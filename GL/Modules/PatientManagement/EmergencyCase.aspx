@@ -7287,14 +7287,7 @@ function setDropdownText(selector, text) {
                         <img src="~../../../../wwwroot/ASsiratTheme/images/dashboard_Icons/Emergency.png" alt="Patient Image" class="img-fluid rounded-circle patient-image">
                     </div>
                 </div>
-                    <div class="row mb-2"  style="display:none">
-                        <div class="col-lg-5 col-md-5 col-sm-6 detail" >
-                            <asp:Label ID="lblPatient_Name" runat="server" style="display:none" Text="Patient Name :"></asp:Label>
-                        </div>
-                        <div class="col-lg-7 col-md-5 col-sm-6 detail">
-                            <asp:Label ID="vlblPatients_Name"  style="display:none" runat="server"></asp:Label>
-                        </div>
-                    </div>
+                    
                 <div class="col-lg-8 col-md-7 col-sm-6">
                     <div class="row mb-3">
                         <div class="col-lg-5 col-md-5 col-sm-6">
@@ -7306,7 +7299,14 @@ function setDropdownText(selector, text) {
                             <asp:HiddenField ID="hdfPatient_ID" runat="server" Value="(New)" ClientIDMode="Static" />
                         </div>
                     </div>
-                
+                <div class="row mb-2">
+                    <div class="col-lg-5 col-md-5 col-sm-6 detail">
+                        <asp:Label ID="lblPatient_Name" runat="server"  Text="Patient Name :"></asp:Label>
+                    </div>
+                    <div class="col-lg-7 col-md-5 col-sm-6 detail">
+                        <asp:Label ID="vlblPatients_Name"  runat="server"></asp:Label>
+                    </div>
+                </div>
                     <div class="row mb-2 mtt">
                         <div class="col-lg-5 col-md-5 col-sm-6 formrgn">
                             <asp:Label ID="lblContactNo" runat="server" Text="Contact No :"></asp:Label>
