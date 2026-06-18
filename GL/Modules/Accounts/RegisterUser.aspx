@@ -90,6 +90,7 @@
                     $('#AllowRateEdit').prop('checked', data.AllowRateEdit);
                     $('#AllowUndischarge').prop('checked', data.AllowUndischarge);
                     $('#AllDoctorTemplate').prop('checked', data.AllDoctorTemplate);
+                    $('#AllowDiscountAssign').prop('checked', data.AllowDiscountAssign);
                     $('#AllowTill').prop('checked', data.AllowTill);
                     $('#AllowLineDiscount').prop('checked', data.AllowLineDiscount);
                     $('#AllowTestlistDoctor').prop('checked', data.AllowTestlistDoctor);             
@@ -157,6 +158,7 @@
             var AllowRateEdit = $('#AllowRateEdit').prop('checked');
             var AllowUndischarge = $('#AllowUndischarge').prop('checked');
             var AllDoctorTemplate = $('#AllDoctorTemplate').prop('checked');
+            var AllowDiscountAssign = $('#AllowDiscountAssign').prop('checked');
             var AllowTill = $('#AllowTill').prop('checked');
             var AllowLineDiscount = $('#AllowLineDiscount').prop('checked');
             var AllowTestlistDoctor = $('#AllowTestlistDoctor').prop('checked');
@@ -299,6 +301,7 @@
                 "ddlcasher": ddlcasher,
                 "AllowUndischarge": AllowUndischarge,
                 "AllDoctorTemplate": AllDoctorTemplate,
+                "AllowDiscountAssign": AllowDiscountAssign,
                 "AllowTill": AllowTill,
                 "AllowLineDiscount": AllowLineDiscount,
                 "AllowTestlistDoctor": AllowTestlistDoctor
@@ -547,8 +550,8 @@
                                                         <input type="checkbox" class="form-check-input" id="AllowDeathDetails" name="AllowDeathDetails" />
                                                     </div>
                                                     <div class="form-check">
-    <input type="checkbox" class="form-check-input" id="AllowUndischarge" name="AllowUndischarge" />
-</div>
+                                                        <input type="checkbox" class="form-check-input" id="AllowUndischarge" name="AllowUndischarge" />
+                                                    </div>
                                                     <div class="form-check">
                                                         <input type="checkbox" class="form-check-input" id="AllDoctorTemplate" name="AllDoctorTemplate" />
                                                     </div>
@@ -560,6 +563,9 @@
                                                      </div>
                                                      <div class="form-check">
                                                          <input type="checkbox" class="form-check-input" id="AllowTestlistDoctor" name="AllowTestlistDoctor" />
+                                                     </div>
+                                                     <div class="form-check">
+                                                         <input type="checkbox" class="form-check-input" id="AllowDiscountAssign" name="AllowDiscountAssign" />
                                                      </div>
                                                     <div class="form-check">
                                                         <input type="text" class="form-check-input" id="EmpCode" name="EmpCode" style="" />
@@ -639,6 +645,9 @@
                                                      </div>
                                                      <div class="form-check">
                                                          <label class="form-check-label" for="AllowTestlistDoctor">Allow Testlist Doctor</label>
+                                                     </div>
+                                                     <div class="form-check">
+                                                         <label class="form-check-label" for="AllowDiscountAssign">Allow Approve Discount</label>
                                                      </div>
                                                      <div class="form-check">
                                                        <label class="form-check-label" for="EmpCode">Employee Code</label>
