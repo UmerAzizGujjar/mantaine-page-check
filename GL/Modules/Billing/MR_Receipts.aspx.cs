@@ -108,53 +108,6 @@ namespace PMS
                 return "";
             }
         }
-        [WebMethod]
-        public static int SaveRecord(int Receipt_ID, int Patient_ID, DateTime Receipt_Date, string Remarks, decimal Receipt_Amount, int Bill_ID)
-        {
-            using (DataBaseDataContext db = new DataBaseDataContext())
-            {
-                Receipt rcpt = null;
-                if (Receipt_ID == 0)
-                {
-                    rcpt = new Receipt();
-                    rcpt.Created_By = AppConfig.UserID;
-                    rcpt.Creation_Date = DateTime.Now;
-                    rcpt.Receipt_No = DBClass.GetNewNumber("Receipt_No", "Receipts", "");
-                }
-                else
-                {
-                    rcpt = db.Receipts.Where(r => r.Receipt_ID == Receipt_ID).FirstOrDefault();
-                    rcpt.Updated_By = AppConfig.UserID;
-                    rcpt.Updation_Date = DateTime.Now;
-                }
-                rcpt.Patient_ID = Patient_ID;
-                rcpt.Receipt_Amount = Receipt_Amount;
-                rcpt.Receipt_Date = Receipt_Date;
-                rcpt.Posted = false;
-                rcpt.Remarks = Remarks;
-                rcpt.Discharge = false;
-                rcpt.Discharge_Charges = (decimal)0.00;
-                rcpt.Bill_ID = Bill_ID;
-
-                if (Receipt_ID == 0)
-                    db.Receipts.InsertOnSubmit(rcpt);
-
-                db.SubmitChanges();
-                return rcpt.Receipt_ID;
-            }
-        }
-        public class BIllResult
-        {
-
-            public string Bill_ID;
-            public string Bill_No;
-            public string Bill_Date;
-            public string Remarks;
-            public string Total_Amount;
-
-        }
-
-
 
         [WebMethod]
         public static string LoadRecord(string Receipt_ID)
@@ -276,124 +229,6 @@ namespace PMS
         }
 
 
-        [WebMethod]
-        public static string LoadBills(int Patient_ID, string Bill_no)
-        {
-            DataBaseDataContext db = new DataBaseDataContext();
-            int MR_NO = DBClass.GetMRNOBy_PatientID_reg(Patient_ID);
-            var billsList = (from b in db.Ar_Billings
-                             join p in db.Reg_patients
-                             on b.Patient_ID equals p.pat_id
-                             where p.Patient_No == MR_NO
-                             && b.Bill_ID == Convert.ToInt32(Bill_no)
-                             orderby b.Bill_ID descending
-                             select new
-                             {
-                                 MR_NO = p.Patient_No,
-                                 Patient_Name = p.Full_Name,
-                                 b.Bill_ID,
-                                 b.Bill_No,
-                                 b.Bill_Date,
-                                 Amount = b.Net_Amount,
-                                 PackageName = (from name in db.Ar_Billing_Details where name.Bill_ID == b.Bill_ID select name.Item_Name).Distinct().FirstOrDefault(),
-                                 b.Received_Amount,
-                                 b.Balance_Amount
-                             }).ToList();
-
-
-            return (new JavaScriptSerializer()).Serialize(billsList);
-        }
-        
-        [WebMethod]
-        public static string LoadAdvances(int Patient_ID)
-        {
-            DataBaseDataContext db = new DataBaseDataContext();
-
-            var AdvanceList = (from b in db.AR_Advances
-                               join p in db.Reg_patients
-                               on b.Patient_ID equals p.pat_id
-                               where b.Patient_ID == Patient_ID
-                               orderby b.Advance_ID descending
-                               select new
-                               {
-                                   MR_NO = p.Patient_No,
-                                   Patient_Name = p.Full_Name,
-                                   b.Advance_ID,
-                                   b.Advance_Date,
-                                   Amount = b.Advance_Amount,
-                                   b.Remarks
-                               }).ToList();
-
-
-            return (new JavaScriptSerializer()).Serialize(AdvanceList);
-        }
-
-        [WebMethod]
-        public static string LoadReceipts(int BillID)
-        {
-            DataBaseDataContext db = new DataBaseDataContext();
-
-            var receiptsList = (from r in db.Receipts
-                                join b in db.Ar_Billings
-                                on r.Bill_ID equals b.Bill_ID
-                                where b.Bill_ID == BillID
-                               // && b.Balance_Amount > 0
-                                orderby r.Receipt_ID descending
-                                select new
-                                {
-                                    b.Bill_No,
-                                    b.Balance_Amount,
-                                    Receipt_ID = r.Receipt_ID,
-                                    r.Receipt_No,
-                                    r.Receipt_Date,
-                                    Amount = r.Receipt_Amount,
-                                    r.Remarks
-                                }).ToList();
-            if (receiptsList.Count > 0)
-                return (new JavaScriptSerializer()).Serialize(receiptsList);
-            else if (receiptsList.Count == 0)
-            {
-                var balance = (from b in db.Ar_Billings where b.Bill_ID == BillID select b.Balance_Amount).FirstOrDefault();
-                var Balance_Amount = balance.HasValue ? balance.Value : 0;
-                return (new JavaScriptSerializer()).Serialize(Balance_Amount);
-            }
-            return (new JavaScriptSerializer()).Serialize(receiptsList);
-        }
-        public class TestDetail
-        {
-            public string Discharge_Test_Date { get; set; }
-            public string Item_ID { get; set; }
-            public string Discharge_Amount { get; set; }
-            public string Transaction_Type { get; set; }
-            public string Parent_Trans_ID { get; set; }
-        }
-        public class ServiceDetail
-        {
-            public string Discharge_Test_Date { get; set; }
-            public string Item_ID { get; set; }
-            public string Discharge_Amount { get; set; }
-
-            public string Net_Amount { get; set; }
-            public string Qty { get; set; }
-
-            public string Transaction_Type { get; set; }
-            public string Parent_Trans_ID { get; set; }
-        }
-        public class Service
-        {
-            public string Discharge_Date { get; set; }
-            public string Receipt_ID { get; set; }
-            public string Discharge_Amount { get; set; }
-            public string Discount_Percentage { get; set; }
-            public string Discount_Amount { get; set; }
-            public string Net_Amount { get; set; }
-            public string Discharge_Charges { get; set; }
-            public string PatientID { get; set; }
-            public int Discharge_ID { get; set; }
-            public decimal Investigation_Limit { get; set; }
-            public List<ServiceDetail> service_list { get; set; }
-            public List<TestDetail> test_list { get; set; }
-        }
 
         public class Result
         {
@@ -796,7 +631,7 @@ namespace PMS
             DataBaseDataContext db = new DataBaseDataContext();
 
             var ipdIds = db.In_Patients
-                .Where(ip => ip.Patient_ID == PatientID && ip.Discharge_On != null)
+                .Where(ip => ip.Patient_ID == PatientID && ip.Discharge != false)
                 .Select(ip => ip.In_Patient_ID)
                 .ToList()
                 .Select(id => (long)id)
@@ -855,45 +690,12 @@ namespace PMS
                     rcpt.Discharge = true;
                     rcpt.Discharge_Charges = 0;
                     db.Receipts.InsertOnSubmit(rcpt);
+                    db.SubmitChanges();
                 }
-
-                db.SubmitChanges();
             }
             return "ok";
         }
 
-        [WebMethod]
-        public static decimal GetNetBalance(string TransType, int TransID)
-        {
-            DataBaseDataContext db = new DataBaseDataContext();
-            decimal Balance_Amount = 0;
-            int MRNO = 0;
-            if (TransType == "Bill Balance")
-            {
-                Balance_Amount = (from bm in db.Ar_Billings
-                                  join bd in db.Ar_Billing_Details
-                                  on bm.Bill_ID equals bd.Bill_ID
-                                  join pat in db.Reg_patients
-                                  on bm.Patient_ID equals pat.pat_id
-                                  where bm.Bill_ID == TransID
-                                  select bm.Balance_Amount
-                        ).Sum().Value;
-            }
-            else if (TransType == "Net Balance")
-            {
-                MRNO = DBClass.GetMRNOBy_PatientID(TransID);
-
-                Balance_Amount = (from bm in db.Ar_Billings
-                                  join bd in db.Ar_Billing_Details
-                                  on bm.Bill_ID equals bd.Bill_ID
-                                  join pat in db.Reg_patients
-                                  on bm.Patient_ID equals pat.pat_id
-                                  where pat.Patient_No == MRNO
-                                  select bm.Balance_Amount
-                        ).Sum().Value;
-            }
-            return Balance_Amount;
-        }
 
         [WebMethod]
         public static string GetServices()
@@ -923,16 +725,6 @@ namespace PMS
         }
 
 
-
-        public class InvestigationDetails
-        {
-            public int ParentTrans_ID;
-            public string Item_ID;
-            public string Item_Name;
-            public decimal Rate;
-            public bool IsCategory;
-            public DateTime Created_Time;
-        }
 
         [WebMethod]
         public static string GetInvestigationDetails(int PatientID)
@@ -1027,205 +819,8 @@ namespace PMS
             return (new JavaScriptSerializer()).Serialize(Serviceetails);
         }
 
-        [WebMethod]
-        public static string GetInvestigationLimit(int Bill_ID)
-        {
 
-            DataBaseDataContext db = new DataBaseDataContext();
-
-            var PackageDetails = (from bm in db.Ar_Billings
-                                  join bd in db.Ar_Billing_Details
-                                  on bm.Bill_ID equals bd.Bill_ID
-                                  join pkgm in db.Packages
-                                  on bd.ParentTrans_ID equals pkgm.Packages_ID
-                                  join pkgd in db.Packages_Details
-                                  on pkgm.Packages_ID equals pkgd.Packages_ID
-                                  join itms in db.INV_Items
-                                  on pkgd.Item_Code equals itms.Item_ID
-                                  where bm.Bill_ID == Bill_ID && itms.Item_ID == 294 
-                                  select new { pkgd.Amount }).FirstOrDefault();
-
-            return (new JavaScriptSerializer()).Serialize(PackageDetails);
-        }
-
-        [WebMethod]
-        public static string CheckPackages(int Patid)
-        {
-            DataBaseDataContext db = new DataBaseDataContext(DBClass.ConnectionString());
-            var data = (from inpataient in db.In_Patients
-                        join p in db.Reg_patients on inpataient.Patient_ID equals p.pat_id
-                        from bill in db.Ar_Billings
-                        join billd in db.Ar_Billing_Details
-                        on bill.Bill_ID equals billd.Bill_ID
-                        join pkg in db.Packages on billd.ParentTrans_ID equals pkg.Packages_ID
-                        where inpataient.Patient_ID == Patid && inpataient.Patient_ID == bill.Patient_ID && inpataient.Discharge == false
-                        select pkg.Package_Name).FirstOrDefault();
-            return (new JavaScriptSerializer()).Serialize(data);
-        }
-
-        [WebMethod]
-        public static decimal GetTotalBillingsAmount()
-        {
-            DataBaseDataContext db = new DataBaseDataContext();
-            DateTime today = DateTime.Now.Date;
-            decimal totalAmount = db.Ar_Billings
-                .Where(b => b.Bill_Date.HasValue &&
-                            b.Main_Department != "03" && b.Created_By == AppConfig.UserID &&
-                            (b.Panel_Id == null || b.Panel_Id == 0 ) &&
-                            b.Bill_Date.Value.Date == today)
-                .Sum(b => (decimal?)b.Total_Amount) ?? 0;
-
-            return totalAmount;
-        }
-
-        [WebMethod]
-        public static decimal GetTotalDiscountAmount()
-        {
-            DataBaseDataContext db = new DataBaseDataContext();
-            DateTime today = DateTime.Now.Date;
-            decimal totalAmount = db.Ar_Billings
-                .Where(b => b.Bill_Date.HasValue &&
-                            b.Main_Department != "03" && b.Created_By == AppConfig.UserID &&
-                            (b.Panel_Id == null || b.Panel_Id == 0) &&
-                            b.Bill_Date.Value.Date == today)
-                .Sum(b => (decimal?)b.Discount_Amount) ?? 0;
-
-            return totalAmount;
-        }
-
-        [WebMethod]
-        public static decimal GetTotalNetAmount()
-        {
-            DataBaseDataContext db = new DataBaseDataContext();
-            DateTime today = DateTime.Now.Date;
-            decimal totalAmount = db.Ar_Billings
-                .Where(b => b.Bill_Date.HasValue &&
-                            b.Main_Department != "03" && b.Created_By == AppConfig.UserID &&
-                            (b.Panel_Id == null || b.Panel_Id == 0) &&
-                            b.Bill_Date.Value.Date == today)
-                .Sum(b => (decimal?)b.Received_Amount) ?? 0;
-
-            return totalAmount;
-        }
-        [WebMethod]
-        public static string CloseSale()
-        {
-            DataBaseDataContext db = new DataBaseDataContext();
-
-            var userId = AppConfig.UserID;
-
-            // Get last receipt created by this user
-            var receipt = (from r in db.Receipts
-                           where r.Created_By == userId
-                           orderby r.Receipt_ID descending
-                           select r).FirstOrDefault();
-
-            if (receipt != null)
-            {
-                receipt.SaleClosing = DateTime.Now;     
-                db.SubmitChanges();
-                return "Success";
-            }
-            return "No receipt found";
-
-        }
-
-
-        [WebMethod]
-        public static decimal GetTotalCashPaid()
-        {
-            DataBaseDataContext db = new DataBaseDataContext();
-            DateTime today = DateTime.Now.Date;
-
-            DateTime? lastCloseTime = (from r in db.Receipts
-                                       where r.Created_By == AppConfig.UserID
-                                             && r.SaleClosing != null
-                                       orderby r.SaleClosing descending
-                                       select r.SaleClosing).FirstOrDefault();
-
-            decimal totalAmount = (from r in db.Receipts
-                                   join b in db.Ar_Billings on r.Bill_ID equals b.Bill_ID
-                                   where r.Receipt_Date.HasValue &&
-                                         r.Creation_Date > lastCloseTime &&
-                                         b.Main_Department != "03" &&
-                                         r.Created_By == AppConfig.UserID &&
-                                         (r.isCancel == null || r.isCancel == false) && // Check Receipt's isCancel
-                                         (b.Panel_Id == null || b.Panel_Id == 0)
-                                   select r.Receipt_Amount)
-                                   .Sum() ?? 0;
-
-            return totalAmount;
-        }
-        [WebMethod]
-        public static decimal GetTotalAdvance()
-        {
-            DataBaseDataContext db = new DataBaseDataContext();
-            DateTime today = DateTime.Now.Date;
-            decimal totalAmount = db.AR_Advances
-                .Where(b => b.Advance_Date.HasValue && b.Advance_Date.Value.Date == today)
-                .Sum(b => (decimal?)b.Advance_Amount) ?? 0;
-
-            return totalAmount;
-        }
-
-        [WebMethod]
-        public static decimal GetTotalRefund()
-        {
-            DataBaseDataContext db = new DataBaseDataContext();
-            DateTime today = DateTime.Now.Date;
-            decimal totalAmount = (from r in db.Refunds
-                                   join b in db.Ar_Billings on r.Bill_ID equals b.Bill_ID
-                                   where r.Refund_Date.HasValue &&
-                                         r.Refund_Date.Value.Date == today &&
-                                         b.Main_Department != "03" && r.Created_By == AppConfig.UserID && 
-                                         (b.Panel_Id == null || b.Panel_Id == 0)
-                                      
-                                   select r.Refund_Amount)
-                                   .Sum() ?? 0;
-
-            return totalAmount;
-        }
-
-        [WebMethod]
-        public static decimal GetTotalActual()
-        {
-            DataBaseDataContext db = new DataBaseDataContext();
-            DateTime today = DateTime.Now.Date;
-
-            decimal totalReceived = db.Ar_Billings
-                .Where(b => b.Bill_Date.HasValue &&
-                            b.Main_Department != "03" && b.Created_By == AppConfig.UserID &&
-                            (b.Panel_Id == null || b.Panel_Id == 0) 
-                            &&(b.isCancel == null || b.isCancel == false)&&
-                            b.Bill_Date.Value.Date == today)
-                .Sum(b => (decimal?)b.Received_Amount) ?? 0;
-
-            decimal totalRefund = (from r in db.Refunds
-                                   join b in db.Ar_Billings on r.Bill_ID equals b.Bill_ID
-                                   where r.Refund_Date.HasValue &&
-                                         r.Refund_Date.Value.Date == today &&
-                                         b.Main_Department != "03" && r.Created_By == AppConfig.UserID &&
-                                         (b.isCancel == null || b.isCancel == false) &&
-                                         (b.Panel_Id == null || b.Panel_Id == 0)
-                                   select r.Refund_Amount)
-                                   .Sum() ?? 0;
-
-            decimal actualAmount = totalReceived - totalRefund;
-
-            return actualAmount;
-        }
-
-        [WebMethod]
-        public static string GetBoxesVisibility()
-        {
-            DataBaseDataContext db = new DataBaseDataContext(DBClass.ConnectionString());
-            var dept = (from data in db.sys_Parms
-                        where data.Name == "Receipts_Boxes"
-                        select data.Code
-                       ).FirstOrDefault();
-
-            return dept;
-        }
+        
         [WebMethod]
         public static string GetAutoFillReceiptSetting()
         {
@@ -1235,38 +830,6 @@ namespace PMS
                            select sp.Code).FirstOrDefault();
 
             return setting ?? "0";
-        }
-        [WebMethod]
-        public static decimal GetTotalPrivateCash()
-        {
-            DataBaseDataContext db = new DataBaseDataContext();
-            DateTime today = DateTime.Now.Date;
-
-            decimal totalAmount = db.Ar_Billings
-                .Where(b => b.Bill_Date.HasValue
-                         && b.Bill_Date.Value.Date == today
-                         && b.Created_By == AppConfig.UserID
-                         && (b.Panel_Id == null || b.Panel_Id == 0))
-                .Sum(b => (decimal?)b.Total_Amount) ?? 0;
-
-            return totalAmount;
-        }
-
-        [WebMethod]
-        public static decimal GetTotalPanelCash()
-        {
-            DataBaseDataContext db = new DataBaseDataContext();
-            DateTime today = DateTime.Now.Date;
-
-            decimal totalAmount = db.Ar_Billings
-                .Where(b => b.Bill_Date.HasValue
-                         && b.Bill_Date.Value.Date == today
-                         && b.Created_By == AppConfig.UserID
-                         && b.Panel_Id != null
-                         && b.Panel_Id > 0)
-                .Sum(b => (decimal?)b.Total_Amount) ?? 0;
-
-            return totalAmount;
         }
 
     }
