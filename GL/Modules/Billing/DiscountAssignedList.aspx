@@ -71,37 +71,54 @@
                 }
             });
 
+            let hasPermission = false;
+            $.ajax({
+                type: "POST",
+                url: "DiscountAssignedList.aspx/GetUserDiscountPermission",
+                contentType: "application/json; charset=utf-8",
+                dataType: "json",
+                async: false,
+                success: function (response) {
+                    hasPermission = response.d;
+                }
+            });
+
+            const buttons = [];
+            if (hasPermission) {
+                buttons.push({
+                    text: '<i class="fa fa-columns"></i> Approve',
+                    className: 'dt-button buttons-colvis',
+                    action: function (e, dt, node, config) {
+                        approveSelectedDiscounts();
+                    }
+                });
+            }
+            buttons.push(
+                {
+                    text: 'Add',
+                    className: 'dt-button buttons-copy buttons-html5',
+                    action: function () {
+                        window.location = 'DiscountAssigned.aspx';
+                    }
+                },
+                'copy',
+                'excel',
+                'pdf',
+                {
+                    extend: 'colvis',
+                    text: '<i class="fa fa-columns"></i> Columns',
+                    className: 'dt-button buttons-colvis',
+                    collectionLayout: 'fixed two-column',
+                    postfixButtons: ['colvisRestore']
+                }
+            );
+
             const table = $("#tblResult").DataTable({
                 "processing": true,
                 "serverSide": true,
                 "dom": 'lBfrtip',
                 "lengthChange": true,
-                "buttons": [
-                    {
-                        text: '<i class="fa fa-columns"></i> Approve',
-                        className: 'dt-button buttons-colvis',
-                        action: function (e, dt, node, config) {
-                            approveSelectedDiscounts();
-                        }
-                    },
-                    {
-                        text: 'Add',
-                        className: 'dt-button buttons-copy buttons-html5',
-                        action: function () {
-                            window.location = 'DiscountAssigned.aspx';
-                        }
-                    },
-                    'copy',
-                    'excel',
-                    'pdf',
-                    {
-                        extend: 'colvis',
-                        text: '<i class="fa fa-columns"></i> Columns',
-                        className: 'dt-button buttons-colvis',
-                        collectionLayout: 'fixed two-column',
-                        postfixButtons: ['colvisRestore']
-                    }
-                ],
+                "buttons": buttons,
                 "columnDefs": savedVisibility ? [] : undefined,
                 "filter": true,
                 "ajax": function (data, callback, settings) {
@@ -175,6 +192,10 @@
                                 this.visible(savedVisibility[index]);
                             });
                         }
+                    }
+                    if (!hasPermission) {
+                        api.column(0).visible(false);
+                        $('#header-checkbox').closest('th').hide();
                     }
                     $('#header-checkbox').off('change').on('change', function () {
                         const isChecked = $(this).prop('checked');

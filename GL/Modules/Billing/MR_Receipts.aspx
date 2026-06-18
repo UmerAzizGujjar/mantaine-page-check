@@ -3,7 +3,6 @@
 <asp:Content ID="Content1" ContentPlaceHolderID="HeadContent" runat="server">
 
     <link href="../../wwwroot/THEME_TIBBIT/CustomCSS/Receipts.css" rel="stylesheet" />
-     <link href="../../wwwroot/lib/sweetalert/swalalert.css" rel="stylesheet" />
     <style>
         .card {
             padding: 0 20px;
@@ -823,7 +822,6 @@
                 success: function (response) {
                     var entries = response.d ? JSON.parse(response.d) : [];
                     if (entries.length > 0) {
-                        $('#divDischargeBills').show();
                         var html = '';
                         var currentIPD = 0;
                         $.each(entries, function (idx, entry) {
@@ -855,7 +853,9 @@
                         $('.chkBill').change(updateTotalReceivable);
                         updateTotalReceivable();
                     } else {
-                        $('#divDischargeBills').hide();
+                        $('#divIPDBillEntries').empty();
+                        $('#txtTotalReceivable').val('');
+                        $('#txtReceiptAmount').val('');
                     }
                 },
                 error: function (err) {
@@ -1143,7 +1143,9 @@
             $('#lblRecentWardNo').text('');
             $('#lblRecentAdmDate').text('');
             $('#lblRecentDisDate').text('');
-            $('#divDischargeBills').hide();
+            $('#divIPDBillEntries').empty();
+            $('#txtTotalReceivable').val('');
+            $('#txtReceiptAmount').val('');
             $('#btnSave').val('Save');
         }
         $(document).ready(function () {
@@ -1316,8 +1318,8 @@
         </div>
     </div>
 
-    <!-- Discharge Bill Entries Table (visible when patient is discharged) -->
-    <div class="row" id="divDischargeBills" style="display:none;">
+    <!-- Discharge Bill Entries Table -->
+    <div class="row" id="divDischargeBills">
         <div class="col-lg-7">
             <div class="card border-success">
                 <div class="card-body">
