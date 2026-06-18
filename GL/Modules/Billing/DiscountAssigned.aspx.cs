@@ -172,6 +172,16 @@ namespace PMS.Modules.Billing
         }
 
         [WebMethod]
+        public static bool GetUserDiscountPermission()
+        {
+            using (DataBaseDataContext db = new DataBaseDataContext())
+            {
+                var user = db.aspnet_Users.FirstOrDefault(u => u.UserId == AppConfig.UserID);
+                return user?.AllowDiscount_assign == true;
+            }
+        }
+
+        [WebMethod]
         public static string LoadPatientDetailsByBillNO(string Bill_No)
         {
             using (DataBaseDataContext db = new DataBaseDataContext())
@@ -458,6 +468,7 @@ namespace PMS.Modules.Billing
                             discountMaster.Bill_ID,
                             discountMaster.Patient_ID,
                             discountMaster.Reg_ID,
+                            discountMaster.Status,
                             Discount_Date = discountMaster.Discount_Date.ToString("MM/dd/yyyy"),                            
                             Total_Discount = discountMaster.Total_Discount,
                             Total_amount = discountMaster.Total_amount ?? 0,

@@ -9,6 +9,7 @@
         //  PAGE READY
         // =============================================
         $(document).ready(function () {
+            $('#btnApprove').hide();
             $("#txtdiscountdate").datepicker({ dateFormat: 'mm/dd/yy' });
             $("#txtdiscountdate").val($.datepicker.formatDate('mm/dd/yy', new Date()));
             LoadTokenInputsDefaultMRNo();
@@ -160,6 +161,18 @@
 
                         $('#btnSave').val('Update');
                         enableAllDiscountFields();
+
+                        $.ajax({
+                            type: "POST",
+                            url: "DiscountAssigned.aspx/GetUserDiscountPermission",
+                            contentType: "application/json; charset=utf-8",
+                            dataType: "json",
+                            success: function (resp) {
+                                if (resp.d && data.Master.Status !== "Approved") {
+                                    $('#btnApprove').show();
+                                }
+                            }
+                        });
 
                         console.log("Edit mode loaded successfully");
                         console.log("Total Discount Amount:", totalDiscountAmount);
@@ -679,7 +692,7 @@
                                     text: 'Billing, Receipts, and Item Details updated successfully',
                                     timer: 2000
                                 });
-                                $('#btnApprove').prop('disabled', true); 
+                                $('#btnApprove').hide();
                             } else {
                                 Swal.fire({
                                     icon: 'error',
