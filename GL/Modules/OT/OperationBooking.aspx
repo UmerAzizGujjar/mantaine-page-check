@@ -2,7 +2,7 @@
 
 <asp:Content ID="Content1" ContentPlaceHolderID="HeadContent" runat="server">
    <%-- <script type="../../text/javascript" src="Scripts/upload.js"></script>--%>
-    <script src="../../wwwroot/THEME_TIBBIT/Scripts/timepicki/timepicki.js"></script>
+    <script src="../../wwwroot/lib/timepicki/timepicki.js"></script>
       <link href="../../wwwroot/THEME_TIBBIT/CustomCSS/timepicki.css" rel="stylesheet" />
     <link href="../../wwwroot/THEME_TIBBIT/CustomCSS/OT.css" rel="stylesheet" />
     <script type="text/javascript">
