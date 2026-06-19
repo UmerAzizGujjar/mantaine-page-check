@@ -1904,11 +1904,27 @@
             text-transform: uppercase;
             letter-spacing: 1px;
         }
+
+            /* ── ADDENDUM SECTION ── */
+        .addendum-section {
+            margin-top: 15px;
+            margin-bottom: 15px;
+            page-break-inside: avoid;
+        }
+        .addendum-heading {
+            font-family: "Times New Roman", Times, serif;
+            font-size: 13px;
+            font-weight: bold;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            margin-bottom: 8px;
+            color: #000;
+        }
         .addendum-content {
             font-size: 11px;
             line-height: 1.7;
-            margin-bottom: 12px;
             text-align: justify;
+            padding-left: 10px;
         }
 
         /* ── REPORT CONTENT ── */
@@ -1919,6 +1935,7 @@
             margin-bottom: 20px;
             text-align: justify;
         }
+
         .report-content p { margin-bottom: 6px; }
         .report-content table { width: 100%; border-collapse: collapse; margin-bottom: 8px; }
         .report-content table td,
@@ -2040,6 +2057,8 @@
         color-adjust: exact !important;
     }
 
+
+
 }
     </style>
     <script>
@@ -2076,7 +2095,7 @@ function cleanPrint() {
 
         <!-- LEFT COLUMN -->
         <div class="patient-col">
-            <div class="patient-title">${data.Full_Name || ''} &nbsp; ${data.Age_years || ''}Y, &nbsp; ${data.Gender || ''}</div>
+            <div class="patient-title">${data.Full_Name || ''} &nbsp; ${data.Age_years || ''}, &nbsp; ${data.Gender || ''}</div>
             <div class="info-row">
                 <span class="info-label">Contact :</span>
                 <span class="info-val">${data.Mobile1 || ''}</span>
@@ -2136,17 +2155,22 @@ function cleanPrint() {
         ${data.Fixed_Value || '<p style="color:#999; text-align:center;">No report content available.</p>'}
     </div>
     
-    <!-- Addendum CONTENT (Addendum_Template from CKEditor) -->
-<div class="addendum-content">
-    ${data.Addendum_Template || '<p style="color:#999; text-align:center;">No report Addendum Added.</p>'}
+<!-- ADDENDUM SECTION (Only visible if Addendum_Template has data) -->
+${data.Addendum_Template ? `
+<div class="addendum-section">
+    <div class="addendum-heading">ADDENDUM:</div>
+    <div class="addendum-content">
+        ${data.Addendum_Template}
+    </div>
 </div>
+` : ''}
 
 <!-- SIGNATURES -->
 <div class="signatures">
     <div class="sig-block">
         <div class="sig-name">${data.Test_Performed_By_Doctor_name || ''}</div>
         <div class="sig-qual">${data.Test_Performed_By_Doctor_qualification || ''}</div>
-        <div class="sig-date">Date &amp; Time: ${data.Test_Ready_On || ''}</div>
+        <div class="sig-date">Date &amp; Time: ${data.Approved_Time || ''}</div>
         <div class="sig-note">No Signature(s) required, Electronically Verified</div>
     </div>
     <div class="sig-block right">

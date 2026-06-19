@@ -220,6 +220,7 @@
             $('#ctl00_MainContent_ddlcatagory').select2();
             $('#ctl00_MainContent_ddlMainDepartment').select2();
             $('#ctl00_MainContent_ddlMedicalSubsidy').select2();
+            $('#ctl00_MainContent_ddlSubDepartment').select2();
             $('#ctl00_MainContent_ddlStock').select2();
             $('#ctl00_MainContent_ddlMovementType').select2();
             $('#ctl00_MainContent_ddOPDIPDdiv').select2();
@@ -823,8 +824,7 @@
                     else if (rptTitle == 'Lab_Log_Report') {
                         debugger;
                         var exporttopdf = document.getElementById('<%= chkExportPDF.ClientID %>').checked;
-
-                        var url = 'ReportViewer.aspx?ReportName=Lab_Log_Report&ReportTitle=Lab Log Report from ' + $('#ctl00_MainContent_txtStart_Date').val() + ' ' + $('#ctl00_MainContent_txtSTime').val() + ' to ' + $('#ctl00_MainContent_txtEnd_Date').val() + ' ' + $('#ctl00_MainContent_txtETime').val() + '&StartDateTime=' + $('#ctl00_MainContent_txtStart_Date').val() + ' ' + $('#ctl00_MainContent_txtSTime').val() + '&EndDateTime=' + $('#ctl00_MainContent_txtEnd_Date').val() + ' ' + $('#ctl00_MainContent_txtETime').val() + '&Operator=' + ((typeof ($("#ctl00_MainContent_ddloprators").val()) != 'undefined') ? $("#ctl00_MainContent_ddloprators").val() : "0") + '&Final_Sign_By=' + ((typeof ($("#ctl00_MainContent_ddlDoctor").val()) != 'undefined') ? $("#ctl00_MainContent_ddlDoctor").val() : "0") + '&BillingDoctor=' + ((typeof ($("#ctl00_MainContent_ddlPatientType").val()) != 'undefined') ? $("#ctl00_MainContent_ddlPatientType").val() : "0") + '&PerformingDoctor=' + ((typeof ($("#ctl00_MainContent_ddlcashier").val()) != 'undefined') ? $("#ctl00_MainContent_ddlcashier").val() : "0") + '&Department=' + $("#ctl00_MainContent_ddlMainDepartment").val() + '&Acknowledged_By=' + ((typeof ($("#ctl00_MainContent_ddlDepartments").val()) != 'undefined') ? $("#ctl00_MainContent_ddlDepartments").val() : "0") + '&Prelim_BY=' + ((typeof ($("#ctl00_MainContent_ddlcatagory").val()) != 'undefined') ? $("#ctl00_MainContent_ddlcatagory").val() : "0") + '&Referring_Consultant=' + ((typeof ($("#ctl00_MainContent_ddlReportType").val()) != 'undefined') ? $("#ctl00_MainContent_ddlReportType").val() : "0") + '&ExportPDF=' + exporttopdf  ;
+                        var url = 'ReportViewer.aspx?ReportName=Lab_Log_Report&ReportTitle=Lab Log Report from ' + $('#ctl00_MainContent_txtStart_Date').val() + ' ' + $('#ctl00_MainContent_txtSTime').val() + ' to ' + $('#ctl00_MainContent_txtEnd_Date').val() + ' ' + $('#ctl00_MainContent_txtETime').val() + '&StartDateTime=' + $('#ctl00_MainContent_txtStart_Date').val() + ' ' + $('#ctl00_MainContent_txtSTime').val() + '&EndDateTime=' + $('#ctl00_MainContent_txtEnd_Date').val() + ' ' + $('#ctl00_MainContent_txtETime').val() + '&Operator=' + ((typeof ($("#ctl00_MainContent_ddloprators").val()) != 'undefined') ? $("#ctl00_MainContent_ddloprators").val() : "0") + '&Final_Sign_By=' + ((typeof ($("#ctl00_MainContent_ddlDoctor").val()) != 'undefined') ? $("#ctl00_MainContent_ddlDoctor").val() : "0") + '&BillingDoctor=' + ((typeof ($("#ctl00_MainContent_ddlPatientType").val()) != 'undefined') ? $("#ctl00_MainContent_ddlPatientType").val() : "0") + '&PerformingDoctor=' + ((typeof ($("#ctl00_MainContent_ddlcashier").val()) != 'undefined') ? $("#ctl00_MainContent_ddlcashier").val() : "0") + '&Category=' + $("#ctl00_MainContent_ddlMainDepartment").val() + '&Acknowledged_By=' + ((typeof ($("#ctl00_MainContent_ddlDepartments").val()) != 'undefined') ? $("#ctl00_MainContent_ddlDepartments").val() : "0") + '&Prelim_BY=' + ((typeof ($("#ctl00_MainContent_ddlcatagory").val()) != 'undefined') ? $("#ctl00_MainContent_ddlcatagory").val() : "0") + '&Referring_Consultant=' + ((typeof ($("#ctl00_MainContent_ddlReportType").val()) != 'undefined') ? $("#ctl00_MainContent_ddlReportType").val() : "0") + '&Test_Departement=' + ((typeof ($("#ctl00_MainContent_ddlSubDepartment").val()) != 'undefined') ? $("#ctl00_MainContent_ddlSubDepartment").val() : "0") + '&ExportPDF=' + exporttopdf  ;
                         window.open(url, '_blank');
                     }
 
@@ -2095,6 +2095,12 @@
             <div class="col-lg-3 col-md-4 col-sm-12" runat="server">
                 <asp:Label runat="server" ID="lblVendor" Text="Vendor"></asp:Label>
                 <asp:DropDownList runat="server" ID="ddlVendor" AppendDataBoundItems="true"></asp:DropDownList>
+            </div>
+        </div>
+        <div class="row mb-3" runat="server" id="SubDepartment" visible="false">
+            <div class="col-lg-3 col-md-4 col-sm-12" runat="server">
+                <asp:Label runat="server" ID="lblSubDepartment" Text="Vendor"></asp:Label>
+                <asp:DropDownList runat="server" ID="ddlSubDepartment" AppendDataBoundItems="true"></asp:DropDownList>
             </div>
         </div>
         <div class="row mb-3" id="DateDiv" runat="server" visible="false">

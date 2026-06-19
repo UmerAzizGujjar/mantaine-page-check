@@ -3787,8 +3787,8 @@ namespace PMS
                     Time_Row.Visible = true;
                     SetDepartent();
                     dpROw.Visible = true;
-                    
 
+                    
                     object valusets;
                     DataBaseDataContext db = new DataBaseDataContext(DBClass.ConnectionString());
                     valusets = from d in db.aspnet_Users
@@ -3881,6 +3881,17 @@ namespace PMS
                     ddlReportType.Items.Add(new ListItem() { Value = "0", Text = "All Doctors" });
                     ddlReportType.DataBind();
 
+
+                    SubDepartment.Visible = true;
+                    lblSubDepartment.Text = "Department";
+                    object valuset1;
+                    valuset1 = DBClass.GetValueSet("Main Test Departments");
+                    ddlSubDepartment.DataSource = valuset1;
+                    ddlSubDepartment.DataTextField = "DataValue_Description";
+                    ddlSubDepartment.DataValueField = "DataValue_Name";
+                    ddlSubDepartment.Items.Clear();
+                    ddlSubDepartment.Items.Add(new ListItem() { Text = "All", Value = "0" });
+                    ddlSubDepartment.DataBind();
 
                 }
 

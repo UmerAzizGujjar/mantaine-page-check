@@ -35,17 +35,46 @@
             loadDoctorsforFilter();
             FillMainTestDepartment();
             
-            // Initialize date pickers first
             initializeDatePickers();
             
-            // Then load the table after dates are set
             loadRadiologyAcknowledgment();
 
-            // Apply filter on any filter change
             $('.filter-control').on('change', function () {
                 var table = $('#tblradilogy').DataTable();
                 if (table) {
                     table.ajax.reload();
+                }
+            });
+
+
+            $('#selectAllHeader').on('click', function () {
+                var isChecked = $(this).prop('checked');
+                $('#tblradilogy tbody .rowSelect').prop('checked', isChecked);
+            });
+
+            $('#tblradilogy').on('change', '.rowSelect', function () {
+                var totalRows = $('#tblradilogy tbody .rowSelect').length;
+                var checkedRows = $('#tblradilogy tbody .rowSelect:checked').length;
+
+                if (checkedRows === totalRows && totalRows > 0) {
+                    $('#selectAllHeader').prop('checked', true);
+                } else {
+                    $('#selectAllHeader').prop('checked', false);
+                }
+            });
+
+            $('#tblradilogy').on('draw.dt', function () {
+                var totalRows = $('#tblradilogy tbody .rowSelect').length;
+                var checkedRows = $('#tblradilogy tbody .rowSelect:checked').length;
+
+                if (totalRows === 0) {
+                    $('#selectAllHeader').prop('checked', false).prop('indeterminate', false);
+                } else if (checkedRows === totalRows) {
+                    $('#selectAllHeader').prop('checked', true).prop('indeterminate', false);
+                } else if (checkedRows > 0) {
+                    $('#selectAllHeader').prop('checked', false).prop('indeterminate', true);
+                } else {
+                    $('#selectAllHeader').prop('checked', false).prop('indeterminate', false);
                 }
             });
         });
@@ -575,7 +604,7 @@
                         <table class="table table-hover table-striped table-bordered" id="tblradilogy" style="width: 100%;">
                             <thead>
                                 <tr>
-                                    <th>Check</th>
+                                    <th><input type="checkbox" id="selectAllHeader" class="header-checkbox" /></th>
                                     <th>Bill Date</th>
                                     <th>Bill No</th>
                                     <th>MR No</th>
