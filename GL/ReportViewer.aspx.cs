@@ -1777,7 +1777,8 @@ namespace PMS
 
                 string sqlStartDateTime = Convert.ToDateTime(StartDateTime).ToString("yyyy-MM-dd HH:mm:ss");
                 string sqlEndDateTime = Convert.ToDateTime(EndDateTime).ToString("yyyy-MM-dd HH:mm:ss");
-                string Department = Convert.ToString(Request.QueryString["Department"]);
+                string Category = Convert.ToString(Request.QueryString["Category"]);
+                string Test_Departement = Convert.ToString(Request.QueryString["Test_Departement"]);
                 string Operator = Convert.ToString(Request.QueryString["Operator"]);
                 string BillingDoctor = Convert.ToString(Request.QueryString["BillingDoctor"]);
                 string Acknowledge_By = Convert.ToString(Request.QueryString["Acknowledged_By"]);
@@ -1791,7 +1792,8 @@ namespace PMS
                 rd.SetParameterValue("Title", reportTitle);
                 rd.SetParameterValue("@stDate", sqlStartDateTime);
                 rd.SetParameterValue("@endDate", sqlEndDateTime);
-                rd.SetParameterValue("@Department", Department);
+                rd.SetParameterValue("@Category", Category);
+                rd.SetParameterValue("@Test_Departement", Test_Departement);
                 rd.SetParameterValue("@Operator", Operator);
                 rd.SetParameterValue("@BillingDoctor", BillingDoctor);
                 rd.SetParameterValue("@Acknowledge_By", Acknowledge_By);
