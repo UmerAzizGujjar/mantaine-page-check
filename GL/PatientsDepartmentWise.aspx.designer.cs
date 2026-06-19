@@ -834,6 +834,33 @@ namespace PMS
         protected global::System.Web.UI.WebControls.DropDownList ddlVendor;
 
         /// <summary>
+        /// SubDepartment control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.HtmlControls.HtmlGenericControl SubDepartment;
+
+        /// <summary>
+        /// lblSubDepartment control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.Label lblSubDepartment;
+
+        /// <summary>
+        /// ddlSubDepartment control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.DropDownList ddlSubDepartment;
+
+        /// <summary>
         /// DateDiv control.
         /// </summary>
         /// <remarks>
