@@ -147,6 +147,15 @@
                 "columns": [
                     { "data": null, "width": "4%", "orderable": false, "render": (data, type, full, meta) => meta.settings._iDisplayStart + meta.row + 1 },
                     { "data": "Bill_No", "name": "Bill_No", "width": "5%", "orderable": true },
+                    {
+                        "data": "Bill_Date", "name": "Bill_Date",
+                        "render": function (data, type, full) {
+                            debugger;
+                            var date = full.Bill_Date;
+                            date = moment(date).format('DD-MMM-YYYY');
+                            return date;
+                        }, "width": "5%", "orderable": true
+                    },
                     { "data": "mr_no_sequence", "name": "mr_no_sequence", "width": "6%", "orderable": true },
                     { "data": "Full_Name", "name": "Full_Name", "width": "12%", "orderable": true },
                     { "data": "Mobile1", "name": "Mobile1", "width": "4%", "orderable": true },
@@ -726,6 +735,7 @@ function cleanPrint() {
                         <tr>
                             <th>Sr#</th>
                             <th>Bill No</th>
+                            <th>Bill Date</th>
                             <th>MR No</th>
                             <th>Patient Name</th>
                             <th>Phone #</th>
