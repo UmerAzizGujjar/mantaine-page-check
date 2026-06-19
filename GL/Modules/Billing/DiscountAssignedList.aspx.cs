@@ -136,6 +136,16 @@ namespace PMS.Modules.Billing
         }
 
         [WebMethod]
+        public static bool GetUserDiscountPermission()
+        {
+            using (DataBaseDataContext db = new DataBaseDataContext())
+            {
+                var user = db.aspnet_Users.FirstOrDefault(u => u.UserId == AppConfig.UserID);
+                return user?.AllowDiscount_assign == true;
+            }
+        }
+
+        [WebMethod]
         public static string GetDiscountDetails(int discountAssignId)
         {
             try

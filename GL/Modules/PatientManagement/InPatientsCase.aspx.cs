@@ -1249,6 +1249,23 @@ namespace PMS
                     cbDicharg_Slip.Checked = qry.Discharge.Value;
 
                 }
+
+                if (qry != null)
+                {
+
+                    if (qry.ProcedureLevel_ID != null && qry.ProcedureLevel_ID != 0)
+                    {
+                        string script = "$('#hdnProcedureLevelID').val('" + qry.ProcedureLevel_ID.ToString() + "');";
+
+                        if (!string.IsNullOrEmpty(qry.ProcedureTemplateContent))
+                        {
+                            string content = qry.ProcedureTemplateContent.Replace("'", "\\'").Replace("\n", "\\n").Replace("\r", "\\r");
+                            script += "$('#hdnProcedureContent').val('" + content + "');";
+                        }
+
+                        ScriptManager.RegisterStartupScript(this, this.GetType(), "SetProcedureData", script, true);
+                    }
+                }
             }
             catch (Exception ex)
             {
