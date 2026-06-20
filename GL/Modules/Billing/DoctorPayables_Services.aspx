@@ -3,7 +3,7 @@
 
 
 <asp:Content ID="Content1" ContentPlaceHolderID="HeadContent" runat="server">
-        <link href="../../wwwroot/THEME_TIBBIT/CustomCSS/tablestyle.css" rel="stylesheet" />
+        <%--<link href="../../wwwroot/THEME_TIBBIT/CustomCSS/tablestyle.css" rel="stylesheet" />--%>
             <link href="../../wwwroot/THEME_TIBBIT/CustomCSS/Billing.css" rel="stylesheet" />
     <script src="https://cdn.datatables.net/buttons/2.4.2/js/buttons.colVis.min.js"></script>
     
@@ -28,6 +28,14 @@
         .table-striped > tbody > tr:nth-child(odd) > td 
         {
             background-color: #dfe9f1;
+        }
+
+        .widthdate {
+            width:20% !important;
+        }
+
+        .btnwidth {
+            width:20% !important;
         }
         </style>
     <script type="text/javascript">
@@ -434,56 +442,63 @@
 </asp:Content>
 <asp:Content ID="Content2" ContentPlaceHolderID="MainContent" runat="server">
 
-    <div class="row" style="margin-top:15px;">
-        <div class="col-md-3">
-            <input type="button" id="BtnSave" onclick="UpdateData();" value="Save & Print" class="btn-primry" />
+    <div class="row">
+        <div class="col-lg-3 col-md-8 col-sm-12" style="display: flex; align-items: center; gap: 0.5rem; flex-wrap: nowrap; white-space: nowrap;">
+            <label>From</label>
+            <input type="text" id="txt_datefrom" style="flex: 1; min-width: 0;" />
+            <label>To</label>
+            <input type="text" id="txt_dateto" style="flex: 1; min-width: 0;" />
         </div>
-        <div class="col-md-6">
-            <label style=" margin-left: 37px;margin-top: 19px;">From</label>            
-            <input type="text" id="txt_datefrom" style="width: 140px !important;" /> 
-            <label>To</label>         
-            <input type="text" id="txt_dateto" style="width: 140px !important;" />            
-            <input type="button" id="btnSearch" class="btn-primry" value="Search" style="width: 95px !important;" />
+        <div class="col-lg-1 col-md-2 col-sm-12">
+            <input type="button" id="btnSearch" class="btn-primry" value="Search" />
         </div>
-        <div class="col-md-3">
-            <input type="button" id="BtnPaid" onclick="TranferShares()" value="Paid" class="btn-primry"/>
+        <div class="col-lg-5 col-md-2 col-sm-12"></div>
+        <div class="col-lg-1 col-md-4 col-sm-12">
+            <input type="button" id="BtnPaid" onclick="TranferShares()" value="Paid" class="btn-primry" />
         </div>
-          <div class="col-md-2">
-              <label>Select Account</label>
-                <input type="checkbox" id="chckAccount"  onclick="togglePaymentMethod()" >
-              </div>
+        <div class="col-lg-1 col-md-2 col-sm-12">
+            <input type="button" id="BtnSave" onclick="UpdateData();" value="Save & Print" class="btn-primry" style="display: none" />
+        </div>
+    </div>
+    
+    <div class="row">
+        <div class="col-lg-2 col-md-6 col-sm-12" style="display: flex; align-items: center; gap: 0.5rem; white-space: nowrap;">
+            <label for="chckAccount" style="margin: 0; cursor: pointer;">Select Account</label>
+            <input type="checkbox" id="chckAccount" onclick="togglePaymentMethod()"  />
+        </div>     
           <div class="col-md-2">
               <select id="ddlpayment_method" disabled="disabled"  >
               </select>
-         </div>
+         </div>          
     </div>
 
-
+    
     <div class="row" style="margin-top:15px;">        
-        <div class="col-md-3">
+        <div class="col-lg-3 col-md-9 col-sm-12">
             <label id="Emp_name"></label>
         </div>
-           <div class="col-md-2" >
-            <select id ="ddlDepartment" onchange="testddlchange()" style="width: 60px !important;margin-top: 11px; margin-left: 9px;">
+        <div class="col-lg-2 col-md-6 col-sm-12"></div>
+           <div class="col-lg-1 col-md-6 col-sm-12" >
+            <select id ="ddlDepartment" onchange="testddlchange()">
                 <option>All</option>
                 <option>IPD</option>
                 <option>OPD</option>
             </select>
         </div>       
-        <div class="col-md-2">
-            <input id="DepSearch" type="text" placeholder="Sub Department" onkeyup="myFunction()" style="margin-top: 7px;width: 121px !important;margin-left: -93px;">
+        <div class="col-lg-2 col-md-6 col-sm-12">
+            <input id="DepSearch" type="text" placeholder="Sub Department" onkeyup="myFunction()"/>
         </div>
-        <div class="col-md-2">
-            <input id="myInput" type="text" placeholder="Table Search.." style="margin-top: 7px;width: 110px !important;">
+        <div class="col-lg-2 col-md-6 col-sm-12">
+            <input id="myInput" type="text" placeholder="Table Search.." />
         </div>
-        <div class="col-md-3">
+        <div class="col-lg-2 col-md-6 col-sm-12">
             <label class="sty" style="color: #438eb9; font-size: 28px;">Total:</label>&nbsp
         <label class="sty" style="background-color: yellow; font-size: 28px;" id="price" for="fname"></label>
         </div>
     </div>
 
-    <div class="row" style="margin-top: 20px;overflow:scroll; height:800px; width:115%; margin-left: -32px;">
-        <table class="table table-sm table-bordered table-hover table-striped" id="tbl" style="overflow: scroll; height: auto; position:relative;">
+    <div class="row" style="overflow:scroll;">
+        <table class="table" id="tbl" style="overflow: scroll; height: auto; position:relative;">
             <thead>
                 <tr >
                     <th>
