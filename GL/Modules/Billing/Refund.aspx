@@ -387,13 +387,12 @@
                 var Patient_ID = $("#hdPatientID").text();
                 var Bill_ID = $("#hdnBillID").val();
 
-                CheckBillTestApproved(Bill_ID, function (canSave) {
+              //  CheckBillTestApproved(Bill_ID, function (canSave) {
 
                     // Stop saving if approved test exists
-                    if (!canSave) {
-                        return;
-                    }
-
+                    // if (!canSave) {
+                    //     return;
+                    // }
                     var remarks = $("#txtRemarks").val();
                     var advanceDate = $("#txtAdvanceDate").val();
                     var saveVal = $('#btnSave').val();
@@ -461,7 +460,7 @@
                         alert(error.get_message());
                     });
 
-                });
+                //});
             }
         }
 
