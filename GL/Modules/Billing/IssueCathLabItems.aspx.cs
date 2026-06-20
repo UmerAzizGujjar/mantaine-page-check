@@ -1307,12 +1307,12 @@ namespace PMS.Modules.Billing
             return result;
         }
         [WebMethod]
-        public static string SaleReturnInvoiceDetail(int BillId)
+        public static string SaleReturnInvoiceDetail(int BillId,string wareHouse)
         {
             string result = string.Empty;
             using (DataBaseDataContext db = new DataBaseDataContext())
             {
-                var query = db.spSaleReturnInvoiceDetails(BillId).ToList();
+                var query = db.spSaleReturnInvoiceDetails(BillId,wareHouse).ToList();
                 result = (new JavaScriptSerializer()).Serialize(query).ToString();
             }
             return result;
