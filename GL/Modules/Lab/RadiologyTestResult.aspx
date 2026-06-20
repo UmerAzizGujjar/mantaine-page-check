@@ -6,7 +6,7 @@
     <style>
 
     </style>
-    <link href="../../wwwroot/THEME_TIBBIT/CustomCSS/LabReportPreview.css" rel="stylesheet" />
+    <link href="../../wwwroot/THEME_NHMC/CustomCSS/LabReportPreview.css" rel="stylesheet" />
     <script type="text/javascript">
         var isSingleTestMode = false;
         var GrowthTypeGlobal = '';
@@ -3081,10 +3081,10 @@ ${data.Addendum_Template ? `
                                 $("#btnReject").show();
                                 if (isAddendumMode) {
                                     $("#btnAddendum").show();
-                                    $("#btnReject").hide();
+                                  
                                 } else {
                                     $("#btnAddendum").hide();
-                                    $("#btnReject").show();
+                                  
                                 }
                             }
 
@@ -3337,10 +3337,10 @@ ${data.Addendum_Template ? `
                             $("#btnReject").show();
                             if (isAddendumMode) {
                                 $("#btnAddendum").show();
-                                $("#btnReject").hide();
+                                
                             } else {
                                 $("#btnAddendum").hide();
-                                $("#btnReject").show();
+                            
                             }
                         }
 
@@ -3961,10 +3961,10 @@ ${data.Addendum_Template ? `
                     isAddendumMode = (mode === "01");
 
                     if (isAddendumMode) {
-                        $('#btnReject').hide(); // Hide reject button in addendum mode
+                    
                         $('#btnAddendum').show(); // Show addendum button
                     } else {
-                        $('#btnReject').show(); // Show reject button in normal mode
+                  
                         $('#btnAddendum').hide(); // Hide addendum button
                     }
                 },
@@ -4095,7 +4095,7 @@ ${data.Addendum_Template ? `
                     var mode = response.d;
                     isAddendumMode = (mode === "01");
 
-                    $('#btnReject').hide();
+                
                     $('#btnAddendum').hide();
                 },
                 error: function (xhr, status, error) {
