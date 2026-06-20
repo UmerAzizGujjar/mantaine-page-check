@@ -6,7 +6,7 @@
     <style>
 
     </style>
-    <link href="../../wwwroot/THEME_NHMC/CustomCSS/LabReportPreview.css" rel="stylesheet" />
+    <link href="../../wwwroot/THEME_TIBBIT//CustomCSS/LabReportPreview.css" rel="stylesheet" />
     <script type="text/javascript">
         var isSingleTestMode = false;
         var GrowthTypeGlobal = '';
