@@ -17,6 +17,7 @@
            window.open(url, '_blank');
        }
 
+
        function CheckUserRights() {
            $.ajax({
                type: "POST",

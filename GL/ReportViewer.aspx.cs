@@ -114,7 +114,7 @@ namespace PMS
                     {
                         VoucherId = DBClass.getField("select Voucher_ID from Store_Issue where Store_Issue_Id = " + transID).ToString();
                     }
-                    else if (transType == "GRN")
+                    else if (transType == "SRN")
                     {
                         VoucherId = DBClass.getField("select Voucher_ID from Goods_Return_Notes where Store_Return_Id = " + transID).ToString();
                     }
@@ -3706,6 +3706,7 @@ namespace PMS
             }
             else if (reportName == "LabTestDetailCollection")
             {
+                var logoPath = DBClass.getField("SELECT dbo.GetCompanyLogo()");
                 string rptFileName = "GeneralPatientsReport/rptLabTestDetailCollection.rpt";
                 string CheckSummary = Request.QueryString["Summary"].ToString();
                 if (CheckSummary == "true")
@@ -3720,21 +3721,26 @@ namespace PMS
 
                 string endDate = Request.QueryString["eDate"].ToString();
                 string endTime = Request.QueryString["ETime"].ToString();
-                string TestName = Request.QueryString["testName"].ToString();       // test name
+                string TestName = Request.QueryString["testName"].ToString();       
+                string Department = Request.QueryString["Department"].ToString();       
+                string Operator = Request.QueryString["Operator"].ToString();       
                 string parameterStDate = string.Empty;
                 string parameterEndDate = string.Empty;
                 this.getDateTimeDBFormate(stDate, stTime, out parameterStDate);
                 this.getDateTimeDBFormate(endDate, endTime, out parameterEndDate);
                 string PatType = Request.QueryString["Patient_Type"].ToString();
-                rd.SetParameterValue("@TestName", TestName);
-                rd.SetParameterValue("@Department", Request.QueryString["Department"]);
+
 
                 rd.SetParameterValue("@stDate", parameterStDate);
                 rd.SetParameterValue("@endDate", parameterEndDate);
                 rd.SetParameterValue("@CompanyID", AppConfig.Company_ID);
                 rd.SetParameterValue("CompanyName", AppConfig.Company_Name);
                 rd.SetParameterValue("Title", "Lab Cash Collection");
-                rd.SetParameterValue("PatientType", PatType);
+                rd.SetParameterValue("@Department", Department);
+                rd.SetParameterValue("@TestName", TestName);
+                rd.SetParameterValue("@Patient_Type", PatType);
+                rd.SetParameterValue("@Operator", Operator);
+                rd.SetParameterValue("CompanyLogo", logoPath);
 
             }
             else if (reportName == "RadiologyReport")

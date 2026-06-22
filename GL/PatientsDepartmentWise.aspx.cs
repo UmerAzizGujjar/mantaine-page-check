@@ -2127,6 +2127,19 @@ namespace PMS
                     ddlPatientType.DataBind();
                     SetDepartent();
 
+                    optRw.Visible = true;
+                    ddlShift.Visible = false;
+                    lbShift.Visible =  false;
+                    object valusetss;
+                    DataBaseDataContext db = new DataBaseDataContext(DBClass.ConnectionString());
+                    valusetss = from d in db.aspnet_Users
+                               select new { d.UserName, d.UserId };
+                    ddloprators.DataSource = valusetss;
+                    ddloprators.DataTextField = "UserName";
+                    ddloprators.DataValueField = "UserId";
+                    ddloprators.Items.Add(new ListItem() { Text = "All", Value = "0" });
+                    ddloprators.DataBind();
+
                 }
                 //else if (this.PageTitle == "RadiologyReport")
                 //{
