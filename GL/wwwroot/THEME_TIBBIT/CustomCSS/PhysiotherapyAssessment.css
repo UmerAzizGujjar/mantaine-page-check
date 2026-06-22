@@ -1,0 +1,627 @@
+.bento-card {
+    background: #fff;
+    border: 1.5px solid #e4e4e4;
+    border-radius: 8px;
+    padding: 16px 18px;
+    margin-bottom: 16px;
+    transition: box-shadow 0.25s ease, border-color 0.25s ease, transform 0.25s ease;
+}
+
+.bento-card:hover {
+    border-color: #c0392b;
+    box-shadow: 0 4px 16px rgba(192, 57, 43, 0.1);
+    transform: translateY(-1px);
+}
+
+.bento-title {
+    font-size: 16px;
+    font-weight: 800;
+    color: #c0392b;
+    text-transform: uppercase;
+    letter-spacing: 0.8px;
+    margin-bottom: 14px;
+    padding-bottom: 8px;
+    border-bottom: 2.5px solid #c0392b;
+}
+
+.bento-card .form-group {
+    margin-bottom: 8px;
+}
+
+.bento-card .form-group label {
+    font-weight: 600;
+    color: #555;
+    font-size: 14px;
+    margin-bottom: 3px;
+}
+
+.bento-card .form-control {
+    height: 34px;
+    padding: 5px 10px;
+    font-size: 14px;
+    border-radius: 4px;
+}
+
+.bento-card textarea.form-control {
+    height: auto;
+    font-size: 14px;
+}
+
+.patient-header {
+    font-size: 16px;
+    font-weight: 700;
+    color: #333;
+    margin-bottom: 8px;
+}
+
+.patient-meta {
+    font-size: 14px;
+    color: #666;
+    line-height: 2;
+}
+
+.patient-meta .meta-item {
+    display: inline-block;
+    margin-right: 16px;
+}
+
+.patient-meta .meta-item .meta-label {
+    font-weight: 600;
+    color: #888;
+}
+
+.occ-inline {
+    width: 120px;
+    height: 28px;
+    font-size: 14px;
+    padding: 2px 7px;
+    border: 1px solid #ccc;
+    border-radius: 3px;
+    vertical-align: middle;
+    margin-left: 2px;
+}
+
+.occ-inline:focus {
+    border-color: #c0392b;
+    outline: none;
+}
+
+.readonly-text {
+    font-size: 14px;
+    color: #333;
+    font-weight: 600;
+    padding: 4px 0;
+    display: block;
+}
+
+.vitals-horizontal {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 6px;
+}
+
+.vitals-horizontal td {
+    padding: 5px 10px;
+    border: 1px solid #eee;
+    font-size: 13px;
+    vertical-align: middle;
+}
+
+.vitals-horizontal .v-label {
+    font-weight: 600;
+    color: #555;
+    width: 50px;
+}
+
+.vitals-horizontal .v-value {
+    color: #333;
+    font-weight: 600;
+    padding-right: 18px;
+    white-space: nowrap;
+}
+
+.other-input {
+    width: 140px;
+    height: 26px;
+    font-size: 13px;
+    padding: 2px 6px;
+    border: 1px solid #ccc;
+    border-radius: 3px;
+    display: inline-block;
+    margin-left: 3px;
+    vertical-align: middle;
+}
+
+.other-input:focus {
+    border-color: #c0392b;
+    outline: none;
+}
+
+/* Physical Examination grid */
+.attached-row {
+    margin-left: -3px;
+    margin-right: -3px;
+    margin-bottom: 2px;
+}
+
+.attached-row > [class*='col-'] {
+    padding-left: 3px;
+    padding-right: 3px;
+}
+
+.attached-row:last-child {
+    margin-bottom: 0;
+}
+
+.inner-bento {
+    border: 1.5px solid #eee;
+    border-radius: 6px;
+    padding: 5px 6px;
+    background: #fff;
+    height: 100%;
+    transition: box-shadow 0.25s ease, border-color 0.25s ease;
+}
+
+.inner-bento:hover {
+    border-color: #c0392b;
+    box-shadow: 0 2px 8px rgba(192, 57, 43, 0.08);
+}
+
+.inner-bento .chk-grid .chk-item {
+    padding: 1px 0;
+    font-size: 12.5px !important;
+}
+
+.inner-bento textarea.form-control {
+    min-height: 35px;
+    font-size: 11.5px;
+}
+
+.inner-bento .ib-subtitle {
+    font-size: 10.5px;
+    margin: 3px 0 1px;
+}
+
+.inner-bento .other-input {
+    width: 100px;
+    height: 20px;
+    font-size: 11px;
+    padding: 1px 4px;
+}
+
+.inner-bento .chk-inline {
+    font-size: 12px !important;
+}
+
+.inner-bento .ib-title {
+    font-size: 12.5px;
+    font-weight: 800;
+    color: #c0392b;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    margin-bottom: 3px;
+    padding-bottom: 2px;
+    border-bottom: 1.5px solid #c0392b;
+}
+
+.inner-bento .form-control {
+    height: 24px;
+    padding: 2px 5px;
+    font-size: 12px;
+    border-radius: 3px;
+}
+
+.inner-bento select.form-control {
+    height: 24px;
+    padding: 1px 3px;
+    font-size: 12px;
+}
+
+.pain-scale-compact {
+    display: flex;
+    gap: 1px;
+    flex-wrap: wrap;
+}
+
+.pain-circle {
+    width: 22px;
+    height: 22px;
+    border-radius: 50%;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    font-weight: 700;
+    font-size: 10px;
+    color: #fff;
+    border: 1.5px solid transparent;
+    transition: all 0.2s ease;
+    user-select: none;
+}
+
+.pain-circle:hover {
+    transform: scale(1.35);
+    z-index: 2;
+}
+
+.pain-circle.active {
+    border-color: rgba(255, 255, 255, 0.9);
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.25);
+    transform: scale(1.45);
+    z-index: 3;
+}
+
+.chk-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr;
+    gap: 0;
+}
+
+.chk-grid .chk-item {
+    margin: 0;
+    padding: 3px 0;
+    font-weight: 400 !important;
+    font-size: 13px !important;
+    color: #555 !important;
+    cursor: pointer;
+    white-space: nowrap;
+    display: flex;
+    align-items: center;
+}
+
+.chk-grid .chk-item input[type="checkbox"],
+.chk-grid .chk-item input[type="radio"] {
+    margin: 0 6px 0 0;
+    padding: 0;
+    flex-shrink: 0;
+    width: 16px;
+    height: 16px;
+}
+
+.chk-inline {
+    font-weight: 400 !important;
+    font-size: 13px !important;
+    color: #555 !important;
+    cursor: pointer;
+    white-space: nowrap;
+    display: inline-flex;
+    align-items: center;
+}
+
+.chk-inline input[type="checkbox"],
+.chk-inline input[type="radio"] {
+    margin: 0 6px 0 0;
+    vertical-align: middle;
+    width: 16px;
+    height: 16px;
+}
+
+.rom-grid {
+    width: 100%;
+    border-collapse: collapse;
+}
+
+.rom-grid th {
+    padding: 2px 4px;
+    font-size: 11.5px;
+    font-weight: 700;
+    color: #777;
+    text-align: center;
+    border-bottom: 1px solid #e0e0e0;
+    text-transform: uppercase;
+}
+
+.rom-grid td {
+    padding: 1px 3px;
+    font-size: 11.5px;
+    vertical-align: middle;
+    text-align: center;
+}
+
+.rom-grid td:first-child {
+    font-weight: 600;
+    color: #555;
+    text-align: left;
+}
+
+.rom-grid .form-control {
+    width: 42px;
+    height: 20px;
+    font-size: 10.5px;
+    padding: 1px 2px;
+    display: inline;
+    text-align: center;
+}
+
+.mmt-list {
+    width: 100%;
+}
+
+.mmt-list .mmt-row {
+    display: flex;
+    align-items: center;
+    margin-bottom: 3px;
+}
+
+.mmt-list .mmt-row:last-child {
+    margin-bottom: 0;
+}
+
+.mmt-list .mmt-row .mmt-name {
+    font-weight: 600;
+    font-size: 12.5px;
+    color: #555;
+    white-space: nowrap;
+    width: 72px;
+    flex-shrink: 0;
+}
+
+.mmt-list .mmt-row .mmt-input {
+    width: 40px;
+    height: 22px;
+    font-size: 11.5px;
+    padding: 1px 4px;
+    text-align: center;
+    border: 1px solid #ccc;
+    border-radius: 3px;
+    flex-shrink: 0;
+    margin-left: auto;
+}
+
+.mmt-list .mmt-row {
+    margin-bottom: 1px;
+}
+.mmt-list .mmt-row:last-child {
+    margin-bottom: 0;
+}
+
+.mmt-list .mmt-row .mmt-input:focus {
+    border-color: #c0392b;
+    outline: none;
+}
+
+.ib-subtitle {
+    font-size: 12.5px;
+    font-weight: 700;
+    color: #555;
+    text-transform: uppercase;
+    margin: 6px 0 3px;
+    padding: 0;
+}
+
+.af-grid {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 2px 6px;
+}
+
+.af-grid .chk-xs {
+    font-size: 10px !important;
+}
+
+@media print {
+    .bento-card {
+        border: 1px solid #ccc;
+        box-shadow: none;
+        break-inside: avoid;
+    }
+
+    .bento-card:hover, .inner-bento:hover {
+        border-color: #ccc;
+        box-shadow: none;
+        transform: none;
+    }
+
+    .bento-title, .inner-bento .ib-title {
+        color: #c0392b !important;
+    }
+
+    .pain-circle {
+        -webkit-print-color-adjust: exact;
+        print-color-adjust: exact;
+    }
+}
+
+ 
+
+/* Vitals table overflow fix */
+.agg-text {
+    width: 100%;
+    font-size: 11.5px;
+    padding: 2px 5px;
+    border: 1px solid #ccc;
+    border-radius: 3px;
+    resize: vertical;
+    min-height: 38px;
+}
+
+.agg-text:focus {
+    border-color: #c0392b;
+    outline: none;
+}
+
+.diag-table {
+    width: 100%;
+    border-collapse: collapse;
+}
+
+.diag-table th {
+    font-size: 13px;
+    font-weight: 700;
+    color: #777;
+    text-align: center;
+    text-transform: uppercase;
+    padding: 5px 4px;
+    border-bottom: 1.5px solid #e0e0e0;
+}
+
+.diag-table td {
+    padding: 4px;
+    text-align: center;
+    vertical-align: middle;
+}
+
+.diag-table select.form-control,
+.diag-table input.form-control {
+    width: 100%;
+    height: 28px;
+    font-size: 12px;
+    padding: 2px 4px;
+}
+
+.diag-table .tx-label {
+    font-size: 13px;
+    font-weight: 600;
+    color: #555;
+    white-space: nowrap;
+}
+
+.diag-table .tx-select {
+    vertical-align: middle;
+}
+
+.tx-row .form-control[disabled] {
+    background: #f5f5f5;
+    cursor: not-allowed;
+    opacity: 0.6;
+}
+
+/* Body Pain Chart */
+.body-chart-card {
+    background: #fff;
+    border: 1.5px solid #e4e4e4;
+    border-radius: 8px;
+    padding: 10px;
+    margin-bottom: 16px;
+    transition: box-shadow 0.25s ease, border-color 0.25s ease;
+}
+
+.body-chart-card:hover {
+    border-color: #c0392b;
+    box-shadow: 0 4px 16px rgba(192, 57, 43, 0.1);
+}
+
+.body-chart-card .bento-title {
+    font-size: 14px;
+    margin-bottom: 10px;
+    padding-bottom: 6px;
+}
+
+.body-legend {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 4px;
+    align-items: center;
+    margin-bottom: 8px;
+}
+
+.legend-color {
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+    padding: 3px 8px;
+    border-radius: 4px;
+    font-size: 11px;
+    font-weight: 600;
+    color: #fff;
+    cursor: pointer;
+    border: 2px solid transparent;
+    transition: all 0.2s ease;
+    user-select: none;
+}
+
+.legend-color:hover {
+    transform: scale(1.05);
+}
+
+.legend-color.active {
+    border-color: #333;
+    box-shadow: 0 0 6px rgba(0,0,0,0.3);
+}
+
+.legend-other-row {
+    margin: 4px 0 6px;
+}
+
+.legend-other-row .form-control {
+    height: 26px;
+    font-size: 11px;
+    padding: 2px 6px;
+}
+
+.body-chart-container {
+    display: flex;
+    gap: 6px;
+    justify-content: center;
+}
+
+.body-view {
+    flex: 1;
+    text-align: center;
+    max-width: 48%;
+}
+
+.body-label {
+    font-size: 10px;
+    font-weight: 700;
+    color: #888;
+    text-transform: uppercase;
+    display: block;
+    margin-bottom: 2px;
+}
+
+.body-image-wrap {
+    position: relative;
+    cursor: crosshair;
+    display: inline-block;
+    width: 100%;
+}
+
+.body-image-wrap svg {
+    display: block;
+    width: 100%;
+    height: auto;
+}
+
+.body-markers {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    pointer-events: none;
+    overflow: hidden;
+}
+
+.body-marker {
+    position: absolute;
+    border-radius: 50%;
+    z-index: 10;
+    pointer-events: none;
+    animation: markerBlink 1.2s ease-in-out infinite;
+    opacity: 0.85;
+}
+
+@keyframes markerBlink {
+    0%, 100% {
+        opacity: 0.85;
+        transform: scale(1);
+    }
+    50% {
+        opacity: 1;
+        transform: scale(1.4);
+    }
+}
+
+.body-save-row {
+    margin-top: 8px;
+    display: flex;
+    gap: 6px;
+    align-items: center;
+}
+
+.body-save-row .btn {
+    font-size: 12px;
+    padding: 4px 12px;
+}
+
