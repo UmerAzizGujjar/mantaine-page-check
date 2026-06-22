@@ -136,6 +136,8 @@
                  setTimeout(function () { LoadMaster(SI_ID); }, 1000);
                  setTimeout(function () { LoadDetail(SI_ID); }, 2500);
                  $("#btnSave").val('Update');
+                 $("#divSaveandClose").hide();
+
              }
            
             if (SI_ID == "") {
@@ -216,9 +218,11 @@
                         debugger;
                         GIRCloseCond = JSON.parse(response.d);
                         if (GIRCloseCond == '01') {
+                            $('#divSaveandClose').show();
                             $('#isCloseGIR').show();
                         }
                         else {
+                            $('#divSaveandClose').hide();                          
                              $('#isCloseGIR').hide();                          
                         }
                     },
@@ -228,7 +232,7 @@
                 });
             }
      
-             $('#btnSave').on('click', function () {
+       <%--      $('#btnSave').on('click', function () {
                  debugger;
                  var checkstock = false;
                  var status;
@@ -410,9 +414,266 @@
                          });
                      }
                  }
-             });
-         });
+             });--%>
+        });
+        function SaveGIN() {
+            var checkstock = false;
+            var status;
+            var btnSave = $('#btnSave').val();
+            var table = $('#tblStoreIssueBote');
+            var comapny_id = '0';
+            var department_id = $('#ddlDepartment').val();
+            var inventory_id = $('#ddlInventoryOrg').val();
+            var store_no = $('#txtStoreissueNo').val();
+            var MRNo = $('#ddlMRNo').val() || 0;
+            var StoreIssue_id = '0';
+            var SI_ID = '<%= Request.QueryString["SI_ID"]%>';
+            if (SI_ID != "") {
+                StoreIssue_id = SI_ID;
+            }
+            else {
+                StoreIssue_id = '0';
+            }
+            var Item_list = [];
+            table.find('tr:gt(0)').each(function (key, value) {
+                debugger
+                var StoreStock = $(value).find('td input[name=txtStoreStock]').val();
+                var IssueQty = $(value).find('td input[name=txtIssueQty]').val();
+                var MIRQty = $(value).find('td input[name=txtmirQty]').val();
+                var Batch = $(value).find('td input[name=txtBatch]').val();
+                var BatchNum = $(value).find('td select[name=ddlBatchNum]').val();
+                var lastIssueDate = $(value).find('td input[name=txtLastIsssueDate]').val();
 
+                if ((parseFloat(IssueQty) > parseFloat(StoreStock)) && btnSave == "Save") {
+                    Swal.fire({
+                        icon: 'error',
+                        title: 'Error!',
+                        text: 'Issue Qty Must Be Less Than Total Stock',
+                        showConfirmButton: false,
+                        timer: 2000,
+                        customClass: {
+                            popup: 'swal-big-popup',
+                            title: 'swal-big-title',
+                            htmlContainer: 'swal-big-text'
+                        }
+                    });
+
+
+
+                    checkstock = true;
+                    return false;
+                }
+                if (btnSave == "Update") {
+                    var txtSaveTimeStock = $(value).find('td input[name=txtSaveTimeStock]').val();
+                    if (parseFloat(IssueQty) > parseFloat(txtSaveTimeStock)) {
+                        Swal.fire({
+                            icon: 'error',
+                            title: 'Error!',
+                            text: 'Issue Qty Must Be Less Than Total Stock',
+                            showConfirmButton: false,
+                            timer: 2000,
+                            customClass: {
+                                popup: 'swal-big-popup',
+                                title: 'swal-big-title',
+                                htmlContainer: 'swal-big-text'
+                            }
+                        });
+
+
+
+                        return false;
+                    }
+                }
+                if (Batch == "true") {
+                    if (BatchNum == "0" || BatchNum == "") {
+                        status = "errorBatch";
+                    }
+                }
+                if ((StoreStock == "" || StoreStock == 0 || StoreStock < 0) && btnSave == "Save") {
+                    status = false;
+                }
+              
+                else if (((IssueQty == "" || IssueQty == 0 || IssueQty < 0) || (parseInt(MIRQty) != 0 && parseInt(MIRQty) < parseInt(IssueQty))) && btnSave == "Save" && isClose == false) {
+                    status = "error"; 
+                    
+                }
+                else {
+                    debugger
+                    if (btnSave == "Save") {
+                        Item_list.push({
+                            'mirDetailId': $(value).find('td:eq(0)').text(), 'mir_id': $(value).find('td:eq(1)').text(), 'ItemId': $(value).find('td input[name=txtItemId]').val(), 'Unit': $(value).find('td:eq(6)').text(), 'StoreStock': $(value).find('td input[name=txtStoreStock]').val(), 'Remarks': $(value).find('input[name=txtRemarks]').val(), 'BatchNum': BatchNum, 'Qty': $(value).find('input[name=txtmirQty]').val(), 'IssueQty': $(value).find('input[name=txtIssueQty]').val(), 'BalanceQty': $(value).find('input[name=txtBlncQty]').val(), 'lastIssueDate': $(value).find('input[name=txtLastIsssueDate]').val(), 'CGS': parseFloat($(value).find('input[name=txtIssueQty]').val() || 0) * parseFloat($(value).find('input[name=txtCGSRate]').val() || 0), 'Department': $(value).find('td:eq(3)').text()
+                        });
+                    }
+                    if (btnSave == "Update") {
+                        Item_list.push({
+                            'mirDetailId': $(value).find('td:eq(0)').text(), 'mir_id': $(value).find('td:eq(1)').text(), 'ItemId': $(value).find('td input[name=txtItemId]').val(), 'Unit': $(value).find('td:eq(6)').text(), 'StoreStock': $(value).find('td input[name=txtSaveTimeStock]').val(), 'Remarks': $(value).find('input[name=txtRemarks]').val(), 'BatchNum': BatchNum, 'Qty': $(value).find('input[name=txtmirQty]').val(), 'IssueQty': $(value).find('input[name=txtIssueQty]').val(), 'BalanceQty': $(value).find('input[name=txtBlncQty]').val(), 'lastIssueDate': $(value).find('input[name=txtLastIsssueDate]').val(), 'CGS': $(value).find('input[name=txtCGSAmount]').val(), 'Department': $(value).find('td:eq(3)').text()
+                        });
+                    }
+
+                }
+            });
+            if (status == false) {
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Error!',
+                    text: 'Stock store Must Be Greater than 0',
+                    showConfirmButton: false,
+                    timer: 2000,
+                    customClass: {
+                        popup: 'swal-big-popup',
+                        title: 'swal-big-title',
+                        htmlContainer: 'swal-big-text'
+                    }
+                });
+
+
+
+                return false;
+            }
+            else if (status == "error") {
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Error!',
+                    text: 'Issue Must Be Greater than 0 OR SIN Qty not greater than MIR Qty',
+                    showConfirmButton: false,
+                    timer: 2000,
+                    customClass: {
+                        popup: 'swal-big-popup',
+                        title: 'swal-big-title',
+                        htmlContainer: 'swal-big-text'
+                    }
+                });
+
+
+
+                return false;
+            }
+            else if (status == "errorBatch") {
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Error!',
+                    text: 'Please Enter Batch Number',
+                    showConfirmButton: false,
+                    timer: 2000,
+                    customClass: {
+                        popup: 'swal-big-popup',
+                        title: 'swal-big-title',
+                        htmlContainer: 'swal-big-text'
+                    }
+                });
+
+
+
+                return false;
+            }
+            else {
+                if (checkstock == true) {
+                    return false;
+                }
+                var AllItemDetail = { 'StoreIssue_id': StoreIssue_id, 'Store_Issue_No': store_no, 'MRNo': MRNo, 'comapny_id': comapny_id, 'department_id': department_id, 'inventory_id': inventory_id, 'ItemList': Item_list };
+                var department_id = $('#ddlDepartment').val();
+                var inventory_id = $('#ddlInventoryOrg').val();
+                var length = $("#tblStoreIssueBote tr:gt(0)").length;
+                if (department_id == '0') $('#ddlDepartment').addClass('ErrorAlert'); else $('#ddlDepartment').removeClass('ErrorAlert');
+                if (inventory_id == '0') $('#ddlInventoryOrg').addClass('ErrorAlert'); else $('#ddlInventoryOrg').removeClass('ErrorAlert');
+                if (length == "0") $('#tblStoreIssueBote').addClass('ErrorAlert'); else $('#tblStoreIssueBote').removeClass('ErrorAlert');
+                if (!$('#ddlDepartment').hasClass('ErrorAlert') && !$('#ddlInventoryOrg').hasClass('ErrorAlert') && !$('#ddlInventoryOrg').hasClass('ErrorAlert') && !$('#tblStoreIssueBote').hasClass('ErrorAlert')) {
+                    $(this).attr('disabled', true);
+                    PageMethods.Save(btnSave, JSON.stringify(AllItemDetail), function (res) {
+                        sendFile(res);
+                        Swal.fire({
+                            icon: 'success',
+                            title: 'Success!',
+                            text: 'Data Save Successfully.',
+                            showConfirmButton: false,
+                            timer: 2500,
+                            customClass: {
+                                popup: 'swal-big-popup',
+                                title: 'swal-big-title',
+                                htmlContainer: 'swal-big-text'
+                            }
+                        });
+                        $('#btnSave').val("Update");
+                        window.location = "GoodsIssuanceNote.aspx?SI_ID=" + res;
+                        $('#btnSave').val("Update");
+                    });
+                }
+            }
+        }
+
+        function closeGIR() {
+            var GIR = $('#ddlMIR').val();
+            if (!GIR || GIR === "0") {
+                Swal.fire({
+                    icon: 'warning',
+                    title: 'Warning!',
+                    text: 'Please select a GIR first.',
+                    showConfirmButton: true,
+                    timer: 2000
+                });
+                return false;
+            }
+            var remarks = '';
+            $.ajax({
+                type: "POST",
+                url: "GoodsIssuanceNote.aspx/CloseGIR",
+                data: JSON.stringify({ 'GIR': GIR, 'remarks': remarks }),
+                contentType: "application/json; charset=utf-8",
+                dataType: "json",
+                success: function (response) {
+                    if (response.d == "success") {
+                        $('#remarksModal').modal('hide');
+                        Swal.fire({
+                            icon: 'success',
+                            title: 'Success!',
+                            text: 'GIR Closed Successfully.',
+                            showConfirmButton: false,
+                            timer: 2000,
+                            customClass: {
+                                popup: 'swal-big-popup',
+                                title: 'swal-big-title',
+                                htmlContainer: 'swal-big-text'
+                            }
+                        });
+                    } else {
+                        $('#remarksModal').modal('hide');
+                        Swal.fire({
+                            icon: 'error',
+                            title: 'Error!',
+                            text: 'There is some issue closing this GIR.',
+                            showConfirmButton: false,
+                            timer: 2000,
+                            customClass: {
+                                popup: 'swal-big-popup',
+                                title: 'swal-big-title',
+                                htmlContainer: 'swal-big-text'
+                            }
+                        });
+                    }
+                },
+
+                error: function (xhr, status, error) {
+                    console.error("Error closing GIR:", error);
+                    console.error("Response:", xhr.responseText);
+                    $('#remarksModal').modal('hide');
+                    Swal.fire({
+                        icon: 'error',
+                        title: 'Error!',
+                        text: 'Server Error: ' + (xhr.responseText || 'Please try again later.'),
+                        showConfirmButton: true
+                    });
+                },
+            });
+        }
+        var isClose = false;
+        function SaveAndClose() {
+
+            isClose = true;
+            closeGIR();
+            SaveGIN();
+
+            
+        }
         function UserRights() {
             debugger;
             $.ajax({
@@ -1217,8 +1478,12 @@
     <div class="row">
          <div class="col-lg-8">
             <div class="row">
+                <div class="col-lg-2 col-md-4 col-sm-6" id="divSaveandClose">
+            <input type="button" class="btn btn-primry" id="btnSaveClose" value="Save & Close" onclick="SaveAndClose();" />
+            &nbsp;
+        </div>
                 <div class="col-lg-2 col-md-4 col-sm-6">
-            <input type="button" class="btn btn-primry" id="btnSave" value="Save"  />
+            <input type="button" class="btn btn-primry" id="btnSave" value="Save" onclick="SaveGIN();" />
             &nbsp;
         </div>
         <div class="col-lg-2 col-md-4 col-sm-6">

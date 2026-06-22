@@ -6,23 +6,17 @@
 
 </asp:Content>
 <asp:Content ID="Content2" ContentPlaceHolderID="MainContent" runat="server">
-
-
     <script type="text/javascript">          
         $(document).ready(function () {
             $("#txtAdvanceDate").datepicker({ dateFormat: 'mm/dd/yy' });
             $("#txtAdvanceDate").val($.datepicker.formatDate('mm/dd/yy', new Date()));
             debugger;
             LoadTokenInputsDefaultMRNo();
-
             var advID = '<% =Request.QueryString["advID"] %>';
             if (advID != "") {
                 LoadPatientDetails(advID);
-
             }
-
         });
-
         function PrintRefund() {
             debugger;
             var refundID = '<% =Request.QueryString["advID"] %>';
@@ -78,16 +72,10 @@
                 $('#txtRemarks').val(ReplaceNullWith_Space(parseData.Remarks));
                 $('#lblOutputShow').text(ReplaceNullWith_Space(Balance));
                 var date = $.datepicker.formatDate('mm-dd-yy', new Date(parseInt(parseData.Advance_Date.substring(6, 19))));
-
                 $('#txtAdvanceAmount').val(ReplaceNullWith_Space(parseData.Advance_Amount));
-
                 $('#txtAdvanceDate').val(ReplaceNullWith_Space(date));
                 var tokendata = httpGet("json.aspx?Table=PatientsFetchByID&q=" + parseData.Patient_ID);
-
                 $('#txtMRNo').tokenInput("add", { id: JSON.parse(tokendata)[0].id, name: JSON.parse(tokendata)[0].name });
-
-
-
             }
         }
         function LoadShareDetails(advID) {
@@ -97,12 +85,9 @@
                 var rows = '';
                 var rowIndex = parseInt((parseInt($('#tblDetails tbody tr').length)));
                 var Description = '';
-
                 $.each(data, function (key, value) {
                     debugger;
                     rows = '<tr></td> ' + value.Item_Name + '</td><td>' + value.Item_Name + '</td><td>' + value.Doctor_Share + '</td><td>' + value.Net_Amount + '  </td><td>' + value.Doctor_Refund + '  </td><td>' + value.Hospital_Refund + '  </td></tr>'
-
-
                     $('#tblDetails tbody').append(rows);
                     rowIndex++;
                 });
@@ -122,8 +107,6 @@
                 $.each(data, function (key, value) {
                     debugger;
                     rows = '<tr></td> ' + value.Emp_Name + '</td><td>' + value.Emp_Name + '</td><td>' + value.Share_type + '</td><td>' + value.Amount + '  </td><td>' + value.Refund_Amount + '  </td></tr>'
-
-
                     $('#Doctor_Share_Table tbody').append(rows);
                     rowIndex++;
                 });
@@ -197,7 +180,6 @@
                         $('#lblPatientCategory').text(parse[0].Patient_Type);
                         totalAmount = parse[0].Total_Amount;
                         receivedAmount = parse[0].Received_Amount;
-
                         $('#txtToT_amount').val(totalAmount);
                         $('#txt_RcvdAmount').val(receivedAmount);
 
