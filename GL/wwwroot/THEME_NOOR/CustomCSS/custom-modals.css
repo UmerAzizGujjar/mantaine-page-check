@@ -1,0 +1,201 @@
+/* ── Modals — shared PR modal design ─────────────────────────── */
+.custom-modal-dialog {
+    max-width: 720px;
+    margin: 40px auto;
+}
+
+.custom-modal-dialog-xl {
+    max-width: 960px;
+}
+
+.custom-modal-content {
+    border: none;
+    border-radius: 10px;
+    overflow: hidden;
+    box-shadow: 0 8px 32px rgba(0,0,0,0.18);
+}
+
+.custom-modal-header {
+    background: linear-gradient(135deg, #438eb9 0%, #39799d 100%);
+    padding: 12px 18px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    border-bottom: none;
+}
+
+.custom-modal-title-wrap {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.custom-modal-icon {
+    width: 32px;
+    height: 32px;
+    background: rgba(255,255,255,0.25);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: #fff;
+    font-size: 15px;
+    flex-shrink: 0;
+}
+
+.custom-modal-title {
+    color: #fff !important;
+    font-size: 15px !important;
+    font-weight: 700;
+    margin: 0;
+}
+
+.custom-modal-close {
+    background: rgba(255,255,255,0.20);
+    border: none;
+    border-radius: 50%;
+    width: 30px;
+    height: 30px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: #fff;
+    font-size: 14px;
+    cursor: pointer;
+    transition: background 0.15s;
+    padding: 0;
+}
+.custom-modal-close:hover { background: rgba(255,255,255,0.40); }
+
+.custom-modal-body {
+    padding: 16px 18px 10px;
+    background: #fff;
+}
+
+/* Search bar inside modal */
+.custom-modal-search-wrap {
+    position: relative;
+    margin-bottom: 12px;
+}
+
+.custom-modal-search-icon {
+    position: absolute;
+    left: 10px;
+    top: 50%;
+    transform: translateY(-50%);
+    color: #aaa;
+    font-size: 13px;
+}
+
+.custom-modal-search {
+    width: 100%;
+    padding: 7px 12px 7px 32px !important;
+    border: 1px solid #ddd !important;
+    border-radius: 20px !important;
+    font-size: 13px !important;
+    background: #f8f9fa !important;
+    box-shadow: none !important;
+    font-weight: normal !important;
+    color: #333 !important;
+    transition: border-color 0.15s;
+}
+.custom-modal-search:focus {
+    border-color: #438eb9 !important;
+    background: #fff !important;
+    outline: none;
+}
+
+/* Table inside modal */
+.custom-modal-table-wrap {
+    max-height: 340px;
+    overflow-y: auto;
+    border: 1px solid #eee;
+    border-radius: 6px;
+}
+
+.custom-modal-table {
+    margin-bottom: 0;
+    font-size: 12px;
+    width: 100%;
+}
+
+.custom-modal-table thead th {
+    background: #f4f6f9;
+    font-weight: 700;
+    font-size: 11px;
+    text-transform: uppercase;
+    letter-spacing: 0.03em;
+    padding: 8px 10px;
+    border-bottom: 2px solid #e0e0e0;
+    position: sticky;
+    top: 0;
+    z-index: 1;
+    white-space: nowrap;
+}
+
+.custom-modal-table tbody tr {
+    transition: background 0.1s;
+}
+.custom-modal-table tbody tr:hover {
+    background: #fdf2e2 !important;
+}
+
+.custom-modal-table tbody td {
+    padding: 7px 10px;
+    vertical-align: middle;
+    border-color: #f0f0f0;
+    font-size: 12px;
+}
+
+/* Add / pick button inside modals */
+.btn-item-pick {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 26px;
+    height: 26px;
+    background: #438eb9;
+    color: #fff;
+    border: none;
+    border-radius: 50%;
+    font-size: 12px;
+    cursor: pointer;
+    transition: background 0.15s, transform 0.1s;
+    padding: 0;
+}
+.btn-item-pick:hover {
+    background: #39799d;
+    transform: scale(1.12);
+}
+
+/* Modal footer */
+.custom-modal-footer {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 10px 18px;
+    background: #f8f9fa;
+    border-top: 1px solid #eee;
+}
+
+.custom-modal-count {
+    font-size: 12px;
+    color: #888;
+    font-style: italic;
+}
+
+.custom-modal-btn-close {
+    display: inline-flex;
+    align-items: center;
+    gap: 5px;
+    background: #6c757d;
+    color: #fff;
+    border: none;
+    border-radius: 20px;
+    padding: 5px 16px;
+    font-size: 12px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: background 0.15s;
+}
+.custom-modal-btn-close:hover { background: #545b62; color: #fff; }

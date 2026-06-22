@@ -1,6 +1,8 @@
 ﻿<%@ Page Title="" Language="C#" MasterPageFile="~/Site.Master" AutoEventWireup="true" CodeBehind="PurchaseOrder.aspx.cs" Inherits="PMS.AP.PurchaseOrder" %>
 
 <asp:Content ID="Content1" ContentPlaceHolderID="HeadContent" runat="server">
+    <link href="../../wwwroot/THEME_TIBBIT/CustomCSS/PO.css" rel="stylesheet" />
+    <link href="../../wwwroot/THEME_TIBBIT/CustomCSS/custom-modals.css" rel="stylesheet" />
     <style type="text/css">
         .form-check-input {
             margin-left: -20px !important;
@@ -102,6 +104,54 @@
     <script type="text/javascript">
         var poid = '<% =Request.QueryString["PO_ID"] %>';
 
+        /* ── PageMethod → AJAX helper ─────────────────────────── */
+        function callPageMethod(methodName, params, successCallback, errorCallback) {
+            if (typeof params === 'function') {
+                errorCallback = successCallback;
+                successCallback = params;
+                params = {};
+            }
+            $.ajax({
+                type: "POST",
+                url: "PurchaseOrder.aspx/" + methodName,
+                data: JSON.stringify(params || {}),
+                contentType: "application/json; charset=utf-8",
+                dataType: "json",
+                success: function (response) {
+                    if (typeof successCallback === 'function') successCallback(response.d);
+                },
+                error: function (xhr, status, error) {
+                    console.error('Error calling ' + methodName + ':', xhr.status, error);
+                    if (typeof errorCallback === 'function') errorCallback(error);
+                }
+            });
+        }
+
+        /* ─── Meta-bar sync helper ─── */
+        function syncMetaBar() {
+            var poNum = $('#ctl00_MainContent_txtPurchase_No').val() || '\u2014';
+            var poDate = $('#ctl00_MainContent_txtPurchase_Date').val() || '\u2014';
+            var status = $('#ctl00_MainContent_txtStatus').val() || 'Draft';
+            $('#poMetaDisplay').html(
+                'PO\u00a0#\u00a0<strong>' + poNum + '</strong>' +
+                '\u00a0\u00a0|\u00a0\u00a0Date:\u00a0<strong>' + poDate + '</strong>' +
+                '\u00a0\u00a0|\u00a0\u00a0Status:\u00a0<strong>' + status + '</strong>'
+            );
+        }
+
+        /* ─── Source-type toggle (Item | PR) ─── */
+        function initSourceToggle() {
+            $('input[name="poSourceType"]').on('change', function () {
+                if ($(this).val() === 'item') {
+                    $('#itemInputSection').show();
+                    $('#prInputSection').hide();
+                } else {
+                    $('#itemInputSection').hide();
+                    $('#prInputSection').show();
+                }
+            });
+        }
+
         // Function to append a single vendor item
         function appendVendorItem(item) {
             var length = $("#tblItemDescription tr:gt(0)").length + 1;
@@ -135,7 +185,7 @@
             }
 
             // Populate Sales Tax dropdown
-            PageMethods.getwtaxtype(function (response) {
+            callPageMethod('getwtaxtype', function (response) {
                 var options = '<option value="0">0</option>';
                 try {
                     var taxData = JSON.parse(response);
@@ -155,7 +205,7 @@
             });
 
             // Populate Advance Tax dropdown
-            PageMethods.getAdvanceTaxType(function (response) {
+            callPageMethod('getAdvanceTaxType', function (response) {
                 var options = '<option value="0">0</option>';
                 try {
                     var taxData = JSON.parse(response);
@@ -177,7 +227,7 @@
         function FillStaxtype() {
             debugger;
             var options = '<option value="0">0</option>';
-            PageMethods.getwtaxtype(function (Tests) {
+            callPageMethod('getwtaxtype', function (Tests) {
                 debugger
                 $.each(JSON.parse(Tests), function (key, value) {
                     debugger;
@@ -190,7 +240,7 @@
         function FillAdvancetaxtype() {
             debugger;
             var options = '<option value="0">0</option>';
-            PageMethods.getAdvanceTaxType(function (Tests) {
+            callPageMethod('getAdvanceTaxType', function (Tests) {
                 debugger
                 $.each(JSON.parse(Tests), function (key, value) {
                     debugger;
@@ -201,7 +251,7 @@
         }
         function FillFurtherTaxType() {
             var options = '<option value="0">0</option>';
-            PageMethods.getFurtherTaxType(function (res) {
+            callPageMethod('getFurtherTaxType', function (res) {
                 $.each(JSON.parse(res), function (key, value) {
                     options += '<option value="' + value.Further_Tax_ID + '">' + value.Further_Tax_Perc + '</option>';
                 });
@@ -317,7 +367,7 @@
         }
         function GetDetail(PO_No) {
             debugger;
-            PageMethods.GetPODetail(PO_No, function (res) {
+            callPageMethod('GetPODetail', { PO_No: PO_No }, function (res) {
                 var Test = JSON.parse(res);
 
                 var rows = '';
@@ -438,7 +488,7 @@
                 }
         
                 // Populate Sales Tax dropdown
-                PageMethods.getwtaxtype(function (response) {
+                callPageMethod('getwtaxtype', function (response) {
                     var options = '<option value="0">0</option>';
                     try {
                         var taxData = JSON.parse(response);
@@ -458,7 +508,7 @@
                 });
         
                 // Populate Advance Tax dropdown
-                PageMethods.getAdvanceTaxType(function (response) {
+                callPageMethod('getAdvanceTaxType', function (response) {
                     var options = '<option value="0">0</option>';
                     try {
                         var taxData = JSON.parse(response);
@@ -506,7 +556,7 @@
                 '<td style="text-align:right ;width:50px !important;font-size:9px;height:20px;padding-top: 7px!important;"><input type="text" style="width:50px !important;text-align:right;font-size:9px;height:20px;" value="0" readonly="readonly" id="txtTotalAmount' + length + '" name="txtTotalAmount"></input></td>' +
                 '<td><input type="text" name="txtddate" id="txtddate' + length + '" class="row-date-picker" style="width:64px !important;text-align:center;font-size:9px;height:20px;" /></td>' +
                 '<td style="text-align:center; font-weight:bold; color:#555;">' + total_stock + '</td>' +
-                '<td style="padding-top: 7px!important;"><a href="javascript:void(0)" onclick="ExcludeFromPayment(this)"><i class="glyphicon glyphicon-trash" style="font-size: 13px;margin-left: 16px; color: #f30a0a;position:relative;left: -10px;"></i></a>  </td>' +
+                '<td style="padding-top: 7px!important;"><a href="javascript:void(0)" onclick="ExcludeFromPayment(this)"><i class="fa fa-trash" style="font-size: 13px;margin-left: 16px; color: #f30a0a;position:relative;left: -10px;"></i></a>  </td>' +
                 '</tr>';
         }
         var dropdownsPopulated = false;
@@ -515,7 +565,7 @@
       {
             var $ddl = $('#ddlSTAX' + rowId);
             // Don't check if already populated - always populate to ensure data is loaded
-            PageMethods.getwtaxtype(function (response) {
+            callPageMethod('getwtaxtype', function (response) {
                 var options = '<option value="0">0</option>';
                 $.each(JSON.parse(response), function (key, value) {
                     options += '<option value="' + value.Sales_Tax_ID + '">' + value.Sales_Tax_Perc + '</option>';
@@ -528,7 +578,7 @@
             {
                 var $ddl = $('#ddlAdvanceTax' + rowId);
                 // Don't check if already populated - always populate to ensure data is loaded
-                PageMethods.getAdvanceTaxType(function (response) {
+                callPageMethod('getAdvanceTaxType', function (response) {
                     var options = '<option value="0">0</option>';
                     $.each(JSON.parse(response), function (key, value) {
                         options += '<option value="' + value.Advance_Tax_ID + '">' + value.Advance_Tax_Perc + '</option>';
@@ -540,7 +590,7 @@
                 });
             }
         function populateFurtherTaxddl(rowId) {
-            PageMethods.getFurtherTaxType(function (response) {
+            callPageMethod('getFurtherTaxType', function (response) {
                 var options = '<option value="0">0</option>';
                 $.each(JSON.parse(response), function (key, value) {
                     options += '<option value="' + value.Further_Tax_ID + '">' + value.Further_Tax_Perc + '</option>';
@@ -557,7 +607,7 @@
         }
         function LoadPrNoDetail(pr_id) {
             debugger;
-            PageMethods.getPurchaseByID(pr_id, function (data) {
+            callPageMethod('getPurchaseByID', { PRID: pr_id }, function (data) {
                 var Test = JSON.parse(data);
                 $('#tblPOItemstModelTable tbody tr').remove();
                 var rows = "";
@@ -583,7 +633,7 @@
         }
         var optionsList = '';
         function loaddata() {
-            PageMethods.getDDLlist(function (Tests) {
+            callPageMethod('getDDLlist', function (Tests) {
                 $.each(JSON.parse(Tests), function (key, value) {
                     debugger;
                     if (value.Type == "Sal") {
@@ -796,9 +846,15 @@
             // Set default dates
             var currentDate = new Date();
             var formattedDate = $.datepicker.formatDate('dd M yy', currentDate);
+            var dueDate = new Date(currentDate);
+            dueDate.setDate(dueDate.getDate() + 7);
+            var formattedDueDate = $.datepicker.formatDate('dd M yy', dueDate);
             $("#ctl00_MainContent_txtPurchase_Date").val(formattedDate).datepicker({ dateFormat: 'dd M yy', readOnly: true });
             $("#ctl00_MainContent_txtProjection_Date").val('').datepicker({ dateFormat: 'dd M yy', readOnly: true });
-            $("#ctl00_MainContent_txtdueDate").val(formattedDate).datepicker({ dateFormat: 'dd M yy', readOnly: true });
+            $("#ctl00_MainContent_txtdueDate").val(formattedDueDate).datepicker({ dateFormat: 'dd M yy' });
+
+            syncMetaBar();
+            initSourceToggle();
 
         // Load PO data ONLY if PO_ID exists in query string
     <% if (Request.QueryString["PO_ID"] != null) { %>
@@ -956,8 +1012,11 @@
             // Set default dates
             var currentDate = new Date();
             var formattedDate = $.datepicker.formatDate('dd M yy', currentDate);
+            var dueDate = new Date(currentDate);
+            dueDate.setDate(dueDate.getDate() + 7);
+            var formattedDueDate = $.datepicker.formatDate('dd M yy', dueDate);
             $("#ctl00_MainContent_txtPurchase_Date").val(formattedDate).datepicker({ dateFormat: 'dd M yy', readOnly: true });
-            $("#ctl00_MainContent_txtdueDate").val(formattedDate).datepicker({ dateFormat: 'dd M yy', readOnly: true });
+            $("#ctl00_MainContent_txtdueDate").val(formattedDueDate).datepicker({ dateFormat: 'dd M yy' });
 
         // ✅ Load PO data ONLY if PO_ID exists in query string
     <% if (Request.QueryString["PO_ID"] != null) { %>
@@ -1211,7 +1270,7 @@
     });
 }
         function GetNewPurchaseNo() {
-            PageMethods.GetNewPurchaseNo(function (resp) {
+            callPageMethod('GetNewPurchaseNo', function (resp) {
                 $('#ctl00_MainContent_txtPurchase_No').val(resp);
             },
                 function (error) {
@@ -1219,7 +1278,7 @@
                 });
         }
         function LoadPurchaseOrderData(PO_ID) {
-            PageMethods.LoadPOHeaderDetail(PO_ID, function (resp) {
+            callPageMethod('LoadPOHeaderDetail', { PO_ID: PO_ID }, function (resp) {
                 var data = JSON.parse(resp);
                 debugger;
                 var datetime = $.datepicker.formatDate('dd M yy', new Date(parseInt(data.PO_Date.substring(6, 19))));
@@ -1264,6 +1323,7 @@
                 $('#chkManual').prop('checked', data.IsManual === true);
                 $('#chkByDefault').prop('checked', data.IsByDefault === true);
                 LoadPOItemDetail(PO_ID);
+                syncMetaBar();
                 $('#txtAdv_amou').val(data.Total_Adv_Amt);
                 $('#txtFurther_amou').val(data.Total_Further_Amt);
                 $('#ddlWarehouse').html(
@@ -1288,7 +1348,7 @@
         function LoadPOItemDetail_Chunked(PO_ID, chunkSize = 50) {
             console.time('LoadPOItemDetail_Chunked');
             
-            PageMethods.getDDLlist(function (Tests) {
+            callPageMethod('getDDLlist', function (Tests) {
                 var testsData = (typeof Tests === "string") ? JSON.parse(Tests) : Tests;
                 var optionsSal = '', optionFed = '';
                 if (testsData && testsData.forEach) {
@@ -1299,7 +1359,7 @@
                     });
                 }
         
-                PageMethods.LoadPOItemDetail(PO_ID, function (resp) {
+                callPageMethod('LoadPOItemDetail', { PO_ID: PO_ID }, function (resp) {
                     var data = (typeof resp === "string") ? JSON.parse(resp) : resp;
                     if (!data || !data.forEach || data.length === 0) {
                         console.timeEnd('LoadPOItemDetail_Chunked');
@@ -1366,7 +1426,7 @@
         //function LoadPOItemDetail(PO_ID) {
         //    var optionsSal = '';
         //    var optionFed = '';
-        //    PageMethods.getDDLlist(function (Tests) {
+        //    callPageMethod('getDDLlist', function (Tests) {
         //        debugger
         //        $.each(JSON.parse(Tests), function (key, value) {
         //            debugger;
@@ -1378,7 +1438,7 @@
         //            }
         //        });
         //    });
-        //    PageMethods.LoadPOItemDetail(PO_ID, function (resp) {
+        //    callPageMethod('LoadPOItemDetail', { PO_ID: PO_ID }, function (resp) {
         //        debugger;
         //        var data = (JSON.parse(resp));
         //        selectedOptions = data;
@@ -1434,7 +1494,7 @@
         //                '<td><input type="text" readonly style="width:50px!important;text-align:right;font-size:9px;height:20px;" value="' + (value.Bonus_Tax != null ? parseFloat(value.Bonus_Tax).toFixed(2) : '0') + '" id="txtBonusAmount' + (key + 1) + '" name="txtBonusAmount" /></td>' +
         //                '<td style="text-align:right ;width:50px !important;font-size:9px;height:20px;padding-top: 7px!important;"><input type="text" style="width:50px !important;text-align:right;font-size:9px;height:20px;" value="' + value.Amount + '" readonly="readonly"  id="txtTotalAmount' + (key + 1) + '" name="txtTotalAmount"></input></td>' +
         //                '<td><input type="text" name="txtddate" id="txtddate' + (key + 1) + '" value="' + TrnsDate + '" style="text-align:right ;width:64px !important;font-size:9px;height:20px;" /></td>' +
-        //                '<td style="padding-top: 7px!important;"><a href="javascript:void(0)" onclick="ExcludeFromPayment(this)"><i class="glyphicon glyphicon-trash" style="font-size: 13px;margin-left: 16px; color: #f30a0a;position:relative;left: -10px;" i=""></i></a> </td></tr>';
+        //                '<td style="padding-top: 7px!important;"><a href="javascript:void(0)" onclick="ExcludeFromPayment(this)"><i class="fa fa-trash" style="font-size: 13px;margin-left: 16px; color: #f30a0a;position:relative;left: -10px;" i=""></i></a> </td></tr>';
         //            $('#tblItemDescription tbody').append(row);
 
         //        });
@@ -1541,7 +1601,7 @@ function scheduleCalcTotal(delay) {
             // Show loader with progress bar
             showLoader('Loading Purchase Order Items...', true);
 
-            PageMethods.LoadPOItemDetail(PO_ID,
+            callPageMethod('LoadPOItemDetail', { PO_ID: PO_ID },
                 function (resp) {
                     var data = (typeof resp === "string") ? JSON.parse(resp) : resp;
                     if (!data || !Array.isArray(data) || data.length === 0) {
@@ -1596,7 +1656,7 @@ function scheduleCalcTotal(delay) {
                             '<td style="text-align:right ;width:50px !important;font-size:9px;height:20px;padding-top: 7px!important;"><input type="text" style="width:50px !important;text-align:right;font-size:9px;height:20px;" value="' + safeVal(value.Amount, 0) + '" readonly="readonly" id="txtTotalAmount' + idx + '" name="txtTotalAmount"><\/input><\/td>' +
                             '<td><input type="text" name="txtddate" id="txtddate' + idx + '" value="' + TrnsDate + '" style="text-align:right ;width:64px !important;font-size:9px;height:20px;" /><\/td>' +
                             '<td style="text-align:center; font-weight:bold; color:#555;">' + (value.TotalStock != null ? value.TotalStock : '0') + '</td>' +
-                            '<td style="padding-top: 7px!important;"><a href="javascript:void(0)" onclick="ExcludeFromPayment(this)"><i class="glyphicon glyphicon-trash" style="font-size: 13px;margin-left: 16px; color: #f30a0a;position:relative;left: -10px;"><\/i><\/a>  <\/td>' +
+                            '<td style="padding-top: 7px!important;"><a href="javascript:void(0)" onclick="ExcludeFromPayment(this)"><i class="fa fa-trash" style="font-size: 13px;margin-left: 16px; color: #f30a0a;position:relative;left: -10px;"><\/i><\/a>  <\/td>' +
                             '<\/tr>';
                         rowsHTML.push(row);
                     });
@@ -1697,7 +1757,7 @@ function scheduleCalcTotal(delay) {
 
        
         function populateTaxddlWithProgress(rowId, onComplete) {
-            PageMethods.getwtaxtype(function (response) {
+            callPageMethod('getwtaxtype', function (response) {
                 var options = '<option value="0">0</option>';
                 try {
                     var taxData = JSON.parse(response);
@@ -1720,7 +1780,7 @@ function scheduleCalcTotal(delay) {
         }
 
         function populateAdvanceTaxddlWithProgress(rowId, onComplete) {
-            PageMethods.getAdvanceTaxType(function (response) {
+            callPageMethod('getAdvanceTaxType', function (response) {
                 var options = '<option value="0">0</option>';
                 try {
                     var taxData = JSON.parse(response);
@@ -1772,7 +1832,7 @@ function scheduleCalcTotal(delay) {
             if (typeof Warehouse == "undefined" || Warehouse == "") {
                 VendorId = item;
             }
-            PageMethods.GetPRNoByWarehouse(Warehouse, function (res) {
+            callPageMethod('GetPRNoByWarehouse', { Warehouse: Warehouse }, function (res) {
                 var item = JSON.parse(res);
                 optionsPR = '<option value="0">Please Select</option>';
                 $.each(item, function (key, value) {
@@ -1787,7 +1847,7 @@ function scheduleCalcTotal(delay) {
             var optionsPR = '';
             var Warehouse;
 
-            PageMethods.GetPRNoBy( function (res) {
+            callPageMethod('GetPRNoBy', function (res) {
                 var item = JSON.parse(res);
                 optionsPR = '<option value="0">Please Select</option>';
                 $.each(item, function (key, value) {
@@ -1897,7 +1957,7 @@ function scheduleCalcTotal(delay) {
             debugger;
             var PRId = $('#ctl00_MainContent_ddlPrNo').val();
             var optionFed = '';
-            PageMethods.getDDLlist(function (Tests) {
+            callPageMethod('getDDLlist', function (Tests) {
                 debugger
                 $.each(JSON.parse(Tests), function (key, value) {
                     debugger;
@@ -1910,7 +1970,7 @@ function scheduleCalcTotal(delay) {
                 });
             });
             if (PRId != "") {
-                PageMethods.getPurchaseByID(PRId, function (res) {
+                callPageMethod('getPurchaseByID', { PRID: PRId }, function (res) {
                     debugger;
                     var item = JSON.parse(res);
                     var rows = '';
@@ -2024,7 +2084,7 @@ function scheduleCalcTotal(delay) {
             debugger;
             var optionsDPT = '';
             var optionInv = '';
-            PageMethods.getDDLlist(function (Tests) {
+            callPageMethod('getDDLlist', function (Tests) {
                 debugger
                 $.each(JSON.parse(Tests), function (key, value) {
                     debugger;
@@ -2044,7 +2104,7 @@ function scheduleCalcTotal(delay) {
         function FillWarehouse() {
 
             var optionInv = '';
-            PageMethods.fillWarehouse(function (Tests) {
+            callPageMethod('fillWarehouse', function (Tests) {
 
                 optionInv = '<option value="0">Please Select</option>';
                 $.each(JSON.parse(Tests), function (key, value) {
@@ -2581,7 +2641,7 @@ function scheduleCalcTotal(delay) {
                     var AllItemDetail = {
                         'txtst_amou': txtst_amou, 'Adv_amount': Adv_amount, 'transtype': transtype, 'txtcsmasterid': txtcsmasterid, 'PO_ID': PO_ID, 'SubTotal': SubTotal, 'DiscountAmount': DiscountAmount, 'NetAmount': NetAmount, 'Purchase_Date': Purchase_Date, 'Purchase_No': Purchase_No, 'RefNo': RefNo, 'VendorName': VendorName, 'Remarks': Remarks, 'Warranty': Warranty, 'Disclaimer': Disclaimer, 'PaymentTerms': PaymentTerms, 'Term_ID': Term_ID, 'DeliveryTerms': DeliveryTerms, 'FreightCharges': Freight, 'POType': POType, 'Due_Date': Due_Date, 'ItemList': Item_list, 'Warehouse': Warehouse, 'Further_amount': Further_amount, 'ProjectionDate': ProjectionDate,'ProjectionType': ProjectionType, 'IsManual': IsManual,
                         'IsByDefault': IsByDefault };
-                    PageMethods.SavePurchaseItemDetail(btnSave, JSON.stringify(AllItemDetail), function (res) {
+                    callPageMethod('SavePurchaseItemDetail', { btnSave: btnSave, AllItemDetail: JSON.stringify(AllItemDetail) }, function (res) {
                         debugger;
                         sendFile(res);
                         Swal.fire({
@@ -2606,7 +2666,7 @@ function scheduleCalcTotal(delay) {
         function UnApprove() {
             debugger;
             var POid = '<% =Request.QueryString["PO_ID"] %>';
-            PageMethods.UnApprovePO(POid, function (Tests) {
+            callPageMethod('UnApprovePO', { POid: POid }, function (Tests) {
                 debugger
                 var message = JSON.parse(Tests);
                 if (message[0].Column1 != "" || message[0].Column1 != null) {
@@ -2620,7 +2680,7 @@ function scheduleCalcTotal(delay) {
 
         function Cancel() {
             var POid = '<%= Request.QueryString["PO_ID"] %>';
-            PageMethods.CancelEntry(POid, function (response) {
+            callPageMethod('CancelEntry', { POid: POid }, function (response) {
                 try {
                     var message = JSON.parse(response);
                     if (message.error) {
@@ -2918,7 +2978,7 @@ function appendSearchItem(anchor) {
         '<td style="text-align:right ;width:50px !important;font-size:9px;height:20px;padding-top: 7px!important;"><input type="text" style="width:50px !important;text-align:right;font-size:9px;height:20px;" value="0" readonly="readonly" id="txtTotalAmount' + length + '" name="txtTotalAmount"></input></td>' +
         '<td><input type="text" name="txtddate" id="txtddate' + length + '" class="row-date-picker" style="width:64px !important;text-align:center;font-size:9px;height:20px;" /></td>' +
         '<td style="text-align:center; font-weight:bold; color:#555;">' + total_stock + '</td>' +
-        '<td style="padding-top: 7px!important;"><a href="javascript:void(0)" onclick="ExcludeFromPayment(this)"><i class="glyphicon glyphicon-trash" style="font-size: 13px;margin-left: 16px; color: #f30a0a;position:relative;left: -10px;"></i></a>   </td>' +
+        '<td style="padding-top: 7px!important;"><a href="javascript:void(0)" onclick="ExcludeFromPayment(this)"><i class="fa fa-trash" style="font-size: 13px;margin-left: 16px; color: #f30a0a;position:relative;left: -10px;"></i></a>   </td>' +
         '</tr>';
 
     $('#tblItemDescription tbody').append(newRow);
@@ -2927,7 +2987,7 @@ function appendSearchItem(anchor) {
     populateTaxddl(length);
     
     // Populate Advance Tax dropdown
-    PageMethods.getAdvanceTaxType(function (response) {
+    callPageMethod('getAdvanceTaxType', function (response) {
         var options = '<option value="0">0</option>';
         try {
             var taxData = JSON.parse(response);
@@ -3045,6 +3105,11 @@ function appendSearchItem(anchor) {
     <input type="hidden" id="txtcsmasterid" name="txtcsmasterid" />
     <input type="hidden" id="txtcsno" name="txtcsno" />
     <input type="hidden" id="txttranstype" name="txttranstype" />
+
+    <div class="pr-meta-bar">
+        <span class="pr-meta-text" id="poMetaDisplay">PO&nbsp;#&nbsp;<strong>\u2014</strong>&nbsp;&nbsp;|&nbsp;&nbsp;Date:&nbsp;<strong>\u2014</strong>&nbsp;&nbsp;|&nbsp;&nbsp;Status:&nbsp;<strong>Draft</strong></span>
+    </div>
+
     <form id="item">
 
         <!-- PAGE LOADER - Make sure this is right after the form tag or at the top of content -->
@@ -3055,116 +3120,142 @@ function appendSearchItem(anchor) {
                 <div class="loader-progress-bar"></div>
             </div>
         </div>
-        <div class="row">
-            <div class="col-lg-3 col-md-6 col-sm-12">
-                <asp:Label ID="LabelPurchase_No" runat="server" Text="PO No."></asp:Label>
-                <asp:TextBox runat="server" ID="txtPurchase_No" class="form-control" ReadOnly="true" />
-                <asp:HiddenField ID="hdnPurchase_ID" runat="server" ClientIDMode="Static" />
-                <asp:TextBox runat="server" ID="txtPurchase_ID" Visible="false" ReadOnly="true" Width="0" />
+
+        <div class="pr-primary-settings">
+
+            <div class="row">
+                <div class="col-lg-3 col-md-6 col-sm-12">
+                    <asp:Label ID="LabelPurchase_No" runat="server" Text="PO No."></asp:Label>
+                    <asp:TextBox runat="server" ID="txtPurchase_No" class="form-control" ReadOnly="true" />
+                    <asp:HiddenField ID="hdnPurchase_ID" runat="server" ClientIDMode="Static" />
+                    <asp:TextBox runat="server" ID="txtPurchase_ID" Visible="false" ReadOnly="true" Width="0" />
+                </div>
+                <div class="col-lg-3 col-md-6 col-sm-12">
+                    <asp:Label ID="LabelPurchase_Date" runat="server" Text="Date"></asp:Label>
+                    <asp:RequiredFieldValidator ID="rfvPurchaseDate" runat="server" InitialValue="0" ControlToValidate="txtPurchase_Date" ErrorMessage="*" Display="Dynamic"></asp:RequiredFieldValidator>
+                    <asp:TextBox runat="server" ID="txtPurchase_Date" class="form-control" />
+                </div>
+                <div class="col-lg-3 col-md-6 col-sm-12">
+                    <asp:Label ID="lblDueDate" runat="server" Text="Due Date"></asp:Label>
+                    <asp:TextBox runat="server" ID="txtdueDate" class="form-control" />
+                </div>
+                <div class="col-lg-3 col-md-6 col-sm-12">
+                    <asp:Label ID="lblStatus" runat="server" Text="Status"></asp:Label>
+                    <asp:TextBox runat="server" ReadOnly="true" ID="txtStatus" class="form-control" />
+                </div>
             </div>
-            <div class="col-lg-3 col-md-6 col-sm-12">
-                <asp:Label ID="LabelPurchase_Date" runat="server" Text="Date"></asp:Label>
-                <asp:RequiredFieldValidator ID="rfvPurchaseDate" runat="server" InitialValue="0" ControlToValidate="txtPurchase_Date" ErrorMessage="*" Display="Dynamic"></asp:RequiredFieldValidator>
-                <asp:TextBox runat="server" ID="txtPurchase_Date" class="form-control" />
+
+            <div class="row">
+                <div class="col-lg-3 col-md-6 col-sm-12">
+                    <asp:Label ID="lblSupplier_ID" runat="server" Text="Vendor">Vendor <span style="color: red;">*</span></asp:Label>
+                    <asp:DropDownList runat="server" ID="ddlVendor" class="form-control" AppendDataBoundItems="true"></asp:DropDownList>
+                </div>
+                <div class="col-lg-3 col-md-6 col-sm-12">
+                    <asp:Label ID="lblPOType" runat="server" Text="P.O Type"></asp:Label>
+                    <asp:DropDownList runat="server" ID="ddlPOType" class="form-control" AppendDataBoundItems="true"></asp:DropDownList>
+                </div>
+                <div class="col-lg-3 col-md-6 col-sm-12">
+                    <asp:Label ID="lblpayment" runat="server" Text="Payment Mode" Style="">Mode of Payment<span style="color: red">*</span></asp:Label>
+                    <asp:DropDownList runat="server" ID="ddlpayment" class="form-control" AppendDataBoundItems="true"></asp:DropDownList>
+                </div>
+                <div class="col-lg-3 col-md-6 col-sm-12" id="warehouse">
+                    <label id="LblWarehouse">WareHouse<span style="color: red">*</span></label>
+                    <select id="ddlWarehouse" onchange="getprNoBy_WareHouse(this)" class="form-select">
+                        <option value="0">Please Select</option>
+                    </select>
+                </div>
             </div>
-            <div class="col-lg-3 col-md-6 col-sm-12">
-                <asp:Label ID="lblPOType" runat="server" Text="P.O Type"></asp:Label>
-                <asp:DropDownList runat="server" ID="ddlPOType" class="form-control" AppendDataBoundItems="true"></asp:DropDownList>
+
+            <div class="row">
+                <div class="col-lg-3 col-md-6 col-sm-12">
+                    <asp:Label ID="lblReference" runat="server" Text="Ref. No"></asp:Label>
+                    <asp:TextBox runat="server" ID="txtPurchase_Reference" class="form-control" />
+                </div>
+                <div class="col-lg-3 col-md-6 col-sm-12">
+                    <asp:Label ID="lblTerm_ID" runat="server" Text="Payment Terms"></asp:Label>
+                    <asp:DropDownList runat="server" ID="ddlTerm" class="form-control" AppendDataBoundItems="true"></asp:DropDownList>
+                </div>
+                <div class="col-lg-3 col-md-6 col-sm-12">
+                    <asp:Label ID="lblDelivery" runat="server" Text="Delivery Terms"></asp:Label>
+                    <asp:DropDownList runat="server" ID="ddlDelivery" class="form-control" AppendDataBoundItems="true"></asp:DropDownList>
+                </div>
+                <div class="col-lg-3 col-md-6 col-sm-12">
+                    <asp:Label ID="lblFreight" runat="server" Text="Freight Amount"></asp:Label>
+                    <asp:TextBox runat="server" ID="Freight" onkeyup="calcTotal()" class="form-control" />
+                </div>
             </div>
-            <div class="col-lg-3 col-md-6 col-sm-12">
-                <asp:Label ID="lblpayment" runat="server" Text="Payment Mode" Style="">Mode of Payment<span style="color: red">*</span></asp:Label>
-                <asp:DropDownList runat="server" ID="ddlpayment" class="form-control" AppendDataBoundItems="true"></asp:DropDownList>
+
+            <div class="row">
+                <div class="col-lg-6 col-md-8 col-sm-12">
+                    <asp:Label ID="lblRemarks" runat="server" Text="Remarks"></asp:Label>
+                    <asp:TextBox runat="server" ID="txtRemarks" class="form-control" />
+                </div>
+                <div class="col-lg-3 col-md-6 col-sm-12">
+                    <asp:Label ID="lblWarranty" runat="server" Text="Warranty"></asp:Label>
+                    <asp:TextBox runat="server" ID="txtWarranty" class="form-control" />
+                </div>
+                <div class="col-lg-3 col-md-6 col-sm-12">
+                    <asp:Label ID="LblDisclaimer" runat="server" Text="Disclaimer"></asp:Label>
+                    <asp:TextBox runat="server" ID="txtDisclaimer" class="form-control" />
+                </div>
             </div>
 
         </div>
 
-        <div class="row">
-            <div class="col-lg-3 col-md-6 col-sm-12">
-                <asp:Label ID="lblDueDate" runat="server" Text="Due Date"></asp:Label>
-                <asp:TextBox runat="server" ID="txtdueDate" class="form-control" />
+        <!-- Source toggle + Attachment -->
+        <div class="pr-source-attach-row">
+            <div class="pr-source-left">
+                <div class="source-toggle-pill" id="poSourceTogglePill">
+                    <label class="source-radio-option">
+                        <input type="radio" name="poSourceType" id="rdoPOItem" value="item" checked="checked" />
+                        <span class="source-pill-label">Item</span>
+                    </label>
+                    <label class="source-radio-option">
+                        <input type="radio" name="poSourceType" id="rdoPOPR" value="pr" />
+                        <span class="source-pill-label">PR</span>
+                    </label>
+                </div>
+                <div id="itemInputSection" class="source-input-wrap">
+                    <div class="source-inline-group">
+                        <input type="text" id="txtItem" class="source-select-input" placeholder="Search items..." />
+                        <button type="button" class="source-action-btn" id="btnGetAllItems" onclick="LoadAllitem('')"><i class="fa fa-search"></i> Items</button>
+                    </div>
+                </div>
+                <div id="prInputSection" class="source-input-wrap" style="display:none;">
+                    <div class="source-inline-group">
+                        <asp:DropDownList runat="server" ID="ddlPrNo" class="source-select-input"></asp:DropDownList>
+                        <button type="button" class="source-action-btn" id="btnPRSave" onclick="LoadPrNoDetail($('#ctl00_MainContent_ddlPrNo').val())"><i class="fa fa-plus"></i> Add</button>
+                    </div>
+                </div>
             </div>
-
-            <div class="col-lg-3 col-md-6 col-sm-12">
-                <asp:Label ID="lblSupplier_ID" runat="server" Text="Vendor">Vendor <span style="color: red;">*</span></asp:Label>
-                <asp:DropDownList runat="server" ID="ddlVendor" class="form-control" AppendDataBoundItems="true"></asp:DropDownList>
-            </div>
-
-
-            <div class="col-lg-2 col-md-6 col-sm-4">
-                <asp:Label ID="lblPrNo" runat="server" Text="Pr.No"></asp:Label>
-                <asp:DropDownList runat="server" ID="ddlPrNo" class="form-control"></asp:DropDownList>
-            </div>
-            <div class="col-lg-1 col-md-2 col-sm-4">
-                <input type="button" value="Add" id="btnPRSave" class="btn btn-primry" style="margin-top: 16px;" />
-            </div>
-            <div class="col-lg-1 col-md-2 col-sm-4">
-                <input type="button" value="Items" id="btnGetAllItems" class="btn btn-gray" style="margin-top: 16px;" />
-            </div>
-            <div class="col-lg-2 col-md-4 col-sm-6" id="warehouse">
-                <label id="LblWarehouse">WareHouse<span style="color: red">*</span></label>
-                <select id="ddlWarehouse" onchange="getprNoBy_WareHouse(this)" class="form-select">
-                    <option value="0">Please Select</option>
-                </select>
-            </div>
-        </div>
-
-        <div class="row">
-
-            <div class="col-lg-3 col-md-6 col-sm-12">
-                <asp:Label ID="lblDelivery" runat="server" Text="Delivery Terms"></asp:Label>
-                <asp:DropDownList runat="server" ID="ddlDelivery" class="form-control" AppendDataBoundItems="true"></asp:DropDownList>
-            </div>
-            <div class="col-lg-3 col-md-6 col-sm-12">
-                <asp:Label ID="lblReference" runat="server" Text="Ref. No"></asp:Label>
-                <asp:TextBox runat="server" ID="txtPurchase_Reference" class="form-control" />
-            </div>
-            <div class="col-lg-3 col-md-6 col-sm-12">
-                <asp:Label ID="lblFreight" runat="server" Text="Freight Amount"></asp:Label>
-                <asp:TextBox runat="server" ID="Freight" onkeyup="calcTotal()" class="form-control" />
-            </div>
-            <div class="col-lg-3 col-md-6 col-sm-12">
-                <asp:Label ID="lblStatus" runat="server" Text="Status"></asp:Label>
-                <asp:TextBox runat="server" ReadOnly="true" ID="txtStatus" class="form-control" />
+            <div class="pr-attachment-card">
+                <div class="pr-attachment-icon"><i class="fa fa-paperclip"></i></div>
+                <div class="pr-attachment-body">
+                    <span class="pr-attachment-label">Attachment</span>
+                    <input type="file" id="chosePofile" name="chosePofile" class="pr-file-input" />
+                    <div class="pr-attachment-download">
+                        <asp:HyperLink ID="HyperLink1" runat="server" CssClass="pr-download-btn"><i class="fa fa-download"></i> Download</asp:HyperLink>
+                    </div>
+                </div>
             </div>
         </div>
 
-        <div class="row">
-
-            <div class="col-lg-3 col-md-6 col-sm-12">
-                <asp:Label ID="lblTerm_ID" runat="server" Text="Payment Terms"></asp:Label>
-                <asp:DropDownList runat="server" ID="ddlTerm" class="form-control" AppendDataBoundItems="true"></asp:DropDownList>
+        <!-- Checkboxes + Projection -->
+        <div class="row" style="margin-top: 8px;">
+            <div class="col-lg-1 col-md-3 col-sm-6">
+                <div class="pr-checkbox-wrap">
+                    <label for="chkByDefault">By Default</label>
+                    <input type="checkbox" id="chkByDefault" />
+                </div>
             </div>
-
-            <div class="col-lg-3 col-md-6 col-sm-12">
-                <asp:Label ID="lblWarranty" runat="server" Text="Warranty"></asp:Label>
-                <asp:TextBox runat="server" ID="txtWarranty" class="form-control" />
-            </div>
-            <div class="col-lg-3 col-md-6 col-sm-12">
-                <asp:Label ID="LblDisclaimer" runat="server" Text="Disclaimer"></asp:Label>
-                <asp:TextBox runat="server" ID="txtDisclaimer" class="form-control" />
-            </div>
-            <div class="col-lg-1 col-md-6 col-sm-12">
-                <label class="col-form-label">Attachment</label>
-                <input type="file" id="chosePofile" name="chosePofile" />
-                <asp:HyperLink ID="HyperLink1" runat="server">Download</asp:HyperLink>
-            </div>
-            <div class="col-lg-1 col-md-6 col-sm-12">
-                <label class="form-check-label" for="chkByDefault">By Default</label>
-                <input class="form-check-input" type="checkbox" id="chkByDefault" />
-            </div>
-            <div class="col-lg-1 col-md-6 col-sm-12">
-                <label class="form-check-label" for="chkManual">Manual</label>
-                <input class="form-check-input" type="checkbox" id="chkManual" />
-            </div>
-        </div>
-        <div class="row">
-            <div class="col-lg-6 col-md-8 col-sm-12">
-                <asp:Label ID="lblRemarks" runat="server" Text="Remarks"></asp:Label>
-                <asp:TextBox runat="server" ID="txtRemarks" class="form-control" />
+            <div class="col-lg-1 col-md-3 col-sm-6">
+                <div class="pr-checkbox-wrap">
+                    <label for="chkManual">Manual</label>
+                    <input type="checkbox" id="chkManual" />
+                </div>
             </div>
             <div class="col-lg-3 col-md-6 col-sm-12" id="projectiondate">
                 <asp:Label ID="lblprojectiondate" runat="server" Text="Projection Date"></asp:Label>
-
                 <asp:TextBox runat="server" ID="txtProjection_Date" class="form-control" />
             </div>
             <div class="col-lg-3 col-md-6 col-sm-12" id="projectiontype">
@@ -3174,8 +3265,8 @@ function appendSearchItem(anchor) {
         </div>
     </form>
     <asp:HiddenField ID="hdfItem_ID" runat="server" ClientIDMode="Static" />
-    <div class="row" style="height: 276px !important; height: auto; overflow: scroll">
-        <table class="table responstable table-bordered" id="tblItemDescription" style="font-size: 9px !important; overflow: scroll; height: auto;">
+    <div id="ITEMTable" style="overflow-x:auto; overflow-y:auto; max-height:310px; border:1px solid #dee2e6; border-radius:4px 4px 0 0;">
+        <table class="table table-bordered table-striped" id="tblItemDescription" style="font-size: 9px !important; width: 100%; min-width: 860px; margin-bottom: 0; overflow: visible; height: auto;">
             <thead>
                 <tr style="position: sticky; top: 0px; z-index: 10;">
                     <th style="width: 29px;">No</th>
@@ -3210,82 +3301,60 @@ function appendSearchItem(anchor) {
         </table>
     </div>
 
-
-    <div class="purchaseOrderSubmitForm" style="margin-top: 21px;">
-
-        <div class="row">
-
-            <div class="col-lg-8">
-                <div class="col-lg-2 col-md-4 col-sm-6">
-                    <input type="button" class="btn btn-primry" onclick="this.disabled=true;SaveAllRecord()" value="Save" id="btnSave" />
-                </div>
-                <div class="col-lg-2 col-md-4 col-sm-6 ">
-                    <input type="button" class="btn-gray" value="List" onclick="window.location = 'PurchaseOrderView.aspx'" />
-                </div>
-                <div class="col-lg-2 col-md-4 col-sm-6">
-                    <input type="button" class="btn btn-yellow" value="New" onclick="window.location = 'PurchaseOrder.aspx'" />
-                </div>
-                <div class="col-lg-2 col-md-4 col-sm-6">
-                    <input style="text-align: center" type="button" value="Cancel" id="btncancel" class="btn btn-primry" onclick="Cancel()" />
-                </div>
-                <div class="col-lg-2 col-md-4 col-sm-6">
-                    <input type="button" id="btnPrint" value="Print" class="btn btn-primry" name="name" onclick="PrintPurchaseOrderDetail();" />
-                </div>
-                <div class="col-lg-2 col-md-4 col-sm-6">
-                    <input type="button" id="btnPrint2" value="Print2" class="btn btn-primry" name="name" onclick="PrintPurchaseOrderDetail2();" />
-                </div>
-                <div class="col-lg-2 col-md-4 col-sm-6">
-                    <input type="button" style="display: none" class="btn btn-primry" value="UnApprove" id="btnUnApprove" onclick="UnApprove()" />
-                </div>
+    <!-- Totals Bar -->
+    <div class="pr-totals-bar">
+        <span class="pr-totals-bar-label">Totals</span>
+        <div class="pr-totals-bar-fields">
+            <div class="pr-totals-bar-item">
+                <label>Sub Total</label>
+                <input type="text" id="txtSub_Total" readonly="readonly" class="pr-total-input" placeholder="0.00" />
             </div>
-            <div class="col-lg-3"></div>
-            <div class="col-lg-3">
-                <div class="col-lg-12 col-md-8 col-sm-12">
-                    <asp:Label ID="lblSubTotal" runat="server" Text="Sub Total"></asp:Label>
-                </div>
-                <div class="col-lg-12 col-md-8 col-sm-12">
-                    <asp:TextBox runat="server" ReadOnly="true" ID="txtSub_Total" ClientIDMode="Static" Style="text-align: right;" />
-                </div>
-                <div class="col-lg-12 col-md-8 col-sm-12">
-                    <asp:Label ID="lblTotalDiscAmt" runat="server" Text="Discount Amount"></asp:Label>
-                </div>
-                <div class="col-lg-12 col-md-8 col-sm-12">
-                    <asp:TextBox runat="server" ReadOnly="true" ID="txtTotalDiscAmt" SkinID="userdefinewidth" Style="text-align: right;" />
-                </div>
-                <div class="col-lg-12 col-md-8 col-sm-12">
-                    <asp:Label ID="Label5" runat="server" Text="Total Tax"></asp:Label>
-                </div>
-                <div class="col-lg-12 col-md-8 col-sm-12">
-                    <asp:TextBox runat="server" ReadOnly="true" ID="txtst_amou" ClientIDMode="Static" Style="text-align: right;" />
-                </div>
-                <div class="col-lg-12 col-md-8 col-sm-12">
-                    <asp:Label ID="lblBonusTax" runat="server" Text="Bonus Tax"></asp:Label>
-                </div>
-                <div class="col-lg-12 col-md-8 col-sm-12">
-                    <asp:TextBox runat="server" ReadOnly="true" ID="txtBonusTaxTotal" ClientIDMode="Static" Style="text-align: right;" />
-                </div>
-                <div class="col-lg-12 col-md-8 col-sm-12">
-                    <asp:Label ID="lblfreight_charges" runat="server" Text="Freight Charges"></asp:Label>
-                </div>
-                <div class="col-lg-12 col-md-8 col-sm-12">
-                    <asp:TextBox runat="server" ID="txtfreight_charges" ReadOnly="true" ClientIDMode="Static" SkinID="userdefinewidth" onchange="return caltotal();" />
-                </div>
-                <div class="col-lg-12 col-md-8 col-sm-12">
-                    <asp:Label ID="lblNet_Amount" runat="server" Text="Net Amount"></asp:Label>
-                </div>
-                <div class="col-lg-12 col-md-8 col-sm-12">
-                    <asp:TextBox runat="server" ID="Net_Amount" ReadOnly="true" SkinID="UserDefineWidth" Style="text-align: right;" />
-                </div>
-                <div>
-                    <asp:TextBox ID="txtAdv_amou" runat="server" ClientIDMode="Static" Style="display: none;" ReadOnly="true" />
-                </div>
-                <div>
-                    <asp:TextBox ID="txtFurther_amou" runat="server" ClientIDMode="Static" Style="display: none;" ReadOnly="true" />
-                </div>
+            <div class="pr-totals-bar-item">
+                <label>Discount</label>
+                <input type="text" id="txtTotalDiscAmt" readonly="readonly" class="pr-total-input" placeholder="0.00" />
             </div>
-
+            <div class="pr-totals-bar-item">
+                <label>Tax</label>
+                <input type="text" id="txtst_amou" readonly="readonly" class="pr-total-input" placeholder="0.00" />
+            </div>
+            <div class="pr-totals-bar-item">
+                <label>Bonus Tax</label>
+                <input type="text" id="txtBonusTaxTotal" readonly="readonly" class="pr-total-input" placeholder="0.00" />
+            </div>
+            <div class="pr-totals-bar-item">
+                <label>Freight</label>
+                <input type="text" id="txtfreight_charges" readonly="readonly" class="pr-total-input" placeholder="0.00" />
+            </div>
+            <div class="pr-totals-bar-item">
+                <label>Net Amount</label>
+                <input type="text" id="Net_Amount" readonly="readonly" class="pr-total-input" placeholder="0.00" />
+            </div>
         </div>
+    </div>
 
+    <!-- Action Buttons -->
+    <div class="row pr-action-buttons">
+        <div class="col-lg-2 col-md-4 col-sm-6">
+            <input type="button" class="btn btn-primry w-100" onclick="this.disabled=true;SaveAllRecord()" value="Save" id="btnSave" />
+        </div>
+        <div class="col-lg-2 col-md-4 col-sm-6">
+            <input type="button" class="btn-gray w-100" value="List" onclick="window.location = 'PurchaseOrderView.aspx'" />
+        </div>
+        <div class="col-lg-2 col-md-4 col-sm-6">
+            <input type="button" class="btn btn-yellow w-100" value="New" onclick="window.location = 'PurchaseOrder.aspx'" />
+        </div>
+        <div class="col-lg-2 col-md-4 col-sm-6">
+            <input style="text-align: center" type="button" value="Cancel" id="btncancel" class="btn btn-primry w-100" onclick="Cancel()" />
+        </div>
+        <div class="col-lg-2 col-md-4 col-sm-6">
+            <input type="button" id="btnPrint" value="Print" class="btn btn-primry w-100" name="name" onclick="PrintPurchaseOrderDetail();" />
+        </div>
+        <div class="col-lg-2 col-md-4 col-sm-6">
+            <input type="button" id="btnPrint2" value="Print2" class="btn btn-primry w-100" name="name" onclick="PrintPurchaseOrderDetail2();" />
+        </div>
+        <div class="col-lg-2 col-md-4 col-sm-6">
+            <input type="button" style="display: none" class="btn btn-primry w-100" value="UnApprove" id="btnUnApprove" onclick="UnApprove()" />
+        </div>
     </div>
 
     <div id="PrintPurchseOrderReport" style="display: none;">
@@ -3432,17 +3501,17 @@ function appendSearchItem(anchor) {
             </tbody>
         </table>
     </div>
-    <div id="POItemsModel" class="modal fade" role="dialog">
-        <div class="modal-dialog">
-            <div class="modal-content" style="width: 1000px; margin-left: -270px; height: 505px;">
-                <div class="modal-header">
-                    <h4 class="modal-title">Add PR Items</h4>
-                    <button type="button" style="width: auto;" class="close" data-dismiss="modal">&times;</button>
+    <div id="POItemsModel" class="modal fade custom-modal-dialog" role="dialog">
+        <div class="modal-dialog custom-modal-content" style="width: 1000px; margin-left: -270px; height: 505px;">
+            <div class="custom-modal-header">
+                <h4 class="modal-title">Add PR Items</h4>
+                <button type="button" style="width: auto;" class="close" data-dismiss="modal">&times;</button>
 
-                </div>
-                <input type="hidden" id="txthiddentr" name="txthidddentr" />
-                <div class="table-container" style="width: 970px; overflow: scroll; height: 401px  !important; height: auto;">
-                    <table class="table table-bordered" style="width: 953px; height: 80px !important; height: auto; overflow: scroll;" id="tblPOItemstModelTable">
+            </div>
+            <input type="hidden" id="txthiddentr" name="txthidddentr" />
+            <div class="custom-modal-body">
+                <div class="custom-modal-table-wrap" style="width: 970px; overflow: scroll; height: 401px  !important; height: auto;">
+                    <table class="custom-modal-table table table-bordered" style="width: 953px; height: 80px !important; height: auto; overflow: scroll;" id="tblPOItemstModelTable">
                         <thead>
                             <tr>
                                 <th style="width: 32px;">
@@ -3462,62 +3531,59 @@ function appendSearchItem(anchor) {
                         </tbody>
                     </table>
                 </div>
-                <div class="modal-footer">
-                    <div class="col-lg-10 col-md-10 col-sm-10">
-                        <div class="col-lg-2 col-md-2 col-sm-2">
-                            <input type="button" id="PoItem" name="PoItem" value="Close" class="btn btn-gray" data-dismiss="modal" />
-                        </div>
+            </div>
+            <div class="modal-footer">
+                <div class="col-lg-10 col-md-10 col-sm-10">
+                    <div class="col-lg-2 col-md-2 col-sm-2">
+                        <input type="button" id="PoItem" name="PoItem" value="Close" class="btn btn-gray" data-dismiss="modal" />
                     </div>
                 </div>
             </div>
         </div>
     </div>
-
     <!-- Add this NEW modal for Item Search -->
-    <div class="modal fade" id="itemsModal" tabindex="-1" aria-labelledby="itemsModalLabel" aria-hidden="true">
-        <div class="modal-dialog modal-lg modal-md">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h3 class="modal-title" id="itemsModalLabel">Item Details</h3>
-                    <button type="button" class="close" data-dismiss="modal" aria-label="Close" style="margin-top: -11px !important">
-                        <span aria-hidden="true">&times;</span>
-                    </button>
-                </div>
-                <div class="modal-body">
-                    <input type="text" id="searchInput" class="form-control search-input" placeholder="Search items..." />
-                    <div style="max-height: 400px; overflow-y: auto;">
-                        <table class="table table-bordered table-striped table-responsive-md table-responsive-lg">
-                            <thead>
-                                <tr>
-                                    <th>Select</th>
-                                    <!-- td:eq(0) -->
-                                    <th style="display: none;">Item ID</th>
-                                    <!-- td:eq(1) -->
-                                    <th>Item Code</th>
-                                    <!-- td:eq(2) -->
-                                    <th>Description</th>
-                                    <!-- td:eq(3) -->
-                                    <th>Unit</th>
-                                    <!-- td:eq(4) -->
-                                    <th style="display: none;">Rate</th>
-                                    <!-- td:eq(5) -->
-                                    <th style="display: none;">UOM Qty</th>
+    <div class="modal fade custom-modal-dialog" id="itemsModal" tabindex="-1" aria-labelledby="itemsModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-lg modal-md custom-modal-content">
+            <div class="custom-modal-header">
+                <h3 class="modal-title" id="itemsModalLabel">Item Details</h3>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close" style="margin-top: -11px !important">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="custom-modal-body">
+                <input type="text" id="searchInput" class="form-control search-input" placeholder="Search items..." />
+                <div class="custom-modal-table-wrap" style="max-height: 400px; overflow-y: auto;">
+                    <table class="custom-modal-table table table-bordered table-striped table-responsive-md table-responsive-lg">
+                        <thead>
+                            <tr>
+                                <th>Select</th>
+                                <!-- td:eq(0) -->
+                                <th style="display: none;">Item ID</th>
+                                <!-- td:eq(1) -->
+                                <th>Item Code</th>
+                                <!-- td:eq(2) -->
+                                <th>Description</th>
+                                <!-- td:eq(3) -->
+                                <th>Unit</th>
+                                <!-- td:eq(4) -->
+                                <th style="display: none;">Rate</th>
+                                <!-- td:eq(5) -->
+                                <th style="display: none;">UOM Qty</th>
 
-                                    <th>Last Purchase Rate</th>
-                                    <!-- td:eq(6) -->
-                                    <th>Stock</th>
-                                </tr>
-                            </thead>
-                            <tbody id="itemsTableBody">
-                            </tbody>
-                        </table>
-                    </div>
+                                <th>Last Purchase Rate</th>
+                                <!-- td:eq(6) -->
+                                <th>Stock</th>
+                            </tr>
+                        </thead>
+                        <tbody id="itemsTableBody">
+                        </tbody>
+                    </table>
                 </div>
-                <div class="modal-footer">
-                    <div class="col-lg-10 col-md-10 col-sm-10"></div>
-                    <div class="col-lg-2 col-md-2 col-sm-2 float-end">
-                        <input type="button" value="Close" class="btn-gray" data-dismiss="modal" />
-                    </div>
+            </div>
+            <div class="modal-footer">
+                <div class="col-lg-10 col-md-10 col-sm-10"></div>
+                <div class="col-lg-2 col-md-2 col-sm-2 float-end">
+                    <input type="button" value="Close" class="btn-gray" data-dismiss="modal" />
                 </div>
             </div>
         </div>
