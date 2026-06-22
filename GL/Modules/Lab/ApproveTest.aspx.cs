@@ -110,8 +110,10 @@ namespace PMS.Modules.Lab
                                           && (bd.Is_Group_Category == null || bd.Is_Group_Category == false)
                                           && (bd.Test_Main_Department == null || bd.Test_Main_Department != "001")
                                           && (ar.isCancel == false || ar.isCancel == null)
-                                          && ltd.Approved_Time >= startDate
-                                          && ltd.Approved_Time <= endDate
+                                           // && ltd.Approved_Time >= startDate
+                                           //&& ltd.Approved_Time <= endDate
+                                           && ar.Bill_Date >= startDate
+                                           && ar.Bill_Date <= endDate
                                           && !db.Refunds.Any(r => r.Bill_ID == ar.Bill_ID)
                                       select ltd).Count();
 
@@ -125,8 +127,10 @@ namespace PMS.Modules.Lab
                                     && (bd.Is_Group_Category == null || bd.Is_Group_Category == false)
                                     && (bd.Test_Main_Department == null || bd.Test_Main_Department != "001")
                                     && (ar.isCancel == false || ar.isCancel == null)
-                                    && ltd.Approved_Time >= startDate
-                                    && ltd.Approved_Time <= endDate
+                                    //&& ltd.Approved_Time >= startDate
+                                    //&& ltd.Approved_Time <= endDate
+                                    && ar.Bill_Date >= startDate
+                                    && ar.Bill_Date <= endDate
                                     && !db.Refunds.Any(r => r.Bill_ID == ar.Bill_ID)
                                 select new
                                 {

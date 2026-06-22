@@ -2718,7 +2718,7 @@ namespace PMS
                 }
             }
             else if (reportName == "Overall_Stock_Consumption_Details")
-            {   
+            {
                 if (Request.QueryString["Stock"] != null)
                 {
                     var stock = Request.QueryString["Stock"];
@@ -3558,7 +3558,7 @@ namespace PMS
             else if (reportName == "Death_Certificate_Detail_Report")
             {
                 string StartDateTime = Request.QueryString["sDate"].ToString();
-                string EndDateTime   = Request.QueryString["eDate"].ToString();
+                string EndDateTime = Request.QueryString["eDate"].ToString();
 
                 var logoPath = DBClass.getField("SELECT dbo.GetCompanyLogo()");
 
@@ -4733,7 +4733,7 @@ namespace PMS
                 rd.SetParameterValue("Title", reportTitle);
                 rd.SetParameterValue("CompanyLogo", logoPath);
                 rd.SetParameterValue("@Year", year);
-                rd.SetParameterValue("@Year", year , rd.Subreports[0].Name.ToString());
+                rd.SetParameterValue("@Year", year, rd.Subreports[0].Name.ToString());
             }
             else if (reportName == "YearlyPharmacyOverallSummaryReport")
             {
@@ -4748,7 +4748,7 @@ namespace PMS
                 rd.SetParameterValue("Title", reportTitle);
                 rd.SetParameterValue("CompanyLogo", logoPath);
                 rd.SetParameterValue("@Year", year);
-                rd.SetParameterValue("@Year", year , rd.Subreports[0].Name.ToString());
+                rd.SetParameterValue("@Year", year, rd.Subreports[0].Name.ToString());
                 rd.SetParameterValue("@Warehouse", Request.QueryString["WareHouse"]);
                 rd.SetParameterValue("@Warehouse", Request.QueryString["WareHouse"], rd.Subreports[0].Name.ToString());
 
@@ -7689,6 +7689,26 @@ namespace PMS
             {
                 var logoPath = DBClass.getField("SELECT dbo.GetCompanyLogo()");
                 reportPath += "Billings/rptTestsRateList.rpt";
+                rd.Load(reportPath);
+                string title = Request.QueryString["ReportTitle"].ToString();
+                rd.SetParameterValue("CompanyName", AppConfig.Company_Name);
+                rd.SetParameterValue("Title", title);
+                rd.SetParameterValue("CompanyLogo", logoPath);
+            }
+            else if (reportName == "ServiceRatelist")
+            {
+                var logoPath = DBClass.getField("SELECT dbo.GetCompanyLogo()");
+                reportPath += "Billings/rptServiceRatelist.rpt";
+                rd.Load(reportPath);
+                string title = Request.QueryString["ReportTitle"].ToString();
+                rd.SetParameterValue("CompanyName", AppConfig.Company_Name);
+                rd.SetParameterValue("Title", title);
+                rd.SetParameterValue("CompanyLogo", logoPath);
+            }
+            else if (reportName == "DepartmentFeeslist")
+            {
+                var logoPath = DBClass.getField("SELECT dbo.GetCompanyLogo()");
+                reportPath += "Billings/rptDepartmentFeeslist.rpt";
                 rd.Load(reportPath);
                 string title = Request.QueryString["ReportTitle"].ToString();
                 rd.SetParameterValue("CompanyName", AppConfig.Company_Name);
