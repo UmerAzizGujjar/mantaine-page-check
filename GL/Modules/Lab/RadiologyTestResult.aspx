@@ -4104,6 +4104,287 @@ ${data.Addendum_Template ? `
             });
         }
 
+        function showTestHistory() {
+            var testId = $('#hdtestdetailid').val(); 
+            var patientId = $('#hdnPatient_ID').val(); 
+
+            if (!testId || testId == "0") {
+                Swal.fire({ icon: 'warning', title: 'Warning!', text: 'Please save the test first to view history.' });
+                return;
+            }
+
+            $('#tblHistoryBody').html('<tr><td colspan="4" class="text-center">Loading...</td></tr>');
+            $('#noHistoryMsg').hide();
+
+            $.ajax({
+                type: "POST",
+                url: "RadiologyTestResult.aspx/GetTestHistory",
+                data: JSON.stringify({
+                    currentTestDetailID: parseInt(testId),
+                    patientID: parseInt(patientId)
+                }),
+                contentType: "application/json; charset=utf-8",
+                dataType: "json",
+                success: function (response) {
+                    var data = typeof response.d === 'string' ? JSON.parse(response.d) : response.d;
+                    var tbody = $('#tblHistoryBody');
+                    tbody.empty();
+
+                    if (data && data.length > 0) {
+                        $.each(data, function (index, item) {
+                            var row = '<tr>' +
+                                '<td>' + (item.Bill_No || '') + '</td>' +
+                                '<td>' + (item.Bill_Date ? new Date(parseInt(item.Bill_Date.replace(/\/Date\((\d+)\)\//, '$1'))).toLocaleDateString() : '') + '</td>' +
+                                '<td>' + (item.Patient_Name || '') + '</td>' +
+                                '<td>' +
+                                '<button type="button" class="btn btn-sm btn-primary" ' +
+                                'onclick="PreviewHistoryReport(\'' + item.Test_IDs + '\', \'' + item.Trans_IDs + '\', \'' + item.Lab_Test_Detail_ID + '\', \'' + item.Bill_Details_ID + '\')">Preview</button>' +
+                                '</td>' +
+                                '</tr>';
+                            tbody.append(row);
+                        });
+                    } else {
+                        $('#noHistoryMsg').show();
+                    }
+
+                    $('#historyModal').modal('show');
+                },
+                error: function (xhr, status, error) {
+                    console.error(error);
+                    Swal.fire({ icon: 'error', title: 'Error!', text: 'Failed to load history.' });
+                }
+            });
+        }
+
+
+        function PreviewHistoryReport(Test_IDs, Trans_IDs, Lab_Test_Detail_ID, Bill_Details_ID) {
+            var Patient_ID = $('#hdnPatient_ID').val() || '0';
+            var ChkLetterHead = true;
+            var Report_Column = '4'; 
+            Test_IDs = (Test_IDs || '').replace(/^,\s*/, '');
+            Trans_IDs = (Trans_IDs || '').replace(/^,\s*/, '');
+            Bill_Details_ID = (Bill_Details_ID || '').replace(/^,\s*/, '');
+            Lab_Test_Detail_ID = (Lab_Test_Detail_ID || '').replace(/^,\s*/, '');
+
+            if (typeof radiologyReporting !== 'undefined' && radiologyReporting === "01") {
+                var url = '../../ReportViewer.aspx?ReportName=TestResultQ' +
+                    '&ReportTitle=Department Of Pathalogy' +
+                    '&Test_IDs=' + encodeURIComponent(Test_IDs) +
+                    '&test_wise_ids=' + encodeURIComponent(Patient_ID) +
+                    '&TransID=' + encodeURIComponent(Trans_IDs) +
+                    '&labTDetailsID=' + encodeURIComponent(Lab_Test_Detail_ID) +
+                    '&BillDetailID=' + encodeURIComponent(Bill_Details_ID) +
+                    '&ReportColumn=' + encodeURIComponent(Report_Column) +
+                    '&ChkLetterHead=' + ChkLetterHead;
+
+                window.open(url, '_blank');
+            }
+            else {
+                var reportWindow = window.open('', '_blank');
+                reportWindow.document.write(`
+            <!DOCTYPE html><html><head><title>Loading...</title>
+            <style>
+            body { font-family: Arial, sans-serif; display: flex; justify-content: center;
+            align-items: center; height: 100vh; margin: 0; background: #f5f5f5; }
+            .loader { text-align: center; }
+            .spinner { border: 4px solid #f3f3f3; border-top: 4px solid #3498db;
+            border-radius: 50%; width: 50px; height: 50px;
+            animation: spin 1s linear infinite; margin: 0 auto 20px; }
+            @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
+            </style></head>
+            <body><div class="loader">
+            <div class="spinner"></div>
+            <p style="color:#555; font-size:16px;">Loading Report, Please Wait...</p>
+            </div></body></html>
+        `);
+
+                $.ajax({
+                    type: "POST",
+                    url: "RadiologyTestResult.aspx/GetDynamicReportHTML",
+                    data: JSON.stringify({
+                        Test_IDs: Test_IDs,
+                        Trans_IDs: Trans_IDs,
+                        Patient_ID: parseInt(Patient_ID) || 0,
+                        Bill_Details_IDs: Bill_Details_ID
+                    }),
+                    contentType: "application/json; charset=utf-8",
+                    dataType: "json",
+                    success: function (response) {
+                        var data;
+                        try {
+                            data = typeof response.d === 'string' ? JSON.parse(response.d) : response.d;
+                        } catch (e) {
+                            reportWindow.document.write('<html><body style="color:red;padding:40px;">Error parsing response: ' + e.message + '</body></html>');
+                            reportWindow.document.close();
+                            return;
+                        }
+
+                        if (data.error) {
+                            reportWindow.document.write('<html><body style="color:red;font-family:Arial;padding:40px;"><h3>Error Loading Report</h3><p>' + data.error + '</p></body></html>');
+                            reportWindow.document.close();
+                            return;
+                        }
+
+                        // Build logo HTML
+                        var logoHtml = '';
+                        if (data.Company_Logo_Path && data.Company_Logo_Path !== '') {
+                            logoHtml = '<img src="' + data.Company_Logo_Path + '" alt="Logo" style="max-height:80px; max-width:150px; object-fit:contain;" onerror="this.style.display=\'none\'" />';
+                        }
+
+                        // Format dates safely
+                        function formatDate(val) {
+                            if (!val) return '';
+                            try {
+                                var match = /\/Date\((\d+)\)\//.exec(val);
+                                if (match) {
+                                    return new Date(parseInt(match[1])).toLocaleDateString('en-GB');
+                                }
+                                return new Date(val).toLocaleDateString('en-GB');
+                            } catch (e) { return val || ''; }
+                        }
+
+                        var html = `<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Report - ${data.Patient_No || ''}</title>
+<style>
+@page { size: A4; margin: 15mm 20mm; }
+* { margin: 0; padding: 0; box-sizing: border-box; }
+body { font-family: Arial, sans-serif; font-size: 11px; color: #000; background: #fff; line-height: 1.4; }
+.page-wrapper { width: 210mm; min-height: 297mm; margin: 0 auto; padding: 10mm 15mm; background: #fff; }
+.report-header { display: flex; align-items: center; gap: 15px; padding-bottom: 10px; border-bottom: 2.5px solid #000; margin-bottom: 12px; }
+.logo-wrap { flex-shrink: 0; width: 100px; display: flex; align-items: center; justify-content: center; }
+.hospital-info { flex: 1; text-align: center; }
+.hospital-info .name { font-size: 17px; font-weight: bold; text-transform: uppercase; letter-spacing: 0.5px; }
+.hospital-info .address { font-size: 9px; color: #333; margin-top: 3px; }
+.patient-section { display: flex; gap: 20px; margin-bottom: 12px; padding-bottom: 8px; border-bottom: 1px solid #ccc; }
+.patient-col { flex: 1; }
+.patient-col .patient-title { font-size: 13px; font-weight: bold; border-bottom: 1px solid #000; margin-bottom: 6px; padding-bottom: 3px; }
+.info-row { display: flex; margin-bottom: 4px; font-size: 10.5px; gap: 5px; }
+.info-label { font-weight: bold; min-width: 115px; flex-shrink: 0; }
+.info-val { flex: 1; border-bottom: 1px dotted #bbb; padding-bottom: 1px; min-height: 14px; }
+.test-banner { text-align: center; border-top: 2px solid #000; border-bottom: 2px solid #000; padding: 7px 0; margin-bottom: 15px; }
+.test-banner .test-title { font-size: 14px; font-weight: bold; text-transform: uppercase; letter-spacing: 1px; }
+.addendum-section { margin-top: 15px; margin-bottom: 15px; page-break-inside: avoid; }
+.addendum-heading { font-family: "Times New Roman", Times, serif; font-size: 13px; font-weight: bold; text-transform: uppercase; letter-spacing: 1px; margin-bottom: 8px; color: #000; }
+.addendum-content { font-size: 11px; line-height: 1.7; text-align: justify; padding-left: 10px; }
+.report-content { min-height: 350px; font-size: 11px; line-height: 1.7; margin-bottom: 20px; text-align: justify; }
+.report-content p { margin-bottom: 6px; }
+.report-content table { width: 100%; border-collapse: collapse; margin-bottom: 8px; }
+.report-content table td, .report-content table th { border: 1px solid #ccc; padding: 4px 6px; font-size: 10.5px; }
+.signatures { display: flex; justify-content: space-between; margin-top: 30px; padding-top: 10px; border-top: 1px solid #000; page-break-inside: avoid; }
+.sig-block { width: 45%; }
+.sig-block.right { text-align: right; }
+.sig-name { font-weight: bold; font-size: 11px; }
+.sig-qual { font-size: 9.5px; margin-top: 2px; color: #333; }
+.sig-date { font-size: 9.5px; margin-top: 2px; }
+.sig-note { font-style: italic; font-size: 8.5px; margin-top: 5px; color: #555; }
+.sig-line { border-top: 1px solid #000; margin-top: 35px; padding-top: 5px; }
+.page-footer { display: flex; justify-content: space-between; gap: 10px; margin-top: 25px; padding-top: 8px; border-top: 1.5px double #000; font-size: 9px; color: #444; page-break-inside: avoid; }
+.footer-col { flex: 1; }
+.footer-col.right { text-align: right; }
+.print-btn { position: fixed; bottom: 25px; right: 25px; background: #1a1a2e; color: #fff; border: none; padding: 12px 28px; border-radius: 6px; font-size: 14px; cursor: pointer; box-shadow: 0 4px 12px rgba(0,0,0,0.3); z-index: 9999; }
+.print-btn:hover { background: #16213e; }
+@media print {
+    @page { size: A4; margin: 15mm 20mm; margin-top: 0; margin-bottom: 0; }
+    body { margin: 15mm 20mm !important; padding: 0 !important; }
+    .print-btn { display: none !important; }
+    html, body { height: auto !important; overflow: visible !important; }
+    * { -webkit-print-color-adjust: exact !important; print-color-adjust: exact !important; color-adjust: exact !important; }
+}
+</style>
+<script>
+function cleanPrint() {
+    var btn = document.querySelector('.print-btn');
+    if (btn) btn.style.display = 'none';
+    var style = document.createElement('style');
+    style.innerHTML = '@page { margin: 15mm 20mm; }';
+    document.head.appendChild(style);
+    window.print();
+    setTimeout(function() { if (btn) btn.style.display = 'block'; }, 1000);
+}
+<\/script>
+</head>
+<body>
+<div class="page-wrapper">
+    <div class="report-header">
+        <div class="logo-wrap">${logoHtml}</div>
+        <div class="hospital-info">
+            <div class="name">${data.Company_Name || 'NATIONAL HOSPITAL & MEDICAL CENTRE'}</div>
+            <div class="address">${data.Company_Address || ''}</div>
+        </div>
+    </div>
+    <div class="patient-section">
+        <div class="patient-col">
+            <div class="patient-title">${data.Full_Name || ''} &nbsp; ${data.Age_years || ''}, &nbsp; ${data.Gender || ''}</div>
+            <div class="info-row"><span class="info-label">Contact :</span><span class="info-val">${data.Mobile1 || ''}</span></div>
+            <div class="info-row"><span class="info-label">Patient Type :</span><span class="info-val">${data.Patient_Type || ''}</span></div>
+            <div class="info-row"><span class="info-label">CNIC :</span><span class="info-val">${data.NIC || ''}</span></div>
+            <div class="info-row"><span class="info-label">Referring Doctor :</span><span class="info-val">${data.ReferredByDoctor || ''}</span></div>
+            <div class="info-row"><span class="info-label">Approved By :</span><span class="info-val">${data.Test_Approved_By_Doctor_name || ''}</span></div>
+        </div>
+        <div class="patient-col">
+            <div class="patient-title">MRN# &nbsp; ${data.Patient_No || ''}</div>
+            <div class="info-row"><span class="info-label">Reg Date :</span><span class="info-val">${formatDate(data.REg_Date)}</span></div>
+            <div class="info-row"><span class="info-label">Department :</span><span class="info-val">${data.Department || ''}</span></div>
+            <div class="info-row"><span class="info-label">Created At :</span><span class="info-val">${data.Billing_Date || ''}</span></div>
+            <div class="info-row"><span class="info-label">Reported At :</span><span class="info-val">${data.Approved_Time || ''}</span></div>
+            <div class="info-row"><span class="info-label">Accession # :</span><span class="info-val">${data.Lab_Test_Detail_Id || ''}</span></div>
+        </div>
+    </div>
+    <div class="test-banner">
+        <div class="test-title">${data.Test_Name || ''}</div>
+    </div>
+    <div class="report-content">
+        ${data.Fixed_Value || '<p style="color:#999; text-align:center;">No report content available.</p>'}
+    </div>
+    ${data.Addendum_Template ? `
+    <div class="addendum-section">
+        <div class="addendum-heading">ADDENDUM:</div>
+        <div class="addendum-content">${data.Addendum_Template}</div>
+    </div>` : ''}
+    <div class="signatures">
+        <div class="sig-block">
+            <div class="sig-name">${data.Test_Performed_By_Doctor_name || ''}</div>
+            <div class="sig-qual">${data.Test_Performed_By_Doctor_qualification || ''}</div>
+            <div class="sig-date">Date &amp; Time: ${data.Test_Ready_On || ''}</div>
+            <div class="sig-note">No Signature(s) required, Electronically Verified</div>
+        </div>
+        <div class="sig-block right">
+            <div class="sig-line" style="margin-top:0; border-top:1px solid #000; padding-top:5px; display:inline-block; min-width:200px; text-align:right;">
+                <div class="sig-name">${data.Test_Approved_By_Doctor_name ? data.Test_Approved_By_Doctor_name : '&nbsp;'}</div>
+                <div class="sig-qual">${data.Test_Approved_By_Doctor_qualification || ''}</div>
+            </div>
+        </div>
+    </div>
+    <div class="page-footer" style="margin-top:10px; border-top: 1px solid #ccc; padding-top:6px;">
+        <div class="footer-col">${data.Report_Footer1 || ''}</div>
+        <div class="footer-col right">${data.Report_Footer_tow1 || ''}</div>
+    </div>
+    <div class="page-footer">
+        <div class="footer-col">${data.Report_Footer || ''}</div>
+        <div class="footer-col right">${data.Report_Footer_tow || ''}</div>
+    </div>
+    <button class="print-btn" onclick="cleanPrint()">🖨 Print Report</button>
+</div>
+</body>
+</html>`;
+
+                        reportWindow.document.open();
+                        reportWindow.document.write(html);
+                        reportWindow.document.close();
+                    },
+                    error: function (xhr, status, error) {
+                        reportWindow.document.open();
+                        reportWindow.document.write('<html><body style="font-family:Arial;color:red;padding:40px;"><h3>AJAX Error</h3><p>' + (xhr.responseText || error) + '</p></body></html>');
+                        reportWindow.document.close();
+                    }
+                });
+            }
+        }
+
     </script>
 
 
@@ -4362,6 +4643,12 @@ ${data.Addendum_Template ? `
                         <div><strong>Category:</strong> <span id="modal_Category">--</span></div>
                         <div><strong>Bill No:</strong> <span id="modal_BillNo">--</span></div>
                         <div><strong>Date:</strong> <span id="modal_BillDate">--</span></div>
+                    </div>
+                </div>
+                <div class="row" style="margin-top: 10px; margin-bottom: 10px; margin-left: 15px; margin-right: 15px;">
+                    <div class="col-lg-8"></div>
+                    <div class="col-lg-2">
+                        <input type="button" id="btnViewHistory" class="btn btn-info btn-sm" name="btnViewHistory" value="View Test History" onclick="showTestHistory();" style="border-radius: 4px;" />
                     </div>
                 </div>
                 <div id="dvSingleTestName">
@@ -4683,6 +4970,40 @@ ${data.Addendum_Template ? `
                 <div class="modal-footer">
                     <input type="button" class="btn btn-default" data-dismiss="modal" value="Cancel" />
                     <input type="button" id="btnConfirmReject" class="btn btn-danger" value="Confirm Reject" />
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+    <div id="historyModal" class="modal fade" role="dialog">
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal">&times;</button>
+                    <h4 class="modal-title">Test History</h4>
+                </div>
+                <div class="modal-body">
+                    <div class="table-responsive">
+                        <table class="table table-bordered table-hover" id="tblHistory">
+                            <thead>
+                                <tr>
+                                    <th>Bill No</th>
+                                    <th>Bill Date</th>
+                                    <th>Patient Name</th>
+                                    <th>Action</th>
+                                </tr>
+                            </thead>
+                            <tbody id="tblHistoryBody">
+                            </tbody>
+                        </table>
+                    </div>
+                    <div id="noHistoryMsg" class="text-center text-muted" style="display: none;">No previous history found.</div>
+                </div>
+                <div class="modal-footer">
+                    <div class="col-lg-2">
+                    <input type="button" class="btn btn-default" data-dismiss="modal" value="Close" />
+                        </div>
                 </div>
             </div>
         </div>
