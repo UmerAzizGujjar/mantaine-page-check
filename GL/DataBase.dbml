@@ -7983,6 +7983,137 @@
       <Column Name="IsPayable" Type="System.Boolean" DbType="Bit" CanBeNull="true" />
     </Type>
   </Table>
+  <Table Name="dbo.Physiotherapy_Assessment" Member="Physiotherapy_Assessments">
+    <Type Name="Physiotherapy_Assessment">
+      <Column Name="Physio_ID" Type="System.Int32" DbType="Int NOT NULL IDENTITY" IsPrimaryKey="true" IsDbGenerated="true" CanBeNull="false" />
+      <Column Name="Out_Patient_ID" Type="System.Int32" DbType="Int" CanBeNull="true" />
+      <Column Name="Reg_Pat_ID" Type="System.Int32" DbType="Int" CanBeNull="true" />
+      <Column Name="Assessment_Date" Type="System.DateTime" DbType="DateTime" CanBeNull="true" />
+      <Column Name="Occupation" Type="System.String" DbType="VarChar(100)" CanBeNull="true" />
+      <Column Name="Reason_For_Referral" Type="System.String" DbType="VarChar(255)" CanBeNull="true" />
+      <Column Name="Cond_Diabetes" Type="System.Boolean" DbType="Bit" CanBeNull="true" />
+      <Column Name="Cond_Hypertension" Type="System.Boolean" DbType="Bit" CanBeNull="true" />
+      <Column Name="Cond_Cardiac" Type="System.Boolean" DbType="Bit" CanBeNull="true" />
+      <Column Name="Cond_Surgery" Type="System.Boolean" DbType="Bit" CanBeNull="true" />
+      <Column Name="Cond_Neuro" Type="System.Boolean" DbType="Bit" CanBeNull="true" />
+      <Column Name="Cond_Resp" Type="System.Boolean" DbType="Bit" CanBeNull="true" />
+      <Column Name="Cond_Thyroid" Type="System.Boolean" DbType="Bit" CanBeNull="true" />
+      <Column Name="Cond_Arthritis" Type="System.Boolean" DbType="Bit" CanBeNull="true" />
+      <Column Name="Cond_Other" Type="System.Boolean" DbType="Bit" CanBeNull="true" />
+      <Column Name="Cond_Other_Spec" Type="System.String" DbType="VarChar(100)" CanBeNull="true" />
+      <Column Name="Surgical_History" Type="System.String" DbType="VarChar(MAX)" CanBeNull="true" />
+      <Column Name="Current_Medications" Type="System.String" DbType="VarChar(MAX)" CanBeNull="true" />
+      <Column Name="Allergies" Type="System.String" DbType="VarChar(MAX)" CanBeNull="true" />
+      <Column Name="Chief_Complaint" Type="System.String" DbType="VarChar(MAX)" CanBeNull="true" />
+      <Column Name="CC_Duration" Type="System.String" DbType="VarChar(50)" CanBeNull="true" />
+      <Column Name="CC_Onset" Type="System.String" DbType="VarChar(50)" CanBeNull="true" />
+      <Column Name="CC_Mode" Type="System.String" DbType="VarChar(50)" CanBeNull="true" />
+      <Column Name="Pain_Scale" Type="System.Int32" DbType="Int" CanBeNull="true" />
+      <Column Name="Pain_Type" Type="System.String" DbType="VarChar(50)" CanBeNull="true" />
+      <Column Name="Body_Chart_JSON" Type="System.String" DbType="VarChar(MAX)" CanBeNull="true" />
+      <Column Name="Post_Normal" Type="System.Boolean" DbType="Bit" CanBeNull="true" />
+      <Column Name="Post_Kyphosis" Type="System.Boolean" DbType="Bit" CanBeNull="true" />
+      <Column Name="Post_Lordosis" Type="System.Boolean" DbType="Bit" CanBeNull="true" />
+      <Column Name="Post_Scoliosis" Type="System.Boolean" DbType="Bit" CanBeNull="true" />
+      <Column Name="Post_Antalgic" Type="System.Boolean" DbType="Bit" CanBeNull="true" />
+      <Column Name="Post_Other" Type="System.Boolean" DbType="Bit" CanBeNull="true" />
+      <Column Name="Post_Other_Spec" Type="System.String" DbType="VarChar(100)" CanBeNull="true" />
+      <Column Name="MMT_Right" Type="System.String" DbType="VarChar(50)" CanBeNull="true" />
+      <Column Name="MMT_Left" Type="System.String" DbType="VarChar(50)" CanBeNull="true" />
+      <Column Name="MMT_Upper_Limb" Type="System.String" DbType="VarChar(50)" CanBeNull="true" />
+      <Column Name="MMT_Lower_Limb" Type="System.String" DbType="VarChar(50)" CanBeNull="true" />
+      <Column Name="Area_Neck" Type="System.Boolean" DbType="Bit" CanBeNull="true" />
+      <Column Name="Area_Shoulder" Type="System.Boolean" DbType="Bit" CanBeNull="true" />
+      <Column Name="Area_Elbow" Type="System.Boolean" DbType="Bit" CanBeNull="true" />
+      <Column Name="Area_Wrist" Type="System.Boolean" DbType="Bit" CanBeNull="true" />
+      <Column Name="Area_Back" Type="System.Boolean" DbType="Bit" CanBeNull="true" />
+      <Column Name="Area_Hip" Type="System.Boolean" DbType="Bit" CanBeNull="true" />
+      <Column Name="Area_Knee" Type="System.Boolean" DbType="Bit" CanBeNull="true" />
+      <Column Name="Area_Ankle" Type="System.Boolean" DbType="Bit" CanBeNull="true" />
+      <Column Name="Area_Other" Type="System.Boolean" DbType="Bit" CanBeNull="true" />
+      <Column Name="Area_Other_Spec" Type="System.String" DbType="VarChar(100)" CanBeNull="true" />
+      <Column Name="Aggravating_Factors" Type="System.String" DbType="VarChar(MAX)" CanBeNull="true" />
+      <Column Name="Rel_Medication" Type="System.Boolean" DbType="Bit" CanBeNull="true" />
+      <Column Name="Rel_Rest" Type="System.Boolean" DbType="Bit" CanBeNull="true" />
+      <Column Name="Rel_Exercise" Type="System.Boolean" DbType="Bit" CanBeNull="true" />
+      <Column Name="Rel_Other" Type="System.Boolean" DbType="Bit" CanBeNull="true" />
+      <Column Name="Rel_Other_Spec" Type="System.String" DbType="VarChar(100)" CanBeNull="true" />
+      <Column Name="Sens_Intact" Type="System.Boolean" DbType="Bit" CanBeNull="true" />
+      <Column Name="Sens_Reduced" Type="System.Boolean" DbType="Bit" CanBeNull="true" />
+      <Column Name="Sens_Absent" Type="System.Boolean" DbType="Bit" CanBeNull="true" />
+      <Column Name="Sens_Hyperalgesia" Type="System.Boolean" DbType="Bit" CanBeNull="true" />
+      <Column Name="Sens_Allodynia" Type="System.Boolean" DbType="Bit" CanBeNull="true" />
+      <Column Name="Ref_Normal" Type="System.Boolean" DbType="Bit" CanBeNull="true" />
+      <Column Name="Ref_Decreased" Type="System.Boolean" DbType="Bit" CanBeNull="true" />
+      <Column Name="Ref_Increased" Type="System.Boolean" DbType="Bit" CanBeNull="true" />
+      <Column Name="Ref_Absent" Type="System.Boolean" DbType="Bit" CanBeNull="true" />
+      <Column Name="Ref_Other" Type="System.Boolean" DbType="Bit" CanBeNull="true" />
+      <Column Name="Ref_Other_Spec" Type="System.String" DbType="VarChar(100)" CanBeNull="true" />
+      <Column Name="Special_Tests" Type="System.String" DbType="VarChar(MAX)" CanBeNull="true" />
+      <Column Name="Palp_Warmth" Type="System.Boolean" DbType="Bit" CanBeNull="true" />
+      <Column Name="Palp_Tenderness" Type="System.Boolean" DbType="Bit" CanBeNull="true" />
+      <Column Name="Palp_Crepitus" Type="System.Boolean" DbType="Bit" CanBeNull="true" />
+      <Column Name="Palp_Swelling" Type="System.Boolean" DbType="Bit" CanBeNull="true" />
+      <Column Name="Palp_Spasm" Type="System.Boolean" DbType="Bit" CanBeNull="true" />
+      <Column Name="Palp_Temperature" Type="System.Boolean" DbType="Bit" CanBeNull="true" />
+      <Column Name="Palp_Other" Type="System.Boolean" DbType="Bit" CanBeNull="true" />
+      <Column Name="Palp_Other_Spec" Type="System.String" DbType="VarChar(100)" CanBeNull="true" />
+      <Column Name="Dermatome_Myotome" Type="System.String" DbType="VarChar(MAX)" CanBeNull="true" />
+      <Column Name="Red_TENS" Type="System.Boolean" DbType="Bit" CanBeNull="true" />
+      <Column Name="Red_EMS" Type="System.Boolean" DbType="Bit" CanBeNull="true" />
+      <Column Name="Red_US" Type="System.Boolean" DbType="Bit" CanBeNull="true" />
+      <Column Name="Red_Heat" Type="System.Boolean" DbType="Bit" CanBeNull="true" />
+      <Column Name="Red_Cold" Type="System.Boolean" DbType="Bit" CanBeNull="true" />
+      <Column Name="Red_Traction" Type="System.Boolean" DbType="Bit" CanBeNull="true" />
+      <Column Name="Red_Mobilization" Type="System.Boolean" DbType="Bit" CanBeNull="true" />
+      <Column Name="Red_Exercise" Type="System.Boolean" DbType="Bit" CanBeNull="true" />
+      <Column Name="Red_Other" Type="System.Boolean" DbType="Bit" CanBeNull="true" />
+      <Column Name="Red_Other_Spec" Type="System.String" DbType="VarChar(100)" CanBeNull="true" />
+      <Column Name="Diagnosis" Type="System.String" DbType="VarChar(MAX)" CanBeNull="true" />
+      <Column Name="Diag_Cervical" Type="System.String" DbType="VarChar(50)" CanBeNull="true" />
+      <Column Name="Diag_Thoracic" Type="System.String" DbType="VarChar(50)" CanBeNull="true" />
+      <Column Name="Diag_Lumbar" Type="System.String" DbType="VarChar(50)" CanBeNull="true" />
+      <Column Name="Diag_Shoulder" Type="System.String" DbType="VarChar(50)" CanBeNull="true" />
+      <Column Name="Diag_Elbow" Type="System.String" DbType="VarChar(50)" CanBeNull="true" />
+      <Column Name="Diag_Wrist" Type="System.String" DbType="VarChar(50)" CanBeNull="true" />
+      <Column Name="Diag_Hip" Type="System.String" DbType="VarChar(50)" CanBeNull="true" />
+      <Column Name="Diag_Knee" Type="System.String" DbType="VarChar(50)" CanBeNull="true" />
+      <Column Name="Diag_Ankle" Type="System.String" DbType="VarChar(50)" CanBeNull="true" />
+      <Column Name="Short_Term_Goals" Type="System.String" DbType="VarChar(MAX)" CanBeNull="true" />
+      <Column Name="Long_Term_Goals" Type="System.String" DbType="VarChar(MAX)" CanBeNull="true" />
+      <Column Name="Home_Exercise_Program" Type="System.String" DbType="VarChar(MAX)" CanBeNull="true" />
+      <Column Name="Patient_Education" Type="System.String" DbType="VarChar(MAX)" CanBeNull="true" />
+      <Column Name="Next_Review_Date" Type="System.DateTime" DbType="DateTime" CanBeNull="true" />
+      <Column Name="Reviewed_By" Type="System.Int32" DbType="Int" CanBeNull="true" />
+      <Column Name="Review_Notes" Type="System.String" DbType="VarChar(MAX)" CanBeNull="true" />
+      <Column Name="Created_By" Type="System.Int32" DbType="Int" CanBeNull="true" />
+      <Column Name="Created_Time" Type="System.DateTime" DbType="DateTime" CanBeNull="true" />
+      <Column Name="Updated_By" Type="System.Int32" DbType="Int" CanBeNull="true" />
+      <Column Name="Updated_Time" Type="System.DateTime" DbType="DateTime" CanBeNull="true" />
+    </Type>
+  </Table>
+  <Table Name="dbo.Physiotherapy_ROM" Member="Physiotherapy_ROMs">
+    <Type Name="Physiotherapy_ROM">
+      <Column Name="ROM_ID" Type="System.Int32" DbType="Int NOT NULL IDENTITY" IsPrimaryKey="true" IsDbGenerated="true" CanBeNull="false" />
+      <Column Name="Physio_ID" Type="System.Int32" DbType="Int" CanBeNull="true" />
+      <Column Name="Movement" Type="System.String" DbType="VarChar(50)" CanBeNull="true" />
+      <Column Name="Left_Value" Type="System.String" DbType="VarChar(50)" CanBeNull="true" />
+      <Column Name="Right_Value" Type="System.String" DbType="VarChar(50)" CanBeNull="true" />
+    </Type>
+  </Table>
+  <Table Name="dbo.Physiotherapy_Treatment_Plan" Member="Physiotherapy_Treatment_Plans">
+    <Type Name="Physiotherapy_Treatment_Plan">
+      <Column Name="Treatment_ID" Type="System.Int32" DbType="Int NOT NULL IDENTITY" IsPrimaryKey="true" IsDbGenerated="true" CanBeNull="false" />
+      <Column Name="Physio_ID" Type="System.Int32" DbType="Int" CanBeNull="true" />
+      <Column Name="Modality" Type="System.String" DbType="VarChar(100)" CanBeNull="true" />
+      <Column Name="Details" Type="System.String" DbType="VarChar(255)" CanBeNull="true" />
+      <Column Name="Duration" Type="System.String" DbType="VarChar(50)" CanBeNull="true" />
+      <Column Name="Frequency" Type="System.String" DbType="VarChar(50)" CanBeNull="true" />
+      <Column Name="Intensity" Type="System.String" DbType="VarChar(50)" CanBeNull="true" />
+      <Column Name="Start_Date" Type="System.DateTime" DbType="DateTime" CanBeNull="true" />
+      <Column Name="End_Date" Type="System.DateTime" DbType="DateTime" CanBeNull="true" />
+    </Type>
+  </Table>
   <Function Name="dbo.GetDataValueName" Method="GetDataValueName" IsComposable="true">
     <Parameter Name="ValueSetName" Parameter="valueSetName" Type="System.String" DbType="VarChar(150)" />
     <Parameter Name="DataValueName" Parameter="dataValueName" Type="System.String" DbType="VarChar(50)" />
