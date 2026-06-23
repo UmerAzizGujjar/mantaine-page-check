@@ -50,7 +50,7 @@ namespace PMS
                               && (bill.isCancel == false || bill.isCancel == null)
                               && !db.Refunds.Any(r => r.Bill_ID == bill.Bill_ID)
 
-                        orderby bill.Bill_No descending
+                        orderby bill.Bill_Date descending
                         let dept = (from ipd in db.In_Patients
                                     where ipd.Patient_ID == pat.pat_id
                                     orderby ipd.In_Patient_ID descending
@@ -99,7 +99,7 @@ namespace PMS
                             RawTestDeptCode = bill_details.Test_Main_Department
                         };
 
-            var queryList = query.ToList();
+            var queryList = query.OrderByDescending(x => x.Bill_Date).ToList();
 
             if (!string.IsNullOrEmpty(ddlDoctorFilter) && ddlDoctorFilter != "0")
             {
@@ -154,7 +154,7 @@ namespace PMS
                     queryList = sortDirection == "asc" ? queryList.OrderBy(x => x.mr_no_sequence).ToList() : queryList.OrderByDescending(x => x.mr_no_sequence).ToList();
                     break;
                 case "Bill_Date":
-                    queryList = sortDirection == "asc" ? queryList.OrderBy(x => x.Bill_Date).ToList() : queryList.OrderByDescending(x => x.Bill_Date).ToList();
+                    queryList = sortDirection == "asc" ? queryList.OrderByDescending(x => x.Bill_Date).ToList() : queryList.OrderBy(x => x.Bill_Date).ToList();
                     break;
                 case "Department":
                     queryList = sortDirection == "asc" ? queryList.OrderBy(x => x.Department).ToList() : queryList.OrderByDescending(x => x.Department).ToList();
