@@ -58,7 +58,7 @@
                     {
                         data: 'AssessmentDate', name: 'AssessmentDate', width: '12%',
                         render: function (data, type, full) {
-                            return full.AssessmentDate ? moment(full.AssessmentDate, 'DD/MM/YYYY').format('DD-MMM-YYYY') : '';
+                            return full.AssessmentDate || '';
                         }
                     },
                     { data: 'Department', name: 'Department', width: '15%' },

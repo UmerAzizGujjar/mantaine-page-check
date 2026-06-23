@@ -379,12 +379,7 @@ namespace PMS.Modules.PatientManagement
                 bool isNew = (existing == null);
 
                 var entity = existing ?? new PMS.Physiotherapy_Assessment();
-                int userId = _currentUserId ?? 0;
-                if (userId == 0)
-                {
-                    var emp = db.HR_Employees.FirstOrDefault(x => x.userid == Convert.ToString(AppConfig.UserID));
-                    if (emp != null) userId = emp.Emp_ID;
-                }
+                var userId = AppConfig.UserID;
 
                 if (isNew)
                 {
