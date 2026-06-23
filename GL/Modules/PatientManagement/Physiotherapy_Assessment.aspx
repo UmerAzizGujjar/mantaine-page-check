@@ -460,6 +460,35 @@
                     </div>
                 </div>
                 <input type="hidden" id="hdnBodyMarkers" />
+
+                <div class="grades-wrap">
+                    <div class="grades-title">Muscle Power Grades</div>
+                    <table class="grades-table">
+                        <thead>
+                            <tr><th>Grades</th><th>0</th><th>1</th><th>2</th><th>3</th><th>4</th><th>5</th></tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>Upper Limb</td>
+                                <td><input type="checkbox" id="chkUL_0" /></td>
+                                <td><input type="checkbox" id="chkUL_1" /></td>
+                                <td><input type="checkbox" id="chkUL_2" /></td>
+                                <td><input type="checkbox" id="chkUL_3" /></td>
+                                <td><input type="checkbox" id="chkUL_4" /></td>
+                                <td><input type="checkbox" id="chkUL_5" /></td>
+                            </tr>
+                            <tr>
+                                <td>Lower Limb</td>
+                                <td><input type="checkbox" id="chkLL_0" /></td>
+                                <td><input type="checkbox" id="chkLL_1" /></td>
+                                <td><input type="checkbox" id="chkLL_2" /></td>
+                                <td><input type="checkbox" id="chkLL_3" /></td>
+                                <td><input type="checkbox" id="chkLL_4" /></td>
+                                <td><input type="checkbox" id="chkLL_5" /></td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
             </div>
 
             <div class="bento-card" style="padding: 12px; margin-top: 10px">
@@ -597,44 +626,44 @@
                     </thead>
                     <tbody>
                         <tr class="tx-row">
-                            <td><input type="checkbox" class="tx-select" data-row="1" /></td>
+                            <td><input type="checkbox" class="tx-select" id="txSelEx" /></td>
                             <td class="tx-label" style="text-align: left">Therapeutic Exercise</td>
-                            <td><input type="text" class="form-control tx-input" disabled /></td>
-                            <td><input type="text" class="form-control tx-input" disabled placeholder="e.g. 30 min" /></td>
-                            <td><input type="text" class="form-control tx-input" disabled placeholder="e.g. 3x/week" /></td>
-                            <td><input type="text" class="form-control tx-input" disabled placeholder="e.g. Low/Med" /></td>
-                            <td><input type="text" class="form-control datepicker tx-input" disabled placeholder="dd/mm/yy" /></td>
-                            <td><input type="text" class="form-control datepicker tx-input" disabled placeholder="dd/mm/yy" /></td>
+                            <td><input type="text" class="form-control tx-input" id="txExDetails" disabled /></td>
+                            <td><input type="text" class="form-control tx-input" id="txExDuration" disabled placeholder="e.g. 30 min" /></td>
+                            <td><input type="text" class="form-control tx-input" id="txExFreq" disabled placeholder="e.g. 3x/week" /></td>
+                            <td><input type="text" class="form-control tx-input" id="txExIntensity" disabled placeholder="e.g. Low/Med" /></td>
+                            <td><input type="text" class="form-control datepicker tx-input" id="txExStart" disabled placeholder="dd/mm/yy" /></td>
+                            <td><input type="text" class="form-control datepicker tx-input" id="txExEnd" disabled placeholder="dd/mm/yy" /></td>
                         </tr>
                         <tr class="tx-row">
-                            <td><input type="checkbox" class="tx-select" data-row="2" /></td>
+                            <td><input type="checkbox" class="tx-select" id="txSelEl" /></td>
                             <td class="tx-label" style="text-align: left">Electrotherapy</td>
-                            <td><input type="text" class="form-control tx-input" disabled /></td>
-                            <td><input type="text" class="form-control tx-input" disabled placeholder="e.g. 30 min" /></td>
-                            <td><input type="text" class="form-control tx-input" disabled placeholder="e.g. 3x/week" /></td>
-                            <td><input type="text" class="form-control tx-input" disabled placeholder="e.g. Low/Med" /></td>
-                            <td><input type="text" class="form-control datepicker tx-input" disabled placeholder="dd/mm/yy" /></td>
-                            <td><input type="text" class="form-control datepicker tx-input" disabled placeholder="dd/mm/yy" /></td>
+                            <td><input type="text" class="form-control tx-input" id="txElDetails" disabled /></td>
+                            <td><input type="text" class="form-control tx-input" id="txElDuration" disabled placeholder="e.g. 30 min" /></td>
+                            <td><input type="text" class="form-control tx-input" id="txElFreq" disabled placeholder="e.g. 3x/week" /></td>
+                            <td><input type="text" class="form-control tx-input" id="txElIntensity" disabled placeholder="e.g. Low/Med" /></td>
+                            <td><input type="text" class="form-control datepicker tx-input" id="txElStart" disabled placeholder="dd/mm/yy" /></td>
+                            <td><input type="text" class="form-control datepicker tx-input" id="txElEnd" disabled placeholder="dd/mm/yy" /></td>
                         </tr>
                         <tr class="tx-row">
-                            <td><input type="checkbox" class="tx-select" data-row="3" /></td>
+                            <td><input type="checkbox" class="tx-select" id="txSelMan" /></td>
                             <td class="tx-label" style="text-align: left">Manual Therapy</td>
-                            <td><input type="text" class="form-control tx-input" disabled /></td>
-                            <td><input type="text" class="form-control tx-input" disabled placeholder="e.g. 30 min" /></td>
-                            <td><input type="text" class="form-control tx-input" disabled placeholder="e.g. 3x/week" /></td>
-                            <td><input type="text" class="form-control tx-input" disabled placeholder="e.g. Low/Med" /></td>
-                            <td><input type="text" class="form-control datepicker tx-input" disabled placeholder="dd/mm/yy" /></td>
-                            <td><input type="text" class="form-control datepicker tx-input" disabled placeholder="dd/mm/yy" /></td>
+                            <td><input type="text" class="form-control tx-input" id="txManDetails" disabled /></td>
+                            <td><input type="text" class="form-control tx-input" id="txManDuration" disabled placeholder="e.g. 30 min" /></td>
+                            <td><input type="text" class="form-control tx-input" id="txManFreq" disabled placeholder="e.g. 3x/week" /></td>
+                            <td><input type="text" class="form-control tx-input" id="txManIntensity" disabled placeholder="e.g. Low/Med" /></td>
+                            <td><input type="text" class="form-control datepicker tx-input" id="txManStart" disabled placeholder="dd/mm/yy" /></td>
+                            <td><input type="text" class="form-control datepicker tx-input" id="txManEnd" disabled placeholder="dd/mm/yy" /></td>
                         </tr>
                         <tr class="tx-row">
-                            <td><input type="checkbox" class="tx-select" data-row="4" /></td>
+                            <td><input type="checkbox" class="tx-select" id="txSelOth" /></td>
                             <td class="tx-label" style="text-align: left">Other Modalities</td>
-                            <td><input type="text" class="form-control tx-input" id="txOtherDetails" disabled placeholder="Specify modality..." /></td>
-                            <td><input type="text" class="form-control tx-input" disabled placeholder="e.g. 30 min" /></td>
-                            <td><input type="text" class="form-control tx-input" disabled placeholder="e.g. 3x/week" /></td>
-                            <td><input type="text" class="form-control tx-input" disabled placeholder="e.g. Low/Med" /></td>
-                            <td><input type="text" class="form-control datepicker tx-input" disabled placeholder="dd/mm/yy" /></td>
-                            <td><input type="text" class="form-control datepicker tx-input" disabled placeholder="dd/mm/yy" /></td>
+                            <td><input type="text" class="form-control tx-input" id="txOthDetails" disabled placeholder="Specify modality..." /></td>
+                            <td><input type="text" class="form-control tx-input" id="txOthDuration" disabled placeholder="e.g. 30 min" /></td>
+                            <td><input type="text" class="form-control tx-input" id="txOthFreq" disabled placeholder="e.g. 3x/week" /></td>
+                            <td><input type="text" class="form-control tx-input" id="txOthIntensity" disabled placeholder="e.g. Low/Med" /></td>
+                            <td><input type="text" class="form-control datepicker tx-input" id="txOthStart" disabled placeholder="dd/mm/yy" /></td>
+                            <td><input type="text" class="form-control datepicker tx-input" id="txOthEnd" disabled placeholder="dd/mm/yy" /></td>
                         </tr>
                     </tbody>
                 </table>
@@ -677,13 +706,17 @@
         </div>
     </div>
 
+    <input type="hidden" id="hdnOutPatientId" value="<%=Request.QueryString["ID"] ?? "" %>" />
+    <input type="hidden" id="hdnRegPatId" value="0" />
+
     <div class="body-save-row" style="padding: 0 15px 15px">
-        <button type="button" class="btn btn-primry" onclick="BodyChart.save()">Save</button>
-        <button type="button" class="btn btn-gray" onclick="BodyChart.clear()">Clear All</button>
+        <button type="button" class="btn btn-primry" id="btnSaveAssessment" onclick="saveAssessment()">Save Assessment</button>
+        <button type="button" class="btn btn-gray" onclick="BodyChart.clear()">Clear Chart</button>
     </div>
 
     <script type="text/javascript">
         function populatePatient(d) {
+            $('#hdnRegPatId').val(d.regPatId || 0);
             document.getElementById('patientDisplay').innerText = d.display;
             document.getElementById('lblAge').innerText = d.age;
             document.getElementById('lblGender').innerText = d.gender;
@@ -696,6 +729,211 @@
             document.getElementById('spnResp').innerText = d.resp;
             document.getElementById('spnHeight').innerText = d.height;
             document.getElementById('spnWeight').innerText = d.weight;
+        }
+
+        function gatherFormData() {
+            function v(id) { return $('#' + id).val(); }
+            function ck(id) { return $('#' + id).is(':checked') ? true : null; }
+            function rv(name) { return $('input[name="' + name + '"]:checked').val() || null; }
+
+            return {
+                assessmentDate: v('txtAssessmentDate'),
+                occupation: v('txtOccupation'),
+                reasonForReferral: v('txtReferralReason'),
+                chiefComplaint: v('txtChiefComplaint'),
+                duration: v('txtDuration'),
+                onset: v('ddlOnset'),
+                mode: v('ddlMode'),
+                condDiabetes: ck('chkDM'), condHypertension: ck('chkHTN'),
+                condCardiac: ck('chkCardiac'), condSurgery: ck('chkSurgery'),
+                condNeuro: ck('chkNeuro'), condResp: ck('chkResp'),
+                condThyroid: ck('chkThyroid'), condArthritis: ck('chkArthritis'),
+                condOther: ck('chkOtherCond'), condOtherSpec: v('txtOtherCondition'),
+                surgicalHistory: v('txtSurgicalHistory'),
+                currentMedications: v('txtMedications'),
+                allergies: v('txtAllergies'),
+                painScale: parseInt($('#hdnPainScale').val()) || null,
+                painType: rv('painType'),
+                bodyChartJson: v('hdnBodyMarkers'),
+                postNormal: ck('chkPostNormal'), postKyphosis: ck('chkKyphosis'),
+                postLordosis: ck('chkLordosis'), postScoliosis: ck('chkScoliosis'),
+                postAntalgic: ck('chkAntalgic'), postOther: ck('chkPostOther'),
+                postOtherSpec: v('txtPostOther'),
+                mmtRight: v('txtMMT_Right'), mmtLeft: v('txtMMT_Left'),
+                mmtUpperLimb: v('txtMMT_UpperLimb'), mmtLowerLimb: v('txtMMT_LowerLimb'),
+                areaNeck: ck('chkAreaNeck'), areaShoulder: ck('chkAreaShoulder'),
+                areaElbow: ck('chkAreaElbow'), areaWrist: ck('chkAreaWrist'),
+                areaBack: ck('chkAreaBack'), areaHip: ck('chkAreaHip'),
+                areaKnee: ck('chkAreaKnee'), areaAnkle: ck('chkAreaAnkle'),
+                areaOther: ck('chkAreaOther'), areaOtherSpec: v('txtAreaOther'),
+                aggravatingFactors: v('txtAggravating'),
+                relMedication: ck('chkMedication'), relRest: ck('chkRest'),
+                relExercise: ck('chkExercise'), relOther: ck('chkRelOther'),
+                relOtherSpec: v('txtRelOther'),
+                sensIntact: ck('chkSensIntact'), sensReduced: ck('chkSensReduced'),
+                sensAbsent: ck('chkSensAbsent'), sensHyperalgesia: ck('chkSensHyper'),
+                sensAllodynia: ck('chkSensAllo'),
+                refNormal: ck('chkRefNormal'), refDecreased: ck('chkRefDecreased'),
+                refIncreased: ck('chkRefIncreased'), refAbsent: ck('chkRefAbsent'),
+                refOther: ck('chkRefOther'), refOtherSpec: v('txtRefOther'),
+                specialTests: v('txtSpecialTests'),
+                palpWarmth: ck('chkPalpWarmth'), palpTenderness: ck('chkPalpTenderness'),
+                palpCrepitus: ck('chkPalpCrepitus'), palpSwelling: ck('chkPalpSwelling'),
+                palpSpasm: ck('chkPalpSpasm'), palpTemperature: ck('chkPalpTemperature'),
+                palpOther: ck('chkPalpOther'), palpOtherSpec: v('txtPalpOther'),
+                dermatomeMyotome: v('txtDermatomeMyotome'),
+                redTENS: ck('chkRedTENS'), redEMS: ck('chkRedEMS'),
+                redUS: ck('chkRedUS'), redHeat: ck('chkRedHeat'),
+                redCold: ck('chkRedCold'), redTraction: ck('chkRedTraction'),
+                redMobilization: ck('chkRedMobilization'), redExercise: ck('chkRedExercise'),
+                redOther: ck('chkRedOther'), redOtherSpec: v('txtRedOther'),
+                diagnosis: v('txtDiagnosis'),
+                diagCervical: v('ddlTestCervical'), diagThoracic: v('ddlTestThoracic'),
+                diagLumbar: v('ddlTestLumbar'), diagShoulder: v('ddlTestShoulder'),
+                diagElbow: v('ddlTestElbow'), diagWrist: v('ddlTestWrist'),
+                diagHip: v('ddlTestHip'), diagKnee: v('ddlTestKnee'),
+                diagAnkle: v('ddlTestAnkle'),
+                shortTermGoals: v('txtShortTermGoals'),
+                longTermGoals: v('txtLongTermGoals'),
+                homeExerciseProgram: v('txtHomeExercise'),
+                patientEducation: v('txtPatientEducation'),
+                txExSel: ck('txSelEx'), txExDetails: v('txExDetails'),
+                txExDuration: v('txExDuration'), txExFreq: v('txExFreq'),
+                txExIntensity: v('txExIntensity'), txExStart: v('txExStart'), txExEnd: v('txExEnd'),
+                txElSel: ck('txSelEl'), txElDetails: v('txElDetails'),
+                txElDuration: v('txElDuration'), txElFreq: v('txElFreq'),
+                txElIntensity: v('txElIntensity'), txElStart: v('txElStart'), txElEnd: v('txElEnd'),
+                txManSel: ck('txSelMan'), txManDetails: v('txManDetails'),
+                txManDuration: v('txManDuration'), txManFreq: v('txManFreq'),
+                txManIntensity: v('txManIntensity'), txManStart: v('txManStart'), txManEnd: v('txManEnd'),
+                txOthSel: ck('txSelOth'), txOthDetails: v('txOthDetails'),
+                txOthDuration: v('txOthDuration'), txOthFreq: v('txOthFreq'),
+                txOthIntensity: v('txOthIntensity'), txOthStart: v('txOthStart'), txOthEnd: v('txOthEnd'),
+                nextReviewDate: v('txtReviewDate'),
+                reviewedBy: parseInt(v('ddlReviewedBy')) || null,
+                reviewNotes: v('txtReviewNotes')
+            };
+        }
+
+        function saveAssessment() {
+            var opId = parseInt($('#hdnOutPatientId').val());
+            var regPatId = parseInt($('#hdnRegPatId').val());
+            if (!opId) { Swal.fire({ icon: 'error', title: 'Error', text: 'No patient ID found!' }); return; }
+
+            var data = gatherFormData();
+            $('#btnSaveAssessment').prop('disabled', true).text('Saving...');
+
+            PageMethods.SaveAssessment(opId, regPatId, JSON.stringify(data), function (r) {
+                if (r.success) {
+                    Swal.fire({ icon: 'success', title: r.isNew ? 'Saved' : 'Updated', text: 'Assessment ' + (r.isNew ? 'saved' : 'updated') + ' successfully!', timer: 1500, showConfirmButton: false });
+                    setTimeout(function () { location.reload(); }, 1600);
+                } else {
+                    Swal.fire({ icon: 'error', title: 'Error', text: 'Failed to save assessment.' });
+                    $('#btnSaveAssessment').prop('disabled', false).text('Save Assessment');
+                }
+            }, function () {
+                Swal.fire({ icon: 'error', title: 'Error', text: 'Server error occurred.' });
+                $('#btnSaveAssessment').prop('disabled', false).text('Save Assessment');
+            });
+        }
+
+        function populateAssessment(d) {
+            if (!d) return;
+            function setVal(id, val) { if (val !== null && val !== undefined) $('#' + id).val(val).trigger('change'); }
+            function setCk(id, val) { $('#' + id).prop('checked', val === true); }
+            function setRd(name, val) { if (val) $('input[name="' + name + '"][value="' + val + '"]').prop('checked', true); }
+
+            setVal('txtOccupation', d.occupation);
+            setVal('txtReferralReason', d.reasonForReferral);
+            setVal('txtChiefComplaint', d.chiefComplaint);
+            setVal('txtDuration', d.duration);
+            setVal('ddlOnset', d.onset);
+            setVal('ddlMode', d.mode);
+            setCk('chkDM', d.condDiabetes); setCk('chkHTN', d.condHypertension);
+            setCk('chkCardiac', d.condCardiac); setCk('chkSurgery', d.condSurgery);
+            setCk('chkNeuro', d.condNeuro); setCk('chkResp', d.condResp);
+            setCk('chkThyroid', d.condThyroid); setCk('chkArthritis', d.condArthritis);
+            setCk('chkOtherCond', d.condOther); setVal('txtOtherCondition', d.condOtherSpec);
+            setVal('txtSurgicalHistory', d.surgicalHistory);
+            setVal('txtMedications', d.currentMedications);
+            setVal('txtAllergies', d.allergies);
+            if (d.painScale !== null && d.painScale !== undefined) {
+                $('.pain-circle[data-value="' + d.painScale + '"]').click();
+            }
+            setRd('painType', d.painType);
+            if (d.bodyChartJson) {
+                try { BodyChart.markers = JSON.parse(d.bodyChartJson); BodyChart.renderAll(); $('#hdnBodyMarkers').val(d.bodyChartJson); } catch (e) { }
+            }
+            setCk('chkPostNormal', d.postNormal); setCk('chkKyphosis', d.postKyphosis);
+            setCk('chkLordosis', d.postLordosis); setCk('chkScoliosis', d.postScoliosis);
+            setCk('chkAntalgic', d.postAntalgic); setCk('chkPostOther', d.postOther);
+            setVal('txtPostOther', d.postOtherSpec);
+            setVal('txtMMT_Right', d.mmtRight); setVal('txtMMT_Left', d.mmtLeft);
+            setVal('txtMMT_UpperLimb', d.mmtUpperLimb); setVal('txtMMT_LowerLimb', d.mmtLowerLimb);
+            setCk('chkAreaNeck', d.areaNeck); setCk('chkAreaShoulder', d.areaShoulder);
+            setCk('chkAreaElbow', d.areaElbow); setCk('chkAreaWrist', d.areaWrist);
+            setCk('chkAreaBack', d.areaBack); setCk('chkAreaHip', d.areaHip);
+            setCk('chkAreaKnee', d.areaKnee); setCk('chkAreaAnkle', d.areaAnkle);
+            setCk('chkAreaOther', d.areaOther); setVal('txtAreaOther', d.areaOtherSpec);
+            setVal('txtAggravating', d.aggravatingFactors);
+            setCk('chkMedication', d.relMedication); setCk('chkRest', d.relRest);
+            setCk('chkExercise', d.relExercise); setCk('chkRelOther', d.relOther);
+            setVal('txtRelOther', d.relOtherSpec);
+            setCk('chkSensIntact', d.sensIntact); setCk('chkSensReduced', d.sensReduced);
+            setCk('chkSensAbsent', d.sensAbsent); setCk('chkSensHyper', d.sensHyperalgesia);
+            setCk('chkSensAllo', d.sensAllodynia);
+            setCk('chkRefNormal', d.refNormal); setCk('chkRefDecreased', d.refDecreased);
+            setCk('chkRefIncreased', d.refIncreased); setCk('chkRefAbsent', d.refAbsent);
+            setCk('chkRefOther', d.refOther); setVal('txtRefOther', d.refOtherSpec);
+            setVal('txtSpecialTests', d.specialTests);
+            setCk('chkPalpWarmth', d.palpWarmth); setCk('chkPalpTenderness', d.palpTenderness);
+            setCk('chkPalpCrepitus', d.palpCrepitus); setCk('chkPalpSwelling', d.palpSwelling);
+            setCk('chkPalpSpasm', d.palpSpasm); setCk('chkPalpTemperature', d.palpTemperature);
+            setCk('chkPalpOther', d.palpOther); setVal('txtPalpOther', d.palpOtherSpec);
+            setVal('txtDermatomeMyotome', d.dermatomeMyotome);
+            setCk('chkRedTENS', d.redTENS); setCk('chkRedEMS', d.redEMS);
+            setCk('chkRedUS', d.redUS); setCk('chkRedHeat', d.redHeat);
+            setCk('chkRedCold', d.redCold); setCk('chkRedTraction', d.redTraction);
+            setCk('chkRedMobilization', d.redMobilization); setCk('chkRedExercise', d.redExercise);
+            setCk('chkRedOther', d.redOther); setVal('txtRedOther', d.redOtherSpec);
+            setVal('txtDiagnosis', d.diagnosis);
+            setVal('ddlTestCervical', d.diagCervical); setVal('ddlTestThoracic', d.diagThoracic);
+            setVal('ddlTestLumbar', d.diagLumbar); setVal('ddlTestShoulder', d.diagShoulder);
+            setVal('ddlTestElbow', d.diagElbow); setVal('ddlTestWrist', d.diagWrist);
+            setVal('ddlTestHip', d.diagHip); setVal('ddlTestKnee', d.diagKnee);
+            setVal('ddlTestAnkle', d.diagAnkle);
+            setVal('txtShortTermGoals', d.shortTermGoals);
+            setVal('txtLongTermGoals', d.longTermGoals);
+            setVal('txtHomeExercise', d.homeExerciseProgram);
+            setVal('txtPatientEducation', d.patientEducation);
+            setVal('txtReviewDate', d.nextReviewDate);
+            if (d.reviewedBy) { $('#ddlReviewedBy').val(d.reviewedBy).trigger('change'); }
+            setVal('txtReviewNotes', d.reviewNotes);
+
+            function txPop(id, val) {
+                setVal(id, val);
+                var $el = $('#' + id);
+                if (val !== null && val !== undefined && val !== '') {
+                    var $row = $el.closest('.tx-row');
+                    var $sel = $row.find('.tx-select');
+                    $sel.prop('checked', true);
+                    $row.find('.tx-input').prop('disabled', false);
+                }
+            }
+            txPop('txExDetails', d.txExDetails); txPop('txExDuration', d.txExDuration);
+            txPop('txExFreq', d.txExFreq); txPop('txExIntensity', d.txExIntensity);
+            txPop('txExStart', d.txExStart); txPop('txExEnd', d.txExEnd);
+            txPop('txElDetails', d.txElDetails); txPop('txElDuration', d.txElDuration);
+            txPop('txElFreq', d.txElFreq); txPop('txElIntensity', d.txElIntensity);
+            txPop('txElStart', d.txElStart); txPop('txElEnd', d.txElEnd);
+            txPop('txManDetails', d.txManDetails); txPop('txManDuration', d.txManDuration);
+            txPop('txManFreq', d.txManFreq); txPop('txManIntensity', d.txManIntensity);
+            txPop('txManStart', d.txManStart); txPop('txManEnd', d.txManEnd);
+            txPop('txOthDetails', d.txOthDetails); txPop('txOthDuration', d.txOthDuration);
+            txPop('txOthFreq', d.txOthFreq); txPop('txOthIntensity', d.txOthIntensity);
+            txPop('txOthStart', d.txOthStart); txPop('txOthEnd', d.txOthEnd);
+
+            $('#btnSaveAssessment').text('Update Assessment');
         }
 
         var BodyChart = {
@@ -898,21 +1136,18 @@
 
         function loadDoctors() {
             PageMethods.LoadDoctors(function (res) {
-                var doctors = JSON.parse(res);
                 var opts = '<option value="">-- Select --</option>';
-                $.each(doctors, function (_, d) {
+                $.each(res, function (_, d) {
                     opts += '<option value="' + d.Emp_ID + '">' + d.Emp_Name + '</option>';
                 });
-                $('#ddlReviewedBy').html(opts);
-                $('#ddlReviewedBy').select2();
+                $('#ddlReviewedBy').html(opts).select2();
             });
         }
 
         function loadDropdown(id, valueSetName) {
             PageMethods.LoadDataValues(valueSetName, function (res) {
-                var items = JSON.parse(res);
                 var opts = '<option value="">--</option>';
-                $.each(items, function (_, it) {
+                $.each(res, function (_, it) {
                     opts += '<option value="' + it.DataValue_Name + '">' + it.DataValue_Description + '</option>';
                 });
                 $(id).html(opts);
@@ -941,10 +1176,7 @@
             $('.tx-select').on('change', function () {
                 var $row = $(this).closest('.tx-row');
                 var enabled = $(this).is(':checked');
-                $row.find('.tx-input').prop('disabled', !enabled);
-                if (!enabled) {
-                    $row.find('.tx-input').val('');
-                }
+                $row.find('.tx-input').prop('disabled', !enabled).val('');
             });
 
             loadDoctors();
