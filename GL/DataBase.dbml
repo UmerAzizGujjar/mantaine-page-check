@@ -7983,6 +7983,28 @@
       <Column Name="IsPayable" Type="System.Boolean" DbType="Bit" CanBeNull="true" />
     </Type>
   </Table>
+  <Table Name="dbo.Physiotherapy_ROM" Member="Physiotherapy_ROMs">
+    <Type Name="Physiotherapy_ROM">
+      <Column Name="ROM_ID" Type="System.Int32" DbType="Int NOT NULL IDENTITY" IsPrimaryKey="true" IsDbGenerated="true" CanBeNull="false" />
+      <Column Name="Physio_ID" Type="System.Int32" DbType="Int" CanBeNull="true" />
+      <Column Name="Movement" Type="System.String" DbType="VarChar(50)" CanBeNull="true" />
+      <Column Name="Left_Value" Type="System.String" DbType="VarChar(50)" CanBeNull="true" />
+      <Column Name="Right_Value" Type="System.String" DbType="VarChar(50)" CanBeNull="true" />
+    </Type>
+  </Table>
+  <Table Name="dbo.Physiotherapy_Treatment_Plan" Member="Physiotherapy_Treatment_Plans">
+    <Type Name="Physiotherapy_Treatment_Plan">
+      <Column Name="Treatment_ID" Type="System.Int32" DbType="Int NOT NULL IDENTITY" IsPrimaryKey="true" IsDbGenerated="true" CanBeNull="false" />
+      <Column Name="Physio_ID" Type="System.Int32" DbType="Int" CanBeNull="true" />
+      <Column Name="Modality" Type="System.String" DbType="VarChar(100)" CanBeNull="true" />
+      <Column Name="Details" Type="System.String" DbType="VarChar(255)" CanBeNull="true" />
+      <Column Name="Duration" Type="System.String" DbType="VarChar(50)" CanBeNull="true" />
+      <Column Name="Frequency" Type="System.String" DbType="VarChar(50)" CanBeNull="true" />
+      <Column Name="Intensity" Type="System.String" DbType="VarChar(50)" CanBeNull="true" />
+      <Column Name="Start_Date" Type="System.DateTime" DbType="DateTime" CanBeNull="true" />
+      <Column Name="End_Date" Type="System.DateTime" DbType="DateTime" CanBeNull="true" />
+    </Type>
+  </Table>
   <Table Name="dbo.Physiotherapy_Assessment" Member="Physiotherapy_Assessments">
     <Type Name="Physiotherapy_Assessment">
       <Column Name="Physio_ID" Type="System.Int32" DbType="Int NOT NULL IDENTITY" IsPrimaryKey="true" IsDbGenerated="true" CanBeNull="false" />
@@ -8090,28 +8112,18 @@
       <Column Name="Created_Time" Type="System.DateTime" DbType="DateTime" CanBeNull="true" />
       <Column Name="Updated_By" Type="System.Int32" DbType="Int" CanBeNull="true" />
       <Column Name="Updated_Time" Type="System.DateTime" DbType="DateTime" CanBeNull="true" />
-    </Type>
-  </Table>
-  <Table Name="dbo.Physiotherapy_ROM" Member="Physiotherapy_ROMs">
-    <Type Name="Physiotherapy_ROM">
-      <Column Name="ROM_ID" Type="System.Int32" DbType="Int NOT NULL IDENTITY" IsPrimaryKey="true" IsDbGenerated="true" CanBeNull="false" />
-      <Column Name="Physio_ID" Type="System.Int32" DbType="Int" CanBeNull="true" />
-      <Column Name="Movement" Type="System.String" DbType="VarChar(50)" CanBeNull="true" />
-      <Column Name="Left_Value" Type="System.String" DbType="VarChar(50)" CanBeNull="true" />
-      <Column Name="Right_Value" Type="System.String" DbType="VarChar(50)" CanBeNull="true" />
-    </Type>
-  </Table>
-  <Table Name="dbo.Physiotherapy_Treatment_Plan" Member="Physiotherapy_Treatment_Plans">
-    <Type Name="Physiotherapy_Treatment_Plan">
-      <Column Name="Treatment_ID" Type="System.Int32" DbType="Int NOT NULL IDENTITY" IsPrimaryKey="true" IsDbGenerated="true" CanBeNull="false" />
-      <Column Name="Physio_ID" Type="System.Int32" DbType="Int" CanBeNull="true" />
-      <Column Name="Modality" Type="System.String" DbType="VarChar(100)" CanBeNull="true" />
-      <Column Name="Details" Type="System.String" DbType="VarChar(255)" CanBeNull="true" />
-      <Column Name="Duration" Type="System.String" DbType="VarChar(50)" CanBeNull="true" />
-      <Column Name="Frequency" Type="System.String" DbType="VarChar(50)" CanBeNull="true" />
-      <Column Name="Intensity" Type="System.String" DbType="VarChar(50)" CanBeNull="true" />
-      <Column Name="Start_Date" Type="System.DateTime" DbType="DateTime" CanBeNull="true" />
-      <Column Name="End_Date" Type="System.DateTime" DbType="DateTime" CanBeNull="true" />
+      <Column Name="UL_Grade_0" Type="System.Boolean" DbType="Bit" CanBeNull="true" />
+      <Column Name="UL_Grade_1" Type="System.Boolean" DbType="Bit" CanBeNull="true" />
+      <Column Name="UL_Grade_2" Type="System.Boolean" DbType="Bit" CanBeNull="true" />
+      <Column Name="UL_Grade_3" Type="System.Boolean" DbType="Bit" CanBeNull="true" />
+      <Column Name="UL_Grade_4" Type="System.Boolean" DbType="Bit" CanBeNull="true" />
+      <Column Name="UL_Grade_5" Type="System.Boolean" DbType="Bit" CanBeNull="true" />
+      <Column Name="LL_Grade_0" Type="System.Boolean" DbType="Bit" CanBeNull="true" />
+      <Column Name="LL_Grade_1" Type="System.Boolean" DbType="Bit" CanBeNull="true" />
+      <Column Name="LL_Grade_2" Type="System.Boolean" DbType="Bit" CanBeNull="true" />
+      <Column Name="LL_Grade_3" Type="System.Boolean" DbType="Bit" CanBeNull="true" />
+      <Column Name="LL_Grade_4" Type="System.Boolean" DbType="Bit" CanBeNull="true" />
+      <Column Name="LL_Grade_5" Type="System.Boolean" DbType="Bit" CanBeNull="true" />
     </Type>
   </Table>
   <Function Name="dbo.GetDataValueName" Method="GetDataValueName" IsComposable="true">

@@ -1008,15 +1008,15 @@ namespace PMS
         partial void InsertPatient(Patient instance);
         partial void UpdatePatient(Patient instance);
         partial void DeletePatient(Patient instance);
-        partial void InsertPhysiotherapy_Assessment(Physiotherapy_Assessment instance);
-        partial void UpdatePhysiotherapy_Assessment(Physiotherapy_Assessment instance);
-        partial void DeletePhysiotherapy_Assessment(Physiotherapy_Assessment instance);
         partial void InsertPhysiotherapy_ROM(Physiotherapy_ROM instance);
         partial void UpdatePhysiotherapy_ROM(Physiotherapy_ROM instance);
         partial void DeletePhysiotherapy_ROM(Physiotherapy_ROM instance);
         partial void InsertPhysiotherapy_Treatment_Plan(Physiotherapy_Treatment_Plan instance);
         partial void UpdatePhysiotherapy_Treatment_Plan(Physiotherapy_Treatment_Plan instance);
         partial void DeletePhysiotherapy_Treatment_Plan(Physiotherapy_Treatment_Plan instance);
+        partial void InsertPhysiotherapy_Assessment(Physiotherapy_Assessment instance);
+        partial void UpdatePhysiotherapy_Assessment(Physiotherapy_Assessment instance);
+        partial void DeletePhysiotherapy_Assessment(Physiotherapy_Assessment instance);
         #endregion
         public DataBaseDataContext() :
 base(global::System.Configuration.ConfigurationManager.ConnectionStrings["ASPGLConnectionString"].ConnectionString, mappingSource)
@@ -3687,14 +3687,6 @@ base(global::System.Configuration.ConfigurationManager.ConnectionStrings["ASPGLC
             }
         }
 
-        public System.Data.Linq.Table<Physiotherapy_Assessment> Physiotherapy_Assessments
-        {
-            get
-            {
-                return this.GetTable<Physiotherapy_Assessment>();
-            }
-        }
-
         public System.Data.Linq.Table<Physiotherapy_ROM> Physiotherapy_ROMs
         {
             get
@@ -3708,6 +3700,14 @@ base(global::System.Configuration.ConfigurationManager.ConnectionStrings["ASPGLC
             get
             {
                 return this.GetTable<Physiotherapy_Treatment_Plan>();
+            }
+        }
+
+        public System.Data.Linq.Table<Physiotherapy_Assessment> Physiotherapy_Assessments
+        {
+            get
+            {
+                return this.GetTable<Physiotherapy_Assessment>();
             }
         }
 
@@ -178563,6 +178563,418 @@ base(global::System.Configuration.ConfigurationManager.ConnectionStrings["ASPGLC
         }
     }
 
+    [global::System.Data.Linq.Mapping.TableAttribute(Name = "dbo.Physiotherapy_ROM")]
+    public partial class Physiotherapy_ROM : INotifyPropertyChanging, INotifyPropertyChanged
+    {
+
+        private static PropertyChangingEventArgs emptyChangingEventArgs = new PropertyChangingEventArgs(String.Empty);
+
+        private int _ROM_ID;
+
+        private System.Nullable<int> _Physio_ID;
+
+        private string _Movement;
+
+        private string _Left_Value;
+
+        private string _Right_Value;
+
+        #region Extensibility Method Definitions
+        partial void OnLoaded();
+        partial void OnValidate(System.Data.Linq.ChangeAction action);
+        partial void OnCreated();
+        partial void OnROM_IDChanging(int value);
+        partial void OnROM_IDChanged();
+        partial void OnPhysio_IDChanging(System.Nullable<int> value);
+        partial void OnPhysio_IDChanged();
+        partial void OnMovementChanging(string value);
+        partial void OnMovementChanged();
+        partial void OnLeft_ValueChanging(string value);
+        partial void OnLeft_ValueChanged();
+        partial void OnRight_ValueChanging(string value);
+        partial void OnRight_ValueChanged();
+        #endregion
+
+        public Physiotherapy_ROM()
+        {
+            OnCreated();
+        }
+
+        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_ROM_ID", AutoSync = AutoSync.OnInsert, DbType = "Int NOT NULL IDENTITY", IsPrimaryKey = true, IsDbGenerated = true)]
+        public int ROM_ID
+        {
+            get
+            {
+                return this._ROM_ID;
+            }
+            set
+            {
+                if ((this._ROM_ID != value))
+                {
+                    this.OnROM_IDChanging(value);
+                    this.SendPropertyChanging();
+                    this._ROM_ID = value;
+                    this.SendPropertyChanged("ROM_ID");
+                    this.OnROM_IDChanged();
+                }
+            }
+        }
+
+        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_Physio_ID", DbType = "Int")]
+        public System.Nullable<int> Physio_ID
+        {
+            get
+            {
+                return this._Physio_ID;
+            }
+            set
+            {
+                if ((this._Physio_ID != value))
+                {
+                    this.OnPhysio_IDChanging(value);
+                    this.SendPropertyChanging();
+                    this._Physio_ID = value;
+                    this.SendPropertyChanged("Physio_ID");
+                    this.OnPhysio_IDChanged();
+                }
+            }
+        }
+
+        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_Movement", DbType = "VarChar(50)")]
+        public string Movement
+        {
+            get
+            {
+                return this._Movement;
+            }
+            set
+            {
+                if ((this._Movement != value))
+                {
+                    this.OnMovementChanging(value);
+                    this.SendPropertyChanging();
+                    this._Movement = value;
+                    this.SendPropertyChanged("Movement");
+                    this.OnMovementChanged();
+                }
+            }
+        }
+
+        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_Left_Value", DbType = "VarChar(50)")]
+        public string Left_Value
+        {
+            get
+            {
+                return this._Left_Value;
+            }
+            set
+            {
+                if ((this._Left_Value != value))
+                {
+                    this.OnLeft_ValueChanging(value);
+                    this.SendPropertyChanging();
+                    this._Left_Value = value;
+                    this.SendPropertyChanged("Left_Value");
+                    this.OnLeft_ValueChanged();
+                }
+            }
+        }
+
+        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_Right_Value", DbType = "VarChar(50)")]
+        public string Right_Value
+        {
+            get
+            {
+                return this._Right_Value;
+            }
+            set
+            {
+                if ((this._Right_Value != value))
+                {
+                    this.OnRight_ValueChanging(value);
+                    this.SendPropertyChanging();
+                    this._Right_Value = value;
+                    this.SendPropertyChanged("Right_Value");
+                    this.OnRight_ValueChanged();
+                }
+            }
+        }
+
+        public event PropertyChangingEventHandler PropertyChanging;
+
+        public event PropertyChangedEventHandler PropertyChanged;
+
+        protected virtual void SendPropertyChanging()
+        {
+            if ((this.PropertyChanging != null))
+            {
+                this.PropertyChanging(this, emptyChangingEventArgs);
+            }
+        }
+
+        protected virtual void SendPropertyChanged(String propertyName)
+        {
+            if ((this.PropertyChanged != null))
+            {
+                this.PropertyChanged(this, new PropertyChangedEventArgs(propertyName));
+            }
+        }
+    }
+
+    [global::System.Data.Linq.Mapping.TableAttribute(Name = "dbo.Physiotherapy_Treatment_Plan")]
+    public partial class Physiotherapy_Treatment_Plan : INotifyPropertyChanging, INotifyPropertyChanged
+    {
+
+        private static PropertyChangingEventArgs emptyChangingEventArgs = new PropertyChangingEventArgs(String.Empty);
+
+        private int _Treatment_ID;
+
+        private System.Nullable<int> _Physio_ID;
+
+        private string _Modality;
+
+        private string _Details;
+
+        private string _Duration;
+
+        private string _Frequency;
+
+        private string _Intensity;
+
+        private System.Nullable<System.DateTime> _Start_Date;
+
+        private System.Nullable<System.DateTime> _End_Date;
+
+        #region Extensibility Method Definitions
+        partial void OnLoaded();
+        partial void OnValidate(System.Data.Linq.ChangeAction action);
+        partial void OnCreated();
+        partial void OnTreatment_IDChanging(int value);
+        partial void OnTreatment_IDChanged();
+        partial void OnPhysio_IDChanging(System.Nullable<int> value);
+        partial void OnPhysio_IDChanged();
+        partial void OnModalityChanging(string value);
+        partial void OnModalityChanged();
+        partial void OnDetailsChanging(string value);
+        partial void OnDetailsChanged();
+        partial void OnDurationChanging(string value);
+        partial void OnDurationChanged();
+        partial void OnFrequencyChanging(string value);
+        partial void OnFrequencyChanged();
+        partial void OnIntensityChanging(string value);
+        partial void OnIntensityChanged();
+        partial void OnStart_DateChanging(System.Nullable<System.DateTime> value);
+        partial void OnStart_DateChanged();
+        partial void OnEnd_DateChanging(System.Nullable<System.DateTime> value);
+        partial void OnEnd_DateChanged();
+        #endregion
+
+        public Physiotherapy_Treatment_Plan()
+        {
+            OnCreated();
+        }
+
+        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_Treatment_ID", AutoSync = AutoSync.OnInsert, DbType = "Int NOT NULL IDENTITY", IsPrimaryKey = true, IsDbGenerated = true)]
+        public int Treatment_ID
+        {
+            get
+            {
+                return this._Treatment_ID;
+            }
+            set
+            {
+                if ((this._Treatment_ID != value))
+                {
+                    this.OnTreatment_IDChanging(value);
+                    this.SendPropertyChanging();
+                    this._Treatment_ID = value;
+                    this.SendPropertyChanged("Treatment_ID");
+                    this.OnTreatment_IDChanged();
+                }
+            }
+        }
+
+        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_Physio_ID", DbType = "Int")]
+        public System.Nullable<int> Physio_ID
+        {
+            get
+            {
+                return this._Physio_ID;
+            }
+            set
+            {
+                if ((this._Physio_ID != value))
+                {
+                    this.OnPhysio_IDChanging(value);
+                    this.SendPropertyChanging();
+                    this._Physio_ID = value;
+                    this.SendPropertyChanged("Physio_ID");
+                    this.OnPhysio_IDChanged();
+                }
+            }
+        }
+
+        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_Modality", DbType = "VarChar(100)")]
+        public string Modality
+        {
+            get
+            {
+                return this._Modality;
+            }
+            set
+            {
+                if ((this._Modality != value))
+                {
+                    this.OnModalityChanging(value);
+                    this.SendPropertyChanging();
+                    this._Modality = value;
+                    this.SendPropertyChanged("Modality");
+                    this.OnModalityChanged();
+                }
+            }
+        }
+
+        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_Details", DbType = "VarChar(255)")]
+        public string Details
+        {
+            get
+            {
+                return this._Details;
+            }
+            set
+            {
+                if ((this._Details != value))
+                {
+                    this.OnDetailsChanging(value);
+                    this.SendPropertyChanging();
+                    this._Details = value;
+                    this.SendPropertyChanged("Details");
+                    this.OnDetailsChanged();
+                }
+            }
+        }
+
+        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_Duration", DbType = "VarChar(50)")]
+        public string Duration
+        {
+            get
+            {
+                return this._Duration;
+            }
+            set
+            {
+                if ((this._Duration != value))
+                {
+                    this.OnDurationChanging(value);
+                    this.SendPropertyChanging();
+                    this._Duration = value;
+                    this.SendPropertyChanged("Duration");
+                    this.OnDurationChanged();
+                }
+            }
+        }
+
+        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_Frequency", DbType = "VarChar(50)")]
+        public string Frequency
+        {
+            get
+            {
+                return this._Frequency;
+            }
+            set
+            {
+                if ((this._Frequency != value))
+                {
+                    this.OnFrequencyChanging(value);
+                    this.SendPropertyChanging();
+                    this._Frequency = value;
+                    this.SendPropertyChanged("Frequency");
+                    this.OnFrequencyChanged();
+                }
+            }
+        }
+
+        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_Intensity", DbType = "VarChar(50)")]
+        public string Intensity
+        {
+            get
+            {
+                return this._Intensity;
+            }
+            set
+            {
+                if ((this._Intensity != value))
+                {
+                    this.OnIntensityChanging(value);
+                    this.SendPropertyChanging();
+                    this._Intensity = value;
+                    this.SendPropertyChanged("Intensity");
+                    this.OnIntensityChanged();
+                }
+            }
+        }
+
+        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_Start_Date", DbType = "DateTime")]
+        public System.Nullable<System.DateTime> Start_Date
+        {
+            get
+            {
+                return this._Start_Date;
+            }
+            set
+            {
+                if ((this._Start_Date != value))
+                {
+                    this.OnStart_DateChanging(value);
+                    this.SendPropertyChanging();
+                    this._Start_Date = value;
+                    this.SendPropertyChanged("Start_Date");
+                    this.OnStart_DateChanged();
+                }
+            }
+        }
+
+        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_End_Date", DbType = "DateTime")]
+        public System.Nullable<System.DateTime> End_Date
+        {
+            get
+            {
+                return this._End_Date;
+            }
+            set
+            {
+                if ((this._End_Date != value))
+                {
+                    this.OnEnd_DateChanging(value);
+                    this.SendPropertyChanging();
+                    this._End_Date = value;
+                    this.SendPropertyChanged("End_Date");
+                    this.OnEnd_DateChanged();
+                }
+            }
+        }
+
+        public event PropertyChangingEventHandler PropertyChanging;
+
+        public event PropertyChangedEventHandler PropertyChanged;
+
+        protected virtual void SendPropertyChanging()
+        {
+            if ((this.PropertyChanging != null))
+            {
+                this.PropertyChanging(this, emptyChangingEventArgs);
+            }
+        }
+
+        protected virtual void SendPropertyChanged(String propertyName)
+        {
+            if ((this.PropertyChanged != null))
+            {
+                this.PropertyChanged(this, new PropertyChangedEventArgs(propertyName));
+            }
+        }
+    }
+
     [global::System.Data.Linq.Mapping.TableAttribute(Name = "dbo.Physiotherapy_Assessment")]
     public partial class Physiotherapy_Assessment : INotifyPropertyChanging, INotifyPropertyChanged
     {
@@ -178779,6 +179191,30 @@ base(global::System.Configuration.ConfigurationManager.ConnectionStrings["ASPGLC
 
         private System.Nullable<System.DateTime> _Updated_Time;
 
+        private System.Nullable<bool> _UL_Grade_0;
+
+        private System.Nullable<bool> _UL_Grade_1;
+
+        private System.Nullable<bool> _UL_Grade_2;
+
+        private System.Nullable<bool> _UL_Grade_3;
+
+        private System.Nullable<bool> _UL_Grade_4;
+
+        private System.Nullable<bool> _UL_Grade_5;
+
+        private System.Nullable<bool> _LL_Grade_0;
+
+        private System.Nullable<bool> _LL_Grade_1;
+
+        private System.Nullable<bool> _LL_Grade_2;
+
+        private System.Nullable<bool> _LL_Grade_3;
+
+        private System.Nullable<bool> _LL_Grade_4;
+
+        private System.Nullable<bool> _LL_Grade_5;
+
         #region Extensibility Method Definitions
         partial void OnLoaded();
         partial void OnValidate(System.Data.Linq.ChangeAction action);
@@ -178993,6 +179429,30 @@ base(global::System.Configuration.ConfigurationManager.ConnectionStrings["ASPGLC
         partial void OnUpdated_ByChanged();
         partial void OnUpdated_TimeChanging(System.Nullable<System.DateTime> value);
         partial void OnUpdated_TimeChanged();
+        partial void OnUL_Grade_0Changing(System.Nullable<bool> value);
+        partial void OnUL_Grade_0Changed();
+        partial void OnUL_Grade_1Changing(System.Nullable<bool> value);
+        partial void OnUL_Grade_1Changed();
+        partial void OnUL_Grade_2Changing(System.Nullable<bool> value);
+        partial void OnUL_Grade_2Changed();
+        partial void OnUL_Grade_3Changing(System.Nullable<bool> value);
+        partial void OnUL_Grade_3Changed();
+        partial void OnUL_Grade_4Changing(System.Nullable<bool> value);
+        partial void OnUL_Grade_4Changed();
+        partial void OnUL_Grade_5Changing(System.Nullable<bool> value);
+        partial void OnUL_Grade_5Changed();
+        partial void OnLL_Grade_0Changing(System.Nullable<bool> value);
+        partial void OnLL_Grade_0Changed();
+        partial void OnLL_Grade_1Changing(System.Nullable<bool> value);
+        partial void OnLL_Grade_1Changed();
+        partial void OnLL_Grade_2Changing(System.Nullable<bool> value);
+        partial void OnLL_Grade_2Changed();
+        partial void OnLL_Grade_3Changing(System.Nullable<bool> value);
+        partial void OnLL_Grade_3Changed();
+        partial void OnLL_Grade_4Changing(System.Nullable<bool> value);
+        partial void OnLL_Grade_4Changed();
+        partial void OnLL_Grade_5Changing(System.Nullable<bool> value);
+        partial void OnLL_Grade_5Changed();
         #endregion
 
         public Physiotherapy_Assessment()
@@ -181100,414 +181560,242 @@ base(global::System.Configuration.ConfigurationManager.ConnectionStrings["ASPGLC
             }
         }
 
-        public event PropertyChangingEventHandler PropertyChanging;
-
-        public event PropertyChangedEventHandler PropertyChanged;
-
-        protected virtual void SendPropertyChanging()
-        {
-            if ((this.PropertyChanging != null))
-            {
-                this.PropertyChanging(this, emptyChangingEventArgs);
-            }
-        }
-
-        protected virtual void SendPropertyChanged(String propertyName)
-        {
-            if ((this.PropertyChanged != null))
-            {
-                this.PropertyChanged(this, new PropertyChangedEventArgs(propertyName));
-            }
-        }
-    }
-
-    [global::System.Data.Linq.Mapping.TableAttribute(Name = "dbo.Physiotherapy_ROM")]
-    public partial class Physiotherapy_ROM : INotifyPropertyChanging, INotifyPropertyChanged
-    {
-
-        private static PropertyChangingEventArgs emptyChangingEventArgs = new PropertyChangingEventArgs(String.Empty);
-
-        private int _ROM_ID;
-
-        private System.Nullable<int> _Physio_ID;
-
-        private string _Movement;
-
-        private string _Left_Value;
-
-        private string _Right_Value;
-
-        #region Extensibility Method Definitions
-        partial void OnLoaded();
-        partial void OnValidate(System.Data.Linq.ChangeAction action);
-        partial void OnCreated();
-        partial void OnROM_IDChanging(int value);
-        partial void OnROM_IDChanged();
-        partial void OnPhysio_IDChanging(System.Nullable<int> value);
-        partial void OnPhysio_IDChanged();
-        partial void OnMovementChanging(string value);
-        partial void OnMovementChanged();
-        partial void OnLeft_ValueChanging(string value);
-        partial void OnLeft_ValueChanged();
-        partial void OnRight_ValueChanging(string value);
-        partial void OnRight_ValueChanged();
-        #endregion
-
-        public Physiotherapy_ROM()
-        {
-            OnCreated();
-        }
-
-        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_ROM_ID", AutoSync = AutoSync.OnInsert, DbType = "Int NOT NULL IDENTITY", IsPrimaryKey = true, IsDbGenerated = true)]
-        public int ROM_ID
+        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_UL_Grade_0", DbType = "Bit")]
+        public System.Nullable<bool> UL_Grade_0
         {
             get
             {
-                return this._ROM_ID;
+                return this._UL_Grade_0;
             }
             set
             {
-                if ((this._ROM_ID != value))
+                if ((this._UL_Grade_0 != value))
                 {
-                    this.OnROM_IDChanging(value);
+                    this.OnUL_Grade_0Changing(value);
                     this.SendPropertyChanging();
-                    this._ROM_ID = value;
-                    this.SendPropertyChanged("ROM_ID");
-                    this.OnROM_IDChanged();
+                    this._UL_Grade_0 = value;
+                    this.SendPropertyChanged("UL_Grade_0");
+                    this.OnUL_Grade_0Changed();
                 }
             }
         }
 
-        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_Physio_ID", DbType = "Int")]
-        public System.Nullable<int> Physio_ID
+        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_UL_Grade_1", DbType = "Bit")]
+        public System.Nullable<bool> UL_Grade_1
         {
             get
             {
-                return this._Physio_ID;
+                return this._UL_Grade_1;
             }
             set
             {
-                if ((this._Physio_ID != value))
+                if ((this._UL_Grade_1 != value))
                 {
-                    this.OnPhysio_IDChanging(value);
+                    this.OnUL_Grade_1Changing(value);
                     this.SendPropertyChanging();
-                    this._Physio_ID = value;
-                    this.SendPropertyChanged("Physio_ID");
-                    this.OnPhysio_IDChanged();
+                    this._UL_Grade_1 = value;
+                    this.SendPropertyChanged("UL_Grade_1");
+                    this.OnUL_Grade_1Changed();
                 }
             }
         }
 
-        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_Movement", DbType = "VarChar(50)")]
-        public string Movement
+        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_UL_Grade_2", DbType = "Bit")]
+        public System.Nullable<bool> UL_Grade_2
         {
             get
             {
-                return this._Movement;
+                return this._UL_Grade_2;
             }
             set
             {
-                if ((this._Movement != value))
+                if ((this._UL_Grade_2 != value))
                 {
-                    this.OnMovementChanging(value);
+                    this.OnUL_Grade_2Changing(value);
                     this.SendPropertyChanging();
-                    this._Movement = value;
-                    this.SendPropertyChanged("Movement");
-                    this.OnMovementChanged();
+                    this._UL_Grade_2 = value;
+                    this.SendPropertyChanged("UL_Grade_2");
+                    this.OnUL_Grade_2Changed();
                 }
             }
         }
 
-        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_Left_Value", DbType = "VarChar(50)")]
-        public string Left_Value
+        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_UL_Grade_3", DbType = "Bit")]
+        public System.Nullable<bool> UL_Grade_3
         {
             get
             {
-                return this._Left_Value;
+                return this._UL_Grade_3;
             }
             set
             {
-                if ((this._Left_Value != value))
+                if ((this._UL_Grade_3 != value))
                 {
-                    this.OnLeft_ValueChanging(value);
+                    this.OnUL_Grade_3Changing(value);
                     this.SendPropertyChanging();
-                    this._Left_Value = value;
-                    this.SendPropertyChanged("Left_Value");
-                    this.OnLeft_ValueChanged();
+                    this._UL_Grade_3 = value;
+                    this.SendPropertyChanged("UL_Grade_3");
+                    this.OnUL_Grade_3Changed();
                 }
             }
         }
 
-        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_Right_Value", DbType = "VarChar(50)")]
-        public string Right_Value
+        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_UL_Grade_4", DbType = "Bit")]
+        public System.Nullable<bool> UL_Grade_4
         {
             get
             {
-                return this._Right_Value;
+                return this._UL_Grade_4;
             }
             set
             {
-                if ((this._Right_Value != value))
+                if ((this._UL_Grade_4 != value))
                 {
-                    this.OnRight_ValueChanging(value);
+                    this.OnUL_Grade_4Changing(value);
                     this.SendPropertyChanging();
-                    this._Right_Value = value;
-                    this.SendPropertyChanged("Right_Value");
-                    this.OnRight_ValueChanged();
+                    this._UL_Grade_4 = value;
+                    this.SendPropertyChanged("UL_Grade_4");
+                    this.OnUL_Grade_4Changed();
                 }
             }
         }
 
-        public event PropertyChangingEventHandler PropertyChanging;
-
-        public event PropertyChangedEventHandler PropertyChanged;
-
-        protected virtual void SendPropertyChanging()
-        {
-            if ((this.PropertyChanging != null))
-            {
-                this.PropertyChanging(this, emptyChangingEventArgs);
-            }
-        }
-
-        protected virtual void SendPropertyChanged(String propertyName)
-        {
-            if ((this.PropertyChanged != null))
-            {
-                this.PropertyChanged(this, new PropertyChangedEventArgs(propertyName));
-            }
-        }
-    }
-
-    [global::System.Data.Linq.Mapping.TableAttribute(Name = "dbo.Physiotherapy_Treatment_Plan")]
-    public partial class Physiotherapy_Treatment_Plan : INotifyPropertyChanging, INotifyPropertyChanged
-    {
-
-        private static PropertyChangingEventArgs emptyChangingEventArgs = new PropertyChangingEventArgs(String.Empty);
-
-        private int _Treatment_ID;
-
-        private System.Nullable<int> _Physio_ID;
-
-        private string _Modality;
-
-        private string _Details;
-
-        private string _Duration;
-
-        private string _Frequency;
-
-        private string _Intensity;
-
-        private System.Nullable<System.DateTime> _Start_Date;
-
-        private System.Nullable<System.DateTime> _End_Date;
-
-        #region Extensibility Method Definitions
-        partial void OnLoaded();
-        partial void OnValidate(System.Data.Linq.ChangeAction action);
-        partial void OnCreated();
-        partial void OnTreatment_IDChanging(int value);
-        partial void OnTreatment_IDChanged();
-        partial void OnPhysio_IDChanging(System.Nullable<int> value);
-        partial void OnPhysio_IDChanged();
-        partial void OnModalityChanging(string value);
-        partial void OnModalityChanged();
-        partial void OnDetailsChanging(string value);
-        partial void OnDetailsChanged();
-        partial void OnDurationChanging(string value);
-        partial void OnDurationChanged();
-        partial void OnFrequencyChanging(string value);
-        partial void OnFrequencyChanged();
-        partial void OnIntensityChanging(string value);
-        partial void OnIntensityChanged();
-        partial void OnStart_DateChanging(System.Nullable<System.DateTime> value);
-        partial void OnStart_DateChanged();
-        partial void OnEnd_DateChanging(System.Nullable<System.DateTime> value);
-        partial void OnEnd_DateChanged();
-        #endregion
-
-        public Physiotherapy_Treatment_Plan()
-        {
-            OnCreated();
-        }
-
-        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_Treatment_ID", AutoSync = AutoSync.OnInsert, DbType = "Int NOT NULL IDENTITY", IsPrimaryKey = true, IsDbGenerated = true)]
-        public int Treatment_ID
+        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_UL_Grade_5", DbType = "Bit")]
+        public System.Nullable<bool> UL_Grade_5
         {
             get
             {
-                return this._Treatment_ID;
+                return this._UL_Grade_5;
             }
             set
             {
-                if ((this._Treatment_ID != value))
+                if ((this._UL_Grade_5 != value))
                 {
-                    this.OnTreatment_IDChanging(value);
+                    this.OnUL_Grade_5Changing(value);
                     this.SendPropertyChanging();
-                    this._Treatment_ID = value;
-                    this.SendPropertyChanged("Treatment_ID");
-                    this.OnTreatment_IDChanged();
+                    this._UL_Grade_5 = value;
+                    this.SendPropertyChanged("UL_Grade_5");
+                    this.OnUL_Grade_5Changed();
                 }
             }
         }
 
-        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_Physio_ID", DbType = "Int")]
-        public System.Nullable<int> Physio_ID
+        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_LL_Grade_0", DbType = "Bit")]
+        public System.Nullable<bool> LL_Grade_0
         {
             get
             {
-                return this._Physio_ID;
+                return this._LL_Grade_0;
             }
             set
             {
-                if ((this._Physio_ID != value))
+                if ((this._LL_Grade_0 != value))
                 {
-                    this.OnPhysio_IDChanging(value);
+                    this.OnLL_Grade_0Changing(value);
                     this.SendPropertyChanging();
-                    this._Physio_ID = value;
-                    this.SendPropertyChanged("Physio_ID");
-                    this.OnPhysio_IDChanged();
+                    this._LL_Grade_0 = value;
+                    this.SendPropertyChanged("LL_Grade_0");
+                    this.OnLL_Grade_0Changed();
                 }
             }
         }
 
-        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_Modality", DbType = "VarChar(100)")]
-        public string Modality
+        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_LL_Grade_1", DbType = "Bit")]
+        public System.Nullable<bool> LL_Grade_1
         {
             get
             {
-                return this._Modality;
+                return this._LL_Grade_1;
             }
             set
             {
-                if ((this._Modality != value))
+                if ((this._LL_Grade_1 != value))
                 {
-                    this.OnModalityChanging(value);
+                    this.OnLL_Grade_1Changing(value);
                     this.SendPropertyChanging();
-                    this._Modality = value;
-                    this.SendPropertyChanged("Modality");
-                    this.OnModalityChanged();
+                    this._LL_Grade_1 = value;
+                    this.SendPropertyChanged("LL_Grade_1");
+                    this.OnLL_Grade_1Changed();
                 }
             }
         }
 
-        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_Details", DbType = "VarChar(255)")]
-        public string Details
+        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_LL_Grade_2", DbType = "Bit")]
+        public System.Nullable<bool> LL_Grade_2
         {
             get
             {
-                return this._Details;
+                return this._LL_Grade_2;
             }
             set
             {
-                if ((this._Details != value))
+                if ((this._LL_Grade_2 != value))
                 {
-                    this.OnDetailsChanging(value);
+                    this.OnLL_Grade_2Changing(value);
                     this.SendPropertyChanging();
-                    this._Details = value;
-                    this.SendPropertyChanged("Details");
-                    this.OnDetailsChanged();
+                    this._LL_Grade_2 = value;
+                    this.SendPropertyChanged("LL_Grade_2");
+                    this.OnLL_Grade_2Changed();
                 }
             }
         }
 
-        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_Duration", DbType = "VarChar(50)")]
-        public string Duration
+        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_LL_Grade_3", DbType = "Bit")]
+        public System.Nullable<bool> LL_Grade_3
         {
             get
             {
-                return this._Duration;
+                return this._LL_Grade_3;
             }
             set
             {
-                if ((this._Duration != value))
+                if ((this._LL_Grade_3 != value))
                 {
-                    this.OnDurationChanging(value);
+                    this.OnLL_Grade_3Changing(value);
                     this.SendPropertyChanging();
-                    this._Duration = value;
-                    this.SendPropertyChanged("Duration");
-                    this.OnDurationChanged();
+                    this._LL_Grade_3 = value;
+                    this.SendPropertyChanged("LL_Grade_3");
+                    this.OnLL_Grade_3Changed();
                 }
             }
         }
 
-        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_Frequency", DbType = "VarChar(50)")]
-        public string Frequency
+        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_LL_Grade_4", DbType = "Bit")]
+        public System.Nullable<bool> LL_Grade_4
         {
             get
             {
-                return this._Frequency;
+                return this._LL_Grade_4;
             }
             set
             {
-                if ((this._Frequency != value))
+                if ((this._LL_Grade_4 != value))
                 {
-                    this.OnFrequencyChanging(value);
+                    this.OnLL_Grade_4Changing(value);
                     this.SendPropertyChanging();
-                    this._Frequency = value;
-                    this.SendPropertyChanged("Frequency");
-                    this.OnFrequencyChanged();
+                    this._LL_Grade_4 = value;
+                    this.SendPropertyChanged("LL_Grade_4");
+                    this.OnLL_Grade_4Changed();
                 }
             }
         }
 
-        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_Intensity", DbType = "VarChar(50)")]
-        public string Intensity
+        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_LL_Grade_5", DbType = "Bit")]
+        public System.Nullable<bool> LL_Grade_5
         {
             get
             {
-                return this._Intensity;
+                return this._LL_Grade_5;
             }
             set
             {
-                if ((this._Intensity != value))
+                if ((this._LL_Grade_5 != value))
                 {
-                    this.OnIntensityChanging(value);
+                    this.OnLL_Grade_5Changing(value);
                     this.SendPropertyChanging();
-                    this._Intensity = value;
-                    this.SendPropertyChanged("Intensity");
-                    this.OnIntensityChanged();
-                }
-            }
-        }
-
-        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_Start_Date", DbType = "DateTime")]
-        public System.Nullable<System.DateTime> Start_Date
-        {
-            get
-            {
-                return this._Start_Date;
-            }
-            set
-            {
-                if ((this._Start_Date != value))
-                {
-                    this.OnStart_DateChanging(value);
-                    this.SendPropertyChanging();
-                    this._Start_Date = value;
-                    this.SendPropertyChanged("Start_Date");
-                    this.OnStart_DateChanged();
-                }
-            }
-        }
-
-        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_End_Date", DbType = "DateTime")]
-        public System.Nullable<System.DateTime> End_Date
-        {
-            get
-            {
-                return this._End_Date;
-            }
-            set
-            {
-                if ((this._End_Date != value))
-                {
-                    this.OnEnd_DateChanging(value);
-                    this.SendPropertyChanging();
-                    this._End_Date = value;
-                    this.SendPropertyChanged("End_Date");
-                    this.OnEnd_DateChanged();
+                    this._LL_Grade_5 = value;
+                    this.SendPropertyChanged("LL_Grade_5");
+                    this.OnLL_Grade_5Changed();
                 }
             }
         }
