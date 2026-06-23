@@ -147,6 +147,15 @@
                 "columns": [
                     { "data": null, "width": "4%", "orderable": false, "render": (data, type, full, meta) => meta.settings._iDisplayStart + meta.row + 1 },
                     { "data": "Bill_No", "name": "Bill_No", "width": "5%", "orderable": true },
+                    {
+                        "data": "Bill_Date", "name": "Bill_Date",
+                        "render": function (data, type, full) {
+                            debugger;
+                            var date = full.Bill_Date;
+                            date = moment(date).format('DD-MMM-YYYY');
+                            return date;
+                        }, "width": "5%", "orderable": true
+                    },
                     { "data": "mr_no_sequence", "name": "mr_no_sequence", "width": "6%", "orderable": true },
                     { "data": "Full_Name", "name": "Full_Name", "width": "12%", "orderable": true },
                     { "data": "Mobile1", "name": "Mobile1", "width": "4%", "orderable": true },
@@ -387,13 +396,7 @@
             text-transform: uppercase;
             letter-spacing: 1px;
         }
-        .addendum-content {
-            font-size: 11px;
-            line-height: 1.7;
-            margin-bottom: 12px;
-            text-align: justify;
-        }
-
+        
         /* ── REPORT CONTENT ── */
         .report-content {
             min-height: 350px;
@@ -427,6 +430,24 @@
         //    margin-top: 35px;
         //    padding-top: 5px;
         //}
+
+
+        
+            /* ── ADDENDUM SECTION ── */
+        .addendum-section {
+            margin-top: 15px;
+            margin-bottom: 15px;
+            page-break-inside: avoid;
+        }
+        .addendum-heading {
+            font-family: "Times New Roman", Times, serif;
+            font-size: 13px;
+            font-weight: bold;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            margin-bottom: 8px;
+            color: #000;
+        }
 
             <!-- SIGNATURES -->
     <div class="signatures">
@@ -559,7 +580,7 @@ function cleanPrint() {
 
         <!-- LEFT COLUMN -->
         <div class="patient-col">
-            <div class="patient-title">${data.Full_Name || ''} &nbsp; ${data.Age_years || ''}Y, &nbsp; ${data.Gender || ''}</div>
+            <div class="patient-title">${data.Full_Name || ''} &nbsp; ${data.Age_years || ''}, &nbsp; ${data.Gender || ''}</div>
             <div class="info-row">
                 <span class="info-label">Contact :</span>
                 <span class="info-val">${data.Mobile1 || ''}</span>
@@ -619,17 +640,22 @@ function cleanPrint() {
         ${data.Fixed_Value || '<p style="color:#999; text-align:center;">No report content available.</p>'}
     </div>
 
-    <!-- Addendum CONTENT (Addendum_Template from CKEditor) -->
-<div class="addendum-content">
-    ${data.Addendum_Template || '<p style="color:#999; text-align:center;">No report Addendum Added.</p>'}
-</div>
+    <!-- ADDENDUM SECTION (Only visible if Addendum_Template has data) -->
+    ${data.Addendum_Template ? `
+    <div class="addendum-section">
+        <div class="addendum-heading">ADDENDUM:</div>
+        <div class="addendum-content">
+            ${data.Addendum_Template}
+        </div>
+    </div>
+     ` : ''}
 
 <!-- SIGNATURES -->
 <div class="signatures">
     <div class="sig-block">
         <div class="sig-name">${data.Test_Performed_By_Doctor_name || ''}</div>
         <div class="sig-qual">${data.Test_Performed_By_Doctor_qualification || ''}</div>
-        <div class="sig-date">Date &amp; Time: ${data.Test_Ready_On || ''}</div>
+        <div class="sig-date">Date &amp; Time: ${data.Approved_Time || ''}</div>
         <div class="sig-note">No Signature(s) required, Electronically Verified</div>
     </div>
     <div class="sig-block right">
@@ -709,6 +735,7 @@ function cleanPrint() {
                         <tr>
                             <th>Sr#</th>
                             <th>Bill No</th>
+                            <th>Bill Date</th>
                             <th>MR No</th>
                             <th>Patient Name</th>
                             <th>Phone #</th>

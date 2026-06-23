@@ -345,6 +345,8 @@
     <Content Include="Modules\Appointment\Derma_Appointment_List.aspx" />
     <Content Include="Modules\Billing\BillApproval.aspx" />
     <Content Include="Modules\Billing\DiscountAssignedList.aspx" />
+    <Content Include="Modules\Billing\DoctorPayables.aspx" />
+    <Content Include="Modules\Billing\DoctorPayables_Services.aspx" />
     <Content Include="Modules\Billing\FBRBillingView.aspx" />
     <Content Include="Modules\Billing\DiscountAssigned.aspx" />
     <Content Include="Modules\Billing\IPDMedicineHistory.aspx" />
@@ -3161,6 +3163,20 @@
     </Compile>
     <Compile Include="Modules\Billing\DiscountAssignedList.aspx.designer.cs">
       <DependentUpon>DiscountAssignedList.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="Modules\Billing\DoctorPayables.aspx.cs">
+      <DependentUpon>DoctorPayables.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Modules\Billing\DoctorPayables.aspx.designer.cs">
+      <DependentUpon>DoctorPayables.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="Modules\Billing\DoctorPayables_Services.aspx.cs">
+      <DependentUpon>DoctorPayables_Services.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Modules\Billing\DoctorPayables_Services.aspx.designer.cs">
+      <DependentUpon>DoctorPayables_Services.aspx</DependentUpon>
     </Compile>
     <Compile Include="Modules\Billing\FBRBillingView.aspx.cs">
       <DependentUpon>FBRBillingView.aspx</DependentUpon>

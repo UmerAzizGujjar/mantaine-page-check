@@ -2441,5 +2441,51 @@ AND (
                 return "{\"error\":\"" + ex.Message + "\"}";
             }
         }
+
+        [WebMethod]
+        public static string GetTestHistory(int currentTestDetailID, int patientID)
+        {
+            try
+            {
+                using (DataBaseDataContext db = new DataBaseDataContext())
+                {
+                    var currentTest = (from ltd in db.Lab_Test_Details
+                                       where ltd.Lab_Test_Detail_ID == currentTestDetailID
+                                       select new { ltd.Test_ID }).FirstOrDefault();
+
+                    if (currentTest == null)
+                        return "[]";
+
+                    int targetTestID = currentTest.Test_ID;
+
+                    var historyList = (from ltd in db.Lab_Test_Details
+                                       join lt in db.Laboratory_Tests on ltd.Lab_Test_ID equals lt.Lab_Test_ID
+                                       join bd in db.Ar_Billing_Details on ltd.Bill_Details_ID equals bd.Bill_Details_ID
+                                       join bill in db.Ar_Billings on bd.Bill_ID equals bill.Bill_ID
+                                       join pat in db.Reg_patients on lt.Patient_ID equals pat.pat_id
+                                       where lt.Patient_ID == patientID        
+                                         && ltd.Test_ID == targetTestID         
+                                         && ltd.Lab_Test_Detail_ID != currentTestDetailID 
+                                         && ltd.Is_Result == true                
+                                       orderby bill.Bill_Date descending         
+                                       select new
+                                       {
+                                           Bill_No = bill.Bill_No,
+                                           Bill_Date = bill.Bill_Date,
+                                           Patient_Name = pat.Full_Name,
+                                           Test_IDs = ltd.Test_ID.ToString(),
+                                           Trans_IDs = lt.Lab_Test_ID.ToString(),
+                                           Lab_Test_Detail_ID = ltd.Lab_Test_Detail_ID.ToString(),
+                                           Bill_Details_ID = bd.Bill_Details_ID.ToString()
+                                       }).Take(20).ToList();
+
+                    return (new JavaScriptSerializer()).Serialize(historyList);
+                }
+            }
+            catch (Exception ex)
+            {
+                return "[]";
+            }
+        }
     }
 }

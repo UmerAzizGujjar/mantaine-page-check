@@ -721,9 +721,11 @@
                     })
                 );
 
+                editDetail(Stu_ID);
+
             });
             GetGroup();
-                editDetail(Stu_ID);
+                
             
          
         }

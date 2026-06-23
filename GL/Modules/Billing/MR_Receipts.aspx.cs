@@ -631,7 +631,7 @@ namespace PMS
             DataBaseDataContext db = new DataBaseDataContext();
 
             var ipdIds = db.In_Patients
-                .Where(ip => ip.Patient_ID == PatientID && ip.Discharge != false)
+                .Where(ip => ip.Patient_ID == PatientID && ip.Discharge == false)
                 .Select(ip => ip.In_Patient_ID)
                 .ToList()
                 .Select(id => (long)id)
