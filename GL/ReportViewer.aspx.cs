@@ -2831,6 +2831,28 @@ namespace PMS
                 rd.SetParameterValue("@Warehouse", Request.QueryString["WareHouse"]);
                 rd.SetParameterValue("CompanyLogo", logoPath);
             }
+            else if (reportName == "CathLab_MER")
+            {
+                var logoPath = DBClass.getField("SELECT dbo.GetCompanyLogo()");
+                string ItemID = Request.QueryString["ItemID"].ToString();
+                string vendorID = Request.QueryString["VendorId"].ToString();
+
+                string rptFileName = "Pharmacy/rptCathLab_MedicineExpiry.rpt";
+
+                string StartDateTime = Request.QueryString["StartDateTime"].ToString();
+                string EndDateTime = Request.QueryString["EndDateTime"].ToString();
+                reportPath += rptFileName;
+
+                rd.Load(reportPath);
+                rd.SetParameterValue("CompanyName", AppConfig.Company_Name);
+                rd.SetParameterValue("Title", reportTitle);
+                rd.SetParameterValue("@startDate", StartDateTime);
+                rd.SetParameterValue("@endDate", EndDateTime);
+                rd.SetParameterValue("@itemId", ItemID);
+                rd.SetParameterValue("@Vendor", vendorID);
+                rd.SetParameterValue("@Warehouse", Request.QueryString["WareHouse"]);
+                rd.SetParameterValue("CompanyLogo", logoPath);
+            }
             else if (reportName == "StockCategoryValuationReport")
             {
                 var logoPath = DBClass.getField("SELECT dbo.GetCompanyLogo()");
@@ -4061,6 +4083,32 @@ namespace PMS
                 rd.SetParameterValue("CompanyName", AppConfig.Company_Name);
                 rd.SetParameterValue("Title", "Lab Cash Collection");
                 //rd.SetParameterValue("Patient_Type", PatType);
+
+            }
+            else if (reportName == "Radiology_Test_Wise_Summary")
+            {
+                string rptFileName = "TransactionalDetails/rptRadiologyTestWiseDetailCollection_Summary.rpt";
+                
+                reportPath += rptFileName;
+                rd.Load(reportPath);
+
+                string stDate = Request.QueryString["sDate"].ToString();
+                string stTime = Request.QueryString["STime"].ToString();
+
+                string endDate = Request.QueryString["eDate"].ToString();
+                string endTime = Request.QueryString["ETime"].ToString();
+                string TestName = Request.QueryString["testName"].ToString();
+                string parameterStDate = string.Empty;
+                string parameterEndDate = string.Empty;
+                this.getDateTimeDBFormate(stDate, stTime, out parameterStDate);
+                this.getDateTimeDBFormate(endDate, endTime, out parameterEndDate);
+                rd.SetParameterValue("@stDate", parameterStDate);
+                rd.SetParameterValue("@endDate", parameterEndDate);
+                rd.SetParameterValue("CompanyName", AppConfig.Company_Name);
+                rd.SetParameterValue("Title", "Radiology Test Wise Summary");
+                rd.SetParameterValue("@TestName", TestName);
+                rd.SetParameterValue("@Department", Request.QueryString["Department"]);
+
 
             }
             else if (reportName == "Lab_Test_Patient_Wise")
