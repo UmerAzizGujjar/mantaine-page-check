@@ -18,9 +18,9 @@
                         <div class="bento-title">Patient Information</div>
                         <div class="patient-header" id="patientDisplay">MR-2024-001 - John Doe</div>
                         <div class="patient-meta">
-                            <div class="meta-item"><span class="meta-label">Age:</span> 35 yrs</div>
-                            <div class="meta-item"><span class="meta-label">Gender:</span> Male</div>
-                            <div class="meta-item"><span class="meta-label">Contact:</span> 0300-1234567</div>
+                            <div class="meta-item"><span class="meta-label">Age:</span> <span id="lblAge">35 yrs</span></div>
+                            <div class="meta-item"><span class="meta-label">Gender:</span> <span id="lblGender">Male</span></div>
+                            <div class="meta-item"><span class="meta-label">Contact:</span> <span id="lblContact">0300-1234567</span></div>
                             <div class="meta-item">
                                 <span class="meta-label">Occupation:</span>
                                 <input type="text" class="occ-inline" id="txtOccupation" placeholder="--" />
@@ -99,8 +99,8 @@
                             </div>
                             <div class="col-lg-6 col-md-6 col-sm-6">
                                 <div class="form-group">
-                                    <label>Referring Doctor</label>
-                                    <span class="readonly-text" id="txtReferredBy">Dr. Smith</span>
+                                    <label>Referring Department</label>
+                                    <span class="readonly-text" id="txtReferredBy">Orthopedics</span>
                                 </div>
                             </div>
                         </div>
@@ -108,7 +108,7 @@
                             <div class="col-lg-12">
                                 <div class="form-group">
                                     <label>Reason for Referral</label>
-                                    <span class="readonly-text" id="txtReferralReason">Low back pain with radiculopathy</span>
+                                    <input type="text" class="form-control" id="txtReferralReason" placeholder="Enter referral reason" />
                                 </div>
                             </div>
                         </div>
@@ -116,19 +116,19 @@
                         <table class="vitals-horizontal">
                             <tr>
                                 <td class="v-label">Pulse</td>
-                                <td class="v-value">-- bpm</td>
+                                <td class="v-value"><span id="spnPulse">--</span> bpm</td>
                                 <td class="v-label">BP</td>
-                                <td class="v-value">-- mmHg</td>
+                                <td class="v-value"><span id="spnBP">--</span> mmHg</td>
                                 <td class="v-label">Temp</td>
-                                <td class="v-value">-- °F</td>
+                                <td class="v-value"><span id="spnTemp">--</span> °F</td>
                             </tr>
                             <tr>
                                 <td class="v-label">Height</td>
-                                <td class="v-value">-- cm</td>
+                                <td class="v-value"><span id="spnHeight">--</span> cm</td>
                                 <td class="v-label">Weight</td>
-                                <td class="v-value">-- kg</td>
+                                <td class="v-value"><span id="spnWeight">--</span> kg</td>
                                 <td class="v-label">Resp</td>
-                                <td class="v-value">-- /min</td>
+                                <td class="v-value"><span id="spnResp">--</span> /min</td>
                             </tr>
                         </table>
                     </div>
@@ -151,8 +151,6 @@
                                     <label>Onset</label>
                                     <select class="form-control" id="ddlOnset">
                                         <option value="">--</option>
-                                        <option value="Sudden">Sudden</option>
-                                        <option value="Gradual">Gradual</option>
                                     </select>
                                 </div>
                             </div>
@@ -161,9 +159,6 @@
                                     <label>Mode</label>
                                     <select class="form-control" id="ddlMode">
                                         <option value="">--</option>
-                                        <option value="Traumatic">Traumatic</option>
-                                        <option value="Non-Traumatic">Non-Traumatic</option>
-                                        <option value="Repetitive Strain">Repetitive Strain</option>
                                     </select>
                                 </div>
                             </div>
@@ -443,6 +438,7 @@
                     <span class="legend-color" data-color="#3498db" style="background: #3498db">Numbness</span>
                     <span class="legend-color" data-color="#f1c40f" style="background: #f1c40f">Stiffness</span>
                     <span class="legend-color" data-color="#2ecc71" style="background: #2ecc71">Other</span>
+                    <span class="legend-eraser" id="eraserBtn" title="Eraser"><i class="fa fa-eraser"></i></span>
                 </div>
                 <div class="legend-other-row" id="legendOtherRow" style="display: none">
                     <input type="text" class="form-control" id="txtOtherPain" placeholder="Specify pain type..." />
@@ -464,10 +460,6 @@
                     </div>
                 </div>
                 <input type="hidden" id="hdnBodyMarkers" />
-                <div class="body-save-row">
-                    <button type="button" class="btn btn-primry btn-sm" onclick="BodyChart.save()">Save</button>
-                    <button type="button" class="btn btn-gray btn-sm" onclick="BodyChart.clear()">Clear All</button>
-                </div>
             </div>
 
             <div class="bento-card" style="padding: 12px; margin-top: 10px">
@@ -544,17 +536,181 @@
         </div>
     </div>
 
+    <div class="row" style="margin-top: 10px">
+        <div class="col-lg-3 col-md-3">
+            <div class="bento-card" style="padding: 12px">
+                <div class="bento-title">Diagnosis</div>
+                <textarea class="form-control" id="txtDiagnosis" rows="3" placeholder="Diagnosis..."></textarea>
+            </div>
+        </div>
+        <div class="col-lg-9 col-md-9">
+            <div class="bento-card" style="padding: 12px">
+                <div class="bento-title">Diagnostic Tests</div>
+                <table class="diag-table">
+                    <thead>
+                        <tr>
+                            <th>Cervical</th>
+                            <th>Thoracic</th>
+                            <th>Lumbar</th>
+                            <th>Shoulder</th>
+                            <th>Elbow</th>
+                            <th>Wrist</th>
+                            <th>Hip</th>
+                            <th>Knee</th>
+                            <th>Ankle</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td><select class="form-control" id="ddlTestCervical"><option value="">--</option><option>X-Ray</option><option>EMG/NCS</option><option>CT Scan</option><option>MRI</option><option>Ultrasound</option></select></td>
+                            <td><select class="form-control" id="ddlTestThoracic"><option value="">--</option><option>X-Ray</option><option>EMG/NCS</option><option>CT Scan</option><option>MRI</option><option>Ultrasound</option></select></td>
+                            <td><select class="form-control" id="ddlTestLumbar"><option value="">--</option><option>X-Ray</option><option>EMG/NCS</option><option>CT Scan</option><option>MRI</option><option>Ultrasound</option></select></td>
+                            <td><select class="form-control" id="ddlTestShoulder"><option value="">--</option><option>X-Ray</option><option>EMG/NCS</option><option>CT Scan</option><option>MRI</option><option>Ultrasound</option></select></td>
+                            <td><select class="form-control" id="ddlTestElbow"><option value="">--</option><option>X-Ray</option><option>EMG/NCS</option><option>CT Scan</option><option>MRI</option><option>Ultrasound</option></select></td>
+                            <td><select class="form-control" id="ddlTestWrist"><option value="">--</option><option>X-Ray</option><option>EMG/NCS</option><option>CT Scan</option><option>MRI</option><option>Ultrasound</option></select></td>
+                            <td><select class="form-control" id="ddlTestHip"><option value="">--</option><option>X-Ray</option><option>EMG/NCS</option><option>CT Scan</option><option>MRI</option><option>Ultrasound</option></select></td>
+                            <td><select class="form-control" id="ddlTestKnee"><option value="">--</option><option>X-Ray</option><option>EMG/NCS</option><option>CT Scan</option><option>MRI</option><option>Ultrasound</option></select></td>
+                            <td><select class="form-control" id="ddlTestAnkle"><option value="">--</option><option>X-Ray</option><option>EMG/NCS</option><option>CT Scan</option><option>MRI</option><option>Ultrasound</option></select></td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+
+    <div class="row" style="margin-top: 10px">
+        <div class="col-lg-8 col-md-8">
+            <div class="bento-card" style="padding: 12px">
+                <div class="bento-title">Physical Therapy Treatment Plan</div>
+                <table class="diag-table" style="margin-top: 4px">
+                    <thead>
+                        <tr>
+                            <th style="width: 5%">Sel</th>
+                            <th style="width: 18%">Treatment Modality</th>
+                            <th style="width: 22%">Details</th>
+                            <th style="width: 11%">Duration</th>
+                            <th style="width: 11%">Frequency</th>
+                            <th style="width: 11%">Intensity</th>
+                            <th style="width: 11%">Start Date</th>
+                            <th style="width: 11%">End Date</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr class="tx-row">
+                            <td><input type="checkbox" class="tx-select" data-row="1" /></td>
+                            <td class="tx-label" style="text-align: left">Therapeutic Exercise</td>
+                            <td><input type="text" class="form-control tx-input" disabled /></td>
+                            <td><input type="text" class="form-control tx-input" disabled placeholder="e.g. 30 min" /></td>
+                            <td><input type="text" class="form-control tx-input" disabled placeholder="e.g. 3x/week" /></td>
+                            <td><input type="text" class="form-control tx-input" disabled placeholder="e.g. Low/Med" /></td>
+                            <td><input type="text" class="form-control datepicker tx-input" disabled placeholder="dd/mm/yy" /></td>
+                            <td><input type="text" class="form-control datepicker tx-input" disabled placeholder="dd/mm/yy" /></td>
+                        </tr>
+                        <tr class="tx-row">
+                            <td><input type="checkbox" class="tx-select" data-row="2" /></td>
+                            <td class="tx-label" style="text-align: left">Electrotherapy</td>
+                            <td><input type="text" class="form-control tx-input" disabled /></td>
+                            <td><input type="text" class="form-control tx-input" disabled placeholder="e.g. 30 min" /></td>
+                            <td><input type="text" class="form-control tx-input" disabled placeholder="e.g. 3x/week" /></td>
+                            <td><input type="text" class="form-control tx-input" disabled placeholder="e.g. Low/Med" /></td>
+                            <td><input type="text" class="form-control datepicker tx-input" disabled placeholder="dd/mm/yy" /></td>
+                            <td><input type="text" class="form-control datepicker tx-input" disabled placeholder="dd/mm/yy" /></td>
+                        </tr>
+                        <tr class="tx-row">
+                            <td><input type="checkbox" class="tx-select" data-row="3" /></td>
+                            <td class="tx-label" style="text-align: left">Manual Therapy</td>
+                            <td><input type="text" class="form-control tx-input" disabled /></td>
+                            <td><input type="text" class="form-control tx-input" disabled placeholder="e.g. 30 min" /></td>
+                            <td><input type="text" class="form-control tx-input" disabled placeholder="e.g. 3x/week" /></td>
+                            <td><input type="text" class="form-control tx-input" disabled placeholder="e.g. Low/Med" /></td>
+                            <td><input type="text" class="form-control datepicker tx-input" disabled placeholder="dd/mm/yy" /></td>
+                            <td><input type="text" class="form-control datepicker tx-input" disabled placeholder="dd/mm/yy" /></td>
+                        </tr>
+                        <tr class="tx-row">
+                            <td><input type="checkbox" class="tx-select" data-row="4" /></td>
+                            <td class="tx-label" style="text-align: left">Other Modalities</td>
+                            <td><input type="text" class="form-control tx-input" id="txOtherDetails" disabled placeholder="Specify modality..." /></td>
+                            <td><input type="text" class="form-control tx-input" disabled placeholder="e.g. 30 min" /></td>
+                            <td><input type="text" class="form-control tx-input" disabled placeholder="e.g. 3x/week" /></td>
+                            <td><input type="text" class="form-control tx-input" disabled placeholder="e.g. Low/Med" /></td>
+                            <td><input type="text" class="form-control datepicker tx-input" disabled placeholder="dd/mm/yy" /></td>
+                            <td><input type="text" class="form-control datepicker tx-input" disabled placeholder="dd/mm/yy" /></td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+        <div class="col-lg-4 col-md-4">
+            <div class="row">
+                <div class="col-lg-6 col-md-6">
+                    <div class="bento-card" style="padding: 12px">
+                        <div class="bento-title">Goals</div>
+                        <div class="ib-subtitle">Short-term</div>
+                        <textarea class="form-control" id="txtShortTermGoals" rows="2" placeholder="Short-term goals..."></textarea>
+                        <div class="ib-subtitle" style="margin-top: 6px">Long-term</div>
+                        <textarea class="form-control" id="txtLongTermGoals" rows="2" placeholder="Long-term goals..."></textarea>
+                    </div>
+                </div>
+                <div class="col-lg-6 col-md-6">
+                    <div class="bento-card" style="padding: 12px">
+                        <div class="bento-title">Home Plan</div>
+                        <div class="ib-subtitle">Home Exercise Program</div>
+                        <textarea class="form-control" id="txtHomeExercise" rows="2" placeholder="HEP instructions..."></textarea>
+                        <div class="ib-subtitle" style="margin-top: 6px">Patient Education</div>
+                        <textarea class="form-control" id="txtPatientEducation" rows="2" placeholder="Education &amp; precautions..."></textarea>
+                    </div>
+                </div>
+                <div class="col-lg-12 col-md-12">
+                    <div class="bento-card" style="padding: 12px">
+                        <div class="bento-title">Follow-up</div>
+                        <div class="ib-subtitle">Next Review Date</div>
+                        <input type="text" class="form-control datepicker" id="txtReviewDate" placeholder="dd/mm/yy" style="margin-bottom: 6px" />
+                        <div class="ib-subtitle">Reviewed By</div>
+                        <select class="form-control" id="ddlReviewedBy" style="margin-bottom: 6px">
+                            <option value="">-- Select --</option>
+                        </select>
+                        <div class="ib-subtitle">Notes</div>
+                        <textarea class="form-control" id="txtReviewNotes" rows="2" placeholder="Notes..."></textarea>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="body-save-row" style="padding: 0 15px 15px">
+        <button type="button" class="btn btn-primry" onclick="BodyChart.save()">Save</button>
+        <button type="button" class="btn btn-gray" onclick="BodyChart.clear()">Clear All</button>
+    </div>
+
     <script type="text/javascript">
+        function populatePatient(d) {
+            document.getElementById('patientDisplay').innerText = d.display;
+            document.getElementById('lblAge').innerText = d.age;
+            document.getElementById('lblGender').innerText = d.gender;
+            document.getElementById('lblContact').innerText = d.contact;
+            var refEl = document.getElementById('txtReferredBy');
+            if (refEl) refEl.innerText = d.referredBy;
+            document.getElementById('spnPulse').innerText = d.pulse;
+            document.getElementById('spnBP').innerText = d.bp;
+            document.getElementById('spnTemp').innerText = d.temp;
+            document.getElementById('spnResp').innerText = d.resp;
+            document.getElementById('spnHeight').innerText = d.height;
+            document.getElementById('spnWeight').innerText = d.weight;
+        }
+
         var BodyChart = {
             activeColor: '#e74c3c',
             markers: { front: [], back: [] },
-            proximityThreshold: 18,
+            proximityThreshold: 6,
+            erasing: false,
 
             init: function () {
                 var self = this;
 
                 $('.legend-color').on('click', function () {
                     $('.legend-color').removeClass('active');
+                    $('#eraserBtn').removeClass('active');
+                    self.erasing = false;
                     $(this).addClass('active');
                     self.activeColor = $(this).data('color');
                     if (self.activeColor === '#2ecc71') {
@@ -564,7 +720,17 @@
                     }
                 });
 
-                $('.body-image-wrap').on('click', function (e) {
+                $('#eraserBtn').on('click', function () {
+                    $(this).toggleClass('active');
+                    self.erasing = $(this).hasClass('active');
+                    if (self.erasing) {
+                        $('.legend-color').removeClass('active');
+                        $('#legendOtherRow').hide();
+                    }
+                });
+
+                $('.body-image-wrap').on('mousedown', function (e) {
+                    if (e.target.tagName !== 'IMG') return;
                     var side = $(this).data('side');
                     var offset = $(this).offset();
                     var w = $(this).width();
@@ -573,7 +739,39 @@
                     var py = e.pageY - offset.top;
                     var relX = px / w;
                     var relY = py / h;
+
+                    if (self.erasing) {
+                        self.eraseNear(side, relX, relY);
+                        return;
+                    }
+
                     self.addMarker(side, relX, relY);
+                    self._drawSide = side;
+                    self._drawing = true;
+                    self._lastX = relX;
+                    self._lastY = relY;
+                });
+
+                $('.body-image-wrap').on('mousemove', function (e) {
+                    if (!self._drawing) return;
+                    var offset = $(this).offset();
+                    var w = $(this).width();
+                    var h = $(this).height();
+                    var px = e.pageX - offset.left;
+                    var py = e.pageY - offset.top;
+                    var relX = px / w;
+                    var relY = py / h;
+                    var dx = relX - self._lastX;
+                    var dy = relY - self._lastY;
+                    if (Math.sqrt(dx*dx + dy*dy) > 0.02) {
+                        self.addMarker(self._drawSide, relX, relY);
+                        self._lastX = relX;
+                        self._lastY = relY;
+                    }
+                });
+
+                $(document).on('mouseup', function () {
+                    self._drawing = false;
                 });
 
                 var saved = $('#hdnBodyMarkers').val();
@@ -588,19 +786,6 @@
             addMarker: function (side, relX, relY) {
                 var self = this;
                 var arr = this.markers[side];
-
-                var dupIdx = -1;
-                for (var i = 0; i < arr.length; i++) {
-                    if (Math.abs(arr[i].x - relX) < 0.015 && Math.abs(arr[i].y - relY) < 0.015) {
-                        dupIdx = i;
-                        break;
-                    }
-                }
-                if (dupIdx > -1) {
-                    arr.splice(dupIdx, 1);
-                    self.renderAll();
-                    return;
-                }
 
                 var closeIdx = -1;
                 for (var i = 0; i < arr.length; i++) {
@@ -689,10 +874,58 @@
                         });
                     }
                 });
+            },
+
+            eraseNear: function (side, relX, relY) {
+                var arr = this.markers[side];
+                var closest = -1;
+                var minDist = 999;
+                for (var i = 0; i < arr.length; i++) {
+                    var dx = (arr[i].x - relX) * 100;
+                    var dy = (arr[i].y - relY) * 100;
+                    var dist = Math.sqrt(dx * dx + dy * dy);
+                    if (dist < minDist) {
+                        minDist = dist;
+                        closest = i;
+                    }
+                }
+                if (closest > -1 && minDist < 15) {
+                    arr.splice(closest, 1);
+                    this.renderAll();
+                }
             }
         };
 
+        function loadDoctors() {
+            PageMethods.LoadDoctors(function (res) {
+                var doctors = JSON.parse(res);
+                var opts = '<option value="">-- Select --</option>';
+                $.each(doctors, function (_, d) {
+                    opts += '<option value="' + d.Emp_ID + '">' + d.Emp_Name + '</option>';
+                });
+                $('#ddlReviewedBy').html(opts);
+                $('#ddlReviewedBy').select2();
+            });
+        }
+
+        function loadDropdown(id, valueSetName) {
+            PageMethods.LoadDataValues(valueSetName, function (res) {
+                var items = JSON.parse(res);
+                var opts = '<option value="">--</option>';
+                $.each(items, function (_, it) {
+                    opts += '<option value="' + it.DataValue_Name + '">' + it.DataValue_Description + '</option>';
+                });
+                $(id).html(opts);
+            });
+        }
+
         $(document).ready(function () {
+            var now = new Date();
+            var dd = ('0' + now.getDate()).slice(-2);
+            var mm = ('0' + (now.getMonth() + 1)).slice(-2);
+            var yyyy = now.getFullYear();
+            $('#txtAssessmentDate').val(dd + '/' + mm + '/' + yyyy);
+
             $('.datepicker').datepicker({
                 changeMonth: true,
                 changeYear: true,
@@ -713,6 +946,10 @@
                     $row.find('.tx-input').val('');
                 }
             });
+
+            loadDoctors();
+            loadDropdown('#ddlOnset', 'Onset');
+            loadDropdown('#ddlMode', 'Mode');
 
             BodyChart.init();
         });

@@ -539,6 +539,32 @@
     box-shadow: 0 0 6px rgba(0,0,0,0.3);
 }
 
+.legend-eraser {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 26px;
+    height: 26px;
+    border-radius: 4px;
+    font-size: 14px;
+    color: #888;
+    cursor: pointer;
+    border: 2px solid transparent;
+    transition: all 0.2s ease;
+    user-select: none;
+}
+
+.legend-eraser:hover {
+    color: #c0392b;
+    background: #fce4e3;
+}
+
+.legend-eraser.active {
+    color: #fff;
+    background: #c0392b;
+    border-color: #a03227;
+}
+
 .legend-other-row {
     margin: 4px 0 6px;
 }
