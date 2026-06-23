@@ -86,7 +86,8 @@ namespace PMS.Modules.PatientManagement
                     if (existing != null)
                     {
                         var plans = db.Physiotherapy_Treatment_Plans.Where(x => x.Physio_ID == existing.Physio_ID).ToList();
-                        var loadData = BuildAssessmentLoadData(existing, plans);
+                    var romRows = db.Physiotherapy_ROMs.Where(x => x.Physio_ID == existing.Physio_ID).ToList();
+                        var loadData = BuildAssessmentLoadData(existing, plans, romRows);
                         script += "setTimeout(function(){ populateAssessment(" + _json.Serialize(loadData) + "); }, 100);";
                     }
 
@@ -95,7 +96,7 @@ namespace PMS.Modules.PatientManagement
             }
         }
 
-        private object BuildAssessmentLoadData(PMS.Physiotherapy_Assessment entity, List<PMS.Physiotherapy_Treatment_Plan> plans = null)
+        private object BuildAssessmentLoadData(PMS.Physiotherapy_Assessment entity, List<PMS.Physiotherapy_Treatment_Plan> plans = null, List<PMS.Physiotherapy_ROM> romRows = null)
         {
             string pv(List<PMS.Physiotherapy_Treatment_Plan> list, string mod, string field)
             {
@@ -111,6 +112,12 @@ namespace PMS.Modules.PatientManagement
                     case "end": return p.End_Date?.ToString("dd/MM/yyyy");
                     default: return null;
                 }
+            }
+            string rv(List<PMS.Physiotherapy_ROM> list, string mov, string side)
+            {
+                var r = list?.FirstOrDefault(x => x.Movement == mov);
+                if (r == null) return null;
+                return side == "L" ? r.Left_Value : r.Right_Value;
             }
             return new
             {
@@ -181,6 +188,17 @@ namespace PMS.Modules.PatientManagement
                 nextReviewDate = entity.Next_Review_Date?.ToString("dd/MM/yyyy"),
                 reviewedBy = entity.Reviewed_By,
                 reviewNotes = entity.Review_Notes,
+                romFlexL = rv(romRows, "Flexion", "L"), romFlexR = rv(romRows, "Flexion", "R"),
+                romExtL = rv(romRows, "Extension", "L"), romExtR = rv(romRows, "Extension", "R"),
+                romAbdL = rv(romRows, "Abduction", "L"), romAbdR = rv(romRows, "Abduction", "R"),
+                romAddL = rv(romRows, "Adduction", "L"), romAddR = rv(romRows, "Adduction", "R"),
+                romRotL = rv(romRows, "Rotation", "L"), romRotR = rv(romRows, "Rotation", "R"),
+                ulGrade0 = entity.UL_Grade_0, ulGrade1 = entity.UL_Grade_1,
+                ulGrade2 = entity.UL_Grade_2, ulGrade3 = entity.UL_Grade_3,
+                ulGrade4 = entity.UL_Grade_4, ulGrade5 = entity.UL_Grade_5,
+                llGrade0 = entity.LL_Grade_0, llGrade1 = entity.LL_Grade_1,
+                llGrade2 = entity.LL_Grade_2, llGrade3 = entity.LL_Grade_3,
+                llGrade4 = entity.LL_Grade_4, llGrade5 = entity.LL_Grade_5,
                 txExSel = plans?.Any(p => p.Modality == "Therapeutic Exercise"),
                 txExDetails = pv(plans, "Therapeutic Exercise", "details"),
                 txExDuration = pv(plans, "Therapeutic Exercise", "duration"),
@@ -228,6 +246,7 @@ namespace PMS.Modules.PatientManagement
                 if (entity == null) return null;
 
                 var plans = db.Physiotherapy_Treatment_Plans.Where(x => x.Physio_ID == entity.Physio_ID).ToList();
+                var romRows = db.Physiotherapy_ROMs.Where(x => x.Physio_ID == entity.Physio_ID).ToList();
 
                 return new
                 {
@@ -299,6 +318,22 @@ namespace PMS.Modules.PatientManagement
                     nextReviewDate = entity.Next_Review_Date?.ToString("dd/MM/yyyy"),
                     reviewedBy = entity.Reviewed_By,
                     reviewNotes = entity.Review_Notes,
+                    romFlexL = romRows.Where(r => r.Movement == "Flexion").Select(r => r.Left_Value).FirstOrDefault(),
+                    romFlexR = romRows.Where(r => r.Movement == "Flexion").Select(r => r.Right_Value).FirstOrDefault(),
+                    romExtL = romRows.Where(r => r.Movement == "Extension").Select(r => r.Left_Value).FirstOrDefault(),
+                    romExtR = romRows.Where(r => r.Movement == "Extension").Select(r => r.Right_Value).FirstOrDefault(),
+                    romAbdL = romRows.Where(r => r.Movement == "Abduction").Select(r => r.Left_Value).FirstOrDefault(),
+                    romAbdR = romRows.Where(r => r.Movement == "Abduction").Select(r => r.Right_Value).FirstOrDefault(),
+                    romAddL = romRows.Where(r => r.Movement == "Adduction").Select(r => r.Left_Value).FirstOrDefault(),
+                    romAddR = romRows.Where(r => r.Movement == "Adduction").Select(r => r.Right_Value).FirstOrDefault(),
+                    romRotL = romRows.Where(r => r.Movement == "Rotation").Select(r => r.Left_Value).FirstOrDefault(),
+                    romRotR = romRows.Where(r => r.Movement == "Rotation").Select(r => r.Right_Value).FirstOrDefault(),
+                    ulGrade0 = entity.UL_Grade_0, ulGrade1 = entity.UL_Grade_1,
+                    ulGrade2 = entity.UL_Grade_2, ulGrade3 = entity.UL_Grade_3,
+                    ulGrade4 = entity.UL_Grade_4, ulGrade5 = entity.UL_Grade_5,
+                    llGrade0 = entity.LL_Grade_0, llGrade1 = entity.LL_Grade_1,
+                    llGrade2 = entity.LL_Grade_2, llGrade3 = entity.LL_Grade_3,
+                    llGrade4 = entity.LL_Grade_4, llGrade5 = entity.LL_Grade_5,
                     txExSel = plans.Any(p => p.Modality == "Therapeutic Exercise"),
                     txExDetails = plans.Where(p => p.Modality == "Therapeutic Exercise").Select(p => p.Details).FirstOrDefault(),
                     txExDuration = plans.Where(p => p.Modality == "Therapeutic Exercise").Select(p => p.Duration).FirstOrDefault(),
@@ -493,6 +528,42 @@ namespace PMS.Modules.PatientManagement
 
                 db.SubmitChanges();
 
+                var oldRows = db.Physiotherapy_ROMs.Where(x => x.Physio_ID == entity.Physio_ID);
+                db.Physiotherapy_ROMs.DeleteAllOnSubmit(oldRows);
+                db.SubmitChanges();
+
+                void addROM(string mov, string l, string r)
+                {
+                    var row = new PMS.Physiotherapy_ROM
+                    {
+                        Physio_ID = entity.Physio_ID,
+                        Movement = mov,
+                        Left_Value = val(l),
+                        Right_Value = val(r)
+                    };
+                    db.Physiotherapy_ROMs.InsertOnSubmit(row);
+                }
+                addROM("Flexion", data.romFlexL, data.romFlexR);
+                addROM("Extension", data.romExtL, data.romExtR);
+                addROM("Abduction", data.romAbdL, data.romAbdR);
+                addROM("Adduction", data.romAddL, data.romAddR);
+                addROM("Rotation", data.romRotL, data.romRotR);
+
+                entity.UL_Grade_0 = bval(data.ulGrade0);
+                entity.UL_Grade_1 = bval(data.ulGrade1);
+                entity.UL_Grade_2 = bval(data.ulGrade2);
+                entity.UL_Grade_3 = bval(data.ulGrade3);
+                entity.UL_Grade_4 = bval(data.ulGrade4);
+                entity.UL_Grade_5 = bval(data.ulGrade5);
+                entity.LL_Grade_0 = bval(data.llGrade0);
+                entity.LL_Grade_1 = bval(data.llGrade1);
+                entity.LL_Grade_2 = bval(data.llGrade2);
+                entity.LL_Grade_3 = bval(data.llGrade3);
+                entity.LL_Grade_4 = bval(data.llGrade4);
+                entity.LL_Grade_5 = bval(data.llGrade5);
+
+                db.SubmitChanges();
+
                 var oldPlans = db.Physiotherapy_Treatment_Plans.Where(x => x.Physio_ID == entity.Physio_ID);
                 db.Physiotherapy_Treatment_Plans.DeleteAllOnSubmit(oldPlans);
                 db.SubmitChanges();
@@ -681,6 +752,28 @@ namespace PMS.Modules.PatientManagement
             public string txOthIntensity { get; set; }
             public string txOthStart { get; set; }
             public string txOthEnd { get; set; }
+            public string romFlexL { get; set; }
+            public string romFlexR { get; set; }
+            public string romExtL { get; set; }
+            public string romExtR { get; set; }
+            public string romAbdL { get; set; }
+            public string romAbdR { get; set; }
+            public string romAddL { get; set; }
+            public string romAddR { get; set; }
+            public string romRotL { get; set; }
+            public string romRotR { get; set; }
+            public bool? ulGrade0 { get; set; }
+            public bool? ulGrade1 { get; set; }
+            public bool? ulGrade2 { get; set; }
+            public bool? ulGrade3 { get; set; }
+            public bool? ulGrade4 { get; set; }
+            public bool? ulGrade5 { get; set; }
+            public bool? llGrade0 { get; set; }
+            public bool? llGrade1 { get; set; }
+            public bool? llGrade2 { get; set; }
+            public bool? llGrade3 { get; set; }
+            public bool? llGrade4 { get; set; }
+            public bool? llGrade5 { get; set; }
         }
     }
 }

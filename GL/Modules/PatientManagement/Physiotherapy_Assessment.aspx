@@ -437,11 +437,11 @@
                     <span class="legend-color active" data-color="#e74c3c" style="background: #e74c3c">Pain</span>
                     <span class="legend-color" data-color="#3498db" style="background: #3498db">Numbness</span>
                     <span class="legend-color" data-color="#f1c40f" style="background: #f1c40f">Stiffness</span>
-                    <span class="legend-color" data-color="#2ecc71" style="background: #2ecc71">Other</span>
+                    <span class="legend-color" data-color="#2ecc71" style="background: #2ecc71"><span class="legend-other-label">Other</span></span>
                     <span class="legend-eraser" id="eraserBtn" title="Eraser"><i class="fa fa-eraser"></i></span>
                 </div>
                 <div class="legend-other-row" id="legendOtherRow" style="display: none">
-                    <input type="text" class="form-control" id="txtOtherPain" placeholder="Specify pain type..." />
+                    <input type="text" class="form-control" id="txtOtherPain" placeholder="Specify pain type..." oninput="document.querySelector('.legend-other-label').textContent = this.value || 'Other'" />
                 </div>
                 <div class="body-chart-container">
                     <div class="body-view">
@@ -708,10 +708,12 @@
 
     <input type="hidden" id="hdnOutPatientId" value="<%=Request.QueryString["ID"] ?? "" %>" />
     <input type="hidden" id="hdnRegPatId" value="0" />
+    <input type="hidden" id="hdnPhysioId" value="0" />
 
     <div class="body-save-row" style="padding: 0 15px 15px">
         <button type="button" class="btn btn-primry" id="btnSaveAssessment" onclick="saveAssessment()">Save Assessment</button>
-        <button type="button" class="btn btn-gray" onclick="BodyChart.clear()">Clear Chart</button>
+        <button type="button" class="btn btn-gray" onclick="window.location.href='Physiotherapy_Assessment_List.aspx'">View List</button>
+        <button type="button" class="btn btn-gray" id="btnPrintForm" onclick="printForm()">Print</button>
     </div>
 
     <script type="text/javascript">
@@ -754,7 +756,7 @@
                 allergies: v('txtAllergies'),
                 painScale: parseInt($('#hdnPainScale').val()) || null,
                 painType: rv('painType'),
-                bodyChartJson: v('hdnBodyMarkers'),
+                bodyChartJson: (function() { var b = ''; try { var d = JSON.parse(v('hdnBodyMarkers')); d._otherText = v('txtOtherPain'); b = JSON.stringify(d); } catch(e) { b = v('hdnBodyMarkers'); } return b; })(),
                 postNormal: ck('chkPostNormal'), postKyphosis: ck('chkKyphosis'),
                 postLordosis: ck('chkLordosis'), postScoliosis: ck('chkScoliosis'),
                 postAntalgic: ck('chkAntalgic'), postOther: ck('chkPostOther'),
@@ -809,6 +811,17 @@
                 txOthSel: ck('txSelOth'), txOthDetails: v('txOthDetails'),
                 txOthDuration: v('txOthDuration'), txOthFreq: v('txOthFreq'),
                 txOthIntensity: v('txOthIntensity'), txOthStart: v('txOthStart'), txOthEnd: v('txOthEnd'),
+                romFlexL: v('txtROM_Flex_L'), romFlexR: v('txtROM_Flex_R'),
+                romExtL: v('txtROM_Ext_L'), romExtR: v('txtROM_Ext_R'),
+                romAbdL: v('txtROM_Abd_L'), romAbdR: v('txtROM_Abd_R'),
+                romAddL: v('txtROM_Add_L'), romAddR: v('txtROM_Add_R'),
+                romRotL: v('txtROM_Rot_L'), romRotR: v('txtROM_Rot_R'),
+                ulGrade0: ck('chkUL_0'), ulGrade1: ck('chkUL_1'),
+                ulGrade2: ck('chkUL_2'), ulGrade3: ck('chkUL_3'),
+                ulGrade4: ck('chkUL_4'), ulGrade5: ck('chkUL_5'),
+                llGrade0: ck('chkLL_0'), llGrade1: ck('chkLL_1'),
+                llGrade2: ck('chkLL_2'), llGrade3: ck('chkLL_3'),
+                llGrade4: ck('chkLL_4'), llGrade5: ck('chkLL_5'),
                 nextReviewDate: v('txtReviewDate'),
                 reviewedBy: parseInt(v('ddlReviewedBy')) || null,
                 reviewNotes: v('txtReviewNotes')
@@ -825,8 +838,9 @@
 
             PageMethods.SaveAssessment(opId, regPatId, JSON.stringify(data), function (r) {
                 if (r.success) {
+                    $('#hdnPhysioId').val(r.physioId);
+                    $('#btnSaveAssessment').prop('disabled', false).text(r.isNew ? 'Update Assessment' : 'Update Assessment');
                     Swal.fire({ icon: 'success', title: r.isNew ? 'Saved' : 'Updated', text: 'Assessment ' + (r.isNew ? 'saved' : 'updated') + ' successfully!', timer: 1500, showConfirmButton: false });
-                    setTimeout(function () { location.reload(); }, 1600);
                 } else {
                     Swal.fire({ icon: 'error', title: 'Error', text: 'Failed to save assessment.' });
                     $('#btnSaveAssessment').prop('disabled', false).text('Save Assessment');
@@ -835,6 +849,50 @@
                 Swal.fire({ icon: 'error', title: 'Error', text: 'Server error occurred.' });
                 $('#btnSaveAssessment').prop('disabled', false).text('Save Assessment');
             });
+        }
+
+        function printForm() {
+            var w = window.open('', '_blank', 'width=900,height=700');
+            function v(id) { var el = document.getElementById(id); return el ? el.value || el.innerText : ''; }
+            function ck(id) { var el = document.getElementById(id); return el && el.checked ? '✓' : ''; }
+            function rd(name) { var el = document.querySelector('input[name="' + name + '"]:checked'); return el ? el.id.replace('chk', '') : ''; }
+            var pn = document.getElementById('patientDisplay');
+            var html = '<html><head><title>Physiotherapy Assessment</title>';
+            html += '<style>body{font-family:Arial,sans-serif;margin:20px;font-size:12px}h2{color:#c0392b;border-bottom:2px solid #c0392b;padding-bottom:5px;font-size:15px;text-transform:uppercase}.sec{border:1px solid #ccc;padding:10px;margin-bottom:10px;border-radius:4px}.row{display:flex;gap:10px;margin-bottom:5px}.col{flex:1}table{width:100%;border-collapse:collapse;margin-top:5px}td,th{border:1px solid #ddd;padding:4px 6px;text-align:left;font-size:11px}th{background:#f5f5f5;font-weight:700}.lbl{font-weight:600;color:#555;font-size:11px;text-transform:uppercase}@media print{body{margin:10px;font-size:11px}.sec{break-inside:avoid}}</style></head><body>';
+            html += '<h1 style="text-align:center;color:#c0392b;font-size:18px">Physical Therapy OPD Assessment</h1>';
+            html += '<div class="sec"><h2>Patient Information</h2><div class="row"><div class="col"><b>Patient:</b> ' + (pn ? pn.innerText : '') + '</div><div class="col"><b>Date:</b> ' + v('txtAssessmentDate') + '</div></div>';
+            html += '<div class="row"><div class="col"><b>Age:</b> ' + v('lblAge') + '</div><div class="col"><b>Gender:</b> ' + v('lblGender') + '</div><div class="col"><b>Contact:</b> ' + v('lblContact') + '</div></div>';
+            html += '<div class="row"><div class="col"><b>Occupation:</b> ' + v('txtOccupation') + '</div><div class="col"><b>Dept:</b> ' + v('txtReferredBy') + '</div></div></div>';
+            html += '<div class="sec"><h2>Assessment Details</h2><div class="row"><div class="col"><b>Referring Dept:</b> ' + v('txtReferredBy') + '</div><div class="col"><b>Reason:</b> ' + v('txtReferralReason') + '</div></div>';
+            html += '<div class="row"><div class="col"><b>Chief Complaint:</b> ' + v('txtChiefComplaint') + '</div></div>';
+            html += '<div class="row"><div class="col"><b>Duration:</b> ' + v('txtDuration') + '</div><div class="col"><b>Onset:</b> ' + v('ddlOnset') + '</div><div class="col"><b>Mode:</b> ' + v('ddlMode') + '</div></div></div>';
+            var conds = [['chkDM','Diabetes'],['chkHTN','HTN'],['chkCardiac','Cardiac'],['chkSurgery','Surgery'],['chkNeuro','Neuro'],['chkResp','Resp'],['chkThyroid','Thyroid'],['chkArthritis','Arthritis']];
+            var condHtml = conds.filter(function(c){return document.getElementById(c[0])&&document.getElementById(c[0]).checked}).map(function(c){return c[1]}).join(', ');
+            html += '<div class="sec"><h2>Medical History</h2><div class="row"><div class="col"><b>Conditions:</b> ' + (condHtml||'None') + '</div></div>';
+            html += '<div class="row"><div class="col"><b>Surgical History:</b> ' + v('txtSurgicalHistory') + '</div><div class="col"><b>Medications:</b> ' + v('txtMedications') + '</div></div>';
+            html += '<div class="row"><div class="col"><b>Allergies:</b> ' + v('txtAllergies') + '</div></div></div>';
+            html += '<div class="sec"><h2>Physical Examination</h2>';
+            html += '<div class="row"><div class="col"><b>Pain Scale:</b> ' + (v('hdnPainScale')||'--') + '/10</div><div class="col"><b>Pain Type:</b> ' + rd('painType') + '</div></div>';
+            var post = [['chkPostNormal','Normal'],['chkKyphosis','Kyphosis'],['chkLordosis','Lordosis'],['chkScoliosis','Scoliosis'],['chkAntalgic','Antalgic']];
+            var postHtml = post.filter(function(c){return document.getElementById(c[0])&&document.getElementById(c[0]).checked}).map(function(c){return c[1]}).join(', ');
+            html += '<div class="row"><div class="col"><b>Posture/Gait:</b> ' + (postHtml||'--') + '</div></div>';
+            html += '<div class="row"><div class="col"><b>MMT:</b> R:'+v('txtMMT_Right')+' L:'+v('txtMMT_Left')+' UL:'+v('txtMMT_UpperLimb')+' LL:'+v('txtMMT_LowerLimb')+'</div></div>';
+            var area = [['chkAreaNeck','Neck'],['chkAreaShoulder','Shoulder'],['chkAreaElbow','Elbow'],['chkAreaWrist','Wrist'],['chkAreaBack','Back'],['chkAreaHip','Hip'],['chkAreaKnee','Knee'],['chkAreaAnkle','Ankle']];
+            var areaHtml = area.filter(function(c){return document.getElementById(c[0])&&document.getElementById(c[0]).checked}).map(function(c){return c[1]}).join(', ');
+            html += '<div class="row"><div class="col"><b>Affected Area:</b> ' + (areaHtml||'--') + '</div></div></div>';
+            html += '<div class="sec"><h2>Diagnosis & Tests</h2><div class="row"><div class="col"><b>Diagnosis:</b> ' + v('txtDiagnosis') + '</div></div></div>';
+            html += '<div class="sec"><h2>Treatment Plan</h2><div class="row"><div class="col"><b>Goals-ST:</b> ' + v('txtShortTermGoals') + '</div></div>';
+            html += '<div class="row"><div class="col"><b>Goals-LT:</b> ' + v('txtLongTermGoals') + '</div></div>';
+            html += '<div class="row"><div class="col"><b>HEP:</b> ' + v('txtHomeExercise') + '</div></div>';
+            html += '<div class="row"><div class="col"><b>Patient Education:</b> ' + v('txtPatientEducation') + '</div></div>';
+            html += '<div class="row"><div class="col"><b>Review Date:</b> ' + v('txtReviewDate') + '</div><div class="col"><b>Reviewed By:</b> ' + $('#ddlReviewedBy option:selected').text() + '</div></div>';
+            html += '<div class="row"><div class="col"><b>Notes:</b> ' + v('txtReviewNotes') + '</div></div></div>';
+            html += '<p style="text-align:center;color:#888;font-size:10px;margin-top:20px">Generated on ' + new Date().toLocaleDateString() + '</p>';
+            html += '</body></html>';
+            w.document.write(html);
+            w.document.close();
+            w.focus();
+            setTimeout(function(){ w.print(); }, 500);
         }
 
         function populateAssessment(d) {
@@ -862,7 +920,7 @@
             }
             setRd('painType', d.painType);
             if (d.bodyChartJson) {
-                try { BodyChart.markers = JSON.parse(d.bodyChartJson); BodyChart.renderAll(); $('#hdnBodyMarkers').val(d.bodyChartJson); } catch (e) { }
+                try { var b = JSON.parse(d.bodyChartJson); BodyChart.markers = b; if (b._otherText) { $('#txtOtherPain').val(b._otherText); document.querySelector('.legend-other-label').textContent = b._otherText; } delete b._otherText; BodyChart.renderAll(); $('#hdnBodyMarkers').val(JSON.stringify(b)); } catch (e) { }
             }
             setCk('chkPostNormal', d.postNormal); setCk('chkKyphosis', d.postKyphosis);
             setCk('chkLordosis', d.postLordosis); setCk('chkScoliosis', d.postScoliosis);
@@ -907,8 +965,28 @@
             setVal('txtHomeExercise', d.homeExerciseProgram);
             setVal('txtPatientEducation', d.patientEducation);
             setVal('txtReviewDate', d.nextReviewDate);
-            if (d.reviewedBy) { $('#ddlReviewedBy').val(d.reviewedBy).trigger('change'); }
             setVal('txtReviewNotes', d.reviewNotes);
+
+            setVal('txtROM_Flex_L', d.romFlexL); setVal('txtROM_Flex_R', d.romFlexR);
+            setVal('txtROM_Ext_L', d.romExtL); setVal('txtROM_Ext_R', d.romExtR);
+            setVal('txtROM_Abd_L', d.romAbdL); setVal('txtROM_Abd_R', d.romAbdR);
+            setVal('txtROM_Add_L', d.romAddL); setVal('txtROM_Add_R', d.romAddR);
+            setVal('txtROM_Rot_L', d.romRotL); setVal('txtROM_Rot_R', d.romRotR);
+            setCk('chkUL_0', d.ulGrade0); setCk('chkUL_1', d.ulGrade1);
+            setCk('chkUL_2', d.ulGrade2); setCk('chkUL_3', d.ulGrade3);
+            setCk('chkUL_4', d.ulGrade4); setCk('chkUL_5', d.ulGrade5);
+            setCk('chkLL_0', d.llGrade0); setCk('chkLL_1', d.llGrade1);
+            setCk('chkLL_2', d.llGrade2); setCk('chkLL_3', d.llGrade3);
+            setCk('chkLL_4', d.llGrade4); setCk('chkLL_5', d.llGrade5);
+
+            if (d.reviewedBy) {
+                var checkReviewed = setInterval(function() {
+                    if ($('#ddlReviewedBy option[value="' + d.reviewedBy + '"]').length) {
+                        $('#ddlReviewedBy').val(d.reviewedBy).trigger('change');
+                        clearInterval(checkReviewed);
+                    }
+                }, 50);
+            }
 
             function txPop(id, val) {
                 setVal(id, val);
