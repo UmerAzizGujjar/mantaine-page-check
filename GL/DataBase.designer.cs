@@ -179183,11 +179183,7 @@ base(global::System.Configuration.ConfigurationManager.ConnectionStrings["ASPGLC
 
         private string _Review_Notes;
 
-        private System.Nullable<int> _Created_By;
-
         private System.Nullable<System.DateTime> _Created_Time;
-
-        private System.Nullable<int> _Updated_By;
 
         private System.Nullable<System.DateTime> _Updated_Time;
 
@@ -179214,6 +179210,10 @@ base(global::System.Configuration.ConfigurationManager.ConnectionStrings["ASPGLC
         private System.Nullable<bool> _LL_Grade_4;
 
         private System.Nullable<bool> _LL_Grade_5;
+
+        private System.Nullable<System.Guid> _Created_By;
+
+        private System.Nullable<System.Guid> _Updated_By;
 
         #region Extensibility Method Definitions
         partial void OnLoaded();
@@ -179421,12 +179421,8 @@ base(global::System.Configuration.ConfigurationManager.ConnectionStrings["ASPGLC
         partial void OnReviewed_ByChanged();
         partial void OnReview_NotesChanging(string value);
         partial void OnReview_NotesChanged();
-        partial void OnCreated_ByChanging(System.Nullable<int> value);
-        partial void OnCreated_ByChanged();
         partial void OnCreated_TimeChanging(System.Nullable<System.DateTime> value);
         partial void OnCreated_TimeChanged();
-        partial void OnUpdated_ByChanging(System.Nullable<int> value);
-        partial void OnUpdated_ByChanged();
         partial void OnUpdated_TimeChanging(System.Nullable<System.DateTime> value);
         partial void OnUpdated_TimeChanged();
         partial void OnUL_Grade_0Changing(System.Nullable<bool> value);
@@ -179453,6 +179449,10 @@ base(global::System.Configuration.ConfigurationManager.ConnectionStrings["ASPGLC
         partial void OnLL_Grade_4Changed();
         partial void OnLL_Grade_5Changing(System.Nullable<bool> value);
         partial void OnLL_Grade_5Changed();
+        partial void OnCreated_ByChanging(System.Nullable<System.Guid> value);
+        partial void OnCreated_ByChanged();
+        partial void OnUpdated_ByChanging(System.Nullable<System.Guid> value);
+        partial void OnUpdated_ByChanged();
         #endregion
 
         public Physiotherapy_Assessment()
@@ -181480,26 +181480,6 @@ base(global::System.Configuration.ConfigurationManager.ConnectionStrings["ASPGLC
             }
         }
 
-        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_Created_By", DbType = "Int")]
-        public System.Nullable<int> Created_By
-        {
-            get
-            {
-                return this._Created_By;
-            }
-            set
-            {
-                if ((this._Created_By != value))
-                {
-                    this.OnCreated_ByChanging(value);
-                    this.SendPropertyChanging();
-                    this._Created_By = value;
-                    this.SendPropertyChanged("Created_By");
-                    this.OnCreated_ByChanged();
-                }
-            }
-        }
-
         [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_Created_Time", DbType = "DateTime")]
         public System.Nullable<System.DateTime> Created_Time
         {
@@ -181516,26 +181496,6 @@ base(global::System.Configuration.ConfigurationManager.ConnectionStrings["ASPGLC
                     this._Created_Time = value;
                     this.SendPropertyChanged("Created_Time");
                     this.OnCreated_TimeChanged();
-                }
-            }
-        }
-
-        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_Updated_By", DbType = "Int")]
-        public System.Nullable<int> Updated_By
-        {
-            get
-            {
-                return this._Updated_By;
-            }
-            set
-            {
-                if ((this._Updated_By != value))
-                {
-                    this.OnUpdated_ByChanging(value);
-                    this.SendPropertyChanging();
-                    this._Updated_By = value;
-                    this.SendPropertyChanged("Updated_By");
-                    this.OnUpdated_ByChanged();
                 }
             }
         }
@@ -181796,6 +181756,46 @@ base(global::System.Configuration.ConfigurationManager.ConnectionStrings["ASPGLC
                     this._LL_Grade_5 = value;
                     this.SendPropertyChanged("LL_Grade_5");
                     this.OnLL_Grade_5Changed();
+                }
+            }
+        }
+
+        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_Created_By", DbType = "UniqueIdentifier")]
+        public System.Nullable<System.Guid> Created_By
+        {
+            get
+            {
+                return this._Created_By;
+            }
+            set
+            {
+                if ((this._Created_By != value))
+                {
+                    this.OnCreated_ByChanging(value);
+                    this.SendPropertyChanging();
+                    this._Created_By = value;
+                    this.SendPropertyChanged("Created_By");
+                    this.OnCreated_ByChanged();
+                }
+            }
+        }
+
+        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_Updated_By", DbType = "UniqueIdentifier")]
+        public System.Nullable<System.Guid> Updated_By
+        {
+            get
+            {
+                return this._Updated_By;
+            }
+            set
+            {
+                if ((this._Updated_By != value))
+                {
+                    this.OnUpdated_ByChanging(value);
+                    this.SendPropertyChanging();
+                    this._Updated_By = value;
+                    this.SendPropertyChanged("Updated_By");
+                    this.OnUpdated_ByChanged();
                 }
             }
         }
