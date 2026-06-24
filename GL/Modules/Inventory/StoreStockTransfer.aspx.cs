@@ -127,6 +127,8 @@ namespace PMS.Inventory
                     stockTransferItem.Item_Code = item.itemCode;
                     stockTransferItem.Batch_No = item.batchNo;
                     stockTransferItem.Qty = item.quantity;
+                    stockTransferItem.Rate = item.Rate;
+                    stockTransferItem.Amount = item.Amount;
                     stockTransferItem.Stock_Transfer_ID = lastId;
                     stockTransferItem.Expiry_Date = item.expiryDate;
                     stockTransferItem.Item_Id = Convert.ToInt32(DBClass.getField("Select Item_ID from Inv_items where Item_Code=" + item.itemCode));
@@ -177,6 +179,8 @@ namespace PMS.Inventory
                                 stockTransferItem.Item_Code = Stkitem.itemCode;
                                 stockTransferItem.Batch_No = Stkitem.batchNo;
                                 stockTransferItem.Qty = Stkitem.quantity;
+                                stockTransferItem.Rate = Stkitem.Rate;
+                                stockTransferItem.Amount = Stkitem.Amount;
                                 stockTransferItem.Stock_Transfer_ID = lastId;
                                 stockTransferItem.Expiry_Date = Stkitem.expiryDate;
                                 stockTransferItem.Item_Id = Convert.ToInt32(DBClass.getField("Select Item_ID from Inv_items where Item_Code=" + Stkitem.itemCode));
@@ -266,6 +270,8 @@ namespace PMS.Inventory
                     stock.itemCode = item.Item_Code;
                     stock.batchNo = item.Batch_No;
                     stock.quantity = (int)item.Qty;
+                    //stock.Rate = item.Rate;
+                    //stock.Amount = item.Amount;
                     stock.description = (from itm in db.INV_Items where itm.Item_Code == stock.itemCode select itm.Description).FirstOrDefault();
                     stock.stockAvailable = GetStock(stock.itemCode, stock.batchNo, wareHouseFrom).stockAvailable;
                     stock.expiryDate = (!string.IsNullOrEmpty(item.Expiry_Date)) ? item.Expiry_Date.ToString() : "";
@@ -301,13 +307,32 @@ namespace PMS.Inventory
                 return "Error";
             }
         }
+        //[WebMethod]
+        //public static decimal PerformBatchNoSearch(int ItemId, string wareHouse, string batchNo, string dateTime)
+        //{
+        //    DataBaseDataContext db = new DataBaseDataContext();
+        //    decimal stockAvailable;
+        //    decimal Item_Rate;
+        //    stockAvailable = (decimal)db.StockTransfer_GetItemBatchStock(ItemId, batchNo, wareHouse);
+        //    Item_Rate = (decimal)db.GetCGSAmounts(ItemId, wareHouse, batchNo);
+        //    return stockAvailable;
+        //}       
         [WebMethod]
-        public static decimal PerformBatchNoSearch(int ItemId, string wareHouse, string batchNo, string dateTime)
+        public static string PerformBatchNoSearch(int ItemId, string wareHouse, string batchNo, string dateTime)
         {
             DataBaseDataContext db = new DataBaseDataContext();
-            decimal stockAvailable;
-            stockAvailable = (decimal)db.StockTransfer_GetItemBatchStock(ItemId, batchNo, wareHouse);
-            return stockAvailable;
-        }       
+
+            decimal stockAvailable = Convert.ToDecimal(db.StockTransfer_GetItemBatchStock(ItemId, batchNo, wareHouse));
+            decimal itemRate = Convert.ToDecimal(db.GetCGSAmounts(ItemId, wareHouse, batchNo));
+
+            var result = new
+            {
+                StockAvailable = stockAvailable,
+                ItemRate = itemRate
+            };
+
+            JavaScriptSerializer js = new JavaScriptSerializer();
+            return js.Serialize(result);
+        }
     }
 }

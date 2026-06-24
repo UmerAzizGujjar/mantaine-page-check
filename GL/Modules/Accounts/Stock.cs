@@ -23,6 +23,8 @@ namespace PMS
         public string itemCode { get; set; }
         public string batchNo { get; set; }
         public int quantity { get; set; }
+        public decimal Rate { get; set; }
+        public decimal Amount { get; set; }
         public string description { get; set; }
         public string expiryDate { get; set; }
         public string remarks { get; set; }
