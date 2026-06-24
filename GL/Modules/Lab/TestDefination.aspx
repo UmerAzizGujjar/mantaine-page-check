@@ -241,10 +241,9 @@
                     var i = 0;
                     for (i = 0; i < test.length; i++) {
                         debugger;
-                        // REMOVED: style="pointer-events: none;"
                         row = row + '<tr><td><input type="hidden" name="ultraSoundlevel_ID" id="ultraSoundlevel_ID" value="' + test[i].UltraSoundLevel_ID + '" /><select style="" name="levelvalue" id="ddllevelvalue' + (i + 1) + '">' + levelType + '</select></td>' +
                             '<td><textarea id="txtfixedValueType' + (i + 1) + '" name="txtfixedValueType">' + test[i].FixValues + '</textarea></td>' +
-                            '<td style="width: 127px;"><input type="hidden" name="value_id" value=""><a href="javascript:void(0)" onclick="value_delete(this)">Delete</a></td>' +
+                            '<td style="width: 127px;"><input type="hidden" name="value_id" value=""><a href="javascript:void(0)" onclick="value_delete(this)">Delete</a> | <a href="javascript:void(0)" onclick="previewUltraSound(this)">Preview</a></td>' +
                             '</tr>';
                     }
                     $('#TblUltra_Value').append(row);
@@ -266,7 +265,6 @@
             });
 
             $("#loadXRays").on('click', function () {
-
                 PageMethods.GetXRayss(function (res) {
                     var test = JSON.parse(res);
                     var ckeditor = test;
@@ -281,7 +279,7 @@
                         row += '<td><textarea id="txtXRayFixedValueType' + (i + 1) + '" name="txtXRayFixedValueType">' + test[i].FixValues + '</textarea></td>';
 
                         row += '<td style="width: 127px;"><input type="hidden" name="xray_value_id" value="">' +
-                            '<a href="javascript:void(0)" onclick="value_delete(this)" style="pointer-events: none;">Delete</a></td></tr>';
+                            '<a href="javascript:void(0)" onclick="value_delete(this)">Delete</a> | <a href="javascript:void(0)" onclick="previewXRay(this)">Preview</a></td></tr>';
                     }
 
                     $('#TblXRay_Value').append(row);
@@ -321,7 +319,7 @@
                             '<select name="mrilevelvalue" id="ddlMRIlevelvalue' + (i + 1) + '">' + mriLevelType + '</select></td>';
                         row += '<td><textarea id="txtMRIFixedValueType' + (i + 1) + '" name="txtMRIFixedValueType">' + test[i].FixValues + '</textarea></td>';
                         row += '<td style="width: 127px;"><input type="hidden" name="mri_value_id" value="">' +
-                            '<a href="javascript:void(0)" onclick="value_delete(this)" style="pointer-events: none;">Delete</a></td></tr>';
+                            '<a href="javascript:void(0)" onclick="value_delete(this)">Delete</a> | <a href="javascript:void(0)" onclick="previewMRI(this)">Preview</a></td></tr>';
                     }
 
                     $('#TblMRI_Value').append(row);
@@ -351,7 +349,7 @@
                             '<select name="ctscanlevelvalue" id="ddlCTScanlevelvalue' + (i + 1) + '">' + ctScanLevelType + '</select></td>';
                         row += '<td><textarea id="txtCTScanFixedValueType' + (i + 1) + '" name="txtCTScanFixedValueType">' + test[i].FixValues + '</textarea></td>';
                         row += '<td style="width: 127px;"><input type="hidden" name="ctscan_value_id" value="">' +
-                            '<a href="javascript:void(0)" onclick="value_delete(this)" style="pointer-events: none;">Delete</a></td></tr>';
+                            '<a href="javascript:void(0)" onclick="value_delete(this)">Delete</a> | <a href="javascript:void(0)" onclick="previewCTScan(this)">Preview</a></td></tr>';
                     }
 
                     $('#TblCTScan_Value').append(row);
