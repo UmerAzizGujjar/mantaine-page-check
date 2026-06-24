@@ -896,7 +896,7 @@
             }
 
             getbatchsAgainstItem(item_code, length);
-
+            debugger;
             var rows = '<tr>' +
                 '<td style="padding-top: 9px;height: 27px !important;text-align: center;padding-top: 6px !important;">' + mir_detail_id + ' </td>' +
                 '<td style="padding-top: 9px;height: 27px !important;text-align: center;padding-top: 6px !important;">' + mir_id + ' </td>' +
@@ -917,9 +917,10 @@
                 '<td style="display:none;padding-top: 2px;"><input type="hidden"  style=" font-size: 10px;height: 22px;  width: 64px!important;margin-top: 2px;margin-bottom: 0px;margin-left: 4px;" id="txtCGSAmount' + length + '" name="txtCGSAmount"/></td>' +
                 '<td style="padding-top: 2px;display:none;"><input type="hidden" value="' + IsBatch + '" style=" font-size: 10px;height: 22px;  width: 64px!important;margin-top: 2px;margin-bottom: 0px;margin-left: 4px;" id="txtBatch' + length + '" name="txtBatch"/></td>'
                 + '<td style="padding-top: 9px;padding-top: 6px !important;"> <a href="#" onclick="ExcludeFromPayment(this)">Delete</a></td></tr>';
-
-            if (Qty == 0 || Qty == "0" || Qty == null) {
-                return false; 
+            debugger;
+            if ((Qty == 0 || Qty == "0" || Qty == null) &&
+                (mir_detail_id && mir_detail_id !== "0")) {
+                return false;
             }
             $("#tblStoreIssueBote tbody").append(rows);
             //if ($('#txtBlncQty' + length).val() == 0) {

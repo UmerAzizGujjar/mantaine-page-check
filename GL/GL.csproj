@@ -471,6 +471,7 @@
     <Content Include="Modules\Administrator\AssetSelection.aspx" />
     <Content Include="Modules\Administrator\DoctorPayableView.aspx" />
     <Content Include="Modules\Administrator\Doctor_Payable.aspx" />
+    <Content Include="Modules\PatientManagement\Physiotherapy_Assessment.aspx" />
     <Content Include="Modules\PatientManagement\Birthcertificate.aspx" />
     <Content Include="Modules\PatientManagement\BirthCertificateView.aspx" />
     <Content Include="Modules\PatientManagement\DialysisForm.aspx" />
@@ -493,6 +494,7 @@
     <Content Include="Modules\PatientManagement\OPD_Refund.aspx" />
     <Content Include="Modules\PatientManagement\ERRefundView.aspx" />
     <Content Include="Modules\PatientManagement\OPD_Refund_List.aspx" />
+    <Content Include="Modules\PatientManagement\Physiotherapy_Assessment_List.aspx" />
     <Content Include="Modules\PatientManagement\RegisterPatient.aspx" />
     <Content Include="Modules\StudentAffair\AddStudent.aspx" />
     <Content Include="Modules\StudentAffair\AddStudentChallan.aspx" />
@@ -4171,6 +4173,13 @@
     <Compile Include="Modules\Administrator\Doctor_Payable.aspx.designer.cs">
       <DependentUpon>Doctor_Payable.aspx</DependentUpon>
     </Compile>
+    <Compile Include="Modules\PatientManagement\Physiotherapy_Assessment.aspx.cs">
+      <DependentUpon>Physiotherapy_Assessment.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Modules\PatientManagement\Physiotherapy_Assessment.aspx.designer.cs">
+      <DependentUpon>Physiotherapy_Assessment.aspx</DependentUpon>
+    </Compile>
     <Compile Include="Modules\PatientManagement\Birthcertificate.aspx.cs">
       <DependentUpon>Birthcertificate.aspx</DependentUpon>
       <SubType>ASPXCodeBehind</SubType>
@@ -4324,6 +4333,13 @@
     </Compile>
     <Compile Include="Modules\PatientManagement\OPD_Refund_List.aspx.designer.cs">
       <DependentUpon>OPD_Refund_List.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="Modules\PatientManagement\Physiotherapy_Assessment_List.aspx.cs">
+      <DependentUpon>Physiotherapy_Assessment_List.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Modules\PatientManagement\Physiotherapy_Assessment_List.aspx.designer.cs">
+      <DependentUpon>Physiotherapy_Assessment_List.aspx</DependentUpon>
     </Compile>
     <Compile Include="Modules\PatientManagement\RegisterPatient.aspx.cs">
       <DependentUpon>RegisterPatient.aspx</DependentUpon>
