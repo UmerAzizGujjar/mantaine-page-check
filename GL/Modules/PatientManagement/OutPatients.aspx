@@ -587,6 +587,18 @@
                 backdrop: 'static'
             });
         }
+        function ShowPhysioModel() {
+            var outPatId = $('#ctl00_MainContent_txtOut_Patient_ID').val();
+            if (outPatId === '(New)' || outPatId === '') {
+                Swal.fire({
+                    icon: 'warning',
+                    title: 'Save Required',
+                    text: 'Please save the patient form first before opening Physiotherapy Assessment.'
+                });
+            } else {
+                window.open('Physiotherapy_Assessment.aspx?ID=' + outPatId, '_blank');
+            }
+        }
 
         function ShowPeadsModel() {
             $('#ModelPeads').modal({
@@ -5589,7 +5601,7 @@
                                 </div>
                              </div>
                     <div class="table-container">
-                    <div style="margin-top: -1px; margin-left:68%; height: 500px;">                       
+                    <div style="margin-top: -1px; margin-left:68%; height: 600px;">                       
                         <h3 style="margin-top:3%">Special Examination</h3>
                         <table style="width: 100%;margin-top:2%;height:300px">
                             <hr />
@@ -5621,7 +5633,15 @@
                                     <img src="~../../../../wwwroot/SOURCE_IMAGES/GENERAL_ICONS/ortho.svg" alt="Ortho" style="width: 100px; cursor: pointer" onclick="ShowOrthoModel()" />
                                     <span style="font-weight: bold;">Ortho</span>
                                 </td>
-                            </tr>                          
+                            </tr>
+                            <tr>
+                                <td class="icon-cell">
+                                    <img src="~../../../../wwwroot/SOURCE_IMAGES/GENERAL_ICONS/FrontPatientModel.png" alt="Physio" style="width:100px;cursor:pointer" onclick="ShowPhysioModel()" />
+                                    <span style="font-weight:bold">Physiotherapy</span>
+                                </td>
+                                <td class="icon-cell"></td>
+                                <td class="icon-cell"></td>
+                            </tr>
                         </table>
                              </div>
                         </div>
