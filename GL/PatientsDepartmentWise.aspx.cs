@@ -3149,6 +3149,17 @@ namespace PMS
                     MRDiv.Visible = true;
 
                 }
+                else if (this.PageTitle == "LCP")
+                {
+                    string x = "LCP Report";
+                    Master.Label2.Text = x;
+                    Master.GetMenuName();
+                    DateDiv.Visible = true;
+                    Time_Row.Visible = true;
+                    AllowPatientRecord = false;
+                    MRDiv.Visible = true;
+
+                }
                 else if (this.PageTitle == "Gir_To_Po_Heirarchy")
                 {
                     string x = "Gir To Po Heirarchy Report";
