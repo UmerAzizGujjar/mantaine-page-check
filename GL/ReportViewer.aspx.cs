@@ -3609,6 +3609,23 @@ namespace PMS
                 rd.SetParameterValue("CompanyLogo", logoPath);
                 rd.SetParameterValue("Address", companyAddress);
             }
+            else if (reportName == "LCP")
+            {
+
+                string StartDateTime = Request.QueryString["StartDateTime"].ToString();
+                string EndDateTime = Request.QueryString["EndDateTime"].ToString();
+                
+                var logoPath = DBClass.getField("SELECT dbo.GetCompanyLogo()");
+
+                reportPath += "Patients/rptServicesLCP.rpt";
+                rd.Load(reportPath);
+                rd.SetParameterValue("CompanyName", AppConfig.Company_Name);
+                rd.SetParameterValue("ReportTitle", reportTitle);
+                rd.SetParameterValue("@StartDate", StartDateTime);
+                rd.SetParameterValue("@EndDate", EndDateTime);
+                rd.SetParameterValue("CompanyLogo", logoPath);
+                
+            }
             else if (reportName == "Gir_To_Po_Heirarchy")
             {
 
@@ -6382,6 +6399,7 @@ namespace PMS
                 rd.SetParameterValue("@outPatient", Convert.ToInt32(InPatient_ID), rd.Subreports[0].Name.ToString());
                 rd.SetParameterValue("@outPatient", Convert.ToInt32(InPatient_ID), rd.Subreports[1].Name.ToString());
                 rd.SetParameterValue("@outPatient", Convert.ToInt32(InPatient_ID), rd.Subreports[2].Name.ToString());
+                rd.SetParameterValue("@outPatient", Convert.ToInt32(InPatient_ID), rd.Subreports[3].Name.ToString());
                 rd.SetParameterValue("@outPatient", Convert.ToInt32(InPatient_ID), rd.Subreports[4].Name.ToString());
                 rd.SetParameterValue("@outPatient", Convert.ToInt32(InPatient_ID), rd.Subreports[5].Name.ToString());
                 // rd.SetParameterValue("@InPatient_id", Convert.ToInt32(InPatient_ID), rd.Subreports[3].Name.ToString());

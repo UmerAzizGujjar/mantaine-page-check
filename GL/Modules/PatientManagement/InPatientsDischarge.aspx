@@ -4995,7 +4995,7 @@
                                 </div>
                                 <div class="col-lg-2 col-md-4 col-m-6">
                                     <asp:Label ID="lblDischarge_On" runat="server" Text="Discharged Date "></asp:Label>
-                                    <asp:TextBox ID="txtDischarge_On" runat="server" Enabled="true"></asp:TextBox>
+                                    <asp:TextBox ID="txtDischarge_On"  runat="server" Enabled="false"></asp:TextBox>
                                 </div>                              
                                 <div class="col-lg-2 col-md-4 col-sm-6">
                                     <asp:Label ID="lblNext_Visit" runat="server" Text="Follow Up"></asp:Label>
