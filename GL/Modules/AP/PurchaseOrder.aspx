@@ -857,15 +857,16 @@
             initSourceToggle();
 
         // Load PO data ONLY if PO_ID exists in query string
-    <% if (Request.QueryString["PO_ID"] != null) { %>
-            var PO_ID = '<%= Request.QueryString["PO_ID"]%>';
-            showLoader('Loading Purchase Order...', true);
+     <% if (Request.QueryString["PO_ID"] != null) { %>
+             var PO_ID = '<%= Request.QueryString["PO_ID"]%>';
+             showLoader('Loading Purchase Order...', true);
+             $('#btnSave').hide();
 
-            // Wait for dropdowns to populate
-            setTimeout(function () {
-                LoadPurchaseOrderData(PO_ID);
-                $('#btnSave').val('Update');
-            }, 500);
+             // Wait for dropdowns to populate
+             setTimeout(function () {
+                 LoadPurchaseOrderData(PO_ID);
+                 $('#btnSave').val('Update');
+             }, 500);
     <% } else { %>
     // No PO_ID - hide loader after initialization
     setTimeout(function() {
@@ -887,26 +888,6 @@
                 LoadPrNoDetail(pr_id);
                 $('#ctl00_MainContent_txtRemarks').focus();
             });
-
-            // Check status after load
-            setTimeout(function () {
-                var status = $('#ctl00_MainContent_txtStatus').val();
-                if (status == "Approved") {
-                    UserUnApproveButtonRights();
-                    $('#btnSave').attr("disabled", 'disabled');
-                    $('#btnSave').hide();
-                    $('#btncancel').hide();
-                }
-                if (status == "Cancelled") {
-                    $('#btnSave').attr("disabled", 'disabled');
-                    $('#btnSave').hide();
-                    $('#btncancel').hide();
-                }
-                if (status == "Created") {
-                    $('#btnSave').show();
-                    $('#btnUnApprove').hide();
-                }
-            }, 1000);
 
             $('#txtItem').tokenInput("../../json.aspx?Table=INV_ItemsForPR", {
                 tokenLimit: 1,
@@ -1018,24 +999,10 @@
             $("#ctl00_MainContent_txtPurchase_Date").val(formattedDate).datepicker({ dateFormat: 'dd M yy', readOnly: true });
             $("#ctl00_MainContent_txtdueDate").val(formattedDueDate).datepicker({ dateFormat: 'dd M yy' });
 
-        // ✅ Load PO data ONLY if PO_ID exists in query string
-    <% if (Request.QueryString["PO_ID"] != null) { %>
-          var PO_ID = '<%= Request.QueryString["PO_ID"]%>';
-          // Wait for dropdowns to populate (500ms is enough, NOT 3000ms)
-          setTimeout(function () {
-              LoadPurchaseOrderData(PO_ID);
-              $('#btnSave').val('Update');
-              // Hide loader after PO data loaded
-              setTimeout(function () {
-                  $('#page-loader').addClass('hidden').fadeOut(300);
-              }, 500);
-          }, 500);
-    <% } else { %>
-    // No PO_ID - hide loader immediately after initialization
-    setTimeout(function() {
-        $('#page-loader').addClass('hidden').fadeOut(300);
-    }, 500);
-    <% } %>
+        // Hide loader after initialization (data loaded from first ready block)
+        setTimeout(function() {
+            $('#page-loader').addClass('hidden').fadeOut(300);
+        }, 1500);
     
     $('.token-input-list').css('width', '666px !important', 'margin-left: 1px;');
     var PO_Id = '<%= Request.QueryString["PO_ID"] %>';
@@ -1051,26 +1018,6 @@
         LoadPrNoDetail(pr_id);
         $('#ctl00_MainContent_txtRemarks').focus();
     });
-    
-    // Check status after load
-    setTimeout(function () {
-        var status = $('#ctl00_MainContent_txtStatus').val();
-        if (status == "Approved") {
-            UserUnApproveButtonRights();
-            $('#btnSave').attr("disabled", 'disabled');
-            $('#btnSave').hide();
-            $('#btncancel').hide();
-        }
-        if (status == "Cancelled") {
-            $('#btnSave').attr("disabled", 'disabled');
-            $('#btnSave').hide();
-            $('#btncancel').hide();
-        }
-        if (status == "Created") {
-            $('#btnSave').show();
-            $('#btnUnApprove').hide();
-        }
-    }, 1000);
     
     $('#txtItem').tokenInput("../../json.aspx?Table=INV_ItemsForPR", {
         tokenLimit: 1,
@@ -1324,6 +1271,7 @@
                 $('#chkByDefault').prop('checked', data.IsByDefault === true);
                 LoadPOItemDetail(PO_ID);
                 syncMetaBar();
+                checkStatusButtons();
                 $('#txtAdv_amou').val(data.Total_Adv_Amt);
                 $('#txtFurther_amou').val(data.Total_Further_Amt);
                 $('#ddlWarehouse').html(
@@ -1336,6 +1284,21 @@
                 function (error) {
                     alert(error.get_message());
                 })
+        }
+
+        function checkStatusButtons() {
+            var status = $('#ctl00_MainContent_txtStatus').val().trim();
+            if (status == "Approved") {
+                UserUnApproveButtonRights();
+                $('#btnSave').attr("disabled", "disabled").hide();
+                $('#btncancel').hide();
+            } else if (status == "Cancelled") {
+                $('#btnSave').attr("disabled", "disabled").hide();
+                $('#btncancel').hide();
+            } else if (status == "Created") {
+                $('#btnSave').show();
+                $('#btnUnApprove').hide();
+            }
         }
       // ============================================================================
 // HELPER FUNCTIONS (define once at top of your JS file)
@@ -3124,22 +3087,22 @@ function appendSearchItem(anchor) {
         <div class="pr-primary-settings">
 
             <div class="row">
-                <div class="col-lg-3 col-md-6 col-sm-12">
+                <div class="col-lg-6 col-md-6 col-sm-12">
                     <asp:Label ID="LabelPurchase_No" runat="server" Text="PO No."></asp:Label>
                     <asp:TextBox runat="server" ID="txtPurchase_No" class="form-control" ReadOnly="true" />
                     <asp:HiddenField ID="hdnPurchase_ID" runat="server" ClientIDMode="Static" />
                     <asp:TextBox runat="server" ID="txtPurchase_ID" Visible="false" ReadOnly="true" Width="0" />
                 </div>
-                <div class="col-lg-3 col-md-6 col-sm-12">
+                <div style="display:none;">
                     <asp:Label ID="LabelPurchase_Date" runat="server" Text="Date"></asp:Label>
                     <asp:RequiredFieldValidator ID="rfvPurchaseDate" runat="server" InitialValue="0" ControlToValidate="txtPurchase_Date" ErrorMessage="*" Display="Dynamic"></asp:RequiredFieldValidator>
                     <asp:TextBox runat="server" ID="txtPurchase_Date" class="form-control" />
                 </div>
-                <div class="col-lg-3 col-md-6 col-sm-12">
+                <div class="col-lg-6 col-md-6 col-sm-12">
                     <asp:Label ID="lblDueDate" runat="server" Text="Due Date"></asp:Label>
                     <asp:TextBox runat="server" ID="txtdueDate" class="form-control" />
                 </div>
-                <div class="col-lg-3 col-md-6 col-sm-12">
+                <div style="display:none;">
                     <asp:Label ID="lblStatus" runat="server" Text="Status"></asp:Label>
                     <asp:TextBox runat="server" ReadOnly="true" ID="txtStatus" class="form-control" />
                 </div>
@@ -3221,6 +3184,16 @@ function appendSearchItem(anchor) {
                         <button type="button" class="source-action-btn" id="btnGetAllItems" onclick="LoadAllitem('')"><i class="fa fa-search"></i> Items</button>
                     </div>
                 </div>
+                <div class="source-checkbox-group">
+                    <div class="pr-checkbox-wrap pr-checkbox-inline">
+                        <input type="checkbox" id="chkByDefault" />
+                        <label for="chkByDefault">By Default</label>
+                    </div>
+                    <div class="pr-checkbox-wrap pr-checkbox-inline">
+                        <input type="checkbox" id="chkManual" />
+                        <label for="chkManual">Manual</label>
+                    </div>
+                </div>
                 <div id="prInputSection" class="source-input-wrap" style="display:none;">
                     <div class="source-inline-group">
                         <asp:DropDownList runat="server" ID="ddlPrNo" class="source-select-input"></asp:DropDownList>
@@ -3240,20 +3213,8 @@ function appendSearchItem(anchor) {
             </div>
         </div>
 
-        <!-- Checkboxes + Projection -->
+        <!-- Projection -->
         <div class="row" style="margin-top: 8px;">
-            <div class="col-lg-1 col-md-3 col-sm-6">
-                <div class="pr-checkbox-wrap">
-                    <label for="chkByDefault">By Default</label>
-                    <input type="checkbox" id="chkByDefault" />
-                </div>
-            </div>
-            <div class="col-lg-1 col-md-3 col-sm-6">
-                <div class="pr-checkbox-wrap">
-                    <label for="chkManual">Manual</label>
-                    <input type="checkbox" id="chkManual" />
-                </div>
-            </div>
             <div class="col-lg-3 col-md-6 col-sm-12" id="projectiondate">
                 <asp:Label ID="lblprojectiondate" runat="server" Text="Projection Date"></asp:Label>
                 <asp:TextBox runat="server" ID="txtProjection_Date" class="form-control" />
@@ -3333,27 +3294,27 @@ function appendSearchItem(anchor) {
     </div>
 
     <!-- Action Buttons -->
-    <div class="row pr-action-buttons">
-        <div class="col-lg-2 col-md-4 col-sm-6">
+    <div class="pr-action-buttons">
+        <div>
             <input type="button" class="btn btn-primry w-100" onclick="this.disabled=true;SaveAllRecord()" value="Save" id="btnSave" />
         </div>
-        <div class="col-lg-2 col-md-4 col-sm-6">
+        <div>
             <input type="button" class="btn-gray w-100" value="List" onclick="window.location = 'PurchaseOrderView.aspx'" />
         </div>
-        <div class="col-lg-2 col-md-4 col-sm-6">
+        <div>
             <input type="button" class="btn btn-yellow w-100" value="New" onclick="window.location = 'PurchaseOrder.aspx'" />
         </div>
-        <div class="col-lg-2 col-md-4 col-sm-6">
+        <div>
             <input style="text-align: center" type="button" value="Cancel" id="btncancel" class="btn btn-primry w-100" onclick="Cancel()" />
         </div>
-        <div class="col-lg-2 col-md-4 col-sm-6">
+        <div>
             <input type="button" id="btnPrint" value="Print" class="btn btn-primry w-100" name="name" onclick="PrintPurchaseOrderDetail();" />
         </div>
-        <div class="col-lg-2 col-md-4 col-sm-6">
+        <div>
             <input type="button" id="btnPrint2" value="Print2" class="btn btn-primry w-100" name="name" onclick="PrintPurchaseOrderDetail2();" />
         </div>
-        <div class="col-lg-2 col-md-4 col-sm-6">
-            <input type="button" style="display: none" class="btn btn-primry w-100" value="UnApprove" id="btnUnApprove" onclick="UnApprove()" />
+        <div>
+            <input type="button" style="display:none;" class="btn btn-primry w-100" value="UnApprove" id="btnUnApprove" onclick="UnApprove()" />
         </div>
     </div>
 
@@ -3501,88 +3462,91 @@ function appendSearchItem(anchor) {
             </tbody>
         </table>
     </div>
-    <div id="POItemsModel" class="modal fade custom-modal-dialog" role="dialog">
-        <div class="modal-dialog custom-modal-content" style="width: 1000px; margin-left: -270px; height: 505px;">
-            <div class="custom-modal-header">
-                <h4 class="modal-title">Add PR Items</h4>
-                <button type="button" style="width: auto;" class="close" data-dismiss="modal">&times;</button>
-
-            </div>
-            <input type="hidden" id="txthiddentr" name="txthidddentr" />
-            <div class="custom-modal-body">
-                <div class="custom-modal-table-wrap" style="width: 970px; overflow: scroll; height: 401px  !important; height: auto;">
-                    <table class="custom-modal-table table table-bordered" style="width: 953px; height: 80px !important; height: auto; overflow: scroll;" id="tblPOItemstModelTable">
-                        <thead>
-                            <tr>
-                                <th style="width: 32px;">
-                                    <input type="checkbox" id="checkHeader" value="false" /></th>
-                                <th style="display: none;">Pr ID </th>
-                                <th style="display: none;">Item ID </th>
-                                <th>Item Name</th>
-                                <th>Qty</th>
-                                <th style="display: none;"></th>
-                                <th style="display: none;"></th>
-                                <th style="display: none;"></th>
-                                <th style="display: none;"></th>
-                                <th>Stock</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                        </tbody>
-                    </table>
-                </div>
-            </div>
-            <div class="modal-footer">
-                <div class="col-lg-10 col-md-10 col-sm-10">
-                    <div class="col-lg-2 col-md-2 col-sm-2">
-                        <input type="button" id="PoItem" name="PoItem" value="Close" class="btn btn-gray" data-dismiss="modal" />
+    <div id="POItemsModel" class="modal fade" role="dialog" tabindex="-1" aria-hidden="true">
+        <div class="modal-dialog modal-lg custom-modal-dialog">
+            <div class="modal-content custom-modal-content">
+                <div class="modal-header custom-modal-header">
+                    <div class="custom-modal-title-wrap">
+                        <span class="custom-modal-icon"><i class="fa fa-list"></i></span>
+                        <h4 class="modal-title custom-modal-title">Add PR Items</h4>
                     </div>
+                    <button type="button" class="custom-modal-close" data-dismiss="modal"><i class="fa fa-times"></i></button>
+                </div>
+                <input type="hidden" id="txthiddentr" name="txthidddentr" />
+                <div class="modal-body custom-modal-body">
+                    <div class="custom-modal-table-wrap">
+                        <table class="table custom-modal-table" id="tblPOItemstModelTable">
+                            <thead>
+                                <tr>
+                                    <th style="width: 32px;">
+                                        <input type="checkbox" id="checkHeader" value="false" /></th>
+                                    <th style="display: none;">Pr ID </th>
+                                    <th style="display: none;">Item ID </th>
+                                    <th>Item Name</th>
+                                    <th>Qty</th>
+                                    <th style="display: none;"></th>
+                                    <th style="display: none;"></th>
+                                    <th style="display: none;"></th>
+                                    <th style="display: none;"></th>
+                                    <th>Stock</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <input type="button" id="PoItem" name="PoItem" value="Close" class="btn btn-gray" data-dismiss="modal" />
                 </div>
             </div>
         </div>
     </div>
     <!-- Add this NEW modal for Item Search -->
-    <div class="modal fade custom-modal-dialog" id="itemsModal" tabindex="-1" aria-labelledby="itemsModalLabel" aria-hidden="true">
-        <div class="modal-dialog modal-lg modal-md custom-modal-content">
-            <div class="custom-modal-header">
-                <h3 class="modal-title" id="itemsModalLabel">Item Details</h3>
-                <button type="button" class="close" data-dismiss="modal" aria-label="Close" style="margin-top: -11px !important">
-                    <span aria-hidden="true">&times;</span>
-                </button>
-            </div>
-            <div class="custom-modal-body">
-                <input type="text" id="searchInput" class="form-control search-input" placeholder="Search items..." />
-                <div class="custom-modal-table-wrap" style="max-height: 400px; overflow-y: auto;">
-                    <table class="custom-modal-table table table-bordered table-striped table-responsive-md table-responsive-lg">
-                        <thead>
-                            <tr>
-                                <th>Select</th>
-                                <!-- td:eq(0) -->
-                                <th style="display: none;">Item ID</th>
-                                <!-- td:eq(1) -->
-                                <th>Item Code</th>
-                                <!-- td:eq(2) -->
-                                <th>Description</th>
-                                <!-- td:eq(3) -->
-                                <th>Unit</th>
-                                <!-- td:eq(4) -->
-                                <th style="display: none;">Rate</th>
-                                <!-- td:eq(5) -->
-                                <th style="display: none;">UOM Qty</th>
-
-                                <th>Last Purchase Rate</th>
-                                <!-- td:eq(6) -->
-                                <th>Stock</th>
-                            </tr>
-                        </thead>
-                        <tbody id="itemsTableBody">
-                        </tbody>
-                    </table>
+    <div class="modal fade" id="itemsModal" tabindex="-1" aria-labelledby="itemsModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-lg custom-modal-dialog">
+            <div class="modal-content custom-modal-content">
+                <div class="modal-header custom-modal-header">
+                    <div class="custom-modal-title-wrap">
+                        <span class="custom-modal-icon"><i class="fa fa-cubes"></i></span>
+                        <h4 class="modal-title custom-modal-title" id="itemsModalLabel">Item Details</h4>
+                    </div>
+                    <button type="button" class="custom-modal-close" data-dismiss="modal" aria-label="Close"><i class="fa fa-times"></i></button>
                 </div>
-            </div>
-            <div class="modal-footer">
-                <div class="col-lg-10 col-md-10 col-sm-10"></div>
-                <div class="col-lg-2 col-md-2 col-sm-2 float-end">
+                <div class="modal-body custom-modal-body">
+                    <div class="custom-modal-search-wrap">
+                        <span class="custom-modal-search-icon"><i class="fa fa-search"></i></span>
+                        <input type="text" id="searchInput" class="custom-modal-search" placeholder="Search items..." />
+                    </div>
+                    <div class="custom-modal-table-wrap">
+                        <table class="table custom-modal-table">
+                            <thead>
+                                <tr>
+                                    <th>Select</th>
+                                    <!-- td:eq(0) -->
+                                    <th style="display: none;">Item ID</th>
+                                    <!-- td:eq(1) -->
+                                    <th>Item Code</th>
+                                    <!-- td:eq(2) -->
+                                    <th>Description</th>
+                                    <!-- td:eq(3) -->
+                                    <th>Unit</th>
+                                    <!-- td:eq(4) -->
+                                    <th style="display: none;">Rate</th>
+                                    <!-- td:eq(5) -->
+                                    <th style="display: none;">UOM Qty</th>
+
+                                    <th>Last Purchase Rate</th>
+                                    <!-- td:eq(6) -->
+                                    <th>Stock</th>
+                                </tr>
+                            </thead>
+                            <tbody id="itemsTableBody">
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+                <div class="modal-footer">
                     <input type="button" value="Close" class="btn-gray" data-dismiss="modal" />
                 </div>
             </div>
