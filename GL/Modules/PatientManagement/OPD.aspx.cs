@@ -882,7 +882,8 @@ namespace PMS.Modules.PatientManagement
                     pd.Discount_Percentage,
                     pd.Day_Check,
                     pd.St_Day,
-                    pd.En_Day
+                    pd.En_Day,
+                    Extra_Time = pd.Extra_Time ?? 0
                 }
             ).ToList();
 
@@ -942,21 +943,68 @@ namespace PMS.Modules.PatientManagement
                     TimeSpan end = pd.End_Time.Value;
 
                     if (start <= end)
-                    {
-                        // Normal range (e.g., 10:00–23:00)
                         timeOk = currentTime >= start && currentTime <= end;
-                    }
                     else
-                    {
-                        // Overnight (e.g., 22:00–06:00)
                         timeOk = currentTime >= start || currentTime <= end;
-                    }
 
                     if (!timeOk) return false;
                 }
 
                 return true;
             });
+
+            // 🔁 Pass 2: If no match found, retry each row with extra time applied
+            if (matched == null)
+            {
+                matched = policies
+                    .Where(pd =>
+                    {
+                        // 1️⃣ Expiry check
+                        if (!pd.Expiry_Date.HasValue || now.Date > pd.Expiry_Date.Value.Date)
+                            return false;
+
+                        // 2️⃣ Day check (only if Day_Check is logically true)
+                        bool dayCheckEnabled = false;
+                        if (pd.Day_Check != null)
+                        {
+                            string v = pd.Day_Check.ToString().Trim();
+                            dayCheckEnabled = v == "1" || v.Equals("true", StringComparison.OrdinalIgnoreCase);
+                        }
+
+                        bool dayOk = true;
+                        if (dayCheckEnabled)
+                        {
+                            int st = ParseDay(pd.St_Day);
+                            int en = ParseDay(pd.En_Day);
+                            if (st == -1 || en == -1) return false;
+
+                            if (st <= en)
+                                dayOk = currentDayNum >= st && currentDayNum <= en;
+                            else
+                                dayOk = currentDayNum >= st || currentDayNum <= en;
+
+                            if (!dayOk) return false;
+                        }
+
+                        // 3️⃣ Time check — with extra time
+                        bool timeOk = false;
+                        if (pd.IsTime == true && pd.Start_Time.HasValue && pd.End_Time.HasValue && pd.Extra_Time > 0)
+                        {
+                            TimeSpan start = pd.Start_Time.Value;
+                            TimeSpan end = pd.End_Time.Value;
+                            TimeSpan effectiveEnd = end.Add(TimeSpan.FromMinutes(pd.Extra_Time));
+
+                            if (start <= effectiveEnd)
+                                timeOk = currentTime >= start && currentTime <= effectiveEnd;
+                            else
+                                timeOk = currentTime >= start || currentTime <= effectiveEnd;
+                        }
+
+                        return timeOk;
+                    })
+                    .OrderByDescending(pd => pd.Start_Time)
+                    .FirstOrDefault();
+            }
 
             // ✅ If no policy matches → show clear error
             if (matched == null)
@@ -1575,25 +1623,63 @@ namespace PMS.Modules.PatientManagement
                 var now = DateTime.Now;
                 var currentTime = now.TimeOfDay;
 
-                var activeSlot = (
+                var slots = (
                     from pd in db.Policy_Details
                     where pd.Policy_ID == policyId &&
                           pd.IsTime == true &&
                           pd.Start_Time.HasValue && pd.End_Time.HasValue &&
                           (!pd.Expiry_Date.HasValue || pd.Expiry_Date.Value.Date >= now.Date)
-                    let start = pd.Start_Time.Value
-                    let end = pd.End_Time.Value
-                    where
-                        (start <= end && currentTime >= start && currentTime < end) || // normal
-                        (start > end && (currentTime >= start || currentTime < end))   // overnight
-                    select new PolicySlot
+                    select new
                     {
-                        Start_Time = start,
-                        End_Time = end
+                        Start = pd.Start_Time.Value,
+                        End = pd.End_Time.Value,
+                        Extra = pd.Extra_Time ?? 0
                     }
-                ).FirstOrDefault();
+                ).ToList();
 
-                return activeSlot;
+                // Pass 1: try matching with RAW End_Time (no extra time)
+                var rawMatch = slots
+                    .FirstOrDefault(s =>
+                        (s.Start <= s.End && currentTime >= s.Start && currentTime < s.End) ||
+                        (s.Start > s.End && (currentTime >= s.Start || currentTime < s.End))
+                    );
+
+                if (rawMatch != null)
+                {
+                    return new PolicySlot
+                    {
+                        Start_Time = rawMatch.Start,
+                        End_Time = rawMatch.End,
+                        ExtraTime = rawMatch.Extra
+                    };
+                }
+
+                // Pass 2: if no match, try with EffectiveEnd (expanded by Extra_Time)
+                var expandedMatch = slots
+                    .Select(s => new
+                    {
+                        s.Start,
+                        EffectiveEnd = s.End.Add(TimeSpan.FromMinutes(s.Extra)),
+                        s.Extra
+                    })
+                    .Where(s =>
+                        (s.Start <= s.EffectiveEnd && currentTime >= s.Start && currentTime < s.EffectiveEnd) ||
+                        (s.Start > s.EffectiveEnd && (currentTime >= s.Start || currentTime < s.EffectiveEnd))
+                    )
+                    .OrderByDescending(s => s.Start)
+                    .FirstOrDefault();
+
+                if (expandedMatch != null)
+                {
+                    return new PolicySlot
+                    {
+                        Start_Time = expandedMatch.Start,
+                        End_Time = expandedMatch.EffectiveEnd,
+                        ExtraTime = expandedMatch.Extra
+                    };
+                }
+
+                return null;
             }
         }
 
@@ -1624,12 +1710,19 @@ namespace PMS.Modules.PatientManagement
                     select new
                     {
                         Start = pd.Start_Time.Value,
-                        End = pd.End_Time.Value
+                        End = pd.End_Time.Value,
+                        Extra = pd.Extra_Time ?? 0
                     }
                 ).ToList();
 
                 // Find the next slot that starts AFTER current time
                 var nextSlot = slots
+                    .Select(s => new
+                    {
+                        s.Start,
+                        EffectiveEnd = s.End.Add(TimeSpan.FromMinutes(s.Extra)),
+                        s.Extra
+                    })
                     .Where(s => s.Start > currentTime)
                     .OrderBy(s => s.Start)
                     .FirstOrDefault();
@@ -1639,7 +1732,8 @@ namespace PMS.Modules.PatientManagement
                     return new PolicySlot
                     {
                         Start_Time = nextSlot.Start,
-                        End_Time = nextSlot.End
+                        End_Time = nextSlot.EffectiveEnd,
+                        ExtraTime = nextSlot.Extra
                     };
                 }
 
@@ -1650,6 +1744,7 @@ namespace PMS.Modules.PatientManagement
         {
             public TimeSpan Start_Time { get; set; }
             public TimeSpan End_Time { get; set; }
+            public int ExtraTime { get; set; }
         }
 
     

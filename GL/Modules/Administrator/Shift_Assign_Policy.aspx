@@ -55,8 +55,8 @@
 
                 $row.find('[name="Start_Time"]').prop('disabled', !isChecked);
                 $row.find('[name="End_Time"]').prop('disabled', !isChecked);
+                $row.find('[name="Extra_Time"]').prop('disabled', !isChecked);
 
-               
             });
             $(document).on('change', '[name="IsDay"]', function () {
                 const $row = $(this).closest('tr');
@@ -142,6 +142,8 @@
                         newRow.find('[name="Start_Time"]').val(policy.Start_Time);
                         newRow.find('[name="End_Time"]').val(policy.End_Time);
                         newRow.find('[name="Next_Day"]').prop("checked", policy.Next_Day);
+                        newRow.find('[name="Extra_Time"]').val(policy.Extra_Time ?? 0);
+                        newRow.find('[name="Extra_Time"]').prop("disabled", !policy.IsTime);
 
                         newRow.find('[name="St_Day"]').val(policy.St_Day);
                         newRow.find('[name="En_Day"]').val(policy.En_Day);
@@ -236,6 +238,7 @@
         <td><input type="time" name="Start_Time" class="form-control" disabled></td>
         <td><input type="checkbox" name="Next_Day"></td>
         <td><input type="time" name="End_Time" class="form-control" disabled></td>
+        <td><input type="number" name="Extra_Time" class="form-control" placeholder="0" min="0" value="0" disabled></td>
         <td>
             <i class="fa fa-trash text-danger btnDeleteRow" style="cursor:pointer; font-size:18px;" title="Delete Row"></i>
         </td>
@@ -322,7 +325,8 @@
                     End_Time: $row.find('[name="End_Time"]').val(),
                     St_Day: $row.find('[name="St_Day"]').val(),  
                     En_Day: $row.find('[name="En_Day"]').val(),
-                    Next_Day: $row.find('[name="Next_Day"]').is(":checked")
+                    Next_Day: $row.find('[name="Next_Day"]').is(":checked"),
+                    Extra_Time: parseInt($row.find('[name="Extra_Time"]').val()) || 0
                 });
             });
 
@@ -549,6 +553,7 @@
                 <th>Start Time</th>              
                 <th>Next Day</th>
                 <th>End Time</th>
+                <th>Extra Time (min)</th>
                 <th>Action</th>
             </tr>
         </thead>
