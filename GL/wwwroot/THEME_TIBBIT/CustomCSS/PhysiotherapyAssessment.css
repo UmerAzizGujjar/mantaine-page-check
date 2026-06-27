@@ -8,20 +8,20 @@
 }
 
 .bento-card:hover {
-    border-color: #c0392b;
-    box-shadow: 0 4px 16px rgba(192, 57, 43, 0.1);
+    border-color: #EFA63E;
+    box-shadow: 0 4px 16px rgba(239, 166, 62, 0.1);
     transform: translateY(-1px);
 }
 
 .bento-title {
     font-size: 16px;
     font-weight: 800;
-    color: #c0392b;
+    color: #EFA63E;
     text-transform: uppercase;
     letter-spacing: 0.8px;
     margin-bottom: 14px;
     padding-bottom: 8px;
-    border-bottom: 2.5px solid #c0392b;
+    border-bottom: 2.5px solid #EFA63E;
 }
 
 .bento-card .form-group {
@@ -82,7 +82,7 @@
 }
 
 .occ-inline:focus {
-    border-color: #c0392b;
+    border-color: #EFA63E;
     outline: none;
 }
 
@@ -133,7 +133,7 @@
 }
 
 .other-input:focus {
-    border-color: #c0392b;
+    border-color: #EFA63E;
     outline: none;
 }
 
@@ -163,8 +163,8 @@
 }
 
 .inner-bento:hover {
-    border-color: #c0392b;
-    box-shadow: 0 2px 8px rgba(192, 57, 43, 0.08);
+    border-color: #EFA63E;
+    box-shadow: 0 2px 8px rgba(239, 166, 62, 0.08);
 }
 
 .inner-bento .chk-grid .chk-item {
@@ -196,12 +196,12 @@
 .inner-bento .ib-title {
     font-size: 12.5px;
     font-weight: 800;
-    color: #c0392b;
+    color: #EFA63E;
     text-transform: uppercase;
     letter-spacing: 0.5px;
     margin-bottom: 3px;
     padding-bottom: 2px;
-    border-bottom: 1.5px solid #c0392b;
+    border-bottom: 1.5px solid #EFA63E;
 }
 
 .inner-bento .form-control {
@@ -376,7 +376,7 @@
 }
 
 .mmt-list .mmt-row .mmt-input:focus {
-    border-color: #c0392b;
+    border-color: #EFA63E;
     outline: none;
 }
 
@@ -413,7 +413,7 @@
     }
 
     .bento-title, .inner-bento .ib-title {
-        color: #c0392b !important;
+        color: #EFA63E !important;
     }
 
     .pain-circle {
@@ -436,7 +436,7 @@
 }
 
 .agg-text:focus {
-    border-color: #c0392b;
+    border-color: #EFA63E;
     outline: none;
 }
 
@@ -497,8 +497,8 @@
 }
 
 .body-chart-card:hover {
-    border-color: #c0392b;
-    box-shadow: 0 4px 16px rgba(192, 57, 43, 0.1);
+    border-color: #EFA63E;
+    box-shadow: 0 4px 16px rgba(239, 166, 62, 0.1);
 }
 
 .body-chart-card .bento-title {
@@ -537,6 +537,32 @@
 .legend-color.active {
     border-color: #333;
     box-shadow: 0 0 6px rgba(0,0,0,0.3);
+}
+
+.legend-eraser {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 26px;
+    height: 26px;
+    border-radius: 4px;
+    font-size: 14px;
+    color: #888;
+    cursor: pointer;
+    border: 2px solid transparent;
+    transition: all 0.2s ease;
+    user-select: none;
+}
+
+.legend-eraser:hover {
+    color: #EFA63E;
+    background: #FDF5E6;
+}
+
+.legend-eraser.active {
+    color: #fff;
+    background: #EFA63E;
+    border-color: #a03227;
 }
 
 .legend-other-row {
@@ -638,4 +664,74 @@
     font-size: 12px;
     padding: 4px 12px;
 }
+
+/* Grades table - uses CSS variable for theme color */
+.grades-wrap {
+    --grades-accent: #EFA63E;
+    margin-top: 10px;
+    border-top: 1px solid #eee;
+    padding-top: 8px;
+}
+
+.grades-title {
+    font-size: 11px;
+    font-weight: 700;
+    color: var(--grades-accent);
+    text-transform: uppercase;
+    letter-spacing: 0.4px;
+    margin-bottom: 4px;
+}
+
+.grades-table {
+    width: 100%;
+    border-collapse: collapse;
+}
+
+.grades-table th {
+    font-size: 10.5px;
+    font-weight: 700;
+    color: #888;
+    text-align: center;
+    padding: 3px 2px;
+    border-bottom: 1.5px solid var(--grades-accent);
+    text-transform: uppercase;
+    letter-spacing: 0.3px;
+}
+
+.grades-table th:first-child {
+    text-align: left;
+}
+
+.grades-table td {
+    padding: 5px 2px;
+    text-align: center;
+    vertical-align: middle;
+    font-size: 11px;
+    color: #555;
+}
+
+.grades-table td:first-child {
+    font-weight: 600;
+    color: var(--grades-accent);
+    text-align: left;
+    white-space: nowrap;
+}
+
+.grades-table input[type="checkbox"] {
+    width: 14px;
+    height: 14px;
+    margin: 0;
+    cursor: pointer;
+    accent-color: var(--grades-accent);
+}
+
+.grades-table tbody tr:hover {
+    background: color-mix(in srgb, var(--grades-accent) 6%, transparent);
+}
+
+/* Fallback for browsers without color-mix / CSS variables */
+.grades-table tbody tr:hover {
+    background: rgba(239, 166, 62, 0.04);
+}
+
 

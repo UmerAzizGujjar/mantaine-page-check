@@ -655,13 +655,9 @@ function cleanPrint() {
     <div class="sig-block">
         <div class="sig-name">${data.Test_Performed_By_Doctor_name || ''}</div>
         <div class="sig-qual">${data.Test_Performed_By_Doctor_qualification || ''}</div>
-        <div class="sig-date">Date &amp; Time: ${data.Approved_Time || ''}</div>
-        <div class="sig-note">No Signature(s) required, Electronically Verified</div>
     </div>
     <div class="sig-block right">
         <div class="sig-line">
-            <div class="sig-name">Approved By: ${data.Test_Approved_By_Doctor_name || ''}</div>
-            <div class="sig-qual">${data.Test_Approved_By_Doctor_qualification || ''}</div>
         </div>
     </div>
 </div>
@@ -676,6 +672,7 @@ function cleanPrint() {
 <div class="page-footer">
     <div class="footer-col">${data.Report_Footer || ''}</div>
     <div class="footer-col right">${data.Report_Footer_tow || ''}</div>
+        <div class="sig-note">No Signature(s) required, Electronically Verified</div>
 </div>
 
 <button class="print-btn" onclick="cleanPrint()">🖨 Print Report</button>

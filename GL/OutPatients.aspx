@@ -862,6 +862,18 @@
                 backdrop: 'static'
             });
         }
+        function ShowPhysioModel() {
+            var outPatId = $('#ctl00_MainContent_txtOut_Patient_ID').val();
+            if (outPatId === '(New)' || outPatId === '') {
+                Swal.fire({
+                    icon: 'warning',
+                    title: 'Save Required',
+                    text: 'Please save the patient form first before opening Physiotherapy Assessment.'
+                });
+            } else {
+                window.open('Modules/PatientManagement/Physiotherapy_Assessment.aspx?ID=' + outPatId, '_blank');
+            }
+        }
 
         function ShowPeadsModel() {
             $('#ModelPeads').modal({
@@ -5834,10 +5846,13 @@
                             </tr>
                             <tr>
                                 <td>
-                                    <input type="button" value="Ortho" name="btnOrtho" onclick="ShowOrthoModel()" /></td>
+                                     <input type="button" value="Ortho" name="btnOrtho" onclick="ShowOrthoModel()" /></td>
                                 <td>
                                     <input type="button" value="Peads" name="btnPeads" onclick="ShowPeadsModel()" /></td>
-
+                            </tr>
+                            <tr>
+                                <td colspan="2">
+                                    <input type="button" value="Physiotherapy" name="btnPhysio" onclick="ShowPhysioModel()" style="width:100%" /></td>
                             </tr>
                         </table>
                     </div>
