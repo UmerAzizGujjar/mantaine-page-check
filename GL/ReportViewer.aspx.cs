@@ -4824,6 +4824,24 @@ namespace PMS
                 rd.SetParameterValue("@Warehouse", Request.QueryString["WareHouse"], rd.Subreports[0].Name.ToString());
 
             }
+            else if (reportName == "DailyPharmacyOverallSummaryReport")
+            {
+                string year = Request.QueryString["Year"].ToString();
+                string Month = Request.QueryString["Month"].ToString();
+
+                var logoPath = DBClass.getField("SELECT dbo.GetCompanyLogo()");
+                string rptFileName = "Pharmacy/rptDailyPharmacyOverallSummaryReport.rpt";
+                reportPath += rptFileName;
+
+                rd.Load(reportPath);
+                rd.SetParameterValue("CompanyName", AppConfig.Company_Name);
+                rd.SetParameterValue("Title", reportTitle);
+                rd.SetParameterValue("CompanyLogo", logoPath);
+                rd.SetParameterValue("@Year", year);
+                rd.SetParameterValue("@Month", Month);
+                rd.SetParameterValue("@Warehouse", Request.QueryString["WareHouse"]);
+
+            }
             else if (reportName == "FastSlow_Non_Moving_Stock")
             {
                 var logoPath = DBClass.getField("SELECT dbo.GetCompanyLogo()");
