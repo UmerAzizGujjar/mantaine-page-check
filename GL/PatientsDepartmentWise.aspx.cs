@@ -3157,7 +3157,6 @@ namespace PMS
                     DateDiv.Visible = true;
                     Time_Row.Visible = true;
                     AllowPatientRecord = false;
-                    MRDiv.Visible = true;
 
                 }
                 else if (this.PageTitle == "Gir_To_Po_Heirarchy")
@@ -5312,7 +5311,7 @@ namespace PMS
                     MonthDiv.Visible = true;
                     tr_Export.Visible = true;
 
-                    //ADDING NEW WAREHOUSE
+                    //ADDING NEW WAREHOUSE  
 
                     object valuset;
                     valuset = DBClass.GetValueSet("Ware house");
