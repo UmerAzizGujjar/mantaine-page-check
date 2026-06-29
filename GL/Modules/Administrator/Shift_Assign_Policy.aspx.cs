@@ -76,9 +76,10 @@ namespace PMS.Modules.Administrator
                                          Start_Time = p.Start_Time.HasValue ? p.Start_Time.Value.ToString(@"hh\:mm") : "",
                                          End_Time = p.End_Time.HasValue ? p.End_Time.Value.ToString(@"hh\:mm") : "",
                                          Next_Day = p.Next_Day ?? false,
-                                         St_Day = p.St_Day,
-                                         En_Day = p.En_Day,
-                                     })
+                                          St_Day = p.St_Day,
+                                          En_Day = p.En_Day,
+                                          Extra_Time = p.Extra_Time ?? 0,
+                                      })
                                      .ToList();
 
                     return new JavaScriptSerializer().Serialize(policies);
@@ -144,6 +145,7 @@ namespace PMS.Modules.Administrator
                                 existingPolicy.Next_Day = item.Next_Day;
                                 existingPolicy.St_Day = item.St_Day;
                                 existingPolicy.En_Day = item.En_Day;
+                                existingPolicy.Extra_Time = item.Extra_Time;
                                 existingPolicy.Updated_By = AppConfig.UserID;
                                 existingPolicy.Updated_At = DateTime.Now;
                             }
@@ -168,6 +170,7 @@ namespace PMS.Modules.Administrator
                                 Is_Cancel = false,
                                 St_Day = item.St_Day,
                                 En_Day = item.En_Day,
+                                Extra_Time = item.Extra_Time ?? 0,
                                 Created_By = AppConfig.UserID,
                                 Created_At = DateTime.Now
                             };
@@ -207,6 +210,7 @@ namespace PMS.Modules.Administrator
 
             public string St_Day { get; set; } 
             public string En_Day { get; set; }
+            public int? Extra_Time { get; set; }
         }
 
     }

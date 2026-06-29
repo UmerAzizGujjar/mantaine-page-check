@@ -5300,6 +5300,35 @@ namespace PMS
                     ddlItemCategory.Visible = false;
 
                 }
+                if (this.PageTitle == "DailyPharmacyOverallSummary")
+                {
+
+                    string x = "Daily Pharmacy Summary";
+                    Master.Label2.Text = x;
+                    Master.GetMenuName();
+
+                    dpROw.Visible = false;
+                    YearDiv.Visible = true;
+                    MonthDiv.Visible = true;
+                    tr_Export.Visible = true;
+
+                    //ADDING NEW WAREHOUSE
+
+                    object valuset;
+                    valuset = DBClass.GetValueSet("Ware house");
+                    ddlwareHouse.DataSource = valuset;
+                    ddlwareHouse.DataTextField = "DataValue_Description";
+                    ddlwareHouse.DataValueField = "DataValue_Name";
+                    ddlwareHouse.Items.Clear();
+                    ddlwareHouse.Items.Add(new ListItem() { Text = "All", Value = "0" });
+                    ddlwareHouse.DataBind();
+                    Stock_Movement.Visible = true;
+
+                    ddlwareHouse.Visible = true;
+                    lblWarehouse.Visible = true;
+                    lbItemCategory.Visible = false;
+                    ddlItemCategory.Visible = false;
+                }
 
                 else if (this.PageTitle == "Cardiology_Cash_Collection")
                 {

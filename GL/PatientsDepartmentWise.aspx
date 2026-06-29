@@ -32,7 +32,24 @@
                    }
                    yearSelect.val(currentYear);
                    $('#ctl00_MainContent_ddlYear').select2();
-               }
+        }
+        function populateMonths() {
+            var monthNames = [
+                "January", "February", "March", "April",
+                "May", "June", "July", "August",
+                "September", "October", "November", "December"
+            ];
+            var monthSelect = $('#<%= ddlMonth.ClientID %>');
+            monthSelect.find('option').not(':first').remove();
+            $.each(monthNames, function (index, name) {
+                monthSelect.append($('<option></option>')
+                    .attr('value', index + 1)
+                    .text(name));
+            });
+            // Default to current month
+            monthSelect.val(new Date().getMonth() + 1);
+            $('#ctl00_MainContent_ddlMonth').select2();
+        }
 
         function FillCardioTests() {
 
@@ -189,15 +206,26 @@
             loadmed();
 
 
-            if (ReportTitle == "YearlyPharmacyOverallSummary") {
-                $('#<%= YearDiv.ClientID %>').show();
+        if (ReportTitle == "YearlyPharmacyOverallSummary") {
+        $('#<%= YearDiv.ClientID %>').show();
         $('#<%= DateDiv.ClientID %>').hide();
         $('#<%= Time_Row.ClientID %>').hide();
 
         setTimeout(function () {
             populateYears();
         }, 100);
-    }
+        }
+        if (ReportTitle == "DailyPharmacyOverallSummary") {
+        $('#<%= YearDiv.ClientID %>').show();
+        $('#<%= MonthDiv.ClientID %>').show();
+        $('#<%= DateDiv.ClientID %>').hide();
+        $('#<%= Time_Row.ClientID %>').hide();
+
+        setTimeout(function () {
+            populateYears();
+            populateMonths();
+        }, 100);
+        }
 
 
 
@@ -235,6 +263,8 @@
             $('#ctl00_MainContent_ddlcashier').select2();
             $('#ctl00_MainContent_ddlProcedure').select2();
             $('#ctl00_MainContent_ddlStatus').select2();
+            $('#ctl00_MainContent_ddlYear').select2();
+            $('#ctl00_MainContent_ddlMonth').select2();
 
             $('#btnReset').click(function () {
 
@@ -318,6 +348,27 @@
                             return;
                         }
                         var url = 'ReportViewer.aspx?ReportName=YearlyPharmacyOverallSummaryReport&ReportTitle=Pharmacy Overall Summary Report FY' + '&Year=' + selectedYear + '&WareHouse=' + $('#ctl00_MainContent_ddlwareHouse').val() + '&ExportPDF=' + exporttopdf;
+                        window.open(url, '_blank');
+                    }
+                    else if (rptTitle == "DailyPharmacyOverallSummary") {
+                        debugger;
+                        var exporttopdf = document.getElementById('<%= chkExportPDF.ClientID %>').checked;
+                        $('#<%= YearDiv.ClientID %>').show();
+                        $('#<%= MonthDiv.ClientID %>').show();
+                        $('#<%= DateDiv.ClientID %>').hide();
+                        $('#<%= Time_Row.ClientID %>').hide();
+                        var selectedYear = $('#ctl00_MainContent_ddlYear').val();
+                        var selectedMonth = $('#ctl00_MainContent_ddlMonth').val();
+                  
+                        if (selectedYear === "0") {
+                            alert('Please select a year');
+                            return;
+                        }
+                        if (selectedMonth === "0") {
+                            alert('Please select a month');
+                            return;
+                        }
+                        var url = 'ReportViewer.aspx?ReportName=DailyPharmacyOverallSummaryReport&ReportTitle=Pharmacy Overall Summary Report FY' + '&Year=' + selectedYear + '&WareHouse=' + $('#ctl00_MainContent_ddlwareHouse').val() + '&Month=' + selectedMonth + '&ExportPDF=' + exporttopdf;
                         window.open(url, '_blank');
                     }
                     else if (rptTitle == "SAR") {
@@ -1961,6 +2012,16 @@
             </div>
         </div>
             <%--new yearly div placed--%>
+            <!-- Month Dropdown -->
+        <div class="row mb-3" id="MonthDiv" runat="server" visible="false">
+            <div class="col-lg-3 col-md-4 col-sm-12">
+                <asp:Label ID="lblMonth" runat="server" Text="Month" CssClass="form-label"></asp:Label>
+                <asp:DropDownList runat="server" ID="ddlMonth" CssClass="form-control">
+                    <asp:ListItem Text="Select Month" Value="0"></asp:ListItem>
+                </asp:DropDownList>
+            </div>
+        </div>
+
             <div class="col-lg-3 col-md-4 col-sm-12" id="trTestResult1" visible="false" runat="server">
                 <asp:Label runat="server" ID="lblTestName" Text="Test Name"></asp:Label>
                 <asp:DropDownList runat="server" ID="ddlTestName" AppendDataBoundItems="true"></asp:DropDownList>

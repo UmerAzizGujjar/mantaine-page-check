@@ -74,7 +74,9 @@
                     dataType: "json",
                     success: function (response) {
                         debugger;
-                        $("#Textstock").val(response.d);
+                        var data = JSON.parse(response.d);
+                        $("#Textstock").val(data.StockAvailable);
+                        $("#TextRate").val(data.ItemRate);
                     },
                     error: function (msg) {
                         alert("Could not load available stock");
@@ -164,6 +166,8 @@
                 $("#txttrnsfer_qty").val('');
                 $("#Textquantity").val('');
                 $("#Textstock").val('');
+                $("#TextRate").val('');
+                $("#TextAmount").val('');
                 return false;
             }
 
@@ -446,10 +450,10 @@
                 $("#stocktable tbody").empty();
                 $.each(data.d, function (i) {
                     if (i > 0)
-                        $("#stocktable tbody").append("<tr id='" + data.d[i].itemCode + "^" + data.d[i].batchNo + "^" + data.d[i].quantity + "^" + data.d[i].expiryDate + "'>" +
+                        $("#stocktable tbody").append("<tr id='" + data.d[i].itemCode + "^" + data.d[i].batchNo + "^" + data.d[i].quantity + "^" + data.d[i].Rate + "^" + data.d[i].Amount + "^" + data.d[i].expiryDate + "'>" +
                             "<td class='dn'><label class='srNo'>" + i + "</label></td>" +
                             "<td class=combat>" + data.d[i].itemCode + "</td><td class=combat>" + data.d[i].batchNo + "</td>" +
-                            "<td class=combat>" + data.d[i].description + "</td><td class='stkAvbl combat'>" + data.d[i].stockAvailable + "</td><td class=combat><span class='val'>" + data.d[i].quantity + "</span><input class ='editQnty dn' type='text' value='" + data.d[i].quantity + "' /></td>" +
+                            "<td class=combat>" + data.d[i].description + "</td><td class='stkAvbl combat'>" + data.d[i].stockAvailable + "</td><td class=combat><span class='val'>" + data.d[i].quantity + "</span><input class ='editQnty dn' type='text' value='" + data.d[i].quantity + "' /></td><td class=combat><span class='val'>" + data.d[i].Rate + "</span><input class ='' type='text' value='" + data.d[i].Rate + "' /></td><td class=combat><span class='val'>" + data.d[i].Amount + "</span><input class ='' type='text' value='" + data.d[i].Amount + "' /></td>" +
                             "<td><span class='editDelete'><a class='editQuantity' >Edit</a>  |  <a class='deleteStkItem' rel='" + data.d[0].stockTransferNo + "'>Delete</a></span><span class='dn' id='" + data.d[i].batchNo + "'><img src='/images/loading.gif' /></span></td></tr>"
                         );
                 });
@@ -566,6 +570,8 @@
                 $("#txttrnsfer_qty").val('');
                 $("#Textquantity").val('');
                 $("#Textstock").val('');
+                $("#TextRate").val('');
+                $("#TextAmount").val('');
                 $('#txtItemCode').tokenInput('clear');
                 $("#Remarks").val('');
                 $("#batchnoddl").empty();
@@ -652,6 +658,8 @@
             }
             var quantity = parseInt(($("#Textquantity").val() != "") ? $("#Textquantity").val() : 0);
             var stock = $("#Textstock").val();
+            var Rate = $("#TextRate").val();
+            var Amount = $("#TextAmount").val();
             var stkNo = $("#ctl00_MainContent_txtStock_No").val();
             var itemCodeDescription = item.split('-')[1];
             var parseStock = parseInt(stock);
@@ -700,14 +708,14 @@
                         if (wareHousefrom.indexOf(wareHouseTo) == -1) {
                             var html = "";
                             if ($("#btnUpdate").css("display") != "none") {
-                                html = "<td class=combat>" + itemCodeDescription + "</td><td class='stkAvbl combat'>" + stock + "</td><td class=combat><span class='val'>" + quantity + "</span><input class ='editQnty dn' type='text' value='" + quantity + "' /></td>" +
+                                html = "<td class=combat>" + itemCodeDescription + "</td><td class='stkAvbl combat'>" + stock + "</td><td class=combat><span class='val'>" + quantity + "</span><input class ='editQnty dn' type='text' value='" + quantity + "' /></td><td class=combat><span class='val'>" + Rate + "</span><input class ='' type='text' value='" + Rate + "' /></td><td class=combat><span class='val'>" + Amount + "</span><input class ='' type='text' value='" + Amount + "' /></td>" +
                                     "<td><span class='editDelete'><a class='editQuantity' >Edit</a>  |  <a class='deleteStkItem' rel='" + stkNo + "'>Delete</a></span><span class='dn' id='" + batcNo + "'><img src='/images/loading.gif' /></span></td>";
                             }
                             else {
-                                html = "<td class=combat>" + itemCodeDescription + "</td><td class='stkAvbl combat'>" + stock + "</td>" + "<td class=combat>" + quantity + "</td><td><a class='deleteStkItem'>Delete</a></td>";
+                                html = "<td class=combat>" + itemCodeDescription + "</td><td class='stkAvbl combat'>" + stock + "</td>" + "<td class=combat>" + quantity + "</td>" + "<td class=combat>" + Rate + "</td>" + "<td class=combat>" + Amount + "</td><td><a class='deleteStkItem'>Delete</a></td>";
                             }
                             var rowCount = $("#stocktable tbody tr").length + 1;
-                            $("#stocktable tbody").append("<tr id='" + itmCode + "^" + batcNo + "^" + quantity + "^" + expDate + "'><td class='dn'><label class='srNo'>" + rowCount + "</label></td><td class=combat>" +
+                            $("#stocktable tbody").append("<tr id='" + itmCode + "^" + batcNo + "^" + quantity + "^" + Rate + "^" + Amount + "^" + expDate + "'><td class='dn'><label class='srNo'>" + rowCount + "</label></td><td class=combat>" +
                                 itmCode + "</td> <td class=combat>" +
                                 batcNo + "</td>" + html + "</tr>"
                             );
@@ -718,6 +726,8 @@
                             CommonActions();
                             $("#Textquantity").val('');
                             $("#Textstock").val('');
+                            $("#TextRate").val('');
+                            $("#TextAmount").val('');
                             $('#txtItemCode').tokenInput('clear');
                             $("#Remarks").val('');
                             $("#batchnoddl").empty();
@@ -813,7 +823,9 @@
                 var itemCode = $(this).attr("id").split('^')[0];
                 var batchNo = $(this).attr("id").split('^')[1];
                 var quantity = parseInt($(this).attr("id").split('^')[2]);
-                var expiry = $(this).attr("id").split('^')[3];
+                var Rate = parseFloat($(this).attr("id").split('^')[3]);
+                var Amount = parseFloat($(this).attr("id").split('^')[4]);
+                var expiry = $(this).attr("id").split('^')[4];
                 if (isUpdate)
                     quantity = (typeof ($(this).find('.val').text()) != 'undefined' && $(this).find('.val').text() != "") ? parseInt($(this).find('.val').text()) : -1;
                 var stock = /^[0-9]/.test($(this).find('.stkAvbl').text()) ? parseInt($(this).find('.stkAvbl').text()) : -1;
@@ -823,6 +835,8 @@
                     details.itemCode = itemCode;
                     details.batchNo = batchNo;
                     details.quantity = quantity;
+                    details.Rate = Rate;
+                    details.Amount = Amount;
                     details.stockTransferId = stockID;
                     details.expiryDate = expiry;
                     detailAry.push(details);
@@ -1077,6 +1091,12 @@
             $('#Textquantity').val(qty);
             $(row).remove();
         }
+        function CalculateAmount() {
+            var TransferQty = $("#Textquantity").val();
+            var Rate = $("#TextRate").val();
+            var Amount = TransferQty * Rate;
+            $("#TextAmount").val(Amount);
+        }
     </script>
 </asp:Content>
 <asp:Content ID="Content2" ContentPlaceHolderID="MainContent" runat="server">
@@ -1141,7 +1161,7 @@
 
         <div class="col-lg-3 col-md-6 col-sm-12">
             <label for="Quantity">Quantity : </label>
-            <input class="form-control" type="text" id="Textquantity" />
+            <input class="form-control" type="text" id="Textquantity" onkeyup="CalculateAmount();" />
         </div>
         </div>
 
@@ -1150,6 +1170,16 @@
         <div class="col-lg-3 col-md-8 col-sm-12">
             <label for="Stock">Stock :</label>
              <input class="form-control" type="text" id="Textstock" readonly="readonly" />
+            
+        </div>
+        <div class="col-lg-3 col-md-8 col-sm-12">
+            <label for="Stock">Rate :</label>
+             <input class="form-control" type="text" id="TextRate" readonly="readonly" />
+            
+        </div>
+        <div class="col-lg-3 col-md-8 col-sm-12">
+            <label for="Stock">Amount :</label>
+             <input class="form-control" type="text" id="TextAmount" readonly="readonly" />
             
         </div>
         <div class="col-lg-1 col-md-2 col-sm-4">           
@@ -1178,6 +1208,8 @@
                 <th>Description</th>
                 <th>Stock</th>
                 <th>Quantity</th>
+                <th>Rate</th>
+                <th>Amount</th>
                 <th class="actionClm">Action</th>
             </tr>
         </thead>
