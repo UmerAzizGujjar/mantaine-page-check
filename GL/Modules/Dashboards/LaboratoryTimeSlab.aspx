@@ -235,7 +235,7 @@
                     { "data": "patientName", "name": "patientName", "width": "16%", "orderable": true },
                     { "data": "billDate", "name": "billDate", "width": "10%", "orderable": true },
                     { "data": "sampleDate", "name": "sampleDate", "width": "10%", "orderable": true },
-                    { "data": "labDate", "name": "labDate", "width": "10%", "orderable": true },
+                    //{ "data": "labDate", "name": "labDate", "width": "10%", "orderable": true },
                     { "data": "reportDate", "name": "reportDate", "width": "10%", "orderable": true },
                     { "data": "approveDate", "name": "approveDate", "width": "10%", "orderable": true },
                     { "data": "totalTime", "name": "totalTimeMinutes", "width": "11%", "orderable": true,
@@ -352,7 +352,7 @@
                                     <th>Patient Name</th>
                                     <th>Bill Date</th>
                                     <th>Sample Date</th>
-                                    <th>Lab Date</th>
+                                    <th style="display:none">Lab Date</th>
                                     <th>Report Date</th>
                                     <th>Approve Date</th>
                                     <th>Total Time</th>

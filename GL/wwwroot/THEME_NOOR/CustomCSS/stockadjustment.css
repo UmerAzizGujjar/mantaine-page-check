@@ -11,6 +11,11 @@ select {
     border-radius: 5px !important;
 }
 
+
+input {
+    width: 100% !important;
+}
+
 input[type="text"] {
     font-size: 13px;
     border-radius: 5px !important;
