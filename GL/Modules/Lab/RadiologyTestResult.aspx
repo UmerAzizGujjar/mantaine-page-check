@@ -1473,7 +1473,12 @@
                     }
 
                     if (actionCell.find('a.pacs-link').length === 0) {
-                        actionCell.append(' | <a class="pacs-link" href="' + rowData.PACS_Study_Url + '" target="_blank" rel="noopener noreferrer">PACS</a>');
+                        actionCell.append(' | <a class="pacs-link" href="' + rowData.PACS_Study_Url + '" target="_blank" rel="noopener noreferrer">WebView</a>');
+                    }
+
+                    if (rowData.PACS_Study_UID && actionCell.find('a.radiant-link').length === 0) {
+                        var radiantUrl = 'radiant://?n=paet&v=VISIONPLUS&n=pstv&v=0020000D&v=' + rowData.PACS_Study_UID;
+                        actionCell.append(' | <a class="radiant-link" href="' + radiantUrl + '">RadiANT</a>');
                     }
                 });
 
