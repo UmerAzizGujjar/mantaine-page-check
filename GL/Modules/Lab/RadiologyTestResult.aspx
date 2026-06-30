@@ -1477,7 +1477,7 @@
                     }
 
                     if (rowData.PACS_Study_UID && actionCell.find('a.radiant-link').length === 0) {
-                        actionCell.append(' | <a class="radiant-link" href="javascript:void(0)" onclick="openRadiAnt(\'' + rowData.PACS_Study_UID + '\')">RadiANT</a>');
+                        actionCell.append(' | <a class="radiant-link" href="LaunchRadiAnt.aspx?uid=' + encodeURIComponent(rowData.PACS_Study_UID) + '" target="_blank" rel="noopener noreferrer">RadiANT</a>');
                     }
                 });
 
@@ -2216,15 +2216,6 @@ ${data.Addendum_Template ? `
 
           // THIS IS THE TESTING BLOCK 
 }
-
-        function openRadiAnt(uid) {
-            if (!uid) return;
-            var iframe = document.createElement('iframe');
-            iframe.style.display = 'none';
-            iframe.src = 'radiant://?n=paet&v=VISIONPLUS&n=pstv&v=0020000D&v=%22' + uid + '%22';
-            document.body.appendChild(iframe);
-            setTimeout(function () { document.body.removeChild(iframe); }, 100);
-        }
 
         var test_wise_id;
         function GetLabDetail() {
