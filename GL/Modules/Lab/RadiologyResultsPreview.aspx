@@ -273,12 +273,6 @@
             );
         }
 
-        function openRadiAnt(uid) {
-            if (uid) {
-                window.location.href = 'radiant://?n=paet&v=VISIONPLUS&n=pstv&v=0020000D&v=%22' + uid + '%22';
-            }
-        }
-
         function buildOrthancButtons(studyUid, orthancId) {
             var viewUrl = orthancBaseUrl + '/ohif/viewer?StudyInstanceUIDs=' + encodeURIComponent(studyUid);
             var segmentationUrl = orthancBaseUrl + '/ohif/segmentation?StudyInstanceUIDs=' + encodeURIComponent(studyUid);
@@ -286,8 +280,8 @@
 
             var radiantButton = '';
             if (studyUid) {
-                radiantButton = '<a class="btn btn-primry d-inline-flex align-items-center ms-1" href="javascript:void(0)" onclick="openRadiAnt(\''
-                    + studyUid + '\')" title="Open in RadiAnt">'
+                radiantButton = '<a class="btn btn-primry d-inline-flex align-items-center ms-1" href="LaunchRadiAnt.aspx?uid='
+                    + encodeURIComponent(studyUid) + '" target="_blank" rel="noopener noreferrer" title="Open in RadiAnt">'
                     + '<i class="fa fa-external-link me-1"></i></a>';
             }
 
