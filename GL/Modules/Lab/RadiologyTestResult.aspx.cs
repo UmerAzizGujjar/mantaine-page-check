@@ -971,6 +971,7 @@ namespace PMS.Modules.Lab
 
             public string History { get; set; }
             public string PACS_Study_Url { get; set; }
+            public string PACS_Study_UID { get; set; }
         }
 
         [WebMethod]
@@ -1026,11 +1027,19 @@ namespace PMS.Modules.Lab
             }
         }
 
-        private static string GetOrthancStudyViewerUrl(string accessionNumber, string baseUrl)
+        private class OrthancStudyLookup
         {
+            public string ViewerUrl { get; set; }
+            public string StudyInstanceUID { get; set; }
+        }
+
+        private static OrthancStudyLookup GetOrthancStudyLookup(string accessionNumber, string baseUrl)
+        {
+            var result = new OrthancStudyLookup { ViewerUrl = string.Empty, StudyInstanceUID = string.Empty };
+
             if (string.IsNullOrWhiteSpace(accessionNumber) || string.IsNullOrWhiteSpace(baseUrl))
             {
-                return string.Empty;
+                return result;
             }
 
             try
@@ -1058,27 +1067,34 @@ namespace PMS.Modules.Lab
 
                 if (string.IsNullOrWhiteSpace(studiesJson) || studiesJson == "[]")
                 {
-                    return string.Empty;
+                    return result;
                 }
 
                 var studies = JArray.Parse(studiesJson);
                 if (studies.Count == 0)
                 {
-                    return string.Empty;
+                    return result;
                 }
 
                 var studyUid = studies[0].SelectToken("MainDicomTags.StudyInstanceUID")?.ToString();
                 if (string.IsNullOrWhiteSpace(studyUid))
                 {
-                    return string.Empty;
+                    return result;
                 }
 
-                return baseUrl + "/ohif/viewer?StudyInstanceUIDs=" + HttpUtility.UrlEncode(studyUid);
+                result.StudyInstanceUID = studyUid;
+                result.ViewerUrl = baseUrl + "/ohif/viewer?StudyInstanceUIDs=" + HttpUtility.UrlEncode(studyUid);
+                return result;
             }
             catch
             {
-                return string.Empty;
+                return result;
             }
+        }
+
+        private static string GetOrthancStudyViewerUrl(string accessionNumber, string baseUrl)
+        {
+            return GetOrthancStudyLookup(accessionNumber, baseUrl).ViewerUrl;
         }
 
         [WebMethod]
@@ -1228,7 +1244,9 @@ namespace PMS.Modules.Lab
                 test.Result_Time = item.Created_Time?.ToString() ?? "";
                 test.Approved_By = item.Approved_By ?? "";
                 test.Approved_Time = item.Approved_Time?.ToString() ?? "";
-                test.PACS_Study_Url = GetOrthancStudyViewerUrl(test.Lab_Test_Detail_ID, orthancBaseUrl);
+                var pacsLookup = GetOrthancStudyLookup(test.Lab_Test_Detail_ID, orthancBaseUrl);
+                test.PACS_Study_Url = pacsLookup.ViewerUrl;
+                test.PACS_Study_UID = pacsLookup.StudyInstanceUID;
                 if (item.Test_Main_Department == null)
                 {
                     test.Test_Main_Department = "";
