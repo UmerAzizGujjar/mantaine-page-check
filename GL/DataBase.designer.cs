@@ -1017,9 +1017,13 @@ namespace PMS
         partial void InsertPolicy_Detail(Policy_Detail instance);
         partial void UpdatePolicy_Detail(Policy_Detail instance);
         partial void DeletePolicy_Detail(Policy_Detail instance);
+        partial void InsertItem_Warehouse_Mapping(Item_Warehouse_Mapping instance);
+        partial void UpdateItem_Warehouse_Mapping(Item_Warehouse_Mapping instance);
+        partial void DeleteItem_Warehouse_Mapping(Item_Warehouse_Mapping instance);
         #endregion
+
         public DataBaseDataContext() :
-base(global::System.Configuration.ConfigurationManager.ConnectionStrings["ASPGLConnectionString"].ConnectionString, mappingSource)
+                base(global::System.Configuration.ConfigurationManager.ConnectionStrings["ASPGLConnectionString"].ConnectionString, mappingSource)
         {
             OnCreated();
         }
@@ -3708,6 +3712,14 @@ base(global::System.Configuration.ConfigurationManager.ConnectionStrings["ASPGLC
             get
             {
                 return this.GetTable<Policy_Detail>();
+            }
+        }
+
+        public System.Data.Linq.Table<Item_Warehouse_Mapping> Item_Warehouse_Mappings
+        {
+            get
+            {
+                return this.GetTable<Item_Warehouse_Mapping>();
             }
         }
 
@@ -181820,6 +181832,140 @@ base(global::System.Configuration.ConfigurationManager.ConnectionStrings["ASPGLC
                     this._Extra_Time = value;
                     this.SendPropertyChanged("Extra_Time");
                     this.OnExtra_TimeChanged();
+                }
+            }
+        }
+
+        public event PropertyChangingEventHandler PropertyChanging;
+
+        public event PropertyChangedEventHandler PropertyChanged;
+
+        protected virtual void SendPropertyChanging()
+        {
+            if ((this.PropertyChanging != null))
+            {
+                this.PropertyChanging(this, emptyChangingEventArgs);
+            }
+        }
+
+        protected virtual void SendPropertyChanged(String propertyName)
+        {
+            if ((this.PropertyChanged != null))
+            {
+                this.PropertyChanged(this, new PropertyChangedEventArgs(propertyName));
+            }
+        }
+    }
+
+    [global::System.Data.Linq.Mapping.TableAttribute(Name = "dbo.Item_Warehouse_Mapping")]
+    public partial class Item_Warehouse_Mapping : INotifyPropertyChanging, INotifyPropertyChanged
+    {
+
+        private static PropertyChangingEventArgs emptyChangingEventArgs = new PropertyChangingEventArgs(String.Empty);
+
+        private int _Id;
+
+        private int _Item_ID;
+
+        private string _Warehouse_Id;
+
+        private System.Nullable<System.DateTime> _Created_Date;
+
+        #region Extensibility Method Definitions
+        partial void OnLoaded();
+        partial void OnValidate(System.Data.Linq.ChangeAction action);
+        partial void OnCreated();
+        partial void OnIdChanging(int value);
+        partial void OnIdChanged();
+        partial void OnItem_IDChanging(int value);
+        partial void OnItem_IDChanged();
+        partial void OnWarehouse_IdChanging(string value);
+        partial void OnWarehouse_IdChanged();
+        partial void OnCreated_DateChanging(System.Nullable<System.DateTime> value);
+        partial void OnCreated_DateChanged();
+        #endregion
+
+        public Item_Warehouse_Mapping()
+        {
+            OnCreated();
+        }
+
+        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_Id", AutoSync = AutoSync.OnInsert, DbType = "Int NOT NULL IDENTITY", IsPrimaryKey = true, IsDbGenerated = true)]
+        public int Id
+        {
+            get
+            {
+                return this._Id;
+            }
+            set
+            {
+                if ((this._Id != value))
+                {
+                    this.OnIdChanging(value);
+                    this.SendPropertyChanging();
+                    this._Id = value;
+                    this.SendPropertyChanged("Id");
+                    this.OnIdChanged();
+                }
+            }
+        }
+
+        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_Item_ID", DbType = "Int NOT NULL")]
+        public int Item_ID
+        {
+            get
+            {
+                return this._Item_ID;
+            }
+            set
+            {
+                if ((this._Item_ID != value))
+                {
+                    this.OnItem_IDChanging(value);
+                    this.SendPropertyChanging();
+                    this._Item_ID = value;
+                    this.SendPropertyChanged("Item_ID");
+                    this.OnItem_IDChanged();
+                }
+            }
+        }
+
+        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_Warehouse_Id", DbType = "NVarChar(50) NOT NULL", CanBeNull = false)]
+        public string Warehouse_Id
+        {
+            get
+            {
+                return this._Warehouse_Id;
+            }
+            set
+            {
+                if ((this._Warehouse_Id != value))
+                {
+                    this.OnWarehouse_IdChanging(value);
+                    this.SendPropertyChanging();
+                    this._Warehouse_Id = value;
+                    this.SendPropertyChanged("Warehouse_Id");
+                    this.OnWarehouse_IdChanged();
+                }
+            }
+        }
+
+        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_Created_Date", DbType = "DateTime")]
+        public System.Nullable<System.DateTime> Created_Date
+        {
+            get
+            {
+                return this._Created_Date;
+            }
+            set
+            {
+                if ((this._Created_Date != value))
+                {
+                    this.OnCreated_DateChanging(value);
+                    this.SendPropertyChanging();
+                    this._Created_Date = value;
+                    this.SendPropertyChanged("Created_Date");
+                    this.OnCreated_DateChanged();
                 }
             }
         }

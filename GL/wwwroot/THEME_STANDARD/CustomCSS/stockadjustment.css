@@ -7,6 +7,10 @@
     font-weight: bold !important;
 }
 
+input {
+    width: 100% !important;
+}
+
 select {
     border-radius: 5px !important;
 }

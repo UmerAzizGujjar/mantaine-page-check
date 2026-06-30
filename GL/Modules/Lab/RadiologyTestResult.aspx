@@ -1473,7 +1473,11 @@
                     }
 
                     if (actionCell.find('a.pacs-link').length === 0) {
-                        actionCell.append(' | <a class="pacs-link" href="' + rowData.PACS_Study_Url + '" target="_blank" rel="noopener noreferrer">PACS</a>');
+                        actionCell.append(' | <a class="pacs-link" href="' + rowData.PACS_Study_Url + '" target="_blank" rel="noopener noreferrer">WebView</a>');
+                    }
+
+                    if (rowData.PACS_Study_UID && actionCell.find('a.radiant-link').length === 0) {
+                        actionCell.append(' | <a class="radiant-link" href="LaunchRadiAnt.aspx?uid=' + encodeURIComponent(rowData.PACS_Study_UID) + '" target="_blank" rel="noopener noreferrer">RadiANT</a>');
                     }
                 });
 
