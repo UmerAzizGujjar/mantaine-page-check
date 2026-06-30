@@ -1477,7 +1477,7 @@
                     }
 
                     if (rowData.PACS_Study_UID && actionCell.find('a.radiant-link').length === 0) {
-                        actionCell.append(' | <a class="radiant-link" href="javascript:void(0)" onclick="launchRadiAnt(\'' + rowData.PACS_Study_UID + '\')">RadiANT</a>');
+                        actionCell.append(' | <a class="radiant-link" href="javascript:void(0)" onclick="openRadiAnt(\'' + rowData.PACS_Study_UID + '\')">RadiANT</a>');
                     }
                 });
 
@@ -2217,21 +2217,10 @@ ${data.Addendum_Template ? `
           // THIS IS THE TESTING BLOCK 
 }
 
-        function launchRadiAnt(uid) {
-            if (!uid) return;
-            $.ajax({
-                type: "POST",
-                url: "RadiologyTestResult.aspx/LaunchRadiAnt",
-                data: JSON.stringify({ studyInstanceUID: uid }),
-                contentType: "application/json; charset=utf-8",
-                success: function (r) {
-                    var res = typeof r.d === "string" ? JSON.parse(r.d) : r.d;
-                    if (!res.Success) {
-                        Swal.fire({ icon: 'error', title: 'RadiAnt launch failed', text: res.Message });
-                    }
-                },
-                error: function (xhr) { console.error(xhr.responseText); }
-            });
+        function openRadiAnt(uid) {
+            if (uid) {
+                window.location.href = 'radiant://?n=paet&v=VISIONPLUS&n=pstv&v=0020000D&v=%22' + uid + '%22';
+            }
         }
 
         var test_wise_id;

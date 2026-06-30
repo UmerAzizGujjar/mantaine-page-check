@@ -2505,26 +2505,5 @@ AND (
                 return "[]";
             }
         }
-
-        [WebMethod]
-        public static object LaunchRadiAnt(string studyInstanceUID)
-        {
-            if (string.IsNullOrWhiteSpace(studyInstanceUID))
-                return new { Success = false, Message = "Empty StudyInstanceUID." };
-
-            if (!System.Text.RegularExpressions.Regex.IsMatch(studyInstanceUID, @"^[0-9.]+$"))
-                return new { Success = false, Message = "Invalid StudyInstanceUID format." };
-
-            try
-            {
-                var url = "radiant://?n=paet&v=VISIONPLUS&n=pstv&v=0020000D&v=\"" + studyInstanceUID + "\"";
-                System.Diagnostics.Process.Start(url);
-                return new { Success = true };
-            }
-            catch (Exception ex)
-            {
-                return new { Success = false, Message = ex.Message };
-            }
-        }
     }
 }
