@@ -1640,7 +1640,7 @@
         </tr>
     </table>
 
-    <div id="divMultipleWarehouse" style="display: flex; gap: 30px; align-items: flex-start; margin-top: 15px; flex-wrap: wrap;">
+    <div  style="display: flex; gap: 30px; align-items: flex-start; margin-top: 15px; flex-wrap: wrap;">
         
         <div style="flex: 0 0 auto;">
             <table class="table table-bordered" id="BatchTable" style="width: 550px;">
@@ -1656,7 +1656,7 @@
             </table>
         </div>
 
-        <div style="flex: 0 0 auto; border: 1px solid #ddd; padding: 15px; border-radius: 6px; background-color: #f9f9f9;">
+        <div id="divMultipleWarehouse" style="flex: 0 0 auto; border: 1px solid #ddd; padding: 15px; border-radius: 6px; background-color: #f9f9f9;">
             <h4 style="font-size: 16px; font-weight: bold; margin-top: 0;">Assign Multiple Warehouses</h4>
             <div style="display: flex; gap: 10px; align-items: center; margin-bottom: 10px;">
                 <select id="ddlAssignWarehouse" class="form-control" style="width: 200px;">

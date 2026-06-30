@@ -348,6 +348,15 @@ namespace PMS
         protected global::System.Web.UI.WebControls.TextBox txtRemarks;
 
         /// <summary>
+        /// hdnGridData control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.HiddenField hdnGridData;
+
+        /// <summary>
         /// hdfItem_Code control.
         /// </summary>
         /// <remarks>
