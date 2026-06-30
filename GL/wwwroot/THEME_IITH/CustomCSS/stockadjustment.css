@@ -16,6 +16,10 @@ input[type="text"] {
     border-radius: 5px !important;
 }
 
+input {
+    width: 100% !important;
+}
+
 .nav-list > li .submenu > li.hover > a {
     font-size: 13px !important;
     font-family: Arial, sans-serif !important;

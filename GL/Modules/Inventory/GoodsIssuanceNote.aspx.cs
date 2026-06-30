@@ -44,7 +44,11 @@ namespace PMS.Inventory
 
                              && x.Active == true
                              && x.Services != true
-                             && x.InventoryOrg == warehouseId
+                            // && x.InventoryOrg == warehouseId
+                            && (x.InventoryOrg == warehouseId
+                        || db.Item_Warehouse_Mappings.Any(m =>
+                        m.Item_ID == x.Item_ID
+                        && m.Warehouse_Id == warehouseId))                
                          )
                     .OrderBy(x => x.Item_Code)
                     .Take(200)

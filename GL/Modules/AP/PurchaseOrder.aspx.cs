@@ -1004,8 +1004,12 @@ namespace PMS.AP
                              
                              && x.Active == true
                              && x.Services != true
-                             && (string.IsNullOrEmpty(warehouseId) || x.InventoryOrg == warehouseId)
-                         )
+                             && (string.IsNullOrEmpty(warehouseId)
+                         || x.InventoryOrg == warehouseId
+                         || db.Item_Warehouse_Mappings.Any(m =>
+                              m.Item_ID == x.Item_ID
+                              && m.Warehouse_Id == warehouseId)
+                         ))
                     .OrderBy(x => x.Item_Code) 
                     .Take(200)
                     .Select(x => new
