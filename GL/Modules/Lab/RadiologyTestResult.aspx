@@ -1477,8 +1477,7 @@
                     }
 
                     if (rowData.PACS_Study_UID && actionCell.find('a.radiant-link').length === 0) {
-                        var radiantUrl = 'radiant://?n=paet&v=VISIONPLUS&n=pstv&v=0020000D&v=' + rowData.PACS_Study_UID;
-                        actionCell.append(' | <a class="radiant-link" href="' + radiantUrl + '">RadiANT</a>');
+                        actionCell.append(' | <a class="radiant-link" href="javascript:void(0)" onclick="openRadiAnt(\'' + rowData.PACS_Study_UID + '\')">RadiANT</a>');
                     }
                 });
 
@@ -2217,6 +2216,12 @@ ${data.Addendum_Template ? `
 
           // THIS IS THE TESTING BLOCK 
 }
+
+        function openRadiAnt(uid) {
+            if (uid) {
+                window.location.href = 'radiant://?n=paet&v=VISIONPLUS&n=pstv&v=0020000D&v=%22' + uid + '%22';
+            }
+        }
 
         var test_wise_id;
         function GetLabDetail() {
