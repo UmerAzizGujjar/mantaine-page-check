@@ -706,10 +706,10 @@
 
     <div class="container-fluid">
         <div class="row">
-            <div class="col-lg-6 col-md-6 col-sm-6" style="margin-top:2%" >
-                <div class="table-responsive" style="height: 250px;">
+            <div class="col-lg-6 col-md-6 col-sm-6" style="margin-top: 2%">
+                <div class="table-responsive" style="height: 250px; overflow-y: auto; overflow-x: auto;">
                     <table class="table table-borderless" id="tblDetails">
-                        <thead>
+                        <thead style="position: sticky; top: 0; background: #fff; z-index: 1;">
                             <tr>
                                 <th>Description</th>
                                 <th>Doc Share</th>
