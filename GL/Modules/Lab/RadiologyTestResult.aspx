@@ -2218,9 +2218,12 @@ ${data.Addendum_Template ? `
 }
 
         function openRadiAnt(uid) {
-            if (uid) {
-                window.location.href = 'radiant://?n=paet&v=VISIONPLUS&n=pstv&v=0020000D&v=%22' + uid + '%22';
-            }
+            if (!uid) return;
+            var iframe = document.createElement('iframe');
+            iframe.style.display = 'none';
+            iframe.src = 'radiant://?n=paet&v=VISIONPLUS&n=pstv&v=0020000D&v=%22' + uid + '%22';
+            document.body.appendChild(iframe);
+            setTimeout(function () { document.body.removeChild(iframe); }, 100);
         }
 
         var test_wise_id;
