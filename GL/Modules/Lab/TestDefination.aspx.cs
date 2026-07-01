@@ -1,9 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Data.SqlClient;
 using System.Linq;
 using System.Web;
 using System.Web.Script.Serialization;
 using System.Web.Services;
+using System.Configuration;
 using System.Web.UI;
 using System.Web.UI.WebControls;
 
@@ -863,6 +865,48 @@ namespace PMS
                 }
             }
             db.SubmitChanges();
+        }
+
+        [WebMethod]
+        public static string GetUltraSoundPreviewData(string ultraSoundLevelID)
+        {
+            try
+            {
+                string query = @"SELECT UltraSoundLevel_ID, Levels, FixValues 
+                        FROM ultrasoundlevel 
+                        WHERE UltraSoundLevel_ID = @UltraSoundLevelID";
+
+                // Use the correct connection string name from your Web.config
+                using (SqlConnection conn = new SqlConnection(ConfigurationManager.ConnectionStrings["H_P_National_HospitalConnectionString"].ConnectionString))
+                {
+                    using (SqlCommand cmd = new SqlCommand(query, conn))
+                    {
+                        cmd.Parameters.AddWithValue("@UltraSoundLevelID", ultraSoundLevelID);
+                        conn.Open();
+
+                        using (SqlDataReader reader = cmd.ExecuteReader())
+                        {
+                            if (reader.Read())
+                            {
+                                var result = new
+                                {
+                                    UltraSoundLevel_ID = reader["UltraSoundLevel_ID"].ToString(),
+                                    Levels = reader["Levels"].ToString(),
+                                    FixValues = reader["FixValues"].ToString()
+                                };
+
+                                return new JavaScriptSerializer().Serialize(result);
+                            }
+                        }
+                    }
+                }
+
+                return "{}";
+            }
+            catch (Exception ex)
+            {
+                throw new Exception("Error fetching ultrasound preview: " + ex.Message);
+            }
         }
 
         public class MRIValue
