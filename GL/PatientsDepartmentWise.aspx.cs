@@ -3157,7 +3157,6 @@ namespace PMS
                     DateDiv.Visible = true;
                     Time_Row.Visible = true;
                     AllowPatientRecord = false;
-                    MRDiv.Visible = true;
 
                 }
                 else if (this.PageTitle == "Gir_To_Po_Heirarchy")
