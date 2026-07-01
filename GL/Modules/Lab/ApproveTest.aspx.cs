@@ -180,7 +180,17 @@ namespace PMS.Modules.Lab
 
                     var FilteredCount = query.Count();
 
-                    // Apply sorting
+                    if (length == -1)
+                    {
+                        start = 0;
+                        length = FilteredCount; 
+                    }
+                    else if (length > 100000)
+                    {
+                        start = 0;
+                        length = FilteredCount;
+                    }
+
                     switch (sortColumn)
                     {
                         case "Bill_No":
