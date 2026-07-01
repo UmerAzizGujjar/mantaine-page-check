@@ -110,6 +110,410 @@
 
 
         }
+        function previewUltraSound(element) {
+            debugger;
+            var row = $(element).closest('tr');
+            var ultraSoundLevelID = row.find('[name="ultraSoundlevel_ID"]').val();
+            var levelValue = row.find('select[name="levelvalue"]').val();
+
+            // Get CKEditor content for current row
+            var rowIndex = row.index();
+            var editorContent = '';
+
+            if (CKEDITOR.instances['txtfixedValueType' + (rowIndex + 1)]) {
+                editorContent = CKEDITOR.instances['txtfixedValueType' + (rowIndex + 1)].getData();
+            }
+
+            // Call PageMethod to get ultrasound data from database
+            PageMethods.GetUltraSoundPreviewData(ultraSoundLevelID, function (response) {
+                var ultrasoundData = JSON.parse(response);
+                displayUltraSoundReport(ultrasoundData, levelValue);
+            });
+        }
+        function displayUltraSoundReport(data, levelValue) {
+            // Static patient data for preview
+            var patientData = {
+                Full_Name: "Patient Name",
+                Age_years: "Age",
+                Gender: "M/F",
+                Mobile1: "",
+                Patient_Type: "",
+                NIC: "",
+                ReferredByDoctor: "Dr. ",
+                Patient_No: "NH-2",
+                REg_Date: "16/06/2026",
+                Department: "Ultrasound",
+                Billing_Date: "6/30/2026 5:11:56 PM",
+                Approved_Time: "6/30/2026 6:07:09 PM",
+                Lab_Test_Detail_Id: "2849110",
+                Test_Name: "ULTRASOUND TRANSVAGINAL (TVS)",
+                Test_Performed_By_Doctor_name: "Dr. ",
+                Test_Performed_By_Doctor_qualification: "M.B.B.S, DMRD, FRCR (UK), Consultant Radiologist",
+                Test_Approved_By_Doctor_name: "Dr. ",
+                Test_Approved_By_Doctor_qualification: "M.B.B.S, DMRD, FRCR (UK), Consultant Radiologist",
+                Company_Name: "NATIONAL HOSPITAL & MEDICAL CENTRE",
+                Company_Address: "132/3 L- Block Phase-1 Near Sports Stadium DHA, Lahore Cantt",
+                Company_Logo_Path: "../../wwwroot/THEME_TIBBIT/images/logo.png",
+                Report_Footer1: "",
+                Report_Footer_tow1: "",
+                Report_Footer: "",
+                Report_Footer_tow: ""
+            };
+
+            // Use database content if available, otherwise use editor content
+            var reportContent = data.FixValues || patientData.Fixed_Value || '';
+            var testName = getTestNameByLevel(data.Levels || levelValue);
+
+            var html = `<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Ultrasound Report Preview - ${patientData.Full_Name}</title>
+    <style>
+        @page { size: A4; margin: 15mm 20mm; }
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+
+        body {
+            font-family: Arial, sans-serif;
+            font-size: 11px;
+            color: #000;
+            background: #fff;
+            line-height: 1.4;
+        }
+
+        .page-wrapper {
+            width: 210mm;
+            min-height: 297mm;
+            margin: 0 auto;
+            padding: 10mm 15mm;
+            background: #fff;
+        }
+
+        /* ── HEADER ── */
+        .report-header {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            padding-bottom: 10px;
+            border-bottom: 2.5px solid #000;
+            margin-bottom: 12px;
+        }
+        .logo-wrap {
+            flex-shrink: 0;
+            width: 100px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        .logo-wrap img {
+            max-height: 80px;
+            max-width: 150px;
+            object-fit: contain;
+        }
+        .hospital-info {
+            flex: 1;
+            text-align: center;
+        }
+        .hospital-info .name {
+            font-size: 17px;
+            font-weight: bold;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+        .hospital-info .address {
+            font-size: 9px;
+            color: #333;
+            margin-top: 3px;
+        }
+
+        /* ── PATIENT INFO ── */
+        .patient-section {
+            display: flex;
+            gap: 20px;
+            margin-bottom: 12px;
+            padding-bottom: 8px;
+            border-bottom: 1px solid #ccc;
+        }
+        .patient-col { flex: 1; }
+        .patient-col .patient-title {
+            font-size: 13px;
+            font-weight: bold;
+            border-bottom: 1px solid #000;
+            margin-bottom: 6px;
+            padding-bottom: 3px;
+        }
+        .info-row {
+            display: flex;
+            margin-bottom: 4px;
+            font-size: 10.5px;
+            gap: 5px;
+        }
+        .info-label {
+            font-weight: bold;
+            min-width: 115px;
+            flex-shrink: 0;
+        }
+        .info-val {
+            flex: 1;
+            border-bottom: 1px dotted #bbb;
+            padding-bottom: 1px;
+            min-height: 14px;
+        }
+
+        /* ── TEST NAME BANNER ── */
+        .test-banner {
+            text-align: center;
+            border-top: 2px solid #000;
+            border-bottom: 2px solid #000;
+            padding: 7px 0;
+            margin-bottom: 15px;
+        }
+        .test-banner .test-title {
+            font-size: 14px;
+            font-weight: bold;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+        
+        /* ── REPORT CONTENT ── */
+        .report-content {
+            min-height: 350px;
+            font-size: 11px;
+            line-height: 1.7;
+            margin-bottom: 20px;
+            text-align: justify;
+        }
+        .report-content p { margin-bottom: 6px; }
+        .report-content strong { font-weight: bold; }
+        .report-content u { text-decoration: underline; }
+
+        /* ── SIGNATURES ── */
+        .signatures {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 30px;
+            padding-top: 10px;
+            border-top: 1px solid #000;
+            page-break-inside: avoid;
+        }
+        .sig-block { width: 45%; }
+        .sig-block.right { text-align: right; }
+        .sig-name { font-weight: bold; font-size: 11px; }
+        .sig-qual { font-size: 9.5px; margin-top: 2px; color: #333; }
+        .sig-note { font-style: italic; font-size: 8.5px; margin-top: 5px; color: #555; }
+        .sig-line {
+            border-top: 1px solid #000;
+            margin-top: 35px;
+            padding-top: 5px;
+        }
+
+        /* ── PAGE FOOTER ── */
+        .page-footer {
+            display: flex;
+            justify-content: space-between;
+            gap: 10px;
+            margin-top: 25px;
+            padding-top: 8px;
+            border-top: 1.5px double #000;
+            font-size: 9px;
+            color: #444;
+            page-break-inside: avoid;
+        }
+        .footer-col { flex: 1; }
+        .footer-col.right { text-align: right; }
+
+        /* ── PRINT BUTTON ── */
+        .print-btn {
+            position: fixed;
+            bottom: 25px;
+            right: 25px;
+            background: #1a1a2e;
+            color: #fff;
+            border: none;
+            padding: 12px 28px;
+            border-radius: 6px;
+            font-size: 14px;
+            cursor: pointer;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.3);
+            z-index: 9999;
+        }
+        .print-btn:hover { background: #16213e; }
+
+        @media print {
+            @page {
+                size: A4;
+                margin: 15mm 20mm;
+            }
+            
+            body {
+                margin: 15mm 20mm !important;
+                padding: 0 !important;
+            }
+            
+            .print-btn { 
+                display: none !important; 
+            }
+            
+            html, body {
+                height: auto !important;
+                overflow: visible !important;
+            }
+            
+            * {
+                -webkit-print-color-adjust: exact !important;
+                print-color-adjust: exact !important;
+                color-adjust: exact !important;
+            }
+        }
+    </style>
+    <script>
+    function cleanPrint() {
+        var btn = document.querySelector('.print-btn');
+        if (btn) btn.style.display = 'none';
+        
+        var style = document.createElement('style');
+        style.innerHTML = '@page { margin: 15mm 20mm; }';
+        document.head.appendChild(style);
+        
+        window.print();
+        
+        setTimeout(function() {
+            if (btn) btn.style.display = 'block';
+        }, 1000);
+    }
+    <\/script>
+</head>
+<body>
+<div class="page-wrapper">
+
+    <!-- HEADER -->
+    <div class="report-header">
+        <div class="logo-wrap">
+            <img src="${patientData.Company_Logo_Path}" alt="Logo" onerror="this.style.display='none'" />
+        </div>
+        <div class="hospital-info">
+            <div class="name">${patientData.Company_Name}</div>
+            <div class="address">${patientData.Company_Address}</div>
+        </div>
+    </div>
+
+    <!-- PATIENT INFO - TWO COLUMNS -->
+    <div class="patient-section">
+        <!-- LEFT COLUMN -->
+        <div class="patient-col">
+            <div class="patient-title">${patientData.Full_Name} &nbsp; ${patientData.Age_years}, &nbsp; ${patientData.Gender}</div>
+            <div class="info-row">
+                <span class="info-label">Contact :</span>
+                <span class="info-val">${patientData.Mobile1}</span>
+            </div>
+            <div class="info-row">
+                <span class="info-label">Patient Type :</span>
+                <span class="info-val">${patientData.Patient_Type}</span>
+            </div>
+            <div class="info-row">
+                <span class="info-label">CNIC :</span>
+                <span class="info-val">${patientData.NIC}</span>
+            </div>
+            <div class="info-row">
+                <span class="info-label">Referring Doctor :</span>
+                <span class="info-val">${patientData.ReferredByDoctor}</span>
+            </div>
+            <div class="info-row">
+                <span class="info-label">Approved By :</span>
+                <span class="info-val">${patientData.Test_Approved_By_Doctor_name}</span>
+            </div>
+        </div>
+
+        <!-- RIGHT COLUMN -->
+        <div class="patient-col">
+            <div class="patient-title">MRN# &nbsp; ${patientData.Patient_No}</div>
+            <div class="info-row">
+                <span class="info-label">Reg Date :</span>
+                <span class="info-val">${patientData.REg_Date}</span>
+            </div>
+            <div class="info-row">
+                <span class="info-label">Department :</span>
+                <span class="info-val">${patientData.Department}</span>
+            </div>
+            <div class="info-row">
+                <span class="info-label">Created At :</span>
+                <span class="info-val">${patientData.Billing_Date}</span>
+            </div>
+            <div class="info-row">
+                <span class="info-label">Reported At :</span>
+                <span class="info-val">${patientData.Approved_Time}</span>
+            </div>
+            <div class="info-row">
+                <span class="info-label">Accession # :</span>
+                <span class="info-val">${patientData.Lab_Test_Detail_Id}</span>
+            </div>
+        </div>
+    </div>
+
+    <!-- TEST NAME BANNER -->
+    <div class="test-banner">
+        <div class="test-title">${testName}</div>
+    </div>
+
+    <!-- REPORT CONTENT (Ultrasound FixValues) -->
+    <div class="report-content">
+        ${reportContent}
+    </div>
+
+    <!-- SIGNATURES -->
+    <div class="signatures">
+        <div class="sig-block">
+            <div class="sig-name">${patientData.Test_Performed_By_Doctor_name}</div>
+            <div class="sig-qual">${patientData.Test_Performed_By_Doctor_qualification}</div>
+            <div class="sig-note">No Signature(s) required, Electronically Verified</div>
+        </div>
+        <div class="sig-block right">
+            <div class="sig-line">
+                <div class="sig-name">${patientData.Test_Approved_By_Doctor_name}</div>
+                <div class="sig-qual">${patientData.Test_Approved_By_Doctor_qualification}</div>
+            </div>
+        </div>
+    </div>
+
+    <!-- PAGE FOOTER -->
+    <div class="page-footer">
+        <div class="footer-col">${patientData.Report_Footer}</div>
+        <div class="footer-col right">${patientData.Report_Footer_tow}</div>
+    </div>
+
+    <button class="print-btn" onclick="cleanPrint()">🖨 Print Report</button>
+
+</div>
+</body>
+</html>`;
+
+            // Open in new window
+            var previewWindow = window.open('', '_blank', 'width=900,height=700');
+            previewWindow.document.open();
+            previewWindow.document.write(html);
+            previewWindow.document.close();
+        }
+
+        function getTestNameByLevel(level) {
+            var testNames = {
+                '001': 'OBS - EARLY SCAN',
+                '002': 'OBS - FETAL WELL BEING',
+                '003': 'OBS - ANOMALY SCAN',
+                '004': 'OBS - FULL TERM SCAN',
+                '005': 'OBS - TWINS OR TRIPLETS',
+                '006': 'ABDOMINO PELVIC USG (MALE)',
+                '007': 'ABDOMINO PELVIC USG (FEMALE)',
+                '008': 'PELVIC ULTRASOUND',
+                '009': 'PELVIC ULTRASOUND (PCO)',
+                '010': 'BILATERAL BREAST ULTRASOUND',
+                '011': 'THYROID ULTRASOUND (NECK)',
+                '012': 'CRANIAL ULTRASOUND',
+                '013': 'ARTERIAL & VENOUS ULTRASOUND'
+            };
+            return testNames[level] || 'ULTRASOUND EXAMINATION';
+        }
+
         function ShowReport() {
             debugger;
             var test_id = $('#test_id').val();

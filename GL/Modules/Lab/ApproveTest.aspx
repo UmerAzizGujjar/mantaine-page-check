@@ -96,6 +96,8 @@
                 "serverSide": true,
                 "dom": 'lBfrtip',
                 "lengthChange": true,
+                "pageLength": 50,
+                "lengthMenu": [[10, 25, 50, 100, -1], [10, 25, 50, 100, "All"]],
                 "buttons": [
                     {
                         text: 'Refresh',
@@ -115,12 +117,18 @@
                     var doctorId = $('#ddlDoctor').val();
                     var searchText = data.search.value;
 
+                    var lengthParam = data.length;
+                    if (lengthParam === -1) {
+                        lengthParam = 1000000;
+                    }
+
                     $.ajax({
                         type: "POST",
                         url: "ApproveTest.aspx/ViewList",
                         data: JSON.stringify({
                             draw: data.draw,
                             start: data.start,
+                            length: lengthParam,
                             length: data.length,
                             sortColumn: data.columns[data.order[0].column].name,
                             sortColumnDirection: data.order[0].dir,
