@@ -18,6 +18,9 @@
         box-sizing: border-box !important;
         font-size: 13px;
     }
+    .table-active {
+    background-color:#fcce58 !important;
+}
     
     #tblDetails td {
         padding: 6px 8px !important;
@@ -2891,18 +2894,290 @@
         }
         function openQueue() {
             debugger;
-            fillPendingPatientsLists();
-          
+            fillPendingPatientsLists();        
             $('#queueModal').modal('show');
-           
+        }
+        function OpenItemList() {
+            debugger;
+            var warehouse = $('#ddlWarehouse').find('option:selected').val();
+            if (warehouse == "0") {
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Error!',
+                    text: 'Please Select Warehouse First.',
+                    showConfirmButton: false,
+                    timer: 2000,
+                    customClass: {
+                        popup: 'swal-big-popup',
+                        title: 'swal-big-title',
+                        htmlContainer: 'swal-big-text'
+                    }
+                });
+                //$('#ddlInv_No').val('');
+                return;
+            }
+            else {
+                fillItemListsWareHouseWise();
+                $('#ItemModal').modal('show');
+            }
+        
         }
 
         function RefreshQueue() {
             $("#txtSearchmodal").val('')
+            var warehouse = $('#ddlWarehouse').find('option:selected').val();
             fillPendingPatientsLists()
         }
-     
-       
+
+        function RefreshList() {
+            $("#txtSearchitem").val('')
+            fillItemListsWareHouseWise()
+        }
+        let currentRowIndex = -1;
+
+        function fillItemListsWareHouseWise(warehouse) {
+            debugger;
+
+            var warehouse = $('#ddlWarehouse').find('option:selected').val();
+            var SearchString = $("#txtSearchitem").val();
+
+            PageMethods.GetItemList_WareHouseWise(warehouse, SearchString, function (data) {
+
+                var parsedData = JSON.parse(data);
+                var rows = '';
+
+                $.each(parsedData, function (i, value) {
+
+                    rows += '<tr tabindex="0" class="item-row" ' +
+                        'data-itemid="' + value.Item_ID + '" ' +
+                        'data-warehouse="' + value.Ware_House + '">' +
+
+                        // '<td class="text-center">' +
+                        // '<input type="checkbox" class="chkItem" ' +
+                        // 'data-itemid="' + value.Item_ID + '" ' +
+                        // 'data-warehouse="' + value.Ware_House + '">' +
+                        // '</td>' +
+
+                        '<td>' + value.Item_Code + '</td>' +
+                        '<td>' + value.Description + '</td>' +
+                        '<td class="text-end">' + value.Qty + '</td>' +
+                        '<td>' + value.WareHouse_Name + '</td>' +
+                        '<td class="text-end">' + parseFloat(value.Purchase_Rate).toFixed(2) + '</td>' +
+                        '<td>' + value.UOM_Qty + '</td>' +
+                        '<td>' + value.Manufacturer_Name + '</td>' +
+                        '</tr>';
+                });
+
+                $("#tblItemList tbody").html(rows);
+
+                attachRowEvents();
+
+                $(".se-pre-con").fadeOut("slow");
+
+            }, function (err) {
+                console.log(err);
+                $(".se-pre-con").fadeOut("slow");
+            });
+        }
+
+        function attachRowEvents() {
+
+            let $rows = $("#tblItemList tbody tr");
+            currentRowIndex = -1;
+
+            // CLICK selection
+            $rows.off("click").on("click", function () {
+
+                $rows.removeClass("table-active");
+
+                $(this).addClass("table-active");
+
+                currentRowIndex = $(this).index();
+            });
+
+            // KEYBOARD navigation
+            $(document).off("keydown.itemNav").on("keydown.itemNav", function (e) {
+
+                $rows = $("#tblItemList tbody tr");
+
+                if ($rows.length === 0) return;
+
+                // DOWN
+                if (e.key === "ArrowDown") {
+                    e.preventDefault();
+
+                    if (currentRowIndex < $rows.length - 1) {
+                        currentRowIndex++;
+                    }
+
+                    highlightRow($rows);
+                }
+
+                // UP
+                if (e.key === "ArrowUp") {
+                    e.preventDefault();
+
+                    if (currentRowIndex > 0) {
+                        currentRowIndex--;
+                    }
+
+                    highlightRow($rows);
+                }
+
+                // ENTER
+                if (e.key === "Enter") {
+                    e.preventDefault();
+
+                    let $selected = $rows.eq(currentRowIndex);
+
+                    if ($selected.length > 0) {
+
+                        let itemId = $selected.data("itemid");
+                        let warehouse = $selected.data("warehouse");
+
+                        ItemSelectionChanged(itemId, warehouse);
+                    }
+                }
+            });
+        }
+        function highlightRow($rows) {
+
+            $rows.removeClass("table-active");
+
+            let $active = $rows.eq(currentRowIndex);
+
+            $active.addClass("table-active");
+
+            // optional: auto scroll into view
+            $active[0].scrollIntoView({
+                behavior: "smooth",
+                block: "nearest"
+            });
+        }
+
+        //function fillItemListsWareHouseWise() {
+        //    debugger;
+        //    var warehouse = $('#ddlWarehouse').find('option:selected').val();
+        //    var SearchString = $("#txtSearchitem").val();
+
+        //    PageMethods.GetItemList_WareHouseWise(warehouse,SearchString, function (data) {
+
+        //        var parsedData = JSON.parse(data);
+        //        var rows = '';
+
+        //        $.each(parsedData, function (i, value) {
+
+        //            rows += '<tr>' +
+        //                '<td class="text-center">' +
+        //                '<input type="checkbox" class="chkItem" ' +
+        //                'data-itemid="' + value.Item_ID + '" ' +
+        //                'data-warehouse="' + value.Ware_House + '" ' +
+        //                'onchange="ItemSelectionChanged(\'' + value.Item_ID + '\',\'' + value.Ware_House + '\')">' +
+        //                '</td>' +
+        //                '<td>' + value.Item_Code + '</td>' +
+        //                '<td>' + value.Description + '</td>' +
+        //                '<td class="text-end">' + value.Qty + '</td>' +
+        //                '<td>' + value.WareHouse_Name + '</td>' +
+        //                '<td class="text-end">' + parseFloat(value.Purchase_Rate).toFixed(2) + '</td>' +
+        //                '<td>' + value.UOM_Qty + '</td>' +
+        //                '<td>' + value.Manufacturer_Name + '</td>' +
+        //                '</tr>';
+
+        //        });
+
+        //        $("#tblItemList tbody").html(rows);
+        //        $(".se-pre-con").fadeOut("slow");
+
+        //    }, function (err) {
+        //        console.log(err);
+        //        $(".se-pre-con").fadeOut("slow");
+        //    });
+        //}
+        debugger;
+        function ItemSelectionChanged(itemId, warehouse) {
+            debugger;
+            let rows;
+            var rowIndex = parseInt($('#tblDetails tbody tr').length);
+            var expdate = '';
+         
+            $.ajax({
+                type: "post",
+                url: "IssueMedicine.aspx/MedicineDetailforListItems",
+                data: JSON.stringify({
+                    "itemId": itemId,
+                    "warehouse": warehouse
+                }),
+                dataType: 'JSON',
+                contentType: "application/json; charset=utf-8",
+                async: false,
+                success: function (msg) {
+                    var length = $("#tblDetails tr:gt(0)").length;
+                    $('#Table_1 tr:gt(0)').remove();
+                    var data = JSON.parse(msg.d);
+                    debugger;
+                    var Uomqty = data[0].UOM_Qty;
+                    if (Uomqty == null) {
+                        Uomqty = 0;
+                    } else {
+                        Uomqty = data[0].UOM_Qty;
+                    }
+                    var date = data[0].ExpiryDate
+                    date = moment(date).format('D-MMM-YYYY');
+                    var discountBlock = data[0].Discount_Block;
+                    var isDiscountDisabled = (discountBlock == 1 || discountBlock === true);
+                    var disDisabledAttr = isDiscountDisabled ? 'disabled' : '';
+                    var requestedQty = (data[0].RequestedQty && data[0].RequestedQty > 0) ? data[0].RequestedQty : 0;
+
+                    debugger;
+                    rows = '<tr><td style="display:none;"><input type="hidden" value="' + data[0].Item_ID + '" name="ItemID" id="ItemID" ></td>' +
+
+                        '<td> ' + parseInt(parseInt(rowIndex) + 1) + '</td>' +
+
+                        '<td style="display:none;"><input type="hidden" value="' + data[0].Item_Code + '" name="ItemIDcode" id="ItemIDcode" ></td>' +
+
+                        '<td><input type="hidden" value="' + data[0].Description + '" name="Itemdesc" id="Itemdesc" >' + data[0].Description + '</td>' +
+
+                        '<td style="display:none"><input type="hidden" value="' + data[0].Unit + '" name="txtUom" id="txtUom" >' + data[0].Unit + '</td>' +
+
+                        '<td><input type="hidden" value="' + Uomqty + '" name="UomQty" id="UomQty"  >' + Uomqty + '</td>' +
+
+                        '<td><input type="text" name="txtQty" value="1" min="1" style="margin-left: -7px;position: absolute;height:22px;text-align: right;" class="height_height" onkeyup="CulculateAmonutWithQty(this)"  onblur="CulculateAmonutWithQty(this)" autocomplete="off" onclick="this.select();" /></td>' +
+
+
+                        '<td><input type="number" name="txtStock" value="' + data[0].Total_Stock + '" style="width: 65px !important;margin-left: -2px;position: absolute;height:22px;text-align: right;" class="height_height" readonly/></td>' +
+
+                        '<td style="text-align: right;" ><input type="hidden" value="' + data[0].Sale_Rate + '" name="txtSalerate" id="txtSalerate" >' + data[0].Sale_Rate + '</td>' +
+
+                        '<td><input type="number" name="DisPer" min="0" value="0"' + disDisabledAttr + ' class="height_height orderchange" style="text-align: right;margin-left: -4px;position: absolute;height:22px;" onkeyup="CalculateSummarieDiscountPerWise(' + rowIndex + '),sumdiscount()" autocomplete="off" onclick="this.select();" /> </td>' +
+                        '<td><input type="text" readonly name="DisAmount"' + disDisabledAttr + ' class="height_height orderchangeDiscount" value="" style="width: 60px !important;text-align: right;margin-left: -4px;position: absolute;height:22px;"  /></td>' +
+
+                        '<td style="text-align:Right;"></td>' +
+                        '<td><input type="text" disabled name="BatchNo" class="" value="' + data[0].BatchNum + '" style="text-align: center;margin-left: -4px;position: absolute;height:22px;" /></td>' +
+                        '<td><input type="text" disabled name="exp_date" class="" value="' + date + '" style="width: 87px !important;text-align: right;margin-left: -4px;position: absolute;height:22px;" /></td>' +
+                        '<td><input type="text" disabled name="LineDiscount" class="" value="0" style="width: 76px !important;text-align: right;margin-left: -4px;position: absolute;height:22px;" /></td>' +
+                        '<td style="display:none;"><input type="text"  id="txtCGSRate' + (rowIndex + 1) + '" name="txtCGSRate" class="" value="' + data[0].CGSRate + ' "/> </td>' +
+                        '<td style="display:none;"><input type="text"  id="txtCGSAmount' + (rowIndex + 1) + '" name="txtCGSAmount" class="" value="' + data[0].CGSRate + ' " /> </td>' +
+                        ' <td style="display:none;"><input type="hidden" value="' + data[0].Item_ID + '" name="hdnItemID" id="hdnItemID" ></td>' +
+                        '<td><input type="text" name="Remarks" class="" value="" style="width: 100% !important; height: 22px; text-align: left;" /></td>' +
+                        '<td style="text-align: center;"><input type="text" name="ReqQty" value="' + requestedQty + '" style="width: 60px !important;text-align: center;background-color:#f5f5f5;" readonly /></td>' +
+                        '<td style="text-align: center;"><a href="javascript:void(0)" onclick="ExcludeFromPayment(this)"><i class="fa fa-trash-o" style="font-size:17px"></i></a> </td>' +
+                        '</tr>';
+                    $('#tblDetails #tblbody').append(rows);
+                    setTimeout(function () {
+                        $('#medName').select2('close');
+                        $('input[name="txtQty"]').focus().select();
+
+                        if (isDiscountDisabled) {
+                            $('input[name="DisPer"]:last').val(0);
+                            $('input[name="DisAmount"]:last').val(0);
+                        }
+                    }, 5);
+                    CalculateSummarieDiscountPerWise(rowIndex);
+                }
+            });
+        }
+
+
         function fillPendingPatientsLists() {
             debugger;
             var SearchString = $("#txtSearchmodal").val();
@@ -4030,6 +4305,11 @@
                     <label class="InvoiceNum">Template:</label>
                     <select  id="ddlTemplate" style="width: 180px !important;" onchange="GetTemplateItems()" class="form-control select2"></select>
                 </div>
+                                  <div class="col-lg-2 col-md-4 col-sm-6">
+                    <label class="InvoiceNum">
+                        </label>
+                    <input type="button" class="btn-primry" value="Item List" id="item_List" onclick="OpenItemList();" style="width:144% !important" />
+                </div>
                   </div>
 
             <!-- Checkboxes and Radio Buttons -->
@@ -4283,6 +4563,62 @@
 
 
     <%--Patient Que Ends--%>
+
+    <%--Item List Start--%>
+    <div id="ItemModal" class="modal fade scrollable-modal" data-backdrop="static" tabindex="-1" role="dialog">
+        <div class="modal-dialog modal-lg modal-dialog-centered modal-dialog-scrollable" role="document">
+            <div class="modal-content">
+                <div class="modal-body">
+                                            <fieldset class="form-group">
+                        <div class="form-row">
+                            <div class="col-md-6">
+                                <label for="txtSearchmodal">Search Your Patients:</label>
+                                <input type="text" id="txtSearchitem" class="form-control" onkeyup="fillItemListsWareHouseWise();" autocomplete="off" placeholder="Enter search text" />
+                            </div>
+                                                       
+                            <div class="col-lg-2 text-end" style=" margin-top:28px !important;">
+                                <a onclick="RefreshList()">
+                                    <i class="fa fa-refresh fa-2x"></i>
+                                </a>
+                            </div>
+                        </div>
+                    </fieldset>
+                    <div id="item_list">
+                        <div class="table-responsive previewTable" style="height: 400px; overflow-y: auto; overflow-x: auto;">
+                            <table class="table table-bordered table-custom" id="tblItemList" >
+                                <thead id="ilhead">
+                                    <tr>
+                                        
+                                        <th>Item Code</th>
+                                        <th>Medicine Name</th>
+                                        <th>Stock</th>
+                                        <th>Ware House</th>
+                                        <th>Purchase Rate</th>
+                                        <th>Pack Unit</th>
+                                        <th>Manufacturer</th>
+                                        
+                                    </tr>
+                                </thead>
+                                <tbody id="ilbody">
+                                </tbody>
+                            </table>
+
+                        </div>
+                    </div>
+
+
+                </div>
+                <div class="modal-footer">
+
+                    <button type="button" class="btn btn-gray" data-dismiss="modal">Close</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+    <%--Item List Ends--%> 
+
     <!-- Modal Sale Return -->
     <div id="SaleReturnModal" class="modal fade" role="dialog">
         <!-- Updated: Changed to modal-xl and forced width to 95% -->
