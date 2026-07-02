@@ -94,6 +94,7 @@
             function PrintCRV2() {
                 debugger;
                 var id = '<%= Request.QueryString["Bill_ID"]%>';
+                IncrementReprintCount(Bill_ID);
                 var locationInfo = window.location;
 
                 var user_name = '<% =AppConfig.Company_Name %>';
@@ -115,6 +116,7 @@
             function PrintCRV1() {
                 debugger;
                 var id = '<%= Request.QueryString["Bill_ID"]%>';
+                IncrementReprintCount(Bill_ID);
                 var locationInfo = window.location;
 
                 var user_name = '<% =AppConfig.Company_Name %>';
