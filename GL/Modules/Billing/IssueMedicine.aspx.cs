@@ -135,6 +135,7 @@ namespace PMS
                              where ip.Patient_ID == Pat_Id
                              && ip.Item_Code != null
                              && ip.Item_Code != "0"
+                             && ip.Item_Code != ""
                                 && (ip.is_rejected == false || ip.is_rejected == null)
                              select ip.Item_Code).ToList();
 
@@ -154,6 +155,7 @@ namespace PMS
                              where ip.Patient_ID == Pat_Id
                              && ip.Item_Code != null
                              && ip.Item_Code != "0"
+                             && ip.Item_Code != ""
                              && (ip.is_rejected == false || ip.is_rejected == null)
                              select ip.Item_Code).ToList();
             return (new JavaScriptSerializer()).Serialize(itemCodes); ;
@@ -229,6 +231,9 @@ namespace PMS
                              join o in db.Out_Patients
                                 on ip.Patient_ID equals o.Out_Patient_ID
                              where o.Out_Patient_ID == Pat_Id
+                             && ip.Item_Code != ""
+                             && ip.Item_Code != "0"
+                             && ip.Item_Code != null
                                 && (ip.is_rejected == false || ip.is_rejected == null)
                              select ip.Item_Code).ToList();
 
