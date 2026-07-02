@@ -44,7 +44,7 @@ namespace PMS
                 var user_id = AppConfig.UserID;
                 
                 var Adj_id = id;
-                var form_id = 7;
+                var form_id = 3;
                 INV_Stock_Adjustment adj = (from tbl in db.INV_Stock_Adjustments
                                             where tbl.Adjustment_ID == Convert.ToInt32(Adj_id)
                                             select tbl).SingleOrDefault();

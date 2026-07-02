@@ -505,6 +505,20 @@ namespace PMS
             }
             return result;
         }
+       
+        [WebMethod]
+        public static string GetItemList_WareHouseWise(string warehouse, string SearchString)
+        {
+            string result;
+
+            using (DataBaseDataContext db = new DataBaseDataContext())
+            {
+                var query = db.sp_GetItemList_WareHouseWise(warehouse,SearchString).ToList();
+                result = (new JavaScriptSerializer()).Serialize(query).ToString();
+
+            }
+            return result;
+        }
         [WebMethod]
         public static string GetReturnMedicineDetail(int Bill_Id, int Item_Id)
         {
@@ -777,6 +791,19 @@ namespace PMS
             using (DataBaseDataContext db = new DataBaseDataContext())
             {
                 var query = db.spMedicinesDetails(itemId, hdndiscountType, Batch, warehouse).ToList();
+                result = (new JavaScriptSerializer()).Serialize(query).ToString();
+            }
+            return result;
+        }
+
+        [WebMethod]
+        public static string MedicineDetailforListItems(int itemId, string warehouse)
+        {
+            string result = string.Empty;
+
+            using (DataBaseDataContext db = new DataBaseDataContext())
+            {
+                var query = db.spMedicinesDetailsforListitems(itemId, warehouse).ToList();
                 result = (new JavaScriptSerializer()).Serialize(query).ToString();
             }
             return result;

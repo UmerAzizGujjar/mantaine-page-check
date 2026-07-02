@@ -52,7 +52,28 @@
                 }
             });
 
+            LoadAssignWarehouseDropdown();
+            CheckMultipleWarehouse();
 
+            $('#ddlwareHouse').change(function () {
+
+                var selected = $(this).val();
+
+                if ($('#tbodyAssignedWarehouses input[name="wh_value"][value="' + selected + '"]').length > 0) {
+
+                    Swal.fire({
+                        icon: 'warning',
+                        text: 'This warehouse is already selected in the Multiple Warehouse list.',
+                        customClass: {
+                            popup: 'swal-big-popup',
+                            title: 'swal-big-title',
+                            htmlContainer: 'swal-big-text'
+                        }
+                    });
+
+                    $(this).val("0").trigger("change");
+                }
+            });
 
         });
         $(function () {
@@ -627,6 +648,13 @@
                         Item_Rate_Id: rateId || null  
                     });
                 });
+                var WarehouseList = [];
+                $('#tbodyAssignedWarehouses tr').each(function () {
+                    var whVal = $(this).find('input[name="wh_value"]').val();
+                    if (whVal && whVal !== "0") {
+                        WarehouseList.push({ WarehouseId: whVal });
+                    }
+                });
                 $('#btnValue').attr('disabled', true);
                 $.ajax({
                     type: "POST",
@@ -697,6 +725,7 @@
                         "batchList": batchList,
                         "PatientTypeList": PatientTypeList,
                         "InfusionFluid": InfusionFluid,
+                        "WarehouseList": WarehouseList,
                     }),
                     contentType: "application/json; charset=utf-8",
                     dataType: "json",
@@ -1025,6 +1054,36 @@
                     }
                     LoadPatientTypeWiseRate(id);
 
+                    $.ajax({
+                        type: "POST",
+                        url: "Product.aspx/GetItemWarehouses",
+                        data: JSON.stringify({ ItemId: id }),
+                        contentType: "application/json; charset=utf-8",
+                        dataType: "json",
+                        success: function (resp) {
+                            try {
+                                var whData = JSON.parse(resp.d);
+                                $('#tbodyAssignedWarehouses').empty();
+                                $.each(whData, function (k, v) {
+                                    var rowHtml = `
+                                        <tr>
+                                            <td>
+                                                ${v.WarehouseName}
+                                                <input type="hidden" name="wh_value" value="${v.WarehouseId}" />
+                                            </td>
+                                            <td style="text-align:center;">
+                                                <a href="javascript:void(0)" onclick="RemoveWarehouseRow(this)" style="color:red;">
+                                                    <i class="fa fa-trash"></i> Remove
+                                                </a>
+                                            </td>
+                                        </tr>
+                                    `;
+                                    $('#tbodyAssignedWarehouses').append(rowHtml);
+                                });
+                            } catch (e) { console.error(e); }
+                        }
+                    });
+
                 },
                 failure: function (response) {
                     Swal.fire({
@@ -1156,6 +1215,118 @@
 
             entries = entries.filter(e => e.type !== type);
             hiddenField.value = JSON.stringify(entries);
+        }
+
+
+        function LoadAssignWarehouseDropdown() {
+            $.ajax({
+                type: "POST",
+                url: "Product.aspx/GetWarehouses", 
+                data: '{}',
+                contentType: "application/json; charset=utf-8",
+                dataType: "json",
+                success: function (response) {
+                    try {
+                        const data = JSON.parse(response.d);
+                        var options = '<option value="0">Select Warehouse</option>';
+                        $.each(data, function (key, value) {
+                            options += `<option value="${value.DataValue_Name}">${value.DataValue_Description}</option>`;
+                        });
+                        $('#ddlAssignWarehouse').html(options);
+                    } catch (e) { console.error(e); }
+                }
+            });
+        }
+
+        function AddWarehouseRow() {
+
+            var ddl = $('#ddlAssignWarehouse');
+            var selectedVal = ddl.val();
+            var selectedText = ddl.find('option:selected').text();
+
+            if (selectedVal == "0" || selectedVal == "") {
+                Swal.fire({
+                    icon: 'warning',
+                    title: 'Warning',
+                    text: 'Please select a warehouse.'
+                });
+                return;
+            }
+
+            if ($("#ddlwareHouse").val() == selectedVal) {
+                Swal.fire({
+                    icon: 'warning',
+                    title: 'Warehouse Already Selected',
+                    text: 'This warehouse is already selected as the main warehouse.',
+                    customClass: {
+                        popup: 'swal-big-popup',
+                        title: 'swal-big-title',
+                        htmlContainer: 'swal-big-text'
+                    }
+                });
+                return;
+            }
+
+            var exists = false;
+            $('#tbodyAssignedWarehouses tr').each(function () {
+                if ($(this).find('input[name="wh_value"]').val() == selectedVal) {
+                    exists = true;
+                    return false;
+                }
+            });
+
+            if (exists) {
+                Swal.fire({
+                    icon: 'warning',
+                    title: 'Already Added',
+                    text: 'This warehouse is already added.'
+                });
+                return;
+            }
+
+            var rowHtml = `
+        <tr>
+            <td>
+                ${selectedText}
+                <input type="hidden" name="wh_value" value="${selectedVal}" />
+            </td>
+            <td style="text-align:center;">
+                <a href="javascript:void(0)" onclick="RemoveWarehouseRow(this)" style="color:red;">
+                    <i class="fa fa-trash"></i> Remove
+                </a>
+            </td>
+        </tr>
+    `;
+
+            $('#tbodyAssignedWarehouses').append(rowHtml);
+            ddl.val("0").trigger("change"); 
+        }
+
+        function RemoveWarehouseRow(btn) {
+            $(btn).closest('tr').remove();
+        }
+
+        function CheckMultipleWarehouse() {
+
+            $.ajax({
+                type: "POST",
+                url: "Product.aspx/MultipleWareHouse",
+                contentType: "application/json; charset=utf-8",
+                dataType: "json",
+                success: function (response) {
+
+                    if (response.d === "01") {
+                        $("#divMultipleWarehouse").show();
+                    } else {
+                        $("#divMultipleWarehouse").hide();
+                    }
+
+                },
+                error: function () {
+                    $("#divMultipleWarehouse").hide();
+                }
+            });
+
         }
     </script>
 </asp:Content>
@@ -1334,7 +1505,6 @@
         </div>        
    <div id="Tab-3" style="display: flex; gap: 40px; align-items: flex-start; padding: 20px;">
 
-    <!-- LEFT: Stock Level Section -->
     <div style="flex: 1; border: 1px solid #ddd; padding: 15px; border-radius: 6px; background-color: #f9f9f9;">
         <span style="font-size: 15px; font-weight: bold;">Stock Level</span>
         <table class="table-responsive-lg table-responsive-md" style="width: 100%; margin-top: 10px;">
@@ -1354,7 +1524,6 @@
     </div>
 
    <div style="flex: 1; padding: 20px; border: 1px solid #ddd; border-radius: 8px; background-color: white;">
-    <!-- Input Row -->
     <div style="display: flex; gap: 15px; margin-bottom: 15px; align-items: center;">
         <div style="flex: 1;">
             <label style="font-weight: bold; display: block; margin-bottom: 5px;">Patient_type</label>
@@ -1375,7 +1544,6 @@
 
   
 
-    <!-- Table for Appended Entries -->
     <div style="margin-top: 15px; border: 1px solid #ddd; border-radius: 6px; overflow: hidden;">
         <table class="table">
             <thead style="background-color: #f5f5f5; border-bottom: 1px solid #ddd;">
@@ -1391,89 +1559,91 @@
         </table>
     </div>
 
-    <!-- Hidden field for form submission -->
     <input type="hidden" id="patientRatesData" name="patientRatesData" value="" />
 </div>
 
 </div>
         <div id="Tab-4" class="table-container">
-            
-            <table style="padding: 20px;" class="table-responsive-lg table-responsive-md table-responsive-sm">
-                <tr>
-                    <td style="width: 21px;">
-                        <input type="checkbox" id="Narcotics" name="Narcotics" />
-                    </td>
-                    <td style="width: 145px;">Narcotics</td>
-                    <td style="width: 21px;">
-                        <input type="checkbox" id="Refregrator" name="Refregrator" /></td>
-                    <td style="width: 84px;">Refregrator</td>
-                    <td style="width: 21px;" class="DiscountBlock">
-                        <input type="checkbox" id="Discount_Block" name="Discount_Block" /></td>
-                    <td class="DiscountBlock" style="width: 84px;">Discount Block</td>
-                </tr>
-                <tr>
-                    <td style="width: 21px;">
-                        <input type="checkbox" id="controller_drug" name="controller_drug" />
-                    </td>
-                    <td style="width: 145px;">Controller Drug</td>
-                    <td style="width: 5px;">
-                        <input type="checkbox" id="PharmacyItem" name="PharmacyItem" /></td>
-                    <td style="width: 93px;">Pharmacy Item</td>
-                    <td style="width: 5px;">
-                    <input type="checkbox" id="InfusionFluid" name="InfusionFluid" /></td>
-                    <td style="width: 93px;">Infusion Fluid</td>
-                </tr>
-            </table>
-            <table>
-                <tr>
-                    <td>
-                        <label style="width: 71px;">ATC</label>
-                        <input style="width:auto !important" type="text" id="ATC" name="ATC" />
-                    </td>
-                    <td>
-                       <label id="Lblmanufacturer" style=" float: left; position: relative; width: 80px;margin-right: 14px; margin-bottom : 10px;margin-left: 16px">Manufacturer</label>
-                    </td>
-                    <td style="width: 170px !important;min-width:170px !important;" >  
-                        <select id="ddlmanu" style="height: 33px !important">
-                            <option value="0">Please Select</option>
-                        </select>
-                    </td>
-                    <td><label id="Lblitem_Qty" style="display: inline-block; float: left; position: relative; width: 150px !important;margin-left: 33px;margin-bottom: 10px">Item Main Category</label></td>
+    
+    <table style="padding: 20px;" class="table-responsive-lg table-responsive-md table-responsive-sm">
+        <tr>
+            <td style="width: 21px;">
+                <input type="checkbox" id="Narcotics" name="Narcotics" />
+            </td>
+            <td style="width: 145px;">Narcotics</td>
+            <td style="width: 21px;">
+                <input type="checkbox" id="Refregrator" name="Refregrator" /></td>
+            <td style="width: 84px;">Refregrator</td>
+            <td style="width: 21px;" class="DiscountBlock">
+                <input type="checkbox" id="Discount_Block" name="Discount_Block" /></td>
+            <td class="DiscountBlock" style="width: 84px;">Discount Block</td>
+        </tr>
+        <tr>
+            <td style="width: 21px;">
+                <input type="checkbox" id="controller_drug" name="controller_drug" />
+            </td>
+            <td style="width: 145px;">Controller Drug</td>
+            <td style="width: 5px;">
+                <input type="checkbox" id="PharmacyItem" name="PharmacyItem" /></td>
+            <td style="width: 93px;">Pharmacy Item</td>
+            <td style="width: 5px;">
+            <input type="checkbox" id="InfusionFluid" name="InfusionFluid" /></td>
+            <td style="width: 93px;">Infusion Fluid</td>
+        </tr>
+    </table>
+    <table>
+        <tr>
+            <td>
+                <label style="width: 71px;">ATC</label>
+                <input style="width:auto !important" type="text" id="ATC" name="ATC" />
+            </td>
+            <td>
+               <label id="Lblmanufacturer" style=" float: left; position: relative; width: 80px;margin-right: 14px; margin-bottom : 10px;margin-left: 16px">Manufacturer</label>
+            </td>
+            <td style="width: 170px !important;min-width:170px !important;" >  
+                <select id="ddlmanu" style="height: 33px !important">
+                    <option value="0">Please Select</option>
+                </select>
+            </td>
+            <td><label id="Lblitem_Qty" style="display: inline-block; float: left; position: relative; width: 150px !important;margin-left: 33px;margin-bottom: 10px">Item Main Category</label></td>
 
-                    <td  style="width: 170px !important;min-width:170px !important;">
-                        
-                        <select id="ddlitem_Qty" style="height: 33px !important" name="ddlitem_Qty">
-                             <option value="0">Please Select</option>
-                        </select>
-                    </td>
-                </tr>
-            </table>
-            <table style="margin-left:0px">
-                <tr>
-                    <td style="width: 71px;">Generic Name</td>
-                    <td>
-                        <input type="text" id="GenericName" name="GenericName" style="width: 178px!Important; margin-left: 8px" /></td>
-                    <td>
-                        <label style=" float: left; position: relative; width: 80px;margin-right: 14px; margin-bottom : 10px;margin-left: 16px">WareHouse</label>
-                    </td>
-                    <td >
-                        <select id="ddlWare" onchange="getbatchfrom_grn();" style="width: 170px;"></select>
+            <td  style="width: 170px !important;min-width:170px !important;">
+                
+                <select id="ddlitem_Qty" style="height: 33px !important" name="ddlitem_Qty">
+                     <option value="0">Please Select</option>
+                </select>
+            </td>
+        </tr>
+    </table>
+    <table style="margin-left:0px">
+        <tr>
+            <td style="width: 71px;">Generic Name</td>
+            <td>
+                <input type="text" id="GenericName" name="GenericName" style="width: 178px!Important; margin-left: 8px" /></td>
+            <td>
+                <label style=" float: left; position: relative; width: 80px;margin-right: 14px; margin-bottom : 10px;margin-left: 16px">WareHouse</label>
+            </td>
+            <td >
+                <select id="ddlWare" onchange="getbatchfrom_grn();" style="width: 170px;"></select>
 
-                    </td>
-                    <td>
-                        <label style="display: inline-block; float: left; position: relative; width: 150px !important;margin-left: 33px;margin-bottom: 10px">Batch Number</label>
-                    </td>
-                    <td >
-                        <select id="ddlBatchNum" style="width: 170px;"></select>
+            </td>
+            <td>
+                <label style="display: inline-block; float: left; position: relative; width: 150px !important;margin-left: 33px;margin-bottom: 10px">Batch Number</label>
+            </td>
+            <td >
+                <select id="ddlBatchNum" style="width: 170px;"></select>
 
-                    </td>
-                    <td>
-                        <input type="button" onclick="AppendBatch()" value="+" id="AddBatch" style="width: 44px; margin-left: 10px !important;" />
-                    </td>
-                </tr>
-            </table>
-            <table class="table table-bordered" id="BatchTable" style="overflow: scroll; width: 550px; height: auto;">
+            </td>
+            <td>
+                <input type="button" onclick="AppendBatch()" value="+" id="AddBatch" style="width: 44px; margin-left: 10px !important;" />
+            </td>
+        </tr>
+    </table>
 
+    <div  style="display: flex; gap: 30px; align-items: flex-start; margin-top: 15px; flex-wrap: wrap;">
+        
+        <div style="flex: 0 0 auto;">
+            <table class="table table-bordered" id="BatchTable" style="width: 550px;">
                 <tr id="row_sample">
                     <th style="width: 40%;">Batch Number</th>
                     <th style="width: 30%;">Rate</th>
@@ -1485,6 +1655,32 @@
                 </tbody>
             </table>
         </div>
+
+        <div id="divMultipleWarehouse" style="flex: 0 0 auto; border: 1px solid #ddd; padding: 15px; border-radius: 6px; background-color: #f9f9f9;">
+            <h4 style="font-size: 16px; font-weight: bold; margin-top: 0;">Assign Multiple Warehouses</h4>
+            <div style="display: flex; gap: 10px; align-items: center; margin-bottom: 10px;">
+                <select id="ddlAssignWarehouse" class="form-control" style="width: 200px;">
+                    <option value="0">Select Warehouse</option>
+                </select>
+                <input type="button" value="+" onclick="AddWarehouseRow()"
+                    style="width: 40px; height: 34px; font-weight: bold; cursor: pointer;" />
+            </div>
+
+            <table class="table table-bordered" style="width: 350px; background-color: white;">
+                <thead>
+                    <tr style="background-color: #f5f5f5;">
+                        <th>Warehouse Name</th>
+                        <th style="width: 80px;">Action</th>
+                    </tr>
+                </thead>
+                <tbody id="tbodyAssignedWarehouses">
+                </tbody>
+            </table>
+        </div>
+
+    </div>
+
+</div>
         <div id="Tab-5" >
             <table>
                 <tr>

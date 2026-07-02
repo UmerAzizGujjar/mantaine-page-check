@@ -9,14 +9,32 @@
             LoadPage();
 
         });
-      
+        function IncrementReprintCount(billId) {
+            if (!billId || billId == '0' || billId == '') return;
+
+            $.ajax({
+                type: "POST",
+                url: "IssueMedicineList.aspx/IncrementReprintCount", 
+                data: JSON.stringify({ 'Bill_ID': parseInt(billId) }),
+                contentType: "application/json; charset=utf-8",
+                dataType: "json",
+                success: function (response) {
+                    console.log("Reprint count updated for Bill ID: " + billId);
+                },
+                error: function (err) {
+                    console.error("Failed to update reprint count", err);
+                }
+            });
+        }
         function PrintBill(Bill_ID) {
+            IncrementReprintCount(Bill_ID);
             var url = '../../ReportViewer.aspx?ReportName=PharmacySlip&ReportTitle=PharmacySlip&Bill_ID=' + Bill_ID;
             window.open(url, '_blank');
 
         }
         function PrintInvoice(key) {
             debugger;
+            IncrementReprintCount(key);
             //var BillId = $('#BillId' + key).val();
             window.open('../../ReportViewer.aspx?ReportName=PharmacySlip&ReportTitle=PharmacySlip&Bill_ID=' + key);
 

@@ -51,10 +51,28 @@
                 }, true);
 
             }
+            function IncrementReprintCount(billId) {
+                if (!billId || billId == '0' || billId == '') return;
+
+                $.ajax({
+                    type: "POST",
+                    url: "BillingProcess.aspx/IncrementReprintCount",
+                    data: JSON.stringify({ 'Bill_ID': parseInt(billId) }),
+                    contentType: "application/json; charset=utf-8",
+                    dataType: "json",
+                    success: function (response) {
+                        console.log("Reprint count updated for Bill ID: " + billId);
+                    },
+                    error: function (err) {
+                        console.error("Failed to update reprint count", err);
+                    }
+                });
+            }
             debugger;
             function PrintCRV() {
                 debugger;
                 var id = '<%= Request.QueryString["Bill_ID"]%>';
+                IncrementReprintCount(id);
                 var locationInfo = window.location;
 
                 var user_name = '<% =AppConfig.Company_Name %>';

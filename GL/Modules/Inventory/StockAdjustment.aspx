@@ -54,7 +54,8 @@
             });
 
             GetWareHouseCondition();
-
+            GetMultipleBatchCondition(); 
+            
             $('#ctl00_MainContent_txtItem_Code').tokenInput(function () {
                 debugger;
 
@@ -92,6 +93,8 @@
 
                     onAdd: function (item) {
                         debugger;
+                        $('#ctl00_MainContent_hdfItem_ID').val(item.id);
+                        $('#ctl00_MainContent_hdnDescription').val(item.name);
                         LoadBatches(item.id);
                         calculatecurrentstock(item.id);
 
@@ -107,6 +110,10 @@
                             $('#ctl00_MainContent_hdDate').val(1);
                             $('#ctl00_MainContent_hdallowblank').val(0);
                         }
+                    },
+                    onDelete: function (item) {
+                        $('#ctl00_MainContent_hdfItem_ID').val('');
+                        $('#ctl00_MainContent_hdnDescription').val('');
                     }
                 });
             debugger;
@@ -598,6 +605,116 @@
             }
             return true;
         }
+
+
+        var gridItems = [];
+
+        function AddItemToTable() {
+            
+            var itemId = $('#ctl00_MainContent_hdfItem_ID').val();
+            var itemCode = $('#ctl00_MainContent_txtItem_Code').val();
+            var itemName = $('#ctl00_MainContent_hdnDescription').val();
+            var batchNo = $('#ctl00_MainContent_hdnSelectedBatchValue').val() || $('#ctl00_MainContent_txtBatchNo').val() || '';
+            var expireDate = $('#ctl00_MainContent_txtExpiredate').val() || '';
+            var qty = parseFloat($('#ctl00_MainContent_txtQuantity').val()) || 0;
+            var rate = parseFloat($('#ctl00_MainContent_txtRate').val()) || 0;
+            var amount = qty * rate;
+            var warehouse = $('#ctl00_MainContent_ddl_Ware_House').val() || '';
+            var warehouseText = $('#ctl00_MainContent_ddl_Ware_House option:selected').text() || '';
+
+            if (!itemId || itemId === '0' || itemId === '') {
+                Swal.fire({ icon: 'error', title: 'Error!', text: 'Please select an item.', showConfirmButton: false, timer: 2000 });
+                return false;
+            }
+
+            if (qty <= 0) {
+                Swal.fire({ icon: 'error', title: 'Error!', text: 'Please enter valid quantity.', showConfirmButton: false, timer: 2000 });
+                return false;
+            }
+
+            var rowObj = {
+                ItemId: itemId,
+                ItemCode: itemCode,
+                ItemName: itemName,
+                BatchNo: batchNo,
+                ExpireDate: expireDate,
+                Qty: qty,
+                Rate: rate,
+                Amount: amount,
+                Warehouse: warehouse
+            };
+
+            gridItems.push(rowObj);
+
+            var rowIndex = gridItems.length - 1;
+            var newRow = '<tr id="row_' + rowIndex + '">' +
+                '<td>' + itemCode + '</td>' +
+                '<td>' + itemName + '</td>' +
+                '<td>' + batchNo + '</td>' +
+                '<td>' + expireDate + '</td>' +
+                '<td>' + qty + '</td>' +
+                '<td>' + rate + '</td>' +
+                '<td>' + amount.toFixed(2) + '</td>' +
+                '<td>' + warehouseText + '</td>' +
+                '<td><a href="javascript:void(0);" onclick="RemoveRow(' + rowIndex + ')" style="color:red;">Remove</a></td>' +
+                '</tr>';
+
+            $('#tblStockItemsBody').append(newRow);
+
+            $('#ctl00_MainContent_txtQuantity').val('');
+            $('#ctl00_MainContent_txtRate').val('');
+            $('#ctl00_MainContent_txtAmount').val('');
+            $('#ctl00_MainContent_txtBatchNo').val('');
+            $('#ctl00_MainContent_ddlBatchNo').val('0');
+            $('#ctl00_MainContent_hdnSelectedBatchValue').val('');
+
+            EnableBothFields();
+            $('#ctl00_MainContent_hdnGridData').val(JSON.stringify(gridItems));
+
+            return false;
+        }
+
+        function RemoveRow(index) {
+            gridItems[index] = null; 
+            $('#row_' + index).remove();
+
+            var activeItems = gridItems.filter(function (item) { return item !== null; });
+            $('#ctl00_MainContent_hdnGridData').val(JSON.stringify(activeItems));
+        }
+
+        var originalValidate = Validate;
+        Validate = function () {
+            var activeItems = gridItems.filter(function (item) { return item !== null; });
+            $('#ctl00_MainContent_hdnGridData').val(JSON.stringify(activeItems));
+
+            return originalValidate();
+        };
+
+
+        function GetMultipleBatchCondition() {
+            $.ajax({
+                type: "POST",
+                url: "StockAdjustment.aspx/MultipleBatchValidation",
+                data: JSON.stringify({}),
+                contentType: "application/json; charset=utf-8",
+                dataType: "json",
+                success: function (response) {
+                    var batchCond = response.d;
+
+                    if (batchCond == '01') {
+                        $('#divAddButton').show();
+                        $('#divGridContainer').show();
+                    } else {
+                        $('#divAddButton').hide();
+                        $('#divGridContainer').hide();
+                    }
+                },
+                error: function (error) {
+                    console.error("Error fetching multiple batch condition", error);
+                }
+            });
+        }
+
     </script>
 </asp:Content>
 <asp:Content ID="Content2" ContentPlaceHolderID="MainContent" runat="server">
@@ -687,7 +804,36 @@
                 <asp:Label Text="Remarks" runat="server" ID="lblremarks" />
                 <asp:TextBox ID="txtRemarks" runat="server" TextMode="MultiLine" Style="width: 100%; border-radius: 5px; height: 35px !important"></asp:TextBox>
             </div>
+            <div class="col-lg-1 col-md-3 col-sm-4" id="divAddButton" style="display:none;">
+                <label></label>
+                <input type="button" class="btn btn-primry" value="Add" id="btnAddToTable" onclick="return AddItemToTable();" />
+            </div>
         </div>
+        
+        <div class="row" style="margin-top:10px;display:none" id="divGridContainer">
+            <div class="col-lg-12">
+                <div class="table-responsive">
+                    <table id="tblStockItems" class="table table-bordered table-striped"  style="width:100%;">
+                        <thead>
+                            <tr>
+                                <th>Item Code</th>
+                                <th>Description</th>
+                                <th>Batch No</th>
+                                <th>Expire Date</th>
+                                <th>Qty</th>
+                                <th>Rate</th>
+                                <th>Amount</th>
+                                <th>Warehouse</th>
+                                <th>Action</th>
+                            </tr>
+                        </thead>
+                        <tbody id="tblStockItemsBody">
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+        <asp:HiddenField runat="server" ID="hdnGridData" />
         <div class="row">
             <div class="col-lg-0 col-md-3 col-sm-4">
                 <input type="hidden" name="hdnDuplicateCheck" value="0" id="hdnDuplicateCheck" />            

@@ -147,6 +147,26 @@ namespace PMS
         {
             lblMessage.Text = "";
             string StockAdjID = "";
+            string gridJson = hdnGridData.Value;
+            if (!string.IsNullOrEmpty(gridJson) && gridJson != "[]")
+            {
+                try
+                {
+                    var serializer = new JavaScriptSerializer();
+                    List<TempStockItem> gridItems = serializer.Deserialize<List<TempStockItem>>(gridJson);
+
+                    if (gridItems != null && gridItems.Count > 0)
+                    {
+                        SaveGridItems(gridItems);
+                        return;
+                    }
+                }
+                catch (Exception ex)
+                {
+                    lblMessage.Text = "Error reading grid data: " + ex.Message;
+                    return;
+                }
+            }
             if (!Page.IsValid)
                 return;
 
@@ -308,7 +328,7 @@ namespace PMS
                 hdnDescription.Value = Item_NAme;
                 if (ddl_Ware_House.Items.FindByValue(Stock_adj.Ware_House) != null)
                     ddl_Ware_House.SelectedValue = Stock_adj.Ware_House;
-                btnSave.Text = "Update";
+                btnSave.Text = "Update";            
             }
         }
         [WebMethod]
@@ -415,6 +435,98 @@ namespace PMS
             public string BatchNum { get; set; }
             public int? uomqty { get; set; }
             public string ReferenceNumber { get; set; }
+        }
+
+        public class TempStockItem
+        {
+            public string ItemId { get; set; }
+            public string ItemCode { get; set; }
+            public string ItemName { get; set; }
+            public string BatchNo { get; set; }
+            public string ExpireDate { get; set; }
+            public decimal Qty { get; set; }
+            public decimal Rate { get; set; }
+            public decimal Amount { get; set; }
+            public string Warehouse { get; set; }
+        }
+
+        private void SaveGridItems(List<TempStockItem> items)
+        {
+            DataBaseDataContext db = new DataBaseDataContext(DBClass.ConnectionString());
+
+            try
+            {
+                foreach (var item in items)
+                {
+                    INV_Stock_Adjustment Stock_Adj = new INV_Stock_Adjustment();
+
+                    Stock_Adj.Status = "Created";
+
+                    
+                    Stock_Adj.Adjustment_No = DBClass.GetNewNumber("Adjustment_No", "INV_Stock_Adjustment", "");
+
+                    Stock_Adj.Created_By = AppConfig.UserID;
+                    Stock_Adj.Creation_Time = DateTime.Now;
+                    Stock_Adj.Company_ID = AppConfig.Company_ID;
+                    Stock_Adj.Book_ID = AppConfig.Book_ID;
+
+                    Stock_Adj.Item_Id = item.ItemId;
+                    Stock_Adj.Item_Code = item.ItemCode;
+                    Stock_Adj.Qty = item.Qty;
+                    Stock_Adj.Rate = item.Rate;
+                    Stock_Adj.Amount = item.Amount;
+                    Stock_Adj.Ware_House = item.Warehouse;
+                    Stock_Adj.Batch_No = item.BatchNo;
+
+                    Stock_Adj.Remarks = txtRemarks.Text;
+                    Stock_Adj.Reason_Why = ddlReasonNeeded.SelectedValue;
+
+                    if (!string.IsNullOrEmpty(item.ExpireDate))
+                        Stock_Adj.Expire_Date = Convert.ToDateTime(item.ExpireDate);
+
+                    if (txtAdustment_date.Text != "")
+                    {
+                        DateTime dateOnly = Convert.ToDateTime(txtAdustment_date.Text);
+                        DateTime fullDateTime = dateOnly.Date.Add(DateTime.Now.TimeOfDay);
+                        Stock_Adj.Adjustment_Date = fullDateTime;
+                    }
+
+                    db.INV_Stock_Adjustments.InsertOnSubmit(Stock_Adj);
+                    
+                    db.SubmitChanges();
+                }
+
+                lblMessage.Text = "Multiple Items saved successfully";
+                lblMessage.CssClass = "sucessfullMessage";
+
+                //var lastSavedId = db.INV_Stock_Adjustments.Max(x => x.Adjustment_ID).ToString();
+                Response.Redirect("~/Modules/Inventory/StockAdjustment.aspx" , true);
+            }
+            catch (Exception ex)
+            {
+                lblMessage.Text = "Error saving grid items: " + ex.Message;
+                lblMessage.CssClass = "errorMessage";
+            }
+        }
+        [WebMethod]
+        public static string MultipleBatchValidation()
+        {
+            try
+            {
+                using (var db = new DataBaseDataContext(DBClass.ConnectionString()))
+                {
+                    var Batch = (from tbl in db.sys_Parms
+                                      where tbl.Name == "Multiple Batch Working"
+                                      select tbl.Code)
+                              .FirstOrDefault();
+
+                    return Batch ?? "01";
+                }
+            }
+            catch (Exception ex)
+            {
+                return "0";
+            }
         }
     }
 }

@@ -138,6 +138,29 @@ namespace PMS
                 throw;
             }
         }
+
+        [WebMethod]
+        public static void IncrementReprintCount(int Bill_ID)
+        {
+            try
+            {
+                using (DataBaseDataContext db = new DataBaseDataContext())
+                {
+                    var bill = db.Ar_Billings.FirstOrDefault(b => b.Bill_ID == Bill_ID);
+                    if (bill != null)
+                    {
+                        // Increment the count (handles nulls just in case)
+                        bill.Reprint_Count = bill.Reprint_Count + 1;
+                        db.SubmitChanges();
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                // Optional: Log the exception to your error log
+                System.Diagnostics.Debug.WriteLine("Reprint Count Error: " + ex.Message);
+            }
+        }
     }
 
 }

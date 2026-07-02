@@ -2634,14 +2634,14 @@
                     var DoctorName = value.DoctorName ?? '';
                     var rowColorStyle = '';
 
-                    if (value.BP == null || value.BP == '') {
+                    if (value.BP == null || value.BP == undefined || value.BP === '' || String(value.BP).trim() === '') {
                         status = 'Un Checked';
                     } else {
                         status = 'Checked';
-                        rowColorStyle = 'style="background-color: #aeffae;"';
+                        rowColorStyle = 'style="background-color: #aeffae !important;"';
                     }
 
-                    rows += '<tr ' + rowColorStyle + '> <td>' + value.Patient_No + '</td> <td> ' + value.Token_No + ' </td>' + '<td>' + value.Full_Name + '</td> ' + '</td> ' + '<td>' + value.Age_years + '</td> ' + '<td>' + value.Department + '<td>' + FilterClinic + '</td> ' + '<td>' + DoctorName + '</td> ' + '<td>' + retdate + '</td> ' + '<td>' + value.UserName + '</td> ' + '<td>' + status + '</td>' + ' <td> <a href="javascript:void(0)" onclick=select(' + value.Patient_ID + ')><i class="fa fa-upload" ></i></a> </td> </tr>';
+                    rows += '<tr> <td ' + rowColorStyle + '>' + value.Patient_No + '</td> <td ' + rowColorStyle + '> ' + value.Token_No + ' </td>' + '<td ' + rowColorStyle + '>' + value.Full_Name + '</td> ' + '<td ' + rowColorStyle + '>' + value.Age_years + '</td> ' + '<td ' + rowColorStyle + '>' + value.Department + '</td><td ' + rowColorStyle + '>' + FilterClinic + '</td> ' + '<td ' + rowColorStyle + '>' + DoctorName + '</td> ' + '<td ' + rowColorStyle + '>' + retdate + '</td> ' + '<td ' + rowColorStyle + '>' + value.UserName + '</td> ' + '<td ' + rowColorStyle + '>' + status + '</td>' + ' <td ' + rowColorStyle + '> <a href="javascript:void(0)" onclick=select(' + value.Patient_ID + ')><i class="fa fa-upload" ></i></a> </td> </tr>';
                 });
                 debugger;
                 $('#tblPendingPatients tbody').html(rows);

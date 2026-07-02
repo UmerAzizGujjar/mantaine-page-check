@@ -277,12 +277,11 @@
             var viewUrl = orthancBaseUrl + '/ohif/viewer?StudyInstanceUIDs=' + encodeURIComponent(studyUid);
             var segmentationUrl = orthancBaseUrl + '/ohif/segmentation?StudyInstanceUIDs=' + encodeURIComponent(studyUid);
             var downloadUrl = orthancBaseUrl + '/studies/' + encodeURIComponent(orthancId) + '/archive';
-            var radiantUrl = 'radiant://?n=paet&v=VISIONPLUS&n=pstv&v=0020000D&v=' + studyUid;
 
             var radiantButton = '';
             if (studyUid) {
-                radiantButton = '<a class="btn btn-primry d-inline-flex align-items-center ms-1" href="'
-                    + radiantUrl + '" title="Open in RadiAnt">'
+                radiantButton = '<a class="btn btn-primry d-inline-flex align-items-center ms-1" href="LaunchRadiAnt.aspx?uid='
+                    + encodeURIComponent(studyUid) + '" target="_blank" rel="noopener noreferrer" title="Open in RadiAnt">'
                     + '<i class="fa fa-external-link me-1"></i></a>';
             }
 
