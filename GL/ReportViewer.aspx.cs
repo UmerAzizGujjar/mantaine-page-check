@@ -2809,6 +2809,34 @@ namespace PMS
                 rd.SetParameterValue("CompanyLogo", logoPath);
                 rd.Subreports[0].RecordSelectionFormula = "{spSaleReport;1.TotalAmount} < 0";
             }
+            else if (reportName == "PharmacySaleReport_PaymentWise")
+            {
+
+                var logoPath = DBClass.getField("SELECT dbo.GetCompanyLogo()");
+
+                string rptFileName = "Pharmacy/rptSaleReport_PaymentTypeWise.rpt";
+                string StartDateTime = Request.QueryString["StartDateTime"].ToString();
+                string EndDateTime = Request.QueryString["EndDateTime"].ToString();
+                string ItemID = Request.QueryString["ItemID"].ToString();
+                string Payment_Type = Request.QueryString["Payment_Type"].ToString();
+                reportPath += rptFileName;
+                rd.Load(reportPath);
+                rd.SetParameterValue("@FromDate", StartDateTime);
+                rd.SetParameterValue("@ToDate", EndDateTime);
+                rd.SetParameterValue("@Item_ID", ItemID);
+                rd.SetParameterValue("@Payment_Type", Payment_Type);
+                rd.SetParameterValue("@Warehouse", Request.QueryString["WareHouse"]);
+                rd.SetParameterValue("CompanyName", AppConfig.Company_Name);
+                rd.SetParameterValue("Title", reportTitle);
+                rd.SetParameterValue("@UserId", Request.QueryString["Operator"]);
+                rd.SetParameterValue("@FromDate", StartDateTime, rd.Subreports[0].Name.ToString());
+                rd.SetParameterValue("@ToDate", EndDateTime, rd.Subreports[0].Name.ToString());
+                rd.SetParameterValue("@UserId", Request.QueryString["Operator"], rd.Subreports[0].Name.ToString());
+                rd.SetParameterValue("@Warehouse", Request.QueryString["WareHouse"], rd.Subreports[0].Name.ToString());
+                //rd.SetParameterValue("@Item_ID", ItemID, rd.Subreports[0].Name.ToString());
+                rd.SetParameterValue("CompanyLogo", logoPath);
+                rd.Subreports[0].RecordSelectionFormula = "{spSaleReport;1.TotalAmount} < 0";
+            }
             else if (reportName == "MER")
             {
                 var logoPath = DBClass.getField("SELECT dbo.GetCompanyLogo()");

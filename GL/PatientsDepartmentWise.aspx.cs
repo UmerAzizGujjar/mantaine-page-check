@@ -2504,6 +2504,9 @@ namespace PMS
                     ddloprators.DataBind();
 
 
+
+
+
                 }
                 #endregion
                 #region Inventory Modules Report Menus
@@ -7862,6 +7865,81 @@ namespace PMS
                     lbShift.Visible = false;
                     DateDiv.Visible = true;
                     Time_Row.Visible = true;
+                }
+                else if (this.PageTitle == "PharmacySaleReport_PaymentWise")
+                {
+                    string x = "Pharmacy Sale Report Payment Type Wise";
+                    Master.Label2.Text = x;
+                    Master.GetMenuName();
+                    lblMainDepartment.Visible = false;
+                    ddlDepartments.Visible = false;
+                    lblPatientType.Visible = false;
+                    lblMultiSelect.Visible = false;
+                    ddlPatientType.Visible = false;
+                    optRw.Visible = false;
+                    trDoctor.Visible = false;
+                    tr_Summary.Visible = true;
+                    trSearch1.Visible = true;
+                    lblMainDepartment.Visible = false;
+                    dpROw.Visible = false;
+                    ddlReportType.Visible = false;
+                    txtMRNo.Visible = false;
+                    lblMRNo.Visible = false;
+                    tr_Export.Visible = false;
+                    ddlShift.Visible = false;
+                    lbShift.Visible = false;
+                    DateDiv.Visible = true;
+                    Time_Row.Visible = true;
+                    if (AllowPatientRecord)
+                    {
+                        optRw.Visible = true;
+                        DataTable dt1 = DBClass.getDataTable("select * from Pharmacy_Users where isActive=1");
+                        ddloprators.DataSource = dt1;
+                        ddloprators.DataTextField = "UserName";
+                        ddloprators.DataValueField = "UserID";
+                        ddloprators.Items.Add(new ListItem() { Text = "All", Value = "0" });
+                        ddloprators.DataBind();
+                    }
+                    // ADDING NEW WAREHOUSE
+                    object valuset;
+                    valuset = DBClass.GetValueSet("Ware house");
+                    ddlwareHouse.DataSource = valuset;
+                    ddlwareHouse.DataTextField = "DataValue_Description";
+                    ddlwareHouse.DataValueField = "DataValue_Name";
+                    ddlwareHouse.Items.Clear();
+                    ddlwareHouse.Items.Add(new ListItem() { Text = "All", Value = "0" });
+                    ddlwareHouse.DataBind();
+                    Stock_Movement.Visible = true;
+
+
+                    ddlwareHouse.Visible = true;
+                    lblWarehouse.Visible = true;
+
+                    lbItemCategory.Visible = false;
+                    ddlItemCategory.Visible = false;
+
+
+
+
+                    DataBaseDataContext dbs = new DataBaseDataContext(DBClass.ConnectionString());
+                    var serviceList = (from sl in dbs.INV_Items
+                                       where sl.Active == true
+                                       select new { sl.Item_ID, sl.Description }).ToList();
+
+                    ddlItemName.DataSource = serviceList;
+                    ddlItemName.DataValueField = "Item_ID";
+                    ddlItemName.DataTextField = "Description";
+                    ddlItemName.Items.Add(new ListItem() { Text = "All", Value = "0" });
+                    ddlItemName.DataBind();
+
+
+                    trPayment.Visible = false;
+                    ddlPaymentType.Items.Clear();
+                    ddlPaymentType.Items.Add(new ListItem("All", "0"));
+                    ddlPaymentType.Items.Add(new ListItem("Cash", "1"));
+                    ddlPaymentType.Items.Add(new ListItem("Credit", "2"));
+                    ddlPaymentType.Items.Add(new ListItem("Panel", "3"));
+
                 }
                 else if (this.PageTitle == "PharmacySaleReport")
                 {
