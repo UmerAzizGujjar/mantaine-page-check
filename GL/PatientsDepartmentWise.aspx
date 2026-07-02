@@ -1267,6 +1267,7 @@
                     else if (rptTitle == "IPD_Detail_Report") {
                         debugger;
                         var summary = document.getElementById('<%= chkSummary.ClientID %>').checked;
+                        var exporttopdf = document.getElementById('<%= chkExportPDF.ClientID %>').checked;
                         var startDate = $('#ctl00_MainContent_txtStart_Date').val();
                         var startTime = $('#ctl00_MainContent_txtSTime').val();
                         var endDate = $('#ctl00_MainContent_txtEnd_Date').val();
@@ -1282,7 +1283,7 @@
                             '&EndDateTime=' + encodeURIComponent(endDateTime) +
                             '&Summary=' + summary +
                             '&Operator=' + ((typeof ($("#ctl00_MainContent_ddlPatientType").val()) != 'undefined') ? $("#ctl00_MainContent_ddlPatientType").val() : "0") +
-                            '&Department=' + ((typeof ($("#ctl00_MainContent_ddlDepartments").val()) != 'undefined') ? $("#ctl00_MainContent_ddlDepartments").val() : "0");
+                            '&Department=' + ((typeof ($("#ctl00_MainContent_ddlDepartments").val()) != 'undefined') ? $("#ctl00_MainContent_ddlDepartments").val() : "0") + '&ExportPDF=' + exporttopdf;
 
                         window.open(url, '_blank');
                     }
@@ -1880,6 +1881,17 @@
                         var startDateTime = startDate + ' ' + startTime;
                         var endDateTime = endDate + ' ' + endTime;
                         var url = 'ReportViewer.aspx?ReportName=Cath_Lab_Billing_Detail_Report&ReportTitle=Cath Lab Billing Detail Report From  ' + startDateTime + ' to ' + endDateTime + '&StartDateTime=' + encodeURIComponent(startDateTime) + '&EndDateTime=' + encodeURIComponent(endDateTime) + '&MRNo=' + (patid || 0) + '&DoctorID=' + $("#ctl00_MainContent_ddlDoctor").val() + '&Operator=' + ((typeof ($("#ctl00_MainContent_ddloprators").val()) != 'undefined') ? $("#ctl00_MainContent_ddloprators").val() : "0") + '&ItemID=' + $('#ctl00_MainContent_ddlItemName').val();
+                        window.open(url, '_blank');
+                    }
+                    if (rptTitle == "Cath_Lab_Billing_Detail_Vendor_Wise_Report") {
+                        debugger;
+                        var startDate = $('#ctl00_MainContent_txtStart_Date').val();
+                        var startTime = $('#ctl00_MainContent_txtSTime').val();
+                        var endDate = $('#ctl00_MainContent_txtEnd_Date').val();
+                        var endTime = $('#ctl00_MainContent_txtETime').val();
+                        var startDateTime = startDate + ' ' + startTime;
+                        var endDateTime = endDate + ' ' + endTime;
+                        var url = 'ReportViewer.aspx?ReportName=Cath_Lab_Billing_Detail_Vendor_Wise_Report&ReportTitle=Cath Lab Billing Detail Report From  ' + startDateTime + ' to ' + endDateTime + '&StartDateTime=' + encodeURIComponent(startDateTime) + '&EndDateTime=' + encodeURIComponent(endDateTime) + '&MRNo=' + (patid || 0) + '&DoctorID=' + $("#ctl00_MainContent_ddlDoctor").val() + '&Operator=' + ((typeof ($("#ctl00_MainContent_ddloprators").val()) != 'undefined') ? $("#ctl00_MainContent_ddloprators").val() : "0") + '&ItemID=' + $('#ctl00_MainContent_ddlItemName').val();
                         window.open(url, '_blank');
                     }
                     if (rptTitle == "High_Risk_Medicine_Report") {
