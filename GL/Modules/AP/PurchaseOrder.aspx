@@ -382,8 +382,7 @@
             window.open(url, '_blank');
         }
 
-      function append(anchor, isBulk = false)
-      {
+        function append(anchor, isBulk = false) {
             debugger;
             var row = $(anchor).parents('tr')[0];
             var PR_Num = $($(row).find('td')[1]).text();
@@ -395,7 +394,7 @@
             var itemcode = $($(row).find('td')[5]).text();
             var UOM_Qty = $($(row).find('td')[10]).text();
 
-            var total_stock = $($(row).find('td')[11]).text() || '0'; 
+            var total_stock = $($(row).find('td')[11]).text() || '0';
 
             if (unit == "null") unit = "";
             if (Rate == "null" || Rate == "NaN") Rate = "0";
@@ -418,14 +417,14 @@
                 return false;
             } else {
                 // Build row
-                var newRow = buildNewRow(length, PR_Num, itemcode, item_name, unit, Qty, UOM_Qty, Rate, pr_detail_id,total_stock);
+                var newRow = buildNewRow(length, PR_Num, itemcode, item_name, unit, Qty, UOM_Qty, Rate, pr_detail_id, total_stock);
                 $("#tblItemDescription tbody").append(newRow);
 
                 // Populate dropdowns for the new row
                 // Use the progress-tracking functions to ensure dropdowns are loaded
                 var staxLoaded = false;
                 var advTaxLoaded = false;
-        
+
                 function checkBothLoaded() {
                     if (staxLoaded && advTaxLoaded) {
                         if (!isBulk) {
@@ -436,7 +435,7 @@
                         }
                     }
                 }
-        
+
                 // Populate Sales Tax dropdown
                 PageMethods.getwtaxtype(function (response) {
                     var options = '<option value="0">0</option>';
@@ -456,7 +455,7 @@
                     staxLoaded = true;
                     checkBothLoaded();
                 });
-        
+
                 // Populate Advance Tax dropdown
                 PageMethods.getAdvanceTaxType(function (response) {
                     var options = '<option value="0">0</option>';
@@ -477,10 +476,10 @@
                     checkBothLoaded();
                 });
             }
-}
+        }
 
         // Helper function to build row HTML
-        function buildNewRow(length, PR_Num, itemcode, item_name, unit, Qty, UOM_Qty, Rate, pr_detail_id,total_stock) {
+        function buildNewRow(length, PR_Num, itemcode, item_name, unit, Qty, UOM_Qty, Rate, pr_detail_id, total_stock) {
             return '<tr>' +
                 '<td style="padding-top:7px!important;"><input type="hidden" id="txtPRDId' + length + '" name="txtPRDId" value="' + pr_detail_id + '" style="width: 75px !important;text-align:right" />' + length + '</td>' +
                 '<td style="padding-top: 7px!important;"><input type="hidden" name="txtPRNo" id="txtPRNO' + length + '" value="' + PR_Num + '" style="text-align:right ;width:50px !important;font-size:9px;height:20px;padding-top: 7px!important;padding-right: 3px!important;"/>' + PR_Num + '</td>' +
@@ -492,7 +491,8 @@
                 '<td><input type="text" id="txtUOMQty' + length + '" style="text-align:right;width:50px!important;font-size:9px;height:20px;" name="txtUOMQty" value="' + UOM_Qty + '" /></td>' +
                 '<td><input type="text" id="txtBonusQty' + length + '" style="text-align:right;width:50px!important;font-size:9px;height:20px;" name="txtBonusQty" value="0" data-toggle="tooltip" data-placement="bottom" title="Enter Bonus quantity in Loose"/></td>' +
                 '<td><input type="text" autocomplete="off" style="text-align:right ;width:50px !important;font-size:9px;height:20px;" onkeyup="CulculateAmonutWithQty(this)" name="txtRate" id="txtRate' + length + '" value="' + Rate + '" /></td>' +
-                '<td><input type="text" autocomplete="off" style="text-align:right ;width:50px !important;font-size:9px;height:20px;" name="txtDisPer" readonly="readonly" id="txtDisPer' + length + '" value="0" /></td>' +
+                /*'<td><input type="text" autocomplete="off" style="text-align:right ;width:50px !important;font-size:9px;height:20px;" name="txtDisPer" readonly="readonly" id="txtDisPer' + length + '" value="0" /></td>' +*/
+                '<td><input type="text" autocomplete="off" style="text-align:right ;width:50px !important;font-size:9px;height:20px;" name="txtDisPer" onchange="calculateDiscountFromPercent(this)" onkeyup="calculateDiscountFromPercent(this)" id="txtDisPer' + length + '" value="0" /></td>' +
                 '<td style="text-align:right;padding-top: 7px!important"><input type="text" onkeyup="calcTotal()" style="width: 50px !important;text-align:right;font-size:9px;height:20px;text-align:right!important;" id="txtDisAmount' + length + '" name="txtDisAmount" value="0"></input></td>' +
                 '<td><select id="ddlSTAX' + length + '" name="ddlSTAX" onchange="calcTotal()" style="text-align:right ;width:50px !important;font-size:9px;height:20px;"><option value="0">0</option></select></td>' +
                 '<td style="padding-top: 7px!important;text-align:right!important"><input type="text" style="text-align:right!important; width:50px !important;font-size:9px;height:20px;" value="0" readonly="readonly" id="txtSalAmount' + length + '" name="txtSalAmount" /></td>' +
@@ -511,8 +511,7 @@
         }
         var dropdownsPopulated = false;
 
-      function populateTaxddl(rowId) 
-      {
+        function populateTaxddl(rowId) {
             var $ddl = $('#ddlSTAX' + rowId);
             // Don't check if already populated - always populate to ensure data is loaded
             PageMethods.getwtaxtype(function (response) {
@@ -524,21 +523,20 @@
             });
         }
 
-            function populateAdvanceTaxddl(rowId, callback) 
-            {
-                var $ddl = $('#ddlAdvanceTax' + rowId);
-                // Don't check if already populated - always populate to ensure data is loaded
-                PageMethods.getAdvanceTaxType(function (response) {
-                    var options = '<option value="0">0</option>';
-                    $.each(JSON.parse(response), function (key, value) {
-                        options += '<option value="' + value.Advance_Tax_ID + '">' + value.Advance_Tax_Perc + '</option>';
-                    });
-                    $ddl.html(options);
-                    if (typeof callback === 'function') {
-                        callback();
-                    }
+        function populateAdvanceTaxddl(rowId, callback) {
+            var $ddl = $('#ddlAdvanceTax' + rowId);
+            // Don't check if already populated - always populate to ensure data is loaded
+            PageMethods.getAdvanceTaxType(function (response) {
+                var options = '<option value="0">0</option>';
+                $.each(JSON.parse(response), function (key, value) {
+                    options += '<option value="' + value.Advance_Tax_ID + '">' + value.Advance_Tax_Perc + '</option>';
                 });
-            }
+                $ddl.html(options);
+                if (typeof callback === 'function') {
+                    callback();
+                }
+            });
+        }
         function populateFurtherTaxddl(rowId) {
             PageMethods.getFurtherTaxType(function (response) {
                 var options = '<option value="0">0</option>';
@@ -596,7 +594,7 @@
             });
         }
         $(document).ready(function () {
-          
+
             // Show loader immediately
             showLoader('Initializing...', false);
 
@@ -604,49 +602,49 @@
             UserRights();
             GetWareHouseCondition();
             GetprojectionCondition();
-              $('#ctl00_MainContent_ddlprojection').change(function() {
-                  
-    currentProjectionType = $(this).val();
-    $('#ctl00_MainContent_ddlprojection').attr('disabled',true);
-    if (currentProjectionType === '002') {
-        var projectionDate = $('#ctl00_MainContent_txtProjection_Date').val();
-        var warehouseId = $('#ddlWarehouse').val();
-        
-        if (!projectionDate || projectionDate.trim() === '') {
-            Swal.fire({
-                icon: 'warning',
-                title: 'Projection Date Required',
-                text: 'Please select a Projection Date for Type item wise projection. This date will be used to calculate consumption.',
-                confirmButtonText: 'Select Date',
-                showCancelButton: true,
-                cancelButtonText: 'Cancel'
-            }).then((result) => {
-                if (result.isConfirmed) {
-                    $('#ctl00_MainContent_txtProjection_Date').focus();
-                    $('#ctl00_MainContent_txtProjection_Date').datepicker('show');
+            $('#ctl00_MainContent_ddlprojection').change(function () {
+
+                currentProjectionType = $(this).val();
+                $('#ctl00_MainContent_ddlprojection').attr('disabled', true);
+                if (currentProjectionType === '002') {
+                    var projectionDate = $('#ctl00_MainContent_txtProjection_Date').val();
+                    var warehouseId = $('#ddlWarehouse').val();
+
+                    if (!projectionDate || projectionDate.trim() === '') {
+                        Swal.fire({
+                            icon: 'warning',
+                            title: 'Projection Date Required',
+                            text: 'Please select a Projection Date for Type item wise projection. This date will be used to calculate consumption.',
+                            confirmButtonText: 'Select Date',
+                            showCancelButton: true,
+                            cancelButtonText: 'Cancel'
+                        }).then((result) => {
+                            if (result.isConfirmed) {
+                                $('#ctl00_MainContent_txtProjection_Date').focus();
+                                $('#ctl00_MainContent_txtProjection_Date').datepicker('show');
+                            }
+                        });
+                    } else if (!warehouseId || warehouseId === '0') {
+                        Swal.fire({
+                            icon: 'warning',
+                            title: 'Warehouse Required',
+                            text: 'Please select a Warehouse for Projection Type 002.',
+                            confirmButtonText: 'OK'
+                        });
+                    } else {
+                        Swal.fire({
+                            icon: 'info',
+                            title: 'Projection Type 002: Consumption Based',
+                            html: 'Quantities will be automatically calculated based on:<br/>' +
+                                '• Consumption data from <strong>' + projectionDate + '</strong><br/>' +
+                                '• To current date<br/>' +
+                                '• For selected warehouse',
+                            timer: 3000,
+                            showConfirmButton: false
+                        });
+                    }
                 }
             });
-        } else if (!warehouseId || warehouseId === '0') {
-            Swal.fire({
-                icon: 'warning',
-                title: 'Warehouse Required',
-                text: 'Please select a Warehouse for Projection Type 002.',
-                confirmButtonText: 'OK'
-            });
-        } else {
-            Swal.fire({
-                icon: 'info',
-                title: 'Projection Type 002: Consumption Based',
-                html: 'Quantities will be automatically calculated based on:<br/>' +
-                      '• Consumption data from <strong>' + projectionDate + '</strong><br/>' +
-                      '• To current date<br/>' +
-                      '• For selected warehouse',
-                timer: 3000,
-                showConfirmButton: false
-            });
-        }
-    }
-});
             $('#ctl00_MainContent_ddlVendor').change(function () {
                 debugger;
                 if (vendorChanging) return;
@@ -736,7 +734,7 @@
                     }
                 }
                 // User said YES - validate warehouse
-              
+
                 debugger;
                 // All good
                 if (projType == "001") {
@@ -745,7 +743,7 @@
                 else if (projType == "002") {
                     return;
                 }
-           
+
             });
             $('#ddlWarehouse').change(function () {
                 $("#ddlWarehouse").attr('disabled', true);
@@ -800,7 +798,7 @@
             $("#ctl00_MainContent_txtProjection_Date").val('').datepicker({ dateFormat: 'dd M yy', readOnly: true });
             $("#ctl00_MainContent_txtdueDate").val(formattedDate).datepicker({ dateFormat: 'dd M yy', readOnly: true });
 
-        // Load PO data ONLY if PO_ID exists in query string
+            // Load PO data ONLY if PO_ID exists in query string
     <% if (Request.QueryString["PO_ID"] != null) { %>
             var PO_ID = '<%= Request.QueryString["PO_ID"]%>';
             showLoader('Loading Purchase Order...', true);
@@ -811,10 +809,10 @@
                 $('#btnSave').val('Update');
             }, 500);
     <% } else { %>
-    // No PO_ID - hide loader after initialization
-    setTimeout(function() {
-        hideLoader();
-    }, 500);
+            // No PO_ID - hide loader after initialization
+            setTimeout(function () {
+                hideLoader();
+            }, 500);
     <% } %>
     
     $('.token-input-list').css('width', '666px !important', 'margin-left: 1px;');
@@ -1582,12 +1580,14 @@ function scheduleCalcTotal(delay) {
                             '<td><input type="text" id="txtUOMQty' + idx + '" name="txtUOMQty" style="text-align:right;width:50px!important;font-size:9px;height:20px;" value="' + parseFloat(safeVal(value.UOM_Qty, 0)).toFixed(2) + '" /><\/td>' +
                             '<td><input type="text" id="txtBonusQty' + idx + '" name="txtBonusQty" style="text-align:right;width:50px!important;font-size:9px;height:20px;" value="' + parseFloat(safeVal(value.Bonus_Qty, 0)).toFixed(2) + '" data-toggle="tooltip" data-placement="bottom" title="Enter Bonus quantity in Loose"/><\/td>' +
                             '<td><input type="text" name="txtRate" style="text-align:right ;width:50px !important;font-size:9px;height:20px" onkeyup="CulculateAmonutWithQty(this)" id="txtRate' + idx + '" value="' + parseFloat(safeVal(value.Rate, 0)).toFixed(2) + '" /><\/td>' +
-                            '<td><input type="text" autocomplete="off" style="text-align:right ;width:50px !important;font-size:9px;height:20px;" readonly="readonly" name="txtDisPer" id="txtDisPer' + idx + '" value="' + safeVal(value.Discount_Percentage, 0) + '" /><\/td>' +
+                        /*'<td><input type="text" autocomplete="off" style="text-align:right ;width:50px !important;font-size:9px;height:20px;" readonly="readonly" name="txtDisPer" id="txtDisPer' + idx + '" value="' + safeVal(value.Discount_Percentage, 0) + '" /><\/td>' +*/
+                            '<td><input type="text" autocomplete="off" style="text-align:right ;width:50px !important;font-size:9px;height:20px;" name="txtDisPer" onchange="calculateDiscountFromPercent(this)" onkeyup="calculateDiscountFromPercent(this)" id="txtDisPer' + idx + '" value="' + safeVal(value.Discount_Percentage, 0) + '" /><\/td>' +
                             '<td style="text-align:right;padding-top: 7px!important;"><input type="text" onkeyup="calcTotal()" value="' + safeVal(value.Discount_Amount, 0) + '" style="width: 50px !important;text-align:right;font-size:9px;height:20px;text-align:right!important;" id="txtDisAmount' + idx + '" name="txtDisAmount"><\/input><\/td>' +
                             '<td><select id="ddlSTAX' + idx + '" name="ddlSTAX" onchange="calcTotal()" style="text-align:right ;width:50px !important;font-size:9px;height:20px;"><option value="0">0</option><\/select><\/td>' +
                             '<td style="padding-top: 7px!important;"><input type="text" style="text-align:right!important;width:50px !important;font-size:9px;height:20px;" readonly="readonly" value="" id="txtSalAmount' + idx + '" name="txtSalAmount"><\/input><\/td>' +
                             '<td><input type="text" id="ddlFurtherTax' + idx + '" name="ddlFurtherTax" onkeyup="calcTotal()" style="text-align:right ;width:50px !important;font-size:9px;height:20px;" value="' + safeVal(value.FurtherTax_Percentage, 0) + '" /><\/td>' +
-                            '<td><input type="text" readonly="readonly" style="width:50px !important;text-align:right;font-size:9px;height:20px;" value="' + safeVal(value.FurtherTax_Amount, 0) + '" id="txtFurtherTaxAmount' + idx + '" name="txtFurtherTaxAmount"><\/td>' +
+                            /*'<td><input type="text" readonly="readonly" style="width:50px !important;text-align:right;font-size:9px;height:20px;" value="' + safeVal(value.FurtherTax_Amount, 0) + '" id="txtFurtherTaxAmount' + idx + '" name="txtFurtherTaxAmount"><\/td>' +*/
+                            '<td><input type="text" style="width:50px !important;text-align:right;font-size:9px;height:20px;" value="' + safeVal(value.FurtherTax_Amount, 0) + '" id="txtFurtherTaxAmount' + idx + '" name="txtFurtherTaxAmount" onkeyup="calcFurtherTaxFromAmount(this)" data-manual="false"><\/td>' +
                             '<td><select id="ddlAdvanceTax' + idx + '" name="ddlAdvanceTax" onchange="calcTotal()" style="text-align:right ;width:50px !important;font-size:9px;height:20px;"><option value="0">0</option><\/select><\/td>' +
                             '<td><input type="text" readonly="readonly" style="width:50px !important;text-align:right;font-size:9px;height:20px;" value="" id="txtAdvanceTaxAmount' + idx + '" name="txtAdvanceTaxAmount"><\/td>' +
                             '<td style="display:none;"><select id="ddlFed' + idx + '" style="text-align:right ;width:50px !important;font-size:9px;height:20px;margin-left: 9px;" ><option value="0">0</option><\/select><\/td>' +
@@ -1695,7 +1695,38 @@ function scheduleCalcTotal(delay) {
             );
         }
 
-       
+        function calculateDiscountFromPercent(anchor) {
+            var $row = null;
+            
+            if (anchor && anchor.nodeType === 1) {
+                $row = $(anchor).closest('tr');
+            } else if (anchor !== undefined && anchor !== null) {
+                var idx = (anchor + '').replace(/[^0-9]/g, '');
+                if (idx) {
+                    $row = $('#txtDisPer' + idx).closest('tr');
+                }
+            }
+
+            if ($row && $row.length > 0) {
+                var rawPer = $row.find('input[name=txtDisPer]').val();
+
+                
+                if (rawPer === '' || rawPer === null) {
+                    $row.find('input[name=txtDisAmount]').val('');
+                    scheduleCalcTotal();
+                    return;
+                }
+
+                var rate = parseFloat($row.find('input[name=txtRate]').val()) || 0;
+                var qty = parseFloat($row.find('input[name=txtQty]').val()) || 0;
+                var disPer = parseFloat(rawPer) || 0;
+                var totalLineAmount = rate * qty;
+                var disAmount = (totalLineAmount * disPer) / 100;
+                $row.find('input[name=txtDisAmount]').val(disAmount.toFixed(2));
+                scheduleCalcTotal();
+            }
+        }
+
         function populateTaxddlWithProgress(rowId, onComplete) {
             PageMethods.getwtaxtype(function (response) {
                 var options = '<option value="0">0</option>';
@@ -2070,11 +2101,25 @@ function scheduleCalcTotal(delay) {
                 var $row = $(value);
 
 
-                var DiscAmount = parseFloat($row.find('input[name=txtDisAmount]').val()) || 0;
+                //var DiscAmount = parseFloat($row.find('input[name=txtDisAmount]').val()) || 0;
+                //if (DiscAmount < 0) {
+                //    DiscAmount = 0;
+                //    $row.find('input[name=txtDisAmount]').val(DiscAmount);
+                //}
+
+                var rawDisVal = $row.find('input[name=txtDisAmount]').val();
+                var DiscAmount = (rawDisVal === '' || rawDisVal === null) ? 0 : (parseFloat(rawDisVal) || 0);
+
+                
                 if (DiscAmount < 0) {
                     DiscAmount = 0;
-                    $row.find('input[name=txtDisAmount]').val(DiscAmount);
+                    $row.find('input[name=txtDisAmount]').val('0.00');
                 }
+                //else if (rawDisVal !== '' && rawDisVal !== null) {
+                    
+                //    $row.find('input[name=txtDisAmount]').val(DiscAmount.toFixed(2));
+                //}
+                
 
                 var Rate = parseFloat($row.find('input[name=txtRate]').val()) || 0;
                 var Qty = parseFloat($row.find('input[name=txtQty]').val()) || 0;
@@ -2082,12 +2127,21 @@ function scheduleCalcTotal(delay) {
                 var UomQty = parseFloat($row.find('input[name=txtUOMQty]').val()) || 0;
                 var PerPice = Rate / UomQty;
 
-                // Calculate discount percentage for this row
+                var rawPerVal = $row.find('input[name=txtDisPer]').val();
                 var discpercent = 0;
+
                 if (amountExclusiveTaxes > 0) {
                     discpercent = parseFloat((DiscAmount / amountExclusiveTaxes) * 100).toFixed(2);
                 }
-                $row.find('input[name=txtDisPer]').val(discpercent);
+
+                if (rawPerVal !== '' && rawPerVal !== null) {
+                    $row.find('input[name=txtDisPer]').val(discpercent);
+                } else if (DiscAmount > 0) {
+                    $row.find('input[name=txtDisPer]').val(discpercent);
+                } else {
+                    
+                    $row.find('input[name=txtDisPer]').val('');
+                }
                 subtotal += amountExclusiveTaxes;
 
                 // Get Sales Tax for THIS ROW - CRITICAL: Use the dropdown's selected value
@@ -2108,8 +2162,23 @@ function scheduleCalcTotal(delay) {
                 var baseAmount = amountExclusiveTaxes - DiscAmount;
 
                 // Calculate Further Tax Amount
+                //var FurtherAmount = parseFloat((FurtherPercent / 100) * baseAmount);
+                //$row.find('input[name=txtFurtherTaxAmount]').val(FurtherAmount.toFixed(2));
+                //totalFurtherAmount += FurtherAmount;
+
+                
+                var rawFurtherVal = $row.find('input[name=txtFurtherTaxAmount]').val();
                 var FurtherAmount = parseFloat((FurtherPercent / 100) * baseAmount);
-                $row.find('input[name=txtFurtherTaxAmount]').val(FurtherAmount.toFixed(2));
+
+                
+                if (rawFurtherVal !== '' && rawFurtherVal !== null) {
+                    $row.find('input[name=txtFurtherTaxAmount]').val(FurtherAmount.toFixed(2));
+                } else if (FurtherPercent > 0) {
+                    $row.find('input[name=txtFurtherTaxAmount]').val(FurtherAmount.toFixed(2));
+                } else {
+                    $row.find('input[name=txtFurtherTaxAmount]').val('');
+                    FurtherAmount = 0; 
+                }
                 totalFurtherAmount += FurtherAmount;
 
                 var AdvAmount = parseFloat((AdvPercent / 100) * baseAmount);
@@ -2306,7 +2375,9 @@ function scheduleCalcTotal(delay) {
             }
 
             if ($row && $row.length > 0) {
-                var disAmount = parseFloat($row.find('input[name=txtDisAmount]').val()) || 0;
+                var rawDisAmount = $row.find('input[name=txtDisAmount]').val();
+                var disAmount = (rawDisAmount === '' || rawDisAmount === null) ? 0 : (parseFloat(rawDisAmount) || 0);
+
                 var rate = parseFloat($row.find('input[name=txtRate]').val()) || 0;
                 var qty = parseFloat($row.find('input[name=txtQty]').val()) || 0;
                 var amount = rate * qty;
@@ -2748,278 +2819,280 @@ function scheduleCalcTotal(delay) {
 
         var currentProjectionType = '';
 
-// Call this when projection type changes
-var currentProjectionType = '';
-var isProcessingProjection002 = false;
+        // Call this when projection type changes
+        var currentProjectionType = '';
+        var isProcessingProjection002 = false;
 
-// Call this when projection type changes
-function onProjectionTypeChange() {
-    currentProjectionType = $('#ctl00_MainContent_ddlprojection').val();
-    
-    if (currentProjectionType === '002') {
-        var projectionDate = $('#ctl00_MainContent_txtProjection_Date').val();
-        var warehouseId = $('#ddlWarehouse').val();
-        
-        if (!projectionDate || projectionDate.trim() === '') {
-            Swal.fire({
-                icon: 'warning',
-                title: 'Projection Date Required',
-                text: 'Please select a Projection Date before adding items for Projection Type 002.',
-                confirmButtonText: 'Select Date',
-                showCancelButton: true,
-                cancelButtonText: 'Cancel'
-            }).then((result) => {
-                if (result.isConfirmed) {
-                    $('#ctl00_MainContent_txtProjection_Date').focus();
-                    $('#ctl00_MainContent_txtProjection_Date').datepicker('show');
-                }
-            });
-        } else if (!warehouseId || warehouseId === '0') {
-            Swal.fire({
-                icon: 'warning',
-                title: 'Warehouse Required',
-                text: 'Please select a Warehouse before adding items for Projection Type 002.',
-                confirmButtonText: 'OK'
-            });
-        } else {
-            // Optional: Show info message that projection type 002 is active
-            Swal.fire({
-                icon: 'info',
-                title: 'Projection Type 002 Active',
-                text: 'Quantities will be auto-loaded from consumption data between Projection Date and current date.',
-                timer: 2000,
-                showConfirmButton: false
-            });
-        }
-    }
-}
-// Modified appendSearchItem function with projection type 002 support
-function appendSearchItem(anchor) {
-    debugger;
-    
-    // Check for projection type 002 requirements before adding item
-    var projectionType = $('#ctl00_MainContent_ddlprojection').val();
-    var projectionDate = $('#ctl00_MainContent_txtProjection_Date').val();
-    var warehouseId = $('#ddlWarehouse').val();
-    
-    if (projectionType === '002') {
-        if (!projectionDate || projectionDate.trim() === '') {
-            Swal.fire({
-                icon: 'error',
-                title: 'Cannot Add Item!',
-                text: 'Please select a Projection Date first before adding items.',
-                confirmButtonText: 'Select Date',
-                showCancelButton: true,
-                cancelButtonText: 'Cancel'
-            }).then((result) => {
-                if (result.isConfirmed) {
-                    $('#ctl00_MainContent_txtProjection_Date').focus();
-                    $('#ctl00_MainContent_txtProjection_Date').datepicker('show');
-                }
-            });
-            $(anchor).prop('checked', false);
-            return false;
-        }
-        
-        if (!warehouseId || warehouseId === '0') {
-            Swal.fire({
-                icon: 'error',
-                title: 'Cannot Add Item!',
-                text: 'Please select a Warehouse first before adding items for Projection Type 002.',
-                confirmButtonText: 'OK'
-            });
-            $(anchor).prop('checked', false);
-            return false;
-        }
-    }
-    
-    var row = $(anchor).closest('tr');
-    var item_id = $(row).find('td:eq(1)').text().trim();
-    var item_code = $(row).find('td:eq(2)').text().trim();
-    var item_name = $(row).find('td:eq(3)').text().trim();
-    var unit = $(row).find('td:eq(4)').text().trim();
-    var rate = $(row).find('td:eq(5)').text().trim() || '0';
-    var uom_qty = $(row).find('td:eq(6)').text().trim() || '1';
-    var total_stock = $(row).find('td:eq(7)').text().trim() || '0';
-    var isChecked = $(anchor).prop('checked');
+        // Call this when projection type changes
+        function onProjectionTypeChange() {
+            currentProjectionType = $('#ctl00_MainContent_ddlprojection').val();
 
-    if (!isChecked) {
-        $('#tblItemDescription tbody tr').each(function () {
-            if ($(this).find('input[name=txtItemCode]').val() === item_code) {
-                $(this).remove();
-            }
-        });
-        calcTotal();
-        return;
-    }
+            if (currentProjectionType === '002') {
+                var projectionDate = $('#ctl00_MainContent_txtProjection_Date').val();
+                var warehouseId = $('#ddlWarehouse').val();
 
-    var exists = false;
-    $('#tblItemDescription tbody tr').each(function () {
-        if ($(this).find('input[name=txtItemCode]').val() === item_code) {
-            exists = true;
-            return false;
-        }
-    });
-
-    if (exists) {
-        Swal.fire({
-            icon: 'error',
-            title: 'Error!',
-            text: 'Item already added!',
-            timer: 2000,
-            showConfirmButton: false
-        });
-        $(anchor).prop('checked', false);
-        return;
-    }
-
-    var length = $("#tblItemDescription tr:gt(0)").length + 1;
-    var defaultQty = '1';
-
-    // For projection type 002, set default to 0 and show loading indicator
-    if (projectionType === '002' && projectionDate && warehouseId && warehouseId !== '0') {
-        defaultQty = '0';
-        
-        // Show loading indicator in the quantity field
-        Swal.fire({
-            title: 'Loading...',
-            text: 'Fetching consumption data for this item...',
-            allowOutsideClick: false,
-            allowEscapeKey: false,
-            showConfirmButton: false,
-            didOpen: () => {
-                Swal.showLoading();
-            }
-        });
-    }
-
-    var newRow = '<tr>' +
-        '<td style="padding-top:7px!important;"><input type="hidden" id="txtPRDId' + length + '" name="txtPRDId" value="0" />' + length + '</td>' +
-        '<td style="padding-top: 7px!important;"><input type="hidden" name="txtPRNo" id="txtPRNO' + length + '" value="" /></td>' +
-        '<td style="padding-top: 7px!important;text-align:right!important;"><input type="hidden" name="txtcsno" id="txtcsno' + length + '" value="" /></td>' +
-        '<td style="padding-top: 7px!important;padding-right: 3px!important;text-align:right!important;"><input type="hidden" name="txtItemCode" id="txtItemCode' + length + '" value="' + item_code + '" style="width:50px !important;text-align:right;font-size:9px;height:20px;"/> ' + item_code + '   </td>' +
-        '<td style="padding-left: 8px!important;padding-top: 7px!important;text-align:left!important;"><input type="hidden" name="txtItemName" id="txtItemName' + length + '" value="' + item_name + '"/> ' + item_name + '   </td>' +
-        '<td style="text-align:left!important;"> <input type="hidden" name="txtUnit" id="txtUnit' + length + '" value="' + unit + '" />' + unit + '   </td>' +
-        '<td><input type="text" id="txtQty' + length + '" style="text-align:right ;width:50px !important;font-size:9px;height:20px;" name="txtQty" onkeyup="CulculateAmonutWithQty(this)" value="' + defaultQty + '"/></td>' +
-        '<td><input type="text" id="txtUOMQty' + length + '" style="text-align:right;width:50px!important;font-size:9px;height:20px;" name="txtUOMQty" value="' + uom_qty + '" /></td>' +
-        '<td><input type="text" id="txtBonusQty' + length + '" style="text-align:right;width:50px!important;font-size:9px;height:20px;" name="txtBonusQty" value="0" data-toggle="tooltip" data-placement="bottom" title="Enter Bonus quantity in Loose"/></td>' +
-        '<td><input type="text" autocomplete="off" style="text-align:right ;width:50px !important;font-size:9px;height:20px;" onkeyup="CulculateAmonutWithQty(this)" name="txtRate" id="txtRate' + length + '" value="' + rate + '" /></td>' +
-        '<td><input type="text" autocomplete="off" style="text-align:right ;width:50px !important;font-size:9px;height:20px;" name="txtDisPer" readonly="readonly" id="txtDisPer' + length + '" value="0" /></td>' +
-        '<td style="text-align:right;padding-top: 7px!important"><input type="text" onkeyup="calcTotal()" style="width: 50px !important;text-align:right;font-size:9px;height:20px;text-align:right!important;" id="txtDisAmount' + length + '" name="txtDisAmount" value="0"></input></td>' +
-        '<td><select id="ddlSTAX' + length + '" name="ddlSTAX" onchange="calcTotal()" style="text-align:right ;width:50px !important;font-size:9px;height:20px;"><option value="0">0</option></select></td>' +
-        '<td style="padding-top: 7px!important;text-align:right!important"><input type="text" style="text-align:right!important; width:50px !important;font-size:9px;height:20px;" value="0" readonly="readonly" id="txtSalAmount' + length + '" name="txtSalAmount" /></td>' +
-        '<td><input type="text" id="ddlFurtherTax' + length + '" name="ddlFurtherTax" onkeyup="calcTotal()" style="text-align:right ;width:50px !important;font-size:9px;height:20px;" value="0" /></td>' +
-        '<td><input type="text" readonly="readonly" style="width:50px !important;text-align:right;font-size:9px;height:20px;" value="0" id="txtFurtherTaxAmount' + length + '" name="txtFurtherTaxAmount"></td>' +
-        '<td><select id="ddlAdvanceTax' + length + '" name="ddlAdvanceTax" onchange="calcTotal()" style="text-align:right ;width:50px !important;font-size:9px;height:20px;"><option value="0">0</option></select></td>' +
-        '<td><input type="text" readonly="readonly" style="width:50px !important;text-align:right;font-size:9px;height:20px;" value="0" id="txtAdvanceTaxAmount' + length + '" name="txtAdvanceTaxAmount"></td>' +
-        '<td style="display:none;"><select id="ddlFed' + length + '" onchange="calcTotal()" style="text-align:right ;width:50px !important;font-size:9px;height:20px;margin-left: 6px;"><option value="0">0</option></select></td>' +
-        '<td style="display:none;"><input type="text" value="0" style="width: 50px !important;text-align:right;font-size:9px;height:20px;" id="txtFedAmount' + length + '" name="txtFedAmount"></input></td>' +
-        '<td><input type="text" readonly style="width:50px!important;text-align:right;font-size:9px;height:20px;" value="0" id="txtBonusAmount' + length + '" name="txtBonusAmount" /></td>' +
-        '<td style="text-align:right ;width:50px !important;font-size:9px;height:20px;padding-top: 7px!important;"><input type="text" style="width:50px !important;text-align:right;font-size:9px;height:20px;" value="0" readonly="readonly" id="txtTotalAmount' + length + '" name="txtTotalAmount"></input></td>' +
-        '<td><input type="text" name="txtddate" id="txtddate' + length + '" class="row-date-picker" style="width:64px !important;text-align:center;font-size:9px;height:20px;" /></td>' +
-        '<td style="text-align:center; font-weight:bold; color:#555;">' + total_stock + '</td>' +
-        '<td style="padding-top: 7px!important;"><a href="javascript:void(0)" onclick="ExcludeFromPayment(this)"><i class="glyphicon glyphicon-trash" style="font-size: 13px;margin-left: 16px; color: #f30a0a;position:relative;left: -10px;"></i></a>   </td>' +
-        '</tr>';
-
-    $('#tblItemDescription tbody').append(newRow);
-
-    initializeDatePickers();
-    populateTaxddl(length);
-    
-    // Populate Advance Tax dropdown
-    PageMethods.getAdvanceTaxType(function (response) {
-        var options = '<option value="0">0</option>';
-        try {
-            var taxData = JSON.parse(response);
-            $.each(taxData, function (key, value) {
-                options += '<option value="' + value.Advance_Tax_ID + '">' + value.Advance_Tax_Perc + '</option>';
-            });
-        } catch (e) {
-            console.error('Error parsing advance tax data:', e);
-        }
-        $('#ddlAdvanceTax' + length).html(options);
-    }, function (error) {
-        console.error('Error loading Advance Tax:', error);
-    });
-
-    populateFurtherTaxddl(length);
-    $('[data-toggle="tooltip"]').tooltip();
-
-    setTimeout(function () {
-        $('#txtddate' + length).datepicker({
-            dateFormat: 'dd M yy',
-            changeMonth: true,
-            changeYear: true,
-            showButtonPanel: true
-        }).attr('readonly', 'readonly').focus(function () {
-            $(this).datepicker('show');
-        });
-    }, 100);
-
-    // If projection type is 002, fetch consumed quantity
-    if (projectionType === '002' && projectionDate && warehouseId && warehouseId !== '0') {
-        var itemIdsArray = [parseInt(item_id)];
-        
-        $.ajax({
-            type: "POST",
-            url: "PurchaseOrder.aspx/GetProjectedConsumptionForItems",
-            data: JSON.stringify({ 
-                itemIdsJson: JSON.stringify(itemIdsArray), 
-                projectionDate: projectionDate, 
-                warehouseId: warehouseId 
-            }),
-            contentType: "application/json; charset=utf-8",
-            dataType: "json",
-            success: function (response) {
-                Swal.close(); // Close the loading Swal
-                
-                var consumedQtys = JSON.parse(response.d);
-                var consumedQty = consumedQtys[item_id] || 0;
-                
-                if (consumedQty > 0) {
-                    // Convert to integer (remove decimal places)
-                    var intQty = Math.floor(consumedQty);
-                    $('#txtQty' + length).val(intQty);
-                    CulculateAmonutWithQty(length);
-                    calcTotal();
-                    
-                    // Show success notification
+                if (!projectionDate || projectionDate.trim() === '') {
                     Swal.fire({
-                        icon: 'success',
-                        title: 'Quantity Loaded',
-                        html: '<strong>' + item_name + '</strong><br/>Quantity: <strong>' + intQty + '</strong><br/>Loaded from consumption data between ' + projectionDate + ' and today.',
+                        icon: 'warning',
+                        title: 'Projection Date Required',
+                        text: 'Please select a Projection Date before adding items for Projection Type 002.',
+                        confirmButtonText: 'Select Date',
+                        showCancelButton: true,
+                        cancelButtonText: 'Cancel'
+                    }).then((result) => {
+                        if (result.isConfirmed) {
+                            $('#ctl00_MainContent_txtProjection_Date').focus();
+                            $('#ctl00_MainContent_txtProjection_Date').datepicker('show');
+                        }
+                    });
+                } else if (!warehouseId || warehouseId === '0') {
+                    Swal.fire({
+                        icon: 'warning',
+                        title: 'Warehouse Required',
+                        text: 'Please select a Warehouse before adding items for Projection Type 002.',
+                        confirmButtonText: 'OK'
+                    });
+                } else {
+                    // Optional: Show info message that projection type 002 is active
+                    Swal.fire({
+                        icon: 'info',
+                        title: 'Projection Type 002 Active',
+                        text: 'Quantities will be auto-loaded from consumption data between Projection Date and current date.',
                         timer: 2000,
                         showConfirmButton: false
                     });
-                } else {
-                    // No consumption data found
-                    Swal.fire({
-                        icon: 'info',
-                        title: 'No Consumption Data',
-                        html: '<strong>' + item_name + '</strong><br/>No consumption records found for this item between ' + projectionDate + ' and today.<br/>Quantity set to 0.',
-                        timer: 2500,
-                        showConfirmButton: false
-                    });
                 }
-            },
-            error: function (error) {
-                Swal.close();
-                console.error("Error fetching projected consumption", error);
-                
+            }
+        }
+        // Modified appendSearchItem function with projection type 002 support
+        function appendSearchItem(anchor) {
+            debugger;
+
+            // Check for projection type 002 requirements before adding item
+            var projectionType = $('#ctl00_MainContent_ddlprojection').val();
+            var projectionDate = $('#ctl00_MainContent_txtProjection_Date').val();
+            var warehouseId = $('#ddlWarehouse').val();
+
+            if (projectionType === '002') {
+                if (!projectionDate || projectionDate.trim() === '') {
+                    Swal.fire({
+                        icon: 'error',
+                        title: 'Cannot Add Item!',
+                        text: 'Please select a Projection Date first before adding items.',
+                        confirmButtonText: 'Select Date',
+                        showCancelButton: true,
+                        cancelButtonText: 'Cancel'
+                    }).then((result) => {
+                        if (result.isConfirmed) {
+                            $('#ctl00_MainContent_txtProjection_Date').focus();
+                            $('#ctl00_MainContent_txtProjection_Date').datepicker('show');
+                        }
+                    });
+                    $(anchor).prop('checked', false);
+                    return false;
+                }
+
+                if (!warehouseId || warehouseId === '0') {
+                    Swal.fire({
+                        icon: 'error',
+                        title: 'Cannot Add Item!',
+                        text: 'Please select a Warehouse first before adding items for Projection Type 002.',
+                        confirmButtonText: 'OK'
+                    });
+                    $(anchor).prop('checked', false);
+                    return false;
+                }
+            }
+
+            var row = $(anchor).closest('tr');
+            var item_id = $(row).find('td:eq(1)').text().trim();
+            var item_code = $(row).find('td:eq(2)').text().trim();
+            var item_name = $(row).find('td:eq(3)').text().trim();
+            var unit = $(row).find('td:eq(4)').text().trim();
+            var rate = $(row).find('td:eq(5)').text().trim() || '0';
+            var uom_qty = $(row).find('td:eq(6)').text().trim() || '1';
+            var total_stock = $(row).find('td:eq(7)').text().trim() || '0';
+            var isChecked = $(anchor).prop('checked');
+
+            if (!isChecked) {
+                $('#tblItemDescription tbody tr').each(function () {
+                    if ($(this).find('input[name=txtItemCode]').val() === item_code) {
+                        $(this).remove();
+                    }
+                });
+                calcTotal();
+                return;
+            }
+
+            var exists = false;
+            $('#tblItemDescription tbody tr').each(function () {
+                if ($(this).find('input[name=txtItemCode]').val() === item_code) {
+                    exists = true;
+                    return false;
+                }
+            });
+
+            if (exists) {
                 Swal.fire({
                     icon: 'error',
-                    title: 'Error Loading Data',
-                    text: 'Failed to fetch consumption data for this item. Quantity set to 0.',
+                    title: 'Error!',
+                    text: 'Item already added!',
                     timer: 2000,
                     showConfirmButton: false
                 });
+                $(anchor).prop('checked', false);
+                return;
             }
-        });
-    }
 
-    CulculateAmonutWithQty(length);
-    calcTotal();
-}
+            var length = $("#tblItemDescription tr:gt(0)").length + 1;
+            var defaultQty = '1';
+
+            // For projection type 002, set default to 0 and show loading indicator
+            if (projectionType === '002' && projectionDate && warehouseId && warehouseId !== '0') {
+                defaultQty = '0';
+
+                // Show loading indicator in the quantity field
+                Swal.fire({
+                    title: 'Loading...',
+                    text: 'Fetching consumption data for this item...',
+                    allowOutsideClick: false,
+                    allowEscapeKey: false,
+                    showConfirmButton: false,
+                    didOpen: () => {
+                        Swal.showLoading();
+                    }
+                });
+            }
+
+            var newRow = '<tr>' +
+                '<td style="padding-top:7px!important;"><input type="hidden" id="txtPRDId' + length + '" name="txtPRDId" value="0" />' + length + '</td>' +
+                '<td style="padding-top: 7px!important;"><input type="hidden" name="txtPRNo" id="txtPRNO' + length + '" value="" /></td>' +
+                '<td style="padding-top: 7px!important;text-align:right!important;"><input type="hidden" name="txtcsno" id="txtcsno' + length + '" value="" /></td>' +
+                '<td style="padding-top: 7px!important;padding-right: 3px!important;text-align:right!important;"><input type="hidden" name="txtItemCode" id="txtItemCode' + length + '" value="' + item_code + '" style="width:50px !important;text-align:right;font-size:9px;height:20px;"/> ' + item_code + '   </td>' +
+                '<td style="padding-left: 8px!important;padding-top: 7px!important;text-align:left!important;"><input type="hidden" name="txtItemName" id="txtItemName' + length + '" value="' + item_name + '"/> ' + item_name + '   </td>' +
+                '<td style="text-align:left!important;"> <input type="hidden" name="txtUnit" id="txtUnit' + length + '" value="' + unit + '" />' + unit + '   </td>' +
+                '<td><input type="text" id="txtQty' + length + '" style="text-align:right ;width:50px !important;font-size:9px;height:20px;" name="txtQty" onkeyup="CulculateAmonutWithQty(this)" value="' + defaultQty + '"/></td>' +
+                '<td><input type="text" id="txtUOMQty' + length + '" style="text-align:right;width:50px!important;font-size:9px;height:20px;" name="txtUOMQty" value="' + uom_qty + '" /></td>' +
+                '<td><input type="text" id="txtBonusQty' + length + '" style="text-align:right;width:50px!important;font-size:9px;height:20px;" name="txtBonusQty" value="0" data-toggle="tooltip" data-placement="bottom" title="Enter Bonus quantity in Loose"/></td>' +
+                '<td><input type="text" autocomplete="off" style="text-align:right ;width:50px !important;font-size:9px;height:20px;" onkeyup="CulculateAmonutWithQty(this)" name="txtRate" id="txtRate' + length + '" value="' + rate + '" /></td>' +
+                /*'<td><input type="text" autocomplete="off" style="text-align:right ;width:50px !important;font-size:9px;height:20px;" name="txtDisPer" readonly="readonly" id="txtDisPer' + length + '" value="0" /></td>' +*/
+                '<td><input type="text" autocomplete="off" style="text-align:right ;width:50px !important;font-size:9px;height:20px;" name="txtDisPer" onchange="calculateDiscountFromPercent(this)" onkeyup="calculateDiscountFromPercent(this)" id="txtDisPer' + length + '" value="0" /></td>' +
+                '<td style="text-align:right;padding-top: 7px!important"><input type="text" onkeyup="calcTotal()" style="width: 50px !important;text-align:right;font-size:9px;height:20px;text-align:right!important;" id="txtDisAmount' + length + '" name="txtDisAmount" value="0"></input></td>' +
+                '<td><select id="ddlSTAX' + length + '" name="ddlSTAX" onchange="calcTotal()" style="text-align:right ;width:50px !important;font-size:9px;height:20px;"><option value="0">0</option></select></td>' +
+                '<td style="padding-top: 7px!important;text-align:right!important"><input type="text" style="text-align:right!important; width:50px !important;font-size:9px;height:20px;" value="0" readonly="readonly" id="txtSalAmount' + length + '" name="txtSalAmount" /></td>' +
+                '<td><input type="text" id="ddlFurtherTax' + length + '" name="ddlFurtherTax" onkeyup="calcTotal()" style="text-align:right ;width:50px !important;font-size:9px;height:20px;" value="0" /></td>' +
+            /*'<td><input type="text" readonly="readonly" style="width:50px !important;text-align:right;font-size:9px;height:20px;" value="0" id="txtFurtherTaxAmount' + length + '" name="txtFurtherTaxAmount"></td>' +*/
+                '<td><input type="text" style="width:50px !important;text-align:right;font-size:9px;height:20px;" value="0" id="txtFurtherTaxAmount' + length + '" name="txtFurtherTaxAmount" onkeyup="calcFurtherTaxFromAmount(this)" data-manual="false"></td>' +
+                '<td><select id="ddlAdvanceTax' + length + '" name="ddlAdvanceTax" onchange="calcTotal()" style="text-align:right ;width:50px !important;font-size:9px;height:20px;"><option value="0">0</option></select></td>' +
+                '<td><input type="text" readonly="readonly" style="width:50px !important;text-align:right;font-size:9px;height:20px;" value="0" id="txtAdvanceTaxAmount' + length + '" name="txtAdvanceTaxAmount"></td>' +
+                '<td style="display:none;"><select id="ddlFed' + length + '" onchange="calcTotal()" style="text-align:right ;width:50px !important;font-size:9px;height:20px;margin-left: 6px;"><option value="0">0</option></select></td>' +
+                '<td style="display:none;"><input type="text" value="0" style="width: 50px !important;text-align:right;font-size:9px;height:20px;" id="txtFedAmount' + length + '" name="txtFedAmount"></input></td>' +
+                '<td><input type="text" readonly style="width:50px!important;text-align:right;font-size:9px;height:20px;" value="0" id="txtBonusAmount' + length + '" name="txtBonusAmount" /></td>' +
+                '<td style="text-align:right ;width:50px !important;font-size:9px;height:20px;padding-top: 7px!important;"><input type="text" style="width:50px !important;text-align:right;font-size:9px;height:20px;" value="0" readonly="readonly" id="txtTotalAmount' + length + '" name="txtTotalAmount"></input></td>' +
+                '<td><input type="text" name="txtddate" id="txtddate' + length + '" class="row-date-picker" style="width:64px !important;text-align:center;font-size:9px;height:20px;" /></td>' +
+                '<td style="text-align:center; font-weight:bold; color:#555;">' + total_stock + '</td>' +
+                '<td style="padding-top: 7px!important;"><a href="javascript:void(0)" onclick="ExcludeFromPayment(this)"><i class="glyphicon glyphicon-trash" style="font-size: 13px;margin-left: 16px; color: #f30a0a;position:relative;left: -10px;"></i></a>   </td>' +
+                '</tr>';
+
+            $('#tblItemDescription tbody').append(newRow);
+
+            initializeDatePickers();
+            populateTaxddl(length);
+
+            // Populate Advance Tax dropdown
+            PageMethods.getAdvanceTaxType(function (response) {
+                var options = '<option value="0">0</option>';
+                try {
+                    var taxData = JSON.parse(response);
+                    $.each(taxData, function (key, value) {
+                        options += '<option value="' + value.Advance_Tax_ID + '">' + value.Advance_Tax_Perc + '</option>';
+                    });
+                } catch (e) {
+                    console.error('Error parsing advance tax data:', e);
+                }
+                $('#ddlAdvanceTax' + length).html(options);
+            }, function (error) {
+                console.error('Error loading Advance Tax:', error);
+            });
+
+            populateFurtherTaxddl(length);
+            $('[data-toggle="tooltip"]').tooltip();
+
+            setTimeout(function () {
+                $('#txtddate' + length).datepicker({
+                    dateFormat: 'dd M yy',
+                    changeMonth: true,
+                    changeYear: true,
+                    showButtonPanel: true
+                }).attr('readonly', 'readonly').focus(function () {
+                    $(this).datepicker('show');
+                });
+            }, 100);
+
+            // If projection type is 002, fetch consumed quantity
+            if (projectionType === '002' && projectionDate && warehouseId && warehouseId !== '0') {
+                var itemIdsArray = [parseInt(item_id)];
+
+                $.ajax({
+                    type: "POST",
+                    url: "PurchaseOrder.aspx/GetProjectedConsumptionForItems",
+                    data: JSON.stringify({
+                        itemIdsJson: JSON.stringify(itemIdsArray),
+                        projectionDate: projectionDate,
+                        warehouseId: warehouseId
+                    }),
+                    contentType: "application/json; charset=utf-8",
+                    dataType: "json",
+                    success: function (response) {
+                        Swal.close(); // Close the loading Swal
+
+                        var consumedQtys = JSON.parse(response.d);
+                        var consumedQty = consumedQtys[item_id] || 0;
+
+                        if (consumedQty > 0) {
+                            // Convert to integer (remove decimal places)
+                            var intQty = Math.floor(consumedQty);
+                            $('#txtQty' + length).val(intQty);
+                            CulculateAmonutWithQty(length);
+                            calcTotal();
+
+                            // Show success notification
+                            Swal.fire({
+                                icon: 'success',
+                                title: 'Quantity Loaded',
+                                html: '<strong>' + item_name + '</strong><br/>Quantity: <strong>' + intQty + '</strong><br/>Loaded from consumption data between ' + projectionDate + ' and today.',
+                                timer: 2000,
+                                showConfirmButton: false
+                            });
+                        } else {
+                            // No consumption data found
+                            Swal.fire({
+                                icon: 'info',
+                                title: 'No Consumption Data',
+                                html: '<strong>' + item_name + '</strong><br/>No consumption records found for this item between ' + projectionDate + ' and today.<br/>Quantity set to 0.',
+                                timer: 2500,
+                                showConfirmButton: false
+                            });
+                        }
+                    },
+                    error: function (error) {
+                        Swal.close();
+                        console.error("Error fetching projected consumption", error);
+
+                        Swal.fire({
+                            icon: 'error',
+                            title: 'Error Loading Data',
+                            text: 'Failed to fetch consumption data for this item. Quantity set to 0.',
+                            timer: 2000,
+                            showConfirmButton: false
+                        });
+                    }
+                });
+            }
+
+            CulculateAmonutWithQty(length);
+            calcTotal();
+        }
 
         function initializeDatePickers() {
             $('.row-date-picker').not('.hasDatepicker').datepicker({

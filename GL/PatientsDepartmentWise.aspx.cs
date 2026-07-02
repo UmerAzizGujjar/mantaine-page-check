@@ -684,6 +684,7 @@ namespace PMS
                     ddlDepartments.DataBind();
                     DateDiv.Visible = true;
                     Time_Row.Visible = true;
+                    tr_Export.Visible = true;
                     op_PanelCompany.Visible = false;
                     optRw.Visible = false;
                     DataBaseDataContext db = new DataBaseDataContext(DBClass.ConnectionString());
@@ -3157,7 +3158,6 @@ namespace PMS
                     DateDiv.Visible = true;
                     Time_Row.Visible = true;
                     AllowPatientRecord = false;
-                    MRDiv.Visible = true;
 
                 }
                 else if (this.PageTitle == "Gir_To_Po_Heirarchy")
@@ -3174,6 +3174,58 @@ namespace PMS
                 else if (this.PageTitle == "Cath_Lab_Billing_Detail_Report")
                 {
                     string x = "Cath Lab Billing Detail Report";
+                    Master.Label2.Text = x;
+                    Master.GetMenuName();
+                    DateDiv.Visible = true;
+                    Time_Row.Visible = true;
+                    trDoctor.Visible = true;
+                    optRw.Visible = true;
+                    AllowPatientRecord = false;
+
+                    MRDiv.Visible = true;
+                    lblMRNo.Visible = true;
+                    txtMRNo.Visible = true;
+
+
+                    DataTable dt = DBClass.getDataTable("select * from HR_Employees where IsDoctor=1");
+                    ddlDoctor.DataSource = dt;
+                    ddlDoctor.DataValueField = "Emp_ID";
+                    ddlDoctor.DataTextField = "Emp_Name";
+                    ddlDoctor.Items.Add(new ListItem() { Value = "0", Text = "All Doctors" });
+                    ddlDoctor.DataBind();
+                    ddlReportType.Visible = false;
+                    lbservieType.Visible = false;
+
+
+                    object valusets;
+                    DataBaseDataContext db = new DataBaseDataContext(DBClass.ConnectionString());
+                    valusets = from d in db.aspnet_Users
+                               select new { d.UserName, d.UserId };
+                    ddloprators.DataSource = valusets;
+                    ddloprators.DataTextField = "UserName";
+                    ddloprators.DataValueField = "UserId";
+                    ddloprators.Items.Add(new ListItem() { Text = "All", Value = "0" });
+                    ddloprators.DataBind();
+                    ddlShift.Visible = false;
+                    lbShift.Visible = false;
+
+                    DataBaseDataContext dbs = new DataBaseDataContext(DBClass.ConnectionString());
+                    var serviceList = (from sl in dbs.INV_Items
+                                       where sl.Active == true
+                                       select new { sl.Item_ID, sl.Description }).ToList();
+
+                    ddlItemName.DataSource = serviceList;
+                    ddlItemName.DataValueField = "Item_ID";
+                    ddlItemName.DataTextField = "Description";
+                    ddlItemName.Items.Add(new ListItem() { Text = "All", Value = "0" });
+                    ddlItemName.DataBind();
+
+                    trSearch1.Visible = true;
+
+                }
+                else if (this.PageTitle == "Cath_Lab_Billing_Detail_Vendor_Wise_Report")
+                {
+                    string x = "Cath Lab Billing Detail Vendor Wise Report";
                     Master.Label2.Text = x;
                     Master.GetMenuName();
                     DateDiv.Visible = true;
