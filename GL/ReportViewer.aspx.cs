@@ -2824,7 +2824,7 @@ namespace PMS
                 rd.SetParameterValue("@FromDate", StartDateTime);
                 rd.SetParameterValue("@ToDate", EndDateTime);
                 rd.SetParameterValue("@Item_ID", ItemID);
-                rd.SetParameterValue("@Payment_Type", Payment_Type);
+                rd.SetParameterValue("Payment_Type", Payment_Type);
                 rd.SetParameterValue("@Warehouse", Request.QueryString["WareHouse"]);
                 rd.SetParameterValue("CompanyName", AppConfig.Company_Name);
                 rd.SetParameterValue("Title", reportTitle);

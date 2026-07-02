@@ -7933,7 +7933,7 @@ namespace PMS
                     ddlItemName.DataBind();
 
 
-                    trPayment.Visible = false;
+                    trPayment.Visible = true;
                     ddlPaymentType.Items.Clear();
                     ddlPaymentType.Items.Add(new ListItem("All", "0"));
                     ddlPaymentType.Items.Add(new ListItem("Cash", "1"));
