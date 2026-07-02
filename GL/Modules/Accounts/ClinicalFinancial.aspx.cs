@@ -409,6 +409,24 @@ namespace PMS.Modules.Accounts
             return data;
         }
 
+        [WebMethod]
+        public static List<RowData> loadSavedRowsRefund()
+        {
+            using (var db = new DataBaseDataContext())
+            {
+                var data = (from x in db.ClinicalAccountCategories
+                            where x.IsCancel == false && x.Fn_Department == "014"
+                            select new RowData
+                            {
+                                categoryname = x.CategoryName,
+                                dr = x.CashInHand.HasValue ? x.CashInHand.Value.ToString() : "0",  
+                                cr = x.Revenue.HasValue ? x.Revenue.Value.ToString() : "0",     
+                                financialdepartment = x.Fn_Department
+                            }).ToList();
+
+                return data;
+            }
+        }
         // Create a class to receive row data
 
         public class RowData
