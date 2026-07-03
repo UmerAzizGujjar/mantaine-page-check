@@ -2805,7 +2805,7 @@ namespace PMS
                 rd.SetParameterValue("@ToDate", EndDateTime, rd.Subreports[0].Name.ToString());
                 rd.SetParameterValue("@UserId", Request.QueryString["Operator"], rd.Subreports[0].Name.ToString());
                 rd.SetParameterValue("@Warehouse", Request.QueryString["WareHouse"], rd.Subreports[0].Name.ToString());
-                //rd.SetParameterValue("@Item_ID", ItemID, rd.Subreports[0].Name.ToString());
+                rd.SetParameterValue("@Item_ID", ItemID, rd.Subreports[0].Name.ToString());
                 rd.SetParameterValue("CompanyLogo", logoPath);
                 rd.Subreports[0].RecordSelectionFormula = "{spSaleReport;1.TotalAmount} < 0";
             }
@@ -2823,8 +2823,8 @@ namespace PMS
                 rd.Load(reportPath);
                 rd.SetParameterValue("@FromDate", StartDateTime);
                 rd.SetParameterValue("@ToDate", EndDateTime);
-                rd.SetParameterValue("@Item_ID", ItemID);
                 rd.SetParameterValue("Payment_Type", Payment_Type);
+                rd.SetParameterValue("@Item_ID", ItemID);
                 rd.SetParameterValue("@Warehouse", Request.QueryString["WareHouse"]);
                 rd.SetParameterValue("CompanyName", AppConfig.Company_Name);
                 rd.SetParameterValue("Title", reportTitle);
@@ -2833,7 +2833,7 @@ namespace PMS
                 rd.SetParameterValue("@ToDate", EndDateTime, rd.Subreports[0].Name.ToString());
                 rd.SetParameterValue("@UserId", Request.QueryString["Operator"], rd.Subreports[0].Name.ToString());
                 rd.SetParameterValue("@Warehouse", Request.QueryString["WareHouse"], rd.Subreports[0].Name.ToString());
-                //rd.SetParameterValue("@Item_ID", ItemID, rd.Subreports[0].Name.ToString());
+                rd.SetParameterValue("@Item_ID", ItemID, rd.Subreports[0].Name.ToString());
                 rd.SetParameterValue("CompanyLogo", logoPath);
                 rd.Subreports[0].RecordSelectionFormula = "{spSaleReport;1.TotalAmount} < 0";
             }
