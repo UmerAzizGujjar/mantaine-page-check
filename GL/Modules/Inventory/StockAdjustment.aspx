@@ -435,6 +435,9 @@
         }
         var amountonedit = 0;
         function calculatecurrentstock(item_id) {
+
+
+            $('#ctl00_MainContent_ddl_Ware_House').atrr('disabled', true);
             debugger;
             var itemID = '';
             if (item_id > 0) {
