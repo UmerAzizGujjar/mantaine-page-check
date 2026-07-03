@@ -242,6 +242,7 @@
             $('#ctl00_MainContent_txtSTime').val('12:00 AM');
             $('#ctl00_MainContent_txtETime').val('11:59 PM');
             $('#ctl00_MainContent_ddlDepartments').select2();
+            $('#ctl00_MainContent_ddlPaymentType').select2();
             $('#ctl00_MainContent_ddlPatientType').select2();
             $('#ctl00_MainContent_ddlwareHouse').select2();
             $('#ctl00_MainContent_ddlReportType').select2();
