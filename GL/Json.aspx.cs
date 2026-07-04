@@ -1064,7 +1064,7 @@ namespace PMS
                 {
                     string sqlQuery;
                     if (Request.QueryString["q"] != null)
-                        sqlQuery = "Select  top 1 p.Patient_ID,p.Opd_No,p.Full_Name,rp.pat_id,rp.mr_no_sequence  as Patient_No,p.Reg_PatId from Patients p join Reg_patient rp on p.Reg_PatId = rp.pat_id   Where rp.mr_no_sequence = '" + Request.QueryString["q"].ToString() + "' order by p.Created_Time desc";
+                        sqlQuery = "Select  top 1 p.Patient_ID,p.Opd_No,p.Full_Name,rp.pat_id,rp.mr_no_sequence  as Patient_No,p.Reg_PatId from Patients p join Reg_patient rp on p.Reg_PatId = rp.pat_id   Where rp.mr_no_sequence LIKE '%" + Request.QueryString["q"].ToString() + "%' order by p.Created_Time desc";
                     else
                         sqlQuery = "Select distinct (select top 1 Patient_ID from Patients where Patient_No=p.Patient_No)Patient_ID,Patient_No,Full_Name from Patients p where isnull(IsRevisit,'0')=0  order by Created_Time desc";
                     string result = "";

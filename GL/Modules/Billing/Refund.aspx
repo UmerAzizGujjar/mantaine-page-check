@@ -55,6 +55,27 @@
             if (data.d != '') {
                 if (data.d.Patient_Discount_Type == null)
                     data.d.Patient_Discount_Type = "";
+
+                var status = parseData.Status ? parseData.Status.trim() : "Created";
+
+                var divApprove = $('#divApproveContainer');
+                var divUnApprove = $('#divUnApproveContainer');
+                var divVoucher = $('#divVoucherContainer');
+
+                divApprove.hide();
+                divUnApprove.hide();
+                divVoucher.hide();
+
+                if (status === "Created") {
+                    divApprove.show();
+                }
+                else if (status === "Approved") {
+                    divUnApprove.show();
+                    divVoucher.show();
+                }
+                else if (status === "UnApproved") {
+                    divApprove.show();
+                }
                 var mydate = new Date(Date.parse(parseData.Entry_Date));
                 var dateR = mydate.toLocaleDateString();
                 $('#hdPatientID').text(ReplaceNullWith_Space(parseData.Patient_ID));
@@ -76,6 +97,9 @@
                 $('#txtAdvanceDate').val(ReplaceNullWith_Space(date));
                 var tokendata = httpGet("json.aspx?Table=PatientsFetchByID&q=" + parseData.Patient_ID);
                 $('#txtMRNo').tokenInput("add", { id: JSON.parse(tokendata)[0].id, name: JSON.parse(tokendata)[0].name });
+
+
+                
             }
         }
         function LoadShareDetails(advID) {
@@ -558,6 +582,174 @@
             return proceed;
         }
 
+
+        function ApproveRefund() {
+            var refundId = '<% =Request.QueryString["advID"] %>';
+            if (!refundId || refundId == "") {
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Error!',
+                    text: 'No refund record found to approve.',
+                    showConfirmButton: true
+                });
+                return;
+            }
+
+            PageMethods.Approve_Refund(refundId, function (response) {
+                debugger;
+                try {
+                    var result = JSON.parse(response);
+                    if (result && result.Message) {
+                        if (result.Success) {
+                            Swal.fire({
+                                icon: 'success',
+                                title: 'Success!',
+                                text: result.Message,
+                                showConfirmButton: false,
+                                timer: 2000,
+                                customClass: {
+                                    popup: 'swal-big-popup',
+                                    title: 'swal-big-title',
+                                    htmlContainer: 'swal-big-text'
+                                }
+                            });
+                            setTimeout(function () {
+                                location.reload();
+                            }, 2000);
+                        } else {
+                            Swal.fire({
+                                icon: 'error',
+                                title: 'Error!',
+                                text: result.Message,
+                                showConfirmButton: true,
+                                customClass: {
+                                    popup: 'swal-big-popup',
+                                    title: 'swal-big-title',
+                                    htmlContainer: 'swal-big-text'
+                                }
+                            });
+                        }
+                    } else {
+                        Swal.fire({
+                            icon: 'error',
+                            title: 'Error!',
+                            text: 'Invalid response from server',
+                            showConfirmButton: true
+                        });
+                    }
+                } catch (error) {
+                    console.error("Error parsing response:", error);
+                    Swal.fire({
+                        icon: 'error',
+                        title: 'Error!',
+                        text: 'An error occurred while processing the request',
+                        showConfirmButton: true
+                    });
+                }
+            }, function (error) {
+                debugger;
+                console.error("PageMethods error:", error);
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Error!',
+                    text: error.get_message ? error.get_message() : 'An error occurred',
+                    showConfirmButton: true
+                });
+            });
+        }
+
+        
+        function UnApproveRefund() {
+            var refundId = '<% =Request.QueryString["advID"] %>';
+    if (!refundId || refundId == "") {
+        Swal.fire({
+            icon: 'error',
+            title: 'Error!',
+            text: 'No refund record found to unapprove.',
+            showConfirmButton: true
+        });
+        return;
+    }
+
+    PageMethods.UnApprove_Refund(refundId, function (response) {
+        debugger;
+        try {
+            var result = JSON.parse(response);
+            if (result && result.Message) {
+                if (result.Success) {
+                    Swal.fire({
+                        icon: 'success',
+                        title: 'Success!',
+                        text: result.Message,
+                        showConfirmButton: false,
+                        timer: 2000,
+                        customClass: {
+                            popup: 'swal-big-popup',
+                            title: 'swal-big-title',
+                            htmlContainer: 'swal-big-text'
+                        }
+                    });
+                    setTimeout(function () {
+                        location.reload();
+                    }, 2000);
+                } else {
+                    Swal.fire({
+                        icon: 'error',
+                        title: 'Error!',
+                        text: result.Message,
+                        showConfirmButton: true,
+                        customClass: {
+                            popup: 'swal-big-popup',
+                            title: 'swal-big-title',
+                            htmlContainer: 'swal-big-text'
+                        }
+                    });
+                }
+            } else {
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Error!',
+                    text: 'Invalid response from server',
+                    showConfirmButton: true
+                });
+            }
+        } catch (error) {
+            console.error("Error parsing response:", error);
+            Swal.fire({
+                icon: 'error',
+                title: 'Error!',
+                text: 'An error occurred while processing the request',
+                showConfirmButton: true
+            });
+        }
+    }, function (error) {
+        debugger;
+        console.error("PageMethods error:", error);
+        Swal.fire({
+            icon: 'error',
+            title: 'Error!',
+            text: error.get_message ? error.get_message() : 'An error occurred',
+            showConfirmButton: true
+        });
+    });
+}
+
+
+function PrintVoucher() {
+    debugger;
+    var refundID = '<%= Request.QueryString["advID"] %>' || '0';
+    refundID = refundID.trim() === "" ? "0" : refundID;
+    var locationInfo = window.location;
+    var url = '../../ReportViewer.aspx?ReportName=Voucher&ReportTitle=Refund Voucher&TransID=' + refundID + '&TransType=REFUND';
+    if (!locationInfo.origin.includes('localhost')) {
+        var urlInfo = window.location.href.split('/');
+        var ip = urlInfo[2];
+        var foldername = urlInfo[3];
+        url = 'http://' + ip + '/' + foldername + '/ReportViewer.aspx?ReportName=Voucher&ReportTitle=Refund Voucher&TransID=' + refundID + '&TransType=REFUND';
+    }
+    window.open(url, '_blank');
+}
+
     </script>
 
     <div class="container-fluid">
@@ -799,20 +991,32 @@
 
 
     <div class="row mt-3">
-        <div class =" col-lg-8">
-            <div class="row">
-        <div class="col-lg-2 col-md-3 col-sm-6">
-            <input type="button"  value="Save" onclick="SaveRecord()" id="btnSave" class="btn btn-primry" />
-        </div>
-        <div class="col-lg-2 col-md-3 col-sm-6">
-            <input type="button" value="List View" class="btn-gray" onclick="window.open('RefundList.aspx')" />
-        </div>
-        <div class="col-lg-2 col-md-2 col-sm-3">
-            <input type="button" id="btnPrint" class="btn btn-primry" onclick="PrintRefund()" value="Print" />
+    <div class="col-lg-8">
+        <div class="row">
+            <div class="col-lg-2 col-md-3 col-sm-6">
+                <input type="button" value="Save" onclick="SaveRecord()" id="btnSave" class="btn btn-primry" />
+            </div>
+            <div class="col-lg-2 col-md-3 col-sm-6">
+                <input type="button" value="List View" class="btn-gray" onclick="window.open('RefundList.aspx')" />
+            </div>
+            <div class="col-lg-2 col-md-2 col-sm-3">
+                <input type="button" id="btnPrint" class="btn btn-primry" onclick="PrintRefund()" value="Print" />
+            </div>
+            
+            <div class="col-lg-2 col-md-2 col-sm-3" id="divApproveContainer" style="display:none;">
+                <input type="button" id="btnApprove" class="btn btn-primry" onclick="ApproveRefund()" value="Approve" />
+            </div>
+            
+            <div class="col-lg-2 col-md-2 col-sm-3" id="divUnApproveContainer" style="display:none;">
+                <input type="button" id="btnUnApprove" class="btn btn-primry" onclick="UnApproveRefund()" value="UnApprove" />
+            </div>
+            
+            <div class="col-lg-2 col-md-2 col-sm-3" id="divVoucherContainer" style="display:none;">
+                <input type="button" id="btnPrintVoucher" class="btn btn-primry" onclick="PrintVoucher();" value="Voucher" />
+            </div>
         </div>
     </div>
-    </div>
-    </div>
+</div>
 
 
 

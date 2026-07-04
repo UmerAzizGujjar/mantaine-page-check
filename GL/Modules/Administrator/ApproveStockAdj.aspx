@@ -204,7 +204,7 @@
                      }, "width": "2%", "orderable": false
                  },
                  { "data": "ADJID", "visible": false, "width": "0%", "orderable": false },
-                 { "data": "ADJNO", "name": "mr_no_sequence", "width": "8%", "orderable": true },
+                 { "data": "ADJNO", "name": "ADJNO", "width": "8%", "orderable": true },
                  {
                  "data": "ADJDATE", "name": "ADJDATE",
                  "render": function (data, type, full) {
