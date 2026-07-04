@@ -7878,7 +7878,6 @@ namespace PMS
                     ddlPatientType.Visible = false;
                     optRw.Visible = false;
                     trDoctor.Visible = false;
-                    tr_Summary.Visible = true;
                     trSearch1.Visible = true;
                     lblMainDepartment.Visible = false;
                     dpROw.Visible = false;

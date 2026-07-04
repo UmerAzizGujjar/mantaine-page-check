@@ -251,6 +251,7 @@
             $('#ctl00_MainContent_ddlMedicalSubsidy').select2();
             $('#ctl00_MainContent_ddlSubDepartment').select2();
             $('#ctl00_MainContent_ddlStock').select2();
+            $('#ctl00_MainContent_ddlPaymentType').select2();
             $('#ctl00_MainContent_ddlMovementType').select2();
             $('#ctl00_MainContent_ddOPDIPDdiv').select2();
             $('#ctl00_MainContent_ddlItemCategory').select2();
@@ -439,7 +440,7 @@
                         var eDate = new Date($("#ctl00_MainContent_txtEnd_Date").val());
                         var sSDate = sDate.getDay();
                         var eEDate = eDate.getDay();
-                        var url = 'ReportViewer.aspx?ReportName=PharmacySaleReport_PaymentWise&ReportTitle=Pharmacy Sale Report from ' + $('#ctl00_MainContent_txtStart_Date').val() + ' ' + $('#ctl00_MainContent_txtSTime').val() + '  ' + sSDate + ' to ' + $('#ctl00_MainContent_txtEnd_Date').val() + ' ' + $('#ctl00_MainContent_txtETime').val() + ' ' + eEDate + '&StartDateTime=' + $('#ctl00_MainContent_txtStart_Date').val() + ' ' + $('#ctl00_MainContent_txtSTime').val() + '&EndDateTime=' + $('#ctl00_MainContent_txtEnd_Date').val() + ' ' + $('#ctl00_MainContent_txtETime').val() + '&Operator=' + ((typeof ($("#ctl00_MainContent_ddloprators").val()) != 'undefined') ? $("#ctl00_MainContent_ddloprators").val() : "0") + '&ItemID=' + $('#ctl00_MainContent_ddlItemName').val() + '&warehouse=' + $('#ctl00_MainContent_ddlwareHouse').val() + '&Payment_Type=' + $('#ctl00_MainContent_ddlPaymentType').val() + '&Summary=' + summary ;
+                        var url = 'ReportViewer.aspx?ReportName=PharmacySaleReport_PaymentWise&ReportTitle=Pharmacy Sale Report from ' + $('#ctl00_MainContent_txtStart_Date').val() + ' ' + $('#ctl00_MainContent_txtSTime').val() + '  ' + sSDate + ' to ' + $('#ctl00_MainContent_txtEnd_Date').val() + ' ' + $('#ctl00_MainContent_txtETime').val() + ' ' + eEDate + '&StartDateTime=' + $('#ctl00_MainContent_txtStart_Date').val() + ' ' + $('#ctl00_MainContent_txtSTime').val() + '&EndDateTime=' + $('#ctl00_MainContent_txtEnd_Date').val() + ' ' + $('#ctl00_MainContent_txtETime').val() + '&Operator=' + ((typeof ($("#ctl00_MainContent_ddloprators").val()) != 'undefined') ? $("#ctl00_MainContent_ddloprators").val() : "0") + '&ItemID=' + $('#ctl00_MainContent_ddlItemName').val() + '&WareHouse=' + $('#ctl00_MainContent_ddlwareHouse').val() + '&Payment_Type=' + $('#ctl00_MainContent_ddlPaymentType').val() + '&Summary=' + summary ;
                         window.open(url, '_blank');
 
                     }
