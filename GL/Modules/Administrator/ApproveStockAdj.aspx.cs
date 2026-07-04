@@ -215,10 +215,14 @@ namespace PMS
                     
                     var Total_Data = db.INV_Stock_Adjustments.Count();
                     var formattedQuery = from a in db.INV_Stock_Adjustments
-                              where a.Status == "Created" || a.Status == "Pending" && a.IsDeleted == false
-                              && (a.Adjustment_No.ToString().Contains(searchValue) ||
-                              a.Status.ToString().Contains(searchValue))
-                             orderby a.Adjustment_ID ascending
+                    where (a.Status == "Created" || a.Status == "Pending")
+                    && (a.IsDeleted == false || a.IsDeleted == null)
+               && (
+                   string.IsNullOrEmpty(searchValue)
+                   || a.Adjustment_No.ToString().Contains(searchValue)
+                   || a.Status.Contains(searchValue)
+               )
+                                         orderby a.Adjustment_ID ascending
                               select new
                               {
                                   ADJID = a.Adjustment_ID,
