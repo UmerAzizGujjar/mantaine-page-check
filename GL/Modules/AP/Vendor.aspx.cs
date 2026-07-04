@@ -49,7 +49,7 @@ namespace PMS
             var itemsList = (from i in db.INV_Items
                              where i.Pharmacy_Item == true && i.IsPharmacyItem == true && i.Services != true && i.Hospital_Services == false && i.Book_ID == 1
                              select new { i.Item_ID, name = i.Item_Code.ToString() + '-' + i.Description })
-                            .Take(30)
+                            //.Take(30)
                             .ToList();
 
             if (itemsList != null)
