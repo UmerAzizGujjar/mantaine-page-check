@@ -3749,6 +3749,10 @@ namespace PMS
                 rd.SetParameterValue("@endDate", EndDateTime);
                 rd.SetParameterValue("CompanyLogo", logoPath);
                 rd.SetParameterValue("Address", companyAddress);
+                rd.SetParameterValue("@FromDate", StartDateTime, rd.Subreports[0].Name.ToString());
+                rd.SetParameterValue("@ToDate", EndDateTime, rd.Subreports[0].Name.ToString());
+                rd.SetParameterValue("@UserId", Operator, rd.Subreports[0].Name.ToString());
+                rd.SetParameterValue("@Item_ID", ItemID, rd.Subreports[0].Name.ToString());
             }
             else if (reportName == "Cath_Lab_Billing_Detail_Vendor_Wise_Report")
             {
