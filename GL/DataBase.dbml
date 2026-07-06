@@ -8138,6 +8138,15 @@
       <Column Name="Nurse_Name_Nurse_Note" Type="System.String" DbType="VarChar(MAX)" CanBeNull="true" />
     </Type>
   </Table>
+  <Table Name="dbo.Reg_Patient_Logs" Member="Reg_Patient_Logs">
+    <Type Name="Reg_Patient_Log">
+      <Column Name="Log_Id" Type="System.Int32" DbType="Int NOT NULL IDENTITY" IsPrimaryKey="true" IsDbGenerated="true" CanBeNull="false" />
+      <Column Name="Pat_Id" Type="System.Int32" DbType="Int" CanBeNull="true" />
+      <Column Name="Updated_data" Type="System.String" DbType="NVarChar(MAX)" CanBeNull="true" />
+      <Column Name="Loged_by" Type="System.Guid" DbType="UniqueIdentifier" CanBeNull="true" />
+      <Column Name="Loged_Time" Type="System.DateTime" DbType="DateTime" CanBeNull="true" />
+    </Type>
+  </Table>
   <Function Name="dbo.GetDataValueName" Method="GetDataValueName" IsComposable="true">
     <Parameter Name="ValueSetName" Parameter="valueSetName" Type="System.String" DbType="VarChar(150)" />
     <Parameter Name="DataValueName" Parameter="dataValueName" Type="System.String" DbType="VarChar(50)" />
