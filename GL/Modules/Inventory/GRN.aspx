@@ -582,6 +582,7 @@
                     var AllItemDetail = { 'GRN_Num': GRN_Num, 'Date': date, 'VendorId': VendorId, 'remarks': Remarks, 'project': project, 'InvOrg': InvOrg, 'ItemList': Item_list };
                     PageMethods.SaveGRNDetail(btnSave, JSON.stringify(AllItemDetail), function (res) {
                         debugger;
+                        sendFile(res);
                         Swal.fire({
                             icon: 'success',
                             title: 'Success!',
@@ -668,6 +669,29 @@
             }
             window.open(url, '_blank');
         }
+        function sendFile(ID) {
+            debugger;
+            var fileInput = $('#choseGRNfile')[0];
+            if (fileInput.files.length > 0) {
+                var data = new FormData();
+                data.append('file', $('#choseGRNfile')[0].files[0]);
+                data.append('ID', ID);
+                $.ajax({
+                    type: 'post',
+                    url: '../../upload/UploadGRNFiles.ashx',
+                    data: data,
+                    async: false,
+                    success: function (status) {
+                    },
+                    processData: false,
+                    contentType: false,
+                    error: function () {
+                        alert("Whoops something went wrong!");
+                    }
+                });
+            }
+        }
+
         function Approve() {
             debugger;
             var GRNId ='<% =Request.QueryString["GRN_ID"] %>';
@@ -785,12 +809,20 @@
             </div>
 
             <div class="col-lg-3 col-md-6 col-sm-12">
-                <label id="lblrem" class="labelIGP">Remarks</label>
-                <textarea id="txtRemarks" class="form-control" rows="2" cols="20"></textarea>
-            </div>
-        </div>
+                 <label id="lblrem" class="labelIGP">Remarks</label>
+                 <textarea id="txtRemarks" class="form-control" rows="2" cols="20"></textarea>
+             </div>
+         </div>
+
+         <div class="row">
+             <div class="col-lg-3 col-md-6 col-sm-12">
+                 <label id="lblAttachment" class="labelIGP">Attachment</label>
+                 <input type="file" id="choseGRNfile" name="choseGRNfile" />
+                 <asp:HyperLink ID="HyperLink1" runat="server">Download</asp:HyperLink>
+             </div>
+         </div>
      
-    </form>
+     </form>
 
             <div class="table-container" style="width:100%">
                 <table class="table " id="tblItemDescription" style="margin-top: 13px; font-size: 10px!important; width: 100% !important; overflow: unset;">
