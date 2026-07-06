@@ -872,36 +872,18 @@ namespace PMS
         {
             try
             {
-                string query = @"SELECT UltraSoundLevel_ID, Levels, FixValues 
-                        FROM ultrasoundlevel 
-                        WHERE UltraSoundLevel_ID = @UltraSoundLevelID";
+                DataBaseDataContext db = new DataBaseDataContext(DBClass.ConnectionString());
 
-                // Use the correct connection string name from your Web.config
-                using (SqlConnection conn = new SqlConnection(ConfigurationManager.ConnectionStrings["H_P_National_HospitalConnectionString"].ConnectionString))
-                {
-                    using (SqlCommand cmd = new SqlCommand(query, conn))
-                    {
-                        cmd.Parameters.AddWithValue("@UltraSoundLevelID", ultraSoundLevelID);
-                        conn.Open();
+                var result = (from dv in db.UltraSoundLevels
+                              where dv.UltraSoundLevel_ID == Convert.ToInt32(ultraSoundLevelID)
+                              select new
+                              {
+                                  dv.UltraSoundLevel_ID,
+                                  dv.Levels,
+                                  dv.FixValues
+                              }).FirstOrDefault();
 
-                        using (SqlDataReader reader = cmd.ExecuteReader())
-                        {
-                            if (reader.Read())
-                            {
-                                var result = new
-                                {
-                                    UltraSoundLevel_ID = reader["UltraSoundLevel_ID"].ToString(),
-                                    Levels = reader["Levels"].ToString(),
-                                    FixValues = reader["FixValues"].ToString()
-                                };
-
-                                return new JavaScriptSerializer().Serialize(result);
-                            }
-                        }
-                    }
-                }
-
-                return "{}";
+                return new JavaScriptSerializer().Serialize(result ?? new object());
             }
             catch (Exception ex)
             {

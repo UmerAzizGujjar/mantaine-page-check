@@ -106,6 +106,16 @@
 
                 $('#txtuserCode').focus();
             }
+           else if (event.altKey && event.code === 'KeyL') {
+                debugger;
+                event.preventDefault();
+                // $('#medName').select2('close');
+                // $('#btnSave').attr('style', 'background: green !important;margin-top: -5px;').focus();
+                //SearchPop();
+               // GetPharmacyUser();
+                OpenItemList()
+              //  $('#txtuserCode').focus();
+            }
             else if (event.altKey && event.code === 'KeyR') {
                 event.preventDefault();
                 $('#medName').select2('close');
@@ -4337,7 +4347,7 @@
                                   <div class="col-lg-2 col-md-4 col-sm-6">
                     <label class="InvoiceNum">
                         </label>
-                    <input type="button" class="btn-primry" value="Item List" id="item_List" onclick="OpenItemList();" style="width:144% !important" />
+                    <input type="button" class="btn-primry" value="Item List (Alt + L)" id="item_List" onclick="OpenItemList();" style="width:144% !important" />
                 </div>
                   </div>
 

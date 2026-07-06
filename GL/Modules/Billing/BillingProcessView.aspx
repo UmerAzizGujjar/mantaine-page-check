@@ -73,6 +73,7 @@
         }
         function PrintBilling1(Bill_ID) {
             var locationInfo = window.location;
+            IncrementReprintCount(Bill_ID);
             var user_name = '<%= AppConfig.Company_Name %>';
             var reportPath;  // ✅ declared properly
 
@@ -86,6 +87,7 @@
 
             if (!locationInfo.origin.includes('localhost')) {
                 var urlInfo = window.location.href.split('/');
+
                 var ip = urlInfo[2];
                 var foldername = urlInfo[3];
                 url = 'http://' + ip + '/' + foldername + '/' + reportPath +
