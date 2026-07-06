@@ -196,7 +196,7 @@ namespace PMS
             }
         }
 
-        
+
 
         [WebMethod]
         public static bool ApproveRefunds(List<string> refundIds)
@@ -207,32 +207,25 @@ namespace PMS
                 {
                     var userId = AppConfig.UserID;
 
-                    using (var conn = new SqlConnection(db.Connection.ConnectionString))
+                    foreach (var idStr in refundIds)
                     {
-                        conn.Open();
-
-                        foreach (var idStr in refundIds)
+                        if (int.TryParse(idStr, out int refundId))
                         {
-                            if (int.TryParse(idStr, out int refundId))
+                            var refund = db.Refunds.FirstOrDefault(r => r.Refund_ID == refundId);
+                            if (refund != null)
                             {
-                                using (var cmd = new SqlCommand("SpApprove_Refund", conn))
-                                {
-                                    cmd.CommandType = CommandType.StoredProcedure;
-                                    cmd.Parameters.AddWithValue("@refundid", refundId);
-                                    cmd.Parameters.AddWithValue("@user_id", userId);
-
-                                    
-                                    cmd.ExecuteNonQuery();
-                                }
+                                refund.approve_by = userId;
+                                refund.approve_date = DateTime.Now;
+                                refund.Status = "Approved";
                             }
                         }
                     }
+                    db.SubmitChanges();
                 }
                 return true;
             }
-            catch (Exception ex)
+            catch (Exception)
             {
-                
                 return false;
             }
         }
