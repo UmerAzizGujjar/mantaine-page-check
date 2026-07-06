@@ -477,10 +477,7 @@
                 return false;
             }
 
-            if (qty <= 0) {
-                Swal.fire({ icon: 'error', title: 'Error!', text: 'Please enter valid quantity.', showConfirmButton: false, timer: 2000 });
-                return false;
-            }
+         
 
             var rowObj = {
                 ItemId: itemId,
