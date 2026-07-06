@@ -1593,6 +1593,7 @@
                 type: 'post',
                 url: '../../UploadCSFiles.ashx',
                 data: data,
+                async: false,
                 success: function (status) {
                 },
                 processData: false,

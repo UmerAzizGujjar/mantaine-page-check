@@ -2368,9 +2368,26 @@
             }
             PageMethods.SaveRecord(JSON.stringify(Parameters), Rbtn, UserId, patId, function (res) {
                 debugger;
+                var result = JSON.parse(res);
+                if (!result.Success) {
+                    Swal.fire({
+                        icon: 'error',
+                        title: 'Cannot Save!',
+                        text: result.Message,
+                        confirmButtonText: 'OK',
+                        confirmButtonColor: '#d33',
+                        customClass: {
+                            popup: 'swal-big-popup',
+                            title: 'swal-big-title',
+                            htmlContainer: 'swal-big-text'
+                        }
+                    });
+                    $('#SaveVal').attr('disabled', false);
+                    return;
+                }
                 var btnSave = $('#btnSave').val();
                 if (btnSave == 'Save & Print(Alt+S)' || btnSave == "Save & Print(Alt+S)") {
-                    window.open('../../ReportViewer.aspx?ReportName=PharmacySlip&ReportTitle=PharmacySlip&Bill_ID=' + JSON.parse(res));
+                    window.open('../../ReportViewer.aspx?ReportName=PharmacySlip&ReportTitle=PharmacySlip&Bill_ID=' + result.BillId);
                 }
                 Swal.fire({
                     icon: 'success',
@@ -2575,9 +2592,21 @@
             PageMethods.SaveRecord(JSON.stringify(Parameters), Rbtn, UserId, patId,
                 function (res) {
                     debugger;
+                    var result = JSON.parse(res);
+                    if (!result.Success) {
+                        Swal.fire({
+                            icon: 'error',
+                            title: 'Cannot Save!',
+                            text: result.Message,
+                            confirmButtonText: 'OK',
+                            confirmButtonColor: '#d33'
+                        });
+                        $('#SaveVal').attr('disabled', false);
+                        return;
+                    }
                     var btnSave = $('#btnSave').val();
                     if (btnSave == 'Save & Print(Alt+S)' || btnSave == "Save & Print(Alt+S)") {
-                        window.open('../../ReportViewer.aspx?ReportName=PharmacySlip&ReportTitle=PharmacySlip&Bill_ID=' + JSON.parse(res));
+                        window.open('../../ReportViewer.aspx?ReportName=PharmacySlip&ReportTitle=PharmacySlip&Bill_ID=' + result.BillId);
                     }
                     Swal.fire({
                         icon: 'success',

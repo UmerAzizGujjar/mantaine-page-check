@@ -626,6 +626,7 @@
                     type: 'post',
                     url: '../../upload/UploadMaterialIssue.ashx',
                     data: data,
+                    async: false,
                     success: function (status) {
                     },
                     processData: false,

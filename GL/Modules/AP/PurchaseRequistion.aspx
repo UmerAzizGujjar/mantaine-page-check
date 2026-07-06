@@ -1085,6 +1085,7 @@
                     type: 'post',
                     url: '../../upload/UploadPRFiles.ashx',
                     data: data,
+                    async: false,
                     success: function (status) {
                     },
                     processData: false,

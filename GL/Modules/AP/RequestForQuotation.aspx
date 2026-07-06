@@ -629,6 +629,7 @@
                     type: 'post',
                     url: '../../UploadRFQFiles.ashx',
                     data: data,
+                    async: false,
                     success: function (status) {
 
                     },

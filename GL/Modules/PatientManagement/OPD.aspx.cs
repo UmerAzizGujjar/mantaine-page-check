@@ -2753,6 +2753,69 @@ namespace PMS.Modules.PatientManagement
                 return "0";
             }
         }
+
+        [WebMethod]
+        public static string OPDSlip()
+        {
+            DataBaseDataContext db = new DataBaseDataContext(DBClass.ConnectionString());
+            var dept = (from data in db.sys_Parms
+                        where data.Name == "OPD Slip Admission Check"
+                        select
+                          data.Code
+                        ).FirstOrDefault();
+            return (new JavaScriptSerializer()).Serialize(dept);
+        }
+
+        [WebMethod]
+        public static string CheckPatientAdmissionStatus(int regPatId)
+        {
+            try
+            {
+                using (DataBaseDataContext db = new DataBaseDataContext(DBClass.ConnectionString()))
+                {
+                    var inPatient = (from ip in db.In_Patients
+                                     where ip.Patient_ID == regPatId
+                                     && ip.Discharge_On == null
+                                     && (ip.Discharge == null || ip.Discharge == false)
+                                     && (ip.is_cancel == null || ip.is_cancel == false)
+                                     select ip).FirstOrDefault();
+
+                    if (inPatient != null)
+                    {
+                        return new JavaScriptSerializer().Serialize(new
+                        {
+                            isAdmitted = true,
+                            location = "In-Patient",
+                            admissionDate = inPatient.Admission_Date?.ToString("dd-MMM-yyyy")
+                        });
+                    }
+
+                    
+                    var emergencyPatient = (from ep in db.Emergency_Patients
+                                            where ep.Patient_ID == regPatId
+                                            && ep.Discharge_On == null
+                                            && (ep.Discharge == null || ep.Discharge == false)
+                                            && (ep.isCancelled == null || ep.isCancelled == false) 
+                                            select ep).FirstOrDefault();
+
+                    if (emergencyPatient != null)
+                    {
+                        return new JavaScriptSerializer().Serialize(new
+                        {
+                            isAdmitted = true,
+                            location = "Emergency",
+                            admissionDate = emergencyPatient.Admission_Date?.ToString("dd-MMM-yyyy")
+                        });
+                    }
+
+                    return new JavaScriptSerializer().Serialize(new { isAdmitted = false });
+                }
+            }
+            catch (Exception ex)
+            {
+                return new JavaScriptSerializer().Serialize(new { isAdmitted = false, error = ex.Message });
+            }
+        }
     }
 
 }

@@ -188,9 +188,17 @@
 
     <!-- Row 3 -->
     <div class="row g-3">
-        <div class="col-lg-1 col-md-6 col-sm-12">
-            <input type="button" id="btnSave" class="btn btn-primry w-100" onclick="SaveRecord()" value="Save" />
-        </div>
+       <div class="col-lg-8 col-md-8">
+            <div class="col-lg-2 col-md-4 col-sm-6">
+                 <input type="button" id="btnSave" class="btn btn-primry" onclick="SaveRecord()" value="Save" />
+             </div>
+            <div class="col-lg-2 col-md-4 col-sm-6">
+                 <input type="button" id="btnnew" class="btn btn-primry" onclick="window.location = 'Pharmacy_Users.aspx'" value="New" />
+             </div>
+            <div class="col-lg-2 col-md-4 col-sm-6">
+                 <input type="button" id="btnview" class="btn btn-primry" onclick="window.location = 'Pharmacy_UserView.aspx'" value="List View" />
+             </div>
+       </div>
     </div>
 
 
