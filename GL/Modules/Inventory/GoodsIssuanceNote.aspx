@@ -1314,12 +1314,13 @@
                     type: 'post',
                     url: '../../upload/UploadGINFiles.ashx',
                     data: data,
+                    async: false,
                     success: function (status) {
                     },
                     processData: false,
                     contentType: false,
                     error: function () {
-                     
+
                     }
                 });
             }
