@@ -582,21 +582,22 @@
                     var AllItemDetail = { 'GRN_Num': GRN_Num, 'Date': date, 'VendorId': VendorId, 'remarks': Remarks, 'project': project, 'InvOrg': InvOrg, 'ItemList': Item_list };
                     PageMethods.SaveGRNDetail(btnSave, JSON.stringify(AllItemDetail), function (res) {
                         debugger;
-                        sendFile(res);
-                        Swal.fire({
-                            icon: 'success',
-                            title: 'Success!',
-                            text: 'Data Save Successfully.',
-                            showConfirmButton: false,
-                            timer: 2500,
-                            customClass: {
-                                popup: 'swal-big-popup',
-                                title: 'swal-big-title',
-                                htmlContainer: 'swal-big-text'
-                            }
+                        sendFile(res, function () {
+                            Swal.fire({
+                                icon: 'success',
+                                title: 'Success!',
+                                text: 'Data Save Successfully.',
+                                showConfirmButton: false,
+                                timer: 2500,
+                                customClass: {
+                                    popup: 'swal-big-popup',
+                                    title: 'swal-big-title',
+                                    htmlContainer: 'swal-big-text'
+                                }
+                            });
+                            $('#btnSave').val("Update");
+                            window.location = "GRN.aspx?GRN_ID=" + res;
                         });
-                         $('#btnSave').val("Update");
-                        window.location = "GRN.aspx?GRN_ID=" + res;
                     });
                 }
             }
@@ -669,7 +670,7 @@
             }
             window.open(url, '_blank');
         }
-        function sendFile(ID) {
+        function sendFile(ID, callback) {
             debugger;
             var fileInput = $('#choseGRNfile')[0];
             if (fileInput.files.length > 0) {
@@ -680,8 +681,8 @@
                     type: 'post',
                     url: '../../upload/UploadGRNFiles.ashx',
                     data: data,
-                    async: false,
                     success: function (status) {
+                        if (typeof callback === 'function') callback();
                     },
                     processData: false,
                     contentType: false,
@@ -689,6 +690,8 @@
                         alert("Whoops something went wrong!");
                     }
                 });
+            } else {
+                if (typeof callback === 'function') callback();
             }
         }
 

@@ -2837,6 +2837,7 @@
     <Content Include="upload\UploadRFQFiles.ashx" />
     <Content Include="upload\UploadCSFiles.ashx" />
     <Content Include="upload\UploadMaterialIssue.ashx" />
+    <Content Include="upload\UploadMIRDetailFiles.ashx" />
     <Content Include="upload\UploadGINFiles.ashx" />
     <Content Include="upload\UploadGRNFiles.ashx" />
     <Content Include="upload\UploadMIFiles.ashx" />
@@ -5876,6 +5877,9 @@
     </Compile>
     <Compile Include="upload\UploadMaterialIssue.ashx.cs">
       <DependentUpon>UploadMaterialIssue.ashx</DependentUpon>
+    </Compile>
+    <Compile Include="upload\UploadMIRDetailFiles.ashx.cs">
+      <DependentUpon>UploadMIRDetailFiles.ashx</DependentUpon>
     </Compile>
     <Compile Include="upload\UploadGINFiles.ashx.cs">
       <DependentUpon>UploadGINFiles.ashx</DependentUpon>
