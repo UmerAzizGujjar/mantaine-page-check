@@ -2759,7 +2759,7 @@ namespace PMS.Modules.PatientManagement
         {
             DataBaseDataContext db = new DataBaseDataContext(DBClass.ConnectionString());
             var dept = (from data in db.sys_Parms
-                        where data.Name == "OPD Slip Validation"
+                        where data.Name == "OPD Slip Admission Check"
                         select
                           data.Code
                         ).FirstOrDefault();
@@ -2774,8 +2774,9 @@ namespace PMS.Modules.PatientManagement
                 using (DataBaseDataContext db = new DataBaseDataContext(DBClass.ConnectionString()))
                 {
                     var inPatient = (from ip in db.In_Patients
-                                     where ip.Reg_PatId == regPatId
+                                     where ip.Patient_ID == regPatId
                                      && ip.Discharge_On == null
+                                     && (ip.Discharge == null || ip.Discharge == false)
                                      && (ip.is_cancel == null || ip.is_cancel == false)
                                      select ip).FirstOrDefault();
 
@@ -2793,6 +2794,7 @@ namespace PMS.Modules.PatientManagement
                     var emergencyPatient = (from ep in db.Emergency_Patients
                                             where ep.Patient_ID == regPatId
                                             && ep.Discharge_On == null
+                                            && (ep.Discharge == null || ep.Discharge == false)
                                             && (ep.isCancelled == null || ep.isCancelled == false) 
                                             select ep).FirstOrDefault();
 
