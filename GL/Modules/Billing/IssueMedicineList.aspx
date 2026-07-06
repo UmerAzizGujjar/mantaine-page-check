@@ -125,15 +125,16 @@
                             return date;
                         }, "width": "8%", "orderable": true
                     },
-                    { "data": "BillNo", "width": "10%", "orderable": false },
-                    { "data": "FBR_Number", "width": "10%", "orderable": false }, 
+                    { "data": "BillNo", "width": "8%", "orderable": false },
+                    { "data": "FBR_Number", "width": "8%", "orderable": false }, 
                     { "data": "Customer_Name", "width": "10%", "orderable": false },
                     { "data": "Patient_ID", "name": "Patient_ID", "width": "8%", "orderable": true },                    
-                    { "data": "Referred_By_value", "width": "10%", "orderable": false },                  
-                    { "data": "Total_Amount", "width": "10%", "orderable": false },
-                    { "data": "Discount_Amount", "width": "10%", "orderable": false },
-                    { "data": "Received_Amount", "width": "10%", "orderable": false },
-                    { "data": "Balance_Amount", "width": "10%", "orderable": false },
+                    { "data": "Referred_By_value", "width": "8%", "orderable": false },                  
+                    { "data": "Main_Department", "width": "8%", "orderable": false },                  
+                    { "data": "Total_Amount", "width": "8%", "orderable": false },
+                    { "data": "Discount_Amount", "width": "8%", "orderable": false },
+                    { "data": "Received_Amount", "width": "8%", "orderable": false },
+                    { "data": "Balance_Amount", "width": "8%", "orderable": false },
                     {
                         render: function (data, type, full) {
                             debugger;
@@ -212,6 +213,7 @@
                         <th>Walking Customer</th>
                         <th>MrNo.</th>                      
                         <th>ReferBy</th>
+                        <th>Main Department</th>
                         <th>Total</th>
                         <th>Discount Amount</th>
                         <th>Received Amount</th>
