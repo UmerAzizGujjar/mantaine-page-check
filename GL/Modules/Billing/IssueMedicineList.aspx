@@ -130,8 +130,26 @@
                     { "data": "Customer_Name", "width": "10%", "orderable": false },
                     { "data": "Patient_ID", "name": "Patient_ID", "width": "8%", "orderable": true },                    
                     { "data": "Referred_By_value", "width": "10%", "orderable": false },
+                    {
+                        "data": "ParentTrans_Name",
+                        "name": "ParentTrans_Name",
+                        "render": function (data) {
+                            if (!data || data === "") {
+                                return "Walk In";
+                            } else if (data === "OutPatient") {
+                                return "Out Patient";
+                            } else if (data === "InPatient") {
+                                return "In Patient";
+                            } else if (data === "Emergency") {
+                                return "Emergency";
+                            } else {
+                                return "Walk In";
+                            }
+                        }
+                    },
                     { "data": "Total_Amount", "width": "10%", "orderable": false },
                     { "data": "Discount_Amount", "width": "10%", "orderable": false },
+                    { "data": "Received_Amount", "width": "10%", "orderable": false },
                     { "data": "Balance_Amount", "width": "10%", "orderable": false },
                     {
                         render: function (data, type, full) {
@@ -210,9 +228,11 @@
                         <th>FBR Number</th>
                         <th>Walking Customer</th>
                         <th>MrNo.</th>
+                        <th>Main Department</th>
                         <th>ReferBy</th>
                         <th>Total</th>
                         <th>Discount Amount</th>
+                        <th>Received Amount</th>
                         <th>Balance Amount</th>
                         <th>View</th>                      
                     </tr>
