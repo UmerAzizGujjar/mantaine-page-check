@@ -424,79 +424,284 @@
             //        CKEDITOR.instances.txtfixedType.setData(fixedVal);
             //    });
             //});
+            //$('#btnApprove').click(function () {
+            //    debugger;
+            //    var hasApprovalRights = checkApprovalRights();
+
+            //    if (!hasApprovalRights) {
+            //        Swal.fire({
+            //            icon: 'error',
+            //            title: 'Access Denied!',
+            //            text: 'You do not have permission to approve radiology tests. Please contact administrator.',
+            //            showConfirmButton: true,
+            //            confirmButtonText: 'OK',
+            //            customClass: {
+            //                popup: 'swal-big-popup',
+            //                title: 'swal-big-title',
+            //                htmlContainer: 'swal-big-text'
+            //            }
+            //        });
+            //        return false;
+            //    }
+
+            //    test_list = [];
+            //    var tbl = $("#tblgroupTestlist tbody tr");
+
+            //    $.each(tbl, function (key, val) {
+            //        var testDetailId = $(val).find('td:eq(0)').text().trim();
+
+
+            //        $.ajax({
+            //            type: "POST",
+            //            url: "RadiologyTestResult.aspx/CheckTestAmount",
+            //            data: JSON.stringify({ testDetailId: testDetailId }),
+            //            contentType: "application/json; charset=utf-8",
+            //            dataType: "json",
+            //            async: false,
+            //            success: function (response) {
+
+            //                if (!response.d.AllowApproval) {
+
+            //                    Swal.fire({
+            //                        icon: 'warning',
+            //                        title: 'Pending Balance',
+            //                        text: response.d.Message
+            //                    });
+
+            //                    allowApprove = false;
+            //                }
+            //            },
+            //            error: function () {
+            //                allowApprove = false;
+            //            }
+            //        });
+
+            //        if (!allowApprove) {
+            //            return false; // Stop checking further rows
+            //        }
+
+            //        if (testDetailId != null && testDetailId !== "" && testDetailId > 0) {
+            //            test_list.push({ 'TestDID': testDetailId });
+            //        }
+            //    });
+
+            //    var testID = $('#hdtestdetailid').val();
+
+            //    $.ajax({
+            //        type: "POST",
+            //        url: "RadiologyTestResult.aspx/CheckTestAmount",
+            //        data: JSON.stringify({ testDetailId: testID }),
+            //        contentType: "application/json; charset=utf-8",
+            //        dataType: "json",
+            //        async: false,
+            //        success: function (response) {
+
+            //            if (!response.d.AllowApproval) {
+
+            //                Swal.fire({
+            //                    icon: 'warning',
+            //                    title: 'Pending Balance',
+            //                    text: response.d.Message
+            //                });
+
+            //                return; // Stop approval
+            //            }
+
+            //    if (testID != null && testID > 0) {
+            //        test_list.push({ 'TestDID': testID });
+            //    }
+
+            //    var Lab_ID = 0;
+
+            //    var selectedDoctorId = $("#ddlReferDoctor").val();
+
+            //    if (!selectedDoctorId || selectedDoctorId === "" || selectedDoctorId === "0" || selectedDoctorId === "null") {
+            //        Swal.fire({
+            //            icon: 'warning',
+            //            title: 'Warning!',
+            //            text: 'Please select referring doctor',
+            //            showConfirmButton: false,
+            //            timer: 2000,
+            //            customClass: {
+            //                popup: 'swal-big-popup',
+            //                title: 'swal-big-title',
+            //                htmlContainer: 'swal-big-text'
+            //            }
+            //        });
+            //        return false;
+            //    }
+
+            //    var TesttDetails = { Lab_ID: Lab_ID == '(New)' ? 0 : Lab_ID, test_list: test_list }
+
+            //    if (test_list.length > 0) {
+            //        // Pass the doctor ID as the third parameter
+            //        PageMethods.ApproveTestDetailCat(Lab_ID, JSON.stringify(TesttDetails), selectedDoctorId, function (response) {
+            //            if (typeof currentlyEditingElement !== 'undefined') {
+            //                EditData(currentlyEditingElement);
+            //            }
+            //            var storageBillNo = localStorage.Bill_No;
+            //            if (storageBillNo != "(New)") {
+            //                $("#ctl00_MainContent_txtBilling").val(storageBillNo);
+            //                loadPatientDataUsingBillId();
+            //            }
+            //        }, function (onfailure) {
+            //            alert(onfailure);
+            //        });
+            //    }
+            //});
+
+
             $('#btnApprove').click(function () {
-                debugger;
+
                 var hasApprovalRights = checkApprovalRights();
 
                 if (!hasApprovalRights) {
                     Swal.fire({
                         icon: 'error',
                         title: 'Access Denied!',
-                        text: 'You do not have permission to approve radiology tests. Please contact administrator.',
-                        showConfirmButton: true,
-                        confirmButtonText: 'OK',
-                        customClass: {
-                            popup: 'swal-big-popup',
-                            title: 'swal-big-title',
-                            htmlContainer: 'swal-big-text'
-                        }
+                        text: 'You do not have permission to approve radiology tests. Please contact administrator.'
                     });
                     return false;
                 }
 
-                test_list = [];
-                var tbl = $("#tblgroupTestlist tbody tr");
+                var test_list = [];
+                var allowApprove = true;
 
-                $.each(tbl, function (key, val) {
-                    var testDetailId = $(val).find('td:eq(0)').text().trim();
-                    if (testDetailId != null && testDetailId !== "" && testDetailId > 0) {
-                        test_list.push({ 'TestDID': testDetailId });
+                //==========================
+                // Group Tests
+                //==========================
+                $("#tblgroupTestlist tbody tr").each(function () {
+
+                    var testDetailId = $(this).find("td:eq(0)").text().trim();
+
+                    if (testDetailId != "") {
+
+                        $.ajax({
+                            type: "POST",
+                            url: "RadiologyTestResult.aspx/CheckTestAmount",
+                            data: JSON.stringify({ testDetailId: parseInt(testDetailId) }),
+                            contentType: "application/json; charset=utf-8",
+                            dataType: "json",
+                            async: false,
+                            success: function (response) {
+
+                                if (!response.d.AllowApproval) {
+                                    Swal.fire({
+                                        icon: 'warning',
+                                        title: 'Pending Balance',
+                                        text: response.d.Message
+                                    });
+
+                                    allowApprove = false;
+                                }
+                            },
+                            error: function () {
+                                allowApprove = false;
+                            }
+                        });
+
+                        if (!allowApprove)
+                            return false;
+
+                        test_list.push({
+                            TestDID: testDetailId
+                        });
                     }
                 });
 
-                var testID = $('#hdtestdetailid').val();
-                if (testID != null && testID > 0) {
-                    test_list.push({ 'TestDID': testID });
+                if (!allowApprove)
+                    return false;
+
+                //==========================
+                // Single Test
+                //==========================
+                if (test_list.length == 0) {
+
+                    var testID = $("#hdtestdetailid").val();
+
+                    if (testID != "" && testID != "0") {
+
+                        $.ajax({
+                            type: "POST",
+                            url: "RadiologyTestResult.aspx/CheckTestAmount",
+                            data: JSON.stringify({ testDetailId: parseInt(testID) }),
+                            contentType: "application/json; charset=utf-8",
+                            dataType: "json",
+                            async: false,
+                            success: function (response) {
+
+                                if (!response.d.AllowApproval) {
+
+                                    Swal.fire({
+                                        icon: 'warning',
+                                        title: 'Pending Balance',
+                                        text: response.d.Message
+                                    });
+
+                                    allowApprove = false;
+                                }
+                            },
+                            error: function () {
+                                allowApprove = false;
+                            }
+                        });
+
+                        if (!allowApprove)
+                            return false;
+
+                        test_list.push({
+                            TestDID: testID
+                        });
+                    }
+                }
+
+                if (test_list.length == 0)
+                    return false;
+
+                var selectedDoctorId = $("#ddlReferDoctor").val();
+
+                if (!selectedDoctorId || selectedDoctorId == "0") {
+                    Swal.fire({
+                        icon: 'warning',
+                        title: 'Warning!',
+                        text: 'Please select referring doctor'
+                    });
+                    return false;
                 }
 
                 var Lab_ID = 0;
 
-                var selectedDoctorId = $("#ddlReferDoctor").val();
+                var TesttDetails = {
+                    Lab_ID: Lab_ID,
+                    test_list: test_list
+                };
 
-                if (!selectedDoctorId || selectedDoctorId === "" || selectedDoctorId === "0" || selectedDoctorId === "null") {
-                    Swal.fire({
-                        icon: 'warning',
-                        title: 'Warning!',
-                        text: 'Please select referring doctor',
-                        showConfirmButton: false,
-                        timer: 2000,
-                        customClass: {
-                            popup: 'swal-big-popup',
-                            title: 'swal-big-title',
-                            htmlContainer: 'swal-big-text'
-                        }
-                    });
-                    return false;
-                }
+                PageMethods.ApproveTestDetailCat(
+                    Lab_ID,
+                    JSON.stringify(TesttDetails),
+                    selectedDoctorId,
+                    function (response) {
 
-                var TesttDetails = { Lab_ID: Lab_ID == '(New)' ? 0 : Lab_ID, test_list: test_list }
-
-                if (test_list.length > 0) {
-                    // Pass the doctor ID as the third parameter
-                    PageMethods.ApproveTestDetailCat(Lab_ID, JSON.stringify(TesttDetails), selectedDoctorId, function (response) {
                         if (typeof currentlyEditingElement !== 'undefined') {
                             EditData(currentlyEditingElement);
                         }
+
                         var storageBillNo = localStorage.Bill_No;
+
                         if (storageBillNo != "(New)") {
                             $("#ctl00_MainContent_txtBilling").val(storageBillNo);
                             loadPatientDataUsingBillId();
                         }
-                    }, function (onfailure) {
-                        alert(onfailure);
+
+                    },
+                    function (err) {
+                        alert(err.get_message ? err.get_message() : err);
                     });
-                }
+
             });
+
+
+
             //$('#btnReject').click(function () {
             //    localStorage.isSaved = 1;
             //    test_list = [];

@@ -404,6 +404,56 @@ namespace PMS.Modules.Lab
             }
             return "Not Successfull";
         }
+        public class CheckAmountResponse
+        {
+            public bool AllowApproval { get; set; }
+            public string Message { get; set; }
+        }
+
+        [WebMethod]
+        public static CheckAmountResponse CheckTestAmount(int testDetailId)
+        {
+            using (DataBaseDataContext db = new DataBaseDataContext())
+            {
+                var data = (from lab in db.Lab_Test_Details
+                            join abd in db.Ar_Billing_Details
+                                on lab.Bill_Details_ID equals abd.Bill_Details_ID
+                            join bill in db.Ar_Billings
+                                on abd.Bill_ID equals bill.Bill_ID
+                            where lab.Lab_Test_Detail_ID == testDetailId
+                            select new
+                            {
+                                BalanceAmount = bill.Balance_Amount ?? 0,
+                                ParentTransName = abd.ParentTrans_Name,
+                                BillNo = bill.Bill_No
+                            }).FirstOrDefault();
+
+                if (data == null)
+                {
+                    return new CheckAmountResponse
+                    {
+                        AllowApproval = false,
+                        Message = "Record not found."
+                    };
+                }
+
+                // Don't allow approval if not InPatient and balance > 0
+                if (data.ParentTransName != "InPatient" && data.BalanceAmount > 0)
+                {
+                    return new CheckAmountResponse
+                    {
+                        AllowApproval = false,
+                        Message = "Bill No " + data.BillNo + " has a pending balance. Approval is not allowed."
+                    };
+                }
+
+                return new CheckAmountResponse
+                {
+                    AllowApproval = true,
+                    Message = ""
+                };
+            }
+        }
         [WebMethod]
         public static string ApproveTestDetailCat(int Lab_ID, string TesttDetails, int ReferDoctorId = 0)
         {

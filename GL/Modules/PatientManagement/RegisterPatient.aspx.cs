@@ -12,6 +12,17 @@ using System.Web.Script.Serialization;
 using System.Web.Script.Services;
 using System.Web.Services;
 using System.Web.UI;
+using System.Configuration;
+using System.Data;
+using System.Data.Entity;
+using System.Data.SqlClient;
+
+using System.Text;
+
+using System.Web.UI.WebControls;
+using System.Windows;
+using Telerik.Web;
+using Telerik.Web.UI.ImageEditor;
 
 namespace PMS.Modules.PatientManagement
 {
@@ -310,11 +321,11 @@ namespace PMS.Modules.PatientManagement
         //[WebMethod]
         [WebMethod]
         public static string SavePatientDetail(
-     string Full_Name, string RelationType, string Relation, string Gender,
-     string Mobile, string Date_Of_Birth, string CNIC, string Address,
-     string PatientID, string martail_status, string Age, string city, string area,
-     string city_val, string area_val, string Blood_Group, string State, string Country,
-     string cardfee, string OtherCnic, bool Monitoring, string AntiForgeryToken)
+                      string Full_Name, string RelationType, string Relation, string Gender,
+                      string Mobile, string Date_Of_Birth, string CNIC, string Address,
+                      string PatientID, string martail_status, string Age, string city, string area,
+                      string city_val, string area_val, string Blood_Group, string State, string Country,
+                      string cardfee, string OtherCnic, bool Monitoring, string AntiForgeryToken)
 
         {
 
@@ -322,6 +333,7 @@ namespace PMS.Modules.PatientManagement
             if (HttpContext.Current.Session["UserID"] == null)
                 return "ERROR: Unauthorized. Please log in.";
 
+            JavaScriptSerializer JSS = new JavaScriptSerializer();
             // Validate CSRF Token
             string storedToken = HttpContext.Current.Session["AntiForgeryToken"] as string;
             if (string.IsNullOrEmpty(storedToken) || !storedToken.Equals(AntiForgeryToken))
@@ -377,6 +389,52 @@ namespace PMS.Modules.PatientManagement
 
                         if (pat == null)
                             return "ERROR: Patient record not found.";
+                        //var previousRegData = new
+                        //{
+                        //    PatData = new
+                        //    {
+                        //        pat.Patient_No,
+                        //        pat.mr_no_sequence,
+                        //        CreationDate = pat.Created_time ?? DateTime.MinValue,
+                        //        pat.Full_Name,
+                        //        pat.Father_Name,
+                        //        pat.Gender,
+                        //        pat.Mobile1,
+                        //        pat.Age_years,
+                        //        pat.NIC,
+                        //        pat.Permanent_Address,
+                        //        pat.Martial_Status,
+                        //        pat.Relation_prefix,
+                        //        pat.walkin,
+                        //        pat.city,
+                        //        pat.val_city,
+                        //        pat.val_area,
+                        //        pat.area,
+                        //        pat.Country,
+                        //        pat.Province,
+                        //        pat.Card_fee,
+                        //        pat.other_cnic,
+                        //        DOB = pat.DOB ?? DateTime.MinValue,
+                              
+                        //    }
+                            
+                        //};
+
+                        //string masterLogJson = JSS.Serialize(previousRegData.PatData);
+                        //Reg_Patient_Log RegLog = new Reg_Patient_Log
+                        //{
+                        //    Bill_Id = newBill.Bill_ID,
+                        //    Master_Log = masterLogJson,
+                        //    Details_Log = detailsLogJson,
+                        //    Log_Time = DateTime.Now,
+                        //    Loged_By = AppConfig.UserID
+                        //};
+
+                        //db.Reg_Patient_Logs.InsertOnSubmit(RegLog);
+
+
+
+
                         pat.updated_by = AppConfig.UserID;
                         pat.updated_time = DateTime.Now;                       
                     }
