@@ -49,9 +49,6 @@ namespace PMS
                                             Discount_Amount = AB.Discount_Amount,
                                             Balance_Amount = AB.Balance_Amount,
                                             FBR_Number = AB.FBR_No ?? "",
-                                            ParentTrans_Name = _dbContext.Ar_Billing_Details.Where(d => d.Bill_ID == AB.Bill_ID)
-                                            .Select(d => d.ParentTrans_Name)
-                                            .FirstOrDefault() ?? "",
                                         };
 
                     var FilteredCount = IssueMedicine.Count();
