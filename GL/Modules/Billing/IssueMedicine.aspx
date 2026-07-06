@@ -106,6 +106,16 @@
 
                 $('#txtuserCode').focus();
             }
+           else if (event.altKey && event.code === 'KeyL') {
+                debugger;
+                event.preventDefault();
+                // $('#medName').select2('close');
+                // $('#btnSave').attr('style', 'background: green !important;margin-top: -5px;').focus();
+                //SearchPop();
+               // GetPharmacyUser();
+                OpenItemList()
+              //  $('#txtuserCode').focus();
+            }
             else if (event.altKey && event.code === 'KeyR') {
                 event.preventDefault();
                 $('#medName').select2('close');
@@ -2358,9 +2368,26 @@
             }
             PageMethods.SaveRecord(JSON.stringify(Parameters), Rbtn, UserId, patId, function (res) {
                 debugger;
+                var result = JSON.parse(res);
+                if (!result.Success) {
+                    Swal.fire({
+                        icon: 'error',
+                        title: 'Cannot Save!',
+                        text: result.Message,
+                        confirmButtonText: 'OK',
+                        confirmButtonColor: '#d33',
+                        customClass: {
+                            popup: 'swal-big-popup',
+                            title: 'swal-big-title',
+                            htmlContainer: 'swal-big-text'
+                        }
+                    });
+                    $('#SaveVal').attr('disabled', false);
+                    return;
+                }
                 var btnSave = $('#btnSave').val();
                 if (btnSave == 'Save & Print(Alt+S)' || btnSave == "Save & Print(Alt+S)") {
-                    window.open('../../ReportViewer.aspx?ReportName=PharmacySlip&ReportTitle=PharmacySlip&Bill_ID=' + JSON.parse(res));
+                    window.open('../../ReportViewer.aspx?ReportName=PharmacySlip&ReportTitle=PharmacySlip&Bill_ID=' + result.BillId);
                 }
                 Swal.fire({
                     icon: 'success',
@@ -2565,9 +2592,21 @@
             PageMethods.SaveRecord(JSON.stringify(Parameters), Rbtn, UserId, patId,
                 function (res) {
                     debugger;
+                    var result = JSON.parse(res);
+                    if (!result.Success) {
+                        Swal.fire({
+                            icon: 'error',
+                            title: 'Cannot Save!',
+                            text: result.Message,
+                            confirmButtonText: 'OK',
+                            confirmButtonColor: '#d33'
+                        });
+                        $('#SaveVal').attr('disabled', false);
+                        return;
+                    }
                     var btnSave = $('#btnSave').val();
                     if (btnSave == 'Save & Print(Alt+S)' || btnSave == "Save & Print(Alt+S)") {
-                        window.open('../../ReportViewer.aspx?ReportName=PharmacySlip&ReportTitle=PharmacySlip&Bill_ID=' + JSON.parse(res));
+                        window.open('../../ReportViewer.aspx?ReportName=PharmacySlip&ReportTitle=PharmacySlip&Bill_ID=' + result.BillId);
                     }
                     Swal.fire({
                         icon: 'success',
@@ -4308,7 +4347,7 @@
                                   <div class="col-lg-2 col-md-4 col-sm-6">
                     <label class="InvoiceNum">
                         </label>
-                    <input type="button" class="btn-primry" value="Item List" id="item_List" onclick="OpenItemList();" style="width:144% !important" />
+                    <input type="button" class="btn-primry" value="Item List (Alt + L)" id="item_List" onclick="OpenItemList();" style="width:144% !important" />
                 </div>
                   </div>
 

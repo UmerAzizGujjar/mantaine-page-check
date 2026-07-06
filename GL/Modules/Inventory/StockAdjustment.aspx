@@ -307,7 +307,7 @@
         }
 
         function calculatecurrentstock(item_id) {
-            $('#ctl00_MainContent_ddl_Ware_House').prop('disabled', true);
+            //$('#ctl00_MainContent_ddl_Ware_House').prop('disabled', true);
             var itemID = '';
             if (item_id > 0) {
                 itemID = item_id;
@@ -477,10 +477,7 @@
                 return false;
             }
 
-            if (qty <= 0) {
-                Swal.fire({ icon: 'error', title: 'Error!', text: 'Please enter valid quantity.', showConfirmButton: false, timer: 2000 });
-                return false;
-            }
+         
 
             var rowObj = {
                 ItemId: itemId,

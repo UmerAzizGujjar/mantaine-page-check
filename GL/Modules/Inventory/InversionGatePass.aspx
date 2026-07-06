@@ -610,6 +610,7 @@
                     type: 'post',
                     url: '../../upload/UploadIGP.ashx',
                     data: data,
+                    async: false,
                     success: function (status) {
                     },
                     processData: false,
