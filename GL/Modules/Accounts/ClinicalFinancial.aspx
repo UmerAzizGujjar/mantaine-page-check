@@ -324,6 +324,8 @@
         allData.push(rowDataAdvance);
     });
 
+         // In the submitData function, find the Refund section and replace it with this:
+
          rowsRefund.each(function () {
              let row = $(this);
              let drValue = row.find('.drRefund').val();
@@ -331,10 +333,10 @@
 
              let rowDataRefund = {
                  financialdepartment: row.find('.financialDepartmentRefund').val(),
-                 categoryname: "02",  
-                 cashinhand: drValue && drValue !== '0' ? drValue : '0',  
-                 discount: '0',  
-                 revenue: crValue && crValue !== '0' ? crValue : '0'    
+                 categoryname: "02",
+                 cashinhand: drValue && drValue !== '0' ? drValue : '0',
+                 discount: '0',
+                 revenue: crValue && crValue !== '0' ? crValue : '0'
              };
 
              let hasDr = drValue && drValue !== '0';
@@ -352,12 +354,7 @@
                  return false;
              }
 
-             
-             if (categoryNamesRefund.has(rowDataRefund.categoryname)) {
-                 duplicateFound = true;
-             } else {
-                 categoryNamesRefund.add(rowDataRefund.categoryname);
-             }
+            
 
              allData.push(rowDataRefund);
          });
