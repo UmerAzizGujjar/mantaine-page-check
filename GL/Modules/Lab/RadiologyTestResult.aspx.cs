@@ -439,7 +439,7 @@ namespace PMS.Modules.Lab
                 }
 
                 // Don't allow approval if not InPatient and balance > 0
-                if ((data.ParentTransName == "OutPatient" || data.ParentTransName == "" ) && Panel_Id == 0 && data.BalanceAmount > 0)
+                if ((data.ParentTransName == "OutPatient" || data.ParentTransName == "" ) && data.Panel_Id == 0 && data.BalanceAmount > 0)
                 {
                     return new CheckAmountResponse
                     {
