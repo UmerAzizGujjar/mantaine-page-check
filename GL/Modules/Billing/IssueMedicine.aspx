@@ -186,7 +186,7 @@
                     if (checkTable == "tblDetails") {
                         var attr_name = $(e.target).attr('name');
                         if (attr_name == 'txtQty') {
-                            $('#medName').select2('open');
+                            OpenItemList();
                         }
                     }
                     break;
@@ -444,6 +444,21 @@
                 $(this).find('input[type="text"]').val('');
                 $(this).find('select').val(null).trigger('change');
                 $('#saleReturnTableBody').empty();
+            });
+
+            // Item search with debounce
+            var searchTimer;
+            $('#txtSearchitem').on('input', function () {
+                clearTimeout(searchTimer);
+                searchTimer = setTimeout(function () {
+                    fillItemListsWareHouseWise();
+                }, 300);
+            }).on('keydown', function (e) {
+                if (e.key === "Enter") {
+                    e.preventDefault();
+                    clearTimeout(searchTimer);
+                    fillItemListsWareHouseWise();
+                }
             });
 
         });
@@ -2952,16 +2967,21 @@
                         htmlContainer: 'swal-big-text'
                     }
                 });
-                //$('#ddlInv_No').val('');
                 return;
             }
             else {
+                $("#tblItemList tbody").html("");
+                $("#txtSearchitem").val("");
                 fillItemListsWareHouseWise();
                 $('#ItemModal').modal('show');
             }
         
         }
-
+        
+        $(document).on('shown.bs.modal', '#ItemModal', function () {
+            $("#txtSearchitem").focus();
+        });
+        
         function RefreshQueue() {
             $("#txtSearchmodal").val('')
             var warehouse = $('#ddlWarehouse').find('option:selected').val();
@@ -3064,7 +3084,7 @@
                 }
 
                 // ENTER
-                if (e.key === "Enter") {
+                if (e.key === "Enter" && currentRowIndex >= 0) {
                     e.preventDefault();
 
                     let $selected = $rows.eq(currentRowIndex);
@@ -3202,6 +3222,7 @@
                         '<td style="text-align: center;"><a href="javascript:void(0)" onclick="ExcludeFromPayment(this)"><i class="fa fa-trash-o" style="font-size:17px"></i></a> </td>' +
                         '</tr>';
                     $('#tblDetails #tblbody').append(rows);
+                    $('#ItemModal').modal('hide');
                     setTimeout(function () {
                         $('#medName').select2('close');
                         $('input[name="txtQty"]').focus().select();
@@ -4612,7 +4633,7 @@
                         <div class="form-row">
                             <div class="col-md-6">
                                 <label for="txtSearchmodal">Search Your Patients:</label>
-                                <input type="text" id="txtSearchitem" class="form-control" onkeyup="fillItemListsWareHouseWise();" autocomplete="off" placeholder="Enter search text" />
+                                <input type="text" id="txtSearchitem" class="form-control" autocomplete="off" placeholder="Enter search text" />
                             </div>
                                                        
                             <div class="col-lg-2 text-end" style=" margin-top:28px !important;">
