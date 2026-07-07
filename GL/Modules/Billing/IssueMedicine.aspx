@@ -106,6 +106,16 @@
 
                 $('#txtuserCode').focus();
             }
+           else if (event.altKey && event.code === 'KeyL') {
+                debugger;
+                event.preventDefault();
+                // $('#medName').select2('close');
+                // $('#btnSave').attr('style', 'background: green !important;margin-top: -5px;').focus();
+                //SearchPop();
+               // GetPharmacyUser();
+                OpenItemList()
+              //  $('#txtuserCode').focus();
+            }
             else if (event.altKey && event.code === 'KeyR') {
                 event.preventDefault();
                 $('#medName').select2('close');
@@ -176,7 +186,7 @@
                     if (checkTable == "tblDetails") {
                         var attr_name = $(e.target).attr('name');
                         if (attr_name == 'txtQty') {
-                            $('#medName').select2('open');
+                            OpenItemList();
                         }
                     }
                     break;
@@ -434,6 +444,21 @@
                 $(this).find('input[type="text"]').val('');
                 $(this).find('select').val(null).trigger('change');
                 $('#saleReturnTableBody').empty();
+            });
+
+            // Item search with debounce
+            var searchTimer;
+            $('#txtSearchitem').on('input', function () {
+                clearTimeout(searchTimer);
+                searchTimer = setTimeout(function () {
+                    fillItemListsWareHouseWise();
+                }, 300);
+            }).on('keydown', function (e) {
+                if (e.key === "Enter") {
+                    e.preventDefault();
+                    clearTimeout(searchTimer);
+                    fillItemListsWareHouseWise();
+                }
             });
 
         });
@@ -2358,9 +2383,26 @@
             }
             PageMethods.SaveRecord(JSON.stringify(Parameters), Rbtn, UserId, patId, function (res) {
                 debugger;
+                var result = JSON.parse(res);
+                if (!result.Success) {
+                    Swal.fire({
+                        icon: 'error',
+                        title: 'Cannot Save!',
+                        text: result.Message,
+                        confirmButtonText: 'OK',
+                        confirmButtonColor: '#d33',
+                        customClass: {
+                            popup: 'swal-big-popup',
+                            title: 'swal-big-title',
+                            htmlContainer: 'swal-big-text'
+                        }
+                    });
+                    $('#SaveVal').attr('disabled', false);
+                    return;
+                }
                 var btnSave = $('#btnSave').val();
                 if (btnSave == 'Save & Print(Alt+S)' || btnSave == "Save & Print(Alt+S)") {
-                    window.open('../../ReportViewer.aspx?ReportName=PharmacySlip&ReportTitle=PharmacySlip&Bill_ID=' + JSON.parse(res));
+                    window.open('../../ReportViewer.aspx?ReportName=PharmacySlip&ReportTitle=PharmacySlip&Bill_ID=' + result.BillId);
                 }
                 Swal.fire({
                     icon: 'success',
@@ -2565,9 +2607,21 @@
             PageMethods.SaveRecord(JSON.stringify(Parameters), Rbtn, UserId, patId,
                 function (res) {
                     debugger;
+                    var result = JSON.parse(res);
+                    if (!result.Success) {
+                        Swal.fire({
+                            icon: 'error',
+                            title: 'Cannot Save!',
+                            text: result.Message,
+                            confirmButtonText: 'OK',
+                            confirmButtonColor: '#d33'
+                        });
+                        $('#SaveVal').attr('disabled', false);
+                        return;
+                    }
                     var btnSave = $('#btnSave').val();
                     if (btnSave == 'Save & Print(Alt+S)' || btnSave == "Save & Print(Alt+S)") {
-                        window.open('../../ReportViewer.aspx?ReportName=PharmacySlip&ReportTitle=PharmacySlip&Bill_ID=' + JSON.parse(res));
+                        window.open('../../ReportViewer.aspx?ReportName=PharmacySlip&ReportTitle=PharmacySlip&Bill_ID=' + result.BillId);
                     }
                     Swal.fire({
                         icon: 'success',
@@ -2913,16 +2967,21 @@
                         htmlContainer: 'swal-big-text'
                     }
                 });
-                //$('#ddlInv_No').val('');
                 return;
             }
             else {
+                $("#tblItemList tbody").html("");
+                $("#txtSearchitem").val("");
                 fillItemListsWareHouseWise();
                 $('#ItemModal').modal('show');
             }
         
         }
-
+        
+        $(document).on('shown.bs.modal', '#ItemModal', function () {
+            $("#txtSearchitem").focus();
+        });
+        
         function RefreshQueue() {
             $("#txtSearchmodal").val('')
             var warehouse = $('#ddlWarehouse').find('option:selected').val();
@@ -3025,7 +3084,7 @@
                 }
 
                 // ENTER
-                if (e.key === "Enter") {
+                if (e.key === "Enter" && currentRowIndex >= 0) {
                     e.preventDefault();
 
                     let $selected = $rows.eq(currentRowIndex);
@@ -3163,6 +3222,7 @@
                         '<td style="text-align: center;"><a href="javascript:void(0)" onclick="ExcludeFromPayment(this)"><i class="fa fa-trash-o" style="font-size:17px"></i></a> </td>' +
                         '</tr>';
                     $('#tblDetails #tblbody').append(rows);
+                    $('#ItemModal').modal('hide');
                     setTimeout(function () {
                         $('#medName').select2('close');
                         $('input[name="txtQty"]').focus().select();
@@ -4308,7 +4368,7 @@
                                   <div class="col-lg-2 col-md-4 col-sm-6">
                     <label class="InvoiceNum">
                         </label>
-                    <input type="button" class="btn-primry" value="Item List" id="item_List" onclick="OpenItemList();" style="width:144% !important" />
+                    <input type="button" class="btn-primry" value="Item List (Alt + L)" id="item_List" onclick="OpenItemList();" style="width:144% !important" />
                 </div>
                   </div>
 
@@ -4573,7 +4633,7 @@
                         <div class="form-row">
                             <div class="col-md-6">
                                 <label for="txtSearchmodal">Search Your Patients:</label>
-                                <input type="text" id="txtSearchitem" class="form-control" onkeyup="fillItemListsWareHouseWise();" autocomplete="off" placeholder="Enter search text" />
+                                <input type="text" id="txtSearchitem" class="form-control" autocomplete="off" placeholder="Enter search text" />
                             </div>
                                                        
                             <div class="col-lg-2 text-end" style=" margin-top:28px !important;">

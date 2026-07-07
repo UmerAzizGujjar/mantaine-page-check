@@ -1510,23 +1510,23 @@
             PageMethods.SaveCSData(btnSave, JSON.stringify(AllItemDetail), function (res) {
                 debugger;
                 var ID = res;
-                sendFile(ID);
-                Swal.fire({
-                    icon: 'success',
-                    title: 'Success!',
-                    text: 'Data Save Successfully',
-                    showConfirmButton: false,
-                    timer: 2500,
-                    customClass: {
-                        popup: 'swal-big-popup',
-                        title: 'swal-big-title',
-                        htmlContainer: 'swal-big-text'
-                    }
-                });
+                sendFile(ID, function () {
+                    Swal.fire({
+                        icon: 'success',
+                        title: 'Success!',
+                        text: 'Data Save Successfully',
+                        showConfirmButton: false,
+                        timer: 2500,
+                        customClass: {
+                            popup: 'swal-big-popup',
+                            title: 'swal-big-title',
+                            htmlContainer: 'swal-big-text'
+                        }
+                    });
 
-                $('#btn_Save').val("Update");
-                window.location = "ComparativeStatementVendorView.aspx";
-                $('#btn_Save').val("Update");
+                    $('#btn_Save').val("Update");
+                    window.location = "ComparativeStatementVendorView.aspx";
+                });
             });
         }    
 
@@ -1582,7 +1582,7 @@
             });
         }
         
-        function sendFile(ID) {
+        function sendFile(ID, callback) {
             debugger;
             var fileInput = $('#uploadcsfile')[0];
             if (fileInput.files.length > 0) {
@@ -1591,15 +1591,18 @@
             data.append('ID', ID);
             $.ajax({
                 type: 'post',
-                url: '../../UploadCSFiles.ashx',
+                url: '../../upload/UploadCSFiles.ashx',
                 data: data,
                 success: function (status) {
+                    if (typeof callback === 'function') callback();
                 },
                 processData: false,
                 contentType: false,
                 error: function () {
                 }
             });
+            } else {
+                if (typeof callback === 'function') callback();
             }
         }
         function getprNoBy_WareHouseCS() {

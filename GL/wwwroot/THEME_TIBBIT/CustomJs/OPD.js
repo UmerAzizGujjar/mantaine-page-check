@@ -1484,7 +1484,7 @@ function SaveData() {
         return;
     }
 
-  
+
     if (Department == "101" && FilterClinic == "0") {
         Swal.fire({
             icon: 'error',
@@ -1536,7 +1536,7 @@ function SaveData() {
         });
         return;
     }
-   
+
     if ((pat_category === "01" || ["02", "04", "05"].includes(pat_category)) && (!Department || Department === "0")) {
         Swal.fire({
             icon: 'error',
@@ -1601,7 +1601,57 @@ function SaveData() {
         return;
     }
 
-    // ✅ FIXED: Send token under CORRECT property name → "AntiForgeryToken"
+    var isPatientAdmitted = false;
+
+    $.ajax({
+        type: "POST",
+        url: "OPD.aspx/OPDSlip",
+        contentType: "application/json; charset=utf-8",
+        dataType: "json",
+        async: false,
+        success: function (response) {
+            var validationCode = JSON.parse(response.d);
+
+            if (validationCode === "01") {
+
+                $.ajax({
+                    type: "POST",
+                    url: "OPD.aspx/CheckPatientAdmissionStatus",
+                    data: JSON.stringify({ regPatId: parseInt(regid) }),
+                    contentType: "application/json; charset=utf-8",
+                    dataType: "json",
+                    async: false,
+                    success: function (admissionResponse) {
+                        var statusData = JSON.parse(admissionResponse.d);
+
+                        if (statusData.isAdmitted) {
+                            isPatientAdmitted = true;
+                            Swal.fire({
+                                icon: 'warning',
+                                title: 'Patient Admitted',
+                                text: 'This patient is currently admitted in ' + statusData.location + ' since ' + statusData.admissionDate + '. You cannot save this OPD form.',
+                                confirmButtonText: 'OK'
+                            });
+                        }
+                    },
+                    error: function (xhr, status, error) {
+                        console.error("Admission check failed", error);
+                    }
+                });
+            }
+        },
+        error: function (xhr, status, error) {
+            console.error("Validation check failed", error);
+        }
+    });
+
+
+    if (isPatientAdmitted) {
+        return;
+    }
+
+
+
     var data = {
         regid: regid,
         appid: appid,

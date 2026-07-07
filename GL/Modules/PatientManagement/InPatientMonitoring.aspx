@@ -2855,7 +2855,15 @@
         $(function () {
             $("#tabs").tabs();
             GetLastSelectedTab();
+            loadWaitingList();
         });
+        function loadWaitingList() {
+            var id = '<%=Request.QueryString["ID"]%>';
+            var inPatientID = '<%=Request.QueryString["InPatientID"]%>';
+            if ((id == "" || id == null) && (inPatientID == "" || inPatientID == null)) {
+                RemoveExtraDepts_WL();
+            }
+        }
         function GetLastSelectedTab() {
 
             $("#tabs").tabs("option", "active", localStorage.SelectedTabID);
@@ -3478,6 +3486,109 @@
 
 
 
+        function RemoveExtraDepts_WL() {
+            PageMethods.GetDepartments_WL(function (data) {
+                var parsedData = JSON.parse(data);
+                var options = '';
+                $.each(parsedData, function (key, value) {
+                    options += '<option value=' + value.Department_ID + '> ' + value.Department_Name + '</option>';
+                });
+                $('#ddlDepartmentsWL').html(options);
+                setTimeout(function () {
+                    $('#ddlDepartmentsWL').val("0");
+                    fillWards_WL();
+                    fillPendingPatientsList_WL();
+                }, 1000);
+            }, function (exec) { alert(exec.getmessage()); })
+        }
+        function fillWards_WL() {
+            var departmentId = $('#ddlDepartmentsWL').val();
+            $.ajax({
+                url: 'InPatientMonitoring.aspx/GetWards_WL',
+                type: 'POST',
+                contentType: 'application/json; charset=utf-8',
+                dataType: 'json',
+                data: JSON.stringify({ departmentId: departmentId || '0' }),
+                success: function (response) {
+                    var data = response.d ? JSON.parse(response.d) : response;
+                    $('#ddlWardsWL').empty();
+                    $('#ddlWardsWL').append('<option value="">All Wards</option>');
+                    $.each(data, function (key, value) {
+                        $('#ddlWardsWL').append('<option value="' + value.Ward_ID + '">' + value.Ward_Type + '</option>');
+                    });
+                },
+                error: function (xhr, status, error) {
+                    console.error('Error fetching ward data:', error);
+                }
+            });
+        }
+        function fillPendingPatientsList_WL() {
+            $(".se-pre-con").fadeIn("slow");
+            var SelectedDepartment = $('#ddlDepartmentsWL').val();
+            var SelectedWard = $('#ddlWardsWL').val();
+            var deptParam = (SelectedDepartment === "0" || SelectedDepartment === "" || !SelectedDepartment) ? "" : SelectedDepartment;
+            var wardParam = (SelectedWard === "0" || SelectedWard === "" || !SelectedWard || SelectedWard === "All Wards") ? "" : SelectedWard;
+            PageMethods.PendingPatients_WL(deptParam, wardParam, function (data) {
+                var parsedData = JSON.parse(data);
+                var rows = '';
+                $.each(parsedData, function (key, value) {
+                    var TrnsDate = new Date(parseInt(value.Created_Time.substr(6)));
+                    var retdate = moment(TrnsDate).format('LLLL');
+                    var status = value.Checked;
+                    if (status != null) {
+                        status = "Checked"
+                    }
+                    else {
+                        status = "Unchecked"
+                    }
+                    var chkPrivate = document.getElementById("chkPrivateWL").checked;
+                    if (chkPrivate == true) {
+                        if (value.Patient_Type == "02") {
+                            rows += '<tr>' +
+                                '<td>' + value.Patient_No + '</td>' +
+                                '<td>' + value.Full_Name + '</td>' +
+                                '<td>' + value.Age_years + '</td>' +
+                                '<td>' + value.Gender + '</td>' +
+                                '<td>' + retdate + '</td>' +
+                                '<td>' + value.DepartmentName + '</td>' +
+                                '<td>' + value.WardName + '</td>' +
+                                '<td>' + value.DoctorName + '</td>' +
+                                '<td>' + value.UserName + '</td>' +
+                                '<td>' + status + '</td>' +
+                                '<td><a href="javascript:void(0)" onclick=selectPatientIPD(' + value.In_Patient_ID + ')>Select</a></td>' +
+                                '</tr>';
+                        }
+                    }
+                    else {
+                        if (value.Patient_Type != "02") {
+                            rows += '<tr>' +
+                                '<td>' + value.Patient_No + '</td>' +
+                                '<td>' + value.Full_Name + '</td>' +
+                                '<td>' + value.Age_years + '</td>' +
+                                '<td>' + value.Gender + '</td>' +
+                                '<td>' + retdate + '</td>' +
+                                '<td>' + value.DepartmentName + '</td>' +
+                                '<td>' + value.WardName + '</td>' +
+                                '<td>' + value.DoctorName + '</td>' +
+                                '<td>' + value.UserName + '</td>' +
+                                '<td>' + status + '</td>' +
+                                '<td><a href="javascript:void(0)" onclick=selectPatientIPD(' + value.In_Patient_ID + ')>Select</a></td>' +
+                                '</tr>';
+                        }
+                    }
+                });
+                $('#tblPendingPatientsWL tbody').html(rows);
+                $(".se-pre-con").fadeOut("slow");
+            }, function (exec) {
+                $(".se-pre-con").fadeOut("slow");
+            })
+        }
+        function selectPatientIPD(inPatID) {
+            localStorage.inPatID = inPatID;
+            var chkPrivateforload = document.getElementById("chkPrivateWL").checked;
+            localStorage.IsPrivate = chkPrivateforload;
+            window.location.href = 'InPatientMonitoring.aspx' + '?InPatientID=' + inPatID;
+        }
     </script>
 
 </asp:Content>
@@ -3702,6 +3813,7 @@
     <div style="width: 100%">
         <div id="tabs">
             <ul>
+                <li><a href="#Tab-19">Waiting List</a></li>
                 <li><a href="#Tab-2">Patient Monitoring</a></li>
                  <li><a href="#Tab-14">Services</a></li>
                 <li><a href="#Tab-18">IV Fluid</a></li>
@@ -3714,6 +3826,57 @@
                
 
             </ul>
+            <div id="Tab-19">
+                <h2>Patients Waiting List Department Wise : </h2>
+                <div id="Div2_WL">
+                    <div>
+                        <table id="tblHeader_WL">
+                            <tr>
+                                <td>
+                                    <h4 style="margin-left: 5px;">Select Your Department </h4>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td style="width: 261px">
+                                    <select id="ddlDepartmentsWL" onchange="fillWards_WL(); fillPendingPatientsList_WL();"></select>
+                                </td>
+                                <td style="width: 261px">
+                                    <select id="ddlWardsWL" style="margin-left: 14px;" onchange="fillPendingPatientsList_WL();">
+                                        <option value="">All Wards</option>
+                                    </select>
+                                </td>
+                                <td style="padding-left:20px !important">Private</td>
+                                <td style="padding-left:10px !important">
+                                    <input type="checkbox" id="chkPrivateWL" onclick="fillPendingPatientsList_WL()" />
+                                </td>
+                            </tr>
+                        </table>
+                    </div>
+                    <div style="overflow: scroll; height: 400px;">
+                        <fieldset>
+                            <table class="table table-hover table-striped table-bordered" id="tblPendingPatientsWL" style="overflow: scroll;">
+                                <thead id="ihead_WL">
+                                    <tr>
+                                        <th>MR No</th>
+                                        <th>Patient Name</th>
+                                        <th>Age</th>
+                                        <th>Gender</th>
+                                        <th style="width: 173px;">Created Time</th>
+                                        <th>Department</th>
+                                        <th>Ward</th>
+                                        <th>Doctor</th>
+                                        <th>Operator Name</th>
+                                        <th>Status</th>
+                                        <th>Select</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="ibody_WL">
+                                </tbody>
+                            </table>
+                        </fieldset>
+                    </div>
+                </div>
+            </div>
             <div id="Tab-1" style="display: none">
                 <div id="OtherDetails" style="width: 70%">
                     <table>

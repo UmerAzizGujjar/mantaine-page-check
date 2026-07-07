@@ -1157,6 +1157,7 @@ namespace PMS.Modules.PatientManagement
             area = SanitizeInput(area);
 
             DataBaseDataContext db = new DataBaseDataContext();
+            JavaScriptSerializer JSS = new JavaScriptSerializer();
             Reg_patient pat = null;
 
             bool isNewPatient = string.IsNullOrEmpty(PatientID) || PatientID == "0" || PatientID == "(New)";
@@ -1206,6 +1207,50 @@ namespace PMS.Modules.PatientManagement
                     pat.val_area = area_val;
                     pat.Country = Country;
                     pat.Province = Province;
+                    pat.updated_time = DateTime.Now;
+                    pat.updated_by = AppConfig.UserID;
+
+                    var previousRegData = new
+                    {
+                        PatData = new
+                        {
+                            pat.Patient_No,
+                            pat.mr_no_sequence,
+                            CreationDate = pat.Created_time ?? DateTime.MinValue,
+                            pat.Full_Name,
+                            pat.Father_Name,
+                            pat.Gender,
+                            pat.Mobile1,
+                            pat.Age_years,
+                            pat.NIC,
+                            pat.Permanent_Address,
+                            pat.Martial_Status,
+                            pat.Relation_prefix,
+                            pat.walkin,
+                            pat.city,
+                            pat.val_city,
+                            pat.val_area,
+                            pat.area,
+                            pat.Country,
+                            pat.Province,
+                            pat.Card_fee,
+                            pat.other_cnic,
+                            DOB = pat.DOB ?? DateTime.MinValue,
+
+                        }
+
+                    };
+
+                    string masterLogJson = JSS.Serialize(previousRegData.PatData);
+                    Reg_Patient_Log RegLog = new Reg_Patient_Log
+                    {
+                        Pat_Id = pat.pat_id,
+                        Updated_data = masterLogJson,
+                        Loged_Time = DateTime.Now,
+                        Loged_by = AppConfig.UserID
+                    };
+
+                    db.Reg_Patient_Logs.InsertOnSubmit(RegLog);
                     db.SubmitChanges();
                 }
             }
@@ -2751,6 +2796,69 @@ namespace PMS.Modules.PatientManagement
             catch (Exception ex)
             {
                 return "0";
+            }
+        }
+
+        [WebMethod]
+        public static string OPDSlip()
+        {
+            DataBaseDataContext db = new DataBaseDataContext(DBClass.ConnectionString());
+            var dept = (from data in db.sys_Parms
+                        where data.Name == "OPD Slip Admission Check"
+                        select
+                          data.Code
+                        ).FirstOrDefault();
+            return (new JavaScriptSerializer()).Serialize(dept);
+        }
+
+        [WebMethod]
+        public static string CheckPatientAdmissionStatus(int regPatId)
+        {
+            try
+            {
+                using (DataBaseDataContext db = new DataBaseDataContext(DBClass.ConnectionString()))
+                {
+                    var inPatient = (from ip in db.In_Patients
+                                     where ip.Patient_ID == regPatId
+                                     && ip.Discharge_On == null
+                                     && (ip.Discharge == null || ip.Discharge == false)
+                                     && (ip.is_cancel == null || ip.is_cancel == false)
+                                     select ip).FirstOrDefault();
+
+                    if (inPatient != null)
+                    {
+                        return new JavaScriptSerializer().Serialize(new
+                        {
+                            isAdmitted = true,
+                            location = "In-Patient",
+                            admissionDate = inPatient.Admission_Date?.ToString("dd-MMM-yyyy")
+                        });
+                    }
+
+                    
+                    var emergencyPatient = (from ep in db.Emergency_Patients
+                                            where ep.Patient_ID == regPatId
+                                            && ep.Discharge_On == null
+                                            && (ep.Discharge == null || ep.Discharge == false)
+                                            && (ep.isCancelled == null || ep.isCancelled == false) 
+                                            select ep).FirstOrDefault();
+
+                    if (emergencyPatient != null)
+                    {
+                        return new JavaScriptSerializer().Serialize(new
+                        {
+                            isAdmitted = true,
+                            location = "Emergency",
+                            admissionDate = emergencyPatient.Admission_Date?.ToString("dd-MMM-yyyy")
+                        });
+                    }
+
+                    return new JavaScriptSerializer().Serialize(new { isAdmitted = false });
+                }
+            }
+            catch (Exception ex)
+            {
+                return new JavaScriptSerializer().Serialize(new { isAdmitted = false, error = ex.Message });
             }
         }
     }

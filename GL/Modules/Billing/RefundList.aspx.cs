@@ -196,7 +196,39 @@ namespace PMS
             }
         }
 
-        
+
+
+        //[WebMethod]
+        //public static bool ApproveRefunds(List<string> refundIds)
+        //{
+        //    try
+        //    {
+        //        using (var db = new DataBaseDataContext(DBClass.ConnectionString()))
+        //        {
+        //            var userId = AppConfig.UserID;
+
+        //            foreach (var idStr in refundIds)
+        //            {
+        //                if (int.TryParse(idStr, out int refundId))
+        //                {
+        //                    var refund = db.Refunds.FirstOrDefault(r => r.Refund_ID == refundId);
+        //                    if (refund != null)
+        //                    {
+        //                        refund.approve_by = userId;
+        //                        refund.approve_date = DateTime.Now;
+        //                        refund.Status = "Approved";
+        //                    }
+        //                }
+        //            }
+        //            db.SubmitChanges();
+        //        }
+        //        return true;
+        //    }
+        //    catch (Exception)
+        //    {
+        //        return false;
+        //    }
+        //}
 
         [WebMethod]
         public static bool ApproveRefunds(List<string> refundIds)
@@ -221,7 +253,7 @@ namespace PMS
                                     cmd.Parameters.AddWithValue("@refundid", refundId);
                                     cmd.Parameters.AddWithValue("@user_id", userId);
 
-                                    
+
                                     cmd.ExecuteNonQuery();
                                 }
                             }
@@ -232,7 +264,6 @@ namespace PMS
             }
             catch (Exception ex)
             {
-                
                 return false;
             }
         }

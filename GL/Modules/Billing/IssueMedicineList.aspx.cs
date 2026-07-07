@@ -48,7 +48,8 @@ namespace PMS
                                             Total_Amount = AB.Total_Amount,
                                             Discount_Amount = AB.Discount_Amount,
                                             Balance_Amount = AB.Balance_Amount,
-                                            FBR_Number = AB.FBR_No ?? ""
+                                            FBR_Number = AB.FBR_No ?? "",
+                                            Main_Department = _dbContext.GetDataValueName("Mode Of Registration", AB.Main_Department),
                                         };
 
                     var FilteredCount = IssueMedicine.Count();

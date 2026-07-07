@@ -1,4 +1,4 @@
-﻿<%@ Page Title="" Language="C#" MasterPageFile="~/Site.Master" AutoEventWireup="true" CodeBehind="StockAdjustment.aspx.cs" Inherits="PMS.WebForm5" EnableEventValidation="false" %>
+﻿<%@ Page Title="Stock Adjustment" Language="C#" MasterPageFile="~/Site.Master" AutoEventWireup="true" CodeBehind="StockAdjustment.aspx.cs" Inherits="PMS.WebForm5" EnableEventValidation="false" %>
 
 <%@ Register Assembly="AjaxControlToolkit" Namespace="AjaxControlToolkit" TagPrefix="asp" %>
 <asp:Content ID="Content1" ContentPlaceHolderID="HeadContent" runat="server">
@@ -6,7 +6,11 @@
 
     <script type="text/javascript">
         var Stock_ID = 0;
+        var warehouseCond;
+        var gridItems = [];
+
         $(document).ready(function () {
+            // Batch input changes
             $('#ctl00_MainContent_txtBatchNo').on('change keyup', function () {
                 DisableDropdownOnTextInput();
 
@@ -19,9 +23,9 @@
                     $('#ctl00_MainContent_hdbatch').val(1);
                     $('#ctl00_MainContent_hdallowblank').val(1);
                 }
-
             });
 
+            // Initialize Select2 for Dropdown Batch
             $('#ctl00_MainContent_ddlBatchNo').select2({
                 width: '100%',
                 placeholder: '-- Select Batch --',
@@ -38,10 +42,6 @@
                 }, 100);
             });
 
-            $('#ctl00_MainContent_ddlBatchNo').on('change', function () {
-                DisableTextOnDropdownChange();
-            });
-
             // Expire date change event
             $('#ctl00_MainContent_txtExpiredate').on('change', function () {
                 if ($(this).val() != '') {
@@ -54,14 +54,13 @@
             });
 
             GetWareHouseCondition();
-            GetMultipleBatchCondition(); 
-            
-            $('#ctl00_MainContent_txtItem_Code').tokenInput(function () {
-                debugger;
+            GetMultipleBatchCondition();
+            UserRights();
 
+            // Initialize TokenInput for Item Selection
+            $('#ctl00_MainContent_txtItem_Code').tokenInput(function () {
                 if (warehouseCond == '01') {
                     var warehouseVal = $('#ctl00_MainContent_ddl_Ware_House').val();
-                    debugger;
                     if (!warehouseVal || warehouseVal === "0" || warehouseVal === "") {
                         Swal.fire({
                             icon: 'error',
@@ -75,14 +74,12 @@
                                 htmlContainer: 'swal-big-text'
                             }
                         });
-                        //return false;
                         return "";
                     }
-
                     return "../../json.aspx?Table=INV_ItemsforStockAdjWareHouse&WarehouseID=" + encodeURIComponent(warehouseVal);
                 }
                 else {
-                    return "../../json.aspx?Table=INV_ItemsforStockAdj"
+                    return "../../json.aspx?Table=INV_ItemsforStockAdj";
                 }
             },
                 {
@@ -90,9 +87,7 @@
                     hintText: "Select a warehouse first...",
                     noResultsText: "No items found.",
                     searchingText: "Searching...",
-
                     onAdd: function (item) {
-                        debugger;
                         $('#ctl00_MainContent_hdfItem_ID').val(item.id);
                         $('#ctl00_MainContent_hdnDescription').val(item.name);
                         LoadBatches(item.id);
@@ -110,134 +105,38 @@
                             $('#ctl00_MainContent_hdDate').val(1);
                             $('#ctl00_MainContent_hdallowblank').val(0);
                         }
+                        return false; // Prevent unwanted postbacks or form focus losses
                     },
                     onDelete: function (item) {
                         $('#ctl00_MainContent_hdfItem_ID').val('');
                         $('#ctl00_MainContent_hdnDescription').val('');
+                        return false;
                     }
                 });
-            debugger;
-               <% if (Request.QueryString["ID"] != null)
-        { %>
-            Stock_ID = '<%= Request.QueryString["ID"]%>'
-               <% } %>
+
+            <% if (Request.QueryString["ID"] != null) { %>
+            Stock_ID = '<%= Request.QueryString["ID"]%>';
+            <% } %>
+
             if (Stock_ID == 0) {
                 $('#btnVoucher').hide();
-
             }
+
             var status = $('#ctl00_MainContent_txt_status').val();
             if (status == "Approved") {
-                $('#ctl00_MainContent_btnSave').attr("disabled", 'disabled');
+                $('#ctl00_MainContent_btnSave').prop("disabled", true);
                 $('#btnVoucher').show();
                 UserUnApproveButtonRights();
             }
             if (status == "Created") {
-                $('#ctl00_MainContent_btnSave').attr("disabled", false);
+                $('#ctl00_MainContent_btnSave').prop("disabled", false);
                 $('#btnVoucher').hide();
             }
 
-        });
-        function hiddenVal(hiddenDate, hiddenbatch, hiddenallowblank) {
-            if (hiddenDate == "1") $('#ctl00_MainContent_txtExpiredate').addClass("ErrorAlert");
-            if (hiddenbatch == "1") $('#ctl00_MainContent_txtBatchNo').addClass("ErrorAlert");
-        }
-
-        //function loadtokenInputsDefaultPRNo() {
-        //    debugger;
-        //    var warehouseVal = $('#ctl00_MainContent_ddl_Ware_House').val();
-
-        //    if (warehouseVal === "0" || warehouseVal === null) {
-        //        return;
-        //    }
-
-        //    try {
-        //        $('#ctl00_MainContent_txtItem_Code').tokenInput("clear");
-        //        $('#ctl00_MainContent_txtItem_Code').tokenInput("destroy");
-        //    } catch (e) { }
-
-        //    $('#ctl00_MainContent_txtItem_Code').tokenInput("../../json.aspx?Table=INV_ItemsforStockAdjWareHouse&WarehouseID=" + encodeURIComponent(warehouseVal), {
-        //        tokenLimit: 1,
-        //        onAdd: function (item) {
-        //            debugger;
-        //            calculatecurrentstock(item.id);
-
-        //            if (item.Type === "True") {
-        //                $('#ctl00_MainContent_hdbatch').val(1);
-        //                $('#ctl00_MainContent_hdDate').val(1);
-        //                $('#ctl00_MainContent_hdallowblank').val(1);
-
-        //                $('#ctl00_MainContent_txtBatchNo').addClass("ErrorAlert");
-        //                $('#ctl00_MainContent_txtExpiredate').addClass("ErrorAlert");
-
-        //                $('#ctl00_MainContent_hdbatch').val(1);
-        //                $('#ctl00_MainContent_hdDate').val(1);
-        //                $('#ctl00_MainContent_hdallowblank').val(0);
-        //            }
-        //        }
-        //    });
-        //}
-        var warehouseCond;
-        function GetWareHouseCondition() {
-
-            $.ajax({
-                type: "POST",
-                url: "StockAdjustment.aspx/GetWareHouseCondition",
-                data: JSON.stringify({}),
-                contentType: "application/json; charset=utf-8",
-                dataType: "json",
-                success: function (response) {
-                    debugger;
-                    warehouseCond = JSON.parse(response.d);
-                    if (warehouseCond == '01') {
-                        $('#divWarehouse').show();
-                    }
-                    else {
-                        //$('#divWarehouse').hide();
-                    }
-                },
-                error: function (error) {
-                    console.error("Error fetching items", error);
-                }
-            });
-        }
-        function loadtokenInputsForPRNo(elementId, data) {
-            if (elementId == "#ctl00_MainContent_txtItem_Code") {
-                $(elementId).tokenInput("../../json.aspx?Table=INV_ItemsforStockAdj&q=",
-                    {
-                        prePopulate: data,
-                        tokenLimit: 1,
-                    });
-            }
-        }
-        $(document).ready(function () {
-            UserRights();
-            $('#ctl00_MainContent_txtBatchNo').on('change', function () {
-                if ($(this).val() != '') {
-                    $('#ctl00_MainContent_txtBatchNo').removeClass('ErrorAlert');
-                    $('#ctl00_MainContent_hdbatch').val(0);
-                    $('#ctl00_MainContent_hdallowblank').val(0);
-                }
-                else {
-                    $('#ctl00_MainContent_txtBatchNo').addClass('ErrorAlert');
-                    $('#ctl00_MainContent_hdbatch').val(1);
-                    $('#ctl00_MainContent_hdallowblank').val(1);
-                }
-            });
-            $('#ctl00_MainContent_txtExpiredate').on('change', function () {
-                if ($(this).val() != '') {
-                    $('#ctl00_MainContent_txtExpiredate').removeClass('ErrorAlert');
-                    $('#ctl00_MainContent_hdDate').val(0);
-                }
-                else {
-                    $('#ctl00_MainContent_txtExpiredate').addClass("ErrorAlert");
-                    $('#ctl00_MainContent_hdDate').val(1);
-                }
-            });
-
+            // Datepicker configs
             var ad_ID = '<%= Request.QueryString["ID"] %>';
             var $adjustDate = $('#ctl00_MainContent_txtAdustment_date');
             var $expireDate = $('#ctl00_MainContent_txtExpiredate');
-
             var dateFormat = "dd M yy";
 
             $adjustDate.datepicker({
@@ -259,39 +158,62 @@
                 $adjustDate.val(currentDate);
                 $expireDate.val(currentDate);
             }
-            window.onunload = refreshParent;
-            function refreshParent() {
-            }
-            debugger;
+
             var AdjustmentID = $('#<%=txtAdjustment_ID.ClientID%>').val();
             var Item_Code = $("#ctl00_MainContent_txtItem_Code").val();
             var Item_ID = $("#ctl00_MainContent_hdfItem_ID").val();
             var Item_Name = $("#ctl00_MainContent_hdnDescription").val();
+
             if (AdjustmentID != "(New)") {
-                debugger;
                 var tokendata = [{ "id": Item_ID, "name": Item_Code + '-' + Item_Name, "Type": "", "Amount": '+0+' }];
                 loadtokenInputsForPRNo("#ctl00_MainContent_txtItem_Code", tokendata);
                 calculatecurrentstock(Item_ID);
             }
-            else {
-                //loadtokenInputsDefaultPRNo();
-            }
             $('.token-input-list').css('width', '368px');
         });
 
+        function hiddenVal(hiddenDate, hiddenbatch, hiddenallowblank) {
+            if (hiddenDate == "1") $('#ctl00_MainContent_txtExpiredate').addClass("ErrorAlert");
+            if (hiddenbatch == "1") $('#ctl00_MainContent_txtBatchNo').addClass("ErrorAlert");
+        }
+
+        function GetWareHouseCondition() {
+            $.ajax({
+                type: "POST",
+                url: "StockAdjustment.aspx/GetWareHouseCondition",
+                data: JSON.stringify({}),
+                contentType: "application/json; charset=utf-8",
+                dataType: "json",
+                success: function (response) {
+                    warehouseCond = JSON.parse(response.d);
+                    if (warehouseCond == '01') {
+                        $('#divWarehouse').show();
+                    }
+                },
+                error: function (error) {
+                    console.error("Error fetching items", error);
+                }
+            });
+        }
+
+        function loadtokenInputsForPRNo(elementId, data) {
+            if (elementId == "#ctl00_MainContent_txtItem_Code") {
+                $(elementId).tokenInput("../../json.aspx?Table=INV_ItemsforStockAdj&q=", {
+                    prePopulate: data,
+                    tokenLimit: 1,
+                });
+            }
+        }
+
         function UserRights() {
-            debugger;
             $.ajax({
                 type: "POST",
                 url: "StockAdjustment.aspx/UserEntryRights",
                 contentType: "application/json; charset=utf-8",
                 dataType: "json",
                 success: function (response) {
-                    debugger;
                     var hasRights = response.d;
-                    debugger;
                     if (hasRights) {
-                        debugger;
                         $('#ctl00_MainContent_btnSave').show();
                     } else {
                         $('#ctl00_MainContent_btnSave').hide();
@@ -303,104 +225,60 @@
             });
         }
 
-
-        function httpGet(theUrl) {
-            var xmlHttp = null;
-            xmlHttp = new XMLHttpRequest();
-            xmlHttp.open("GET", theUrl, false);
-            xmlHttp.send(null);
-            return xmlHttp.responseText;
-        }
         function onchange() {
             var num1 = parseFloat(document.getElementById('<%= txtQuantity.ClientID %>').value);
             var num2 = parseFloat(document.getElementById('<%= txtRate.ClientID %>').value);
-            if (isNaN(num1))
-                num1 = 0;
-            if (isNaN(num2))
-                num2 = 0;
-            var totalresult = 0;
-            totalresult = num1 * num2;
+            if (isNaN(num1)) num1 = 0;
+            if (isNaN(num2)) num2 = 0;
+            var totalresult = num1 * num2;
             document.getElementById('<%= txtAmount.ClientID %>').value = parseFloat(totalresult).toFixed();
         }
+
         function New() {
             window.location = "StockAdjustment.aspx";
         }
+
         function Validate() {
             var val = document.getElementById("hdnDuplicateCheck").value;
-            var returnVal = false;
 
             if (!checkRemarksBeforeSave()) {
                 return false;
             }
-            if (val == "0")//no duplicate
-            {
-                document.getElementById("hdnDuplicateCheck").value = "1";
-            }
-            else {
 
+            // Bind grid JSON data right before validation postback triggers
+            var activeItems = gridItems.filter(function (item) { return item !== null; });
+            $('#ctl00_MainContent_hdnGridData').val(JSON.stringify(activeItems));
+
+            if (val == "0") {
+                document.getElementById("hdnDuplicateCheck").value = "1";
+                return true; 
+            } else {
                 Swal.fire({
                     icon: 'error',
                     title: 'Error!',
                     text: 'Processing Please Wait',
                     showConfirmButton: false,
-                    timer: 2000,
-                    customClass: {
-                        popup: 'swal-big-popup',
-                        title: 'swal-big-title',
-                        htmlContainer: 'swal-big-text'
-                    }
+                    timer: 2000
                 });
-                 return false;
+                return false;
             }
         }
-        <%--function Approve() {
-            debugger;
-            var user_id = '<% =AppConfig.UserID %>';
-            PageMethods.ApproveStock(Stock_ID, function (Tests) {
-                debugger
-                var message = JSON.parse(Tests);
-                if (message[0].Column1 != "") {
-                    alert("Approved Successfully");
-                    window.location.href = 'StockAdjustment.aspx';
-                }
-            });
-        }
-        function UnApprove() {
-            debugger;
-            PageMethods.UnApproveStock(Stock_ID, function (Tests) {
-                debugger
-                var message = JSON.parse(Tests);
-                if (message[0].Column1 == "1") {
-                    alert("Un Approve Done Successfully");
-                    location.reload();
-                }
-            });
-        }     --%> 
 
         function UnApprove() {
-            debugger;
             PageMethods.UnApproveStock(Stock_ID, function (Tests) {
-                debugger
                 var message = JSON.parse(Tests);
-                if (message[0].Column1 != "" || message[0].Column1 != null) {
+                if (message[0].Column1 != "" && message[0].Column1 != null) {
                     alert(message[0].Column1);
                     location.reload();
                 }
             });
         }
 
-        debugger;
         function PrintVoucher() {
-            debugger;
             var id = '<%= Request.QueryString["ID"]%>';
             var locationInfo = window.location;
-
             var user_name = '<% =AppConfig.Company_Name %>';
-            if (user_name == 'As-Siraat Serving Humanity') {
-                reportPath = '../../ReportViewer.aspx';
-            } else {
-                reportPath = 'ReportViewer.aspx'; // same folder
-            }
+            var reportPath = (user_name == 'As-Siraat Serving Humanity') ? '../../ReportViewer.aspx' : 'ReportViewer.aspx';
 
             var url = '/ReportViewer.aspx?ReportName=Voucher&ReportTitle=Adj Voucher&TransID=' + id + '&TransType=Adj';
             if (!locationInfo.origin.includes('localhost')) {
@@ -411,18 +289,12 @@
             }
             window.open(url, '_blank');
         }
-        debugger;
+
         function PrintStockAdjustment() {
-            debugger;
             var id = '<%= Request.QueryString["ID"]%>';
             var locationInfo = window.location;
-
             var user_name = '<% =AppConfig.Company_Name %>';
-            if (user_name == 'As-Siraat Serving Humanity') {
-                reportPath = '../../ReportViewer.aspx';
-            } else {
-                reportPath = 'ReportViewer.aspx'; // same folder
-            }
+            var reportPath = (user_name == 'As-Siraat Serving Humanity') ? '../../ReportViewer.aspx' : 'ReportViewer.aspx';
 
             var url = '/ReportViewer.aspx?ReportName=StockAdjustmentPrint&ReportTitle=Stock Adjustment&StockAdjustmentID=' + id ;
             if (!locationInfo.origin.includes('localhost')) {
@@ -433,54 +305,39 @@
             }
             window.open(url, '_blank');
         }
-        var amountonedit = 0;
+
         function calculatecurrentstock(item_id) {
-
-
-            $('#ctl00_MainContent_ddl_Ware_House').atrr('disabled', true);
-            debugger;
+            //$('#ctl00_MainContent_ddl_Ware_House').prop('disabled', true);
             var itemID = '';
             if (item_id > 0) {
                 itemID = item_id;
-                var batchitem = item_id;
-                checkbatchitem(batchitem);
-            }
-            else {
+                checkbatchitem(item_id);
+            } else {
                 itemID = $('#ctl00_MainContent_txtItem_Code').val();
             }
             var wareHouse = $('#ctl00_MainContent_ddl_Ware_House').val();
-            debugger;
             if (itemID > 0 && wareHouse != "0") {
                 PageMethods.calculateStock(itemID, wareHouse, function (res) {
-                    debugger;
                     $('#ctl00_MainContent_txtcurrentStock').val(res);
-
                 });
             }
         }
+
         function checkbatchitem(batchitem) {
-            debugger;
             PageMethods.checkbatch(batchitem, function (res) {
-                debugger;
-                var batchcheck = res;
                 $('#ctl00_MainContent_hndcheckbatch').val(res);
             });
-
-
         }
+
         function UserUnApproveButtonRights() {
-            debugger;
             $.ajax({
                 type: "POST",
                 url: "StockAdjustment.aspx/UserUnApproveEntryRights",
                 contentType: "application/json; charset=utf-8",
                 dataType: "json",
                 success: function (response) {
-                    debugger;
                     var hasRights = response.d;
-                    debugger;
                     if (hasRights) {
-                        debugger;
                         $('#btnUnApprove').show();
                     } else {
                         $('#btnUnApprove').hide();
@@ -491,6 +348,7 @@
                 }
             });
         }
+
         function showTooltip(input) {
             var tooltip = document.getElementById("tooltipQuantity");
             tooltip.style.display = "inline";
@@ -498,18 +356,13 @@
             tooltip.style.left = rect.left + "px";
             tooltip.style.top = (rect.bottom + window.scrollY + 5) + "px";
         }
+
         function hideTooltip() {
             document.getElementById("tooltipQuantity").style.display = "none";
         }
+
         function LoadBatches(item_id) {
-            debugger;
-            if (!item_id || item_id == "") {
-                console.log("No item ID provided");
-                return;
-            }
-
-            console.log("Loading batches for item_id: " + item_id);
-
+            if (!item_id || item_id == "") return;
             EnableBothFields();
 
             $.ajax({
@@ -519,7 +372,6 @@
                 contentType: "application/json; charset=utf-8",
                 dataType: "json",
                 success: function (response) {
-                    debugger;
                     var result = JSON.parse(response.d);
 
                     $('#ctl00_MainContent_ddlBatchNo').empty();
@@ -550,6 +402,7 @@
                 }
             });
         }
+
         function DisableDropdownOnTextInput() {
             var txtBatchNo = $('#ctl00_MainContent_txtBatchNo');
             var ddlBatchNo = $('#ctl00_MainContent_ddlBatchNo');
@@ -558,14 +411,12 @@
             if (txtBatchNo.val().trim() !== '') {
                 ddlBatchNo.prop('disabled', true);
                 ddlBatchNo.val('0');
-
                 hdnBatch.val(txtBatchNo.val().trim());
             } else {
                 ddlBatchNo.prop('disabled', false);
                 hdnBatch.val('');
             }
         }
-
 
         function DisableTextOnDropdownChange() {
             var txtBatchNo = $('#ctl00_MainContent_txtBatchNo');
@@ -588,11 +439,11 @@
             }
         }
 
-        // Function to enable both fields when clearing
         function EnableBothFields() {
             $('#ctl00_MainContent_txtBatchNo').prop('disabled', false);
             $('#ctl00_MainContent_ddlBatchNo').prop('disabled', false).val('0');
         }
+
         function checkRemarksBeforeSave() {
             var remarksCode = '<%= ReamrksValidation() %>';
             var remarks = $('#ctl00_MainContent_txtRemarks').val();
@@ -609,11 +460,7 @@
             return true;
         }
 
-
-        var gridItems = [];
-
         function AddItemToTable() {
-            
             var itemId = $('#ctl00_MainContent_hdfItem_ID').val();
             var itemCode = $('#ctl00_MainContent_txtItem_Code').val();
             var itemName = $('#ctl00_MainContent_hdnDescription').val();
@@ -630,10 +477,7 @@
                 return false;
             }
 
-            if (qty <= 0) {
-                Swal.fire({ icon: 'error', title: 'Error!', text: 'Please enter valid quantity.', showConfirmButton: false, timer: 2000 });
-                return false;
-            }
+         
 
             var rowObj = {
                 ItemId: itemId,
@@ -648,8 +492,8 @@
             };
 
             gridItems.push(rowObj);
-
             var rowIndex = gridItems.length - 1;
+
             var newRow = '<tr id="row_' + rowIndex + '">' +
                 '<td>' + itemCode + '</td>' +
                 '<td>' + itemName + '</td>' +
@@ -664,6 +508,7 @@
 
             $('#tblStockItemsBody').append(newRow);
 
+            // Clean input boxes
             $('#ctl00_MainContent_txtQuantity').val('');
             $('#ctl00_MainContent_txtRate').val('');
             $('#ctl00_MainContent_txtAmount').val('');
@@ -672,27 +517,16 @@
             $('#ctl00_MainContent_hdnSelectedBatchValue').val('');
 
             EnableBothFields();
-            $('#ctl00_MainContent_hdnGridData').val(JSON.stringify(gridItems));
+            $('#ctl00_MainContent_hdnGridData').val(JSON.stringify(gridItems.filter(Boolean)));
 
             return false;
         }
 
         function RemoveRow(index) {
-            gridItems[index] = null; 
+            gridItems[index] = null;
             $('#row_' + index).remove();
-
-            var activeItems = gridItems.filter(function (item) { return item !== null; });
-            $('#ctl00_MainContent_hdnGridData').val(JSON.stringify(activeItems));
+            $('#ctl00_MainContent_hdnGridData').val(JSON.stringify(gridItems.filter(Boolean)));
         }
-
-        var originalValidate = Validate;
-        Validate = function () {
-            var activeItems = gridItems.filter(function (item) { return item !== null; });
-            $('#ctl00_MainContent_hdnGridData').val(JSON.stringify(activeItems));
-
-            return originalValidate();
-        };
-
 
         function GetMultipleBatchCondition() {
             $.ajax({
@@ -703,7 +537,6 @@
                 dataType: "json",
                 success: function (response) {
                     var batchCond = response.d;
-
                     if (batchCond == '01') {
                         $('#divAddButton').show();
                         $('#divGridContainer').show();
@@ -717,12 +550,14 @@
                 }
             });
         }
-
     </script>
 </asp:Content>
+
 <asp:Content ID="Content2" ContentPlaceHolderID="MainContent" runat="server">
     <asp:HiddenField runat="server" ID="hdnSelectedBatchValue" />
-    <form id="item">
+    
+    <!-- CHANGED FROM FORM TO DIV to stop broken nested form submissions -->
+    <div id="divStockItemForm">
         <div class="row">
             <div class="col-lg-2 col-md-3 col-sm-4">
                 <asp:Label Text="Transaction ID" runat="server" ID="lblAdjustment_ID" />
@@ -763,15 +598,13 @@
                 <asp:TextBox runat="server" ID="txtQuantity" onchange="return onchange();" autocomplete="off" onfocus="showTooltip(this);" onblur="hideTooltip(this);" />
                 <asp:RequiredFieldValidator ID="rfvQuantity" ErrorMessage="Quantity is required."
                     ControlToValidate="txtQuantity" runat="server" SetFocusOnError="true" Display="Dynamic" />
-                     <!-- Tooltip -->
-            <span id="tooltipQuantity" class="tooltip-style" style="display:none;">Enter quantity in loose.</span>
+                <span id="tooltipQuantity" class="tooltip-style" style="display:none;">Enter quantity in loose.</span>
             </div>
             <div class="col-lg-2 col-md-3 col-sm-4">
                 <asp:Label Text="Purchase Rate" runat="server" ID="lblRate" />
                 <asp:TextBox runat="server" ID="txtRate" onchange="return onchange();"  />
                 <asp:RequiredFieldValidator ID="rfvRate" ErrorMessage="Rate is required."
                     ControlToValidate="txtRate" runat="server" SetFocusOnError="true" Display="Dynamic" />
-                 
             </div>
             <div class="col-lg-2 col-md-3 col-sm-4">
                 <asp:Label Text="Amount" runat="server" ID="lblAmount" />
@@ -789,15 +622,14 @@
                 <asp:TextBox runat="server" ID="txtcurrentStock" ReadOnly="True" />               
                 <asp:HiddenField ID="hndcheckbatch" runat="server" />                 
             </div>
-         
         </div>
         <div class="row">
-               <div class="col-lg-2 col-md-3 col-sm-4">
-               <asp:Label Text="Batch No" runat="server" ID="Label5" />
-               <asp:DropDownList runat="server" ID="ddlBatchNo" Style="width: 100%; height: 35px;" onchange="DisableTextBatch()">
-                   <asp:ListItem Text="-- Select Batch --" Value="0" />
-               </asp:DropDownList>
-           </div>
+            <div class="col-lg-2 col-md-3 col-sm-4">
+                <asp:Label Text="Batch No" runat="server" ID="Label5" />
+                <asp:DropDownList runat="server" ID="ddlBatchNo" Style="width: 100%; height: 35px;">
+                    <asp:ListItem Text="-- Select Batch --" Value="0" />
+                </asp:DropDownList>
+            </div>
             <div class="col-lg-4 col-md-3 col-sm-4">
                 <asp:Label ID="lbl_Reason_Needed" runat="server" Text="Reason Needed"></asp:Label>
                 <asp:DropDownList runat="server" ID="ddlReasonNeeded" Style="height: 35px;" AppendDataBoundItems="true">
@@ -843,35 +675,33 @@
                 <asp:TextBox runat="server" ID="hdfItem_Code" Style="display: none" />
             </div>
         </div>
-    </form>
+    </div>
 
     <asp:Panel runat="server" ID="pnlForm">
         <div class="row">
             <div class="col-lg-8">
                 <div class="row">
-            <div class="col-lg-2 col-md-4 col-sm-6">               
-             <input type="button" class="btn-gray" name="back" value="View" onclick="location.href = 'StockAdjustmentView.aspx'" />
-            </div>
-            <div class="col-lg-2 col-md-4 col-sm-6">
-                <asp:Button Text="Save" Class="btn btn-primry" ID="btnSave" runat="server" OnClick="btnSave_Click" OnClientClick="return Validate();" />
-            </div>
-            <div class="col-lg-2 col-md-4 col-sm-6">
-                <input type="button" class="btn btn-yellow" value="New" id="btnNew" onclick="New()" />
-            </div>
-            <div class="col-lg-2 col-md-4 col-sm-6">
-                <input type="button" class="btn btn-yellow" value="Print" id="btnStockAdjustmentPrint" onclick="PrintStockAdjustment();" />
-            </div>
-
-            <div class="col-lg-2 col-md-4 col-sm-6">
-                <input type="button" class="btn btn-primry"  value="Voucher" id="btnVoucher" onclick="PrintVoucher()" />
-            </div>
-            <div class="col-lg-2 col-md-4 col-sm-6">
-                <input type="button" style="display:none" class="btn btn-primry" value="UnApprove" id="btnUnApprove" onclick="UnApprove()" />
+                    <div class="col-lg-2 col-md-4 col-sm-6">               
+                        <input type="button" class="btn-gray" name="back" value="View" onclick="location.href = 'StockAdjustmentView.aspx'" />
+                    </div>
+                    <div class="col-lg-2 col-md-4 col-sm-6">
+                        <asp:Button Text="Save" Class="btn btn-primry" ID="btnSave" runat="server" OnClick="btnSave_Click" OnClientClick="return Validate();" />
+                    </div>
+                    <div class="col-lg-2 col-md-4 col-sm-6">
+                        <input type="button" class="btn btn-yellow" value="New" id="btnNew" onclick="New()" />
+                    </div>
+                    <div class="col-lg-2 col-md-4 col-sm-6">
+                        <input type="button" class="btn btn-yellow" value="Print" id="btnStockAdjustmentPrint" onclick="PrintStockAdjustment();" />
+                    </div>
+                    <div class="col-lg-2 col-md-4 col-sm-6">
+                        <input type="button" class="btn btn-primry" value="Voucher" id="btnVoucher" onclick="PrintVoucher()" />
+                    </div>
+                    <div class="col-lg-2 col-md-4 col-sm-6">
+                        <input type="button" style="display:none" class="btn btn-primry" value="UnApprove" id="btnUnApprove" onclick="UnApprove()" />
+                    </div>
                 </div>
-        </div>
             </div>
         </div>
-        <%--&nbsp;<input type="button" style="width: 93px;display:none" value="Approve" id="btnApprove" onclick="Approve()" /> --%>
         <asp:Label ID="lblMessage" runat="server" />
     </asp:Panel>
     <asp:HiddenField runat="server" ID="hdbatch" />

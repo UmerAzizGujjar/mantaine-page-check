@@ -2,6 +2,7 @@
 using PMS.Modules.PatientManagement;
 using System;
 using System.Collections.Generic;
+using System.Data;
 using System.Data.SqlClient;
 using System.Linq;
 using System.Web;
@@ -1142,19 +1143,169 @@ namespace PMS
         [WebMethod]
         public static string SaveRecord(string Parameters, string Rbtn, string UserId, int patId)
         {
-            return (new JavaScriptSerializer()).Serialize(Save(Parameters, Rbtn, UserId, patId));
+            SaveResult result = new SaveResult();
+            try
+            {
+                string billId = Save(Parameters, Rbtn, UserId, patId);
+                result.Success = true;
+                result.BillId = billId;
+            }
+            catch (Exception ex)
+            {
+                result.Success = false;
+                result.Message = ex.Message;
+            }
+            return (new JavaScriptSerializer()).Serialize(result);
         }
 
+        public class SaveResult
+        {
+            public bool Success { get; set; }
+            public string BillId { get; set; }
+            public string Message { get; set; }
+        }
+
+        private const string PharmacyStockLockResource = "Pharmacy_Stock_Save";
+        private const int PharmacyLockMaxRetries = 3;
+        private const int PharmacyLockRetryDelayMs = 400;
+        private const int PharmacyLockTimeoutMs = 5000;
+
         public static string Save(string Parameters, string Rbtn, string UserId, int patId)
+        {
+            Exception lastError = null;
+            for (int attempt = 1; attempt <= PharmacyLockMaxRetries; attempt++)
+            {
+                try
+                {
+                    return SaveInternal(Parameters, Rbtn, UserId, patId);
+                }
+                catch (Exception ex) when (IsLockContention(ex))
+                {
+                    lastError = ex;
+                    System.Threading.Thread.Sleep(PharmacyLockRetryDelayMs);
+                }
+            }
+            throw new Exception("Another pharmacy bill is being saved by a different user. Please try again in a moment.", lastError);
+        }
+
+        private static bool IsLockContention(Exception ex)
+        {
+            if (ex == null || ex.Message == null) return false;
+            string msg = ex.Message;
+            return msg.Contains("Pharmacy stock is currently locked") ||
+                   msg.Contains("Lock request time out period exceeded") ||
+                   msg.Contains("could not be obtained");
+        }
+
+        private static string SaveInternal(string Parameters, string Rbtn, string UserId, int patId)
         {
             DataBaseDataContext db = new DataBaseDataContext();
             JavaScriptSerializer JSS = new JavaScriptSerializer();
             var data = JSS.Deserialize<Medicines>(Parameters);
-            var getmaxno = db.Ar_Billings.Where(p => p.Creation_Date.Value.Year == DateTime.Now.Year
-                                  && p.IsPharmacy == true
-                                  && p.Creation_Date.Value.Month == DateTime.Now.Month
-                                  && p.Creation_Date.Value.Day == DateTime.Now.Day).Count() + 1;
             decimal Total_CGSS = 0;
+            Ar_Billing newBill;
+
+            if (db.Connection.State != ConnectionState.Open)
+                db.Connection.Open();
+
+            using (db.Transaction = db.Connection.BeginTransaction(IsolationLevel.Serializable))
+            {
+                try
+                {
+                    AcquirePharmacyLock(db);
+
+                    int getmaxno = db.Ar_Billings.Where(p => p.Creation_Date.Value.Year == DateTime.Now.Year
+                                          && p.IsPharmacy == true
+                                          && p.Creation_Date.Value.Month == DateTime.Now.Month
+                                          && p.Creation_Date.Value.Day == DateTime.Now.Day).Count() + 1;
+
+                    newBill = SaveBillCore(db, data, Rbtn, UserId, patId, getmaxno, ref Total_CGSS, out int newBillId);
+
+                    db.Transaction.Commit();
+
+                    ApprovePhramcy(newBillId.ToString());
+
+                    PostToFBRIfEnabled(newBillId);
+
+                    return newBillId.ToString();
+                }
+                catch
+                {
+                    try
+                    {
+                        if (db.Transaction != null) db.Transaction.Rollback();
+                    }
+                    catch { }
+                    throw;
+                }
+                finally
+                {
+                    ReleasePharmacyLock(db);
+                }
+            }
+        }
+
+        private static void PostToFBRIfEnabled(int billId)
+        {
+            try
+            {
+                using (DataBaseDataContext db = new DataBaseDataContext())
+                {
+                    var FBR_Pharmacy = db.sys_Parms.FirstOrDefault(p => p.Name == "FBR_Pharmacy")?.Code;
+                    if (FBR_Pharmacy != "01") return;
+
+                    var detailIds = db.Ar_Billing_Details
+                        .Where(b => b.Bill_ID == billId)
+                        .Select(b => b.Bill_Details_ID)
+                        .ToList();
+
+                    if (detailIds.Count > 0)
+                    {
+                        FBRBillingView.PostToFBR(billId, detailIds);
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                System.Diagnostics.Debug.WriteLine("FBR post failed: " + ex.Message);
+            }
+        }
+
+        private static void AcquirePharmacyLock(DataBaseDataContext db)
+        {
+            int lockResult;
+            using (SqlCommand cmd = (SqlCommand)db.Connection.CreateCommand())
+            {
+                cmd.Transaction = (SqlTransaction)db.Transaction;
+                cmd.CommandText = "DECLARE @r INT; EXEC @r = sp_getapplock @Resource=@res, @LockMode='Exclusive', @LockOwner='Session', @LockTimeout=@lt; SELECT @r;";
+                cmd.Parameters.AddWithValue("@res", PharmacyStockLockResource);
+                cmd.Parameters.AddWithValue("@lt", PharmacyLockTimeoutMs);
+                lockResult = Convert.ToInt32(cmd.ExecuteScalar());
+            }
+            if (lockResult < 0)
+            {
+                throw new Exception("Pharmacy stock is currently locked by another save operation. Please try again.");
+            }
+        }
+
+        private static void ReleasePharmacyLock(DataBaseDataContext db)
+        {
+            try
+            {
+                if (db.Transaction == null) return;
+                using (SqlCommand cmd = (SqlCommand)db.Connection.CreateCommand())
+                {
+                    cmd.Transaction = (SqlTransaction)db.Transaction;
+                    cmd.CommandText = "EXEC sp_releaseapplock @Resource=@res, @LockOwner='Session';";
+                    cmd.Parameters.AddWithValue("@res", PharmacyStockLockResource);
+                    cmd.ExecuteNonQuery();
+                }
+            }
+            catch { }
+        }
+
+        private static Ar_Billing SaveBillCore(DataBaseDataContext db, Medicines data, string Rbtn, string UserId, int patId, int getmaxno, ref decimal Total_CGSS, out int newBillId)
+        {
             Ar_Billing newBill;
 
             if (data.Bill_ID == 0)
@@ -1306,9 +1457,19 @@ namespace PMS
                 newBillDetails.Batch_No = dtls.batchno;
                 newBillDetails.Remarks = dtls.Remarks;
                 newBillDetails.Req_qty = dtls.Req_qty;
-                var TotalRemainStock = dtls.Stock - dtls.Qty;
                 newBillDetails.CGS = dtls.CGSAmount;
-                var getttlStock = DBClass.getField("update INV_Items set Total_Qty= '" + TotalRemainStock + "' where Item_ID =" + dtls.Itemid);
+
+                decimal currentDbStock = ReadCurrentStock(db, Item_Id);
+                if (currentDbStock < dtls.Qty)
+                {
+                    throw new Exception(
+                        "Insufficient stock for " + dtls.ItemName +
+                        ". Available: " + currentDbStock +
+                        ", Requested: " + dtls.Qty + ".");
+                }
+                decimal newStock = currentDbStock - dtls.Qty;
+                UpdateStockAtomic(db, Item_Id, newStock);
+
                 Total_CGSS += dtls.CGSAmount;
                 ListOfDetails.Add(newBillDetails);
             }
@@ -1334,24 +1495,33 @@ namespace PMS
                 }
             }
 
-            ApprovePhramcy(newBill.Bill_ID.ToString());
+            newBillId = newBill.Bill_ID;
+            return newBill;
+        }
 
-            // Check if FBR_Pharmacy is set to "01" before posting to FBR
-            var FBR_Pharmacy = db.sys_Parms.FirstOrDefault(p => p.Name == "FBR_Pharmacy")?.Code;
-            if (FBR_Pharmacy == "01")
+        private static decimal ReadCurrentStock(DataBaseDataContext db, int itemId)
+        {
+            using (SqlCommand cmd = (SqlCommand)db.Connection.CreateCommand())
             {
-                var detailIds = db.Ar_Billing_Details
-                    .Where(b => b.Bill_ID == newBill.Bill_ID)
-                    .Select(b => b.Bill_Details_ID)
-                    .ToList();
-
-                if (detailIds.Count > 0)
-                {
-                    FBRBillingView.PostToFBR(newBill.Bill_ID, detailIds);
-                }
+                cmd.Transaction = (SqlTransaction)db.Transaction;
+                cmd.CommandText = "SELECT ISNULL(Total_Qty, 0) FROM INV_Items WHERE Item_ID = @id";
+                cmd.Parameters.AddWithValue("@id", itemId);
+                object result = cmd.ExecuteScalar();
+                if (result == null || result == DBNull.Value) return 0m;
+                return Convert.ToDecimal(result);
             }
+        }
 
-            return newBill.Bill_ID.ToString();
+        private static void UpdateStockAtomic(DataBaseDataContext db, int itemId, decimal newStock)
+        {
+            using (SqlCommand cmd = (SqlCommand)db.Connection.CreateCommand())
+            {
+                cmd.Transaction = (SqlTransaction)db.Transaction;
+                cmd.CommandText = "UPDATE INV_Items SET Total_Qty = @qty WHERE Item_ID = @id";
+                cmd.Parameters.AddWithValue("@qty", newStock);
+                cmd.Parameters.AddWithValue("@id", itemId);
+                cmd.ExecuteNonQuery();
+            }
         }
         [WebMethod]
         public static string ApprovePhramcy(string billid)
