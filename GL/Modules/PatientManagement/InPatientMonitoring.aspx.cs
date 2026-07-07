@@ -1581,6 +1581,12 @@ namespace PMS
             ddlMedicine_Type.DataValueField = "DataValue_Name";
             ddlMedicine_Type.Items.Add(new ListItem("Please Select", "0"));
             ddlMedicine_Type.DataBind();
+            valueset = DBClass.GetValueSet("Patient Main Category");
+            ddlDepartments.DataSource = valueset;
+            ddlDepartments.DataTextField = "DataValue_Description";
+            ddlDepartments.DataValueField = "DataValue_Name";
+            ddlDepartments.Items.Add(new ListItem("Please Select", "0"));
+            ddlDepartments.DataBind();
 
         }
         public class List2
@@ -1596,6 +1602,59 @@ namespace PMS
             public int BMI { get; set; }
             public int Height { get; set; }
             public int Saturation { get; set; }
+        }
+        [WebMethod]
+        public static string PendingPatients(string DeptID, string DoctorID)
+        {
+            DataBaseDataContext db = new DataBaseDataContext();
+            DateTime startDate = System.DateTime.Now.AddDays(-5);
+
+            var query = (from p in db.Reg_patients
+                         join ip in db.In_Patients
+                         on p.pat_id equals ip.Patient_ID
+                         join u in db.aspnet_Users
+                         on ip.Created_By equals u.UserId
+                         where ip.Created_Time.Value.Date >= startDate
+                         select new
+                         {
+                             p.pat_id,
+                             ip.In_Patient_ID,
+                             p.Patient_No,
+                             p.Full_Name,
+                             p.NIC,
+                             DoctorName = (from d in db.HR_Employees where d.Emp_ID == Convert.ToInt32(ip.Doctor) select d.Emp_Name).FirstOrDefault(),
+                             DepartmentName = db.GetDataValueName("Patient Main Category", ip.Department),  // Changed from Department to DepartmentName
+                             Checked = ((from op in db.ReceivingNotes
+                                         where ip.In_Patient_ID == op.In_Patient_ID
+                                         && op.Type_Nursing == "IPD Receiving Note"
+                                         select op.In_Patient_ID).FirstOrDefault()),
+                             Gender = db.GetDataValueName("Gender", p.Gender),
+                             ip.Created_Time,
+                             u.UserName,
+                             p.Age_years,
+                             DepartmentID = ip.Department,  // For filtering
+                             DoctorID_Value = ip.Doctor,    // For filtering
+                             Patient_Type = (from dv in db.DataValues
+                                             join vs in db.ValueSets on dv.ValueSet_ID equals vs.ValueSet_ID
+                                             where vs.ValueSet_Name == "Patient Type" && dv.DataValue_Name == ip.Patient_Discount_Type
+                                             select dv.DataValue_Description).FirstOrDefault()
+                         }).AsQueryable();
+
+            // Apply department filter if provided and not "0"
+            if (!string.IsNullOrEmpty(DeptID) && DeptID != "0")
+            {
+                query = query.Where(x => x.DepartmentID == DeptID);
+            }
+
+            // Apply doctor filter if provided and not "0"
+            if (!string.IsNullOrEmpty(DoctorID) && DoctorID != "0")
+            {
+                query = query.Where(x => x.DoctorID_Value == DoctorID);
+            }
+
+            var data = query.OrderByDescending(x => x.Created_Time).ToList();
+
+            return (new JavaScriptSerializer()).Serialize(data);
         }
 
         [WebMethod]
