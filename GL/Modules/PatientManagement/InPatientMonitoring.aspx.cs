@@ -42,6 +42,10 @@ namespace PMS
                     fill(Request.QueryString["ID"], "InPatient_Monitoring");
                     ScriptManager.RegisterStartupScript(this.Page, this.GetType(), "", "GetMonDetail('" + Convert.ToInt32(Request.QueryString["ID"]) + "');", true);
                 }
+                if (Request.QueryString["InPatientID"] != null)
+                {
+                    PopulateInPatientDataForMonitoring(Convert.ToInt32(Request.QueryString["InPatientID"]));
+                }
             }
             else
             {
@@ -2167,5 +2171,124 @@ namespace PMS
             }
         }
 
+        [WebMethod]
+        public static string GetDepartments_WL()
+        {
+            DataBaseDataContext db = new DataBaseDataContext();
+
+            var allDepts = (from d in db.DataValues
+                            join v in db.ValueSets on d.ValueSet_ID equals v.ValueSet_ID
+                            where v.ValueSet_Name == "Patient Main Category"
+                            select new { Department_ID = d.DataValue_Name, Department_Name = d.DataValue_Description }
+                       ).ToList();
+
+            allDepts.Insert(0, new { Department_ID = "0", Department_Name = "All Departments" });
+
+            return (new JavaScriptSerializer().Serialize(allDepts));
+        }
+
+        [WebMethod]
+        public static string GetDoctors_WL(int departmentId)
+        {
+            string data = string.Empty;
+            using (DataBaseDataContext db = new DataBaseDataContext())
+            {
+                var doctors = (from emp in db.HR_Employees
+                               where emp.IsDoctor == true && emp.userid == Convert.ToString(AppConfig.UserID)
+                               select new
+                               {
+                                   Emp_ID = (int)emp.Emp_ID,
+                                   emp.Emp_Name
+                               }).ToList();
+
+                doctors.Insert(0, new { Emp_ID = 0, Emp_Name = "All Doctors" });
+
+                data = new JavaScriptSerializer().Serialize(doctors);
+            }
+            return data;
+        }
+
+        [WebMethod]
+        public static string PendingPatients_WL(string DeptID, string DoctorID)
+        {
+            DataBaseDataContext db = new DataBaseDataContext();
+            DateTime startDate = System.DateTime.Now.AddDays(-5);
+
+            var query = (from p in db.Reg_patients
+                         join ip in db.In_Patients
+                         on p.pat_id equals ip.Patient_ID
+                         join u in db.aspnet_Users
+                         on ip.Created_By equals u.UserId
+                         where ip.Created_Time.Value.Date >= startDate
+                         select new
+                         {
+                             p.pat_id,
+                             ip.In_Patient_ID,
+                             p.Patient_No,
+                             p.Full_Name,
+                             p.NIC,
+                             DoctorName = (from d in db.HR_Employees where d.Emp_ID == Convert.ToInt32(ip.Doctor) select d.Emp_Name).FirstOrDefault(),
+                             DepartmentName = db.GetDataValueName("Patient Main Category", ip.Department),
+                             Checked = ((from op in db.ReceivingNotes
+                                         where ip.In_Patient_ID == op.In_Patient_ID
+                                         && op.Type_Nursing == "IPD Receiving Note"
+                                         select op.In_Patient_ID).FirstOrDefault()),
+                             Gender = db.GetDataValueName("Gender", p.Gender),
+                             ip.Created_Time,
+                             u.UserName,
+                             p.Age_years,
+                             DepartmentID = ip.Department,
+                             DoctorID_Value = ip.Doctor,
+                             Patient_Type = (from dv in db.DataValues
+                                             join vs in db.ValueSets on dv.ValueSet_ID equals vs.ValueSet_ID
+                                             where vs.ValueSet_Name == "Patient Type" && dv.DataValue_Name == ip.Patient_Discount_Type
+                                             select dv.DataValue_Description).FirstOrDefault()
+                         }).AsQueryable();
+
+            if (!string.IsNullOrEmpty(DeptID) && DeptID != "0")
+            {
+                query = query.Where(x => x.DepartmentID == DeptID);
+            }
+
+            if (!string.IsNullOrEmpty(DoctorID) && DoctorID != "0")
+            {
+                query = query.Where(x => x.DoctorID_Value == DoctorID);
+            }
+
+            var data = query.OrderByDescending(x => x.Created_Time).ToList();
+
+            return (new JavaScriptSerializer()).Serialize(data);
+        }
+
+        private void PopulateInPatientDataForMonitoring(int InPatient_ID)
+        {
+            try
+            {
+                db = new DataBaseDataContext(DBClass.ConnectionString());
+                var qry = (from ip in db.In_Patients
+                           join p in db.Reg_patients on ip.Patient_ID equals p.pat_id
+                           where ip.In_Patient_ID == InPatient_ID
+                           select new { ip, p }).FirstOrDefault();
+
+                if (qry != null)
+                {
+                    hdfPatient_ID.Value = qry.p.pat_id.ToString();
+                    txtPatient_ID.Text = qry.p.pat_id.ToString();
+                    hdnInpatient_id.Value = qry.ip.In_Patient_ID.ToString();
+                    txtInPatient_Mon_ID.Text = "(New)";
+                    vlblPatients_Name.Text = qry.p.Full_Name;
+                    vLbl_Contact.Text = qry.p.Mobile1;
+                    vLbl_Adress.Text = qry.p.Permanent_Address;
+                    vLbl_Gender.Text = db.GetDataValueName("Gender", qry.p.Gender);
+                    vLbl_Age.Text = qry.p.Age_years;
+                    vLbl_RegDate.Text = qry.p.Created_time?.ToString(AppConfig.DateFormat) ?? "";
+                }
+            }
+            catch (Exception ex)
+            {
+                lblMessage.CssClass = "errorMessage";
+                lblMessage.Text = ex.Message;
+            }
+        }
     }
 }
