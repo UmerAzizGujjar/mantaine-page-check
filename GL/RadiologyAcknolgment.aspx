@@ -465,22 +465,56 @@
             var isChkZero = true;
 
             $('#tblradilogy tbody input.rowSelect:checked').each(function () {
+
                 isChkZero = false;
+
                 var row = $(this).closest('tr');
                 var rowData = tableDT.row(row).data();
+
                 var status = row.find('.priority-select').val();
                 var Lab_Test_Detail_ID = rowData.Lab_Test_Detail_ID;
+                var Bill_ID = rowData.Bill_ID;
+                var Bill_No = rowData.Bill_No;
+                var Department = rowData.ParentTrans_Name;
                 var Doctor_ID = row.find('.doctor-select').val() || 0;
                 var History = row.find('.history-value').val() || '';
 
-                Testlist.push({
-                    'status': status,
-                    'Lab_Test_Detail_ID': Lab_Test_Detail_ID,
-                    'Doctor_ID': parseInt(Doctor_ID),
-                    'History': History
-                });
-            });
+                var allowSave = true;
 
+                if (Department != "InPatient") {
+
+                    $.ajax({
+                        type: "POST",
+                        url: "RadiologyAcknolgment.aspx/CheckTestAmount",
+                        data: JSON.stringify({ Bill_ID: Bill_ID }),
+                        contentType: "application/json; charset=utf-8",
+                        dataType: "json",
+                        async: false, // wait for response
+                        success: function (response) {
+
+                            if (!response.d) {
+                                alert("Bill No " + Bill_No + " has a pending balance. This test cannot be acknowledged.");
+                                allowSave = false;
+                            }
+
+                        },
+                        error: function () {
+                            allowSave = false;
+                        }
+                    });
+                }
+
+                if (!allowSave)
+                    return true;   // Skip this row and continue with next checked row
+
+                Testlist.push({
+                    status: status,
+                    Lab_Test_Detail_ID: Lab_Test_Detail_ID,
+                    Doctor_ID: parseInt(Doctor_ID),
+                    History: History
+                });
+
+            });
             if (isChkZero) {
                 alert("Select Checkbox Which Test Do You Want To Acknowledge");
                 return;

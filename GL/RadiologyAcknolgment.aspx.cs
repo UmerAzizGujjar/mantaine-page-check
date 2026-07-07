@@ -220,6 +220,20 @@ namespace PMS
         }
 
         [WebMethod]
+        public static bool CheckTestAmount(int Bill_ID)
+        {
+            using (DataBaseDataContext db = new DataBaseDataContext())
+            {
+                decimal balance = db.Ar_Billings
+                                    .Where(x => x.Bill_ID == Bill_ID)
+                                    .Select(x => x.Balance_Amount ?? 0)
+                                    .FirstOrDefault();
+
+                return balance <= 0;   // true = allowed, false = balance pending
+            }
+        }
+
+        [WebMethod]
         public static string loadDoctorsforFilter()
         {
             string result = string.Empty;
