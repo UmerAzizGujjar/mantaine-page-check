@@ -3496,41 +3496,39 @@
                 $('#ddlDepartmentsWL').html(options);
                 setTimeout(function () {
                     $('#ddlDepartmentsWL').val("0");
-                    fillDoctors_WL();
+                    fillWards_WL();
                     fillPendingPatientsList_WL();
                 }, 1000);
             }, function (exec) { alert(exec.getmessage()); })
         }
-        function fillDoctors_WL() {
+        function fillWards_WL() {
             var departmentId = $('#ddlDepartmentsWL').val();
-            var options = '';
             $.ajax({
-                url: 'InPatientMonitoring.aspx/GetDoctors_WL',
+                url: 'InPatientMonitoring.aspx/GetWards_WL',
                 type: 'POST',
                 contentType: 'application/json; charset=utf-8',
                 dataType: 'json',
                 data: JSON.stringify({ departmentId: departmentId || '0' }),
                 success: function (response) {
                     var data = response.d ? JSON.parse(response.d) : response;
-                    $('#ddldoctorsWL').empty();
-                    $('#ddldoctorsWL').append('<option value="">Select Doctor</option>');
+                    $('#ddlWardsWL').empty();
+                    $('#ddlWardsWL').append('<option value="">All Wards</option>');
                     $.each(data, function (key, value) {
-                        options += '<option value="' + value.Emp_ID + '">' + value.Emp_Name + '</option>';
+                        $('#ddlWardsWL').append('<option value="' + value.Ward_ID + '">' + value.Ward_Type + '</option>');
                     });
-                    $('#ddldoctorsWL').append(options);
                 },
                 error: function (xhr, status, error) {
-                    console.error('Error fetching doctor data:', error);
+                    console.error('Error fetching ward data:', error);
                 }
             });
         }
         function fillPendingPatientsList_WL() {
             $(".se-pre-con").fadeIn("slow");
             var SelectedDepartment = $('#ddlDepartmentsWL').val();
-            var SelectedDoctor = $('#ddldoctorsWL').val();
+            var SelectedWard = $('#ddlWardsWL').val();
             var deptParam = (SelectedDepartment === "0" || SelectedDepartment === "" || !SelectedDepartment) ? "" : SelectedDepartment;
-            var doctorParam = (SelectedDoctor === "0" || SelectedDoctor === "" || !SelectedDoctor || SelectedDoctor === "Select Doctor") ? "" : SelectedDoctor;
-            PageMethods.PendingPatients_WL(deptParam, doctorParam, function (data) {
+            var wardParam = (SelectedWard === "0" || SelectedWard === "" || !SelectedWard || SelectedWard === "All Wards") ? "" : SelectedWard;
+            PageMethods.PendingPatients_WL(deptParam, wardParam, function (data) {
                 var parsedData = JSON.parse(data);
                 var rows = '';
                 $.each(parsedData, function (key, value) {
@@ -3553,6 +3551,7 @@
                                 '<td>' + value.Gender + '</td>' +
                                 '<td>' + retdate + '</td>' +
                                 '<td>' + value.DepartmentName + '</td>' +
+                                '<td>' + value.WardName + '</td>' +
                                 '<td>' + value.DoctorName + '</td>' +
                                 '<td>' + value.UserName + '</td>' +
                                 '<td>' + status + '</td>' +
@@ -3569,6 +3568,7 @@
                                 '<td>' + value.Gender + '</td>' +
                                 '<td>' + retdate + '</td>' +
                                 '<td>' + value.DepartmentName + '</td>' +
+                                '<td>' + value.WardName + '</td>' +
                                 '<td>' + value.DoctorName + '</td>' +
                                 '<td>' + value.UserName + '</td>' +
                                 '<td>' + status + '</td>' +
@@ -3838,11 +3838,11 @@
                             </tr>
                             <tr>
                                 <td style="width: 261px">
-                                    <select id="ddlDepartmentsWL" onchange="fillDoctors_WL();"></select>
+                                    <select id="ddlDepartmentsWL" onchange="fillWards_WL(); fillPendingPatientsList_WL();"></select>
                                 </td>
                                 <td style="width: 261px">
-                                    <select id="ddldoctorsWL" style="margin-left: 14px;" onchange="fillPendingPatientsList_WL();">
-                                        <option value="">Select Doctor</option>
+                                    <select id="ddlWardsWL" style="margin-left: 14px;" onchange="fillPendingPatientsList_WL();">
+                                        <option value="">All Wards</option>
                                     </select>
                                 </td>
                                 <td style="padding-left:20px !important">Private</td>
@@ -3863,6 +3863,7 @@
                                         <th>Gender</th>
                                         <th style="width: 173px;">Created Time</th>
                                         <th>Department</th>
+                                        <th>Ward</th>
                                         <th>Doctor</th>
                                         <th>Operator Name</th>
                                         <th>Status</th>

@@ -2188,28 +2188,26 @@ namespace PMS
         }
 
         [WebMethod]
-        public static string GetDoctors_WL(int departmentId)
+        public static string GetWards_WL(string departmentId)
         {
             string data = string.Empty;
             using (DataBaseDataContext db = new DataBaseDataContext())
             {
-                var doctors = (from emp in db.HR_Employees
-                               where emp.IsDoctor == true && emp.userid == Convert.ToString(AppConfig.UserID)
-                               select new
-                               {
-                                   Emp_ID = (int)emp.Emp_ID,
-                                   emp.Emp_Name
-                               }).ToList();
+                var wards = (from w in db.Ward_Definitions
+                             where (departmentId == "0" || w.Department == departmentId)
+                             select new
+                             {
+                                 w.Ward_ID,
+                                 w.Ward_Type
+                             }).ToList();
 
-                doctors.Insert(0, new { Emp_ID = 0, Emp_Name = "All Doctors" });
-
-                data = new JavaScriptSerializer().Serialize(doctors);
+                data = new JavaScriptSerializer().Serialize(wards);
             }
             return data;
         }
 
         [WebMethod]
-        public static string PendingPatients_WL(string DeptID, string DoctorID)
+        public static string PendingPatients_WL(string DeptID, string WardID)
         {
             DataBaseDataContext db = new DataBaseDataContext();
             DateTime startDate = System.DateTime.Now.AddDays(-5);
@@ -2229,6 +2227,7 @@ namespace PMS
                              p.NIC,
                              DoctorName = (from d in db.HR_Employees where d.Emp_ID == Convert.ToInt32(ip.Doctor) select d.Emp_Name).FirstOrDefault(),
                              DepartmentName = db.GetDataValueName("Patient Main Category", ip.Department),
+                             WardName = (from w in db.Ward_Definitions where w.Ward_ID == ip.Ward_ID select w.Ward_Type).FirstOrDefault(),
                              Checked = ((from op in db.ReceivingNotes
                                          where ip.In_Patient_ID == op.In_Patient_ID
                                          && op.Type_Nursing == "IPD Receiving Note"
@@ -2238,7 +2237,7 @@ namespace PMS
                              u.UserName,
                              p.Age_years,
                              DepartmentID = ip.Department,
-                             DoctorID_Value = ip.Doctor,
+                             WardID_Value = ip.Ward_ID,
                              Patient_Type = (from dv in db.DataValues
                                              join vs in db.ValueSets on dv.ValueSet_ID equals vs.ValueSet_ID
                                              where vs.ValueSet_Name == "Patient Type" && dv.DataValue_Name == ip.Patient_Discount_Type
@@ -2250,9 +2249,9 @@ namespace PMS
                 query = query.Where(x => x.DepartmentID == DeptID);
             }
 
-            if (!string.IsNullOrEmpty(DoctorID) && DoctorID != "0")
+            if (!string.IsNullOrEmpty(WardID) && WardID != "0")
             {
-                query = query.Where(x => x.DoctorID_Value == DoctorID);
+                query = query.Where(x => x.WardID_Value == Convert.ToInt32(WardID));
             }
 
             var data = query.OrderByDescending(x => x.Created_Time).ToList();
