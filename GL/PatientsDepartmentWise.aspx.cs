@@ -6062,7 +6062,6 @@ namespace PMS
                     //ddlMedicalSubsidy.Items.Add("Annually");
                     ddlMedicalSubsidy.Items.Add("Annually with Stay Days");
                     ddlMedicalSubsidy.Items.Add("Annually with Stay Days Summary");
-                    ddlMedicalSubsidy.Items.Add("Monthly");
                     ddlMedicalSubsidy.Items.Add("Annually");
 
                 }
