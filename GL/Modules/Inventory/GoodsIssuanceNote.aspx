@@ -580,22 +580,23 @@
                 if (!$('#ddlDepartment').hasClass('ErrorAlert') && !$('#ddlInventoryOrg').hasClass('ErrorAlert') && !$('#ddlInventoryOrg').hasClass('ErrorAlert') && !$('#tblStoreIssueBote').hasClass('ErrorAlert')) {
                     $(this).attr('disabled', true);
                     PageMethods.Save(btnSave, JSON.stringify(AllItemDetail), function (res) {
-                        sendFile(res);
-                        Swal.fire({
-                            icon: 'success',
-                            title: 'Success!',
-                            text: 'Data Save Successfully.',
-                            showConfirmButton: false,
-                            timer: 2500,
-                            customClass: {
-                                popup: 'swal-big-popup',
-                                title: 'swal-big-title',
-                                htmlContainer: 'swal-big-text'
-                            }
+                        sendFile(res, function () {
+                            Swal.fire({
+                                icon: 'success',
+                                title: 'Success!',
+                                text: 'Data Save Successfully.',
+                                showConfirmButton: false,
+                                timer: 2500,
+                                customClass: {
+                                    popup: 'swal-big-popup',
+                                    title: 'swal-big-title',
+                                    htmlContainer: 'swal-big-text'
+                                }
+                            });
+                            $('#btnSave').val("Update");
+                            window.location = "GoodsIssuanceNote.aspx?SI_ID=" + res;
+                            $('#btnSave').val("Update");
                         });
-                        $('#btnSave').val("Update");
-                        window.location = "GoodsIssuanceNote.aspx?SI_ID=" + res;
-                        $('#btnSave').val("Update");
                     });
                 }
             }
@@ -1303,7 +1304,7 @@
             }
             window.open(url, '_blank');
         }
-        function sendFile(ID) {
+        function sendFile(ID, callback) {
             debugger;
             var fileInput = $('#choseGINfile')[0];
             if (fileInput.files.length > 0) {
@@ -1315,13 +1316,16 @@
                     url: '../../upload/UploadGINFiles.ashx',
                     data: data,
                     success: function (status) {
+                        if (typeof callback === 'function') callback();
                     },
                     processData: false,
                     contentType: false,
                     error: function () {
-                     
+
                     }
                 });
+            } else {
+                if (typeof callback === 'function') callback();
             }
         }
      

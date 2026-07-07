@@ -582,20 +582,22 @@
                     var AllItemDetail = { 'GRN_Num': GRN_Num, 'Date': date, 'VendorId': VendorId, 'remarks': Remarks, 'project': project, 'InvOrg': InvOrg, 'ItemList': Item_list };
                     PageMethods.SaveGRNDetail(btnSave, JSON.stringify(AllItemDetail), function (res) {
                         debugger;
-                        Swal.fire({
-                            icon: 'success',
-                            title: 'Success!',
-                            text: 'Data Save Successfully.',
-                            showConfirmButton: false,
-                            timer: 2500,
-                            customClass: {
-                                popup: 'swal-big-popup',
-                                title: 'swal-big-title',
-                                htmlContainer: 'swal-big-text'
-                            }
+                        sendFile(res, function () {
+                            Swal.fire({
+                                icon: 'success',
+                                title: 'Success!',
+                                text: 'Data Save Successfully.',
+                                showConfirmButton: false,
+                                timer: 2500,
+                                customClass: {
+                                    popup: 'swal-big-popup',
+                                    title: 'swal-big-title',
+                                    htmlContainer: 'swal-big-text'
+                                }
+                            });
+                            $('#btnSave').val("Update");
+                            window.location = "GRN.aspx?GRN_ID=" + res;
                         });
-                         $('#btnSave').val("Update");
-                        window.location = "GRN.aspx?GRN_ID=" + res;
                     });
                 }
             }
@@ -668,6 +670,31 @@
             }
             window.open(url, '_blank');
         }
+        function sendFile(ID, callback) {
+            debugger;
+            var fileInput = $('#choseGRNfile')[0];
+            if (fileInput.files.length > 0) {
+                var data = new FormData();
+                data.append('file', $('#choseGRNfile')[0].files[0]);
+                data.append('ID', ID);
+                $.ajax({
+                    type: 'post',
+                    url: '../../upload/UploadGRNFiles.ashx',
+                    data: data,
+                    success: function (status) {
+                        if (typeof callback === 'function') callback();
+                    },
+                    processData: false,
+                    contentType: false,
+                    error: function () {
+                        alert("Whoops something went wrong!");
+                    }
+                });
+            } else {
+                if (typeof callback === 'function') callback();
+            }
+        }
+
         function Approve() {
             debugger;
             var GRNId ='<% =Request.QueryString["GRN_ID"] %>';
@@ -785,12 +812,20 @@
             </div>
 
             <div class="col-lg-3 col-md-6 col-sm-12">
-                <label id="lblrem" class="labelIGP">Remarks</label>
-                <textarea id="txtRemarks" class="form-control" rows="2" cols="20"></textarea>
-            </div>
-        </div>
+                 <label id="lblrem" class="labelIGP">Remarks</label>
+                 <textarea id="txtRemarks" class="form-control" rows="2" cols="20"></textarea>
+             </div>
+         </div>
+
+         <div class="row">
+             <div class="col-lg-3 col-md-6 col-sm-12">
+                 <label id="lblAttachment" class="labelIGP">Attachment</label>
+                 <input type="file" id="choseGRNfile" name="choseGRNfile" />
+                 <asp:HyperLink ID="HyperLink1" runat="server">Download</asp:HyperLink>
+             </div>
+         </div>
      
-    </form>
+     </form>
 
             <div class="table-container" style="width:100%">
                 <table class="table " id="tblItemDescription" style="margin-top: 13px; font-size: 10px!important; width: 100% !important; overflow: unset;">

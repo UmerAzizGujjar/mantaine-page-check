@@ -591,14 +591,15 @@
                             htmlContainer: 'swal-big-text'
                         }
                     });
-                    sendFile(res);
-                    $('#btnSave').val("Update");
-                    window.location = "InversionGatePass.aspx?IGP_ID=" + res;
-                    $('#btnSave').val("Update");
+                    sendFile(res, function () {
+                        $('#btnSave').val("Update");
+                        window.location = "InversionGatePass.aspx?IGP_ID=" + res;
+                        $('#btnSave').val("Update");
+                    });
                 });
             }
         }
-        function sendFile(ID) {
+        function sendFile(ID, callback) {
             debugger;
             var fileInput = $('#fileUpload1')[0];
             if (fileInput.files.length > 0) {
@@ -611,6 +612,7 @@
                     url: '../../upload/UploadIGP.ashx',
                     data: data,
                     success: function (status) {
+                        if (typeof callback === 'function') callback();
                     },
                     processData: false,
                     contentType: false,
@@ -618,6 +620,8 @@
                         alert("Whoops something went wrong!");
                     }
                 });
+            } else {
+                if (typeof callback === 'function') callback();
             }
         }
         function GetNewIgpNo() {

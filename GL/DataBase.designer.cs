@@ -1020,10 +1020,12 @@ namespace PMS
         partial void InsertEmergency_Patient(Emergency_Patient instance);
         partial void UpdateEmergency_Patient(Emergency_Patient instance);
         partial void DeleteEmergency_Patient(Emergency_Patient instance);
+        partial void InsertReg_Patient_Log(Reg_Patient_Log instance);
+        partial void UpdateReg_Patient_Log(Reg_Patient_Log instance);
+        partial void DeleteReg_Patient_Log(Reg_Patient_Log instance);
         #endregion
-
         public DataBaseDataContext() :
-                base(global::System.Configuration.ConfigurationManager.ConnectionStrings["ASPGLConnectionString"].ConnectionString, mappingSource)
+               base(global::System.Configuration.ConfigurationManager.ConnectionStrings["ASPGLConnectionString"].ConnectionString, mappingSource)
         {
             OnCreated();
         }
@@ -3720,6 +3722,14 @@ namespace PMS
             get
             {
                 return this.GetTable<Emergency_Patient>();
+            }
+        }
+
+        public System.Data.Linq.Table<Reg_Patient_Log> Reg_Patient_Logs
+        {
+            get
+            {
+                return this.GetTable<Reg_Patient_Log>();
             }
         }
 
@@ -182052,6 +182062,164 @@ namespace PMS
                     this._Nurse_Name_Nurse_Note = value;
                     this.SendPropertyChanged("Nurse_Name_Nurse_Note");
                     this.OnNurse_Name_Nurse_NoteChanged();
+                }
+            }
+        }
+
+        public event PropertyChangingEventHandler PropertyChanging;
+
+        public event PropertyChangedEventHandler PropertyChanged;
+
+        protected virtual void SendPropertyChanging()
+        {
+            if ((this.PropertyChanging != null))
+            {
+                this.PropertyChanging(this, emptyChangingEventArgs);
+            }
+        }
+
+        protected virtual void SendPropertyChanged(String propertyName)
+        {
+            if ((this.PropertyChanged != null))
+            {
+                this.PropertyChanged(this, new PropertyChangedEventArgs(propertyName));
+            }
+        }
+    }
+
+    [global::System.Data.Linq.Mapping.TableAttribute(Name = "dbo.Reg_Patient_Logs")]
+    public partial class Reg_Patient_Log : INotifyPropertyChanging, INotifyPropertyChanged
+    {
+
+        private static PropertyChangingEventArgs emptyChangingEventArgs = new PropertyChangingEventArgs(String.Empty);
+
+        private int _Log_Id;
+
+        private System.Nullable<int> _Pat_Id;
+
+        private string _Updated_data;
+
+        private System.Nullable<System.Guid> _Loged_by;
+
+        private System.Nullable<System.DateTime> _Loged_Time;
+
+        #region Extensibility Method Definitions
+        partial void OnLoaded();
+        partial void OnValidate(System.Data.Linq.ChangeAction action);
+        partial void OnCreated();
+        partial void OnLog_IdChanging(int value);
+        partial void OnLog_IdChanged();
+        partial void OnPat_IdChanging(System.Nullable<int> value);
+        partial void OnPat_IdChanged();
+        partial void OnUpdated_dataChanging(string value);
+        partial void OnUpdated_dataChanged();
+        partial void OnLoged_byChanging(System.Nullable<System.Guid> value);
+        partial void OnLoged_byChanged();
+        partial void OnLoged_TimeChanging(System.Nullable<System.DateTime> value);
+        partial void OnLoged_TimeChanged();
+        #endregion
+
+        public Reg_Patient_Log()
+        {
+            OnCreated();
+        }
+
+        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_Log_Id", AutoSync = AutoSync.OnInsert, DbType = "Int NOT NULL IDENTITY", IsPrimaryKey = true, IsDbGenerated = true)]
+        public int Log_Id
+        {
+            get
+            {
+                return this._Log_Id;
+            }
+            set
+            {
+                if ((this._Log_Id != value))
+                {
+                    this.OnLog_IdChanging(value);
+                    this.SendPropertyChanging();
+                    this._Log_Id = value;
+                    this.SendPropertyChanged("Log_Id");
+                    this.OnLog_IdChanged();
+                }
+            }
+        }
+
+        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_Pat_Id", DbType = "Int")]
+        public System.Nullable<int> Pat_Id
+        {
+            get
+            {
+                return this._Pat_Id;
+            }
+            set
+            {
+                if ((this._Pat_Id != value))
+                {
+                    this.OnPat_IdChanging(value);
+                    this.SendPropertyChanging();
+                    this._Pat_Id = value;
+                    this.SendPropertyChanged("Pat_Id");
+                    this.OnPat_IdChanged();
+                }
+            }
+        }
+
+        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_Updated_data", DbType = "NVarChar(MAX)")]
+        public string Updated_data
+        {
+            get
+            {
+                return this._Updated_data;
+            }
+            set
+            {
+                if ((this._Updated_data != value))
+                {
+                    this.OnUpdated_dataChanging(value);
+                    this.SendPropertyChanging();
+                    this._Updated_data = value;
+                    this.SendPropertyChanged("Updated_data");
+                    this.OnUpdated_dataChanged();
+                }
+            }
+        }
+
+        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_Loged_by", DbType = "UniqueIdentifier")]
+        public System.Nullable<System.Guid> Loged_by
+        {
+            get
+            {
+                return this._Loged_by;
+            }
+            set
+            {
+                if ((this._Loged_by != value))
+                {
+                    this.OnLoged_byChanging(value);
+                    this.SendPropertyChanging();
+                    this._Loged_by = value;
+                    this.SendPropertyChanged("Loged_by");
+                    this.OnLoged_byChanged();
+                }
+            }
+        }
+
+        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_Loged_Time", DbType = "DateTime")]
+        public System.Nullable<System.DateTime> Loged_Time
+        {
+            get
+            {
+                return this._Loged_Time;
+            }
+            set
+            {
+                if ((this._Loged_Time != value))
+                {
+                    this.OnLoged_TimeChanging(value);
+                    this.SendPropertyChanging();
+                    this._Loged_Time = value;
+                    this.SendPropertyChanged("Loged_Time");
+                    this.OnLoged_TimeChanged();
                 }
             }
         }

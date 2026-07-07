@@ -3225,6 +3225,11 @@ namespace PMS
 
                     trSearch1.Visible = true;
 
+                 
+
+                    lbItemCategory.Visible = false;
+                    ddlItemCategory.Visible = false;
+
                 }
                 else if (this.PageTitle == "Cath_Lab_Billing_Detail_Vendor_Wise_Report")
                 {

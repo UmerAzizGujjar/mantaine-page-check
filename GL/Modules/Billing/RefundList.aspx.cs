@@ -198,6 +198,38 @@ namespace PMS
 
 
 
+        //[WebMethod]
+        //public static bool ApproveRefunds(List<string> refundIds)
+        //{
+        //    try
+        //    {
+        //        using (var db = new DataBaseDataContext(DBClass.ConnectionString()))
+        //        {
+        //            var userId = AppConfig.UserID;
+
+        //            foreach (var idStr in refundIds)
+        //            {
+        //                if (int.TryParse(idStr, out int refundId))
+        //                {
+        //                    var refund = db.Refunds.FirstOrDefault(r => r.Refund_ID == refundId);
+        //                    if (refund != null)
+        //                    {
+        //                        refund.approve_by = userId;
+        //                        refund.approve_date = DateTime.Now;
+        //                        refund.Status = "Approved";
+        //                    }
+        //                }
+        //            }
+        //            db.SubmitChanges();
+        //        }
+        //        return true;
+        //    }
+        //    catch (Exception)
+        //    {
+        //        return false;
+        //    }
+        //}
+
         [WebMethod]
         public static bool ApproveRefunds(List<string> refundIds)
         {
@@ -207,24 +239,30 @@ namespace PMS
                 {
                     var userId = AppConfig.UserID;
 
-                    foreach (var idStr in refundIds)
+                    using (var conn = new SqlConnection(db.Connection.ConnectionString))
                     {
-                        if (int.TryParse(idStr, out int refundId))
+                        conn.Open();
+
+                        foreach (var idStr in refundIds)
                         {
-                            var refund = db.Refunds.FirstOrDefault(r => r.Refund_ID == refundId);
-                            if (refund != null)
+                            if (int.TryParse(idStr, out int refundId))
                             {
-                                refund.approve_by = userId;
-                                refund.approve_date = DateTime.Now;
-                                refund.Status = "Approved";
+                                using (var cmd = new SqlCommand("SpApprove_Refund", conn))
+                                {
+                                    cmd.CommandType = CommandType.StoredProcedure;
+                                    cmd.Parameters.AddWithValue("@refundid", refundId);
+                                    cmd.Parameters.AddWithValue("@user_id", userId);
+
+
+                                    cmd.ExecuteNonQuery();
+                                }
                             }
                         }
                     }
-                    db.SubmitChanges();
                 }
                 return true;
             }
-            catch (Exception)
+            catch (Exception ex)
             {
                 return false;
             }

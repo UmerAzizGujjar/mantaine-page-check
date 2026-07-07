@@ -336,9 +336,10 @@ namespace PMS.Inventory
                                      MIRQty = Convert.ToString(data.MIRQty),
                                      Last_MIR_Qty = Convert.ToString(data.Last_MIR_Qty),
                                      remarks = data.Remarks,
-                                     UOM_Qty = Convert.ToString(inv.UOM_Qty ?? 0),
-                                     
-                                 }).ToList();
+                                      UOM_Qty = Convert.ToString(inv.UOM_Qty ?? 0),
+                                      FilePath = data.FilePath,
+
+                                  }).ToList();
                     result = (new JavaScriptSerializer()).Serialize(listItems).ToString();
                 }
             }
@@ -371,6 +372,7 @@ namespace PMS.Inventory
             public string Unit { get; set; }
             public string UOM_Qty { get; set; }
             public string Last_MIR_Date { get; set; }
+            public string FilePath { get; set; }
         }
     }
 }
