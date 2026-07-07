@@ -1195,8 +1195,53 @@
             });
         }
 
+        function checkOutPatientDischarge(department, callback) {
+            var regid = $('#hdn_regid').val();
+            var opdid = $('#hdn_opdId').val();
+            
+            // Only check for NEW OPD
+            if (opdid !== "" || !regid || !department || department === "0") {
+                callback(false);
+                return;
+            }
+            
+            $.ajax({
+                type: "POST",
+                url: "OPD.aspx/CheckOutPatientDischarge",
+                data: JSON.stringify({ regPatId: parseInt(regid), department: department }),
+                contentType: "application/json; charset=utf-8",
+                dataType: "json",
+                async: false,
+                success: function (response) {
+                    var result = JSON.parse(response.d);
+                    if (result.hasActiveOPD) {
+                        Swal.fire({
+                            icon: 'warning',
+                            title: 'Active OPD Found',
+                            text: 'Patient has active OPD. Please discharge first.',
+                            confirmButtonText: 'OK',
+                            confirmButtonColor: '#3085d6',
+                            allowOutsideClick: false,
+                            allowEscapeKey: false
+                        });
+                        
+                        // Reset department dropdown
+                        $('#ddlDepartment').val('').trigger('change');
+                        
+                        callback(true);
+                    } else {
+                        callback(false);
+                    }
+                },
+                error: function (xhr, status, error) {
+                    console.error("Error checking OPD discharge status:", error);
+                    callback(false);
+                }
+            });
+        }
        
 
+        
 
     </script>
 

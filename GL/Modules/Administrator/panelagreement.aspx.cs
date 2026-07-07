@@ -88,7 +88,7 @@ namespace PMS
             int lstid = 0;
             Panel panel;
             DataBaseDataContext db = new DataBaseDataContext(DBClass.ConnectionString());
-            if (btnValue == "Save")
+            if (btnValue == "Save" || btnValue == "Replicate")
             {
                 panel = new Panel();
                 panel.Created_By = AppConfig.UserID;
@@ -120,7 +120,7 @@ namespace PMS
             panel.Panel_Rate_Emergency = panelrateEmergency;
             panel.No_Of_Employees = Convert.ToInt32(no_of_emp);
 
-            if (btnValue == "Save")
+            if (btnValue == "Save" || btnValue == "Replicate")
             {
                 db.SubmitChanges(); 
             }

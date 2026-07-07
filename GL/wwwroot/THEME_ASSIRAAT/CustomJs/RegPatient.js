@@ -1,4 +1,4 @@
-$(document).ready(function () {
+﻿$(document).ready(function () {
 
 
     clearPatient();
@@ -354,39 +354,43 @@ function SavePatient() {
     var Monitoring = $('#chkMonitoring').is(':checked');
     var AntiForgeryToken = $('#ctl00_MainContent_hfAntiForgery').val();
 
+    var valid = true;
+
     if (PatientName === "") {
         $('#firstname-error').show();
         valid = false;
 
     }
-    if (Mobile == "+92__________") {
+    if (Mobile === "" || Mobile == "+92__________") {
         $('#mobile-error').show();
         valid = false;
 
     }
 
-    //if (Age === "") {
-    //    $('#age-error').show();
-    //    valid = false;
+    if (Age === "") {
+        $('#age-error').show();
+        valid = false;
 
-    //}
+    }
 
-    //if (Relation === "") {
-    //    $('#relation-error').show();
-    //    valid = false;
+    if (Relation === "") {
+        $('#relation-error').show();
+        valid = false;
 
-    //}
-    //if (Address === "") {
-    //    $('#address-error').show();
-    //    valid = false;
+    }
+    if (Address === "") {
+        $('#address-error').show();
+        valid = false;
 
-    //}
-    //if ((PatientName == "" || Mobile == "+92__________" || Age == "" || Relation == "0" || Address == "0")) {
-    if ((PatientName == "" || Mobile == "+92__________" )) {
-
-        $('#SavePatient_Data').attr('disabled', false);
-        return;
-
+    }
+    if (Gender === "" || Gender === "0") {
+        valid = false;
+    }
+    if (martail_status === "" || martail_status === "0") {
+        valid = false;
+    }
+    if (cardfee === "" || isNaN(cardfee) || parseFloat(cardfee) === 0) {
+        valid = false;
     }
     var isCNICRequired = isCNICValidationRequired();
     if (isCNICRequired) {
@@ -433,6 +437,17 @@ function SavePatient() {
                 }
             }
         }
+    }
+    if (!valid) {
+        Swal.fire({
+            icon: 'error',
+            title: 'Validation Error',
+            text: 'Please fill all required fields.',
+            confirmButtonText: 'OK',
+            confirmButtonColor: '#3085d6'
+        });
+        $('#SavePatient_Data').attr('disabled', false);
+        return;
     }
     var data = JSON.stringify({
         "Full_Name": Full_Name,
