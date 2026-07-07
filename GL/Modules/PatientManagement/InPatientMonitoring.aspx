@@ -406,29 +406,6 @@
                     chartArea: { width: "90%" },
                 });
         }
-        function fillDoctors() {
-            var departmentId = $('#ctl00_MainContent_ddlDepartments').val();
-            var options = '';
-
-            $.ajax({
-                url: 'InPatientMonitoring.aspx/GetDoctors',
-                type: 'POST',
-                contentType: 'application/json; charset=utf-8',
-                dataType: 'json',
-                data: JSON.stringify({ departmentId: departmentId || '0' }),
-                success: function (response) {
-                    var data = response.d ? JSON.parse(response.d) : response;
-                    $('#ddldoctors').empty();
-                    $.each(data, function (key, value) {
-                        options += '<option value="' + value.Emp_ID + '">' + value.Emp_Name + '</option>';
-                    });
-                    $('#ddldoctors').html(options);
-                },
-                error: function (xhr, status, error) {
-                    console.error('Error fetching doctor data:', error);
-                }
-            });
-        }
         function drawResp() {
 
             $('#ctl00_MainContent_chkBP_mm_Hg').attr('checked', false);
@@ -1000,34 +977,17 @@
             InfussionPharmacy();
             additive();
             Sides();
-            debugger;
-          <%--    var id = '<%=Request.QueryString["ID"]%>';
-  if (id != "") {
-      setTimeout(function () {
 
-      }, 1000);                    $("#ctl00_MainContent_ddlDepartments").val(0);
-  }
-  else {
-      fillPendingPatientsList();
-      setTimeout(function () {
-          $("#ctl00_MainContent_ddlDepartments").val(0);
+            //$('#txtStopD').datepicker({
+            //    dateFormat: 'mm/dd/yy', numberOfMonths: 1,
+            //    onSelect: function (selected) {
+            //        debugger;
+            //        var dt = new Date(selected);
+            //        dt.setDate(dt.getDate() + 1);
+            //        $("#txtStopD").datepicker("option", "minDate", dt);
+            //    }
+            //});
 
-      }, 1000);
-  }        $("#c $('#ctl00_MainContent_ddlDepartments').on("change", function () {
-                localStorage.DeptID = $('#ctl00_MainContent_ddlDepartments').find('option:selected')[0].value;
-                fillPendingPatientsList();
-            });s').find('option:selected')[0].value;
-                fillPendingPatientsList();
-            });--%>
-            setTimeout(function () {
-                $("#ctl00_MainContent_ddlDepartments").val("0");
-                fillDoctors();
-                fillPendingPatientsList();
-            }, 500);
-        $("#ctl00_MainContent_ddlDepartments").val(0);
-
-                }, 1000);
-            }
             $('#txtStartD').datepicker({
                 dateFormat: 'mm/dd/yy', numberOfMonths: 1,
                 onSelect: function (selected) {
@@ -2141,51 +2101,6 @@
                 $('#btnAddPulse').val('Add')
             }
 
-        }
-        function select(inPatID) {
-            window.location.href = 'InPatientMonitoring.aspx?ID=' + inPatID;
-        }
-        function fillPendingPatientsList() {
-            $(".se-pre-con").fadeIn("slow");
-
-            var SelectedDepartment = $("#ctl00_MainContent_ddlDepartments").val();
-            var SelectedDoctor = $("#ddldoctors").val();
-
-            var deptParam = (SelectedDepartment === "0" || SelectedDepartment === "" || !SelectedDepartment) ? "" : SelectedDepartment;
-            var doctorParam = (SelectedDoctor === "0" || SelectedDoctor === "" || !SelectedDoctor) ? "" : SelectedDoctor;
-
-            PageMethods.PendingPatients(deptParam, doctorParam, function (data) {
-                var parsedData = JSON.parse(data);
-                var rows = '';
-                $.each(parsedData, function (key, value) {
-                    var TrnsDate = new Date(parseInt(value.Created_Time.substr(6)));
-                    var retdate = moment(TrnsDate).format('LLLL');
-                    var status = value.Checked != null ? "Checked" : "Unchecked";
-
-                    var chkPrivate = document.getElementById("ctl00_MainContent_chkPrivate");
-                    var showPrivate = chkPrivate && chkPrivate.checked;
-                    if (showPrivate && value.Patient_Type !== "02") return;
-                    if (!showPrivate && value.Patient_Type === "02") return;
-
-                    rows += '<tr>' +
-                        '<td>' + value.Patient_No + '</td>' +
-                        '<td>' + value.Full_Name + '</td>' +
-                        '<td>' + value.Age_years + '</td>' +
-                        '<td>' + value.Gender + '</td>' +
-                        '<td>' + retdate + '</td>' +
-                        '<td>' + value.DepartmentName + '</td>' +
-                        '<td>' + value.DoctorName + '</td>' +
-                        '<td>' + value.UserName + '</td>' +
-                        '<td>' + status + '</td>' +
-                        '<td><a href="javascript:void(0)" onclick=select(' + value.In_Patient_ID + ')>Select</a></td>' +
-                        '</tr>';
-                });
-                $('#tblPendingPatients tbody').html(rows);
-                $(".se-pre-con").fadeOut("slow");
-            }, function (exec) {
-                $(".se-pre-con").fadeOut("slow");
-                console.error("PendingPatients error:", exec);
-            });
         }
         function AddProgressNote() {
 
@@ -3777,77 +3692,28 @@
                  <input type="hidden" name="uurowid" value="" />
              </div>
              <div class="modal-footer">
-                 <input type="button" value="Done" class="btn-gray" data-dismiss="modal" style="width:13% !imp
-                 <li><a href="#Tab-12">Waiting List</a></li>
-                 <li><a href="#Tab-2">Patient Monitoring</a></li>
-iv style="width: 100%">
+                 <input type="button" value="Done" class="btn-gray" data-dismiss="modal" style="width:13% !important" />
+             </div>
+         </div>
+     </div>
+ </div>
+        </ContentTemplate>
+    </asp:UpdatePanel>
+    <div style="width: 100%">
         <div id="tabs">
             <ul>
-                 <li><a href="#Tab-12">Waiting List</a></li>
                 <li><a href="#Tab-2">Patient Monitoring</a></li>
-               
                  <li><a href="#Tab-14">Services</a></li>
                 <li><a href="#Tab-18">IV Fluid</a></li>
                 <li><a href="#Tab-8">Medicine</a></li>
                 <li><a href="#Tab-4">Fluid Intake/Output</a></li>
                 <li><a href="#Tab-3">Progress Note</a></li>
-                <li><a h
-                    <div id="Tab-12">
-    <h2>Patients Waiting List Department Wise : </h2>
-    <div id="Div_waiting">
-        <div>
-            <table id="tblHeader">
-                <tr>
- <div id="Tab-12">
-    <h2>Patients Waiting List Department Wise : </h2>
-    <div id="Div_waiting">
-        <div>
-            <table id="tblHeader">
-                <tr>
-                    <td><h4 style="margin-left: 5px;">Select Your Department</h4></td>
-                    <td><h4 style="margin-left: 20px;">Select Doctor</h4></td>
-                    <td style="padding-left:20px !important">Private</td>
-                    <td style="padding-left:10px !important">
-                        <asp:CheckBox ID="chkPrivate" runat="server" onclick="fillPendingPatientsList()" />
-                    </td>
-                </tr>
-                <tr>
-                    <td style="width: 261px">
-                        <select id="ddlDepartments" runat="server" onchange="fillDoctors(); fillPendingPatientsList();"></select>
-                    </td>
-                    <td style="width: 261px">
-                        <select id="ddldoctors" style="margin-left: 14px;" onchange="fillPendingPatientsList();">
-                            <option value="">Select Doctor</option>
-                        </select>
-                    </td>
-                </tr>
-            </table>
-        </div>
-        <div style="overflow: scroll; height: 400px;">
-            <fieldset>
-                <table class="table table-hover table-striped table-bordered" id="tblPendingPatients" style="overflow: scroll;">
-                    <thead id="ihead">
-                        <tr>
-                            <th>MR No</th>
-                            <th>Patient Name</th>
-                            <th>Age</th>
-                            <th>Gender</th>
-                            <th style="width: 173px;">Created Time</th>
-                            <th>Department</th>
-                            <th>Doctor</th>
-                            <th>Operator Name</th>
-                            <th>Status</th>
-                            <th>Select</th>
-                        </tr>
-                    </thead>
-                    <tbody id="ibody">
-                    </tbody>
-                </table>
-            </fieldset>
-        </div>
-    </div>
-</div>
+                <li><a href="#Tab-5">Medication</a></li>
+                <li><a href="#Tab-6">Doctor Instruction</a></li>
+                <li><a href="#Tab-7">Nursing Plan</a></li>
+               
 
+            </ul>
             <div id="Tab-1" style="display: none">
                 <div id="OtherDetails" style="width: 70%">
                     <table>

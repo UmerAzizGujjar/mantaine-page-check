@@ -186,24 +186,6 @@ namespace PMS
         protected global::System.Web.UI.WebControls.Label vLbl_Adress;
 
         /// <summary>
-        /// chkPrivate control.
-        /// </summary>
-        /// <remarks>
-        /// Auto-generated field.
-        /// To modify move field declaration from designer file to code-behind file.
-        /// </remarks>
-        protected global::System.Web.UI.WebControls.CheckBox chkPrivate;
-
-        /// <summary>
-        /// ddlDepartments control.
-        /// </summary>
-        /// <remarks>
-        /// Auto-generated field.
-        /// To modify move field declaration from designer file to code-behind file.
-        /// </remarks>
-        protected global::System.Web.UI.HtmlControls.HtmlSelect ddlDepartments;
-
-        /// <summary>
         /// upInPatForm control.
         /// </summary>
         /// <remarks>
