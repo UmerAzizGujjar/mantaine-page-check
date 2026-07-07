@@ -4,7 +4,6 @@
     <link href="../../wwwroot/THEME_TIBBIT/CustomCSS/GIR.css" rel="stylesheet" />
     <script type="text/javascript">
         var counter = 1;
-        var append_data = '';
         debugger;
         var id = '<% =Request.QueryString["ID"] %>';
         $(document).ready(function () {
@@ -432,8 +431,9 @@
                             var arr = res.split('-');
                             var msg = arr[0];
                             var id = arr[1];
-                            sendFile(id);
-                            SaveMIRDetail(id);
+                            sendFile(id, function () {
+                                SaveMIRDetail(id);
+                            });
                         },
                         failure: function (response) {
                             // RE-ENABLE BUTTON ON AJAX FAILURE
@@ -459,15 +459,6 @@
                 details.itemId = $(this).find('td:eq(8)').text();
                 detailAry.push(details);
             });
-            debugger;
-            var getuploadlist = $('input[name=fileuploadlist]').get();
-            append_data = new FormData();
-            for (var i = 0; i < getuploadlist.length; i++) {
-                var filecomplete = getuploadlist[i].files;
-                if (filecomplete.length > 0) {
-                    append_data.append(filecomplete[0].name, filecomplete[0]);
-                }
-            }
             if (detailAry.length > 0) {
                 $.ajax({
                     type: "POST",
@@ -484,11 +475,27 @@
                         var res = response.d;
                         var arr = res.split('-')[1];
                         var btnValue = $("#btnsave").val();
-                        if (btnValue == "Save") {
-                            append_data.append('ID', 0);
-                        }
-                        else {
-                            append_data.append('ID', arr);
+
+                        // Upload per-row files after details saved
+                        var getuploadlist = $('input[name=fileuploadlist]').get();
+                        var hasPerRowFiles = false;
+                        for (var i = 0; i < getuploadlist.length; i++) {
+                            var filecomplete = getuploadlist[i].files;
+                            if (filecomplete.length > 0) {
+                                hasPerRowFiles = true;
+                                var fd = new FormData();
+                                fd.append('file', filecomplete[0]);
+                                fd.append('MIRId', id);
+                                fd.append('rowIndex', i);
+                                $.ajax({
+                                    type: 'post',
+                                    url: '../../upload/UploadMIRDetailFiles.ashx',
+                                    data: fd,
+                                    async: false,
+                                    processData: false,
+                                    contentType: false
+                                });
+                            }
                         }
 
                         if (btnValue == "Save") {
@@ -504,7 +511,6 @@
                                     htmlContainer: 'swal-big-text'
                                 }
                             });
-                            // Button already disabled, no need to disable again
                         }
                         else {
                             Swal.fire({
@@ -519,12 +525,10 @@
                                     htmlContainer: 'swal-big-text'
                                 }
                             });
-                            // Button already disabled, no need to disable again
                         }
                         window.location.href = 'GoodsIssuanceRequestView.aspx';
                     },
                     failure: function (response) {
-                        // RE-ENABLE BUTTON ON FAILURE
                         $('#btnsave').prop('disabled', false);
                         alert("In failure method");
                     }
@@ -605,7 +609,9 @@
                     $.each(parse, function (key, value) {
                         debugger;
                         var len = key + 1;
-                        row += '<tr><td style="padding-top: 7px!important;">' + len + '</td><td style="padding-top: 7px!important;padding-right: 3px!important; */">' + parse[key].itemCode + '</td><td style="padding-left: 8px!important;padding-top: 7px!important;">' + parse[key].Description + '</td><td style="text-align:center;">' + parse[key].Unit + '</td><td style="text-align: center;"><input type="text"  value="' + parseFloat(parse[key].MIRQty).toFixed(2) + '" name="Qty" id="txtQty ' + counter + '" style="font-size: 9px;width: 52px!important;text-align: right;margin-top: 2px;" autocomplete="off" onkeyup="calcutaeQty(this)"/></td><td style="padding-top: 7px!important;text-align:center;padding-left: 8px!important;" contenteditable>' + parse[key].Last_MIR_Qty + '</td><td style="padding-top: 7px!important;padding-left: 8px!important" contenteditable>' + parse[key].remarks + '</td><td> <label class="fileContainer" style="font-size: 13px;margin-top: -3px;"><i class="glyphicon glyphicon-paperclip"></i><input type="file" name="fileuploadlist" id="fileuploadlist' + key + '"></label></td><td style="display:none">' + parse[key].itemId + '</td><td><a href="#" onclick="Delete(this)"><i class="glyphicon glyphicon-trash" style="font-size: 13px; margin-top: 5px;  margin-left: 16px; color: #f30a0a;"></i></a></td></tr>';
+                        var filePath = parse[key].FilePath || '';
+                        var downloadLink = filePath ? '<a href="' + filePath + '" target="_blank" style="margin-right:4px;" title="Download"><i class="glyphicon glyphicon-download-alt"></i></a>' : '';
+                        row += '<tr><td style="padding-top: 7px!important;">' + len + '</td><td style="padding-top: 7px!important;padding-right: 3px!important; */">' + parse[key].itemCode + '</td><td style="padding-left: 8px!important;padding-top: 7px!important;">' + parse[key].Description + '</td><td style="text-align:center;">' + parse[key].Unit + '</td><td style="text-align: center;"><input type="text"  value="' + parseFloat(parse[key].MIRQty).toFixed(2) + '" name="Qty" id="txtQty ' + counter + '" style="font-size: 9px;width: 52px!important;text-align: right;margin-top: 2px;" autocomplete="off" onkeyup="calcutaeQty(this)"/></td><td style="padding-top: 7px!important;text-align:center;padding-left: 8px!important;" contenteditable>' + parse[key].Last_MIR_Qty + '</td><td style="padding-top: 7px!important;padding-left: 8px!important" contenteditable>' + parse[key].remarks + '</td><td>' + downloadLink + '<label class="fileContainer" style="font-size: 13px;margin-top: -3px;"><i class="glyphicon glyphicon-paperclip"></i><input type="file" name="fileuploadlist" id="fileuploadlist' + key + '"></label></td><td style="display:none">' + parse[key].itemId + '</td><td><a href="#" onclick="Delete(this)"><i class="glyphicon glyphicon-trash" style="font-size: 13px; margin-top: 5px;  margin-left: 16px; color: #f30a0a;"></i></a></td></tr>';
                     });
                     $("#tblPackage").append(row);
                     calcutaeQty();
@@ -615,7 +621,7 @@
                 }
             });
         }
-        function sendFile(ID) {
+        function sendFile(ID, callback) {
             debugger;
             var fileInput = $('#choseGIRfile')[0];
             if (fileInput.files.length > 0) {
@@ -626,8 +632,8 @@
                     type: 'post',
                     url: '../../upload/UploadMaterialIssue.ashx',
                     data: data,
-                    async: false,
                     success: function (status) {
+                        if (typeof callback === 'function') callback();
                     },
                     processData: false,
                     contentType: false,
@@ -635,6 +641,8 @@
                         alert("hehe");
                     }
                 });
+            } else {
+                if (typeof callback === 'function') callback();
             }
         }
         function calcutaeQty() {

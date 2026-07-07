@@ -759,8 +759,9 @@
                             var arr = res.split('-');
                             var msg = arr[0];
                             var id = arr[1];
-                            sendFile(id);
-                            SaveDetailPurchaseRequestion(id);
+                            sendFile(id, function () {
+                                SaveDetailPurchaseRequestion(id);
+                            });
                         },
                         failure: function (response) {
                             alert("In failure method");
@@ -1074,7 +1075,7 @@
             }
             window.open(url, '_blank');
         }
-        function sendFile(ID) {
+        function sendFile(ID, callback) {
 
             var fileInput = $('#chosePrfile')[0];
             if (fileInput.files.length > 0) {
@@ -1085,8 +1086,8 @@
                     type: 'post',
                     url: '../../upload/UploadPRFiles.ashx',
                     data: data,
-                    async: false,
                     success: function (status) {
+                        if (typeof callback === 'function') callback();
                     },
                     processData: false,
                     contentType: false,
@@ -1094,6 +1095,8 @@
                         alert(" something went wrong!");
                     }
                 });
+            } else {
+                if (typeof callback === 'function') callback();
             }
         }
 

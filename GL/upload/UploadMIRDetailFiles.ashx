@@ -1,0 +1,1 @@
+<%@ WebHandler Language="C#" CodeBehind="UploadMIRDetailFiles.ashx.cs" Class="PMS.UploadMIRDetailFiles" %>

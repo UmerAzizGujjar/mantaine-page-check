@@ -403,8 +403,9 @@
                             });
 
                         }
-                        sendFile(res);
-                        window.location = "RequestForQuotation.aspx?RFQ_ID=" + res;
+                        sendFile(res, function () {
+                            window.location = "RequestForQuotation.aspx?RFQ_ID=" + res;
+                        });
                     });
                 }
             }
@@ -617,7 +618,7 @@
                 $('#ctl00_MainContent_ddlVendors').val(0).trigger('change');
             }
         }
-        function sendFile(ID) {
+        function sendFile(ID, callback) {
             debugger;
             var fileInput = $('#choseRFQfile')[0];
             if (fileInput.files.length > 0) {
@@ -627,11 +628,10 @@
                 data.append('ID', ID);
                 $.ajax({
                     type: 'post',
-                    url: '../../UploadRFQFiles.ashx',
+                    url: '../../upload/UploadRFQFiles.ashx',
                     data: data,
-                    async: false,
                     success: function (status) {
-
+                        if (typeof callback === 'function') callback();
                     },
                     processData: false,
                     contentType: false,
@@ -639,6 +639,8 @@
                         alert(" something went wrong!");
                     }
                 });
+            } else {
+                if (typeof callback === 'function') callback();
             }
         }
 
