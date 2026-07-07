@@ -1157,6 +1157,7 @@ namespace PMS.Modules.PatientManagement
             area = SanitizeInput(area);
 
             DataBaseDataContext db = new DataBaseDataContext();
+            JavaScriptSerializer JSS = new JavaScriptSerializer();
             Reg_patient pat = null;
 
             bool isNewPatient = string.IsNullOrEmpty(PatientID) || PatientID == "0" || PatientID == "(New)";
@@ -1206,6 +1207,50 @@ namespace PMS.Modules.PatientManagement
                     pat.val_area = area_val;
                     pat.Country = Country;
                     pat.Province = Province;
+                    pat.updated_time = DateTime.Now;
+                    pat.updated_by = AppConfig.UserID;
+
+                    var previousRegData = new
+                    {
+                        PatData = new
+                        {
+                            pat.Patient_No,
+                            pat.mr_no_sequence,
+                            CreationDate = pat.Created_time ?? DateTime.MinValue,
+                            pat.Full_Name,
+                            pat.Father_Name,
+                            pat.Gender,
+                            pat.Mobile1,
+                            pat.Age_years,
+                            pat.NIC,
+                            pat.Permanent_Address,
+                            pat.Martial_Status,
+                            pat.Relation_prefix,
+                            pat.walkin,
+                            pat.city,
+                            pat.val_city,
+                            pat.val_area,
+                            pat.area,
+                            pat.Country,
+                            pat.Province,
+                            pat.Card_fee,
+                            pat.other_cnic,
+                            DOB = pat.DOB ?? DateTime.MinValue,
+
+                        }
+
+                    };
+
+                    string masterLogJson = JSS.Serialize(previousRegData.PatData);
+                    Reg_Patient_Log RegLog = new Reg_Patient_Log
+                    {
+                        Pat_Id = pat.pat_id,
+                        Updated_data = masterLogJson,
+                        Loged_Time = DateTime.Now,
+                        Loged_by = AppConfig.UserID
+                    };
+
+                    db.Reg_Patient_Logs.InsertOnSubmit(RegLog);
                     db.SubmitChanges();
                 }
             }

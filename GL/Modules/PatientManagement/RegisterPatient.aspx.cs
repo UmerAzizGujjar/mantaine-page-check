@@ -389,48 +389,47 @@ namespace PMS.Modules.PatientManagement
 
                         if (pat == null)
                             return "ERROR: Patient record not found.";
-                        //var previousRegData = new
-                        //{
-                        //    PatData = new
-                        //    {
-                        //        pat.Patient_No,
-                        //        pat.mr_no_sequence,
-                        //        CreationDate = pat.Created_time ?? DateTime.MinValue,
-                        //        pat.Full_Name,
-                        //        pat.Father_Name,
-                        //        pat.Gender,
-                        //        pat.Mobile1,
-                        //        pat.Age_years,
-                        //        pat.NIC,
-                        //        pat.Permanent_Address,
-                        //        pat.Martial_Status,
-                        //        pat.Relation_prefix,
-                        //        pat.walkin,
-                        //        pat.city,
-                        //        pat.val_city,
-                        //        pat.val_area,
-                        //        pat.area,
-                        //        pat.Country,
-                        //        pat.Province,
-                        //        pat.Card_fee,
-                        //        pat.other_cnic,
-                        //        DOB = pat.DOB ?? DateTime.MinValue,
-                              
-                        //    }
-                            
-                        //};
+                        var previousRegData = new
+                        {
+                            PatData = new
+                            {
+                                pat.Patient_No,
+                                pat.mr_no_sequence,
+                                CreationDate = pat.Created_time ?? DateTime.MinValue,
+                                pat.Full_Name,
+                                pat.Father_Name,
+                                pat.Gender,
+                                pat.Mobile1,
+                                pat.Age_years,
+                                pat.NIC,
+                                pat.Permanent_Address,
+                                pat.Martial_Status,
+                                pat.Relation_prefix,
+                                pat.walkin,
+                                pat.city,
+                                pat.val_city,
+                                pat.val_area,
+                                pat.area,
+                                pat.Country,
+                                pat.Province,
+                                pat.Card_fee,
+                                pat.other_cnic,
+                                DOB = pat.DOB ?? DateTime.MinValue,
 
-                        //string masterLogJson = JSS.Serialize(previousRegData.PatData);
-                        //Reg_Patient_Log RegLog = new Reg_Patient_Log
-                        //{
-                        //    Bill_Id = newBill.Bill_ID,
-                        //    Master_Log = masterLogJson,
-                        //    Details_Log = detailsLogJson,
-                        //    Log_Time = DateTime.Now,
-                        //    Loged_By = AppConfig.UserID
-                        //};
+                            }
 
-                        //db.Reg_Patient_Logs.InsertOnSubmit(RegLog);
+                        };
+
+                        string masterLogJson = JSS.Serialize(previousRegData.PatData);
+                        Reg_Patient_Log RegLog = new Reg_Patient_Log
+                        {
+                            Pat_Id = pat.pat_id,
+                            Updated_data = masterLogJson,
+                            Loged_Time = DateTime.Now,
+                            Loged_by = AppConfig.UserID
+                        };
+
+                        db.Reg_Patient_Logs.InsertOnSubmit(RegLog);
 
 
 
