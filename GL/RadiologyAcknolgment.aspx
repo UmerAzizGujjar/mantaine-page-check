@@ -482,7 +482,7 @@
 
                 var allowSave = true;
 
-                if ((Department == "OutPatient" || Department == "") && Panel != 0) {
+                if ((Department == "OutPatient" || Department == "") && Panel == 0) {
 
                     $.ajax({
                         type: "POST",
