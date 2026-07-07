@@ -475,13 +475,14 @@
                 var Lab_Test_Detail_ID = rowData.Lab_Test_Detail_ID;
                 var Bill_ID = rowData.Bill_ID;
                 var Bill_No = rowData.Bill_No;
+                var Panel = rowData.Bill_No;
                 var Department = rowData.ParentTrans_Name;
                 var Doctor_ID = row.find('.doctor-select').val() || 0;
                 var History = row.find('.history-value').val() || '';
 
                 var allowSave = true;
 
-                if (Department != "InPatient") {
+                if ((Department == "OutPatient" || Department == "") && Panel != 0) {
 
                     $.ajax({
                         type: "POST",

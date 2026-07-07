@@ -425,7 +425,8 @@ namespace PMS.Modules.Lab
                             {
                                 BalanceAmount = bill.Balance_Amount ?? 0,
                                 ParentTransName = abd.ParentTrans_Name,
-                                BillNo = bill.Bill_No
+                                BillNo = bill.Bill_No,
+                                Panel_Id = bill.Panel_Id
                             }).FirstOrDefault();
 
                 if (data == null)
@@ -438,7 +439,7 @@ namespace PMS.Modules.Lab
                 }
 
                 // Don't allow approval if not InPatient and balance > 0
-                if (data.ParentTransName != "InPatient" && data.BalanceAmount > 0)
+                if ((data.ParentTransName == "OutPatient" || data.ParentTransName == "" ) && Panel_Id != 0 && data.BalanceAmount > 0)
                 {
                     return new CheckAmountResponse
                     {
