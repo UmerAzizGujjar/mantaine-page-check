@@ -298,6 +298,7 @@
                         } catch (e) { return val || ''; }
                     }
 
+
                     var html = `<!DOCTYPE html>
 <html lang="en">
 <head>
@@ -616,7 +617,7 @@ function cleanPrint() {
             <div class="patient-title">MRN# &nbsp; ${data.Patient_No || ''}</div>
             <div class="info-row">
                 <span class="info-label">Reg Date :</span>
-                <span class="info-val">${formatDate(data.REg_Date)}</span>
+                <span class="info-val">${data.REg_Date}</span>
             </div>
             <div class="info-row">
                 <span class="info-label">Department :</span>
