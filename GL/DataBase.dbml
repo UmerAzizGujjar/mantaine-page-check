@@ -2606,15 +2606,6 @@
       <Column Name="IsNotificationViewed" Type="System.Boolean" DbType="Bit" CanBeNull="true" />
     </Type>
   </Table>
-  <Table Name="dbo.OutPatients_Protos" Member="OutPatients_Protos">
-    <Type Name="OutPatients_Proto">
-      <Column Name="Proto_id" Type="System.Int32" DbType="Int NOT NULL IDENTITY" IsPrimaryKey="true" IsDbGenerated="true" CanBeNull="false" />
-      <Column Name="Patient_Id" Type="System.Int32" DbType="Int" CanBeNull="true" />
-      <Column Name="Outpatient_id" Type="System.Int32" DbType="Int" CanBeNull="true" />
-      <Column Name="ProtoId" Type="System.String" DbType="NVarChar(100)" CanBeNull="true" />
-      <Column Name="Proto_Description" Type="System.String" DbType="NVarChar(MAX)" CanBeNull="true" />
-    </Type>
-  </Table>
   <Table Name="dbo.Appointment_Form" Member="Appointment_Forms">
     <Type Name="Appointment_Form">
       <Column Name="Appointment_ID" Type="System.Int32" DbType="Int NOT NULL IDENTITY" IsPrimaryKey="true" IsDbGenerated="true" CanBeNull="false" />
@@ -3730,32 +3721,6 @@
     <Type Name="DiagnosisDefinition">
       <Column Name="ID" Type="System.Int32" DbType="Int NOT NULL IDENTITY" IsPrimaryKey="true" IsDbGenerated="true" CanBeNull="false" />
       <Column Name="DiagnosisName" Type="System.String" DbType="VarChar(100) NOT NULL" CanBeNull="false" />
-    </Type>
-  </Table>
-  <Table Name="dbo.OutPatientComplaints" Member="OutPatientComplaints">
-    <Type Name="OutPatientComplaint">
-      <Column Name="ID" Type="System.Int32" DbType="Int NOT NULL IDENTITY" IsPrimaryKey="true" IsDbGenerated="true" CanBeNull="false" />
-      <Column Name="OutPatientID" Type="System.Int32" DbType="Int NOT NULL" CanBeNull="false" />
-      <Column Name="PatientID" Type="System.Int32" DbType="Int NOT NULL" CanBeNull="false" />
-      <Column Name="ComplaintID" Type="System.Int32" DbType="Int NOT NULL" CanBeNull="false" />
-    </Type>
-  </Table>
-  <Table Name="dbo.OutPatientFinalDiagnosis" Member="OutPatientFinalDiagnosis">
-    <Type Name="OutPatientFinalDiagnosi">
-      <Column Name="ID" Type="System.Int32" DbType="Int NOT NULL IDENTITY" IsPrimaryKey="true" IsDbGenerated="true" CanBeNull="false" />
-      <Column Name="OutPatientID" Type="System.Int32" DbType="Int NOT NULL" CanBeNull="false" />
-      <Column Name="PatientID" Type="System.Int32" DbType="Int NOT NULL" CanBeNull="false" />
-      <Column Name="DiagnosisID" Type="System.Int32" DbType="Int NOT NULL" CanBeNull="false" />
-      <Column Name="Remarks" Type="System.String" DbType="Text" CanBeNull="true" UpdateCheck="Never" />
-    </Type>
-  </Table>
-  <Table Name="dbo.OutPatientPrimaryDiagnosis" Member="OutPatientPrimaryDiagnosis">
-    <Type Name="OutPatientPrimaryDiagnosi">
-      <Column Name="ID" Type="System.Int32" DbType="Int NOT NULL IDENTITY" IsPrimaryKey="true" IsDbGenerated="true" CanBeNull="false" />
-      <Column Name="OutPatientID" Type="System.Int32" DbType="Int NOT NULL" CanBeNull="false" />
-      <Column Name="PatientID" Type="System.Int32" DbType="Int NOT NULL" CanBeNull="false" />
-      <Column Name="DiagnosisID" Type="System.Int32" DbType="Int NOT NULL" CanBeNull="false" />
-      <Column Name="Remarks" Type="System.String" DbType="VarChar(100)" CanBeNull="true" />
     </Type>
   </Table>
   <Table Name="dbo.company_opd_policy" Member="company_opd_policies">
@@ -4934,383 +4899,6 @@
       <Column Name="Approve_date" Type="System.DateTime" DbType="DateTime" CanBeNull="true" />
       <Column Name="Approve_by" Type="System.Guid" DbType="UniqueIdentifier" CanBeNull="true" />
       <Column Name="Payment_type" Type="System.String" DbType="NVarChar(150)" CanBeNull="true" />
-    </Type>
-  </Table>
-  <Table Name="dbo.Out_Patient" Member="Out_Patients">
-    <Type Name="Out_Patient">
-      <Column Name="Out_Patient_ID" Type="System.Int32" DbType="Int NOT NULL IDENTITY" IsPrimaryKey="true" IsDbGenerated="true" CanBeNull="false" />
-      <Column Name="Patient_ID" Type="System.Int32" DbType="Int" CanBeNull="true" />
-      <Column Name="OPD_Entry_Date" Type="System.DateTime" DbType="Date" CanBeNull="true" />
-      <Column Name="Suffering_Days" Type="System.String" DbType="VarChar(5)" CanBeNull="true" />
-      <Column Name="Recommended_Department" Type="System.String" DbType="VarChar(5)" CanBeNull="true" />
-      <Column Name="Recommended_Doctor" Type="System.String" DbType="VarChar(5)" CanBeNull="true" />
-      <Column Name="Health_Complaints" Type="System.String" DbType="VarChar(MAX)" CanBeNull="true" />
-      <Column Name="Refering_Doctor" Type="System.String" DbType="VarChar(50)" CanBeNull="true" />
-      <Column Name="pulse_Min" Type="System.String" DbType="VarChar(10)" CanBeNull="true" />
-      <Column Name="BP_mm_Hg" Type="System.String" DbType="VarChar(10)" CanBeNull="true" />
-      <Column Name="Temp_C" Type="System.String" DbType="VarChar(10)" CanBeNull="true" />
-      <Column Name="Respiration_Min" Type="System.String" DbType="VarChar(10)" CanBeNull="true" />
-      <Column Name="Height_Cm" Type="System.String" DbType="VarChar(10)" CanBeNull="true" />
-      <Column Name="Weight_Kg" Type="System.String" DbType="VarChar(10)" CanBeNull="true" />
-      <Column Name="Provisional_Diagnosis" Type="System.String" DbType="VarChar(MAX)" CanBeNull="true" />
-      <Column Name="Patient_Status" Type="System.String" DbType="VarChar(50)" CanBeNull="true" />
-      <Column Name="Refer_To_Hospital" Type="System.String" DbType="VarChar(50)" CanBeNull="true" />
-      <Column Name="Complaints" Type="System.String" DbType="VarChar(50)" CanBeNull="true" />
-      <Column Name="Prior_Reports" Type="System.String" DbType="VarChar(50)" CanBeNull="true" />
-      <Column Name="Medical_Reports" Type="System.String" DbType="VarChar(50)" CanBeNull="true" />
-      <Column Name="Physical_Condition" Type="System.String" DbType="VarChar(MAX)" CanBeNull="true" />
-      <Column Name="Created_By" Type="System.Guid" DbType="UniqueIdentifier" CanBeNull="true" />
-      <Column Name="Created_Time" Type="System.DateTime" DbType="DateTime" CanBeNull="true" />
-      <Column Name="Updated_By" Type="System.Guid" DbType="UniqueIdentifier" CanBeNull="true" />
-      <Column Name="Updated_Time" Type="System.DateTime" DbType="DateTime" CanBeNull="true" />
-      <Column Name="Company_ID" Type="System.Int32" DbType="Int" CanBeNull="true" />
-      <Column Name="Book_ID" Type="System.Int32" DbType="Int" CanBeNull="true" />
-      <Column Name="L_M_P" Type="System.String" DbType="VarChar(500)" CanBeNull="true" />
-      <Column Name="EDD" Type="System.String" DbType="NVarChar(100)" CanBeNull="true" />
-      <Column Name="BSR" Type="System.String" DbType="VarChar(100)" CanBeNull="true" />
-      <Column Name="BMI" Type="System.String" DbType="VarChar(100)" CanBeNull="true" />
-      <Column Name="URG" Type="System.String" DbType="NVarChar(MAX)" CanBeNull="true" />
-      <Column Name="HistoryOfPeresentIllness" Type="System.String" DbType="NVarChar(MAX)" CanBeNull="true" />
-      <Column Name="HistoryOfPastIllness" Type="System.String" DbType="NVarChar(MAX)" CanBeNull="true" />
-      <Column Name="HistoryOfFamily" Type="System.String" DbType="NVarChar(MAX)" CanBeNull="true" />
-      <Column Name="SocioEconomicHistory" Type="System.String" DbType="NVarChar(MAX)" CanBeNull="true" />
-      <Column Name="ObstetricHistory" Type="System.String" DbType="NVarChar(MAX)" CanBeNull="true" />
-      <Column Name="AllergiesHistory" Type="System.String" DbType="NVarChar(MAX)" CanBeNull="true" />
-      <Column Name="TreatmentHistory" Type="System.String" DbType="NVarChar(MAX)" CanBeNull="true" />
-      <Column Name="GIT" Type="System.String" DbType="NVarChar(MAX)" CanBeNull="true" />
-      <Column Name="CVS" Type="System.String" DbType="NVarChar(MAX)" CanBeNull="true" />
-      <Column Name="CNS" Type="System.String" DbType="NVarChar(MAX)" CanBeNull="true" />
-      <Column Name="RESP" Type="System.String" DbType="NVarChar(MAX)" CanBeNull="true" />
-      <Column Name="GYNAE" Type="System.String" DbType="VarChar(MAX)" CanBeNull="true" />
-      <Column Name="ProvisionalDiagnosis" Type="System.String" DbType="NVarChar(MAX)" CanBeNull="true" />
-      <Column Name="chkPallor" Type="System.Boolean" DbType="Bit" CanBeNull="true" />
-      <Column Name="chkunconceed" Type="System.Boolean" DbType="Bit" CanBeNull="true" />
-      <Column Name="edema" Type="System.Boolean" DbType="Bit" CanBeNull="true" />
-      <Column Name="chkJVP" Type="System.Boolean" DbType="Bit" CanBeNull="true" />
-      <Column Name="chkjaundice" Type="System.Boolean" DbType="Bit" CanBeNull="true" />
-      <Column Name="chkaganoris" Type="System.Boolean" DbType="Bit" CanBeNull="true" />
-      <Column Name="hydration" Type="System.Boolean" DbType="Bit" CanBeNull="true" />
-      <Column Name="chk1" Type="System.Boolean" DbType="Bit" CanBeNull="true" />
-      <Column Name="chk2" Type="System.Boolean" DbType="Bit" CanBeNull="true" />
-      <Column Name="chk3" Type="System.Boolean" DbType="Bit" CanBeNull="true" />
-      <Column Name="chk4" Type="System.Boolean" DbType="Bit" CanBeNull="true" />
-      <Column Name="chk5" Type="System.Boolean" DbType="Bit" CanBeNull="true" />
-      <Column Name="chk6" Type="System.Boolean" DbType="Bit" CanBeNull="true" />
-      <Column Name="chk7" Type="System.Boolean" DbType="Bit" CanBeNull="true" />
-      <Column Name="chk8" Type="System.Boolean" DbType="Bit" CanBeNull="true" />
-      <Column Name="txtRemarksHistory" Type="System.String" DbType="NVarChar(MAX)" CanBeNull="true" />
-      <Column Name="txtInputBox1" Type="System.String" DbType="VarChar(500)" CanBeNull="true" />
-      <Column Name="Doctor_ID" Type="System.String" DbType="VarChar(50)" CanBeNull="true" />
-      <Column Name="Designation" Type="System.String" DbType="VarChar(50)" CanBeNull="true" />
-      <Column Name="Administration" Type="System.String" DbType="VarChar(50)" CanBeNull="true" />
-      <Column Name="Control_Date" Type="System.DateTime" DbType="DateTime" CanBeNull="true" />
-      <Column Name="Discharge" Type="System.Boolean" DbType="Bit" CanBeNull="true" />
-      <Column Name="Special_Test" Type="System.String" DbType="VarChar(500)" CanBeNull="true" />
-      <Column Name="Area_Of_Interest" Type="System.String" DbType="VarChar(500)" CanBeNull="true" />
-      <Column Name="Reffer_To" Type="System.String" DbType="VarChar(50)" CanBeNull="true" />
-      <Column Name="Reffer_No" Type="System.String" DbType="VarChar(50)" CanBeNull="true" />
-      <Column Name="Birth_History" Type="System.String" DbType="NVarChar(MAX)" CanBeNull="true" />
-      <Column Name="Drug_History" Type="System.String" DbType="NVarChar(MAX)" CanBeNull="true" />
-      <Column Name="Personal_History" Type="System.String" DbType="NVarChar(MAX)" CanBeNull="true" />
-      <Column Name="Follow_Up" Type="System.String" DbType="VarChar(50)" CanBeNull="true" />
-      <Column Name="Folllow_Date" Type="System.DateTime" DbType="DateTime" CanBeNull="true" />
-      <Column Name="Advice" Type="System.String" DbType="NVarChar(MAX)" CanBeNull="true" />
-      <Column Name="Local" Type="System.String" DbType="NVarChar(MAX)" CanBeNull="true" />
-      <Column Name="Mucculor" Type="System.String" DbType="NVarChar(MAX)" CanBeNull="true" />
-      <Column Name="ENT_Throat_IDL" Type="System.String" DbType="VarChar(200)" CanBeNull="true" />
-      <Column Name="ENT_Throat_Nose" Type="System.String" DbType="VarChar(200)" CanBeNull="true" />
-      <Column Name="ENT_Ear_Right" Type="System.String" DbType="VarChar(200)" CanBeNull="true" />
-      <Column Name="Ent_Ear_Left" Type="System.String" DbType="VarChar(200)" CanBeNull="true" />
-      <Column Name="ENT_Rinnes_Right_PosNeg" Type="System.Boolean" DbType="Bit" CanBeNull="true" />
-      <Column Name="ENT_Rinnes_Lft_PosNeg" Type="System.Boolean" DbType="Bit" CanBeNull="true" />
-      <Column Name="ENT_Rinnes_Right_FalseNeg" Type="System.Boolean" DbType="Bit" CanBeNull="true" />
-      <Column Name="ENT_Rinnes_Lft_FalseNeg" Type="System.Boolean" DbType="Bit" CanBeNull="true" />
-      <Column Name="ENT_Webber_Central" Type="System.Boolean" DbType="Bit" CanBeNull="true" />
-      <Column Name="ENT_Webber_Lateralized" Type="System.Boolean" DbType="Bit" CanBeNull="true" />
-      <Column Name="ENT_Investigation_PTA" Type="System.Boolean" DbType="Bit" CanBeNull="true" />
-      <Column Name="ENT_Investigation_Tympanometry" Type="System.Boolean" DbType="Bit" CanBeNull="true" />
-      <Column Name="Final_Diagnosis" Type="System.String" DbType="VarChar(MAX)" CanBeNull="true" />
-      <Column Name="ENT_Rinnes_Right_Neg" Type="System.Boolean" DbType="Bit" CanBeNull="true" />
-      <Column Name="ENT_Rinnes_Lft_Neg" Type="System.Boolean" DbType="Bit" CanBeNull="true" />
-      <Column Name="ENT_Rinnes_Right_FNeg" Type="System.Boolean" DbType="Bit" CanBeNull="true" />
-      <Column Name="ENT_Rinnes_Lft_FNeg" Type="System.Boolean" DbType="Bit" CanBeNull="true" />
-      <Column Name="Psychiatry_Informant" Type="System.String" DbType="VarChar(200)" CanBeNull="true" />
-      <Column Name="Psychiatry_Source_Referral" Type="System.String" DbType="VarChar(200)" CanBeNull="true" />
-      <Column Name="Psychiatry_Neck_Holding" Type="System.Boolean" DbType="Bit" CanBeNull="true" />
-      <Column Name="Psychiatry_Walking" Type="System.Boolean" DbType="Bit" CanBeNull="true" />
-      <Column Name="Psychiatry_Talking" Type="System.Boolean" DbType="Bit" CanBeNull="true" />
-      <Column Name="Psychiatry_Others" Type="System.Boolean" DbType="Bit" CanBeNull="true" />
-      <Column Name="Psychiatry_Menarche" Type="System.String" DbType="VarChar(200)" CanBeNull="true" />
-      <Column Name="Psychiatry_Menstrual" Type="System.String" DbType="VarChar(200)" CanBeNull="true" />
-      <Column Name="Psychiatry_Attachment_Separation" Type="System.String" DbType="VarChar(200)" CanBeNull="true" />
-      <Column Name="Psychiatry_Health" Type="System.String" DbType="VarChar(200)" CanBeNull="true" />
-      <Column Name="Psychiatry_Nail_Biting" Type="System.String" DbType="VarChar(200)" CanBeNull="true" />
-      <Column Name="Psychiatry_Temper_Tantrums" Type="System.String" DbType="VarChar(200)" CanBeNull="true" />
-      <Column Name="Psychiatry_Bed_Wetting" Type="System.String" DbType="VarChar(200)" CanBeNull="true" />
-      <Column Name="Psychiatry_Academics" Type="System.String" DbType="VarChar(200)" CanBeNull="true" />
-      <Column Name="Psychiatry_Peer_Relationship" Type="System.String" DbType="VarChar(200)" CanBeNull="true" />
-      <Column Name="Psychiatry_Behaviour" Type="System.String" DbType="VarChar(200)" CanBeNull="true" />
-      <Column Name="Psychiatry_Occupational_History" Type="System.String" DbType="VarChar(200)" CanBeNull="true" />
-      <Column Name="Psychiatry_Sexual_History" Type="System.String" DbType="VarChar(200)" CanBeNull="true" />
-      <Column Name="Psychiatry_Substance_Use" Type="System.String" DbType="VarChar(200)" CanBeNull="true" />
-      <Column Name="Psychiatry_Forensic_Use" Type="System.String" DbType="VarChar(200)" CanBeNull="true" />
-      <Column Name="Psychiatry_Relationship" Type="System.String" DbType="VarChar(200)" CanBeNull="true" />
-      <Column Name="Psychiatry_Leisure_Activities" Type="System.String" DbType="VarChar(200)" CanBeNull="true" />
-      <Column Name="Psychiatry_Attitude_Standards" Type="System.String" DbType="VarChar(200)" CanBeNull="true" />
-      <Column Name="Psychiatry_Prevalling_Mood" Type="System.String" DbType="VarChar(200)" CanBeNull="true" />
-      <Column Name="Psychiatry_Reaction_Stress" Type="System.String" DbType="VarChar(200)" CanBeNull="true" />
-      <Column Name="Psychiatry_Religious_Practices" Type="System.String" DbType="VarChar(200)" CanBeNull="true" />
-      <Column Name="Psychiatry_Father" Type="System.String" DbType="VarChar(200)" CanBeNull="true" />
-      <Column Name="Psychiatry_Mother" Type="System.String" DbType="VarChar(200)" CanBeNull="true" />
-      <Column Name="Psychiatry_Siblings" Type="System.String" DbType="VarChar(200)" CanBeNull="true" />
-      <Column Name="Psychiatry_Home_Atmosphere" Type="System.String" DbType="VarChar(200)" CanBeNull="true" />
-      <Column Name="Psychiatry_Familial_Illness" Type="System.String" DbType="VarChar(200)" CanBeNull="true" />
-      <Column Name="Psychiatry_Actual_age" Type="System.String" DbType="VarChar(200)" CanBeNull="true" />
-      <Column Name="Psychiatry_Race" Type="System.String" DbType="VarChar(200)" CanBeNull="true" />
-      <Column Name="Psychiatry_Tattoos_body_scars" Type="System.String" DbType="VarChar(200)" CanBeNull="true" />
-      <Column Name="Psychiatry_Body_Habitus" Type="System.String" DbType="VarChar(200)" CanBeNull="true" />
-      <Column Name="Psychiatry_Dress" Type="System.String" DbType="VarChar(200)" CanBeNull="true" />
-      <Column Name="Psychiatry_Hygiene" Type="System.String" DbType="VarChar(200)" CanBeNull="true" />
-      <Column Name="Psychiatry_Psychomotor_Activity" Type="System.String" DbType="VarChar(200)" CanBeNull="true" />
-      <Column Name="Psychiatry_Involuntary_movements" Type="System.String" DbType="VarChar(200)" CanBeNull="true" />
-      <Column Name="Psychiatry_Dystonia_EPS" Type="System.String" DbType="VarChar(200)" CanBeNull="true" />
-      <Column Name="Psychiatry_Tardive_dyskinesia" Type="System.String" DbType="VarChar(200)" CanBeNull="true" />
-      <Column Name="Psychiatry_Tics" Type="System.String" DbType="VarChar(200)" CanBeNull="true" />
-      <Column Name="Psychiatry_Tremors" Type="System.String" DbType="VarChar(200)" CanBeNull="true" />
-      <Column Name="Psychiatry_Attentiveness_interview" Type="System.String" DbType="VarChar(200)" CanBeNull="true" />
-      <Column Name="Psychiatry_Eye_Contact" Type="System.String" DbType="VarChar(200)" CanBeNull="true" />
-      <Column Name="Psychiatry_Level_Consciousness" Type="System.String" DbType="VarChar(200)" CanBeNull="true" />
-      <Column Name="Psychiatry_Rate" Type="System.String" DbType="VarChar(200)" CanBeNull="true" />
-      <Column Name="Psychiatry_Rhythm" Type="System.String" DbType="VarChar(200)" CanBeNull="true" />
-      <Column Name="Psychiatry_Volume" Type="System.String" DbType="VarChar(200)" CanBeNull="true" />
-      <Column Name="Psychiatry_Tone" Type="System.String" DbType="VarChar(200)" CanBeNull="true" />
-      <Column Name="Psychiatry_Modulation" Type="System.String" DbType="VarChar(200)" CanBeNull="true" />
-      <Column Name="Psychiatry_Depressed" Type="System.String" DbType="VarChar(200)" CanBeNull="true" />
-      <Column Name="Psychiatry_Elated" Type="System.String" DbType="VarChar(200)" CanBeNull="true" />
-      <Column Name="Psychiatry_Irritable" Type="System.String" DbType="VarChar(200)" CanBeNull="true" />
-      <Column Name="Psychiatry_Labile" Type="System.String" DbType="VarChar(200)" CanBeNull="true" />
-      <Column Name="Psychiatry_Incongruent" Type="System.String" DbType="VarChar(200)" CanBeNull="true" />
-      <Column Name="Psychiatry_Blunting_Flattening_Apathy" Type="System.String" DbType="VarChar(200)" CanBeNull="true" />
-      <Column Name="Psychiatry_Thinking" Type="System.String" DbType="VarChar(200)" CanBeNull="true" />
-      <Column Name="Psychiatry_Plans" Type="System.String" DbType="VarChar(200)" CanBeNull="true" />
-      <Column Name="Psychiatry_Actions" Type="System.String" DbType="VarChar(200)" CanBeNull="true" />
-      <Column Name="Psychiatry_Preservative" Type="System.String" DbType="VarChar(200)" CanBeNull="true" />
-      <Column Name="Psychiatry_LoosAssociation" Type="System.String" DbType="VarChar(200)" CanBeNull="true" />
-      <Column Name="Psychiatry_Tangentiaility" Type="System.String" DbType="VarChar(200)" CanBeNull="true" />
-      <Column Name="Psychiatry_Circumstantiality" Type="System.String" DbType="VarChar(200)" CanBeNull="true" />
-      <Column Name="Psychiatry_Flight_Ideas" Type="System.String" DbType="VarChar(200)" CanBeNull="true" />
-      <Column Name="Psychiatry_Thought_Insertion" Type="System.String" DbType="VarChar(200)" CanBeNull="true" />
-      <Column Name="Psychiatry_Thought_Withdrawal" Type="System.String" DbType="VarChar(200)" CanBeNull="true" />
-      <Column Name="Psychiatry_Thought_Broadcasting" Type="System.String" DbType="VarChar(200)" CanBeNull="true" />
-      <Column Name="Psychiatry_Thought_Control" Type="System.String" DbType="VarChar(200)" CanBeNull="true" />
-      <Column Name="Psychiatry_Dellusion" Type="System.String" DbType="VarChar(200)" CanBeNull="true" />
-      <Column Name="Psychiatry_Overvalued_Ideas" Type="System.String" DbType="VarChar(200)" CanBeNull="true" />
-      <Column Name="Psychiatry_Depresonalization" Type="System.String" DbType="VarChar(200)" CanBeNull="true" />
-      <Column Name="Psychiatry_Derealization" Type="System.String" DbType="VarChar(200)" CanBeNull="true" />
-      <Column Name="Psychiatry_Obsession" Type="System.String" DbType="VarChar(200)" CanBeNull="true" />
-      <Column Name="Psychiatry_Phobies" Type="System.String" DbType="VarChar(200)" CanBeNull="true" />
-      <Column Name="Psychiatry_Homocidial_Ideas" Type="System.String" DbType="VarChar(200)" CanBeNull="true" />
-      <Column Name="Psychiatry_Illusion" Type="System.String" DbType="VarChar(200)" CanBeNull="true" />
-      <Column Name="Psychiatry_Hallucination" Type="System.String" DbType="VarChar(200)" CanBeNull="true" />
-      <Column Name="Psychiatry_Orientation_Time" Type="System.String" DbType="VarChar(200)" CanBeNull="true" />
-      <Column Name="Psychiatry_Place" Type="System.String" DbType="VarChar(200)" CanBeNull="true" />
-      <Column Name="Psychiatry_Person" Type="System.String" DbType="VarChar(200)" CanBeNull="true" />
-      <Column Name="Psychiatry_Attention_Concentration" Type="System.String" DbType="VarChar(200)" CanBeNull="true" />
-      <Column Name="Psychiatry_Days_Week" Type="System.String" DbType="VarChar(200)" CanBeNull="true" />
-      <Column Name="Psychiatry_Immediate_Memory" Type="System.String" DbType="VarChar(200)" CanBeNull="true" />
-      <Column Name="Psychiatry_Recent_Events" Type="System.String" DbType="VarChar(200)" CanBeNull="true" />
-      <Column Name="Psychiatry_Adress_Recall_Two" Type="System.String" DbType="VarChar(200)" CanBeNull="true" />
-      <Column Name="Psychiatry_Remote_Events" Type="System.String" DbType="VarChar(200)" CanBeNull="true" />
-      <Column Name="Psychiatry_Adress_Recall_Five" Type="System.String" DbType="VarChar(200)" CanBeNull="true" />
-      <Column Name="Psychiatry_General_knowledge" Type="System.String" DbType="VarChar(200)" CanBeNull="true" />
-      <Column Name="Psychiatry_Arthemetic_Calculation" Type="System.String" DbType="VarChar(200)" CanBeNull="true" />
-      <Column Name="Psychiatry_Abstraction" Type="System.String" DbType="VarChar(200)" CanBeNull="true" />
-      <Column Name="Psychiatry_Insight" Type="System.String" DbType="VarChar(200)" CanBeNull="true" />
-      <Column Name="DermaFace" Type="System.String" DbType="VarChar(500)" CanBeNull="true" />
-      <Column Name="DermaNeck" Type="System.String" DbType="VarChar(500)" CanBeNull="true" />
-      <Column Name="DermaTrunk" Type="System.String" DbType="VarChar(500)" CanBeNull="true" />
-      <Column Name="DermaUpperLimb" Type="System.String" DbType="VarChar(500)" CanBeNull="true" />
-      <Column Name="DermaLowerLimb" Type="System.String" DbType="VarChar(500)" CanBeNull="true" />
-      <Column Name="DermaFlexures" Type="System.String" DbType="VarChar(500)" CanBeNull="true" />
-      <Column Name="DermaGenitalias" Type="System.String" DbType="VarChar(500)" CanBeNull="true" />
-      <Column Name="DermaHair" Type="System.String" DbType="VarChar(500)" CanBeNull="true" />
-      <Column Name="DermaNail" Type="System.String" DbType="VarChar(500)" CanBeNull="true" />
-      <Column Name="DermaMucousMembrane" Type="System.String" DbType="VarChar(500)" CanBeNull="true" />
-      <Column Name="DermaEyes" Type="System.String" DbType="VarChar(500)" CanBeNull="true" />
-      <Column Name="DermaEars" Type="System.String" DbType="VarChar(500)" CanBeNull="true" />
-      <Column Name="DermaNose" Type="System.String" DbType="VarChar(500)" CanBeNull="true" />
-      <Column Name="DermaLips" Type="System.String" DbType="VarChar(500)" CanBeNull="true" />
-      <Column Name="Psychiatry_HBM_Problem" Type="System.String" DbType="VarChar(200)" CanBeNull="true" />
-      <Column Name="Psychiatry_HBM_Caused" Type="System.String" DbType="VarChar(200)" CanBeNull="true" />
-      <Column Name="Psychiatry_HBM_Started" Type="System.String" DbType="VarChar(200)" CanBeNull="true" />
-      <Column Name="Psychiatry_HBM_Course" Type="System.String" DbType="VarChar(200)" CanBeNull="true" />
-      <Column Name="Psychiatry_HBM_Treatment" Type="System.String" DbType="VarChar(200)" CanBeNull="true" />
-      <Column Name="Psychiatry_HBM_Effects" Type="System.String" DbType="VarChar(200)" CanBeNull="true" />
-      <Column Name="Psychiatry_PE_Pluse" Type="System.String" DbType="VarChar(50)" CanBeNull="true" />
-      <Column Name="Psychiatry_PE_BP" Type="System.String" DbType="VarChar(50)" CanBeNull="true" />
-      <Column Name="Psychiatry_PE_Temperature" Type="System.String" DbType="VarChar(50)" CanBeNull="true" />
-      <Column Name="Psychiatry_PE_Weight" Type="System.String" DbType="VarChar(50)" CanBeNull="true" />
-      <Column Name="Psychiatry_PE_RespiratoryRate" Type="System.String" DbType="VarChar(50)" CanBeNull="true" />
-      <Column Name="Psychiatry_PE_Jaundice" Type="System.String" DbType="VarChar(50)" CanBeNull="true" />
-      <Column Name="Psychiatry_PE_Anemia" Type="System.String" DbType="VarChar(50)" CanBeNull="true" />
-      <Column Name="Psychiatry_PE_Cyanosis" Type="System.String" DbType="VarChar(50)" CanBeNull="true" />
-      <Column Name="Psychiatry_PE_Clubbing" Type="System.String" DbType="VarChar(50)" CanBeNull="true" />
-      <Column Name="Psychiatry_PE_JVP" Type="System.String" DbType="VarChar(50)" CanBeNull="true" />
-      <Column Name="Psychiatry_PE_LymphNodes" Type="System.String" DbType="VarChar(50)" CanBeNull="true" />
-      <Column Name="Psychiatry_PE_Edema" Type="System.String" DbType="VarChar(50)" CanBeNull="true" />
-      <Column Name="Psychiatry_PE_Respiratory" Type="System.String" DbType="VarChar(200)" CanBeNull="true" />
-      <Column Name="Psychiatry_PE_Cardiovascular" Type="System.String" DbType="VarChar(200)" CanBeNull="true" />
-      <Column Name="Psychiatry_PE_Gastro_Intestinal" Type="System.String" DbType="VarChar(200)" CanBeNull="true" />
-      <Column Name="Psychiatry_PE_Observation" Type="System.String" DbType="VarChar(300)" CanBeNull="true" />
-      <Column Name="Psychiatry_PE_Cranial_Nerves" Type="System.String" DbType="VarChar(500)" CanBeNull="true" />
-      <Column Name="Psychiatry_PE_Limb_Strength" Type="System.String" DbType="VarChar(200)" CanBeNull="true" />
-      <Column Name="Psychiatry_PE_Spasticity" Type="System.String" DbType="VarChar(200)" CanBeNull="true" />
-      <Column Name="Psychiatry_PE_Position" Type="System.String" DbType="VarChar(50)" CanBeNull="true" />
-      <Column Name="Psychiatry_PE_Vibration" Type="System.String" DbType="VarChar(50)" CanBeNull="true" />
-      <Column Name="Psychiatry_PE_Stereognosis" Type="System.String" DbType="VarChar(50)" CanBeNull="true" />
-      <Column Name="Psychiatry_PE_Pain" Type="System.String" DbType="VarChar(50)" CanBeNull="true" />
-      <Column Name="Psychiatry_PE_Biceps" Type="System.String" DbType="VarChar(50)" CanBeNull="true" />
-      <Column Name="Psychiatry_PE_Triceps" Type="System.String" DbType="VarChar(50)" CanBeNull="true" />
-      <Column Name="Psychiatry_PE_Brachioradialis" Type="System.String" DbType="VarChar(50)" CanBeNull="true" />
-      <Column Name="Psychiatry_PE_Quadriceps" Type="System.String" DbType="VarChar(50)" CanBeNull="true" />
-      <Column Name="Psychiatry_PE_Patellar" Type="System.String" DbType="VarChar(50)" CanBeNull="true" />
-      <Column Name="Psychiatry_PE_Achilles" Type="System.String" DbType="VarChar(50)" CanBeNull="true" />
-      <Column Name="Psychiatry_PE_Extensor" Type="System.String" DbType="VarChar(50)" CanBeNull="true" />
-      <Column Name="Psychiatry_PE_Frontal" Type="System.String" DbType="VarChar(50)" CanBeNull="true" />
-      <Column Name="Psychiatry_PE_Finger" Type="System.String" DbType="VarChar(50)" CanBeNull="true" />
-      <Column Name="Psychiatry_PE_Heel" Type="System.String" DbType="VarChar(50)" CanBeNull="true" />
-      <Column Name="Psychiatry_PE_Movements" Type="System.String" DbType="VarChar(50)" CanBeNull="true" />
-      <Column Name="Psychiatry_PE_Gait" Type="System.String" DbType="VarChar(50)" CanBeNull="true" />
-      <Column Name="Psychiatry_PE_Neck_Rigidity" Type="System.Boolean" DbType="Bit" CanBeNull="true" />
-      <Column Name="Psychiatry_PE_Kerning_Sign" Type="System.Boolean" DbType="Bit" CanBeNull="true" />
-      <Column Name="Psychiatry_PE_Brudzinki_Sign" Type="System.Boolean" DbType="Bit" CanBeNull="true" />
-      <Column Name="Psychiatry_For_Summary" Type="System.String" DbType="VarChar(500)" CanBeNull="true" />
-      <Column Name="Psychiatry_For_Diagnosis" Type="System.String" DbType="VarChar(200)" CanBeNull="true" />
-      <Column Name="Psychiatry_For_AxisI" Type="System.String" DbType="VarChar(200)" CanBeNull="true" />
-      <Column Name="Psychiatry_For_AxisII" Type="System.String" DbType="VarChar(200)" CanBeNull="true" />
-      <Column Name="Psychiatry_For_AxisIII" Type="System.String" DbType="VarChar(200)" CanBeNull="true" />
-      <Column Name="Psychiatry_For_AxisIV" Type="System.String" DbType="VarChar(200)" CanBeNull="true" />
-      <Column Name="Psychiatry_For_AxisV" Type="System.String" DbType="VarChar(200)" CanBeNull="true" />
-      <Column Name="Psychiatry_For_PredisposingFactors" Type="System.String" DbType="VarChar(200)" CanBeNull="true" />
-      <Column Name="Psychiatry_For_PrecipitatingFactors" Type="System.String" DbType="VarChar(200)" CanBeNull="true" />
-      <Column Name="Psychiatry_For_PrepetuatingFactors" Type="System.String" DbType="VarChar(200)" CanBeNull="true" />
-      <Column Name="Psychiatry_For_Investigation" Type="System.String" DbType="VarChar(300)" CanBeNull="true" />
-      <Column Name="Psychiatry_For_Medical" Type="System.String" DbType="VarChar(300)" CanBeNull="true" />
-      <Column Name="Psychiatry_For_Psychological" Type="System.String" DbType="VarChar(500)" CanBeNull="true" />
-      <Column Name="Psychiatry_Major_Issues" Type="System.String" DbType="VarChar(500)" CanBeNull="true" />
-      <Column Name="Psychiatry_For_Strengths" Type="System.String" DbType="VarChar(500)" CanBeNull="true" />
-      <Column Name="Psychiatry_For_Goals" Type="System.String" DbType="VarChar(500)" CanBeNull="true" />
-      <Column Name="Psychiatry_For_Strategies" Type="System.String" DbType="VarChar(500)" CanBeNull="true" />
-      <Column Name="Peads_weight" Type="System.String" DbType="VarChar(50)" CanBeNull="true" />
-      <Column Name="Peads_Length" Type="System.String" DbType="VarChar(50)" CanBeNull="true" />
-      <Column Name="Peads_HC" Type="System.String" DbType="VarChar(50)" CanBeNull="true" />
-      <Column Name="Peads_General_Appearance" Type="System.String" DbType="VarChar(300)" CanBeNull="true" />
-      <Column Name="Peads_Cyanosis" Type="System.Boolean" DbType="Bit" CanBeNull="true" />
-      <Column Name="Peads_Jaundice" Type="System.Boolean" DbType="Bit" CanBeNull="true" />
-      <Column Name="Peads_Lethargy" Type="System.Boolean" DbType="Bit" CanBeNull="true" />
-      <Column Name="Peads_Rash" Type="System.Boolean" DbType="Bit" CanBeNull="true" />
-      <Column Name="Peads_Others" Type="System.String" DbType="VarChar(500)" CanBeNull="true" />
-      <Column Name="Peads_Caput" Type="System.Boolean" DbType="Bit" CanBeNull="true" />
-      <Column Name="Peads_Cephalhematoma" Type="System.Boolean" DbType="Bit" CanBeNull="true" />
-      <Column Name="Peads_Anterioropen" Type="System.Boolean" DbType="Bit" CanBeNull="true" />
-      <Column Name="Peads_AnteriorClose" Type="System.Boolean" DbType="Bit" CanBeNull="true" />
-      <Column Name="Peads_Dextrocardia" Type="System.Boolean" DbType="Bit" CanBeNull="true" />
-      <Column Name="Peads_Bulging" Type="System.Boolean" DbType="Bit" CanBeNull="true" />
-      <Column Name="Peads_Murmur" Type="System.Boolean" DbType="Bit" CanBeNull="true" />
-      <Column Name="Peads_HeartSound" Type="System.String" DbType="VarChar(200)" CanBeNull="true" />
-      <Column Name="Peads_Nasal" Type="System.Boolean" DbType="Bit" CanBeNull="true" />
-      <Column Name="Peads_Recessions" Type="System.Boolean" DbType="Bit" CanBeNull="true" />
-      <Column Name="Peads_AddedSounds" Type="System.String" DbType="VarChar(200)" CanBeNull="true" />
-      <Column Name="Peads_Flat" Type="System.Boolean" DbType="Bit" CanBeNull="true" />
-      <Column Name="Peads_Distended" Type="System.Boolean" DbType="Bit" CanBeNull="true" />
-      <Column Name="Peads_Scaphoid" Type="System.Boolean" DbType="Bit" CanBeNull="true" />
-      <Column Name="Peads_Liver" Type="System.Boolean" DbType="Bit" CanBeNull="true" />
-      <Column Name="Peads_Spleen" Type="System.Boolean" DbType="Bit" CanBeNull="true" />
-      <Column Name="Peads_GITOthers" Type="System.String" DbType="VarChar(500)" CanBeNull="true" />
-      <Column Name="Peads_Sucking" Type="System.Boolean" DbType="Bit" CanBeNull="true" />
-      <Column Name="Peads_Rooting" Type="System.Boolean" DbType="Bit" CanBeNull="true" />
-      <Column Name="Peads_Moro" Type="System.Boolean" DbType="Bit" CanBeNull="true" />
-      <Column Name="Peads_CNSOthers" Type="System.String" DbType="VarChar(500)" CanBeNull="true" />
-      <Column Name="Peads_FullTerm" Type="System.Boolean" DbType="Bit" CanBeNull="true" />
-      <Column Name="Peads_PreTerm" Type="System.Boolean" DbType="Bit" CanBeNull="true" />
-      <Column Name="Peads_DateOfDelivery" Type="System.DateTime" DbType="Date" CanBeNull="true" />
-      <Column Name="Peads_TimeOfDelivery" Type="System.String" DbType="VarChar(10)" CanBeNull="true" />
-      <Column Name="Peads_Booked" Type="System.Boolean" DbType="Bit" CanBeNull="true" />
-      <Column Name="Peads_UnBooked" Type="System.Boolean" DbType="Bit" CanBeNull="true" />
-      <Column Name="Peads_DAIHandling" Type="System.Boolean" DbType="Bit" CanBeNull="true" />
-      <Column Name="Peads_ANTURash" Type="System.Boolean" DbType="Bit" CanBeNull="true" />
-      <Column Name="Peads_PIH" Type="System.Boolean" DbType="Bit" CanBeNull="true" />
-      <Column Name="Peads_GDM" Type="System.Boolean" DbType="Bit" CanBeNull="true" />
-      <Column Name="Peads_Vacinated" Type="System.Boolean" DbType="Bit" CanBeNull="true" />
-      <Column Name="Peads_ANTOthers" Type="System.String" DbType="VarChar(500)" CanBeNull="true" />
-      <Column Name="Peads_SVD" Type="System.Boolean" DbType="Bit" CanBeNull="true" />
-      <Column Name="Peads_LSCS" Type="System.Boolean" DbType="Bit" CanBeNull="true" />
-      <Column Name="Peads_Emergency" Type="System.Boolean" DbType="Bit" CanBeNull="true" />
-      <Column Name="Peads_Elective" Type="System.Boolean" DbType="Bit" CanBeNull="true" />
-      <Column Name="Peads_PlaceOfDelivery" Type="System.String" DbType="VarChar(100)" CanBeNull="true" />
-      <Column Name="Peads_IndicationForLSCS" Type="System.String" DbType="VarChar(500)" CanBeNull="true" />
-      <Column Name="Peads_apgerScore1min" Type="System.String" DbType="VarChar(10)" CanBeNull="true" />
-      <Column Name="Peads_apgerScore5min" Type="System.String" DbType="VarChar(10)" CanBeNull="true" />
-      <Column Name="Peads_Resuscitation" Type="System.Boolean" DbType="Bit" CanBeNull="true" />
-      <Column Name="Peads_NatalOthers" Type="System.String" DbType="VarChar(500)" CanBeNull="true" />
-      <Column Name="Peads_Moaning" Type="System.Boolean" DbType="Bit" CanBeNull="true" />
-      <Column Name="Peads_RespDistress" Type="System.Boolean" DbType="Bit" CanBeNull="true" />
-      <Column Name="Peads_PostNATALCyanosis" Type="System.Boolean" DbType="Bit" CanBeNull="true" />
-      <Column Name="Peads_Fits" Type="System.Boolean" DbType="Bit" CanBeNull="true" />
-      <Column Name="Peads_ReluctanceToFeed" Type="System.Boolean" DbType="Bit" CanBeNull="true" />
-      <Column Name="Peads_PostNatalOthers" Type="System.String" DbType="VarChar(500)" CanBeNull="true" />
-      <Column Name="DRE" Type="System.Boolean" DbType="Bit" CanBeNull="true" />
-      <Column Name="Proctoscopy" Type="System.Boolean" DbType="Bit" CanBeNull="true" />
-      <Column Name="Abdominal" Type="System.String" DbType="NVarChar(MAX)" CanBeNull="true" />
-      <Column Name="PA_Gynae" Type="System.String" DbType="NVarChar(MAX)" CanBeNull="true" />
-      <Column Name="PS_Gynae" Type="System.String" DbType="NVarChar(MAX)" CanBeNull="true" />
-      <Column Name="Uterus" Type="System.String" DbType="NVarChar(MAX)" CanBeNull="true" />
-      <Column Name="FX" Type="System.String" DbType="NVarChar(MAX)" CanBeNull="true" />
-      <Column Name="PS_Obs" Type="System.String" DbType="NVarChar(MAX)" CanBeNull="true" />
-      <Column Name="PV_Obs" Type="System.String" DbType="NVarChar(MAX)" CanBeNull="true" />
-      <Column Name="SFH" Type="System.String" DbType="NVarChar(MAX)" CanBeNull="true" />
-      <Column Name="LIE" Type="System.String" DbType="NVarChar(MAX)" CanBeNull="true" />
-      <Column Name="Presentation" Type="System.String" DbType="NVarChar(MAX)" CanBeNull="true" />
-      <Column Name="FHR" Type="System.String" DbType="NVarChar(MAX)" CanBeNull="true" />
-      <Column Name="Engagement" Type="System.String" DbType="NVarChar(MAX)" CanBeNull="true" />
-      <Column Name="Ent_Com_Right_pos" Type="System.String" DbType="NVarChar(150)" CanBeNull="true" />
-      <Column Name="Ent_Com_Left_pos" Type="System.String" DbType="NVarChar(150)" CanBeNull="true" />
-      <Column Name="Ent_Com_Right_Neg" Type="System.String" DbType="NVarChar(150)" CanBeNull="true" />
-      <Column Name="Ent_Com_Left_Neg" Type="System.String" DbType="NVarChar(150)" CanBeNull="true" />
-      <Column Name="Ent_Com_Right_False" Type="System.String" DbType="NVarChar(150)" CanBeNull="true" />
-      <Column Name="Ent_Com_Left_False" Type="System.String" DbType="NVarChar(150)" CanBeNull="true" />
-      <Column Name="Ent_Com_Right_False_Neg" Type="System.String" DbType="NVarChar(150)" CanBeNull="true" />
-      <Column Name="Ent_Com_Left_False_Neg" Type="System.String" DbType="NVarChar(150)" CanBeNull="true" />
-      <Column Name="Ent_Com_Central" Type="System.String" DbType="NVarChar(150)" CanBeNull="true" />
-      <Column Name="Ent_Com_Lateralized" Type="System.String" DbType="NVarChar(150)" CanBeNull="true" />
-      <Column Name="Ent_Com_PTA" Type="System.String" DbType="NVarChar(150)" CanBeNull="true" />
-      <Column Name="Ent_Com_Tympanometry" Type="System.String" DbType="NVarChar(150)" CanBeNull="true" />
-      <Column Name="MUAC" Type="System.String" DbType="NVarChar(150)" CanBeNull="true" />
-      <Column Name="OFC" Type="System.String" DbType="NVarChar(150)" CanBeNull="true" />
-      <Column Name="Heptomology" Type="System.String" DbType="NVarChar(150)" CanBeNull="true" />
-      <Column Name="Splenomegaly" Type="System.String" DbType="NVarChar(150)" CanBeNull="true" />
-      <Column Name="DevelopmentHistory" Type="System.String" DbType="NVarChar(MAX)" CanBeNull="true" />
-      <Column Name="VaccinationHistory" Type="System.String" DbType="NVarChar(MAX)" CanBeNull="true" />
-      <Column Name="NutritionHistory" Type="System.String" DbType="NVarChar(MAX)" CanBeNull="true" />
-      <Column Name="NextPlan" Type="System.String" DbType="NVarChar(150)" CanBeNull="true" />
-      <Column Name="No_medicine" Type="System.Boolean" DbType="Bit" CanBeNull="true" />
-      <Column Name="No_LabTest" Type="System.Boolean" DbType="Bit" CanBeNull="true" />
-      <Column Name="Prepared_Status" Type="System.Boolean" DbType="Bit" CanBeNull="true" />
-      <Column Name="Final_Rec" Type="System.String" DbType="VarChar(1500)" CanBeNull="true" />
-      <Column Name="PDF_File" Type="System.String" DbType="NVarChar(1000)" CanBeNull="true" />
-      <Column Name="reffer_doc" Type="System.Int32" DbType="Int" CanBeNull="true" />
-      <Column Name="spo2" Type="System.String" DbType="NVarChar(100)" CanBeNull="true" />
-      <Column Name="discharge_date" Type="System.DateTime" DbType="DateTime" CanBeNull="true" />
-      <Column Name="Proto" Type="System.String" DbType="NVarChar(200)" CanBeNull="true" />
-      <Column Name="Verbal_Consent" Type="System.String" DbType="NVarChar(150)" CanBeNull="true" />
-      <Column Name="Reg_PatId" Type="System.Int32" DbType="Int" CanBeNull="true" />
-      <Column Name="Voucher_Id" Type="System.Int32" DbType="Int" CanBeNull="true" />
-      <Column Name="Status" Type="System.String" DbType="VarChar(500)" CanBeNull="true" />
-      <Column Name="Follow_Up_Time" Type="System.String" DbType="VarChar(500)" CanBeNull="true" />
-      <Column Name="Smokers" Type="System.Boolean" DbType="Bit" CanBeNull="true" />
-      <Column Name="Non_Smokers" Type="System.Boolean" DbType="Bit" CanBeNull="true" />
-      <Column Name="Diabetics" Type="System.Boolean" DbType="Bit" CanBeNull="true" />
-      <Column Name="Hypertensive" Type="System.Boolean" DbType="Bit" CanBeNull="true" />
     </Type>
   </Table>
   <Table Name="dbo.Gl_Accounts_Log" Member="Gl_Accounts_Logs">
@@ -6548,54 +6136,6 @@
       <Association Name="ItemSelection_Master_ItemSelection_Detail" Member="ItemSelection_Master" ThisKey="Selection_ID" OtherKey="Selection_ID" Type="ItemSelection_Master" IsForeignKey="true" />
     </Type>
   </Table>
-  <Table Name="dbo.Reg_patient" Member="Reg_patients">
-    <Type Name="Reg_patient">
-      <Column Name="pat_id" Type="System.Int32" DbType="Int NOT NULL IDENTITY" IsPrimaryKey="true" IsDbGenerated="true" CanBeNull="false" />
-      <Column Name="Patient_No" Type="System.Int32" DbType="Int" CanBeNull="true" />
-      <Column Name="Full_Name" Type="System.String" DbType="VarChar(100)" CanBeNull="true" />
-      <Column Name="Father_Name" Type="System.String" DbType="VarChar(100)" CanBeNull="true" />
-      <Column Name="Gender" Type="System.String" DbType="VarChar(50)" CanBeNull="true" />
-      <Column Name="Mobile1" Type="System.String" DbType="VarChar(50)" CanBeNull="true" />
-      <Column Name="Age_years" Type="System.String" DbType="VarChar(50)" CanBeNull="true" />
-      <Column Name="NIC" Type="System.String" DbType="VarChar(250)" CanBeNull="true" />
-      <Column Name="Permanent_Address" Type="System.String" DbType="NVarChar(350)" CanBeNull="true" />
-      <Column Name="Created_time" Type="System.DateTime" DbType="DateTime" CanBeNull="true" />
-      <Column Name="Created_by" Type="System.Guid" DbType="UniqueIdentifier" CanBeNull="true" />
-      <Column Name="iscancel" Type="System.Boolean" DbType="Bit" CanBeNull="true" />
-      <Column Name="cancel_by" Type="System.Guid" DbType="UniqueIdentifier" CanBeNull="true" />
-      <Column Name="cancel_time" Type="System.DateTime" DbType="DateTime" CanBeNull="true" />
-      <Column Name="Martial_Status" Type="System.String" DbType="NVarChar(50)" CanBeNull="true" />
-      <Column Name="DOB" Type="System.DateTime" DbType="DateTime" CanBeNull="true" />
-      <Column Name="filter_clinic" Type="System.String" DbType="NVarChar(50)" CanBeNull="true" />
-      <Column Name="mr_no_sequence" Type="System.String" DbType="NVarChar(50)" CanBeNull="true" />
-      <Column Name="Reation_prefix" Type="System.String" DbType="VarChar(500)" CanBeNull="true" />
-      <Column Name="Relation_prefix" Type="System.String" DbType="VarChar(500)" CanBeNull="true" />
-      <Column Name="walkin" Type="System.Boolean" DbType="Bit" CanBeNull="true" />
-      <Column Name="House_No" Type="System.String" DbType="NVarChar(150)" CanBeNull="true" />
-      <Column Name="stno_mno" Type="System.String" DbType="NVarChar(150)" CanBeNull="true" />
-      <Column Name="city" Type="System.String" DbType="NVarChar(150)" CanBeNull="true" />
-      <Column Name="area" Type="System.String" DbType="NVarChar(150)" CanBeNull="true" />
-      <Column Name="val_city" Type="System.String" DbType="NVarChar(150)" CanBeNull="true" />
-      <Column Name="val_area" Type="System.String" DbType="NVarChar(150)" CanBeNull="true" />
-      <Column Name="patients_Seq" Type="System.Int32" DbType="Int" CanBeNull="true" />
-      <Column Name="emergency_walk_in" Type="System.Boolean" DbType="Bit" CanBeNull="true" />
-      <Column Name="State" Type="System.String" DbType="NVarChar(150)" CanBeNull="true" />
-      <Column Name="Blood_Group" Type="System.String" DbType="NVarChar(150)" CanBeNull="true" />
-      <Column Name="Country" Type="System.String" DbType="NVarChar(150)" CanBeNull="true" />
-      <Column Name="Province" Type="System.String" DbType="NVarChar(150)" CanBeNull="true" />
-      <Column Name="Voucher_Id" Type="System.Int32" DbType="Int" CanBeNull="true" />
-      <Column Name="Card_fee" Type="System.Decimal" DbType="Decimal(18,2)" CanBeNull="true" />
-      <Column Name="QRCodePath" Type="System.String" DbType="NVarChar(500)" CanBeNull="true" />
-      <Column Name="other_cnic" Type="System.String" DbType="NVarChar(200)" CanBeNull="true" />
-      <Column Name="Monitoring" Type="System.Boolean" DbType="Bit" CanBeNull="true" />
-      <Column Name="updated_time" Type="System.DateTime" DbType="DateTime" CanBeNull="true" />
-      <Column Name="updated_by" Type="System.Guid" DbType="UniqueIdentifier" CanBeNull="true" />
-      <Column Name="IsRefunded" Type="System.Boolean" DbType="Bit" CanBeNull="true" />
-      <Column Name="Refund_by" Type="System.Guid" DbType="UniqueIdentifier" CanBeNull="true" />
-      <Column Name="Refund_date" Type="System.DateTime" DbType="DateTime" CanBeNull="true" />
-      <Association Name="Reg_patient_Birth_Certificate" Member="Birth_Certificates" ThisKey="pat_id" OtherKey="Patient_ID" Type="Birth_Certificate" />
-    </Type>
-  </Table>
   <Table Name="dbo.Birth_Certificate" Member="Birth_Certificates">
     <Type Name="Birth_Certificate">
       <Column Name="Birth_Certificate_ID" Type="System.Int32" DbType="Int NOT NULL IDENTITY" IsPrimaryKey="true" IsDbGenerated="true" CanBeNull="false" />
@@ -7064,79 +6604,6 @@
       <Column Name="reject_by" Type="System.Guid" DbType="UniqueIdentifier" CanBeNull="true" />
       <Column Name="Is_Addendum" Type="System.Boolean" DbType="Bit" CanBeNull="true" />
       <Column Name="Addendum_Template" Type="System.String" DbType="NVarChar(MAX)" CanBeNull="true" />
-    </Type>
-  </Table>
-  <Table Name="dbo.aspnet_Users" Member="aspnet_Users">
-    <Type Name="aspnet_User">
-      <Column Name="ApplicationId" Type="System.Guid" DbType="UniqueIdentifier NOT NULL" CanBeNull="false" />
-      <Column Name="UserId" Type="System.Guid" DbType="UniqueIdentifier NOT NULL" IsPrimaryKey="true" CanBeNull="false" />
-      <Column Name="UserName" Type="System.String" DbType="NVarChar(256) NOT NULL" CanBeNull="false" />
-      <Column Name="LoweredUserName" Type="System.String" DbType="NVarChar(256) NOT NULL" CanBeNull="false" />
-      <Column Name="MobileAlias" Type="System.String" DbType="NVarChar(16)" CanBeNull="true" />
-      <Column Name="IsAnonymous" Type="System.Boolean" DbType="Bit NOT NULL" CanBeNull="false" />
-      <Column Name="LastActivityDate" Type="System.DateTime" DbType="DateTime NOT NULL" CanBeNull="false" />
-      <Column Name="AllowUnapproveVoucher" Type="System.Boolean" DbType="Bit" CanBeNull="true" />
-      <Column Name="AllowPatientEdit" Type="System.Boolean" DbType="Bit" CanBeNull="true" />
-      <Column Name="AllowPatientDelete" Type="System.Boolean" DbType="Bit" CanBeNull="true" />
-      <Column Name="Emp_Code" Type="System.String" DbType="VarChar(50)" CanBeNull="true" />
-      <Column Name="AllPatientRecords" Type="System.Boolean" DbType="Bit" CanBeNull="true" />
-      <Column Name="AllowToAccessAllTest" Type="System.Boolean" DbType="Bit" CanBeNull="true" />
-      <Column Name="AllowTestRate" Type="System.Boolean" DbType="Bit" CanBeNull="true" />
-      <Column Name="Discount" Type="System.Decimal" DbType="Decimal(18,2)" CanBeNull="true" />
-      <Column Name="Discount_Amount" Type="System.Decimal" DbType="Decimal(18,2)" CanBeNull="true" />
-      <Column Name="BlockUser" Type="System.Boolean" DbType="Bit" CanBeNull="true" />
-      <Column Name="AllowBillDelete" Type="System.Boolean" DbType="Bit" CanBeNull="true" />
-      <Column Name="allowtestbox" Type="System.Boolean" DbType="Bit" CanBeNull="true" />
-      <Column Name="allow_lab" Type="System.Boolean" DbType="Bit" CanBeNull="true" />
-      <Column Name="allow_ultra" Type="System.Boolean" DbType="Bit" CanBeNull="true" />
-      <Column Name="allow_xray" Type="System.Boolean" DbType="Bit" CanBeNull="true" />
-      <Column Name="allow_ctscan" Type="System.Boolean" DbType="Bit" CanBeNull="true" />
-      <Column Name="allow_b_bank" Type="System.Boolean" DbType="Bit" CanBeNull="true" />
-      <Column Name="allow_cardio" Type="System.Boolean" DbType="Bit" CanBeNull="true" />
-      <Column Name="OpdAllow" Type="System.Boolean" DbType="Bit" CanBeNull="true" />
-      <Column Name="AllowPharmacy" Type="System.Boolean" DbType="Bit" CanBeNull="true" />
-      <Column Name="AllowGeneralItems" Type="System.Boolean" DbType="Bit" CanBeNull="true" />
-      <Column Name="IsShowBudget" Type="System.Boolean" DbType="Bit" CanBeNull="true" />
-      <Column Name="IsInventoryUnApprove" Type="System.Boolean" DbType="Bit" CanBeNull="true" />
-      <Column Name="IsNotificationViewed" Type="System.Boolean" DbType="Bit" CanBeNull="true" />
-      <Column Name="AllowSaleReturn" Type="System.Boolean" DbType="Bit" CanBeNull="true" />
-      <Column Name="AllowActiveItems" Type="System.Boolean" DbType="Bit" CanBeNull="true" />
-      <Column Name="Emergency_adm_dis" Type="System.Boolean" DbType="Bit" CanBeNull="true" />
-      <Column Name="EditEmergency" Type="System.Boolean" DbType="Bit" CanBeNull="true" />
-      <Column Name="Allow_emer_disc" Type="System.Boolean" DbType="Bit" CanBeNull="true" />
-      <Column Name="cashier" Type="System.String" DbType="NVarChar(150)" CanBeNull="true" />
-      <Column Name="OTPUsers" Type="System.Boolean" DbType="Bit" CanBeNull="true" />
-      <Column Name="mobileno" Type="System.String" DbType="NVarChar(150)" CanBeNull="true" />
-      <Column Name="AllowRateEdit" Type="System.Boolean" DbType="Bit" CanBeNull="true" />
-      <Column Name="Refer_IPD" Type="System.Boolean" DbType="Bit" CanBeNull="true" />
-      <Column Name="Gl_Account" Type="System.String" DbType="NVarChar(150)" CanBeNull="true" />
-      <Column Name="Allow_bill_edit" Type="System.Boolean" DbType="Bit" CanBeNull="true" />
-      <Column Name="Radiology_result" Type="System.Boolean" DbType="Bit" CanBeNull="true" />
-      <Column Name="Allow_Recipe" Type="System.Boolean" DbType="Bit" CanBeNull="true" />
-      <Column Name="Student_Update" Type="System.Boolean" DbType="Bit" CanBeNull="true" />
-      <Column Name="Radiology_result_Approval" Type="System.Boolean" DbType="Bit" CanBeNull="true" />
-      <Column Name="Allow_RadiologyAllList" Type="System.Boolean" DbType="Bit" CanBeNull="true" />
-      <Column Name="adjustment_Allow" Type="System.Boolean" DbType="Bit" CanBeNull="true" />
-      <Column Name="Approve_radiology" Type="System.Boolean" DbType="Bit" CanBeNull="true" />
-      <Column Name="UnApprove_radiology" Type="System.Boolean" DbType="Bit" CanBeNull="true" />
-      <Column Name="Reject_radiology" Type="System.Boolean" DbType="Bit" CanBeNull="true" />
-      <Column Name="IPD_ALlow_Death_Details" Type="System.Boolean" DbType="Bit" CanBeNull="true" />
-      <Column Name="IPD_Allow_birth_Certifcate" Type="System.Boolean" DbType="Bit" CanBeNull="true" />
-      <Column Name="allow_undischarge" Type="System.Boolean" DbType="Bit" CanBeNull="true" />
-      <Column Name="All_doctor_template" Type="System.Boolean" DbType="Bit" CanBeNull="true" />
-      <Column Name="user_till" Type="System.Boolean" DbType="Bit" CanBeNull="true" />
-      <Column Name="AllowAddPatient" Type="System.Boolean" DbType="Bit" CanBeNull="true" />
-      <Column Name="AllowLineDiscount" Type="System.Boolean" DbType="Bit" CanBeNull="true" />
-      <Column Name="Allow_Sample_list" Type="System.Boolean" DbType="Bit" CanBeNull="true" />
-      <Column Name="AllowTestlistDoctor" Type="System.Boolean" DbType="Bit" CanBeNull="true" />
-      <Column Name="AllowRegisterRefund" Type="System.Boolean" DbType="Bit" CanBeNull="true" />
-      <Column Name="Allow_Return_Queue" Type="System.Boolean" DbType="Bit" CanBeNull="true" />
-      <Column Name="AllowDiscount_assign" Type="System.Boolean" DbType="Bit" CanBeNull="true" />
-      <Association Name="aspnet_User_aspnet_PersonalizationPerUser" Member="aspnet_PersonalizationPerUsers" ThisKey="UserId" OtherKey="UserId" Type="aspnet_PersonalizationPerUser" />
-      <Association Name="aspnet_User_aspnet_Profile" Member="aspnet_Profile" ThisKey="UserId" OtherKey="UserId" Type="aspnet_Profile" Cardinality="One" />
-      <Association Name="aspnet_User_aspnet_UsersInRole" Member="aspnet_UsersInRoles" ThisKey="UserId" OtherKey="UserId" Type="aspnet_UsersInRole" />
-      <Association Name="aspnet_User_aspnet_Membership" Member="aspnet_Membership" ThisKey="UserId" OtherKey="UserId" Type="aspnet_Membership" Cardinality="One" />
-      <Association Name="aspnet_Application_aspnet_User" Member="aspnet_Application" ThisKey="ApplicationId" OtherKey="ApplicationId" Type="aspnet_Application" IsForeignKey="true" />
     </Type>
   </Table>
   <Table Name="dbo.Ar_Billing_Details" Member="Ar_Billing_Details">
@@ -8145,6 +7612,553 @@
       <Column Name="Updated_data" Type="System.String" DbType="NVarChar(MAX)" CanBeNull="true" />
       <Column Name="Loged_by" Type="System.Guid" DbType="UniqueIdentifier" CanBeNull="true" />
       <Column Name="Loged_Time" Type="System.DateTime" DbType="DateTime" CanBeNull="true" />
+    </Type>
+  </Table>
+  <Table Name="dbo.Out_Patient" Member="Out_Patients">
+    <Type Name="Out_Patient">
+      <Column Name="Out_Patient_ID" Type="System.Int32" DbType="Int NOT NULL IDENTITY" IsPrimaryKey="true" IsDbGenerated="true" CanBeNull="false" />
+      <Column Name="Patient_ID" Type="System.Int32" DbType="Int" CanBeNull="true" />
+      <Column Name="OPD_Entry_Date" Type="System.DateTime" DbType="Date" CanBeNull="true" />
+      <Column Name="Suffering_Days" Type="System.String" DbType="VarChar(5)" CanBeNull="true" />
+      <Column Name="Recommended_Department" Type="System.String" DbType="VarChar(5)" CanBeNull="true" />
+      <Column Name="Recommended_Doctor" Type="System.String" DbType="VarChar(5)" CanBeNull="true" />
+      <Column Name="Health_Complaints" Type="System.String" DbType="VarChar(MAX)" CanBeNull="true" />
+      <Column Name="Refering_Doctor" Type="System.String" DbType="VarChar(50)" CanBeNull="true" />
+      <Column Name="pulse_Min" Type="System.String" DbType="VarChar(10)" CanBeNull="true" />
+      <Column Name="BP_mm_Hg" Type="System.String" DbType="VarChar(10)" CanBeNull="true" />
+      <Column Name="Temp_C" Type="System.String" DbType="VarChar(10)" CanBeNull="true" />
+      <Column Name="Respiration_Min" Type="System.String" DbType="VarChar(10)" CanBeNull="true" />
+      <Column Name="Height_Cm" Type="System.String" DbType="VarChar(10)" CanBeNull="true" />
+      <Column Name="Weight_Kg" Type="System.String" DbType="VarChar(10)" CanBeNull="true" />
+      <Column Name="Provisional_Diagnosis" Type="System.String" DbType="VarChar(MAX)" CanBeNull="true" />
+      <Column Name="Patient_Status" Type="System.String" DbType="VarChar(50)" CanBeNull="true" />
+      <Column Name="Refer_To_Hospital" Type="System.String" DbType="VarChar(50)" CanBeNull="true" />
+      <Column Name="Complaints" Type="System.String" DbType="VarChar(50)" CanBeNull="true" />
+      <Column Name="Prior_Reports" Type="System.String" DbType="VarChar(50)" CanBeNull="true" />
+      <Column Name="Medical_Reports" Type="System.String" DbType="VarChar(50)" CanBeNull="true" />
+      <Column Name="Physical_Condition" Type="System.String" DbType="VarChar(MAX)" CanBeNull="true" />
+      <Column Name="Created_By" Type="System.Guid" DbType="UniqueIdentifier" CanBeNull="true" />
+      <Column Name="Created_Time" Type="System.DateTime" DbType="DateTime" CanBeNull="true" />
+      <Column Name="Updated_By" Type="System.Guid" DbType="UniqueIdentifier" CanBeNull="true" />
+      <Column Name="Updated_Time" Type="System.DateTime" DbType="DateTime" CanBeNull="true" />
+      <Column Name="Company_ID" Type="System.Int32" DbType="Int" CanBeNull="true" />
+      <Column Name="Book_ID" Type="System.Int32" DbType="Int" CanBeNull="true" />
+      <Column Name="L_M_P" Type="System.String" DbType="VarChar(500)" CanBeNull="true" />
+      <Column Name="EDD" Type="System.String" DbType="NVarChar(100)" CanBeNull="true" />
+      <Column Name="BSR" Type="System.String" DbType="VarChar(100)" CanBeNull="true" />
+      <Column Name="BMI" Type="System.String" DbType="VarChar(100)" CanBeNull="true" />
+      <Column Name="URG" Type="System.String" DbType="NVarChar(MAX)" CanBeNull="true" />
+      <Column Name="HistoryOfPeresentIllness" Type="System.String" DbType="NVarChar(MAX)" CanBeNull="true" />
+      <Column Name="HistoryOfPastIllness" Type="System.String" DbType="NVarChar(MAX)" CanBeNull="true" />
+      <Column Name="HistoryOfFamily" Type="System.String" DbType="NVarChar(MAX)" CanBeNull="true" />
+      <Column Name="SocioEconomicHistory" Type="System.String" DbType="NVarChar(MAX)" CanBeNull="true" />
+      <Column Name="ObstetricHistory" Type="System.String" DbType="NVarChar(MAX)" CanBeNull="true" />
+      <Column Name="AllergiesHistory" Type="System.String" DbType="NVarChar(MAX)" CanBeNull="true" />
+      <Column Name="TreatmentHistory" Type="System.String" DbType="NVarChar(MAX)" CanBeNull="true" />
+      <Column Name="GIT" Type="System.String" DbType="NVarChar(MAX)" CanBeNull="true" />
+      <Column Name="CVS" Type="System.String" DbType="NVarChar(MAX)" CanBeNull="true" />
+      <Column Name="CNS" Type="System.String" DbType="NVarChar(MAX)" CanBeNull="true" />
+      <Column Name="RESP" Type="System.String" DbType="NVarChar(MAX)" CanBeNull="true" />
+      <Column Name="GYNAE" Type="System.String" DbType="VarChar(MAX)" CanBeNull="true" />
+      <Column Name="ProvisionalDiagnosis" Type="System.String" DbType="NVarChar(MAX)" CanBeNull="true" />
+      <Column Name="chkPallor" Type="System.Boolean" DbType="Bit" CanBeNull="true" />
+      <Column Name="chkunconceed" Type="System.Boolean" DbType="Bit" CanBeNull="true" />
+      <Column Name="edema" Type="System.Boolean" DbType="Bit" CanBeNull="true" />
+      <Column Name="chkJVP" Type="System.Boolean" DbType="Bit" CanBeNull="true" />
+      <Column Name="chkjaundice" Type="System.Boolean" DbType="Bit" CanBeNull="true" />
+      <Column Name="chkaganoris" Type="System.Boolean" DbType="Bit" CanBeNull="true" />
+      <Column Name="hydration" Type="System.Boolean" DbType="Bit" CanBeNull="true" />
+      <Column Name="chk1" Type="System.Boolean" DbType="Bit" CanBeNull="true" />
+      <Column Name="chk2" Type="System.Boolean" DbType="Bit" CanBeNull="true" />
+      <Column Name="chk3" Type="System.Boolean" DbType="Bit" CanBeNull="true" />
+      <Column Name="chk4" Type="System.Boolean" DbType="Bit" CanBeNull="true" />
+      <Column Name="chk5" Type="System.Boolean" DbType="Bit" CanBeNull="true" />
+      <Column Name="chk6" Type="System.Boolean" DbType="Bit" CanBeNull="true" />
+      <Column Name="chk7" Type="System.Boolean" DbType="Bit" CanBeNull="true" />
+      <Column Name="chk8" Type="System.Boolean" DbType="Bit" CanBeNull="true" />
+      <Column Name="txtRemarksHistory" Type="System.String" DbType="NVarChar(MAX)" CanBeNull="true" />
+      <Column Name="txtInputBox1" Type="System.String" DbType="VarChar(500)" CanBeNull="true" />
+      <Column Name="Doctor_ID" Type="System.String" DbType="VarChar(50)" CanBeNull="true" />
+      <Column Name="Designation" Type="System.String" DbType="VarChar(50)" CanBeNull="true" />
+      <Column Name="Administration" Type="System.String" DbType="VarChar(50)" CanBeNull="true" />
+      <Column Name="Control_Date" Type="System.DateTime" DbType="DateTime" CanBeNull="true" />
+      <Column Name="Discharge" Type="System.Boolean" DbType="Bit" CanBeNull="true" />
+      <Column Name="Special_Test" Type="System.String" DbType="VarChar(500)" CanBeNull="true" />
+      <Column Name="Area_Of_Interest" Type="System.String" DbType="VarChar(500)" CanBeNull="true" />
+      <Column Name="Reffer_To" Type="System.String" DbType="VarChar(50)" CanBeNull="true" />
+      <Column Name="Reffer_No" Type="System.String" DbType="VarChar(50)" CanBeNull="true" />
+      <Column Name="Birth_History" Type="System.String" DbType="NVarChar(MAX)" CanBeNull="true" />
+      <Column Name="Drug_History" Type="System.String" DbType="NVarChar(MAX)" CanBeNull="true" />
+      <Column Name="Personal_History" Type="System.String" DbType="NVarChar(MAX)" CanBeNull="true" />
+      <Column Name="Follow_Up" Type="System.String" DbType="VarChar(50)" CanBeNull="true" />
+      <Column Name="Folllow_Date" Type="System.DateTime" DbType="DateTime" CanBeNull="true" />
+      <Column Name="Advice" Type="System.String" DbType="NVarChar(MAX)" CanBeNull="true" />
+      <Column Name="Local" Type="System.String" DbType="NVarChar(MAX)" CanBeNull="true" />
+      <Column Name="Mucculor" Type="System.String" DbType="NVarChar(MAX)" CanBeNull="true" />
+      <Column Name="ENT_Throat_IDL" Type="System.String" DbType="VarChar(200)" CanBeNull="true" />
+      <Column Name="ENT_Throat_Nose" Type="System.String" DbType="VarChar(200)" CanBeNull="true" />
+      <Column Name="ENT_Ear_Right" Type="System.String" DbType="VarChar(200)" CanBeNull="true" />
+      <Column Name="Ent_Ear_Left" Type="System.String" DbType="VarChar(200)" CanBeNull="true" />
+      <Column Name="ENT_Rinnes_Right_PosNeg" Type="System.Boolean" DbType="Bit" CanBeNull="true" />
+      <Column Name="ENT_Rinnes_Lft_PosNeg" Type="System.Boolean" DbType="Bit" CanBeNull="true" />
+      <Column Name="ENT_Rinnes_Right_FalseNeg" Type="System.Boolean" DbType="Bit" CanBeNull="true" />
+      <Column Name="ENT_Rinnes_Lft_FalseNeg" Type="System.Boolean" DbType="Bit" CanBeNull="true" />
+      <Column Name="ENT_Webber_Central" Type="System.Boolean" DbType="Bit" CanBeNull="true" />
+      <Column Name="ENT_Webber_Lateralized" Type="System.Boolean" DbType="Bit" CanBeNull="true" />
+      <Column Name="ENT_Investigation_PTA" Type="System.Boolean" DbType="Bit" CanBeNull="true" />
+      <Column Name="ENT_Investigation_Tympanometry" Type="System.Boolean" DbType="Bit" CanBeNull="true" />
+      <Column Name="Final_Diagnosis" Type="System.String" DbType="VarChar(MAX)" CanBeNull="true" />
+      <Column Name="ENT_Rinnes_Right_Neg" Type="System.Boolean" DbType="Bit" CanBeNull="true" />
+      <Column Name="ENT_Rinnes_Lft_Neg" Type="System.Boolean" DbType="Bit" CanBeNull="true" />
+      <Column Name="ENT_Rinnes_Right_FNeg" Type="System.Boolean" DbType="Bit" CanBeNull="true" />
+      <Column Name="ENT_Rinnes_Lft_FNeg" Type="System.Boolean" DbType="Bit" CanBeNull="true" />
+      <Column Name="Psychiatry_Informant" Type="System.String" DbType="VarChar(200)" CanBeNull="true" />
+      <Column Name="Psychiatry_Source_Referral" Type="System.String" DbType="VarChar(200)" CanBeNull="true" />
+      <Column Name="Psychiatry_Neck_Holding" Type="System.Boolean" DbType="Bit" CanBeNull="true" />
+      <Column Name="Psychiatry_Walking" Type="System.Boolean" DbType="Bit" CanBeNull="true" />
+      <Column Name="Psychiatry_Talking" Type="System.Boolean" DbType="Bit" CanBeNull="true" />
+      <Column Name="Psychiatry_Others" Type="System.Boolean" DbType="Bit" CanBeNull="true" />
+      <Column Name="Psychiatry_Menarche" Type="System.String" DbType="VarChar(200)" CanBeNull="true" />
+      <Column Name="Psychiatry_Menstrual" Type="System.String" DbType="VarChar(200)" CanBeNull="true" />
+      <Column Name="Psychiatry_Attachment_Separation" Type="System.String" DbType="VarChar(200)" CanBeNull="true" />
+      <Column Name="Psychiatry_Health" Type="System.String" DbType="VarChar(200)" CanBeNull="true" />
+      <Column Name="Psychiatry_Nail_Biting" Type="System.String" DbType="VarChar(200)" CanBeNull="true" />
+      <Column Name="Psychiatry_Temper_Tantrums" Type="System.String" DbType="VarChar(200)" CanBeNull="true" />
+      <Column Name="Psychiatry_Bed_Wetting" Type="System.String" DbType="VarChar(200)" CanBeNull="true" />
+      <Column Name="Psychiatry_Academics" Type="System.String" DbType="VarChar(200)" CanBeNull="true" />
+      <Column Name="Psychiatry_Peer_Relationship" Type="System.String" DbType="VarChar(200)" CanBeNull="true" />
+      <Column Name="Psychiatry_Behaviour" Type="System.String" DbType="VarChar(200)" CanBeNull="true" />
+      <Column Name="Psychiatry_Occupational_History" Type="System.String" DbType="VarChar(200)" CanBeNull="true" />
+      <Column Name="Psychiatry_Sexual_History" Type="System.String" DbType="VarChar(200)" CanBeNull="true" />
+      <Column Name="Psychiatry_Substance_Use" Type="System.String" DbType="VarChar(200)" CanBeNull="true" />
+      <Column Name="Psychiatry_Forensic_Use" Type="System.String" DbType="VarChar(200)" CanBeNull="true" />
+      <Column Name="Psychiatry_Relationship" Type="System.String" DbType="VarChar(200)" CanBeNull="true" />
+      <Column Name="Psychiatry_Leisure_Activities" Type="System.String" DbType="VarChar(200)" CanBeNull="true" />
+      <Column Name="Psychiatry_Attitude_Standards" Type="System.String" DbType="VarChar(200)" CanBeNull="true" />
+      <Column Name="Psychiatry_Prevalling_Mood" Type="System.String" DbType="VarChar(200)" CanBeNull="true" />
+      <Column Name="Psychiatry_Reaction_Stress" Type="System.String" DbType="VarChar(200)" CanBeNull="true" />
+      <Column Name="Psychiatry_Religious_Practices" Type="System.String" DbType="VarChar(200)" CanBeNull="true" />
+      <Column Name="Psychiatry_Father" Type="System.String" DbType="VarChar(200)" CanBeNull="true" />
+      <Column Name="Psychiatry_Mother" Type="System.String" DbType="VarChar(200)" CanBeNull="true" />
+      <Column Name="Psychiatry_Siblings" Type="System.String" DbType="VarChar(200)" CanBeNull="true" />
+      <Column Name="Psychiatry_Home_Atmosphere" Type="System.String" DbType="VarChar(200)" CanBeNull="true" />
+      <Column Name="Psychiatry_Familial_Illness" Type="System.String" DbType="VarChar(200)" CanBeNull="true" />
+      <Column Name="Psychiatry_Actual_age" Type="System.String" DbType="VarChar(200)" CanBeNull="true" />
+      <Column Name="Psychiatry_Race" Type="System.String" DbType="VarChar(200)" CanBeNull="true" />
+      <Column Name="Psychiatry_Tattoos_body_scars" Type="System.String" DbType="VarChar(200)" CanBeNull="true" />
+      <Column Name="Psychiatry_Body_Habitus" Type="System.String" DbType="VarChar(200)" CanBeNull="true" />
+      <Column Name="Psychiatry_Dress" Type="System.String" DbType="VarChar(200)" CanBeNull="true" />
+      <Column Name="Psychiatry_Hygiene" Type="System.String" DbType="VarChar(200)" CanBeNull="true" />
+      <Column Name="Psychiatry_Psychomotor_Activity" Type="System.String" DbType="VarChar(200)" CanBeNull="true" />
+      <Column Name="Psychiatry_Involuntary_movements" Type="System.String" DbType="VarChar(200)" CanBeNull="true" />
+      <Column Name="Psychiatry_Dystonia_EPS" Type="System.String" DbType="VarChar(200)" CanBeNull="true" />
+      <Column Name="Psychiatry_Tardive_dyskinesia" Type="System.String" DbType="VarChar(200)" CanBeNull="true" />
+      <Column Name="Psychiatry_Tics" Type="System.String" DbType="VarChar(200)" CanBeNull="true" />
+      <Column Name="Psychiatry_Tremors" Type="System.String" DbType="VarChar(200)" CanBeNull="true" />
+      <Column Name="Psychiatry_Attentiveness_interview" Type="System.String" DbType="VarChar(200)" CanBeNull="true" />
+      <Column Name="Psychiatry_Eye_Contact" Type="System.String" DbType="VarChar(200)" CanBeNull="true" />
+      <Column Name="Psychiatry_Level_Consciousness" Type="System.String" DbType="VarChar(200)" CanBeNull="true" />
+      <Column Name="Psychiatry_Rate" Type="System.String" DbType="VarChar(200)" CanBeNull="true" />
+      <Column Name="Psychiatry_Rhythm" Type="System.String" DbType="VarChar(200)" CanBeNull="true" />
+      <Column Name="Psychiatry_Volume" Type="System.String" DbType="VarChar(200)" CanBeNull="true" />
+      <Column Name="Psychiatry_Tone" Type="System.String" DbType="VarChar(200)" CanBeNull="true" />
+      <Column Name="Psychiatry_Modulation" Type="System.String" DbType="VarChar(200)" CanBeNull="true" />
+      <Column Name="Psychiatry_Depressed" Type="System.String" DbType="VarChar(200)" CanBeNull="true" />
+      <Column Name="Psychiatry_Elated" Type="System.String" DbType="VarChar(200)" CanBeNull="true" />
+      <Column Name="Psychiatry_Irritable" Type="System.String" DbType="VarChar(200)" CanBeNull="true" />
+      <Column Name="Psychiatry_Labile" Type="System.String" DbType="VarChar(200)" CanBeNull="true" />
+      <Column Name="Psychiatry_Incongruent" Type="System.String" DbType="VarChar(200)" CanBeNull="true" />
+      <Column Name="Psychiatry_Blunting_Flattening_Apathy" Type="System.String" DbType="VarChar(200)" CanBeNull="true" />
+      <Column Name="Psychiatry_Thinking" Type="System.String" DbType="VarChar(200)" CanBeNull="true" />
+      <Column Name="Psychiatry_Plans" Type="System.String" DbType="VarChar(200)" CanBeNull="true" />
+      <Column Name="Psychiatry_Actions" Type="System.String" DbType="VarChar(200)" CanBeNull="true" />
+      <Column Name="Psychiatry_Preservative" Type="System.String" DbType="VarChar(200)" CanBeNull="true" />
+      <Column Name="Psychiatry_LoosAssociation" Type="System.String" DbType="VarChar(200)" CanBeNull="true" />
+      <Column Name="Psychiatry_Tangentiaility" Type="System.String" DbType="VarChar(200)" CanBeNull="true" />
+      <Column Name="Psychiatry_Circumstantiality" Type="System.String" DbType="VarChar(200)" CanBeNull="true" />
+      <Column Name="Psychiatry_Flight_Ideas" Type="System.String" DbType="VarChar(200)" CanBeNull="true" />
+      <Column Name="Psychiatry_Thought_Insertion" Type="System.String" DbType="VarChar(200)" CanBeNull="true" />
+      <Column Name="Psychiatry_Thought_Withdrawal" Type="System.String" DbType="VarChar(200)" CanBeNull="true" />
+      <Column Name="Psychiatry_Thought_Broadcasting" Type="System.String" DbType="VarChar(200)" CanBeNull="true" />
+      <Column Name="Psychiatry_Thought_Control" Type="System.String" DbType="VarChar(200)" CanBeNull="true" />
+      <Column Name="Psychiatry_Dellusion" Type="System.String" DbType="VarChar(200)" CanBeNull="true" />
+      <Column Name="Psychiatry_Overvalued_Ideas" Type="System.String" DbType="VarChar(200)" CanBeNull="true" />
+      <Column Name="Psychiatry_Depresonalization" Type="System.String" DbType="VarChar(200)" CanBeNull="true" />
+      <Column Name="Psychiatry_Derealization" Type="System.String" DbType="VarChar(200)" CanBeNull="true" />
+      <Column Name="Psychiatry_Obsession" Type="System.String" DbType="VarChar(200)" CanBeNull="true" />
+      <Column Name="Psychiatry_Phobies" Type="System.String" DbType="VarChar(200)" CanBeNull="true" />
+      <Column Name="Psychiatry_Homocidial_Ideas" Type="System.String" DbType="VarChar(200)" CanBeNull="true" />
+      <Column Name="Psychiatry_Illusion" Type="System.String" DbType="VarChar(200)" CanBeNull="true" />
+      <Column Name="Psychiatry_Hallucination" Type="System.String" DbType="VarChar(200)" CanBeNull="true" />
+      <Column Name="Psychiatry_Orientation_Time" Type="System.String" DbType="VarChar(200)" CanBeNull="true" />
+      <Column Name="Psychiatry_Place" Type="System.String" DbType="VarChar(200)" CanBeNull="true" />
+      <Column Name="Psychiatry_Person" Type="System.String" DbType="VarChar(200)" CanBeNull="true" />
+      <Column Name="Psychiatry_Attention_Concentration" Type="System.String" DbType="VarChar(200)" CanBeNull="true" />
+      <Column Name="Psychiatry_Days_Week" Type="System.String" DbType="VarChar(200)" CanBeNull="true" />
+      <Column Name="Psychiatry_Immediate_Memory" Type="System.String" DbType="VarChar(200)" CanBeNull="true" />
+      <Column Name="Psychiatry_Recent_Events" Type="System.String" DbType="VarChar(200)" CanBeNull="true" />
+      <Column Name="Psychiatry_Adress_Recall_Two" Type="System.String" DbType="VarChar(200)" CanBeNull="true" />
+      <Column Name="Psychiatry_Remote_Events" Type="System.String" DbType="VarChar(200)" CanBeNull="true" />
+      <Column Name="Psychiatry_Adress_Recall_Five" Type="System.String" DbType="VarChar(200)" CanBeNull="true" />
+      <Column Name="Psychiatry_General_knowledge" Type="System.String" DbType="VarChar(200)" CanBeNull="true" />
+      <Column Name="Psychiatry_Arthemetic_Calculation" Type="System.String" DbType="VarChar(200)" CanBeNull="true" />
+      <Column Name="Psychiatry_Abstraction" Type="System.String" DbType="VarChar(200)" CanBeNull="true" />
+      <Column Name="Psychiatry_Insight" Type="System.String" DbType="VarChar(200)" CanBeNull="true" />
+      <Column Name="DermaFace" Type="System.String" DbType="VarChar(500)" CanBeNull="true" />
+      <Column Name="DermaNeck" Type="System.String" DbType="VarChar(500)" CanBeNull="true" />
+      <Column Name="DermaTrunk" Type="System.String" DbType="VarChar(500)" CanBeNull="true" />
+      <Column Name="DermaUpperLimb" Type="System.String" DbType="VarChar(500)" CanBeNull="true" />
+      <Column Name="DermaLowerLimb" Type="System.String" DbType="VarChar(500)" CanBeNull="true" />
+      <Column Name="DermaFlexures" Type="System.String" DbType="VarChar(500)" CanBeNull="true" />
+      <Column Name="DermaGenitalias" Type="System.String" DbType="VarChar(500)" CanBeNull="true" />
+      <Column Name="DermaHair" Type="System.String" DbType="VarChar(500)" CanBeNull="true" />
+      <Column Name="DermaNail" Type="System.String" DbType="VarChar(500)" CanBeNull="true" />
+      <Column Name="DermaMucousMembrane" Type="System.String" DbType="VarChar(500)" CanBeNull="true" />
+      <Column Name="DermaEyes" Type="System.String" DbType="VarChar(500)" CanBeNull="true" />
+      <Column Name="DermaEars" Type="System.String" DbType="VarChar(500)" CanBeNull="true" />
+      <Column Name="DermaNose" Type="System.String" DbType="VarChar(500)" CanBeNull="true" />
+      <Column Name="DermaLips" Type="System.String" DbType="VarChar(500)" CanBeNull="true" />
+      <Column Name="Psychiatry_HBM_Problem" Type="System.String" DbType="VarChar(200)" CanBeNull="true" />
+      <Column Name="Psychiatry_HBM_Caused" Type="System.String" DbType="VarChar(200)" CanBeNull="true" />
+      <Column Name="Psychiatry_HBM_Started" Type="System.String" DbType="VarChar(200)" CanBeNull="true" />
+      <Column Name="Psychiatry_HBM_Course" Type="System.String" DbType="VarChar(200)" CanBeNull="true" />
+      <Column Name="Psychiatry_HBM_Treatment" Type="System.String" DbType="VarChar(200)" CanBeNull="true" />
+      <Column Name="Psychiatry_HBM_Effects" Type="System.String" DbType="VarChar(200)" CanBeNull="true" />
+      <Column Name="Psychiatry_PE_Pluse" Type="System.String" DbType="VarChar(50)" CanBeNull="true" />
+      <Column Name="Psychiatry_PE_BP" Type="System.String" DbType="VarChar(50)" CanBeNull="true" />
+      <Column Name="Psychiatry_PE_Temperature" Type="System.String" DbType="VarChar(50)" CanBeNull="true" />
+      <Column Name="Psychiatry_PE_Weight" Type="System.String" DbType="VarChar(50)" CanBeNull="true" />
+      <Column Name="Psychiatry_PE_RespiratoryRate" Type="System.String" DbType="VarChar(50)" CanBeNull="true" />
+      <Column Name="Psychiatry_PE_Jaundice" Type="System.String" DbType="VarChar(50)" CanBeNull="true" />
+      <Column Name="Psychiatry_PE_Anemia" Type="System.String" DbType="VarChar(50)" CanBeNull="true" />
+      <Column Name="Psychiatry_PE_Cyanosis" Type="System.String" DbType="VarChar(50)" CanBeNull="true" />
+      <Column Name="Psychiatry_PE_Clubbing" Type="System.String" DbType="VarChar(50)" CanBeNull="true" />
+      <Column Name="Psychiatry_PE_JVP" Type="System.String" DbType="VarChar(50)" CanBeNull="true" />
+      <Column Name="Psychiatry_PE_LymphNodes" Type="System.String" DbType="VarChar(50)" CanBeNull="true" />
+      <Column Name="Psychiatry_PE_Edema" Type="System.String" DbType="VarChar(50)" CanBeNull="true" />
+      <Column Name="Psychiatry_PE_Respiratory" Type="System.String" DbType="VarChar(200)" CanBeNull="true" />
+      <Column Name="Psychiatry_PE_Cardiovascular" Type="System.String" DbType="VarChar(200)" CanBeNull="true" />
+      <Column Name="Psychiatry_PE_Gastro_Intestinal" Type="System.String" DbType="VarChar(200)" CanBeNull="true" />
+      <Column Name="Psychiatry_PE_Observation" Type="System.String" DbType="VarChar(300)" CanBeNull="true" />
+      <Column Name="Psychiatry_PE_Cranial_Nerves" Type="System.String" DbType="VarChar(500)" CanBeNull="true" />
+      <Column Name="Psychiatry_PE_Limb_Strength" Type="System.String" DbType="VarChar(200)" CanBeNull="true" />
+      <Column Name="Psychiatry_PE_Spasticity" Type="System.String" DbType="VarChar(200)" CanBeNull="true" />
+      <Column Name="Psychiatry_PE_Position" Type="System.String" DbType="VarChar(50)" CanBeNull="true" />
+      <Column Name="Psychiatry_PE_Vibration" Type="System.String" DbType="VarChar(50)" CanBeNull="true" />
+      <Column Name="Psychiatry_PE_Stereognosis" Type="System.String" DbType="VarChar(50)" CanBeNull="true" />
+      <Column Name="Psychiatry_PE_Pain" Type="System.String" DbType="VarChar(50)" CanBeNull="true" />
+      <Column Name="Psychiatry_PE_Biceps" Type="System.String" DbType="VarChar(50)" CanBeNull="true" />
+      <Column Name="Psychiatry_PE_Triceps" Type="System.String" DbType="VarChar(50)" CanBeNull="true" />
+      <Column Name="Psychiatry_PE_Brachioradialis" Type="System.String" DbType="VarChar(50)" CanBeNull="true" />
+      <Column Name="Psychiatry_PE_Quadriceps" Type="System.String" DbType="VarChar(50)" CanBeNull="true" />
+      <Column Name="Psychiatry_PE_Patellar" Type="System.String" DbType="VarChar(50)" CanBeNull="true" />
+      <Column Name="Psychiatry_PE_Achilles" Type="System.String" DbType="VarChar(50)" CanBeNull="true" />
+      <Column Name="Psychiatry_PE_Extensor" Type="System.String" DbType="VarChar(50)" CanBeNull="true" />
+      <Column Name="Psychiatry_PE_Frontal" Type="System.String" DbType="VarChar(50)" CanBeNull="true" />
+      <Column Name="Psychiatry_PE_Finger" Type="System.String" DbType="VarChar(50)" CanBeNull="true" />
+      <Column Name="Psychiatry_PE_Heel" Type="System.String" DbType="VarChar(50)" CanBeNull="true" />
+      <Column Name="Psychiatry_PE_Movements" Type="System.String" DbType="VarChar(50)" CanBeNull="true" />
+      <Column Name="Psychiatry_PE_Gait" Type="System.String" DbType="VarChar(50)" CanBeNull="true" />
+      <Column Name="Psychiatry_PE_Neck_Rigidity" Type="System.Boolean" DbType="Bit" CanBeNull="true" />
+      <Column Name="Psychiatry_PE_Kerning_Sign" Type="System.Boolean" DbType="Bit" CanBeNull="true" />
+      <Column Name="Psychiatry_PE_Brudzinki_Sign" Type="System.Boolean" DbType="Bit" CanBeNull="true" />
+      <Column Name="Psychiatry_For_Summary" Type="System.String" DbType="VarChar(500)" CanBeNull="true" />
+      <Column Name="Psychiatry_For_Diagnosis" Type="System.String" DbType="VarChar(200)" CanBeNull="true" />
+      <Column Name="Psychiatry_For_AxisI" Type="System.String" DbType="VarChar(200)" CanBeNull="true" />
+      <Column Name="Psychiatry_For_AxisII" Type="System.String" DbType="VarChar(200)" CanBeNull="true" />
+      <Column Name="Psychiatry_For_AxisIII" Type="System.String" DbType="VarChar(200)" CanBeNull="true" />
+      <Column Name="Psychiatry_For_AxisIV" Type="System.String" DbType="VarChar(200)" CanBeNull="true" />
+      <Column Name="Psychiatry_For_AxisV" Type="System.String" DbType="VarChar(200)" CanBeNull="true" />
+      <Column Name="Psychiatry_For_PredisposingFactors" Type="System.String" DbType="VarChar(200)" CanBeNull="true" />
+      <Column Name="Psychiatry_For_PrecipitatingFactors" Type="System.String" DbType="VarChar(200)" CanBeNull="true" />
+      <Column Name="Psychiatry_For_PrepetuatingFactors" Type="System.String" DbType="VarChar(200)" CanBeNull="true" />
+      <Column Name="Psychiatry_For_Investigation" Type="System.String" DbType="VarChar(300)" CanBeNull="true" />
+      <Column Name="Psychiatry_For_Medical" Type="System.String" DbType="VarChar(300)" CanBeNull="true" />
+      <Column Name="Psychiatry_For_Psychological" Type="System.String" DbType="VarChar(500)" CanBeNull="true" />
+      <Column Name="Psychiatry_Major_Issues" Type="System.String" DbType="VarChar(500)" CanBeNull="true" />
+      <Column Name="Psychiatry_For_Strengths" Type="System.String" DbType="VarChar(500)" CanBeNull="true" />
+      <Column Name="Psychiatry_For_Goals" Type="System.String" DbType="VarChar(500)" CanBeNull="true" />
+      <Column Name="Psychiatry_For_Strategies" Type="System.String" DbType="VarChar(500)" CanBeNull="true" />
+      <Column Name="Peads_weight" Type="System.String" DbType="VarChar(50)" CanBeNull="true" />
+      <Column Name="Peads_Length" Type="System.String" DbType="VarChar(50)" CanBeNull="true" />
+      <Column Name="Peads_HC" Type="System.String" DbType="VarChar(50)" CanBeNull="true" />
+      <Column Name="Peads_General_Appearance" Type="System.String" DbType="VarChar(300)" CanBeNull="true" />
+      <Column Name="Peads_Cyanosis" Type="System.Boolean" DbType="Bit" CanBeNull="true" />
+      <Column Name="Peads_Jaundice" Type="System.Boolean" DbType="Bit" CanBeNull="true" />
+      <Column Name="Peads_Lethargy" Type="System.Boolean" DbType="Bit" CanBeNull="true" />
+      <Column Name="Peads_Rash" Type="System.Boolean" DbType="Bit" CanBeNull="true" />
+      <Column Name="Peads_Others" Type="System.String" DbType="VarChar(500)" CanBeNull="true" />
+      <Column Name="Peads_Caput" Type="System.Boolean" DbType="Bit" CanBeNull="true" />
+      <Column Name="Peads_Cephalhematoma" Type="System.Boolean" DbType="Bit" CanBeNull="true" />
+      <Column Name="Peads_Anterioropen" Type="System.Boolean" DbType="Bit" CanBeNull="true" />
+      <Column Name="Peads_AnteriorClose" Type="System.Boolean" DbType="Bit" CanBeNull="true" />
+      <Column Name="Peads_Dextrocardia" Type="System.Boolean" DbType="Bit" CanBeNull="true" />
+      <Column Name="Peads_Bulging" Type="System.Boolean" DbType="Bit" CanBeNull="true" />
+      <Column Name="Peads_Murmur" Type="System.Boolean" DbType="Bit" CanBeNull="true" />
+      <Column Name="Peads_HeartSound" Type="System.String" DbType="VarChar(200)" CanBeNull="true" />
+      <Column Name="Peads_Nasal" Type="System.Boolean" DbType="Bit" CanBeNull="true" />
+      <Column Name="Peads_Recessions" Type="System.Boolean" DbType="Bit" CanBeNull="true" />
+      <Column Name="Peads_AddedSounds" Type="System.String" DbType="VarChar(200)" CanBeNull="true" />
+      <Column Name="Peads_Flat" Type="System.Boolean" DbType="Bit" CanBeNull="true" />
+      <Column Name="Peads_Distended" Type="System.Boolean" DbType="Bit" CanBeNull="true" />
+      <Column Name="Peads_Scaphoid" Type="System.Boolean" DbType="Bit" CanBeNull="true" />
+      <Column Name="Peads_Liver" Type="System.Boolean" DbType="Bit" CanBeNull="true" />
+      <Column Name="Peads_Spleen" Type="System.Boolean" DbType="Bit" CanBeNull="true" />
+      <Column Name="Peads_GITOthers" Type="System.String" DbType="VarChar(500)" CanBeNull="true" />
+      <Column Name="Peads_Sucking" Type="System.Boolean" DbType="Bit" CanBeNull="true" />
+      <Column Name="Peads_Rooting" Type="System.Boolean" DbType="Bit" CanBeNull="true" />
+      <Column Name="Peads_Moro" Type="System.Boolean" DbType="Bit" CanBeNull="true" />
+      <Column Name="Peads_CNSOthers" Type="System.String" DbType="VarChar(500)" CanBeNull="true" />
+      <Column Name="Peads_FullTerm" Type="System.Boolean" DbType="Bit" CanBeNull="true" />
+      <Column Name="Peads_PreTerm" Type="System.Boolean" DbType="Bit" CanBeNull="true" />
+      <Column Name="Peads_DateOfDelivery" Type="System.DateTime" DbType="Date" CanBeNull="true" />
+      <Column Name="Peads_TimeOfDelivery" Type="System.String" DbType="VarChar(10)" CanBeNull="true" />
+      <Column Name="Peads_Booked" Type="System.Boolean" DbType="Bit" CanBeNull="true" />
+      <Column Name="Peads_UnBooked" Type="System.Boolean" DbType="Bit" CanBeNull="true" />
+      <Column Name="Peads_DAIHandling" Type="System.Boolean" DbType="Bit" CanBeNull="true" />
+      <Column Name="Peads_ANTURash" Type="System.Boolean" DbType="Bit" CanBeNull="true" />
+      <Column Name="Peads_PIH" Type="System.Boolean" DbType="Bit" CanBeNull="true" />
+      <Column Name="Peads_GDM" Type="System.Boolean" DbType="Bit" CanBeNull="true" />
+      <Column Name="Peads_Vacinated" Type="System.Boolean" DbType="Bit" CanBeNull="true" />
+      <Column Name="Peads_ANTOthers" Type="System.String" DbType="VarChar(500)" CanBeNull="true" />
+      <Column Name="Peads_SVD" Type="System.Boolean" DbType="Bit" CanBeNull="true" />
+      <Column Name="Peads_LSCS" Type="System.Boolean" DbType="Bit" CanBeNull="true" />
+      <Column Name="Peads_Emergency" Type="System.Boolean" DbType="Bit" CanBeNull="true" />
+      <Column Name="Peads_Elective" Type="System.Boolean" DbType="Bit" CanBeNull="true" />
+      <Column Name="Peads_PlaceOfDelivery" Type="System.String" DbType="VarChar(100)" CanBeNull="true" />
+      <Column Name="Peads_IndicationForLSCS" Type="System.String" DbType="VarChar(500)" CanBeNull="true" />
+      <Column Name="Peads_apgerScore1min" Type="System.String" DbType="VarChar(10)" CanBeNull="true" />
+      <Column Name="Peads_apgerScore5min" Type="System.String" DbType="VarChar(10)" CanBeNull="true" />
+      <Column Name="Peads_Resuscitation" Type="System.Boolean" DbType="Bit" CanBeNull="true" />
+      <Column Name="Peads_NatalOthers" Type="System.String" DbType="VarChar(500)" CanBeNull="true" />
+      <Column Name="Peads_Moaning" Type="System.Boolean" DbType="Bit" CanBeNull="true" />
+      <Column Name="Peads_RespDistress" Type="System.Boolean" DbType="Bit" CanBeNull="true" />
+      <Column Name="Peads_PostNATALCyanosis" Type="System.Boolean" DbType="Bit" CanBeNull="true" />
+      <Column Name="Peads_Fits" Type="System.Boolean" DbType="Bit" CanBeNull="true" />
+      <Column Name="Peads_ReluctanceToFeed" Type="System.Boolean" DbType="Bit" CanBeNull="true" />
+      <Column Name="Peads_PostNatalOthers" Type="System.String" DbType="VarChar(500)" CanBeNull="true" />
+      <Column Name="DRE" Type="System.Boolean" DbType="Bit" CanBeNull="true" />
+      <Column Name="Proctoscopy" Type="System.Boolean" DbType="Bit" CanBeNull="true" />
+      <Column Name="Abdominal" Type="System.String" DbType="NVarChar(MAX)" CanBeNull="true" />
+      <Column Name="PA_Gynae" Type="System.String" DbType="NVarChar(MAX)" CanBeNull="true" />
+      <Column Name="PS_Gynae" Type="System.String" DbType="NVarChar(MAX)" CanBeNull="true" />
+      <Column Name="Uterus" Type="System.String" DbType="NVarChar(MAX)" CanBeNull="true" />
+      <Column Name="FX" Type="System.String" DbType="NVarChar(MAX)" CanBeNull="true" />
+      <Column Name="PS_Obs" Type="System.String" DbType="NVarChar(MAX)" CanBeNull="true" />
+      <Column Name="PV_Obs" Type="System.String" DbType="NVarChar(MAX)" CanBeNull="true" />
+      <Column Name="SFH" Type="System.String" DbType="NVarChar(MAX)" CanBeNull="true" />
+      <Column Name="LIE" Type="System.String" DbType="NVarChar(MAX)" CanBeNull="true" />
+      <Column Name="Presentation" Type="System.String" DbType="NVarChar(MAX)" CanBeNull="true" />
+      <Column Name="FHR" Type="System.String" DbType="NVarChar(MAX)" CanBeNull="true" />
+      <Column Name="Engagement" Type="System.String" DbType="NVarChar(MAX)" CanBeNull="true" />
+      <Column Name="Ent_Com_Right_pos" Type="System.String" DbType="NVarChar(150)" CanBeNull="true" />
+      <Column Name="Ent_Com_Left_pos" Type="System.String" DbType="NVarChar(150)" CanBeNull="true" />
+      <Column Name="Ent_Com_Right_Neg" Type="System.String" DbType="NVarChar(150)" CanBeNull="true" />
+      <Column Name="Ent_Com_Left_Neg" Type="System.String" DbType="NVarChar(150)" CanBeNull="true" />
+      <Column Name="Ent_Com_Right_False" Type="System.String" DbType="NVarChar(150)" CanBeNull="true" />
+      <Column Name="Ent_Com_Left_False" Type="System.String" DbType="NVarChar(150)" CanBeNull="true" />
+      <Column Name="Ent_Com_Right_False_Neg" Type="System.String" DbType="NVarChar(150)" CanBeNull="true" />
+      <Column Name="Ent_Com_Left_False_Neg" Type="System.String" DbType="NVarChar(150)" CanBeNull="true" />
+      <Column Name="Ent_Com_Central" Type="System.String" DbType="NVarChar(150)" CanBeNull="true" />
+      <Column Name="Ent_Com_Lateralized" Type="System.String" DbType="NVarChar(150)" CanBeNull="true" />
+      <Column Name="Ent_Com_PTA" Type="System.String" DbType="NVarChar(150)" CanBeNull="true" />
+      <Column Name="Ent_Com_Tympanometry" Type="System.String" DbType="NVarChar(150)" CanBeNull="true" />
+      <Column Name="MUAC" Type="System.String" DbType="NVarChar(150)" CanBeNull="true" />
+      <Column Name="OFC" Type="System.String" DbType="NVarChar(150)" CanBeNull="true" />
+      <Column Name="Heptomology" Type="System.String" DbType="NVarChar(150)" CanBeNull="true" />
+      <Column Name="Splenomegaly" Type="System.String" DbType="NVarChar(150)" CanBeNull="true" />
+      <Column Name="DevelopmentHistory" Type="System.String" DbType="NVarChar(MAX)" CanBeNull="true" />
+      <Column Name="VaccinationHistory" Type="System.String" DbType="NVarChar(MAX)" CanBeNull="true" />
+      <Column Name="NutritionHistory" Type="System.String" DbType="NVarChar(MAX)" CanBeNull="true" />
+      <Column Name="NextPlan" Type="System.String" DbType="NVarChar(150)" CanBeNull="true" />
+      <Column Name="No_medicine" Type="System.Boolean" DbType="Bit" CanBeNull="true" />
+      <Column Name="No_LabTest" Type="System.Boolean" DbType="Bit" CanBeNull="true" />
+      <Column Name="Prepared_Status" Type="System.Boolean" DbType="Bit" CanBeNull="true" />
+      <Column Name="Final_Rec" Type="System.String" DbType="VarChar(1500)" CanBeNull="true" />
+      <Column Name="PDF_File" Type="System.String" DbType="NVarChar(1000)" CanBeNull="true" />
+      <Column Name="reffer_doc" Type="System.Int32" DbType="Int" CanBeNull="true" />
+      <Column Name="spo2" Type="System.String" DbType="NVarChar(100)" CanBeNull="true" />
+      <Column Name="discharge_date" Type="System.DateTime" DbType="DateTime" CanBeNull="true" />
+      <Column Name="Proto" Type="System.String" DbType="NVarChar(200)" CanBeNull="true" />
+      <Column Name="Verbal_Consent" Type="System.String" DbType="NVarChar(150)" CanBeNull="true" />
+      <Column Name="Reg_PatId" Type="System.Int32" DbType="Int" CanBeNull="true" />
+      <Column Name="Voucher_Id" Type="System.Int32" DbType="Int" CanBeNull="true" />
+      <Column Name="Status" Type="System.String" DbType="VarChar(500)" CanBeNull="true" />
+      <Column Name="Follow_Up_Time" Type="System.String" DbType="VarChar(500)" CanBeNull="true" />
+      <Column Name="Smokers" Type="System.Boolean" DbType="Bit" CanBeNull="true" />
+      <Column Name="Non_Smokers" Type="System.Boolean" DbType="Bit" CanBeNull="true" />
+      <Column Name="Diabetics" Type="System.Boolean" DbType="Bit" CanBeNull="true" />
+      <Column Name="Hypertensive" Type="System.Boolean" DbType="Bit" CanBeNull="true" />
+      <Column Name="Type" Type="System.String" DbType="VarChar(50)" CanBeNull="true" />
+      <Column Name="Naswar_Smokeless" Type="System.Boolean" DbType="Bit" CanBeNull="true" />
+      <Column Name="Alcohol_Consumption" Type="System.Boolean" DbType="Bit" CanBeNull="true" />
+      <Column Name="HTN" Type="System.Boolean" DbType="Bit" CanBeNull="true" />
+      <Column Name="DM" Type="System.Boolean" DbType="Bit" CanBeNull="true" />
+      <Column Name="TB" Type="System.Boolean" DbType="Bit" CanBeNull="true" />
+      <Column Name="IHD" Type="System.Boolean" DbType="Bit" CanBeNull="true" />
+      <Column Name="Asthma" Type="System.Boolean" DbType="Bit" CanBeNull="true" />
+    </Type>
+  </Table>
+  <Table Name="dbo.OutPatients_Protos" Member="OutPatients_Protos">
+    <Type Name="OutPatients_Proto">
+      <Column Name="Proto_id" Type="System.Int32" DbType="Int NOT NULL IDENTITY" IsPrimaryKey="true" IsDbGenerated="true" CanBeNull="false" />
+      <Column Name="Patient_Id" Type="System.Int32" DbType="Int" CanBeNull="true" />
+      <Column Name="Outpatient_id" Type="System.Int32" DbType="Int" CanBeNull="true" />
+      <Column Name="ProtoId" Type="System.String" DbType="NVarChar(100)" CanBeNull="true" />
+      <Column Name="Proto_Description" Type="System.String" DbType="NVarChar(MAX)" CanBeNull="true" />
+      <Column Name="In_Patient_ID" Type="System.Int32" DbType="Int" CanBeNull="true" />
+    </Type>
+  </Table>
+  <Table Name="dbo.OutPatientPrimaryDiagnosis" Member="OutPatientPrimaryDiagnosis">
+    <Type Name="OutPatientPrimaryDiagnosi">
+      <Column Name="ID" Type="System.Int32" DbType="Int NOT NULL IDENTITY" IsPrimaryKey="true" IsDbGenerated="true" CanBeNull="false" />
+      <Column Name="OutPatientID" Type="System.Int32" DbType="Int NOT NULL" CanBeNull="false" />
+      <Column Name="PatientID" Type="System.Int32" DbType="Int NOT NULL" CanBeNull="false" />
+      <Column Name="DiagnosisID" Type="System.Int32" DbType="Int NOT NULL" CanBeNull="false" />
+      <Column Name="Remarks" Type="System.String" DbType="VarChar(100)" CanBeNull="true" />
+      <Column Name="In_Patient_ID" Type="System.Int32" DbType="Int" CanBeNull="true" />
+    </Type>
+  </Table>
+  <Table Name="dbo.OutPatientFinalDiagnosis" Member="OutPatientFinalDiagnosis">
+    <Type Name="OutPatientFinalDiagnosi">
+      <Column Name="ID" Type="System.Int32" DbType="Int NOT NULL IDENTITY" IsPrimaryKey="true" IsDbGenerated="true" CanBeNull="false" />
+      <Column Name="OutPatientID" Type="System.Int32" DbType="Int NOT NULL" CanBeNull="false" />
+      <Column Name="PatientID" Type="System.Int32" DbType="Int NOT NULL" CanBeNull="false" />
+      <Column Name="DiagnosisID" Type="System.Int32" DbType="Int NOT NULL" CanBeNull="false" />
+      <Column Name="Remarks" Type="System.String" DbType="Text" CanBeNull="true" UpdateCheck="Never" />
+      <Column Name="In_Patient_ID" Type="System.Int32" DbType="Int" CanBeNull="true" />
+    </Type>
+  </Table>
+  <Table Name="dbo.OutPatientComplaints" Member="OutPatientComplaints">
+    <Type Name="OutPatientComplaint">
+      <Column Name="ID" Type="System.Int32" DbType="Int NOT NULL IDENTITY" IsPrimaryKey="true" IsDbGenerated="true" CanBeNull="false" />
+      <Column Name="OutPatientID" Type="System.Int32" DbType="Int NOT NULL" CanBeNull="false" />
+      <Column Name="PatientID" Type="System.Int32" DbType="Int NOT NULL" CanBeNull="false" />
+      <Column Name="ComplaintID" Type="System.Int32" DbType="Int NOT NULL" CanBeNull="false" />
+      <Column Name="In_Patient_ID" Type="System.Int32" DbType="Int" CanBeNull="true" />
+    </Type>
+  </Table>
+  <Table Name="dbo.aspnet_Users" Member="aspnet_Users">
+    <Type Name="aspnet_User">
+      <Column Name="ApplicationId" Type="System.Guid" DbType="UniqueIdentifier NOT NULL" CanBeNull="false" />
+      <Column Name="UserId" Type="System.Guid" DbType="UniqueIdentifier NOT NULL" IsPrimaryKey="true" CanBeNull="false" />
+      <Column Name="UserName" Type="System.String" DbType="NVarChar(256) NOT NULL" CanBeNull="false" />
+      <Column Name="LoweredUserName" Type="System.String" DbType="NVarChar(256) NOT NULL" CanBeNull="false" />
+      <Column Name="MobileAlias" Type="System.String" DbType="NVarChar(16)" CanBeNull="true" />
+      <Column Name="IsAnonymous" Type="System.Boolean" DbType="Bit NOT NULL" CanBeNull="false" />
+      <Column Name="LastActivityDate" Type="System.DateTime" DbType="DateTime NOT NULL" CanBeNull="false" />
+      <Column Name="AllowUnapproveVoucher" Type="System.Boolean" DbType="Bit" CanBeNull="true" />
+      <Column Name="AllowPatientEdit" Type="System.Boolean" DbType="Bit" CanBeNull="true" />
+      <Column Name="AllowPatientDelete" Type="System.Boolean" DbType="Bit" CanBeNull="true" />
+      <Column Name="Emp_Code" Type="System.String" DbType="VarChar(50)" CanBeNull="true" />
+      <Column Name="AllPatientRecords" Type="System.Boolean" DbType="Bit" CanBeNull="true" />
+      <Column Name="AllowToAccessAllTest" Type="System.Boolean" DbType="Bit" CanBeNull="true" />
+      <Column Name="AllowTestRate" Type="System.Boolean" DbType="Bit" CanBeNull="true" />
+      <Column Name="Discount" Type="System.Decimal" DbType="Decimal(18,2)" CanBeNull="true" />
+      <Column Name="Discount_Amount" Type="System.Decimal" DbType="Decimal(18,2)" CanBeNull="true" />
+      <Column Name="BlockUser" Type="System.Boolean" DbType="Bit" CanBeNull="true" />
+      <Column Name="AllowBillDelete" Type="System.Boolean" DbType="Bit" CanBeNull="true" />
+      <Column Name="allowtestbox" Type="System.Boolean" DbType="Bit" CanBeNull="true" />
+      <Column Name="allow_lab" Type="System.Boolean" DbType="Bit" CanBeNull="true" />
+      <Column Name="allow_ultra" Type="System.Boolean" DbType="Bit" CanBeNull="true" />
+      <Column Name="allow_xray" Type="System.Boolean" DbType="Bit" CanBeNull="true" />
+      <Column Name="allow_ctscan" Type="System.Boolean" DbType="Bit" CanBeNull="true" />
+      <Column Name="allow_b_bank" Type="System.Boolean" DbType="Bit" CanBeNull="true" />
+      <Column Name="allow_cardio" Type="System.Boolean" DbType="Bit" CanBeNull="true" />
+      <Column Name="OpdAllow" Type="System.Boolean" DbType="Bit" CanBeNull="true" />
+      <Column Name="AllowPharmacy" Type="System.Boolean" DbType="Bit" CanBeNull="true" />
+      <Column Name="AllowGeneralItems" Type="System.Boolean" DbType="Bit" CanBeNull="true" />
+      <Column Name="IsShowBudget" Type="System.Boolean" DbType="Bit" CanBeNull="true" />
+      <Column Name="IsInventoryUnApprove" Type="System.Boolean" DbType="Bit" CanBeNull="true" />
+      <Column Name="IsNotificationViewed" Type="System.Boolean" DbType="Bit" CanBeNull="true" />
+      <Column Name="AllowSaleReturn" Type="System.Boolean" DbType="Bit" CanBeNull="true" />
+      <Column Name="AllowActiveItems" Type="System.Boolean" DbType="Bit" CanBeNull="true" />
+      <Column Name="Emergency_adm_dis" Type="System.Boolean" DbType="Bit" CanBeNull="true" />
+      <Column Name="EditEmergency" Type="System.Boolean" DbType="Bit" CanBeNull="true" />
+      <Column Name="Allow_emer_disc" Type="System.Boolean" DbType="Bit" CanBeNull="true" />
+      <Column Name="cashier" Type="System.String" DbType="NVarChar(150)" CanBeNull="true" />
+      <Column Name="OTPUsers" Type="System.Boolean" DbType="Bit" CanBeNull="true" />
+      <Column Name="mobileno" Type="System.String" DbType="NVarChar(150)" CanBeNull="true" />
+      <Column Name="AllowRateEdit" Type="System.Boolean" DbType="Bit" CanBeNull="true" />
+      <Column Name="Refer_IPD" Type="System.Boolean" DbType="Bit" CanBeNull="true" />
+      <Column Name="Gl_Account" Type="System.String" DbType="NVarChar(150)" CanBeNull="true" />
+      <Column Name="Allow_bill_edit" Type="System.Boolean" DbType="Bit" CanBeNull="true" />
+      <Column Name="Radiology_result" Type="System.Boolean" DbType="Bit" CanBeNull="true" />
+      <Column Name="Allow_Recipe" Type="System.Boolean" DbType="Bit" CanBeNull="true" />
+      <Column Name="Student_Update" Type="System.Boolean" DbType="Bit" CanBeNull="true" />
+      <Column Name="Radiology_result_Approval" Type="System.Boolean" DbType="Bit" CanBeNull="true" />
+      <Column Name="Allow_RadiologyAllList" Type="System.Boolean" DbType="Bit" CanBeNull="true" />
+      <Column Name="adjustment_Allow" Type="System.Boolean" DbType="Bit" CanBeNull="true" />
+      <Column Name="Approve_radiology" Type="System.Boolean" DbType="Bit" CanBeNull="true" />
+      <Column Name="UnApprove_radiology" Type="System.Boolean" DbType="Bit" CanBeNull="true" />
+      <Column Name="Reject_radiology" Type="System.Boolean" DbType="Bit" CanBeNull="true" />
+      <Column Name="IPD_ALlow_Death_Details" Type="System.Boolean" DbType="Bit" CanBeNull="true" />
+      <Column Name="IPD_Allow_birth_Certifcate" Type="System.Boolean" DbType="Bit" CanBeNull="true" />
+      <Column Name="allow_undischarge" Type="System.Boolean" DbType="Bit" CanBeNull="true" />
+      <Column Name="All_doctor_template" Type="System.Boolean" DbType="Bit" CanBeNull="true" />
+      <Column Name="user_till" Type="System.Boolean" DbType="Bit" CanBeNull="true" />
+      <Column Name="AllowAddPatient" Type="System.Boolean" DbType="Bit" CanBeNull="true" />
+      <Column Name="AllowLineDiscount" Type="System.Boolean" DbType="Bit" CanBeNull="true" />
+      <Column Name="Allow_Sample_list" Type="System.Boolean" DbType="Bit" CanBeNull="true" />
+      <Column Name="AllowTestlistDoctor" Type="System.Boolean" DbType="Bit" CanBeNull="true" />
+      <Column Name="Allow_Return_Queue" Type="System.Boolean" DbType="Bit" CanBeNull="true" />
+      <Column Name="AllowRegisterRefund" Type="System.Boolean" DbType="Bit" CanBeNull="true" />
+      <Column Name="AllowDiscount_assign" Type="System.Boolean" DbType="Bit" CanBeNull="true" />
+      <Column Name="AllowRegListPrint" Type="System.Boolean" DbType="Bit" CanBeNull="true" />
+      <Association Name="aspnet_User_aspnet_PersonalizationPerUser" Member="aspnet_PersonalizationPerUsers" ThisKey="UserId" OtherKey="UserId" Type="aspnet_PersonalizationPerUser" />
+      <Association Name="aspnet_User_aspnet_Profile" Member="aspnet_Profile" ThisKey="UserId" OtherKey="UserId" Type="aspnet_Profile" Cardinality="One" />
+      <Association Name="aspnet_User_aspnet_UsersInRole" Member="aspnet_UsersInRoles" ThisKey="UserId" OtherKey="UserId" Type="aspnet_UsersInRole" />
+      <Association Name="aspnet_User_aspnet_Membership" Member="aspnet_Membership" ThisKey="UserId" OtherKey="UserId" Type="aspnet_Membership" Cardinality="One" />
+      <Association Name="aspnet_Application_aspnet_User" Member="aspnet_Application" ThisKey="ApplicationId" OtherKey="ApplicationId" Type="aspnet_Application" IsForeignKey="true" />
+    </Type>
+  </Table>
+  <Table Name="dbo.Reg_patient" Member="Reg_patients">
+    <Type Name="Reg_patient">
+      <Column Name="pat_id" Type="System.Int32" DbType="Int NOT NULL IDENTITY" IsPrimaryKey="true" IsDbGenerated="true" CanBeNull="false" />
+      <Column Name="Patient_No" Type="System.Int32" DbType="Int" CanBeNull="true" />
+      <Column Name="Full_Name" Type="System.String" DbType="VarChar(100)" CanBeNull="true" />
+      <Column Name="Father_Name" Type="System.String" DbType="VarChar(100)" CanBeNull="true" />
+      <Column Name="Gender" Type="System.String" DbType="VarChar(50)" CanBeNull="true" />
+      <Column Name="Mobile1" Type="System.String" DbType="VarChar(50)" CanBeNull="true" />
+      <Column Name="Age_years" Type="System.String" DbType="VarChar(50)" CanBeNull="true" />
+      <Column Name="NIC" Type="System.String" DbType="VarChar(250)" CanBeNull="true" />
+      <Column Name="Permanent_Address" Type="System.String" DbType="NVarChar(350)" CanBeNull="true" />
+      <Column Name="Created_time" Type="System.DateTime" DbType="DateTime" CanBeNull="true" />
+      <Column Name="Created_by" Type="System.Guid" DbType="UniqueIdentifier" CanBeNull="true" />
+      <Column Name="iscancel" Type="System.Boolean" DbType="Bit" CanBeNull="true" />
+      <Column Name="cancel_by" Type="System.Guid" DbType="UniqueIdentifier" CanBeNull="true" />
+      <Column Name="cancel_time" Type="System.DateTime" DbType="DateTime" CanBeNull="true" />
+      <Column Name="Martial_Status" Type="System.String" DbType="NVarChar(50)" CanBeNull="true" />
+      <Column Name="DOB" Type="System.DateTime" DbType="DateTime" CanBeNull="true" />
+      <Column Name="filter_clinic" Type="System.String" DbType="NVarChar(50)" CanBeNull="true" />
+      <Column Name="mr_no_sequence" Type="System.String" DbType="NVarChar(50)" CanBeNull="true" />
+      <Column Name="Reation_prefix" Type="System.String" DbType="VarChar(500)" CanBeNull="true" />
+      <Column Name="Relation_prefix" Type="System.String" DbType="VarChar(500)" CanBeNull="true" />
+      <Column Name="walkin" Type="System.Boolean" DbType="Bit" CanBeNull="true" />
+      <Column Name="House_No" Type="System.String" DbType="NVarChar(150)" CanBeNull="true" />
+      <Column Name="stno_mno" Type="System.String" DbType="NVarChar(150)" CanBeNull="true" />
+      <Column Name="city" Type="System.String" DbType="NVarChar(150)" CanBeNull="true" />
+      <Column Name="area" Type="System.String" DbType="NVarChar(150)" CanBeNull="true" />
+      <Column Name="val_city" Type="System.String" DbType="NVarChar(150)" CanBeNull="true" />
+      <Column Name="val_area" Type="System.String" DbType="NVarChar(150)" CanBeNull="true" />
+      <Column Name="patients_Seq" Type="System.Int32" DbType="Int" CanBeNull="true" />
+      <Column Name="emergency_walk_in" Type="System.Boolean" DbType="Bit" CanBeNull="true" />
+      <Column Name="State" Type="System.String" DbType="NVarChar(150)" CanBeNull="true" />
+      <Column Name="Blood_Group" Type="System.String" DbType="NVarChar(150)" CanBeNull="true" />
+      <Column Name="Country" Type="System.String" DbType="NVarChar(150)" CanBeNull="true" />
+      <Column Name="Province" Type="System.String" DbType="NVarChar(150)" CanBeNull="true" />
+      <Column Name="Voucher_Id" Type="System.Int32" DbType="Int" CanBeNull="true" />
+      <Column Name="Card_fee" Type="System.Decimal" DbType="Decimal(18,2)" CanBeNull="true" />
+      <Column Name="QRCodePath" Type="System.String" DbType="NVarChar(500)" CanBeNull="true" />
+      <Column Name="other_cnic" Type="System.String" DbType="NVarChar(200)" CanBeNull="true" />
+      <Column Name="Monitoring" Type="System.Boolean" DbType="Bit" CanBeNull="true" />
+      <Column Name="updated_time" Type="System.DateTime" DbType="DateTime" CanBeNull="true" />
+      <Column Name="updated_by" Type="System.Guid" DbType="UniqueIdentifier" CanBeNull="true" />
+      <Column Name="IsRefunded" Type="System.Boolean" DbType="Bit" CanBeNull="true" />
+      <Column Name="Refund_by" Type="System.Guid" DbType="UniqueIdentifier" CanBeNull="true" />
+      <Column Name="Refund_date" Type="System.DateTime" DbType="DateTime" CanBeNull="true" />
+      <Column Name="Reprint" Type="System.String" DbType="NVarChar(100)" CanBeNull="true" />
+      <Association Name="Reg_patient_Birth_Certificate" Member="Birth_Certificates" ThisKey="pat_id" OtherKey="Patient_ID" Type="Birth_Certificate" />
     </Type>
   </Table>
   <Function Name="dbo.GetDataValueName" Method="GetDataValueName" IsComposable="true">
