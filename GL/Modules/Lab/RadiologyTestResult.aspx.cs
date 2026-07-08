@@ -2404,7 +2404,7 @@ AND (
                     Age_years = data.Age_years?.ToString() ?? "",
                     Gender = data.Gender ?? "",
                     Patient_No = data.Patient_No?.ToString() ?? "",
-                    REg_Date = data.REg_Date,
+                    REg_Date = data.REg_Date.ToString() ?? "",
                     Mobile1 = data.Mobile1 ?? "",
                     NIC = data.NIC ?? "",
                     Patient_Type = data.Patient_Type ?? "",
