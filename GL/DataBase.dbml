@@ -6009,19 +6009,6 @@
       <Column Name="UpdatedAt" Type="System.DateTime" DbType="DateTime" CanBeNull="true" />
     </Type>
   </Table>
-  <Table Name="dbo.MaterialIssueRequest_Detail" Member="MaterialIssueRequest_Details">
-    <Type Name="MaterialIssueRequest_Detail">
-      <Column Name="MaterialRequestDetail_Id" Type="System.Int64" DbType="BigInt NOT NULL IDENTITY" IsPrimaryKey="true" IsDbGenerated="true" CanBeNull="false" />
-      <Column Name="MaterialRequest_Id" Type="System.Int64" DbType="BigInt" CanBeNull="true" />
-      <Column Name="Item_Id" Type="System.Int64" DbType="BigInt" CanBeNull="true" />
-      <Column Name="MIRQty" Type="System.Decimal" DbType="Decimal(18,4)" CanBeNull="true" />
-      <Column Name="Technical_Specifications" Type="System.String" DbType="VarChar(500)" CanBeNull="true" />
-      <Column Name="Remarks" Type="System.String" DbType="VarChar(500)" CanBeNull="true" />
-      <Column Name="FilePath" Type="System.String" DbType="VarChar(MAX)" CanBeNull="true" />
-      <Column Name="File_Type" Type="System.String" DbType="VarChar(10)" CanBeNull="true" />
-      <Column Name="Last_MIR_Qty" Type="System.Decimal" DbType="Decimal(18,4)" CanBeNull="true" />
-    </Type>
-  </Table>
   <Table Name="dbo.Discount_Assign_Detail_bill" Member="Discount_Assign_Detail_bills">
     <Type Name="Discount_Assign_Detail_bill">
       <Column Name="Discount_Detail_ID" Type="System.Int32" DbType="Int NOT NULL IDENTITY" IsPrimaryKey="true" IsDbGenerated="true" CanBeNull="false" />
@@ -8159,6 +8146,20 @@
       <Column Name="Refund_date" Type="System.DateTime" DbType="DateTime" CanBeNull="true" />
       <Column Name="Reprint" Type="System.String" DbType="NVarChar(100)" CanBeNull="true" />
       <Association Name="Reg_patient_Birth_Certificate" Member="Birth_Certificates" ThisKey="pat_id" OtherKey="Patient_ID" Type="Birth_Certificate" />
+    </Type>
+  </Table>
+  <Table Name="dbo.MaterialIssueRequest_Detail" Member="MaterialIssueRequest_Details">
+    <Type Name="MaterialIssueRequest_Detail">
+      <Column Name="MaterialRequestDetail_Id" Type="System.Int64" DbType="BigInt NOT NULL IDENTITY" IsPrimaryKey="true" IsDbGenerated="true" CanBeNull="false" />
+      <Column Name="MaterialRequest_Id" Type="System.Int64" DbType="BigInt" CanBeNull="true" />
+      <Column Name="Item_Id" Type="System.Int64" DbType="BigInt" CanBeNull="true" />
+      <Column Name="MIRQty" Type="System.Decimal" DbType="Decimal(18,4)" CanBeNull="true" />
+      <Column Name="Technical_Specifications" Type="System.String" DbType="VarChar(500)" CanBeNull="true" />
+      <Column Name="Remarks" Type="System.String" DbType="VarChar(500)" CanBeNull="true" />
+      <Column Name="FilePath" Type="System.String" DbType="VarChar(MAX)" CanBeNull="true" />
+      <Column Name="File_Type" Type="System.String" DbType="VarChar(10)" CanBeNull="true" />
+      <Column Name="Last_MIR_Qty" Type="System.Decimal" DbType="Decimal(18,4)" CanBeNull="true" />
+      <Column Name="Last_SIN_Qty" Type="System.Decimal" DbType="Decimal(18,2)" CanBeNull="true" />
     </Type>
   </Table>
   <Function Name="dbo.GetDataValueName" Method="GetDataValueName" IsComposable="true">
@@ -11645,20 +11646,6 @@
       <Column Name="CreatedDate" Type="System.DateTime" DbType="DateTime" CanBeNull="true" />
     </ElementType>
   </Function>
-  <Function Name="dbo.spGetitemsDetails" Method="spGetitemsDetails">
-    <Parameter Name="itemId" Type="System.Int32" DbType="Int" />
-    <Parameter Name="DeptID" Parameter="deptID" Type="System.String" DbType="VarChar(50)" />
-    <ElementType Name="spGetitemsDetailsResult">
-      <Column Name="Item_ID" Type="System.Int32" DbType="Int NOT NULL" CanBeNull="false" />
-      <Column Name="Item_Code" Type="System.String" DbType="VarChar(15)" CanBeNull="true" />
-      <Column Name="Description" Type="System.String" DbType="VarChar(200)" CanBeNull="true" />
-      <Column Name="Unit" Type="System.String" DbType="VarChar(150)" CanBeNull="true" />
-      <Column Name="Active" Type="System.Boolean" DbType="Bit" CanBeNull="true" />
-      <Column Name="UOM_Qty" Type="System.Decimal" DbType="Decimal(18,2)" CanBeNull="true" />
-      <Column Name="Last_MIR_Qty" Type="System.Decimal" DbType="Decimal(18,4) NOT NULL" CanBeNull="false" />
-      <Column Name="Last_MIR_Date" Type="System.DateTime" DbType="DateTime" CanBeNull="true" />
-    </ElementType>
-  </Function>
   <Function Name="dbo.spGetitemsDetailsVendors" Method="spGetitemsDetailsVendors">
     <Parameter Name="itemId" Type="System.Int32" DbType="Int" />
     <ElementType Name="spGetitemsDetailsVendorsResult">
@@ -12863,6 +12850,21 @@
       <Column Name="Patient_Category" Type="System.String" DbType="NVarChar(150)" CanBeNull="true" />
       <Column Name="Nursing_Plan" Type="System.String" DbType="VarChar(MAX)" CanBeNull="true" />
       <Column Name="Nurse_Name_Nurse_Note" Type="System.String" DbType="VarChar(MAX)" CanBeNull="true" />
+    </ElementType>
+  </Function>
+  <Function Name="dbo.spGetitemsDetails" Method="spGetitemsDetails">
+    <Parameter Name="itemId" Type="System.Int32" DbType="Int" />
+    <Parameter Name="DeptID" Parameter="deptID" Type="System.String" DbType="VarChar(50)" />
+    <ElementType Name="spGetitemsDetailsResult">
+      <Column Name="Item_ID" Type="System.Int32" DbType="Int NOT NULL" CanBeNull="false" />
+      <Column Name="Item_Code" Type="System.String" DbType="VarChar(15)" CanBeNull="true" />
+      <Column Name="Description" Type="System.String" DbType="VarChar(200)" CanBeNull="true" />
+      <Column Name="Unit" Type="System.String" DbType="VarChar(150)" CanBeNull="true" />
+      <Column Name="Active" Type="System.Boolean" DbType="Bit" CanBeNull="true" />
+      <Column Name="UOM_Qty" Type="System.Decimal" DbType="Decimal(18,2)" CanBeNull="true" />
+      <Column Name="Last_MIR_Qty" Type="System.Decimal" DbType="Decimal(18,4) NOT NULL" CanBeNull="false" />
+      <Column Name="Last_SIN_Qty" Type="System.Decimal" DbType="Decimal(18,4) NOT NULL" CanBeNull="false" />
+      <Column Name="Last_MIR_Date" Type="System.DateTime" DbType="DateTime" CanBeNull="true" />
     </ElementType>
   </Function>
 </Database>
