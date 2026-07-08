@@ -99,6 +99,7 @@ namespace PMS.Modules.Accounts
                              Allow_Return_Queue = p.Allow_Return_Queue,
                               AllowRadiologylist = p.Radiology_result,
                              AllowLineDiscount = p.AllowLineDiscount,
+                             AllowReglistPrint = p.AllowRegListPrint,
                              AllowTestlistDoctor = p.AllowTestlistDoctor,
                              AllowReferIPD = p.Refer_IPD,
                              AllowSamplelist = p.Allow_Sample_list,
@@ -230,6 +231,7 @@ namespace PMS.Modules.Accounts
                     user.AllowDiscount_assign = data.AllowDiscountAssign;
                     user.user_till = data.AllowTill;
                     user.AllowLineDiscount = data.AllowLineDiscount;
+                    user.AllowRegListPrint = data.AllowReglistPrint;
                     user.AllowTestlistDoctor = data.AllowTestlistDoctor;
                     membership.mobileno = data.Mobile;
                     membership.Email = data.Email;
@@ -294,6 +296,7 @@ namespace PMS.Modules.Accounts
                 newuser.Allow_Sample_list = data.AllowSamplelist;
                 newuser.IsNotificationViewed = data.PRFsNotifications;
                 newuser.AllowLineDiscount = data.AllowLineDiscount;
+                newuser.AllowRegListPrint = data.AllowReglistPrint;
                 newuser.AllowTestlistDoctor = data.AllowTestlistDoctor;
                 newuser.AllowUnapproveVoucher = data.AllowUnapproveVouchers;
                 newuser.IsAnonymous = data.IsAnonymous;
@@ -432,6 +435,7 @@ namespace PMS.Modules.Accounts
             public bool AlllowPAtientAdd { get; set; }
             public bool AllowSamplelist { get; set; }
             public bool AllowLineDiscount { get; set; }
+            public bool AllowReglistPrint { get; set; }
             public bool AllowTestlistDoctor { get; set; }
             public bool AllowBirthCertificate { get; set; }
             public bool AllowDeathDetails { get; set; }

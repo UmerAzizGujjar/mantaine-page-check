@@ -87,6 +87,7 @@
                     $('#AllowSamplelist').prop('checked', data.AllowSamplelist);
                     $('#AllowRegisterRefund').prop('checked', data.AllowRegisterRefund);
                     $('#Allow_Return_Queue').prop('checked', data.Allow_Return_Queue);
+                    $('#Allow_ReglistPrint').prop('checked', data.AllowRegListPrint);
                     $('#AllowRateEdit').prop('checked', data.AllowRateEdit);
                     $('#AllowUndischarge').prop('checked', data.AllowUndischarge);
                     $('#AllDoctorTemplate').prop('checked', data.AllDoctorTemplate);
@@ -154,7 +155,7 @@
             var AlllowPAtientAdd = $('#AlllowPAtientAdd').prop('checked');
             var AllowSamplelist = $('#AllowSamplelist').prop('checked');
             var AllowRegisterRefund = $('#AllowRegisterRefund').prop('checked');
-            var Allow_Return_Queue = $('#Allow_Return_Queue').prop('checked');
+            var Allow_ReglistPrint = $('#Allow_ReglistPrint').prop('checked');
             var AllowRateEdit = $('#AllowRateEdit').prop('checked');
             var AllowUndischarge = $('#AllowUndischarge').prop('checked');
             var AllDoctorTemplate = $('#AllDoctorTemplate').prop('checked');
@@ -162,6 +163,7 @@
             var AllowTill = $('#AllowTill').prop('checked');
             var AllowLineDiscount = $('#AllowLineDiscount').prop('checked');
             var AllowTestlistDoctor = $('#AllowTestlistDoctor').prop('checked');
+            var AllowReglistPrint = $('#Allow_ReglistPrint').prop('checked');
             
             var EmpCode = $('#EmpCode').val();
             var ddlcasher = $('#ddlcasher').val();
@@ -304,6 +306,7 @@
                 "AllowDiscountAssign": AllowDiscountAssign,
                 "AllowTill": AllowTill,
                 "AllowLineDiscount": AllowLineDiscount,
+                "AllowReglistPrint": AllowReglistPrint,
                 "AllowTestlistDoctor": AllowTestlistDoctor
 
             };
@@ -735,6 +738,9 @@
                                                       <div class="form-check">
                                                           <input type="checkbox" class="form-check-input" id="Allow_Return_Queue" name="Allow_Return_Queue" />
                                                       </div>
+                                                    <div class="form-check">
+                                                        <input type="checkbox" class="form-check-input" id="Allow_ReglistPrint" name="Allow_ReglistPrint" />
+                                                    </div>
 
 
                                                  </div>
@@ -818,6 +824,9 @@
                                                        <div class="form-check">
                                                            <label class="form-check-label" for="Allow_Return_Queue">Allow Return Queue</label>
                                                        </div>
+                                                    <div class="form-check">
+                                                        <label class="form-check-label" for="Allow_ReglistPrint">Reg List Print</label>
+                                                    </div>
                                                  </div>
                                             </div>
                                             <div class="row">

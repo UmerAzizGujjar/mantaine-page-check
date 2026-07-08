@@ -6179,8 +6179,8 @@
     <Folder Include="upload\UploadCA\" />
     <Folder Include="upload\UploadCSFilesImages\" />
     <Folder Include="upload\UploadGINFilesImages\" />
-    <Folder Include="upload\UploadGRNFilesImages\" />
     <Folder Include="upload\UploadGIRFilesImages\" />
+    <Folder Include="upload\UploadGRNFilesImages\" />
     <Folder Include="upload\UploadInvItems\" />
     <Folder Include="upload\UploadItemsStock\" />
     <Folder Include="upload\UploadMIFilesImages\" />

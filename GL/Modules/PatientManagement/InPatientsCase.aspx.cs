@@ -7131,5 +7131,53 @@ namespace PMS
             return data;
         }
 
+        [WebMethod]
+        public static string CheckFinalBillAndDischargePermission(int InPatientID)
+        {
+            try
+            {
+                using (DataBaseDataContext db = new DataBaseDataContext(DBClass.ConnectionString()))
+                {
+                    var sysParm = db.sys_Parms
+                        .Where(p => p.Name == "InPatient Discharge Details"
+                                 && p.Company_ID == AppConfig.Company_ID)
+                        .Select(p => p.Code)
+                        .FirstOrDefault();
+
+                    if (sysParm != "1")
+                    {
+                        return new JavaScriptSerializer().Serialize(new { allowed = false, reason = "Button is disabled in settings." });
+                    }
+
+                    var billingExists = db.Ar_Billings
+                        .Any(b => b.In_Patient_ID == InPatientID);
+
+                    var existingOPD = db.Out_Patients
+                        .Where(o => o.Patient_ID == InPatientID && o.Type == "InPatientDischarge")
+                        .Select(o => (int?)o.Out_Patient_ID)
+                        .FirstOrDefault();
+
+                    if (!billingExists)
+                    {
+                        return new JavaScriptSerializer().Serialize(new { allowed = true, existingOutPatientID = existingOPD ?? 0 });
+                    }
+
+                    var finalBillDone = db.Ar_Billings
+                        .Any(b => b.In_Patient_ID == InPatientID && b.final_bill_ipd == true);
+
+                    if (finalBillDone)
+                    {
+                        return new JavaScriptSerializer().Serialize(new { allowed = true, existingOutPatientID = existingOPD ?? 0 });
+                    }
+
+                    return new JavaScriptSerializer().Serialize(new { allowed = false, reason = "Please complete final billing first." });
+                }
+            }
+            catch (Exception ex)
+            {
+                return new JavaScriptSerializer().Serialize(new { allowed = false, reason = ex.Message });
+            }
+        }
+
     }
 }
