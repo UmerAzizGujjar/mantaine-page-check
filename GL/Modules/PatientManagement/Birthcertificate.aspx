@@ -121,6 +121,7 @@
             }
             
         });
+
         function fillBirthGender() {
             var options = '<option value="0">Select</option>';
             PageMethods.GetGender(function (data) {
@@ -1053,6 +1054,14 @@
 
             // Just call save - don't show loading here
             SaveAllRecords();
+        }
+
+        function PrintGenrateCertificate(Birth_Certificate_ID)
+        {
+            debugger;
+            var url = '../../ReportViewer.aspx?ReportName=Birth_Certificate&ReportTitle=Admission Slip Report&Inpatient_ID=' + Birth_Certificate_ID;
+            window.open(url, '_blank');
+
         }
 
         function SaveAllRecords() {
@@ -2074,7 +2083,7 @@
                        class="btn-primry"
                        id="Printbirthcertificate"
                        type="button"
-                       onclick="PrintGenrateCertificate()" />
+                       onclick="PrintGenrateCertificate($('#hdfBC_ID').val())" />
             </div>
 
         </div>
