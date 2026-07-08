@@ -1199,6 +1199,7 @@
                 CountPerQtyOutput();
                 LoadMedicationHistory($('#<%= hdfPatient_ID.ClientID%>').val());
                 LoadMedicinesFormInPatient($('#<%= hdfPatient_ID.ClientID%>').val());
+               <%-- // //Appendtestintable($('#<%= hdfPatient_ID.ClientID%>').val());--%>
                 LoadInstruction();
                 LoadInstructionEdit();
                 loadServices();
@@ -2780,6 +2781,85 @@
                 rdo_true();
             }
         }
+
+        function Appendtestintable(patid) {
+            
+
+            $('#tblLabtest tbody').empty();
+
+                PageMethods.GetTestListForHistoryIPD(patid, function (res) {
+                    var test = JSON.parse(res);
+                    var Result = 'Result';
+                    $.each(test, function (key, value) {
+                        var Result = 'Pendding';
+                        var timeStamp = parseInt(value.Date.substr(6, 10));
+                        var date = moment.unix(timeStamp).format('M/D/YYYY h:m:s A');
+                        if (value.L_R_Rotation_ID == null) value.L_R_Rotation_ID = "";
+                        var datearray = date.split("/");
+                        var newdate = datearray[1] + '/' + datearray[0] + '/' + datearray[2];
+                        debugger;
+                        if (value.isApproved == true) {
+                            Result = "View Result";
+                            Sample = "Yes";
+                            $("#btnprint").attr('disabled', false)
+                        }
+                        if (value.isApproved == false) {
+                            Result = "Waiting";
+                            Sample = "No";
+                            $("#btnprint").attr('disabled', true)
+                        }
+
+                        if (value.Test_ID != 0) {
+                            row = '<tr>' +
+                                '<td><input type="hidden" name="testDate" value="' + newdate + '">' + newdate + '</td>' +
+                                '<td><input type="hidden" name="testID" value="' + value.Test_ID + '" />' +
+                                '<input type="hidden" name="txtValueType" value="' + value.Value_Type + '"/>' +
+                                '<input type="hidden" name="txtRecievedID" value="' + value.Recieved_ID + '"/>' +
+                                '<input type="hidden" name="txtRotation" value="0">' +
+                                '<input type="hidden" name="txtGroupCategory" value="0">' +
+                                (value.DepartmentName == null ? '' : value.DepartmentName + ', ') +
+                                ' ' + value.Test_Name + ' ' +
+                                (value.GroupName == null ? ' ' : ', ' + value.GroupName) +
+                                '</td>' +
+                                '<td>' + Result + '</td>' +
+                                '<td>' + value.DoctorName + '</td>' +
+                                '<td>' +
+                                '<a style="border-radius: 4px;background-color:#308665db !important;margin-left: 4px;color: white;padding: 5px 8px 5px 8px;" href="#" onclick="PreviewReport(this)" id="btnprint">' +
+                                '<i class="fa fa-print" style="color:white !important;"></i></a>' +
+                                '</td>' +
+                                '<td style="display:none;">' +
+                                '<input type="hidden" name="List_Of_Test_IDs" id="ListOfTestIDs" value="' + value.Lab_Test_ID + '" />' +
+                                '<input type="hidden" name="Bill_Details_ID" id="Bill_Details_ID" value="' + value.Bill_Details_ID + '" />' +
+                                '<input type="hidden" name="Report_Colum" id="Report_Colum" value="' + value.Report_Column + '" />' +
+                                '<input type="hidden" name="test_wise_id" id="test_wise_id" value="' + value.Patient_ID + '" />' +
+                                '<input type="hidden" name="Lab_Test_Detail_ID" id="Lab_Test_Detail_ID" value="' + value.Lab_Test_Detail_ID + '" />' +
+                                '</td></tr>';
+                        }
+                        $('#tblLabtest tbody').append(row);
+                        console.log(row);
+                    });
+                });
+        }
+
+        function PreviewReport($this) {
+            var tbl = $($($this).parents('tr')[0]);
+            var hdn_Patient_ID = tbl.find("td").find("input[id=Patient_Id]").val();
+            var ChkLetterHead = true;
+            var ListOfTestIDs = '';
+            var ListTransID = '';
+            var Report_Column = '';
+            var LabTestDetailsID = '';
+            var billdetailid = '';
+
+            Report_Column = tbl.find('td').find('input[name=Report_Colum]').val();
+            ListOfTestIDs = tbl.find('td').find('input[name=testID]').val();
+            test_wise_ids = tbl.find('td').find('input[name=test_wise_id]').val();
+            ListTransID = tbl.find('td').find('input[name=List_Of_Test_IDs]').val();
+            LabTestDetailsID = tbl.find('td').find('input[name=Lab_Test_Detail_ID]').val();
+            billdetailid = tbl.find('td').find('input[name=Bill_Details_ID]').val();
+            var url = '../../ReportViewer.aspx?ReportName=TestResultQ&ReportTitle=Department Of Pathalogy&Test_IDs=' + ListOfTestIDs + '&test_wise_ids=' + test_wise_ids + '&TransID=' + ListTransID + '&labTDetailsID=' + LabTestDetailsID + '&BillDetailID=' + billdetailid + '&ReportColumn=' + Report_Column + '&ChkLetterHead=' + ChkLetterHead;
+            window.open(url, '_blank');
+        }
         function httpGet(theUrl) {
             var xmlHttp = null;
             xmlHttp = new XMLHttpRequest();
@@ -3823,9 +3903,30 @@
                 <li><a href="#Tab-5">Medication</a></li>
                 <li><a href="#Tab-6">Doctor Instruction</a></li>
                 <li><a href="#Tab-7">Nursing Plan</a></li>
+                <li><a href="#Tab-20">Investigation</a></li>
                
 
             </ul>
+            <div id="Tab-20">
+                <h3>Investigation :</h3>
+
+
+                 <div class="table table-container" style="overflow-y: scroll; height: 400px">
+     <table id="tblLabtest" class="table table-hover table-striped table-bordered">
+         <thead style="height: 35px;">
+             <tr style="position: sticky; top: 0; z-index: 10;">
+                 <th>Date</th>
+                 <th>Test Name</th>
+                 <th>Result</th>
+                 <th>Doctor</th>
+                 <th>Action</th>
+             </tr>
+         </thead>
+         <tbody id="loadtest">
+         </tbody>
+     </table>
+ </div>
+            </div>
             <div id="Tab-19">
                 <h2>Patients Waiting List Department Wise : </h2>
                 <div id="Div2_WL">

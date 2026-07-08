@@ -993,7 +993,7 @@
         </div>
         <div class="row">
             <div class="col-lg-12 col-md-6 col-sm-6" style="margin-top: 2%">
-                <div class="table-responsive" style="height: 250px;">
+                <div class="table-responsive" style="height: 450px;overflow-y: auto; overflow-x: auto">
                     <table class="table table-borderless" id="tblDetails">
                         <thead>
                             <tr>
