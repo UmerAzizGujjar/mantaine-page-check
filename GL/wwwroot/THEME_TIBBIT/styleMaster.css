@@ -30,7 +30,9 @@
     /* Removed border so it covers full width */
 }
 
-
+input{
+    width: 100% !important;
+}
 * {
     margin: 0;
     padding: 0;

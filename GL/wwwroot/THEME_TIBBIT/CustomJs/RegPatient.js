@@ -369,7 +369,7 @@ function SavePatient() {
         $('#firstname-error').show();
         valid = false;
     }
-    if (Mobile == "+92__________") {
+    if (Mobile === "" || Mobile == "+92__________") {
         $('#mobile-error').show();
         valid = false;
     }
@@ -387,7 +387,15 @@ function SavePatient() {
         $('#address-error').show();
         valid = false;
     }
-
+    if (Gender === "" || Gender === "0") {
+        valid = false;
+    }
+    if (martail_status === "" || martail_status === "0") {
+        valid = false;
+    }
+    if (cardfee === "" || isNaN(cardfee) || parseFloat(cardfee) === 0) {
+        valid = false;
+    }
 
     var isCNICRequired = isCNICValidationRequired();
     if (isCNICRequired) {
@@ -437,6 +445,13 @@ function SavePatient() {
     }
 
     if (!valid) {
+        Swal.fire({
+            icon: 'error',
+            title: 'Validation Error',
+            text: 'Please fill all required fields.',
+            confirmButtonText: 'OK',
+            confirmButtonColor: '#3085d6'
+        });
         $('#SavePatient_Data').attr('disabled', false);
         return;
     }

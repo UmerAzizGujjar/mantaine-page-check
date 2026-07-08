@@ -13,6 +13,7 @@
             var id = '<% =Request.QueryString["ID"] %>';
             if (id != "") {
                 $('#btnSave').val('Update');
+                $('#btnReplicate').show();
                 LoadPanelData(id);
                 $('#tblItemDescriptionDetail').html('<tr><td colspan="3">Loading services...</td></tr>');
                 ajaxCall("panelagreement.aspx/loadData", JSON.stringify({ "panelID": id }), getResponseData);
@@ -143,6 +144,87 @@
             })
 
         });
+        function ReplicatePanel() {
+            debugger;
+            var valid = true;
+            var cmp_name = $("#txtCompanyName").val();
+            var no_of_emp = $("#txtEmpNo").val() || 0;
+            var email = $("#txtEmail").val();
+            var contact_no = $("#txtContactNo").val();
+            var address = $("#txtAddress").val();
+            var discount = $("#txtDiscount").val() || 0;
+
+            var panelrate = $("#txtpanelrate").val() || 0;
+            var panelrateEmergency = $("#txtpanelrateEmergency").val() || 0;
+            var Glcode = $("#ddlGlAccount").val();
+
+            if (cmp_name == "") {
+                valid = false;
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Error!',
+                    text: 'Please Enter Company Name.',
+                    showConfirmButton: false,
+                    timer: 2000
+                });
+            }
+            else if (Glcode == 0) {
+                valid = false;
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Error!',
+                    text: 'Please Enter GL Account.',
+                    showConfirmButton: false,
+                    timer: 2000
+                });
+            }
+
+            if (!$("#txtCompanyName").hasClass('ErrorAlert') && !$("#txtEmail").hasClass('ErrorAlert') && !$("#txtAddress").hasClass('ErrorAlert') && !$("#txtContactNo").hasClass('ErrorAlert') && !$("#txtDiscount").hasClass('ErrorAlert') && !$("#txtEmpNo").hasClass('ErrorAlert')) {
+
+                var servicesList = new Array();
+                var list = document.getElementById('tblItemDescription');
+                for (var i = 1; i < list.rows.length; i++) {
+                    var row = list.rows[i];
+                    var serviceID = $(row).find('td').eq(0).find('input').val();
+                    var serviceRate = $(row).find('td').eq(2).find('input').val();
+                    if (serviceRate == "") {
+                        alert("Please Enter Rate");
+                        return false;
+                    }
+                    var groupCategory = $(row).find('td').eq(3).find('input').val();
+                    var testID = $(row).find('td').eq(4).find('input').val();
+                    servicesList[i] = new Array(serviceID, serviceRate, groupCategory, testID);
+                }
+
+                if (valid) {
+                    $.ajax({
+                        type: "POST",
+                        url: "panelagreement.aspx/Save",
+                        data: JSON.stringify({
+                            'cmp_name': cmp_name,
+                            'no_of_emp': no_of_emp,
+                            'email': email,
+                            'contact_no': contact_no,
+                            'address': address,
+                            'discount': discount,
+                            'panelrate': panelrate,
+                            'panelrateEmergency': panelrateEmergency,
+                            "btnValue": "Replicate",
+                            "Glcode": Glcode,
+                            "id": "",
+                            "rateDetail": servicesList
+                        }),
+                        contentType: "application/json; charset=utf-8",
+                        dataType: "json",
+                        success: function (response) {
+                            var data = response.d;
+                            alert("Data has been saved successfully");
+                            window.location.href = "PanelView.aspx";
+                        }, error: function () { }
+                    });
+                }
+            }
+        }
         function loadGlAccounts() {
             var options = '<option value="0">Please Select Account</option>';
 
@@ -662,6 +744,9 @@
     <div class="row">
         <div class="col-lg-1 col-md-4 col-sm-6">
             <input type="button" class="btn btn-primry" id="btnSave" value="Save" />
+        </div>
+        <div class="col-lg-1 col-md-4 col-sm-6">
+            <input type="button" class="btn btn-primry" id="btnReplicate" value="Replicate" style="display:none;" onclick="ReplicatePanel()" />
         </div>
         <div class="col-lg-1 col-md-4 col-sm-6">
             <input type="button" class="btn btn-yellow" id="btnNew" value="New" />

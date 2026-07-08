@@ -4,6 +4,7 @@
     <link href="../../wwwroot/THEME_TIBBIT/CustomCSS/GIR.css" rel="stylesheet" />
     <script type="text/javascript">
         var counter = 1;
+        var isReplicate = false;
         debugger;
         var id = '<% =Request.QueryString["ID"] %>';
         $(document).ready(function () {
@@ -64,7 +65,12 @@
                 LoadLoadMIRDetail(id);
                 $("#btnsave").val('Update');
                 $('#btn_Print').show();
+                $('#btnReplicate').show();
             }
+            $('#btnReplicate').on('click', function () {
+                isReplicate = true;
+                SaveTest();
+            });
             setTimeout(function () {
                 var status = $('#txt_Status').val();
                 if (status == "Approved") {
@@ -335,11 +341,8 @@
         function SaveTest() {
             debugger;
             var MIRId = 0;
-            if (id == "") {
-                MIRId = 0;
-            }
-            else {
-                MIRId = id
+            if (!isReplicate && id != "") {
+                MIRId = id;
             }
             var status = '';
             var MIRNum = $('#txtReq_Num').val();
@@ -349,7 +352,8 @@
             var WareHouse = $('#ddlwarehouse :selected').val();
             var remarks = $('#txtRemarks').val();
             var itemId = $('#hditemID').val();
-            var btnValue = $("#btnsave").val();
+            var btnValue = isReplicate ? "Replicate" : $("#btnsave").val();
+            isReplicate = false;
 
             if (MIRNum == '') $('#txtReq_Num').addClass('ErrorAlert'); else $('#txtReq_Num').removeClass('ErrorAlert');
             if (MIRDate == '') $('#txtMIR_Date').addClass('ErrorAlert'); else $('#txtMIR_Date').removeClass('ErrorAlert');
@@ -474,7 +478,7 @@
                         debugger;
                         var res = response.d;
                         var arr = res.split('-')[1];
-                        var btnValue = $("#btnsave").val();
+            var btnValue = isReplicate ? "Replicate" : $("#btnsave").val();
 
                         // Upload per-row files after details saved
                         var getuploadlist = $('input[name=fileuploadlist]').get();
@@ -498,11 +502,11 @@
                             }
                         }
 
-                        if (btnValue == "Save") {
+                        if (btnValue == "Save" || btnValue == "Replicate") {
                             Swal.fire({
                                 icon: 'success',
                                 title: 'Success!',
-                                text: 'Data Inserted Successfully.',
+                                text: btnValue == "Replicate" ? 'Data Replicated Successfully.' : 'Data Inserted Successfully.',
                                 showConfirmButton: false,
                                 timer: 2500,
                                 customClass: {
@@ -769,9 +773,12 @@
         <div class="row">
              <div class="col-lg-8">
             <div class="row">
-                        <div class="col-lg-2 col-md-4 col-sm-6">
+            <div class="col-lg-2 col-md-4 col-sm-6">
                 <input type="button" class="btn btn-primry" value="Save" id="btnsave" onclick="SaveTest()" />
                 &nbsp;
+            </div>
+            <div class="col-lg-2 col-md-4 col-sm-6">
+                <input type="button" class="btn btn-primry" value="Replicate" id="btnReplicate" style="display:none;" />
             </div>
             <div class="col-lg-2 col-md-4 col-sm-6">
                 <input type="button" class="btn-gray" value="List" onclick="window.location = 'GoodsIssuanceRequestView.aspx'" />

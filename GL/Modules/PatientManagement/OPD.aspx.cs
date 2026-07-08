@@ -2861,6 +2861,46 @@ namespace PMS.Modules.PatientManagement
                 return new JavaScriptSerializer().Serialize(new { isAdmitted = false, error = ex.Message });
             }
         }
+
+        [WebMethod]
+        public static string CheckOutPatientDischarge(int regPatId, string department)
+        {
+            try
+            {
+                using (DataBaseDataContext db = new DataBaseDataContext(DBClass.ConnectionString()))
+                {
+                    // Check if feature is enabled in sys_parms
+                    var sysParm = db.sys_Parms.FirstOrDefault(p => p.Name == "OPD Discharge Check" && p.Code == "01");
+                    
+                    if (sysParm == null)
+                    {
+                        // Feature disabled
+                        return new JavaScriptSerializer().Serialize(new { hasActiveOPD = false });
+                    }
+
+                    // Check if patient has active OPD record for this specific department
+                    var activeOPD = (from opd in db.Out_Patients
+                                    join p in db.Patients on opd.Patient_ID equals p.Patient_ID
+                                    where opd.Reg_PatId == regPatId
+                                          && opd.Discharge == false
+                                          && p.Patient_Main_Category == department
+                                    select opd).FirstOrDefault();
+
+                    return new JavaScriptSerializer().Serialize(new 
+                    { 
+                        hasActiveOPD = activeOPD != null 
+                    });
+                }
+            }
+            catch (Exception ex)
+            {
+                return new JavaScriptSerializer().Serialize(new 
+                { 
+                    hasActiveOPD = false, 
+                    error = ex.Message 
+                });
+            }
+        }
     }
 
 }
