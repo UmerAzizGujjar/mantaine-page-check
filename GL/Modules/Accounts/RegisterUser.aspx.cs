@@ -99,7 +99,7 @@ namespace PMS.Modules.Accounts
                              Allow_Return_Queue = p.Allow_Return_Queue,
                               AllowRadiologylist = p.Radiology_result,
                              AllowLineDiscount = p.AllowLineDiscount,
-                             AllowReglistPrint = p.AllowRegListPrint,
+                             AllowRegListPrint = p.AllowRegListPrint,
                              AllowTestlistDoctor = p.AllowTestlistDoctor,
                              AllowReferIPD = p.Refer_IPD,
                              AllowSamplelist = p.Allow_Sample_list,

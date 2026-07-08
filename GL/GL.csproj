@@ -472,6 +472,7 @@
     <Content Include="Modules\Administrator\AssetSelection.aspx" />
     <Content Include="Modules\Administrator\DoctorPayableView.aspx" />
     <Content Include="Modules\Administrator\Doctor_Payable.aspx" />
+    <Content Include="Modules\PatientManagement\DeathDetailsList.aspx" />
     <Content Include="Modules\PatientManagement\Physiotherapy_Assessment.aspx" />
     <Content Include="Modules\PatientManagement\Birthcertificate.aspx" />
     <Content Include="Modules\PatientManagement\BirthCertificateView.aspx" />
@@ -4182,6 +4183,13 @@
     </Compile>
     <Compile Include="Modules\Administrator\Doctor_Payable.aspx.designer.cs">
       <DependentUpon>Doctor_Payable.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="Modules\PatientManagement\DeathDetailsList.aspx.cs">
+      <DependentUpon>DeathDetailsList.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Modules\PatientManagement\DeathDetailsList.aspx.designer.cs">
+      <DependentUpon>DeathDetailsList.aspx</DependentUpon>
     </Compile>
     <Compile Include="Modules\PatientManagement\Physiotherapy_Assessment.aspx.cs">
       <DependentUpon>Physiotherapy_Assessment.aspx</DependentUpon>

@@ -70,7 +70,7 @@
             window.open(url, '_blank');
         }
 
-        function PrintReceipt() {
+        <%--function PrintReceipt() {
             var reg_id = '<%= Request.QueryString["Reg_id"] %>'
             var locationInfo = window.location;
             var url = "/ReportViewer.aspx?ReportName=Reg_Patient_Print&Title=Register Patient Print &Patient_ID=" + reg_id;
@@ -81,7 +81,68 @@
                 url = 'http://' + ip + '/' + foldername + "/ReportViewer.aspx?ReportName=Reg_Patient_Print&Title=Register Patient Print &Patient_ID=" + reg_id;
             }
             window.open(url, '_blank');
+        }--%>
+
+        function PrintReceipt() {
+            var reg_id = '<%= Request.QueryString["Reg_id"] %>';
+
+            if (!reg_id || reg_id == "") {
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Error',
+                    text: 'No patient registration found to print!'
+                });
+                return;
+            }
+            Swal.fire({
+                title: 'Preparing Print...',
+                text: 'Please wait',
+                allowOutsideClick: false,
+                didOpen: () => {
+                    Swal.showLoading();
+                }
+            });
+            $.ajax({
+                type: "POST",
+                url: "RegisterPatient.aspx/IncrementReprintCount",
+                contentType: "application/json; charset=utf-8",
+                data: JSON.stringify({ regId: reg_id }),
+                dataType: "json",
+                success: function (response) {
+
+                    Swal.close();
+
+                    if (response.d.startsWith("SUCCESS")) {
+                        var locationInfo = window.location;
+                        var url = "/ReportViewer.aspx?ReportName=Reg_Patient_Print&Title=Register Patient Print &Patient_ID=" + reg_id;
+                        if (!locationInfo.origin.includes('localhost')) {
+                            var urlInfo = window.location.href.split('/');
+                            var ip = urlInfo[2];
+                            var foldername = urlInfo[3];
+                            url = 'http://' + ip + '/' + foldername + "/ReportViewer.aspx?ReportName=Reg_Patient_Print&Title=Register Patient Print &Patient_ID=" + reg_id;
+                        }
+                        window.open(url, '_blank');
+                    } else {
+                        Swal.fire({
+                            icon: 'error',
+                            title: 'Error',
+                            text: response.d
+                        });
+                    }
+                },
+                error: function (xhr, status, error) {
+                    Swal.close();
+                    Swal.fire({
+                        icon: 'error',
+                        title: 'Error',
+                        text: 'Failed to track print. Please try again.'
+                    });
+                    console.error("Print tracking error:", error);
+                }
+            });
         }
+
+            
 
         function loadCardfee() {
             $.ajax({

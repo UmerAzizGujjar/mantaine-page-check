@@ -2259,6 +2259,43 @@ namespace PMS
             return (new JavaScriptSerializer()).Serialize(data);
         }
 
+        [WebMethod]
+        public static string MonitoringMedicines()
+        {
+            try
+            {
+                using (var db = new DataBaseDataContext(DBClass.ConnectionString()))
+                {
+                    var Monitoring = (from tbl in db.sys_Parms
+                                    where tbl.Name == "Monitoring Medicines tab"
+                                      select tbl.Code)
+                              .FirstOrDefault();
+
+                    return Monitoring ?? "01";
+                }
+            }
+            catch (Exception ex)
+            {
+                return "0";
+            }
+        }
+
+        [WebMethod]
+        public static string loadAllUsers()
+        {
+            using (DataBaseDataContext db = new DataBaseDataContext())
+            {
+                var user = (from u in db.aspnet_Users
+                            where u.UserId == AppConfig.UserID
+                            select new
+                            {
+                                u.UserId,
+                                u.UserName
+                            }).ToList();
+
+                return new JavaScriptSerializer().Serialize(user);
+            }
+        }
         private void PopulateInPatientDataForMonitoring(int InPatient_ID)
         {
             try
