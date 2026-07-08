@@ -5372,7 +5372,7 @@ namespace PMS
                     MonthDiv.Visible = true;
                     tr_Export.Visible = true;
 
-                    //ADDING NEW WAREHOUSE
+                    //ADDING NEW WAREHOUSE  
 
                     object valuset;
                     valuset = DBClass.GetValueSet("Ware house");

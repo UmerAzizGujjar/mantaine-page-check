@@ -158,7 +158,7 @@ namespace PMS.Inventory
             DataBaseDataContext db = new DataBaseDataContext();
             PMS.MaterialIssueRequest obj = new PMS.MaterialIssueRequest();
             var MIRid = string.Empty;
-            if (btnValue == "Save")
+            if (btnValue == "Save" || btnValue == "Replicate")
             {
                 obj.Request_No = DBClass.getMaxEntry_No("MaterialIssueRequest", "Request_No");
                 obj.MIRDate = Convert.ToDateTime(MIRDate);

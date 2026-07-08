@@ -123,7 +123,12 @@ $(document).ready(function () {
         if (item.id === '#ddlDepartment') {
             $element.prop('disabled', false);
             const deptHandler = function () {
-                loaddoctor();
+                var selectedDept = $('#ddlDepartment').val();
+                checkOutPatientDischarge(selectedDept, function(hasActiveOPD) {
+                    if (!hasActiveOPD) {
+                        loaddoctor();
+                    }
+                });
             };
             if (!isInsideModal) {
                 $element.off('select2:select').on('select2:select', deptHandler);
