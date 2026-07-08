@@ -7,6 +7,10 @@
             overflow: auto;
             max-height: 150px;
         }
+
+    input[type="text"] {
+    width: 100%;
+}
         /*k*/
         .pending-badge {
     display: inline-block;
@@ -232,7 +236,8 @@
                                 text: error.get_message()
                             });
                         });
-                }
+            }
+            var autoRecvOPD = '0';
             var Appointment;
             function CheckAppointmentAllow() {
 
@@ -258,7 +263,18 @@
                     }
                 });
             }
-
+            function AutoFillCashInHand() {
+                debugger;
+                if (autoRecvOPD != '01') return;
+                var mainDept = $('#txtMaindepartment').val();
+                if (mainDept != '01' && mainDept != '02') return;
+                var netPayable = $('#txtNetPayable').val();
+                if (!netPayable || netPayable == '0') return;
+                // Always set, do not check currentCash
+                $('#txtcashinhand').val(parseFloat(netPayable).toFixed(0));
+                // Do not set balance to 0 here; let SumTotalAmountrecived handle it.
+                SumTotalAmountrecived();
+            }
             var Rpts;
             function CheckReceiptsUpdateonBilling() {
 
@@ -3209,6 +3225,8 @@
                     $('#txtDisAmt').val(total_Disc);
                     var net = Net_Amt - total_Disc;
                     $('#txtNetPayable').val(TotalAmount);
+                    debugger;
+                    AutoFillCashInHand();   // ← moved here, after Net Payable is set
                     var AmtReceived = $('#txtAmountReceived').val();
                     var amt = parseFloat(AmtReceived) || 0;
                     if ($('#txtTotalPayable').val() != '') {
@@ -3243,6 +3261,8 @@
 
                     $('#txtDisAmt').val(parseFloat(total_Disc).toFixed(2));
                     $('#txtNetPayable').val(TotalAmount.toFixed());
+                    debugger;
+                    AutoFillCashInHand();
                     var AmtReceived = $('#txtAmountReceived').val();
                     if ($('#txtTotalPayable').val() != '') {
                         debugger;
@@ -3536,6 +3556,8 @@
                     });
                     $('#txtDisPer').val(DisPer.toFixed(2));
                     $('#hdntxtDisPer').val(DisPer.toFixed(6));
+                    debugger;
+                    AutoFillCashInHand();
                 }
                 else {
                     debugger;
@@ -3552,7 +3574,8 @@
                     $('#txtDisAmt').val(TotalDiscountAmount.toFixed(0));
                     $('#hdnBaseNetPayable').val(TotalNetAmount.toFixed(0));
                     $('#txtNetPayable').val(TotalNetAmount.toFixed(0));
-
+                    debugger;
+                    AutoFillCashInHand();
                     // Update each row's discount values
                     $.each($('#tblDetails tbody tr'), function (key, value) {
                         var qty = parseFloat($(value).find('input[name="txtQty"]').val()) || 1;
@@ -5241,18 +5264,18 @@
                 var AmtReceived = $('#txtAmountReceived').val();
                 if ($('#txtTotalPayable').val() != '') {
                     if (AmtReceived != '') {
-                        // $('#txtBalances').val(Math.round(parseFloat(NetAmount) - parseFloat(AmtReceived)));
                         $('#txtBalances').val(((TotalNetAmount + PreviousAmount) - (AmtReceived + AdvanceAmount + PreviousPaid)).toFixed());
                     }
                     else
-                        // $('#txtBalances').val(Math.round(parseFloat(NetAmount)));
                         $('#txtBalances').val(((TotalNetAmount + PreviousAmount) - (AmtReceived + AdvanceAmount + PreviousPaid)).toFixed());
                 }
                 else {
-                    // $('#txtBalances').val(Math.round(parseFloat(NetAmount)));
                     $('#txtBalances').val(((TotalNetAmount + PreviousAmount) - (AmtReceived + AdvanceAmount + PreviousPaid)).toFixed());
                 }
+
+                AutoFillCashInHand();   // <--- ADD THIS LINE
             }
+     
             function checkRepeat() {
                 var patID = $('#txtMRNo').val();
                 PageMethods.checkRepeat(patID, function (data) {
@@ -5820,6 +5843,8 @@
                     $('#lblDepartment').val(data.d.Department);
                     $('#txt_balance').val(data.d.Balance);
                     $('#txtMaindepartment').val(data.d.MainDepartment).trigger('change');
+                    debugger;
+                    setTimeout(function () { AutoFillCashInHand(); }, 300);
                     var NIC = data.d.NIC;
                     if (CNICs == '01') {
    
@@ -7240,6 +7265,20 @@
                 fillmartial();
                 fillgender();
                 CheckAppointmentAllow();
+                $.ajax({
+                    type: "POST",
+                    url: "BillingProcess.aspx/GetAutoRecvOPD",
+                    contentType: "application/json; charset=utf-8",
+                    dataType: "json",
+                    success: function (response) {
+                        autoRecvOPD = JSON.parse(response.d);
+                        // Trigger auto-fill if patient is already loaded
+                        setTimeout(function () { AutoFillCashInHand(); }, 100);
+                    },
+                    error: function (error) {
+                        console.error("Error fetching autoRecvOPD", error);
+                    }
+                });
                 CheckReceiptsUpdateonBilling();
                 CheckCNICUpdateonCondition();
 
