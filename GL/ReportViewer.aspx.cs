@@ -5619,7 +5619,7 @@ namespace PMS
                 reportPath += "PatientManagement/rptBillBasePrintHalf.rpt";
                 var logoPath = DBClass.getField("SELECT dbo.GetCompanyLogo()");
                 rd.Load(reportPath);
-                // ✅ Silently ignore if report doesn't have @IsDuplicate parameter
+                
                 try
                 {
                     int isDuplicate = 0;
@@ -5630,6 +5630,14 @@ namespace PMS
                     rd.SetParameterValue("IsDuplicate", isDuplicate);
                 }
                 catch { }
+                try
+                {
+                    rd.SetParameterValue("@Bill_ID", billId, rd.Subreports[0].Name.ToString());
+                }
+                catch
+                {
+                    // Subreport parameter doesn't exist on this report variant - ignore silently
+                }
                 rd.SetParameterValue("@Bill_Id", billId);
                 rd.SetParameterValue("@CompanyID", AppConfig.Company_ID);
                 rd.SetParameterValue("CompanyName", AppConfig.Company_Name);
