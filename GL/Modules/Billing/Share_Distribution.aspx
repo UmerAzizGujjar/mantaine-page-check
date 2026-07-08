@@ -808,6 +808,129 @@
                  }
              });
          }--%>
+
+        function PreviewShareDistribution() {
+            var patientName = $('#lblPatienName').text();
+            var mrNo = $('#lblMRNo').text();
+            var billNo = $('#txtBillNo').val();
+            var regDate = $('#lblRegDate').text();
+            var distDate = $('#txtDistributuionDate').val();
+            var shareableIncome = $('#txtShareableIncome').val();
+
+            // Revenue / detail table rows
+            var detailRows = '';
+            $('#tblDetails tbody tr').each(function () {
+                var row = $(this);
+                var account = row.find('select[name="ddlGlAccounts"] option:selected').text();
+                var description = row.find('input[name="txtDescription"]').val();
+                var total = row.find('input[name="txtTotalAmount"]').val();
+                var discPer = row.find('input[name="txtDiscountPer"]').val();
+                var discAmt = row.find('input[name="txtDiscountAmount"]').val();
+                var net = row.find('input[name="txtNetAmount"]').val();
+
+                detailRows += `
+            <tr>
+                <td>${account}</td>
+                <td>${description}</td>
+                <td style="text-align:right;">${total}</td>
+                <td style="text-align:right;">${discPer}</td>
+                <td style="text-align:right;">${discAmt}</td>
+                <td style="text-align:right;">${net}</td>
+            </tr>`;
+            });
+
+            // Doctor share table rows
+            var shareRows = '';
+            $('#tblDoctorShareDetails tbody tr').each(function () {
+                var row = $(this);
+                var accountCode = row.find('input[name="Account_Code"]').val();
+                var accountName = row.find('input[name="Account_Name"]').val();
+                var total = row.find('input[name="txtRevenuAmount"]').val();
+                var discPer = row.find('input[name="txtRevenuDiscPer"]').val();
+                var discAmt = row.find('input[name="txtRevenuDiscAmount"]').val();
+                var net = row.find('input[name="txtRevenuNetAmount"]').val();
+
+                shareRows += `
+            <tr>
+                <td>${accountCode}</td>
+                <td>${accountName}</td>
+                <td style="text-align:right;">${total}</td>
+                <td style="text-align:right;">${discPer}</td>
+                <td style="text-align:right;">${discAmt}</td>
+                <td style="text-align:right;">${net}</td>
+            </tr>`;
+            });
+
+            var html = `
+    <html>
+    <head>
+        <title>Share Distribution Preview</title>
+        <style>
+            body { font-family: Arial, sans-serif; margin: 20px; color:#222; }
+            h2 { text-align:center; margin-bottom:5px; }
+            .info-table { width:100%; margin-bottom:20px; border-collapse:collapse; }
+            .info-table td { padding:4px 8px; font-size:13px; }
+            table.data { width:100%; border-collapse:collapse; margin-bottom:25px; }
+            table.data th, table.data td { border:1px solid #999; padding:6px 8px; font-size:13px; }
+            table.data th { background:#333; color:#fff; text-align:center; }
+            .section-title { background:#000; color:#fff; padding:6px 10px; font-size:15px; margin-bottom:0; }
+            .total-box { text-align:right; font-weight:bold; font-size:14px; margin-bottom:15px; }
+            @media print {
+                .no-print { display:none; }
+            }
+        </style>
+    </head>
+    <body>
+        <h2>Share Distribution Report</h2>
+        <table class="info-table">
+            <tr>
+                <td><b>MR No:</b> ${mrNo}</td>
+                <td><b>Patient Name:</b> ${patientName}</td>
+                <td><b>Bill No:</b> ${billNo}</td>
+            </tr>
+            <tr>
+                <td><b>Reg Date:</b> ${regDate}</td>
+                <td><b>Distribution Date:</b> ${distDate}</td>
+                <td></td>
+            </tr>
+        </table>
+
+        <p class="section-title">Revenue / Distribution Details</p>
+        <table class="data">
+            <thead>
+                <tr>
+                    <th>Account</th><th>Description</th><th>Total</th>
+                    <th>Disc %</th><th>Disc Amt</th><th>Net Amount</th>
+                </tr>
+            </thead>
+            <tbody>${detailRows}</tbody>
+        </table>
+
+        <div class="total-box">Net Sharable Income: ${shareableIncome}</div>
+
+        <p class="section-title">Doctor / Account Share Distribution</p>
+        <table class="data">
+            <thead>
+                <tr>
+                    <th>Account</th><th>Doctor</th><th>Total</th>
+                    <th>Disc %</th><th>Disc Amt</th><th>Net Amount</th>
+                </tr>
+            </thead>
+            <tbody>${shareRows}</tbody>
+        </table>
+
+        <div class="no-print" style="text-align:center; margin-top:20px;">
+            <button onclick="window.print()">Print</button>
+            <button onclick="window.close()">Close</button>
+        </div>
+    </body>
+    </html>`;
+
+            var previewWindow = window.open('', '_blank', 'width=900,height=700');
+            previewWindow.document.open();
+            previewWindow.document.write(html);
+            previewWindow.document.close();
+        }
     </script>
 
 </asp:Content>
@@ -1092,6 +1215,9 @@
             <div class="col-lg-2 col-md-6 col-sm-6">
                 <input type="button" id="btnPrint" class="btn btn-primry" value="Print" onclick="PrintShareDistribution();" />
             </div> 
+            <div class="col-lg-2 col-md-6 col-sm-6">
+            <input type="button" id="btnPreview" class="btn btn-primry" value="Preview" onclick="PreviewShareDistribution();" />
+            </div>
 
         </div>
     </div>
