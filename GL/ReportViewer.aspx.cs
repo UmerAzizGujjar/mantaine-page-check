@@ -5619,7 +5619,7 @@ namespace PMS
                 reportPath += "PatientManagement/rptBillBasePrintHalf.rpt";
                 var logoPath = DBClass.getField("SELECT dbo.GetCompanyLogo()");
                 rd.Load(reportPath);
-                // ✅ Silently ignore if report doesn't have @IsDuplicate parameter
+                
                 try
                 {
                     int isDuplicate = 0;
