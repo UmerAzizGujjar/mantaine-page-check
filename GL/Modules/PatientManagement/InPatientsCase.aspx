@@ -163,6 +163,7 @@
             LoadProcedureTemplates();
             CheckProcedureTabPermission();
             LoadMedicationDoctor();
+            CheckDischargeDetailsPermission();
 
             if (typeof CKEDITOR !== 'undefined') {
                 CKEDITOR.replace('txtViewTemplateContent', {
@@ -468,6 +469,53 @@
 
 
         });
+        // InPatient Discharge Details button
+        $(document).on('click', '#btnAddDischargeDetails', function () {
+            var InPatientID = $('#ctl00_MainContent_txtIn_Patient_ID').val();
+            $.ajax({
+                type: "POST",
+                url: "InPatientsCase.aspx/CheckFinalBillAndDischargePermission",
+                data: JSON.stringify({ InPatientID: parseInt(InPatientID) }),
+                contentType: "application/json; charset=utf-8",
+                dataType: "json",
+                success: function (response) {
+                    var result = JSON.parse(response.d);
+                    if (result.allowed) {
+                        var url = 'NewOutPatient.aspx?Type=InPatientDischarge&InPatientID=' + InPatientID;
+                        if (result.existingOutPatientID && result.existingOutPatientID != 0) {
+                            url += '&ID=' + result.existingOutPatientID;
+                        }
+                        window.open(url, '_blank');
+                    } else {
+                        Swal.fire({
+                            icon: 'warning',
+                            title: 'Cannot Add Discharge Details',
+                            text: result.reason
+                        });
+                    }
+                }
+            });
+        });
+
+        function CheckDischargeDetailsPermission() {
+            var InPatientID = $('#ctl00_MainContent_txtIn_Patient_ID').val();
+            if (InPatientID && InPatientID != "(New)") {
+                $.ajax({
+                    type: "POST",
+                    url: "InPatientsCase.aspx/CheckFinalBillAndDischargePermission",
+                    data: JSON.stringify({ InPatientID: parseInt(InPatientID) }),
+                    contentType: "application/json; charset=utf-8",
+                    dataType: "json",
+                    success: function (response) {
+                        var result = JSON.parse(response.d);
+                        if (result.allowed) {
+                            $('#divAddDischargeDetails').show();
+                        }
+                    }
+                });
+            }
+        }
+
         function check() {
              
             if ($("#ctl00_MainContent_ddlDepartments :selected").text().trim() == "PSYCHIATRY") {
@@ -10170,10 +10218,13 @@
                                                      <div class="col-lg-2 col-md-3 col-sm-12">
                                                          <input type="button" id="btnprintVital" value="Print" class="btn btn-primry" onclick="PrintVitalMedicationDetail()" />
                                                      </div>
-                                                     <div class="col-lg-2 col-md-3 col-sm-12">
-                                                         <input type="button" id="btnDischargeRequest" value="Discharge Request" class="btn btn-primry" onclick="DischargeRequest()" />
-                                                         <input type="hidden" runat="server" id="DischargeRequest" value='false'/>
-                                                     </div>
+                                                      <div class="col-lg-2 col-md-3 col-sm-12">
+                                                          <input type="button" id="btnDischargeRequest" value="Discharge Request" class="btn btn-primry" onclick="DischargeRequest()" />
+                                                          <input type="hidden" runat="server" id="DischargeRequest" value='false'/>
+                                                      </div>
+                                                      <div class="col-lg-2 col-md-3 col-sm-12" id="divAddDischargeDetails" style="display:none;">
+                                                          <input type="button" id="btnAddDischargeDetails" value="Add Discharge Details" class="btn btn-primry" />
+                                                      </div>
                                                  </div>
                                              </div>
                                          </div>

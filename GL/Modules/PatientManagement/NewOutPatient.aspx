@@ -234,7 +234,42 @@
             loaddoctor_byDep();
             LoadSharingPolicy();
             var id = '<%=Request.QueryString["ID"]%>';
-            if (id != "") {
+            var formType = '<%=Request.QueryString["Type"]%>';
+            var inPatientID = '<%=Request.QueryString["InPatientID"]%>';
+            globalFormType = formType;
+
+            if (formType == "InPatientDischarge" && id != "") {
+                $('#<%= hdfPatient_ID.ClientID %>').val(inPatientID);
+                $('#<%= hdfInPatientID.ClientID %>').val(inPatientID);
+                $('#<%= hdfFormType.ClientID %>').val('InPatientDischarge');
+                $('#<%= txtOut_Patient_ID.ClientID%>').val(inPatientID);
+                loadPatientFormData(id);
+                loaddoctor(id);
+                $('#btnSave').val("Update");
+                AppendSymtompsHistory();
+                LoadMedicines();
+                AppendPrimaryDiagnosisHistory();
+                AppendFinalDiagnosisHistory();
+                AppendComplaintsHistory();
+                updateHistoryTable();
+                LoadLabResultrpt();
+                LoadServices();
+
+                $('.exam-row input[type="checkbox"]').each(function () {
+                    var param = this.id.split('_chk').pop();
+                    if (this.checked) {
+                        Add_GeneralExamRow(param);
+                    }
+                });
+            }
+            else if (formType == "InPatientDischarge" && inPatientID != "") {
+                $('#<%= hdfPatient_ID.ClientID %>').val(inPatientID);
+                $('#<%= hdfInPatientID.ClientID %>').val(inPatientID);
+                $('#<%= hdfFormType.ClientID %>').val('InPatientDischarge');
+                $('#ctl00_MainContent_txtOut_Patient_ID').val("(New)");
+                $('#<%= txtOut_Patient_ID.ClientID%>').val("(New)");
+            }
+            else if (id != "") {
                 $('#<%= txtOut_Patient_ID.ClientID%>').val(id);
                 loadPatientFormData(id);
                 loaddoctor(id);
@@ -262,6 +297,9 @@
                 $('#ctl00_MainContent_txtOut_Patient_ID').val("(New)");
                 $('#<%= txtOut_Patient_ID.ClientID%>').val("(New)");
 
+            }
+            if (formType == "InPatientDischarge") {
+                $('#09, #10, #tab09, #tab10').hide();
             }
             $("#ctl00_MainContent_txtLMP").datepicker();
             $('.labtest_checkbox').hide();
@@ -554,6 +592,7 @@
         });
     </script>
     <script id="functions" type="text/javascript">
+        var globalFormType = '';
         function loadPolicyVisibility() {
             $.ajax({
                 type: "POST",
@@ -832,11 +871,11 @@
 
     var ResulttrptDetail = { Pat: PatID, OutPatientID: OutPatID, Resulttrpt: tblResultrpt };
 
-    PageMethods.SaveLabResultrpt(btnsave, JSON.stringify(ResulttrptDetail), function (response) { });
+    PageMethods.SaveLabResultrpt(btnsave, JSON.stringify(ResulttrptDetail), globalFormType, function (response) { });
 }
 
 function LoadLabResultrpt() {
-            PageMethods.LoadLabResultrptDetail($('#<%= txtOut_Patient_ID.ClientID%>').val(), function (res) {
+            PageMethods.LoadLabResultrptDetail($('#<%= txtOut_Patient_ID.ClientID%>').val(), globalFormType, function (res) {
                 var Medicines = JSON.parse(res);
                 var rows = '';
 
@@ -3356,7 +3395,7 @@ function LoadLabResultrpt() {
                 return;
             }
 
-            PageMethods.LoadServicesDetail(OutPatID, function (res) {
+            PageMethods.LoadServicesDetail(OutPatID, globalFormType, function (res) {
                 if (!res) return;
 
                 var Services = JSON.parse(res);
@@ -3726,7 +3765,7 @@ function LoadLabResultrpt() {
             });
 
 
-            PageMethods.SaveComplaintsOfPatient(JSON.stringify(ComplaintsList), function (response) {
+            PageMethods.SaveComplaintsOfPatient(JSON.stringify(ComplaintsList), globalFormType, function (response) {
             });
 
         }
@@ -3746,7 +3785,7 @@ function LoadLabResultrpt() {
             });
 
 
-            PageMethods.SavePrimaryDiagnosisOfPatient(JSON.stringify(PrimaryDiagnosisList), function (response) {
+            PageMethods.SavePrimaryDiagnosisOfPatient(JSON.stringify(PrimaryDiagnosisList), globalFormType, function (response) {
             });
 
         }
@@ -3766,7 +3805,7 @@ function LoadLabResultrpt() {
             });
 
 
-            PageMethods.SaveFinalDiagnosisOfPatient(JSON.stringify(FinalDiagnosisList), function (response) {
+            PageMethods.SaveFinalDiagnosisOfPatient(JSON.stringify(FinalDiagnosisList), globalFormType, function (response) {
             });
 
         }
@@ -3800,7 +3839,7 @@ function LoadLabResultrpt() {
 
            console.log('Saving services:', ServiceDetails);
 
-           PageMethods.SaveServices(JSON.stringify(ServiceDetails),
+           PageMethods.SaveServices(JSON.stringify(ServiceDetails), globalFormType,
                function (response) {
                    // Parse response if using enhanced DTO
                    try {
@@ -3854,8 +3893,12 @@ function LoadLabResultrpt() {
                 OutPatID = 0;
             var MedicineDetails = { Pat: PatID, PatientID: OutPatID, MedicineList: MedicinesList }
             console.log(MedicineDetails);
-            PageMethods.SaveMedicines(JSON.stringify(MedicineDetails), function (response) {
-                saveTests();
+            PageMethods.SaveMedicines(JSON.stringify(MedicineDetails), globalFormType, function (response) {
+                if (globalFormType !== 'InPatientDischarge') {
+                    saveTests();
+                } else {
+                    SaveHistoryTab();
+                }
             });
 
         }
@@ -3924,7 +3967,7 @@ function LoadLabResultrpt() {
                 SymtomsList: SymtomsList
             }
             console.log(SymtomsList);
-            PageMethods.SaveSymtoms(JSON.stringify(SymtomsList), function (response) {
+            PageMethods.SaveSymtoms(JSON.stringify(SymtomsList), globalFormType, function (response) {
                 SaveProtos();
                 saveAllRecord();
             });
@@ -3948,7 +3991,7 @@ function LoadLabResultrpt() {
                 opdid = 0;
             var ProtoDetails = { PatId: patID, opdid: opdid, ProtoList: ProcedureList };
             console.log(ProtoDetails);
-            PageMethods.SaveProto(btnSave, JSON.stringify(ProtoDetails), function (response) {
+            PageMethods.SaveProto(btnSave, JSON.stringify(ProtoDetails), globalFormType, function (response) {
 
             });
         }
@@ -4068,7 +4111,9 @@ function LoadLabResultrpt() {
                 btnsave: safeGetValue('#btnSave') || "Save",
                 Discharged: document.getElementById("DischargeCheckBox") ? document.getElementById("DischargeCheckBox").checked : false,
                 Administration: Administration,
-                Out_Patient_ID: Out_Patient_ID
+                Out_Patient_ID: Out_Patient_ID,
+                FormType: $('#<%= hdfFormType.ClientID %>').val() || "",
+                InPatientID: parseInt($('#<%= hdfInPatientID.ClientID %>').val()) || 0
             };
 
             console.log("Data being sent:", data);
@@ -4104,6 +4149,12 @@ function LoadLabResultrpt() {
                             }
                         });
                         debugger;
+                        var formTypeId = $('#<%= hdfFormType.ClientID %>').val();
+                        if (formTypeId === 'InPatientDischarge') {
+                            var inPatID = $('#<%= hdfInPatientID.ClientID %>').val();
+                            window.location = "NewOutPatient.aspx?Type=InPatientDischarge&InPatientID=" + inPatID + "&ID=" + response.d;
+                            return;
+                        }
                         if (SharingPolicy == '001') {
 
                         
@@ -4171,7 +4222,7 @@ function LoadLabResultrpt() {
         function AppendSymtompsHistory() {
             var OutPatientID = $('#<%= txtOut_Patient_ID.ClientID%>').val();
 
-            PageMethods.LoadSymtompsHistory(OutPatientID, function (res) {
+            PageMethods.LoadSymtompsHistory(OutPatientID, globalFormType, function (res) {
                 var Symptoms = JSON.parse(res);
                 var rows = '';
 
@@ -4320,7 +4371,7 @@ function LoadLabResultrpt() {
                 return; // Exit if new patient
             }
 
-            PageMethods.LoadMedicines(patientId, function (res) {
+            PageMethods.LoadMedicines(patientId, globalFormType, function (res) {
                 try {
                     var Medicines = JSON.parse(res);
                     var rows = '';
@@ -4370,7 +4421,7 @@ function LoadLabResultrpt() {
         }
         function AppendComplaintsHistory() {
             var OutPatientID = $('#<%= txtOut_Patient_ID.ClientID%>').val();
-            PageMethods.LoadComplaints(OutPatientID, function (res) {
+            PageMethods.LoadComplaints(OutPatientID, globalFormType, function (res) {
                 var Complaints = JSON.parse(res);
                 var rows = '';
 
@@ -4397,7 +4448,7 @@ function LoadLabResultrpt() {
         function AppendFinalDiagnosisHistory() {
             var OutPatientID = $('#<%= txtOut_Patient_ID.ClientID%>').val();
 
-            PageMethods.LoadFinalDiagnosis(OutPatientID, function (res) {
+            PageMethods.LoadFinalDiagnosis(OutPatientID, globalFormType, function (res) {
                 var FinalDiagnosis = JSON.parse(res);
                 var rows = '';
 
@@ -4427,7 +4478,7 @@ function LoadLabResultrpt() {
         function AppendPrimaryDiagnosisHistory() {
             var OutPatientID = $('#<%= txtOut_Patient_ID.ClientID%>').val();
 
-            PageMethods.LoadPrimaryDiagnosis(OutPatientID, function (res) {
+            PageMethods.LoadPrimaryDiagnosis(OutPatientID, globalFormType, function (res) {
                 var PrimaryDiagnosis = JSON.parse(res);
                 var rows = '';
 
@@ -6173,6 +6224,8 @@ function LoadLabResultrpt() {
     <asp:TextBox ID="txtOut_Patient_ID" runat="server" ReadOnly="True" Style="display: none;"></asp:TextBox>
     <asp:HiddenField ID="hdfPatient_ID" Value="(New)" runat="server" />
     <asp:HiddenField ID="hdfReg_ID" Value="(New)" runat="server" />
+    <asp:HiddenField ID="hdfInPatientID" Value="" runat="server" />
+    <asp:HiddenField ID="hdfFormType" Value="" runat="server" />
     <asp:HiddenField ID="hdfPatient_No" runat="server" />
     <asp:HiddenField ID="hdfdhischarge" Value="false" runat="server" />
     <asp:HiddenField ID="hdfFetch_ID" runat="server" />
