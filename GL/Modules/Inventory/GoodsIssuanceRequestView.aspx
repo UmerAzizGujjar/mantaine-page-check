@@ -143,6 +143,20 @@
                         "width": "12%"
                     },
                     {
+                        "data": null,
+                        "render": function (data, type, full) {
+                            return parseFloat(full.bln_Qty) > 0 ? "Partial" : "Complete";
+                        },
+                        "orderable": false
+                    },
+                    {
+                        "data": null,
+                        "render": function (data, type, full) {
+                            return parseFloat(full.bln_Qty) > 0 ? "" : "Closed";
+                        },
+                        "orderable": false
+                    },
+                    {
                         "render": function (data, type, full) {
                             var res = ' <a href="#"  class="editListBtn" onclick="Edit(' + full.MaterialRequest_Id + ')" style="border-radius: 4px;margin-right: 4px; color: white; padding: 5px 8px 5px 8px;"><i class="fa fa-pencil"></i>';
                             var print = '<a class="printListBtn" style ="border-radius: 4px;margin-left: 4px;padding: 5px 8px 5px 8px;" href = "#" onclick = "Print(' + full.MaterialRequest_Id + ')" id = "btnprint" ><i class="fa fa-print"></i></a >';
@@ -222,6 +236,8 @@
                         <th>Status</th>
                         <th>Creation Date</th>
                         <th>Approved Date</th>
+                        <th>GIR Status</th>
+                        <th>GIR Status</th>
                         <th>Actions</th>
                     </tr>
 

@@ -1199,7 +1199,7 @@
                 CountPerQtyOutput();
                 LoadMedicationHistory($('#<%= hdfPatient_ID.ClientID%>').val());
                 LoadMedicinesFormInPatient($('#<%= hdfPatient_ID.ClientID%>').val());
-               <%-- // //Appendtestintable($('#<%= hdfPatient_ID.ClientID%>').val());--%>
+                Appendtestintable($('#<%= hdfPatient_ID.ClientID%>').val());
                 LoadInstruction();
                 LoadInstructionEdit();
                 loadServices();
@@ -2782,63 +2782,153 @@
             }
         }
 
-        function Appendtestintable(patid) {
-            
+        // function Appendtestintable(patid) {
 
+        //     var in_patient_Id = $('#ctl00_MainContent_hdnInpatient_id').val()
+        //     $('#tblLabtest tbody').empty();
+
+        //     PageMethods.GetTestListForHistoryIPD(in_patient_Id, function (res) {
+        //             var test = JSON.parse(res);
+        //             var Result = 'Result';
+        //             $.each(test, function (key, value) {
+        //                 var Result = 'Pendding';
+        //                 var timeStamp = parseInt(value.Date.substr(6, 10));
+        //                 var date = moment.unix(timeStamp).format('M/D/YYYY h:m:s A');
+        //                 if (value.L_R_Rotation_ID == null) value.L_R_Rotation_ID = "";
+        //                 var datearray = date.split("/");
+        //                 var newdate = datearray[1] + '/' + datearray[0] + '/' + datearray[2];
+        //                 debugger;
+        //                 if (value.isApproved == true) {
+        //                     Result = "View Result";
+        //                     Sample = "Yes";
+        //                     $("#btnprint").attr('disabled', false)
+        //                 }
+        //                 if (value.isApproved == false) {
+        //                     Result = "Waiting";
+        //                     Sample = "No";
+        //                     $("#btnprint").attr('disabled', true)
+        //                 }
+
+        //                 if (value.Test_ID != 0) {
+        //                     row = '<tr>' +
+        //                         '<td><input type="hidden" name="testDate" value="' + newdate + '">' + newdate + '</td>' +
+        //                         '<td><input type="hidden" name="testID" value="' + value.Test_ID + '" />' +
+        //                         '<input type="hidden" name="txtValueType" value="' + value.Value_Type + '"/>' +
+        //                         '<input type="hidden" name="txtRecievedID" value="' + value.Recieved_ID + '"/>' +
+        //                         '<input type="hidden" name="txtRotation" value="0">' +
+        //                         '<input type="hidden" name="txtGroupCategory" value="0">' +
+        //                         (value.DepartmentName == null ? '' : value.DepartmentName + ', ') +
+        //                         ' ' + value.Test_Name + ' ' +
+        //                         (value.GroupName == null ? ' ' : ', ' + value.GroupName) +
+        //                         '</td>' +
+        //                         '<td>' + Result + '</td>' +
+        //                         '<td>' + value.DoctorName + '</td>' +
+        //                         '<td>' +
+        //                         '<a style="border-radius: 4px;background-color:#308665db !important;margin-left: 4px;color: white;padding: 5px 8px 5px 8px;" href="#" onclick="PreviewReport(this)" id="btnprint">' +
+        //                         '<i class="fa fa-print" style="color:white !important;"></i></a>' +
+        //                         '</td>' +
+        //                         '<td style="display:none;">' +
+        //                         '<input type="hidden" name="List_Of_Test_IDs" id="ListOfTestIDs" value="' + value.Lab_Test_ID + '" />' +
+        //                         '<input type="hidden" name="Bill_Details_ID" id="Bill_Details_ID" value="' + value.Bill_Details_ID + '" />' +
+        //                         '<input type="hidden" name="Report_Colum" id="Report_Colum" value="' + value.Report_Column + '" />' +
+        //                         '<input type="hidden" name="test_wise_id" id="test_wise_id" value="' + value.Patient_ID + '" />' +
+        //                         '<input type="hidden" name="Lab_Test_Detail_ID" id="Lab_Test_Detail_ID" value="' + value.Lab_Test_Detail_ID + '" />' +
+        //                         '</td></tr>';
+        //                 }
+        //                 $('#tblLabtest tbody').append(row);
+        //                 console.log(row);
+        //             });
+        //         });
+        // }
+
+        function Appendtestintable(patid) {
+
+            var in_patient_Id = $('#ctl00_MainContent_hdnInpatient_id').val();
             $('#tblLabtest tbody').empty();
 
-                PageMethods.GetTestListForHistoryIPD(patid, function (res) {
-                    var test = JSON.parse(res);
-                    var Result = 'Result';
-                    $.each(test, function (key, value) {
-                        var Result = 'Pendding';
-                        var timeStamp = parseInt(value.Date.substr(6, 10));
-                        var date = moment.unix(timeStamp).format('M/D/YYYY h:m:s A');
-                        if (value.L_R_Rotation_ID == null) value.L_R_Rotation_ID = "";
-                        var datearray = date.split("/");
-                        var newdate = datearray[1] + '/' + datearray[0] + '/' + datearray[2];
-                        debugger;
-                        if (value.isApproved == true) {
-                            Result = "View Result";
-                            Sample = "Yes";
-                            $("#btnprint").attr('disabled', false)
-                        }
-                        if (value.isApproved == false) {
-                            Result = "Waiting";
-                            Sample = "No";
-                            $("#btnprint").attr('disabled', true)
-                        }
+            PageMethods.GetTestListForHistoryIPD(in_patient_Id, function (res) {
 
-                        if (value.Test_ID != 0) {
-                            row = '<tr>' +
-                                '<td><input type="hidden" name="testDate" value="' + newdate + '">' + newdate + '</td>' +
-                                '<td><input type="hidden" name="testID" value="' + value.Test_ID + '" />' +
-                                '<input type="hidden" name="txtValueType" value="' + value.Value_Type + '"/>' +
-                                '<input type="hidden" name="txtRecievedID" value="' + value.Recieved_ID + '"/>' +
-                                '<input type="hidden" name="txtRotation" value="0">' +
-                                '<input type="hidden" name="txtGroupCategory" value="0">' +
-                                (value.DepartmentName == null ? '' : value.DepartmentName + ', ') +
-                                ' ' + value.Test_Name + ' ' +
-                                (value.GroupName == null ? ' ' : ', ' + value.GroupName) +
-                                '</td>' +
-                                '<td>' + Result + '</td>' +
-                                '<td>' + value.DoctorName + '</td>' +
-                                '<td>' +
-                                '<a style="border-radius: 4px;background-color:#308665db !important;margin-left: 4px;color: white;padding: 5px 8px 5px 8px;" href="#" onclick="PreviewReport(this)" id="btnprint">' +
-                                '<i class="fa fa-print" style="color:white !important;"></i></a>' +
-                                '</td>' +
-                                '<td style="display:none;">' +
-                                '<input type="hidden" name="List_Of_Test_IDs" id="ListOfTestIDs" value="' + value.Lab_Test_ID + '" />' +
-                                '<input type="hidden" name="Bill_Details_ID" id="Bill_Details_ID" value="' + value.Bill_Details_ID + '" />' +
-                                '<input type="hidden" name="Report_Colum" id="Report_Colum" value="' + value.Report_Column + '" />' +
-                                '<input type="hidden" name="test_wise_id" id="test_wise_id" value="' + value.Patient_ID + '" />' +
-                                '<input type="hidden" name="Lab_Test_Detail_ID" id="Lab_Test_Detail_ID" value="' + value.Lab_Test_Detail_ID + '" />' +
-                                '</td></tr>';
-                        }
+                var test = JSON.parse(res);
+
+                $.each(test, function (key, value) {
+
+                    var Result = "";
+                    var Sample = "";
+
+                    var timeStamp = parseInt(value.Date.substr(6, 10));
+                    var date = moment.unix(timeStamp).format('M/D/YYYY h:m:s A');
+
+                    if (value.L_R_Rotation_ID == null)
+                        value.L_R_Rotation_ID = "";
+
+                    var datearray = date.split("/");
+                    var newdate = datearray[1] + '/' + datearray[0] + '/' + datearray[2];
+
+                    if (value.isApproved) {
+                        Result = "View Result";
+                        Sample = "Yes";
+                    }
+                    else {
+                        Result = "Waiting";
+                        Sample = "No";
+                    }
+
+                    var printButton = "";
+
+                    if (value.isApproved) {
+                        printButton =
+                            '<a href="#" ' +
+                            'style="border-radius:4px;background-color:#308665db;margin-left:4px;color:white;padding:5px 8px;" ' +
+                            'onclick="PreviewReport(this); return false;">' +
+                            '<i class="fa fa-print" style="color:white;"></i>' +
+                            '</a>';
+                    }
+                    else {
+                        printButton =
+                            '<a href="javascript:void(0);" ' +
+                            'style="border-radius:4px;background-color:#bfbfbf;margin-left:4px;color:white;padding:5px 8px;pointer-events:none;cursor:not-allowed;opacity:0.5;">' +
+                            '<i class="fa fa-print" style="color:white;"></i>' +
+                            '</a>';
+                    }
+
+                    if (value.Test_ID != 0) {
+
+                        var row = '<tr>' +
+                            '<td>' +
+                            '<input type="hidden" name="testDate" value="' + newdate + '">' +
+                            newdate +
+                            '</td>' +
+
+                            '<td>' +
+                            '<input type="hidden" name="testID" value="' + value.Test_ID + '" />' +
+                            '<input type="hidden" name="txtValueType" value="' + value.Value_Type + '"/>' +
+                            '<input type="hidden" name="txtRecievedID" value="' + value.Recieved_ID + '"/>' +
+                            '<input type="hidden" name="txtRotation" value="0">' +
+                            '<input type="hidden" name="txtGroupCategory" value="0">' +
+                            (value.DepartmentName == null ? '' : value.DepartmentName + ', ') +
+                            ' ' + value.Test_Name +
+                            (value.GroupName == null ? '' : ', ' + value.GroupName) +
+                            '</td>' +
+
+                            '<td>' + Result + '</td>' +
+
+                            '<td>' + value.DoctorName + '</td>' +
+
+                            '<td>' + printButton + '</td>' +
+
+                            '<td style="display:none;">' +
+                            '<input type="hidden" name="List_Of_Test_IDs" value="' + value.Lab_Test_ID + '" />' +
+                            '<input type="hidden" name="Bill_Details_ID" value="' + value.Bill_Details_ID + '" />' +
+                            '<input type="hidden" name="Report_Colum" value="' + value.Report_Column + '" />' +
+                            '<input type="hidden" name="test_wise_id" value="' + value.Patient_ID + '" />' +
+                            '<input type="hidden" name="Lab_Test_Detail_ID" value="' + value.Lab_Test_Detail_ID + '" />' +
+                            '</td>' +
+                            '</tr>';
+
                         $('#tblLabtest tbody').append(row);
-                        console.log(row);
-                    });
+                    }
                 });
+            });
         }
 
         function PreviewReport($this) {
