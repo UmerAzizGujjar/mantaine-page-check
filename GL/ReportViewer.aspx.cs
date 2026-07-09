@@ -2277,11 +2277,19 @@ namespace PMS
             }
             else if (reportName == "PrintRefundReport")
             {
-
+                var refundid = Request.QueryString["Refund_ID"].ToString();
                 reportPath += "Billings/rptPrintRefundPrint.rpt";
                 rd.Load(reportPath);
                 rd.SummaryInfo.ReportTitle = reportTitle;
-                rd.SetParameterValue("@Refund_IDs", Request.QueryString["Refund_ID"]);
+                rd.SetParameterValue("@Refund_IDs", refundid);
+                try
+                {
+                    rd.SetParameterValue("@Refund_IDs", refundid, rd.Subreports[0].Name.ToString());
+                }
+                catch
+                {
+                    // Subreport parameter doesn't exist on this report variant - ignore silently
+                }
             }
             else if (reportName == "PrinAllReceiptDetail")
             {
