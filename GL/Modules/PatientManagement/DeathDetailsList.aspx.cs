@@ -56,7 +56,7 @@ namespace PMS.Modules.PatientManagement
                             pat = sortColumnDirection == "asc" ? pat.OrderBy(a => a.Department) : pat.OrderByDescending(a => a.Department);
                             break;
                         case "DATE":
-                            pat = sortColumnDirection == "asc" ? pat.OrderBy(a => a.Admission_Date) : pat.OrderByDescending(a => a.Admission_Date);
+                            pat = sortColumnDirection == "asc" ? pat.OrderBy(a => a.Death_Date) : pat.OrderByDescending(a => a.Death_Date);
                             break;
                         default:
                             pat = pat.OrderByDescending(a => a.IN_Patient_ID);
