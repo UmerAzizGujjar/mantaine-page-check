@@ -289,14 +289,6 @@
                         logoHtml = '<img src="' + data.Company_Logo_Path + '" alt="Logo" style="max-height:80px; max-width:150px; object-fit:contain;" onerror="this.style.display=\'none\'" />';
                     }
 
-                    //function formatDate(val) {
-                    //    if (!val) return '';
-                    //    try {
-                    //        var match = /\/Date\((\d+)\)\//.exec(val);
-                    //        if (match) return new Date(parseInt(match[1])).toLocaleDateString('en-GB');
-                    //        return new Date(val).toLocaleDateString('en-GB');
-                    //    } catch (e) { return val || ''; }
-                    //}
                     function formatDate(val) {
                         if (!val) return '';
                         try {
