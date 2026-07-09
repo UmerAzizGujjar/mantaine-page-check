@@ -822,7 +822,7 @@
                 // Show success message
                 AddVitals();
                 setDropdownValue('ctl00_MainContent_ddldoctors', data.referDoc);
-
+                setValue('ctl00_MainContent_chkHypertensive', data.Hypertensive);
                 setValue('ctl00_MainContent_chkSmokers', data.Smokers);
                 setValue('ctl00_MainContent_chkNon_Smokers', data.Non_Smokers);
                 setValue('ctl00_MainContent_chkDiabetics', data.Diabetics);

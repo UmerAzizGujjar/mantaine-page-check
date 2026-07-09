@@ -1722,13 +1722,13 @@ namespace PMS.Modules.PatientManagement
                         Non_Smokers = qry.Non_Smokers?.ToString().ToLower() ?? "false",
                         Diabetics = qry.Diabetics?.ToString().ToLower() ?? "false",
                         Hypertensive = qry.Hypertensive?.ToString().ToLower() ?? "false",
-                       // DM = qry.DM?.ToString().ToLower() ?? "false",
-                       // HTN = qry.HTN?.ToString().ToLower() ?? "false",
-                       // TB = qry.TB?.ToString().ToLower() ?? "false",
-                       // IHD = qry.IHD?.ToString().ToLower() ?? "false",
-                        //Asthma = qry.Asthma?.ToString().ToLower() ?? "false"
-                        // Alcohol_Consumption = qry.Alcohol_Consumption?.ToString().ToLower() ?? "false",
-                        //Smokeless = qry.Naswar_Smokeless?.ToString().ToLower() ?? "false"
+                       DM = qry.DM?.ToString().ToLower() ?? "false",
+                       HTN = qry.HTN?.ToString().ToLower() ?? "false",
+                        TB = qry.TB?.ToString().ToLower() ?? "false",
+                       IHD = qry.IHD?.ToString().ToLower() ?? "false",
+                        Asthma = qry.Asthma?.ToString().ToLower() ?? "false",
+                        Alcohol_Consumption = qry.Alcohol_Consumption?.ToString().ToLower() ?? "false",
+                        Smokeless = qry.Naswar_Smokeless?.ToString().ToLower() ?? "false"
                     }
                 };
 
