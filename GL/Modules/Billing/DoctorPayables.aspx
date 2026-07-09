@@ -4,101 +4,78 @@
 
 <asp:Content ID="Content1" ContentPlaceHolderID="HeadContent" runat="server">
     <link href="../../wwwroot/THEME_TIBBIT/CustomCSS/tablestyle.css" rel="stylesheet" />
-    <script src="https://cdn.datatables.net/buttons/2.4.2/js/buttons.colVis.min.js"></script>
     <style type="text/css">
         .no-skin .nav-list > li .submenu > li > a {
             font-size: 14px !important;
         }
 
-        #Table_1 thead {
-            font-size: 20px;
+        #Table_1 { width: 100% !important; }
+
+        #Table_1_wrapper .dataTables_filter label::before {
+            content: none !important;
         }
 
-        #Table_1 {
-            line-height: 14.5px;
-        }
-
-        .table.table-bordered > thead > tr > th {
-            line-height: 12.5px;
-        }
-
-
-
-        .table-striped > tbody > tr:nth-child(odd) > td, .table-striped > tbody > tr:nth-child(odd) > th {
-            background-color: #dfe9f1;
-        }
-
-        table[name="SameTable"] {
-            margin-left: 10px;
-        }
-
-            table[name="SameTable"] th {
-                font-size: 13px;
-                background-color: #438eb9 !important;
-                color: #fff;
-            }
-
-        .table.table-bordered > thead > tr > th:first-child {
-            line-height: 19.5px;
-        }
-
-        #lblPayble {
-            color: blue;
-            font-size: 25px;
-            margin-left: 11px;
-        }
-
-        #totalamt {
-            font-size: 23px;
-            margin-left: 10px;
-            background-color: yellow;
-        }
-
-        td {
+        .total-badge {
+            background-color: #EFA63E;
+            color: #fff;
+            padding: 8px 20px;
+            border-radius: 6px;
+            font-weight: 700;
             font-size: 16px;
+            display: inline-block;
+        }
+
+        .total-badge .total-amount {
+            font-weight: 800;
+            font-size: 18px;
+        }
+
+        .HRlink {
+            text-decoration: underline !important;
+            color: #EFA63E !important;
+            font-weight: 600;
+        }
+
+        .editListBtn {
+            background-color: #EFA63E;
+            color: #fff !important;
+            padding: 4px 10px;
+            border-radius: 4px;
+            font-size: 13px;
+            text-decoration: none;
+            display: inline-block;
+        }
+
+        .editListBtn:hover {
+            background-color: #333;
+            color: #fff !important;
+            text-decoration: none;
         }
     </style>
 
-
     <script type="text/javascript">
-
+        var oTable;
 
         $(document).ready(function () {
             LoadPage();
             loadDoc();
         });
 
-
         function OpenList(id) {
-            debugger;
             window.open("DoctorPayables_Services.aspx?ID=" + id);
-
         }
 
         function calculateall() {
-
-            debugger;
             var totalamt = 0;
-
-            $.each($('#Table_1 tbody tr'), function (key, value) {
-                debugger;
-
-                var txtamount = $($(value).find('td input[name=txtamount]')[0]).val();
-
-                totalamt += parseFloat(txtamount);
+            $('#Table_1 tbody tr').each(function () {
+                var txtamount = $(this).find('td input[name=txtamount]').val();
+                totalamt += parseFloat(txtamount) || 0;
             });
-
             $('#totalamt').text(totalamt.toLocaleString('en'));
-
         }
 
-
-
-
         function loadDoc() {
-
             var optionsDepth = '';
-
             $.ajax({
                 type: "post",
                 url: "DoctorPayables.aspx/loadDoctors",
@@ -109,139 +86,143 @@
                     optionsDepth = '<option value="0">Please Select</option>';
                     var data = JSON.parse(msg.d);
                     $.each(data, function (key, value) {
-
                         optionsDepth += '<option value="' + value.Emp_ID + '" >' + value.name + '</option>';
                     });
-
                     $('#ddlDoctor').html(optionsDepth);
                     $('#ddlDoctor').select2();
                 },
-
             });
         }
 
-
-
-        var abc = false;
         function testddlchange() {
-            debugger;
-
             var Statusddl = $('#ddlDoctor').find('option:selected').text();
-
+            if (!oTable) return;
             if (Statusddl == "Please Select") {
-                abc = true;
-                LoadPage();
+                oTable.column(3).search('').draw();
+            } else {
+                oTable.column(3).search(Statusddl).draw();
             }
-            else {
-                var tbl = document.getElementById('Table_1');
-                if (Statusddl.trim() != '') {
-
-                    for (var i = 1; i < tbl.rows.length; i++) {
-                        if (tbl.rows[i].cells[3].innerText != Statusddl) {
-                            var row = tbl.rows[i];
-                            row.style.display = 'none';
-                        }
-                        else {
-                            var row = tbl.rows[i];
-                            row.style.display = '';
-                        }
-                    }
-                }
-                else {
-                    for (var i = 1; i < tbl.rows.length; i++) {
-                        var row = tbl.rows[i];
-                        row.style.display = '';
-                    }
-                }
-            }
+            calculateall();
         }
+
         function LoadPage() {
-            debugger;
-            async: false;
             $.ajax({
                 async: false,
                 type: "POST",
                 url: "DoctorPayables.aspx/ViewList",
-                data: JSON.stringify({
-
-                }),
+                data: JSON.stringify({}),
                 contentType: "application/json; charset=utf-8",
                 dataType: "json",
-
                 success: function (data) {
-                    debugger;
-                    var Priority = '';
-                    var length = $("#Table_1 tr:gt(0)").length;
-
                     if (data != '') {
                         var data = JSON.parse(data.d);
-                        $('#Table_1 tr:gt(0)').remove();
+
+                        if (oTable) {
+                            oTable.destroy();
+                            $('#Table_1 tbody').empty();
+                        }
 
                         var rows = '';
                         $.each(data, function (i, item) {
-
                             var bl = data[i].Balance;
-
-                            rows += '<tr><td style="display:none;"><input type="hidden" value="' + data[i].Doctor_Id + '" name="DocID" id="DocID" ></td><td>' + (i + 1) + '</td><td style="display:none;"><input type="hidden" value="' + data[i].Balance + '" name="txtamount" id="txtamount" ></td> <td>' + data[i].Name + '</td> <td>' + '<a class="HRlink" style="text-decoration-line: underline ; float: right; " href="#" onclick=OpenList(' + data[i].Doctor_Id + ')>' + bl.toLocaleString('en') + '</a>' + '</td></tr>';
+                            rows += '<tr>' +
+                                '<td style="display:none;"><input type="hidden" value="' + data[i].Doctor_Id + '" name="DocID"></td>' +
+                                '<td>' + (i + 1) + '</td>' +
+                                '<td style="display:none;"><input type="hidden" value="' + data[i].Balance + '" name="txtamount"></td>' +
+                                '<td>' + data[i].Name + '</td>' +
+                                '<td style="text-align:right;">' + bl.toLocaleString('en') + '</td>' +
+                                '<td style="text-align:center;"><a class="editListBtn" href="#" onclick="OpenList(' + data[i].Doctor_Id + ')"><i class="fa fa-pencil"></i></a></td>' +
+                                '</tr>';
                         });
                         $('#Table_1 #tblbody').append(rows);
+
+                        oTable = $('#Table_1').DataTable({
+                            "dom": 'lBfrtip',
+                            "buttons": [
+                                'copy', 'excel', 'pdf',
+                                {
+                                    extend: 'colvis',
+                                    text: '<i class="fa fa-columns"></i> Columns',
+                                    className: 'dt-button buttons-colvis',
+                                    collectionLayout: 'fixed two-column',
+                                    postfixButtons: ['colvisRestore']
+                                }
+                            ],
+                            "columnDefs": [
+                                { "targets": 0, "visible": false, "searchable": false },
+                                { "targets": 1, "width": "8%", "className": "text-center" },
+                                { "targets": 2, "visible": false, "searchable": false },
+                                { "targets": 3, "width": "50%" },
+                                { "targets": 4, "width": "25%", "className": "text-right" },
+                                { "targets": 5, "width": "8%", "orderable": false, "className": "text-center" }
+                            ],
+                            "paging": true,
+                            "pageLength": 25,
+                            "ordering": true,
+                            "order": [[3, 'asc']],
+                            "language": {
+                                "search": "",
+                                "searchPlaceholder": "Search..."
+                            },
+                            "initComplete": function (settings, json) {
+                                var lengthContainer = document.querySelector('#Table_1_length');
+                                var lengthDropdown = document.querySelector('#Table_1_length select');
+                                var label = document.querySelector('#Table_1_length label');
+                                if (lengthDropdown && label && lengthContainer) {
+                                    var labelText = document.createElement('span');
+                                    labelText.textContent = 'Show entries ';
+                                    labelText.style.marginTop = '10px';
+                                    labelText.style.display = 'inline-block';
+                                    lengthDropdown.style.width = '60px';
+                                    label.innerHTML = '';
+                                    label.style.display = 'inline-flex';
+                                    label.style.marginTop = '17px';
+                                    label.appendChild(labelText);
+                                    label.appendChild(lengthDropdown);
+                                }
+                            },
+                            "drawCallback": function () {
+                                calculateall();
+                            }
+                        });
+
                         calculateall();
-                        $('#Table_1 th:eq(0)').css('background-color', '#438eb9 !important');
-                        $('#Table_1 th:eq(1)').css('background-color', '#438eb9 !important');
-                        $('#Table_1 th:eq(2)').css('background-color', '#438eb9 !important');
-
-                        $('#Table_1 th:eq(0)').css('color', '#fff !important');
-                        $('#Table_1 th:eq(1)').css('color', '#fff !important');
-                        $('#Table_1 th:eq(2)').css('color', '#fff !important');
-
-                    }
-
-                    else {
-
                     }
                 }
             });
         }
-
-
-
     </script>
-
-
 </asp:Content>
 <asp:Content ID="Content3" ContentPlaceHolderID="MainContent" runat="server">
-
-    <div class="row">
-        <div class="col-md-2">
-        </div>
-        <div class="col-md-2" style="margin-bottom:10px !important">
-            <label>Doctor</label>
-            <select id="ddlDoctor" onchange="testddlchange()">
-            </select>
-        </div>
+    <div class="row" style="margin-bottom:15px;align-items:center;">
         <div class="col-md-3">
+            <label style="font-weight:600;font-size:13px;color:#555;">Doctor</label>
+            <select id="ddlDoctor" onchange="testddlchange()" style="width:220px;"></select>
         </div>
-        <div class="col-md-4">
-            <label id="lblPayble">Total Payable:</label>
-            <label id="totalamt" for="fname"></label>
+        <div class="col-md-6"></div>
+        <div class="col-md-3 text-right">
+            <span class="total-badge">
+                Total Payable: <span class="total-amount" id="totalamt">0</span>
+            </span>
         </div>
-
     </div>
-    <%--        <label id="totalamt"> </label>--%>
+
     <div class="row">
-        <div>
-            <table id="Table_1" class="table table-striped table-bordered" style="font-size: 13px; font-weight: 600; width: 70%; margin-left: 185px;">
+        <div class="col-lg-12" style="overflow-x:auto;">
+            <table id="Table_1" class="table table-hover table-striped table-bordered" style="width:100%;">
                 <thead>
                     <tr>
+                        <th style="display:none;">DocID</th>
                         <th>Sr No</th>
+                        <th style="display:none;">Balance</th>
                         <th>Doctor Name</th>
-                        <th style="text-align: right;">Amount</th>
-
+                        <th>Amount</th>
+                        <th>Action</th>
                     </tr>
                 </thead>
                 <tbody id="tblbody">
                 </tbody>
-
             </table>
         </div>
+    </div>
 </asp:Content>

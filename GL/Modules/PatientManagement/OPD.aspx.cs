@@ -1644,6 +1644,8 @@ namespace PMS.Modules.PatientManagement
                     pat.AccountID = string.IsNullOrEmpty(data.accountid) ? 0 : Convert.ToInt32(data.accountid);
                     pat.Card_Issued = data.IssueCard ?? false;
                     pat.free_check = data.FreeCheck ?? false;
+                    pat.bank_cash = data.bank_cash;
+                    pat.bank_account_id = data.bank_account_id;
                     decimal netAmount = data.Fees;
 
                     if (category == "11")
@@ -2448,7 +2450,9 @@ namespace PMS.Modules.PatientManagement
                             .Where(i => i.Item_ID == patient.Service_id)
                             .Select(i => i.Description)
                             .FirstOrDefault() ?? ""
-                    )
+                    ),
+                    bank_cash = patient.bank_cash ?? "",
+                    bank_account_id = patient.bank_account_id ?? ""
                 };
                 return new JavaScriptSerializer().Serialize(result);
             }
@@ -2788,6 +2792,8 @@ namespace PMS.Modules.PatientManagement
             public int Fees { get; set; }
             public int Actual_Fees { get; set; }
             public string Remarks { get; set; }
+            public string bank_cash { get; set; }
+            public string bank_account_id { get; set; }
         }
 
         [WebMethod]
