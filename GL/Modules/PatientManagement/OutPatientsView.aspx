@@ -66,6 +66,26 @@
         }
 
 
+        function PrintVoucher(id) {
+            debugger;
+
+            var locationInfo = window.location;
+            var url = '../../ReportViewer.aspx?ReportName=Voucher&ReportTitle=OPD Voucher&TransID=' + id + '&TransType=OPDShare';
+
+            if (!locationInfo.origin.includes('localhost') || locationInfo.origin.includes('localhost')) {
+                var urlInfo = window.location.href.split('/');
+                var ip = urlInfo[2];
+                var foldername = urlInfo[3];
+
+                url = 'http://' + ip + '/' + foldername +
+                    '/ReportViewer.aspx?ReportName=Voucher&ReportTitle=OPD Voucher&TransID=' +
+                    id + '&TransType=OPDShare';
+            }
+
+            window.open(url, '_blank');
+        }
+
+
 
         function LoadPage() {
             let savedVisibility = null;
@@ -161,7 +181,9 @@
                             var res = '<a href="#" class="editListBtn" onclick="Edit(' + full.Out_Patient_ID + ')" style="border-radius: 4px;margin-right: 4px;padding: 5px 8px 5px 8px;"><i class="fa fa-pencil"></i></a>';
                             var Del = '<a class="delListBtn" style="border-radius: 4px;margin-left: 4px;color: white;padding: 5px 8px 5px 8px;" href="#" data-id="' + full.Out_Patient_ID + '" onclick="deleteConfirm(this)"><i class="fa fa-trash"></i></a>';
                             var print = '<a class="printListBtn" style="border-radius: 4px;margin-left: 4px;color: white;padding: 5px 8px 5px 8px;" href="#" onclick="PrintoutPatient(' + full.Out_Patient_ID + ')"><i class="fa fa-print"></i></a>';
-                            return res + Del + print;
+
+                            var voucher = '<a class="printListBtn" href="#" onclick="PrintVoucher(' + full.Out_Patient_ID + ')" title="Print Voucher" style="border-radius: 4px;margin-left: 4px;color: black;padding: 5px 8px 5px 8px;"><i class="fa fa-money"></i></a>';
+                            return res + Del + print + voucher;
                         },
                         "width": "10%",
                         "orderable": false

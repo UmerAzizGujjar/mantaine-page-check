@@ -27,9 +27,59 @@
                 $('#ddlRelation').select2();
                 $('#ddl_name').select2();
                 $('#PrefixAge').select2();
+                $('#ddlbankcash').select2();
+                $('#ddlbank').select2();
             }
+           function loadBankAccounts(paymentType) {
+    var $bank = $('#ddlbank');
+    if (paymentType !== "02") { // Cash
+        $bank.empty().append('<option value="">Select Account</option>');
+        $bank.prop('disabled', true);           // 👈 Disable when Cash
+        $bank.trigger('change.select2');
+        return;
+    }
+
+    // Bank – load via AJAX and enable
+    $bank.prop('disabled', false);              // 👈 Enable before loading
+    $bank.prop('disabled', true);               // temporarily disable during AJAX
+    $.ajax({
+        type: "POST",
+        url: "RegisterPatient.aspx/GetBankAccounts",
+        contentType: "application/json; charset=utf-8",
+        dataType: "json",
+        success: function (response) {
+            var accounts = response.d;
+            $bank.empty().append('<option value="">Select Account</option>');
+            if (accounts && accounts.length) {
+                $.each(accounts, function (i, acc) {
+                    $bank.append('<option value="' + acc.id + '">' + acc.name + '</option>');
+                });
+            } else {
+                $bank.append('<option value="">No bank accounts found</option>');
+            }
+            $bank.prop('disabled', false);       // 👈 Re-enable after load
+            $bank.trigger('change.select2');
+        },
+        error: function () {
+            $bank.empty().append('<option value="">Error loading accounts</option>')
+                .prop('disabled', false)        // 👈 Enable even on error
+                .trigger('change.select2');
+        }
+    });
+}
+        // Bind change event
+        $('#ddlbankcash').on('change', function () {
+            loadBankAccounts($(this).val());
         });
 
+        // Initial load if Bank is selected by default
+        if ($('#ddlbankcash').val() === "02") {
+            loadBankAccounts("02");
+        }
+        });
+     
+       
+    
         var refund;
         function AllowRefund() {
             $.ajax({
@@ -70,7 +120,7 @@
             window.open(url, '_blank');
         }
 
-        function PrintReceipt() {
+        <%--function PrintReceipt() {
             var reg_id = '<%= Request.QueryString["Reg_id"] %>'
             var locationInfo = window.location;
             var url = "/ReportViewer.aspx?ReportName=Reg_Patient_Print&Title=Register Patient Print &Patient_ID=" + reg_id;
@@ -81,7 +131,68 @@
                 url = 'http://' + ip + '/' + foldername + "/ReportViewer.aspx?ReportName=Reg_Patient_Print&Title=Register Patient Print &Patient_ID=" + reg_id;
             }
             window.open(url, '_blank');
+        }--%>
+
+        function PrintReceipt() {
+            var reg_id = '<%= Request.QueryString["Reg_id"] %>';
+
+            if (!reg_id || reg_id == "") {
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Error',
+                    text: 'No patient registration found to print!'
+                });
+                return;
+            }
+            Swal.fire({
+                title: 'Preparing Print...',
+                text: 'Please wait',
+                allowOutsideClick: false,
+                didOpen: () => {
+                    Swal.showLoading();
+                }
+            });
+            $.ajax({
+                type: "POST",
+                url: "RegisterPatient.aspx/IncrementReprintCount",
+                contentType: "application/json; charset=utf-8",
+                data: JSON.stringify({ regId: reg_id }),
+                dataType: "json",
+                success: function (response) {
+
+                    Swal.close();
+
+                    if (response.d.startsWith("SUCCESS")) {
+                        var locationInfo = window.location;
+                        var url = "/ReportViewer.aspx?ReportName=Reg_Patient_Print&Title=Register Patient Print &Patient_ID=" + reg_id;
+                        if (!locationInfo.origin.includes('localhost')) {
+                            var urlInfo = window.location.href.split('/');
+                            var ip = urlInfo[2];
+                            var foldername = urlInfo[3];
+                            url = 'http://' + ip + '/' + foldername + "/ReportViewer.aspx?ReportName=Reg_Patient_Print&Title=Register Patient Print &Patient_ID=" + reg_id;
+                        }
+                        window.open(url, '_blank');
+                    } else {
+                        Swal.fire({
+                            icon: 'error',
+                            title: 'Error',
+                            text: response.d
+                        });
+                    }
+                },
+                error: function (xhr, status, error) {
+                    Swal.close();
+                    Swal.fire({
+                        icon: 'error',
+                        title: 'Error',
+                        text: 'Failed to track print. Please try again.'
+                    });
+                    console.error("Print tracking error:", error);
+                }
+            });
         }
+
+            
 
         function loadCardfee() {
             $.ajax({
@@ -352,21 +463,38 @@
                             <option value="0">Select Area</option>
                         </select>
                     </div>
+                    <div class="col-lg-2 col-md-4 col-sm-6" >
+               
+                     <label for="ddlbankcash">Payment method</label>
+                   <select id="ddlbankcash" class="form-control" name="payment">   <!-- removed onchange -->
+                        <option value="02">Bank</option>
+                        <option value="01" selected>Cash</option>
+                    </select>
+                    </div>
+                    <div class="col-lg-2 col-md-4 col-sm-6"  >
+                        <label for="ddlbank">Bank/Cash</label>
+                        <select id="ddlbank" class="form-control">
+                            
+                        </select>
+                    </div>
 
                     <!-- Address – position 18 -->
+                    
+
+                    <!-- Fee – position 19 -->
+                 
+                </div>
+                <div class="row">
                     <div class="col-lg-3 col-md-6 col-sm-8">
                         <label for="txt_Address">Address<span style="color: red;">*</span></label>
                         <input type="text" id="txt_Address" class="form-control" />
                         <span id="address-error" class="span_txt" style="display: none;">Please Enter Address</span>
                     </div>
-
-                    <!-- Fee – position 19 -->
-                    <div class="col-lg-1 col-md-4 col-sm-6">
-                        <label for="lblfee">Fee<span style="color: red;">*</span></label>
-                        <input type="text" id="txtCardFee" class="form-control" />
-                    </div>
+                       <div class="col-lg-1 col-md-4 col-sm-6">
+                       <label for="lblfee">Fee<span style="color: red;">*</span></label>
+                       <input type="text" id="txtCardFee" class="form-control" />
+                   </div>
                 </div>
-
                 <!-- Monitoring (hidden by default) – position 20 -->
                 <div class="row" id="MonitoringDiv">
                     <div class="col-lg-1 col-md-4 col-sm-6">

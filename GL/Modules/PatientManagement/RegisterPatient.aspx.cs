@@ -477,6 +477,7 @@ namespace PMS.Modules.PatientManagement
                     pat.Blood_Group = Blood_Group;
                     pat.Country = Country;
                     pat.Monitoring = Monitoring;
+                    pat.Reprint = "1";
 
                     // Card Fee Safe Parse
                     decimal cardFeeValue = 0;
@@ -700,6 +701,66 @@ namespace PMS.Modules.PatientManagement
                 return "0";
             }
         }
-        
+        [WebMethod]
+        public static string GetBankAccounts()
+        {
+            try
+            {
+                using (var db = new DataBaseDataContext(DBClass.ConnectionString()))
+                {
+                    var accounts = (from acc in db.GL_Accounts
+                                    where acc.Bank == true
+                                    select new
+                                    {
+                                        id = acc.Account_ID,
+                                        name = acc.Account_Name
+                                    }).ToList();
+
+                    return new JavaScriptSerializer().Serialize(accounts);
+                }
+            }
+            catch (Exception ex)
+            {
+                // Log error if needed
+                return "[]"; // return empty array on error
+            }
+        }
+        [WebMethod]
+        public static string IncrementReprintCount(string regId)
+        {
+            try
+            {
+                if (string.IsNullOrEmpty(regId))
+                    return "ERROR: Invalid patient ID";
+
+                using (var db = new DataBaseDataContext())
+                {
+                    var patient = db.Reg_patients.FirstOrDefault(p => p.pat_id == Convert.ToInt32(regId));
+
+                    if (patient == null)
+                        return "ERROR: Patient not found";
+
+                    
+                    int currentCount = 1;
+                    if (!string.IsNullOrEmpty(patient.Reprint) && int.TryParse(patient.Reprint, out int parsed))
+                    {
+                        currentCount = parsed;
+                    }
+
+                    
+                    currentCount++;
+                    patient.Reprint = currentCount.ToString();
+
+                    db.SubmitChanges();
+
+                    return "SUCCESS:" + currentCount.ToString();
+                }
+            }
+            catch (Exception ex)
+            {
+                return "ERROR: " + ex.Message;
+            }
+        }
+
     }
 }
