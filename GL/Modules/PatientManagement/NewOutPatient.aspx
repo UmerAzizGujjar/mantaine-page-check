@@ -826,7 +826,13 @@
                 setValue('ctl00_MainContent_chkSmokers', data.Smokers);
                 setValue('ctl00_MainContent_chkNon_Smokers', data.Non_Smokers);
                 setValue('ctl00_MainContent_chkDiabetics', data.Diabetics);
-                setValue('ctl00_MainContent_chkHypertensive', data.Hypertensive);
+                setValue('ctl00_MainContent_chkAlcoholConsumption', data.Alcohol_Consumption);
+                setValue('ctl00_MainContent_chkSmokeless', data.Smokeless);
+                setValue('ctl00_MainContent_chkDM', data.DM);
+                setValue('ctl00_MainContent_chkHTN', data.HTN);
+                setValue('ctl00_MainContent_chkTB', data.TB);
+                setValue('ctl00_MainContent_chkIHD', data.IHD);
+                setValue('ctl00_MainContent_chkAsthma', data.Asthma);
 
             } catch (error) {
                 console.error("Error populating form: ", error);
@@ -4249,6 +4255,14 @@ function LoadLabResultrpt() {
                 Non_Smokers: document.getElementById("ctl00_MainContent_chkNon_Smokers")?.checked || false,
                 Diabetics: document.getElementById("ctl00_MainContent_chkDiabetics")?.checked || false,
                 Hypertensive: document.getElementById("ctl00_MainContent_chkHypertensive")?.checked || false,
+                Alcohol_Consumption: document.getElementById("ctl00_MainContent_chkAlcoholConsumption")?.checked || false,
+                Smokeless: document.getElementById("ctl00_MainContent_chkSmokeless")?.checked || false,
+
+                DM: document.getElementById("ctl00_MainContent_chkDM")?.checked || false,
+                HTN: document.getElementById("ctl00_MainContent_chkHTN")?.checked || false,
+                TB: document.getElementById("ctl00_MainContent_chkTB")?.checked || false,
+                IHD: document.getElementById("ctl00_MainContent_chkIHD")?.checked || false,
+                Asthma: document.getElementById("ctl00_MainContent_chkAsthma")?.checked || false,
 
                 // Common Fields - ensure these are proper data types
                 Patient_ID: parseInt(Patient_ID) || 0,
@@ -5063,22 +5077,65 @@ function LoadLabResultrpt() {
                                             <div class="row mb-3">
                                                 <div class="col-md-7 col-sm-6">
                                                     <div style="display: flex; gap: 15px; flex-wrap: wrap;">
+
                                                         <div style="display: flex; align-items: center;">
                                                             <asp:CheckBox ID="chkSmokers" runat="server" />
                                                             <label for="ctl00_MainContent_chkSmokers" style="margin-left: 5px; margin-bottom: 0;">Smoker</label>
-                                                        </div>                                                     
+                                                        </div>
+
                                                         <div style="display: flex; align-items: center;">
                                                             <asp:CheckBox ID="chkDiabetics" runat="server" />
                                                             <label for="ctl00_MainContent_chkDiabetics" style="margin-left: 5px; margin-bottom: 0;">Diabetic</label>
                                                         </div>
+
+                                                        <div style="display: flex; align-items: center;">
+                                                            <asp:CheckBox ID="chkAlcoholConsumption" runat="server" />
+                                                            <label for="ctl00_MainContent_chkAlcoholConsumption" style="margin-left: 5px; margin-bottom: 0;">Alcohol Consumption</label>
+                                                        </div>
+
                                                         <div style="display: flex; align-items: center;">
                                                             <asp:CheckBox ID="chkHypertensive" runat="server" />
                                                             <label for="ctl00_MainContent_chkHypertensive" style="margin-left: 5px; margin-bottom: 0;">Hypertensive</label>
                                                         </div>
-                                                        <div style="display: flex; align-items: center;display:none">
+
+                                                        <div style="display: flex; align-items: center;">
+                                                            <asp:CheckBox ID="chkSmokeless" runat="server" />
+                                                            <label for="ctl00_MainContent_chkSmokeless" style="margin-left: 5px; margin-bottom: 0;">Naswar/Smokeless</label>
+                                                        </div>
+
+                                                        <div style="display: flex; align-items: center; display: none;">
                                                             <asp:CheckBox ID="chkNon_Smokers" runat="server" />
                                                             <label for="ctl00_MainContent_chkNon_Smokers" style="margin-left: 5px; margin-bottom: 0;">Non-Smoker</label>
                                                         </div>
+                                                    </div>
+                                              </div>                                        
+                                            </div>
+                                            <div class="row">
+                                                <div class="col-md-12">
+                                                    <h2>Co-Morbid Conditions</h2>
+                                                    <div style="display: flex; gap: 15px; flex-wrap: wrap; align-items: center;">
+                                                      <div style="display: flex; align-items: center;">
+                                                            <asp:CheckBox ID="chkDM" runat="server" />
+                                                            <label for="ctl00_MainContent_chkDM" style="margin-left: 5px; margin-bottom: 0;">DM</label>
+                                                        </div>
+                                                        <div style="display: flex; align-items: center;">
+                                                            <asp:CheckBox ID="chkHTN" runat="server" />
+                                                            <label for="ctl00_MainContent_chkHTN" style="margin-left: 5px; margin-bottom: 0;">HTN</label>
+                                                        </div>
+                                                    </div>
+                                                    <div style="display: flex; gap: 15px; flex-wrap: wrap; align-items: center;">
+                                                        <div style="display: flex; align-items: center;">
+                                                            <asp:CheckBox ID="chkTB" runat="server" />
+                                                            <label for="ctl00_MainContent_chkTB" style="margin-left: 5px; margin-bottom: 0;">TB</label>
+                                                        </div>
+                                                        <div style="display: flex; align-items: center;">
+                                                            <asp:CheckBox ID="chkIHD" runat="server"  Style="margin-left:6px !important"/>
+                                                            <label for="ctl00_MainContent_chkIHD" style="margin-left: 10px; margin-bottom: 0;">IHD</label>
+                                                        </div>
+                                                    </div>
+                                                    <div style="display: flex; align-items: center;">
+                                                        <asp:CheckBox ID="chkAsthma" runat="server" />
+                                                        <label for="ctl00_MainContent_chkAsthma" style="margin-left: 6px; margin-bottom: 0;">Asthma</label>
                                                     </div>
                                                 </div>
                                             </div>

@@ -643,6 +643,13 @@ namespace PMS.Modules.PatientManagement
                     OPD.Non_Smokers = data.Non_Smokers;
                     OPD.Diabetics = data.Diabetics;
                     OPD.Hypertensive = data.Hypertensive;
+                    OPD.Alcohol_Consumption = data.Alcohol_Consumption;
+                    OPD.Naswar_Smokeless = data.Smokeless;
+                    OPD.DM = data.DM;
+                    OPD.HTN = data.HTN;
+                    OPD.TB = data.TB;
+                    OPD.IHD = data.IHD;
+                    OPD.Asthma = data.Asthma;
 
                     // Handle referral logic only if Reffer_To is provided
                     if (!string.IsNullOrEmpty(data.Reffer_To))
@@ -715,7 +722,7 @@ namespace PMS.Modules.PatientManagement
                             if (wardAlloc != null)
                             {
                                 wardAlloc.IsDischarge = true;
-                                wardAlloc.To_Date = DateTime.Now;
+                                wardAlloc.To_TimeDate = DateTime.Now;
                             }
 
                             db.SubmitChanges();
@@ -1714,7 +1721,14 @@ namespace PMS.Modules.PatientManagement
                         Smokers = qry.Smokers?.ToString().ToLower() ?? "false",
                         Non_Smokers = qry.Non_Smokers?.ToString().ToLower() ?? "false",
                         Diabetics = qry.Diabetics?.ToString().ToLower() ?? "false",
-                        Hypertensive = qry.Hypertensive?.ToString().ToLower() ?? "false"
+                        Hypertensive = qry.Hypertensive?.ToString().ToLower() ?? "false",
+                       // DM = qry.DM?.ToString().ToLower() ?? "false",
+                       // HTN = qry.HTN?.ToString().ToLower() ?? "false",
+                       // TB = qry.TB?.ToString().ToLower() ?? "false",
+                       // IHD = qry.IHD?.ToString().ToLower() ?? "false",
+                        //Asthma = qry.Asthma?.ToString().ToLower() ?? "false"
+                        // Alcohol_Consumption = qry.Alcohol_Consumption?.ToString().ToLower() ?? "false",
+                        //Smokeless = qry.Naswar_Smokeless?.ToString().ToLower() ?? "false"
                     }
                 };
 
@@ -2863,7 +2877,14 @@ namespace PMS.Modules.PatientManagement
             public bool Smokers { get; set; }
             public bool Non_Smokers { get; set; }
             public bool Diabetics { get; set; }
+            public bool DM { get; set; }
+            public bool HTN { get; set; }
+            public bool TB { get; set; }
+            public bool IHD { get; set; }
+            public bool Asthma { get; set; }
             public bool Hypertensive { get; set; }
+            public bool Alcohol_Consumption { get; set; }
+            public bool Smokeless { get; set; }
             public string FormType { get; set; }
             public int InPatientID { get; set; }
         }
