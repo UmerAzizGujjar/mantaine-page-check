@@ -956,6 +956,20 @@
                                         <div class="field-desc">Remarks</div>
                                     </div>
                                 </div>
+                                <div class="right-item" onclick="toggleRight(this)">
+                                    <input type="checkbox" id="PaymentMethod" name="rights[]" value="PaymentMethod" />
+                                    <div>
+                                        <label for="PaymentMethod">PaymentMethod</label>
+                                        <div class="field-desc">PaymentMethod</div>
+                                    </div>
+                                </div>
+                                <div class="right-item" onclick="toggleRight(this)">
+                                    <input type="checkbox" id="bank" name="rights[]" value="bank" />
+                                    <div>
+                                        <label for="bank">bank</label>
+                                        <div class="field-desc">bank</div>
+                                    </div>
+                                </div>
                             </div>
                         </div>
                     </div>
