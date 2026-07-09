@@ -27,28 +27,43 @@
                 $('#ddlRelation').select2();
                 $('#ddl_name').select2();
                 $('#PrefixAge').select2();
-                $('#ddlbankcash').select2();
-                $('#ddlbank').select2();
             }
-           function loadBankAccounts(paymentType) {
+            $('#ddlbankcash').select2();
+            $('#ddlbank').select2();
+        // Bind change event
+        $('#ddlbankcash').on('change', function () {
+            loadBankAccounts($(this).val());
+        });
+
+        // Initialize bank dropdown based on default payment method
+        loadBankAccounts($('#ddlbankcash').val());
+        });
+
+       function loadBankAccounts(paymentType, selectedId) {
     var $bank = $('#ddlbank');
+
+    $bank.select2('destroy');
+
     if (paymentType !== "02") { // Cash
-        $bank.empty().append('<option value="">Select Account</option>');
-        $bank.prop('disabled', true);           // 👈 Disable when Cash
-        $bank.trigger('change.select2');
+        $bank.empty().append('<option value="">Select Account</option>')
+             .prop('disabled', true);
+        $bank.select2();
         return;
     }
 
-    // Bank – load via AJAX and enable
-    $bank.prop('disabled', false);              // 👈 Enable before loading
-    $bank.prop('disabled', true);               // temporarily disable during AJAX
+    // Bank – disable initially while loading
+    $bank.empty().append('<option value="">Select Account</option>')
+         .prop('disabled', true);
+    $bank.select2();
+
     $.ajax({
         type: "POST",
         url: "RegisterPatient.aspx/GetBankAccounts",
         contentType: "application/json; charset=utf-8",
         dataType: "json",
         success: function (response) {
-            var accounts = response.d;
+            var accounts = JSON.parse(response.d);
+            $bank.select2('destroy');
             $bank.empty().append('<option value="">Select Account</option>');
             if (accounts && accounts.length) {
                 $.each(accounts, function (i, acc) {
@@ -57,26 +72,23 @@
             } else {
                 $bank.append('<option value="">No bank accounts found</option>');
             }
-            $bank.prop('disabled', false);       // 👈 Re-enable after load
-            $bank.trigger('change.select2');
+            $bank.prop('disabled', false);
+            $bank.select2();
+            if (selectedId) {
+                $bank.val(selectedId).trigger('change');
+            }
         },
         error: function () {
-            $bank.empty().append('<option value="">Error loading accounts</option>')
-                .prop('disabled', false)        // 👈 Enable even on error
-                .trigger('change.select2');
+            $bank.select2('destroy')
+                .empty().append('<option value="">Error loading accounts</option>')
+                .prop('disabled', false);
+            $bank.select2();
+            if (selectedId) {
+                $bank.val(selectedId).trigger('change');
+            }
         }
     });
 }
-        // Bind change event
-        $('#ddlbankcash').on('change', function () {
-            loadBankAccounts($(this).val());
-        });
-
-        // Initial load if Bank is selected by default
-        if ($('#ddlbankcash').val() === "02") {
-            loadBankAccounts("02");
-        }
-        });
      
        
     
