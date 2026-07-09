@@ -30,56 +30,56 @@
                 $('#ddlbankcash').select2();
                 $('#ddlbank').select2();
             }
-        });
-     
-        function loadBankAccounts(paymentType) {
-            var $bank = $('#ddlbank');
-            // If Cash (01) – clear the dropdown
-            if (paymentType !== "02") {
-                $bank.empty().append('<option value="">Select Account</option>');
-                $bank.trigger('change.select2');    // refresh Select2
-                return;
+           function loadBankAccounts(paymentType) {
+    var $bank = $('#ddlbank');
+    if (paymentType !== "02") { // Cash
+        $bank.empty().append('<option value="">Select Account</option>');
+        $bank.prop('disabled', true);           // 👈 Disable when Cash
+        $bank.trigger('change.select2');
+        return;
+    }
+
+    // Bank – load via AJAX and enable
+    $bank.prop('disabled', false);              // 👈 Enable before loading
+    $bank.prop('disabled', true);               // temporarily disable during AJAX
+    $.ajax({
+        type: "POST",
+        url: "RegisterPatient.aspx/GetBankAccounts",
+        contentType: "application/json; charset=utf-8",
+        dataType: "json",
+        success: function (response) {
+            var accounts = response.d;
+            $bank.empty().append('<option value="">Select Account</option>');
+            if (accounts && accounts.length) {
+                $.each(accounts, function (i, acc) {
+                    $bank.append('<option value="' + acc.id + '">' + acc.name + '</option>');
+                });
+            } else {
+                $bank.append('<option value="">No bank accounts found</option>');
             }
-
-            // Bank (02) – load accounts via AJAX
-            $bank.prop('disabled', true);
-            $.ajax({
-                type: "POST",
-                url: "RegisterPatient.aspx/GetBankAccounts",
-                data: "",
-                contentType: "application/json; charset=utf-8",
-                dataType: "json",
-                async: true,
-                success: function (response) {
-                    var accounts = response.d;
-                    $bank.empty().append('<option value="">Select Account</option>');
-                    if (accounts && accounts.length) {
-                        $.each(accounts, function (i, acc) {
-                            $bank.append('<option value="' + acc.id + '">' + acc.name + '</option>');
-                        });
-                    } else {
-                        $bank.append('<option value="">No bank accounts found</option>');
-                    }
-                    $bank.trigger('change.select2');
-                    $bank.prop('disabled', false);
-                },
-                error: function () {
-                    $bank.empty().append('<option value="">Error loading accounts</option>')
-                        .trigger('change.select2')
-                        .prop('disabled', false);
-                }
-            });
+            $bank.prop('disabled', false);       // 👈 Re-enable after load
+            $bank.trigger('change.select2');
+        },
+        error: function () {
+            $bank.empty().append('<option value="">Error loading accounts</option>')
+                .prop('disabled', false)        // 👈 Enable even on error
+                .trigger('change.select2');
         }
-
-        // Bind change event to ddlbankcash
+    });
+}
+        // Bind change event
         $('#ddlbankcash').on('change', function () {
             loadBankAccounts($(this).val());
         });
 
-        // Optionally, if Bank is preselected on load, load accounts
+        // Initial load if Bank is selected by default
         if ($('#ddlbankcash').val() === "02") {
             loadBankAccounts("02");
         }
+        });
+     
+       
+    
         var refund;
         function AllowRefund() {
             $.ajax({
@@ -463,15 +463,15 @@
                             <option value="0">Select Area</option>
                         </select>
                     </div>
-                    <div class="col-lg-2 col-md-4 col-sm-6" style="display:none;">
+                    <div class="col-lg-2 col-md-4 col-sm-6" >
                
                      <label for="ddlbankcash">Payment method</label>
-                    <select id="ddlbankcash" onchange="loadBankAccounts();" class="form-control" name="payment">
+                   <select id="ddlbankcash" class="form-control" name="payment">   <!-- removed onchange -->
                         <option value="02">Bank</option>
-                        <option value="01" selected>Cash</option>   <!-- 'selected' sets a default -->
+                        <option value="01" selected>Cash</option>
                     </select>
                     </div>
-                    <div class="col-lg-2 col-md-4 col-sm-6"  style="display:none;">
+                    <div class="col-lg-2 col-md-4 col-sm-6"  >
                         <label for="ddlbank">Bank/Cash</label>
                         <select id="ddlbank" class="form-control">
                             
