@@ -253,6 +253,7 @@
             $('#ctl00_MainContent_ddlStock').select2();
             $('#ctl00_MainContent_ddlPaymentType').select2();
             $('#ctl00_MainContent_ddlMovementType').select2();
+            $('#ctl00_MainContent_ddlVendor').select2();
             $('#ctl00_MainContent_ddOPDIPDdiv').select2();
             $('#ctl00_MainContent_ddlItemCategory').select2();
             $('#ctl00_MainContent_ddloprators').select2();
@@ -442,7 +443,16 @@
                         window.open(url, '_blank');
 
                     }
+                    else if (rptTitle == "CathLabStockInHand") {
+                        debugger;
+                        var sDate = new Date($("#ctl00_MainContent_txtStart_Date").val());
+                        var eDate = new Date($("#ctl00_MainContent_txtEnd_Date").val());
+                        var sSDate = sDate.getDay();
+                        var eEDate = eDate.getDay();
+                        var url = 'ReportViewer.aspx?ReportName=CathLabStockDetail&ReportTitle=Cath Lab Stock in Hand Report from ' + $('#ctl00_MainContent_txtStart_Date').val() + ' ' + $('#ctl00_MainContent_txtSTime').val() + '  ' + sSDate + ' to ' + $('#ctl00_MainContent_txtEnd_Date').val() + ' ' + $('#ctl00_MainContent_txtETime').val() + ' ' + eEDate + '&StartDateTime=' + $('#ctl00_MainContent_txtStart_Date').val() + ' ' + $('#ctl00_MainContent_txtSTime').val() + '&EndDateTime=' + $('#ctl00_MainContent_txtEnd_Date').val() + ' ' + $('#ctl00_MainContent_txtETime').val() + '&WareHouse=' + $('#ctl00_MainContent_ddlwareHouse').val();
+                        window.open(url, '_blank');
 
+                    }
 
                     else if (rptTitle == "GroupTestsRateList") {
                         var exporttopdf = document.getElementById('<%= chkExportPDF.ClientID %>').checked;
@@ -1903,7 +1913,7 @@
                         var endTime = $('#ctl00_MainContent_txtETime').val();
                         var startDateTime = startDate + ' ' + startTime;
                         var endDateTime = endDate + ' ' + endTime;
-                        var url = 'ReportViewer.aspx?ReportName=Cath_Lab_Billing_Detail_Vendor_Wise_Report&ReportTitle=Cath Lab Billing Detail Report From  ' + startDateTime + ' to ' + endDateTime + '&StartDateTime=' + encodeURIComponent(startDateTime) + '&EndDateTime=' + encodeURIComponent(endDateTime) + '&MRNo=' + (patid || 0) + '&DoctorID=' + $("#ctl00_MainContent_ddlDoctor").val() + '&Operator=' + ((typeof ($("#ctl00_MainContent_ddloprators").val()) != 'undefined') ? $("#ctl00_MainContent_ddloprators").val() : "0") + '&ItemID=' + $('#ctl00_MainContent_ddlItemName').val();
+                        var url = 'ReportViewer.aspx?ReportName=Cath_Lab_Billing_Detail_Vendor_Wise_Report&ReportTitle=Cath Lab Billing Detail Report From  ' + startDateTime + ' to ' + endDateTime + '&StartDateTime=' + encodeURIComponent(startDateTime) + '&EndDateTime=' + encodeURIComponent(endDateTime) + '&MRNo=' + (patid || 0) + '&DoctorID=' + $("#ctl00_MainContent_ddlDoctor").val() + '&Operator=' + ((typeof ($("#ctl00_MainContent_ddloprators").val()) != 'undefined') ? $("#ctl00_MainContent_ddloprators").val() : "0") + '&ItemID=' + $('#ctl00_MainContent_ddlItemName').val() + '&VendorId=' + $('#ctl00_MainContent_ddlVendor').val();
                         window.open(url, '_blank');
                     }
                     if (rptTitle == "High_Risk_Medicine_Report") {

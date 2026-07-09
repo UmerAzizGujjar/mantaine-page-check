@@ -184,6 +184,8 @@ namespace PMS.Modules.PatientManagement
             public decimal Card_fee { get; set; }
             public bool Monitoring { get; set; }
             public bool IsRefunded { get; set; }
+            public string bank_cash { get; set; }
+            public string bank_account_id { get; set; }
 
         }
 
@@ -325,7 +327,8 @@ namespace PMS.Modules.PatientManagement
                       string Mobile, string Date_Of_Birth, string CNIC, string Address,
                       string PatientID, string martail_status, string Age, string city, string area,
                       string city_val, string area_val, string Blood_Group, string State, string Country,
-                      string cardfee, string OtherCnic, bool Monitoring, string AntiForgeryToken)
+                       string cardfee, string OtherCnic, bool Monitoring, string AntiForgeryToken,
+                       string bank_cash, string bank_account_id)
 
         {
 
@@ -477,6 +480,8 @@ namespace PMS.Modules.PatientManagement
                     pat.Blood_Group = Blood_Group;
                     pat.Country = Country;
                     pat.Monitoring = Monitoring;
+                    pat.bank_cash = bank_cash;
+                    pat.bank_account_id = bank_account_id;
                     pat.Reprint = "1";
 
                     // Card Fee Safe Parse
@@ -621,10 +626,12 @@ namespace PMS.Modules.PatientManagement
                                       rg.val_area,
                                       rg.pat_id,
                                       rg.other_cnic,
-                                      rg.Monitoring,
-                                      rg.DOB,
-                                      rg.IsRefunded
-                                  }).FirstOrDefault();
+                                       rg.Monitoring,
+                                       rg.DOB,
+                                       rg.IsRefunded,
+                                       rg.bank_cash,
+                                       rg.bank_account_id
+                                   }).FirstOrDefault();
 
                 if (patientRaw == null)
                     return new JavaScriptSerializer().Serialize((object)null);
@@ -653,7 +660,9 @@ namespace PMS.Modules.PatientManagement
                           ? patientRaw.DOB.Value.ToString("dd/MM/yyyy")
                           : "",
                           Monitoring = patientRaw.Monitoring ?? false,
-                          IsRefunded = patientRaw.IsRefunded ?? false
+                          IsRefunded = patientRaw.IsRefunded ?? false,
+                          bank_cash = patientRaw.bank_cash ?? "",
+                          bank_account_id = patientRaw.bank_account_id ?? ""
                 };
 
                 return new JavaScriptSerializer().Serialize(patient);

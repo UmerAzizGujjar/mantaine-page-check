@@ -1,4 +1,4 @@
-﻿
+
 $(document).ready(function () {
     debugger;
     isCNICValidationRequired();
@@ -97,7 +97,7 @@ $(document).ready(function () {
                 fillDropdown($element, item.method);
             });
         } else {
-            // ✅ MODAL: Use native 'focus' to load data ONCE
+            // ? MODAL: Use native 'focus' to load data ONCE
             $element.off('focus.fill').on('focus.fill', function () {
                 if (!$element.data('filled')) {
                     fillDropdown($element, item.method);
@@ -105,7 +105,7 @@ $(document).ready(function () {
             });
         }
 
-        // 👇 Keep ALL your existing logic exactly as before
+        // ?? Keep ALL your existing logic exactly as before
         if (item.id === '#ddlPatient_Type') {
             $element.prop('disabled', false);
             // Since modal uses native select, bind to 'change', not 'select2:select'
@@ -500,7 +500,7 @@ function Get_Pat_Info(reg_id) {
             $('#txt_patname').val(data.Name);
             $('#txt_F_Name').val(data.FatherName);
             $('#txtage').val(data.Age);
-            $('#txtnic').val(data.CNIC_Masked); // 👈 Updated!
+            $('#txtnic').val(data.CNIC_Masked); // ?? Updated!
             $('#txtmobile').val(data.Mobile);
             $('#ctl00_MainContent_lblNoOfDays').html(data.DaysSinceLatestVisit);
             $('#ctl00_MainContent_lblNoOfDays2').html(data.DaysSinceSecondLatestVisit);
@@ -1246,6 +1246,8 @@ function SaveData() {
     var IssueCard = $('#chckcardissue').prop('checked');
     var FreeCheck = $('#chckfreecheck').prop('checked');
     var Remarks = $('#txtremarks').val() || "";
+    var bank_cash = $('#ddlbankcash').val();
+    var bank_account_id = $('#ddlbank').val();
 
     if (discount < 100.0 && Fees == 0.0) {
 
@@ -1281,10 +1283,10 @@ function SaveData() {
     }
 
 
-    // ✅ CORRECT: Get VALUE of hidden field
+    // ? CORRECT: Get VALUE of hidden field
     var hfAntiForgery = $('#ctl00_MainContent_hfAntiForgery').val();
 
-    // 🚨 VALIDATIONS (unchanged)
+    // ?? VALIDATIONS (unchanged)
     if (!patient_no || patient_no === "0") {
         Swal.fire({
             icon: 'error',
@@ -1380,6 +1382,17 @@ function SaveData() {
         return;
     }
 
+    if (bank_cash === '02' && (!bank_account_id || bank_account_id === '')) {
+        Swal.fire({
+            icon: 'warning',
+            title: 'Bank Account Required!',
+            text: 'Please select a bank account for Bank payment.',
+            confirmButtonText: 'OK',
+            confirmButtonColor: '#3085d6'
+        });
+        return;
+    }
+
     var isPatientAdmitted = false;
 
     $.ajax({
@@ -1429,7 +1442,7 @@ function SaveData() {
         return;
     }
 
-    // ✅ FIXED: Send token under CORRECT property name → "AntiForgeryToken"
+    // ? FIXED: Send token under CORRECT property name ? "AntiForgeryToken"
     var data = {
         regid: regid,
         appid: appid,
@@ -1468,14 +1481,16 @@ function SaveData() {
         accountid: accountid,
         IssueCard: IssueCard,
         FreeCheck: FreeCheck,
-        AntiForgeryToken: hfAntiForgery, // ✅ THIS WAS THE BUG — NOW FIXED
+        AntiForgeryToken: hfAntiForgery, // ? THIS WAS THE BUG � NOW FIXED
         EmployeeName: EmployeeName,
         EmployeeDept: EmployeeDept,
         StudentName: StudentName,
-        Remarks: Remarks
+        Remarks: Remarks,
+        bank_cash: bank_cash,
+        bank_account_id: bank_account_id
     };
 
-    // 👇 Optional: Log to verify
+    // ?? Optional: Log to verify
     console.log("AntiForgeryToken being sent:", data.AntiForgeryToken);
     console.log("Data being sent:", data);
 
@@ -1812,7 +1827,9 @@ function loadPatientDetail(OPDID) {
             $('#ddlsection').val(data.Section).trigger('change').attr('disabled', true);
             $('#ddlCashInHand').val(data.account_id).trigger('change').attr('disabled', true);
 
-
+            var bankCash = data.bank_cash || "01";
+            $('#ddlbankcash').val(bankCash).trigger('change.select2');
+            LoadBankAccounts(data.bank_account_id);
 
 
             $('#txtfees').val(data.Receipt_Amount).attr('disabled', true);
@@ -2026,10 +2043,10 @@ function OPD_Print(OPD_ID, company_name) {
     var reportParams = '?ReportName=OPD_Patient_Print&Title=OPD Patient Print &OPD_ID=' + OPD_ID;
 
     if (locationInfo.hostname === "localhost") {
-        // Local development — use relative path
+        // Local development � use relative path
         url = '../../' + reportPath + reportParams;
     } else {
-        // Live server — dynamically pick up IP and folder
+        // Live server � dynamically pick up IP and folder
         var urlParts = window.location.href.split('/');
         var protocol = urlParts[0];           // "http:"
         var ip = urlParts[2];           // "173.234.137.51"

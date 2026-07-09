@@ -3282,6 +3282,17 @@ namespace PMS
 
                     trSearch1.Visible = true;
 
+                    row_Vendor.Visible = true;
+                    DataTable dtPanel = DBClass.getDataTable("select Vendor_ID,Vendor_Name from AP_Vendors where IsActive=1");
+                    ddlVendor.DataSource = dtPanel;
+                    ddlVendor.DataTextField = "Vendor_Name";
+                    ddlVendor.DataValueField = "Vendor_ID";
+                    ddlVendor.Items.Clear();
+                    ddlVendor.Items.Add(new ListItem("Please Select", "0"));
+                    ddlVendor.DataBind();
+
+
+
                 }
                 else if (this.PageTitle == "High_Risk_Medicine_Report")
                 {
@@ -7926,9 +7937,8 @@ namespace PMS
 
                     DataBaseDataContext dbs = new DataBaseDataContext(DBClass.ConnectionString());
                     var serviceList = (from sl in dbs.INV_Items
-                                       where sl.Active == true
+                                       where sl.Active == true && sl.IsPharmacyItem == true
                                        select new { sl.Item_ID, sl.Description }).ToList();
-
                     ddlItemName.DataSource = serviceList;
                     ddlItemName.DataValueField = "Item_ID";
                     ddlItemName.DataTextField = "Description";
@@ -8000,7 +8010,7 @@ namespace PMS
 
                     DataBaseDataContext dbs = new DataBaseDataContext(DBClass.ConnectionString());
                     var serviceList = (from sl in dbs.INV_Items
-                                       where sl.Active == true
+                                       where sl.Active == true && sl.IsPharmacyItem == true
                                        select new { sl.Item_ID, sl.Description }).ToList();
 
                     ddlItemName.DataSource = serviceList;
@@ -8011,20 +8021,37 @@ namespace PMS
 
 
                 }
-                //else if (PageTitle == "Pharmacy_Profit_and_Loss_Report")
-                //{
-                //    optRw.Visible = false;
-                //    tr_Summary.Visible = false;
-                //    ddlDepartments.Visible = false;
-                //    ddlDoctor.Visible = false;
-                //    trDoctor.Visible = false;
-                //    lbservieType.Visible = false;
-                //    DateDiv.Visible = true;
-                //    ddlReportType.Visible = false;
-                //    dpROw.Visible = false;
-                //    Time_Row.Visible = true;
+                else if (this.PageTitle == "CathLabStockInHand")
+                {
+                    string x = "Cath Lab Stock in Hand Report";
+                    Master.Label2.Text = x;
+                    Master.GetMenuName();
 
-                //}
+                    DateDiv.Visible = true;
+                    Time_Row.Visible = true;
+
+                    // ADDING NEW WAREHOUSE
+                    DataBaseDataContext dbs = new DataBaseDataContext(DBClass.ConnectionString());
+                    var allowedWarehouses = new List<string> { "009", "010" };
+                    var valueSet = (from dv in dbs.DataValues
+                                    where dv.ValueSet_ID == 8 && allowedWarehouses.Contains(dv.DataValue_Name)
+                                    select new { dv.DataValue_Name, dv.DataValue_Description }).ToList();
+                    ddlwareHouse.DataSource = valueSet;
+                    ddlwareHouse.DataValueField = "DataValue_Name";
+                    ddlwareHouse.DataTextField = "DataValue_Description";
+                    ddlwareHouse.Items.Clear();
+                    ddlwareHouse.Items.Add(new ListItem() { Text = "All", Value = "0" });
+                    ddlwareHouse.DataBind();
+
+
+                    Stock_Movement.Visible = true;
+
+                    ddlwareHouse.Visible = true;
+                    lblWarehouse.Visible = true;
+
+                    lbItemCategory.Visible = false;
+                    ddlItemCategory.Visible = false;
+                }
 
                 else if (this.PageTitle == "ChargePolicyWiseSummary")
                 {

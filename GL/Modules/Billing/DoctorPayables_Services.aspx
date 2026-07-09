@@ -3,7 +3,7 @@
 
 
 <asp:Content ID="Content1" ContentPlaceHolderID="HeadContent" runat="server">
-        <%--<link href="../../wwwroot/THEME_TIBBIT/CustomCSS/tablestyle.css" rel="stylesheet" />--%>
+        <%--<link href="../../wwwroot/THEME_IITH/CustomCSS/tablestyle.css" rel="stylesheet" />--%>
             <link href="../../wwwroot/THEME_TIBBIT/CustomCSS/Billing.css" rel="stylesheet" />
     <script src="https://cdn.datatables.net/buttons/2.4.2/js/buttons.colVis.min.js"></script>
     
@@ -530,3 +530,4 @@
     </div>
 
 </asp:Content>
+

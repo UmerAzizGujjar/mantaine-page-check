@@ -362,6 +362,8 @@ function SavePatient() {
     var cardfee = $('#txtCardFee').val();
     var Monitoring = $('#chkMonitoring').is(':checked');
     var AntiForgeryToken = $('#ctl00_MainContent_hfAntiForgery').val();
+    var bank_cash = $('#ddlbankcash').val();
+    var bank_account_id = $('#ddlbank').val();
 
     var valid = true;
 
@@ -393,8 +395,20 @@ function SavePatient() {
     if (martail_status === "" || martail_status === "0") {
         valid = false;
     }
-    if (cardfee === "" || isNaN(cardfee) || parseFloat(cardfee) === 0) {
+    if (cardfee === "" || isNaN(cardfee) || parseFloat(cardfee) < 0) {
         valid = false;
+    }
+
+    if (bank_cash === "02" && (!bank_account_id || bank_account_id === "")) {
+        Swal.fire({
+            icon: 'warning',
+            title: 'Bank Account Required!',
+            text: 'Please select a bank account for Bank payment.',
+            confirmButtonText: 'OK',
+            confirmButtonColor: '#3085d6'
+        });
+        $('#SavePatient_Data').attr('disabled', false);
+        return;
     }
 
     var isCNICRequired = isCNICValidationRequired();
@@ -479,6 +493,8 @@ function SavePatient() {
         "OtherCnic": OtherCnic,
         "Monitoring": Monitoring,
         "AntiForgeryToken": AntiForgeryToken,
+        "bank_cash": bank_cash,
+        "bank_account_id": bank_account_id,
     });
 
     console.log(data);
@@ -620,6 +636,37 @@ function Get_Pat_Info(reg_id) {
             $('#txt_OtherCnic').val(data.other_cnic);
             $('#txtAge_yearss').val(data.DOB);
             $('#txtCardFee').val(data.Card_fee);
+            var bankCash = data.bank_cash || "01";
+            $('#ddlbankcash').val(bankCash).trigger('change.select2');
+            if (bankCash === "02") {
+                $.ajax({
+                    type: "POST",
+                    url: "RegisterPatient.aspx/GetBankAccounts",
+                    contentType: "application/json; charset=utf-8",
+                    dataType: "json",
+                    success: function (resp) {
+                        var accts = JSON.parse(resp.d);
+                        var $bank = $('#ddlbank');
+                        $bank.select2('destroy');
+                        $bank.empty().append('<option value="">Select Account</option>');
+                        if (accts && accts.length) {
+                            $.each(accts, function (i, a) {
+                                $bank.append('<option value="' + a.id + '">' + a.name + '</option>');
+                            });
+                        }
+                        $bank.prop('disabled', false);
+                        $bank.select2();
+                        if (data.bank_account_id) {
+                            $bank.val(data.bank_account_id).trigger('change');
+                        }
+                    }
+                });
+            } else {
+                var $bank = $('#ddlbank');
+                $bank.select2('destroy');
+                $bank.empty().append('<option value="">Select Account</option>').prop('disabled', true);
+                $bank.select2();
+            }
             
             if (data.Monitoring === true) {
                 $('#chkMonitoring').prop('checked', true).trigger('change');

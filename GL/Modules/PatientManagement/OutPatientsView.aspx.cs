@@ -199,5 +199,26 @@ namespace PMS
                 throw;
             }
         }
+        [WebMethod]
+        public static string GetOutPatientNewFormRedirectPermission()
+        {
+            try
+            {
+                using (DataBaseDataContext db = new DataBaseDataContext(DBClass.ConnectionString()))
+                {
+                    var sysParm = db.sys_Parms
+                        .Where(p => p.Name == "OutPatient New Form Redirect"
+                                 && p.Company_ID == AppConfig.Company_ID)
+                        .Select(p => p.Code)
+                        .FirstOrDefault();
+
+                    return new JavaScriptSerializer().Serialize(new { useNewForm = sysParm == "1" });
+                }
+            }
+            catch (Exception ex)
+            {
+                return new JavaScriptSerializer().Serialize(new { useNewForm = false, error = ex.Message });
+            }
+        }
     }
 }

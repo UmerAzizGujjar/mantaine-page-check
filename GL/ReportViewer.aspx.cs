@@ -307,6 +307,23 @@ namespace PMS
                 rd.SetParameterValue("Title", reportTitle);
                 rd.SetParameterValue("CompanyLogo", logoPath);
             }
+            else if (reportName == "CathLabStockDetail")
+            {
+                var logoPath = DBClass.getField("SELECT dbo.GetCompanyLogo()");
+
+                string warehouse = Request.QueryString["WareHouse"].ToString();
+                string StartDateTime = Request.QueryString["StartDateTime"].ToString();
+                string EndDateTime = Request.QueryString["EndDateTime"].ToString();
+                reportPath += "Inventory/rptCathLabStockDetail.rpt";
+                rd.Load(reportPath);
+                rd.SummaryInfo.ReportTitle = reportTitle;
+                rd.SetParameterValue("CompanyName", AppConfig.Company_Name);
+                rd.SetParameterValue("@StartDate", StartDateTime);
+                rd.SetParameterValue("@EndDate", EndDateTime);
+                rd.SetParameterValue("@warehouse", warehouse);
+                rd.SetParameterValue("Title", reportTitle);
+                rd.SetParameterValue("CompanyLogo", logoPath);
+            }
             else if (reportName == "StockBalance")
             {
                 string CurrentUserName = DBClass.getField("select username from aspnet_users where userid='" + AppConfig.UserID + "'").ToString();
@@ -2277,11 +2294,19 @@ namespace PMS
             }
             else if (reportName == "PrintRefundReport")
             {
-
+                var refundid = Request.QueryString["Refund_ID"].ToString();
                 reportPath += "Billings/rptPrintRefundPrint.rpt";
                 rd.Load(reportPath);
                 rd.SummaryInfo.ReportTitle = reportTitle;
-                rd.SetParameterValue("@Refund_IDs", Request.QueryString["Refund_ID"]);
+                rd.SetParameterValue("@Refund_IDs", refundid);
+                try
+                {
+                    rd.SetParameterValue("@Refund_IDs", refundid, rd.Subreports[0].Name.ToString());
+                }
+                catch
+                {
+                    // Subreport parameter doesn't exist on this report variant - ignore silently
+                }
             }
             else if (reportName == "PrinAllReceiptDetail")
             {
@@ -3765,6 +3790,7 @@ namespace PMS
                 string doctorID = Request.QueryString["DoctorID"].ToString();
                 string Operator = Request.QueryString["Operator"].ToString();
                 string ItemID = Request.QueryString["ItemID"].ToString();
+                string vendorID = Request.QueryString["VendorId"].ToString();
 
 
                 reportPath += "TransactionalDetails/rptCathLabBillingDetailVendorWiseReport.rpt";
@@ -3777,6 +3803,7 @@ namespace PMS
                 rd.SetParameterValue("@itemId", ItemID);
                 rd.SetParameterValue("@stDate", StartDateTime);
                 rd.SetParameterValue("@endDate", EndDateTime);
+                rd.SetParameterValue("@Vendor_ID", vendorID);
                 rd.SetParameterValue("CompanyLogo", logoPath);
                 rd.SetParameterValue("Address", companyAddress);
             }

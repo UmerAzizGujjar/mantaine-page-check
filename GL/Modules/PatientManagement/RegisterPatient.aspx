@@ -27,59 +27,71 @@
                 $('#ddlRelation').select2();
                 $('#ddl_name').select2();
                 $('#PrefixAge').select2();
-                $('#ddlbankcash').select2();
-                $('#ddlbank').select2();
             }
-        });
-     
-        function loadBankAccounts(paymentType) {
-            var $bank = $('#ddlbank');
-            // If Cash (01) – clear the dropdown
-            if (paymentType !== "02") {
-                $bank.empty().append('<option value="">Select Account</option>');
-                $bank.trigger('change.select2');    // refresh Select2
-                return;
-            }
-
-            // Bank (02) – load accounts via AJAX
-            $bank.prop('disabled', true);
-            $.ajax({
-                type: "POST",
-                url: "RegisterPatient.aspx/GetBankAccounts",
-                data: "",
-                contentType: "application/json; charset=utf-8",
-                dataType: "json",
-                async: true,
-                success: function (response) {
-                    var accounts = response.d;
-                    $bank.empty().append('<option value="">Select Account</option>');
-                    if (accounts && accounts.length) {
-                        $.each(accounts, function (i, acc) {
-                            $bank.append('<option value="' + acc.id + '">' + acc.name + '</option>');
-                        });
-                    } else {
-                        $bank.append('<option value="">No bank accounts found</option>');
-                    }
-                    $bank.trigger('change.select2');
-                    $bank.prop('disabled', false);
-                },
-                error: function () {
-                    $bank.empty().append('<option value="">Error loading accounts</option>')
-                        .trigger('change.select2')
-                        .prop('disabled', false);
-                }
-            });
-        }
-
-        // Bind change event to ddlbankcash
+            $('#ddlbankcash').select2();
+            $('#ddlbank').select2();
+        // Bind change event
         $('#ddlbankcash').on('change', function () {
             loadBankAccounts($(this).val());
         });
 
-        // Optionally, if Bank is preselected on load, load accounts
-        if ($('#ddlbankcash').val() === "02") {
-            loadBankAccounts("02");
+        // Initialize bank dropdown based on default payment method
+        loadBankAccounts($('#ddlbankcash').val());
+        });
+
+       function loadBankAccounts(paymentType, selectedId) {
+    var $bank = $('#ddlbank');
+
+    $bank.select2('destroy');
+
+    if (paymentType !== "02") { // Cash
+        $bank.empty().append('<option value="">Select Account</option>')
+             .prop('disabled', true);
+        $bank.select2();
+        return;
+    }
+
+    // Bank – disable initially while loading
+    $bank.empty().append('<option value="">Select Account</option>')
+         .prop('disabled', true);
+    $bank.select2();
+
+    $.ajax({
+        type: "POST",
+        url: "RegisterPatient.aspx/GetBankAccounts",
+        contentType: "application/json; charset=utf-8",
+        dataType: "json",
+        success: function (response) {
+            var accounts = JSON.parse(response.d);
+            $bank.select2('destroy');
+            $bank.empty().append('<option value="">Select Account</option>');
+            if (accounts && accounts.length) {
+                $.each(accounts, function (i, acc) {
+                    $bank.append('<option value="' + acc.id + '">' + acc.name + '</option>');
+                });
+            } else {
+                $bank.append('<option value="">No bank accounts found</option>');
+            }
+            $bank.prop('disabled', false);
+            $bank.select2();
+            if (selectedId) {
+                $bank.val(selectedId).trigger('change');
+            }
+        },
+        error: function () {
+            $bank.select2('destroy')
+                .empty().append('<option value="">Error loading accounts</option>')
+                .prop('disabled', false);
+            $bank.select2();
+            if (selectedId) {
+                $bank.val(selectedId).trigger('change');
+            }
         }
+    });
+}
+     
+       
+    
         var refund;
         function AllowRefund() {
             $.ajax({
@@ -463,15 +475,15 @@
                             <option value="0">Select Area</option>
                         </select>
                     </div>
-                    <div class="col-lg-2 col-md-4 col-sm-6" style="display:none;">
+                    <div class="col-lg-2 col-md-4 col-sm-6" >
                
                      <label for="ddlbankcash">Payment method</label>
-                    <select id="ddlbankcash" onchange="loadBankAccounts();" class="form-control" name="payment">
+                   <select id="ddlbankcash" class="form-control" name="payment">   <!-- removed onchange -->
                         <option value="02">Bank</option>
-                        <option value="01" selected>Cash</option>   <!-- 'selected' sets a default -->
+                        <option value="01" selected>Cash</option>
                     </select>
                     </div>
-                    <div class="col-lg-2 col-md-4 col-sm-6"  style="display:none;">
+                    <div class="col-lg-2 col-md-4 col-sm-6"  >
                         <label for="ddlbank">Bank/Cash</label>
                         <select id="ddlbank" class="form-control">
                             

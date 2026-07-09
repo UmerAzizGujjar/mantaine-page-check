@@ -43,8 +43,6 @@
 
             }
             else {
-
-
                 $('#ddlGender').select2();
                 $('#ddlpanel').select2();
                 $('#ddlemployee').select2();
@@ -53,6 +51,8 @@
                 $('#ddlFilterClnic').select2();
                 $('#ddlServices').select2();
             }
+            $('#ddlbankcash').select2();
+            $('#ddlbank').select2();
             if (reg_id != "" && added == "true") {
                 Get_Pat_Info(reg_id);
 
@@ -82,7 +82,7 @@
                 Get_Pat_Info_Reffer(Reffered_id_opd);
             }
 
-
+            LoadBankAccounts($('#ddlbankcash').val());
         });
         var cardvalidation;
         function checkcardvalidation() {
@@ -305,6 +305,8 @@
             "EmerRefferedBy": "EmerRefferedBy",
             "cashier": "cashier",
             "remarks": "remarks",
+            "PaymentMethod": "PaymentMethod",
+            "bank": "bank",
         };
 
         function loadPermissions(callback) {
@@ -780,6 +782,52 @@
             });
 
         }
+        function LoadBankAccounts(selectedId) {
+    var $bank = $('#ddlbank');
+    var paymentType = $('#ddlbankcash').val();
+
+    $bank.select2('destroy');
+
+    if (paymentType === "01") { // Cash
+        $bank.empty().append('<option value="">Select Account</option>')
+             .prop('disabled', true);
+        $bank.select2();
+        return;
+    }
+
+    // Bank – disable initially while loading
+    $bank.empty().append('<option value="">Select Account</option>')
+         .prop('disabled', true);
+    $bank.select2();
+
+    $.ajax({
+        type: "POST",
+        url: "OPD.aspx/GetBankAccounts",
+        contentType: "application/json; charset=utf-8",
+        dataType: "json",
+        success: function (response) {
+            var accounts = JSON.parse(response.d);
+            $bank.select2('destroy');
+            $bank.empty().append('<option value="">Select Account</option>');
+            if (accounts && accounts.length) {
+                $.each(accounts, function (i, acc) {
+                    $bank.append('<option value="' + acc.id + '">' + acc.name + '</option>');
+                });
+            }
+            $bank.prop('disabled', false);
+            $bank.select2();
+            if (selectedId) {
+                $bank.val(selectedId).trigger('change');
+            }
+        },
+        error: function () {
+            $bank.select2('destroy')
+                .empty().append('<option value="">Error loading accounts</option>')
+                .prop('disabled', false);
+            $bank.select2();
+        }
+    });
+}
 
         function getGeneralFee() {
             debugger;
@@ -1446,7 +1494,7 @@
                         </select>
                     </div>
 
-                    <div class="col-lg-6 col-md-12 col-sm-12" id="field_Address">
+                    <div class="col-lg-3 col-md-12 col-sm-12" id="field_Address">
                         <label>Address</label>
                         <input type="text" id="txtAdrress" readonly="readonly" />
                     </div>
@@ -1456,6 +1504,19 @@
                        <select id="ddlcashier" class="form-control">
                             <option value="0">Select Cashier</option>
                        </select>
+                   </div>
+                       <div class="col-lg-3 col-md-8 col-sm-8" id="PaymentMethod" >
+                       <label for="ddlbankcash">Payment method</label>
+                        <select id="ddlbankcash" onchange="LoadBankAccounts();" class="form-control" name="payment">   <!-- removed onchange -->
+                             <option value="02">Bank</option>
+                             <option value="01" selected>Cash</option>
+                         </select>
+                   </div>
+                       <div class="col-lg-3 col-md-8 col-sm-8" id="bank" >
+                           <label for="ddlbank">Bank</label>
+                        <select id="ddlbank" class="form-control">
+                            
+                        </select>
                    </div>
                     <div class="col-lg-3 col-md-8 col-sm-8" id="remarks">
                         <label>Remarks</label>
