@@ -230,6 +230,7 @@
                                 "<td style='text-align:center;'>" + parse[0].Unit + "</td>" +
                                 "<td style='text-align: center;'><input type='text' name='Qty' id='txtQty" + length + "' style='font-size: 11px;width: 100%!important;text-align: right;margin-top: 2px;' autocomplete='off' onkeyup='calcutaeQty(this)'/></td>" +
                                 "<td style='padding-top: 7px!important;text-align:center;padding-left: 8px!important;' >" + parse[0].Last_MIR_Qty + "</td>" +
+                                "<td style='padding-top: 7px!important;text-align:center;padding-left: 8px!important;' >" + parse[0].Last_SIN_Qty + "</td>" +
                                 "<td style='padding-top: 7px!important;padding-left: 8px!important' contenteditable></td>" +
                                 "<td><label class='fileContainer' style='font-size: 13px;margin-top: -3px;'><i class='glyphicon glyphicon-paperclip'></i><input type='file' name='fileuploadlist' id='fileuploadlist" + length + "'></label></td>" +
                                 "<td style='display:none'>" + parse[0].Item_ID + "</td>" +
@@ -458,9 +459,10 @@
                 details = {};
                 details.MIRQty = $(this).find('td:eq(4) input').val();
                 details.Last_MIR_Qty = $(this).find('td:eq(5)').text();
-                details.Remarks = $(this).find('td:eq(6)').text();
+                details.Last_SIN_Qty = $(this).find('td:eq(6)').text();
+                details.Remarks = $(this).find('td:eq(7)').text();
                 details.MIRId = id;
-                details.itemId = $(this).find('td:eq(8)').text();
+                details.itemId = $(this).find('td:eq(9)').text();
                 detailAry.push(details);
             });
             if (detailAry.length > 0) {
@@ -615,7 +617,7 @@
                         var len = key + 1;
                         var filePath = parse[key].FilePath || '';
                         var downloadLink = filePath ? '<a href="' + filePath + '" target="_blank" style="margin-right:4px;" title="Download"><i class="glyphicon glyphicon-download-alt"></i></a>' : '';
-                        row += '<tr><td style="padding-top: 7px!important;">' + len + '</td><td style="padding-top: 7px!important;padding-right: 3px!important; */">' + parse[key].itemCode + '</td><td style="padding-left: 8px!important;padding-top: 7px!important;">' + parse[key].Description + '</td><td style="text-align:center;">' + parse[key].Unit + '</td><td style="text-align: center;"><input type="text"  value="' + parseFloat(parse[key].MIRQty).toFixed(2) + '" name="Qty" id="txtQty ' + counter + '" style="font-size: 9px;width: 52px!important;text-align: right;margin-top: 2px;" autocomplete="off" onkeyup="calcutaeQty(this)"/></td><td style="padding-top: 7px!important;text-align:center;padding-left: 8px!important;" contenteditable>' + parse[key].Last_MIR_Qty + '</td><td style="padding-top: 7px!important;padding-left: 8px!important" contenteditable>' + parse[key].remarks + '</td><td>' + downloadLink + '<label class="fileContainer" style="font-size: 13px;margin-top: -3px;"><i class="glyphicon glyphicon-paperclip"></i><input type="file" name="fileuploadlist" id="fileuploadlist' + key + '"></label></td><td style="display:none">' + parse[key].itemId + '</td><td><a href="#" onclick="Delete(this)"><i class="glyphicon glyphicon-trash" style="font-size: 13px; margin-top: 5px;  margin-left: 16px; color: #f30a0a;"></i></a></td></tr>';
+                        row += '<tr><td style="padding-top: 7px!important;">' + len + '</td><td style="padding-top: 7px!important;padding-right: 3px!important; */">' + parse[key].itemCode + '</td><td style="padding-left: 8px!important;padding-top: 7px!important;">' + parse[key].Description + '</td><td style="text-align:center;">' + parse[key].Unit + '</td><td style="text-align: center;"><input type="text"  value="' + parseFloat(parse[key].MIRQty).toFixed(2) + '" name="Qty" id="txtQty ' + counter + '" style="font-size: 9px;width: 52px!important;text-align: right;margin-top: 2px;" autocomplete="off" onkeyup="calcutaeQty(this)"/></td><td style="padding-top: 7px!important;text-align:center;padding-left: 8px!important;" contenteditable>' + parse[key].Last_MIR_Qty + '</td><td style="padding-top: 7px!important;text-align:center;padding-left: 8px!important;" contenteditable>' + parse[key].Last_SIN_Qty + '</td><td style="padding-top: 7px!important;padding-left: 8px!important" contenteditable>' + parse[key].remarks + '</td><td>' + downloadLink + '<label class="fileContainer" style="font-size: 13px;margin-top: -3px;"><i class="glyphicon glyphicon-paperclip"></i><input type="file" name="fileuploadlist" id="fileuploadlist' + key + '"></label></td><td style="display:none">' + parse[key].itemId + '</td><td><a href="#" onclick="Delete(this)"><i class="glyphicon glyphicon-trash" style="font-size: 13px; margin-top: 5px;  margin-left: 16px; color: #f30a0a;"></i></a></td></tr>';
                     });
                     $("#tblPackage").append(row);
                     calcutaeQty();
@@ -743,6 +745,7 @@
                     <th style="width: 35px; text-align: center;">Unit</th>
                     <th style="width: 43px; text-align: center;">GIR Qty</th>
                     <th style="width: 43px; text-align: center;">Last GIR Qty</th>
+                    <th style="width: 43px; text-align: center;">Last GIN Qty</th>
                     <th style="width: 112px; text-align: center; display: none;">Technical Specifications</th>
                     <th style="width: 126px; text-align: center;">Remarks</th>
                     <th style="width: 32px!important; text-align: center;">Attachment</th>

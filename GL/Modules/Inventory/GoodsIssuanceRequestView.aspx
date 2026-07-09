@@ -95,6 +95,7 @@
                         contentType: "application/json; charset=utf-8",
                         dataType: "json",
                         success: function (response) {
+                            debugger;
                             callback({
                                 draw: response.d.draw,
                                 recordsTotal: response.d.recordsTotal,
@@ -150,9 +151,9 @@
                         "orderable": false
                     },
                     {
-                        "data": null,
-                        "render": function (data, type, full) {
-                            return parseFloat(full.bln_Qty) > 0 ? "" : "Closed";
+                        "data": "isClosed",
+                        "render": function (data) {
+                            return data ? "Closed" : "";
                         },
                         "orderable": false
                     },
@@ -167,8 +168,15 @@
                     }
                 ],
                 "rowCallback": function (row, data, index) {
-                    if (data.Status === "Approved") {
+                    if (data.Status === "Approved" && data.isClosed === true) {
+                        $(row).css('background-color', '#41c782');
+                    }
+
+                    else if (data.Status === "Approved") {
                         $(row).css('background-color', '#ABEBC6');
+                    }
+                    else {
+                        $(row).css('background-color', '');
                     }
                 },
                 "initComplete": function (settings, json) {
