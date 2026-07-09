@@ -4408,18 +4408,6 @@
       <Column Name="Bonus_Tax" Type="System.Decimal" DbType="Decimal(18,2)" CanBeNull="true" />
     </Type>
   </Table>
-  <Table Name="dbo.IPD_Doctor_Distribution_Detail" Member="IPD_Doctor_Distribution_Details">
-    <Type Name="IPD_Doctor_Distribution_Detail">
-      <Column Name="Doctor_Distribution_Id" Type="System.Int32" DbType="Int NOT NULL IDENTITY" IsPrimaryKey="true" IsDbGenerated="true" CanBeNull="false" />
-      <Column Name="Distribution_Id" Type="System.Int32" DbType="Int" CanBeNull="true" />
-      <Column Name="Account_Id" Type="System.Int32" DbType="Int" CanBeNull="true" />
-      <Column Name="Share_Account_Name" Type="System.String" DbType="VarChar(500)" CanBeNull="true" />
-      <Column Name="Total_Amount" Type="System.Decimal" DbType="Decimal(18,2)" CanBeNull="true" />
-      <Column Name="Discount_Percentage" Type="System.Decimal" DbType="Decimal(18,2)" CanBeNull="true" />
-      <Column Name="Discount_Amount" Type="System.Decimal" DbType="Decimal(18,2)" CanBeNull="true" />
-      <Column Name="Net_Amount" Type="System.Decimal" DbType="Decimal(18,2)" CanBeNull="true" />
-    </Type>
-  </Table>
   <Table Name="dbo.IPD_Distribution_Detail" Member="IPD_Distribution_Details">
     <Type Name="IPD_Distribution_Detail">
       <Column Name="Distribution_Detail_Id" Type="System.Int32" DbType="Int NOT NULL IDENTITY" IsPrimaryKey="true" IsDbGenerated="true" CanBeNull="false" />
@@ -8166,6 +8154,19 @@
       <Column Name="balance_amount" Type="System.Decimal" DbType="Decimal(18,2)" CanBeNull="true" />
       <Column Name="bank_cash" Type="System.String" DbType="NVarChar(150)" CanBeNull="true" />
       <Column Name="bank_account_id" Type="System.String" DbType="NVarChar(150)" CanBeNull="true" />
+    </Type>
+  </Table>
+  <Table Name="dbo.IPD_Doctor_Distribution_Detail" Member="IPD_Doctor_Distribution_Details">
+    <Type Name="IPD_Doctor_Distribution_Detail">
+      <Column Name="Doctor_Distribution_Id" Type="System.Int32" DbType="Int NOT NULL IDENTITY" IsPrimaryKey="true" IsDbGenerated="true" CanBeNull="false" />
+      <Column Name="Distribution_Id" Type="System.Int32" DbType="Int" CanBeNull="true" />
+      <Column Name="Account_Id" Type="System.Int32" DbType="Int" CanBeNull="true" />
+      <Column Name="Share_Account_Name" Type="System.String" DbType="VarChar(500)" CanBeNull="true" />
+      <Column Name="Total_Amount" Type="System.Decimal" DbType="Decimal(18,2)" CanBeNull="true" />
+      <Column Name="Discount_Percentage" Type="System.Decimal" DbType="Decimal(18,2)" CanBeNull="true" />
+      <Column Name="Discount_Amount" Type="System.Decimal" DbType="Decimal(18,2)" CanBeNull="true" />
+      <Column Name="Net_Amount" Type="System.Decimal" DbType="Decimal(18,2)" CanBeNull="true" />
+      <Column Name="doc_id" Type="System.Int32" DbType="Int" CanBeNull="true" />
     </Type>
   </Table>
   <Function Name="dbo.GetDataValueName" Method="GetDataValueName" IsComposable="true">
@@ -11916,13 +11917,6 @@
       <Column Name="G_Phone" Type="System.String" DbType="VarChar(500)" CanBeNull="true" />
     </ElementType>
   </Function>
-  <Function Name="dbo.sp_Load_Payables" Method="sp_Load_Payables">
-    <ElementType Name="sp_Load_PayablesResult">
-      <Column Name="Doctor_Id" Type="System.String" DbType="VarChar(100)" CanBeNull="true" />
-      <Column Name="Name" Type="System.String" DbType="VarChar(50)" CanBeNull="true" />
-      <Column Name="Balance" Type="System.Decimal" DbType="Decimal(38,2)" CanBeNull="true" />
-    </ElementType>
-  </Function>
   <Function Name="dbo.sp_Load_Payables_Details" Method="sp_Load_Payables_Details">
     <Parameter Name="DocId" Parameter="docId" Type="System.Int32" DbType="Int" />
     <ElementType Name="sp_Load_Payables_DetailsResult">
@@ -12880,6 +12874,13 @@
       <Column Name="Gender" Type="System.String" DbType="VarChar(10)" CanBeNull="true" />
       <Column Name="Patient_ID1" Type="System.Int32" DbType="Int NOT NULL" CanBeNull="false" />
       <Column Name="Reg_PatId1" Type="System.Int32" DbType="Int" CanBeNull="true" />
+    </ElementType>
+  </Function>
+  <Function Name="dbo.sp_Load_Payables" Method="sp_Load_Payables">
+    <ElementType Name="sp_Load_PayablesResult">
+      <Column Name="Doctor_Id" Type="System.Int32" DbType="Int" CanBeNull="true" />
+      <Column Name="Name" Type="System.String" DbType="VarChar(50)" CanBeNull="true" />
+      <Column Name="Balance" Type="System.Decimal" DbType="Decimal(38,2)" CanBeNull="true" />
     </ElementType>
   </Function>
 </Database>
