@@ -465,7 +465,7 @@
                     $('#tblDetails tbody').append(rows);
                 }
             });
-
+            AddDoctorFromBilling(Bill_No)
         }
 
         function LoadDetailDoctor() {
@@ -633,6 +633,65 @@
         `;
             $('#tblDoctorShareDetails tbody').append(row);
         }
+
+
+        function AddDoctorFromBilling(Bill_No) {
+
+            PageMethods.GetDoctorAmountsfromBilling(Bill_No, function (response) {
+
+                var doctors = JSON.parse(response);
+
+                $('#tblDoctorShareDetails tbody').empty();
+
+                $.each(doctors, function (i, item) {
+
+                    var row = `
+            <tr>
+                <td style="text-align:center;">
+                    <input type="hidden" name="Account_ID" value="${item.Account_ID}">
+                    <input type="text" name="Account_Code" class="form-control"
+                           value="${item.Account_Code}" readonly>
+                </td>
+
+                <td style="text-align:center;">
+                    <input type="text" name="Account_Name" class="form-control"
+                           value="${item.Account_Name}" readonly>
+                </td>
+
+                <td style="text-align:center;">
+                    <input type="number" class="form-control total-amount"
+                           name="txtRevenuAmount"
+                           value="0" >
+                </td>
+
+                <td style="text-align:center;">
+                    <input type="number" class="form-control disc-perc"
+                           name="txtRevenuDiscPer" value="0">
+                </td>
+
+                <td style="text-align:center;">
+                    <input type="number" class="form-control disc-amount"
+                           name="txtRevenuDiscAmount" value="0">
+                </td>
+
+                <td style="text-align:center;">
+                    <input type="number" class="form-control net-amount"
+                           name="txtRevenuNetAmount"
+                           value="${item.TotalAmount}" readonly>
+                </td>
+            </tr>`;
+
+                    $('#tblDoctorShareDetails tbody').append(row);
+                });
+
+            }, function (err) {
+                alert(err.get_message());
+            });
+        }
+
+
+
+
         debugger;
         function SaveRecord() {       
                 debugger;
@@ -673,7 +732,7 @@
                         Account_ID: Account_ID, Account_Name: Account_Name, txtRevenuAmount: txtRevenuAmount, txtRevenuDiscPer: txtRevenuDiscPer, txtRevenuDiscAmount: txtRevenuDiscAmount, txtRevenuNetAmount: txtRevenuNetAmount
                     });
                 });
-            var data = { Distribution_Id: Distribution_Id,Patient_ID: Patient_ID, Bill_ID: Bill_ID, Distributuion_Date: Distributuion_Date, remarks: remarks, DepartmentDistribution: DepartmentDistribution, IPDDistribution: IPDDistribution };
+            var data = { Distribution_Id: Distribution_Id, IPD_Revenue: IPD_Revenue, Patient_ID: Patient_ID, Bill_ID: Bill_ID, Distributuion_Date: Distributuion_Date, remarks: remarks, DepartmentDistribution: DepartmentDistribution, IPDDistribution: IPDDistribution };
 
             if (saveVal == "Save") {
 
@@ -1177,7 +1236,7 @@
 
         <div class="row">
             <div class="col-lg-12 col-md-6 col-sm-6" style="margin-top: 2%">
-                <div class="table-responsive" style="height: 250px;">
+                <div class="table-responsive" style="height: 250px;overflow-y: auto; overflow-x: auto">
                     <table class="table table-borderless" id="tblDoctorShareDetails">
                         <thead>
                             <tr>
