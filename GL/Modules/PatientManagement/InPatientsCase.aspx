@@ -7706,7 +7706,7 @@
                         <li><a href="#Tab-2">Receiving</a></li>
                         <li><a href="#Tab-8">History</a></li>
                         <li><a href="#Tab-13">Examination</a></li>
-                        <li><a href="#Tab-6">Investigation</a></li>
+                        <li><a href="#Tab-6">Investigation/Diagnostic</a></li>
                         <li><a href="#Tab-14">Services</a></li>
                         <li><a href="#Tab-4">Medication</a></li>
                         <li><a href="#Tab-18">IV Fluid</a></li>

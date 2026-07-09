@@ -28,8 +28,70 @@
                 $('#ddl_name').select2();
                 $('#PrefixAge').select2();
             }
+            $('#ddlbankcash').select2();
+            $('#ddlbank').select2();
+        // Bind change event
+        $('#ddlbankcash').on('change', function () {
+            loadBankAccounts($(this).val());
         });
 
+        // Initialize bank dropdown based on default payment method
+        loadBankAccounts($('#ddlbankcash').val());
+        });
+
+       function loadBankAccounts(paymentType, selectedId) {
+    var $bank = $('#ddlbank');
+
+    $bank.select2('destroy');
+
+    if (paymentType !== "02") { // Cash
+        $bank.empty().append('<option value="">Select Account</option>')
+             .prop('disabled', true);
+        $bank.select2();
+        return;
+    }
+
+    // Bank – disable initially while loading
+    $bank.empty().append('<option value="">Select Account</option>')
+         .prop('disabled', true);
+    $bank.select2();
+
+    $.ajax({
+        type: "POST",
+        url: "RegisterPatient.aspx/GetBankAccounts",
+        contentType: "application/json; charset=utf-8",
+        dataType: "json",
+        success: function (response) {
+            var accounts = JSON.parse(response.d);
+            $bank.select2('destroy');
+            $bank.empty().append('<option value="">Select Account</option>');
+            if (accounts && accounts.length) {
+                $.each(accounts, function (i, acc) {
+                    $bank.append('<option value="' + acc.id + '">' + acc.name + '</option>');
+                });
+            } else {
+                $bank.append('<option value="">No bank accounts found</option>');
+            }
+            $bank.prop('disabled', false);
+            $bank.select2();
+            if (selectedId) {
+                $bank.val(selectedId).trigger('change');
+            }
+        },
+        error: function () {
+            $bank.select2('destroy')
+                .empty().append('<option value="">Error loading accounts</option>')
+                .prop('disabled', false);
+            $bank.select2();
+            if (selectedId) {
+                $bank.val(selectedId).trigger('change');
+            }
+        }
+    });
+}
+     
+       
+    
         var refund;
         function AllowRefund() {
             $.ajax({
@@ -413,21 +475,38 @@
                             <option value="0">Select Area</option>
                         </select>
                     </div>
+                    <div class="col-lg-2 col-md-4 col-sm-6" >
+               
+                     <label for="ddlbankcash">Payment method</label>
+                   <select id="ddlbankcash" class="form-control" name="payment">   <!-- removed onchange -->
+                        <option value="02">Bank</option>
+                        <option value="01" selected>Cash</option>
+                    </select>
+                    </div>
+                    <div class="col-lg-2 col-md-4 col-sm-6"  >
+                        <label for="ddlbank">Bank/Cash</label>
+                        <select id="ddlbank" class="form-control">
+                            
+                        </select>
+                    </div>
 
                     <!-- Address – position 18 -->
+                    
+
+                    <!-- Fee – position 19 -->
+                 
+                </div>
+                <div class="row">
                     <div class="col-lg-3 col-md-6 col-sm-8">
                         <label for="txt_Address">Address<span style="color: red;">*</span></label>
                         <input type="text" id="txt_Address" class="form-control" />
                         <span id="address-error" class="span_txt" style="display: none;">Please Enter Address</span>
                     </div>
-
-                    <!-- Fee – position 19 -->
-                    <div class="col-lg-1 col-md-4 col-sm-6">
-                        <label for="lblfee">Fee<span style="color: red;">*</span></label>
-                        <input type="text" id="txtCardFee" class="form-control" />
-                    </div>
+                       <div class="col-lg-1 col-md-4 col-sm-6">
+                       <label for="lblfee">Fee<span style="color: red;">*</span></label>
+                       <input type="text" id="txtCardFee" class="form-control" />
+                   </div>
                 </div>
-
                 <!-- Monitoring (hidden by default) – position 20 -->
                 <div class="row" id="MonitoringDiv">
                     <div class="col-lg-1 col-md-4 col-sm-6">
