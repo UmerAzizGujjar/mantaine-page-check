@@ -346,5 +346,41 @@ namespace PMS
                 throw;
             }
         }
+        [WebMethod]
+        public static string GetInPatientDischargeSeparateFormPermission(int InPatientID)
+        {
+            try
+            {
+                using (DataBaseDataContext db = new DataBaseDataContext(DBClass.ConnectionString()))
+                {
+                    var sysParm = db.sys_Parms
+                        .Where(p => p.Name == "InPatient Discharge Separate Form"
+                                 && p.Company_ID == AppConfig.Company_ID)
+                        .Select(p => p.Code)
+                        .FirstOrDefault();
+
+                    if (sysParm != "1")
+                    {
+                        return new System.Web.Script.Serialization.JavaScriptSerializer()
+                            .Serialize(new { separateForm = false });
+                    }
+
+                    int existingOPDId = 0;
+                    var existingOPD = db.Out_Patients
+                        .Where(o => o.Patient_ID == InPatientID)
+                        .Select(o => (int?)o.Out_Patient_ID)
+                        .FirstOrDefault();
+                    existingOPDId = existingOPD ?? 0;
+
+                    return new System.Web.Script.Serialization.JavaScriptSerializer()
+                        .Serialize(new { separateForm = true, existingOutPatientID = existingOPDId });
+                }
+            }
+            catch (Exception ex)
+            {
+                return new System.Web.Script.Serialization.JavaScriptSerializer()
+                    .Serialize(new { separateForm = false, error = ex.Message });
+            }
+        }
     }
 }

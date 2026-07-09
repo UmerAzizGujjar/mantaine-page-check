@@ -22,7 +22,28 @@
 
 
         function Edit(id) {
-            window.open("NewOutPatient.aspx?ID=" + id + "");
+            var newWin = window.open('', '_blank');
+            $.ajax({
+                type: "POST",
+                url: "OutPatientsView.aspx/GetOutPatientNewFormRedirectPermission",
+                contentType: "application/json; charset=utf-8",
+                dataType: "json",
+                success: function (response) {
+                    var result = JSON.parse(response.d);
+                    var url = result.useNewForm
+                        ? "NewOutPatient.aspx?ID=" + id
+                        : "OutPatients.aspx?ID=" + id;
+                    if (newWin) {
+                        newWin.location.href = url;
+                    } else {
+                        window.open(url, '_blank');
+                    }
+                },
+                error: function () {
+                    if (newWin) newWin.close();
+                    window.open("NewOutPatient.aspx?ID=" + id + "");
+                }
+            });
         }
 
         function deleteConfirm(anchorTag) {
