@@ -197,8 +197,16 @@ namespace PMS.Modules.PatientManagement
                     if (data.btnsave == "Save")
                     {
                         OPD = new Out_Patient();
-                        OPD.Patient_ID = Convert.ToInt32(data.Patient_ID);
-                        OPD.Reg_PatId = Convert.ToInt32(data.reg_ID);
+                        if (data.FormType == "InPatientDischarge")
+                        {
+                            OPD.Patient_ID = data.InPatientID;
+                            OPD.Reg_PatId = Convert.ToInt32(data.reg_ID);
+                        }
+                        else
+                        {
+                            OPD.Patient_ID = Convert.ToInt32(data.Patient_ID);
+                            OPD.Reg_PatId = Convert.ToInt32(data.reg_ID);
+                        }
 
                         // Required fields for new records
                         OPD.Book_ID = AppConfig.Book_ID;
@@ -680,11 +688,7 @@ namespace PMS.Modules.PatientManagement
                     id = OPD.Out_Patient_ID.ToString();
 
                     // Update related records with the new Out_Patient_ID
-                    if (data.FormType == "InPatientDischarge")
-                    {
-                        UpdateRelatedRecordsForInPatientDischarge(db, data.InPatientID);
-                    }
-                    else
+                    if (data.FormType != "InPatientDischarge")
                     {
                         UpdateRelatedRecords(db, OPD.Out_Patient_ID);
                     }
@@ -695,6 +699,25 @@ namespace PMS.Modules.PatientManagement
                         if (inPatient != null)
                         {
                             inPatient.Discharge = true;
+                            inPatient.Discharge_On = DateTime.Now;
+                            inPatient.Discharge_By = AppConfig.UserName;
+
+                            var roomAlloc = db.Room_Allocations
+                                .FirstOrDefault(r => r.In_Patient_ID == data.InPatientID && r.IsDischarge == false);
+                            if (roomAlloc != null)
+                            {
+                                roomAlloc.IsDischarge = true;
+                                roomAlloc.To_Date = DateTime.Now;
+                            }
+
+                            var wardAlloc = db.Ward_Allocations
+                                .FirstOrDefault(w => w.InPatient_ID == data.InPatientID.ToString() && w.IsDischarge == false);
+                            if (wardAlloc != null)
+                            {
+                                wardAlloc.IsDischarge = true;
+                                wardAlloc.To_Date = DateTime.Now;
+                            }
+
                             db.SubmitChanges();
                         }
                     }
@@ -722,7 +745,7 @@ namespace PMS.Modules.PatientManagement
                 DataBaseDataContext db = new DataBaseDataContext(DBClass.ConnectionString());
 
                 var services = db.InPatientServices
-                    .Where(s => (formType == "InPatientDischarge" ? s.In_Patient_Id.ToString() == outPatientId : s.Ou_Patient_Id == outPatientId) && s.PatientType == "OutPatient")
+                    .Where(s => (formType == "InPatientDischarge" ? s.In_Patient_Id.ToString() == outPatientId : s.Ou_Patient_Id == outPatientId) && (formType == "InPatientDischarge" ? s.PatientType == "InPatient Discharge" : s.PatientType == "OutPatient"))
                     .OrderBy(s => s.CreatedDate)
                     .Select(s => new
                     {
@@ -946,7 +969,12 @@ namespace PMS.Modules.PatientManagement
                 int patientId = serviceData.Pat;
                 int outPatientId = serviceData.PatientID;
 
-            
+                if (formType == "InPatientDischarge" && outPatientId != 0)
+                {
+                    var existingServices = db.InPatientServices
+                        .Where(s => s.In_Patient_Id == outPatientId && s.PatientType == "InPatient Discharge").ToList();
+                    db.InPatientServices.DeleteAllOnSubmit(existingServices);
+                }
 
                 foreach (var service in serviceData.ServiceList)
                 {
@@ -975,7 +1003,6 @@ namespace PMS.Modules.PatientManagement
                         ServiceAmount = itemDetails.Sale_Rate ?? 0,
                         PatientId = patientId,
                         ServiceType = "Service",
-                        PatientType = "OutPatient",
                         CreatedDate = DateTime.Now,
                         UserName = Convert.ToString(AppConfig.UserID),
                         isbilled = false,
@@ -986,11 +1013,13 @@ namespace PMS.Modules.PatientManagement
                     {
                         newService.In_Patient_Id = outPatientId;
                         newService.Ou_Patient_Id = "0";
+                        newService.PatientType = "InPatient Discharge";
                     }
                     else
                     {
                         newService.Ou_Patient_Id = outPatientId.ToString();
                         newService.In_Patient_Id = null;
+                        newService.PatientType = "OutPatient";
                     }
 
                     db.InPatientServices.InsertOnSubmit(newService);
@@ -1004,6 +1033,55 @@ namespace PMS.Modules.PatientManagement
                 // Log error for debugging
                 System.Diagnostics.Debug.WriteLine($"SaveServices Error: {ex.Message}");
                 return $"Error: {ex.Message}";
+            }
+        }
+        [WebMethod]
+        public static string GetInPatientFormData(int InPatientID)
+        {
+            try
+            {
+                DataBaseDataContext db = new DataBaseDataContext(DBClass.ConnectionString());
+
+                var qry = (from ip in db.In_Patients
+                           join rp in db.Reg_patients on ip.Patient_ID equals rp.pat_id
+                           where ip.In_Patient_ID == InPatientID
+                           select new
+                           {
+                               rp.Full_Name,
+                               rp.Age_years,
+                               rp.Mobile1,
+                               rp.Permanent_Address,
+                               rp.pat_id,
+                               rp.Gender,
+                               rp.Patient_No
+                           }).FirstOrDefault();
+
+                if (qry == null)
+                {
+                    return JsonConvert.SerializeObject(new { success = false, message = "InPatient data not found" });
+                }
+
+                var patientData = new
+                {
+                    success = true,
+                    data = new
+                    {
+                        PatientName = qry.Full_Name ?? "",
+                        Age = qry.Age_years ?? "",
+                        Contact = qry.Mobile1 ?? "",
+                        Address = qry.Permanent_Address ?? "",
+                        PatientId = qry.pat_id.ToString(),
+                        RegId = qry.pat_id.ToString(),
+                        Gender = qry.Gender ?? "",
+                        MR_No = qry.Patient_No?.ToString() ?? ""
+                    }
+                };
+
+                return JsonConvert.SerializeObject(patientData);
+            }
+            catch (Exception ex)
+            {
+                return JsonConvert.SerializeObject(new { success = false, message = ex.Message });
             }
         }
         [WebMethod]
@@ -1509,7 +1587,11 @@ namespace PMS.Modules.PatientManagement
 
                 if (qry == null)
                 {
-                    return JsonConvert.SerializeObject(new { success = false, message = "Patient data not found" });
+                    var op = db.Out_Patients.FirstOrDefault(o => o.Out_Patient_ID == PatientID);
+                    if (op == null)
+                        return JsonConvert.SerializeObject(new { success = false, message = "Patient data not found" });
+
+                    return JsonConvert.SerializeObject(BuildFallbackPatientData(op, PatientID, doctorId));
                 }
 
                 var patientData = new
@@ -1642,6 +1724,108 @@ namespace PMS.Modules.PatientManagement
             {
                 return JsonConvert.SerializeObject(new { success = false, message = ex.Message });
             }
+        }
+        private static object BuildFallbackPatientData(Out_Patient op, int patientId, string doctorId)
+        {
+            return new
+            {
+                success = true,
+                data = new
+                {
+                    DoctorId = doctorId ?? "",
+                    PatientName = "",
+                    Age = "",
+                    Contact = "",
+                    Address = "",
+                    OutPatientId = patientId.ToString(),
+                    PatientId = op.Patient_ID.ToString(),
+                    RegId = op.Reg_PatId?.ToString() ?? "",
+                    Pulse = op.pulse_Min ?? "",
+                    BP = op.BP_mm_Hg ?? "",
+                    Temperature = op.Temp_C ?? "",
+                    Respiration = op.Respiration_Min ?? "",
+                    Height = op.Height_Cm ?? "",
+                    Weight = op.Weight_Kg ?? "",
+                    SPO2 = op.spo2 ?? "",
+                    BMI = op.BMI ?? "",
+                    BSR = op.BSR ?? "",
+                    MUAC = op.MUAC ?? "",
+                    OFC = op.OFC ?? "",
+                    LMP = op.L_M_P ?? "",
+                    EDD = op.EDD ?? "",
+                    DevelopmentHistory = op.DevelopmentHistory ?? "",
+                    VaccinationHistory = op.VaccinationHistory ?? "",
+                    NutritionHistory = op.NutritionHistory ?? "",
+                    HistoryOfPresentIllness = op.HistoryOfPeresentIllness ?? "",
+                    HistoryOfFamily = op.HistoryOfFamily ?? "",
+                    HistoryOfPastIllness = op.HistoryOfPastIllness ?? "",
+                    SocioEconomicHistory = op.SocioEconomicHistory ?? "",
+                    ObstetricHistory = op.ObstetricHistory ?? "",
+                    AllergiesHistory = op.AllergiesHistory ?? "",
+                    TreatmentHistory = op.TreatmentHistory ?? "",
+                    DrugHistory = op.Drug_History ?? "",
+                    PersonalHistory = op.Personal_History ?? "",
+                    BirthHistory = op.Birth_History ?? "",
+                    CVS = op.CVS ?? "",
+                    GIT = op.GIT ?? "",
+                    RESP = op.RESP ?? "",
+                    CNS = op.CNS ?? "",
+                    GYNAE = op.GYNAE ?? "",
+                    UGS = op.URG ?? "",
+                    Local = op.Local ?? "",
+                    Muscular = op.Mucculor ?? "",
+                    Abdominal = op.Abdominal ?? "",
+                    Pallor = op.chkPallor?.ToString().ToLower() ?? "false",
+                    JVP = op.chkJVP?.ToString().ToLower() ?? "false",
+                    Cyanosis = op.chkaganoris?.ToString().ToLower() ?? "false",
+                    Disoriented = op.chkunconceed?.ToString().ToLower() ?? "false",
+                    Jaundice = op.chkjaundice?.ToString().ToLower() ?? "false",
+                    Dehydration = op.hydration?.ToString().ToLower() ?? "false",
+                    Edema = op.edema?.ToString().ToLower() ?? "false",
+                    Lymphadenopathy = op.chk1?.ToString().ToLower() ?? "false",
+                    Clubbing = op.chk2?.ToString().ToLower() ?? "false",
+                    Dyspnoea = op.chk3?.ToString().ToLower() ?? "false",
+                    NeckSwelling = op.chk4?.ToString().ToLower() ?? "false",
+                    SkinLesions = op.chk5?.ToString().ToLower() ?? "false",
+                    DRE = op.DRE?.ToString().ToLower() ?? "false",
+                    Proctoscopy = op.Proctoscopy?.ToString().ToLower() ?? "false",
+                    ProvisionalDiagnosis = op.ProvisionalDiagnosis ?? "",
+                    FinalDiagnosis = op.Final_Diagnosis ?? "",
+                    FinalRecommendation = op.Final_Rec ?? "",
+                    hdnStatus = op.Status ?? "",
+                    hdnVoucher_id = op.Voucher_Id ?? 0,
+                    Advice = op.Advice ?? "",
+                    ReferToHospital = op.Refer_To_Hospital ?? "",
+                    Designation = op.Designation ?? "",
+                    referDoc = op.reffer_doc ?? 0,
+                    PA_Gynae = op.PA_Gynae ?? "",
+                    PS_Gynae = op.PS_Gynae ?? "",
+                    Uterus_Gynae = op.Uterus ?? "",
+                    FX_Gynae = op.FX ?? "",
+                    PS_Obs = op.PS_Obs ?? "",
+                    PV_Obs = op.PV_Obs ?? "",
+                    SFH_Obs = op.SFH ?? "",
+                    LIE_Obs = op.LIE ?? "",
+                    Presentation_Obs = op.Presentation ?? "",
+                    FHR_Obs = op.FHR ?? "",
+                    Engagement_Obs = op.Engagement ?? "",
+                    Verbal_Consent = op.Verbal_Consent ?? "",
+                    IssuanceOf = op.Administration ?? "",
+                    FollowUp = op.Follow_Up ?? "",
+                    FollowUpWeek = op.Follow_Up_Time ?? "",
+                    Proto = op.Proto ?? "",
+                    PatientMainCategory = op.Reffer_To ?? "",
+                    FollowDate = op.Folllow_Date?.ToString("dd/MM/yyyy") ?? "",
+                    InputBox1 = op.txtInputBox1 ?? "",
+                    ReferNote = op.Reffer_No ?? "",
+                    RemarksHistory = op.txtRemarksHistory ?? "",
+                    Discharge = op.Discharge?.ToString().ToLower() ?? "false",
+                    Smokers = op.Smokers?.ToString().ToLower() ?? "false",
+                    Non_Smokers = op.Non_Smokers?.ToString().ToLower() ?? "false",
+                    Diabetics = op.Diabetics?.ToString().ToLower() ?? "false",
+                    Hypertensive = op.Hypertensive?.ToString().ToLower() ?? "false"
+                }
+            };
         }
         [WebMethod]
         public static string LoadSymtompsHistory(int OutPatientID, string formType)
@@ -2295,12 +2479,15 @@ namespace PMS.Modules.PatientManagement
             return (new JavaScriptSerializer().Serialize(dpt));
         }
         [WebMethod]
-        public static string LoadProtoDetails(string patients_id)
+        public static string LoadProtoDetails(string patients_id, string formType)
         {
             using (DataBaseDataContext db = new DataBaseDataContext())
             {
                 List<ProtoDetailss> list = new List<ProtoDetailss>();
-                var OutPatients_Proto = db.OutPatients_Protos.DefaultIfEmpty().Where(w => w.Outpatient_id == Convert.ToInt32(patients_id)).ToList();
+                var pid = Convert.ToInt32(patients_id);
+                var OutPatients_Proto = formType == "InPatientDischarge"
+                    ? db.OutPatients_Protos.Where(w => w.In_Patient_ID == pid).ToList()
+                    : db.OutPatients_Protos.Where(w => w.Outpatient_id == pid).ToList();
 
                 if (OutPatients_Proto.Count > 0 && OutPatients_Proto != null)
                 {

@@ -477,6 +477,7 @@ namespace PMS.Modules.PatientManagement
                     pat.Blood_Group = Blood_Group;
                     pat.Country = Country;
                     pat.Monitoring = Monitoring;
+                    pat.Reprint = "1";
 
                     // Card Fee Safe Parse
                     decimal cardFeeValue = 0;
@@ -700,6 +701,43 @@ namespace PMS.Modules.PatientManagement
                 return "0";
             }
         }
-        
+
+        [WebMethod]
+        public static string IncrementReprintCount(string regId)
+        {
+            try
+            {
+                if (string.IsNullOrEmpty(regId))
+                    return "ERROR: Invalid patient ID";
+
+                using (var db = new DataBaseDataContext())
+                {
+                    var patient = db.Reg_patients.FirstOrDefault(p => p.pat_id == Convert.ToInt32(regId));
+
+                    if (patient == null)
+                        return "ERROR: Patient not found";
+
+                    
+                    int currentCount = 1;
+                    if (!string.IsNullOrEmpty(patient.Reprint) && int.TryParse(patient.Reprint, out int parsed))
+                    {
+                        currentCount = parsed;
+                    }
+
+                    
+                    currentCount++;
+                    patient.Reprint = currentCount.ToString();
+
+                    db.SubmitChanges();
+
+                    return "SUCCESS:" + currentCount.ToString();
+                }
+            }
+            catch (Exception ex)
+            {
+                return "ERROR: " + ex.Message;
+            }
+        }
+
     }
 }

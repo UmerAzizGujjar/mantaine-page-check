@@ -3,12 +3,66 @@
 <asp:Content ID="Content1" ContentPlaceHolderID="HeadContent" runat="server">
     <link href="../../wwwroot/THEME_TIBBIT/CustomCSS/tablestyle.css" rel="stylesheet" /> 
     <script type="text/javascript">
+
+        var allowPrint = false;
         $(document).ready(function () {
             $('#ctl00_lblMessage').hide();
+            checkPrintPermission();
             LoadPage();
         });
 
+        function checkPrintPermission() {
+            $.ajax({
+                type: "POST",
+                url: "RegList.aspx/checkeditPrintRights",
+                contentType: "application/json; charset=utf-8",
+                dataType: "json",
+                async: false,
+                success: function (response) {
+                    allowPrint = JSON.parse(response.d);
+                    console.log("Print permission:", allowPrint);
+                },
+                error: function (error) {
+                    console.error("Failed to check print permission:", error);
+                    allowPrint = false;
+                }
+            });
+        }
+
+        //function PrintReceipt(pat_id) {
+        //    var locationInfo = window.location;
+        //    var url = "/ReportViewer.aspx?ReportName=Reg_Patient_Print&Title=Register Patient Print &Patient_ID=" + pat_id;
+
+        //    if (!locationInfo.origin.includes('localhost')) {
+        //        var urlInfo = window.location.href.split('/');
+        //        var ip = urlInfo[2];
+        //        var foldername = urlInfo[3];
+        //        url = 'http://' + ip + '/' + foldername + "/ReportViewer.aspx?ReportName=Reg_Patient_Print&Title=Register Patient Print &Patient_ID=" + pat_id;
+        //    }
+        //    window.open(url, '_blank');
+        //}
+
         function PrintReceipt(pat_id) {
+            $.ajax({
+                type: "POST",
+                url: "RegList.aspx/IncrementReprintCount",
+                data: JSON.stringify({ pat_id: pat_id }),
+                contentType: "application/json; charset=utf-8",
+                dataType: "json",
+                async: true, 
+                success: function (response) {
+                    if (response.d === "Success") {
+                        console.log("Reprint count incremented for Patient: " + pat_id);
+                    } else {
+                        console.warn("Failed to increment reprint count: " + response.d);
+                    }
+                },
+                error: function (xhr, status, error) {
+                    console.error("Error updating reprint count:", error);
+                }
+            });
+
+            
             var locationInfo = window.location;
             var url = "/ReportViewer.aspx?ReportName=Reg_Patient_Print&Title=Register Patient Print &Patient_ID=" + pat_id;
 
@@ -16,8 +70,11 @@
                 var urlInfo = window.location.href.split('/');
                 var ip = urlInfo[2];
                 var foldername = urlInfo[3];
-                url = 'http://' + ip + '/' + foldername + "/ReportViewer.aspx?ReportName=Reg_Patient_Print&Title=Register Patient Print &Patient_ID=" + pat_id;
+                
+                var pathPrefix = foldername ? '/' + foldername : '';
+                url = 'http://' + ip + pathPrefix + "/ReportViewer.aspx?ReportName=Reg_Patient_Print&Title=Register Patient Print &Patient_ID=" + pat_id;
             }
+
             window.open(url, '_blank');
         }
         function editOpen(id) {
@@ -158,13 +215,18 @@
                         orderable: false,
                         searchable: false,
                         render: function (data, type, full) {
-                            return `
-       <a href="#" onclick="editOpen(${full.pat_id})" class="editListBtn" style="border-radius: 4px;margin-left: 4px;color: white;padding: 5px 8px 5px 8px;" title="Edit">
-           <i class="fa fa-pencil" style="color: #667eea;"></i>
-       </a>
-       <a href="#" class="printListBtn" style="border-radius: 4px;margin-left: 4px;color: white;padding: 5px 8px 5px 8px;"  onclick="PrintReceipt(${full.pat_id})" class="printListBtn" title="Print">
-           <i class="fa fa-print"></i>
-       </a>`;
+                            var editButton = `<a href="#" onclick="editOpen(${full.pat_id})" class="editListBtn" style="border-radius: 4px;margin-left: 4px;color: white;padding: 5px 8px 5px 8px;" title="Edit">
+                                  <i class="fa fa-pencil" style="color: #667eea;"></i>
+                              </a>`;
+
+                            var printButton = '';
+                            if (allowPrint) {
+                                printButton = `<a href="#" class="printListBtn" style="border-radius: 4px;margin-left: 4px;color: white;padding: 5px 8px 5px 8px;" onclick="PrintReceipt(${full.pat_id})" title="Print">
+                                   <i class="fa fa-print"></i>
+                               </a>`;
+                            }
+
+                            return editButton + printButton;
                         }
                     }
                 ],

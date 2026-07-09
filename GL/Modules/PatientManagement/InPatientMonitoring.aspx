@@ -977,6 +977,8 @@
             InfussionPharmacy();
             additive();
             Sides();
+            CheckMonitoringMedicines();
+            loadNurseName();
 
             //$('#txtStopD').datepicker({
             //    dateFormat: 'mm/dd/yy', numberOfMonths: 1,
@@ -2106,13 +2108,15 @@
         function AddProgressNote() {
 
             var datetime = '<%= DateTime.Now%>';
+            var NurseName = $('#ctl00_MainContent_ddlNurseName').find('option:selected').text();
+
             if ($('#btnAddProgress').val() == 'Add') {
-                var row = '<tr> <td> ' + $('#ctl00_MainContent_txtDate').val() + ' </td><td> ' + $('#ctl00_MainContent_txtNurseName').val() + '</td> <td> ' + $('#ctl00_MainContent_txtProgressNote').val() + '</td><td> ' + $('#ctl00_MainContent_txtInstruction').val() + ' </td> <td> <a href="#" onclick="editPlus(this)"> Edit </a> | <a href="#" onclick="deleteMedicine(this)"> Delete </a> <input type="hidden" name="uurowid" value=' + uuid() + ' />  </td> </tr>';
+                var row = '<tr> <td> ' + $('#ctl00_MainContent_txtDate').val() + ' </td><<td> ' + NurseName + '</td> <td> ' + $('#ctl00_MainContent_txtProgressNote').val() + '</td><td> ' + $('#ctl00_MainContent_txtInstruction').val() + ' </td> <td> <a href="#" onclick="editPlus(this)"> Edit </a> | <a href="#" onclick="deleteMedicine(this)"> Delete </a> <input type="hidden" name="uurowid" value=' + uuid() + ' />  </td> </tr>';
                 var table = $('#tblProdressNote tbody');
                 table.append(row);
                 $('#ctl00_MainContent_txtProgressNote').val('');
                 $('#ctl00_MainContent_txtInstruction').val('');
-                $('#ctl00_MainContent_txtNurseName').val('');
+                $('#ctl00_MainContent_ddlNurseName').val('');
 
             }
             else {
@@ -2163,7 +2167,7 @@
             var table = $('#tblMedicinesList');
             var MedicinesList = [];
             table.find('tbody tr').each(function (key, value) {
-                MedicinesList.push({ 'Medicine_Date': $($(value).find('td')[0]).text(), 'Medicine_Name': $($(value).find('td')[1]).text(), 'Recomended_Dosage': $($(value).find('td')[2]).text(), 'Frequency': $($(value).find('td')[3]).text(), 'Oral': $($(value).find('td')[4]).text(), 'Injection': $($(value).find('td')[5]).text(), 'AttendingParamedical_Staff': $($(value).find('td')[6]).text(), 'Nurse_Name': $(value).find('td input[name=txtNurseName]').val(), 'Duration': $($(value).find('td')[7]).text(), 'Special_Ins': $($(value).find('td')[8]).text(), 'Dosage_From': $($(value).find('td')[9]).text(), 'Dosage_Qty': $($(value).find('td')[10]).text(), 'Other_Ins': $($(value).find('td')[11]).text(), 'Type': $($(value).find('td')[12]).text(), });
+                MedicinesList.push({ 'Medicine_Date': $($(value).find('td')[0]).text(), 'Medicine_Name': $($(value).find('td')[1]).text(), 'Recomended_Dosage': $($(value).find('td')[2]).text(), 'Frequency': $($(value).find('td')[3]).text(), 'Oral': $($(value).find('td')[4]).text(), 'Injection': $($(value).find('td')[5]).text(), 'AttendingParamedical_Staff': $($(value).find('td')[6]).text(), 'Nurse_Name': $(value).find('td input[name=ddlNurseName]').val(), 'Duration': $($(value).find('td')[7]).text(), 'Special_Ins': $($(value).find('td')[8]).text(), 'Dosage_From': $($(value).find('td')[9]).text(), 'Dosage_Qty': $($(value).find('td')[10]).text(), 'Other_Ins': $($(value).find('td')[11]).text(), 'Type': $($(value).find('td')[12]).text(), });
             });
             var PatID = $('#<%= txtPatient_ID.ClientID%>').val();
 
@@ -2508,7 +2512,7 @@
                         }
                         var timeStamp = parseInt(value.Medicine_Date.substr(6, 10));
                         var date = moment.unix(timeStamp).format('M/D/YYYY h:m:s A');
-                        rows += '<tr> <td> ' + date + ' </td><td> ' + value.Medicine_Name + ' </td> <td> ' + value.Recomended_Dosage + ' </td><td>' + value.Frequency + '</td><td> ' + value.Oral + ' </td> <td style="display:none"> ' + value.Injections + ' </td><td> <input type="text"  id="txtNurseName" name="txtNurseName" style="width:80px !important;" value="' + value.Nurse_Name + '"/></td><td>' + value.Injections + '</td><td>' + value.AttendingParamedical_Staff + '</td><td>' + value.Dosage_From + '</td><td>' + value.Dosage_Qty + '</td><td>' + value.Other_Instruction + '</td><td>' + type + '</td><td> <a style="display:none;" href="#" onclick="editMedicine(this)"> Edit </a> | <a style="display:none;" href="#" onclick="deleteMedicine(this)"> Delete </a> <input type="hidden" name="uurowid" value=' + uuid() + ' />  </td> </tr>';
+                        rows += '<tr> <td> ' + date + ' </td><td> ' + value.Medicine_Name + ' </td> <td> ' + value.Recomended_Dosage + ' </td><td>' + value.Frequency + '</td><td> ' + value.Oral + ' </td> <td style="display:none"> ' + value.Injections + ' </td><td> <input type="text"  id="ddlNurseName" name="ddlNurseName" style="width:80px !important;" value="' + value.Nurse_Name + '"/></td><td>' + value.Injections + '</td><td>' + value.AttendingParamedical_Staff + '</td><td>' + value.Dosage_From + '</td><td>' + value.Dosage_Qty + '</td><td>' + value.Other_Instruction + '</td><td>' + type + '</td><td> <a style="display:none;" href="#" onclick="editMedicine(this)"> Edit </a> | <a style="display:none;" href="#" onclick="deleteMedicine(this)"> Delete </a> <input type="hidden" name="uurowid" value=' + uuid() + ' />  </td> </tr>';
                     });
                     $('#tblMedicinesList tbody').html(rows);
                 });
@@ -3167,7 +3171,7 @@
             var InstructionList = [];
             table.find('tbody tr').each(function (key, value) {
                 
-                InstructionList.push({ 'Instruction_Date': $($(value).find('td')[0]).text(), 'Doctor_Status': DocStatus[1], 'Doctor_ID': $(value).find('td input[name=txtDoctorValue]').val(), 'Doctor_Instruction': $($(value).find('td')[2]).text(), 'ChekInstruction': $(value).find('td input[name=chekInstruction]')[0].checked, 'Nurse_Name': $(value).find('td input[name=txtNurseName]').val(), 'Progress_Note': $(value).find('td input[name=txtprogress]').val(), });
+                InstructionList.push({ 'Instruction_Date': $($(value).find('td')[0]).text(), 'Doctor_Status': DocStatus[1], 'Doctor_ID': $(value).find('td input[name=txtDoctorValue]').val(), 'Doctor_Instruction': $($(value).find('td')[2]).text(), 'ChekInstruction': $(value).find('td input[name=chekInstruction]')[0].checked, 'Nurse_Name': $(value).find('td input[name=ddlNurseName]').val(), 'Progress_Note': $(value).find('td input[name=txtprogress]').val(), });
 
             });
 
@@ -3202,7 +3206,7 @@
             var Other_Ins = $($(row).find('td')[11]).text();
             var Type = $($(row).find('td')[12]).text();
             var date = '<%= DateTime.Now %>';
-            var row = '<tr><td>' + date + '</td><td>' + MedicineName + '</td><td>' + Dosage + '</td><td>' + Frequency + '</td><td> ' + Routes + '</td><td style="display:none"> ' + Duration + '</td><td> <input type="text"  id="txtNurseName" name="txtNurseName" style="width:80px !important;"/></td><td>' + Duration + '</td><td>' + Special_Ins + '</td><td>' + Dosage_From + '</td><td>' + Dosage_Qty + '</td><td>' + Other_Ins + '</td><td>' + Type + '</td><td><input type="hidden" name="rowid" value="' + uuid() + '" /><a href="javascript:void(0)" onclick="deleteMedicine(this)">Delete</a></td></tr>';
+            var row = '<tr><td>' + date + '</td><td>' + MedicineName + '</td><td>' + Dosage + '</td><td>' + Frequency + '</td><td> ' + Routes + '</td><td style="display:none"> ' + Duration + '</td><td> <input type="text"  id="ddlNurseName" name="ddlNurseName" style="width:80px !important;"/></td><td>' + Duration + '</td><td>' + Special_Ins + '</td><td>' + Dosage_From + '</td><td>' + Dosage_Qty + '</td><td>' + Other_Ins + '</td><td>' + Type + '</td><td><input type="hidden" name="rowid" value="' + uuid() + '" /><a href="javascript:void(0)" onclick="deleteMedicine(this)">Delete</a></td></tr>';
             $('#tblMedicinesList').append(row);
         }
         var ArrDel = [];
@@ -3217,11 +3221,11 @@
             var Doctor_ID = $($(row).find('td')[1]).find('input[name="txtDoctorValue"]').val();
             var Doctor_Note_ID = $($(row).find('td')[1]).find('input[name="txtDoctorNoteID"]').val();
             var Instruction = $($(row).find('td')[2]).text();
-            var Nurse_Name = $($(row).find('td')[3]).find('input[name="txtNurseName"]').val();
+            var Nurse_Name = $($(row).find('td')[3]).find('input[name="ddlNurseName"]').val();
             var ProgresNote = $($(row).find('td')[2]).find('input[name="txtprogress"]').val();
 
             var date = '<%= DateTime.Now %>';
-            rows = '<tr> <td> ' + Date + ' </td> <td><input type="hidden" name ="txtDoctorStatus" value="">  ' + Doctor_name + '<input type="hidden" name ="txtDoctorValue" value="' + Doctor_ID + '"> </td>  <td><input type="hidden" name ="txtprogress" value="' + ProgresNote + '">' + Instruction + '</td><td><input type="text" name="txtNurseName" value="' + Nurse_Name + '" style="font - size: medium;"/></td><td><input type="checkbox" name="chekInstruction" checked  disabled/></td> </tr>';
+            rows = '<tr> <td> ' + Date + ' </td> <td><input type="hidden" name ="txtDoctorStatus" value="">  ' + Doctor_name + '<input type="hidden" name ="txtDoctorValue" value="' + Doctor_ID + '"> </td>  <td><input type="hidden" name ="txtprogress" value="' + ProgresNote + '">' + Instruction + '</td><td><input type="text" name="ddlNurseName" value="' + Nurse_Name + '" style="font - size: medium;"/></td><td><input type="checkbox" name="chekInstruction" checked  disabled/></td> </tr>';
             $('#tblInstruction2 tbody').append(rows);
 
             ArrDel.push({ 'Doctor_Note_ID': Doctor_Note_ID, });
@@ -3244,7 +3248,7 @@
                         
                         if (value.Nurse_Name == null) value.Nurse_Name = '';
                         rows += '<tr> <td> ' + date + ' </td> <td><input type="hidden" name ="txtDoctorStatus" value="' + value.Doctor_Status + '">  ' + value.DoctorName + ',' + value.Doctor_Status
-                            + '<input type="hidden" name ="txtDoctorValue" value="' + value.Doctor_ID + '"> </td>  <td><input type="hidden" name ="txtprogress" value="' + value.Progress_Note + '">' + value.Doctor_Instruction + '</td><td><input type="text" value="' + value.Nurse_Name + '" name="txtNurseName"  style="font - size: medium;"/></td><td><input type="checkbox" name="chekInstruction"  ' + (value.IsLatest ? 'checked' : '') + ' onclick="selectDoctorInstruction(this)" checked disabled style="width: 20px;" /></td> </tr>';
+                            + '<input type="hidden" name ="txtDoctorValue" value="' + value.Doctor_ID + '"> </td>  <td><input type="hidden" name ="txtprogress" value="' + value.Progress_Note + '">' + value.Doctor_Instruction + '</td><td><input type="text" value="' + value.Nurse_Name + '" name="ddlNurseName"  style="font - size: medium;"/></td><td><input type="checkbox" name="chekInstruction"  ' + (value.IsLatest ? 'checked' : '') + ' onclick="selectDoctorInstruction(this)" checked disabled style="width: 20px;" /></td> </tr>';
                     });
                     $('#tblInstruction2 tbody').html(rows);
                 });
@@ -3274,7 +3278,7 @@
                                 if (value.Nurse_Name == null) value.Nurse_Name = '';
                                 rows += '<tr> <td> ' + date + ' </td> <td><input type="hidden" name ="txtDoctorNoteID" value="' + value.Doctor_Note_ID + '"><input type="hidden" name ="txtDoctorStatus" value="' + value.Doctor_Status + '">  ' + value.DoctorName
                                     + ',' + value.DoctorStatus
-                                    + '<input type="hidden" name ="txtDoctorValue" value="' + value.Doctor_ID + '"> </td>  <td><input type="hidden" name ="txtprogress" value="' + value.Progress_Note + '">' + value.RN_Special_Instruction + '</td><td><input type="text" value="' + value.Nurse_Name + '" name="txtNurseName"  style="font - size: medium;"/></td><td><input type="checkbox" name="chekInstruction"  ' + (value.IsLatest ? 'checked' : '') + ' onclick="selectDoctorInstruction(this)" /></td> </tr>';
+                                    + '<input type="hidden" name ="txtDoctorValue" value="' + value.Doctor_ID + '"> </td>  <td><input type="hidden" name ="txtprogress" value="' + value.Progress_Note + '">' + value.RN_Special_Instruction + '</td><td><input type="text" value="' + value.Nurse_Name + '" name="ddlNurseName"  style="font - size: medium;"/></td><td><input type="checkbox" name="chekInstruction"  ' + (value.IsLatest ? 'checked' : '') + ' onclick="selectDoctorInstruction(this)" /></td> </tr>';
                             }
                         }
                     });
@@ -3758,6 +3762,42 @@
             var chkPrivateforload = document.getElementById("chkPrivateWL").checked;
             localStorage.IsPrivate = chkPrivateforload;
             window.location.href = 'InPatientMonitoring.aspx' + '?InPatientID=' + inPatID;
+        }
+
+        function CheckMonitoringMedicines() {
+            $.ajax({
+                type: 'POST',
+                url: 'InPatientMonitoring.aspx/MonitoringMedicines',
+                contentType: 'application/json; charset=utf-8',
+                dataType: 'json',
+                success: function (response) {
+                    var code = response.d;
+                    if (code === "01") {                      
+                        $('#btnRegularMedicine').show();                      
+                        $('#Medicationheading').show();                      
+                        $('#RegulerMedicinePrint').show();                      
+                    } else {
+                        $('#btnRegularMedicine').hide();
+                        $('#Medicationheading').hide();
+                        $('#RegulerMedicinePrint').hide();                    
+                    }
+                },
+                error: function () {
+                    console.log("Error fetching monitoring medicines setting");                    
+                    $('#btnRegularMedicine').show();
+                }
+            });
+        }
+
+        function loadNurseName() {
+            PageMethods.loadAllUsers(function (res) {
+                var data = JSON.parse(res);
+                var options = '';
+                $.each(data, function (i, item) {
+                    options += '<option value="' + item.UserId + '">' + item.UserName + '</option>';
+                });
+                $('#ctl00_MainContent_ddlNurseName').html(options).select2();
+            });
         }
     </script>
 
@@ -4428,7 +4468,8 @@
                     <div class="row">
                         <div class="col-lg-2 col-md-4 col-sm-6">
                             <asp:Label ID="Label3" runat="server" Text="Nurse Name "></asp:Label>
-                            <asp:TextBox ID="txtNurseName" runat="server"></asp:TextBox>
+                            <%--<asp:TextBox ID="txtNurseName" runat="server"></asp:TextBox>--%>
+                            <asp:DropDownList ID="ddlNurseName" runat="server"></asp:DropDownList>
                         </div>
                         <div class="col-lg-2 col-md-4 col-sm-6">
                             <asp:Label ID="Label12" runat="server" Text="Date/Time"></asp:Label>
@@ -5045,14 +5086,14 @@
             <%--Medication Tab Start--%> 
                                 <div id="Tab-8">
                         <div id="Medication" >
-                            <h2 >Medication : </h2>
+                            <h2 id="Medicationheading">Medication : </h2>
                             <table style="width:100%">
                                 <tr>
                                     <td>
                                         <input type="button" value="Regular Medicine" id="btnRegularMedicine" class="btn btn-primry" style="width: 15% !important;"/>
                                      <%--      <input type="button" value="STAT Medicine" class="btn btn-primry" id="btnSTATMedicine" style="width: 15% !important;"/>
                                          <input type="button" value="PRN Medicine" class="btn btn-primry" id="btnPRNMedicine" style="width:15% !important;"/> --%>                     
-                                         <input type="button" class="btn btn-primry" onclick="PrintMecicationDetail()" value="Regular Print" style="width:15% !important" />
+                                         <input type="button" id="RegulerMedicinePrint" class="btn btn-primry" onclick="PrintMecicationDetail()" value="Regular Print" style="width:15% !important" />
         <%--                                <input type="button" class="btn btn-primry" onclick="PrintMecicationDetailPRN()" value="STAT Print"  style="width: 15% !important;"/>
                                          <input type="button" class="btn btn-primry" onclick="PrintMecicationDetailSTAT()" value="PRN Print" style="width: 15% !important;" />--%>
                                         <h2>Regular Medicine</h2>

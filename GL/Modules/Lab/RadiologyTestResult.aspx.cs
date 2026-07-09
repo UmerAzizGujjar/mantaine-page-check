@@ -1525,6 +1525,7 @@ AND (
 
             List<Test> AlltestList = new List<Test>();
             List<Test> AlltestListRefined = new List<Test>();
+            var orthancBaseUrl = GetOrthancBaseUrl();
 
             foreach (var item in data)
             {
@@ -1590,6 +1591,9 @@ AND (
                 test.Result_Time = item.Created_Time?.ToString() ?? "";
                 test.Approved_By = item.Approved_By ?? "";
                 test.Approved_Time = item.Approved_Time?.ToString() ?? "";
+                var pacsLookup = GetOrthancStudyLookup(test.Lab_Test_Detail_ID, orthancBaseUrl);
+                test.PACS_Study_Url = pacsLookup.ViewerUrl;
+                test.PACS_Study_UID = pacsLookup.StudyInstanceUID;
                 AlltestList.Add(test);
             }
 
@@ -2404,7 +2408,7 @@ AND (
                     Age_years = data.Age_years?.ToString() ?? "",
                     Gender = data.Gender ?? "",
                     Patient_No = data.Patient_No?.ToString() ?? "",
-                    REg_Date = data.REg_Date,
+                    REg_Date = data.REg_Date.ToString() ?? "",
                     Mobile1 = data.Mobile1 ?? "",
                     NIC = data.NIC ?? "",
                     Patient_Type = data.Patient_Type ?? "",

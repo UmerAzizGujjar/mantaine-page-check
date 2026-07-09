@@ -44,6 +44,7 @@
                     }, 200);
                     // Checkboxes
                     $('#AllowPatientEdit').prop('checked', data.AllowPatientEdit);
+                    $('#Allow_ReglistPrint').prop('checked', data.AllowRegListPrint);
                     $('#AllowPatientDelete').prop('checked', data.AllowPatientDelete);
                     $('#AllPatientRecords').prop('checked', data.AllPatientRecords);
                     $('#AllowUnapproveVouchers').prop('checked', data.AllowUnapproveVoucher);
@@ -87,14 +88,14 @@
                     $('#AllowSamplelist').prop('checked', data.AllowSamplelist);
                     $('#AllowRegisterRefund').prop('checked', data.AllowRegisterRefund);
                     $('#Allow_Return_Queue').prop('checked', data.Allow_Return_Queue);
-                    $('#Allow_ReglistPrint').prop('checked', data.AllowRegListPrint);
+                    
                     $('#AllowRateEdit').prop('checked', data.AllowRateEdit);
                     $('#AllowUndischarge').prop('checked', data.AllowUndischarge);
                     $('#AllDoctorTemplate').prop('checked', data.AllDoctorTemplate);
                     $('#AllowDiscountAssign').prop('checked', data.AllowDiscountAssign);
                     $('#AllowTill').prop('checked', data.AllowTill);
                     $('#AllowLineDiscount').prop('checked', data.AllowLineDiscount);
-                    $('#AllowTestlistDoctor').prop('checked', data.AllowTestlistDoctor);             
+                    $('#AllowTestlistDoctor').prop('checked', data.AllowTestlistDoctor);
                 },
                 error: function (xhr, status, error) {
                     alert("Error: " + xhr.responseText);
@@ -154,8 +155,7 @@
             var Rejectradiology = $('#Rejectradiology').prop('checked');
             var AlllowPAtientAdd = $('#AlllowPAtientAdd').prop('checked');
             var AllowSamplelist = $('#AllowSamplelist').prop('checked');
-            var AllowRegisterRefund = $('#AllowRegisterRefund').prop('checked');
-            var Allow_ReglistPrint = $('#Allow_ReglistPrint').prop('checked');
+            var AllowRegisterRefund = $('#AllowRegisterRefund').prop('checked');            
             var AllowRateEdit = $('#AllowRateEdit').prop('checked');
             var AllowUndischarge = $('#AllowUndischarge').prop('checked');
             var AllDoctorTemplate = $('#AllDoctorTemplate').prop('checked');
