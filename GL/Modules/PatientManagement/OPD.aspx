@@ -43,8 +43,6 @@
 
             }
             else {
-
-
                 $('#ddlGender').select2();
                 $('#ddlpanel').select2();
                 $('#ddlemployee').select2();
@@ -52,9 +50,9 @@
                 $('#ddlDepartment').select2();
                 $('#ddlFilterClnic').select2();
                 $('#ddlServices').select2();
-                $('#ddlbankcash').select2();
-                $('#ddlbank').select2();
             }
+            $('#ddlbankcash').select2();
+            $('#ddlbank').select2();
             if (reg_id != "" && added == "true") {
                 Get_Pat_Info(reg_id);
 
@@ -84,7 +82,7 @@
                 Get_Pat_Info_Reffer(Reffered_id_opd);
             }
 
-
+            LoadBankAccounts($('#ddlbankcash').val());
         });
         var cardvalidation;
         function checkcardvalidation() {
@@ -784,43 +782,52 @@
             });
 
         }
-        function LoadBankAccounts() {
-            debugger;
-            var ddlbankcash = $("#ddlbankcash").val();
+        function LoadBankAccounts(selectedId) {
+    var $bank = $('#ddlbank');
+    var paymentType = $('#ddlbankcash').val();
 
-      
-                if (ddlbankcash == "01") {
-                    $("#ddlbank").val("0").prop("disabled", true);
-       
-            } else {
-                $.ajax({
-                    type: "POST",
-                    url: "OPD.aspx/GetBankAccounts",
-                    data: '{}',
-                    contentType: "application/json; charset=utf-8",
-                    dataType: "json",
-                    success: function (response) {
-                        debugger;
-                        var doctor = JSON.parse(response.d);
-                        var options = '<option value=""> Please Select </option>';
+    $bank.select2('destroy');
 
-                        $.each(doctor, function (key, value) {
-                            options += '<option value="' + value.id + '">' + value.name + '</option>';
-                        });
+    if (paymentType === "01") { // Cash
+        $bank.empty().append('<option value="">Select Account</option>')
+             .prop('disabled', true);
+        $bank.select2();
+        return;
+    }
 
-                        $('#ddlbank').html(options);
+    // Bank – disable initially while loading
+    $bank.empty().append('<option value="">Select Account</option>')
+         .prop('disabled', true);
+    $bank.select2();
 
-
-
-                    },
-                    error: function (xhr, status, error) {
-                        console.log("Error: " + error);
-                    }
+    $.ajax({
+        type: "POST",
+        url: "OPD.aspx/GetBankAccounts",
+        contentType: "application/json; charset=utf-8",
+        dataType: "json",
+        success: function (response) {
+            var accounts = JSON.parse(response.d);
+            $bank.select2('destroy');
+            $bank.empty().append('<option value="">Select Account</option>');
+            if (accounts && accounts.length) {
+                $.each(accounts, function (i, acc) {
+                    $bank.append('<option value="' + acc.id + '">' + acc.name + '</option>');
                 });
             }
-          
-
+            $bank.prop('disabled', false);
+            $bank.select2();
+            if (selectedId) {
+                $bank.val(selectedId).trigger('change');
+            }
+        },
+        error: function () {
+            $bank.select2('destroy')
+                .empty().append('<option value="">Error loading accounts</option>')
+                .prop('disabled', false);
+            $bank.select2();
         }
+    });
+}
 
         function getGeneralFee() {
             debugger;

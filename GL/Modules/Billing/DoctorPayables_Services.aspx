@@ -3,100 +3,146 @@
 
 
 <asp:Content ID="Content1" ContentPlaceHolderID="HeadContent" runat="server">
-        <%--<link href="../../wwwroot/THEME_TIBBIT/CustomCSS/tablestyle.css" rel="stylesheet" />--%>
-            <link href="../../wwwroot/THEME_TIBBIT/CustomCSS/Billing.css" rel="stylesheet" />
-    <script src="https://cdn.datatables.net/buttons/2.4.2/js/buttons.colVis.min.js"></script>
-    
+    <link href="../../../wwwroot/THEME_TIBBIT/CustomCSS/tablestyle.css" rel="stylesheet" />
+    <link href="../../../wwwroot/THEME_TIBBIT/CustomCSS/Billing.css" rel="stylesheet" />
 
     <style type="text/css">
+        #tbl { width: 100% !important; }
 
-        .table th 
-        {
-            border: 1px solid #FFF;
-            background-color: #438eb9;
-            color: #FFF;
-            position: sticky;
-            top: -1px; 
-            
+        #tbl_wrapper .dataTables_filter label::before {
+            content: none !important;
         }
-        #Emp_name 
-        {
-            font-size: 28px;
-            color: #2385bd;
-            background-color: #e0dfdf;
+
+        #tbl thead th {
+            background-color: #EFA63E !important;
+            color: #fff !important;
+            border: 1px solid #e8972e !important;
+            white-space: nowrap;
+            vertical-align: middle;
+            text-align: center;
+            font-weight: 700;
+            font-size: 13px;
         }
-        .table-striped > tbody > tr:nth-child(odd) > td 
-        {
-            background-color: #dfe9f1;
+
+        #tbl tbody td {
+            font-size: 12px;
+            vertical-align: middle;
+            padding: 6px 4px;
+        }
+
+        #tbl tbody tr:hover {
+            background-color: #fff8e5 !important;
+        }
+
+        .selected-badge {
+            background-color: #EFA63E;
+            color: #fff;
+            padding: 6px 16px;
+            border-radius: 6px;
+            font-weight: 700;
+            font-size: 15px;
+            display: inline-block;
+        }
+
+        .selected-badge .selected-amount {
+            font-weight: 800;
+            font-size: 17px;
+        }
+
+        .grand-badge {
+            background-color: #444;
+            color: #fff;
+            padding: 6px 20px;
+            border-radius: 6px;
+            font-weight: 700;
+            font-size: 16px;
+            display: inline-block;
+        }
+
+        .grand-badge .grand-amount {
+            font-weight: 800;
+            font-size: 18px;
+        }
+
+        #chckAccount {
+            width: 18px !important;
+            height: 18px;
+            cursor: pointer;
         }
 
         .widthdate {
-            width:20% !important;
+            width: 100% !important;
+            border-radius: 5px !important;
         }
 
-        .btnwidth {
-            width:20% !important;
+        .filter-row {
+            margin-bottom: 10px;
+            align-items: center;
         }
-        </style>
+
+        .filter-row label {
+            font-weight: 600;
+            font-size: 13px;
+            color: #555;
+            margin-bottom: 2px;
+        }
+    </style>
+
     <script type="text/javascript">
         var _global_payable = '';
         var DocId = "<%= Request.QueryString["ID"] %>";
-        $(document).ready(function ()
-        {
+        var oTable;
+        var DocName;
+
+        $(document).ready(function () {
             LoadPage(DocId);
             loadacc();
-            loadAccounts() 
-            $("#myInput").on("keyup", function ()
-            {
-                var value = $(this).val().toLowerCase();
-                $("#tbody tr").filter(function ()
-                {
-                    $(this).toggle($(this).text().toLowerCase().indexOf(value) > -1)
-                });
-            });
+            loadAccounts();
+
             $('#ddlpayment_method').on('change', function () {
                 var val = $(this).val();
-
                 $('.ddlname').each(function () {
                     $(this).val(val).trigger('change');
                 });
             });
-            var date;
+
             $("#txt_dateto").datepicker({ dateFormat: 'mm/dd/yy' }).attr('readonly', 'readonly');
-            date = moment(date).format('L');
-            $("#txt_dateto").val("");
-            var date;
             $("#txt_datefrom").datepicker({ dateFormat: 'mm/dd/yy' }).attr('readonly', 'readonly');
-            date = moment(date).format('L');
-            $("#txt_datefrom").val("");
+
             var checkeditmode_startdate = '<%= Request.QueryString["stDate"]%>';
-            var checkeditmode_enddate = '<%= Request.QueryString["endDate"]%>'
+            var checkeditmode_enddate = '<%= Request.QueryString["endDate"]%>';
             if (checkeditmode_startdate != '') {
                 $('#txt_datefrom').val(checkeditmode_startdate);
             }
             if (checkeditmode_enddate != '') {
                 $('#txt_dateto').val(checkeditmode_enddate);
             }
+
             $('#btnSearch').click(function () {
                 LoadPage(DocId);
             });
-            $('[id*=chckHead]').on('click',function ()
-            {                             
+
+            $('[id*=chckHead]').on('click', function () {
                 var isTrue = $('#chckHead').is(':checked');
-                if (isTrue)
-                {
-                    $('.chcktbl').prop('checked', true);
-                    calculateSum();
+                if (oTable) {
+                    oTable.rows({ search: 'applied' }).every(function () {
+                        var $row = $(this.node());
+                        $row.find('input[type="checkbox"]').prop('checked', isTrue);
+                    });
                 }
-                else
-                {
-                    $('.chcktbl').prop('checked', false);
-                    calculateSum();
-                }
-            });            
+                calculateSum();
+            });
         });
-        function loadacc()
-        {
+
+        function initSelect2() {
+            $("select[name='ddlname']").each(function () {
+                if (!$(this).data('select2')) {
+                    $(this).select2();
+                }
+            });
+        }
+
+        function loadacc() {
             var optionsDepth = '';
             $.ajax({
                 type: "post",
@@ -104,35 +150,33 @@
                 dataType: 'JSON',
                 contentType: "application/json; charset=utf-8",
                 async: false,
-                success: function (msg)
-                {
+                success: function (msg) {
                     var data = JSON.parse(msg.d);
-                    $.each(data, function (key, value)
-                    {
+                    $.each(data, function (key, value) {
                         optionsDepth += '<option value="' + value.Account_ID + '" >' + value.name + '</option>';
                     });
                     _global_payable = optionsDepth;
                 },
             });
         }
+
         var sumTotal;
-        function calculateSum()
-        {
+        function calculateSum() {
             sumTotal = 0;
-            $('table tbody tr').each(function ()
-            {
-                var $tr = $(this);
-                if ($tr.find('input[type="checkbox"]').is(':checked') && $($tr).is(':visible'))
-                {
-                    var $txtamount = $tr.closest('tr').find('td input[name="txt_Doctorshare"]').val();
-                    sumTotal += parseInt($txtamount);
-                }
-            });
+            if (oTable) {
+                oTable.rows({ search: 'applied' }).every(function () {
+                    var $row = $(this.node());
+                    if ($row.find('input[type="checkbox"]').is(':checked')) {
+                        var $txtamount = $row.find('td input[name="txt_Doctorshare"]').val();
+                        sumTotal += parseInt($txtamount) || 0;
+                    }
+                });
+            }
             $("#price").val(sumTotal);
             $('#price').text(sumTotal.toLocaleString('en'));
         }
-        function addCommas(nStr)
-        {
+
+        function addCommas(nStr) {
             nStr += '';
             x = nStr.split('.');
             x1 = x[0];
@@ -143,46 +187,52 @@
             }
             return x1 + x2;
         }
+
         var totalCr = 0;
         function getTotal_CR_DR() {
-            var crside = 0;            
-            var table = $('#tbody');
-            table.find('tr input[type=checkbox]:checked:visible').each(function (key, value) {
-                crside = $(value).closest('tr').find('td input[name=txt_Doctorshare]').val();
-                totalCr += parseFloat(crside);
-            });
+            totalCr = 0;
+            if (oTable) {
+                oTable.rows({ search: 'applied' }).every(function () {
+                    var $row = $(this.node());
+                    if ($row.find('input[type="checkbox"]').is(':checked')) {
+                        var crside = $row.find('td input[name=txt_Doctorshare]').val();
+                        totalCr += parseFloat(crside) || 0;
+                    }
+                });
+            }
         }
+
         var CrAccountID = 0;
         function TranferShares() {
-            debugger;
             getTotal_CR_DR();
             var btnSave = 'Save';
             var Distri_No = 1;
-            var table = $('#tbody');
             var Item_list = [];
-            table.find('tr input[type=checkbox]:checked:visible').each(function (key, value) {
-                debugger;
-                CrAccountID = $(value).closest('tr').find('td select[name=ddlname] :selected').val();
-                var $row = $(this).closest('tr');
-                var shareAmount = $row.find('td input[name="txt_Doctorshare"]').val();
-                var accountId = $row.find('td input[name="TxtAccountID"]').val();
-                var sourceType = $row.find('td input[name="txt_SourceType"]').val();
-                var billDetailId = null;
-                var patientId = null;
-                if (sourceType === 'Billing') {
-                    billDetailId = $row.find('td input[name="txt_BilldetID"]').val();
-                } else if (sourceType === 'Patient') {
-                    patientId = $row.find('td input[name="txt_MRNo"]').val(); 
-                }
-                Item_list.push({
-                    'Source_Type': sourceType,
-                    'Bill_Detail_ID': billDetailId,
-                    'Patient_ID': patientId,
-                    'AccountID': accountId,
-                    'shareAmount': shareAmount
+            if (oTable) {
+                oTable.rows({ search: 'applied' }).every(function () {
+                    var $row = $(this.node());
+                    if ($row.find('input[type="checkbox"]').is(':checked')) {
+                        CrAccountID = $row.find('td select[name=ddlname] :selected').val();
+                        var shareAmount = $row.find('td input[name="txt_Doctorshare"]').val();
+                        var accountId = $row.find('td input[name="TxtAccountID"]').val();
+                        var sourceType = $row.find('td input[name="txt_SourceType"]').val();
+                        var billDetailId = null;
+                        var patientId = null;
+                        if (sourceType === 'Billing') {
+                            billDetailId = $row.find('td input[name="txt_BilldetID"]').val();
+                        } else if (sourceType === 'Patient') {
+                            patientId = $row.find('td input[name="txt_MRNo"]').val();
+                        }
+                        Item_list.push({
+                            'Source_Type': sourceType,
+                            'Bill_Detail_ID': billDetailId,
+                            'Patient_ID': patientId,
+                            'AccountID': accountId,
+                            'shareAmount': shareAmount
+                        });
+                    }
                 });
-            });
-            debugger;
+            }
             var AllItemDetail = {
                 'Distri_No': Distri_No,
                 'totalCr': totalCr,
@@ -190,139 +240,74 @@
                 'ItemList': Item_list
             };
             PageMethods.TranferShares(btnSave, JSON.stringify(AllItemDetail), function (res) {
-                swal({
+                Swal.fire({
                     title: "Data Transfer!",
                     icon: "success",
-                    buttons: false,
+                    showConfirmButton: false,
                 });
                 window.location = "DoctorPayables_Services.aspx?ID=" + DocId;
             });
         }
+
         function UpdateData() {
-            var table = $('#tbody');
             var Update_list = [];
             var ListTransID = '';
-            table.find('tr input[type=checkbox]:checked:visible').each(function (key, value) {
-                Update_list.push({
-                    'txt_billdetail_id': $(value).closest('tr').find('td input[name=txt_BilldetID]').val(),
+            if (oTable) {
+                oTable.rows({ search: 'applied' }).every(function () {
+                    var $row = $(this.node());
+                    if ($row.find('input[type="checkbox"]').is(':checked')) {
+                        Update_list.push({
+                            'txt_billdetail_id': $row.find('td input[name=txt_BilldetID]').val(),
+                        });
+                        var transIds = $row.find('td input[name=txt_BilldetID]').val();
+                        ListTransID += ', ' + transIds;
+                    }
                 });
-            });
-      
+            }
+            ListTransID = ListTransID.replace(', ', '');
             $.ajax({
                 type: "post",
                 url: "DoctorPayables_Services.aspx/Update",
-
-                data: JSON.stringify({
-                    "Update_list": Update_list,
-                }),
+                data: JSON.stringify({ "Update_list": Update_list }),
                 dataType: 'JSON',
                 contentType: "application/json; charset=utf-8",
                 success: function (msg) {
-                    debugger;
-                        swal({
-                            title: "Data Successfully Save!",
-                            icon: "success",
-                            buttons: false,
-                        });
-                        location.reload();                   
+                    Swal.fire({
+                        title: "Data Successfully Save!",
+                        icon: "success",
+                        showConfirmButton: false,
+                    });
+                    location.reload();
                 },
                 error: function (err) {
-                    alert(err.d)
+                    Swal.fire({
+                        title: "Error",
+                        text: err.d,
+                        icon: "error",
+                    });
                 }
             });
-            table.find('tr input[type=checkbox]:checked:visible').each(function (key, value) {
-                debugger;
-                var transIds = $(value).closest('tr').find('td input[name=txt_BilldetID]').val();
-                ListTransID += ', ' + transIds;
-            });
-            ListTransID = ListTransID.replace(', ', '');
             var id = '<%= Request.QueryString["ID"]%>';
             if (id != "") {
                 var url = 'ReportViewer.aspx?ReportName=DoctorBaseReport&ReportTitle=Doctor Share Base  Report&Doctor_ID=' + id + '&Bill_Details_ID=' + ListTransID;
                 window.open(url, '_blank');
             }
         }
-        function myFunction() {
-            debugger;
-            var input, filter, table, tr, td, i, txtValue;
-            input = document.getElementById("DepSearch");
-            filter = input.value.toUpperCase();
-            table = document.getElementById("tbl");
-            tr = table.getElementsByTagName("tr");
-            for (i = 0; i < tr.length; i++) {
-                td = tr[i].getElementsByTagName("td")[8];
-                if (td) {
-                    txtValue = td.textContent || td.innerText;
-                    if (txtValue.toUpperCase().indexOf(filter) > -1) {
-                        tr[i].style.display = "";
-                    } else {
-                        tr[i].style.display = "none";
-                    }
-                }
-            }
-        }
-        var abc = false;
+
         function testddlchange() {
-            debugger;
             var Dep = $('#ddlDepartment').find('option:selected').text();
             if (Dep == "All") {
-                $("#txt_dateto").val("");
-                $("#txt_datefrom").val("");
-                abc = true;
-                LoadPage(DocId);
+                if (oTable) oTable.column(7).search('').draw();
+            } else {
+                if (oTable) oTable.column(7).search(Dep).draw();
             }
-            else
-            {
-                var tbl = document.getElementById('tbl');
-                if (Dep.trim() != '') {
-
-                    for (var i = 1; i < tbl.rows.length; i++) {
-                        if (tbl.rows[i].cells[7].innerText != Dep) {
-                            var row = tbl.rows[i];
-                            row.style.display = 'none';
-                        }
-                        else {
-                            var row = tbl.rows[i];
-                            row.style.display = '';
-                        }
-                    }
-                }
-                else {
-                    for (var i = 1; i < tbl.rows.length; i++) {
-                        var row = tbl.rows[i];
-                        row.style.display = '';
-                    }
-                }
-            }
-
         }
-        var DocName;
-        function LoadPage(DocId)
-        {
-            var stDate;
-            var endDate;
-            
-            if (stDate == null) {
 
-                var getstDate = $('#txt_datefrom').val();
-                stDate = getstDate;
-            }
-            else {
-                stDate = stDate;
-            }
-            if (endDate == null) {
-                endDate = $('#txt_dateto').val();
-            }
-            else {
-                endDate = endDate;
-            }
-            var Statusddl = $('#ddlDepartment').find('option:selected').text();
-            if (Statusddl == "All" && abc == true) {
-
-            }
+        function LoadPage(DocId) {
+            var stDate = $('#txt_datefrom').val();
+            var endDate = $('#txt_dateto').val();
 
             $.ajax({
-
                 type: "POST",
                 url: "DoctorPayables_Services.aspx/ViewList",
                 data: JSON.stringify({
@@ -332,11 +317,14 @@
                 }),
                 contentType: "application/json; charset=utf-8",
                 dataType: "json",
-                success: function (newdata)
-                {
+                success: function (newdata) {
                     var data = JSON.parse(newdata.d);
-                    $('#tbl tr:gt(0)').remove();
-                    table = $('#tbody');
+
+                    if (oTable) {
+                        oTable.destroy();
+                        $('#tbody').empty();
+                    }
+
                     var totalshareAmount = 0;
                     $("#lbl_TotalAmount").html("");
                     $.each(data, function (key, value) {
@@ -395,23 +383,86 @@
                             '<td style="text-align:right;"><input type="hidden" id="txt_Doctorshare' + (key + 1) + '" name="txt_Doctorshare" value="' + value.Doctor_Share + '"/>' + (addCommas(value.Doctor_Share)) + '</td>' +
                             '<td style="display:none"><input type="hidden" id="TxtAccountID' + (key + 1) + '" name="TxtAccountID" value="' + (value.Account_Id || '') + '"/>' + (value.Account_Id || '') + '</td>' +
                             '<td style="display:none"><input type="hidden" id="txt_SourceType' + (key + 1) + '" name="txt_SourceType" value="' + (value.SourceType || '') + '"/></td>' +
-                            '<td><select class="ddlname" id="ddlitmeCode' + (key + 1) + '" name="ddlname"> ' + _global_payable + ' </select></td>'+
+                            '<td><select class="ddlname" id="ddlitmeCode' + (key + 1) + '" name="ddlname"> ' + _global_payable + ' </select></td>' +
                             "</tr>");
                         if (value.isPayable == true) {
-                            calculateSum();
-                        }
-                        else {
+                            $('input[name=chkReport' + (key + 1) + ']').prop('checked', true);
+                        } else {
                             $('input[name=chkReport' + (key + 1) + ']').prop('checked', false);
-                            calculateSum();
                         }
-                        length++;
                     });
+
                     $("#lbl_TotalAmount").html(totalshareAmount.toLocaleString('en'));
                     $('#Emp_name').html(DocName);
-                    $("select[name='ddlname']").select2();
+
+                    oTable = $('#tbl').DataTable({
+                        "dom": 'lBfrtip',
+                        "buttons": [
+                            'copy', 'excel', 'pdf',
+                            {
+                                extend: 'colvis',
+                                text: '<i class="fa fa-columns"></i> Columns',
+                                className: 'dt-button buttons-colvis',
+                                collectionLayout: 'fixed two-column',
+                                postfixButtons: ['colvisRestore']
+                            }
+                        ],
+                        "columnDefs": [
+                            { "targets": 0, "orderable": false, "searchable": false, "width": "3%" },
+                            { "targets": 1, "width": "3%", "className": "text-center" },
+                            { "targets": 2, "width": "5%" },
+                            { "targets": 3, "width": "7%" },
+                            { "targets": 4, "visible": false, "searchable": false },
+                            { "targets": 5, "width": "4%" },
+                            { "targets": 6, "width": "12%" },
+                            { "targets": 7, "width": "4%" },
+                            { "targets": 8, "width": "6%" },
+                            { "targets": 9, "width": "6%" },
+                            { "targets": 10, "width": "6%" },
+                            { "targets": 11, "width": "5%" },
+                            { "targets": 12, "width": "10%" },
+                            { "targets": 13, "width": "6%", "className": "text-right" },
+                            { "targets": 14, "visible": false, "searchable": false },
+                            { "targets": 15, "visible": false, "searchable": false },
+                            { "targets": 16, "width": "10%" }
+                        ],
+                        "paging": true,
+                        "pageLength": 25,
+                        "ordering": true,
+                        "order": [[3, 'desc']],
+                        "language": {
+                            "search": "",
+                            "searchPlaceholder": "Search..."
+                        },
+                        "initComplete": function (settings, json) {
+                            initSelect2();
+                            var lengthContainer = document.querySelector('#tbl_length');
+                            var lengthDropdown = document.querySelector('#tbl_length select');
+                            var label = document.querySelector('#tbl_length label');
+                            if (lengthDropdown && label && lengthContainer) {
+                                var labelText = document.createElement('span');
+                                labelText.textContent = 'Show entries ';
+                                labelText.style.marginTop = '10px';
+                                labelText.style.display = 'inline-block';
+                                lengthDropdown.style.width = '60px';
+                                label.innerHTML = '';
+                                label.style.display = 'inline-flex';
+                                label.style.marginTop = '17px';
+                                label.appendChild(labelText);
+                                label.appendChild(lengthDropdown);
+                            }
+                        },
+                        "drawCallback": function () {
+                            initSelect2();
+                            calculateSum();
+                        }
+                    });
+
+                    calculateSum();
                 }
             });
         }
+
         function loadAccounts() {
             var options = ""
             $.ajax({
@@ -431,102 +482,100 @@
                 },
             });
         }
+
         function togglePaymentMethod() {
             var isChecked = document.getElementById("chckAccount").checked;
             document.getElementById("ddlpayment_method").disabled = !isChecked;
         }
-
-         
-    </Script>
-
+    </script>
 </asp:Content>
 <asp:Content ID="Content2" ContentPlaceHolderID="MainContent" runat="server">
 
-    <div class="row">
-        <div class="col-lg-3 col-md-8 col-sm-12" style="display: flex; align-items: center; gap: 0.5rem; flex-wrap: nowrap; white-space: nowrap;">
-            <label>From</label>
-            <input type="text" id="txt_datefrom" style="flex: 1; min-width: 0;" />
-            <label>To</label>
-            <input type="text" id="txt_dateto" style="flex: 1; min-width: 0;" />
-        </div>
-        <div class="col-lg-1 col-md-2 col-sm-12">
-            <input type="button" id="btnSearch" class="btn-primry" value="Search" />
-        </div>
-        <div class="col-lg-5 col-md-2 col-sm-12"></div>
-        <div class="col-lg-1 col-md-4 col-sm-12">
-            <input type="button" id="BtnPaid" onclick="TranferShares()" value="Paid" class="btn-primry" />
-        </div>
-        <div class="col-lg-1 col-md-2 col-sm-12">
-            <input type="button" id="BtnSave" onclick="UpdateData();" value="Save & Print" class="btn-primry" style="display: none" />
-        </div>
-    </div>
-    
-    <div class="row">
-        <div class="col-lg-2 col-md-6 col-sm-12" style="display: flex; align-items: center; gap: 0.5rem; white-space: nowrap;">
-            <label for="chckAccount" style="margin: 0; cursor: pointer;">Select Account</label>
-            <input type="checkbox" id="chckAccount" onclick="togglePaymentMethod()"  />
-        </div>     
-          <div class="col-md-2">
-              <select id="ddlpayment_method" disabled="disabled"  >
-              </select>
-         </div>          
-    </div>
-
-    
-    <div class="row" style="margin-top:15px;">        
-        <div class="col-lg-3 col-md-9 col-sm-12">
-            <label id="Emp_name"></label>
-        </div>
-        <div class="col-lg-2 col-md-6 col-sm-12"></div>
-           <div class="col-lg-1 col-md-6 col-sm-12" >
-            <select id ="ddlDepartment" onchange="testddlchange()">
+    <div class="row filter-row">
+        <div class="col-lg-1 col-md-2 col-sm-3">
+            <label>Dept</label>
+            <select id="ddlDepartment" onchange="testddlchange()" style="width:100%;">
                 <option>All</option>
                 <option>IPD</option>
                 <option>OPD</option>
             </select>
-        </div>       
-        <div class="col-lg-2 col-md-6 col-sm-12">
-            <input id="DepSearch" type="text" placeholder="Sub Department" onkeyup="myFunction()"/>
         </div>
-        <div class="col-lg-2 col-md-6 col-sm-12">
-            <input id="myInput" type="text" placeholder="Table Search.." />
+        <div class="col-lg-2 col-md-3 col-sm-4">
+            <label>From</label>
+            <input type="text" id="txt_datefrom" class="widthdate" />
         </div>
-        <div class="col-lg-2 col-md-6 col-sm-12">
-            <label class="sty" style="color: #438eb9; font-size: 28px;">Total:</label>&nbsp
-        <label class="sty" style="background-color: yellow; font-size: 28px;" id="price" for="fname"></label>
+        <div class="col-lg-2 col-md-3 col-sm-4">
+            <label>To</label>
+            <input type="text" id="txt_dateto" class="widthdate" />
+        </div>
+        <div class="col-lg-1 col-md-3 col-sm-3" style="margin-top:22px;">
+            <input type="button" id="btnSearch" class="btn-primry" value="Search" style="padding:7px 14px;font-size:13px;" />
+        </div>
+        <div class="col-lg-1 col-md-3 col-sm-3" style="margin-top:22px;">
+            <input type="button" id="BtnPaid" onclick="TranferShares()" value="Paid" class="btn-primry" style="padding:7px 14px;font-size:13px;" />
+        </div>
+        <div class="col-lg-1 col-md-3 col-sm-3" style="margin-top:22px;display:none;">
+            <input type="button" id="BtnSave" onclick="UpdateData();" value="Save &amp; Print" class="btn-primry" style="padding:7px 14px;font-size:13px;" />
         </div>
     </div>
 
-    <div class="row" style="overflow:scroll;">
-        <table class="table" id="tbl" style="overflow: scroll; height: auto; position:relative;">
-            <thead>
-                <tr >
-                    <th>
-                        <input type="checkbox" id="chckHead" name="chkReport" /></th>
-                    <th>Sr No</th>
-                    <th style="width:100px !important">Bill/OPD No</th>
-                    <th>Bill Date</th>
-                    <th>Mr No</th>
-                    <th>Patient Name</th>
-                    <th>Department</th>
-                    <th>Sub Department</th>
-                   <%-- <th>Test Department</th>--%>
-                    <th>Date Of Admission</th>
-                    <th>Date Of Discharge</th>
-                    <th>Bill Type</th>
-                    <th>Service Name </th>
-                    <th>Doctor Share</th>
-                    <th style="z-index:1;">Payment Through</th>
-                </tr>
-            </thead>
-            <tbody id="tbody" class="font-weight-bold">
-            </tbody>
-        </table>
+    <div class="row filter-row">
+        <div class="col-lg-8 col-md-12" style="display:flex;align-items:center;gap:10px;flex-wrap:wrap;">
+            <span style="font-weight:700;font-size:16px;color:#EFA63E;" id="Emp_name"></span>
+           
+        </div>
+        <div class="col-lg-4 col-md-12 text-right">
+            <span class="selected-badge">
+                Selected: <span class="selected-amount" id="price">0</span>
+            </span>
+        </div>
+    </div>
+    <div class="row">
+         <div style="display:flex;align-items:center;gap:5px;margin-left: 12px;">
+     <input type="checkbox" id="chckAccount" onclick="togglePaymentMethod()" />
+     <label for="chckAccount" style="margin:0;font-weight:600;font-size:13px;cursor:pointer;white-space:nowrap;">Select Account</label>
+ </div>
+        <div class="col-lg-4 col-md-12" style="margin-top:10px">
+ <select id="ddlpayment_method" disabled="disabled" ></select>
+            </div>
     </div>
 
-    <div class="col-xs-12 col-sm-12 col-lg-12 col-md-12" style="text-align: right;">
-        <label style="font-size: 28px; margin-left: -32px; background-color: #cecccc;">Total:</label>
-        <label id="lbl_TotalAmount" style="font-size: 28px; margin-left: 20px; margin-right: 15px; background-color: #cecccc;"></label>
+    <div class="row">
+        <div class="col-lg-12">
+            <table class="table table-hover table-striped table-bordered" id="tbl" style="width:100%;">
+                <thead>
+                    <tr>
+                        <th><input type="checkbox" id="chckHead" name="chkReport" /></th>
+                        <th>Sr No</th>
+                        <th>Bill/OPD No</th>
+                        <th>Bill Date</th>
+                        <th style="display:none;">Bill Detail ID</th>
+                        <th>Mr No</th>
+                        <th>Patient Name</th>
+                        <th>Department</th>
+                        <th>Sub Department</th>
+                        <th>Admission Date</th>
+                        <th>Discharge Date</th>
+                        <th>Bill Type</th>
+                        <th>Service Name</th>
+                        <th>Doctor Share</th>
+                        <th style="display:none;">Account ID</th>
+                        <th style="display:none;">Source Type</th>
+                        <th>Payment Through</th>
+                    </tr>
+                </thead>
+                <tbody id="tbody" class="font-weight-bold">
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    <div class="row" style="margin-top:10px;">
+        <div class="col-lg-12 text-right">
+            <span class="grand-badge">
+                Grand Total: <span class="grand-amount" id="lbl_TotalAmount">0</span>
+            </span>
+        </div>
     </div>
 
 </asp:Content>
