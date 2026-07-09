@@ -4978,7 +4978,7 @@ function LoadLabResultrpt() {
 
                         <input type="button" class="btn btn-primry" value="Prescription" name="name" onclick="PrintoutPatient();" />
 
-                        <input type="button" class="btn btn-primry" value="Voucher" name="Voucher" id="Voucher" onclick="PrintVoucher();" />
+                        <input type="button" class="btn btn-primry" value="Voucher" name="Voucher" id="Voucher" onclick="PrintVoucher();" style="display:none;" />
                         <input type="button" class="btn btn-primry" value="List View" name="name" onclick="window.location = 'OutPatientsView.aspx'" />
                     </div>
                 </div>

@@ -86,11 +86,12 @@
                 },
                 "columns": [                  
                     { "data": "IN_Patient_ID", "name": "IN_Patient_Id", "visible": false, "width": "0%" },
-                    { "data": "mr_no_sequence", "name": "MRNO", "width": "10%", "orderable": true },
-                    { "data": "Full_Name", "width": "15%", "orderable": true },
+                    { "data": "mr_no_sequence", "name": "MRNO", "width": "6%", "orderable": true },
+                    { "data": "Full_Name", "width": "10%", "orderable": true },
                     { "data": "Father_Name", "width": "10%", "orderable": false },
+                    { "data": "Department", "width": "10%", "orderable": false },
                     { "data": "PlaceOfDeath", "width": "10%", "orderable": false },
-                    { "data": "CauseOfDeath", "width": "10%", "orderable": false },
+                    { "data": "CauseOfDeath", "width": "12%", "orderable": false },
 
                     {
                         "data": "Death_Date", "name": "Death_Date",
@@ -99,7 +100,7 @@
                             var date = full.Death_Date;
                             date = moment(date).format('DD-MMM-YYYY');
                             return date;
-                        }, "width": "15%", "orderable": false
+                        }, "width": "10%", "orderable": false
                     },
                     {
                         render: function (data, type, full) {
@@ -182,6 +183,7 @@
                         <th>MR No.</th>
                         <th>Patient Name</th>
                         <th>Father/Husband Name</th>
+                        <th>Department</th>
                         <th>Place Of Death</th>   
                         <th>Cause of Death</th>   
                        <th>Death Date</th>

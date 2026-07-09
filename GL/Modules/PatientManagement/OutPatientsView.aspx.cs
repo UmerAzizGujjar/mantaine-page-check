@@ -102,6 +102,7 @@ namespace PMS
                                   Father_Name = rg.Father_Name,
                                   Category = _dbContext.GetDataValueName("Patient Main Category", rg.Patient_Main_Category),
                                   Mobile1 = rg.Mobile1,
+                                  Status = p.Status
                               };
 
                     var FilteredCount = pat.Count();

@@ -2049,7 +2049,7 @@ function addNewRowAdvance() {
             <li><a href="#Tab-10">OPD Sharing</a></li>
             <li><a href="#Tab-9">Patient Reg</a></li>
             <li><a href="#Tab-2">Diagnostic</a></li>
-            <li style="display:none;"><a href="#Tab-3">Emergency</a></li>
+            <li><a href="#Tab-3">Emergency</a></li>
             <li><a href="#Tab-4">Service</a></li>
             <li><a href="#Tab-6">SpecialServices</a></li>           
             <li ><a href="#Tab-5">Pharmacy</a></li>

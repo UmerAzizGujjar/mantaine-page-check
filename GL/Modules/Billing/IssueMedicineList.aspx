@@ -130,11 +130,22 @@
                     { "data": "Customer_Name", "width": "10%", "orderable": false },
                     { "data": "Patient_ID", "name": "Patient_ID", "width": "8%", "orderable": true },                    
                     { "data": "Referred_By_value", "width": "8%", "orderable": false },                  
-                    { "data": "Main_Department", "width": "8%", "orderable": false },                  
-                    { "data": "Total_Amount", "width": "8%", "orderable": false },
-                    { "data": "Discount_Amount", "width": "8%", "orderable": false },
-                    { "data": "Received_Amount", "width": "8%", "orderable": false },
-                    { "data": "Balance_Amount", "width": "8%", "orderable": false },
+                    { "data": "pharmacy_Department", "width": "8%", "orderable": false },                  
+                    {
+                        "data": "Pharma_trans_Type",
+                        "width": "8%",
+                        "orderable": false,
+                        "render": function (data) {
+                            if (!data || data.trim() === "") {
+                                return "Walk In";
+                            }
+                            return data;
+                        }
+                    },                  
+                    { "data": "Total_Amount", "width": "6%", "orderable": false },
+                    { "data": "Discount_Amount", "width": "6%", "orderable": false },
+                    { "data": "Received_Amount", "width": "6%", "orderable": false },
+                    { "data": "Balance_Amount", "width": "6%", "orderable": false },
                     {
                         render: function (data, type, full) {
                             debugger;
@@ -214,6 +225,7 @@
                         <th>MrNo.</th>                      
                         <th>ReferBy</th>
                         <th>Main Department</th>
+                        <th>Patient Type</th>
                         <th>Total</th>
                         <th>Discount Amount</th>
                         <th>Received Amount</th>
