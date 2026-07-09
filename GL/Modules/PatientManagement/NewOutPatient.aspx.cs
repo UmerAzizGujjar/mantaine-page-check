@@ -715,7 +715,7 @@ namespace PMS.Modules.PatientManagement
                             if (wardAlloc != null)
                             {
                                 wardAlloc.IsDischarge = true;
-                                wardAlloc.To_Date = DateTime.Now;
+                                wardAlloc.To_TimeDate = DateTime.Now;
                             }
 
                             db.SubmitChanges();
