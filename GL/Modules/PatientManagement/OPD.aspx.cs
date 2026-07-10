@@ -325,16 +325,16 @@ namespace PMS.Modules.PatientManagement
             {
                 object Details;
 
-                //if (company_name == "As-Siraat Serving Humanity")
-                //{
-                //    // Call client-specific SP
-                //    Details = db.SpApprove_OPD_AsSiraat(Convert.ToInt32(pat_id), Pat_Category, user_id);
-                //}
-                //else
-                //{
+                if (company_name == "As-Siraat Serving Humanity")
+                {
+                    // Call client-specific SP
+                    Details = db.SpApprove_OPD_AsSiraat(Convert.ToInt32(pat_id), Pat_Category, user_id);
+                }
+                else
+                {
                     // Default for other clients (e.g., Noor Hospital, KDC Lab, etc.)
                     Details = db.SpApprove_OPD(Convert.ToInt32(pat_id), Pat_Category, user_id);
-               // }
+                }
 
                 return new JavaScriptSerializer().Serialize(Details);
             }
