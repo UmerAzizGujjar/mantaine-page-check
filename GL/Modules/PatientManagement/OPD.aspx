@@ -1266,7 +1266,7 @@
                         Swal.fire({
                             icon: 'warning',
                             title: 'Active OPD Found',
-                            text: 'Patient has active OPD. Please discharge first.',
+                            text: 'Patient has active OPD already in last 24 hrs.',
                             confirmButtonText: 'OK',
                             confirmButtonColor: '#3085d6',
                             allowOutsideClick: false,

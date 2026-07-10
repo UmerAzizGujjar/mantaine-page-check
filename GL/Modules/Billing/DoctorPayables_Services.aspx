@@ -1,7 +1,5 @@
-﻿<%@ Page Title="" Language="C#" MasterPageFile="~/Site.Master" AutoEventWireup="true" CodeBehind="DoctorPayables_Services.aspx.cs" Inherits="PMS.Modules.Billing.DoctorPayables_Services" %>
-
-
-
+﻿
+<%@ Page Title="" Language="C#" MasterPageFile="~/Site.Master" AutoEventWireup="true" CodeBehind="DoctorPayables_Services.aspx.cs" Inherits="PMS.Modules.Billing.DoctorPayables_Services" %>
 <asp:Content ID="Content1" ContentPlaceHolderID="HeadContent" runat="server">
         <%--<link href="../../wwwroot/THEME_IITH/CustomCSS/tablestyle.css" rel="stylesheet" />--%>
             <link href="../../wwwroot/THEME_TIBBIT/CustomCSS/Billing.css" rel="stylesheet" />
@@ -41,16 +39,13 @@
     <script type="text/javascript">
         var _global_payable = '';
         var DocId = "<%= Request.QueryString["ID"] %>";
-        $(document).ready(function ()
-        {
+        $(document).ready(function () {
             LoadPage(DocId);
             loadacc();
-            loadAccounts() 
-            $("#myInput").on("keyup", function ()
-            {
+            loadAccounts()
+            $("#myInput").on("keyup", function () {
                 var value = $(this).val().toLowerCase();
-                $("#tbody tr").filter(function ()
-                {
+                $("#tbody tr").filter(function () {
                     $(this).toggle($(this).text().toLowerCase().indexOf(value) > -1)
                 });
             });
@@ -80,23 +75,19 @@
             $('#btnSearch').click(function () {
                 LoadPage(DocId);
             });
-            $('[id*=chckHead]').on('click',function ()
-            {                             
+            $('[id*=chckHead]').on('click', function () {
                 var isTrue = $('#chckHead').is(':checked');
-                if (isTrue)
-                {
+                if (isTrue) {
                     $('.chcktbl').prop('checked', true);
                     calculateSum();
                 }
-                else
-                {
+                else {
                     $('.chcktbl').prop('checked', false);
                     calculateSum();
                 }
-            });            
+            });
         });
-        function loadacc()
-        {
+        function loadacc() {
             var optionsDepth = '';
             $.ajax({
                 type: "post",
@@ -104,11 +95,9 @@
                 dataType: 'JSON',
                 contentType: "application/json; charset=utf-8",
                 async: false,
-                success: function (msg)
-                {
+                success: function (msg) {
                     var data = JSON.parse(msg.d);
-                    $.each(data, function (key, value)
-                    {
+                    $.each(data, function (key, value) {
                         optionsDepth += '<option value="' + value.Account_ID + '" >' + value.name + '</option>';
                     });
                     _global_payable = optionsDepth;
@@ -116,14 +105,11 @@
             });
         }
         var sumTotal;
-        function calculateSum()
-        {
+        function calculateSum() {
             sumTotal = 0;
-            $('table tbody tr').each(function ()
-            {
+            $('table tbody tr').each(function () {
                 var $tr = $(this);
-                if ($tr.find('input[type="checkbox"]').is(':checked') && $($tr).is(':visible'))
-                {
+                if ($tr.find('input[type="checkbox"]').is(':checked') && $($tr).is(':visible')) {
                     var $txtamount = $tr.closest('tr').find('td input[name="txt_Doctorshare"]').val();
                     sumTotal += parseInt($txtamount);
                 }
@@ -131,8 +117,7 @@
             $("#price").val(sumTotal);
             $('#price').text(sumTotal.toLocaleString('en'));
         }
-        function addCommas(nStr)
-        {
+        function addCommas(nStr) {
             nStr += '';
             x = nStr.split('.');
             x1 = x[0];
@@ -145,7 +130,7 @@
         }
         var totalCr = 0;
         function getTotal_CR_DR() {
-            var crside = 0;            
+            var crside = 0;
             var table = $('#tbody');
             table.find('tr input[type=checkbox]:checked:visible').each(function (key, value) {
                 crside = $(value).closest('tr').find('td input[name=txt_Doctorshare]').val();
@@ -167,17 +152,23 @@
                 var shareAmount = $row.find('td input[name="txt_Doctorshare"]').val();
                 var accountId = $row.find('td input[name="TxtAccountID"]').val();
                 var sourceType = $row.find('td input[name="txt_SourceType"]').val();
+                var billId = null;
                 var billDetailId = null;
                 var patientId = null;
+              
+
                 if (sourceType === 'Billing') {
                     billDetailId = $row.find('td input[name="txt_BilldetID"]').val();
                 } else if (sourceType === 'Patient') {
-                    patientId = $row.find('td input[name="txt_MRNo"]').val(); 
+                    patientId = $row.find('td input[name="txt_MRNo"]').val();
+                } else if (sourceType === 'IPD_Share_Distribution') {
+                    billId = $row.find('td input[name="txt_BillNo"]').val();
                 }
                 Item_list.push({
                     'Source_Type': sourceType,
                     'Bill_Detail_ID': billDetailId,
                     'Patient_ID': patientId,
+                    'Bill_ID': billId,                 // ← new
                     'AccountID': accountId,
                     'shareAmount': shareAmount
                 });
@@ -207,7 +198,7 @@
                     'txt_billdetail_id': $(value).closest('tr').find('td input[name=txt_BilldetID]').val(),
                 });
             });
-      
+
             $.ajax({
                 type: "post",
                 url: "DoctorPayables_Services.aspx/Update",
@@ -219,12 +210,12 @@
                 contentType: "application/json; charset=utf-8",
                 success: function (msg) {
                     debugger;
-                        swal({
-                            title: "Data Successfully Save!",
-                            icon: "success",
-                            buttons: false,
-                        });
-                        location.reload();                   
+                    swal({
+                        title: "Data Successfully Save!",
+                        icon: "success",
+                        buttons: false,
+                    });
+                    location.reload();
                 },
                 error: function (err) {
                     alert(err.d)
@@ -271,8 +262,7 @@
                 abc = true;
                 LoadPage(DocId);
             }
-            else
-            {
+            else {
                 var tbl = document.getElementById('tbl');
                 if (Dep.trim() != '') {
 
@@ -297,11 +287,10 @@
 
         }
         var DocName;
-        function LoadPage(DocId)
-        {
+        function LoadPage(DocId) {
             var stDate;
             var endDate;
-            
+
             if (stDate == null) {
 
                 var getstDate = $('#txt_datefrom').val();
@@ -332,8 +321,7 @@
                 }),
                 contentType: "application/json; charset=utf-8",
                 dataType: "json",
-                success: function (newdata)
-                {
+                success: function (newdata) {
                     var data = JSON.parse(newdata.d);
                     $('#tbl tr:gt(0)').remove();
                     table = $('#tbody');
@@ -395,7 +383,7 @@
                             '<td style="text-align:right;"><input type="hidden" id="txt_Doctorshare' + (key + 1) + '" name="txt_Doctorshare" value="' + value.Doctor_Share + '"/>' + (addCommas(value.Doctor_Share)) + '</td>' +
                             '<td style="display:none"><input type="hidden" id="TxtAccountID' + (key + 1) + '" name="TxtAccountID" value="' + (value.Account_Id || '') + '"/>' + (value.Account_Id || '') + '</td>' +
                             '<td style="display:none"><input type="hidden" id="txt_SourceType' + (key + 1) + '" name="txt_SourceType" value="' + (value.SourceType || '') + '"/></td>' +
-                            '<td><select class="ddlname" id="ddlitmeCode' + (key + 1) + '" name="ddlname"> ' + _global_payable + ' </select></td>'+
+                            '<td><select class="ddlname" id="ddlitmeCode' + (key + 1) + '" name="ddlname"> ' + _global_payable + ' </select></td>' +
                             "</tr>");
                         if (value.isPayable == true) {
                             calculateSum();
@@ -436,7 +424,7 @@
             document.getElementById("ddlpayment_method").disabled = !isChecked;
         }
 
-         
+
     </Script>
 
 </asp:Content>
@@ -530,4 +518,3 @@
     </div>
 
 </asp:Content>
-

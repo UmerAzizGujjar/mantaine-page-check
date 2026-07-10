@@ -2908,13 +2908,15 @@ namespace PMS.Modules.PatientManagement
                         return new JavaScriptSerializer().Serialize(new { hasActiveOPD = false });
                     }
 
-                    // Check if patient has active OPD record for this specific department
-                    var activeOPD = (from opd in db.Out_Patients
-                                    join p in db.Patients on opd.Patient_ID equals p.Patient_ID
-                                    where opd.Reg_PatId == regPatId
-                                          && opd.Discharge == false
-                                          && p.Patient_Main_Category == department
-                                    select opd).FirstOrDefault();
+                    // Calculate the time 24 hours ago
+                    var past24Hours = DateTime.Now.AddHours(-24);
+
+                    // Check if patient has active OPD record for this specific department in the last 24 hours
+                    var activeOPD = (from opd in db.Patients
+                                     where opd.Reg_PatId == regPatId
+                                           && opd.Patient_Main_Category == department
+                                           && opd.Created_Time >= past24Hours
+                                     select opd).FirstOrDefault();
 
                     return new JavaScriptSerializer().Serialize(new 
                     { 
