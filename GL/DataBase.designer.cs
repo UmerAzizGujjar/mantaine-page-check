@@ -1024,8 +1024,9 @@ namespace PMS
         partial void UpdateIPD_Doctor_Distribution_Detail(IPD_Doctor_Distribution_Detail instance);
         partial void DeleteIPD_Doctor_Distribution_Detail(IPD_Doctor_Distribution_Detail instance);
         #endregion
+
         public DataBaseDataContext() :
-    base(global::System.Configuration.ConfigurationManager.ConnectionStrings["ASPGLConnectionString"].ConnectionString, mappingSource)
+        base(global::System.Configuration.ConfigurationManager.ConnectionStrings["ASPGLConnectionString"].ConnectionString, mappingSource)
         {
             OnCreated();
         }
@@ -5689,13 +5690,6 @@ namespace PMS
             return ((ISingleResult<spApprove_Distribution_Transfer_CR_SideResult>)(result.ReturnValue));
         }
 
-        [global::System.Data.Linq.Mapping.FunctionAttribute(Name = "dbo.spApprove_Distribution_Transfer_DR")]
-        public ISingleResult<spApprove_Distribution_Transfer_DRResult> spApprove_Distribution_Transfer_DR([global::System.Data.Linq.Mapping.ParameterAttribute(DbType = "Int")] System.Nullable<int> maxVoucherId, [global::System.Data.Linq.Mapping.ParameterAttribute(Name = "Bill_Det_ID", DbType = "Int")] System.Nullable<int> bill_Det_ID, [global::System.Data.Linq.Mapping.ParameterAttribute(Name = "Patient_ID", DbType = "Int")] System.Nullable<int> patient_ID, [global::System.Data.Linq.Mapping.ParameterAttribute(Name = "Share_Amnt", DbType = "Decimal(18,2)")] System.Nullable<decimal> share_Amnt, [global::System.Data.Linq.Mapping.ParameterAttribute(Name = "Account_ID", DbType = "Int")] System.Nullable<int> account_ID, [global::System.Data.Linq.Mapping.ParameterAttribute(Name = "RecordType", DbType = "VarChar(10)")] string recordType)
-        {
-            IExecuteResult result = this.ExecuteMethodCall(this, ((MethodInfo)(MethodInfo.GetCurrentMethod())), maxVoucherId, bill_Det_ID, patient_ID, share_Amnt, account_ID, recordType);
-            return ((ISingleResult<spApprove_Distribution_Transfer_DRResult>)(result.ReturnValue));
-        }
-
         [global::System.Data.Linq.Mapping.FunctionAttribute(Name = "dbo.spApprove_Distribution_Transfer_Master")]
         public ISingleResult<spApprove_Distribution_Transfer_MasterResult> spApprove_Distribution_Transfer_Master([global::System.Data.Linq.Mapping.ParameterAttribute(Name = "Created_By", DbType = "UniqueIdentifier")] System.Nullable<System.Guid> created_By)
         {
@@ -5736,6 +5730,13 @@ namespace PMS
         {
             IExecuteResult result = this.ExecuteMethodCall(this, ((MethodInfo)(MethodInfo.GetCurrentMethod())), docId);
             return ((ISingleResult<sp_Load_Payables_DetailsResult>)(result.ReturnValue));
+        }
+
+        [global::System.Data.Linq.Mapping.FunctionAttribute(Name = "dbo.spApprove_Distribution_Transfer_DR")]
+        public ISingleResult<spApprove_Distribution_Transfer_DRResult> spApprove_Distribution_Transfer_DR([global::System.Data.Linq.Mapping.ParameterAttribute(DbType = "Int")] System.Nullable<int> maxVoucherId, [global::System.Data.Linq.Mapping.ParameterAttribute(Name = "Bill_Det_ID", DbType = "Int")] System.Nullable<int> bill_Det_ID, [global::System.Data.Linq.Mapping.ParameterAttribute(Name = "Patient_ID", DbType = "Int")] System.Nullable<int> patient_ID, [global::System.Data.Linq.Mapping.ParameterAttribute(Name = "Share_Amnt", DbType = "Decimal(18,2)")] System.Nullable<decimal> share_Amnt, [global::System.Data.Linq.Mapping.ParameterAttribute(Name = "Account_ID", DbType = "Int")] System.Nullable<int> account_ID, [global::System.Data.Linq.Mapping.ParameterAttribute(Name = "RecordType", DbType = "VarChar(50)")] string recordType)
+        {
+            IExecuteResult result = this.ExecuteMethodCall(this, ((MethodInfo)(MethodInfo.GetCurrentMethod())), maxVoucherId, bill_Det_ID, patient_ID, share_Amnt, account_ID, recordType);
+            return ((ISingleResult<spApprove_Distribution_Transfer_DRResult>)(result.ReturnValue));
         }
     }
 
@@ -182543,6 +182544,8 @@ namespace PMS
 
         private System.Nullable<int> _doc_id;
 
+        private System.Nullable<bool> _ispayable;
+
         #region Extensibility Method Definitions
         partial void OnLoaded();
         partial void OnValidate(System.Data.Linq.ChangeAction action);
@@ -182565,6 +182568,8 @@ namespace PMS
         partial void OnNet_AmountChanged();
         partial void Ondoc_idChanging(System.Nullable<int> value);
         partial void Ondoc_idChanged();
+        partial void OnispayableChanging(System.Nullable<bool> value);
+        partial void OnispayableChanged();
         #endregion
 
         public IPD_Doctor_Distribution_Detail()
@@ -182748,6 +182753,26 @@ namespace PMS
                     this._doc_id = value;
                     this.SendPropertyChanged("doc_id");
                     this.Ondoc_idChanged();
+                }
+            }
+        }
+
+        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_ispayable", DbType = "Bit")]
+        public System.Nullable<bool> ispayable
+        {
+            get
+            {
+                return this._ispayable;
+            }
+            set
+            {
+                if ((this._ispayable != value))
+                {
+                    this.OnispayableChanging(value);
+                    this.SendPropertyChanging();
+                    this._ispayable = value;
+                    this.SendPropertyChanged("ispayable");
+                    this.OnispayableChanged();
                 }
             }
         }
@@ -233851,32 +233876,6 @@ namespace PMS
         }
     }
 
-    public partial class spApprove_Distribution_Transfer_DRResult
-    {
-
-        private string _ResultMessage;
-
-        public spApprove_Distribution_Transfer_DRResult()
-        {
-        }
-
-        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_ResultMessage", DbType = "VarChar(1000)")]
-        public string ResultMessage
-        {
-            get
-            {
-                return this._ResultMessage;
-            }
-            set
-            {
-                if ((this._ResultMessage != value))
-                {
-                    this._ResultMessage = value;
-                }
-            }
-        }
-    }
-
     public partial class spApprove_Distribution_Transfer_MasterResult
     {
 
@@ -241408,6 +241407,32 @@ namespace PMS
                 if ((this._SourceType != value))
                 {
                     this._SourceType = value;
+                }
+            }
+        }
+    }
+
+    public partial class spApprove_Distribution_Transfer_DRResult
+    {
+
+        private string _ResultMessage;
+
+        public spApprove_Distribution_Transfer_DRResult()
+        {
+        }
+
+        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_ResultMessage", DbType = "VarChar(1000)")]
+        public string ResultMessage
+        {
+            get
+            {
+                return this._ResultMessage;
+            }
+            set
+            {
+                if ((this._ResultMessage != value))
+                {
+                    this._ResultMessage = value;
                 }
             }
         }
