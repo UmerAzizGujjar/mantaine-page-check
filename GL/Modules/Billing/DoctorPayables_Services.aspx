@@ -190,12 +190,15 @@
                 'ItemList': Item_list
             };
             PageMethods.TranferShares(btnSave, JSON.stringify(AllItemDetail), function (res) {
-                swal({
-                    title: "Data Transfer!",
-                    icon: "success",
-                    buttons: false,
+                Swal.fire({
+                    title: 'Data Transfer!',
+                    icon: 'success',
+                    showConfirmButton: false,
+                    timer: 2000
                 });
-                window.location = "DoctorPayables_Services.aspx?ID=" + DocId;
+                setTimeout(function () {
+                    window.location = "DoctorPayables_Services.aspx?ID=" + DocId;
+                }, 500);
             });
         }
         function UpdateData() {
@@ -219,15 +222,22 @@
                 contentType: "application/json; charset=utf-8",
                 success: function (msg) {
                     debugger;
-                        swal({
-                            title: "Data Successfully Save!",
-                            icon: "success",
-                            buttons: false,
-                        });
-                        location.reload();                   
+                    Swal.fire({
+                        title: 'Data Successfully Saved!',
+                        icon: 'success',
+                        showConfirmButton: false,
+                        timer: 2000
+                    });
+                    setTimeout(function () {
+                        location.reload();
+                    }, 500);
                 },
                 error: function (err) {
-                    alert(err.d)
+                    Swal.fire({
+                        icon: 'error',
+                        title: 'Error',
+                        text: err.d
+                    });
                 }
             });
             table.find('tr input[type=checkbox]:checked:visible').each(function (key, value) {
