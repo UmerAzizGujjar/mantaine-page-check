@@ -22,7 +22,7 @@ namespace PMS
     using System;
 
 
-    [global::System.Data.Linq.Mapping.DatabaseAttribute(Name = "H_P_National_Hospital")]
+    [global::System.Data.Linq.Mapping.DatabaseAttribute(Name = "IITH")]
     public partial class DataBaseDataContext : System.Data.Linq.DataContext
     {
 
@@ -5202,25 +5202,11 @@ namespace PMS
             return ((ISingleResult<spLoadBillingInfoResult>)(result.ReturnValue));
         }
 
-        [global::System.Data.Linq.Mapping.FunctionAttribute(Name = "dbo.SpApprove_OPD")]
-        public ISingleResult<SpApprove_OPDResult> SpApprove_OPD([global::System.Data.Linq.Mapping.ParameterAttribute(Name = "Pat_ID", DbType = "BigInt")] System.Nullable<long> pat_ID, [global::System.Data.Linq.Mapping.ParameterAttribute(Name = "Pat_Category", DbType = "NVarChar(150)")] string pat_Category, [global::System.Data.Linq.Mapping.ParameterAttribute(DbType = "UniqueIdentifier")] System.Nullable<System.Guid> user_id)
-        {
-            IExecuteResult result = this.ExecuteMethodCall(this, ((MethodInfo)(MethodInfo.GetCurrentMethod())), pat_ID, pat_Category, user_id);
-            return ((ISingleResult<SpApprove_OPDResult>)(result.ReturnValue));
-        }
-
         [global::System.Data.Linq.Mapping.FunctionAttribute(Name = "dbo.SpApprove_OPDShare")]
         public ISingleResult<SpApprove_OPDShareResult> SpApprove_OPDShare([global::System.Data.Linq.Mapping.ParameterAttribute(Name = "Pat_ID", DbType = "BigInt")] System.Nullable<long> pat_ID, [global::System.Data.Linq.Mapping.ParameterAttribute(DbType = "UniqueIdentifier")] System.Nullable<System.Guid> user_id)
         {
             IExecuteResult result = this.ExecuteMethodCall(this, ((MethodInfo)(MethodInfo.GetCurrentMethod())), pat_ID, user_id);
             return ((ISingleResult<SpApprove_OPDShareResult>)(result.ReturnValue));
-        }
-
-        [global::System.Data.Linq.Mapping.FunctionAttribute(Name = "dbo.sp_ApprovePatientCardFee")]
-        public ISingleResult<sp_ApprovePatientCardFeeResult> sp_ApprovePatientCardFee([global::System.Data.Linq.Mapping.ParameterAttribute(Name = "Pat_Id", DbType = "Int")] System.Nullable<int> pat_Id, [global::System.Data.Linq.Mapping.ParameterAttribute(Name = "UserId", DbType = "UniqueIdentifier")] System.Nullable<System.Guid> userId)
-        {
-            IExecuteResult result = this.ExecuteMethodCall(this, ((MethodInfo)(MethodInfo.GetCurrentMethod())), pat_Id, userId);
-            return ((ISingleResult<sp_ApprovePatientCardFeeResult>)(result.ReturnValue));
         }
 
         [global::System.Data.Linq.Mapping.FunctionAttribute(Name = "dbo.getUserName", IsComposable = true)]
@@ -5736,6 +5722,20 @@ namespace PMS
         {
             IExecuteResult result = this.ExecuteMethodCall(this, ((MethodInfo)(MethodInfo.GetCurrentMethod())));
             return ((ISingleResult<sp_Load_PayablesResult>)(result.ReturnValue));
+        }
+
+        [global::System.Data.Linq.Mapping.FunctionAttribute(Name = "dbo.SpApprove_OPD")]
+        public ISingleResult<SpApprove_OPDResult> SpApprove_OPD([global::System.Data.Linq.Mapping.ParameterAttribute(Name = "Pat_ID", DbType = "BigInt")] System.Nullable<long> pat_ID, [global::System.Data.Linq.Mapping.ParameterAttribute(Name = "Pat_Category", DbType = "NVarChar(150)")] string pat_Category, [global::System.Data.Linq.Mapping.ParameterAttribute(DbType = "UniqueIdentifier")] System.Nullable<System.Guid> user_id)
+        {
+            IExecuteResult result = this.ExecuteMethodCall(this, ((MethodInfo)(MethodInfo.GetCurrentMethod())), pat_ID, pat_Category, user_id);
+            return ((ISingleResult<SpApprove_OPDResult>)(result.ReturnValue));
+        }
+
+        [global::System.Data.Linq.Mapping.FunctionAttribute(Name = "dbo.sp_ApprovePatientCardFee")]
+        public ISingleResult<sp_ApprovePatientCardFeeResult> sp_ApprovePatientCardFee([global::System.Data.Linq.Mapping.ParameterAttribute(Name = "Pat_Id", DbType = "Int")] System.Nullable<int> pat_Id, [global::System.Data.Linq.Mapping.ParameterAttribute(Name = "UserId", DbType = "UniqueIdentifier")] System.Nullable<System.Guid> userId)
+        {
+            IExecuteResult result = this.ExecuteMethodCall(this, ((MethodInfo)(MethodInfo.GetCurrentMethod())), pat_Id, userId);
+            return ((ISingleResult<sp_ApprovePatientCardFeeResult>)(result.ReturnValue));
         }
     }
 
@@ -203021,32 +203021,6 @@ namespace PMS
         }
     }
 
-    public partial class SpApprove_OPDResult
-    {
-
-        private string _Message;
-
-        public SpApprove_OPDResult()
-        {
-        }
-
-        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_Message", DbType = "VarChar(300)")]
-        public string Message
-        {
-            get
-            {
-                return this._Message;
-            }
-            set
-            {
-                if ((this._Message != value))
-                {
-                    this._Message = value;
-                }
-            }
-        }
-    }
-
     public partial class SpApprove_OPDShareResult
     {
 
@@ -203057,32 +203031,6 @@ namespace PMS
         }
 
         [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_Message", DbType = "VarChar(18) NOT NULL", CanBeNull = false)]
-        public string Message
-        {
-            get
-            {
-                return this._Message;
-            }
-            set
-            {
-                if ((this._Message != value))
-                {
-                    this._Message = value;
-                }
-            }
-        }
-    }
-
-    public partial class sp_ApprovePatientCardFeeResult
-    {
-
-        private string _Message;
-
-        public sp_ApprovePatientCardFeeResult()
-        {
-        }
-
-        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_Message", DbType = "VarChar(300)")]
         public string Message
         {
             get
@@ -241408,6 +241356,58 @@ namespace PMS
                 if ((this._Balance != value))
                 {
                     this._Balance = value;
+                }
+            }
+        }
+    }
+
+    public partial class SpApprove_OPDResult
+    {
+
+        private string _Message;
+
+        public SpApprove_OPDResult()
+        {
+        }
+
+        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_Message", DbType = "VarChar(300)")]
+        public string Message
+        {
+            get
+            {
+                return this._Message;
+            }
+            set
+            {
+                if ((this._Message != value))
+                {
+                    this._Message = value;
+                }
+            }
+        }
+    }
+
+    public partial class sp_ApprovePatientCardFeeResult
+    {
+
+        private string _Message;
+
+        public sp_ApprovePatientCardFeeResult()
+        {
+        }
+
+        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_Message", DbType = "VarChar(300)")]
+        public string Message
+        {
+            get
+            {
+                return this._Message;
+            }
+            set
+            {
+                if ((this._Message != value))
+                {
+                    this._Message = value;
                 }
             }
         }
