@@ -762,9 +762,6 @@ namespace PMS
         partial void InsertAP_Purchase_Order_Item(AP_Purchase_Order_Item instance);
         partial void UpdateAP_Purchase_Order_Item(AP_Purchase_Order_Item instance);
         partial void DeleteAP_Purchase_Order_Item(AP_Purchase_Order_Item instance);
-        partial void InsertIPD_Doctor_Distribution_Detail(IPD_Doctor_Distribution_Detail instance);
-        partial void UpdateIPD_Doctor_Distribution_Detail(IPD_Doctor_Distribution_Detail instance);
-        partial void DeleteIPD_Doctor_Distribution_Detail(IPD_Doctor_Distribution_Detail instance);
         partial void InsertIPD_Distribution_Detail(IPD_Distribution_Detail instance);
         partial void UpdateIPD_Distribution_Detail(IPD_Distribution_Detail instance);
         partial void DeleteIPD_Distribution_Detail(IPD_Distribution_Detail instance);
@@ -1023,9 +1020,13 @@ namespace PMS
         partial void InsertEmergency(Emergency instance);
         partial void UpdateEmergency(Emergency instance);
         partial void DeleteEmergency(Emergency instance);
+        partial void InsertIPD_Doctor_Distribution_Detail(IPD_Doctor_Distribution_Detail instance);
+        partial void UpdateIPD_Doctor_Distribution_Detail(IPD_Doctor_Distribution_Detail instance);
+        partial void DeleteIPD_Doctor_Distribution_Detail(IPD_Doctor_Distribution_Detail instance);
         #endregion
+
         public DataBaseDataContext() :
-       base(global::System.Configuration.ConfigurationManager.ConnectionStrings["ASPGLConnectionString"].ConnectionString, mappingSource)
+        base(global::System.Configuration.ConfigurationManager.ConnectionStrings["ASPGLConnectionString"].ConnectionString, mappingSource)
         {
             OnCreated();
         }
@@ -3037,14 +3038,6 @@ namespace PMS
             }
         }
 
-        public System.Data.Linq.Table<IPD_Doctor_Distribution_Detail> IPD_Doctor_Distribution_Details
-        {
-            get
-            {
-                return this.GetTable<IPD_Doctor_Distribution_Detail>();
-            }
-        }
-
         public System.Data.Linq.Table<IPD_Distribution_Detail> IPD_Distribution_Details
         {
             get
@@ -3730,6 +3723,14 @@ namespace PMS
             get
             {
                 return this.GetTable<Emergency>();
+            }
+        }
+
+        public System.Data.Linq.Table<IPD_Doctor_Distribution_Detail> IPD_Doctor_Distribution_Details
+        {
+            get
+            {
+                return this.GetTable<IPD_Doctor_Distribution_Detail>();
             }
         }
 
@@ -5202,25 +5203,11 @@ namespace PMS
             return ((ISingleResult<spLoadBillingInfoResult>)(result.ReturnValue));
         }
 
-        [global::System.Data.Linq.Mapping.FunctionAttribute(Name = "dbo.SpApprove_OPD")]
-        public ISingleResult<SpApprove_OPDResult> SpApprove_OPD([global::System.Data.Linq.Mapping.ParameterAttribute(Name = "Pat_ID", DbType = "BigInt")] System.Nullable<long> pat_ID, [global::System.Data.Linq.Mapping.ParameterAttribute(Name = "Pat_Category", DbType = "NVarChar(150)")] string pat_Category, [global::System.Data.Linq.Mapping.ParameterAttribute(DbType = "UniqueIdentifier")] System.Nullable<System.Guid> user_id)
-        {
-            IExecuteResult result = this.ExecuteMethodCall(this, ((MethodInfo)(MethodInfo.GetCurrentMethod())), pat_ID, pat_Category, user_id);
-            return ((ISingleResult<SpApprove_OPDResult>)(result.ReturnValue));
-        }
-
         [global::System.Data.Linq.Mapping.FunctionAttribute(Name = "dbo.SpApprove_OPDShare")]
         public ISingleResult<SpApprove_OPDShareResult> SpApprove_OPDShare([global::System.Data.Linq.Mapping.ParameterAttribute(Name = "Pat_ID", DbType = "BigInt")] System.Nullable<long> pat_ID, [global::System.Data.Linq.Mapping.ParameterAttribute(DbType = "UniqueIdentifier")] System.Nullable<System.Guid> user_id)
         {
             IExecuteResult result = this.ExecuteMethodCall(this, ((MethodInfo)(MethodInfo.GetCurrentMethod())), pat_ID, user_id);
             return ((ISingleResult<SpApprove_OPDShareResult>)(result.ReturnValue));
-        }
-
-        [global::System.Data.Linq.Mapping.FunctionAttribute(Name = "dbo.sp_ApprovePatientCardFee")]
-        public ISingleResult<sp_ApprovePatientCardFeeResult> sp_ApprovePatientCardFee([global::System.Data.Linq.Mapping.ParameterAttribute(Name = "Pat_Id", DbType = "Int")] System.Nullable<int> pat_Id, [global::System.Data.Linq.Mapping.ParameterAttribute(Name = "UserId", DbType = "UniqueIdentifier")] System.Nullable<System.Guid> userId)
-        {
-            IExecuteResult result = this.ExecuteMethodCall(this, ((MethodInfo)(MethodInfo.GetCurrentMethod())), pat_Id, userId);
-            return ((ISingleResult<sp_ApprovePatientCardFeeResult>)(result.ReturnValue));
         }
 
         [global::System.Data.Linq.Mapping.FunctionAttribute(Name = "dbo.getUserName", IsComposable = true)]
@@ -5654,20 +5641,6 @@ namespace PMS
             return ((ISingleResult<sp_GetInPatientDetailResult>)(result.ReturnValue));
         }
 
-        [global::System.Data.Linq.Mapping.FunctionAttribute(Name = "dbo.sp_Load_Payables")]
-        public ISingleResult<sp_Load_PayablesResult> sp_Load_Payables()
-        {
-            IExecuteResult result = this.ExecuteMethodCall(this, ((MethodInfo)(MethodInfo.GetCurrentMethod())));
-            return ((ISingleResult<sp_Load_PayablesResult>)(result.ReturnValue));
-        }
-
-        [global::System.Data.Linq.Mapping.FunctionAttribute(Name = "dbo.sp_Load_Payables_Details")]
-        public ISingleResult<sp_Load_Payables_DetailsResult> sp_Load_Payables_Details([global::System.Data.Linq.Mapping.ParameterAttribute(Name = "DocId", DbType = "Int")] System.Nullable<int> docId)
-        {
-            IExecuteResult result = this.ExecuteMethodCall(this, ((MethodInfo)(MethodInfo.GetCurrentMethod())), docId);
-            return ((ISingleResult<sp_Load_Payables_DetailsResult>)(result.ReturnValue));
-        }
-
         [global::System.Data.Linq.Mapping.FunctionAttribute(Name = "dbo.spSaleReturnInvoiceDetails")]
         public ISingleResult<spSaleReturnInvoiceDetailsResult> spSaleReturnInvoiceDetails([global::System.Data.Linq.Mapping.ParameterAttribute(Name = "BillId", DbType = "Int")] System.Nullable<int> billId, [global::System.Data.Linq.Mapping.ParameterAttribute(DbType = "VarChar(50)")] string wareHouse)
         {
@@ -5717,13 +5690,6 @@ namespace PMS
             return ((ISingleResult<spApprove_Distribution_Transfer_CR_SideResult>)(result.ReturnValue));
         }
 
-        [global::System.Data.Linq.Mapping.FunctionAttribute(Name = "dbo.spApprove_Distribution_Transfer_DR")]
-        public ISingleResult<spApprove_Distribution_Transfer_DRResult> spApprove_Distribution_Transfer_DR([global::System.Data.Linq.Mapping.ParameterAttribute(DbType = "Int")] System.Nullable<int> maxVoucherId, [global::System.Data.Linq.Mapping.ParameterAttribute(Name = "Bill_Det_ID", DbType = "Int")] System.Nullable<int> bill_Det_ID, [global::System.Data.Linq.Mapping.ParameterAttribute(Name = "Patient_ID", DbType = "Int")] System.Nullable<int> patient_ID, [global::System.Data.Linq.Mapping.ParameterAttribute(Name = "Share_Amnt", DbType = "Decimal(18,2)")] System.Nullable<decimal> share_Amnt, [global::System.Data.Linq.Mapping.ParameterAttribute(Name = "Account_ID", DbType = "Int")] System.Nullable<int> account_ID, [global::System.Data.Linq.Mapping.ParameterAttribute(Name = "RecordType", DbType = "VarChar(10)")] string recordType)
-        {
-            IExecuteResult result = this.ExecuteMethodCall(this, ((MethodInfo)(MethodInfo.GetCurrentMethod())), maxVoucherId, bill_Det_ID, patient_ID, share_Amnt, account_ID, recordType);
-            return ((ISingleResult<spApprove_Distribution_Transfer_DRResult>)(result.ReturnValue));
-        }
-
         [global::System.Data.Linq.Mapping.FunctionAttribute(Name = "dbo.spApprove_Distribution_Transfer_Master")]
         public ISingleResult<spApprove_Distribution_Transfer_MasterResult> spApprove_Distribution_Transfer_Master([global::System.Data.Linq.Mapping.ParameterAttribute(Name = "Created_By", DbType = "UniqueIdentifier")] System.Nullable<System.Guid> created_By)
         {
@@ -5736,6 +5702,41 @@ namespace PMS
         {
             IExecuteResult result = this.ExecuteMethodCall(this, ((MethodInfo)(MethodInfo.GetCurrentMethod())), patient_Id);
             return ((ISingleResult<sp_FillOutPatientFormResult>)(result.ReturnValue));
+        }
+
+        [global::System.Data.Linq.Mapping.FunctionAttribute(Name = "dbo.sp_Load_Payables")]
+        public ISingleResult<sp_Load_PayablesResult> sp_Load_Payables()
+        {
+            IExecuteResult result = this.ExecuteMethodCall(this, ((MethodInfo)(MethodInfo.GetCurrentMethod())));
+            return ((ISingleResult<sp_Load_PayablesResult>)(result.ReturnValue));
+        }
+
+        [global::System.Data.Linq.Mapping.FunctionAttribute(Name = "dbo.SpApprove_OPD")]
+        public ISingleResult<SpApprove_OPDResult> SpApprove_OPD([global::System.Data.Linq.Mapping.ParameterAttribute(Name = "Pat_ID", DbType = "BigInt")] System.Nullable<long> pat_ID, [global::System.Data.Linq.Mapping.ParameterAttribute(Name = "Pat_Category", DbType = "NVarChar(150)")] string pat_Category, [global::System.Data.Linq.Mapping.ParameterAttribute(DbType = "UniqueIdentifier")] System.Nullable<System.Guid> user_id)
+        {
+            IExecuteResult result = this.ExecuteMethodCall(this, ((MethodInfo)(MethodInfo.GetCurrentMethod())), pat_ID, pat_Category, user_id);
+            return ((ISingleResult<SpApprove_OPDResult>)(result.ReturnValue));
+        }
+
+        [global::System.Data.Linq.Mapping.FunctionAttribute(Name = "dbo.sp_ApprovePatientCardFee")]
+        public ISingleResult<sp_ApprovePatientCardFeeResult> sp_ApprovePatientCardFee([global::System.Data.Linq.Mapping.ParameterAttribute(Name = "Pat_Id", DbType = "Int")] System.Nullable<int> pat_Id, [global::System.Data.Linq.Mapping.ParameterAttribute(Name = "UserId", DbType = "UniqueIdentifier")] System.Nullable<System.Guid> userId)
+        {
+            IExecuteResult result = this.ExecuteMethodCall(this, ((MethodInfo)(MethodInfo.GetCurrentMethod())), pat_Id, userId);
+            return ((ISingleResult<sp_ApprovePatientCardFeeResult>)(result.ReturnValue));
+        }
+
+        [global::System.Data.Linq.Mapping.FunctionAttribute(Name = "dbo.sp_Load_Payables_Details")]
+        public ISingleResult<sp_Load_Payables_DetailsResult> sp_Load_Payables_Details([global::System.Data.Linq.Mapping.ParameterAttribute(Name = "DocId", DbType = "Int")] System.Nullable<int> docId)
+        {
+            IExecuteResult result = this.ExecuteMethodCall(this, ((MethodInfo)(MethodInfo.GetCurrentMethod())), docId);
+            return ((ISingleResult<sp_Load_Payables_DetailsResult>)(result.ReturnValue));
+        }
+
+        [global::System.Data.Linq.Mapping.FunctionAttribute(Name = "dbo.spApprove_Distribution_Transfer_DR")]
+        public ISingleResult<spApprove_Distribution_Transfer_DRResult> spApprove_Distribution_Transfer_DR([global::System.Data.Linq.Mapping.ParameterAttribute(DbType = "Int")] System.Nullable<int> maxVoucherId, [global::System.Data.Linq.Mapping.ParameterAttribute(Name = "Bill_Det_ID", DbType = "Int")] System.Nullable<int> bill_Det_ID, [global::System.Data.Linq.Mapping.ParameterAttribute(Name = "Patient_ID", DbType = "Int")] System.Nullable<int> patient_ID, [global::System.Data.Linq.Mapping.ParameterAttribute(Name = "Share_Amnt", DbType = "Decimal(18,2)")] System.Nullable<decimal> share_Amnt, [global::System.Data.Linq.Mapping.ParameterAttribute(Name = "Account_ID", DbType = "Int")] System.Nullable<int> account_ID, [global::System.Data.Linq.Mapping.ParameterAttribute(Name = "RecordType", DbType = "VarChar(50)")] string recordType)
+        {
+            IExecuteResult result = this.ExecuteMethodCall(this, ((MethodInfo)(MethodInfo.GetCurrentMethod())), maxVoucherId, bill_Det_ID, patient_ID, share_Amnt, account_ID, recordType);
+            return ((ISingleResult<spApprove_Distribution_Transfer_DRResult>)(result.ReturnValue));
         }
     }
 
@@ -97330,236 +97331,6 @@ namespace PMS
         }
     }
 
-    [global::System.Data.Linq.Mapping.TableAttribute(Name = "dbo.IPD_Doctor_Distribution_Detail")]
-    public partial class IPD_Doctor_Distribution_Detail : INotifyPropertyChanging, INotifyPropertyChanged
-    {
-
-        private static PropertyChangingEventArgs emptyChangingEventArgs = new PropertyChangingEventArgs(String.Empty);
-
-        private int _Doctor_Distribution_Id;
-
-        private System.Nullable<int> _Distribution_Id;
-
-        private System.Nullable<int> _Account_Id;
-
-        private string _Share_Account_Name;
-
-        private System.Nullable<decimal> _Total_Amount;
-
-        private System.Nullable<decimal> _Discount_Percentage;
-
-        private System.Nullable<decimal> _Discount_Amount;
-
-        private System.Nullable<decimal> _Net_Amount;
-
-        #region Extensibility Method Definitions
-        partial void OnLoaded();
-        partial void OnValidate(System.Data.Linq.ChangeAction action);
-        partial void OnCreated();
-        partial void OnDoctor_Distribution_IdChanging(int value);
-        partial void OnDoctor_Distribution_IdChanged();
-        partial void OnDistribution_IdChanging(System.Nullable<int> value);
-        partial void OnDistribution_IdChanged();
-        partial void OnAccount_IdChanging(System.Nullable<int> value);
-        partial void OnAccount_IdChanged();
-        partial void OnShare_Account_NameChanging(string value);
-        partial void OnShare_Account_NameChanged();
-        partial void OnTotal_AmountChanging(System.Nullable<decimal> value);
-        partial void OnTotal_AmountChanged();
-        partial void OnDiscount_PercentageChanging(System.Nullable<decimal> value);
-        partial void OnDiscount_PercentageChanged();
-        partial void OnDiscount_AmountChanging(System.Nullable<decimal> value);
-        partial void OnDiscount_AmountChanged();
-        partial void OnNet_AmountChanging(System.Nullable<decimal> value);
-        partial void OnNet_AmountChanged();
-        #endregion
-
-        public IPD_Doctor_Distribution_Detail()
-        {
-            OnCreated();
-        }
-
-        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_Doctor_Distribution_Id", AutoSync = AutoSync.OnInsert, DbType = "Int NOT NULL IDENTITY", IsPrimaryKey = true, IsDbGenerated = true)]
-        public int Doctor_Distribution_Id
-        {
-            get
-            {
-                return this._Doctor_Distribution_Id;
-            }
-            set
-            {
-                if ((this._Doctor_Distribution_Id != value))
-                {
-                    this.OnDoctor_Distribution_IdChanging(value);
-                    this.SendPropertyChanging();
-                    this._Doctor_Distribution_Id = value;
-                    this.SendPropertyChanged("Doctor_Distribution_Id");
-                    this.OnDoctor_Distribution_IdChanged();
-                }
-            }
-        }
-
-        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_Distribution_Id", DbType = "Int")]
-        public System.Nullable<int> Distribution_Id
-        {
-            get
-            {
-                return this._Distribution_Id;
-            }
-            set
-            {
-                if ((this._Distribution_Id != value))
-                {
-                    this.OnDistribution_IdChanging(value);
-                    this.SendPropertyChanging();
-                    this._Distribution_Id = value;
-                    this.SendPropertyChanged("Distribution_Id");
-                    this.OnDistribution_IdChanged();
-                }
-            }
-        }
-
-        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_Account_Id", DbType = "Int")]
-        public System.Nullable<int> Account_Id
-        {
-            get
-            {
-                return this._Account_Id;
-            }
-            set
-            {
-                if ((this._Account_Id != value))
-                {
-                    this.OnAccount_IdChanging(value);
-                    this.SendPropertyChanging();
-                    this._Account_Id = value;
-                    this.SendPropertyChanged("Account_Id");
-                    this.OnAccount_IdChanged();
-                }
-            }
-        }
-
-        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_Share_Account_Name", DbType = "VarChar(500)")]
-        public string Share_Account_Name
-        {
-            get
-            {
-                return this._Share_Account_Name;
-            }
-            set
-            {
-                if ((this._Share_Account_Name != value))
-                {
-                    this.OnShare_Account_NameChanging(value);
-                    this.SendPropertyChanging();
-                    this._Share_Account_Name = value;
-                    this.SendPropertyChanged("Share_Account_Name");
-                    this.OnShare_Account_NameChanged();
-                }
-            }
-        }
-
-        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_Total_Amount", DbType = "Decimal(18,2)")]
-        public System.Nullable<decimal> Total_Amount
-        {
-            get
-            {
-                return this._Total_Amount;
-            }
-            set
-            {
-                if ((this._Total_Amount != value))
-                {
-                    this.OnTotal_AmountChanging(value);
-                    this.SendPropertyChanging();
-                    this._Total_Amount = value;
-                    this.SendPropertyChanged("Total_Amount");
-                    this.OnTotal_AmountChanged();
-                }
-            }
-        }
-
-        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_Discount_Percentage", DbType = "Decimal(18,2)")]
-        public System.Nullable<decimal> Discount_Percentage
-        {
-            get
-            {
-                return this._Discount_Percentage;
-            }
-            set
-            {
-                if ((this._Discount_Percentage != value))
-                {
-                    this.OnDiscount_PercentageChanging(value);
-                    this.SendPropertyChanging();
-                    this._Discount_Percentage = value;
-                    this.SendPropertyChanged("Discount_Percentage");
-                    this.OnDiscount_PercentageChanged();
-                }
-            }
-        }
-
-        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_Discount_Amount", DbType = "Decimal(18,2)")]
-        public System.Nullable<decimal> Discount_Amount
-        {
-            get
-            {
-                return this._Discount_Amount;
-            }
-            set
-            {
-                if ((this._Discount_Amount != value))
-                {
-                    this.OnDiscount_AmountChanging(value);
-                    this.SendPropertyChanging();
-                    this._Discount_Amount = value;
-                    this.SendPropertyChanged("Discount_Amount");
-                    this.OnDiscount_AmountChanged();
-                }
-            }
-        }
-
-        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_Net_Amount", DbType = "Decimal(18,2)")]
-        public System.Nullable<decimal> Net_Amount
-        {
-            get
-            {
-                return this._Net_Amount;
-            }
-            set
-            {
-                if ((this._Net_Amount != value))
-                {
-                    this.OnNet_AmountChanging(value);
-                    this.SendPropertyChanging();
-                    this._Net_Amount = value;
-                    this.SendPropertyChanged("Net_Amount");
-                    this.OnNet_AmountChanged();
-                }
-            }
-        }
-
-        public event PropertyChangingEventHandler PropertyChanging;
-
-        public event PropertyChangedEventHandler PropertyChanged;
-
-        protected virtual void SendPropertyChanging()
-        {
-            if ((this.PropertyChanging != null))
-            {
-                this.PropertyChanging(this, emptyChangingEventArgs);
-            }
-        }
-
-        protected virtual void SendPropertyChanged(String propertyName)
-        {
-            if ((this.PropertyChanged != null))
-            {
-                this.PropertyChanged(this, new PropertyChangedEventArgs(propertyName));
-            }
-        }
-    }
-
     [global::System.Data.Linq.Mapping.TableAttribute(Name = "dbo.IPD_Distribution_Detail")]
     public partial class IPD_Distribution_Detail : INotifyPropertyChanging, INotifyPropertyChanged
     {
@@ -182749,6 +182520,284 @@ namespace PMS
         }
     }
 
+    [global::System.Data.Linq.Mapping.TableAttribute(Name = "dbo.IPD_Doctor_Distribution_Detail")]
+    public partial class IPD_Doctor_Distribution_Detail : INotifyPropertyChanging, INotifyPropertyChanged
+    {
+
+        private static PropertyChangingEventArgs emptyChangingEventArgs = new PropertyChangingEventArgs(String.Empty);
+
+        private int _Doctor_Distribution_Id;
+
+        private System.Nullable<int> _Distribution_Id;
+
+        private System.Nullable<int> _Account_Id;
+
+        private string _Share_Account_Name;
+
+        private System.Nullable<decimal> _Total_Amount;
+
+        private System.Nullable<decimal> _Discount_Percentage;
+
+        private System.Nullable<decimal> _Discount_Amount;
+
+        private System.Nullable<decimal> _Net_Amount;
+
+        private System.Nullable<int> _doc_id;
+
+        private System.Nullable<bool> _ispayable;
+
+        #region Extensibility Method Definitions
+        partial void OnLoaded();
+        partial void OnValidate(System.Data.Linq.ChangeAction action);
+        partial void OnCreated();
+        partial void OnDoctor_Distribution_IdChanging(int value);
+        partial void OnDoctor_Distribution_IdChanged();
+        partial void OnDistribution_IdChanging(System.Nullable<int> value);
+        partial void OnDistribution_IdChanged();
+        partial void OnAccount_IdChanging(System.Nullable<int> value);
+        partial void OnAccount_IdChanged();
+        partial void OnShare_Account_NameChanging(string value);
+        partial void OnShare_Account_NameChanged();
+        partial void OnTotal_AmountChanging(System.Nullable<decimal> value);
+        partial void OnTotal_AmountChanged();
+        partial void OnDiscount_PercentageChanging(System.Nullable<decimal> value);
+        partial void OnDiscount_PercentageChanged();
+        partial void OnDiscount_AmountChanging(System.Nullable<decimal> value);
+        partial void OnDiscount_AmountChanged();
+        partial void OnNet_AmountChanging(System.Nullable<decimal> value);
+        partial void OnNet_AmountChanged();
+        partial void Ondoc_idChanging(System.Nullable<int> value);
+        partial void Ondoc_idChanged();
+        partial void OnispayableChanging(System.Nullable<bool> value);
+        partial void OnispayableChanged();
+        #endregion
+
+        public IPD_Doctor_Distribution_Detail()
+        {
+            OnCreated();
+        }
+
+        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_Doctor_Distribution_Id", AutoSync = AutoSync.OnInsert, DbType = "Int NOT NULL IDENTITY", IsPrimaryKey = true, IsDbGenerated = true)]
+        public int Doctor_Distribution_Id
+        {
+            get
+            {
+                return this._Doctor_Distribution_Id;
+            }
+            set
+            {
+                if ((this._Doctor_Distribution_Id != value))
+                {
+                    this.OnDoctor_Distribution_IdChanging(value);
+                    this.SendPropertyChanging();
+                    this._Doctor_Distribution_Id = value;
+                    this.SendPropertyChanged("Doctor_Distribution_Id");
+                    this.OnDoctor_Distribution_IdChanged();
+                }
+            }
+        }
+
+        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_Distribution_Id", DbType = "Int")]
+        public System.Nullable<int> Distribution_Id
+        {
+            get
+            {
+                return this._Distribution_Id;
+            }
+            set
+            {
+                if ((this._Distribution_Id != value))
+                {
+                    this.OnDistribution_IdChanging(value);
+                    this.SendPropertyChanging();
+                    this._Distribution_Id = value;
+                    this.SendPropertyChanged("Distribution_Id");
+                    this.OnDistribution_IdChanged();
+                }
+            }
+        }
+
+        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_Account_Id", DbType = "Int")]
+        public System.Nullable<int> Account_Id
+        {
+            get
+            {
+                return this._Account_Id;
+            }
+            set
+            {
+                if ((this._Account_Id != value))
+                {
+                    this.OnAccount_IdChanging(value);
+                    this.SendPropertyChanging();
+                    this._Account_Id = value;
+                    this.SendPropertyChanged("Account_Id");
+                    this.OnAccount_IdChanged();
+                }
+            }
+        }
+
+        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_Share_Account_Name", DbType = "VarChar(500)")]
+        public string Share_Account_Name
+        {
+            get
+            {
+                return this._Share_Account_Name;
+            }
+            set
+            {
+                if ((this._Share_Account_Name != value))
+                {
+                    this.OnShare_Account_NameChanging(value);
+                    this.SendPropertyChanging();
+                    this._Share_Account_Name = value;
+                    this.SendPropertyChanged("Share_Account_Name");
+                    this.OnShare_Account_NameChanged();
+                }
+            }
+        }
+
+        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_Total_Amount", DbType = "Decimal(18,2)")]
+        public System.Nullable<decimal> Total_Amount
+        {
+            get
+            {
+                return this._Total_Amount;
+            }
+            set
+            {
+                if ((this._Total_Amount != value))
+                {
+                    this.OnTotal_AmountChanging(value);
+                    this.SendPropertyChanging();
+                    this._Total_Amount = value;
+                    this.SendPropertyChanged("Total_Amount");
+                    this.OnTotal_AmountChanged();
+                }
+            }
+        }
+
+        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_Discount_Percentage", DbType = "Decimal(18,2)")]
+        public System.Nullable<decimal> Discount_Percentage
+        {
+            get
+            {
+                return this._Discount_Percentage;
+            }
+            set
+            {
+                if ((this._Discount_Percentage != value))
+                {
+                    this.OnDiscount_PercentageChanging(value);
+                    this.SendPropertyChanging();
+                    this._Discount_Percentage = value;
+                    this.SendPropertyChanged("Discount_Percentage");
+                    this.OnDiscount_PercentageChanged();
+                }
+            }
+        }
+
+        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_Discount_Amount", DbType = "Decimal(18,2)")]
+        public System.Nullable<decimal> Discount_Amount
+        {
+            get
+            {
+                return this._Discount_Amount;
+            }
+            set
+            {
+                if ((this._Discount_Amount != value))
+                {
+                    this.OnDiscount_AmountChanging(value);
+                    this.SendPropertyChanging();
+                    this._Discount_Amount = value;
+                    this.SendPropertyChanged("Discount_Amount");
+                    this.OnDiscount_AmountChanged();
+                }
+            }
+        }
+
+        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_Net_Amount", DbType = "Decimal(18,2)")]
+        public System.Nullable<decimal> Net_Amount
+        {
+            get
+            {
+                return this._Net_Amount;
+            }
+            set
+            {
+                if ((this._Net_Amount != value))
+                {
+                    this.OnNet_AmountChanging(value);
+                    this.SendPropertyChanging();
+                    this._Net_Amount = value;
+                    this.SendPropertyChanged("Net_Amount");
+                    this.OnNet_AmountChanged();
+                }
+            }
+        }
+
+        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_doc_id", DbType = "Int")]
+        public System.Nullable<int> doc_id
+        {
+            get
+            {
+                return this._doc_id;
+            }
+            set
+            {
+                if ((this._doc_id != value))
+                {
+                    this.Ondoc_idChanging(value);
+                    this.SendPropertyChanging();
+                    this._doc_id = value;
+                    this.SendPropertyChanged("doc_id");
+                    this.Ondoc_idChanged();
+                }
+            }
+        }
+
+        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_ispayable", DbType = "Bit")]
+        public System.Nullable<bool> ispayable
+        {
+            get
+            {
+                return this._ispayable;
+            }
+            set
+            {
+                if ((this._ispayable != value))
+                {
+                    this.OnispayableChanging(value);
+                    this.SendPropertyChanging();
+                    this._ispayable = value;
+                    this.SendPropertyChanged("ispayable");
+                    this.OnispayableChanged();
+                }
+            }
+        }
+
+        public event PropertyChangingEventHandler PropertyChanging;
+
+        public event PropertyChangedEventHandler PropertyChanged;
+
+        protected virtual void SendPropertyChanging()
+        {
+            if ((this.PropertyChanging != null))
+            {
+                this.PropertyChanging(this, emptyChangingEventArgs);
+            }
+        }
+
+        protected virtual void SendPropertyChanged(String propertyName)
+        {
+            if ((this.PropertyChanged != null))
+            {
+                this.PropertyChanged(this, new PropertyChangedEventArgs(propertyName));
+            }
+        }
+    }
+
     public partial class sp_DispatchedTestListResult
     {
 
@@ -202997,32 +203046,6 @@ namespace PMS
         }
     }
 
-    public partial class SpApprove_OPDResult
-    {
-
-        private string _Message;
-
-        public SpApprove_OPDResult()
-        {
-        }
-
-        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_Message", DbType = "VarChar(300)")]
-        public string Message
-        {
-            get
-            {
-                return this._Message;
-            }
-            set
-            {
-                if ((this._Message != value))
-                {
-                    this._Message = value;
-                }
-            }
-        }
-    }
-
     public partial class SpApprove_OPDShareResult
     {
 
@@ -203033,32 +203056,6 @@ namespace PMS
         }
 
         [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_Message", DbType = "VarChar(18) NOT NULL", CanBeNull = false)]
-        public string Message
-        {
-            get
-            {
-                return this._Message;
-            }
-            set
-            {
-                if ((this._Message != value))
-                {
-                    this._Message = value;
-                }
-            }
-        }
-    }
-
-    public partial class sp_ApprovePatientCardFeeResult
-    {
-
-        private string _Message;
-
-        public sp_ApprovePatientCardFeeResult()
-        {
-        }
-
-        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_Message", DbType = "VarChar(300)")]
         public string Message
         {
             get
@@ -225165,436 +225162,6 @@ namespace PMS
         }
     }
 
-    public partial class sp_Load_PayablesResult
-    {
-
-        private string _Doctor_Id;
-
-        private string _Name;
-
-        private System.Nullable<decimal> _Balance;
-
-        public sp_Load_PayablesResult()
-        {
-        }
-
-        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_Doctor_Id", DbType = "VarChar(100)")]
-        public string Doctor_Id
-        {
-            get
-            {
-                return this._Doctor_Id;
-            }
-            set
-            {
-                if ((this._Doctor_Id != value))
-                {
-                    this._Doctor_Id = value;
-                }
-            }
-        }
-
-        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_Name", DbType = "VarChar(50)")]
-        public string Name
-        {
-            get
-            {
-                return this._Name;
-            }
-            set
-            {
-                if ((this._Name != value))
-                {
-                    this._Name = value;
-                }
-            }
-        }
-
-        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_Balance", DbType = "Decimal(38,2)")]
-        public System.Nullable<decimal> Balance
-        {
-            get
-            {
-                return this._Balance;
-            }
-            set
-            {
-                if ((this._Balance != value))
-                {
-                    this._Balance = value;
-                }
-            }
-        }
-    }
-
-    public partial class sp_Load_Payables_DetailsResult
-    {
-
-        private string _Doctor_Id;
-
-        private System.Nullable<int> _Bill_ID;
-
-        private string _Bill_No;
-
-        private System.Nullable<System.DateTime> _Bill_Date;
-
-        private System.Nullable<int> _Bill_Details_ID;
-
-        private int _Patient_ID;
-
-        private System.Nullable<int> _Patient_No;
-
-        private System.Nullable<long> _In_Patient_ID;
-
-        private string _Full_Name;
-
-        private System.Nullable<System.DateTime> _Admission_Date;
-
-        private System.Nullable<System.DateTime> _Discharge_Date;
-
-        private System.Nullable<int> _Account_Id;
-
-        private System.Nullable<int> _Item_ID;
-
-        private string _Item_Name;
-
-        private string _BillType;
-
-        private string _Test_Department;
-
-        private string _Emp_Name;
-
-        private System.Nullable<decimal> _Doctor_Share;
-
-        private System.Nullable<int> _isPayable;
-
-        private string _SourceType;
-
-        public sp_Load_Payables_DetailsResult()
-        {
-        }
-
-        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_Doctor_Id", DbType = "VarChar(100)")]
-        public string Doctor_Id
-        {
-            get
-            {
-                return this._Doctor_Id;
-            }
-            set
-            {
-                if ((this._Doctor_Id != value))
-                {
-                    this._Doctor_Id = value;
-                }
-            }
-        }
-
-        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_Bill_ID", DbType = "Int")]
-        public System.Nullable<int> Bill_ID
-        {
-            get
-            {
-                return this._Bill_ID;
-            }
-            set
-            {
-                if ((this._Bill_ID != value))
-                {
-                    this._Bill_ID = value;
-                }
-            }
-        }
-
-        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_Bill_No", DbType = "VarChar(50)")]
-        public string Bill_No
-        {
-            get
-            {
-                return this._Bill_No;
-            }
-            set
-            {
-                if ((this._Bill_No != value))
-                {
-                    this._Bill_No = value;
-                }
-            }
-        }
-
-        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_Bill_Date", DbType = "DateTime")]
-        public System.Nullable<System.DateTime> Bill_Date
-        {
-            get
-            {
-                return this._Bill_Date;
-            }
-            set
-            {
-                if ((this._Bill_Date != value))
-                {
-                    this._Bill_Date = value;
-                }
-            }
-        }
-
-        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_Bill_Details_ID", DbType = "Int")]
-        public System.Nullable<int> Bill_Details_ID
-        {
-            get
-            {
-                return this._Bill_Details_ID;
-            }
-            set
-            {
-                if ((this._Bill_Details_ID != value))
-                {
-                    this._Bill_Details_ID = value;
-                }
-            }
-        }
-
-        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_Patient_ID", DbType = "Int NOT NULL")]
-        public int Patient_ID
-        {
-            get
-            {
-                return this._Patient_ID;
-            }
-            set
-            {
-                if ((this._Patient_ID != value))
-                {
-                    this._Patient_ID = value;
-                }
-            }
-        }
-
-        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_Patient_No", DbType = "Int")]
-        public System.Nullable<int> Patient_No
-        {
-            get
-            {
-                return this._Patient_No;
-            }
-            set
-            {
-                if ((this._Patient_No != value))
-                {
-                    this._Patient_No = value;
-                }
-            }
-        }
-
-        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_In_Patient_ID", DbType = "BigInt")]
-        public System.Nullable<long> In_Patient_ID
-        {
-            get
-            {
-                return this._In_Patient_ID;
-            }
-            set
-            {
-                if ((this._In_Patient_ID != value))
-                {
-                    this._In_Patient_ID = value;
-                }
-            }
-        }
-
-        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_Full_Name", DbType = "VarChar(100)")]
-        public string Full_Name
-        {
-            get
-            {
-                return this._Full_Name;
-            }
-            set
-            {
-                if ((this._Full_Name != value))
-                {
-                    this._Full_Name = value;
-                }
-            }
-        }
-
-        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_Admission_Date", DbType = "DateTime")]
-        public System.Nullable<System.DateTime> Admission_Date
-        {
-            get
-            {
-                return this._Admission_Date;
-            }
-            set
-            {
-                if ((this._Admission_Date != value))
-                {
-                    this._Admission_Date = value;
-                }
-            }
-        }
-
-        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_Discharge_Date", DbType = "DateTime")]
-        public System.Nullable<System.DateTime> Discharge_Date
-        {
-            get
-            {
-                return this._Discharge_Date;
-            }
-            set
-            {
-                if ((this._Discharge_Date != value))
-                {
-                    this._Discharge_Date = value;
-                }
-            }
-        }
-
-        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_Account_Id", DbType = "Int")]
-        public System.Nullable<int> Account_Id
-        {
-            get
-            {
-                return this._Account_Id;
-            }
-            set
-            {
-                if ((this._Account_Id != value))
-                {
-                    this._Account_Id = value;
-                }
-            }
-        }
-
-        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_Item_ID", DbType = "Int")]
-        public System.Nullable<int> Item_ID
-        {
-            get
-            {
-                return this._Item_ID;
-            }
-            set
-            {
-                if ((this._Item_ID != value))
-                {
-                    this._Item_ID = value;
-                }
-            }
-        }
-
-        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_Item_Name", DbType = "VarChar(200)")]
-        public string Item_Name
-        {
-            get
-            {
-                return this._Item_Name;
-            }
-            set
-            {
-                if ((this._Item_Name != value))
-                {
-                    this._Item_Name = value;
-                }
-            }
-        }
-
-        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_BillType", DbType = "VarChar(20)")]
-        public string BillType
-        {
-            get
-            {
-                return this._BillType;
-            }
-            set
-            {
-                if ((this._BillType != value))
-                {
-                    this._BillType = value;
-                }
-            }
-        }
-
-        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_Test_Department", DbType = "VarChar(150)")]
-        public string Test_Department
-        {
-            get
-            {
-                return this._Test_Department;
-            }
-            set
-            {
-                if ((this._Test_Department != value))
-                {
-                    this._Test_Department = value;
-                }
-            }
-        }
-
-        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_Emp_Name", DbType = "VarChar(50)")]
-        public string Emp_Name
-        {
-            get
-            {
-                return this._Emp_Name;
-            }
-            set
-            {
-                if ((this._Emp_Name != value))
-                {
-                    this._Emp_Name = value;
-                }
-            }
-        }
-
-        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_Doctor_Share", DbType = "Decimal(20,4)")]
-        public System.Nullable<decimal> Doctor_Share
-        {
-            get
-            {
-                return this._Doctor_Share;
-            }
-            set
-            {
-                if ((this._Doctor_Share != value))
-                {
-                    this._Doctor_Share = value;
-                }
-            }
-        }
-
-        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_isPayable", DbType = "Int")]
-        public System.Nullable<int> isPayable
-        {
-            get
-            {
-                return this._isPayable;
-            }
-            set
-            {
-                if ((this._isPayable != value))
-                {
-                    this._isPayable = value;
-                }
-            }
-        }
-
-        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_SourceType", DbType = "VarChar(7) NOT NULL", CanBeNull = false)]
-        public string SourceType
-        {
-            get
-            {
-                return this._SourceType;
-            }
-            set
-            {
-                if ((this._SourceType != value))
-                {
-                    this._SourceType = value;
-                }
-            }
-        }
-    }
-
     public partial class spSaleReturnInvoiceDetailsResult
     {
 
@@ -234309,32 +233876,6 @@ namespace PMS
         }
     }
 
-    public partial class spApprove_Distribution_Transfer_DRResult
-    {
-
-        private string _ResultMessage;
-
-        public spApprove_Distribution_Transfer_DRResult()
-        {
-        }
-
-        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_ResultMessage", DbType = "VarChar(1000)")]
-        public string ResultMessage
-        {
-            get
-            {
-                return this._ResultMessage;
-            }
-            set
-            {
-                if ((this._ResultMessage != value))
-                {
-                    this._ResultMessage = value;
-                }
-            }
-        }
-    }
-
     public partial class spApprove_Distribution_Transfer_MasterResult
     {
 
@@ -241384,6 +240925,514 @@ namespace PMS
                 if ((this._Reg_PatId1 != value))
                 {
                     this._Reg_PatId1 = value;
+                }
+            }
+        }
+    }
+
+    public partial class sp_Load_PayablesResult
+    {
+
+        private System.Nullable<int> _Doctor_Id;
+
+        private string _Name;
+
+        private System.Nullable<decimal> _Balance;
+
+        public sp_Load_PayablesResult()
+        {
+        }
+
+        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_Doctor_Id", DbType = "Int")]
+        public System.Nullable<int> Doctor_Id
+        {
+            get
+            {
+                return this._Doctor_Id;
+            }
+            set
+            {
+                if ((this._Doctor_Id != value))
+                {
+                    this._Doctor_Id = value;
+                }
+            }
+        }
+
+        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_Name", DbType = "VarChar(50)")]
+        public string Name
+        {
+            get
+            {
+                return this._Name;
+            }
+            set
+            {
+                if ((this._Name != value))
+                {
+                    this._Name = value;
+                }
+            }
+        }
+
+        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_Balance", DbType = "Decimal(38,2)")]
+        public System.Nullable<decimal> Balance
+        {
+            get
+            {
+                return this._Balance;
+            }
+            set
+            {
+                if ((this._Balance != value))
+                {
+                    this._Balance = value;
+                }
+            }
+        }
+    }
+
+    public partial class SpApprove_OPDResult
+    {
+
+        private string _Message;
+
+        public SpApprove_OPDResult()
+        {
+        }
+
+        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_Message", DbType = "VarChar(300)")]
+        public string Message
+        {
+            get
+            {
+                return this._Message;
+            }
+            set
+            {
+                if ((this._Message != value))
+                {
+                    this._Message = value;
+                }
+            }
+        }
+    }
+
+    public partial class sp_ApprovePatientCardFeeResult
+    {
+
+        private string _Message;
+
+        public sp_ApprovePatientCardFeeResult()
+        {
+        }
+
+        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_Message", DbType = "VarChar(300)")]
+        public string Message
+        {
+            get
+            {
+                return this._Message;
+            }
+            set
+            {
+                if ((this._Message != value))
+                {
+                    this._Message = value;
+                }
+            }
+        }
+    }
+
+    public partial class sp_Load_Payables_DetailsResult
+    {
+
+        private System.Nullable<int> _Doctor_Id;
+
+        private System.Nullable<int> _Bill_ID;
+
+        private string _Bill_No;
+
+        private System.Nullable<System.DateTime> _Bill_Date;
+
+        private System.Nullable<int> _Bill_Details_ID;
+
+        private int _Patient_ID;
+
+        private System.Nullable<int> _Patient_No;
+
+        private System.Nullable<long> _In_Patient_ID;
+
+        private string _Full_Name;
+
+        private System.Nullable<System.DateTime> _Admission_Date;
+
+        private System.Nullable<System.DateTime> _Discharge_Date;
+
+        private System.Nullable<int> _Account_Id;
+
+        private System.Nullable<int> _Item_ID;
+
+        private string _Item_Name;
+
+        private string _BillType;
+
+        private string _Test_Department;
+
+        private string _Emp_Name;
+
+        private System.Nullable<decimal> _Doctor_Share;
+
+        private System.Nullable<int> _isPayable;
+
+        private string _SourceType;
+
+        public sp_Load_Payables_DetailsResult()
+        {
+        }
+
+        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_Doctor_Id", DbType = "Int")]
+        public System.Nullable<int> Doctor_Id
+        {
+            get
+            {
+                return this._Doctor_Id;
+            }
+            set
+            {
+                if ((this._Doctor_Id != value))
+                {
+                    this._Doctor_Id = value;
+                }
+            }
+        }
+
+        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_Bill_ID", DbType = "Int")]
+        public System.Nullable<int> Bill_ID
+        {
+            get
+            {
+                return this._Bill_ID;
+            }
+            set
+            {
+                if ((this._Bill_ID != value))
+                {
+                    this._Bill_ID = value;
+                }
+            }
+        }
+
+        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_Bill_No", DbType = "VarChar(50)")]
+        public string Bill_No
+        {
+            get
+            {
+                return this._Bill_No;
+            }
+            set
+            {
+                if ((this._Bill_No != value))
+                {
+                    this._Bill_No = value;
+                }
+            }
+        }
+
+        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_Bill_Date", DbType = "DateTime")]
+        public System.Nullable<System.DateTime> Bill_Date
+        {
+            get
+            {
+                return this._Bill_Date;
+            }
+            set
+            {
+                if ((this._Bill_Date != value))
+                {
+                    this._Bill_Date = value;
+                }
+            }
+        }
+
+        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_Bill_Details_ID", DbType = "Int")]
+        public System.Nullable<int> Bill_Details_ID
+        {
+            get
+            {
+                return this._Bill_Details_ID;
+            }
+            set
+            {
+                if ((this._Bill_Details_ID != value))
+                {
+                    this._Bill_Details_ID = value;
+                }
+            }
+        }
+
+        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_Patient_ID", DbType = "Int NOT NULL")]
+        public int Patient_ID
+        {
+            get
+            {
+                return this._Patient_ID;
+            }
+            set
+            {
+                if ((this._Patient_ID != value))
+                {
+                    this._Patient_ID = value;
+                }
+            }
+        }
+
+        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_Patient_No", DbType = "Int")]
+        public System.Nullable<int> Patient_No
+        {
+            get
+            {
+                return this._Patient_No;
+            }
+            set
+            {
+                if ((this._Patient_No != value))
+                {
+                    this._Patient_No = value;
+                }
+            }
+        }
+
+        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_In_Patient_ID", DbType = "BigInt")]
+        public System.Nullable<long> In_Patient_ID
+        {
+            get
+            {
+                return this._In_Patient_ID;
+            }
+            set
+            {
+                if ((this._In_Patient_ID != value))
+                {
+                    this._In_Patient_ID = value;
+                }
+            }
+        }
+
+        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_Full_Name", DbType = "VarChar(100)")]
+        public string Full_Name
+        {
+            get
+            {
+                return this._Full_Name;
+            }
+            set
+            {
+                if ((this._Full_Name != value))
+                {
+                    this._Full_Name = value;
+                }
+            }
+        }
+
+        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_Admission_Date", DbType = "DateTime")]
+        public System.Nullable<System.DateTime> Admission_Date
+        {
+            get
+            {
+                return this._Admission_Date;
+            }
+            set
+            {
+                if ((this._Admission_Date != value))
+                {
+                    this._Admission_Date = value;
+                }
+            }
+        }
+
+        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_Discharge_Date", DbType = "DateTime")]
+        public System.Nullable<System.DateTime> Discharge_Date
+        {
+            get
+            {
+                return this._Discharge_Date;
+            }
+            set
+            {
+                if ((this._Discharge_Date != value))
+                {
+                    this._Discharge_Date = value;
+                }
+            }
+        }
+
+        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_Account_Id", DbType = "Int")]
+        public System.Nullable<int> Account_Id
+        {
+            get
+            {
+                return this._Account_Id;
+            }
+            set
+            {
+                if ((this._Account_Id != value))
+                {
+                    this._Account_Id = value;
+                }
+            }
+        }
+
+        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_Item_ID", DbType = "Int")]
+        public System.Nullable<int> Item_ID
+        {
+            get
+            {
+                return this._Item_ID;
+            }
+            set
+            {
+                if ((this._Item_ID != value))
+                {
+                    this._Item_ID = value;
+                }
+            }
+        }
+
+        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_Item_Name", DbType = "VarChar(200)")]
+        public string Item_Name
+        {
+            get
+            {
+                return this._Item_Name;
+            }
+            set
+            {
+                if ((this._Item_Name != value))
+                {
+                    this._Item_Name = value;
+                }
+            }
+        }
+
+        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_BillType", DbType = "VarChar(20)")]
+        public string BillType
+        {
+            get
+            {
+                return this._BillType;
+            }
+            set
+            {
+                if ((this._BillType != value))
+                {
+                    this._BillType = value;
+                }
+            }
+        }
+
+        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_Test_Department", DbType = "VarChar(150)")]
+        public string Test_Department
+        {
+            get
+            {
+                return this._Test_Department;
+            }
+            set
+            {
+                if ((this._Test_Department != value))
+                {
+                    this._Test_Department = value;
+                }
+            }
+        }
+
+        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_Emp_Name", DbType = "VarChar(50)")]
+        public string Emp_Name
+        {
+            get
+            {
+                return this._Emp_Name;
+            }
+            set
+            {
+                if ((this._Emp_Name != value))
+                {
+                    this._Emp_Name = value;
+                }
+            }
+        }
+
+        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_Doctor_Share", DbType = "Decimal(20,4)")]
+        public System.Nullable<decimal> Doctor_Share
+        {
+            get
+            {
+                return this._Doctor_Share;
+            }
+            set
+            {
+                if ((this._Doctor_Share != value))
+                {
+                    this._Doctor_Share = value;
+                }
+            }
+        }
+
+        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_isPayable", DbType = "Int")]
+        public System.Nullable<int> isPayable
+        {
+            get
+            {
+                return this._isPayable;
+            }
+            set
+            {
+                if ((this._isPayable != value))
+                {
+                    this._isPayable = value;
+                }
+            }
+        }
+
+        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_SourceType", DbType = "VarChar(7) NOT NULL", CanBeNull = false)]
+        public string SourceType
+        {
+            get
+            {
+                return this._SourceType;
+            }
+            set
+            {
+                if ((this._SourceType != value))
+                {
+                    this._SourceType = value;
+                }
+            }
+        }
+    }
+
+    public partial class spApprove_Distribution_Transfer_DRResult
+    {
+
+        private string _ResultMessage;
+
+        public spApprove_Distribution_Transfer_DRResult()
+        {
+        }
+
+        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_ResultMessage", DbType = "VarChar(1000)")]
+        public string ResultMessage
+        {
+            get
+            {
+                return this._ResultMessage;
+            }
+            set
+            {
+                if ((this._ResultMessage != value))
+                {
+                    this._ResultMessage = value;
                 }
             }
         }

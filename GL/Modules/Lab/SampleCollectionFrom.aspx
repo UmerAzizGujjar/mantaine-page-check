@@ -868,6 +868,12 @@
             window.open('../../ReportViewer.aspx?ReportName=LabBarcode&ReportTitle=Lab Barcode Report&Sample_ID=' + sampleID);
 
         }
+        function PrintQrCode() {
+            debugger;
+            var sampleID = $("#hdSample_ID").val();
+            window.open('../../ReportViewer.aspx?ReportName=LabQrCode&ReportTitle=Lab QrCode Report&Sample_ID=' + sampleID);
+
+        }
             function PrintOrder() {
         debugger;
         var sampleID = $("#hdSample_ID").val();
@@ -1529,6 +1535,9 @@
                 </div>
                 <div class="col-lg-2 col-md-3 col-sm-4">
                     <input id="btnPrintBarcode" class="btn btn-primry" type="button" value="Barcode" onclick="PrintBarcode()" />
+                </div>
+                <div class="col-lg-2 col-md-3 col-sm-4">
+                    <input id="btnPrintQrCode" class="btn btn-primry" type="button" value="QR Code" onclick="PrintQrCode()" />
                 </div>
                 <div class="col-lg-2 col-md-3 col-sm-4">
                     <input id="btnPrintOrder" class="btn btn-primry" type="button" value="Print Order" onclick="PrintOrder()" />

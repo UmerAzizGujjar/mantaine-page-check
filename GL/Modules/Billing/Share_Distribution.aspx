@@ -616,7 +616,7 @@
             var row = `
             <tr>
                 <td style="text-align:center;"><input type="hidden" id="Account_ID" name="Account_ID" value="${accountId}"><input type="text" id="Account_Code" name="Account_Code" value="${accountCode}" readonly></td>
-                <td style="text-align:center;"><input type="text" id="Account_Name" name="Account_Name" value="${doctorText}" readonly></td>
+                <td style="text-align:center;"><input type="hidden" id="Doctor_ID" name="Doctor_ID" value="${doctorId}"><input type="text" id="Account_Name" name="Account_Name" value="${doctorText}" readonly></td>
                 <td style="text-align:center;">
                     <input type="number" class="form-control total-amount" id="txtRevenuAmount" name="txtRevenuAmount" value="0">
                 </td>
@@ -654,6 +654,7 @@
                 </td>
 
                 <td style="text-align:center;">
+                <input type="hidden" name="Doctor_ID" value="${item.Doctor_ID}">
                     <input type="text" name="Account_Name" class="form-control"
                            value="${item.Account_Name}" readonly>
                 </td>
@@ -722,6 +723,7 @@
             $.each($('#tblDoctorShareDetails tbody tr'), function (key, value) {
                     debugger;
                     var Account_ID = $(value).find('input[name="Account_ID"]').val();
+                    var Doctor_ID = $(value).find('input[name="Doctor_ID"]').val();
                     var Account_Name = $(value).find('input[name="Account_Name"]').val();
                     var txtRevenuAmount = $(value).find('input[name="txtRevenuAmount"]').val();
                     var txtRevenuDiscPer = $(value).find('input[name="txtRevenuDiscPer"]').val();
@@ -729,7 +731,7 @@
                     var txtRevenuNetAmount = $(value).find('input[name="txtRevenuNetAmount"]').val();
 
                     IPDDistribution.push({
-                        Account_ID: Account_ID, Account_Name: Account_Name, txtRevenuAmount: txtRevenuAmount, txtRevenuDiscPer: txtRevenuDiscPer, txtRevenuDiscAmount: txtRevenuDiscAmount, txtRevenuNetAmount: txtRevenuNetAmount
+                        Account_ID: Account_ID, Doctor_ID: Doctor_ID, Account_Name: Account_Name, txtRevenuAmount: txtRevenuAmount, txtRevenuDiscPer: txtRevenuDiscPer, txtRevenuDiscAmount: txtRevenuDiscAmount, txtRevenuNetAmount: txtRevenuNetAmount
                     });
                 });
             var data = { Distribution_Id: Distribution_Id, IPD_Revenue: IPD_Revenue, Patient_ID: Patient_ID, Bill_ID: Bill_ID, Distributuion_Date: Distributuion_Date, remarks: remarks, DepartmentDistribution: DepartmentDistribution, IPDDistribution: IPDDistribution };

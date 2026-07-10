@@ -4408,18 +4408,6 @@
       <Column Name="Bonus_Tax" Type="System.Decimal" DbType="Decimal(18,2)" CanBeNull="true" />
     </Type>
   </Table>
-  <Table Name="dbo.IPD_Doctor_Distribution_Detail" Member="IPD_Doctor_Distribution_Details">
-    <Type Name="IPD_Doctor_Distribution_Detail">
-      <Column Name="Doctor_Distribution_Id" Type="System.Int32" DbType="Int NOT NULL IDENTITY" IsPrimaryKey="true" IsDbGenerated="true" CanBeNull="false" />
-      <Column Name="Distribution_Id" Type="System.Int32" DbType="Int" CanBeNull="true" />
-      <Column Name="Account_Id" Type="System.Int32" DbType="Int" CanBeNull="true" />
-      <Column Name="Share_Account_Name" Type="System.String" DbType="VarChar(500)" CanBeNull="true" />
-      <Column Name="Total_Amount" Type="System.Decimal" DbType="Decimal(18,2)" CanBeNull="true" />
-      <Column Name="Discount_Percentage" Type="System.Decimal" DbType="Decimal(18,2)" CanBeNull="true" />
-      <Column Name="Discount_Amount" Type="System.Decimal" DbType="Decimal(18,2)" CanBeNull="true" />
-      <Column Name="Net_Amount" Type="System.Decimal" DbType="Decimal(18,2)" CanBeNull="true" />
-    </Type>
-  </Table>
   <Table Name="dbo.IPD_Distribution_Detail" Member="IPD_Distribution_Details">
     <Type Name="IPD_Distribution_Detail">
       <Column Name="Distribution_Detail_Id" Type="System.Int32" DbType="Int NOT NULL IDENTITY" IsPrimaryKey="true" IsDbGenerated="true" CanBeNull="false" />
@@ -8168,6 +8156,20 @@
       <Column Name="bank_account_id" Type="System.String" DbType="NVarChar(150)" CanBeNull="true" />
     </Type>
   </Table>
+  <Table Name="dbo.IPD_Doctor_Distribution_Detail" Member="IPD_Doctor_Distribution_Details">
+    <Type Name="IPD_Doctor_Distribution_Detail">
+      <Column Name="Doctor_Distribution_Id" Type="System.Int32" DbType="Int NOT NULL IDENTITY" IsPrimaryKey="true" IsDbGenerated="true" CanBeNull="false" />
+      <Column Name="Distribution_Id" Type="System.Int32" DbType="Int" CanBeNull="true" />
+      <Column Name="Account_Id" Type="System.Int32" DbType="Int" CanBeNull="true" />
+      <Column Name="Share_Account_Name" Type="System.String" DbType="VarChar(500)" CanBeNull="true" />
+      <Column Name="Total_Amount" Type="System.Decimal" DbType="Decimal(18,2)" CanBeNull="true" />
+      <Column Name="Discount_Percentage" Type="System.Decimal" DbType="Decimal(18,2)" CanBeNull="true" />
+      <Column Name="Discount_Amount" Type="System.Decimal" DbType="Decimal(18,2)" CanBeNull="true" />
+      <Column Name="Net_Amount" Type="System.Decimal" DbType="Decimal(18,2)" CanBeNull="true" />
+      <Column Name="doc_id" Type="System.Int32" DbType="Int" CanBeNull="true" />
+      <Column Name="ispayable" Type="System.Boolean" DbType="Bit" CanBeNull="true" />
+    </Type>
+  </Table>
   <Function Name="dbo.GetDataValueName" Method="GetDataValueName" IsComposable="true">
     <Parameter Name="ValueSetName" Parameter="valueSetName" Type="System.String" DbType="VarChar(150)" />
     <Parameter Name="DataValueName" Parameter="dataValueName" Type="System.String" DbType="VarChar(50)" />
@@ -10336,26 +10338,11 @@
       <Column Name="Status" Type="System.String" DbType="NVarChar(150)" CanBeNull="true" />
     </ElementType>
   </Function>
-  <Function Name="dbo.SpApprove_OPD" Method="SpApprove_OPD">
-    <Parameter Name="Pat_ID" Parameter="pat_ID" Type="System.Int64" DbType="BigInt" />
-    <Parameter Name="Pat_Category" Parameter="pat_Category" Type="System.String" DbType="NVarChar(150)" />
-    <Parameter Name="user_id" Type="System.Guid" DbType="UniqueIdentifier" />
-    <ElementType Name="SpApprove_OPDResult">
-      <Column Name="Message" Type="System.String" DbType="VarChar(300)" CanBeNull="true" />
-    </ElementType>
-  </Function>
   <Function Name="dbo.SpApprove_OPDShare" Method="SpApprove_OPDShare">
     <Parameter Name="Pat_ID" Parameter="pat_ID" Type="System.Int64" DbType="BigInt" />
     <Parameter Name="user_id" Type="System.Guid" DbType="UniqueIdentifier" />
     <ElementType Name="SpApprove_OPDShareResult">
       <Column Name="Message" Type="System.String" DbType="VarChar(18) NOT NULL" CanBeNull="false" />
-    </ElementType>
-  </Function>
-  <Function Name="dbo.sp_ApprovePatientCardFee" Method="sp_ApprovePatientCardFee">
-    <Parameter Name="Pat_Id" Parameter="pat_Id" Type="System.Int32" DbType="Int" />
-    <Parameter Name="UserId" Parameter="userId" Type="System.Guid" DbType="UniqueIdentifier" />
-    <ElementType Name="sp_ApprovePatientCardFeeResult">
-      <Column Name="Message" Type="System.String" DbType="VarChar(300)" CanBeNull="true" />
     </ElementType>
   </Function>
   <Function Name="dbo.getUserName" Method="getUserName" IsComposable="true">
@@ -11916,38 +11903,6 @@
       <Column Name="G_Phone" Type="System.String" DbType="VarChar(500)" CanBeNull="true" />
     </ElementType>
   </Function>
-  <Function Name="dbo.sp_Load_Payables" Method="sp_Load_Payables">
-    <ElementType Name="sp_Load_PayablesResult">
-      <Column Name="Doctor_Id" Type="System.String" DbType="VarChar(100)" CanBeNull="true" />
-      <Column Name="Name" Type="System.String" DbType="VarChar(50)" CanBeNull="true" />
-      <Column Name="Balance" Type="System.Decimal" DbType="Decimal(38,2)" CanBeNull="true" />
-    </ElementType>
-  </Function>
-  <Function Name="dbo.sp_Load_Payables_Details" Method="sp_Load_Payables_Details">
-    <Parameter Name="DocId" Parameter="docId" Type="System.Int32" DbType="Int" />
-    <ElementType Name="sp_Load_Payables_DetailsResult">
-      <Column Name="Doctor_Id" Type="System.String" DbType="VarChar(100)" CanBeNull="true" />
-      <Column Name="Bill_ID" Type="System.Int32" DbType="Int" CanBeNull="true" />
-      <Column Name="Bill_No" Type="System.String" DbType="VarChar(50)" CanBeNull="true" />
-      <Column Name="Bill_Date" Type="System.DateTime" DbType="DateTime" CanBeNull="true" />
-      <Column Name="Bill_Details_ID" Type="System.Int32" DbType="Int" CanBeNull="true" />
-      <Column Name="Patient_ID" Type="System.Int32" DbType="Int NOT NULL" CanBeNull="false" />
-      <Column Name="Patient_No" Type="System.Int32" DbType="Int" CanBeNull="true" />
-      <Column Name="In_Patient_ID" Type="System.Int64" DbType="BigInt" CanBeNull="true" />
-      <Column Name="Full_Name" Type="System.String" DbType="VarChar(100)" CanBeNull="true" />
-      <Column Name="Admission_Date" Type="System.DateTime" DbType="DateTime" CanBeNull="true" />
-      <Column Name="Discharge_Date" Type="System.DateTime" DbType="DateTime" CanBeNull="true" />
-      <Column Name="Account_Id" Type="System.Int32" DbType="Int" CanBeNull="true" />
-      <Column Name="Item_ID" Type="System.Int32" DbType="Int" CanBeNull="true" />
-      <Column Name="Item_Name" Type="System.String" DbType="VarChar(200)" CanBeNull="true" />
-      <Column Name="BillType" Type="System.String" DbType="VarChar(20)" CanBeNull="true" />
-      <Column Name="Test_Department" Type="System.String" DbType="VarChar(150)" CanBeNull="true" />
-      <Column Name="Emp_Name" Type="System.String" DbType="VarChar(50)" CanBeNull="true" />
-      <Column Name="Doctor_Share" Type="System.Decimal" DbType="Decimal(20,4)" CanBeNull="true" />
-      <Column Name="isPayable" Type="System.Int32" DbType="Int" CanBeNull="true" />
-      <Column Name="SourceType" Type="System.String" DbType="VarChar(7) NOT NULL" CanBeNull="false" />
-    </ElementType>
-  </Function>
   <Function Name="dbo.spSaleReturnInvoiceDetails" Method="spSaleReturnInvoiceDetails">
     <Parameter Name="BillId" Parameter="billId" Type="System.Int32" DbType="Int" />
     <Parameter Name="wareHouse" Type="System.String" DbType="VarChar(50)" />
@@ -12470,17 +12425,6 @@
       <Column Name="" Member="Column1" Type="System.String" DbType="VarChar(1000)" CanBeNull="true" />
     </ElementType>
   </Function>
-  <Function Name="dbo.spApprove_Distribution_Transfer_DR" Method="spApprove_Distribution_Transfer_DR">
-    <Parameter Name="maxVoucherId" Type="System.Int32" DbType="Int" />
-    <Parameter Name="Bill_Det_ID" Parameter="bill_Det_ID" Type="System.Int32" DbType="Int" />
-    <Parameter Name="Patient_ID" Parameter="patient_ID" Type="System.Int32" DbType="Int" />
-    <Parameter Name="Share_Amnt" Parameter="share_Amnt" Type="System.Decimal" DbType="Decimal(18,2)" />
-    <Parameter Name="Account_ID" Parameter="account_ID" Type="System.Int32" DbType="Int" />
-    <Parameter Name="RecordType" Parameter="recordType" Type="System.String" DbType="VarChar(10)" />
-    <ElementType Name="spApprove_Distribution_Transfer_DRResult">
-      <Column Name="ResultMessage" Type="System.String" DbType="VarChar(1000)" CanBeNull="true" />
-    </ElementType>
-  </Function>
   <Function Name="dbo.spApprove_Distribution_Transfer_Master" Method="spApprove_Distribution_Transfer_Master">
     <Parameter Name="Created_By" Parameter="created_By" Type="System.Guid" DbType="UniqueIdentifier" />
     <ElementType Name="spApprove_Distribution_Transfer_MasterResult">
@@ -12880,6 +12824,64 @@
       <Column Name="Gender" Type="System.String" DbType="VarChar(10)" CanBeNull="true" />
       <Column Name="Patient_ID1" Type="System.Int32" DbType="Int NOT NULL" CanBeNull="false" />
       <Column Name="Reg_PatId1" Type="System.Int32" DbType="Int" CanBeNull="true" />
+    </ElementType>
+  </Function>
+  <Function Name="dbo.sp_Load_Payables" Method="sp_Load_Payables">
+    <ElementType Name="sp_Load_PayablesResult">
+      <Column Name="Doctor_Id" Type="System.Int32" DbType="Int" CanBeNull="true" />
+      <Column Name="Name" Type="System.String" DbType="VarChar(50)" CanBeNull="true" />
+      <Column Name="Balance" Type="System.Decimal" DbType="Decimal(38,2)" CanBeNull="true" />
+    </ElementType>
+  </Function>
+  <Function Name="dbo.SpApprove_OPD" Method="SpApprove_OPD">
+    <Parameter Name="Pat_ID" Parameter="pat_ID" Type="System.Int64" DbType="BigInt" />
+    <Parameter Name="Pat_Category" Parameter="pat_Category" Type="System.String" DbType="NVarChar(150)" />
+    <Parameter Name="user_id" Type="System.Guid" DbType="UniqueIdentifier" />
+    <ElementType Name="SpApprove_OPDResult">
+      <Column Name="Message" Type="System.String" DbType="VarChar(300)" CanBeNull="true" />
+    </ElementType>
+  </Function>
+  <Function Name="dbo.sp_ApprovePatientCardFee" Method="sp_ApprovePatientCardFee">
+    <Parameter Name="Pat_Id" Parameter="pat_Id" Type="System.Int32" DbType="Int" />
+    <Parameter Name="UserId" Parameter="userId" Type="System.Guid" DbType="UniqueIdentifier" />
+    <ElementType Name="sp_ApprovePatientCardFeeResult">
+      <Column Name="Message" Type="System.String" DbType="VarChar(300)" CanBeNull="true" />
+    </ElementType>
+  </Function>
+  <Function Name="dbo.sp_Load_Payables_Details" Method="sp_Load_Payables_Details">
+    <Parameter Name="DocId" Parameter="docId" Type="System.Int32" DbType="Int" />
+    <ElementType Name="sp_Load_Payables_DetailsResult">
+      <Column Name="Doctor_Id" Type="System.Int32" DbType="Int" CanBeNull="true" />
+      <Column Name="Bill_ID" Type="System.Int32" DbType="Int" CanBeNull="true" />
+      <Column Name="Bill_No" Type="System.String" DbType="VarChar(50)" CanBeNull="true" />
+      <Column Name="Bill_Date" Type="System.DateTime" DbType="DateTime" CanBeNull="true" />
+      <Column Name="Bill_Details_ID" Type="System.Int32" DbType="Int" CanBeNull="true" />
+      <Column Name="Patient_ID" Type="System.Int32" DbType="Int NOT NULL" CanBeNull="false" />
+      <Column Name="Patient_No" Type="System.Int32" DbType="Int" CanBeNull="true" />
+      <Column Name="In_Patient_ID" Type="System.Int64" DbType="BigInt" CanBeNull="true" />
+      <Column Name="Full_Name" Type="System.String" DbType="VarChar(100)" CanBeNull="true" />
+      <Column Name="Admission_Date" Type="System.DateTime" DbType="DateTime" CanBeNull="true" />
+      <Column Name="Discharge_Date" Type="System.DateTime" DbType="DateTime" CanBeNull="true" />
+      <Column Name="Account_Id" Type="System.Int32" DbType="Int" CanBeNull="true" />
+      <Column Name="Item_ID" Type="System.Int32" DbType="Int" CanBeNull="true" />
+      <Column Name="Item_Name" Type="System.String" DbType="VarChar(200)" CanBeNull="true" />
+      <Column Name="BillType" Type="System.String" DbType="VarChar(20)" CanBeNull="true" />
+      <Column Name="Test_Department" Type="System.String" DbType="VarChar(150)" CanBeNull="true" />
+      <Column Name="Emp_Name" Type="System.String" DbType="VarChar(50)" CanBeNull="true" />
+      <Column Name="Doctor_Share" Type="System.Decimal" DbType="Decimal(20,4)" CanBeNull="true" />
+      <Column Name="isPayable" Type="System.Int32" DbType="Int" CanBeNull="true" />
+      <Column Name="SourceType" Type="System.String" DbType="VarChar(7) NOT NULL" CanBeNull="false" />
+    </ElementType>
+  </Function>
+  <Function Name="dbo.spApprove_Distribution_Transfer_DR" Method="spApprove_Distribution_Transfer_DR">
+    <Parameter Name="maxVoucherId" Type="System.Int32" DbType="Int" />
+    <Parameter Name="Bill_Det_ID" Parameter="bill_Det_ID" Type="System.Int32" DbType="Int" />
+    <Parameter Name="Patient_ID" Parameter="patient_ID" Type="System.Int32" DbType="Int" />
+    <Parameter Name="Share_Amnt" Parameter="share_Amnt" Type="System.Decimal" DbType="Decimal(18,2)" />
+    <Parameter Name="Account_ID" Parameter="account_ID" Type="System.Int32" DbType="Int" />
+    <Parameter Name="RecordType" Parameter="recordType" Type="System.String" DbType="VarChar(50)" />
+    <ElementType Name="spApprove_Distribution_Transfer_DRResult">
+      <Column Name="ResultMessage" Type="System.String" DbType="VarChar(1000)" CanBeNull="true" />
     </ElementType>
   </Function>
 </Database>

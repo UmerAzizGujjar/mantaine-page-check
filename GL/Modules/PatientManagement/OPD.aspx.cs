@@ -325,16 +325,16 @@ namespace PMS.Modules.PatientManagement
             {
                 object Details;
 
-                //if (company_name == "As-Siraat Serving Humanity")
-                //{
-                //    // Call client-specific SP
-                //    Details = db.SpApprove_OPD_AsSiraat(Convert.ToInt32(pat_id), Pat_Category, user_id);
-                //}
-                //else
-                //{
+                if (company_name == "As-Siraat Serving Humanity")
+                {
+                    // Call client-specific SP
+                    Details = db.SpApprove_OPD_AsSiraat(Convert.ToInt32(pat_id), Pat_Category, user_id);
+                }
+                else
+                {
                     // Default for other clients (e.g., Noor Hospital, KDC Lab, etc.)
                     Details = db.SpApprove_OPD(Convert.ToInt32(pat_id), Pat_Category, user_id);
-               // }
+                }
 
                 return new JavaScriptSerializer().Serialize(Details);
             }
@@ -2908,13 +2908,15 @@ namespace PMS.Modules.PatientManagement
                         return new JavaScriptSerializer().Serialize(new { hasActiveOPD = false });
                     }
 
-                    // Check if patient has active OPD record for this specific department
-                    var activeOPD = (from opd in db.Out_Patients
-                                    join p in db.Patients on opd.Patient_ID equals p.Patient_ID
-                                    where opd.Reg_PatId == regPatId
-                                          && opd.Discharge == false
-                                          && p.Patient_Main_Category == department
-                                    select opd).FirstOrDefault();
+                    // Calculate the time 24 hours ago
+                    var past24Hours = DateTime.Now.AddHours(-24);
+
+                    // Check if patient has active OPD record for this specific department in the last 24 hours
+                    var activeOPD = (from opd in db.Patients
+                                     where opd.Reg_PatId == regPatId
+                                           && opd.Patient_Main_Category == department
+                                           && opd.Created_Time >= past24Hours
+                                     select opd).FirstOrDefault();
 
                     return new JavaScriptSerializer().Serialize(new 
                     { 
