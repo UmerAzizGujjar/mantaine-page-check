@@ -238,6 +238,7 @@
                         });
             }
             var autoRecvOPD = '0';
+            var billingServicesDeptWise = '0';
             var Appointment;
             function CheckAppointmentAllow() {
 
@@ -6058,7 +6059,17 @@
                             else if ((lblPatientCategory == "Insurance Company") && (lblIn_Patient_Category == "General")) {
                                 var tokeinpt = $('#token-input-txtAddService').val();
                                 if (typeof tokeinpt === 'undefined') {
-                                    tokenInputs('txtAddService', 'INV_ItemsForBilling');
+                                    if (billingServicesDeptWise == '01') {
+                                        var deptId = $('#BillDepartment').val();
+                                        if (deptId != '0' && deptId != '') {
+                                            tokenInputs('txtAddService', 'INV_ItemsForBilling&DeptID=' + deptId);
+                                        } else {
+                                            $('#txtAddService').attr('placeholder', 'Select a Bill Department first');
+                                            $('#txtAddService').prop('disabled', true);
+                                        }
+                                    } else {
+                                        tokenInputs('txtAddService', 'INV_ItemsForBilling');
+                                    }
                                 }
                             }
                         }
@@ -6073,7 +6084,17 @@
                     else if ((lblPatientCategory == "Private") && (lblIn_Patient_Category == "General")) {
                         var tokeinpt = $('#token-input-txtAddService').val();
                         if (typeof tokeinpt === 'undefined') {
-                            tokenInputs('txtAddService', 'INV_ItemsForBilling');
+                            if (billingServicesDeptWise == '01') {
+                                var deptId = $('#BillDepartment').val();
+                                if (deptId != '0' && deptId != '') {
+                                    tokenInputs('txtAddService', 'INV_ItemsForBilling&DeptID=' + deptId);
+                                } else {
+                                    $('#txtAddService').attr('placeholder', 'Select a Bill Department first');
+                                    $('#txtAddService').prop('disabled', true);
+                                }
+                            } else {
+                                tokenInputs('txtAddService', 'INV_ItemsForBilling');
+                            }
                         }
                     }
 
@@ -6094,14 +6115,34 @@
                         else {
                             var tokeinpt = $('#token-input-txtAddService').val();
                             if (typeof tokeinpt === 'undefined') {
-                                tokenInputs('txtAddService', 'INV_ItemsForBilling');
+                                if (billingServicesDeptWise == '01') {
+                                    var deptId = $('#BillDepartment').val();
+                                    if (deptId != '0' && deptId != '') {
+                                        tokenInputs('txtAddService', 'INV_ItemsForBilling&DeptID=' + deptId);
+                                    } else {
+                                        $('#txtAddService').attr('placeholder', 'Select a Bill Department first');
+                                        $('#txtAddService').prop('disabled', true);
+                                    }
+                                } else {
+                                    tokenInputs('txtAddService', 'INV_ItemsForBilling');
+                                }
                             }
                         }
                     }
                     else {
                         var tokeinpt = $('#token-input-txtAddService').val();
                         if (typeof tokeinpt === 'undefined') {
-                            tokenInputs('txtAddService', 'INV_ItemsForBilling');
+                            if (billingServicesDeptWise == '01') {
+                                var deptId = $('#BillDepartment').val();
+                                if (deptId != '0' && deptId != '') {
+                                    tokenInputs('txtAddService', 'INV_ItemsForBilling&DeptID=' + deptId);
+                                } else {
+                                    $('#txtAddService').attr('placeholder', 'Select a Bill Department first');
+                                    $('#txtAddService').prop('disabled', true);
+                                }
+                            } else {
+                                tokenInputs('txtAddService', 'INV_ItemsForBilling');
+                            }
                         }
                     }
 
@@ -7284,6 +7325,19 @@
                 });
                 CheckReceiptsUpdateonBilling();
                 CheckCNICUpdateonCondition();
+                $.ajax({
+                    type: "POST",
+                    url: "BillingProcess.aspx/CheckBillingServicesDeptWise",
+                    data: "{}",
+                    contentType: "application/json; charset=utf-8",
+                    dataType: "json",
+                    success: function (response) {
+                        billingServicesDeptWise = JSON.parse(response.d);
+                    },
+                    error: function (error) {
+                        billingServicesDeptWise = '0';
+                    }
+                });
 
                 jQuery(function ($) {
                     MaskedInput({
@@ -7462,6 +7516,23 @@
                         return;
                     }
                     $(this).datepicker('show');
+                });
+
+                $('#BillDepartment').change(function () {
+                    if (billingServicesDeptWise == '01') {
+                        var deptId = $(this).val();
+                        if (deptId == '0' || deptId == '') {
+                            $('#txtAddService').attr('placeholder', 'Select a Bill Department first');
+                            $('#txtAddService').prop('disabled', true);
+                            if ($('#txtAddService').tokenInput) {
+                                $('#txtAddService').tokenInput("clear");
+                            }
+                        } else {
+                            $('#txtAddService').prop('disabled', false);
+                            $('#txtAddService').attr('placeholder', 'Search Service...');
+                            tokenInputs('txtAddService', 'INV_ItemsForBilling&DeptID=' + deptId);
+                        }
+                    }
                 });
 
             });  // document.ready ends

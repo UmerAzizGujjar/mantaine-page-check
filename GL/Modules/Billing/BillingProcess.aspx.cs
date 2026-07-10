@@ -133,7 +133,15 @@ namespace PMS
                         ).FirstOrDefault();
             return (new JavaScriptSerializer()).Serialize(dept);
         }
-
+        [WebMethod]
+        public static string CheckBillingServicesDeptWise()
+        {
+            DataBaseDataContext db = new DataBaseDataContext(DBClass.ConnectionString());
+            var dept = (from data in db.sys_Parms
+                        where data.Name == "Billing Services Load Dept Wise"
+                        select data.Code).FirstOrDefault();
+            return (new JavaScriptSerializer()).Serialize(dept ?? "0");
+        }
 
         [WebMethod]
         public static string GetCardioTests()
