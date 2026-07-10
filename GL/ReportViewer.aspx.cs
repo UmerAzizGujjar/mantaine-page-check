@@ -1549,12 +1549,24 @@ namespace PMS
             {
                 if (Request.QueryString["OPD_ID"] != null)
                 {
-
+                    var OPDID = Request.QueryString["OPD_ID"].ToString();
                     var logoPath = DBClass.getField("SELECT dbo.GetCompanyLogo()");
+                    var address = DBClass.getField("select Company_Address from Sys_Companys where Company_ID = " + AppConfig.Company_ID + "");
 
                     reportPath += "Patients/rpt_OPD_Patient_Print.rpt";
                     rd.Load(reportPath);
-                    rd.SetParameterValue("@OPD_ID", Request.QueryString["OPD_ID"]);
+                    rd.SetParameterValue("@OPD_ID", OPDID);
+                    try
+                    {
+                        rd.SetParameterValue("@OPD_ID", OPDID, rd.Subreports[0].Name.ToString());
+                        rd.SetParameterValue("CompanyName", AppConfig.Company_Name, rd.Subreports[0].Name.ToString());
+                        rd.SetParameterValue("CompanyLogo", logoPath, rd.Subreports[0].Name.ToString());
+                        rd.SetParameterValue("Address", DBClass.getField("select Company_Address from Sys_Companys where Company_ID = " + AppConfig.Company_ID + ""), rd.Subreports[0].Name.ToString());
+                    }
+                    catch
+                    {
+                        // Subreport parameter doesn't exist on this report variant - ignore silently
+                    }
                     rd.SetParameterValue("CompanyName", AppConfig.Company_Name);
                     rd.SetParameterValue("CompanyLogo", logoPath);
                     rd.SetParameterValue("Address", DBClass.getField("select Company_Address from Sys_Companys where Company_ID = " + AppConfig.Company_ID + ""));
