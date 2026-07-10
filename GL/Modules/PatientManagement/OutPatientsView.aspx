@@ -22,7 +22,28 @@
 
 
         function Edit(id) {
-            window.open("NewOutPatient.aspx?ID=" + id + "");
+            var newWin = window.open('', '_blank');
+            $.ajax({
+                type: "POST",
+                url: "OutPatientsView.aspx/GetOutPatientNewFormRedirectPermission",
+                contentType: "application/json; charset=utf-8",
+                dataType: "json",
+                success: function (response) {
+                    var result = JSON.parse(response.d);
+                    var url = result.useNewForm
+                        ? "NewOutPatient.aspx?ID=" + id
+                        : "OutPatients.aspx?ID=" + id;
+                    if (newWin) {
+                        newWin.location.href = url;
+                    } else {
+                        window.open(url, '_blank');
+                    }
+                },
+                error: function () {
+                    if (newWin) newWin.close();
+                    window.open("NewOutPatient.aspx?ID=" + id + "");
+                }
+            });
         }
 
         function deleteConfirm(anchorTag) {
@@ -42,6 +63,26 @@
                     alert("An error occurred while deleting the record.");
                 });
             }
+        }
+
+
+        function PrintVoucher(id) {
+            debugger;
+
+            var locationInfo = window.location;
+            var url = '../../ReportViewer.aspx?ReportName=Voucher&ReportTitle=OPD Voucher&TransID=' + id + '&TransType=OPDShare';
+
+            if (!locationInfo.origin.includes('localhost') || locationInfo.origin.includes('localhost')) {
+                var urlInfo = window.location.href.split('/');
+                var ip = urlInfo[2];
+                var foldername = urlInfo[3];
+
+                url = 'http://' + ip + '/' + foldername +
+                    '/ReportViewer.aspx?ReportName=Voucher&ReportTitle=OPD Voucher&TransID=' +
+                    id + '&TransType=OPDShare';
+            }
+
+            window.open(url, '_blank');
         }
 
 
@@ -137,10 +178,15 @@
                     },
                     {
                         render: function (data, type, full) {
-                            var res = '<a href="#" class="editListBtn" onclick="Edit(' + full.Out_Patient_ID + ')" style="border-radius: 4px;margin-right: 4px;padding: 5px 8px 5px 8px;"><i class="fa fa-pencil"></i></a>';
-                            var Del = '<a class="delListBtn" style="border-radius: 4px;margin-left: 4px;color: white;padding: 5px 8px 5px 8px;" href="#" data-id="' + full.Out_Patient_ID + '" onclick="deleteConfirm(this)"><i class="fa fa-trash"></i></a>';
-                            var print = '<a class="printListBtn" style="border-radius: 4px;margin-left: 4px;color: white;padding: 5px 8px 5px 8px;" href="#" onclick="PrintoutPatient(' + full.Out_Patient_ID + ')"><i class="fa fa-print"></i></a>';
-                            return res + Del + print;
+
+                            var res = '<a href="#" class="editListBtn" onclick="Edit(' + full.Out_Patient_ID + ')" style="border-radius:4px;margin-right:4px;padding:5px 8px;"><i class="fa fa-pencil"></i></a>';
+                            var Del = '<a class="delListBtn" href="#" data-id="' + full.Out_Patient_ID + '" onclick="deleteConfirm(this)" style="border-radius:4px;margin-left:4px;color:white;padding:5px 8px;"><i class="fa fa-trash"></i></a>';
+                            var print = '<a class="printListBtn" href="#" onclick="PrintoutPatient(' + full.Out_Patient_ID + ')" style="border-radius:4px;margin-left:4px;color:white;padding:5px 8px;"><i class="fa fa-print"></i></a>';
+                            var voucher = "";
+                            if (full.Status === "Approved") {
+                                voucher = '<a class="printListBtn" href="#" onclick="PrintVoucher(' + full.Out_Patient_ID + ')" title="Print Voucher" style="border-radius:4px;margin-left:4px;color:black;padding:5px 8px;"><i class="fa fa-money"></i></a>';
+                            }
+                            return res + Del + print + voucher;
                         },
                         "width": "10%",
                         "orderable": false

@@ -1239,6 +1239,8 @@ function SaveData() {
     var IssueCard = $('#chckcardissue').prop('checked');
     var FreeCheck = $('#chckfreecheck').prop('checked');
     var Remarks = $('#txtremarks').val() || "";
+    var bank_cash = $('#ddlbankcash').val();
+    var bank_account_id = $('#ddlbank').val();
 
     if (discount < 100.0 && Fees == 0.0) {
 
@@ -1386,6 +1388,17 @@ function SaveData() {
         return;
     }
 
+    if (bank_cash === "02" && (!bank_account_id || bank_account_id === "")) {
+        Swal.fire({
+            icon: 'warning',
+            title: 'Bank Account Required!',
+            text: 'Please select a bank account for Bank payment.',
+            confirmButtonText: 'OK',
+            confirmButtonColor: '#3085d6'
+        });
+        return;
+    }
+
     var isPatientAdmitted = false;
 
     $.ajax({
@@ -1478,7 +1491,9 @@ function SaveData() {
         EmployeeName: EmployeeName,
         EmployeeDept: EmployeeDept,
         StudentName: StudentName,
-        Remarks: Remarks
+        Remarks: Remarks,
+        bank_cash: bank_cash,
+        bank_account_id: bank_account_id
     };
 
     // 👇 Optional: Log to verify
@@ -1782,7 +1797,9 @@ function loadPatientDetail(OPDID) {
             $('#ddlsection').val(data.Section).trigger('change').attr('disabled', true);
             $('#ddlCashInHand').val(data.account_id).trigger('change').attr('disabled', true);
 
-
+            var bankCash = data.bank_cash || "01";
+            $('#ddlbankcash').val(bankCash).trigger('change.select2');
+            LoadBankAccounts(data.bank_account_id);
 
 
             $('#txtfees').val(data.Receipt_Amount).attr('disabled', true);

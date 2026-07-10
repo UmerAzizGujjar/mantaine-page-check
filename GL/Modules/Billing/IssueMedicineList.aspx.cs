@@ -49,7 +49,8 @@ namespace PMS
                                             Discount_Amount = AB.Discount_Amount,
                                             Balance_Amount = AB.Balance_Amount,
                                             FBR_Number = AB.FBR_No ?? "",
-                                            Main_Department = _dbContext.GetDataValueName("Mode Of Registration", AB.Main_Department),
+                                            Pharma_trans_Type = AB.Pharma_trans_Type,
+                                            pharmacy_Department = _dbContext.GetDataValueName("Patient Main Category", AB.pharmacy_Department),
                                         };
 
                     var FilteredCount = IssueMedicine.Count();

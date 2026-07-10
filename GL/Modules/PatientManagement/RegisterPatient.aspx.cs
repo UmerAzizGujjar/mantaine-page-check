@@ -184,6 +184,8 @@ namespace PMS.Modules.PatientManagement
             public decimal Card_fee { get; set; }
             public bool Monitoring { get; set; }
             public bool IsRefunded { get; set; }
+            public string bank_cash { get; set; }
+            public string bank_account_id { get; set; }
 
         }
 
@@ -325,7 +327,8 @@ namespace PMS.Modules.PatientManagement
                       string Mobile, string Date_Of_Birth, string CNIC, string Address,
                       string PatientID, string martail_status, string Age, string city, string area,
                       string city_val, string area_val, string Blood_Group, string State, string Country,
-                      string cardfee, string OtherCnic, bool Monitoring, string AntiForgeryToken)
+                       string cardfee, string OtherCnic, bool Monitoring, string AntiForgeryToken,
+                       string bank_cash, string bank_account_id)
 
         {
 
@@ -477,6 +480,9 @@ namespace PMS.Modules.PatientManagement
                     pat.Blood_Group = Blood_Group;
                     pat.Country = Country;
                     pat.Monitoring = Monitoring;
+                    pat.bank_cash = bank_cash;
+                    pat.bank_account_id = bank_account_id;
+                    pat.Reprint = "1";
 
                     // Card Fee Safe Parse
                     decimal cardFeeValue = 0;
@@ -620,10 +626,12 @@ namespace PMS.Modules.PatientManagement
                                       rg.val_area,
                                       rg.pat_id,
                                       rg.other_cnic,
-                                      rg.Monitoring,
-                                      rg.DOB,
-                                      rg.IsRefunded
-                                  }).FirstOrDefault();
+                                       rg.Monitoring,
+                                       rg.DOB,
+                                       rg.IsRefunded,
+                                       rg.bank_cash,
+                                       rg.bank_account_id
+                                   }).FirstOrDefault();
 
                 if (patientRaw == null)
                     return new JavaScriptSerializer().Serialize((object)null);
@@ -652,7 +660,9 @@ namespace PMS.Modules.PatientManagement
                           ? patientRaw.DOB.Value.ToString("dd/MM/yyyy")
                           : "",
                           Monitoring = patientRaw.Monitoring ?? false,
-                          IsRefunded = patientRaw.IsRefunded ?? false
+                          IsRefunded = patientRaw.IsRefunded ?? false,
+                          bank_cash = patientRaw.bank_cash ?? "",
+                          bank_account_id = patientRaw.bank_account_id ?? ""
                 };
 
                 return new JavaScriptSerializer().Serialize(patient);
@@ -700,6 +710,66 @@ namespace PMS.Modules.PatientManagement
                 return "0";
             }
         }
-        
+        [WebMethod]
+        public static string GetBankAccounts()
+        {
+            try
+            {
+                using (var db = new DataBaseDataContext(DBClass.ConnectionString()))
+                {
+                    var accounts = (from acc in db.GL_Accounts
+                                    where acc.Bank == true
+                                    select new
+                                    {
+                                        id = acc.Account_ID,
+                                        name = acc.Account_Name
+                                    }).ToList();
+
+                    return new JavaScriptSerializer().Serialize(accounts);
+                }
+            }
+            catch (Exception ex)
+            {
+                // Log error if needed
+                return "[]"; // return empty array on error
+            }
+        }
+        [WebMethod]
+        public static string IncrementReprintCount(string regId)
+        {
+            try
+            {
+                if (string.IsNullOrEmpty(regId))
+                    return "ERROR: Invalid patient ID";
+
+                using (var db = new DataBaseDataContext())
+                {
+                    var patient = db.Reg_patients.FirstOrDefault(p => p.pat_id == Convert.ToInt32(regId));
+
+                    if (patient == null)
+                        return "ERROR: Patient not found";
+
+                    
+                    int currentCount = 1;
+                    if (!string.IsNullOrEmpty(patient.Reprint) && int.TryParse(patient.Reprint, out int parsed))
+                    {
+                        currentCount = parsed;
+                    }
+
+                    
+                    currentCount++;
+                    patient.Reprint = currentCount.ToString();
+
+                    db.SubmitChanges();
+
+                    return "SUCCESS:" + currentCount.ToString();
+                }
+            }
+            catch (Exception ex)
+            {
+                return "ERROR: " + ex.Message;
+            }
+        }
+
     }
 }

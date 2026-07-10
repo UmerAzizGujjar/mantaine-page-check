@@ -163,6 +163,7 @@
             LoadProcedureTemplates();
             CheckProcedureTabPermission();
             LoadMedicationDoctor();
+            CheckDischargeDetailsPermission();
 
             if (typeof CKEDITOR !== 'undefined') {
                 CKEDITOR.replace('txtViewTemplateContent', {
@@ -446,7 +447,8 @@
             var id = '<%=Request.QueryString["ID"]%>';
             if (id != "") {
                 setTimeout(function () {
-
+                    AppendPrimaryDiagnosisHistory(id);
+                    AppendFinalDiagnosisHistory(id);
                 }, 1000);
             }
             else {
@@ -465,9 +467,102 @@
                 GetMedicineStock();
             });
 
+            fillPrimaryDiagnosis("");
+            fillFinalDiagnosis("");
+
+            $('#tabPrimaryDiagnosisSearch').on('input', function () {
+                fillPrimaryDiagnosis($(this).val().trim());
+            });
+            $('#tabFinalDiagnosisSearch').on('input', function () {
+                fillFinalDiagnosis($(this).val().trim());
+            });
+
+            $(document).on('change', '.Primary_Diagnosis_checkbox', function () {
+                var id = $(this).val();
+                var name = $(this).next('label').text();
+                if ($(this).is(':checked')) handlePrimaryDiagnosisRow(id, name);
+                else removePrimaryDiagnosisRow(id);
+            });
+            $(document).on('input', '.primaryDiagnosisTextbox', function () {
+                var id = $(this).attr('id').replace('txtPrimaryDiagnosis_', '');
+                var name = $(this).prevAll('label').text();
+                var chk = $('#chk_Primary_Diagnosis_' + id);
+                if (!chk.is(':checked')) chk.prop('checked', true);
+                handlePrimaryDiagnosisRow(id, name);
+            });
+            $(document).on('change', '.Final_Diagnosis_checkbox', function () {
+                var id = $(this).val();
+                var name = $(this).next('label').text();
+                if ($(this).is(':checked')) handleFinalDiagnosisRow(id, name);
+                else removeFinalDiagnosisRow(id);
+            });
+            $(document).on('input', '.finalDiagnosisTextbox', function () {
+                var id = $(this).attr('id').replace('txtFinalDiagnosis_', '');
+                var name = $(this).prevAll('label').text();
+                var chk = $('#chk_Final_Diagnosis_' + id);
+                if (!chk.is(':checked')) chk.prop('checked', true);
+                handleFinalDiagnosisRow(id, name);
+            });
+
 
 
         });
+        // InPatient Discharge Details button
+        $(document).on('click', '#btnAddDischargeDetails', function () {
+            var InPatientID = $('#ctl00_MainContent_txtIn_Patient_ID').val();
+            var newWin = window.open('', '_blank');
+            $.ajax({
+                type: "POST",
+                url: "InPatientsCase.aspx/CheckFinalBillAndDischargePermission",
+                data: JSON.stringify({ InPatientID: parseInt(InPatientID) }),
+                contentType: "application/json; charset=utf-8",
+                dataType: "json",
+                success: function (response) {
+                    var result = JSON.parse(response.d);
+                    if (result.allowed) {
+                        var url = 'NewOutPatient.aspx?Type=InPatientDischarge&InPatientID=' + InPatientID;
+                        if (result.existingOutPatientID && result.existingOutPatientID != 0) {
+                            url += '&ID=' + result.existingOutPatientID;
+                        }
+                        if (newWin) {
+                            newWin.location.href = url;
+                        } else {
+                            window.open(url, '_blank');
+                        }
+                    } else {
+                        if (newWin) newWin.close();
+                        Swal.fire({
+                            icon: 'warning',
+                            title: 'Cannot Add Discharge Details',
+                            text: result.reason
+                        });
+                    }
+                },
+                error: function () {
+                    if (newWin) newWin.close();
+                }
+            });
+        });
+
+        function CheckDischargeDetailsPermission() {
+            var InPatientID = $('#ctl00_MainContent_txtIn_Patient_ID').val();
+            if (InPatientID && InPatientID != "(New)") {
+                $.ajax({
+                    type: "POST",
+                    url: "InPatientsCase.aspx/CheckFinalBillAndDischargePermission",
+                    data: JSON.stringify({ InPatientID: parseInt(InPatientID) }),
+                    contentType: "application/json; charset=utf-8",
+                    dataType: "json",
+                    success: function (response) {
+                        var result = JSON.parse(response.d);
+                        if (result.allowed) {
+                            $('#divAddDischargeDetails').show();
+                        }
+                    }
+                });
+            }
+        }
+
         function check() {
              
             if ($("#ctl00_MainContent_ddlDepartments :selected").text().trim() == "PSYCHIATRY") {
@@ -1828,6 +1923,256 @@
             }
         }
 
+        function fillPrimaryDiagnosis(searchValue) {
+            var options = '';
+            $.ajax({
+                url: 'InPatientsCase.aspx/GetDiagnosis',
+                type: 'POST',
+                contentType: 'application/json; charset=utf-8',
+                dataType: 'json',
+                data: JSON.stringify({ searchValue: searchValue || "" }),
+                success: function (response) {
+                    var data = response.d ? JSON.parse(response.d) : response;
+                    $.each(data, function (key, value) {
+                        options += '<div class="Primary-Diagnosis-row" style="display:flex;align-items:flex-start;padding:4px 0;border-bottom:1px solid #f0f0f0;">' +
+                            '<div style="flex:0 0 28px;padding-top:4px;text-align:center;">' +
+                            '<input type="checkbox" id="chk_Primary_Diagnosis_' + value.DiagnosisId + '" ' +
+                            'value="' + value.DiagnosisId + '" class="Primary_Diagnosis_checkbox" ' +
+                            'onclick="var textarea=document.getElementById(\'txtPrimaryDiagnosis_' + value.DiagnosisId + '\');' +
+                            'this.checked?handlePrimaryDiagnosisRow(\'' + value.DiagnosisId + '\',\'' + (value.DiagnosisName||'').replace(/'/g,"\\'") + '\')' +
+                            ':removePrimaryDiagnosisRow(\'' + value.DiagnosisId + '\')" /></div>' +
+                            '<label for="chk_Primary_Diagnosis_' + value.DiagnosisId + '" style="flex:0 0 28%;padding:4px 8px 0 4px;font-size:12px;">' + (value.DiagnosisName||'') + '</label>' +
+                            '<div style="flex:1;"><textarea class="primaryDiagnosisTextbox" id="txtPrimaryDiagnosis_' + value.DiagnosisId + '" style="width:100%;" rows="2" placeholder="Remarks..."></textarea></div>' +
+                            '</div>';
+                    });
+                    $('#allPrimaryDiagnosis').html(options);
+                },
+                error: function (xhr, status, error) {
+                    console.error('Error fetching diagnosis:', error);
+                }
+            });
+        }
+
+        function fillFinalDiagnosis(searchValue) {
+            var options = '';
+            $.ajax({
+                url: 'InPatientsCase.aspx/GetDiagnosis',
+                type: 'POST',
+                contentType: 'application/json; charset=utf-8',
+                dataType: 'json',
+                data: JSON.stringify({ searchValue: searchValue || "" }),
+                success: function (response) {
+                    var data = response.d ? JSON.parse(response.d) : response;
+                    $.each(data, function (key, value) {
+                        options += '<div class="Final-Diagnosis-row" style="display:flex;align-items:flex-start;padding:4px 0;border-bottom:1px solid #f0f0f0;">' +
+                            '<div style="flex:0 0 28px;padding-top:4px;text-align:center;">' +
+                            '<input type="checkbox" id="chk_Final_Diagnosis_' + value.DiagnosisId + '" ' +
+                            'value="' + value.DiagnosisId + '" class="Final_Diagnosis_checkbox" ' +
+                            'onclick="var textarea=document.getElementById(\'txtFinalDiagnosis_' + value.DiagnosisId + '\');' +
+                            'this.checked?handleFinalDiagnosisRow(\'' + value.DiagnosisId + '\',\'' + (value.DiagnosisName||'').replace(/'/g,"\\'") + '\')' +
+                            ':removeFinalDiagnosisRow(\'' + value.DiagnosisId + '\')" /></div>' +
+                            '<label for="chk_Final_Diagnosis_' + value.DiagnosisId + '" style="flex:0 0 28%;padding:4px 8px 0 4px;font-size:12px;">' + (value.DiagnosisName||'') + '</label>' +
+                            '<div style="flex:1;"><textarea class="finalDiagnosisTextbox" id="txtFinalDiagnosis_' + value.DiagnosisId + '" style="width:100%;" rows="2" placeholder="Remarks..."></textarea></div>' +
+                            '</div>';
+                    });
+                    $('#allFinalDiagnosis').html(options);
+                },
+                error: function (xhr, status, error) {
+                    console.error('Error fetching diagnosis:', error);
+                }
+            });
+        }
+
+        function handlePrimaryDiagnosisRow(diagnosisId, diagnosisName) {
+            var remarks = $('#txtPrimaryDiagnosis_' + diagnosisId).val().trim();
+            var existingRow = $('#PrimarydiagnosisRow_' + diagnosisId);
+            if (existingRow.length) {
+                existingRow.find('td:eq(2)').text(remarks);
+            } else {
+                var newRow = '<tr id="PrimarydiagnosisRow_' + diagnosisId + '">' +
+                    '<td style="display:none">' + diagnosisId + '</td>' +
+                    '<td>' + diagnosisName + '</td>' +
+                    '<td>' + remarks + '</td>' +
+                    '<td><a href="#" onclick="removePrimaryDiagnosisRow(\'' + diagnosisId + '\');return false;"><i class="fa fa-times"></i></a></td></tr>';
+                $('#tblPrimaryDiagnosis tbody').append(newRow);
+            }
+            $('#dvtblPrimaryDiagnosis').slideDown();
+        }
+
+        function handleFinalDiagnosisRow(diagnosisId, diagnosisName) {
+            var remarks = $('#txtFinalDiagnosis_' + diagnosisId).val().trim();
+            var existingRow = $('#FinaldiagnosisRow_' + diagnosisId);
+            if (existingRow.length) {
+                existingRow.find('td:eq(2)').text(remarks);
+            } else {
+                var newRow = '<tr id="FinaldiagnosisRow_' + diagnosisId + '">' +
+                    '<td style="display:none">' + diagnosisId + '</td>' +
+                    '<td>' + diagnosisName + '</td>' +
+                    '<td>' + remarks + '</td>' +
+                    '<td><a href="#" onclick="removeFinalDiagnosisRow(\'' + diagnosisId + '\');return false;"><i class="fa fa-times"></i></a></td></tr>';
+                $('#tblFinalDiagnosis tbody').append(newRow);
+            }
+            $('#dvtblFinalDiagnosis').slideDown();
+        }
+
+        function removePrimaryDiagnosisRow(diagnosisId) {
+            $('#PrimarydiagnosisRow_' + diagnosisId).remove();
+            $('#chk_Primary_Diagnosis_' + diagnosisId).prop('checked', false);
+            $('#txtPrimaryDiagnosis_' + diagnosisId).val('');
+            if ($('#tblPrimaryDiagnosis tbody tr').length === 0) {
+                $('#dvtblPrimaryDiagnosis').slideUp();
+            }
+        }
+
+        function removeFinalDiagnosisRow(diagnosisId) {
+            $('#FinaldiagnosisRow_' + diagnosisId).remove();
+            $('#chk_Final_Diagnosis_' + diagnosisId).prop('checked', false);
+            $('#txtFinalDiagnosis_' + diagnosisId).val('');
+            if ($('#tblFinalDiagnosis tbody tr').length === 0) {
+                $('#dvtblFinalDiagnosis').slideUp();
+            }
+        }
+
+        function AddNewPrimaryDiagnosis() {
+            var $div = $('#divAddNewPrimaryDiagnosis');
+            if ($div.is(':visible')) {
+                $div.slideUp(300, function () { $('#NewPrimaryDiagnosis').val(''); });
+            } else {
+                $div.slideDown(300, function () { $('#NewPrimaryDiagnosis').focus(); });
+            }
+        }
+
+        function AddNewFinalDiagnosis() {
+            var $div = $('#divAddNewFinalDiagnosis');
+            if ($div.is(':visible')) {
+                $div.slideUp(300, function () { $('#NewFinalDiagnosis').val(''); });
+            } else {
+                $div.slideDown(300, function () { $('#NewFinalDiagnosis').focus(); });
+            }
+        }
+
+        function savePrimaryDiagnosis() {
+            var Text = $('#NewPrimaryDiagnosis').val().trim();
+            if (Text === '') {
+                Swal.fire({ icon: 'warning', title: 'Warning!', text: 'Please enter a Diagnosis before saving.', showConfirmButton: false, timer: 2000 });
+                return;
+            }
+            $.ajax({
+                type: "POST",
+                url: "InPatientsCase.aspx/SaveNewDiagnosis",
+                data: JSON.stringify({ Text: Text }),
+                contentType: "application/json; charset=utf-8",
+                dataType: "json",
+                success: function (response) {
+                    if (response.d == "0") {
+                        Swal.fire({ icon: 'error', title: 'Error!', text: 'Diagnosis already exists!', showConfirmButton: false, timer: 2000 });
+                    } else {
+                        fillPrimaryDiagnosis("");
+                        fillFinalDiagnosis("");
+                    }
+                },
+                error: function (xhr, status, error) {
+                    console.error("Error saving diagnosis:", error);
+                }
+            });
+            $('#divAddNewPrimaryDiagnosis').slideUp(300, function () { $('#NewPrimaryDiagnosis').val(''); });
+        }
+
+        function saveFinalDiagnosis() {
+            var Text = $('#NewFinalDiagnosis').val().trim();
+            if (Text === '') {
+                Swal.fire({ icon: 'warning', title: 'Warning!', text: 'Please enter a Diagnosis before saving.', showConfirmButton: false, timer: 2000 });
+                return;
+            }
+            $.ajax({
+                type: "POST",
+                url: "InPatientsCase.aspx/SaveNewDiagnosis",
+                data: JSON.stringify({ Text: Text }),
+                contentType: "application/json; charset=utf-8",
+                dataType: "json",
+                success: function (response) {
+                    if (response.d == "0") {
+                        Swal.fire({ icon: 'error', title: 'Error!', text: 'Diagnosis already exists!', showConfirmButton: false, timer: 2000 });
+                    } else {
+                        fillFinalDiagnosis("");
+                        fillPrimaryDiagnosis("");
+                    }
+                },
+                error: function (xhr, status, error) {
+                    console.error("Error saving diagnosis:", error);
+                }
+            });
+            $('#divAddNewFinalDiagnosis').slideUp(300, function () { $('#NewFinalDiagnosis').val(''); });
+        }
+
+        function SavePrimaryDiagnosisTab(inPatientId) {
+            var list = [];
+            $('#tblPrimaryDiagnosis tbody tr').each(function (key, value) {
+                list.push({
+                    'InPatientID': inPatientId,
+                    'DiagnosisID': parseInt($($(value).find('td')[0]).text().trim()),
+                    'Remarks': $($(value).find('td')[2]).text().trim()
+                });
+            });
+            if (list.length > 0) {
+                PageMethods.SavePrimaryDiagnosisForInPatient(JSON.stringify(list), inPatientId, function (response) {});
+            }
+        }
+
+        function SaveFinalDiagnosisTab(inPatientId) {
+            var list = [];
+            $('#tblFinalDiagnosis tbody tr').each(function (key, value) {
+                list.push({
+                    'InPatientID': inPatientId,
+                    'DiagnosisID': parseInt($($(value).find('td')[0]).text().trim()),
+                    'Remarks': $($(value).find('td')[2]).text().trim()
+                });
+            });
+            if (list.length > 0) {
+                PageMethods.SaveFinalDiagnosisForInPatient(JSON.stringify(list), inPatientId, function (response) {});
+            }
+        }
+
+        function AppendPrimaryDiagnosisHistory(inPatientId) {
+            PageMethods.LoadPrimaryDiagnosis(inPatientId, function (res) {
+                var data = JSON.parse(res);
+                $('[id^="chk_Primary_Diagnosis_"]').prop('checked', false);
+                $('[id^="txtPrimaryDiagnosis_"]').val('');
+                var rows = '';
+                $.each(data, function (key, value) {
+                    rows += '<tr id="PrimarydiagnosisRow_' + value.DiagnosisId + '">' +
+                        '<td style="display:none;">' + value.DiagnosisId + '</td>' +
+                        '<td>' + value.DiagnosisName + '</td>' +
+                        '<td>' + (value.Remarks || '') + '</td>' +
+                        '<td><a href="#" onclick="removePrimaryDiagnosisRow(\'' + value.DiagnosisId + '\');return false;"><i class="fa fa-times"></i></a></td></tr>';
+                    $('#chk_Primary_Diagnosis_' + value.DiagnosisId).prop('checked', true);
+                    $('#txtPrimaryDiagnosis_' + value.DiagnosisId).val(value.Remarks || '');
+                });
+                $('#tblPrimaryDiagnosis tbody').html(rows);
+                if (data.length > 0) $('#dvtblPrimaryDiagnosis').show();
+            });
+        }
+
+        function AppendFinalDiagnosisHistory(inPatientId) {
+            PageMethods.LoadFinalDiagnosis(inPatientId, function (res) {
+                var data = JSON.parse(res);
+                $('[id^="chk_Final_Diagnosis_"]').prop('checked', false);
+                $('[id^="txtFinalDiagnosis_"]').val('');
+                var rows = '';
+                $.each(data, function (key, value) {
+                    rows += '<tr id="FinaldiagnosisRow_' + value.DiagnosisId + '">' +
+                        '<td style="display:none;">' + value.DiagnosisId + '</td>' +
+                        '<td>' + value.DiagnosisName + '</td>' +
+                        '<td>' + (value.Remarks || '') + '</td>' +
+                        '<td><a href="#" onclick="removeFinalDiagnosisRow(\'' + value.DiagnosisId + '\');return false;"><i class="fa fa-times"></i></a></td></tr>';
+                    $('#chk_Final_Diagnosis_' + value.DiagnosisId).prop('checked', true);
+                    $('#txtFinalDiagnosis_' + value.DiagnosisId).val(value.Remarks || '');
+                });
+                $('#tblFinalDiagnosis tbody').html(rows);
+                if (data.length > 0) $('#dvtblFinalDiagnosis').show();
+            });
+        }
+
         function saveAllRecord() {
 
              
@@ -2438,6 +2783,9 @@
                     var btn = btnVal;
 
                     if (btn == 'btnSave' || btn == 'btnDischargeRequest') {
+                        var inPatId = response;
+                        SavePrimaryDiagnosisTab(inPatId);
+                        SaveFinalDiagnosisTab(inPatId);
                         alert('Data Successfully Save');
                         window.location = "InPatientsCase.aspx?ID=" + response;
                         //window.open('../../ReportViewer.aspx?ReportName=InpatientDetail&Title=In Patient Detail Report&In_Patient_ID=' + response);
@@ -7358,7 +7706,7 @@
                         <li><a href="#Tab-2">Receiving</a></li>
                         <li><a href="#Tab-8">History</a></li>
                         <li><a href="#Tab-13">Examination</a></li>
-                        <li><a href="#Tab-6">Investigation</a></li>
+                        <li><a href="#Tab-6">Investigation/Diagnostic</a></li>
                         <li><a href="#Tab-14">Services</a></li>
                         <li><a href="#Tab-4">Medication</a></li>
                         <li><a href="#Tab-18">IV Fluid</a></li>
@@ -9626,9 +9974,74 @@
                               <div class="col-lg-1 col-md-4 col-sm-6" style="margin-top:18%">
                                   <input type="button" id="btnAdPrint" class="btn btn-primry" onclick="AdPrint()" value="Print" />
                               </div>
-                          </div>
-                       
-                        <div>
+                           </div>
+
+                        <div class="row" style="margin-top:15px;">
+                            <div class="col-lg-6 col-md-6 col-sm-12">
+                                <div class="dashboard-card" style="border:1px solid #dee2e6;">
+                                    <div class="card-header"><h4><i class="fa fa-diagnoses"></i>Primary Diagnosis</h4></div>
+                                    <div class="card-body" style="padding:12px 15px;">
+                                        <div class="row" style="display:flex;align-items:center;">
+                                            <div class="col-md-8" style="padding-right:5px;">
+                                                <input type="text" class="form-control" id="tabPrimaryDiagnosisSearch" placeholder="Search diagnosis..." />
+                                            </div>
+                                            <div class="col-md-4" style="padding-left:5px;">
+                                                <input type="button" class="btn btn-primry" value="Add New" onclick="AddNewPrimaryDiagnosis()" style="width:100%;font-size:11px;padding:4px 10px;" />
+                                            </div>
+                                        </div>
+                                        <div id="divAddNewPrimaryDiagnosis" style="display:none;margin-top:8px;margin-bottom:8px;">
+                                            <div style="display:flex;">
+                                                <input type="text" id="NewPrimaryDiagnosis" class="form-control" style="width:70%;" placeholder="Enter new diagnosis" />
+                                                <input type="button" class="btn btn-primry" value="Save" onclick="savePrimaryDiagnosis()" style="width:28%;margin-left:2%;font-size:11px;padding:4px 10px;" />
+                                            </div>
+                                        </div>
+                                        <div id="allPrimaryDiagnosis" style="max-height:300px;overflow-y:auto;margin-top:8px;"></div>
+                                    </div>
+                                </div>
+                                <div id="dvtblPrimaryDiagnosis" style="display:none;margin-top:8px;">
+                                    <div class="dashboard-card" style="border:1px solid #dee2e6;">
+                                        <div class="card-header"><h4>Selected Primary Diagnosis</h4></div>
+                                        <table class="table modern-table" id="tblPrimaryDiagnosis">
+                                            <thead><tr><th>Diagnosis</th><th>Remarks</th><th></th></tr></thead>
+                                            <tbody></tbody>
+                                        </table>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-lg-6 col-md-6 col-sm-12">
+                                <div class="dashboard-card" style="border:1px solid #dee2e6;">
+                                    <div class="card-header"><h4><i class="fa fa-file-medical-alt"></i>Final Diagnosis</h4></div>
+                                    <div class="card-body" style="padding:12px 15px;">
+                                        <div class="row" style="display:flex;align-items:center;">
+                                            <div class="col-md-8" style="padding-right:5px;">
+                                                <input type="text" class="form-control" id="tabFinalDiagnosisSearch" placeholder="Search diagnosis..." />
+                                            </div>
+                                            <div class="col-md-4" style="padding-left:5px;">
+                                                <input type="button" class="btn btn-primry" value="Add New" onclick="AddNewFinalDiagnosis()" style="width:100%;font-size:11px;padding:4px 10px;" />
+                                            </div>
+                                        </div>
+                                        <div id="divAddNewFinalDiagnosis" style="display:none;margin-top:8px;margin-bottom:8px;">
+                                            <div style="display:flex;">
+                                                <input type="text" id="NewFinalDiagnosis" class="form-control" style="width:70%;" placeholder="Enter new diagnosis" />
+                                                <input type="button" class="btn btn-primry" value="Save" onclick="saveFinalDiagnosis()" style="width:28%;margin-left:2%;font-size:11px;padding:4px 10px;" />
+                                            </div>
+                                        </div>
+                                        <div id="allFinalDiagnosis" style="max-height:300px;overflow-y:auto;margin-top:8px;"></div>
+                                    </div>
+                                </div>
+                                <div id="dvtblFinalDiagnosis" style="display:none;margin-top:8px;">
+                                    <div class="dashboard-card" style="border:1px solid #dee2e6;">
+                                        <div class="card-header"><h4>Selected Final Diagnosis</h4></div>
+                                        <table class="table modern-table" id="tblFinalDiagnosis">
+                                            <thead><tr><th>Diagnosis</th><th>Remarks</th><th></th></tr></thead>
+                                            <tbody></tbody>
+                                        </table>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                         <div>
                                 <table class="table" id="tblExaminationHistory" style="display: block; overflow: scroll;">
                                     <thead>
                                         <tr>
@@ -10170,10 +10583,13 @@
                                                      <div class="col-lg-2 col-md-3 col-sm-12">
                                                          <input type="button" id="btnprintVital" value="Print" class="btn btn-primry" onclick="PrintVitalMedicationDetail()" />
                                                      </div>
-                                                     <div class="col-lg-2 col-md-3 col-sm-12">
-                                                         <input type="button" id="btnDischargeRequest" value="Discharge Request" class="btn btn-primry" onclick="DischargeRequest()" />
-                                                         <input type="hidden" runat="server" id="DischargeRequest" value='false'/>
-                                                     </div>
+                                                      <div class="col-lg-2 col-md-3 col-sm-12">
+                                                          <input type="button" id="btnDischargeRequest" value="Discharge Request" class="btn btn-primry" onclick="DischargeRequest()" />
+                                                          <input type="hidden" runat="server" id="DischargeRequest" value='false'/>
+                                                      </div>
+                                                      <div class="col-lg-2 col-md-3 col-sm-12" id="divAddDischargeDetails" style="display:none;">
+                                                          <input type="button" id="btnAddDischargeDetails" value="Add Discharge Details" class="btn btn-primry" />
+                                                      </div>
                                                  </div>
                                              </div>
                                          </div>

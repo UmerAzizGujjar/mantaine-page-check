@@ -244,6 +244,14 @@ namespace PMS.Inventory
                 {
                     obj.Last_MIR_Qty = 0;
                 }
+                if(item.Last_SIN_Qty != "null")
+                {
+                    obj.Last_SIN_Qty = Convert.ToDecimal(item.Last_SIN_Qty);
+                }
+                else
+                {
+                    obj.Last_SIN_Qty = 0;
+                }
                 
                 db.MaterialIssueRequest_Details.InsertOnSubmit(obj);
                 try
@@ -335,6 +343,7 @@ namespace PMS.Inventory
                                      MIRId = Convert.ToString(data.MaterialRequest_Id),
                                      MIRQty = Convert.ToString(data.MIRQty),
                                      Last_MIR_Qty = Convert.ToString(data.Last_MIR_Qty),
+                                     Last_SIN_Qty = Convert.ToString(data.Last_SIN_Qty),
                                      remarks = data.Remarks,
                                       UOM_Qty = Convert.ToString(inv.UOM_Qty ?? 0),
                                       FilePath = data.FilePath,
@@ -363,6 +372,7 @@ namespace PMS.Inventory
         {
             public string MIRQty { get; set; }
             public string Last_MIR_Qty { get; set; }
+            public string Last_SIN_Qty { get; set; }
             public string remarks { get; set; }
             public string MIRId { get; set; }
             public string itemId { get; set; }

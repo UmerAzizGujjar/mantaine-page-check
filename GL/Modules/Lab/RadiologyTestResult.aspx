@@ -1998,12 +1998,19 @@
                 function formatDate(val) {
                     if (!val) return '';
                     try {
-                        // Handle /Date(xxxxx)/ format
                         var match = /\/Date\((\d+)\)\//.exec(val);
-                        if (match) {
-                            return new Date(parseInt(match[1])).toLocaleDateString('en-GB');
-                        }
-                        return new Date(val).toLocaleDateString('en-GB');
+                        var d = match ? new Date(parseInt(match[1])) : new Date(val);
+                        if (isNaN(d.getTime())) return val || '';
+
+                        var months = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
+                        var dd = String(d.getDate()).padStart(2, '0');
+                        var mmm = months[d.getMonth()];
+                        var yyyy = d.getFullYear();
+                        var hh = String(d.getHours()).padStart(2, '0');
+                        var min = String(d.getMinutes()).padStart(2, '0');
+                        var ss = String(d.getSeconds()).padStart(2, '0');
+
+                        return dd + '-' + mmm + '-' + yyyy + ' ' + hh + ':' + min + ':' + ss;
                     } catch (e) { return val || ''; }
                 }
 
@@ -2340,11 +2347,11 @@ function cleanPrint() {
             </div>
             <div class="info-row">
                 <span class="info-label">Created At :</span>
-                <span class="info-val">${data.Billing_Date || ''}</span>
+                <span class="info-val">${formatDate(data.Billing_Date) || ''}</span>
             </div>
             <div class="info-row">
                 <span class="info-label">Reported At :</span>
-                <span class="info-val">${data.Approved_Time || ''}</span>
+                <span class="info-val">${formatDate(data.Approved_Time) || ''}</span>
             </div>
             <div class="info-row">
                 <span class="info-label">Accession # :</span>
@@ -2529,6 +2536,27 @@ ${data.Addendum_Template ? `
                 });
 
                 $('#tblLabTest tbody').html(rows);
+
+                $('#tblLabTest tbody tr').each(function (index) {
+                    var rowData = Test[index];
+                    if (!rowData || !rowData.PACS_Study_Url) {
+                        return;
+                    }
+
+                    var actionCell = $(this).find('td:eq(13)');
+                    if (actionCell.find('a[onclick="EditData(this)"]').length === 0) {
+                        return;
+                    }
+
+                    if (actionCell.find('a.pacs-link').length === 0) {
+                        actionCell.append(' | <a class="pacs-link" href="' + rowData.PACS_Study_Url + '" target="_blank" rel="noopener noreferrer">WebView</a>');
+                    }
+
+                    if (rowData.PACS_Study_UID && actionCell.find('a.radiant-link').length === 0) {
+                        actionCell.append(' | <a class="radiant-link" href="LaunchRadiAnt.aspx?uid=' + encodeURIComponent(rowData.PACS_Study_UID) + '" target="_blank" rel="noopener noreferrer">RadiANT</a>');
+                    }
+                });
+
                 $(".tdemergency").hide();
             });
         }

@@ -102,6 +102,7 @@ namespace PMS
                                   Father_Name = rg.Father_Name,
                                   Category = _dbContext.GetDataValueName("Patient Main Category", rg.Patient_Main_Category),
                                   Mobile1 = rg.Mobile1,
+                                  Status = p.Status
                               };
 
                     var FilteredCount = pat.Count();
@@ -196,6 +197,27 @@ namespace PMS
             catch (Exception ex)
             {
                 throw;
+            }
+        }
+        [WebMethod]
+        public static string GetOutPatientNewFormRedirectPermission()
+        {
+            try
+            {
+                using (DataBaseDataContext db = new DataBaseDataContext(DBClass.ConnectionString()))
+                {
+                    var sysParm = db.sys_Parms
+                        .Where(p => p.Name == "OutPatient New Form Redirect"
+                                 && p.Company_ID == AppConfig.Company_ID)
+                        .Select(p => p.Code)
+                        .FirstOrDefault();
+
+                    return new JavaScriptSerializer().Serialize(new { useNewForm = sysParm == "1" });
+                }
+            }
+            catch (Exception ex)
+            {
+                return new JavaScriptSerializer().Serialize(new { useNewForm = false, error = ex.Message });
             }
         }
     }

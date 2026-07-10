@@ -5909,7 +5909,15 @@ namespace PMS
                 return "0";
             }
         }
-
+        [WebMethod]
+        public static string GetAutoRecvOPD()
+        {
+            DataBaseDataContext db = new DataBaseDataContext(DBClass.ConnectionString());
+            var dept = (from data in db.sys_Parms
+                        where data.Name == "auto recvingopd"
+                        select data.Code).FirstOrDefault();
+            return (new JavaScriptSerializer()).Serialize(dept);
+        }
         [WebMethod]
         public static void IncrementReprintCount(int Bill_ID)
         {

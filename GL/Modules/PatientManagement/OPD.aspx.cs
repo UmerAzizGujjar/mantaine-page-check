@@ -325,16 +325,16 @@ namespace PMS.Modules.PatientManagement
             {
                 object Details;
 
-                //if (company_name == "As-Siraat Serving Humanity")
-                //{
-                //    // Call client-specific SP
-                //    Details = db.SpApprove_OPD_AsSiraat(Convert.ToInt32(pat_id), Pat_Category, user_id);
-                //}
-                //else
-                //{
+                if (company_name == "As-Siraat Serving Humanity")
+                {
+                    // Call client-specific SP
+                    Details = db.SpApprove_OPD_AsSiraat(Convert.ToInt32(pat_id), Pat_Category, user_id);
+                }
+                else
+                {
                     // Default for other clients (e.g., Noor Hospital, KDC Lab, etc.)
                     Details = db.SpApprove_OPD(Convert.ToInt32(pat_id), Pat_Category, user_id);
-               // }
+                }
 
                 return new JavaScriptSerializer().Serialize(Details);
             }
@@ -768,6 +768,30 @@ namespace PMS.Modules.PatientManagement
                 return (new JavaScriptSerializer()).Serialize(inPatmedicineList);
             }
             return "";
+        }
+        [WebMethod]
+        public static string GetBankAccounts()
+        {
+            try
+            {
+                using (var db = new DataBaseDataContext(DBClass.ConnectionString()))
+                {
+                    var accounts = (from acc in db.GL_Accounts
+                                    where acc.Bank == true
+                                    select new
+                                    {
+                                        id = acc.Account_ID,
+                                        name = acc.Account_Name
+                                    }).ToList();
+
+                    return new JavaScriptSerializer().Serialize(accounts);
+                }
+            }
+            catch (Exception ex)
+            {
+                // Log error if needed
+                return "[]"; // return empty array on error
+            }
         }
         //[WebMethod]
         //public static string LoadDepartmentByDoc(string doc)
@@ -1620,6 +1644,8 @@ namespace PMS.Modules.PatientManagement
                     pat.AccountID = string.IsNullOrEmpty(data.accountid) ? 0 : Convert.ToInt32(data.accountid);
                     pat.Card_Issued = data.IssueCard ?? false;
                     pat.free_check = data.FreeCheck ?? false;
+                    pat.bank_cash = data.bank_cash;
+                    pat.bank_account_id = data.bank_account_id;
                     decimal netAmount = data.Fees;
 
                     if (category == "11")
@@ -2424,7 +2450,9 @@ namespace PMS.Modules.PatientManagement
                             .Where(i => i.Item_ID == patient.Service_id)
                             .Select(i => i.Description)
                             .FirstOrDefault() ?? ""
-                    )
+                    ),
+                    bank_cash = patient.bank_cash ?? "",
+                    bank_account_id = patient.bank_account_id ?? ""
                 };
                 return new JavaScriptSerializer().Serialize(result);
             }
@@ -2764,6 +2792,8 @@ namespace PMS.Modules.PatientManagement
             public int Fees { get; set; }
             public int Actual_Fees { get; set; }
             public string Remarks { get; set; }
+            public string bank_cash { get; set; }
+            public string bank_account_id { get; set; }
         }
 
         [WebMethod]

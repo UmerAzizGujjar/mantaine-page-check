@@ -11,6 +11,7 @@ using System.Web.Script.Services;
 using System.Web.Services;
 using System.Web.UI;
 using System.Web.UI.WebControls;
+using static PMS.Inventory.Product;
 using static Telerik.Web.UI.OrgChartStyles;
 namespace PMS
 {
@@ -1458,8 +1459,8 @@ namespace PMS
                 newBillDetails.Remarks = dtls.Remarks;
                 newBillDetails.Req_qty = dtls.Req_qty;
                 newBillDetails.CGS = dtls.CGSAmount;
-
-                decimal currentDbStock = ReadCurrentStock(db, Item_Id);
+                 
+                decimal currentDbStock = ReadCurrentStock(db, Item_Id , dtls.batchno);
                 if (currentDbStock < dtls.Qty)
                 {
                     throw new Exception(
@@ -1499,15 +1500,26 @@ namespace PMS
             return newBill;
         }
 
-        private static decimal ReadCurrentStock(DataBaseDataContext db, int itemId)
+        private static decimal ReadCurrentStock(DataBaseDataContext db, int itemId, string batchNo)
         {
             using (SqlCommand cmd = (SqlCommand)db.Connection.CreateCommand())
             {
                 cmd.Transaction = (SqlTransaction)db.Transaction;
-                cmd.CommandText = "SELECT ISNULL(Total_Qty, 0) FROM INV_Items WHERE Item_ID = @id";
+
+                cmd.CommandText = @"
+            SELECT ISNULL(SUM(Qty), 0)
+            FROM vwBatch_Ledger
+            WHERE Item_ID = @id
+              AND Batch_No = @batch";
+
                 cmd.Parameters.AddWithValue("@id", itemId);
+                cmd.Parameters.AddWithValue("@batch", batchNo);
+
                 object result = cmd.ExecuteScalar();
-                if (result == null || result == DBNull.Value) return 0m;
+
+                if (result == null || result == DBNull.Value)
+                    return 0m;
+
                 return Convert.ToDecimal(result);
             }
         }

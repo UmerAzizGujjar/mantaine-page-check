@@ -152,5 +152,56 @@ namespace PMS
                 return "NotAllowed";
             }
         }
+
+        [WebMethod]
+        public static string checkeditPrintRights()
+        {
+            DataBaseDataContext db = new DataBaseDataContext();
+            var ups = (from St in db.aspnet_Users
+                       where St.UserName == AppConfig.UserName
+                       select St.AllowRegListPrint).FirstOrDefault();
+            return (new JavaScriptSerializer()).Serialize(ups);
+        }
+
+        [WebMethod]
+        public static string IncrementReprintCount(string pat_id)
+        {
+            try
+            {
+                if (string.IsNullOrEmpty(pat_id))
+                    return "Error: Invalid ID";
+
+                int id = Convert.ToInt32(pat_id);
+
+                using (var db = new DataBaseDataContext())
+                {
+                    var patient = db.Reg_patients.FirstOrDefault(p => p.pat_id == id);
+
+                    if (patient != null)
+                    {
+                        
+                        int currentCount = 0;
+                        if (!string.IsNullOrEmpty(patient.Reprint) && int.TryParse(patient.Reprint, out int parsed))
+                        {
+                            currentCount = parsed;
+                        }
+
+                        
+                        patient.Reprint = (currentCount + 1).ToString();
+
+                        db.SubmitChanges();
+                        return "Success";
+                    }
+                    else
+                    {
+                        return "Error: Patient not found";
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                return "Error: " + ex.Message;
+            }
+        }
     }
 }
