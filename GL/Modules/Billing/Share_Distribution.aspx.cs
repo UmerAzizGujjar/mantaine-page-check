@@ -194,6 +194,7 @@ namespace PMS.Modules.Billing
         public class IPDDistributions
         {
             public int Account_ID { get; set; }
+            public int Doctor_ID { get; set; }
             public string Account_Name { get; set; }
             public decimal txtRevenuAmount { get; set; }
             public decimal txtRevenuDiscPer { get; set; }
@@ -345,6 +346,7 @@ namespace PMS.Modules.Billing
                 IPD_Doctor_Distribution_Detail Doctor = new IPD_Doctor_Distribution_Detail();
                 Doctor.Distribution_Id = Ref.Distribution_Id; 
                 Doctor.Account_Id = dts.Account_ID;
+                Doctor.doc_id = dts.Doctor_ID;
                 Doctor.Share_Account_Name = dts.Account_Name;
                 Doctor.Total_Amount = dts.txtRevenuAmount;
                 Doctor.Net_Amount = dts.txtRevenuNetAmount;
@@ -420,6 +422,7 @@ namespace PMS.Modules.Billing
 
                 Doctor.Distribution_Id = dt.Distribution_Id;
                 Doctor.Account_Id = dts.Account_ID;
+                Doctor.doc_id = dts.Doctor_ID;
                 Doctor.Share_Account_Name = dts.Account_Name;
                 Doctor.Total_Amount = dts.txtRevenuAmount;
                 Doctor.Net_Amount = dts.txtRevenuNetAmount;

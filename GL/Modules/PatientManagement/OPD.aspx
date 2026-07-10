@@ -704,7 +704,7 @@
                 var urlInfo = window.location.href.split('/');
                 var ip = urlInfo[2];
                 var foldername = urlInfo[3];
-                url = 'http://' + ip + foldername + '/ReportViewer.aspx?ReportName=Voucher&ReportTitle=OPD Voucher&TransID=' + id + '&TransType=OPD';
+                url = 'http://' + ip + '/' + foldername + '/ReportViewer.aspx?ReportName=Voucher&ReportTitle=OPD Voucher&TransID=' + id + '&TransType=OPD';
             }
             window.open(url, '_blank');
         }
@@ -1266,7 +1266,7 @@
                         Swal.fire({
                             icon: 'warning',
                             title: 'Active OPD Found',
-                            text: 'Patient has active OPD. Please discharge first.',
+                            text: 'Patient has active OPD already in last 24 hrs.',
                             confirmButtonText: 'OK',
                             confirmButtonColor: '#3085d6',
                             allowOutsideClick: false,

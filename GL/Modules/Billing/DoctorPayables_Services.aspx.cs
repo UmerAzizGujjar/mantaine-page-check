@@ -82,12 +82,25 @@ namespace PMS.Modules.Billing
 
             foreach (var a in record.ItemList)
             {
-                // Pass parameters based on Source_Type
-                int? billDetId = a.Source_Type == "Billing" ? a.Bill_Detail_ID : (int?)null;
-                int? patientId = a.Source_Type == "Patient" ? a.Patient_ID : (int?)null;
+                int? billDetId = null;
+                int? patientId = null;
                 string recordType = a.Source_Type ?? "Billing";
 
-                // Call updated stored procedure
+                if (a.Source_Type == "Billing")
+                {
+                    billDetId = a.Bill_Detail_ID;
+                }
+                else if (a.Source_Type == "Patient")
+                {
+                    patientId = a.Patient_ID;
+                }
+                else if (a.Source_Type == "IPD_Share_Distribution")
+                {
+                    billDetId = a.Bill_ID;   // use Bill_ID as the identifier
+                                             // patientId remains null
+                }
+                // For any other Source_Type, both remain null
+
                 db.spApprove_Distribution_Transfer_DR(
                     Convert.ToInt32(getMaxVoucherIDforInsert),
                     billDetId,
@@ -155,9 +168,10 @@ namespace PMS.Modules.Billing
 
         public class DetailTransferList
         {
-            public int? Bill_Detail_ID { get; set; }   // keep as nullable
-            public int? Patient_ID { get; set; }          // ← ADD THIS
-            public string Source_Type { get; set; }       // ← ADD THIS ("Billing" or "Patient")
+            public int? Bill_Detail_ID { get; set; }
+            public int? Patient_ID { get; set; }
+            public int? Bill_ID { get; set; }           // ← new property
+            public string Source_Type { get; set; }
             public string AccountID { get; set; }
             public decimal shareAmount { get; set; }
         }

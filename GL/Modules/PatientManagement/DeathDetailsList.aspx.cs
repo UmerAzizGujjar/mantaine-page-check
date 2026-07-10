@@ -44,6 +44,7 @@ namespace PMS.Modules.PatientManagement
                                   CauseOfDeath = ipd.CauseOfDeath,
                                   Department = _dbContext.GetDataValueName("Patient Main Category", ipd.Department),
                                   PlaceOfDeath = _dbContext.GetDataValueName("Place Of Death", ipd.PlaceOfDeath)
+                                  
                               };
 
                     var FilteredCount = pat.Count();

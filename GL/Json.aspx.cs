@@ -1229,16 +1229,19 @@ namespace PMS
                 {
                     string sqlQuery;
                     if (Request.QueryString["q"] != null)
-                        sqlQuery = "Select  top 1 pat_id as Patient_ID,Patient_No,Full_Name from Reg_patient Where pat_id ='" + Request.QueryString["q"].ToString() + "' order by Created_time desc";
+                        sqlQuery = "Select top 1 pat_id as Patient_ID, mr_no_sequence, Patient_No, Full_Name from Reg_patient Where pat_id ='" + Request.QueryString["q"].ToString() + "' order by Created_time desc";
                     else
-                        sqlQuery = "Select distinct (select top 1 pat_id as Patient_ID from Reg_patient where Patient_No=p.Patient_No)Patient_ID,Patient_No,Full_Name  from Reg_patient p    order by Created_time desc";
+                        sqlQuery = "Select distinct (select top 1 pat_id as Patient_ID from Reg_patient where Patient_No=p.Patient_No) Patient_ID, mr_no_sequence, Patient_No, Full_Name from Reg_patient p order by Created_time desc";
+
                     string result = "";
                     DataTable dt = DBClass.getDataTable(sqlQuery);
+
                     foreach (DataRow dr in dt.Rows)
                     {
                         result += (result == "") ? "" : ",";
-                        result += @"{""id"":""" + dr["Patient_ID"].ToString() + @""",""name"": """ + dr["Patient_No"].ToString() + " - " + dr["Full_Name"].ToString() + @"""}";
+                        result += @"{""id"":""" + dr["Patient_ID"].ToString() + @""",""name"": """ + dr["mr_no_sequence"].ToString() + " - " + dr["Full_Name"].ToString() + @"""}";
                     }
+
                     Response.Write("[" + result + "]");
                 }
                 else if (Request.QueryString["Table"] == "PatientsFetchByREgID")
