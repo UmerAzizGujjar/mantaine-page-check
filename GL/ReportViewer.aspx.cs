@@ -6861,6 +6861,73 @@ namespace PMS
                 rd.SummaryInfo.ReportTitle = reportTitle;
                 rd.SetParameterValue("@Sample_ID", int.Parse(Request.QueryString["Sample_ID"]));
             }
+            else if (reportName == "LabQrCode")
+            {
+                var sampleId = Request.QueryString["Sample_ID"].ToString();
+                reportPath += "LabRadiology/rptLabQrCode.rpt";
+                rd.Load(reportPath);
+                rd.SummaryInfo.ReportTitle = reportTitle;
+                rd.SetParameterValue("@Sample_ID", sampleId);
+
+                try
+                {
+                    bool patientDataFound = false;
+
+                    string sql = $@"
+                    SELECT distinct 
+                           ISNULL(rp.mr_no_sequence, '') AS mr_no_sequence,
+                           ISNULL(rp.Full_Name, '') AS Full_Name,
+                           ISNULL(CONVERT(VARCHAR, rp.Age_years), '') AS Age_years,
+                           ISNULL(rp.Gender, '') AS Gender,
+                           ISNULL(ar.Bill_No, '') AS Bill_No
+
+                    FROM Sample_Master m,
+                         Ar_Billings ar,
+                         Reg_patient rp,
+                         Ar_Billing_Details abd,
+                         Sample_Detail sd
+                    WHERE m.Patient_ID = rp.pat_id 
+                      AND abd.Bill_Details_ID = sd.Bill_Detail_ID
+                      AND ar.Bill_ID = abd.Bill_ID
+                      AND sd.Sample_ID = {sampleId}";
+
+                    DataTable patientData = DBClass.getDataTable(sql);
+
+                    if (patientData.Rows.Count > 0)
+                    {
+                        patientDataFound = true;
+
+                        string qrContent = $"MR:{patientData.Rows[0]["mr_no_sequence"]}|Name:{patientData.Rows[0]["Full_Name"]}|Age:{patientData.Rows[0]["Age_years"]}|Gender:{patientData.Rows[0]["Gender"]}|Bill No:{patientData.Rows[0]["Bill_No"]}";
+                        // Save to temp file instead of passing bytes
+                        string tempQrPath = Path.Combine(Path.GetTempPath(), $"QR_{sampleId}_{Guid.NewGuid()}.png");
+                        using (QRCodeGenerator qrGenerator = new QRCodeGenerator())
+                        {
+                            QRCodeData qrCodeData = qrGenerator.CreateQrCode(qrContent, QRCodeGenerator.ECCLevel.Q);
+                            using (PngByteQRCode qrCodeImage = new PngByteQRCode(qrCodeData))
+                            {
+                                byte[] qrBytes = qrCodeImage.GetGraphic(10);
+                                File.WriteAllBytes(tempQrPath, qrBytes);
+                            }
+                        }
+                        // Pass FILE PATH as string parameter
+                        rd.SetParameterValue("QRImagePath", tempQrPath);
+                    }
+                    else
+                    {
+                        rd.SetParameterValue("QRImagePath", "");
+                    }
+
+                    // Debug check — remove or comment out once confirmed working
+                    System.Diagnostics.Debug.WriteLine(patientDataFound
+                        ? $"Patient data found for sample_id={sampleId}. Row count: {patientData.Rows.Count}"
+                        : $"No patient data found for sample_id={sampleId}.");
+                }
+                catch (Exception ex)
+                {
+                    rd.SetParameterValue("QRImagePath", "");
+                    System.Diagnostics.Debug.WriteLine($"QR generation failed for sample_id={sampleId}: {ex.Message}");
+                }
+            }
             else if (reportName == "PrintINVBarcodes")
             {
                 reportPath += "Inventory/rptCathLabBarcode.rpt";

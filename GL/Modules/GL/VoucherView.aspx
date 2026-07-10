@@ -89,6 +89,7 @@ $(document).ready(function () {
                 case 'BPV': titleText = 'Bank Payment Voucher'; break;
                 case 'BRV': titleText = 'Bank Receipt Voucher'; break;
                 case 'JV': titleText = 'Journal Voucher'; break;
+                case 'DPV': titleText = 'Doctor Payment Voucher'; break;
             }
             $('#ctl00_lbl1').text(titleText);
 

@@ -1290,7 +1290,7 @@
         <elementListCompartment Id="ee3a1a2d-7d67-48da-a319-0ebcbc4bd043" absoluteBounds="8.89, 1.46, 1.9700000000000002, 2.1724039713541665" name="DataPropertiesCompartment" titleTextColor="Black" itemTextColor="Black" />
       </nestedChildShapes>
     </classShape>
-    <associationConnector edgePoints="[(3.25 : 3.87725341796875); (3.625 : 3.87725341796875)]" fixedFrom="NotFixed" fixedTo="NotFixed">
+    <associationConnector edgePoints="[(3.25 : 3.87725341796875); (3.625 : 3.87725341796875)]" fixedFrom="Algorithm" fixedTo="Algorithm">
       <AssociationMoniker Name="/DataBaseDataContext/aspnet_Application/aspnet_Application_aspnet_Path" />
       <nodes>
         <classShapeMoniker Id="59e65987-e576-4b67-b0c2-f95d5990dd1c" />
@@ -2216,10 +2216,10 @@
         <classShapeMoniker Id="f43e198c-4ba2-4838-8b1d-852fa256b927" />
       </nodes>
     </associationConnector>
-    <classShape Id="4fcd0ae0-0aa2-4bf6-be73-644100168037" absoluteBounds="9.375, 20.125, 2, 2.5401025390625">
+    <classShape Id="7ea4e999-73cf-4c17-8b16-ad8efcc00c64" absoluteBounds="9.5, 19.5, 2, 2.7324039713541666">
       <DataClassMoniker Name="/DataBaseDataContext/IPD_Doctor_Distribution_Detail" />
       <nestedChildShapes>
-        <elementListCompartment Id="08feda6b-7e78-49be-8f27-140f313f266b" absoluteBounds="9.39, 20.585, 1.9700000000000002, 1.9801025390625" name="DataPropertiesCompartment" titleTextColor="Black" itemTextColor="Black" />
+        <elementListCompartment Id="d7302abf-a047-4eaf-9a6e-0ebda1e00b15" absoluteBounds="9.515, 19.96, 1.9700000000000002, 2.1724039713541665" name="DataPropertiesCompartment" titleTextColor="Black" itemTextColor="Black" />
       </nestedChildShapes>
     </classShape>
   </nestedChildShapes>
