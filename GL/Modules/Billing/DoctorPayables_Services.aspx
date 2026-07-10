@@ -386,7 +386,7 @@
                             '<td style="display:none"><input type="hidden" id="txt_BilldetID' + (key + 1) + '" name="txt_BilldetID" value="' + (value.Bill_Details_ID || '') + '"/>' + (value.Bill_Details_ID || '') + '</td>' +
                             '<td><input type="hidden" id="txt_MRNo' + (key + 1) + '" name="txt_MRNo" value="' + (value.Patient_ID || '') + '"/>' + (value.Patient_No || '') + '</td>' +
                             '<td><input type="hidden" id="txt_patientName' + (key + 1) + '" name="txt_patientName" value="' + (value.Patient_ID || '') + '"/>' + (value.Full_Name || '') + '</td>' +
-                            '<td><input type="hidden" id="txt_Dept' + (key + 1) + '" name="txt_Dept" value="' + (value.In_Patient_ID || '') + '"/>' + department + '</td>' +
+                            '<td><input type="hidden" id="txt_Dept' + (key + 1) + '" name="txt_Dept" value="' + (value.In_Patient_ID || '') + '"/>' + value.Test_Department + '</td>' +
                             '<td><input type="hidden" id="txt_SubDept' + (key + 1) + '" name="txt_SubDept" value="' + value.Department + '"/>' + value.Department + '</td>' +
                             '<td><input type="hidden" id="txt_AdmDate' + (key + 1) + '" name="txt_AdmDate" value="' + AdmissionDate + '"/>' + AdmissionDate + '</td>' +
                             '<td><input type="hidden" id="txtDisDate' + (key + 1) + '" name="txtDisDate" value="' + DischargeDate + '"/>' + DischargeDate + '</td>' +
