@@ -519,101 +519,60 @@ function SavePatient() {
                 return;
             }
 
-            // Check for other errors
             if (response.d.startsWith("ERROR:")) {
-                toasterMessage(true, "Validation Failed", response.d.replace("ERROR: ", ""));
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Save Failed',
+                    text: response.d.replace("ERROR: ", ""),
+                    confirmButtonColor: '#d33'
+                });
                 $('#SavePatient_Data').attr('disabled', false);
                 return;
             }
 
-            debugger;
             var ini_patientID = response.d;
-            toasterMessage(false, "Success", "Data Saved Successfully");
             Approve(ini_patientID);
-            var reportPath;
-            var url;
+
             var locationInfo = window.location;
-
-            //if (company_name == 'As-Siraat Serving Humanity') {
-            //    reportPath = '../../ReportViewer.aspx';
-            //} else {
-            //    reportPath = 'ReportViewer.aspx';
-            //}
-
-            var reportParams = '?ReportName=Reg_Patient_Print&Title=Register Patient Print &Patient_ID=' + ini_patientID;
-
+            var reportParams = '?ReportName=Reg_Patient_Print&Title=Register Patient Print&Patient_ID=' + ini_patientID;
+            var url;
             if (locationInfo.hostname === "localhost") {
-                // Local development — use relative path
-                url = '../../' + reportPath + reportParams;
+                url = '../../ReportViewer.aspx' + reportParams;
             } else {
-                // Live server — dynamically pick up IP and folder
                 var urlParts = window.location.href.split('/');
-                var protocol = urlParts[0];             // "http:"
-                var ip = urlParts[2];                   // "173.234.137.51"
-                var foldername = urlParts[3];           // "Assiraat_Standard"
-
-                url = protocol + '//' + ip + '/' + foldername + '/' + reportPath + reportParams;
+                var protocol = urlParts[0];
+                var ip = urlParts[2];
+                var foldername = urlParts[3];
+                url = protocol + '//' + ip + '/' + foldername + '/ReportViewer.aspx' + reportParams;
             }
             window.open(url, '_blank');
-            console.log("Opening URL:", url);
-            window.location.reload();
-            //var url = "../../ReportViewer.aspx?ReportName=Reg_Patient_Print&Title=Register Patient Print &Patient_ID=" + ini_patientID;
-            //window.open(url, '_blank');
         },
         error: function (xhr, status, error) {
-            toasterMessage(true, "Request Failed", "An unexpected error occurred.");
+            Swal.fire({
+                icon: 'error',
+                title: 'Request Failed',
+                text: 'An unexpected error occurred while saving.',
+                confirmButtonColor: '#d33'
+            });
             $('#SavePatient_Data').attr('disabled', false);
         }
     });
 }
 function Approve(pat_id) {
     PageMethods.approvepatient(pat_id, function (Tests) {
-        debugger
         var message = JSON.parse(Tests);
         if (message[0].Message != null || message[0].Message != "") {
             Swal.fire({
                 icon: 'success',
                 title: 'Success!',
                 text: message[0].Message,
-                showConfirmButton: false,
-                timer: 2000,
-                customClass: {
-                    popup: 'swal-big-popup',
-                    title: 'swal-big-title',
-                    htmlContainer: 'swal-big-text'
-                }
+                confirmButtonColor: '#3085d6'
+            }).then(function () {
+                window.location.href = 'RegList.aspx';
             });
-            location.reload();
         }
     });
 }
-function toasterMessage(isError = false, title, message) {
-    
-    toastr.options = {
-        "closeButton": true,
-        "debug": false,
-        "preventDuplicates": false,
-        "positionClass": "toast-center-screen", 
-        "onclick": null,
-        "showDuration": "551500",
-        "hideDuration": "2000",
-        "timeOut": "4000",
-        "extendedTimeOut": "1000",
-        "showEasing": "swing",
-        "hideEasing": "linear",
-        "showMethod": "fadeIn",
-        "hideMethod": "fadeOut",
-        onclick: function () {
-            $('#right-sidebar').toggleClass('sidebar-open');
-        }
-    };
-
-    if (isError)
-        toastr.error(message, title);
-    else
-        toastr.success(message, title);
-}
-
 function Get_Pat_Info(reg_id) {
     $.ajax({
         type: "POST",
