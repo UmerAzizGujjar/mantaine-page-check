@@ -1,4 +1,4 @@
-﻿<?xml version="1.0" encoding="utf-8"?><Database Name="IITH" Class="DataBaseDataContext" xmlns="http://schemas.microsoft.com/linqtosql/dbml/2007">
+﻿<?xml version="1.0" encoding="utf-8"?><Database Name="H_P_National_Hospital" Class="DataBaseDataContext" xmlns="http://schemas.microsoft.com/linqtosql/dbml/2007">
   <Table Name="dbo.Ar_Customers" Member="Ar_Customers">
     <Type Name="Ar_Customer">
       <Column Name="Customer_ID" Type="System.Int32" DbType="Int NOT NULL IDENTITY" IsPrimaryKey="true" IsDbGenerated="true" CanBeNull="false" />
@@ -11902,31 +11902,6 @@
       <Column Name="G_Phone" Type="System.String" DbType="VarChar(500)" CanBeNull="true" />
     </ElementType>
   </Function>
-  <Function Name="dbo.sp_Load_Payables_Details" Method="sp_Load_Payables_Details">
-    <Parameter Name="DocId" Parameter="docId" Type="System.Int32" DbType="Int" />
-    <ElementType Name="sp_Load_Payables_DetailsResult">
-      <Column Name="Doctor_Id" Type="System.String" DbType="VarChar(100)" CanBeNull="true" />
-      <Column Name="Bill_ID" Type="System.Int32" DbType="Int" CanBeNull="true" />
-      <Column Name="Bill_No" Type="System.String" DbType="VarChar(50)" CanBeNull="true" />
-      <Column Name="Bill_Date" Type="System.DateTime" DbType="DateTime" CanBeNull="true" />
-      <Column Name="Bill_Details_ID" Type="System.Int32" DbType="Int" CanBeNull="true" />
-      <Column Name="Patient_ID" Type="System.Int32" DbType="Int NOT NULL" CanBeNull="false" />
-      <Column Name="Patient_No" Type="System.Int32" DbType="Int" CanBeNull="true" />
-      <Column Name="In_Patient_ID" Type="System.Int64" DbType="BigInt" CanBeNull="true" />
-      <Column Name="Full_Name" Type="System.String" DbType="VarChar(100)" CanBeNull="true" />
-      <Column Name="Admission_Date" Type="System.DateTime" DbType="DateTime" CanBeNull="true" />
-      <Column Name="Discharge_Date" Type="System.DateTime" DbType="DateTime" CanBeNull="true" />
-      <Column Name="Account_Id" Type="System.Int32" DbType="Int" CanBeNull="true" />
-      <Column Name="Item_ID" Type="System.Int32" DbType="Int" CanBeNull="true" />
-      <Column Name="Item_Name" Type="System.String" DbType="VarChar(200)" CanBeNull="true" />
-      <Column Name="BillType" Type="System.String" DbType="VarChar(20)" CanBeNull="true" />
-      <Column Name="Test_Department" Type="System.String" DbType="VarChar(150)" CanBeNull="true" />
-      <Column Name="Emp_Name" Type="System.String" DbType="VarChar(50)" CanBeNull="true" />
-      <Column Name="Doctor_Share" Type="System.Decimal" DbType="Decimal(20,4)" CanBeNull="true" />
-      <Column Name="isPayable" Type="System.Int32" DbType="Int" CanBeNull="true" />
-      <Column Name="SourceType" Type="System.String" DbType="VarChar(7) NOT NULL" CanBeNull="false" />
-    </ElementType>
-  </Function>
   <Function Name="dbo.spSaleReturnInvoiceDetails" Method="spSaleReturnInvoiceDetails">
     <Parameter Name="BillId" Parameter="billId" Type="System.Int32" DbType="Int" />
     <Parameter Name="wareHouse" Type="System.String" DbType="VarChar(50)" />
@@ -12881,6 +12856,31 @@
     <Parameter Name="UserId" Parameter="userId" Type="System.Guid" DbType="UniqueIdentifier" />
     <ElementType Name="sp_ApprovePatientCardFeeResult">
       <Column Name="Message" Type="System.String" DbType="VarChar(300)" CanBeNull="true" />
+    </ElementType>
+  </Function>
+  <Function Name="dbo.sp_Load_Payables_Details" Method="sp_Load_Payables_Details">
+    <Parameter Name="DocId" Parameter="docId" Type="System.Int32" DbType="Int" />
+    <ElementType Name="sp_Load_Payables_DetailsResult">
+      <Column Name="Doctor_Id" Type="System.Int32" DbType="Int" CanBeNull="true" />
+      <Column Name="Bill_ID" Type="System.Int32" DbType="Int" CanBeNull="true" />
+      <Column Name="Bill_No" Type="System.String" DbType="VarChar(50)" CanBeNull="true" />
+      <Column Name="Bill_Date" Type="System.DateTime" DbType="DateTime" CanBeNull="true" />
+      <Column Name="Bill_Details_ID" Type="System.Int32" DbType="Int" CanBeNull="true" />
+      <Column Name="Patient_ID" Type="System.Int32" DbType="Int NOT NULL" CanBeNull="false" />
+      <Column Name="Patient_No" Type="System.Int32" DbType="Int" CanBeNull="true" />
+      <Column Name="In_Patient_ID" Type="System.Int64" DbType="BigInt" CanBeNull="true" />
+      <Column Name="Full_Name" Type="System.String" DbType="VarChar(100)" CanBeNull="true" />
+      <Column Name="Admission_Date" Type="System.DateTime" DbType="DateTime" CanBeNull="true" />
+      <Column Name="Discharge_Date" Type="System.DateTime" DbType="DateTime" CanBeNull="true" />
+      <Column Name="Account_Id" Type="System.Int32" DbType="Int" CanBeNull="true" />
+      <Column Name="Item_ID" Type="System.Int32" DbType="Int" CanBeNull="true" />
+      <Column Name="Item_Name" Type="System.String" DbType="VarChar(200)" CanBeNull="true" />
+      <Column Name="BillType" Type="System.String" DbType="VarChar(20)" CanBeNull="true" />
+      <Column Name="Test_Department" Type="System.String" DbType="VarChar(150)" CanBeNull="true" />
+      <Column Name="Emp_Name" Type="System.String" DbType="VarChar(50)" CanBeNull="true" />
+      <Column Name="Doctor_Share" Type="System.Decimal" DbType="Decimal(20,4)" CanBeNull="true" />
+      <Column Name="isPayable" Type="System.Int32" DbType="Int" CanBeNull="true" />
+      <Column Name="SourceType" Type="System.String" DbType="VarChar(7) NOT NULL" CanBeNull="false" />
     </ElementType>
   </Function>
 </Database>
