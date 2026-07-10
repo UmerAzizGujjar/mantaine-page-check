@@ -6871,29 +6871,35 @@ namespace PMS
 
                 try
                 {
+                    bool patientDataFound = false;
+
                     string sql = $@"
-       SELECT distinct ISNULL(rp.mr_no_sequence, '') AS mr_no_sequence,
-               ISNULL(rp.Full_Name, '') AS Full_Name,
-               ISNULL(CONVERT(VARCHAR, rp.Age_years), '') AS Age_years,
-               ISNULL(rp.Gender, '') AS Gender,
-               IsNULL(ar.Bill_No,'') as BillNo
-        FROM  
-         Sample_Master sm  
-         join Sample_Detail sd on sm.Sample_ID =sd.Sample_ID
-         JOIN Reg_patient rp ON sm.patient_id = rp.pat_id
-         join Ar_Billing_Details abd on abd.Bill_Details_ID = sd.Bill_Detail_ID
-         join Ar_billings ar on ar.Bill_ID = abd.Bill_ID
-        WHERE sm.Sample_ID = {sampleId}";
+                    SELECT distinct 
+                           ISNULL(rp.mr_no_sequence, '') AS mr_no_sequence,
+                           ISNULL(rp.Full_Name, '') AS Full_Name,
+                           ISNULL(CONVERT(VARCHAR, rp.Age_years), '') AS Age_years,
+                           ISNULL(rp.Gender, '') AS Gender,
+                           ISNULL(ar.Bill_No, '') AS Bill_No
+
+                    FROM Sample_Master m,
+                         Ar_Billings ar,
+                         Reg_patient rp,
+                         Ar_Billing_Details abd,
+                         Sample_Detail sd
+                    WHERE m.Patient_ID = rp.pat_id 
+                      AND abd.Bill_Details_ID = sd.Bill_Detail_ID
+                      AND ar.Bill_ID = abd.Bill_ID
+                      AND sd.Sample_ID = {sampleId}";
 
                     DataTable patientData = DBClass.getDataTable(sql);
 
                     if (patientData.Rows.Count > 0)
                     {
-                        string qrContent = $"MR:{patientData.Rows[0]["mr_no_sequence"]}|Name:{patientData.Rows[0]["Full_Name"]}|Age:{patientData.Rows[0]["Age_years"]}|Gender:{patientData.Rows[0]["Gender"]}";
+                        patientDataFound = true;
 
+                        string qrContent = $"MR:{patientData.Rows[0]["mr_no_sequence"]}|Name:{patientData.Rows[0]["Full_Name"]}|Age:{patientData.Rows[0]["Age_years"]}|Gender:{patientData.Rows[0]["Gender"]}|Bill No:{patientData.Rows[0]["Bill_No"]}";
                         // Save to temp file instead of passing bytes
                         string tempQrPath = Path.Combine(Path.GetTempPath(), $"QR_{sampleId}_{Guid.NewGuid()}.png");
-
                         using (QRCodeGenerator qrGenerator = new QRCodeGenerator())
                         {
                             QRCodeData qrCodeData = qrGenerator.CreateQrCode(qrContent, QRCodeGenerator.ECCLevel.Q);
@@ -6903,7 +6909,6 @@ namespace PMS
                                 File.WriteAllBytes(tempQrPath, qrBytes);
                             }
                         }
-
                         // Pass FILE PATH as string parameter
                         rd.SetParameterValue("QRImagePath", tempQrPath);
                     }
@@ -6911,10 +6916,16 @@ namespace PMS
                     {
                         rd.SetParameterValue("QRImagePath", "");
                     }
+
+                    // Debug check — remove or comment out once confirmed working
+                    System.Diagnostics.Debug.WriteLine(patientDataFound
+                        ? $"Patient data found for sample_id={sampleId}. Row count: {patientData.Rows.Count}"
+                        : $"No patient data found for sample_id={sampleId}.");
                 }
                 catch (Exception ex)
                 {
                     rd.SetParameterValue("QRImagePath", "");
+                    System.Diagnostics.Debug.WriteLine($"QR generation failed for sample_id={sampleId}: {ex.Message}");
                 }
             }
             else if (reportName == "PrintINVBarcodes")
