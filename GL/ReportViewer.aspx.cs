@@ -170,6 +170,14 @@ namespace PMS
                     {
                         VoucherId = DBClass.getField("select Voucher_ID from Out_Patient where Out_Patient_ID = " + transID).ToString();
                     }
+                    else if (transType == "DPV")
+                    {
+                        VoucherId = DBClass.getField("select Voucher_ID from GL_Vouchers  where Voucher_ID = " + transID).ToString();
+                    }
+                    else if (transType == "CPV")
+                    {
+                        VoucherId = DBClass.getField("select Voucher_ID from GL_Vouchers  where Voucher_ID = " + transID).ToString();
+                    }
                     else if (transType == "ADV")
                     {
                         var rawVoucherId = DBClass.getField("select Voucher_ID from Advance_Payment where Advance_ID = " + transID);
