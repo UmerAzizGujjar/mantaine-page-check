@@ -126,6 +126,18 @@ namespace PMS
                     {
                         VoucherId = DBClass.getField("select Voucher_ID from Ar_Billings where Bill_Id = " + transID).ToString();
                     }
+                    else if (transType == "DSJV")
+                    {
+                        VoucherId = DBClass.getField("select Doctor_Share_Voucher_ID from Ar_Billings where Bill_Id = " + transID).ToString();
+                    }
+                    else if (transType == "IPD_Dist")
+                    {
+                        VoucherId = DBClass.getField("Select Voucher_ID from IPD_Distribution_Master where Distribution_Id =  " + transID).ToString();
+                    }
+                    else if (transType == "IPD_Share")
+                    {
+                        VoucherId = DBClass.getField("Select Share_Voucher_ID from IPD_Distribution_Master where Distribution_Id =  " + transID).ToString();
+                    }
                     else if (transType == "MIN")
                     {
                         VoucherId = DBClass.getField("select Voucher_ID from Manual_Invoice where ManualInvoiceId = " + transID).ToString();

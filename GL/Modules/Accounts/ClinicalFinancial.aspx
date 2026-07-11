@@ -156,9 +156,10 @@
             categoryname: row.find('.categorynameDiagnostic').val(),
             cashinhand: row.find('.cashinhandDiagnostic').val(),
             discount: row.find('.discountDiagnostic').val(),
-            revenue: row.find('.revenueDiagnostic').val()
+            revenue: row.find('.revenueDiagnostic').val(),
+            expense: row.find('.expenseDiagnostic').val()
         };
-        if (rowDataDiagnostic.categoryname == 0 || rowDataDiagnostic.cashinhand == 0 || rowDataDiagnostic.discount == 0 || rowDataDiagnostic.revenue == 0) {
+        if (rowDataDiagnostic.categoryname == 0 || rowDataDiagnostic.cashinhand == 0 || rowDataDiagnostic.discount == 0 || rowDataDiagnostic.revenue == 0|| rowDataDiagnostic.expense == 0) {
             isEmptyFound = true;
         }
         if (categoryNamesDiagnostic.has(rowDataDiagnostic.categoryname)) {
@@ -256,9 +257,10 @@
             categoryname: row.find('.categorynameSERVICE').val(),
             cashinhand: row.find('.cashinhandSERVICE').val(),
             discount: row.find('.discountSERVICE').val(),
-            revenue: row.find('.revenueSERVICE').val()
+            revenue: row.find('.revenueSERVICE').val(),
+            expense: row.find('.expenseSERVICE').val()
         };
-        if (rowDataSERVICE.categoryname == 0 || rowDataSERVICE.cashinhand == 0 || rowDataSERVICE.discount == 0 || rowDataSERVICE.revenue == 0) {
+        if (rowDataSERVICE.categoryname == 0 || rowDataSERVICE.cashinhand == 0 || rowDataSERVICE.discount == 0 || rowDataSERVICE.revenue == 0|| rowDataSERVICE.expense == 0) {
             isEmptyFound = true;
         }
         if (categoryNamesSERVICE.has(rowDataSERVICE.categoryname)) {
@@ -1024,6 +1026,11 @@ function addNewRowAdvance() {
                                                 </select>
                                             </td>
                                             <td>
+                                                <select class="expenseDiagnostic select2select" style="background-color: white;" disabled>
+                                                    ${setSelected(optionsVen, item.expense)}
+                                                </select>
+                                            </td>
+                                            <td>
                                                 <a href="#" onclick="removeRow(this)">
                                                     <i class="fa fa-trash fa-lg " style="color: black;"></i>
                                                 </a>
@@ -1333,6 +1340,11 @@ function addNewRowAdvance() {
     <td>
         <select class="revenueSERVICE select2select" style="background-color: white;" disabled>
             ${setSelected(optionsVen, item.revenue)}
+        </select>
+    </td>
+    <td>
+        <select class="expenseSERVICE select2select" style="background-color: white;" disabled>
+            ${setSelected(optionsVen, item.expense)}
         </select>
     </td>
     <td>
@@ -1694,6 +1706,11 @@ function addNewRowAdvance() {
                         </select>
                     </td>
                     <td>
+                        <select class="expenseDiagnostic select2select" style="background-color: white;">
+                            ${optionsVen}
+                        </select>
+                    </td>
+                    <td>
                         <a href="#" onclick="removeRow(this)">
                         <i class="fa fa-trash fa-lg " style="color: black;"></i>
                     </a>
@@ -1828,6 +1845,11 @@ function addNewRowAdvance() {
                         </select>
                     </td>
                     <td>
+                        <select class="expenseSERVICE select2select" style="background-color: white;">
+                            ${optionsVen}
+                        </select>
+                    </td>
+                    <td>
                         <a href="#" onclick="removeRow(this)">
                         <i class="fa fa-trash fa-lg " style="color: black;"></i>
                     </a>
@@ -1889,7 +1911,7 @@ function addNewRowAdvance() {
                 <tr class="data-row">
                     <td style="display: none">
     
-<input type = "hidden" class="financialDepartmentPHARMACY" value = "005">
+                        <input type = "hidden" class="financialDepartmentPHARMACY" value = "005">
                     
                     <td>
                         <select disabled class="categorynamePHARMACY" style="background-color: white; height:32px;">
@@ -2228,6 +2250,7 @@ function addNewRowAdvance() {
                         <th style="width: 25%;">Cash in Hand (C.I.H.) </th>
                         <th style="width: 25%;">Discount              </th>
                         <th style="width: 25%;">Revenue               </th>
+                        <th style="width: 25%;">Expense               </th>
                         <th style="width: 9%;">Action                </th>
                     </tr>
                 </thead>
@@ -2355,6 +2378,7 @@ function addNewRowAdvance() {
                         <th style="width: 25%;">Cash in Hand (C.I.H.) </th>
                         <th style="width: 25%;">Discount              </th>
                         <th style="width: 25%;">Revenue               </th>
+                        <th style="width: 25%;">Expense               </th>
                         <th style="width: 9%;">Action                </th>
                     </tr>
                 </thead>

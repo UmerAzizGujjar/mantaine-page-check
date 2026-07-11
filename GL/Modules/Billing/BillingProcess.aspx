@@ -730,6 +730,19 @@
                 }
                 window.open(url, '_blank');
             }
+            function PrintVoucher2() {
+                debugger;
+                var id = '<%=Request.QueryString["Bill_ID"]%>';
+                var locationInfo = window.location;
+                var url = 'ReportViewer.aspx?ReportName=Voucher&ReportTitle=OPD Voucher&TransID=' + id + '&TransType=DSJV';
+                if (!locationInfo.origin.includes('localhost') || locationInfo.origin.includes('localhost')) {
+                    var urlInfo = window.location.href.split('/');
+                    var ip = urlInfo[2];
+                    var foldername = urlInfo[3];
+                    url = 'http://' + ip + '/' + foldername + '/ReportViewer.aspx?ReportName=Voucher&ReportTitle=OPD Voucher&TransID=' + id + '&TransType=DSJV';
+                }
+                window.open(url, '_blank');
+            }
             function PrintHospital() {
                 window.open('/ReportViewer.aspx?ReportName=PrintHospital&ReportTitle=Hospital Print' + '&Bill_ID=' + '<%= Request.QueryString["Bill_ID"]%>');
             }
@@ -1551,10 +1564,18 @@
                     );
                     $('#BillCategory').attr('disabled', true);
                     var status = data[0].Status;
+                    var Doctor_Share_Voucher_Status = data[0].Doctor_Share_Voucher_Status;
                     if (status === 'Approved') {
                         $('#btnPrintVoucher').show();
                     } else {
                         $('#btnPrintVoucher').hide();
+                    }
+                    var status = data[0].Status;
+                    if (Doctor_Share_Voucher_Status === 'Approved') {
+                 
+                        $('#btnPrintVoucher2').show();
+                    } else {
+                        $('#btnPrintVoucher2').hide();
                     }
                     if (status != "Approved") {
                         $('#btnApprove').show();
@@ -8406,9 +8427,10 @@
                     </div>
                     <div class="col-lg-2">
                         <input type="button" style="width: 110px; display: none;" id="btnPrintVoucher" class="btn btn-primry" value="Print Voucher" onclick="PrintVoucher();" />
+                        <input type="button" style="width: 110px; display: none;" id="btnPrintVoucher2" class="btn btn-primry" value="Print Voucher 2"  onclick="PrintVoucher2();" />
                         <input type="button" style="width: 110px; display: none;" value="Hospital Print" onclick="PrintHospital();" />
                         <input type="button" style="width: 110px; display: none;" value="Consult Print" onclick="PrintConsultant();" />
-                        <input type="button" style="width: 110px; display: none;" value="Patient Copy" name="name" onclick="BackToPrintPatient();" style="width: 100px;" />
+                        <input type="button" style="width: 100px; display: none;" value="Patient Copy" name="name" onclick="BackToPrintPatient();"  />
                     
                     </div>
                 </div>
