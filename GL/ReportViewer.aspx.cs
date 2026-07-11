@@ -3951,6 +3951,41 @@ namespace PMS
 
 
             }
+            else if (reportName == "Panel_wise_Billing_Report")
+            {
+                var logoPath = DBClass.getField("SELECT dbo.GetCompanyLogo()");
+
+                string rptFileName = "LabRadiology/rptPanelWiseBillingReport.rpt";
+
+
+                reportPath += rptFileName;
+                rd.Load(reportPath);
+
+                string StartDateTime = Request.QueryString["StartDateTime"].ToString();
+                string EndDateTime = Request.QueryString["EndDateTime"].ToString();
+
+                string Operator = Request.QueryString["Operator"].ToString();
+                string TestName = Request.QueryString["testName"].ToString();
+                string MainDepartment = Request.QueryString["MainDepartment"].ToString();
+                string Panel = Request.QueryString["Panel"].ToString();
+                //if (TestName == "All")
+                //{
+                //    TestName = "0";
+                //}
+                rd.SetParameterValue("@LabTest", TestName);
+
+                rd.SetParameterValue("@RadiologyDept", MainDepartment);
+                rd.SetParameterValue("@Operator", Operator);
+
+                rd.SetParameterValue("@stDate", StartDateTime);
+                rd.SetParameterValue("@endDate", EndDateTime);
+                rd.SetParameterValue("CompanyName", AppConfig.Company_Name);
+                rd.SetParameterValue("Title", reportTitle);
+                rd.SetParameterValue("@Panel", Panel);
+                rd.SetParameterValue("CompanyLogo", logoPath);
+
+
+            }
             else if (reportName == "AnalysisReport")
             {
                 var logoPath = DBClass.getField("SELECT dbo.GetCompanyLogo()");

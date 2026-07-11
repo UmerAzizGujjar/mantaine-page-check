@@ -5749,6 +5749,102 @@ namespace PMS
 
 
                 }
+
+                if (this.PageTitle == "Panel_wise_Billing_Report")
+                {
+                    string x = "Panelized Billing Report";
+                    Master.Label2.Text = x;
+                    Master.GetMenuName();
+
+                    tr_Summary.Visible = false;
+                    tr1MedicalSubsidy.Visible = false;
+                    lblMainDepartment.Visible = false;
+                    lblPatientType.Visible = false;
+                    lblMultiSelect.Visible = false;
+                    ddlPatientType.Visible = false;
+                    optRw.Visible = true;
+                    trDoctor.Visible = false;
+                    AllowPatientRecord = false;
+                    lblMainDepartment.Visible = false;
+                    lblMedical.Visible = false;
+                    DateDiv.Visible = true;
+                    Time_Row.Visible = true;
+                    SetDepartent();
+                    dpROw.Visible = true;
+
+
+
+                    MainDeptDiv.Visible = true;
+                    lblMainDepartment.Visible = true;
+                    lblMainDepartment.Text = "Department Name";
+                    ddlMainDepartment.Visible = true;
+                    ddlMainDepartment.Items.Clear();
+                    object valuset;
+                    valuset = DBClass.GetValueSet("Main Test Departments");
+                    ddlMainDepartment.DataSource = valuset;
+                    ddlMainDepartment.DataTextField = "DataValue_Description";
+                    ddlMainDepartment.DataValueField = "DataValue_Name";
+                    ddlMainDepartment.Items.Clear();
+                    ddlMainDepartment.Items.Add(new ListItem() { Text = "All", Value = "0" });
+                    ddlMainDepartment.DataBind();
+
+
+
+                    DataTable Tests = DBClass.getDataTable("select Test_id ,Test_Name from Lab_Tests where main_department in ('002','003','006','004','009','010')");
+                    DataTable TestCategories = (DataTable)DBClass.getDataTable("select dv.DataValue_Name,dv.DataValue_Description from ValueSet vs,DataValues dv where vs.ValueSet_ID=dv.ValueSet_ID and vs.ValueSet_Name='Test Groups'");
+
+                    foreach (DataRow dr in TestCategories.Rows)
+                    {
+                        DataRow newdr = Tests.NewRow();
+                        newdr["Test_ID"] = dr["DataValue_Name"].ToString();
+                        newdr["Test_Name"] = dr["DataValue_Description"].ToString();
+                        Tests.Rows.Add(newdr);
+                        Tests.AcceptChanges();
+                    }
+                    trTestResult1.Visible = true;
+                    ddlTestName.DataSource = Tests;
+                    ddlTestName.DataTextField = "Test_Name";
+                    ddlTestName.DataValueField = "Test_Name";
+                    ddlTestName.Items.Add(new ListItem() { Text = "All", Value = "0" });
+                    ddlTestName.DataBind();
+
+                    
+                    object valusets;
+                    
+
+
+                    DataBaseDataContext db = new DataBaseDataContext(DBClass.ConnectionString());
+                    valusets = from d in db.aspnet_Users
+                               select new { d.UserName, d.UserId };
+                    ddloprators.DataSource = valusets;
+                    ddloprators.DataTextField = "UserName";
+                    ddloprators.DataValueField = "UserId";
+                    ddloprators.Items.Add(new ListItem() { Text = "All", Value = "0" });
+                    ddloprators.DataBind();
+
+
+                    lblMainDepartment.Visible = true;
+                    ddlMainDepartment.Visible = true;
+                    lboperator.Visible = true;
+                    ddloprators.Visible = true;
+                    lblDepartment.Text = "Panel";
+                    DataTable dtPanel = DBClass.getDataTable("select panel_id,Company_Name from Panel");
+                    ddlDepartments.DataSource = dtPanel;
+                    ddlDepartments.DataTextField = "Company_Name";
+                    ddlDepartments.DataValueField = "panel_id";
+                    ddlDepartments.Items.Clear();
+                    ddlDepartments.Items.Add(new ListItem("Please Select", "0"));
+                    ddlDepartments.DataBind();
+
+                    ddlShift.Visible = false;
+                    lbShift.Visible = false;
+
+
+                }
+
+
+
+
                 if (this.PageTitle == "AnalysisReport")
                 {
                     string x = "Analysis Report";

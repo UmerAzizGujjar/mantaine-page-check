@@ -827,6 +827,16 @@
                         var url = 'ReportViewer.aspx?ReportName=RadiologyReport_Panel&ReportTitle=Radiology Report From ' + $('#ctl00_MainContent_txtStart_Date').val() + ' ' + $('#ctl00_MainContent_txtSTime').val() + ' to ' + $('#ctl00_MainContent_txtEnd_Date').val() + ' ' + $('#ctl00_MainContent_txtETime').val() + '&StartDateTime=' + $('#ctl00_MainContent_txtStart_Date').val() + ' ' + $('#ctl00_MainContent_txtSTime').val() + '&EndDateTime=' + $('#ctl00_MainContent_txtEnd_Date').val() + ' ' + $('#ctl00_MainContent_txtETime').val() + '&MainDepartment=' + main_department + '&testName=' + testname + '&Patient_Type=' + ((typeof ($("#ctl00_MainContent_ddlPatientType").val()) != 'undefined') ? $("#ctl00_MainContent_ddlPatientType").val() : "0")+ '&Panel=' + $('#ctl00_MainContent_ddlDepartments').val() + '&Operator=' + ((typeof ($("#ctl00_MainContent_ddloprators").val()) != 'undefined') ? $("#ctl00_MainContent_ddloprators").val() : "0");
                         window.open(url, '_blank');
                     }
+                    else if (rptTitle == "Panel_wise_Billing_Report") {
+                        debugger;
+                        var main_department = ((typeof ($("#ctl00_MainContent_ddlMainDepartment").val()) != 'undefined') ? $("#ctl00_MainContent_ddlMainDepartment").val() : "0");
+                        //var testname = ((typeof ($("#ctl00_MainContent_ddlTestName").val()) != 'undefined') ? $("#ctl00_MainContent_ddlTestName").val() : "0")
+                        var testname = $("#ctl00_MainContent_ddlTestName").val() || "0";
+                        testname = encodeURIComponent(testname); 
+                        var url = 'ReportViewer.aspx?ReportName=Panel_wise_Billing_Report&ReportTitle=Panel Wise Billing Report From ' + $('#ctl00_MainContent_txtStart_Date').val() + ' ' + $('#ctl00_MainContent_txtSTime').val() + ' to ' + $('#ctl00_MainContent_txtEnd_Date').val() + ' ' + $('#ctl00_MainContent_txtETime').val() + '&StartDateTime=' + $('#ctl00_MainContent_txtStart_Date').val() + ' ' + $('#ctl00_MainContent_txtSTime').val() + '&EndDateTime=' + $('#ctl00_MainContent_txtEnd_Date').val() + ' ' + $('#ctl00_MainContent_txtETime').val() + '&MainDepartment=' + main_department + '&testName=' + testname + '&Panel=' + $('#ctl00_MainContent_ddlDepartments').val() + '&Operator=' + ((typeof ($("#ctl00_MainContent_ddloprators").val()) != 'undefined') ? $("#ctl00_MainContent_ddloprators").val() : "0");
+                        window.open(url, '_blank');
+                    }
+                  
                     else if (rptTitle == "AnalysisReport") {
                         debugger;
                         var testname = ((typeof ($("#ctl00_MainContent_ddlTestName").val()) != 'undefined') ? $("#ctl00_MainContent_ddlTestName").val() : "0")
