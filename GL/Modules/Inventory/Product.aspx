@@ -46,9 +46,9 @@
             document.getElementById('chkSehatSahulat').addEventListener('change', function () {
                 const container = document.getElementById('sehatCardRateContainer');
                 if (this.checked) {
-                    container.style.display = 'block'; // Show the field
+                    container.style.display = 'block';
                 } else {
-                    container.style.display = 'none';  // Hide the field
+                    container.style.display = 'none'; 
                 }
             });
 
@@ -941,6 +941,16 @@
                     $('#ATC').val(parse.ATC);
                     $('#GenericName').val(parse.Generic_Name);
                     $('#Note').val(parse.Notes);
+                    //$('#Active').val(parse.Active);
+                    if (parse.Active == 1) {
+
+                        $("#Active").prop('checked', true);
+                    }
+                    else
+                    {
+                        $("#Active").prop('checked', false);
+                    }
+
                     if (parse.issehatCard_item == 1) {
                         $("#chkSehatSahulat").prop('checked', true);
                     }
