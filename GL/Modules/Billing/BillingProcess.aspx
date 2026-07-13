@@ -5646,8 +5646,15 @@
                 });
             }
             debugger;
+            function destroyTokenInput(textboxID) {
+                var $input = $('#' + textboxID);
+                $input.siblings('.token-input-list').remove();
+                $input.siblings('input.token-input-input').remove();
+                $input.show();
+            }
             function tokenInputs(textboxID, tblName, OnAddFun) {
                 debugger;
+                destroyTokenInput(textboxID);
                 $('#' + textboxID).tokenInput("../../json.aspx?Table=" + tblName,
                     {
                         tokenLimit: 1,
@@ -5664,7 +5671,7 @@
 
                                         GetPatientIdfromOPd();
                                     }
-                                    else if (tblName == 'INV_ItemsForBilling') {
+                                    else if (tblName.indexOf('INV_ItemsForBilling') == 0) {
 
                                         localStorage.SelectedItemID = item.id;
                                         localStorage.SelectedItemType = item.Type;
