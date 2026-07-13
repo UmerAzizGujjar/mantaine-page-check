@@ -730,6 +730,19 @@
                 }
                 window.open(url, '_blank');
             }
+            function PrintVoucher2() {
+                debugger;
+                var id = '<%=Request.QueryString["Bill_ID"]%>';
+                var locationInfo = window.location;
+                var url = 'ReportViewer.aspx?ReportName=Voucher&ReportTitle=OPD Voucher&TransID=' + id + '&TransType=DSJV';
+                if (!locationInfo.origin.includes('localhost') || locationInfo.origin.includes('localhost')) {
+                    var urlInfo = window.location.href.split('/');
+                    var ip = urlInfo[2];
+                    var foldername = urlInfo[3];
+                    url = 'http://' + ip + '/' + foldername + '/ReportViewer.aspx?ReportName=Voucher&ReportTitle=OPD Voucher&TransID=' + id + '&TransType=DSJV';
+                }
+                window.open(url, '_blank');
+            }
             function PrintHospital() {
                 window.open('/ReportViewer.aspx?ReportName=PrintHospital&ReportTitle=Hospital Print' + '&Bill_ID=' + '<%= Request.QueryString["Bill_ID"]%>');
             }
@@ -1354,6 +1367,7 @@
                 });
             }
             function FillLabTests() {
+                debugger;
                 var options = '<option value="0" >Please Select</option>';
                 PageMethods.GetLabTests(function (Tests) {
                     $.each(JSON.parse(Tests), function (key, value) {
@@ -1509,6 +1523,7 @@
                     $('#txtDisAmt').val(data[0].Discount_Amount);
                     $('#txtNetPayable').val(data[0].Net_Amount);
                     $('#txtAmountReceived').val(data[0].Received_Amount);
+                    debugger;
                     $('#txtBalances').val(data[0].Balance_Amount);
                     $('#ddlChargePolicy').val(data[0].Charge_Policy);
 
@@ -1551,10 +1566,18 @@
                     );
                     $('#BillCategory').attr('disabled', true);
                     var status = data[0].Status;
+                    var Doctor_Share_Voucher_Status = data[0].Doctor_Share_Voucher_Status;
                     if (status === 'Approved') {
                         $('#btnPrintVoucher').show();
                     } else {
                         $('#btnPrintVoucher').hide();
+                    }
+                    var status = data[0].Status;
+                    if (Doctor_Share_Voucher_Status === 'Approved') {
+                 
+                        $('#btnPrintVoucher2').show();
+                    } else {
+                        $('#btnPrintVoucher2').hide();
                     }
                     if (status != "Approved") {
                         $('#btnApprove').show();
@@ -2476,13 +2499,16 @@
                 $('#txtNetPayable').val(NetPayable.toFixed(1));
                 var AmtReceived = $('#txtAmountReceived').val();
                 if (NetPayable != '') {
+                    debugger;
                     if (AmtReceived != '') {
+                        debugger;
                         $('#txtBalances').val((NetPayable - AmtReceived).toFixed(1));
                     }
                     else
                         $('#txtBalances').val(NetPayable.toFixed(0));
                 }
                 else {
+                    debugger;
                     $('#txtBalances').val(NetPayable.toFixed(0));
                 }
             }
@@ -3234,15 +3260,23 @@
                     var AmtReceived = $('#txtAmountReceived').val();
                     var amt = parseFloat(AmtReceived) || 0;
                     if ($('#txtTotalPayable').val() != '') {
+                        debugger;
                         if (AmtReceived != '') {
-                            $('#txtBalances').val(((net + PreviousAmount) - (amt + AdvanceAmount + PreviousPaid)).toFixed());
+                            debugger;
+                            $('#txtBalances').val(
+                                ((parseFloat(net) + parseFloat(PreviousAmount)) -
+                                    (parseFloat(amt) + parseFloat(AdvanceAmount) + parseFloat(PreviousPaid))
+                                ).toFixed()
+                            );
                             //   $('#txt_balance').val(((net + PreviousAmount) - (amt + AdvanceAmount + PreviousPaid)).toFixed());
 
                         }
                         else
                             $('#txtBalances').val(net.toFixed());
                     }
+
                     else {
+                        debugger;
                         $('#txtBalances').val(net.toFixed());
                     }
                 }
@@ -3271,8 +3305,13 @@
                     if ($('#txtTotalPayable').val() != '') {
                         debugger;
                         if (AmtReceived != '') {
-                            // $('#txtBalances').val((TotalNetAmount - AmtReceived).toFixed());
-                            $('#txtBalances').val(((TotalNetAmount + PreviousAmount) - (AmtReceived + AdvanceAmount + PreviousPaid)).toFixed());
+                            debugger;
+                         
+                            $('#txtBalances').val(
+                                ((parseFloat(TotalNetAmount) + parseFloat(PreviousAmount)) -
+                                    (parseFloat(AmtReceived) + parseFloat(AdvanceAmount) + parseFloat(PreviousPaid))
+                                ).toFixed()
+                            );
                         }
                         else
                             $('#txtBalances').val(TotalNetAmount.toFixed());
@@ -3338,7 +3377,9 @@
                 $('#txtNetPayable').val(TotalNetAmount.toFixed());
                 var AmtReceived = $('#txtAmountReceived').val();
                 if ($('#txtTotalPayable').val() != '') {
+                    debugger;
                     if (AmtReceived != '') {
+                        debugger;
                         $('#txtBalances').val((TotalNetAmount - AmtReceived).toFixed());
                     }
                     else
@@ -3595,10 +3636,11 @@
                         $($(value).find('td')[8]).text(rowNetAmount.toFixed(0));
                         $(value).find('input[name="hdnNet_Amount"]').val(rowNetAmount.toFixed(6));
                     });
-
+                    debugger;
                     var AmtReceived = $('#txtAmountReceived').val();
                     if ($('#txtTotalPayable').val() != '') {
                         if (AmtReceived != '') {
+                            debugger;
                             $('#txtBalances').val((TotalNetAmount - AmtReceived).toFixed(0));
                         }
                         else
@@ -3620,6 +3662,7 @@
 
                 if ($('#txtTotalPayable').val() != '') {
                     if (AmtReceived != '') {
+                        debugger;
                         $('#txtBalances').val((TotalNetAmount - AmtReceived).toFixed(0));
                     }
                     else
@@ -3679,6 +3722,7 @@
                         $('#txtNetPayable').val(total_amt);
                         var AmtReceived = $('#txtAmountReceived').val();
                         if ($('#txtTotalPayable').val() != '') {
+                            debugger;
                             if (AmtReceived != '') {
                                 $('#txtBalances').val((net - AmtReceived).toFixed());
                             }
@@ -8406,9 +8450,10 @@
                     </div>
                     <div class="col-lg-2">
                         <input type="button" style="width: 110px; display: none;" id="btnPrintVoucher" class="btn btn-primry" value="Print Voucher" onclick="PrintVoucher();" />
+                        <input type="button" style="width: 110px; display: none;" id="btnPrintVoucher2" class="btn btn-primry" value="Print Voucher 2"  onclick="PrintVoucher2();" />
                         <input type="button" style="width: 110px; display: none;" value="Hospital Print" onclick="PrintHospital();" />
                         <input type="button" style="width: 110px; display: none;" value="Consult Print" onclick="PrintConsultant();" />
-                        <input type="button" style="width: 110px; display: none;" value="Patient Copy" name="name" onclick="BackToPrintPatient();" style="width: 100px;" />
+                        <input type="button" style="width: 100px; display: none;" value="Patient Copy" name="name" onclick="BackToPrintPatient();"  />
                     
                     </div>
                 </div>
