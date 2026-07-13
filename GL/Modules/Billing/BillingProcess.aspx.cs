@@ -3399,6 +3399,7 @@ namespace PMS
                             data.Bank_Cash,
                             data.Main_Department,
                             data.Status,
+                            data.Doctor_Share_Voucher_Status,
                             data.Voucher_ID,
                             data.In_Patient_ID,
                             data.Panel_Id,

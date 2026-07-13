@@ -43,7 +43,7 @@ namespace PMS
                     var Total_Items = _dbContext.INV_Items.Count();
                     var Items = from I in _dbContext.INV_Items
                                 where I.Pharmacy_Item == true &&
-                                     ((I.Item_ID.ToString().Contains(searchValue) || I.Item_Code.Contains(searchValue) || I.Description.Contains(searchValue) || _dbContext.GetDataValueName("UOM", I.Unit).Contains(searchValue) || _dbContext.GetDataValueName("Ware House", I.InventoryOrg).Contains(searchValue)))
+                                     ((I.Item_Code.Contains(searchValue) || I.Description.Contains(searchValue) || _dbContext.GetDataValueName("UOM", I.Unit).Contains(searchValue) || _dbContext.GetDataValueName("Ware House", I.InventoryOrg).Contains(searchValue)))
                                     select new
                                     {
                                         Item_ID = I.Item_ID,

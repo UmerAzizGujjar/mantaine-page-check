@@ -126,6 +126,18 @@ namespace PMS
                     {
                         VoucherId = DBClass.getField("select Voucher_ID from Ar_Billings where Bill_Id = " + transID).ToString();
                     }
+                    else if (transType == "DSJV")
+                    {
+                        VoucherId = DBClass.getField("select Doctor_Share_Voucher_ID from Ar_Billings where Bill_Id = " + transID).ToString();
+                    }
+                    else if (transType == "IPD_Dist")
+                    {
+                        VoucherId = DBClass.getField("Select Voucher_ID from IPD_Distribution_Master where Distribution_Id =  " + transID).ToString();
+                    }
+                    else if (transType == "IPD_Share")
+                    {
+                        VoucherId = DBClass.getField("Select Share_Voucher_ID from IPD_Distribution_Master where Distribution_Id =  " + transID).ToString();
+                    }
                     else if (transType == "MIN")
                     {
                         VoucherId = DBClass.getField("select Voucher_ID from Manual_Invoice where ManualInvoiceId = " + transID).ToString();
@@ -169,6 +181,18 @@ namespace PMS
                     else if (transType == "OPDShare")
                     {
                         VoucherId = DBClass.getField("select Voucher_ID from Out_Patient where Out_Patient_ID = " + transID).ToString();
+                    }
+                    else if (transType == "DPV")
+                    {
+                        VoucherId = DBClass.getField("select Voucher_ID from GL_Vouchers  where Voucher_ID = " + transID).ToString();
+                    }
+                    else if (transType == "PSV")
+                    {
+                        VoucherId = DBClass.getField("select Voucher_ID from Ar_Billings  where ispharmacy = 1 and Bill_id = " + transID).ToString();
+                    }
+                    else if (transType == "CPV")
+                    {
+                        VoucherId = DBClass.getField("select Voucher_ID from GL_Vouchers  where Voucher_ID = " + transID).ToString();
                     }
                     else if (transType == "ADV")
                     {
@@ -3946,6 +3970,41 @@ namespace PMS
                 rd.SetParameterValue("CompanyName", AppConfig.Company_Name);
                 rd.SetParameterValue("Title", reportTitle);
                 rd.SetParameterValue("@Patient_Type", PatType);
+                rd.SetParameterValue("@Panel", Panel);
+                rd.SetParameterValue("CompanyLogo", logoPath);
+
+
+            }
+            else if (reportName == "Panel_wise_Billing_Report")
+            {
+                var logoPath = DBClass.getField("SELECT dbo.GetCompanyLogo()");
+
+                string rptFileName = "LabRadiology/rptPanelWiseBillingReport.rpt";
+
+
+                reportPath += rptFileName;
+                rd.Load(reportPath);
+
+                string StartDateTime = Request.QueryString["StartDateTime"].ToString();
+                string EndDateTime = Request.QueryString["EndDateTime"].ToString();
+
+                string Operator = Request.QueryString["Operator"].ToString();
+                string TestName = Request.QueryString["testName"].ToString();
+                string MainDepartment = Request.QueryString["MainDepartment"].ToString();
+                string Panel = Request.QueryString["Panel"].ToString();
+                //if (TestName == "All")
+                //{
+                //    TestName = "0";
+                //}
+                rd.SetParameterValue("@LabTest", TestName);
+
+                rd.SetParameterValue("@RadiologyDept", MainDepartment);
+                rd.SetParameterValue("@Operator", Operator);
+
+                rd.SetParameterValue("@stDate", StartDateTime);
+                rd.SetParameterValue("@endDate", EndDateTime);
+                rd.SetParameterValue("CompanyName", AppConfig.Company_Name);
+                rd.SetParameterValue("Title", reportTitle);
                 rd.SetParameterValue("@Panel", Panel);
                 rd.SetParameterValue("CompanyLogo", logoPath);
 
