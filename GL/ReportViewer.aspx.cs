@@ -126,6 +126,18 @@ namespace PMS
                     {
                         VoucherId = DBClass.getField("select Voucher_ID from Ar_Billings where Bill_Id = " + transID).ToString();
                     }
+                    else if (transType == "DSJV")
+                    {
+                        VoucherId = DBClass.getField("select Doctor_Share_Voucher_ID from Ar_Billings where Bill_Id = " + transID).ToString();
+                    }
+                    else if (transType == "IPD_Dist")
+                    {
+                        VoucherId = DBClass.getField("Select Voucher_ID from IPD_Distribution_Master where Distribution_Id =  " + transID).ToString();
+                    }
+                    else if (transType == "IPD_Share")
+                    {
+                        VoucherId = DBClass.getField("Select Share_Voucher_ID from IPD_Distribution_Master where Distribution_Id =  " + transID).ToString();
+                    }
                     else if (transType == "MIN")
                     {
                         VoucherId = DBClass.getField("select Voucher_ID from Manual_Invoice where ManualInvoiceId = " + transID).ToString();
@@ -1549,12 +1561,24 @@ namespace PMS
             {
                 if (Request.QueryString["OPD_ID"] != null)
                 {
-
+                    var OPDID = Request.QueryString["OPD_ID"].ToString();
                     var logoPath = DBClass.getField("SELECT dbo.GetCompanyLogo()");
+                    var address = DBClass.getField("select Company_Address from Sys_Companys where Company_ID = " + AppConfig.Company_ID + "");
 
                     reportPath += "Patients/rpt_OPD_Patient_Print.rpt";
                     rd.Load(reportPath);
-                    rd.SetParameterValue("@OPD_ID", Request.QueryString["OPD_ID"]);
+                    rd.SetParameterValue("@OPD_ID", OPDID);
+                    try
+                    {
+                        rd.SetParameterValue("@OPD_ID", OPDID, rd.Subreports[0].Name.ToString());
+                        rd.SetParameterValue("CompanyName", AppConfig.Company_Name, rd.Subreports[0].Name.ToString());
+                        rd.SetParameterValue("CompanyLogo", logoPath, rd.Subreports[0].Name.ToString());
+                        rd.SetParameterValue("Address", DBClass.getField("select Company_Address from Sys_Companys where Company_ID = " + AppConfig.Company_ID + ""), rd.Subreports[0].Name.ToString());
+                    }
+                    catch
+                    {
+                        // Subreport parameter doesn't exist on this report variant - ignore silently
+                    }
                     rd.SetParameterValue("CompanyName", AppConfig.Company_Name);
                     rd.SetParameterValue("CompanyLogo", logoPath);
                     rd.SetParameterValue("Address", DBClass.getField("select Company_Address from Sys_Companys where Company_ID = " + AppConfig.Company_ID + ""));
@@ -3934,6 +3958,41 @@ namespace PMS
                 rd.SetParameterValue("CompanyName", AppConfig.Company_Name);
                 rd.SetParameterValue("Title", reportTitle);
                 rd.SetParameterValue("@Patient_Type", PatType);
+                rd.SetParameterValue("@Panel", Panel);
+                rd.SetParameterValue("CompanyLogo", logoPath);
+
+
+            }
+            else if (reportName == "Panel_wise_Billing_Report")
+            {
+                var logoPath = DBClass.getField("SELECT dbo.GetCompanyLogo()");
+
+                string rptFileName = "LabRadiology/rptPanelWiseBillingReport.rpt";
+
+
+                reportPath += rptFileName;
+                rd.Load(reportPath);
+
+                string StartDateTime = Request.QueryString["StartDateTime"].ToString();
+                string EndDateTime = Request.QueryString["EndDateTime"].ToString();
+
+                string Operator = Request.QueryString["Operator"].ToString();
+                string TestName = Request.QueryString["testName"].ToString();
+                string MainDepartment = Request.QueryString["MainDepartment"].ToString();
+                string Panel = Request.QueryString["Panel"].ToString();
+                //if (TestName == "All")
+                //{
+                //    TestName = "0";
+                //}
+                rd.SetParameterValue("@LabTest", TestName);
+
+                rd.SetParameterValue("@RadiologyDept", MainDepartment);
+                rd.SetParameterValue("@Operator", Operator);
+
+                rd.SetParameterValue("@stDate", StartDateTime);
+                rd.SetParameterValue("@endDate", EndDateTime);
+                rd.SetParameterValue("CompanyName", AppConfig.Company_Name);
+                rd.SetParameterValue("Title", reportTitle);
                 rd.SetParameterValue("@Panel", Panel);
                 rd.SetParameterValue("CompanyLogo", logoPath);
 
@@ -6860,6 +6919,73 @@ namespace PMS
                 rd.Load(reportPath);
                 rd.SummaryInfo.ReportTitle = reportTitle;
                 rd.SetParameterValue("@Sample_ID", int.Parse(Request.QueryString["Sample_ID"]));
+            }
+            else if (reportName == "LabQrCode")
+            {
+                var sampleId = Request.QueryString["Sample_ID"].ToString();
+                reportPath += "LabRadiology/rptLabQrCode.rpt";
+                rd.Load(reportPath);
+                rd.SummaryInfo.ReportTitle = reportTitle;
+                rd.SetParameterValue("@Sample_ID", sampleId);
+
+                try
+                {
+                    bool patientDataFound = false;
+
+                    string sql = $@"
+                    SELECT distinct 
+                           ISNULL(rp.mr_no_sequence, '') AS mr_no_sequence,
+                           ISNULL(rp.Full_Name, '') AS Full_Name,
+                           ISNULL(CONVERT(VARCHAR, rp.Age_years), '') AS Age_years,
+                           ISNULL(rp.Gender, '') AS Gender,
+                           ISNULL(ar.Bill_No, '') AS Bill_No
+
+                    FROM Sample_Master m,
+                         Ar_Billings ar,
+                         Reg_patient rp,
+                         Ar_Billing_Details abd,
+                         Sample_Detail sd
+                    WHERE m.Patient_ID = rp.pat_id 
+                      AND abd.Bill_Details_ID = sd.Bill_Detail_ID
+                      AND ar.Bill_ID = abd.Bill_ID
+                      AND sd.Sample_ID = {sampleId}";
+
+                    DataTable patientData = DBClass.getDataTable(sql);
+
+                    if (patientData.Rows.Count > 0)
+                    {
+                        patientDataFound = true;
+
+                        string qrContent = $"MR:{patientData.Rows[0]["mr_no_sequence"]}|Name:{patientData.Rows[0]["Full_Name"]}|Age:{patientData.Rows[0]["Age_years"]}|Gender:{patientData.Rows[0]["Gender"]}|Bill No:{patientData.Rows[0]["Bill_No"]}";
+                        // Save to temp file instead of passing bytes
+                        string tempQrPath = Path.Combine(Path.GetTempPath(), $"QR_{sampleId}_{Guid.NewGuid()}.png");
+                        using (QRCodeGenerator qrGenerator = new QRCodeGenerator())
+                        {
+                            QRCodeData qrCodeData = qrGenerator.CreateQrCode(qrContent, QRCodeGenerator.ECCLevel.Q);
+                            using (PngByteQRCode qrCodeImage = new PngByteQRCode(qrCodeData))
+                            {
+                                byte[] qrBytes = qrCodeImage.GetGraphic(10);
+                                File.WriteAllBytes(tempQrPath, qrBytes);
+                            }
+                        }
+                        // Pass FILE PATH as string parameter
+                        rd.SetParameterValue("QRImagePath", tempQrPath);
+                    }
+                    else
+                    {
+                        rd.SetParameterValue("QRImagePath", "");
+                    }
+
+                    // Debug check — remove or comment out once confirmed working
+                    System.Diagnostics.Debug.WriteLine(patientDataFound
+                        ? $"Patient data found for sample_id={sampleId}. Row count: {patientData.Rows.Count}"
+                        : $"No patient data found for sample_id={sampleId}.");
+                }
+                catch (Exception ex)
+                {
+                    rd.SetParameterValue("QRImagePath", "");
+                    System.Diagnostics.Debug.WriteLine($"QR generation failed for sample_id={sampleId}: {ex.Message}");
+                }
             }
             else if (reportName == "PrintINVBarcodes")
             {

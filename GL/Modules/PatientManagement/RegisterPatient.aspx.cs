@@ -558,9 +558,10 @@ namespace PMS.Modules.PatientManagement
                     return pat.pat_id.ToString();
                 }
             }
-            catch (Exception)
+            catch (Exception ex)
             {
-                return "ERROR: Failed to save patient. Please try again.";
+                System.Diagnostics.Trace.TraceError($"SavePatientDetail failed: {ex.Message}");
+                return "ERROR: " + ex.Message;
             }
         }
 

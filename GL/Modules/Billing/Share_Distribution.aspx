@@ -992,6 +992,35 @@
             previewWindow.document.write(html);
             previewWindow.document.close();
         }
+
+
+        function PrintDistributionVoucher() {
+            debugger;
+            var id = '<%=Request.QueryString["ID"]%>';
+                        var locationInfo = window.location;
+            var url = 'ReportViewer.aspx?ReportName=Voucher&ReportTitle=OPD Voucher&TransID=' + id + '&TransType=IPD_Dist';
+                        if (!locationInfo.origin.includes('localhost') || locationInfo.origin.includes('localhost')) {
+                            var urlInfo = window.location.href.split('/');
+                            var ip = urlInfo[2];
+                            var foldername = urlInfo[3];
+                            url = 'http://' + ip + '/' + foldername + '/ReportViewer.aspx?ReportName=Voucher&ReportTitle=OPD Voucher&TransID=' + id + '&TransType=IPD_Dist';
+                        }
+                        window.open(url, '_blank');
+        }
+
+        function PrintDoctorVoucher() {
+            debugger;
+            var id = '<%=Request.QueryString["ID"]%>';
+                        var locationInfo = window.location;
+                        var url = 'ReportViewer.aspx?ReportName=Voucher&ReportTitle=OPD Voucher&TransID=' + id + '&TransType=IPD_Share';
+                        if (!locationInfo.origin.includes('localhost') || locationInfo.origin.includes('localhost')) {
+                            var urlInfo = window.location.href.split('/');
+                            var ip = urlInfo[2];
+                            var foldername = urlInfo[3];
+                            url = 'http://' + ip + '/' + foldername + '/ReportViewer.aspx?ReportName=Voucher&ReportTitle=OPD Voucher&TransID=' + id + '&TransType=IPD_Share';
+                        }
+                        window.open(url, '_blank');
+                    }
     </script>
 
 </asp:Content>
@@ -1278,6 +1307,12 @@
             </div> 
             <div class="col-lg-2 col-md-6 col-sm-6">
             <input type="button" id="btnPreview" class="btn btn-primry" value="Preview" onclick="PreviewShareDistribution();" />
+            </div>
+            <div class="col-lg-2 col-md-6 col-sm-6">
+                <input type="button" id="btnPrintVoucher" class="btn btn-primry" value="Print Distribution Voucher" onclick="PrintDistributionVoucher();" />
+            </div> 
+            <div class="col-lg-2 col-md-6 col-sm-6">
+            <input type="button" id="btnPrintVoucher2" class="btn btn-primry" value="Print Doctor Voucher" onclick="PrintDoctorVoucher();" />
             </div>
 
         </div>
