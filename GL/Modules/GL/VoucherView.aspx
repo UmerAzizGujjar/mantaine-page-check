@@ -262,7 +262,8 @@ function LoadPageByYear() {
     LoadPage();
 }
 
-function PrintReport(ID) {
+ function PrintReport(ID) {
+    var getype = '<%= Request.QueryString["VoucherType"]%>'
     var locationInfo = window.location;
     var user_name = '<% =AppConfig.Company_Name %>';
     if (user_name == 'As-Siraat Serving Humanity') {
@@ -271,19 +272,21 @@ function PrintReport(ID) {
         reportPath = 'ReportViewer.aspx'; // same folder
     }
 
-    var url = '/ReportViewer.aspx?ReportName=Voucher_GL&Voucher_ID=' + ID;
+     var url = '/ReportViewer.aspx?ReportName=Voucher&TransID=' + ID + '&TransType=' + getype;
     if (!locationInfo.origin.includes('localhost')) {
         var urlInfo = window.location.href.split('/');
         var ip = urlInfo[2];
         var foldername = urlInfo[3];
 
-        url = 'http://' + ip + '/' + foldername + '/' + reportPath +  '?ReportName=Voucher_GL&Voucher_ID=' + ID;
+        url = 'http://' + ip + '/' + foldername + '/' + reportPath + '?ReportName=Voucher&TransID=' + ID + '&TransType=' + getype;
     }
-    window.location.href = url;
+    //window.location.href = url;
+    window.open(url, '_blank');
 }
 
 function Edit(ID) {
     var getype = '<%= Request.QueryString["VoucherType"]%>'
+    
     window.location.href = "Voucher.aspx?VoucherType=" + getype + "&VID=" + ID;
 }
 

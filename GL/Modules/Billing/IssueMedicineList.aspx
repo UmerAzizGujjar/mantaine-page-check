@@ -32,6 +32,10 @@
             window.open(url, '_blank');
 
         }
+        function PrintVoucher(Bill_ID) {
+            var url = '../../ReportViewer.aspx?ReportName=Voucher&ReportTitle=PharmacySlip&TransID=' + Bill_ID + '&TransType=PSV';
+            window.open(url, '_blank');
+        }
         function PrintInvoice(key) {
             debugger;
             IncrementReprintCount(key);
@@ -152,8 +156,9 @@
                             var res = '<a href="#" class="editListBtn" onclick="PrintInvoice(' + full.Bill_ID + ')" style="border-radius: 4px;  color: white; padding: 5px 8px 5px 8px;"><i class="fa fa-upload"></i></a>'
 
                             var print = '<a class="printListBtn" style="border-radius: 4px;margin-left: 4px;color: white;padding: 5px 8px 5px 8px;" href="#" onclick="PrintBill(' + full.Bill_ID + ')" id="btnprint"><i class="fa fa-print" ></i></a>';
+                            var voucher = '<a class="printListBtn" style="border-radius: 4px;margin-left: 4px;color: white;padding: 5px 8px 5px 8px;" href="#" onclick="PrintVoucher(' + full.Bill_ID + ')" id="btnvoucherprint"><i class="fa fa-print" ></i></a
                             var result;
-                            result = res  + print;
+                            result = res + print + voucher;
                             return result;
                         }, "width": "8%", "orderable": false
                     }
