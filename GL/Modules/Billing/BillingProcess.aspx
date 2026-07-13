@@ -1855,7 +1855,8 @@
                         //}
                         var Bill_Date = $('#txtBillDate').val();
                         var Remarks = $('#txtRemarks').val();
-                        var TotalPayable = $('#txtTotalAmount').val();
+                        //var TotalPayable = $('#txtTotalAmount').val();
+                        var TotalPayable = parseFloat($('#txtTotalAmount').val()) || 0;
                         var Discount_Percentage = $('#txtDisPer').val();
                         Discount_Percentage = $('#hdntxtDisPer').val();
                         var Discount_Amount = $('#txtDisAmt').val();
