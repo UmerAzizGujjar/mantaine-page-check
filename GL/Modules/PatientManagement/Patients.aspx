@@ -1141,6 +1141,7 @@
 
                 },
                 error: function (response) {
+                    $('#SavePatient_Data').attr('disabled', false);
                     alert("Error");
                 }
             });

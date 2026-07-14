@@ -327,8 +327,6 @@ function CalculateDateOfBirth() {
 
 
 function SavePatient() {
-    debugger;
-
     $('#SavePatient_Data').attr('disabled', true);
     $('.span_txt').hide();
     var Prefix_PatientName = $('#ddl_name').val();
@@ -633,19 +631,19 @@ function Get_Pat_Info(reg_id) {
                 $('#chkMonitoring').prop('checked', false).trigger('change');
             }
             if (data.MaritalStatus_text)
-                $('#ddl_status').html($('<option>', { value: '', text: data.MaritalStatus_text }).prop('selected', true));
+                $('#ddl_status').html($('<option>', { value: data.Martial_Status, text: data.MaritalStatus_text }).prop('selected', true));
             if (data.Country_text)
-                $('#ddlCountry').html($('<option>', { value: '', text: data.Country_text }).prop('selected', true));
+                $('#ddlCountry').html($('<option>', { value: data.Country, text: data.Country_text }).prop('selected', true));
             if (data.BloodGroup_text)
-                $('#ddl_bloodGroup').html($('<option>', { value: '', text: data.BloodGroup_text }).prop('selected', true));
+                $('#ddl_bloodGroup').html($('<option>', { value: data.Blood_Group, text: data.BloodGroup_text }).prop('selected', true));
             if (data.Area_text)
-                $('#txtarea').html($('<option>', { value: '', text: data.Area_text }).prop('selected', true));
+                $('#txtarea').html($('<option>', { value: data.val_area, text: data.Area_text }).prop('selected', true));
             if (data.Gender_text)
-                $('#ddl_Gender').html($('<option>', { value: '', text: data.Gender_text }).prop('selected', true));
+                $('#ddl_Gender').html($('<option>', { value: data.Gender, text: data.Gender_text }).prop('selected', true));
             if (data.State_text)
-                $('#ddlstate').html($('<option>', { value: '', text: data.State_text }).prop('selected', true));
+                $('#ddlstate').html($('<option>', { value: data.State, text: data.State_text }).prop('selected', true));
             if (data.City_text)
-                $('#txtcity').html($('<option>', { value: '', text: data.City_text }).prop('selected', true));
+                $('#txtcity').html($('<option>', { value: data.val_city, text: data.City_text }).prop('selected', true));
 
             $('#SavePatient_Data').val('Update');
             $('#btnPrint').show();

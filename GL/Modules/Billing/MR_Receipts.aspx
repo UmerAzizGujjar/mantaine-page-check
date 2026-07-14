@@ -665,10 +665,12 @@
         }
 
         function SaveRecord() {
+            $('#btnSave').attr('disabled', true);
             var mrNo = $('#txtMRNo').val();
             if (mrNo == '') {
                 Swal.fire({ icon: 'error', title: 'Error!', text: 'Please Select Patient.', showConfirmButton: false, timer: 2000 });
                 $('#txtMRNo').focus();
+                $('#btnSave').attr('disabled', false);
                 return;
             }
 
@@ -681,6 +683,7 @@
                 });
                 if (checkedBills.length == 0) {
                     Swal.fire({ icon: 'error', title: 'Error!', text: 'Select at least one bill', showConfirmButton: false, timer: 2000 });
+                    $('#btnSave').attr('disabled', false);
                     return;
                 }
                 var paid = parseFloat($('#txtReceiptAmount').val()) || 0;
@@ -688,6 +691,7 @@
                 if (paid != totalRecv) {
                     Swal.fire({ icon: 'error', title: 'Error!', text: 'Amount Paid must equal Total Receivable', showConfirmButton: false, timer: 2000 });
                     $('#txtReceiptAmount').focus();
+                    $('#btnSave').attr('disabled', false);
                     return;
                 }
                 Swal.fire({ title: 'Processing...', text: 'Please wait', allowOutsideClick: false, didOpen: () => Swal.showLoading() });
@@ -703,6 +707,7 @@
                     },
                     error: function (err) {
                         Swal.close();
+                        $('#btnSave').attr('disabled', false);
                         alert(err.responseText);
                     }
                 });

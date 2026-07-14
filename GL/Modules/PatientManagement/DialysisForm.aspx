@@ -777,7 +777,9 @@
         }
 
         function SavePatient() {
+            $('#SavePatient_Data').attr('disabled', true);
             if (!validatePatientModal()) {
+                $('#SavePatient_Data').attr('disabled', false);
                 return;
             }
 
@@ -1048,8 +1050,10 @@
         }
 
         function saveStep1() {
+            $('#btnSaveStep1').attr('disabled', true);
             var patientId = $('#hdfPatientId').val();
             if (!patientId) {
+                $('#btnSaveStep1').attr('disabled', false);
                 Swal.fire({
                     icon: 'warning',
                     title: 'Warning!',
@@ -1112,8 +1116,10 @@
                             timer: 2000,
                             showConfirmButton: false
                         });
+                        $('#btnSaveStep1').attr('disabled', false);
                         navigateToStep(2);
                     } else {
+                        $('#btnSaveStep1').attr('disabled', false);
                         Swal.fire({
                             icon: 'error',
                             title: 'Error!',
@@ -1122,6 +1128,9 @@
                             showConfirmButton: false
                         });
                     }
+                },
+                error: function () {
+                    $('#btnSaveStep1').attr('disabled', false);
                 }
             });
         }
@@ -1165,9 +1174,11 @@
         }
 
         function saveStep2() {
+            $('#btnSaveStep2').attr('disabled', true);
             var vitalsData = getVitalSignsData();
 
             if (vitalsData.length === 0) {
+                $('#btnSaveStep2').attr('disabled', false);
                 Swal.fire({
                     icon: 'warning',
                     title: 'Warning!',
@@ -1203,6 +1214,7 @@
                         });
                         navigateToStep(3);
                     } else {
+                        $('#btnSaveStep2').attr('disabled', false);
                         Swal.fire({
                             icon: 'error',
                             title: 'Error!',
@@ -1211,6 +1223,9 @@
                             showConfirmButton: false
                         });
                     }
+                },
+                error: function () {
+                    $('#btnSaveStep2').attr('disabled', false);
                 }
             });
         }
@@ -1236,6 +1251,7 @@
         }
 
         function saveStep3() {
+            $('#btnSaveStep3').attr('disabled', true);
             var data = {
                 DialysisId: currentDialysisId,
                 PatientId: $('#hdfPatientId').val(),
@@ -1269,6 +1285,7 @@
                             showConfirmButton: false
                         });
                     } else {
+                        $('#btnSaveStep3').attr('disabled', false);
                         Swal.fire({
                             icon: 'error',
                             title: 'Error!',
@@ -1277,6 +1294,9 @@
                             showConfirmButton: false
                         });
                     }
+                },
+                error: function () {
+                    $('#btnSaveStep3').attr('disabled', false);
                 }
             });
         }

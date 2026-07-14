@@ -1065,7 +1065,7 @@
         }
 
         function SaveAllRecords() {
-            debugger;
+            $('#btnsave').attr('disabled', true);
             var btnsave = $('#btnsave').val();
             var Patient_ID = $("#hdfPatient_ID").val();
            
@@ -1128,7 +1128,7 @@
                             text: response.replace("ERROR:", ""),
                             confirmButtonText: 'OK'
                         });
-
+                        $('#btnsave').attr('disabled', false);
                         return;
                     }
 
@@ -1154,7 +1154,7 @@
                 function (error) {
 
                     console.log(error);
-
+                    $('#btnsave').attr('disabled', false);
                     Swal.fire({
                         icon: 'error',
                         title: 'Server Error!',

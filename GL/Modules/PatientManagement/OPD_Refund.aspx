@@ -203,6 +203,7 @@
         }
 
         function SaveOPDRecord() {
+            $('#btnSave').attr('disabled', true);
             var urlParams = new URLSearchParams(window.location.search);
             var refundID = urlParams.get("RefundID");
 
@@ -218,6 +219,7 @@
             }
 
             if (HospitalRefund > maxHospitalShare) {
+                $('#btnSave').attr('disabled', false);
                 Swal.fire({
                     icon: 'warning',
                     title: 'Invalid Hospital Refund',
@@ -232,6 +234,7 @@
             }
 
             if (DoctorRefund > maxDoctorAmount) {
+                $('#btnSave').attr('disabled', false);
                 Swal.fire({
                     icon: 'warning',
                     title: 'Invalid Doctor Refund',
@@ -246,6 +249,7 @@
             }
 
             if (HospitalRefund === 0 && DoctorRefund === 0) {
+                $('#btnSave').attr('disabled', false);
                 Swal.fire({
                     icon: 'warning',
                     title: 'No Refund Amount',
@@ -296,6 +300,7 @@
                             }
                         });
                     } else {
+                        $('#btnSave').attr('disabled', false);
                         Swal.fire({
                             icon: 'error',
                             title: 'Error',
@@ -309,6 +314,7 @@
                     }
                 },
                 error: function () {
+                    $('#btnSave').attr('disabled', false);
                     Swal.fire({
                         icon: 'error',
                         title: 'Error',

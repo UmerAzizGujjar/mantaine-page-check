@@ -694,7 +694,8 @@
 
 
         debugger;
-        function SaveRecord() {       
+        function SaveRecord() {
+            $('#btnSave').attr('disabled', true);
                 debugger;
                 var Patient_ID = $("#hdPatientID").text();
                 var Bill_ID = $("#hdBillID").text();
@@ -773,6 +774,7 @@
                             window.location.reload();
                             $('#btnSave').attr('disabled', 'disabled');
                         }, function (error) {
+                            $('#btnSave').attr('disabled', false);
                             alert(error.get_message());
                         });
                     }
@@ -795,11 +797,13 @@
                     window.location.reload();
                     $('#btnSave').attr('disabled', 'disabled');
                 }, function (error) {
+                    $('#btnSave').attr('disabled', false);
                     alert(error.get_message());
                 });
             }
         }
         function Approve() {
+            $('#btnApprove').attr('disabled', true);
             debugger;
 
             var BillId = '<%= Request.QueryString["ID"] %>';
@@ -826,6 +830,7 @@
                     location.reload();
                 }
                 else {
+                    $('#btnApprove').attr('disabled', false);
                     Swal.fire({
                         icon: 'error',
                         title: 'Error!',
@@ -835,6 +840,7 @@
                 }
             },
                 function (error) {
+                    $('#btnApprove').attr('disabled', false);
                     Swal.fire({
                         icon: 'error',
                         title: 'Error!',

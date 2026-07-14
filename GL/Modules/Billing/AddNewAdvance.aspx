@@ -201,6 +201,7 @@
 
     function SaveRecord() {
     debugger;
+    $('#btnSave').attr('disabled', true);
     var Patient_ID = $('#hdPatientID').val();
     var advanceAmount = $("#txtAdvanceAmount").val();
     var ddlPaymentType = $("#ddlPaymentType").val();  // Now matches the HTML ID
@@ -212,14 +213,17 @@
     
     if (Patient_ID == "") {
         alert("Mr No. is missing");
+        $('#btnSave').attr('disabled', false);
         return;
     }
     if (advanceAmount == "") {
         alert("Advance amount is missing");
+        $('#btnSave').attr('disabled', false);
         return;
     }
     if (ddlPaymentType == "0" || ddlPaymentType == "") {
         alert("Please select Payment Type");
+        $('#btnSave').attr('disabled', false);
         return;
     }
     else {
@@ -236,6 +240,7 @@
                 var Parse = JSON.parse(response.d);
                 if (Parse == null) {
                     alert("First create In Patient of : " + $("#txtMRNo").val());
+                    $('#btnSave').attr('disabled', false);
                     return;
                 }
                 else {
@@ -279,22 +284,30 @@
                                 window.location = "AddNewAdvance.aspx";
                             }
                             else {
+                                $('#btnSave').attr('disabled', false);
                                 alert(response.d);
                             }
                         },
                         failure: function (response) {
                             alert(response.d);
+                        },
+                        error: function () {
+                            $('#btnSave').attr('disabled', false);
                         }
                     });
                 }
             },
             failure: function (response) {
                 alert(response.d);
+            },
+            error: function () {
+                $('#btnSave').attr('disabled', false);
             }
         });
     }
 }
     function ApproveAdvance() {
+        $('#btnApprove').attr('disabled', true);
         var advanceid = '<% =Request.QueryString["advID"] %>';
         PageMethods.Approve_Advance(advanceid, function (response) {
             debugger;
@@ -318,6 +331,7 @@
                             location.reload();
                         }, 2000);
                     } else {
+                        $('#btnApprove').attr('disabled', false);
                         Swal.fire({
                             icon: 'error',
                             title: 'Error!',
@@ -331,6 +345,7 @@
                         });
                     }
                 } else {
+                    $('#btnApprove').attr('disabled', false);
                     Swal.fire({
                         icon: 'error',
                         title: 'Error!',
@@ -339,6 +354,7 @@
                     });
                 }
             } catch (error) {
+                $('#btnApprove').attr('disabled', false);
                 console.error("Error parsing response:", error);
                 Swal.fire({
                     icon: 'error',
@@ -348,6 +364,7 @@
                 });
             }
         }, function (error) {
+            $('#btnApprove').attr('disabled', false);
             debugger;
             console.error("PageMethods error:", error);
             Swal.fire({
@@ -360,6 +377,7 @@
     }
     
     function UnApprove() {
+        $('#btnUnApprove').attr('disabled', true);
         var advid = '<% =Request.QueryString["advID"] %>';
         PageMethods.unApproveAdvance(advid, function (response) {
             debugger;
@@ -383,6 +401,7 @@
                             location.reload();
                         }, 2000);
                     } else {
+                        $('#btnUnApprove').attr('disabled', false);
                         Swal.fire({
                             icon: 'error',
                             title: 'Error!',
@@ -396,6 +415,7 @@
                         });
                     }
                 } else {
+                    $('#btnUnApprove').attr('disabled', false);
                     Swal.fire({
                         icon: 'error',
                         title: 'Error!',
@@ -404,6 +424,7 @@
                     });
                 }
             } catch (error) {
+                $('#btnUnApprove').attr('disabled', false);
                 console.error("Error parsing response:", error);
                 Swal.fire({
                     icon: 'error',
@@ -413,6 +434,7 @@
                 });
             }
         }, function (error) {
+            $('#btnUnApprove').attr('disabled', false);
             debugger;
             console.error("PageMethods error:", error);
             Swal.fire({
