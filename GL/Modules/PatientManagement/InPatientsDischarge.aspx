@@ -2817,6 +2817,7 @@
         }
 
         function SaveInPatientAllRecord() {
+            $('#btnSave').attr('disabled', true);
             debugger;
             var dischargechk = document.getElementById("ctl00_MainContent_cbDicharg_Slip").checked;
             var ddlDischargeBy = $('#ctl00_MainContent_ddlDischarge_By').val();
@@ -2837,6 +2838,7 @@
                         $('#loadingimage').show();
                         LoadPatientDetails();
                     } else {
+                        $('#btnSave').attr('disabled', false);
                         $('#loadingimage').hide();
                         $('#ctl00_MainContent_cbDicharg_Slip').prop('checked', false);
                         $('#btnDischargePrint').attr('disabled', true);
@@ -2849,6 +2851,7 @@
                     icon: 'warning',
                     confirmButtonText: 'OK'
                 });
+                $('#btnSave').attr('disabled', false);
                 return false;
             }
         }

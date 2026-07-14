@@ -391,12 +391,15 @@
         }--%>
 
         function SaveAdmission() {
+            $('#btnSave').attr('disabled', true);
             var doctor = $('#ctl00_MainContent_ddlDoctor').val();
             if (currentEmergencyID === 0) {
+                $('#btnSave').attr('disabled', false);
                 Swal.fire('Warning', 'Please select a patient from the waiting list', 'warning');
                 return;
             }
             if (doctor === "0" || doctor === null) {
+                $('#btnSave').attr('disabled', false);
                 Swal.fire('Warning', 'Please select a Doctor', 'warning');
                 return;
             }
@@ -409,10 +412,12 @@
             var roomNo = $('#<%= ddlRoom_No.ClientID %>').val();
 
             if (admitTo === '001' && (wardNo === '0' || wardNo === '')) {
+                $('#btnSave').attr('disabled', false);
                 Swal.fire('Warning', 'Please select Ward', 'warning');
                 return;
             }
             if (admitTo === '002' && (roomType === '0' || roomType === '' || roomNo === '0' || roomNo === '')) {
+                $('#btnSave').attr('disabled', false);
                 Swal.fire('Warning', 'Please select Room Type and Room No', 'warning');
                 return;
             }
@@ -446,6 +451,7 @@
                 success: function (response) {
                     var result = response.d;
                     if (result.indexOf('Error') >= 0) {
+                        $('#btnSave').attr('disabled', false);
                         Swal.fire('Error', result, 'error');
                     } else {
                         var actionText = admissionData.btnAction === 'Save' ? 'saved' : 'updated';
@@ -455,6 +461,7 @@
                     }
                 },
                 error: function (xhr, status, error) {
+                    $('#btnSave').attr('disabled', false);
                     Swal.fire('Error', 'Error saving admission: ' + error, 'error');
                 }
             });

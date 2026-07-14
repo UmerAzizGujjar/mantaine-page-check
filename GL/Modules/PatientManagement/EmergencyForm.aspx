@@ -1758,7 +1758,7 @@
 
         }
         function SaveData() {
-            debugger;
+            $('#btnsave').attr('disabled', true);
 
             var regid = $('#hdn_regid').val();
             var emer_id = $('#hdn_EmergencyFormId').val();
@@ -1792,6 +1792,7 @@
         // Only validate fee for non-panel categories
             if (pat_category != "03") {
                 if (discount < 100.0 && Fees == 0.0) {
+                    $('#btnsave').attr('disabled', false);
                     Swal.fire({
                         icon: 'error',
                         title: 'Error!',
@@ -1803,31 +1804,37 @@
                 }
             }
             if (!patient_no || patient_no === "0") {
+                $('#btnsave').attr('disabled', false);
                 Swal.fire({ icon: 'error', title: 'Error!', text: 'Please select a Patient.', showConfirmButton: false, timer: 2000 });
                 return;
             }
             if (!pat_category || pat_category === "0") {
+                $('#btnsave').attr('disabled', false);
                 Swal.fire({ icon: 'error', title: 'Error!', text: 'Please select a patient category.', showConfirmButton: false, timer: 2000 });
                 return;
             }
 
             // Category specific validations
             if (pat_category === "03" && (!panel || panel === "0")) {
+                $('#btnsave').attr('disabled', false);
                 Swal.fire({ icon: 'error', title: 'Error!', text: 'Please select a panel company.', showConfirmButton: false, timer: 2000 });
                 return;
             }
 
             if ((pat_category === "02" ) && (!doctor || doctor === "0")) {
+                $('#btnsave').attr('disabled', false);
                 Swal.fire({ icon: 'error', title: 'Error!', text: 'Please select a doctor.', showConfirmButton: false, timer: 2000 });
                 return;
             }
           
             if ((pat_category === "01" || ["02"].includes(pat_category)) && (!hdnDepartment || hdnDepartment === "0")) {
+                $('#btnsave').attr('disabled', false);
                 Swal.fire({ icon: 'error', title: 'Error!', text: 'Please select a department.', showConfirmButton: false, timer: 2000 });
                 return;
             }
 
             if (!accountid || accountid === "0") {
+                $('#btnsave').attr('disabled', false);
                 Swal.fire({ icon: 'error', title: 'Error!', text: 'Please select a Cash In Hand.', showConfirmButton: false, timer: 2000 });
                 return;
             }
@@ -1867,6 +1874,7 @@
                 dataType: "json",
                 success: function (response) {
                     if (response.d && response.d.startsWith("ERROR:")) {
+                        $('#btnsave').attr('disabled', false);
                         Swal.fire({
                             icon: 'error',
                             title: 'Validation Failed',
@@ -1891,6 +1899,7 @@
                     window.location.href = "Emergency_View.aspx";
                 },
                 error: function (xhr, status, error) {
+                    $('#btnsave').attr('disabled', false);
                     console.error("Error: ", error);
                     console.log("Response Text: ", xhr.responseText);
                     Swal.fire({

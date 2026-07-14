@@ -199,6 +199,7 @@
 
             function ApproveBill() {
                 debugger;
+                $('#btnApprove').attr('disabled', true);
                 var BillId = '<% =Request.QueryString["Bill_ID"] %>';
                     PageMethods.approve_Bill(BillId, function (Tests) {
                         debugger
@@ -221,6 +222,7 @@
                             }, 2500);
                         }
                         else {
+                            $('#btnApprove').attr('disabled', false);
                             Swal.fire({
                                 icon: 'error',
                                 title: 'Error!',
@@ -230,6 +232,7 @@
                     },
 
                         function (error) {
+                            $('#btnApprove').attr('disabled', false);
                             Swal.fire({
                                 icon: 'error',
                                 title: 'Error!',

@@ -125,6 +125,7 @@
                     },
                     { "data": "Department", "orderable": false },
                     { "data": "Remarks", "orderable": false },
+                    
                     { "data": "Closing_Remarks", "orderable": false },
                     {
                         "data": "CreatedBY",
@@ -143,6 +144,7 @@
                         "render": (data, type, full) => full.Approved_Time ? moment(full.Approved_Time).format('DD-MMM-YYYY hh:mm A') : '',
                         "width": "12%"
                     },
+                    { "data": "ReViewRecommended", "orderable": false },
                     {
                         "data": null,
                         "render": function (data, type, full) {
@@ -243,6 +245,7 @@
                         <th>Request BY</th>
                         <th>Status</th>
                         <th>Creation Date</th>
+                        <th>Approved Date</th>
                         <th>Approved Date</th>
                         <th>GIR Status</th>
                         <th>GIR Status</th>

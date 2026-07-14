@@ -114,7 +114,18 @@ namespace PMS.Inventory
              select (decimal?)sid.Issue_Qty).Sum() ?? 0
         )
     )
-).Sum() ?? 0
+).Sum() ?? 0,
+                                            ReViewRecommended = string.Join(",",
+                                                                     (from sa in _dbContext.Sys_Approval_Logs
+                                                                      join sasm in _dbContext.Sys_Approval_Stage_Masters
+                                                                          on sa.Approval_Stage_ID equals sasm.Stage_ID
+                                                                      where sa.Form_ID == 5
+                                                                         && sa.Entry_ID == MIR.MaterialRequest_Id
+                                                                       //  && sasm.Stage_Name == "Accounts Department(PO)"
+                                                                      select _dbContext.aspnet_Users.Where(x => x.UserId == sa.Approve_By).Select(x => x.UserName).FirstOrDefault())
+                                                                     .ToArray()),
+
+
                                         };
 
                     var FilteredCount = MaterialIssue.Count();
