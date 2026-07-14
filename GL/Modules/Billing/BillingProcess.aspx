@@ -5901,7 +5901,18 @@
                     $('#txtprevious_Amount').val(data.d.PreviousTotalAmount);
                     $('#lblDepartment').val(data.d.Department);
                     $('#txt_balance').val(data.d.Balance);
-                    $('#txtMaindepartment').val(data.d.MainDepartment).trigger('change');
+                    //$('#txtMaindepartment').val(data.d.MainDepartment).trigger('change');
+                    
+                                
+                    if (data.d.MainDepartment) {
+                        if ($('#txtMaindepartment option').length > 1) {
+                            $('#txtMaindepartment').val(data.d.MainDepartment).trigger('change');
+                        } else {
+                            LoadMainDepartment(function () {
+                                $('#txtMaindepartment').val(data.d.MainDepartment).trigger('change');
+                            });
+                        }
+                    }
                     debugger;
                     setTimeout(function () { AutoFillCashInHand(); }, 300);
                     var NIC = data.d.NIC;
