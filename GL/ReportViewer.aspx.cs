@@ -182,6 +182,18 @@ namespace PMS
                     {
                         VoucherId = DBClass.getField("select Voucher_ID from Out_Patient where Out_Patient_ID = " + transID).ToString();
                     }
+                    else if (transType == "DPV")
+                    {
+                        VoucherId = DBClass.getField("select Voucher_ID from GL_Vouchers  where Voucher_ID = " + transID).ToString();
+                    }
+                    else if (transType == "PSV")
+                    {
+                        VoucherId = DBClass.getField("select Voucher_ID from Ar_Billings  where ispharmacy = 1 and Bill_id = " + transID).ToString();
+                    }
+                    else if (transType == "CPV")
+                    {
+                        VoucherId = DBClass.getField("select Voucher_ID from GL_Vouchers  where Voucher_ID = " + transID).ToString();
+                    }
                     else if (transType == "ADV")
                     {
                         var rawVoucherId = DBClass.getField("select Voucher_ID from Advance_Payment where Advance_ID = " + transID);
@@ -731,6 +743,27 @@ namespace PMS
 
 
             }
+            else if (reportName == "DischargeDetailedPrint")
+            {
+
+                var logoPath = DBClass.getField("SELECT dbo.GetCompanyLogo()");
+
+                string InPatientId = Request.QueryString["InPatientId"].ToString();
+                reportPath += "InPatient/rptDischargeBasePrint.rpt";
+                rd.Load(reportPath);
+                rd.SetParameterValue("@InPatientId", InPatientId);
+                rd.SetParameterValue("CompanyName", AppConfig.Company_Name);
+                rd.SetParameterValue("CompanyLogo", logoPath);
+                rd.SetParameterValue("@InPatientId", Convert.ToInt32(InPatientId), rd.Subreports[0].Name.ToString());
+                rd.SetParameterValue("@InPatientId", Convert.ToInt32(InPatientId), rd.Subreports[1].Name.ToString());
+                rd.SetParameterValue("@InPatientId", Convert.ToInt32(InPatientId), rd.Subreports[2].Name.ToString());
+                rd.SetParameterValue("@InPatientId", Convert.ToInt32(InPatientId), rd.Subreports[3].Name.ToString());
+                rd.SetParameterValue("@InPatientId", Convert.ToInt32(InPatientId), rd.Subreports[4].Name.ToString());
+                rd.SetParameterValue("@InPatientId", Convert.ToInt32(InPatientId), rd.Subreports[5].Name.ToString());
+            }
+
+
+
             else if (reportName == "Emergencypatient")
             {
                 string Emergency_ID = Request.QueryString["Emergency_ID"].ToString();
@@ -3958,6 +3991,41 @@ namespace PMS
                 rd.SetParameterValue("CompanyName", AppConfig.Company_Name);
                 rd.SetParameterValue("Title", reportTitle);
                 rd.SetParameterValue("@Patient_Type", PatType);
+                rd.SetParameterValue("@Panel", Panel);
+                rd.SetParameterValue("CompanyLogo", logoPath);
+
+
+            }
+            else if (reportName == "Panel_wise_Billing_Report")
+            {
+                var logoPath = DBClass.getField("SELECT dbo.GetCompanyLogo()");
+
+                string rptFileName = "LabRadiology/rptPanelWiseBillingReport.rpt";
+
+
+                reportPath += rptFileName;
+                rd.Load(reportPath);
+
+                string StartDateTime = Request.QueryString["StartDateTime"].ToString();
+                string EndDateTime = Request.QueryString["EndDateTime"].ToString();
+
+                string Operator = Request.QueryString["Operator"].ToString();
+                string TestName = Request.QueryString["testName"].ToString();
+                string MainDepartment = Request.QueryString["MainDepartment"].ToString();
+                string Panel = Request.QueryString["Panel"].ToString();
+                //if (TestName == "All")
+                //{
+                //    TestName = "0";
+                //}
+                rd.SetParameterValue("@LabTest", TestName);
+
+                rd.SetParameterValue("@RadiologyDept", MainDepartment);
+                rd.SetParameterValue("@Operator", Operator);
+
+                rd.SetParameterValue("@stDate", StartDateTime);
+                rd.SetParameterValue("@endDate", EndDateTime);
+                rd.SetParameterValue("CompanyName", AppConfig.Company_Name);
+                rd.SetParameterValue("Title", reportTitle);
                 rd.SetParameterValue("@Panel", Panel);
                 rd.SetParameterValue("CompanyLogo", logoPath);
 
