@@ -570,51 +570,89 @@ WHERE m.Creation_Date >= @s AND m.Creation_Date <= @e", conn))
         }
 
         [WebMethod(EnableSession = false)]
-        public static string GetYearlyPharmacySummary(int year)
-        {
-            try
-            {
-                using (DataBaseDataContext db = new DataBaseDataContext())
-                {
-                    var query = db.sp_YearlyPharmacySummary(year).ToList();
-                    return new JavaScriptSerializer().Serialize(query);
-                }
-            }
-            catch (Exception ex)
-            {
-                return new JavaScriptSerializer().Serialize(new { Error = ex.Message });
-            }
-        }
-
-        [WebMethod(EnableSession = false)]
-        public static string GetYearlyPharmacyRevenue(int year)
-        {
-            try
-            {
-                using (DataBaseDataContext db = new DataBaseDataContext())
-                {
-                    var query = db.sp_YearlyPharmacyRevenue(year).ToList();
-                    return new JavaScriptSerializer().Serialize(query);
-                }
-            }
-            catch (Exception ex)
-            {
-                return new JavaScriptSerializer().Serialize(new { Error = ex.Message });
-            }
-        }
-
-        [WebMethod]
-        public static string GetYearlyInventorySummary(int year)
+        public static string GetYearlyPharmacySummary(int year, string warehouse = "0")
         {
             try
             {
                 var rows = new List<Dictionary<string, object>>();
-                using (var conn = new System.Data.SqlClient.SqlConnection(System.Web.Configuration.WebConfigurationManager.ConnectionStrings["ASPGLConnectionString"].ConnectionString))
+                using (var conn = new System.Data.SqlClient.SqlConnection(
+                    System.Web.Configuration.WebConfigurationManager.ConnectionStrings["ASPGLConnectionString"].ConnectionString))
+                {
+                    using (var cmd = new System.Data.SqlClient.SqlCommand("dbo.sp_YearlyPharmacySummary", conn))
+                    {
+                        cmd.CommandType = System.Data.CommandType.StoredProcedure;
+                        cmd.Parameters.AddWithValue("@Year", year);
+                        cmd.Parameters.AddWithValue("@Warehouse", warehouse ?? "0");
+                        conn.Open();
+                        using (var reader = cmd.ExecuteReader())
+                        {
+                            while (reader.Read())
+                            {
+                                var row = new Dictionary<string, object>();
+                                for (int i = 0; i < reader.FieldCount; i++)
+                                    row[reader.GetName(i)] = reader[i];
+                                rows.Add(row);
+                            }
+                        }
+                    }
+                }
+                return new JavaScriptSerializer().Serialize(rows);
+            }
+            catch (Exception ex)
+            {
+                return new JavaScriptSerializer().Serialize(new { Error = ex.Message + "|" + ex.GetType().Name + "|" + (ex.InnerException?.Message ?? "") });
+            }
+        }
+
+        [WebMethod(EnableSession = false)]
+        public static string GetYearlyPharmacyRevenue(int year, string warehouse = "0")
+        {
+            try
+            {
+                var rows = new List<Dictionary<string, object>>();
+                using (var conn = new System.Data.SqlClient.SqlConnection(
+                    System.Web.Configuration.WebConfigurationManager.ConnectionStrings["ASPGLConnectionString"].ConnectionString))
+                {
+                    using (var cmd = new System.Data.SqlClient.SqlCommand("dbo.sp_YearlyPharmacyRevenue", conn))
+                    {
+                        cmd.CommandType = System.Data.CommandType.StoredProcedure;
+                        cmd.Parameters.AddWithValue("@Year", year);
+                        cmd.Parameters.AddWithValue("@Warehouse", warehouse ?? "0");
+                        conn.Open();
+                        using (var reader = cmd.ExecuteReader())
+                        {
+                            while (reader.Read())
+                            {
+                                var row = new Dictionary<string, object>();
+                                for (int i = 0; i < reader.FieldCount; i++)
+                                    row[reader.GetName(i)] = reader[i];
+                                rows.Add(row);
+                            }
+                        }
+                    }
+                }
+                return new JavaScriptSerializer().Serialize(rows);
+            }
+            catch (Exception ex)
+            {
+                return new JavaScriptSerializer().Serialize(new { Error = ex.Message + "|" + ex.GetType().Name + "|" + (ex.InnerException?.Message ?? "") });
+            }
+        }
+
+        [WebMethod]
+        public static string GetYearlyInventorySummary(int year, string warehouse = "0")
+        {
+            try
+            {
+                var rows = new List<Dictionary<string, object>>();
+                using (var conn = new System.Data.SqlClient.SqlConnection(
+                    System.Web.Configuration.WebConfigurationManager.ConnectionStrings["ASPGLConnectionString"].ConnectionString))
                 {
                     using (var cmd = new System.Data.SqlClient.SqlCommand("dbo.sp_YearlyInventorySummary", conn))
                     {
                         cmd.CommandType = System.Data.CommandType.StoredProcedure;
                         cmd.Parameters.AddWithValue("@Year", year);
+                        cmd.Parameters.AddWithValue("@Warehouse", warehouse ?? "0");
                         conn.Open();
                         using (var reader = cmd.ExecuteReader())
                         {
@@ -634,6 +672,30 @@ WHERE m.Creation_Date >= @s AND m.Creation_Date <= @e", conn))
             {
                 return new JavaScriptSerializer().Serialize(new { Error = ex.Message + "|" + ex.GetType().Name + "|" + (ex.InnerException?.Message ?? "") + "|" + (ex.InnerException?.GetType().Name ?? "") });
             }
+        }
+
+        private class ddlListItems
+        {
+            public string DataValueName;
+            public string DataValueDescription;
+            public string Type;
+        }
+
+        [WebMethod]
+        public static string fillWarehouse()
+        {
+            DataBaseDataContext db = new DataBaseDataContext();
+            List<ddlListItems> listItems = new List<ddlListItems>();
+            string data = string.Empty;
+            listItems = (from p in db.DataValues
+                         join v in db.ValueSets on p.ValueSet_ID equals v.ValueSet_ID
+                         where v.ValueSet_Description == "Ware House"
+                         select new ddlListItems
+                         {
+                             DataValueName = p.DataValue_Name,
+                             DataValueDescription = p.DataValue_Description,
+                         }).ToList();
+            return (new JavaScriptSerializer()).Serialize(listItems);
         }
 
         [WebMethod(EnableSession = false)]
