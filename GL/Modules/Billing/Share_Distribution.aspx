@@ -465,7 +465,7 @@
                     $('#tblDetails tbody').append(rows);
                 }
             });
-
+            AddDoctorFromBilling(Bill_No)
         }
 
         function LoadDetailDoctor() {
@@ -616,7 +616,7 @@
             var row = `
             <tr>
                 <td style="text-align:center;"><input type="hidden" id="Account_ID" name="Account_ID" value="${accountId}"><input type="text" id="Account_Code" name="Account_Code" value="${accountCode}" readonly></td>
-                <td style="text-align:center;"><input type="text" id="Account_Name" name="Account_Name" value="${doctorText}" readonly></td>
+                <td style="text-align:center;"><input type="hidden" id="Doctor_ID" name="Doctor_ID" value="${doctorId}"><input type="text" id="Account_Name" name="Account_Name" value="${doctorText}" readonly></td>
                 <td style="text-align:center;">
                     <input type="number" class="form-control total-amount" id="txtRevenuAmount" name="txtRevenuAmount" value="0">
                 </td>
@@ -633,8 +633,69 @@
         `;
             $('#tblDoctorShareDetails tbody').append(row);
         }
+
+
+        function AddDoctorFromBilling(Bill_No) {
+
+            PageMethods.GetDoctorAmountsfromBilling(Bill_No, function (response) {
+
+                var doctors = JSON.parse(response);
+
+                $('#tblDoctorShareDetails tbody').empty();
+
+                $.each(doctors, function (i, item) {
+
+                    var row = `
+            <tr>
+                <td style="text-align:center;">
+                    <input type="hidden" name="Account_ID" value="${item.Account_ID}">
+                    <input type="text" name="Account_Code" class="form-control"
+                           value="${item.Account_Code}" readonly>
+                </td>
+
+                <td style="text-align:center;">
+                <input type="hidden" name="Doctor_ID" value="${item.Doctor_ID}">
+                    <input type="text" name="Account_Name" class="form-control"
+                           value="${item.Account_Name}" readonly>
+                </td>
+
+                <td style="text-align:center;">
+                    <input type="number" class="form-control total-amount"
+                           name="txtRevenuAmount"
+                           value="0" >
+                </td>
+
+                <td style="text-align:center;">
+                    <input type="number" class="form-control disc-perc"
+                           name="txtRevenuDiscPer" value="0">
+                </td>
+
+                <td style="text-align:center;">
+                    <input type="number" class="form-control disc-amount"
+                           name="txtRevenuDiscAmount" value="0">
+                </td>
+
+                <td style="text-align:center;">
+                    <input type="number" class="form-control net-amount"
+                           name="txtRevenuNetAmount"
+                           value="${item.TotalAmount}" readonly>
+                </td>
+            </tr>`;
+
+                    $('#tblDoctorShareDetails tbody').append(row);
+                });
+
+            }, function (err) {
+                alert(err.get_message());
+            });
+        }
+
+
+
+
         debugger;
-        function SaveRecord() {       
+        function SaveRecord() {
+            $('#btnSave').attr('disabled', true);
                 debugger;
                 var Patient_ID = $("#hdPatientID").text();
                 var Bill_ID = $("#hdBillID").text();
@@ -663,6 +724,7 @@
             $.each($('#tblDoctorShareDetails tbody tr'), function (key, value) {
                     debugger;
                     var Account_ID = $(value).find('input[name="Account_ID"]').val();
+                    var Doctor_ID = $(value).find('input[name="Doctor_ID"]').val();
                     var Account_Name = $(value).find('input[name="Account_Name"]').val();
                     var txtRevenuAmount = $(value).find('input[name="txtRevenuAmount"]').val();
                     var txtRevenuDiscPer = $(value).find('input[name="txtRevenuDiscPer"]').val();
@@ -670,10 +732,10 @@
                     var txtRevenuNetAmount = $(value).find('input[name="txtRevenuNetAmount"]').val();
 
                     IPDDistribution.push({
-                        Account_ID: Account_ID, Account_Name: Account_Name, txtRevenuAmount: txtRevenuAmount, txtRevenuDiscPer: txtRevenuDiscPer, txtRevenuDiscAmount: txtRevenuDiscAmount, txtRevenuNetAmount: txtRevenuNetAmount
+                        Account_ID: Account_ID, Doctor_ID: Doctor_ID, Account_Name: Account_Name, txtRevenuAmount: txtRevenuAmount, txtRevenuDiscPer: txtRevenuDiscPer, txtRevenuDiscAmount: txtRevenuDiscAmount, txtRevenuNetAmount: txtRevenuNetAmount
                     });
                 });
-            var data = { Distribution_Id: Distribution_Id,Patient_ID: Patient_ID, Bill_ID: Bill_ID, Distributuion_Date: Distributuion_Date, remarks: remarks, DepartmentDistribution: DepartmentDistribution, IPDDistribution: IPDDistribution };
+            var data = { Distribution_Id: Distribution_Id, IPD_Revenue: IPD_Revenue, Patient_ID: Patient_ID, Bill_ID: Bill_ID, Distributuion_Date: Distributuion_Date, remarks: remarks, DepartmentDistribution: DepartmentDistribution, IPDDistribution: IPDDistribution };
 
             if (saveVal == "Save") {
 
@@ -712,6 +774,7 @@
                             window.location.reload();
                             $('#btnSave').attr('disabled', 'disabled');
                         }, function (error) {
+                            $('#btnSave').attr('disabled', false);
                             alert(error.get_message());
                         });
                     }
@@ -734,11 +797,13 @@
                     window.location.reload();
                     $('#btnSave').attr('disabled', 'disabled');
                 }, function (error) {
+                    $('#btnSave').attr('disabled', false);
                     alert(error.get_message());
                 });
             }
         }
         function Approve() {
+            $('#btnApprove').attr('disabled', true);
             debugger;
 
             var BillId = '<%= Request.QueryString["ID"] %>';
@@ -765,6 +830,7 @@
                     location.reload();
                 }
                 else {
+                    $('#btnApprove').attr('disabled', false);
                     Swal.fire({
                         icon: 'error',
                         title: 'Error!',
@@ -774,6 +840,7 @@
                 }
             },
                 function (error) {
+                    $('#btnApprove').attr('disabled', false);
                     Swal.fire({
                         icon: 'error',
                         title: 'Error!',
@@ -808,6 +875,158 @@
                  }
              });
          }--%>
+
+        function PreviewShareDistribution() {
+            var patientName = $('#lblPatienName').text();
+            var mrNo = $('#lblMRNo').text();
+            var billNo = $('#txtBillNo').val();
+            var regDate = $('#lblRegDate').text();
+            var distDate = $('#txtDistributuionDate').val();
+            var shareableIncome = $('#txtShareableIncome').val();
+
+            // Revenue / detail table rows
+            var detailRows = '';
+            $('#tblDetails tbody tr').each(function () {
+                var row = $(this);
+                var account = row.find('select[name="ddlGlAccounts"] option:selected').text();
+                var description = row.find('input[name="txtDescription"]').val();
+                var total = row.find('input[name="txtTotalAmount"]').val();
+                var discPer = row.find('input[name="txtDiscountPer"]').val();
+                var discAmt = row.find('input[name="txtDiscountAmount"]').val();
+                var net = row.find('input[name="txtNetAmount"]').val();
+
+                detailRows += `
+            <tr>
+                <td>${account}</td>
+                <td>${description}</td>
+                <td style="text-align:right;">${total}</td>
+                <td style="text-align:right;">${discPer}</td>
+                <td style="text-align:right;">${discAmt}</td>
+                <td style="text-align:right;">${net}</td>
+            </tr>`;
+            });
+
+            // Doctor share table rows
+            var shareRows = '';
+            $('#tblDoctorShareDetails tbody tr').each(function () {
+                var row = $(this);
+                var accountCode = row.find('input[name="Account_Code"]').val();
+                var accountName = row.find('input[name="Account_Name"]').val();
+                var total = row.find('input[name="txtRevenuAmount"]').val();
+                var discPer = row.find('input[name="txtRevenuDiscPer"]').val();
+                var discAmt = row.find('input[name="txtRevenuDiscAmount"]').val();
+                var net = row.find('input[name="txtRevenuNetAmount"]').val();
+
+                shareRows += `
+            <tr>
+                <td>${accountCode}</td>
+                <td>${accountName}</td>
+                <td style="text-align:right;">${total}</td>
+                <td style="text-align:right;">${discPer}</td>
+                <td style="text-align:right;">${discAmt}</td>
+                <td style="text-align:right;">${net}</td>
+            </tr>`;
+            });
+
+            var html = `
+    <html>
+    <head>
+        <title>Share Distribution Preview</title>
+        <style>
+            body { font-family: Arial, sans-serif; margin: 20px; color:#222; }
+            h2 { text-align:center; margin-bottom:5px; }
+            .info-table { width:100%; margin-bottom:20px; border-collapse:collapse; }
+            .info-table td { padding:4px 8px; font-size:13px; }
+            table.data { width:100%; border-collapse:collapse; margin-bottom:25px; }
+            table.data th, table.data td { border:1px solid #999; padding:6px 8px; font-size:13px; }
+            table.data th { background:#333; color:#fff; text-align:center; }
+            .section-title { background:#000; color:#fff; padding:6px 10px; font-size:15px; margin-bottom:0; }
+            .total-box { text-align:right; font-weight:bold; font-size:14px; margin-bottom:15px; }
+            @media print {
+                .no-print { display:none; }
+            }
+        </style>
+    </head>
+    <body>
+        <h2>Share Distribution Report</h2>
+        <table class="info-table">
+            <tr>
+                <td><b>MR No:</b> ${mrNo}</td>
+                <td><b>Patient Name:</b> ${patientName}</td>
+                <td><b>Bill No:</b> ${billNo}</td>
+            </tr>
+            <tr>
+                <td><b>Reg Date:</b> ${regDate}</td>
+                <td><b>Distribution Date:</b> ${distDate}</td>
+                <td></td>
+            </tr>
+        </table>
+
+        <p class="section-title">Revenue / Distribution Details</p>
+        <table class="data">
+            <thead>
+                <tr>
+                    <th>Account</th><th>Description</th><th>Total</th>
+                    <th>Disc %</th><th>Disc Amt</th><th>Net Amount</th>
+                </tr>
+            </thead>
+            <tbody>${detailRows}</tbody>
+        </table>
+
+        <div class="total-box">Net Sharable Income: ${shareableIncome}</div>
+
+        <p class="section-title">Doctor / Account Share Distribution</p>
+        <table class="data">
+            <thead>
+                <tr>
+                    <th>Account</th><th>Doctor</th><th>Total</th>
+                    <th>Disc %</th><th>Disc Amt</th><th>Net Amount</th>
+                </tr>
+            </thead>
+            <tbody>${shareRows}</tbody>
+        </table>
+
+        <div class="no-print" style="text-align:center; margin-top:20px;">
+            <button onclick="window.print()">Print</button>
+            <button onclick="window.close()">Close</button>
+        </div>
+    </body>
+    </html>`;
+
+            var previewWindow = window.open('', '_blank', 'width=900,height=700');
+            previewWindow.document.open();
+            previewWindow.document.write(html);
+            previewWindow.document.close();
+        }
+
+
+        function PrintDistributionVoucher() {
+            debugger;
+            var id = '<%=Request.QueryString["ID"]%>';
+                        var locationInfo = window.location;
+            var url = 'ReportViewer.aspx?ReportName=Voucher&ReportTitle=OPD Voucher&TransID=' + id + '&TransType=IPD_Dist';
+                        if (!locationInfo.origin.includes('localhost') || locationInfo.origin.includes('localhost')) {
+                            var urlInfo = window.location.href.split('/');
+                            var ip = urlInfo[2];
+                            var foldername = urlInfo[3];
+                            url = 'http://' + ip + '/' + foldername + '/ReportViewer.aspx?ReportName=Voucher&ReportTitle=OPD Voucher&TransID=' + id + '&TransType=IPD_Dist';
+                        }
+                        window.open(url, '_blank');
+        }
+
+        function PrintDoctorVoucher() {
+            debugger;
+            var id = '<%=Request.QueryString["ID"]%>';
+                        var locationInfo = window.location;
+                        var url = 'ReportViewer.aspx?ReportName=Voucher&ReportTitle=OPD Voucher&TransID=' + id + '&TransType=IPD_Share';
+                        if (!locationInfo.origin.includes('localhost') || locationInfo.origin.includes('localhost')) {
+                            var urlInfo = window.location.href.split('/');
+                            var ip = urlInfo[2];
+                            var foldername = urlInfo[3];
+                            url = 'http://' + ip + '/' + foldername + '/ReportViewer.aspx?ReportName=Voucher&ReportTitle=OPD Voucher&TransID=' + id + '&TransType=IPD_Share';
+                        }
+                        window.open(url, '_blank');
+                    }
     </script>
 
 </asp:Content>
@@ -993,7 +1212,7 @@
         </div>
         <div class="row">
             <div class="col-lg-12 col-md-6 col-sm-6" style="margin-top: 2%">
-                <div class="table-responsive" style="height: 250px;">
+                <div class="table-responsive" style="height: 450px;overflow-y: auto; overflow-x: auto">
                     <table class="table table-borderless" id="tblDetails">
                         <thead>
                             <tr>
@@ -1054,7 +1273,7 @@
 
         <div class="row">
             <div class="col-lg-12 col-md-6 col-sm-6" style="margin-top: 2%">
-                <div class="table-responsive" style="height: 250px;">
+                <div class="table-responsive" style="height: 250px;overflow-y: auto; overflow-x: auto">
                     <table class="table table-borderless" id="tblDoctorShareDetails">
                         <thead>
                             <tr>
@@ -1092,6 +1311,15 @@
             <div class="col-lg-2 col-md-6 col-sm-6">
                 <input type="button" id="btnPrint" class="btn btn-primry" value="Print" onclick="PrintShareDistribution();" />
             </div> 
+            <div class="col-lg-2 col-md-6 col-sm-6">
+            <input type="button" id="btnPreview" class="btn btn-primry" value="Preview" onclick="PreviewShareDistribution();" />
+            </div>
+            <div class="col-lg-2 col-md-6 col-sm-6">
+                <input type="button" id="btnPrintVoucher" class="btn btn-primry" value="Print Distribution Voucher" onclick="PrintDistributionVoucher();" />
+            </div> 
+            <div class="col-lg-2 col-md-6 col-sm-6">
+            <input type="button" id="btnPrintVoucher2" class="btn btn-primry" value="Print Doctor Voucher" onclick="PrintDoctorVoucher();" />
+            </div>
 
         </div>
     </div>

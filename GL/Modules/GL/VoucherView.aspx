@@ -89,6 +89,7 @@ $(document).ready(function () {
                 case 'BPV': titleText = 'Bank Payment Voucher'; break;
                 case 'BRV': titleText = 'Bank Receipt Voucher'; break;
                 case 'JV': titleText = 'Journal Voucher'; break;
+                case 'DPV': titleText = 'Doctor Payment Voucher'; break;
             }
             $('#ctl00_lbl1').text(titleText);
 
@@ -174,17 +175,32 @@ $(document).ready(function () {
             { "data": "Approved_By", width: "10%" },
             {
                 "render": function (data, type, full) {
-                    var actionButtons = `
-<a href="#" class="editListBtn" onclick="Edit(${full.Voucher_ID})" style="border-radius: 4px; background-color: #007bff; color: white; padding: 5px 8px;"><i class="fa fa-pencil"></i></a>
-<a class="printListBtn" style="border-radius: 4px; background-color: #28a745; color: white; padding: 5px 8px;" href="#" onclick="PrintReport(${full.Voucher_ID})"><i class="fa fa-print"></i></a>`;
+
+                    var getquerytype = '<%= Request.QueryString["VoucherType"]%>';
+
+                    var actionButtons = '';
+                    if (getquerytype !== 'DPV') {
+                        actionButtons += `
+<a href="#" class="editListBtn" onclick="Edit(${full.Voucher_ID})" style="border-radius: 4px; background-color: #007bff; color: white; padding: 5px 8px;">
+    <i class="fa fa-pencil"></i>
+</a>`;
+                    }
+
+                    actionButtons += `
+<a class="printListBtn" style="border-radius: 4px; background-color: #28a745; color: white; padding: 5px 8px;" href="#" onclick="PrintReport(${full.Voucher_ID})">
+    <i class="fa fa-print"></i>
+</a>`;
 
                     if (full.Voucher_Status === 'CREATED') {
                         actionButtons += `
-<a href="#" class="delListBtn" onclick="deleteConfirm(${full.Voucher_ID})" style="border-radius: 4px; background-color: #dc3545; color: white; padding: 5px 8px;"><i class="fa fa-trash-o"></i></a>`;
+<a href="#" class="delListBtn" onclick="deleteConfirm(${full.Voucher_ID})" style="border-radius: 4px; background-color: #dc3545; color: white; padding: 5px 8px;">
+    <i class="fa fa-trash-o"></i>
+</a>`;
                     }
 
                     return actionButtons;
-                }, width: "30%"
+                },
+                width: "30%"
             }
         ],
         "rowCallback": function (row, data, index) {
@@ -246,7 +262,8 @@ function LoadPageByYear() {
     LoadPage();
 }
 
-function PrintReport(ID) {
+ function PrintReport(ID) {
+    var getype = '<%= Request.QueryString["VoucherType"]%>'
     var locationInfo = window.location;
     var user_name = '<% =AppConfig.Company_Name %>';
     if (user_name == 'As-Siraat Serving Humanity') {
@@ -255,19 +272,21 @@ function PrintReport(ID) {
         reportPath = 'ReportViewer.aspx'; // same folder
     }
 
-    var url = '/ReportViewer.aspx?ReportName=Voucher_GL&Voucher_ID=' + ID;
+     var url = '/ReportViewer.aspx?ReportName=Voucher&TransID=' + ID + '&TransType=' + getype;
     if (!locationInfo.origin.includes('localhost')) {
         var urlInfo = window.location.href.split('/');
         var ip = urlInfo[2];
         var foldername = urlInfo[3];
 
-        url = 'http://' + ip + '/' + foldername + '/' + reportPath +  '?ReportName=Voucher_GL&Voucher_ID=' + ID;
+        url = 'http://' + ip + '/' + foldername + '/' + reportPath + '?ReportName=Voucher&TransID=' + ID + '&TransType=' + getype;
     }
-    window.location.href = url;
+    //window.location.href = url;
+    window.open(url, '_blank');
 }
 
 function Edit(ID) {
     var getype = '<%= Request.QueryString["VoucherType"]%>'
+    
     window.location.href = "Voucher.aspx?VoucherType=" + getype + "&VID=" + ID;
 }
 

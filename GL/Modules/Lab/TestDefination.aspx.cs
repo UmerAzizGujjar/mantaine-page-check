@@ -1,9 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Data.SqlClient;
 using System.Linq;
 using System.Web;
 using System.Web.Script.Serialization;
 using System.Web.Services;
+using System.Configuration;
 using System.Web.UI;
 using System.Web.UI.WebControls;
 
@@ -863,6 +865,30 @@ namespace PMS
                 }
             }
             db.SubmitChanges();
+        }
+
+        [WebMethod]
+        public static string GetUltraSoundPreviewData(string ultraSoundLevelID)
+        {
+            try
+            {
+                DataBaseDataContext db = new DataBaseDataContext(DBClass.ConnectionString());
+
+                var result = (from dv in db.UltraSoundLevels
+                              where dv.UltraSoundLevel_ID == Convert.ToInt32(ultraSoundLevelID)
+                              select new
+                              {
+                                  dv.UltraSoundLevel_ID,
+                                  dv.Levels,
+                                  dv.FixValues
+                              }).FirstOrDefault();
+
+                return new JavaScriptSerializer().Serialize(result ?? new object());
+            }
+            catch (Exception ex)
+            {
+                throw new Exception("Error fetching ultrasound preview: " + ex.Message);
+            }
         }
 
         public class MRIValue

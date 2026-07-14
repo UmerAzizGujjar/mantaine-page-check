@@ -207,7 +207,64 @@ namespace PMS
                     }
                     Response.Write("[" + result + "]");
                 }
-               
+
+                //else if (Request.QueryString["Table"] == "INV_ItemsForMIRByWarehouse")
+                //{
+                //    DataBaseDataContext db = new DataBaseDataContext(DBClass.ConnectionString());
+                //    string warehouseID = Request.QueryString["WarehouseID"];
+                //    var userPermissions = (from data in db.aspnet_Users
+                //                           where data.UserId == AppConfig.UserID
+                //                           select new
+                //                           {
+                //                               data.AllowPharmacy,
+                //                               data.AllowGeneralItems
+                //                           }).FirstOrDefault();
+
+                //    bool allowPharmacy = userPermissions != null && Convert.ToBoolean(userPermissions.AllowPharmacy);
+                //    bool allowGeneralItem = userPermissions != null && Convert.ToBoolean(userPermissions.AllowGeneralItems);
+                //    string sqlQuery;
+                //    if (Request.QueryString["q"] != null)
+                //    {
+                //        if (allowPharmacy && allowGeneralItem)
+                //        {
+                //            sqlQuery = "Select * from INV_Items i Where Hospital_Services=0 and Services<>1 and Active=1 and Book_ID=" + AppConfig.Book_ID + " and InventoryOrg=" + warehouseID + "  AND (Description like '%" + Request.QueryString["q"] + "%' OR Item_Code like '%" + Request.QueryString["q"] + "%')";
+                //        }
+                //        else if (allowPharmacy)
+                //        {
+                //            sqlQuery = "Select * from INV_Items i Where Pharmacy_Item=1 and IsPharmacyItem=1 and Hospital_Services=0 and Services<>1 and Active=1 and Book_ID=" + AppConfig.Book_ID + " and InventoryOrg=" + warehouseID + " AND (Description like '%" + Request.QueryString["q"] + "%' OR Item_Code like '%" + Request.QueryString["q"] + "%')";
+                //        }                        
+                //        else
+                //        {
+                //            sqlQuery = "Select * from INV_Items i Where Pharmacy_Item<>1 and IsPharmacyItem<>1 and Hospital_Services=0 and Services<>1 and Active=1 and Book_ID=" + AppConfig.Book_ID + " and InventoryOrg=" + warehouseID + " AND (Description like '%" + Request.QueryString["q"] + "%' OR Item_Code like '%" + Request.QueryString["q"] + "%')";
+                //        }
+                //    }
+                //    else
+                //    {
+                //        if (allowPharmacy && allowGeneralItem)
+                //        {
+                //            sqlQuery = "Select * from INV_Items Where Hospital_Services=0 and Services<>1 and Active=1 and Book_ID=" + AppConfig.Book_ID;
+                //        }
+                //        else if (allowPharmacy)
+                //        {
+                //            sqlQuery = "Select * from INV_Items Where Pharmacy_Item=1 and IsPharmacyItem=1 and Hospital_Services=0 and Services<>1 and Active=1 and Book_ID=" + AppConfig.Book_ID;
+                //        }                        
+                //        else
+                //        {
+                //            sqlQuery = "Select * from INV_Items Where Pharmacy_Item<>1 and IsPharmacyItem<>1 and Hospital_Services=0 and Services<>1 and Active=1 and Book_ID=" + AppConfig.Book_ID;
+                //        }
+                //    }
+                //    string result = "";
+                //    DataTable dt = DBClass.getDataTable(sqlQuery);
+
+                //    foreach (DataRow dr in dt.Rows)
+                //    {
+                //        result += (result == "") ? "" : ",";                       
+                //        result += @"{""id"":""   " + dr["Item_ID"].ToString() + @""",""name"": ""    " + dr["Item_Code"].ToString() + " -- " + dr["Description"].ToString() + @"""}";
+                //    }
+                //    Response.Write("[" + result + "]");
+                //}
+
+
                 else if (Request.QueryString["Table"] == "INV_ItemsForMIRByWarehouse")
                 {
                     DataBaseDataContext db = new DataBaseDataContext(DBClass.ConnectionString());
@@ -222,35 +279,41 @@ namespace PMS
 
                     bool allowPharmacy = userPermissions != null && Convert.ToBoolean(userPermissions.AllowPharmacy);
                     bool allowGeneralItem = userPermissions != null && Convert.ToBoolean(userPermissions.AllowGeneralItems);
+
+                    string warehouseCondition = @"(InventoryOrg = " + warehouseID + @" 
+                                  OR Item_ID IN (SELECT CONVERT(INT, Item_ID) 
+                                                 FROM Item_Warehouse_Mapping 
+                                                 WHERE Warehouse_Id = '" + warehouseID + @"'))";
+
                     string sqlQuery;
                     if (Request.QueryString["q"] != null)
                     {
                         if (allowPharmacy && allowGeneralItem)
                         {
-                            sqlQuery = "Select * from INV_Items i Where Hospital_Services=0 and Services<>1 and Active=1 and Book_ID=" + AppConfig.Book_ID + " and InventoryOrg=" + warehouseID + "  AND (Description like '%" + Request.QueryString["q"] + "%' OR Item_Code like '%" + Request.QueryString["q"] + "%')";
+                            sqlQuery = "Select * from INV_Items i Where Hospital_Services=0 and Services<>1 and Active=1 and Book_ID=" + AppConfig.Book_ID + " and " + warehouseCondition + " AND (Description like '%" + Request.QueryString["q"] + "%' OR Item_Code like '%" + Request.QueryString["q"] + "%')";
                         }
                         else if (allowPharmacy)
                         {
-                            sqlQuery = "Select * from INV_Items i Where Pharmacy_Item=1 and IsPharmacyItem=1 and Hospital_Services=0 and Services<>1 and Active=1 and Book_ID=" + AppConfig.Book_ID + " and InventoryOrg=" + warehouseID + " AND (Description like '%" + Request.QueryString["q"] + "%' OR Item_Code like '%" + Request.QueryString["q"] + "%')";
-                        }                        
+                            sqlQuery = "Select * from INV_Items i Where Pharmacy_Item=1 and IsPharmacyItem=1 and Hospital_Services=0 and Services<>1 and Active=1 and Book_ID=" + AppConfig.Book_ID + " and " + warehouseCondition + " AND (Description like '%" + Request.QueryString["q"] + "%' OR Item_Code like '%" + Request.QueryString["q"] + "%')";
+                        }
                         else
                         {
-                            sqlQuery = "Select * from INV_Items i Where Pharmacy_Item<>1 and IsPharmacyItem<>1 and Hospital_Services=0 and Services<>1 and Active=1 and Book_ID=" + AppConfig.Book_ID + " and InventoryOrg=" + warehouseID + " AND (Description like '%" + Request.QueryString["q"] + "%' OR Item_Code like '%" + Request.QueryString["q"] + "%')";
+                            sqlQuery = "Select * from INV_Items i Where Pharmacy_Item<>1 and IsPharmacyItem<>1 and Hospital_Services=0 and Services<>1 and Active=1 and Book_ID=" + AppConfig.Book_ID + " and " + warehouseCondition + " AND (Description like '%" + Request.QueryString["q"] + "%' OR Item_Code like '%" + Request.QueryString["q"] + "%')";
                         }
                     }
                     else
                     {
                         if (allowPharmacy && allowGeneralItem)
                         {
-                            sqlQuery = "Select * from INV_Items Where Hospital_Services=0 and Services<>1 and Active=1 and Book_ID=" + AppConfig.Book_ID;
+                            sqlQuery = "Select * from INV_Items Where Hospital_Services=0 and Services<>1 and Active=1 and Book_ID=" + AppConfig.Book_ID + " and " + warehouseCondition;
                         }
                         else if (allowPharmacy)
                         {
-                            sqlQuery = "Select * from INV_Items Where Pharmacy_Item=1 and IsPharmacyItem=1 and Hospital_Services=0 and Services<>1 and Active=1 and Book_ID=" + AppConfig.Book_ID;
-                        }                        
+                            sqlQuery = "Select * from INV_Items Where Pharmacy_Item=1 and IsPharmacyItem=1 and Hospital_Services=0 and Services<>1 and Active=1 and Book_ID=" + AppConfig.Book_ID + " and " + warehouseCondition;
+                        }
                         else
                         {
-                            sqlQuery = "Select * from INV_Items Where Pharmacy_Item<>1 and IsPharmacyItem<>1 and Hospital_Services=0 and Services<>1 and Active=1 and Book_ID=" + AppConfig.Book_ID;
+                            sqlQuery = "Select * from INV_Items Where Pharmacy_Item<>1 and IsPharmacyItem<>1 and Hospital_Services=0 and Services<>1 and Active=1 and Book_ID=" + AppConfig.Book_ID + " and " + warehouseCondition;
                         }
                     }
                     string result = "";
@@ -258,12 +321,12 @@ namespace PMS
 
                     foreach (DataRow dr in dt.Rows)
                     {
-                        result += (result == "") ? "" : ",";                       
+                        result += (result == "") ? "" : ",";
                         result += @"{""id"":""   " + dr["Item_ID"].ToString() + @""",""name"": ""    " + dr["Item_Code"].ToString() + " -- " + dr["Description"].ToString() + @"""}";
                     }
                     Response.Write("[" + result + "]");
                 }
-               
+
                 else if (Request.QueryString["Table"] == "INV_ItemsForMIR")
                 {
                     DataBaseDataContext db = new DataBaseDataContext(DBClass.ConnectionString());
@@ -457,6 +520,13 @@ namespace PMS
 
                     bool allowPharmacy = userPermissions != null && Convert.ToBoolean(userPermissions.AllowPharmacy);
                     bool allowGeneralItem = userPermissions != null && Convert.ToBoolean(userPermissions.AllowGeneralItems);
+
+                    string warehouseCondition = @"(InventoryOrg = " + warehouseID + @" 
+                                  OR Item_ID IN (SELECT CONVERT(INT, Item_ID) 
+                                                 FROM Item_Warehouse_Mapping 
+                                                 WHERE Warehouse_Id = '" + warehouseID + @"'))";
+                    // ---------------------------------------------------------------------------------
+
                     string sqlQuery;
 
                     if (Request.QueryString["q"] != null)
@@ -465,30 +535,30 @@ namespace PMS
 
                         if (allowPharmacy && allowGeneralItem)
                         {
-                            sqlQuery = "Select *, isnull(dbo.GetDataValueName('UOM', i.Unit),'NIL') as UOM, (select top 1 CAST(ISNULL(Rate,0) as DECIMAL(18,2)) from AP_Purchase_Order_Items where Item_Id = i.Item_ID order by PO_Item_ID desc) as LastRate, (select ISNULL(sum(Qty),0) from vwBatch_Ledger where Item_ID = i.Item_ID) as Stock from INV_Items i Where Hospital_Services= 0 and Services<>1 and Active=1 and InventoryOrg=" + warehouseID + " and Book_ID=" + AppConfig.Book_ID + " AND (Description like '%" + searchTerm + "%' OR Generic_Name like '%" + searchTerm + "%')";
+                            sqlQuery = "Select *, isnull(dbo.GetDataValueName('UOM', i.Unit),'NIL') as UOM, (select top 1 CAST(ISNULL(Rate,0) as DECIMAL(18,2)) from AP_Purchase_Order_Items where Item_Id = i.Item_ID order by PO_Item_ID desc) as LastRate, (select ISNULL(sum(Qty),0) from vwBatch_Ledger where Item_ID = i.Item_ID) as Stock from INV_Items i Where Hospital_Services= 0 and Services<>1 and Active=1 and " + warehouseCondition + " and Book_ID=" + AppConfig.Book_ID + " AND (Description like '%" + searchTerm + "%' OR Generic_Name like '%" + searchTerm + "%')";
                         }
                         else if (allowPharmacy)
                         {
-                            sqlQuery = "Select *, isnull(dbo.GetDataValueName('UOM', i.Unit),'NIL') as UOM, (select top 1 CAST(ISNULL(Rate,0) as DECIMAL(18,2)) from AP_Purchase_Order_Items where Item_Id = i.Item_ID order by PO_Item_ID desc) as LastRate, (select ISNULL(sum(Qty),0) from vwBatch_Ledger where Item_ID = i.Item_ID) as Stock from INV_Items i Where Pharmacy_Item=1 and IsPharmacyItem=1 and Hospital_Services= 0 and Services<>1 and Active=1 and InventoryOrg=" + warehouseID + " and Book_ID=" + AppConfig.Book_ID + " AND (Description like '%" + searchTerm + "%' OR Generic_Name like '%" + searchTerm + "%')";
+                            sqlQuery = "Select *, isnull(dbo.GetDataValueName('UOM', i.Unit),'NIL') as UOM, (select top 1 CAST(ISNULL(Rate,0) as DECIMAL(18,2)) from AP_Purchase_Order_Items where Item_Id = i.Item_ID order by PO_Item_ID desc) as LastRate, (select ISNULL(sum(Qty),0) from vwBatch_Ledger where Item_ID = i.Item_ID) as Stock from INV_Items i Where Pharmacy_Item=1 and IsPharmacyItem=1 and Hospital_Services= 0 and Services<>1 and Active=1 and " + warehouseCondition + " and Book_ID=" + AppConfig.Book_ID + " AND (Description like '%" + searchTerm + "%' OR Generic_Name like '%" + searchTerm + "%')";
                         }
                         else
                         {
-                            sqlQuery = "Select *, isnull(dbo.GetDataValueName('UOM', i.Unit),'NIL') as UOM, (select top 1 CAST(ISNULL(Rate,0) as DECIMAL(18,2)) from AP_Purchase_Order_Items where Item_Id = i.Item_ID order by PO_Item_ID desc) as LastRate, (select ISNULL(sum(Qty),0) from vwBatch_Ledger where Item_ID = i.Item_ID) as Stock from INV_Items i Where Pharmacy_Item<>1 and IsPharmacyItem<>1 and Hospital_Services= 0 and Services<>1 and Active=1 and InventoryOrg=" + warehouseID + " and Book_ID=" + AppConfig.Book_ID + " AND (Description like '%" + searchTerm + "%' OR Generic_Name like '%" + searchTerm + "%')";
+                            sqlQuery = "Select *, isnull(dbo.GetDataValueName('UOM', i.Unit),'NIL') as UOM, (select top 1 CAST(ISNULL(Rate,0) as DECIMAL(18,2)) from AP_Purchase_Order_Items where Item_Id = i.Item_ID order by PO_Item_ID desc) as LastRate, (select ISNULL(sum(Qty),0) from vwBatch_Ledger where Item_ID = i.Item_ID) as Stock from INV_Items i Where Pharmacy_Item<>1 and IsPharmacyItem<>1 and Hospital_Services= 0 and Services<>1 and Active=1 and " + warehouseCondition + " and Book_ID=" + AppConfig.Book_ID + " AND (Description like '%" + searchTerm + "%' OR Generic_Name like '%" + searchTerm + "%')";
                         }
                     }
                     else
                     {
                         if (allowPharmacy && allowGeneralItem)
                         {
-                            sqlQuery = "Select * from INV_Items Where Hospital_Services=0 and Services<>1 and Active=1 and Book_ID=" + AppConfig.Book_ID;
+                            sqlQuery = "Select * from INV_Items Where Hospital_Services=0 and Services<>1 and Active=1 and " + warehouseCondition + " and Book_ID=" + AppConfig.Book_ID;
                         }
                         else if (allowPharmacy)
                         {
-                            sqlQuery = "Select * from INV_Items Where Pharmacy_Item=1 and IsPharmacyItem=1 and Hospital_Services=0 and Services<>1 and Active=1 and Book_ID=" + AppConfig.Book_ID;
+                            sqlQuery = "Select * from INV_Items Where Pharmacy_Item=1 and IsPharmacyItem=1 and Hospital_Services=0 and Services<>1 and Active=1 and " + warehouseCondition + " and Book_ID=" + AppConfig.Book_ID;
                         }
                         else
                         {
-                            sqlQuery = "Select * from INV_Items Where Pharmacy_Item<>1 and IsPharmacyItem<>1 and Hospital_Services=0 and Services<>1 and Active=1  and Book_ID=" + AppConfig.Book_ID;
+                            sqlQuery = "Select * from INV_Items Where Pharmacy_Item<>1 and IsPharmacyItem<>1 and Hospital_Services=0 and Services<>1 and Active=1 and " + warehouseCondition + " and Book_ID=" + AppConfig.Book_ID;
                         }
                     }
 
@@ -649,57 +719,62 @@ namespace PMS
 
                     bool allowPharmacy = userPermissions != null && Convert.ToBoolean(userPermissions.AllowPharmacy);
                     bool allowGeneralItem = userPermissions != null && Convert.ToBoolean(userPermissions.AllowGeneralItems);
+
+                    string warehouseCondition = @"(InventoryOrg = " + warehouseID + @" 
+                                  OR Item_ID IN (SELECT CONVERT(INT, Item_ID) 
+                                                 FROM Item_Warehouse_Mapping 
+                                                 WHERE Warehouse_Id = '" + warehouseID + @"'))";
+
                     string sqlQuery;
 
                     if (Request.QueryString["q"] != null)
                     {
-                        string searchTerm = Request.QueryString["q"].Replace("'", "''"); // Basic SQL injection mitigation
+                        string searchTerm = Request.QueryString["q"].Replace("'", "''"); 
 
                         if (allowPharmacy && allowGeneralItem)
                         {
                             sqlQuery = @"Select *, isnull(dbo.GetDataValueName('UOM', i.Unit),'NIL') as UOM, 
-                        (select top 1 CAST(ISNULL(Rate,0) as DECIMAL(18,2)) from AP_Purchase_Order_Items where Item_Id = i.Item_ID order by PO_Item_ID desc) as LastRate, 
-                        (select ISNULL(sum(Qty),0) from vwBatch_Ledger where Item_ID = i.Item_ID) as Stock 
-                        from INV_Items i 
-                        Where Hospital_Services=0 and Services<>1 and Active=1 and Book_ID=" + AppConfig.Book_ID + @" 
-                        and InventoryOrg = " + warehouseID + @" 
-                        AND (Description like '%" + searchTerm + @"%' OR Generic_Name like '%" + searchTerm + @"%')";
+        (select top 1 CAST(ISNULL(Rate,0) as DECIMAL(18,2)) from AP_Purchase_Order_Items where Item_Id = i.Item_ID order by PO_Item_ID desc) as LastRate, 
+        (select ISNULL(sum(Qty),0) from vwBatch_Ledger where Item_ID = i.Item_ID) as Stock 
+        from INV_Items i 
+        Where Hospital_Services=0 and Services<>1 and Active=1 and Book_ID=" + AppConfig.Book_ID + @" 
+        and " + warehouseCondition + @" 
+        AND (Description like '%" + searchTerm + @"%' OR Generic_Name like '%" + searchTerm + @"%')";
                         }
                         else if (allowPharmacy)
                         {
                             sqlQuery = @"Select *, isnull(dbo.GetDataValueName('UOM', i.Unit),'NIL') as UOM, 
-                        (select top 1 CAST(ISNULL(Rate,0) as DECIMAL(18,2)) from AP_Purchase_Order_Items where Item_Id = i.Item_ID order by PO_Item_ID desc) as LastRate, 
-                        (select ISNULL(sum(Qty),0) from vwBatch_Ledger where Item_ID = i.Item_ID) as Stock 
-                        from INV_Items i 
-                        Where Pharmacy_Item=1 and IsPharmacyItem=1 and Hospital_Services=0 and Services<>1 and Active=1 and Book_ID=" + AppConfig.Book_ID + @" 
-                        and InventoryOrg = " + warehouseID + @" 
-                        AND (Description like '%" + searchTerm + @"%' OR Generic_Name like '%" + searchTerm + @"%')";
+        (select top 1 CAST(ISNULL(Rate,0) as DECIMAL(18,2)) from AP_Purchase_Order_Items where Item_Id = i.Item_ID order by PO_Item_ID desc) as LastRate, 
+        (select ISNULL(sum(Qty),0) from vwBatch_Ledger where Item_ID = i.Item_ID) as Stock 
+        from INV_Items i 
+        Where Pharmacy_Item=1 and IsPharmacyItem=1 and Hospital_Services=0 and Services<>1 and Active=1 and Book_ID=" + AppConfig.Book_ID + @" 
+        and " + warehouseCondition + @" 
+        AND (Description like '%" + searchTerm + @"%' OR Generic_Name like '%" + searchTerm + @"%')";
                         }
                         else
                         {
                             sqlQuery = @"Select *, isnull(dbo.GetDataValueName('UOM', i.Unit),'NIL') as UOM, 
-                        (select top 1 CAST(ISNULL(Rate,0) as DECIMAL(18,2)) from AP_Purchase_Order_Items where Item_Id = i.Item_ID order by PO_Item_ID desc) as LastRate, 
-                        (select ISNULL(sum(Qty),0) from vwBatch_Ledger where Item_ID = i.Item_ID) as Stock 
-                        from INV_Items i 
-                        Where Pharmacy_Item<>1 and IsPharmacyItem<>1 and Hospital_Services=0 and Services<>1 and Active=1 and Book_ID=" + AppConfig.Book_ID + @" 
-                        and InventoryOrg = " + warehouseID + @" 
-                        AND (Description like '%" + searchTerm + @"%' OR Generic_Name like '%" + searchTerm + @"%')";
+        (select top 1 CAST(ISNULL(Rate,0) as DECIMAL(18,2)) from AP_Purchase_Order_Items where Item_Id = i.Item_ID order by PO_Item_ID desc) as LastRate, 
+        (select ISNULL(sum(Qty),0) from vwBatch_Ledger where Item_ID = i.Item_ID) as Stock 
+        from INV_Items i 
+        Where Pharmacy_Item<>1 and IsPharmacyItem<>1 and Hospital_Services=0 and Services<>1 and Active=1 and Book_ID=" + AppConfig.Book_ID + @" 
+        and " + warehouseCondition + @" 
+        AND (Description like '%" + searchTerm + @"%' OR Generic_Name like '%" + searchTerm + @"%')";
                         }
                     }
                     else
                     {
-                        // No search term — return all matching items (no Generic_Name filter needed here)
                         if (allowPharmacy && allowGeneralItem)
                         {
-                            sqlQuery = "Select * from INV_Items Where Hospital_Services=0 and Services<>1 and Active=1 and Book_ID=" + AppConfig.Book_ID;
+                            sqlQuery = "Select * from INV_Items Where Hospital_Services=0 and Services<>1 and Active=1 and Book_ID=" + AppConfig.Book_ID + " and " + warehouseCondition;
                         }
                         else if (allowPharmacy)
                         {
-                            sqlQuery = "Select * from INV_Items Where Pharmacy_Item=1 and IsPharmacyItem=1 and Hospital_Services=0 and Services<>1 and Active=1 and Book_ID=" + AppConfig.Book_ID;
+                            sqlQuery = "Select * from INV_Items Where Pharmacy_Item=1 and IsPharmacyItem=1 and Hospital_Services=0 and Services<>1 and Active=1 and Book_ID=" + AppConfig.Book_ID + " and " + warehouseCondition;
                         }
                         else
                         {
-                            sqlQuery = "Select * from INV_Items Where Pharmacy_Item<>1 and IsPharmacyItem<>1 and Hospital_Services=0 and Services<>1 and Active=1 and Book_ID=" + AppConfig.Book_ID;
+                            sqlQuery = "Select * from INV_Items Where Pharmacy_Item<>1 and IsPharmacyItem<>1 and Hospital_Services=0 and Services<>1 and Active=1 and Book_ID=" + AppConfig.Book_ID + " and " + warehouseCondition;
                         }
                     }
 
@@ -791,7 +866,7 @@ namespace PMS
                 {
                     string sqlQuery;
                     if (Request.QueryString["q"] != null)
-                        sqlQuery = "Select top 1 pat_id as Patient_ID, mr_no_sequence as  Patient_No from Reg_patient Where mr_no_sequence = '" + Request.QueryString["q"].ToString() + "' order by Created_time desc";
+                        sqlQuery = "Select top 1 pat_id as Patient_ID, mr_no_sequence as  Patient_No from Reg_patient Where mr_no_sequence LIKE '%" + Request.QueryString["q"].ToString() + "%' order by Created_time desc";
                     else
                         sqlQuery = "Select distinct (select top 1 Patient_ID from Patients where Patient_No=p.Patient_No) Patient_ID, Patient_No from Patients p where isnull(IsRevisit,'0')=0 order by Created_Time desc";
 
@@ -803,12 +878,12 @@ namespace PMS
                         result += @"{""id"":""" + dr["Patient_ID"].ToString() + @""",""name"": """ + dr["Patient_No"].ToString() + @"""}";
                     }
                     Response.Write("[" + result + "]");
-                }
+                }               
                 else if (Request.QueryString["Table"] == "In_Patients")
                 {
                     string sqlQuery;
                     if (Request.QueryString["q"] != null)
-                        sqlQuery = "Select top 1 pat_id as Patient_ID, mr_no_sequence as  Patient_No from Reg_patient rg inner join In_Patient ipd  on rg.pat_id=ipd.Patient_ID Where mr_no_sequence = '" + Request.QueryString["q"].ToString() + "' order by rg.Created_time desc";
+                        sqlQuery = "Select top 1 pat_id as Patient_ID, mr_no_sequence as  Patient_No from Reg_patient rg inner join In_Patient ipd  on rg.pat_id=ipd.Patient_ID Where mr_no_sequence LIKE '%" + Request.QueryString["q"].ToString() + "%' order by rg.Created_time desc";
                     else
                         sqlQuery = "Select distinct pat_id as Patient_ID, mr_no_sequence as Patient_No from Reg_patient rg inner join In_Patient ipd on rg.pat_id = ipd.Patient_ID where ISNULL(ipd.Discharge,0)=0 order by rg.Created_time desc";
 
@@ -825,7 +900,7 @@ namespace PMS
                 {
                     string sqlQuery;
                     if (Request.QueryString["q"] != null)
-                        sqlQuery = "Select top 1 pat_id as Patient_ID, mr_no_sequence as  Patient_No from Reg_patient rg inner join In_Patient ipd  on rg.pat_id=ipd.Patient_ID Where mr_no_sequence = '" + Request.QueryString["q"].ToString() + "' and isnull(ipd.Discharge,0)=0 order by rg.Created_time desc";
+                        sqlQuery = "Select top 1 pat_id as Patient_ID, mr_no_sequence as  Patient_No from Reg_patient rg inner join In_Patient ipd  on rg.pat_id=ipd.Patient_ID Where mr_no_sequence LIKE '%" + Request.QueryString["q"].ToString() + "%' and isnull(ipd.Discharge,0)=0 order by rg.Created_time desc";
                     else
                         sqlQuery = "Select distinct pat_id as Patient_ID, mr_no_sequence as Patient_No from Reg_patient rg inner join In_Patient ipd on rg.pat_id = ipd.Patient_ID where ISNULL(ipd.Discharge,0)=0 order by rg.Created_time desc";
 
@@ -985,22 +1060,54 @@ namespace PMS
                     }
                     Response.Write("[" + result + "]");
                 }
+                //else if (Request.QueryString["Table"] == "Out_PatientsbyMrNo")
+                //{
+                //    string sqlQuery;
+                //    if (Request.QueryString["q"] != null)
+                //        sqlQuery = "Select  top 10 p.Patient_ID,p.Opd_No,p.Full_Name,rp.pat_id,rp.mr_no_sequence  as Patient_No,p.Reg_PatId from Patients p join Reg_patient rp on p.Reg_PatId = rp.pat_id   Where rp.mr_no_sequence LIKE '%" + Request.QueryString["q"].ToString() + "%' order by p.Created_Time desc";
+                //    else
+                //        sqlQuery = "Select distinct (select top 10 Patient_ID from Patients where Patient_No=p.Patient_No)Patient_ID,Patient_No,Full_Name from Patients p where isnull(IsRevisit,'0')=0  order by Created_Time desc";
+                //    string result = "";
+                //    DataTable dt = DBClass.getDataTable(sqlQuery);
+                //    foreach (DataRow dr in dt.Rows)
+                //    {
+                //        result += (result == "") ? "" : ",";
+                //        result += @"{""id"":""" + dr["Patient_ID"].ToString() + @"""," +
+                //                  @"""name"": """ + dr["Patient_No"].ToString() + " - " + dr["Full_Name"].ToString() + @"""," +
+                //                  @"""reg_patId"": """ + dr["Reg_PatId"].ToString() + @"""}";
+                //    }
+                //    Response.Write("[" + result + "]");
+                //}
+
                 else if (Request.QueryString["Table"] == "Out_PatientsbyMrNo")
                 {
                     string sqlQuery;
+
                     if (Request.QueryString["q"] != null)
-                        sqlQuery = "Select  top 1 p.Patient_ID,p.Opd_No,p.Full_Name,rp.pat_id,rp.mr_no_sequence  as Patient_No,p.Reg_PatId from Patients p join Reg_patient rp on p.Reg_PatId = rp.pat_id   Where rp.mr_no_sequence = '" + Request.QueryString["q"].ToString() + "' order by p.Created_Time desc";
+                    {
+                        sqlQuery = @"SELECT TOP 10 p.Patient_ID,p.Opd_No,p.Full_Name,rp.pat_id, rp.mr_no_sequence AS Patient_No, p.Reg_PatId FROM Patients p INNER JOIN Reg_patient rp  ON p.Reg_PatId = rp.pat_id  WHERE rp.mr_no_sequence LIKE '%" + Request.QueryString["q"].ToString() + @"%' ORDER BY p.Created_Time DESC";
+                    }
                     else
-                        sqlQuery = "Select distinct (select top 1 Patient_ID from Patients where Patient_No=p.Patient_No)Patient_ID,Patient_No,Full_Name from Patients p where isnull(IsRevisit,'0')=0  order by Created_Time desc";
+                    {sqlQuery = @"SELECT DISTINCT (SELECT TOP 1 Patient_ID FROM Patients
+                         WHERE Patient_No = p.Patient_No) AS Patient_ID,
+                        Patient_No,
+                        Full_Name
+                     FROM Patients p
+                     WHERE ISNULL(IsRevisit, 0) = 0
+                     ORDER BY Created_Time DESC";
+                    }
+
                     string result = "";
                     DataTable dt = DBClass.getDataTable(sqlQuery);
+
                     foreach (DataRow dr in dt.Rows)
                     {
                         result += (result == "") ? "" : ",";
                         result += @"{""id"":""" + dr["Patient_ID"].ToString() + @"""," +
-                                  @"""name"": """ + dr["Patient_No"].ToString() + " - " + dr["Full_Name"].ToString() + @"""," +
-                                  @"""reg_patId"": """ + dr["Reg_PatId"].ToString() + @"""}";
+                                  @"""name"":""" + dr["Patient_No"].ToString() + " - " + dr["Full_Name"].ToString() + @"""," +
+                                  @"""reg_patId"":""" + dr["Reg_PatId"].ToString() + @"""}";
                     }
+
                     Response.Write("[" + result + "]");
                 }
                 else if (Request.QueryString["Table"] == "Patients")
@@ -1154,16 +1261,19 @@ namespace PMS
                 {
                     string sqlQuery;
                     if (Request.QueryString["q"] != null)
-                        sqlQuery = "Select  top 1 pat_id as Patient_ID,Patient_No,Full_Name from Reg_patient Where pat_id ='" + Request.QueryString["q"].ToString() + "' order by Created_time desc";
+                        sqlQuery = "Select top 1 pat_id as Patient_ID, mr_no_sequence, Patient_No, Full_Name from Reg_patient Where pat_id ='" + Request.QueryString["q"].ToString() + "' order by Created_time desc";
                     else
-                        sqlQuery = "Select distinct (select top 1 pat_id as Patient_ID from Reg_patient where Patient_No=p.Patient_No)Patient_ID,Patient_No,Full_Name  from Reg_patient p    order by Created_time desc";
+                        sqlQuery = "Select distinct (select top 1 pat_id as Patient_ID from Reg_patient where Patient_No=p.Patient_No) Patient_ID, mr_no_sequence, Patient_No, Full_Name from Reg_patient p order by Created_time desc";
+
                     string result = "";
                     DataTable dt = DBClass.getDataTable(sqlQuery);
+
                     foreach (DataRow dr in dt.Rows)
                     {
                         result += (result == "") ? "" : ",";
-                        result += @"{""id"":""" + dr["Patient_ID"].ToString() + @""",""name"": """ + dr["Patient_No"].ToString() + " - " + dr["Full_Name"].ToString() + @"""}";
+                        result += @"{""id"":""" + dr["Patient_ID"].ToString() + @""",""name"": """ + dr["mr_no_sequence"].ToString() + " - " + dr["Full_Name"].ToString() + @"""}";
                     }
+
                     Response.Write("[" + result + "]");
                 }
                 else if (Request.QueryString["Table"] == "PatientsFetchByREgID")
@@ -1396,10 +1506,15 @@ namespace PMS
                 {
                     string sqlQuery;
                     var s = Request.QueryString["Panel"];
+                    string deptFilter = "";
+                    if (Request.QueryString["DeptID"] != null && Request.QueryString["DeptID"] != "0" && Request.QueryString["DeptID"] != "")
+                    {
+                        deptFilter = " AND ISNULL(DepartmentId, 0) = " + Request.QueryString["DeptID"];
+                    }
                     if (Request.QueryString["q"] != null)
-                        sqlQuery = "Select top 1000 Item_ID as ItemID,Item_Code as ItemCode,Description as ItemName,Pharmacy_Item, Sale_Rate as Amount,case when Services = 1 then 'Service' when Services = 0 then 'Item' else '' end ItemType from INV_Items Where (Services = 1)  and Book_ID = 1  and Active=1 and Description like'%" + Request.QueryString["q"] + "%'";
+                        sqlQuery = "Select top 1000 Item_ID as ItemID,Item_Code as ItemCode,Description as ItemName,Pharmacy_Item, Sale_Rate as Amount,case when Services = 1 then 'Service' when Services = 0 then 'Item' else '' end ItemType from INV_Items Where (Services = 1)  and Book_ID = 1  and Active=1 and Description like'%" + Request.QueryString["q"] + "%'" + deptFilter;
                     else
-                        sqlQuery = "Select  top 1000  Item_ID as ItemID,Item_Code as ItemCode,Description as ItemName,Sale_Rate as Amount,case when Services=1 then 'Service' when Services=0 then 'Item' else '' end ItemType from INV_Items Where (Pharmacy_Item=0 or Pharmacy_Item is null) and Active=1 and Book_ID=" + AppConfig.Book_ID + "";
+                        sqlQuery = "Select  top 1000  Item_ID as ItemID,Item_Code as ItemCode,Description as ItemName,Sale_Rate as Amount,case when Services=1 then 'Service' when Services=0 then 'Item' else '' end ItemType from INV_Items Where (Pharmacy_Item=0 or Pharmacy_Item is null) and Active=1 and Book_ID=" + AppConfig.Book_ID + deptFilter;
                     string result = "";
                     DataTable dt = DBClass.getDataTable(sqlQuery);
                     foreach (DataRow dr in dt.Rows)

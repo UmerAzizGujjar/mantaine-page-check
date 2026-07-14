@@ -9,14 +9,36 @@
             LoadPage();
 
         });
-      
+        function IncrementReprintCount(billId) {
+            if (!billId || billId == '0' || billId == '') return;
+
+            $.ajax({
+                type: "POST",
+                url: "IssueMedicineList.aspx/IncrementReprintCount", 
+                data: JSON.stringify({ 'Bill_ID': parseInt(billId) }),
+                contentType: "application/json; charset=utf-8",
+                dataType: "json",
+                success: function (response) {
+                    console.log("Reprint count updated for Bill ID: " + billId);
+                },
+                error: function (err) {
+                    console.error("Failed to update reprint count", err);
+                }
+            });
+        }
         function PrintBill(Bill_ID) {
+            IncrementReprintCount(Bill_ID);
             var url = '../../ReportViewer.aspx?ReportName=PharmacySlip&ReportTitle=PharmacySlip&Bill_ID=' + Bill_ID;
             window.open(url, '_blank');
 
         }
+        function PrintVoucher(Bill_ID) {
+            var url = '../../ReportViewer.aspx?ReportName=Voucher&ReportTitle=PharmacySlip&TransID=' + Bill_ID + '&TransType=PSV';
+            window.open(url, '_blank');
+        }
         function PrintInvoice(key) {
             debugger;
+            IncrementReprintCount(key);
             //var BillId = $('#BillId' + key).val();
             window.open('../../ReportViewer.aspx?ReportName=PharmacySlip&ReportTitle=PharmacySlip&Bill_ID=' + key);
 
@@ -107,22 +129,36 @@
                             return date;
                         }, "width": "8%", "orderable": true
                     },
-                    { "data": "BillNo", "width": "10%", "orderable": false },
-                    { "data": "FBR_Number", "width": "10%", "orderable": false }, 
+                    { "data": "BillNo", "width": "8%", "orderable": false },
+                    { "data": "FBR_Number", "width": "8%", "orderable": false }, 
                     { "data": "Customer_Name", "width": "10%", "orderable": false },
                     { "data": "Patient_ID", "name": "Patient_ID", "width": "8%", "orderable": true },                    
-                    { "data": "Referred_By_value", "width": "10%", "orderable": false },
-                    { "data": "Total_Amount", "width": "10%", "orderable": false },
-                    { "data": "Discount_Amount", "width": "10%", "orderable": false },
-                    { "data": "Balance_Amount", "width": "10%", "orderable": false },
+                    { "data": "Referred_By_value", "width": "8%", "orderable": false },                  
+                    { "data": "pharmacy_Department", "width": "8%", "orderable": false },                  
+                    {
+                        "data": "Pharma_trans_Type",
+                        "width": "8%",
+                        "orderable": false,
+                        "render": function (data) {
+                            if (!data || data.trim() === "") {
+                                return "Walk In";
+                            }
+                            return data;
+                        }
+                    },                  
+                    { "data": "Total_Amount", "width": "6%", "orderable": false },
+                    { "data": "Discount_Amount", "width": "6%", "orderable": false },
+                    { "data": "Received_Amount", "width": "6%", "orderable": false },
+                    { "data": "Balance_Amount", "width": "6%", "orderable": false },
                     {
                         render: function (data, type, full) {
                             debugger;
                             var res = '<a href="#" class="editListBtn" onclick="PrintInvoice(' + full.Bill_ID + ')" style="border-radius: 4px;  color: white; padding: 5px 8px 5px 8px;"><i class="fa fa-upload"></i></a>'
 
                             var print = '<a class="printListBtn" style="border-radius: 4px;margin-left: 4px;color: white;padding: 5px 8px 5px 8px;" href="#" onclick="PrintBill(' + full.Bill_ID + ')" id="btnprint"><i class="fa fa-print" ></i></a>';
+                            var voucher = '<a class="printListBtn" style="border-radius: 4px;margin-left: 4px;color: white;padding: 5px 8px 5px 8px;" href="#" onclick="PrintVoucher(' + full.Bill_ID + ')" id="btnvoucherprint"><i class="fa fa-print" ></i></a
                             var result;
-                            result = res  + print;
+                            result = res + print + voucher;
                             return result;
                         }, "width": "8%", "orderable": false
                     }
@@ -191,10 +227,13 @@
                         <th>Inv No</th>
                         <th>FBR Number</th>
                         <th>Walking Customer</th>
-                        <th>MrNo.</th>
+                        <th>MrNo.</th>                      
                         <th>ReferBy</th>
+                        <th>Main Department</th>
+                        <th>Patient Type</th>
                         <th>Total</th>
                         <th>Discount Amount</th>
+                        <th>Received Amount</th>
                         <th>Balance Amount</th>
                         <th>View</th>                      
                     </tr>

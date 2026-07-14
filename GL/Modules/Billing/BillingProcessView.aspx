@@ -25,10 +25,29 @@
 
         });
 
+        function IncrementReprintCount(billId) {
+            if (!billId || billId == '0' || billId == '') return;
+
+            $.ajax({
+                type: "POST",
+                url: "BillingProcess.aspx/IncrementReprintCount",
+                data: JSON.stringify({ 'Bill_ID': parseInt(billId) }),
+                contentType: "application/json; charset=utf-8",
+                dataType: "json",
+                success: function (response) {
+                    console.log("Reprint count updated for Bill ID: " + billId);
+                },
+                error: function (err) {
+                    console.error("Failed to update reprint count", err);
+                }
+            });
+        }
+
 
         function PrintBilling(Bill_ID) {
             var locationInfo = window.location;
             var user_name = '<%= AppConfig.Company_Name %>';
+            IncrementReprintCount(Bill_ID);
             var reportPath;  // ✅ declared properly
 
             if (user_name == 'As-Siraat Serving Humanity') {
@@ -54,6 +73,7 @@
         }
         function PrintBilling1(Bill_ID) {
             var locationInfo = window.location;
+            IncrementReprintCount(Bill_ID);
             var user_name = '<%= AppConfig.Company_Name %>';
             var reportPath;  // ✅ declared properly
 
@@ -67,6 +87,7 @@
 
             if (!locationInfo.origin.includes('localhost')) {
                 var urlInfo = window.location.href.split('/');
+
                 var ip = urlInfo[2];
                 var foldername = urlInfo[3];
                 url = 'http://' + ip + '/' + foldername + '/' + reportPath +

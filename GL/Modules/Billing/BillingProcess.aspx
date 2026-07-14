@@ -7,6 +7,10 @@
             overflow: auto;
             max-height: 150px;
         }
+
+    input[type="text"] {
+    width: 100%;
+}
         /*k*/
         .pending-badge {
     display: inline-block;
@@ -51,10 +55,28 @@
                 }, true);
 
             }
+            function IncrementReprintCount(billId) {
+                if (!billId || billId == '0' || billId == '') return;
+
+                $.ajax({
+                    type: "POST",
+                    url: "BillingProcess.aspx/IncrementReprintCount",
+                    data: JSON.stringify({ 'Bill_ID': parseInt(billId) }),
+                    contentType: "application/json; charset=utf-8",
+                    dataType: "json",
+                    success: function (response) {
+                        console.log("Reprint count updated for Bill ID: " + billId);
+                    },
+                    error: function (err) {
+                        console.error("Failed to update reprint count", err);
+                    }
+                });
+            }
             debugger;
             function PrintCRV() {
                 debugger;
                 var id = '<%= Request.QueryString["Bill_ID"]%>';
+                IncrementReprintCount(id);
                 var locationInfo = window.location;
 
                 var user_name = '<% =AppConfig.Company_Name %>';
@@ -76,6 +98,7 @@
             function PrintCRV2() {
                 debugger;
                 var id = '<%= Request.QueryString["Bill_ID"]%>';
+                IncrementReprintCount(id);
                 var locationInfo = window.location;
 
                 var user_name = '<% =AppConfig.Company_Name %>';
@@ -97,6 +120,7 @@
             function PrintCRV1() {
                 debugger;
                 var id = '<%= Request.QueryString["Bill_ID"]%>';
+                IncrementReprintCount(id);
                 var locationInfo = window.location;
 
                 var user_name = '<% =AppConfig.Company_Name %>';
@@ -175,6 +199,7 @@
 
             function ApproveBill() {
                 debugger;
+                $('#btnApprove').attr('disabled', true);
                 var BillId = '<% =Request.QueryString["Bill_ID"] %>';
                     PageMethods.approve_Bill(BillId, function (Tests) {
                         debugger
@@ -197,6 +222,7 @@
                             }, 2500);
                         }
                         else {
+                            $('#btnApprove').attr('disabled', false);
                             Swal.fire({
                                 icon: 'error',
                                 title: 'Error!',
@@ -206,13 +232,16 @@
                     },
 
                         function (error) {
+                            $('#btnApprove').attr('disabled', false);
                             Swal.fire({
                                 icon: 'error',
                                 title: 'Error!',
                                 text: error.get_message()
                             });
                         });
-                }
+            }
+            var autoRecvOPD = '0';
+            var billingServicesDeptWise = '0';
             var Appointment;
             function CheckAppointmentAllow() {
 
@@ -238,7 +267,18 @@
                     }
                 });
             }
-
+            function AutoFillCashInHand() {
+                debugger;
+                if (autoRecvOPD != '01') return;
+                var mainDept = $('#txtMaindepartment').val();
+                if (mainDept != '01' && mainDept != '02') return;
+                var netPayable = $('#txtNetPayable').val();
+                if (!netPayable || netPayable == '0') return;
+                // Always set, do not check currentCash
+                $('#txtcashinhand').val(parseFloat(netPayable).toFixed(0));
+                // Do not set balance to 0 here; let SumTotalAmountrecived handle it.
+                SumTotalAmountrecived();
+            }
             var Rpts;
             function CheckReceiptsUpdateonBilling() {
 
@@ -690,6 +730,19 @@
                     var ip = urlInfo[2];
                     var foldername = urlInfo[3];
                     url = 'http://' + ip + '/' + foldername + '/ReportViewer.aspx?ReportName=Voucher&ReportTitle=OPD Voucher&TransID=' + id + '&TransType=BIJV';
+                }
+                window.open(url, '_blank');
+            }
+            function PrintVoucher2() {
+                debugger;
+                var id = '<%=Request.QueryString["Bill_ID"]%>';
+                var locationInfo = window.location;
+                var url = 'ReportViewer.aspx?ReportName=Voucher&ReportTitle=OPD Voucher&TransID=' + id + '&TransType=DSJV';
+                if (!locationInfo.origin.includes('localhost') || locationInfo.origin.includes('localhost')) {
+                    var urlInfo = window.location.href.split('/');
+                    var ip = urlInfo[2];
+                    var foldername = urlInfo[3];
+                    url = 'http://' + ip + '/' + foldername + '/ReportViewer.aspx?ReportName=Voucher&ReportTitle=OPD Voucher&TransID=' + id + '&TransType=DSJV';
                 }
                 window.open(url, '_blank');
             }
@@ -1317,6 +1370,7 @@
                 });
             }
             function FillLabTests() {
+                debugger;
                 var options = '<option value="0" >Please Select</option>';
                 PageMethods.GetLabTests(function (Tests) {
                     $.each(JSON.parse(Tests), function (key, value) {
@@ -1472,6 +1526,7 @@
                     $('#txtDisAmt').val(data[0].Discount_Amount);
                     $('#txtNetPayable').val(data[0].Net_Amount);
                     $('#txtAmountReceived').val(data[0].Received_Amount);
+                    debugger;
                     $('#txtBalances').val(data[0].Balance_Amount);
                     $('#ddlChargePolicy').val(data[0].Charge_Policy);
 
@@ -1514,10 +1569,18 @@
                     );
                     $('#BillCategory').attr('disabled', true);
                     var status = data[0].Status;
+                    var Doctor_Share_Voucher_Status = data[0].Doctor_Share_Voucher_Status;
                     if (status === 'Approved') {
                         $('#btnPrintVoucher').show();
                     } else {
                         $('#btnPrintVoucher').hide();
+                    }
+                    var status = data[0].Status;
+                    if (Doctor_Share_Voucher_Status === 'Approved') {
+                 
+                        $('#btnPrintVoucher2').show();
+                    } else {
+                        $('#btnPrintVoucher2').hide();
                     }
                     if (status != "Approved") {
                         $('#btnApprove').show();
@@ -1582,7 +1645,7 @@
                             TestDate = $.datepicker.formatDate('dd M yy', new Date(parseInt(value.Issue_Date.substring(6, 19))))
                         }
                         debugger;
-                        rows = '<tr><td style="text-align:left;">' + parseInt(parseInt(rowIndex) + 1) + '</td><td id="btndeletes"> <a href="javascript:void(0)" onclick="ExcludeFromPayment(this)" id="btnDelete" name="btndelBill">Delete</a> </td><td style="text-align:left;"><input type="hidden" name="hdnCategory_ID" value="' + value.Category_ID + '" /> <input type="hidden" name="hdnParentTrans_ID" value="' + value.ParentTrans_ID + '" /> <input type="hidden" name="hdnParentTrans_Name" value="' + value.ParentTrans_Name + '" /> <input type="hidden" name="hdnParentTrans_Type" value="' + value.ParentTrans_Type + '" /> <input type="hidden" name="hdnItemID" value="' + value.Item_ID + '" /> <input type="hidden" name="hdnItemName" value="' + value.Item_Name + '" /> <input type="hidden" name="hdnProcedure" value="" /><input type="hidden" name="hdnItemType" value="' + value.Item_Type + '" /><input type="hidden" name="hdnDisPer" value=' + parseFloat(value.Discount_Percentage.toFixed(6)) + '><input type="hidden" name="hdnDisAmount" value=' + parseFloat(value.Discount_Amount.toFixed(6)) + '><input type="hidden" name="hdnNet_Amount" value=' + parseFloat(value.Net_Amount.toFixed(6)) + '><input type="hidden" name="hdnRecommendedByDoctor" value="' + value.RecommendedByDoctor + '" />' + value.Item_Name + '</td><td>' + value.Remarks + '</td><td><input type="text" name="txtQty" value="' + value.Qty + '" style="width: 45px !important;" onkeyup="CulculateAmonutWithQty(this)"/><input type="hidden" name="txtActualAmount" value="' + value.Amount + '" /></td><td  id="amnt' + rowIndex + '" name"amnt" style="text-align:Right;"> ' + value.Amount + ' </td><td> <input type="text" name="DisPer" value="' + parseFloat(value.Discount_Percentage.toFixed(2)) + '"style="width: 37px !important;" onkeyup="CalculateSummarieDiscountPerWise(' + rowIndex + ')"/> </td><td> <input type="text" name="DisAmount" value="' + parseFloat(value.Discount_Amount.toFixed(2)) + '" style="width: 75px !important;" onkeyup="CalculateSummarieDiscountAmountWise(' + rowIndex + ')"/> </td> <td style="text-align:Right;"> ' + parseFloat(value.Net_Amount.toFixed(0)) + ' </td><td> <input type="text" id = "ds' + key + '" name="Docshare" value="' + parseFloat(value.Doctor_Share.toFixed(0)) + '" style="width: 75px !important;" onkeyup="calculateDoctorShare(' + rowIndex + ')"/> </td><td><input type="number" id="HocShare' + rowIndex + '" name="HocShare" value="' + parseFloat(value.Hospital_Share.toFixed(0)) + '"  style="width: 75px !important;" onkeyup="calculateDoctorShare()"/></td>><td><select id="ddldoctor' + rowIndex + '" name="ddlDoctor" onchange="GetDocAgreementValuess(this)"  class="ddlDoctor" >' + doctors + '</select> <input type="hidden" name="Main_Department" value="' + value.Test_Main_Department + '" /></td><td><input type="hidden" name="hdnTestCreatedDate" id="hdnTestCreatedDate" value="' + TestDate + '"/>' + TestDate + ' </td></tr>'
+                        rows = '<tr><td style="text-align:left;">' + parseInt(parseInt(rowIndex) + 1) + '</td><td id="btndeletes"> <a href="javascript:void(0)" onclick="ExcludeFromPayment(this)" id="btnDelete" name="btndelBill">Delete</a> </td><td style="text-align:left;"><input type="hidden" name="hdnCategory_ID" value="' + value.Category_ID + '" /> <input type="hidden" name="hdnParentTrans_ID" value="' + value.ParentTrans_ID + '" /> <input type="hidden" name="hdnParentTrans_Name" value="' + value.ParentTrans_Name + '" /> <input type="hidden" name="hdnParentTrans_Type" value="' + value.ParentTrans_Type + '" /> <input type="hidden" name="hdnItemID" value="' + value.Item_ID + '" /> <input type="hidden" name="hdnItemName" value="' + value.Item_Name + '" /> <input type="hidden" name="hdnProcedure" value="" /><input type="hidden" name="hdnItemType" value="' + value.Item_Type + '" /><input type="hidden" name="hdnDisPer" value=' + parseFloat(value.Discount_Percentage.toFixed(6)) + '><input type="hidden" name="hdnDisAmount" value=' + parseFloat(value.Discount_Amount.toFixed(6)) + '><input type="hidden" name="hdnNet_Amount" value=' + parseFloat(value.Net_Amount.toFixed(6)) + '><input type="hidden" name="hdnRecommendedByDoctor" value="' + value.RecommendedByDoctor + '" />' + value.Item_Name + '</td><td>' + value.Remarks + '</td><td><input type="text" name="txtQty" value="' + value.Qty + '" style="width: 45px !important;" onkeyup="CulculateAmonutWithQty(this)"/><input type="hidden" name="txtActualAmount" value="' + value.Amount + '" /></td><td  id="amnt' + rowIndex + '" name"amnt" style="text-align:Right;"> ' + value.Amount + ' </td><td> <input type="text" name="DisPer" value="' + parseFloat(value.Discount_Percentage.toFixed(2)) + '"style="width: 37px !important;" onkeyup="CalculateSummarieDiscountPerWise(' + rowIndex + ')"/> </td><td> <input type="text" name="DisAmount" value="' + parseFloat(value.Discount_Amount.toFixed(2)) + '" style="width: 75px !important;" onkeyup="CalculateSummarieDiscountAmountWise(' + rowIndex + ')"/> </td> <td style="text-align:Right;"> ' + parseFloat(value.Net_Amount.toFixed(0)) + ' </td><td> <input type="text" id = "ds' + key + '" name="DocShare" value="' + parseFloat(value.Doctor_Share.toFixed(0)) + '" style="width: 75px !important;" onkeyup="calculateDoctorShare(' + rowIndex + ')"/> </td><td><input type="number" id="HocShare' + rowIndex + '" name="HocShare" value="' + parseFloat(value.Hospital_Share.toFixed(0)) + '"  style="width: 75px !important;" onkeyup="calculateDoctorShare()"/></td>><td><select id="ddldoctor' + rowIndex + '" name="ddlDoctor" onchange="GetDocAgreementValuess(this)"  class="ddlDoctor" >' + doctors + '</select> <input type="hidden" name="Main_Department" value="' + value.Test_Main_Department + '" /></td><td><input type="hidden" name="hdnTestCreatedDate" id="hdnTestCreatedDate" value="' + TestDate + '"/>' + TestDate + ' </td></tr>'
                         debugger;
 
 
@@ -1631,10 +1694,13 @@
                         else {
                             TestDate = $.datepicker.formatDate('dd M yy', new Date(parseInt(value.Issue_Date.substring(6, 19))))
                         }
-                        rows = '<tr><td style="text-align:left;">' + parseInt(parseInt(rowIndex) + 1) + '</td><td id="btndeletes"> <a href="javascript:void(0)" onclick="ExcludeFromPayment(this)" id="btnDelete" name="btndelBill">Delete</a> </td><td style="text-align:left;"> <input type="hidden" name="hdnParentTrans_ID" value="' + value.ParentTrans_ID + '" /> <input type="hidden" name="hdnParentTrans_Name" value="' + value.ParentTrans_Name + '" /> <input type="hidden" name="hdnParentTrans_Type" value="' + value.ParentTrans_Type + '" /> <input type="hidden" name="hdnItemID" value="' + value.Item_ID + '" /> <input type="hidden" name="hdnItemName" value="' + value.Item_Name + '" /> <input type="hidden" name="hdnProcedure" value="" /><input type="hidden" name="hdnItemType" value="' + value.Item_Type + '" /><input type="hidden" name="hdnDisPer" value=' + parseFloat(value.Discount_Percentage.toFixed(6)) + '><input type="hidden" name="hdnDisAmount" value=' + parseFloat(value.Discount_Amount.toFixed(6)) + '><input type="hidden" name="hdnNet_Amount" value=' + parseFloat(value.Net_Amount.toFixed(6)) + '><input type="hidden" name="hdnRecommendedByDoctor" value="' + value.RecommendedByDoctor + '" />' + value.Item_Name + '</td><td>' + value.Remarks + '</td><td><input type="text" name="txtQty" value="' + value.Qty + '" style="width: 45px !important;" onkeyup="CulculateAmonutWithQty(this)"/><input type="hidden" name="txtActualAmount" value="' + value.Amount + '" /></td><td  id="amnt' + rowIndex + '" name"amnt" style="text-align:Right;"> ' + value.Amount + ' </td><td> <input type="text" name="DisPer" value="' + parseFloat(value.Discount_Percentage.toFixed(2)) + '"style="width: 37px !important;" onkeyup="CalculateSummarieDiscountPerWise(' + rowIndex + ')"/> </td><td> <input type="text" name="DisAmount" value="' + parseFloat(value.Discount_Amount.toFixed(2)) + '" style="width: 75px !important;" onkeyup="CalculateSummarieDiscountAmountWise(' + rowIndex + ')"/> </td> <td style="text-align:Right;"> ' + parseFloat(value.Net_Amount.toFixed(0)) + ' </td><td> <input type="text" id = "ds' + key + '" name="Docshare" value="' + parseFloat(value.Doctor_Share.toFixed(0)) + '" style="width: 75px !important;" onkeyup="calculateDoctorShare(' + rowIndex + ')"/> </td><td><input type="number" id="HocShare' + rowIndex + '" name="HocShare" value="' + parseFloat(value.Hospital_Share.toFixed(0)) + '"  style="width: 75px !important;" onkeyup="calculateDoctorShare()"/></td>><td><select id="ddldoctor' + rowIndex + '" name="ddlDoctor" onchange="GetDocAgreementValuess(this)"  class="ddlDoctor" >' + doctors + '</select> <input type="hidden" name="Main_Department" value="' + value.Test_Main_Department + '" /></td><td><input type="hidden" name="hdnTestCreatedDate" id="hdnTestCreatedDate" value="' + TestDate + '"/>' + TestDate + ' </td></tr>'
+                        rows = '<tr><td style="text-align:left;">' + parseInt(parseInt(rowIndex) + 1) + '</td><td id="btndeletes"> <a href="javascript:void(0)" onclick="ExcludeFromPayment(this)" id="btnDelete" name="btndelBill">Delete</a> </td><td style="text-align:left;"> <input type="hidden" name="hdnParentTrans_ID" value="' + value.ParentTrans_ID + '" /> <input type="hidden" name="hdnParentTrans_Name" value="' + value.ParentTrans_Name + '" /> <input type="hidden" name="hdnParentTrans_Type" value="' + value.ParentTrans_Type + '" /> <input type="hidden" name="hdnItemID" value="' + value.Item_ID + '" /> <input type="hidden" name="hdnItemName" value="' + value.Item_Name + '" /> <input type="hidden" name="hdnProcedure" value="" /><input type="hidden" name="hdnItemType" value="' + value.Item_Type + '" /><input type="hidden" name="hdnDisPer" value=' + parseFloat(value.Discount_Percentage.toFixed(6)) + '><input type="hidden" name="hdnDisAmount" value=' + parseFloat(value.Discount_Amount.toFixed(6)) + '><input type="hidden" name="hdnNet_Amount" value=' + parseFloat(value.Net_Amount.toFixed(6)) + '><input type="hidden" name="hdnRecommendedByDoctor" value="' + value.RecommendedByDoctor + '" />' + value.Item_Name + '</td><td>' + value.Remarks + '</td><td><input type="text" name="txtQty" value="' + value.Qty + '" style="width: 45px !important;" onkeyup="CulculateAmonutWithQty(this)"/><input type="hidden" name="txtActualAmount" value="' + value.Amount + '" /></td><td  id="amnt' + rowIndex + '" name"amnt" style="text-align:Right;"> ' + value.Amount + ' </td><td> <input type="text" name="DisPer" value="' + parseFloat(value.Discount_Percentage.toFixed(2)) + '"style="width: 37px !important;" onkeyup="CalculateSummarieDiscountPerWise(' + rowIndex + ')"/> </td><td> <input type="text" name="DisAmount" value="' + parseFloat(value.Discount_Amount.toFixed(2)) + '" style="width: 75px !important;" onkeyup="CalculateSummarieDiscountAmountWise(' + rowIndex + ')"/> </td> <td style="text-align:Right;"> ' + parseFloat(value.Net_Amount.toFixed(0)) + ' </td><td> <input type="text" id = "ds' + rowIndex + '" name="DocShare" value="' + parseFloat(value.Doctor_Share.toFixed(0)) + '" style="width: 75px !important;" onkeyup="calculateDoctorShare(' + rowIndex + ')"/> </td><td><input type="number" id="HocShare' + rowIndex + '" name="HocShare" value="' + parseFloat(value.Hospital_Share.toFixed(0)) + '"  style="width: 75px !important;" onkeyup="calculateDoctorShare()"/></td>><td><select id="ddldoctor' + rowIndex + '" name="ddlDoctor" onchange="GetDocAgreementValuess(this)"  class="ddlDoctor" >' + doctors + '</select> <input type="hidden" name="Main_Department" value="' + value.Test_Main_Department + '" /></td><td><input type="hidden" name="hdnTestCreatedDate" id="hdnTestCreatedDate" value="' + TestDate + '"/>' + TestDate + ' </td></tr>'
 
                         $('#tblDetails tbody').append(rows);
                         CalculateSummarieDiscountPerWise(rowIndex);
+                        //$('input[name="DisAmount"]').attr('disabled', true);
+                        $('#ddldoctor' + rowIndex).val(value.Doctor_id);
+                        $('#ddldoctor' + key + '').select2();
                         rowIndex++;
 
                     });
@@ -1792,7 +1858,8 @@
                         //}
                         var Bill_Date = $('#txtBillDate').val();
                         var Remarks = $('#txtRemarks').val();
-                        var TotalPayable = $('#txtTotalAmount').val();
+                        //var TotalPayable = $('#txtTotalAmount').val();
+                        var TotalPayable = parseFloat($('#txtTotalAmount').val()) || 0;
                         var Discount_Percentage = $('#txtDisPer').val();
                         Discount_Percentage = $('#hdntxtDisPer').val();
                         var Discount_Amount = $('#txtDisAmt').val();
@@ -2436,13 +2503,16 @@
                 $('#txtNetPayable').val(NetPayable.toFixed(1));
                 var AmtReceived = $('#txtAmountReceived').val();
                 if (NetPayable != '') {
+                    debugger;
                     if (AmtReceived != '') {
+                        debugger;
                         $('#txtBalances').val((NetPayable - AmtReceived).toFixed(1));
                     }
                     else
                         $('#txtBalances').val(NetPayable.toFixed(0));
                 }
                 else {
+                    debugger;
                     $('#txtBalances').val(NetPayable.toFixed(0));
                 }
             }
@@ -3189,18 +3259,28 @@
                     $('#txtDisAmt').val(total_Disc);
                     var net = Net_Amt - total_Disc;
                     $('#txtNetPayable').val(TotalAmount);
+                    debugger;
+                    AutoFillCashInHand();   // ← moved here, after Net Payable is set
                     var AmtReceived = $('#txtAmountReceived').val();
                     var amt = parseFloat(AmtReceived) || 0;
                     if ($('#txtTotalPayable').val() != '') {
+                        debugger;
                         if (AmtReceived != '') {
-                            $('#txtBalances').val(((net + PreviousAmount) - (amt + AdvanceAmount + PreviousPaid)).toFixed());
+                            debugger;
+                            $('#txtBalances').val(
+                                ((parseFloat(net) + parseFloat(PreviousAmount)) -
+                                    (parseFloat(amt) + parseFloat(AdvanceAmount) + parseFloat(PreviousPaid))
+                                ).toFixed()
+                            );
                             //   $('#txt_balance').val(((net + PreviousAmount) - (amt + AdvanceAmount + PreviousPaid)).toFixed());
 
                         }
                         else
                             $('#txtBalances').val(net.toFixed());
                     }
+
                     else {
+                        debugger;
                         $('#txtBalances').val(net.toFixed());
                     }
                 }
@@ -3223,12 +3303,19 @@
 
                     $('#txtDisAmt').val(parseFloat(total_Disc).toFixed(2));
                     $('#txtNetPayable').val(TotalAmount.toFixed());
+                    debugger;
+                    AutoFillCashInHand();
                     var AmtReceived = $('#txtAmountReceived').val();
                     if ($('#txtTotalPayable').val() != '') {
                         debugger;
                         if (AmtReceived != '') {
-                            // $('#txtBalances').val((TotalNetAmount - AmtReceived).toFixed());
-                            $('#txtBalances').val(((TotalNetAmount + PreviousAmount) - (AmtReceived + AdvanceAmount + PreviousPaid)).toFixed());
+                            debugger;
+                         
+                            $('#txtBalances').val(
+                                ((parseFloat(TotalNetAmount) + parseFloat(PreviousAmount)) -
+                                    (parseFloat(AmtReceived) + parseFloat(AdvanceAmount) + parseFloat(PreviousPaid))
+                                ).toFixed()
+                            );
                         }
                         else
                             $('#txtBalances').val(TotalNetAmount.toFixed());
@@ -3294,7 +3381,9 @@
                 $('#txtNetPayable').val(TotalNetAmount.toFixed());
                 var AmtReceived = $('#txtAmountReceived').val();
                 if ($('#txtTotalPayable').val() != '') {
+                    debugger;
                     if (AmtReceived != '') {
+                        debugger;
                         $('#txtBalances').val((TotalNetAmount - AmtReceived).toFixed());
                     }
                     else
@@ -3516,6 +3605,8 @@
                     });
                     $('#txtDisPer').val(DisPer.toFixed(2));
                     $('#hdntxtDisPer').val(DisPer.toFixed(6));
+                    debugger;
+                    AutoFillCashInHand();
                 }
                 else {
                     debugger;
@@ -3532,7 +3623,8 @@
                     $('#txtDisAmt').val(TotalDiscountAmount.toFixed(0));
                     $('#hdnBaseNetPayable').val(TotalNetAmount.toFixed(0));
                     $('#txtNetPayable').val(TotalNetAmount.toFixed(0));
-
+                    debugger;
+                    AutoFillCashInHand();
                     // Update each row's discount values
                     $.each($('#tblDetails tbody tr'), function (key, value) {
                         var qty = parseFloat($(value).find('input[name="txtQty"]').val()) || 1;
@@ -3548,10 +3640,11 @@
                         $($(value).find('td')[8]).text(rowNetAmount.toFixed(0));
                         $(value).find('input[name="hdnNet_Amount"]').val(rowNetAmount.toFixed(6));
                     });
-
+                    debugger;
                     var AmtReceived = $('#txtAmountReceived').val();
                     if ($('#txtTotalPayable').val() != '') {
                         if (AmtReceived != '') {
+                            debugger;
                             $('#txtBalances').val((TotalNetAmount - AmtReceived).toFixed(0));
                         }
                         else
@@ -3573,6 +3666,7 @@
 
                 if ($('#txtTotalPayable').val() != '') {
                     if (AmtReceived != '') {
+                        debugger;
                         $('#txtBalances').val((TotalNetAmount - AmtReceived).toFixed(0));
                     }
                     else
@@ -3632,6 +3726,7 @@
                         $('#txtNetPayable').val(total_amt);
                         var AmtReceived = $('#txtAmountReceived').val();
                         if ($('#txtTotalPayable').val() != '') {
+                            debugger;
                             if (AmtReceived != '') {
                                 $('#txtBalances').val((net - AmtReceived).toFixed());
                             }
@@ -5221,18 +5316,18 @@
                 var AmtReceived = $('#txtAmountReceived').val();
                 if ($('#txtTotalPayable').val() != '') {
                     if (AmtReceived != '') {
-                        // $('#txtBalances').val(Math.round(parseFloat(NetAmount) - parseFloat(AmtReceived)));
                         $('#txtBalances').val(((TotalNetAmount + PreviousAmount) - (AmtReceived + AdvanceAmount + PreviousPaid)).toFixed());
                     }
                     else
-                        // $('#txtBalances').val(Math.round(parseFloat(NetAmount)));
                         $('#txtBalances').val(((TotalNetAmount + PreviousAmount) - (AmtReceived + AdvanceAmount + PreviousPaid)).toFixed());
                 }
                 else {
-                    // $('#txtBalances').val(Math.round(parseFloat(NetAmount)));
                     $('#txtBalances').val(((TotalNetAmount + PreviousAmount) - (AmtReceived + AdvanceAmount + PreviousPaid)).toFixed());
                 }
+
+                AutoFillCashInHand();   // <--- ADD THIS LINE
             }
+     
             function checkRepeat() {
                 var patID = $('#txtMRNo').val();
                 PageMethods.checkRepeat(patID, function (data) {
@@ -5599,8 +5694,15 @@
                 });
             }
             debugger;
+            function destroyTokenInput(textboxID) {
+                var $input = $('#' + textboxID);
+                $input.siblings('.token-input-list').remove();
+                $input.siblings('input.token-input-input').remove();
+                $input.show();
+            }
             function tokenInputs(textboxID, tblName, OnAddFun) {
                 debugger;
+                destroyTokenInput(textboxID);
                 $('#' + textboxID).tokenInput("../../json.aspx?Table=" + tblName,
                     {
                         tokenLimit: 1,
@@ -5617,7 +5719,7 @@
 
                                         GetPatientIdfromOPd();
                                     }
-                                    else if (tblName == 'INV_ItemsForBilling') {
+                                    else if (tblName.indexOf('INV_ItemsForBilling') == 0) {
 
                                         localStorage.SelectedItemID = item.id;
                                         localStorage.SelectedItemType = item.Type;
@@ -5800,6 +5902,8 @@
                     $('#lblDepartment').val(data.d.Department);
                     $('#txt_balance').val(data.d.Balance);
                     $('#txtMaindepartment').val(data.d.MainDepartment).trigger('change');
+                    debugger;
+                    setTimeout(function () { AutoFillCashInHand(); }, 300);
                     var NIC = data.d.NIC;
                     if (CNICs == '01') {
    
@@ -6010,7 +6114,17 @@
                             else if ((lblPatientCategory == "Insurance Company") && (lblIn_Patient_Category == "General")) {
                                 var tokeinpt = $('#token-input-txtAddService').val();
                                 if (typeof tokeinpt === 'undefined') {
-                                    tokenInputs('txtAddService', 'INV_ItemsForBilling');
+                                    if (billingServicesDeptWise == '01') {
+                                        var deptId = $('#BillDepartment').val();
+                                        if (deptId != '0' && deptId != '') {
+                                            tokenInputs('txtAddService', 'INV_ItemsForBilling&DeptID=' + deptId);
+                                        } else {
+                                            $('#txtAddService').attr('placeholder', 'Select a Bill Department first');
+                                            $('#txtAddService').prop('disabled', true);
+                                        }
+                                    } else {
+                                        tokenInputs('txtAddService', 'INV_ItemsForBilling');
+                                    }
                                 }
                             }
                         }
@@ -6025,7 +6139,17 @@
                     else if ((lblPatientCategory == "Private") && (lblIn_Patient_Category == "General")) {
                         var tokeinpt = $('#token-input-txtAddService').val();
                         if (typeof tokeinpt === 'undefined') {
-                            tokenInputs('txtAddService', 'INV_ItemsForBilling');
+                            if (billingServicesDeptWise == '01') {
+                                var deptId = $('#BillDepartment').val();
+                                if (deptId != '0' && deptId != '') {
+                                    tokenInputs('txtAddService', 'INV_ItemsForBilling&DeptID=' + deptId);
+                                } else {
+                                    $('#txtAddService').attr('placeholder', 'Select a Bill Department first');
+                                    $('#txtAddService').prop('disabled', true);
+                                }
+                            } else {
+                                tokenInputs('txtAddService', 'INV_ItemsForBilling');
+                            }
                         }
                     }
 
@@ -6046,14 +6170,34 @@
                         else {
                             var tokeinpt = $('#token-input-txtAddService').val();
                             if (typeof tokeinpt === 'undefined') {
-                                tokenInputs('txtAddService', 'INV_ItemsForBilling');
+                                if (billingServicesDeptWise == '01') {
+                                    var deptId = $('#BillDepartment').val();
+                                    if (deptId != '0' && deptId != '') {
+                                        tokenInputs('txtAddService', 'INV_ItemsForBilling&DeptID=' + deptId);
+                                    } else {
+                                        $('#txtAddService').attr('placeholder', 'Select a Bill Department first');
+                                        $('#txtAddService').prop('disabled', true);
+                                    }
+                                } else {
+                                    tokenInputs('txtAddService', 'INV_ItemsForBilling');
+                                }
                             }
                         }
                     }
                     else {
                         var tokeinpt = $('#token-input-txtAddService').val();
                         if (typeof tokeinpt === 'undefined') {
-                            tokenInputs('txtAddService', 'INV_ItemsForBilling');
+                            if (billingServicesDeptWise == '01') {
+                                var deptId = $('#BillDepartment').val();
+                                if (deptId != '0' && deptId != '') {
+                                    tokenInputs('txtAddService', 'INV_ItemsForBilling&DeptID=' + deptId);
+                                } else {
+                                    $('#txtAddService').attr('placeholder', 'Select a Bill Department first');
+                                    $('#txtAddService').prop('disabled', true);
+                                }
+                            } else {
+                                tokenInputs('txtAddService', 'INV_ItemsForBilling');
+                            }
                         }
                     }
 
@@ -7220,8 +7364,35 @@
                 fillmartial();
                 fillgender();
                 CheckAppointmentAllow();
+                $.ajax({
+                    type: "POST",
+                    url: "BillingProcess.aspx/GetAutoRecvOPD",
+                    contentType: "application/json; charset=utf-8",
+                    dataType: "json",
+                    success: function (response) {
+                        autoRecvOPD = JSON.parse(response.d);
+                        // Trigger auto-fill if patient is already loaded
+                        setTimeout(function () { AutoFillCashInHand(); }, 100);
+                    },
+                    error: function (error) {
+                        console.error("Error fetching autoRecvOPD", error);
+                    }
+                });
                 CheckReceiptsUpdateonBilling();
                 CheckCNICUpdateonCondition();
+                $.ajax({
+                    type: "POST",
+                    url: "BillingProcess.aspx/CheckBillingServicesDeptWise",
+                    data: "{}",
+                    contentType: "application/json; charset=utf-8",
+                    dataType: "json",
+                    success: function (response) {
+                        billingServicesDeptWise = JSON.parse(response.d);
+                    },
+                    error: function (error) {
+                        billingServicesDeptWise = '0';
+                    }
+                });
 
                 jQuery(function ($) {
                     MaskedInput({
@@ -7400,6 +7571,23 @@
                         return;
                     }
                     $(this).datepicker('show');
+                });
+
+                $('#BillDepartment').change(function () {
+                    if (billingServicesDeptWise == '01') {
+                        var deptId = $(this).val();
+                        if (deptId == '0' || deptId == '') {
+                            $('#txtAddService').attr('placeholder', 'Select a Bill Department first');
+                            $('#txtAddService').prop('disabled', true);
+                            if ($('#txtAddService').tokenInput) {
+                                $('#txtAddService').tokenInput("clear");
+                            }
+                        } else {
+                            $('#txtAddService').prop('disabled', false);
+                            $('#txtAddService').attr('placeholder', 'Search Service...');
+                            tokenInputs('txtAddService', 'INV_ItemsForBilling&DeptID=' + deptId);
+                        }
+                    }
                 });
 
             });  // document.ready ends
@@ -8273,9 +8461,10 @@
                     </div>
                     <div class="col-lg-2">
                         <input type="button" style="width: 110px; display: none;" id="btnPrintVoucher" class="btn btn-primry" value="Print Voucher" onclick="PrintVoucher();" />
+                        <input type="button" style="width: 110px; display: none;" id="btnPrintVoucher2" class="btn btn-primry" value="Print Voucher 2"  onclick="PrintVoucher2();" />
                         <input type="button" style="width: 110px; display: none;" value="Hospital Print" onclick="PrintHospital();" />
                         <input type="button" style="width: 110px; display: none;" value="Consult Print" onclick="PrintConsultant();" />
-                        <input type="button" style="width: 110px; display: none;" value="Patient Copy" name="name" onclick="BackToPrintPatient();" style="width: 100px;" />
+                        <input type="button" style="width: 100px; display: none;" value="Patient Copy" name="name" onclick="BackToPrintPatient();"  />
                     
                     </div>
                 </div>

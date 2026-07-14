@@ -603,10 +603,13 @@
                         contentType: "application/json; charset=utf-8",
                         dataType: "json",
                         success: function (response) {
-                            var arr = response.d.split('-');
-                            var newId = arr[1];
-                            sendFile(newId);
-                            SaveDetailPurchaseRequestion(newId);
+                            var res = response.d;
+                            var arr = res.split('-');
+                            var msg = arr[0];
+                            var id = arr[1];
+                            sendFile(id, function () {
+                                SaveDetailPurchaseRequestion(id);
+                            });
                         },
                         failure: function (response) { alert("In failure method"); }
                     });
@@ -829,7 +832,21 @@
                 var data = new FormData();
                 data.append('file', fileInput.files[0]);
                 data.append('ID', ID);
-                $.ajax({ type: 'post', url: '../../upload/UploadPRFiles.ashx', data: data, processData: false, contentType: false, error: function () { alert("something went wrong!"); } });
+                $.ajax({
+                    type: 'post',
+                    url: '../../upload/UploadPRFiles.ashx',
+                    data: data,
+                    success: function (status) {
+                        if (typeof callback === 'function') callback();
+                    },
+                    processData: false,
+                    contentType: false,
+                    error: function () {
+                        alert(" something went wrong!");
+                    }
+                });
+            } else {
+                if (typeof callback === 'function') callback();
             }
         }
 

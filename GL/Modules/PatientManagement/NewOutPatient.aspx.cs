@@ -114,7 +114,7 @@ namespace PMS.Modules.PatientManagement
             public string Result_Name { get; set; }
         }
         [WebMethod]
-        public static string SaveLabResultrpt(string btnsave, string ResulttrptDetail)
+        public static string SaveLabResultrpt(string btnsave, string ResulttrptDetail, string formType)
         {
             try
             {
@@ -124,14 +124,31 @@ namespace PMS.Modules.PatientManagement
                 /********************Deleting Previous 0 Value Saved Rows.***********************************/
                 if (btnsave == "Update")
                 {
-                    List<Lab_Resultrpt> InPatient_Lab_Resultrpt = db.Lab_Resultrpts.Where(i => i.Out_Patient_ID == LabResulttrptDetail.OutPatientID).ToList();
-                    db.Lab_Resultrpts.DeleteAllOnSubmit(InPatient_Lab_Resultrpt);
+                    if (formType == "InPatientDischarge")
+                    {
+                        List<Lab_Resultrpt> InPatient_Lab_Resultrpt = db.Lab_Resultrpts.Where(i => i.In_Patient_ID == LabResulttrptDetail.OutPatientID).ToList();
+                        db.Lab_Resultrpts.DeleteAllOnSubmit(InPatient_Lab_Resultrpt);
+                    }
+                    else
+                    {
+                        List<Lab_Resultrpt> InPatient_Lab_Resultrpt = db.Lab_Resultrpts.Where(i => i.Out_Patient_ID == LabResulttrptDetail.OutPatientID).ToList();
+                        db.Lab_Resultrpts.DeleteAllOnSubmit(InPatient_Lab_Resultrpt);
+                    }
                     db.SubmitChanges();
                 }
                 foreach (var test in LabResulttrptDetail.Resulttrpt)
                 {
                     Lab_Resultrpt oInPatient_Lab_Resultrpt = new PMS.Lab_Resultrpt();
-                    oInPatient_Lab_Resultrpt.Out_Patient_ID = LabResulttrptDetail.OutPatientID;
+                    if (formType == "InPatientDischarge")
+                    {
+                        oInPatient_Lab_Resultrpt.In_Patient_ID = LabResulttrptDetail.OutPatientID;
+                        oInPatient_Lab_Resultrpt.Out_Patient_ID = 0;
+                    }
+                    else
+                    {
+                        oInPatient_Lab_Resultrpt.Out_Patient_ID = LabResulttrptDetail.OutPatientID;
+                        oInPatient_Lab_Resultrpt.In_Patient_ID = null;
+                    }
                     oInPatient_Lab_Resultrpt.Patient_ID = LabResulttrptDetail.Pat;
                     oInPatient_Lab_Resultrpt.Lab_Resultrpt_ID = test.Result_ID.ToString();
                     oInPatient_Lab_Resultrpt.Date = DateTime.Now;
@@ -149,16 +166,21 @@ namespace PMS.Modules.PatientManagement
             return "";
         }
         [WebMethod]
-        public static string LoadLabResultrptDetail(int PatientID)
+        public static string LoadLabResultrptDetail(int PatientID, string formType)
         {
             using (DataBaseDataContext db = new DataBaseDataContext())
             {
-                var inPatmedicineList = (from pm in db.Lab_Resultrpts
-                                         join op in db.Out_Patients
-                                         on pm.Out_Patient_ID equals op.Out_Patient_ID
-                                         where op.Out_Patient_ID == PatientID
-                                         select new { pm.Lab_Resultrpt_ID, Lab_Resultrpt = db.GetDataValueName("Lab Result", pm.Lab_Resultrpt_ID), pm.Lab_Resultrpt_Name, pm.ReslutDate }).ToList();
-                return (new JavaScriptSerializer()).Serialize(inPatmedicineList);
+                List<Lab_Resultrpt> inPatmedicineList;
+                if (formType == "InPatientDischarge")
+                {
+                    inPatmedicineList = db.Lab_Resultrpts.Where(p => p.In_Patient_ID == PatientID).ToList();
+                }
+                else
+                {
+                    inPatmedicineList = db.Lab_Resultrpts.Where(p => p.Out_Patient_ID == PatientID).ToList();
+                }
+                var result = inPatmedicineList.Select(pm => new { pm.Lab_Resultrpt_ID, Lab_Resultrpt = db.GetDataValueName("Lab Result", pm.Lab_Resultrpt_ID), pm.Lab_Resultrpt_Name, pm.ReslutDate }).ToList();
+                return (new JavaScriptSerializer()).Serialize(result);
             }
             return "";
         }
@@ -175,8 +197,16 @@ namespace PMS.Modules.PatientManagement
                     if (data.btnsave == "Save")
                     {
                         OPD = new Out_Patient();
-                        OPD.Patient_ID = Convert.ToInt32(data.Patient_ID);
-                        OPD.Reg_PatId = Convert.ToInt32(data.reg_ID);
+                        if (data.FormType == "InPatientDischarge")
+                        {
+                            OPD.Patient_ID = data.InPatientID;
+                            OPD.Reg_PatId = Convert.ToInt32(data.reg_ID);
+                        }
+                        else
+                        {
+                            OPD.Patient_ID = Convert.ToInt32(data.Patient_ID);
+                            OPD.Reg_PatId = Convert.ToInt32(data.reg_ID);
+                        }
 
                         // Required fields for new records
                         OPD.Book_ID = AppConfig.Book_ID;
@@ -184,7 +214,11 @@ namespace PMS.Modules.PatientManagement
                         OPD.Created_Time = DateTime.Now;
                         OPD.Company_ID = AppConfig.Company_ID;
                         OPD.OPD_Entry_Date = DateTime.Now.Date;
-                       
+
+                        if (data.FormType == "InPatientDischarge")
+                        {
+                            // OPD.Type = "InPatientDischarge";
+                        }
                     }
                     else
                     {
@@ -203,6 +237,11 @@ namespace PMS.Modules.PatientManagement
 
                         OPD.Updated_By = AppConfig.UserID;
                         OPD.Updated_Time = DateTime.Now;
+
+                        if (data.FormType == "InPatientDischarge")
+                        {
+                            // OPD.Type = "InPatientDischarge";
+                        }
                     }
 
                     // Initialize only fields that aren't being set elsewhere in the code
@@ -604,6 +643,13 @@ namespace PMS.Modules.PatientManagement
                     OPD.Non_Smokers = data.Non_Smokers;
                     OPD.Diabetics = data.Diabetics;
                     OPD.Hypertensive = data.Hypertensive;
+                    OPD.Alcohol_Consumption = data.Alcohol_Consumption;
+                    OPD.Naswar_Smokeless = data.Smokeless;
+                    OPD.DM = data.DM;
+                    OPD.HTN = data.HTN;
+                    OPD.TB = data.TB;
+                    OPD.IHD = data.IHD;
+                    OPD.Asthma = data.Asthma;
 
                     // Handle referral logic only if Reffer_To is provided
                     if (!string.IsNullOrEmpty(data.Reffer_To))
@@ -649,7 +695,39 @@ namespace PMS.Modules.PatientManagement
                     id = OPD.Out_Patient_ID.ToString();
 
                     // Update related records with the new Out_Patient_ID
-                    UpdateRelatedRecords(db, OPD.Out_Patient_ID);
+                    if (data.FormType != "InPatientDischarge")
+                    {
+                        UpdateRelatedRecords(db, OPD.Out_Patient_ID);
+                    }
+
+                    if (data.FormType == "InPatientDischarge" && data.Discharged == true)
+                    {
+                        var inPatient = db.In_Patients.FirstOrDefault(ip => ip.In_Patient_ID == data.InPatientID);
+                        if (inPatient != null)
+                        {
+                            inPatient.Discharge = true;
+                            inPatient.Discharge_On = DateTime.Now;
+                            inPatient.Discharge_By = AppConfig.UserName;
+
+                            var roomAlloc = db.Room_Allocations
+                                .FirstOrDefault(r => r.In_Patient_ID == data.InPatientID && r.IsDischarge == false);
+                            if (roomAlloc != null)
+                            {
+                                roomAlloc.IsDischarge = true;
+                                roomAlloc.To_Date = DateTime.Now;
+                            }
+
+                            var wardAlloc = db.Ward_Allocations
+                                .FirstOrDefault(w => w.InPatient_ID == data.InPatientID.ToString() && w.IsDischarge == false);
+                            if (wardAlloc != null)
+                            {
+                                wardAlloc.IsDischarge = true;
+                                wardAlloc.To_TimeDate = DateTime.Now;
+                            }
+
+                            db.SubmitChanges();
+                        }
+                    }
                 }
 
                 return id;
@@ -662,7 +740,7 @@ namespace PMS.Modules.PatientManagement
             }
         }
         [WebMethod]
-        public static string LoadServicesDetail(string outPatientId)
+        public static string LoadServicesDetail(string outPatientId, string formType)
         {
             try
             {
@@ -674,7 +752,7 @@ namespace PMS.Modules.PatientManagement
                 DataBaseDataContext db = new DataBaseDataContext(DBClass.ConnectionString());
 
                 var services = db.InPatientServices
-                    .Where(s => s.Ou_Patient_Id == outPatientId && s.PatientType == "OutPatient")
+                    .Where(s => (formType == "InPatientDischarge" ? s.In_Patient_Id.ToString() == outPatientId : s.Ou_Patient_Id == outPatientId) && (formType == "InPatientDischarge" ? s.PatientType == "InPatient Discharge" : s.PatientType == "OutPatient"))
                     .OrderBy(s => s.CreatedDate)
                     .Select(s => new
                     {
@@ -774,6 +852,95 @@ namespace PMS.Modules.PatientManagement
 
             db.SubmitChanges();
         }
+
+        private static void UpdateRelatedRecordsForInPatientDischarge(DataBaseDataContext db, int inPatientId)
+        {
+            // In_Patient_Medicines: set Transaction_Type + Patient_ID
+            var medicines = db.In_Patient_Medicines
+                .Where(p => p.Patient_ID == 0 && p.Transaction_Type == "OutPatient")
+                .ToList();
+            foreach (var med in medicines)
+            {
+                med.Patient_ID = inPatientId;
+                med.Transaction_Type = "InPatient Discharge";
+            }
+
+            // InPatientServices: use In_Patient_Id
+            var services = db.InPatientServices
+                .Where(p => p.Ou_Patient_Id == "0" && p.PatientType == "OutPatient")
+                .ToList();
+            foreach (var ser in services)
+            {
+                ser.In_Patient_Id = inPatientId;
+            }
+
+            // Lab_Resultrpts: use In_Patient_ID
+            var rpts = db.Lab_Resultrpts
+                .Where(p => p.Out_Patient_ID == 0 && p.Transaction_Type == "OutPatient")
+                .ToList();
+            foreach (var rpt in rpts)
+            {
+                rpt.In_Patient_ID = inPatientId;
+            }
+
+            // EyeDetails: set TransactionType + TransactionID
+            var eyeDetails = db.EyeDetails
+                .Where(t => t.TransactionType == "OutPatient" && t.TransactionID == 0)
+                .ToList();
+            foreach (var eye in eyeDetails)
+            {
+                eye.TransactionID = inPatientId;
+                eye.TransactionType = "InPatient Discharge";
+            }
+
+            // OutPatients_Protos: use In_Patient_ID
+            var protos = db.OutPatients_Protos
+                .Where(t => t.Outpatient_id == 0)
+                .ToList();
+            foreach (var proto in protos)
+            {
+                proto.In_Patient_ID = inPatientId;
+            }
+
+            // OutPatientPrimaryDiagnosis: use In_Patient_ID
+            var primaryDiagnoses = db.OutPatientPrimaryDiagnosis
+                .Where(t => t.OutPatientID == 0)
+                .ToList();
+            foreach (var oppd in primaryDiagnoses)
+            {
+                oppd.In_Patient_ID = inPatientId;
+            }
+
+            // OutPatientFinalDiagnosis: use In_Patient_ID
+            var finalDiagnoses = db.OutPatientFinalDiagnosis
+                .Where(t => t.OutPatientID == 0)
+                .ToList();
+            foreach (var opfd in finalDiagnoses)
+            {
+                opfd.In_Patient_ID = inPatientId;
+            }
+
+            // OutPatientComplaints: use In_Patient_ID
+            var complaints = db.OutPatientComplaints
+                .Where(t => t.OutPatientID == 0)
+                .ToList();
+            foreach (var opc in complaints)
+            {
+                opc.In_Patient_ID = inPatientId;
+            }
+
+            // Sysmtopms (symptoms): use In_Patient_ID
+            var symptoms = db.Sysmtopms
+                .Where(t => t.Out_Patient_ID == 0)
+                .ToList();
+            foreach (var sym in symptoms)
+            {
+                sym.In_Patient_ID = inPatientId;
+            }
+
+            db.SubmitChanges();
+        }
+
         // DTOs
         public class ServiceDetailsDTO
         {
@@ -791,7 +958,7 @@ namespace PMS.Modules.PatientManagement
 
         // WebMethod
         [WebMethod]
-        public static string SaveServices(string ServiceDetails)
+        public static string SaveServices(string ServiceDetails, string formType)
         {
             try
             {
@@ -809,7 +976,12 @@ namespace PMS.Modules.PatientManagement
                 int patientId = serviceData.Pat;
                 int outPatientId = serviceData.PatientID;
 
-           
+                if (formType == "InPatientDischarge" && outPatientId != 0)
+                {
+                    var existingServices = db.InPatientServices
+                        .Where(s => s.In_Patient_Id == outPatientId && s.PatientType == "InPatient Discharge").ToList();
+                    db.InPatientServices.DeleteAllOnSubmit(existingServices);
+                }
 
                 foreach (var service in serviceData.ServiceList)
                 {
@@ -831,22 +1003,31 @@ namespace PMS.Modules.PatientManagement
                     if (itemDetails == null)
                         continue;
 
-                    // Create new service entity
                     InPatientService newService = new InPatientService
                     {
                         Service_ItemId = itemDetails.Item_Code,
                         Services_Procedure_ItemName = itemDetails.Description,
                         ServiceAmount = itemDetails.Sale_Rate ?? 0,
                         PatientId = patientId,
-                        Ou_Patient_Id = outPatientId.ToString(),
                         ServiceType = "Service",
-                        PatientType = "OutPatient",
                         CreatedDate = DateTime.Now,
                         UserName = Convert.ToString(AppConfig.UserID),
                         isbilled = false,
-                        In_Patient_Id = null,
                         EmergencyId = null
                     };
+
+                    if (formType == "InPatientDischarge")
+                    {
+                        newService.In_Patient_Id = outPatientId;
+                        newService.Ou_Patient_Id = "0";
+                        newService.PatientType = "InPatient Discharge";
+                    }
+                    else
+                    {
+                        newService.Ou_Patient_Id = outPatientId.ToString();
+                        newService.In_Patient_Id = null;
+                        newService.PatientType = "OutPatient";
+                    }
 
                     db.InPatientServices.InsertOnSubmit(newService);
                 }
@@ -862,7 +1043,56 @@ namespace PMS.Modules.PatientManagement
             }
         }
         [WebMethod]
-        public static string SaveMedicines(string MedicineDetails)
+        public static string GetInPatientFormData(int InPatientID)
+        {
+            try
+            {
+                DataBaseDataContext db = new DataBaseDataContext(DBClass.ConnectionString());
+
+                var qry = (from ip in db.In_Patients
+                           join rp in db.Reg_patients on ip.Patient_ID equals rp.pat_id
+                           where ip.In_Patient_ID == InPatientID
+                           select new
+                           {
+                               rp.Full_Name,
+                               rp.Age_years,
+                               rp.Mobile1,
+                               rp.Permanent_Address,
+                               rp.pat_id,
+                               rp.Gender,
+                               rp.Patient_No
+                           }).FirstOrDefault();
+
+                if (qry == null)
+                {
+                    return JsonConvert.SerializeObject(new { success = false, message = "InPatient data not found" });
+                }
+
+                var patientData = new
+                {
+                    success = true,
+                    data = new
+                    {
+                        PatientName = qry.Full_Name ?? "",
+                        Age = qry.Age_years ?? "",
+                        Contact = qry.Mobile1 ?? "",
+                        Address = qry.Permanent_Address ?? "",
+                        PatientId = qry.pat_id.ToString(),
+                        RegId = qry.pat_id.ToString(),
+                        Gender = qry.Gender ?? "",
+                        MR_No = qry.Patient_No?.ToString() ?? ""
+                    }
+                };
+
+                return JsonConvert.SerializeObject(patientData);
+            }
+            catch (Exception ex)
+            {
+                return JsonConvert.SerializeObject(new { success = false, message = ex.Message });
+            }
+        }
+        [WebMethod]
+        public static string SaveMedicines(string MedicineDetails, string formType)
         {
             try
             {
@@ -871,8 +1101,10 @@ namespace PMS.Modules.PatientManagement
 
                 using (DataBaseDataContext db = new DataBaseDataContext(DBClass.ConnectionString()))
                 {
+                    var transType = formType == "InPatientDischarge" ? "InPatient Discharge" : "OutPatient";
+
                     /********************Deleting Previous 0 Value Saved Rows.***********************************/
-                    List<In_Patient_Medicine> In_Patient_MedicineList = db.In_Patient_Medicines.Where(i => i.Patient_ID == 0 && i.Transaction_Type == "OutPatient").ToList();
+                    List<In_Patient_Medicine> In_Patient_MedicineList = db.In_Patient_Medicines.Where(i => i.Patient_ID == 0 && i.Transaction_Type == transType).ToList();
                     db.In_Patient_Medicines.DeleteAllOnSubmit(In_Patient_MedicineList);
                     db.SubmitChanges();
 
@@ -881,7 +1113,7 @@ namespace PMS.Modules.PatientManagement
                     if (MedicineDetail.PatientID != 0)
                     {
                         /*********************Deleting Previous Entry On Every Insert Or Update*************************/
-                        List<In_Patient_Medicine> inPatmedicineList = db.In_Patient_Medicines.Where(p => p.Patient_ID == MedicineDetail.PatientID && p.Transaction_Type == "OutPatient").ToList();
+                        List<In_Patient_Medicine> inPatmedicineList = db.In_Patient_Medicines.Where(p => p.Patient_ID == MedicineDetail.PatientID && p.Transaction_Type == transType).ToList();
                         if (inPatmedicineList != null)
                         {
                             db.In_Patient_Medicines.DeleteAllOnSubmit(inPatmedicineList);
@@ -898,7 +1130,7 @@ namespace PMS.Modules.PatientManagement
                             Patient_ID = Convert.ToInt32(MedicineDetail.PatientID),
                             Item_Code = oIn_Patient_Medicine.ItemCode,
                             Medicine_Name = oIn_Patient_Medicine.Medicine_Name,
-                            Transaction_Type = "OutPatient",
+                            Transaction_Type = transType,
                             Medicine_Date = oIn_Patient_Medicine.Medicine_Date,
                             Oral = oIn_Patient_Medicine.Oral,
                             Injections = oIn_Patient_Medicine.Injection,
@@ -917,6 +1149,7 @@ namespace PMS.Modules.PatientManagement
             }
             catch (Exception ex)
             {
+
             }
             return "";
         }
@@ -1041,7 +1274,7 @@ namespace PMS.Modules.PatientManagement
             return "";
         }
         [WebMethod]
-        public static string SaveSymtoms(string SymtomsList)
+        public static string SaveSymtoms(string SymtomsList, string formType)
         {
             try
             {
@@ -1053,7 +1286,11 @@ namespace PMS.Modules.PatientManagement
                         data.OutPatientID = Convert.ToInt32(DBClass.getField("select (isnull(max(Out_Patient_id),0)+1) from Out_Patient").ToString());
                     int couterNewRecords = 0;
                     /*********************Deleting Previous Entry On Every Insert Or Update*************************/
-                    List<Sysmtopm> SysmtopmList = db.Sysmtopms.Where(p => p.Out_Patient_ID == data.OutPatientID).ToList();
+                    List<Sysmtopm> SysmtopmList;
+                    if (formType == "InPatientDischarge")
+                        SysmtopmList = db.Sysmtopms.Where(p => p.In_Patient_ID == data.OutPatientID).ToList();
+                    else
+                        SysmtopmList = db.Sysmtopms.Where(p => p.Out_Patient_ID == data.OutPatientID).ToList();
                     if (SysmtopmList != null)
                     {
                         db.Sysmtopms.DeleteAllOnSubmit(SysmtopmList);
@@ -1066,12 +1303,21 @@ namespace PMS.Modules.PatientManagement
                     {
                         Sysmtopm oSysmtopm = new Sysmtopm()
                         {
-                            Out_Patient_ID = data.OutPatientID,
                             Symtom_ID = oSymtomsList.SymtomID.Replace(" ", ""),
                             Duration = oSymtomsList.Duration,
                             Days_Years_Months = oSymtomsList.DayYearMonth,
                             Remarks = oSymtomsList.Remarks
                         };
+                        if (formType == "InPatientDischarge")
+                        {
+                            oSysmtopm.In_Patient_ID = data.OutPatientID;
+                            oSysmtopm.Out_Patient_ID = null;
+                        }
+                        else
+                        {
+                            oSysmtopm.Out_Patient_ID = data.OutPatientID;
+                            oSysmtopm.In_Patient_ID = null;
+                        }
                         db.Sysmtopms.InsertOnSubmit(oSysmtopm);
                         couterNewRecords++;
                     }
@@ -1085,7 +1331,7 @@ namespace PMS.Modules.PatientManagement
             return "";
         }
         [WebMethod]
-        public static string SaveProto(string btnSave, string ProtoDetailss)
+        public static string SaveProto(string btnSave, string ProtoDetailss, string formType)
         {
             try
             {
@@ -1102,8 +1348,16 @@ namespace PMS.Modules.PatientManagement
 
                     if (btnSave == "Update")
                     {
-                        List<OutPatients_Proto> outpatient_protos = db.OutPatients_Protos.Where(w => w.Outpatient_id == ProtDetailList.opdid).ToList();
-                        db.OutPatients_Protos.DeleteAllOnSubmit(outpatient_protos);
+                        if (formType == "InPatientDischarge")
+                        {
+                            List<OutPatients_Proto> outpatient_protos = db.OutPatients_Protos.Where(w => w.In_Patient_ID == ProtDetailList.opdid).ToList();
+                            db.OutPatients_Protos.DeleteAllOnSubmit(outpatient_protos);
+                        }
+                        else
+                        {
+                            List<OutPatients_Proto> outpatient_protos = db.OutPatients_Protos.Where(w => w.Outpatient_id == ProtDetailList.opdid).ToList();
+                            db.OutPatients_Protos.DeleteAllOnSubmit(outpatient_protos);
+                        }
                         db.SubmitChanges();
                     }
                     foreach (var item in ProtDetailList.ProtoList)
@@ -1115,6 +1369,10 @@ namespace PMS.Modules.PatientManagement
                             Outpatient_id = 0,
                             Proto_Description = item.Proto_Description
                         };
+                        if (formType == "InPatientDischarge")
+                        {
+                            ipser.In_Patient_ID = ProtDetailList.opdid;
+                        }
 
                         db.OutPatients_Protos.InsertOnSubmit(ipser);
                     }
@@ -1148,7 +1406,7 @@ namespace PMS.Modules.PatientManagement
             }
         }
         [WebMethod]
-        public static string SaveComplaintsOfPatient(string ComplaintsList)
+        public static string SaveComplaintsOfPatient(string ComplaintsList, string formType)
         {
             try
             {
@@ -1164,7 +1422,9 @@ namespace PMS.Modules.PatientManagement
 
 
                         /*********************Deleting Previous Complaints*************************/
-                        var existingComplaints = db.OutPatientComplaints.Where(p => p.OutPatientID == outPatientId).ToList();
+                        var existingComplaints = formType == "InPatientDischarge"
+                            ? db.OutPatientComplaints.Where(p => p.In_Patient_ID == outPatientId).ToList()
+                            : db.OutPatientComplaints.Where(p => p.OutPatientID == outPatientId).ToList();
                         if (existingComplaints != null && existingComplaints.Count > 0)
                         {
                             db.OutPatientComplaints.DeleteAllOnSubmit(existingComplaints);
@@ -1175,10 +1435,18 @@ namespace PMS.Modules.PatientManagement
                         {
                             OutPatientComplaint newComplaint = new OutPatientComplaint()
                             {
-                                OutPatientID = outPatientId,
                                 ComplaintID = complaint.ComplaintID,
                                 PatientID = 0 // You might want to set this properly
                             };
+                            if (formType == "InPatientDischarge")
+                            {
+                                newComplaint.In_Patient_ID = outPatientId;
+                                newComplaint.OutPatientID = 0;
+                            }
+                            else
+                            {
+                                newComplaint.OutPatientID = outPatientId;
+                            }
                             db.OutPatientComplaints.InsertOnSubmit(newComplaint);
                         }
 
@@ -1195,7 +1463,7 @@ namespace PMS.Modules.PatientManagement
             }
         }
         [WebMethod]
-        public static string SavePrimaryDiagnosisOfPatient(string PrimaryDiagnosisList)
+        public static string SavePrimaryDiagnosisOfPatient(string PrimaryDiagnosisList, string formType)
         {
             try
             {
@@ -1210,7 +1478,9 @@ namespace PMS.Modules.PatientManagement
                         int outPatientId = PrimaryDiagnosis[0].OutPatientID;
 
                         /*********************Deleting Previous PrimaryDiagnosis*************************/
-                        var existingPrimaryDiagnosis = db.OutPatientPrimaryDiagnosis.Where(p => p.OutPatientID == outPatientId).ToList();
+                        var existingPrimaryDiagnosis = formType == "InPatientDischarge"
+                            ? db.OutPatientPrimaryDiagnosis.Where(p => p.In_Patient_ID == outPatientId).ToList()
+                            : db.OutPatientPrimaryDiagnosis.Where(p => p.OutPatientID == outPatientId).ToList();
                         if (existingPrimaryDiagnosis != null && existingPrimaryDiagnosis.Count > 0)
                         {
                             db.OutPatientPrimaryDiagnosis.DeleteAllOnSubmit(existingPrimaryDiagnosis);
@@ -1221,12 +1491,20 @@ namespace PMS.Modules.PatientManagement
                         {
                             OutPatientPrimaryDiagnosi newprimaryDiagnosis = new OutPatientPrimaryDiagnosi()
                             {
-                                OutPatientID = outPatientId,
                                 DiagnosisID = primaryDiagnosis.DiagnosisID,
                                 PatientID = 0,
                                 Remarks = primaryDiagnosis.Remarks
 
                             };
+                            if (formType == "InPatientDischarge")
+                            {
+                                newprimaryDiagnosis.In_Patient_ID = outPatientId;
+                                newprimaryDiagnosis.OutPatientID = 0;
+                            }
+                            else
+                            {
+                                newprimaryDiagnosis.OutPatientID = outPatientId;
+                            }
                             db.OutPatientPrimaryDiagnosis.InsertOnSubmit(newprimaryDiagnosis);
                         }
 
@@ -1243,7 +1521,7 @@ namespace PMS.Modules.PatientManagement
             }
         }
         [WebMethod]
-        public static string SaveFinalDiagnosisOfPatient(string FinalDiagnosisList)
+        public static string SaveFinalDiagnosisOfPatient(string FinalDiagnosisList, string formType)
         {
             try
             {
@@ -1258,7 +1536,9 @@ namespace PMS.Modules.PatientManagement
                         int outPatientId = FinalDiagnosis[0].OutPatientID;
 
                         /*********************Deleting Previous FinalDiagnosis*************************/
-                        var existingFinalDiagnosis = db.OutPatientFinalDiagnosis.Where(p => p.OutPatientID == outPatientId).ToList();
+                        var existingFinalDiagnosis = formType == "InPatientDischarge"
+                            ? db.OutPatientFinalDiagnosis.Where(p => p.In_Patient_ID == outPatientId).ToList()
+                            : db.OutPatientFinalDiagnosis.Where(p => p.OutPatientID == outPatientId).ToList();
                         if (existingFinalDiagnosis != null && existingFinalDiagnosis.Count > 0)
                         {
                             db.OutPatientFinalDiagnosis.DeleteAllOnSubmit(existingFinalDiagnosis);
@@ -1269,12 +1549,20 @@ namespace PMS.Modules.PatientManagement
                         {
                             OutPatientFinalDiagnosi newFinalDiagnosis = new OutPatientFinalDiagnosi()
                             {
-                                OutPatientID = outPatientId,
                                 DiagnosisID = finalDiagnosis.DiagnosisID,
                                 PatientID = 0,
                                 Remarks = finalDiagnosis.Remarks
 
                             };
+                            if (formType == "InPatientDischarge")
+                            {
+                                newFinalDiagnosis.In_Patient_ID = outPatientId;
+                                newFinalDiagnosis.OutPatientID = 0;
+                            }
+                            else
+                            {
+                                newFinalDiagnosis.OutPatientID = outPatientId;
+                            }
                             db.OutPatientFinalDiagnosis.InsertOnSubmit(newFinalDiagnosis);
                         }
 
@@ -1306,7 +1594,11 @@ namespace PMS.Modules.PatientManagement
 
                 if (qry == null)
                 {
-                    return JsonConvert.SerializeObject(new { success = false, message = "Patient data not found" });
+                    var op = db.Out_Patients.FirstOrDefault(o => o.Out_Patient_ID == PatientID);
+                    if (op == null)
+                        return JsonConvert.SerializeObject(new { success = false, message = "Patient data not found" });
+
+                    return JsonConvert.SerializeObject(BuildFallbackPatientData(op, PatientID, doctorId));
                 }
 
                 var patientData = new
@@ -1429,7 +1721,14 @@ namespace PMS.Modules.PatientManagement
                         Smokers = qry.Smokers?.ToString().ToLower() ?? "false",
                         Non_Smokers = qry.Non_Smokers?.ToString().ToLower() ?? "false",
                         Diabetics = qry.Diabetics?.ToString().ToLower() ?? "false",
-                        Hypertensive = qry.Hypertensive?.ToString().ToLower() ?? "false"
+                        Hypertensive = qry.Hypertensive?.ToString().ToLower() ?? "false",
+                       DM = qry.DM?.ToString().ToLower() ?? "false",
+                       HTN = qry.HTN?.ToString().ToLower() ?? "false",
+                        TB = qry.TB?.ToString().ToLower() ?? "false",
+                       IHD = qry.IHD?.ToString().ToLower() ?? "false",
+                        Asthma = qry.Asthma?.ToString().ToLower() ?? "false",
+                        Alcohol_Consumption = qry.Alcohol_Consumption?.ToString().ToLower() ?? "false",
+                        Smokeless = qry.Naswar_Smokeless?.ToString().ToLower() ?? "false"
                     }
                 };
 
@@ -1440,15 +1739,117 @@ namespace PMS.Modules.PatientManagement
                 return JsonConvert.SerializeObject(new { success = false, message = ex.Message });
             }
         }
+        private static object BuildFallbackPatientData(Out_Patient op, int patientId, string doctorId)
+        {
+            return new
+            {
+                success = true,
+                data = new
+                {
+                    DoctorId = doctorId ?? "",
+                    PatientName = "",
+                    Age = "",
+                    Contact = "",
+                    Address = "",
+                    OutPatientId = patientId.ToString(),
+                    PatientId = op.Patient_ID.ToString(),
+                    RegId = op.Reg_PatId?.ToString() ?? "",
+                    Pulse = op.pulse_Min ?? "",
+                    BP = op.BP_mm_Hg ?? "",
+                    Temperature = op.Temp_C ?? "",
+                    Respiration = op.Respiration_Min ?? "",
+                    Height = op.Height_Cm ?? "",
+                    Weight = op.Weight_Kg ?? "",
+                    SPO2 = op.spo2 ?? "",
+                    BMI = op.BMI ?? "",
+                    BSR = op.BSR ?? "",
+                    MUAC = op.MUAC ?? "",
+                    OFC = op.OFC ?? "",
+                    LMP = op.L_M_P ?? "",
+                    EDD = op.EDD ?? "",
+                    DevelopmentHistory = op.DevelopmentHistory ?? "",
+                    VaccinationHistory = op.VaccinationHistory ?? "",
+                    NutritionHistory = op.NutritionHistory ?? "",
+                    HistoryOfPresentIllness = op.HistoryOfPeresentIllness ?? "",
+                    HistoryOfFamily = op.HistoryOfFamily ?? "",
+                    HistoryOfPastIllness = op.HistoryOfPastIllness ?? "",
+                    SocioEconomicHistory = op.SocioEconomicHistory ?? "",
+                    ObstetricHistory = op.ObstetricHistory ?? "",
+                    AllergiesHistory = op.AllergiesHistory ?? "",
+                    TreatmentHistory = op.TreatmentHistory ?? "",
+                    DrugHistory = op.Drug_History ?? "",
+                    PersonalHistory = op.Personal_History ?? "",
+                    BirthHistory = op.Birth_History ?? "",
+                    CVS = op.CVS ?? "",
+                    GIT = op.GIT ?? "",
+                    RESP = op.RESP ?? "",
+                    CNS = op.CNS ?? "",
+                    GYNAE = op.GYNAE ?? "",
+                    UGS = op.URG ?? "",
+                    Local = op.Local ?? "",
+                    Muscular = op.Mucculor ?? "",
+                    Abdominal = op.Abdominal ?? "",
+                    Pallor = op.chkPallor?.ToString().ToLower() ?? "false",
+                    JVP = op.chkJVP?.ToString().ToLower() ?? "false",
+                    Cyanosis = op.chkaganoris?.ToString().ToLower() ?? "false",
+                    Disoriented = op.chkunconceed?.ToString().ToLower() ?? "false",
+                    Jaundice = op.chkjaundice?.ToString().ToLower() ?? "false",
+                    Dehydration = op.hydration?.ToString().ToLower() ?? "false",
+                    Edema = op.edema?.ToString().ToLower() ?? "false",
+                    Lymphadenopathy = op.chk1?.ToString().ToLower() ?? "false",
+                    Clubbing = op.chk2?.ToString().ToLower() ?? "false",
+                    Dyspnoea = op.chk3?.ToString().ToLower() ?? "false",
+                    NeckSwelling = op.chk4?.ToString().ToLower() ?? "false",
+                    SkinLesions = op.chk5?.ToString().ToLower() ?? "false",
+                    DRE = op.DRE?.ToString().ToLower() ?? "false",
+                    Proctoscopy = op.Proctoscopy?.ToString().ToLower() ?? "false",
+                    ProvisionalDiagnosis = op.ProvisionalDiagnosis ?? "",
+                    FinalDiagnosis = op.Final_Diagnosis ?? "",
+                    FinalRecommendation = op.Final_Rec ?? "",
+                    hdnStatus = op.Status ?? "",
+                    hdnVoucher_id = op.Voucher_Id ?? 0,
+                    Advice = op.Advice ?? "",
+                    ReferToHospital = op.Refer_To_Hospital ?? "",
+                    Designation = op.Designation ?? "",
+                    referDoc = op.reffer_doc ?? 0,
+                    PA_Gynae = op.PA_Gynae ?? "",
+                    PS_Gynae = op.PS_Gynae ?? "",
+                    Uterus_Gynae = op.Uterus ?? "",
+                    FX_Gynae = op.FX ?? "",
+                    PS_Obs = op.PS_Obs ?? "",
+                    PV_Obs = op.PV_Obs ?? "",
+                    SFH_Obs = op.SFH ?? "",
+                    LIE_Obs = op.LIE ?? "",
+                    Presentation_Obs = op.Presentation ?? "",
+                    FHR_Obs = op.FHR ?? "",
+                    Engagement_Obs = op.Engagement ?? "",
+                    Verbal_Consent = op.Verbal_Consent ?? "",
+                    IssuanceOf = op.Administration ?? "",
+                    FollowUp = op.Follow_Up ?? "",
+                    FollowUpWeek = op.Follow_Up_Time ?? "",
+                    Proto = op.Proto ?? "",
+                    PatientMainCategory = op.Reffer_To ?? "",
+                    FollowDate = op.Folllow_Date?.ToString("dd/MM/yyyy") ?? "",
+                    InputBox1 = op.txtInputBox1 ?? "",
+                    ReferNote = op.Reffer_No ?? "",
+                    RemarksHistory = op.txtRemarksHistory ?? "",
+                    Discharge = op.Discharge?.ToString().ToLower() ?? "false",
+                    Smokers = op.Smokers?.ToString().ToLower() ?? "false",
+                    Non_Smokers = op.Non_Smokers?.ToString().ToLower() ?? "false",
+                    Diabetics = op.Diabetics?.ToString().ToLower() ?? "false",
+                    Hypertensive = op.Hypertensive?.ToString().ToLower() ?? "false"
+                }
+            };
+        }
         [WebMethod]
-        public static string LoadSymtompsHistory(int OutPatientID)
+        public static string LoadSymtompsHistory(int OutPatientID, string formType)
         {
             DataBaseDataContext db = new DataBaseDataContext();
  
             var OutPatientlist = (
                 from s in db.Sysmtopms
-                where s.Out_Patient_ID == OutPatientID
-                select new { s.Symtom_ID, Symtom_Name = (DBClass.getField("select Datavalue_Description from ValueSet vs,DataValues dv where                                            vs.ValueSet_ID=dv.ValueSet_ID and vs.ValueSet_Name='Symtoms' and dv.DataValue_Name='" + s.Symtom_ID + "'").ToString()), s.Duration, Days_Years_Months = db.GetDataValueName("Days_Years_Months", s.Days_Years_Months), s.Remarks }
+                where (formType == "InPatientDischarge" ? s.In_Patient_ID == OutPatientID : s.Out_Patient_ID == OutPatientID)
+                select new { s.Symtom_ID, Symtom_Name = (DBClass.getField("select Datavalue_Description from ValueSet vs,DataValues dv where vs.ValueSet_ID=dv.ValueSet_ID and vs.ValueSet_Name='Symtoms' and dv.DataValue_Name='" + s.Symtom_ID + "'").ToString()), s.Duration, Days_Years_Months = db.GetDataValueName("Days_Years_Months", s.Days_Years_Months), s.Remarks }
                 ).ToList();
 
 
@@ -1516,24 +1917,25 @@ namespace PMS.Modules.PatientManagement
         }
         
         [WebMethod]
-        public static string LoadMedicines(int PatientID)
+        public static string LoadMedicines(int PatientID, string formType)
         {
             using (DataBaseDataContext db = new DataBaseDataContext())
             {
-                List<In_Patient_Medicine> inPatmedicineList = db.In_Patient_Medicines.Where(p => p.Patient_ID == PatientID && p.Transaction_Type == "OutPatient").ToList();
+                var transType = formType == "InPatientDischarge" ? "InPatient Discharge" : "OutPatient";
+                List<In_Patient_Medicine> inPatmedicineList = db.In_Patient_Medicines.Where(p => p.Patient_ID == PatientID && p.Transaction_Type == transType).ToList();
                 return (new JavaScriptSerializer()).Serialize(inPatmedicineList);
             }
             return "";
         }
         [WebMethod]
-        public static string LoadComplaints(int OutPatientID)
+        public static string LoadComplaints(int OutPatientID, string formType)
         {
             using (DataBaseDataContext db = new DataBaseDataContext())
             {
                 var Complaints = from opc in db.OutPatientComplaints
                                        join cd in db.ComplaintsDefinitions
                                        on opc.ComplaintID equals cd.ID
-                                       where opc.OutPatientID == OutPatientID
+                                       where (formType == "InPatientDischarge" ? opc.In_Patient_ID == OutPatientID : opc.OutPatientID == OutPatientID)
                                        select new
                                        {
                                            ComplaintID = opc.ComplaintID,
@@ -1544,14 +1946,14 @@ namespace PMS.Modules.PatientManagement
             return "";
         }
         [WebMethod]
-        public static string LoadPrimaryDiagnosis(int OutPatientID)
+        public static string LoadPrimaryDiagnosis(int OutPatientID, string formType)
         {
             using (DataBaseDataContext db = new DataBaseDataContext())
             {
                 var PrimaryDiagnosis = from oppd in db.OutPatientPrimaryDiagnosis
                                        join pdd in db.DiagnosisDefinitions
                                        on oppd.DiagnosisID equals pdd.ID
-                                       where oppd.OutPatientID == OutPatientID
+                                       where (formType == "InPatientDischarge" ? oppd.In_Patient_ID == OutPatientID : oppd.OutPatientID == OutPatientID)
                                        select new
                                        {
                                            PrimaryDiagnosisID = oppd.DiagnosisID,
@@ -1562,14 +1964,14 @@ namespace PMS.Modules.PatientManagement
             }
         }
         [WebMethod]
-        public static string LoadFinalDiagnosis(int OutPatientID)
+        public static string LoadFinalDiagnosis(int OutPatientID, string formType)
         {
             using (DataBaseDataContext db = new DataBaseDataContext())
             {
                 var FinalDiagnosis = from oppd in db.OutPatientFinalDiagnosis
                                        join pdd in db.DiagnosisDefinitions
                                        on oppd.DiagnosisID equals pdd.ID
-                                       where oppd.OutPatientID == OutPatientID
+                                       where (formType == "InPatientDischarge" ? oppd.In_Patient_ID == OutPatientID : oppd.OutPatientID == OutPatientID)
                                        select new
                                        {
                                            FinalDiagnosisID = oppd.DiagnosisID,
@@ -2091,12 +2493,15 @@ namespace PMS.Modules.PatientManagement
             return (new JavaScriptSerializer().Serialize(dpt));
         }
         [WebMethod]
-        public static string LoadProtoDetails(string patients_id)
+        public static string LoadProtoDetails(string patients_id, string formType)
         {
             using (DataBaseDataContext db = new DataBaseDataContext())
             {
                 List<ProtoDetailss> list = new List<ProtoDetailss>();
-                var OutPatients_Proto = db.OutPatients_Protos.DefaultIfEmpty().Where(w => w.Outpatient_id == Convert.ToInt32(patients_id)).ToList();
+                var pid = Convert.ToInt32(patients_id);
+                var OutPatients_Proto = formType == "InPatientDischarge"
+                    ? db.OutPatients_Protos.Where(w => w.In_Patient_ID == pid).ToList()
+                    : db.OutPatients_Protos.Where(w => w.Outpatient_id == pid).ToList();
 
                 if (OutPatients_Proto.Count > 0 && OutPatients_Proto != null)
                 {
@@ -2472,7 +2877,16 @@ namespace PMS.Modules.PatientManagement
             public bool Smokers { get; set; }
             public bool Non_Smokers { get; set; }
             public bool Diabetics { get; set; }
+            public bool DM { get; set; }
+            public bool HTN { get; set; }
+            public bool TB { get; set; }
+            public bool IHD { get; set; }
+            public bool Asthma { get; set; }
             public bool Hypertensive { get; set; }
+            public bool Alcohol_Consumption { get; set; }
+            public bool Smokeless { get; set; }
+            public string FormType { get; set; }
+            public int InPatientID { get; set; }
         }
         
 

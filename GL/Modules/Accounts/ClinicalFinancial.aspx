@@ -18,6 +18,7 @@
             ProcedureloadSavedRows();
             PHARMACYloadSavedRows();
             AdvanceloadSavedRows();
+            RefundloadSavedRows();
         });
 
         //tabs 
@@ -41,6 +42,7 @@
     let categoryNamesPHARMACY = new Set();
     let categoryNamesProcedure = new Set();
     let categoryNamesSpecialService = new Set();
+    let categoryNamesRefund = new Set();
     let duplicateFound = false;
     
     let rowsOPD = $('#tableOPD .data-row');
@@ -55,6 +57,8 @@
     let rowsSERVICE = $('#tableSERVICE .data-row');
     let rowsPHARMACY = $('#tablePHARMACY .data-row');
     let rowsAdvance = $('#tableAdvance .data-row');
+    let rowsRefund = $('#tableRefund .data-row');
+   
 
     // Check if any rows exist
     if (rowsOPD.length === 0 && rowsIPD.length === 0 && rowsOPDShare.length === 0 && rowsReg.length === 0 && 
@@ -152,9 +156,10 @@
             categoryname: row.find('.categorynameDiagnostic').val(),
             cashinhand: row.find('.cashinhandDiagnostic').val(),
             discount: row.find('.discountDiagnostic').val(),
-            revenue: row.find('.revenueDiagnostic').val()
+            revenue: row.find('.revenueDiagnostic').val(),
+            expense: row.find('.expenseDiagnostic').val()
         };
-        if (rowDataDiagnostic.categoryname == 0 || rowDataDiagnostic.cashinhand == 0 || rowDataDiagnostic.discount == 0 || rowDataDiagnostic.revenue == 0) {
+        if (rowDataDiagnostic.categoryname == 0 || rowDataDiagnostic.cashinhand == 0 || rowDataDiagnostic.discount == 0 || rowDataDiagnostic.revenue == 0|| rowDataDiagnostic.expense == 0) {
             isEmptyFound = true;
         }
         if (categoryNamesDiagnostic.has(rowDataDiagnostic.categoryname)) {
@@ -252,9 +257,10 @@
             categoryname: row.find('.categorynameSERVICE').val(),
             cashinhand: row.find('.cashinhandSERVICE').val(),
             discount: row.find('.discountSERVICE').val(),
-            revenue: row.find('.revenueSERVICE').val()
+            revenue: row.find('.revenueSERVICE').val(),
+            expense: row.find('.expenseSERVICE').val()
         };
-        if (rowDataSERVICE.categoryname == 0 || rowDataSERVICE.cashinhand == 0 || rowDataSERVICE.discount == 0 || rowDataSERVICE.revenue == 0) {
+        if (rowDataSERVICE.categoryname == 0 || rowDataSERVICE.cashinhand == 0 || rowDataSERVICE.discount == 0 || rowDataSERVICE.revenue == 0|| rowDataSERVICE.expense == 0) {
             isEmptyFound = true;
         }
         if (categoryNamesSERVICE.has(rowDataSERVICE.categoryname)) {
@@ -319,6 +325,41 @@
         
         allData.push(rowDataAdvance);
     });
+
+         // In the submitData function, find the Refund section and replace it with this:
+
+         rowsRefund.each(function () {
+             let row = $(this);
+             let drValue = row.find('.drRefund').val();
+             let crValue = row.find('.crRefund').val();
+
+             let rowDataRefund = {
+                 financialdepartment: row.find('.financialDepartmentRefund').val(),
+                 categoryname: "02",
+                 cashinhand: drValue && drValue !== '0' ? drValue : '0',
+                 discount: '0',
+                 revenue: crValue && crValue !== '0' ? crValue : '0'
+             };
+
+             let hasDr = drValue && drValue !== '0';
+             let hasCr = crValue && crValue !== '0';
+
+             if ((!hasDr && !hasCr)) {
+                 Swal.fire({
+                     icon: 'error',
+                     title: 'Error!',
+                     text: 'In Refund tab, please select either Dr OR Cr.',
+                     showConfirmButton: false,
+                     timer: 2000
+                 });
+                 isEmptyFound = true;
+                 return false;
+             }
+
+            
+
+             allData.push(rowDataRefund);
+         });
     
     // Check for empty fields
     //if (isEmptyFound) {
@@ -542,7 +583,152 @@ function addNewRowAdvance() {
             $('.select2select').select2();
         });
     });
-}
+        }
+
+        function addNewRowRefund() {
+            getClinicalFinancialAcoountsDropdown(function (options) {
+                getAccounts(function (optionsVen) {
+                    let newRow = `
+                <tr class="data-row">
+                    <td style="display: none">
+                        <input type="hidden" class="financialDepartmentRefund" value="014">
+                    </td>
+                    <td>
+                        <input type="text" class="categorynameRefund form-control" value="Refund" readonly style="background-color: #f0f0f0;" />
+                        <input type="hidden" class="categorynameRefundHidden" value="02" />
+                    </td>
+                    <td>
+                        <select class="drRefund select2select" style="background-color: white;">
+                            ${optionsVen}
+                        </select>
+                    </td>
+                    <td>
+                        <select class="crRefund select2select" style="background-color: white;">
+                            ${optionsVen}
+                        </select>
+                    </td>
+                    <td>
+                        <a href="#" onclick="removeRow(this)">
+                            <i class="fa fa-trash fa-lg" style="color: black;"></i>
+                        </a>
+                    </td>
+                </tr>
+            `;
+                    $('#tableRefund tbody').append(newRow);
+                    $('.financialDepartmentRefund option[value="014"]').prop('selected', true);
+                    $('.select2select').select2();
+                });
+            });
+        }
+
+        function RefundloadSavedRows() {
+            $.ajax({
+                type: "POST",
+                url: "ClinicalFinancial.aspx/loadSavedRowsRefund",
+                data: '{}',
+                contentType: "application/json; charset=utf-8",
+                dataType: "json",
+                success: function (response) {
+                    const savedData = response.d;
+                    console.log(savedData);
+                    getClinicalFinancialAcoountsDropdown(function (options) {
+                        getAccounts(function (optionsVen) {
+                            savedData.forEach(item => {
+                                let row = `
+                            <tr class="data-row">
+                                <td style="display: none">
+                                    <input type="hidden" class="financialDepartmentRefund" value="${item.financialdepartment}"/>
+                                 </td>
+                                 <td>
+                                    <input type="text" class="categorynameRefund form-control" value="Refund" disabled style="background-color: #f0f0f0;" />
+                                    <input type="hidden" class="categorynameRefundHidden" value="02" />
+                                 </td>
+                                 <td>
+                                    <select class="drRefund select2select" style="background-color: white;" disabled>
+                                        ${setSelected(optionsVen, item.dr)}
+                                    </select>
+                                 </td>
+                                 <td>
+                                    <select class="crRefund select2select" style="background-color: white;" disabled>
+                                        ${setSelected(optionsVen, item.cr)}
+                                    </select>
+                                 </td>
+                                 <td>
+                                    <a href="#" onclick="removeRow(this)">
+                                        <i class="fa fa-trash fa-lg" style="color: black;"></i>
+                                    </a>
+                                    <a href="#" onclick="enableSelectsInRow(this)" style="margin-left:20px">
+                                        <i class="fa fa-pencil fa-lg" style="color: black;"></i>
+                                    </a>
+                                 </td>
+                             </tr>`;
+
+                                $('#tableRefund tbody').append(row);
+                            });
+                            $('.select2select').select2();
+                        });
+                    });
+                },
+                error: function (xhr, status, error) {
+                    console.error("Error loading refund rows:", error);
+                }
+            });
+        }
+
+
+        function RefundloadSavedRows() {
+            $.ajax({
+                type: "POST",
+                url: "ClinicalFinancial.aspx/loadSavedRowsRefund",
+                data: '{}',
+                contentType: "application/json; charset=utf-8",
+                dataType: "json",
+                success: function (response) {
+                    const savedData = response.d;
+                    console.log(savedData);
+                    getClinicalFinancialAcoountsDropdown(function (options) {
+                        getAccounts(function (optionsVen) {
+                            savedData.forEach(item => {
+                                let row = `
+                            <tr class="data-row">
+                                <td style="display: none">
+                                    <input type="hidden" class="financialDepartmentRefund" value="${item.financialdepartment}"/>
+                                 </td>
+                                 <td>
+                                    <input type="text" class="categorynameRefund form-control" value="Refund" disabled style="background-color: #f0f0f0;" />
+                                    <input type="hidden" class="categorynameRefundHidden" value="02" />
+                                 </td>
+                                 <td>
+                                    <select class="drRefund select2select" style="background-color: white;" disabled>
+                                        ${setSelected(optionsVen, item.dr)}
+                                    </select>
+                                 </td>
+                                 <td>
+                                    <select class="crRefund select2select" style="background-color: white;" disabled>
+                                        ${setSelected(optionsVen, item.cr)}
+                                    </select>
+                                 </td>
+                                 <td>
+                                    <a href="#" onclick="removeRow(this)">
+                                        <i class="fa fa-trash fa-lg" style="color: black;"></i>
+                                    </a>
+                                    <a href="#" onclick="enableSelectsInRow(this)" style="margin-left:20px">
+                                        <i class="fa fa-pencil fa-lg" style="color: black;"></i>
+                                    </a>
+                                 </td>
+                             </tr>`;
+
+                                $('#tableRefund tbody').append(row);
+                            });
+                            $('.select2select').select2();
+                        });
+                    });
+                },
+                error: function (xhr, status, error) {
+                    console.error("Error loading refund rows:", error);
+                }
+            });
+        }
        
         //function IPDShareloadSavedRows() {
         //    $.ajax({
@@ -837,6 +1023,11 @@ function addNewRowAdvance() {
                                             <td>
                                                 <select class="revenueDiagnostic select2select" style="background-color: white;" disabled>
                                                     ${setSelected(optionsVen, item.revenue)}
+                                                </select>
+                                            </td>
+                                            <td>
+                                                <select class="expenseDiagnostic select2select" style="background-color: white;" disabled>
+                                                    ${setSelected(optionsVen, item.expense)}
                                                 </select>
                                             </td>
                                             <td>
@@ -1149,6 +1340,11 @@ function addNewRowAdvance() {
     <td>
         <select class="revenueSERVICE select2select" style="background-color: white;" disabled>
             ${setSelected(optionsVen, item.revenue)}
+        </select>
+    </td>
+    <td>
+        <select class="expenseSERVICE select2select" style="background-color: white;" disabled>
+            ${setSelected(optionsVen, item.expense)}
         </select>
     </td>
     <td>
@@ -1510,6 +1706,11 @@ function addNewRowAdvance() {
                         </select>
                     </td>
                     <td>
+                        <select class="expenseDiagnostic select2select" style="background-color: white;">
+                            ${optionsVen}
+                        </select>
+                    </td>
+                    <td>
                         <a href="#" onclick="removeRow(this)">
                         <i class="fa fa-trash fa-lg " style="color: black;"></i>
                     </a>
@@ -1644,6 +1845,11 @@ function addNewRowAdvance() {
                         </select>
                     </td>
                     <td>
+                        <select class="expenseSERVICE select2select" style="background-color: white;">
+                            ${optionsVen}
+                        </select>
+                    </td>
+                    <td>
                         <a href="#" onclick="removeRow(this)">
                         <i class="fa fa-trash fa-lg " style="color: black;"></i>
                     </a>
@@ -1705,7 +1911,7 @@ function addNewRowAdvance() {
                 <tr class="data-row">
                     <td style="display: none">
     
-<input type = "hidden" class="financialDepartmentPHARMACY" value = "005">
+                        <input type = "hidden" class="financialDepartmentPHARMACY" value = "005">
                     
                     <td>
                         <select disabled class="categorynamePHARMACY" style="background-color: white; height:32px;">
@@ -1865,7 +2071,7 @@ function addNewRowAdvance() {
             <li><a href="#Tab-10">OPD Sharing</a></li>
             <li><a href="#Tab-9">Patient Reg</a></li>
             <li><a href="#Tab-2">Diagnostic</a></li>
-            <li style="display:none;"><a href="#Tab-3">Emergency</a></li>
+            <li><a href="#Tab-3">Emergency</a></li>
             <li><a href="#Tab-4">Service</a></li>
             <li><a href="#Tab-6">SpecialServices</a></li>           
             <li ><a href="#Tab-5">Pharmacy</a></li>
@@ -1873,6 +2079,7 @@ function addNewRowAdvance() {
             <li><a href="#Tab-8">Diagnostic Share</a></li>
             <li><a href="#Tab-11">IPD</a></li>
             <li><a href="#Tab-12">Advance</a></li>
+            <li><a href="#Tab-13">Refund</a></li>
 
         </ul>
 
@@ -1950,6 +2157,29 @@ function addNewRowAdvance() {
         </tbody>
     </table>
 </div>
+        <div id="Tab-13">
+            <div class="row">
+                <div class="col-lg-11 col-md-11 col-sm-11"></div>
+                <div class="col-lg-1 col-md-1 col-sm-1" style="text-align: right;">
+                    <a href="#" id="btnaddrowRefund" onclick="addNewRowRefund()">
+                        <i class="fa fa-plus-circle" style="font-size: 30px;"></i>
+                    </a>
+                </div>
+            </div>
+            <table id="tableRefund" class="table table-bordered table-hover table-striped" style="margin-top: 10px;">
+                <thead id="theadRefund">
+                    <tr>
+                        <th style="display: none">Financial Department</th>
+                        <th style="width: 30%;">Category Name</th>
+                        <th style="width: 30%;">Dr (Debit) - Cash in Hand</th>
+                        <th style="width: 30%;">Cr (Credit) - Revenue</th>
+                        <th style="width: 10%;">Action</th>
+                    </tr>
+                </thead>
+                <tbody id="tbodyRefund">
+                </tbody>
+            </table>
+        </div>
         <div id="Tab-10">
             <div class="row">
 
@@ -2020,6 +2250,7 @@ function addNewRowAdvance() {
                         <th style="width: 25%;">Cash in Hand (C.I.H.) </th>
                         <th style="width: 25%;">Discount              </th>
                         <th style="width: 25%;">Revenue               </th>
+                        <th style="width: 25%;">Expense               </th>
                         <th style="width: 9%;">Action                </th>
                     </tr>
                 </thead>
@@ -2147,6 +2378,7 @@ function addNewRowAdvance() {
                         <th style="width: 25%;">Cash in Hand (C.I.H.) </th>
                         <th style="width: 25%;">Discount              </th>
                         <th style="width: 25%;">Revenue               </th>
+                        <th style="width: 25%;">Expense               </th>
                         <th style="width: 9%;">Action                </th>
                     </tr>
                 </thead>

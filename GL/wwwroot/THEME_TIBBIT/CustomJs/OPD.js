@@ -124,7 +124,12 @@ $(document).ready(function () {
         if (item.id === '#ddlDepartment') {
             $element.prop('disabled', false);
             const deptHandler = function () {
-                loaddoctor();
+                var selectedDept = $('#ddlDepartment').val();
+                checkOutPatientDischarge(selectedDept, function(hasActiveOPD) {
+                    if (!hasActiveOPD) {
+                        loaddoctor();
+                    }
+                });
             };
             if (!isInsideModal) {
                 $element.off('select2:select').on('select2:select', deptHandler);
@@ -1230,7 +1235,7 @@ function fillmrno() {
     });
 }
 function SavePatient() {
-    debugger;
+    $('#SavePatient_Data').attr('disabled', true);
     var Prefix_PatientName = $('#ddl_name').val();
     var PatientName = $('#txt_name').val();
     var PatientID = $('#hdfPatient_ID').val();
@@ -1382,6 +1387,7 @@ function SavePatient() {
             
         },
         error: function (xhr, status, error) {
+            $('#SavePatient_Data').attr('disabled', false);
             console.error("Error: ", error);
             Swal.fire({
                 icon: 'error',
@@ -1419,7 +1425,7 @@ function Approve(pat_id) {
     });
 }
 function SaveData() {
-    debugger;
+    $('#btnsave').attr('disabled', true);
 
     var regid = $('#hdn_regid').val();
     var appid = $('#hdn_aptid').val();
@@ -1466,10 +1472,12 @@ function SaveData() {
     var IssueCard = $('#chckcardissue').prop('checked');
     var FreeCheck = $('#chckfreecheck').prop('checked');
     var Remarks = $('#txtremarks').val() || "";
+    var bank_cash = $('#ddlbankcash').val();
+    var bank_account_id = $('#ddlbank').val();
 
-    if (discount < 100.0 && Fees == 0.0) {
-
-        Swal.fire({
+            if (discount < 100.0 && Fees == 0.0) {
+                $('#btnsave').attr('disabled', false);
+                Swal.fire({
             icon: 'error',
             title: 'Error!',
             text: 'Fee Should Not be Zero',
@@ -1484,8 +1492,9 @@ function SaveData() {
         return;
     }
 
-  
+
     if (Department == "101" && FilterClinic == "0") {
+        $('#btnsave').attr('disabled', false);
         Swal.fire({
             icon: 'error',
             title: 'Error!',
@@ -1507,6 +1516,7 @@ function SaveData() {
 
     // 🚨 VALIDATIONS (unchanged)
     if (!patient_no || patient_no === "0") {
+        $('#btnsave').attr('disabled', false);
         Swal.fire({
             icon: 'error',
             title: 'Error!',
@@ -1522,6 +1532,7 @@ function SaveData() {
         return;
     }
     if (!pat_category || pat_category === "0") {
+        $('#btnsave').attr('disabled', false);
         Swal.fire({
             icon: 'error',
             title: 'Error!',
@@ -1536,8 +1547,9 @@ function SaveData() {
         });
         return;
     }
-   
+
     if ((pat_category === "01" || ["02", "04", "05"].includes(pat_category)) && (!Department || Department === "0")) {
+        $('#btnsave').attr('disabled', false);
         Swal.fire({
             icon: 'error',
             title: 'Error!',
@@ -1554,6 +1566,7 @@ function SaveData() {
     }
 
     if (["02", "03"].includes(pat_category) && (!doctor || doctor === "0")) {
+        $('#btnsave').attr('disabled', false);
         Swal.fire({
             icon: 'error',
             title: 'Error!',
@@ -1570,6 +1583,7 @@ function SaveData() {
     }
 
     if (pat_category === "03" && (!panel || panel === "0")) {
+        $('#btnsave').attr('disabled', false);
         Swal.fire({
             icon: 'error',
             title: 'Error!',
@@ -1586,6 +1600,7 @@ function SaveData() {
     }
 
     if (!accountid || accountid === "0") {
+        $('#btnsave').attr('disabled', false);
         Swal.fire({
             icon: 'error',
             title: 'Error!',
@@ -1601,7 +1616,69 @@ function SaveData() {
         return;
     }
 
-    // ✅ FIXED: Send token under CORRECT property name → "AntiForgeryToken"
+    if (bank_cash === "02" && (!bank_account_id || bank_account_id === "")) {
+        $('#btnsave').attr('disabled', false);
+        Swal.fire({
+            icon: 'warning',
+            title: 'Bank Account Required!',
+            text: 'Please select a bank account for Bank payment.',
+            confirmButtonText: 'OK',
+            confirmButtonColor: '#3085d6'
+        });
+        return;
+    }
+
+    var isPatientAdmitted = false;
+
+    $.ajax({
+        type: "POST",
+        url: "OPD.aspx/OPDSlip",
+        contentType: "application/json; charset=utf-8",
+        dataType: "json",
+        async: false,
+        success: function (response) {
+            var validationCode = JSON.parse(response.d);
+
+            if (validationCode === "01") {
+
+                $.ajax({
+                    type: "POST",
+                    url: "OPD.aspx/CheckPatientAdmissionStatus",
+                    data: JSON.stringify({ regPatId: parseInt(regid) }),
+                    contentType: "application/json; charset=utf-8",
+                    dataType: "json",
+                    async: false,
+                    success: function (admissionResponse) {
+                        var statusData = JSON.parse(admissionResponse.d);
+
+                        if (statusData.isAdmitted) {
+                            isPatientAdmitted = true;
+                            Swal.fire({
+                                icon: 'warning',
+                                title: 'Patient Admitted',
+                                text: 'This patient is currently admitted in ' + statusData.location + ' since ' + statusData.admissionDate + '. You cannot save this OPD form.',
+                                confirmButtonText: 'OK'
+                            });
+                        }
+                    },
+                    error: function (xhr, status, error) {
+                        console.error("Admission check failed", error);
+                    }
+                });
+            }
+        },
+        error: function (xhr, status, error) {
+            console.error("Validation check failed", error);
+        }
+    });
+
+
+    if (isPatientAdmitted) {
+        return;
+    }
+
+
+
     var data = {
         regid: regid,
         appid: appid,
@@ -1644,7 +1721,9 @@ function SaveData() {
         EmployeeName: EmployeeName,
         EmployeeDept: EmployeeDept,
         StudentName: StudentName,
-        Remarks: Remarks
+        Remarks: Remarks,
+        bank_cash: bank_cash,
+        bank_account_id: bank_account_id
     };
 
     // 👇 Optional: Log to verify
@@ -1658,8 +1737,9 @@ function SaveData() {
         contentType: "application/json; charset=utf-8",
         dataType: "json",
         success: function (response) {
-            if (response.d.startsWith("ERROR:")) {
-                Swal.fire({
+                    if (response.d.startsWith("ERROR:")) {
+                        $('#btnsave').attr('disabled', false);
+                        Swal.fire({
                     icon: 'error',
                     title: 'Validation Failed',
                     text: response.d.replace("ERROR: ", ""),
@@ -1693,6 +1773,7 @@ function SaveData() {
             window.location.href = "OPDView.aspx";
         },
         error: function (xhr, status, error) {
+            $('#btnsave').attr('disabled', false);
             console.error("Error: ", error);
             console.log("Response Text: ", xhr.responseText);
             Swal.fire({
@@ -1984,7 +2065,9 @@ function loadPatientDetail(OPDID) {
             $('#ddlsection').val(data.Section).trigger('change').attr('disabled', true);
             $('#ddlCashInHand').val(data.account_id).trigger('change').attr('disabled', true);
 
-
+            var bankCash = data.bank_cash || "01";
+            $('#ddlbankcash').val(bankCash).trigger('change.select2');
+            LoadBankAccounts(data.bank_account_id);
 
 
             $('#txtfees').val(data.Receipt_Amount).attr('disabled', true);

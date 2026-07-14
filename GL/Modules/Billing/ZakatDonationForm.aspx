@@ -322,7 +322,11 @@
         }
 
         function SaveDonation() {
-            if (!validateForm()) return;
+            $('#btnSave').attr('disabled', true);
+            if (!validateForm()) {
+                $('#btnSave').attr('disabled', false);
+                return;
+            }
 
             var recordId = parseInt($('#txtRecordID').val() || '0');
             var dto = {
@@ -358,10 +362,12 @@
                             window.location = 'ZakatDonationForm.aspx';
                         });
                     } else {
+                        $('#btnSave').attr('disabled', false);
                         showError(result.Message || 'Save failed');
                     }
                 },
                 error: function (xhr, status, error) {
+                    $('#btnSave').attr('disabled', false);
                     showError('Error while saving: ' + error);
                     console.log(xhr.responseText);
                 }
@@ -530,7 +536,7 @@
                 
                 <div class="row" style="margin-top:15px;">
                     <div class="col-lg-2">
-                        <input type="button" class="btn btn-primry" value="Save" onclick="SaveDonation();" />
+                        <input type="button" class="btn btn-primry" value="Save" id="btnSave" onclick="SaveDonation();" />
                     </div>
                     <div class="col-lg-2">
                         <input type="button" class="btn btn-gray" value="View List" onclick="window.location='ZakatDonationList.aspx'" />

@@ -152,5 +152,128 @@ namespace PMS
                 return "NotAllowed";
             }
         }
+
+        [WebMethod]
+        public static string checkeditPrintRights()
+        {
+            DataBaseDataContext db = new DataBaseDataContext();
+            var ups = (from St in db.aspnet_Users
+                       where St.UserName == AppConfig.UserName
+                       select St.AllowRegListPrint).FirstOrDefault();
+            return (new JavaScriptSerializer()).Serialize(ups);
+        }
+
+        [WebMethod]
+        public static string GetCurrentPatientData(int pat_id)
+        {
+            try
+            {
+                using (var db = new DataBaseDataContext())
+                {
+                    var pat = db.Reg_patients.FirstOrDefault(p => p.pat_id == pat_id);
+                    if (pat == null) return "null";
+
+                    var data = new
+                    {
+                        Patient_No = pat.Patient_No,
+                        mr_no_sequence = pat.mr_no_sequence,
+                        CreationDate = pat.Created_time ?? DateTime.MinValue,
+                        Full_Name = pat.Full_Name,
+                        Father_Name = pat.Father_Name,
+                        Gender = pat.Gender,
+                        Mobile1 = pat.Mobile1,
+                        Age_years = pat.Age_years,
+                        NIC = pat.NIC,
+                        Permanent_Address = pat.Permanent_Address,
+                        Martial_Status = pat.Martial_Status,
+                        Relation_prefix = pat.Relation_prefix,
+                        walkin = pat.walkin,
+                        city = pat.city,
+                        val_city = pat.val_city,
+                        val_area = pat.val_area,
+                        area = pat.area,
+                        Country = pat.Country,
+                        Province = pat.Province,
+                        Card_fee = pat.Card_fee,
+                        other_cnic = pat.other_cnic,
+                        DOB = pat.DOB ?? DateTime.MinValue
+                    };
+
+                    return new JavaScriptSerializer().Serialize(data);
+                }
+            }
+            catch (Exception ex)
+            {
+                return "null";
+            }
+        }
+
+        [WebMethod]
+        public static string GetPatientLogs(int pat_id)
+        {
+            try
+            {
+                using (var db = new DataBaseDataContext())
+                {
+                    var logs = (from l in db.Reg_Patient_Logs
+                                where l.Pat_Id == pat_id
+                                orderby l.Loged_Time ascending
+                                select new
+                                {
+                                    Log_Id = l.Log_Id,
+                                    Loged_Time = l.Loged_Time,
+                                    UserName = db.aspnet_Users.Where(u => u.UserId == l.Loged_by).Select(u => u.UserName).FirstOrDefault(),
+                                    Updated_data = l.Updated_data
+                                }).ToList();
+
+                    return new JavaScriptSerializer().Serialize(logs);
+                }
+            }
+            catch (Exception ex)
+            {
+                return new JavaScriptSerializer().Serialize(new List<object>());
+            }
+        }
+
+        [WebMethod]
+        public static string IncrementReprintCount(string pat_id)
+        {
+            try
+            {
+                if (string.IsNullOrEmpty(pat_id))
+                    return "Error: Invalid ID";
+
+                int id = Convert.ToInt32(pat_id);
+
+                using (var db = new DataBaseDataContext())
+                {
+                    var patient = db.Reg_patients.FirstOrDefault(p => p.pat_id == id);
+
+                    if (patient != null)
+                    {
+                        
+                        int currentCount = 0;
+                        if (!string.IsNullOrEmpty(patient.Reprint) && int.TryParse(patient.Reprint, out int parsed))
+                        {
+                            currentCount = parsed;
+                        }
+
+                        
+                        patient.Reprint = (currentCount + 1).ToString();
+
+                        db.SubmitChanges();
+                        return "Success";
+                    }
+                    else
+                    {
+                        return "Error: Patient not found";
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                return "Error: " + ex.Message;
+            }
+        }
     }
 }

@@ -48,7 +48,9 @@ namespace PMS
                                             Total_Amount = AB.Total_Amount,
                                             Discount_Amount = AB.Discount_Amount,
                                             Balance_Amount = AB.Balance_Amount,
-                                            FBR_Number = AB.FBR_No ?? ""
+                                            FBR_Number = AB.FBR_No ?? "",
+                                            Pharma_trans_Type = AB.Pharma_trans_Type,
+                                            pharmacy_Department = _dbContext.GetDataValueName("Patient Main Category", AB.pharmacy_Department),
                                         };
 
                     var FilteredCount = IssueMedicine.Count();
@@ -136,6 +138,29 @@ namespace PMS
             catch (Exception ex)
             {
                 throw;
+            }
+        }
+
+        [WebMethod]
+        public static void IncrementReprintCount(int Bill_ID)
+        {
+            try
+            {
+                using (DataBaseDataContext db = new DataBaseDataContext())
+                {
+                    var bill = db.Ar_Billings.FirstOrDefault(b => b.Bill_ID == Bill_ID);
+                    if (bill != null)
+                    {
+                        // Increment the count (handles nulls just in case)
+                        bill.Reprint_Count = bill.Reprint_Count + 1;
+                        db.SubmitChanges();
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                // Optional: Log the exception to your error log
+                System.Diagnostics.Debug.WriteLine("Reprint Count Error: " + ex.Message);
             }
         }
     }

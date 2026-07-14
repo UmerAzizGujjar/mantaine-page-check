@@ -12,6 +12,17 @@ using System.Web.Script.Serialization;
 using System.Web.Script.Services;
 using System.Web.Services;
 using System.Web.UI;
+using System.Configuration;
+using System.Data;
+using System.Data.Entity;
+using System.Data.SqlClient;
+
+using System.Text;
+
+using System.Web.UI.WebControls;
+using System.Windows;
+using Telerik.Web;
+using Telerik.Web.UI.ImageEditor;
 
 namespace PMS.Modules.PatientManagement
 {
@@ -173,6 +184,15 @@ namespace PMS.Modules.PatientManagement
             public decimal Card_fee { get; set; }
             public bool Monitoring { get; set; }
             public bool IsRefunded { get; set; }
+            public string bank_cash { get; set; }
+            public string bank_account_id { get; set; }
+            public string Gender { get; set; }
+            public string Martial_Status { get; set; }
+            public string Country { get; set; }
+            public string Blood_Group { get; set; }
+            public string val_area { get; set; }
+            public string State { get; set; }
+            public string val_city { get; set; }
 
         }
 
@@ -310,11 +330,12 @@ namespace PMS.Modules.PatientManagement
         //[WebMethod]
         [WebMethod]
         public static string SavePatientDetail(
-     string Full_Name, string RelationType, string Relation, string Gender,
-     string Mobile, string Date_Of_Birth, string CNIC, string Address,
-     string PatientID, string martail_status, string Age, string city, string area,
-     string city_val, string area_val, string Blood_Group, string State, string Country,
-     string cardfee, string OtherCnic, bool Monitoring, string AntiForgeryToken)
+                      string Full_Name, string RelationType, string Relation, string Gender,
+                      string Mobile, string Date_Of_Birth, string CNIC, string Address,
+                      string PatientID, string martail_status, string Age, string city, string area,
+                      string city_val, string area_val, string Blood_Group, string State, string Country,
+                       string cardfee, string OtherCnic, bool Monitoring, string AntiForgeryToken,
+                       string bank_cash, string bank_account_id)
 
         {
 
@@ -322,6 +343,7 @@ namespace PMS.Modules.PatientManagement
             if (HttpContext.Current.Session["UserID"] == null)
                 return "ERROR: Unauthorized. Please log in.";
 
+            JavaScriptSerializer JSS = new JavaScriptSerializer();
             // Validate CSRF Token
             string storedToken = HttpContext.Current.Session["AntiForgeryToken"] as string;
             if (string.IsNullOrEmpty(storedToken) || !storedToken.Equals(AntiForgeryToken))
@@ -377,6 +399,51 @@ namespace PMS.Modules.PatientManagement
 
                         if (pat == null)
                             return "ERROR: Patient record not found.";
+                        var previousRegData = new
+                        {
+                            PatData = new
+                            {
+                                pat.Patient_No,
+                                pat.mr_no_sequence,
+                                CreationDate = pat.Created_time ?? DateTime.MinValue,
+                                pat.Full_Name,
+                                pat.Father_Name,
+                                pat.Gender,
+                                pat.Mobile1,
+                                pat.Age_years,
+                                pat.NIC,
+                                pat.Permanent_Address,
+                                pat.Martial_Status,
+                                pat.Relation_prefix,
+                                pat.walkin,
+                                pat.city,
+                                pat.val_city,
+                                pat.val_area,
+                                pat.area,
+                                pat.Country,
+                                pat.Province,
+                                pat.Card_fee,
+                                pat.other_cnic,
+                                DOB = pat.DOB ?? DateTime.MinValue,
+
+                            }
+
+                        };
+
+                        string masterLogJson = JSS.Serialize(previousRegData.PatData);
+                        Reg_Patient_Log RegLog = new Reg_Patient_Log
+                        {
+                            Pat_Id = pat.pat_id,
+                            Updated_data = masterLogJson,
+                            Loged_Time = DateTime.Now,
+                            Loged_by = AppConfig.UserID
+                        };
+
+                        db.Reg_Patient_Logs.InsertOnSubmit(RegLog);
+
+
+
+
                         pat.updated_by = AppConfig.UserID;
                         pat.updated_time = DateTime.Now;                       
                     }
@@ -420,6 +487,9 @@ namespace PMS.Modules.PatientManagement
                     pat.Blood_Group = Blood_Group;
                     pat.Country = Country;
                     pat.Monitoring = Monitoring;
+                    pat.bank_cash = bank_cash;
+                    pat.bank_account_id = bank_account_id;
+                    pat.Reprint = "1";
 
                     // Card Fee Safe Parse
                     decimal cardFeeValue = 0;
@@ -495,9 +565,10 @@ namespace PMS.Modules.PatientManagement
                     return pat.pat_id.ToString();
                 }
             }
-            catch (Exception)
+            catch (Exception ex)
             {
-                return "ERROR: Failed to save patient. Please try again.";
+                System.Diagnostics.Trace.TraceError($"SavePatientDetail failed: {ex.Message}");
+                return "ERROR: " + ex.Message;
             }
         }
 
@@ -563,10 +634,12 @@ namespace PMS.Modules.PatientManagement
                                       rg.val_area,
                                       rg.pat_id,
                                       rg.other_cnic,
-                                      rg.Monitoring,
-                                      rg.DOB,
-                                      rg.IsRefunded
-                                  }).FirstOrDefault();
+                                       rg.Monitoring,
+                                       rg.DOB,
+                                       rg.IsRefunded,
+                                       rg.bank_cash,
+                                       rg.bank_account_id
+                                   }).FirstOrDefault();
 
                 if (patientRaw == null)
                     return new JavaScriptSerializer().Serialize((object)null);
@@ -595,7 +668,16 @@ namespace PMS.Modules.PatientManagement
                           ? patientRaw.DOB.Value.ToString("dd/MM/yyyy")
                           : "",
                           Monitoring = patientRaw.Monitoring ?? false,
-                          IsRefunded = patientRaw.IsRefunded ?? false
+                          IsRefunded = patientRaw.IsRefunded ?? false,
+                          bank_cash = patientRaw.bank_cash ?? "",
+                          bank_account_id = patientRaw.bank_account_id ?? "",
+                          Gender = patientRaw.Gender ?? "",
+                          Martial_Status = patientRaw.Martial_Status ?? "",
+                          Country = patientRaw.Country ?? "",
+                          Blood_Group = patientRaw.Blood_Group ?? "",
+                          val_area = patientRaw.val_area ?? "",
+                          State = patientRaw.State ?? "",
+                          val_city = patientRaw.val_city ?? ""
                 };
 
                 return new JavaScriptSerializer().Serialize(patient);
@@ -643,6 +725,66 @@ namespace PMS.Modules.PatientManagement
                 return "0";
             }
         }
-        
+        [WebMethod]
+        public static string GetBankAccounts()
+        {
+            try
+            {
+                using (var db = new DataBaseDataContext(DBClass.ConnectionString()))
+                {
+                    var accounts = (from acc in db.GL_Accounts
+                                    where acc.Bank == true
+                                    select new
+                                    {
+                                        id = acc.Account_ID,
+                                        name = acc.Account_Name
+                                    }).ToList();
+
+                    return new JavaScriptSerializer().Serialize(accounts);
+                }
+            }
+            catch (Exception ex)
+            {
+                // Log error if needed
+                return "[]"; // return empty array on error
+            }
+        }
+        [WebMethod]
+        public static string IncrementReprintCount(string regId)
+        {
+            try
+            {
+                if (string.IsNullOrEmpty(regId))
+                    return "ERROR: Invalid patient ID";
+
+                using (var db = new DataBaseDataContext())
+                {
+                    var patient = db.Reg_patients.FirstOrDefault(p => p.pat_id == Convert.ToInt32(regId));
+
+                    if (patient == null)
+                        return "ERROR: Patient not found";
+
+                    
+                    int currentCount = 1;
+                    if (!string.IsNullOrEmpty(patient.Reprint) && int.TryParse(patient.Reprint, out int parsed))
+                    {
+                        currentCount = parsed;
+                    }
+
+                    
+                    currentCount++;
+                    patient.Reprint = currentCount.ToString();
+
+                    db.SubmitChanges();
+
+                    return "SUCCESS:" + currentCount.ToString();
+                }
+            }
+            catch (Exception ex)
+            {
+                return "ERROR: " + ex.Message;
+            }
+        }
+
     }
 }

@@ -123,7 +123,12 @@ $(document).ready(function () {
         if (item.id === '#ddlDepartment') {
             $element.prop('disabled', false);
             const deptHandler = function () {
-                loaddoctor();
+                var selectedDept = $('#ddlDepartment').val();
+                checkOutPatientDischarge(selectedDept, function(hasActiveOPD) {
+                    if (!hasActiveOPD) {
+                        loaddoctor();
+                    }
+                });
             };
             if (!isInsideModal) {
                 $element.off('select2:select').on('select2:select', deptHandler);
@@ -1234,6 +1239,8 @@ function SaveData() {
     var IssueCard = $('#chckcardissue').prop('checked');
     var FreeCheck = $('#chckfreecheck').prop('checked');
     var Remarks = $('#txtremarks').val() || "";
+    var bank_cash = $('#ddlbankcash').val();
+    var bank_account_id = $('#ddlbank').val();
 
     if (discount < 100.0 && Fees == 0.0) {
 
@@ -1381,6 +1388,66 @@ function SaveData() {
         return;
     }
 
+    if (bank_cash === "02" && (!bank_account_id || bank_account_id === "")) {
+        Swal.fire({
+            icon: 'warning',
+            title: 'Bank Account Required!',
+            text: 'Please select a bank account for Bank payment.',
+            confirmButtonText: 'OK',
+            confirmButtonColor: '#3085d6'
+        });
+        return;
+    }
+
+    var isPatientAdmitted = false;
+
+    $.ajax({
+        type: "POST",
+        url: "OPD.aspx/OPDSlip",
+        contentType: "application/json; charset=utf-8",
+        dataType: "json",
+        async: false,
+        success: function (response) {
+            var validationCode = JSON.parse(response.d);
+
+            if (validationCode === "01") {
+
+                $.ajax({
+                    type: "POST",
+                    url: "OPD.aspx/CheckPatientAdmissionStatus",
+                    data: JSON.stringify({ regPatId: parseInt(regid) }),
+                    contentType: "application/json; charset=utf-8",
+                    dataType: "json",
+                    async: false,
+                    success: function (admissionResponse) {
+                        var statusData = JSON.parse(admissionResponse.d);
+
+                        if (statusData.isAdmitted) {
+                            isPatientAdmitted = true;
+                            Swal.fire({
+                                icon: 'warning',
+                                title: 'Patient Admitted',
+                                text: 'This patient is currently admitted in ' + statusData.location + ' since ' + statusData.admissionDate + '. You cannot save this OPD form.',
+                                confirmButtonText: 'OK'
+                            });
+                        }
+                    },
+                    error: function (xhr, status, error) {
+                        console.error("Admission check failed", error);
+                    }
+                });
+            }
+        },
+        error: function (xhr, status, error) {
+            console.error("Validation check failed", error);
+        }
+    });
+
+
+    if (isPatientAdmitted) {
+        return;
+    }
+
     // ✅ FIXED: Send token under CORRECT property name → "AntiForgeryToken"
     var data = {
         regid: regid,
@@ -1424,7 +1491,9 @@ function SaveData() {
         EmployeeName: EmployeeName,
         EmployeeDept: EmployeeDept,
         StudentName: StudentName,
-        Remarks: Remarks
+        Remarks: Remarks,
+        bank_cash: bank_cash,
+        bank_account_id: bank_account_id
     };
 
     // 👇 Optional: Log to verify
@@ -1728,7 +1797,9 @@ function loadPatientDetail(OPDID) {
             $('#ddlsection').val(data.Section).trigger('change').attr('disabled', true);
             $('#ddlCashInHand').val(data.account_id).trigger('change').attr('disabled', true);
 
-
+            var bankCash = data.bank_cash || "01";
+            $('#ddlbankcash').val(bankCash).trigger('change.select2');
+            LoadBankAccounts(data.bank_account_id);
 
 
             $('#txtfees').val(data.Receipt_Amount).attr('disabled', true);

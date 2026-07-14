@@ -684,6 +684,7 @@ namespace PMS
                     ddlDepartments.DataBind();
                     DateDiv.Visible = true;
                     Time_Row.Visible = true;
+                    tr_Export.Visible = true;
                     op_PanelCompany.Visible = false;
                     optRw.Visible = false;
                     DataBaseDataContext db = new DataBaseDataContext(DBClass.ConnectionString());
@@ -1515,6 +1516,71 @@ namespace PMS
 
 
                 }
+                if (this.PageTitle == "CathLab_MER")
+                {
+                    string x = "Cath Lab Medicine Expiry Report";
+                    Master.Label2.Text = x;
+                    Master.GetMenuName();
+                    tr1MedicalSubsidy.Visible = false;
+                    dpROw.Visible = false;
+                    lblMultiSelect.Visible = false;
+                    tr_Export.Visible = true;
+                    trDoctor.Visible = false;
+                    tr_Summary.Visible = false;
+                    Time_Row.Visible = true;  // could be problematic
+                    DateDiv.Visible = true;
+                    trSearch1.Visible = true;
+
+                    op_FilterClinic.Visible = false;
+                    lblPatientType.Visible = false;
+                    lblMultiSelect.Visible = false;
+                    ddlPatientType.Visible = false;
+
+                    trSearch1.Visible = true;
+                    dpROw.Visible = true;
+
+                    lblDepartment.Text = "Vendor";
+                    DataTable dtPanel = DBClass.getDataTable("select Vendor_ID,Vendor_Name from AP_Vendors where IsActive=1");
+                    ddlDepartments.DataSource = dtPanel;
+                    ddlDepartments.DataTextField = "Vendor_Name";
+                    ddlDepartments.DataValueField = "Vendor_ID";
+                    ddlDepartments.Items.Clear();
+                    ddlDepartments.Items.Add(new ListItem("Please Select", "0"));
+                    ddlDepartments.DataBind();
+
+
+                    //ADDING NEW WAREHOUSE
+
+                    object valuset;
+                    valuset = DBClass.GetValueSet("Ware house");
+                    ddlwareHouse.DataSource = valuset;
+                    ddlwareHouse.DataTextField = "DataValue_Description";
+                    ddlwareHouse.DataValueField = "DataValue_Name";
+                    ddlwareHouse.Items.Clear();
+                    ddlwareHouse.Items.Add(new ListItem() { Text = "All", Value = "0" });
+                    ddlwareHouse.DataBind();
+                    Stock_Movement.Visible = true;
+
+
+                    ddlwareHouse.Visible = true;
+                    lblWarehouse.Visible = true;
+
+                    lbItemCategory.Visible = false;
+                    ddlItemCategory.Visible = false;
+
+                    DataBaseDataContext dbs = new DataBaseDataContext(DBClass.ConnectionString());
+                    var serviceList = (from sl in dbs.INV_Items
+                                       where sl.Active == true
+                                       select new { sl.Item_ID, sl.Description }).ToList();
+
+                    ddlItemName.DataSource = serviceList;
+                    ddlItemName.DataValueField = "Item_ID";
+                    ddlItemName.DataTextField = "Description";
+                    ddlItemName.Items.Add(new ListItem() { Text = "All", Value = "0" });
+                    ddlItemName.DataBind();
+
+
+                }
                 if (this.PageTitle == "StockValuationReport")
                 {
                     string x = "Stock Valuation Report";
@@ -2127,6 +2193,19 @@ namespace PMS
                     ddlPatientType.DataBind();
                     SetDepartent();
 
+                    optRw.Visible = true;
+                    ddlShift.Visible = false;
+                    lbShift.Visible =  false;
+                    object valusetss;
+                    DataBaseDataContext db = new DataBaseDataContext(DBClass.ConnectionString());
+                    valusetss = from d in db.aspnet_Users
+                               select new { d.UserName, d.UserId };
+                    ddloprators.DataSource = valusetss;
+                    ddloprators.DataTextField = "UserName";
+                    ddloprators.DataValueField = "UserId";
+                    ddloprators.Items.Add(new ListItem() { Text = "All", Value = "0" });
+                    ddloprators.DataBind();
+
                 }
                 //else if (this.PageTitle == "RadiologyReport")
                 //{
@@ -2240,6 +2319,66 @@ namespace PMS
                     ddlPatientType.Items.Add(new ListItem() { Text = "All", Value = "All" });
                     ddlPatientType.DataBind();
                     SetDepartent();
+
+                }
+                else if (this.PageTitle == "Radiology_Test_Wise_Summary")
+                {
+                    string x = "Radiology Test Wise Summary";
+                    Master.Label2.Text = x;
+                    Master.GetMenuName();
+                    dpROw.Visible = false;
+
+                    tr_Summary.Visible = true;
+                    tr_Export.Visible = true;
+                    DateDiv.Visible = true;
+                    Time_Row.Visible = true;
+
+                    MainDeptDiv.Visible = true;
+                    lblMainDepartment.Visible = true;
+                    lblMainDepartment.Text = "Radiology Name";
+                    ddlMainDepartment.Visible = true;
+                    ddlMainDepartment.Items.Clear();
+                    object valuset;
+                    valuset = DBClass.GetValueSet("Main Test Departments");
+                    ddlMainDepartment.DataSource = valuset;
+                    ddlMainDepartment.DataTextField = "DataValue_Description";
+                    ddlMainDepartment.DataValueField = "DataValue_Name";
+                    ddlMainDepartment.Items.Clear();
+                    ddlMainDepartment.Items.Add(new ListItem() { Text = "All", Value = "0" });
+                    ddlMainDepartment.DataBind();
+
+
+                    DataTable Tests = DBClass.getDataTable("select Test_id ,Test_Name from Lab_Tests where main_department in ('003')");
+                    DataTable TestCategories = (DataTable)DBClass.getDataTable("select dv.DataValue_Name,dv.DataValue_Description from ValueSet vs,DataValues dv where vs.ValueSet_ID=dv.ValueSet_ID and vs.ValueSet_Name='Test Groups'");
+
+                    foreach (DataRow dr in TestCategories.Rows)
+                    {
+                        DataRow newdr = Tests.NewRow();
+                        newdr["Test_ID"] = dr["DataValue_Name"].ToString();
+                        newdr["Test_Name"] = dr["DataValue_Description"].ToString();
+                        Tests.Rows.Add(newdr);
+                        Tests.AcceptChanges();
+                    }
+                    trTestResult1.Visible = true;
+                    ddlTestName.DataSource = Tests;
+                    ddlTestName.DataTextField = "Test_Name";
+                    ddlTestName.DataValueField = "Test_Name";
+                    ddlTestName.Items.Add(new ListItem() { Text = "All", Value = "0" });
+                    ddlTestName.DataBind();
+
+
+
+
+                    lblMultiSelect.Visible = false;
+                    //ddlPatientType.Visible = true;
+                    //lblPatientType.Visible = true;
+                    //object valusets;
+                    //valusets = DBClass.GetValueSet("Patient Type");
+                    //ddlPatientType.DataSource = valusets;
+                    //ddlPatientType.DataTextField = "DataValue_Description";
+                    //ddlPatientType.DataValueField = "DataValue_Name";
+                    //ddlPatientType.Items.Add(new ListItem() { Text = "All", Value = "All" });
+                    //ddlPatientType.DataBind();
 
                 }
                 else if (this.PageTitle == "Lab_Test_Patient_Wise")
@@ -2363,6 +2502,9 @@ namespace PMS
                     ddloprators.DataValueField = "DataValue_Name";
                     ddloprators.Items.Add(new ListItem() { Text = "Please Select", Value = "0" });
                     ddloprators.DataBind();
+
+
+
 
 
                 }
@@ -3011,6 +3153,16 @@ namespace PMS
                     MRDiv.Visible = true;
 
                 }
+                else if (this.PageTitle == "LCP")
+                {
+                    string x = "LCP Report";
+                    Master.Label2.Text = x;
+                    Master.GetMenuName();
+                    DateDiv.Visible = true;
+                    Time_Row.Visible = true;
+                    AllowPatientRecord = false;
+
+                }
                 else if (this.PageTitle == "Gir_To_Po_Heirarchy")
                 {
                     string x = "Gir To Po Heirarchy Report";
@@ -3072,6 +3224,74 @@ namespace PMS
                     ddlItemName.DataBind();
 
                     trSearch1.Visible = true;
+
+                 
+
+                    lbItemCategory.Visible = false;
+                    ddlItemCategory.Visible = false;
+
+                }
+                else if (this.PageTitle == "Cath_Lab_Billing_Detail_Vendor_Wise_Report")
+                {
+                    string x = "Cath Lab Billing Detail Vendor Wise Report";
+                    Master.Label2.Text = x;
+                    Master.GetMenuName();
+                    DateDiv.Visible = true;
+                    Time_Row.Visible = true;
+                    trDoctor.Visible = true;
+                    optRw.Visible = true;
+                    AllowPatientRecord = false;
+
+                    MRDiv.Visible = true;
+                    lblMRNo.Visible = true;
+                    txtMRNo.Visible = true;
+
+
+                    DataTable dt = DBClass.getDataTable("select * from HR_Employees where IsDoctor=1");
+                    ddlDoctor.DataSource = dt;
+                    ddlDoctor.DataValueField = "Emp_ID";
+                    ddlDoctor.DataTextField = "Emp_Name";
+                    ddlDoctor.Items.Add(new ListItem() { Value = "0", Text = "All Doctors" });
+                    ddlDoctor.DataBind();
+                    ddlReportType.Visible = false;
+                    lbservieType.Visible = false;
+
+
+                    object valusets;
+                    DataBaseDataContext db = new DataBaseDataContext(DBClass.ConnectionString());
+                    valusets = from d in db.aspnet_Users
+                               select new { d.UserName, d.UserId };
+                    ddloprators.DataSource = valusets;
+                    ddloprators.DataTextField = "UserName";
+                    ddloprators.DataValueField = "UserId";
+                    ddloprators.Items.Add(new ListItem() { Text = "All", Value = "0" });
+                    ddloprators.DataBind();
+                    ddlShift.Visible = false;
+                    lbShift.Visible = false;
+
+                    DataBaseDataContext dbs = new DataBaseDataContext(DBClass.ConnectionString());
+                    var serviceList = (from sl in dbs.INV_Items
+                                       where sl.Active == true
+                                       select new { sl.Item_ID, sl.Description }).ToList();
+
+                    ddlItemName.DataSource = serviceList;
+                    ddlItemName.DataValueField = "Item_ID";
+                    ddlItemName.DataTextField = "Description";
+                    ddlItemName.Items.Add(new ListItem() { Text = "All", Value = "0" });
+                    ddlItemName.DataBind();
+
+                    trSearch1.Visible = true;
+
+                    row_Vendor.Visible = true;
+                    DataTable dtPanel = DBClass.getDataTable("select Vendor_ID,Vendor_Name from AP_Vendors where IsActive=1");
+                    ddlVendor.DataSource = dtPanel;
+                    ddlVendor.DataTextField = "Vendor_Name";
+                    ddlVendor.DataValueField = "Vendor_ID";
+                    ddlVendor.Items.Clear();
+                    ddlVendor.Items.Add(new ListItem("Please Select", "0"));
+                    ddlVendor.DataBind();
+
+
 
                 }
                 else if (this.PageTitle == "High_Risk_Medicine_Report")
@@ -3787,8 +4007,8 @@ namespace PMS
                     Time_Row.Visible = true;
                     SetDepartent();
                     dpROw.Visible = true;
-                    
 
+                    
                     object valusets;
                     DataBaseDataContext db = new DataBaseDataContext(DBClass.ConnectionString());
                     valusets = from d in db.aspnet_Users
@@ -3881,6 +4101,17 @@ namespace PMS
                     ddlReportType.Items.Add(new ListItem() { Value = "0", Text = "All Doctors" });
                     ddlReportType.DataBind();
 
+
+                    SubDepartment.Visible = true;
+                    lblSubDepartment.Text = "Department";
+                    object valuset1;
+                    valuset1 = DBClass.GetValueSet("Main Test Departments");
+                    ddlSubDepartment.DataSource = valuset1;
+                    ddlSubDepartment.DataTextField = "DataValue_Description";
+                    ddlSubDepartment.DataValueField = "DataValue_Name";
+                    ddlSubDepartment.Items.Clear();
+                    ddlSubDepartment.Items.Add(new ListItem() { Text = "All", Value = "0" });
+                    ddlSubDepartment.DataBind();
 
                 }
 
@@ -5140,6 +5371,35 @@ namespace PMS
                     ddlItemCategory.Visible = false;
 
                 }
+                if (this.PageTitle == "DailyPharmacyOverallSummary")
+                {
+
+                    string x = "Daily Pharmacy Summary";
+                    Master.Label2.Text = x;
+                    Master.GetMenuName();
+
+                    dpROw.Visible = false;
+                    YearDiv.Visible = true;
+                    MonthDiv.Visible = true;
+                    tr_Export.Visible = true;
+
+                    //ADDING NEW WAREHOUSE  
+
+                    object valuset;
+                    valuset = DBClass.GetValueSet("Ware house");
+                    ddlwareHouse.DataSource = valuset;
+                    ddlwareHouse.DataTextField = "DataValue_Description";
+                    ddlwareHouse.DataValueField = "DataValue_Name";
+                    ddlwareHouse.Items.Clear();
+                    ddlwareHouse.Items.Add(new ListItem() { Text = "All", Value = "0" });
+                    ddlwareHouse.DataBind();
+                    Stock_Movement.Visible = true;
+
+                    ddlwareHouse.Visible = true;
+                    lblWarehouse.Visible = true;
+                    lbItemCategory.Visible = false;
+                    ddlItemCategory.Visible = false;
+                }
 
                 else if (this.PageTitle == "Cardiology_Cash_Collection")
                 {
@@ -5489,6 +5749,102 @@ namespace PMS
 
 
                 }
+
+                if (this.PageTitle == "Panel_wise_Billing_Report")
+                {
+                    string x = "Panelized Billing Report";
+                    Master.Label2.Text = x;
+                    Master.GetMenuName();
+
+                    tr_Summary.Visible = false;
+                    tr1MedicalSubsidy.Visible = false;
+                    lblMainDepartment.Visible = false;
+                    lblPatientType.Visible = false;
+                    lblMultiSelect.Visible = false;
+                    ddlPatientType.Visible = false;
+                    optRw.Visible = true;
+                    trDoctor.Visible = false;
+                    AllowPatientRecord = false;
+                    lblMainDepartment.Visible = false;
+                    lblMedical.Visible = false;
+                    DateDiv.Visible = true;
+                    Time_Row.Visible = true;
+                    SetDepartent();
+                    dpROw.Visible = true;
+
+
+
+                    MainDeptDiv.Visible = true;
+                    lblMainDepartment.Visible = true;
+                    lblMainDepartment.Text = "Department Name";
+                    ddlMainDepartment.Visible = true;
+                    ddlMainDepartment.Items.Clear();
+                    object valuset;
+                    valuset = DBClass.GetValueSet("Main Test Departments");
+                    ddlMainDepartment.DataSource = valuset;
+                    ddlMainDepartment.DataTextField = "DataValue_Description";
+                    ddlMainDepartment.DataValueField = "DataValue_Name";
+                    ddlMainDepartment.Items.Clear();
+                    ddlMainDepartment.Items.Add(new ListItem() { Text = "All", Value = "0" });
+                    ddlMainDepartment.DataBind();
+
+
+
+                    DataTable Tests = DBClass.getDataTable("select Test_id ,Test_Name from Lab_Tests where main_department in ('002','003','006','004','009','010')");
+                    DataTable TestCategories = (DataTable)DBClass.getDataTable("select dv.DataValue_Name,dv.DataValue_Description from ValueSet vs,DataValues dv where vs.ValueSet_ID=dv.ValueSet_ID and vs.ValueSet_Name='Test Groups'");
+
+                    foreach (DataRow dr in TestCategories.Rows)
+                    {
+                        DataRow newdr = Tests.NewRow();
+                        newdr["Test_ID"] = dr["DataValue_Name"].ToString();
+                        newdr["Test_Name"] = dr["DataValue_Description"].ToString();
+                        Tests.Rows.Add(newdr);
+                        Tests.AcceptChanges();
+                    }
+                    trTestResult1.Visible = true;
+                    ddlTestName.DataSource = Tests;
+                    ddlTestName.DataTextField = "Test_Name";
+                    ddlTestName.DataValueField = "Test_Name";
+                    ddlTestName.Items.Add(new ListItem() { Text = "All", Value = "0" });
+                    ddlTestName.DataBind();
+
+                    
+                    object valusets;
+                    
+
+
+                    DataBaseDataContext db = new DataBaseDataContext(DBClass.ConnectionString());
+                    valusets = from d in db.aspnet_Users
+                               select new { d.UserName, d.UserId };
+                    ddloprators.DataSource = valusets;
+                    ddloprators.DataTextField = "UserName";
+                    ddloprators.DataValueField = "UserId";
+                    ddloprators.Items.Add(new ListItem() { Text = "All", Value = "0" });
+                    ddloprators.DataBind();
+
+
+                    lblMainDepartment.Visible = true;
+                    ddlMainDepartment.Visible = true;
+                    lboperator.Visible = true;
+                    ddloprators.Visible = true;
+                    lblDepartment.Text = "Panel";
+                    DataTable dtPanel = DBClass.getDataTable("select panel_id,Company_Name from Panel");
+                    ddlDepartments.DataSource = dtPanel;
+                    ddlDepartments.DataTextField = "Company_Name";
+                    ddlDepartments.DataValueField = "panel_id";
+                    ddlDepartments.Items.Clear();
+                    ddlDepartments.Items.Add(new ListItem("Please Select", "0"));
+                    ddlDepartments.DataBind();
+
+                    ddlShift.Visible = false;
+                    lbShift.Visible = false;
+
+
+                }
+
+
+
+
                 if (this.PageTitle == "AnalysisReport")
                 {
                     string x = "Analysis Report";
@@ -5813,7 +6169,6 @@ namespace PMS
                     //ddlMedicalSubsidy.Items.Add("Annually");
                     ddlMedicalSubsidy.Items.Add("Annually with Stay Days");
                     ddlMedicalSubsidy.Items.Add("Annually with Stay Days Summary");
-                    ddlMedicalSubsidy.Items.Add("Monthly");
                     ddlMedicalSubsidy.Items.Add("Annually");
 
                 }
@@ -7622,6 +7977,79 @@ namespace PMS
                     DateDiv.Visible = true;
                     Time_Row.Visible = true;
                 }
+                else if (this.PageTitle == "PharmacySaleReport_PaymentWise")
+                {
+                    string x = "Pharmacy Sale Report Payment Type Wise";
+                    Master.Label2.Text = x;
+                    Master.GetMenuName();
+                    lblMainDepartment.Visible = false;
+                    ddlDepartments.Visible = false;
+                    lblPatientType.Visible = false;
+                    lblMultiSelect.Visible = false;
+                    ddlPatientType.Visible = false;
+                    optRw.Visible = false;
+                    trDoctor.Visible = false;
+                    trSearch1.Visible = true;
+                    lblMainDepartment.Visible = false;
+                    dpROw.Visible = false;
+                    ddlReportType.Visible = false;
+                    txtMRNo.Visible = false;
+                    lblMRNo.Visible = false;
+                    tr_Export.Visible = false;
+                    ddlShift.Visible = false;
+                    lbShift.Visible = false;
+                    DateDiv.Visible = true;
+                    Time_Row.Visible = true;
+                    if (AllowPatientRecord)
+                    {
+                        optRw.Visible = true;
+                        DataTable dt1 = DBClass.getDataTable("select * from Pharmacy_Users where isActive=1");
+                        ddloprators.DataSource = dt1;
+                        ddloprators.DataTextField = "UserName";
+                        ddloprators.DataValueField = "UserID";
+                        ddloprators.Items.Add(new ListItem() { Text = "All", Value = "0" });
+                        ddloprators.DataBind();
+                    }
+                    // ADDING NEW WAREHOUSE
+                    object valuset;
+                    valuset = DBClass.GetValueSet("Ware house");
+                    ddlwareHouse.DataSource = valuset;
+                    ddlwareHouse.DataTextField = "DataValue_Description";
+                    ddlwareHouse.DataValueField = "DataValue_Name";
+                    ddlwareHouse.Items.Clear();
+                    ddlwareHouse.Items.Add(new ListItem() { Text = "All", Value = "0" });
+                    ddlwareHouse.DataBind();
+                    Stock_Movement.Visible = true;
+
+
+                    ddlwareHouse.Visible = true;
+                    lblWarehouse.Visible = true;
+
+                    lbItemCategory.Visible = false;
+                    ddlItemCategory.Visible = false;
+
+
+
+
+                    DataBaseDataContext dbs = new DataBaseDataContext(DBClass.ConnectionString());
+                    var serviceList = (from sl in dbs.INV_Items
+                                       where sl.Active == true && sl.IsPharmacyItem == true
+                                       select new { sl.Item_ID, sl.Description }).ToList();
+                    ddlItemName.DataSource = serviceList;
+                    ddlItemName.DataValueField = "Item_ID";
+                    ddlItemName.DataTextField = "Description";
+                    ddlItemName.Items.Add(new ListItem() { Text = "All", Value = "0" });
+                    ddlItemName.DataBind();
+
+
+                    trPayment.Visible = true;
+                    ddlPaymentType.Items.Clear();
+                    ddlPaymentType.Items.Add(new ListItem("All", "0"));
+                    ddlPaymentType.Items.Add(new ListItem("Cash", "1"));
+                    ddlPaymentType.Items.Add(new ListItem("Credit", "2"));
+                    ddlPaymentType.Items.Add(new ListItem("Panel", "3"));
+
+                }
                 else if (this.PageTitle == "PharmacySaleReport")
                 {
                     string x = "Pharmacy Sale Report";
@@ -7678,7 +8106,7 @@ namespace PMS
 
                     DataBaseDataContext dbs = new DataBaseDataContext(DBClass.ConnectionString());
                     var serviceList = (from sl in dbs.INV_Items
-                                       where sl.Active == true
+                                       where sl.Active == true && sl.IsPharmacyItem == true
                                        select new { sl.Item_ID, sl.Description }).ToList();
 
                     ddlItemName.DataSource = serviceList;
@@ -7689,20 +8117,37 @@ namespace PMS
 
 
                 }
-                //else if (PageTitle == "Pharmacy_Profit_and_Loss_Report")
-                //{
-                //    optRw.Visible = false;
-                //    tr_Summary.Visible = false;
-                //    ddlDepartments.Visible = false;
-                //    ddlDoctor.Visible = false;
-                //    trDoctor.Visible = false;
-                //    lbservieType.Visible = false;
-                //    DateDiv.Visible = true;
-                //    ddlReportType.Visible = false;
-                //    dpROw.Visible = false;
-                //    Time_Row.Visible = true;
+                else if (this.PageTitle == "CathLabStockInHand")
+                {
+                    string x = "Cath Lab Stock in Hand Report";
+                    Master.Label2.Text = x;
+                    Master.GetMenuName();
 
-                //}
+                    DateDiv.Visible = true;
+                    Time_Row.Visible = true;
+
+                    // ADDING NEW WAREHOUSE
+                    DataBaseDataContext dbs = new DataBaseDataContext(DBClass.ConnectionString());
+                    var allowedWarehouses = new List<string> { "009", "010" };
+                    var valueSet = (from dv in dbs.DataValues
+                                    where dv.ValueSet_ID == 8 && allowedWarehouses.Contains(dv.DataValue_Name)
+                                    select new { dv.DataValue_Name, dv.DataValue_Description }).ToList();
+                    ddlwareHouse.DataSource = valueSet;
+                    ddlwareHouse.DataValueField = "DataValue_Name";
+                    ddlwareHouse.DataTextField = "DataValue_Description";
+                    ddlwareHouse.Items.Clear();
+                    ddlwareHouse.Items.Add(new ListItem() { Text = "All", Value = "0" });
+                    ddlwareHouse.DataBind();
+
+
+                    Stock_Movement.Visible = true;
+
+                    ddlwareHouse.Visible = true;
+                    lblWarehouse.Visible = true;
+
+                    lbItemCategory.Visible = false;
+                    ddlItemCategory.Visible = false;
+                }
 
                 else if (this.PageTitle == "ChargePolicyWiseSummary")
                 {

@@ -121,6 +121,7 @@
             }
             
         });
+
         function fillBirthGender() {
             var options = '<option value="0">Select</option>';
             PageMethods.GetGender(function (data) {
@@ -1055,8 +1056,16 @@
             SaveAllRecords();
         }
 
-        function SaveAllRecords() {
+        function PrintGenrateCertificate(Birth_Certificate_ID)
+        {
             debugger;
+            var url = '../../ReportViewer.aspx?ReportName=Birth_Certificate&ReportTitle=Admission Slip Report&Inpatient_ID=' + Birth_Certificate_ID;
+            window.open(url, '_blank');
+
+        }
+
+        function SaveAllRecords() {
+            $('#btnsave').attr('disabled', true);
             var btnsave = $('#btnsave').val();
             var Patient_ID = $("#hdfPatient_ID").val();
            
@@ -1119,7 +1128,7 @@
                             text: response.replace("ERROR:", ""),
                             confirmButtonText: 'OK'
                         });
-
+                        $('#btnsave').attr('disabled', false);
                         return;
                     }
 
@@ -1145,7 +1154,7 @@
                 function (error) {
 
                     console.log(error);
-
+                    $('#btnsave').attr('disabled', false);
                     Swal.fire({
                         icon: 'error',
                         title: 'Server Error!',
@@ -2074,7 +2083,7 @@
                        class="btn-primry"
                        id="Printbirthcertificate"
                        type="button"
-                       onclick="PrintGenrateCertificate()" />
+                       onclick="PrintGenrateCertificate($('#hdfBC_ID').val())" />
             </div>
 
         </div>

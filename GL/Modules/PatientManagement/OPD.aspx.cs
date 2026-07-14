@@ -325,16 +325,16 @@ namespace PMS.Modules.PatientManagement
             {
                 object Details;
 
-                //if (company_name == "As-Siraat Serving Humanity")
-                //{
-                //    // Call client-specific SP
-                //    Details = db.SpApprove_OPD_AsSiraat(Convert.ToInt32(pat_id), Pat_Category, user_id);
-                //}
-                //else
-                //{
+                if (company_name == "As-Siraat Serving Humanity")
+                {
+                    // Call client-specific SP
+                    Details = db.SpApprove_OPD_AsSiraat(Convert.ToInt32(pat_id), Pat_Category, user_id);
+                }
+                else
+                {
                     // Default for other clients (e.g., Noor Hospital, KDC Lab, etc.)
                     Details = db.SpApprove_OPD(Convert.ToInt32(pat_id), Pat_Category, user_id);
-               // }
+                }
 
                 return new JavaScriptSerializer().Serialize(Details);
             }
@@ -769,6 +769,30 @@ namespace PMS.Modules.PatientManagement
             }
             return "";
         }
+        [WebMethod]
+        public static string GetBankAccounts()
+        {
+            try
+            {
+                using (var db = new DataBaseDataContext(DBClass.ConnectionString()))
+                {
+                    var accounts = (from acc in db.GL_Accounts
+                                    where acc.Bank == true
+                                    select new
+                                    {
+                                        id = acc.Account_ID,
+                                        name = acc.Account_Name
+                                    }).ToList();
+
+                    return new JavaScriptSerializer().Serialize(accounts);
+                }
+            }
+            catch (Exception ex)
+            {
+                // Log error if needed
+                return "[]"; // return empty array on error
+            }
+        }
         //[WebMethod]
         //public static string LoadDepartmentByDoc(string doc)
         //{
@@ -882,7 +906,8 @@ namespace PMS.Modules.PatientManagement
                     pd.Discount_Percentage,
                     pd.Day_Check,
                     pd.St_Day,
-                    pd.En_Day
+                    pd.En_Day,
+                    Extra_Time = pd.Extra_Time ?? 0
                 }
             ).ToList();
 
@@ -942,21 +967,68 @@ namespace PMS.Modules.PatientManagement
                     TimeSpan end = pd.End_Time.Value;
 
                     if (start <= end)
-                    {
-                        // Normal range (e.g., 10:00–23:00)
                         timeOk = currentTime >= start && currentTime <= end;
-                    }
                     else
-                    {
-                        // Overnight (e.g., 22:00–06:00)
                         timeOk = currentTime >= start || currentTime <= end;
-                    }
 
                     if (!timeOk) return false;
                 }
 
                 return true;
             });
+
+            // 🔁 Pass 2: If no match found, retry each row with extra time applied
+            if (matched == null)
+            {
+                matched = policies
+                    .Where(pd =>
+                    {
+                        // 1️⃣ Expiry check
+                        if (!pd.Expiry_Date.HasValue || now.Date > pd.Expiry_Date.Value.Date)
+                            return false;
+
+                        // 2️⃣ Day check (only if Day_Check is logically true)
+                        bool dayCheckEnabled = false;
+                        if (pd.Day_Check != null)
+                        {
+                            string v = pd.Day_Check.ToString().Trim();
+                            dayCheckEnabled = v == "1" || v.Equals("true", StringComparison.OrdinalIgnoreCase);
+                        }
+
+                        bool dayOk = true;
+                        if (dayCheckEnabled)
+                        {
+                            int st = ParseDay(pd.St_Day);
+                            int en = ParseDay(pd.En_Day);
+                            if (st == -1 || en == -1) return false;
+
+                            if (st <= en)
+                                dayOk = currentDayNum >= st && currentDayNum <= en;
+                            else
+                                dayOk = currentDayNum >= st || currentDayNum <= en;
+
+                            if (!dayOk) return false;
+                        }
+
+                        // 3️⃣ Time check — with extra time
+                        bool timeOk = false;
+                        if (pd.IsTime == true && pd.Start_Time.HasValue && pd.End_Time.HasValue && pd.Extra_Time > 0)
+                        {
+                            TimeSpan start = pd.Start_Time.Value;
+                            TimeSpan end = pd.End_Time.Value;
+                            TimeSpan effectiveEnd = end.Add(TimeSpan.FromMinutes(pd.Extra_Time));
+
+                            if (start <= effectiveEnd)
+                                timeOk = currentTime >= start && currentTime <= effectiveEnd;
+                            else
+                                timeOk = currentTime >= start || currentTime <= effectiveEnd;
+                        }
+
+                        return timeOk;
+                    })
+                    .OrderByDescending(pd => pd.Start_Time)
+                    .FirstOrDefault();
+            }
 
             // ✅ If no policy matches → show clear error
             if (matched == null)
@@ -1109,6 +1181,7 @@ namespace PMS.Modules.PatientManagement
             area = SanitizeInput(area);
 
             DataBaseDataContext db = new DataBaseDataContext();
+            JavaScriptSerializer JSS = new JavaScriptSerializer();
             Reg_patient pat = null;
 
             bool isNewPatient = string.IsNullOrEmpty(PatientID) || PatientID == "0" || PatientID == "(New)";
@@ -1158,6 +1231,50 @@ namespace PMS.Modules.PatientManagement
                     pat.val_area = area_val;
                     pat.Country = Country;
                     pat.Province = Province;
+                    pat.updated_time = DateTime.Now;
+                    pat.updated_by = AppConfig.UserID;
+
+                    var previousRegData = new
+                    {
+                        PatData = new
+                        {
+                            pat.Patient_No,
+                            pat.mr_no_sequence,
+                            CreationDate = pat.Created_time ?? DateTime.MinValue,
+                            pat.Full_Name,
+                            pat.Father_Name,
+                            pat.Gender,
+                            pat.Mobile1,
+                            pat.Age_years,
+                            pat.NIC,
+                            pat.Permanent_Address,
+                            pat.Martial_Status,
+                            pat.Relation_prefix,
+                            pat.walkin,
+                            pat.city,
+                            pat.val_city,
+                            pat.val_area,
+                            pat.area,
+                            pat.Country,
+                            pat.Province,
+                            pat.Card_fee,
+                            pat.other_cnic,
+                            DOB = pat.DOB ?? DateTime.MinValue,
+
+                        }
+
+                    };
+
+                    string masterLogJson = JSS.Serialize(previousRegData.PatData);
+                    Reg_Patient_Log RegLog = new Reg_Patient_Log
+                    {
+                        Pat_Id = pat.pat_id,
+                        Updated_data = masterLogJson,
+                        Loged_Time = DateTime.Now,
+                        Loged_by = AppConfig.UserID
+                    };
+
+                    db.Reg_Patient_Logs.InsertOnSubmit(RegLog);
                     db.SubmitChanges();
                 }
             }
@@ -1527,6 +1644,8 @@ namespace PMS.Modules.PatientManagement
                     pat.AccountID = string.IsNullOrEmpty(data.accountid) ? 0 : Convert.ToInt32(data.accountid);
                     pat.Card_Issued = data.IssueCard ?? false;
                     pat.free_check = data.FreeCheck ?? false;
+                    pat.bank_cash = data.bank_cash;
+                    pat.bank_account_id = data.bank_account_id;
                     decimal netAmount = data.Fees;
 
                     if (category == "11")
@@ -1575,25 +1694,63 @@ namespace PMS.Modules.PatientManagement
                 var now = DateTime.Now;
                 var currentTime = now.TimeOfDay;
 
-                var activeSlot = (
+                var slots = (
                     from pd in db.Policy_Details
                     where pd.Policy_ID == policyId &&
                           pd.IsTime == true &&
                           pd.Start_Time.HasValue && pd.End_Time.HasValue &&
                           (!pd.Expiry_Date.HasValue || pd.Expiry_Date.Value.Date >= now.Date)
-                    let start = pd.Start_Time.Value
-                    let end = pd.End_Time.Value
-                    where
-                        (start <= end && currentTime >= start && currentTime < end) || // normal
-                        (start > end && (currentTime >= start || currentTime < end))   // overnight
-                    select new PolicySlot
+                    select new
                     {
-                        Start_Time = start,
-                        End_Time = end
+                        Start = pd.Start_Time.Value,
+                        End = pd.End_Time.Value,
+                        Extra = pd.Extra_Time ?? 0
                     }
-                ).FirstOrDefault();
+                ).ToList();
 
-                return activeSlot;
+                // Pass 1: try matching with RAW End_Time (no extra time)
+                var rawMatch = slots
+                    .FirstOrDefault(s =>
+                        (s.Start <= s.End && currentTime >= s.Start && currentTime < s.End) ||
+                        (s.Start > s.End && (currentTime >= s.Start || currentTime < s.End))
+                    );
+
+                if (rawMatch != null)
+                {
+                    return new PolicySlot
+                    {
+                        Start_Time = rawMatch.Start,
+                        End_Time = rawMatch.End,
+                        ExtraTime = rawMatch.Extra
+                    };
+                }
+
+                // Pass 2: if no match, try with EffectiveEnd (expanded by Extra_Time)
+                var expandedMatch = slots
+                    .Select(s => new
+                    {
+                        s.Start,
+                        EffectiveEnd = s.End.Add(TimeSpan.FromMinutes(s.Extra)),
+                        s.Extra
+                    })
+                    .Where(s =>
+                        (s.Start <= s.EffectiveEnd && currentTime >= s.Start && currentTime < s.EffectiveEnd) ||
+                        (s.Start > s.EffectiveEnd && (currentTime >= s.Start || currentTime < s.EffectiveEnd))
+                    )
+                    .OrderByDescending(s => s.Start)
+                    .FirstOrDefault();
+
+                if (expandedMatch != null)
+                {
+                    return new PolicySlot
+                    {
+                        Start_Time = expandedMatch.Start,
+                        End_Time = expandedMatch.EffectiveEnd,
+                        ExtraTime = expandedMatch.Extra
+                    };
+                }
+
+                return null;
             }
         }
 
@@ -1624,12 +1781,19 @@ namespace PMS.Modules.PatientManagement
                     select new
                     {
                         Start = pd.Start_Time.Value,
-                        End = pd.End_Time.Value
+                        End = pd.End_Time.Value,
+                        Extra = pd.Extra_Time ?? 0
                     }
                 ).ToList();
 
                 // Find the next slot that starts AFTER current time
                 var nextSlot = slots
+                    .Select(s => new
+                    {
+                        s.Start,
+                        EffectiveEnd = s.End.Add(TimeSpan.FromMinutes(s.Extra)),
+                        s.Extra
+                    })
                     .Where(s => s.Start > currentTime)
                     .OrderBy(s => s.Start)
                     .FirstOrDefault();
@@ -1639,7 +1803,8 @@ namespace PMS.Modules.PatientManagement
                     return new PolicySlot
                     {
                         Start_Time = nextSlot.Start,
-                        End_Time = nextSlot.End
+                        End_Time = nextSlot.EffectiveEnd,
+                        ExtraTime = nextSlot.Extra
                     };
                 }
 
@@ -1650,6 +1815,7 @@ namespace PMS.Modules.PatientManagement
         {
             public TimeSpan Start_Time { get; set; }
             public TimeSpan End_Time { get; set; }
+            public int ExtraTime { get; set; }
         }
 
     
@@ -2284,7 +2450,9 @@ namespace PMS.Modules.PatientManagement
                             .Where(i => i.Item_ID == patient.Service_id)
                             .Select(i => i.Description)
                             .FirstOrDefault() ?? ""
-                    )
+                    ),
+                    bank_cash = patient.bank_cash ?? "",
+                    bank_account_id = patient.bank_account_id ?? ""
                 };
                 return new JavaScriptSerializer().Serialize(result);
             }
@@ -2624,6 +2792,8 @@ namespace PMS.Modules.PatientManagement
             public int Fees { get; set; }
             public int Actual_Fees { get; set; }
             public string Remarks { get; set; }
+            public string bank_cash { get; set; }
+            public string bank_account_id { get; set; }
         }
 
         [WebMethod]
@@ -2656,6 +2826,111 @@ namespace PMS.Modules.PatientManagement
             catch (Exception ex)
             {
                 return "0";
+            }
+        }
+
+        [WebMethod]
+        public static string OPDSlip()
+        {
+            DataBaseDataContext db = new DataBaseDataContext(DBClass.ConnectionString());
+            var dept = (from data in db.sys_Parms
+                        where data.Name == "OPD Slip Admission Check"
+                        select
+                          data.Code
+                        ).FirstOrDefault();
+            return (new JavaScriptSerializer()).Serialize(dept);
+        }
+
+        [WebMethod]
+        public static string CheckPatientAdmissionStatus(int regPatId)
+        {
+            try
+            {
+                using (DataBaseDataContext db = new DataBaseDataContext(DBClass.ConnectionString()))
+                {
+                    var inPatient = (from ip in db.In_Patients
+                                     where ip.Patient_ID == regPatId
+                                     && ip.Discharge_On == null
+                                     && (ip.Discharge == null || ip.Discharge == false)
+                                     && (ip.is_cancel == null || ip.is_cancel == false)
+                                     select ip).FirstOrDefault();
+
+                    if (inPatient != null)
+                    {
+                        return new JavaScriptSerializer().Serialize(new
+                        {
+                            isAdmitted = true,
+                            location = "In-Patient",
+                            admissionDate = inPatient.Admission_Date?.ToString("dd-MMM-yyyy")
+                        });
+                    }
+
+                    
+                    var emergencyPatient = (from ep in db.Emergency_Patients
+                                            where ep.Patient_ID == regPatId
+                                            && ep.Discharge_On == null
+                                            && (ep.Discharge == null || ep.Discharge == false)
+                                            && (ep.isCancelled == null || ep.isCancelled == false) 
+                                            select ep).FirstOrDefault();
+
+                    if (emergencyPatient != null)
+                    {
+                        return new JavaScriptSerializer().Serialize(new
+                        {
+                            isAdmitted = true,
+                            location = "Emergency",
+                            admissionDate = emergencyPatient.Admission_Date?.ToString("dd-MMM-yyyy")
+                        });
+                    }
+
+                    return new JavaScriptSerializer().Serialize(new { isAdmitted = false });
+                }
+            }
+            catch (Exception ex)
+            {
+                return new JavaScriptSerializer().Serialize(new { isAdmitted = false, error = ex.Message });
+            }
+        }
+
+        [WebMethod]
+        public static string CheckOutPatientDischarge(int regPatId, string department)
+        {
+            try
+            {
+                using (DataBaseDataContext db = new DataBaseDataContext(DBClass.ConnectionString()))
+                {
+                    // Check if feature is enabled in sys_parms
+                    var sysParm = db.sys_Parms.FirstOrDefault(p => p.Name == "OPD Discharge Check" && p.Code == "01");
+                    
+                    if (sysParm == null)
+                    {
+                        // Feature disabled
+                        return new JavaScriptSerializer().Serialize(new { hasActiveOPD = false });
+                    }
+
+                    // Calculate the time 24 hours ago
+                    var past24Hours = DateTime.Now.AddHours(-24);
+
+                    // Check if patient has active OPD record for this specific department in the last 24 hours
+                    var activeOPD = (from opd in db.Patients
+                                     where opd.Reg_PatId == regPatId
+                                           && opd.Patient_Main_Category == department
+                                           && opd.Created_Time >= past24Hours
+                                     select opd).FirstOrDefault();
+
+                    return new JavaScriptSerializer().Serialize(new 
+                    { 
+                        hasActiveOPD = activeOPD != null 
+                    });
+                }
+            }
+            catch (Exception ex)
+            {
+                return new JavaScriptSerializer().Serialize(new 
+                { 
+                    hasActiveOPD = false, 
+                    error = ex.Message 
+                });
             }
         }
     }

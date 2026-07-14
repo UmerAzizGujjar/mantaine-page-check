@@ -404,6 +404,57 @@ namespace PMS.Modules.Lab
             }
             return "Not Successfull";
         }
+        public class CheckAmountResponse
+        {
+            public bool AllowApproval { get; set; }
+            public string Message { get; set; }
+        }
+
+        [WebMethod]
+        public static CheckAmountResponse CheckTestAmount(int testDetailId)
+        {
+            using (DataBaseDataContext db = new DataBaseDataContext())
+            {
+                var data = (from lab in db.Lab_Test_Details
+                            join abd in db.Ar_Billing_Details
+                                on lab.Bill_Details_ID equals abd.Bill_Details_ID
+                            join bill in db.Ar_Billings
+                                on abd.Bill_ID equals bill.Bill_ID
+                            where lab.Lab_Test_Detail_ID == testDetailId
+                            select new
+                            {
+                                BalanceAmount = bill.Balance_Amount ?? 0,
+                                ParentTransName = abd.ParentTrans_Name,
+                                BillNo = bill.Bill_No,
+                                Panel_Id = bill.Panel_Id
+                            }).FirstOrDefault();
+
+                if (data == null)
+                {
+                    return new CheckAmountResponse
+                    {
+                        AllowApproval = false,
+                        Message = "Record not found."
+                    };
+                }
+
+                // Don't allow approval if not InPatient and balance > 0
+                if ((data.ParentTransName == "OutPatient" || data.ParentTransName == "" ) && data.Panel_Id == 0 && data.BalanceAmount > 0)
+                {
+                    return new CheckAmountResponse
+                    {
+                        AllowApproval = false,
+                        Message = "Bill No " + data.BillNo + " has a pending balance. Approval is not allowed."
+                    };
+                }
+
+                return new CheckAmountResponse
+                {
+                    AllowApproval = true,
+                    Message = ""
+                };
+            }
+        }
         [WebMethod]
         public static string ApproveTestDetailCat(int Lab_ID, string TesttDetails, int ReferDoctorId = 0)
         {
@@ -971,6 +1022,7 @@ namespace PMS.Modules.Lab
 
             public string History { get; set; }
             public string PACS_Study_Url { get; set; }
+            public string PACS_Study_UID { get; set; }
         }
 
         [WebMethod]
@@ -1026,11 +1078,19 @@ namespace PMS.Modules.Lab
             }
         }
 
-        private static string GetOrthancStudyViewerUrl(string accessionNumber, string baseUrl)
+        private class OrthancStudyLookup
         {
+            public string ViewerUrl { get; set; }
+            public string StudyInstanceUID { get; set; }
+        }
+
+        private static OrthancStudyLookup GetOrthancStudyLookup(string accessionNumber, string baseUrl)
+        {
+            var result = new OrthancStudyLookup { ViewerUrl = string.Empty, StudyInstanceUID = string.Empty };
+
             if (string.IsNullOrWhiteSpace(accessionNumber) || string.IsNullOrWhiteSpace(baseUrl))
             {
-                return string.Empty;
+                return result;
             }
 
             try
@@ -1058,27 +1118,34 @@ namespace PMS.Modules.Lab
 
                 if (string.IsNullOrWhiteSpace(studiesJson) || studiesJson == "[]")
                 {
-                    return string.Empty;
+                    return result;
                 }
 
                 var studies = JArray.Parse(studiesJson);
                 if (studies.Count == 0)
                 {
-                    return string.Empty;
+                    return result;
                 }
 
                 var studyUid = studies[0].SelectToken("MainDicomTags.StudyInstanceUID")?.ToString();
                 if (string.IsNullOrWhiteSpace(studyUid))
                 {
-                    return string.Empty;
+                    return result;
                 }
 
-                return baseUrl + "/ohif/viewer?StudyInstanceUIDs=" + HttpUtility.UrlEncode(studyUid);
+                result.StudyInstanceUID = studyUid;
+                result.ViewerUrl = baseUrl + "/ohif/viewer?StudyInstanceUIDs=" + HttpUtility.UrlEncode(studyUid);
+                return result;
             }
             catch
             {
-                return string.Empty;
+                return result;
             }
+        }
+
+        private static string GetOrthancStudyViewerUrl(string accessionNumber, string baseUrl)
+        {
+            return GetOrthancStudyLookup(accessionNumber, baseUrl).ViewerUrl;
         }
 
         [WebMethod]
@@ -1228,7 +1295,9 @@ namespace PMS.Modules.Lab
                 test.Result_Time = item.Created_Time?.ToString() ?? "";
                 test.Approved_By = item.Approved_By ?? "";
                 test.Approved_Time = item.Approved_Time?.ToString() ?? "";
-                test.PACS_Study_Url = GetOrthancStudyViewerUrl(test.Lab_Test_Detail_ID, orthancBaseUrl);
+                var pacsLookup = GetOrthancStudyLookup(test.Lab_Test_Detail_ID, orthancBaseUrl);
+                test.PACS_Study_Url = pacsLookup.ViewerUrl;
+                test.PACS_Study_UID = pacsLookup.StudyInstanceUID;
                 if (item.Test_Main_Department == null)
                 {
                     test.Test_Main_Department = "";
@@ -1456,6 +1525,7 @@ AND (
 
             List<Test> AlltestList = new List<Test>();
             List<Test> AlltestListRefined = new List<Test>();
+            var orthancBaseUrl = GetOrthancBaseUrl();
 
             foreach (var item in data)
             {
@@ -1521,6 +1591,9 @@ AND (
                 test.Result_Time = item.Created_Time?.ToString() ?? "";
                 test.Approved_By = item.Approved_By ?? "";
                 test.Approved_Time = item.Approved_Time?.ToString() ?? "";
+                var pacsLookup = GetOrthancStudyLookup(test.Lab_Test_Detail_ID, orthancBaseUrl);
+                test.PACS_Study_Url = pacsLookup.ViewerUrl;
+                test.PACS_Study_UID = pacsLookup.StudyInstanceUID;
                 AlltestList.Add(test);
             }
 
@@ -2335,7 +2408,7 @@ AND (
                     Age_years = data.Age_years?.ToString() ?? "",
                     Gender = data.Gender ?? "",
                     Patient_No = data.Patient_No?.ToString() ?? "",
-                    REg_Date = data.REg_Date,
+                    REg_Date = data.REg_Date.ToString() ?? "",
                     Mobile1 = data.Mobile1 ?? "",
                     NIC = data.NIC ?? "",
                     Patient_Type = data.Patient_Type ?? "",
@@ -2439,6 +2512,52 @@ AND (
             catch (Exception ex)
             {
                 return "{\"error\":\"" + ex.Message + "\"}";
+            }
+        }
+
+        [WebMethod]
+        public static string GetTestHistory(int currentTestDetailID, int patientID)
+        {
+            try
+            {
+                using (DataBaseDataContext db = new DataBaseDataContext())
+                {
+                    var currentTest = (from ltd in db.Lab_Test_Details
+                                       where ltd.Lab_Test_Detail_ID == currentTestDetailID
+                                       select new { ltd.Test_ID }).FirstOrDefault();
+
+                    if (currentTest == null)
+                        return "[]";
+
+                    int targetTestID = currentTest.Test_ID;
+
+                    var historyList = (from ltd in db.Lab_Test_Details
+                                       join lt in db.Laboratory_Tests on ltd.Lab_Test_ID equals lt.Lab_Test_ID
+                                       join bd in db.Ar_Billing_Details on ltd.Bill_Details_ID equals bd.Bill_Details_ID
+                                       join bill in db.Ar_Billings on bd.Bill_ID equals bill.Bill_ID
+                                       join pat in db.Reg_patients on lt.Patient_ID equals pat.pat_id
+                                       where lt.Patient_ID == patientID        
+                                         && ltd.Test_ID == targetTestID         
+                                         && ltd.Lab_Test_Detail_ID != currentTestDetailID 
+                                         && ltd.Is_Result == true                
+                                       orderby bill.Bill_Date descending         
+                                       select new
+                                       {
+                                           Bill_No = bill.Bill_No,
+                                           Bill_Date = bill.Bill_Date,
+                                           Patient_Name = pat.Full_Name,
+                                           Test_IDs = ltd.Test_ID.ToString(),
+                                           Trans_IDs = lt.Lab_Test_ID.ToString(),
+                                           Lab_Test_Detail_ID = ltd.Lab_Test_Detail_ID.ToString(),
+                                           Bill_Details_ID = bd.Bill_Details_ID.ToString()
+                                       }).Take(20).ToList();
+
+                    return (new JavaScriptSerializer()).Serialize(historyList);
+                }
+            }
+            catch (Exception ex)
+            {
+                return "[]";
             }
         }
     }

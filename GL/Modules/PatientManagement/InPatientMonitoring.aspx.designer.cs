@@ -555,13 +555,13 @@ namespace PMS
         protected global::System.Web.UI.WebControls.Label Label3;
 
         /// <summary>
-        /// txtNurseName control.
+        /// ddlNurseName control.
         /// </summary>
         /// <remarks>
         /// Auto-generated field.
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
-        protected global::System.Web.UI.WebControls.TextBox txtNurseName;
+        protected global::System.Web.UI.WebControls.DropDownList ddlNurseName;
 
         /// <summary>
         /// Label12 control.

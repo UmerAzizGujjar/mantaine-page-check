@@ -95,6 +95,7 @@
                         contentType: "application/json; charset=utf-8",
                         dataType: "json",
                         success: function (response) {
+                            debugger;
                             callback({
                                 draw: response.d.draw,
                                 recordsTotal: response.d.recordsTotal,
@@ -124,6 +125,7 @@
                     },
                     { "data": "Department", "orderable": false },
                     { "data": "Remarks", "orderable": false },
+                    
                     { "data": "Closing_Remarks", "orderable": false },
                     {
                         "data": "CreatedBY",
@@ -142,6 +144,21 @@
                         "render": (data, type, full) => full.Approved_Time ? moment(full.Approved_Time).format('DD-MMM-YYYY hh:mm A') : '',
                         "width": "12%"
                     },
+                    { "data": "ReViewRecommended", "orderable": false },
+                    {
+                        "data": null,
+                        "render": function (data, type, full) {
+                            return parseFloat(full.bln_Qty) > 0 ? "Partial" : "Complete";
+                        },
+                        "orderable": false
+                    },
+                    {
+                        "data": "isClosed",
+                        "render": function (data) {
+                            return data ? "Closed" : "";
+                        },
+                        "orderable": false
+                    },
                     {
                         "render": function (data, type, full) {
                             var res = ' <a href="#"  class="editListBtn" onclick="Edit(' + full.MaterialRequest_Id + ')" style="border-radius: 4px;margin-right: 4px; color: white; padding: 5px 8px 5px 8px;"><i class="fa fa-pencil"></i>';
@@ -153,8 +170,15 @@
                     }
                 ],
                 "rowCallback": function (row, data, index) {
-                    if (data.Status === "Approved") {
+                    if (data.Status === "Approved" && data.isClosed === true) {
+                        $(row).css('background-color', '#41c782');
+                    }
+
+                    else if (data.Status === "Approved") {
                         $(row).css('background-color', '#ABEBC6');
+                    }
+                    else {
+                        $(row).css('background-color', '');
                     }
                 },
                 "initComplete": function (settings, json) {
@@ -222,6 +246,9 @@
                         <th>Status</th>
                         <th>Creation Date</th>
                         <th>Approved Date</th>
+                        <th>Approved Date</th>
+                        <th>GIR Status</th>
+                        <th>GIR Status</th>
                         <th>Actions</th>
                     </tr>
 

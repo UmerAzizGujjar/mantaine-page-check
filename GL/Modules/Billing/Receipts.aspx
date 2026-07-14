@@ -829,6 +829,7 @@
 
         function SaveRecord() {
             debugger;
+            $('#btnSave').attr('disabled', true);
             var val = document.getElementById("hdnDuplicateCheck").value;
             var returnVal = false;
             if (val == "0") {
@@ -858,7 +859,7 @@
                             htmlContainer: 'swal-big-text'
                         }
                     });
-
+                    $('#btnSave').attr('disabled', false);
                     $('#txtMRNo').focus();
                     return;
                 }
@@ -875,7 +876,7 @@
                             htmlContainer: 'swal-big-text'
                         }
                     });
-
+                    $('#btnSave').attr('disabled', false);
                     $('#txtReceiptAmount').focus();
                     return;
                 }
@@ -892,6 +893,7 @@
                             htmlContainer: 'swal-big-text'
                         }
                     });
+                    $('#btnSave').attr('disabled', false);
                     $('#txtReceiptAmount').focus();
                     return;
                 }
@@ -908,11 +910,12 @@
                             htmlContainer: 'swal-big-text'
                         }
                     });
-
+                    $('#btnSave').attr('disabled', false);
                     return;
                 }
                 if ($('#chkDischarge').is(':checked') == true) {
                     if (parseFloat($('#txtReceiptAmount').val()) < NetReceivable) {
+                        $('#btnSave').attr('disabled', false);
                         alert('Receipt Amount Should Be:-' + NetReceivable);
                         $('#txtReceiptAmount').focus();
                         return;
@@ -940,6 +943,7 @@
                     window.location = 'Receipts.aspx?Receipt_ID=' + Receipt_ID;
 
                 }, function (error) {
+                    $('#btnSave').attr('disabled', false);
                     alert(error.get_message());
                 });
             }
@@ -956,7 +960,7 @@
                         htmlContainer: 'swal-big-text'
                     }
                 });
-
+                $('#btnSave').attr('disabled', false);
                 returnVal = false;
             }
         }

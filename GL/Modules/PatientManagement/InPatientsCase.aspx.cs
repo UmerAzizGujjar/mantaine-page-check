@@ -7131,5 +7131,235 @@ namespace PMS
             return data;
         }
 
+        [WebMethod]
+        public static string CheckFinalBillAndDischargePermission(int InPatientID)
+        {
+            try
+            {
+                using (DataBaseDataContext db = new DataBaseDataContext(DBClass.ConnectionString()))
+                {
+                    var sysParm = db.sys_Parms
+                        .Where(p => p.Name == "InPatient Discharge Details"
+                                 && p.Company_ID == AppConfig.Company_ID)
+                        .Select(p => p.Code)
+                        .FirstOrDefault();
+
+                    if (sysParm != null && sysParm != "1")
+                    {
+                        return new JavaScriptSerializer().Serialize(new { allowed = false, reason = "Button is disabled in settings." });
+                    }
+
+                    var existingOPDId = 0;
+                    try
+                    {
+                        var existingOPD = db.Out_Patients
+                            .Where(o => o.Patient_ID == InPatientID)
+                            .Select(o => (int?)o.Out_Patient_ID)
+                            .FirstOrDefault();
+                        existingOPDId = existingOPD ?? 0;
+                    }
+                    catch
+                    {
+                        // Ignore lookup errors
+                    }
+
+                    var billingExists = db.Ar_Billings
+                        .Any(b => b.In_Patient_ID == (long)InPatientID);
+
+                    if (!billingExists)
+                    {
+                        return new JavaScriptSerializer().Serialize(new { allowed = true, existingOutPatientID = existingOPDId });
+                    }
+
+                    var finalBillDone = db.Ar_Billings
+                        .Any(b => b.In_Patient_ID == (long)InPatientID && b.final_bill_ipd == true);
+
+                    if (finalBillDone)
+                    {
+                        return new JavaScriptSerializer().Serialize(new { allowed = true, existingOutPatientID = existingOPDId });
+                    }
+
+                    return new JavaScriptSerializer().Serialize(new { allowed = false, reason = "Please complete final billing first." });
+                }
+            }
+            catch (Exception ex)
+            {
+                return new JavaScriptSerializer().Serialize(new { allowed = false, reason = ex.Message });
+            }
+        }
+
+        [WebMethod]
+        public static string GetDiagnosis(string searchValue)
+        {
+            try
+            {
+                using (DataBaseDataContext db = new DataBaseDataContext(DBClass.ConnectionString()))
+                {
+                    IQueryable<DiagnosisDefinition> query = db.DiagnosisDefinitions;
+
+                    if (!string.IsNullOrEmpty(searchValue))
+                    {
+                        query = query.Where(c => c.DiagnosisName.ToLower().Contains(searchValue.ToLower()));
+                    }
+                    else
+                    {
+                        query = query.Take(6);
+                    }
+
+                    var result = query
+                        .Select(c => new
+                        {
+                            DiagnosisId = c.ID,
+                            DiagnosisName = c.DiagnosisName
+                        })
+                        .ToList();
+
+                    return new JavaScriptSerializer().Serialize(result);
+                }
+            }
+            catch (Exception ex)
+            {
+                return "[]";
+            }
+        }
+
+        [WebMethod]
+        public static string SaveNewDiagnosis(string Text)
+        {
+            using (DataBaseDataContext db = new DataBaseDataContext(DBClass.ConnectionString()))
+            {
+                try
+                {
+                    string trimmedText = Text.Trim();
+                    bool exists = db.DiagnosisDefinitions.Any(c => c.DiagnosisName.ToLower() == trimmedText.ToLower());
+                    if (exists) return "0";
+
+                    DiagnosisDefinition newDiagnosis = new DiagnosisDefinition { DiagnosisName = trimmedText };
+                    db.DiagnosisDefinitions.InsertOnSubmit(newDiagnosis);
+                    db.SubmitChanges();
+                    return "1";
+                }
+                catch (Exception ex)
+                {
+                    return "Error saving diagnosis: " + ex.Message;
+                }
+            }
+        }
+
+        [WebMethod]
+        public static string SavePrimaryDiagnosisForInPatient(string PrimaryDiagnosisList, int InPatientID)
+        {
+            try
+            {
+                JavaScriptSerializer js = new JavaScriptSerializer();
+                var list = js.Deserialize<List<DiagnosisSaveItem>>(PrimaryDiagnosisList);
+
+                using (DataBaseDataContext db = new DataBaseDataContext(DBClass.ConnectionString()))
+                {
+                    var existing = db.OutPatientPrimaryDiagnosis.Where(p => p.In_Patient_ID == InPatientID).ToList();
+                    if (existing != null && existing.Count > 0)
+                        db.OutPatientPrimaryDiagnosis.DeleteAllOnSubmit(existing);
+
+                    foreach (var item in list)
+                    {
+                        OutPatientPrimaryDiagnosi newItem = new OutPatientPrimaryDiagnosi()
+                        {
+                            DiagnosisID = item.DiagnosisID,
+                            PatientID = 0,
+                            Remarks = item.Remarks,
+                            In_Patient_ID = InPatientID,
+                            OutPatientID = 0
+                        };
+                        db.OutPatientPrimaryDiagnosis.InsertOnSubmit(newItem);
+                    }
+                    db.SubmitChanges();
+                    return "Success";
+                }
+            }
+            catch (Exception ex)
+            {
+                return "Error: " + ex.Message;
+            }
+        }
+
+        [WebMethod]
+        public static string SaveFinalDiagnosisForInPatient(string FinalDiagnosisList, int InPatientID)
+        {
+            try
+            {
+                JavaScriptSerializer js = new JavaScriptSerializer();
+                var list = js.Deserialize<List<DiagnosisSaveItem>>(FinalDiagnosisList);
+
+                using (DataBaseDataContext db = new DataBaseDataContext(DBClass.ConnectionString()))
+                {
+                    var existing = db.OutPatientFinalDiagnosis.Where(p => p.In_Patient_ID == InPatientID).ToList();
+                    if (existing != null && existing.Count > 0)
+                        db.OutPatientFinalDiagnosis.DeleteAllOnSubmit(existing);
+
+                    foreach (var item in list)
+                    {
+                        OutPatientFinalDiagnosi newItem = new OutPatientFinalDiagnosi()
+                        {
+                            DiagnosisID = item.DiagnosisID,
+                            PatientID = 0,
+                            Remarks = item.Remarks,
+                            In_Patient_ID = InPatientID,
+                            OutPatientID = 0
+                        };
+                        db.OutPatientFinalDiagnosis.InsertOnSubmit(newItem);
+                    }
+                    db.SubmitChanges();
+                    return "Success";
+                }
+            }
+            catch (Exception ex)
+            {
+                return "Error: " + ex.Message;
+            }
+        }
+
+        [WebMethod]
+        public static string LoadPrimaryDiagnosis(int InPatientID)
+        {
+            using (DataBaseDataContext db = new DataBaseDataContext())
+            {
+                var data = from oppd in db.OutPatientPrimaryDiagnosis
+                           join pdd in db.DiagnosisDefinitions on oppd.DiagnosisID equals pdd.ID
+                           where oppd.In_Patient_ID == InPatientID
+                           select new
+                           {
+                               DiagnosisId = oppd.DiagnosisID,
+                               Remarks = oppd.Remarks,
+                               DiagnosisName = pdd.DiagnosisName
+                           };
+                return new JavaScriptSerializer().Serialize(data.ToList());
+            }
+        }
+
+        [WebMethod]
+        public static string LoadFinalDiagnosis(int InPatientID)
+        {
+            using (DataBaseDataContext db = new DataBaseDataContext())
+            {
+                var data = from oppd in db.OutPatientFinalDiagnosis
+                           join pdd in db.DiagnosisDefinitions on oppd.DiagnosisID equals pdd.ID
+                           where oppd.In_Patient_ID == InPatientID
+                           select new
+                           {
+                               DiagnosisId = oppd.DiagnosisID,
+                               Remarks = oppd.Remarks,
+                               DiagnosisName = pdd.DiagnosisName
+                           };
+                return new JavaScriptSerializer().Serialize(data.ToList());
+            }
+        }
+
+        public class DiagnosisSaveItem
+        {
+            public int DiagnosisID { get; set; }
+            public string Remarks { get; set; }
+            public int InPatientID { get; set; }
+        }
+
     }
 }

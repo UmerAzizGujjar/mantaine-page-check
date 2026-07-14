@@ -110,8 +110,10 @@ namespace PMS.Modules.Lab
                                           && (bd.Is_Group_Category == null || bd.Is_Group_Category == false)
                                           && (bd.Test_Main_Department == null || bd.Test_Main_Department != "001")
                                           && (ar.isCancel == false || ar.isCancel == null)
-                                          && ltd.Approved_Time >= startDate
-                                          && ltd.Approved_Time <= endDate
+                                           // && ltd.Approved_Time >= startDate
+                                           //&& ltd.Approved_Time <= endDate
+                                           && ar.Bill_Date >= startDate
+                                           && ar.Bill_Date <= endDate
                                           && !db.Refunds.Any(r => r.Bill_ID == ar.Bill_ID)
                                       select ltd).Count();
 
@@ -125,8 +127,10 @@ namespace PMS.Modules.Lab
                                     && (bd.Is_Group_Category == null || bd.Is_Group_Category == false)
                                     && (bd.Test_Main_Department == null || bd.Test_Main_Department != "001")
                                     && (ar.isCancel == false || ar.isCancel == null)
-                                    && ltd.Approved_Time >= startDate
-                                    && ltd.Approved_Time <= endDate
+                                    //&& ltd.Approved_Time >= startDate
+                                    //&& ltd.Approved_Time <= endDate
+                                    && ar.Bill_Date >= startDate
+                                    && ar.Bill_Date <= endDate
                                     && !db.Refunds.Any(r => r.Bill_ID == ar.Bill_ID)
                                 select new
                                 {
@@ -176,7 +180,17 @@ namespace PMS.Modules.Lab
 
                     var FilteredCount = query.Count();
 
-                    // Apply sorting
+                    if (length == -1)
+                    {
+                        start = 0;
+                        length = FilteredCount; 
+                    }
+                    else if (length > 100000)
+                    {
+                        start = 0;
+                        length = FilteredCount;
+                    }
+
                     switch (sortColumn)
                     {
                         case "Bill_No":
@@ -300,7 +314,7 @@ namespace PMS.Modules.Lab
                     Age_years = data.Age_years?.ToString() ?? "",
                     Gender = data.Gender ?? "",
                     Patient_No = data.Patient_No?.ToString() ?? "",
-                    REg_Date = data.REg_Date,
+                    REg_Date = data.REg_Date.ToString() ?? "",
                     Mobile1 = data.Mobile1 ?? "",
                     NIC = data.NIC ?? "",
                     Patient_Type = data.Patient_Type ?? "",

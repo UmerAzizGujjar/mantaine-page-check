@@ -186,6 +186,15 @@ namespace PMS.Modules.PatientManagement
         protected global::System.Web.UI.WebControls.CheckBox chkDiabetics;
 
         /// <summary>
+        /// chkAlcoholConsumption control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.CheckBox chkAlcoholConsumption;
+
+        /// <summary>
         /// chkHypertensive control.
         /// </summary>
         /// <remarks>
@@ -195,6 +204,15 @@ namespace PMS.Modules.PatientManagement
         protected global::System.Web.UI.WebControls.CheckBox chkHypertensive;
 
         /// <summary>
+        /// chkSmokeless control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.CheckBox chkSmokeless;
+
+        /// <summary>
         /// chkNon_Smokers control.
         /// </summary>
         /// <remarks>
@@ -202,6 +220,51 @@ namespace PMS.Modules.PatientManagement
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
         protected global::System.Web.UI.WebControls.CheckBox chkNon_Smokers;
+
+        /// <summary>
+        /// chkDM control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.CheckBox chkDM;
+
+        /// <summary>
+        /// chkHTN control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.CheckBox chkHTN;
+
+        /// <summary>
+        /// chkTB control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.CheckBox chkTB;
+
+        /// <summary>
+        /// chkIHD control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.CheckBox chkIHD;
+
+        /// <summary>
+        /// chkAsthma control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.CheckBox chkAsthma;
 
         /// <summary>
         /// Doctor control.
@@ -1579,6 +1642,33 @@ namespace PMS.Modules.PatientManagement
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
         protected global::System.Web.UI.WebControls.HiddenField hdfReg_ID;
+
+        /// <summary>
+        /// hdfInPatientID control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.HiddenField hdfInPatientID;
+
+        /// <summary>
+        /// hdfFormType control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.HiddenField hdfFormType;
+
+        /// <summary>
+        /// hdfOutPatientID control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.HiddenField hdfOutPatientID;
 
         /// <summary>
         /// hdfPatient_No control.

@@ -40,9 +40,14 @@
 
         function InpatientDischargePrint(In_Patient_ID) {
             debugger;
-            var url = '../../ReportViewer.aspx?ReportName=DischargePrint&InPatientId=' + In_Patient_ID;
-            window.open(url, '_blank');
 
+            var user_name = '<% =AppConfig.Company_Name %>';
+            if (user_name == 'Imran Idrees Teaching Hospital') {
+                window.open('../../ReportViewer.aspx?ReportName=DischargeDetailedPrint&InPatientId=' + In_Patient_ID);
+            }
+            else {
+                window.open('../../ReportViewer.aspx?ReportName=DischargePrint&InPatientId=' + In_Patient_ID);
+            }
         }
 
 
@@ -259,10 +264,38 @@
         }
 
         function editOpen(id) {
-
-            
-            window.open("InPatientsDischarge.aspx?ID=" + id + "");
-
+            var newWin = window.open('', '_blank');
+            $.ajax({
+                type: "POST",
+                url: "InPatientsDischargeList.aspx/GetInPatientDischargeSeparateFormPermission",
+                data: JSON.stringify({ InPatientID: id }),
+                contentType: "application/json; charset=utf-8",
+                dataType: "json",
+                success: function (response) {
+                    var result = JSON.parse(response.d);
+                    if (result.separateForm) {
+                        var url = 'NewOutPatient.aspx?Type=InPatientDischarge&InPatientID=' + id;
+                        if (result.existingOutPatientID && result.existingOutPatientID != 0) {
+                            url += '&ID=' + result.existingOutPatientID;
+                        }
+                        if (newWin) {
+                            newWin.location.href = url;
+                        } else {
+                            window.open(url, '_blank');
+                        }
+                    } else {
+                        if (newWin) {
+                            newWin.location.href = "InPatientsDischarge.aspx?ID=" + id;
+                        } else {
+                            window.open("InPatientsDischarge.aspx?ID=" + id + "");
+                        }
+                    }
+                },
+                error: function () {
+                    if (newWin) newWin.close();
+                    window.open("InPatientsDischarge.aspx?ID=" + id + "");
+                }
+            });
         }
         function updateSelectAllCheckbox() {
             var totalRows = $('#tblResult tbody .row-select').length;

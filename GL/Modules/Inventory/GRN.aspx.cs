@@ -11,9 +11,23 @@ namespace PMS.Inventory
 {
     public partial class GRN : System.Web.UI.Page
     {
-
         protected void Page_Load(object sender, EventArgs e)
         {
+            HyperLink1.Visible = false;
+            if (!IsPostBack)
+            {
+                if (Request.QueryString["GRN_ID"] != null)
+                {
+                    DataBaseDataContext db = new DataBaseDataContext();
+                    var getID = Request.QueryString["GRN_ID"];
+                    var gettype = (from a in db.GRN_Masters where a.GRN_ID == Convert.ToInt32(getID) select a.File_Path).FirstOrDefault();
+                    if (!string.IsNullOrEmpty(gettype))
+                    {
+                        HyperLink1.NavigateUrl = gettype;
+                        HyperLink1.Visible = true;
+                    }
+                }
+            }
         }
 
         [WebMethod]

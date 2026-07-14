@@ -1,5 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Data;
+using System.Data.SqlClient;
 using System.Linq;
 using System.Web;
 using System.Web.Script.Serialization;
@@ -54,6 +56,7 @@ namespace PMS
                            data.Refund_Date,
                            data.Bill_ID,                          
                            data.Refund_Amount,
+                           data.Status,
                            Balance = Convert.ToInt32(db.getAdvance_Balance(Convert.ToInt32(InPatientId), "In_Patient"))
                            }).FirstOrDefault();
 
@@ -363,6 +366,115 @@ namespace PMS
             }
 
             return value;
+        }
+
+        [WebMethod]
+        public static string Approve_Refund(string refundId)
+        {
+            var user_id = AppConfig.UserID;
+
+            try
+            {
+                string message = "";
+                int voucherId = 0;
+
+                using (var db = new DataBaseDataContext())
+                {
+                    using (var conn = new SqlConnection(db.Connection.ConnectionString))
+                    {
+                        using (var cmd = new SqlCommand("SpApprove_Refund", conn))
+                        {
+                            cmd.CommandType = CommandType.StoredProcedure;
+                            cmd.Parameters.AddWithValue("@refundid", Convert.ToInt32(refundId));
+                            cmd.Parameters.AddWithValue("@user_id", user_id);
+
+                            conn.Open();
+
+                            using (var reader = cmd.ExecuteReader())
+                            {
+                                if (reader.Read())
+                                {
+                                    message = reader["Message"].ToString();
+                                    voucherId = Convert.ToInt32(reader["Voucher_ID"]);
+                                }
+                            }
+                        }
+                    }
+                }
+
+                var response = new
+                {
+                    Message = message,
+                    Voucher_ID = voucherId,
+                    Success = voucherId > 0
+                };
+
+                return new JavaScriptSerializer().Serialize(response);
+            }
+            catch (Exception ex)
+            {
+                var errorResponse = new
+                {
+                    Message = ex.Message,
+                    Voucher_ID = 0,
+                    Success = false
+                };
+                return new JavaScriptSerializer().Serialize(errorResponse);
+            }
+        }
+
+        [WebMethod]
+        public static string UnApprove_Refund(string refundId)
+        {
+            var userid = AppConfig.UserID;
+
+            try
+            {
+                string message = "";
+
+                using (var db = new DataBaseDataContext())
+                {
+                    using (var conn = new SqlConnection(db.Connection.ConnectionString))
+                    {
+                        using (var cmd = new SqlCommand("spUnApproveRefund", conn))
+                        {
+                            cmd.CommandType = CommandType.StoredProcedure;
+                            cmd.Parameters.AddWithValue("@refundid", Convert.ToInt32(refundId));
+                            cmd.Parameters.AddWithValue("@user_id", userid);
+
+                            conn.Open();
+
+                            using (var reader = cmd.ExecuteReader())
+                            {
+                                if (reader.Read())
+                                {
+                                    if (reader.FieldCount > 0)
+                                    {
+                                        message = reader[0] != DBNull.Value ? reader[0].ToString() : "";
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+
+                var response = new
+                {
+                    Message = message,
+                    Success = !string.IsNullOrEmpty(message) && message.Contains("Successfully")
+                };
+
+                return new JavaScriptSerializer().Serialize(response);
+            }
+            catch (Exception ex)
+            {
+                var errorResponse = new
+                {
+                    Message = ex.Message,
+                    Success = false
+                };
+                return new JavaScriptSerializer().Serialize(errorResponse);
+            }
         }
     }
 }

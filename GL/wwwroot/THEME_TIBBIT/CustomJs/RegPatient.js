@@ -327,8 +327,6 @@ function CalculateDateOfBirth() {
 
 
 function SavePatient() {
-    debugger;
-
     $('#SavePatient_Data').attr('disabled', true);
     $('.span_txt').hide();
     var Prefix_PatientName = $('#ddl_name').val();
@@ -362,6 +360,8 @@ function SavePatient() {
     var cardfee = $('#txtCardFee').val();
     var Monitoring = $('#chkMonitoring').is(':checked');
     var AntiForgeryToken = $('#ctl00_MainContent_hfAntiForgery').val();
+    var bank_cash = $('#ddlbankcash').val();
+    var bank_account_id = $('#ddlbank').val();
 
     var valid = true;
 
@@ -369,7 +369,7 @@ function SavePatient() {
         $('#firstname-error').show();
         valid = false;
     }
-    if (Mobile == "+92__________") {
+    if (Mobile === "" || Mobile == "+92__________") {
         $('#mobile-error').show();
         valid = false;
     }
@@ -387,7 +387,27 @@ function SavePatient() {
         $('#address-error').show();
         valid = false;
     }
+    if (Gender === "" || Gender === "0") {
+        valid = false;
+    }
+    if (martail_status === "" || martail_status === "0") {
+        valid = false;
+    }
+    if (cardfee === "" || isNaN(cardfee) || parseFloat(cardfee) < 0) {
+        valid = false;
+    }
 
+    if (bank_cash === "02" && (!bank_account_id || bank_account_id === "")) {
+        Swal.fire({
+            icon: 'warning',
+            title: 'Bank Account Required!',
+            text: 'Please select a bank account for Bank payment.',
+            confirmButtonText: 'OK',
+            confirmButtonColor: '#3085d6'
+        });
+        $('#SavePatient_Data').attr('disabled', false);
+        return;
+    }
 
     var isCNICRequired = isCNICValidationRequired();
     if (isCNICRequired) {
@@ -437,6 +457,13 @@ function SavePatient() {
     }
 
     if (!valid) {
+        Swal.fire({
+            icon: 'error',
+            title: 'Validation Error',
+            text: 'Please fill all required fields.',
+            confirmButtonText: 'OK',
+            confirmButtonColor: '#3085d6'
+        });
         $('#SavePatient_Data').attr('disabled', false);
         return;
     }
@@ -464,6 +491,8 @@ function SavePatient() {
         "OtherCnic": OtherCnic,
         "Monitoring": Monitoring,
         "AntiForgeryToken": AntiForgeryToken,
+        "bank_cash": bank_cash,
+        "bank_account_id": bank_account_id,
     });
 
     console.log(data);
@@ -488,101 +517,60 @@ function SavePatient() {
                 return;
             }
 
-            // Check for other errors
             if (response.d.startsWith("ERROR:")) {
-                toasterMessage(true, "Validation Failed", response.d.replace("ERROR: ", ""));
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Save Failed',
+                    text: response.d.replace("ERROR: ", ""),
+                    confirmButtonColor: '#d33'
+                });
                 $('#SavePatient_Data').attr('disabled', false);
                 return;
             }
 
-            debugger;
             var ini_patientID = response.d;
-            toasterMessage(false, "Success", "Data Saved Successfully");
             Approve(ini_patientID);
-            var reportPath;
-            var url;
+
             var locationInfo = window.location;
-
-            //if (company_name == 'As-Siraat Serving Humanity') {
-            //    reportPath = '../../ReportViewer.aspx';
-            //} else {
-            //    reportPath = 'ReportViewer.aspx';
-            //}
-
-            var reportParams = '?ReportName=Reg_Patient_Print&Title=Register Patient Print &Patient_ID=' + ini_patientID;
-
+            var reportParams = '?ReportName=Reg_Patient_Print&Title=Register Patient Print&Patient_ID=' + ini_patientID;
+            var url;
             if (locationInfo.hostname === "localhost") {
-                // Local development — use relative path
-                url = '../../' + reportPath + reportParams;
+                url = '../../ReportViewer.aspx' + reportParams;
             } else {
-                // Live server — dynamically pick up IP and folder
                 var urlParts = window.location.href.split('/');
-                var protocol = urlParts[0];             // "http:"
-                var ip = urlParts[2];                   // "173.234.137.51"
-                var foldername = urlParts[3];           // "Assiraat_Standard"
-
-                url = protocol + '//' + ip + '/' + foldername + '/' + reportPath + reportParams;
+                var protocol = urlParts[0];
+                var ip = urlParts[2];
+                var foldername = urlParts[3];
+                url = protocol + '//' + ip + '/' + foldername + '/ReportViewer.aspx' + reportParams;
             }
             window.open(url, '_blank');
-            console.log("Opening URL:", url);
-            window.location.reload();
-            //var url = "../../ReportViewer.aspx?ReportName=Reg_Patient_Print&Title=Register Patient Print &Patient_ID=" + ini_patientID;
-            //window.open(url, '_blank');
         },
         error: function (xhr, status, error) {
-            toasterMessage(true, "Request Failed", "An unexpected error occurred.");
+            Swal.fire({
+                icon: 'error',
+                title: 'Request Failed',
+                text: 'An unexpected error occurred while saving.',
+                confirmButtonColor: '#d33'
+            });
             $('#SavePatient_Data').attr('disabled', false);
         }
     });
 }
 function Approve(pat_id) {
     PageMethods.approvepatient(pat_id, function (Tests) {
-        debugger
         var message = JSON.parse(Tests);
         if (message[0].Message != null || message[0].Message != "") {
             Swal.fire({
                 icon: 'success',
                 title: 'Success!',
                 text: message[0].Message,
-                showConfirmButton: false,
-                timer: 2000,
-                customClass: {
-                    popup: 'swal-big-popup',
-                    title: 'swal-big-title',
-                    htmlContainer: 'swal-big-text'
-                }
+                confirmButtonColor: '#3085d6'
+            }).then(function () {
+                window.location.href = 'RegList.aspx';
             });
-            location.reload();
         }
     });
 }
-function toasterMessage(isError = false, title, message) {
-    
-    toastr.options = {
-        "closeButton": true,
-        "debug": false,
-        "preventDuplicates": false,
-        "positionClass": "toast-center-screen", 
-        "onclick": null,
-        "showDuration": "551500",
-        "hideDuration": "2000",
-        "timeOut": "4000",
-        "extendedTimeOut": "1000",
-        "showEasing": "swing",
-        "hideEasing": "linear",
-        "showMethod": "fadeIn",
-        "hideMethod": "fadeOut",
-        onclick: function () {
-            $('#right-sidebar').toggleClass('sidebar-open');
-        }
-    };
-
-    if (isError)
-        toastr.error(message, title);
-    else
-        toastr.success(message, title);
-}
-
 function Get_Pat_Info(reg_id) {
     $.ajax({
         type: "POST",
@@ -605,6 +593,37 @@ function Get_Pat_Info(reg_id) {
             $('#txt_OtherCnic').val(data.other_cnic);
             $('#txtAge_yearss').val(data.DOB);
             $('#txtCardFee').val(data.Card_fee);
+            var bankCash = data.bank_cash || "01";
+            $('#ddlbankcash').val(bankCash).trigger('change.select2');
+            if (bankCash === "02") {
+                $.ajax({
+                    type: "POST",
+                    url: "RegisterPatient.aspx/GetBankAccounts",
+                    contentType: "application/json; charset=utf-8",
+                    dataType: "json",
+                    success: function (resp) {
+                        var accts = JSON.parse(resp.d);
+                        var $bank = $('#ddlbank');
+                        $bank.select2('destroy');
+                        $bank.empty().append('<option value="">Select Account</option>');
+                        if (accts && accts.length) {
+                            $.each(accts, function (i, a) {
+                                $bank.append('<option value="' + a.id + '">' + a.name + '</option>');
+                            });
+                        }
+                        $bank.prop('disabled', false);
+                        $bank.select2();
+                        if (data.bank_account_id) {
+                            $bank.val(data.bank_account_id).trigger('change');
+                        }
+                    }
+                });
+            } else {
+                var $bank = $('#ddlbank');
+                $bank.select2('destroy');
+                $bank.empty().append('<option value="">Select Account</option>').prop('disabled', true);
+                $bank.select2();
+            }
             
             if (data.Monitoring === true) {
                 $('#chkMonitoring').prop('checked', true).trigger('change');
@@ -612,19 +631,19 @@ function Get_Pat_Info(reg_id) {
                 $('#chkMonitoring').prop('checked', false).trigger('change');
             }
             if (data.MaritalStatus_text)
-                $('#ddl_status').html($('<option>', { value: '', text: data.MaritalStatus_text }).prop('selected', true));
+                $('#ddl_status').html($('<option>', { value: data.Martial_Status, text: data.MaritalStatus_text }).prop('selected', true));
             if (data.Country_text)
-                $('#ddlCountry').html($('<option>', { value: '', text: data.Country_text }).prop('selected', true));
+                $('#ddlCountry').html($('<option>', { value: data.Country, text: data.Country_text }).prop('selected', true));
             if (data.BloodGroup_text)
-                $('#ddl_bloodGroup').html($('<option>', { value: '', text: data.BloodGroup_text }).prop('selected', true));
+                $('#ddl_bloodGroup').html($('<option>', { value: data.Blood_Group, text: data.BloodGroup_text }).prop('selected', true));
             if (data.Area_text)
-                $('#txtarea').html($('<option>', { value: '', text: data.Area_text }).prop('selected', true));
+                $('#txtarea').html($('<option>', { value: data.val_area, text: data.Area_text }).prop('selected', true));
             if (data.Gender_text)
-                $('#ddl_Gender').html($('<option>', { value: '', text: data.Gender_text }).prop('selected', true));
+                $('#ddl_Gender').html($('<option>', { value: data.Gender, text: data.Gender_text }).prop('selected', true));
             if (data.State_text)
-                $('#ddlstate').html($('<option>', { value: '', text: data.State_text }).prop('selected', true));
+                $('#ddlstate').html($('<option>', { value: data.State, text: data.State_text }).prop('selected', true));
             if (data.City_text)
-                $('#txtcity').html($('<option>', { value: '', text: data.City_text }).prop('selected', true));
+                $('#txtcity').html($('<option>', { value: data.val_city, text: data.City_text }).prop('selected', true));
 
             $('#SavePatient_Data').val('Update');
             $('#btnPrint').show();

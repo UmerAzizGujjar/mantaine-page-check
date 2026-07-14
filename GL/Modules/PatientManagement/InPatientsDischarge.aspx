@@ -2817,6 +2817,7 @@
         }
 
         function SaveInPatientAllRecord() {
+            $('#btnSave').attr('disabled', true);
             debugger;
             var dischargechk = document.getElementById("ctl00_MainContent_cbDicharg_Slip").checked;
             var ddlDischargeBy = $('#ctl00_MainContent_ddlDischarge_By').val();
@@ -2837,6 +2838,7 @@
                         $('#loadingimage').show();
                         LoadPatientDetails();
                     } else {
+                        $('#btnSave').attr('disabled', false);
                         $('#loadingimage').hide();
                         $('#ctl00_MainContent_cbDicharg_Slip').prop('checked', false);
                         $('#btnDischargePrint').attr('disabled', true);
@@ -2849,6 +2851,7 @@
                     icon: 'warning',
                     confirmButtonText: 'OK'
                 });
+                $('#btnSave').attr('disabled', false);
                 return false;
             }
         }
@@ -4995,7 +4998,7 @@
                                 </div>
                                 <div class="col-lg-2 col-md-4 col-m-6">
                                     <asp:Label ID="lblDischarge_On" runat="server" Text="Discharged Date "></asp:Label>
-                                    <asp:TextBox ID="txtDischarge_On" runat="server" Enabled="true"></asp:TextBox>
+                                    <asp:TextBox ID="txtDischarge_On"  runat="server" Enabled="false"></asp:TextBox>
                                 </div>                              
                                 <div class="col-lg-2 col-md-4 col-sm-6">
                                     <asp:Label ID="lblNext_Visit" runat="server" Text="Follow Up"></asp:Label>

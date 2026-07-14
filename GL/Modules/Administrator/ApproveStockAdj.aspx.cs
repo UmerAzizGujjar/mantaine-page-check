@@ -44,7 +44,7 @@ namespace PMS
                 var user_id = AppConfig.UserID;
                 
                 var Adj_id = id;
-                var form_id = 7;
+                var form_id = 3;
                 INV_Stock_Adjustment adj = (from tbl in db.INV_Stock_Adjustments
                                             where tbl.Adjustment_ID == Convert.ToInt32(Adj_id)
                                             select tbl).SingleOrDefault();
@@ -215,10 +215,14 @@ namespace PMS
                     
                     var Total_Data = db.INV_Stock_Adjustments.Count();
                     var formattedQuery = from a in db.INV_Stock_Adjustments
-                              where a.Status == "Created" || a.Status == "Pending" && a.IsDeleted == false
-                              && (a.Adjustment_No.ToString().Contains(searchValue) ||
-                              a.Status.ToString().Contains(searchValue))
-                             orderby a.Adjustment_ID ascending
+                    where (a.Status == "Created" || a.Status == "Pending")
+                    && (a.IsDeleted == false || a.IsDeleted == null)
+               && (
+                   string.IsNullOrEmpty(searchValue)
+                   || a.Adjustment_No.ToString().Contains(searchValue)
+                   || a.Status.Contains(searchValue)
+               )
+                                         orderby a.Adjustment_ID ascending
                               select new
                               {
                                   ADJID = a.Adjustment_ID,

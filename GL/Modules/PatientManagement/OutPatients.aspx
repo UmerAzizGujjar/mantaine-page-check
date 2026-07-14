@@ -587,6 +587,18 @@
                 backdrop: 'static'
             });
         }
+        function ShowPhysioModel() {
+            var outPatId = $('#ctl00_MainContent_txtOut_Patient_ID').val();
+            if (outPatId === '(New)' || outPatId === '') {
+                Swal.fire({
+                    icon: 'warning',
+                    title: 'Save Required',
+                    text: 'Please save the patient form first before opening Physiotherapy Assessment.'
+                });
+            } else {
+                window.open('Physiotherapy_Assessment.aspx?ID=' + outPatId, '_blank');
+            }
+        }
 
         function ShowPeadsModel() {
             $('#ModelPeads').modal({
@@ -2622,14 +2634,14 @@
                     var DoctorName = value.DoctorName ?? '';
                     var rowColorStyle = '';
 
-                    if (value.BP == null || value.BP == '') {
+                    if (value.BP == null || value.BP == undefined || value.BP === '' || String(value.BP).trim() === '') {
                         status = 'Un Checked';
                     } else {
                         status = 'Checked';
-                        rowColorStyle = 'style="background-color: #aeffae;"';
+                        rowColorStyle = 'style="background-color: #aeffae !important;"';
                     }
 
-                    rows += '<tr ' + rowColorStyle + '> <td>' + value.Patient_No + '</td> <td> ' + value.Token_No + ' </td>' + '<td>' + value.Full_Name + '</td> ' + '</td> ' + '<td>' + value.Age_years + '</td> ' + '<td>' + value.Department + '<td>' + FilterClinic + '</td> ' + '<td>' + DoctorName + '</td> ' + '<td>' + retdate + '</td> ' + '<td>' + value.UserName + '</td> ' + '<td>' + status + '</td>' + ' <td> <a href="javascript:void(0)" onclick=select(' + value.Patient_ID + ')><i class="fa fa-upload" ></i></a> </td> </tr>';
+                    rows += '<tr> <td ' + rowColorStyle + '>' + value.Patient_No + '</td> <td ' + rowColorStyle + '> ' + value.Token_No + ' </td>' + '<td ' + rowColorStyle + '>' + value.Full_Name + '</td> ' + '<td ' + rowColorStyle + '>' + value.Age_years + '</td> ' + '<td ' + rowColorStyle + '>' + value.Department + '</td><td ' + rowColorStyle + '>' + FilterClinic + '</td> ' + '<td ' + rowColorStyle + '>' + DoctorName + '</td> ' + '<td ' + rowColorStyle + '>' + retdate + '</td> ' + '<td ' + rowColorStyle + '>' + value.UserName + '</td> ' + '<td ' + rowColorStyle + '>' + status + '</td>' + ' <td ' + rowColorStyle + '> <a href="javascript:void(0)" onclick=select(' + value.Patient_ID + ')><i class="fa fa-upload" ></i></a> </td> </tr>';
                 });
                 debugger;
                 $('#tblPendingPatients tbody').html(rows);
@@ -4425,7 +4437,7 @@
         }
 
         function SaveMedicinesAndTests() {
-
+            $('#btnSave').attr('disabled', true);
             SaveMedicines();
             localStorage.SelectedTabID = $("#tabs").tabs("option", "active");
         }
@@ -5589,7 +5601,7 @@
                                 </div>
                              </div>
                     <div class="table-container">
-                    <div style="margin-top: -1px; margin-left:68%; height: 500px;">                       
+                    <div style="margin-top: -1px; margin-left:68%; height: 600px;">                       
                         <h3 style="margin-top:3%">Special Examination</h3>
                         <table style="width: 100%;margin-top:2%;height:300px">
                             <hr />
@@ -5621,7 +5633,15 @@
                                     <img src="~../../../../wwwroot/SOURCE_IMAGES/GENERAL_ICONS/ortho.svg" alt="Ortho" style="width: 100px; cursor: pointer" onclick="ShowOrthoModel()" />
                                     <span style="font-weight: bold;">Ortho</span>
                                 </td>
-                            </tr>                          
+                            </tr>
+                            <tr>
+                                <td class="icon-cell">
+                                    <img src="~../../../../wwwroot/SOURCE_IMAGES/GENERAL_ICONS/FrontPatientModel.png" alt="Physio" style="width:100px;cursor:pointer" onclick="ShowPhysioModel()" />
+                                    <span style="font-weight:bold">Physiotherapy</span>
+                                </td>
+                                <td class="icon-cell"></td>
+                                <td class="icon-cell"></td>
+                            </tr>
                         </table>
                              </div>
                         </div>

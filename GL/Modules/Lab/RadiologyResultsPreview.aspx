@@ -278,17 +278,25 @@
             var segmentationUrl = orthancBaseUrl + '/ohif/segmentation?StudyInstanceUIDs=' + encodeURIComponent(studyUid);
             var downloadUrl = orthancBaseUrl + '/studies/' + encodeURIComponent(orthancId) + '/archive';
 
+            var radiantButton = '';
+            if (studyUid) {
+                radiantButton = '<a class="btn btn-primry d-inline-flex align-items-center ms-1" href="LaunchRadiAnt.aspx?uid='
+                    + encodeURIComponent(studyUid) + '" target="_blank" rel="noopener noreferrer" title="Open in RadiAnt">'
+                    + '<i class="fa fa-external-link me-1"></i></a>';
+            }
+
             return `
     <div class="d-flex flex-nowrap">
         <a class="btn btn-primry d-inline-flex align-items-center" href="${viewUrl}" target="_blank" rel="noopener noreferrer">
-            <i class="fa fa-eye me-1"></i> 
+            <i class="fa fa-eye me-1"></i>
         </a>
         <a class="btn btn-primry d-inline-flex align-items-center ms-1" href="${segmentationUrl}" target="_blank" rel="noopener noreferrer">
-            <i class="fa fa-cube me-1"></i> 
+            <i class="fa fa-cube me-1"></i>
         </a>
         <a class="btn btn-primry d-inline-flex align-items-center ms-1" href="${downloadUrl}" target="_blank" rel="noopener noreferrer">
-            <i class="fa fa-download me-1"></i> 
+            <i class="fa fa-download me-1"></i>
         </a>
+        ${radiantButton}
     </div>
 `;
         }

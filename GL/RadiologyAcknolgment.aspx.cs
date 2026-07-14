@@ -99,11 +99,7 @@ namespace PMS
 
                 var queryList = query.ToList();
 
-                //if (!string.IsNullOrEmpty(ddlDoctorFilter) && ddlDoctorFilter != "0")
-                //{
-                //    int doctorId = Convert.ToInt32(ddlDoctorFilter);
-                //    queryList = queryList.Where(x => x.Billing_DoctorID == doctorId || x.LabTest_DoctorID == doctorId).ToList();
-                //}
+                
 
                 if (!string.IsNullOrEmpty(ddlDoctorFilter) && ddlDoctorFilter != "0")
                 {
@@ -220,6 +216,20 @@ namespace PMS
                                   where emp.Resign_Date == null && emp.IsDoctor == true
                                   select new { emp.Emp_ID, emp.Emp_Name }).ToList();
                 return (new JavaScriptSerializer()).Serialize(doctorList);
+            }
+        }
+
+        [WebMethod]
+        public static bool CheckTestAmount(int Bill_ID)
+        {
+            using (DataBaseDataContext db = new DataBaseDataContext())
+            {
+                decimal balance = db.Ar_Billings
+                                    .Where(x => x.Bill_ID == Bill_ID)
+                                    .Select(x => x.Balance_Amount ?? 0)
+                                    .FirstOrDefault();
+
+                return balance <= 0;   // true = allowed, false = balance pending
             }
         }
 

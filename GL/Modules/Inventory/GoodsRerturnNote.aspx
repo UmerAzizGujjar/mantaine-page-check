@@ -347,9 +347,8 @@
             });
         }
         function PrintVoucher() {
-            var id = '<% =Request.QueryString["SI_ID"] %>';
+            var id = '<% =Request.QueryString["SR_ID"] %>';
             var locationInfo = window.location;
-
 
                     var user_name = '<% =AppConfig.Company_Name %>';
                     if (user_name == 'As-Siraat Serving Humanity') {
@@ -358,12 +357,12 @@
                         reportPath = 'ReportViewer.aspx'; // same folder
                     }
 
-                    var url = '/ReportViewer.aspx?ReportName=Voucher&ReportTitle=GRN Voucher&TransID=' + id + '&TransType=GRN';
+                    var url = '/ReportViewer.aspx?ReportName=Voucher&ReportTitle=SRN Voucher&TransID=' + id + '&TransType=SRN';
                     if (!locationInfo.origin.includes('localhost')) {
                         var urlInfo = window.location.href.split('/');
                         var ip = urlInfo[2];
                         var foldername = urlInfo[3];
-                        url = 'http://' + ip + '/' + foldername + '/' + reportPath + '?ReportName=Voucher&ReportTitle=GRN Voucher&TransID=' + id + '&TransType=GRN';
+                        url = 'http://' + ip + '/' + foldername + '/' + reportPath + '?ReportName=Voucher&ReportTitle=SRN Voucher&TransID=' + id + '&TransType=SRN';
                     }
                     window.open(url, '_blank');
                 }

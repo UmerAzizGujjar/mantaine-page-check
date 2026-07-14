@@ -108,6 +108,7 @@ namespace PMS.Modules.Accounts
                                 cashinhand = x.CashInHand.ToString(),
                                 discount = x.Discount.ToString(),
                                 revenue = x.Revenue.ToString(),
+                                expense = x.Expense.ToString(),
                                 financialdepartment = x.Fn_Department
                             }).ToList();
 
@@ -165,6 +166,7 @@ namespace PMS.Modules.Accounts
                                 cashinhand = x.CashInHand.ToString(),
                                 discount = x.Discount.ToString(),
                                 revenue = x.Revenue.ToString(),
+                                expense = x.Expense.ToString(),
                                 financialdepartment = x.Fn_Department
                             }).ToList();
 
@@ -344,12 +346,13 @@ namespace PMS.Modules.Accounts
                                              where ds.ValueSet_Name == "Clinical Financial Department" && dv.DataValue_Name == financialDept
                                              select dv.DataValue_Description).FirstOrDefault();
 
-                int cash = 0, discount = 0, revenue = 0;
+                int cash = 0, discount = 0, revenue = 0, expense = 0;
 
                 // Parse values
                 int.TryParse(row.cashinhand, out cash);
                 int.TryParse(row.discount, out discount);
                 int.TryParse(row.revenue, out revenue);
+                int.TryParse(row.expense, out expense);
 
                 ClinicalAccountCategory table = new ClinicalAccountCategory
                 {
@@ -359,6 +362,7 @@ namespace PMS.Modules.Accounts
                     CashInHand = cash,
                     Discount = discount,
                     Revenue = revenue,
+                    Expense = expense,
                     CreatedBy = AppConfig.UserID,
                     CreatedDate = DateTime.Now,
                     IsCancel = false
@@ -409,6 +413,24 @@ namespace PMS.Modules.Accounts
             return data;
         }
 
+        [WebMethod]
+        public static List<RowData> loadSavedRowsRefund()
+        {
+            using (var db = new DataBaseDataContext())
+            {
+                var data = (from x in db.ClinicalAccountCategories
+                            where x.IsCancel == false && x.Fn_Department == "014"
+                            select new RowData
+                            {
+                                categoryname = x.CategoryName,
+                                dr = x.CashInHand.HasValue ? x.CashInHand.Value.ToString() : "0",  
+                                cr = x.Revenue.HasValue ? x.Revenue.Value.ToString() : "0",     
+                                financialdepartment = x.Fn_Department
+                            }).ToList();
+
+                return data;
+            }
+        }
         // Create a class to receive row data
 
         public class RowData
@@ -419,6 +441,7 @@ namespace PMS.Modules.Accounts
             public string cashinhand { get; set; }
             public string discount { get; set; }
             public string revenue { get; set; }
+            public string expense { get; set; }
             public string dr { get; set; }  // Add this line
             public string cr { get; set; }  // Add this line
         }

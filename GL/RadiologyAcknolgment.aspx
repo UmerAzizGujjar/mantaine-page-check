@@ -35,17 +35,46 @@
             loadDoctorsforFilter();
             FillMainTestDepartment();
             
-            // Initialize date pickers first
             initializeDatePickers();
             
-            // Then load the table after dates are set
             loadRadiologyAcknowledgment();
 
-            // Apply filter on any filter change
             $('.filter-control').on('change', function () {
                 var table = $('#tblradilogy').DataTable();
                 if (table) {
                     table.ajax.reload();
+                }
+            });
+
+
+            $('#selectAllHeader').on('click', function () {
+                var isChecked = $(this).prop('checked');
+                $('#tblradilogy tbody .rowSelect').prop('checked', isChecked);
+            });
+
+            $('#tblradilogy').on('change', '.rowSelect', function () {
+                var totalRows = $('#tblradilogy tbody .rowSelect').length;
+                var checkedRows = $('#tblradilogy tbody .rowSelect:checked').length;
+
+                if (checkedRows === totalRows && totalRows > 0) {
+                    $('#selectAllHeader').prop('checked', true);
+                } else {
+                    $('#selectAllHeader').prop('checked', false);
+                }
+            });
+
+            $('#tblradilogy').on('draw.dt', function () {
+                var totalRows = $('#tblradilogy tbody .rowSelect').length;
+                var checkedRows = $('#tblradilogy tbody .rowSelect:checked').length;
+
+                if (totalRows === 0) {
+                    $('#selectAllHeader').prop('checked', false).prop('indeterminate', false);
+                } else if (checkedRows === totalRows) {
+                    $('#selectAllHeader').prop('checked', true).prop('indeterminate', false);
+                } else if (checkedRows > 0) {
+                    $('#selectAllHeader').prop('checked', false).prop('indeterminate', true);
+                } else {
+                    $('#selectAllHeader').prop('checked', false).prop('indeterminate', false);
                 }
             });
         });
@@ -436,22 +465,57 @@
             var isChkZero = true;
 
             $('#tblradilogy tbody input.rowSelect:checked').each(function () {
+
                 isChkZero = false;
+
                 var row = $(this).closest('tr');
                 var rowData = tableDT.row(row).data();
+
                 var status = row.find('.priority-select').val();
                 var Lab_Test_Detail_ID = rowData.Lab_Test_Detail_ID;
+                var Bill_ID = rowData.Bill_ID;
+                var Bill_No = rowData.Bill_No;
+                var Panel = rowData.Panel;
+                var Department = rowData.ParentTrans_Name;
                 var Doctor_ID = row.find('.doctor-select').val() || 0;
                 var History = row.find('.history-value').val() || '';
 
-                Testlist.push({
-                    'status': status,
-                    'Lab_Test_Detail_ID': Lab_Test_Detail_ID,
-                    'Doctor_ID': parseInt(Doctor_ID),
-                    'History': History
-                });
-            });
+                var allowSave = true;
 
+                if ((Department == "OutPatient" || Department == "") && Panel == 0) {
+
+                    $.ajax({
+                        type: "POST",
+                        url: "RadiologyAcknolgment.aspx/CheckTestAmount",
+                        data: JSON.stringify({ Bill_ID: Bill_ID }),
+                        contentType: "application/json; charset=utf-8",
+                        dataType: "json",
+                        async: false, // wait for response
+                        success: function (response) {
+
+                            if (!response.d) {
+                                alert("Bill No " + Bill_No + " has a pending balance. This test cannot be acknowledged.");
+                                allowSave = false;
+                            }
+
+                        },
+                        error: function () {
+                            allowSave = false;
+                        }
+                    });
+                }
+
+                if (!allowSave)
+                    return true;   // Skip this row and continue with next checked row
+
+                Testlist.push({
+                    status: status,
+                    Lab_Test_Detail_ID: Lab_Test_Detail_ID,
+                    Doctor_ID: parseInt(Doctor_ID),
+                    History: History
+                });
+
+            });
             if (isChkZero) {
                 alert("Select Checkbox Which Test Do You Want To Acknowledge");
                 return;
@@ -575,7 +639,7 @@
                         <table class="table table-hover table-striped table-bordered" id="tblradilogy" style="width: 100%;">
                             <thead>
                                 <tr>
-                                    <th>Check</th>
+                                    <th><input type="checkbox" id="selectAllHeader" class="header-checkbox" /></th>
                                     <th>Bill Date</th>
                                     <th>Bill No</th>
                                     <th>MR No</th>

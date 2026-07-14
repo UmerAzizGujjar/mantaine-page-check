@@ -569,12 +569,13 @@
         function AddSaleReturnInvoiceDetails(invNo) {
             debugger
             var BillId = invNo;
+            var wareHouse = $("#ddl_Warehouse").val();
             if (BillId) {
                 $('#saleReturnTableBody').empty();
                 $.ajax({
                     type: "post",
                     url: "IssueCathLabItems.aspx/SaleReturnInvoiceDetail",
-                    data: JSON.stringify({ "BillId": BillId }),
+                    data: JSON.stringify({ "BillId": BillId, "wareHouse": wareHouse }),
                     dataType: 'JSON',
                     contentType: "application/json; charset=utf-8",
                     async: false,
@@ -1105,7 +1106,7 @@
                             htmlContainer: 'swal-big-text'
                         }
                     });
-
+                    $('#btnSaveSaleReturn').attr('disabled', false);
                     return;
                 }
                 if (userC == userCode && userP == UserPass) {
@@ -2514,6 +2515,7 @@
             });
             debugger;
             if (hasInvalidStock) {
+                $('#SaveVal').attr('disabled', false);
                 return;
             }
             debugger;
@@ -2595,7 +2597,7 @@
                             htmlContainer: 'swal-big-text'
                         }
                     });
-
+                    $('#SaveVal').attr('disabled', false);
                     return;
                 }
                 if (userC == userCode && userP == UserPass) {
@@ -2695,6 +2697,7 @@
                     });
                     debugger;
                     if (hasInvalidStock) {
+                        $('#SaveVal').attr('disabled', false);
                         return;
                     }
                     debugger;
@@ -2757,7 +2760,7 @@
                             htmlContainer: 'swal-big-text'
                         }
                     });
-
+                    $('#SaveVal').attr('disabled', false);
                     return;
                 }
             });

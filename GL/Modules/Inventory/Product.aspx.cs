@@ -356,7 +356,7 @@ string ATC, string GenericName, string ControllerDrug, string Narcotics, string 
 string Notes, string RadioCharges, string DentalItem, string Procedure, string LensRequired, string BedServices, string LabRequired,
 string PattHistoryRequired, string FitnessCertificate, string OtherServices, string Billing, string OTProcedure,string ShortItem,string CathLabItems,string HighRisk, string btnValue,
 string ItemId, string DepartmentId, string IsHospital, string IsService, string SehatSahulat, string SehatCardRate, string Discount_Block,string InfusionFluid,
-List<BatchNum> batchList, List<PatientTypeList> PatientTypeList)
+List<BatchNum> batchList, List<PatientTypeList> PatientTypeList, List<WarehouseMapping> WarehouseList)
         {
             string Id = "";
             DataBaseDataContext db = new DataBaseDataContext();
@@ -484,6 +484,24 @@ List<BatchNum> batchList, List<PatientTypeList> PatientTypeList)
                             db.INV_Item_PatientWises.InsertOnSubmit(ratewise);
                         }
                     }
+
+
+                    if(WarehouseList != null && WarehouseList.Count > 0)
+                    {
+                        foreach (var wh in WarehouseList)
+                        {
+                            if (string.IsNullOrEmpty(wh.WarehouseId)) continue;
+
+                            var mapping = new Item_Warehouse_Mapping
+                            {
+                                Item_ID = obj.Item_ID,
+                                Warehouse_Id = wh.WarehouseId,
+                                Created_Date = DateTime.Now
+                            };
+                            db.Item_Warehouse_Mappings.InsertOnSubmit(mapping); 
+                        }
+                    }
+
 
                     db.SubmitChanges();
                 }
@@ -666,6 +684,43 @@ List<BatchNum> batchList, List<PatientTypeList> PatientTypeList)
                         }
                     }
 
+                    if (WarehouseList != null)
+                    {
+                        // Use the int variable 'itemId' directly
+                        var existingWarehouses = db.Item_Warehouse_Mappings
+                            .Where(x => x.Item_ID == itemId)
+                            .Select(x => x.Warehouse_Id)
+                            .ToList();
+
+                        var submittedWarehouses = WarehouseList
+                            .Where(w => !string.IsNullOrEmpty(w.WarehouseId))
+                            .Select(w => w.WarehouseId)
+                            .ToList();
+
+                        var toDelete = existingWarehouses.Except(submittedWarehouses).ToList();
+                        foreach (var whId in toDelete)
+                        {
+                            var mapping = db.Item_Warehouse_Mappings
+                                .FirstOrDefault(x => x.Item_ID == itemId && x.Warehouse_Id == whId);
+                            if (mapping != null)
+                            {
+                                db.Item_Warehouse_Mappings.DeleteOnSubmit(mapping);
+                            }
+                        }
+
+                        var toInsert = submittedWarehouses.Except(existingWarehouses).ToList();
+                        foreach (var whId in toInsert)
+                        {
+                            var mapping = new Item_Warehouse_Mapping
+                            {
+                                Item_ID = itemId,
+                                Warehouse_Id = whId,
+                                Created_Date = DateTime.Now
+                            };
+                            db.Item_Warehouse_Mappings.InsertOnSubmit(mapping);
+                        }
+                    }
+
                     db.SubmitChanges();
                     Id = itemId.ToString();
                     return "Update-" + Id;
@@ -676,6 +731,25 @@ List<BatchNum> batchList, List<PatientTypeList> PatientTypeList)
             catch (Exception ex)
             {
                 return "Error";
+            }
+        }
+
+        [WebMethod]
+        public static string GetItemWarehouses(int ItemId)
+        {
+            using (DataBaseDataContext db = new DataBaseDataContext())
+            {
+                
+
+                var result = (from m in db.Item_Warehouse_Mappings
+                              where m.Item_ID == ItemId
+                              select new
+                              {
+                                  WarehouseId = m.Warehouse_Id,
+                                  WarehouseName = db.GetDataValueName("Ware House", m.Warehouse_Id)
+                              }).ToList();
+
+                return new JavaScriptSerializer().Serialize(result);
             }
         }
 
@@ -841,6 +915,26 @@ List<BatchNum> batchList, List<PatientTypeList> PatientTypeList)
                          }).ToList();
             return (new JavaScriptSerializer()).Serialize(listItems);
         }
+        [WebMethod]
+        public static string MultipleWareHouse()
+        {
+            try
+            {
+                using (var db = new DataBaseDataContext(DBClass.ConnectionString()))
+                {
+                    var WareHouseWorking = (from tbl in db.sys_Parms
+                                    where tbl.Name == "Multiple WareHouse Working"
+                                    select tbl.Code)
+                              .FirstOrDefault();
+
+                    return WareHouseWorking ?? "01";
+                }
+            }
+            catch (Exception ex)
+            {
+                return "0";
+            }
+        }
         public class BatchNum
         {
             public string Item_Id { get; set; }
@@ -858,5 +952,10 @@ List<BatchNum> batchList, List<PatientTypeList> PatientTypeList)
             public int? Item_Rate_Id { get; set; }
 
         }
+        public class WarehouseMapping
+        {
+            public string WarehouseId { get; set; }
+        }
+        
     }
 }

@@ -41,9 +41,10 @@
                     $('#symptoms').html(options);
 
                 },
-                error: function (xhr, status, error) {
-                    console.error("Error searching symptoms:", error);
-                }
+                    error: function (xhr, status, error) {
+                        $('#btnSaveNewComplaint').attr('disabled', false);
+                        console.error("Error searching symptoms:", error);
+                    }
             });
         }
         function RemoveSymtomRowInModal(id) {
@@ -166,7 +167,7 @@
             });
         }
         function saveSymptomsToDatabase() {
-            // Array to store all symptom data
+            $('#btnSaveSymptoms').attr('disabled', true);
             var symptomsData = [];
 
             // Loop through each row in the table
@@ -186,11 +187,12 @@
             if (symptomsData.length > 0) {
                 $.ajax({
                     type: "POST",
-                    url: "NewOutPatient.aspx/SaveSymptoms", // Update with your actual endpoint
+                    url: "NewOutPatient.aspx/SaveSymptoms",
                     data: JSON.stringify({ symptoms: symptomsData }),
                     contentType: "application/json; charset=utf-8",
                     dataType: "json",
                     success: function (response) {
+                        $('#btnSaveSymptoms').attr('disabled', false);
                         if (response.d) {
                             // Success handling
                             Swal.fire({
@@ -206,7 +208,7 @@
                         $('#manageSymptomsModal').modal('hide')
                     },
                     error: function (xhr, status, error) {
-                        // Error handling
+                        $('#btnSaveSymptoms').attr('disabled', false);
                         Swal.fire({
                             icon: 'error',
                             title: 'Error!',
@@ -217,6 +219,7 @@
                     }
                 });
             } else {
+                $('#btnSaveSymptoms').attr('disabled', false);
                 Swal.fire({
                     icon: 'warning',
                     title: 'No Data',
@@ -234,7 +237,44 @@
             loaddoctor_byDep();
             LoadSharingPolicy();
             var id = '<%=Request.QueryString["ID"]%>';
-            if (id != "") {
+            var formType = '<%=Request.QueryString["Type"]%>';
+            var inPatientID = '<%=Request.QueryString["InPatientID"]%>';
+            globalFormType = formType;
+
+            if (formType == "InPatientDischarge" && id != "") {
+                $('#<%= hdfPatient_ID.ClientID %>').val(inPatientID);
+                $('#<%= hdfInPatientID.ClientID %>').val(inPatientID);
+                $('#<%= hdfFormType.ClientID %>').val('InPatientDischarge');
+                $('#<%= hdfOutPatientID.ClientID %>').val(id);
+                $('#<%= txtOut_Patient_ID.ClientID%>').val(inPatientID);
+                loadPatientFormData(id);
+                loaddoctor(id);
+                $('#btnSave').val("Update");
+                AppendSymtompsHistory();
+                LoadMedicines();
+                AppendPrimaryDiagnosisHistory();
+                AppendFinalDiagnosisHistory();
+                AppendComplaintsHistory();
+                updateHistoryTable();
+                LoadLabResultrpt();
+                LoadServices();
+
+                $('.exam-row input[type="checkbox"]').each(function () {
+                    var param = this.id.split('_chk').pop();
+                    if (this.checked) {
+                        Add_GeneralExamRow(param);
+                    }
+                });
+            }
+            else if (formType == "InPatientDischarge" && inPatientID != "") {
+                $('#<%= hdfPatient_ID.ClientID %>').val(inPatientID);
+                $('#<%= hdfInPatientID.ClientID %>').val(inPatientID);
+                $('#<%= hdfFormType.ClientID %>').val('InPatientDischarge');
+                $('#ctl00_MainContent_txtOut_Patient_ID').val(inPatientID);
+                $('#<%= txtOut_Patient_ID.ClientID%>').val(inPatientID);
+                loadInPatientFormData(inPatientID);
+            }
+            else if (id != "") {
                 $('#<%= txtOut_Patient_ID.ClientID%>').val(id);
                 loadPatientFormData(id);
                 loaddoctor(id);
@@ -551,9 +591,14 @@
                     subtree: true
                 });
             });
+            if (formType == "InPatientDischarge") {
+                hideInPatientDischargeElements();
+                setTimeout(hideInPatientDischargeElements, 500);
+            }
         });
     </script>
     <script id="functions" type="text/javascript">
+        var globalFormType = '';
         function loadPolicyVisibility() {
             $.ajax({
                 type: "POST",
@@ -601,6 +646,18 @@
 
                             $('#btnSave').hide();
                             $('.mybutton2-wrapper').hide();
+                        }
+                        if (globalFormType === 'InPatientDischarge') {
+                            $('#btnSave').show();
+                            $('#btnSave').val("Update");
+                            $('.mybutton2-wrapper').show();
+                            var inPatID = $('#<%= hdfInPatientID.ClientID %>').val();
+                            if (inPatID) {
+                                // Restore txtOut_Patient_ID to InPatientID (populatePatientForm overwrites it with OutPatientID)
+                                $('#ctl00_MainContent_txtOut_Patient_ID').val(inPatID);
+                                $('#<%= txtOut_Patient_ID.ClientID %>').val(inPatID);
+                                loadInPatientFormData(inPatID);
+                            }
                         }
                     } else {
                         alert("Error: " + result.message);
@@ -768,11 +825,17 @@
                 // Show success message
                 AddVitals();
                 setDropdownValue('ctl00_MainContent_ddldoctors', data.referDoc);
-
+                setValue('ctl00_MainContent_chkHypertensive', data.Hypertensive);
                 setValue('ctl00_MainContent_chkSmokers', data.Smokers);
                 setValue('ctl00_MainContent_chkNon_Smokers', data.Non_Smokers);
                 setValue('ctl00_MainContent_chkDiabetics', data.Diabetics);
-                setValue('ctl00_MainContent_chkHypertensive', data.Hypertensive);
+                setValue('ctl00_MainContent_chkAlcoholConsumption', data.Alcohol_Consumption);
+                setValue('ctl00_MainContent_chkSmokeless', data.Smokeless);
+                setValue('ctl00_MainContent_chkDM', data.DM);
+                setValue('ctl00_MainContent_chkHTN', data.HTN);
+                setValue('ctl00_MainContent_chkTB', data.TB);
+                setValue('ctl00_MainContent_chkIHD', data.IHD);
+                setValue('ctl00_MainContent_chkAsthma', data.Asthma);
 
             } catch (error) {
                 console.error("Error populating form: ", error);
@@ -806,37 +869,47 @@
             }
         }
 
-        function SaveLabResult() {
-            var table = $('#tblResultrpt');
-            var tblResultrpt = [];
+        function SaveLabResult(callback) {
+            console.log('SaveLabResult called');
+            try {
+                var table = $('#tblResultrpt');
+                var tblResultrpt = [];
 
-            table.find('tbody tr').each(function (key, value) {
-                var resultDate = $(value).find('td input[name=txtResulDate]').val();
-                var resultObj = {
-                    'Result_ID': $(value).find('td input[name=txtLabResultrpt]').val(),
-                    'Result_Name': $(value).find('td input[name=txtResultName]').val()
-                };
+                table.find('tbody tr').each(function (key, value) {
+                    var resultDate = $(value).find('td input[name=txtResulDate]').val();
+                    var resultObj = {
+                        'Result_ID': $(value).find('td input[name=txtLabResultrpt]').val(),
+                        'Result_Name': $(value).find('td input[name=txtResultName]').val()
+                    };
 
-                if (resultDate !== "") {
-                    resultObj.Result_Date = resultDate;
-                }
+                    if (resultDate !== "") {
+                        resultObj.Result_Date = resultDate;
+                    }
 
-                tblResultrpt.push(resultObj);
-            });
+                    tblResultrpt.push(resultObj);
+                });
 
-            var btnsave = $('#btnSave').val();
-            var PatID = $('#<%= hdfPatient_ID.ClientID%>').val();
-    var OutPatID = $('#<%= txtOut_Patient_ID.ClientID%>').val();
-    if (OutPatID == '(New)' || OutPatID == '')
-        OutPatID = 0;
+                var btnsave = $('#btnSave').val();
+                var PatID = $('#<%= hdfPatient_ID.ClientID%>').val();
+                var OutPatID = $('#<%= txtOut_Patient_ID.ClientID%>').val();
+                if (OutPatID == '(New)' || OutPatID == '')
+                    OutPatID = 0;
 
-    var ResulttrptDetail = { Pat: PatID, OutPatientID: OutPatID, Resulttrpt: tblResultrpt };
+                var ResulttrptDetail = { Pat: PatID, OutPatientID: OutPatID, Resulttrpt: tblResultrpt };
 
-    PageMethods.SaveLabResultrpt(btnsave, JSON.stringify(ResulttrptDetail), function (response) { });
-}
+                console.log('SaveLabResult saving, OutPatID=', OutPatID);
+                PageMethods.SaveLabResultrpt(btnsave, JSON.stringify(ResulttrptDetail), globalFormType, function (response) {
+                    console.log('SaveLabResult completed');
+                    if (callback) callback();
+                });
+            } catch (e) {
+                console.error('SaveLabResult exception:', e);
+                if (callback) callback();
+            }
+        }
 
 function LoadLabResultrpt() {
-            PageMethods.LoadLabResultrptDetail($('#<%= txtOut_Patient_ID.ClientID%>').val(), function (res) {
+            PageMethods.LoadLabResultrptDetail($('#<%= txtOut_Patient_ID.ClientID%>').val(), globalFormType, function (res) {
                 var Medicines = JSON.parse(res);
                 var rows = '';
 
@@ -966,6 +1039,42 @@ function LoadLabResultrpt() {
         }
         function ResetForm() {
             window.location.href = "NewOutPatient.aspx";
+        }
+        function loadInPatientFormData(inPatientID) {
+            $.ajax({
+                type: "POST",
+                url: "NewOutPatient.aspx/GetInPatientFormData",
+                data: JSON.stringify({ InPatientID: parseInt(inPatientID) }),
+                contentType: "application/json; charset=utf-8",
+                dataType: "json",
+                success: function (response) {
+                    var result = JSON.parse(response.d);
+                    if (result.success) {
+                        var data = result.data;
+                        $('#<%= vlblPatients_Name.ClientID %>').text(data.PatientName);
+                        $('#<%= vLbl_Age.ClientID %>').text(data.Age);
+                        $('#<%= vLbl_Contact.ClientID %>').text(data.Contact);
+                        $('#<%= vLbl_Adress.ClientID %>').text(data.Address);
+                        $('#<%= hdfReg_ID.ClientID %>').val(data.RegId);
+                        $('#<%= Label200.ClientID %>').text(data.MR_No);
+                    }
+                },
+                error: function (xhr, status, error) {
+                    console.error("Error loading InPatient data:", error);
+                }
+            });
+        }
+        function hideInPatientDischargeElements() {
+            $('input[value="Queue"]').hide();
+            $('input[value="Voucher"]').hide();
+            $('input[value="Prescription"]').hide();
+            $('#<%= dlblFollowNo.ClientID %>').closest('.row').hide();
+            $('#<%= lblPatien_ID.ClientID %>').closest('.row').hide();
+            // Hide Medical History section
+            $('#<%= chkSmokers.ClientID %>').closest('.row.mb-3').prev('.row.mb-3').hide();
+            $('#<%= chkSmokers.ClientID %>').closest('.row.mb-3').hide();
+            $('#09, #10, #tab09, #tab10').hide();
+            $('#dvtblResultrpt').hide();
         }
         function ShowHistory() {
             var reg_ID = $("#<%= hdfReg_ID.ClientID %>").val();
@@ -1513,9 +1622,11 @@ function LoadLabResultrpt() {
             $('#manageSymptomsModal').modal('show');
         }
         function saveSymptom() {
+            $('#btnSaveNewSymptom').attr('disabled', true);
             const SymptomText = $('#NewSymptom').val().trim();
 
             if (SymptomText === '') {
+                $('#btnSaveNewSymptom').attr('disabled', false);
                 alert('Please enter a Symptom before saving.');
                 return;
             }
@@ -1527,6 +1638,7 @@ function LoadLabResultrpt() {
                     contentType: "application/json; charset=utf-8",
                     dataType: "json",
                     success: function (response) {
+                        $('#btnSaveNewSymptom').attr('disabled', false);
                         if (response.d) {
                             // Success handling
                             Swal.fire({
@@ -1541,7 +1653,7 @@ function LoadLabResultrpt() {
                         fillSymptoms("000", "");
                     },
                     error: function (xhr, status, error) {
-                        // Error handling
+                        $('#btnSaveNewSymptom').attr('disabled', false);
                         Swal.fire({
                             icon: 'error',
                             title: 'Error!',
@@ -1554,7 +1666,7 @@ function LoadLabResultrpt() {
             }
             // Hide the form with slide up animation after saving
             $('#divAddNewSymptom').slideUp(300, function () {
-                $('#NewSymptom').val(''); // Clear input after hiding
+                $('#NewSymptom').val('');
             });
         }
 
@@ -1710,9 +1822,11 @@ function LoadLabResultrpt() {
             }
         }
         function saveComplaint() {
+            $('#btnSaveNewComplaint').attr('disabled', true);
             const complaintText = $('#NewComplaint').val().trim();
 
             if (complaintText === '') {
+                $('#btnSaveNewComplaint').attr('disabled', false);
                 alert('Please enter a complaint before saving.');
                 return;
             }
@@ -1724,6 +1838,7 @@ function LoadLabResultrpt() {
                     contentType: "application/json; charset=utf-8",
                     dataType: "json",
                     success: function (response) {
+                        $('#btnSaveNewComplaint').attr('disabled', false);
                         if (response.d == "0") {
                             Swal.fire({
                                 icon: 'error',
@@ -1743,6 +1858,7 @@ function LoadLabResultrpt() {
                         }
                     },
                     error: function (xhr, status, error) {
+                        $('#btnSaveNewComplaint').attr('disabled', false);
                         console.error("Error searching symptoms:", error);
                     }
                 });
@@ -1863,9 +1979,11 @@ function LoadLabResultrpt() {
             }
         }
         function savePrimaryDiagnosis() {
+            $('#btnSaveNewPrimaryDiagnosis').attr('disabled', true);
             const Text = $('#NewPrimaryDiagnosis').val().trim();
 
             if (Text === '') {
+                $('#btnSaveNewPrimaryDiagnosis').attr('disabled', false);
                 alert('Please enter a Diagnosis before saving.');
                 return;
             }
@@ -1877,6 +1995,7 @@ function LoadLabResultrpt() {
                     contentType: "application/json; charset=utf-8",
                     dataType: "json",
                     success: function (response) {
+                        $('#btnSaveNewPrimaryDiagnosis').attr('disabled', false);
                         if (response.d == "0") {
                             Swal.fire({
                                 icon: 'error',
@@ -1897,6 +2016,7 @@ function LoadLabResultrpt() {
                         }
                     },
                     error: function (xhr, status, error) {
+                        $('#btnSaveNewPrimaryDiagnosis').attr('disabled', false);
                         console.error("Error searching symptoms:", error);
                     }
                 });
@@ -1997,9 +2117,11 @@ function LoadLabResultrpt() {
         });
 
         function saveFinalDiagnosis() {
+            $('#btnSaveNewFinalDiagnosis').attr('disabled', true);
             const Text = $('#NewFinalDiagnosis').val().trim();
 
             if (Text === '') {
+                $('#btnSaveNewFinalDiagnosis').attr('disabled', false);
                 alert('Please enter a Diagnosis before saving.');
                 return;
             }
@@ -2011,6 +2133,7 @@ function LoadLabResultrpt() {
                     contentType: "application/json; charset=utf-8",
                     dataType: "json",
                     success: function (response) {
+                        $('#btnSaveNewFinalDiagnosis').attr('disabled', false);
                         if (response.d == "0") {
                             Swal.fire({
                                 icon: 'error',
@@ -2031,6 +2154,7 @@ function LoadLabResultrpt() {
                         }
                     },
                     error: function (xhr, status, error) {
+                        $('#btnSaveNewFinalDiagnosis').attr('disabled', false);
                         console.error("Error searching symptoms:", error);
                     }
                 });
@@ -3356,7 +3480,7 @@ function LoadLabResultrpt() {
                 return;
             }
 
-            PageMethods.LoadServicesDetail(OutPatID, function (res) {
+            PageMethods.LoadServicesDetail(OutPatID, globalFormType, function (res) {
                 if (!res) return;
 
                 var Services = JSON.parse(res);
@@ -3711,66 +3835,93 @@ function LoadLabResultrpt() {
 
     </script>
     <script id="saveLogic">
-        function SaveComplaintsTab() {
-
-            var ComplaintsList = [];
-            var OutPatientID = $('#<%= txtOut_Patient_ID.ClientID%>').val();
-            if (OutPatientID == '(New)' || OutPatientID == '' || OutPatientID == "0")
-                OutPatientID = 0;
-            $.each($('#tblComplaints tbody tr'), function (key, value) {
-                ComplaintsList.push({
-                    'OutPatientID': OutPatientID,
-                    'ComplaintID': $(value).find('.complainclass').val(), // Get the value from the hidden input
-                    'ComplaintText': $($(value).find('td')[1]).text().trim(), // Get text from second td
+        function SaveComplaintsTab(callback) {
+            console.log('SaveComplaintsTab called');
+            try {
+                var ComplaintsList = [];
+                var OutPatientID = $('#<%= txtOut_Patient_ID.ClientID%>').val();
+                if (OutPatientID == '(New)' || OutPatientID == '' || OutPatientID == "0")
+                    OutPatientID = 0;
+                $.each($('#tblComplaints tbody tr'), function (key, value) {
+                    ComplaintsList.push({
+                        'OutPatientID': OutPatientID,
+                        'ComplaintID': $(value).find('.complainclass').val(),
+                        'ComplaintText': $($(value).find('td')[1]).text().trim(),
+                    });
                 });
-            });
 
-
-            PageMethods.SaveComplaintsOfPatient(JSON.stringify(ComplaintsList), function (response) {
-            });
-
-        }
-        function SavePrimaryDiagnosisTab() {
-
-            var PrimaryDiagnosisList = [];
-            var OutPatientID = $('#<%= txtOut_Patient_ID.ClientID%>').val();
-            if (OutPatientID == '(New)' || OutPatientID == '' || OutPatientID == "0") {
-                OutPatientID = 0;
+                PageMethods.SaveComplaintsOfPatient(JSON.stringify(ComplaintsList), globalFormType, function (response) {
+                    console.log('SaveComplaintsTab completed');
+                    if (callback) callback();
+                }, function (error) {
+                    console.error('SaveComplaintsTab error:', error ? error.get_message ? error.get_message() : error : 'unknown');
+                    if (callback) callback();
+                });
+            } catch (e) {
+                console.error('SaveComplaintsTab exception:', e);
+                if (callback) callback();
             }
-            $.each($('#tblPrimaryDiagnosis tbody tr'), function (key, value) {
-                PrimaryDiagnosisList.push({
-                    'OutPatientID': OutPatientID,
-                    'DiagnosisID': $($(value).find('td')[0]).text().trim(), // Get the value from the hidden input
-                    'Remarks': $($(value).find('td')[2]).text().trim(), // Get text from second td
-                });
-            });
-
-
-            PageMethods.SavePrimaryDiagnosisOfPatient(JSON.stringify(PrimaryDiagnosisList), function (response) {
-            });
 
         }
-        function SaveFinalDiagnosisTab() {
+        function SavePrimaryDiagnosisTab(callback) {
+            console.log('SavePrimaryDiagnosisTab called');
+            try {
+                var PrimaryDiagnosisList = [];
+                var OutPatientID = $('#<%= txtOut_Patient_ID.ClientID%>').val();
+                if (OutPatientID == '(New)' || OutPatientID == '' || OutPatientID == "0") {
+                    OutPatientID = 0;
+                }
+                $.each($('#tblPrimaryDiagnosis tbody tr'), function (key, value) {
+                    PrimaryDiagnosisList.push({
+                        'OutPatientID': OutPatientID,
+                        'DiagnosisID': $($(value).find('td')[0]).text().trim(),
+                        'Remarks': $($(value).find('td')[2]).text().trim(),
+                    });
+                });
 
-            var FinalDiagnosisList = [];
-            var OutPatientID = $('#<%= txtOut_Patient_ID.ClientID%>').val();
-            if (OutPatientID == '(New)' || OutPatientID == '' || OutPatientID == "0") {
-                OutPatientID = 0;
+                PageMethods.SavePrimaryDiagnosisOfPatient(JSON.stringify(PrimaryDiagnosisList), globalFormType, function (response) {
+                    console.log('SavePrimaryDiagnosisTab completed');
+                    if (callback) callback();
+                }, function (error) {
+                    console.error('SavePrimaryDiagnosisTab error:', error && error.get_message ? error.get_message() : error);
+                    if (callback) callback();
+                });
+            } catch (e) {
+                console.error('SavePrimaryDiagnosisTab exception:', e);
+                if (callback) callback();
             }
-            $.each($('#tblFinalDiagnosis tbody tr'), function (key, value) {
-                FinalDiagnosisList.push({
-                    'OutPatientID': OutPatientID,
-                    'DiagnosisID': $($(value).find('td')[0]).text().trim(), // Get the value from the hidden input
-                    'Remarks': $($(value).find('td')[2]).text().trim(), // Get text from second td
-                });
-            });
-
-
-            PageMethods.SaveFinalDiagnosisOfPatient(JSON.stringify(FinalDiagnosisList), function (response) {
-            });
 
         }
-        function SaveServices() {
+        function SaveFinalDiagnosisTab(callback) {
+            console.log('SaveFinalDiagnosisTab called');
+            try {
+                var FinalDiagnosisList = [];
+                var OutPatientID = $('#<%= txtOut_Patient_ID.ClientID%>').val();
+                if (OutPatientID == '(New)' || OutPatientID == '' || OutPatientID == "0") {
+                    OutPatientID = 0;
+                }
+                $.each($('#tblFinalDiagnosis tbody tr'), function (key, value) {
+                    FinalDiagnosisList.push({
+                        'OutPatientID': OutPatientID,
+                        'DiagnosisID': $($(value).find('td')[0]).text().trim(),
+                        'Remarks': $($(value).find('td')[2]).text().trim(),
+                    });
+                });
+
+                PageMethods.SaveFinalDiagnosisOfPatient(JSON.stringify(FinalDiagnosisList), globalFormType, function (response) {
+                    console.log('SaveFinalDiagnosisTab completed');
+                    if (callback) callback();
+                }, function (error) {
+                    console.error('SaveFinalDiagnosisTab error:', error && error.get_message ? error.get_message() : error);
+                    if (callback) callback();
+                });
+            } catch (e) {
+                console.error('SaveFinalDiagnosisTab exception:', e);
+                if (callback) callback();
+            }
+
+        }
+        function SaveServices(callback) {
             debugger;
             var table = $('#tblServices');
             var ServicesList = [];
@@ -3800,7 +3951,7 @@ function LoadLabResultrpt() {
 
            console.log('Saving services:', ServiceDetails);
 
-           PageMethods.SaveServices(JSON.stringify(ServiceDetails),
+           PageMethods.SaveServices(JSON.stringify(ServiceDetails), globalFormType,
                function (response) {
                    // Parse response if using enhanced DTO
                    try {
@@ -3817,23 +3968,66 @@ function LoadLabResultrpt() {
                            console.error('Save failed:', result.Message);
                            alert('Error saving services: ' + result.Message);
                        }
-                   } catch (e) {
-                       // Simple string response
-                       console.log('Response:', response);
-                       if (response === 'Success') {
-                           alert('Services saved successfully!');
-                       } else {
-                           alert(response);
-                       }
-                   }
-               },
-               function (error) {
-                   console.error('Error calling SaveServices:', error);
-                   alert('Error saving services: ' + error.get_message());
-               }
-           );
-       }
+                    } catch (e) {
+                        console.log('Response:', response);
+                    }
+                    if (callback) callback();
+                },
+                function (error) {
+                    console.error('Error calling SaveServices:', error);
+                    if (callback) callback();
+                }
+            );
+        }
+        function saveInPatientDischargeTabs(callback) {
+            console.log('saveInPatientDischargeTabs: starting chain...');
+            SaveComplaintsTab(function () {
+                console.log('Complaints saved');
+                SavePrimaryDiagnosisTab(function () {
+                    console.log('Primary diagnosis saved');
+                    SaveFinalDiagnosisTab(function () {
+                        console.log('Final diagnosis saved');
+                        SaveServices(function () {
+                            console.log('Services saved');
+                            SaveLabResult(function () {
+                                console.log('Lab results saved, calling final callback');
+                                if (callback) callback();
+                            });
+                        });
+                    });
+                });
+            });
+        }
         function SaveMedicines() {
+            $('#btnSave').attr('disabled', true);
+            console.log('SaveMedicines called, globalFormType=', globalFormType);
+            if (globalFormType === 'InPatientDischarge') {
+                console.log('Starting InPatientDischarge save chain...');
+                saveInPatientDischargeTabs(function () {
+                    console.log('Child tabs saved, now saving medicines...');
+                    var table = $('#tblMedicines');
+                    var MedicinesList = [];
+                    table.find('tbody tr').each(function (key, value) {
+                        var date = '<%= DateTime.Now%>'
+                        MedicinesList.push({
+                            'Medicine_Date': $(value).find('td input[name=testDate]').val(), 'Medicine_Name': $($(value).find('td')[1]).text(), 'Frequency': $($(value).find('td')[2]).text(), 'Oral': $($(value).find('td')[3]).text(), 'Injection': $($(value).find('td')[4]).text(), 'AttendingParamedical_Staff': $($(value).find('td')[5]).text(),
+                            'Dosage_From': $($(value).find('td')[6]).text(), 'Dosage_Qty': $($(value).find('td')[7]).text(), 'Other_Instruction': $($(value).find('td')[8]).text(), 'ItemCode': $(value).find('td input[name=ItemCode]').val(),
+                        });
+                    });
+                    var PatID = $('#<%= hdfPatient_ID.ClientID%>').val();
+                    var OutPatID = $('#<%= txtOut_Patient_ID.ClientID%>').val();
+                    console.log('Medicines PatID=', PatID, 'OutPatID=', OutPatID);
+                    if (OutPatID == '(New)' || OutPatID == '' || OutPatID == "0")
+                        OutPatID = 0;
+                    var MedicineDetails = { Pat: PatID, PatientID: OutPatID, MedicineList: MedicinesList }
+                    console.log('Saving medicines...', MedicineDetails);
+                    PageMethods.SaveMedicines(JSON.stringify(MedicineDetails), globalFormType, function (response) {
+                        console.log('Medicines saved, calling SaveHistoryTab');
+                        SaveHistoryTab();
+                    });
+                });
+                return;
+            }
             SaveComplaintsTab(); SavePrimaryDiagnosisTab(); SaveFinalDiagnosisTab(); SaveServices(); SaveLabResult();
             debugger;
             var table = $('#tblMedicines');
@@ -3854,8 +4048,12 @@ function LoadLabResultrpt() {
                 OutPatID = 0;
             var MedicineDetails = { Pat: PatID, PatientID: OutPatID, MedicineList: MedicinesList }
             console.log(MedicineDetails);
-            PageMethods.SaveMedicines(JSON.stringify(MedicineDetails), function (response) {
-                saveTests();
+            PageMethods.SaveMedicines(JSON.stringify(MedicineDetails), globalFormType, function (response) {
+                if (globalFormType !== 'InPatientDischarge') {
+                    saveTests();
+                } else {
+                    SaveHistoryTab();
+                }
             });
 
         }
@@ -3901,7 +4099,7 @@ function LoadLabResultrpt() {
             });
         }
         function SaveHistoryTab() {
-
+            console.log('SaveHistoryTab called');
             var SymtomsList = [];
 
             $.each($('#tblSymtoms tbody tr'), function (key, value) {
@@ -3923,9 +4121,13 @@ function LoadLabResultrpt() {
                 OutPatientID: ($('#ctl00_MainContent_txtOut_Patient_ID').val() != "(New)" || $('#ctl00_MainContent_txtOut_Patient_ID').val() != "0") ? $('#ctl00_MainContent_txtOut_Patient_ID').val() : "0",
                 SymtomsList: SymtomsList
             }
-            console.log(SymtomsList);
-            PageMethods.SaveSymtoms(JSON.stringify(SymtomsList), function (response) {
+            console.log('SaveSymptoms OutPatientID=', SymtomsList.OutPatientID);
+            PageMethods.SaveSymtoms(JSON.stringify(SymtomsList), globalFormType, function (response) {
+                console.log('Symptoms saved, calling SaveProtos');
                 SaveProtos();
+                saveAllRecord();
+            }, function (error) {
+                console.error('SaveSymtoms error:', error.get_message());
                 saveAllRecord();
             });
 
@@ -3948,12 +4150,12 @@ function LoadLabResultrpt() {
                 opdid = 0;
             var ProtoDetails = { PatId: patID, opdid: opdid, ProtoList: ProcedureList };
             console.log(ProtoDetails);
-            PageMethods.SaveProto(btnSave, JSON.stringify(ProtoDetails), function (response) {
+            PageMethods.SaveProto(btnSave, JSON.stringify(ProtoDetails), globalFormType, function (response) {
 
             });
         }
         function saveAllRecord() {
-            debugger;
+            console.log('=== saveAllRecord called ===');
             var Patient_ID = $("#<%= hdfPatient_ID.ClientID %>").val();
             var reg_ID = $("#<%= hdfReg_ID.ClientID %>").val();
             var Administration = $('#ctl00_MainContent_ddlIssuance_Of').val();
@@ -3964,12 +4166,24 @@ function LoadLabResultrpt() {
             var Out_Patient_ID = $('#ctl00_MainContent_txtOut_Patient_ID').val();
             if (Out_Patient_ID == "(New)" || Out_Patient_ID == "0")
                 Out_Patient_ID = "";
+            if (globalFormType === 'InPatientDischarge') {
+                Out_Patient_ID = $('#<%= hdfOutPatientID.ClientID %>').val() || Out_Patient_ID;
+            }
 
             // Helper function to safely get values
             function safeGetValue(selector) {
                 var value = $(selector).val();
                 return value || "";
             }
+
+            console.log("saveAllRecord values:", {
+                Patient_ID: Patient_ID,
+                reg_ID: reg_ID,
+                Out_Patient_ID: Out_Patient_ID,
+                btnSave: safeGetValue('#btnSave'),
+                FormType: $('#<%= hdfFormType.ClientID %>').val(),
+                InPatientID: parseInt($('#<%= hdfInPatientID.ClientID %>').val()) || 0
+            });
 
             var data = {
                 // Tab02 - Vitals
@@ -4060,6 +4274,14 @@ function LoadLabResultrpt() {
                 Non_Smokers: document.getElementById("ctl00_MainContent_chkNon_Smokers")?.checked || false,
                 Diabetics: document.getElementById("ctl00_MainContent_chkDiabetics")?.checked || false,
                 Hypertensive: document.getElementById("ctl00_MainContent_chkHypertensive")?.checked || false,
+                Alcohol_Consumption: document.getElementById("ctl00_MainContent_chkAlcoholConsumption")?.checked || false,
+                Smokeless: document.getElementById("ctl00_MainContent_chkSmokeless")?.checked || false,
+
+                DM: document.getElementById("ctl00_MainContent_chkDM")?.checked || false,
+                HTN: document.getElementById("ctl00_MainContent_chkHTN")?.checked || false,
+                TB: document.getElementById("ctl00_MainContent_chkTB")?.checked || false,
+                IHD: document.getElementById("ctl00_MainContent_chkIHD")?.checked || false,
+                Asthma: document.getElementById("ctl00_MainContent_chkAsthma")?.checked || false,
 
                 // Common Fields - ensure these are proper data types
                 Patient_ID: parseInt(Patient_ID) || 0,
@@ -4068,7 +4290,9 @@ function LoadLabResultrpt() {
                 btnsave: safeGetValue('#btnSave') || "Save",
                 Discharged: document.getElementById("DischargeCheckBox") ? document.getElementById("DischargeCheckBox").checked : false,
                 Administration: Administration,
-                Out_Patient_ID: Out_Patient_ID
+                Out_Patient_ID: Out_Patient_ID,
+                FormType: $('#<%= hdfFormType.ClientID %>').val() || "",
+                InPatientID: parseInt($('#<%= hdfInPatientID.ClientID %>').val()) || 0
             };
 
             console.log("Data being sent:", data);
@@ -4104,6 +4328,12 @@ function LoadLabResultrpt() {
                             }
                         });
                         debugger;
+                        var formTypeId = $('#<%= hdfFormType.ClientID %>').val();
+                        if (formTypeId === 'InPatientDischarge') {
+                            var inPatID = $('#<%= hdfInPatientID.ClientID %>').val();
+                            window.location = "NewOutPatient.aspx?Type=InPatientDischarge&InPatientID=" + inPatID + "&ID=" + response.d;
+                            return;
+                        }
                         if (SharingPolicy == '001') {
 
                         
@@ -4171,7 +4401,7 @@ function LoadLabResultrpt() {
         function AppendSymtompsHistory() {
             var OutPatientID = $('#<%= txtOut_Patient_ID.ClientID%>').val();
 
-            PageMethods.LoadSymtompsHistory(OutPatientID, function (res) {
+            PageMethods.LoadSymtompsHistory(OutPatientID, globalFormType, function (res) {
                 var Symptoms = JSON.parse(res);
                 var rows = '';
 
@@ -4320,7 +4550,7 @@ function LoadLabResultrpt() {
                 return; // Exit if new patient
             }
 
-            PageMethods.LoadMedicines(patientId, function (res) {
+            PageMethods.LoadMedicines(patientId, globalFormType, function (res) {
                 try {
                     var Medicines = JSON.parse(res);
                     var rows = '';
@@ -4370,7 +4600,7 @@ function LoadLabResultrpt() {
         }
         function AppendComplaintsHistory() {
             var OutPatientID = $('#<%= txtOut_Patient_ID.ClientID%>').val();
-            PageMethods.LoadComplaints(OutPatientID, function (res) {
+            PageMethods.LoadComplaints(OutPatientID, globalFormType, function (res) {
                 var Complaints = JSON.parse(res);
                 var rows = '';
 
@@ -4397,7 +4627,7 @@ function LoadLabResultrpt() {
         function AppendFinalDiagnosisHistory() {
             var OutPatientID = $('#<%= txtOut_Patient_ID.ClientID%>').val();
 
-            PageMethods.LoadFinalDiagnosis(OutPatientID, function (res) {
+            PageMethods.LoadFinalDiagnosis(OutPatientID, globalFormType, function (res) {
                 var FinalDiagnosis = JSON.parse(res);
                 var rows = '';
 
@@ -4427,7 +4657,7 @@ function LoadLabResultrpt() {
         function AppendPrimaryDiagnosisHistory() {
             var OutPatientID = $('#<%= txtOut_Patient_ID.ClientID%>').val();
 
-            PageMethods.LoadPrimaryDiagnosis(OutPatientID, function (res) {
+            PageMethods.LoadPrimaryDiagnosis(OutPatientID, globalFormType, function (res) {
                 var PrimaryDiagnosis = JSON.parse(res);
                 var rows = '';
 
@@ -4457,7 +4687,7 @@ function LoadLabResultrpt() {
             debugger;
             if ($("#<%= hdfPatient_ID.ClientID%>").val() !== "(New)") {
                 var patients_id = $('#<%= txtOut_Patient_ID.ClientID %>').val();
-                PageMethods.LoadProtoDetails(patients_id, function (response) {
+                PageMethods.LoadProtoDetails(patients_id, globalFormType, function (response) {
                     var Proto = JSON.parse(response);
                     var rows = "";
 
@@ -4767,7 +4997,7 @@ function LoadLabResultrpt() {
 
                         <input type="button" class="btn btn-primry" value="Prescription" name="name" onclick="PrintoutPatient();" />
 
-                        <input type="button" class="btn btn-primry" value="Voucher" name="Voucher" id="Voucher" onclick="PrintVoucher();" />
+                        <input type="button" class="btn btn-primry" value="Voucher" name="Voucher" id="Voucher" onclick="PrintVoucher();" style="display:none;" />
                         <input type="button" class="btn btn-primry" value="List View" name="name" onclick="window.location = 'OutPatientsView.aspx'" />
                     </div>
                 </div>
@@ -4866,22 +5096,65 @@ function LoadLabResultrpt() {
                                             <div class="row mb-3">
                                                 <div class="col-md-7 col-sm-6">
                                                     <div style="display: flex; gap: 15px; flex-wrap: wrap;">
+
                                                         <div style="display: flex; align-items: center;">
                                                             <asp:CheckBox ID="chkSmokers" runat="server" />
                                                             <label for="ctl00_MainContent_chkSmokers" style="margin-left: 5px; margin-bottom: 0;">Smoker</label>
-                                                        </div>                                                     
+                                                        </div>
+
                                                         <div style="display: flex; align-items: center;">
                                                             <asp:CheckBox ID="chkDiabetics" runat="server" />
                                                             <label for="ctl00_MainContent_chkDiabetics" style="margin-left: 5px; margin-bottom: 0;">Diabetic</label>
                                                         </div>
+
+                                                        <div style="display: flex; align-items: center;">
+                                                            <asp:CheckBox ID="chkAlcoholConsumption" runat="server" />
+                                                            <label for="ctl00_MainContent_chkAlcoholConsumption" style="margin-left: 5px; margin-bottom: 0;">Alcohol Consumption</label>
+                                                        </div>
+
                                                         <div style="display: flex; align-items: center;">
                                                             <asp:CheckBox ID="chkHypertensive" runat="server" />
                                                             <label for="ctl00_MainContent_chkHypertensive" style="margin-left: 5px; margin-bottom: 0;">Hypertensive</label>
                                                         </div>
-                                                        <div style="display: flex; align-items: center;display:none">
+
+                                                        <div style="display: flex; align-items: center;">
+                                                            <asp:CheckBox ID="chkSmokeless" runat="server" />
+                                                            <label for="ctl00_MainContent_chkSmokeless" style="margin-left: 5px; margin-bottom: 0;">Naswar/Smokeless</label>
+                                                        </div>
+
+                                                        <div style="display: flex; align-items: center; display: none;">
                                                             <asp:CheckBox ID="chkNon_Smokers" runat="server" />
                                                             <label for="ctl00_MainContent_chkNon_Smokers" style="margin-left: 5px; margin-bottom: 0;">Non-Smoker</label>
                                                         </div>
+                                                    </div>
+                                              </div>                                        
+                                            </div>
+                                            <div class="row">
+                                                <div class="col-md-12">
+                                                    <h2>Co-Morbid Conditions</h2>
+                                                    <div style="display: flex; gap: 15px; flex-wrap: wrap; align-items: center;">
+                                                      <div style="display: flex; align-items: center;">
+                                                            <asp:CheckBox ID="chkDM" runat="server" />
+                                                            <label for="ctl00_MainContent_chkDM" style="margin-left: 5px; margin-bottom: 0;">DM</label>
+                                                        </div>
+                                                        <div style="display: flex; align-items: center;">
+                                                            <asp:CheckBox ID="chkHTN" runat="server" />
+                                                            <label for="ctl00_MainContent_chkHTN" style="margin-left: 5px; margin-bottom: 0;">HTN</label>
+                                                        </div>
+                                                    </div>
+                                                    <div style="display: flex; gap: 15px; flex-wrap: wrap; align-items: center;">
+                                                        <div style="display: flex; align-items: center;">
+                                                            <asp:CheckBox ID="chkTB" runat="server" />
+                                                            <label for="ctl00_MainContent_chkTB" style="margin-left: 5px; margin-bottom: 0;">TB</label>
+                                                        </div>
+                                                        <div style="display: flex; align-items: center;">
+                                                            <asp:CheckBox ID="chkIHD" runat="server"  Style="margin-left:6px !important"/>
+                                                            <label for="ctl00_MainContent_chkIHD" style="margin-left: 10px; margin-bottom: 0;">IHD</label>
+                                                        </div>
+                                                    </div>
+                                                    <div style="display: flex; align-items: center;">
+                                                        <asp:CheckBox ID="chkAsthma" runat="server" />
+                                                        <label for="ctl00_MainContent_chkAsthma" style="margin-left: 6px; margin-bottom: 0;">Asthma</label>
                                                     </div>
                                                 </div>
                                             </div>
@@ -6173,6 +6446,9 @@ function LoadLabResultrpt() {
     <asp:TextBox ID="txtOut_Patient_ID" runat="server" ReadOnly="True" Style="display: none;"></asp:TextBox>
     <asp:HiddenField ID="hdfPatient_ID" Value="(New)" runat="server" />
     <asp:HiddenField ID="hdfReg_ID" Value="(New)" runat="server" />
+    <asp:HiddenField ID="hdfInPatientID" Value="" runat="server" />
+    <asp:HiddenField ID="hdfFormType" Value="" runat="server" />
+    <asp:HiddenField ID="hdfOutPatientID" Value="" runat="server" />
     <asp:HiddenField ID="hdfPatient_No" runat="server" />
     <asp:HiddenField ID="hdfdhischarge" Value="false" runat="server" />
     <asp:HiddenField ID="hdfFetch_ID" runat="server" />

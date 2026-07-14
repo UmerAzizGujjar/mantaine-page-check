@@ -24,7 +24,8 @@ namespace PMS.Inventory
                     var StoreAdjustment = from ISA in _dbContext.INV_Stock_Adjustments
                                           join item in _dbContext.INV_Items
                                           on Convert.ToInt32(ISA.Item_Id) equals item.Item_ID
-                                          where ISA.Item_Code.ToString().Contains(searchValue) || item.Description.Contains(searchValue) || ISA.Adjustment_No.ToString().Contains(searchValue)
+                                          where (ISA.Item_Code.ToString().Contains(searchValue) || item.Description.Contains(searchValue) || ISA.Adjustment_No.ToString().Contains(searchValue)) 
+                                          && (ISA.IsDeleted == false || ISA.IsDeleted == null)
                                           select new
                                           {
                                           Adjustment_Id = ISA.Adjustment_ID,
