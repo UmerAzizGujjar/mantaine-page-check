@@ -41,9 +41,10 @@
                     $('#symptoms').html(options);
 
                 },
-                error: function (xhr, status, error) {
-                    console.error("Error searching symptoms:", error);
-                }
+                    error: function (xhr, status, error) {
+                        $('#btnSaveNewComplaint').attr('disabled', false);
+                        console.error("Error searching symptoms:", error);
+                    }
             });
         }
         function RemoveSymtomRowInModal(id) {
@@ -166,7 +167,7 @@
             });
         }
         function saveSymptomsToDatabase() {
-            // Array to store all symptom data
+            $('#btnSaveSymptoms').attr('disabled', true);
             var symptomsData = [];
 
             // Loop through each row in the table
@@ -186,11 +187,12 @@
             if (symptomsData.length > 0) {
                 $.ajax({
                     type: "POST",
-                    url: "NewOutPatient.aspx/SaveSymptoms", // Update with your actual endpoint
+                    url: "NewOutPatient.aspx/SaveSymptoms",
                     data: JSON.stringify({ symptoms: symptomsData }),
                     contentType: "application/json; charset=utf-8",
                     dataType: "json",
                     success: function (response) {
+                        $('#btnSaveSymptoms').attr('disabled', false);
                         if (response.d) {
                             // Success handling
                             Swal.fire({
@@ -206,7 +208,7 @@
                         $('#manageSymptomsModal').modal('hide')
                     },
                     error: function (xhr, status, error) {
-                        // Error handling
+                        $('#btnSaveSymptoms').attr('disabled', false);
                         Swal.fire({
                             icon: 'error',
                             title: 'Error!',
@@ -217,6 +219,7 @@
                     }
                 });
             } else {
+                $('#btnSaveSymptoms').attr('disabled', false);
                 Swal.fire({
                     icon: 'warning',
                     title: 'No Data',
@@ -1619,9 +1622,11 @@ function LoadLabResultrpt() {
             $('#manageSymptomsModal').modal('show');
         }
         function saveSymptom() {
+            $('#btnSaveNewSymptom').attr('disabled', true);
             const SymptomText = $('#NewSymptom').val().trim();
 
             if (SymptomText === '') {
+                $('#btnSaveNewSymptom').attr('disabled', false);
                 alert('Please enter a Symptom before saving.');
                 return;
             }
@@ -1633,6 +1638,7 @@ function LoadLabResultrpt() {
                     contentType: "application/json; charset=utf-8",
                     dataType: "json",
                     success: function (response) {
+                        $('#btnSaveNewSymptom').attr('disabled', false);
                         if (response.d) {
                             // Success handling
                             Swal.fire({
@@ -1647,7 +1653,7 @@ function LoadLabResultrpt() {
                         fillSymptoms("000", "");
                     },
                     error: function (xhr, status, error) {
-                        // Error handling
+                        $('#btnSaveNewSymptom').attr('disabled', false);
                         Swal.fire({
                             icon: 'error',
                             title: 'Error!',
@@ -1660,7 +1666,7 @@ function LoadLabResultrpt() {
             }
             // Hide the form with slide up animation after saving
             $('#divAddNewSymptom').slideUp(300, function () {
-                $('#NewSymptom').val(''); // Clear input after hiding
+                $('#NewSymptom').val('');
             });
         }
 
@@ -1816,9 +1822,11 @@ function LoadLabResultrpt() {
             }
         }
         function saveComplaint() {
+            $('#btnSaveNewComplaint').attr('disabled', true);
             const complaintText = $('#NewComplaint').val().trim();
 
             if (complaintText === '') {
+                $('#btnSaveNewComplaint').attr('disabled', false);
                 alert('Please enter a complaint before saving.');
                 return;
             }
@@ -1830,6 +1838,7 @@ function LoadLabResultrpt() {
                     contentType: "application/json; charset=utf-8",
                     dataType: "json",
                     success: function (response) {
+                        $('#btnSaveNewComplaint').attr('disabled', false);
                         if (response.d == "0") {
                             Swal.fire({
                                 icon: 'error',
@@ -1849,6 +1858,7 @@ function LoadLabResultrpt() {
                         }
                     },
                     error: function (xhr, status, error) {
+                        $('#btnSaveNewComplaint').attr('disabled', false);
                         console.error("Error searching symptoms:", error);
                     }
                 });
@@ -1969,9 +1979,11 @@ function LoadLabResultrpt() {
             }
         }
         function savePrimaryDiagnosis() {
+            $('#btnSaveNewPrimaryDiagnosis').attr('disabled', true);
             const Text = $('#NewPrimaryDiagnosis').val().trim();
 
             if (Text === '') {
+                $('#btnSaveNewPrimaryDiagnosis').attr('disabled', false);
                 alert('Please enter a Diagnosis before saving.');
                 return;
             }
@@ -1983,6 +1995,7 @@ function LoadLabResultrpt() {
                     contentType: "application/json; charset=utf-8",
                     dataType: "json",
                     success: function (response) {
+                        $('#btnSaveNewPrimaryDiagnosis').attr('disabled', false);
                         if (response.d == "0") {
                             Swal.fire({
                                 icon: 'error',
@@ -2003,6 +2016,7 @@ function LoadLabResultrpt() {
                         }
                     },
                     error: function (xhr, status, error) {
+                        $('#btnSaveNewPrimaryDiagnosis').attr('disabled', false);
                         console.error("Error searching symptoms:", error);
                     }
                 });
@@ -2103,9 +2117,11 @@ function LoadLabResultrpt() {
         });
 
         function saveFinalDiagnosis() {
+            $('#btnSaveNewFinalDiagnosis').attr('disabled', true);
             const Text = $('#NewFinalDiagnosis').val().trim();
 
             if (Text === '') {
+                $('#btnSaveNewFinalDiagnosis').attr('disabled', false);
                 alert('Please enter a Diagnosis before saving.');
                 return;
             }
@@ -2117,6 +2133,7 @@ function LoadLabResultrpt() {
                     contentType: "application/json; charset=utf-8",
                     dataType: "json",
                     success: function (response) {
+                        $('#btnSaveNewFinalDiagnosis').attr('disabled', false);
                         if (response.d == "0") {
                             Swal.fire({
                                 icon: 'error',
@@ -2137,6 +2154,7 @@ function LoadLabResultrpt() {
                         }
                     },
                     error: function (xhr, status, error) {
+                        $('#btnSaveNewFinalDiagnosis').attr('disabled', false);
                         console.error("Error searching symptoms:", error);
                     }
                 });
@@ -3981,6 +3999,7 @@ function LoadLabResultrpt() {
             });
         }
         function SaveMedicines() {
+            $('#btnSave').attr('disabled', true);
             console.log('SaveMedicines called, globalFormType=', globalFormType);
             if (globalFormType === 'InPatientDischarge') {
                 console.log('Starting InPatientDischarge save chain...');

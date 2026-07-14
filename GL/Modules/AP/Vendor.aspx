@@ -2,6 +2,7 @@
 
 <asp:Content ID="Content1" ContentPlaceHolderID="HeadContent" runat="server">
     <link href="../../wwwroot/THEME_TIBBIT/CustomCSS/vendor.css" rel="stylesheet" />
+    <link href="../../wwwroot/THEME_TIBBIT/CustomCSS/custom-modals.css" rel="stylesheet" />
 
     <script type="text/javascript">
         var selectedOptions = '';
@@ -27,18 +28,22 @@
             $('#ctl00_lbl1').text('Supplier');
             $('select').select2();
             GetNewVendorNo();
-            loadPayableCode();
             FillDropDownList();
             var VenId = '<%= Request.QueryString["ID"]%>';
-           
+            
             if (VenId != "") {
                 $('#btnSave').val('Update');
-                var VenId = '<%= Request.QueryString["ID"]%>';
                 $('#txtVendorId').val(VenId);
-                LoadVendorDetail(VenId);
+                // Load Payable Code dropdown first, then load vendor data so Account_ID can be selected
+                loadPayableCode(function () {
+                    LoadVendorDetail(VenId);
+                });
             }
             else {
+                loadPayableCode();
                 loadnewaccountToCreate();
+                $("#Active").prop('checked', true);
+                setTimeout(function() { $('#Active').trigger('change'); }, 100);
             }
         })
         var id = '<% =Request.QueryString["ID"] %>';
@@ -112,6 +117,8 @@
                 $('#btnSave').val();
                 if (data.IsActive == true) {
                     $("#Active").prop('checked', true);
+                } else {
+                    $("#Active").prop('checked', false);
                 }
                 if (data.Ismanual == true) {
                     $("#chkmanual").prop('checked', true);
@@ -143,25 +150,23 @@
                 $('#txtEmail').val(data.Vendor_Email);
                 $('#txtFoc').val(data.Contact_Person);
                 setTimeout(function () {
-                    $('#ddlPayabl').val(data.Account_ID).trigger('change');
-                }, 1000);
-                setTimeout(function () {
                     $('#ddlTax').val(data.TaxPayerTyp).trigger('change');
                 }, 1000);
                 setTimeout(function () {
                     $('#ddlCom').val(data.CompanyType_Id).trigger('change');
                 }, 1000);
 
-                if (data.Account_ID != null) {
-                    PageMethods.LoadGLAccount(parseInt(data.Account_ID), function (data) {
-                        var AccountData = JSON.parse(data);
-                        $("#ddlPayabl").val(AccountData.txtAccount_Code_Name).trigger();
+                if (data.Account_ID != null && data.Account_ID != "0") {
+                    PageMethods.LoadGLAccount(parseInt(data.Account_ID), function (glData) {
+                        var AccountData = JSON.parse(glData);
                         $("#hdfAccount_Name").val(AccountData.hdfAccount_Name);
                         $("#hdfAccount_Code").val(AccountData.hdfAccount_Code);
                         $("#hdfParent_Code").val(AccountData.hdfParent_Code);
                         $("#hdfAccount_Serial").val(AccountData.hdfAccount_Serial);
                         $("#hdfLevel").val(AccountData.hdfLevel);
                         $("#hdfAccount_ID").val(AccountData.hdfAccount_ID);
+                        // Set dropdown AFTER GL data is fully loaded
+                        $('#ddlPayabl').val(data.Account_ID).trigger('change');
                     }
                         , function (err) {
                             alert("Error: " + err.get_message());
@@ -174,12 +179,46 @@
                 LoadVendorPharmacyItem(VenId);
                 LoadVendorCompany(VenId);
 
-
+                // Sync Active badge after loading vendor data
+                $('#Active').trigger('change');
             },
                 function (error) {
                     alert(error.get_message());
                 })
         }
+
+        function syncVendorMeta() {
+            var code = $('#txtVendorCode').val();
+            if (code) {
+                $('#vendorCodeDisplay').text(code);
+            }
+        }
+
+        $(document).ready(function () {
+            // Watch vendor code input (hidden) to sync meta bar
+            var originalVal = $.fn.val;
+            $.fn.val = function(value) {
+                var res = originalVal.apply(this, arguments);
+                if (this.attr('id') === 'txtVendorCode' && arguments.length >= 1) {
+                    syncVendorMeta();
+                }
+                return res;
+            };
+
+            $('#Active').change(function () {
+                if ($(this).is(':checked')) {
+                    $('#vendorActiveBadge').removeClass('badge-inactive').addClass('badge-active');
+                    $('#vendorActiveIcon').removeClass('fa-times-circle').addClass('fa-check-circle');
+                    $('#vendorActiveText').text('Active');
+                } else {
+                    $('#vendorActiveBadge').removeClass('badge-active').addClass('badge-inactive');
+                    $('#vendorActiveIcon').removeClass('fa-check-circle').addClass('fa-times-circle');
+                    $('#vendorActiveText').text('Inactive');
+                }
+            });
+            // Initial sync (handles new vendor default, existing is synced in LoadVendorDetail)
+            $('#Active').trigger('change');
+        });
 
         function GetNewVendorNo() {
             PageMethods.GetNewVendorNo(function (resp) {
@@ -204,7 +243,7 @@
                         '<td><input type="text" name="txtphone" id="txtphone' + (key + 1) + '"  value="' + value.Phone_no + '"  style="width:130px !important;font-size:9px;"/></td>' +
                         '<td><input type="text" name="txtExt" id="txtExt' + (key + 1) + '"  value="' + value.Ext_no + '" style="width:130px !important;font-size:9px;"/></td>' +
                         '<td><input type="text" name="txtcell" id="txtcell' + (key + 1) + '"  value="' + value.cell_no + '" style="width:130px !important;font-size:9px;" /></td>' +
-                        '<td><a href="javascript:void(0)" onclick="ExcludeFromPayment(this)"><i class="glyphicon glyphicon-trash" style="width:15px !important;font-size: 13px;color:#f30a0a;position:relative;" i=""></i></a> </td>'
+                        '<td><a href="javascript:void(0)" onclick="ExcludeFromPayment(this)"><i class="fa fa-trash" style="width:15px !important;font-size: 13px;color:#f30a0a;position:relative;" i=""></i></a> </td>'
                     '</tr>';
                 })
                 $('#tblPerson').append(rows);
@@ -229,7 +268,7 @@
                         '<td><input type="text" name="txtRate" id="txtRate' + (key + 1) + '"  value="' + value.Rate + '" style="width:100% !important;font-size:10px;"/></td>' +
                         '<td><input type="text" name="txtRef" id="txtRef' + (key + 1) + '"  value="' + value.Ref_num + '"  style="width:100% !important;font-size:9px;"/></td>' +
                         '<td><input type="text" name="txtRemarks" id="txtRemarks' + (key + 1) + '"  value="' + value.remarks + '" style="width:100% !important;font-size:9px;" /></td>' +
-                        '<td><a href="javascript:void(0)" onclick="ExcludeFromPayment(this)"><i class="glyphicon glyphicon-trash" style="width:50% !important;font-size: 13px;color:#f30a0a;position:relative;" i=""></i></a></td>'
+                        '<td><a href="javascript:void(0)" onclick="ExcludeFromPayment(this)"><i class="fa fa-trash" style="width:50% !important;font-size: 13px;color:#f30a0a;position:relative;" i=""></i></a></td>'
                     '</tr>';
                 })
                 $('#myVendorGeneralItem').append(rows);
@@ -253,7 +292,7 @@
                         '<td><input type="text" name="txtRate" id="txtRate' + (key + 1) + '"  value="' + value.Rate + '" style="width:100% !important;font-size:10px;"/></td>' +
                         '<td><input type="text" name="txtRef" id="txtRef' + (key + 1) + '"  value="' + value.Ref_num + '"  style="width:100% !important;font-size:9px;"/></td>' +
                         '<td><input type="text" name="txtRemarks" id="txtRemarks' + (key + 1) + '"  value="' + value.remarks + '" style="width:100% !important;font-size:9px;" /></td>' +
-                        '<td><a href="javascript:void(0)" onclick="ExcludeFromPayment(this)"><i class="glyphicon glyphicon-trash" style="width:50% !important;font-size: 13px;color:#f30a0a;position:relative;" i=""></i></a></td>'
+                        '<td><a href="javascript:void(0)" onclick="ExcludeFromPayment(this)"><i class="fa fa-trash" style="width:50% !important;font-size: 13px;color:#f30a0a;position:relative;" i=""></i></a></td>'
                     '</tr>';
                 })
                 $('#myVendorPharmacyItem').append(rows);
@@ -274,7 +313,7 @@
                     rows += '<tr>' +
                         '<td><input type="text" readonly name="txtSrNO" id="txtSrNO' + (key + 1) + '"  value="' + value.SR_No + '"  style="width:100% !important;font-size:10px;"/></td>' +
                         '<td><input type="text" name="txtCompanyName" id="txtCompanyName' + (key + 1) + '"  value="' + value.Company_Name + '" style="width:100% !important;font-size:10px;" /></td>' +
-                        '<td><a href="javascript:void(0)" onclick="ExcludeFromPayment(this)"><i class="glyphicon glyphicon-trash" style="width:50% !important;font-size: 13px;color:#f30a0a;position:relative;" i=""></i></a></td>'
+                        '<td><a href="javascript:void(0)" onclick="ExcludeFromPayment(this)"><i class="fa fa-trash" style="width:50% !important;font-size: 13px;color:#f30a0a;position:relative;" i=""></i></a></td>'
                     '</tr>';
                 })
                 $('#myVendorCompany').append(rows);
@@ -295,7 +334,7 @@
                 '<td><input type="text" name="txtphone" id="txtphone' + rowlength + '"  value=""  style=""/></td>' +
                 '<td><input type="text" name="txtExt" id="txtExt' + rowlength + '"  value="" style=""/></td>' +
                 '<td><input type="text" name="txtcell" id="txtcell' + rowlength + '"  value="" style="" /></td>' +
-                '<td><a href="javascript:void(0)" onclick="ExcludeFromPayment(this)"><i class="glyphicon glyphicon-trash" style="width:15px !important;font-size: 13px;color:#f30a0a;position:relative;" i=""></i></a> </td>'
+                '<td><a href="javascript:void(0)" onclick="ExcludeFromPayment(this)"><i class="fa fa-trash" style="width:15px !important;font-size: 13px;color:#f30a0a;position:relative;" i=""></i></a> </td>'
             '</tr>';
             $('#tblPerson').append(rows);
         }
@@ -311,7 +350,7 @@
                 '<td><input type="text" name="txtRate" id="txtRate' + rowlength + '"  value="" style="width:100% !important;font-size:10px;"/></td>' +
                 '<td><input type="text" name="txtRef" id="txtRef' + rowlength + '"  value=""  style="width:100% !important;font-size:9px;"/></td>' +
                 '<td><input type="text" name="txtRemarks" id="txtRemarks' + rowlength + '"  value="" style="width:100% !important;font-size:9px;" /></td>' +
-                '<td><a href="javascript:void(0)" onclick="ExcludeFromPayment(this)"><i class="glyphicon glyphicon-trash" style="width:50% !important;font-size: 13px;color:#f30a0a;position:relative;" i=""></i></a></td>'
+                '<td><a href="javascript:void(0)" onclick="ExcludeFromPayment(this)"><i class="fa fa-trash" style="width:50% !important;font-size: 13px;color:#f30a0a;position:relative;" i=""></i></a></td>'
             '</tr>';
             $('#myVendorGeneralItem').append(rows);
             loadGeneralItemList(rowlength);
@@ -327,7 +366,7 @@
                 '<td><input type="text" name="txtRate" id="txtRate' + rowlength + '"  value="" style="width:100% !important;font-size:10px;"/></td>' +
                 '<td><input type="text" name="txtRef" id="txtRef' + rowlength + '"  value=""  style="width:100% !important;font-size:9px;"/></td>' +
                 '<td><input type="text" name="txtRemarks" id="txtRemarks' + rowlength + '"  value="" style="width:100% !important;font-size:9px;" /></td>' +
-                '<td><a href="javascript:void(0)" onclick="ExcludeFromPayment(this)"><i class="glyphicon glyphicon-trash" style="width:50% !important;font-size: 13px;color:#f30a0a;position:relative;" i=""></i></a></td>'
+                '<td><a href="javascript:void(0)" onclick="ExcludeFromPayment(this)"><i class="fa fa-trash" style="width:50% !important;font-size: 13px;color:#f30a0a;position:relative;" i=""></i></a></td>'
             '</tr>';
             $('#myVendorPharmacyItem').append(rows);
             loadPharmacyItemList(rowlength);
@@ -340,19 +379,33 @@
             rows += '<tr>' +
                 '<td><input type="text" readonly name="txtSrNO" id="txtSrNO' + rowlength + '"  value="' + currentSrNo + '"  style="width:100% !important;font-size:10px;"/></td>' +
                 '<td><input type="text" name="txtCompanyName" id="txtCompanyName' + rowlength + '"  value="" style="width:100% !important;font-size:10px;" /></td>' +
-                '<td><a href="javascript:void(0)" onclick="ExcludeFromPayment(this)"><i class="glyphicon glyphicon-trash" style="width:50% !important;font-size: 13px;color:#f30a0a;position:relative;" i=""></i></a></td>'
+                '<td><a href="javascript:void(0)" onclick="ExcludeFromPayment(this)"><i class="fa fa-trash" style="width:50% !important;font-size: 13px;color:#f30a0a;position:relative;" i=""></i></a></td>'
             '</tr>';
             $('#myVendorCompany').append(rows);
             currentSrNo++;
         }
         function ExcludeFromPayment(anchor) {
             debugger;
-            var a = confirm("Are you sure You want to delete");
-            if (a == true) {
-                console.clear();
-                var row = $(anchor).parents('tr')[0];
-                row.remove();
-            }
+            Swal.fire({
+                title: 'Are you sure?',
+                text: "You want to delete this record",
+                icon: 'warning',
+                showCancelButton: true,
+                confirmButtonColor: '#d33',
+                cancelButtonColor: '#6c757d',
+                confirmButtonText: 'Yes, delete it!',
+                customClass: {
+                    popup: 'swal-big-popup',
+                    title: 'swal-big-title',
+                    htmlContainer: 'swal-big-text'
+                }
+            }).then(function (result) {
+                if (result.isConfirmed) {
+                    console.clear();
+                    var row = $(anchor).parents('tr')[0];
+                    row.remove();
+                }
+            });
         }
         function loadGeneralItemList(rowlength) {
             debugger;
@@ -446,7 +499,7 @@
                             '<td><input type="text" name="txtRate" id="txtRate' + rowlength + '"  value="" style="width:100% !important;font-size:10px;"/></td>' +
                             '<td><input type="text" name="txtRef" id="txtRef ' + rowlength + '"  value=""  style="width:100% !important;font-size:9px;"/></td>' +
                             '<td><input type="text" name="txtRemarks" id="txtRemarks' + rowlength + '"  value="" style="width:100% !important;font-size:9px;" /></td>' +
-                            '<td><a href="javascript:void(0)" onclick="ExcludeFromPayment(this)"><i class="glyphicon glyphicon-trash" style="width:50% !important;font-size: 13px;color:#f30a0a;position:relative;" i=""></i></a></td></tr>';
+                            '<td><a href="javascript:void(0)" onclick="ExcludeFromPayment(this)"><i class="fa fa-trash" style="width:50% !important;font-size: 13px;color:#f30a0a;position:relative;" i=""></i></a></td></tr>';
                         $("#VendorPharmacyItemlist").append(rows);
 
                         for (var i = 0; i < VendorPharmacyItemlist.rows.length; i++) {
@@ -522,7 +575,7 @@
                             '<td><input type="text" name="txtRate" id="txtRate' + rowlength + '"  value="" style="width:100% !important;font-size:10px;"/></td>' +
                             '<td><input type="text" name="txtRef" id="txtRef ' + rowlength + '"  value=""  style="width:100% !important;font-size:9px;"/></td>' +
                             '<td><input type="text" name="txtRemarks" id="txtRemarks' + rowlength + '"  value="" style="width:100% !important;font-size:9px;" /></td>' +
-                            '<td><a href="javascript:void(0)" onclick="ExcludeFromPayment(this)"><i class="glyphicon glyphicon-trash" style="width:50% !important;font-size: 13px;color:#f30a0a;position:relative;" i=""></i></a></td></tr>';
+                            '<td><a href="javascript:void(0)" onclick="ExcludeFromPayment(this)"><i class="fa fa-trash" style="width:50% !important;font-size: 13px;color:#f30a0a;position:relative;" i=""></i></a></td></tr>';
                         $("#VendorGeneralItemlist").append(rows);
                         for (var i = 0; i < VendorGeneralItemlist.rows.length; i++) {
                             if ($('#txtItemname' + i + '').val() == '') {
@@ -679,7 +732,7 @@
                 $('#btnSave').val("Update");
             });
         }
-        function loadPayableCode() {
+        function loadPayableCode(callback) {
             var optionsPayabl = '';
             PageMethods.loadPayableCode(function (resp) {
                 optionsPayabl = '<option value="0">Please Select</option>';
@@ -687,6 +740,13 @@
                     optionsPayabl += '<option value="' + value.Account_ID + '" >' + value.name + '</option>';
                 });
                 $('#ddlPayabl').html(optionsPayabl);
+                // Re-init select2 so new options are reflected in the widget
+                if ($('#ddlPayabl').data('select2')) {
+                    $('#ddlPayabl').select2('destroy').select2();
+                } else {
+                    $('#ddlPayabl').select2();
+                }
+                if (callback) callback();
             },
                 function (error) {
                     alert(error.get_message());
@@ -718,158 +778,194 @@
                 $('#ddlTax').html(optionTaxTyp);
                 $('#ddlCom').html(optionComTyp);
 
+                // Re-init select2 on all repopulated dropdowns
+                var select2Selectors = ['#ddlVendorType', '#ddlRegion', '#ddlTax', '#ddlCom'];
+                $.each(select2Selectors, function (i, sel) {
+                    if ($(sel).data('select2')) {
+                        $(sel).select2('destroy').select2();
+                    } else {
+                        $(sel).select2();
+                    }
+                });
+
             });
         }
     </script>
 </asp:Content>
 <asp:Content ID="Content2" ContentPlaceHolderID="MainContent" runat="server">
+    <!-- Meta Bar -->
+    <div class="pr-meta-bar">
+        <div class="meta-left">
+            <span class="meta-title"><i class="fa fa-building"></i> Supplier / Vendor</span>
+        </div>
+        <div class="meta-right">
+            <div class="meta-badge">
+                <span class="badge-label">Code:</span>
+                <span class="badge-value" id="vendorCodeDisplay">---</span>
+            </div>
+            <div class="meta-badge" id="vendorActiveBadge" style="cursor: pointer;" onclick="$('#Active').click();">
+                <i class="fa fa-check-circle" id="vendorActiveIcon"></i> <span id="vendorActiveText">Active</span>
+            </div>
+            <!-- Hidden inputs to retain logic -->
+            <input type="hidden" id="txtVendorCode" name="txtVendorCode" />
+            <input type="checkbox" id="Active" name="Active" style="display:none;" />
+            <input type="hidden" id="txtVendorId" name="txtVendorId" />
+        </div>
+    </div>
+
     <form id="item">
         <div class="row">
-            <div class="col-lg-3 col-md-6 col-sm-12">
-                <label id="lblVendorCode" class="">Code</label>
-                <input type="text" id="txtVendorCode" class="form-control" readonly="readonly" />
-            </div>
-            <div class="col-lg-3 col-md-6 col-sm-12">
-                <label id="lblVendorName" class="">Supplier / Vendor Name </label>
-                <input type="text" id="txtVendorName" class="form-control" />
-            </div>
-            <div class="col-lg-3 col-md-6 col-sm-12">
-                <label id="lblVendorType">Supplier / Vendor Type </label>
-                <select id="ddlVendorType"></select>
-            </div>
-            <div class="col-lg-3 col-md-6 col-sm-12">
-                <label id="lblAddress">
-                    Address
-                </label>
-                <input type="text" id="txtAddress" class="form-control" />
-            </div>
-        </div>
-        <div class="row">
-            <div class="col-lg-3 col-md-6 col-sm-12">
-                <label id="lblCountry" class="">
-                    Country
-                </label>
-                <input type="text" id="txtCountry" class="form-control" />
-            </div>
-            <div class="col-lg-3 col-md-6 col-sm-12">
-                <label id="lblRegion">
-                    Region
-                </label>
-                <select id="ddlRegion">
-                </select>
-            </div>
+            <!-- Left Column: Basic & Legal -->
+            <div class="col-lg-6 col-md-12 pr-cards-column">
+                <!-- Card 1: Basic Info -->
+                <div class="pr-primary-settings">
+                    <h5 class="pr-section-title" style="margin-top:0;"><i class="fa fa-info-circle"></i> Basic Information</h5>
+                    <div class="row">
+                        <div class="col-md-8 col-sm-12">
+                            <label id="lblVendorName">Supplier / Vendor Name</label>
+                            <div class="input-group">
+                                <div class="input-group-prepend"><span class="input-group-text"><i class="fa fa-user"></i></span></div>
+                                <input type="text" id="txtVendorName" class="form-control" placeholder="Enter supplier / vendor name" />
+                            </div>
+                        </div>
+                        <div class="col-md-4 col-sm-12">
+                            <label id="lblVendorType">Vendor Type</label>
+                            <select id="ddlVendorType"></select>
+                        </div>
+                    </div>
+                    <div class="row mt-2">
+                        <div class="col-md-4 col-sm-12">
+                            <label id="lblCountry">Country</label>
+                            <input type="text" id="txtCountry" class="form-control" placeholder="e.g. Pakistan" />
+                        </div>
+                        <div class="col-md-4 col-sm-12">
+                            <label id="lblRegion">Region</label>
+                            <select id="ddlRegion"></select>
+                        </div>
+                        <div class="col-md-4 col-sm-12">
+                            <label id="lblCity">City</label>
+                            <input type="text" id="txtCity" class="form-control" placeholder="e.g. Lahore" />
+                        </div>
+                    </div>
+                </div>
 
-            <div class="col-lg-3 col-md-6 col-sm-12">
-                <label id="lblMobno" class="">
-                    Mobile #
-                </label>
-                <input type="text" id="txtMobno" class="form-control" />
-                <input type="hidden" id="txtVendorId" name="txtVendorId" />
-            </div>
-            <div class="col-lg-3 col-md-6 col-sm-12">
-                <label id="lblCity">
-                    City
-                </label>
-                <input type="text" id="txtCity" class="form-control" />
-            </div>
-        </div>
-        <div class="row">
-            <div class="col-lg-3 col-md-6 col-sm-12">
-                <label id="lblFoc">
-                    Focal Person
-                </label>
-                <input type="text" id="txtFoc" class="form-control" />
-            </div>
-            <div class="col-lg-3 col-md-6 col-sm-12">
-                <label id="lblPhno">
-                    Phone #
-                </label>
-                <input type="text" id="txtPhno" class="form-control" />
-            </div>
-            <div class="col-lg-3 col-md-6 col-sm-12">
-                <label id="lblCnic">
-                    CNIC #
-                </label>
-                <input type="text" id="txtCnic" class="form-control" />
-            </div>
-            <div class="col-lg-3 col-md-6 col-sm-12">
-                <label id="lblEmail" class="">
-                    Email
-                </label>
-                <input type="text" id="txtEmail" class="form-control" />
-            </div>
-        </div>
-        <div class="row">
-            <div class="col-lg-3 col-md-6 col-sm-12">
-                <label id="lblPayabl" class="">
-                    Payable code
-                </label>
-                <select id="ddlPayabl" class="form-control">
-                </select>
-
-                 <input type="hidden" id="hdfAccount_Name" name="hdfAccount_Name" />
-                <input type="hidden" id="hdfAccount_Code" name="hdfAccount_Code" />
-                <input type="hidden" id="hdfParent_Code" name="hdfParent_Code" />
-                <input type="hidden" id="hdfAccount_Serial" name="hdfAccount_Serial" />
-                <input type="hidden" id="hdfLevel" name="hdfLevel" />
-                <input type="hidden" id="hdfAccount_ID" name="hdfAccount_ID" />
-                <input type="hidden" id="hdfAccountExists" name="hdfAccountExists" />
-            </div>
-
-            <div class="col-lg-3 col-md-6 col-sm-12">
-                <label id="lblNtn">
-                    NTN
-                </label>
-                <input type="text" id="txtNtn" class="form-control" />
-            </div>
-            <div class="col-lg-3 col-md-6 col-sm-12">
-                <label id="lblStn" class="">
-                    STN
-                </label>
-                <input type="text" id="txtStn" class="form-control" />
-            </div>
-            <div class="col-lg-3 col-md-6 col-sm-12">
-                <label id="lblDrugLicenceNo">
-                    Drug Licence #
-                </label>
-                <input type="text" id="txtDrugLicenceNo" class="form-control" />
-            </div>
-            <div class="col-lg-3 col-md-6 col-sm-12">
-                <label id="lblTax">
-                    Tax Payer Type
-                </label>
-                <select id="ddlTax" class="form-control">
-                </select>
-            </div>
-            <div class="col-lg-3 col-md-6 col-sm-12">
-                <label id="lblCom">
-                    Company Type
-                </label>
-                <select id="ddlCom" class="form-control">
-                </select>
-            </div>
-
-            <div class="col-lg-1 col-md-6 col-sm-6" style="margin-top: 2%; width: 40px">
-                <div class="form-check">
-                    <input type="checkbox" class="form-check-input" id="chkmanual" name="chkmanual" />
+                <!-- Card 2: Tax & Legal -->
+                <div class="pr-primary-settings">
+                    <h5 class="pr-section-title" style="margin-top:0;"><i class="fa fa-balance-scale"></i> Tax & Legal</h5>
+                    <div class="row">
+                        <div class="col-md-4 col-sm-12">
+                            <label id="lblCnic">CNIC #</label>
+                            <div class="input-group">
+                                <div class="input-group-prepend"><span class="input-group-text"><i class="fa fa-credit-card"></i></span></div>
+                                <input type="text" id="txtCnic" class="form-control" placeholder="XXXXX-XXXXXXX-X" />
+                            </div>
+                        </div>
+                        <div class="col-md-4 col-sm-12">
+                            <label id="lblNtn">NTN</label>
+                            <input type="text" id="txtNtn" class="form-control" placeholder="Enter NTN number" />
+                        </div>
+                        <div class="col-md-4 col-sm-12">
+                            <label id="lblStn">STN</label>
+                            <input type="text" id="txtStn" class="form-control" placeholder="Enter STN number" />
+                        </div>
+                    </div>
+                    <div class="row mt-2">
+                        <div class="col-md-4 col-sm-12">
+                            <label id="lblDrugLicenceNo">Drug Licence #</label>
+                            <input type="text" id="txtDrugLicenceNo" class="form-control" placeholder="Licence number" />
+                        </div>
+                        <div class="col-md-4 col-sm-12">
+                            <label id="lblTax">Tax Payer Type</label>
+                            <select id="ddlTax" class="form-control"></select>
+                        </div>
+                        <div class="col-md-4 col-sm-12">
+                            <label id="lblCom">Company Type</label>
+                            <select id="ddlCom" class="form-control"></select>
+                        </div>
+                    </div>
                 </div>
             </div>
-            <div class="col-lg-1 col-md-6 col-sm-6" style="margin-top: 2%">
-                <label class="form-check-label" id="lblmanual">Manual</label>
-            </div>
-            <div class="col-lg-1 col-md-6 col-sm-6" style="margin-top: 2%; width: 40px">
-                <div class="form-check">
-                    <input type="checkbox" id="Active" class="form-check-input" name="Active" />
+
+            <!-- Right Column: Contact & Financial -->
+            <div class="col-lg-6 col-md-12 pr-cards-column">
+                <!-- Card 3: Contact Details -->
+                <div class="pr-primary-settings">
+                    <h5 class="pr-section-title" style="margin-top:0;"><i class="fa fa-address-book"></i> Contact Details</h5>
+                    <div class="row">
+                        <div class="col-md-12">
+                            <label id="lblAddress">Address</label>
+                            <div class="input-group">
+                                <div class="input-group-prepend"><span class="input-group-text"><i class="fa fa-map-marker"></i></span></div>
+                                <input type="text" id="txtAddress" class="form-control" placeholder="Street, area, landmark..." />
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row mt-2">
+                        <div class="col-md-6 col-sm-12">
+                            <label id="lblFoc">Focal Person</label>
+                            <input type="text" id="txtFoc" class="form-control" placeholder="Contact person name" />
+                        </div>
+                        <div class="col-md-6 col-sm-12">
+                            <label id="lblMobno">Mobile #</label>
+                            <div class="input-group">
+                                <div class="input-group-prepend"><span class="input-group-text"><i class="fa fa-mobile"></i></span></div>
+                                <input type="text" id="txtMobno" class="form-control" placeholder="+92XXXXXXXXXX" />
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row mt-2">
+                        <div class="col-md-6 col-sm-12">
+                            <label id="lblPhno">Phone #</label>
+                            <div class="input-group">
+                                <div class="input-group-prepend"><span class="input-group-text"><i class="fa fa-phone"></i></span></div>
+                                <input type="text" id="txtPhno" class="form-control" placeholder="Landline number" />
+                            </div>
+                        </div>
+                        <div class="col-md-6 col-sm-12">
+                            <label id="lblEmail">Email</label>
+                            <div class="input-group">
+                                <div class="input-group-prepend"><span class="input-group-text"><i class="fa fa-envelope"></i></span></div>
+                                <input type="text" id="txtEmail" class="form-control" placeholder="someone@example.com" />
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Card 4: Financial Settings -->
+                <div class="pr-primary-settings">
+                    <h5 class="pr-section-title" style="margin-top:0;"><i class="fa fa-money"></i> Financial Settings</h5>
+                    <div class="row">
+                        <div class="col-md-2 col-sm-4">
+                            <label for="chkmanual">Manual</label>
+                            <input type="checkbox" id="chkmanual" name="chkmanual" style="display: block; margin: 8px 0 0 0; width: 20px; height: 20px; cursor: pointer;" />
+                        </div>
+                        <div class="col-md-6 col-sm-4">
+                            <label id="lblPayabl">Payable Code</label>
+                            <select id="ddlPayabl" class="form-control"></select>
+                            <!-- Hidden account fields -->
+                            <input type="hidden" id="hdfAccount_Name" name="hdfAccount_Name" />
+                            <input type="hidden" id="hdfAccount_Code" name="hdfAccount_Code" />
+                            <input type="hidden" id="hdfParent_Code" name="hdfParent_Code" />
+                            <input type="hidden" id="hdfAccount_Serial" name="hdfAccount_Serial" />
+                            <input type="hidden" id="hdfLevel" name="hdfLevel" />
+                            <input type="hidden" id="hdfAccount_ID" name="hdfAccount_ID" />
+                            <input type="hidden" id="hdfAccountExists" name="hdfAccountExists" />
+                        </div>
+                        <div class="col-md-4 col-sm-4">
+                            <label id="lblCreditDays">Credit Days</label>
+                            <input type="text" id="txtcreditDays" class="form-control" placeholder="e.g. 30" />
+                        </div>
+                    </div>
+                    <div class="vendor-info-callout" style="margin-top: 6px;">
+                        <i class="fa fa-info-circle"></i>
+                        <span>A GL payable account will be <strong>auto-created</strong> for this vendor. Check <strong>Manual</strong> to select an existing account instead.</span>
+                    </div>
                 </div>
             </div>
-            <div class="col-lg-1 col-md-6 col-sm-6" style="margin-top: 2%">
-                <label id="lblActive">Active</label>
-            </div>
-
         </div>
     </form>
 
-    <div id="tabs">
+    <div id="tabs" style="margin-top: 20px;">
         <ul>
             <li><a href="#Tab-1">Persons</a></li>
             <li><a href="#Tab-2">Vendor Companies</a></li>
@@ -877,127 +973,133 @@
             <li><a href="#Tab-4">Vendor Pharmacy Items</a></li>
         </ul>
         <div id="Tab-1">
-            <div style="overflow-x: auto; overflow-y: auto; height: 200px;">
-                <div>
-                    <div class="col-lg-1 col-md-4 col-sm-12">
-                        <input type="button" onclick="Addrow()" value="+" id="AddPerson" class="btn btn-primry" />
-                    </div>
-                    <div class="col-lg-1 col-md-4 col-sm-12">
-                        <input style="display: none !important" type="button" class="btn btn-primry" onclick="printPerson()" value="Print" id="PrintPerson" />
-                    </div>
-                </div>
-                <table class="table table-hover table-striped table-bordered" id="tblItemDescription">
+            <div style="margin-bottom: 12px; display: flex; justify-content: flex-end; gap: 8px;">
+                <button type="button" class="btn-item-pick" onclick="Addrow()" title="Add Person"><i class="fa fa-plus"></i></button>
+                <input style="display: none !important" type="button" class="btn btn-primry" onclick="printPerson()" value="Print" id="PrintPerson" />
+            </div>
+            <div style="overflow-x: auto; overflow-y: auto; max-height: 250px; border-radius: 4px; border: 1px solid #eee;">
+                <table class="table pr-tab-table table-hover table-bordered table-striped" id="tblItemDescription" style="margin: 0; width: 100%;">
                     <thead>
                         <tr>
-                            <th style="width: 30px; text-align: center;">Person Name</th>
-                            <th style="width: 30px; text-align: center;">Designation</th>
-                            <th style="width: 40px; text-align: center; font-size: 10px;">Phone #</th>
-                            <th style="width: 45px; text-align: center;">Ext #</th>
-                            <th style="width: 35px; text-align: center;">Cell #</th>
-                            <th style="width: 6%; text-align: center;">Action</th>
+                            <th style="width: 25%; text-align: left;">Person Name</th>
+                            <th style="width: 20%; text-align: left;">Designation</th>
+                            <th style="width: 20%; text-align: left;">Phone #</th>
+                            <th style="width: 15%; text-align: left;">Ext #</th>
+                            <th style="width: 15%; text-align: left;">Cell #</th>
+                            <th style="width: 5%; text-align: center;">Action</th>
                         </tr>
                     </thead>
                     <tbody id="tblPerson">
+                        <tr class="empty-state-row">
+                            <td colspan="6">
+                                <span class="empty-state-icon"><i class="fa fa-address-book-o"></i></span>
+                                <span class="empty-state-text">No persons added yet</span>
+                            </td>
+                        </tr>
                     </tbody>
                 </table>
             </div>
         </div>
 
         <div id="Tab-2">
-            <div style="overflow-x: auto; overflow-y: auto; height: 200px;">
-                <div>
-                    <div class="col-lg-1 col-md-4 col-sm-12">
-                        <input type="button" class="btn btn-primry" onclick="AppendvendorCompany()" value="+" id="AddvendorCompany" />
-                    </div>
-                    <div class="col-lg-1 col-md-4 col-sm-12">
-                        <input style="display: none !important" type="button" class="btn btn-info" onclick="printVendorCompany()" value="Print" id="PrintVendorCompany" />
-                    </div>
-                </div>
-                <table class="table responstable" id="VendorCompanieslist" style="margin-top: 13px; font-size: 10px!important; width: 95% !important; overflow: unset;">
+            <div style="margin-bottom: 12px; display: flex; justify-content: flex-end; gap: 8px;">
+                <button type="button" class="btn-item-pick" onclick="AppendvendorCompany()" title="Add Company"><i class="fa fa-plus"></i></button>
+                <input style="display: none !important" type="button" class="btn btn-info" onclick="printVendorCompany()" value="Print" id="PrintVendorCompany" />
+            </div>
+            <div style="overflow-x: auto; overflow-y: auto; max-height: 250px; border-radius: 4px; border: 1px solid #eee;">
+                <table class="table pr-tab-table table-hover table-bordered table-striped" id="VendorCompanieslist" style="margin: 0; width: 100%;">
                     <thead>
                         <tr>
-                            <th style="width: 10%;">Sr #</th>
-                            <th style="width: 80%;">Company Name</th>
+                            <th style="width: 10%; text-align: center;">Sr #</th>
+                            <th style="width: 80%; text-align: left;">Company Name</th>
                             <th style="text-align: center; width: 10%;">Action</th>
                         </tr>
                     </thead>
                     <tbody id="myVendorCompany">
+                        <tr class="empty-state-row">
+                            <td colspan="3">
+                                <span class="empty-state-icon"><i class="fa fa-building-o"></i></span>
+                                <span class="empty-state-text">No companies added yet</span>
+                            </td>
+                        </tr>
                     </tbody>
                 </table>
             </div>
         </div>
 
         <div id="Tab-3">
-            <div style="overflow-x: auto; overflow-y: auto; height: 200px;">
-                <div>
-                    <div class="col-lg-1 col-md-4 col-sm-12">
-                        <input type="button" class="btn btn-primry" onclick="AppendvendorGeneralItem()" value="+" id="AddvendorGeneralItem" />
-                    </div>
-                    <div class="col-lg-1 col-md-4 col-sm-12">
-                        <input style="display: none !important" type="button" class="btn btn-info" onclick="printvendorGeneralItem()" value="Print" id="PrintvendorGeneralItem" />
-                    </div>
-                </div>
-                <table class="table responstable" id="VendorGeneralItemlist" style="margin-top: 13px; font-size: 10px!important; width: 95% !important; overflow: unset;">
+            <div style="margin-bottom: 12px; display: flex; justify-content: flex-end; gap: 8px;">
+                <button type="button" class="btn-item-pick" onclick="AppendvendorGeneralItem()" title="Add General Item"><i class="fa fa-plus"></i></button>
+                <input style="display: none !important" type="button" class="btn btn-info" onclick="printvendorGeneralItem()" value="Print" id="PrintvendorGeneralItem" />
+            </div>
+            <div style="overflow-x: auto; overflow-y: auto; max-height: 250px; border-radius: 4px; border: 1px solid #eee;">
+                <table class="table pr-tab-table table-hover table-bordered table-striped" id="VendorGeneralItemlist" style="margin: 0; width: 100%;">
                     <thead>
                         <tr>
-                            <th style="width: 15%;">Item Code</th>
-                            <th style="width: 25%;">Description</th>
+                            <th style="width: 15%; text-align: left;">Item Code</th>
+                            <th style="width: 25%; text-align: left;">Description</th>
                             <th style="text-align: center; width: 8%;">UOM</th>
-                            <th style="text-align: center; width: 7%;">Rate</th>
-                            <th style="text-align: center; width: 20%;">Ref #</th>
-                            <th style="text-align: center; width: 30%;">Remarks</th>
+                            <th style="text-align: right; width: 10%;">Rate</th>
+                            <th style="text-align: left; width: 15%;">Ref #</th>
+                            <th style="text-align: left; width: 22%;">Remarks</th>
                             <th style="text-align: center; width: 5%;">Action</th>
                         </tr>
                     </thead>
                     <tbody id="myVendorGeneralItem">
+                        <tr class="empty-state-row">
+                            <td colspan="7">
+                                <span class="empty-state-icon"><i class="fa fa-cube"></i></span>
+                                <span class="empty-state-text">No general items added yet</span>
+                            </td>
+                        </tr>
                     </tbody>
                 </table>
-
             </div>
         </div>
 
         <div id="Tab-4">
-            <div style="overflow-x: auto; overflow-y: auto; height: 200px;">
-                <div>
-                    <div class="col-lg-1 col-md-4 col-sm-6">
-                        <input type="button" class="btn btn-primry" onclick="AppendvendorPharmacyItem()" value="+" id="AddvendorPharmacyItem" />
-                    </div>
-                    <div class="col-lg-1 col-md-4 col-sm-6">
-                        <input style="display: none !important" type="button" class="btn btn-info" onclick="printPharmacyItem()" value="Print" id="PrintPharmacyItem" />
-                    </div>
-                </div>
-                <table class="table responstable" id="VendorPharmacyItemlist" style="margin-top: 13px; font-size: 10px!important; width: 95% !important; overflow: unset;">
+            <div style="margin-bottom: 12px; display: flex; justify-content: flex-end; gap: 8px;">
+                <button type="button" class="btn-item-pick" onclick="AppendvendorPharmacyItem()" title="Add Pharmacy Item"><i class="fa fa-plus"></i></button>
+                <input style="display: none !important" type="button" class="btn btn-info" onclick="printPharmacyItem()" value="Print" id="PrintPharmacyItem" />
+            </div>
+            <div style="overflow-x: auto; overflow-y: auto; max-height: 250px; border-radius: 4px; border: 1px solid #eee;">
+                <table class="table pr-tab-table table-hover table-bordered table-striped" id="VendorPharmacyItemlist" style="margin: 0; width: 100%;">
                     <thead>
                         <tr>
-                            <th style="width: 15%;">Item Code</th>
-                            <th style="width: 25%;">Description</th>
+                            <th style="width: 15%; text-align: left;">Item Code</th>
+                            <th style="width: 25%; text-align: left;">Description</th>
                             <th style="text-align: center; width: 8%;">UOM</th>
-                            <th style="text-align: center; width: 7%;">Rate</th>
-                            <th style="text-align: center; width: 20%;">Ref #</th>
-                            <th style="text-align: center; width: 30%;">Remarks</th>
+                            <th style="text-align: right; width: 10%;">Rate</th>
+                            <th style="text-align: left; width: 15%;">Ref #</th>
+                            <th style="text-align: left; width: 22%;">Remarks</th>
                             <th style="text-align: center; width: 5%;">Action</th>
                         </tr>
                     </thead>
                     <tbody id="myVendorPharmacyItem">
+                        <tr class="empty-state-row">
+                            <td colspan="7">
+                                <span class="empty-state-icon"><i class="fa fa-medkit"></i></span>
+                                <span class="empty-state-text">No pharmacy items added yet</span>
+                            </td>
+                        </tr>
                     </tbody>
                 </table>
             </div>
         </div>
     </div>
 
-    <div style="margin-top: 21px;">
+    <div class="pr-action-buttons">
         <div class="row">
-            <div class="col-lg-1 col-md-4 col-sm-12">
-                <input type="button" class="btn btn-primry" onclick="SaveAllRecord()" value="Save" id="btnSave" />
+            <div class="col-lg-2 col-md-4 col-sm-12">
+                <input type="button" class="btn btn-primry w-100" onclick="SaveAllRecord()" value="Save" id="btnSave" />
             </div>
-            <div class="col-lg-1 col-md-4 col-sm-12">
-                <input type="button" class="btn-gray" value="List" onclick="window.location = 'VendorView.aspx'" />
+            <div class="col-lg-2 col-md-4 col-sm-12">
+                <input type="button" class="btn btn-gray w-100" value="List" onclick="window.location = 'VendorView.aspx'" />
             </div>
-            <div class="col-lg-1 col-md-4 col-sm-12">
-                <input type="button" class="btn btn-yellow" value="New" onclick="window.location = 'Vendor.aspx'" />
+            <div class="col-lg-2 col-md-4 col-sm-12">
+                <input type="button" class="btn btn-yellow w-100" value="New" onclick="window.location = 'Vendor.aspx'" />
             </div>
         </div>
-                   
     </div>
 
 </asp:Content>

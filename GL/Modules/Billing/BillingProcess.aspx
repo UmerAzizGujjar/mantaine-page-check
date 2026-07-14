@@ -199,6 +199,7 @@
 
             function ApproveBill() {
                 debugger;
+                $('#btnApprove').attr('disabled', true);
                 var BillId = '<% =Request.QueryString["Bill_ID"] %>';
                     PageMethods.approve_Bill(BillId, function (Tests) {
                         debugger
@@ -221,6 +222,7 @@
                             }, 2500);
                         }
                         else {
+                            $('#btnApprove').attr('disabled', false);
                             Swal.fire({
                                 icon: 'error',
                                 title: 'Error!',
@@ -230,6 +232,7 @@
                     },
 
                         function (error) {
+                            $('#btnApprove').attr('disabled', false);
                             Swal.fire({
                                 icon: 'error',
                                 title: 'Error!',
@@ -1855,7 +1858,8 @@
                         //}
                         var Bill_Date = $('#txtBillDate').val();
                         var Remarks = $('#txtRemarks').val();
-                        var TotalPayable = $('#txtTotalAmount').val();
+                        //var TotalPayable = $('#txtTotalAmount').val();
+                        var TotalPayable = parseFloat($('#txtTotalAmount').val()) || 0;
                         var Discount_Percentage = $('#txtDisPer').val();
                         Discount_Percentage = $('#hdntxtDisPer').val();
                         var Discount_Amount = $('#txtDisAmt').val();

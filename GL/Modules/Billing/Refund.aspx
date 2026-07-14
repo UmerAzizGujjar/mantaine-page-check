@@ -385,7 +385,7 @@
             });
         }
         function SaveRecord() {
-
+            $('#btnSave').attr('disabled', true);
             if (validateSave()) {
 
                 debugger;
@@ -462,11 +462,14 @@
                         $('#btnSave').attr('disabled', 'disabled');
 
                     }, function (error) {
-
+                        $('#btnSave').attr('disabled', false);
                         alert(error.get_message());
                     });
 
                 //});
+            }
+            else {
+                $('#btnSave').attr('disabled', false);
             }
         }
 
@@ -584,6 +587,7 @@
 
 
         function ApproveRefund() {
+            $('#btnApprove').attr('disabled', true);
             var refundId = '<% =Request.QueryString["advID"] %>';
             if (!refundId || refundId == "") {
                 Swal.fire({
@@ -592,6 +596,7 @@
                     text: 'No refund record found to approve.',
                     showConfirmButton: true
                 });
+                $('#btnApprove').attr('disabled', false);
                 return;
             }
 
@@ -617,6 +622,7 @@
                                 location.reload();
                             }, 2000);
                         } else {
+                            $('#btnApprove').attr('disabled', false);
                             Swal.fire({
                                 icon: 'error',
                                 title: 'Error!',
@@ -630,6 +636,7 @@
                             });
                         }
                     } else {
+                        $('#btnApprove').attr('disabled', false);
                         Swal.fire({
                             icon: 'error',
                             title: 'Error!',
@@ -638,6 +645,7 @@
                         });
                     }
                 } catch (error) {
+                    $('#btnApprove').attr('disabled', false);
                     console.error("Error parsing response:", error);
                     Swal.fire({
                         icon: 'error',
@@ -647,6 +655,7 @@
                     });
                 }
             }, function (error) {
+                $('#btnApprove').attr('disabled', false);
                 debugger;
                 console.error("PageMethods error:", error);
                 Swal.fire({
@@ -660,6 +669,7 @@
 
         
         function UnApproveRefund() {
+            $('#btnUnApprove').attr('disabled', true);
             var refundId = '<% =Request.QueryString["advID"] %>';
     if (!refundId || refundId == "") {
         Swal.fire({
@@ -668,6 +678,7 @@
             text: 'No refund record found to unapprove.',
             showConfirmButton: true
         });
+        $('#btnUnApprove').attr('disabled', false);
         return;
     }
 
@@ -693,6 +704,7 @@
                         location.reload();
                     }, 2000);
                 } else {
+                    $('#btnUnApprove').attr('disabled', false);
                     Swal.fire({
                         icon: 'error',
                         title: 'Error!',
@@ -706,6 +718,7 @@
                     });
                 }
             } else {
+                $('#btnUnApprove').attr('disabled', false);
                 Swal.fire({
                     icon: 'error',
                     title: 'Error!',
@@ -714,6 +727,7 @@
                 });
             }
         } catch (error) {
+            $('#btnUnApprove').attr('disabled', false);
             console.error("Error parsing response:", error);
             Swal.fire({
                 icon: 'error',
@@ -723,6 +737,7 @@
             });
         }
     }, function (error) {
+        $('#btnUnApprove').attr('disabled', false);
         debugger;
         console.error("PageMethods error:", error);
         Swal.fire({

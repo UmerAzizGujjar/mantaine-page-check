@@ -1155,7 +1155,7 @@
                             htmlContainer: 'swal-big-text'
                         }
                     });
-
+                    $('#btnSaveSaleReturn').attr('disabled', false);
                     return;
                 }
                 if (userC == userCode && userP == UserPass) {
@@ -2352,6 +2352,7 @@
             });
             debugger;
             if (hasInvalidStock) {
+                $('#SaveVal').attr('disabled', false);
                 return;
             }
             debugger;

@@ -568,6 +568,7 @@
     
         function SaveRecord() {
             debugger;
+            $('#btnSave').attr('disabled', true);
             if (validateSave()) {
                 var Patient_ID = $("#hdPatientID").text();
                 var Reg_ID = $("#hdRegID").val();
@@ -622,10 +623,12 @@
                         timer: 2500
                     });
                     setTimeout(function () { window.location = 'DiscountAssignedList.aspx'; }, 2500);
-                    $('#btnSave').attr('disabled', 'disabled');
                 }, function (error) {
+                    $('#btnSave').attr('disabled', false);
                     alert(error.get_message());
                 });
+            } else {
+                $('#btnSave').attr('disabled', false);
             }
         }
 
@@ -666,10 +669,12 @@
 
         function ApproveRecord() {
             debugger;
+            $('#btnApprove').attr('disabled', true);
 
             var Bill_ID = $("#hdnBillID").val();
 
             if (!Bill_ID || Bill_ID == "0") {
+                $('#btnApprove').attr('disabled', false);
                 Swal.fire({ title: "Error!", text: "Bill ID is missing", icon: "error" });
                 return;
             }
@@ -694,6 +699,7 @@
                                 });
                                 $('#btnApprove').hide();
                             } else {
+                                $('#btnApprove').attr('disabled', false);
                                 Swal.fire({
                                     icon: 'error',
                                     title: 'Error!',
@@ -702,6 +708,7 @@
                             }
                         },
                         function (error) {
+                            $('#btnApprove').attr('disabled', false);
                             Swal.fire({
                                 icon: 'error',
                                 title: 'Error!',

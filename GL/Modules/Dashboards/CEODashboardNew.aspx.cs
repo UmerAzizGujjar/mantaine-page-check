@@ -46,27 +46,27 @@ namespace PMS.Modules.Dashboards
                 return new JavaScriptSerializer().Serialize(resultObj);
             }
         }
-        [WebMethod]
-        public static string GetYearlyInventorySummary(int year)
-        {
-            try
-            {
-                using (DataBaseDataContext db = new DataBaseDataContext())
-                {
-                    var query = db.sp_YearlyInventorySummary(year).ToList();
+        //[WebMethod]
+        //public static string GetYearlyInventorySummary(int year)
+        //{
+        //    try
+        //    {
+        //        using (DataBaseDataContext db = new DataBaseDataContext())
+        //        {
+        //            var query = db.sp_YearlyInventorySummary(year).ToList();
 
-                    return (new JavaScriptSerializer()).Serialize(query);
-                }
-            }
-            catch (Exception ex)
-            {
-                return (new JavaScriptSerializer()).Serialize(new
-                {
-                    Status = false,
-                    Message = ex.Message
-                });
-            }
-        }
+        //            return (new JavaScriptSerializer()).Serialize(query);
+        //        }
+        //    }
+        //    catch (Exception ex)
+        //    {
+        //        return (new JavaScriptSerializer()).Serialize(new
+        //        {
+        //            Status = false,
+        //            Message = ex.Message
+        //        });
+        //    }
+        //}
 
         [WebMethod]
         public static string GetYearlyPharmacySummary(int year)
@@ -74,8 +74,8 @@ namespace PMS.Modules.Dashboards
             string result = string.Empty;
             using (DataBaseDataContext db = new DataBaseDataContext())
             {
-                var query = db.sp_YearlyPharmacySummary(year).ToList();
-                result = (new JavaScriptSerializer()).Serialize(query);
+                //var query = db.sp_YearlyPharmacySummary(year).ToList();
+               // result = (new JavaScriptSerializer()).Serialize(query);
             }
             return result;
         }
@@ -86,8 +86,8 @@ namespace PMS.Modules.Dashboards
             string result = string.Empty;
             using (DataBaseDataContext db = new DataBaseDataContext())
             {
-                var query = db.sp_YearlyPharmacyRevenue(year).ToList();
-                result = (new JavaScriptSerializer()).Serialize(query);
+               //var query = db.sp_YearlyPharmacyRevenue(year).ToList();
+               // result = (new JavaScriptSerializer()).Serialize(query);
             }
             return result;
         }

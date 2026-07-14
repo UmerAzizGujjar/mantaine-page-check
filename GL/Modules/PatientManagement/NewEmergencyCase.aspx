@@ -1637,6 +1637,8 @@
             });
         }
         function saveSymptomsToDatabase() {
+            // Disable modal save button if it exists
+            $('#btnSaveSymptoms').attr('disabled', true);
             // Array to store all symptom data
             var symptomsData = [];
 
@@ -1657,11 +1659,12 @@
             if (symptomsData.length > 0) {
                 $.ajax({
                     type: "POST",
-                    url: "NewEmergencyCase.aspx/SaveSymptoms", // Update with your actual endpoint
+                    url: "NewEmergencyCase.aspx/SaveSymptoms",
                     data: JSON.stringify({ symptoms: symptomsData }),
                     contentType: "application/json; charset=utf-8",
                     dataType: "json",
                     success: function (response) {
+                        $('#btnSaveSymptoms').attr('disabled', false);
                         if (response.d) {
                             // Success handling
                             Swal.fire({
@@ -1677,7 +1680,7 @@
                         $('#manageSymptomsModal').modal('hide')
                     },
                     error: function (xhr, status, error) {
-                        // Error handling
+                        $('#btnSaveSymptoms').attr('disabled', false);
                         Swal.fire({
                             icon: 'error',
                             title: 'Error!',
@@ -1688,6 +1691,7 @@
                     }
                 });
             } else {
+                $('#btnSaveSymptoms').attr('disabled', false);
                 Swal.fire({
                     icon: 'warning',
                     title: 'No Data',
@@ -1911,9 +1915,11 @@
             $('#manageSymptomsModal').modal('show');
         }
         function saveSymptom() {
+            $('#btnSaveNewSymptom').attr('disabled', true);
             const SymptomText = $('#NewSymptom').val().trim();
 
             if (SymptomText === '') {
+                $('#btnSaveNewSymptom').attr('disabled', false);
                 alert('Please enter a Symptom before saving.');
                 return;
             }
@@ -1925,6 +1931,7 @@
                     contentType: "application/json; charset=utf-8",
                     dataType: "json",
                     success: function (response) {
+                        $('#btnSaveNewSymptom').attr('disabled', false);
                         if (response.d) {
                             // Success handling
                             Swal.fire({
@@ -1939,7 +1946,7 @@
                         fillSymptoms("000", "");
                     },
                     error: function (xhr, status, error) {
-                        // Error handling
+                        $('#btnSaveNewSymptom').attr('disabled', false);
                         Swal.fire({
                             icon: 'error',
                             title: 'Error!',
@@ -3494,6 +3501,7 @@
     <script id="saveLogic">
 
         function SaveMedicines() {
+            $('#btnSave').attr('disabled', true);
 
             debugger;
             var table = $('#tblMedicines');

@@ -140,6 +140,7 @@
         var CrAccountID = 0;
         function TranferShares() {
             debugger;
+            $('#BtnPaid').attr('disabled', true);
             getTotal_CR_DR();
             var btnSave = 'Save';
             var Distri_No = 1;
@@ -190,9 +191,17 @@
                 setTimeout(function () {
                     window.location = "DoctorPayables_Services.aspx?ID=" + DocId;
                 }, 500);
+            }, function (error) {
+                $('#BtnPaid').attr('disabled', false);
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Error',
+                    text: error.get_message()
+                });
             });
         }
         function UpdateData() {
+            $('#BtnSave').attr('disabled', true);
             var table = $('#tbody');
             var Update_list = [];
             var ListTransID = '';
@@ -224,6 +233,7 @@
                     }, 500);
                 },
                 error: function (err) {
+                    $('#BtnSave').attr('disabled', false);
                     Swal.fire({
                         icon: 'error',
                         title: 'Error',

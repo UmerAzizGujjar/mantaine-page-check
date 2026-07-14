@@ -10545,42 +10545,6 @@
     <Parameter Name="Batch" Parameter="batch" Type="System.String" DbType="VarChar(100)" />
     <Return Type="System.Decimal" />
   </Function>
-  <Function Name="dbo.sp_YearlyPharmacyRevenue" Method="sp_YearlyPharmacyRevenue">
-    <Parameter Name="Year" Parameter="year" Type="System.Int32" DbType="Int" />
-    <ElementType Name="sp_YearlyPharmacyRevenueResult">
-      <Column Name="Metric" Type="System.String" DbType="NVarChar(128)" CanBeNull="true" />
-      <Column Name="Jan" Type="System.Decimal" DbType="Decimal(38,4) NOT NULL" CanBeNull="false" />
-      <Column Name="Feb" Type="System.Decimal" DbType="Decimal(38,4) NOT NULL" CanBeNull="false" />
-      <Column Name="Mar" Type="System.Decimal" DbType="Decimal(38,4) NOT NULL" CanBeNull="false" />
-      <Column Name="Apr" Type="System.Decimal" DbType="Decimal(38,4) NOT NULL" CanBeNull="false" />
-      <Column Name="May" Type="System.Decimal" DbType="Decimal(38,4) NOT NULL" CanBeNull="false" />
-      <Column Name="Jun" Type="System.Decimal" DbType="Decimal(38,4) NOT NULL" CanBeNull="false" />
-      <Column Name="Jul" Type="System.Decimal" DbType="Decimal(38,4) NOT NULL" CanBeNull="false" />
-      <Column Name="Aug" Type="System.Decimal" DbType="Decimal(38,4) NOT NULL" CanBeNull="false" />
-      <Column Name="Sep" Type="System.Decimal" DbType="Decimal(38,4) NOT NULL" CanBeNull="false" />
-      <Column Name="Oct" Type="System.Decimal" DbType="Decimal(38,4) NOT NULL" CanBeNull="false" />
-      <Column Name="Nov" Type="System.Decimal" DbType="Decimal(38,4) NOT NULL" CanBeNull="false" />
-      <Column Name="Dec" Type="System.Decimal" DbType="Decimal(38,4) NOT NULL" CanBeNull="false" />
-    </ElementType>
-  </Function>
-  <Function Name="dbo.sp_YearlyPharmacySummary" Method="sp_YearlyPharmacySummary">
-    <Parameter Name="Year" Parameter="year" Type="System.Int32" DbType="Int" />
-    <ElementType Name="sp_YearlyPharmacySummaryResult">
-      <Column Name="Metric" Type="System.String" DbType="NVarChar(128)" CanBeNull="true" />
-      <Column Name="Jan" Type="System.Decimal" DbType="Decimal(38,4) NOT NULL" CanBeNull="false" />
-      <Column Name="Feb" Type="System.Decimal" DbType="Decimal(38,4) NOT NULL" CanBeNull="false" />
-      <Column Name="Mar" Type="System.Decimal" DbType="Decimal(38,4) NOT NULL" CanBeNull="false" />
-      <Column Name="Apr" Type="System.Decimal" DbType="Decimal(38,4) NOT NULL" CanBeNull="false" />
-      <Column Name="May" Type="System.Decimal" DbType="Decimal(38,4) NOT NULL" CanBeNull="false" />
-      <Column Name="Jun" Type="System.Decimal" DbType="Decimal(38,4) NOT NULL" CanBeNull="false" />
-      <Column Name="Jul" Type="System.Decimal" DbType="Decimal(38,4) NOT NULL" CanBeNull="false" />
-      <Column Name="Aug" Type="System.Decimal" DbType="Decimal(38,4) NOT NULL" CanBeNull="false" />
-      <Column Name="Sep" Type="System.Decimal" DbType="Decimal(38,4) NOT NULL" CanBeNull="false" />
-      <Column Name="Oct" Type="System.Decimal" DbType="Decimal(38,4) NOT NULL" CanBeNull="false" />
-      <Column Name="Nov" Type="System.Decimal" DbType="Decimal(38,4) NOT NULL" CanBeNull="false" />
-      <Column Name="Dec" Type="System.Decimal" DbType="Decimal(38,4) NOT NULL" CanBeNull="false" />
-    </ElementType>
-  </Function>
   <Function Name="dbo.sp_Bio_Data_Dashborad" Method="sp_Bio_Data_Dashborad">
     <Parameter Name="startdate" Type="System.String" DbType="VarChar(100)" />
     <Parameter Name="enddate" Type="System.String" DbType="VarChar(100)" />
@@ -11336,24 +11300,6 @@
     <ElementType Name="sp_GetProcedureCountsResult">
       <Column Name="Item_Name" Type="System.String" DbType="VarChar(200)" CanBeNull="true" />
       <Column Name="TotalCount" Type="System.Decimal" DbType="Decimal(38,2)" CanBeNull="true" />
-    </ElementType>
-  </Function>
-  <Function Name="dbo.sp_YearlyInventorySummary" Method="sp_YearlyInventorySummary">
-    <Parameter Name="Year" Parameter="year" Type="System.Int32" DbType="Int" />
-    <ElementType Name="sp_YearlyInventorySummaryResult">
-      <Column Name="Metric" Type="System.String" DbType="NVarChar(128)" CanBeNull="true" />
-      <Column Name="Jan" Type="System.Decimal" DbType="Decimal(38,4) NOT NULL" CanBeNull="false" />
-      <Column Name="Feb" Type="System.Decimal" DbType="Decimal(38,4) NOT NULL" CanBeNull="false" />
-      <Column Name="Mar" Type="System.Decimal" DbType="Decimal(38,4) NOT NULL" CanBeNull="false" />
-      <Column Name="Apr" Type="System.Decimal" DbType="Decimal(38,4) NOT NULL" CanBeNull="false" />
-      <Column Name="May" Type="System.Decimal" DbType="Decimal(38,4) NOT NULL" CanBeNull="false" />
-      <Column Name="Jun" Type="System.Decimal" DbType="Decimal(38,4) NOT NULL" CanBeNull="false" />
-      <Column Name="Jul" Type="System.Decimal" DbType="Decimal(38,4) NOT NULL" CanBeNull="false" />
-      <Column Name="Aug" Type="System.Decimal" DbType="Decimal(38,4) NOT NULL" CanBeNull="false" />
-      <Column Name="Sep" Type="System.Decimal" DbType="Decimal(38,4) NOT NULL" CanBeNull="false" />
-      <Column Name="Oct" Type="System.Decimal" DbType="Decimal(38,4) NOT NULL" CanBeNull="false" />
-      <Column Name="Nov" Type="System.Decimal" DbType="Decimal(38,4) NOT NULL" CanBeNull="false" />
-      <Column Name="Dec" Type="System.Decimal" DbType="Decimal(38,4) NOT NULL" CanBeNull="false" />
     </ElementType>
   </Function>
   <Function Name="dbo.sp_GetPatientCountsAndNetAmountByDate" Method="sp_GetPatientCountsAndNetAmountByDate">
@@ -12885,6 +12831,63 @@
     <Parameter Name="RecordType" Parameter="recordType" Type="System.String" DbType="VarChar(50)" />
     <ElementType Name="spApprove_Distribution_Transfer_DRResult">
       <Column Name="ResultMessage" Type="System.String" DbType="VarChar(1000)" CanBeNull="true" />
+    </ElementType>
+  </Function>
+  <Function Name="dbo.sp_YearlyPharmacyRevenue" Method="sp_YearlyPharmacyRevenue">
+    <Parameter Name="Year" Parameter="year" Type="System.Int32" DbType="Int" />
+    <Parameter Name="Warehouse" Parameter="warehouse" Type="System.String" DbType="VarChar(50)" />
+    <ElementType Name="sp_YearlyPharmacyRevenueResult">
+      <Column Name="Metric" Type="System.String" DbType="NVarChar(128)" CanBeNull="true" />
+      <Column Name="Jan" Type="System.Decimal" DbType="Decimal(38,4) NOT NULL" CanBeNull="false" />
+      <Column Name="Feb" Type="System.Decimal" DbType="Decimal(38,4) NOT NULL" CanBeNull="false" />
+      <Column Name="Mar" Type="System.Decimal" DbType="Decimal(38,4) NOT NULL" CanBeNull="false" />
+      <Column Name="Apr" Type="System.Decimal" DbType="Decimal(38,4) NOT NULL" CanBeNull="false" />
+      <Column Name="May" Type="System.Decimal" DbType="Decimal(38,4) NOT NULL" CanBeNull="false" />
+      <Column Name="Jun" Type="System.Decimal" DbType="Decimal(38,4) NOT NULL" CanBeNull="false" />
+      <Column Name="Jul" Type="System.Decimal" DbType="Decimal(38,4) NOT NULL" CanBeNull="false" />
+      <Column Name="Aug" Type="System.Decimal" DbType="Decimal(38,4) NOT NULL" CanBeNull="false" />
+      <Column Name="Sep" Type="System.Decimal" DbType="Decimal(38,4) NOT NULL" CanBeNull="false" />
+      <Column Name="Oct" Type="System.Decimal" DbType="Decimal(38,4) NOT NULL" CanBeNull="false" />
+      <Column Name="Nov" Type="System.Decimal" DbType="Decimal(38,4) NOT NULL" CanBeNull="false" />
+      <Column Name="Dec" Type="System.Decimal" DbType="Decimal(38,4) NOT NULL" CanBeNull="false" />
+    </ElementType>
+  </Function>
+  <Function Name="dbo.sp_YearlyInventorySummary" Method="sp_YearlyInventorySummary">
+    <Parameter Name="Year" Parameter="year" Type="System.Int32" DbType="Int" />
+    <Parameter Name="Warehouse" Parameter="warehouse" Type="System.String" DbType="VarChar(50)" />
+    <ElementType Name="sp_YearlyInventorySummaryResult">
+      <Column Name="Metric" Type="System.String" DbType="NVarChar(128)" CanBeNull="true" />
+      <Column Name="Jan" Type="System.Decimal" DbType="Decimal(38,4) NOT NULL" CanBeNull="false" />
+      <Column Name="Feb" Type="System.Decimal" DbType="Decimal(38,4) NOT NULL" CanBeNull="false" />
+      <Column Name="Mar" Type="System.Decimal" DbType="Decimal(38,4) NOT NULL" CanBeNull="false" />
+      <Column Name="Apr" Type="System.Decimal" DbType="Decimal(38,4) NOT NULL" CanBeNull="false" />
+      <Column Name="May" Type="System.Decimal" DbType="Decimal(38,4) NOT NULL" CanBeNull="false" />
+      <Column Name="Jun" Type="System.Decimal" DbType="Decimal(38,4) NOT NULL" CanBeNull="false" />
+      <Column Name="Jul" Type="System.Decimal" DbType="Decimal(38,4) NOT NULL" CanBeNull="false" />
+      <Column Name="Aug" Type="System.Decimal" DbType="Decimal(38,4) NOT NULL" CanBeNull="false" />
+      <Column Name="Sep" Type="System.Decimal" DbType="Decimal(38,4) NOT NULL" CanBeNull="false" />
+      <Column Name="Oct" Type="System.Decimal" DbType="Decimal(38,4) NOT NULL" CanBeNull="false" />
+      <Column Name="Nov" Type="System.Decimal" DbType="Decimal(38,4) NOT NULL" CanBeNull="false" />
+      <Column Name="Dec" Type="System.Decimal" DbType="Decimal(38,4) NOT NULL" CanBeNull="false" />
+    </ElementType>
+  </Function>
+  <Function Name="dbo.sp_YearlyPharmacySummary" Method="sp_YearlyPharmacySummary">
+    <Parameter Name="Year" Parameter="year" Type="System.Int32" DbType="Int" />
+    <Parameter Name="Warehouse" Parameter="warehouse" Type="System.String" DbType="VarChar(50)" />
+    <ElementType Name="sp_YearlyPharmacySummaryResult">
+      <Column Name="Metric" Type="System.String" DbType="NVarChar(128)" CanBeNull="true" />
+      <Column Name="Jan" Type="System.Decimal" DbType="Decimal(38,4) NOT NULL" CanBeNull="false" />
+      <Column Name="Feb" Type="System.Decimal" DbType="Decimal(38,4) NOT NULL" CanBeNull="false" />
+      <Column Name="Mar" Type="System.Decimal" DbType="Decimal(38,4) NOT NULL" CanBeNull="false" />
+      <Column Name="Apr" Type="System.Decimal" DbType="Decimal(38,4) NOT NULL" CanBeNull="false" />
+      <Column Name="May" Type="System.Decimal" DbType="Decimal(38,4) NOT NULL" CanBeNull="false" />
+      <Column Name="Jun" Type="System.Decimal" DbType="Decimal(38,4) NOT NULL" CanBeNull="false" />
+      <Column Name="Jul" Type="System.Decimal" DbType="Decimal(38,4) NOT NULL" CanBeNull="false" />
+      <Column Name="Aug" Type="System.Decimal" DbType="Decimal(38,4) NOT NULL" CanBeNull="false" />
+      <Column Name="Sep" Type="System.Decimal" DbType="Decimal(38,4) NOT NULL" CanBeNull="false" />
+      <Column Name="Oct" Type="System.Decimal" DbType="Decimal(38,4) NOT NULL" CanBeNull="false" />
+      <Column Name="Nov" Type="System.Decimal" DbType="Decimal(38,4) NOT NULL" CanBeNull="false" />
+      <Column Name="Dec" Type="System.Decimal" DbType="Decimal(38,4) NOT NULL" CanBeNull="false" />
     </ElementType>
   </Function>
 </Database>
