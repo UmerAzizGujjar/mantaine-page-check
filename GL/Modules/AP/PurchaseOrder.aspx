@@ -1293,9 +1293,12 @@
             } else if (status == "Cancelled") {
                 $('#btnSave').attr("disabled", "disabled").hide();
                 $('#btncancel').hide();
-            } else if (status == "Created") {
+            } else if (status == "Created" || status == "Pending") {
                 $('#btnSave').show();
                 $('#btnUnApprove').hide();
+                if (poid != "") {
+                    CheckPOApprovalRightsAndShowButton(poid);
+                }
             }
         }
       // ============================================================================
@@ -2710,7 +2713,75 @@ function scheduleCalcTotal(delay) {
             });
         }
 
+        function CheckPOApprovalRightsAndShowButton(poId) {
+            callPageMethod('CheckPOApprovalRights', function (hasRights) {
+                if (hasRights) {
+                    callPageMethod('GetPOApprovalInfo', { POId: poId }, function (resp) {
+                        var info = JSON.parse(resp);
+                        if (info.CanApprove) {
+                            $('#btnApprove').show();
+                            $('#btnApprove').data('po-amount', info.POAmount);
+                            $('#btnApprove').data('remaining-amount', info.RemainingAmount);
+                            $('#btnApprove').data('budget-enabled', info.BudgetEnabled);
+                        }
+                    });
+                }
+            });
+        }
 
+        function ApprovePOFromEdit() {
+            var poId = poid;
+            var poAmount = $('#btnApprove').data('po-amount');
+            var remainingAmount = $('#btnApprove').data('remaining-amount');
+            var budgetEnabled = $('#btnApprove').data('budget-enabled');
+
+            var confirmHtml = 'Are you sure you want to approve PO #' + $('#ctl00_MainContent_txtPurchase_No').val() + '?';
+            if (budgetEnabled) {
+                confirmHtml += '<br><br>PO Amount: <strong>' + parseFloat(poAmount).toFixed(2) + '</strong>';
+                confirmHtml += '<br>Remaining Budget: <strong>' + parseFloat(remainingAmount).toFixed(2) + '</strong>';
+            }
+
+            Swal.fire({
+                title: 'Approve PO?',
+                html: confirmHtml,
+                icon: 'question',
+                showCancelButton: true,
+                confirmButtonText: 'Yes, Approve',
+                cancelButtonText: 'Cancel',
+                input: 'textarea',
+                inputPlaceholder: 'Approval remarks (optional)...',
+                inputAttributes: { 'aria-label': 'Approval remarks' },
+                customClass: { popup: 'swal-big-popup', title: 'swal-big-title', htmlContainer: 'swal-big-text' }
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    var remarks = result.value || '';
+                    callPageMethod('ApproveSinglePO', { POId: poId, approvalRemarks: remarks }, function (resp) {
+                        if (resp === "Success") {
+                            Swal.fire({
+                                icon: 'success',
+                                title: 'Approved!',
+                                text: 'PO has been approved successfully.',
+                                showConfirmButton: false,
+                                timer: 2000,
+                                customClass: { popup: 'swal-big-popup', title: 'swal-big-title', htmlContainer: 'swal-big-text' }
+                            }).then(function () {
+                                location.reload();
+                            });
+                        } else {
+                            Swal.fire({
+                                icon: 'error',
+                                title: 'Error',
+                                text: resp,
+                                showConfirmButton: true,
+                                customClass: { popup: 'swal-big-popup', title: 'swal-big-title', htmlContainer: 'swal-big-text' }
+                            }).then(function () {
+                                location.reload();
+                            });
+                        }
+                    });
+                }
+            });
+        }
 
         function Cancel() {
             var POid = '<%= Request.QueryString["PO_ID"] %>';
@@ -3361,7 +3432,7 @@ function scheduleCalcTotal(delay) {
             </div>
             <div class="pr-totals-bar-item">
                 <label>Net Amount</label>
-                <input type="text" id="Net_Amount" readonly="readonly" class="pr-total-input" placeholder="0.00" />
+                <input type="text" id="ctl00_MainContent_Net_Amount" readonly="readonly" class="pr-total-input" placeholder="0.00" />
             </div>
         </div>
     </div>
@@ -3385,6 +3456,9 @@ function scheduleCalcTotal(delay) {
         </div>
         <div>
             <input type="button" id="btnPrint2" value="Print2" class="btn btn-primry w-100" name="name" onclick="PrintPurchaseOrderDetail2();" />
+        </div>
+        <div>
+            <input type="button" style="display:none;" class="btn btn-primry w-100" value="Approve" id="btnApprove" onclick="ApprovePOFromEdit()" />
         </div>
         <div>
             <input type="button" style="display:none;" class="btn btn-primry w-100" value="UnApprove" id="btnUnApprove" onclick="UnApprove()" />

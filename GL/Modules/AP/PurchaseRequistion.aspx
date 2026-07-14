@@ -8,6 +8,7 @@
     <script type="text/javascript">
         var counter = 1;
         var append_data = '';
+        var isSaving = false;
 
         var id = '<% =Request.QueryString["ID"] %>';
 
@@ -173,7 +174,10 @@
                     $('#btnsave').attr("disabled", 'disabled');
                     $('#btnsave').hide();
                 }
-                if (status == "Created") {
+                if (status == "Created" || status == "Pending") {
+                    if (id != "") {
+                        CheckApprovalRightsAndShowButton(id);
+                    }
                 }
             }, 1500);
 
@@ -532,7 +536,9 @@
 
         function SaveTest() {
             debugger;
-            $("#btnSave").prop("disabled", true);
+            if (isSaving) return false;
+            isSaving = true;
+            $("#btnsave").prop("disabled", true);
             var qtyOrAmtChck = false;
             var datecheck = '';
             var PRId = (id == "") ? 0 : id;
@@ -552,13 +558,13 @@
             }
             if (Pirority == '0') {
                 Swal.fire({ icon: 'error', title: 'Error!', text: 'Please Select Priority', showConfirmButton: false, timer: 2000, customClass: { popup: 'swal-big-popup', title: 'swal-big-title', htmlContainer: 'swal-big-text' } });
-                $("#btnSave").prop("disabled", false);
+                isSaving = false; $("#btnsave").prop("disabled", false);
                 $('#ddlPriority').select2().focus(); $('#ddlPriority').select2('open');
                 return false;
             }
             if (dept == '0') {
                 Swal.fire({ icon: 'error', title: 'Error!', text: 'Please Select Department', showConfirmButton: false, timer: 2000, customClass: { popup: 'swal-big-popup', title: 'swal-big-title', htmlContainer: 'swal-big-text' } });
-                $("#btnSave").prop("disabled", false);
+                isSaving = false; $("#btnsave").prop("disabled", false);
                 $('#ddldept').select2().focus(); $('#ddldept').select2('open');
                 return false;
             }
@@ -566,7 +572,7 @@
             if (tblLength == '0') {
                 Swal.fire({ icon: 'error', title: 'Error!', text: 'Please Add Items', showConfirmButton: false, timer: 2000, customClass: { popup: 'swal-big-popup', title: 'swal-big-title', htmlContainer: 'swal-big-text' } });
                 $('#tblPackage').addClass('ErrorAlert');
-                $("#btnSave").prop("disabled", false);
+                isSaving = false; $("#btnsave").prop("disabled", false);
                 return false;
             } else { $('#tblPackage').removeClass('ErrorAlert'); }
 
@@ -579,22 +585,22 @@
                     datecheck = (PRDate > RequiredDate) ? false : true;
                     if (RDate == "") {
                         Swal.fire({ icon: 'error', title: 'Error!', text: 'Please Enter Required Date', showConfirmButton: false, timer: 2000, customClass: { popup: 'swal-big-popup', title: 'swal-big-title', htmlContainer: 'swal-big-text' } });
-                        $("#btnSave").prop("disabled", false); qtyOrAmtChck = true; return false;
+                        isSaving = false; $("#btnsave").prop("disabled", false); qtyOrAmtChck = true; return false;
                     }
-                    if (Qty == "" || Qty == 0 || Qty < 0) {
+                    if (Qty == "" || Qty == "0" || Qty === 0 || Qty < 0) {
                         Swal.fire({ icon: 'error', title: 'Error!', text: 'Please Enter Qty Or Qty Must be Greater than zero', showConfirmButton: false, timer: 2000, customClass: { popup: 'swal-big-popup', title: 'swal-big-title', htmlContainer: 'swal-big-text' } });
-                        qtyOrAmtChck = true; $("#btnSave").prop("disabled", false); return false;
+                        qtyOrAmtChck = true; isSaving = false; $("#btnsave").prop("disabled", false); return false;
                     }
                 });
                 if (parseFloat(totCost) > 50000 && Pirority === '004') {
                     Swal.fire({ icon: 'error', title: 'Error!', text: 'For Low Priority Total Amount Must be Less then 50000', showConfirmButton: false, timer: 2000, customClass: { popup: 'swal-big-popup', title: 'swal-big-title', htmlContainer: 'swal-big-text' } });
-                    $("#btnSave").prop("disabled", false); return false;
+                    isSaving = false; $("#btnsave").prop("disabled", false); return false;
                 }
                 if (datecheck == false) {
                     Swal.fire({ icon: 'error', title: 'Error!', text: 'Required Date must be greater than Purchase Date', showConfirmButton: false, timer: 2000, customClass: { popup: 'swal-big-popup', title: 'swal-big-title', htmlContainer: 'swal-big-text' } });
-                    $("#btnSave").prop("disabled", false); return false;
+                    isSaving = false; $("#btnsave").prop("disabled", false); return false;
                 } else if (qtyOrAmtChck == true) {
-                    $("#btnSave").prop("disabled", false); return false;
+                    isSaving = false; $("#btnsave").prop("disabled", false); return false;
                 } else {
                     $.ajax({
                         type: "post",
@@ -611,7 +617,7 @@
                                 SaveDetailPurchaseRequestion(id);
                             });
                         },
-                        failure: function (response) { alert("In failure method"); }
+                        failure: function (response) { isSaving = false; alert("In failure method"); }
                     });
                 }
             }
@@ -637,7 +643,7 @@
             });
             if (detailAry.length === 0) {
                 Swal.fire({ icon: 'error', title: 'Error!', text: 'No Valid Rows to Save.', showConfirmButton: false, timer: 2000, customClass: { popup: 'swal-big-popup', title: 'swal-big-title', htmlContainer: 'swal-big-text' } });
-                $("#btnSave").prop("disabled", false); return false;
+                isSaving = false; $("#btnsave").prop("disabled", false); return false;
             }
             $.ajax({
                 type: "POST",
@@ -653,10 +659,11 @@
                         window.location = 'PurchaseRequistion.aspx?ID=' + id;
                         $("#btnsave").prop("disabled", true);
                     } else {
+                        isSaving = false;
                         alert("Error In Purchase Requisition details: " + res);
                     }
                 },
-                failure: function (response) { alert("In failure method"); }
+                failure: function (response) { isSaving = false; alert("In failure method"); }
             });
         }
 
@@ -826,7 +833,7 @@
             window.open(url, '_blank');
         }
 
-        function sendFile(ID) {
+        function sendFile(ID, callback) {
             var fileInput = $('#chosePrfile')[0];
             if (fileInput.files.length > 0) {
                 var data = new FormData();
@@ -872,6 +879,107 @@
                 if (message[0].Column1 != "" || message[0].Column1 != null) {
                     alert(message[0].Column1);
                     location.reload(true);
+                }
+            });
+        }
+
+        function CheckApprovalRightsAndShowButton(prId) {
+            $.ajax({
+                type: "POST",
+                url: "PurchaseRequistion.aspx/CheckApprovalRights",
+                contentType: "application/json; charset=utf-8",
+                dataType: "json",
+                success: function (response) {
+                    if (response.d) {
+                        $.ajax({
+                            type: "POST",
+                            url: "PurchaseRequistion.aspx/GetApprovalInfo",
+                            data: JSON.stringify({ PRId: prId }),
+                            contentType: "application/json; charset=utf-8",
+                            dataType: "json",
+                            success: function (resp) {
+                                var info = JSON.parse(resp.d);
+                                if (info.CanApprove) {
+                                    $('#btnApprove').show();
+                                    $('#btnApprove').data('pr-amount', info.PRAmount);
+                                    $('#btnApprove').data('remaining-amount', info.RemainingAmount);
+                                    $('#btnApprove').data('budget-enabled', info.BudgetEnabled);
+                                }
+                            }
+                        });
+                    }
+                }
+            });
+        }
+
+        function ApprovePRFromEdit() {
+            var prId = id;
+            var prAmount = $('#btnApprove').data('pr-amount');
+            var remainingAmount = $('#btnApprove').data('remaining-amount');
+            var budgetEnabled = $('#btnApprove').data('budget-enabled');
+
+            var confirmHtml = 'Are you sure you want to approve PR #' + $('#txtPr_Num').val() + '?';
+            if (budgetEnabled) {
+                confirmHtml += '<br><br>PR Amount: <strong>' + parseFloat(prAmount).toFixed(2) + '</strong>';
+                confirmHtml += '<br>Remaining Budget: <strong>' + parseFloat(remainingAmount).toFixed(2) + '</strong>';
+            }
+
+            Swal.fire({
+                title: 'Approve PR?',
+                html: confirmHtml,
+                icon: 'question',
+                showCancelButton: true,
+                confirmButtonText: 'Yes, Approve',
+                cancelButtonText: 'Cancel',
+                input: 'textarea',
+                inputPlaceholder: 'Approval remarks (optional)...',
+                inputAttributes: { 'aria-label': 'Approval remarks' },
+                customClass: { popup: 'swal-big-popup', title: 'swal-big-title', htmlContainer: 'swal-big-text' }
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    var remarks = result.value || '';
+                    $.ajax({
+                        type: "POST",
+                        url: "PurchaseRequistion.aspx/ApproveSinglePR",
+                        data: JSON.stringify({ PRId: prId, approvalRemarks: remarks }),
+                        contentType: "application/json; charset=utf-8",
+                        dataType: "json",
+                        success: function (response) {
+                            if (response.d === "Success") {
+                                Swal.fire({
+                                    icon: 'success',
+                                    title: 'Approved!',
+                                    text: 'PR has been approved successfully.',
+                                    showConfirmButton: false,
+                                    timer: 2000,
+                                    customClass: { popup: 'swal-big-popup', title: 'swal-big-title', htmlContainer: 'swal-big-text' }
+                                }).then(function () {
+                                    location.reload();
+                                });
+                            } else {
+                                Swal.fire({
+                                    icon: 'error',
+                                    title: 'Error',
+                                    text: response.d,
+                                    showConfirmButton: true,
+                                    customClass: { popup: 'swal-big-popup', title: 'swal-big-title', htmlContainer: 'swal-big-text' }
+                                }).then(function () {
+                                    location.reload();
+                                });
+                            }
+                        },
+                        error: function () {
+                            Swal.fire({
+                                icon: 'error',
+                                title: 'Error',
+                                text: 'Something went wrong during approval.',
+                                showConfirmButton: true,
+                                customClass: { popup: 'swal-big-popup', title: 'swal-big-title', htmlContainer: 'swal-big-text' }
+                            }).then(function () {
+                                location.reload();
+                            });
+                        }
+                    });
                 }
             });
         }
@@ -1082,6 +1190,9 @@
             <input type="button" value="Print" class="btn-primry" id="btn_Print" onclick="PrintPurchaseRequisitionDetail();" />
         </div>
         <div class="col-lg-2 col-md-4 col-sm-12">
+            <input type="button" class="btn-primry" value="Approve" style="display:none;" id="btnApprove" onclick="ApprovePRFromEdit()" />
+        </div>
+        <div class="col-lg-2 col-md-4 col-sm-12">
             <input type="button" class="btn-primry" value="Unnaprove" style="display:none;" id="btnUnApprove" onclick="UnApprovePR()" />
         </div>
     </div>
@@ -1089,7 +1200,7 @@
     <!-- ══════════════════════════════════════════════════════════
          MODAL: Browse Items
     ════════════════════════════════════════════════════════════ -->
-    <div class="modal fade" id="itemsModal" tabindex="-1" aria-labelledby="itemsModalLabel" aria-hidden="true">
+    <div class="modal fade" id="itemsModal" tabindex="-1" aria-labelledby="itemsModalLabel">
         <div class="modal-dialog modal-lg custom-modal-dialog">
             <div class="modal-content custom-modal-content">
                 <div class="modal-header custom-modal-header">

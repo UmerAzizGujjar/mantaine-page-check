@@ -639,15 +639,19 @@ namespace PMS
                             sqlQuery = "Select * from INV_Items Where Pharmacy_Item<>1 and IsPharmacyItem<>1 and Hospital_Services=0 and Services<>1 and Active=1 and Book_ID=" + AppConfig.Book_ID;
                         }
                     }                   
-                    string result = "";
+                    var serializer = new JavaScriptSerializer();
                     DataTable dt = DBClass.getDataTable(sqlQuery);
+                    var items = new List<object>();
 
                     foreach (DataRow dr in dt.Rows)
                     {
-                        result += (result == "") ? "" : ",";
-                        result += @"{""id"":""" + dr["Item_ID"].ToString() + @""",""name"": """ + dr["Item_Code"].ToString() + " - " + dr["Description"].ToString() + @"""}";
+                        items.Add(new
+                        {
+                            id = dr["Item_ID"].ToString(),
+                            name = dr["Item_Code"].ToString() + " - " + dr["Description"].ToString()
+                        });
                     }
-                    Response.Write("[" + result + "]");
+                    Response.Write(serializer.Serialize(items));
                 }
 
                 //else if (Request.QueryString["Table"] == "INV_ItemsForPRwithWarehouse")
@@ -778,15 +782,19 @@ namespace PMS
                         }
                     }
 
-                    string result = "";
+                    var serializer = new JavaScriptSerializer();
                     DataTable dt = DBClass.getDataTable(sqlQuery);
+                    var items = new List<object>();
 
                     foreach (DataRow dr in dt.Rows)
                     {
-                        result += (result == "") ? "" : ",";
-                        result += @"{""id"":""" + dr["Item_ID"].ToString() + @""",""name"": """ + dr["Item_Code"].ToString() + " - " + dr["Description"].ToString() + @"""}";
+                        items.Add(new
+                        {
+                            id = dr["Item_ID"].ToString(),
+                            name = dr["Item_Code"].ToString() + " - " + dr["Description"].ToString()
+                        });
                     }
-                    Response.Write("[" + result + "]");
+                    Response.Write(serializer.Serialize(items));
                 }
 
                 else if (Request.QueryString["Table"] == "Patients" && Request.QueryString["Record"] == "Edit")
