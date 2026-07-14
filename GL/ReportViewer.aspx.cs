@@ -743,6 +743,27 @@ namespace PMS
 
 
             }
+            else if (reportName == "DischargeDetailedPrint")
+            {
+
+                var logoPath = DBClass.getField("SELECT dbo.GetCompanyLogo()");
+
+                string InPatientId = Request.QueryString["InPatientId"].ToString();
+                reportPath += "InPatient/rptDischargeBasePrint.rpt";
+                rd.Load(reportPath);
+                rd.SetParameterValue("@InPatientId", InPatientId);
+                rd.SetParameterValue("CompanyName", AppConfig.Company_Name);
+                rd.SetParameterValue("CompanyLogo", logoPath);
+                rd.SetParameterValue("@InPatientId", Convert.ToInt32(InPatientId), rd.Subreports[0].Name.ToString());
+                rd.SetParameterValue("@InPatientId", Convert.ToInt32(InPatientId), rd.Subreports[1].Name.ToString());
+                rd.SetParameterValue("@InPatientId", Convert.ToInt32(InPatientId), rd.Subreports[2].Name.ToString());
+                rd.SetParameterValue("@InPatientId", Convert.ToInt32(InPatientId), rd.Subreports[3].Name.ToString());
+                rd.SetParameterValue("@InPatientId", Convert.ToInt32(InPatientId), rd.Subreports[4].Name.ToString());
+                rd.SetParameterValue("@InPatientId", Convert.ToInt32(InPatientId), rd.Subreports[5].Name.ToString());
+            }
+
+
+
             else if (reportName == "Emergencypatient")
             {
                 string Emergency_ID = Request.QueryString["Emergency_ID"].ToString();

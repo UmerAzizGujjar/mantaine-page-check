@@ -2203,7 +2203,7 @@ function OPD_Print(OPD_ID, company_name) {
     }
 
     window.open(url, '_blank');
-    window.open(url1, '_blank');
+    //window.open(url1, '_blank');
 }
 
 

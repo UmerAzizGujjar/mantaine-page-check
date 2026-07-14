@@ -40,9 +40,14 @@
 
         function InpatientDischargePrint(In_Patient_ID) {
             debugger;
-            var url = '../../ReportViewer.aspx?ReportName=DischargePrint&InPatientId=' + In_Patient_ID;
-            window.open(url, '_blank');
 
+            var user_name = '<% =AppConfig.Company_Name %>';
+            if (user_name == 'Imran Idrees Teaching Hospital') {
+                window.open('../../ReportViewer.aspx?ReportName=DischargeDetailedPrint&InPatientId=' + In_Patient_ID);
+            }
+            else {
+                window.open('../../ReportViewer.aspx?ReportName=DischargePrint&InPatientId=' + In_Patient_ID);
+            }
         }
 
 
