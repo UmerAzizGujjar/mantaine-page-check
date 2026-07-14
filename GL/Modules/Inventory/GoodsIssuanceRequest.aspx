@@ -81,6 +81,11 @@
                 if (status == "Created") {
                     debugger;
                 }
+                if (status == "Created" || status == "Pending") {
+                    if (id != "") {
+                        CheckGIRApprovalRightsAndShowButton(id);
+                    }
+                }
             }, 1000);
         });
         var warehouseCond;
@@ -299,6 +304,63 @@
                 },
                 failure: function (response) {
                     alert("Failed to retrieve User UnApprove Button Rights.");
+                }
+            });
+        }
+        function callPageMethod(methodName, params, successCallback, errorCallback) {
+            if (typeof params === 'function') {
+                errorCallback = successCallback;
+                successCallback = params;
+                params = {};
+            }
+            $.ajax({
+                type: "POST",
+                url: "GoodsIssuanceRequest.aspx/" + methodName,
+                data: JSON.stringify(params || {}),
+                contentType: "application/json; charset=utf-8",
+                dataType: "json",
+                success: function (response) {
+                    if (typeof successCallback === 'function') successCallback(response.d);
+                },
+                error: function (xhr, status, error) {
+                    console.error('Error calling ' + methodName + ':', xhr.status, error);
+                    if (typeof errorCallback === 'function') errorCallback(error);
+                }
+            });
+        }
+        function CheckGIRApprovalRightsAndShowButton(girId) {
+            callPageMethod('CheckGIRApprovalRights', function (hasRights) {
+                if (hasRights) {
+                    callPageMethod('GetGIRApprovalInfo', { GIRId: girId }, function (resp) {
+                        var info = JSON.parse(resp);
+                        if (info.CanApprove) {
+                            $('#btnApprove').show();
+                        }
+                    });
+                }
+            });
+        }
+        function ApproveGIRFromEdit() {
+            var girId = id;
+            Swal.fire({
+                title: 'Approve GIR?',
+                icon: 'question',
+                showCancelButton: true,
+                confirmButtonText: 'Yes, Approve',
+                cancelButtonText: 'Cancel',
+                input: 'textarea',
+                inputPlaceholder: 'Approval remarks (optional)...',
+                customClass: { popup: 'swal-big-popup', title: 'swal-big-title', htmlContainer: 'swal-big-text' }
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    var remarks = result.value || '';
+                    callPageMethod('ApproveSingleGIR', { GIRId: girId, approvalRemarks: remarks }, function (resp) {
+                        if (resp === "Success") {
+                            Swal.fire({ icon: 'success', title: 'Approved!', text: 'GIR has been approved successfully.', showConfirmButton: false, timer: 2000, customClass: { popup: 'swal-big-popup', title: 'swal-big-title', htmlContainer: 'swal-big-text' } }).then(function () { location.reload(); });
+                        } else {
+                            Swal.fire({ icon: 'error', title: 'Error', text: resp, showConfirmButton: true, customClass: { popup: 'swal-big-popup', title: 'swal-big-title', htmlContainer: 'swal-big-text' } }).then(function () { location.reload(); });
+                        }
+                    });
                 }
             });
         }
@@ -794,6 +856,10 @@
                 <div class="col-lg-2 col-md-4 col-sm-6">
     <input type="button" value="Print" class="btn btn-primry" name="btn_Print" id="btn_Print" onclick="PrintGoodsIssuanceRequest();" style="width: 81px;" />
 </div>
+            <div class="col-lg-2 col-md-4 col-sm-6">
+                <input type="button" style="display:none;" class="btn btn-primry" value="Approve" id="btnApprove" onclick="ApproveGIRFromEdit()" />
+                &nbsp;
+            </div>
             <div class="col-lg-2 col-md-4 col-sm-6" id="btnUnApproveToBeHidden">
                 <input type="button" style="display: none" class="btn btn-primry" value="UnApprove" id="btnUnApprove" onclick="UnApprove()" />            
                         &nbsp;

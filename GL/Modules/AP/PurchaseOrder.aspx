@@ -3231,7 +3231,7 @@ function scheduleCalcTotal(delay) {
         <div class="pr-primary-settings">
 
             <div class="row">
-                <div class="col-lg-6 col-md-6 col-sm-12">
+                <div class="col-lg-3 col-md-6 col-sm-12">
                     <asp:Label ID="LabelPurchase_No" runat="server" Text="PO No."></asp:Label>
                     <asp:TextBox runat="server" ID="txtPurchase_No" class="form-control" ReadOnly="true" />
                     <asp:HiddenField ID="hdnPurchase_ID" runat="server" ClientIDMode="Static" />
@@ -3242,13 +3242,21 @@ function scheduleCalcTotal(delay) {
                     <asp:RequiredFieldValidator ID="rfvPurchaseDate" runat="server" InitialValue="0" ControlToValidate="txtPurchase_Date" ErrorMessage="*" Display="Dynamic"></asp:RequiredFieldValidator>
                     <asp:TextBox runat="server" ID="txtPurchase_Date" class="form-control" />
                 </div>
-                <div class="col-lg-6 col-md-6 col-sm-12">
+                <div class="col-lg-3 col-md-6 col-sm-12">
                     <asp:Label ID="lblDueDate" runat="server" Text="Due Date"></asp:Label>
                     <asp:TextBox runat="server" ID="txtdueDate" class="form-control" />
                 </div>
                 <div style="display:none;">
                     <asp:Label ID="lblStatus" runat="server" Text="Status"></asp:Label>
                     <asp:TextBox runat="server" ReadOnly="true" ID="txtStatus" class="form-control" />
+                </div>
+                <div class="col-lg-3 col-md-6 col-sm-12" id="projectiondate">
+                    <asp:Label ID="lblprojectiondate" runat="server" Text="Projection Date"></asp:Label>
+                    <asp:TextBox runat="server" ID="txtProjection_Date" class="form-control" />
+                </div>
+                <div class="col-lg-3 col-md-6 col-sm-12" id="projectiontype">
+                    <asp:Label ID="lblddlprojection" runat="server" Text="Projection" Style="">Projection<span style="color: red">*</span></asp:Label>
+                    <asp:DropDownList runat="server" ID="ddlprojection" class="form-control" AppendDataBoundItems="true"></asp:DropDownList>
                 </div>
             </div>
 
@@ -3328,6 +3336,12 @@ function scheduleCalcTotal(delay) {
                         <button type="button" class="source-action-btn" id="btnGetAllItems" onclick="LoadAllitem('')"><i class="fa fa-search"></i> Items</button>
                     </div>
                 </div>
+                <div id="prInputSection" class="source-input-wrap" style="display:none;">
+                    <div class="source-inline-group">
+                        <asp:DropDownList runat="server" ID="ddlPrNo" class="source-select-input"></asp:DropDownList>
+                        <button type="button" class="source-action-btn" id="btnPRSave" onclick="LoadPrNoDetail($('#ctl00_MainContent_ddlPrNo').val())"><i class="fa fa-plus"></i> Add</button>
+                    </div>
+                </div>
                 <div class="source-checkbox-group">
                     <div class="pr-checkbox-wrap pr-checkbox-inline">
                         <input type="checkbox" id="chkByDefault" />
@@ -3336,12 +3350,6 @@ function scheduleCalcTotal(delay) {
                     <div class="pr-checkbox-wrap pr-checkbox-inline">
                         <input type="checkbox" id="chkManual" />
                         <label for="chkManual">Manual</label>
-                    </div>
-                </div>
-                <div id="prInputSection" class="source-input-wrap" style="display:none;">
-                    <div class="source-inline-group">
-                        <asp:DropDownList runat="server" ID="ddlPrNo" class="source-select-input"></asp:DropDownList>
-                        <button type="button" class="source-action-btn" id="btnPRSave" onclick="LoadPrNoDetail($('#ctl00_MainContent_ddlPrNo').val())"><i class="fa fa-plus"></i> Add</button>
                     </div>
                 </div>
             </div>
@@ -3354,18 +3362,6 @@ function scheduleCalcTotal(delay) {
                         <asp:HyperLink ID="HyperLink1" runat="server" CssClass="pr-download-btn"><i class="fa fa-download"></i> Download</asp:HyperLink>
                     </div>
                 </div>
-            </div>
-        </div>
-
-        <!-- Projection -->
-        <div class="row" style="margin-top: 8px;">
-            <div class="col-lg-3 col-md-6 col-sm-12" id="projectiondate">
-                <asp:Label ID="lblprojectiondate" runat="server" Text="Projection Date"></asp:Label>
-                <asp:TextBox runat="server" ID="txtProjection_Date" class="form-control" />
-            </div>
-            <div class="col-lg-3 col-md-6 col-sm-12" id="projectiontype">
-                <asp:Label ID="lblddlprojection" runat="server" Text="Projection" Style="">Projection<span style="color: red">*</span></asp:Label>
-                <asp:DropDownList runat="server" ID="ddlprojection" class="form-control" AppendDataBoundItems="true"></asp:DropDownList>
             </div>
         </div>
     </form>

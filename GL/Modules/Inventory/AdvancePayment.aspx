@@ -368,9 +368,12 @@
                 $("#btn_Save").prop("disabled", true);
                 $('#btn_Save').hide();
             }
-            if (checkstatus == 'Created') {
+            if (checkstatus == 'Created' || checkstatus == 'Pending') {
                 $("#btnVoucher").prop("disabled", true);
                 $('#btnVoucher').hide();
+                if (Adv_ID != '') {
+                    CheckADVANCEApprovalRightsAndShowButton(Adv_ID);
+                }
             }
             $('#btn_Save').val("Update");
 
@@ -378,6 +381,27 @@
             function (error) {
                 alert(error.get_message());
             })
+    }
+    function callPageMethod(methodName, params, successCallback, errorCallback) {
+        if (typeof params === 'function') {
+            errorCallback = successCallback;
+            successCallback = params;
+            params = {};
+        }
+        $.ajax({
+            type: "POST",
+            url: "AdvancePayment.aspx/" + methodName,
+            data: JSON.stringify(params || {}),
+            contentType: "application/json; charset=utf-8",
+            dataType: "json",
+            success: function (response) {
+                if (typeof successCallback === 'function') successCallback(response.d);
+            },
+            error: function (xhr, status, error) {
+                console.error('Error calling ' + methodName + ':', xhr.status, error);
+                if (typeof errorCallback === 'function') errorCallback(error);
+            }
+        });
     }
     function UserRights() {
         debugger;
@@ -426,6 +450,49 @@
             }
         });
     }--%>
+        function CheckADVANCEApprovalRightsAndShowButton(advId) {
+            callPageMethod('CheckADVANCEApprovalRights', function (hasRights) {
+                if (hasRights) {
+                    callPageMethod('GetADVANCEApprovalInfo', { AdvId: advId }, function (resp) {
+                        var info = JSON.parse(resp);
+                        if (info.CanApprove) {
+                            $('#btnApproveAdv').show();
+                            $('#btnApproveAdv').data('adv-amount', info.Amount);
+                        }
+                    });
+                }
+            });
+        }
+        function ApproveADVANCEFromEdit() {
+            var advId = '<% =Request.QueryString["Adv_ID"] %>';
+            var amount = $('#btnApproveAdv').data('adv-amount');
+            var confirmHtml = 'Are you sure you want to approve Advance Payment #' + $('#advanceno').val() + '?';
+            if (amount > 0) {
+                confirmHtml += '<br><br>Advance Amount: <strong>' + parseFloat(amount).toFixed(2) + '</strong>';
+            }
+            Swal.fire({
+                title: 'Approve Advance Payment?',
+                html: confirmHtml,
+                icon: 'question',
+                showCancelButton: true,
+                confirmButtonText: 'Yes, Approve',
+                cancelButtonText: 'Cancel',
+                input: 'textarea',
+                inputPlaceholder: 'Approval remarks (optional)...',
+                customClass: { popup: 'swal-big-popup', title: 'swal-big-title', htmlContainer: 'swal-big-text' }
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    var remarks = result.value || '';
+                    callPageMethod('ApproveSingleADVANCE', { AdvId: advId, approvalRemarks: remarks }, function (resp) {
+                        if (resp === "Success") {
+                            Swal.fire({ icon: 'success', title: 'Approved!', text: 'Advance Payment has been approved successfully.', showConfirmButton: false, timer: 2000, customClass: { popup: 'swal-big-popup', title: 'swal-big-title', htmlContainer: 'swal-big-text' } }).then(function () { location.reload(); });
+                        } else {
+                            Swal.fire({ icon: 'error', title: 'Error', text: resp, showConfirmButton: true, customClass: { popup: 'swal-big-popup', title: 'swal-big-title', htmlContainer: 'swal-big-text' } }).then(function () { location.reload(); });
+                        }
+                    });
+                }
+            });
+        }
         function sendFile(ID) {
             debugger;
             var fileInput = $('#choseAdPaymentfile')[0];
@@ -561,6 +628,9 @@
                 </div>
                 <div class="col-lg-2 col-md-4 col-sm-6">
                     <input type="button"  value="Voucher" class="btn btn-yellow" id="btnVoucher" onclick="PrintVoucher()" title="Voucher" />
+                </div>
+                <div class="col-lg-2 col-md-4 col-sm-6">
+                    <input type="button" style="display: none" class="btn btn-primry" value="Approve" id="btnApproveAdv" onclick="ApproveADVANCEFromEdit()" />
                 </div>
                 <div class="col-lg-2 col-md-4 col-sm-6">
                     <input type="button"  value="Print" class="btn btn-primry" id="btnPrint" onclick="Print()" title="Print" />

@@ -48,12 +48,36 @@
                     $('#btn_Save').attr("disabled", true);
                     $('#btnVoucher').show();
                 }
-                if (status == "Created") {
+                if (status == "Created" || status == "Pending") {
                     debugger;
                     $('#btnVoucher').hide();
+                    if (Inv_ID != '') {
+                        CheckMIApprovalRightsAndShowButton(Inv_ID);
+                    }
                 }
             }, 1000);
         });
+        function callPageMethod(methodName, params, successCallback, errorCallback) {
+            if (typeof params === 'function') {
+                errorCallback = successCallback;
+                successCallback = params;
+                params = {};
+            }
+            $.ajax({
+                type: "POST",
+                url: "AddManualInvoice.aspx/" + methodName,
+                data: JSON.stringify(params || {}),
+                contentType: "application/json; charset=utf-8",
+                dataType: "json",
+                success: function (response) {
+                    if (typeof successCallback === 'function') successCallback(response.d);
+                },
+                error: function (xhr, status, error) {
+                    console.error('Error calling ' + methodName + ':', xhr.status, error);
+                    if (typeof errorCallback === 'function') errorCallback(error);
+                }
+            });
+        }
         function UserRights() {
             debugger;
             $.ajax({
@@ -101,7 +125,50 @@
                    location.reload();
                }
            });
-       }
+        }
+        function CheckMIApprovalRightsAndShowButton(invId) {
+            callPageMethod('CheckMIApprovalRights', function (hasRights) {
+                if (hasRights) {
+                    callPageMethod('GetMIApprovalInfo', { InvId: invId }, function (resp) {
+                        var info = JSON.parse(resp);
+                        if (info.CanApprove) {
+                            $('#btn_Approve').show();
+                            $('#btn_Approve').data('mi-amount', info.Amount);
+                        }
+                    });
+                }
+            });
+        }
+        function ApproveMIFromEdit() {
+            var invId = '<% =Request.QueryString["Inv_ID"] %>';
+            var amount = $('#btn_Approve').data('mi-amount');
+            var confirmHtml = 'Are you sure you want to approve Manual Invoice #' + $('#txt_Invoice').val() + '?';
+            if (amount > 0) {
+                confirmHtml += '<br><br>Invoice Amount: <strong>' + parseFloat(amount).toFixed(2) + '</strong>';
+            }
+            Swal.fire({
+                title: 'Approve Manual Invoice?',
+                html: confirmHtml,
+                icon: 'question',
+                showCancelButton: true,
+                confirmButtonText: 'Yes, Approve',
+                cancelButtonText: 'Cancel',
+                input: 'textarea',
+                inputPlaceholder: 'Approval remarks (optional)...',
+                customClass: { popup: 'swal-big-popup', title: 'swal-big-title', htmlContainer: 'swal-big-text' }
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    var remarks = result.value || '';
+                    callPageMethod('ApproveSingleMI', { InvId: invId, approvalRemarks: remarks }, function (resp) {
+                        if (resp === "Success") {
+                            Swal.fire({ icon: 'success', title: 'Approved!', text: 'Manual Invoice has been approved successfully.', showConfirmButton: false, timer: 2000, customClass: { popup: 'swal-big-popup', title: 'swal-big-title', htmlContainer: 'swal-big-text' } }).then(function () { location.reload(); });
+                        } else {
+                            Swal.fire({ icon: 'error', title: 'Error', text: resp, showConfirmButton: true, customClass: { popup: 'swal-big-popup', title: 'swal-big-title', htmlContainer: 'swal-big-text' } }).then(function () { location.reload(); });
+                        }
+                    });
+                }
+            });
+        }
         debugger;
         function PrintVoucher() {
             var id = '<% =Request.QueryString["Inv_ID"] %>';
@@ -640,7 +707,8 @@
                 <input type="button" class="btn btn-primry" value="Voucher" id="btnVoucher" onclick="PrintVoucher()" />
             </div>
              <div class="col-lg-2 col-md-3">
-            <input type="button" name="btn_UnApprove" class="btn btn-primry" id="btn_UnApprove" style="display: none" value="UnApprove" onclick="UnApprove()" />
+            <input type="button" name="btn_Approve" class="btn btn-primry" id="btn_Approve" style="display: none" value="Approve" onclick="ApproveMIFromEdit()" />
+             <input type="button" name="btn_UnApprove" class="btn btn-primry" id="btn_UnApprove" style="display: none" value="UnApprove" onclick="UnApprove()" />
         </div>
             </div>
             </div>
