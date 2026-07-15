@@ -1,13 +1,9 @@
 ﻿<%@ Page Title="" Language="C#" MasterPageFile="~/Site.Master" AutoEventWireup="true" CodeBehind="PurchaseOrder.aspx.cs" Inherits="PMS.AP.PurchaseOrder" %>
 
 <asp:Content ID="Content1" ContentPlaceHolderID="HeadContent" runat="server">
-    <link href="../../wwwroot/THEME_TIBBIT/CustomCSS/PO.css" rel="stylesheet" />
-    <link href="../../wwwroot/THEME_TIBBIT/CustomCSS/custom-modals.css" rel="stylesheet" />
+    <link href="../../wwwroot/THEME_NHMC/CustomCSS/PO.css" rel="stylesheet" />
+    <link href="../../wwwroot/THEME_NHMC/CustomCSS/custom-modals.css" rel="stylesheet" />
     <style type="text/css">
-        .form-check-input {
-            margin-left: -20px !important;
-        }
-
         .tooltip-inner {
             background-color: #ffc107 !important;
             color: #000 !important;
