@@ -625,7 +625,7 @@
                 '<td><input type="hidden" id="txtadvanceamount' + length + '" name="txtadvanceamount" value="' + advance + '"/>' + advance + '</td> ' +
                 '<td><input type="text" readonly style="width: 70px!important" id="txtPreviouslyPaid' + length + '" name="txtPreviouslyPaid" value="' + paidamount + '"/></td>' +
                 '<td><input type="text" readonly style="width: 70px!important" id="txtBalance' + length + '" name="txtBalance" value="' + balance + '"/></td>' +
-                '<td><input type="text" id="txtAdjusted' + length + '" name="txtAdjusted" onchange="calcutae()" style="width: 88px!important"/></td>' +
+                '<td><input type="text" id="txtAdjusted' + length + '" name="txtAdjusted" onkeyup="calcutae()" style="width: 88px!important" value="' + balance + '"/></td>' +
                 '<td><input type="text" id="txtDedcution' + length + '" name="txtDedcution" onchange="calcutae()" style="width: 88px!important"/></td>' +
                 '<td><select id="ddlWTaxType' + length + '" class="ddlWTaxType" name="ddlWTaxType" onchange="calcutae()" style="width: 93px!important"></select></td>' +
                 '<td style="display:none;"><input type="text" id="WhOnInvAdj' + length + '" name="WhOnInvAdj"  readonly="true"/></td>' +
@@ -634,7 +634,7 @@
                 '<td><input type="text" id="WTaxAmount' + length + '" name="WTaxAmount" readonly="true" style="width: 116px!important"></td>' +
                 '<td style="display:none"><select id="ddlSalTax' + length + '" name="ddlSalTax" class="ddlSalTax" readonly style="width: 93px!important"></select></td>' +
                 '<td style="display:none"><input type="text" id="SalTaxAmount' + length + '" name="SalTaxAmount" readonly="true" value="' + SalTaxAmt + '" style="width: 116px!important"></td>' +
-                '<td><input  readonly="readonly" style="width:133px!important;border: none" id="txtPaidAmount' + length + '" name="txtPaidAmount" value="" type="text"/></td>' +
+                '<td><input  readonly="readonly" style="width:133px!important;border: none" id="txtPaidAmount' + length + '" name="txtPaidAmount" value="' + balance + '" type="text" /></td>' +
                 '<td style="display:none"><input type="hidden" id="txtPurchaseInoviceId' + length + '" name="txtPurchaseInoviceId" value="' + PurchaseInvoiceId + '"/></td>' +
                 '<td style="display:none"><input type="hidden" id="txtPurchaseInoviceType' + length + '" name="txtPurchaseInoviceType" value="' + InvoiceType + '"/></td>' +
                 '<td><a href="javascript:void(0)" onclick="ExcludeFromPayment(this)"><i class="glyphicon glyphicon-trash" style="font-size: 13px;margin-left: 16px; color: #f30a0a;position:relative;" i=""></i></a></td>' +

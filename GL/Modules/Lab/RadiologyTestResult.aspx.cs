@@ -1196,7 +1196,8 @@ namespace PMS.Modules.Lab
                             || (ltd.IsAcknowledge) == true
                            )
                        && bd.Is_Group_Category == false
-                       && !db.Refunds.Any(r => r.Bill_ID == ar.Bill_ID)
+                       //&& !db.Refunds.Any(r => r.Bill_ID == ar.Bill_ID)
+                        && (bd.Is_Refunded == false || bd.Is_Refunded == null)
                        select new
                         {
                             lt.Parent_Transaction_Type,
@@ -1485,7 +1486,8 @@ AND (
                             || (ltd.IsAcknowledge) == true
                            )
                         && bd.Is_Group_Category == false
-                        && !db.Refunds.Any(r => r.Bill_ID == ar.Bill_ID)
+                        && (bd.Is_Refunded == false || bd.Is_Refunded == null)
+                        //&& !db.Refunds.Any(r => r.Bill_ID == ar.Bill_ID)
                         select new
                         {
                             lt.Parent_Transaction_Type,
@@ -1947,7 +1949,8 @@ AND (
                       (bill.isCancel == false || bill.isCancel == null) &&
                        bill.Bill_Date >= startDate &&
                         bill.Bill_Date <= endDate
-                         && !db.Refunds.Any(r => r.Bill_ID == bill.Bill_ID)
+                       //   && !db.Refunds.Any(r => r.Bill_ID == bill.Bill_ID)
+                       && (bill_details.Is_Refunded == false || bill_details.Is_Refunded == null)
                 orderby bill.Bill_Date descending
                 select new
                 {
@@ -2020,8 +2023,9 @@ AND (
                          bill_details.Test_Main_Department != "001" &&
                          (bill.isCancel == false || bill.isCancel == null) &&
                          bill.Bill_Date >= startDate &&
-                         bill.Bill_Date <= endDate &&
-                         !db.Refunds.Any(r => r.Bill_ID == bill.Bill_ID)
+                         bill.Bill_Date <= endDate
+                          && (bill_details.Is_Refunded == false || bill_details.Is_Refunded == null)
+                   //!db.Refunds.Any(r => r.Bill_ID == bill.Bill_ID)
                    orderby bill.Bill_Date descending
                    select new
                    {
@@ -2062,7 +2066,7 @@ AND (
                          (bill.isCancel == false || bill.isCancel == null) &&
                          bill.Bill_Date >= startDate &&
                          bill.Bill_Date <= endDate &&
-                         !db.Refunds.Any(r => r.Bill_ID == bill.Bill_ID) &&
+                         (bill_details.Is_Refunded == false || bill_details.Is_Refunded == null) &&
                          labtest_detail.Refer_Doctor == loggedInEmpId
                    orderby bill.Bill_Date descending
                    select new

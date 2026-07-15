@@ -7,6 +7,7 @@
             FillDepartments();
             GetDepartments();
             FillAccountCategory();
+            FillAccounts();
             ActiveCheckRights();
             $("#lblProcedure_Time").hide();
             $("#Procedure_Time").hide();
@@ -17,6 +18,7 @@
             else {
                 GetitemNum();
             }
+            $('#ddlAccount').select2();
         });
         $(function () {
             $("#tabs").tabs();
@@ -134,6 +136,23 @@
                     optionsAccCategory += '<option value="' + value.Account_Category_Id + '" >' + value.CategoryName + '</option>';
                 });
                 $('#ddlfiance_integration').html(optionsAccCategory);
+            });
+        }
+        function FillAccounts() {
+            $.ajax({
+                type: "POST",
+                url: "Service.aspx/GetAccounts",
+                data: "",
+                contentType: "application/json; charset=utf-8",
+                dataType: "json",
+                async: false,
+                success: function (response) {
+                    var options = '<option value="0">Please Select</option>';
+                    $.each(JSON.parse(response.d), function (key, value) {
+                        options += '<option value="' + value.Account_ID + '">' + value.Account_Code + ' - ' + value.Account_Name + '</option>';
+                    });
+                    $('#ddlAccount').html(options);
+                }
             });
         }
         function validateSave() {
@@ -332,6 +351,7 @@
                 var btnValue = $('#btnValue').val();
                 var DepartmentId = $('#ddldepartment').val();
                 var isHospitalchk = $('#chkIsHospital').prop('checked');
+                var account = $('#ddlAccount').val();
                 var Id = 0;
                 if (id == "") {
                     Id = 0;
@@ -389,7 +409,7 @@
                         "LabRequired": labRequired,
                         "PattHistoryRequired": pattHistoryRequired,
                         "FitnessCertificate": fitnessCertificate,
-                        "OtherServices": OtherServices,
+                        "OtherServices": otherServices,
                         "Billing": billing,
                         "OTProcedure": OTProcedure,
                         "DoctorShare": DoctorShare,
@@ -401,6 +421,7 @@
                         "ItemId": Id,
                         "DepartmentId": DepartmentId,
                         "IsHospital": isHospitalchk,
+                        "Account": account,
                     }),
                     contentType: "application/json; charset=utf-8",
                     dataType: "json",
@@ -409,52 +430,45 @@
                         var msg = response.d;
                         var Split = msg.split("-");
                         if (Split[0] == "Success") {
-                            debugger;
                             Swal.fire({
                                 icon: 'success',
                                 title: 'Success!',
                                 text: 'Data added Successfully.',
                                 showConfirmButton: false,
-                                timer: 2500,
-                                customClass: {
-                                    popup: 'swal-big-popup',
-                                    title: 'swal-big-title',
-                                    htmlContainer: 'swal-big-text'
-                                }
+                                timer: 2500
                             });
                              window.location.href = 'Service.aspx?ID=' + Split[1];
                         }
-                        if (Split[0] == "Update") {
-                            debugger;
+                        else if (Split[0] == "Update") {
                             Swal.fire({
                                 icon: 'success',
                                 title: 'Success!',
                                 text: 'Data Updated Successfully.',
                                 showConfirmButton: false,
-                                timer: 2500,
-                                customClass: {
-                                    popup: 'swal-big-popup',
-                                    title: 'swal-big-title',
-                                    htmlContainer: 'swal-big-text'
-                                }
+                                timer: 2500
                             });
                              window.location.href = 'Service.aspx?ID=' + Split[1];
                         }
+                        else {
+                            $('#btnValue').attr('disabled', false);
+                            Swal.fire({
+                                icon: 'error',
+                                title: 'Error!',
+                                text: msg,
+                                showConfirmButton: false,
+                                timer: 3000
+                            });
+                        }
                     },
                     failure: function (response) {
+                        $('#btnValue').attr('disabled', false);
                         Swal.fire({
                             icon: 'error',
                             title: 'Error!',
                             text: 'In failure method',
                             showConfirmButton: false,
-                            timer: 2000,
-                            customClass: {
-                                popup: 'swal-big-popup',
-                                title: 'swal-big-title',
-                                htmlContainer: 'swal-big-text'
-                            }
+                            timer: 3000
                         });
-
                      }
                 });
             }
@@ -534,6 +548,9 @@
                     setTimeout(function () {
                         $('#ddldepartment').val(parse.DepartmentId).trigger('change');
                     }, 4000);
+                    setTimeout(function () {
+                        $('#ddlAccount').val(parse.Account_ID).trigger('change');
+                    }, 1000);
                     $('#txtlocatorAddress').val(parse.locatorAddress);
                     $('#txtLength').val(parse.Length);
                     $('#txtwidth').val(parse.Width);
@@ -646,7 +663,7 @@
 <asp:Content ID="Content2" ContentPlaceHolderID="MainContent" runat="server">
         <form  id="item">
      <div class="row">
-         <div class="col-lg-3 col-md-6 col-sm-12 ">
+         <div class="col-lg-2 col-md-6 col-sm-12">
              <div class="form-group">
                 <label id="Lblitem_code">Item Code</label>
                 <input style="" type="text" class="form-control" id="item_code" name="item_code" placeholder="(New) " readonly="readonly" />
@@ -660,7 +677,7 @@
                  </div>
             </div> 
 
-         <div class="col-lg-3 col-md-6 col-sm-12">
+         <div class="col-lg-2 col-md-6 col-sm-12">
                <div class="form-group">
                 <label id="Lblitem_type">Item Type</label>
                  <select id="ddlitem_type"  class="form-control">
@@ -669,13 +686,22 @@
                    </div>
             </div>
 
-         <div class="col-lg-3 col-md-6 col-sm-12">
+         <div class="col-lg-2 col-md-6 col-sm-12">
                  <div class="form-group">
                   <label id="LblItemGroup">Item Group </label>
                  <select id="ddlItemGroup" name="ddlItemGroup" class="form-control">
                 </select>
                      </div>
                </div>
+
+         <div class="col-lg-3 col-md-6 col-sm-12">
+             <div class="form-group">
+                <label id="LblAccount">Account</label>
+                <select id="ddlAccount" class="form-control">
+                    <option value="0">Please Select</option>
+                </select>
+             </div>
+         </div>
          </div>
 
          <div class="row">

@@ -321,16 +321,16 @@ textarea { font-size: 10px; border-radius: 5px; }
 .source-checkbox-group {
     display: flex;
     align-items: center;
-    gap: 12px;
+    gap: 65px;
     flex-shrink: 0;
     margin-left: 6px;
 }
 
 .pr-checkbox-inline {
     flex-direction: row !important;
-    gap: 5px !important;
+    gap: 6px !important;
     white-space: nowrap;
-    margin-left: 50px;
+    align-items: center;
 }
 
 .pr-checkbox-inline label {
@@ -340,12 +340,16 @@ textarea { font-size: 10px; border-radius: 5px; }
     margin: 0;
     cursor: pointer;
     white-space: nowrap;
+    display: inline;
+    line-height: 1.2;
+    vertical-align: middle;
 }
 
 .pr-checkbox-inline input[type="checkbox"] {
-    width: 22px;
-    height: 22px;
+    width: 20px;
+    height: 20px;
     margin: 0;
+    padding: 0;
     cursor: pointer;
     accent-color: #EFA63E;
     flex-shrink: 0;
