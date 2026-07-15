@@ -408,7 +408,7 @@
                         Sehat_card_rate_batch +
                         '</td>' +
                         '<td>' +
-                        '<input type="hidden" name="txtUom_Qty_' + rowlength + '" value="' + Uom_Qty + '" />' +
+                        '<input type="hidden"  name="txtUom_Qty_' + rowlength + '" value="' + Uom_Qty + '" />' +
                         Uom_Qty +
                         '</td>' +
                         '<td>' +
