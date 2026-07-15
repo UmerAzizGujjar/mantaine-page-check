@@ -142,6 +142,9 @@
                     $('#btnUnInspec').attr("disabled", 'disabled');
                     $('#SaveButtonToBeHidden').attr("disabled", false);
                     $('#SaveButtonToBeHidden').show();
+                    if (IGP_ID != "") {
+                        CheckIGPApprovalRightsAndShowButton(IGP_ID);
+                    }
                 }
                 $('#ddlVendor').attr("disabled", 'disabled');
                 getPONumByVendor(data.Vendor);
@@ -1113,6 +1116,63 @@
                 }
             });
         }
+        function callPageMethod(methodName, params, successCallback, errorCallback) {
+            if (typeof params === 'function') {
+                errorCallback = successCallback;
+                successCallback = params;
+                params = {};
+            }
+            $.ajax({
+                type: "POST",
+                url: "InversionGatePass.aspx/" + methodName,
+                data: JSON.stringify(params || {}),
+                contentType: "application/json; charset=utf-8",
+                dataType: "json",
+                success: function (response) {
+                    if (typeof successCallback === 'function') successCallback(response.d);
+                },
+                error: function (xhr, status, error) {
+                    console.error('Error calling ' + methodName + ':', xhr.status, error);
+                    if (typeof errorCallback === 'function') errorCallback(error);
+                }
+            });
+        }
+        function CheckIGPApprovalRightsAndShowButton(igpId) {
+            callPageMethod('CheckIGPApprovalRights', function (hasRights) {
+                if (hasRights) {
+                    callPageMethod('GetIGPApprovalInfo', { IgpId: igpId }, function (resp) {
+                        var info = JSON.parse(resp);
+                        if (info.CanApprove) {
+                            $('#btnApprove').show();
+                        }
+                    });
+                }
+            });
+        }
+        function ApproveIGPFromEdit() {
+            var IgpId = '<%= Request.QueryString["IGP_Id"] %>';
+            Swal.fire({
+                title: 'Approve IGP?',
+                icon: 'question',
+                showCancelButton: true,
+                confirmButtonText: 'Yes, Approve',
+                cancelButtonText: 'Cancel',
+                input: 'textarea',
+                inputPlaceholder: 'Approval remarks (optional)...',
+                customClass: { popup: 'swal-big-popup', title: 'swal-big-title', htmlContainer: 'swal-big-text' }
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    var remarks = result.value || '';
+                    callPageMethod('ApproveSingleIGP', { IgpId: IgpId, approvalRemarks: remarks }, function (resp) {
+                        if (resp === "Success") {
+                            Swal.fire({ icon: 'success', title: 'Approved!', text: 'IGP has been approved successfully.', showConfirmButton: false, timer: 2000, customClass: { popup: 'swal-big-popup', title: 'swal-big-title', htmlContainer: 'swal-big-text' } }).then(function () { location.reload(); });
+                        } else {
+                            Swal.fire({ icon: 'error', title: 'Error', text: resp, showConfirmButton: true, customClass: { popup: 'swal-big-popup', title: 'swal-big-title', htmlContainer: 'swal-big-text' } }).then(function () { location.reload(); });
+                        }
+                    });
+                }
+            });
+        }
 
         function validateBatchDuplicates() {
             var isValid = true;
@@ -1260,6 +1320,9 @@
                 </div>
                 <div class="col-lg-2 col-md-4 col-sm-12">
                     <input type="button" class="btn btn-yellow" value="New" onclick="window.location = 'InversionGatePass.aspx'" />
+                </div>
+                <div class="col-lg-2 col-md-4 col-sm-12">
+                    <input type="button" style="display:none;" class="btn btn-primry" value="Approve" id="btnApprove" onclick="ApproveIGPFromEdit()" />
                 </div>
                 <div class="col-lg-2 col-md-4 col-sm-12" id="btnUnApproveToBeHidden">
                     <input type="button" class=" btn-primry" style="width: 103px; display: none" value="UnApprove" id="btnUnApprove" onclick="UnApprove()" />

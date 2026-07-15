@@ -1,5 +1,5 @@
-﻿/* ================================================================
-   PO.css  â€”  Purchase Order form styles (mirrors PR.css patterns)
+/* ================================================================
+   PO.css  —  Purchase Order form styles (mirrors PR.css patterns)
    ================================================================ */
 
 input[type="text"] {
@@ -34,7 +34,7 @@ textarea { font-size: 10px; border-radius: 5px; }
 
 .ErrorAlert { border: 1px solid red !important; }
 
-/* â”€â”€ Meta-Bar â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */
+/* ── Meta-Bar ─────────────────────────────────────────────────── */
 .pr-meta-bar {
     display: flex;
     justify-content: flex-end;
@@ -58,7 +58,7 @@ textarea { font-size: 10px; border-radius: 5px; }
 
 .pr-meta-text strong { color: #521c1c; font-weight: 700; }
 
-/* â”€â”€ Primary Settings â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */
+/* ── Primary Settings ─────────────────────────────────────────── */
 .pr-primary-settings {
     margin-bottom: 8px;
     align-items: flex-end;
@@ -68,7 +68,7 @@ textarea { font-size: 10px; border-radius: 5px; }
     padding-bottom: 6px;
 }
 
-/* â”€â”€ Select2 overrides â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */
+/* ── Select2 overrides ────────────────────────────────────────── */
 .select2-container--default .select2-selection--single {
     height: 34px !important;
     border: 1px solid #d5d5d5 !important;
@@ -83,7 +83,7 @@ textarea { font-size: 10px; border-radius: 5px; }
     height: 32px !important;
 }
 
-/* â”€â”€ Source toggle + Attachment row â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */
+/* ── Source toggle + Attachment row ──────────────────────────── */
 .pr-source-attach-row {
     display: flex;
     align-items: center;
@@ -166,6 +166,7 @@ textarea { font-size: 10px; border-radius: 5px; }
     border-radius: 5px 0 0 5px !important;
     height: 34px;
     font-size: 13px;
+    max-width: 220px;
 }
 
 .source-action-btn {
@@ -200,7 +201,7 @@ textarea { font-size: 10px; border-radius: 5px; }
     overflow: hidden;
 }
 
-/* â”€â”€ Attachment card â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */
+/* ── Attachment card ──────────────────────────────────────────── */
 .pr-attachment-card {
     display: flex;
     align-items: center;
@@ -280,7 +281,7 @@ textarea { font-size: 10px; border-radius: 5px; }
     text-decoration: none !important;
 }
 
-/* â”€â”€ Projection Row â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */
+/* ── Projection Row ───────────────────────────────────────────── */
 .pr-projection-row {
     display: flex;
     flex-wrap: wrap;
@@ -292,7 +293,7 @@ textarea { font-size: 10px; border-radius: 5px; }
     margin-bottom: 10px;
 }
 
-/* â”€â”€ Checkbox styling â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */
+/* ── Checkbox styling ─────────────────────────────────────────── */
 .pr-checkbox-wrap {
     display: flex;
     flex-direction: column;
@@ -316,13 +317,13 @@ textarea { font-size: 10px; border-radius: 5px; }
     accent-color: #c11718;
 }
 
-/* â”€â”€ Inline checkbox group in source row â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */
+/* ── Inline checkbox group in source row ──────────────────────── */
 .source-checkbox-group {
     display: flex;
     align-items: center;
-    gap: 60px;
+    gap: 12px;
     flex-shrink: 0;
-    margin-left: 16px;
+    margin-left: 6px;
 }
 
 .pr-checkbox-inline {
@@ -349,7 +350,7 @@ textarea { font-size: 10px; border-radius: 5px; }
     flex-shrink: 0;
 }
 
-/* â”€â”€ Table header â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */
+/* ── Table header ─────────────────────────────────────────────── */
 #tblItemDescription thead th {
     background-color: #f1f4f8;
     font-size: 10px !important;
@@ -367,7 +368,7 @@ textarea { font-size: 10px; border-radius: 5px; }
     font-size: 10px;
 }
 
-/* â”€â”€ Totals Bar â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */
+/* ── Totals Bar ───────────────────────────────────────────────── */
 .pr-totals-bar {
     display: flex;
     align-items: center;
@@ -423,7 +424,7 @@ textarea { font-size: 10px; border-radius: 5px; }
     color: #333;
 }
 
-/* â”€â”€ Action Buttons â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */
+/* ── Action Buttons ───────────────────────────────────────────── */
 .pr-action-buttons {
     display: flex;
     flex-wrap: nowrap;
@@ -437,7 +438,7 @@ textarea { font-size: 10px; border-radius: 5px; }
     min-width: 120px;
 }
 
-/* â”€â”€ Audit Bar (edit mode) â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */
+/* ── Audit Bar (edit mode) ────────────────────────────────────── */
 .pr-audit-bar {
     display: flex;
     flex-wrap: wrap;
@@ -477,7 +478,7 @@ textarea { font-size: 10px; border-radius: 5px; }
     font-weight: 600;
 }
 
-/* â”€â”€ Field width fix for PO form â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */
+/* ── Field width fix for PO form ──────────────────────────────── */
 #ctl00_MainContent_txtPurchase_No,
 #ctl00_MainContent_txtPurchase_Date,
 #ctl00_MainContent_txtdueDate,
@@ -491,7 +492,7 @@ textarea { font-size: 10px; border-radius: 5px; }
     width: 100% !important;
 }
 
-/* â”€â”€ Modal items table â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */
+/* ── Modal items table ────────────────────────────────────────── */
 #tblPOItemstModelTable thead th {
     background-color: #f1f4f8;
     font-size: 10px !important;
@@ -500,7 +501,8 @@ textarea { font-size: 10px; border-radius: 5px; }
     padding: 6px 5px;
 }
 
-/* â”€â”€ Remove old fieldset/row spacing that caused extra whitespace â”€ */
+/* ── Remove old fieldset/row spacing that caused extra whitespace ─ */
 .pr-primary-settings .row {
     margin-bottom: 0;
 }
+

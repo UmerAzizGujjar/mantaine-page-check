@@ -454,5 +454,165 @@ namespace PMS.Inventory
                 return exists;
             }
         }
+
+        [WebMethod]
+        public static bool CheckIGPApprovalRights()
+        {
+            using (DataBaseDataContext db = new DataBaseDataContext())
+            {
+                var form_id = 4;
+                var user_id = AppConfig.UserID;
+                return (from SASD in db.Sys_Approval_Stage_Details
+                        join SASM in db.Sys_Approval_Stage_Masters on SASD.Stage_ID equals SASM.Stage_ID
+                        join SATD in db.Sys_Approval_Tempelate_Detail_Stages on SASM.Stage_ID equals SATD.StageId
+                        join SATF in db.Sys_Approval_Tempelate_Detail_Forms on SATD.Tempelate_ID equals SATF.Tempelate_ID
+                        join SATM in db.Sys_Approval_Tempelate_Masters on SATD.Tempelate_ID equals SATM.Tempelate_ID
+                        where SASD.UserId == user_id && SATF.FormId == form_id && SATM.IsActive == true && SASM.IsDeleted == false
+                        select SASD).Any();
+            }
+        }
+
+        [WebMethod]
+        public static string GetIGPApprovalInfo(string IgpId)
+        {
+            using (DataBaseDataContext db = new DataBaseDataContext(DBClass.ConnectionString()))
+            {
+                var igpId = Convert.ToInt32(IgpId);
+                var user_id = AppConfig.UserID;
+                var form_id = 4;
+
+                var IGP = db.Igp_masters.Where(p => p.Igp_Id == igpId).FirstOrDefault();
+                if (IGP == null)
+                    return (new JavaScriptSerializer()).Serialize(new { CanApprove = false, MaxApprovalLimit = 0m, Amount = 0m });
+
+                var maxApprovalLimit = db.ExecuteQuery<decimal?>(
+                    "SELECT MAX(SASD.MaxApprovalLimit) " +
+                    "FROM Sys_Approval_Stage_Detail SASD " +
+                    "INNER JOIN Sys_Approval_Stage_Master SASM ON SASD.Stage_ID = SASM.Stage_ID " +
+                    "INNER JOIN Sys_Approval_Tempelate_Detail_Stages SATD ON SASM.Stage_ID = SATD.StageId " +
+                    "INNER JOIN Sys_Approval_Tempelate_Detail_Forms SATF ON SATD.Tempelate_ID = SATF.Tempelate_ID " +
+                    "INNER JOIN Sys_Approval_Tempelate_Master SATM ON SATD.Tempelate_ID = SATM.Tempelate_ID " +
+                    "WHERE SASD.UserId = {0} AND SATF.FormId = {1} AND SATM.IsActive = 1 AND SASM.IsDeleted = 0",
+                    user_id, form_id).FirstOrDefault() ?? 0m;
+
+                var canApprove = maxApprovalLimit == -1m || maxApprovalLimit >= 0m;
+
+                var result = new
+                {
+                    CanApprove = canApprove,
+                    MaxApprovalLimit = maxApprovalLimit,
+                    Amount = 0m
+                };
+
+                return (new JavaScriptSerializer()).Serialize(result);
+            }
+        }
+
+        [WebMethod]
+        public static string ApproveSingleIGP(string IgpId, string approvalRemarks)
+        {
+            using (DataBaseDataContext db = new DataBaseDataContext(DBClass.ConnectionString()))
+            {
+                var igpId = Convert.ToInt32(IgpId);
+                var user_id = AppConfig.UserID;
+                var form_id = 4;
+
+                var IGP = db.Igp_masters.Where(p => p.Igp_Id == igpId).SingleOrDefault();
+                if (IGP == null)
+                    return "Error: IGP not found";
+
+                var isFinalApprovals = (from SASD in db.Sys_Approval_Stage_Details
+                                        join SASM in db.Sys_Approval_Stage_Masters on SASD.Stage_ID equals SASM.Stage_ID
+                                        join SATD in db.Sys_Approval_Tempelate_Detail_Stages on SASM.Stage_ID equals SATD.StageId
+                                        join SATF in db.Sys_Approval_Tempelate_Detail_Forms on SATD.Tempelate_ID equals SATF.Tempelate_ID
+                                        where SASD.UserId == user_id && SATF.FormId == form_id && SASM.IsDeleted == false
+                                        select new { SASM.IsFinalApproval, SATF.FormId }).ToList();
+
+                if (isFinalApprovals.Any(a => a.IsFinalApproval == true && a.FormId == form_id))
+                {
+                    var Details = db.spApproveIgp((int)IGP.Igp_Id, user_id);
+                    db.SubmitChanges();
+
+                    var sasd = (from tbl in db.Sys_Approval_Stage_Details
+                                join SASM in db.Sys_Approval_Stage_Masters on tbl.Stage_ID equals SASM.Stage_ID
+                                join SATDS in db.Sys_Approval_Tempelate_Detail_Stages on SASM.Stage_ID equals SATDS.StageId
+                                join SATF in db.Sys_Approval_Tempelate_Detail_Forms on SATDS.Tempelate_ID equals SATF.Tempelate_ID
+                                where tbl.UserId == user_id && SASM.IsFinalApproval == true && SATF.FormId == form_id && SASM.IsDeleted == false
+                                select tbl).FirstOrDefault();
+
+                    if (sasd != null)
+                    {
+                        var satds = (from tbl in db.Sys_Approval_Tempelate_Detail_Stages
+                                     join SATF in db.Sys_Approval_Tempelate_Detail_Forms on tbl.Tempelate_ID equals SATF.Tempelate_ID
+                                     where tbl.StageId == sasd.Stage_ID && SATF.FormId == form_id
+                                     select tbl).FirstOrDefault();
+
+                        if (satds != null)
+                        {
+                            var log = new Sys_Approval_Log();
+                            log.Approval_Template_ID = satds.Tempelate_ID;
+                            log.Approval_Stage_ID = sasd.Stage_ID;
+                            log.Entry_ID = (int)IGP.Igp_Id;
+                            log.Form_ID = form_id;
+                            log.From_Name = "Inward Gate Pass";
+                            log.Remarks = IGP.Remarks;
+                            log.Company_ID = AppConfig.Company_ID;
+                            log.IsFinalAprroval = true;
+                            log.Entry_Status = "Approved";
+                            log.Approve_By = user_id;
+                            log.Approve_Date = DateTime.Now;
+                            log.IsRejected = false;
+                            log.Approval_Remarks = approvalRemarks;
+                            db.Sys_Approval_Logs.InsertOnSubmit(log);
+                            db.SubmitChanges();
+                        }
+                    }
+                }
+                else
+                {
+                    IGP.Status = "Pending";
+                    IGP.Approved_Time = DateTime.Now;
+                    IGP.Approved_By = user_id;
+                    db.SubmitChanges();
+
+                    var sasd = (from tbl in db.Sys_Approval_Stage_Details
+                                join SASM in db.Sys_Approval_Stage_Masters on tbl.Stage_ID equals SASM.Stage_ID
+                                join SATDS in db.Sys_Approval_Tempelate_Detail_Stages on SASM.Stage_ID equals SATDS.StageId
+                                join SATF in db.Sys_Approval_Tempelate_Detail_Forms on SATDS.Tempelate_ID equals SATF.Tempelate_ID
+                                where tbl.UserId == user_id && SASM.IsFinalApproval == false && SATF.FormId == form_id && SASM.IsDeleted == false
+                                select tbl).FirstOrDefault();
+
+                    if (sasd != null)
+                    {
+                        var satds = (from tbl in db.Sys_Approval_Tempelate_Detail_Stages
+                                     join SATF in db.Sys_Approval_Tempelate_Detail_Forms on tbl.Tempelate_ID equals SATF.Tempelate_ID
+                                     where tbl.StageId == sasd.Stage_ID && SATF.FormId == form_id
+                                     select tbl).FirstOrDefault();
+
+                        if (satds != null)
+                        {
+                            var log = new Sys_Approval_Log();
+                            log.Approval_Template_ID = satds.Tempelate_ID;
+                            log.Approval_Stage_ID = sasd.Stage_ID;
+                            log.Entry_ID = (int)IGP.Igp_Id;
+                            log.Form_ID = form_id;
+                            log.From_Name = "Inward Gate Pass";
+                            log.Remarks = IGP.Remarks;
+                            log.Company_ID = AppConfig.Company_ID;
+                            log.IsFinalAprroval = false;
+                            log.Entry_Status = "Pending";
+                            log.Approve_By = user_id;
+                            log.Approve_Date = DateTime.Now;
+                            log.IsRejected = false;
+                            log.Approval_Remarks = approvalRemarks;
+                            db.Sys_Approval_Logs.InsertOnSubmit(log);
+                            db.SubmitChanges();
+                        }
+                    }
+                }
+                db.SubmitChanges();
+                return "Success";
+            }
+        }
     }
 }
