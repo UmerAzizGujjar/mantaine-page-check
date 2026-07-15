@@ -2204,13 +2204,26 @@ function scheduleCalcTotal(delay) {
                 }
                 totalFurtherAmount += FurtherAmount;
 
-                var AdvAmount = parseFloat((AdvPercent / 100) * baseAmount);
-                $row.find('input[name=txtAdvanceTaxAmount]').val(AdvAmount.toFixed(2));
-                totalAdvAmount += AdvAmount;
 
+                debugger;
                 var STAmount = parseFloat((STpercent / 100) * baseAmount);
                 $row.find('input[name=txtSalAmount]').val(STAmount.toFixed(2));
                 totalstamount += STAmount;
+                var IsadvancewithTax = $('#IsadvancewithTax').is(':checked');
+                var basamountwithStax = (baseAmount + STAmount);
+                 if (IsadvancewithTax == 1){
+                        var AdvAmount = parseFloat((AdvPercent / 100) * basamountwithStax);
+                            $row.find('input[name=txtAdvanceTaxAmount]').val(AdvAmount.toFixed(2));
+                            totalAdvAmount += AdvAmount;
+                     }
+                  else{
+                         var AdvAmount = parseFloat((AdvPercent / 100) * baseAmount);
+                             $row.find('input[name=txtAdvanceTaxAmount]').val(AdvAmount.toFixed(2));
+                             totalAdvAmount += AdvAmount;
+                      }
+              
+
+
 
                 var BonusQty = parseFloat($row.find('input[name=txtBonusQty]').val()) || 0;
                 var bonusTaxTotal = 0;
