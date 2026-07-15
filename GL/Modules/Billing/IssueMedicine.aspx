@@ -186,7 +186,12 @@
                     if (checkTable == "tblDetails") {
                         var attr_name = $(e.target).attr('name');
                         if (attr_name == 'txtQty') {
-                            OpenItemList();
+                            if (showTemplate == "01") {
+                                OpenItemList();
+                            }
+
+
+                           
                         }
                     }
                     break;
@@ -4156,7 +4161,7 @@
 
             return options;
         }
-      
+        var showTemplate;
         function CheckShowTemplateOnSale() {
             $.ajax({
                 type: "POST",
@@ -4166,7 +4171,7 @@
                 dataType: "json",
                 async: false,
                 success: function (response) {
-                    var showTemplate = JSON.parse(response.d);
+                    showTemplate = JSON.parse(response.d);
                     debugger;
                     if (showTemplate === "01") {
                         // Show the div
