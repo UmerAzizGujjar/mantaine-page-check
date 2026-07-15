@@ -4996,9 +4996,11 @@ namespace PMS
                 rd.SetParameterValue("Title", reportTitle);
                 rd.SetParameterValue("CompanyLogo", logoPath);
                 rd.SetParameterValue("@Year", year);
-                rd.SetParameterValue("@Year", year, rd.Subreports[0].Name.ToString());
                 rd.SetParameterValue("@Warehouse", Request.QueryString["WareHouse"]);
+                rd.SetParameterValue("@Year", year, rd.Subreports[0].Name.ToString());
                 rd.SetParameterValue("@Warehouse", Request.QueryString["WareHouse"], rd.Subreports[0].Name.ToString());
+                rd.SetParameterValue("@Year", year, rd.Subreports[1].Name.ToString());
+                rd.SetParameterValue("@Warehouse", Request.QueryString["WareHouse"], rd.Subreports[1].Name.ToString());
 
             }
             else if (reportName == "DailyPharmacyOverallSummaryReport")
@@ -6605,7 +6607,12 @@ namespace PMS
                 rd.SetParameterValue("@outPatient", Convert.ToInt32(InPatient_ID), rd.Subreports[3].Name.ToString());
                 rd.SetParameterValue("@outPatient", Convert.ToInt32(InPatient_ID), rd.Subreports[4].Name.ToString());
                 rd.SetParameterValue("@outPatient", Convert.ToInt32(InPatient_ID), rd.Subreports[5].Name.ToString());
-                // rd.SetParameterValue("@InPatient_id", Convert.ToInt32(InPatient_ID), rd.Subreports[3].Name.ToString());
+                try
+                {
+                    rd.SetParameterValue("@outPatient", Convert.ToInt32(InPatient_ID), rd.Subreports[6].Name.ToString());
+                    rd.SetParameterValue("@outPatient", Convert.ToInt32(InPatient_ID), rd.Subreports[7].Name.ToString());
+                }
+                catch { }
             }
             else if (reportName == "Clinical_Summary")
             {

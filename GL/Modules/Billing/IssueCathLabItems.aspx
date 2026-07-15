@@ -1106,7 +1106,7 @@
                             htmlContainer: 'swal-big-text'
                         }
                     });
-
+                    $('#btnSaveSaleReturn').attr('disabled', false);
                     return;
                 }
                 if (userC == userCode && userP == UserPass) {
@@ -1362,6 +1362,7 @@
                      }
 
                      if (!parsed || parsed.length === 0) {
+                         currentBarcodeId = null;
                          $barcode.val('').focus();
                          return;
                      }
@@ -1408,17 +1409,14 @@
                          }, 600);
                      }
 
-                     $barcode.val('').focus();
-                     // Reset currentBarcodeId after adding to grid
-                     setTimeout(function () {
-                         currentBarcodeId = null;
-                     }, 100);
+                    $barcode.val('').focus();
 
                  }, function (error) {
                      console.error("Error loading medicine by ID:", error);
+                     currentBarcodeId = null;
                      $barcode.val('').focus();
                  });
-
+ 
              }, function (error) {
                  console.error("Error checking barcode status:", error);
                  // On error, still try to load the medicine as fallback
@@ -1431,28 +1429,30 @@
                          parsed = [];
                      }
 
-                     if (!parsed || parsed.length === 0) {
-                         $barcode.val('').focus();
-                         return;
-                     }
+                      if (!parsed || parsed.length === 0) {
+                          currentBarcodeId = null;
+                          $barcode.val('').focus();
+                          return;
+                      }
 
-                     var item = parsed[0];
-                     var itemId = item.Item_ID;
-                     currentBarcodeId = item.Barcode_ID ? item.Barcode_ID.toString() : null;
+                      var item = parsed[0];
+                      var itemId = item.Item_ID;
+                      currentBarcodeId = item.Barcode_ID ? item.Barcode_ID.toString() : null;
 
-                     // Check for duplicate in current bill
-                     if (currentBarcodeId && isBarcodeAlreadyAddedInGrid(currentBarcodeId)) {
-                         Swal.fire({
-                             icon: 'warning',
-                             title: 'Duplicate Item!',
-                             text: 'This item is already in the bill.',
-                             showConfirmButton: true,
-                             confirmButtonText: 'OK'
-                         }).then(function () {
-                             $barcode.val('').focus();
-                         });
-                         return;
-                     }
+                      // Check for duplicate in current bill
+                      if (currentBarcodeId && isBarcodeAlreadyAddedInGrid(currentBarcodeId)) {
+                          currentBarcodeId = null;
+                          Swal.fire({
+                              icon: 'warning',
+                              title: 'Duplicate Item!',
+                              text: 'This item is already in the bill.',
+                              showConfirmButton: true,
+                              confirmButtonText: 'OK'
+                          }).then(function () {
+                              $barcode.val('').focus();
+                          });
+                          return;
+                      }
 
                      var displayText = (item.Item_Code || '') + ' - ' + (item.Description || item.Generic_Name || '');
                      var $medName = $('#medName');
@@ -1473,13 +1473,14 @@
                      }
 
                      $barcode.val('').focus();
-                 }, function (error) {
-                     console.error(error);
-                     $barcode.val('').focus();
-                 });
-             });
-         }
-         // Check if barcode already exists in current bill
+                  }, function (error) {
+                      console.error(error);
+                      currentBarcodeId = null;
+                      $barcode.val('').focus();
+                  });
+              });
+          }
+          // Check if barcode already exists in current bill
          function isBarcodeAlreadyAddedInGrid(barcodeId) {
              if (!barcodeId) return false;
 
@@ -2191,6 +2192,9 @@
                         ? window.currentBarcodeId.toString()
                         : '';
 
+                    var isBarcodeScan = barcodeValue !== '';
+                    var qtyDisabledAttr = isBarcodeScan ? 'disabled' : '';
+
                     debugger;
                     rows = '<tr><td> ' + parseInt(parseInt(rowIndex) + 1) + '</td>' +
 
@@ -2204,7 +2208,7 @@
 
                         '<td><input type="hidden" value="' + Uomqty + '" name="UomQty" id="UomQty"  >' + Uomqty + '</td>' +
 
-                        '<td><input type="number" name="txtQty" disabled value="1" style="width: 3% !important;margin-left: -7px;position: absolute;height:22px;text-align: right;" class="height_height" onkeyup="CulculateAmonutWithQty(this)" onblur="CulculateAmonutWithQty(this)" autocomplete="off" onclick="this.select();" /></td>' +
+                        '<td><input type="number" name="txtQty" ' + qtyDisabledAttr + ' value="1" style="width: 3% !important;margin-left: -7px;position: absolute;height:22px;text-align: right;" class="height_height" onkeyup="CulculateAmonutWithQty(this)" onblur="CulculateAmonutWithQty(this)" autocomplete="off" onclick="this.select();" /></td>' +
 
                         '<td><input type="number" name="txtStock" value="' + data[0].Total_Stock + '" style="width: 65px !important;margin-left: -2px;position: absolute;height:22px;text-align: right;" class="height_height" disabled/></td>' +
 
@@ -2235,6 +2239,7 @@
                     }, 5);
 
                     CalculateSummarieDiscountPerWise(rowIndex);
+                    currentBarcodeId = null;
                 }
             });
         }
@@ -2309,7 +2314,10 @@
                     var barcodeValue = (typeof window.currentBarcodeId !== 'undefined' && window.currentBarcodeId)
                         ? window.currentBarcodeId.toString()
                         : '';
-                   
+
+                    var isBarcodeScan = barcodeValue !== '';
+                    var qtyDisabledAttr = isBarcodeScan ? 'disabled' : '';
+
                     debugger;
                     rows = '<tr><td style="display:none;"><input type="hidden" value="' + data[0].Item_ID + '" name="ItemID" id="ItemID" ></td>' +
 
@@ -2323,7 +2331,7 @@
 
                         '<td><input type="hidden" value="' + Uomqty + '" name="UomQty" id="UomQty"  >' + Uomqty + '</td>' +
 
-                        '<td><input type="text" name="txtQty" disabled value="1" min="1" style="width: 3% !important;margin-left: -7px;position: absolute;height:22px;text-align: right;" class="height_height" onkeyup="CulculateAmonutWithQty(this)"  onblur="CulculateAmonutWithQty(this)" autocomplete="off" onclick="this.select();" /></td>' +
+                        '<td><input type="text" name="txtQty" ' + qtyDisabledAttr + ' value="1" min="1" style="width: 3% !important;margin-left: -7px;position: absolute;height:22px;text-align: right;" class="height_height" onkeyup="CulculateAmonutWithQty(this)"  onblur="CulculateAmonutWithQty(this)" autocomplete="off" onclick="this.select();" /></td>' +
 
                         '<td><input type="number" name="txtStock" value="' + data[0].Total_Stock + '" style="width: 65px !important;margin-left: -2px;position: absolute;height:22px;text-align: right;" class="height_height" readonly/></td>' +
 
@@ -2515,6 +2523,7 @@
             });
             debugger;
             if (hasInvalidStock) {
+                $('#SaveVal').attr('disabled', false);
                 return;
             }
             debugger;
@@ -2596,7 +2605,7 @@
                             htmlContainer: 'swal-big-text'
                         }
                     });
-
+                    $('#SaveVal').attr('disabled', false);
                     return;
                 }
                 if (userC == userCode && userP == UserPass) {
@@ -2696,6 +2705,7 @@
                     });
                     debugger;
                     if (hasInvalidStock) {
+                        $('#SaveVal').attr('disabled', false);
                         return;
                     }
                     debugger;
@@ -2758,7 +2768,7 @@
                             htmlContainer: 'swal-big-text'
                         }
                     });
-
+                    $('#SaveVal').attr('disabled', false);
                     return;
                 }
             });

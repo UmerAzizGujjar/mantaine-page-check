@@ -2052,8 +2052,10 @@
         }
 
         function savePrimaryDiagnosis() {
+            $('#NewPrimaryDiagnosis').prop('disabled', true);
             var Text = $('#NewPrimaryDiagnosis').val().trim();
             if (Text === '') {
+                $('#NewPrimaryDiagnosis').prop('disabled', false);
                 Swal.fire({ icon: 'warning', title: 'Warning!', text: 'Please enter a Diagnosis before saving.', showConfirmButton: false, timer: 2000 });
                 return;
             }
@@ -2064,6 +2066,7 @@
                 contentType: "application/json; charset=utf-8",
                 dataType: "json",
                 success: function (response) {
+                    $('#NewPrimaryDiagnosis').prop('disabled', false);
                     if (response.d == "0") {
                         Swal.fire({ icon: 'error', title: 'Error!', text: 'Diagnosis already exists!', showConfirmButton: false, timer: 2000 });
                     } else {
@@ -2072,6 +2075,7 @@
                     }
                 },
                 error: function (xhr, status, error) {
+                    $('#NewPrimaryDiagnosis').prop('disabled', false);
                     console.error("Error saving diagnosis:", error);
                 }
             });
@@ -2079,8 +2083,10 @@
         }
 
         function saveFinalDiagnosis() {
+            $('#NewFinalDiagnosis').prop('disabled', true);
             var Text = $('#NewFinalDiagnosis').val().trim();
             if (Text === '') {
+                $('#NewFinalDiagnosis').prop('disabled', false);
                 Swal.fire({ icon: 'warning', title: 'Warning!', text: 'Please enter a Diagnosis before saving.', showConfirmButton: false, timer: 2000 });
                 return;
             }
@@ -2091,6 +2097,7 @@
                 contentType: "application/json; charset=utf-8",
                 dataType: "json",
                 success: function (response) {
+                    $('#NewFinalDiagnosis').prop('disabled', false);
                     if (response.d == "0") {
                         Swal.fire({ icon: 'error', title: 'Error!', text: 'Diagnosis already exists!', showConfirmButton: false, timer: 2000 });
                     } else {
@@ -2099,6 +2106,7 @@
                     }
                 },
                 error: function (xhr, status, error) {
+                    $('#NewFinalDiagnosis').prop('disabled', false);
                     console.error("Error saving diagnosis:", error);
                 }
             });

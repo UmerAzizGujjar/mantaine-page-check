@@ -615,6 +615,11 @@
                     if (status == "Created") {
                         $('#btnVoucher').hide();
                     }
+                    if (status == "Created" || status == "Pending") {
+                        if (Inv_ID != "") {
+                            CheckPIApprovalRightsAndShowButton(Inv_ID);
+                        }
+                    }
                 }, 1000);
                 debugger;
                 LoadInvocieDetail(Inv_ID)
@@ -902,6 +907,49 @@
                 }
             });
         }   
+        function CheckPIApprovalRightsAndShowButton(invId) {
+            callPageMethod('CheckPIApprovalRights', function (hasRights) {
+                if (hasRights) {
+                    callPageMethod('GetPIApprovalInfo', { InvId: invId }, function (resp) {
+                        var info = JSON.parse(resp);
+                        if (info.CanApprove) {
+                            $('#btnApprove').show();
+                            $('#btnApprove').data('pi-amount', info.Amount);
+                        }
+                    });
+                }
+            });
+        }
+        function ApprovePIFromEdit() {
+            var invId = Inv_ID;
+            var amount = $('#btnApprove').data('pi-amount');
+            var confirmHtml = 'Are you sure you want to approve Purchase Invoice?';
+            if (amount > 0) {
+                confirmHtml += '<br><br>Invoice Amount: <strong>' + parseFloat(amount).toFixed(2) + '</strong>';
+            }
+            Swal.fire({
+                title: 'Approve Purchase Invoice?',
+                html: confirmHtml,
+                icon: 'question',
+                showCancelButton: true,
+                confirmButtonText: 'Yes, Approve',
+                cancelButtonText: 'Cancel',
+                input: 'textarea',
+                inputPlaceholder: 'Approval remarks (optional)...',
+                customClass: { popup: 'swal-big-popup', title: 'swal-big-title', htmlContainer: 'swal-big-text' }
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    var remarks = result.value || '';
+                    callPageMethod('ApproveSinglePI', { InvId: invId, approvalRemarks: remarks }, function (resp) {
+                        if (resp === "Success") {
+                            Swal.fire({ icon: 'success', title: 'Approved!', text: 'Purchase Invoice has been approved successfully.', showConfirmButton: false, timer: 2000, customClass: { popup: 'swal-big-popup', title: 'swal-big-title', htmlContainer: 'swal-big-text' } }).then(function () { location.reload(); });
+                        } else {
+                            Swal.fire({ icon: 'error', title: 'Error', text: resp, showConfirmButton: true, customClass: { popup: 'swal-big-popup', title: 'swal-big-title', htmlContainer: 'swal-big-text' } }).then(function () { location.reload(); });
+                        }
+                    });
+                }
+            });
+        }
         function PrintPurchaseDetail() {
             var id = '<% =Request.QueryString["Inv_ID"] %>';
             var locationInfo = window.location;
@@ -1564,6 +1612,9 @@
                 </div>
                 <div class="col-lg-2 col-md-4 col-sm-6">
                     <input type="button" class="btn btn-primry" value="Voucher" id="btnVoucher" onclick="PrintVoucher()" />
+                </div>
+                <div class="col-lg-2 col-md-4 col-sm-6">
+                    <input type="button" style="height: 32px !important; width: 102px; display: none" value="Approve" id="btnApprove" onclick="ApprovePIFromEdit()" />
                 </div>
                 <div class="col-lg-2 col-md-4 col-sm-6">
                     

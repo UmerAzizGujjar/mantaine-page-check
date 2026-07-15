@@ -1460,7 +1460,8 @@ namespace PMS
                 newBillDetails.Req_qty = dtls.Req_qty;
                 newBillDetails.CGS = dtls.CGSAmount;
                  
-                decimal currentDbStock = ReadCurrentStock(db, Item_Id , dtls.batchno);
+               // decimal currentDbStock = ReadCurrentStock(db, Item_Id , dtls.batchno);
+                decimal currentDbStock = ReadCurrentStock(db, Item_Id, dtls.batchno, data.warehouse);
                 if (currentDbStock < dtls.Qty)
                 {
                     throw new Exception(
@@ -1500,7 +1501,31 @@ namespace PMS
             return newBill;
         }
 
-        private static decimal ReadCurrentStock(DataBaseDataContext db, int itemId, string batchNo)
+        //private static decimal ReadCurrentStock(DataBaseDataContext db, int itemId, string batchNo)
+        //{
+        //    using (SqlCommand cmd = (SqlCommand)db.Connection.CreateCommand())
+        //    {
+        //        cmd.Transaction = (SqlTransaction)db.Transaction;
+
+        //        cmd.CommandText = @"
+        //    SELECT ISNULL(SUM(Qty), 0)
+        //    FROM vwBatch_Ledger
+        //    WHERE Item_ID = @id
+        //      AND Batch_No = @batch";
+
+        //        cmd.Parameters.AddWithValue("@id", itemId);
+        //        cmd.Parameters.AddWithValue("@batch", batchNo);
+
+        //        object result = cmd.ExecuteScalar();
+
+        //        if (result == null || result == DBNull.Value)
+        //            return 0m;
+
+        //        return Convert.ToDecimal(result);
+        //    }
+        //}
+
+        private static decimal ReadCurrentStock(DataBaseDataContext db, int itemId, string batchNo, string warehouse)
         {
             using (SqlCommand cmd = (SqlCommand)db.Connection.CreateCommand())
             {
@@ -1510,10 +1535,12 @@ namespace PMS
             SELECT ISNULL(SUM(Qty), 0)
             FROM vwBatch_Ledger
             WHERE Item_ID = @id
-              AND Batch_No = @batch";
+              AND Batch_No = @batch
+              AND Ware_House = @warehouse";
 
                 cmd.Parameters.AddWithValue("@id", itemId);
                 cmd.Parameters.AddWithValue("@batch", batchNo);
+                cmd.Parameters.AddWithValue("@warehouse", warehouse);
 
                 object result = cmd.ExecuteScalar();
 

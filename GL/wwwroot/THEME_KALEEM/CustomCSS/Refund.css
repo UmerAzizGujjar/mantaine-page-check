@@ -32,3 +32,85 @@
 .formrgn {
     margin-top: 10px;
 }
+
+
+
+/* â”€â”€ Attachment card (shared with DiscountAssigned.aspx) â”€â”€ */
+.pr-attachment-card {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    background: linear-gradient(135deg, #fdf2e2 0%, #fbe9cf 100%);
+    border: 1px solid #f5ca8b;
+    border-radius: 8px;
+    padding: 5px 14px;
+    box-shadow: 0 1px 4px rgba(48,134,101,0.10);
+    flex-shrink: 0;
+    height: 46px;
+}
+
+.pr-attachment-icon {
+    width: 28px;
+    height: 28px;
+    background: #308665;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: #fff;
+    font-size: 13px;
+    flex-shrink: 0;
+}
+
+.pr-attachment-body {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.pr-attachment-label {
+    font-size: 12px;
+    font-weight: 700;
+    color: #543a16;
+    white-space: nowrap;
+}
+
+.pr-file-input {
+    font-size: 11px !important;
+    border: 1px dashed #bf8532 !important;
+    background: #fefbf5 !important;
+    border-radius: 5px !important;
+    padding: 2px 6px !important;
+    color: #333 !important;
+    font-weight: normal !important;
+    box-shadow: none !important;
+    cursor: pointer;
+    max-width: 190px;
+    height: 28px;
+}
+
+.pr-attachment-download { flex-shrink: 0; }
+
+.pr-download-btn,
+#ctl00_MainContent_HyperLink1 {
+    display: inline-flex !important;
+    align-items: center;
+    gap: 5px;
+    background: #308665 !important;
+    color: #fff !important;
+    font-size: 12px !important;
+    font-weight: 600;
+    padding: 4px 12px !important;
+    border-radius: 20px !important;
+    text-decoration: none !important;
+    border: none;
+    white-space: nowrap;
+    transition: background 0.15s;
+}
+
+.pr-download-btn:hover,
+#ctl00_MainContent_HyperLink1:hover {
+    background: #256b50 !important;
+    color: #fff !important;
+    text-decoration: none !important;
+}

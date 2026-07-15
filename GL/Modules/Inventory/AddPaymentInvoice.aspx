@@ -108,6 +108,27 @@
             });
         }
 
+        function callPageMethod(methodName, params, successCallback, errorCallback) {
+            if (typeof params === 'function') {
+                errorCallback = successCallback;
+                successCallback = params;
+                params = {};
+            }
+            $.ajax({
+                type: "POST",
+                url: "AddPaymentInvoice.aspx/" + methodName,
+                data: JSON.stringify(params || {}),
+                contentType: "application/json; charset=utf-8",
+                dataType: "json",
+                success: function (response) {
+                    if (typeof successCallback === 'function') successCallback(response.d);
+                },
+                error: function (xhr, status, error) {
+                    console.error('Error calling ' + methodName + ':', xhr.status, error);
+                    if (typeof errorCallback === 'function') errorCallback(error);
+                }
+            });
+        }
         function UserRights() {
             debugger;
             $.ajax({
@@ -486,12 +507,15 @@
                     $('#btn_Print').show();
                 }
                 debugger;
-                if (checkstatus == 'Created') {
+                if (checkstatus == 'Created' || checkstatus == 'Pending') {
                     debugger;
                     $('#btnSave').attr("disabled", false);
                     $('#btnSave').show();
                     $('#btnVoucher').hide();
                     $('#btn_Print').show();
+                    if (Inv_ID != '') {
+                        CheckPAYMENTApprovalRightsAndShowButton(Inv_ID);
+                    }
                 }
                 debugger;
                 FillzerobalanceVendors(Inv_ID);
@@ -812,6 +836,49 @@
                     }
                 });
             }
+            function CheckPAYMENTApprovalRightsAndShowButton(invId) {
+                callPageMethod('CheckPAYMENTApprovalRights', function (hasRights) {
+                    if (hasRights) {
+                        callPageMethod('GetPAYMENTApprovalInfo', { InvId: invId }, function (resp) {
+                            var info = JSON.parse(resp);
+                            if (info.CanApprove) {
+                                $('#btnApprovePay').show();
+                                $('#btnApprovePay').data('pay-amount', info.Amount);
+                            }
+                        });
+                    }
+                });
+            }
+            function ApprovePAYMENTFromEdit() {
+                var invId = '<% =Request.QueryString["Inv_ID"] %>';
+                var amount = $('#btnApprovePay').data('pay-amount');
+                var confirmHtml = 'Are you sure you want to approve Payment Invoice #' + $('#txt_PaymentNo').val() + '?';
+                if (amount > 0) {
+                    confirmHtml += '<br><br>Invoice Amount: <strong>' + parseFloat(amount).toFixed(2) + '</strong>';
+                }
+                Swal.fire({
+                    title: 'Approve Payment Invoice?',
+                    html: confirmHtml,
+                    icon: 'question',
+                    showCancelButton: true,
+                    confirmButtonText: 'Yes, Approve',
+                    cancelButtonText: 'Cancel',
+                    input: 'textarea',
+                    inputPlaceholder: 'Approval remarks (optional)...',
+                    customClass: { popup: 'swal-big-popup', title: 'swal-big-title', htmlContainer: 'swal-big-text' }
+                }).then((result) => {
+                    if (result.isConfirmed) {
+                        var remarks = result.value || '';
+                        callPageMethod('ApproveSinglePAYMENT', { InvId: invId, approvalRemarks: remarks }, function (resp) {
+                            if (resp === "Success") {
+                                Swal.fire({ icon: 'success', title: 'Approved!', text: 'Payment Invoice has been approved successfully.', showConfirmButton: false, timer: 2000, customClass: { popup: 'swal-big-popup', title: 'swal-big-title', htmlContainer: 'swal-big-text' } }).then(function () { location.reload(); });
+                            } else {
+                                Swal.fire({ icon: 'error', title: 'Error', text: resp, showConfirmButton: true, customClass: { popup: 'swal-big-popup', title: 'swal-big-title', htmlContainer: 'swal-big-text' } }).then(function () { location.reload(); });
+                            }
+                        });
+                    }
+                });
+            }
 
 
         </script>
@@ -937,6 +1004,7 @@
             <input type="button" name="" id="btn_Print" value="Print" class="btn btn-primry" onclick="PrintPaymentDetail()" />
         </div>
         <div class="col-lg-2 col-md-4 col-sm-12">
+            <input type="button" style="display: none" class="btn btn-primry" value="Approve" id="btnApprovePay" onclick="ApprovePAYMENTFromEdit()" />
             <input type="button" style="display: none" class="btn btn-primry" value="UnApprove" id="btnUnApprove" onclick="UnApprove()" />
     
         </div>

@@ -50,6 +50,29 @@
     <script type="text/javascript">
         var stID = "";
         var wareHouses = [];
+
+        function callPageMethod(methodName, params, successCallback, errorCallback) {
+            if (typeof params === 'function') {
+                errorCallback = successCallback;
+                successCallback = params;
+                params = {};
+            }
+            $.ajax({
+                type: "POST",
+                url: "StoreStockTransfer.aspx/" + methodName,
+                data: JSON.stringify(params || {}),
+                contentType: "application/json; charset=utf-8",
+                dataType: "json",
+                success: function (response) {
+                    if (typeof successCallback === 'function') successCallback(response.d);
+                },
+                error: function (xhr, status, error) {
+                    console.error('Error calling ' + methodName + ':', xhr.status, error);
+                    if (typeof errorCallback === 'function') errorCallback(error);
+                }
+            });
+        }
+
         function InitStock() {
         }
         function getstockdetailnum() {
@@ -1097,6 +1120,52 @@
             var Amount = TransferQty * Rate;
             $("#TextAmount").val(Amount);
         }
+
+        function CheckSTORESTOCKTRANSFERApprovalRightsAndShowButton(stId) {
+            callPageMethod('CheckSTORESTOCKTRANSFERApprovalRights', function (hasRights) {
+                if (hasRights) {
+                    callPageMethod('GetSTORESTOCKTRANSFERApprovalInfo', { StockTransferId: stId }, function (resp) {
+                        var info = JSON.parse(resp);
+                        if (info.CanApprove) {
+                            $('#btnApprove').show();
+                        }
+                    });
+                }
+            });
+        }
+        function ApproveSTORESTOCKTRANSFERFromEdit() {
+            var transferId = stID;
+            Swal.fire({
+                title: 'Approve Stock Transfer?',
+                icon: 'question',
+                showCancelButton: true,
+                confirmButtonText: 'Yes, Approve',
+                cancelButtonText: 'Cancel',
+                input: 'textarea',
+                inputPlaceholder: 'Approval remarks (optional)...',
+                customClass: { popup: 'swal-big-popup', title: 'swal-big-title', htmlContainer: 'swal-big-text' }
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    var remarks = result.value || '';
+                    callPageMethod('ApproveSingleSTORESTOCKTRANSFER', { StockTransferId: transferId, approvalRemarks: remarks }, function (resp) {
+                        if (resp === "Success") {
+                            Swal.fire({ icon: 'success', title: 'Approved!', text: 'Stock Transfer has been approved successfully.', showConfirmButton: false, timer: 2000, customClass: { popup: 'swal-big-popup', title: 'swal-big-title', htmlContainer: 'swal-big-text' } }).then(function () { location.reload(); });
+                        } else {
+                            Swal.fire({ icon: 'error', title: 'Error', text: resp, showConfirmButton: true, customClass: { popup: 'swal-big-popup', title: 'swal-big-title', htmlContainer: 'swal-big-text' } }).then(function () { location.reload(); });
+                        }
+                    });
+                }
+            });
+        }
+
+        if (stID != "") {
+            setTimeout(function() {
+                var status = $("#txtstatus_trnsfer").val();
+                if (status == "Created" || status == "" || status == null || status == "Pending") {
+                    CheckSTORESTOCKTRANSFERApprovalRightsAndShowButton(stID);
+                }
+            }, 1500);
+        }
     </script>
 </asp:Content>
 <asp:Content ID="Content2" ContentPlaceHolderID="MainContent" runat="server">
@@ -1234,6 +1303,9 @@
                  </div>
                   <div class="col-lg-2 col-md-2 col-sm-3">
                     <input type="button" id="btnPrint" class="btn btn-primry" onclick="PrintStoreTransfer()" value="Print" />
+                </div>
+                <div class="col-lg-2 col-md-2 col-sm-3">
+                    <input type="button" style="display:none" class="btn btn-primry" value="Approve" id="btnApprove" onclick="ApproveSTORESTOCKTRANSFERFromEdit()" />
                 </div>
              </div>
         </div>

@@ -13,5 +13,6 @@ namespace PMS.Modules.Billing
 
     public partial class DiscountAssigned
     {
+        protected global::System.Web.UI.WebControls.HyperLink HyperLink1;
     }
 }

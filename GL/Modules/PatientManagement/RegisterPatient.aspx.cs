@@ -186,6 +186,13 @@ namespace PMS.Modules.PatientManagement
             public bool IsRefunded { get; set; }
             public string bank_cash { get; set; }
             public string bank_account_id { get; set; }
+            public string Gender { get; set; }
+            public string Martial_Status { get; set; }
+            public string Country { get; set; }
+            public string Blood_Group { get; set; }
+            public string val_area { get; set; }
+            public string State { get; set; }
+            public string val_city { get; set; }
 
         }
 
@@ -663,7 +670,14 @@ namespace PMS.Modules.PatientManagement
                           Monitoring = patientRaw.Monitoring ?? false,
                           IsRefunded = patientRaw.IsRefunded ?? false,
                           bank_cash = patientRaw.bank_cash ?? "",
-                          bank_account_id = patientRaw.bank_account_id ?? ""
+                          bank_account_id = patientRaw.bank_account_id ?? "",
+                          Gender = patientRaw.Gender ?? "",
+                          Martial_Status = patientRaw.Martial_Status ?? "",
+                          Country = patientRaw.Country ?? "",
+                          Blood_Group = patientRaw.Blood_Group ?? "",
+                          val_area = patientRaw.val_area ?? "",
+                          State = patientRaw.State ?? "",
+                          val_city = patientRaw.val_city ?? ""
                 };
 
                 return new JavaScriptSerializer().Serialize(patient);
