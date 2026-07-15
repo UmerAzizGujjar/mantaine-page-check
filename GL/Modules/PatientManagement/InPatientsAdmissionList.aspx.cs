@@ -7,6 +7,7 @@ using System.Data.SqlClient;
 using System.Linq;
 using System.Net.PeerToPeer;
 using System.Web;
+using System.Web.Script.Serialization;
 using System.Web.Services;
 using System.Web.UI;
 using System.Web.UI.WebControls;
@@ -42,15 +43,15 @@ namespace PMS
             public int allowDelete;
             public int allowEdit;
         }
-        [WebMethod]
-        public static object DischargePatients(List<int> patientIds)
+        [WebMethod(EnableSession = true)]
+        public static object DischargePatientsWithDoctor(List<int> patientIds, int dischargeDoctorId)
         {
             if (patientIds == null || patientIds.Count == 0)
                 return new { success = false, message = "No patients selected." };
 
-            var userId = HttpContext.Current.Session["UserId"]?.ToString();
-            if (string.IsNullOrEmpty(userId))
-                return new { success = false, message = "Session expired. Please log in again." };
+            var currentUserId = HttpContext.Current.Session["UserId"]?.ToString();
+            if (string.IsNullOrEmpty(currentUserId))
+                return new { success = false, message = "Session expired." };
 
             try
             {
@@ -59,14 +60,12 @@ namespace PMS
                     foreach (int inPatId in patientIds)
                     {
                         var ip = db.In_Patients.FirstOrDefault(x => x.In_Patient_ID == inPatId);
-                        if (ip == null || ip.Discharge == true) continue; // skip if missing or already discharged
+                        if (ip == null || ip.Discharge == true) continue;
 
-                        // ✅ Discharge patient
                         ip.Discharge = true;
                         ip.Discharge_On = DateTime.Now;
-                        ip.Discharge_By = userId;
+                        ip.Discharge_By = dischargeDoctorId.ToString();
 
-                        // ✅ Discharge active ward allocations
                         var wards = db.Ward_Allocations
                             .Where(w => w.InPatient_ID == inPatId.ToString() && w.IsDischarge == false)
                             .ToList();
@@ -76,20 +75,35 @@ namespace PMS
                             w.To_TimeDate = DateTime.Now;
                         }
 
-                        // ✅ Mark discount as discharged
                         DBClass.executeNonQueryWithoutBegin(
                             $"UPDATE Discount_Assigned_Patient SET IsDischarge = 1 WHERE Patient_Id = {ip.Patient_ID}");
                     }
-
                     db.SubmitChanges();
                 }
-
                 return new { success = true, message = $"{patientIds.Count} patient(s) discharged successfully." };
             }
-            catch (Exception ex)
+            catch (Exception)
             {
                 return new { success = false, message = "An error occurred. Please try again." };
             }
+        }
+
+        [WebMethod(EnableSession = true)]
+        public static string GetDoctor()
+        {
+            string data = string.Empty;
+            using (DataBaseDataContext db = new DataBaseDataContext())
+            {
+                var result = (from dv in db.HR_Employees
+                              where dv.IsDoctor == true
+                              select new
+                              {
+                                  dv.Emp_ID,
+                                  dv.Emp_Name
+                              }).ToList();
+                data = new JavaScriptSerializer().Serialize(result);
+            }
+            return data;
         }
 
         public static string GetQoute()
