@@ -63,7 +63,7 @@ namespace PMS.Modules.Inventory
         }
         //
         [WebMethod]
-        public static string SaveItem(string Item_Code, string Desc, string Active, string PackUnit, string UomQty, string Menu, string ItemType, string ItemCategory, string FianceIntegration, string locatorAddress, string Lenght, string Width, string Heigth, string SalesRate, string PurchRate, string Remarks, string FinshProduct, string Consumable, string Saleable, string ItemGroup, string Warehouse, string Purchaseable, string Locator, string NonStockItem, string Fixasset, string MinimumStock, string Batch, string ReorderStock, string MaximumStock, string ATC, string GenericName, string ControllerDrug, string Narcotics, string Refregrator, string PharmacyItem, string ProcedureTypes, string Notes, string RadioCharges, string DentalItem, string Procedure, string LensRequired, string BedServices, string LabRequired, string PattHistoryRequired, string DoctorShare, string HospitalShare, string FitnessCertificate, string OtherServices, string Billing, string OTProcedure, string btnValue, string ItemId, string DepartmentId, string IsHospital, string IsService,string fluid, string Procedure_Time)
+        public static string SaveItem(string Item_Code, string Desc, string Active, string PackUnit, string UomQty, string Menu, string ItemType, string ItemCategory, string FianceIntegration, string locatorAddress, string Lenght, string Width, string Heigth, string SalesRate, string PurchRate, string Remarks, string FinshProduct, string Consumable, string Saleable, string ItemGroup, string Warehouse, string Purchaseable, string Locator, string NonStockItem, string Fixasset, string MinimumStock, string Batch, string ReorderStock, string MaximumStock, string ATC, string GenericName, string ControllerDrug, string Narcotics, string Refregrator, string PharmacyItem, string ProcedureTypes, string Notes, string RadioCharges, string DentalItem, string Procedure, string LensRequired, string BedServices, string LabRequired, string PattHistoryRequired, string DoctorShare, string HospitalShare, string FitnessCertificate, string OtherServices, string Billing, string OTProcedure, string btnValue, string ItemId, string DepartmentId, string IsHospital, string IsService,string fluid, string Procedure_Time, string Account)
         {
             string result = string.Empty;
             string Id = "";
@@ -85,6 +85,10 @@ namespace PMS.Modules.Inventory
                     obj.UOM_Qty = Convert.ToDecimal(UomQty);
                 }
                 obj.Item_Account_category = int.Parse(FianceIntegration);
+                if (Account != null && Account != "0" && Account != "")
+                {
+                    obj.Account_ID = Convert.ToInt32(Account);
+                }
                 if (Lenght != "")
                 {
                     obj.Length = Convert.ToDecimal(Lenght);
@@ -214,6 +218,10 @@ namespace PMS.Modules.Inventory
                 obj.Item_Category = ItemCategory;
                 if (FianceIntegration == null) FianceIntegration = "0";
                 obj.Item_Account_category = int.Parse(FianceIntegration);
+                if (Account != null && Account != "0" && Account != "")
+                {
+                    obj.Account_ID = Convert.ToInt32(Account);
+                }
                 obj.Book_ID = AppConfig.Book_ID;
                 obj.Financial_Integration = FianceIntegration;
                 obj.locatorAddress = locatorAddress;
@@ -394,8 +402,9 @@ namespace PMS.Modules.Inventory
                                      obj.ItemGroupId,
                                      obj.InventoryOrg,
                                      obj.DepartmentId,
-                                     obj.Hospital_Services,
-                                     obj.OTProcedure,
+                                    obj.Hospital_Services,
+                                    obj.OTProcedure,
+                                    obj.Account_ID,
                                  }).FirstOrDefault();
                     result = (new JavaScriptSerializer()).Serialize(query).ToString();
                 }
@@ -413,6 +422,20 @@ namespace PMS.Modules.Inventory
                                        p.CategoryName
                                    }).ToList();
             return (new JavaScriptSerializer()).Serialize(accountcategory);
+        }
+        [WebMethod]
+        public static string GetAccounts()
+        {
+            DataBaseDataContext db = new DataBaseDataContext();
+            var accounts = (from a in db.GL_Accounts
+                            where a.Levels == 4 && a.Active == true
+                            select new
+                            {
+                                a.Account_ID,
+                                a.Account_Code,
+                                a.Account_Name
+                            }).ToList();
+            return (new JavaScriptSerializer()).Serialize(accounts);
         }
         [WebMethod]
         public static string GetDepartments()
