@@ -43,7 +43,8 @@ namespace PMS
                             where lbt.System_Generated == true
                                   && bill_details.Test_Main_Department != "001"
                                   && (bill.isCancel == false || bill.isCancel == null)
-                                  && !db.Refunds.Any(r => r.Bill_ID == bill.Bill_ID)
+                                 // && !db.Refunds.Any(r => r.Bill_ID == bill.Bill_ID)
+                                 && (bill_details.Is_Refunded == false || bill_details.Is_Refunded == null)
                                   && bill.Bill_Date >= startDateTime
                                   && bill.Bill_Date < endDateTime
                             let dept = (from ipd in db.In_Patients

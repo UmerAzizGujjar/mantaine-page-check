@@ -18,16 +18,16 @@ namespace PMS
 
             if (Session["Book_ID"] != null && Request.QueryString["Table"] == null && Request.QueryString["StartCode"] == null && Request.QueryString["EndCode"] == null && Request.QueryString["Bank"] == null && Request.QueryString["Levels"] == null)
             {
-                string sqlQuery = "Select * from GL_Accounts Where Book_ID=" + AppConfig.Book_ID + " AND Levels=4 AND (Account_Name like '" + Request.QueryString["q"].Replace("'", "''") + "%' OR Account_Code like '" + Request.QueryString["q"].Replace("'", "''") + "%')";
+                string sqlQuery = "SELECT gl.*,Parent3.Account_Name AS GrandParentAccountName FROM GL_Accounts gl LEFT JOIN GL_Accounts Parent1 ON Parent1.Account_ID = gl.Parent_Code LEFT JOIN GL_Accounts Parent2 ON Parent2.Account_ID = Parent1.Parent_Code LEFT JOIN GL_Accounts Parent3 ON Parent3.Account_ID = Parent2.Parent_Code WHERE gl.Levels = 4; AND (Account_Name like '" + Request.QueryString["q"].Replace("'", "''") + "%' OR Account_Code like '" + Request.QueryString["q"].Replace("'", "''") + "%')";
 
-                sqlQuery = "select distinct * from (Select * from GL_Accounts Where Book_ID=1 and Levels=4 AND (Account_Name like '" + Request.QueryString["q"].Replace("'", "''") + "%' OR Account_Code like '" + Request.QueryString["q"].Replace("'", "''") + "%') union all Select * from GL_Accounts Where Book_ID=1 and Levels=4 and Parent_Code in (Select Account_ID from GL_Accounts Where Book_ID=1 AND (Account_Name like '" + Request.QueryString["q"].Replace("'", "''") + "%' OR Account_Code like '" + Request.QueryString["q"].Replace("'", "''") + "%')))t";
+                sqlQuery = "SELECT DISTINCT * FROM(SELECT gl.*, Parent3.Account_Name AS GrandParentAccountName FROM GL_Accounts gl LEFT JOIN GL_Accounts Parent1 ON Parent1.Account_ID = gl.Parent_Code LEFT JOIN GL_Accounts Parent2 ON Parent2.Account_ID = Parent1.Parent_Code LEFT JOIN GL_Accounts Parent3 ON Parent3.Account_ID = Parent2.Parent_Code WHERE gl.Book_ID = 1 AND gl.Levels = 4 AND (gl.Account_Name LIKE  '" + Request.QueryString["q"].Replace("'", "''") + "%'  OR gl.Account_Code LIKE  '" + Request.QueryString["q"].Replace("'", "''") + "%' )UNION ALL SELECT gl.*,Parent3.Account_Name AS GrandParentAccountName FROM GL_Accounts gl LEFT JOIN GL_Accounts Parent1 ON Parent1.Account_ID = gl.Parent_Code LEFT JOIN GL_Accounts Parent2 ON Parent2.Account_ID = Parent1.Parent_Code LEFT JOIN GL_Accounts Parent3 ON Parent3.Account_ID = Parent2.Parent_Code WHERE gl.Book_ID = 1 AND gl.Levels = 4 AND gl.Parent_Code IN ( SELECT Account_ID FROM GL_Accounts WHERE Book_ID = 1 AND (Account_Name LIKE  '" + Request.QueryString["q"].Replace("'", "''") + "%'  OR Account_Code LIKE '" + Request.QueryString["q"].Replace("'", "''") + "%' )) )t;";
 
                 string result = "";
                 DataTable dt = DBClass.getDataTable(sqlQuery);
                 foreach (DataRow dr in dt.Rows)
                 {
                     result += (result == "") ? "" : ",";
-                    result += @"{""id"":""" + dr["Account_ID"].ToString() + @""",""name"": """ + dr["Account_Code"].ToString() + " - " + dr["Account_Name"].ToString() + @"""}";
+                    result += @"{""id"":""" + dr["Account_ID"].ToString() + @""",""name"": """ + dr["Account_Code"].ToString() + " - " + dr["GrandParentAccountName"].ToString() + " - " + dr["Account_Name"].ToString() + @"""}";
                 }
                 Response.Write("[" + result + "]");
             }
