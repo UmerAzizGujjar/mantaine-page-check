@@ -330,6 +330,7 @@ textarea { font-size: 10px; border-radius: 5px; }
     flex-direction: row !important;
     gap: 5px !important;
     white-space: nowrap;
+    margin-left: 50px;
 }
 
 .pr-checkbox-inline label {
