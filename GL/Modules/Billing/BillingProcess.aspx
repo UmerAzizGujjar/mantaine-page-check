@@ -6080,6 +6080,7 @@
                     else {
                         $('#lblPatientCategory').val(ReplaceNullWith_Space(data.d.Patient_Type));
                     }
+                    syncPatientTypeFromCategory();
 
 
 
@@ -7295,6 +7296,16 @@
                     return " ";
                 else
                     return Data;
+            }
+            function syncPatientTypeFromCategory() {
+                var categoryText = $('#lblPatientCategory').val();
+                if (!categoryText) return;
+                $('#ddlPatientType option').each(function () {
+                    if ($(this).text().trim() === categoryText) {
+                        $('#ddlPatientType').val($(this).val()).trigger('change');
+                        return false;
+                    }
+                });
             }
             function FillOtherTest() {
                 var options = '';
