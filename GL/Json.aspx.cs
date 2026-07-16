@@ -18,16 +18,16 @@ namespace PMS
 
             if (Session["Book_ID"] != null && Request.QueryString["Table"] == null && Request.QueryString["StartCode"] == null && Request.QueryString["EndCode"] == null && Request.QueryString["Bank"] == null && Request.QueryString["Levels"] == null)
             {
-                string sqlQuery = "Select * from GL_Accounts Where Book_ID=" + AppConfig.Book_ID + " AND Levels=4 AND (Account_Name like '" + Request.QueryString["q"].Replace("'", "''") + "%' OR Account_Code like '" + Request.QueryString["q"].Replace("'", "''") + "%')";
+                string sqlQuery = "SELECT gl.*,Parent3.Account_Name AS GrandParentAccountName FROM GL_Accounts gl LEFT JOIN GL_Accounts Parent1 ON Parent1.Account_ID = gl.Parent_Code LEFT JOIN GL_Accounts Parent2 ON Parent2.Account_ID = Parent1.Parent_Code LEFT JOIN GL_Accounts Parent3 ON Parent3.Account_ID = Parent2.Parent_Code WHERE gl.Levels = 4; AND (Account_Name like '" + Request.QueryString["q"].Replace("'", "''") + "%' OR Account_Code like '" + Request.QueryString["q"].Replace("'", "''") + "%')";
 
-                sqlQuery = "select distinct * from (Select * from GL_Accounts Where Book_ID=1 and Levels=4 AND (Account_Name like '" + Request.QueryString["q"].Replace("'", "''") + "%' OR Account_Code like '" + Request.QueryString["q"].Replace("'", "''") + "%') union all Select * from GL_Accounts Where Book_ID=1 and Levels=4 and Parent_Code in (Select Account_ID from GL_Accounts Where Book_ID=1 AND (Account_Name like '" + Request.QueryString["q"].Replace("'", "''") + "%' OR Account_Code like '" + Request.QueryString["q"].Replace("'", "''") + "%')))t";
+                sqlQuery = "SELECT DISTINCT * FROM(SELECT gl.*, Parent3.Account_Name AS GrandParentAccountName FROM GL_Accounts gl LEFT JOIN GL_Accounts Parent1 ON Parent1.Account_ID = gl.Parent_Code LEFT JOIN GL_Accounts Parent2 ON Parent2.Account_ID = Parent1.Parent_Code LEFT JOIN GL_Accounts Parent3 ON Parent3.Account_ID = Parent2.Parent_Code WHERE gl.Book_ID = 1 AND gl.Levels = 4 AND (gl.Account_Name LIKE  '" + Request.QueryString["q"].Replace("'", "''") + "%'  OR gl.Account_Code LIKE  '" + Request.QueryString["q"].Replace("'", "''") + "%' )UNION ALL SELECT gl.*,Parent3.Account_Name AS GrandParentAccountName FROM GL_Accounts gl LEFT JOIN GL_Accounts Parent1 ON Parent1.Account_ID = gl.Parent_Code LEFT JOIN GL_Accounts Parent2 ON Parent2.Account_ID = Parent1.Parent_Code LEFT JOIN GL_Accounts Parent3 ON Parent3.Account_ID = Parent2.Parent_Code WHERE gl.Book_ID = 1 AND gl.Levels = 4 AND gl.Parent_Code IN ( SELECT Account_ID FROM GL_Accounts WHERE Book_ID = 1 AND (Account_Name LIKE  '" + Request.QueryString["q"].Replace("'", "''") + "%'  OR Account_Code LIKE '" + Request.QueryString["q"].Replace("'", "''") + "%' )) )t;";
 
                 string result = "";
                 DataTable dt = DBClass.getDataTable(sqlQuery);
                 foreach (DataRow dr in dt.Rows)
                 {
                     result += (result == "") ? "" : ",";
-                    result += @"{""id"":""" + dr["Account_ID"].ToString() + @""",""name"": """ + dr["Account_Code"].ToString() + " - " + dr["Account_Name"].ToString() + @"""}";
+                    result += @"{""id"":""" + dr["Account_ID"].ToString() + @""",""name"": """ + dr["Account_Code"].ToString() + " - " + dr["GrandParentAccountName"].ToString() + " - " + dr["Account_Name"].ToString() + @"""}";
                 }
                 Response.Write("[" + result + "]");
             }
@@ -639,15 +639,19 @@ namespace PMS
                             sqlQuery = "Select * from INV_Items Where Pharmacy_Item<>1 and IsPharmacyItem<>1 and Hospital_Services=0 and Services<>1 and Active=1 and Book_ID=" + AppConfig.Book_ID;
                         }
                     }                   
-                    string result = "";
+                    var serializer = new JavaScriptSerializer();
                     DataTable dt = DBClass.getDataTable(sqlQuery);
+                    var items = new List<object>();
 
                     foreach (DataRow dr in dt.Rows)
                     {
-                        result += (result == "") ? "" : ",";
-                        result += @"{""id"":""" + dr["Item_ID"].ToString() + @""",""name"": """ + dr["Item_Code"].ToString() + " - " + dr["Description"].ToString() + @"""}";
+                        items.Add(new
+                        {
+                            id = dr["Item_ID"].ToString(),
+                            name = dr["Item_Code"].ToString() + " - " + dr["Description"].ToString()
+                        });
                     }
-                    Response.Write("[" + result + "]");
+                    Response.Write(serializer.Serialize(items));
                 }
 
                 //else if (Request.QueryString["Table"] == "INV_ItemsForPRwithWarehouse")
@@ -778,15 +782,19 @@ namespace PMS
                         }
                     }
 
-                    string result = "";
+                    var serializer = new JavaScriptSerializer();
                     DataTable dt = DBClass.getDataTable(sqlQuery);
+                    var items = new List<object>();
 
                     foreach (DataRow dr in dt.Rows)
                     {
-                        result += (result == "") ? "" : ",";
-                        result += @"{""id"":""" + dr["Item_ID"].ToString() + @""",""name"": """ + dr["Item_Code"].ToString() + " - " + dr["Description"].ToString() + @"""}";
+                        items.Add(new
+                        {
+                            id = dr["Item_ID"].ToString(),
+                            name = dr["Item_Code"].ToString() + " - " + dr["Description"].ToString()
+                        });
                     }
-                    Response.Write("[" + result + "]");
+                    Response.Write(serializer.Serialize(items));
                 }
 
                 else if (Request.QueryString["Table"] == "Patients" && Request.QueryString["Record"] == "Edit")
@@ -1060,22 +1068,54 @@ namespace PMS
                     }
                     Response.Write("[" + result + "]");
                 }
+                //else if (Request.QueryString["Table"] == "Out_PatientsbyMrNo")
+                //{
+                //    string sqlQuery;
+                //    if (Request.QueryString["q"] != null)
+                //        sqlQuery = "Select  top 10 p.Patient_ID,p.Opd_No,p.Full_Name,rp.pat_id,rp.mr_no_sequence  as Patient_No,p.Reg_PatId from Patients p join Reg_patient rp on p.Reg_PatId = rp.pat_id   Where rp.mr_no_sequence LIKE '%" + Request.QueryString["q"].ToString() + "%' order by p.Created_Time desc";
+                //    else
+                //        sqlQuery = "Select distinct (select top 10 Patient_ID from Patients where Patient_No=p.Patient_No)Patient_ID,Patient_No,Full_Name from Patients p where isnull(IsRevisit,'0')=0  order by Created_Time desc";
+                //    string result = "";
+                //    DataTable dt = DBClass.getDataTable(sqlQuery);
+                //    foreach (DataRow dr in dt.Rows)
+                //    {
+                //        result += (result == "") ? "" : ",";
+                //        result += @"{""id"":""" + dr["Patient_ID"].ToString() + @"""," +
+                //                  @"""name"": """ + dr["Patient_No"].ToString() + " - " + dr["Full_Name"].ToString() + @"""," +
+                //                  @"""reg_patId"": """ + dr["Reg_PatId"].ToString() + @"""}";
+                //    }
+                //    Response.Write("[" + result + "]");
+                //}
+
                 else if (Request.QueryString["Table"] == "Out_PatientsbyMrNo")
                 {
                     string sqlQuery;
+
                     if (Request.QueryString["q"] != null)
-                        sqlQuery = "Select  top 1 p.Patient_ID,p.Opd_No,p.Full_Name,rp.pat_id,rp.mr_no_sequence  as Patient_No,p.Reg_PatId from Patients p join Reg_patient rp on p.Reg_PatId = rp.pat_id   Where rp.mr_no_sequence LIKE '%" + Request.QueryString["q"].ToString() + "%' order by p.Created_Time desc";
+                    {
+                        sqlQuery = @"SELECT TOP 10 p.Patient_ID,p.Opd_No,p.Full_Name,rp.pat_id, rp.mr_no_sequence AS Patient_No, p.Reg_PatId FROM Patients p INNER JOIN Reg_patient rp  ON p.Reg_PatId = rp.pat_id  WHERE rp.mr_no_sequence LIKE '%" + Request.QueryString["q"].ToString() + @"%' ORDER BY p.Created_Time DESC";
+                    }
                     else
-                        sqlQuery = "Select distinct (select top 1 Patient_ID from Patients where Patient_No=p.Patient_No)Patient_ID,Patient_No,Full_Name from Patients p where isnull(IsRevisit,'0')=0  order by Created_Time desc";
+                    {sqlQuery = @"SELECT DISTINCT (SELECT TOP 1 Patient_ID FROM Patients
+                         WHERE Patient_No = p.Patient_No) AS Patient_ID,
+                        Patient_No,
+                        Full_Name
+                     FROM Patients p
+                     WHERE ISNULL(IsRevisit, 0) = 0
+                     ORDER BY Created_Time DESC";
+                    }
+
                     string result = "";
                     DataTable dt = DBClass.getDataTable(sqlQuery);
+
                     foreach (DataRow dr in dt.Rows)
                     {
                         result += (result == "") ? "" : ",";
                         result += @"{""id"":""" + dr["Patient_ID"].ToString() + @"""," +
-                                  @"""name"": """ + dr["Patient_No"].ToString() + " - " + dr["Full_Name"].ToString() + @"""," +
-                                  @"""reg_patId"": """ + dr["Reg_PatId"].ToString() + @"""}";
+                                  @"""name"":""" + dr["Patient_No"].ToString() + " - " + dr["Full_Name"].ToString() + @"""," +
+                                  @"""reg_patId"":""" + dr["Reg_PatId"].ToString() + @"""}";
                     }
+
                     Response.Write("[" + result + "]");
                 }
                 else if (Request.QueryString["Table"] == "Patients")

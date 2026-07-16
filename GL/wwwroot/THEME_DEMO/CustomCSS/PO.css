@@ -1,0 +1,513 @@
+/* ================================================================
+   PO.css  —  Purchase Order form styles (mirrors PR.css patterns)
+   ================================================================ */
+
+input[type="text"] {
+    font-size: 13px;
+    border-radius: 5px !important;
+}
+
+label {
+    font-size: 12px;
+    font-weight: 600;
+    margin-bottom: 3px;
+    display: block;
+}
+
+select { font-size: 12px; border-radius: 5px; }
+textarea { font-size: 10px; border-radius: 5px; }
+
+.textarea, input[type="text"] {
+    border-radius: 5px !important;
+    color: #060606 !important;
+    font-weight: bold !important;
+    background-color: #fff;
+    box-shadow: none;
+    border: 1px solid #d5d5d5;
+    padding: 5px 4px 6px;
+    font-size: 14px;
+    font-family: inherit;
+    -webkit-box-shadow: none !important;
+    -webkit-transition-duration: .1s;
+    transition-duration: .1s;
+}
+
+.ErrorAlert { border: 1px solid red !important; }
+
+/* ── Meta-Bar ─────────────────────────────────────────────────── */
+.pr-meta-bar {
+    display: flex;
+    justify-content: flex-end;
+    align-items: center;
+    padding: 5px 4px 6px;
+    margin-bottom: 10px;
+    background: linear-gradient(90deg, transparent, #e0ede8);
+    border-bottom: 1px solid #b5d5c4;
+    border-radius: 0 0 4px 4px;
+}
+
+.pr-meta-text {
+    font-size: 12px;
+    color: #1a5c40;
+    letter-spacing: 0.02em;
+    background: #e0ede8;
+    border: 1px solid #b5d5c4;
+    border-radius: 20px;
+    padding: 3px 14px;
+}
+
+.pr-meta-text strong { color: #0d3d28; font-weight: 700; }
+
+/* ── Primary Settings ─────────────────────────────────────────── */
+.pr-primary-settings {
+    margin-bottom: 8px;
+    align-items: flex-end;
+}
+
+.pr-primary-settings [class*="col-"] {
+    padding-bottom: 6px;
+}
+
+/* ── Select2 overrides ────────────────────────────────────────── */
+.select2-container--default .select2-selection--single {
+    height: 34px !important;
+    border: 1px solid #d5d5d5 !important;
+    border-radius: 5px !important;
+}
+.select2-container--default .select2-selection--single .select2-selection__rendered {
+    line-height: 32px !important;
+    font-weight: bold;
+    color: #060606;
+}
+.select2-container--default .select2-selection--single .select2-selection__arrow {
+    height: 32px !important;
+}
+
+/* ── Source toggle + Attachment row ──────────────────────────── */
+.pr-source-attach-row {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    margin-bottom: 10px;
+    flex-wrap: nowrap;
+}
+
+.pr-source-left {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    flex: 1;
+    min-width: 0;
+}
+
+.source-toggle-pill {
+    display: flex;
+    background: #f0f4f8;
+    border: 1px solid #d0d8e4;
+    border-radius: 24px;
+    padding: 3px 4px;
+    gap: 2px;
+    flex-shrink: 0;
+}
+
+.source-toggle-pill.toggle-locked {
+    opacity: 0.45;
+    cursor: not-allowed;
+    pointer-events: none;
+}
+
+.source-radio-option {
+    display: flex;
+    align-items: center;
+    cursor: pointer;
+    margin: 0;
+    padding: 0;
+}
+
+.source-radio-option input[type="radio"] {
+    display: none;
+}
+
+.source-pill-label {
+    display: inline-block;
+    padding: 4px 16px;
+    border-radius: 20px;
+    font-size: 12px;
+    font-weight: 700;
+    color: #666;
+    cursor: pointer;
+    transition: background 0.18s, color 0.18s;
+    white-space: nowrap;
+    user-select: none;
+}
+
+.source-radio-option input[type="radio"]:checked + .source-pill-label {
+    background: #308665;
+    color: #fff;
+    box-shadow: 0 1px 4px rgba(48,134,101,0.35);
+}
+
+.source-input-wrap {
+    flex: 0.5;
+    min-width: 0;
+}
+
+.source-inline-group {
+    display: flex;
+    align-items: stretch;
+    gap: 0;
+    height: 34px;
+}
+
+.source-select-input {
+    flex: 1;
+    min-width: 0;
+    border-right: none !important;
+    border-radius: 5px 0 0 5px !important;
+    height: 34px;
+    font-size: 13px;
+    max-width: 220px;
+}
+
+.source-action-btn {
+    display: inline-flex !important;
+    align-items: center;
+    gap: 5px;
+    padding: 0 16px !important;
+    height: 34px;
+    background: #308665 !important;
+    color: #fff !important;
+    border: 1px solid #308665;
+    border-radius: 0 5px 5px 0 !important;
+    font-size: 13px !important;
+    font-weight: 700;
+    cursor: pointer;
+    white-space: nowrap;
+    margin: 0 !important;
+    width: auto !important;
+    transition: background 0.15s;
+    text-shadow: none !important;
+    flex-shrink: 0;
+}
+.source-action-btn:hover { background: #256b50 !important; border-color: #256b50; }
+
+/* token-input plugin overrides */
+.token-input-list {
+    border-radius: 5px 0 0 5px !important;
+    border-right: none !important;
+    margin: 0 !important;
+    min-height: 34px !important;
+    height: 34px !important;
+    overflow: hidden;
+}
+
+/* ── Attachment card ──────────────────────────────────────────── */
+.pr-attachment-card {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    background: linear-gradient(135deg, #e0ede8 0%, #e0ede8 100%);
+    border: 1px solid #b5d5c4;
+    border-radius: 8px;
+    padding: 5px 14px;
+    box-shadow: 0 1px 4px rgba(48,134,101,0.10);
+    flex-shrink: 0;
+    height: 46px;
+}
+
+.pr-attachment-icon {
+    width: 28px;
+    height: 28px;
+    background: #308665;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: #fff;
+    font-size: 13px;
+    flex-shrink: 0;
+}
+
+.pr-attachment-body {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.pr-attachment-label {
+    font-size: 12px;
+    font-weight: 700;
+    color: #2a664b;
+    white-space: nowrap;
+}
+
+.pr-file-input {
+    font-size: 11px !important;
+    border: 1px dashed #5b9e7e !important;
+    background: #e0ede8 !important;
+    border-radius: 5px !important;
+    padding: 2px 6px !important;
+    color: #333 !important;
+    font-weight: normal !important;
+    box-shadow: none !important;
+    cursor: pointer;
+    max-width: 190px;
+    height: 28px;
+}
+
+.pr-attachment-download { flex-shrink: 0; }
+
+.pr-download-btn,
+#ctl00_MainContent_HyperLink1 {
+    display: inline-flex !important;
+    align-items: center;
+    gap: 5px;
+    background: #308665 !important;
+    color: #fff !important;
+    font-size: 12px !important;
+    font-weight: 600;
+    padding: 4px 12px !important;
+    border-radius: 20px !important;
+    text-decoration: none !important;
+    border: none;
+    white-space: nowrap;
+    transition: background 0.15s;
+    height: 28px;
+}
+.pr-download-btn:hover,
+#ctl00_MainContent_HyperLink1:hover {
+    background: #256b50 !important;
+    color: #fff !important;
+    text-decoration: none !important;
+}
+
+/* ── Projection Row ───────────────────────────────────────────── */
+.pr-projection-row {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+    padding: 8px 12px;
+    background: #e0ede8;
+    border: 1px dashed #8fbda8;
+    border-radius: 6px;
+    margin-bottom: 10px;
+}
+
+/* ── Checkbox styling ─────────────────────────────────────────── */
+.pr-checkbox-wrap {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 4px;
+}
+
+.pr-checkbox-wrap label {
+    font-size: 11px;
+    font-weight: 700;
+    color: #555;
+    margin: 0;
+    text-align: center;
+}
+
+.pr-checkbox-wrap input[type="checkbox"] {
+    width: 20px;
+    height: 20px;
+    margin: 0;
+    cursor: pointer;
+    accent-color: #308665;
+}
+
+/* ── Inline checkbox group in source row ──────────────────────── */
+.source-checkbox-group {
+    display: flex;
+    align-items: center;
+    gap: 65px;
+    flex-shrink: 0;
+    margin-left: 6px;
+}
+
+.pr-checkbox-inline {
+    flex-direction: row !important;
+    gap: 6px !important;
+    white-space: nowrap;
+    align-items: center;
+}
+
+.pr-checkbox-inline label {
+    font-size: 12px;
+    font-weight: 700;
+    color: #555;
+    margin: 0;
+    cursor: pointer;
+    white-space: nowrap;
+    display: inline;
+    line-height: 1.2;
+    vertical-align: middle;
+}
+
+.pr-checkbox-inline input[type="checkbox"] {
+    width: 20px;
+    height: 20px;
+    margin: 0;
+    padding: 0;
+    cursor: pointer;
+    accent-color: #308665;
+    flex-shrink: 0;
+}
+
+/* ── Table header ─────────────────────────────────────────────── */
+#tblItemDescription thead th {
+    background-color: #f1f4f8;
+    font-size: 10px !important;
+    font-weight: 700;
+    white-space: nowrap;
+    padding: 6px 5px;
+    position: sticky;
+    top: 0;
+    z-index: 1;
+}
+
+#tblItemDescription tbody td {
+    padding: 2px 4px;
+    vertical-align: middle;
+    font-size: 10px;
+}
+
+/* ── Totals Bar ───────────────────────────────────────────────── */
+.pr-totals-bar {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    background: #f8f9fa;
+    border: 1px solid #dee2e6;
+    border-top: 2px solid #308665;
+    border-radius: 0 0 4px 4px;
+    padding: 7px 14px;
+    margin-bottom: 0;
+}
+
+.pr-totals-bar-label {
+    font-size: 11px;
+    font-weight: 700;
+    color: #555;
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+}
+
+.pr-totals-bar-fields {
+    display: flex;
+    align-items: center;
+    gap: 20px;
+}
+
+.pr-totals-bar-item {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+}
+
+.pr-totals-bar-item label {
+    font-size: 11px;
+    font-weight: 700;
+    color: #555;
+    margin: 0;
+    display: inline;
+    white-space: nowrap;
+}
+
+.pr-total-input {
+    width: 90px !important;
+    text-align: right !important;
+    font-weight: 700 !important;
+    font-size: 11px !important;
+    background-color: #e0ede8 !important;
+    border: 1px solid #308665 !important;
+    border-radius: 4px !important;
+    padding: 3px 7px !important;
+    height: 28px;
+    min-width: 70px;
+    color: #333;
+}
+
+/* ── Action Buttons ───────────────────────────────────────────── */
+.pr-action-buttons {
+    display: flex;
+    flex-wrap: nowrap;
+    gap: 8px;
+    margin-top: 14px;
+    padding-top: 10px;
+    border-top: 1px solid #e8e8e8;
+}
+.pr-action-buttons > div {
+    flex: 1 1 0%;
+    min-width: 120px;
+}
+
+/* ── Audit Bar (edit mode) ────────────────────────────────────── */
+.pr-audit-bar {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: space-between;
+    gap: 10px;
+    padding: 8px 12px;
+    background: #f8f9fa;
+    border: 1px solid #e8e8e8;
+    border-radius: 6px;
+    margin-bottom: 10px;
+    border-left: 4px solid #308665;
+}
+
+.pr-audit-group {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 6px;
+}
+
+.pr-audit-chip {
+    display: inline-flex;
+    align-items: center;
+    gap: 5px;
+    background: #fff;
+    border: 1px solid #e0e0e0;
+    border-radius: 4px;
+    padding: 3px 8px;
+    font-size: 11px;
+    white-space: nowrap;
+    box-shadow: 0 1px 2px rgba(0,0,0,0.02);
+}
+
+.pr-audit-chip-value {
+    color: #333;
+    font-weight: 600;
+}
+
+/* ── Field width fix for PO form ──────────────────────────────── */
+#ctl00_MainContent_txtPurchase_No,
+#ctl00_MainContent_txtPurchase_Date,
+#ctl00_MainContent_txtdueDate,
+#ctl00_MainContent_txtStatus,
+#ctl00_MainContent_txtPurchase_Reference,
+#ctl00_MainContent_Freight,
+#ctl00_MainContent_txtWarranty,
+#ctl00_MainContent_txtDisclaimer,
+#ctl00_MainContent_txtRemarks,
+#ctl00_MainContent_txtProjection_Date {
+    width: 100% !important;
+}
+
+/* ── Modal items table ────────────────────────────────────────── */
+#tblPOItemstModelTable thead th {
+    background-color: #f1f4f8;
+    font-size: 10px !important;
+    font-weight: 700;
+    white-space: nowrap;
+    padding: 6px 5px;
+}
+
+/* ── Remove old fieldset/row spacing that caused extra whitespace ─ */
+.pr-primary-settings .row {
+    margin-bottom: 0;
+}
+

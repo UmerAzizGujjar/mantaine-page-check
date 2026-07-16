@@ -1110,6 +1110,7 @@ namespace PMS
             public string Approved_Time { get; set; }
             public string TestDepartment { get; set; }
             public string Branch_Id { get; set; }
+            public string Area_Of_Interest { get; set; }
         }
         [WebMethod]
         public static string FillTestDepartment()
@@ -1169,6 +1170,7 @@ namespace PMS
                             ltd.Emergancy,
                             ltd.L_R_Rotation_ID,
                             tdef.Group_Category,
+                            ltd.Area_Of_Interest,
                             DepartmentName = (db.GetDataValueName("Main Test Departments", tdef.Main_Department) == null ? "" : db.GetDataValueName("Main Test Departments", tdef.Main_Department)),
                             GroupName = (db.GetDataValueName("Test Groups", tdef.Group_Category) == null ? "" : db.GetDataValueName("Test Groups", tdef.Group_Category)),
                             Rotation = db.GetDataValueName("Test XRay Rotations", ltd.Rotation_ID),
@@ -1254,6 +1256,7 @@ namespace PMS
                 test.Approved_By = item.Approved_By ?? "";
                 test.Approved_Time = item.Approved_Time?.ToString() ?? "";
                 test.Branch_Id = item.Branch_Id?.ToString() ?? "";
+                test.Area_Of_Interest = item.Area_Of_Interest ?? "";
                 if (item.Test_Main_Department == null)
                 {
                     test.Test_Main_Department = "";
@@ -1289,7 +1292,8 @@ namespace PMS
         MIN(ltm.Patient_ID) AS Patient_ID,
         MIN(bd.Test_Main_Department) AS Test_Main_Department,
         dbo.GetDataValueName('Test Departments', lt.Group_Department) AS Test_Department,
-        ar.Branch_Id
+        ar.Branch_Id,
+        MIN(ld.Area_Of_Interest) AS Area_Of_Interest 
         FROM Lab_Test_Detail ld
         JOIN Lab_Tests lt ON lt.Test_ID = ld.Test_ID
         JOIN Laboratory_Test ltm ON ltm.Lab_Test_ID = ld.Lab_Test_ID
@@ -1326,7 +1330,8 @@ namespace PMS
                     Approved_Time = item[7] == DBNull.Value ? "" : Convert.ToDateTime(item[7]).ToString(),
                     Approved_By = item[8] == DBNull.Value ? "" : item[8].ToString(),
                     TestDepartment = item[16] == DBNull.Value ? "" : item[16].ToString(),
-                    Branch_Id = item[17] == DBNull.Value ? "" : item[17].ToString()
+                    Branch_Id = item[17] == DBNull.Value ? "" : item[17].ToString(),
+                    Area_Of_Interest = item[18] == DBNull.Value ? "" : item[18].ToString()
                 };
 
                 TestObj.ListOfTestIDs = DBClass.getField("select dbo.[GetGroupSubTests]('" + TestObj.Group_Category + "')");

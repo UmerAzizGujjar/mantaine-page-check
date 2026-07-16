@@ -2,6 +2,11 @@
 
 <asp:Content ID="Content1" ContentPlaceHolderID="HeadContent" runat="server">
     <link href="../../wwwroot/THEME_TIBBIT/CustomCSS/tablestyle.css" rel="stylesheet" /> 
+    <style>
+        .log-changed-row { background-color: #fff3cd !important; }
+        .log-changed-row td:first-child { border-left: 3px solid #ffc107; }
+        #historyModal .table th { background: #f5f5f5; }
+    </style>
     <script type="text/javascript">
 
         var allowPrint = false;
@@ -99,6 +104,168 @@
                             window.open("RegisterPatient.aspx?Reg_id=" + id, "_blank");
                         }
                     });
+                }
+            });
+        }
+
+        var logLabelMap = {
+            Patient_No: 'Patient No',
+            mr_no_sequence: 'MR No',
+            CreationDate: 'Creation Date',
+            Full_Name: 'Full Name',
+            Father_Name: 'Father Name',
+            Gender: 'Gender',
+            Mobile1: 'Mobile',
+            Age_years: 'Age',
+            NIC: 'NIC',
+            Permanent_Address: 'Address',
+            Martial_Status: 'Martial Status',
+            Relation_prefix: 'Relation',
+            walkin: 'Walk-in',
+            city: 'City',
+            val_city: 'Val City',
+            val_area: 'Val Area',
+            area: 'Area',
+            Country: 'Country',
+            Province: 'Province',
+            Card_fee: 'Card Fee',
+            other_cnic: 'Other CNIC',
+            DOB: 'DOB'
+        };
+
+        var allLogsData = [];
+        var currentPatientData = null;
+
+        function formatLogValue(key, val) {
+            if (val === null || val === undefined) return '-';
+            if (key === 'CreationDate' || key === 'DOB') {
+                if (typeof val === 'string' && val.indexOf('/Date(') === 0) {
+                    var ms = parseInt(val.replace(/\/Date\((\d+)\)\//, '$1'));
+                    return moment(ms).format('DD-MMM-YYYY');
+                }
+                if (typeof val === 'string') return moment(val).format('DD-MMM-YYYY');
+                return val;
+            }
+            if (key === 'walkin') return val ? 'Yes' : 'No';
+            if (key === 'Card_fee') return parseFloat(val).toFixed(2);
+            return val;
+        }
+
+        function formatLogTime(dateStr) {
+            if (!dateStr) return '-';
+            return moment(dateStr).format('DD-MMM-YYYY hh:mm A');
+        }
+
+        function renderChangedTables(oldData, newData) {
+            var changedKeys = [];
+            $.each(logLabelMap, function (key) {
+                var oldVal = formatLogValue(key, oldData[key]);
+                var newVal = formatLogValue(key, newData[key]);
+                if (oldVal !== newVal) {
+                    changedKeys.push(key);
+                }
+            });
+
+            var oldBody = $('#oldLogTableBody');
+            var newBody = $('#newLogTableBody');
+            oldBody.empty();
+            newBody.empty();
+
+            if (changedKeys.length === 0) {
+                var msg = '<tr><td colspan="2" class="text-center" style="color:#999;">No changes in this log</td></tr>';
+                oldBody.append(msg);
+                newBody.append(msg);
+                return;
+            }
+
+            $.each(changedKeys, function (i, key) {
+                var label = logLabelMap[key];
+                var oldVal = formatLogValue(key, oldData[key]);
+                var newVal = formatLogValue(key, newData[key]);
+                oldBody.append('<tr class="log-changed-row"><td style="font-weight:600;width:180px;">' + label + '</td><td>' + oldVal + '</td></tr>');
+                newBody.append('<tr><td style="font-weight:600;width:180px;">' + label + '</td><td>' + newVal + '</td></tr>');
+            });
+        }
+
+        function onLogChange() {
+            var selLogId = $('#logSelect').val();
+            if (!selLogId || !currentPatientData) return;
+            for (var i = 0; i < allLogsData.length; i++) {
+                if (allLogsData[i].Log_Id == selLogId) {
+                    var log = allLogsData[i];
+                    var oldData = typeof log.Updated_data === 'string' ? JSON.parse(log.Updated_data) : log.Updated_data;
+                    renderChangedTables(oldData, currentPatientData);
+                    $('#oldLogInfo').html('<i class="fa fa-user"></i> ' + log.UserName + ' &nbsp;|&nbsp; <i class="fa fa-clock-o"></i> ' + formatLogTime(log.Loged_Time));
+                    break;
+                }
+            }
+        }
+
+        function openHistoryModal(pat_id) {
+            try {
+                Swal.fire({ icon: 'info', title: 'Loading', text: 'Fetching logs for patient #' + pat_id });
+            } catch (e) {
+                alert('Error: ' + e.message);
+            }
+
+            $.ajax({
+                type: "POST",
+                url: "RegList.aspx/GetPatientLogs",
+                data: JSON.stringify({ pat_id: pat_id }),
+                contentType: "application/json; charset=utf-8",
+                dataType: "json",
+                success: function (logsResp) {
+                    var logsData = JSON.parse(logsResp.d);
+                    if (!logsData || logsData.length === 0) {
+                        $('#historyModalBody').hide();
+                        $('#noLogsMsg').show();
+                        $('#historyModal').modal('show');
+                        return;
+                    }
+
+                    $.ajax({
+                        type: "POST",
+                        url: "RegList.aspx/GetCurrentPatientData",
+                        data: JSON.stringify({ pat_id: pat_id }),
+                        contentType: "application/json; charset=utf-8",
+                        dataType: "json",
+                        success: function (currResp) {
+                            var currData = JSON.parse(currResp.d);
+                            allLogsData = logsData;
+                            currentPatientData = currData;
+
+                            if (!currData) {
+                                $('#historyModalBody').hide();
+                                $('#noLogsMsg').show();
+                                $('#historyModal').modal('show');
+                                return;
+                            }
+
+                            $('#newLogInfo').html('<i class="fa fa-user"></i> Current &nbsp;|&nbsp; <i class="fa fa-clock-o"></i> ' + moment().format('DD-MMM-YYYY hh:mm A'));
+
+                            var lastLog = logsData[logsData.length - 1];
+                            var lastData = JSON.parse(lastLog.Updated_data);
+                            renderChangedTables(lastData, currData);
+                            $('#oldLogInfo').html('<i class="fa fa-user"></i> ' + lastLog.UserName + ' &nbsp;|&nbsp; <i class="fa fa-clock-o"></i> ' + formatLogTime(lastLog.Loged_Time));
+
+                            var $select = $('#logSelect');
+                            $select.empty();
+                            for (var i = 0; i < logsData.length; i++) {
+                                var log = logsData[i];
+                                $select.append('<option value="' + log.Log_Id + '">Log #' + log.Log_Id + ' - ' + formatLogTime(log.Loged_Time) + '</option>');
+                            }
+                            $select.val(lastLog.Log_Id);
+
+                            $('#historyModalBody').show();
+                            $('#historyModal').modal('show');
+                        },
+                        error: function (xhr) {
+                            Swal.fire({ icon: 'error', title: 'Error', text: 'Failed to load patient data. Status: ' + xhr.status });
+                        }
+                    });
+                },
+                error: function (xhr) {
+                    Swal.fire({ icon: 'error', title: 'Error', text: 'Failed to load logs. Status: ' + xhr.status });
                 }
             });
         }
@@ -219,6 +386,10 @@
                                   <i class="fa fa-pencil" style="color: #667eea;"></i>
                               </a>`;
 
+                            var historyButton = `<a href="#" onclick="openHistoryModal(${full.pat_id})" style="border-radius: 4px;margin-left: 4px;color: white;padding: 5px 8px 5px 8px;" title="History">
+                                  <i class="fa fa-history" style="color: #667eea;"></i>
+                              </a>`;
+
                             var printButton = '';
                             if (allowPrint) {
                                 printButton = `<a href="#" class="printListBtn" style="border-radius: 4px;margin-left: 4px;color: white;padding: 5px 8px 5px 8px;" onclick="PrintReceipt(${full.pat_id})" title="Print">
@@ -226,7 +397,7 @@
                                </a>`;
                             }
 
-                            return editButton + printButton;
+                            return editButton + historyButton + printButton;
                         }
                     }
                 ],
@@ -334,6 +505,48 @@
                 </thead>
                 <tbody></tbody>
             </table>
+        </div>
+    </div>
+
+    <div class="modal fade" id="historyModal" tabindex="-1" role="dialog" aria-hidden="true">
+        <div class="modal-dialog custom-modal-width" style="width:90%;max-width:1200px;" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h4 class="modal-title"><i class="fa fa-history"></i> Logs</h4>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close" style="margin-top:-11px">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <div class="row" id="historyModalBody">
+                        <div class="col-lg-6 col-md-6 col-sm-12" id="oldLogPanel">
+                            <h5 style="border-bottom:2px solid #667eea;padding-bottom:8px;">Old Data</h5>
+                            <div class="form-group">
+                                <label>Log Number</label>
+                                <select id="logSelect" class="form-control" onchange="onLogChange()"></select>
+                            </div>
+                            <div id="oldLogInfo" style="margin-bottom:10px;font-size:12px;color:#666;"></div>
+                            <table class="table table-bordered table-striped" style="border:1px solid #ddd;">
+                                <thead><tr><th>Label</th><th>Value</th></tr></thead>
+                                <tbody id="oldLogTableBody"></tbody>
+                            </table>
+                        </div>
+                        <div class="col-lg-6 col-md-6 col-sm-12" id="newLogPanel">
+                            <h5 style="border-bottom:2px solid #28a745;padding-bottom:8px;">New Data</h5>
+                            <div style="height:58px;"></div>
+                            <div id="newLogInfo" style="margin-bottom:10px;font-size:12px;color:#666;"></div>
+                            <table class="table table-bordered table-striped" style="border:1px solid #ddd;">
+                                <thead><tr><th>Label</th><th>Value</th></tr></thead>
+                                <tbody id="newLogTableBody"></tbody>
+                            </table>
+                        </div>
+                    </div>
+                    <div id="noLogsMsg" class="text-center" style="display:none;padding:40px;color:#999;">
+                        <i class="fa fa-info-circle fa-3x"></i>
+                        <p style="margin-top:10px;">No history available for this patient.</p>
+                    </div>
+                </div>
+            </div>
         </div>
     </div>
 </asp:Content>

@@ -9,6 +9,28 @@
         var warehouseCond;
         var gridItems = [];
 
+        function callPageMethod(methodName, params, successCallback, errorCallback) {
+            if (typeof params === 'function') {
+                errorCallback = successCallback;
+                successCallback = params;
+                params = {};
+            }
+            $.ajax({
+                type: "POST",
+                url: "StockAdjustment.aspx/" + methodName,
+                data: JSON.stringify(params || {}),
+                contentType: "application/json; charset=utf-8",
+                dataType: "json",
+                success: function (response) {
+                    if (typeof successCallback === 'function') successCallback(response.d);
+                },
+                error: function (xhr, status, error) {
+                    console.error('Error calling ' + methodName + ':', xhr.status, error);
+                    if (typeof errorCallback === 'function') errorCallback(error);
+                }
+            });
+        }
+
         $(document).ready(function () {
             // Batch input changes
             $('#ctl00_MainContent_txtBatchNo').on('change keyup', function () {
@@ -128,9 +150,12 @@
                 $('#btnVoucher').show();
                 UserUnApproveButtonRights();
             }
-            if (status == "Created") {
+            if (status == "Created" || status == "Pending") {
                 $('#ctl00_MainContent_btnSave').prop("disabled", false);
                 $('#btnVoucher').hide();
+            }
+            if (Stock_ID != "") {
+                CheckSTOCKADJApprovalRightsAndShowButton(Stock_ID);
             }
 
             // Datepicker configs
@@ -270,6 +295,43 @@
                 if (message[0].Column1 != "" && message[0].Column1 != null) {
                     alert(message[0].Column1);
                     location.reload();
+                }
+            });
+        }
+
+        function CheckSTOCKADJApprovalRightsAndShowButton(stockId) {
+            callPageMethod('CheckSTOCKADJApprovalRights', function (hasRights) {
+                if (hasRights) {
+                    callPageMethod('GetSTOCKADJApprovalInfo', { AdjustmentId: stockId }, function (resp) {
+                        var info = JSON.parse(resp);
+                        if (info.CanApprove) {
+                            $('#btnApprove').show();
+                        }
+                    });
+                }
+            });
+        }
+        function ApproveSTOCKADJFromEdit() {
+            var adjustmentId = Stock_ID;
+            Swal.fire({
+                title: 'Approve Stock Adjustment?',
+                icon: 'question',
+                showCancelButton: true,
+                confirmButtonText: 'Yes, Approve',
+                cancelButtonText: 'Cancel',
+                input: 'textarea',
+                inputPlaceholder: 'Approval remarks (optional)...',
+                customClass: { popup: 'swal-big-popup', title: 'swal-big-title', htmlContainer: 'swal-big-text' }
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    var remarks = result.value || '';
+                    callPageMethod('ApproveSingleSTOCKADJ', { AdjustmentId: adjustmentId, approvalRemarks: remarks }, function (resp) {
+                        if (resp === "Success") {
+                            Swal.fire({ icon: 'success', title: 'Approved!', text: 'Stock Adjustment has been approved successfully.', showConfirmButton: false, timer: 2000, customClass: { popup: 'swal-big-popup', title: 'swal-big-title', htmlContainer: 'swal-big-text' } }).then(function () { location.reload(); });
+                        } else {
+                            Swal.fire({ icon: 'error', title: 'Error', text: resp, showConfirmButton: true, customClass: { popup: 'swal-big-popup', title: 'swal-big-title', htmlContainer: 'swal-big-text' } }).then(function () { location.reload(); });
+                        }
+                    });
                 }
             });
         }
@@ -695,6 +757,9 @@
                     </div>
                     <div class="col-lg-2 col-md-4 col-sm-6">
                         <input type="button" class="btn btn-primry" value="Voucher" id="btnVoucher" onclick="PrintVoucher()" />
+                    </div>
+                    <div class="col-lg-2 col-md-4 col-sm-6">
+                        <input type="button" style="display:none" class="btn btn-primry" value="Approve" id="btnApprove" onclick="ApproveSTOCKADJFromEdit()" />
                     </div>
                     <div class="col-lg-2 col-md-4 col-sm-6">
                         <input type="button" style="display:none" class="btn btn-primry" value="UnApprove" id="btnUnApprove" onclick="UnApprove()" />

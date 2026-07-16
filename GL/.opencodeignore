@@ -1,0 +1,10 @@
+# Visual Studio
+.vs/
+
+# Compiled outputs
+bin/
+obj/
+
+# Project specific
+reports/
+aspnet_client/

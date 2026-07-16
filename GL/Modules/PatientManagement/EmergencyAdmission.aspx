@@ -51,12 +51,13 @@
                 openEmergencyWaitingListModal()
             }
 
-            // Setup search functionality for waiting list
+            var searchTimer;
             $('#SearchEmergencyWaitingList').on('keyup', function () {
-                var value = $(this).val().toLowerCase();
-                $('#tblEmergencyWaitingList tbody tr').filter(function () {
-                    $(this).toggle($(this).text().toLowerCase().indexOf(value) > -1);
-                });
+                clearTimeout(searchTimer);
+                var value = $(this).val();
+                searchTimer = setTimeout(function () {
+                    fillEmergencyWaitingList(value);
+                }, 300); 
             });
         });
 
@@ -164,8 +165,10 @@
             fillEmergencyWaitingList();
         }
 
-        function fillEmergencyWaitingList() {
-            PageMethods.GetEmergencyWaitingList(function (response) {
+        function fillEmergencyWaitingList(searchText) {
+            var searchValue = searchText || '';
+
+            PageMethods.GetEmergencyWaitingList(searchValue, function (response) {
                 var data = JSON.parse(response);
                 if (data.error) {
                     Swal.fire('Error', 'Error loading waiting list: ' + data.error, 'error');
@@ -174,6 +177,11 @@
 
                 var tbody = $('#tblEmergencyWaitingList tbody');
                 tbody.empty();
+
+                if (data.length === 0) {
+                    tbody.append('<tr><td colspan="7" class="text-center">No records found</td></tr>');
+                    return;
+                }
 
                 $.each(data, function (i, item) {
                     var createdTime = new Date(parseInt(item.Created_Time.substr(6)));
@@ -185,15 +193,12 @@
                     else statusClass = 'text-warning';
 
                     var selectDropdown = '';
-                    var editIcon = '';
-
                     if (item.Status === 'Admitted') {
                         selectDropdown = '<select class="form-control form-control-sm status-select" data-emergency-id="' + item.Emergency_ID + '" data-patient-id="' + item.Patient_ID + '" disabled>' +
                             '<option value="Pending">Pending</option>' +
                             '<option value="Admitted" selected>Admitted</option>' +
                             '<option value="NotAdmitted">Not Admitted</option>' +
                             '</select>';
-                        
                     } else {
                         selectDropdown = '<select class="form-control form-control-sm status-select" data-emergency-id="' + item.Emergency_ID + '" data-patient-id="' + item.Patient_ID + '" onchange="handleStatusChange(this)">' +
                             '<option value="Pending" ' + (item.Status === 'Pending' ? 'selected' : '') + '>Pending</option>' +
@@ -391,12 +396,15 @@
         }--%>
 
         function SaveAdmission() {
+            $('#btnSave').attr('disabled', true);
             var doctor = $('#ctl00_MainContent_ddlDoctor').val();
             if (currentEmergencyID === 0) {
+                $('#btnSave').attr('disabled', false);
                 Swal.fire('Warning', 'Please select a patient from the waiting list', 'warning');
                 return;
             }
             if (doctor === "0" || doctor === null) {
+                $('#btnSave').attr('disabled', false);
                 Swal.fire('Warning', 'Please select a Doctor', 'warning');
                 return;
             }
@@ -409,10 +417,12 @@
             var roomNo = $('#<%= ddlRoom_No.ClientID %>').val();
 
             if (admitTo === '001' && (wardNo === '0' || wardNo === '')) {
+                $('#btnSave').attr('disabled', false);
                 Swal.fire('Warning', 'Please select Ward', 'warning');
                 return;
             }
             if (admitTo === '002' && (roomType === '0' || roomType === '' || roomNo === '0' || roomNo === '')) {
+                $('#btnSave').attr('disabled', false);
                 Swal.fire('Warning', 'Please select Room Type and Room No', 'warning');
                 return;
             }
@@ -446,6 +456,7 @@
                 success: function (response) {
                     var result = response.d;
                     if (result.indexOf('Error') >= 0) {
+                        $('#btnSave').attr('disabled', false);
                         Swal.fire('Error', result, 'error');
                     } else {
                         var actionText = admissionData.btnAction === 'Save' ? 'saved' : 'updated';
@@ -455,6 +466,7 @@
                     }
                 },
                 error: function (xhr, status, error) {
+                    $('#btnSave').attr('disabled', false);
                     Swal.fire('Error', 'Error saving admission: ' + error, 'error');
                 }
             });

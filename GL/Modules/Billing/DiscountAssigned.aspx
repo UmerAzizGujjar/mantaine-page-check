@@ -162,6 +162,15 @@
                         $('#btnSave').val('Update');
                         enableAllDiscountFields();
 
+                        if (data.Master.File_Path) {
+                            $('#ctl00_MainContent_HyperLink1').show();
+                            $('#hdnDiscountFilePath').val(data.Master.File_Path);
+                            $('#btnDeleteDiscountFile').show();
+                        } else {
+                            $('#ctl00_MainContent_HyperLink1').hide();
+                            $('#btnDeleteDiscountFile').hide();
+                        }
+
                         $.ajax({
                             type: "POST",
                             url: "DiscountAssigned.aspx/GetUserDiscountPermission",
@@ -566,8 +575,72 @@
         }
 
     
+        function sendFile(ID) {
+            var fileInput = $('#choseDiscountFile')[0];
+            if (fileInput && fileInput.files.length > 0) {
+                var data = new FormData();
+                data.append('file', fileInput.files[0]);
+                data.append('ID', ID);
+                $.ajax({
+                    type: 'post',
+                    url: '../../upload/UploadDiscountAssignFiles.ashx',
+                    data: data,
+                    processData: false,
+                    contentType: false,
+                    error: function (xhr, status, error) {
+                        console.warn('File upload failed:', error);
+                    }
+                });
+            }
+        }
+
+        function DeleteDiscountFile() {
+            var discountId = $('#hdnDiscountAssignID').val();
+            if (!discountId) return;
+
+            Swal.fire({
+                title: 'Delete Attachment?',
+                text: 'Are you sure you want to remove this file?',
+                icon: 'warning',
+                showCancelButton: true,
+                confirmButtonText: 'Yes, delete it',
+                cancelButtonText: 'Cancel'
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    $.ajax({
+                        type: "POST",
+                        url: "DiscountAssigned.aspx/DeleteDiscountFile",
+                        data: JSON.stringify({ Discount_Assign_ID: discountId }),
+                        contentType: "application/json; charset=utf-8",
+                        dataType: "json",
+                        success: function (response) {
+                            if (response.d) {
+                                $('#choseDiscountFile').val('');
+                                $('#hdnDiscountFilePath').val('');
+                                $('#ctl00_MainContent_HyperLink1').hide();
+                                $('#btnDeleteDiscountFile').hide();
+                                Swal.fire({
+                                    icon: 'success',
+                                    title: 'Deleted!',
+                                    text: 'File has been removed.',
+                                    timer: 1500,
+                                    showConfirmButton: false
+                                });
+                            } else {
+                                Swal.fire({ icon: 'error', title: 'Error!', text: 'Failed to delete file.' });
+                            }
+                        },
+                        error: function () {
+                            Swal.fire({ icon: 'error', title: 'Error!', text: 'Something went wrong.' });
+                        }
+                    });
+                }
+            });
+        }
+
         function SaveRecord() {
             debugger;
+            $('#btnSave').attr('disabled', true);
             if (validateSave()) {
                 var Patient_ID = $("#hdPatientID").text();
                 var Reg_ID = $("#hdRegID").val();
@@ -614,18 +687,23 @@
                     ServiceDiscount: ServiceDiscount
                 };
 
-                PageMethods.SaveDiscount(JSON.stringify(data), function (res) {
-                    Swal.fire({
-                        icon: 'success',
-                        title: 'Success!',
-                        text: Discount_Assign_ID ? 'Discount Successfully Updated' : 'Discount Successfully Saved',
-                        timer: 2500
-                    });
-                    setTimeout(function () { window.location = 'DiscountAssignedList.aspx'; }, 2500);
-                    $('#btnSave').attr('disabled', 'disabled');
-                }, function (error) {
-                    alert(error.get_message());
-                });
+        PageMethods.SaveDiscount(JSON.stringify(data), function (res) {
+            var savedId = Discount_Assign_ID || res;
+            sendFile(savedId);
+            Swal.fire({
+                icon: 'success',
+                title: 'Success!',
+                text: Discount_Assign_ID ? 'Discount Successfully Updated' : 'Discount Successfully Saved',
+                timer: 2000,
+                showConfirmButton: false
+            });
+            setTimeout(function () { window.location = 'DiscountAssigned.aspx?Discount_Assign_ID=' + savedId; }, 2000);
+        }, function (error) {
+            $('#btnSave').attr('disabled', false);
+            Swal.fire({ icon: 'error', title: 'Error!', text: error.get_message() });
+        });
+            } else {
+                $('#btnSave').attr('disabled', false);
             }
         }
 
@@ -666,10 +744,12 @@
 
         function ApproveRecord() {
             debugger;
+            $('#btnApprove').attr('disabled', true);
 
             var Bill_ID = $("#hdnBillID").val();
 
             if (!Bill_ID || Bill_ID == "0") {
+                $('#btnApprove').attr('disabled', false);
                 Swal.fire({ title: "Error!", text: "Bill ID is missing", icon: "error" });
                 return;
             }
@@ -694,6 +774,7 @@
                                 });
                                 $('#btnApprove').hide();
                             } else {
+                                $('#btnApprove').attr('disabled', false);
                                 Swal.fire({
                                     icon: 'error',
                                     title: 'Error!',
@@ -702,6 +783,7 @@
                             }
                         },
                         function (error) {
+                            $('#btnApprove').attr('disabled', false);
                             Swal.fire({
                                 icon: 'error',
                                 title: 'Error!',
@@ -806,7 +888,7 @@
         </div>
         <%-- END PATIENT INFO ROW --%>
 
-        <%-- ======================== DATE + REMARKS ======================== --%>
+        <%-- ======================== DATE + REMARKS + ATTACHMENT ======================== --%>
         <div class="row mt-3">
             <div class="col-lg-2 col-md-4 col-sm-6">
                 <label>Discount Date :</label>
@@ -815,6 +897,31 @@
             <div class="col-lg-3 col-md-4 col-sm-6">
                 <label>Remarks:</label>
                 <textarea id="txtRemarks" class="form-control" style="height:35px"></textarea>
+            </div>
+            <div class="col-lg-5 col-md-8 col-sm-12">
+                <label>&nbsp;</label>
+                <div class="pr-attachment-card">
+                    <div class="pr-attachment-icon">
+                        <i class="fa fa-paperclip"></i>
+                    </div>
+                    <div class="pr-attachment-body">
+                        <span class="pr-attachment-label">Attachment</span>
+                        <input type="file" id="choseDiscountFile" name="choseDiscountFile" class="pr-file-input" />
+                    </div>
+                    <div class="pr-attachment-download">
+                        <asp:HyperLink ID="HyperLink1" runat="server" CssClass="pr-download-btn">
+                            <i class="fa fa-download"></i> Download
+                        </asp:HyperLink>
+                    </div>
+                    <div class="pr-attachment-delete" style="flex-shrink:0; margin-left:4px;">
+                        <a href="#" id="btnDeleteDiscountFile" onclick="DeleteDiscountFile(); return false;"
+                           style="display:none; background:#dc3545; color:#fff; font-size:12px; font-weight:600;
+                                  padding:4px 10px; border-radius:20px; text-decoration:none; white-space:nowrap;
+                                  align-items:center; gap:5px;">
+                            <i class="fa fa-trash"></i> Delete
+                        </a>
+                    </div>
+                </div>
             </div>
         </div>
 

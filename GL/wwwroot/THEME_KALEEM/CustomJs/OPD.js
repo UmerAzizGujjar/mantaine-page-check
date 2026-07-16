@@ -1275,21 +1275,7 @@ function SaveData() {
         return;
     }
 
-    if (!Cashier || Cashier === "0") {
-        Swal.fire({
-            icon: 'error',
-            title: 'Error!',
-            text: 'Please select a cashier.',
-            showConfirmButton: false,
-            timer: 2000,
-            customClass: {
-                popup: 'swal-big-popup',
-                title: 'swal-big-title',
-                htmlContainer: 'swal-big-text'
-            }
-        });
-        return;
-    }
+    
     // ? CORRECT: Get VALUE of hidden field
     var hfAntiForgery = $('#ctl00_MainContent_hfAntiForgery').val();
 

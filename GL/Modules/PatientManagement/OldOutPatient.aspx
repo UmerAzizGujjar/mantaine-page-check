@@ -4491,7 +4491,7 @@
         }
 
         function SaveMedicinesAndTests() {
-
+            $('#btnSave').attr('disabled', true);
             SaveMedicines();
             localStorage.SelectedTabID = $("#tabs").tabs("option", "active");
         }

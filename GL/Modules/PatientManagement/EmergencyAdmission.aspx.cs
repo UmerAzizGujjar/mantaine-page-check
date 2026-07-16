@@ -25,28 +25,42 @@ namespace PMS.Modules.PatientManagement
         }
 
         [WebMethod]
-        public static string GetEmergencyWaitingList()
+        public static string GetEmergencyWaitingList(string searchText = null)
         {
             try
             {
                 using (DataBaseDataContext db = new DataBaseDataContext())
                 {
-                    var emergencyList = (from e in db.Emergencies
-                                         join p in db.Reg_patients on e.Reg_PatId equals p.pat_id
-                                         where (e.isCancel == false || e.isCancel == null)
-                                         && !db.Emergency_Patients.Any(ep => ep.emer_id == e.Emer_id && ep.Discharge == true)
-                                         orderby e.Emer_id descending
-                                         select new
-                                         {
-                                             Emergency_ID = e.Emer_id,
-                                             Emergency_No = e.Emergency_No ?? 0,
-                                             MR_No = p.mr_no_sequence ?? "",
-                                             Patient_Name = p.Full_Name ?? "",
-                                             Age = p.Age_years ?? "",
-                                             Created_Time = e.Created_Time,
-                                             Status = e.Admitted_Status ?? "Pending",
-                                             Patient_ID = e.Reg_PatId
-                                         }).ToList();
+                    var query = (from e in db.Emergencies
+                                 join p in db.Reg_patients on e.Reg_PatId equals p.pat_id
+                                 where (e.isCancel == false || e.isCancel == null)
+                                 && !db.Emergency_Patients.Any(ep => ep.emer_id == e.Emer_id && ep.Discharge == true)
+                                 orderby e.Emer_id descending
+                                 select new
+                                 {
+                                     Emergency_ID = e.Emer_id,
+                                     Emergency_No = e.Emergency_No ?? 0,
+                                     MR_No = p.mr_no_sequence ?? "",
+                                     Patient_Name = p.Full_Name ?? "",
+                                     Age = p.Age_years ?? "",
+                                     Created_Time = e.Created_Time,
+                                     Status = e.Admitted_Status ?? "Pending",
+                                     Patient_ID = e.Reg_PatId
+                                 });
+
+                    
+                    if (!string.IsNullOrEmpty(searchText))
+                    {
+                        searchText = searchText.ToLower();
+                        query = query.Where(x =>
+                            x.MR_No.ToLower().Contains(searchText) ||
+                            x.Patient_Name.ToLower().Contains(searchText) ||
+                            x.Emergency_No.ToString().Contains(searchText)
+                        );
+                    }
+
+                    
+                    var emergencyList = query.Take(100).ToList();
 
                     return new JavaScriptSerializer().Serialize(emergencyList);
                 }

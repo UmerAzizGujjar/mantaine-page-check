@@ -247,6 +247,8 @@
             }
         }
 
+        let pendingDischargeIds = [];
+
         function dischargeSelected() {
             var selectedIds = $('.select-row:checked').map(function () {
                 return parseInt($(this).val());
@@ -262,63 +264,129 @@
                 return;
             }
 
+            pendingDischargeIds = selectedIds;
+            $('#selectedPatientsCount').text(pendingDischargeIds.length);
+            loadDoctorsDropdown();
+            $('#dischargeModal').modal('show');
+        }
+
+        function loadDoctorsDropdown() {
+            const $ddl = $('#ddlDischargeDoctor');
+            if ($ddl.data('select2')) {
+                $ddl.select2('destroy');
+            }
+            $ddl.select2({
+                placeholder: 'Search and select a doctor...',
+                allowClear: true,
+                width: '100%',
+                dropdownParent: $('#dischargeModal'),
+                language: {
+                    noResults: function () {
+                        return "No doctor found";
+                    },
+                    searching: function () {
+                        return "Searching...";
+                    }
+                }
+            });
+            $ddl.prop('disabled', true);
+            $ddl.empty().append(new Option('Loading doctors...', '', true, true));
+
+            $.ajax({
+                type: "POST",
+                url: "InPatientsAdmissionList.aspx/GetDoctor",
+                contentType: "application/json; charset=utf-8",
+                dataType: "json",
+                success: function (response) {
+                    $ddl.empty().append(new Option('Select Doctor', '', true, true));
+                    let doctors = (typeof response.d === 'string') ? JSON.parse(response.d) : response.d;
+
+                    $.each(doctors, function (i, doc) {
+                        let option = new Option(doc.Emp_Name, doc.Emp_ID, false, false);
+                        $ddl.append(option);
+                    });
+                    $ddl.trigger('change');
+                    $ddl.prop('disabled', false);
+                },
+                error: function (xhr, status, error) {
+                    console.error("AJAX Error:", error);
+                    $ddl.empty().append(new Option('Error loading doctors', '', true, true));
+                    $ddl.trigger('change');
+                    Swal.fire('Error', 'Could not load doctors list.', 'error');
+                }
+            });
+        }
+
+        $(document).on('click', '#btnConfirmDischarge', function () {
+            debugger;
+            const doctorId = $('#ddlDischargeDoctor').val();
+
+            if (!doctorId) {
+                Swal.fire({
+                    icon: 'warning',
+                    title: 'Doctor Required',
+                    text: 'Please select a doctor.',
+                    confirmButtonText: 'OK'
+                });
+                return;
+            }
+
             Swal.fire({
                 title: 'Confirm Discharge',
-                text: `Are you sure you want to discharge ${selectedIds.length} patient(s)?`,
+                text: `Discharge ${pendingDischargeIds.length} patient(s) by Dr. ${$('#ddlDischargeDoctor option:selected').text()}?`,
                 icon: 'question',
                 showCancelButton: true,
                 confirmButtonText: 'Yes, Discharge',
-                cancelButtonText: 'Cancel',
-                reverseButtons: true
+                cancelButtonText: 'Cancel'
             }).then((result) => {
                 if (result.isConfirmed) {
                     Swal.fire({
                         title: 'Processing...',
-                        text: 'Discharging patients, please wait.',
                         allowOutsideClick: false,
                         didOpen: () => Swal.showLoading()
                     });
 
-                    PageMethods.DischargePatients(selectedIds,
-                        function (response) {
+                    $.ajax({
+                        type: "POST",
+                        url: "InPatientsAdmissionList.aspx/DischargePatientsWithDoctor",
+                        contentType: "application/json; charset=utf-8",
+                        dataType: "json",
+                        data: JSON.stringify({
+                            patientIds: pendingDischargeIds,
+                            dischargeDoctorId: parseInt(doctorId)
+                        }),
+                        success: function (response) {
+                            debugger;
                             Swal.close();
-                            if (response.success) {
-                                Swal.fire({
-                                    icon: 'success',
-                                    title: 'Success!',
-                                    text: response.message,
-                                    confirmButtonText: 'OK'
-                                }).then(() => {
-                                    // ✅ Refresh table
+                            $('#dischargeModal').modal('hide');
+
+                            if (response.d && response.d.success) {
+                                Swal.fire('Success!', response.d.message, 'success').then(() => {
                                     if ($.fn.DataTable.isDataTable('#tblResult')) {
                                         $('#tblResult').DataTable().ajax.reload(null, false);
                                     } else {
-                                        location.reload(); // fallback
+                                        location.reload();
                                     }
                                 });
-                            } else {
-                                Swal.fire({
-                                    icon: 'error',
-                                    title: 'Failed',
-                                    text: response.message,
-                                    confirmButtonText: 'Try Again'
-                                });
+                            } else if (response.d && !response.d.success) {
+                                Swal.fire('Failed', response.d.message, 'error');
                             }
                         },
-                        function (error) {
+                        error: function (xhr, status, error) {
                             Swal.close();
-                            console.error("Discharge error:", error);
-                            Swal.fire({
-                                icon: 'error',
-                                title: 'Oops!',
-                                text: 'An unexpected error occurred.',
-                                confirmButtonText: 'Close'
-                            });
+                            console.error("AJAX Error:", xhr.responseText);
+                            Swal.fire('Error', 'An unexpected error occurred: ' + error, 'error');
                         }
-                    );
+                    });
                 }
             });
-        }
+        });
+
+
+        $(document).on('hidden.bs.modal', '#dischargeModal', function () {
+            $('#ddlDischargeDoctor').val('');
+            pendingDischargeIds = [];
+        });
 
 
     </script>
@@ -347,6 +415,33 @@
             </tbody>
         </table>
  </div>
+
+        
+<div class="modal fade" id="dischargeModal" tabindex="-1" role="dialog" aria-labelledby="dischargeModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="dischargeModalLabel">Confirm Discharge</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <p>Selected Patients: <strong id="selectedPatientsCount">0</strong></p>
+                <div class="form-group">
+                    <label for="ddlDischargeDoctor">Discharging Doctor:</label>
+                    <select id="ddlDischargeDoctor" class="form-control" required="required">
+                        <option value="">-- Select Doctor --</option>
+                    </select>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
+                <button type="button" class="btn btn-primary" id="btnConfirmDischarge">Confirm Discharge</button>
+            </div>
+        </div>
+    </div>
+</div>
          </div>
 </asp:Content>
 

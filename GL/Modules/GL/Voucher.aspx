@@ -118,7 +118,7 @@
         function FillCostCenter() {
             debugger;
             var optionInv = '';
-            optionInv = '<option value="0">Please Select</option>';
+          
             PageMethods.fillcostcenterss(function (Tests) {
                 debugger
                 $.each(JSON.parse(Tests), function (key, value) {

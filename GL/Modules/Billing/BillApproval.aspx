@@ -20,6 +20,7 @@
 
               $('#btnApproved').on('click', function () {
                   debugger;
+                  $('#btnApproved').attr('disabled', true);
 
                   $.each($('#tblBillPatients tbody tr'), function (key, value) {
                       debugger;
@@ -31,16 +32,18 @@
                       if (chck == "true" || chck == true) {
                           debugger;
                           PageMethods.ApproveBill(billid, function (response) {
-                              debugger;
-                              var data = response;
-                              if (data == "Success") {
-                                  // alert("Bill has been approved successfully");
+                               debugger;
+                               var data = response;
+                               if (data == "Success") {
+                                   // alert("Bill has been approved successfully");
 
-                              }
+                               }
 
 
 
-                          });
+                           }, function (error) {
+                               $('#btnApproved').attr('disabled', false);
+                           });
 
                       }
                       else {
@@ -52,6 +55,7 @@
 
 
                   });
+                  $('#btnApproved').attr('disabled', false);
                   window.location.href = 'BillApproval.aspx';
               });
 

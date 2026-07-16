@@ -743,6 +743,27 @@ namespace PMS
 
 
             }
+            else if (reportName == "DischargeDetailedPrint")
+            {
+
+                var logoPath = DBClass.getField("SELECT dbo.GetCompanyLogo()");
+
+                string InPatientId = Request.QueryString["InPatientId"].ToString();
+                reportPath += "InPatient/rptDischargeBasePrint.rpt";
+                rd.Load(reportPath);
+                rd.SetParameterValue("@InPatientId", InPatientId);
+                rd.SetParameterValue("CompanyName", AppConfig.Company_Name);
+                rd.SetParameterValue("CompanyLogo", logoPath);
+                rd.SetParameterValue("@InPatientId", Convert.ToInt32(InPatientId), rd.Subreports[0].Name.ToString());
+                rd.SetParameterValue("@InPatientId", Convert.ToInt32(InPatientId), rd.Subreports[1].Name.ToString());
+                rd.SetParameterValue("@InPatientId", Convert.ToInt32(InPatientId), rd.Subreports[2].Name.ToString());
+                rd.SetParameterValue("@InPatientId", Convert.ToInt32(InPatientId), rd.Subreports[3].Name.ToString());
+                rd.SetParameterValue("@InPatientId", Convert.ToInt32(InPatientId), rd.Subreports[4].Name.ToString());
+                rd.SetParameterValue("@InPatientId", Convert.ToInt32(InPatientId), rd.Subreports[5].Name.ToString());
+            }
+
+
+
             else if (reportName == "Emergencypatient")
             {
                 string Emergency_ID = Request.QueryString["Emergency_ID"].ToString();
@@ -889,6 +910,23 @@ namespace PMS
                 rd.SetParameterValue("@filterClinic", FilterClinic);
                 rd.SetParameterValue("@DoctorID", doctorID);
 
+                try
+                {
+                    string subreportName = rd.Subreports[0].Name;
+
+                    rd.SetParameterValue("@Company_ID", AppConfig.Company_ID, subreportName);
+                    rd.SetParameterValue("@FromDate", sqlStartDateTime, subreportName);
+                    rd.SetParameterValue("@ToDate", sqlEndDateTime, subreportName);
+                    rd.SetParameterValue("@Operator", Operator, subreportName);
+                    rd.SetParameterValue("@Department", departmentID, subreportName);
+                    rd.SetParameterValue("@filterClinic", FilterClinic, subreportName);
+                    rd.SetParameterValue("@DoctorID", doctorID, subreportName);
+                    
+                }
+                catch (Exception ex)
+                {
+                    
+                }
 
             }
             else if (reportName == "EmergencyDetailReport")
@@ -4975,9 +5013,11 @@ namespace PMS
                 rd.SetParameterValue("Title", reportTitle);
                 rd.SetParameterValue("CompanyLogo", logoPath);
                 rd.SetParameterValue("@Year", year);
-                rd.SetParameterValue("@Year", year, rd.Subreports[0].Name.ToString());
                 rd.SetParameterValue("@Warehouse", Request.QueryString["WareHouse"]);
+                rd.SetParameterValue("@Year", year, rd.Subreports[0].Name.ToString());
                 rd.SetParameterValue("@Warehouse", Request.QueryString["WareHouse"], rd.Subreports[0].Name.ToString());
+                rd.SetParameterValue("@Year", year, rd.Subreports[1].Name.ToString());
+                rd.SetParameterValue("@Warehouse", Request.QueryString["WareHouse"], rd.Subreports[1].Name.ToString());
 
             }
             else if (reportName == "DailyPharmacyOverallSummaryReport")
@@ -6584,7 +6624,12 @@ namespace PMS
                 rd.SetParameterValue("@outPatient", Convert.ToInt32(InPatient_ID), rd.Subreports[3].Name.ToString());
                 rd.SetParameterValue("@outPatient", Convert.ToInt32(InPatient_ID), rd.Subreports[4].Name.ToString());
                 rd.SetParameterValue("@outPatient", Convert.ToInt32(InPatient_ID), rd.Subreports[5].Name.ToString());
-                // rd.SetParameterValue("@InPatient_id", Convert.ToInt32(InPatient_ID), rd.Subreports[3].Name.ToString());
+                try
+                {
+                    rd.SetParameterValue("@outPatient", Convert.ToInt32(InPatient_ID), rd.Subreports[6].Name.ToString());
+                    rd.SetParameterValue("@outPatient", Convert.ToInt32(InPatient_ID), rd.Subreports[7].Name.ToString());
+                }
+                catch { }
             }
             else if (reportName == "Clinical_Summary")
             {

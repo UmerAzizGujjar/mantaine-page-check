@@ -1235,7 +1235,7 @@ function fillmrno() {
     });
 }
 function SavePatient() {
-    debugger;
+    $('#SavePatient_Data').attr('disabled', true);
     var Prefix_PatientName = $('#ddl_name').val();
     var PatientName = $('#txt_name').val();
     var PatientID = $('#hdfPatient_ID').val();
@@ -1387,6 +1387,7 @@ function SavePatient() {
             
         },
         error: function (xhr, status, error) {
+            $('#SavePatient_Data').attr('disabled', false);
             console.error("Error: ", error);
             Swal.fire({
                 icon: 'error',
@@ -1424,7 +1425,7 @@ function Approve(pat_id) {
     });
 }
 function SaveData() {
-    debugger;
+    $('#btnsave').attr('disabled', true);
 
     var regid = $('#hdn_regid').val();
     var appid = $('#hdn_aptid').val();
@@ -1474,9 +1475,9 @@ function SaveData() {
     var bank_cash = $('#ddlbankcash').val();
     var bank_account_id = $('#ddlbank').val();
 
-    if (discount < 100.0 && Fees == 0.0) {
-
-        Swal.fire({
+            if (discount < 100.0 && Fees == 0.0) {
+                $('#btnsave').attr('disabled', false);
+                Swal.fire({
             icon: 'error',
             title: 'Error!',
             text: 'Fee Should Not be Zero',
@@ -1493,6 +1494,7 @@ function SaveData() {
 
 
     if (Department == "101" && FilterClinic == "0") {
+        $('#btnsave').attr('disabled', false);
         Swal.fire({
             icon: 'error',
             title: 'Error!',
@@ -1514,6 +1516,7 @@ function SaveData() {
 
     // 🚨 VALIDATIONS (unchanged)
     if (!patient_no || patient_no === "0") {
+        $('#btnsave').attr('disabled', false);
         Swal.fire({
             icon: 'error',
             title: 'Error!',
@@ -1529,6 +1532,7 @@ function SaveData() {
         return;
     }
     if (!pat_category || pat_category === "0") {
+        $('#btnsave').attr('disabled', false);
         Swal.fire({
             icon: 'error',
             title: 'Error!',
@@ -1545,6 +1549,7 @@ function SaveData() {
     }
 
     if ((pat_category === "01" || ["02", "04", "05"].includes(pat_category)) && (!Department || Department === "0")) {
+        $('#btnsave').attr('disabled', false);
         Swal.fire({
             icon: 'error',
             title: 'Error!',
@@ -1561,6 +1566,7 @@ function SaveData() {
     }
 
     if (["02", "03"].includes(pat_category) && (!doctor || doctor === "0")) {
+        $('#btnsave').attr('disabled', false);
         Swal.fire({
             icon: 'error',
             title: 'Error!',
@@ -1577,6 +1583,7 @@ function SaveData() {
     }
 
     if (pat_category === "03" && (!panel || panel === "0")) {
+        $('#btnsave').attr('disabled', false);
         Swal.fire({
             icon: 'error',
             title: 'Error!',
@@ -1593,6 +1600,7 @@ function SaveData() {
     }
 
     if (!accountid || accountid === "0") {
+        $('#btnsave').attr('disabled', false);
         Swal.fire({
             icon: 'error',
             title: 'Error!',
@@ -1609,6 +1617,7 @@ function SaveData() {
     }
 
     if (bank_cash === "02" && (!bank_account_id || bank_account_id === "")) {
+        $('#btnsave').attr('disabled', false);
         Swal.fire({
             icon: 'warning',
             title: 'Bank Account Required!',
@@ -1728,8 +1737,9 @@ function SaveData() {
         contentType: "application/json; charset=utf-8",
         dataType: "json",
         success: function (response) {
-            if (response.d.startsWith("ERROR:")) {
-                Swal.fire({
+                    if (response.d.startsWith("ERROR:")) {
+                        $('#btnsave').attr('disabled', false);
+                        Swal.fire({
                     icon: 'error',
                     title: 'Validation Failed',
                     text: response.d.replace("ERROR: ", ""),
@@ -1763,6 +1773,7 @@ function SaveData() {
             window.location.href = "OPDView.aspx";
         },
         error: function (xhr, status, error) {
+            $('#btnsave').attr('disabled', false);
             console.error("Error: ", error);
             console.log("Response Text: ", xhr.responseText);
             Swal.fire({

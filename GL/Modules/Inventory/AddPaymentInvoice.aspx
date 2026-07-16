@@ -108,6 +108,27 @@
             });
         }
 
+        function callPageMethod(methodName, params, successCallback, errorCallback) {
+            if (typeof params === 'function') {
+                errorCallback = successCallback;
+                successCallback = params;
+                params = {};
+            }
+            $.ajax({
+                type: "POST",
+                url: "AddPaymentInvoice.aspx/" + methodName,
+                data: JSON.stringify(params || {}),
+                contentType: "application/json; charset=utf-8",
+                dataType: "json",
+                success: function (response) {
+                    if (typeof successCallback === 'function') successCallback(response.d);
+                },
+                error: function (xhr, status, error) {
+                    console.error('Error calling ' + methodName + ':', xhr.status, error);
+                    if (typeof errorCallback === 'function') errorCallback(error);
+                }
+            });
+        }
         function UserRights() {
             debugger;
             $.ajax({
@@ -486,12 +507,15 @@
                     $('#btn_Print').show();
                 }
                 debugger;
-                if (checkstatus == 'Created') {
+                if (checkstatus == 'Created' || checkstatus == 'Pending') {
                     debugger;
                     $('#btnSave').attr("disabled", false);
                     $('#btnSave').show();
                     $('#btnVoucher').hide();
                     $('#btn_Print').show();
+                    if (Inv_ID != '') {
+                        CheckPAYMENTApprovalRightsAndShowButton(Inv_ID);
+                    }
                 }
                 debugger;
                 FillzerobalanceVendors(Inv_ID);
@@ -601,7 +625,7 @@
                 '<td><input type="hidden" id="txtadvanceamount' + length + '" name="txtadvanceamount" value="' + advance + '"/>' + advance + '</td> ' +
                 '<td><input type="text" readonly style="width: 70px!important" id="txtPreviouslyPaid' + length + '" name="txtPreviouslyPaid" value="' + paidamount + '"/></td>' +
                 '<td><input type="text" readonly style="width: 70px!important" id="txtBalance' + length + '" name="txtBalance" value="' + balance + '"/></td>' +
-                '<td><input type="text" id="txtAdjusted' + length + '" name="txtAdjusted" onchange="calcutae()" style="width: 88px!important"/></td>' +
+                '<td><input type="text" id="txtAdjusted' + length + '" name="txtAdjusted" onkeyup="calcutae()" style="width: 88px!important" value="' + balance + '"/></td>' +
                 '<td><input type="text" id="txtDedcution' + length + '" name="txtDedcution" onchange="calcutae()" style="width: 88px!important"/></td>' +
                 '<td><select id="ddlWTaxType' + length + '" class="ddlWTaxType" name="ddlWTaxType" onchange="calcutae()" style="width: 93px!important"></select></td>' +
                 '<td style="display:none;"><input type="text" id="WhOnInvAdj' + length + '" name="WhOnInvAdj"  readonly="true"/></td>' +
@@ -610,7 +634,7 @@
                 '<td><input type="text" id="WTaxAmount' + length + '" name="WTaxAmount" readonly="true" style="width: 116px!important"></td>' +
                 '<td style="display:none"><select id="ddlSalTax' + length + '" name="ddlSalTax" class="ddlSalTax" readonly style="width: 93px!important"></select></td>' +
                 '<td style="display:none"><input type="text" id="SalTaxAmount' + length + '" name="SalTaxAmount" readonly="true" value="' + SalTaxAmt + '" style="width: 116px!important"></td>' +
-                '<td><input  readonly="readonly" style="width:133px!important;border: none" id="txtPaidAmount' + length + '" name="txtPaidAmount" value="" type="text"/></td>' +
+                '<td><input  readonly="readonly" style="width:133px!important;border: none" id="txtPaidAmount' + length + '" name="txtPaidAmount" value="' + balance + '" type="text" /></td>' +
                 '<td style="display:none"><input type="hidden" id="txtPurchaseInoviceId' + length + '" name="txtPurchaseInoviceId" value="' + PurchaseInvoiceId + '"/></td>' +
                 '<td style="display:none"><input type="hidden" id="txtPurchaseInoviceType' + length + '" name="txtPurchaseInoviceType" value="' + InvoiceType + '"/></td>' +
                 '<td><a href="javascript:void(0)" onclick="ExcludeFromPayment(this)"><i class="glyphicon glyphicon-trash" style="font-size: 13px;margin-left: 16px; color: #f30a0a;position:relative;" i=""></i></a></td>' +
@@ -812,6 +836,49 @@
                     }
                 });
             }
+            function CheckPAYMENTApprovalRightsAndShowButton(invId) {
+                callPageMethod('CheckPAYMENTApprovalRights', function (hasRights) {
+                    if (hasRights) {
+                        callPageMethod('GetPAYMENTApprovalInfo', { InvId: invId }, function (resp) {
+                            var info = JSON.parse(resp);
+                            if (info.CanApprove) {
+                                $('#btnApprovePay').show();
+                                $('#btnApprovePay').data('pay-amount', info.Amount);
+                            }
+                        });
+                    }
+                });
+            }
+            function ApprovePAYMENTFromEdit() {
+                var invId = '<% =Request.QueryString["Inv_ID"] %>';
+                var amount = $('#btnApprovePay').data('pay-amount');
+                var confirmHtml = 'Are you sure you want to approve Payment Invoice #' + $('#txt_PaymentNo').val() + '?';
+                if (amount > 0) {
+                    confirmHtml += '<br><br>Invoice Amount: <strong>' + parseFloat(amount).toFixed(2) + '</strong>';
+                }
+                Swal.fire({
+                    title: 'Approve Payment Invoice?',
+                    html: confirmHtml,
+                    icon: 'question',
+                    showCancelButton: true,
+                    confirmButtonText: 'Yes, Approve',
+                    cancelButtonText: 'Cancel',
+                    input: 'textarea',
+                    inputPlaceholder: 'Approval remarks (optional)...',
+                    customClass: { popup: 'swal-big-popup', title: 'swal-big-title', htmlContainer: 'swal-big-text' }
+                }).then((result) => {
+                    if (result.isConfirmed) {
+                        var remarks = result.value || '';
+                        callPageMethod('ApproveSinglePAYMENT', { InvId: invId, approvalRemarks: remarks }, function (resp) {
+                            if (resp === "Success") {
+                                Swal.fire({ icon: 'success', title: 'Approved!', text: 'Payment Invoice has been approved successfully.', showConfirmButton: false, timer: 2000, customClass: { popup: 'swal-big-popup', title: 'swal-big-title', htmlContainer: 'swal-big-text' } }).then(function () { location.reload(); });
+                            } else {
+                                Swal.fire({ icon: 'error', title: 'Error', text: resp, showConfirmButton: true, customClass: { popup: 'swal-big-popup', title: 'swal-big-title', htmlContainer: 'swal-big-text' } }).then(function () { location.reload(); });
+                            }
+                        });
+                    }
+                });
+            }
 
 
         </script>
@@ -937,6 +1004,7 @@
             <input type="button" name="" id="btn_Print" value="Print" class="btn btn-primry" onclick="PrintPaymentDetail()" />
         </div>
         <div class="col-lg-2 col-md-4 col-sm-12">
+            <input type="button" style="display: none" class="btn btn-primry" value="Approve" id="btnApprovePay" onclick="ApprovePAYMENTFromEdit()" />
             <input type="button" style="display: none" class="btn btn-primry" value="UnApprove" id="btnUnApprove" onclick="UnApprove()" />
     
         </div>

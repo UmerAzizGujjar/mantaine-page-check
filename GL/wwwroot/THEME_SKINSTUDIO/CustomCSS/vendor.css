@@ -1,32 +1,297 @@
-﻿#tabs ul {
+﻿/* ================================================================
+   Vendor.css  —  Modern Vendor Form styles
+   ================================================================ */
+
+/* ── Meta Bar (Top Right Badge Strip) ───────────────────────── */
+.pr-meta-bar {
     display: flex;
-    overflow-x: auto;
-    overflow-y: hidden;
-    white-space: nowrap;
-    list-style: none;
-    margin: 0;
-    padding: 0;
-    scrollbar-width: thin;
+    justify-content: space-between;
+    align-items: center;
+    background: linear-gradient(90deg, transparent, #F5F9F7);
+    border-bottom: 2px solid #F5F9F7;
+    padding: 8px 16px;
+    margin-bottom: 15px;
+    border-radius: 4px;
+}
+.meta-left {
+    display: flex;
+    align-items: center;
+}
+.meta-title {
+    font-size: 16px;
+    font-weight: 700;
+    color: #308665;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+.meta-right {
+    display: flex;
+    gap: 10px;
+}
+.meta-badge {
+    background: #E0EDE8;
+    border: 1px solid #F5F9F7;
+    border-radius: 20px;
+    padding: 4px 12px;
+    font-size: 12px;
+    font-weight: 600;
+    color: #091812;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    box-shadow: 0 2px 4px rgba(48, 134, 101, 0.1);
+    transition: all 0.2s;
+}
+.badge-label { color: #888; font-size: 10px; text-transform: uppercase; }
+.badge-value { color: #266B51; font-weight: 700; font-size: 13px; }
+
+.badge-active {
+    background: #e6f4ea;
+    border-color: #34a853;
+    color: #137333;
+}
+.badge-inactive {
+    background: #fce8e6;
+    border-color: #ea4335;
+    color: #c5221f;
 }
 
-    #tabs ul li {
-        display: inline-block;
-        flex-shrink: 0;
-    }
+/* ── Primary Settings Group (Bento Box) ──────────────────────── */
+.pr-primary-settings {
+    background: #fff;
+    border: 1px solid #E0EDE8;
+    border-left: 3px solid #308665;
+    border-radius: 6px;
+    padding: 0 20px 10px;
+    margin-bottom: 20px;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.03);
+    position: relative;
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+.pr-primary-settings:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 8px 24px rgba(0,0,0,0.07);
+}
 
-        #tabs ul li a {
-            background-color: #308665db  !important;
-            color: white;
-            text-decoration: none;
-            padding: 10px;
-            border: none;
-        }
+/* ── Section Title (Card Sub-Header Band) ────────────────────── */
+.pr-section-title {
+    font-size: 13px;
+    font-weight: 700;
+    color: #308665;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    margin: 0 -20px 14px -20px;
+    padding: 10px 20px;
+    background: linear-gradient(90deg, #F5F9F7, #fff);
+    border-bottom: 1px solid #E0EDE8;
+    border-radius: 6px 6px 0 0;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+.pr-section-title i {
+    font-size: 14px;
+    opacity: 0.8;
+}
 
-            #tabs ul li a:hover {
-                color: #FFC000 !important;
-            }
+/* Form controls reset */
+.pr-primary-settings label {
+    font-size: 11px;
+    font-weight: 700;
+    color: #555;
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+    margin-bottom: 4px;
+    display: block;
+}
+.pr-primary-settings input[type="text"],
+.pr-primary-settings select {
+    font-size: 12px !important;
+    padding: 5px 10px !important;
+    border: 1px solid #F5F9F7 !important;
+    border-radius: 4px !important;
+    height: 30px !important;
+    background: #fff;
+    box-shadow: none;
+    width: 100% !important;
+}
+.pr-primary-settings input[type="text"]:focus,
+.pr-primary-settings select:focus {
+    background: #fff;
+    border-color: #308665 !important;
+    box-shadow: 0 0 0 3px rgba(48, 134, 101, 0.1);
+    outline: none;
+}
+.pr-primary-settings .row { margin-bottom: 12px; }
 
-        #tabs ul li.ui-tabs-active a {
-            border-bottom: 2px solid aliceblue !important;
-            color: white !important;
-        }
+/* ── Input Group Icons ───────────────────────────────────────── */
+.pr-primary-settings .input-group {
+    display: flex;
+    align-items: stretch;
+}
+.pr-primary-settings .input-group .input-group-prepend {
+    display: flex;
+}
+.pr-primary-settings .input-group .input-group-text {
+    background: #f5f5f5;
+    border: 1px solid #e0e0e0;
+    border-right: none;
+    border-radius: 4px 0 0 4px;
+    padding: 0 10px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    min-width: 34px;
+    color: #308665;
+    font-size: 12px;
+}
+.pr-primary-settings .input-group input[type="text"] {
+    border-radius: 0 4px 4px 0 !important;
+    flex: 1;
+}
+
+/* ── Cards Column (Equal-height flex) ─────────────────────────── */
+.pr-cards-column {
+    display: flex;
+    flex-direction: column;
+}
+.pr-cards-column .pr-primary-settings {
+    flex: 1;
+    margin-bottom: 15px;
+}
+.pr-cards-column .pr-primary-settings:last-child {
+    margin-bottom: 0;
+}
+
+/* ── Info Callout ─────────────────────────────────────────────── */
+.vendor-info-callout {
+    background: #F5F9F7;
+    border: 1px dashed #C1DBD1;
+    border-radius: 5px;
+    padding: 10px 14px;
+    margin-top: 10px;
+    display: flex;
+    align-items: flex-start;
+    gap: 10px;
+    font-size: 11.5px;
+    color: #133628;
+    line-height: 1.5;
+}
+.vendor-info-callout i {
+    color: #308665;
+    font-size: 16px;
+    margin-top: 1px;
+    flex-shrink: 0;
+}
+
+/* ── Tabs (No overrides — native jQuery UI) ──────────────────── */
+
+
+
+/* ── Tables inside Tabs ───────────────────────────────────────── */
+.pr-tab-table {
+    border: 1px solid #eee;
+    border-radius: 4px;
+    overflow: hidden;
+}
+.pr-tab-table thead th {
+    background: #f1f4f8;
+    font-size: 10px !important;
+    font-weight: 700;
+    white-space: nowrap;
+    padding: 6px 8px;
+    border-bottom: 1px solid #dee2e6;
+}
+.pr-tab-table tbody td {
+    padding: 6px;
+    vertical-align: middle;
+}
+/* Inputs inside the grid/tables */
+.pr-tab-table tbody td input[type="text"],
+.pr-tab-table tbody td select {
+    border: 1px solid transparent;
+    background: transparent;
+    font-size: 11px !important;
+    padding: 4px 6px !important;
+    height: 24px !important;
+    border-radius: 3px;
+    transition: all 0.2s;
+}
+.pr-tab-table tbody td input[type="text"]:focus,
+.pr-tab-table tbody td input[type="text"]:hover,
+.pr-tab-table tbody td select:focus,
+.pr-tab-table tbody td select:hover {
+    border-color: #308665;
+    background: #fff;
+    box-shadow: 0 0 0 2px rgba(48, 134, 101, 0.1);
+}
+
+/* ── Empty State Row ──────────────────────────────────────────── */
+.pr-tab-table .empty-state-row td {
+    text-align: center;
+    padding: 30px 10px;
+    color: #bbb;
+    font-size: 12px;
+    border: none;
+    background: #E0EDE8;
+}
+.pr-tab-table .empty-state-row .empty-state-icon {
+    font-size: 28px;
+    color: #ddd;
+    margin-bottom: 6px;
+    display: block;
+}
+.pr-tab-table .empty-state-row .empty-state-text {
+    font-style: italic;
+    letter-spacing: 0.02em;
+}
+/* Auto-hide empty row when tbody has real data rows */
+.pr-tab-table tbody:has(tr:not(.empty-state-row)) .empty-state-row {
+    display: none;
+}
+
+/* ── Action Buttons (PR-style row + col + w-100) ─────────────── */
+.pr-action-buttons {
+    margin-top: 25px;
+    padding-top: 15px;
+    border-top: 1px solid #E0EDE8;
+}
+.pr-action-buttons .row {
+    margin-left: -8px;
+    margin-right: -8px;
+}
+.pr-action-buttons .row > [class*="col-"] {
+    padding-left: 8px;
+    padding-right: 8px;
+    margin-bottom: 8px;
+}
+.pr-action-buttons .btn {
+    font-weight: 600;
+    font-size: 13px;
+    padding: 8px 20px;
+    border-radius: 4px;
+    transition: all 0.2s;
+}
+.pr-action-buttons .btn:hover {
+    transform: translateY(-1px);
+    box-shadow: 0 4px 12px rgba(0,0,0,0.12);
+}
+/* Button icons via pseudo-elements */
+.pr-action-buttons .btn-primry::before {
+    content: "\f0c7";
+    font-family: FontAwesome;
+    margin-right: 6px;
+}
+.pr-action-buttons .btn-gray::before {
+    content: "\f022";
+    font-family: FontAwesome;
+    margin-right: 6px;
+}
+.pr-action-buttons .btn-yellow::before {
+    content: "\f067";
+    font-family: FontAwesome;
+    margin-right: 6px;
+}

@@ -204,6 +204,7 @@ namespace PMS.AP
                               m.Total_Further_Amt,
                               m.IsManual,
                               m.IsByDefault,
+                              m.IsAdvancewithTax,
                               Vendor_Name = db.AP_Vendors.Where(po => po.Vendor_ID == m.Vendor_ID).Select(po => po.Vendor_Name),
                           }).FirstOrDefault();
             return (new JavaScriptSerializer()).Serialize(Header);
@@ -428,6 +429,7 @@ namespace PMS.AP
             public string ProjectionType { get; set; }
             public bool IsManual { get; set; }
             public bool IsByDefault { get; set; }
+            public bool IsAdvanceWithTax { get; set; }
             public List<DetailItemList> ItemList { get; set; }
         }
         public class DetailItemList
@@ -531,6 +533,7 @@ namespace PMS.AP
                     existingItem.Term_ID = record.Term_ID;
                     existingItem.IsManual = record.IsManual;
                     existingItem.IsByDefault = record.IsByDefault;
+                    existingItem.IsAdvancewithTax = record.IsAdvanceWithTax;
                     if (record.FreightCharges != "")
                     {
                         existingItem.Frieght_Charges = Convert.ToDecimal(record.FreightCharges);
@@ -594,6 +597,7 @@ namespace PMS.AP
                 PO.IsDeleted = false;
                 PO.IsManual = record.IsManual;
                 PO.IsByDefault = record.IsByDefault;
+                PO.IsAdvancewithTax = record.IsAdvanceWithTax;
                 db.AP_Purchase_Orders.InsertOnSubmit(PO);
                 db.SubmitChanges();
                 PoNo = PO.PO_ID.ToString();
@@ -802,6 +806,245 @@ namespace PMS.AP
             var Details = db.spUnApprovePurchaseOrder(Convert.ToInt32(POid));
             return (new JavaScriptSerializer()).Serialize(Details);
         }
+
+        [WebMethod]
+        public static bool CheckPOApprovalRights()
+        {
+            using (DataBaseDataContext db = new DataBaseDataContext())
+            {
+                var form_id = 3;
+                var user_id = AppConfig.UserID;
+
+                return (from SASD in db.Sys_Approval_Stage_Details
+                        join SASM in db.Sys_Approval_Stage_Masters on SASD.Stage_ID equals SASM.Stage_ID
+                        join SATD in db.Sys_Approval_Tempelate_Detail_Stages on SASM.Stage_ID equals SATD.StageId
+                        join SATF in db.Sys_Approval_Tempelate_Detail_Forms on SATD.Tempelate_ID equals SATF.Tempelate_ID
+                        join SATM in db.Sys_Approval_Tempelate_Masters on SATD.Tempelate_ID equals SATM.Tempelate_ID
+                        where SASD.UserId == user_id && SATF.FormId == form_id && SATM.IsActive == true && SASM.IsDeleted == false
+                        select SASD).Any();
+            }
+        }
+
+        [WebMethod]
+        public static string GetPOApprovalInfo(string POId)
+        {
+            using (DataBaseDataContext db = new DataBaseDataContext(DBClass.ConnectionString()))
+            {
+                var poId = Convert.ToInt32(POId);
+                var user_id = AppConfig.UserID;
+                var form_id = 3;
+
+                // PO amount
+                var poAmount = (from apoi in db.AP_Purchase_Order_Items
+                                where apoi.PO_ID == poId
+                                select (decimal?)apoi.Amount).Sum() ?? 0m;
+
+                // Department from linked PR (via PRDetailId)
+                var prDept = (from apoi in db.AP_Purchase_Order_Items
+                              join prd in db.Purchase_Requisition_Details on Convert.ToInt32(apoi.PRDetailId) equals prd.PR_Detail_ID
+                              join pr in db.Purchase_Requisitions on prd.PR_ID equals pr.PR_Id
+                              where apoi.PO_ID == poId
+                              select pr.Department).FirstOrDefault();
+
+                // User's max approval limit (same raw SQL as ApprovePO.aspx.cs)
+                var maxApprovalLimit = db.ExecuteQuery<decimal?>(
+                    "SELECT MAX(SASD.MaxApprovalLimit) " +
+                    "FROM Sys_Approval_Stage_Detail SASD " +
+                    "INNER JOIN Sys_Approval_Stage_Master SASM ON SASD.Stage_ID = SASM.Stage_ID " +
+                    "INNER JOIN Sys_Approval_Tempelate_Detail_Stages SATD ON SASM.Stage_ID = SATD.StageId " +
+                    "INNER JOIN Sys_Approval_Tempelate_Detail_Forms SATF ON SATD.Tempelate_ID = SATF.Tempelate_ID " +
+                    "INNER JOIN Sys_Approval_Tempelate_Master SATM ON SATD.Tempelate_ID = SATM.Tempelate_ID " +
+                    "WHERE SASD.UserId = {0} AND SATF.FormId = {1} AND SATM.IsActive = 1 AND SASM.IsDeleted = 0",
+                    user_id, form_id).FirstOrDefault() ?? 0m;
+
+                // Budget info (only if department exists)
+                var totalBudget = 0m;
+                var totalApprovedForDept = 0m;
+                var budgetEnabled = false;
+
+                if (!string.IsNullOrEmpty(prDept))
+                {
+                    budgetEnabled = db.sys_Parms
+                        .Where(s => s.Name == "Budget Working")
+                        .Select(s => s.Code)
+                        .FirstOrDefault() == "01";
+
+                    totalBudget = (from ba in db.Budget_Accounts
+                                   join b in db.Budgets on ba.Budget_ID equals b.Budget_ID
+                                   where b.Budget_Status == "Approved" && ba.DepartmentId == prDept
+                                   select (decimal?)ba.DR).Sum() ?? 0m;
+
+                    totalApprovedForDept = (from prd in db.Purchase_Requisition_Details
+                                            join pr in db.Purchase_Requisitions on prd.PR_ID equals pr.PR_Id
+                                            where pr.Status == "Approved" && pr.Department == prDept
+                                            select (decimal?)prd.EstimateCost).Sum() ?? 0m;
+                }
+
+                var remainingAmount = totalBudget - totalApprovedForDept;
+                var canApprove = maxApprovalLimit == -1m || poAmount <= maxApprovalLimit;
+
+                var result = new
+                {
+                    CanApprove = canApprove,
+                    RemainingAmount = remainingAmount,
+                    POAmount = poAmount,
+                    MaxApprovalLimit = maxApprovalLimit,
+                    BudgetEnabled = budgetEnabled
+                };
+
+                return (new JavaScriptSerializer()).Serialize(result);
+            }
+        }
+
+        [WebMethod]
+        public static string ApproveSinglePO(string POId, string approvalRemarks)
+        {
+            using (DataBaseDataContext db = new DataBaseDataContext(DBClass.ConnectionString()))
+            {
+                var poId = Convert.ToInt32(POId);
+                var user_id = AppConfig.UserID;
+                var form_id = 3;
+
+                var PO = db.AP_Purchase_Orders
+                    .Where(p => p.PO_ID == poId)
+                    .SingleOrDefault();
+
+                if (PO == null)
+                    return "Error: Purchase Order not found";
+
+                // Budget check
+                var budgetEnabled = db.sys_Parms
+                    .Where(s => s.Name == "Budget Working")
+                    .Select(s => s.Code)
+                    .FirstOrDefault() == "01";
+
+                if (budgetEnabled)
+                {
+                    var prDept = (from apoi in db.AP_Purchase_Order_Items
+                                  join prd in db.Purchase_Requisition_Details on Convert.ToInt32(apoi.PRDetailId) equals prd.PR_Detail_ID
+                                  join pr in db.Purchase_Requisitions on prd.PR_ID equals pr.PR_Id
+                                  where apoi.PO_ID == poId
+                                  select pr.Department).FirstOrDefault();
+
+                    if (!string.IsNullOrEmpty(prDept))
+                    {
+                        var totalBudget = (from ba in db.Budget_Accounts
+                                           join b in db.Budgets on ba.Budget_ID equals b.Budget_ID
+                                           where b.Budget_Status == "Approved" && ba.DepartmentId == prDept
+                                           select (decimal?)ba.DR).Sum() ?? 0m;
+
+                        var totalApprovedForDept = (from prd in db.Purchase_Requisition_Details
+                                                    join pr in db.Purchase_Requisitions on prd.PR_ID equals pr.PR_Id
+                                                    where pr.Status == "Approved" && pr.Department == prDept
+                                                    select (decimal?)prd.EstimateCost).Sum() ?? 0m;
+
+                        var remainingAmount = totalBudget - totalApprovedForDept;
+
+                        var poAmount = (from apoi in db.AP_Purchase_Order_Items
+                                        where apoi.PO_ID == poId
+                                        select (decimal?)apoi.Amount).Sum() ?? 0m;
+
+                        if (poAmount > remainingAmount)
+                        {
+                            return "Error: PO Amount exceeds remaining budget";
+                        }
+                    }
+                }
+
+                var isFinalApprovals = (from SASD in db.Sys_Approval_Stage_Details
+                                        join SASM in db.Sys_Approval_Stage_Masters on SASD.Stage_ID equals SASM.Stage_ID
+                                        join SATD in db.Sys_Approval_Tempelate_Detail_Stages on SASM.Stage_ID equals SATD.StageId
+                                        join SATF in db.Sys_Approval_Tempelate_Detail_Forms on SATD.Tempelate_ID equals SATF.Tempelate_ID
+                                        where SASD.UserId == user_id && SATF.FormId == form_id && SASM.IsDeleted == false
+                                        select new { SASM.IsFinalApproval, SATF.FormId }).ToList();
+
+                if (isFinalApprovals.Any(a => a.IsFinalApproval == true && a.FormId == form_id))
+                {
+                    var Details = db.spApprovePurchaseOrder(PO.PO_ID, user_id);
+                    db.SubmitChanges();
+
+                    var sasd = (from tbl in db.Sys_Approval_Stage_Details
+                                join SASM in db.Sys_Approval_Stage_Masters on tbl.Stage_ID equals SASM.Stage_ID
+                                join SATDS in db.Sys_Approval_Tempelate_Detail_Stages on SASM.Stage_ID equals SATDS.StageId
+                                join SATF in db.Sys_Approval_Tempelate_Detail_Forms on SATDS.Tempelate_ID equals SATF.Tempelate_ID
+                                where tbl.UserId == user_id && SASM.IsFinalApproval == true && SATF.FormId == form_id && SASM.IsDeleted == false
+                                select tbl).FirstOrDefault();
+
+                    if (sasd != null)
+                    {
+                        var satds = (from tbl in db.Sys_Approval_Tempelate_Detail_Stages
+                                     join SATF in db.Sys_Approval_Tempelate_Detail_Forms on tbl.Tempelate_ID equals SATF.Tempelate_ID
+                                     where tbl.StageId == sasd.Stage_ID && SATF.FormId == form_id
+                                     select tbl).FirstOrDefault();
+
+                        if (satds != null)
+                        {
+                            var log = new Sys_Approval_Log();
+                            log.Approval_Template_ID = satds.Tempelate_ID;
+                            log.Approval_Stage_ID = sasd.Stage_ID;
+                            log.Entry_ID = PO.PO_ID;
+                            log.Form_ID = form_id;
+                            log.From_Name = "Purchase Order";
+                            log.Remarks = PO.Remarks;
+                            log.Company_ID = AppConfig.Company_ID;
+                            log.IsFinalAprroval = true;
+                            log.Entry_Status = "Approved";
+                            log.Approve_By = user_id;
+                            log.Approve_Date = DateTime.Now;
+                            log.IsRejected = false;
+                            log.Approval_Remarks = approvalRemarks;
+                            db.Sys_Approval_Logs.InsertOnSubmit(log);
+                            db.SubmitChanges();
+                        }
+                    }
+                }
+                else
+                {
+                    PO.Status = "Pending";
+                    PO.Approved_Time = DateTime.Now;
+                    PO.Approved_By = user_id;
+                    db.SubmitChanges();
+
+                    var sasd = (from tbl in db.Sys_Approval_Stage_Details
+                                join SASM in db.Sys_Approval_Stage_Masters on tbl.Stage_ID equals SASM.Stage_ID
+                                join SATDS in db.Sys_Approval_Tempelate_Detail_Stages on SASM.Stage_ID equals SATDS.StageId
+                                join SATF in db.Sys_Approval_Tempelate_Detail_Forms on SATDS.Tempelate_ID equals SATF.Tempelate_ID
+                                where tbl.UserId == user_id && SASM.IsFinalApproval == false && SATF.FormId == form_id && SASM.IsDeleted == false
+                                select tbl).FirstOrDefault();
+
+                    if (sasd != null)
+                    {
+                        var satds = (from tbl in db.Sys_Approval_Tempelate_Detail_Stages
+                                     join SATF in db.Sys_Approval_Tempelate_Detail_Forms on tbl.Tempelate_ID equals SATF.Tempelate_ID
+                                     where tbl.StageId == sasd.Stage_ID && SATF.FormId == form_id
+                                     select tbl).FirstOrDefault();
+
+                        if (satds != null)
+                        {
+                            var log = new Sys_Approval_Log();
+                            log.Approval_Template_ID = satds.Tempelate_ID;
+                            log.Approval_Stage_ID = sasd.Stage_ID;
+                            log.Entry_ID = PO.PO_ID;
+                            log.Form_ID = form_id;
+                            log.From_Name = "Purchase Order";
+                            log.Remarks = PO.Remarks;
+                            log.Company_ID = AppConfig.Company_ID;
+                            log.IsFinalAprroval = false;
+                            log.Entry_Status = "Pending";
+                            log.Approve_By = user_id;
+                            log.Approve_Date = DateTime.Now;
+                            log.IsRejected = false;
+                            log.Approval_Remarks = approvalRemarks;
+                            db.Sys_Approval_Logs.InsertOnSubmit(log);
+                            db.SubmitChanges();
+                        }
+                    }
+                }
+                db.SubmitChanges();
+                return "Success";
+            }
+        }
+
         [WebMethod]
         public static string CancelEntry(string POid)
         {

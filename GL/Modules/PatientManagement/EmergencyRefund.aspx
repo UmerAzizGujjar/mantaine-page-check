@@ -152,6 +152,7 @@
         }
 
         function SaveEmergencyRecord() {
+            $('#btnSave').attr('disabled', true);
             var urlParams = new URLSearchParams(window.location.search);
             var refundID = urlParams.get("RefundID");
 
@@ -162,6 +163,7 @@
             var maxDoctorAmount = parseFloat($("#txtDoctorAmount").val()) || 0;
 
             if (HospitalRefund > maxHospitalShare) {
+                $('#btnSave').attr('disabled', false);
                 Swal.fire({
                     icon: 'warning',
                     title: 'Invalid Hospital Refund',
@@ -171,6 +173,7 @@
             }
 
             if (DoctorRefund > maxDoctorAmount) {
+                $('#btnSave').attr('disabled', false);
                 Swal.fire({
                     icon: 'warning',
                     title: 'Invalid Doctor Refund',
@@ -180,6 +183,7 @@
             }
 
             if (HospitalRefund === 0 && DoctorRefund === 0) {
+                $('#btnSave').attr('disabled', false);
                 Swal.fire({
                     icon: 'warning',
                     title: 'No Refund Amount',
@@ -217,6 +221,7 @@
                             window.location.href = "EmergencyRefund_List.aspx";
                         });
                     } else {
+                        $('#btnSave').attr('disabled', false);
                         Swal.fire({
                             icon: 'error',
                             title: 'Error',
@@ -225,6 +230,7 @@
                     }
                 },
                 error: function () {
+                    $('#btnSave').attr('disabled', false);
                     Swal.fire({
                         icon: 'error',
                         title: 'Error',

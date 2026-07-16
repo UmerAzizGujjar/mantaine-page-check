@@ -3373,6 +3373,7 @@
         }
 
         function SaveAllRecords() {
+            $('#btnSave').attr('disabled', true);
             debugger;
             var btnsave = $('#btnSave').val();
             var Patient_ID = $("#<%=txtPatient_ID.ClientID%>").val();
@@ -3501,6 +3502,7 @@
                 BirthUnionCouncil, BirthAddress, BirthCity, BirthProvince, BirthPostalCode,
                 BirthReligion, BirthAttendant, BirthRemarks, isCertificateGenrate,
                 function (response) {
+                    $('#btnSave').attr('disabled', false);
                     debugger;
                     var btn = btnVal;
 
@@ -3867,6 +3869,7 @@
    }
 
         function SaveInPatientAllRecord() {
+            $('#btnSave').attr('disabled', true);
             debugger;
 
             // Get the current inpatient ID

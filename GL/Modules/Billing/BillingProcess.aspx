@@ -199,6 +199,7 @@
 
             function ApproveBill() {
                 debugger;
+                $('#btnApprove').attr('disabled', true);
                 var BillId = '<% =Request.QueryString["Bill_ID"] %>';
                     PageMethods.approve_Bill(BillId, function (Tests) {
                         debugger
@@ -221,6 +222,7 @@
                             }, 2500);
                         }
                         else {
+                            $('#btnApprove').attr('disabled', false);
                             Swal.fire({
                                 icon: 'error',
                                 title: 'Error!',
@@ -230,6 +232,7 @@
                     },
 
                         function (error) {
+                            $('#btnApprove').attr('disabled', false);
                             Swal.fire({
                                 icon: 'error',
                                 title: 'Error!',
@@ -1855,7 +1858,8 @@
                         //}
                         var Bill_Date = $('#txtBillDate').val();
                         var Remarks = $('#txtRemarks').val();
-                        var TotalPayable = $('#txtTotalAmount').val();
+                        //var TotalPayable = $('#txtTotalAmount').val();
+                        var TotalPayable = parseFloat($('#txtTotalAmount').val()) || 0;
                         var Discount_Percentage = $('#txtDisPer').val();
                         Discount_Percentage = $('#hdntxtDisPer').val();
                         var Discount_Amount = $('#txtDisAmt').val();
@@ -5690,8 +5694,15 @@
                 });
             }
             debugger;
+            function destroyTokenInput(textboxID) {
+                var $input = $('#' + textboxID);
+                $input.siblings('.token-input-list').remove();
+                $input.siblings('input.token-input-input').remove();
+                $input.show();
+            }
             function tokenInputs(textboxID, tblName, OnAddFun) {
                 debugger;
+                destroyTokenInput(textboxID);
                 $('#' + textboxID).tokenInput("../../json.aspx?Table=" + tblName,
                     {
                         tokenLimit: 1,
@@ -5708,7 +5719,7 @@
 
                                         GetPatientIdfromOPd();
                                     }
-                                    else if (tblName == 'INV_ItemsForBilling') {
+                                    else if (tblName.indexOf('INV_ItemsForBilling') == 0) {
 
                                         localStorage.SelectedItemID = item.id;
                                         localStorage.SelectedItemType = item.Type;
@@ -5890,7 +5901,10 @@
                     $('#txtprevious_Amount').val(data.d.PreviousTotalAmount);
                     $('#lblDepartment').val(data.d.Department);
                     $('#txt_balance').val(data.d.Balance);
-                    $('#txtMaindepartment').val(data.d.MainDepartment).trigger('change');
+                    //$('#txtMaindepartment').val(data.d.MainDepartment).trigger('change');
+                    
+                                
+                   
                     debugger;
                     setTimeout(function () { AutoFillCashInHand(); }, 300);
                     var NIC = data.d.NIC;
@@ -5999,7 +6013,7 @@
                     if (data.d.IPD_Panel_ID == null) {
                         fillPanel();
                     }
-
+                    
                     $('#PackageType').val(Packtypes);
                     $('#PackageName').val(Packnames);
                     $('#hdn_PatienttypeId').val(data.d.Patient_Type_id);
@@ -6014,7 +6028,15 @@
                     debugger;
                     var Patient_ID = $('#hdfPatient_ID').val();
 
-
+                    if (data.d.MainDepartment) {
+                        if ($('#txtMaindepartment option').length > 1) {
+                            $('#txtMaindepartment').val(data.d.MainDepartment).trigger('change');
+                        } else {
+                            LoadMainDepartment(function () {
+                                $('#txtMaindepartment').val(data.d.MainDepartment).trigger('change');
+                            });
+                        }
+                    }
 
 
                     var isadd = '<%= Request.QueryString["isAdd"]%>';
@@ -7350,6 +7372,7 @@
                     if (SearchString === '')
                         FillPatientsList();
                 });
+                LoadMainDepartment();
                 fillmartial();
                 fillgender();
                 CheckAppointmentAllow();
@@ -7455,7 +7478,7 @@
                 FillOtherTest();
                 FillMainTestDepartment();
                 FillChargePolicy();
-                LoadMainDepartment();
+             
                 LoadBillDepartment();
                 LoadBillPatCategory();
                 fillCashInHand();

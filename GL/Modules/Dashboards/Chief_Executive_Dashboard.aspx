@@ -56,6 +56,34 @@
             $("#trendMonth").val(String(new Date().getMonth()));
             setPeriod("today");
             renderSatisfaction();
+            FillWarehouse();
+            FillWarehousePharmacy();
+            $("#ddlWarehouse").change(function () {
+                var pill = $(".period-pill.active");
+                var period = pill.data("period");
+                var startDate = null, endDate = null;
+                if (period === "custom") {
+                    startDate = $("#txtStartDate").val();
+                    endDate = $("#txtEndDate").val();
+                }
+                
+                loadSummaryCards();
+                
+                var m = $("#trendMonth").val();
+                if (m !== "") {
+                    applyTrendFilter();
+                }
+            });
+
+            $("#ddlWarehousepharmacy").change(function () {
+                loadPharmacyData(); 
+                var m = $("#trendMonth").val();
+                if (m !== "") {
+                    applyTrendFilterPharmacy(); 
+                }
+            });
+
+
 
             $.ajax({
                 type: "POST",
@@ -145,10 +173,12 @@
                 var y = new Date().getFullYear();
                 var months = ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
                 var cm = months[parseInt(m)];
+                var warehouse = $('#ddlWarehouse').val() || '0';
+                var pharmacyWarehouse = $('#ddlWarehousepharmacy').val() || '0';
                 $.ajax({
                     type: "POST",
                     url: "Chief_Executive_Dashboard.aspx/GetYearlyInventorySummary",
-                    data: JSON.stringify({ year: y }),
+                    data: JSON.stringify({ year: y, warehouse: warehouse }),
                     contentType: "application/json; charset=utf-8",
                     dataType: "json",
                     success: function (res) {
@@ -173,7 +203,7 @@
                 $.ajax({
                     type: "POST",
                     url: "Chief_Executive_Dashboard.aspx/GetYearlyPharmacySummary",
-                    data: JSON.stringify({ year: y }),
+                    data: JSON.stringify({ year: y, warehouse: pharmacyWarehouse }),
                     contentType: "application/json; charset=utf-8",
                     dataType: "json",
                     success: function (res) {
@@ -199,7 +229,7 @@
                 $.ajax({
                     type: "POST",
                     url: "Chief_Executive_Dashboard.aspx/GetYearlyPharmacyRevenue",
-                    data: JSON.stringify({ year: y }),
+                    data: JSON.stringify({ year: y, warehouse: pharmacyWarehouse }),
                     contentType: "application/json; charset=utf-8",
                     dataType: "json",
                     success: function (res) {
@@ -251,6 +281,44 @@
                 LoadClinicalOutcomes(m.period, m.startDate, m.endDate);
             });
         });
+
+
+        function loadPharmacyData() {
+            var y = new Date().getFullYear();
+            var m = new Date().getMonth();
+            var months = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
+            var curMon = months[m];
+            var pharmacyWarehouse = $('#ddlWarehousepharmacy').val() || '0';
+
+            // Load Pharmacy Summary with pharmacy warehouse
+            $.ajax({
+                type: "POST",
+                url: "Chief_Executive_Dashboard.aspx/GetYearlyPharmacySummary",
+                data: JSON.stringify({ year: y, warehouse: pharmacyWarehouse }),
+                contentType: "application/json; charset=utf-8",
+                dataType: "json",
+                success: function (res) {
+                    var data = JSON.parse(res.d);
+                    if (data.Error) return;
+                    var openingRow, purchaseRow, saleRow, closingRow;
+                    data.forEach(function (r) {
+                        if (r.Metric === 'Opening_Value') openingRow = r;
+                        else if (r.Metric === 'Purchase_Value') purchaseRow = r;
+                        else if (r.Metric === 'Sale_Value') saleRow = r;
+                        else if (r.Metric === 'Closing_Value') closingRow = r;
+                    });
+                    var po = openingRow ? (openingRow[curMon] || 0) : 0;
+                    var pp = purchaseRow ? (purchaseRow[curMon] || 0) : 0;
+                    var ps = saleRow ? (saleRow[curMon] || 0) : 0;
+                    var pc = closingRow ? (closingRow[curMon] || 0) : 0;
+                    $('#pharmOpening').text('Rs. ' + fmt(po));
+                    $('#pharmPurchase').text('Rs. ' + fmt(pp));
+                    $('#pharmSale').text('Rs. ' + fmt(ps));
+                    $('#pharmClosing').text('Rs. ' + fmt(pc));
+                }
+            });
+
+        }
 
         function LoadHospitalRevenue(period, startDate, endDate) {
             var data = { 'period': period, 'startDate': startDate || null, 'endDate': endDate || null };
@@ -775,11 +843,14 @@
             var m = new Date().getMonth();
             var months = ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
             var curMon = months[m];
+            var warehouse = $('#ddlWarehouse').val() || '0';
+            var pharmacyWarehouse = $('#ddlWarehousepharmacy').val() || '0';
+
 
             $.ajax({
                 type: "POST",
                 url: "Chief_Executive_Dashboard.aspx/GetYearlyInventorySummary",
-                data: JSON.stringify({ year: y }),
+                data: JSON.stringify({ year: y, warehouse: warehouse }),
                 contentType: "application/json; charset=utf-8",
                 dataType: "json",
                 success: function (res) {
@@ -794,18 +865,18 @@
                         else if (r.Metric === 'Sale_Value') saleRow = r;
                         else if (r.Metric === 'Closing_Value') closingRow = r;
                     });
-                    $('#invOpening').text('Rs. ' + fmt(openingRow ? (openingRow[curMon]||0) : 0));
-                    $('#invPurchase').text('Rs. ' + fmt(purchaseRow ? (purchaseRow[curMon]||0) : 0));
-                    $('#invPurchaseReturn').text('Rs. ' + fmt(purchaseRetRow ? (purchaseRetRow[curMon]||0) : 0));
-                    $('#invSale').text('Rs. ' + fmt(saleRow ? (saleRow[curMon]||0) : 0));
-                    $('#invClosing').text('Rs. ' + fmt(closingRow ? (closingRow[curMon]||0) : 0));
+                    $('#invOpening').text('Rs. ' + fmt(openingRow ? (openingRow[curMon] || 0) : 0));
+                    $('#invPurchase').text('Rs. ' + fmt(purchaseRow ? (purchaseRow[curMon] || 0) : 0));
+                    $('#invPurchaseReturn').text('Rs. ' + fmt(purchaseRetRow ? (purchaseRetRow[curMon] || 0) : 0));
+                    $('#invSale').text('Rs. ' + fmt(saleRow ? (saleRow[curMon] || 0) : 0));
+                    $('#invClosing').text('Rs. ' + fmt(closingRow ? (closingRow[curMon] || 0) : 0));
                 }
             });
 
             $.ajax({
                 type: "POST",
                 url: "Chief_Executive_Dashboard.aspx/GetYearlyPharmacySummary",
-                data: JSON.stringify({ year: y }),
+                data: JSON.stringify({ year: y, warehouse: pharmacyWarehouse }),
                 contentType: "application/json; charset=utf-8",
                 dataType: "json",
                 success: function (res) {
@@ -832,7 +903,7 @@
             $.ajax({
                 type: "POST",
                 url: "Chief_Executive_Dashboard.aspx/GetYearlyPharmacyRevenue",
-                data: JSON.stringify({ year: y }),
+                data: JSON.stringify({ year: y, warehouse: pharmacyWarehouse }),
                 contentType: "application/json; charset=utf-8",
                 dataType: "json",
                 success: function (res) {
@@ -903,10 +974,11 @@
         function closeInventoryModal() { $('#invModal').removeClass('open'); }
         function loadInventoryModal() {
             var y = $('#invYear').val();
+            var warehouse = $('#ddlWarehouse').val() || '0';
             $.ajax({
                 type: "POST",
                 url: "Chief_Executive_Dashboard.aspx/GetYearlyInventorySummary",
-                data: JSON.stringify({ year: parseInt(y) }),
+                data: JSON.stringify({ year: parseInt(y), warehouse: warehouse }),
                 contentType: "application/json; charset=utf-8",
                 dataType: "json",
                 success: function (res) {
@@ -931,10 +1003,11 @@
         function closePharmacyModal() { $('#pharmModal').removeClass('open'); }
         function loadPharmacyModal() {
             var y = $('#pharmYear').val();
+            var pharmacyWarehouse = $('#ddlWarehousepharmacy').val() || '0';
             $.ajax({
                 type: "POST",
                 url: "Chief_Executive_Dashboard.aspx/GetYearlyPharmacySummary",
-                data: JSON.stringify({ year: parseInt(y) }),
+                data: JSON.stringify({ year: parseInt(y), warehouse: pharmacyWarehouse }),
                 contentType: "application/json; charset=utf-8",
                 dataType: "json",
                 success: function (res) {
@@ -958,10 +1031,11 @@
         function closeRevenueModal() { $('#revModal').removeClass('open'); }
         function loadRevenueModal() {
             var y = $('#revYear').val();
+            var pharmacyWarehouse = $('#ddlWarehousepharmacy').val() || '0';
             $.ajax({
                 type: "POST",
                 url: "Chief_Executive_Dashboard.aspx/GetYearlyPharmacyRevenue",
-                data: JSON.stringify({ year: parseInt(y) }),
+                data: JSON.stringify({ year: parseInt(y), warehouse: pharmacyWarehouse }),
                 contentType: "application/json; charset=utf-8",
                 dataType: "json",
                 success: function (res) {
@@ -977,6 +1051,48 @@
                         'Gross_Profit': 'Gross Profit'
                     });
                 }
+            });
+        }
+
+        function FillWarehouse() {
+            var optionInv = '';
+            PageMethods.fillWarehouse(function (Tests) {
+                optionInv = '<option value="0">Please Select</option>';
+                var parsedTests = JSON.parse(Tests);
+
+                $.each(parsedTests, function (key, value) {
+                    optionInv += '<option value="' + value.DataValueName + '" >' + value.DataValueDescription + '</option>';
+                });
+                $('#ddlWarehouse').html(optionInv);
+
+                
+                if ($('#ddlWarehouse option[value="008"]').length > 0) {
+                    $('#ddlWarehouse').val("008");
+                    $('#ddlWarehouse').trigger('change');
+                } else {
+                    var firstVal = $('#ddlWarehouse option:not([value="0"])').first().val();
+                    if (firstVal) {
+                        $('#ddlWarehouse').val(firstVal);
+                        $('#ddlWarehouse').trigger('change');
+                    }
+                }
+            });
+        }
+
+        function FillWarehousePharmacy() {
+            var optionInv = '';
+            PageMethods.fillWarehouse(function (Tests) {
+                optionInv = '<option value="0">Please Select</option>';
+                $.each(JSON.parse(Tests), function (key, value) {
+
+                    if (value.DataValueName === "008" || value.DataValueName === "009") {
+                        optionInv += '<option value="' + value.DataValueName + '">' +
+                            value.DataValueDescription +
+                            '</option>';
+                    }
+                });
+
+                $('#ddlWarehousepharmacy').html(optionInv);
             });
         }
     </script>
@@ -1781,73 +1897,103 @@
         </div>
 
         <div class="bento-item" id="trend-area">
-            <div class="main-heading">Trend Records &amp; Stock Analytics</div>
-            <div class="card-filter">
-                <select id="trendMonth" class="form-control" style="width:90px;font-size:10px;padding:2px 4px;height:24px;">
-                    <option value="">All</option>
-                    <option value="0">Jan</option><option value="1">Feb</option><option value="2">Mar</option><option value="3">Apr</option><option value="4">May</option><option value="5">Jun</option>
-                    <option value="6">Jul</option><option value="7">Aug</option><option value="8">Sep</option><option value="9">Oct</option><option value="10">Nov</option><option value="11">Dec</option>
-                </select>
-                <button type="button" class="btn btn-sm btn-primry card-apply" data-card="trend" style="font-size:10px;height:24px;display:flex;align-items:center;justify-content:center;padding:0 10px;">Apply</button>
-                <button type="button" class="btn btn-sm btn-trash card-trash" data-card="trend" title="Reset to master"><i class="fa fa-trash"></i></button>
+    <div class="main-heading">Trend Records &amp; Stock Analytics</div>
+    
+    <!-- Filter row with all selectors in one line -->
+    <div class="card-filter" style="display: flex; gap: 12px; align-items: center; flex-wrap: wrap; margin-bottom: 12px;">
+        <!-- Inventory Warehouse -->
+        <div style="display: flex; align-items: center; gap: 6px;">
+            <label id="LblWarehouse" style="font-size: 11px; font-weight: 600; color: #374151; white-space: nowrap; margin: 0;">WareHouse Inventory</label>
+            <select id="ddlWarehouse" class="form-control" style="width:140px;font-size:10px;padding:2px 4px;height:26px;">
+                <option value="0">Please Select</option>
+            </select>
+        </div>
+        
+        <!-- Pharmacy Warehouse -->
+        <div style="display: flex; align-items: center; gap: 6px;">
+            <label id="LblWarehousepharmacy" style="font-size: 11px; font-weight: 600; color: #374151; white-space: nowrap; margin: 0;">WareHouse Pharmacy</label>
+            <select id="ddlWarehousepharmacy" class="form-control" style="width:140px;font-size:10px;padding:2px 4px;height:26px;">
+                <option value="0">Please Select</option>
+            </select>
+        </div>
+        
+        <!-- Month Selector -->
+        <div style="display: flex; align-items: center; gap: 6px;">
+            <label style="font-size: 11px; font-weight: 600; color: #374151; white-space: nowrap; margin: 0;">Month</label>
+            <select id="trendMonth" class="form-control" style="width:90px;font-size:10px;padding:2px 4px;height:26px;">
+                <option value="">All</option>
+                <option value="0">Jan</option><option value="1">Feb</option><option value="2">Mar</option>
+                <option value="3">Apr</option><option value="4">May</option><option value="5">Jun</option>
+                <option value="6">Jul</option><option value="7">Aug</option><option value="8">Sep</option>
+                <option value="9">Oct</option><option value="10">Nov</option><option value="11">Dec</option>
+            </select>
+        </div>
+        
+        <!-- Buttons -->
+        <button type="button" class="btn btn-sm btn-primry card-apply" data-card="trend" style="font-size:10px;height:26px;display:flex;align-items:center;justify-content:center;padding:0 12px;">Apply</button>
+        <button type="button" class="btn btn-sm btn-trash card-trash" data-card="trend" title="Reset to master" style="font-size:13px;height:26px;display:flex;align-items:center;"><i class="fa fa-trash"></i></button>
+    </div>
+    
+    <div class="main-inner">
+        <div class="main-sub trend-sub" id="invRecordCard">
+            <div class="ms-title">Inventory Record</div>
+            <div class="ts-badge" id="invBadge">Month-end Closing</div>
+            <div class="ts-big-number" id="invOpening">Rs. 0.00</div>
+            <div class="ts-metrics" id="invMetrics">
+                <div class="ts-row"><span class="ts-lbl">Purchase Value</span><span class="ts-val" id="invPurchase">Rs. 0.00</span></div>
+                <div class="ts-row"><span class="ts-lbl">Purchase Return</span><span class="ts-val" id="invPurchaseReturn">Rs. 0.00</span></div>
+                <div class="ts-row"><span class="ts-lbl">Sale Value</span><span class="ts-val" id="invSale">Rs. 0.00</span></div>
+                <div class="ts-row ts-total"><span class="ts-lbl">Closing Value</span><span class="ts-val" id="invClosing">Rs. 0.00</span></div>
             </div>
-            <div class="main-inner">
-                <div class="main-sub trend-sub" id="invRecordCard">
-                    <div class="ms-title">Inventory Record</div>
-                    <div class="ts-badge" id="invBadge">Month-end Closing</div>
-                    <div class="ts-big-number" id="invOpening">Rs. 0.00</div>
-                    <div class="ts-metrics" id="invMetrics">
-                        <div class="ts-row"><span class="ts-lbl">Purchase Value</span><span class="ts-val" id="invPurchase">Rs. 0.00</span></div>
-                        <div class="ts-row"><span class="ts-lbl">Purchase Return</span><span class="ts-val" id="invPurchaseReturn">Rs. 0.00</span></div>
-                        <div class="ts-row"><span class="ts-lbl">Sale Value</span><span class="ts-val" id="invSale">Rs. 0.00</span></div>
-                        <div class="ts-row ts-total"><span class="ts-lbl">Closing Value</span><span class="ts-val" id="invClosing">Rs. 0.00</span></div>
-                    </div>
-                    <div class="ts-expand" onclick="openInventoryModal()">&#9655; View Detailed Report</div>
-                </div>
-                <div class="main-sub trend-sub" id="pharmStockCard">
-                    <div class="ms-title">Pharmacy Stock Analytics</div>
-                    <div class="ts-badge" id="pharmBadge">PB-1</div>
-                    <div class="ts-big-number" id="pharmOpening">Rs. 0.00</div>
-                    <div class="ts-metrics" id="pharmMetrics">
-                        <div class="ts-row"><span class="ts-lbl">Purchase Value</span><span class="ts-val" id="pharmPurchase">Rs. 0.00</span></div>
-                        <div class="ts-row"><span class="ts-lbl">Sale Value</span><span class="ts-val" id="pharmSale">Rs. 0.00</span></div>
-                        <div class="ts-row ts-total"><span class="ts-lbl">Closing Value</span><span class="ts-val" id="pharmClosing">Rs. 0.00</span></div>
-                    </div>
-                    <div class="ts-expand" onclick="openPharmacyModal()">&#9655; Stock Movement Report</div>
-                </div>
-                <div class="main-sub trend-sub" id="revPnLCard">
-                    <div class="ms-title">Revenue P&amp;L Summary</div>
-                    <div class="ts-badge" id="revBadge">Month-end Closing</div>
-                    <div class="ts-big-number" id="revGrossSale">Rs. 0.00</div>
-                    <div class="ts-metrics" id="revMetrics">
-                        <div class="ts-row"><span class="ts-lbl">Discount</span><span class="ts-val" id="revDiscount">Rs. 0.00</span></div>
-                        <div class="ts-row"><span class="ts-lbl">Adjustment</span><span class="ts-val" id="revAdjustment">Rs. 0.00</span></div>
-                        <div class="ts-row"><span class="ts-lbl">Sale Return</span><span class="ts-val" id="revSaleReturn">Rs. 0.00</span></div>
-                        <div class="ts-row"><span class="ts-lbl">Net Sale</span><span class="ts-val" id="revNetSale">Rs. 0.00</span></div>
-                        <div class="ts-row"><span class="ts-lbl">COGS</span><span class="ts-val" id="revCogs">Rs. 0.00</span></div>
-                        <div class="ts-row ts-total"><span class="ts-lbl">Gross Profit</span><span class="ts-val" id="revGrossProfit">Rs. 0.00</span></div>
-                    </div>
-                    <div class="ts-expand" onclick="openRevenueModal()">&#9655; View 12-Month Report</div>
-                </div>
+            <div class="ts-expand" onclick="openInventoryModal()">&#9655; View Detailed Report</div>
+        </div>
+        
+        <div class="main-sub trend-sub" id="pharmStockCard">
+            <div class="ms-title">Pharmacy Stock Analytics</div>
+            <div class="ts-badge" id="pharmBadge">PB-1</div>
+            <div class="ts-big-number" id="pharmOpening">Rs. 0.00</div>
+            <div class="ts-metrics" id="pharmMetrics">
+                <div class="ts-row"><span class="ts-lbl">Purchase Value</span><span class="ts-val" id="pharmPurchase">Rs. 0.00</span></div>
+                <div class="ts-row"><span class="ts-lbl">Sale Value</span><span class="ts-val" id="pharmSale">Rs. 0.00</span></div>
+                <div class="ts-row ts-total"><span class="ts-lbl">Closing Value</span><span class="ts-val" id="pharmClosing">Rs. 0.00</span></div>
             </div>
-            <div class="heat-card">
-                <div class="heat-header">
-                    <div class="heat-icon"><i class="fa fa-map-marker"></i></div>
-                    <div>
-                        <div class="heat-title">Regional Patient Heatmap</div>
-                        <div class="heat-subtitle">Distribution by Location</div>
-                    </div>
-                </div>
-                <div class="card-filter">
-                    <input type="text" class="form-control datepicker" id="heatFrom" placeholder="From" style="width:85px;font-size:10px;padding:2px 4px;height:24px;" readonly />
-                    <span style="font-size:10px;color:#6b7280;">-</span>
-                    <input type="text" class="form-control datepicker" id="heatTo" placeholder="To" style="width:85px;font-size:10px;padding:2px 4px;height:24px;" readonly />
-                    <button type="button" class="btn btn-sm btn-primry card-apply" data-card="heat" style="font-size:10px;height:24px;display:flex;align-items:center;justify-content:center;padding:0 10px;">Apply</button>
-                    <button type="button" class="btn btn-sm btn-trash card-trash" data-card="heat" title="Reset to master"><i class="fa fa-trash"></i></button>
-                </div>
-                <div id="heatmapContainer"></div>
+            <div class="ts-expand" onclick="openPharmacyModal()">&#9655; Stock Movement Report</div>
+        </div>
+        
+        <div class="main-sub trend-sub" id="revPnLCard">
+            <div class="ms-title">Revenue P&amp;L Summary</div>
+            <div class="ts-badge" id="revBadge">Month-end Closing</div>
+            <div class="ts-big-number" id="revGrossSale">Rs. 0.00</div>
+            <div class="ts-metrics" id="revMetrics">
+                <div class="ts-row"><span class="ts-lbl">Discount</span><span class="ts-val" id="revDiscount">Rs. 0.00</span></div>
+                <div class="ts-row"><span class="ts-lbl">Adjustment</span><span class="ts-val" id="revAdjustment">Rs. 0.00</span></div>
+                <div class="ts-row"><span class="ts-lbl">Sale Return</span><span class="ts-val" id="revSaleReturn">Rs. 0.00</span></div>
+                <div class="ts-row"><span class="ts-lbl">Net Sale</span><span class="ts-val" id="revNetSale">Rs. 0.00</span></div>
+                <div class="ts-row"><span class="ts-lbl">COGS</span><span class="ts-val" id="revCogs">Rs. 0.00</span></div>
+                <div class="ts-row ts-total"><span class="ts-lbl">Gross Profit</span><span class="ts-val" id="revGrossProfit">Rs. 0.00</span></div>
+            </div>
+            <div class="ts-expand" onclick="openRevenueModal()">&#9655; View 12-Month Report</div>
+        </div>
+    </div>
+    
+    <div class="heat-card">
+        <div class="heat-header">
+            <div class="heat-icon"><i class="fa fa-map-marker"></i></div>
+            <div>
+                <div class="heat-title">Regional Patient Heatmap</div>
+                <div class="heat-subtitle">Distribution by Location</div>
             </div>
         </div>
+        <div class="card-filter">
+            <input type="text" class="form-control datepicker" id="heatFrom" placeholder="From" style="width:85px;font-size:10px;padding:2px 4px;height:24px;" readonly />
+            <span style="font-size:10px;color:#6b7280;">-</span>
+            <input type="text" class="form-control datepicker" id="heatTo" placeholder="To" style="width:85px;font-size:10px;padding:2px 4px;height:24px;" readonly />
+            <button type="button" class="btn btn-sm btn-primry card-apply" data-card="heat" style="font-size:10px;height:24px;display:flex;align-items:center;justify-content:center;padding:0 10px;">Apply</button>
+            <button type="button" class="btn btn-sm btn-trash card-trash" data-card="heat" title="Reset to master"><i class="fa fa-trash"></i></button>
+        </div>
+        <div id="heatmapContainer"></div>
+    </div>
+</div>
 
         <div class="bento-item" id="dia">
             <div class="dia-header">
