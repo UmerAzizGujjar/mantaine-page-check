@@ -910,6 +910,23 @@ namespace PMS
                 rd.SetParameterValue("@filterClinic", FilterClinic);
                 rd.SetParameterValue("@DoctorID", doctorID);
 
+                try
+                {
+                    string subreportName = rd.Subreports[0].Name;
+
+                    rd.SetParameterValue("@Company_ID", AppConfig.Company_ID, subreportName);
+                    rd.SetParameterValue("@FromDate", sqlStartDateTime, subreportName);
+                    rd.SetParameterValue("@ToDate", sqlEndDateTime, subreportName);
+                    rd.SetParameterValue("@Operator", Operator, subreportName);
+                    rd.SetParameterValue("@Department", departmentID, subreportName);
+                    rd.SetParameterValue("@filterClinic", FilterClinic, subreportName);
+                    rd.SetParameterValue("@DoctorID", doctorID, subreportName);
+                    
+                }
+                catch (Exception ex)
+                {
+                    
+                }
 
             }
             else if (reportName == "EmergencyDetailReport")
