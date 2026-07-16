@@ -1,8 +1,8 @@
 ﻿<%@ Page Title="" Language="C#" MasterPageFile="~/Site.Master" AutoEventWireup="true" CodeBehind="PurchaseOrder.aspx.cs" Inherits="PMS.AP.PurchaseOrder" %>
 
 <asp:Content ID="Content1" ContentPlaceHolderID="HeadContent" runat="server">
-    <link href="../../wwwroot/THEME_NHMC/CustomCSS/PO.css" rel="stylesheet" />
-    <link href="../../wwwroot/THEME_NHMC/CustomCSS/custom-modals.css" rel="stylesheet" />
+    <link href="../../wwwroot/THEME_TIBBIT/CustomCSS/PO.css" rel="stylesheet" />
+    <link href="../../wwwroot/THEME_TIBBIT/CustomCSS/custom-modals.css" rel="stylesheet" />
     <style type="text/css">
         .tooltip-inner {
             background-color: #ffc107 !important;
@@ -3362,7 +3362,7 @@ function scheduleCalcTotal(delay) {
                         <input type="checkbox" id="chkManual" />
                         <label for="chkManual">Manual</label>
                     </div>
-                    <div class="pr-checkbox-wrap pr-checkbox-inline">
+                    <div class="pr-checkbox-wrap pr-checkbox-inline" style="display:none;">
                         <input type="checkbox" id="IsadvancewithTax" />
                         <label for="IsadvancewithTax">Advance With Tax</label>
                     </div>
