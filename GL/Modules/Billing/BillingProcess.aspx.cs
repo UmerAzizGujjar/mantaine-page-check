@@ -985,6 +985,27 @@ namespace PMS
             return (new JavaScriptSerializer().Serialize(Dis));
         }
 
+        [WebMethod]
+        public static string PatientType()
+        {
+            string data = string.Empty;
+            using (DataBaseDataContext db = new DataBaseDataContext())
+            {
+                var result = (from dv in db.DataValues
+                              join ds in db.ValueSets
+                              on dv.ValueSet_ID equals ds.ValueSet_ID
+                              where ds.ValueSet_Name == "Patient Type"
+                               && (dv.DataValue_Name == "01" || dv.DataValue_Name == "02")
+                              select new
+                              {
+                                  dv.DataValue_Name,
+                                  dv.DataValue_Description
+                              }).ToList();
+                data = new JavaScriptSerializer().Serialize(result);
+            }
+            return data;
+        }
+
         //changes for opd
         [WebMethod]
         public static string FetchRecommendedDetails(int PatientID)
@@ -1862,6 +1883,7 @@ namespace PMS
             newBill.Sales_Tax_ID = data.Sales_Tax_ID;
             newBill.Sales_Tax_Percentage = data.Sales_Tax_Percentage;
             newBill.Panel_Id = Convert.ToInt32(data.Panel_Id);
+            newBill.Patient_Type = data.Patient_Type;
 
             if (data.finalbill == true)
             {
@@ -3221,6 +3243,8 @@ namespace PMS
             public int? Appointment_ID { get; set; }
             public string Appointment_Type { get; set; }
 
+            public string Patient_Type { get; set; }
+
             public decimal? Sales_Tax_Percentage { get; set; }
             //public string Remarks { get; set; }
             public List<BillingProcessDetails> Details { get; set; }
@@ -3408,6 +3432,7 @@ namespace PMS
                             data.Bill_Department,
                             data.Sales_Tax_ID,
                             data.Sales_Tax_Percentage,
+                            data.Patient_Type,
                             Referred_By_Text = db.HR_Employees.Where(e => e.Emp_ID == (data.Referred_By != null ? Convert.ToInt32(data.Referred_By) : 0)).Select(e => e.Emp_Name).FirstOrDefault() ?? "",
                             Bill_Department_text = db.GetDataValueName("Patient Main Category", data.Bill_Department),
                             Bill_Category_text = db.GetDataValueName("Mode Of Registration", data.Bill_Category),

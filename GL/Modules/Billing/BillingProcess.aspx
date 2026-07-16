@@ -1436,6 +1436,17 @@
                     //$('#BillDepartment').attr('disabled', true);
                 });
             }
+            function LoadPatientType() {
+                PageMethods.PatientType(function (data) {
+                    var options = '<option value="0" >Please Select</option>';
+                    $.each(JSON.parse(data), function (key, value) {
+                        options += '<option value="' + value.DataValue_Name + '" >' + value.DataValue_Description + '</option>';
+                    });
+                    $('#ddlPatientType').html(options);
+                    $('#ddlPatientType').select2();
+                    //$('#BillDepartment').attr('disabled', true);
+                });
+            }
             function LoadBillPatCategory() {
                 //var options = ''
                 PageMethods.GetMainDepartment(function (data) {
@@ -1531,7 +1542,9 @@
                     $('#ddlChargePolicy').val(data[0].Charge_Policy);
 
 
-
+                    if (data[0].Patient_Type) {
+                        $('#ddlPatientType').val(data[0].Patient_Type).trigger('change');
+                    }
                     $('#txt_balance').val(data[0].Previous_Balance);
                     $('#txtprevious_paid').val(data[0].Previous_Paid);
                     $('#txtTotalDoctorShare').val(data[0].Total_Doctor_Share);
@@ -1881,6 +1894,7 @@
                         var BillCategory = $('#BillCategory').val();
                         var bomTotalValue = $('#bomTotalValue').val();
                         var selectedBranchId = $('#ddlUserBranch').val();
+                        var Patient_Type = $('#ddlPatientType').val();
                         debugger;
                         var Panel_Id = $('#ddlpanel').val();
 
@@ -2108,7 +2122,7 @@
                             alert("Amount Should not be zero");
                             return true;
                         }
-                        var Parameters = { Bill_ID: Bill_ID, Patient_ID: Patient_ID, Opd_id: Opd_id, Bill_Date: Bill_Date, Remarks: Remarks, TotalPayable: TotalPayable, Discount_Percentage: Discount_Percentage, Discount_Amount: Discount_Amount, Net_Amount: Net_Amount, Received_Amount: Received_Amount, Balance_Amount: Balance_Amount, ChargePolicy: ChargePolicy, Details: Details, Share: Share, referred_by_doctor: referred_by_doctor, bomItems: bomItems, Casher: Casher, Previous_Balance: Previous_Balance, Previous_Paid: Previous_Paid, Over_and_Above: Over_and_Above, Cash_In_Hand: Cash_In_Hand, Cash_In_Hand_Account: Cash_In_Hand_Account, Bank_Account: Bank_Account, Bank_Cash: Bank_Cash, Main_Department: Main_Department, PackageType: PackageType, PackageName: PackageName, finalbill: finalbill, BillDepartment: BillDepartment, BillCategory: BillCategory, hdn_docid: hdn_docid, opd_procedure: opd_procedure, bomTotalValue: bomTotalValue, SelectedBranchId: selectedBranchId, Sales_Tax_ID: $('#hdnSalesTaxID').val(), Sales_Tax_Percentage: $('#hdnSalesTaxPercentage').val(), Panel_Id: Panel_Id, Appointment_ID: $('#hdnAppointment_ID').val(), }; //Total_Doctor_Share: Total_Doctor_Share,
+                        var Parameters = { Bill_ID: Bill_ID, Patient_ID: Patient_ID, Opd_id: Opd_id, Bill_Date: Bill_Date, Remarks: Remarks, TotalPayable: TotalPayable, Discount_Percentage: Discount_Percentage, Discount_Amount: Discount_Amount, Net_Amount: Net_Amount, Received_Amount: Received_Amount, Balance_Amount: Balance_Amount, ChargePolicy: ChargePolicy, Details: Details, Share: Share, referred_by_doctor: referred_by_doctor, bomItems: bomItems, Casher: Casher, Previous_Balance: Previous_Balance, Previous_Paid: Previous_Paid, Over_and_Above: Over_and_Above, Cash_In_Hand: Cash_In_Hand, Cash_In_Hand_Account: Cash_In_Hand_Account, Bank_Account: Bank_Account, Bank_Cash: Bank_Cash, Main_Department: Main_Department, PackageType: PackageType, PackageName: PackageName, finalbill: finalbill, BillDepartment: BillDepartment, BillCategory: BillCategory, hdn_docid: hdn_docid, opd_procedure: opd_procedure, bomTotalValue: bomTotalValue, SelectedBranchId: selectedBranchId,Patient_Type: Patient_Type, Sales_Tax_ID: $('#hdnSalesTaxID').val(), Sales_Tax_Percentage: $('#hdnSalesTaxPercentage').val(), Panel_Id: Panel_Id, Appointment_ID: $('#hdnAppointment_ID').val(), }; //Total_Doctor_Share: Total_Doctor_Share,
                         var rcptAmt = $('#txtAmountReceived').val();
                         if (Patient_ID == '') {
                             alert('Select Patient.');
@@ -6039,6 +6053,7 @@
                     }
 
 
+                    
                     var isadd = '<%= Request.QueryString["isAdd"]%>';
                     var PackType = data.d.pkg_type;
                     var packname = data.d.pkg_name;
@@ -6065,6 +6080,9 @@
                     else {
                         $('#lblPatientCategory').val(ReplaceNullWith_Space(data.d.Patient_Type));
                     }
+
+
+
                     debugger;
 
                     if (id == '') {
@@ -7390,6 +7408,11 @@
                         console.error("Error fetching autoRecvOPD", error);
                     }
                 });
+
+                $('#ddlPatientType').change(function () {
+                    var selectedText = $(this).find('option:selected').text();
+                    $('#lblPatientCategory').val(selectedText);
+                });
                 CheckReceiptsUpdateonBilling();
                 CheckCNICUpdateonCondition();
                 $.ajax({
@@ -7480,6 +7503,7 @@
                 FillChargePolicy();
              
                 LoadBillDepartment();
+                LoadPatientType();
                 LoadBillPatCategory();
                 fillCashInHand();
 
@@ -8192,6 +8216,13 @@
             </div>
 
         
+        </div>
+        <div class="row">
+            <div class="col-lg-2">
+                <label>Patient Type</label>
+                <select id="ddlPatientType">
+                </select>
+            </div>
         </div>
         
         <div class="row mtop">
