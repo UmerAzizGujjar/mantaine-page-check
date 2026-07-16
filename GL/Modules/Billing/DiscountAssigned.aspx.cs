@@ -22,7 +22,23 @@ namespace PMS.Modules.Billing
     {
         protected void Page_Load(object sender, EventArgs e)
         {
-
+            HyperLink1.Visible = false;
+            if (!IsPostBack)
+            {
+                if (Request.QueryString["Discount_Assign_ID"] != null)
+                {
+                    DataBaseDataContext db = new DataBaseDataContext();
+                    var getId = Request.QueryString["Discount_Assign_ID"];
+                    var fileInfo = (from a in db.Discount_Assign_Bills
+                                    where a.Discount_Assign_ID == Convert.ToInt32(getId)
+                                    select new { a.File_Path }).FirstOrDefault();
+                    if (fileInfo != null && !string.IsNullOrEmpty(fileInfo.File_Path))
+                    {
+                        HyperLink1.NavigateUrl = fileInfo.File_Path;
+                        HyperLink1.Visible = true;
+                    }
+                }
+            }
         }
 
         [System.Web.Services.WebMethod]
@@ -472,7 +488,8 @@ namespace PMS.Modules.Billing
                             Discount_Date = discountMaster.Discount_Date.ToString("MM/dd/yyyy"),                            
                             Total_Discount = discountMaster.Total_Discount,
                             Total_amount = discountMaster.Total_amount ?? 0,
-                            discountMaster.Remarks
+                            discountMaster.Remarks,
+                            discountMaster.File_Path
                         },
                         Patient = patient != null ? new
                         {
@@ -579,6 +596,38 @@ namespace PMS.Modules.Billing
                 catch (Exception ex)
                 {
                     return "Error: " + ex.Message;
+                }
+            }
+        }
+
+        [WebMethod]
+        public static bool DeleteDiscountFile(string Discount_Assign_ID)
+        {
+            using (DataBaseDataContext db = new DataBaseDataContext())
+            {
+                try
+                {
+                    int discountId = Convert.ToInt32(Discount_Assign_ID);
+                    var discount = db.Discount_Assign_Bills
+                                     .FirstOrDefault(d => d.Discount_Assign_ID == discountId);
+
+                    if (discount == null || string.IsNullOrEmpty(discount.File_Path))
+                        return false;
+
+                    string physicalPath = HttpContext.Current.Server.MapPath(discount.File_Path);
+                    if (System.IO.File.Exists(physicalPath))
+                    {
+                        System.IO.File.Delete(physicalPath);
+                    }
+
+                    discount.File_Path = null;
+                    discount.File_Type = null;
+                    db.SubmitChanges();
+                    return true;
+                }
+                catch
+                {
+                    return false;
                 }
             }
         }

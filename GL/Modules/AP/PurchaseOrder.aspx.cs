@@ -204,6 +204,7 @@ namespace PMS.AP
                               m.Total_Further_Amt,
                               m.IsManual,
                               m.IsByDefault,
+                              m.IsAdvancewithTax,
                               Vendor_Name = db.AP_Vendors.Where(po => po.Vendor_ID == m.Vendor_ID).Select(po => po.Vendor_Name),
                           }).FirstOrDefault();
             return (new JavaScriptSerializer()).Serialize(Header);
@@ -428,6 +429,7 @@ namespace PMS.AP
             public string ProjectionType { get; set; }
             public bool IsManual { get; set; }
             public bool IsByDefault { get; set; }
+            public bool IsAdvanceWithTax { get; set; }
             public List<DetailItemList> ItemList { get; set; }
         }
         public class DetailItemList
@@ -531,6 +533,7 @@ namespace PMS.AP
                     existingItem.Term_ID = record.Term_ID;
                     existingItem.IsManual = record.IsManual;
                     existingItem.IsByDefault = record.IsByDefault;
+                    existingItem.IsAdvancewithTax = record.IsAdvanceWithTax;
                     if (record.FreightCharges != "")
                     {
                         existingItem.Frieght_Charges = Convert.ToDecimal(record.FreightCharges);
@@ -594,6 +597,7 @@ namespace PMS.AP
                 PO.IsDeleted = false;
                 PO.IsManual = record.IsManual;
                 PO.IsByDefault = record.IsByDefault;
+                PO.IsAdvancewithTax = record.IsAdvanceWithTax;
                 db.AP_Purchase_Orders.InsertOnSubmit(PO);
                 db.SubmitChanges();
                 PoNo = PO.PO_ID.ToString();
