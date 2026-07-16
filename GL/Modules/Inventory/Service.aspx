@@ -409,7 +409,7 @@
                         "LabRequired": labRequired,
                         "PattHistoryRequired": pattHistoryRequired,
                         "FitnessCertificate": fitnessCertificate,
-                        "OtherServices": otherServices,
+                        "OtherServices": OtherServices,
                         "Billing": billing,
                         "OTProcedure": OTProcedure,
                         "DoctorShare": DoctorShare,

@@ -16,17 +16,7 @@ namespace PMS.Modules.Others
 
             if (ex != null)
             {
-                // 🔒 LOG THE ERROR (Example: write to file or database)
-                // ⚠️ NEVER show ex.ToString() to user!
-
-                string logMessage = $"[{DateTime.Now}] Error: {ex.Message}\n{ex.StackTrace}\n\n";
-
-                // Example: Log to a file (you can replace with DB, NLog, etc.)
-                string logPath = Server.MapPath("~/App_Data/ErrorLog.txt");
-                System.IO.File.AppendAllText(logPath, logMessage);
-
-                // Clear the error so it doesn't bubble up
-                Server.ClearError();
+                return;
             }
         }
     }

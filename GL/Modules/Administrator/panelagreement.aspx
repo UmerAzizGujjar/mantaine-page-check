@@ -70,30 +70,7 @@
                     });
 
                 }
-                else if (Glcode == 0) {
-                    valid = false;
-                    Swal.fire({
-                        icon: 'error',
-                        title: 'Error!',
-                        text: 'Please Enter GL Account.',
-                        showConfirmButton: false,
-                        timer: 2000,
-                        customClass: {
-                            popup: 'swal-big-popup',
-                            title: 'swal-big-title',
-                            htmlContainer: 'swal-big-text'
-                        }
-                    });
-
-
-                }
-                if ($(cmp_nameV).val() == '') $(cmp_nameV).addClass('ErrorAlert'); else $(cmp_nameV).removeClass('ErrorAlert');
-                if ($(no_of_empV).val() == '') $(no_of_empV).addClass('ErrorAlert'); else $(no_of_empV).removeClass('ErrorAlert');
-                if ($(emailV).val() == '') $(emailV).addClass('ErrorAlert'); else $(emailV).removeClass('ErrorAlert');
-                if ($(addressV).val() == '') $(addressV).addClass('ErrorAlert'); else $(addressV).removeClass('ErrorAlert');      
-                if ($(emailV).val() == '') $(emailV).addClass('ErrorAlert'); else $(emailV).removeClass('ErrorAlert');
-                if ($(contact_noV).val() == '') $(contact_noV).addClass('ErrorAlert'); else $(contact_noV).removeClass('ErrorAlert');
-                if (!$("#txtCompanyName").hasClass('ErrorAlert') && !$("#txtEmail").hasClass('ErrorAlert') && !$("#txtAddress").hasClass('ErrorAlert') && !$("#txtContactNo").hasClass('ErrorAlert') && !$("#txtDiscount").hasClass('ErrorAlert') && !$("#txtEmpNo").hasClass('ErrorAlert')) {
+                if (true) {
 
 
 
@@ -168,18 +145,8 @@
                     timer: 2000
                 });
             }
-            else if (Glcode == 0) {
-                valid = false;
-                Swal.fire({
-                    icon: 'error',
-                    title: 'Error!',
-                    text: 'Please Enter GL Account.',
-                    showConfirmButton: false,
-                    timer: 2000
-                });
-            }
 
-            if (!$("#txtCompanyName").hasClass('ErrorAlert') && !$("#txtEmail").hasClass('ErrorAlert') && !$("#txtAddress").hasClass('ErrorAlert') && !$("#txtContactNo").hasClass('ErrorAlert') && !$("#txtDiscount").hasClass('ErrorAlert') && !$("#txtEmpNo").hasClass('ErrorAlert')) {
+            if (true) {
 
                 var servicesList = new Array();
                 var list = document.getElementById('tblItemDescription');
