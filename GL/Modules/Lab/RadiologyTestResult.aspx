@@ -4,7 +4,9 @@
 
 <asp:Content ID="Content1" ContentPlaceHolderID="HeadContent" runat="server">
     <style>
-
+        .select2-container--open {
+            z-index: 99999 !important;
+        }
     </style>
     <link href="../../wwwroot/THEME_TIBBIT//CustomCSS/LabReportPreview.css" rel="stylesheet" />
     <script type="text/javascript">
@@ -1222,7 +1224,23 @@
                         options += '<option value="' + value.id + '">' + value.text + '</option>';
                     });
                     $("#ddlReferDoctor").html(options);
-                    $("#ddlReferDoctor").select2();
+                    $("#ddlReferDoctor").select2({
+                        placeholder: "Select Doctor",
+                        allowClear: true,
+                        width: '100%'
+                    });
+
+                    // Auto-focus search field when select2 opens
+                    $('#ddlReferDoctor').on('select2:open', function () {
+                        setTimeout(function() {
+                            $('.select2-container--open .select2-search__field').focus();
+                        }, 100);
+                    });
+
+                    // Prevent Bootstrap modal focus trap blocking select2 search
+                    $('#myModal').on('shown.bs.modal', function () {
+                        $(document).off('focusin.bs.modal');
+                    });
                 },
                 error: function (xhr, status, error) {
                     console.error("Error loading doctors", error);
