@@ -242,6 +242,7 @@
             }
             var autoRecvOPD = '0';
             var billingServicesDeptWise = '0';
+            var allowDuplicateBillingItems = '0';
             var Appointment;
             function CheckAppointmentAllow() {
 
@@ -4457,28 +4458,30 @@
             function AddServiceOrItem() {
     debugger;
 
-    var alreadyExists = false;
-    $("#tblDetails tbody tr").each(function () {
-        var existingItemId = $(this).find('input[name="hdnItemID"]').val();
-        if (existingItemId == localStorage.SelectedItemID) {
-            alreadyExists = true;
-            return false;
-        }
-    });
-
-    if (alreadyExists) {
-        Swal.fire({
-            icon: 'warning',
-            title: 'Service Already Added!',
-            text: 'This service is already in the list.',
-            showConfirmButton: true,
-            customClass: {
-                popup: 'swal-big-popup',
-                title: 'swal-big-title',
-                htmlContainer: 'swal-big-text'
+    if (allowDuplicateBillingItems != '01') {
+        var alreadyExists = false;
+        $("#tblDetails tbody tr").each(function () {
+            var existingItemId = $(this).find('input[name="hdnItemID"]').val();
+            if (existingItemId == localStorage.SelectedItemID) {
+                alreadyExists = true;
+                return false;
             }
         });
-        return;
+
+        if (alreadyExists) {
+            Swal.fire({
+                icon: 'warning',
+                title: 'Service Already Added!',
+                text: 'This service is already in the list.',
+                showConfirmButton: true,
+                customClass: {
+                    popup: 'swal-big-popup',
+                    title: 'swal-big-title',
+                    htmlContainer: 'swal-big-text'
+                }
+            });
+            return;
+        }
     }
     getAllowLineDiscount();
     notProcedurenotITem = false;
@@ -7437,6 +7440,19 @@
                     },
                     error: function (error) {
                         billingServicesDeptWise = '0';
+                    }
+                });
+                $.ajax({
+                    type: "POST",
+                    url: "BillingProcess.aspx/AllowDuplicateBillingItems",
+                    data: "{}",
+                    contentType: "application/json; charset=utf-8",
+                    dataType: "json",
+                    success: function (response) {
+                        allowDuplicateBillingItems = JSON.parse(response.d);
+                    },
+                    error: function (error) {
+                        allowDuplicateBillingItems = '0';
                     }
                 });
 

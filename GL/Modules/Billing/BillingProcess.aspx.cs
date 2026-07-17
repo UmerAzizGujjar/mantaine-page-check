@@ -144,6 +144,16 @@ namespace PMS
         }
 
         [WebMethod]
+        public static string AllowDuplicateBillingItems()
+        {
+            DataBaseDataContext db = new DataBaseDataContext(DBClass.ConnectionString());
+            var dept = (from data in db.sys_Parms
+                        where data.Name == "Allow Duplicate Billing Items"
+                        select data.Code).FirstOrDefault();
+            return (new JavaScriptSerializer()).Serialize(dept ?? "0");
+        }
+
+        [WebMethod]
         public static string GetCardioTests()
         {
 

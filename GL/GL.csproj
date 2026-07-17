@@ -256,6 +256,7 @@
     <Reference Include="System.EnterpriseServices" />
     <Reference Include="System.Web.Mobile" />
     <Reference Include="System.Xml.Linq" />
+    <Reference Include="System.IO.Compression" />
     <Reference Include="Telerik.Web.UI">
       <HintPath>..\..\..\Users\Irfan\Desktop\Telerik.Web.UI.dll</HintPath>
     </Reference>
