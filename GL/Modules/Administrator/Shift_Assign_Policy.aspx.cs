@@ -198,8 +198,8 @@ namespace PMS.Modules.Administrator
             public decimal? Fees { get; set; }
             public decimal? Discount_Percentage { get; set; }
             public decimal? Discount_Amount { get; set; }
-            public int? Hospital_Share { get; set; }           
-            public int? Doctor_Share { get; set; }
+            public decimal? Hospital_Share { get; set; }
+            public decimal? Doctor_Share { get; set; }
             public DateTime? Expiry_Date { get; set; }
             public bool IsTime { get; set; }
             public bool IsDay { get; set; }

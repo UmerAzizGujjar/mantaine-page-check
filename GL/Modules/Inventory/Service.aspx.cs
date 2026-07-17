@@ -63,7 +63,7 @@ namespace PMS.Modules.Inventory
         }
         //
         [WebMethod]
-        public static string SaveItem(string Item_Code, string Desc, string Active, string PackUnit, string UomQty, string Menu, string ItemType, string ItemCategory, string FianceIntegration, string locatorAddress, string Lenght, string Width, string Heigth, string SalesRate, string PurchRate, string Remarks, string FinshProduct, string Consumable, string Saleable, string ItemGroup, string Warehouse, string Purchaseable, string Locator, string NonStockItem, string Fixasset, string MinimumStock, string Batch, string ReorderStock, string MaximumStock, string ATC, string GenericName, string ControllerDrug, string Narcotics, string Refregrator, string PharmacyItem, string ProcedureTypes, string Notes, string RadioCharges, string DentalItem, string Procedure, string LensRequired, string BedServices, string LabRequired, string PattHistoryRequired, string DoctorShare, string HospitalShare, string FitnessCertificate, string OtherServices, string Billing, string OTProcedure, string btnValue, string ItemId, string DepartmentId, string IsHospital, string IsService,string fluid, string Procedure_Time, string Account)
+        public static string SaveItem(string Item_Code, string Desc, string Active, string PackUnit, string UomQty, string Menu, string ItemType, string ItemCategory, string FianceIntegration, string locatorAddress, string Lenght, string Width, string Heigth, string SalesRate, string PurchRate, string Remarks, string FinshProduct, string Consumable, string Saleable, string ItemGroup, string Warehouse, string Purchaseable, string Locator, string NonStockItem, string Fixasset, string MinimumStock, string Batch, string ReorderStock, string MaximumStock, string ATC, string GenericName, string ControllerDrug, string Narcotics, string Refregrator, string PharmacyItem, string ProcedureTypes, string Notes, string RadioCharges, string DentalItem, string Procedure, string LensRequired, string BedServices, string LabRequired, string PattHistoryRequired, string DoctorShare, string HospitalShare, string FitnessCertificate, string OtherServices, string Billing, string OTProcedure, string btnValue, string ItemId, string DepartmentId, string Subcategory, string IsHospital, string IsService,string fluid, string Procedure_Time, string Account)
         {
             string result = string.Empty;
             string Id = "";
@@ -156,6 +156,7 @@ namespace PMS.Modules.Inventory
                 obj.Book_ID = AppConfig.Book_ID;
                 obj.Company_ID = AppConfig.Company_ID;
                 obj.DepartmentId = DepartmentId;
+                obj.Service_Sub_Category = Subcategory;
                 obj.ItemGroupId = ItemGroup;
                 obj.InventoryOrg = Warehouse;
                 obj.Hospital_Services = Convert.ToBoolean(IsHospital);
@@ -310,6 +311,7 @@ namespace PMS.Modules.Inventory
                 obj.Billing_Required = Convert.ToBoolean(Billing);
                 obj.OTProcedure = Convert.ToBoolean(OTProcedure);
                 obj.DepartmentId = DepartmentId;
+                obj.Service_Sub_Category = Subcategory;
                 obj.InventoryOrg = Warehouse;
                 obj.Hospital_Services = Convert.ToBoolean(IsHospital);
                 obj.Company_ID = AppConfig.Company_ID;
@@ -402,6 +404,7 @@ namespace PMS.Modules.Inventory
                                      obj.ItemGroupId,
                                      obj.InventoryOrg,
                                      obj.DepartmentId,
+                                     obj.Service_Sub_Category,
                                     obj.Hospital_Services,
                                     obj.OTProcedure,
                                     obj.Account_ID,
@@ -453,6 +456,24 @@ namespace PMS.Modules.Inventory
                              Type = v.ValueSet_Description == "Patient Main Category" ? "Dept" : "Fed"
                          }).ToList();
             return (new JavaScriptSerializer()).Serialize(listItems);
+        }
+
+        [WebMethod]
+        public static string GetSubCategory()
+        {
+            DataBaseDataContext db = new DataBaseDataContext();
+
+            var Dis = (from d in db.DataValues
+                       join v in db.ValueSets
+                       on d.ValueSet_ID equals v.ValueSet_ID
+                       where v.ValueSet_Name == "Service Sub Category"
+                       select new
+                       {
+                           d.DataValue_Name,
+                           d.DataValue_Description
+                       }).ToList();
+
+            return (new JavaScriptSerializer().Serialize(Dis));
         }
     }
 }
