@@ -114,6 +114,13 @@
             debugger;
             var accountid = 0;
             loadtokenInputsByAccount_ID();
+            $("input[name='rbtn']").change(function () {
+                $("#txtAccountName").prev(".token-input-list").remove();
+                $("#txtAccountName").show().val("");
+                // Recreate it with the new AccountType
+                loadtokenInputsByAccount_ID();
+            });
+
         });
         function FillCostCenter() {
             debugger;
@@ -295,11 +302,14 @@
         }
         function loadtokenInputsByAccount_ID() {
             debugger;
+            var accountType = $("input[name='rbtn']:checked").val();
             var tokendata;
             try {
-                $("#txtAccountName").tokenInput("../../json.aspx",
+                $("#txtAccountName").tokenInput("../../json.aspx?Table=VoucherByAccountType&AccountType=" + accountType,
                     {
                         tokenLimit: 1,
+                        cacheResults: false,   // if supported
+                        preventDuplicates: true,
                         onAdd: function (item) {
                             try {
                                 debugger;
@@ -624,8 +634,10 @@
             });
         }
         function loadtokenInputsForPRNo(elementId, data) {
+            var accountType = $("input[name='rbtn']:checked").val();
             if (elementId == "#txtAccountName") {
-                $(elementId).tokenInput("../../json.aspx",
+
+                $(elementId).tokenInput("../../json.aspx?Table=VoucherByAccountType&AccountType=" + accountType,
                     {
                         prePopulate: data,
                         tokenLimit: 1,
@@ -745,6 +757,32 @@
                      <input id="ChoseVoucherfile" type="file" name="ChoseVoucherfile" />
                      <asp:HyperLink ID="HyperLink1" runat="server">Download</asp:HyperLink>
                  </div>
+            </div>
+            <div class="row">
+                <div class="col-lg-1 col-md-2 col-sm-2">
+                <%--<input type="checkbox" id="Cash" />--%> 
+                    <input type="radio" name="rbtn" id="chkAll" tabindex="11" value="rbtnAll" checked />
+
+                </div>
+                     <div class="col-lg-2 col-md-4 col-sm-4">
+                <label>All</label>
+                    </div>
+                <div class="col-lg-1 col-md-2 col-sm-2">
+                <%--<input type="checkbox" id="Cash" />--%> 
+                    <input type="radio" name="rbtn" id="chkcash" tabindex="11" value="rbtncash"  />
+
+                </div>
+                     <div class="col-lg-2 col-md-4 col-sm-4">
+                <label>Cash</label>
+                    </div>
+                <div class="col-lg-1 col-md-2 col-sm-2">
+                <%--<input type="checkbox" id="Bank" />--%> 
+                     <input type="radio" name="rbtn" tabindex="12" id="chkBank" value="rbtnbank" />
+
+                </div>
+                     <div class="col-lg-2 col-md-4 col-sm-4">
+                <label>Bank</label>
+                    </div>
             </div>
         </div>
 
