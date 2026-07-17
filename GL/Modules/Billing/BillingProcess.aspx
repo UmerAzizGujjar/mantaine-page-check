@@ -6083,9 +6083,9 @@
                     else {
                         $('#lblPatientCategory').val(ReplaceNullWith_Space(data.d.Patient_Type));
                     }
+                    
+
                     syncPatientTypeFromCategory();
-
-
 
                     debugger;
 
@@ -7300,16 +7300,17 @@
                 else
                     return Data;
             }
-            function syncPatientTypeFromCategory() {
-                var categoryText = $('#lblPatientCategory').val();
-                if (!categoryText) return;
-                $('#ddlPatientType option').each(function () {
-                    if ($(this).text().trim() === categoryText) {
-                        $('#ddlPatientType').val($(this).val()).trigger('change');
-                        return false;
-                    }
-                });
-            }
+            function syncPatientTypeFromCategory() {           
+            var categoryText = $('#lblPatientCategory').text().trim() || $('#lblPatientCategory').val();
+            if (!categoryText) return;
+    
+            $('#ddlPatientType option').each(function() {
+                if ($(this).text().trim() === categoryText) {
+                    $('#ddlPatientType').val($(this).val()).trigger('change');
+                    return false;
+                }
+            });
+           }
             function FillOtherTest() {
                 var options = '';
                 PageMethods.FillOtherTest(function (item) {
@@ -7429,6 +7430,7 @@
                 });
                 CheckReceiptsUpdateonBilling();
                 CheckCNICUpdateonCondition();
+                LoadPatientType();
                 $.ajax({
                     type: "POST",
                     url: "BillingProcess.aspx/CheckBillingServicesDeptWise",
@@ -7530,7 +7532,7 @@
                 FillChargePolicy();
              
                 LoadBillDepartment();
-                LoadPatientType();
+                
                 LoadBillPatCategory();
                 fillCashInHand();
 
