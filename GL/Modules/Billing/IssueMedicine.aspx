@@ -51,6 +51,79 @@
         display: inline-block;
         width: 100%;
     }
+    
+    /* Sale Return Modal table inputs - relative sizing for zoom stability */
+    #saleReturnTable input,
+    #saleReturnTable select {
+        width: 100% !important;
+        max-width: 100%;
+        box-sizing: border-box !important;
+        height: 26px;
+        padding: 2px 4px;
+        font-size: 12px;
+    }
+    #saleReturnTable td {
+        padding: 4px 6px !important;
+        vertical-align: middle !important;
+    }
+    #saleReturnTable th {
+        padding: 8px 6px !important;
+        background-color: #f5f7fa;
+        font-weight: 600;
+        white-space: nowrap;
+    }
+    #saleReturnTable {
+        width: 100% !important;
+        table-layout: auto;
+    }
+    #saleReturnTable .select2-container {
+        width: 100% !important;
+    }
+    .table-summary {
+        width: 100%;
+        border-collapse: collapse;
+    }
+    .table-summary td {
+        padding: 2px 4px;
+        vertical-align: middle;
+    }
+    .table-summary td:first-child {
+        text-align: right;
+    }
+    #SaleReturnModal .modal-header {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+    }
+    #SaleReturnModal {
+        text-align: center;
+    }
+    #SaleReturnModal::before {
+        display: inline-block;
+        vertical-align: middle;
+        height: 100%;
+        content: " ";
+    }
+    #SaleReturnModal .modal-content {
+        margin-top: 0 !important;
+    }
+    #SaleReturnModal .modal-dialog {
+        display: inline-block;
+        vertical-align: middle;
+        text-align: left;
+        position: relative;
+        top: auto;
+        left: auto;
+        transform: none !important;
+        margin: 0;
+        width: 95%;
+        max-width: 95%;
+    }
+    #SaleReturnModal .summary-wrap {
+        display: flex;
+        justify-content: flex-end;
+        margin-top: 8px;
+    }
 </style>
     <script type="text/javascript">
         $(document).ready(function () {
@@ -482,7 +555,7 @@
             $('#ddlInvoiceNumber').select2({
                 placeholder: "Search Invoice Number",
                 allowClear: true,
-                minimumInputLength: 1, // Start searching after 1 character
+                minimumInputLength: 1,
                 ajax: {
                     url: 'IssueMedicine.aspx/AllInvoiceNumbers',
                     type: 'POST',
@@ -4687,8 +4760,7 @@
 
     <!-- Modal Sale Return -->
     <div id="SaleReturnModal" class="modal fade" role="dialog">
-        <!-- Updated: Changed to modal-xl and forced width to 95% -->
-        <div class="modal-dialog modal-xl" role="document" style="width: 95% !important; max-width: 65% !important;">
+        <div class="modal-dialog modal-xl modal-dialog-centered" role="document">
             <div class="modal-content">
                 <div class="modal-header">
                     <h1 class="modal-title">Sale Return</h1>
@@ -4697,79 +4769,68 @@
                     </button>
                 </div>
                 <div class="modal-body">
-                    <div class="form-row">
-                        <div class="col-lg-2 col-md-4 col-sm-6">
+                    <div class="row">
+                        <div class="form-group col-lg-2 col-md-4 col-sm-6">
                             <label>WareHouse</label>
-                            <select id="ddl_Warehouse" class="form-select" onchange="DisableSaleReturnWareHouse()">
+                            <select id="ddl_Warehouse" class="form-control" onchange="DisableSaleReturnWareHouse()">
                                 <option value="0">Please Select</option>
-                                <!-- other options -->
                             </select>
                         </div>
-                        <div class="col-lg-2 col-md-4 col-sm-6">
+                        <div class="form-group col-lg-2 col-md-4 col-sm-6">
                             <label>Mr No</label>
-                            <select id="ddlpat_no" onchange="getInvoiceNo_PatWise();"></select>
-
+                            <select id="ddlpat_no" class="form-control" onchange="getInvoiceNo_PatWise();"></select>
                         </div>
-                        
-                        <div class="form-group col-lg-2 col-md-2 col-sm-3">
+                        <div class="form-group col-lg-2 col-md-4 col-sm-6">
                             <label for="ddlInvoiceNumber">Invoice #</label>
-                            <select disabled id="ddlInvoiceNumber" style="width: 180px !important;" onchange="AddSaleReturnInvoiceMaster()" class="form-control select2"></select>
+                            <select disabled id="ddlInvoiceNumber" onchange="AddSaleReturnInvoiceMaster()" class="form-control select2"></select>
                         </div>
-
-                        <div class="form-group col-lg-2 col-md-5 col-sm-3">
+                        <div class="form-group col-lg-3 col-md-6 col-sm-6">
                             <label for="ddlSaleReturnItems">Items</label>
-                            <select disabled id="ddlSaleReturnItems" onchange="AddSaleReturnMedicineDetail()" style="width: 380px !important;" class="form-control select2"></select>
+                            <select disabled id="ddlSaleReturnItems" onchange="AddSaleReturnMedicineDetail()" class="form-control select2"></select>
                         </div>
-                      
-
-                        <%--<div class="form-group col-lg-1 col-md-2 col-sm-0"></div>--%>
-
-                        <div class="form-group col-lg-4 col-md-3 col-sm-6">
-                            <table style="width: auto !important">
-                                <tr>
-                                    <td style="font-size: 13px; font-weight: bold">Total Payable:</td>
-                                    <td>
-                                        <input type="text" id="txtSaleReturnTotalPayable" style="width: 211px!important; height: 25px; text-align: right; font-size: 22px; color: #cd1818 !important;" readonly="readonly" />
-                                    </td>
-                                </tr>
-                                <tr>
-                                    <td style="font-size: 13px; font-weight: bold">Total Line Disc :</td>
-                                    <td>
-                                        <input type="text" id="txtSaleReturnLineDisc" style="width: 211px !important; height: 25px; text-align: right; font-size: 22px; margin-top: -3px;" readonly="readonly" />
-                                    </td>
-                                </tr>
-                                <tr>
-                                    <td style="font-size: 13px; font-weight: bold">Disc :  </td>
-                                    <td>
-                                        <input type="text" id="txtSaleReturnDisPer" onkeyup="CalCulateReturnDisc()" readonly="readonly" style="width: 73px !important; height: 25px; text-align: right; font-size: 22px; margin-top: -3px;" />
-                                        &nbsp;%
-                                        <input type="text" id="txtSaleReturnDisAmt" readonly="readonly" style="width: 116px !important; height: 25px; text-align: right; font-size: 22px; margin-top: -3px;" />
-                                    </td>
-                                </tr>
-                                <tr>
-                                    <td style="font-size: 13px; font-weight: bold">Adjustment :</td>
-                                    <td>
-                                        <input type="text" id="txtSaleReturnFlatDisc" onkeyup="CalculateSaleReturnAdj()" style="width: 211px !important; height: 25px; text-align: right; font-size: 22px; margin-top: -3px;" autocomplete="off" />
-                                    </td>
-                                </tr>
-                                <tr>
-                                    <td style="font-size: 13px; font-weight: bold">Total:  </td>
-                                    <td>
-                                        <input type="text" id="txtSaleReturnTotal" style="width: 211px !important; height: 25px; text-align: right; font-size: 22px; margin-top: -3px;" readonly="readonly" />
-                                    </td>
-                                </tr>
-                            </table>
-                        </div>    
-                        
-
-                        <div class="col-lg-3 col-md-4 col-sm-6" style="margin-top:-7% !important">
+                        <div class="form-group col-lg-3 col-md-6 col-sm-6">
                             <label>Remarks</label>
                             <input type="text" id="txtSaleReturnRemarks" class="form-control" placeholder="Enter remarks" />
                         </div>
-                          <div class="col-lg-2 col-md-4 col-sm-6" style="margin-top: -64px; margin-left: 320px;">
-                    <input type="button" class="btn-primry" value="Queue" id="ReturnQueue" onclick="openReturnQueue()"  />
-                </div>
                     </div>
+                    <div class="summary-wrap">
+                        <table class="table-summary" style="width: auto;">
+                                <tr>
+                                    <td style="font-size: 13px; font-weight: bold; white-space: nowrap; padding-right: 8px; width: 1px;">Total Payable:</td>
+                                    <td style="width: 100%;">
+                                        <input type="text" id="txtSaleReturnTotalPayable" style="width: 100% !important; max-width: 220px; height: 25px; text-align: right; font-size: 22px; color: #cd1818 !important;" readonly="readonly" />
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td style="font-size: 13px; font-weight: bold; white-space: nowrap; padding-right: 8px; width: 1px;">Total Line Disc :</td>
+                                    <td>
+                                        <input type="text" id="txtSaleReturnLineDisc" style="width: 100% !important; max-width: 220px; height: 25px; text-align: right; font-size: 22px;" readonly="readonly" />
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td style="font-size: 13px; font-weight: bold; white-space: nowrap; padding-right: 8px; width: 1px;">Disc :</td>
+                                    <td>
+                                        <div style="display: flex; align-items: center; gap: 4px; max-width: 220px;">
+                                            <input type="text" id="txtSaleReturnDisPer" onkeyup="CalCulateReturnDisc()" readonly="readonly" style="width: 70px !important; height: 25px; text-align: right; font-size: 22px; flex-shrink: 0;" />
+                                            <span style="font-size: 22px; flex-shrink: 0;">%</span>
+                                            <input type="text" id="txtSaleReturnDisAmt" readonly="readonly" style="flex: 1; height: 25px; text-align: right; font-size: 22px;" />
+                                        </div>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td style="font-size: 13px; font-weight: bold; white-space: nowrap; padding-right: 8px; width: 1px;">Adjustment :</td>
+                                    <td>
+                                        <input type="text" id="txtSaleReturnFlatDisc" onkeyup="CalculateSaleReturnAdj()" style="width: 100% !important; max-width: 220px; height: 25px; text-align: right; font-size: 22px;" autocomplete="off" />
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td style="font-size: 13px; font-weight: bold; white-space: nowrap; padding-right: 8px; width: 1px;">Total :</td>
+                                    <td>
+                                        <input type="text" id="txtSaleReturnTotal" style="width: 100% !important; max-width: 220px; height: 25px; text-align: right; font-size: 22px;" readonly="readonly" />
+                                    </td>
+                                </tr>
+                            </table>
+                        </div>
                     <table id="saleReturnTable" class="table table-bordered table-responsive-lg table-responsive-md">
                         <thead>
                             <tr>
@@ -4794,7 +4855,7 @@
                 </div>
                 <div class="modal-footer">
                     <button type="button" class="btn btn-primry" id="SSearchReturnPop" onclick="SearchReturnPop()">Save & Print</button>
-         
+                    <button type="button" class="btn btn-primry" id="ReturnQueue" onclick="openReturnQueue()">Queue</button>
                     <button type="button" class="btn btn-primry" onclick="RefreshSaleReturnModal()">Refresh</button>
                     <button type="button" class="btn btn-primry" data-dismiss="modal">Close</button>
                 </div>

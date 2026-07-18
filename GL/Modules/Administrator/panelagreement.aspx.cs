@@ -112,13 +112,13 @@ namespace PMS
 
             panel.Address = address;
             panel.Company_Name = cmp_name;
-            panel.gl_account = Convert.ToInt32(Glcode);
+            panel.gl_account = string.IsNullOrEmpty(Glcode) ? 0 : Convert.ToInt32(Glcode);
             panel.Contact_No = contact_no;
-            panel.Discount = Convert.ToDecimal(discount);
+            panel.Discount = string.IsNullOrEmpty(discount) ? 0 : Convert.ToDecimal(discount);
             panel.Email = email;
             panel.Panel_Rate = panelrate;
             panel.Panel_Rate_Emergency = panelrateEmergency;
-            panel.No_Of_Employees = Convert.ToInt32(no_of_emp);
+            panel.No_Of_Employees = string.IsNullOrEmpty(no_of_emp) ? 0 : Convert.ToInt32(no_of_emp);
 
             if (btnValue == "Save" || btnValue == "Replicate")
             {

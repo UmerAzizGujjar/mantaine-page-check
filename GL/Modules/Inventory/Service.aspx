@@ -6,6 +6,7 @@
         $(document).ready(function () {
             FillDepartments();
             GetDepartments();
+            GetSubcategory();
             FillAccountCategory();
             FillAccounts();
             ActiveCheckRights();
@@ -46,6 +47,20 @@
                 $('#ddldepartment').html(optionsDepth);
             });
         }
+
+        function GetSubcategory() {
+
+            PageMethods.GetSubCategory(function (data) {
+                var options = '<option value="0" >Please Select</option>';
+                $.each(JSON.parse(data), function (key, value) {
+                    options += '<option value="' + value.DataValue_Name + '" >' + value.DataValue_Description + '</option>';
+                });
+                $('#ddlSubcategory').html(options);
+                $('#ddlSubcategory').select2();
+            });
+        }
+        
+        
         function ActiveCheckRights() {
             debugger;
             $.ajax({
@@ -350,6 +365,7 @@
                 var Procedure_Time = $('#Procedure_Time').val();
                 var btnValue = $('#btnValue').val();
                 var DepartmentId = $('#ddldepartment').val();
+                var Subcategory = $('#ddlSubcategory').val();
                 var isHospitalchk = $('#chkIsHospital').prop('checked');
                 var account = $('#ddlAccount').val();
                 var Id = 0;
@@ -409,7 +425,7 @@
                         "LabRequired": labRequired,
                         "PattHistoryRequired": pattHistoryRequired,
                         "FitnessCertificate": fitnessCertificate,
-                        "OtherServices": otherServices,
+                        "OtherServices": OtherServices,
                         "Billing": billing,
                         "OTProcedure": OTProcedure,
                         "DoctorShare": DoctorShare,
@@ -420,6 +436,7 @@
                         "btnValue": btnValue,
                         "ItemId": Id,
                         "DepartmentId": DepartmentId,
+                        "Subcategory": Subcategory,
                         "IsHospital": isHospitalchk,
                         "Account": account,
                     }),
@@ -547,6 +564,9 @@
                     }, 2000);
                     setTimeout(function () {
                         $('#ddldepartment').val(parse.DepartmentId).trigger('change');
+                    }, 4000);
+                    setTimeout(function () {
+                        $('#ddlSubcategory').val(parse.Service_Sub_Category).trigger('change');
                     }, 4000);
                     setTimeout(function () {
                         $('#ddlAccount').val(parse.Account_ID).trigger('change');
@@ -813,6 +833,14 @@
                                     </td>
                                     <td class="col-lg-3 col-md-3 col-sm-2">
                                         <select id="ddldepartment" ></select>          
+                                    </td>                                 
+                                </tr>
+                                <tr>
+                                    <td class="col-lg-2 col-md-2 col-sm-2">
+                                        <label id="lblSubcategory">Sub Category</label>
+                                    </td>
+                                    <td class="col-lg-3 col-md-3 col-sm-2">
+                                        <select id="ddlSubcategory"></select>
                                     </td>
                                 </tr>
                             </table>

@@ -4,7 +4,9 @@
 
 <asp:Content ID="Content1" ContentPlaceHolderID="HeadContent" runat="server">
     <style>
-
+        .select2-container--open {
+            z-index: 99999 !important;
+        }
     </style>
     <link href="../../wwwroot/THEME_TIBBIT//CustomCSS/LabReportPreview.css" rel="stylesheet" />
     <script type="text/javascript">
@@ -13,6 +15,7 @@
         var OrganismTypeGlobal = '';
         var testValueOptionsList = '';
         var globalTestId = '';
+        var currentMainDept = '';
         function swipe(thi) {
             var largeImage = document.getElementsByName('other_amount');
             largeImage.style.display = 'block';
@@ -843,6 +846,9 @@
                 }
             });
             debugger;
+            var _templateSaveMode = false;
+            var _templateFormatName = '';
+
             $('#saveTest').click(function () {
                 localStorage.isSaved = 1;
                 debugger;
@@ -1033,38 +1039,99 @@
                         contentType: "application/json; charset=utf-8",
                         dataType: "json",
                         success: function (data) {
-
                             if (data.d == 'Successfull') {
-                                Swal.fire({
-                                    icon: 'success',
-                                    title: 'Success!',
-                                    text: 'Saved',
-                                    showConfirmButton: false,
-                                    timer: 2500,
-                                    customClass: {
-                                        popup: 'swal-big-popup',
-                                        title: 'swal-big-title',
-                                        htmlContainer: 'swal-big-text'
-                                    }
-                                });
-
+                                if (_templateSaveMode) {
+                                    var fixValues = CKEDITOR.instances.txtfixedType.getData();
+                                    $.ajax({
+                                        type: "POST",
+                                        url: "RadiologyTestResult.aspx/SaveTemplateFormat",
+                                        data: JSON.stringify({
+                                            department: currentMainDept,
+                                            fixValues: fixValues,
+                                            selectedFormatId: null,
+                                            isNewFormat: true,
+                                            newFormatName: _templateFormatName
+                                        }),
+                                        contentType: "application/json; charset=utf-8",
+                                        dataType: "json",
+                                        success: function (tplResponse) {
+                                            if (tplResponse.d && tplResponse.d.indexOf('Success') === 0) {
+                                                _templateSaveMode = false;
+                                                $('#templateModal').modal('hide');
+                                                $('#saveTest').hide();
+                                                $('#btnSaveTemplate').hide();
+                                                $('#btnApprove').show();
+                                                reloadPendingList();
+                                                if (currentMainDept == "Ultrasound" || currentMainDept == "002") LoadUltrasoundLevelsUserWise();
+                                                else if (currentMainDept == "X-Ray" || currentMainDept == "003") LoadXRayLevels();
+                                                else if (currentMainDept == "CT Scan" || currentMainDept == "004") LoadCTScanLevels();
+                                                else if (currentMainDept == "MRI" || currentMainDept == "006") LoadMRILevels();
+                                                Swal.fire({
+                                                    icon: 'success',
+                                                    title: 'Success!',
+                                                    text: 'Saved',
+                                                    showConfirmButton: false,
+                                                    timer: 2500,
+                                                    customClass: {
+                                                        popup: 'swal-big-popup',
+                                                        title: 'swal-big-title',
+                                                        htmlContainer: 'swal-big-text'
+                                                    }
+                                                });
+                                                setTimeout(function () {
+                                                    if (typeof currentlyEditingElement !== 'undefined') {
+                                                        EditData(currentlyEditingElement);
+                                                    }
+                                                    var storageBillNo = localStorage.Bill_No;
+                                                    if (storageBillNo != "(New)") {
+                                                        $("#ctl00_MainContent_txtBilling").val(storageBillNo);
+                                                        loadPatientDataUsingBillId();
+                                                    }
+                                                }, 3000);
+                                            } else {
+                                                _templateSaveMode = false;
+                                                Swal.fire({ icon: 'error', title: 'Error!', text: tplResponse.d || 'Error saving template' });
+                                            }
+                                        },
+                                        error: function (xhr, status, error) {
+                                            _templateSaveMode = false;
+                                            Swal.fire({ icon: 'error', title: 'Error!', text: error });
+                                        }
+                                    });
+                                } else {
+                                    Swal.fire({
+                                        icon: 'success',
+                                        title: 'Success!',
+                                        text: 'Saved',
+                                        showConfirmButton: false,
+                                        timer: 2500,
+                                        customClass: {
+                                            popup: 'swal-big-popup',
+                                            title: 'swal-big-title',
+                                            htmlContainer: 'swal-big-text'
+                                        }
+                                    });
+                                    $('#saveTest').hide();
+                                    $('#btnSaveTemplate').hide();
+                                    $('#btnApprove').show();
+                                    reloadPendingList();
+                                }
                             }
-                            setTimeout(function () {
-                                if (typeof currentlyEditingElement !== 'undefined') {
-                                    EditData(currentlyEditingElement);
-
-                                }
-                                var storageBillNo = localStorage.Bill_No;
-                                if (storageBillNo != "(New)") {
-                                    $("#ctl00_MainContent_txtBilling").val(storageBillNo);
-
-                                    loadPatientDataUsingBillId();
-
-
-                                }
-                            }, 3000);
+                            if (!_templateSaveMode) {
+                                setTimeout(function () {
+                                    if (typeof currentlyEditingElement !== 'undefined') {
+                                        EditData(currentlyEditingElement);
+                                    }
+                                    var storageBillNo = localStorage.Bill_No;
+                                    if (storageBillNo != "(New)") {
+                                        $("#ctl00_MainContent_txtBilling").val(storageBillNo);
+                                        loadPatientDataUsingBillId();
+                                    }
+                                }, 3000);
+                            }
                         },
                         failure: function (response) {
+                            _templateSaveMode = false;
                             alert(response.d);
                         }
                     });
@@ -1138,12 +1205,12 @@
 
 
 
-            $("#ddlReferDoctor").select2({
-                placeholder: "Select Doctor",
-                allowClear: true,
-                width: '100%',
-                dropdownParent: $('#myModal')  // Appends to modal instead of body
-            });
+            //$("#ddlReferDoctor").select2({
+            //    placeholder: "Select Doctor",
+            //    allowClear: true,
+            //    width: '100%',
+            //    dropdownParent: $('#myModal')  // Appends to modal instead of body
+            //});
 
             $.ajax({
                 type: "POST",
@@ -1157,6 +1224,23 @@
                         options += '<option value="' + value.id + '">' + value.text + '</option>';
                     });
                     $("#ddlReferDoctor").html(options);
+                    $("#ddlReferDoctor").select2({
+                        placeholder: "Select Doctor",
+                        allowClear: true,
+                        width: '100%'
+                    });
+
+                    // Auto-focus search field when select2 opens
+                    $('#ddlReferDoctor').on('select2:open', function () {
+                        setTimeout(function() {
+                            $('.select2-container--open .select2-search__field').focus();
+                        }, 100);
+                    });
+
+                    // Prevent Bootstrap modal focus trap blocking select2 search
+                    $('#myModal').on('shown.bs.modal', function () {
+                        $(document).off('focusin.bs.modal');
+                    });
                 },
                 error: function (xhr, status, error) {
                     console.error("Error loading doctors", error);
@@ -1225,6 +1309,29 @@
                 } else if ($(this).val() === "") {
                     CKEDITOR.instances.txtfixedType.setData("");
                 }
+            });
+
+            // Save Result & Template button click
+            $('#btnSaveTemplate').click(function () {
+                var department = currentMainDept;
+                if (!department) {
+                    Swal.fire({ icon: 'error', title: 'Error!', text: 'Could not determine test department.' });
+                    return;
+                }
+                $('#txtNewFormatName').val('');
+                $('#templateModal').modal('show');
+            });
+
+            // Save Result & Template confirm - saves both result and template, then closes both modals
+            $('#btnSaveTemplateConfirm').click(function () {
+                var newFormatName = $('#txtNewFormatName').val().trim();
+                if (!newFormatName) {
+                    Swal.fire({ icon: 'error', title: 'Error!', text: 'Please enter a format name.' });
+                    return;
+                }
+                _templateFormatName = newFormatName;
+                _templateSaveMode = true;
+                $('#saveTest').click();
             });
         });
         function GetTestDepartment() {
@@ -3138,6 +3245,7 @@ ${data.Addendum_Template ? `
                             }
 
                             var MainDept = data[2];
+                            currentMainDept = MainDept;
 
                             // Show/hide Ultrasound level dropdown
                             $("#chkUltraSound_level").hide();
@@ -5032,8 +5140,9 @@ function cleanPrint() {
                         <div class="col-lg-2 col-md-6 col-sm-12">
                             <input class="btn btn-yellow" data-toggle="modal" data-target="#myInnerModal1" style="color: white !important; border-radius: 5px; height: 35px;" value="Remarks" />
                         </div>
-                        <div class="col-lg-2 col-md-6 col-sm-12">
-                            <input type="button" class="btn btn-primry" id="saveTest" name="saveTest" value="Save" />
+                        <div class="col-lg-2 col-md-6 col-sm-12" style="display:flex;gap:4px;">
+                            <input type="button" class="btn btn-primry" id="saveTest" name="saveTest" value="Save" style="flex:1;" />
+                            <input type="button" class="btn btn-primry" id="btnSaveTemplate" value="Save Result & Template" style="flex:1;" />
                         </div>
                         <div class="col-lg-2 col-md-6 col-sm-12">
                             <input type="button" id="btnApprove" class="btn btn-primry" name="btnApprove" value="Approve" />
@@ -5209,6 +5318,38 @@ function cleanPrint() {
         </div>
     </div>
 
+    <!-- Save As Template Modal -->
+    <div id="templateModal" class="modal fade" role="dialog">
+        <div class="modal-dialog">
+            <div class="modal-content" style="width: 500px;">
+                <div class="modal-header">
+                    <button type="button" style="width: auto;" class="close" data-dismiss="modal">&times;</button>
+                    <h4 class="modal-title">Save As Template</h4>
+                </div>
+                <div class="modal-body">
+                    <div class="form-group" style="display:none;">
+                        <label for="ddlTemplateFormat">Select Format Name</label>
+                        <select id="ddlTemplateFormat" class="form-control" style="width: 100%;">
+                            <option value="">Select Format</option>
+                        </select>
+                    </div>
+                    <div class="form-group" style="display:none;">
+                        <label>
+                            <input type="checkbox" id="chkAddNewFormat" /> Add New
+                        </label>
+                    </div>
+                    <div class="form-group" id="newFormatDiv" style="margin-top: 10px;">
+                        <label for="txtNewFormatName">New Format Name</label>
+                        <input type="text" id="txtNewFormatName" class="form-control" placeholder="Enter format name" />
+                    </div>
+                </div>
+                <div class="modal-footer" style="display:flex;gap:8px;justify-content:flex-end;">
+                    <input type="button" class="btn btn-default" data-dismiss="modal" value="Cancel" />
+                    <input type="button" id="btnSaveTemplateConfirm" class="btn btn-primry" value="Save" />
+                </div>
+            </div>
+        </div>
+    </div>
 
     <div id="historyModal" class="modal fade" role="dialog">
         <div class="modal-dialog modal-lg">

@@ -2307,6 +2307,149 @@ AND (
         }
 
         [WebMethod]
+        public static string GetTemplateFormats(string department)
+        {
+            string valueSetName = "";
+            switch (department)
+            {
+                case "Ultrasound": case "002": valueSetName = "Ultrasound level"; break;
+                case "X-Ray": case "003": valueSetName = "X-Ray Format"; break;
+                case "CT Scan": case "004": valueSetName = "CTScan Format"; break;
+                case "MRI": case "006": valueSetName = "MRI Format"; break;
+                default: return "[]";
+            }
+
+            using (DataBaseDataContext db = new DataBaseDataContext())
+            {
+                var formats = (from dv in db.DataValues
+                               join vs in db.ValueSets on dv.ValueSet_ID equals vs.ValueSet_ID
+                               where vs.ValueSet_Name == valueSetName
+                               select new
+                               {
+                                   id = dv.DataValue_Name,
+                                   text = dv.DataValue_Description
+                               }).ToList();
+                return new JavaScriptSerializer().Serialize(formats);
+            }
+        }
+
+        [WebMethod]
+        public static string SaveTemplateFormat(string department, string fixValues, string selectedFormatId, bool isNewFormat, string newFormatName)
+        {
+            try
+            {
+                using (DataBaseDataContext db = new DataBaseDataContext(DBClass.ConnectionString()))
+                {
+                    string valueSetName = "";
+                    string departmentCode = "";
+
+                    switch (department)
+                    {
+                        case "Ultrasound": case "002":
+                            valueSetName = "Ultrasound level"; departmentCode = "002"; break;
+                        case "X-Ray": case "003":
+                            valueSetName = "X-Ray Format"; departmentCode = "003"; break;
+                        case "CT Scan": case "004":
+                            valueSetName = "CTScan Format"; departmentCode = "004"; break;
+                        case "MRI": case "006":
+                            valueSetName = "MRI Format"; departmentCode = "006"; break;
+                        default:
+                            return "Error: Invalid department";
+                    }
+
+                    string formatDataValueName = "";
+
+                    if (isNewFormat)
+                    {
+                        var vs = db.ValueSets.FirstOrDefault(v => v.ValueSet_Name == valueSetName);
+                        if (vs == null) return "Error: ValueSet not found";
+
+                        int maxCode = Convert.ToInt32(DBClass.getField(
+                            "SELECT ISNULL(MAX(CAST(DataValue_Name AS INT)), 0) FROM DataValues WHERE ValueSet_ID = " + vs.ValueSet_ID + " AND LEN(DataValue_Name) <= 3 AND ISNUMERIC(DataValue_Name) = 1"
+                        ));
+
+                        string newCode = (maxCode + 1).ToString("D3");
+
+                        DataValue dv = new DataValue
+                        {
+                            ValueSet_ID = vs.ValueSet_ID,
+                            DataValue_Name = newCode,
+                            DataValue_Description = newFormatName
+                        };
+                        db.DataValues.InsertOnSubmit(dv);
+                        db.SubmitChanges();
+
+                        formatDataValueName = newCode;
+                    }
+                    else
+                    {
+                        formatDataValueName = selectedFormatId;
+                    }
+
+                    string sql = "";
+                    switch (departmentCode)
+                    {
+                        case "002":
+                            sql = $"INSERT INTO UltraSoundLevel (Levels, FixValues) VALUES ('{formatDataValueName.Replace("'", "''")}', '{fixValues.Replace("'", "''")}')";
+                            break;
+                        case "003":
+                            sql = $"INSERT INTO XRayLevels (Levels, FixValues, Created_By, Created_Time) VALUES ('{formatDataValueName.Replace("'", "''")}', '{fixValues.Replace("'", "''")}', '{AppConfig.UserID}', GETDATE())";
+                            break;
+                        case "004":
+                            sql = $"INSERT INTO CTScanLevels (Levels, FixValues, Created_By, Created_Time) VALUES ('{formatDataValueName.Replace("'", "''")}', '{fixValues.Replace("'", "''")}', '{AppConfig.UserID}', GETDATE())";
+                            break;
+                        case "006":
+                            sql = $"INSERT INTO MRILevels (Levels, FixValues, Created_By, Created_Time) VALUES ('{formatDataValueName.Replace("'", "''")}', '{fixValues.Replace("'", "''")}', '{AppConfig.UserID}', GETDATE())";
+                            break;
+                    }
+
+                    if (!string.IsNullOrEmpty(sql))
+                        DBClass.executeNonQueryWithoutBegin(sql);
+
+                    Guid currentUser = AppConfig.UserID;
+
+                    var existingMaster = db.User_Wise_Templates
+                        .FirstOrDefault(x => x.User_Id == currentUser && x.is_cancel == false);
+
+                    int masterId;
+                    if (existingMaster != null)
+                    {
+                        masterId = existingMaster.User_Wise_Template_Id;
+                    }
+                    else
+                    {
+                        User_Wise_Template master = new User_Wise_Template
+                        {
+                            User_Id = currentUser,
+                            Created_By = currentUser,
+                            Created_Time = DateTime.Now,
+                            is_cancel = false
+                        };
+                        db.User_Wise_Templates.InsertOnSubmit(master);
+                        db.SubmitChanges();
+                        masterId = master.User_Wise_Template_Id;
+                    }
+
+                    User_Wise_Template_Detail detail = new User_Wise_Template_Detail
+                    {
+                        User_Wise_Template_Id = masterId,
+                        User_Id = currentUser,
+                        DataValue_ID = formatDataValueName,
+                        Department = departmentCode
+                    };
+                    db.User_Wise_Template_Details.InsertOnSubmit(detail);
+                    db.SubmitChanges();
+
+                    return "Success: " + formatDataValueName;
+                }
+            }
+            catch (Exception ex)
+            {
+                return "Error: " + ex.Message;
+            }
+        }
+
+        [WebMethod]
         public static string CheckApprovalrights()
         {
             DataBaseDataContext db = new DataBaseDataContext();

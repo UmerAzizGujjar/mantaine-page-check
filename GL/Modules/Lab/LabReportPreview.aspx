@@ -83,136 +83,137 @@
         var index = 0;
         function ShowReport() {
             debugger;
-            var textInput = [];
-            // debugger;td:eq(10) #Report_Colum
-            var ChkLetterHead = $("#ChkIs_latterhead").prop('checked');
+
+            var ChkLetterHead = false;
+            var $chkLetterHead = $("#ChkIs_latterhead");
+            if ($chkLetterHead.length > 0) {
+                ChkLetterHead = $chkLetterHead.prop('checked');
+            }
+
             var CheckUnApprove = 0;
-            $("#tblLabTest tr").find('td:eq(15) #Report_Colum').map(function () {
-                debugger;
+            var selectedRowsCount = 0;
 
-                if (textInput.indexOf(this.value) === -1) {
-                    debugger;
-                    textInput.push(this.value);
-                }
+            
+            var allTestIDs = [];
+            var allTransIDs = [];
+            var allBillDetailIDs = [];
+            var allLabTDetailsIDs = [];
+            var reportColumns = [];
+            var testWiseIDs = [];
+            $("#tblLabTest tbody tr").each(function () {
+                var $row = $(this);
 
-            });
+                
+                var $checkbox = $row.find('input[name="chkReport"]');
 
-
-            //var uniques = textInput.unique();
-            //alert(uniques);
-            $('#tblLabTest tr').each(function (key, value) {
-
-                var Checked = $(this).find('td:eq(0) input[name=chkReport]').prop('checked');
-
-                if (Checked == true) {
-                    Chk_IsApprove = $(this).find('td:eq(13) #isApprove').attr('value');
-
-                    if (Chk_IsApprove == false || typeof Chk_IsApprove === 'undefined' || Chk_IsApprove == 'false' || Chk_IsApprove == "False") {
+                if ($checkbox.is(':checked')) {
+                    selectedRowsCount++;
+                    var isApproveVal = $row.find('#isApprove').attr('value');
+                    if (isApproveVal == "false" || isApproveVal == "False" || typeof isApproveVal === 'undefined') {
                         CheckUnApprove += 1;
                     }
+                    var reportCol = $row.find('input[name="Report_Colum"]').val();
+                    if (reportCol) reportColumns.push(reportCol);
+                    var testWiseId = $row.find('input[name="test_wise_id"]').val();
+                    if (testWiseId) testWiseIDs.push(testWiseId);
+                    var transId = $row.find('td:eq(1)').text().trim();
+                    if (transId) allTransIDs.push(transId);
+
+                    
+                    var billDetailId = $row.find('input[name="Bill_Details_ID"]').val();
+                    if (billDetailId) allBillDetailIDs.push(billDetailId);
+                    var labTestDetailId = $row.find('td:eq(2)').text().trim();
+                    if (labTestDetailId) allLabTDetailsIDs.push(labTestDetailId);
+
+                    
+                    var groupCategory = $row.find('input[name="Group_Category"]').val();
+                    var testIds = "";
+
+                    if (groupCategory && groupCategory !== "") {
+                        testIds = $row.find('input[name="List_Of_Test_IDs"]').val();
+                        if (!testIds || testIds === "null") {
+                            testIds = $row.find('input[name="labtestDID"]').val();
+                        }
+                    } else {
+                        testIds = $row.find('input[name="labtestDID"]').val();
+                    }
+
+                    if (testIds) allTestIDs.push(testIds);
                 }
             });
+
+            
+            if (selectedRowsCount === 0) {
+                Swal.fire({
+                    icon: 'warning',
+                    title: 'Warning!',
+                    text: 'Please select at least one test to print.',
+                    timer: 2000
+                });
+                return false;
+            }
 
             if (CheckUnApprove > 0) {
                 Swal.fire({
                     icon: 'error',
                     title: 'Error!',
                     text: 'Please Approve The Test First',
-                    showConfirmButton: false,
-                    timer: 2000,
-                    customClass: {
-                        popup: 'swal-big-popup',
-                        title: 'swal-big-title',
-                        htmlContainer: 'swal-big-text'
-                    }
+                    timer: 2000
                 });
-
                 return false;
             }
-            else {
 
-                for (var i = 0; i < textInput.length; i++) {
-
-                    var ListOfTestIDs = '';
-                    var ListTransID = '';
-                    var Report_Column = '';
-                    var ListBillDetailID = '';
-                    var LabTestDetailsID = '';
-                    var test_wise_ids = '';
-
-                    index = textInput[i];
-
-                    $('#tblLabTest tr').each(function () {
-
-                        //   closeCoutner += 1;
-
-
-                        var Checked = $(this).find('td:eq(0) input[name=chkReport]').prop('checked');
-                        if (Checked == true) {
-
-                            Report_Column = $(this).find('td:eq(15) #Report_Colum').val();
-                            //$(this).find('td:eq(11) #Report_Column').val();
-                            Chk_IsApprove = $(this).find('td:eq(13) #isApprove').attr('value');
-                            if (Report_Column == "null" || Report_Column == '') {
-                                Swal.fire({
-                                    icon: 'error',
-                                    title: 'Error!',
-                                    text: 'Please Verify Report Again this Test',
-                                    showConfirmButton: false,
-                                    timer: 2000,
-                                    customClass: {
-                                        popup: 'swal-big-popup',
-                                        title: 'swal-big-title',
-                                        htmlContainer: 'swal-big-text'
-                                    }
-                                });
-
-                                return false;
-                            }
-                            debugger;
-                            if (index == Report_Column.trim()) {
-                                debugger;
-                                var transIds = $(this).find('td:eq(1)').text();
-                                ListTransID += ', ' + transIds;
-                                var billdetailid = $(this).find('input[name="Bill_Details_ID"]').val();
-                                test_wise_ids = $(this).find('input[name=test_wise_id]').val();
-                                ListBillDetailID += ', ' + billdetailid;
-                                LabTestDetailsID = $(this).find('td:eq(2)').text();
-
-                                var groupCategory = $(this).find('#GroupCategory').val();
-                                if (groupCategory != "") {
-
-                                    var testIds = $(this).find('td:eq(15) #ListOfTestIDs').val();
-
-                                    if (testIds == "null" || testIds == '') {
-                                        testIds = $(this).find('td:eq(1) #labtestDID').val();
-                                    }
-                                    ListOfTestIDs += ', ' + testIds;
-                                }
-                                else {
-                                    ListOfTestIDs += ', ' + $(this).find('#labtestDID').val();
-                                }
-                            }
-                        } // check false
-                        //loop end
-                    });
-                    debugger;
-                    ListTransID = ListTransID.replace(', ', '');
-                    ListOfTestIDs = ListOfTestIDs.replace(', ', '');
-                    ListBillDetailID = ListBillDetailID.replace(', ', '');
-                    if (ListOfTestIDs != '') {
-                        w = window.open('../../ReportViewer.aspx?ReportName=TestResultQ&ReportTitle=Department Of Pathalogy&Test_IDs=' + ListOfTestIDs + '&test_wise_ids=' + test_wise_ids + '&TransID=' + ListTransID + '&labTDetailsID=' + LabTestDetailsID + '&BillDetailID=' + ListBillDetailID + '&ReportColumn=' + index + '&ChkLetterHead=' + ChkLetterHead)
-
-                        //var Patient_ID = $('#hdnPatient_ID').val();
-                        //w = window.open('../../ReportViewer.aspx?ReportName=TestResultQ&ReportTitle=Department Of Pathalogy&Test_IDs=' + ListOfTestIDs + '&Patient_ID=' + Patient_ID + '&TransID=' + ListTransID + '&labTDetailsID=' + LabTestDetailsID + '&BillDetailID=' + ListBillDetailID + '&ReportColumn=' + index + '&ChkLetterHead=' + ChkLetterHead)
+            var hasInvalidReportCol = false;
+            $("#tblLabTest tbody tr").each(function () {
+                if ($(this).find('input[name="chkReport"]').is(':checked')) {
+                    var rc = $(this).find('input[name="Report_Colum"]').val();
+                    if (!rc || rc === "" || rc === "null") {
+                        hasInvalidReportCol = true;
                     }
-
                 }
+            });
 
+            if (hasInvalidReportCol) {
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Error!',
+                    text: 'Please Verify Report Again for this Test (Missing Report Column)',
+                    timer: 2000
+                });
+                return false;
+            }
+            var strTestIDs = allTestIDs.join(',');
+            var strTransIDs = allTransIDs.join(',');
+            var strBillDetailIDs = allBillDetailIDs.join(',');
+            var strLabTDetailsIDs = allLabTDetailsIDs.join(',');
+            var reportColumnParam = reportColumns.length > 0 ? reportColumns[0] : "";
 
+            
+            var testWiseIdParam = testWiseIDs.length > 0 ? testWiseIDs[0] : "";
 
+            if (!strTestIDs) {
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Error!',
+                    text: 'Could not retrieve Test IDs. Please verify the report again.',
+                    timer: 2000
+                });
+                return false;
             }
 
+            
+            var url = '../../ReportViewer.aspx?ReportName=TestResultQ' +
+                '&ReportTitle=Department Of Pathalogy' +
+                '&Test_IDs=' + encodeURIComponent(strTestIDs) +
+                '&test_wise_ids=' + encodeURIComponent(testWiseIdParam) +
+                '&TransID=' + encodeURIComponent(strTransIDs) +
+                '&labTDetailsID=' + encodeURIComponent(strLabTDetailsIDs) +
+                '&BillDetailID=' + encodeURIComponent(strBillDetailIDs) +
+                '&ReportColumn=' + encodeURIComponent(reportColumnParam) +
+                '&ChkLetterHead=' + ChkLetterHead;
+
+            console.log("Opening Report URL:", url); 
+            window.open(url, '_blank');
         }
         var SharingPolicy;
         function LoadSharingPolicy() {
