@@ -74,10 +74,14 @@ namespace PMS.Modules.Inventory
                                         AccountCategory = (from a in _dbContext.Account_Categories
                                                            where a.Account_Category_Id == I.Item_Account_category
                                                            select new { category = a.CategoryName }).FirstOrDefault().category.ToString(),
+                                        AccountID = (from a in _dbContext.GL_Accounts
+                                                           where a.Account_ID == I.Account_ID
+                                                           select new { Account = a.Account_Name }).FirstOrDefault().Account.ToString(),
                                         PurchaseRate = I.Purchase_Rate ?? 0,
                                         SaleRate = I.Sale_Rate ?? 0,
                                         Active = I.Active ?? false,
                                         WareHouse = _dbContext.GetDataValueName("Ware House", I.InventoryOrg) ?? "",
+                                        Service_Sub_Category = _dbContext.GetDataValueName("Service Sub Category", I.Service_Sub_Category) ?? "",
                                         StockTotal = (_dbContext.GetInvenrtoryItemUomTotalStock(I.Item_ID, I.InventoryOrg))
                                     };
 
