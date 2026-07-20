@@ -1800,7 +1800,30 @@ namespace PMS
 
                 }
             }
+            else if (reportName == "PrinRegtPatientCard")
+            {
 
+                var logoPath = DBClass.getField("SELECT dbo.GetCompanyLogo()");
+                reportPath += "Patients/rptRegistration_Patient_Card.rpt";
+                rd.Load(reportPath);
+                rd.SetParameterValue("@pat_id", Request.QueryString["Reg_id"]);
+                rd.SetParameterValue("CompanyName", AppConfig.Company_Name);
+                rd.SetParameterValue("CompanyLogo", logoPath);
+                rd.SetParameterValue("Address", DBClass.getField("select Company_Address from Sys_Companys where Company_ID = " + AppConfig.Company_ID + ""));
+
+            }
+            else if (reportName == "PrintRegPatientBackCard")
+            {
+
+
+                reportPath += "Patients/rptRegistrationPatientCard_Back.rpt";
+                rd.Load(reportPath);
+                rd.SetParameterValue("@pat_id", Request.QueryString["Reg_id"]);
+                rd.SetParameterValue("CompanyName", AppConfig.Company_Name);
+                rd.SetParameterValue("Address", DBClass.getField("select Company_Address from Sys_Companys where Company_ID = " + AppConfig.Company_ID + ""));
+
+
+            }
             else if (reportName == "OPDForm")
             {
                 if (Request.QueryString["OPD_ID"] != null)
