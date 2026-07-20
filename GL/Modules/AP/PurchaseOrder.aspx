@@ -2629,7 +2629,7 @@ function scheduleCalcTotal(delay) {
                 var Due_Date = $('#ctl00_MainContent_txtdueDate').val();
                 var table = $('#tblItemDescriptionDetail');
                 var SubTotal = $('#txtSub_Total').val();
-                var DiscountAmount = $('#ctl00_MainContent_txtTotalDiscAmt').val();
+                var DiscountAmount = $('#txtTotalDiscAmt').val();
                 var NetAmount = $('#ctl00_MainContent_Net_Amount').val();
                 var PaymentTerms = $('#ctl00_MainContent_ddlpayment').val();
                 var Warehouse = $('#ddlWarehouse').val();
