@@ -5067,6 +5067,12 @@ namespace PMS
                 rd.SetParameterValue("@Year", year);
                 rd.SetParameterValue("@Month", Month);
                 rd.SetParameterValue("@Warehouse", Request.QueryString["WareHouse"]);
+                rd.SetParameterValue("@Year", year, rd.Subreports[0].Name.ToString());
+                rd.SetParameterValue("@Month", Month, rd.Subreports[0].Name.ToString());
+                rd.SetParameterValue("@Warehouse", Request.QueryString["WareHouse"], rd.Subreports[0].Name.ToString());
+                rd.SetParameterValue("@Year", year, rd.Subreports[1].Name.ToString());
+                rd.SetParameterValue("@Month", Month, rd.Subreports[1].Name.ToString());
+                rd.SetParameterValue("@Warehouse", Request.QueryString["WareHouse"], rd.Subreports[1].Name.ToString());
 
             }
             else if (reportName == "FastSlow_Non_Moving_Stock")
