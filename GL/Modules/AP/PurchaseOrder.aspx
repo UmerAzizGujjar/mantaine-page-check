@@ -3362,7 +3362,7 @@ function scheduleCalcTotal(delay) {
                         <input type="checkbox" id="chkManual" />
                         <label for="chkManual">Manual</label>
                     </div>
-                    <div class="pr-checkbox-wrap pr-checkbox-inline" style="display:none;">
+                    <div class="pr-checkbox-wrap pr-checkbox-inline" >
                         <input type="checkbox" id="IsadvancewithTax" />
                         <label for="IsadvancewithTax">Advance With Tax</label>
                     </div>

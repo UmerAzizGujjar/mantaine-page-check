@@ -200,7 +200,7 @@ namespace PMS
                         VoucherId = rawVoucherId != null ? rawVoucherId.ToString() : "0"; // Default to "0" if null
                     }
 
-                    if (transType == "AJV")
+                    else if (transType == "AJV")
                     {
                         VoucherId = DBClass.getField("select Voucher_id_adjustment from Purchase_Invoice_Master where PurchaseInvoiceId = " + transID).ToString();
                     }
@@ -208,20 +208,20 @@ namespace PMS
                     reportPath += "Inventory/rptGLViewVoucher.rpt";
                     rd.Load(reportPath);
                     //rd.SetParameterValue("@Voucher_ID", Convert.ToInt32(VoucherId));    // this is the original parameter that is wihotu a fail safe 
-                    int voucherIdInt;
-                    if (!int.TryParse(VoucherId, out voucherIdInt))
-                    {
-                        // If parsing fails, use a default value (like 0) or handle the error gracefully.
-                        voucherIdInt = 0;
-                    }
+                    //int voucherIdInt;
+                    //if (!int.TryParse(VoucherId, out voucherIdInt))
+                    //{
+                    //    // If parsing fails, use a default value (like 0) or handle the error gracefully.
+                    //    voucherIdInt = 0;
+                    //}
 
-                    rd.SetParameterValue("@Voucher_ID", voucherIdInt);
+                    rd.SetParameterValue("@Voucher_ID", Convert.ToInt32(VoucherId));
                     rd.SetParameterValue("CompanyName", AppConfig.Company_Name);
                     rd.SetParameterValue("Title", Title);
                     rd.SetParameterValue("UserName", AppConfig.UserName);
                 }
             }
-            if (reportName == "Voucher_GIN")
+            else if (reportName == "Voucher_GIN")
             {
                 if (Request.QueryString["TransID"] != null && Request.QueryString["TransType"] != null)
                 {
