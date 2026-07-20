@@ -16,6 +16,8 @@
             else {
                 $('#btnPrint').hide();
                 $('#btnVoucher').hide();
+                $('#divcardfront').hide();
+                $('#divcardback').hide();
                 fillmrno();
                 $('#ddl_status').select2();
                 $('#ddl_bloodGroup').select2();
@@ -114,6 +116,21 @@
                 }
             });
         }
+        function PrintPatientCard() {
+
+            Patient_ID = '<%= Request.QueryString["Reg_id"]%>';
+            var url = "/ReportViewer.aspx?ReportName=PrinRegtPatientCard&ReportTitle=Patient Registration Front Card&Reg_id=" + Patient_ID;
+          window.open(url);
+      }
+
+       function PrintPatientBackCard() {
+          
+            Patient_ID = '<%= Request.QueryString["Reg_id"]%>';
+           var url = "/ReportViewer.aspx?ReportName=PrintRegPatientBackCard&ReportTitle=Patient Registration Back Card&Reg_id=" + Patient_ID;
+            window.open(url);
+        }
+
+
 
         function PrintVoucher() {
             var id = '<%= Request.QueryString["Reg_id"] %>';
@@ -529,6 +546,12 @@
                 </div>
                 <div class="col-lg-2 col-md-2 col-sm-3">
                     <input type="button" id="btnPrint" class="btn btn-primry" onclick="PrintReceipt()" value="Print" />
+                </div>
+                  <div class="col-lg-2 col-md-2 col-sm-3" id="divcardfront">
+                    <input type="button" name="btnPrintCard" class="btn-primry" id="btnPrintCardFront" onclick="PrintPatientCard()" value="Front Card" />
+                </div>
+                <div class="col-lg-2 col-md-2 col-sm-3" id="divcardback">
+                    <input type="button" name="btnPrintCard" class="btn-primry" id="btnPrintCardBack" onclick="PrintPatientBackCard()" value="Back Card" />
                 </div>
                 <div class="col-lg-2 col-md-2 col-sm-3">
                     <input type="button" id="btnRefund" class="btn btn-primry" onclick="RefundRegisterFee()" value="Refund" />
