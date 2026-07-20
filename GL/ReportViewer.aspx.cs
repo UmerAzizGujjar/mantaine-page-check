@@ -221,6 +221,37 @@ namespace PMS
                     rd.SetParameterValue("UserName", AppConfig.UserName);
                 }
             }
+            if (reportName == "Voucher_GIN")
+            {
+                if (Request.QueryString["TransID"] != null && Request.QueryString["TransType"] != null)
+                {
+                    string companyAddress = DBClass.getField("select Company_Address from sys_Companys where Company_ID = " + AppConfig.Company_ID + "").ToString();
+                    string transType = Request.QueryString["TransType"].ToString();
+
+                    int transID = Convert.ToInt32(Request.QueryString["TransID"]);
+                    string VoucherId = string.Empty;
+
+                    if (transType == "SIN")
+                    {
+                        VoucherId = DBClass.getField("select Voucher_ID from Store_Issue where Store_Issue_Id = " + transID).ToString();
+                    }
+                    reportPath += "Inventory/rptGLViewVoucher_GIN.rpt";
+                    rd.Load(reportPath);
+                    //rd.SetParameterValue("@Voucher_ID", Convert.ToInt32(VoucherId));    // this is the original parameter that is wihotu a fail safe 
+                    int voucherIdInt;
+                    if (!int.TryParse(VoucherId, out voucherIdInt))
+                    {
+                        // If parsing fails, use a default value (like 0) or handle the error gracefully.
+                        voucherIdInt = 0;
+                    }
+
+                    rd.SetParameterValue("@Voucher_ID", voucherIdInt);
+                    rd.SetParameterValue("CompanyName", AppConfig.Company_Name);
+                    rd.SetParameterValue("Title", Title);
+                    rd.SetParameterValue("UserName", AppConfig.UserName);
+                }
+            }
+   
             else if (reportName == "MinimumStock")
             {
                 reportPath += "Inventory/rptMinimumStock.rpt";
@@ -5036,6 +5067,12 @@ namespace PMS
                 rd.SetParameterValue("@Year", year);
                 rd.SetParameterValue("@Month", Month);
                 rd.SetParameterValue("@Warehouse", Request.QueryString["WareHouse"]);
+                rd.SetParameterValue("@Year", year, rd.Subreports[0].Name.ToString());
+                rd.SetParameterValue("@Month", Month, rd.Subreports[0].Name.ToString());
+                rd.SetParameterValue("@Warehouse", Request.QueryString["WareHouse"], rd.Subreports[0].Name.ToString());
+                rd.SetParameterValue("@Year", year, rd.Subreports[1].Name.ToString());
+                rd.SetParameterValue("@Month", Month, rd.Subreports[1].Name.ToString());
+                rd.SetParameterValue("@Warehouse", Request.QueryString["WareHouse"], rd.Subreports[1].Name.ToString());
 
             }
             else if (reportName == "FastSlow_Non_Moving_Stock")
