@@ -235,7 +235,7 @@ namespace PMS
                     {
                         VoucherId = DBClass.getField("select Voucher_ID from Store_Issue where Store_Issue_Id = " + transID).ToString();
                     }
-                    reportPath += "Inventory/rptGLViewVoucher_GIN.rpt";
+                    reportPath += "Inventory/rptGINPrint.rpt";
                     rd.Load(reportPath);
                     //rd.SetParameterValue("@Voucher_ID", Convert.ToInt32(VoucherId));    // this is the original parameter that is wihotu a fail safe 
                     int voucherIdInt;
