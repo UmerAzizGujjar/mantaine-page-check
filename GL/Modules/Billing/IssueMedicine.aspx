@@ -129,9 +129,9 @@
 
        #btnSave {
            min-width: 150px !important;
-           width: auto !important;
+          
            white-space: nowrap !important;
-           padding: 13px 16px !important;
+         
        }
    
 </style>
@@ -183,7 +183,7 @@
                 debugger;
                 event.preventDefault();
                 $('#medName').select2('close');
-                $('#btnSave').attr('style', 'background: green !important;margin-top: -5px;').focus();
+                $('#btnSave').attr('style', 'background: green !important;margin-top: 0px;').focus();
                 //SearchPop();
                 GetPharmacyUser();
 
@@ -203,37 +203,37 @@
                 event.preventDefault();
                 $('#medName').select2('close');
                 $('#txtAmountReceived').focus().select();
-                $('#btnSave').attr('style', 'margin-top: -5px;').focusout();
+                $('#btnSave').attr('style', 'margin-top: 0px;').focusout();
                 $('#CloseSearchModel').click();
             }
             else if (event.altKey && event.code === 'KeyE') {
                 event.preventDefault();
                 $('#medName').select2('close');
-                $('#btnSave').attr('style', 'margin-top: -5px;').focusout();
+                $('#btnSave').attr('style', 'margin-top: 0px;').focusout();
                 $('#CloseSearchModel').click();
             }
             else if (event.altKey && event.code === 'KeyD') {
                 event.preventDefault();
                 $('#medName').select2('close');
                 $('#txtDisPer').focus().select();
-                $('#btnSave').attr('style', 'margin-top: -5px;').focusout();
+                $('#btnSave').attr('style', 'margin-top: 0px;').focusout();
                 $('#CloseSearchModel').click();
             }
             else if (event.altKey && event.code === 'KeyQ') {
                 event.preventDefault();
                 $('#medName').select2('open');
-                $('#btnSave').attr('style', 'margin-top: -5px;').focusout();
+                $('#btnSave').attr('style', 'margin-top: 0px;').focusout();
                 $('#CloseSearchModel').click();
             }
             else if (event.altKey && event.code === 'KeyA') {
                 event.preventDefault();
                 $('#medName').select2('close');
                 $('#txtFlatDisc').focus().select();
-                $('#btnSave').attr('style', 'margin-top: -5px;').focusout();
+                $('#btnSave').attr('style', 'margin-top: 0px;').focusout();
                 $('#CloseSearchModel').click();
             }
             else {
-                $('#btnSave').attr('style', 'margin-top: -5px;')
+                $('#btnSave').attr('style', 'margin-top: 0px;')
             }
         });
 
@@ -4395,7 +4395,7 @@
                     <label></label>
                     <input type="button" class="btn-primry" onclick="Print_Prescription()" value="Print" />
                 </div>                              
-                <div class="col-sm-6 col-md-4 col-lg-3">
+                <div class="col-sm-6 col-md-4 col-lg-1">
                     <label id="lblBed">Bed No:</label>
                     <input type="text" id="BedName" tabindex="2" autocomplete="off" class="form-control" />
                 </div>
@@ -4411,11 +4411,15 @@
                     <label class="paneldiv">Panel</label>
                     <select id="ddlpanel" class="form-control ddlpanel" tabindex="7"></select>
                 </div>
+                 <div class="col-lg-1 col-md-4 col-sm-6">
+                     <label></label>
+                     <input type="button" class="btn-primry" value="Queue" id="Queue" onclick="openQueue()" style="width:144px !important" />
+                 </div>
             </div>
 
             <!-- OPD Prescription & Batch -->
             <div class="row mb-3">
-                <div class="col-lg-3 col-md-7 col-sm-6">
+                <div class="col-lg-2 col-md-7 col-sm-6">
                     <label id="lblmedName">Medicine:</label>
                     <label class="small">(Alt+Q)</label>
                     <select id="medName" class="form-control" tabindex="6" onchange="getbatchfrom_grn()">
@@ -4434,24 +4438,25 @@
                     <label class="batchdiv">Batch No:</label>
                     <select id="batchno" class="form-control batchdiv" tabindex="7" onchange="AddMedicineDetail()"></select>
                 </div>
-               
-
                 <div class="col-lg-1 col-sm-3 col-md-1 text-center" style="margin-top: 2%;">
                     <label id="lblbatch">Batch</label>
                 </div>
                 <div class="col-lg-1 col-sm-3 col-md-1 text-center" style="margin-top: 2%; margin-left: -5%;">
                     <input type="checkbox" id="chkbatch" tabindex="8" onchange="loadmed();" />
                 </div>
-                <div class="col-sm-2 col-md-2 col-lg-1 text-center" style="margin-top: 2%;">
-                    <label class="me-3">Print</label>
-                </div>
-                <div class="col-sm-2 col-md-2 col-lg-1 text-center" style="margin-top: 2%; margin-left: -4%;">
-                    <input type="checkbox" tabindex="9" id="chkprint" />
-                </div>
-                <div class="col-lg-1 col-md-4 col-sm-6">
-                    <label></label>
-                    <input type="button" class="btn-primry" value="Queue" id="Queue" onclick="openQueue()" style="width:144px !important" />
-                </div>
+               
+                  <div class="col-sm-2 col-md-2 col-lg-2">
+                      <label></label>
+                  <input type="button" class="btn btn-primry w-100 w-md-auto" id="btnSave" tabindex="10" value="Save & Print(Alt+S)" onclick="GetPharmacyUser()" />
+              </div>
+                
+               <div class="col-lg-2 col-md-4 col-sm-6">
+                   <label></label>
+                <input type="button" tabindex="15" title="Sale Return" class="btn btn-primry" value="Sale Return" id="btnSaleReturn" />
+            </div>
+                    
+                
+
                
             </div>
 
@@ -4488,13 +4493,17 @@
                 <div class="col-lg-1 col-md-4 col-sm-6 margin">
                     <label id="lblHold">Hold</label>
                 </div>
-                 <div class="col-sm-2 col-md-2 col-lg-2">
-                     <input type="button" class="btn btn-primry w-100 w-md-auto" id="btnSave" tabindex="10" value="Save & Print(Alt+S)" onclick="GetPharmacyUser()" />
-                 </div>
-                <div class="col-lg-2 col-md-4 col-sm-6">
-                    <input type="button" tabindex="15" title="Sale Return" class="btn btn-primry" value="Sale Return" id="btnSaleReturn" />
-                </div>
                 
+                <div class="col-lg-1 col-md-4 col-sm-6"></div>
+                <div class="col-sm-2 col-md-2 col-lg-1 text-center" >
+                    <label class="me-3">Print</label>
+                </div>
+                <div class="col-sm-2 col-md-2 col-lg-1 text-center" style="margin-left: -4%;">
+                    <input type="checkbox" tabindex="9" id="chkprint" />
+                </div>
+               <div class="col-sm-2 col-md-2 col-lg-1">
+                <input type="button" class="btn-primry" value="Item List (Alt + L)" id="item_List" onclick="OpenItemList();" style="width:144% !important" />
+                </div>
             </div>
 
         </div>
