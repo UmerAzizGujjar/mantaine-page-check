@@ -1244,8 +1244,6 @@
             });
         }
 
-       
-
         function PrintVoucher() {
             var id = '<% =Request.QueryString["SI_ID"] %>';
             var locationInfo = window.location;
@@ -1258,18 +1256,12 @@
                 reportPath = 'ReportViewer.aspx'; // same folder
             }
 
-            var user_name = '<% =AppConfig.Company_Name %>';
-            if (user_name == 'National Hospital & Medical Centre') {
-                var url = '/ReportViewer.aspx?ReportName=Voucher_GIN&ReportTitle=SIN Voucher&TransID=' + id + '&TransType=SIN';
-            } else {
                 var url = '/ReportViewer.aspx?ReportName=Voucher&ReportTitle=SIN Voucher&TransID=' + id + '&TransType=SIN';
-            }
-
             if (!locationInfo.origin.includes('localhost')) {
                 var urlInfo = window.location.href.split('/');
                 var ip = urlInfo[2];
                 var foldername = urlInfo[3];
-                url = 'http://' + ip + '/' + foldername + '/' + reportPath + '?ReportName=Voucher&ReportTitle=SIN Voucher&TransID=' + id + '&TransType=SIN';
+                url = 'http://' + ip + '/' + foldername + '/' + reportPath +  '?ReportName=Voucher&ReportTitle=SIN Voucher&TransID=' + id + '&TransType=SIN';
             }
             window.open(url, '_blank');
         }

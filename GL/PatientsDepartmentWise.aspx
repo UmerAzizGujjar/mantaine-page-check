@@ -1214,7 +1214,7 @@
                         var startDateTime = startDate + ' ' + startTime;
                         var endDateTime = endDate + ' ' + endTime;
                         var url = 'ReportViewer.aspx?ReportName=DoctorWiseUltrasoundReport' +
-                            '&ReportTitle=Department Wise Report from ' + startDateTime + ' to ' + endDateTime +
+                            '&ReportTitle=Radiology Statistics Report from ' + startDateTime + ' to ' + endDateTime +
                             '&StartDateTime=' + encodeURIComponent(startDateTime) +
                             '&EndDateTime=' + encodeURIComponent(endDateTime) +
                             '&DoctorID=' + $('#ctl00_MainContent_ddlDoctor').val();
