@@ -424,6 +424,7 @@
     <Content Include="Modules\Administrator\AddAssetSelection.aspx" />
     <Content Include="Modules\Billing\AddNewAdvance.aspx" />
     <Content Include="Modules\Others\AddRoute.aspx" />
+    <Content Include="Modules\Administrator\AdminDashboard.aspx" />
     <Content Include="Modules\Administrator\AdministrationSection.aspx" />
     <Content Include="Modules\Billing\AdvanceList.aspx" />
     <Content Include="Modules\Appointment\Appointment.aspx" />
@@ -3722,6 +3723,13 @@
     </Compile>
     <Compile Include="Modules\Administrator\AdministrationSection.aspx.designer.cs">
       <DependentUpon>AdministrationSection.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="Modules\Administrator\AdminDashboard.aspx.cs">
+      <DependentUpon>AdminDashboard.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Modules\Administrator\AdminDashboard.aspx.designer.cs">
+      <DependentUpon>AdminDashboard.aspx</DependentUpon>
     </Compile>
     <Compile Include="Modules\Billing\AdvanceList.aspx.cs">
       <DependentUpon>AdvanceList.aspx</DependentUpon>
