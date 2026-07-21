@@ -767,7 +767,7 @@ List<BatchNum> batchList, List<PatientTypeList> PatientTypeList, List<WarehouseM
                                  {
                                      obj.Item_Code,
                                      obj.Description,
-                                     obj.Active,
+                                     Active =obj.Is_Active,
                                      obj.Unit,
                                      Unit_Text = db.GetDataValueName("UOM", obj.Unit),
                                      obj.UOM_Qty,
