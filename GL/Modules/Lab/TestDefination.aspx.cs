@@ -552,10 +552,10 @@ namespace PMS
 
                 test.Created_By = AppConfig.UserID;
                 test.Created_Time = DateTime.Now;
-                if (is_admin)
-                {
+                //if (is_admin)
+               // {
                     test.Rate = Convert.ToDecimal(record.Rate == "" ? "0.0" : record.Rate);
-                }
+               // }
 
                 test.Out_Source_Lab_ID = record.out_source_lab_id;
                 test.Genre = record.Genre;
@@ -652,10 +652,10 @@ namespace PMS
                 test.Updated_By = AppConfig.UserID;
                 test.Updated_Time = DateTime.Now;
                 test.Special_Test = record.Special_Test;
-                if (is_admin)
-                {
+               // if (is_admin)
+               // {
                     test.Rate = Convert.ToDecimal(record.Rate == "" ? "0.0" : record.Rate);
-                }
+               // }
 
                 test.Fixed_Value = record.FixedValue;
                 test.WaitingTime = int.TryParse(record.WaitingTime, out var temp) ? temp : (int?)0;
