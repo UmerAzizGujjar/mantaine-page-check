@@ -248,7 +248,12 @@ namespace PMS.AP
                                d.Bonus_Tax,
                                d.Bonus_Qty,
                                pr_id = DBClass.getField("select PR.PR_Num from Purchase_Requisition PR join Purchase_Requisition_Detail PRD on PR.PR_Id = PRD.PR_ID where PRD.PR_Detail_ID = " + d.PRDetailId),
-                               TotalStock = db.GetInvenrtoryItemUomTotalStock(d.Item_Id ?? 0, m.Ware_House)
+                               TotalStock = db.GetInvenrtoryItemUomTotalStock(d.Item_Id ?? 0, m.Ware_House),
+                               LastPORate = (from pd in db.AP_Purchase_Order_Items
+                                             join ph in db.AP_Purchase_Orders on pd.PO_ID equals ph.PO_ID
+                                             where pd.Item_Id == d.Item_Id
+                                             orderby ph.Creation_Time descending
+                                             select pd.Rate).FirstOrDefault() ?? d.Rate
                            }).ToList();
 
             return (new JavaScriptSerializer()).Serialize(Details);

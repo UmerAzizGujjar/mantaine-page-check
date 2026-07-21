@@ -1379,7 +1379,7 @@
 
          <div class="row">
                   <div class="col-lg-2 col-md-6 col-sm-12">
-                    <label id="Lblpack_unit">UOM</label>
+                    <label id="Lblpack_unit">UOM / Pack Size</label>
                     <select id="ddlpack_unit">
                        <option>Please Select</option>
                    </select>    

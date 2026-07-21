@@ -252,7 +252,30 @@ namespace PMS.Inventory
                 {
                     obj.Last_SIN_Qty = 0;
                 }
-                
+                if (!string.IsNullOrEmpty(item.Last_GIR_Date) && item.Last_GIR_Date != "null")
+                {
+                    try
+                    {
+                        DateTime parsedDate;
+                        if (DateTime.TryParse(item.Last_GIR_Date, out parsedDate))
+                        {
+                            obj.Last_GIR_Date = parsedDate;
+                        }
+                        else
+                        {
+                            obj.Last_GIR_Date = null;
+                        }
+                    }
+                    catch
+                    {
+                        obj.Last_GIR_Date = null;
+                    }
+                }
+                else
+                {
+                    obj.Last_GIR_Date = null;
+                }
+
                 db.MaterialIssueRequest_Details.InsertOnSubmit(obj);
                 try
                 {
@@ -344,6 +367,8 @@ namespace PMS.Inventory
                                      MIRQty = Convert.ToString(data.MIRQty),
                                      Last_MIR_Qty = Convert.ToString(data.Last_MIR_Qty),
                                      Last_SIN_Qty = Convert.ToString(data.Last_SIN_Qty),
+                                     Last_GIR_Date = Convert.ToString(data.Last_GIR_Date),
+                                     //Last_GIR_Date = data.Last_GIR_Date.HasValue ? data.Last_GIR_Date.Value.ToString("dd-MMM-yyyy") : "",
                                      remarks = data.Remarks,
                                       UOM_Qty = Convert.ToString(inv.UOM_Qty ?? 0),
                                       FilePath = data.FilePath,
@@ -373,6 +398,7 @@ namespace PMS.Inventory
             public string MIRQty { get; set; }
             public string Last_MIR_Qty { get; set; }
             public string Last_SIN_Qty { get; set; }
+            public string Last_GIR_Date { get; set; }
             public string remarks { get; set; }
             public string MIRId { get; set; }
             public string itemId { get; set; }
