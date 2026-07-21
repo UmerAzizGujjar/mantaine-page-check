@@ -3364,7 +3364,7 @@ function scheduleCalcTotal(delay) {
                     </div>
                     <div class="pr-checkbox-wrap pr-checkbox-inline" >
                         <input type="checkbox" id="IsadvancewithTax" />
-                        <label for="IsadvancewithTax">Advance With Tax</label>
+                        <label for="IsadvancewithTax">Adv Tax Including GST</label>
                     </div>
                 </div>
             </div>
