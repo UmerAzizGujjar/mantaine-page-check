@@ -174,7 +174,7 @@
             debugger
             var itemID = $("#hditemID").val();
 
-            var deptID = $('#ddldept').val(); 
+            var deptID = $('#ddldept').val();
             $.ajax({
                 type: "POST",
                 url: "GoodsIssuanceRequest.aspx/Getitem",
@@ -199,12 +199,12 @@
 
                     $('#tblbodyPackage tr').each(function () {
                         debugger;
-                        var existingItemID = String($(this).find('td:eq(8)').text()).trim();
+                        var existingItemID = String($(this).find('td:eq(9)').text()).trim();
 
                         if (existingItemID == selectedItemID) {
                             debugger;
                             find = true;
-                            return false; 
+                            return false;
                         }
                     });
                     if (find == true) {
@@ -228,6 +228,8 @@
                     }
                     else {
                         if (parse[0].Active == true) {
+                            var lastGIRDateValue = parse[0].Last_MIR_Date || '';
+
                             $("#tblbodyPackage").append("<tr>" +
                                 "<td style='padding-top: 7px!important;'>" + length + "</td>" +
                                 "<td style='padding-top: 7px!important;padding-right: 3px!important;'>" + parse[0].Item_Code + "</td>" +
@@ -239,10 +241,11 @@
                                 "<td style='padding-top: 7px!important;padding-left: 8px!important' contenteditable></td>" +
                                 "<td><label class='fileContainer' style='font-size: 13px;margin-top: -3px;'><i class='glyphicon glyphicon-paperclip'></i><input type='file' name='fileuploadlist' id='fileuploadlist" + length + "'></label></td>" +
                                 "<td style='display:none'>" + parse[0].Item_ID + "</td>" +
-                                "<td style='text-align:center;'>" + (parse[0].UOM_Qty || '0') + "</td>" +  
+                                "<td style='text-align:center;'>" + (parse[0].UOM_Qty || '0') + "</td>" +
                                 "<td style='text-align:center;'>" +
                                 (parse[0].Last_MIR_Date ? moment(parse[0].Last_MIR_Date).format('D-MMM-YYYY') : '') +
                                 "</td>" +
+                                "<td style='display:none'>" + lastGIRDateValue + "</td>" + 
                                 "<td><a href='#' onclick='Delete(this)'><i class='glyphicon glyphicon-trash' style='font-size: 13px; margin-top: 5px; margin-left: 16px; color: #f30a0a;'></i></a></td>" +
                                 "</tr>")
                             length++;
@@ -525,6 +528,27 @@
                 details.Remarks = $(this).find('td:eq(7)').text();
                 details.MIRId = id;
                 details.itemId = $(this).find('td:eq(9)').text();
+                var rawDate = $(this).find('td:eq(11)').text();
+                if (rawDate && rawDate !== '' && rawDate !== 'null') {
+                    var match = rawDate.match(/Date\((\d+)\)/);
+                    if (match && match[1]) {
+                        var timestamp = parseInt(match[1]);
+                        var dateObj = new Date(timestamp);
+
+                        if (!isNaN(dateObj.getTime())) {
+                            details.Last_GIR_Date = dateObj.getFullYear() + '-' +
+                                String(dateObj.getMonth() + 1).padStart(2, '0') + '-' +
+                                String(dateObj.getDate()).padStart(2, '0');
+                        } else {
+                            details.Last_GIR_Date = null;
+                        }
+                    } else {
+                        details.Last_GIR_Date = rawDate;
+                    }
+                } else {
+                    details.Last_GIR_Date = null;
+                }
+                
                 detailAry.push(details);
             });
             if (detailAry.length > 0) {
@@ -679,7 +703,52 @@
                         var len = key + 1;
                         var filePath = parse[key].FilePath || '';
                         var downloadLink = filePath ? '<a href="' + filePath + '" target="_blank" style="margin-right:4px;" title="Download"><i class="glyphicon glyphicon-download-alt"></i></a>' : '';
-                        row += '<tr><td style="padding-top: 7px!important;">' + len + '</td><td style="padding-top: 7px!important;padding-right: 3px!important; */">' + parse[key].itemCode + '</td><td style="padding-left: 8px!important;padding-top: 7px!important;">' + parse[key].Description + '</td><td style="text-align:center;">' + parse[key].Unit + '</td><td style="text-align: center;"><input type="text"  value="' + parseFloat(parse[key].MIRQty).toFixed(2) + '" name="Qty" id="txtQty ' + counter + '" style="font-size: 9px;width: 52px!important;text-align: right;margin-top: 2px;" autocomplete="off" onkeyup="calcutaeQty(this)"/></td><td style="padding-top: 7px!important;text-align:center;padding-left: 8px!important;" contenteditable>' + parse[key].Last_MIR_Qty + '</td><td style="padding-top: 7px!important;text-align:center;padding-left: 8px!important;" contenteditable>' + parse[key].Last_SIN_Qty + '</td><td style="padding-top: 7px!important;padding-left: 8px!important" contenteditable>' + parse[key].remarks + '</td><td>' + downloadLink + '<label class="fileContainer" style="font-size: 13px;margin-top: -3px;"><i class="glyphicon glyphicon-paperclip"></i><input type="file" name="fileuploadlist" id="fileuploadlist' + key + '"></label></td><td style="display:none">' + parse[key].itemId + '</td><td><a href="#" onclick="Delete(this)"><i class="glyphicon glyphicon-trash" style="font-size: 13px; margin-top: 5px;  margin-left: 16px; color: #f30a0a;"></i></a></td></tr>';
+
+
+                        var lastGIRDateDisplay = '';
+                        if (parse[key].Last_GIR_Date && parse[key].Last_GIR_Date !== 'null' && parse[key].Last_GIR_Date !== '') {
+                            try {
+                                var dateStr = parse[key].Last_GIR_Date;
+                                console.log('Raw Last_GIR_Date:', dateStr);
+                                var cleanStr = dateStr.replace(/\s+/g, ' ').trim(); 
+                                var parts = cleanStr.split(' ');
+                                var datePart = parts[0] + ' ' + parts[1] + ' ' + parts[2];
+                                console.log('Date part:', datePart);
+                                var dateObj = new Date(datePart);
+                                console.log('Date object:', dateObj);
+                                if (!isNaN(dateObj.getTime())) {
+                                    dateObj.setHours(0, 0, 0, 0);
+                                    lastGIRDateDisplay = $.datepicker.formatDate('dd M yy', dateObj);
+                                    console.log('Formatted date:', lastGIRDateDisplay);
+                                } else {
+                                    var altDate = new Date(parts[2], getMonthIndex(parts[0]), parseInt(parts[1]));
+                                    if (!isNaN(altDate.getTime())) {
+                                        altDate.setHours(0, 0, 0, 0);
+                                        lastGIRDateDisplay = $.datepicker.formatDate('dd M yy', altDate);
+                                    } else {
+                                        lastGIRDateDisplay = dateStr;
+                                    }
+                                }
+                            } catch (e) {
+                                console.log('Error parsing date:', e);
+                                lastGIRDateDisplay = parse[key].Last_GIR_Date;
+                            }
+                        }
+
+                        row += '<tr><td style="padding-top: 7px!important;">' + len + '</td>' +
+                            '<td style="padding-top: 7px!important;padding-right: 3px!important;">' + parse[key].itemCode + '</td>' +
+                            '<td style="padding-left: 8px!important;padding-top: 7px!important;">' + parse[key].Description + '</td>' +
+                            '<td style="text-align:center;">' + parse[key].Unit + '</td>' +
+                            '<td style="text-align: center;"><input type="text" value="' + parseFloat(parse[key].MIRQty).toFixed(2) + '" name="Qty" id="txtQty' + counter + '" style="font-size: 9px;width: 52px!important;text-align: right;margin-top: 2px;" autocomplete="off" onkeyup="calcutaeQty(this)"/></td>' +
+                            '<td style="padding-top: 7px!important;text-align:center;padding-left: 8px!important;" contenteditable>' + parse[key].Last_MIR_Qty + '</td>' +
+                            '<td style="padding-top: 7px!important;text-align:center;padding-left: 8px!important;" contenteditable>' + parse[key].Last_SIN_Qty + '</td>' +
+                            '<td style="padding-top: 7px!important;padding-left: 8px!important" contenteditable>' + parse[key].remarks + '</td>' +
+                            '<td>' + downloadLink + '<label class="fileContainer" style="font-size: 13px;margin-top: -3px;"><i class="glyphicon glyphicon-paperclip"></i><input type="file" name="fileuploadlist" id="fileuploadlist' + key + '"></label></td>' +
+                            '<td style="display:none">' + parse[key].itemId + '</td>' +
+                            '<td style="text-align:center;">' + (parse[key].UOM_Qty || '0') + '</td>' +
+                            '<td style="text-align:center;padding-left: 8px!important;">' + lastGIRDateDisplay + '</td>' +
+                            '<td><a href="#" onclick="Delete(this)"><i class="glyphicon glyphicon-trash" style="font-size: 13px; margin-top: 5px; margin-left: 16px; color: #f30a0a;"></i></a></td>' +
+                            '</tr>';
                     });
                     $("#tblPackage").append(row);
                     calcutaeQty();

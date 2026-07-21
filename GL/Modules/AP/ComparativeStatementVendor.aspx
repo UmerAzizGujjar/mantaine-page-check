@@ -1750,6 +1750,16 @@
         <div class="col-lg-5 col-md-5 col-sm-5">
             <div class="row">
                 <div class="col-xs-9 col-lg-9 col-md-5 col-sm-9">
+                    <div class="row" id="warehouserow">
+                        <div class="col-lg-4 col-md-4 col-sm-6">
+                            <label id="LblWarehouse">WareHouse<span style="color: red">*</span></label>
+                        </div>
+                        <div class="col-lg-6 col-md-4 col-sm-6 mt-1">
+                            <select id="ddlWarehouse" onchange="getprNoBy_WareHouseCS()" style="width: 100% !important">
+                                <option value="0">Please Select</option>
+                            </select>
+                        </div>
+                    </div>
                     <div class="row">
                         <div class="col-lg-4 col-md-5 col-sm-6">
                             <label class="Fleft"  id="lb_CSno">CS#</label>
@@ -1810,16 +1820,7 @@
                                    </asp:DropDownList>
                                </div>
                            </div>  
-                    <div class="row" id="warehouserow">
-                        <div class="col-lg-4 col-md-4 col-sm-6">
-                            <label id="LblWarehouse">WareHouse<span style="color: red">*</span></label>
-                        </div>
-                        <div class="col-lg-6 col-md-4 col-sm-6 mt-1">
-                            <select id="ddlWarehouse" onchange="getprNoBy_WareHouseCS()" style="width:100% !important">
-                                <option value="0">Please Select</option>
-                            </select>
-                        </div>
-                    </div>
+                    
                 </div>
 
                 <div class="col-xs-3 col-sm-3 col-lg-3 col-md-3">

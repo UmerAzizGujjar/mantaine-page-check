@@ -45,6 +45,8 @@
         width: 100% !important;
         margin-left: 0 !important;
     }
+
+
     
     /* Fix for batch/batchdiv */
     .batchdiv {
@@ -124,6 +126,14 @@
         justify-content: flex-end;
         margin-top: 8px;
     }
+
+       #btnSave {
+           min-width: 150px !important;
+          
+           white-space: nowrap !important;
+         
+       }
+   
 </style>
     <script type="text/javascript">
         $(document).ready(function () {
@@ -173,7 +183,7 @@
                 debugger;
                 event.preventDefault();
                 $('#medName').select2('close');
-                $('#btnSave').attr('style', 'background: green !important;margin-top: -5px;').focus();
+                $('#btnSave').attr('style', 'background: green !important;margin-top: 0px;').focus();
                 //SearchPop();
                 GetPharmacyUser();
 
@@ -193,37 +203,37 @@
                 event.preventDefault();
                 $('#medName').select2('close');
                 $('#txtAmountReceived').focus().select();
-                $('#btnSave').attr('style', 'margin-top: -5px;').focusout();
+                $('#btnSave').attr('style', 'margin-top: 0px;').focusout();
                 $('#CloseSearchModel').click();
             }
             else if (event.altKey && event.code === 'KeyE') {
                 event.preventDefault();
                 $('#medName').select2('close');
-                $('#btnSave').attr('style', 'margin-top: -5px;').focusout();
+                $('#btnSave').attr('style', 'margin-top: 0px;').focusout();
                 $('#CloseSearchModel').click();
             }
             else if (event.altKey && event.code === 'KeyD') {
                 event.preventDefault();
                 $('#medName').select2('close');
                 $('#txtDisPer').focus().select();
-                $('#btnSave').attr('style', 'margin-top: -5px;').focusout();
+                $('#btnSave').attr('style', 'margin-top: 0px;').focusout();
                 $('#CloseSearchModel').click();
             }
             else if (event.altKey && event.code === 'KeyQ') {
                 event.preventDefault();
                 $('#medName').select2('open');
-                $('#btnSave').attr('style', 'margin-top: -5px;').focusout();
+                $('#btnSave').attr('style', 'margin-top: 0px;').focusout();
                 $('#CloseSearchModel').click();
             }
             else if (event.altKey && event.code === 'KeyA') {
                 event.preventDefault();
                 $('#medName').select2('close');
                 $('#txtFlatDisc').focus().select();
-                $('#btnSave').attr('style', 'margin-top: -5px;').focusout();
+                $('#btnSave').attr('style', 'margin-top: 0px;').focusout();
                 $('#CloseSearchModel').click();
             }
             else {
-                $('#btnSave').attr('style', 'margin-top: -5px;')
+                $('#btnSave').attr('style', 'margin-top: 0px;')
             }
         });
 
@@ -4340,7 +4350,7 @@
 
             <!-- Input Fields -->
             <div class="row mb-3">
-                <div class="col-sm-12 col-md-4 col-lg-3">
+                <div class="col-sm-12 col-md-4 col-lg-2">
                     <label>MR No:</label>
                     <input type="hidden" id="hdPatientID" />
                     <input type="hidden" id="hdndiscountType" />
@@ -4348,21 +4358,29 @@
                     <input type="text" id="txtMRNo" tabindex="1" class="form-control" />
                     <input type="text" id="txtTransType" style="display: none" tabindex="1" class="form-control" />
                 </div>
-                <div class="col-sm-12 col-md-4 col-lg-3">
+                <div class="col-sm-12 col-md-4 col-lg-2">
                     <label id="LblCustomerName">Walk-in Customer:</label>
                     <input type="text" id="CustomerName" tabindex="2" autocomplete="off" class="form-control" />
                 </div>
-                <div class="col-sm-12 col-md-4 col-lg-3">
+                <div class="col-sm-12 col-md-4 col-lg-2">
                     <label>Referred By:</label>
                     <select class="form-control" tabindex="3" id="ddlDoctor">
                         <option></option>
                     </select>
                 </div>
-                <div class="col-sm-6 col-md-4 col-lg-3">
+                <div class="col-sm-6 col-md-4 col-lg-2">
                     <label id="lblDepartment">Department:</label>
                     <select class="form-control depName" tabindex="4" id="ddlDepartment">
                         <option></option>
                     </select>
+                </div>
+                <div class="col-sm-12 col-md-4 col-lg-2">
+                    <label id="LblPatientType">Patient Type</label>
+                    <input type="text" id="txtPatientType" tabindex="2" autocomplete="off" class="form-control" />
+                </div>
+                <div class="col-sm-12 col-md-4 col-lg-2">
+                    <label id="LblWard">Ward Name</label>
+                    <input type="text" id="Ward_Name" tabindex="2" autocomplete="off" class="form-control" />
                 </div>
             </div>
             <div class="row mb-3">
@@ -4376,26 +4394,32 @@
                 <div class="col-sm-12 col-md-4 col-lg-1">
                     <label></label>
                     <input type="button" class="btn-primry" onclick="Print_Prescription()" value="Print" />
-
-                </div>
-                <div class="col-sm-12 col-md-4 col-lg-3">
-                    <label id="LblPatientType">Patient Type</label>
-                    <input type="text" id="txtPatientType" tabindex="2" autocomplete="off" class="form-control" />
-                </div>
-                <div class="col-sm-12 col-md-4 col-lg-3">
-                    <label id="LblWard">Ward Name</label>
-                    <input type="text" id="Ward_Name" tabindex="2" autocomplete="off" class="form-control" />
-                </div>
-
-                <div class="col-sm-6 col-md-4 col-lg-3">
+                </div>                              
+                <div class="col-sm-6 col-md-4 col-lg-1">
                     <label id="lblBed">Bed No:</label>
                     <input type="text" id="BedName" tabindex="2" autocomplete="off" class="form-control" />
                 </div>
+                <div class="col-lg-2 col-md-4 col-sm-6">
+                    <label class="InvoiceNum">Invoice No:</label>
+                    <select id="ddlInv_No" style="width: 180px !important;" onchange="GetBillingItems()" class="form-control select2"></select>
+                </div>
+                <div class="col-lg-2 col-md-4 col-sm-6">
+                    <label class="InvoiceNum">Template:</label>
+                    <select id="ddlTemplate" style="width: 180px !important;" onchange="GetTemplateItems()" class="form-control select2"></select>
+                </div>
+                <div class="col-lg-2 col-md-4 col-sm-6">
+                    <label class="paneldiv">Panel</label>
+                    <select id="ddlpanel" class="form-control ddlpanel" tabindex="7"></select>
+                </div>
+                 <div class="col-lg-1 col-md-4 col-sm-6">
+                     <label></label>
+                     <input type="button" class="btn-primry" value="Queue" id="Queue" onclick="openQueue()" style="width:144px !important" />
+                 </div>
             </div>
 
             <!-- OPD Prescription & Batch -->
             <div class="row mb-3">
-                <div class="col-lg-3 col-md-7 col-sm-6">
+                <div class="col-lg-2 col-md-7 col-sm-6">
                     <label id="lblmedName">Medicine:</label>
                     <label class="small">(Alt+Q)</label>
                     <select id="medName" class="form-control" tabindex="6" onchange="getbatchfrom_grn()">
@@ -4414,41 +4438,33 @@
                     <label class="batchdiv">Batch No:</label>
                     <select id="batchno" class="form-control batchdiv" tabindex="7" onchange="AddMedicineDetail()"></select>
                 </div>
-                <div class="col-lg-2 col-md-4 col-sm-6">
-                    <label class="paneldiv">Panel</label>
-                    <select id="ddlpanel" class="form-control ddlpanel" tabindex="7" ></select>
-                </div>
-
                 <div class="col-lg-1 col-sm-3 col-md-1 text-center" style="margin-top: 2%;">
                     <label id="lblbatch">Batch</label>
                 </div>
                 <div class="col-lg-1 col-sm-3 col-md-1 text-center" style="margin-top: 2%; margin-left: -5%;">
                     <input type="checkbox" id="chkbatch" tabindex="8" onchange="loadmed();" />
                 </div>
-                <div class="col-sm-2 col-md-2 col-lg-1 text-center" style="margin-top: 2%;">
-                    <label class="me-3">Print</label>
-                </div>
-                <div class="col-sm-2 col-md-2 col-lg-1 text-center" style="margin-top: 2%; margin-left: -4%;">
-                    <input type="checkbox" tabindex="9" id="chkprint" />
-                </div>
+               
+                  <div class="col-sm-2 col-md-2 col-lg-2">
+                      <label></label>
+                  <input type="button" class="btn btn-primry w-100 w-md-auto" id="btnSave" tabindex="10" value="Save & Print(Alt+S)" onclick="GetPharmacyUser()" />
+              </div>
+                
+               <div class="col-lg-2 col-md-4 col-sm-6">
+                   <label></label>
+                <input type="button" tabindex="15" title="Sale Return" class="btn btn-primry" value="Sale Return" id="btnSaleReturn" />
+            </div>
+                    
+                
+
                
             </div>
 
               <div class="row mb-3 align-items-center" id="divinvoiceoldtemplate" style="margin-top: 1%; margin-bottom: 1%">
 
-                <div class="col-lg-2 col-md-4 col-sm-6">
-                    <label class="InvoiceNum">Invoice No:</label>
-                    <select  id="ddlInv_No" style="width: 180px !important;" onchange="GetBillingItems()" class="form-control select2"></select>
-                </div>
-                                  <div class="col-lg-2 col-md-4 col-sm-6">
-                    <label class="InvoiceNum">Template:</label>
-                    <select  id="ddlTemplate" style="width: 180px !important;" onchange="GetTemplateItems()" class="form-control select2"></select>
-                </div>
-                                  <div class="col-lg-2 col-md-4 col-sm-6">
-                    <label class="InvoiceNum">
-                        </label>
-                    <input type="button" class="btn-primry" value="Item List (Alt + L)" id="item_List" onclick="OpenItemList();" style="width:144% !important" />
-                </div>
+                
+                                  
+                                 
                   </div>
 
             <!-- Checkboxes and Radio Buttons -->
@@ -4477,14 +4493,16 @@
                 <div class="col-lg-1 col-md-4 col-sm-6 margin">
                     <label id="lblHold">Hold</label>
                 </div>
-                 <div class="col-sm-2 col-md-2 col-lg-2">
-                     <input type="button" class="btn btn-primry" id="btnSave" tabindex="10" value="Save & Print(Alt+S)" onclick="GetPharmacyUser()" />
-                 </div>
-                <div class="col-lg-2 col-md-4 col-sm-6">
-                    <input type="button" tabindex="15" title="Sale Return" class="btn btn-primry" value="Sale Return" id="btnSaleReturn" />
+                
+                <div class="col-lg-1 col-md-4 col-sm-6"></div>
+                <div class="col-sm-2 col-md-2 col-lg-1 text-center" >
+                    <label class="me-3">Print</label>
                 </div>
-                <div class="col-lg-1 col-md-4 col-sm-6">
-                    <input type="button" class="btn-primry" value="Queue" id="Queue" onclick="openQueue()" style="width:144% !important" />
+                <div class="col-sm-2 col-md-2 col-lg-1 text-center" style="margin-left: -4%;">
+                    <input type="checkbox" tabindex="9" id="chkprint" />
+                </div>
+               <div class="col-sm-2 col-md-2 col-lg-1">
+                <input type="button" class="btn-primry" value="Item List (Alt + L)" id="item_List" onclick="OpenItemList();" style="width:144% !important" />
                 </div>
             </div>
 

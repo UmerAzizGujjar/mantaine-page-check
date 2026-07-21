@@ -1458,6 +1458,8 @@
     <Content Include="wwwroot\SOURCE_IMAGES\GENERAL_ICONS\vplogopage.png" />
     <Content Include="wwwroot\SOURCE_IMAGES\GENERAL_ICONS\Ward_Allotment.jpg" />
     <Content Include="wwwroot\SOURCE_IMAGES\GENERAL_ICONS\Ward_Definition.jpg" />
+    <Content Include="wwwroot\THEME_ASSIRAAT\PhysiotherapyAssessment.css" />
+    <Content Include="wwwroot\THEME_CPTH\CustomCSS\PhysiotherapyAssessment.css" />
     <Content Include="wwwroot\THEME_DEMO\CustomCSS\AddNewLabTest.css" />
     <Content Include="wwwroot\THEME_DEMO\CustomCSS\AddpurchaseInvoice.css" />
     <Content Include="wwwroot\THEME_DEMO\CustomCSS\Advance.css" />
@@ -1504,6 +1506,7 @@
     <Content Include="wwwroot\THEME_DEMO\CustomCSS\Outpatient.css" />
     <Content Include="wwwroot\THEME_DEMO\CustomCSS\Pharmacy.css" />
     <Content Include="wwwroot\THEME_DEMO\CustomCSS\pharmacyuser.css" />
+    <Content Include="wwwroot\THEME_DEMO\CustomCSS\PhysiotherapyAssessment.css" />
     <Content Include="wwwroot\THEME_DEMO\CustomCSS\PR.css" />
     <Content Include="wwwroot\THEME_DEMO\CustomCSS\Product.css" />
     <Content Include="wwwroot\THEME_DEMO\CustomCSS\Receipts.css" />
@@ -1560,6 +1563,7 @@
     <Content Include="wwwroot\THEME_DEMO\images\StudentImages\3631.png" />
     <Content Include="wwwroot\THEME_DEMO\styleMaster.css" />
     <Content Include="wwwroot\THEME_ASSIRAAT\images\LOGOS\Icon.png" />
+    <Content Include="wwwroot\THEME_IITH\CustomCSS\PhysiotherapyAssessment.css" />
     <Content Include="wwwroot\THEME_KALEEM\CustomCSS\AddNewLabTest.css" />
     <Content Include="wwwroot\THEME_KALEEM\CustomCSS\AddpurchaseInvoice.css" />
     <Content Include="wwwroot\THEME_KALEEM\CustomCSS\Advance.css" />
@@ -1606,6 +1610,7 @@
     <Content Include="wwwroot\THEME_KALEEM\CustomCSS\Outpatient.css" />
     <Content Include="wwwroot\THEME_KALEEM\CustomCSS\Pharmacy.css" />
     <Content Include="wwwroot\THEME_KALEEM\CustomCSS\pharmacyuser.css" />
+    <Content Include="wwwroot\THEME_KALEEM\CustomCSS\PhysiotherapyAssessment.css" />
     <Content Include="wwwroot\THEME_KALEEM\CustomCSS\PR.css" />
     <Content Include="wwwroot\THEME_KALEEM\CustomCSS\Product.css" />
     <Content Include="wwwroot\THEME_KALEEM\CustomCSS\Receipts.css" />
@@ -1660,6 +1665,9 @@
     <Content Include="wwwroot\THEME_KALEEM\images\StudentImages\3.jpg" />
     <Content Include="wwwroot\THEME_KALEEM\images\StudentImages\3631.png" />
     <Content Include="wwwroot\THEME_KALEEM\styleMaster.css" />
+    <Content Include="wwwroot\THEME_KHURSHID\CustomCSS\PhysiotherapyAssessment.css" />
+    <Content Include="wwwroot\THEME_NHMC\CustomCSS\PhysiotherapyAssessment.css" />
+    <Content Include="wwwroot\THEME_NOOR\CustomCSS\PhysiotherapyAssessment.css" />
     <Content Include="wwwroot\THEME_NOOR\styleMaster.css" />
     <Content Include="wwwroot\THEME_CPTH\CustomCSS\AddNewLabTest.css" />
     <Content Include="wwwroot\THEME_CPTH\CustomCSS\AddpurchaseInvoice.css" />
@@ -1757,6 +1765,7 @@
     <Content Include="wwwroot\THEME_CPTH\images\StudentImages\3.jpg" />
     <Content Include="wwwroot\THEME_CPTH\images\StudentImages\3631.png" />
     <Content Include="wwwroot\THEME_CPTH\styleMaster.css" />
+    <Content Include="wwwroot\THEME_PAKRED\CustomCSS\PhysiotherapyAssessment.css" />
     <Content Include="wwwroot\THEME_SKINSTUDIO\CustomCSS\AddNewLabTest.css" />
     <Content Include="wwwroot\THEME_SKINSTUDIO\CustomCSS\AddpurchaseInvoice.css" />
     <Content Include="wwwroot\THEME_SKINSTUDIO\CustomCSS\Advance.css" />
@@ -1803,6 +1812,7 @@
     <Content Include="wwwroot\THEME_SKINSTUDIO\CustomCSS\Outpatient.css" />
     <Content Include="wwwroot\THEME_SKINSTUDIO\CustomCSS\Pharmacy.css" />
     <Content Include="wwwroot\THEME_SKINSTUDIO\CustomCSS\pharmacyuser.css" />
+    <Content Include="wwwroot\THEME_SKINSTUDIO\CustomCSS\PhysiotherapyAssessment.css" />
     <Content Include="wwwroot\THEME_SKINSTUDIO\CustomCSS\PR.css" />
     <Content Include="wwwroot\THEME_SKINSTUDIO\CustomCSS\Product.css" />
     <Content Include="wwwroot\THEME_SKINSTUDIO\CustomCSS\Receipts.css" />
@@ -2486,6 +2496,7 @@
     <Content Include="wwwroot\THEME_STANDARD\CustomCSS\Outpatient.css" />
     <Content Include="wwwroot\THEME_STANDARD\CustomCSS\Pharmacy.css" />
     <Content Include="wwwroot\THEME_STANDARD\CustomCSS\pharmacyuser.css" />
+    <Content Include="wwwroot\THEME_STANDARD\CustomCSS\PhysiotherapyAssessment.css" />
     <Content Include="wwwroot\THEME_STANDARD\CustomCSS\Policy.css" />
     <Content Include="wwwroot\THEME_STANDARD\CustomCSS\PR.css" />
     <Content Include="wwwroot\THEME_STANDARD\CustomCSS\Product.css" />
@@ -2583,6 +2594,7 @@
     <Content Include="wwwroot\THEME_TIBBIT\CustomCSS\Outpatient.css" />
     <Content Include="wwwroot\THEME_TIBBIT\CustomCSS\Pharmacy.css" />
     <Content Include="wwwroot\THEME_TIBBIT\CustomCSS\pharmacyuser.css" />
+    <Content Include="wwwroot\THEME_TIBBIT\CustomCSS\PhysiotherapyAssessment.css" />
     <Content Include="wwwroot\THEME_TIBBIT\CustomCSS\Policy.css" />
     <Content Include="wwwroot\THEME_TIBBIT\CustomCSS\PR.css" />
     <Content Include="wwwroot\THEME_TIBBIT\CustomCSS\Product.css" />
