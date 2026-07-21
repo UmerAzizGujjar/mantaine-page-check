@@ -1,6 +1,6 @@
 ﻿<%@ Page Title="" Language="C#" MasterPageFile="~/Site.Master" AutoEventWireup="true" CodeBehind="RegisterPatient.aspx.cs" Inherits="PMS.Modules.PatientManagement.RegisterPatient" %>
 <asp:Content ID="Content1" ContentPlaceHolderID="HeadContent" runat="server">
-    <script src="../../wwwroot/THEME_TIBBIT/CustomJs/RegPatient.js" type="text/javascript"></script>
+    <script src="../../wwwroot/THEME_TIBBIT/CustomJs/RegPatient.js?v=<%= System.IO.File.GetLastWriteTime(Server.MapPath("~/wwwroot/THEME_TIBBIT/CustomJs/RegPatient.js")).Ticks %>" type="text/javascript"></script>
     <link href="../../wwwroot/THEME_TIBBIT/CustomCSS/RegPat.css" rel="stylesheet" />
    
     <script type="text/javascript">
