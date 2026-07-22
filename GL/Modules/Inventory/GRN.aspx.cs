@@ -29,6 +29,53 @@ namespace PMS.Inventory
                 }
             }
         }
+        [WebMethod]
+        public static string GetAllitem(string searchText, string warehouseId)
+        {
+            try
+            {
+                DataBaseDataContext db = new DataBaseDataContext();
+
+                var Details = db.INV_Items
+                    .Where(x => (string.IsNullOrEmpty(searchText)
+                                || x.Item_Code.Contains(searchText)
+                                || x.Description.Contains(searchText))
+
+                             && x.Active == true
+                             && x.Services != true
+                             && (string.IsNullOrEmpty(warehouseId)
+                         || x.InventoryOrg == warehouseId
+                         || db.Item_Warehouse_Mappings.Any(m =>
+                              m.Item_ID == x.Item_ID
+                              && m.Warehouse_Id == warehouseId)
+                         ))
+                    .OrderBy(x => x.Item_Code)
+                    .Take(200)
+                    .Select(x => new
+                    {
+                        Item_ID = x.Item_ID,
+                        Item_Code = x.Item_Code,
+                        Description = x.Description,
+                        Unit = db.GetDataValueName("UOM", x.Unit) ?? "",
+                        Purchase_Rate = x.Purchase_Rate != null ? x.Purchase_Rate : 0,
+                        UOM_Qty = x.UOM_Qty != null ? x.UOM_Qty : 1,
+                        Last_GRN_Rate = (from pd in db.GRN_Details
+                                        join ph in db.GRN_Masters on pd.GRNId equals ph.GRN_ID
+                                        where pd.Item_Id == x.Item_ID
+                                        orderby ph.Creation_Date descending
+                                        select pd.Rate)
+                            .FirstOrDefault() ?? 0,
+                        TotalStock = db.GetInvenrtoryItemUomTotalStock(x.Item_ID, x.InventoryOrg)
+                    })
+                         .ToList();
+
+                return (new JavaScriptSerializer()).Serialize(Details);
+            }
+            catch (Exception)
+            {
+                return (new JavaScriptSerializer()).Serialize(new List<object>());
+            }
+        }
 
         [WebMethod]
         public static int SaveGRNDetail(string btnSave, string AllItemDetail)
@@ -78,21 +125,46 @@ namespace PMS.Inventory
                 db.GRN_Details.DeleteAllOnSubmit(lstGRNItemDetails);
                 db.SubmitChanges();
             }
-
-            foreach (var item in record.ItemList)
+            if (record.ItemList != null)
             {
-                GRN_Detail ltd = new GRN_Detail();
-                ltd.ItemCode = item.ItemCode;
-                ltd.GRNId = int.Parse(GRNNo);
-                ltd.MfgDate = Convert.ToDateTime(item.Mfgdate);
-                ltd.ExpiryDate = Convert.ToDateTime(item.Expdate);
-                ltd.IGPDetailId = Convert.ToInt32(item.IGPDetailId);
-                ltd.GRNQty = Convert.ToDecimal(item.AccQty);
-                ltd.Item_Id = Convert.ToInt32(DBClass.getField("select Item_Id from inv_items where Item_Code=" + Convert.ToInt32(item.ItemCode)));
-                db.GRN_Details.InsertOnSubmit(ltd);
-                db.SubmitChanges();
+                foreach (var item in record.ItemList)
+                {
+                    GRN_Detail ltd = new GRN_Detail();
+                    ltd.ItemCode = item.ItemCode;
+                    ltd.GRNId = int.Parse(GRNNo);
+                    ltd.MfgDate = Convert.ToDateTime(item.Mfgdate);
+                    ltd.ExpiryDate = Convert.ToDateTime(item.Expdate);
+                    ltd.IGPDetailId = Convert.ToInt32(item.IGPDetailId);
+                    ltd.GRNQty = Convert.ToDecimal(item.AccQty);
+                    ltd.Item_Id = Convert.ToInt32(DBClass.getField("select Item_Id from inv_items where Item_Code=" + Convert.ToInt32(item.ItemCode)));
+                    db.GRN_Details.InsertOnSubmit(ltd);
+                    db.SubmitChanges();
+                }
+
             }
-            return int.Parse(GRNNo);
+            if (record.ItemListDir != null)
+            {
+                foreach (var item in record.ItemListDir)
+                {
+                    GRN_Detail ltd = new GRN_Detail();
+                    ltd.ItemCode = item.ItemCodeDir;
+                    ltd.GRNId = int.Parse(GRNNo);
+                    ltd.MfgDate = Convert.ToDateTime(item.MfgdateDir);
+                    ltd.ExpiryDate = Convert.ToDateTime(item.ExpdateDir);
+                    ltd.BatchNum = item.BatchNoDir;
+                    ltd.UOM_Qty = Convert.ToInt32(item.UOMQtyDir);
+                    ltd.BounusQty = Convert.ToInt32(item.BONQtyDir);
+                    //ltd.IGPDetailId = Convert.ToInt32(item.IGPDetailId);
+                    ltd.GRNQty = Convert.ToDecimal(item.GRNQtyDir);
+                    ltd.Rate = Convert.ToDecimal(item.RateDir);
+                    ltd.Amount = Convert.ToDecimal(item.AmountDir);
+                    ltd.Item_Id = Convert.ToInt32(DBClass.getField("select Item_Id from inv_items where Item_Code=" + Convert.ToInt32(item.ItemCodeDir)));
+                    db.GRN_Details.InsertOnSubmit(ltd);
+                    db.SubmitChanges();
+                }
+            }
+                return int.Parse(GRNNo);
+            
         }
 
         [WebMethod]
@@ -258,6 +330,7 @@ namespace PMS.Inventory
             public string InvOrg { get; set; }
             public string project { get; set; }
             public List<DetailGRNList> ItemList { get; set; }
+            public List<DetailGRNListDir> ItemListDir { get; set; }
         }
 
         public class DetailGRNList
@@ -267,6 +340,22 @@ namespace PMS.Inventory
             public string Expdate { get; set; }
             public string AccQty { get; set; }
             public string GRNQty { get; set; }
+            public string IGPDetailId { get; set; }
+
+        }
+
+        public class DetailGRNListDir
+        {
+            public string ItemIdDir { get; set; }
+            public string ItemCodeDir { get; set; }
+            public string MfgdateDir { get; set; }
+            public string ExpdateDir { get; set; }
+            public string GRNQtyDir { get; set; }
+            public string RateDir { get; set; }
+            public string AmountDir { get; set; }
+            public string UOMQtyDir { get; set; }
+            public string BONQtyDir { get; set; }
+            public string BatchNoDir { get; set; }
             public string IGPDetailId { get; set; }
 
         }
