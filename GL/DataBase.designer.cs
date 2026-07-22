@@ -241525,6 +241525,8 @@ namespace PMS
 
         private decimal _LastPORate;
 
+        private string _LastVendorName;
+
         public sp_GetPRDetailByPRIDResult()
         {
         }
@@ -241733,6 +241735,22 @@ namespace PMS
                 if ((this._LastPORate != value))
                 {
                     this._LastPORate = value;
+                }
+            }
+        }
+
+        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_LastVendorName", DbType = "VarChar(100) NOT NULL", CanBeNull = false)]
+        public string LastVendorName
+        {
+            get
+            {
+                return this._LastVendorName;
+            }
+            set
+            {
+                if ((this._LastVendorName != value))
+                {
+                    this._LastVendorName = value;
                 }
             }
         }

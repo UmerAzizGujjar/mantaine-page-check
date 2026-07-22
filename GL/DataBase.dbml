@@ -12898,6 +12898,7 @@
       <Column Name="UOM_Qty" Type="System.Decimal" DbType="Decimal(18,2)" CanBeNull="true" />
       <Column Name="TotalStock" Type="System.Decimal" DbType="Decimal(18,2)" CanBeNull="true" />
       <Column Name="LastPORate" Type="System.Decimal" DbType="Decimal(18,4) NOT NULL" CanBeNull="false" />
+      <Column Name="LastVendorName" Type="System.String" DbType="VarChar(100) NOT NULL" CanBeNull="false" />
     </ElementType>
   </Function>
 </Database>

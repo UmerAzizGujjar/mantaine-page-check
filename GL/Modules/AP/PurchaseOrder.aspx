@@ -163,7 +163,8 @@
                 item.Purchase_Rate || 0,
                 0, // pr_detail_id (0 for direct items)
                 item.TotalStock || 0,
-                item.Purchase_Rate || 0
+                item.Purchase_Rate || 0,
+                 item.LastVendorName || ""
             );
 
             $("#tblItemDescription tbody").append(newRow);
@@ -468,7 +469,8 @@
                             itm.Sale_Rate || 0,
                             0, 
                             0, 
-                            itm.Sale_Rate || 0 
+                            itm.Sale_Rate || 0 ,
+                            itm.LastVendorName || "" 
                         );
 
                         $("#tblItemDescription tbody").append(newRow);
@@ -532,6 +534,7 @@
 
             var total_stock = $($(row).find('td')[11]).text() || '0';
             var last_po_rate = $($(row).find('td')[12]).text() || '0';
+            var last_vendor_name = $($(row).find('td')[13]).text() || '';
 
             if (unit == "null") unit = "";
             if (Rate == "null" || Rate == "NaN") Rate = "0";
@@ -616,7 +619,7 @@
         }
 
         // Helper function to build row HTML
-        function buildNewRow(length, PR_Num, itemcode, item_name, unit, Qty, UOM_Qty, Rate, pr_detail_id, total_stock, lastPORate) {
+        function buildNewRow(length, PR_Num, itemcode, item_name, unit, Qty, UOM_Qty, Rate, pr_detail_id, total_stock, lastPORate,lastVendorName) {
             return '<tr>' +
                 '<td style="padding-top:7px!important;"><input type="hidden" id="txtPRDId' + length + '" name="txtPRDId" value="' + pr_detail_id + '" style="width: 75px !important;text-align:right" />' + length + '</td>' +
                 '<td style="padding-top: 7px!important;"><input type="hidden" name="txtPRNo" id="txtPRNO' + length + '" value="' + PR_Num + '" style="text-align:right ;width:50px !important;font-size:9px;height:20px;padding-top: 7px!important;padding-right: 3px!important;"/>' + PR_Num + '</td>' +
@@ -646,6 +649,7 @@
                 '<td style="padding-top: 7px!important; text-align:right;">' +
                 '<input type="text" readonly="readonly" id="txtLastPORate' + length + '" name="txtLastPORate" ' +
                 'style="width:50px !important;text-align:right;font-size:9px;height:20px;" value="' + parseFloat(lastPORate).toFixed(2) + '" />' +
+                '<td style="padding-top: 7px!important; text-align:center; font-size:9px;">' + (lastVendorName || '') + '</td>' + 
                 '<td style="padding-top: 7px!important;"><a href="javascript:void(0)" onclick="ExcludeFromPayment(this)"><i class="fa fa-trash" style="font-size: 13px;margin-left: 16px; color: #f30a0a;position:relative;left: -10px;"></i></a>  </td>' +
                 '</tr>';
         }
@@ -714,6 +718,7 @@
                         '<td style="display:none;">' + (Test[i].UOM_Qty != null ? Test[i].UOM_Qty : '0') + '</td>' +
                         '<td>' + (Test[i].TotalStock != null ? Test[i].TotalStock : '0') + '</td>' +
                         '<td style="display:none;">' + (Test[i].LastPORate != null ? parseFloat(Test[i].LastPORate).toFixed(2) : '0.00') + '</td>' +
+                        '<td style="display:none;">' + (Test[i].LastVendorName != null ? Test[i].LastVendorName : '') + '</td>' + 
                         '</tr>';
                     $('#tblPOItemstModelTable tbody').append(rows);
                 }
@@ -1737,6 +1742,7 @@ function scheduleCalcTotal(delay) {
                             '<input type="text" readonly="readonly" id="txtLastPORate' + idx + '" name="txtLastPORate" ' +
                             'style="width:50px !important;text-align:right;font-size:9px;height:20px;" value="' + parseFloat(safeVal(value.Rate, 0)).toFixed(2) + '" />' +
                             '</td>' +
+                            '<td style="padding-top: 7px!important; text-align:center; font-size:9px;">' + (value.LastVendorName || '') + '</td>' + 
                             '<td style="padding-top: 7px!important;"><a href="javascript:void(0)" onclick="ExcludeFromPayment(this)"><i class="fa fa-trash" style="font-size: 13px;margin-left: 16px; color: #f30a0a;position:relative;left: -10px;"><\/i><\/a>  <\/td>' +
                             '<\/tr>';
                         rowsHTML.push(row);
@@ -3028,6 +3034,7 @@ function scheduleCalcTotal(delay) {
                             '<td style="display:none;">' + (item.UOM_Qty || 1) + '</td>' +
                             '<td style="">' + (item.Last_PO_Rate) + '</td>' +
                             '<td>' + (item.TotalStock || 0) + '</td>' +
+                            '<td>' + (item.Last_Vendor_Name || '') + '</td>' + 
                             '</tr>';
                         tableBody.append(row);
                     });
@@ -3138,6 +3145,7 @@ function scheduleCalcTotal(delay) {
 
 
             var total_stock = $(row).find('td:eq(8)').text().trim() || '0';
+            var last_vendor_name = $(row).find('td:eq(9)').text().trim() || '';
             var isChecked = $(anchor).prop('checked');
 
             if (!isChecked) {
@@ -3221,6 +3229,7 @@ function scheduleCalcTotal(delay) {
                 '<input type="text" readonly="readonly" id="txtLastPORate' + length + '" name="txtLastPORate" ' +
                 'style="width:50px !important;text-align:right;font-size:9px;height:20px;" value="' + last_po_rate + '" />' +
                 '</td>' +
+                '<td style="padding-top: 7px!important; text-align:center; font-size:9px;">' + last_vendor_name + '</td>' +
                 '</td>' +
                 '<td style="padding-top: 7px!important;"><a href="javascript:void(0)" onclick="ExcludeFromPayment(this)"><i class="glyphicon glyphicon-trash" style="font-size: 13px;margin-left: 16px; color: #f30a0a;position:relative;left: -10px;"></i></a>   </td>' +
                 '</tr>';
@@ -3536,6 +3545,7 @@ function scheduleCalcTotal(delay) {
                     <th style="width: 75px;">Delivery Date</th>
                     <th style="width: 60px; text-align: center;">Stock</th>
                     <th style="width: 80px; text-align: center;">Last PO Rate</th>
+                    <th style="width: 120px; text-align: center;">Last Vendor</th> 
                     <th style="width: 45px;">Action</th>
                 </tr>
             </thead>
@@ -3829,9 +3839,10 @@ function scheduleCalcTotal(delay) {
                                     <!-- td:eq(5) -->
                                     <th style="display: none;">UOM Qty</th>
 
-                                    <th>Last Purchase Rate</th>
+                                    <th>Last Purchase Rate</th>                               
                                     <!-- td:eq(6) -->
                                     <th>Stock</th>
+                                    <th>Last Vendor</th>
                                 </tr>
                             </thead>
                             <tbody id="itemsTableBody">
