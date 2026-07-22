@@ -731,6 +731,34 @@
                     var datetime = '';
                     var currentDate = new Date();
                     var formattedDate = $.datepicker.formatDate('dd M yy', currentDate);
+                    var hasDuplicate = false;
+                    var duplicateItemCode = "";
+
+                    $.each(item.PurchaseOrderDetails, function (key, value) {
+                        var existingRow = $('#tblItemDescription').find('input[name=txtItemCode][value="' + value.Item_Code + '"]');
+
+                        if (existingRow.length > 0) {
+                            hasDuplicate = true;
+                            duplicateItemCode = value.Item_Code;
+                            return false;
+                        }
+                    });
+
+                    if (hasDuplicate) {
+                        Swal.fire({
+                            icon: 'error',
+                            title: 'Error!',
+                            text: 'This PO is already added to the list.',
+                            showConfirmButton: false,
+                            timer: 3000,
+                            customClass: {
+                                popup: 'swal-big-popup',
+                                title: 'swal-big-title',
+                                htmlContainer: 'swal-big-text'
+                            }
+                        });
+                        return; 
+                    }
                     $.each(item.PurchaseOrderDetails, function (key, value) {
                         if (value.Unit == null)
                             value.Unit = "";

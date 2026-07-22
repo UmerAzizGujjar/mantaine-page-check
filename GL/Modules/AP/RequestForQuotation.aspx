@@ -2,6 +2,13 @@
 
 <asp:Content ID="Content1" ContentPlaceHolderID="HeadContent" runat="server">
  
+    <style>
+        /* Prevent Select2 dropdown from being clipped inside modal */
+        #VendorModal { overflow: visible !important; }
+        #VendorModal .modal-body { overflow: visible !important; }
+        #VendorModal .modal-content { overflow: visible !important; }
+        .select2-container { z-index: 9999 !important; }
+    </style>
     <script type="text/javascript">
         var _gloabal = '';
         function Filltaxtype() {
@@ -49,7 +56,7 @@
             });
             Filltaxtype();
 
-            $('select').select2();
+            $('#ctl00_MainContent_ddlVendors').select2({ dropdownParent: $('#VendorModal') });
             var currentDate = new Date();
             var formattedDate = $.datepicker.formatDate('dd M yy', currentDate);
             $("#txtRFQ_Date").val(formattedDate).datepicker({ dateFormat: 'dd M yy', readOnly: true });

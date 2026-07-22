@@ -162,7 +162,8 @@
                 item.UOM_Qty || 1,
                 item.Purchase_Rate || 0,
                 0, // pr_detail_id (0 for direct items)
-                item.TotalStock || 0
+                item.TotalStock || 0,
+                item.Purchase_Rate || 0
             );
 
             $("#tblItemDescription tbody").append(newRow);
@@ -430,7 +431,96 @@
 
         function append(anchor, isBulk = false) {
             debugger;
+
+            if (typeof anchor === 'string' || typeof anchor === 'number') {
+                var itemId = anchor;
+                if (!itemId) {
+                    console.warn("No item ID found for token input addition.");
+                    return;
+                }
+
+                callPageMethod('SearchItem', { ItemCode: parseInt(itemId) }, function (response) {
+                    var items = JSON.parse(response);
+                    if (items && items.length > 0) {
+                        var itm = items[0];
+                        var length = $("#tblItemDescription tr:gt(0)").length + 1;
+
+                        var test_array = $('#tblItemDescription').find('input[name=txtItemCode][value="' + itm.Item_Code + '"]');
+                        if (test_array.length > 0) {
+                            Swal.fire({
+                                icon: 'error',
+                                title: 'Error!',
+                                text: 'This Item already added!',
+                                showConfirmButton: false,
+                                timer: 2000
+                            });
+                            return;
+                        }
+
+                        var newRow = buildNewRow(
+                            length,
+                            "", 
+                            itm.Item_Code,
+                            itm.Description,
+                            itm.UnitName || itm.Unit,
+                            1, 
+                            itm.Pack_Quantity || 1, 
+                            itm.Sale_Rate || 0,
+                            0, 
+                            0, 
+                            itm.Sale_Rate || 0 
+                        );
+
+                        $("#tblItemDescription tbody").append(newRow);
+
+                        
+                        var staxLoaded = false;
+                        var advTaxLoaded = false;
+                        function checkBothLoaded() {
+                            if (staxLoaded && advTaxLoaded) {
+                                CulculateAmonutWithQty(length);
+                                $('[data-toggle="tooltip"]').tooltip();
+                                $('#txtddate' + length).datepicker({ dateFormat: 'dd M yy' }).attr('readonly', 'readonly');
+                                calcTotal();
+                            }
+                        }
+
+                        callPageMethod('getwtaxtype', function (response) {
+                            var options = '<option value="0">0</option>';
+                            try {
+                                var taxData = JSON.parse(response);
+                                $.each(taxData, function (key, value) {
+                                    options += '<option value="' + value.Sales_Tax_ID + '">' + value.Sales_Tax_Perc + '</option>';
+                                });
+                            } catch (e) { console.error('Error parsing tax data:', e); }
+                            $('#ddlSTAX' + length).html(options);
+                            staxLoaded = true;
+                            checkBothLoaded();
+                        });
+
+                        callPageMethod('getAdvanceTaxType', function (response) {
+                            var options = '<option value="0">0</option>';
+                            try {
+                                var taxData = JSON.parse(response);
+                                $.each(taxData, function (key, value) {
+                                    options += '<option value="' + value.Advance_Tax_ID + '">' + value.Advance_Tax_Perc + '</option>';
+                                });
+                            } catch (e) { console.error('Error parsing advance tax data:', e); }
+                            $('#ddlAdvanceTax' + length).html(options);
+                            advTaxLoaded = true;
+                            checkBothLoaded();
+                        });
+                    }
+                });
+                return;
+            }
+
+            
             var row = $(anchor).parents('tr')[0];
+
+            
+            if (!row) return;
+
             var PR_Num = $($(row).find('td')[1]).text();
             var item_name = $($(row).find('td')[3]).text();
             var unit = $($(row).find('td')[6]).text();
@@ -441,14 +531,16 @@
             var UOM_Qty = $($(row).find('td')[10]).text();
 
             var total_stock = $($(row).find('td')[11]).text() || '0';
+            var last_po_rate = $($(row).find('td')[12]).text() || '0';
 
             if (unit == "null") unit = "";
             if (Rate == "null" || Rate == "NaN") Rate = "0";
             if (UOM_Qty == "null" || UOM_Qty == "") UOM_Qty = "0";
+            if (last_po_rate == "null" || last_po_rate == "NaN") last_po_rate = "0";
 
             var length = $("#tblItemDescription tr:gt(0)").length + 1;
 
-            // Check for duplicates
+            
             var test_array = $('#tblItemDescription').find('input[name=txtItemCode][value="' + itemcode + '"]');
             if (test_array.length > 0) {
                 if (!isBulk) {
@@ -462,12 +554,11 @@
                 }
                 return false;
             } else {
-                // Build row
-                var newRow = buildNewRow(length, PR_Num, itemcode, item_name, unit, Qty, UOM_Qty, Rate, pr_detail_id, total_stock);
+                
+                var newRow = buildNewRow(length, PR_Num, itemcode, item_name, unit, Qty, UOM_Qty, Rate, pr_detail_id, total_stock, last_po_rate);
                 $("#tblItemDescription tbody").append(newRow);
 
-                // Populate dropdowns for the new row
-                // Use the progress-tracking functions to ensure dropdowns are loaded
+                
                 var staxLoaded = false;
                 var advTaxLoaded = false;
 
@@ -482,7 +573,7 @@
                     }
                 }
 
-                // Populate Sales Tax dropdown
+                
                 callPageMethod('getwtaxtype', function (response) {
                     var options = '<option value="0">0</option>';
                     try {
@@ -502,7 +593,7 @@
                     checkBothLoaded();
                 });
 
-                // Populate Advance Tax dropdown
+                
                 callPageMethod('getAdvanceTaxType', function (response) {
                     var options = '<option value="0">0</option>';
                     try {
@@ -525,7 +616,7 @@
         }
 
         // Helper function to build row HTML
-        function buildNewRow(length, PR_Num, itemcode, item_name, unit, Qty, UOM_Qty, Rate, pr_detail_id, total_stock) {
+        function buildNewRow(length, PR_Num, itemcode, item_name, unit, Qty, UOM_Qty, Rate, pr_detail_id, total_stock, lastPORate) {
             return '<tr>' +
                 '<td style="padding-top:7px!important;"><input type="hidden" id="txtPRDId' + length + '" name="txtPRDId" value="' + pr_detail_id + '" style="width: 75px !important;text-align:right" />' + length + '</td>' +
                 '<td style="padding-top: 7px!important;"><input type="hidden" name="txtPRNo" id="txtPRNO' + length + '" value="' + PR_Num + '" style="text-align:right ;width:50px !important;font-size:9px;height:20px;padding-top: 7px!important;padding-right: 3px!important;"/>' + PR_Num + '</td>' +
@@ -552,6 +643,9 @@
                 '<td style="text-align:right ;width:50px !important;font-size:9px;height:20px;padding-top: 7px!important;"><input type="text" style="width:50px !important;text-align:right;font-size:9px;height:20px;" value="0" readonly="readonly" id="txtTotalAmount' + length + '" name="txtTotalAmount"></input></td>' +
                 '<td><input type="text" name="txtddate" id="txtddate' + length + '" class="row-date-picker" style="width:64px !important;text-align:center;font-size:9px;height:20px;" /></td>' +
                 '<td style="text-align:center; font-weight:bold; color:#555;">' + total_stock + '</td>' +
+                '<td style="padding-top: 7px!important; text-align:right;">' +
+                '<input type="text" readonly="readonly" id="txtLastPORate' + length + '" name="txtLastPORate" ' +
+                'style="width:50px !important;text-align:right;font-size:9px;height:20px;" value="' + parseFloat(lastPORate).toFixed(2) + '" />' +
                 '<td style="padding-top: 7px!important;"><a href="javascript:void(0)" onclick="ExcludeFromPayment(this)"><i class="fa fa-trash" style="font-size: 13px;margin-left: 16px; color: #f30a0a;position:relative;left: -10px;"></i></a>  </td>' +
                 '</tr>';
         }
@@ -619,6 +713,7 @@
                         '<td style="display:none;">' + Test[i].PR_Detail_ID + '</td>' +
                         '<td style="display:none;">' + (Test[i].UOM_Qty != null ? Test[i].UOM_Qty : '0') + '</td>' +
                         '<td>' + (Test[i].TotalStock != null ? Test[i].TotalStock : '0') + '</td>' +
+                        '<td style="display:none;">' + (Test[i].LastPORate != null ? parseFloat(Test[i].LastPORate).toFixed(2) : '0.00') + '</td>' +
                         '</tr>';
                     $('#tblPOItemstModelTable tbody').append(rows);
                 }
@@ -850,9 +945,9 @@
             syncMetaBar();
             initSourceToggle();
 
-        // Load PO data ONLY if PO_ID exists in query string
+            // Load PO data ONLY if PO_ID exists in query string
      <% if (Request.QueryString["PO_ID"] != null) { %>
-             var PO_ID = '<%= Request.QueryString["PO_ID"]%>';
+            var PO_ID = '<%= Request.QueryString["PO_ID"]%>';
              showLoader('Loading Purchase Order...', true);
              $('#btnSave').hide();
 
@@ -885,10 +980,28 @@
 
             $('#txtItem').tokenInput("../../json.aspx?Table=INV_ItemsForPR", {
                 tokenLimit: 1,
+                onResult: function (results) {
+                    if (warehouseCond === '01') {
+                        var warehouseVal = $('#ddlWarehouse').val();
+                        if (!warehouseVal || warehouseVal === '0' || warehouseVal === '') {
+                            if (typeof Swal !== 'undefined' && !Swal.isVisible()) {
+                                Swal.fire({
+                                    icon: 'warning',
+                                    title: 'Warning!',
+                                    text: 'Please select warehouse first',
+                                    timer: 3000,
+                                    showConfirmButton: false
+                                });
+                            }
+                            $('#ddlWarehouse').focus();
+                            return [];
+                        }
+                    }
+                    return results;
+                },
                 onAdd: function (item) {
                     try {
-                        $("#hditemID").val(item.id);
-                        append();
+                        append(item.id);
                         $('#btnGIR').attr('disabled', true);
                         $('#btnGIR').css('pointer-events', 'none');
                         $('#ctl00_MainContent_ddlGIR').css('pointer-events', 'none');
@@ -902,6 +1015,7 @@
             $('#txtItem').focus();
 
             $('#btnGetAllItems').on('click', function () {
+                debugger;
                 if (warehouseCond === '01') {
                     var warehouseVal = $('#ddlWarehouse').val();
                     if (!warehouseVal || warehouseVal === '0' || warehouseVal === '') {
@@ -1619,6 +1733,10 @@ function scheduleCalcTotal(delay) {
                             '<td style="text-align:right ;width:50px !important;font-size:9px;height:20px;padding-top: 7px!important;"><input type="text" style="width:50px !important;text-align:right;font-size:9px;height:20px;" value="' + safeVal(value.Amount, 0) + '" readonly="readonly" id="txtTotalAmount' + idx + '" name="txtTotalAmount"><\/input><\/td>' +
                             '<td><input type="text" name="txtddate" id="txtddate' + idx + '" value="' + TrnsDate + '" style="text-align:right ;width:64px !important;font-size:9px;height:20px;" /><\/td>' +
                             '<td style="text-align:center; font-weight:bold; color:#555;">' + (value.TotalStock != null ? value.TotalStock : '0') + '</td>' +
+                            '<td style="padding-top: 7px!important; text-align:right;">' +
+                            '<input type="text" readonly="readonly" id="txtLastPORate' + idx + '" name="txtLastPORate" ' +
+                            'style="width:50px !important;text-align:right;font-size:9px;height:20px;" value="' + parseFloat(safeVal(value.Rate, 0)).toFixed(2) + '" />' +
+                            '</td>' +
                             '<td style="padding-top: 7px!important;"><a href="javascript:void(0)" onclick="ExcludeFromPayment(this)"><i class="fa fa-trash" style="font-size: 13px;margin-left: 16px; color: #f30a0a;position:relative;left: -10px;"><\/i><\/a>  <\/td>' +
                             '<\/tr>';
                         rowsHTML.push(row);
@@ -3016,7 +3134,10 @@ function scheduleCalcTotal(delay) {
             var unit = $(row).find('td:eq(4)').text().trim();
             var rate = $(row).find('td:eq(5)').text().trim() || '0';
             var uom_qty = $(row).find('td:eq(6)').text().trim() || '1';
-            var total_stock = $(row).find('td:eq(7)').text().trim() || '0';
+            var last_po_rate = $(row).find('td:eq(7)').text().trim() || '0';
+
+
+            var total_stock = $(row).find('td:eq(8)').text().trim() || '0';
             var isChecked = $(anchor).prop('checked');
 
             if (!isChecked) {
@@ -3086,7 +3207,7 @@ function scheduleCalcTotal(delay) {
                 '<td><select id="ddlSTAX' + length + '" name="ddlSTAX" onchange="calcTotal()" style="text-align:right ;width:50px !important;font-size:9px;height:20px;"><option value="0">0</option></select></td>' +
                 '<td style="padding-top: 7px!important;text-align:right!important"><input type="text" style="text-align:right!important; width:50px !important;font-size:9px;height:20px;" value="0" readonly="readonly" id="txtSalAmount' + length + '" name="txtSalAmount" /></td>' +
                 '<td><input type="text" id="ddlFurtherTax' + length + '" name="ddlFurtherTax" onkeyup="calcTotal()" style="text-align:right ;width:50px !important;font-size:9px;height:20px;" value="0" /></td>' +
-            /*'<td><input type="text" readonly="readonly" style="width:50px !important;text-align:right;font-size:9px;height:20px;" value="0" id="txtFurtherTaxAmount' + length + '" name="txtFurtherTaxAmount"></td>' +*/
+                /*'<td><input type="text" readonly="readonly" style="width:50px !important;text-align:right;font-size:9px;height:20px;" value="0" id="txtFurtherTaxAmount' + length + '" name="txtFurtherTaxAmount"></td>' +*/
                 '<td><input type="text" style="width:50px !important;text-align:right;font-size:9px;height:20px;" value="0" id="txtFurtherTaxAmount' + length + '" name="txtFurtherTaxAmount" onkeyup="calcFurtherTaxFromAmount(this)" data-manual="false"></td>' +
                 '<td><select id="ddlAdvanceTax' + length + '" name="ddlAdvanceTax" onchange="calcTotal()" style="text-align:right ;width:50px !important;font-size:9px;height:20px;"><option value="0">0</option></select></td>' +
                 '<td><input type="text" readonly="readonly" style="width:50px !important;text-align:right;font-size:9px;height:20px;" value="0" id="txtAdvanceTaxAmount' + length + '" name="txtAdvanceTaxAmount"></td>' +
@@ -3096,6 +3217,11 @@ function scheduleCalcTotal(delay) {
                 '<td style="text-align:right ;width:50px !important;font-size:9px;height:20px;padding-top: 7px!important;"><input type="text" style="width:50px !important;text-align:right;font-size:9px;height:20px;" value="0" readonly="readonly" id="txtTotalAmount' + length + '" name="txtTotalAmount"></input></td>' +
                 '<td><input type="text" name="txtddate" id="txtddate' + length + '" class="row-date-picker" style="width:64px !important;text-align:center;font-size:9px;height:20px;" /></td>' +
                 '<td style="text-align:center; font-weight:bold; color:#555;">' + total_stock + '</td>' +
+                '<td style="padding-top: 7px!important; text-align:right;">' +
+                '<input type="text" readonly="readonly" id="txtLastPORate' + length + '" name="txtLastPORate" ' +
+                'style="width:50px !important;text-align:right;font-size:9px;height:20px;" value="' + last_po_rate + '" />' +
+                '</td>' +
+                '</td>' +
                 '<td style="padding-top: 7px!important;"><a href="javascript:void(0)" onclick="ExcludeFromPayment(this)"><i class="glyphicon glyphicon-trash" style="font-size: 13px;margin-left: 16px; color: #f30a0a;position:relative;left: -10px;"></i></a>   </td>' +
                 '</tr>';
 
@@ -3344,7 +3470,7 @@ function scheduleCalcTotal(delay) {
                 <div id="itemInputSection" class="source-input-wrap">
                     <div class="source-inline-group">
                         <input type="text" id="txtItem" class="source-select-input" placeholder="Search items..." />
-                        <button type="button" class="source-action-btn" id="btnGetAllItems" onclick="LoadAllitem('')"><i class="fa fa-search"></i> Items</button>
+                        <button type="button" class="source-action-btn" id="btnGetAllItems" ><i class="fa fa-search"></i> Items</button>
                     </div>
                 </div>
                 <div id="prInputSection" class="source-input-wrap" style="display:none;">
@@ -3364,7 +3490,7 @@ function scheduleCalcTotal(delay) {
                     </div>
                     <div class="pr-checkbox-wrap pr-checkbox-inline" >
                         <input type="checkbox" id="IsadvancewithTax" />
-                        <label for="IsadvancewithTax">Advance With Tax</label>
+                        <label for="IsadvancewithTax">Adv Tax Including GST</label>
                     </div>
                 </div>
             </div>
@@ -3392,7 +3518,7 @@ function scheduleCalcTotal(delay) {
                     <th style="width: 218px; text-align: center;">Item Description</th>
                     <th style="width: 60px;">Unit</th>
                     <th style="width: 60px;">Qty</th>
-                    <th style="width: 60px;">UOM Qty</th>
+                    <th style="width: 60px;">UOM / P Size Qty </th>
                     <th style="width: 60px;">Bonus Qty</th>
                     <th style="width: 60px;">Rate</th>
                     <th style="width: 63px;">Dis %</th>
@@ -3409,6 +3535,7 @@ function scheduleCalcTotal(delay) {
                     <th style="width: 75px;">Total</th>
                     <th style="width: 75px;">Delivery Date</th>
                     <th style="width: 60px; text-align: center;">Stock</th>
+                    <th style="width: 80px; text-align: center;">Last PO Rate</th>
                     <th style="width: 45px;">Action</th>
                 </tr>
             </thead>
@@ -3444,6 +3571,14 @@ function scheduleCalcTotal(delay) {
             <div class="pr-totals-bar-item">
                 <label>Net Amount</label>
                 <input type="text" id="ctl00_MainContent_Net_Amount" readonly="readonly" class="pr-total-input" placeholder="0.00" />
+            </div>
+            <div class="pr-totals-bar-item" style="display: none;">
+                <label>Adv Tax</label>
+                <input type="text" id="txtAdv_amou" readonly="readonly" class="pr-total-input" placeholder="0.00" />
+            </div>
+            <div class="pr-totals-bar-item" style="display: none;">
+                <label>Further Tax</label>
+                <input type="text" id="txtFurther_amou" readonly="readonly" class="pr-total-input" placeholder="0.00" />
             </div>
         </div>
     </div>

@@ -8,6 +8,8 @@
         var pharmacyChartInstance = null;
         var clinicalChartInstance = null;
         var satisfactionChartInstance = null;
+        var deptPctChart = null;
+        var deptCountChart = null;
         var _sparkCharts = {};
 
         function setPeriod(period, startDate, endDate) {
@@ -29,6 +31,7 @@
             LoadOPDVolume(period, startDate, endDate);
             LoadWaitTimeTrends(period, startDate, endDate);
             LoadDialysisLive(period, startDate, endDate);
+            LoadDeptStatsCharts(period, startDate, endDate);
             loadSummaryCards();
             loadRevenueTrends(period, startDate, endDate);
             LoadPharmacySnapshot(period, startDate, endDate);
@@ -151,7 +154,7 @@
                 var from = $("#" + card + "From").val();
                 var to = $("#" + card + "To").val();
                 if (!from || !to) return;
-                var targetId = card === "opd" ? "opd-area" : card === "heat" ? "trend-area" : card;
+                var targetId = card === "opd" ? "opd-area" : card === "dept" ? "dept-area" : card === "heat" ? "trend-area" : card;
                 setCardLoading(targetId, true);
                 setTimeout(function () { setCardLoading(targetId, false); }, 120000);
                 switch (card) {
@@ -160,6 +163,7 @@
                         LoadOPDVolume("custom", from, to);
                         LoadWaitTimeTrends("custom", from, to);
                         break;
+                    case "dept": LoadDeptStatsCharts("custom", from, to); break;
                     case "heat": LoadRegionalHeatmap("custom", from, to); break;
                     case "dia": LoadDialysisLive("custom", from, to); break;
                     case "ph": LoadPharmacySnapshot("custom", from, to); break;
@@ -268,6 +272,7 @@
                         LoadOPDVolume(m.period, m.startDate, m.endDate);
                         LoadWaitTimeTrends(m.period, m.startDate, m.endDate);
                         break;
+                    case "dept": LoadDeptStatsCharts(m.period, m.startDate, m.endDate); break;
                     case "heat": LoadRegionalHeatmap(m.period, m.startDate, m.endDate); break;
                     case "dia": LoadDialysisLive(m.period, m.startDate, m.endDate); break;
                     case "ph": LoadPharmacySnapshot(m.period, m.startDate, m.endDate); break;
@@ -677,6 +682,69 @@
                 ]
             };
             clinicalChartInstance.setOption(option);
+        }
+
+        function LoadDeptStatsCharts(period, startDate, endDate) {
+            var today = new Date();
+            if (period === "today" || period === "yesterday") {
+                if (period === "yesterday") today.setDate(today.getDate() - 1);
+                startDate = $.datepicker.formatDate('MM d, yy', today);
+                endDate = startDate;
+            } else if (period === "custom" && startDate && endDate) {
+                var ps = startDate.split("/"), pe = endDate.split("/");
+                startDate = $.datepicker.formatDate('MM d, yy', new Date(ps[2], ps[1] - 1, ps[0]));
+                endDate = $.datepicker.formatDate('MM d, yy', new Date(pe[2], pe[1] - 1, pe[0]));
+            } else if (!startDate || !endDate) {
+                startDate = $.datepicker.formatDate('MM d, yy', today);
+                endDate = startDate;
+            }
+            $.ajax({
+                type: "POST",
+                url: "Chief_Executive_Dashboard.aspx/GetOPDDepartmentWise",
+                data: JSON.stringify({ txt_sdate: startDate, txt_edate: endDate }),
+                contentType: "application/json; charset=utf-8",
+                dataType: "json",
+                success: function (response) {
+                    var parsedData = typeof response.d === 'string' ? JSON.parse(response.d) : response.d;
+                    if (parsedData && parsedData.Error) { console.error("Dept Stats Error:", parsedData.Error); return; }
+                    var labels = [], counts = [];
+                    if (parsedData && parsedData.length > 0) {
+                        labels = parsedData.map(function (item) { return item.Department_Name; });
+                        counts = parsedData.map(function (item) { return parseFloat(item.OPD_Count) || 0; });
+                    }
+                    var colors = ['#2E93fA', '#66DA26', '#FF9800', '#FF4560', '#546E7A', '#00E396', '#FEB019', '#A45DE8', '#26a69a', '#FF9F43'];
+                    var chartData = labels.length > 0 ? labels.map(function (l, i) {
+                        return { value: counts[i], name: l, itemStyle: { color: colors[i % colors.length] } };
+                    }) : [{ value: 1, name: 'No Data', itemStyle: { color: '#e5e7eb' } }];
+
+                    if (deptPctChart) deptPctChart.dispose();
+                    deptPctChart = echarts.init(document.querySelector("#chartDeptPct"));
+                    deptPctChart.setOption({
+                        tooltip: { trigger: 'item', formatter: '{b}: {c} ({d}%)' },
+                        series: [{
+                            type: 'pie', radius: ['45%', '75%'], center: ['50%', '50%'],
+                            avoidLabelOverlap: false, label: { show: false },
+                            data: chartData
+                        }]
+                    });
+
+                    if (deptCountChart) deptCountChart.dispose();
+                    deptCountChart = echarts.init(document.querySelector("#chartDeptCount"));
+                    deptCountChart.setOption({
+                        tooltip: { trigger: 'item', formatter: '{b}: {c}' },
+                        series: [{
+                            type: 'pie', radius: ['45%', '75%'], center: ['50%', '50%'],
+                            avoidLabelOverlap: false,
+                            label: { show: labels.length > 0, formatter: function (p) { return p.value; }, fontSize: 11, fontWeight: 'bold', color: '#000' },
+                            labelLine: { show: labels.length > 0 },
+                            data: chartData
+                        }]
+                    });
+                },
+                error: function (xhr, status, error) {
+                    console.error("Dept Stats AJAX Error:", status, error, xhr.responseText);
+                }
+            });
         }
 
         function renderSatisfaction() {
@@ -1105,7 +1173,7 @@
             grid-template-areas:
                 "period period period period"
                 "left opd opd dia"
-                "left trend trend ph"
+                "left dept dept ph"
                 "left trend trend lab"
                 "left trend trend lab";
         }
@@ -1183,6 +1251,10 @@
         }
 
         #opd-area { grid-area: opd; align-self: start; }
+        #dept-area { grid-area: dept; align-self: start; }
+        #dept-area .dept-chart-wrap { height: 220px; width: 100%; }
+        #dept-area .dept-chart-wrap > div { height: 100% !important; width: 100% !important; }
+        #dept-area .dept-labels { font-size: 9px; color: #6b7280; text-transform: uppercase; font-weight: 600; text-align: center; margin-top: 4px; }
         #trend-area { grid-area: trend; align-self: start; display: flex; flex-direction: column; }
         #trend-area .main-inner { flex: 1; }
         #trend-area .heat-card {
@@ -1892,6 +1964,27 @@
                             PHYSIO: <strong style="margin-left:3px;"><span id="lblPhysioCount">0</span></strong>
                         </span>
                     </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="bento-item" id="dept-area">
+            <div class="main-heading">Department Wise Statistics</div>
+            <div class="card-filter">
+                <input type="text" class="form-control datepicker" id="deptFrom" placeholder="From" style="width:85px;font-size:10px;padding:2px 4px;height:24px;" readonly />
+                <span style="font-size:10px;color:#6b7280;">-</span>
+                <input type="text" class="form-control datepicker" id="deptTo" placeholder="To" style="width:85px;font-size:10px;padding:2px 4px;height:24px;" readonly />
+                <button type="button" class="btn btn-sm btn-primry card-apply" data-card="dept" style="font-size:10px;height:24px;display:flex;align-items:center;justify-content:center;padding:0 10px;">Apply</button>
+                <button type="button" class="btn btn-sm btn-trash card-trash" data-card="dept" title="Reset to master"><i class="fa fa-trash"></i></button>
+            </div>
+            <div class="main-inner">
+                <div class="main-sub">
+                    <div class="ms-title">Department Wise (Percentage)</div>
+                    <div class="dept-chart-wrap"><div id="chartDeptPct" style="height:100%;width:100%;"></div></div>
+                </div>
+                <div class="main-sub">
+                    <div class="ms-title">Department Wise (With Counts)</div>
+                    <div class="dept-chart-wrap"><div id="chartDeptCount" style="height:100%;width:100%;"></div></div>
                 </div>
             </div>
         </div>

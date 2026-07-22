@@ -880,5 +880,22 @@ WHERE m.Creation_Date >= @s AND m.Creation_Date <= @e", conn))
                 return new JavaScriptSerializer().Serialize(new { Error = ex.Message });
             }
         }
+
+        [WebMethod(EnableSession = false)]
+        public static string GetOPDDepartmentWise(string txt_sdate, string txt_edate)
+        {
+            try
+            {
+                using (var db = new DataBaseDataContext())
+                {
+                    var result = db.sp_OPDDepartmentWise(txt_sdate, txt_edate).ToList();
+                    return new JavaScriptSerializer().Serialize(result);
+                }
+            }
+            catch (Exception ex)
+            {
+                return new JavaScriptSerializer().Serialize(new { Error = ex.Message });
+            }
+        }
     }
 }

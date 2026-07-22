@@ -254,7 +254,7 @@
                                         appendGIRROW($(this).closest('tr'));
                                         $('#rdoGIR').prop('checked', true).trigger('change');
                                         checkToggleLock();
-                                        $('#GIRModal').modal('hide');
+                                        //$('#GIRModal').modal('hide');
                                     })
                             ));
                             row.append($('<td style="display:none;"></td>').text(detail.MaterialRequestDetail_Id));
@@ -269,9 +269,27 @@
                             tbody.append(row);
                         });
                     }
+
+                    $('#GIRallItemsUpload').off('click').on('click', function () {
+                        var allRows = $('#GIRItemTableBody tr');
+
+                        if (allRows.length > 0) {
+                            allRows.each(function (index, row) {
+                                appendGIRROW($(row));
+                            });
+
+                            $('#rdoGIR').prop('checked', true).trigger('change');
+                            checkToggleLock();
+
+                        }
+                    });
+
                     $('#GIRModal').modal('show');
+
                 });
             }
+
+            
 
             $(document).on('change', '.select-row', function () {
                 var row = $(this).closest('tr');
@@ -395,7 +413,7 @@
             var formattedDate = $.datepicker.formatDate('dd M yy', currentDate);
             $('#txtrdate' + length).val(formattedDate).datepicker({ dateFormat: 'dd M yy', readOnly: true });
             $('#rdoItem').prop('checked', true).trigger('change');
-            $('#itemsModal').modal('hide');
+            //$('#itemsModal').modal('hide');
             checkToggleLock();
         }
 
@@ -1256,7 +1274,12 @@
                         <table class="table custom-modal-table" id="tblGIRDetails">
                             <thead>
                                 <tr>
-                                    <th style="width:50px;">Add</th>
+                                    
+                                    <th style="width: 50px;">
+                                        <button type="button" id="GIRallItemsUpload" class="btn-item-pick" title="Select All">
+                                            <i class="fa fa-plus-circle"></i>
+                                        </button>
+                                    </th>
                                     <th style="display:none;">MaterialRequestDetail Id</th>
                                     <th style="display:none;">MaterialRequest Id</th>
                                     <th>Request #</th>

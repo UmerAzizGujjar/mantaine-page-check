@@ -43,7 +43,18 @@
             buttons: [
                 'copy',
                 'excel',
-                'pdf',
+                {
+                    extend: 'pdfHtml5',
+                    text: 'PDF',
+                    orientation: 'Potrait',
+                    pageSize: 'A3',
+                    exportOptions: {
+                        columns: ':not(:last-child)'
+                    },
+                    customize: function (doc) {
+                        doc.defaultStyle.fontSize = 8;
+                    }
+                },
                 {
                     extend: 'colvis',
                     text: '<i class="fa fa-columns"></i> Columns',
@@ -193,7 +204,7 @@
         // window.location.href = "IPDMedicineDetail.aspx?ID=" + id;
     }
 
-</script>
+    </script>
 </asp:Content>
 <asp:Content ID="Content2" ContentPlaceHolderID="MainContent" runat="server">
     <div class="row">
