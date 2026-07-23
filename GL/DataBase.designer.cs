@@ -1020,9 +1020,12 @@ namespace PMS
         partial void InsertGRN_Master(GRN_Master instance);
         partial void UpdateGRN_Master(GRN_Master instance);
         partial void DeleteGRN_Master(GRN_Master instance);
+<<<<<<< HEAD
         partial void InsertPurchase_Invoice_Master(Purchase_Invoice_Master instance);
         partial void UpdatePurchase_Invoice_Master(Purchase_Invoice_Master instance);
         partial void DeletePurchase_Invoice_Master(Purchase_Invoice_Master instance);
+=======
+>>>>>>> incoming changes
         #endregion
         public DataBaseDataContext() :
 base(global::System.Configuration.ConfigurationManager.ConnectionStrings["ASPGLConnectionString"].ConnectionString, mappingSource)
@@ -3725,6 +3728,7 @@ base(global::System.Configuration.ConfigurationManager.ConnectionStrings["ASPGLC
             }
         }
 
+<<<<<<< HEAD
         public System.Data.Linq.Table<Purchase_Invoice_Master> Purchase_Invoice_Masters
         {
             get
@@ -3733,6 +3737,8 @@ base(global::System.Configuration.ConfigurationManager.ConnectionStrings["ASPGLC
             }
         }
 
+=======
+>>>>>>> incoming changes
         [global::System.Data.Linq.Mapping.FunctionAttribute(Name = "dbo.GetDataValueName", IsComposable = true)]
         public string GetDataValueName([global::System.Data.Linq.Mapping.ParameterAttribute(Name = "ValueSetName", DbType = "VarChar(150)")] string valueSetName, [global::System.Data.Linq.Mapping.ParameterAttribute(Name = "DataValueName", DbType = "VarChar(50)")] string dataValueName)
         {
@@ -5737,6 +5743,7 @@ base(global::System.Configuration.ConfigurationManager.ConnectionStrings["ASPGLC
             IExecuteResult result = this.ExecuteMethodCall(this, ((MethodInfo)(MethodInfo.GetCurrentMethod())), mIRId);
             return ((ISingleResult<sp_GetMIRDetailByMIRIDResult>)(result.ReturnValue));
         }
+<<<<<<< HEAD
 
         [global::System.Data.Linq.Mapping.FunctionAttribute(Name = "dbo.sp_token_doc_listFilter")]
         public ISingleResult<sp_token_doc_listFilterResult> sp_token_doc_listFilter([global::System.Data.Linq.Mapping.ParameterAttribute(DbType = "VarChar(50)")] string doc_Id)
@@ -5765,6 +5772,8 @@ base(global::System.Configuration.ConfigurationManager.ConnectionStrings["ASPGLC
             IExecuteResult result = this.ExecuteMethodCall(this, ((MethodInfo)(MethodInfo.GetCurrentMethod())), invId, isDirct);
             return ((ISingleResult<sp_LoadPurchaseDetailInvoice_DirctGRNResult>)(result.ReturnValue));
         }
+=======
+>>>>>>> incoming changes
     }
 
     [global::System.Data.Linq.Mapping.TableAttribute(Name = "dbo.Ar_Customers")]
@@ -182331,6 +182340,7 @@ base(global::System.Configuration.ConfigurationManager.ConnectionStrings["ASPGLC
         }
     }
 
+<<<<<<< HEAD
     [global::System.Data.Linq.Mapping.TableAttribute(Name = "dbo.Purchase_Invoice_Master")]
     public partial class Purchase_Invoice_Master : INotifyPropertyChanging, INotifyPropertyChanged
     {
@@ -183185,6 +183195,8 @@ base(global::System.Configuration.ConfigurationManager.ConnectionStrings["ASPGLC
         }
     }
 
+=======
+>>>>>>> incoming changes
     public partial class sp_DispatchedTestListResult
     {
 
@@ -241896,6 +241908,7 @@ base(global::System.Configuration.ConfigurationManager.ConnectionStrings["ASPGLC
             }
         }
     }
+<<<<<<< HEAD
 
     public partial class sp_token_doc_listFilterResult
     {
@@ -243368,5 +243381,7 @@ base(global::System.Configuration.ConfigurationManager.ConnectionStrings["ASPGLC
             }
         }
     }
+=======
+>>>>>>> incoming changes
 }
 #pragma warning restore 1591
