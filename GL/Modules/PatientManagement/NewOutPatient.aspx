@@ -1078,19 +1078,26 @@ function LoadLabResultrpt() {
         }
         function ShowHistory() {
             var reg_ID = $("#<%= hdfReg_ID.ClientID %>").val();
-
-            if (reg_ID) {
+            if (reg_ID && reg_ID !== "(New)") {
                 var locationInfo = window.location;
-                var url = "/Modules/Dashboards/NewEMR.aspx?RegID=" + encodeURIComponent(reg_ID);
+                var url = "/Dashboards/NewEMR.aspx?RegID=" + encodeURIComponent(reg_ID);
                 if (!locationInfo.origin.includes('localhost') || locationInfo.origin.includes('localhost')) {
                     var urlInfo = window.location.href.split('/');
                     var ip = urlInfo[2];
                     var foldername = urlInfo[3];
-                    url = 'http://' + ip + '/' + foldername + '/Modules/Dashboards/NewEMR.aspx?RegID=' + encodeURIComponent(reg_ID);
+                    url = 'http://' + ip + '/' + foldername + '/Dashboards/NewEMR.aspx?RegID=' + encodeURIComponent(reg_ID);
                 }
                 window.open(url, '_blank');
             } else {
-                alert("No RegID found!");
+                var locationInfo = window.location;
+                var url = "/Dashboards/NewEMR.aspx";
+                if (!locationInfo.origin.includes('localhost') || locationInfo.origin.includes('localhost')) {
+                    var urlInfo = window.location.href.split('/');
+                    var ip = urlInfo[2];
+                    var foldername = urlInfo[3];
+                    url = 'http://' + ip + '/' + foldername + '/Dashboards/NewEMR.aspx';
+                }
+                window.open(url, '_blank');
             }
         }
 

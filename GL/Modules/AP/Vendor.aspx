@@ -45,6 +45,16 @@
                 $("#Active").prop('checked', true);
                 setTimeout(function() { $('#Active').trigger('change'); }, 100);
             }
+
+            $('#btnGetAllItems').on('click', function () {
+                debugger;
+                LoadAllitem('');
+            });
+
+            $('#searchInput').on('keyup', function () {
+                var searchText = $(this).val().trim();
+                LoadAllitem(searchText);
+            });
         })
         var id = '<% =Request.QueryString["ID"] %>';
         function printPerson() {
@@ -699,9 +709,21 @@
                 }
             });
             tablePharmacyItems.find('tr').each(function (key, value) {
+                if ($(this).hasClass('empty-state-row')) {
+                    return;
+                }
                 var itemId = $(value).find('td input[name=txtItemCode]').val();
-                if (itemId != undefined) {
-                    PharmacyItem_list.push({ 'ItemId': $(value).find('td input[name=txtItemCode]').val(), 'Rate': $(value).find('td input[name=txtRate]').val(), 'RefNo': $(value).find('td input[name=txtRef]').val(), 'Remarks': $(value).find('td input[name=txtRemarks]').val(), });
+                if (itemId != undefined && itemId != '' && itemId != '0') {
+                    var rate = $(value).find('td input[name=txtRate]').val();
+                    if (rate == '' || rate == null || rate == undefined) {
+                        rate = '0';
+                    }
+                    PharmacyItem_list.push({
+                        'ItemId': itemId,
+                        'Rate': rate,
+                        'RefNo': $(value).find('td input[name=txtRef]').val() || '',
+                        'Remarks': $(value).find('td input[name=txtRemarks]').val() || ''
+                    });
                 }
             });
             tableCompany.find('tr').each(function (key, value) {
@@ -789,6 +811,182 @@
                 });
 
             });
+        }
+
+        function LoadAllitem(searchText) {
+            debugger;
+            $.ajax({
+                type: "POST",
+                url: "Vendor.aspx/GetAllitem",
+                data: JSON.stringify({ searchText: searchText }),
+                contentType: "application/json; charset=utf-8",
+                dataType: "json",
+                success: function (response) {
+                    var items = JSON.parse(response.d);
+                    var tableBody = $('#itemsTableBody');
+                    tableBody.empty();
+
+                    if (items.length === 0) {
+                        tableBody.append('<tr><td colspan="5" class="text-center">No items found</td></tr>');
+                    } else {
+                        $.each(items, function (index, item) {
+                            var row = '<tr>' +
+                                '<td style="text-align:center;"><input type="checkbox" class="itemCheckbox" onclick="appendSearchItem(this)"></td>' +
+                                '<td style="display:none;">' + item.Item_ID + '</td>' +
+                                '<td>' + (item.Item_Code || '') + '</td>' +
+                                '<td>' + (item.Description || '') + '</td>' +
+                                '<td>' + (item.Unit || '') + '</td>' +
+                                '<td style="display:none;">' + (item.Purchase_Rate || 0) + '</td>' +
+                                '<td style="display:none;">' + (item.UOM_Qty || 1) + '</td>' +
+                                '</tr>';
+                            tableBody.append(row);
+                        });
+                    }
+                    $('#itemsModal').modal('show');
+                },
+                error: function (error) {
+                    console.error("Error fetching items", error);
+                    Swal.fire({ icon: 'error', title: 'Error', text: 'Failed to load items.' });
+                }
+            });
+        }
+
+        
+        function toggleAllItems(selectAllCheckbox) {
+            var isChecked = $(selectAllCheckbox).is(':checked');
+            $('#itemsTableBody .itemCheckbox').each(function () {
+                if ($(this).prop('checked') !== isChecked) {
+                    $(this).prop('checked', isChecked);
+                    appendSearchItem(this);
+                }
+            });
+        }
+
+
+        function appendSearchItem(checkbox) {
+            debugger;
+            var row = $(checkbox).closest('tr');
+            var itemId = row.find('td:eq(1)').text().trim();
+            var itemCode = row.find('td:eq(2)').text().trim();
+            var description = row.find('td:eq(3)').text().trim();
+            var uom = row.find('td:eq(4)').text().trim();
+            var purchaseRate = row.find('td:eq(5)').text().trim();
+            var uomQty = row.find('td:eq(6)').text().trim();
+
+            if ($(checkbox).is(':checked')) {
+                var find = false;
+                $('#myVendorPharmacyItem tr').each(function () {
+                    // Skip empty state row
+                    if ($(this).hasClass('empty-state-row')) {
+                        return true; // continue
+                    }
+                    var existingItemId = $(this).find('td input[name=txtItemCode]').val();
+                    if (existingItemId == itemId) {
+                        find = true;
+                        return false;
+                    }
+                });
+
+                if (find) {
+                    Swal.fire({
+                        icon: 'error',
+                        title: 'Error!',
+                        text: 'Item already exists',
+                        showConfirmButton: false,
+                        timer: 2000,
+                        customClass: {
+                            popup: 'swal-big-popup',
+                            title: 'swal-big-title',
+                            htmlContainer: 'swal-big-text'
+                        }
+                    });
+                    $(checkbox).prop('checked', false);
+                    return;
+                }
+
+                // Remove empty state row if it exists
+                $('#myVendorPharmacyItem tr.empty-state-row').remove();
+
+                // Get current row count in the table body
+                var rowlength = $('#myVendorPharmacyItem tr').length;
+
+                var rows = '';
+                rows += '<tr>' +
+                    '<td><input type="hidden" id="txtItemCode' + rowlength + '" name="txtItemCode" value="' + itemId + '" style="width:100% !important;" />' + itemCode + '</td>' +
+                    '<td><input type="hidden" name="txtItemname" id="txtItemname' + rowlength + '" value="' + description + '" style="width:100% !important;font-size:9px;"/>' + description + '</td>' +
+                    '<td><input type="hidden" name="txtUom" id="txtUom' + rowlength + '" value="' + uom + '" style="width:100% !important;font-size:10px;"/>' + uom + '</td>' +
+                    '<td><input type="text" name="txtRate" id="txtRate' + rowlength + '" value="" style="width:100% !important;font-size:10px;" placeholder="Enter Rate"/></td>' +
+                    '<td><input type="text" name="txtRef" id="txtRef' + rowlength + '" value="" style="width:100% !important;font-size:9px;" placeholder="Ref #"/></td>' +
+                    '<td><input type="text" name="txtRemarks" id="txtRemarks' + rowlength + '" value="" style="width:100% !important;font-size:9px;" placeholder="Remarks"/></td>' +
+                    '<td><a href="javascript:void(0)" onclick="ExcludeFromPayment(this)"><i class="fa fa-trash" style="width:50% !important;font-size: 13px;color:#f30a0a;position:relative;" i=""></i></a></td>' +
+                    '</tr>';
+
+                $('#myVendorPharmacyItem').append(rows);
+                var newRow = $('#myVendorPharmacyItem tr:last');
+                newRow.css('background-color', '#d4edda');
+                setTimeout(function () {
+                    newRow.css('background-color', '');
+                }, 1000);
+
+            } else {
+                // Remove the item when unchecked
+                var itemToRemove = null;
+                $('#myVendorPharmacyItem tr').each(function () {
+                    if ($(this).hasClass('empty-state-row')) {
+                        return true; // continue
+                    }
+                    var existingItemId = $(this).find('td input[name=txtItemCode]').val();
+                    if (existingItemId == itemId) {
+                        itemToRemove = $(this);
+                        return false;
+                    }
+                });
+
+                if (itemToRemove) {
+                    itemToRemove.css('background-color', '#f8d7da');
+                    setTimeout(function () {
+                        itemToRemove.remove();
+                        if ($('#myVendorPharmacyItem tr').length === 0) {
+                            showEmptyState();
+                        }
+                    }, 300);
+                }
+            }
+        }
+
+        function removePharmacyItem(row) {
+            debugger;
+            Swal.fire({
+                title: 'Are you sure?',
+                text: "You want to remove this item",
+                icon: 'warning',
+                showCancelButton: true,
+                confirmButtonColor: '#d33',
+                cancelButtonColor: '#6c757d',
+                confirmButtonText: 'Yes, remove it!',
+                customClass: {
+                    popup: 'swal-big-popup',
+                    title: 'swal-big-title',
+                    htmlContainer: 'swal-big-text'
+                }
+            }).then(function (result) {
+                if (result.isConfirmed) {
+                    $(row).remove();
+                    if ($('#myVendorPharmacyItem tr').length === 0) {
+                        showEmptyState();
+                    }
+                }
+            });
+        }
+
+        function showEmptyState() {
+            var emptyRow = '<tr class="empty-state-row">' +
+                '<td colspan="7">' +
+                '<span class="empty-state-icon"><i class="fa fa-medkit"></i></span>' +
+                '<span class="empty-state-text">No pharmacy items added yet</span>' +
+                '</td>' +
+                '</tr>';
+            $('#myVendorPharmacyItem').append(emptyRow);
         }
     </script>
 </asp:Content>
@@ -1058,8 +1256,10 @@
         </div>
 
         <div id="Tab-4">
+            
             <div style="margin-bottom: 12px; display: flex; justify-content: flex-end; gap: 8px;">
-                <button type="button" class="btn-item-pick" onclick="AppendvendorPharmacyItem()" title="Add Pharmacy Item"><i class="fa fa-plus"></i></button>
+                <button type="button" class="btn btn-primry" id="btnGetAllItems" ><i class="fa fa-search"></i> Items</button>
+                <button type="button" class="btn-item-pick" onclick="AppendvendorPharmacyItem()" title="Add Pharmacy Item"><i class="fa fa-plus"></i></button>       
                 <input style="display: none !important" type="button" class="btn btn-info" onclick="printPharmacyItem()" value="Print" id="PrintPharmacyItem" />
             </div>
             <div style="overflow-x: auto; overflow-y: auto; max-height: 250px; border-radius: 4px; border: 1px solid #eee;">
@@ -1087,6 +1287,48 @@
             </div>
         </div>
     </div>
+
+    <div class="modal fade" id="itemsModal" tabindex="-1" aria-labelledby="itemsModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg custom-modal-dialog">
+        <div class="modal-content custom-modal-content">
+            <div class="modal-header custom-modal-header">
+                <div class="custom-modal-title-wrap">
+                    <span class="custom-modal-icon"><i class="fa fa-cubes"></i></span>
+                    <h4 class="modal-title custom-modal-title" id="itemsModalLabel">Item Details</h4>
+                </div>
+                <button type="button" class="custom-modal-close" data-dismiss="modal" aria-label="Close"><i class="fa fa-times"></i></button>
+            </div>
+            <div class="modal-body custom-modal-body">
+                <div class="custom-modal-search-wrap">
+                    <span class="custom-modal-search-icon"><i class="fa fa-search"></i></span>
+                    <input type="text" id="searchInput" class="custom-modal-search" placeholder="Search items..." />
+                </div>
+                <div class="custom-modal-table-wrap">
+                    <table class="table custom-modal-table">
+                        <thead>
+                            <tr>
+                                <th style="width: 5%;">
+                                    <input type="checkbox" id="selectAllItems" onclick="toggleAllItems(this)" />
+                                </th>
+                                <th style="display: none;">Item ID</th>
+                                <th style="width: 20%;">Item Code</th>
+                                <th style="width: 35%;">Description</th>
+                                <th style="width: 15%;">Unit</th>
+                                <th style="display: none;">Purchase Rate</th>
+                                <th style="display: none;">UOM Qty</th>
+                            </tr>
+                        </thead>
+                        <tbody id="itemsTableBody">
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <input type="button" value="Close" class="btn-gray" data-dismiss="modal" />
+            </div>
+        </div>
+    </div>
+</div>
 
     <div class="pr-action-buttons">
         <div class="row">

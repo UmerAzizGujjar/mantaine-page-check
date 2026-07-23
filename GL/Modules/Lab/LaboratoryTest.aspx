@@ -1704,7 +1704,7 @@
                                 </tr>
                                 <tr>
                                     <td>
-                                        <div id="dvtblSymtomps" class="table-responsive" style="height: 207px;">
+                                        <div id="dvtblSymtomps" class="table-responsive" style="height: 207px; overflow-y: auto; overflow-x: auto;">
                                             <table class="table" id="tblPendingPatients">
                                                 <thead>
                                                     <tr>

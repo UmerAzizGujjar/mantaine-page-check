@@ -1025,7 +1025,7 @@ namespace PMS
         partial void DeletePurchase_Invoice_Master(Purchase_Invoice_Master instance);
         #endregion
         public DataBaseDataContext() :
-base(global::System.Configuration.ConfigurationManager.ConnectionStrings["ASPGLConnectionString"].ConnectionString, mappingSource)
+                base(global::System.Configuration.ConfigurationManager.ConnectionStrings["ASPGLConnectionString"].ConnectionString, mappingSource)
         {
             OnCreated();
         }

@@ -3917,6 +3917,7 @@ namespace PMS
                         pt.pkg_type = inpat.packagae_type;
                         pt.Request_Discharge = Convert.ToBoolean(inpat.Discharge_Request);
                         pt.In_Patient_ID = Convert.ToString(inpat.In_Patient_ID);
+                        pt.InsuranceCardNo = inpat.InsuranceCardNo;
 
                     }
                 }
@@ -4365,6 +4366,7 @@ namespace PMS
             public string paid_amount { get; set; }
             public string Balance { get; set; }
             public string PreviousTotalAmount { get; set; }
+            public string InsuranceCardNo { get; set; }
 
 
         }
