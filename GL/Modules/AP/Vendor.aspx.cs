@@ -343,17 +343,30 @@ namespace PMS
                 db.SubmitChanges();
             }
 
-            foreach (var VenPharmcyitem in record.PharmacyItemlist)
+            if (record.PharmacyItemlist != null && record.PharmacyItemlist.Count > 0)
             {
-                AP_Vendor_Pharmacy_Item ltd = new AP_Vendor_Pharmacy_Item();
-                ltd.Rate = Convert.ToDecimal(VenPharmcyitem.Rate);
-                ltd.Ref_num = VenPharmcyitem.RefNo;
-                ltd.remarks = VenPharmcyitem.Remarks;
-                ltd.Vendor_Id = Convert.ToInt32(VendorId);
-                ltd.IsPharmacyItem = true;
-                ltd.ItemId = Convert.ToInt32(VenPharmcyitem.ItemId);
-                db.AP_Vendor_Pharmacy_Items.InsertOnSubmit(ltd);
-                db.SubmitChanges();
+                foreach (var VenPharmcyitem in record.PharmacyItemlist)
+                {
+                    if (VenPharmcyitem.ItemId != null && VenPharmcyitem.ItemId != "" && VenPharmcyitem.ItemId != "0")
+                    {
+                        AP_Vendor_Pharmacy_Item ltd = new AP_Vendor_Pharmacy_Item();
+                        try
+                        {
+                            ltd.Rate = Convert.ToDecimal(VenPharmcyitem.Rate);
+                        }
+                        catch
+                        {
+                            ltd.Rate = 0;
+                        }
+                        ltd.Ref_num = VenPharmcyitem.RefNo ?? "";
+                        ltd.remarks = VenPharmcyitem.Remarks ?? "";
+                        ltd.Vendor_Id = Convert.ToInt32(VendorId);
+                        ltd.IsPharmacyItem = true;
+                        ltd.ItemId = Convert.ToInt32(VenPharmcyitem.ItemId);
+                        db.AP_Vendor_Pharmacy_Items.InsertOnSubmit(ltd);
+                        db.SubmitChanges();
+                    }
+                }
             }
 
             foreach (var VenCompany in record.Companylist)
@@ -518,6 +531,7 @@ namespace PMS
             return (new JavaScriptSerializer()).Serialize(Header);
         }
 
+
         [WebMethod]
         public static string getDDLlist()
         {
@@ -535,6 +549,47 @@ namespace PMS
                          }).ToList();
             return (new JavaScriptSerializer()).Serialize(listItems);
         }
+
+        [WebMethod]
+        public static string GetAllitem(string searchText)
+        {
+            try
+            {
+                DataBaseDataContext db = new DataBaseDataContext();
+
+                var Details = db.INV_Items
+                    .Where(x => (string.IsNullOrEmpty(searchText)
+                                || x.Item_Code.Contains(searchText)
+                                || x.Description.Contains(searchText))
+
+                             && x.Active == true
+                             && x.Services != true
+                             && x.IsPharmacyItem == true
+                        
+                         )
+                    .OrderBy(x => x.Item_Code)
+                    .Take(200)
+                    .Select(x => new
+                    {
+                        Item_ID = x.Item_ID,
+                        Item_Code = x.Item_Code,
+                        Description = x.Description,
+                        Unit = db.GetDataValueName("UOM", x.Unit) ?? "",
+                        Purchase_Rate = x.Purchase_Rate != null ? x.Purchase_Rate : 0,
+                        UOM_Qty = x.UOM_Qty != null ? x.UOM_Qty : 1,                       
+                        TotalStock = db.GetInvenrtoryItemUomTotalStock(x.Item_ID, x.InventoryOrg)
+                    })
+                         .ToList();
+
+                return (new JavaScriptSerializer()).Serialize(Details);
+            }
+            catch (Exception)
+            {
+                return (new JavaScriptSerializer()).Serialize(new List<object>());
+            }
+        }
+
+
         private class ddlListItems
         {
             public string DataValueName;
