@@ -95,6 +95,7 @@ namespace PMS.Inventory
                 lstItem.VendorId = record.VendorId;
                 lstItem.InvOrgId = record.InvOrg;
                 lstItem.Project = record.project;
+                lstItem.is_Direct = record.Is_Direct;
                 lstItem.Update_Date = DateTime.Now;
                 lstItem.Updated_By = AppConfig.UserID;
                 lstItem.Company_ID = AppConfig.Company_ID;
@@ -109,6 +110,7 @@ namespace PMS.Inventory
                 obj.Remarks = record.remarks;
                 obj.InvOrgId = record.InvOrg;
                 obj.Project = record.project;
+                obj.is_Direct = record.Is_Direct;
                 obj.Creation_Date = DateTime.Now;
                 obj.Created_By = AppConfig.UserID;
                 obj.Company_ID = AppConfig.Company_ID;
@@ -185,6 +187,7 @@ namespace PMS.Inventory
                               m.InvOrgId,
                               m.Status,
                               m.Project,
+                              m.is_Direct,
                               Vendor_Name = db.AP_Vendors.Where(po => po.Vendor_ID == Convert.ToInt32(m.VendorId)).Select(po => po.Vendor_Name),
                           }).FirstOrDefault();
             return (new JavaScriptSerializer()).Serialize(Header);
@@ -204,7 +207,34 @@ namespace PMS.Inventory
                            }).Where(x => x.vendorId == Convert.ToInt32(venId) && x.Status == "Approved").ToList();
             return (new JavaScriptSerializer()).Serialize(IGPList);
         }
+        [WebMethod]
+        public static string LoadGRNDetailDir(int GRN_ID)
+        {
+            DataBaseDataContext db = new DataBaseDataContext(DBClass.ConnectionString());
 
+            var result = (from d in db.GRN_Details
+                          join i in db.INV_Items
+                              on d.Item_Id equals i.Item_ID
+                          where d.GRNId == GRN_ID
+                                && (d.IGPDetailId == null || d.IGPDetailId == 0)
+                          select new
+                          {
+                              d.Item_Id,
+                              d.ItemCode,
+                              Description = i.Description,
+                              d.GRNQty,
+                              d.UOM_Qty,
+                              d.BatchNum,
+                              d.MfgDate,
+                              d.ExpiryDate,
+                              BounusQty = d.BounusQty,
+                              d.Rate,
+                              d.Amount
+                          }).ToList();
+
+            JavaScriptSerializer js = new JavaScriptSerializer();
+            return js.Serialize(result);
+        }
 
         [WebMethod]
         public static string LoadGRNDetail(int GRN_ID)
@@ -329,6 +359,7 @@ namespace PMS.Inventory
 
             public string InvOrg { get; set; }
             public string project { get; set; }
+            public bool Is_Direct { get; set; }
             public List<DetailGRNList> ItemList { get; set; }
             public List<DetailGRNListDir> ItemListDir { get; set; }
         }

@@ -167,7 +167,7 @@
             var patientType = $('#ddlPatientType').val();
             var department = $('#ddldepartment').val();
             $.ajax({
-                url: 'TokenList.aspx/LoadTokenPatient',
+                url: 'TokenList.aspx/LoadTokenPatientFilter',
                 type: 'post',
                 contentType: 'application/json;charset=utf-8',
                 dataType: 'json',

@@ -234,25 +234,28 @@ $(document).ready(function() {
             $('#btnGetAllItems').on('click', function() {
                 //if (warehouseCond === '01') {
                     var warehouseVal = $('#ddlInv_org').val();
-                    if (!warehouseVal || warehouseVal === '0' || warehouseVal === '') {
-                        Swal.fire({
-                            icon: 'warning',
-                            title: 'Warning!',
-                            text: 'Please select warehouse first',
-                            showConfirmButton: true,
-                            timer: 3000,
-                            customClass: {
-                                popup: 'swal-big-popup',
-                                title: 'swal-big-title',
-                                htmlContainer: 'swal-big-text'
-                            }
-                        });
-                        $('#ddlInv_org').focus();
-                        return false;
-                    }
+                if (!warehouseVal || warehouseVal === '0' || warehouseVal === '') {
+                    Swal.fire({
+                        icon: 'warning',
+                        title: 'Warning!',
+                        text: 'Please select warehouse first',
+                        showConfirmButton: true,
+                        timer: 3000,
+                        customClass: {
+                            popup: 'swal-big-popup',
+                            title: 'swal-big-title',
+                            htmlContainer: 'swal-big-text'
+                        }
+                    });
+                    $('#ddlInv_org').focus();
+                    return false;
+                }
                 //}
                 //$('#ctl00_MainContent_ddlPrNo').prop('disabled', true);
-                LoadAllitem('');
+                else {
+                    LoadAllitem('');
+                }
+                
             });
 
             $('#searchInput').on('keyup', function() {
@@ -273,10 +276,10 @@ $(document).ready(function() {
                 }
             });
 
-            $('#btnGetAllItems').on('click', function() {
-               // $('#ctl00_MainContent_ddlPrNo').prop('disabled', true);
-                LoadAllitem('');
-            });
+            //$('#btnGetAllItems').on('click', function() {
+            //   // $('#ctl00_MainContent_ddlPrNo').prop('disabled', true);
+            //    LoadAllitem('');
+            //});
 
             $('#searchInput').on('keyup', function() {
                 var searchText = $(this).val().trim();
@@ -317,40 +320,59 @@ $(document).ready(function() {
     });
 
 });
+
 function LoadAllitem(searchText) {
     var warehouseId = $("#ddlInv_org").val();
-    debugger;
-    $.ajax({
-        type: "POST",
-        url: "GRN.aspx/GetAllitem",
-        data: JSON.stringify({ searchText: searchText, warehouseId: warehouseId }),
-        contentType: "application/json; charset=utf-8",
-        dataType: "json",
-        success: function(response) {
-            var items = JSON.parse(response.d);
-            var tableBody = $('#itemsTableBody');
-            tableBody.empty();
-            $.each(items, function(index, item) {
-                var row = '<tr>' +
-                    '<td><input type="checkbox" class="itemCheckbox" onclick="appendSearchItem(this)"></td>' +
-                    '<td style="display:none;">' + item.Item_ID + '</td>' +
-                    '<td>' + item.Item_Code + '</td>' +
-                    '<td>' + item.Description + '</td>' +
-                    '<td>' + item.Unit + '</td>' +
-                    '<td style="display:none;">' + (item.Purchase_Rate || 0) + '</td>' +
-                    '<td style="display:none;">' + (item.UOM_Qty || 1) + '</td>' +
-                    '<td style="">' + (item.Last_GRN_Rate) + '</td>' +
-                    '<td>' + (item.TotalStock || 0) + '</td>' +
-                    '</tr>';
-                tableBody.append(row);
-            });
-            $('#itemsModal').modal('show');
-        },
-        error: function(error) {
-            console.error("Error fetching items", error);
-            Swal.fire({ icon: 'error', title: 'Error', text: 'Failed to load items.' });
-        }
-            });
+    if (!warehouseId || warehouseId === '0' || warehouseId === '') {
+        Swal.fire({
+            icon: 'warning',
+            title: 'Warning!',
+            text: 'Please select warehouse first',
+            showConfirmButton: true,
+            timer: 3000,
+            customClass: {
+                popup: 'swal-big-popup',
+                title: 'swal-big-title',
+                htmlContainer: 'swal-big-text'
+            }
+        });
+        $('#ddlInv_org').focus();
+        return false;
+    }
+    else {
+        debugger;
+        $.ajax({
+            type: "POST",
+            url: "GRN.aspx/GetAllitem",
+            data: JSON.stringify({ searchText: searchText, warehouseId: warehouseId }),
+            contentType: "application/json; charset=utf-8",
+            dataType: "json",
+            success: function (response) {
+                var items = JSON.parse(response.d);
+                var tableBody = $('#itemsTableBody');
+                tableBody.empty();
+                $.each(items, function (index, item) {
+                    var row = '<tr>' +
+                        '<td><input type="checkbox" class="itemCheckbox" onclick="appendSearchItem(this)"></td>' +
+                        '<td style="display:none;">' + item.Item_ID + '</td>' +
+                        '<td>' + item.Item_Code + '</td>' +
+                        '<td>' + item.Description + '</td>' +
+                        '<td>' + item.Unit + '</td>' +
+                        '<td style="display:none;">' + (item.Purchase_Rate || 0) + '</td>' +
+                        '<td style="display:none;">' + (item.UOM_Qty || 1) + '</td>' +
+                        '<td style="">' + (item.Last_GRN_Rate) + '</td>' +
+                        '<td>' + (item.TotalStock || 0) + '</td>' +
+                        '</tr>';
+                    tableBody.append(row);
+                });
+                $('#itemsModal').modal('show');
+            },
+            error: function (error) {
+                console.error("Error fetching items", error);
+                Swal.fire({ icon: 'error', title: 'Error', text: 'Failed to load items.' });
+            }
+        });
+    }
 }
 
         function appendSearchItem(anchor) {
@@ -438,8 +460,107 @@ function LoadAllitem(searchText) {
                     $(this).datepicker('show');
                 });
             }, 100);
-        }
+}
+function LoadGRNDetailDir(GRN_ID) {
 
+    PageMethods.LoadGRNDetailDir(GRN_ID, function(resp) {
+
+        var item = JSON.parse(resp);
+        var rows = '';
+        var iteration = 0;
+        var ExpiryDate = '';
+        var MfgDate = '';
+
+        $.each(item, function(key, value) {
+
+            if (value.BatchNum == null)
+                value.BatchNum = "";
+
+            if (value.ExpiryDate != null) {
+                ExpiryDate = $.datepicker.formatDate('dd M yy',
+                    new Date(parseInt(value.ExpiryDate.substring(6, 19))));
+
+                if (ExpiryDate.includes("1963") || ExpiryDate.includes("1964") ||
+                    ExpiryDate.includes("1965") || ExpiryDate.includes("1966"))
+                    ExpiryDate = "";
+            }
+            else {
+                ExpiryDate = "";
+            }
+
+            if (value.MfgDate != null) {
+                MfgDate = $.datepicker.formatDate('dd M yy',
+                    new Date(parseInt(value.MfgDate.substring(6, 19))));
+
+                if (MfgDate.includes("1963") || MfgDate.includes("1964") ||
+                    MfgDate.includes("1965") || MfgDate.includes("1966"))
+                    MfgDate = "";
+            }
+            else {
+                MfgDate = "";
+            }
+
+            iteration++;
+
+            var rowlength = $("#tblItemDescriptionDir tbody tr").length + iteration;
+
+            rows += '<tr>' +
+                '<td style="border:1px solid #D9E4E6;">' +
+                '<input type="hidden" id="txtItemIdDir' + rowlength + '" name="txtItemIdDir" value="' + value.Item_Id + '" />' +
+                rowlength +
+                '</td>' +
+
+                '<td>' +
+                '<input type="hidden" id="txtItemCodeDir' + rowlength + '" name="txtItemCodeDir" value="' + value.ItemCode + '" />' +
+                value.ItemCode +
+                '</td>' +
+
+                '<td>' +
+                '<input type="hidden" id="txtItemNameDir' + rowlength + '" name="txtItemNameDir" value="' + value.Description + '" />' +
+                value.Description +
+                '</td>' +
+
+                '<td><input type="text" id="txtGRNQtyDir' + rowlength + '" name="txtGRNQtyDir" value="' + parseFloat(value.GRNQty).toFixed(2) + '" style="text-align:center;width:145px;font-size:11px;height:27px;" /></td>' +
+
+                '<td><input type="text" id="txtUOMQtyDir' + rowlength + '" name="txtUOMQtyDir" value="' + value.UOM_Qty + '" style="text-align:center;width:145px;font-size:11px;height:27px;" /></td>' +
+
+                '<td><input type="text" id="BatchNoDir' + rowlength + '" name="BatchNoDir" value="' + value.BatchNum + '" style="text-align:center;width:145px;font-size:11px;height:27px;" /></td>' +
+
+                '<td><input type="text" id="txtMfgdateDir' + rowlength + '" name="txtMfgdateDir" value="' + MfgDate + '" readonly /></td>' +
+
+                '<td><input type="text" id="ExpdateDir' + rowlength + '" name="ExpdateDir" value="' + ExpiryDate + '" readonly /></td>' +
+
+                '<td><input type="text" id="txtBONQtyDir' + rowlength + '" name="txtBONQtyDir" value="' + value.BounusQty + '" style="text-align:center;width:145px;font-size:11px;height:27px;" /></td>' +
+
+                '<td><input type="text" id="txtRateDir' + rowlength + '" name="txtRateDir" value="' + parseFloat(value.Rate).toFixed(2) + '" style="text-align:center;font-size:11px;" /></td>' +
+
+                '<td><input type="text" id="txtamountDir' + rowlength + '" name="txtamountDir" value="' + parseFloat(value.Amount).toFixed(2) + '" readonly style="width:145px;text-align:right;font-size:11px;height:27px;" /></td>' +
+
+                '<td><a href="javascript:void(0)" onclick="ExcludeFromPayment(this)"><i class="glyphicon glyphicon-trash" style="font-size:11px;color:#f30a0a;"></i></a></td>' +
+                '</tr>';
+
+        });
+
+        $('#tblItemDescriptionDir tbody').append(rows);
+
+        $('input[name="txtMfgdateDir"]').datepicker({
+            dateFormat: 'dd M yy',
+            changeMonth: true,
+            changeYear: true
+        });
+
+        $('input[name="ExpdateDir"]').datepicker({
+            dateFormat: 'dd M yy',
+            changeMonth: true,
+            changeYear: true
+        });
+
+    },
+        function(error) {
+            alert(error.get_message());
+        });
+    $('#btnSave').val('Update');
+        }
 
         function LoadGRNData(GRN_ID) {
             PageMethods.LoadGRNHeaderDetail(GRN_ID, function (resp) {
@@ -458,6 +579,8 @@ function LoadAllitem(searchText) {
                 if (data.Status == "Created") {
                     UserApproveButtonRights();
                 }
+
+                $('#dircGRN').prop('checked', data.is_Direct === true).trigger('change');;
                 setTimeout(function () {
                     $('#ddlVendor').val(data.VendorId).trigger('change');
 
@@ -472,7 +595,14 @@ function LoadAllitem(searchText) {
                 setTimeout(function () {
                     getIGPNumByVendor(data.VendorId);
                 }, 3000);
-                LoadGRNDetail(GRN_ID);
+
+                if (data.is_Direct == true) {
+                    LoadGRNDetailDir(GRN_ID);
+                }
+                else {
+                    LoadGRNDetail(GRN_ID);
+                }
+                
             },
                 function (error) {
                     alert(error.get_message());
@@ -725,6 +855,7 @@ function LoadAllitem(searchText) {
             var project = $('#ddlProject').val();
             var table = $('#tblItemDescriptionDetail');
             var tableDir = $('#tblItemDescriptionDetailDir');
+            var Is_Direct = $('#dircGRN').is(':checked');
             if (VendorId == '0') {
                 $("#ddlVendor").addClass('ErrorAlert');
                 $('#select2-ddlVendor-container').parent().css('border-color', 'red');
@@ -848,7 +979,7 @@ function LoadAllitem(searchText) {
                 }
                 else {
                     $('#btnsave').attr('disabled', true);
-                    var AllItemDetail = { 'GRN_Num': GRN_Num, 'Date': date, 'VendorId': VendorId, 'remarks': Remarks, 'project': project, 'InvOrg': InvOrg, 'ItemList': Item_list, 'ItemListDir': ItemListDir };
+                    var AllItemDetail = { 'GRN_Num': GRN_Num, 'Date': date, 'VendorId': VendorId, 'remarks': Remarks, 'project': project, 'InvOrg': InvOrg, 'ItemList': Item_list, 'ItemListDir': ItemListDir, 'Is_Direct': Is_Direct };
                     PageMethods.SaveGRNDetail(btnSave, JSON.stringify(AllItemDetail), function (res) {
                         debugger;
                         sendFile(res, function () {

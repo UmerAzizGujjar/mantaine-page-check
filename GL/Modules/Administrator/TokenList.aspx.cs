@@ -15,12 +15,60 @@ namespace PMS
         {
 
         }
+
+        [WebMethod]
+        public static string GetDepartment()
+        {
+            string data = string.Empty;
+            using (DataBaseDataContext db = new DataBaseDataContext())
+            {
+                var result = (from dv in db.DataValues
+                              join ds in db.ValueSets
+                              on dv.ValueSet_ID equals ds.ValueSet_ID
+                              where ds.ValueSet_Name == "Patient Main Category"
+                              select new
+                              {
+                                  dv.DataValue_Name,
+                                  dv.DataValue_Description
+                              }).ToList();
+                data = new JavaScriptSerializer().Serialize(result);
+            }
+            return data;
+        }
+
+        [WebMethod]
+        public static string PatientType()
+        {
+            string data = string.Empty;
+            using (DataBaseDataContext db = new DataBaseDataContext())
+            {
+                var result = (from dv in db.DataValues
+                              join ds in db.ValueSets
+                              on dv.ValueSet_ID equals ds.ValueSet_ID
+                              where ds.ValueSet_Name == "Patient Type"
+                              select new
+                              {
+                                  dv.DataValue_Name,
+                                  dv.DataValue_Description
+                              }).ToList();
+                data = new JavaScriptSerializer().Serialize(result);
+            }
+            return data;
+        }
         [WebMethod]
         public static string LoadTokenPatient()
         {
             var user_id = AppConfig.UserID;
             DataBaseDataContext db = new DataBaseDataContext();
             var Details = db.sp_token_list();
+            return (new JavaScriptSerializer()).Serialize(Details);
+        }
+        [WebMethod]
+        public static string LoadTokenPatientFilter(string patientType , string department)
+        {
+            var user_id = AppConfig.UserID;
+            DataBaseDataContext db = new DataBaseDataContext();
+            var Details = db.sp_token_list_filter(patientType, department);
             return (new JavaScriptSerializer()).Serialize(Details);
         }
 
