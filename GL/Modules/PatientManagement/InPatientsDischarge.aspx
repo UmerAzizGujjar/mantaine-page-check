@@ -2929,12 +2929,13 @@
                     var txtProcedure_Detail = $('#ctl00_MainContent_txtBilling').val();
                     var txtDignosis = $('#ctl00_MainContent_txtMedication').val();
                     var txtNext_Visit = $('#ctl00_MainContent_txtNext_Visit').val();
+                    var DischargeType = $('#ctl00_MainContent_ddlDischarge_Type').val();
                     debugger;
                     var Package_type = $('#ddlPackageType').val();
                     var Package_Name = $('#ddlPackageName').val();
                
 
-                    PageMethods.SaveWardInformation(btnsave, PatID, InPatID, ddlWard_No, txtBed_No, txtExpected_Discharge_On_Date, ddlDoctor, DischargeChk, txtAdvice, txtProcedure_Operation, txtProcedure_Detail, txtDignosis, txtNext_Visit, function (response) {
+                    PageMethods.SaveWardInformation(btnsave, PatID, InPatID, ddlWard_No, txtBed_No, txtExpected_Discharge_On_Date, ddlDoctor, DischargeChk, txtAdvice, txtProcedure_Operation, txtProcedure_Detail, txtDignosis, txtNext_Visit, DischargeType, function (response) {
                         debugger;
                         if (response !== "") {
                                                   
@@ -2978,11 +2979,12 @@
                     var txtProcedure_Detail = $('#ctl00_MainContent_txtBilling').val();
                     var txtDignosis = $('#ctl00_MainContent_txtMedication').val();
                     var txtNext_Visit = $('#ctl00_MainContent_txtNext_Visit').val();
+                    var DischargeType = $('#ctl00_MainContent_ddlDischarge_Type').val();
 
                     var Package_type = $('#ddlPackageType').val();
                     var Package_Name = $('#ddlPackageName').val();
 
-                    PageMethods.SaveRoomInformation(btnsave, PatID, InPatID, ddlRoom_No, txtRoom_Type, txtExpected_Discharge_On_Date, ddlDoctor, DischargeChk, txtAdvice, txtProcedure_Operation, txtProcedure_Detail, txtDignosis, txtNext_Visit, function (response) {
+                    PageMethods.SaveRoomInformation(btnsave, PatID, InPatID, ddlRoom_No, txtRoom_Type, txtExpected_Discharge_On_Date, ddlDoctor, DischargeChk, txtAdvice, txtProcedure_Operation, txtProcedure_Detail, txtDignosis, txtNext_Visit, DischargeType, function (response) {
                         debugger;
                         if (response !== "") {
 
@@ -5046,6 +5048,10 @@
                                 </div>
                                 <div class="col-lg-1 col-md-4 col-sm-6">
                                   <asp:CheckBox ID="cbDicharg_Slip" runat="server" onclick="toggleButton()"></asp:CheckBox>
+                                </div>
+                                <div class="col-lg-2 col-md-6 col-sm-12">
+                                    <asp:Label ID="Label10" runat="server" Text="Discharge Type"></asp:Label>
+                                    <asp:DropDownList runat="server" AppendDataBoundItems="true" ID="ddlDischarge_Type"></asp:DropDownList>
                                 </div>
                                 <div class="col-lg-1 col-md-4 col-sm-6">
                                     <asp:Label ID="lblDeath_Certificate" runat="server" Text="Death Certificate" style="display:none"></asp:Label>

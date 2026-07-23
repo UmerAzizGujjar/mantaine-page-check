@@ -5918,6 +5918,7 @@
                     $('#txtprevious_Amount').val(data.d.PreviousTotalAmount);
                     $('#lblDepartment').val(data.d.Department);
                     $('#txt_balance').val(data.d.Balance);
+                    $('#txtInsuranceCardNo').val(ReplaceNullWith_Space(data.d.InsuranceCardNo));
                     //$('#txtMaindepartment').val(data.d.MainDepartment).trigger('change');
                     
                                 
@@ -8251,6 +8252,10 @@
                 <label>Patient Type</label>
                 <select id="ddlPatientType">
                 </select>
+            </div>
+            <div class="col-lg-2 col-md-5 col-sm-6 formrgn">
+                <label>Insurance Card No:</label>
+                <input type="text" id="txtInsuranceCardNo" class="form-control" disabled="disabled" />
             </div>
         </div>
         

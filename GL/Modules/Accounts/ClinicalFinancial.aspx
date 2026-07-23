@@ -78,7 +78,7 @@
             discount: row.find('.discountIPD').val(),
             revenue: row.find('.revenueIPD').val()
         };
-        if (rowDataIPD.categoryname == 0 || rowDataIPD.cashinhand == 0 || rowDataIPD.revenue == 0) {
+        if (rowDataIPD.categoryname == 0 || rowDataIPD.cashinhand == 0) {
             isEmptyFound = true;
         }
         if (categoryNamesIPD.has(rowDataIPD.categoryname)) {
@@ -98,7 +98,7 @@
             discount: row.find('.discountOPD').val(),
             revenue: row.find('.revenueOPD').val()
         };
-        if (rowDataOPD.categoryname == 0 || rowDataOPD.cashinhand == 0 || rowDataOPD.discount == 0 || rowDataOPD.revenue == 0) {
+        if (rowDataOPD.categoryname == 0 || rowDataOPD.cashinhand == 0 || rowDataOPD.discount == 0) {
             isEmptyFound = true;
         }
         if (categoryNamesOPD.has(rowDataOPD.categoryname)) {
@@ -118,7 +118,7 @@
             discount: row.find('.discountOPDShare').val(),
             revenue: row.find('.revenueOPDShare').val()
         };
-        if (rowDataOPDShare.categoryname == 0 || rowDataOPDShare.cashinhand == 0 || rowDataOPDShare.revenue == 0) {
+        if (rowDataOPDShare.categoryname == 0 || rowDataOPDShare.cashinhand == 0) {
             isEmptyFound = true;
         }
         if (categoryNamesOPDShare.has(rowDataOPDShare.categoryname)) {
@@ -138,7 +138,7 @@
             discount: row.find('.discountReg').val(),
             revenue: row.find('.revenueReg').val()
         };
-        if (rowDataReg.cashinhand == 0 || rowDataReg.revenue == 0) {
+        if (rowDataReg.cashinhand == 0) {
             isEmptyFound = true;
         }
         if (categoryNamesReg.has(rowDataReg.categoryname)) {
@@ -159,7 +159,7 @@
             revenue: row.find('.revenueDiagnostic').val(),
             expense: row.find('.expenseDiagnostic').val()
         };
-        if (rowDataDiagnostic.categoryname == 0 || rowDataDiagnostic.cashinhand == 0 || rowDataDiagnostic.discount == 0 || rowDataDiagnostic.revenue == 0|| rowDataDiagnostic.expense == 0) {
+        if (rowDataDiagnostic.categoryname == 0 || rowDataDiagnostic.cashinhand == 0 || rowDataDiagnostic.discount == 0 || rowDataDiagnostic.expense == 0) {
             isEmptyFound = true;
         }
         if (categoryNamesDiagnostic.has(rowDataDiagnostic.categoryname)) {
@@ -199,7 +199,7 @@
             discount: row.find('.discountSpecialServices').val(),
             revenue: row.find('.revenueSpecialServices').val()
         };
-        if (rowDataSpecialService.categoryname == 0 || rowDataSpecialService.cashinhand == 0 || rowDataSpecialService.discount == 0 || rowDataSpecialService.revenue == 0) {
+        if (rowDataSpecialService.categoryname == 0 || rowDataSpecialService.cashinhand == 0 || rowDataSpecialService.discount == 0 ) {
             isEmptyFound = true;
         }
         if (categoryNamesSpecialService.has(rowDataSpecialService.categoryname)) {
@@ -219,7 +219,7 @@
             discount: row.find('.discountProcedure').val(),
             revenue: row.find('.revenueProcedure').val()
         };
-        if (rowDataProcedure.categoryname == 0 || rowDataProcedure.cashinhand == 0 || rowDataProcedure.discount == 0 || rowDataProcedure.revenue == 0) {
+        if (rowDataProcedure.categoryname == 0 || rowDataProcedure.cashinhand == 0 || rowDataProcedure.discount == 0) {
             isEmptyFound = true;
         }
         if (categoryNamesProcedure.has(rowDataProcedure.categoryname)) {
@@ -239,7 +239,7 @@
             discount: row.find('.discountEMERGENCY').val(),
             revenue: row.find('.revenueEMERGENCY').val()
         };
-        if (rowDataEMERGENCY.categoryname == 0 || rowDataEMERGENCY.cashinhand == 0 || rowDataEMERGENCY.discount == 0 || rowDataEMERGENCY.revenue == 0) {
+        if (rowDataEMERGENCY.categoryname == 0 || rowDataEMERGENCY.cashinhand == 0 || rowDataEMERGENCY.discount == 0) {
             isEmptyFound = true;
         }
         if (categoryNamesEMERGENCY.has(rowDataEMERGENCY.categoryname)) {
@@ -260,7 +260,7 @@
             revenue: row.find('.revenueSERVICE').val(),
             expense: row.find('.expenseSERVICE').val()
         };
-        if (rowDataSERVICE.categoryname == 0 || rowDataSERVICE.cashinhand == 0 || rowDataSERVICE.discount == 0 || rowDataSERVICE.revenue == 0|| rowDataSERVICE.expense == 0) {
+        if (rowDataSERVICE.categoryname == 0 || rowDataSERVICE.cashinhand == 0 || rowDataSERVICE.discount == 0 || rowDataSERVICE.expense == 0) {
             isEmptyFound = true;
         }
         if (categoryNamesSERVICE.has(rowDataSERVICE.categoryname)) {
@@ -280,7 +280,7 @@
             discount: row.find('.discountPHARMACY').val(),
             revenue: row.find('.revenuePHARMACY').val()
         };
-        if (rowDataPHARMACY.categoryname == 0 || rowDataPHARMACY.cashinhand == 0 || rowDataPHARMACY.discount == 0 || rowDataPHARMACY.revenue == 0) {
+        if (rowDataPHARMACY.categoryname == 0 || rowDataPHARMACY.cashinhand == 0 || rowDataPHARMACY.discount == 0 ) {
             isEmptyFound = true;
         }
         if (categoryNamesPHARMACY.has(rowDataPHARMACY.categoryname)) {

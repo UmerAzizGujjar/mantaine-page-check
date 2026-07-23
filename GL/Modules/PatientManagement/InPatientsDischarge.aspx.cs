@@ -108,6 +108,13 @@ namespace PMS
             ddlOrthoSide.Items.Add(new ListItem("Right", "Right"));
             ddlOrthoSide.DataBind();
 
+            valueset = DBClass.GetValueSet("Discharge Type");
+            ddlDischarge_Type.DataSource = valueset;
+            ddlDischarge_Type.DataTextField = "DataValue_Description";
+            ddlDischarge_Type.DataValueField = "DataValue_Name";
+            ddlDischarge_Type.Items.Add(new ListItem("Please Select", "0"));
+            ddlDischarge_Type.DataBind();
+
             valueset = DBClass.GetValueSet("Lab Result");
             ddlLabResult.DataSource = valueset;
             ddlLabResult.DataTextField = "DataValue_Description";
@@ -947,6 +954,15 @@ namespace PMS
                     if (qry.Discharge_On != null)
                         txtDischarge_On.Text = qry.Discharge_On.Value.ToString(AppConfig.DateFormat);
                     cbDicharg_Slip.Checked = qry.Discharge.Value;
+
+                    if (!string.IsNullOrEmpty(qry.Discharge_Type))
+                    {
+                        ddlDischarge_Type.SelectedValue = qry.Discharge_Type;
+                    }
+                    else
+                    {
+                        ddlDischarge_Type.SelectedIndex = 0;
+                    }
 
                 }
             }
@@ -4214,7 +4230,7 @@ namespace PMS
         }
 
         [WebMethod]
-        public static string SaveRoomInformation(string btnsave, int PatID, int InPatID, string ddlRoom_No, string txtRoom_Type, string txtExpected_Discharge_On_Date, string ddlDoctor, bool DischargeChk, string txtAdvice, string txtProcedure_Operation, string txtProcedure_Detail, string txtDignosis, string txtNext_Visit)
+        public static string SaveRoomInformation(string btnsave, int PatID, int InPatID, string ddlRoom_No, string txtRoom_Type, string txtExpected_Discharge_On_Date, string ddlDoctor, bool DischargeChk, string txtAdvice, string txtProcedure_Operation, string txtProcedure_Detail, string txtDignosis, string txtNext_Visit,string DischargeType)
         {
             string InPatientStatus = string.Empty;
             try
@@ -4234,6 +4250,7 @@ namespace PMS
                     {
                         in_Patient.Discharge = false;
                         in_Patient.Discharge_On = null;
+                        in_Patient.Discharge_Type = null;
                         db.SubmitChanges();
                         return InPatientStatus = "Patient is undischarged Successfully !," + InPatID;
 
@@ -4254,6 +4271,7 @@ namespace PMS
                     in_Patient.Prevention_Precaution = txtAdvice;
                     in_Patient.Procedure_Operation = txtProcedure_Operation;
                     in_Patient.Procedure_Detail = txtProcedure_Detail;
+                    in_Patient.Discharge_Type = DischargeType;
                     if (!string.IsNullOrEmpty(txtNext_Visit))
                         in_Patient.Next_Visit = Convert.ToDateTime(txtNext_Visit);
                     in_Patient.Diagonosis = txtDignosis;
@@ -4330,7 +4348,7 @@ namespace PMS
 
 
         [WebMethod]
-        public static string SaveWardInformation(string btnsave, string PatID, string InPatID, string ddlWard_No, string txtBed_No, string txtExpected_Discharge_On_Date, string ddlDoctor, bool DischargeChk, string txtAdvice, string txtProcedure_Operation, string txtProcedure_Detail, string txtDignosis, string txtNext_Visit)
+        public static string SaveWardInformation(string btnsave, string PatID, string InPatID, string ddlWard_No, string txtBed_No, string txtExpected_Discharge_On_Date, string ddlDoctor, bool DischargeChk, string txtAdvice, string txtProcedure_Operation, string txtProcedure_Detail, string txtDignosis, string txtNext_Visit, string DischargeType)
         {
             string InPatientStatus = string.Empty;
 
@@ -4352,6 +4370,7 @@ namespace PMS
                     {
                         in_Pat.Discharge = false;
                         in_Pat.Discharge_On = null;
+                        in_Pat.Discharge_Type = null;
                         db.SubmitChanges();
                         return InPatientStatus = "Patient is undischarged Successfully !," + InPatID;
                     }
@@ -4371,6 +4390,7 @@ namespace PMS
                     in_Pat.Prevention_Precaution = txtAdvice;
                     in_Pat.Procedure_Operation = txtProcedure_Operation;
                     in_Pat.Procedure_Detail = txtProcedure_Detail;
+                    in_Pat.Discharge_Type = DischargeType;
                     if (!string.IsNullOrEmpty(txtNext_Visit))
                         in_Pat.Next_Visit = Convert.ToDateTime(txtNext_Visit);
                     in_Pat.Diagonosis = txtDignosis;
@@ -4387,7 +4407,7 @@ namespace PMS
                     in_Pat.Prevention_Precaution = txtAdvice;
                     in_Pat.Procedure_Operation = txtProcedure_Operation;
                     in_Pat.Procedure_Detail = txtProcedure_Detail;
-
+                    in_Pat.Discharge_Type = DischargeType;
                     if (!string.IsNullOrEmpty(txtNext_Visit))
                         in_Pat.Next_Visit = Convert.ToDateTime(txtNext_Visit);
                     in_Pat.Diagonosis = txtDignosis;
