@@ -58,6 +58,8 @@
                 "serverSide": true,
                 "dom": 'lBfrtip',
                 "lengthChange": true,
+                "pageLength": 50,
+                "lengthMenu": [[10, 25, 50, 100, -1], [10, 25, 50, 100, "All"]],
                 "buttons": [{ text: 'Add', className: 'dt-button buttons-copy buttons-html5', action: function () { window.location = 'Service.aspx'; } }, 'copy', 'excel', 'pdf',
                     {
                         extend: 'colvis',
@@ -124,7 +126,7 @@
                             var result;
                             result = res  + print;
                             return result;
-                        },"width": "10%",
+                        },"width": "8%",
                     }
                 ],
                 "initComplete": function (settings, json) {

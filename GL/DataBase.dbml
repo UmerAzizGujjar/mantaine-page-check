@@ -2489,33 +2489,6 @@
       <Column Name="Special_Test" Type="System.Boolean" DbType="Bit" CanBeNull="true" />
     </Type>
   </Table>
-  <Table Name="dbo.GRN_Master" Member="GRN_Masters">
-    <Type Name="GRN_Master">
-      <Column Name="GRN_ID" Type="System.Int32" DbType="Int NOT NULL IDENTITY" IsPrimaryKey="true" IsDbGenerated="true" CanBeNull="false" />
-      <Column Name="GRN_Num" Type="System.Int32" DbType="Int" CanBeNull="true" />
-      <Column Name="GRN_Date" Type="System.DateTime" DbType="DateTime NOT NULL" CanBeNull="false" />
-      <Column Name="VendorId" Type="System.String" DbType="VarChar(250)" CanBeNull="true" />
-      <Column Name="Remarks" Type="System.String" DbType="NVarChar(MAX)" CanBeNull="true" />
-      <Column Name="File_Path" Type="System.String" DbType="VarChar(250)" CanBeNull="true" />
-      <Column Name="File_Type" Type="System.String" DbType="VarChar(10)" CanBeNull="true" />
-      <Column Name="IGP_Id" Type="System.Int32" DbType="Int" CanBeNull="true" />
-      <Column Name="InvOrgId" Type="System.String" DbType="VarChar(10)" CanBeNull="true" />
-      <Column Name="Company_ID" Type="System.Int32" DbType="Int" CanBeNull="true" />
-      <Column Name="Created_By" Type="System.Guid" DbType="UniqueIdentifier" CanBeNull="true" />
-      <Column Name="Creation_Date" Type="System.DateTime" DbType="DateTime" CanBeNull="true" />
-      <Column Name="Update_Date" Type="System.DateTime" DbType="DateTime" CanBeNull="true" />
-      <Column Name="Updated_By" Type="System.Guid" DbType="UniqueIdentifier" CanBeNull="true" />
-      <Column Name="Status" Type="System.String" DbType="VarChar(25)" CanBeNull="true" />
-      <Column Name="Voucher_ID" Type="System.Int64" DbType="BigInt" CanBeNull="true" />
-      <Column Name="IsAutoGenerate" Type="System.Boolean" DbType="Bit" CanBeNull="true" />
-      <Column Name="Approved_By" Type="System.Guid" DbType="UniqueIdentifier" CanBeNull="true" />
-      <Column Name="AdvigpagainstPo" Type="System.Int32" DbType="Int" CanBeNull="true" />
-      <Column Name="Approved_Date" Type="System.DateTime" DbType="DateTime" CanBeNull="true" />
-      <Column Name="is_auto_Adv" Type="System.Boolean" DbType="Bit" CanBeNull="true" />
-      <Column Name="Project" Type="System.String" DbType="NVarChar(50)" CanBeNull="true" />
-      <Association Name="GRN_Master_ItemSelection_Barcode" Member="ItemSelection_Barcodes" ThisKey="GRN_ID" OtherKey="GRN_ID" Type="ItemSelection_Barcode" />
-    </Type>
-  </Table>
   <Table Name="dbo.Igp_master" Member="Igp_masters">
     <Type Name="Igp_master">
       <Column Name="Igp_Id" Type="System.Int64" DbType="BigInt NOT NULL IDENTITY" IsPrimaryKey="true" IsDbGenerated="true" CanBeNull="false" />
@@ -5990,8 +5963,8 @@
       <Column Name="Used_Date" Type="System.DateTime" DbType="DateTime" CanBeNull="true" />
       <Column Name="Used_By" Type="System.Guid" DbType="UniqueIdentifier" CanBeNull="true" />
       <Column Name="Generation_Date" Type="System.DateTime" DbType="DateTime" CanBeNull="true" />
-      <Association Name="GRN_Master_ItemSelection_Barcode" Member="GRN_Master" ThisKey="GRN_ID" OtherKey="GRN_ID" Type="GRN_Master" IsForeignKey="true" />
       <Association Name="ItemSelection_Master_ItemSelection_Barcode" Member="ItemSelection_Master" ThisKey="Selection_ID" OtherKey="Selection_ID" Type="ItemSelection_Master" IsForeignKey="true" />
+      <Association Name="GRN_Master_ItemSelection_Barcode" Member="GRN_Master" ThisKey="GRN_ID" OtherKey="GRN_ID" Type="GRN_Master" IsForeignKey="true" />
     </Type>
   </Table>
   <Table Name="dbo.ItemSelection_Detail" Member="ItemSelection_Details">
@@ -8179,6 +8152,36 @@
       <Column Name="Last_MIR_Qty" Type="System.Decimal" DbType="Decimal(18,4)" CanBeNull="true" />
       <Column Name="Last_SIN_Qty" Type="System.Decimal" DbType="Decimal(18,2)" CanBeNull="true" />
       <Column Name="Last_GIR_Date" Type="System.DateTime" DbType="DateTime" CanBeNull="true" />
+    </Type>
+  </Table>
+  <Table Name="dbo.GRN_Master" Member="GRN_Masters">
+    <Type Name="GRN_Master">
+      <Column Name="GRN_ID" Type="System.Int32" DbType="Int NOT NULL IDENTITY" IsPrimaryKey="true" IsDbGenerated="true" CanBeNull="false" />
+      <Column Name="GRN_Num" Type="System.Int32" DbType="Int" CanBeNull="true" />
+      <Column Name="GRN_Date" Type="System.DateTime" DbType="DateTime NOT NULL" CanBeNull="false" />
+      <Column Name="VendorId" Type="System.String" DbType="VarChar(250)" CanBeNull="true" />
+      <Column Name="Remarks" Type="System.String" DbType="NVarChar(MAX)" CanBeNull="true" />
+      <Column Name="File_Path" Type="System.String" DbType="VarChar(250)" CanBeNull="true" />
+      <Column Name="File_Type" Type="System.String" DbType="VarChar(10)" CanBeNull="true" />
+      <Column Name="IGP_Id" Type="System.Int32" DbType="Int" CanBeNull="true" />
+      <Column Name="InvOrgId" Type="System.String" DbType="VarChar(10)" CanBeNull="true" />
+      <Column Name="Company_ID" Type="System.Int32" DbType="Int" CanBeNull="true" />
+      <Column Name="Created_By" Type="System.Guid" DbType="UniqueIdentifier" CanBeNull="true" />
+      <Column Name="Creation_Date" Type="System.DateTime" DbType="DateTime" CanBeNull="true" />
+      <Column Name="Update_Date" Type="System.DateTime" DbType="DateTime" CanBeNull="true" />
+      <Column Name="Updated_By" Type="System.Guid" DbType="UniqueIdentifier" CanBeNull="true" />
+      <Column Name="Status" Type="System.String" DbType="VarChar(25)" CanBeNull="true" />
+      <Column Name="Voucher_ID" Type="System.Int64" DbType="BigInt" CanBeNull="true" />
+      <Column Name="IsAutoGenerate" Type="System.Boolean" DbType="Bit" CanBeNull="true" />
+      <Column Name="Approved_By" Type="System.Guid" DbType="UniqueIdentifier" CanBeNull="true" />
+      <Column Name="AdvigpagainstPo" Type="System.Int32" DbType="Int" CanBeNull="true" />
+      <Column Name="Approved_Date" Type="System.DateTime" DbType="DateTime" CanBeNull="true" />
+      <Column Name="is_auto_Adv" Type="System.Boolean" DbType="Bit" CanBeNull="true" />
+      <Column Name="Project" Type="System.String" DbType="NVarChar(50)" CanBeNull="true" />
+      <Column Name="DepartmentId" Type="System.String" DbType="NVarChar(250)" CanBeNull="true" />
+      <Column Name="Total_Amount" Type="System.Decimal" DbType="Decimal(18,4)" CanBeNull="true" />
+      <Column Name="is_Direct" Type="System.Boolean" DbType="Bit" CanBeNull="true" />
+      <Association Name="GRN_Master_ItemSelection_Barcode" Member="ItemSelection_Barcodes" ThisKey="GRN_ID" OtherKey="GRN_ID" Type="ItemSelection_Barcode" />
     </Type>
   </Table>
   <Function Name="dbo.GetDataValueName" Method="GetDataValueName" IsComposable="true">
@@ -10951,29 +10954,6 @@
       <Column Name="Collected_Emp_ID" Type="System.Int32" DbType="Int" CanBeNull="true" />
     </ElementType>
   </Function>
-  <Function Name="dbo.sp_GetMIRDetailByMIRID" Method="sp_GetMIRDetailByMIRID">
-    <Parameter Name="MIRId" Parameter="mIRId" Type="System.Int32" DbType="Int" />
-    <ElementType Name="sp_GetMIRDetailByMIRIDResult">
-      <Column Name="DepartmentId" Type="System.String" DbType="VarChar(10) NOT NULL" CanBeNull="false" />
-      <Column Name="InventoryOrganizationId" Type="System.String" DbType="VarChar(10) NOT NULL" CanBeNull="false" />
-      <Column Name="Department" Type="System.String" DbType="VarChar(150)" CanBeNull="true" />
-      <Column Name="MIRDate" Type="System.DateTime" DbType="DateTime" CanBeNull="true" />
-      <Column Name="MaterialRequestDetail_Id" Type="System.Int64" DbType="BigInt NOT NULL" CanBeNull="false" />
-      <Column Name="MaterialRequest_Id" Type="System.Int64" DbType="BigInt" CanBeNull="true" />
-      <Column Name="MIR_Num" Type="System.Int64" DbType="BigInt" CanBeNull="true" />
-      <Column Name="Item_Id" Type="System.Int64" DbType="BigInt" CanBeNull="true" />
-      <Column Name="MIRQty" Type="System.Decimal" DbType="Decimal(18,4)" CanBeNull="true" />
-      <Column Name="Item_Code" Type="System.String" DbType="VarChar(15)" CanBeNull="true" />
-      <Column Name="Description" Type="System.String" DbType="VarChar(200)" CanBeNull="true" />
-      <Column Name="Unit" Type="System.String" DbType="VarChar(150)" CanBeNull="true" />
-      <Column Name="Pack_Quantity" Type="System.Int32" DbType="Int" CanBeNull="true" />
-      <Column Name="Purchase_Rate" Type="System.Decimal" DbType="Decimal(18,2)" CanBeNull="true" />
-      <Column Name="IsBatch" Type="System.Boolean" DbType="Bit" CanBeNull="true" />
-      <Column Name="Stock" Type="System.Decimal" DbType="Decimal(18,2)" CanBeNull="true" />
-      <Column Name="Balance" Type="System.Decimal" DbType="Decimal(38,4)" CanBeNull="true" />
-      <Column Name="Last_Issue_date" Type="System.DateTime" DbType="DateTime" CanBeNull="true" />
-    </ElementType>
-  </Function>
   <Function Name="dbo.sp_GetLabApprovalStatus" Method="sp_GetLabApprovalStatus">
     <Parameter Name="Bill_ID" Parameter="bill_ID" Type="System.Int64" DbType="BigInt" />
     <ElementType Name="sp_GetLabApprovalStatusResult">
@@ -12899,6 +12879,30 @@
       <Column Name="TotalStock" Type="System.Decimal" DbType="Decimal(18,2)" CanBeNull="true" />
       <Column Name="LastPORate" Type="System.Decimal" DbType="Decimal(18,4) NOT NULL" CanBeNull="false" />
       <Column Name="LastVendorName" Type="System.String" DbType="VarChar(100) NOT NULL" CanBeNull="false" />
+    </ElementType>
+  </Function>
+  <Function Name="dbo.sp_GetMIRDetailByMIRID" Method="sp_GetMIRDetailByMIRID">
+    <Parameter Name="MIRId" Parameter="mIRId" Type="System.Int32" DbType="Int" />
+    <ElementType Name="sp_GetMIRDetailByMIRIDResult">
+      <Column Name="DepartmentId" Type="System.String" DbType="VarChar(10) NOT NULL" CanBeNull="false" />
+      <Column Name="InventoryOrganizationId" Type="System.String" DbType="VarChar(10) NOT NULL" CanBeNull="false" />
+      <Column Name="Department" Type="System.String" DbType="VarChar(150)" CanBeNull="true" />
+      <Column Name="MIRDate" Type="System.DateTime" DbType="DateTime" CanBeNull="true" />
+      <Column Name="MaterialRequestDetail_Id" Type="System.Int64" DbType="BigInt NOT NULL" CanBeNull="false" />
+      <Column Name="MaterialRequest_Id" Type="System.Int64" DbType="BigInt" CanBeNull="true" />
+      <Column Name="MIR_Num" Type="System.Int64" DbType="BigInt" CanBeNull="true" />
+      <Column Name="Item_Id" Type="System.Int64" DbType="BigInt" CanBeNull="true" />
+      <Column Name="MIRQty" Type="System.Decimal" DbType="Decimal(18,4)" CanBeNull="true" />
+      <Column Name="Item_Code" Type="System.String" DbType="VarChar(15)" CanBeNull="true" />
+      <Column Name="Description" Type="System.String" DbType="VarChar(200)" CanBeNull="true" />
+      <Column Name="Unit" Type="System.String" DbType="VarChar(150)" CanBeNull="true" />
+      <Column Name="Pack_Quantity" Type="System.Int32" DbType="Int" CanBeNull="true" />
+      <Column Name="Purchase_Rate" Type="System.Decimal" DbType="Decimal(18,2)" CanBeNull="true" />
+      <Column Name="IsBatch" Type="System.Boolean" DbType="Bit" CanBeNull="true" />
+      <Column Name="Stock" Type="System.Decimal" DbType="Decimal(18,2)" CanBeNull="true" />
+      <Column Name="Balance" Type="System.Decimal" DbType="Decimal(38,4)" CanBeNull="true" />
+      <Column Name="Last_Issue_date" Type="System.DateTime" DbType="DateTime" CanBeNull="true" />
+      <Column Name="ExpiryDate" Type="System.String" DbType="VarChar(10) NOT NULL" CanBeNull="false" />
     </ElementType>
   </Function>
 </Database>

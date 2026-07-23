@@ -137,7 +137,7 @@
                     {
                         "data": "Creation_Date", "name": "Creation_Date",
                         "render": (data, type, full) => moment(full.Creation_Date).format('DD-MMM-YYYY hh:mm A'),
-                        "width": "12%"
+                        "width": "10%"
                     },
                     {
                         "data": "Approved_Time", "name": "Approved_Time",
@@ -166,7 +166,7 @@
 
                             var result = res + print;
                             return result;
-                        }, "orderable": false
+                        }, "orderable": false, "width": "8%",
                     }
                 ],
                 "rowCallback": function (row, data, index) {
@@ -246,7 +246,7 @@
                         <th>Status</th>
                         <th>Creation Date</th>
                         <th>Approved Date</th>
-                        <th>Approved Date</th>
+                        <th>Approved By</th>
                         <th>GIR Status</th>
                         <th>GIR Status</th>
                         <th>Actions</th>

@@ -952,6 +952,17 @@
             var Stock = $($(row).find('td')[11]).text();
             var balance = $($(row).find('td')[12]).text();
             var CGSRate = $($(row).find('td')[13]).text();
+            var expiryDate = $($(row).find('td')[15]).text();
+            if (!expiryDate || expiryDate == "null" || expiryDate === "") {
+                expiryDate = '';
+            }
+            
+            else if (expiryDate.indexOf("/Date(") !== -1) {
+                expiryDate = $.datepicker.formatDate(
+                    'dd M yy',
+                    new Date(parseInt(expiryDate.substring(6, 19)))
+                );
+            }
 
             if (!txtLastIsssueDate || txtLastIsssueDate == "null") {
                 txtLastIsssueDate = '';
@@ -1023,7 +1034,9 @@
                     '<td style="paddin g-top: 2px;"><input type="text" style=" font-size: 10px; width: 64px!important;                                        height: 22px;margin-top: 2px;margin-bottom: 0px;margin-left: 4px;" id="txtIssueQty' + length + '" name="txtIssueQty" value="0" onkeyup="calculateBalanceQty(this)"/></td>' +
                     '<td style="padding-top: 2px;"> <input type="text" value="' + balance + '" style=" font-size: 10px;height: 22px;  width: 64px!important;margin-top: 2px;margin-bottom: 0px;margin-left: 4px;" id="txtBlncQty' + length + '" name="txtBlncQty" readonly="readonly"/></td>' +
                     '<td style="padding-top: 2px;"> <input type="text" value="' + txtLastIsssueDate + '" style=" font-size: 10px;height: 22px;  width: 64px!important;margin-top: 2px;margin-bottom: 0px;margin-left: 4px;" id="txtLastIsssueDate' + length + '" name="txtLastIsssueDate" readonly="readonly"/></td>' +
+                    '<td style="padding-top: 2px;"> <input type="text" value="' + expiryDate + '" style="font-size: 10px;height: 22px; width: 80px!important;margin-top: 2px;margin-bottom: 0px;margin-left: 4px;" id="txtExpiryDate' + length + '" name="txtExpiryDate" readonly="readonly"/></td>' +
                     '<td style="padding-top: 2px;"><input type="text" id="txtRemarks' + length + '" name="txtRemarks" style="width:73px;height: 22px;margin-top: 2px;margin-bottom: 0px;margin-left: 4px;"/> </td>' +
+                    
                     '<td style="display:none;padding-top: 2px;"><input type="hidden" value=" ' + item_id + '" style=" font-size: 10px;height: 22px;  width: 64px!important;margin-top: 2px;margin-bottom: 0px;margin-left: 4px;" id="txtItemId' + length + '" name="txtItemId"/></td>' +
                     '<td style="display:none;padding-top: 2px;"><input type="hidden"  style=" font-size: 10px;height: 22px;  width: 64px!important;margin-top: 2px;margin-bottom: 0px;margin-left: 4px;" id="txtCGSRate' + length + '" name="txtCGSRate" value="' + CGSRate +'"/></td>' +
                     '<td style="display:none;padding-top: 2px;"><input type="hidden"  style=" font-size: 10px;height: 22px;  width: 64px!important;margin-top: 2px;margin-bottom: 0px;margin-left: 4px;" id="txtCGSAmount' + length + '" name="txtCGSAmount"/></td>' +
@@ -1058,6 +1071,7 @@
                 $('#tblMIRItemstModelTable tbody tr').remove();
                 var rows = "";
                 for (var i = 0; i < parsed_Date.length; i++) {
+                    var expDate = parsed_Date[i].ExpiryDate ? parsed_Date[i].ExpiryDate : "";
                     rows =
                         '<tr>' +
                         '<td><input class="chktd" id="chktd" name="chktd" type="checkbox" style=" margin-top: -2px; margin-left: 1px;" onclick="append(this)"/></td>' +
@@ -1076,6 +1090,7 @@
                        /* '<td style="display:none;">' + parseFloat(parsed_Date[i].CGSRate).toFixed(2) + '</td>' +*/
                     '<td style="display:none;">StoreStock</td>' +
                     '<td style="display:none;">' + parsed_Date[i].Last_Issue_date + '</td>' +
+                    '<td style="display:none;">' + expDate + '</td>' + 
                         '</tr>';
                     $('#tblMIRItemstModelTable tbody').append(rows);
                 }
@@ -1203,6 +1218,26 @@
                     if (result[key].Unit == null) {
                         result[key].Unit = " "
                     }
+                    var expiryDate = result[key].ExpiryDate;
+                    if (!expiryDate || expiryDate == "null" || expiryDate == "") {
+                        expiryDate = '';
+                    } else {
+                        if (expiryDate.indexOf("/Date(") !== -1) {
+                            expiryDate = $.datepicker.formatDate(
+                                'dd M yy',
+                                new Date(parseInt(expiryDate.substring(6, 19)))
+                            );
+                        } else {
+                            try {
+                                var dateObj = new Date(expiryDate);
+                                if (!isNaN(dateObj.getTime())) {
+                                    expiryDate = $.datepicker.formatDate('dd M yy', dateObj);
+                                }
+                            } catch (e) {
+                                expiryDate = '';
+                            }
+                        }
+                    }
                     var lastissueDate = result[key].Last_issue_date
 
                     if (!lastissueDate || lastissueDate == "null") {
@@ -1230,7 +1265,8 @@
                         '<td style="padding-top: 2px;"><input type="text" style="font-size: 10px; width: 64px!important;height: 22px;margin-top: 2px;margin-bottom: 0px;margin-left: 4px;" id="txtIssueQty' + key + '" name="txtIssueQty" value="' + parseFloat(result[key].Issue_Qty).toFixed(2) + '" onkeyup="calculateBalanceQty(this)"/></td>' +
                         '<td style="padding-top: 2px;"> <input type="text" value="' + parseFloat(result[key].Balance_Qty).toFixed(2) + '" style=" font-size: 10px;height: 22px;  width: 64px!important;margin-top: 2px;margin-bottom: 0px;margin-left: 4px;" id="txtBlncQty' + key + '" name="txtBlncQty"/></td>' +
                         '<td style="padding-top: 2px;"> <input type="text" value="' + lastissueDate + '" style=" font-size: 10px;height: 22px;  width: 64px!important;margin-top: 2px;margin-bottom: 0px;margin-left: 4px;" id="txtLastIsssueDate' + key + '" name="txtLastIsssueDate"/></td>' +
-                        '<td style="padding-top: 2px;"><input type="text" id="txtRemarks' + key + '" style="width:73px;height: 22px;margin-top: 2px;margin-bottom: 0px;margin-left: 4px;" name="txtRemarks" value="' + result[key].Remarks + '"/> </td>' +
+                        '<td style="padding-top: 2px;"> <input type="text" value="' + expiryDate + '" style=" font-size: 10px;height: 22px;  width: 80px!important;margin-top: 2px;margin-bottom: 0px;margin-left: 4px;" id="txtExpiryDate' + key + '" name="txtExpiryDate" readonly="readonly"/></td>' +
+                        '<td style="padding-top: 2px;"><input type="text" id="txtRemarks' + key + '" style="width:73px;height: 22px;margin-top: 2px;margin-bottom: 0px;margin-left: 4px;" name="txtRemarks" value="' + result[key].Remarks + '"/> </td>' +                     
                         '<td style="display:none;padding-top: 2px;"><input type="hidden" value=" ' + result[key].Item_Id + '" style=" font-size: 10px;height: 22px;  width: 64px!important;margin-top: 2px;margin-bottom: 0px;margin-left: 4px;" id="txtItemId' + length + '" name="txtItemId"/></td>' +
                         '<td style="display:none;padding-top: 2px;"><input type="hidden" value=" ' + result[key].CGS + '" style=" font-size: 10px;height: 22px;  width: 64px!important;margin-top: 2px;margin-bottom: 0px;margin-left: 4px;" id="txtCGSAmount' + length + '" name="txtCGSAmount"/></td>' +
                         '<td style="padding-top: 9px;padding-top: 6px !important;"> <a href="#" onclick="ExcludeFromPayment(this)">Delete</a></td>' +
@@ -1537,6 +1573,7 @@
                         <th>Issue Qty</th>
                         <th>Balance Qty</th>
                         <th>Last Issue Date</th>
+                         <th>Expiry Date</th>
                         <th>Remarks</th>
                         <th>Action</th>
                     </tr>

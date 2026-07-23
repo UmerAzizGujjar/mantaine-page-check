@@ -86,6 +86,13 @@ namespace PMS.Modules.Inventory
                                     };
 
                     var FilteredCount = inv_Items.Count();
+                    if (length == -1 || length > 100000)
+                    {
+                        start = 0;
+                        length = FilteredCount; 
+                                                
+                                           
+                    }
                     switch (sortColumn)
                     {
                         case "ItemCode":
@@ -107,7 +114,7 @@ namespace PMS.Modules.Inventory
             }
             catch (Exception ex)
             {
-                throw new Exception("Error fetching inv Items  list", ex);
+                throw new Exception("Error fetching Service list", ex);
             }
         }
 

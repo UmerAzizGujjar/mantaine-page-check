@@ -371,6 +371,10 @@ namespace PMS.Inventory
                              Description = DBClass.getField("select Description from inv_items where Item_Id=" + data.Item_Id),
                              IsBatch = DBClass.getField("select IsBatch from inv_items where Item_Id=" + data.Item_Id),
                              SaveTimeStock=data.Store_Stock,
+                             ExpiryDate = (from igp in db.Igp_Details
+                                           where igp.Item_Id == data.Item_Id && igp.ExpiryDate != null
+                                           orderby igp.Igp_item_ID descending
+                                           select igp.ExpiryDate).FirstOrDefault()
                          }).ToList();
             return (new JavaScriptSerializer()).Serialize(query);
         }   
