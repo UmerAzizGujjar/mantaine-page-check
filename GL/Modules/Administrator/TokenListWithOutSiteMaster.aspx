@@ -73,9 +73,10 @@
         $(document).ready(function () {
             FillPatientType();
             FillDepartment();
+            filldoctor();
             GetLatestToken();
             GetLatest_doc_Token();
-            filldoctor();
+            
             $('#clinicBtn').click(function () {
                 $('#doctorTable').hide();
                 $('#clinicTable').show();
@@ -164,8 +165,15 @@
             return options;
         }
         function GetLatestToken() {
+            debugger;
             var patientType = $('#ddlPatientType').val();
             var department = $('#ddldepartment').val();
+            if (patientType == null) {
+                patientType = 0;
+            }
+            if (department == null) {
+                department = 0;
+            }
             $.ajax({
                 url: 'TokenList.aspx/LoadTokenPatientFilter',
                 type: 'post',
@@ -201,14 +209,14 @@
         setInterval(function () {
             location.reload();
         }, 180000);
-        function GetLatest_doc_Token() {
-            var doctor = $('#ddldoctor').val();
+    function GetLatest_doc_Token() {
+            var doc_Id = $('#ddldoctor').val();
             $.ajax({
-                url: 'TokenList.aspx/LoadDocTokenPatient',
+                url: 'TokenList.aspx/LoadDocTokenPatientFitler',
                 type: 'post',
                 contentType: 'application/json;charset=utf-8',
                 dataType: 'json',
-                data: JSON.stringify({ doctor: doctor }),
+                data: JSON.stringify({ doc_Id: doc_Id }),
                 success: function (_data) {
                     debugger;
                     _data = JSON.parse(_data.d);

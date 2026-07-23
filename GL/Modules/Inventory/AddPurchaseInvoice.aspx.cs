@@ -184,10 +184,10 @@ namespace PMS.Inventory
         }
 
         [WebMethod]
-        public static string getGRNDetailByVendorId(string vendorId)
+        public static string getGRNDetailByVendorId(string vendorId,bool Is_Direct)
         {
             DataBaseDataContext db = new DataBaseDataContext();
-            var listPurchaseDetails = db.sp_GetGRNDetailByVendorId(Convert.ToInt32(vendorId)).ToList();
+            var listPurchaseDetails = db.sp_GetGRNDetailByVendorId_DirectGRN(Convert.ToInt32(vendorId), Is_Direct).ToList();
             return (new JavaScriptSerializer()).Serialize(listPurchaseDetails);
         }
         [WebMethod]
@@ -217,6 +217,7 @@ namespace PMS.Inventory
                 lstItem.AccountingDate = Convert.ToDateTime(record.InvoiceDate);
                 lstItem.DueDate = Convert.ToDateTime(record.DueDate);
                 lstItem.CurrencyId = record.Currency;
+                lstItem.is_DirtGRN = record.Is_Direct;
                 lstItem.SalTaxInvocieNum = record.SalTaxInvoiceNum;
                 if (record.disc_amount != "")
                 {
@@ -257,6 +258,7 @@ namespace PMS.Inventory
                 PO.AccountingDate = Convert.ToDateTime(record.InvoiceDate);
                 PO.DueDate = Convert.ToDateTime(record.DueDate);
                 PO.CurrencyId = record.Currency;
+                PO.is_DirtGRN = record.Is_Direct;
                 if (record.disc_amount != "")
                 {
                     PO.Discount_Amount = Convert.ToDecimal(record.disc_amount);
@@ -435,13 +437,14 @@ namespace PMS.Inventory
                               m.Total_Advance_Adjusted,
                               m.Total_Invoice_Amount,
                               m.Net_Amount,
+                              m.is_DirtGRN,
                               m.Discount_Amount,
                               Vendor_Name = db.AP_Vendors.Where(po => po.Vendor_ID == Convert.ToInt32(m.VendorId)).Select(po => po.Vendor_Name),
                           }).FirstOrDefault();
             return (new JavaScriptSerializer()).Serialize(Header);
         }
         [WebMethod]
-        public static string LoadInvocieDetail(int Inv_ID)
+        public static string LoadInvocieDetail(int Inv_ID , bool isDirct)
         {
             DataBaseDataContext db = new DataBaseDataContext();
 
@@ -455,7 +458,7 @@ namespace PMS.Inventory
             }
             else
             {
-                Details = db.sp_LoadPurchaseDetailInvoice(Inv_ID).ToList();
+                Details = db.sp_LoadPurchaseDetailInvoice_DirctGRN(Inv_ID, isDirct).ToList();
             }
 
             return (new JavaScriptSerializer()).Serialize(Details);
@@ -496,6 +499,7 @@ namespace PMS.Inventory
             public string totalinvoiceamount { get; set; }
             public string totaladvanceadjusted { get; set; }
             public string totalnetamount { get; set; }
+            public bool Is_Direct { get; set; }
             public string disc_amount { get; set; }
             
             public List<InoiceDetailList> ItemList { get; set; }
