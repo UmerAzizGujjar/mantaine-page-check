@@ -212,117 +212,349 @@
             });
         }
 
-        function appendrow(anchor) {
-            debugger;
-            var row = $(anchor).parents('tr')[0];
-            var prid = $($(row).find('td')[1]).text();
-            var prnum = $($(row).find('td')[2]).text();
-            var item_id = $($(row).find('td')[3]).text();
-            var item_name = $($(row).find('td')[4]).text();
-            var Qty = $($(row).find('td')[5]).text();
-            var itemcode = $($(row).find('td')[6]).text();
-            var unit = $($(row).find('td')[7]).text();
-            var reqdate = $($(row).find('td')[8]).text();
-            var pr_detail_id = $($(row).find('td')[9]).text();
-            var length = $("#tblItemDescription tr").length;
-            if (unit == "null")
-                unit = "";
-            if (Qty == "null")
-                Qty = "0";
-            if (Qty == "NaN")
-                Qty = "0";
-            var length = $("#tblItemDescription tr:gt(0)").length;
-            if (length > 0) {
-                length = length + 1;
-            }
-            else {
-                length = 1;
-            }
-            var timestamp = parseInt(reqdate.match(/\d+/)[0]);
-            var date = new Date(timestamp);
-            var formattedDateForDatepicker = $.datepicker.formatDate('dd M yy', date);
+        //function appendrow(anchor) {
+        //    debugger;
+        //    var row = $(anchor).parents('tr')[0];
+        //    var prid = $($(row).find('td')[1]).text();
+        //    var prnum = $($(row).find('td')[2]).text();
+        //    var item_id = $($(row).find('td')[3]).text();
+        //    var item_name = $($(row).find('td')[4]).text();
+        //    var Qty = $($(row).find('td')[5]).text();
+        //    var itemcode = $($(row).find('td')[6]).text();
+        //    var unit = $($(row).find('td')[7]).text();
+        //    var reqdate = $($(row).find('td')[8]).text();
+        //    var pr_detail_id = $($(row).find('td')[9]).text();
+        //    var length = $("#tblItemDescription tr").length;
+        //    if (unit == "null")
+        //        unit = "";
+        //    if (Qty == "null")
+        //        Qty = "0";
+        //    if (Qty == "NaN")
+        //        Qty = "0";
+        //    var length = $("#tblItemDescription tr:gt(0)").length;
+        //    if (length > 0) {
+        //        length = length + 1;
+        //    }
+        //    else {
+        //        length = 1;
+        //    }
+        //    var timestamp = parseInt(reqdate.match(/\d+/)[0]);
+        //    var date = new Date(timestamp);
+        //    var formattedDateForDatepicker = $.datepicker.formatDate('dd M yy', date);
 
-            var test_array = $('#tblItemDescription').find('input[name=txt_itemcode][value=' + itemcode + ']');
-            if (test_array.length > 0) {
-                Swal.fire({
-                    icon: 'error',
-                    title: 'Error!',
-                    text: 'This Item already added!',
-                    showConfirmButton: false,
-                    timer: 2000,
-                    customClass: {
-                        popup: 'swal-big-popup',
-                        title: 'swal-big-title',
-                        htmlContainer: 'swal-big-text'
-                    }
-                });
+        //    var test_array = $('#tblItemDescription').find('input[name=txt_itemcode][value=' + itemcode + ']');
+        //    if (test_array.length > 0) {
+        //        Swal.fire({
+        //            icon: 'error',
+        //            title: 'Error!',
+        //            text: 'This Item already added!',
+        //            showConfirmButton: false,
+        //            timer: 2000,
+        //            customClass: {
+        //                popup: 'swal-big-popup',
+        //                title: 'swal-big-title',
+        //                htmlContainer: 'swal-big-text'
+        //            }
+        //        });
 
-                return false;
-            }
-            else {
-                $("#tblItemDescription").append('<tr>' +
-                    '<td style="display:none"><input type="hidden" name="txt_pr_id" id="txt_pr_id' + length + '"  value="' + prid + '" style="text-align:right ;width:50px !important;font-size:9px;height:20px;padding-top: 7px!important;padding-right: 3px!important;"/>' + prid + '</td>' +
-                    '<td style="padding-top: 7px!important;"><input type="hidden" name="txt_prnum" id="txt_prnum' + length + '"  value="' + prnum + '" style="text-align:right ;width:50px !important;font-size:9px;height:20px;padding-top: 7px!important;padding-right: 3px!important;"/>' + prnum + '</td>' +
-                    '<td style="display:none;"><input type="hidden" name="txtItemId" id="txtItemId' + length + '"  value="' + item_id + '" /> ' + item_id + ' </td>' +
-                    '<td style="padding-top: 7px!important;padding-right: 3px!important;text-align:center!important;"><input type="hidden" name="txt_itemcode" id="txt_itemcode' + length + '"  value="' + itemcode + '"  style="width:50px !important;text-align:center;font-size:9px;height:20px;"/> ' + itemcode + ' </td>' +
-                    '<td style="padding-left: 8px!important;padding-top: 7px!important;text-align:left!important;"><input type="hidden" name="txtItemName" id="txtItemName' + length + '"  value="' + item_name + '"/> ' + item_name + ' </td>' +
-                    '<td style="text-align:center!important;"><input type="hidden" name="txtUnit" id="txtUnit' + length + '"  value="' + unit + '" />' + unit + ' </td>' +
-                    '<td><input type="hidden" readonly id="txt_qty' + length + '"  value="' + Qty + '"  style="text-align:right ;width:50px !important;font-size:9px;height:20px" name="txt_qty" /> ' + Qty + '</td>' +
-                    '<td style="width: 63px;"><input type="hidden" readonly name="txt_reqdate" id="txt_reqdate' + length + '" value="' + formattedDateForDatepicker + '" style="width:62px !important;text-align:center;font-size:9px;height:20px;" />' + formattedDateForDatepicker + '</td>' +
-                    '<td style="display:none"><input type="hidden" id="txt_prdetail_id' + length + '" name="txt_prdetail_id" value="' + pr_detail_id + '" style="width: 75px !important;text-align:right" />' + pr_detail_id + '</td></tr>');
-                $('#txt_reqdate' + length).datepicker({ dateFormat: 'dd M yy', }).attr('readonly', 'readonly').datepicker('setDate', formattedDateForDatepicker);
-                $('#txt_reqdate' + length).datepicker('destroy');
-                length++;
-                $('input[name="txt_reqdate"]').datepicker({ dateFormat: 'dd M yy' }).attr('readonly', 'readonly');
+        //        return false;
+        //    }
+        //    else {
+        //        $("#tblItemDescription").append('<tr>' +
+        //            '<td style="display:none"><input type="hidden" name="txt_pr_id" id="txt_pr_id' + length + '"  value="' + prid + '" style="text-align:right ;width:50px !important;font-size:9px;height:20px;padding-top: 7px!important;padding-right: 3px!important;"/>' + prid + '</td>' +
+        //            '<td style="padding-top: 7px!important;"><input type="hidden" name="txt_prnum" id="txt_prnum' + length + '"  value="' + prnum + '" style="text-align:right ;width:50px !important;font-size:9px;height:20px;padding-top: 7px!important;padding-right: 3px!important;"/>' + prnum + '</td>' +
+        //            '<td style="display:none;"><input type="hidden" name="txtItemId" id="txtItemId' + length + '"  value="' + item_id + '" /> ' + item_id + ' </td>' +
+        //            '<td style="padding-top: 7px!important;padding-right: 3px!important;text-align:center!important;"><input type="hidden" name="txt_itemcode" id="txt_itemcode' + length + '"  value="' + itemcode + '"  style="width:50px !important;text-align:center;font-size:9px;height:20px;"/> ' + itemcode + ' </td>' +
+        //            '<td style="padding-left: 8px!important;padding-top: 7px!important;text-align:left!important;"><input type="hidden" name="txtItemName" id="txtItemName' + length + '"  value="' + item_name + '"/> ' + item_name + ' </td>' +
+        //            '<td style="text-align:center!important;"><input type="hidden" name="txtUnit" id="txtUnit' + length + '"  value="' + unit + '" />' + unit + ' </td>' +
+        //            '<td><input type="hidden" readonly id="txt_qty' + length + '"  value="' + Qty + '"  style="text-align:right ;width:50px !important;font-size:9px;height:20px" name="txt_qty" /> ' + Qty + '</td>' +
+        //            '<td style="width: 63px;"><input type="hidden" readonly name="txt_reqdate" id="txt_reqdate' + length + '" value="' + formattedDateForDatepicker + '" style="width:62px !important;text-align:center;font-size:9px;height:20px;" />' + formattedDateForDatepicker + '</td>' +
+        //            '<td style="display:none"><input type="hidden" id="txt_prdetail_id' + length + '" name="txt_prdetail_id" value="' + pr_detail_id + '" style="width: 75px !important;text-align:right" />' + pr_detail_id + '</td></tr>');
+        //        $('#txt_reqdate' + length).datepicker({ dateFormat: 'dd M yy', }).attr('readonly', 'readonly').datepicker('setDate', formattedDateForDatepicker);
+        //        $('#txt_reqdate' + length).datepicker('destroy');
+        //        length++;
+        //        $('input[name="txt_reqdate"]').datepicker({ dateFormat: 'dd M yy' }).attr('readonly', 'readonly');
                 
-                debugger
-                var prid = $($(row).find('td')[1]).text();
-                var prnum = $($(row).find('td')[2]).text();
-                var itemid = $($(row).find('td')[3]).text();
-                var itemcode = $($(row).find('td')[6]).text();
-                var Description = $($(row).find('td')[4]).text();
-                var Qty = $($(row).find('td')[5]).text();
-                var prdetailid = $($(row).find('td')[9]).text();
-                var grnnum = $($(row).find('td')[10]).text();
-                var grnrate = $($(row).find('td')[11]).text();
-                rows = '<tr>' +
-                    '<td><input name="chkselect" type="checkbox" class="chktd" id="chktd" name="chktd" onclick="appendtogrn(this)" style=" margin-top: -2px; margin-left: 0px;height: 36px;"/></td>' +
-                    '<td style="display:none;"><input style="width:100%!important;text-align:right;" type="text" id="txt_itemcode" name="txt_itemcode" value="' + itemcode + '" readonly="readonly"></td>' +
-                    '<td><input style="width:100%!important;text-align:right;" type="text" id="txt_qty" name="txt_qty" onchange="CalculateAmonut(this)" value="0"></td>' +
-                    '<td><input style="width:100%!important;text-align:right;" type="text" id="txt_rate" name="txt_rate" onchange="CalculateAmonut(this)" value=""></td>' +
-                    '<td><select id="ddlItemSTAX" name="ddlItemSTAX" onchange="CalculateAmonut(this)" style="text-align:right;width:100%!important"><option value="0">Please Select</option>' + _gloabal + '</select></td>' +
-                    '<td><input style="width:100%!important;text-align:right;" type="text" id="txt_amount" name="txt_amount" value="" readonly="readonly"></td>' +
-                    '<td style="display:none;">' + grnnum + '</td>' +
-                    '<td style="display:none;">' + grnrate + '</td>' +
-                    '<td style="display:none;">' + itemid + '</td>' +
-                    '<td style="display:none;">' + Description + '</td>' +
-                    '<td style="display:none;"><input style="width:100%!important;" type="text" id="txt_prdetail_id" name="txt_prdetail_id" value="' + prdetailid + '" readonly="readonly"></td>' +
-                    '<td style="display:none;"><input style="width:100%!important;" type="text" id="txt_pr_id" name="txt_pr_id" value="' + prid + '" readonly="readonly"></td>' +
-                    '<td style="display:none;"><input style="width:100%!important;" type="text" id="txt_prnum" name="txt_prnum" value="' + prnum + '" readonly="readonly"></td>' +
-                    '<td style="display:none;"><input style="width:100%!important;" type="text" id="txt_reqdate" name="txt_reqdate" value="' + formattedDateForDatepicker + '" readonly="readonly"></td>' +
-                    '</tr>'
-                $("#tblItemDescription11").append(rows);
-                $("#tblItemDescription21").append(rows);
-                $("#tblItemDescription31").append(rows);
-                $("#tblItemDescription41").append(rows);
-                $("#tblItemDescription51").append(rows);
+        //        debugger
+        //        var prid = $($(row).find('td')[1]).text();
+        //        var prnum = $($(row).find('td')[2]).text();
+        //        var itemid = $($(row).find('td')[3]).text();
+        //        var itemcode = $($(row).find('td')[6]).text();
+        //        var Description = $($(row).find('td')[4]).text();
+        //        var Qty = $($(row).find('td')[5]).text();
+        //        var prdetailid = $($(row).find('td')[9]).text();
+        //        var grnnum = $($(row).find('td')[10]).text();
+        //        var grnrate = $($(row).find('td')[11]).text();
+        //        rows = '<tr>' +
+        //            '<td><input name="chkselect" type="checkbox" class="chktd" id="chktd" name="chktd" onclick="appendtogrn(this)" style=" margin-top: -2px; margin-left: 0px;height: 36px;"/></td>' +
+        //            '<td style="display:none;"><input style="width:100%!important;text-align:right;" type="text" id="txt_itemcode" name="txt_itemcode" value="' + itemcode + '" readonly="readonly"></td>' +
+        //            '<td><input style="width:100%!important;text-align:right;" type="text" id="txt_qty" name="txt_qty" onchange="CalculateAmonut(this)" value="0"></td>' +
+        //            '<td><input style="width:100%!important;text-align:right;" type="text" id="txt_rate" name="txt_rate" onchange="CalculateAmonut(this)" value=""></td>' +
+        //            '<td><select id="ddlItemSTAX" name="ddlItemSTAX" onchange="CalculateAmonut(this)" style="text-align:right;width:100%!important"><option value="0">Please Select</option>' + _gloabal + '</select></td>' +
+        //            '<td><input style="width:100%!important;text-align:right;" type="text" id="txt_amount" name="txt_amount" value="" readonly="readonly"></td>' +
+        //            '<td style="display:none;">' + grnnum + '</td>' +
+        //            '<td style="display:none;">' + grnrate + '</td>' +
+        //            '<td style="display:none;">' + itemid + '</td>' +
+        //            '<td style="display:none;">' + Description + '</td>' +
+        //            '<td style="display:none;"><input style="width:100%!important;" type="text" id="txt_prdetail_id" name="txt_prdetail_id" value="' + prdetailid + '" readonly="readonly"></td>' +
+        //            '<td style="display:none;"><input style="width:100%!important;" type="text" id="txt_pr_id" name="txt_pr_id" value="' + prid + '" readonly="readonly"></td>' +
+        //            '<td style="display:none;"><input style="width:100%!important;" type="text" id="txt_prnum" name="txt_prnum" value="' + prnum + '" readonly="readonly"></td>' +
+        //            '<td style="display:none;"><input style="width:100%!important;" type="text" id="txt_reqdate" name="txt_reqdate" value="' + formattedDateForDatepicker + '" readonly="readonly"></td>' +
+        //            '</tr>'
+        //        $("#tblItemDescription11").append(rows);
+        //        $("#tblItemDescription21").append(rows);
+        //        $("#tblItemDescription31").append(rows);
+        //        $("#tblItemDescription41").append(rows);
+        //        $("#tblItemDescription51").append(rows);
 
-                var lastAppendedRow = $('#tblItemDescription1 tbody tr:last');
-                var itemcode = $(lastAppendedRow).find('td input[name=txt_itemcode]').val();
-                var Qty = $(lastAppendedRow).find('td input[name=txt_qty]').val();
-                var amount = $(lastAppendedRow).find('td input[name=txt_amount]').val();
-                var grnnum = $(lastAppendedRow).find('td:eq(5)').text();
-                var grnrate = $(lastAppendedRow).find('td:eq(6)').text();
-                var descrip = $(lastAppendedRow).find('td:eq(8)').text();
-                rows = '<tr>' +
-                    '<td style="display:none;"><input style="width:80px!important;text-align:right;" type="text" id="txt_grnitemcode" name="txt_grnitemcode" value="' + itemcode + '" readonly="readonly"></td>' +
-                    '<td><input style="width:80px!important;text-align:right;" type="text" id="txt_grnappamount" name="txt_grnappamount" value="' + amount + '" readonly="readonly"></td>' +
-                    '<td style="display:none;">' + grnnum + '</td>' +
-                    '<td style="text-align:right;">' + grnrate + '</td>' +
-                    '<td style="display:none;">' + descrip + '</td>' +
-                    '</tr>'
-                $("#grntable tbody").append(rows);               
-            }
+        //        var lastAppendedRow = $('#tblItemDescription1 tbody tr:last');
+        //        var itemcode = $(lastAppendedRow).find('td input[name=txt_itemcode]').val();
+        //        var Qty = $(lastAppendedRow).find('td input[name=txt_qty]').val();
+        //        var amount = $(lastAppendedRow).find('td input[name=txt_amount]').val();
+        //        var grnnum = $(lastAppendedRow).find('td:eq(5)').text();
+        //        var grnrate = $(lastAppendedRow).find('td:eq(6)').text();
+        //        var descrip = $(lastAppendedRow).find('td:eq(8)').text();
+        //        rows = '<tr>' +
+        //            '<td style="display:none;"><input style="width:80px!important;text-align:right;" type="text" id="txt_grnitemcode" name="txt_grnitemcode" value="' + itemcode + '" readonly="readonly"></td>' +
+        //            '<td><input style="width:80px!important;text-align:right;" type="text" id="txt_grnappamount" name="txt_grnappamount" value="' + amount + '" readonly="readonly"></td>' +
+        //            '<td style="display:none;">' + grnnum + '</td>' +
+        //            '<td style="text-align:right;">' + grnrate + '</td>' +
+        //            '<td style="display:none;">' + descrip + '</td>' +
+        //            '</tr>'
+        //        $("#grntable tbody").append(rows);               
+        //    }
+        //}
+
+
+function appendrow(anchor) {
+   debugger;
+
+   var row = $(anchor).parents('tr')[0];
+
+   var prid = $($(row).find('td')[1]).text();
+   var prnum = $($(row).find('td')[2]).text();
+   var item_id = $($(row).find('td')[3]).text();
+   var item_name = $($(row).find('td')[4]).text();
+   var Qty = $($(row).find('td')[5]).text();
+   var itemcode = $($(row).find('td')[6]).text();
+   var unit = $($(row).find('td')[7]).text();
+   var reqdate = $($(row).find('td')[8]).text();
+   var pr_detail_id = $($(row).find('td')[9]).text();
+
+   // Unique Row Id
+   var rowId = "RID_" + new Date().getTime();
+
+   var length = $("#tblItemDescription tr").length;
+
+   if (unit == "null")
+       unit = "";
+
+   if (Qty == "null")
+       Qty = "0";
+
+   if (Qty == "NaN")
+       Qty = "0";
+
+   var length = $("#tblItemDescription tr:gt(0)").length;
+
+   if (length > 0) {
+       length = length + 1;
+   }
+   else {
+       length = 1;
+   }
+
+   var timestamp = parseInt(reqdate.match(/\d+/)[0]);
+   var date = new Date(timestamp);
+   var formattedDateForDatepicker = $.datepicker.formatDate('dd M yy', date);
+
+   var test_array = $('#tblItemDescription').find('input[name=txt_itemcode][value="' + itemcode + '"]');
+
+   if (test_array.length > 0) {
+
+       Swal.fire({
+           icon: 'error',
+           title: 'Error!',
+           text: 'This Item already added!',
+           showConfirmButton: false,
+           timer: 2000,
+           customClass: {
+               popup: 'swal-big-popup',
+               title: 'swal-big-title',
+               htmlContainer: 'swal-big-text'
+           }
+       });
+
+       return false;
+   }
+   else {
+
+       $("#tblItemDescription").append(
+           '<tr data-rowid="' + rowId + '">' +
+
+           '<td style="text-align:center;">' +
+           '<a href="javascript:void(0);" onclick="DeleteAllRows(\'' + rowId + '\')" title="Delete">' +
+           '<i class="fa fa-trash text-danger"></i>' +
+           '</a>' +
+           '</td>' +
+
+           '<td style="display:none">' +
+           '<input type="hidden" name="txt_pr_id" id="txt_pr_id' + length + '" value="' + prid + '"/>' +
+           prid +
+           '</td>' +
+
+           '<td style="padding-top:7px!important;">' +
+           '<input type="hidden" name="txt_prnum" id="txt_prnum' + length + '" value="' + prnum + '"/>' +
+           prnum +
+           '</td>' +
+
+           '<td style="display:none;">' +
+           '<input type="hidden" name="txtItemId" id="txtItemId' + length + '" value="' + item_id + '" />' +
+           item_id +
+           '</td>' +
+
+           '<td style="padding-top:7px!important;padding-right:3px!important;text-align:center!important;">' +
+           '<input type="hidden" name="txt_itemcode" id="txt_itemcode' + length + '" value="' + itemcode + '" />' +
+           itemcode +
+           '</td>' +
+
+           '<td style="padding-left:8px!important;padding-top:7px!important;text-align:left!important;">' +
+           '<input type="hidden" name="txtItemName" id="txtItemName' + length + '" value="' + item_name + '"/>' +
+           item_name +
+           '</td>' +
+
+           '<td style="text-align:center!important;">' +
+           '<input type="hidden" name="txtUnit" id="txtUnit' + length + '" value="' + unit + '" />' +
+           unit +
+           '</td>' +
+
+           '<td>' +
+           '<input type="hidden" readonly id="txt_qty' + length + '" value="' + Qty + '" name="txt_qty" />' +
+           Qty +
+           '</td>' +
+
+           '<td style="width:63px;">' +
+           '<input type="hidden" readonly name="txt_reqdate" id="txt_reqdate' + length + '" value="' + formattedDateForDatepicker + '" />' +
+           formattedDateForDatepicker +
+           '</td>' +
+
+           '<td style="display:none">' +
+           '<input type="hidden" id="txt_prdetail_id' + length + '" name="txt_prdetail_id" value="' + pr_detail_id + '" />' +
+           pr_detail_id +
+           '</td>' +
+
+           '</tr>'
+       );
+
+       $('#txt_reqdate' + length)
+           .datepicker({ dateFormat: 'dd M yy' })
+           .attr('readonly', 'readonly')
+           .datepicker('setDate', formattedDateForDatepicker);
+
+       $('#txt_reqdate' + length).datepicker('destroy');
+
+       length++;
+
+       $('input[name="txt_reqdate"]')
+           .datepicker({ dateFormat: 'dd M yy' })
+           .attr('readonly', 'readonly');
+
+       // Continue with your remaining code...
+debugger;
+
+var prid = $($(row).find('td')[1]).text();
+var prnum = $($(row).find('td')[2]).text();
+var itemid = $($(row).find('td')[3]).text();
+var itemcode = $($(row).find('td')[6]).text();
+var Description = $($(row).find('td')[4]).text();
+var Qty = $($(row).find('td')[5]).text();
+var prdetailid = $($(row).find('td')[9]).text();
+var grnnum = $($(row).find('td')[10]).text();
+var grnrate = $($(row).find('td')[11]).text();
+
+rows = '<tr data-rowid="' + rowId + '">' +
+    '<td><input name="chkselect" type="checkbox" class="chktd" id="chktd" onclick="appendtogrn(this)" style="margin-top:-2px;margin-left:0px;height:36px;"/></td>' +
+    '<td style="display:none;"><input style="width:100%!important;text-align:right;" type="text" id="txt_itemcode" name="txt_itemcode" value="' + itemcode + '" readonly="readonly"></td>' +
+    '<td><input style="width:100%!important;text-align:right;" type="text" id="txt_qty" name="txt_qty" onchange="CalculateAmonut(this)" value="0"></td>' +
+    '<td><input style="width:100%!important;text-align:right;" type="text" id="txt_rate" name="txt_rate" onchange="CalculateAmonut(this)" value=""></td>' +
+    '<td><select id="ddlItemSTAX" name="ddlItemSTAX" onchange="CalculateAmonut(this)" style="text-align:right;width:100%!important"><option value="0">Please Select</option>' + _gloabal + '</select></td>' +
+    '<td><input style="width:100%!important;text-align:right;" type="text" id="txt_amount" name="txt_amount" value="" readonly="readonly"></td>' +
+    '<td style="display:none;">' + grnnum + '</td>' +
+    '<td style="display:none;">' + grnrate + '</td>' +
+    '<td style="display:none;">' + itemid + '</td>' +
+    '<td style="display:none;">' + Description + '</td>' +
+    '<td style="display:none;"><input type="text" id="txt_prdetail_id" name="txt_prdetail_id" value="' + prdetailid + '" readonly></td>' +
+    '<td style="display:none;"><input type="text" id="txt_pr_id" name="txt_pr_id" value="' + prid + '" readonly></td>' +
+    '<td style="display:none;"><input type="text" id="txt_prnum" name="txt_prnum" value="' + prnum + '" readonly></td>' +
+    '<td style="display:none;"><input type="text" id="txt_reqdate" name="txt_reqdate" value="' + formattedDateForDatepicker + '" readonly></td>' +
+    '</tr>';
+
+$("#tblItemDescription11").append(rows);
+$("#tblItemDescription21").append(rows);
+$("#tblItemDescription31").append(rows);
+$("#tblItemDescription41").append(rows);
+$("#tblItemDescription51").append(rows);
+
+var lastAppendedRow = $('#tblItemDescription1 tbody tr:last');
+
+var itemcode = $(lastAppendedRow).find('input[name=txt_itemcode]').val();
+var Qty = $(lastAppendedRow).find('input[name=txt_qty]').val();
+var amount = $(lastAppendedRow).find('input[name=txt_amount]').val();
+var grnnum = $(lastAppendedRow).find('td:eq(5)').text();
+var grnrate = $(lastAppendedRow).find('td:eq(6)').text();
+var descrip = $(lastAppendedRow).find('td:eq(8)').text();
+
+rows = '<tr data-rowid="' + rowId + '">' +
+    '<td style="display:none;"><input type="text" id="txt_grnitemcode" name="txt_grnitemcode" value="' + itemcode + '" readonly></td>' +
+    '<td><input type="text" id="txt_grnappamount" name="txt_grnappamount" value="' + amount + '" readonly></td>' +
+    '<td style="display:none;">' + grnnum + '</td>' +
+    '<td style="text-align:right;">' + grnrate + '</td>' +
+    '<td style="display:none;">' + descrip + '</td>' +
+    '</tr>';
+
+$("#grntable tbody").append(rows);
+    }
+}
+function DeleteAllRows(rowId) {
+
+    $('#tblItemDescription tr[data-rowid="' + rowId + '"]').remove();
+
+    $('#tblItemDescription11 tr[data-rowid="' + rowId + '"]').remove();
+
+    $('#tblItemDescription21 tr[data-rowid="' + rowId + '"]').remove();
+
+    $('#tblItemDescription31 tr[data-rowid="' + rowId + '"]').remove();
+
+    $('#tblItemDescription41 tr[data-rowid="' + rowId + '"]').remove();
+
+    $('#tblItemDescription51 tr[data-rowid="' + rowId + '"]').remove();
+
+    $('#grntable tr[data-rowid="' + rowId + '"]').remove();
+    RecalculateAllVendorTotals();
+}
+
+function RecalculateAllVendorTotals() {
+
+    $('#tblItemDescription1 tbody tr:first input[name=txt_qty]').each(function() {
+        CalculateAmonut(this);
+    });
+
+    $('#tblItemDescription2 tbody tr:first input[name=txt_qty]').each(function() {
+        CalculateAmonut(this);
+    });
+
+    $('#tblItemDescription3 tbody tr:first input[name=txt_qty]').each(function() {
+        CalculateAmonut(this);
+    });
+
+    $('#tblItemDescription4 tbody tr:first input[name=txt_qty]').each(function() {
+        CalculateAmonut(this);
+    });
+
+    $('#tblItemDescription5 tbody tr:first input[name=txt_qty]').each(function() {
+        CalculateAmonut(this);
+    });
+
         }
 
         function LoadVenData(CM_ID) {
@@ -447,6 +679,7 @@
                 var rows6 = '';
                 var grnnum = 0;
                 var grnrate = 0;
+                var uniqueRowCounter = 0;
                 selectedOptions = data;
                 $.each(data, function (key, value) {
                     debugger;
@@ -464,11 +697,15 @@
                     else {
                         venamount1 = '';
                     }
+                    uniqueRowCounter++;
+                    var rowId = "RID_" + uniqueRowCounter;
                     var timestamp = parseInt(value.ReqDate.match(/\d+/)[0]);
                     var date = new Date(timestamp);
                     var formattedDateForDatepicker = $.datepicker.formatDate('dd M yy', date);
 
-                    rows1 += '<tr>' +
+                    rows1 += '<tr data-rowid="' + rowId + '">' +
+
+
                         '<td><input name="chkselect" type="checkbox" class="chktd" id="chktd" name="chktd" onclick="appendtogrn(this)" style=" margin-top: -2px; margin-left: 0px;height: 36px;"/></td>' +
                         '<td style="display:none;"><input style="width:100%!important;text-align:right;" type="text" id="txt_itemcode" name="txt_itemcode" value="' + value.Item_Code + '"      readonly="readonly"></   td>' +
                         '<td><input style="width:100%!important;text-align:right;" type="text" id="txt_qty" name="txt_qty" onchange="CalculateAmonut(this)" value="' + value.Qty1 + '"></td>' +
@@ -484,7 +721,12 @@
                         '<td style="display:none;"><input style="width:100%!important;" type="text" id="txt_reqdate" name="txt_reqdate" value="' + formattedDateForDatepicker + '" readonly="readonly"></td>' +
                         '</tr>'
 
-                    rowsitem += '<tr>' +
+                    rowsitem += '<tr data-rowid="' + rowId + '">' +
+                        '<td style="text-align:center;">' +
+                        '<a href="javascript:void(0);" onclick="DeleteAllRows(\'' + rowId + '\')" title="Delete">' +
+                        '<i class="fa fa-trash text-danger"></i>' +
+                        '</a>' +
+                        '</td>' +
                         '<td style="display:none"><input type="hidden" name="txt_pr_id" id="txt_pr_id"  value="' + value.PRID + '" style="text-align:right ;width:50px !important;font-size:9px;height:20px;padding-top: 7px!important;padding-right: 3px!important;"/>' + value.PRID + '</td>' +
                         '<td style="padding-top: 7px!important;"><input type="hidden" name="txt_prnum" id="txt_prnum"  value="' + value.PRNUM + '" style="text-align:right ;width:50px !important;font-size:9px;height:20px;padding-top: 7px!important;padding-right: 3px!important;"/>' + value.PRNUM + '</td>' +
                         '<td style="display:none;"> ' + value.Item_ID + ' </td>' +
@@ -529,7 +771,7 @@
                     else {
                         venamount2 = '';
                     }
-                    rows2 += '<tr>' +
+                    rows2 += '<tr data-rowid="' + rowId + '">' +
                         '<td><input name="chkselect" type="checkbox" class="chktd" id="chktd" name="chktd" onclick="appendtogrn(this)" style=" margin-top: -2px; margin-left: 0px;height: 36px;"/></td>' +
                         '<td style="display:none;"><input style="width:100%!important;text-align:right;" type="text" id="txt_itemcode" name="txt_itemcode" value="' + value.Item_Code + '" readonly="readonly"></td>' +
                         '<td><input style="width:100%!important;text-align:right;" type="text" id="txt_qty" name="txt_qty" onchange="CalculateAmonut(this)" value="' + value.Qty2 + '"></td>' +
@@ -569,7 +811,7 @@
                     else {
                         venamount3 = '';
                     }
-                    rows3 += '<tr>' +
+                    rows3 += '<tr data-rowid="' + rowId + '">' +
                         '<td><input name="chkselect" type="checkbox" class="chktd" id="chktd" name="chktd" onclick="appendtogrn(this)" style=" margin-top: -2px; margin-left: 0px;height: 36px;"/></td>' +
                         '<td style="display:none;"><input style="width:100%!important;text-align:right;" type="text" id="txt_itemcode" name="txt_itemcode" value="' + value.Item_Code + '" readonly="readonly"></td>' +
                         '<td><input style="width:100%!important;text-align:right;" type="text" id="txt_qty" name="txt_qty" onchange="CalculateAmonut(this)" value="' + value.Qty3 + '"></td>' +
@@ -610,7 +852,7 @@
                     else {
                         venamount4 = '';
                     }
-                    rows4 += '<tr>' +
+                    rows4 += '<tr data-rowid="' + rowId + '">' +
                         '<td><input name="chkselect" type="checkbox" class="chktd" id="chktd" name="chktd" onclick="appendtogrn(this)" style=" margin-top: -2px; margin-left: 0px;height: 36px;"/></td>' +
                         '<td style="display:none;"><input style="width:100%!important;text-align:right;" type="text" id="txt_itemcode" name="txt_itemcode" value="' + value.Item_Code + '" readonly="readonly"></td>' +
                         '<td><input style="width:100%!important;text-align:right;" type="text" id="txt_qty" name="txt_qty" onchange="CalculateAmonut(this)" value="' + value.Qty4 + '"></td>' +
@@ -652,7 +894,7 @@
                     else {
                         venamount5 = '';
                     }
-                    rows5 += '<tr>' +
+                    rows5 += '<tr data-rowid="' + rowId + '">' +
                         '<td><input name="chkselect" type="checkbox" class="chktd" id="chktd" name="chktd" onclick="appendtogrn(this)" style=" margin-top: -2px; margin-left: 0px;height: 36px;"/></td>' +
                         '<td style="display:none;"><input style="width:100%!important;text-align:right;" type="text" id="txt_itemcode" name="txt_itemcode" value="' + value.Item_Code + '" readonly="readonly"></td>' +
                         '<td><input style="width:100%!important;text-align:right;" type="text" id="txt_qty" name="txt_qty" onchange="CalculateAmonut(this)" value="' + value.Qty5 + '"></td>' +
@@ -702,8 +944,8 @@
                     else {
                         lastgrnrate = '';
                     }                   
-                        debugger
-                        rows6 += '<tr>' +
+                    debugger
+                    rows6 += '<tr data-rowid="' + rowId + '">' +
                             '<td style="display:none;" ><input style="width:80px!important;text-align:right;" type="text" id="txt_grnitemcode" name="txt_grnitemcode" value="' + value.Item_Code + '" readonly="readonly"></td>' +
                             '<td><input style="width:80px!important;text-align:right;" type="text" id="txt_grnappamount" name="txt_grnappamount" value="' + TotalappAmou + '" readonly="readonly"></td>' +
                             '<td style="display:none;">' + lastgrnum + '</td>' +
@@ -1834,7 +2076,9 @@
                     <table class="table table-bordered" id="tblDetails" style="margin-top: 4px;">
                         <thead>
                             <tr>
+                                <th>Action</th>
                                 <th style="display: none">PR ID</th>        
+                                
                                 <th>PR No</th>
                                 <th style="display: none">Item ID</th>
                                 <th>Item Code</th>

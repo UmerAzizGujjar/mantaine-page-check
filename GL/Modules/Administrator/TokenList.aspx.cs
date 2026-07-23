@@ -6,6 +6,7 @@ using System.Web.Script.Serialization;
 using System.Web.Services;
 using System.Web.UI;
 using System.Web.UI.WebControls;
+using Telerik.Web.Data.Extensions;
 
 namespace PMS
 {
@@ -15,12 +16,60 @@ namespace PMS
         {
 
         }
+
+        [WebMethod]
+        public static string GetDepartment()
+        {
+            string data = string.Empty;
+            using (DataBaseDataContext db = new DataBaseDataContext())
+            {
+                var result = (from dv in db.DataValues
+                              join ds in db.ValueSets
+                              on dv.ValueSet_ID equals ds.ValueSet_ID
+                              where ds.ValueSet_Name == "Patient Main Category"
+                              select new
+                              {
+                                  dv.DataValue_Name,
+                                  dv.DataValue_Description
+                              }).ToList();
+                data = new JavaScriptSerializer().Serialize(result);
+            }
+            return data;
+        }
+
+        [WebMethod]
+        public static string PatientType()
+        {
+            string data = string.Empty;
+            using (DataBaseDataContext db = new DataBaseDataContext())
+            {
+                var result = (from dv in db.DataValues
+                              join ds in db.ValueSets
+                              on dv.ValueSet_ID equals ds.ValueSet_ID
+                              where ds.ValueSet_Name == "Patient Type"
+                              select new
+                              {
+                                  dv.DataValue_Name,
+                                  dv.DataValue_Description
+                              }).ToList();
+                data = new JavaScriptSerializer().Serialize(result);
+            }
+            return data;
+        }
         [WebMethod]
         public static string LoadTokenPatient()
         {
             var user_id = AppConfig.UserID;
             DataBaseDataContext db = new DataBaseDataContext();
             var Details = db.sp_token_list();
+            return (new JavaScriptSerializer()).Serialize(Details);
+        }
+        [WebMethod]
+        public static string LoadTokenPatientFilter(string patientType , string department)
+        {
+            var user_id = AppConfig.UserID;
+            DataBaseDataContext db = new DataBaseDataContext();
+            var Details = db.sp_token_list_filter(patientType, department);
             return (new JavaScriptSerializer()).Serialize(Details);
         }
 
@@ -41,15 +90,40 @@ namespace PMS
             var user_id = AppConfig.UserID;
             DataBaseDataContext db = new DataBaseDataContext();
 
-            var WareHouse = db.Sp_GetDoctorByUsingId(user_id);
+            var WareHouse = (from hr in db.HR_Employees
+                             where hr.IsDoctor == true
+                             && hr.IS_Active == true && hr.userid == Convert.ToString(user_id)
+                             select new
+                             {
+                                 hr.Emp_ID,
+                                 hr.Emp_Name
+                             }).ToIList();
             return (new JavaScriptSerializer()).Serialize(WareHouse);
         }
+        //[WebMethod]
+
+        //public static string getdoctor()
+        //{
+        //    var user_id = AppConfig.UserID;
+        //    DataBaseDataContext db = new DataBaseDataContext();
+
+        //    var WareHouse = db.Sp_GetDoctorByUsingId(user_id);
+        //    return (new JavaScriptSerializer()).Serialize(WareHouse);
+        //}
         [WebMethod]
         public static string LoadDocTokenPatient()
         {
             var user_id = AppConfig.UserID;
             DataBaseDataContext db = new DataBaseDataContext();
             var Details = db.sp_token_doc_list(user_id);
+            return (new JavaScriptSerializer()).Serialize(Details);
+        }
+        [WebMethod]
+        public static string LoadDocTokenPatientFitler(string doc_Id)
+        {
+            var user_id = AppConfig.UserID;
+            DataBaseDataContext db = new DataBaseDataContext();
+            var Details = db.sp_token_doc_listFilter(doc_Id);
             return (new JavaScriptSerializer()).Serialize(Details);
         }
         [WebMethod]

@@ -206,6 +206,21 @@
             $('#PO_Modal').on('shown.bs.modal', function () {
                 $('#searchPONo').focus();
             });
+
+
+            $('#dircGRN').on('change', function() {
+                if ($(this).is(':checked')) {
+                    $('#itemInputSection').show();
+                    $('#ManualGRN').hide();
+                    $('#DirectGRN').show();
+                    $('#btnSave').show();
+
+                } else {
+                    $('#itemInputSection').hide();
+                    $('#DirectGRN').hide();
+                    $('#ManualGRN').show();
+                }
+            });
         });
 
 
@@ -309,9 +324,10 @@
                     }
                 })
             });
-        }
+}
         function LoadGRNDetail(vendorId) {
-            PageMethods.getGRNDetailByVendorId(vendorId, function (data) {
+            var Is_Direct = $('#dircGRN').is(':checked');
+            PageMethods.getGRNDetailByVendorId(vendorId, Is_Direct, function (data) {
                 debugger;
                 var Test = JSON.parse(data);
                 var TotalAmount = '';
@@ -607,6 +623,9 @@
                 $('#tot_adjusted_advance').val(data.Total_Advance_Adjusted);
                 $('#net_amount').val(data.Net_Amount);
                 $('#disc_amount').val(data.Discount_Amount);
+                debugger;
+                $('#dircGRN').prop('checked', data.is_DirtGRN === true).trigger('change');
+                var isDirct = data.is_DirtGRN == true
                 setTimeout(function () {
                     var status = data.Status;
                     if (status == "Approved") {
@@ -622,18 +641,18 @@
                     }
                 }, 1000);
                 debugger;
-                LoadInvocieDetail(Inv_ID)
+                LoadInvocieDetail(Inv_ID, isDirct)
             },
                 function (error) {
                     alert(error.get_message());
                 })
         }
         debugger;
-        function LoadInvocieDetail(Inv_ID) {
+          function LoadInvocieDetail(Inv_ID, isDirct) {
             debugger;
             $("#tblItemDescription tbody").empty();
 
-            PageMethods.LoadInvocieDetail(Inv_ID, function (resp) {
+              PageMethods.LoadInvocieDetail(Inv_ID, isDirct, function (resp) {
                 debugger;
                 var data = JSON.parse(resp);
 
@@ -800,8 +819,10 @@
                 var disc_amount = $('#disc_amount').val();
                 var table = $('#tblItemDescriptionDetail');
                 var table2 = $('#advancepaymenttablebody');
+
                 var Item_list = [];
                 var Item_list2 = [];
+                var Is_Direct = $('#dircGRN').is(':checked');
                 debugger;
                 table.find('tr').each(function (key, value) {
                     debugger;
@@ -836,7 +857,7 @@
                         'advadjusted': $(value).find('td input[name=adjusted_Amount]').val()
                     });
                 });
-                var AllItemDetail = { 'disc_amount': disc_amount, 'totalnetamount': totalnetamount, 'totaladvanceadjusted': totaladvanceadjusted, 'totalinvoiceamount': totalinvoiceamount, 'InvoiceNum': InvoiceNum, 'InvoiceType': InvoiceTyp, 'VendorId': VendorId, 'RefInvoiceNum': RefInvoiceno, 'SalTaxInvoiceNum': StaxInvoice, 'InvoiceDate': InvoiceDate, 'AccountingDate': AccountingDate, 'DueDate': DueDate, 'Currency': CurrencyId, 'ExRate': ExRate, 'Remarks': Remarks, 'ExDate': ExDate, 'ItemList': Item_list, 'Itemlist2': Item_list2 };
+                var AllItemDetail = { 'disc_amount': disc_amount, 'totalnetamount': totalnetamount, 'totaladvanceadjusted': totaladvanceadjusted, 'totalinvoiceamount': totalinvoiceamount, 'InvoiceNum': InvoiceNum, 'InvoiceType': InvoiceTyp, 'VendorId': VendorId, 'RefInvoiceNum': RefInvoiceno, 'SalTaxInvoiceNum': StaxInvoice, 'InvoiceDate': InvoiceDate, 'AccountingDate': AccountingDate, 'DueDate': DueDate, 'Currency': CurrencyId, 'ExRate': ExRate, 'Remarks': Remarks, 'ExDate': ExDate, 'ItemList': Item_list, 'Itemlist2': Item_list2, 'Is_Direct': Is_Direct };
                 PageMethods.SaveInvoice(btnSave, JSON.stringify(AllItemDetail), function (res) {
                     debugger;
                     Swal.fire({
@@ -1437,6 +1458,7 @@
             <div class="col-lg-1 col-md-4 col-sm-6">
                 <input class="btn btn-primry" type="button" value="Get from PO" id="btn_GetFromPO" style="margin-top: 26px;display:none;" />
             </div>
+
             <div class="col-lg-2 col-md-4 col-sm-6">
                 <label id="lb_currency">Currency</label>
                 <select id="ddl_currency" class="form-control">
@@ -1463,6 +1485,12 @@
                 <label id="lb_attachments">Attachments</label>
                 <input type="file" name="txt_attachments" id="txt_attachments" />
                 <asp:HyperLink ID="HyperLink1" runat="server">Download</asp:HyperLink>
+            </div>
+                         <div class="col-lg-1 col-md-6 col-sm-12">
+                     <label class="source-radio-option">
+                    Direct GRN
+                </label>
+                <input type="checkbox" name="dircGRN" id="dircGRN" value="item" />
             </div>
         </div>
 

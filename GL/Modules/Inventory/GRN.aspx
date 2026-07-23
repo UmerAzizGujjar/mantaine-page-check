@@ -1,7 +1,19 @@
 ﻿<%@ Page Title="" Language="C#" MasterPageFile="~/Site.Master" AutoEventWireup="true" CodeBehind="GRN.aspx.cs" Inherits="PMS.Inventory.GRN" %>
 
 <asp:Content ID="Content1" ContentPlaceHolderID="HeadContent" runat="server">
+
+    <link href="../../wwwroot/THEME_TIBBIT/CustomCSS/custom-modals.css" rel="stylesheet" />
     <style type="text/css">
+
+        .source-select-input {
+            flex: 1;
+            min-width: 0;
+            border-right: none !important;
+            border-radius: 5px 0 0 5px !important;
+            height: 34px;
+            font-size: 13px;
+            max-width: 220px;
+        }
         .ErrorAlert {
             border: 1px solid red !important;
         }
@@ -191,8 +203,12 @@
     </style>
     <script type="text/javascript">
         var GRN_ID = 0;
-        $(document).ready(function () {
-            var date = '<%= DateTime.Now%>';
+$(document).ready(function() {
+    var date = '<%= DateTime.Now%>';
+    $('#itemInputSection').hide();
+
+    $('#DirectGRN').hide();
+    $('#ManualGRN').show();
             $("#txtDate").datepicker({ dateFormat: 'mm/dd/yy' }).attr('readonly', 'readonly');
             $("#txtDate").val(date);
             GetNewGRNNo();
@@ -203,7 +219,7 @@
             { %>
             GRN_ID = '<%= Request.QueryString["GRN_ID"]%>'
             LoadGRNData(GRN_ID);
-            $('#SaveButtonToBeHidden').hide();
+            //$('#SaveButtonToBeHidden').hide();
             $('#thaction').hide();
             <% } %>
             $('select').select2();
@@ -213,9 +229,338 @@
                 $('#btn_Print').hide();
                
             }
-            
+
+
+            $('#btnGetAllItems').on('click', function() {
+                //if (warehouseCond === '01') {
+                    var warehouseVal = $('#ddlInv_org').val();
+                if (!warehouseVal || warehouseVal === '0' || warehouseVal === '') {
+                    Swal.fire({
+                        icon: 'warning',
+                        title: 'Warning!',
+                        text: 'Please select warehouse first',
+                        showConfirmButton: true,
+                        timer: 3000,
+                        customClass: {
+                            popup: 'swal-big-popup',
+                            title: 'swal-big-title',
+                            htmlContainer: 'swal-big-text'
+                        }
+                    });
+                    $('#ddlInv_org').focus();
+                    return false;
+                }
+                //}
+                //$('#ctl00_MainContent_ddlPrNo').prop('disabled', true);
+                else {
+                    LoadAllitem('');
+                }
+                
+            });
+
+            $('#searchInput').on('keyup', function() {
+                var searchText = $(this).val().trim();
+                LoadAllitem(searchText);
+            });
+            $('#dircGRN').on('change', function() {
+                if ($(this).is(':checked')) {
+                    $('#itemInputSection').show();
+                    $('#ManualGRN').hide();
+                    $('#DirectGRN').show();
+                    $('#btnSave').show();
+                   
+                } else {
+                    $('#itemInputSection').hide();
+                    $('#DirectGRN').hide();
+                    $('#ManualGRN').show();
+                }
+            });
+
+            //$('#btnGetAllItems').on('click', function() {
+            //   // $('#ctl00_MainContent_ddlPrNo').prop('disabled', true);
+            //    LoadAllitem('');
+            //});
+
+            $('#searchInput').on('keyup', function() {
+                var searchText = $(this).val().trim();
+                LoadAllitem(searchText);
+            });
+
+    $('#txtItem').tokenInput("../../json.aspx?Table=INV_ItemsForPR", {
+        tokenLimit: 1,
+        onAdd: function(item) {
+            try {
+                $("#hditemID").val(item.id);
+                append();
+                $('#btnGIR').attr('disabled', true);
+                $('#btnGIR').css('pointer-events', 'none');
+                $('#ctl00_MainContent_ddlGIR').css('pointer-events', 'none');
+                $('#ctl00_MainContent_ddlGIR').attr('disabled', true);
+            } catch (err) {
+                alert(err.message);
+            }
+        }
+    });
+
+    $('#txtItem').focus();
+
+
+    $(document).on('keyup change', 'input[name="txtGRNQtyDir"], input[name="txtRateDir"]', function() {
+
+        var row = $(this).closest('tr');
+
+        var qty = parseFloat(row.find('input[name="txtGRNQtyDir"]').val()) || 0;
+        var rate = parseFloat(row.find('input[name="txtRateDir"]').val()) || 0;
+
+        var amount = qty * rate;
+
+        row.find('input[name="txtamountDir"]').val(amount.toFixed(2));
+
+      //  calcTotal(); // Optional: if you have a function to calculate grand total
+    });
+
+});
+
+function LoadAllitem(searchText) {
+    var warehouseId = $("#ddlInv_org").val();
+    if (!warehouseId || warehouseId === '0' || warehouseId === '') {
+        Swal.fire({
+            icon: 'warning',
+            title: 'Warning!',
+            text: 'Please select warehouse first',
+            showConfirmButton: true,
+            timer: 3000,
+            customClass: {
+                popup: 'swal-big-popup',
+                title: 'swal-big-title',
+                htmlContainer: 'swal-big-text'
+            }
+        });
+        $('#ddlInv_org').focus();
+        return false;
+    }
+    else {
+        debugger;
+        $.ajax({
+            type: "POST",
+            url: "GRN.aspx/GetAllitem",
+            data: JSON.stringify({ searchText: searchText, warehouseId: warehouseId }),
+            contentType: "application/json; charset=utf-8",
+            dataType: "json",
+            success: function (response) {
+                var items = JSON.parse(response.d);
+                var tableBody = $('#itemsTableBody');
+                tableBody.empty();
+                $.each(items, function (index, item) {
+                    var row = '<tr>' +
+                        '<td><input type="checkbox" class="itemCheckbox" onclick="appendSearchItem(this)"></td>' +
+                        '<td style="display:none;">' + item.Item_ID + '</td>' +
+                        '<td>' + item.Item_Code + '</td>' +
+                        '<td>' + item.Description + '</td>' +
+                        '<td>' + item.Unit + '</td>' +
+                        '<td style="display:none;">' + (item.Purchase_Rate || 0) + '</td>' +
+                        '<td style="display:none;">' + (item.UOM_Qty || 1) + '</td>' +
+                        '<td style="">' + (item.Last_GRN_Rate) + '</td>' +
+                        '<td>' + (item.TotalStock || 0) + '</td>' +
+                        '</tr>';
+                    tableBody.append(row);
+                });
+                $('#itemsModal').modal('show');
+            },
+            error: function (error) {
+                console.error("Error fetching items", error);
+                Swal.fire({ icon: 'error', title: 'Error', text: 'Failed to load items.' });
+            }
+        });
+    }
+}
+
+        function appendSearchItem(anchor) {
+            debugger;
+
+            // Check for projection type 002 requirements before adding item
+            var warehouseId = $('#ddlInv_org').val();
+
+            var row = $(anchor).closest('tr');
+            var item_id = $(row).find('td:eq(1)').text().trim();
+            var item_code = $(row).find('td:eq(2)').text().trim();
+            var item_name = $(row).find('td:eq(3)').text().trim();
+            var unit = $(row).find('td:eq(4)').text().trim();
+            var rate = $(row).find('td:eq(7)').text().trim() || '0';
+            var uom_qty = $(row).find('td:eq(6)').text().trim() || '1';
+            var total_stock = $(row).find('td:eq(8)').text().trim() || '0';
+            var isChecked = $(anchor).prop('checked');
+
+            if (!isChecked) {
+                $('#tblItemDescriptionDir tbody tr').each(function () {
+                    if ($(this).find('input[name=txtItemCodeDir]').val() === item_code) {
+                        $(this).remove();
+                    }
+                });
+                calcTotal();
+                return;
+            }
+
+            var exists = false;
+            $('#tblItemDescriptionDir tbody tr').each(function () {
+                if ($(this).find('input[name=txtItemCodeDir]').val() === item_code) {
+                    exists = true;
+                    return false;
+                }
+            });
+
+            if (exists) {
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Error!',
+                    text: 'Item already added!',
+                    timer: 2000,
+                    showConfirmButton: false
+                });
+                $(anchor).prop('checked', false);
+                return;
+            }
+            var length = $("#tblItemDescriptionDir tr:gt(0)").length + 1;
+            var defaultQty = '1';
+
+            var newRow = '<tr>' +
+                '<td style=" border: 1px solid #D9E4E6;"><input type="hidden" id="txtItemIdDir' + length + '" name="txtItemIdDir" value="' + item_id + '" style="width:50px !important;text-align:right" />' + length + '</td>' +
+                '<td style="padding-right: 3px!important;"><input type="hidden" name="txtItemCodeDir" id="txtItemCodeDir' + length + '"  value="' + item_code + '"  style="width:50px !important;text-align:right;font-size:9px;height:10px !important;"/> ' + item_code + ' </td>' +
+                '<td style="padding-left: 3px!important;"><input type="hidden" name="txtItemNameDir" id="txtItemNameDir' + length + '"  value="' + item_name + '" style="width:50px !important;text-align:left;font-size:9px;height:10px !important ;"/> ' + item_name + ' </td>' +
+                '<td><input type="text" id="txtGRNQtyDir' + length + '" style="text-align:center;width:145px!important;font-size:11px;height:27px;" name="txtGRNQtyDir" value="0" /></td>' +
+                '<td><input type="text" id="txtUOMQtyDir' + length + '" style="text-align:center;width:145px!important;font-size:11px;height:27px;" name="txtUOMQtyDir" value="' + uom_qty + '" /></td>' +
+                '<td><input type="text" name="BatchNoDir" id="BatchNoDir' + length + '"  value="" style="width:145px !important;text-align:center;font-size:11px;height:27px !important ;"/></td>' +
+                '<td><input type="text" style="text-align:center;font-size:9px;" name="txtMfgdateDir" id="txtMfgdateDir' + length + '"   readonly="readonly"/></td>' +
+                '<td><input type="text" style="text-align:center;font-size:9px;" name="ExpdateDir" id="ExpdateDir' + length + '"   readonly="readonly"/></td>' +
+                '<td><input type="text" id="txtBONQtyDir' + length + '" style="text-align:center;width:145px!important;font-size:11px;height:27px;" name="txtBONQtyDir" value="0" /></td>' +
+                '<td><input type="text" style="text-align:center;font-size:11px;" name="txtRateDir" id="txtRateDir' + length + '"  value="' + rate + '" /></td>' +
+                '<td style="padding-right: 3px!important;text-align:center;"><input type="text" style="width:145px !important;text-align:right;font-size:11px;height:27px !important;" value="0" readonly="readonly"  id="txtamountDir' + length + '" name="txtamountDir" ></input></td>' +
+                '<td><a href="javascript:void(0)" onclick="ExcludeFromPayment(this)"><i class="glyphicon glyphicon-trash" style="font-size:11px;margin-left: 16px; color: #f30a0a;position:relative;left:-33px"></i></a> </td>' +
+                '</tr>';
+
+            // $('#tblItemDescription tbody').append(newRow);
+            $('#tblItemDescriptionDir').append(newRow);
+            setTimeout(function() {
+                $('#txtMfgdateDir' + length).datepicker({
+                    dateFormat: 'dd M yy',
+                    changeMonth: true,
+                    changeYear: true,
+                    showButtonPanel: true
+                }).attr('readonly', 'readonly').focus(function() {
+                    $(this).datepicker('show');
+                });
+            }, 100);
+            setTimeout(function() {
+                $('#ExpdateDir' + length).datepicker({
+                    dateFormat: 'dd M yy',
+                    changeMonth: true,
+                    changeYear: true,
+                    showButtonPanel: true
+                }).attr('readonly', 'readonly').focus(function() {
+                    $(this).datepicker('show');
+                });
+            }, 100);
+}
+function LoadGRNDetailDir(GRN_ID) {
+
+    PageMethods.LoadGRNDetailDir(GRN_ID, function(resp) {
+
+        var item = JSON.parse(resp);
+        var rows = '';
+        var iteration = 0;
+        var ExpiryDate = '';
+        var MfgDate = '';
+
+        $.each(item, function(key, value) {
+
+            if (value.BatchNum == null)
+                value.BatchNum = "";
+
+            if (value.ExpiryDate != null) {
+                ExpiryDate = $.datepicker.formatDate('dd M yy',
+                    new Date(parseInt(value.ExpiryDate.substring(6, 19))));
+
+                if (ExpiryDate.includes("1963") || ExpiryDate.includes("1964") ||
+                    ExpiryDate.includes("1965") || ExpiryDate.includes("1966"))
+                    ExpiryDate = "";
+            }
+            else {
+                ExpiryDate = "";
+            }
+
+            if (value.MfgDate != null) {
+                MfgDate = $.datepicker.formatDate('dd M yy',
+                    new Date(parseInt(value.MfgDate.substring(6, 19))));
+
+                if (MfgDate.includes("1963") || MfgDate.includes("1964") ||
+                    MfgDate.includes("1965") || MfgDate.includes("1966"))
+                    MfgDate = "";
+            }
+            else {
+                MfgDate = "";
+            }
+
+            iteration++;
+
+            var rowlength = $("#tblItemDescriptionDir tbody tr").length + iteration;
+
+            rows += '<tr>' +
+                '<td style="border:1px solid #D9E4E6;">' +
+                '<input type="hidden" id="txtItemIdDir' + rowlength + '" name="txtItemIdDir" value="' + value.Item_Id + '" />' +
+                rowlength +
+                '</td>' +
+
+                '<td>' +
+                '<input type="hidden" id="txtItemCodeDir' + rowlength + '" name="txtItemCodeDir" value="' + value.ItemCode + '" />' +
+                value.ItemCode +
+                '</td>' +
+
+                '<td>' +
+                '<input type="hidden" id="txtItemNameDir' + rowlength + '" name="txtItemNameDir" value="' + value.Description + '" />' +
+                value.Description +
+                '</td>' +
+
+                '<td><input type="text" id="txtGRNQtyDir' + rowlength + '" name="txtGRNQtyDir" value="' + parseFloat(value.GRNQty).toFixed(2) + '" style="text-align:center;width:145px;font-size:11px;height:27px;" /></td>' +
+
+                '<td><input type="text" id="txtUOMQtyDir' + rowlength + '" name="txtUOMQtyDir" value="' + value.UOM_Qty + '" style="text-align:center;width:145px;font-size:11px;height:27px;" /></td>' +
+
+                '<td><input type="text" id="BatchNoDir' + rowlength + '" name="BatchNoDir" value="' + value.BatchNum + '" style="text-align:center;width:145px;font-size:11px;height:27px;" /></td>' +
+
+                '<td><input type="text" id="txtMfgdateDir' + rowlength + '" name="txtMfgdateDir" value="' + MfgDate + '" readonly /></td>' +
+
+                '<td><input type="text" id="ExpdateDir' + rowlength + '" name="ExpdateDir" value="' + ExpiryDate + '" readonly /></td>' +
+
+                '<td><input type="text" id="txtBONQtyDir' + rowlength + '" name="txtBONQtyDir" value="' + value.BounusQty + '" style="text-align:center;width:145px;font-size:11px;height:27px;" /></td>' +
+
+                '<td><input type="text" id="txtRateDir' + rowlength + '" name="txtRateDir" value="' + parseFloat(value.Rate).toFixed(2) + '" style="text-align:center;font-size:11px;" /></td>' +
+
+                '<td><input type="text" id="txtamountDir' + rowlength + '" name="txtamountDir" value="' + parseFloat(value.Amount).toFixed(2) + '" readonly style="width:145px;text-align:right;font-size:11px;height:27px;" /></td>' +
+
+                '<td><a href="javascript:void(0)" onclick="ExcludeFromPayment(this)"><i class="glyphicon glyphicon-trash" style="font-size:11px;color:#f30a0a;"></i></a></td>' +
+                '</tr>';
 
         });
+
+        $('#tblItemDescriptionDir tbody').append(rows);
+
+        $('input[name="txtMfgdateDir"]').datepicker({
+            dateFormat: 'dd M yy',
+            changeMonth: true,
+            changeYear: true
+        });
+
+        $('input[name="ExpdateDir"]').datepicker({
+            dateFormat: 'dd M yy',
+            changeMonth: true,
+            changeYear: true
+        });
+
+    },
+        function(error) {
+            alert(error.get_message());
+        });
+    $('#btnSave').val('Update');
+        }
 
         function LoadGRNData(GRN_ID) {
             PageMethods.LoadGRNHeaderDetail(GRN_ID, function (resp) {
@@ -234,6 +579,8 @@
                 if (data.Status == "Created") {
                     UserApproveButtonRights();
                 }
+
+                $('#dircGRN').prop('checked', data.is_Direct === true).trigger('change');;
                 setTimeout(function () {
                     $('#ddlVendor').val(data.VendorId).trigger('change');
 
@@ -248,7 +595,14 @@
                 setTimeout(function () {
                     getIGPNumByVendor(data.VendorId);
                 }, 3000);
-                LoadGRNDetail(GRN_ID);
+
+                if (data.is_Direct == true) {
+                    LoadGRNDetailDir(GRN_ID);
+                }
+                else {
+                    LoadGRNDetail(GRN_ID);
+                }
+                
             },
                 function (error) {
                     alert(error.get_message());
@@ -375,7 +729,7 @@
             debugger;
             var optionsIgp = '';
             var VendorId;
-            VendorId = item.value;
+            VendorId = item;
             if (VendorId == undefined) {
                 VendorId = item;
             }
@@ -500,6 +854,8 @@
             var InvOrg = $('#ddlInv_org').val();
             var project = $('#ddlProject').val();
             var table = $('#tblItemDescriptionDetail');
+            var tableDir = $('#tblItemDescriptionDetailDir');
+            var Is_Direct = $('#dircGRN').is(':checked');
             if (VendorId == '0') {
                 $("#ddlVendor").addClass('ErrorAlert');
                 $('#select2-ddlVendor-container').parent().css('border-color', 'red');
@@ -517,7 +873,8 @@
                 $('#select2-ddlInv_org-container').parent().css('border-color', ' rgb(206, 191, 191)');
             }
             var tblLength = $("#tblItemDescription tr:gt(0)").length;
-            if (tblLength == '0') {
+            var tblLengthDir = $("#tblItemDescriptionDir tr:gt(0)").length;
+            if (tblLength == '0' && tblLengthDir == '0') {
                 $('#tblItemDescription').addClass('ErrorAlert');
             } else {
                 $('#tblItemDescription').removeClass('ErrorAlert');
@@ -539,6 +896,49 @@
                     }
                     else {
                         Item_list.push({ 'IGPDetailId': $(value).find('td input[name=txtIgpDetailId]').val(), 'ItemCode': $(value).find('td input[name=txtItemCode]').val(), 'Mfgdate': $(value).find('td input[name=txtMfgdate]').val(), 'Expdate': $(value).find('td input[name=Expdate]').val(), 'AccQty': $(value).find('td input[name=AccQty]').val(), 'GRNQty': $(value).find('td input[name=GRNQty]').val(), });
+                    }
+
+                });
+                var ItemListDir = [];
+                var status = true;
+                var dateStatus = "";
+
+                $('#tblItemDescriptionDir tbody tr').each(function(key, value) {
+
+                    var grnQty = $(value).find('input[name=txtGRNQtyDir]').val() || "0";
+                    var mfgDate = $(value).find('input[name=txtMfgdateDir]').val();
+                    var expDate = $(value).find('input[name=ExpdateDir]').val();
+
+                    // Validate expiry date if entered
+                    if (expDate != "") {
+                        var GRNdate = new Date(date).setHours(0, 0, 0, 0); // date = GRN Date
+                        var ExpDate = new Date(expDate).setHours(0, 0, 0, 0);
+
+                        if (GRNdate > ExpDate) {
+                            dateStatus = "DateFalse";
+                        }
+                    }
+
+                    // Quantity validation
+                    if (parseFloat(grnQty) <= 0) {
+                        status = false;
+                    }
+                    else {
+
+                        ItemListDir.push({
+                            'ItemIdDir': $(value).find('input[name=txtItemIdDir]').val(),
+                            'ItemCodeDir': $(value).find('input[name=txtItemCodeDir]').val(),
+                           // 'ItemNameDir': $(value).find('input[name=txtItemNameDir]').val(),
+                            'GRNQtyDir': $(value).find('input[name=txtGRNQtyDir]').val(),
+                            'UOMQtyDir': $(value).find('input[name=txtUOMQtyDir]').val(),
+                            'BatchNoDir': $(value).find('input[name=BatchNoDir]').val(),
+                            'MfgdateDir': $(value).find('input[name=txtMfgdateDir]').val(),
+                            'ExpdateDir': $(value).find('input[name=ExpdateDir]').val(),
+                            'BONQtyDir': $(value).find('input[name=txtBONQtyDir]').val(),
+                            'RateDir': $(value).find('input[name=txtRateDir]').val(),
+                            'AmountDir': $(value).find('input[name=txtamountDir]').val()
+                        });
+
                     }
 
                 });
@@ -579,7 +979,7 @@
                 }
                 else {
                     $('#btnsave').attr('disabled', true);
-                    var AllItemDetail = { 'GRN_Num': GRN_Num, 'Date': date, 'VendorId': VendorId, 'remarks': Remarks, 'project': project, 'InvOrg': InvOrg, 'ItemList': Item_list };
+                    var AllItemDetail = { 'GRN_Num': GRN_Num, 'Date': date, 'VendorId': VendorId, 'remarks': Remarks, 'project': project, 'InvOrg': InvOrg, 'ItemList': Item_list, 'ItemListDir': ItemListDir, 'Is_Direct': Is_Direct };
                     PageMethods.SaveGRNDetail(btnSave, JSON.stringify(AllItemDetail), function (res) {
                         debugger;
                         sendFile(res, function () {
@@ -817,17 +1217,37 @@
              </div>
          </div>
 
-         <div class="row">
-             <div class="col-lg-3 col-md-6 col-sm-12">
-                 <label id="lblAttachment" class="labelIGP">Attachment</label>
-                 <input type="file" id="choseGRNfile" name="choseGRNfile" />
-                 <asp:HyperLink ID="HyperLink1" runat="server">Download</asp:HyperLink>
-             </div>
-         </div>
+        <div class="row">
+            <div class="col-lg-3 col-md-6 col-sm-12">
+                <label id="lblAttachment" class="labelIGP">Attachment</label>
+                <input type="file" id="choseGRNfile" name="choseGRNfile" />
+                <asp:HyperLink ID="HyperLink1" runat="server">Download</asp:HyperLink>
+            </div>
+
+            <div class="col-lg-1 col-md-6 col-sm-12">
+                <label class="source-radio-option">
+                    Direct GRN
+                </label>
+            </div>
+
+            <div class="col-lg-1 col-md-6 col-sm-12">
+     
+                <input type="checkbox" name="dircGRN" id="dircGRN" value="item" />
+            </div>
+            <div id="itemInputSection" class="col-lg-4 col-md-6 col-sm-12">
+                
+                   <%-- <input type="hidden" id="txtItem" class="source-select-input" placeholder="Search items..." />--%>
+                    <button type="button" class="btn btn-primry" id="btnGetAllItems" onclick="LoadAllitem('')"><i class="fa fa-search"></i>Items</button>
+              
+            </div>
+
+
+        </div>
+
      
      </form>
 
-            <div class="table-container" style="width:100%">
+            <div id="ManualGRN" class="table-container" style="width:100%">
                 <table class="table " id="tblItemDescription" style="margin-top: 13px; font-size: 10px!important; width: 100% !important; overflow: unset;">
                     <thead>
                         <tr>
@@ -850,6 +1270,29 @@
                         </tr>
                     </thead>
                     <tbody id="tblItemDescriptionDetail">
+                    </tbody>
+                </table>
+            </div>
+    
+            <div id="DirectGRN" class="table-container" style="width:100%">
+                <table class="table " id="tblItemDescriptionDir" style="margin-top: 13px; font-size: 10px!important; width: 100% !important; overflow: unset;">
+                    <thead>
+                        <tr>
+                            <th style="text-align: center;">Sr No.</th>
+                            <th style="text-align: center; font-size: 10px;">Item Code</th>
+                            <th style="text-align: center;">Item Description</th>
+                            <th style="text-align: center;">GRN Qty</th>
+                            <th style="text-align: center;">UOM</th>
+                            <th style="text-align: center;">Batch No</th>
+                            <th style="text-align: center;">Mfg Date</th>
+                            <th style="text-align: center;">Exp Date</th>
+                            <th style="text-align: center;">Bounus Qty</th>
+                            <th style="text-align: center;">Rate</th>
+                            <th style="text-align: center;">Amount</th>
+                            <th style="text-align: center;" id="thactiond">Action</th>
+                        </tr>
+                    </thead>
+                    <tbody id="tblItemDescriptionDetailDir">
                     </tbody>
                 </table>
             </div>
@@ -891,4 +1334,54 @@
 
         </div>
     </div>
+
+       <div class="modal fade" id="itemsModal" tabindex="-1" aria-labelledby="itemsModalLabel" aria-hidden="true">
+       <div class="modal-dialog modal-lg custom-modal-dialog">
+           <div class="modal-content custom-modal-content">
+               <div class="modal-header custom-modal-header">
+                   <div class="custom-modal-title-wrap">
+                       <span class="custom-modal-icon"><i class="fa fa-cubes"></i></span>
+                       <h4 class="modal-title custom-modal-title" id="itemsModalLabel">Item Details</h4>
+                   </div>
+                   <button type="button" class="custom-modal-close" data-dismiss="modal" aria-label="Close"><i class="fa fa-times"></i></button>
+               </div>
+               <div class="modal-body custom-modal-body">
+                   <div class="custom-modal-search-wrap">
+                       <span class="custom-modal-search-icon"><i class="fa fa-search"></i></span>
+                       <input type="text" id="searchInput" class="custom-modal-search" placeholder="Search items..." />
+                   </div>
+                   <div class="custom-modal-table-wrap">
+                       <table class="table custom-modal-table">
+                           <thead>
+                               <tr>
+                                   <th>Select</th>
+                                   <!-- td:eq(0) -->
+                                   <th style="display: none;">Item ID</th>
+                                   <!-- td:eq(1) -->
+                                   <th>Item Code</th>
+                                   <!-- td:eq(2) -->
+                                   <th>Description</th>
+                                   <!-- td:eq(3) -->
+                                   <th>Unit</th>
+                                   <!-- td:eq(4) -->
+                                   <th style="display: none;">Rate</th>
+                                   <!-- td:eq(5) -->
+                                   <th style="display: none;">UOM Qty</th>
+
+                                   <th>Last Purchase Rate</th>
+                                   <!-- td:eq(6) -->
+                                   <th>Stock</th>
+                               </tr>
+                           </thead>
+                           <tbody id="itemsTableBody">
+                           </tbody>
+                       </table>
+                   </div>
+               </div>
+               <div class="modal-footer">
+                   <input type="button" value="Close" class="btn-gray" data-dismiss="modal" />
+               </div>
+           </div>
+       </div>
+   </div>
 </asp:Content>
