@@ -4502,7 +4502,7 @@
                     <input type="checkbox" tabindex="9" id="chkprint" />
                 </div>
                <div class="col-sm-2 col-md-2 col-lg-1">
-                <input type="button" class="btn-primry" value="Item List (Alt + L)" id="item_List" onclick="OpenItemList();" style="width:144% !important" />
+                <input type="button" class="btn-primry" value="Item List (Alt + L)" id="item_List" onclick="OpenItemList();" style="width:146px !important" />
                 </div>
             </div>
 
