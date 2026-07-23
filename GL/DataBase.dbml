@@ -8148,6 +8148,9 @@
     </Type>
   </Table>
 <<<<<<< HEAD
+<<<<<<< HEAD
+=======
+>>>>>>> 21
   <Table Name="dbo.Purchase_Invoice_Master" Member="Purchase_Invoice_Masters">
     <Type Name="Purchase_Invoice_Master">
       <Column Name="PurchaseInvoiceId" Type="System.Int64" DbType="BigInt NOT NULL IDENTITY" IsPrimaryKey="true" IsDbGenerated="true" CanBeNull="false" />
@@ -8186,8 +8189,11 @@
       <Column Name="is_DirtGRN" Type="System.Boolean" DbType="Bit" CanBeNull="true" />
     </Type>
   </Table>
+<<<<<<< HEAD
 =======
 >>>>>>> incoming changes
+=======
+>>>>>>> 21
   <Function Name="dbo.GetDataValueName" Method="GetDataValueName" IsComposable="true">
     <Parameter Name="ValueSetName" Parameter="valueSetName" Type="System.String" DbType="VarChar(150)" />
     <Parameter Name="DataValueName" Parameter="dataValueName" Type="System.String" DbType="VarChar(50)" />
@@ -12910,6 +12916,9 @@
     </ElementType>
   </Function>
 <<<<<<< HEAD
+<<<<<<< HEAD
+=======
+>>>>>>> 21
   <Function Name="dbo.sp_token_doc_listFilter" Method="sp_token_doc_listFilter">
     <Parameter Name="doc_Id" Type="System.String" DbType="VarChar(50)" />
     <ElementType Name="sp_token_doc_listFilterResult">
@@ -13013,6 +13022,9 @@
       <Column Name="Rate1" Type="System.Decimal" DbType="Decimal(18,4)" CanBeNull="true" />
     </ElementType>
   </Function>
+<<<<<<< HEAD
 =======
 >>>>>>> incoming changes
+=======
+>>>>>>> 21
 </Database>

@@ -219,11 +219,6 @@ namespace PMS
                     rd.SetParameterValue("CompanyName", AppConfig.Company_Name);
                     rd.SetParameterValue("Title", Title);
                     rd.SetParameterValue("UserName", AppConfig.UserName);
-                    try
-                    {
-                    rd.SetParameterValue("@TransType", transType);
-                    }
-                    catch { }
                 }
             }
             else if (reportName == "Voucher_GIN")
