@@ -38,7 +38,21 @@
                     });
                 }
             });
-        }
+}
+
+function OPD_Form_Print(Patient_ID) {
+    debugger;
+    var ID = Patient_ID;
+    var locationInfo = window.location;
+    var url = "/ReportViewer.aspx?ReportName=OPD_Patient_Print&Title=OPD FORM &OPD_ID=" + ID;
+    if (!locationInfo.origin.includes('localhost') || locationInfo.origin.includes('localhost')) {
+        var urlInfo = window.location.href.split('/');
+        var ip = urlInfo[2];
+        var foldername = urlInfo[3];
+        url = 'http://' + ip + '/' + foldername + "/ReportViewer.aspx?ReportName=OPD_Patient_Print&Title=OPD FORM &OPD_ID=" + ID;
+    }
+    window.open(url, '_blank');
+}
         function cancelPatient(patid, patname) {
             debugger;
             var PatID = patid;
@@ -180,7 +194,8 @@
                             let res = `<a href="#" onclick="editOpen(${full.Patient_ID})" class="editListBtn" style="border-radius: 4px;padding: 5px 8px;"><i class="fa fa-pencil"></i></a>`;
                             let Del = `<a class="delListBtn" style="border-radius: 4px;margin-left: 4px;color: white;padding: 5px 8px;" href="#" onclick="cancelPatient(${full.Patient_ID}, '${full.Full_Name.replace(/'/g, "\\'")}')"><i class="fa fa-trash"></i></a>`;
                             let print = `<a class="printListBtn" style="border-radius: 4px;margin-left: 4px;color: white;padding: 5px 8px;" href="#" onclick="Print(${full.Patient_ID})"><i class="fa fa-print"></i></a>`;
-                            return res + Del + print;
+                            let print2 = `<a class="printListBtn" style="border-radius: 4px;margin-left: 4px;color: white;padding: 5px 8px;" href="#" onclick="OPD_Form_Print(${full.Patient_ID})"><i class="fa fa-print"></i></a>`;
+                            return res + Del + print + print2;
                         },
                         "width": "14%",
                         "orderable": false
@@ -230,7 +245,8 @@
                     }
                 }
             });
-        }
+}
+
     </script>
 </asp:Content>
 <asp:Content ID="Content2" ContentPlaceHolderID="MainContent" runat="server">
