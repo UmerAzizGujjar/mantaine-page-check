@@ -22,6 +22,7 @@ namespace PMS.AP
         DataTable dt;
 
         DataBaseDataContext db;
+        public string ReplicateCode { get; set; }
         protected void Page_Load(object sender, EventArgs e)
         {
             HyperLink1.Visible = false;
@@ -34,6 +35,8 @@ namespace PMS.AP
                 BindDeliveryTerms();
                 BindPOType();
                 //LoadPRNum();
+                var code = db.sys_Parms.Where(x => x.Name == "Replicate").Select(x => x.Code).FirstOrDefault();
+                ReplicateCode = code ?? "";
                 if (Request.QueryString["PO_ID"] != null)
                 {
                     var getID = Request.QueryString["PO_ID"];
@@ -100,6 +103,16 @@ namespace PMS.AP
                           data.Code
                         ).FirstOrDefault();
             return (new JavaScriptSerializer()).Serialize(dept);
+        }
+
+        [WebMethod]
+        public static string GetReplicateParm()
+        {
+            DataBaseDataContext db = new DataBaseDataContext(DBClass.ConnectionString());
+            var code = (from data in db.sys_Parms
+                        where data.Name == "Replicate"
+                        select data.Code).FirstOrDefault();
+            return (new JavaScriptSerializer()).Serialize(code ?? "");
         }
 
         [WebMethod]

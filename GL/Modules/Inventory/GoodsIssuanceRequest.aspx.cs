@@ -12,14 +12,17 @@ namespace PMS.Inventory
 {
     public partial class GoodsIssuanceRequest : System.Web.UI.Page
     {
+        public string ReplicateCode { get; set; }
         protected void Page_Load(object sender, EventArgs e)
         {
             HyperLink1.Visible = false;
             if (!IsPostBack)
             {
+                DataBaseDataContext db = new DataBaseDataContext();
+                var code = db.sys_Parms.Where(x => x.Name == "Replicate").Select(x => x.Code).FirstOrDefault();
+                ReplicateCode = code ?? "";
                 if (Request.QueryString["ID"] != null)
                 {
-                    DataBaseDataContext db = new DataBaseDataContext();
                     var getID = Request.QueryString["ID"];
                     var gettype = (from a in db.MaterialIssueRequests where a.MaterialRequest_Id == Convert.ToInt32(getID) select a.FilePath).FirstOrDefault();
                     if (!string.IsNullOrEmpty(gettype))
@@ -43,6 +46,16 @@ namespace PMS.Inventory
                         ).FirstOrDefault();
             return (new JavaScriptSerializer()).Serialize(dept);
         }
+        [WebMethod]
+        public static string GetReplicateParm()
+        {
+            DataBaseDataContext db = new DataBaseDataContext(DBClass.ConnectionString());
+            var code = (from data in db.sys_Parms
+                        where data.Name == "Replicate"
+                        select data.Code).FirstOrDefault();
+            return (new JavaScriptSerializer()).Serialize(code ?? "");
+        }
+
         [WebMethod]
         public static string filldepartments()
         {

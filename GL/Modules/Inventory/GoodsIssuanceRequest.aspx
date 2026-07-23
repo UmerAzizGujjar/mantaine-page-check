@@ -5,6 +5,7 @@
     <script type="text/javascript">
         var counter = 1;
         var isReplicate = false;
+        var replicateEnabled = '<%= ReplicateCode %>' === '01';
         debugger;
         var id = '<% =Request.QueryString["ID"] %>';
         $(document).ready(function () {
@@ -65,7 +66,6 @@
                 LoadLoadMIRDetail(id);
                 $("#btnsave").val('Update');
                 $('#btn_Print').show();
-                $('#btnReplicate').show();
             }
             $('#btnReplicate').on('click', function () {
                 isReplicate = true;
@@ -77,11 +77,13 @@
                     debugger;
                     UserUnApproveButtonRights();
                     $('#btnsave').attr("disabled", 'disabled');
+                    $('#btnReplicate').hide();
                 }
                 if (status == "Created") {
                     debugger;
                 }
                 if (status == "Created" || status == "Pending") {
+                    if (replicateEnabled) $('#btnReplicate').show();
                     if (id != "") {
                         CheckGIRApprovalRightsAndShowButton(id);
                     }

@@ -99,6 +99,7 @@
 
     <script type="text/javascript">
         var poid = '<% =Request.QueryString["PO_ID"] %>';
+        var replicateEnabled = '<%= ReplicateCode %>' === '01';
 
         /* ── PageMethod → AJAX helper ─────────────────────────── */
         function callPageMethod(methodName, params, successCallback, errorCallback) {
@@ -1406,11 +1407,14 @@
                 UserUnApproveButtonRights();
                 $('#btnSave').attr("disabled", "disabled").hide();
                 $('#btncancel').hide();
+                $('#btnReplicate').hide();
             } else if (status == "Cancelled") {
                 $('#btnSave').attr("disabled", "disabled").hide();
                 $('#btncancel').hide();
+                $('#btnReplicate').hide();
             } else if (status == "Created" || status == "Pending") {
                 $('#btnSave').show();
+                if (replicateEnabled) $('#btnReplicate').show();
                 $('#btnUnApprove').hide();
                 if (poid != "") {
                     CheckPOApprovalRightsAndShowButton(poid);
@@ -3618,6 +3622,9 @@ function scheduleCalcTotal(delay) {
         </div>
         <div>
             <input type="button" style="display:none;" class="btn btn-primry w-100" value="UnApprove" id="btnUnApprove" onclick="UnApprove()" />
+        </div>
+        <div>
+            <input type="button" style="display:none;" class="btn btn-primry w-100" value="Replicate" id="btnReplicate" onclick="this.disabled=true;$('#tblItemDescription tbody tr').each(function(){var $prd=$(this).find('input[name=txtPRDId]');if($prd.val()&&$prd.val()!='0'&&$prd.val()!=''){$prd.val('0');$(this).find('input[name=txtPRNo]').val('');$(this).find('input[name=txtcsno]').val('');}});$('#btnSave').val('Save');$('#hdnPurchase_ID').val('');SaveAllRecord()" />
         </div>
     </div>
 
