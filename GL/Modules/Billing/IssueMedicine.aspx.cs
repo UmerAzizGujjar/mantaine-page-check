@@ -1459,19 +1459,21 @@ namespace PMS
                 newBillDetails.Remarks = dtls.Remarks;
                 newBillDetails.Req_qty = dtls.Req_qty;
                 newBillDetails.CGS = dtls.CGSAmount;
-                 
-               // decimal currentDbStock = ReadCurrentStock(db, Item_Id , dtls.batchno);
-                decimal currentDbStock = ReadCurrentStock(db, Item_Id, dtls.batchno, data.warehouse);
-                if (currentDbStock < dtls.Qty)
-                {
-                    throw new Exception(
-                        "Insufficient stock for " + dtls.ItemName +
-                        ". Available: " + currentDbStock +
-                        ", Requested: " + dtls.Qty + ".");
-                }
-                decimal newStock = currentDbStock - dtls.Qty;
-                UpdateStockAtomic(db, Item_Id, newStock);
 
+                // decimal currentDbStock = ReadCurrentStock(db, Item_Id , dtls.batchno);
+                if (dtls.batchno != "" || dtls.batchno != null)
+                {
+                    decimal currentDbStock = ReadCurrentStock(db, Item_Id, dtls.batchno, data.warehouse);
+                    if (currentDbStock < dtls.Qty)
+                    {
+                        throw new Exception(
+                            "Insufficient stock for " + dtls.ItemName +
+                            ". Available: " + currentDbStock +
+                            ", Requested: " + dtls.Qty + ".");
+                    }
+                    decimal newStock = currentDbStock - dtls.Qty;
+                    UpdateStockAtomic(db, Item_Id, newStock);
+                }
                 Total_CGSS += dtls.CGSAmount;
                 ListOfDetails.Add(newBillDetails);
             }
