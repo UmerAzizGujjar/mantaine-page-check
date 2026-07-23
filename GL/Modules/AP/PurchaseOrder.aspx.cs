@@ -253,7 +253,14 @@ namespace PMS.AP
                                              join ph in db.AP_Purchase_Orders on pd.PO_ID equals ph.PO_ID
                                              where pd.Item_Id == d.Item_Id
                                              orderby ph.Creation_Time descending
-                                             select pd.Rate).FirstOrDefault() ?? d.Rate
+                                             select pd.Rate).FirstOrDefault() ?? d.Rate,
+
+                               LastVendorName = (from pd in db.AP_Purchase_Order_Items
+                                                 join ph in db.AP_Purchase_Orders on pd.PO_ID equals ph.PO_ID
+                                                 join v in db.AP_Vendors on ph.Vendor_ID equals v.Vendor_ID
+                                                 where pd.Item_Id == d.Item_Id
+                                                 orderby ph.Creation_Time descending
+                                                 select v.Vendor_Name).FirstOrDefault() ?? ""
                            }).ToList();
 
             return (new JavaScriptSerializer()).Serialize(Details);
@@ -713,6 +720,8 @@ namespace PMS.AP
             public bool Pack;
             public int Pack_Quantity;
             public string Pack_Unit;
+            public decimal LastPORate;      
+            public string LastVendorName;
             public bool Active;
         }
         [WebMethod]
@@ -753,6 +762,21 @@ namespace PMS.AP
                 invItems.UnitName = db.GetDataValueName("UOM", item.Unit); //updated Unit to UOM
                 invItems.Internal_Part_No = item.Internal_Part_No;
                 invItems.Active = item.Active ?? false;
+
+                var rate = (from pd in db.AP_Purchase_Order_Items
+                            join ph in db.AP_Purchase_Orders on pd.PO_ID equals ph.PO_ID
+                            where pd.Item_Id == item.Item_ID
+                            orderby ph.Creation_Time descending
+                            select pd.Rate).FirstOrDefault();
+
+                invItems.LastPORate = Convert.ToDecimal(rate ?? item.Purchase_Rate);
+
+                invItems.LastVendorName = (from pd in db.AP_Purchase_Order_Items
+                                           join ph in db.AP_Purchase_Orders on pd.PO_ID equals ph.PO_ID
+                                           join v in db.AP_Vendors on ph.Vendor_ID equals v.Vendor_ID
+                                           where pd.Item_Id == item.Item_ID
+                                           orderby ph.Creation_Time descending
+                                           select v.Vendor_Name).FirstOrDefault() ?? "";
                 listItem.Add(invItems);
             }
             return (new JavaScriptSerializer()).Serialize(listItem);
@@ -1161,7 +1185,14 @@ namespace PMS.AP
                                  UOM_Qty = i.UOM_Qty != null ? i.UOM_Qty : 1,
                                  Qty = 1, // Default quantity
                                  TotalStock = db.GetInvenrtoryItemUomTotalStock(i.Item_ID, i.InventoryOrg) ?? 0,
-                                 vi.Vendor_Id
+                                 vi.Vendor_Id,
+
+                                 LastVendorName = (from pd in db.AP_Purchase_Order_Items
+                                                   join ph in db.AP_Purchase_Orders on pd.PO_ID equals ph.PO_ID
+                                                   join v in db.AP_Vendors on ph.Vendor_ID equals v.Vendor_ID
+                                                   where pd.Item_Id == i.Item_ID
+                                                   orderby ph.Creation_Time descending
+                                                   select v.Vendor_Name).FirstOrDefault() ?? ""
                              })
                              .Distinct()
                              .OrderBy(x => x.Item_Code)
@@ -1274,7 +1305,13 @@ namespace PMS.AP
                                         orderby ph.Creation_Time descending
                                         select pd.Rate)
                             .FirstOrDefault() ?? 0,
-                                TotalStock = db.GetInvenrtoryItemUomTotalStock(x.Item_ID, x.InventoryOrg)
+                        Last_Vendor_Name = (from pd in db.AP_Purchase_Order_Items
+                                            join ph in db.AP_Purchase_Orders on pd.PO_ID equals ph.PO_ID
+                                            join v in db.AP_Vendors on ph.Vendor_ID equals v.Vendor_ID
+                                            where pd.Item_Id == x.Item_ID
+                                            orderby ph.Creation_Time descending
+                                            select v.Vendor_Name).FirstOrDefault() ?? "",
+                        TotalStock = db.GetInvenrtoryItemUomTotalStock(x.Item_ID, x.InventoryOrg)
                             })
                          .ToList();
 
