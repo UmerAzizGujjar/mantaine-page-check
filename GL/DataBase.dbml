@@ -8147,7 +8147,6 @@
       <Association Name="GRN_Master_ItemSelection_Barcode" Member="ItemSelection_Barcodes" ThisKey="GRN_ID" OtherKey="GRN_ID" Type="ItemSelection_Barcode" />
     </Type>
   </Table>
-
   <Table Name="dbo.Purchase_Invoice_Master" Member="Purchase_Invoice_Masters">
     <Type Name="Purchase_Invoice_Master">
       <Column Name="PurchaseInvoiceId" Type="System.Int64" DbType="BigInt NOT NULL IDENTITY" IsPrimaryKey="true" IsDbGenerated="true" CanBeNull="false" />
@@ -8186,7 +8185,6 @@
       <Column Name="is_DirtGRN" Type="System.Boolean" DbType="Bit" CanBeNull="true" />
     </Type>
   </Table>
-
   <Function Name="dbo.GetDataValueName" Method="GetDataValueName" IsComposable="true">
     <Parameter Name="ValueSetName" Parameter="valueSetName" Type="System.String" DbType="VarChar(150)" />
     <Parameter Name="DataValueName" Parameter="dataValueName" Type="System.String" DbType="VarChar(50)" />
@@ -11032,22 +11030,6 @@
       <Column Name="Ward_Name" Type="System.String" DbType="NVarChar(50)" CanBeNull="true" />
     </ElementType>
   </Function>
-  <Function Name="dbo.Sp_GetLast24Hours_Medicines" Method="Sp_GetLast24Hours_Medicines">
-    <Parameter Name="Search" Parameter="search" Type="System.String" DbType="NVarChar(200)" />
-    <ElementType Name="Sp_GetLast24Hours_MedicinesResult">
-      <Column Name="Full_Name" Type="System.String" DbType="VarChar(100)" CanBeNull="true" />
-      <Column Name="mr_no_sequence" Type="System.String" DbType="NVarChar(50)" CanBeNull="true" />
-      <Column Name="pat_id" Type="System.Int32" DbType="Int NOT NULL" CanBeNull="false" />
-      <Column Name="Patient_No" Type="System.Int32" DbType="Int" CanBeNull="true" />
-      <Column Name="Medicine_Date" Type="System.DateTime" DbType="DateTime" CanBeNull="true" />
-      <Column Name="Transaction_Type" Type="System.String" DbType="VarChar(4) NOT NULL" CanBeNull="false" />
-      <Column Name="Referred_By" Type="System.String" DbType="VarChar(1000)" CanBeNull="true" />
-      <Column Name="Bed_No" Type="System.Int32" DbType="Int" CanBeNull="true" />
-      <Column Name="Ward_Name" Type="System.String" DbType="NVarChar(50)" CanBeNull="true" />
-      <Column Name="In_Patient_Medicine_ID" Type="System.Int32" DbType="Int NOT NULL" CanBeNull="false" />
-      <Column Name="Status" Type="System.String" DbType="NVarChar(150)" CanBeNull="true" />
-    </ElementType>
-  </Function>
   <Function Name="dbo.spMedicinesDetailsfromopd" Method="spMedicinesDetailsfromopd">
     <Parameter Name="ItemId" Parameter="itemId" Type="System.Int32" DbType="Int" />
     <Parameter Name="PatientId" Parameter="patientId" Type="System.Int32" DbType="Int" />
@@ -12908,7 +12890,6 @@
       <Column Name="ExpiryDate" Type="System.String" DbType="VarChar(10) NOT NULL" CanBeNull="false" />
     </ElementType>
   </Function>
-
   <Function Name="dbo.sp_token_doc_listFilter" Method="sp_token_doc_listFilter">
     <Parameter Name="doc_Id" Type="System.String" DbType="VarChar(50)" />
     <ElementType Name="sp_token_doc_listFilterResult">
@@ -13012,5 +12993,21 @@
       <Column Name="Rate1" Type="System.Decimal" DbType="Decimal(18,4)" CanBeNull="true" />
     </ElementType>
   </Function>
-
+  <Function Name="dbo.Sp_GetLast24Hours_Medicines" Method="Sp_GetLast24Hours_Medicines">
+    <Parameter Name="Search" Parameter="search" Type="System.String" DbType="NVarChar(200)" />
+    <ElementType Name="Sp_GetLast24Hours_MedicinesResult">
+      <Column Name="In_Patient_Medicine_ID" Type="System.Int32" DbType="Int NOT NULL" CanBeNull="false" />
+      <Column Name="Full_Name" Type="System.String" DbType="VarChar(100)" CanBeNull="true" />
+      <Column Name="mr_no_sequence" Type="System.String" DbType="NVarChar(50)" CanBeNull="true" />
+      <Column Name="pat_id" Type="System.Int32" DbType="Int NOT NULL" CanBeNull="false" />
+      <Column Name="Patient_No" Type="System.Int32" DbType="Int" CanBeNull="true" />
+      <Column Name="Medicine_Date" Type="System.DateTime" DbType="DateTime" CanBeNull="true" />
+      <Column Name="Transaction_Type" Type="System.String" DbType="VarChar(3) NOT NULL" CanBeNull="false" />
+      <Column Name="Referred_By" Type="System.String" DbType="VarChar(MAX)" CanBeNull="true" />
+      <Column Name="Bed_No" Type="System.Int32" DbType="Int" CanBeNull="true" />
+      <Column Name="Ward_Name" Type="System.String" DbType="NVarChar(50)" CanBeNull="true" />
+      <Column Name="Status" Type="System.String" DbType="NVarChar(150) NOT NULL" CanBeNull="false" />
+      <Column Name="HasStat" Type="System.Boolean" DbType="Bit" CanBeNull="true" />
+    </ElementType>
+  </Function>
 </Database>
