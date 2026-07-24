@@ -356,7 +356,7 @@ string ATC, string GenericName, string ControllerDrug, string Narcotics, string 
 string Notes, string RadioCharges, string DentalItem, string Procedure, string LensRequired, string BedServices, string LabRequired,
 string PattHistoryRequired, string FitnessCertificate, string OtherServices, string Billing, string OTProcedure,string ShortItem,string CathLabItems,string HighRisk, string btnValue,
 string ItemId, string DepartmentId, string IsHospital, string IsService, string SehatSahulat, string SehatCardRate, string Discount_Block,string InfusionFluid,
-List<BatchNum> batchList, List<PatientTypeList> PatientTypeList, List<WarehouseMapping> WarehouseList)
+List<BatchNum> batchList, List<PatientTypeList> PatientTypeList, List<WarehouseMapping> WarehouseList,List<WarehouseBatchData> WarehouseBatchList)
         {
             string Id = "";
             DataBaseDataContext db = new DataBaseDataContext();
@@ -499,6 +499,27 @@ List<BatchNum> batchList, List<PatientTypeList> PatientTypeList, List<WarehouseM
                                 Created_Date = DateTime.Now
                             };
                             db.Item_Warehouse_Mappings.InsertOnSubmit(mapping); 
+                        }
+                    }
+
+                    if (WarehouseBatchList != null && WarehouseBatchList.Count > 0)
+                    {
+                        foreach (var wb in WarehouseBatchList)
+                        {
+                            if (string.IsNullOrEmpty(wb.WarehouseId) || string.IsNullOrEmpty(wb.BatchNumber))
+                                continue;
+
+                            var newBatch = new Warehouse_Item_Batch
+                            {
+                                Warehouse_Id = wb.WarehouseId,
+                                Item_ID = obj.Item_ID,
+                                Batch_Number = wb.BatchNumber,
+                                IsBlocked = wb.IsBlocked,
+                                Created_Date = DateTime.Now,
+                                Created_By = AppConfig.UserID
+                            };
+
+                            db.Warehouse_Item_Batches.InsertOnSubmit(newBatch);
                         }
                     }
 
@@ -721,6 +742,33 @@ List<BatchNum> batchList, List<PatientTypeList> PatientTypeList, List<WarehouseM
                         }
                     }
 
+                    var existingBatchAssignments = db.Warehouse_Item_Batches
+                .Where(x => x.Item_ID == itemId)
+                .ToList();
+
+                    db.Warehouse_Item_Batches.DeleteAllOnSubmit(existingBatchAssignments);
+
+                    // Add new assignments
+                    if (WarehouseBatchList != null && WarehouseBatchList.Count > 0)
+                    {
+                        foreach (var wb in WarehouseBatchList)
+                        {
+                            if (string.IsNullOrEmpty(wb.WarehouseId) || string.IsNullOrEmpty(wb.BatchNumber))
+                                continue;
+
+                            var newBatch = new Warehouse_Item_Batch
+                            {
+                                Warehouse_Id = wb.WarehouseId,
+                                Item_ID = itemId,
+                                Batch_Number = wb.BatchNumber,
+                                IsBlocked = wb.IsBlocked,
+                                Created_Date = DateTime.Now,
+                                Created_By = AppConfig.UserID
+                            };
+
+                            db.Warehouse_Item_Batches.InsertOnSubmit(newBatch);
+                        }
+                    }
                     db.SubmitChanges();
                     Id = itemId.ToString();
                     return "Update-" + Id;
@@ -935,6 +983,122 @@ List<BatchNum> batchList, List<PatientTypeList> PatientTypeList, List<WarehouseM
                 return "0";
             }
         }
+
+        // Get batches for specific item and warehouse
+        [WebMethod]
+        public static string GetBatchesForItemAndWarehouse(int itemId, string warehouseId)
+        {
+            using (DataBaseDataContext db = new DataBaseDataContext())
+            {
+                var batchList = new List<string>(); // Use List<string> instead of List<object>
+
+                // Get batches from GRN/PO
+                var PICondition = (from sys in db.sys_Parms
+                                   where sys.Name == "Direct PO ON Purchase Invoice"
+                                   select sys.Code).FirstOrDefault();
+
+                if (PICondition == "01")
+                {
+                    var batches = (from ds in db.Purchase_Invoice_Details
+                                   where ds.ItemId == itemId
+                                   select ds.BatchNum)
+                                 .Distinct()
+                                 .ToList();
+
+                    foreach (var batch in batches)
+                    {
+                        if (!string.IsNullOrEmpty(batch))
+                        {
+                            // Check if batch has stock in this warehouse
+                            int stock = Convert.ToInt32(
+                                db.GetPharmcyItemUomTotalStock(itemId, warehouseId, batch)
+                            );
+
+                            if (stock > 0 && !batchList.Contains(batch))
+                            {
+                                batchList.Add(batch);
+                            }
+                        }
+                    }
+                }
+                else
+                {
+                    var batches = (from ds in db.GRN_Details
+                                   join grn in db.GRN_Masters on ds.GRNId equals grn.GRN_ID
+                                   where ds.Item_Id == itemId && grn.InvOrgId == warehouseId
+                                   select ds.BatchNum)
+                                 .Distinct()
+                                 .ToList();
+
+                    foreach (var batch in batches)
+                    {
+                        if (!string.IsNullOrEmpty(batch))
+                        {
+                            int stock = Convert.ToInt32(
+                                db.GetPharmcyItemUomTotalStock(itemId, warehouseId, batch)
+                            );
+
+                            if (stock > 0 && !batchList.Contains(batch))
+                            {
+                                batchList.Add(batch);
+                            }
+                        }
+                    }
+                }
+
+                // Also get batches from stock adjustments
+                var adjBatches = (from inv in db.INV_Stock_Adjustments
+                                  where inv.Item_Id == itemId.ToString()
+                                  && inv.Ware_House == warehouseId
+                                  && inv.Status == "Approved"
+                                  select inv.Batch_No)
+                                .Distinct()
+                                .ToList();
+
+                foreach (var batch in adjBatches)
+                {
+                    if (!string.IsNullOrEmpty(batch))
+                    {
+                        int stock = Convert.ToInt32(
+                            db.GetPharmcyItemUomTotalStock(itemId, warehouseId, batch)
+                        );
+
+                        if (stock > 0 && !batchList.Contains(batch))
+                        {
+                            batchList.Add(batch);
+                        }
+                    }
+                }
+
+                // Convert to the expected format for dropdown
+                var result = batchList.Select(b => new { BatchNum = b }).ToList();
+
+                return new JavaScriptSerializer().Serialize(result);
+            }
+        }
+
+
+
+        // Get existing warehouse-batch assignments for an item
+        [WebMethod]
+        public static string GetItemWarehouseBatches(int itemId)
+        {
+            using (DataBaseDataContext db = new DataBaseDataContext())
+            {
+                var result = (from wb in db.Warehouse_Item_Batches
+                              where wb.Item_ID == itemId
+                              select new
+                              {
+                                  wb.ID,
+                                  wb.Warehouse_Id,
+                                  WarehouseName = db.GetDataValueName("Ware House", wb.Warehouse_Id),
+                                  wb.Batch_Number,
+                                  wb.IsBlocked
+                              }).ToList();
+
+                return new JavaScriptSerializer().Serialize(result);
+            }
+        }
         public class BatchNum
         {
             public string Item_Id { get; set; }
@@ -956,6 +1120,13 @@ List<BatchNum> batchList, List<PatientTypeList> PatientTypeList, List<WarehouseM
         {
             public string WarehouseId { get; set; }
         }
-        
+
+        public class WarehouseBatchData
+        {
+            public string WarehouseId { get; set; }
+            public string BatchNumber { get; set; }
+            public bool IsBlocked { get; set; }
+        }
+
     }
 }

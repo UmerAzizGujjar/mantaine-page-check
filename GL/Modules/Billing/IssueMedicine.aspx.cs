@@ -316,25 +316,38 @@ namespace PMS
             public int? uomqty { get; set; }
             //public string Source { get; set; }
         }
-
         [WebMethod]
-        public static string Getbatch_grn(int med_id,string warehouse)
+        public static string Getbatch_grn(int med_id, string warehouse)
         {
             using (DataBaseDataContext db = new DataBaseDataContext())
             {
                 HashSet<string> batchSet = new HashSet<string>();
 
-                var PICondition = (from sys in db.sys_Parms where sys.Name == "Direct PO ON Purchase Invoice" select sys.Code).FirstOrDefault();
+                // Get blocked batches for this item and warehouse
+                var blockedBatches = new HashSet<string>(
+                    (from wb in db.Warehouse_Item_Batches
+                     where wb.Item_ID == med_id
+                     && wb.Warehouse_Id == warehouse
+                     && wb.IsBlocked == true
+                     select wb.Batch_Number).ToList()
+                );
+
+                var PICondition = (from sys in db.sys_Parms
+                                   where sys.Name == "Direct PO ON Purchase Invoice"
+                                   select sys.Code).FirstOrDefault();
 
                 if (PICondition == "01")
                 {
                     var grnBatches = (from ds in db.Purchase_Invoice_Details
                                       join grn in db.Purchase_Invoice_Masters on ds.PurchaseInvoiceId equals grn.PurchaseInvoiceId
-                                      where ds.ItemId == med_id 
+                                      where ds.ItemId == med_id
                                       select ds.BatchNum).ToList();
 
                     foreach (var batch in grnBatches)
                     {
+                        if (string.IsNullOrEmpty(batch)) continue;
+                        if (blockedBatches.Contains(batch)) continue;
+
                         int stock = Convert.ToInt32(
                             db.GetPharmcyItemUomTotalStock(med_id, warehouse, batch)
                         );
@@ -342,7 +355,6 @@ namespace PMS
                         if (stock > 0)
                             batchSet.Add(batch);
                     }
-
                 }
                 else
                 {
@@ -353,6 +365,9 @@ namespace PMS
 
                     foreach (var batch in grnBatches)
                     {
+                        if (string.IsNullOrEmpty(batch)) continue;
+                        if (blockedBatches.Contains(batch)) continue;
+
                         int stock = Convert.ToInt32(
                             db.GetPharmcyItemUomTotalStock(med_id, warehouse, batch)
                         );
@@ -360,18 +375,20 @@ namespace PMS
                         if (stock > 0)
                             batchSet.Add(batch);
                     }
-
                 }
-
 
                 // ---------- Stock Adjustment Batches ----------
                 var stockAdjBatches = (from inv in db.INV_Stock_Adjustments
-                                       where inv.Item_Id == med_id.ToString() && inv.Ware_House == warehouse
+                                       where inv.Item_Id == med_id.ToString()
+                                       && inv.Ware_House == warehouse
                                        && inv.Status == "Approved"
                                        select inv.Batch_No).ToList();
 
                 foreach (var batch in stockAdjBatches)
                 {
+                    if (string.IsNullOrEmpty(batch)) continue;
+                    if (blockedBatches.Contains(batch)) continue;
+
                     int stock = Convert.ToInt32(
                         db.GetPharmcyItemUomTotalStock(med_id, warehouse, batch)
                     );
@@ -379,17 +396,19 @@ namespace PMS
                     if (stock > 0)
                         batchSet.Add(batch);
                 }
-
 
                 // ------------------------- Stock Transfer Batch -------------------
                 var stocktransBatches = (from sti in db.Stock_Transfer_Items
                                          join st in db.Stock_Transfers on sti.Stock_Transfer_ID equals st.Stock_Transfer_ID
-                                       where sti.Item_Id == med_id && st.Ware_House_To == warehouse
-                                       && st.Status == "Approved"
-                                       select sti.Batch_No).ToList();
+                                         where sti.Item_Id == med_id && st.Ware_House_To == warehouse
+                                         && st.Status == "Approved"
+                                         select sti.Batch_No).ToList();
 
                 foreach (var batch in stocktransBatches)
                 {
+                    if (string.IsNullOrEmpty(batch)) continue;
+                    if (blockedBatches.Contains(batch)) continue;
+
                     int stock = Convert.ToInt32(
                         db.GetPharmcyItemUomTotalStock(med_id, warehouse, batch)
                     );
@@ -397,6 +416,7 @@ namespace PMS
                     if (stock > 0)
                         batchSet.Add(batch);
                 }
+
                 // ---------- Final Result ----------
                 var result = batchSet.Select(b => new BatchStock
                 {
@@ -406,6 +426,95 @@ namespace PMS
                 return new JavaScriptSerializer().Serialize(result);
             }
         }
+        //[WebMethod]
+        //public static string Getbatch_grn(int med_id,string warehouse)
+        //{
+        //    using (DataBaseDataContext db = new DataBaseDataContext())
+        //    {
+        //        HashSet<string> batchSet = new HashSet<string>();
+
+        //        var PICondition = (from sys in db.sys_Parms where sys.Name == "Direct PO ON Purchase Invoice" select sys.Code).FirstOrDefault();
+
+        //        if (PICondition == "01")
+        //        {
+        //            var grnBatches = (from ds in db.Purchase_Invoice_Details
+        //                              join grn in db.Purchase_Invoice_Masters on ds.PurchaseInvoiceId equals grn.PurchaseInvoiceId
+        //                              where ds.ItemId == med_id 
+        //                              select ds.BatchNum).ToList();
+
+        //            foreach (var batch in grnBatches)
+        //            {
+        //                int stock = Convert.ToInt32(
+        //                    db.GetPharmcyItemUomTotalStock(med_id, warehouse, batch)
+        //                );
+
+        //                if (stock > 0)
+        //                    batchSet.Add(batch);
+        //            }
+
+        //        }
+        //        else
+        //        {
+        //            var grnBatches = (from ds in db.GRN_Details
+        //                              join grn in db.GRN_Masters on ds.GRNId equals grn.GRN_ID
+        //                              where ds.Item_Id == med_id && grn.InvOrgId == warehouse
+        //                              select ds.BatchNum).ToList();
+
+        //            foreach (var batch in grnBatches)
+        //            {
+        //                int stock = Convert.ToInt32(
+        //                    db.GetPharmcyItemUomTotalStock(med_id, warehouse, batch)
+        //                );
+
+        //                if (stock > 0)
+        //                    batchSet.Add(batch);
+        //            }
+
+        //        }
+
+
+        //        // ---------- Stock Adjustment Batches ----------
+        //        var stockAdjBatches = (from inv in db.INV_Stock_Adjustments
+        //                               where inv.Item_Id == med_id.ToString() && inv.Ware_House == warehouse
+        //                               && inv.Status == "Approved"
+        //                               select inv.Batch_No).ToList();
+
+        //        foreach (var batch in stockAdjBatches)
+        //        {
+        //            int stock = Convert.ToInt32(
+        //                db.GetPharmcyItemUomTotalStock(med_id, warehouse, batch)
+        //            );
+
+        //            if (stock > 0)
+        //                batchSet.Add(batch);
+        //        }
+
+
+        //        // ------------------------- Stock Transfer Batch -------------------
+        //        var stocktransBatches = (from sti in db.Stock_Transfer_Items
+        //                                 join st in db.Stock_Transfers on sti.Stock_Transfer_ID equals st.Stock_Transfer_ID
+        //                               where sti.Item_Id == med_id && st.Ware_House_To == warehouse
+        //                               && st.Status == "Approved"
+        //                               select sti.Batch_No).ToList();
+
+        //        foreach (var batch in stocktransBatches)
+        //        {
+        //            int stock = Convert.ToInt32(
+        //                db.GetPharmcyItemUomTotalStock(med_id, warehouse, batch)
+        //            );
+
+        //            if (stock > 0)
+        //                batchSet.Add(batch);
+        //        }
+        //        // ---------- Final Result ----------
+        //        var result = batchSet.Select(b => new BatchStock
+        //        {
+        //            BatchNum = b
+        //        }).ToList();
+
+        //        return new JavaScriptSerializer().Serialize(result);
+        //    }
+        //}
 
 
 
@@ -829,13 +938,13 @@ namespace PMS
         //    return result;
         //}
         [WebMethod]
-        public static string MedicineDetailgetfromOPD(int itemId, int patientId = 0, string visitType = "")
+        public static string MedicineDetailgetfromOPD(int itemId,string warehouse, int patientId = 0, string visitType = "")
         {
             string result = string.Empty;
 
             using (DataBaseDataContext db = new DataBaseDataContext())
             {
-                var query = db.spMedicinesDetailsfromopd(itemId, patientId, visitType).ToList();
+                var query = db.spMedicinesDetailsfromopd(itemId, warehouse, patientId, visitType).ToList();
                 result = (new JavaScriptSerializer()).Serialize(query);
             }
             return result;

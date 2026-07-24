@@ -2084,6 +2084,7 @@
       function AddnonBatchItems() {
     debugger;
     var itemId = $('#medName').val();
+        
           var pat_Id = $('#ddlPatient_No').val() || 0;
           var PatNo = $('#ddlPatient_No option:selected').text();
           var parts = PatNo.split('-');
@@ -3846,10 +3847,11 @@
     var PatNo = $('#ddlPatient_No option:selected').text();
     var parts = PatNo.split('-');
     var prefix = parts.length > 0 ? parts[0] : '';
-
+            var warehouse = $('#ddlWarehouse').val();
     itemIds.forEach(function (itemCode) {
         debugger;
         var itemId = itemCode;
+
         var rowIndex = parseInt($('#tblDetails tbody tr').length);
         var rows;
         $.ajax({
@@ -3857,6 +3859,7 @@
             url: "IssueMedicine.aspx/MedicineDetailgetfromOPD",
             data: JSON.stringify({
                 "itemId": itemId,
+                "warehouse": warehouse,
                 "patientId": pat_Id,
                 "visitType": prefix
             }),

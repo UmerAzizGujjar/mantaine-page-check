@@ -33,10 +33,17 @@
             });
             GetDiscountItem();
             ActiveCheckRights();
+            LoadBatchWarehouseDropdown();
+            $(document).on('change', '#ddlBatchWarehouse', function () {
+                LoadBatchesForWarehouse();
+            });
             if (id != "") {
                 LoadItemInventory(id);
 
                 $("#btnValue").val('Update');
+                setTimeout(function () {
+                    LoadWarehouseBatchesForItem(id);
+                }, 1000);
             }
             else {
                 GetitemNum();
@@ -655,6 +662,20 @@
                         WarehouseList.push({ WarehouseId: whVal });
                     }
                 });
+                var warehouseBatchList = [];
+                $('#tbodyWarehouseBatches tr').each(function () {
+                    var warehouseId = $(this).find('input[name="wh_batch_warehouse"]').val();
+                    var batchNumber = $(this).find('input[name="wh_batch_batch"]').val();
+                    var isBlocked = $(this).find('input[name="wh_batch_isblocked"]').val() == '1' ? true : false;
+
+                    if (warehouseId && warehouseId !== "0" && batchNumber && batchNumber !== "0") {
+                        warehouseBatchList.push({
+                            WarehouseId: warehouseId,
+                            BatchNumber: batchNumber,
+                            IsBlocked: isBlocked
+                        });
+                    }
+                });
                 $('#btnValue').attr('disabled', true);
                 $.ajax({
                     type: "POST",
@@ -726,6 +747,7 @@
                         "PatientTypeList": PatientTypeList,
                         "InfusionFluid": InfusionFluid,
                         "WarehouseList": WarehouseList,
+                        "WarehouseBatchList": warehouseBatchList
                     }),
                     contentType: "application/json; charset=utf-8",
                     dataType: "json",
@@ -1338,6 +1360,237 @@
             });
 
         }
+
+
+        function LoadBatchWarehouseDropdown() {
+            $.ajax({
+                type: "POST",
+                url: "Product.aspx/GetWarehouses",
+                data: '{}',
+                contentType: "application/json; charset=utf-8",
+                dataType: "json",
+                success: function (response) {
+                    try {
+                        const data = JSON.parse(response.d);
+                        var options = '<option value="0">Select Warehouse</option>';
+                        $.each(data, function (key, value) {
+                            options += `<option value="${value.DataValue_Name}">${value.DataValue_Description}</option>`;
+                        });
+                        $('#ddlBatchWarehouse').html(options);
+                        $('#ddlBatchWarehouse').val("0").trigger('change');
+                    } catch (e) { console.error(e); }
+                }
+            });
+        }
+
+        // Load batches when warehouse is selected
+        function LoadBatchesForWarehouse() {
+            var warehouseId = $('#ddlBatchWarehouse').val();
+            var itemId = id; // Current item ID from the page
+
+            if (!warehouseId || warehouseId == "0") {
+                Swal.fire({
+                    icon: 'warning',
+                    title: 'Warning',
+                    text: 'Please select a warehouse first.'
+                });
+                return;
+            }
+
+            if (!itemId || itemId == "") {
+                Swal.fire({
+                    icon: 'warning',
+                    title: 'Warning',
+                    text: 'Please save the item first before assigning batches.'
+                });
+                return;
+            }
+
+            $.ajax({
+                type: "POST",
+                url: "Product.aspx/GetBatchesForItemAndWarehouse",
+                data: JSON.stringify({
+                    itemId: itemId,
+                    warehouseId: warehouseId
+                }),
+                contentType: "application/json; charset=utf-8",
+                dataType: "json",
+                success: function (response) {
+                    try {
+                        const data = JSON.parse(response.d);
+                        var options = '<option value="0">Select Batch</option>';
+                        $.each(data, function (key, value) {
+                            options += `<option value="${value.BatchNum}">${value.BatchNum}</option>`;
+                        });
+                        $('#ddlBatchNumber').html(options);
+                        $('#ddlBatchNumber').val("0").trigger('change');
+                    } catch (e) { console.error(e); }
+                }
+            });
+        }
+
+        // Add warehouse-batch row
+        function AddWarehouseBatchRow() {
+            var warehouseId = $('#ddlBatchWarehouse').val();
+            var warehouseText = $('#ddlBatchWarehouse option:selected').text();
+            var batchNumber = $('#ddlBatchNumber').val();
+            var batchText = $('#ddlBatchNumber option:selected').text();
+
+            // Validate selections
+            if (warehouseId == "0" || warehouseId == "") {
+                Swal.fire({
+                    icon: 'warning',
+                    title: 'Warning',
+                    text: 'Please select a warehouse.'
+                });
+                return;
+            }
+
+            if (batchNumber == "0" || batchNumber == "") {
+                Swal.fire({
+                    icon: 'warning',
+                    title: 'Warning',
+                    text: 'Please select a batch.'
+                });
+                return;
+            }
+
+            // Check for duplicates
+            var exists = false;
+            $('#tbodyWarehouseBatches tr').each(function () {
+                var existingWarehouse = $(this).find('input[name="wh_batch_warehouse"]').val();
+                var existingBatch = $(this).find('input[name="wh_batch_batch"]').val();
+                if (existingWarehouse == warehouseId && existingBatch == batchNumber) {
+                    exists = true;
+                    return false;
+                }
+            });
+
+            if (exists) {
+                Swal.fire({
+                    icon: 'warning',
+                    title: 'Already Added',
+                    text: 'This warehouse-batch combination is already added.'
+                });
+                return;
+            }
+
+            // Add row
+            var rowHtml = `
+        <tr>
+            <td>
+                ${warehouseText}
+                <input type="hidden" name="wh_batch_warehouse" value="${warehouseId}" />
+            </td>
+            <td>
+                ${batchText}
+                <input type="hidden" name="wh_batch_batch" value="${batchNumber}" />
+                <input type="hidden" name="wh_batch_isblocked" value="0" />
+            </td>
+            <td style="text-align:center;">
+                <span class="badge badge-success" style="background-color: #28a745; color: white; padding: 5px 10px; border-radius: 3px;">Active</span>
+            </td>
+            <td style="text-align:center;">
+                <a href="javascript:void(0)" onclick="RemoveWarehouseBatchRow(this)" style="color:red;">
+                    <i class="fa fa-trash"></i>
+                </a>
+                <a href="javascript:void(0)" onclick="ToggleWarehouseBatchStatus(this)" style="color:orange; margin-left: 8px;">
+                    <i class="fa fa-ban"></i>
+                </a>
+            </td>
+        </tr>
+    `;
+
+            $('#tbodyWarehouseBatches').append(rowHtml);
+
+            // Reset dropdowns
+            $('#ddlBatchNumber').val("0").trigger('change');
+        }
+
+        // Remove warehouse-batch row
+        function RemoveWarehouseBatchRow(btn) {
+            Swal.fire({
+                title: 'Are you sure?',
+                text: "You want to remove this warehouse-batch assignment?",
+                icon: 'warning',
+                showCancelButton: true,
+                confirmButtonColor: '#d33',
+                cancelButtonColor: '#3085d6',
+                confirmButtonText: 'Yes, remove it!'
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    $(btn).closest('tr').remove();
+                }
+            });
+        }
+
+        // Toggle block status
+        function ToggleWarehouseBatchStatus(btn) {
+            var $row = $(btn).closest('tr');
+            var $statusBadge = $row.find('.badge');
+            var $hiddenStatus = $row.find('input[name="wh_batch_isblocked"]');
+
+            if ($statusBadge.text().trim() === 'Active') {
+                $statusBadge.text('Blocked').css('background-color', '#dc3545');
+                $statusBadge.removeClass('badge-success').addClass('badge-danger');
+                $hiddenStatus.val('1');
+                $(btn).html('<i class="fa fa-check"></i>');
+            } else {
+                $statusBadge.text('Active').css('background-color', '#28a745');
+                $statusBadge.removeClass('badge-danger').addClass('badge-success');
+                $hiddenStatus.val('0');
+                $(btn).html('<i class="fa fa-ban"></i>');
+            }
+        }
+
+        // Load existing warehouse-batch assignments in edit mode
+        function LoadWarehouseBatchesForItem(itemId) {
+            $.ajax({
+                type: "POST",
+                url: "Product.aspx/GetItemWarehouseBatches",
+                data: JSON.stringify({ itemId: itemId }),
+                contentType: "application/json; charset=utf-8",
+                dataType: "json",
+                success: function (response) {
+                    try {
+                        const data = JSON.parse(response.d);
+                        $('#tbodyWarehouseBatches').empty();
+                        $.each(data, function (k, v) {
+                            var statusText = v.IsBlocked ? 'Blocked' : 'Active';
+                            var statusClass = v.IsBlocked ? 'badge-danger' : 'badge-success';
+                            var statusColor = v.IsBlocked ? '#dc3545' : '#28a745';
+                            var actionIcon = v.IsBlocked ? '<i class="fa fa-check"></i>' : '<i class="fa fa-ban"></i>';
+
+                            var rowHtml = `
+                        <tr>
+                            <td>
+                                ${v.WarehouseName}
+                                <input type="hidden" name="wh_batch_warehouse" value="${v.WarehouseId}" />
+                            </td>
+                            <td>
+                                ${v.BatchNumber}
+                                <input type="hidden" name="wh_batch_batch" value="${v.BatchNumber}" />
+                                <input type="hidden" name="wh_batch_isblocked" value="${v.IsBlocked ? 1 : 0}" />
+                            </td>
+                            <td style="text-align:center;">
+                                <span class="badge ${statusClass}" style="background-color: ${statusColor}; color: white; padding: 5px 10px; border-radius: 3px;">${statusText}</span>
+                            </td>
+                            <td style="text-align:center;">
+                                <a href="javascript:void(0)" onclick="RemoveWarehouseBatchRow(this)" style="color:red;">
+                                    <i class="fa fa-trash"></i>
+                                </a>
+                                <a href="javascript:void(0)" onclick="ToggleWarehouseBatchStatus(this)" style="color:orange; margin-left: 8px;">
+                                    ${actionIcon}
+                                </a>
+                            </td>
+                        </tr>
+                    `;
+                            $('#tbodyWarehouseBatches').append(rowHtml);
+                        });
+                    } catch (e) { console.error(e); }
+                }
+            });
+        }
     </script>
 </asp:Content>
 <asp:Content ID="Content2" ContentPlaceHolderID="MainContent" runat="server">
@@ -1684,6 +1937,42 @@
                     </tr>
                 </thead>
                 <tbody id="tbodyAssignedWarehouses">
+                </tbody>
+            </table>
+        </div>
+
+        <!-- Add this after the existing divMultipleWarehouse section -->
+        <div id="divWarehouseBatches" style="flex: 0 0 auto; border: 1px solid #ddd; padding: 15px; border-radius: 6px; background-color: #f9f9f9; margin-top: 15px;">
+            <h4 style="font-size: 16px; font-weight: bold; margin-top: 0;">Assign Batches to Warehouse</h4>
+            <div style="display: flex; gap: 10px; align-items: center; margin-bottom: 10px; flex-wrap: wrap;">
+                <div style="display: flex; align-items: center; gap: 5px;">
+                    <label style="font-weight: bold; margin-right: 5px;">Warehouse:</label>
+                    <select id="ddlBatchWarehouse" class="form-control" style="width: 180px;">
+                        <option value="0">Select Warehouse</option>
+                    </select>
+                </div>
+                <div style="display: flex; align-items: center; gap: 5px;">
+                    <label style="font-weight: bold; margin-right: 5px;">Batch:</label>
+                    <select id="ddlBatchNumber" class="form-control" style="width: 180px;">
+                        <option value="0">Select Batch</option>
+                    </select>
+                </div>
+                <input type="button" value="+" onclick="AddWarehouseBatchRow()"
+                    style="width: 40px; height: 34px; font-weight: bold; cursor: pointer;" />
+                <input type="button" value="Refresh Batches" onclick="LoadBatchesForWarehouse()"
+                    style="height: 34px; font-weight: bold; cursor: pointer; padding: 0 15px;" />
+            </div>
+
+            <table class="table table-bordered" style="width: 100%; background-color: white;">
+                <thead>
+                    <tr style="background-color: #f5f5f5;">
+                        <th style="width: 35%;">Warehouse Name</th>
+                        <th style="width: 35%;">Batch Number</th>
+                        <th style="width: 20%;">Status</th>
+                        <th style="width: 10%;">Action</th>
+                    </tr>
+                </thead>
+                <tbody id="tbodyWarehouseBatches">
                 </tbody>
             </table>
         </div>
