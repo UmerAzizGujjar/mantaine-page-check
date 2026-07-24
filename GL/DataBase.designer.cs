@@ -450,9 +450,6 @@ namespace PMS
         partial void InsertDoctor_Rouster_Master(Doctor_Rouster_Master instance);
         partial void UpdateDoctor_Rouster_Master(Doctor_Rouster_Master instance);
         partial void DeleteDoctor_Rouster_Master(Doctor_Rouster_Master instance);
-        partial void InsertAP_Vendor(AP_Vendor instance);
-        partial void UpdateAP_Vendor(AP_Vendor instance);
-        partial void DeleteAP_Vendor(AP_Vendor instance);
         partial void InsertAP_Vendor_General_Item(AP_Vendor_General_Item instance);
         partial void UpdateAP_Vendor_General_Item(AP_Vendor_General_Item instance);
         partial void DeleteAP_Vendor_General_Item(AP_Vendor_General_Item instance);
@@ -1023,9 +1020,12 @@ namespace PMS
         partial void InsertPurchase_Invoice_Master(Purchase_Invoice_Master instance);
         partial void UpdatePurchase_Invoice_Master(Purchase_Invoice_Master instance);
         partial void DeletePurchase_Invoice_Master(Purchase_Invoice_Master instance);
+        partial void InsertAP_Vendor(AP_Vendor instance);
+        partial void UpdateAP_Vendor(AP_Vendor instance);
+        partial void DeleteAP_Vendor(AP_Vendor instance);
         #endregion
         public DataBaseDataContext() :
-             base(global::System.Configuration.ConfigurationManager.ConnectionStrings["ASPGLConnectionString"].ConnectionString, mappingSource)
+     base(global::System.Configuration.ConfigurationManager.ConnectionStrings["ASPGLConnectionString"].ConnectionString, mappingSource)
         {
             OnCreated();
         }
@@ -2202,14 +2202,6 @@ namespace PMS
             get
             {
                 return this.GetTable<Doctor_Rouster_Master>();
-            }
-        }
-
-        public System.Data.Linq.Table<AP_Vendor> AP_Vendors
-        {
-            get
-            {
-                return this.GetTable<AP_Vendor>();
             }
         }
 
@@ -3730,6 +3722,14 @@ namespace PMS
             get
             {
                 return this.GetTable<Purchase_Invoice_Master>();
+            }
+        }
+
+        public System.Data.Linq.Table<AP_Vendor> AP_Vendors
+        {
+            get
+            {
+                return this.GetTable<AP_Vendor>();
             }
         }
 
@@ -51644,812 +51644,6 @@ namespace PMS
                     this._Deleted_Time = value;
                     this.SendPropertyChanged("Deleted_Time");
                     this.OnDeleted_TimeChanged();
-                }
-            }
-        }
-
-        public event PropertyChangingEventHandler PropertyChanging;
-
-        public event PropertyChangedEventHandler PropertyChanged;
-
-        protected virtual void SendPropertyChanging()
-        {
-            if ((this.PropertyChanging != null))
-            {
-                this.PropertyChanging(this, emptyChangingEventArgs);
-            }
-        }
-
-        protected virtual void SendPropertyChanged(String propertyName)
-        {
-            if ((this.PropertyChanged != null))
-            {
-                this.PropertyChanged(this, new PropertyChangedEventArgs(propertyName));
-            }
-        }
-    }
-
-    [global::System.Data.Linq.Mapping.TableAttribute(Name = "dbo.AP_Vendors")]
-    public partial class AP_Vendor : INotifyPropertyChanging, INotifyPropertyChanged
-    {
-
-        private static PropertyChangingEventArgs emptyChangingEventArgs = new PropertyChangingEventArgs(String.Empty);
-
-        private int _Vendor_ID;
-
-        private System.Nullable<int> _Account_ID;
-
-        private string _Vendor_Name;
-
-        private string _Contact_Person;
-
-        private string _Job_Title;
-
-        private string _Vendor_Phone1;
-
-        private string _Vendor_Phone2;
-
-        private string _Vendor_Address;
-
-        private string _City;
-
-        private string _Country;
-
-        private string _Vendor_Fax;
-
-        private string _Vendor_Email;
-
-        private string _Vendor_Website;
-
-        private string _Vendor_Sales_TaxNo;
-
-        private string _Vendor_NTN;
-
-        private string _Remarks;
-
-        private System.Nullable<int> _Book_ID;
-
-        private System.Nullable<int> _Company_ID;
-
-        private string _Zip_Code;
-
-        private string _Bank_Account_No;
-
-        private System.Nullable<bool> _IsActive;
-
-        private string _VendorType;
-
-        private string _CreditDays;
-
-        private string _Region;
-
-        private string _MobNo;
-
-        private string _Vendor_STN;
-
-        private string _Cnic;
-
-        private string _TaxPayerTyp;
-
-        private System.Nullable<int> _Vendor_Code;
-
-        private System.Nullable<bool> _Ismanual;
-
-        private string _CompanyType_Id;
-
-        private string _DrugLicenceNo;
-
-        #region Extensibility Method Definitions
-        partial void OnLoaded();
-        partial void OnValidate(System.Data.Linq.ChangeAction action);
-        partial void OnCreated();
-        partial void OnVendor_IDChanging(int value);
-        partial void OnVendor_IDChanged();
-        partial void OnAccount_IDChanging(System.Nullable<int> value);
-        partial void OnAccount_IDChanged();
-        partial void OnVendor_NameChanging(string value);
-        partial void OnVendor_NameChanged();
-        partial void OnContact_PersonChanging(string value);
-        partial void OnContact_PersonChanged();
-        partial void OnJob_TitleChanging(string value);
-        partial void OnJob_TitleChanged();
-        partial void OnVendor_Phone1Changing(string value);
-        partial void OnVendor_Phone1Changed();
-        partial void OnVendor_Phone2Changing(string value);
-        partial void OnVendor_Phone2Changed();
-        partial void OnVendor_AddressChanging(string value);
-        partial void OnVendor_AddressChanged();
-        partial void OnCityChanging(string value);
-        partial void OnCityChanged();
-        partial void OnCountryChanging(string value);
-        partial void OnCountryChanged();
-        partial void OnVendor_FaxChanging(string value);
-        partial void OnVendor_FaxChanged();
-        partial void OnVendor_EmailChanging(string value);
-        partial void OnVendor_EmailChanged();
-        partial void OnVendor_WebsiteChanging(string value);
-        partial void OnVendor_WebsiteChanged();
-        partial void OnVendor_Sales_TaxNoChanging(string value);
-        partial void OnVendor_Sales_TaxNoChanged();
-        partial void OnVendor_NTNChanging(string value);
-        partial void OnVendor_NTNChanged();
-        partial void OnRemarksChanging(string value);
-        partial void OnRemarksChanged();
-        partial void OnBook_IDChanging(System.Nullable<int> value);
-        partial void OnBook_IDChanged();
-        partial void OnCompany_IDChanging(System.Nullable<int> value);
-        partial void OnCompany_IDChanged();
-        partial void OnZip_CodeChanging(string value);
-        partial void OnZip_CodeChanged();
-        partial void OnBank_Account_NoChanging(string value);
-        partial void OnBank_Account_NoChanged();
-        partial void OnIsActiveChanging(System.Nullable<bool> value);
-        partial void OnIsActiveChanged();
-        partial void OnVendorTypeChanging(string value);
-        partial void OnVendorTypeChanged();
-        partial void OnCreditDaysChanging(string value);
-        partial void OnCreditDaysChanged();
-        partial void OnRegionChanging(string value);
-        partial void OnRegionChanged();
-        partial void OnMobNoChanging(string value);
-        partial void OnMobNoChanged();
-        partial void OnVendor_STNChanging(string value);
-        partial void OnVendor_STNChanged();
-        partial void OnCnicChanging(string value);
-        partial void OnCnicChanged();
-        partial void OnTaxPayerTypChanging(string value);
-        partial void OnTaxPayerTypChanged();
-        partial void OnVendor_CodeChanging(System.Nullable<int> value);
-        partial void OnVendor_CodeChanged();
-        partial void OnIsmanualChanging(System.Nullable<bool> value);
-        partial void OnIsmanualChanged();
-        partial void OnCompanyType_IdChanging(string value);
-        partial void OnCompanyType_IdChanged();
-        partial void OnDrugLicenceNoChanging(string value);
-        partial void OnDrugLicenceNoChanged();
-        #endregion
-
-        public AP_Vendor()
-        {
-            OnCreated();
-        }
-
-        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_Vendor_ID", AutoSync = AutoSync.OnInsert, DbType = "Int NOT NULL IDENTITY", IsPrimaryKey = true, IsDbGenerated = true)]
-        public int Vendor_ID
-        {
-            get
-            {
-                return this._Vendor_ID;
-            }
-            set
-            {
-                if ((this._Vendor_ID != value))
-                {
-                    this.OnVendor_IDChanging(value);
-                    this.SendPropertyChanging();
-                    this._Vendor_ID = value;
-                    this.SendPropertyChanged("Vendor_ID");
-                    this.OnVendor_IDChanged();
-                }
-            }
-        }
-
-        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_Account_ID", DbType = "Int")]
-        public System.Nullable<int> Account_ID
-        {
-            get
-            {
-                return this._Account_ID;
-            }
-            set
-            {
-                if ((this._Account_ID != value))
-                {
-                    this.OnAccount_IDChanging(value);
-                    this.SendPropertyChanging();
-                    this._Account_ID = value;
-                    this.SendPropertyChanged("Account_ID");
-                    this.OnAccount_IDChanged();
-                }
-            }
-        }
-
-        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_Vendor_Name", DbType = "VarChar(100)")]
-        public string Vendor_Name
-        {
-            get
-            {
-                return this._Vendor_Name;
-            }
-            set
-            {
-                if ((this._Vendor_Name != value))
-                {
-                    this.OnVendor_NameChanging(value);
-                    this.SendPropertyChanging();
-                    this._Vendor_Name = value;
-                    this.SendPropertyChanged("Vendor_Name");
-                    this.OnVendor_NameChanged();
-                }
-            }
-        }
-
-        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_Contact_Person", DbType = "VarChar(100)")]
-        public string Contact_Person
-        {
-            get
-            {
-                return this._Contact_Person;
-            }
-            set
-            {
-                if ((this._Contact_Person != value))
-                {
-                    this.OnContact_PersonChanging(value);
-                    this.SendPropertyChanging();
-                    this._Contact_Person = value;
-                    this.SendPropertyChanged("Contact_Person");
-                    this.OnContact_PersonChanged();
-                }
-            }
-        }
-
-        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_Job_Title", DbType = "VarChar(50)")]
-        public string Job_Title
-        {
-            get
-            {
-                return this._Job_Title;
-            }
-            set
-            {
-                if ((this._Job_Title != value))
-                {
-                    this.OnJob_TitleChanging(value);
-                    this.SendPropertyChanging();
-                    this._Job_Title = value;
-                    this.SendPropertyChanged("Job_Title");
-                    this.OnJob_TitleChanged();
-                }
-            }
-        }
-
-        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_Vendor_Phone1", DbType = "VarChar(50)")]
-        public string Vendor_Phone1
-        {
-            get
-            {
-                return this._Vendor_Phone1;
-            }
-            set
-            {
-                if ((this._Vendor_Phone1 != value))
-                {
-                    this.OnVendor_Phone1Changing(value);
-                    this.SendPropertyChanging();
-                    this._Vendor_Phone1 = value;
-                    this.SendPropertyChanged("Vendor_Phone1");
-                    this.OnVendor_Phone1Changed();
-                }
-            }
-        }
-
-        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_Vendor_Phone2", DbType = "VarChar(50)")]
-        public string Vendor_Phone2
-        {
-            get
-            {
-                return this._Vendor_Phone2;
-            }
-            set
-            {
-                if ((this._Vendor_Phone2 != value))
-                {
-                    this.OnVendor_Phone2Changing(value);
-                    this.SendPropertyChanging();
-                    this._Vendor_Phone2 = value;
-                    this.SendPropertyChanged("Vendor_Phone2");
-                    this.OnVendor_Phone2Changed();
-                }
-            }
-        }
-
-        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_Vendor_Address", DbType = "VarChar(250)")]
-        public string Vendor_Address
-        {
-            get
-            {
-                return this._Vendor_Address;
-            }
-            set
-            {
-                if ((this._Vendor_Address != value))
-                {
-                    this.OnVendor_AddressChanging(value);
-                    this.SendPropertyChanging();
-                    this._Vendor_Address = value;
-                    this.SendPropertyChanged("Vendor_Address");
-                    this.OnVendor_AddressChanged();
-                }
-            }
-        }
-
-        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_City", DbType = "VarChar(10)")]
-        public string City
-        {
-            get
-            {
-                return this._City;
-            }
-            set
-            {
-                if ((this._City != value))
-                {
-                    this.OnCityChanging(value);
-                    this.SendPropertyChanging();
-                    this._City = value;
-                    this.SendPropertyChanged("City");
-                    this.OnCityChanged();
-                }
-            }
-        }
-
-        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_Country", DbType = "VarChar(30)")]
-        public string Country
-        {
-            get
-            {
-                return this._Country;
-            }
-            set
-            {
-                if ((this._Country != value))
-                {
-                    this.OnCountryChanging(value);
-                    this.SendPropertyChanging();
-                    this._Country = value;
-                    this.SendPropertyChanged("Country");
-                    this.OnCountryChanged();
-                }
-            }
-        }
-
-        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_Vendor_Fax", DbType = "VarChar(50)")]
-        public string Vendor_Fax
-        {
-            get
-            {
-                return this._Vendor_Fax;
-            }
-            set
-            {
-                if ((this._Vendor_Fax != value))
-                {
-                    this.OnVendor_FaxChanging(value);
-                    this.SendPropertyChanging();
-                    this._Vendor_Fax = value;
-                    this.SendPropertyChanged("Vendor_Fax");
-                    this.OnVendor_FaxChanged();
-                }
-            }
-        }
-
-        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_Vendor_Email", DbType = "VarChar(100)")]
-        public string Vendor_Email
-        {
-            get
-            {
-                return this._Vendor_Email;
-            }
-            set
-            {
-                if ((this._Vendor_Email != value))
-                {
-                    this.OnVendor_EmailChanging(value);
-                    this.SendPropertyChanging();
-                    this._Vendor_Email = value;
-                    this.SendPropertyChanged("Vendor_Email");
-                    this.OnVendor_EmailChanged();
-                }
-            }
-        }
-
-        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_Vendor_Website", DbType = "VarChar(50)")]
-        public string Vendor_Website
-        {
-            get
-            {
-                return this._Vendor_Website;
-            }
-            set
-            {
-                if ((this._Vendor_Website != value))
-                {
-                    this.OnVendor_WebsiteChanging(value);
-                    this.SendPropertyChanging();
-                    this._Vendor_Website = value;
-                    this.SendPropertyChanged("Vendor_Website");
-                    this.OnVendor_WebsiteChanged();
-                }
-            }
-        }
-
-        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_Vendor_Sales_TaxNo", DbType = "VarChar(50)")]
-        public string Vendor_Sales_TaxNo
-        {
-            get
-            {
-                return this._Vendor_Sales_TaxNo;
-            }
-            set
-            {
-                if ((this._Vendor_Sales_TaxNo != value))
-                {
-                    this.OnVendor_Sales_TaxNoChanging(value);
-                    this.SendPropertyChanging();
-                    this._Vendor_Sales_TaxNo = value;
-                    this.SendPropertyChanged("Vendor_Sales_TaxNo");
-                    this.OnVendor_Sales_TaxNoChanged();
-                }
-            }
-        }
-
-        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_Vendor_NTN", DbType = "VarChar(50)")]
-        public string Vendor_NTN
-        {
-            get
-            {
-                return this._Vendor_NTN;
-            }
-            set
-            {
-                if ((this._Vendor_NTN != value))
-                {
-                    this.OnVendor_NTNChanging(value);
-                    this.SendPropertyChanging();
-                    this._Vendor_NTN = value;
-                    this.SendPropertyChanged("Vendor_NTN");
-                    this.OnVendor_NTNChanged();
-                }
-            }
-        }
-
-        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_Remarks", DbType = "VarChar(200)")]
-        public string Remarks
-        {
-            get
-            {
-                return this._Remarks;
-            }
-            set
-            {
-                if ((this._Remarks != value))
-                {
-                    this.OnRemarksChanging(value);
-                    this.SendPropertyChanging();
-                    this._Remarks = value;
-                    this.SendPropertyChanged("Remarks");
-                    this.OnRemarksChanged();
-                }
-            }
-        }
-
-        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_Book_ID", DbType = "Int")]
-        public System.Nullable<int> Book_ID
-        {
-            get
-            {
-                return this._Book_ID;
-            }
-            set
-            {
-                if ((this._Book_ID != value))
-                {
-                    this.OnBook_IDChanging(value);
-                    this.SendPropertyChanging();
-                    this._Book_ID = value;
-                    this.SendPropertyChanged("Book_ID");
-                    this.OnBook_IDChanged();
-                }
-            }
-        }
-
-        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_Company_ID", DbType = "Int")]
-        public System.Nullable<int> Company_ID
-        {
-            get
-            {
-                return this._Company_ID;
-            }
-            set
-            {
-                if ((this._Company_ID != value))
-                {
-                    this.OnCompany_IDChanging(value);
-                    this.SendPropertyChanging();
-                    this._Company_ID = value;
-                    this.SendPropertyChanged("Company_ID");
-                    this.OnCompany_IDChanged();
-                }
-            }
-        }
-
-        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_Zip_Code", DbType = "VarChar(100)")]
-        public string Zip_Code
-        {
-            get
-            {
-                return this._Zip_Code;
-            }
-            set
-            {
-                if ((this._Zip_Code != value))
-                {
-                    this.OnZip_CodeChanging(value);
-                    this.SendPropertyChanging();
-                    this._Zip_Code = value;
-                    this.SendPropertyChanged("Zip_Code");
-                    this.OnZip_CodeChanged();
-                }
-            }
-        }
-
-        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_Bank_Account_No", DbType = "VarChar(100)")]
-        public string Bank_Account_No
-        {
-            get
-            {
-                return this._Bank_Account_No;
-            }
-            set
-            {
-                if ((this._Bank_Account_No != value))
-                {
-                    this.OnBank_Account_NoChanging(value);
-                    this.SendPropertyChanging();
-                    this._Bank_Account_No = value;
-                    this.SendPropertyChanged("Bank_Account_No");
-                    this.OnBank_Account_NoChanged();
-                }
-            }
-        }
-
-        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_IsActive", DbType = "Bit")]
-        public System.Nullable<bool> IsActive
-        {
-            get
-            {
-                return this._IsActive;
-            }
-            set
-            {
-                if ((this._IsActive != value))
-                {
-                    this.OnIsActiveChanging(value);
-                    this.SendPropertyChanging();
-                    this._IsActive = value;
-                    this.SendPropertyChanged("IsActive");
-                    this.OnIsActiveChanged();
-                }
-            }
-        }
-
-        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_VendorType", DbType = "VarChar(50)")]
-        public string VendorType
-        {
-            get
-            {
-                return this._VendorType;
-            }
-            set
-            {
-                if ((this._VendorType != value))
-                {
-                    this.OnVendorTypeChanging(value);
-                    this.SendPropertyChanging();
-                    this._VendorType = value;
-                    this.SendPropertyChanged("VendorType");
-                    this.OnVendorTypeChanged();
-                }
-            }
-        }
-
-        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_CreditDays", DbType = "VarChar(50)")]
-        public string CreditDays
-        {
-            get
-            {
-                return this._CreditDays;
-            }
-            set
-            {
-                if ((this._CreditDays != value))
-                {
-                    this.OnCreditDaysChanging(value);
-                    this.SendPropertyChanging();
-                    this._CreditDays = value;
-                    this.SendPropertyChanged("CreditDays");
-                    this.OnCreditDaysChanged();
-                }
-            }
-        }
-
-        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_Region", DbType = "VarChar(50)")]
-        public string Region
-        {
-            get
-            {
-                return this._Region;
-            }
-            set
-            {
-                if ((this._Region != value))
-                {
-                    this.OnRegionChanging(value);
-                    this.SendPropertyChanging();
-                    this._Region = value;
-                    this.SendPropertyChanged("Region");
-                    this.OnRegionChanged();
-                }
-            }
-        }
-
-        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_MobNo", DbType = "VarChar(50)")]
-        public string MobNo
-        {
-            get
-            {
-                return this._MobNo;
-            }
-            set
-            {
-                if ((this._MobNo != value))
-                {
-                    this.OnMobNoChanging(value);
-                    this.SendPropertyChanging();
-                    this._MobNo = value;
-                    this.SendPropertyChanged("MobNo");
-                    this.OnMobNoChanged();
-                }
-            }
-        }
-
-        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_Vendor_STN", DbType = "VarChar(50)")]
-        public string Vendor_STN
-        {
-            get
-            {
-                return this._Vendor_STN;
-            }
-            set
-            {
-                if ((this._Vendor_STN != value))
-                {
-                    this.OnVendor_STNChanging(value);
-                    this.SendPropertyChanging();
-                    this._Vendor_STN = value;
-                    this.SendPropertyChanged("Vendor_STN");
-                    this.OnVendor_STNChanged();
-                }
-            }
-        }
-
-        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_Cnic", DbType = "VarChar(50)")]
-        public string Cnic
-        {
-            get
-            {
-                return this._Cnic;
-            }
-            set
-            {
-                if ((this._Cnic != value))
-                {
-                    this.OnCnicChanging(value);
-                    this.SendPropertyChanging();
-                    this._Cnic = value;
-                    this.SendPropertyChanged("Cnic");
-                    this.OnCnicChanged();
-                }
-            }
-        }
-
-        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_TaxPayerTyp", DbType = "VarChar(50)")]
-        public string TaxPayerTyp
-        {
-            get
-            {
-                return this._TaxPayerTyp;
-            }
-            set
-            {
-                if ((this._TaxPayerTyp != value))
-                {
-                    this.OnTaxPayerTypChanging(value);
-                    this.SendPropertyChanging();
-                    this._TaxPayerTyp = value;
-                    this.SendPropertyChanged("TaxPayerTyp");
-                    this.OnTaxPayerTypChanged();
-                }
-            }
-        }
-
-        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_Vendor_Code", DbType = "Int")]
-        public System.Nullable<int> Vendor_Code
-        {
-            get
-            {
-                return this._Vendor_Code;
-            }
-            set
-            {
-                if ((this._Vendor_Code != value))
-                {
-                    this.OnVendor_CodeChanging(value);
-                    this.SendPropertyChanging();
-                    this._Vendor_Code = value;
-                    this.SendPropertyChanged("Vendor_Code");
-                    this.OnVendor_CodeChanged();
-                }
-            }
-        }
-
-        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_Ismanual", DbType = "Bit")]
-        public System.Nullable<bool> Ismanual
-        {
-            get
-            {
-                return this._Ismanual;
-            }
-            set
-            {
-                if ((this._Ismanual != value))
-                {
-                    this.OnIsmanualChanging(value);
-                    this.SendPropertyChanging();
-                    this._Ismanual = value;
-                    this.SendPropertyChanged("Ismanual");
-                    this.OnIsmanualChanged();
-                }
-            }
-        }
-
-        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_CompanyType_Id", DbType = "VarChar(50)")]
-        public string CompanyType_Id
-        {
-            get
-            {
-                return this._CompanyType_Id;
-            }
-            set
-            {
-                if ((this._CompanyType_Id != value))
-                {
-                    this.OnCompanyType_IdChanging(value);
-                    this.SendPropertyChanging();
-                    this._CompanyType_Id = value;
-                    this.SendPropertyChanged("CompanyType_Id");
-                    this.OnCompanyType_IdChanged();
-                }
-            }
-        }
-
-        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_DrugLicenceNo", DbType = "NVarChar(250)")]
-        public string DrugLicenceNo
-        {
-            get
-            {
-                return this._DrugLicenceNo;
-            }
-            set
-            {
-                if ((this._DrugLicenceNo != value))
-                {
-                    this.OnDrugLicenceNoChanging(value);
-                    this.SendPropertyChanging();
-                    this._DrugLicenceNo = value;
-                    this.SendPropertyChanged("DrugLicenceNo");
-                    this.OnDrugLicenceNoChanged();
                 }
             }
         }
@@ -183160,6 +182354,836 @@ namespace PMS
                     this._is_DirtGRN = value;
                     this.SendPropertyChanged("is_DirtGRN");
                     this.Onis_DirtGRNChanged();
+                }
+            }
+        }
+
+        public event PropertyChangingEventHandler PropertyChanging;
+
+        public event PropertyChangedEventHandler PropertyChanged;
+
+        protected virtual void SendPropertyChanging()
+        {
+            if ((this.PropertyChanging != null))
+            {
+                this.PropertyChanging(this, emptyChangingEventArgs);
+            }
+        }
+
+        protected virtual void SendPropertyChanged(String propertyName)
+        {
+            if ((this.PropertyChanged != null))
+            {
+                this.PropertyChanged(this, new PropertyChangedEventArgs(propertyName));
+            }
+        }
+    }
+
+    [global::System.Data.Linq.Mapping.TableAttribute(Name = "dbo.AP_Vendors")]
+    public partial class AP_Vendor : INotifyPropertyChanging, INotifyPropertyChanged
+    {
+
+        private static PropertyChangingEventArgs emptyChangingEventArgs = new PropertyChangingEventArgs(String.Empty);
+
+        private int _Vendor_ID;
+
+        private System.Nullable<int> _Account_ID;
+
+        private string _Vendor_Name;
+
+        private string _Contact_Person;
+
+        private string _Job_Title;
+
+        private string _Vendor_Phone1;
+
+        private string _Vendor_Phone2;
+
+        private string _Vendor_Address;
+
+        private string _City;
+
+        private string _Country;
+
+        private string _Vendor_Fax;
+
+        private string _Vendor_Email;
+
+        private string _Vendor_Website;
+
+        private string _Vendor_Sales_TaxNo;
+
+        private string _Vendor_NTN;
+
+        private string _Remarks;
+
+        private System.Nullable<int> _Book_ID;
+
+        private System.Nullable<int> _Company_ID;
+
+        private string _Zip_Code;
+
+        private string _Bank_Account_No;
+
+        private System.Nullable<bool> _IsActive;
+
+        private string _VendorType;
+
+        private string _CreditDays;
+
+        private string _Region;
+
+        private string _MobNo;
+
+        private string _Vendor_STN;
+
+        private string _Cnic;
+
+        private string _TaxPayerTyp;
+
+        private System.Nullable<int> _Vendor_Code;
+
+        private System.Nullable<bool> _Ismanual;
+
+        private string _DrugLicenceNo;
+
+        private string _CompanyType_Id;
+
+        private string _manufacture_id;
+
+        #region Extensibility Method Definitions
+        partial void OnLoaded();
+        partial void OnValidate(System.Data.Linq.ChangeAction action);
+        partial void OnCreated();
+        partial void OnVendor_IDChanging(int value);
+        partial void OnVendor_IDChanged();
+        partial void OnAccount_IDChanging(System.Nullable<int> value);
+        partial void OnAccount_IDChanged();
+        partial void OnVendor_NameChanging(string value);
+        partial void OnVendor_NameChanged();
+        partial void OnContact_PersonChanging(string value);
+        partial void OnContact_PersonChanged();
+        partial void OnJob_TitleChanging(string value);
+        partial void OnJob_TitleChanged();
+        partial void OnVendor_Phone1Changing(string value);
+        partial void OnVendor_Phone1Changed();
+        partial void OnVendor_Phone2Changing(string value);
+        partial void OnVendor_Phone2Changed();
+        partial void OnVendor_AddressChanging(string value);
+        partial void OnVendor_AddressChanged();
+        partial void OnCityChanging(string value);
+        partial void OnCityChanged();
+        partial void OnCountryChanging(string value);
+        partial void OnCountryChanged();
+        partial void OnVendor_FaxChanging(string value);
+        partial void OnVendor_FaxChanged();
+        partial void OnVendor_EmailChanging(string value);
+        partial void OnVendor_EmailChanged();
+        partial void OnVendor_WebsiteChanging(string value);
+        partial void OnVendor_WebsiteChanged();
+        partial void OnVendor_Sales_TaxNoChanging(string value);
+        partial void OnVendor_Sales_TaxNoChanged();
+        partial void OnVendor_NTNChanging(string value);
+        partial void OnVendor_NTNChanged();
+        partial void OnRemarksChanging(string value);
+        partial void OnRemarksChanged();
+        partial void OnBook_IDChanging(System.Nullable<int> value);
+        partial void OnBook_IDChanged();
+        partial void OnCompany_IDChanging(System.Nullable<int> value);
+        partial void OnCompany_IDChanged();
+        partial void OnZip_CodeChanging(string value);
+        partial void OnZip_CodeChanged();
+        partial void OnBank_Account_NoChanging(string value);
+        partial void OnBank_Account_NoChanged();
+        partial void OnIsActiveChanging(System.Nullable<bool> value);
+        partial void OnIsActiveChanged();
+        partial void OnVendorTypeChanging(string value);
+        partial void OnVendorTypeChanged();
+        partial void OnCreditDaysChanging(string value);
+        partial void OnCreditDaysChanged();
+        partial void OnRegionChanging(string value);
+        partial void OnRegionChanged();
+        partial void OnMobNoChanging(string value);
+        partial void OnMobNoChanged();
+        partial void OnVendor_STNChanging(string value);
+        partial void OnVendor_STNChanged();
+        partial void OnCnicChanging(string value);
+        partial void OnCnicChanged();
+        partial void OnTaxPayerTypChanging(string value);
+        partial void OnTaxPayerTypChanged();
+        partial void OnVendor_CodeChanging(System.Nullable<int> value);
+        partial void OnVendor_CodeChanged();
+        partial void OnIsmanualChanging(System.Nullable<bool> value);
+        partial void OnIsmanualChanged();
+        partial void OnDrugLicenceNoChanging(string value);
+        partial void OnDrugLicenceNoChanged();
+        partial void OnCompanyType_IdChanging(string value);
+        partial void OnCompanyType_IdChanged();
+        partial void Onmanufacture_idChanging(string value);
+        partial void Onmanufacture_idChanged();
+        #endregion
+
+        public AP_Vendor()
+        {
+            OnCreated();
+        }
+
+        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_Vendor_ID", AutoSync = AutoSync.OnInsert, DbType = "Int NOT NULL IDENTITY", IsPrimaryKey = true, IsDbGenerated = true)]
+        public int Vendor_ID
+        {
+            get
+            {
+                return this._Vendor_ID;
+            }
+            set
+            {
+                if ((this._Vendor_ID != value))
+                {
+                    this.OnVendor_IDChanging(value);
+                    this.SendPropertyChanging();
+                    this._Vendor_ID = value;
+                    this.SendPropertyChanged("Vendor_ID");
+                    this.OnVendor_IDChanged();
+                }
+            }
+        }
+
+        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_Account_ID", DbType = "Int")]
+        public System.Nullable<int> Account_ID
+        {
+            get
+            {
+                return this._Account_ID;
+            }
+            set
+            {
+                if ((this._Account_ID != value))
+                {
+                    this.OnAccount_IDChanging(value);
+                    this.SendPropertyChanging();
+                    this._Account_ID = value;
+                    this.SendPropertyChanged("Account_ID");
+                    this.OnAccount_IDChanged();
+                }
+            }
+        }
+
+        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_Vendor_Name", DbType = "VarChar(100)")]
+        public string Vendor_Name
+        {
+            get
+            {
+                return this._Vendor_Name;
+            }
+            set
+            {
+                if ((this._Vendor_Name != value))
+                {
+                    this.OnVendor_NameChanging(value);
+                    this.SendPropertyChanging();
+                    this._Vendor_Name = value;
+                    this.SendPropertyChanged("Vendor_Name");
+                    this.OnVendor_NameChanged();
+                }
+            }
+        }
+
+        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_Contact_Person", DbType = "VarChar(100)")]
+        public string Contact_Person
+        {
+            get
+            {
+                return this._Contact_Person;
+            }
+            set
+            {
+                if ((this._Contact_Person != value))
+                {
+                    this.OnContact_PersonChanging(value);
+                    this.SendPropertyChanging();
+                    this._Contact_Person = value;
+                    this.SendPropertyChanged("Contact_Person");
+                    this.OnContact_PersonChanged();
+                }
+            }
+        }
+
+        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_Job_Title", DbType = "VarChar(50)")]
+        public string Job_Title
+        {
+            get
+            {
+                return this._Job_Title;
+            }
+            set
+            {
+                if ((this._Job_Title != value))
+                {
+                    this.OnJob_TitleChanging(value);
+                    this.SendPropertyChanging();
+                    this._Job_Title = value;
+                    this.SendPropertyChanged("Job_Title");
+                    this.OnJob_TitleChanged();
+                }
+            }
+        }
+
+        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_Vendor_Phone1", DbType = "VarChar(50)")]
+        public string Vendor_Phone1
+        {
+            get
+            {
+                return this._Vendor_Phone1;
+            }
+            set
+            {
+                if ((this._Vendor_Phone1 != value))
+                {
+                    this.OnVendor_Phone1Changing(value);
+                    this.SendPropertyChanging();
+                    this._Vendor_Phone1 = value;
+                    this.SendPropertyChanged("Vendor_Phone1");
+                    this.OnVendor_Phone1Changed();
+                }
+            }
+        }
+
+        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_Vendor_Phone2", DbType = "VarChar(50)")]
+        public string Vendor_Phone2
+        {
+            get
+            {
+                return this._Vendor_Phone2;
+            }
+            set
+            {
+                if ((this._Vendor_Phone2 != value))
+                {
+                    this.OnVendor_Phone2Changing(value);
+                    this.SendPropertyChanging();
+                    this._Vendor_Phone2 = value;
+                    this.SendPropertyChanged("Vendor_Phone2");
+                    this.OnVendor_Phone2Changed();
+                }
+            }
+        }
+
+        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_Vendor_Address", DbType = "VarChar(250)")]
+        public string Vendor_Address
+        {
+            get
+            {
+                return this._Vendor_Address;
+            }
+            set
+            {
+                if ((this._Vendor_Address != value))
+                {
+                    this.OnVendor_AddressChanging(value);
+                    this.SendPropertyChanging();
+                    this._Vendor_Address = value;
+                    this.SendPropertyChanged("Vendor_Address");
+                    this.OnVendor_AddressChanged();
+                }
+            }
+        }
+
+        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_City", DbType = "VarChar(10)")]
+        public string City
+        {
+            get
+            {
+                return this._City;
+            }
+            set
+            {
+                if ((this._City != value))
+                {
+                    this.OnCityChanging(value);
+                    this.SendPropertyChanging();
+                    this._City = value;
+                    this.SendPropertyChanged("City");
+                    this.OnCityChanged();
+                }
+            }
+        }
+
+        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_Country", DbType = "VarChar(30)")]
+        public string Country
+        {
+            get
+            {
+                return this._Country;
+            }
+            set
+            {
+                if ((this._Country != value))
+                {
+                    this.OnCountryChanging(value);
+                    this.SendPropertyChanging();
+                    this._Country = value;
+                    this.SendPropertyChanged("Country");
+                    this.OnCountryChanged();
+                }
+            }
+        }
+
+        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_Vendor_Fax", DbType = "VarChar(50)")]
+        public string Vendor_Fax
+        {
+            get
+            {
+                return this._Vendor_Fax;
+            }
+            set
+            {
+                if ((this._Vendor_Fax != value))
+                {
+                    this.OnVendor_FaxChanging(value);
+                    this.SendPropertyChanging();
+                    this._Vendor_Fax = value;
+                    this.SendPropertyChanged("Vendor_Fax");
+                    this.OnVendor_FaxChanged();
+                }
+            }
+        }
+
+        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_Vendor_Email", DbType = "VarChar(100)")]
+        public string Vendor_Email
+        {
+            get
+            {
+                return this._Vendor_Email;
+            }
+            set
+            {
+                if ((this._Vendor_Email != value))
+                {
+                    this.OnVendor_EmailChanging(value);
+                    this.SendPropertyChanging();
+                    this._Vendor_Email = value;
+                    this.SendPropertyChanged("Vendor_Email");
+                    this.OnVendor_EmailChanged();
+                }
+            }
+        }
+
+        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_Vendor_Website", DbType = "VarChar(50)")]
+        public string Vendor_Website
+        {
+            get
+            {
+                return this._Vendor_Website;
+            }
+            set
+            {
+                if ((this._Vendor_Website != value))
+                {
+                    this.OnVendor_WebsiteChanging(value);
+                    this.SendPropertyChanging();
+                    this._Vendor_Website = value;
+                    this.SendPropertyChanged("Vendor_Website");
+                    this.OnVendor_WebsiteChanged();
+                }
+            }
+        }
+
+        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_Vendor_Sales_TaxNo", DbType = "VarChar(50)")]
+        public string Vendor_Sales_TaxNo
+        {
+            get
+            {
+                return this._Vendor_Sales_TaxNo;
+            }
+            set
+            {
+                if ((this._Vendor_Sales_TaxNo != value))
+                {
+                    this.OnVendor_Sales_TaxNoChanging(value);
+                    this.SendPropertyChanging();
+                    this._Vendor_Sales_TaxNo = value;
+                    this.SendPropertyChanged("Vendor_Sales_TaxNo");
+                    this.OnVendor_Sales_TaxNoChanged();
+                }
+            }
+        }
+
+        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_Vendor_NTN", DbType = "VarChar(50)")]
+        public string Vendor_NTN
+        {
+            get
+            {
+                return this._Vendor_NTN;
+            }
+            set
+            {
+                if ((this._Vendor_NTN != value))
+                {
+                    this.OnVendor_NTNChanging(value);
+                    this.SendPropertyChanging();
+                    this._Vendor_NTN = value;
+                    this.SendPropertyChanged("Vendor_NTN");
+                    this.OnVendor_NTNChanged();
+                }
+            }
+        }
+
+        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_Remarks", DbType = "VarChar(200)")]
+        public string Remarks
+        {
+            get
+            {
+                return this._Remarks;
+            }
+            set
+            {
+                if ((this._Remarks != value))
+                {
+                    this.OnRemarksChanging(value);
+                    this.SendPropertyChanging();
+                    this._Remarks = value;
+                    this.SendPropertyChanged("Remarks");
+                    this.OnRemarksChanged();
+                }
+            }
+        }
+
+        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_Book_ID", DbType = "Int")]
+        public System.Nullable<int> Book_ID
+        {
+            get
+            {
+                return this._Book_ID;
+            }
+            set
+            {
+                if ((this._Book_ID != value))
+                {
+                    this.OnBook_IDChanging(value);
+                    this.SendPropertyChanging();
+                    this._Book_ID = value;
+                    this.SendPropertyChanged("Book_ID");
+                    this.OnBook_IDChanged();
+                }
+            }
+        }
+
+        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_Company_ID", DbType = "Int")]
+        public System.Nullable<int> Company_ID
+        {
+            get
+            {
+                return this._Company_ID;
+            }
+            set
+            {
+                if ((this._Company_ID != value))
+                {
+                    this.OnCompany_IDChanging(value);
+                    this.SendPropertyChanging();
+                    this._Company_ID = value;
+                    this.SendPropertyChanged("Company_ID");
+                    this.OnCompany_IDChanged();
+                }
+            }
+        }
+
+        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_Zip_Code", DbType = "VarChar(100)")]
+        public string Zip_Code
+        {
+            get
+            {
+                return this._Zip_Code;
+            }
+            set
+            {
+                if ((this._Zip_Code != value))
+                {
+                    this.OnZip_CodeChanging(value);
+                    this.SendPropertyChanging();
+                    this._Zip_Code = value;
+                    this.SendPropertyChanged("Zip_Code");
+                    this.OnZip_CodeChanged();
+                }
+            }
+        }
+
+        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_Bank_Account_No", DbType = "VarChar(100)")]
+        public string Bank_Account_No
+        {
+            get
+            {
+                return this._Bank_Account_No;
+            }
+            set
+            {
+                if ((this._Bank_Account_No != value))
+                {
+                    this.OnBank_Account_NoChanging(value);
+                    this.SendPropertyChanging();
+                    this._Bank_Account_No = value;
+                    this.SendPropertyChanged("Bank_Account_No");
+                    this.OnBank_Account_NoChanged();
+                }
+            }
+        }
+
+        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_IsActive", DbType = "Bit")]
+        public System.Nullable<bool> IsActive
+        {
+            get
+            {
+                return this._IsActive;
+            }
+            set
+            {
+                if ((this._IsActive != value))
+                {
+                    this.OnIsActiveChanging(value);
+                    this.SendPropertyChanging();
+                    this._IsActive = value;
+                    this.SendPropertyChanged("IsActive");
+                    this.OnIsActiveChanged();
+                }
+            }
+        }
+
+        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_VendorType", DbType = "VarChar(50)")]
+        public string VendorType
+        {
+            get
+            {
+                return this._VendorType;
+            }
+            set
+            {
+                if ((this._VendorType != value))
+                {
+                    this.OnVendorTypeChanging(value);
+                    this.SendPropertyChanging();
+                    this._VendorType = value;
+                    this.SendPropertyChanged("VendorType");
+                    this.OnVendorTypeChanged();
+                }
+            }
+        }
+
+        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_CreditDays", DbType = "VarChar(50)")]
+        public string CreditDays
+        {
+            get
+            {
+                return this._CreditDays;
+            }
+            set
+            {
+                if ((this._CreditDays != value))
+                {
+                    this.OnCreditDaysChanging(value);
+                    this.SendPropertyChanging();
+                    this._CreditDays = value;
+                    this.SendPropertyChanged("CreditDays");
+                    this.OnCreditDaysChanged();
+                }
+            }
+        }
+
+        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_Region", DbType = "VarChar(50)")]
+        public string Region
+        {
+            get
+            {
+                return this._Region;
+            }
+            set
+            {
+                if ((this._Region != value))
+                {
+                    this.OnRegionChanging(value);
+                    this.SendPropertyChanging();
+                    this._Region = value;
+                    this.SendPropertyChanged("Region");
+                    this.OnRegionChanged();
+                }
+            }
+        }
+
+        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_MobNo", DbType = "VarChar(50)")]
+        public string MobNo
+        {
+            get
+            {
+                return this._MobNo;
+            }
+            set
+            {
+                if ((this._MobNo != value))
+                {
+                    this.OnMobNoChanging(value);
+                    this.SendPropertyChanging();
+                    this._MobNo = value;
+                    this.SendPropertyChanged("MobNo");
+                    this.OnMobNoChanged();
+                }
+            }
+        }
+
+        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_Vendor_STN", DbType = "VarChar(50)")]
+        public string Vendor_STN
+        {
+            get
+            {
+                return this._Vendor_STN;
+            }
+            set
+            {
+                if ((this._Vendor_STN != value))
+                {
+                    this.OnVendor_STNChanging(value);
+                    this.SendPropertyChanging();
+                    this._Vendor_STN = value;
+                    this.SendPropertyChanged("Vendor_STN");
+                    this.OnVendor_STNChanged();
+                }
+            }
+        }
+
+        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_Cnic", DbType = "VarChar(50)")]
+        public string Cnic
+        {
+            get
+            {
+                return this._Cnic;
+            }
+            set
+            {
+                if ((this._Cnic != value))
+                {
+                    this.OnCnicChanging(value);
+                    this.SendPropertyChanging();
+                    this._Cnic = value;
+                    this.SendPropertyChanged("Cnic");
+                    this.OnCnicChanged();
+                }
+            }
+        }
+
+        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_TaxPayerTyp", DbType = "VarChar(50)")]
+        public string TaxPayerTyp
+        {
+            get
+            {
+                return this._TaxPayerTyp;
+            }
+            set
+            {
+                if ((this._TaxPayerTyp != value))
+                {
+                    this.OnTaxPayerTypChanging(value);
+                    this.SendPropertyChanging();
+                    this._TaxPayerTyp = value;
+                    this.SendPropertyChanged("TaxPayerTyp");
+                    this.OnTaxPayerTypChanged();
+                }
+            }
+        }
+
+        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_Vendor_Code", DbType = "Int")]
+        public System.Nullable<int> Vendor_Code
+        {
+            get
+            {
+                return this._Vendor_Code;
+            }
+            set
+            {
+                if ((this._Vendor_Code != value))
+                {
+                    this.OnVendor_CodeChanging(value);
+                    this.SendPropertyChanging();
+                    this._Vendor_Code = value;
+                    this.SendPropertyChanged("Vendor_Code");
+                    this.OnVendor_CodeChanged();
+                }
+            }
+        }
+
+        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_Ismanual", DbType = "Bit")]
+        public System.Nullable<bool> Ismanual
+        {
+            get
+            {
+                return this._Ismanual;
+            }
+            set
+            {
+                if ((this._Ismanual != value))
+                {
+                    this.OnIsmanualChanging(value);
+                    this.SendPropertyChanging();
+                    this._Ismanual = value;
+                    this.SendPropertyChanged("Ismanual");
+                    this.OnIsmanualChanged();
+                }
+            }
+        }
+
+        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_DrugLicenceNo", DbType = "NVarChar(250)")]
+        public string DrugLicenceNo
+        {
+            get
+            {
+                return this._DrugLicenceNo;
+            }
+            set
+            {
+                if ((this._DrugLicenceNo != value))
+                {
+                    this.OnDrugLicenceNoChanging(value);
+                    this.SendPropertyChanging();
+                    this._DrugLicenceNo = value;
+                    this.SendPropertyChanged("DrugLicenceNo");
+                    this.OnDrugLicenceNoChanged();
+                }
+            }
+        }
+
+        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_CompanyType_Id", DbType = "VarChar(50)")]
+        public string CompanyType_Id
+        {
+            get
+            {
+                return this._CompanyType_Id;
+            }
+            set
+            {
+                if ((this._CompanyType_Id != value))
+                {
+                    this.OnCompanyType_IdChanging(value);
+                    this.SendPropertyChanging();
+                    this._CompanyType_Id = value;
+                    this.SendPropertyChanged("CompanyType_Id");
+                    this.OnCompanyType_IdChanged();
+                }
+            }
+        }
+
+        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_manufacture_id", DbType = "NVarChar(150)")]
+        public string manufacture_id
+        {
+            get
+            {
+                return this._manufacture_id;
+            }
+            set
+            {
+                if ((this._manufacture_id != value))
+                {
+                    this.Onmanufacture_idChanging(value);
+                    this.SendPropertyChanging();
+                    this._manufacture_id = value;
+                    this.SendPropertyChanged("manufacture_id");
+                    this.Onmanufacture_idChanged();
                 }
             }
         }
