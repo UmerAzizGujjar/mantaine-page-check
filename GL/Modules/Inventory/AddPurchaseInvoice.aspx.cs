@@ -182,7 +182,15 @@ namespace PMS.Inventory
 
             return code;
         }
-
+        [WebMethod]
+        public static string AllowDirectGRN()
+        {
+            DataBaseDataContext db = new DataBaseDataContext(DBClass.ConnectionString());
+            var code = (from data in db.sys_Parms
+                        where data.Name == "DirectGRN"
+                        select data.Code).FirstOrDefault();
+            return (new JavaScriptSerializer()).Serialize(code);
+        }
         [WebMethod]
         public static string getGRNDetailByVendorId(string vendorId,bool Is_Direct)
         {
