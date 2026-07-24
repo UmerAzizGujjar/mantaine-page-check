@@ -49,7 +49,7 @@ namespace PMS.Modules.Inventory
         }
 
         [WebMethod]
-        public static object ViewList(int draw, int start, int length, string sortColumn, string sortColumnDirection, string searchValue)
+        public static object ViewList(int draw, int start, int length, string sortColumn, string sortColumnDirection, string searchValue, string filterStatus = "all")
         {
             try
             {
@@ -61,8 +61,6 @@ namespace PMS.Modules.Inventory
                     var inv_Items = from I in _dbContext.INV_Items
                                     where I.Item_Type != null
                                     && I.Services == true
-                                    &&
-                                       ((I.Item_Code.ToString().Contains(searchValue) || I.Description.ToString().Contains(searchValue)))
                                     select new
                                     {
                                         Item_ID = I.Item_ID,
@@ -75,8 +73,9 @@ namespace PMS.Modules.Inventory
                                                            where a.Account_Category_Id == I.Item_Account_category
                                                            select new { category = a.CategoryName }).FirstOrDefault().category.ToString(),
                                         AccountID = (from a in _dbContext.GL_Accounts
-                                                           where a.Account_ID == I.Account_ID
-                                                           select new { Account = a.Account_Name }).FirstOrDefault().Account.ToString(),
+                                                     where a.Account_ID == I.Account_ID
+                                                     select new { Account = a.Account_Name }).FirstOrDefault().Account.ToString(),
+                                        Account_ID = I.Account_ID, 
                                         PurchaseRate = I.Purchase_Rate ?? 0,
                                         SaleRate = I.Sale_Rate ?? 0,
                                         Active = I.Active ?? false,
@@ -84,15 +83,32 @@ namespace PMS.Modules.Inventory
                                         Service_Sub_Category = _dbContext.GetDataValueName("Service Sub Category", I.Service_Sub_Category) ?? "",
                                         StockTotal = (_dbContext.GetInvenrtoryItemUomTotalStock(I.Item_ID, I.InventoryOrg))
                                     };
+                    if (filterStatus == "mapped")
+                    {
+                        inv_Items = inv_Items.Where(i => i.Account_ID != null && i.Account_ID > 0);
+                    }
+                    else if (filterStatus == "unmapped")
+                    {
+                        inv_Items = inv_Items.Where(i => i.Account_ID == null || i.Account_ID == 0);
+                    }
+                    if (!string.IsNullOrEmpty(searchValue))
+                    {
+                        inv_Items = inv_Items.Where(i =>
+                            i.ItemCode.ToString().Contains(searchValue) ||
+                            i.ItemName.ToString().Contains(searchValue) ||
+                            i.AccountID.ToString().Contains(searchValue) ||
+                            i.ItemType.ToString().Contains(searchValue) ||
+                            i.AccountCategory.ToString().Contains(searchValue) ||
+                            i.Service_Sub_Category.ToString().Contains(searchValue));
+                    }
 
                     var FilteredCount = inv_Items.Count();
                     if (length == -1 || length > 100000)
                     {
                         start = 0;
-                        length = FilteredCount; 
-                                                
-                                           
+                        length = FilteredCount;
                     }
+
                     switch (sortColumn)
                     {
                         case "ItemCode":
@@ -177,6 +193,25 @@ namespace PMS.Modules.Inventory
             {
                 throw;
             }
+        }
+
+        [WebMethod]
+        public static void SavePageState(int pageIndex)
+        {
+            if (HttpContext.Current.Session != null)
+            {
+                HttpContext.Current.Session["ServiceView_PageIndex"] = pageIndex;
+            }
+        }
+
+        [WebMethod]
+        public static int GetPageState()
+        {
+            if (HttpContext.Current.Session != null && HttpContext.Current.Session["ServiceView_PageIndex"] != null)
+            {
+                return Convert.ToInt32(HttpContext.Current.Session["ServiceView_PageIndex"]);
+            }
+            return 0; 
         }
     }
 }

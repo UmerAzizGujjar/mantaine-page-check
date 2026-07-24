@@ -33,6 +33,26 @@
 
         function LoadPage() {
             let savedVisibility = null;
+            let savedPageIndex = 0;
+            let filterValue = 'all';
+
+            // Load saved filter
+            $.ajax({
+                type: "POST",
+                url: "ServiceView.aspx/GetFilterState",
+                contentType: "application/json; charset=utf-8",
+                dataType: "json",
+                async: false,
+                success: function (response) {
+                    if (response.d !== null && response.d !== undefined) {
+                        filterValue = response.d;
+                        $('#filterStatus').val(filterValue);
+                    }
+                },
+                error: function () {
+                    console.error("Failed to load filter state");
+                }
+            });
 
             $.ajax({
                 type: "POST",
@@ -53,14 +73,39 @@
                     console.error("Failed to load column preferences");
                 }
             });
+            $.ajax({
+                type: "POST",
+                url: "ServiceView.aspx/GetPageState",
+                contentType: "application/json; charset=utf-8",
+                dataType: "json",
+                async: false,
+                success: function (response) {
+                    if (response.d !== null && response.d !== undefined) {
+                        savedPageIndex = response.d;
+                    }
+                },
+                error: function () {
+                    console.error("Failed to load page state");
+                }
+            });
+
             $("#example").DataTable({
                 "processing": true,
                 "serverSide": true,
                 "dom": 'lBfrtip',
                 "lengthChange": true,
                 "pageLength": 50,
+                "displayStart": savedPageIndex * 50,
                 "lengthMenu": [[10, 25, 50, 100, -1], [10, 25, 50, 100, "All"]],
-                "buttons": [{ text: 'Add', className: 'dt-button buttons-copy buttons-html5', action: function () { window.location = 'Service.aspx'; } }, 'copy', 'excel', 'pdf',
+                "buttons": [
+                    {
+                        text: 'Add',
+                        className: 'dt-button buttons-copy buttons-html5',
+                        action: function () { window.location = 'Service.aspx'; }
+                    },
+                    'copy',
+                    'excel',
+                    'pdf',
                     {
                         extend: 'colvis',
                         text: '<i class="fa fa-columns"></i> Columns',
@@ -71,6 +116,9 @@
                 ],
                 "filter": true,
                 "ajax": function (data, callback, settings) {
+                    // Get the current filter value
+                    var filter = $('#filterStatus').val() || 'all';
+
                     $.ajax({
                         type: "POST",
                         url: "ServiceView.aspx/ViewList",
@@ -80,7 +128,8 @@
                             length: data.length,
                             sortColumn: data.columns[data.order[0].column].name,
                             sortColumnDirection: data.order[0].dir,
-                            searchValue: data.search.value
+                            searchValue: data.search.value,
+                            filterStatus: filter  // Pass filter to backend
                         }),
                         contentType: "application/json; charset=utf-8",
                         dataType: "json",
@@ -102,31 +151,29 @@
                     { "data": "ItemCode", "name": "ItemCode", "width": "5%", "orderable": true },
                     { "data": "ItemName", "name": "ItemName", "width": "10%", "orderable": true },
                     { "data": "UOM", "name": "UOM", "width": "5%", "orderable": false },
-                    { "data": "WareHouse", "name": "WareHouse", "width": "5%","orderable": false },
-                    { "data": "ItemCategory", "name": "ItemCategory","width": "5%","orderable": false },
+                    { "data": "WareHouse", "name": "WareHouse", "width": "5%", "orderable": false },
+                    { "data": "ItemCategory", "name": "ItemCategory", "width": "5%", "orderable": false },
                     { "data": "AccountCategory", "name": "AccountCategory", "width": "7%", "orderable": false },
-                    { "data": "ItemType", "name": "ItemType","width": "5%", "orderable": false },                  
-                    { "data": "Service_Sub_Category", "name": "Service_Sub_Category", "width": "7%","orderable": false },                  
-                    { "data": "AccountID", "name": "AccountID", "width": "9%", "orderable": false },                  
+                    { "data": "ItemType", "name": "ItemType", "width": "5%", "orderable": false },
+                    { "data": "Service_Sub_Category", "name": "Service_Sub_Category", "width": "7%", "orderable": false },
+                    { "data": "AccountID", "name": "AccountID", "width": "9%", "orderable": false },
                     { "data": "SaleRate", "name": "SaleRate", "width": "5%" },
-                    { "data": "StockTotal", "name": "StockTotal", "width": "5%" }, 
+                    { "data": "StockTotal", "name": "StockTotal", "width": "5%" },
                     {
                         "data": "Active",
                         "name": "Active",
                         "render": function (data, type, full) {
-                            return data ? 'Active' : 'InActive'; 
-                        },"width": "5%",
+                            return data ? 'Active' : 'InActive';
+                        }, "width": "5%",
                     },
-                                    
                     {
                         "render": function (data, type, full) {
                             var res = '<a class="editListBtn"  href="#" onclick="Edit(' + full.Item_ID + ')" style="border-radius: 4px;margin-right: 4px;padding: 5px 8px 5px 8px;"><i class="fa fa-pencil"></i></a>';
-
                             var print = '<a class="printListBtn" style="border-radius: 4px;margin-left: 4px;padding: 5px 8px 5px 8px;" href="#" onclick="PrintTest(' + full.Test_ID + ')" id="btnprint"><i class="fa fa-print" ></i></a>';
                             var result;
-                            result = res  + print;
+                            result = res + print;
                             return result;
-                        },"width": "8%",
+                        }, "width": "8%",
                     }
                 ],
                 "initComplete": function (settings, json) {
@@ -154,6 +201,24 @@
                         );
                     });
 
+                    api.on('page.dt', function () {
+                        var page = api.page.info();
+                        var pageIndex = page.page;
+                        $.ajax({
+                            type: "POST",
+                            url: "ServiceView.aspx/SavePageState",
+                            data: JSON.stringify({ pageIndex: pageIndex }),
+                            contentType: "application/json; charset=utf-8",
+                            dataType: "json",
+                            success: function () {
+                                console.log("Page state saved: " + pageIndex);
+                            },
+                            error: function () {
+                                console.error("Failed to save page state");
+                            }
+                        });
+                    });
+
                     var lengthContainer = document.querySelector('#example_length');
                     var lengthDropdown = document.querySelector('#example_length select');
                     var label = document.querySelector('#example_length label');
@@ -172,15 +237,50 @@
                         label.appendChild(lengthDropdown);
                     }
                 }
-            }); 
-        } 
+            });
+
+            if (savedPageIndex > 0) {
+                setTimeout(function () {
+                    table.page(savedPageIndex).draw('page');
+                }, 100);
+            }
+
+            // Filter change event
+            $('#filterStatus').on('change', function () {
+                var filterValue = $(this).val();
+
+                $.ajax({
+                    type: "POST",
+                    url: "ServiceView.aspx/SaveFilterState",
+                    data: JSON.stringify({ filterValue: filterValue }),
+                    contentType: "application/json; charset=utf-8",
+                    dataType: "json",
+                    success: function () {
+                        console.log("Filter state saved: " + filterValue);
+                    },
+                    error: function () {
+                        console.error("Failed to save filter state");
+                    }
+                });
+
+                $('#example').DataTable().ajax.reload();
+            });
+        }
         
         
     </script>
 </asp:Content>
 <asp:Content ID="Content2" ContentPlaceHolderID="MainContent" runat="server">
-    
-
+    <div class="row">
+        <div class="col-lg-2 col-md-6 col-sm-12">
+            <label for="filterStatus">Filter by Account Status:</label>
+            <select id="filterStatus">
+                <option value="all">All Services</option>
+                <option value="mapped">Mapped (Has Account)</option>
+                <option value="unmapped">Unmapped (No Account)</option>
+            </select>
+        </div>
+    </div>
     <div class="table-container">
         <table id="example" class="table table-hover table-bordered">
             <thead>

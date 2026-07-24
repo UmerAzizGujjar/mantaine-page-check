@@ -65,7 +65,7 @@ namespace PMS.AP
 
 
         [WebMethod]
-        public static object ViewList(int draw, int start, int length, string sortColumn, string sortColumnDirection, string searchValue)
+        public static object ViewList(int draw, int start, int length, string sortColumn, string sortColumnDirection, string searchValue, string filterStatus = "all")
         {
             try
             {
@@ -74,33 +74,62 @@ namespace PMS.AP
                     string userId = HttpContext.Current.Session["UserId"].ToString();
 
                     var Total_Vendors = _dbContext.AP_Vendors.Count();
-                    var Vendors = from V in _dbContext.AP_Vendors
-                                  where
-                                       ((V.Vendor_ID.ToString().Contains(searchValue) || V.Vendor_Name.ToString().Contains(searchValue) || V.Vendor_Phone1.ToString().Contains(searchValue) || V.Contact_Person.ToString().Contains(searchValue) || V.Vendor_Address.ToString().Contains(searchValue) || V.City.ToString().Contains(searchValue) || V.Vendor_NTN.ToString().Contains(searchValue)))
-                                  select new
-                                  {
-                                      Vendor_ID = V.Vendor_ID,
-                                      Vendor_Name = V.Vendor_Name,
-                                      Contact_Person = V.Contact_Person,
-                                      Vendor_Phone1 = V.Vendor_Phone1,
-                                      Vendor_Address = V.Vendor_Address,                                     
-                                      City = V.City,
-                                      Vendor_NTN = V.Vendor_NTN,
-                                  };
 
-                    var FilteredCount = Vendors.Count();
+                    // Start with base query
+                    var VendorsQuery = from V in _dbContext.AP_Vendors
+                                       select new
+                                       {
+                                           Vendor_ID = V.Vendor_ID,
+                                           Vendor_Name = V.Vendor_Name,
+                                           Contact_Person = V.Contact_Person,
+                                           Vendor_Phone1 = V.Vendor_Phone1,
+                                           Vendor_Address = V.Vendor_Address,
+                                           City = V.City,
+                                           Vendor_NTN = V.Vendor_NTN,
+                                           Account_ID = V.Account_ID, 
+                                           AccountID = (from a in _dbContext.GL_Accounts
+                                                        where a.Account_ID == V.Account_ID
+                                                        select new { Account = a.Account_Name }).FirstOrDefault().Account.ToString(),
+                                       };
+
+                    if (filterStatus == "mapped")
+                    {
+                        VendorsQuery = VendorsQuery.Where(v => v.Account_ID != null && v.Account_ID > 0);
+                    }
+                    else if (filterStatus == "unmapped")
+                    {
+                        VendorsQuery = VendorsQuery.Where(v => v.Account_ID == null || v.Account_ID == 0);
+                    }
+                    if (!string.IsNullOrEmpty(searchValue))
+                    {
+                        VendorsQuery = VendorsQuery.Where(v =>
+                            v.Vendor_ID.ToString().Contains(searchValue) ||
+                            v.Vendor_Name.ToString().Contains(searchValue) ||
+                            v.Vendor_Phone1.ToString().Contains(searchValue) ||
+                            v.Contact_Person.ToString().Contains(searchValue) ||
+                            v.Vendor_Address.ToString().Contains(searchValue) ||
+                            v.City.ToString().Contains(searchValue) ||
+                            v.Vendor_NTN.ToString().Contains(searchValue));
+                    }
+
+                    var FilteredCount = VendorsQuery.Count();
+
+                    if (length == -1 || length > 100000)
+                    {
+                        start = 0;
+                        length = FilteredCount;
+                    }
                     switch (sortColumn)
                     {
-
                         case "Vendor_Name":
-                            Vendors = sortColumnDirection == "asc" ? Vendors.OrderBy(b => b.Vendor_Name) : Vendors.OrderByDescending(a => a.Vendor_Name);
+                            VendorsQuery = sortColumnDirection == "asc" ? VendorsQuery.OrderBy(b => b.Vendor_Name) : VendorsQuery.OrderByDescending(a => a.Vendor_Name);
                             break;
                         default:
-                            Vendors = Vendors.OrderByDescending(a => a.Vendor_ID);
+                            VendorsQuery = VendorsQuery.OrderByDescending(a => a.Vendor_ID);
                             break;
                     }
 
-                    var VendorList = Vendors.Skip(start).Take(length).ToList();
+                    var VendorList = VendorsQuery.Skip(start).Take(length).ToList();
 
                     var jsonData = new { draw = draw, recordsFiltered = FilteredCount, recordsTotal = Total_Vendors, data = VendorList };
                     return jsonData;
@@ -171,6 +200,25 @@ namespace PMS.AP
             {
                 throw;
             }
+        }
+
+        [WebMethod]
+        public static void SavePageState(int pageIndex)
+        {
+            if (HttpContext.Current.Session != null)
+            {
+                HttpContext.Current.Session["VendorView_PageIndex"] = pageIndex;
+            }
+        }
+
+        [WebMethod]
+        public static int GetPageState()
+        {
+            if (HttpContext.Current.Session != null && HttpContext.Current.Session["VendorView_PageIndex"] != null)
+            {
+                return Convert.ToInt32(HttpContext.Current.Session["VendorView_PageIndex"]);
+            }
+            return 0; // Default to first page
         }
     }
 }
