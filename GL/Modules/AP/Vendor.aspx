@@ -8,6 +8,7 @@
         var selectedOptions = '';
         $(document).ready(function () {
             $("#ddlPayabl").prop("disabled", true);
+
             $("#chkmanual").change(function () {
                 if (this.checked) {
                     $('#ddlPayabl').prop("disabled", false);
@@ -45,7 +46,15 @@
                 $("#Active").prop('checked', true);
                 setTimeout(function() { $('#Active').trigger('change'); }, 100);
             }
-
+            $('#manufacturerDropdown').on('change', function () {
+                var val = $(this).val();
+                if (val !== '0' && val !== '') {
+                    $(this).prop('disabled', true);
+                } else {
+                    $(this).prop('disabled', false);
+                }
+           
+            });
             $('#btnGetAllItems').on('click', function () {
                 debugger;
                 LoadAllitem('');
@@ -55,6 +64,7 @@
                 var searchText = $(this).val().trim();
                 LoadAllitem(searchText);
             });
+            FillCompany();
         })
         var id = '<% =Request.QueryString["ID"] %>';
         function printPerson() {
@@ -82,6 +92,16 @@
                 , function (err) {
                     alert("Error: " + err.get_message());
                 });
+        }
+        function FillCompany() {
+            PageMethods.FillCompanys(function (Tests) {
+                var optionInv = '<option value="0">Please Select</option>';
+                $.each(JSON.parse(Tests), function (key, value) {
+                    optionInv += '<option value="' + value.DataValueName + '" >' + value.DataValueDescription + '</option>';
+                });
+                $('#manufacturerDropdown').html(optionInv);
+                
+            });
         }
         function printVendorCompany() {
             debugger;
@@ -165,6 +185,7 @@
                 setTimeout(function () {
                     $('#ddlCom').val(data.CompanyType_Id).trigger('change');
                 }, 1000);
+             
 
                 if (data.Account_ID != null && data.Account_ID != "0") {
                     PageMethods.LoadGLAccount(parseInt(data.Account_ID), function (glData) {
@@ -183,7 +204,9 @@
                         });
                 }
                 debugger;
-
+                setTimeout(function () {
+                    $('#manufacturerDropdown').val(data.manufacture_id).trigger('change');
+                }, 1000);
                 LoadVendorPerson(VenId);
                 LoadVendorGeneralItem(VenId);
                 LoadVendorPharmacyItem(VenId);
@@ -663,6 +686,7 @@
             var AccountId = $('#ddlPayabl').val();
             var TaxTyp = $('#ddlTax').val();
             var CompanyTyp = $('#ddlCom').val();
+            var manufacturerDropdown = $('#manufacturerDropdown').val();
             var active = $('#Active').prop('checked');
             var Chkmanual = $('#chkmanual').prop('checked');
             if (Chkmanual == true && AccountId == 0) {
@@ -734,7 +758,7 @@
             });
             $('#btnsave').attr('disabled', true);
             var AllItemDetail = {
-                'IsActive': active, 'Ismanual': Chkmanual, 'VendorId': VendorId, 'VendorName': VendorName, 'VendorType': VendorType, 'Address': Address, 'CreditDays': CreditDays, 'Country': Country, 'Region': Region, 'City': City, 'MobNo': MobNo, 'PhnNo': PhnNo, 'DrugLicenceNo': DrugLicenceNo, 'Stn': Stn, 'Ntn': Ntn, 'Cnic': Cnic, 'Email': Email, 'FocalPerson': Foc, 'PayablCode': AccountId, 'TaxTyp': TaxTyp, 'VendorCode': VendorCode, 'CompanyTyp': CompanyTyp, 'PersonList': Person_list, 'GeneralItemlist': GeneralItem_list, 'PharmacyItemlist': PharmacyItem_list, 'Companylist': Company_list ,'hdfAccount_ID': hdfAccount_ID,'hdfParent_Code': hdfParent_Code,'hdfAccount_Serial': hdfAccount_Serial,'hdfLevel': hdfLevel,'hdfAccount_Code': hdfAccount_Code};
+                'IsActive': active, 'Ismanual': Chkmanual, 'VendorId': VendorId, 'VendorName': VendorName, 'VendorType': VendorType, 'Address': Address, 'CreditDays': CreditDays, 'Country': Country, 'Region': Region, 'City': City, 'MobNo': MobNo, 'PhnNo': PhnNo, 'DrugLicenceNo': DrugLicenceNo, 'Stn': Stn, 'Ntn': Ntn, 'Cnic': Cnic, 'Email': Email, 'FocalPerson': Foc, 'PayablCode': AccountId, 'TaxTyp': TaxTyp, 'VendorCode': VendorCode, 'CompanyTyp': CompanyTyp, 'manufacturerDropdown': manufacturerDropdown, 'PersonList': Person_list, 'GeneralItemlist': GeneralItem_list, 'PharmacyItemlist': PharmacyItem_list, 'Companylist': Company_list ,'hdfAccount_ID': hdfAccount_ID,'hdfParent_Code': hdfParent_Code,'hdfAccount_Serial': hdfAccount_Serial,'hdfLevel': hdfLevel,'hdfAccount_Code': hdfAccount_Code};
             PageMethods.SaveVendor(btnSave, JSON.stringify(AllItemDetail), function (res) {
                 Swal.fire({
                     icon: 'success',
@@ -814,11 +838,14 @@
         }
 
         function LoadAllitem(searchText) {
-            debugger;
+            var manufacturerId = $('#manufacturerDropdown').val() || '0';
             $.ajax({
                 type: "POST",
                 url: "Vendor.aspx/GetAllitem",
-                data: JSON.stringify({ searchText: searchText }),
+                data: JSON.stringify({
+                    searchText: searchText,
+                    manufacturerId: manufacturerId
+                }),
                 contentType: "application/json; charset=utf-8",
                 dataType: "json",
                 success: function (response) {
@@ -1256,12 +1283,24 @@
         </div>
 
         <div id="Tab-4">
-            
-            <div style="margin-bottom: 12px; display: flex; justify-content: flex-end; gap: 8px;">
-                <button type="button" class="btn btn-primry" id="btnGetAllItems" ><i class="fa fa-search"></i> Items</button>
-                <button type="button" class="btn-item-pick" onclick="AppendvendorPharmacyItem()" title="Add Pharmacy Item"><i class="fa fa-plus"></i></button>       
-                <input style="display: none !important" type="button" class="btn btn-info" onclick="printPharmacyItem()" value="Print" id="PrintPharmacyItem" />
-            </div>
+            <div class="row" style="margin-bottom: 12px;">
+    <!-- Left column: Manufacturer filter -->
+    <div class="col-lg-2">
+        <div class="form-inline" style="gap: 8px;">
+            <label for="manufacturerDropdown" style="font-weight: bold; white-space: nowrap;">Manufacturer:</label>
+            <select id="manufacturerDropdown" class="form-control" style="width: auto; flex: 1;">
+                <option value="">All</option>
+                <!-- options dynamically populated -->
+            </select>
+        </div>
+    </div>
+    <!-- Right column: Buttons -->
+    <div class="col-lg-10 text-right">
+        <button type="button" class="btn btn-primry" id="btnGetAllItems"><i class="fa fa-search"></i> Items</button>
+        <button type="button" class="btn-item-pick" onclick="AppendvendorPharmacyItem()" title="Add Pharmacy Item"><i class="fa fa-plus"></i></button>
+        <input style="display: none !important" type="button" class="btn btn-info" onclick="printPharmacyItem()" value="Print" id="PrintPharmacyItem" />
+    </div>
+</div>
             <div style="overflow-x: auto; overflow-y: auto; max-height: 250px; border-radius: 4px; border: 1px solid #eee;">
                 <table class="table pr-tab-table table-hover table-bordered table-striped" id="VendorPharmacyItemlist" style="margin: 0; width: 100%;">
                     <thead>

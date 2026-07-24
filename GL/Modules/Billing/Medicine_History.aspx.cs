@@ -31,7 +31,10 @@ namespace PMS.Modules.Billing
                                                 (
                                                     (AB.Customer_Name != null && AB.Customer_Name.Contains(searchValue)) ||
                                                     (AB.Referred_By_value != null && AB.Referred_By_value.Contains(searchValue)) ||
-                                                    (AB.Received_Amount != null && AB.Received_Amount.ToString().Contains(searchValue)) ||
+                                                    (AB.Invoice_No != null && AB.Invoice_No.ToString().Contains(searchValue)) ||
+                                                    (AB.Patient_ID != null && AB.Patient_ID.ToString().Contains(searchValue)) ||
+                                                    (AB.Seq_InvoiceNo != null && AB.Seq_InvoiceNo.ToString().Contains(searchValue)) ||
+                                                    
                                                     _dbContext.Reg_patients.Any(rg => rg.pat_id == AB.Patient_ID && rg.mr_no_sequence != null && rg.mr_no_sequence.Contains(searchValue)
                                                     || detailsGroup.Any(d => d.Item_Name != null && d.Item_Name.Contains(searchValue)))
                                                 )
