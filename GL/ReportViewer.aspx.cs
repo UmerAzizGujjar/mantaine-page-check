@@ -221,7 +221,7 @@ namespace PMS
                     rd.SetParameterValue("UserName", AppConfig.UserName);
                     try
                     {
-                    rd.SetParameterValue("@TransType", transType);
+                        rd.SetParameterValue("@TransType", transType);
                     }
                     catch { }
                 }
