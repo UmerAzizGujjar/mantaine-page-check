@@ -530,7 +530,22 @@ namespace PMS
                           }).ToList();
             return (new JavaScriptSerializer()).Serialize(Header);
         }
-
+        [WebMethod]
+        public static string FillCompanys()
+        {
+            DataBaseDataContext db = new DataBaseDataContext();
+            List<ddlListItems> listItems = new List<ddlListItems>();
+            string data = string.Empty;
+            listItems = (from p in db.DataValues
+                         join v in db.ValueSets on p.ValueSet_ID equals v.ValueSet_ID
+                         where v.ValueSet_Description == "Manufacture Company"
+                         select new ddlListItems
+                         {
+                             DataValueName = p.DataValue_Name,
+                             DataValueDescription = p.DataValue_Description,
+                         }).ToList();
+            return (new JavaScriptSerializer()).Serialize(listItems);
+        }
 
         [WebMethod]
         public static string getDDLlist()
@@ -551,41 +566,53 @@ namespace PMS
         }
 
         [WebMethod]
-        public static string GetAllitem(string searchText)
+        public static string GetAllitem(string searchText, string manufacturerId)
         {
             try
             {
-                DataBaseDataContext db = new DataBaseDataContext();
+                using (DataBaseDataContext db = new DataBaseDataContext())
+                {
+                    var query = db.INV_Items
+                        .Where(x => x.Active == true
+                                    && x.Services != true
+                                    && x.IsPharmacyItem == true);
 
-                var Details = db.INV_Items
-                    .Where(x => (string.IsNullOrEmpty(searchText)
-                                || x.Item_Code.Contains(searchText)
-                                || x.Description.Contains(searchText))
-
-                             && x.Active == true
-                             && x.Services != true
-                             && x.IsPharmacyItem == true
-                        
-                         )
-                    .OrderBy(x => x.Item_Code)
-                    .Take(200)
-                    .Select(x => new
+                    // 1. Text search (AND with manufacturer filter)
+                    if (!string.IsNullOrEmpty(searchText))
                     {
-                        Item_ID = x.Item_ID,
-                        Item_Code = x.Item_Code,
-                        Description = x.Description,
-                        Unit = db.GetDataValueName("UOM", x.Unit) ?? "",
-                        Purchase_Rate = x.Purchase_Rate != null ? x.Purchase_Rate : 0,
-                        UOM_Qty = x.UOM_Qty != null ? x.UOM_Qty : 1,                       
-                        TotalStock = db.GetInvenrtoryItemUomTotalStock(x.Item_ID, x.InventoryOrg)
-                    })
-                         .ToList();
+                        query = query.Where(x => x.Item_Code.Contains(searchText)
+                                              || x.Description.Contains(searchText));
+                    }
 
-                return (new JavaScriptSerializer()).Serialize(Details);
+                    // 2. Manufacturer filter
+                    if (!string.IsNullOrEmpty(manufacturerId) && manufacturerId != "0")
+                    {
+                        string companyId = manufacturerId;
+                        // ⚠️ Replace 'Company_ID' with your actual column name
+                        query = query.Where(x => x.Manufacture_Company == companyId);
+                    }
+
+                    var Details = query
+                        .OrderBy(x => x.Item_Code)
+                        .Take(200)
+                        .Select(x => new
+                        {
+                            Item_ID = x.Item_ID,
+                            Item_Code = x.Item_Code,
+                            Description = x.Description,
+                            Unit = db.GetDataValueName("UOM", x.Unit) ?? "",
+                            Purchase_Rate = x.Purchase_Rate ?? 0,
+                            UOM_Qty = x.UOM_Qty ?? 1,
+                            TotalStock = db.GetInvenrtoryItemUomTotalStock(x.Item_ID, x.InventoryOrg)
+                        })
+                        .ToList();
+
+                    return new JavaScriptSerializer().Serialize(Details);
+                }
             }
             catch (Exception)
             {
-                return (new JavaScriptSerializer()).Serialize(new List<object>());
+                return new JavaScriptSerializer().Serialize(new List<object>());
             }
         }
 
