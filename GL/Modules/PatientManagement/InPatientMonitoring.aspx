@@ -818,10 +818,24 @@
                     $('#txtPrnDose').val(Max_Prn_Dose);
                 }
                 if (localStorage.IsStat == 1) {
-                    frequency = $($(row).find('td')[4]).text().trim();
-                    duration = $($(row).find('td')[5]).text().trim();
-                    other_instruction = $($(row).find('td')[7]).text().trim();
-                    special_instruction = $($(row).find('td')[8]).text().trim();
+                    frequency = $($(row).find('td')[4]).text().trim();                      // Frequency
+                    duration = $($(row).find('td')[5]).text().trim();                       // Duration
+                    other_instruction = $($(row).find('td')[9]).text().trim();              // Other Instruction
+                    special_instruction = $($(row).find('td')[10]).text().trim();           // Special Instructions
+                    var reqQty = $($(row).find('td')[7]).find('input').val() || 0;          // Request Qty
+                    var recQty = $($(row).find('td')[8]).find('input').val() || 0;          // Received Qty
+
+                    // Populate modal fields
+                    $('#txtInjections').val(duration);
+                    $('#AttendingParamedicalStaffs').val(special_instruction);
+                    // Set dropdowns – you may need to select by text
+                    $('#ddlOther_Instruction').val(other_instruction);
+                    // If you have hidden fields for quantities in the modal, set them
+                    $('#MedicationModel input[name=IssueQty]').val(reqQty);
+                    $('#MedicationModel input[name=RecQty]').val(recQty);
+                    // Also set frequency and dose if needed
+                    $('#txtRecomended_Dosages').val(frequency);   // might need to select by text
+                    // etc.
                 }
 
                 debugger;
@@ -1484,11 +1498,29 @@
                         var row = '<tr> <td> <input type="hidden" name="testDate" value="' + complete + '">' + complete + ' </td><td><input type="hidden" name="hdnItemCode" value="0"> ' + pharmacyITem + '</td><td> ' + $('#ddlDosage_Qty').val() + '</td><td> ' + $('#ddlDosage_From').find('option:selected').text() + '</td> <td> ' + $('#txtRecomended_Dosages').find('option:selected').text() + ' </td><td> ' + $('#txtInjections').val() + '</td>   <td> ' + $('#Route').find('option:selected').text() + ' </td><td> <input type="text" class="form-control routeInput" value="0"   name="IssueQty"  placeholder="Enter value" /></td><td> <input type="text" class="form-control routeInput" value="0"   name="RecQty"  placeholder="Enter value" /></td><td>' + completeStop + '</td> <td>' + otherIns + '</td><td> ' + $('#AttendingParamedicalStaffs').val() + ' </td>' + '<td>' + username + '</td><td> <input type="text" class="form-control routeInput" value="0"   name="RtnQty"  placeholder="Enter value" /></td>' + '<td><a href="#" onclick="editMedicine(this)"> Edit </a> | <a href="#" onclick="deleteMedicine(this)"> Delete </a> <input type="hidden" name="uurowid" value=' + uuid() + ' />  </td><td style="display:none;">' + itemCode + '</td></tr>';
 
                       //  var row = '<tr> <td> <input type="hidden" name="testDate" value="' + complete + '">' + complete + ' </td><td><input type="hidden" name="hdnItemCode" value="0"> ' + pharmacyITem + '</td><td> ' + $('#txtRecomended_Dosages').find('option:selected').text() + '</td><td> ' + $('#Route').find('option:selected').text() + '</td><td> <input type="text" class="form-control routeInput" value="0"   name="IssueQty"  placeholder="Enter value" /></td><td> <input type="text" class="form-control routeInput" value="0"   name="RecQty"  placeholder="Enter value" /></td><td> ' + $('#txtInjections').val() + '</td><td>' + $('#AttendingParamedicalStaffs').val() + '</td><td> ' + $('#ddlDosage_From').find('option:selected').text() + ' </td> <td> ' + $('#ddlDosage_Qty').val() + ' </td>' + '<td> ' + $('#ddlOther_Instruction').find('option:selected').text() + ' </td>' + '<td>' + username + '</td><td> <input type="text" class="form-control routeInput" value="0"   name="RtnQty"  placeholder="Enter value" /></td><td> <a href="#" onclick="editMedicine(this)"> Edit </a> | <a href="#" onclick="deleteMedicine(this)"> Delete </a> <input type="hidden" name="uurowid" value=' + uuid() + ' />  </td><td style="display:none;">' + itemCode + '</td></tr>';
-
-                        // if (localStorage.IsStat == 1) {
-                        //     debugger;
-                        //     var row = '<tr> <td> <input type="hidden" name="testDate" value="' + complete + '">' + complete + ' </td><td><input type="hidden" name="hdnItemCode" value="0"> ' + pharmacyITem + '</td><td> ' + $('#txtRecomended_Dosages').find('option:selected').text() + '</td><td> ' + $('#Route').find('option:selected').text() + '</td><td> <input type="text" class="form-control routeInput" value="0"   name="IssueQty"  placeholder="Enter value" /></td><td> <input type="text" class="form-control routeInput" value="0"   name="RecQty"  placeholder="Enter value" /></td><td> ' + $('#txtInjections').val() + '</td><td>' + $('#AttendingParamedicalStaffs').val() + '</td><td> ' + $('#ddlDosage_From').find('option:selected').text() + ' </td> <td> ' + $('#ddlDosage_Qty').val() + ' </td>' + '<td> ' + $('#ddlOther_Instruction').find('option:selected').text() + ' </td>' + '<td>' + username + '</td><td> <a href="#" onclick="editMedicine(this)"> Edit </a> | <a href="#" onclick="deleteMedicine(this)"> Delete </a> <input type="hidden" name="uurowid" value=' + uuid() + ' />  </td><td style="display:none;">' + itemCode + '</td></tr>';
-                        // }
+                        if (localStorage.IsStat == 1) {
+                            // STAT row – matches tblMedicinesListSTAT header (13 columns)
+                            var row = '<tr>' +
+                                '<td><input type="hidden" name="testDate" value="' + complete + '">' + complete + '</td>' +
+                                '<td><input type="hidden" name="hdnItemCode" value="' + itemCode + '">' + pharmacyITem + '</td>' +
+                                '<td>' + $('#ddlDosage_Qty').val() + '</td>' +
+                                '<td>' + $('#ddlDosage_From').find('option:selected').text() + '</td>' +
+                                '<td>' + $('#txtRecomended_Dosages').find('option:selected').text() + '</td>' +
+                                '<td>' + $('#txtInjections').val() + '</td>' +
+                                '<td>' + $('#Route').find('option:selected').text() + '</td>' +
+                                '<td><input type="text" class="form-control routeInput" value="0" name="IssueQty" placeholder="Enter value" /></td>' +
+                                '<td><input type="text" class="form-control routeInput" value="0" name="RecQty" placeholder="Enter value" /></td>' +
+                                '<td>' + otherIns + '</td>' +
+                                '<td>' + $('#AttendingParamedicalStaffs').val() + '</td>' +
+                                '<td>' + username + '</td>' +
+                                '<td>' +
+                                '<a href="#" onclick="editMedicine(this)"> Edit </a> | ' +
+                                '<a href="#" onclick="deleteMedicine(this)"> Delete </a> ' +
+                                '<input type="hidden" name="uurowid" value="' + uuid() + '" />' +
+                                '</td>' +
+                                '</tr>';
+                           
+                        }
                         // if (localStorage.IsPRN == 1) {
                         //     debugger;
                         //     var row = '<tr> <td> <input type="hidden" name="testDate" value="' + complete + '">' + complete + ' </td><td><input type="hidden" name="hdnItemCode" value="0"> ' + pharmacyITem + '</td><td> ' + $('#txtRecomended_Dosages').find('option:selected').text() + '</td><td> ' + $('#Route').find('option:selected').text() + '</td><td> <input type="text" class="form-control routeInput" value="0"   name="IssueQty"  placeholder="Enter value" /></td><td> <input type="text" class="form-control routeInput" value="0"   name="RecQty"  placeholder="Enter value" /></td><td> ' + $('#txtInjections').val() + '</td><td>' + $('#AttendingParamedicalStaffs').val() + '</td><td> ' + $('#ddlDosage_From').find('option:selected').text() + ' </td> <td> ' + $('#ddlDosage_Qty').val() + ' </td>' + '<td> ' + $('#ddlOther_Instruction').find('option:selected').text() + ' </td>' + '<td>' + username + '</td><td> <a href="#" onclick="editMedicine(this)"> Edit </a> | <a href="#" onclick="deleteMedicine(this)"> Delete </a> <input type="hidden" name="uurowid" value=' + uuid() + ' />  </td><td style="display:none;">' + itemCode + '</td></tr>';
@@ -1552,18 +1584,19 @@
                         }
                         else if (localStorage.IsStat == 1) {
                             row = $('#tblMedicinesListSTAT tbody tr').find('input[value=' + tid + ']').parents('tr')[0];
-                            $(row).find('td')[0].innerText = complete;
-                            $(row).find('td')[1].innerText = $('#txtPharmacyItem').find('option:selected').text().trim();
-                            $(row).find('td')[2].innerText = $('#ddlDosage_Qty').val();
-                            $(row).find('td')[3].innerText = $('#ddlDosage_From').find('option:selected').text().trim() == "Select" ? '' : $('#ddlDosage_From').find('option:selected').text().trim();
-                            $(row).find('td')[4].innerText = $('#MedicationModel select[name=RecomendedDosage]').find('option:selected').text();
-                            $(row).find('td')[5].innerText = $('#MedicationModel input[name=txtInjections]').val();
-                            $(row).find('td')[6].innerText = $('#MedicationModel select[name=Routes]').find('option:selected').text();
-                            $(row).find('td')[7].innerText = $('#MedicationModel input[name=IssueQty]').val();
-                            $(row).find('td')[8].innerText = $('#MedicationModel input[name=RecQty]').val();
-                            $(row).find('td')[9].innerText = $('#ddlOther_Instruction').find('option:selected').text();
-                            $(row).find('td')[10].innerText = $('#AttendingParamedicalStaff').val();
-                            $(row).find('td')[11].innerText = $('#txtPharmacyItem').val();
+                            $(row).find('td')[0].innerText = complete;   // Start Date
+                            $(row).find('td')[1].innerText = $('#txtPharmacyItem').find('option:selected').text().trim();   // Medicine Name
+                            $(row).find('td')[2].innerText = $('#ddlDosage_Qty').val();   // Dose
+                            $(row).find('td')[3].innerText = $('#ddlDosage_From').find('option:selected').text().trim() == "Select" ? '' : $('#ddlDosage_From').find('option:selected').text().trim();   // Dosage Unit
+                            $(row).find('td')[4].innerText = $('#txtRecomended_Dosages').find('option:selected').text();   // Frequency
+                            $(row).find('td')[5].innerText = $('#txtInjections').val();   // Duration
+                            $(row).find('td')[6].innerText = $('#Route').find('option:selected').text();   // Route
+                            $(row).find('td')[7].innerText = $('input[name=IssueQty]', '#MedicationModel').val();   // Request Qty
+                            $(row).find('td')[8].innerText = $('input[name=RecQty]', '#MedicationModel').val();   // Received Qty
+                            $(row).find('td')[9].innerText = $('#ddlOther_Instruction').find('option:selected').text();   // Other Instruction
+                            $(row).find('td')[10].innerText = $('#AttendingParamedicalStaffs').val();   // Special Instructions
+                            $(row).find('td')[11].innerText = username;   // Username (or keep as is)
+                            // td[12] is the Edit column – leave unchanged
                         }
                         else if (localStorage.IsRegular == 1) {
                             debugger;
@@ -2215,26 +2248,29 @@
 
             tableStat.find('tbody tr').each(function (key, value) {
                 debugger;
+                var itemCode = $(this).find('input[name=hdnItemCode]').val() || '';
                 MedicinesList.push({
                     'Medicine_Date': $($(value).find('td')[0]).text(),
                     'Medicine_Name': $($(value).find('td')[1]).text(),
                     'Frequency': $($(value).find('td')[4]).text(),
-                    'Oral': $($(value).find('td')[6]).text(),
-                    'Injection': $($(value).find('td')[5]).text(),
-                    'AttendingParamedical_Staff': $($(value).find('td')[5]).text(),
+                    'Oral': $($(value).find('td')[6]).text(),               // Route
+                    'Injection': $($(value).find('td')[5]).text(),          // Duration
+                    'AttendingParamedical_Staff': $($(value).find('td')[10]).text(),   // Special Instructions
                     'Dosage_From': $($(value).find('td')[3]).text(),
                     'Dosage_Qty': $($(value).find('td')[2]).text(),
-                    'Other_Instruction': $($(value).find('td')[7]).text(),
-                    'Special_Instruction': $($(value).find('td')[8]).text(),
-                    'ItemCode': $($(value).find('td')[11]).text(),
+                    'Other_Instruction': $($(value).find('td')[9]).text(),
+                    'Special_Instruction': $($(value).find('td')[10]).text(),
+                    'ItemCode': itemCode,
                     'Start_Date_Time': $($(value).find('td')[0]).text(),
                     'Stop_Date_Time': "",
                     'High_Risk': "",
-                    'User': $($(value).find('td')[9]).text(),
+                    'User': $($(value).find('td')[11]).text(),
                     'Max_PRN': "",
                     "Regular": false,
                     "STAT": true,
                     "PRN": false,
+                    'Req_Qty': $($(value).find('td')[7]).find('input').val() || 0,
+                    'Rcv_Qty': $($(value).find('td')[8]).find('input').val() || 0
                 });
             });
 
@@ -5091,8 +5127,8 @@
                                 <tr>
                                     <td>
                                         <input type="button" value="Regular Medicine" id="btnRegularMedicine" class="btn btn-primry" style="width: 15% !important;"/>
-                                     <%--      <input type="button" value="STAT Medicine" class="btn btn-primry" id="btnSTATMedicine" style="width: 15% !important;"/>
-                                         <input type="button" value="PRN Medicine" class="btn btn-primry" id="btnPRNMedicine" style="width:15% !important;"/> --%>                     
+                                       <input type="button" value="STAT Medicine" class="btn btn-primry" id="btnSTATMedicine" style="width: 15% !important;"/>
+                                         <%--<input type="button" value="PRN Medicine" class="btn btn-primry" id="btnPRNMedicine" style="width:15% !important;"/>--%>                    
                                          <input type="button" id="RegulerMedicinePrint" class="btn btn-primry" onclick="PrintMecicationDetail()" value="Regular Print" style="width:15% !important" />
         <%--                                <input type="button" class="btn btn-primry" onclick="PrintMecicationDetailPRN()" value="STAT Print"  style="width: 15% !important;"/>
                                          <input type="button" class="btn btn-primry" onclick="PrintMecicationDetailSTAT()" value="PRN Print" style="width: 15% !important;" />--%>
@@ -5122,31 +5158,31 @@
                                         </tbody>
                                     </table>
                                             </div>
-                                       <%--  <h2>STAT Medicine</h2>
+
+                                         <h2>STAT Medicine</h2>
                                           <div style="overflow: scroll; height: 280px;">
-                                            <table class="table" id="tblMedicinesListSTAT">
-                                        <thead>
-                                            <tr style="position: sticky; top: 0px; z-index: 10;">
-                                                <th style="width: 160px;">Start Date & Time </th>
-                                                <th style="width: 170px;">Medicine Name </th>
-                                                <th>Dose </th>
-                                                <th>Dosage Unit </th>
-                                                <th>Frequency  </th>
-                                                <th>Duration </th>
-                                                <th>Route </th>
-                                                <th>Request Qty </th>
-                                                <th>Received Qty </th>
-                                                <th>Other Instruction</th>
-                                                <th>Special Instructions </th>
-                                                <th>Username</th>                                              
-                                                <th style="width: 100PX;">Edit</th>
-                                            </tr>
-                                        </thead>
-                                        <tbody>
-                                        </tbody>
-                                    </table>
+                                           <table class="table" id="tblMedicinesListSTAT">
+                                            <thead>
+                                                <tr>
+                                                    <th>Start Date & Time</th>
+                                                    <th>Medicine Name</th>
+                                                    <th>Dose</th>
+                                                    <th>Dosage Unit</th>
+                                                    <th>Frequency</th>
+                                                    <th>Duration</th>
+                                                    <th>Route</th>
+                                                    <th>Request Qty</th>
+                                                    <th>Received Qty</th>
+                                                    <th>Other Instruction</th>
+                                                    <th>Special Instructions</th>
+                                                    <th>Username</th>
+                                                    <th>Edit</th>
+                                                </tr>
+                                            </thead>
+                                            <tbody></tbody>
+                                        </table>
                                               </div>
-                                          <h2>PRN Medicine</h2>
+                                       <%--   <h2>PRN Medicine</h2>
                                           <div style="overflow: scroll; height: 280px;">
                                             <table class="table" id="tblMedicinesListPRN">
                                         <thead>

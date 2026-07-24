@@ -8322,10 +8322,10 @@
                                         </div>
                                         
                                         <input type="button" value="Regular Medicine" id="btnRegularMedicine" class="btn btn-primry" style="width: 15% !important;"/>
-                                   <%--        <input type="button" value="STAT Medicine" class="btn btn-primry" id="btnSTATMedicine" style="width: 15% !important;"/>
-                                         <input type="button" value="PRN Medicine" class="btn btn-primry" id="btnPRNMedicine" style="width:15% !important;"/> --%>                     
+                                        <input type="button" value="STAT Medicine" class="btn btn-primry" id="btnSTATMedicine" style="width: 15% !important;"/>
+                                         <%--<input type="button" value="PRN Medicine" class="btn btn-primry" id="btnPRNMedicine" style="width:15% !important;"/>--%>                   
                                          <input type="button" class="btn btn-primry" onclick="PrintMecicationDetail()" value="Regular Print" style="width:15% !important" />
-                                       <%-- <input type="button" class="btn btn-primry" onclick="PrintMecicationDetailPRN()" value="STAT Print"  style="width: 15% !important;"/>
+                                  <%--      <input type="button" class="btn btn-primry" onclick="PrintMecicationDetailPRN()" value="STAT Print"  style="width: 15% !important;"/>
                                          <input type="button" class="btn btn-primry" onclick="PrintMecicationDetailSTAT()" value="PRN Print" style="width: 15% !important;" />--%>
                                         <h2>Regular Medicine</h2>
                                         <div style="overflow: scroll; height: 280px;">                                       
@@ -8351,7 +8351,7 @@
                                         </tbody>
                                     </table>
                                             </div>
-                                        <%-- <h2>STAT Medicine</h2>
+                                         <h2>STAT Medicine</h2>
                                           <div style="overflow: scroll; height: 280px;">
                                             <table class="table" id="tblMedicinesListSTAT">
                                         <thead>
@@ -8373,7 +8373,7 @@
                                         </tbody>
                                     </table>
                                               </div>
-                                          <h2>PRN Medicine</h2>
+                                         <%-- <h2>PRN Medicine</h2>
                                           <div style="overflow: scroll; height: 280px;">
                                             <table class="table" id="tblMedicinesListPRN">
                                         <thead>

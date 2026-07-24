@@ -52,7 +52,25 @@
                     $('.chktd').prop('checked', false);
                 }
             });
+            $.ajax({
+                type: "POST",
+                url: "AddPurchaseInvoice.aspx/AllowDirectGRN",
+                contentType: "application/json; charset=utf-8",
+                dataType: "json",
+                success: function (response) {
+                    debugger;
+                    var code = JSON.parse(response.d);
+                  
+                    if (code === "02") {
+                        debugger
+                        $('[name="directgrn"]').hide();
 
+                    }
+                },
+                error: function (error) {
+                    console.error("Error calling AllowDirectGRN:", error);
+                }
+            });
             var currentDate = new Date();
             var formattedDate = $.datepicker.formatDate('dd M yy', currentDate);
 
@@ -1486,7 +1504,7 @@
                 <input type="file" name="txt_attachments" id="txt_attachments" />
                 <asp:HyperLink ID="HyperLink1" runat="server">Download</asp:HyperLink>
             </div>
-                         <div class="col-lg-1 col-md-6 col-sm-12">
+                         <div class="col-lg-1 col-md-6 col-sm-12" name="directgrn">
                      <label class="source-radio-option">
                     Direct GRN
                 </label>

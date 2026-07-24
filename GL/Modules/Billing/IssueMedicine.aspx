@@ -18,6 +18,9 @@
         box-sizing: border-box !important;
         font-size: 13px;
     }
+    .stat-row {
+    background-color: #ffcccc !important; /* light red */
+}
     .table-active {
     background-color:#fcce58 !important;
 }
@@ -3341,14 +3344,21 @@
                     var WardName = (value.Ward_Name !== null && value.Ward_Name !== undefined) ? value.Ward_Name : '';
                     var BedNo = (value.Bed_No !== null && value.Bed_No !== undefined && value.Bed_No !== 0) ? value.Bed_No : '';
 
-                    // Check if status is rejected (handles both string 'rejected' and numeric values)
+                    // Check if the medicine request is rejected
                     var isRejected = (value.Status === 'rejected' || value.Status === '1' || value.Status === 1);
 
-                    // Set row color for rejected entries
-                    var rowClass = isRejected ? 'rejected-row' : '';
-                    var rowStyle = isRejected ? 'style="background-color: #ffe6e6;"' : '';
+                    // NEW: Check if this patient has at least one STAT medicine
+                    var hasStat = value.HasStat === true || value.HasStat === 1;
 
-                    // Hide edit and reject actions for rejected entries
+                    // Determine row class: STAT takes precedence over rejected (red is more important)
+                    var rowClass = '';
+                    if (hasStat) {
+                        rowClass = 'stat-row';            // red background
+                    } else if (isRejected) {
+                        rowClass = 'rejected-row';        // light pink / grey
+                    }
+
+                    // Build action buttons
                     var actionButtons = '';
                     if (!isRejected) {
                         actionButtons = '<a href="#" class="btnEdit" ' +
@@ -3363,7 +3373,8 @@
                         actionButtons = '<span class="badge badge-danger" style="background-color: #dc3545; padding: 5px 10px; border-radius: 3px; cursor: default;">Closed</span>';
                     }
 
-                    rows += '<tr class="' + rowClass + '" ' + rowStyle + '>' +
+                    // Build the table row with the computed class
+                    rows += '<tr class="' + rowClass + '">' +
                         '<td>' + value.mr_no_sequence + '</td>' +
                         '<td>' + value.Full_Name + '</td>' +
                         '<td>' + value.Transaction_Type + '</td>' +

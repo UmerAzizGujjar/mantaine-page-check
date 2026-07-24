@@ -304,7 +304,25 @@ $(document).ready(function() {
 
     $('#txtItem').focus();
 
-
+    $.ajax({
+        type: "POST",
+        url: "GRN.aspx/AllowDirectGRN",
+        contentType: "application/json; charset=utf-8",
+        dataType: "json",
+        success: function (response) {
+            debugger;
+            var code = JSON.parse(response.d);
+            console.log("DirectGRN code:", response.d);
+            if (code === "02") {
+                debugger
+                $('[name="grndirect"]').hide();
+              
+            }
+        },
+        error: function (error) {
+            console.error("Error calling AllowDirectGRN:", error);
+        }
+    });
     $(document).on('keyup change', 'input[name="txtGRNQtyDir"], input[name="txtRateDir"]', function() {
 
         var row = $(this).closest('tr');
@@ -1224,13 +1242,13 @@ function LoadGRNDetailDir(GRN_ID) {
                 <asp:HyperLink ID="HyperLink1" runat="server">Download</asp:HyperLink>
             </div>
 
-            <div class="col-lg-1 col-md-6 col-sm-12">
+            <div class="col-lg-1 col-md-6 col-sm-12" name="grndirect">
                 <label class="source-radio-option">
                     Direct GRN
                 </label>
             </div>
 
-            <div class="col-lg-1 col-md-6 col-sm-12">
+            <div class="col-lg-1 col-md-6 col-sm-12"  name="grndirect">
      
                 <input type="checkbox" name="dircGRN" id="dircGRN" value="item" />
             </div>
