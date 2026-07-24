@@ -12,7 +12,19 @@
 
         });
       
-
+        function OPD_Form_Print(Patient_ID) {
+            debugger;
+            var ID = Patient_ID;
+            var locationInfo = window.location;
+            var url = "/ReportViewer.aspx?ReportName=OPD_Patient_Print&Title=OPD FORM &OPD_ID=" + ID;
+            if (!locationInfo.origin.includes('localhost') || locationInfo.origin.includes('localhost')) {
+                var urlInfo = window.location.href.split('/');
+                var ip = urlInfo[2];
+                var foldernam = urlInfo[3];
+                url = 'http://' + ip + '/' + foldername + "/ReportViewer.aspx?ReportName=OPD_Patient_Print&Title=OPD FORM &OPD_ID=" + ID;
+            }
+            window.open(url, '_blank');
+        }
        
         function editOpen(id) {
             Swal.fire({
