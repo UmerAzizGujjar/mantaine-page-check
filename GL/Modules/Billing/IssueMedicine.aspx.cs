@@ -519,15 +519,24 @@ namespace PMS
 
 
         [WebMethod]
-        public static string GetBatchNumbers(int itemId,string warehouse)
+        public static string GetBatchNumbers(int itemId, string warehouse)
         {
             using (DataBaseDataContext db = new DataBaseDataContext())
             {
                 HashSet<string> batchSet = new HashSet<string>();
 
-                //var warehouse = (from sys in db.sys_Parms where sys.Name == "Pharmacy WareHouse" select sys.Code).FirstOrDefault();
+                // Get blocked batches for this item and warehouse
+                var blockedBatches = new HashSet<string>(
+                    (from wb in db.Warehouse_Item_Batches
+                     where wb.Item_ID == itemId
+                     && wb.Warehouse_Id == warehouse
+                     && wb.IsBlocked == true
+                     select wb.Batch_Number).ToList()
+                );
 
-                var PICondition = (from sys in db.sys_Parms where sys.Name == "Direct PO ON Purchase Invoice" select sys.Code).FirstOrDefault();
+                var PICondition = (from sys in db.sys_Parms
+                                   where sys.Name == "Direct PO ON Purchase Invoice"
+                                   select sys.Code).FirstOrDefault();
 
                 if (PICondition == "01")
                 {
@@ -538,6 +547,9 @@ namespace PMS
 
                     foreach (var batch in grnBatches)
                     {
+                        if (string.IsNullOrEmpty(batch)) continue;
+                        if (blockedBatches.Contains(batch)) continue;
+
                         int stock = Convert.ToInt32(
                             db.GetPharmcyItemUomTotalStock(itemId, warehouse, batch)
                         );
@@ -545,7 +557,6 @@ namespace PMS
                         if (stock > 0)
                             batchSet.Add(batch);
                     }
-
                 }
                 else
                 {
@@ -556,6 +567,9 @@ namespace PMS
 
                     foreach (var batch in grnBatches)
                     {
+                        if (string.IsNullOrEmpty(batch)) continue;
+                        if (blockedBatches.Contains(batch)) continue;
+
                         int stock = Convert.ToInt32(
                             db.GetPharmcyItemUomTotalStock(itemId, warehouse, batch)
                         );
@@ -563,18 +577,20 @@ namespace PMS
                         if (stock > 0)
                             batchSet.Add(batch);
                     }
-
                 }
-
 
                 // ---------- Stock Adjustment Batches ----------
                 var stockAdjBatches = (from inv in db.INV_Stock_Adjustments
-                                       where inv.Item_Id == itemId.ToString() && inv.Ware_House == warehouse
+                                       where inv.Item_Id == itemId.ToString()
+                                       && inv.Ware_House == warehouse
                                        && inv.Status == "Approved"
                                        select inv.Batch_No).ToList();
 
                 foreach (var batch in stockAdjBatches)
                 {
+                    if (string.IsNullOrEmpty(batch)) continue;
+                    if (blockedBatches.Contains(batch)) continue;
+
                     int stock = Convert.ToInt32(
                         db.GetPharmcyItemUomTotalStock(itemId, warehouse, batch)
                     );
@@ -582,6 +598,7 @@ namespace PMS
                     if (stock > 0)
                         batchSet.Add(batch);
                 }
+
                 // ------------------------- Stock Transfer Batch -------------------
                 var stocktransBatches = (from sti in db.Stock_Transfer_Items
                                          join st in db.Stock_Transfers on sti.Stock_Transfer_ID equals st.Stock_Transfer_ID
@@ -591,6 +608,9 @@ namespace PMS
 
                 foreach (var batch in stocktransBatches)
                 {
+                    if (string.IsNullOrEmpty(batch)) continue;
+                    if (blockedBatches.Contains(batch)) continue;
+
                     int stock = Convert.ToInt32(
                         db.GetPharmcyItemUomTotalStock(itemId, warehouse, batch)
                     );
@@ -598,6 +618,7 @@ namespace PMS
                     if (stock > 0)
                         batchSet.Add(batch);
                 }
+
                 // ---------- Final Result ----------
                 var result = batchSet.Select(b => new BatchStock
                 {
@@ -607,7 +628,7 @@ namespace PMS
                 return new JavaScriptSerializer().Serialize(result);
             }
         }
-       
+
         [WebMethod]
         public static string PendingPatients(string SearchString)
         {
@@ -925,18 +946,7 @@ namespace PMS
             return result;
         }
 
-        //[WebMethod]
-        //public static string MedicineDetailgetfromOPD(int itemId)
-        //{
-        //    string result = string.Empty;
-
-        //    using (DataBaseDataContext db = new DataBaseDataContext())
-        //    {
-        //        var query = db.spMedicinesDetailsfromopd(itemId).ToList();
-        //        result = (new JavaScriptSerializer()).Serialize(query).ToString();
-        //    }
-        //    return result;
-        //}
+     
         [WebMethod]
         public static string MedicineDetailgetfromOPD(int itemId,string warehouse, int patientId = 0, string visitType = "")
         {
@@ -944,7 +954,7 @@ namespace PMS
 
             using (DataBaseDataContext db = new DataBaseDataContext())
             {
-                var query = db.spMedicinesDetailsfromopd(itemId, warehouse, patientId, visitType).ToList();
+                var query = db.spMedicinesDetailsfromopd(itemId,patientId,warehouse,visitType).ToList();
                 result = (new JavaScriptSerializer()).Serialize(query);
             }
             return result;
@@ -2102,6 +2112,49 @@ namespace PMS
                 result = (new JavaScriptSerializer()).Serialize(query).ToString();
             }
             return result;
+        }
+        [WebMethod]
+        public static string GetPendingPatientsCount()
+        {
+            try
+            {
+                using (DataBaseDataContext db = new DataBaseDataContext())
+                {
+                    DateTime last24Hours = DateTime.Now.AddHours(-24);
+
+                    // Get distinct patient IDs with pending medicines in last 24 hours
+                    var query = (from pm in db.In_Patient_Medicines
+                                 where pm.Medicine_Date >= last24Hours
+                                       && (pm.is_rejected == null || pm.is_rejected == false)
+                                 join ipd in db.In_Patients on pm.Patient_ID equals ipd.In_Patient_ID
+                                 join rp in db.Reg_patients on ipd.Patient_ID equals rp.pat_id
+                                 select rp.pat_id)
+                                .Union(
+                                    from pm in db.In_Patient_Medicines
+                                    where pm.Medicine_Date >= last24Hours
+                                          && (pm.is_rejected == null || pm.is_rejected == false)
+                                    join opd in db.Out_Patients on pm.Patient_ID equals opd.Out_Patient_ID
+                                    join rp in db.Reg_patients on opd.Reg_PatId equals rp.pat_id
+                                    select rp.pat_id
+                                )
+                                .Union(
+                                    from pm in db.In_Patient_Medicines
+                                    where pm.Medicine_Date >= last24Hours
+                                          && (pm.is_rejected == null || pm.is_rejected == false)
+                                    join ep in db.Emergency_Patients on pm.Patient_ID equals ep.Emergency_ID
+                                    join rp in db.Reg_patients on ep.Patient_ID equals rp.pat_id
+                                    select rp.pat_id
+                                )
+                                .Distinct();
+
+                    int count = query.Count();
+                    return (new JavaScriptSerializer()).Serialize(new { Count = count });
+                }
+            }
+            catch (Exception ex)
+            {
+                return (new JavaScriptSerializer()).Serialize(new { Count = 0, Error = ex.Message });
+            }
         }
         [WebMethod]
         public static string GetShowTemplateOnSale()
