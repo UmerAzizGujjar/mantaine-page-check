@@ -227,6 +227,7 @@ namespace PMS
                 lstItem.MobNo = record.MobNo;
                 lstItem.Vendor_Phone1 = record.PhnNo;
                 lstItem.DrugLicenceNo = record.DrugLicenceNo;
+                lstItem.manufacture_id = record.manufacturerDropdown;
                 lstItem.Vendor_STN = record.Stn;
                 lstItem.Vendor_NTN = record.Ntn;
                 lstItem.Cnic = record.Cnic;
@@ -267,6 +268,7 @@ namespace PMS
                 obj.City = record.City;
                 obj.MobNo = record.MobNo;
                 obj.Vendor_Phone1 = record.PhnNo;
+                obj.manufacture_id = record.manufacturerDropdown;
                 obj.DrugLicenceNo = record.DrugLicenceNo;
                 obj.Vendor_STN = record.Stn;
                 obj.Vendor_NTN = record.Ntn;
@@ -422,6 +424,7 @@ namespace PMS
                               m.TaxPayerTyp,
                               m.CompanyType_Id,
                               m.DrugLicenceNo,
+                              m.manufacture_id,
                               m.IsActive,
                               m.Ismanual,
 
@@ -634,6 +637,7 @@ namespace PMS
             public string Region { get; set; }
             public string City { get; set; }
             public string MobNo { get; set; }
+            public string manufacturerDropdown { get; set; }
             public string PhnNo { get; set; }
             public string DrugLicenceNo { get; set; }
             public string Stn { get; set; }

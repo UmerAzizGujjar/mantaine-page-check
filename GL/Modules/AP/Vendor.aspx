@@ -185,6 +185,7 @@
                 setTimeout(function () {
                     $('#ddlCom').val(data.CompanyType_Id).trigger('change');
                 }, 1000);
+             
 
                 if (data.Account_ID != null && data.Account_ID != "0") {
                     PageMethods.LoadGLAccount(parseInt(data.Account_ID), function (glData) {
@@ -203,7 +204,9 @@
                         });
                 }
                 debugger;
-
+                setTimeout(function () {
+                    $('#manufacturerDropdown').val(data.manufacture_id).trigger('change');
+                }, 1000);
                 LoadVendorPerson(VenId);
                 LoadVendorGeneralItem(VenId);
                 LoadVendorPharmacyItem(VenId);
@@ -683,6 +686,7 @@
             var AccountId = $('#ddlPayabl').val();
             var TaxTyp = $('#ddlTax').val();
             var CompanyTyp = $('#ddlCom').val();
+            var manufacturerDropdown = $('#manufacturerDropdown').val();
             var active = $('#Active').prop('checked');
             var Chkmanual = $('#chkmanual').prop('checked');
             if (Chkmanual == true && AccountId == 0) {
@@ -754,7 +758,7 @@
             });
             $('#btnsave').attr('disabled', true);
             var AllItemDetail = {
-                'IsActive': active, 'Ismanual': Chkmanual, 'VendorId': VendorId, 'VendorName': VendorName, 'VendorType': VendorType, 'Address': Address, 'CreditDays': CreditDays, 'Country': Country, 'Region': Region, 'City': City, 'MobNo': MobNo, 'PhnNo': PhnNo, 'DrugLicenceNo': DrugLicenceNo, 'Stn': Stn, 'Ntn': Ntn, 'Cnic': Cnic, 'Email': Email, 'FocalPerson': Foc, 'PayablCode': AccountId, 'TaxTyp': TaxTyp, 'VendorCode': VendorCode, 'CompanyTyp': CompanyTyp, 'PersonList': Person_list, 'GeneralItemlist': GeneralItem_list, 'PharmacyItemlist': PharmacyItem_list, 'Companylist': Company_list ,'hdfAccount_ID': hdfAccount_ID,'hdfParent_Code': hdfParent_Code,'hdfAccount_Serial': hdfAccount_Serial,'hdfLevel': hdfLevel,'hdfAccount_Code': hdfAccount_Code};
+                'IsActive': active, 'Ismanual': Chkmanual, 'VendorId': VendorId, 'VendorName': VendorName, 'VendorType': VendorType, 'Address': Address, 'CreditDays': CreditDays, 'Country': Country, 'Region': Region, 'City': City, 'MobNo': MobNo, 'PhnNo': PhnNo, 'DrugLicenceNo': DrugLicenceNo, 'Stn': Stn, 'Ntn': Ntn, 'Cnic': Cnic, 'Email': Email, 'FocalPerson': Foc, 'PayablCode': AccountId, 'TaxTyp': TaxTyp, 'VendorCode': VendorCode, 'CompanyTyp': CompanyTyp, 'manufacturerDropdown': manufacturerDropdown, 'PersonList': Person_list, 'GeneralItemlist': GeneralItem_list, 'PharmacyItemlist': PharmacyItem_list, 'Companylist': Company_list ,'hdfAccount_ID': hdfAccount_ID,'hdfParent_Code': hdfParent_Code,'hdfAccount_Serial': hdfAccount_Serial,'hdfLevel': hdfLevel,'hdfAccount_Code': hdfAccount_Code};
             PageMethods.SaveVendor(btnSave, JSON.stringify(AllItemDetail), function (res) {
                 Swal.fire({
                     icon: 'success',
