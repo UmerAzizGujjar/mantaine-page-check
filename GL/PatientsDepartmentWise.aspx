@@ -1728,6 +1728,21 @@
                         var url = 'ReportViewer.aspx?ReportName=DoctorShare_Report&ReportTitle=Doctor Share Report from ' + $('#ctl00_MainContent_txtStart_Date').val() + ' ' + $('#ctl00_MainContent_txtSTime').val() + ' to ' + $('#ctl00_MainContent_txtEnd_Date').val() + ' ' + $('#ctl00_MainContent_txtETime').val() + '&StartDate=' + $('#ctl00_MainContent_txtStart_Date').val() + '&EndDate=' + $('#ctl00_MainContent_txtEnd_Date').val() + '&StartTime=' + $('#ctl00_MainContent_txtSTime').val() + '&EndTime=' + $('#ctl00_MainContent_txtETime').val() + '' + '&DoctorID=' + $('#ctl00_MainContent_ddlDoctor').val() + '&Operator=' + $("#ctl00_MainContent_ddloprators").val() + '&Department=' + ((typeof ($("#ctl00_MainContent_ddlDepartments").val()) != 'undefined') ? $("#ctl00_MainContent_ddlDepartments").val() : "0") + '&PatientType=' + $("#ctl00_MainContent_ddlPatientType").val() + '&Summary=' + summary + '&ExportPDF=' + exporttopdf;  // excluded: + '&ExportPDF=' + exporttopdf    + '&Summary=' + summary 
                         window.open(url, '_blank');
                     }
+                    else if (rptTitle == "IPDDoctorShareReport") {
+                        debugger;
+                        var exporttopdf = document.getElementById('<%= chkExportPDF.ClientID %>').checked;
+                       
+                        var url = 'ReportViewer.aspx?ReportName=IPDDoctorShareReport&ReportTitle=Doctor Share Report from ' +
+                            $('#ctl00_MainContent_txtStart_Date').val() + ' ' + $('#ctl00_MainContent_txtSTime').val() +
+                            ' to ' + $('#ctl00_MainContent_txtEnd_Date').val() + ' ' + $('#ctl00_MainContent_txtETime').val() +
+                            '&StartDate=' + $('#ctl00_MainContent_txtStart_Date').val() + '&EndDate=' + $('#ctl00_MainContent_txtEnd_Date').val() + '&StartTime=' + $('#ctl00_MainContent_txtSTime').val() + '&EndTime=' + $('#ctl00_MainContent_txtETime').val() + '' +
+                            '&DoctorID=' + $('#ctl00_MainContent_ddlDoctor').val() +
+                            '&Operator=' + $("#ctl00_MainContent_ddloprators").val() +
+                            '&Department=' + ((typeof ($("#ctl00_MainContent_ddlDepartments").val()) != 'undefined') ? $("#ctl00_MainContent_ddlDepartments").val() : "0") +
+                            '&PatientType=' + ((typeof ($("#ctl00_MainContent_ddlPatientType").val()) != 'undefined') ? $("#ctl00_MainContent_ddlPatientType").val() : "0")+
+                            '&ExportPDF=' + exporttopdf;  // excluded: + '&ExportPDF=' + exporttopdf    + '&Summary=' + summary 
+                        window.open(url, '_blank');
+                    }
 
                     else if (rptTitle == "Patients_Investigation") {
                         var exporttopdf = document.getElementById('<%= chkExportPDF.ClientID %>').checked;

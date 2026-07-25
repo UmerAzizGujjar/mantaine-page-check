@@ -4534,6 +4534,45 @@ namespace PMS
                 rd.SetParameterValue("Title", reportTitle);
                 rd.SetParameterValue("@Operator", operatorID);
             }
+            else if (reportName == "IPDDoctorShareReport")
+            {
+                //  var logoPath = DBClass.getField("SELECT dbo.GetCompanyLogo()");
+                string rptFileName = "TransactionalDetails/IPDDoctorShareDetail.rpt";
+                string Operator = Request.QueryString["Operator"].ToString();
+
+                var logoPath = DBClass.getField("SELECT dbo.GetCompanyLogo()");
+             
+
+                reportPath += rptFileName;
+                rd.Load(reportPath);
+
+                string departmentID = Request.QueryString["Department"].ToString();
+                string PatientType = Request.QueryString["PatientType"].ToString();
+
+                string stDate = Request.QueryString["StartDate"].ToString();
+                string stTime = Request.QueryString["StartTime"].ToString();
+
+                string endDate = Request.QueryString["EndDate"].ToString();
+                string endTime = Request.QueryString["EndTime"].ToString();
+                //string doctorID = Request.QueryString["DoctorID"].ToString();
+                string doctorID = Request.QueryString["DoctorID"] ?? "0";
+                string parameterStDate = string.Empty;
+                string parameterEndDate = string.Empty;
+
+                this.getDateTimeDBFormate(stDate, stTime, out parameterStDate);
+                this.getDateTimeDBFormate(endDate, endTime, out parameterEndDate);
+
+                rd.SetParameterValue("@stDate", parameterStDate);
+                rd.SetParameterValue("@endDate", parameterEndDate);
+                rd.SetParameterValue("CompanyName", AppConfig.Company_Name);
+                rd.SetParameterValue("@DepartmentID", departmentID);
+
+                rd.SetParameterValue("@Patient_Category", PatientType);
+                rd.SetParameterValue("@DoctorID", doctorID);
+                rd.SetParameterValue("CompanyLogo", logoPath);
+                rd.SetParameterValue("Title", reportTitle);
+                rd.SetParameterValue("@Operator", Operator);
+            }
             else if (reportName == "DoctorShare_Report")
             {
                 //  var logoPath = DBClass.getField("SELECT dbo.GetCompanyLogo()");
