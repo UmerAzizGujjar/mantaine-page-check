@@ -3907,6 +3907,10 @@
                     async: false,
                     success: function (msg) {
                         var data = JSON.parse(msg.d);
+                        if (!data || data.length === 0) {
+                            console.warn("Item not found: " + itemId);
+                            return;  // Skip to next item
+                        }
                         var Uomqty = data[0].UOM_Qty;
                         if (Uomqty == null) {
                             Uomqty = 0;
