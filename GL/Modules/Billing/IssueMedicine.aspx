@@ -183,6 +183,9 @@
             LoadPatientNo();
             AllowadjustmentEdit();
             LoadQueueCount();
+            $('#filterTransactionType').on('change', function () {
+                filterPendingPatients();
+            });
 
         });
         window.addEventListener('keydown', function (event) {
@@ -758,6 +761,19 @@
                 });
             }
         }
+        function filterPendingPatients() {
+            var selected = $('#filterTransactionType').val();
+            $('#tblPendingPatients tbody tr').each(function () {
+                // Department is the 3rd column (index 2)
+                var dept = $(this).find('td:eq(2)').text().trim();
+                if (selected === 'all' || dept === selected) {
+                    $(this).show();
+                } else {
+                    $(this).hide();
+                }
+            });
+        }
+
         // Function to load Simple Sale Return Items Data
         function AddSaleReturnMedicineDetail() {
             var itemId = $('#ddlSaleReturnItems').val();
@@ -3086,6 +3102,7 @@
             var warehouse = $('#ddlWarehouse').find('option:selected').val();
             fillPendingPatientsLists();
             LoadQueueCount(); // Refresh the count as well
+            fillPendingPatientsLists();
         }
 
         function RefreshList() {
@@ -3396,6 +3413,7 @@
                 debugger;
                 $('#tblPendingPatients tbody').html(rows);
                 $(".se-pre-con").fadeOut("slow");
+                filterPendingPatients();
             }, function (err) {
                 console.log(err);
             });
@@ -3408,7 +3426,7 @@
         }
         function RefreshReturnQueue() {
             $("#txtReturnSearchmodal").val('')
-            fillReturnPatientsLists()
+            fillReturnPatientsLists();
         }
        
         //function fillReturnPatientsLists() {
@@ -4751,55 +4769,68 @@
     <%--Return Que Ends--%>
 
     <%--Patient Que Start--%>
-    <div id="queueModal" class="modal fade scrollable-modal" data-backdrop="static" tabindex="-1" role="dialog">
-        <div class="modal-dialog modal-lg modal-dialog-centered modal-dialog-scrollable" role="document">
-            <div class="modal-content">
-                <div class="modal-body">
-                                            <fieldset class="form-group">
-                        <div class="form-row">
-                            <div class="col-md-6">
-                                <label for="txtSearchmodal">Search Your Patients:</label>
-                                <input type="text" id="txtSearchmodal" class="form-control" onkeyup="fillPendingPatientsLists();" autocomplete="off" placeholder="Enter search text" />
-                            </div>
-                                                       
-                            <div class="col-lg-2 text-end" style=" margin-top:28px !important;">
-                                <a onclick="RefreshQueue()">
-                                    <i class="fa fa-refresh fa-2x"></i>
-                                </a>
-                            </div>
+<div id="queueModal" class="modal fade scrollable-modal" data-backdrop="static" tabindex="-1" role="dialog">
+    <div class="modal-dialog modal-lg modal-dialog-centered modal-dialog-scrollable" role="document">
+        <div class="modal-content">
+            <div class="modal-body">
+                <fieldset class="form-group">
+                    <div class="form-row align-items-end">
+                        <!-- Search input -->
+                        <div class="col-md-4">
+                            <label for="txtSearchmodal">Search Patients:</label>
+                            <input type="text" id="txtSearchmodal" class="form-control" 
+                                   onkeyup="fillPendingPatientsLists();" 
+                                   autocomplete="off" placeholder="Enter MR No / Name" />
                         </div>
-                    </fieldset>
-                    <div id="QueueList">
-                        <div class="table-responsive previewTable">
-                            <table class="table table-bordered table-custom" id="tblPendingPatients" style="overflow: auto;">
-                                <thead id="ihead">
-                                    <tr>
-                                        <th>MR No</th>
-                                        <th>Patient Name</th>
-                                        <th>Department</th>
-                                        <th>Referred By</th>
-                                        <th>Ward</th>
-                                        <th>Bed</th>
-                                        <th style="width: 173px;">Created Time</th>
-                                        <th>Select</th>
-                                    </tr>
-                                </thead>
-                                <tbody id="ibody">
-                                </tbody>
-                            </table>
 
+                        <!-- NEW: Department Filter Dropdown -->
+                        <div class="col-md-3">
+                            <label for="filterTransactionType">Department:</label>
+                            <select id="filterTransactionType" class="form-control">
+                                <option value="all">All</option>
+                                <option value="IPD">IPD</option>
+                                <option value="OPD">OPD</option>
+                                <option value="EMR">EMR</option>
+                            </select>
+                        </div>
+
+                        <!-- Refresh button -->
+                        <div class="col-md-2 text-end">
+                            <a onclick="RefreshQueue()" style="cursor:pointer;">
+                                <i class="fa fa-refresh fa-2x"></i>
+                            </a>
                         </div>
                     </div>
+                </fieldset>
 
-
+                <!-- Queue Table -->
+                <div id="QueueList">
+                    <div class="table-responsive previewTable">
+                        <table class="table table-bordered table-custom" id="tblPendingPatients">
+                            <thead id="ihead">
+                                <tr>
+                                    <th>MR No</th>
+                                    <th>Patient Name</th>
+                                    <th>Department</th>
+                                    <th>Referred By</th>
+                                    <th>Ward</th>
+                                    <th>Bed</th>
+                                    <th style="width:173px;">Created Time</th>
+                                    <th>Select</th>
+                                </tr>
+                            </thead>
+                            <tbody id="ibody"></tbody>
+                        </table>
+                    </div>
                 </div>
-                <div class="modal-footer">
+            </div>
 
-                    <button type="button" class="btn btn-gray" data-dismiss="modal">Close</button>
-                </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-gray" data-dismiss="modal">Close</button>
             </div>
         </div>
     </div>
+</div>
 
 
     <%--Patient Que Ends--%>
