@@ -183,6 +183,9 @@
             LoadPatientNo();
             AllowadjustmentEdit();
             LoadQueueCount();
+            $('#filterTransactionType').on('change', function () {
+                filterPendingPatients();
+            });
 
         });
         window.addEventListener('keydown', function (event) {
@@ -758,6 +761,19 @@
                 });
             }
         }
+        function filterPendingPatients() {
+            var selected = $('#filterTransactionType').val();
+            $('#tblPendingPatients tbody tr').each(function () {
+                // Department is the 3rd column (index 2)
+                var dept = $(this).find('td:eq(2)').text().trim();
+                if (selected === 'all' || dept === selected) {
+                    $(this).show();
+                } else {
+                    $(this).hide();
+                }
+            });
+        }
+
         // Function to load Simple Sale Return Items Data
         function AddSaleReturnMedicineDetail() {
             var itemId = $('#ddlSaleReturnItems').val();
@@ -2497,6 +2513,7 @@
                     $('#SaveVal').attr('disabled', false);
                     return;
                 }
+                isPatientDataSaved = true; 
                 var btnSave = $('#btnSave').val();
                 if (btnSave == 'Save & Print(Alt+S)' || btnSave == "Save & Print(Alt+S)") {
                     window.open('../../ReportViewer.aspx?ReportName=PharmacySlip&ReportTitle=PharmacySlip&Bill_ID=' + result.BillId);
@@ -2716,6 +2733,7 @@
                         $('#SaveVal').attr('disabled', false);
                         return;
                     }
+                    isPatientDataSaved = true; 
                     var btnSave = $('#btnSave').val();
                     if (btnSave == 'Save & Print(Alt+S)' || btnSave == "Save & Print(Alt+S)") {
                         window.open('../../ReportViewer.aspx?ReportName=PharmacySlip&ReportTitle=PharmacySlip&Bill_ID=' + result.BillId);
@@ -3084,6 +3102,7 @@
             var warehouse = $('#ddlWarehouse').find('option:selected').val();
             fillPendingPatientsLists();
             LoadQueueCount(); // Refresh the count as well
+            fillPendingPatientsLists();
         }
 
         function RefreshList() {
@@ -3394,6 +3413,7 @@
                 debugger;
                 $('#tblPendingPatients tbody').html(rows);
                 $(".se-pre-con").fadeOut("slow");
+                filterPendingPatients();
             }, function (err) {
                 console.log(err);
             });
@@ -3406,7 +3426,7 @@
         }
         function RefreshReturnQueue() {
             $("#txtReturnSearchmodal").val('')
-            fillReturnPatientsLists()
+            fillReturnPatientsLists();
         }
        
         //function fillReturnPatientsLists() {
@@ -3582,6 +3602,7 @@
             
 
         }
+        var isPatientDataSaved = true;
         function RejectMedicineRequest(medicineId, element) {
                 debugger;
                 Swal.fire({
@@ -3620,13 +3641,26 @@
                     }
                 });
             }
-                    function hideModel(pat_id, mr_no_sequence) {
+        function hideModel(pat_id, mr_no_sequence) {
+            // Check if there is unsaved data in the current transaction
+            if (!isPatientDataSaved && $('#tblDetails tbody tr').length > 0) {
+                Swal.fire({
+                    icon: 'warning',
+                    title: 'Unsaved Data!',
+                    text: 'You have unsaved data for the current patient. Please Save or Clear before loading a new patient from the queue.',
+                    confirmButtonText: 'OK'
+                });
+                return; // Stop execution
+            }
+
             console.log(pat_id, mr_no_sequence);
             $('#queueModal').modal('hide');
 
+            // Reset the flag because we are loading a NEW patient
+            isPatientDataSaved = false;
+
             $("#txtMRNo").tokenInput("clear");
             $("#txtMRNo").tokenInput("add", { id: pat_id, name: mr_no_sequence });
-
             getOPDandIPDNO(pat_id);
         }
         function OnSuccess(data) {
@@ -3873,29 +3907,10 @@
                     async: false,
                     success: function (msg) {
                         var data = JSON.parse(msg.d);
-
-                        // Check if data is empty - means batch is blocked
                         if (!data || data.length === 0) {
-                            // Show alert with item info (using itemId since we don't have the name)
-                            Swal.fire({
-                                icon: 'error',
-                                title: 'Batch Blocked! Use different Warehouse',
-                                html: `
-                            <div style="text-align: left; padding: 10px;">
-                                <p><strong>Item ID:</strong> ${itemId}</p>
-                                <p><strong>Warehouse:</strong> ${warehouse}</p>
-                                <p><strong>Status:</strong> <span style="color: red; font-weight: bold;">BLOCKED</span></p>
-                                <hr />
-                                <p style="color: #666; font-size: 14px;">This batch has been blocked by the administrator.</p>
-                                <p style="color: #666; font-size: 14px;">Please contact the admin for further assistance.</p>
-                            </div>
-                        `,
-                                confirmButtonText: 'OK',
-                                confirmButtonColor: '#d33'
-                            });
-                            return; // Skip adding this item
+                            console.warn("Item not found: " + itemId);
+                            return;  // Skip to next item
                         }
-
                         var Uomqty = data[0].UOM_Qty;
                         if (Uomqty == null) {
                             Uomqty = 0;
@@ -4735,55 +4750,68 @@
     <%--Return Que Ends--%>
 
     <%--Patient Que Start--%>
-    <div id="queueModal" class="modal fade scrollable-modal" data-backdrop="static" tabindex="-1" role="dialog">
-        <div class="modal-dialog modal-lg modal-dialog-centered modal-dialog-scrollable" role="document">
-            <div class="modal-content">
-                <div class="modal-body">
-                                            <fieldset class="form-group">
-                        <div class="form-row">
-                            <div class="col-md-6">
-                                <label for="txtSearchmodal">Search Your Patients:</label>
-                                <input type="text" id="txtSearchmodal" class="form-control" onkeyup="fillPendingPatientsLists();" autocomplete="off" placeholder="Enter search text" />
-                            </div>
-                                                       
-                            <div class="col-lg-2 text-end" style=" margin-top:28px !important;">
-                                <a onclick="RefreshQueue()">
-                                    <i class="fa fa-refresh fa-2x"></i>
-                                </a>
-                            </div>
+<div id="queueModal" class="modal fade scrollable-modal" data-backdrop="static" tabindex="-1" role="dialog">
+    <div class="modal-dialog modal-lg modal-dialog-centered modal-dialog-scrollable" role="document">
+        <div class="modal-content">
+            <div class="modal-body">
+                <fieldset class="form-group">
+                    <div class="form-row align-items-end">
+                        <!-- Search input -->
+                        <div class="col-md-4">
+                            <label for="txtSearchmodal">Search Patients:</label>
+                            <input type="text" id="txtSearchmodal" class="form-control" 
+                                   onkeyup="fillPendingPatientsLists();" 
+                                   autocomplete="off" placeholder="Enter MR No / Name" />
                         </div>
-                    </fieldset>
-                    <div id="QueueList">
-                        <div class="table-responsive previewTable">
-                            <table class="table table-bordered table-custom" id="tblPendingPatients" style="overflow: auto;">
-                                <thead id="ihead">
-                                    <tr>
-                                        <th>MR No</th>
-                                        <th>Patient Name</th>
-                                        <th>Department</th>
-                                        <th>Referred By</th>
-                                        <th>Ward</th>
-                                        <th>Bed</th>
-                                        <th style="width: 173px;">Created Time</th>
-                                        <th>Select</th>
-                                    </tr>
-                                </thead>
-                                <tbody id="ibody">
-                                </tbody>
-                            </table>
 
+                        <!-- NEW: Department Filter Dropdown -->
+                        <div class="col-md-3">
+                            <label for="filterTransactionType">Department:</label>
+                            <select id="filterTransactionType" class="form-control">
+                                <option value="all">All</option>
+                                <option value="IPD">IPD</option>
+                                <option value="OPD">OPD</option>
+                                <option value="EMR">EMR</option>
+                            </select>
+                        </div>
+
+                        <!-- Refresh button -->
+                        <div class="col-md-2 text-end">
+                            <a onclick="RefreshQueue()" style="cursor:pointer;">
+                                <i class="fa fa-refresh fa-2x"></i>
+                            </a>
                         </div>
                     </div>
+                </fieldset>
 
-
+                <!-- Queue Table -->
+                <div id="QueueList">
+                    <div class="table-responsive previewTable">
+                        <table class="table table-bordered table-custom" id="tblPendingPatients">
+                            <thead id="ihead">
+                                <tr>
+                                    <th>MR No</th>
+                                    <th>Patient Name</th>
+                                    <th>Department</th>
+                                    <th>Referred By</th>
+                                    <th>Ward</th>
+                                    <th>Bed</th>
+                                    <th style="width:173px;">Created Time</th>
+                                    <th>Select</th>
+                                </tr>
+                            </thead>
+                            <tbody id="ibody"></tbody>
+                        </table>
+                    </div>
                 </div>
-                <div class="modal-footer">
+            </div>
 
-                    <button type="button" class="btn btn-gray" data-dismiss="modal">Close</button>
-                </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-gray" data-dismiss="modal">Close</button>
             </div>
         </div>
     </div>
+</div>
 
 
     <%--Patient Que Ends--%>

@@ -971,11 +971,32 @@ List<BatchNum> batchList, List<PatientTypeList> PatientTypeList, List<WarehouseM
                 using (var db = new DataBaseDataContext(DBClass.ConnectionString()))
                 {
                     var WareHouseWorking = (from tbl in db.sys_Parms
-                                    where tbl.Name == "Multiple WareHouse Working"
-                                    select tbl.Code)
+                                            where tbl.Name == "Multiple WareHouse Working"
+                                            select tbl.Code)
                               .FirstOrDefault();
 
                     return WareHouseWorking ?? "01";
+                }
+            }
+            catch (Exception ex)
+            {
+                return "0";
+            }
+        }
+
+        [WebMethod]
+        public static string MultipleBatches()
+        {
+            try
+            {
+                using (var db = new DataBaseDataContext(DBClass.ConnectionString()))
+                {
+                    var BatchesWorking = (from tbl in db.sys_Parms
+                                            where tbl.Name == "Batch Block Working"
+                                          select tbl.Code)
+                              .FirstOrDefault();
+
+                    return BatchesWorking ?? "01";
                 }
             }
             catch (Exception ex)

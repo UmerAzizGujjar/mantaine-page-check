@@ -50,7 +50,7 @@ namespace PMS
 
 
         [WebMethod]
-        public static object ViewList(int draw, int start, int length, string sortColumn, string sortColumnDirection, string searchValue)
+        public static object ViewList(int draw, int start, int length, string sortColumn, string sortColumnDirection, string searchValue, string filterStatus = "all")
         {
             try
             {
@@ -71,9 +71,27 @@ namespace PMS
                                   Designation = _dbContext.GetDataValueName("Designation", p.Designation),
                                   Email = p.Email,
                                   Mobile1 = p.Mobile,
+                                  Account_ID = p.Account_ID,
+                                  AccountID = (from a in _dbContext.GL_Accounts
+                                               where a.Account_ID == p.Account_ID
+                                               select new { Account = a.Account_Name }).FirstOrDefault().Account.ToString(),
                               };
 
+
                     var FilteredCount = Employees.Count();
+                    if (filterStatus == "mapped")
+                    {
+                        Employees = Employees.Where(e => e.Account_ID != null && e.Account_ID > 0);
+                    }
+                    else if (filterStatus == "unmapped")
+                    {
+                        Employees = Employees.Where(e => e.Account_ID == null || e.Account_ID == 0);
+                    }
+                    if (length == -1 || length > 100000)
+                    {
+                        start = 0;
+                        length = FilteredCount;
+                    }
                     switch (sortColumn)
                     {
                         case "Emp_No":
@@ -99,6 +117,25 @@ namespace PMS
             {
                 throw new Exception("Error fetching Employee list", ex);
             }
+        }
+
+        [WebMethod]
+        public static void SavePageState(int pageIndex)
+        {
+            if (HttpContext.Current.Session != null)
+            {
+                HttpContext.Current.Session["EmployeeView_PageIndex"] = pageIndex;
+            }
+        }
+
+        [WebMethod]
+        public static int GetPageState()
+        {
+            if (HttpContext.Current.Session != null && HttpContext.Current.Session["EmployeeView_PageIndex"] != null)
+            {
+                return Convert.ToInt32(HttpContext.Current.Session["EmployeeView_PageIndex"]);
+            }
+            return 0; // Default to first page
         }
     }
 }
