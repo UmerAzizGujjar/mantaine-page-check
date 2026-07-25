@@ -3907,29 +3907,10 @@
                     async: false,
                     success: function (msg) {
                         var data = JSON.parse(msg.d);
-
-                        // Check if data is empty - means batch is blocked
                         if (!data || data.length === 0) {
-                            // Show alert with item info (using itemId since we don't have the name)
-                            Swal.fire({
-                                icon: 'error',
-                                title: 'Batch Blocked! Use different Warehouse',
-                                html: `
-                            <div style="text-align: left; padding: 10px;">
-                                <p><strong>Item ID:</strong> ${itemId}</p>
-                                <p><strong>Warehouse:</strong> ${warehouse}</p>
-                                <p><strong>Status:</strong> <span style="color: red; font-weight: bold;">BLOCKED</span></p>
-                                <hr />
-                                <p style="color: #666; font-size: 14px;">This batch has been blocked by the administrator.</p>
-                                <p style="color: #666; font-size: 14px;">Please contact the admin for further assistance.</p>
-                            </div>
-                        `,
-                                confirmButtonText: 'OK',
-                                confirmButtonColor: '#d33'
-                            });
-                            return; // Skip adding this item
+                            console.warn("Item not found: " + itemId);
+                            return;  // Skip to next item
                         }
-
                         var Uomqty = data[0].UOM_Qty;
                         if (Uomqty == null) {
                             Uomqty = 0;

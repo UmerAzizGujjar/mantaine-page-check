@@ -13004,6 +13004,11 @@
       <Column Name="HasStat" Type="System.Boolean" DbType="Bit" CanBeNull="true" />
     </ElementType>
   </Function>
+  <Function Name="dbo.GetPharmcyItemUomTotalStocksss" Method="GetPharmcyItemUomTotalStocksss" IsComposable="true">
+    <Parameter Name="ItemId" Parameter="itemId" Type="System.Int32" DbType="Int" />
+    <Parameter Name="Warehouse" Parameter="warehouse" Type="System.String" DbType="VarChar(50)" />
+    <Return Type="System.Int32" />
+  </Function>
   <Function Name="dbo.spMedicinesDetailsfromopd" Method="spMedicinesDetailsfromopd">
     <Parameter Name="ItemId" Parameter="itemId" Type="System.Int32" DbType="Int" />
     <Parameter Name="PatientId" Parameter="patientId" Type="System.Int32" DbType="Int" />
@@ -13018,16 +13023,8 @@
       <Column Name="Unit" Type="System.String" DbType="VarChar(150)" CanBeNull="true" />
       <Column Name="BatchNum" Type="System.String" DbType="NVarChar(MAX)" CanBeNull="true" />
       <Column Name="ExpiryDate" Type="System.String" DbType="VarChar(10)" CanBeNull="true" />
-      <Column Name="Total_Stock" Type="System.Int32" DbType="Int" CanBeNull="true" />
       <Column Name="Sale_Rate" Type="System.Decimal" DbType="Decimal(10,2)" CanBeNull="true" />
       <Column Name="Discount_Block" Type="System.Boolean" DbType="Bit NOT NULL" CanBeNull="false" />
-      <Column Name="CGSRate" Type="System.Decimal" DbType="Decimal(18,2)" CanBeNull="true" />
-      <Column Name="RequestedQty" Type="System.Decimal" DbType="Decimal(18,2) NOT NULL" CanBeNull="false" />
     </ElementType>
-  </Function>
-  <Function Name="dbo.GetPharmcyItemUomTotalStocksss" Method="GetPharmcyItemUomTotalStocksss" IsComposable="true">
-    <Parameter Name="ItemId" Parameter="itemId" Type="System.Int32" DbType="Int" />
-    <Parameter Name="Warehouse" Parameter="warehouse" Type="System.String" DbType="VarChar(50)" />
-    <Return Type="System.Int32" />
   </Function>
 </Database>

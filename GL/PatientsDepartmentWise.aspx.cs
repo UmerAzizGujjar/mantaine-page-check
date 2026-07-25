@@ -8484,6 +8484,67 @@ namespace PMS
                         ddloprators.DataBind();
                     }
                 }
+                if (this.PageTitle == "IPDDoctorShareReport")
+                {
+                    string x = "IPD Doctor Share Report";
+                    Master.Label2.Text = x;
+                    Master.GetMenuName();
+                    tr1MedicalSubsidy.Visible = true;
+                    dpROw.Visible = true;
+                    ddlShift.Visible = false;
+                    lbShift.Visible = false;
+                    tr_Summary.Visible = false;
+                    tr_Export.Visible = true;
+                    lblMainDepartment.Visible = false;
+                    ddlDepartments.Visible = true;
+                    lblPatientType.Visible = true;
+                    ddlPatientType.Visible = true;
+                    lblMultiSelect.Visible = false;
+                    DateDiv.Visible = true;
+                    Time_Row.Visible = true;
+                    tr1MedicalSubsidy.Visible = false;
+                    ddlMedicalSubsidy.Visible = false;
+                    optRw.Visible = true;
+                    object valuesets;
+
+                    DataBaseDataContext db = new DataBaseDataContext(DBClass.ConnectionString());
+                    valuesets = from d in db.aspnet_Users
+                                select new { d.UserName, d.UserId };
+                    ddloprators.DataSource = valuesets;
+                    ddloprators.DataTextField = "UserName";
+                    ddloprators.DataValueField = "UserId";
+                    ddloprators.Items.Add(new ListItem() { Text = "All", Value = "0" });
+                    ddloprators.DataBind();
+
+                    object valusets;
+                    DataBaseDataContext dc = new DataBaseDataContext(DBClass.ConnectionString());
+                    valusets = (from p in dc.DataValues where p.ValueSet_ID == 9 select new { p.DataValue_Name, p.DataValue_Description }).ToList();
+                    ddlDepartments.DataSource = valusets;
+                    ddlDepartments.DataTextField = "DataValue_Description";
+                    ddlDepartments.DataValueField = "DataValue_Name";
+                    ddlDepartments.Items.Add(new ListItem() { Text = "Please Select", Value = "0" });
+                    ddlDepartments.DataBind();
+
+                    DataTable dt = DBClass.getDataTable("select * from HR_Employees where IsDoctor=1");
+                    ddlDoctor.DataSource = dt;
+                    ddlDoctor.DataValueField = "Emp_ID";
+                    ddlDoctor.DataTextField = "Emp_Name";
+                    ddlDoctor.Items.Add(new ListItem() { Value = "0", Text = "All Doctors" });
+                    ddlDoctor.DataBind();
+                    lblMultiSelect.Visible = false;
+                    trDoctor.Visible = true;
+
+                    lblPatientType.Visible = true;
+                    lblPatientType.Text = "Patient Type";
+                    object valusests;
+                    valusests = DBClass.GetValueSet("Mode Of Registration");
+                    ddlPatientType.DataSource = valusests;
+                    ddlPatientType.DataTextField = "DataValue_Description";
+                    ddlPatientType.DataValueField = "DataValue_Name";
+                    ddlPatientType.Items.Add(new ListItem() { Text = "All", Value = "0" });
+                    ddlPatientType.DataBind();
+                    ddlPatientType.Visible = true;
+                }
                 if (this.PageTitle == "DoctorShare_Report")
                 {
                     string x = "Doctor Share Report";

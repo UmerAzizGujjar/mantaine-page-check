@@ -1027,7 +1027,6 @@ namespace PMS
         partial void UpdateWarehouse_Item_Batch(Warehouse_Item_Batch instance);
         partial void DeleteWarehouse_Item_Batch(Warehouse_Item_Batch instance);
         #endregion
-
         public DataBaseDataContext() :
                 base(global::System.Configuration.ConfigurationManager.ConnectionStrings["ASPGLConnectionString"].ConnectionString, mappingSource)
         {
@@ -5771,17 +5770,17 @@ namespace PMS
             return ((ISingleResult<Sp_GetLast24Hours_MedicinesResult>)(result.ReturnValue));
         }
 
+        [global::System.Data.Linq.Mapping.FunctionAttribute(Name = "dbo.GetPharmcyItemUomTotalStocksss", IsComposable = true)]
+        public System.Nullable<int> GetPharmcyItemUomTotalStocksss([global::System.Data.Linq.Mapping.ParameterAttribute(Name = "ItemId", DbType = "Int")] System.Nullable<int> itemId, [global::System.Data.Linq.Mapping.ParameterAttribute(Name = "Warehouse", DbType = "VarChar(50)")] string warehouse)
+        {
+            return ((System.Nullable<int>)(this.ExecuteMethodCall(this, ((MethodInfo)(MethodInfo.GetCurrentMethod())), itemId, warehouse).ReturnValue));
+        }
+
         [global::System.Data.Linq.Mapping.FunctionAttribute(Name = "dbo.spMedicinesDetailsfromopd")]
         public ISingleResult<spMedicinesDetailsfromopdResult> spMedicinesDetailsfromopd([global::System.Data.Linq.Mapping.ParameterAttribute(Name = "ItemId", DbType = "Int")] System.Nullable<int> itemId, [global::System.Data.Linq.Mapping.ParameterAttribute(Name = "PatientId", DbType = "Int")] System.Nullable<int> patientId, [global::System.Data.Linq.Mapping.ParameterAttribute(DbType = "VarChar(50)")] string warehouse, [global::System.Data.Linq.Mapping.ParameterAttribute(Name = "VisitType", DbType = "NVarChar(20)")] string visitType)
         {
             IExecuteResult result = this.ExecuteMethodCall(this, ((MethodInfo)(MethodInfo.GetCurrentMethod())), itemId, patientId, warehouse, visitType);
             return ((ISingleResult<spMedicinesDetailsfromopdResult>)(result.ReturnValue));
-        }
-
-        [global::System.Data.Linq.Mapping.FunctionAttribute(Name = "dbo.GetPharmcyItemUomTotalStocksss", IsComposable = true)]
-        public System.Nullable<int> GetPharmcyItemUomTotalStocksss([global::System.Data.Linq.Mapping.ParameterAttribute(Name = "ItemId", DbType = "Int")] System.Nullable<int> itemId, [global::System.Data.Linq.Mapping.ParameterAttribute(Name = "Warehouse", DbType = "VarChar(50)")] string warehouse)
-        {
-            return ((System.Nullable<int>)(this.ExecuteMethodCall(this, ((MethodInfo)(MethodInfo.GetCurrentMethod())), itemId, warehouse).ReturnValue));
         }
     }
 
@@ -243460,15 +243459,9 @@ namespace PMS
 
         private string _ExpiryDate;
 
-        private System.Nullable<int> _Total_Stock;
-
         private System.Nullable<decimal> _Sale_Rate;
 
         private bool _Discount_Block;
-
-        private System.Nullable<decimal> _CGSRate;
-
-        private decimal _RequestedQty;
 
         public spMedicinesDetailsfromopdResult()
         {
@@ -243602,22 +243595,6 @@ namespace PMS
             }
         }
 
-        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_Total_Stock", DbType = "Int")]
-        public System.Nullable<int> Total_Stock
-        {
-            get
-            {
-                return this._Total_Stock;
-            }
-            set
-            {
-                if ((this._Total_Stock != value))
-                {
-                    this._Total_Stock = value;
-                }
-            }
-        }
-
         [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_Sale_Rate", DbType = "Decimal(10,2)")]
         public System.Nullable<decimal> Sale_Rate
         {
@@ -243646,38 +243623,6 @@ namespace PMS
                 if ((this._Discount_Block != value))
                 {
                     this._Discount_Block = value;
-                }
-            }
-        }
-
-        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_CGSRate", DbType = "Decimal(18,2)")]
-        public System.Nullable<decimal> CGSRate
-        {
-            get
-            {
-                return this._CGSRate;
-            }
-            set
-            {
-                if ((this._CGSRate != value))
-                {
-                    this._CGSRate = value;
-                }
-            }
-        }
-
-        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_RequestedQty", DbType = "Decimal(18,2) NOT NULL")]
-        public decimal RequestedQty
-        {
-            get
-            {
-                return this._RequestedQty;
-            }
-            set
-            {
-                if ((this._RequestedQty != value))
-                {
-                    this._RequestedQty = value;
                 }
             }
         }
