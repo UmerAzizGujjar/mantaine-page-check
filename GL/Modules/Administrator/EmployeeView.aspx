@@ -33,22 +33,54 @@
 
         function LoadPage() {
             debugger
-            $("#example").DataTable({
+            let savedPageIndex = 0;
+            let filterValue = 'all';
+
+            $.ajax({
+                type: "POST",
+                url: "EmployeeView.aspx/GetPageState",
+                contentType: "application/json; charset=utf-8",
+                dataType: "json",
+                async: false,
+                success: function (response) {
+                    if (response.d !== null && response.d !== undefined) {
+                        savedPageIndex = response.d;
+                    }
+                },
+                error: function () {
+                    console.error("Failed to load page state");
+                }
+            });
+
+            var table = $("#example").DataTable({
                 "processing": true,
                 "serverSide": true,
                 "dom": 'lBfrtip',
                 "lengthChange": true,
-                "buttons": [{ text: 'Add', className: 'dt-button buttons-copy buttons-html5', action: function () { window.location = 'Employee.aspx'; } }, 'copy', 'excel', 'pdf',
-                    {
-                        extend: 'colvis',
-                        text: '<i class="fa fa-columns"></i> Columns',
-                        className: 'dt-button buttons-colvis',
-                        collectionLayout: 'fixed two-column',
-                        postfixButtons: ['colvisRestore']
+                "pageLength": 10,
+                "displayStart": savedPageIndex * 10,
+                "lengthMenu": [[10, 25, 50, 100, -1], [10, 25, 50, 100, "All"]],
+                "buttons": [{
+                    text: 'Add',
+                    className: 'dt-button buttons-copy buttons-html5',
+                    action: function () {
+                        window.location = 'Employee.aspx';
                     }
+                },
+                    'copy',
+                    'excel',
+                    'pdf',
+                {
+                    extend: 'colvis',
+                    text: '<i class="fa fa-columns"></i> Columns',
+                    className: 'dt-button buttons-colvis',
+                    collectionLayout: 'fixed two-column',
+                    postfixButtons: ['colvisRestore']
+                }
                 ],
                 "filter": true,
                 "ajax": function (data, callback, settings) {
+                    var filter = $('#filterStatus').val() || "all";
                     $.ajax({
                         type: "POST",
                         url: "EmployeeView.aspx/ViewList",
@@ -58,7 +90,8 @@
                             length: data.length,
                             sortColumn: data.columns[data.order[0].column].name,
                             sortColumnDirection: data.order[0].dir,
-                            searchValue: data.search.value
+                            searchValue: data.search.value,
+                            filterStatus: filter
                         }),
                         contentType: "application/json; charset=utf-8",
                         dataType: "json",
@@ -83,22 +116,27 @@
                     { "data": "Designation", "orderable": false },
                     { "data": "Mobile1", "orderable": false },
                     { "data": "Email", "orderable": false },
+                    { "data": "AccountID", "orderable": false },
                     {
                         render: function (data, type, full) {
                             debugger;
-                            var res = '<a class="editListBtn"  href="#" onclick="editOpen(' + full.Emp_id + ')" style="border-radius: 4px;margin-right: 4px;padding: 5px 8px 5px 8px;"><i class="fa fa-pencil"></i></a>'
+                            var res = '<a class="editListBtn" href="#" onclick="editOpen(' + full.Emp_id + ')" style="border-radius:4px;margin-right:4px;padding:5px 8px;"><i class="fa fa-pencil"></i></a>';
 
-                            var Delete = '<a class="delListBtn" style="border-radius: 4px;margin-left: 4px;padding: 5px 8px 5px 8px;" href="#"  onclick="deleteConfirm(' + full.Emp_id + ')"><i class="fa fa-trash"></i></a>';
+                            var Delete = '<a class="delListBtn" href="#" onclick="deleteConfirm(' + full.Emp_id + ')" style="border-radius:4px;margin-left:4px;padding:5px 8px;"><i class="fa fa-trash"></i></a>';
 
-                            var print = '<a class="printListBtn" style="border-radius: 4px;margin-left: 4px;padding: 5px 8px 5px 8px;" href="#" onclick="PrintTest(' + full.Test_ID + ')" id="btnprint"><i class="fa fa-print" ></i></a>';
-                            var result;
-                            result = res + Delete + print;
-                            return result;
-                        }, "width": "10%", "orderable": false
+                            var print = '<a class="printListBtn" href="#" onclick="PrintTest(' + full.Test_ID + ')" id="btnprint" style="border-radius:4px;margin-left:4px;padding:5px 8px;"><i class="fa fa-print"></i></a>';
+
+                            return res + Delete + print;
+                        },
+                        "width": "10%",
+                        "orderable": false
                     }
-
                 ],
+
                 "initComplete": function (settings, json) {
+
+                    var api = this.api();
+
                     var lengthContainer = document.querySelector('#example_length');
                     var lengthDropdown = document.querySelector('#example_length select');
                     var label = document.querySelector('#example_length label');
@@ -118,7 +156,36 @@
                     } else {
                         console.log("Length dropdown, label, or container not found");
                     }
+
+                    api.on('page.dt', function () {
+                        var page = api.page.info();
+                        var pageIndex = page.page;
+
+                        $.ajax({
+                            type: "POST",
+                            url: "EmployeeView.aspx/SavePageState",
+                            data: JSON.stringify({ pageIndex: pageIndex }),
+                            contentType: "application/json; charset=utf-8",
+                            dataType: "json",
+                            success: function () {
+                                console.log("Page state saved: " + pageIndex);
+                            },
+                            error: function () {
+                                console.error("Failed to save page state");
+                            }
+                        });
+                    });
                 }
+            });
+
+            if (savedPageIndex > 0) {
+                setTimeout(function () {
+                    table.page(savedPageIndex).draw('page');
+                }, 100);
+            }
+
+            $('#filterStatus').on('change', function () {
+                table.ajax.reload();
             });
         }
 
@@ -127,7 +194,16 @@
 
 </asp:Content>
 <asp:Content ID="Content2" ContentPlaceHolderID="MainContent" runat="server">
-    <div class="">
+    <div class="row">
+        <div class="col-lg-2 col-md-6 col-sm-12">
+            <label for="filterStatus">Filter by Account Status:</label>
+            <select id="filterStatus" style="padding: 5px 10px; border-radius: 4px; border: 1px solid #ccc;">
+                <option value="all">All Employees</option>
+                <option value="mapped">Mapped (Has Account)</option>
+                <option value="unmapped">Unmapped (No Account)</option>
+            </select>
+        </div>
+    </div>
        
         <div class="row">
                 <table id="example" class="table table-striped table-bordered display table-responsive-sm table-responsive-md table-responsive-lg w-100">
@@ -140,6 +216,7 @@
                             <th>Designation</th>
                             <th>Phone No.</th>
                             <th>Email</th>
+                            <th>Acount</th>
                             <th>Actions</th>
 
                         </tr>
@@ -149,7 +226,6 @@
 
                 </table>
             </div>
-    </div>
 
 
 

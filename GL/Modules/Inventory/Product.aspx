@@ -61,6 +61,7 @@
 
             LoadAssignWarehouseDropdown();
             CheckMultipleWarehouse();
+            CheckMultipleBatches();
 
             $('#ddlwareHouse').change(function () {
 
@@ -1361,6 +1362,29 @@
 
         }
 
+        function CheckMultipleBatches() {
+
+            $.ajax({
+                type: "POST",
+                url: "Product.aspx/MultipleBatches",
+                contentType: "application/json; charset=utf-8",
+                dataType: "json",
+                success: function (response) {
+
+                    if (response.d === "01") {
+                        $("#divWarehouseBatches").show();
+                    } else {
+                        $("#divWarehouseBatches").hide();
+                    }
+
+                },
+                error: function () {
+                    $("#divWarehouseBatches").hide();
+                }
+            });
+
+        }
+
 
         function LoadBatchWarehouseDropdown() {
             $.ajax({
@@ -1383,28 +1407,27 @@
             });
         }
 
-        // Load batches when warehouse is selected
         function LoadBatchesForWarehouse() {
             var warehouseId = $('#ddlBatchWarehouse').val();
-            var itemId = id; // Current item ID from the page
+            var itemId = id; 
 
-            if (!warehouseId || warehouseId == "0") {
-                Swal.fire({
-                    icon: 'warning',
-                    title: 'Warning',
-                    text: 'Please select a warehouse first.'
-                });
-                return;
-            }
+            //if (!warehouseId || warehouseId == "0") {
+            //    Swal.fire({
+            //        icon: 'warning',
+            //        title: 'Warning',
+            //        text: 'Please select a warehouse first.'
+            //    });
+            //    return;
+            //}
 
-            if (!itemId || itemId == "") {
-                Swal.fire({
-                    icon: 'warning',
-                    title: 'Warning',
-                    text: 'Please save the item first before assigning batches.'
-                });
-                return;
-            }
+            //if (!itemId || itemId == "") {
+            //    Swal.fire({
+            //        icon: 'warning',
+            //        title: 'Warning',
+            //        text: 'Please save the item first before assigning batches.'
+            //    });
+            //    return;
+            //}
 
             $.ajax({
                 type: "POST",
@@ -1543,7 +1566,6 @@
             }
         }
 
-        // Load existing warehouse-batch assignments in edit mode
         function LoadWarehouseBatchesForItem(itemId) {
             $.ajax({
                 type: "POST",
@@ -1554,6 +1576,8 @@
                 success: function (response) {
                     try {
                         const data = JSON.parse(response.d);
+                        console.log("Data received:", data); 
+
                         $('#tbodyWarehouseBatches').empty();
                         $.each(data, function (k, v) {
                             var statusText = v.IsBlocked ? 'Blocked' : 'Active';
@@ -1561,15 +1585,18 @@
                             var statusColor = v.IsBlocked ? '#dc3545' : '#28a745';
                             var actionIcon = v.IsBlocked ? '<i class="fa fa-check"></i>' : '<i class="fa fa-ban"></i>';
 
+                            var warehouseDisplay = v.WarehouseName || v.Warehouse_Id || 'Unknown';
+                            var batchDisplay = v.Batch_Number || 'Unknown';
+
                             var rowHtml = `
                         <tr>
                             <td>
-                                ${v.WarehouseName}
-                                <input type="hidden" name="wh_batch_warehouse" value="${v.WarehouseId}" />
+                                ${warehouseDisplay}
+                                <input type="hidden" name="wh_batch_warehouse" value="${v.Warehouse_Id}" />
                             </td>
                             <td>
-                                ${v.BatchNumber}
-                                <input type="hidden" name="wh_batch_batch" value="${v.BatchNumber}" />
+                                ${batchDisplay}
+                                <input type="hidden" name="wh_batch_batch" value="${v.Batch_Number}" />
                                 <input type="hidden" name="wh_batch_isblocked" value="${v.IsBlocked ? 1 : 0}" />
                             </td>
                             <td style="text-align:center;">
@@ -1587,7 +1614,13 @@
                     `;
                             $('#tbodyWarehouseBatches').append(rowHtml);
                         });
-                    } catch (e) { console.error(e); }
+                    } catch (e) {
+                        console.error("Error loading warehouse batches:", e);
+                        console.log("Response data:", response.d);
+                    }
+                },
+                error: function (xhr, status, error) {
+                    console.error("AJAX error:", error);
                 }
             });
         }
@@ -1941,7 +1974,6 @@
             </table>
         </div>
 
-        <!-- Add this after the existing divMultipleWarehouse section -->
         <div id="divWarehouseBatches" style="flex: 0 0 auto; border: 1px solid #ddd; padding: 15px; border-radius: 6px; background-color: #f9f9f9; margin-top: 15px;">
             <h4 style="font-size: 16px; font-weight: bold; margin-top: 0;">Assign Batches to Warehouse</h4>
             <div style="display: flex; gap: 10px; align-items: center; margin-bottom: 10px; flex-wrap: wrap;">
@@ -1953,14 +1985,18 @@
                 </div>
                 <div style="display: flex; align-items: center; gap: 5px;">
                     <label style="font-weight: bold; margin-right: 5px;">Batch:</label>
+
                     <select id="ddlBatchNumber" class="form-control" style="width: 180px;">
                         <option value="0">Select Batch</option>
                     </select>
+
+                    <input type="button" value="+"
+                        onclick="AddWarehouseBatchRow()"
+                        style="width: 40px; height: 34px; font-weight: bold; cursor: pointer;" />
                 </div>
-                <input type="button" value="+" onclick="AddWarehouseBatchRow()"
-                    style="width: 40px; height: 34px; font-weight: bold; cursor: pointer;" />
-                <input type="button" value="Refresh Batches" onclick="LoadBatchesForWarehouse()"
-                    style="height: 34px; font-weight: bold; cursor: pointer; padding: 0 15px;" />
+                <input type="button" value="Refresh Batches"
+                    onclick="LoadBatchesForWarehouse()"
+                    style="height: 34px; font-weight: bold; cursor: pointer; padding: 0 15px;display:none;" />
             </div>
 
             <table class="table table-bordered" style="width: 100%; background-color: white;">

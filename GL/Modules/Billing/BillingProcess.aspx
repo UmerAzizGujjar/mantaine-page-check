@@ -27,6 +27,17 @@
     margin: 0 auto;   /* center it */
     display: block;
 }
+
+    /* Force Select2 dropdown to stay on top */
+    .select2-container--default .select2-dropdown {
+        z-index: 99999 !important;
+    }
+    
+    /* Fix for search input losing focus on zoom */
+    .select2-search__field {
+        transform: translateZ(0);
+        -webkit-transform: translateZ(0);
+    }
     </style>
 </asp:Content>
 <asp:Content ID="Content2" ContentPlaceHolderID="MainContent" runat="server">
@@ -800,7 +811,9 @@
                         options += '<option value="' + value.Test_ID + '" >' + value.Test_Name + '</option>';
                     });
                     $('#ddlTestList').html(options);
-                    $('#ddlTestList').select2();
+                    $('#ddlTestList').select2({
+                        dropdownParent: $('#TestModel')
+                    });
                 });
             }
             function FillProcedure(deptID) {
@@ -1378,7 +1391,9 @@
                         options += '<option value="' + value.SerialNo + '" >' + value.TestName + '</option>';
                     });
                     $('#ddlTestList').html(options);
-                    $('#ddlTestList').select2();
+                    $('#ddlTestList').select2({
+                        dropdownParent: $('#TestModel') 
+                    }); 
                     localStorage.TestForCategoryWiseSelections = options;
                 });
             }
