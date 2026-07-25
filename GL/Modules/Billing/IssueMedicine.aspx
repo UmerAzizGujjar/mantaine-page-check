@@ -2497,6 +2497,7 @@
                     $('#SaveVal').attr('disabled', false);
                     return;
                 }
+                isPatientDataSaved = true; 
                 var btnSave = $('#btnSave').val();
                 if (btnSave == 'Save & Print(Alt+S)' || btnSave == "Save & Print(Alt+S)") {
                     window.open('../../ReportViewer.aspx?ReportName=PharmacySlip&ReportTitle=PharmacySlip&Bill_ID=' + result.BillId);
@@ -2716,6 +2717,7 @@
                         $('#SaveVal').attr('disabled', false);
                         return;
                     }
+                    isPatientDataSaved = true; 
                     var btnSave = $('#btnSave').val();
                     if (btnSave == 'Save & Print(Alt+S)' || btnSave == "Save & Print(Alt+S)") {
                         window.open('../../ReportViewer.aspx?ReportName=PharmacySlip&ReportTitle=PharmacySlip&Bill_ID=' + result.BillId);
@@ -3582,6 +3584,7 @@
             
 
         }
+        var isPatientDataSaved = true;
         function RejectMedicineRequest(medicineId, element) {
                 debugger;
                 Swal.fire({
@@ -3620,13 +3623,26 @@
                     }
                 });
             }
-                    function hideModel(pat_id, mr_no_sequence) {
+        function hideModel(pat_id, mr_no_sequence) {
+            // Check if there is unsaved data in the current transaction
+            if (!isPatientDataSaved && $('#tblDetails tbody tr').length > 0) {
+                Swal.fire({
+                    icon: 'warning',
+                    title: 'Unsaved Data!',
+                    text: 'You have unsaved data for the current patient. Please Save or Clear before loading a new patient from the queue.',
+                    confirmButtonText: 'OK'
+                });
+                return; // Stop execution
+            }
+
             console.log(pat_id, mr_no_sequence);
             $('#queueModal').modal('hide');
 
+            // Reset the flag because we are loading a NEW patient
+            isPatientDataSaved = false;
+
             $("#txtMRNo").tokenInput("clear");
             $("#txtMRNo").tokenInput("add", { id: pat_id, name: mr_no_sequence });
-
             getOPDandIPDNO(pat_id);
         }
         function OnSuccess(data) {
