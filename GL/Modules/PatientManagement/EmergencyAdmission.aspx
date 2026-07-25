@@ -557,39 +557,48 @@
             $('#ctl00_MainContent_txtBedno').val(BedNo);
         }
 
-                    function FillWardBeds() {
-                var wardID = $('#<%= ddlWard_No.ClientID %>').val();
-                if (!wardID || wardID === '0') {
-                    $('#tblWards tbody').empty();
-                    return;
-                }
-    
-                PageMethods.FillWardBeds(parseInt(wardID), function (response) {
-                    var beds = JSON.parse(response);
-                    if (beds.error) {
-                        console.error('Error loading beds:', beds.error);
+        function FillWardBeds() {
+            var wardID = $('#<%= ddlWard_No.ClientID %>').val();
+                    if (!wardID || wardID === '0') {
+                        $('#tblWards tbody').empty();
                         return;
                     }
-        
-                    var tbody = $('#tblWards tbody');
-                    tbody.empty();
-        
-                    $.each(beds, function (i, bed) {
-                        var mrNo = bed.PatientNo == "0" ? 'Available' : bed.PatientNo;
-                        var rowClass = bed.PatientNo == "0" ? 'table-success' : 'table-danger';
-                        var bedColor = bed.PatientNo == "0" ? 'Green' : 'red';
-            
-                        var row = '<tr class="' + rowClass + '">' +
-                            '<td>' + mrNo + (bed.PatientNo != "0" ? ' - ' + bed.Full_Name : '') + '</td>' +
-                            '<td><a onclick="SelectBed(' + bed.WardID + ',' + bed.BedNo + ')" style="color:' + bedColor + '">' + bed.BedNo + '</a></td>' +
-                            '</tr>';
-                        tbody.append(row);
-                    });
-                }, function (error) {
-                    console.error('Error:', error);
-                });
-            }
 
+                    PageMethods.FillWardBeds(parseInt(wardID), function (response) {
+                        var beds = JSON.parse(response);
+                        if (beds.error) {
+                            console.error('Error loading beds:', beds.error);
+                            return;
+                        }
+
+                        var tbody = $('#tblWards tbody');
+                        tbody.empty();
+
+                        $.each(beds, function (i, bed) {
+                            var mrNo = bed.PatientNo == "0" ? 'Available' : bed.PatientNo;
+                            var rowClass = bed.PatientNo == "0" ? 'table-success' : 'table-danger';
+                            var bedColor = bed.PatientNo == "0" ? 'Green' : 'red';
+
+                            // Build the bed cell content
+                            var bedCell;
+                            if (bed.PatientNo == "0") {
+                                // Available bed → clickable link
+                                bedCell = '<a onclick="SelectBed(' + bed.WardID + ',' + bed.BedNo + ')" style="color:' + bedColor + '">' + bed.BedNo + '</a>';
+                            } else {
+                                // Occupied bed → plain text, not clickable
+                                bedCell = '<span style="color:' + bedColor + '">' + bed.BedNo + '</span>';
+                            }
+
+                            var row = '<tr class="' + rowClass + '">' +
+                                '<td>' + mrNo + (bed.PatientNo != "0" ? ' - ' + bed.Full_Name : '') + '</td>' +
+                                '<td>' + bedCell + '</td>' +
+                                '</tr>';
+                            tbody.append(row);
+                        });
+                    }, function (error) {
+                        console.error('Error:', error);
+                    });
+                }
 
             
       
