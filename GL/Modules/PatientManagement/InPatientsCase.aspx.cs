@@ -3773,7 +3773,7 @@ namespace PMS
                           {
                               data.Ward_ID,
                               Room_No = DBClass.getField("select isnull(Room_No,'0') from Rooms where room_id=" + data.Room_ID),
-                              Description = DBClass.getField("select isnull(ward_no,'0') from Ward_Definition where ward_id=" + data.Ward_ID),
+                              Description = DBClass.getField("select isnull(Ward_Type,'0') from Ward_Definition where ward_id=" + data.Ward_ID),
 
                               data.Room_ID,
 

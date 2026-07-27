@@ -75,6 +75,13 @@
                 }
             });
 
+            $('#ctl00_MainContent_ddl_Ware_House').on('change', function () {
+                var itemId = $('#ctl00_MainContent_hdfItem_ID').val();
+                var warehouseVal = $(this).val();
+                if (itemId && itemId !== "" && itemId !== "0" && warehouseVal && warehouseVal !== "0") {
+                    LoadPurchaseRate(itemId, warehouseVal);
+                }
+            });
             GetWareHouseCondition();
             GetMultipleBatchCondition();
             UserRights();
@@ -114,6 +121,12 @@
                         $('#ctl00_MainContent_hdnDescription').val(item.name);
                         LoadBatches(item.id);
                         calculatecurrentstock(item.id);
+                        var warehouseVal = $('#ctl00_MainContent_ddl_Ware_House').val();
+                        if (warehouseVal && warehouseVal !== "0" && warehouseVal !== "") {
+                            LoadPurchaseRate(item.id, warehouseVal);
+                        } else {
+                            $('#ctl00_MainContent_txtRate').val('');
+                        }
 
                         if (item.Type === "True") {
                             $('#ctl00_MainContent_hdbatch').val(1);
@@ -127,7 +140,7 @@
                             $('#ctl00_MainContent_hdDate').val(1);
                             $('#ctl00_MainContent_hdallowblank').val(0);
                         }
-                        return false; // Prevent unwanted postbacks or form focus losses
+                        return false; 
                     },
                     onDelete: function (item) {
                         $('#ctl00_MainContent_hdfItem_ID').val('');
@@ -193,10 +206,44 @@
                 var tokendata = [{ "id": Item_ID, "name": Item_Code + '-' + Item_Name, "Type": "", "Amount": '+0+' }];
                 loadtokenInputsForPRNo("#ctl00_MainContent_txtItem_Code", tokendata);
                 calculatecurrentstock(Item_ID);
+
+                var warehouseVal = $('#ctl00_MainContent_ddl_Ware_House').val();
+                if (Item_ID && Item_ID !== "" && Item_ID !== "0" && warehouseVal && warehouseVal !== "0") {
+                    LoadPurchaseRate(Item_ID, warehouseVal);
+                }
             }
             $('.token-input-list').css('width', '368px');
         });
 
+
+        function LoadPurchaseRate(itemId, warehouseId) {
+            if (!itemId || itemId === "" || itemId === "0") return;
+            if (!warehouseId || warehouseId === "" || warehouseId === "0") {
+                $('#ctl00_MainContent_txtRate').val('');
+                return;
+            }
+
+            $.ajax({
+                type: "POST",
+                url: "StockAdjustment.aspx/GetPurchaseRate",
+                data: JSON.stringify({ itemId: itemId, warehouseId: warehouseId }),
+                contentType: "application/json; charset=utf-8",
+                dataType: "json",
+                success: function (response) {
+                    var rate = response.d;
+                    if (rate && rate !== "") {
+                        $('#ctl00_MainContent_txtRate').val(rate);
+                        onchange();
+                    } else {
+                        $('#ctl00_MainContent_txtRate').val('');
+                    }
+                },
+                error: function (error) {
+                    console.error("Error loading purchase rate:", error);
+                    $('#ctl00_MainContent_txtRate').val('');
+                }
+            });
+        }
         function hiddenVal(hiddenDate, hiddenbatch, hiddenallowblank) {
             if (hiddenDate == "1") $('#ctl00_MainContent_txtExpiredate').addClass("ErrorAlert");
             if (hiddenbatch == "1") $('#ctl00_MainContent_txtBatchNo').addClass("ErrorAlert");
@@ -382,8 +429,15 @@
                 PageMethods.calculateStock(itemID, wareHouse, function (res) {
                     $('#ctl00_MainContent_txtcurrentStock').val(res);
                 });
+
+                var itemId = $('#ctl00_MainContent_hdfItem_ID').val();
+                if (itemId && itemId !== "" && itemId !== "0") {
+                    LoadPurchaseRate(itemId, wareHouse);
+                }
             }
         }
+
+
 
         function checkbatchitem(batchitem) {
             PageMethods.checkbatch(batchitem, function (res) {

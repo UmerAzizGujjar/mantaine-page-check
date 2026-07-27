@@ -580,6 +580,67 @@ namespace PMS
         }
 
         [WebMethod]
+        public static string GetPurchaseRate(string itemId, string warehouseId)
+        {
+            try
+            {
+                using (DataBaseDataContext db = new DataBaseDataContext(DBClass.ConnectionString()))
+                {
+                    decimal? purchaseRate = null;
+                    int itemIdInt = Convert.ToInt32(itemId);
+
+                    // 1. First try to get rate from GRN_Details (latest GRN)
+                    var grnRate = (from gd in db.GRN_Details
+                                   join gm in db.GRN_Masters on gd.GRNId equals gm.GRN_ID
+                                   where gd.Item_Id == itemIdInt
+                                   && gm.InvOrgId == warehouseId
+                                   && gm.Status == "Approved"
+                                   orderby gm.GRN_Date descending, gm.GRN_ID descending
+                                   select gd.Rate)
+                                  .FirstOrDefault();
+
+                    if (grnRate.HasValue && grnRate.Value > 0)
+                    {
+                        purchaseRate = grnRate.Value;
+                    }
+                    else
+                    {
+                        var adjRate = (from sa in db.INV_Stock_Adjustments
+                                       where sa.Item_Id == itemId
+                                       && sa.Ware_House == warehouseId
+                                       && sa.Status == "Approved"
+                                       orderby sa.Adjustment_Date descending, sa.Adjustment_ID descending
+                                       select sa.Rate)
+                                      .FirstOrDefault();
+
+                        if (adjRate.HasValue && adjRate.Value > 0)
+                        {
+                            purchaseRate = adjRate.Value;
+                        }
+                        else
+                        {
+                            var itemRate = (from item in db.INV_Items
+                                            where item.Item_ID == itemIdInt
+                                            select item.Purchase_Rate)
+                                           .FirstOrDefault();
+
+                            if (itemRate.HasValue && itemRate.Value > 0)
+                            {
+                                purchaseRate = itemRate.Value;
+                            }
+                        }
+                    }
+
+                    return purchaseRate.HasValue ? purchaseRate.Value.ToString("0.00") : "";
+                }
+            }
+            catch (Exception ex)
+            {
+                return "";
+            }
+        }
+
+        [WebMethod]
         public static string ApproveSingleSTOCKADJ(string AdjustmentId, string approvalRemarks)
         {
             using (DataBaseDataContext db = new DataBaseDataContext(DBClass.ConnectionString()))
