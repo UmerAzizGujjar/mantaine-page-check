@@ -338,9 +338,15 @@ namespace PMS.Inventory
         public static string ApproveGRN(string GRNId)
         {
             var userid = AppConfig.UserID;
-            DataBaseDataContext db = new DataBaseDataContext();
-            var Details = db.spApproveGRN(Convert.ToInt32(GRNId), userid);
-            return (new JavaScriptSerializer()).Serialize(Details);
+
+            using (DataBaseDataContext db = new DataBaseDataContext())
+            {
+                var result = db.spApproveGRN(Convert.ToInt32(GRNId), userid).FirstOrDefault();
+
+                return result != null
+                    ? result.Message
+                    : "No message returned.";
+            }
         }
         [WebMethod]
         public static string UnApproveGRN(string GRNId)

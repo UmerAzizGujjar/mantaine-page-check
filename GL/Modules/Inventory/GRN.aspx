@@ -1110,21 +1110,44 @@ function LoadGRNDetailDir(GRN_ID) {
                 });
             } else {
                 if (typeof callback === 'function') callback();
-            }
-        }
-
+    }
+}
         function Approve() {
-            debugger;
-            var GRNId ='<% =Request.QueryString["GRN_ID"] %>';
-            PageMethods.ApproveGRN(GRNId, function (Tests) {
-                debugger
-                var message = JSON.parse(Tests);
-                if (message[0].Column1 != null || message[0].Column1 != "") {
-                    alert(message[0].Column1);
+            var GRNId = '<%= Request.QueryString["GRN_ID"] %>';
+
+    PageMethods.ApproveGRN(GRNId, function (message) {
+
+        if (message && message.trim() !== "") {
+
+            var icon = message.toLowerCase().includes("approved")
+                ? "success"
+                : "error";
+
+            Swal.fire({
+                icon: icon,
+                title: icon === "success" ? "Success" : "Error",
+                text: message,
+                showConfirmButton: true,
+                customClass: {
+                    popup: 'swal-big-popup',
+                    title: 'swal-big-title',
+                    htmlContainer: 'swal-big-text'
+                }
+            }).then(() => {
+                if (icon === "success") {
                     location.reload();
                 }
             });
         }
+
+    }, function (err) {
+        Swal.fire({
+            icon: "error",
+            title: "Error",
+            text: err.get_message()
+        });
+    });
+}
 
         function UserUnApproveButtonRights() {
             debugger;
