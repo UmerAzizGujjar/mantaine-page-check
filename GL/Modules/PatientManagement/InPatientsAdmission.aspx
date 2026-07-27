@@ -6433,6 +6433,19 @@
             var SearchString = '';
             PageMethods.AddPatient(SearchString, OnFilterPatients, OnFailPatients);
         }
+        var searchTimeout; 
+
+        function SearchPatients() {
+            var text = $('#txtPatientSearch').val();
+            clearTimeout(searchTimeout); 
+            searchTimeout = setTimeout(function () {
+                if (text.length >= 1) {
+                    PageMethods.AddPatient(text, OnFilterPatients, OnFailPatients);
+                } else {
+                    FillPatientsList(); 
+                }
+            }, 400); 
+        }
         function OnFilterPatients(data) {
 
             ClearPatientResults();
@@ -6687,7 +6700,6 @@
         }
 
         function AddPatientsResult(Reg_Patient_ID, Patient_No, Full_Name, NIC, Mobile1, Father_Name) {
-            debugger;
             tblLength = tblPatientsResult.rows.length;
             var row = iPatientsBody.insertRow(-1);
             var cell;
@@ -13540,6 +13552,10 @@
                 <div class="col-lg-3 col-md-4 col-sm-6">                           
                 <label id="srchpat">Search Your Patients: </label>
                     <input type="text" id="txtSearch" style="margin-left: 2px;" autocomplete="off" />
+                </div>
+                <div class="col-lg-3 col-md-4 col-sm-6">
+                    <label>Search</label>
+                    <input type="text" id="txtPatientSearch" placeholder="Name / MR No / CNIC / Phone" onkeyup="SearchPatients()" />
                 </div>
                 <div class="col-lg-2 col-md-4 col-sm-6">
                     <label></label>

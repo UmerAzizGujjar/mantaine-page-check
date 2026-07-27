@@ -117,6 +117,12 @@
                 LoadAllitem(searchText);
             });
 
+
+            $('#ddlDepartment').change(function () {
+                if ($('#ddlInventoryOrg').val() && $('#ddlInventoryOrg').val() != '0') {
+                    getMIR();
+                }
+            });
             $('#ddlInventoryOrg').change(function () {
                 $('#tblStoreIssueBote tbody').empty();
                 $('#checkHeader').prop('checked', false);
@@ -1135,25 +1141,71 @@
                 }
             });
         }
+        //function getMIR() {
+        //    debugger;
+        //    var warehouse = $("#ddlInventoryOrg").val();
+        //    if (warehouse == null || warehouse == undefined) {
+        //        warehouse = '0';
+        //    }
+        //    $.ajax({
+        //        type: "POST",
+        //        url: "GoodsIssuanceNote.aspx/getMIR",
+        //        data: JSON.stringify({ warehouse: warehouse }), // <-- pass parameter here
+        //        contentType: "application/json; charset=utf-8",
+        //        dataType: "json",
+        //        success: function (response) {
+        //            var parsed_Date = JSON.parse(response.d);
+        //            var options = '<option value="0">Select</option>';
+        //            $(parsed_Date).each(function (key, index) {
+        //                options += '<option value=' + parsed_Date[key].MIR + '>' + parsed_Date[key].MIR_No + '</option>';
+        //            });
+        //            $("#ddlMIR").html(options);
+        //        },
+        //        failure: function (response) {
+        //            alert("In failure method");
+        //        }
+        //    });
+        //}
+
         function getMIR() {
             debugger;
             var warehouse = $("#ddlInventoryOrg").val();
+            var department = $("#ddlDepartment").val(); 
+
             if (warehouse == null || warehouse == undefined) {
                 warehouse = '0';
             }
+            if (department == null || department == undefined) {
+                department = '0';
+            }
+
             $.ajax({
                 type: "POST",
                 url: "GoodsIssuanceNote.aspx/getMIR",
-                data: JSON.stringify({ warehouse: warehouse }), // <-- pass parameter here
+                data: JSON.stringify({
+                    warehouse: warehouse,
+                    department: department 
+                }),
                 contentType: "application/json; charset=utf-8",
                 dataType: "json",
                 success: function (response) {
                     var parsed_Date = JSON.parse(response.d);
                     var options = '<option value="0">Select</option>';
+
                     $(parsed_Date).each(function (key, index) {
-                        options += '<option value=' + parsed_Date[key].MIR + '>' + parsed_Date[key].MIR_No + '</option>';
+                        var mirNo = parsed_Date[key].MIR_No;
+                        var deptName = parsed_Date[key].DeptName;
+
+                        var displayText = mirNo;
+                        if (deptName) {
+                            displayText += " (" + deptName + ")";
+                        }
+
+                        options += '<option value=' + parsed_Date[key].MIR + '>' + displayText + '</option>';
                     });
+
                     $("#ddlMIR").html(options);
+                    $('#ddlMIR').select2(); 
                 },
                 failure: function (response) {
                     alert("In failure method");

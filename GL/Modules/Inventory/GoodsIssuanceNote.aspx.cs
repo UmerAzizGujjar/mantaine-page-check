@@ -93,10 +93,10 @@ namespace PMS.Inventory
             return (new JavaScriptSerializer()).Serialize(dept);
         }
         [WebMethod]
-        public static String getMIR(string warehouse)
+        public static String getMIR(string warehouse, string department)
         {
             DataBaseDataContext db = new DataBaseDataContext(DBClass.ConnectionString());         
-            var result = db.sp_GetMIR(warehouse);
+            var result = db.sp_GetMIR(warehouse, department);
             return (new JavaScriptSerializer()).Serialize(result);
         }
 
