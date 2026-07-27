@@ -32,9 +32,46 @@
 
 
         function LoadPage() {
-            debugger
+            let savedVisibility = null;
             let savedPageIndex = 0;
             let filterValue = 'all';
+
+            $.ajax({
+                type: "POST",
+                url: "EmployeeView.aspx/GetFilterState",
+                contentType: "application/json; charset=utf-8",
+                dataType: "json",
+                async: false,
+                success: function (response) {
+                    if (response.d !== null && response.d !== undefined) {
+                        filterValue = response.d;
+                        $('#filterStatus').val(filterValue);
+                    }
+                },
+                error: function () {
+                    console.error("Failed to load filter state");
+                }
+            });
+
+            $.ajax({
+                type: "POST",
+                url: "EmployeeView.aspx/GetUserColumnPreferences",
+                contentType: "application/json; charset=utf-8",
+                dataType: "json",
+                async: false,
+                success: function (response) {
+                    if (response.d && response.d !== "") {
+                        try {
+                            savedVisibility = JSON.parse(response.d);
+                        } catch (e) {
+                            console.warn("Invalid column visibility JSON");
+                        }
+                    }
+                },
+                error: function () {
+                    console.error("Failed to load column preferences");
+                }
+            });
 
             $.ajax({
                 type: "POST",
@@ -60,23 +97,24 @@
                 "pageLength": 10,
                 "displayStart": savedPageIndex * 10,
                 "lengthMenu": [[10, 25, 50, 100, -1], [10, 25, 50, 100, "All"]],
-                "buttons": [{
-                    text: 'Add',
-                    className: 'dt-button buttons-copy buttons-html5',
-                    action: function () {
-                        window.location = 'Employee.aspx';
-                    }
-                },
+                "buttons": [
+                    {
+                        text: 'Add',
+                        className: 'dt-button buttons-copy buttons-html5',
+                        action: function () {
+                            window.location = 'Employee.aspx';
+                        }
+                    },
                     'copy',
                     'excel',
                     'pdf',
-                {
-                    extend: 'colvis',
-                    text: '<i class="fa fa-columns"></i> Columns',
-                    className: 'dt-button buttons-colvis',
-                    collectionLayout: 'fixed two-column',
-                    postfixButtons: ['colvisRestore']
-                }
+                    {
+                        extend: 'colvis',
+                        text: '<i class="fa fa-columns"></i> Columns',
+                        className: 'dt-button buttons-colvis',
+                        collectionLayout: 'fixed two-column',
+                        postfixButtons: ['colvisRestore']
+                    }
                 ],
                 "filter": true,
                 "ajax": function (data, callback, settings) {
@@ -109,53 +147,51 @@
                     });
                 },
                 "columns": [
-                    { "data": "Emp_id", "visible": false, "width": "0%" },
-                    { "data": "Emp_No", "name": "Emp_No", width: "12%", "orderable": true },
+                    { "data": "Emp_id", "name": "Emp_id", "visible": false, "width": "0%" },
+                    { "data": "Emp_No", "name": "Emp_No", "width": "12%", "orderable": true },
                     { "data": "Emp_Name", "name": "Emp_Name", "orderable": true },
-                    { "data": "Department", "orderable": false },
-                    { "data": "Designation", "orderable": false },
-                    { "data": "Mobile1", "orderable": false },
-                    { "data": "Email", "orderable": false },
-                    { "data": "AccountID", "orderable": false },
+                    { "data": "Department", "name": "Department", "orderable": false },
+                    { "data": "Designation", "name": "Designation", "orderable": false },
+                    { "data": "Mobile1", "name": "Mobile1", "orderable": false },
+                    { "data": "Email", "name": "Email", "orderable": false },
+                    { "data": "AccountID", "name": "AccountID", "orderable": false },
                     {
                         render: function (data, type, full) {
-                            debugger;
                             var res = '<a class="editListBtn" href="#" onclick="editOpen(' + full.Emp_id + ')" style="border-radius:4px;margin-right:4px;padding:5px 8px;"><i class="fa fa-pencil"></i></a>';
-
                             var Delete = '<a class="delListBtn" href="#" onclick="deleteConfirm(' + full.Emp_id + ')" style="border-radius:4px;margin-left:4px;padding:5px 8px;"><i class="fa fa-trash"></i></a>';
-
-                            var print = '<a class="printListBtn" href="#" onclick="PrintTest(' + full.Test_ID + ')" id="btnprint" style="border-radius:4px;margin-left:4px;padding:5px 8px;"><i class="fa fa-print"></i></a>';
-
+                            var print = '<a class="printListBtn" href="#" onclick="PrintTest(' + full.Emp_id + ')" id="btnprint" style="border-radius:4px;margin-left:4px;padding:5px 8px;"><i class="fa fa-print"></i></a>';
                             return res + Delete + print;
                         },
                         "width": "10%",
                         "orderable": false
                     }
                 ],
-
                 "initComplete": function (settings, json) {
-
                     var api = this.api();
 
-                    var lengthContainer = document.querySelector('#example_length');
-                    var lengthDropdown = document.querySelector('#example_length select');
-                    var label = document.querySelector('#example_length label');
-
-                    if (lengthDropdown && label && lengthContainer) {
-                        var labelText = document.createElement('span');
-                        labelText.textContent = 'Show entries ';
-                        labelText.style.marginTop = '10px';
-                        labelText.style.display = 'inline-block';
-
-                        lengthDropdown.style.width = '60px';
-                        label.innerHTML = '';
-                        label.style.display = 'inline-flex';
-                        label.style.marginTop = '17px';
-                        label.appendChild(labelText);
-                        label.appendChild(lengthDropdown);
-                    } else {
-                        console.log("Length dropdown, label, or container not found");
+                    if (savedVisibility && Array.isArray(savedVisibility)) {
+                        if (savedVisibility.length === api.columns().count()) {
+                            api.columns().every(function (index) {
+                                this.visible(savedVisibility[index]);
+                            });
+                        }
                     }
+
+                    api.on('column-visibility.dt', function (e, settings, column, state) {
+                        let currentVis = [];
+                        api.columns().every(function () {
+                            currentVis.push(this.visible());
+                        });
+                        PageMethods.SaveUserColumnPreferences(
+                            JSON.stringify(currentVis),
+                            function () {
+                                console.log("Column preferences saved");
+                            },
+                            function (error) {
+                                console.error("Failed to save preferences:", error);
+                            }
+                        );
+                    });
 
                     api.on('page.dt', function () {
                         var page = api.page.info();
@@ -175,6 +211,24 @@
                             }
                         });
                     });
+
+                    var lengthContainer = document.querySelector('#example_length');
+                    var lengthDropdown = document.querySelector('#example_length select');
+                    var label = document.querySelector('#example_length label');
+
+                    if (lengthDropdown && label && lengthContainer) {
+                        var labelText = document.createElement('span');
+                        labelText.textContent = 'Show entries ';
+                        labelText.style.marginTop = '10px';
+                        labelText.style.display = 'inline-block';
+
+                        lengthDropdown.style.width = '60px';
+                        label.innerHTML = '';
+                        label.style.display = 'inline-flex';
+                        label.style.marginTop = '17px';
+                        label.appendChild(labelText);
+                        label.appendChild(lengthDropdown);
+                    }
                 }
             });
 
@@ -185,6 +239,22 @@
             }
 
             $('#filterStatus').on('change', function () {
+                var filterValue = $(this).val();
+
+                $.ajax({
+                    type: "POST",
+                    url: "EmployeeView.aspx/SaveFilterState",
+                    data: JSON.stringify({ filterValue: filterValue }),
+                    contentType: "application/json; charset=utf-8",
+                    dataType: "json",
+                    success: function () {
+                        console.log("Filter state saved: " + filterValue);
+                    },
+                    error: function () {
+                        console.error("Failed to save filter state");
+                    }
+                });
+
                 table.ajax.reload();
             });
         }
