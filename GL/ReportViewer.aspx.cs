@@ -6750,6 +6750,8 @@ namespace PMS
                 {
                     rd.SetParameterValue("@outPatient", Convert.ToInt32(InPatient_ID), rd.Subreports[6].Name.ToString());
                     rd.SetParameterValue("@outPatient", Convert.ToInt32(InPatient_ID), rd.Subreports[7].Name.ToString());
+                    rd.SetParameterValue("@outPatient", Convert.ToInt32(InPatient_ID), rd.Subreports[8].Name.ToString());
+                    rd.SetParameterValue("@outPatient", Convert.ToInt32(InPatient_ID), rd.Subreports[9].Name.ToString());
                 }
                 catch { }
             }
