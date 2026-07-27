@@ -357,7 +357,13 @@
                     debugger;
                     TotalAmount = parseInt(Test[i].GRNQty * Test[i].Rate);
                     PODate = Test[i].PO_Date ? $.datepicker.formatDate('dd M yy', new Date(parseInt(Test[i].PO_Date.substring(6, 19)))) : '';
-                    IgpDate = $.datepicker.formatDate('dd M yy', new Date(parseInt(Test[i].Igp_date.substring(6, 19))));
+                    if (IgpDate == '') {
+                        IgpDate = ''
+                    }
+                    else {
+                        IgpDate = $.datepicker.formatDate('dd M yy', new Date(parseInt(Test[i].Igp_date.substring(6, 19))));
+                    }
+                   
                     rows = '<tr>' +
                         '<td><input name="chkselect" type="checkbox" class="chktd" id="chktd" name="chktd" onclick="append(this)" value="false" style=" margin-top: -2px; margin-left: 0px;height: 36px;"/></td>' +
                         '<td style="display:none">' + Test[i].GRN_ID + '</td> ' +
