@@ -10975,14 +10975,6 @@
       <Column Name="isApproved" Type="System.Boolean" DbType="Bit" CanBeNull="true" />
     </ElementType>
   </Function>
-  <Function Name="dbo.sp_GetMIR" Method="sp_GetMIR">
-    <Parameter Name="warehouse" Type="System.String" DbType="VarChar(500)" />
-    <ElementType Name="sp_GetMIRResult">
-      <Column Name="MIR" Type="System.Int64" DbType="BigInt NOT NULL" CanBeNull="false" />
-      <Column Name="MIR_No" Type="System.Int64" DbType="BigInt" CanBeNull="true" />
-      <Column Name="Qty" Type="System.Decimal" DbType="Decimal(38,4)" CanBeNull="true" />
-    </ElementType>
-  </Function>
   <Function Name="dbo.spGetBillDetails" Method="spGetBillDetails">
     <Parameter Name="Bill_No" Parameter="bill_No" Type="System.Int64" DbType="BigInt" />
     <ElementType Name="spGetBillDetailsResult">
@@ -13025,6 +13017,16 @@
       <Column Name="ExpiryDate" Type="System.String" DbType="VarChar(10)" CanBeNull="true" />
       <Column Name="Sale_Rate" Type="System.Decimal" DbType="Decimal(10,2)" CanBeNull="true" />
       <Column Name="Discount_Block" Type="System.Boolean" DbType="Bit NOT NULL" CanBeNull="false" />
+    </ElementType>
+  </Function>
+  <Function Name="dbo.sp_GetMIR" Method="sp_GetMIR">
+    <Parameter Name="warehouse" Type="System.String" DbType="VarChar(500)" />
+    <Parameter Name="department" Type="System.String" DbType="VarChar(500)" />
+    <ElementType Name="sp_GetMIRResult">
+      <Column Name="MIR" Type="System.Int64" DbType="BigInt NOT NULL" CanBeNull="false" />
+      <Column Name="MIR_No" Type="System.Int64" DbType="BigInt" CanBeNull="true" />
+      <Column Name="DeptName" Type="System.String" DbType="VarChar(10)" CanBeNull="true" />
+      <Column Name="Qty" Type="System.Decimal" DbType="Decimal(38,4)" CanBeNull="true" />
     </ElementType>
   </Function>
 </Database>

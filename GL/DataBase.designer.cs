@@ -1027,6 +1027,7 @@ namespace PMS
         partial void UpdateWarehouse_Item_Batch(Warehouse_Item_Batch instance);
         partial void DeleteWarehouse_Item_Batch(Warehouse_Item_Batch instance);
         #endregion
+
         public DataBaseDataContext() :
                 base(global::System.Configuration.ConfigurationManager.ConnectionStrings["ASPGLConnectionString"].ConnectionString, mappingSource)
         {
@@ -5462,13 +5463,6 @@ namespace PMS
             return ((ISingleResult<sp_GetLabApprovalStatusResult>)(result.ReturnValue));
         }
 
-        [global::System.Data.Linq.Mapping.FunctionAttribute(Name = "dbo.sp_GetMIR")]
-        public ISingleResult<sp_GetMIRResult> sp_GetMIR([global::System.Data.Linq.Mapping.ParameterAttribute(DbType = "VarChar(500)")] string warehouse)
-        {
-            IExecuteResult result = this.ExecuteMethodCall(this, ((MethodInfo)(MethodInfo.GetCurrentMethod())), warehouse);
-            return ((ISingleResult<sp_GetMIRResult>)(result.ReturnValue));
-        }
-
         [global::System.Data.Linq.Mapping.FunctionAttribute(Name = "dbo.spGetBillDetails")]
         public ISingleResult<spGetBillDetailsResult> spGetBillDetails([global::System.Data.Linq.Mapping.ParameterAttribute(Name = "Bill_No", DbType = "BigInt")] System.Nullable<long> bill_No)
         {
@@ -5781,6 +5775,13 @@ namespace PMS
         {
             IExecuteResult result = this.ExecuteMethodCall(this, ((MethodInfo)(MethodInfo.GetCurrentMethod())), itemId, patientId, warehouse, visitType);
             return ((ISingleResult<spMedicinesDetailsfromopdResult>)(result.ReturnValue));
+        }
+
+        [global::System.Data.Linq.Mapping.FunctionAttribute(Name = "dbo.sp_GetMIR")]
+        public ISingleResult<sp_GetMIRResult> sp_GetMIR([global::System.Data.Linq.Mapping.ParameterAttribute(DbType = "VarChar(500)")] string warehouse, [global::System.Data.Linq.Mapping.ParameterAttribute(DbType = "VarChar(500)")] string department)
+        {
+            IExecuteResult result = this.ExecuteMethodCall(this, ((MethodInfo)(MethodInfo.GetCurrentMethod())), warehouse, department);
+            return ((ISingleResult<sp_GetMIRResult>)(result.ReturnValue));
         }
     }
 
@@ -211120,68 +211121,6 @@ namespace PMS
         }
     }
 
-    public partial class sp_GetMIRResult
-    {
-
-        private long _MIR;
-
-        private System.Nullable<long> _MIR_No;
-
-        private System.Nullable<decimal> _Qty;
-
-        public sp_GetMIRResult()
-        {
-        }
-
-        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_MIR", DbType = "BigInt NOT NULL")]
-        public long MIR
-        {
-            get
-            {
-                return this._MIR;
-            }
-            set
-            {
-                if ((this._MIR != value))
-                {
-                    this._MIR = value;
-                }
-            }
-        }
-
-        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_MIR_No", DbType = "BigInt")]
-        public System.Nullable<long> MIR_No
-        {
-            get
-            {
-                return this._MIR_No;
-            }
-            set
-            {
-                if ((this._MIR_No != value))
-                {
-                    this._MIR_No = value;
-                }
-            }
-        }
-
-        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_Qty", DbType = "Decimal(38,4)")]
-        public System.Nullable<decimal> Qty
-        {
-            get
-            {
-                return this._Qty;
-            }
-            set
-            {
-                if ((this._Qty != value))
-                {
-                    this._Qty = value;
-                }
-            }
-        }
-    }
-
     public partial class spGetBillDetailsResult
     {
 
@@ -243623,6 +243562,86 @@ namespace PMS
                 if ((this._Discount_Block != value))
                 {
                     this._Discount_Block = value;
+                }
+            }
+        }
+    }
+
+    public partial class sp_GetMIRResult
+    {
+
+        private long _MIR;
+
+        private System.Nullable<long> _MIR_No;
+
+        private string _DeptName;
+
+        private System.Nullable<decimal> _Qty;
+
+        public sp_GetMIRResult()
+        {
+        }
+
+        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_MIR", DbType = "BigInt NOT NULL")]
+        public long MIR
+        {
+            get
+            {
+                return this._MIR;
+            }
+            set
+            {
+                if ((this._MIR != value))
+                {
+                    this._MIR = value;
+                }
+            }
+        }
+
+        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_MIR_No", DbType = "BigInt")]
+        public System.Nullable<long> MIR_No
+        {
+            get
+            {
+                return this._MIR_No;
+            }
+            set
+            {
+                if ((this._MIR_No != value))
+                {
+                    this._MIR_No = value;
+                }
+            }
+        }
+
+        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_DeptName", DbType = "VarChar(10)")]
+        public string DeptName
+        {
+            get
+            {
+                return this._DeptName;
+            }
+            set
+            {
+                if ((this._DeptName != value))
+                {
+                    this._DeptName = value;
+                }
+            }
+        }
+
+        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_Qty", DbType = "Decimal(38,4)")]
+        public System.Nullable<decimal> Qty
+        {
+            get
+            {
+                return this._Qty;
+            }
+            set
+            {
+                if ((this._Qty != value))
+                {
+                    this._Qty = value;
                 }
             }
         }
