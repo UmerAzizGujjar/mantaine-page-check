@@ -38,12 +38,80 @@
 
         
         function LoadPage() {
-            $('#tblPanel').DataTable({
+            let savedVisibility = null;
+            let savedPageIndex = 0;
+            let filterValue = 'all';
+
+            $.ajax({
+                type: "POST",
+                url: "PanelView.aspx/GetPageState",
+                contentType: "application/json; charset=utf-8",
+                dataType: "json",
+                async: false,
+                success: function (response) {
+                    if (response.d !== null && response.d !== undefined) {
+                        savedPageIndex = response.d;
+                    }
+                },
+                error: function () {
+                    console.error("Failed to load page state");
+                }
+            });
+
+            $.ajax({
+                type: "POST",
+                url: "PanelView.aspx/GetFilterState",
+                contentType: "application/json; charset=utf-8",
+                dataType: "json",
+                async: false,
+                success: function (response) {
+                    if (response.d !== null && response.d !== undefined) {
+                        filterValue = response.d;
+                        $('#filterStatus').val(filterValue);
+                    }
+                },
+                error: function () {
+                    console.error("Failed to load filter state");
+                }
+            });
+
+            $.ajax({
+                type: "POST",
+                url: "PanelView.aspx/GetUserColumnPreferences",
+                contentType: "application/json; charset=utf-8",
+                dataType: "json",
+                async: false,
+                success: function (response) {
+                    if (response.d && response.d !== "") {
+                        try {
+                            savedVisibility = JSON.parse(response.d);
+                        } catch (e) {
+                            console.warn("Invalid column visibility JSON");
+                        }
+                    }
+                },
+                error: function () {
+                    console.error("Failed to load column preferences");
+                }
+            });
+
+            var table = $("#tblPanel").DataTable({
                 "processing": true,
                 "serverSide": true,
                 "dom": 'lBfrtip',
                 "lengthChange": true,
-                "buttons": [{ text: 'Add', className: 'dt-button buttons-copy buttons-html5', action: function () { window.location = 'panelagreement.aspx'; } }, 'copy', 'excel', 'pdf',
+                "pageLength": 10,
+                "displayStart": savedPageIndex * 10,
+                "lengthMenu": [[10, 25, 50, 100, -1], [10, 25, 50, 100, "All"]],
+                "buttons": [
+                    {
+                        text: 'Add',
+                        className: 'dt-button buttons-copy buttons-html5',
+                        action: function () { window.location = 'panelagreement.aspx'; }
+                    },
+                    'copy',
+                    'excel',
+                    'pdf',
                     {
                         extend: 'colvis',
                         text: '<i class="fa fa-columns"></i> Columns',
@@ -54,6 +122,8 @@
                 ],
                 "filter": true,
                 "ajax": function (data, callback, settings) {
+                    var filter = $('#filterStatus').val() || 'all';
+
                     $.ajax({
                         type: "POST",
                         url: "PanelView.aspx/ViewList",
@@ -63,7 +133,8 @@
                             length: data.length,
                             sortColumn: data.columns[data.order[0].column].name,
                             sortColumnDirection: data.order[0].dir,
-                            searchValue: data.search.value
+                            searchValue: data.search.value,
+                            filterStatus: filter
                         }),
                         contentType: "application/json; charset=utf-8",
                         dataType: "json",
@@ -82,37 +153,109 @@
                 },
                 "columns": [
                     { "data": "Panel_ID", "name": "Panel_ID", "visible": false, "width": "0%" },
-                    { "data": "Company_Name", "orderable": false },
-                    { "data": "No_Of_Employees", "name": "No_Of_Employees", "orderable": true },
-                    { "data": "Email", "orderable": false },
-                    { "data": "Contact_No", "orderable": false },
-                    { "data": "Address", "orderable": false },
-                    { "data": "Discount", "orderable": false },
+                    { "data": "Company_Name", "name": "Company_Name", "orderable": true, "width": "20%" },
+                    { "data": "No_Of_Employees", "name": "No_Of_Employees", "orderable": true, "width": "10%" },
+                    { "data": "Email", "name": "Email", "orderable": false, "width": "10%" },
+                    { "data": "Contact_No", "name": "Contact_No", "orderable": false, "width": "10%" },
+                    { "data": "Address", "name": "Address", "orderable": false, "width": "10%" },
+                    { "data": "Discount", "name": "Discount", "orderable": false, "width": "10%" },
+                    { "data": "AccountID", "name": "AccountID", "orderable": false, "width": "10%" },
                     {
                         render: function (data, type, full) {
-                            debugger;
-                            var res = '<a href="#" class="editListBtn"  onclick="Edit(\'' + full.Panel_ID + '\')" style="border-radius: 4px; margin-right: 4px;padding: 5px 8px;"><i class="fa fa-pencil"></i></a>';
-
+                            var res = '<a href="#" class="editListBtn" onclick="Edit(' + full.Panel_ID + ')" style="border-radius: 4px; margin-right: 4px;padding: 5px 8px;"><i class="fa fa-pencil"></i></a>';
                             var Delete = '<a class="delListBtn" style="border-radius: 4px; margin-left: 4px;padding: 5px 8px;" href="#" data-id="' + full.Panel_ID + '" onclick="Delete(this)"><i class="fa fa-trash"></i></a>';
-
-                            var print = '<a class="printListBtn" style="border-radius: 4px;margin-left: 4px;color: white;padding: 5px 8px 5px 8px;" href="#" onclick="PrintTest(' + full.Test_ID + ')" id="btnprint"><i class="fa fa-print"></i></a>';
-                            var result;
-                            result = res + Delete + print;
+                            var result = res + Delete;
                             return result;
                         }, "width": "10%", "orderable": false
                     }
-
                 ],
                 "initComplete": function (settings, json) {
+                    const api = this.api();
+
+                    if (savedVisibility && Array.isArray(savedVisibility)) {
+                        if (savedVisibility.length === api.columns().count()) {
+                            api.columns().every(function (index) {
+                                this.visible(savedVisibility[index]);
+                            });
+                        }
+                    }
+
+                    api.on('column-visibility.dt', function (e, settings, column, state) {
+                        let currentVis = [];
+                        api.columns().every(function () {
+                            currentVis.push(this.visible());
+                        });
+                        PageMethods.SaveUserColumnPreferences(
+                            JSON.stringify(currentVis),
+                            function () {
+                                console.log("Column preferences saved");
+                            },
+                            function (error) {
+                                console.error("Failed to save preferences:", error);
+                            }
+                        );
+                    });
+
+                    api.on('page.dt', function () {
+                        var page = api.page.info();
+                        var pageIndex = page.page;
+                        $.ajax({
+                            type: "POST",
+                            url: "PanelView.aspx/SavePageState",
+                            data: JSON.stringify({ pageIndex: pageIndex }),
+                            contentType: "application/json; charset=utf-8",
+                            dataType: "json",
+                            success: function () {
+                                console.log("Page state saved: " + pageIndex);
+                            },
+                            error: function () {
+                                console.error("Failed to save page state");
+                            }
+                        });
+                    });
+                    var lengthContainer = document.querySelector('#tblPanel_length');
                     var lengthDropdown = document.querySelector('#tblPanel_length select');
                     var label = document.querySelector('#tblPanel_length label');
-                    if (lengthDropdown && label) {
-                        label.innerHTML = 'Show entries ';
+
+                    if (lengthDropdown && label && lengthContainer) {
+                        var labelText = document.createElement('span');
+                        labelText.textContent = 'Show entries ';
+                        labelText.style.marginTop = '10px';
+                        labelText.style.display = 'inline-block';
+
+                        lengthDropdown.style.width = '60px';
+                        label.innerHTML = '';
+                        label.style.display = 'inline-flex';
+                        label.style.marginTop = '17px';
+                        label.appendChild(labelText);
                         label.appendChild(lengthDropdown);
-                    } else {
-                        console.log("Length dropdown or label not found");
                     }
                 }
+            });
+
+            if (savedPageIndex > 0) {
+                setTimeout(function () {
+                    table.page(savedPageIndex).draw('page');
+                }, 100);
+            }
+            $('#filterStatus').on('change', function () {
+                var filterValue = $(this).val();
+
+                $.ajax({
+                    type: "POST",
+                    url: "PanelView.aspx/SaveFilterState",
+                    data: JSON.stringify({ filterValue: filterValue }),
+                    contentType: "application/json; charset=utf-8",
+                    dataType: "json",
+                    success: function () {
+                        console.log("Filter state saved: " + filterValue);
+                    },
+                    error: function () {
+                        console.error("Failed to save filter state");
+                    }
+                });
+
+                $('#tblPanel').DataTable().ajax.reload();
             });
         }
 
@@ -120,7 +263,16 @@
 
 </asp:Content>
 <asp:Content ID="Content2" ContentPlaceHolderID="MainContent" runat="server">
-   
+   <div class="row">
+    <div class="col-lg-2 col-md-6 col-sm-12">
+        <label for="filterStatus">Filter by Account Status:</label>
+        <select id="filterStatus" style="padding: 5px 10px; border-radius: 4px; border: 1px solid #ccc;">
+            <option value="all">All</option>
+            <option value="mapped">Mapped (Has Account)</option>
+            <option value="unmapped">Unmapped (No Account)</option>
+        </select>
+    </div>
+</div>
    <div class="table-container">
        <table id="tblPanel" class="table table-hover table-bordered">
            <thead>
@@ -132,6 +284,7 @@
                    <th>Contact No</th>
                    <th>Address</th>
                    <th>Discount</th>
+                   <th>Account</th>
                    <th>Action</th>
                </tr>
            </thead>
