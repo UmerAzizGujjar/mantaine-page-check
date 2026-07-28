@@ -88,8 +88,8 @@
                 },
                 "columns": [
                     { "data": "Item_ID", "visible": false, "width": "0%" },
-                    { "data": "Item_Code", "name": "Item_Code", "width": "8%", "orderable": true },
-                    { "data": "Description", "width": "13%", "orderable": false },
+                    { "data": "Item_Code", "name": "Item_Code", "width": "7%", "orderable": true },
+                    { "data": "Description", "width": "10%", "orderable": false },
                     { "data": "Unit", "width": "7%", "orderable": false },
                     { "data": "Sale_Rate", "width": "8%", "orderable": false },
                     { "data": "Service", "width": "8%", "orderable": false },
@@ -98,6 +98,7 @@
                     { "data": "SaleRate", "width": "8%", "orderable": false },
                     { "data": "WareHouse", "width": "10%", "orderable": false },
                     { "data": "StockTotal", "width": "8%", "orderable": false },
+                    { "data": "CreatedBy", "width": "8%", "orderable": false },
 
                    
                     {
@@ -219,6 +220,7 @@
                     <th>Sale Rate</th>                                          
                     <th>Ware House</th>                                          
                     <th>Stock</th>                                          
+                    <th>Created by</th>                                          
                     <th>Actions</th>
                 </tr>
             </thead>
