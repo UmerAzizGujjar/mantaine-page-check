@@ -5783,6 +5783,13 @@ namespace PMS
             IExecuteResult result = this.ExecuteMethodCall(this, ((MethodInfo)(MethodInfo.GetCurrentMethod())), warehouse, department);
             return ((ISingleResult<sp_GetMIRResult>)(result.ReturnValue));
         }
+
+        [global::System.Data.Linq.Mapping.FunctionAttribute(Name = "dbo.sp_GetMIRAll")]
+        public ISingleResult<sp_GetMIRAllResult> sp_GetMIRAll()
+        {
+            IExecuteResult result = this.ExecuteMethodCall(this, ((MethodInfo)(MethodInfo.GetCurrentMethod())));
+            return ((ISingleResult<sp_GetMIRAllResult>)(result.ReturnValue));
+        }
     }
 
     [global::System.Data.Linq.Mapping.TableAttribute(Name = "dbo.Ar_Customers")]
@@ -243615,6 +243622,86 @@ namespace PMS
         }
 
         [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_DeptName", DbType = "VarChar(10)")]
+        public string DeptName
+        {
+            get
+            {
+                return this._DeptName;
+            }
+            set
+            {
+                if ((this._DeptName != value))
+                {
+                    this._DeptName = value;
+                }
+            }
+        }
+
+        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_Qty", DbType = "Decimal(38,4)")]
+        public System.Nullable<decimal> Qty
+        {
+            get
+            {
+                return this._Qty;
+            }
+            set
+            {
+                if ((this._Qty != value))
+                {
+                    this._Qty = value;
+                }
+            }
+        }
+    }
+
+    public partial class sp_GetMIRAllResult
+    {
+
+        private long _MIR;
+
+        private System.Nullable<long> _MIR_No;
+
+        private string _DeptName;
+
+        private System.Nullable<decimal> _Qty;
+
+        public sp_GetMIRAllResult()
+        {
+        }
+
+        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_MIR", DbType = "BigInt NOT NULL")]
+        public long MIR
+        {
+            get
+            {
+                return this._MIR;
+            }
+            set
+            {
+                if ((this._MIR != value))
+                {
+                    this._MIR = value;
+                }
+            }
+        }
+
+        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_MIR_No", DbType = "BigInt")]
+        public System.Nullable<long> MIR_No
+        {
+            get
+            {
+                return this._MIR_No;
+            }
+            set
+            {
+                if ((this._MIR_No != value))
+                {
+                    this._MIR_No = value;
+                }
+            }
+        }
+
+        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_DeptName", DbType = "VarChar(150)")]
         public string DeptName
         {
             get

@@ -564,6 +564,14 @@ namespace PMS.Inventory
         }
 
         [WebMethod]
+        public static String getMIRAll()
+        {
+            DataBaseDataContext db = new DataBaseDataContext(DBClass.ConnectionString());
+            var result = db.sp_GetMIRAll();
+            return (new JavaScriptSerializer()).Serialize(result);
+        }
+
+        [WebMethod]
         public static string ApproveSingleGIN(string SINId, string approvalRemarks)
         {
             using (DataBaseDataContext db = new DataBaseDataContext(DBClass.ConnectionString()))

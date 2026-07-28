@@ -119,7 +119,7 @@
 
 
             $('#ddlDepartment').change(function () {
-                if ($('#ddlInventoryOrg').val() && $('#ddlInventoryOrg').val() != '0') {
+                if (warehouseCond == '01' && $('#ddlInventoryOrg').val() && $('#ddlInventoryOrg').val() != '0') {
                     getMIR();
                 }
             });
@@ -189,31 +189,7 @@
                  var MIR_id = $("#ddlMIR").val();
                  LoadMIRDetail(MIR_id);
              });
-            var warehouseCond;
-            function GetWareHouseCondition() {
-                debugger;
-                $.ajax({
-                    type: "POST",
-                    url: "GoodsIssuanceNote.aspx/GetWareHouseCondition",
-                    data: JSON.stringify({}),
-                    contentType: "application/json; charset=utf-8",
-                    dataType: "json",
-                    success: function (response) {
-                        debugger;
-                        warehouseCond = JSON.parse(response.d);
-                        if (warehouseCond == '01') {
-                            //$('#warehouse').show();
-                        }
-                        else {
-                            // $('#warehouse').hide();
-                            getMIR();
-                        }
-                    },
-                    error: function (error) {
-                        console.error("Error fetching items", error);
-                    }
-                });
-            }
+            
             var GIRCloseCond;
             function GetGIRCloseCondition() {
                 debugger;
@@ -425,6 +401,61 @@
                  }
              });--%>
         });
+
+        var warehouseCond;
+        function GetWareHouseCondition() {
+            debugger;
+            $.ajax({
+                type: "POST",
+                url: "GoodsIssuanceNote.aspx/GetWareHouseCondition",
+                data: JSON.stringify({}),
+                contentType: "application/json; charset=utf-8",
+                dataType: "json",
+                success: function (response) {
+                    debugger;
+                    warehouseCond = JSON.parse(response.d);
+                    if (warehouseCond == '01') {
+                        getMIR();
+                    } else if (warehouseCond == '02') {
+                        getMIRAll();
+                    } else {
+                        getMIRAll();
+                    }
+                },
+                error: function (error) {
+                    console.error("Error fetching items", error);
+                }
+            });
+        }
+
+        function getMIRAll() {
+            debugger;
+            $.ajax({
+                type: "POST",
+                url: "GoodsIssuanceNote.aspx/getMIRAll",
+                data: JSON.stringify({}),
+                contentType: "application/json; charset=utf-8",
+                dataType: "json",
+                success: function (response) {
+                    var parsed_Date = JSON.parse(response.d);
+                    var options = '<option value="0">Select</option>';
+                    $(parsed_Date).each(function (key, index) {
+                        var mirNo = parsed_Date[key].MIR_No;
+                        var deptName = parsed_Date[key].DeptName || '';
+                        var displayText = mirNo;
+                        if (deptName) {
+                            displayText += " (" + deptName + ")";
+                        }
+                        options += '<option value=' + parsed_Date[key].MIR + '>' + displayText + '</option>';
+                    });
+                    $("#ddlMIR").html(options);
+                    $('#ddlMIR').select2();
+                },
+                failure: function (response) {
+                    alert("In failure method");
+                }
+            });
+        }
         function SaveGIN() {
             var checkstock = false;
             var status;
