@@ -1972,7 +1972,6 @@ namespace PMS
                     Master.Label2.Text = x;
                     Master.GetMenuName();
                     tr1MedicalSubsidy.Visible = false;
-                    dpROw.Visible = false;
                     optRw.Visible = true;
                     lblMultiSelect.Visible = false;
                     tr_Export.Visible = true;
@@ -1989,8 +1988,6 @@ namespace PMS
                     trSearch1.Visible = true;
 
 
-                    //ADDING NEW WAREHOUSE
-
                     DataBaseDataContext db = new DataBaseDataContext(DBClass.ConnectionString());
                     object valusetss = from d in db.aspnet_Users
                                        select new { d.UserName, d.UserId };
@@ -2000,19 +1997,9 @@ namespace PMS
                     ddloprators.Items.Add(new ListItem() { Text = "All", Value = "0" });
                     ddloprators.DataBind();
 
-                    Stock_Movement.Visible = false;
                     trProcedure1.Visible = false;
                     ddlProcedure.Visible = false;
 
-
-                    ddlwareHouse.Visible = false;
-                    lblWarehouse.Visible = false;
-
-                    lbItemCategory.Visible = false;
-                    ddlItemCategory.Visible = false;
-
-                    lblPatientType.Visible = false;
-                    ddlPatientType.Visible = false;
 
                     // ✅ ADD THIS CODE TO POPULATE ITEM DROPDOWN:
                     td11.Text = "Item Name";
@@ -2029,6 +2016,34 @@ namespace PMS
                     ddlItemName.DataTextField = "Description";
                     ddlItemName.Items.Add(new ListItem() { Text = "All", Value = "0" });
                     ddlItemName.DataBind();
+
+                    //ADDING NEW WAREHOUSE
+
+                    object valuset;
+                    valuset = DBClass.GetValueSet("Ware house");
+                    ddlwareHouse.DataSource = valuset;
+                    ddlwareHouse.DataTextField = "DataValue_Description";
+                    ddlwareHouse.DataValueField = "DataValue_Name";
+                    ddlwareHouse.Items.Clear();
+                    ddlwareHouse.Items.Add(new ListItem() { Text = "All", Value = "0" });
+                    ddlwareHouse.DataBind();
+                    Stock_Movement.Visible = true;
+
+
+                    ddlwareHouse.Visible = true;
+                    lblWarehouse.Text = "From Warehouse";
+
+                    lbItemCategory.Text = "To Warehouse";
+                    //ADDING NEW WAREHOUSE
+
+                    object valusetz;
+                    valusetz = DBClass.GetValueSet("Ware house");
+                    ddlItemCategory.DataSource = valusetz;
+                    ddlItemCategory.DataTextField = "DataValue_Description";
+                    ddlItemCategory.DataValueField = "DataValue_Name";
+                    ddlItemCategory.Items.Clear();
+                    ddlItemCategory.Items.Add(new ListItem() { Text = "All", Value = "0" });
+                    ddlItemCategory.DataBind();
 
                 }
                 if (this.PageTitle == "PurchaseReturnReport")

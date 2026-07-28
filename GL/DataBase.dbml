@@ -13029,4 +13029,12 @@
       <Column Name="Qty" Type="System.Decimal" DbType="Decimal(38,4)" CanBeNull="true" />
     </ElementType>
   </Function>
+  <Function Name="dbo.sp_GetMIRAll" Method="sp_GetMIRAll">
+    <ElementType Name="sp_GetMIRAllResult">
+      <Column Name="MIR" Type="System.Int64" DbType="BigInt NOT NULL" CanBeNull="false" />
+      <Column Name="MIR_No" Type="System.Int64" DbType="BigInt" CanBeNull="true" />
+      <Column Name="DeptName" Type="System.String" DbType="VarChar(150)" CanBeNull="true" />
+      <Column Name="Qty" Type="System.Decimal" DbType="Decimal(38,4)" CanBeNull="true" />
+    </ElementType>
+  </Function>
 </Database>

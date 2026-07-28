@@ -231,7 +231,11 @@
                     }
                 });
             }
-
+            function renumberRows() {
+                $('#tblbodyPackage tr').each(function (index) {
+                    $(this).find('td:first').text(index + 1);
+                });
+            }
             $('#searchInput').on('keyup', function () {
                 var searchText = $(this).val().trim();
                 LoadAllitem(searchText);
@@ -277,6 +281,7 @@
                             allRows.each(function (index, row) {
                                 appendGIRROW($(row));
                             });
+                            renumberRows();
 
                             $('#rdoGIR').prop('checked', true).trigger('change');
                             checkToggleLock();
@@ -697,6 +702,9 @@
                     var parse = JSON.parse(response.d);
                     $('#txtPr_Num').val(parse.PR_Num);
                     $('#txt_Status').val(parse.Status);
+
+
+                    
                     $('#txtRef_Num').val(parse.Ref_Num);
                     var datetime = $.datepicker.formatDate('dd M yy', new Date(parseInt(parse.PR_Date.substring(6, 19))));
                     $('#txtPR_Date').val(datetime);
@@ -710,7 +718,10 @@
                     } else {
                         $('#lblUpatedTime').text(moment(parseInt(parse.Update_Date.substring(6, 19))).format('DD-MMM-YYYY h:mm A'));
                     }
-
+                    if (parse.Status == "Approved") {
+                        debugger;
+                        $('#btnsave').attr("disabled", 'disabled');
+                    } 
                     // Save values globally for async dropdown loaders to pick up
                     savedPriority = parse.Priority;
                     savedDept = parse.Department;

@@ -630,6 +630,7 @@
             }
         }
         function LoadMIRMaster(id) {
+            debugger;
             $.ajax({
                 type: "POST",
                 url: "GoodsIssuanceRequest.aspx/LoadMIR",
@@ -639,6 +640,7 @@
                 contentType: "application/json; charset=utf-8",
                 dataType: "json",
                 success: function (response) {
+                    debugger;
                     var parse = JSON.parse(response.d);
                     $('#txtReq_Num').val(parse.Request_No);
                     var datetime = $.datepicker.formatDate('dd M yy', new Date(parseInt(parse.MIRDate.substring(6, 19))))
@@ -654,6 +656,11 @@
                     }, 1000);
                     $('#txtRemarks').val(parse.Remarks);
                     $('#txt_Status').val(parse.Status);
+                    if (parse.Status == "Approved") {
+                        debugger;
+                        $('#btnsave').attr("disabled", 'disabled');
+
+                    }
                 },
                 failure: function (response) {
                     alert("In failure method");
