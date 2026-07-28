@@ -389,21 +389,9 @@
             }
         }
         function loadPharmcayList() {
-            debugger;
-            var searchString = '';
-            var optionsUser = '';
-            PageMethods.getpharmacyitems(searchString, function (resp) {
-                optionsUser = '<option value="0">Please Select</option>';
-                $.each(JSON.parse(resp), function (key, value) {
-                    optionsUser += '<option value="' + value.Item_Code + '" >' + value.Description + '</option>';
-                });
-                $('#ddlMedicine').html(optionsUser);
-                $('#ddlMedicine').select2({
-                    matcher: function (params, data) {
-                        return data;
-                    }
-                });
-            });
+            $('#ddlMedicine').html('<option value="0">Please Select</option><option disabled style="color:#999;">Please type 2 or more characters to search</option>');
+            $('#ddlMedicine').select2();
+            $('#ddlMedicine').val('0').trigger('change');
         }
         var activeSelect2Id = null;
         var searchSeq = 0;
@@ -411,17 +399,19 @@
             activeSelect2Id = $(e.target).attr('id');
             console.log('Opened Select2 element with ID:', activeSelect2Id);
         });
-        $(document).on('keyup', '.select2-search__field', function () {
+        $(document).on('input', '.select2-search__field', function () {
             debugger;
             var searchString = $(this).val();
 
-            if (searchString.length === 0) {
-                return;
-            }
-
             if (activeSelect2Id) {
-                console.log('Working on Select2 element with ID:', activeSelect2Id);
                 var $select = $('#' + activeSelect2Id);
+
+                if (searchString.length < 2) {
+                    $select.empty();
+                    $select.append('<option value="0">Please Select</option><option disabled style="color:#999;">Please type 2 or more characters to search</option>');
+                    $select.val('0').trigger('change');
+                    return;
+                }
 
                 searchSeq++;
                 var seq = searchSeq;
@@ -432,12 +422,14 @@
                     try {
                         var pharmacyItems = JSON.parse(resp);
 
-                        $select.empty().append('<option value="0">Please Select</option>');
+                        var currentVal = $select.val();
+                        $select.empty();
                         $.each(pharmacyItems, function (key, value) {
                             $select.append('<option value="' + value.Item_Code + '">' + value.Description + '</option>');
                         });
-
-                        $select.trigger('change.select2');
+                        if ($select.find('option[value="' + currentVal + '"]').length > 0)
+                            $select.val(currentVal);
+                        $select.trigger('change');
 
                     } catch (error) {
                         console.error('Error parsing response:', error);

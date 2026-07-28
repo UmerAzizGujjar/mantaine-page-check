@@ -167,10 +167,14 @@
             FillPharmacyItem();
 
 
-            $(document).on('keyup', '.select2-search__field', function () {
+            $(document).on('input', '.select2-search__field', function () {
                 var searchString = $(this).val();
+                var $select = $('#txtPharmacyItem');
 
-                if (searchString.length === 0) {
+                if (searchString.length < 2) {
+                    $select.empty();
+                    $select.append('<option value="0">Please Select</option><option disabled style="color:#999;">Please type 2 or more characters to search</option>');
+                    $select.val('0').trigger('change');
                     return;
                 }
 
@@ -189,12 +193,14 @@
                             var pharmacyItems = JSON.parse(response.d);
                             var $select = $('#txtPharmacyItem');
 
-                            $select.empty().append('<option value="">Select Medicine</option>');
+                            var currentVal = $select.val();
+                            $select.empty();
                             $.each(pharmacyItems, function (key, value) {
                                 $select.append('<option value="' + value.Item_ID + '">' + value.Description + '</option>');
                             });
-
-                            $select.trigger('change.select2');
+                            if ($select.find('option[value="' + currentVal + '"]').length > 0)
+                                $select.val(currentVal);
+                            $select.trigger('change');
 
                         } catch (error) {
                             console.error('Error parsing response:', error);
@@ -217,27 +223,16 @@
 
         });
         function FillPharmacyItem() {
-            PageMethods.FillPharmacyItemDropDown(function (Medicine) {
-                var options = '<option value=""> Select Medicine  </option>'
-                $.each(JSON.parse(Medicine), function (key, value) {
-                    options += '<option value="' + value.Item_ID + '"> ' + value.Description + ' </option>';
-                });
-
-                $('#txtPharmacyItem').html(options);
-                $('#txtPharmacyItem').select2({
-                    width: '100%',
-                    dropdownAutoWidth: false,
-                    minimumResultsForSearch: 0,
-                    dropdownParent: $('#MedicationModel'),
-                    placeholder: 'Select Medicine',
-                    allowClear: true,
-                    matcher: function (params, data) {
-                        return data;
-                    }
-                });
-
-
+            $('#txtPharmacyItem').html('<option value="0">Please Select</option><option disabled style="color:#999;">Please type 2 or more characters to search</option>');
+            $('#txtPharmacyItem').select2({
+                width: '100%',
+                dropdownAutoWidth: false,
+                minimumResultsForSearch: 0,
+                dropdownParent: $('#MedicationModel'),
+                placeholder: 'Select Medicine',
+                allowClear: true
             });
+            $('#txtPharmacyItem').val('0').trigger('change');
         }
 
         function uuid() {
