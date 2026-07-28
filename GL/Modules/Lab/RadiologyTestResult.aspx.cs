@@ -1775,23 +1775,20 @@ AND (
                                    select ipd.Emergency_ID).FirstOrDefault();
                 if (isIPD != 0)
                 {
-                    var Locations = DBClass.getField("Select Concat (wd.Ward_Type,' / ',ipd.Bed_No) from In_Patient ipd join Ward_Definition wd on ipd.Ward_ID = wd.Ward_ID where ipd.In_Patient_ID =" + isIPD + "order by ipd.In_Patient_ID desc");
-                    var Department = DBClass.getField("Select dbo.GetDataValueName('Patient Main Category', ipd.Department) AS Department from In_Patient ipd  where ipd.In_Patient_ID =" + isIPD + "order by ipd.In_Patient_ID desc");
-                    pt.Location = Locations;
+                    pt.Location = db.ExecuteQuery<string>("SELECT wd.Ward_Type + ' / ' + CAST(ipd.Bed_No AS NVARCHAR) FROM In_Patient ipd JOIN Ward_Definition wd ON ipd.Ward_ID = wd.Ward_ID WHERE ipd.In_Patient_ID = {0}", isIPD).FirstOrDefault() ?? "";
+                    pt.Department = db.ExecuteQuery<string>("SELECT dbo.GetDataValueName('Patient Main Category', ipd.Department) FROM In_Patient ipd WHERE ipd.In_Patient_ID = {0}", isIPD).FirstOrDefault() ?? "";
                     pt.Patient_Category = "IPD";
-                    pt.Department = Department;
                 }
                 else if (isEmergency != 0)
                 {
-                    pt.Location = DBClass.getField("Select Concat (wd.Ward_Type,' / ',ipd.Bed_No) from Emergency_Patient ipd join Ward_Definition wd on ipd.Ward_ID = wd.Ward_ID where ipd.Emergency_ID =" + isEmergency + "order by ipd.Emergency_ID desc");
+                    pt.Location = db.ExecuteQuery<string>("SELECT wd.Ward_Type + ' / ' + CAST(ipd.Bed_No AS NVARCHAR) FROM Emergency_Patient ipd JOIN Ward_Definition wd ON ipd.Ward_ID = wd.Ward_ID WHERE ipd.Emergency_ID = {0}", isEmergency).FirstOrDefault() ?? "";
                     pt.Patient_Category = "Emergency";
                     pt.Department = "";
                 }
                 else
                 {
-                    var Department = DBClass.getField("Select dbo.GetDataValueName('Patient Main Category', p.Patient_Main_Category) AS Department from Patients p  where p.Reg_PatId =" + pat.pat_id + "order by p.Patient_ID desc");
                     pt.Location = "";
-                    pt.Department = Department;
+                    pt.Department = db.ExecuteQuery<string>("SELECT dbo.GetDataValueName('Patient Main Category', p.Patient_Main_Category) FROM Patients p WHERE p.Reg_PatId = {0}", pat.pat_id).FirstOrDefault() ?? "";
                     pt.Patient_Category = "OPD";
                 }
                 pt.Gender = db.GetDataValueName("Gender", pat.Gender);

@@ -6,13 +6,14 @@
         var chartInstances = {};
 
         $(document).ready(function () {
-            var today = $.datepicker.formatDate('dd/mm/yy', new Date());
+            var yesterday = new Date(); yesterday.setDate(yesterday.getDate() - 1);
+            var yStr = $.datepicker.formatDate('dd/mm/yy', yesterday);
             $(".datepicker").datepicker({
                 changeMonth: true, changeYear: true,
                 dateFormat: "dd/mm/yy", yearRange: "-100:+0"
             });
-            $("#txtStartDate").datepicker("setDate", today);
-            $("#txtEndDate").datepicker("setDate", today);
+            $("#txtStartDate").datepicker("setDate", yStr);
+            $("#txtEndDate").datepicker("setDate", yStr);
             $("#ddlDepartment").select2({ placeholder: "Select Department", allowClear: true, width: '100%' });
             $("#ddlDoctor").select2({ placeholder: "Select Doctor", allowClear: true, width: '100%' });
             $("#btnApplyFilters").click(function () { applyFilters(); });
@@ -69,13 +70,11 @@
             loadAppointmentFunnel(f);
             loadNewVsFollowUp(f);
             loadConsultantBar(f);
+            loadWalkInBar(f);
             loadOPDTrends(f);
-            loadTAT(f);
-            loadWaitTime(f);
             loadAgeGroup(f);
             loadConsultDistribution(f);
             loadGenderData(f);
-            loadOTGauge(f);
             loadSpecialistTable(f);
             loadWalkInTable(f);
             loadRevenueTable(f);
@@ -85,7 +84,10 @@
             window.setTimeout(function () { $(".bento-item").removeClass("card-loading"); }, 2000);
         }
 
-        $(document).ajaxStop(function () { $(".bento-item").removeClass("card-loading"); });
+        $(document).ajaxStop(function () {
+            $(".bento-item").removeClass("card-loading");
+            $("#pageLoader").addClass("hidden");
+        });
 
         function disposeChart(id) { if (chartInstances[id]) { chartInstances[id].dispose(); delete chartInstances[id]; } }
         function initChart(id) {
@@ -180,17 +182,27 @@
         /* ─── CONSULTANT BAR ─── */
         function loadConsultantBar(f) {
             post("GetSpecialistConsultants", f, function (data) {
-                var chart = initChart("chartConsultantBar");
-                if (!chart) return;
-                var names = data.map(function (d) { return d.name; }).slice(0, 10);
-                var vals = data.map(function (d) { return d.patientsSeen; }).slice(0, 10);
-                chart.setOption({
-                    tooltip: { trigger: 'axis', axisPointer: { type: 'shadow' } },
-                    grid: { left: 100, right: 60, top: 10, bottom: 25 },
-                    xAxis: { type: 'value', axisLabel: { fontSize: 9 }, splitLine: { show: false } },
-                    yAxis: { type: 'category', data: names.reverse(), axisLabel: { fontSize: 9, fontWeight: 600, width: 95, overflow: 'truncate' }, axisLine: { show: false }, axisTick: { show: false } },
-                    series: [{ type: 'bar', barWidth: 14, data: vals.reverse().map(function (v) { return { value: v, itemStyle: { color: '#1a4332', borderRadius: [0, 4, 4, 0] } }; }), label: { show: true, position: 'right', color: '#1a4332', fontSize: 10, fontWeight: 'bold', offset: [10, 0] } }]
-                });
+                renderBarChart("chartConsultantBar", data);
+            });
+        }
+
+        function loadWalkInBar(f) {
+            post("GetWalkInConsultants", f, function (data) {
+                renderBarChart("chartWalkInBar", data);
+            });
+        }
+
+        function renderBarChart(chartId, data) {
+            var chart = initChart(chartId);
+            if (!chart) return;
+            var names = data.map(function (d) { return d.name; }).slice(0, 10);
+            var vals = data.map(function (d) { return d.patientsSeen; }).slice(0, 10);
+            chart.setOption({
+                tooltip: { trigger: 'axis', axisPointer: { type: 'shadow' } },
+                grid: { left: 100, right: 60, top: 10, bottom: 25 },
+                xAxis: { type: 'value', axisLabel: { fontSize: 9 }, splitLine: { show: false } },
+                yAxis: { type: 'category', data: names.reverse(), axisLabel: { fontSize: 9, fontWeight: 600, width: 95, overflow: 'truncate' }, axisLine: { show: false }, axisTick: { show: false } },
+                series: [{ type: 'bar', barWidth: 14, data: vals.reverse().map(function (v) { return { value: v, itemStyle: { color: '#1a4332', borderRadius: [0, 4, 4, 0] } }; }), label: { show: true, position: 'right', color: '#1a4332', fontSize: 10, fontWeight: 'bold', offset: [10, 0] } }]
             });
         }
 
@@ -208,42 +220,6 @@
                     xAxis: { type: 'category', data: hrs, axisLabel: { fontSize: 10, fontWeight: 600 }, axisLine: { show: false }, axisTick: { show: false } },
                     yAxis: { type: 'value', splitLine: { lineStyle: { color: '#f1f5f9', type: 'dashed' } }, axisLabel: { fontSize: 9 }, max: maxV },
                     series: [{ type: 'line', smooth: true, data: vals, lineStyle: { color: '#1a4332', width: 3 }, itemStyle: { color: '#1a4332' }, areaStyle: { color: 'rgba(26,67,50,0.08)' }, symbol: 'circle', symbolSize: 6, label: { show: true, position: 'top', color: '#1a4332', fontSize: 9, fontWeight: 'bold', offset: [0, 6] } }]
-                });
-            });
-        }
-
-        /* ─── TAT ─── */
-        function loadTAT(f) {
-            post("GetTATData", f, function (data) {
-                var chart = initChart("chartTAT");
-                if (!chart) return;
-                var times = data.map(function (d) { return d.time; });
-                var vals = data.map(function (d) { return d.lab; });
-                var maxV = Math.max.apply(null, vals) * 1.3;
-                chart.setOption({
-                    tooltip: { trigger: 'axis' },
-                    grid: { left: 40, right: 30, top: 35, bottom: 25 },
-                    xAxis: { type: 'category', data: times, axisLabel: { fontSize: 10 }, axisLine: { show: false }, axisTick: { show: false } },
-                    yAxis: { type: 'value', splitLine: { lineStyle: { color: '#f1f5f9', type: 'dashed' } }, axisLabel: { fontSize: 9 }, max: maxV },
-                    series: [{ type: 'line', smooth: true, data: vals, lineStyle: { color: '#1a4332', width: 3 }, itemStyle: { color: '#1a4332' }, areaStyle: { color: { type: 'linear', x: 0, y: 0, x2: 0, y2: 1, colorStops: [{ offset: 0, color: 'rgba(26,67,50,0.2)' }, { offset: 1, color: 'rgba(26,67,50,0)' }] } }, symbol: 'circle', symbolSize: 5, label: { show: true, position: 'top', color: '#1a4332', fontSize: 9, fontWeight: 'bold', offset: [0, 6] } }]
-                });
-            });
-        }
-
-        /* ─── PATIENT WAIT TIME ─── */
-        function loadWaitTime(f) {
-            post("GetPatientWaitTime", f, function (data) {
-                var chart = initChart("chartPatientWaitTime");
-                if (!chart) return;
-                var colors = ['#1a4332', '#2d5a47', '#4a8268', '#6ba88a', '#92cea9', '#b8e4c7', '#d6f2e1'];
-                var ranges = data.map(function (d) { return d.range; }).reverse();
-                var vals = data.map(function (d) { return d.value; }).reverse();
-                chart.setOption({
-                    tooltip: { trigger: 'axis', axisPointer: { type: 'shadow' } },
-                    grid: { left: 60, right: 50, top: 20, bottom: 25 },
-                    xAxis: { type: 'value', axisLabel: { fontSize: 9 }, splitLine: { show: false } },
-                    yAxis: { type: 'category', data: ranges, axisLabel: { fontSize: 10, fontWeight: 600 }, axisLine: { show: false }, axisTick: { show: false } },
-                    series: [{ type: 'bar', barWidth: 22, data: vals.map(function (v, i) { return { value: v, itemStyle: { color: colors[colors.length - 1 - i], borderRadius: [0, 8, 8, 0] } }; }), label: { show: true, position: 'right', color: '#1a4332', fontSize: 10, fontWeight: 'bold', offset: [10, 0] } }]
                 });
             });
         }
@@ -307,29 +283,6 @@
                     series: [
                         { name: 'Patients', type: 'bar', barWidth: 28, barGap: '20%', data: [{ value: d.male.patients, itemStyle: { color: '#1a4332', borderRadius: [4, 4, 0, 0] } }, { value: d.female.patients, itemStyle: { color: '#10b981', borderRadius: [4, 4, 0, 0] } }], label: { show: true, position: 'top', color: '#1a4332', fontSize: 9, fontWeight: 'bold', offset: [0, 6] } },
                         { name: 'Avg Time (min)', type: 'bar', barWidth: 18, yAxisIndex: 1, data: [{ value: d.male.avgTime, itemStyle: { color: '#9333ea', borderRadius: [4, 4, 0, 0] } }, { value: d.female.avgTime, itemStyle: { color: '#9333ea', borderRadius: [4, 4, 0, 0] } }], label: { show: true, position: 'top', color: '#9333ea', fontSize: 9, fontWeight: 'bold', offset: [0, 6] } }
-                    ]
-                });
-            });
-        }
-
-        /* ─── OT GAUGE ─── */
-        function loadOTGauge(f) {
-            post("GetOTUtilization", f, function (d) {
-                var chart = initChart("chartOTGauge");
-                if (!chart) return;
-                chart.setOption({
-                    tooltip: { formatter: function (p) { return p.name + ': ' + p.value + '%'; } },
-                    series: [{
-                        type: 'pie', radius: ['55%', '75%'], center: ['50%', '55%'],
-                        startAngle: 180, endAngle: 0, avoidLabelOverlap: false, label: { show: false },
-                        data: [
-                            { value: d.utilized, name: 'Utilized', itemStyle: { color: '#1a4332' } },
-                            { value: d.available, name: 'Available', itemStyle: { color: '#f1f5f9' } }
-                        ]
-                    }],
-                    graphic: [
-                        { type: 'text', left: 'center', top: '48%', style: { text: d.utilized + '%', fill: '#1f2937', fontSize: 32, fontWeight: 'bold', textAlign: 'center', lineHeight: 36 }, z: 100 },
-                        { type: 'text', left: 'center', top: '62%', style: { text: 'Avg Capacity', fill: '#94a3b8', fontSize: 10, fontWeight: 'bold', textAlign: 'center' }, z: 100 }
                     ]
                 });
             });
@@ -433,15 +386,15 @@
                 var html = "";
                 data.forEach(function (d) {
                     var arrow = d.isUp ? '&#9650;' : '&#9660;';
-                    var iconCls = d.isUp ? 'up' : 'down';
-                    var changeCls = d.isUp ? 'up' : 'down';
-                    html += '<div class="dept-tile"><div class="dt-header"><span class="dt-name">' + d.name + '</span><span class="dt-icon ' + iconCls + '">' + arrow + '</span></div><div class="dt-count">' + fmt(d.count) + '</div><div class="dt-period">Total for Period</div><div class="dt-change ' + changeCls + '">' + (d.isUp ? '+' : '-') + d.change + '% ' + arrow + '</div></div>';
+                    var bgCls = d.isUp ? 'normal' : 'caution';
+                    html += '<div class="kpi-card" style="border-left-color:' + (d.isUp ? '#059669' : '#d97706') + ';"><div class="kpi-label">' + d.name + '</div><div class="kpi-value" style="font-size:22px;">' + fmt(d.count) + '</div><div class="kpi-status ' + bgCls + '">' + arrow + ' ' + (d.isUp ? '+' : '-') + d.change + '% <span class="vs-text">vs Prev</span></div></div>';
                 });
                 $("#deptTiles").html(html);
             });
         }
 
         function applyFilters() {
+            $("#pageLoader").removeClass("hidden");
             loadAllData();
         }
 
@@ -522,11 +475,10 @@
 
         .grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin-bottom: 24px; min-width: 0; }
         .grid-4-8 { display: grid; grid-template-columns: 4fr 8fr; gap: 16px; margin-bottom: 24px; min-width: 0; }
-        .grid-8-4 { display: grid; grid-template-columns: 8fr 4fr; gap: 16px; margin-bottom: 24px; min-width: 0; }
         .grid-2x2 { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; min-width: 0; }
-        @media (max-width: 1200px) { .grid-2, .grid-4-8, .grid-8-4, .grid-2x2 { grid-template-columns: 1fr; } }
+        @media (max-width: 1200px) { .grid-2, .grid-4-8, .grid-2x2 { grid-template-columns: 1fr; } }
         .kpi-strip, .dept-tiles { max-width: 100%; }
-        .grid-2 > *, .grid-4-8 > *, .grid-8-4 > *, .grid-2x2 > *, .kpi-strip > *, .dept-tiles > * { min-width: 0; max-width: 100%; }
+        .grid-2 > *, .grid-4-8 > *, .grid-2x2 > *, .kpi-strip > *, .dept-tiles > * { min-width: 0; max-width: 100%; }
 
         .bento-item {
             background: #fff; border-radius: 12px; border: 1px solid #e2e8f0;
@@ -608,52 +560,29 @@
         .summary-strip .sum-box.dark .sum-label { color: rgba(255,255,255,0.5); }
         .summary-strip .sum-box.dark .sum-value { color: #fff; }
         .summary-strip .sum-box.dark .sum-sub { color: #10b981; font-size: 11px; font-weight: 700; }
-
-        .notes-card {
-            padding: 14px 16px; background: #f8fafc; border: 1px solid #e2e8f0;
-            border-radius: 10px; margin-bottom: 14px;
-        }
-        .notes-card .notes-title {
-            font-size: 9px; font-weight: 900; color: #94a3b8;
-            text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 6px;
-        }
-        .notes-card .notes-text {
-            font-size: 11px; color: #64748b; line-height: 1.5; font-weight: 500;
-        }
-
         .dept-tiles {
-            display: grid; grid-template-columns: repeat(5, 1fr); gap: 14px; margin-top: 12px;
+            display: grid; grid-template-columns: repeat(4, 1fr); gap: 14px; margin-top: 12px;
         }
-        @media (max-width: 1400px) { .dept-tiles { grid-template-columns: repeat(4, 1fr); } }
-        @media (max-width: 1100px) { .dept-tiles { grid-template-columns: repeat(3, 1fr); } }
-        .dept-tile {
-            background: #fff; padding: 14px; border-radius: 10px;
-            border: 1px solid #e2e8f0; cursor: pointer;
-            transition: box-shadow 0.2s, border-color 0.2s;
-        }
-        .dept-tile:hover { border-color: #1a4332; box-shadow: 0 4px 12px rgba(26,67,50,0.1); }
-        .dept-tile .dt-header {
-            display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px;
-        }
-        .dept-tile .dt-name { font-size: 10px; font-weight: 700; color: #64748b; text-transform: uppercase; letter-spacing: 0.5px; }
-        .dept-tile .dt-icon {
-            padding: 4px; border-radius: 6px; display: flex;
-        }
-        .dept-tile .dt-icon.up { background: #ecfdf5; color: #059669; }
-        .dept-tile .dt-icon.down { background: #fef2f2; color: #dc2626; }
-        .dept-tile .dt-count { font-size: 20px; font-weight: 800; color: #1a4332; }
-        .dept-tile .dt-period { font-size: 9px; color: #94a3b8; font-weight: 500; }
-        .dept-tile .dt-change {
-            display: flex; align-items: center; gap: 2px;
-            font-size: 11px; font-weight: 700;
-        }
-        .dept-tile .dt-change.up { color: #059669; }
-        .dept-tile .dt-change.down { color: #dc2626; }
+        @media (max-width: 1400px) { .dept-tiles { grid-template-columns: repeat(3, 1fr); } }
+        @media (max-width: 1100px) { .dept-tiles { grid-template-columns: repeat(2, 1fr); } }
+        .dept-tiles .kpi-card { min-width: 0; }
 
         .empty-state {
             text-align: center; padding: 40px 20px; color: #94a3b8;
             font-size: 12px; font-weight: 700; text-transform: uppercase;
             letter-spacing: 1px; font-style: italic;
+        }
+        #pageLoader {
+            position: fixed; inset: 0; z-index: 99999;
+            background: #f8fafc; display: flex;
+            align-items: center; justify-content: center;
+            transition: opacity 0.4s;
+        }
+        #pageLoader.hidden { opacity: 0; pointer-events: none; }
+        #pageLoader .spinner {
+            width: 40px; height: 40px;
+            border: 4px solid #e2e8f0; border-top-color: #1a4332;
+            border-radius: 50%; animation: spin 0.7s linear infinite;
         }
 
         .card-loading { opacity: 0.35; pointer-events: none; transition: opacity 0.2s; position: relative; }
@@ -672,6 +601,7 @@
 
 <asp:Content ID="Content2" ContentPlaceHolderID="MainContent" runat="server">
     <div class="admin-dashboard">
+        <div id="pageLoader"><div class="spinner"></div></div>
 
         <!-- === FILTER BAR (Sticky) === -->
         <div class="filter-bar">
@@ -832,51 +762,32 @@
         </div>
 
         <!-- === DETAILED OPERATIONS === -->
-        <div class="grid-8-4">
-            <div class="grid-2x2">
-                <div class="bento-item">
-                    <div class="bento-header"><div><div class="bh-title">Patient Count Volume</div><div class="bh-sub">PERIOD COMPARISON</div></div></div>
-                    <div class="bento-body">
-                        <div id="chartPatientWaitTime" class="chart-container" style="height:300px;"></div>
-                    </div>
-                </div>
-                <div class="bento-item">
-                    <div class="bento-header"><div><div class="bh-title">Age Group Matrix</div><div class="bh-sub">SEGMENTATION BY LIFE STAGE</div></div></div>
-                    <div class="bento-body">
-                        <div id="chartAgeGroup" class="chart-container" style="height:300px;"></div>
-                    </div>
-                </div>
-                <div class="bento-item">
-                    <div class="bento-header"><div><div class="bh-title">OPD Hourly Flux</div><div class="bh-sub">TRAFFIC DENSITY PATTERNS</div></div></div>
-                    <div class="bento-body">
-                        <div id="chartOPDTrends" class="chart-container" style="height:300px;"></div>
-                    </div>
-                </div>
-                <div class="bento-item">
-                    <div class="bento-header"><div><div class="bh-title">Ancillary TAT</div><div class="bh-sub">AVG TURNAROUND TIMES (MINS)</div></div></div>
-                    <div class="bento-body">
-                        <div id="chartTAT" class="chart-container" style="height:300px;"></div>
-                    </div>
+        <div class="grid-2" style="margin-bottom:16px;">
+            <div class="bento-item">
+                <div class="bento-header"><div><div class="bh-title">Age Group Matrix</div><div class="bh-sub">SEGMENTATION BY LIFE STAGE</div></div></div>
+                <div class="bento-body">
+                    <div id="chartAgeGroup" class="chart-container" style="height:300px;"></div>
                 </div>
             </div>
-            <div>
-                <div class="bento-item" style="margin-bottom:16px;">
-                    <div class="bento-header"><div><div class="bh-title">OT Capacity Gauge</div><div class="bh-sub">LOAD RATIO &amp; THEATRE READINESS</div></div></div>
-                    <div class="bento-body">
-                        <div id="chartOTGauge" class="chart-container" style="height:280px;"></div>
-                    </div>
+            <div class="bento-item">
+                <div class="bento-header"><div><div class="bh-title">OPD Hourly Flux</div><div class="bh-sub">TRAFFIC DENSITY PATTERNS</div></div></div>
+                <div class="bento-body">
+                    <div id="chartOPDTrends" class="chart-container" style="height:300px;"></div>
                 </div>
-                <div class="notes-card">
-                    <div class="notes-title">Admin Dashboard Notes</div>
-                    <div class="notes-text">
-                        Filter Clinic and FRU clinics are tracked as high-volume walk-in units. Appointment data is suppressed for these departments to ensure metric integrity.
-                    </div>
+            </div>
+        </div>
+
+        <div class="grid-2" style="margin-bottom:24px;">
+            <div class="bento-item">
+                <div class="bento-header"><div><div class="bh-title">Productivity Ranking (Private)</div><div class="bh-sub">TOP PERFORMING SPECIALISTS</div></div></div>
+                <div class="bento-body">
+                    <div id="chartConsultantBar" class="chart-container" style="height:320px;"></div>
                 </div>
-                <div class="bento-item">
-                    <div class="bento-header"><div><div class="bh-title">Productivity Ranking</div><div class="bh-sub">TOP PERFORMING SPECIALISTS</div></div></div>
-                    <div class="bento-body">
-                        <div id="chartConsultantBar" class="chart-container" style="height:320px;"></div>
-                    </div>
+            </div>
+            <div class="bento-item">
+                <div class="bento-header"><div><div class="bh-title">Productivity Ranking (General)</div><div class="bh-sub">TOP PERFORMING WALK-IN STAFF</div></div></div>
+                <div class="bento-body">
+                    <div id="chartWalkInBar" class="chart-container" style="height:320px;"></div>
                 </div>
             </div>
         </div>

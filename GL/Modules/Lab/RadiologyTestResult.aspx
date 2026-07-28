@@ -3964,10 +3964,7 @@ ${data.Addendum_Template ? `
                         var mydate = new Date(Date.parse(data.d.Entry_Date));
                         var dateR = mydate.toLocaleDateString();
 
-                        var tokenData = httpGet("../../json.aspx?Table=Billing&q=" + Bill_No);
-
-
-                        $('#ctl00_MainContent_txtBilling').tokenInput("add", { id: JSON.parse(tokenData)[0].id, name: JSON.parse(tokenData)[0].name });
+                        $('#ctl00_MainContent_txtBilling').tokenInput("add", { id: Bill_ID, name: Bill_No });
 
                         //var tokendata = httpGet("../../json.aspx?Table=Patients&Record=Edit&q=" + data.d.Patient_No);
                         //$('#ctl00_MainContent_txtPatient_ID').tokenInput("add", {
