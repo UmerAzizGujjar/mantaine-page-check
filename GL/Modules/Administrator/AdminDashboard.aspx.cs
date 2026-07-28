@@ -365,37 +365,6 @@ namespace PMS.Modules.Administrator
         }
 
         [WebMethod(EnableSession = false)]
-        public static string GetPharmacyAnalytics(string startDate, string endDate, string department, string doctor)
-        {
-            try
-            {
-                DateTime s = ParseDate(startDate, DateTime.Today);
-                DateTime e = ParseDate(endDate, DateTime.Today).Date.AddDays(1).AddTicks(-1);
-
-                using (DataBaseDataContext db = new DataBaseDataContext())
-                {
-                    var walkIn = db.Ar_Billings.Where(b => b.Creation_Date >= s && b.Creation_Date <= e && b.IsPharmacy == true && (b.Opd_Id == null || b.Opd_Id == 0)).ToList();
-                    var hospital = db.Ar_Billings.Where(b => b.Creation_Date >= s && b.Creation_Date <= e && b.IsPharmacy == true && b.Opd_Id != null && b.Opd_Id != 0).ToList();
-
-                    int wCount = walkIn.Count();
-                    int hCount = hospital.Count();
-                    int totalPh = wCount + hCount;
-
-                    var data = new[]
-                    {
-                        new { customerType = "Walk-in", ordered = wCount, netAmount = (int)walkIn.Sum(b => (decimal?)b.Received_Amount ?? 0), percent = totalPh > 0 ? Math.Round((double)wCount / totalPh * 100, 2) : 0 },
-                        new { customerType = "Hospital-Patient", ordered = hCount, netAmount = (int)hospital.Sum(b => (decimal?)b.Received_Amount ?? 0), percent = totalPh > 0 ? Math.Round((double)hCount / totalPh * 100, 2) : 0 }
-                    };
-                    return new JavaScriptSerializer().Serialize(new { success = true, data });
-                }
-            }
-            catch (Exception ex)
-            {
-                return new JavaScriptSerializer().Serialize(new { success = false, error = ex.Message });
-            }
-        }
-
-        [WebMethod(EnableSession = false)]
         public static string GetInvestigationSummary(string startDate, string endDate, string department, string doctor)
         {
             try
@@ -405,36 +374,32 @@ namespace PMS.Modules.Administrator
 
                 using (DataBaseDataContext db = new DataBaseDataContext())
                 {
-                    var billIds = db.Ar_Billings
-                        .Where(b => b.Creation_Date >= s && b.Creation_Date <= e)
-                        .Select(b => b.Bill_ID).ToList();
+                    var details = (from b in db.Ar_Billings
+                                   join d in db.Ar_Billing_Details on b.Bill_ID equals d.Bill_ID
+                                   where b.Creation_Date >= s && b.Creation_Date <= e
+                                      && d.Item_Type == "Test"
+                                   select d).ToList();
 
-                    var details = db.Ar_Billing_Details
-                        .Where(d => d.Item_Type == "Test" || d.Item_Type == "test")
-                        .ToList()
-                        .Where(d => d.Bill_ID != null && billIds.Contains(d.Bill_ID.Value))
-                        .ToList();
+                    var billDetailIds = details.Select(d => (long)d.Bill_Details_ID).ToList();
 
-                    var billDetailIds = new HashSet<long>(details.Select(d => (long)d.Bill_Details_ID));
-
-                    var billDetailList = billDetailIds.ToList();
                     var performedIds = new HashSet<long>(
                         db.Lab_Test_Details
-                            .Where(lt => lt.Is_Result == true && lt.BillDetailID != null && billDetailList.Contains(lt.BillDetailID.Value))
+                            .Where(lt => lt.Is_Result == true && lt.BillDetailID != null && billDetailIds.Contains(lt.BillDetailID.Value))
                             .Select(lt => lt.BillDetailID.Value)
                             .Distinct()
                     );
 
-                    var deptCodes = details.Select(d => d.Test_Main_Department).Distinct().ToList();
+                    var deptCodes = details.Where(d => d.Test_Main_Department != null).Select(d => d.Test_Main_Department).Distinct().ToList();
                     var deptNames = deptCodes.ToDictionary(c => c, c => db.GetDataValueName("Main Test Departments", c) ?? c);
 
                     var grouped = details
-                        .GroupBy(d => d.Test_Main_Department ?? "Other")
+                        .Where(d => d.Test_Main_Department != null)
+                        .GroupBy(d => d.Test_Main_Department)
                         .Select(g => new
                         {
                             departmentName = deptNames.ContainsKey(g.Key) ? deptNames[g.Key] : g.Key,
                             ordered = g.Count(),
-                            performed = g.Count(d => d.Bill_Details_ID != null && performedIds.Contains((long)d.Bill_Details_ID)),
+                            performed = g.Count(d => performedIds.Contains((long)d.Bill_Details_ID)),
                             amount = (int)g.Sum(d => (decimal?)d.Net_Amount ?? 0)
                         })
                         .OrderByDescending(x => x.ordered)
@@ -462,46 +427,47 @@ namespace PMS.Modules.Administrator
             {
                 DateTime s = ParseDate(startDate, DateTime.Today);
                 DateTime e = ParseDate(endDate, DateTime.Today).Date.AddDays(1).AddTicks(-1);
-                DateTime lookback = s.AddDays(-7);
 
                 using (DataBaseDataContext db = new DataBaseDataContext())
                 {
                     var allPats = db.Patients
-                        .Where(p => p.Created_Time >= lookback && p.Created_Time < e && p.Reg_PatId != null)
+                        .Where(p => p.Created_Time >= s.AddDays(-7) && p.Created_Time < e && p.Reg_PatId != null)
                         .OrderBy(p => p.Created_Time)
                         .ToList();
 
                     var visitsByPat = allPats
                         .Where(p => p.Reg_PatId != null)
                         .GroupBy(p => p.Reg_PatId.Value)
-                        .ToDictionary(g => g.Key, g => g.OrderBy(p => p.Created_Time).Select(p => p.Created_Time).ToList());
+                        .ToDictionary(g => g.Key, g => g.OrderBy(p => p.Created_Time).Select(p => p.Created_Time.Value).ToList());
 
-                    var periodPats = allPats.Where(p => p.Created_Time >= s).ToList();
+                    DateTime latestMonth = allPats.Where(p => p.Created_Time >= s)
+                        .Select(p => p.Created_Time.Value)
+                        .DefaultIfEmpty(e.AddDays(-1))
+                        .Max();
+                    latestMonth = new DateTime(latestMonth.Year, latestMonth.Month, 1);
 
-                    var weeklyData = periodPats
-                        .Where(p => p.Created_Time != null)
-                        .GroupBy(p => new { year = p.Created_Time.Value.Year, month = p.Created_Time.Value.Month, week = (p.Created_Time.Value.Day - 1) / 7 + 1 })
-                        .OrderBy(g => g.Key.year).ThenBy(g => g.Key.month).ThenBy(g => g.Key.week)
-                        .Select(g =>
+                    var data = new System.Collections.Generic.List<object>();
+                    for (int w = 1; w <= 4; w++)
+                    {
+                        int newC = 0, retC = 0;
+                        int wStartDay = (w - 1) * 7 + 1;
+                        int wEndDay = Math.Min(w * 7, DateTime.DaysInMonth(latestMonth.Year, latestMonth.Month));
+                        DateTime ws = new DateTime(latestMonth.Year, latestMonth.Month, wStartDay);
+                        DateTime we = new DateTime(latestMonth.Year, latestMonth.Month, wEndDay).AddDays(1).AddTicks(-1);
+
+                        var weekPats = allPats.Where(p => p.Created_Time >= ws && p.Created_Time <= we).ToList();
+                        foreach (var pat in weekPats)
                         {
-                            int newC = 0, retC = 0;
-                            foreach (var pat in g)
-                                {
-                                    int rpid = pat.Reg_PatId.Value;
-                                    var patTime = pat.Created_Time.Value;
-                                    var dates = visitsByPat[rpid];
-                                    bool hasPrior7d = dates.Any(d => d >= patTime.AddDays(-7) && d < patTime);
-                                    if (hasPrior7d) retC++;
-                                    else newC++;
-                                }
-                            return new { weekLabel = "W" + g.Key.week, newPatients = newC, returning = retC };
-                        })
-                        .Take(8).ToList();
+                            int rpid = pat.Reg_PatId.Value;
+                            var patTime = pat.Created_Time.Value;
+                            if (visitsByPat.ContainsKey(rpid) && visitsByPat[rpid].Any(d => d >= patTime.AddDays(-7) && d < patTime))
+                                retC++;
+                            else
+                                newC++;
+                        }
+                        data.Add(new { week = "W" + w, newPatients = newC, returning = retC });
+                    }
 
-                    if (weeklyData.Count == 0)
-                        return new JavaScriptSerializer().Serialize(new { success = true, data = new[] { new { week = "W1", newPatients = 0, returning = 0 } } });
-
-                    var data = weeklyData.Select(x => new { week = x.weekLabel, newPatients = x.newPatients, returning = x.returning }).ToList();
                     return new JavaScriptSerializer().Serialize(new { success = true, data });
                 }
             }
@@ -514,16 +480,53 @@ namespace PMS.Modules.Administrator
         [WebMethod(EnableSession = false)]
         public static string GetConsultationDistribution(string startDate, string endDate, string department, string doctor)
         {
-            var data = new[]
+            try
             {
-                new { range = "<5", count = 1819 },
-                new { range = "5-10", count = 3336 },
-                new { range = "16-30", count = 2245 },
-                new { range = "31-60", count = 1481 },
-                new { range = "61-120", count = 816 },
-                new { range = ">120", count = 452 }
-            };
-            return new JavaScriptSerializer().Serialize(new { success = true, data });
+                DateTime s = ParseDate(startDate, DateTime.Today);
+                DateTime e = ParseDate(endDate, DateTime.Today).Date.AddDays(1).AddTicks(-1);
+
+                using (DataBaseDataContext db = new DataBaseDataContext())
+                {
+                    var minutes = new List<double>();
+                    using (var cmd = new System.Data.SqlClient.SqlCommand(@"
+SELECT DATEDIFF(MINUTE, op.Created_Time, op.discharge_date) AS Mins
+FROM Out_Patient op
+WHERE op.Created_Time IS NOT NULL AND op.discharge_date IS NOT NULL
+  AND op.Created_Time >= @s AND op.Created_Time <= @e
+  AND DATEDIFF(MINUTE, op.Created_Time, op.discharge_date) >= 0", new System.Data.SqlClient.SqlConnection(db.Connection.ConnectionString)))
+                    {
+                        cmd.Parameters.AddWithValue("@s", s);
+                        cmd.Parameters.AddWithValue("@e", e);
+                        cmd.Connection.Open();
+                        using (var r = cmd.ExecuteReader())
+                        {
+                            while (r.Read()) minutes.Add(Convert.ToDouble(r["Mins"]));
+                        }
+                    }
+
+                    int lt5 = minutes.Count(m => m < 5);
+                    int r5_10 = minutes.Count(m => m >= 5 && m <= 10);
+                    int r16_30 = minutes.Count(m => m > 10 && m <= 30);
+                    int r31_60 = minutes.Count(m => m > 30 && m <= 60);
+                    int r61_120 = minutes.Count(m => m > 60 && m <= 120);
+                    int gt120 = minutes.Count(m => m > 120);
+
+                    var data = new[]
+                    {
+                        new { range = "<5", count = lt5 },
+                        new { range = "5-10", count = r5_10 },
+                        new { range = "16-30", count = r16_30 },
+                        new { range = "31-60", count = r31_60 },
+                        new { range = "61-120", count = r61_120 },
+                        new { range = ">120", count = gt120 }
+                    };
+                    return new JavaScriptSerializer().Serialize(new { success = true, data });
+                }
+            }
+            catch (Exception ex)
+            {
+                return new JavaScriptSerializer().Serialize(new { success = false, error = ex.Message });
+            }
         }
 
         [WebMethod(EnableSession = false)]
@@ -536,20 +539,46 @@ namespace PMS.Modules.Administrator
 
                 using (DataBaseDataContext db = new DataBaseDataContext())
                 {
-                    int male = (from p in db.Patients
-                                join rp in db.Reg_patients on p.Reg_PatId equals rp.pat_id
-                                where rp.Created_time >= s && rp.Created_time <= e && rp.Gender == "Male"
-                                select p).Count();
+                    var regPats = (from p in db.Patients
+                                   join rp in db.Reg_patients on p.Reg_PatId equals rp.pat_id
+                                   where p.Created_Time >= s && p.Created_Time <= e
+                                   select rp).Distinct().ToList();
 
-                    int female = (from p in db.Patients
-                                  join rp in db.Reg_patients on p.Reg_PatId equals rp.pat_id
-                                  where rp.Created_time >= s && rp.Created_time <= e && rp.Gender == "Female"
-                                  select p).Count();
+                    int male = regPats.Count(r => r.Gender == "M" || r.Gender == "Male");
+                    int female = regPats.Count(r => r.Gender == "F" || r.Gender == "Female");
+
+                    double maleAvg = 0, femaleAvg = 0, maleCnt = 0, femaleCnt = 0;
+                    using (var cmd = new System.Data.SqlClient.SqlCommand(@"
+SELECT p.Patient_ID, DATEDIFF(MINUTE, op.Created_Time, op.discharge_date) AS Mins
+FROM Patients p
+INNER JOIN Out_Patient op ON p.Patient_ID = op.Patient_ID
+WHERE p.Created_Time >= @s AND p.Created_Time <= @e
+  AND op.Created_Time IS NOT NULL AND op.discharge_date IS NOT NULL
+  AND DATEDIFF(MINUTE, op.Created_Time, op.discharge_date) >= 0", new System.Data.SqlClient.SqlConnection(db.Connection.ConnectionString)))
+                    {
+                        cmd.Parameters.AddWithValue("@s", s);
+                        cmd.Parameters.AddWithValue("@e", e);
+                        cmd.Connection.Open();
+                        using (var r = cmd.ExecuteReader())
+                        {
+                            while (r.Read())
+                            {
+                                int pid = Convert.ToInt32(r["Patient_ID"]);
+                                double mins = Convert.ToDouble(r["Mins"]);
+                                var rp = regPats.FirstOrDefault(x => x.pat_id == pid);
+                                if (rp == null) continue;
+                                if (rp.Gender == "M" || rp.Gender == "Male") { maleAvg += mins; maleCnt++; }
+                                else if (rp.Gender == "F" || rp.Gender == "Female") { femaleAvg += mins; femaleCnt++; }
+                            }
+                        }
+                    }
+                    maleAvg = maleCnt > 0 ? Math.Round(maleAvg / maleCnt, 1) : 0;
+                    femaleAvg = femaleCnt > 0 ? Math.Round(femaleAvg / femaleCnt, 1) : 0;
 
                     var data = new
                     {
-                        male = new { patients = male, avgTime = 32.5 },
-                        female = new { patients = female, avgTime = 28.7 }
+                        male = new { patients = male, avgTime = maleAvg },
+                        female = new { patients = female, avgTime = femaleAvg }
                     };
                     return new JavaScriptSerializer().Serialize(new { success = true, data });
                 }
@@ -563,70 +592,73 @@ namespace PMS.Modules.Administrator
         [WebMethod(EnableSession = false)]
         public static string GetOPDTrends(string startDate, string endDate, string department, string doctor)
         {
-            var data = new[]
+            try
             {
-                new { hour = "08:00", value = 445 },
-                new { hour = "10:00", value = 820 },
-                new { hour = "12:00", value = 1140 },
-                new { hour = "14:00", value = 780 },
-                new { hour = "16:00", value = 590 },
-                new { hour = "18:00", value = 360 }
-            };
-            return new JavaScriptSerializer().Serialize(new { success = true, data });
-        }
+                DateTime s = ParseDate(startDate, DateTime.Today);
+                DateTime e = ParseDate(endDate, DateTime.Today).Date.AddDays(1).AddTicks(-1);
 
-        [WebMethod(EnableSession = false)]
-        public static string GetTATData(string startDate, string endDate, string department, string doctor)
-        {
-            var data = new[]
-            {
-                new { time = "00:00", lab = 45 },
-                new { time = "04:00", lab = 30 },
-                new { time = "08:00", lab = 90 },
-                new { time = "12:00", lab = 120 },
-                new { time = "16:00", lab = 80 },
-                new { time = "20:00", lab = 50 }
-            };
-            return new JavaScriptSerializer().Serialize(new { success = true, data });
-        }
+                using (DataBaseDataContext db = new DataBaseDataContext())
+                {
+                    var pats = db.Patients.Where(p => p.Created_Time >= s && p.Created_Time <= e).ToList()
+                        .Where(p => p.Created_Time != null).Select(p => p.Created_Time.Value.Hour).Where(h => h >= 8 && h <= 18).ToList();
 
-        [WebMethod(EnableSession = false)]
-        public static string GetPatientWaitTime(string startDate, string endDate, string department, string doctor)
-        {
-            var data = new[]
+                    var hours = Enumerable.Range(8, 11).Select(h => new { hour = h.ToString("D2") + ":00", value = pats.Count(v => v == h) }).ToList();
+                    return new JavaScriptSerializer().Serialize(new { success = true, data = hours });
+                }
+            }
+            catch (Exception ex)
             {
-                new { range = "0-1", value = 840 },
-                new { range = "1-5", value = 2520 },
-                new { range = "5-12", value = 1210 },
-                new { range = "13-18", value = 2700 },
-                new { range = "19-30", value = 1820 },
-                new { range = "31-45", value = 1950 },
-                new { range = "46-60", value = 2100 }
-            };
-            return new JavaScriptSerializer().Serialize(new { success = true, data });
+                return new JavaScriptSerializer().Serialize(new { success = false, error = ex.Message });
+            }
         }
 
         [WebMethod(EnableSession = false)]
         public static string GetAgeGroupData(string startDate, string endDate, string department, string doctor)
         {
-            var data = new[]
+            try
             {
-                new { range = "0-1", value = 840 },
-                new { range = "1-5", value = 2520 },
-                new { range = "5-12", value = 1210 },
-                new { range = "13-18", value = 2700 },
-                new { range = "19-30", value = 1820 },
-                new { range = "31-45", value = 1950 },
-                new { range = "46-60", value = 2100 }
-            };
-            return new JavaScriptSerializer().Serialize(new { success = true, data });
-        }
+                DateTime s = ParseDate(startDate, DateTime.Today);
+                DateTime e = ParseDate(endDate, DateTime.Today).Date.AddDays(1).AddTicks(-1);
 
-        [WebMethod(EnableSession = false)]
-        public static string GetOTUtilization(string startDate, string endDate, string department, string doctor)
-        {
-            var data = new { utilized = 78, available = 22 };
-            return new JavaScriptSerializer().Serialize(new { success = true, data });
+                using (DataBaseDataContext db = new DataBaseDataContext())
+                {
+                    var regs = (from p in db.Patients
+                                join rp in db.Reg_patients on p.Reg_PatId equals rp.pat_id
+                                where p.Created_Time >= s && p.Created_Time <= e
+                                select rp).Distinct().ToList();
+
+                    int c0_1 = 0, c1_5 = 0, c5_12 = 0, c13_18 = 0, c19_30 = 0, c31_45 = 0, c46_60 = 0;
+                    foreach (var r in regs)
+                    {
+                        DateTime dob = r.DOB ?? r.Created_time ?? e.AddYears(-30);
+                        int age = e.Year - dob.Year;
+                        if (dob > e.AddYears(-age)) age--;
+                        if (age <= 1) c0_1++;
+                        else if (age <= 5) c1_5++;
+                        else if (age <= 12) c5_12++;
+                        else if (age <= 18) c13_18++;
+                        else if (age <= 30) c19_30++;
+                        else if (age <= 45) c31_45++;
+                        else if (age <= 60) c46_60++;
+                    }
+
+                    var data = new[]
+                    {
+                        new { range = "0-1", value = c0_1 },
+                        new { range = "1-5", value = c1_5 },
+                        new { range = "5-12", value = c5_12 },
+                        new { range = "13-18", value = c13_18 },
+                        new { range = "19-30", value = c19_30 },
+                        new { range = "31-45", value = c31_45 },
+                        new { range = "46-60", value = c46_60 }
+                    };
+                    return new JavaScriptSerializer().Serialize(new { success = true, data });
+                }
+            }
+            catch (Exception ex)
+            {
+                return new JavaScriptSerializer().Serialize(new { success = false, error = ex.Message });
+            }
         }
 
         [WebMethod(EnableSession = false)]
@@ -639,26 +671,36 @@ namespace PMS.Modules.Administrator
 
                 using (DataBaseDataContext db = new DataBaseDataContext())
                 {
-                    var deptData = (from p in db.Patients
-                                    join rp in db.Reg_patients on p.Reg_PatId equals rp.pat_id
-                                    join emp in db.HR_Employees on p.Doctor_ID equals emp.Emp_ID.ToString()
-                                    where rp.Created_time >= s && rp.Created_time <= e && emp.Department != null
-                                    group p by emp.Department into g
-                                    select new
-                                    {
-                                        name = g.Key,
-                                        count = g.Count(),
-                                        change = 0,
-                                        isUp = true
-                                    }).OrderByDescending(x => x.count).ToList();
+                    var prevS = s.AddDays(-(e.Date - s.Date).TotalDays - 1);
+                    var prevE = s.AddTicks(-1);
 
-                    if (deptData.Count == 0)
+                    var current = db.Patients.Where(p => p.Created_Time >= s && p.Created_Time <= e && p.Patient_Main_Category != null).ToList();
+                    var previous = db.Patients.Where(p => p.Created_Time >= prevS && p.Created_Time <= prevE && p.Patient_Main_Category != null).ToList();
+
+                    var curGroup = current.GroupBy(p => p.Patient_Main_Category).ToDictionary(g => g.Key, g => g.Count());
+                    var prevGroup = previous.GroupBy(p => p.Patient_Main_Category).ToDictionary(g => g.Key, g => g.Count());
+
+                    var allCodes = curGroup.Keys.Union(prevGroup.Keys).Distinct().ToList();
+                    var deptNames = allCodes.ToDictionary(c => c, c => db.GetDataValueName("Patient Main Category", c) ?? c);
+
+                    var data = allCodes.Select(code =>
                     {
-                        var empty = new[] { new { name = "No Data", count = 0, change = 0, isUp = true } };
-                        return new JavaScriptSerializer().Serialize(new { success = true, data = empty });
-                    }
+                        int cur = curGroup.ContainsKey(code) ? curGroup[code] : 0;
+                        int prv = prevGroup.ContainsKey(code) ? prevGroup[code] : 0;
+                        int change = prv > 0 ? (int)Math.Round(((double)cur - prv) / prv * 100) : (cur > 0 ? 100 : 0);
+                        return new
+                        {
+                            name = deptNames.ContainsKey(code) ? deptNames[code] : code,
+                            count = cur,
+                            change = Math.Abs(change),
+                            isUp = cur >= prv
+                        };
+                    }).OrderByDescending(x => x.count).ToList();
 
-                    return new JavaScriptSerializer().Serialize(new { success = true, data = deptData });
+                    if (data.Count == 0)
+                        data = new[] { new { name = "No Data", count = 0, change = 0, isUp = true } }.ToList();
+
+                    return new JavaScriptSerializer().Serialize(new { success = true, data });
                 }
             }
             catch (Exception ex)
