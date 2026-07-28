@@ -1050,7 +1050,7 @@ namespace PMS.Modules.Lab
 
                 using (var client = new HttpClient())
                 {
-                    client.Timeout = TimeSpan.FromSeconds(10);
+                    client.Timeout = TimeSpan.FromSeconds(1);
                     var content = new StringContent(payloadJson, Encoding.UTF8, "application/json");
                     var response = client.PostAsync(baseUrl + "/tools/find", content).GetAwaiter().GetResult();
 
@@ -1107,7 +1107,7 @@ namespace PMS.Modules.Lab
 
                 using (var client = new HttpClient())
                 {
-                    client.Timeout = TimeSpan.FromSeconds(10);
+                    client.Timeout = TimeSpan.FromSeconds(1);
                     var content = new StringContent(payloadJson, Encoding.UTF8, "application/json");
                     var response = client.PostAsync(baseUrl + "/tools/find", content).GetAwaiter().GetResult();
                     if (response.IsSuccessStatusCode)
@@ -1240,6 +1240,23 @@ namespace PMS.Modules.Lab
             List<Test> AlltestList = new List<Test>();
             List<Test> AlltestListRefined = new List<Test>();
             var orthancBaseUrl = GetOrthancBaseUrl();
+            bool orthancFailed = false;
+            if (!string.IsNullOrWhiteSpace(orthancBaseUrl))
+            {
+                try
+                {
+                    using (var client = new HttpClient())
+                    {
+                        client.Timeout = TimeSpan.FromMilliseconds(200);
+                        var response = client.GetAsync(orthancBaseUrl).GetAwaiter().GetResult();
+                        orthancFailed = !response.IsSuccessStatusCode;
+                    }
+                }
+                catch
+                {
+                    orthancFailed = true;
+                }
+            }
 
             foreach (var item in data)
             {
@@ -1296,9 +1313,12 @@ namespace PMS.Modules.Lab
                 test.Result_Time = item.Created_Time?.ToString() ?? "";
                 test.Approved_By = item.Approved_By ?? "";
                 test.Approved_Time = item.Approved_Time?.ToString() ?? "";
-                var pacsLookup = GetOrthancStudyLookup(test.Lab_Test_Detail_ID, orthancBaseUrl);
-                test.PACS_Study_Url = pacsLookup.ViewerUrl;
-                test.PACS_Study_UID = pacsLookup.StudyInstanceUID;
+                if (!orthancFailed && !string.IsNullOrWhiteSpace(orthancBaseUrl))
+                {
+                    var pacsLookup = GetOrthancStudyLookup(test.Lab_Test_Detail_ID, orthancBaseUrl);
+                    test.PACS_Study_Url = pacsLookup.ViewerUrl;
+                    test.PACS_Study_UID = pacsLookup.StudyInstanceUID;
+                }
                 if (item.Test_Main_Department == null)
                 {
                     test.Test_Main_Department = "";
@@ -1528,6 +1548,23 @@ AND (
             List<Test> AlltestList = new List<Test>();
             List<Test> AlltestListRefined = new List<Test>();
             var orthancBaseUrl = GetOrthancBaseUrl();
+            bool orthancFailed = false;
+            if (!string.IsNullOrWhiteSpace(orthancBaseUrl))
+            {
+                try
+                {
+                    using (var client = new HttpClient())
+                    {
+                        client.Timeout = TimeSpan.FromMilliseconds(200);
+                        var response = client.GetAsync(orthancBaseUrl).GetAwaiter().GetResult();
+                        orthancFailed = !response.IsSuccessStatusCode;
+                    }
+                }
+                catch
+                {
+                    orthancFailed = true;
+                }
+            }
 
             foreach (var item in data)
             {
@@ -1593,9 +1630,12 @@ AND (
                 test.Result_Time = item.Created_Time?.ToString() ?? "";
                 test.Approved_By = item.Approved_By ?? "";
                 test.Approved_Time = item.Approved_Time?.ToString() ?? "";
-                var pacsLookup = GetOrthancStudyLookup(test.Lab_Test_Detail_ID, orthancBaseUrl);
-                test.PACS_Study_Url = pacsLookup.ViewerUrl;
-                test.PACS_Study_UID = pacsLookup.StudyInstanceUID;
+                if (!orthancFailed && !string.IsNullOrWhiteSpace(orthancBaseUrl))
+                {
+                    var pacsLookup = GetOrthancStudyLookup(test.Lab_Test_Detail_ID, orthancBaseUrl);
+                    test.PACS_Study_Url = pacsLookup.ViewerUrl;
+                    test.PACS_Study_UID = pacsLookup.StudyInstanceUID;
+                }
                 AlltestList.Add(test);
             }
 
