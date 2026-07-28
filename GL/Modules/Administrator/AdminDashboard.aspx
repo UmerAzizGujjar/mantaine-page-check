@@ -19,7 +19,7 @@
             $("#btnApplyFilters").click(function () { applyFilters(); });
             loadDepartments();
             loadAllData();
-        });
+        }); 
 
         function getFilters() {
             return {

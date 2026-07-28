@@ -21,13 +21,13 @@ namespace PMS
             using (DataBaseDataContext db = new DataBaseDataContext())
             {
                 var pharmacyItems = (from d in db.INV_Items
-                                     where d.IsPharmacyItem == true && d.Description.Contains(searchString)
-                                     orderby d.Item_ID descending
+                                     where d.IsPharmacyItem == true && d.Description.ToLower().Contains(searchString.ToLower())
+                                     orderby d.Description
                                      select new
                                      {
                                          d.Item_ID,
                                          Description = d.Description
-                                     }).Take(20).ToList();
+                                     }).Take(100).ToList();
 
                 return (new JavaScriptSerializer().Serialize(pharmacyItems));
             }

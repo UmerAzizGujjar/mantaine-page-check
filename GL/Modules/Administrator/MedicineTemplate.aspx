@@ -4,6 +4,7 @@
     <link href="../../wwwroot/CustomCSS/MEdTemplate.css" rel="stylesheet" />
 
     <script type="text/javascript">
+        var searchSeq = 0;
         $(document).ready(function () {
 
             FillRoutes();
@@ -169,9 +170,12 @@
             $(document).on('keyup', '.select2-search__field', function () {
                 var searchString = $(this).val();
 
-                if (searchString.length < 2) {
+                if (searchString.length === 0) {
                     return;
                 }
+
+                searchSeq++;
+                var seq = searchSeq;
 
                 $.ajax({
                     url: 'MedicineTemplate.aspx/getpharmacyitems',
@@ -179,18 +183,18 @@
                     contentType: 'application/json',
                     data: JSON.stringify({ searchString: searchString }),
                     success: function (response) {
+                        if (seq !== searchSeq) return;
+
                         try {
                             var pharmacyItems = JSON.parse(response.d);
                             var $select = $('#txtPharmacyItem');
 
+                            $select.empty().append('<option value="">Select Medicine</option>');
                             $.each(pharmacyItems, function (key, value) {
-                                var optionExists = $select.find('option[value="' + value.Item_ID + '"]').length > 0;
-                                if (!optionExists) {
-                                    $select.append('<option value="' + value.Item_ID + '">' + value.Description + '</option>');
-                                }
+                                $select.append('<option value="' + value.Item_ID + '">' + value.Description + '</option>');
                             });
 
-                            $select.trigger('change');
+                            $select.trigger('change.select2');
 
                         } catch (error) {
                             console.error('Error parsing response:', error);
@@ -220,15 +224,16 @@
                 });
 
                 $('#txtPharmacyItem').html(options);
-                $('#txtPharmacyItem').select2();
-
                 $('#txtPharmacyItem').select2({
                     width: '100%',
                     dropdownAutoWidth: false,
                     minimumResultsForSearch: 0,
                     dropdownParent: $('#MedicationModel'),
                     placeholder: 'Select Medicine',
-                    allowClear: true
+                    allowClear: true,
+                    matcher: function (params, data) {
+                        return data;
+                    }
                 });
 
 

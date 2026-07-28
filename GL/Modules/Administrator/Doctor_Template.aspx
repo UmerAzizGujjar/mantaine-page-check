@@ -398,10 +398,15 @@
                     optionsUser += '<option value="' + value.Item_Code + '" >' + value.Description + '</option>';
                 });
                 $('#ddlMedicine').html(optionsUser);
-                $('#ddlMedicine').select2();
+                $('#ddlMedicine').select2({
+                    matcher: function (params, data) {
+                        return data;
+                    }
+                });
             });
         }
         var activeSelect2Id = null;
+        var searchSeq = 0;
         $(document).on('select2:open', function (e) {
             activeSelect2Id = $(e.target).attr('id');
             console.log('Opened Select2 element with ID:', activeSelect2Id);
@@ -410,8 +415,7 @@
             debugger;
             var searchString = $(this).val();
 
-            // Don't search if less than 2 characters
-            if (searchString.length < 2) {
+            if (searchString.length === 0) {
                 return;
             }
 
@@ -419,20 +423,21 @@
                 console.log('Working on Select2 element with ID:', activeSelect2Id);
                 var $select = $('#' + activeSelect2Id);
 
+                searchSeq++;
+                var seq = searchSeq;
+
                 PageMethods.getpharmacyitems(searchString, function (resp) {
+                    if (seq !== searchSeq) return;
+
                     try {
                         var pharmacyItems = JSON.parse(resp);
 
-                        // Only add items that don't already exist (prevents duplicates)
+                        $select.empty().append('<option value="0">Please Select</option>');
                         $.each(pharmacyItems, function (key, value) {
-                            var optionExists = $select.find('option[value="' + value.Item_Code + '"]').length > 0;
-                            if (!optionExists) {
-                                $select.append('<option value="' + value.Item_Code + '">' + value.Description + '</option>');
-                            }
+                            $select.append('<option value="' + value.Item_Code + '">' + value.Description + '</option>');
                         });
 
-                        // Refresh Select2
-                        $select.trigger('change');
+                        $select.trigger('change.select2');
 
                     } catch (error) {
                         console.error('Error parsing response:', error);
