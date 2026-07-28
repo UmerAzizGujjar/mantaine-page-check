@@ -186,9 +186,10 @@ namespace PMS.Modules.Accounts
                                 cashinhand = x.CashInHand.ToString(),
                                 discount = x.Discount.ToString(),
                                 revenue = x.Revenue.ToString(),
+                                cgs = x.CGS.ToString(),         
+                                balanceaccount = x.BalanceAccount.ToString(),
                                 financialdepartment = x.Fn_Department
                             }).ToList();
-
                 return data;
             }
         }
@@ -346,13 +347,15 @@ namespace PMS.Modules.Accounts
                                              where ds.ValueSet_Name == "Clinical Financial Department" && dv.DataValue_Name == financialDept
                                              select dv.DataValue_Description).FirstOrDefault();
 
-                int cash = 0, discount = 0, revenue = 0, expense = 0;
+                int cash = 0, discount = 0, revenue = 0, expense = 0, cgs = 0, balanceAccount = 0;
 
                 // Parse values
                 int.TryParse(row.cashinhand, out cash);
                 int.TryParse(row.discount, out discount);
                 int.TryParse(row.revenue, out revenue);
                 int.TryParse(row.expense, out expense);
+                int.TryParse(row.cgs, out cgs);
+                int.TryParse(row.balanceaccount, out balanceAccount);
 
                 ClinicalAccountCategory table = new ClinicalAccountCategory
                 {
@@ -363,6 +366,8 @@ namespace PMS.Modules.Accounts
                     Discount = discount,
                     Revenue = revenue,
                     Expense = expense,
+                    CGS = string.IsNullOrEmpty(row.cgs) ? (int?)null : int.Parse(row.cgs),
+                    BalanceAccount = string.IsNullOrEmpty(row.balanceaccount) ? (int?)null : int.Parse(row.balanceaccount),
                     CreatedBy = AppConfig.UserID,
                     CreatedDate = DateTime.Now,
                     IsCancel = false
@@ -443,7 +448,9 @@ namespace PMS.Modules.Accounts
             public string revenue { get; set; }
             public string expense { get; set; }
             public string dr { get; set; }  // Add this line
-            public string cr { get; set; }  // Add this line
+            public string cr { get; set; }
+            public string cgs { get; set; }      
+            public string balanceaccount { get; set; } 
         }
     }
 }

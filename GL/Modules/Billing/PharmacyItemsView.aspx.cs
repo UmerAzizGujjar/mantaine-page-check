@@ -1,4 +1,5 @@
-﻿using System;
+﻿using PMS.Inventory;
+using System;
 using System.Collections.Generic;
 using System.Data;
 using System.Linq;
@@ -58,7 +59,8 @@ namespace PMS
                                         PurchaseRate = I.Purchase_Rate ?? 0,
                                         SaleRate = I.Sale_Rate ?? 0,
                                         WareHouse = _dbContext.GetDataValueName("Ware House", I.InventoryOrg) ?? "",
-                                        StockTotal = (_dbContext.GetInvenrtoryItemUomTotalStock(I.Item_ID, I.InventoryOrg))
+                                        StockTotal = (_dbContext.GetInvenrtoryItemUomTotalStock(I.Item_ID, I.InventoryOrg)),
+                                        CreatedBy = _dbContext.aspnet_Users.Where(x => x.UserId == I.Created_By).Select(x => x.UserName).FirstOrDefault()
                                     };
 
                     var FilteredCount = Items.Count();

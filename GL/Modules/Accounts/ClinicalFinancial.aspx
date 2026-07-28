@@ -271,25 +271,27 @@
         allData.push(rowDataSERVICE);
     });
     
-    rowsPHARMACY.each(function () {
-        let row = $(this);
-        let rowDataPHARMACY = {
-            financialdepartment: row.find('.financialDepartmentPHARMACY').val(),
-            categoryname: row.find('.categorynamePHARMACY').val(),
-            cashinhand: row.find('.cashinhandPHARMACY').val(),
-            discount: row.find('.discountPHARMACY').val(),
-            revenue: row.find('.revenuePHARMACY').val()
-        };
-        if (rowDataPHARMACY.categoryname == 0 || rowDataPHARMACY.cashinhand == 0 || rowDataPHARMACY.discount == 0 ) {
-            isEmptyFound = true;
-        }
-        if (categoryNamesPHARMACY.has(rowDataPHARMACY.categoryname)) {
-            duplicateFound = true;
-        } else {
-            categoryNamesPHARMACY.add(rowDataPHARMACY.categoryname);
-        }
-        allData.push(rowDataPHARMACY);
-    });
+         rowsPHARMACY.each(function () {
+             let row = $(this);
+             let rowDataPHARMACY = {
+                 financialdepartment: row.find('.financialDepartmentPHARMACY').val(),
+                 categoryname: row.find('.categorynamePHARMACY').val(),
+                 cashinhand: row.find('.cashinhandPHARMACY').val(),
+                 discount: row.find('.discountPHARMACY').val(),
+                 revenue: row.find('.revenuePHARMACY').val(),
+                 cgs: row.find('.cgsPHARMACY').val(),
+                 balanceaccount: row.find('.balanceaccountPHARMACY').val()
+             };
+             if (rowDataPHARMACY.categoryname == 0 || rowDataPHARMACY.cashinhand == 0 || rowDataPHARMACY.discount == 0) {
+                 isEmptyFound = true;
+             }
+             if (categoryNamesPHARMACY.has(rowDataPHARMACY.categoryname)) {
+                 duplicateFound = true;
+             } else {
+                 categoryNamesPHARMACY.add(rowDataPHARMACY.categoryname);
+             }
+             allData.push(rowDataPHARMACY);
+         });
     
     // Handle Advance tab data - Hard-coded category name "Advance" with value "01"
     rowsAdvance.each(function () {
@@ -1380,51 +1382,57 @@ function addNewRowAdvance() {
                     console.log(savedData);
                     getClinicalFinancialAcoountsDropdown(function (options) {
                         getAccounts(function (optionsVen) {
-
                             savedData.forEach(item => {
                                 let row = `
-<tr class="data-row">
-    <td style="display: none">
-
-                <input type="hidden" class="financialDepartmentPHARMACY" value="${item.financialdepartment}"/>
-    </td>
-    <td>
-        <select class="categorynamePHARMACY" style="background-color: white; height:32px;" disabled>
-            <option value="0">Please Select</option>
-            <option value="001" selected>Medicene</option>
-        </select>
-    </td>
-    <td>
-        <select class="cashinhandPHARMACY select2select" style="background-color: white;" >
-            ${setSelected(optionsVen, item.cashinhand)}
-        </select>
-    </td>
-    <td>
-        <select class="discountPHARMACY select2select" style="background-color: white;" >
-            ${setSelected(optionsVen, item.discount)}
-        </select>
-    </td>
-    <td>
-        <select class="revenuePHARMACY select2select" style="background-color: white;">
-            ${setSelected(optionsVen, item.revenue)}
-        </select>
-    </td>
-    <td>
-        <a href="#" onclick="removeRow(this)">
-            <i class="fa fa-trash fa-lg " style="color: black;"></i>
-        </a>
-        <a href="#" onclick="enableSelectsInRow(this)" style="margin-left:20px">
-            <i class="fa fa-pencil fa-lg " style="color: black;"></i>
-        </a>
-    </td>
-</tr>`;
+                        <tr class="data-row">
+                            <td style="display: none">
+                                <input type="hidden" class="financialDepartmentPHARMACY" value="${item.financialdepartment}"/>
+                            </td>
+                            <td>
+                                <select class="categorynamePHARMACY" style="background-color: white; height:32px;" disabled>
+                                    <option value="0">Please Select</option>
+                                    <option value="001" ${item.categoryname === "001" ? "selected" : ""}>Medicene</option>
+                                </select>
+                            </td>
+                            <td>
+                                <select class="cashinhandPHARMACY select2select" style="background-color: white;" disabled>
+                                    ${setSelected(optionsVen, item.cashinhand)}
+                                </select>
+                            </td>
+                            <td>
+                                <select class="discountPHARMACY select2select" style="background-color: white;" disabled>
+                                    ${setSelected(optionsVen, item.discount)}
+                                </select>
+                            </td>
+                            <td>
+                                <select class="revenuePHARMACY select2select" style="background-color: white;" disabled>
+                                    ${setSelected(optionsVen, item.revenue)}
+                                </select>
+                            </td>
+                            <td>
+                                <select class="cgsPHARMACY select2select" style="background-color: white;" disabled>
+                                    ${setSelected(optionsVen, item.cgs)}
+                                </select>
+                            </td>
+                            <td>
+                                <select class="balanceaccountPHARMACY select2select" style="background-color: white;" disabled>
+                                    ${setSelected(optionsVen, item.balanceaccount)}
+                                </select>
+                            </td>
+                            <td>
+                                <a href="#" onclick="removeRow(this)">
+                                    <i class="fa fa-trash fa-lg" style="color: black;"></i>
+                                </a>
+                                <a href="#" onclick="enableSelectsInRow(this)" style="margin-left:20px">
+                                    <i class="fa fa-pencil fa-lg" style="color: black;"></i>
+                                </a>
+                            </td>
+                        </tr>`;
 
                                 $('.financialDepartmentPHARMACY option[value="005"]').prop('selected', true);
-
                                 $('#tablePHARMACY tbody').append(row);
                             });
-
-                            $('.select2select').select2(); // reinit after DOM update
+                            $('.select2select').select2();
                         });
                     });
                 }
@@ -1908,44 +1916,50 @@ function addNewRowAdvance() {
             getClinicalFinancialAcoountsDropdown(function (options) {
                 getAccounts(function (optionsVen) {
                     let newRow = `
-                <tr class="data-row">
-                    <td style="display: none">
-    
-                        <input type = "hidden" class="financialDepartmentPHARMACY" value = "005">
-                    
-                    <td>
-                        <select disabled class="categorynamePHARMACY" style="background-color: white; height:32px;">
-                            <option value="0">Please Select</option>
-                            <option value="001" selected>Medicene</option>
-                        </select>
-                    </td>
-         
-                    <td>
-                        <select class="cashinhandPHARMACY select2select" style="background-color: white;">
-                            ${optionsVen}
-                        </select>
-                    </td>
-                    <td>
-                        <select class="discountPHARMACY select2select" style="background-color: white;">
-                            ${optionsVen}
-                        </select>
-                    </td>
-                    <td>
-                        <select class="revenuePHARMACY select2select" style="background-color: white;">
-                            ${optionsVen}
-                        </select>
-                    </td>
-                    <td>
-                        <a href="#" onclick="removeRow(this)">
-                        <i class="fa fa-trash fa-lg " style="color: black;"></i>
+            <tr class="data-row">
+                <td style="display: none">
+                    <input type="hidden" class="financialDepartmentPHARMACY" value="005">
+                </td>
+                <td>
+                    <select disabled class="categorynamePHARMACY" style="background-color: white; height:32px;">
+                        <option value="0">Please Select</option>
+                        <option value="001" selected>Medicene</option>
+                    </select>
+                </td>
+                <td>
+                    <select class="cashinhandPHARMACY select2select" style="background-color: white;">
+                        ${optionsVen}
+                    </select>
+                </td>
+                <td>
+                    <select class="discountPHARMACY select2select" style="background-color: white;">
+                        ${optionsVen}
+                    </select>
+                </td>
+                <td>
+                    <select class="revenuePHARMACY select2select" style="background-color: white;">
+                        ${optionsVen}
+                    </select>
+                </td>
+                <td>
+                    <select class="cgsPHARMACY select2select" style="background-color: white;">
+                        ${optionsVen}
+                    </select>
+                </td>
+                <td>
+                    <select class="balanceaccountPHARMACY select2select" style="background-color: white;">
+                        ${optionsVen}
+                    </select>
+                </td>
+                <td>
+                    <a href="#" onclick="removeRow(this)">
+                        <i class="fa fa-trash fa-lg" style="color: black;"></i>
                     </a>
-
-                    </td>
-                </tr>
-            `;
+                </td>
+            </tr>`;
                     $('#tablePHARMACY tbody').append(newRow);
                     $('.financialDepartmentPHARMACY option[value="005"]').prop('selected', true);
-                    $('.select2select').select2(); // initialize Select2
+                    $('.select2select').select2();
                 });
             });
         }
@@ -2387,11 +2401,10 @@ function addNewRowAdvance() {
             </table>
         </div>
 
-        <div id="Tab-5" >
+        <div id="Tab-5">
             <div class="row">
-
-                <div class="col-lg-11 col-md-11 col-sm-11"></div>
-                <div class="col-lg-1 col-md-1 col-sm-1" style="text-align: right;">
+                <div class="col-lg-10 col-md-10 col-sm-10"></div>
+                <div class="col-lg-2 col-md-2 col-sm-2" style="text-align: right;">
                     <a href="#" id="btnaddrowPHARMACY" onclick="addNewRowPHARMACY()">
                         <i class="fa fa-plus-circle" style="font-size: 30px;"></i>
                     </a>
@@ -2400,12 +2413,14 @@ function addNewRowAdvance() {
             <table id="tablePHARMACY" class="table table-bordered table-hover table-striped" style="margin-top: 10px;">
                 <thead id="theadPHARMACY">
                     <tr>
-                        <th style="display: none">Financial Department  </th>
-                        <th style="width: 16%;">Category Name         </th>
-                        <th style="width: 25%;">Cash in Hand (C.I.H.) </th>
-                        <th style="width: 25%;">Discount              </th>
-                        <th style="width: 25%;">Revenue               </th>
-                        <th style="width: 9%;">Action                </th>
+                        <th style="display: none">Financial Department</th>
+                        <th style="width: 12%;">Category Name</th>
+                        <th style="width: 18%;">Cash in Hand (C.I.H.)</th>
+                        <th style="width: 18%;">Discount</th>
+                        <th style="width: 18%;">Revenue</th>
+                        <th style="width: 18%;">CGS</th>
+                        <th style="width: 18%;">Balance Account</th>
+                        <th style="width: 9%;">Action</th>
                     </tr>
                 </thead>
                 <tbody id="tbodyPHARMACY">
