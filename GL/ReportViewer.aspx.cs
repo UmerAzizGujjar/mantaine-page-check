@@ -3190,6 +3190,8 @@ namespace PMS
                 var logoPath = DBClass.getField("SELECT dbo.GetCompanyLogo()");
                 string ItemID = Request.QueryString["ItemID"].ToString();
                 string Operator = Request.QueryString["Operator"].ToString();
+                string FromWarehouse = Request.QueryString["FromWarehouse"].ToString();
+                string ToWarehouse = Request.QueryString["ToWarehouse"].ToString();
 
 
                 string rptFileName = "Inventory/rptStockTransferReport.rpt";
@@ -3205,6 +3207,8 @@ namespace PMS
                 rd.SetParameterValue("@endDate", EndDateTime);
                 rd.SetParameterValue("@itemId", ItemID);
                 rd.SetParameterValue("@Operator", Operator);
+                rd.SetParameterValue("@FromWarehouse", FromWarehouse);
+                rd.SetParameterValue("@ToWarehouse", ToWarehouse);
                 rd.SetParameterValue("CompanyLogo", logoPath);
 
             }
