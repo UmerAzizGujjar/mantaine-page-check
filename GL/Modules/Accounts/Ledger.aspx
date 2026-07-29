@@ -7,11 +7,17 @@
 
     <script type="text/javascript">
 
-        $(function () {
-            $("#ctl00_MainContent_txtStart_Date").datepicker({ dateFormat: "dd M yy" }).datepicker("setDate", new Date());
-            $("#ctl00_MainContent_txtEnd_Date").datepicker({ dateFormat: "dd M yy" }).datepicker("setDate", new Date());
+$(function () {
+    $("#ctl00_MainContent_txtStart_Date").datepicker({ dateFormat: "dd M yy" });
+    $("#ctl00_MainContent_txtEnd_Date").datepicker({ dateFormat: "dd M yy" });
 
-        });
+    if ($("#ctl00_MainContent_txtStart_Date").val() === "") {
+        $("#ctl00_MainContent_txtStart_Date").datepicker("setDate", new Date());
+    }
+    if ($("#ctl00_MainContent_txtEnd_Date").val() === "") {
+        $("#ctl00_MainContent_txtEnd_Date").datepicker("setDate", new Date());
+    }
+});
 
         $(document).ready(function () {
             loadtokenInputsByAccount_ID();
@@ -27,7 +33,7 @@
 
             $('#ctl00_MainContent_ddlVendor').select2();
             $('#ctl00_MainContent_ddlVendorType').select2();
-
+            $('#ctl00_MainContent_ddlWarehouse').select2();
         }
     </script>
     <style>
