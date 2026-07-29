@@ -91,9 +91,15 @@ namespace PMS
                         ddlVendorType.AppendDataBoundItems = true;
                         ddlVendorType.Items.Clear();
                         ddlVendorType.Items.Add(new ListItem("All", "0"));
-
                         ddlVendorType.DataBind();
-                        warehouseDiv.Visible = false;
+
+                        warehouseDiv.Visible = true;
+                        object valuset = DBClass.GetValueSet("Ware house");
+                        ddlWarehouse.DataSource = valuset;
+                        ddlWarehouse.DataTextField = "DataValue_Description";
+                        ddlWarehouse.DataValueField = "DataValue_Name";
+                        ddlWarehouse.DataBind();
+                        ddlWarehouse.Items.Insert(0, new ListItem("All", "0"));
                         break;
                     case "GRNS":
                         vendorDiv.Visible = true;
@@ -177,8 +183,8 @@ namespace PMS
                         warehouseDiv.Visible = true;
                         tr_Export.Visible = true;
 
-                        object valuset = DBClass.GetValueSet("Ware house");
-                        ddlWarehouse.DataSource = valuset;
+                        object valusets = DBClass.GetValueSet("Ware house");
+                        ddlWarehouse.DataSource = valusets;
                         ddlWarehouse.DataTextField = "DataValue_Description";
                         ddlWarehouse.DataValueField = "DataValue_Name";
                         ddlWarehouse.DataBind();
@@ -251,7 +257,7 @@ namespace PMS
                     query = "ReportName=VendorDetailsGRNS&ReportTitle=Good Receipt Note Summary from " + txtStart_Date.Text + " to " + txtEnd_Date.Text + "&Vendor_ID=" + ddlVendor.SelectedValue + "&startDate=" + txtStart_Date.Text + "&endDate=" + txtEnd_Date.Text + "";
                     break;
                 case "VWP":
-                    query = "ReportName=VendorWisePurchase&ReportTitle=Vendor Wise Purchase Detail from " + txtStart_Date.Text + " to " + txtEnd_Date.Text + "&startDate=" + txtStart_Date.Text + "&endDate=" + txtEnd_Date.Text + "&VendorType=" + ddlVendorType.SelectedValue + "&VendorId=" + ddlVendor.SelectedValue + "";
+                    query = "ReportName=VendorWisePurchase&ReportTitle=Vendor Wise Purchase Detail from " + txtStart_Date.Text + " to " + txtEnd_Date.Text + "&startDate=" + txtStart_Date.Text + "&endDate=" + txtEnd_Date.Text + "&VendorType=" + ddlVendorType.SelectedValue + "&VendorId=" + ddlVendor.SelectedValue + "&Warehouse=" + ddlWarehouse.SelectedValue + "";
                     break;
                 case "SIH":
                     query = "ReportName=PharmacyStock&ReportTitle=Stock In Hand &Stock=" + ddlStock.SelectedValue + "";
