@@ -483,29 +483,20 @@ namespace PMS
                     string x = "Radiology Statistics Report";
                     Master.Label2.Text = x;
                     Master.GetMenuName();
-                    tr1MedicalSubsidy.Visible = false;
-                    dpROw.Visible = false;
-                    tr_Summary.Visible = false;      // changed
-                    lblMultiSelect.Visible = false;
                     DateDiv.Visible = true;
                     Time_Row.Visible = true;
-                    op_PanelCompany.Visible = false;
-                    optRw.Visible = false;
 
-                    lboperator.Visible = false;
-                    ddloprators.Visible = false;
-
-
-                    trDoctor.Visible = true;
-
-                    DataTable dt = DBClass.getDataTable("select * from HR_Employees where IsDoctor=1");
-                    ddlDoctor.DataSource = dt;
-                    ddlDoctor.DataValueField = "Emp_ID";
-                    ddlDoctor.DataTextField = "Emp_Name";
-                    ddlDoctor.Items.Add(new ListItem() { Value = "0", Text = "All Doctors" });
-                    ddlDoctor.DataBind();
-                    lblMultiSelect.Visible = false;
-
+                    lbShift.Visible = false;
+                    ddlShift.Visible = false;
+                    optRw.Visible = true;
+                    DataBaseDataContext db = new DataBaseDataContext(DBClass.ConnectionString());
+                    object valusetss = from d in db.aspnet_Users
+                                       select new { d.UserName, d.UserId };
+                    ddloprators.DataSource = valusetss;
+                    ddloprators.DataTextField = "UserName";
+                    ddloprators.DataValueField = "UserId";
+                    ddloprators.Items.Add(new ListItem() { Text = "All", Value = "0" });
+                    ddloprators.DataBind();
                 }
 
                 else if (this.PageTitle == "Over_Summary_Shift_Wise")

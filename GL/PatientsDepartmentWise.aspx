@@ -1217,7 +1217,7 @@
                             '&ReportTitle=Department Wise Report from ' + startDateTime + ' to ' + endDateTime +
                             '&StartDateTime=' + encodeURIComponent(startDateTime) +
                             '&EndDateTime=' + encodeURIComponent(endDateTime) +
-                            '&DoctorID=' + $('#ctl00_MainContent_ddlDoctor').val();
+                            '&DoctorID=' + $('#ctl00_MainContent_ddloprators').val();
 
                         window.open(url, '_blank');
                     }
