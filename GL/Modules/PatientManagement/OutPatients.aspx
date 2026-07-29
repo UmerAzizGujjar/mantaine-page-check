@@ -3562,7 +3562,10 @@
                 fillPendingPatientsList();
             })
 
-            var OPD_Patient = $('#<%=txtPatient_ID.ClientID%>').val();
+            
+            InitializeTokenInputsBasedOnConfig();
+
+            <%--var OPD_Patient = $('#<%=txtPatient_ID.ClientID%>').val();
 
             if (OPD_Patient == "(New)")
                 OPD_Patient = localStorage.PatientIDforNewForm;
@@ -3579,7 +3582,7 @@
             else {
                 loadtokenInputsDefault();
                 loadtokenInputsByMrNo();
-            }
+            }--%>
             var OPD_MR = $('#<%=txtMRNO.ClientID%>').val();
 
 
@@ -3882,6 +3885,61 @@
         });
 
 
+        function InitializeTokenInputsBasedOnConfig() {
+            PageMethods.Gettokeninputsearch(function (result) {
+                var code = JSON.parse(result);
+                if (!code) code = "01";
+
+                var OPD_Patient = $('#<%=txtPatient_ID.ClientID%>').val();
+                if (OPD_Patient == "(New)")
+                    OPD_Patient = localStorage.PatientIDforNewForm;
+
+                if (code === "02") {
+                    if (OPD_Patient != "") {
+                        var Patient_ID = OPD_Patient;
+                        loadtokenInputsByMrNos_Default();
+                    } else {
+                        loadtokenInputsByMrNos_Default();
+                    }
+
+                    loadtokenInputsDefault();
+                }
+                else {
+                    if (OPD_Patient != "") {
+                        var Patient_ID = OPD_Patient;
+                        var tokendata = httpGet("../../json.aspx?Table=OutPatients&Patient_ID=" + Patient_ID);
+                        loadtokenInputs(JSON.parse(tokendata));
+                        var tokendatas = httpGet("../../json.aspx?Table=OutPatients_MrNo&Patient_ID=" + Patient_ID);
+                        loadtokenInputsByMrNo(JSON.parse(tokendatas));
+                    }
+                    else {
+                        loadtokenInputsDefault();
+                        loadtokenInputsByMrNo();
+                    }
+                }
+            }, function (error) {
+                console.error("Error fetching token config:", error);
+                loadtokenInputsDefault();
+                loadtokenInputsByMrNo();
+            });
+        }
+
+        function loadtokenInputsByMrNos_Default() {
+            $("#ctl00_MainContent_txtPatNO").tokenInput("../../json.aspx?Table=Out_PatientsbyMrNos", {
+                tokenLimit: 1,
+                onAdd: function (item) {
+                    debugger;
+                    $("#hdfPatient_ID").val(item.id);
+                    $("#hdfReg_ID").val(item.reg_patId);
+                    localStorage.PatientIDforNewForm = item.id;
+                    $("#ctl00_MainContent_txtPatient_ID").val(item.id);
+                    localStorage.SelectedTabID = 1;
+                    loadAjax();
+                    LoadHistory();
+                    checkRepeat();
+                }
+            });
+        }
 
 
         function uuid() {

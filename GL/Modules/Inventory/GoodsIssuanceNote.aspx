@@ -1699,8 +1699,8 @@
         <div class="col-lg-2 col-md-4 col-sm-6">
             <input type="button" style="display:none;" class="btn btn-primry" value="Approve" id="btnApprove" onclick="ApproveGINFromEdit()" />
         </div>
-        <div class="col-lg-2 col-md-4 col-sm-6" id="btnUnApproveToBeHidden">
-            <input type="button" style="display: none" class="btn btn-primry" value="UnApprove" id="btnUnApprove" onclick="UnApprove()" />
+        <div class="col-lg-2 col-md-4 col-sm-6" id="btnUnApproveToBeHidden" style="display: none">
+            <input type="button"  class="btn btn-primry" value="UnApprove" id="btnUnApprove" onclick="UnApprove()" />
             
         </div>
         <div class="col-lg-2 col-md-4 col-sm-6" id="isCloseGIR">
