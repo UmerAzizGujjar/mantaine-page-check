@@ -27,7 +27,6 @@
 
             $('#ctl00_MainContent_ddlVendor').select2();
             $('#ctl00_MainContent_ddlVendorType').select2();
-            $('#ctl00_MainContent_ddlWarehouse').select2();
 
         }
     </script>

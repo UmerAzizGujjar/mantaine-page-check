@@ -2805,9 +2805,7 @@ namespace PMS
                     reportPath += "Pharmacy/rptSupplierWisePurchase.rpt";
 
                     rd.Load(reportPath);
-                    string VendorId = Request.QueryString["VendorId"].ToString();
-                    string vendorType = Request.QueryString["VendorType"].ToString();
-                    string Warehouse = Request.QueryString["Warehouse"].ToString();
+                    string vendorType = Request.QueryString["VendorType"];
 
 
                     string stDate = Request.QueryString["startDate"].ToString();
@@ -2818,8 +2816,7 @@ namespace PMS
                     rd.SetParameterValue("@StartDate", stDate);
                     rd.SetParameterValue("@EndDate", endDate);
                     rd.SetParameterValue("CompanyLogo", logoPath);
-                    rd.SetParameterValue("@VendorId", VendorId);
-                    rd.SetParameterValue("@Warehouse", Warehouse);
+                    rd.SetParameterValue("@VendorId", Convert.ToInt32(Request.QueryString["VendorId"]));
                     rd.SetParameterValue("CompanyName", AppConfig.Company_Name);
                     // rd.SetParameterValue("Address", companyAddress);
                 }
