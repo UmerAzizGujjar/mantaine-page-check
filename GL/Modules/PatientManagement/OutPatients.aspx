@@ -703,7 +703,7 @@
             }
         }
 
-        function Appendintable() {
+        <%--function Appendintable() {
             var PatientID = ($('#<%= hdfPatient_ID.ClientID %>').val());
             if (PatientID != '(New)') {
                 PageMethods.LoadMedicinesForHistory(PatientID, function (res) {
@@ -760,7 +760,80 @@
                     $('#tblMedicinesList tbody').append(rows);
                 });
             }
-        }
+        }--%>
+
+        function Appendintable() {
+    var PatientID = ($('#<%= hdfPatient_ID.ClientID %>').val());
+    if (PatientID != '(New)') {
+        PageMethods.LoadMedicinesForHistory(PatientID, function (res) {
+            var Medicines = JSON.parse(res);
+            var rows = '';
+
+            var headerCheckbox = $('#select-all-checkbox');
+            if (headerCheckbox.is(':checked')) {
+                $.each(Medicines, function (index, value) {
+                    var timeStamp = parseInt(value.Medicine_Date.substr(6, 10));
+                    var date = moment.unix(timeStamp).format('M/D/YYYY h:m:s A');
+                    var datearray = date.split("/");
+                    var newdate = datearray[1] + '/' + datearray[0] + '/' + datearray[2];
+
+                    rows += '<tr>';
+                    rows += '<td><input type="hidden" name="testDate" value="' + date + '"> ' + newdate + ' </td>';
+                    rows += '<td>' + value.Medicine_Name + '</td>';
+                    rows += '<td>' + value.Frequency + '</td>';
+                    rows += '<td>' + value.Oral + '</td>';
+                    rows += '<td>' + value.Injections + '</td>';
+                    rows += '<td>' + value.AttendingParamedical_Staff + '</td>';
+                    rows += '<td>' + value.Dosage_From + '</td>';
+                    rows += '<td>' + value.Dosage_Qty + '</td>';
+                    rows += '<td>' + value.Other_Instruction + '</td>';
+                    rows += '<td><a href="#" onclick="deleteMedicine(this)">Delete</a></td>';
+                    rows += '</tr>';
+                });
+            } else {
+                $('#tblHistoryMedication tbody tr').each(function () {
+                    var checkbox = $(this).find('.history-checkbox');
+                    if (checkbox.is(':checked')) {
+                        // Get the medicine name from the row (4th column index 3)
+                        var medicineName = $(this).find('td:eq(3)').text().trim();
+                        
+                        // Find the matching medicine in the array by name
+                        var matchedMedicine = null;
+                        for (var i = 0; i < Medicines.length; i++) {
+                            if (Medicines[i].Medicine_Name.trim() === medicineName) {
+                                matchedMedicine = Medicines[i];
+                                break;
+                            }
+                        }
+                        
+                        // If found, add it to rows
+                        if (matchedMedicine) {
+                            var timeStamp = parseInt(matchedMedicine.Medicine_Date.substr(6, 10));
+                            var date = moment.unix(timeStamp).format('M/D/YYYY h:m:s A');
+                            var datearray = date.split("/");
+                            var newdate = datearray[1] + '/' + datearray[0] + '/' + datearray[2];
+
+                            rows += '<tr>';
+                            rows += '<td><input type="hidden" name="testDate" value="' + date + '"> ' + newdate + ' </td>';
+                            rows += '<td>' + matchedMedicine.Medicine_Name + '</td>';
+                            rows += '<td>' + matchedMedicine.Frequency + '</td>';
+                            rows += '<td>' + matchedMedicine.Oral + '</td>';
+                            rows += '<td>' + matchedMedicine.Injections + '</td>';
+                            rows += '<td>' + matchedMedicine.AttendingParamedical_Staff + '</td>';
+                            rows += '<td>' + matchedMedicine.Dosage_From + '</td>';
+                            rows += '<td>' + matchedMedicine.Dosage_Qty + '</td>';
+                            rows += '<td>' + matchedMedicine.Other_Instruction + '</td>';
+                            rows += '<td><a href="#" onclick="deleteMedicine(this)">Delete</a></td>';
+                            rows += '</tr>';
+                        }
+                    }
+                });
+            }
+
+            $('#tblMedicinesList tbody').append(rows);
+        });
+    }
+}
 
         function AppendSymtompsHistory() {
             var PatID = ($('#<%= hdfPatient_ID.ClientID%>').val())
