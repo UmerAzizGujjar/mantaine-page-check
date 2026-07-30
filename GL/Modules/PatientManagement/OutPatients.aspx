@@ -3967,28 +3967,22 @@
         if (OPD_Patient == "(New)")
             OPD_Patient = localStorage.PatientIDforNewForm;
 
-        if (code === "02") {
-            if (OPD_Patient != "") {
-                var Patient_ID = OPD_Patient;
-                var tokendata = httpGet("../../json.aspx?Table=OutPatients&Patient_ID=" + Patient_ID);
-                loadtokenInputs(JSON.parse(tokendata));
-                var tokendatas = httpGet("../../json.aspx?Table=OutPatients_MrNo&Patient_ID=" + Patient_ID);
+        if (OPD_Patient != "") {
+            var Patient_ID = OPD_Patient;
+            var tokendata = httpGet("../../json.aspx?Table=OutPatients&Patient_ID=" + Patient_ID);
+            loadtokenInputs(JSON.parse(tokendata));
+            var tokendatas = httpGet("../../json.aspx?Table=OutPatients_MrNo&Patient_ID=" + Patient_ID);
+
+            if (code === "02") {
                 loadtokenInputsByMrNos_Default(JSON.parse(tokendatas));
             } else {
-                loadtokenInputsDefault();
-                loadtokenInputsByMrNos_Default(); 
-            }
-        }
-        else {
-            if (OPD_Patient != "") {
-                var Patient_ID = OPD_Patient;
-                var tokendata = httpGet("../../json.aspx?Table=OutPatients&Patient_ID=" + Patient_ID);
-                loadtokenInputs(JSON.parse(tokendata));
-                var tokendatas = httpGet("../../json.aspx?Table=OutPatients_MrNo&Patient_ID=" + Patient_ID);
                 loadtokenInputsByMrNo(JSON.parse(tokendatas));
             }
-            else {
-                loadtokenInputsDefault();
+        } else {
+            loadtokenInputsDefault();
+            if (code === "02") {
+                loadtokenInputsByMrNos_Default();
+            } else {
                 loadtokenInputsByMrNo();
             }
         }
