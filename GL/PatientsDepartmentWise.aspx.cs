@@ -4617,6 +4617,7 @@ namespace PMS
                     Master.Label2.Text = x;
                     Master.GetMenuName();
                     tr_Summary.Visible = false;
+                    tr_Export.Visible = true;
                     tr1MedicalSubsidy.Visible = false;
                     lblMainDepartment.Visible = true;
                     ddlDepartments.Visible = false;
@@ -4640,6 +4641,26 @@ namespace PMS
                     ddlMainDepartment.DataValueField = "DataValue_Name";
                     ddlMainDepartment.Items.Add(new ListItem() { Text = "All", Value = "0" });
                     ddlMainDepartment.DataBind();
+
+
+                    //ADDING NEW WAREHOUSE
+
+                    object valuset;
+                    valuset = DBClass.GetValueSet("Ware house");
+                    ddlwareHouse.DataSource = valuset;
+                    ddlwareHouse.DataTextField = "DataValue_Description";
+                    ddlwareHouse.DataValueField = "DataValue_Name";
+                    ddlwareHouse.Items.Clear();
+                    ddlwareHouse.Items.Add(new ListItem() { Text = "All", Value = "0" });
+                    ddlwareHouse.DataBind();
+                    Stock_Movement.Visible = true;
+
+                    ddlwareHouse.Visible = true;
+                    lblWarehouse.Visible = true;
+
+                    lbItemCategory.Visible = false;
+                    ddlItemCategory.Visible = false;
+
 
                 }
                 if (this.PageTitle == "Fast_Slow_Non_Moving_Stock")
