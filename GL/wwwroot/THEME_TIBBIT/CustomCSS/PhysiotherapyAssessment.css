@@ -274,7 +274,7 @@
     margin: 0 6px 0 0;
     padding: 0;
     flex-shrink: 0;
-    width: 16px;
+    width: 16px !important;
     height: 16px;
 }
 
@@ -357,7 +357,7 @@
 }
 
 .mmt-list .mmt-row .mmt-input {
-    width: 40px;
+    width: 40px !important;
     height: 22px;
     font-size: 11.5px;
     padding: 1px 4px;
