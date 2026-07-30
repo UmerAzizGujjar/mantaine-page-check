@@ -5276,6 +5276,16 @@ on d.Doctor_Id equals hr.Emp_ID
             return data;
         }
 
+        [WebMethod]
+        public static string Gettokeninputsearch()
+        {
+            DataBaseDataContext db = new DataBaseDataContext(DBClass.ConnectionString());
+            var dept = (from data in db.sys_Parms
+                        where data.Name == "OutPatients Tokeninput"
+                        select data.Code).FirstOrDefault();
+            return (new JavaScriptSerializer()).Serialize(dept);
+        }
+
         //[WebMethod]
         //public static string GetfilterClinic()
         //{

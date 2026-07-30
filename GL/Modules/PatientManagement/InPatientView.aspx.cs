@@ -262,6 +262,15 @@ namespace PMS
                             w.To_TimeDate = DateTime.Now;
                         }
 
+                        var rooms = db.Room_Allocations
+                            .Where(r => r.In_Patient_ID == inPatId && r.IsDischarge == false)
+                            .ToList();
+                        foreach (var r in rooms)
+                        {
+                            r.IsDischarge = true;
+                            r.To_Date = DateTime.Now;
+                        }
+
                         DBClass.executeNonQueryWithoutBegin(
                             $"UPDATE Discount_Assigned_Patient SET IsDischarge = 1 WHERE Patient_Id = {ip.Patient_ID}");
                     }
@@ -269,7 +278,7 @@ namespace PMS
                 }
                 return new { success = true, message = $"{patientIds.Count} patient(s) discharged successfully." };
             }
-            catch (Exception)
+            catch (Exception ex)
             {
                 return new { success = false, message = "An error occurred. Please try again." };
             }

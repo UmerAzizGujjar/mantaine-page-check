@@ -1217,7 +1217,7 @@
                             '&ReportTitle=Department Wise Report from ' + startDateTime + ' to ' + endDateTime +
                             '&StartDateTime=' + encodeURIComponent(startDateTime) +
                             '&EndDateTime=' + encodeURIComponent(endDateTime) +
-                            '&DoctorID=' + $('#ctl00_MainContent_ddlDoctor').val();
+                            '&DoctorID=' + $('#ctl00_MainContent_ddloprators').val();
 
                         window.open(url, '_blank');
                     }
@@ -1452,7 +1452,7 @@
                     }
                     else if (rptTitle == "Category_Wise_Profitability_Report") {
                         debugger;
-                        var url = 'ReportViewer.aspx?ReportName=Category_Wise_Profitability_Report&ReportTitle=Category Wise Profit Report From ' + $('#ctl00_MainContent_txtStart_Date').val() + ' ' + $('#ctl00_MainContent_txtSTime').val() + ' to ' + $('#ctl00_MainContent_txtEnd_Date').val() + ' ' + $('#ctl00_MainContent_txtETime').val() + '&StartDateTime=' + $('#ctl00_MainContent_txtStart_Date').val() + ' ' + $('#ctl00_MainContent_txtSTime').val() + '&EndDateTime=' + $('#ctl00_MainContent_txtEnd_Date').val() + ' ' + $('#ctl00_MainContent_txtETime').val() + '&Category=' + $('#ctl00_MainContent_ddlMainDepartment').val();
+                        var url = 'ReportViewer.aspx?ReportName=Category_Wise_Profitability_Report&ReportTitle=Category Wise Profit Report From ' + $('#ctl00_MainContent_txtStart_Date').val() + ' ' + $('#ctl00_MainContent_txtSTime').val() + ' to ' + $('#ctl00_MainContent_txtEnd_Date').val() + ' ' + $('#ctl00_MainContent_txtETime').val() + '&StartDateTime=' + $('#ctl00_MainContent_txtStart_Date').val() + ' ' + $('#ctl00_MainContent_txtSTime').val() + '&EndDateTime=' + $('#ctl00_MainContent_txtEnd_Date').val() + ' ' + $('#ctl00_MainContent_txtETime').val() + '&Category=' + $('#ctl00_MainContent_ddlMainDepartment').val() + '&WareHouse=' + $('#ctl00_MainContent_ddlwareHouse').val() + '&ExportPDF=' + exporttopdf;
                         window.open(url, '_blank');
                     }
                     else if (rptTitle == "Fast_Slow_Non_Moving_Stock") {

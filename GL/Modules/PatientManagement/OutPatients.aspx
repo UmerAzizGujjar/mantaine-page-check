@@ -703,7 +703,7 @@
             }
         }
 
-        function Appendintable() {
+        <%--function Appendintable() {
             var PatientID = ($('#<%= hdfPatient_ID.ClientID %>').val());
             if (PatientID != '(New)') {
                 PageMethods.LoadMedicinesForHistory(PatientID, function (res) {
@@ -760,7 +760,80 @@
                     $('#tblMedicinesList tbody').append(rows);
                 });
             }
-        }
+        }--%>
+
+        function Appendintable() {
+    var PatientID = ($('#<%= hdfPatient_ID.ClientID %>').val());
+    if (PatientID != '(New)') {
+        PageMethods.LoadMedicinesForHistory(PatientID, function (res) {
+            var Medicines = JSON.parse(res);
+            var rows = '';
+
+            var headerCheckbox = $('#select-all-checkbox');
+            if (headerCheckbox.is(':checked')) {
+                $.each(Medicines, function (index, value) {
+                    var timeStamp = parseInt(value.Medicine_Date.substr(6, 10));
+                    var date = moment.unix(timeStamp).format('M/D/YYYY h:m:s A');
+                    var datearray = date.split("/");
+                    var newdate = datearray[1] + '/' + datearray[0] + '/' + datearray[2];
+
+                    rows += '<tr>';
+                    rows += '<td><input type="hidden" name="testDate" value="' + date + '"> ' + newdate + ' </td>';
+                    rows += '<td>' + value.Medicine_Name + '</td>';
+                    rows += '<td>' + value.Frequency + '</td>';
+                    rows += '<td>' + value.Oral + '</td>';
+                    rows += '<td>' + value.Injections + '</td>';
+                    rows += '<td>' + value.AttendingParamedical_Staff + '</td>';
+                    rows += '<td>' + value.Dosage_From + '</td>';
+                    rows += '<td>' + value.Dosage_Qty + '</td>';
+                    rows += '<td>' + value.Other_Instruction + '</td>';
+                    rows += '<td><a href="#" onclick="deleteMedicine(this)">Delete</a></td>';
+                    rows += '</tr>';
+                });
+            } else {
+                $('#tblHistoryMedication tbody tr').each(function () {
+                    var checkbox = $(this).find('.history-checkbox');
+                    if (checkbox.is(':checked')) {
+                        // Get the medicine name from the row (4th column index 3)
+                        var medicineName = $(this).find('td:eq(3)').text().trim();
+                        
+                        // Find the matching medicine in the array by name
+                        var matchedMedicine = null;
+                        for (var i = 0; i < Medicines.length; i++) {
+                            if (Medicines[i].Medicine_Name.trim() === medicineName) {
+                                matchedMedicine = Medicines[i];
+                                break;
+                            }
+                        }
+                        
+                        // If found, add it to rows
+                        if (matchedMedicine) {
+                            var timeStamp = parseInt(matchedMedicine.Medicine_Date.substr(6, 10));
+                            var date = moment.unix(timeStamp).format('M/D/YYYY h:m:s A');
+                            var datearray = date.split("/");
+                            var newdate = datearray[1] + '/' + datearray[0] + '/' + datearray[2];
+
+                            rows += '<tr>';
+                            rows += '<td><input type="hidden" name="testDate" value="' + date + '"> ' + newdate + ' </td>';
+                            rows += '<td>' + matchedMedicine.Medicine_Name + '</td>';
+                            rows += '<td>' + matchedMedicine.Frequency + '</td>';
+                            rows += '<td>' + matchedMedicine.Oral + '</td>';
+                            rows += '<td>' + matchedMedicine.Injections + '</td>';
+                            rows += '<td>' + matchedMedicine.AttendingParamedical_Staff + '</td>';
+                            rows += '<td>' + matchedMedicine.Dosage_From + '</td>';
+                            rows += '<td>' + matchedMedicine.Dosage_Qty + '</td>';
+                            rows += '<td>' + matchedMedicine.Other_Instruction + '</td>';
+                            rows += '<td><a href="#" onclick="deleteMedicine(this)">Delete</a></td>';
+                            rows += '</tr>';
+                        }
+                    }
+                });
+            }
+
+            $('#tblMedicinesList tbody').append(rows);
+        });
+    }
+}
 
         function AppendSymtompsHistory() {
             var PatID = ($('#<%= hdfPatient_ID.ClientID%>').val())
@@ -3562,7 +3635,10 @@
                 fillPendingPatientsList();
             })
 
-            var OPD_Patient = $('#<%=txtPatient_ID.ClientID%>').val();
+            
+            InitializeTokenInputsBasedOnConfig();
+
+            <%--var OPD_Patient = $('#<%=txtPatient_ID.ClientID%>').val();
 
             if (OPD_Patient == "(New)")
                 OPD_Patient = localStorage.PatientIDforNewForm;
@@ -3579,7 +3655,7 @@
             else {
                 loadtokenInputsDefault();
                 loadtokenInputsByMrNo();
-            }
+            }--%>
             var OPD_MR = $('#<%=txtMRNO.ClientID%>').val();
 
 
@@ -3882,6 +3958,64 @@
         });
 
 
+        function InitializeTokenInputsBasedOnConfig() {
+            PageMethods.Gettokeninputsearch(function (result) {
+                var code = JSON.parse(result);
+                if (!code) code = "01";
+
+                var OPD_Patient = $('#<%=txtPatient_ID.ClientID%>').val();
+        if (OPD_Patient == "(New)")
+            OPD_Patient = localStorage.PatientIDforNewForm;
+
+        if (code === "02") {
+            if (OPD_Patient != "") {
+                var Patient_ID = OPD_Patient;
+                var tokendata = httpGet("../../json.aspx?Table=OutPatients&Patient_ID=" + Patient_ID);
+                loadtokenInputs(JSON.parse(tokendata));
+                var tokendatas = httpGet("../../json.aspx?Table=OutPatients_MrNo&Patient_ID=" + Patient_ID);
+                loadtokenInputsByMrNos_Default(JSON.parse(tokendatas));
+            } else {
+                loadtokenInputsDefault();
+                loadtokenInputsByMrNos_Default(); 
+            }
+        }
+        else {
+            if (OPD_Patient != "") {
+                var Patient_ID = OPD_Patient;
+                var tokendata = httpGet("../../json.aspx?Table=OutPatients&Patient_ID=" + Patient_ID);
+                loadtokenInputs(JSON.parse(tokendata));
+                var tokendatas = httpGet("../../json.aspx?Table=OutPatients_MrNo&Patient_ID=" + Patient_ID);
+                loadtokenInputsByMrNo(JSON.parse(tokendatas));
+            }
+            else {
+                loadtokenInputsDefault();
+                loadtokenInputsByMrNo();
+            }
+        }
+    }, function (error) {
+        console.error("Error fetching token config:", error);
+        loadtokenInputsDefault();
+        loadtokenInputsByMrNo();
+    });
+        }
+
+        function loadtokenInputsByMrNos_Default(data) {
+            $("#ctl00_MainContent_txtPatNO").tokenInput("../../json.aspx?Table=Out_PatientsbyMrNos", {
+                prePopulate: data, 
+                tokenLimit: 1,
+                onAdd: function (item) {
+                    debugger;
+                    $("#hdfPatient_ID").val(item.id);
+                    $("#hdfReg_ID").val(item.reg_patId);
+                    localStorage.PatientIDforNewForm = item.id;
+                    $("#ctl00_MainContent_txtPatient_ID").val(item.id);
+                    localStorage.SelectedTabID = 1;
+                    loadAjax();
+                    LoadHistory();
+                    checkRepeat();
+                }
+            });
+        }
 
 
         function uuid() {
