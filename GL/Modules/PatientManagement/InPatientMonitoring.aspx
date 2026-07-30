@@ -2269,8 +2269,8 @@
                     "Regular": false,
                     "STAT": true,
                     "PRN": false,
-                    'Req_Qty': $($(value).find('td')[7]).find('input').val() || 0,
-                    'Rcv_Qty': $($(value).find('td')[8]).find('input').val() || 0
+                    'Issue_Qty': $($(value).find('td')[7]).find('input').val() || 0,
+                    'Rec_Qty': $($(value).find('td')[8]).find('input').val() || 0,
                 });
             });
 
