@@ -61,6 +61,7 @@
                     $('#GeneralItems').prop('checked', data.AllowGeneralItems);
                     $('#ShowBudgetBtn').prop('checked', data.IsShowBudget);
                     $('#InventoryUnApprove').prop('checked', data.IsInventoryUnApprove);
+                    $('#PurchaseUnApprove').prop('checked', data.PurchaseUnApprove);
                     $('#PRFsNotifications').prop('checked', data.IsNotificationViewed);
                     $('#RateBox').prop('checked', data.allowtestbox);
                     $('#AllowToAccessAllTest').prop('checked', data.AllowToAccessAllTest);
@@ -130,6 +131,7 @@
             var GeneralItems = $('#GeneralItems').prop('checked');
             var ShowBudgetBtn = $('#ShowBudgetBtn').prop('checked');
             var InventoryUnApprove = $('#InventoryUnApprove').prop('checked');
+            var PurchaseUnApprove = $('#PurchaseUnApprove').prop('checked');
             var PRFsNotifications = $('#PRFsNotifications').prop('checked');
             var RateBox = $('#RateBox').prop('checked');
             var AllowToAccessAllTest = $('#AllowToAccessAllTest').prop('checked');
@@ -271,6 +273,7 @@
                 "GeneralItems": GeneralItems,
                 "ShowBudgetBtn": ShowBudgetBtn,
                 "InventoryUnApprove": InventoryUnApprove,
+                "PurchaseUnApprove": PurchaseUnApprove,
                 "PRFsNotifications": PRFsNotifications,
                 "RateBox": RateBox,
                 "EmpCode": EmpCode,
@@ -678,6 +681,10 @@
                                                         <input type="checkbox" class="form-check-input" id="InventoryUnApprove" name="InventoryUnApprove" />
                                                     </div>
                                                     <div class="form-check">
+                                                        <input type="checkbox" class="form-check-input" id="PurchaseUnApprove" name="PurchaseUnApprove" />
+                                                    </div>
+                                                    
+                                                    <div class="form-check">
                                                         <input type="checkbox" class="form-check-input" id="PRFsNotifications" name="PRFsNotifications" />
                                                     </div>
                                                     <div class="form-check">
@@ -762,6 +769,9 @@
                                                     </div>
                                                     <div class="form-check">
                                                         <label class="form-check-label" for="InventoryUnApprove">Inventory UnApprove</label>
+                                                    </div>
+                                                    <div class="form-check">
+                                                        <label class="form-check-label" for="PurchaseUnApprove">Purchase UnApprove</label>
                                                     </div>
                                                     <div class="form-check">
                                                         <label class="form-check-label" for="PRFsNotifications">PRFs Notifications</label>

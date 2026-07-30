@@ -73,6 +73,7 @@ namespace PMS.Modules.Accounts
                              AllowGeneralItems = p.AllowGeneralItems,
                              IsShowBudget = p.IsShowBudget,
                              IsInventoryUnApprove = p.IsInventoryUnApprove,
+                             PurchaseUnApprove = p.PurchaseUnApprove,
                              AllowToAccessAllTest = p.AllowToAccessAllTest,
                              allow_cardio = p.allow_cardio,
                              IsNotificationViewed = p.IsNotificationViewed,
@@ -198,6 +199,7 @@ namespace PMS.Modules.Accounts
                     user.AllowGeneralItems = data.GeneralItems;
                     user.IsShowBudget = data.ShowBudgetBtn;
                     user.IsInventoryUnApprove = data.InventoryUnApprove;
+                    user.PurchaseUnApprove = data.PurchaseUnApprove;
                     user.AllowToAccessAllTest = data.AllowToAccessAllTest;
                     user.allow_cardio = data.AllowCardio;
                     user.IsNotificationViewed = data.PRFsNotifications;
@@ -291,6 +293,7 @@ namespace PMS.Modules.Accounts
                 newuser.AllowGeneralItems = data.GeneralItems;
                 newuser.IsShowBudget = data.ShowBudgetBtn;
                 newuser.IsInventoryUnApprove = data.InventoryUnApprove;
+                newuser.PurchaseUnApprove = data.PurchaseUnApprove;
                 newuser.AllowToAccessAllTest = data.AllowToAccessAllTest;
                 newuser.allow_cardio = data.AllowCardio;
                 newuser.Allow_Sample_list = data.AllowSamplelist;
@@ -421,6 +424,7 @@ namespace PMS.Modules.Accounts
             public bool GeneralItems { get; set; }
             public bool ShowBudgetBtn { get; set; }
             public bool InventoryUnApprove { get; set; }
+            public bool PurchaseUnApprove { get; set; }
             public bool PRFsNotifications { get; set; }
             public bool RateBox { get; set; }
             public bool AllowToAccessAllTest { get; set; }

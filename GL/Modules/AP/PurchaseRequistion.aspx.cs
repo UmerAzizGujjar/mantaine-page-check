@@ -196,9 +196,9 @@ namespace PMS.AP
                                        where data.UserId == AppConfig.UserID
                                        select new
                                        {
-                                           data.IsInventoryUnApprove
+                                           data.PurchaseUnApprove
                                        }).FirstOrDefault();
-                bool UnApproveRight = userPermissions?.IsInventoryUnApprove ?? false;
+                bool UnApproveRight = userPermissions?.PurchaseUnApprove ?? false;
                 return UnApproveRight;
             }
         }
