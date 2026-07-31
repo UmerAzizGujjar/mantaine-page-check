@@ -3383,6 +3383,19 @@ namespace PMS.Modules.PatientManagement
                 return "[]";
             }
         }
+
+        [WebMethod]
+        public static string GetDoctorFilter()
+        {
+            using (DataBaseDataContext db = new DataBaseDataContext(DBClass.ConnectionString()))
+            {
+                var dept = (from data in db.sys_Parms
+                            where data.Name == "OutPatients Prescription filter"
+                            select data.Code).FirstOrDefault();
+
+                return dept ?? "01";
+            }
+        }
         public class SymptomData
         {
             public string DepartmentId { get; set; }

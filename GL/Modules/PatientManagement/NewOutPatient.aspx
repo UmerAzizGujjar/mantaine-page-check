@@ -1375,15 +1375,32 @@ function LoadLabResultrpt() {
         }
         function filldoc() {
             var options;
-            PageMethods.Getdoctors(function (data) {
-                debugger;
-                var options = '<option value="0" >Filter By Doctor</option>';
-                $.each(JSON.parse(data), function (key, value) {
-                    options += '<option value="' + value.Emp_ID + '" >' + value.Emp_Name + '</option>';
+            PageMethods.GetDoctorFilter(function (filterData) {
+                var filterPolicy = filterData; 
+
+                PageMethods.Getdoctors(function (data) {
+                    debugger;
+                    var doctorData = JSON.parse(data);
+                    var options = '<option value="0">Filter By Doctor</option>';
+                    var firstDoctorId = null;
+
+                    $.each(doctorData, function (key, value) {
+                        options += '<option value="' + value.Emp_ID + '" >' + value.Emp_Name + '</option>';
+                        if (key === 0) {
+                            firstDoctorId = value.Emp_ID;
+                        }
+                    });
+
+                    $("#ctl00_MainContent_ddldocname").html(options);
+                    $("#ctl00_MainContent_ddldocname").select2();
+                    if (filterPolicy === "02" && firstDoctorId) {
+                        $("#ctl00_MainContent_ddldocname").val(firstDoctorId).trigger('change');
+                    } else {
+                        $("#ctl00_MainContent_ddldocname").val("0").trigger('change');
+                    }
                 });
-                $("#ctl00_MainContent_ddldocname").html(options);
-                $("#ctl00_MainContent_ddldocname").select2();
             });
+
             return options;
         }
 

@@ -2831,9 +2831,25 @@
                 contentType: "application/json; charset=utf-8",
                 dataType: "json",
                 success: function (response) {
-                    var code = response.d;
+                    var rawCode = response.d;
+                    console.log("Raw Code from DB:", rawCode);
+                    var code = rawCode ? rawCode.toString().trim() : "";
+                    code = code.replace(/"/g, '');
+                    console.log("Cleaned Code for Comparison:", "'" + code + "'");
 
-                    var tableName = (code === "01") ? "Out_PatientsbyMrNo" : "Out_PatientsbyMrNos";
+                    var tableName = "";
+                    if (code === "01") {
+                        console.log("Condition Met: Code is 01 -> Using LIKE (Out_PatientsbyMrNo)");
+                        tableName = "Out_PatientsbyMrNo";
+                    } else if (code === "02") {
+                        console.log("Condition Met: Code is 02 -> Using EQUALS (Out_PatientsbyMrNos)");
+                        tableName = "Out_PatientsbyMrNos";
+                    } else {
+                        console.warn("Condition Not Met: Code is neither 01 nor 02. Defaulting to LIKE.");
+                        tableName = "Out_PatientsbyMrNo";
+                    }
+
+                    console.log("Final Table Name Selected:", tableName);
 
                     initializeTokenInput(tableName, data);
                 },

@@ -465,6 +465,7 @@
                 $('#designation').hide();
                 $('#dependent').hide();
                 $('#emp_id').hide();
+                LoadDoc();
 
 
             }

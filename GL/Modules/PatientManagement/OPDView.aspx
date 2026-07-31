@@ -200,7 +200,7 @@
                     {
                         "data": "Created_Time", "name": "Created_Time",
                         "render": (data, type, full) => moment(full.Created_Time).format('DD-MMM-YYYY'),
-                        "width": "9%"
+                        "width": "8%"
                     },
                     {
                         "render": (data, type, full) => {
@@ -210,7 +210,7 @@
                             let print2 = `<a class="printListBtn" style="border-radius: 4px;margin-left: 4px;color: white;padding: 5px 8px;" href="#" onclick="OPD_Form_Print(${full.Patient_ID})"><i class="fa fa-print"></i></a>`;
                             return res + Del + print + print2;
                         },
-                        "width": "14%",
+                        "width": "15%",
                         "orderable": false
                     }
                 ],
