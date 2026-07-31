@@ -589,52 +589,67 @@ namespace PMS
                     decimal? purchaseRate = null;
                     int itemIdInt = Convert.ToInt32(itemId);
 
-                    // 1. First try to get rate from GRN_Details (latest GRN)
-                    var grnRate = (from gd in db.GRN_Details
-                                   join gm in db.GRN_Masters on gd.GRNId equals gm.GRN_ID
-                                   where gd.Item_Id == itemIdInt
-                                   && gm.InvOrgId == warehouseId
-                                   && gm.Status == "Approved"
-                                   orderby gm.GRN_Date descending, gm.GRN_ID descending
-                                   select gd.Rate)
-                                  .FirstOrDefault();
+                    var grn = (from gd in db.GRN_Details
+                               join gm in db.GRN_Masters on gd.GRNId equals gm.GRN_ID
+                               where gd.Item_Id == itemIdInt
+                                     && gm.InvOrgId == warehouseId
+                                     && gm.Status == "Approved"
+                               orderby gm.Creation_Date descending, gm.GRN_ID descending
+                               select new
+                               {
+                                   Rate = gd.Rate,
+                                   Date = gm.Creation_Date
+                               }).FirstOrDefault();
 
-                    if (grnRate.HasValue && grnRate.Value > 0)
+                    var adjustment = (from sa in db.INV_Stock_Adjustments
+                                      where sa.Item_Id == itemId
+                                            && sa.Ware_House == warehouseId
+                                            && sa.Status == "Approved"
+                                      orderby sa.Creation_Time descending, sa.Adjustment_ID descending
+                                      select new
+                                      {
+                                          Rate = sa.Rate,
+                                          Date = sa.Creation_Time
+                                      }).FirstOrDefault();
+
+                    if (grn != null && adjustment != null)
                     {
-                        purchaseRate = grnRate.Value;
+                        purchaseRate = grn.Date >= adjustment.Date
+                            ? grn.Rate
+                            : adjustment.Rate;
+                    }
+                    else if (grn != null)
+                    {
+                        purchaseRate = grn.Rate;
+                    }
+                    else if (adjustment != null)
+                    {
+                        purchaseRate = adjustment.Rate;
                     }
                     else
                     {
-                        var adjRate = (from sa in db.INV_Stock_Adjustments
-                                       where sa.Item_Id == itemId
-                                       && sa.Ware_House == warehouseId
-                                       && sa.Status == "Approved"
-                                       orderby sa.Adjustment_Date descending, sa.Adjustment_ID descending
-                                       select sa.Rate)
-                                      .FirstOrDefault();
+                        var item = (from i in db.INV_Items
+                                    where i.Item_ID == itemIdInt
+                                    select new
+                                    {
+                                        i.Purchase_Rate,
+                                        i.UOM_Qty
+                                    }).FirstOrDefault();
 
-                        if (adjRate.HasValue && adjRate.Value > 0)
+                        if (item != null
+                            && item.Purchase_Rate.HasValue
+                            && item.Purchase_Rate.Value > 0
+                            && item.UOM_Qty.HasValue
+                            && item.UOM_Qty.Value > 0)
                         {
-                            purchaseRate = adjRate.Value;
-                        }
-                        else
-                        {
-                            var itemRate = (from item in db.INV_Items
-                                            where item.Item_ID == itemIdInt
-                                            select item.Purchase_Rate)
-                                           .FirstOrDefault();
-
-                            if (itemRate.HasValue && itemRate.Value > 0)
-                            {
-                                purchaseRate = itemRate.Value;
-                            }
+                            purchaseRate = item.Purchase_Rate.Value / item.UOM_Qty.Value;
                         }
                     }
 
                     return purchaseRate.HasValue ? purchaseRate.Value.ToString("0.00") : "";
                 }
             }
-            catch (Exception ex)
+            catch (Exception)
             {
                 return "";
             }

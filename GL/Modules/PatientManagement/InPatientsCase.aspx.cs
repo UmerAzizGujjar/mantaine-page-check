@@ -4083,6 +4083,10 @@ namespace PMS
             public string Dosage_Qty;
             public string Other_Instruction;
 
+            public string Issue_Qty;
+            public string Rec_Qty;
+            public string Rtn_Qty;
+
             public string Regular;
 
             public string STAT;
@@ -4570,7 +4574,10 @@ namespace PMS
                                 is_rejected = false,
                                 Status = null,
                                 Start_Date_Time = null,
-                                Stop_Date_Time = null
+                                Stop_Date_Time = null,
+                                Req_Qty = decimal.TryParse(newMed.Issue_Qty, out decimal issueQty) ? issueQty : 0,
+                                Rcv_Qty = decimal.TryParse(newMed.Rec_Qty, out decimal recQty) ? recQty : 0,
+                                Rtn_Qty = decimal.TryParse(newMed.Rtn_Qty, out decimal rtnQty) ? rtnQty : 0
                             };
 
                             if (!string.IsNullOrEmpty(newMed.Start_Date_Time) && newMed.Start_Date_Time != "null" && newMed.Start_Date_Time != "1/1/0001")
@@ -4586,6 +4593,31 @@ namespace PMS
                             }
 
                             db.In_Patient_Medicines.InsertOnSubmit(newMedicine);
+                        }
+                    }
+
+                    // 3b. UPDATE LOGIC: Persist qty changes for medicines already in DB
+                    foreach (MedicineDetails newMed in MedicineDetail.MedicineList)
+                    {
+                        if (!existingNames.Contains(newMed.Medicine_Name.Trim()))
+                            continue;
+
+                        decimal issueQty = decimal.TryParse(newMed.Issue_Qty, out decimal issueVal) ? issueVal : 0;
+                        decimal recQty = decimal.TryParse(newMed.Rec_Qty, out decimal recVal) ? recVal : 0;
+                        decimal rtnQty = decimal.TryParse(newMed.Rtn_Qty, out decimal rtnVal) ? rtnVal : 0;
+
+                        var existingMedicine = existingMedicines
+                            .FirstOrDefault(p => p.Medicine_Name.Trim() == newMed.Medicine_Name.Trim());
+
+                        if (existingMedicine != null &&
+                            (existingMedicine.Req_Qty != issueQty ||
+                             existingMedicine.Rcv_Qty != recQty ||
+                             existingMedicine.Rtn_Qty != rtnQty))
+                        {
+                            System.Diagnostics.Debug.WriteLine("UPDATING qty for medicine: " + existingMedicine.Medicine_Name);
+                            existingMedicine.Req_Qty = issueQty;
+                            existingMedicine.Rcv_Qty = recQty;
+                            existingMedicine.Rtn_Qty = rtnQty;
                         }
                     }
 
@@ -4685,6 +4717,9 @@ namespace PMS
                                          inPatmedicineList.Stop_Date_Time,
                                          inPatmedicineList.High_Risk_Drug,
                                          inPatmedicineList.Item_Code,
+                                         inPatmedicineList.Req_Qty,
+                                         inPatmedicineList.Rcv_Qty,
+                                         inPatmedicineList.Rtn_Qty,
 
                                          DoctorName = (from d in db.HR_Employees where d.Emp_ID == Convert.ToInt32(inPatmedicineList.Doctor_ID) select d.Emp_Name).FirstOrDefault(),
 
