@@ -1612,6 +1612,7 @@
         function LoadVitalParametersHistoryDischarge(PatientID) {
             if (PatientID != "(New)") {
                 PageMethods.LoadVitalParametersHistoryDischarge(PatientID, function (res) {
+                    debugger;
                     var Data = JSON.parse(res);
                     var rows = '';
                     var gcs = "";
