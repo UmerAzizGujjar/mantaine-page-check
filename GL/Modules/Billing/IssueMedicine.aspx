@@ -4235,6 +4235,7 @@
             );
         }
 
+
         function LoadWarehousesforSaleReturn() {
             var $dropdown = $('#ddl_Warehouse');
             $dropdown.empty();
@@ -4545,6 +4546,113 @@
                 AddMedicineDetailFormOPD(itemIds)
             }
         }
+
+        function ResetPharmacyForm() {
+            debugger;
+
+            $("#txtMRNo").tokenInput("clear");
+
+            $('#lblPatienName').text('');
+            $('#lblContactNo').text('');
+
+            $('#txtPatientType').val('');
+            $('#Ward_Name').val('');
+            $('#BedName').val('');
+
+            $('#ddlDoctor').val('0').trigger('change');
+            $('#ddlDepartment').val('0').trigger('change');
+            $('#ddlPatient_No').val('0').trigger('change');
+            $('#ddlInv_No').val('').trigger('change');
+            $('#ddlTemplate').val('0').trigger('change');
+            $('#ddlpanel').val('0').trigger('change');
+
+            $('#ddlDoctor').attr('disabled', false);
+            $('#ddlDepartment').attr('disabled', false);
+            $('#ddlWarehouse').prop('disabled', false);
+            $('#ddlpanel').attr('disabled', false);
+
+            
+            $('#medName').val('').trigger('change');
+
+            $('#batchno').html('<option value="0">Please Select</option>');
+            $('#batchno').select2();
+
+            $('#tblDetails #tblbody').empty();
+
+            $('#txtTotalPayable').val('');
+            $('#txtLineDisc').val('');
+            $('#txtDisPer').val('');
+            $('#txtDisAmt').val('');
+            $('#txttotalDisc').val('');
+            $('#txtFlatDisc').val('');
+            $('#txtAmountReceived').val('');
+            $('#txtBalances').val('');
+
+            $('#chkcash').prop('checked', true);
+            $('#chkBank').prop('checked', false);
+            $('#chkHospital').prop('checked', false);
+
+            $('#chkbatch').prop('checked', true);
+            $('#chkprint').prop('checked', true);
+            $('#chkHold').prop('checked', false);
+
+            BalanceAmountCondition();
+
+            $('#hdPatientID').val('');
+            $('#hdndiscountType').val('');
+            $('#hdnReturnBillID').val('');
+            $('#txtTransType').val('');
+
+            $('#CustomerName').val('').attr('disabled', false);
+
+            $('#row22').hide();
+
+            $('#Inv_No').val('');
+
+            if ($('#ddlInv_No').data('select2')) {
+                $('#ddlInv_No').val('').trigger('change');
+            }
+
+            $('.batchdiv').show();
+
+            $('#btnSave').val('Save & Print(Alt+S)');
+
+            $('#divinvoiceoldtemplate').hide(); 
+
+            currentTransType = "";
+
+            isPatientDataSaved = true;
+
+            if ($('#ddlWarehouse').data('select2')) {
+                $('#ddlWarehouse').select2('destroy');
+            }
+            LoadWarehouses();
+
+            setTimeout(function () {
+                $('#txtMRNo').focus();
+            }, 100);
+
+            $('.table-active').removeClass('table-active');
+
+            $('input[name="txtQty"]').val('');
+            $('input[name="DisPer"]').val('');
+            $('input[name="DisAmount"]').val('');
+            $('input[name="LineDiscount"]').val('');
+            $('input[name="Remarks"]').val('');
+
+            if ($('#medName').data('select2')) {
+                $('#medName').val('').trigger('change');
+            }
+
+            $('#queueModal').modal('hide');
+            $('#ItemModal').modal('hide');
+
+            LoadQueueCount();
+
+            toastr.success('Form has been reset successfully!');
+        }
+
+        
     </script>
 </asp:Content>
 
@@ -4712,16 +4820,18 @@
                     <label id="lblHold">Hold</label>
                 </div>
                 
-                <div class="col-lg-1 col-md-4 col-sm-6"></div>
                 <div class="col-sm-2 col-md-2 col-lg-1 text-center" >
                     <label class="me-3">Print</label>
                 </div>
                 <div class="col-sm-2 col-md-2 col-lg-1 text-center" style="margin-left: -4%;">
                     <input type="checkbox" tabindex="9" id="chkprint" />
                 </div>
-               <div class="col-sm-2 col-md-2 col-lg-1">
-                <input type="button" class="btn-primry" value="Item List (Alt + L)" id="item_List" onclick="OpenItemList();" style="width:146px !important" />
+               <div class="col-sm-2 col-md-2 col-lg-2">
+                <input type="button" class="btn-primry" value="Item List (Alt + L)" id="item_List" onclick="OpenItemList();"  />
                 </div>
+               <div class="col-sm-1 col-md-2 col-lg-1">
+                   <input type="button" class="btn-primry" value="Reset" id="btnResetForm" onclick="ResetPharmacyForm();"  />
+               </div>
             </div>
 
         </div>

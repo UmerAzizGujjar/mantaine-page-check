@@ -52,7 +52,8 @@ namespace PMS.Modules.PatientManagement
                                     pat.Actual_amount,
                                     Department = db.GetDataValueName("Patient Main Category", pat.Patient_Main_Category),
                                     Patient_Type = db.GetDataValueName("Patient Type", pat.Patient_Type),
-                                    pat.Is_Refund
+                                    pat.Is_Refund,
+                                    pat.Receipt_Amount
                                 };
 
                     var list = query.ToList();
@@ -83,7 +84,8 @@ namespace PMS.Modules.PatientManagement
                             : "",
                         p.Department,
                         p.Patient_Type,
-                        p.Is_Refund
+                        p.Is_Refund,
+                        p.Receipt_Amount
                     }).ToList();
 
                     return new JavaScriptSerializer().Serialize(result);
