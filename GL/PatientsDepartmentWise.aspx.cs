@@ -8564,13 +8564,19 @@ namespace PMS
 
                     lblPatientType.Visible = true;
                     lblPatientType.Text = "Patient Type";
+                    //object valusests;
+                    //valusests = DBClass.GetValueSet("Mode Of Registration");
+                    //ddlPatientType.DataSource = valusests;
+                    //ddlPatientType.DataTextField = "DataValue_Description";
+                    //ddlPatientType.DataValueField = "DataValue_Name";
+                    //ddlPatientType.Items.Add(new ListItem() { Text = "All", Value = "0" });
+                    //ddlPatientType.DataBind();
+                    //ddlPatientType.Visible = true;
                     object valusests;
-                    valusests = DBClass.GetValueSet("Mode Of Registration");
-                    ddlPatientType.DataSource = valusests;
-                    ddlPatientType.DataTextField = "DataValue_Description";
-                    ddlPatientType.DataValueField = "DataValue_Name";
-                    ddlPatientType.Items.Add(new ListItem() { Text = "All", Value = "0" });
-                    ddlPatientType.DataBind();
+                    ddlPatientType.Items.Clear();
+                    ddlPatientType.Items.Add(new ListItem("IPD", "03"));
+                    ddlPatientType.SelectedValue = "03";
+                    ddlPatientType.Enabled = false;   // Optional: prevent user from changing it
                     ddlPatientType.Visible = true;
                 }
                 if (this.PageTitle == "DoctorShare_Report")
