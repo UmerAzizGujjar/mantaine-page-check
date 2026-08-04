@@ -1452,15 +1452,16 @@
                     }
                     else if (rptTitle == "Category_Wise_Profitability_Report") {
                         debugger;
-        var exporttopdf = document.getElementById('<%= chkExportPDF.ClientID %>').checked;
+                        var exporttopdf = document.getElementById('<%= chkExportPDF.ClientID %>').checked;
                         var url = 'ReportViewer.aspx?ReportName=Category_Wise_Profitability_Report&ReportTitle=Category Wise Profit Report From ' + $('#ctl00_MainContent_txtStart_Date').val() + ' ' + $('#ctl00_MainContent_txtSTime').val() + ' to ' + $('#ctl00_MainContent_txtEnd_Date').val() + ' ' + $('#ctl00_MainContent_txtETime').val() + '&StartDateTime=' + $('#ctl00_MainContent_txtStart_Date').val() + ' ' + $('#ctl00_MainContent_txtSTime').val() + '&EndDateTime=' + $('#ctl00_MainContent_txtEnd_Date').val() + ' ' + $('#ctl00_MainContent_txtETime').val() + '&Category=' + $('#ctl00_MainContent_ddlMainDepartment').val() + '&WareHouse=' + $('#ctl00_MainContent_ddlwareHouse').val() + '&ExportPDF=' + exporttopdf;
                         window.open(url, '_blank');
                     }
                     else if (rptTitle == "Fast_Slow_Non_Moving_Stock") {
                         debugger;
+                        var exporttopdf = document.getElementById('<%= chkExportPDF.ClientID %>').checked;
                         var movementType = $("#ctl00_MainContent_ddlMovementType").val();
                         var Item = $("#ctl00_MainContent_ddlMainDepartment").val();
-                        var url = 'ReportViewer.aspx?ReportName=FastSlow_Non_Moving_Stock&ReportTitle=Stock Movement Report From ' + $('#ctl00_MainContent_txtStart_Date').val() + ' ' + $('#ctl00_MainContent_txtSTime').val() + ' to ' + $('#ctl00_MainContent_txtEnd_Date').val() + ' ' + $('#ctl00_MainContent_txtETime').val() + '&StartDateTime=' + $('#ctl00_MainContent_txtStart_Date').val() + ' ' + $('#ctl00_MainContent_txtSTime').val() + '&EndDateTime=' + $('#ctl00_MainContent_txtEnd_Date').val() + ' ' + $('#ctl00_MainContent_txtETime').val() + '&ItemID=' + Item + '&MovementType=' + movementType + '&warehouse=' + $('#ctl00_MainContent_ddlwareHouse').val();
+                        var url = 'ReportViewer.aspx?ReportName=FastSlow_Non_Moving_Stock&ReportTitle=Stock Movement Report From ' + $('#ctl00_MainContent_txtStart_Date').val() + ' ' + $('#ctl00_MainContent_txtSTime').val() + ' to ' + $('#ctl00_MainContent_txtEnd_Date').val() + ' ' + $('#ctl00_MainContent_txtETime').val() + '&StartDateTime=' + $('#ctl00_MainContent_txtStart_Date').val() + ' ' + $('#ctl00_MainContent_txtSTime').val() + '&EndDateTime=' + $('#ctl00_MainContent_txtEnd_Date').val() + ' ' + $('#ctl00_MainContent_txtETime').val() + '&ItemID=' + Item + '&MovementType=' + movementType + '&warehouse=' + $('#ctl00_MainContent_ddlwareHouse').val() + '&ExportPDF=' + exporttopdf ;
                         window.open(url, '_blank');
                     }
                     else if (rptTitle == "PharmacyStockDetail") {
