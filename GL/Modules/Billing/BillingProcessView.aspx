@@ -255,6 +255,7 @@
                 },
                 "columns": [
                     { "data": "Bill_ID", "visible": false, "width": "0%" },
+                    { "data": "isCancel", "visible": false, "orderable": false, "width": "0%" },
                     { "data": "Bill_No", "name": "Bill_No", "width": "5%", "orderable": true },
                     {
                         "data": "Bill_Date", "name": "Bill_Date",
@@ -278,6 +279,9 @@
                     {
                         render: function (data, type, full) {
                             debugger;
+                            if (full.isCancel === true) {
+                                return '<span style="color:#721c24; font-weight:bold;">Cancelled</span>';
+                            }
                             var res = '<a href="#" class="editListBtn" onclick="editOpen(' + full.Bill_ID + ')" style="border-radius: 4px;color: white; padding: 5px 8px 5px 8px;"><i class="fa fa-pencil"></i></a>'
 
                             var Del = '<a class="delListBtn" href="#" style="border-radius: 4px;margin-left: 4px; color: white; padding: 5px 8px 5px 8px;" onclick=cancelPatient(this)><i class="fa fa-trash" aria-hidden="true"></i></a>';
@@ -308,6 +312,11 @@
                 "createdRow": function (row, data, dataIndex) {
                     $(row).addClass('clickable-row');
                     $(row).attr('data-bill-id', data.Bill_ID);
+                    if (data.isCancel === true) {
+                        $(row).attr('data-cancelled', '1');
+                        $(row).css('background-color', '#f8d7da');
+                        $(row).find('td').css('color', '#721c24');
+                    }
                 },
                 "initComplete": function (settings, json) {
                     const api = this.api();
@@ -360,6 +369,9 @@
                 }
 
                 var tr = $(this);
+                if (tr.attr('data-cancelled') === '1') {
+                    return;
+                }
                 var row = table.row(tr);
                 var billId = tr.attr('data-bill-id');
 
@@ -549,6 +561,7 @@
                 <thead id="ihead">
                     <tr>
                         <th class="hide">Bill ID</th>
+                        <th class="hide">Is Cancel</th>
                         <th>Bill No</th>
                         <th>Bill Date</th>
                         <th>MR No</th>

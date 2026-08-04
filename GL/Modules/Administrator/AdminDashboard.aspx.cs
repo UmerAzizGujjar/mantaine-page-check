@@ -268,28 +268,82 @@ namespace PMS.Modules.Administrator
 
                 using (DataBaseDataContext db = new DataBaseDataContext())
                 {
-                    decimal specialistGross = (from p in db.Patients
-                                               join rp in db.Reg_patients on p.Reg_PatId equals rp.pat_id
-                                               where rp.Created_time >= s && rp.Created_time <= e
-                                                  && p.Patient_Type == "02"
-                                               select (decimal?)p.Receipt_Amount).Sum() ?? 0;
+                    // ── Specialist Consultation ──
+                    var specialistPatients = db.Patients.Where(p => p.Patient_Type == "02" && p.Created_Time >= s && p.Created_Time <= e).ToList();
+                    decimal specialistGross = specialistPatients.Sum(p => p.Actual_amount ?? 0);
+                    decimal specialistDiscount = specialistPatients.Sum(p => p.discount_amt ?? 0);
 
-                    decimal diagnosticsGross = (from b in db.Ar_Billings
-                                                 where b.Creation_Date >= s && b.Creation_Date <= e
-                                                    && (b.IsPharmacy == null || b.IsPharmacy == false)
-                                                    && b.Main_Department != "01"
-                                                 select (decimal?)b.Received_Amount).Sum() ?? 0;
+                    var specialistPatList = specialistPatients.Select(p => p.Patient_ID).ToList();
+                    decimal specialistRefund = 0;
+                    if (specialistPatList.Count > 0)
+                    {
+                        specialistRefund = db.OPD_Refunds
+                            .Where(od => od.Refund_Date >= s && od.Refund_Date <= e
+                                      && (od.isCancelled == null || od.isCancelled == false))
+                            .ToList()
+                            .Where(od => specialistPatList.Contains(od.pat_id))
+                            .Sum(od => (od.Hospital_Refund ?? 0) + (od.Doctor_Refund ?? 0));
+                    }
+                    decimal specialistNet = specialistGross - specialistDiscount - specialistRefund;
 
-                    decimal pharmacyGross = (from b in db.Ar_Billings
-                                              where b.Creation_Date >= s && b.Creation_Date <= e
-                                                 && b.IsPharmacy == true
-                                              select (decimal?)b.Received_Amount).Sum() ?? 0;
+                    // ── Diagnostics & Labs / Pharmacy ──
+                    var billIds = db.Ar_Billings
+                        .Where(b => b.Creation_Date >= s && b.Creation_Date <= e)
+                        .Select(b => b.Bill_ID)
+                        .ToList();
+
+                    var details = db.Ar_Billing_Details
+                        .Where(d => d.Item_Type == "Test" || d.Item_Type == "Medicine")
+                        .ToList()
+                        .Where(d => d.Bill_ID != null && billIds.Contains(d.Bill_ID.Value))
+                        .ToList();
+
+                    var testDetails = details.Where(d => d.Item_Type == "Test").ToList();
+                    var medicineDetails = details.Where(d => d.Item_Type == "Medicine").ToList();
+
+                    decimal diagnosticsGross = testDetails.Sum(d => d.Amount ?? 0);
+                    decimal diagnosticsDiscount = testDetails.Sum(d => d.Discount_Amount ?? 0);
+
+                    decimal pharmacyGross = medicineDetails.Sum(d => d.Amount ?? 0);
+                    decimal pharmacyDiscount = medicineDetails.Sum(d => d.Discount_Amount ?? 0);
+
+                    // Refunds for diagnostics & pharmacy
+                    var testDetailIds = testDetails.Select(d => d.Bill_Details_ID).ToHashSet();
+                    var medicineDetailIds = medicineDetails.Select(d => d.Bill_Details_ID).ToHashSet();
+
+                    decimal diagnosticsRefund = 0, pharmacyRefund = 0;
+                    if (testDetailIds.Count > 0 || medicineDetailIds.Count > 0)
+                    {
+                        var activeRefunds = db.Refunds
+                            .Where(r => r.Creation_Date >= s && r.Creation_Date <= e
+                                     && (r.isCancelled == null || r.isCancelled == false))
+                            .Select(r => r.Refund_ID)
+                            .ToHashSet();
+
+                        var refundDetails = db.Refund_Detail_Services
+                            .Where(rds => rds.Bill_Detail_ID != null
+                                       && (rds.isCancelled == null || rds.isCancelled == false))
+                            .ToList()
+                            .Where(rds => rds.Refund_ID != null && activeRefunds.Contains(rds.Refund_ID.Value))
+                            .ToList();
+
+                        foreach (var rds in refundDetails)
+                        {
+                            decimal amt = (rds.Doctor_Refund ?? 0) + (rds.Hospital_Refund ?? 0);
+                            int bdid = rds.Bill_Detail_ID.Value;
+                            if (testDetailIds.Contains(bdid)) diagnosticsRefund += amt;
+                            else if (medicineDetailIds.Contains(bdid)) pharmacyRefund += amt;
+                        }
+                    }
+
+                    decimal diagnosticsNet = diagnosticsGross - diagnosticsDiscount - diagnosticsRefund;
+                    decimal pharmacyNet = pharmacyGross - pharmacyDiscount - pharmacyRefund;
 
                     var data = new[]
                     {
-                        new { category = "Specialist Consultation", grossAmount = (int)specialistGross, discount = (int)(specialistGross * 0.04m), refund = (int)(specialistGross * 0.02m), netCollection = (int)(specialistGross * 0.94m) },
-                        new { category = "Diagnostics & Labs", grossAmount = (int)diagnosticsGross, discount = (int)(diagnosticsGross * 0.03m), refund = (int)(diagnosticsGross * 0.015m), netCollection = (int)(diagnosticsGross * 0.955m) },
-                        new { category = "Pharmacy Dispensing", grossAmount = (int)pharmacyGross, discount = (int)(pharmacyGross * 0.04m), refund = 0, netCollection = (int)(pharmacyGross * 0.96m) }
+                        new { category = "Specialist Consultation", grossAmount = (int)specialistGross, discount = (int)specialistDiscount, refund = (int)specialistRefund, netCollection = (int)specialistNet },
+                        new { category = "Diagnostics & Labs", grossAmount = (int)diagnosticsGross, discount = (int)diagnosticsDiscount, refund = (int)diagnosticsRefund, netCollection = (int)diagnosticsNet },
+                        new { category = "Pharmacy Dispensing", grossAmount = (int)pharmacyGross, discount = (int)pharmacyDiscount, refund = (int)pharmacyRefund, netCollection = (int)pharmacyNet }
                     };
                     return new JavaScriptSerializer().Serialize(new { success = true, data });
                 }
