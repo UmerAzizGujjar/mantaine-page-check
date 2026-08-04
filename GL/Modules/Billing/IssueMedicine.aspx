@@ -3968,6 +3968,9 @@
             var prefix = parts.length > 0 ? parts[0] : '';
             var warehouse = $('#ddlWarehouse').val();
 
+            var totalItems = itemIds.length;  
+            var loadedItems = 0;          
+
             itemIds.forEach(function (itemCode) {
                 debugger;
                 var itemId = itemCode;
@@ -3990,7 +3993,8 @@
                         var data = JSON.parse(msg.d);
                         if (!data || data.length === 0) {
                             console.warn("Item not found: " + itemId);
-                            return;  // Skip to next item
+                            loadedItems++;
+                            return;  
                         }
                         var Uomqty = data[0].UOM_Qty;
                         if (Uomqty == null) {
@@ -4037,18 +4041,50 @@
                             '</tr>';
                         $('#tblDetails tbody').append(rows);
 
+                        //PageMethods.GetBatchNumbers(itemId, warehouse, function (data) {
+                        //    debugger;
+                        //    var parsedData = JSON.parse(data);
+                        //    var options = '<option value="0" >Please Select</option>';
+
+                        //    $.each(parsedData, function (key, value) {
+                        //        options += '<option value="' + value.BatchNum + '" >' + value.BatchNum + '</option>';
+                        //    });
+                        //    $('#ddlbatch' + (rowIndex + 1)).html(options);
+                        //}, function (error) {
+                        //    alert(error.get_message());
+                        //});
+
                         PageMethods.GetBatchNumbers(itemId, warehouse, function (data) {
                             debugger;
                             var parsedData = JSON.parse(data);
-                            var options = '<option value="0" >Please Select</option>';
+                            var options = '';
 
-                            $.each(parsedData, function (key, value) {
-                                options += '<option value="' + value.BatchNum + '" >' + value.BatchNum + '</option>';
-                            });
-                            $('#ddlbatch' + (rowIndex + 1)).html(options);
+                            if (parsedData && parsedData.length > 0) {
+                                $.each(parsedData, function (key, value) {
+                                    if (key === 0) {
+                                        options += '<option value="' + value.BatchNum + '" selected="selected">' + value.BatchNum + '</option>';
+                                    } else {
+                                        options += '<option value="' + value.BatchNum + '">' + value.BatchNum + '</option>';
+                                    }
+                                });
+                            } else {
+                                options = '<option value="0">No Batch Available</option>';
+                            }
+
+                            var selectElement = $('#ddlbatch' + (rowIndex + 1));
+                            selectElement.html(options);
+                            selectElement.trigger('change');
+
+                            loadedItems++;  
+                            if (loadedItems === totalItems) {
+                                $('#ddlWarehouse').prop('disabled', true); 
+                            }
+
                         }, function (error) {
                             alert(error.get_message());
+                            loadedItems++;  
                         });
+
                         setTimeout(function () {
                             $('#medName').select2('close');
                             $('input[name="txtQty"]').focus().select();
@@ -4057,6 +4093,7 @@
                     },
                     error: function (xhr, status, error) {
                         console.log("Error fetching medicine details: " + error);
+                        loadedItems++;  
                     }
                 });
             });
@@ -4146,42 +4183,54 @@
 
         }
 
+        var isFirstLoad = true;
+
         function LoadWarehouses() {
             var $dropdown = $('#ddlWarehouse');
             $dropdown.empty();
+            $dropdown.prop('disabled', false);
+            isFirstLoad = true; 
 
             PageMethods.GetUserWarehouses(
                 function (response) {
                     if (response && Array.isArray(response)) {
                         if (response.length === 1) {
-                            // Only one warehouse: skip "Please Select" and auto-select it
                             var item = response[0];
                             $dropdown.append('<option value="' + item.Value + '" selected="selected">' + item.Text + '</option>');
-                            $("#ddlWarehouse").attr("disabled", true);
-                        } else {
-                            // Multiple or zero warehouses: show "Please Select"
-                            $dropdown.append('<option value="0">Please Select</option>');
+                        } else if (response.length > 1) {
+                            $dropdown.append('<option value="" disabled>Please Select</option>');
+
                             $.each(response, function (index, item) {
+                                var selected = (index === 0) ? 'selected="selected"' : '';
                                 $dropdown.append(
-                                    '<option value="' + item.Value + '">' +
+                                    '<option value="' + item.Value + '" ' + selected + '>' +
                                     item.Text +
                                     '</option>'
                                 );
                             });
+                        } else {
+                            $dropdown.append('<option value="0">Please Select</option>');
                         }
                     } else {
-                        // Handle case where response is not an array or is null
                         $dropdown.append('<option value="0">Please Select</option>');
                     }
 
-                    // Reinitialize Select2 after populating
                     $dropdown.select2();
+
+                    setTimeout(function () {
+                        isFirstLoad = false;
+                    }, 100);
+
+                    if ($dropdown.val() && $dropdown.val() !== "0" && $dropdown.val() !== "") {
+                        $dropdown.trigger('change');
+                    }
                 },
                 function (error) {
                     console.log('Error loading warehouses:', error);
-                    // On error, default to "Please Select"
                     $dropdown.append('<option value="0">Please Select</option>');
                     $dropdown.select2();
+                    $dropdown.prop('disabled', false);
+                    isFirstLoad = false;
                 }
             );
         }
@@ -4236,14 +4285,20 @@
         function DisableWareHouse() {
             debugger;
 
+            if (isFirstLoad) {
+                return;
+            }
+
             var mro = $("#txtMRNo").val();
 
-            if (!mro) {   // handles "", null, undefined
+            if (!mro) {   
                 getbatchfrom_grn();
             }
 
-            $("#ddlWarehouse").prop('disabled', true);
-
+            var warehouse = $("#ddlWarehouse").val();
+            if (warehouse && warehouse !== "0" && warehouse !== "" && warehouse !== "Please Select") {
+                $("#ddlWarehouse").prop('disabled', true);
+            }
         }
         function DisableSaleReturnWareHouse() {
             debugger;
