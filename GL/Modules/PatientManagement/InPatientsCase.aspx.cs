@@ -2261,8 +2261,26 @@ namespace PMS
                 }
                 else
                 {
+                    int existingNoteId = 0;
+                    int.TryParse(hdfReceivingNoteID, out existingNoteId);
 
-                    ReceivingNote rcvNote = new ReceivingNote();
+                    ReceivingNote rcvNote;
+
+                    if (existingNoteId > 0)
+                    {
+                        rcvNote = db.ReceivingNotes.FirstOrDefault(r => r.ReceivingNoteID == existingNoteId);
+                        if (rcvNote == null)
+                        {
+                            rcvNote = new ReceivingNote();
+                            db.ReceivingNotes.InsertOnSubmit(rcvNote);
+                        }
+                    }
+                    else
+                    {
+                        rcvNote = new ReceivingNote();
+                        db.ReceivingNotes.InsertOnSubmit(rcvNote);
+                    }
+
                     rcvNote.Patient_ID = Convert.ToInt32(Patient_ID);
                     rcvNote.Emergency_ID = null;
                     rcvNote.In_Patient_ID = OPD.In_Patient_ID;
@@ -2284,10 +2302,8 @@ namespace PMS
                     rcvNote.O2_Saturation_Oxygen2 = O2_Saturation_Oxygen2;
                     rcvNote.user_id = AppConfig.UserID;
                     rcvNote.Type_Nursing = "IPD Receiving Note";
-                    db.ReceivingNotes.InsertOnSubmit(rcvNote);
+
                     db.SubmitChanges();
-
-
                 }
 
                 if (PulseRate == "" && (Rhythmdischarge == null || Rhythmdischarge == "0") && (volumedisc == null || volumedisc == "0") && (otherecdesc == "" || otherecdesc == "<li></li>") && (BPDischarge == "" || BPDischarge == "___/___") && Tempdisch == "" && RespRateDesc == "" && (Oxygen2_desc == "" || Oxygen2_desc == "<li></li>") && (Special_Instruction_Desc == "" || Special_Instruction_Desc == "<li></li>" || Special_Instruction_Desc == "• "))
@@ -2296,8 +2312,26 @@ namespace PMS
                 }
                 else
                 {
+                    int existingNoteId = 0;
+                    int.TryParse(hdfVitalDischargeID, out existingNoteId);
 
-                    ReceivingNote rcvNote = new ReceivingNote();
+                    ReceivingNote rcvNote;
+
+                    if (existingNoteId > 0)
+                    {
+                        rcvNote = db.ReceivingNotes.FirstOrDefault(r => r.ReceivingNoteID == existingNoteId);
+                        if (rcvNote == null)
+                        {
+                            rcvNote = new ReceivingNote();
+                            db.ReceivingNotes.InsertOnSubmit(rcvNote);
+                        }
+                    }
+                    else
+                    {
+                        rcvNote = new ReceivingNote();
+                        db.ReceivingNotes.InsertOnSubmit(rcvNote);
+                    }
+
                     rcvNote.Patient_ID = Convert.ToInt32(Patient_ID);
                     rcvNote.Emergency_ID = null;
                     rcvNote.In_Patient_ID = OPD.In_Patient_ID;
@@ -2321,9 +2355,8 @@ namespace PMS
                     rcvNote.O2_Saturation_Oxygen2 = Oxygen2_desc;
                     rcvNote.user_id = AppConfig.UserID;
                     rcvNote.Type_Nursing = "Discharge IPD Receiving Note";
-                    db.ReceivingNotes.InsertOnSubmit(rcvNote);
-                    db.SubmitChanges();
 
+                    db.SubmitChanges();
                 }
                 if (doc == "0")
                 {
@@ -6064,7 +6097,7 @@ namespace PMS
             public string Pulse_Min;
             public string BP_mm_Hg;
             public string Weight_Kg;
-            public string Height_Cm;
+            public string Height_cm;
             public DateTime Created_Time;
             public string Respiration_Min;
             public string Temp_C;
@@ -6186,6 +6219,10 @@ namespace PMS
                 obj.RN_Special_Instruction = item.RN_Special_Instruction;
                 obj.Status = "IPD Discharge Patient";
                 obj.User_Name = item.user;
+                obj.BMI = item.BMI != null ? item.BMI.ToString() : "";
+                obj.Blood_Suger = item.Blood_Suger != null ? item.Blood_Suger.ToString() : "";
+                obj.Weight_Kg = item.Weight_Kg != null ? item.Weight_Kg.ToString() : "";
+                obj.Height_cm = item.Height_cm != null ? item.Height_cm.ToString() : "";
 
                 list.Add(obj);
             }

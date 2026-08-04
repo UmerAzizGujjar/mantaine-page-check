@@ -163,8 +163,7 @@ namespace PMS
                     var Billing = from b in _dbContext.Ar_Billings
                                   join p in _dbContext.Reg_patients on b.Patient_ID equals p.pat_id
                                   join u in _dbContext.aspnet_Users on b.Created_By equals u.UserId
-                                  where (b.Total_Amount != null || b.Discount_Amount != null)
-                                        && (b.isCancel == null || b.isCancel == false)
+                                   where (b.Total_Amount != null || b.Discount_Amount != null)
                                         && (b.IsPharmacy == null || b.IsPharmacy == false)
                                   select new
                                   {
@@ -184,9 +183,10 @@ namespace PMS
                                       Balance_Amount = b.Balance_Amount,
                                       MrNo = p.mr_no_sequence,
                                       Full_Name = p.Full_Name,
-                                      Bill_ID = b.Bill_ID,
-                                      Operator = u.UserName
-                                  };
+                                       Bill_ID = b.Bill_ID,
+                                       Operator = u.UserName,
+                                       isCancel = b.isCancel
+                                   };
 
                     // Total records that match base filters (not affected by search)
                     var Total_Billing = Billing.Count();
