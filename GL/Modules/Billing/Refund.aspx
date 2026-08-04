@@ -185,6 +185,21 @@
                     var parse = JSON.parse(response.d);
 
                     if (parse && parse.length > 0) {
+                        if (parse[0].IsCancel == 1 || parse[0].IsCancel == true) {
+
+                            Swal.fire({
+                                icon: 'warning',
+                                title: 'Cancelled Bill',
+                                text: 'This bill is cancelled.',
+                                confirmButtonText: 'OK'
+                            });
+
+                            $('#tblDetails tbody').empty();
+                            $('#Doctor_Share_Table tbody').empty();
+                            $('#btnSave').prop('disabled', true);
+
+                            return;
+                        }
                         var length = parse.length;
                         var rows = '';
                         var hasRefundableItems = false;
