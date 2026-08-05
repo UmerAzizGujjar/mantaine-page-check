@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.Data;
 using System.Linq;
 using System.Web;
+using System.Web.Script.Serialization;
 using System.Web.Services;
 using System.Web.UI;
 using System.Web.UI.WebControls;
@@ -23,6 +24,25 @@ namespace PMS
 
 
         [WebMethod]
+        public static string GetWarehouses()
+        {
+            using (DataBaseDataContext db = new DataBaseDataContext())
+            {
+                var result = (from dv in db.DataValues
+                              join ds in db.ValueSets
+                              on dv.ValueSet_ID equals ds.ValueSet_ID
+                              where ds.ValueSet_Name == "Ware House"
+                              select new
+                              {
+                                  dv.DataValue_Name,
+                                  dv.DataValue_Description
+                              }).ToList();
+
+                return new JavaScriptSerializer().Serialize(result);
+            }
+        }
+
+        [WebMethod]
         public static bool DeleteRecord(int ItemID)
         {
             DataBaseDataContext db = new DataBaseDataContext();
@@ -33,7 +53,7 @@ namespace PMS
         }
 
         [WebMethod]
-        public static object ViewList(int draw, int start, int length, string sortColumn, string sortColumnDirection, string searchValue)
+        public static object ViewList(int draw, int start, int length, string sortColumn, string sortColumnDirection, string searchValue, string warehouseId)
         {
             try
             {
@@ -44,6 +64,7 @@ namespace PMS
                     var Total_Items = _dbContext.INV_Items.Count();
                     var Items = from I in _dbContext.INV_Items
                                 where I.Pharmacy_Item == true &&
+                                     (string.IsNullOrEmpty(warehouseId) || warehouseId == "0" || I.InventoryOrg == warehouseId) &&
                                      ((I.Item_Code.Contains(searchValue) || I.Description.Contains(searchValue)))
                                     select new
                                     {
