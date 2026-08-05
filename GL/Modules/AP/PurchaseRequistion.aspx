@@ -9,6 +9,8 @@
         var counter = 1;
         var append_data = '';
         var isSaving = false;
+        var isReplicate = false;
+        var replicateEnabled = '<%= ReplicateCode %>' === '01';
 
         var id = '<% =Request.QueryString["ID"] %>';
 
@@ -164,17 +166,24 @@
                 $("#btnsave").val('Update');
                 $("#CreatedByRow").css("display", "flex");
             }
+            $('#btnReplicate').on('click', function () {
+                isReplicate = true;
+                SaveTest();
+            });
             setTimeout(function () {
                 var status = $('#txt_Status').val();
                 if (status == "Approved") {
                     UserUnApproveButtonRights();
                     $('#btnsave').attr("disabled", 'disabled');
+                    $('#btnReplicate').hide();
                 }
                 if (status == "Cancelled") {
                     $('#btnsave').attr("disabled", 'disabled');
                     $('#btnsave').hide();
+                    $('#btnReplicate').hide();
                 }
                 if (status == "Created" || status == "Pending") {
+                    if (replicateEnabled) $('#btnReplicate').show();
                     if (id != "") {
                         CheckApprovalRightsAndShowButton(id);
                     }
@@ -564,14 +573,18 @@
             $("#btnsave").prop("disabled", true);
             var qtyOrAmtChck = false;
             var datecheck = '';
-            var PRId = (id == "") ? 0 : id;
+            var PRId = 0;
+            if (!isReplicate && id != "") {
+                PRId = id;
+            }
             var PrNum    = $('#txtPr_Num').val();
             var PrDate   = $('#txtPR_Date').val();
             var Pirority = $("#ddlPriority").val();
             var Warehouse = $("#ddlWarehouse").val();
             var RefNum   = $('#txtRef_Num').val();
             var remarks  = $('#txtRemarks').val();
-            var btnValue = $("#btnsave").val();
+            var btnValue = isReplicate ? "Replicate" : $("#btnsave").val();
+            isReplicate = false;
             var totCost  = $("#totCost").val() || 0;
             var dept     = $('#ddldept').val();
 
@@ -637,7 +650,7 @@
                             var msg = arr[0];
                             var id = arr[1];
                             sendFile(id, function () {
-                                SaveDetailPurchaseRequestion(id);
+                                SaveDetailPurchaseRequestion(id, btnValue);
                             });
                         },
                         failure: function (response) { isSaving = false; alert("In failure method"); }
@@ -646,10 +659,9 @@
             }
         }
 
-        function SaveDetailPurchaseRequestion(id) {
+        function SaveDetailPurchaseRequestion(id, btnValue) {
             debugger;
             var detailAry = [];
-            var btnValue = $("#btnsave").val();
             $.each($("#tblPackage").find('tbody').find('tr'), function (index, row) {
                 var Qty = $(row).find('td:eq(4) input').val();
                 var UnitPrice = $(row).find('td:eq(6) input').val();
@@ -677,7 +689,7 @@
                 success: function (response) {
                     var res = response.d;
                     if (res.startsWith("Success")) {
-                        var msg = (btnValue == "Save") ? 'Data Inserted Successfully' : 'Data Updated Successfully';
+                        var msg = (btnValue == "Replicate") ? 'Data Replicated Successfully' : (btnValue == "Save") ? 'Data Inserted Successfully' : 'Data Updated Successfully';
                         Swal.fire({ icon: 'success', title: 'Success!', text: msg, showConfirmButton: false, timer: 2500, customClass: { popup: 'swal-big-popup', title: 'swal-big-title', htmlContainer: 'swal-big-text' } });
                         window.location = 'PurchaseRequistion.aspx?ID=' + id;
                         $("#btnsave").prop("disabled", true);
@@ -1208,6 +1220,9 @@
     <div class="row pr-action-buttons">
         <div class="col-lg-2 col-md-4 col-sm-12">
             <input type="button" class="btn btn-primry" value="Save" id="btnsave" onclick="SaveTest()" />
+        </div>
+        <div class="col-lg-2 col-md-4 col-sm-12">
+            <input type="button" class="btn btn-primry" value="Replicate" id="btnReplicate" style="display:none;" />
         </div>
         <div class="col-lg-2 col-md-4 col-sm-12">
             <input type="button" class="btn-gray" value="List" onclick="window.location = 'PurchaseRequistionView.aspx'" />
