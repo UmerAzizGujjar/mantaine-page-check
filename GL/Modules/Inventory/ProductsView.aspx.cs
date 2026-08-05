@@ -56,7 +56,26 @@ namespace PMS.Inventory
         }
        
         [WebMethod]
-        public static object ViewList(int draw, int start, int length, string sortColumn, string sortColumnDirection, string searchValue)        
+        public static string GetWarehouses()
+        {
+            using (DataBaseDataContext db = new DataBaseDataContext())
+            {
+                var result = (from dv in db.DataValues
+                              join ds in db.ValueSets
+                              on dv.ValueSet_ID equals ds.ValueSet_ID
+                              where ds.ValueSet_Name == "Ware House"
+                              select new
+                              {
+                                  dv.DataValue_Name,
+                                  dv.DataValue_Description
+                              }).ToList();
+
+                return new JavaScriptSerializer().Serialize(result);
+            }
+        }
+
+        [WebMethod]
+        public static object ViewList(int draw, int start, int length, string sortColumn, string sortColumnDirection, string searchValue, string warehouseId)        
         {
             try
             {
@@ -68,7 +87,9 @@ namespace PMS.Inventory
                     var inv_Items = from I in _dbContext.INV_Items
                                     where I.Item_Type != null && I.Services != true && I.Pharmacy_Item != true
                                     &&
-                                       ((I.Item_Code.ToString().Contains(searchValue) || I.Description.ToString().Contains(searchValue) || _dbContext.GetDataValueName("Ware House", I.InventoryOrg).Contains(searchValue)))
+                                       (string.IsNullOrEmpty(warehouseId) || warehouseId == "0" || I.InventoryOrg == warehouseId)
+                                    &&
+                                       ((I.Item_Code.ToString().Contains(searchValue) || I.Description.ToString().Contains(searchValue)))
                                            select new
                                            {
                                                Item_ID =    I.Item_ID,

@@ -4,10 +4,37 @@
     <script type="text/javascript">
         $(document).ready(function () {
             $('#ctl00_lblMessage').hide();
+            LoadWarehouseDropdown();
             LoadPage();
 
 
         });
+
+        function LoadWarehouseDropdown() {
+            $.ajax({
+                type: "POST",
+                url: "PharmacyItemsView.aspx/GetWarehouses",
+                data: '{}',
+                contentType: "application/json; charset=utf-8",
+                dataType: "json",
+                success: function (response) {
+                    try {
+                        var data = JSON.parse(response.d);
+                        var options = '<option value="0">All Warehouses</option>';
+                        $.each(data, function (key, value) {
+                            options += '<option value="' + value.DataValue_Name + '">' + value.DataValue_Description + '</option>';
+                        });
+                        $('#ddlWarehouse').html(options);
+                        $('#ddlWarehouse').select2();
+                    } catch (e) {
+                        console.error("Error parsing warehouses: ", e);
+                    }
+                },
+                error: function (xhr, status, error) {
+                    console.error("Failed to load warehouses: ", error);
+                }
+            });
+        }
 
         function PrintTest(id) {
             window.open('ReportViewer.aspx?ReportName=TestDefination&ReportTitle= Test Defination&Test_IDs=' + id);
@@ -69,7 +96,8 @@
                             length: data.length,
                             sortColumn: data.columns[data.order[0].column].name,
                             sortColumnDirection: data.order[0].dir,
-                            searchValue: data.search.value
+                            searchValue: data.search.value,
+                            warehouseId: ($('#ddlWarehouse').val() || '0')
                         }),
                         contentType: "application/json; charset=utf-8",
                         dataType: "json",
@@ -160,6 +188,10 @@
                     }
                 }
             });
+
+            $('#ddlWarehouse').on('change', function () {
+                $('#tbloutPatients').DataTable().ajax.reload();
+            });
         }
 
         function editOpen(id) {
@@ -206,6 +238,14 @@
     </table>
 
     <div class="table-container">
+
+        <div class="row">
+            <div class="col-lg-2">
+                <label for="ddlWarehouse" style="font-weight: bold;">Ware House</label>
+            <select id="ddlWarehouse" ></select>
+            </div>
+            
+        </div>
         <table class="table table-hover table-striped table-bordered" id="tbloutPatients">
             <thead id="ihead">
                 <tr>                  

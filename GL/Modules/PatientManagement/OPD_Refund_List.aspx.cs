@@ -116,8 +116,7 @@ namespace PMS.Modules.PatientManagement
                     var Total_Refunds = _dbContext.OPD_Refunds.Count();
                     var Refunds = from R in _dbContext.OPD_Refunds
                                   join reg in _dbContext.Reg_patients on R.Reg_PatId equals reg.pat_id
-                                  where (R.isCancelled == false || R.isCancelled == null) &&
-                                       ((reg.Full_Name.ToString().Contains(searchValue) || R.Refund_Amount.ToString().Contains(searchValue) || R.OPD_No.ToString().Contains(searchValue)))
+                                  where ((reg.Full_Name.ToString().Contains(searchValue) || R.Refund_Amount.ToString().Contains(searchValue) || R.OPD_No.ToString().Contains(searchValue)))
                                   select new
                                   {
                                       Refund_ID = R.Refund_ID,
@@ -129,6 +128,7 @@ namespace PMS.Modules.PatientManagement
                                       Doctor_Refund = R.Doctor_Refund,
                                       Status = R.Status ?? "Created",
                                       Remarks = R.Remarks,
+                                      isCancelled = R.isCancelled,
                                   };
 
                     var FilteredCount = Refunds.Count();

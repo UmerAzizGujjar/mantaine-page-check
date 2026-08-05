@@ -61,7 +61,7 @@
                         className: 'dt-button buttons-copy buttons-html5',
                         action: function (e, dt, node, config) {
                             var selected = [];
-                            $('#tblOPDRefund tbody .refund-checkbox:checked').each(function () {
+                            $('#tblOPDRefund tbody .refund-checkbox:checked:not(:disabled)').each(function () {
                                 selected.push($(this).val());
                             });
 
@@ -208,6 +208,9 @@
                         "width": "5%",
                         "orderable": false,
                         "render": function (data, type, full) {
+                            if (full.isCancelled === true) {
+                                return '<input type="checkbox" class="refund-checkbox" value="' + full.Refund_ID + '" disabled />';
+                            }
                             return '<input type="checkbox" class="refund-checkbox" value="' + full.Refund_ID + '" />';
                         },
                         "createdCell": function (td, cellData, rowData, row, col) {
@@ -250,18 +253,28 @@
                     },
                     {
                         render: function (data, type, full) {
-                            // Only show Edit button if status is not Approved
+                            if (full.isCancelled === true) {
+                                return '<span style="color:#dc3545; font-weight:bold;">Cancelled</span>';
+                            }
+                            // Only show Edit/Delete button if status is not Approved
                             var editBtn = '';
+                            var Del = '';
                             if (full.Status !== "Approved") {
                                 editBtn = '<a href="#" onclick="EditOPDRefund(' + full.Refund_ID + ')" class="editListBtn" style="border-radius: 4px;padding: 5px 8px 5px 8px;"><i class="fa fa-pencil"></i></a>';
+                                Del = '<a href="#" class="delListBtn" onclick="cancelRefund(' + full.Refund_ID + ')" style="border-radius: 4px; margin-left: 4px; color: white; background-color: red; padding: 5px 8px; text-decoration: none;"><i class="fa fa-trash"></i></a>';
                             }
-                            var Del = '<a href="#" class="delListBtn" onclick="cancelRefund(' + full.Refund_ID + ')" style="border-radius: 4px; margin-left: 4px; color: white; background-color: red; padding: 5px 8px; text-decoration: none;"><i class="fa fa-trash"></i></a>';
                             return editBtn + Del;
                         },
                         "width": "10%",
                         "orderable": false
                     }
                 ],
+                "createdRow": function (row, data, dataIndex) {
+                    if (data.isCancelled === true) {
+                        $(row).css('background-color', '#f8d7da');
+                        $(row).find('td').css('color', '#721c24');
+                    }
+                },
                 "initComplete": function (settings, json) {
                     const api = this.api();
                     if (savedVisibility && Array.isArray(savedVisibility)) {

@@ -5,8 +5,21 @@
     <script type="text/javascript">
 
         $(document).ready(function () {
+            LoadWarehouseDropdown();
             LoadPage();
         });
+        function LoadWarehouseDropdown() {
+            PageMethods.GetWarehouses(function (result) {
+                var warehouses = JSON.parse(result);
+                var select = $('#ddlWarehouse');
+                select.empty();
+                select.append('<option value="0">All Warehouses</option>');
+                $.each(warehouses, function (i, item) {
+                    select.append('<option value="' + item.DataValue_Name + '">' + item.DataValue_Description + '</option>');
+                });
+                select.select2();
+            });
+        }
         function PrintTest(id) {
             window.open('ReportViewer.aspx?ReportName=TestDefination&ReportTitle= Test Defination&Test_IDs=' + id);
         }
@@ -76,7 +89,8 @@
                             length: data.length,
                             sortColumn: data.columns[data.order[0].column].name,
                             sortColumnDirection: data.order[0].dir,
-                            searchValue: data.search.value
+                            searchValue: data.search.value,
+                            warehouseId: ($('#ddlWarehouse').val() || '0')
                         }),
                         contentType: "application/json; charset=utf-8",
                         dataType: "json",
@@ -166,7 +180,11 @@
                         label.appendChild(lengthDropdown);
                     }
                 }
-            }); 
+            });
+
+            $('#ddlWarehouse').on('change', function () {
+                $('#example').DataTable().ajax.reload();
+            });
         } 
         
         
@@ -176,6 +194,13 @@
      
 
     <div class="table-container">
+        <div class="row">
+            <div class="col-lg-2">
+                <label for="ddlWarehouse" style="font-weight: bold; margin-bottom: 0;">Ware House:</label>
+                <select id="ddlWarehouse" ></select>
+            </div>
+        
+        </div>
         <table id="example" class="table table-hover table-bordered">
             <thead>
                 <tr style="position: sticky; top: 0px; z-index: 10;">
