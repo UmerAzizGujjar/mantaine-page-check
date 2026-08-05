@@ -4244,18 +4244,16 @@
                 function (response) {
                     if (response && Array.isArray(response)) {
                         if (response.length === 1) {
-                            // Only one warehouse: skip "Please Select" and auto-select it
                             var item = response[0];
                             $dropdown.append('<option value="' + item.Value + '" selected="selected">' + item.Text + '</option>');
                             $("#ddl_Warehouse").attr("disabled", true);
-                            // Manually trigger the change to enable invoice number and items dropdowns
                             $("#ddl_Warehouse").trigger('change');
                         } else {
-                            // Multiple or zero warehouses: show "Please Select"
                             $dropdown.append('<option value="0">Please Select</option>');
                             $.each(response, function (index, item) {
+                                var selected = (index === 0) ? 'selected="selected"' : '';
                                 $dropdown.append(
-                                    '<option value="' + item.Value + '">' +
+                                    '<option value="' + item.Value + '" ' + selected + '>' +
                                     item.Text +
                                     '</option>'
                                 );
@@ -4270,9 +4268,14 @@
                     $dropdown.select2();
 
                     // Bind change event
-                    $dropdown.off('change').on('change', function () {
+                    $dropdown.on('change', function () {
                         DisableSaleReturnWareHouse();
                     });
+
+                    if ($dropdown.val() && $dropdown.val() !== "0" && $dropdown.val() !== "") {
+                        $("#ddlInvoiceNumber").prop('disabled', false);
+                        $("#ddlSaleReturnItems").prop('disabled', false);
+                    }
                 },
                 function (error) {
                     console.log('Error loading warehouses:', error);
