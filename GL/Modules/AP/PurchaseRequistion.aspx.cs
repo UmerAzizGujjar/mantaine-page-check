@@ -418,6 +418,17 @@ namespace PMS.AP
                                      MaterialRequestDetail_Id = Convert.ToInt32(data.MaterialRequestDetail_Id),
                                      MaterialRequest_Id = Convert.ToInt32(data.MaterialRequest_Id),
                                      Req_Num = Convert.ToInt32(data.Req_Num),
+                                     LastQty = (from prd in db.Purchase_Requisition_Details
+                                                join pr in db.Purchase_Requisitions on prd.PR_ID equals pr.PR_Id
+                                                where prd.Item_ID == data.Item_ID && pr.Status != "Cancelled"
+                                                orderby pr.Creation_Date descending
+                                                select prd.Qty).FirstOrDefault() ?? 0,
+
+                                     LastRequiredDate = (from prd in db.Purchase_Requisition_Details
+                                                         join pr in db.Purchase_Requisitions on prd.PR_ID equals pr.PR_Id
+                                                         where prd.Item_ID == data.Item_ID && pr.Status != "Cancelled"
+                                                         orderby pr.Creation_Date descending
+                                                         select prd.Required_Date).FirstOrDefault()
 
                                  }).ToList();
                     result = (new JavaScriptSerializer()).Serialize(listItems).ToString();
@@ -674,6 +685,9 @@ namespace PMS.AP
             public int MaterialRequestDetail_Id { get; set; }
             public int MaterialRequest_Id { get; set; }
             public int Req_Num { get; set; }
+
+            public decimal LastQty { get; set; }
+            public DateTime? LastRequiredDate { get; set; }
 
         }
     }

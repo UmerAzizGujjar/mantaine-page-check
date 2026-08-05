@@ -8887,19 +8887,6 @@
       <Column Name="UOM" Type="System.String" DbType="VarChar(150) NOT NULL" CanBeNull="false" />
     </ElementType>
   </Function>
-  <Function Name="dbo.spGetitemsDetailswithStock" Method="spGetitemsDetailswithStock">
-    <Parameter Name="itemId" Type="System.Int32" DbType="Int" />
-    <Parameter Name="PRDate" Parameter="pRDate" Type="System.String" DbType="VarChar(100)" />
-    <Parameter Name="Inv_org" Parameter="inv_org" Type="System.String" DbType="VarChar(50)" />
-    <ElementType Name="spGetitemsDetailswithStockResult">
-      <Column Name="Item_ID" Type="System.Int32" DbType="Int NOT NULL" CanBeNull="false" />
-      <Column Name="Item_Code" Type="System.String" DbType="VarChar(15)" CanBeNull="true" />
-      <Column Name="Description" Type="System.String" DbType="VarChar(200)" CanBeNull="true" />
-      <Column Name="Unit" Type="System.String" DbType="VarChar(150) NOT NULL" CanBeNull="false" />
-      <Column Name="Stock" Type="System.Decimal" DbType="Decimal(18,2)" CanBeNull="true" />
-      <Column Name="Active" Type="System.Boolean" DbType="Bit" CanBeNull="true" />
-    </ElementType>
-  </Function>
   <Function Name="dbo.sp_LoadVendorAfterApproveIgp" Method="sp_LoadVendorAfterApproveIgp">
     <ElementType Name="sp_LoadVendorAfterApproveIgpResult">
       <Column Name="VendorID" Type="System.Int32" DbType="Int NOT NULL" CanBeNull="false" />
@@ -13042,6 +13029,21 @@
       <Column Name="Is_Refund" Type="System.Boolean" DbType="Bit NOT NULL" CanBeNull="false" />
       <Column Name="Is_Refunded" Type="System.Boolean" DbType="Bit NOT NULL" CanBeNull="false" />
       <Column Name="IsCancel" Type="System.Boolean" DbType="Bit NOT NULL" CanBeNull="false" />
+    </ElementType>
+  </Function>
+  <Function Name="dbo.spGetitemsDetailswithStock" Method="spGetitemsDetailswithStock">
+    <Parameter Name="itemId" Type="System.Int32" DbType="Int" />
+    <Parameter Name="PRDate" Parameter="pRDate" Type="System.String" DbType="VarChar(100)" />
+    <Parameter Name="Inv_org" Parameter="inv_org" Type="System.String" DbType="VarChar(50)" />
+    <ElementType Name="spGetitemsDetailswithStockResult">
+      <Column Name="Item_ID" Type="System.Int32" DbType="Int NOT NULL" CanBeNull="false" />
+      <Column Name="Item_Code" Type="System.String" DbType="VarChar(15)" CanBeNull="true" />
+      <Column Name="Description" Type="System.String" DbType="VarChar(200)" CanBeNull="true" />
+      <Column Name="Unit" Type="System.String" DbType="VarChar(150) NOT NULL" CanBeNull="false" />
+      <Column Name="Stock" Type="System.Decimal" DbType="Decimal(18,2)" CanBeNull="true" />
+      <Column Name="Active" Type="System.Boolean" DbType="Bit" CanBeNull="true" />
+      <Column Name="LastQty" Type="System.Decimal" DbType="Decimal(18,2) NOT NULL" CanBeNull="false" />
+      <Column Name="LastRequiredDate" Type="System.DateTime" DbType="DateTime" CanBeNull="true" />
     </ElementType>
   </Function>
 </Database>

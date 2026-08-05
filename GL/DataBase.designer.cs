@@ -1033,7 +1033,6 @@ namespace PMS
         {
             OnCreated();
         }
-
         public DataBaseDataContext(string connection) :
                 base(connection, mappingSource)
         {
@@ -4207,13 +4206,6 @@ namespace PMS
             return ((ISingleResult<sp_LoadVenChildDetailsResult>)(result.ReturnValue));
         }
 
-        [global::System.Data.Linq.Mapping.FunctionAttribute(Name = "dbo.spGetitemsDetailswithStock")]
-        public ISingleResult<spGetitemsDetailswithStockResult> spGetitemsDetailswithStock([global::System.Data.Linq.Mapping.ParameterAttribute(DbType = "Int")] System.Nullable<int> itemId, [global::System.Data.Linq.Mapping.ParameterAttribute(Name = "PRDate", DbType = "VarChar(100)")] string pRDate, [global::System.Data.Linq.Mapping.ParameterAttribute(Name = "Inv_org", DbType = "VarChar(50)")] string inv_org)
-        {
-            IExecuteResult result = this.ExecuteMethodCall(this, ((MethodInfo)(MethodInfo.GetCurrentMethod())), itemId, pRDate, inv_org);
-            return ((ISingleResult<spGetitemsDetailswithStockResult>)(result.ReturnValue));
-        }
-
         [global::System.Data.Linq.Mapping.FunctionAttribute(Name = "dbo.sp_LoadVendorAfterApproveIgp")]
         public ISingleResult<sp_LoadVendorAfterApproveIgpResult> sp_LoadVendorAfterApproveIgp()
         {
@@ -5790,6 +5782,13 @@ namespace PMS
         {
             IExecuteResult result = this.ExecuteMethodCall(this, ((MethodInfo)(MethodInfo.GetCurrentMethod())), bill_No);
             return ((ISingleResult<spGetBillServicesResult>)(result.ReturnValue));
+        }
+
+        [global::System.Data.Linq.Mapping.FunctionAttribute(Name = "dbo.spGetitemsDetailswithStock")]
+        public ISingleResult<spGetitemsDetailswithStockResult> spGetitemsDetailswithStock([global::System.Data.Linq.Mapping.ParameterAttribute(DbType = "Int")] System.Nullable<int> itemId, [global::System.Data.Linq.Mapping.ParameterAttribute(Name = "PRDate", DbType = "VarChar(100)")] string pRDate, [global::System.Data.Linq.Mapping.ParameterAttribute(Name = "Inv_org", DbType = "VarChar(50)")] string inv_org)
+        {
+            IExecuteResult result = this.ExecuteMethodCall(this, ((MethodInfo)(MethodInfo.GetCurrentMethod())), itemId, pRDate, inv_org);
+            return ((ISingleResult<spGetitemsDetailswithStockResult>)(result.ReturnValue));
         }
     }
 
@@ -190075,122 +190074,6 @@ namespace PMS
         }
     }
 
-    public partial class spGetitemsDetailswithStockResult
-    {
-
-        private int _Item_ID;
-
-        private string _Item_Code;
-
-        private string _Description;
-
-        private string _Unit;
-
-        private System.Nullable<decimal> _Stock;
-
-        private System.Nullable<bool> _Active;
-
-        public spGetitemsDetailswithStockResult()
-        {
-        }
-
-        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_Item_ID", DbType = "Int NOT NULL")]
-        public int Item_ID
-        {
-            get
-            {
-                return this._Item_ID;
-            }
-            set
-            {
-                if ((this._Item_ID != value))
-                {
-                    this._Item_ID = value;
-                }
-            }
-        }
-
-        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_Item_Code", DbType = "VarChar(15)")]
-        public string Item_Code
-        {
-            get
-            {
-                return this._Item_Code;
-            }
-            set
-            {
-                if ((this._Item_Code != value))
-                {
-                    this._Item_Code = value;
-                }
-            }
-        }
-
-        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_Description", DbType = "VarChar(200)")]
-        public string Description
-        {
-            get
-            {
-                return this._Description;
-            }
-            set
-            {
-                if ((this._Description != value))
-                {
-                    this._Description = value;
-                }
-            }
-        }
-
-        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_Unit", DbType = "VarChar(150) NOT NULL", CanBeNull = false)]
-        public string Unit
-        {
-            get
-            {
-                return this._Unit;
-            }
-            set
-            {
-                if ((this._Unit != value))
-                {
-                    this._Unit = value;
-                }
-            }
-        }
-
-        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_Stock", DbType = "Decimal(18,2)")]
-        public System.Nullable<decimal> Stock
-        {
-            get
-            {
-                return this._Stock;
-            }
-            set
-            {
-                if ((this._Stock != value))
-                {
-                    this._Stock = value;
-                }
-            }
-        }
-
-        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_Active", DbType = "Bit")]
-        public System.Nullable<bool> Active
-        {
-            get
-            {
-                return this._Active;
-            }
-            set
-            {
-                if ((this._Active != value))
-                {
-                    this._Active = value;
-                }
-            }
-        }
-    }
-
     public partial class sp_LoadVendorAfterApproveIgpResult
     {
 
@@ -243874,6 +243757,158 @@ namespace PMS
                 if ((this._IsCancel != value))
                 {
                     this._IsCancel = value;
+                }
+            }
+        }
+    }
+
+    public partial class spGetitemsDetailswithStockResult
+    {
+
+        private int _Item_ID;
+
+        private string _Item_Code;
+
+        private string _Description;
+
+        private string _Unit;
+
+        private System.Nullable<decimal> _Stock;
+
+        private System.Nullable<bool> _Active;
+
+        private decimal _LastQty;
+
+        private System.Nullable<System.DateTime> _LastRequiredDate;
+
+        public spGetitemsDetailswithStockResult()
+        {
+        }
+
+        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_Item_ID", DbType = "Int NOT NULL")]
+        public int Item_ID
+        {
+            get
+            {
+                return this._Item_ID;
+            }
+            set
+            {
+                if ((this._Item_ID != value))
+                {
+                    this._Item_ID = value;
+                }
+            }
+        }
+
+        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_Item_Code", DbType = "VarChar(15)")]
+        public string Item_Code
+        {
+            get
+            {
+                return this._Item_Code;
+            }
+            set
+            {
+                if ((this._Item_Code != value))
+                {
+                    this._Item_Code = value;
+                }
+            }
+        }
+
+        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_Description", DbType = "VarChar(200)")]
+        public string Description
+        {
+            get
+            {
+                return this._Description;
+            }
+            set
+            {
+                if ((this._Description != value))
+                {
+                    this._Description = value;
+                }
+            }
+        }
+
+        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_Unit", DbType = "VarChar(150) NOT NULL", CanBeNull = false)]
+        public string Unit
+        {
+            get
+            {
+                return this._Unit;
+            }
+            set
+            {
+                if ((this._Unit != value))
+                {
+                    this._Unit = value;
+                }
+            }
+        }
+
+        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_Stock", DbType = "Decimal(18,2)")]
+        public System.Nullable<decimal> Stock
+        {
+            get
+            {
+                return this._Stock;
+            }
+            set
+            {
+                if ((this._Stock != value))
+                {
+                    this._Stock = value;
+                }
+            }
+        }
+
+        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_Active", DbType = "Bit")]
+        public System.Nullable<bool> Active
+        {
+            get
+            {
+                return this._Active;
+            }
+            set
+            {
+                if ((this._Active != value))
+                {
+                    this._Active = value;
+                }
+            }
+        }
+
+        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_LastQty", DbType = "Decimal(18,2) NOT NULL")]
+        public decimal LastQty
+        {
+            get
+            {
+                return this._LastQty;
+            }
+            set
+            {
+                if ((this._LastQty != value))
+                {
+                    this._LastQty = value;
+                }
+            }
+        }
+
+        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_LastRequiredDate", DbType = "DateTime")]
+        public System.Nullable<System.DateTime> LastRequiredDate
+        {
+            get
+            {
+                return this._LastRequiredDate;
+            }
+            set
+            {
+                if ((this._LastRequiredDate != value))
+                {
+                    this._LastRequiredDate = value;
                 }
             }
         }
