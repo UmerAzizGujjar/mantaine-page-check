@@ -172,6 +172,15 @@
                         });
                         return;
                     }
+                    if (parseFloat(p.Receipt_Amount) <= 0 || p.Receipt_Amount == null) {
+                        Swal.fire({
+                            title: "Invalid Receipt",
+                            text: "This OPD receipt amount is 0, refund cannot be processed.",
+                            icon: "warning",
+                            button: "OK"
+                        });
+                        return;
+                    }
                     $('#hdPatientID').text(p.Patient_ID);
                     $('#hdRegPatId').val(p.Reg_PatId);
                     $('#lblMRNo').text(p.Patient_No);

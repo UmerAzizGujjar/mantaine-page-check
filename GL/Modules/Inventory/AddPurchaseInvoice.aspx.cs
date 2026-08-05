@@ -452,24 +452,25 @@ namespace PMS.Inventory
             return (new JavaScriptSerializer()).Serialize(Header);
         }
         [WebMethod]
-        public static string LoadInvocieDetail(int Inv_ID , bool isDirct)
+        public static string LoadInvocieDetail(int Inv_ID, bool isDirct)
         {
             DataBaseDataContext db = new DataBaseDataContext();
-
             var code = db.sys_Parms.Where(x => x.Name == "Direct PO ON Purchase Invoice").Select(x => x.Code).FirstOrDefault();
 
-            object Details;
-
-            if (code == "01")
+            try
             {
-                Details = db.sp_LoadPurchaseDetailInvoice_DirectPO(Inv_ID).ToList();
-            }
-            else
-            {
-                Details = db.sp_LoadPurchaseDetailInvoice_DirctGRN(Inv_ID, isDirct).ToList();
-            }
+                object Details;
+                if (code == "01")
+                    Details = db.sp_LoadPurchaseDetailInvoice_DirectPO(Inv_ID).ToList();
+                else
+                    Details = db.sp_LoadPurchaseDetailInvoice_DirctGRN(Inv_ID, isDirct).ToList();
 
-            return (new JavaScriptSerializer()).Serialize(Details);
+                return new JavaScriptSerializer().Serialize(Details);
+            }
+            catch (InvalidCastException ex)
+            {
+                throw new Exception($"Cast Error in LoadInvocieDetail: {ex.Message}");
+            }
         }
         [WebMethod]
         public static string ApprovePurchaseInvoice(string InvId)

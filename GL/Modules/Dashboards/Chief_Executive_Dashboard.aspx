@@ -26,6 +26,7 @@
             LoadHospitalRevenue(period, startDate, endDate);
             LoadOPDSaleRevenue(period, startDate, endDate);
             LoadPharmacyRevenue(period, startDate, endDate);
+            LoadPBRevenue(period, startDate, endDate);
             LoadLabRadiologyRevenue(period, startDate, endDate);
             LoadOPDChart(period, startDate, endDate);
             LoadOPDVolume(period, startDate, endDate);
@@ -405,6 +406,34 @@
                 },
                 error: function () {
                     $('#lblPharmacyRevenue').text('0');
+                }
+            });
+        }
+
+        function LoadPBRevenue(period, startDate, endDate) {
+            var data = { 'period': period, 'startDate': startDate || null, 'endDate': endDate || null };
+            $.ajax({
+                type: "POST",
+                url: "Chief_Executive_Dashboard.aspx/GetPBRevenue",
+                data: JSON.stringify(data),
+                contentType: "application/json; charset=utf-8",
+                dataType: "json",
+                success: function (data) {
+                    var result = JSON.parse(data.d);
+                    if (result.Error) {
+                        $('#lblPB1Revenue').text('0');
+                        $('#lblPharmacyDate').text('Error loading data');
+                    } else {
+                        var formatted = parseFloat(result.PharmacyRevenue).toLocaleString('en-PK', {
+                            minimumFractionDigits: 0,
+                            maximumFractionDigits: 0
+                        });
+                        $('#lblPB1Revenue').text(formatted);
+                        $('#lblPharmacyDate').text(result.DateRange);
+                    }
+                },
+                error: function() {
+                    $('#lblPB1Revenue').text('0');
                 }
             });
         }
@@ -888,10 +917,12 @@
                     renderSparkline("sparkRevenue", d.hospital, d.labels);
                     renderSparkline("sparkOPD", d.opd, d.labels);
                     renderSparkline("sparkPharmacy", d.pharmacy, d.labels);
+                    renderSparkline("sparkPB", d.PB, d.labels);
                     renderSparkline("sparkLab", d.lab, d.labels);
                     checkBlink("sparkRevenue", d.hospital);
                     checkBlink("sparkOPD", d.opd);
                     checkBlink("sparkPharmacy", d.pharmacy);
+                    checkBlink("sparkPB", d.PB);
                     checkBlink("sparkLab", d.lab);
                 }
             });
@@ -1852,6 +1883,11 @@
                 <div class="rev-label">Pharmacy Revenue</div>
                 <div class="rev-value">Rs. <span id="lblPharmacyRevenue">0</span></div>
                 <div class="rev-chart" id="sparkPharmacy"></div>
+            </div>
+            <div class="bento-item rev-item">
+                <div class="rev-label">PB-1 Revenue</div>
+                <div class="rev-value">Rs. <span id="lblPB1Revenue">0</span></div>
+                <div class="rev-chart" id="sparkPB"></div>
             </div>
             <div class="bento-item rev-item">
                 <div class="rev-label">Lab & Radiology Revenue</div>

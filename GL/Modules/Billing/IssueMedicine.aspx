@@ -242,6 +242,11 @@
                 $('#btnSave').attr('style', 'margin-top: 0px;').focusout();
                 $('#CloseSearchModel').click();
             }
+            else if (event.ctrlKey && event.code === 'KeyQ') {
+                event.preventDefault();
+                $('#medName').select2('close');
+                openQueue();
+            }
             else {
                 $('#btnSave').attr('style', 'margin-top: 0px;')
             }
@@ -4235,6 +4240,7 @@
             );
         }
 
+
         function LoadWarehousesforSaleReturn() {
             var $dropdown = $('#ddl_Warehouse');
             $dropdown.empty();
@@ -4243,18 +4249,16 @@
                 function (response) {
                     if (response && Array.isArray(response)) {
                         if (response.length === 1) {
-                            // Only one warehouse: skip "Please Select" and auto-select it
                             var item = response[0];
                             $dropdown.append('<option value="' + item.Value + '" selected="selected">' + item.Text + '</option>');
                             $("#ddl_Warehouse").attr("disabled", true);
-                            // Manually trigger the change to enable invoice number and items dropdowns
                             $("#ddl_Warehouse").trigger('change');
                         } else {
-                            // Multiple or zero warehouses: show "Please Select"
                             $dropdown.append('<option value="0">Please Select</option>');
                             $.each(response, function (index, item) {
+                                var selected = (index === 0) ? 'selected="selected"' : '';
                                 $dropdown.append(
-                                    '<option value="' + item.Value + '">' +
+                                    '<option value="' + item.Value + '" ' + selected + '>' +
                                     item.Text +
                                     '</option>'
                                 );
@@ -4269,9 +4273,14 @@
                     $dropdown.select2();
 
                     // Bind change event
-                    $dropdown.off('change').on('change', function () {
+                    $dropdown.on('change', function () {
                         DisableSaleReturnWareHouse();
                     });
+
+                    if ($dropdown.val() && $dropdown.val() !== "0" && $dropdown.val() !== "") {
+                        $("#ddlInvoiceNumber").prop('disabled', false);
+                        $("#ddlSaleReturnItems").prop('disabled', false);
+                    }
                 },
                 function (error) {
                     console.log('Error loading warehouses:', error);
@@ -4545,6 +4554,113 @@
                 AddMedicineDetailFormOPD(itemIds)
             }
         }
+
+        function ResetPharmacyForm() {
+            debugger;
+
+            $("#txtMRNo").tokenInput("clear");
+
+            $('#lblPatienName').text('');
+            $('#lblContactNo').text('');
+
+            $('#txtPatientType').val('');
+            $('#Ward_Name').val('');
+            $('#BedName').val('');
+
+            $('#ddlDoctor').val('0').trigger('change');
+            $('#ddlDepartment').val('0').trigger('change');
+            $('#ddlPatient_No').val('0').trigger('change');
+            $('#ddlInv_No').val('').trigger('change');
+            $('#ddlTemplate').val('0').trigger('change');
+            $('#ddlpanel').val('0').trigger('change');
+
+            $('#ddlDoctor').attr('disabled', false);
+            $('#ddlDepartment').attr('disabled', false);
+            $('#ddlWarehouse').prop('disabled', false);
+            $('#ddlpanel').attr('disabled', false);
+
+            
+            $('#medName').val('').trigger('change');
+
+            $('#batchno').html('<option value="0">Please Select</option>');
+            $('#batchno').select2();
+
+            $('#tblDetails #tblbody').empty();
+
+            $('#txtTotalPayable').val('');
+            $('#txtLineDisc').val('');
+            $('#txtDisPer').val('');
+            $('#txtDisAmt').val('');
+            $('#txttotalDisc').val('');
+            $('#txtFlatDisc').val('');
+            $('#txtAmountReceived').val('');
+            $('#txtBalances').val('');
+
+            $('#chkcash').prop('checked', true);
+            $('#chkBank').prop('checked', false);
+            $('#chkHospital').prop('checked', false);
+
+            $('#chkbatch').prop('checked', true);
+            $('#chkprint').prop('checked', true);
+            $('#chkHold').prop('checked', false);
+
+            BalanceAmountCondition();
+
+            $('#hdPatientID').val('');
+            $('#hdndiscountType').val('');
+            $('#hdnReturnBillID').val('');
+            $('#txtTransType').val('');
+
+            $('#CustomerName').val('').attr('disabled', false);
+
+            $('#row22').hide();
+
+            $('#Inv_No').val('');
+
+            if ($('#ddlInv_No').data('select2')) {
+                $('#ddlInv_No').val('').trigger('change');
+            }
+
+            $('.batchdiv').show();
+
+            $('#btnSave').val('Save & Print(Alt+S)');
+
+            $('#divinvoiceoldtemplate').hide(); 
+
+            currentTransType = "";
+
+            isPatientDataSaved = true;
+
+            if ($('#ddlWarehouse').data('select2')) {
+                $('#ddlWarehouse').select2('destroy');
+            }
+            LoadWarehouses();
+
+            setTimeout(function () {
+                $('#txtMRNo').focus();
+            }, 100);
+
+            $('.table-active').removeClass('table-active');
+
+            $('input[name="txtQty"]').val('');
+            $('input[name="DisPer"]').val('');
+            $('input[name="DisAmount"]').val('');
+            $('input[name="LineDiscount"]').val('');
+            $('input[name="Remarks"]').val('');
+
+            if ($('#medName').data('select2')) {
+                $('#medName').val('').trigger('change');
+            }
+
+            $('#queueModal').modal('hide');
+            $('#ItemModal').modal('hide');
+
+            LoadQueueCount();
+
+            toastr.success('Form has been reset successfully!');
+        }
+
+        
     </script>
 </asp:Content>
 
@@ -4712,16 +4828,18 @@
                     <label id="lblHold">Hold</label>
                 </div>
                 
-                <div class="col-lg-1 col-md-4 col-sm-6"></div>
                 <div class="col-sm-2 col-md-2 col-lg-1 text-center" >
                     <label class="me-3">Print</label>
                 </div>
                 <div class="col-sm-2 col-md-2 col-lg-1 text-center" style="margin-left: -4%;">
                     <input type="checkbox" tabindex="9" id="chkprint" />
                 </div>
-               <div class="col-sm-2 col-md-2 col-lg-1">
-                <input type="button" class="btn-primry" value="Item List (Alt + L)" id="item_List" onclick="OpenItemList();" style="width:146px !important" />
+               <div class="col-sm-2 col-md-2 col-lg-2">
+                <input type="button" class="btn-primry" value="Item List (Alt + L)" id="item_List" onclick="OpenItemList();"  />
                 </div>
+               <div class="col-sm-1 col-md-2 col-lg-1">
+                   <input type="button" class="btn-primry" value="Reset" id="btnResetForm" onclick="ResetPharmacyForm();"  />
+               </div>
             </div>
 
         </div>

@@ -1,4 +1,4 @@
-﻿<?xml version="1.0" encoding="utf-8"?><Database Name="PakRed" Class="DataBaseDataContext" xmlns="http://schemas.microsoft.com/linqtosql/dbml/2007">
+﻿<?xml version="1.0" encoding="utf-8"?><Database Name="H_P_National_Hospital" Class="DataBaseDataContext" xmlns="http://schemas.microsoft.com/linqtosql/dbml/2007">
   <Table Name="dbo.Ar_Customers" Member="Ar_Customers">
     <Type Name="Ar_Customer">
       <Column Name="Customer_ID" Type="System.Int32" DbType="Int NOT NULL IDENTITY" IsPrimaryKey="true" IsDbGenerated="true" CanBeNull="false" />
@@ -8887,19 +8887,6 @@
       <Column Name="UOM" Type="System.String" DbType="VarChar(150) NOT NULL" CanBeNull="false" />
     </ElementType>
   </Function>
-  <Function Name="dbo.spGetitemsDetailswithStock" Method="spGetitemsDetailswithStock">
-    <Parameter Name="itemId" Type="System.Int32" DbType="Int" />
-    <Parameter Name="PRDate" Parameter="pRDate" Type="System.String" DbType="VarChar(100)" />
-    <Parameter Name="Inv_org" Parameter="inv_org" Type="System.String" DbType="VarChar(50)" />
-    <ElementType Name="spGetitemsDetailswithStockResult">
-      <Column Name="Item_ID" Type="System.Int32" DbType="Int NOT NULL" CanBeNull="false" />
-      <Column Name="Item_Code" Type="System.String" DbType="VarChar(15)" CanBeNull="true" />
-      <Column Name="Description" Type="System.String" DbType="VarChar(200)" CanBeNull="true" />
-      <Column Name="Unit" Type="System.String" DbType="VarChar(150) NOT NULL" CanBeNull="false" />
-      <Column Name="Stock" Type="System.Decimal" DbType="Decimal(18,2)" CanBeNull="true" />
-      <Column Name="Active" Type="System.Boolean" DbType="Bit" CanBeNull="true" />
-    </ElementType>
-  </Function>
   <Function Name="dbo.sp_LoadVendorAfterApproveIgp" Method="sp_LoadVendorAfterApproveIgp">
     <ElementType Name="sp_LoadVendorAfterApproveIgpResult">
       <Column Name="VendorID" Type="System.Int32" DbType="Int NOT NULL" CanBeNull="false" />
@@ -11815,44 +11802,6 @@
       <Column Name="CGSRate" Type="System.Decimal" DbType="Decimal(18,4)" CanBeNull="true" />
     </ElementType>
   </Function>
-  <Function Name="dbo.spGetBillServices" Method="spGetBillServices">
-    <Parameter Name="Bill_No" Parameter="bill_No" Type="System.Int64" DbType="BigInt" />
-    <ElementType Name="spGetBillServicesResult">
-      <Column Name="Receipt_Amount" Type="System.Decimal" DbType="Decimal(23,6) NOT NULL" CanBeNull="false" />
-      <Column Name="Creation_Date" Type="System.String" DbType="VarChar(8000)" CanBeNull="true" />
-      <Column Name="pat_id" Type="System.Int32" DbType="Int NOT NULL" CanBeNull="false" />
-      <Column Name="Patient_No" Type="System.Int32" DbType="Int" CanBeNull="true" />
-      <Column Name="Full_Name" Type="System.String" DbType="VarChar(100)" CanBeNull="true" />
-      <Column Name="NIC" Type="System.String" DbType="VarChar(250)" CanBeNull="true" />
-      <Column Name="Mobile1" Type="System.String" DbType="VarChar(50)" CanBeNull="true" />
-      <Column Name="Age_years" Type="System.String" DbType="VarChar(50)" CanBeNull="true" />
-      <Column Name="Permanent_Address" Type="System.String" DbType="NVarChar(350)" CanBeNull="true" />
-      <Column Name="Gender" Type="System.String" DbType="VarChar(50)" CanBeNull="true" />
-      <Column Name="Department" Type="System.String" DbType="VarChar(150) NOT NULL" CanBeNull="false" />
-      <Column Name="Emp_Name" Type="System.String" DbType="VarChar(150) NOT NULL" CanBeNull="false" />
-      <Column Name="Patient_Type" Type="System.String" DbType="VarChar(150) NOT NULL" CanBeNull="false" />
-      <Column Name="bill_ID" Type="System.Int32" DbType="Int NOT NULL" CanBeNull="false" />
-      <Column Name="Bill_No" Type="System.String" DbType="VarChar(50)" CanBeNull="true" />
-      <Column Name="Patient_ID" Type="System.Int32" DbType="Int" CanBeNull="true" />
-      <Column Name="Total_Amount" Type="System.Decimal" DbType="Decimal(18,4) NOT NULL" CanBeNull="false" />
-      <Column Name="Net_Amount" Type="System.Decimal" DbType="Decimal(18,4) NOT NULL" CanBeNull="false" />
-      <Column Name="Received_Amount" Type="System.Decimal" DbType="Decimal(18,4) NOT NULL" CanBeNull="false" />
-      <Column Name="balance_Amount" Type="System.Decimal" DbType="Decimal(18,4) NOT NULL" CanBeNull="false" />
-      <Column Name="Bill_Details_ID" Type="System.Int32" DbType="Int NOT NULL" CanBeNull="false" />
-      <Column Name="Item_Name" Type="System.String" DbType="VarChar(200)" CanBeNull="true" />
-      <Column Name="Item_Id" Type="System.Int32" DbType="Int" CanBeNull="true" />
-      <Column Name="Item_Type" Type="System.String" DbType="VarChar(20)" CanBeNull="true" />
-      <Column Name="Amount" Type="System.Decimal" DbType="Decimal(18,4) NOT NULL" CanBeNull="false" />
-      <Column Name="Discount_Amount" Type="System.Decimal" DbType="Decimal(18,4) NOT NULL" CanBeNull="false" />
-      <Column Name="Discount_Percentage" Type="System.Decimal" DbType="Decimal(18,4) NOT NULL" CanBeNull="false" />
-      <Column Name="Net_Amount1" Type="System.Decimal" DbType="Decimal(18,4) NOT NULL" CanBeNull="false" />
-      <Column Name="Qty" Type="System.Decimal" DbType="Decimal(18,2) NOT NULL" CanBeNull="false" />
-      <Column Name="Doctor_Share" Type="System.Decimal" DbType="Decimal(18,4) NOT NULL" CanBeNull="false" />
-      <Column Name="Hospital_Share" Type="System.Decimal" DbType="Decimal(19,4) NOT NULL" CanBeNull="false" />
-      <Column Name="Is_Refund" Type="System.Boolean" DbType="Bit NOT NULL" CanBeNull="false" />
-      <Column Name="Is_Refunded" Type="System.Boolean" DbType="Bit NOT NULL" CanBeNull="false" />
-    </ElementType>
-  </Function>
   <Function Name="dbo.spMedicinesDetailsforListitems" Method="spMedicinesDetailsforListitems">
     <Parameter Name="ItemId" Parameter="itemId" Type="System.Int32" DbType="Int" />
     <Parameter Name="warehouse" Type="System.String" DbType="NVarChar(150)" />
@@ -12908,45 +12857,6 @@
       <Column Name="Doctor_ID" Type="System.String" DbType="VarChar(50)" CanBeNull="true" />
     </ElementType>
   </Function>
-  <Function Name="dbo.sp_LoadPurchaseDetailInvoice_DirctGRN" Method="sp_LoadPurchaseDetailInvoice_DirctGRN">
-    <Parameter Name="InvId" Parameter="invId" Type="System.Int32" DbType="Int" />
-    <Parameter Name="isDirct" Type="System.Boolean" DbType="Bit" />
-    <ElementType Name="sp_LoadPurchaseDetailInvoice_DirctGRNResult">
-      <Column Name="PurchaseInvoiceDetailId" Type="System.Int64" DbType="BigInt NOT NULL" CanBeNull="false" />
-      <Column Name="PurchaseInvoiceId" Type="System.Int64" DbType="BigInt" CanBeNull="true" />
-      <Column Name="Rate" Type="System.Decimal" DbType="Decimal(18,2)" CanBeNull="true" />
-      <Column Name="Qty" Type="System.Decimal" DbType="Decimal(38,2)" CanBeNull="true" />
-      <Column Name="TotalAmount" Type="System.Decimal" DbType="Decimal(18,2)" CanBeNull="true" />
-      <Column Name="IGPQty" Type="System.Int32" DbType="Int NOT NULL" CanBeNull="false" />
-      <Column Name="IRNQty" Type="System.Int32" DbType="Int NOT NULL" CanBeNull="false" />
-      <Column Name="GRNQty" Type="System.Decimal" DbType="Decimal(18,4)" CanBeNull="true" />
-      <Column Name="GRN_ID" Type="System.Int32" DbType="Int" CanBeNull="true" />
-      <Column Name="GRN_detail_Id" Type="System.Int32" DbType="Int" CanBeNull="true" />
-      <Column Name="ItemId" Type="System.Int32" DbType="Int" CanBeNull="true" />
-      <Column Name="Amount" Type="System.Decimal" DbType="Decimal(18,2)" CanBeNull="true" />
-      <Column Name="Stax_ID" Type="System.Int32" DbType="Int NOT NULL" CanBeNull="false" />
-      <Column Name="Stax_Perc" Type="System.Decimal" DbType="Decimal(18,2) NOT NULL" CanBeNull="false" />
-      <Column Name="DiscPer" Type="System.Decimal" DbType="Decimal(18,2) NOT NULL" CanBeNull="false" />
-      <Column Name="DiscAmt" Type="System.Decimal" DbType="Decimal(18,2) NOT NULL" CanBeNull="false" />
-      <Column Name="Adv_Po_ID" Type="System.Int32" DbType="Int" CanBeNull="true" />
-      <Column Name="AdvTax_ID" Type="System.Int32" DbType="Int NOT NULL" CanBeNull="false" />
-      <Column Name="AdvTax_Amount" Type="System.Decimal" DbType="Decimal(18,2) NOT NULL" CanBeNull="false" />
-      <Column Name="AdvanceTotalAmount" Type="System.Decimal" DbType="Decimal(18,2) NOT NULL" CanBeNull="false" />
-      <Column Name="FurtherTax_Id" Type="System.Int32" DbType="Int NOT NULL" CanBeNull="false" />
-      <Column Name="FurtherTax_Amount" Type="System.Decimal" DbType="Decimal(18,2) NOT NULL" CanBeNull="false" />
-      <Column Name="Bonus_Qty" Type="System.Decimal" DbType="Decimal(18,2) NOT NULL" CanBeNull="false" />
-      <Column Name="Bonus_Tax" Type="System.Decimal" DbType="Decimal(18,2) NOT NULL" CanBeNull="false" />
-      <Column Name="Item_Code" Type="System.String" DbType="VarChar(15)" CanBeNull="true" />
-      <Column Name="Description" Type="System.String" DbType="VarChar(200)" CanBeNull="true" />
-      <Column Name="GRN_Num" Type="System.Int32" DbType="Int" CanBeNull="true" />
-      <Column Name="Igp_Id" Type="System.Int32" DbType="Int NOT NULL" CanBeNull="false" />
-      <Column Name="Igp_num" Type="System.Int32" DbType="Int NOT NULL" CanBeNull="false" />
-      <Column Name="Igp_date" Type="System.String" DbType="VarChar(1) NOT NULL" CanBeNull="false" />
-      <Column Name="PO_Date" Type="System.String" DbType="VarChar(1) NOT NULL" CanBeNull="false" />
-      <Column Name="PO_No" Type="System.Int32" DbType="Int NOT NULL" CanBeNull="false" />
-      <Column Name="Rate1" Type="System.Decimal" DbType="Decimal(18,4)" CanBeNull="true" />
-    </ElementType>
-  </Function>
   <Function Name="dbo.Sp_GetLast24Hours_Medicines" Method="Sp_GetLast24Hours_Medicines">
     <Parameter Name="Search" Parameter="search" Type="System.String" DbType="NVarChar(200)" />
     <ElementType Name="Sp_GetLast24Hours_MedicinesResult">
@@ -13041,6 +12951,99 @@
       <Column Name="FurtherTax_Amount" Type="System.Decimal" DbType="Decimal(18,4)" CanBeNull="true" />
       <Column Name="Bonus_Qty" Type="System.Decimal" DbType="Decimal(18,4)" CanBeNull="true" />
       <Column Name="Bonus_Tax" Type="System.Decimal" DbType="Decimal(18,4)" CanBeNull="true" />
+    </ElementType>
+  </Function>
+  <Function Name="dbo.sp_LoadPurchaseDetailInvoice_DirctGRN" Method="sp_LoadPurchaseDetailInvoice_DirctGRN">
+    <Parameter Name="InvId" Parameter="invId" Type="System.Int32" DbType="Int" />
+    <Parameter Name="isDirct" Type="System.Boolean" DbType="Bit" />
+    <ElementType Name="sp_LoadPurchaseDetailInvoice_DirctGRNResult">
+      <Column Name="PurchaseInvoiceDetailId" Type="System.Int32" DbType="Int" CanBeNull="true" />
+      <Column Name="PurchaseInvoiceId" Type="System.Int32" DbType="Int" CanBeNull="true" />
+      <Column Name="Rate" Type="System.Decimal" DbType="Decimal(18,2)" CanBeNull="true" />
+      <Column Name="Qty" Type="System.Decimal" DbType="Decimal(18,2)" CanBeNull="true" />
+      <Column Name="TotalAmount" Type="System.Decimal" DbType="Decimal(18,2)" CanBeNull="true" />
+      <Column Name="IGPQty" Type="System.Int32" DbType="Int" CanBeNull="true" />
+      <Column Name="IRNQty" Type="System.Int32" DbType="Int" CanBeNull="true" />
+      <Column Name="GRNQty" Type="System.Decimal" DbType="Decimal(18,2)" CanBeNull="true" />
+      <Column Name="GRN_ID" Type="System.Int32" DbType="Int" CanBeNull="true" />
+      <Column Name="GRN_detail_Id" Type="System.Int32" DbType="Int" CanBeNull="true" />
+      <Column Name="ItemId" Type="System.Int32" DbType="Int" CanBeNull="true" />
+      <Column Name="Amount" Type="System.Decimal" DbType="Decimal(18,2)" CanBeNull="true" />
+      <Column Name="Stax_ID" Type="System.Int32" DbType="Int" CanBeNull="true" />
+      <Column Name="Stax_Perc" Type="System.Decimal" DbType="Decimal(18,2)" CanBeNull="true" />
+      <Column Name="DiscPer" Type="System.Decimal" DbType="Decimal(18,2)" CanBeNull="true" />
+      <Column Name="DiscAmt" Type="System.Decimal" DbType="Decimal(18,2)" CanBeNull="true" />
+      <Column Name="Adv_Po_ID" Type="System.Int32" DbType="Int" CanBeNull="true" />
+      <Column Name="AdvTax_ID" Type="System.Int32" DbType="Int" CanBeNull="true" />
+      <Column Name="AdvTax_Amount" Type="System.Decimal" DbType="Decimal(18,2)" CanBeNull="true" />
+      <Column Name="AdvanceTotalAmount" Type="System.Decimal" DbType="Decimal(18,2)" CanBeNull="true" />
+      <Column Name="FurtherTax_Id" Type="System.Int32" DbType="Int" CanBeNull="true" />
+      <Column Name="FurtherTax_Amount" Type="System.Decimal" DbType="Decimal(18,2)" CanBeNull="true" />
+      <Column Name="Bonus_Qty" Type="System.Decimal" DbType="Decimal(18,2)" CanBeNull="true" />
+      <Column Name="Bonus_Tax" Type="System.Decimal" DbType="Decimal(18,2)" CanBeNull="true" />
+      <Column Name="Item_Code" Type="System.String" DbType="VarChar(15)" CanBeNull="true" />
+      <Column Name="Description" Type="System.String" DbType="VarChar(200)" CanBeNull="true" />
+      <Column Name="GRN_Num" Type="System.Int32" DbType="Int" CanBeNull="true" />
+      <Column Name="Igp_Id" Type="System.Int32" DbType="Int" CanBeNull="true" />
+      <Column Name="Igp_num" Type="System.Int32" DbType="Int" CanBeNull="true" />
+      <Column Name="Igp_date" Type="System.DateTime" DbType="DateTime" CanBeNull="true" />
+      <Column Name="PO_Date" Type="System.DateTime" DbType="DateTime" CanBeNull="true" />
+      <Column Name="PO_No" Type="System.Int32" DbType="Int" CanBeNull="true" />
+      <Column Name="Rate1" Type="System.Decimal" DbType="Decimal(18,2)" CanBeNull="true" />
+    </ElementType>
+  </Function>
+  <Function Name="dbo.spGetBillServices" Method="spGetBillServices">
+    <Parameter Name="Bill_No" Parameter="bill_No" Type="System.Int64" DbType="BigInt" />
+    <ElementType Name="spGetBillServicesResult">
+      <Column Name="Receipt_Amount" Type="System.Decimal" DbType="Decimal(23,6) NOT NULL" CanBeNull="false" />
+      <Column Name="Creation_Date" Type="System.String" DbType="VarChar(8000)" CanBeNull="true" />
+      <Column Name="pat_id" Type="System.Int32" DbType="Int NOT NULL" CanBeNull="false" />
+      <Column Name="Patient_No" Type="System.Int32" DbType="Int" CanBeNull="true" />
+      <Column Name="Full_Name" Type="System.String" DbType="VarChar(100)" CanBeNull="true" />
+      <Column Name="NIC" Type="System.String" DbType="VarChar(250)" CanBeNull="true" />
+      <Column Name="Mobile1" Type="System.String" DbType="VarChar(50)" CanBeNull="true" />
+      <Column Name="Age_years" Type="System.String" DbType="VarChar(50)" CanBeNull="true" />
+      <Column Name="Permanent_Address" Type="System.String" DbType="NVarChar(350)" CanBeNull="true" />
+      <Column Name="Gender" Type="System.String" DbType="VarChar(50)" CanBeNull="true" />
+      <Column Name="Department" Type="System.String" DbType="VarChar(150) NOT NULL" CanBeNull="false" />
+      <Column Name="Emp_Name" Type="System.String" DbType="VarChar(150) NOT NULL" CanBeNull="false" />
+      <Column Name="Patient_Type" Type="System.String" DbType="VarChar(150) NOT NULL" CanBeNull="false" />
+      <Column Name="bill_ID" Type="System.Int32" DbType="Int NOT NULL" CanBeNull="false" />
+      <Column Name="Bill_No" Type="System.String" DbType="VarChar(50)" CanBeNull="true" />
+      <Column Name="Patient_ID" Type="System.Int32" DbType="Int" CanBeNull="true" />
+      <Column Name="Total_Amount" Type="System.Decimal" DbType="Decimal(18,4) NOT NULL" CanBeNull="false" />
+      <Column Name="Net_Amount" Type="System.Decimal" DbType="Decimal(18,4) NOT NULL" CanBeNull="false" />
+      <Column Name="Received_Amount" Type="System.Decimal" DbType="Decimal(18,4) NOT NULL" CanBeNull="false" />
+      <Column Name="balance_Amount" Type="System.Decimal" DbType="Decimal(18,4) NOT NULL" CanBeNull="false" />
+      <Column Name="Bill_Details_ID" Type="System.Int32" DbType="Int NOT NULL" CanBeNull="false" />
+      <Column Name="Item_Name" Type="System.String" DbType="VarChar(200)" CanBeNull="true" />
+      <Column Name="Item_Id" Type="System.Int32" DbType="Int" CanBeNull="true" />
+      <Column Name="Item_Type" Type="System.String" DbType="VarChar(20)" CanBeNull="true" />
+      <Column Name="Amount" Type="System.Decimal" DbType="Decimal(18,4) NOT NULL" CanBeNull="false" />
+      <Column Name="Discount_Amount" Type="System.Decimal" DbType="Decimal(18,4) NOT NULL" CanBeNull="false" />
+      <Column Name="Discount_Percentage" Type="System.Decimal" DbType="Decimal(18,4) NOT NULL" CanBeNull="false" />
+      <Column Name="Net_Amount1" Type="System.Decimal" DbType="Decimal(18,4) NOT NULL" CanBeNull="false" />
+      <Column Name="Qty" Type="System.Decimal" DbType="Decimal(18,2) NOT NULL" CanBeNull="false" />
+      <Column Name="Doctor_Share" Type="System.Decimal" DbType="Decimal(18,4) NOT NULL" CanBeNull="false" />
+      <Column Name="Hospital_Share" Type="System.Decimal" DbType="Decimal(19,4) NOT NULL" CanBeNull="false" />
+      <Column Name="Is_Refund" Type="System.Boolean" DbType="Bit NOT NULL" CanBeNull="false" />
+      <Column Name="Is_Refunded" Type="System.Boolean" DbType="Bit NOT NULL" CanBeNull="false" />
+      <Column Name="IsCancel" Type="System.Boolean" DbType="Bit NOT NULL" CanBeNull="false" />
+    </ElementType>
+  </Function>
+  <Function Name="dbo.spGetitemsDetailswithStock" Method="spGetitemsDetailswithStock">
+    <Parameter Name="itemId" Type="System.Int32" DbType="Int" />
+    <Parameter Name="PRDate" Parameter="pRDate" Type="System.String" DbType="VarChar(100)" />
+    <Parameter Name="Inv_org" Parameter="inv_org" Type="System.String" DbType="VarChar(50)" />
+    <ElementType Name="spGetitemsDetailswithStockResult">
+      <Column Name="Item_ID" Type="System.Int32" DbType="Int NOT NULL" CanBeNull="false" />
+      <Column Name="Item_Code" Type="System.String" DbType="VarChar(15)" CanBeNull="true" />
+      <Column Name="Description" Type="System.String" DbType="VarChar(200)" CanBeNull="true" />
+      <Column Name="Unit" Type="System.String" DbType="VarChar(150) NOT NULL" CanBeNull="false" />
+      <Column Name="Stock" Type="System.Decimal" DbType="Decimal(18,2)" CanBeNull="true" />
+      <Column Name="Active" Type="System.Boolean" DbType="Bit" CanBeNull="true" />
+      <Column Name="LastQty" Type="System.Decimal" DbType="Decimal(18,2) NOT NULL" CanBeNull="false" />
+      <Column Name="LastRequiredDate" Type="System.DateTime" DbType="DateTime" CanBeNull="true" />
     </ElementType>
   </Function>
 </Database>

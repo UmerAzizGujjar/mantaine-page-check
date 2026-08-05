@@ -356,6 +356,8 @@
                 "<td style='text-align:right;'><input type='text' name='txtUnitPrice' id='txtUnitPrice" + length + "' style='font-size:9px;width:68px!important;text-align:right;margin-top:2px;' autocomplete='off' value='" + Rate + "' onkeyup='calcutaeEstimCost(this)'/></td>" +
                 "<td style='text-align:right;'><input readonly type='text' name='txtEstimCost' id='txtEstimCost" + length + "' style='font-size:9px;width:78px!important;text-align:right;margin-top:2px;' /></td>" +
                 "<td style='text-align:left;'><input type='text' name='txtrdate' id='txtrdate" + length + "' style='font-size:9px;width:80px!important;margin-top:2px;' autocomplete='off'/></td>" +
+                "<td style='text-align:right;padding-top:7px!important;'>" + "</td>" +
+                "<td style='text-align:left;padding-top:7px!important;'>" + "</td>" +
                 "<td style='text-align:left;'><input type='text' name='remarks' id='remarks" + length + "' style='font-size:9px;width:100%;margin-top:2px;'/></td>" +
                 "<td style='display:none'>" + Item_ID + "</td>" +
                 "<td style='text-align:center;'><a href='#' onclick='Delete(this)'><i class='fa fa-trash' style='font-size:13px;margin-top:5px;color:#f30a0a;'></i></a></td>" +
@@ -417,6 +419,8 @@
                 "<td style='text-align:right;'><input type='text' name='txtUnitPrice' id='txtUnitPrice" + length + "' style='font-size:9px;width:68px!important;text-align:right;margin-top:2px;' autocomplete='off' onkeyup='calcutaeEstimCost(this)'/></td>" +
                 "<td style='text-align:right;'><input readonly type='text' name='txtEstimCost' id='txtEstimCost" + length + "' style='font-size:9px;width:78px!important;text-align:right;margin-top:2px;' /></td>" +
                 "<td style='text-align:left;'><input type='text' name='txtrdate' id='txtrdate" + length + "' style='font-size:9px;width:80px!important;margin-top:2px;' autocomplete='off'/></td>" +
+                "<td style='text-align:right;padding-top:7px!important;'>" + "</td>" +
+                "<td style='text-align:left;padding-top:7px!important;'>" + "</td>" +
                 "<td style='text-align:left;'><input type='text' name='remarks' id='remarks" + length + "' style='font-size:9px;width:100%;margin-top:2px;'/></td>" +
                 "<td style='display:none'>" + Item_ID + "</td>" +
                 "<td style='text-align:center;'><a href='#' onclick='Delete(this)'><i class='fa fa-trash' style='font-size:13px;margin-top:5px;color:#f30a0a;'></i></a></td>" +
@@ -499,6 +503,11 @@
                         return false;
                     }
                     if (parse[0].Active == true) {
+                        var lastQty = (parse[0].LastQty != null && parse[0].LastQty !== '') ? parseFloat(parse[0].LastQty).toFixed(2) : '';
+                        var lastReqDate = '';
+                        if (parse[0].LastRequiredDate != null && parse[0].LastRequiredDate !== '' && parse[0].LastRequiredDate !== 'null') {
+                            lastReqDate = $.datepicker.formatDate('dd M yy', new Date(parseInt(parse[0].LastRequiredDate.substring(6, 19))));
+                        }
                         $("#tblbodyPackage").append(
                             "<tr>" +
                             "<td style='text-align:center;padding-top:7px!important;'>" + length + "</td>" +
@@ -510,6 +519,8 @@
                             "<td style='text-align:right;'><input type='text' name='txtUnitPrice' id='txtUnitPrice" + length + "' style='font-size:9px;width:68px!important;text-align:right;margin-top:2px;' autocomplete='off' onkeyup='calcutaeEstimCost(this)'/></td>" +
                             "<td style='text-align:right;'><input readonly type='text' name='txtEstimCost' id='txtEstimCost" + length + "' style='font-size:9px;width:78px!important;text-align:right;margin-top:2px;' /></td>" +
                             "<td style='text-align:left;'><input type='text' name='txtrdate' id='txtrdate" + length + "' style='font-size:9px;width:80px!important;margin-top:2px;' autocomplete='off'/></td>" +
+                            "<td style='text-align:right;padding-top:7px!important;'>" + lastQty + "</td>" +
+                            "<td style='text-align:left;padding-top:7px!important;'>" + lastReqDate + "</td>" +
                             "<td style='text-align:left;'><input type='text' name='remarks' id='remarks" + length + "' style='font-size:9px;width:100%;margin-top:2px;'/></td>" +
                             "<td style='display:none'><input type='hidden' name='txtItemID' value='" + parse[0].Item_ID + "'/>" + parse[0].Item_ID + "</td>" +
                             "<td style='text-align:center;'><a href='#' onclick='Delete(this)'><i class='fa fa-trash' style='font-size:13px;margin-top:5px;color:#f30a0a;'></i></a></td>" +
@@ -667,11 +678,11 @@
                 var UnitPrice = $(row).find('td:eq(6) input').val();
                 var EstimateCost = $(row).find('td:eq(7) input').val();
                 var RDate = $(row).find('input[name=txtrdate]').val();
-                var Remarks = $(row).find('td:eq(9) input').val();
-                var itemId = $(row).find('td:eq(10)').text();
-                var MaterialRequestDetail_Id = $(row).find('td:eq(12)').text();
-                var MaterialRequest_Id = $(row).find('td:eq(13)').text();
-                var Req_Num = $(row).find('td:eq(14)').text();
+                var Remarks = $(row).find('td:eq(11) input').val();
+                var itemId = $(row).find('td:eq(12)').text();
+                var MaterialRequestDetail_Id = $(row).find('td:eq(14)').text();
+                var MaterialRequest_Id = $(row).find('td:eq(15)').text();
+                var Req_Num = $(row).find('td:eq(16)').text();
                 if (Qty && RDate && itemId) {
                     detailAry.push({ Qty: Qty, UnitPrice: UnitPrice, EstimateCost: EstimateCost, RDate: RDate, Remarks: Remarks, PRId: id, itemId: itemId, MaterialRequestDetail_Id: MaterialRequestDetail_Id, MaterialRequest_Id: MaterialRequest_Id, Req_Num: Req_Num });
                 }
@@ -787,6 +798,13 @@
                         var len = key + 1;
                         var uom = parse[key].UOM;
                         if (uom == null || uom == 'NULL' || uom == 'null') { uom = ""; }
+
+                        var lastReqDateDisplay = '';
+                        if (parse[key].LastRequiredDate) {
+                            var lastDateObj = new Date(parseInt(parse[key].LastRequiredDate.substring(6, 19)));
+                            lastReqDateDisplay = $.datepicker.formatDate('dd M yy', lastDateObj);
+                        }
+
                         row +=
                             '<tr>' +
                             '<td style="text-align:center;padding-top:7px!important;">' + len + '</td>' +
@@ -798,6 +816,8 @@
                             '<td style="text-align:right;"><input type="text" value="' + parseFloat(parse[key].UnitPrice).toFixed(2) + '" name="txtUnitPrice" id="txtUnitPrice' + counter + '" style="font-size:9px;width:68px!important;text-align:right;margin-top:2px;" autocomplete="off" onkeyup="calcutaeEstimCost(this)"/></td>' +
                             '<td style="text-align:right;"><input readonly type="text" value="' + parseFloat(parse[key].EstimateCost).toFixed(2) + '" name="txtEstimCost" id="txtEstimCost' + counter + '" style="font-size:9px;width:78px!important;text-align:right;margin-top:2px;" autocomplete="off"/></td>' +
                             '<td style="text-align:left;"><input type="text" name="txtrdate" id="txtrdate' + counter + '" style="font-size:9px;width:80px!important;margin-top:2px;" value="' + datetime + '"/></td>' +
+                            '<td style="text-align:right;padding-top:7px!important;">' + (parse[key].LastQty || 0) + '</td>' +
+                            '<td style="text-align:left;padding-top:7px!important;">' + lastReqDateDisplay + '</td>' +
                             '<td style="text-align:left;"><input type="text" name="remarks" id="remarks' + counter + '" style="font-size:9px;width:100%;margin-top:2px;" value="' + parse[key].Remarks + '"/></td>' +
                             '<td style="display:none">' + parse[key].itemId + '</td>' +
                             '<td style="text-align:center;"><a href="#" onclick="Delete(this)"><i class="fa fa-trash" style="font-size:13px;margin-top:5px;color:#f30a0a;"></i></a></td>' +
@@ -1186,6 +1206,8 @@
                     <th style="width:9%;  text-align:right;">Unit Price</th>
                     <th style="width:10%; text-align:right;">Estimated Cost</th>
                     <th style="width:10%; text-align:left;">Required Date</th>
+                    <th style="width:6%;  text-align:right;">Last Qty</th>   
+                    <th style="width:10%; text-align:left;">Last PR Date</th>
                     <th style="width:15%; text-align:left;">Remarks</th>
                     <th style="width:6%;  text-align:center;">Action</th>
                     <th style="display:none;">MaterialRequestDetail Id</th>

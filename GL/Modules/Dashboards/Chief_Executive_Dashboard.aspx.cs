@@ -67,15 +67,21 @@ namespace PMS.Modules.Dashboards
 
                 using (DataBaseDataContext db = new DataBaseDataContext())
                 {
+                    decimal RegSum = (from p in db.Reg_patients
+                                          where p.Created_time >= sDate && p.Created_time <= eDate
+                                          select (decimal?)p.Card_fee).Sum() ?? 0;
                     decimal patientSum = (from p in db.Patients
                                           where p.Created_Time >= sDate && p.Created_Time <= eDate
                                           select (decimal?)p.Receipt_Amount).Sum() ?? 0;
 
                     decimal billingSum = (from b in db.Ar_Billings
-                                          where b.Creation_Date >= sDate && b.Creation_Date <= eDate
+                                          where b.Creation_Date >= sDate && b.Creation_Date <= eDate && (b.IsPharmacy == null || b.IsPharmacy == false)
                                           select (decimal?)b.Received_Amount).Sum() ?? 0;
+                    decimal PharSum = (from b in db.Ar_Billings
+                                          where b.Creation_Date >= sDate && b.Creation_Date <= eDate && b.IsPharmacy == true && b.Ware_House == "008"
+                                       select (decimal?)b.Received_Amount).Sum() ?? 0;
 
-                    decimal totalRevenue = patientSum + billingSum;
+                    decimal totalRevenue = patientSum + billingSum + RegSum + PharSum;
 
                     return new JavaScriptSerializer().Serialize(new
                     {
@@ -128,7 +134,37 @@ namespace PMS.Modules.Dashboards
                     decimal pharmacySum = (from b in db.Ar_Billings
                                            where b.Creation_Date >= sDate &&
                                                  b.Creation_Date <= eDate &&
-                                                 b.IsPharmacy == true 
+                                                 b.IsPharmacy == true  &&
+                                                 b.Ware_House == "008"
+                                           select (decimal?)b.Received_Amount).Sum() ?? 0;
+
+                    return new JavaScriptSerializer().Serialize(new
+                    {
+                        PharmacyRevenue = pharmacySum
+                    });
+                }
+            }
+            catch (Exception ex)
+            {
+                return new JavaScriptSerializer().Serialize(new { Error = ex.Message });
+            }
+        }
+
+        [WebMethod(EnableSession = false)]
+        public static string GetPBRevenue(string period, string startDate = null, string endDate = null)
+        {
+            try
+            {
+                DateTime sDate, eDate;
+                ResolveDates(period, startDate, endDate, out sDate, out eDate);
+
+                using (DataBaseDataContext db = new DataBaseDataContext())
+                {
+                    decimal pharmacySum = (from b in db.Ar_Billings
+                                           where b.Creation_Date >= sDate &&
+                                                 b.Creation_Date <= eDate &&
+                                                 b.IsPharmacy == true  &&
+                                                 b.Ware_House == "009"
                                            select (decimal?)b.Received_Amount).Sum() ?? 0;
 
                     return new JavaScriptSerializer().Serialize(new
@@ -732,6 +768,7 @@ WHERE m.Creation_Date >= @s AND m.Creation_Date <= @e", conn))
                 var monthPatients = new Dictionary<string, decimal>();
                 var monthBillings = new Dictionary<string, decimal>();
                 var monthPharmacy = new Dictionary<string, decimal>();
+                var monthPB = new Dictionary<string, decimal>();
                 var monthLab = new Dictionary<string, decimal>();
 
                 using (var conn = new System.Data.SqlClient.SqlConnection(
@@ -771,7 +808,7 @@ WHERE m.Creation_Date >= @s AND m.Creation_Date <= @e", conn))
 
                     using (var cmd = new System.Data.SqlClient.SqlCommand(
                         @"SELECT YEAR(Creation_Date) AS Yr, MONTH(Creation_Date) AS Mn, ISNULL(SUM(Received_Amount), 0) AS val
-                          FROM Ar_Billings WHERE Creation_Date >= @ts AND Creation_Date < @te AND IsPharmacy = 1
+                          FROM Ar_Billings WHERE Creation_Date >= @ts AND Creation_Date < @te AND IsPharmacy = 1 and Ware_House = '008'
                           GROUP BY YEAR(Creation_Date), MONTH(Creation_Date)", conn))
                     {
                         cmd.Parameters.AddWithValue("@ts", trendStart);
@@ -781,6 +818,21 @@ WHERE m.Creation_Date >= @s AND m.Creation_Date <= @e", conn))
                             {
                                 string key = r["Yr"].ToString() + "-" + r["Mn"].ToString().PadLeft(2, '0');
                                 monthPharmacy[key] = (decimal)r["val"];
+                            }
+                    }
+
+                    using (var cmd = new System.Data.SqlClient.SqlCommand(
+                        @"SELECT YEAR(Creation_Date) AS Yr, MONTH(Creation_Date) AS Mn, ISNULL(SUM(Received_Amount), 0) AS val
+                          FROM Ar_Billings WHERE Creation_Date >= @ts AND Creation_Date < @te AND IsPharmacy = 1 and Ware_House = '009'
+                          GROUP BY YEAR(Creation_Date), MONTH(Creation_Date)", conn))
+                    {
+                        cmd.Parameters.AddWithValue("@ts", trendStart);
+                        cmd.Parameters.AddWithValue("@te", trendEnd);
+                        using (var r = cmd.ExecuteReader())
+                            while (r.Read())
+                            {
+                                string key = r["Yr"].ToString() + "-" + r["Mn"].ToString().PadLeft(2, '0');
+                                monthPB[key] = (decimal)r["val"];
                             }
                     }
 
@@ -802,7 +854,7 @@ WHERE m.Creation_Date >= @s AND m.Creation_Date <= @e", conn))
                             }
                     }
 
-                    decimal curP = 0, curB = 0, curPh = 0, curL = 0;
+                    decimal curP = 0, curB = 0, curPh = 0,curPBh = 0, curL = 0;
 
                     using (var cmd = new System.Data.SqlClient.SqlCommand(
                         "SELECT ISNULL(SUM(Receipt_Amount), 0) FROM Patients WHERE Created_Time >= @cs AND Created_Time <= @ce", conn))
@@ -821,11 +873,27 @@ WHERE m.Creation_Date >= @s AND m.Creation_Date <= @e", conn))
                     }
 
                     using (var cmd = new System.Data.SqlClient.SqlCommand(
-                        "SELECT ISNULL(SUM(Received_Amount), 0) FROM Ar_Billings WHERE Creation_Date >= @cs AND Creation_Date <= @ce AND IsPharmacy = 1", conn))
+                        "SELECT ISNULL(SUM(Received_Amount), 0) FROM Ar_Billings WHERE Creation_Date >= @cs AND Creation_Date <= @ce AND IsPharmacy = 1 and Ware_House = '008'", conn))
                     {
                         cmd.Parameters.AddWithValue("@cs", endMonthStart);
                         cmd.Parameters.AddWithValue("@ce", endPointEnd);
                         curPh = (decimal)cmd.ExecuteScalar();
+                    }
+
+                    using (var cmd = new System.Data.SqlClient.SqlCommand(
+                        "SELECT ISNULL(SUM(Received_Amount), 0) FROM Ar_Billings WHERE Creation_Date >= @cs AND Creation_Date <= @ce AND IsPharmacy = 1 and Ware_House = '009'", conn))
+                    {
+                        cmd.Parameters.AddWithValue("@cs", endMonthStart);
+                        cmd.Parameters.AddWithValue("@ce", endPointEnd);
+                        curPh = (decimal)cmd.ExecuteScalar();
+                    }
+
+                    using (var cmd = new System.Data.SqlClient.SqlCommand(
+                        "SELECT ISNULL(SUM(Received_Amount), 0) FROM Ar_Billings WHERE Creation_Date >= @cs AND Creation_Date <= @ce AND IsPharmacy = 1", conn))
+                    {
+                        cmd.Parameters.AddWithValue("@cs", endMonthStart);
+                        cmd.Parameters.AddWithValue("@ce", endPointEnd);
+                        curPBh = (decimal)cmd.ExecuteScalar();
                     }
 
                     using (var cmd = new System.Data.SqlClient.SqlCommand(
@@ -845,6 +913,7 @@ WHERE m.Creation_Date >= @s AND m.Creation_Date <= @e", conn))
                     var hospital = new List<decimal>();
                     var opd = new List<decimal>();
                     var pharmacy = new List<decimal>();
+                    var PB = new List<decimal>();
                     var lab = new List<decimal>();
 
                     for (var d = trendStart; d < trendEnd; d = d.AddMonths(1))
@@ -856,6 +925,7 @@ WHERE m.Creation_Date >= @s AND m.Creation_Date <= @e", conn))
                         hospital.Add(pv + bv);
                         opd.Add(pv);
                         pharmacy.Add(monthPharmacy.ContainsKey(key) ? monthPharmacy[key] : 0);
+                        PB.Add(monthPB.ContainsKey(key) ? monthPB[key] : 0);
                         lab.Add(monthLab.ContainsKey(key) ? monthLab[key] : 0);
                     }
 
@@ -863,6 +933,7 @@ WHERE m.Creation_Date >= @s AND m.Creation_Date <= @e", conn))
                     hospital.Add(curP + curB);
                     opd.Add(curP);
                     pharmacy.Add(curPh);
+                    PB.Add(curPBh);
                     lab.Add(curL);
 
                     return new JavaScriptSerializer().Serialize(new
@@ -871,6 +942,7 @@ WHERE m.Creation_Date >= @s AND m.Creation_Date <= @e", conn))
                         hospital = hospital,
                         opd = opd,
                         pharmacy = pharmacy,
+                        PB = PB,
                         lab = lab
                     });
                 }

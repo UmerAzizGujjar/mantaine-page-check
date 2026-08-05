@@ -138,6 +138,7 @@ namespace PMS
 
                     case "SIHD":
                         vendorDiv.Visible = true;
+                        tr_Export.Visible = true;
                         stockDiv.Visible = false;
                         accountDiv.Visible = false;
                         vendorTypeDiv.Visible = false;
@@ -263,7 +264,7 @@ namespace PMS
                     query = "ReportName=PharmacyStock&ReportTitle=Stock In Hand &Stock=" + ddlStock.SelectedValue + "";
                     break;
                 case "SIHD":
-                    query = "ReportName=PharmacyStockDetail&ReportTitle=Stock In Hand Detail from " + txtStart_Date.Text + " to " + txtEnd_Date.Text + "&startDate=" + txtStart_Date.Text + "&endDate=" + txtEnd_Date.Text + "&WareHouse=" + ddlVendor.SelectedValue;
+                    query = "ReportName=PharmacyStockDetail&ReportTitle=Stock In Hand Detail from " + txtStart_Date.Text + " to " + txtEnd_Date.Text + "&startDate=" + txtStart_Date.Text + "&endDate=" + txtEnd_Date.Text + "&WareHouse=" + ddlVendor.SelectedValue + "&ExportPDF=" + chkExportPDF.Checked;
                     break;
 
                 case "Stock_Consumption_Details":

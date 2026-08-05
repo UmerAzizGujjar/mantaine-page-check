@@ -1429,17 +1429,30 @@
                 });
             }
 
-            function LoadMainDepartment() {
-                //var options = ''
-                PageMethods.GetMainDepartment(function (data) {
-                    var options = '<option value="0" >Please Select</option>';
-                    $.each(JSON.parse(data), function (key, value) {
-                        options += '<option value="' + value.DataValue_Name + '" >' + value.DataValue_Description + '</option>';
+                  function LoadMainDepartment(callback) {
+                    PageMethods.GetMainDepartment(function (data) {
+                        var options = '<option value="0" >Please Select</option>';
+                        $.each(JSON.parse(data), function (key, value) {
+                            options += '<option value="' + value.DataValue_Name + '" >' + value.DataValue_Description + '</option>';
+                        });
+
+                        var savedVal = $('#txtMaindepartment').val();
+                        if (!savedVal || savedVal === "0") {
+                            savedVal = $('#hdnMainDepartmentFallback').val();
+                        }
+
+                        $('#txtMaindepartment').html(options);
+                        $('#txtMaindepartment').attr('disabled', true);
+
+                        if (savedVal && savedVal !== "0" && savedVal !== "") {
+                            $('#txtMaindepartment').val(savedVal);
+                        }
+
+                        if (typeof callback === 'function') {
+                            callback();
+                        }
                     });
-                    $('#txtMaindepartment').html(options);
-                    $('#txtMaindepartment').attr('disabled', true);
-                });
-            }
+                }
             function LoadBillDepartment() {
                 //var options = ''
                 PageMethods.GetSubdepartments(function (data) {
@@ -1623,8 +1636,19 @@
                     setTimeout(function () {
                         $('#ddl_Bank').val(data[0].Bank_Account).trigger('change');
                     }, 1000)
+
                     setTimeout(function () {
-                        $('#txtMaindepartment').val(data[0].Main_Department).trigger('change');
+                        var mainDept = data[0].Main_Department;
+                        $('#hdnMainDepartmentFallback').val(mainDept);
+    
+                        var optionExists = $('#txtMaindepartment option[value="' + mainDept + '"]').length > 0;
+                        if (optionExists) {
+                            $('#txtMaindepartment').val(mainDept).trigger('change');
+                        } else {
+                            LoadMainDepartment(function () {
+                                $('#txtMaindepartment').val(mainDept).trigger('change');
+                            });
+                        }
                     }, 1000)
 
 
@@ -1903,6 +1927,14 @@
                         var Bank_Account = $('#ddl_Bank').val();
                         var Bank_Cash = $('#txtbankcash').val();
                         var Main_Department = $('#txtMaindepartment').val();
+
+                        if (!Main_Department || Main_Department === "0" || Main_Department === "") {
+                            Main_Department = $('#hdnMainDepartmentFallback').val();
+                        }
+
+                        if (!Main_Department) {
+                            Main_Department = "0"; 
+                        }
                         debugger;
                         var PackageType = $('#hdn_pkgtype').val();
                         var PackageName = $('#hdn_pkgname').val();
@@ -6062,11 +6094,17 @@
                     var Patient_ID = $('#hdfPatient_ID').val();
 
                     if (data.d.MainDepartment) {
-                        if ($('#txtMaindepartment option').length > 1) {
-                            $('#txtMaindepartment').val(data.d.MainDepartment).trigger('change');
+                        $('#hdnMainDepartmentFallback').val(data.d.MainDepartment);
+    
+                        var deptVal = data.d.MainDepartment;
+    
+                        var optionExists = $('#txtMaindepartment option[value="' + deptVal + '"]').length > 0;
+    
+                        if (optionExists) {
+                            $('#txtMaindepartment').val(deptVal).trigger('change');
                         } else {
                             LoadMainDepartment(function () {
-                                $('#txtMaindepartment').val(data.d.MainDepartment).trigger('change');
+                                $('#txtMaindepartment').val(deptVal).trigger('change');
                             });
                         }
                     }
@@ -8027,6 +8065,7 @@
          <input type="hidden" name="hdn_docid" value="0" id="hdn_docid" />
          <input type="hidden" name="hdn_finalBill"  id="hdn_finalBill" />
         <input type="hidden" name="hdnAppointment_ID" value="0" id="hdnAppointment_ID" />
+        <input type="hidden" id="hdnMainDepartmentFallback" value="" />     
        <div class="row">
            <div class="col-md-2 text-end">
             <input type="button" value="Add Patient" id="btnSearchPatient" onclick="OpenModal()" class="btn-primry" style="border-radius: 28px; width: 100%;" />
