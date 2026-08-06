@@ -10,6 +10,7 @@
         var satisfactionChartInstance = null;
         var deptPctChart = null;
         var deptCountChart = null;
+        var deptDoctorChart = null;
         var _sparkCharts = {};
 
         function setPeriod(period, startDate, endDate) {
@@ -752,7 +753,13 @@
                         tooltip: { trigger: 'item', formatter: '{b}: {c} ({d}%)' },
                         series: [{
                             type: 'pie', radius: ['45%', '75%'], center: ['50%', '50%'],
-                            avoidLabelOverlap: false, label: { show: false },
+                            avoidLabelOverlap: false,
+                            label: {
+                                show: labels.length > 0,
+                                formatter: function (p) { return Math.round(p.percent) + '%'; },
+                                fontSize: 11, fontWeight: 'bold', color: '#000'
+                            },
+                            labelLine: { show: labels.length > 0 },
                             data: chartData
                         }]
                     });
@@ -772,6 +779,52 @@
                 },
                 error: function (xhr, status, error) {
                     console.error("Dept Stats AJAX Error:", status, error, xhr.responseText);
+                }
+            });
+
+            $.ajax({
+                type: "POST",
+                url: "Chief_Executive_Dashboard.aspx/GetDoctorWise",
+                data: JSON.stringify({ txt_sdate: startDate, txt_edate: endDate }),
+                contentType: "application/json; charset=utf-8",
+                dataType: "json",
+                success: function (response) {
+                    var parsedData = typeof response.d === 'string' ? JSON.parse(response.d) : response.d;
+                    if (parsedData && parsedData.Error) { console.error("Doctor Stats Error:", parsedData.Error); return; }
+                    var dLabels = [], dCounts = [];
+                    if (parsedData && parsedData.length > 0) {
+                        parsedData.forEach(function (item) {
+                            var n = item.Doctor_Name ? item.Doctor_Name.trim() : '';
+                            if (n !== '') { dLabels.push(n); dCounts.push(parseFloat(item.Total_Count) || 0); }
+                        });
+                    }
+                    var colors = ['#2E93fA', '#66DA26', '#FF9800', '#FF4560', '#546E7A', '#00E396', '#FEB019', '#A45DE8', '#26a69a', '#FF9F43'];
+                    var docData = dLabels.length > 0 ? dLabels.map(function (l, i) {
+                        return { value: dCounts[i], name: l, itemStyle: { color: colors[i % colors.length] } };
+                    }) : [{ value: 1, name: 'No Data', itemStyle: { color: '#e5e7eb' } }];
+
+                    if (deptDoctorChart) deptDoctorChart.dispose();
+                    deptDoctorChart = echarts.init(document.querySelector("#chartDeptDoctor"));
+                    deptDoctorChart.setOption({
+                        tooltip: { trigger: 'item', formatter: '{b}: {c} ({d}%)' },
+                        legend: { bottom: 0, left: 'center', type: 'scroll', icon: 'circle', itemWidth: 8, itemHeight: 8, textStyle: { fontSize: 9 }, pageIconSize: 10 },
+                        series: [{
+                            type: 'pie', radius: ['45%', '75%'], center: ['50%', '45%'],
+                            avoidLabelOverlap: false,
+                            label: {
+                                show: dLabels.length > 0,
+                                formatter: function (p) {
+                                    return p.name.length > 18 ? p.name.substring(0, 17) + '…' : p.name;
+                                },
+                                fontSize: 10, fontWeight: 'bold', color: '#000'
+                            },
+                            labelLine: { show: dLabels.length > 0 },
+                            data: docData
+                        }]
+                    });
+                },
+                error: function (xhr, status, error) {
+                    console.error("Doctor Stats AJAX Error:", status, error, xhr.responseText);
                 }
             });
         }
@@ -2021,6 +2074,10 @@
                 <div class="main-sub">
                     <div class="ms-title">Department Wise (With Counts)</div>
                     <div class="dept-chart-wrap"><div id="chartDeptCount" style="height:100%;width:100%;"></div></div>
+                </div>
+                <div class="main-sub">
+                    <div class="ms-title">Doctor Wise</div>
+                    <div class="dept-chart-wrap"><div id="chartDeptDoctor" style="height:100%;width:100%;"></div></div>
                 </div>
             </div>
         </div>
