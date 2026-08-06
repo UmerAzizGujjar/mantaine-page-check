@@ -245,6 +245,7 @@
 
                             '<td><input type="text" style="width:61px !important;text-align:center;font-size:9px;height:21px !important;" name="txtMfgdate" id="txtMfgdate' + (key + 1) + '"  value="' + MfgDate + '" readonly="readonly"/></td>' +
                             '<td><input type="text" style="width:61px !important;text-align:center;font-size:9px;height:21px !important;" name="Expdate" id="Expdate' + (key + 1) + '"  value="' + ExpiryDate + '" readonly="readonly"/></td>' +
+                            '<td><input type="text" style="width:65px !important;text-align:right;font-size:9px;height:21px !important;" name="SaleRate" id="SaleRate' + (key + 1) + '"  value="' + (value.Sale_Rate != null ? value.Sale_Rate : '') + '"/></td>' +
                             '<td style="display:none"><input type="hidden" style="width:61px !important;text-align:center;font-size:9px;height:21px !important;" name="Isbatch" id="Isbatch' + rowlength + '" value="' + value.IsBatch + '" readonly="readonly"/></td>' +
                             '<td style="display:none;width:50px !important;text-align:right;font-size:9px;height:10px !important;"><input type="text" style="width:50px !important;text-align:right;font-size:9px;height:21px !important;position: relative;" value="0"  id="RejQty' + rowlength + '" name="RejQty"></input></td>' +
                             '<td><a href="javascript:void(0)" onclick="ExcludeFromPayment(this)"><i class="glyphicon glyphicon-trash" style="font-size: 13px;color: #f30a0a;position:relative;" i=""></i></a></td>' +
@@ -338,6 +339,9 @@
                     $($(value).find('td input[name=BatchNo]')[0]).prop('readonly', true);
                     $($(value).find('td input[name=txtMfgdate]')[0]).attr('disabled', true);
                     $($(value).find('td input[name=Expdate]')[0]).attr('disabled', true);
+                    $($(value).find('td input[name=SaleRate]')[0]).prop('readonly', true);
+                } else {
+                    $($(value).find('td input[name=SaleRate]')[0]).prop('readonly', false);
                 }
             });
             disablepo();
@@ -576,7 +580,7 @@
                 debugger;
                 table.find('tr').each(function (key, value) {
                     debugger;
-                    Item_list.push({ 'PODetailId': $(value).find('td input[name=txtPODetailId]').val(), 'ItemCode': $(value).find('td input[name=txtItemCode]').val(), 'RcvQty': $(value).find('td input[name=RcvQty]').val(), 'POQty': $(value).find('td input[name=POQty]').val(), 'BatchNo': $(value).find('td input[name=BatchNo]').val(), 'txtuomqty': $(value).find('td input[name=txtuomqty]').val(), 'BlncQty': $(value).find('td input[name=blncQty]').val(), 'IgpQty': $(value).find('td input[name=IgpQty]').val(), 'InspecQty': $(value).find('td input[name=InspQty]').val(), 'BounusQty': $(value).find('td input[name=BounusQty]').val(), 'Mfgdate': $(value).find('td input[name=txtMfgdate]').val(), 'Expdate': $(value).find('td input[name=Expdate]').val(), });
+                    Item_list.push({ 'PODetailId': $(value).find('td input[name=txtPODetailId]').val(), 'ItemCode': $(value).find('td input[name=txtItemCode]').val(), 'RcvQty': $(value).find('td input[name=RcvQty]').val(), 'POQty': $(value).find('td input[name=POQty]').val(), 'BatchNo': $(value).find('td input[name=BatchNo]').val(), 'txtuomqty': $(value).find('td input[name=txtuomqty]').val(), 'BlncQty': $(value).find('td input[name=blncQty]').val(), 'IgpQty': $(value).find('td input[name=IgpQty]').val(), 'InspecQty': $(value).find('td input[name=InspQty]').val(), 'BounusQty': $(value).find('td input[name=BounusQty]').val(), 'Mfgdate': $(value).find('td input[name=txtMfgdate]').val(), 'Expdate': $(value).find('td input[name=Expdate]').val(), 'SaleRate': $(value).find('td input[name=SaleRate]').val(), });
                 });
                 var AllItemDetail = { 'Igp_num': IgpNo, 'Date': date, 'Vendor': Vendor, 'DriverName': DriverName, 'VehicleNum': VehicleNum, 'BilityNum': Bility_No, 'remarks': Remarks, 'InvOrg': InvOrg, 'ItemList': Item_list };
                 PageMethods.SaveIgpDetail(btnSave, JSON.stringify(AllItemDetail), function (res) {
@@ -803,6 +807,7 @@
 
                             '<td><input type="text" style="width:61px !important;text-align:center;font-size:9px;height:21px !important;" name="txtMfgdate" id="txtMfgdate' + (key + 1) + '" value="' + formattedDate + '"/></td>' +
                             '<td><input type="text" style="width:61px !important;text-align:center;font-size:9px;height:21px !important;" name="Expdate" id="Expdate' + (key + 1) + '" value="" readonly="readonly"/></td>' +
+                            '<td><input type="text" style="width:65px !important;text-align:right;font-size:9px;height:21px !important;" name="SaleRate" id="SaleRate' + rowlength + '" value=""/></td>' +
                             '<td style="display:none"><input type="hidden" style="width:61px !important;text-align:center;font-size:9px;height:21px !important;" name="Isbatch" id="Isbatch' + rowlength + '" value="' + value.IsBatch + '" readonly="readonly"/></td>' +
                             '<td style="display:none;width:50px !important;text-align:right;font-size:9px;height:10px !important;"><input type="text" style="width:50px !important;text-align:right;font-size:9px;height:21px !important;position: relative;" value="0" id="RejQty' + rowlength + '" name="RejQty"></input></td>' +
                             '<td><a href="javascript:void(0)" onclick="ExcludeFromPayment(this)"><i class="glyphicon glyphicon-trash" style="font-size:11px;color: #f30a0a;position:relative;"></i></a> </td>' +
@@ -1320,6 +1325,7 @@
                         <th style="width: 40px; text-align: center;">Bounus Qty</th>
                         <th style="width: 30px; text-align: center;">Mfg Date</th>
                         <th style="width: 30px; text-align: center;">Exp Date</th>
+                        <th style="width: 40px; text-align: center;">Sale Rate</th>
                         <th style="width: 40px; display: none; text-align: center;">Rej Qty</th>
                         <th style="width: 40px; text-align: center;">Action</th>
                     </tr>
