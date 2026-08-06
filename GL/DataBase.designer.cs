@@ -5777,18 +5777,18 @@ namespace PMS
             return ((ISingleResult<spGetitemsDetailswithStockResult>)(result.ReturnValue));
         }
 
-        [global::System.Data.Linq.Mapping.FunctionAttribute(Name = "dbo.sp_AutoGRN")]
-        public ISingleResult<sp_AutoGRNResult> sp_AutoGRN([global::System.Data.Linq.Mapping.ParameterAttribute(DbType = "BigInt")] System.Nullable<long> igpID, [global::System.Data.Linq.Mapping.ParameterAttribute(DbType = "UniqueIdentifier")] System.Nullable<System.Guid> user_id)
-        {
-            IExecuteResult result = this.ExecuteMethodCall(this, ((MethodInfo)(MethodInfo.GetCurrentMethod())), igpID, user_id);
-            return ((ISingleResult<sp_AutoGRNResult>)(result.ReturnValue));
-        }
-
         [global::System.Data.Linq.Mapping.FunctionAttribute(Name = "dbo.sp_LoadGRNDetailByGRNId")]
         public ISingleResult<sp_LoadGRNDetailByGRNIdResult> sp_LoadGRNDetailByGRNId([global::System.Data.Linq.Mapping.ParameterAttribute(Name = "GRNId", DbType = "Int")] System.Nullable<int> gRNId)
         {
             IExecuteResult result = this.ExecuteMethodCall(this, ((MethodInfo)(MethodInfo.GetCurrentMethod())), gRNId);
             return ((ISingleResult<sp_LoadGRNDetailByGRNIdResult>)(result.ReturnValue));
+        }
+
+        [global::System.Data.Linq.Mapping.FunctionAttribute(Name = "dbo.sp_AutoGRN")]
+        public ISingleResult<sp_AutoGRNResult> sp_AutoGRN([global::System.Data.Linq.Mapping.ParameterAttribute(DbType = "BigInt")] System.Nullable<long> igpID, [global::System.Data.Linq.Mapping.ParameterAttribute(DbType = "UniqueIdentifier")] System.Nullable<System.Guid> user_id)
+        {
+            IExecuteResult result = this.ExecuteMethodCall(this, ((MethodInfo)(MethodInfo.GetCurrentMethod())), igpID, user_id);
+            return ((ISingleResult<sp_AutoGRNResult>)(result.ReturnValue));
         }
     }
 
@@ -243622,32 +243622,6 @@ namespace PMS
         }
     }
 
-    public partial class sp_AutoGRNResult
-    {
-
-        private string _Message;
-
-        public sp_AutoGRNResult()
-        {
-        }
-
-        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_Message", DbType = "VarChar(500)")]
-        public string Message
-        {
-            get
-            {
-                return this._Message;
-            }
-            set
-            {
-                if ((this._Message != value))
-                {
-                    this._Message = value;
-                }
-            }
-        }
-    }
-
     public partial class sp_LoadGRNDetailByGRNIdResult
     {
 
@@ -243993,6 +243967,32 @@ namespace PMS
                 if ((this._PO_No != value))
                 {
                     this._PO_No = value;
+                }
+            }
+        }
+    }
+
+    public partial class sp_AutoGRNResult
+    {
+
+        private string _Message;
+
+        public sp_AutoGRNResult()
+        {
+        }
+
+        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_Message", DbType = "VarChar(500)")]
+        public string Message
+        {
+            get
+            {
+                return this._Message;
+            }
+            set
+            {
+                if ((this._Message != value))
+                {
+                    this._Message = value;
                 }
             }
         }

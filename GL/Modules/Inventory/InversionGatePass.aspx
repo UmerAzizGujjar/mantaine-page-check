@@ -520,7 +520,24 @@
                                 }
                             });
                         }
+                        var saleRateVal = $($(value).find('td input[name=SaleRate]')[0]).val();
+                        if (saleRateVal == "" || saleRateVal == null || parseFloat(saleRateVal) <= 0) {
+                            proceed = false;
+                            Swal.fire({
+                                icon: 'error',
+                                title: 'Error!',
+                                text: 'Sale Rate is compulsory for batch items. Please enter Sale Rate for Item Code ' + item_code,
+                                showConfirmButton: false,
+                                timer: 2000,
+                                customClass: {
+                                    popup: 'swal-big-popup',
+                                    title: 'swal-big-title',
+                                    htmlContainer: 'swal-big-text'
+                                }
+                            });
+                        }
                     }
+
                     if (Isbatch == "false" || Isbatch == 'null' || Isbatch == null) {
                         debugger;
                         var message = "Batch is false,You can't enter batch number against Item Code " + item_code + ",Please check batch to true in items";
