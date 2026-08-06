@@ -19,7 +19,26 @@ namespace PMS
 
 
         [WebMethod]
-        public static object ViewList(int draw, int start, int length, string sortColumn, string sortColumnDirection, string searchValue)
+        public static string GetWarehouses()
+        {
+            using (DataBaseDataContext db = new DataBaseDataContext())
+            {
+                var result = (from dv in db.DataValues
+                              join ds in db.ValueSets
+                              on dv.ValueSet_ID equals ds.ValueSet_ID
+                              where ds.ValueSet_Name == "Ware House"
+                              select new
+                              {
+                                  dv.DataValue_Name,
+                                  dv.DataValue_Description
+                              }).ToList();
+
+                return new JavaScriptSerializer().Serialize(result);
+            }
+        }
+
+        [WebMethod]
+        public static object ViewList(int draw, int start, int length, string sortColumn, string sortColumnDirection, string searchValue, string warehouseId)
         {
             try
             {
@@ -30,6 +49,7 @@ namespace PMS
                     var Total_Billings = _dbContext.Ar_Billings.Count();
                     var IssueMedicine = from AB in _dbContext.Ar_Billings
                                         where AB.IsPharmacy == true &&
+                                              (string.IsNullOrEmpty(warehouseId) || warehouseId == "0" || AB.Ware_House == warehouseId) &&
                                               (
                                                   (AB.Customer_Name != null && AB.Customer_Name.Contains(searchValue)) ||
                                                   (AB.Referred_By_value != null && AB.Referred_By_value.Contains(searchValue)) ||
@@ -51,6 +71,7 @@ namespace PMS
                                             FBR_Number = AB.FBR_No ?? "",
                                             Pharma_trans_Type = AB.Pharma_trans_Type,
                                             pharmacy_Department = _dbContext.GetDataValueName("Patient Main Category", AB.pharmacy_Department),
+                                            WareHouse = _dbContext.GetDataValueName("Ware House", AB.Ware_House) ?? "",
                                         };
 
                     var FilteredCount = IssueMedicine.Count();

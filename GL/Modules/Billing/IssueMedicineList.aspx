@@ -6,9 +6,35 @@
 
         $(document).ready(function () {
             $('#ctl00_lblMessage').hide();
+            LoadWarehouseDropdown();
             LoadPage();
 
         });
+        function LoadWarehouseDropdown() {
+            $.ajax({
+                type: "POST",
+                url: "IssueMedicineList.aspx/GetWarehouses",
+                data: '{}',
+                contentType: "application/json; charset=utf-8",
+                dataType: "json",
+                success: function (response) {
+                    try {
+                        var data = JSON.parse(response.d);
+                        var options = '<option value="0">All Warehouses</option>';
+                        $.each(data, function (key, value) {
+                            options += '<option value="' + value.DataValue_Name + '">' + value.DataValue_Description + '</option>';
+                        });
+                        $('#ddlWarehouse').html(options);
+                        $('#ddlWarehouse').select2();
+                    } catch (e) {
+                        console.error("Error parsing warehouses: ", e);
+                    }
+                },
+                error: function (xhr, status, error) {
+                    console.error("Failed to load warehouses: ", error);
+                }
+            });
+        }
         function IncrementReprintCount(billId) {
             if (!billId || billId == '0' || billId == '') return;
 
@@ -101,7 +127,8 @@
                             length: data.length,
                             sortColumn: data.columns[data.order[0].column].name,
                             sortColumnDirection: data.order[0].dir,
-                            searchValue: data.search.value
+                            searchValue: data.search.value,
+                            warehouseId: ($('#ddlWarehouse').val() || '0')
                         }),
                         contentType: "application/json; charset=utf-8",
                         dataType: "json",
@@ -150,6 +177,7 @@
                     { "data": "Discount_Amount", "width": "6%", "orderable": false },
                     { "data": "Received_Amount", "width": "6%", "orderable": false },
                     { "data": "Balance_Amount", "width": "6%", "orderable": false },
+                    { "data": "WareHouse", "width": "8%", "orderable": false },
                     {
                         render: function (data, type, full) {
                             debugger;
@@ -207,6 +235,10 @@
                     }
                 }
             });
+
+            $('#ddlWarehouse').on('change', function () {
+                $('#tbl').DataTable().ajax.reload();
+            });
         }
         
 
@@ -219,6 +251,12 @@
 <asp:Content ID="Content2" ContentPlaceHolderID="MainContent" runat="server">
         <div class="row">
         <div class="table-container">
+            <div class="row">
+                <div class="col-lg-2">
+                    <label for="ddlWarehouse" style="font-weight: bold;">Ware House</label>
+                    <select id="ddlWarehouse"></select>
+                </div>
+            </div>
             <table id="tbl" class="table table-bordered table-hover table-striped">
                 <thead id="ihead">
                     <tr>
@@ -235,6 +273,7 @@
                         <th>Discount Amount</th>
                         <th>Received Amount</th>
                         <th>Balance Amount</th>
+                        <th>Ware House</th>
                         <th>View</th>                      
                     </tr>
                 </thead>
