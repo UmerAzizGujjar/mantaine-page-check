@@ -780,7 +780,7 @@ namespace PMS.Modules.Billing
             JavaScriptSerializer JSS = new JavaScriptSerializer();
             var data = JSS.Deserialize<Medicines>(Parameters);
             var getmaxno = db.Ar_Billings.Where(p => p.Creation_Date.Value.Year == DateTime.Now.Year
-                                  && p.IsPharmacy == true
+                                  && p.IsCathLab == true
                                   && p.Creation_Date.Value.Month == DateTime.Now.Month
                                   && p.Creation_Date.Value.Day == DateTime.Now.Day).Count() + 1;
             decimal Total_CGSS = 0;
@@ -803,7 +803,7 @@ namespace PMS.Modules.Billing
             }
             newBill.Invoice_No = getmaxno;
             newBill.Invoice_Date = DateTime.Now;
-            newBill.Seq_InvoiceNo = db.GetSale_InoviceNo();
+            newBill.Seq_InvoiceNo = db.GetSale_InoviceNoCathLAb();
             newBill.Discount_Percentage = data.DiscPercent;
             newBill.Discount_Amount = data.DiscAmnt;
             newBill.Master_Discount = data.MasterDiscount;

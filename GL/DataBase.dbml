@@ -13050,4 +13050,7 @@
       <Column Name="Message" Type="System.String" DbType="VarChar(500)" CanBeNull="true" />
     </ElementType>
   </Function>
+  <Function Name="dbo.GetSale_InoviceNoCathLAb" Method="GetSale_InoviceNoCathLAb" IsComposable="true">
+    <Return Type="System.String" />
+  </Function>
 </Database>
