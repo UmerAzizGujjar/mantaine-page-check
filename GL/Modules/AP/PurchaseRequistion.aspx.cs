@@ -18,6 +18,7 @@ namespace PMS.AP
     public partial class PurchaseRequistion : System.Web.UI.Page
     {
         string detail_id = string.Empty;
+        public string ReplicateCode { get; set; }
 
         private class ddlListItems
         {
@@ -31,9 +32,11 @@ namespace PMS.AP
             if (!IsPostBack)
             {
                 LoadGIRNum();
+                DataBaseDataContext db = new DataBaseDataContext();
+                var code = db.sys_Parms.Where(x => x.Name == "Replicate").Select(x => x.Code).FirstOrDefault();
+                ReplicateCode = code ?? "";
                 if (Request.QueryString["ID"] != null)
                 {
-                    DataBaseDataContext db = new DataBaseDataContext();
                     var getID = Request.QueryString["ID"];
                     var gettype = (from a in db.Purchase_Requisitions where a.PR_Id == Convert.ToInt32(getID) select a.File_Path).FirstOrDefault();
                     if (!string.IsNullOrEmpty(gettype))
@@ -212,7 +215,7 @@ namespace PMS.AP
             Purchase_Requisition obj = new Purchase_Requisition();
             Purchase_Requisition query = new Purchase_Requisition();
             var Purchaseid = string.Empty;
-            if (btnValue == "Save")
+            if (btnValue == "Save" || btnValue == "Replicate")
             {
                 obj.PR_Num = Convert.ToInt32(PrNum);
                 obj.PR_Date = Convert.ToDateTime(PrDate);
@@ -418,6 +421,17 @@ namespace PMS.AP
                                      MaterialRequestDetail_Id = Convert.ToInt32(data.MaterialRequestDetail_Id),
                                      MaterialRequest_Id = Convert.ToInt32(data.MaterialRequest_Id),
                                      Req_Num = Convert.ToInt32(data.Req_Num),
+                                     LastQty = (from prd in db.Purchase_Requisition_Details
+                                                join pr in db.Purchase_Requisitions on prd.PR_ID equals pr.PR_Id
+                                                where prd.Item_ID == data.Item_ID && pr.Status != "Cancelled"
+                                                orderby pr.Creation_Date descending
+                                                select prd.Qty).FirstOrDefault() ?? 0,
+
+                                     LastRequiredDate = (from prd in db.Purchase_Requisition_Details
+                                                         join pr in db.Purchase_Requisitions on prd.PR_ID equals pr.PR_Id
+                                                         where prd.Item_ID == data.Item_ID && pr.Status != "Cancelled"
+                                                         orderby pr.Creation_Date descending
+                                                         select prd.Required_Date).FirstOrDefault()
 
                                  }).ToList();
                     result = (new JavaScriptSerializer()).Serialize(listItems).ToString();
@@ -674,6 +688,9 @@ namespace PMS.AP
             public int MaterialRequestDetail_Id { get; set; }
             public int MaterialRequest_Id { get; set; }
             public int Req_Num { get; set; }
+
+            public decimal LastQty { get; set; }
+            public DateTime? LastRequiredDate { get; set; }
 
         }
     }

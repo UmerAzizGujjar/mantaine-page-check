@@ -673,6 +673,11 @@ function LoadGRNDetailDir(GRN_ID) {
 
                         '<td style="padding-right: 3px!important;text-align:right;"><input type="hidden" style="width:50px !important;text-align:right;font-size:9px;height:10px !important;" value="' + value.Amount + '"  id="txtpoamount' + rowlength + '" name="txtpoamount" >' + value.Amount + '</input></td>' +
                         '<td style="width:50px !important;text-align:right;font-size:9px;height:10px !important;"><input type="hidden" style="width:50px !important;text-align:right;font-size:9px;height:10px !important;position: relative;left: -14px;" value="' + parseFloat(value.GRNQty).toFixed(2) + '"  id="GRNQty' + rowlength + '" name="GRNQty">' + parseFloat(value.GRNQty).toFixed(2) + '</input></td>' +
+                        '<td style="padding-right: 3px!important;text-align:right;">' +
+                        '<input type="hidden" name="SaleRate" id="SaleRate' + rowlength + '" ' +
+                        'value="' + (value.Sale_Rate != null ? parseFloat(value.Sale_Rate).toFixed(2) : '') + '" />' +
+                        (value.Sale_Rate != null ? parseFloat(value.Sale_Rate).toFixed(2) : '') +
+                        '</td>' +
                         '</tr>';
                 });
                 debugger;
@@ -1307,6 +1312,7 @@ function LoadGRNDetailDir(GRN_ID) {
                             <th style="display: none; text-align: center;">Rej Qty</th>
                             <th style="text-align: center;">Rate</th>
                             <th style="text-align: center;">GRN Qty</th>
+                            <th style="text-align: center;">Sale Rate</th>
                             <th style="text-align: center;" id="thaction">Action</th>
                         </tr>
                     </thead>

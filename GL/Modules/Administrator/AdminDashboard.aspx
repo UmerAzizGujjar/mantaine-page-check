@@ -66,22 +66,26 @@
         function loadAllData() {
             $(".bento-item").addClass("card-loading");
             var f = getFilters();
-            loadKpis(f);
-            loadAppointmentFunnel(f);
-            loadNewVsFollowUp(f);
-            loadConsultantBar(f);
-            loadWalkInBar(f);
-            loadOPDTrends(f);
-            loadAgeGroup(f);
-            loadConsultDistribution(f);
-            loadGenderData(f);
-            loadSpecialistTable(f);
-            loadWalkInTable(f);
-            loadRevenueTable(f);
-            loadBillingTable(f);
-            loadInvestigationTable(f);
-            loadDeptTiles(f);
-            window.setTimeout(function () { $(".bento-item").removeClass("card-loading"); }, 2000);
+            post("GetDashboardData", f, function (d) {
+                if (!d) { $(".bento-item").removeClass("card-loading"); return; }
+                renderKpis(d.kpi);
+                renderAppointmentFunnel(d.funnel);
+                renderNewVsFollowUp(d.retention);
+                renderBarChart("chartConsultantBar", d.specialist);
+                renderBarChart("chartWalkInBar", d.walkIn);
+                renderOPDTrends(d.opdTrends);
+                renderAgeGroup(d.ageGroup);
+                renderConsultDistribution(d.distribution);
+                renderGenderData(d.gender);
+                renderSpecialistTable(d.specialist);
+                renderWalkInTable(d.walkIn);
+                renderRevenueTable(d.revenue);
+                renderBillingTable(d.billing);
+                renderInvestigationTable(d.investigation);
+                renderDeptTiles(d.deptTiles);
+                $(".bento-item").removeClass("card-loading");
+                $("#pageLoader").addClass("hidden");
+            });
         }
 
         $(document).ajaxStop(function () {
@@ -101,94 +105,75 @@
         function fmt(n) { return typeof n === 'number' ? n.toLocaleString() : n; }
 
         /* ─── KPI ─── */
-        function loadKpis(f) {
-            post("GetKpiData", f, function (d) {
-                $("#lblTotalVisited").text(d.totalVisited);
-                $("#lblWalkInVolume").text(d.walkInVolume);
-                $("#lblTotalAppointments").text(d.totalAppointments);
-                $("#lblConsultantCheckups").text(d.consultantCheckups);
-                $("#lblCancellationRate").text(d.cancellationRate || "0%");
-                $("#lblRevenueYield").text(d.revenueYield);
-                if (d.todayDiff !== undefined) {
-                    var trendingUp = d.todayDiff >= 0;
-                    var arrow = trendingUp ? '&#9650;' : '&#9660;';
-                    $(".kpi-status .vs-text").text('vs Yesterday');
-                    $(".kpi-status").each(function (i) {
-                        var label = "";
-                        if (i === 0) label = "totalVisitedDiff";
-                        else if (i === 1) label = "walkInDiff";
-                        else if (i === 2) label = "appointmentsDiff";
-                        else if (i === 3) label = "checkupsDiff";
-                        else if (i === 4) label = "cancellationDiff";
-                        else if (i === 5) label = "revenueDiff";
-                        if (d[label] !== undefined) {
-                            var up = d[label] >= 0;
-                            $(this).html((up ? '&#9650;' : '&#9660;') + ' <span class="vs-text">vs Yesterday</span>');
-                            if (up) { $(this).removeClass('caution').addClass('normal'); }
-                            else { $(this).removeClass('normal').addClass('caution'); }
-                        }
-                    });
-                }
-            });
+        function renderKpis(d) {
+            $("#lblTotalVisited").text(d.totalVisited);
+            $("#lblWalkInVolume").text(d.walkInVolume);
+            $("#lblTotalAppointments").text(d.totalAppointments);
+            $("#lblConsultantCheckups").text(d.consultantCheckups);
+            $("#lblCancellationRate").text(d.cancellationRate || "0%");
+            $("#lblRevenueYield").text(d.revenueYield);
+            if (d.todayDiff !== undefined) {
+                var trendingUp = d.todayDiff >= 0;
+                var arrow = trendingUp ? '&#9650;' : '&#9660;';
+                $(".kpi-status .vs-text").text('vs Yesterday');
+                $(".kpi-status").each(function (i) {
+                    var label = "";
+                    if (i === 0) label = "totalVisitedDiff";
+                    else if (i === 1) label = "walkInDiff";
+                    else if (i === 2) label = "appointmentsDiff";
+                    else if (i === 3) label = "checkupsDiff";
+                    else if (i === 4) label = "cancellationDiff";
+                    else if (i === 5) label = "revenueDiff";
+                    if (d[label] !== undefined) {
+                        var up = d[label] >= 0;
+                        $(this).html((up ? '&#9650;' : '&#9660;') + ' <span class="vs-text">vs Yesterday</span>');
+                        if (up) { $(this).removeClass('caution').addClass('normal'); }
+                        else { $(this).removeClass('normal').addClass('caution'); }
+                    }
+                });
+            }
         }
 
         /* ─── APPOINTMENT FUNNEL ─── */
-        function loadAppointmentFunnel(f) {
-            post("GetAppointmentFunnel", f, function (d) {
-                var chart = initChart("chartAppointmentDonut");
-                if (!chart) return;
-                chart.setOption({
-                    tooltip: { trigger: 'item', formatter: '{b}: {c} ({d}%)' },
-                    series: [{
-                        type: 'pie', radius: ['50%', '70%'],
-                        avoidLabelOverlap: false, label: { show: false },
-                        data: [
-                            { value: d.visited, name: 'Visited', itemStyle: { color: '#1a4332' } },
-                            { value: d.noShow, name: 'No-Show', itemStyle: { color: '#f59e0b' } },
-                            { value: d.cancelled, name: 'Cancelled', itemStyle: { color: '#ef4444' } }
-                        ]
-                    }]
-                });
-                $("#lblFunnelVisited").text(fmt(d.visited));
-                $("#lblFunnelNoShow").text(fmt(d.noShow));
-                $("#lblFunnelCancelled").text(fmt(d.cancelled));
+        function renderAppointmentFunnel(d) {
+            var chart = initChart("chartAppointmentDonut");
+            if (!chart) return;
+            chart.setOption({
+                tooltip: { trigger: 'item', formatter: '{b}: {c} ({d}%)' },
+                series: [{
+                    type: 'pie', radius: ['50%', '70%'],
+                    avoidLabelOverlap: false, label: { show: false },
+                    data: [
+                        { value: d.visited, name: 'Visited', itemStyle: { color: '#1a4332' } },
+                        { value: d.noShow, name: 'No-Show', itemStyle: { color: '#f59e0b' } },
+                        { value: d.cancelled, name: 'Cancelled', itemStyle: { color: '#ef4444' } }
+                    ]
+                }]
             });
+            $("#lblFunnelVisited").text(fmt(d.visited));
+            $("#lblFunnelNoShow").text(fmt(d.noShow));
+            $("#lblFunnelCancelled").text(fmt(d.cancelled));
         }
 
         /* ─── NEW VS FOLLOW-UP ─── */
-        function loadNewVsFollowUp(f) {
-            post("GetNewVsFollowUp", f, function (data) {
-                var chart = initChart("chartNewVsFollowUp");
-                if (!chart) return;
-                var weeks = data.map(function (d) { return d.week; });
-                var newP = data.map(function (d) { return d.newPatients; });
-                var rtn = data.map(function (d) { return d.returning; });
-                var allVals = newP.concat(rtn);
-                var maxV = allVals.length > 0 ? Math.max.apply(null, allVals) * 1.35 : 10;
-                chart.setOption({
-                    tooltip: { trigger: 'axis' },
-                    legend: { data: ['New Patients', 'Returning (7d)'], bottom: 0, left: 'center', icon: 'circle', itemWidth: 8, itemHeight: 8, textStyle: { fontSize: 10 } },
-                    grid: { left: 50, right: 50, top: 50, bottom: 40 },
-                    xAxis: { type: 'category', data: weeks, axisLabel: { fontSize: 10, fontWeight: 600 }, axisLine: { show: false }, axisTick: { show: false } },
-                    yAxis: { type: 'value', splitLine: { lineStyle: { color: '#f1f5f9', type: 'dashed' } }, axisLabel: { fontSize: 9 }, max: maxV },
-                    series: [
-                        { name: 'New Patients', type: 'bar', barWidth: 18, barGap: '20%', data: newP.map(function (v) { return { value: v, itemStyle: { color: '#1a4332', borderRadius: [4, 4, 0, 0] } }; }), label: { show: true, position: 'top', color: '#1a4332', fontSize: 9, fontWeight: 'bold', offset: [0, 6] } },
-                        { name: 'Returning (7d)', type: 'bar', barWidth: 18, data: rtn.map(function (v) { return { value: v, itemStyle: { color: '#10b981', borderRadius: [4, 4, 0, 0] } }; }), label: { show: true, position: 'top', color: '#10b981', fontSize: 9, fontWeight: 'bold', offset: [0, 6] } }
-                    ]
-                });
-            });
-        }
-
-        /* ─── CONSULTANT BAR ─── */
-        function loadConsultantBar(f) {
-            post("GetSpecialistConsultants", f, function (data) {
-                renderBarChart("chartConsultantBar", data);
-            });
-        }
-
-        function loadWalkInBar(f) {
-            post("GetWalkInConsultants", f, function (data) {
-                renderBarChart("chartWalkInBar", data);
+        function renderNewVsFollowUp(data) {
+            var chart = initChart("chartNewVsFollowUp");
+            if (!chart) return;
+            var weeks = data.map(function (d) { return d.week; });
+            var newP = data.map(function (d) { return d.newPatients; });
+            var rtn = data.map(function (d) { return d.returning; });
+            var allVals = newP.concat(rtn);
+            var maxV = allVals.length > 0 ? Math.max.apply(null, allVals) * 1.35 : 10;
+            chart.setOption({
+                tooltip: { trigger: 'axis' },
+                legend: { data: ['New Patients', 'Returning (7d)'], bottom: 0, left: 'center', icon: 'circle', itemWidth: 8, itemHeight: 8, textStyle: { fontSize: 10 } },
+                grid: { left: 50, right: 50, top: 50, bottom: 40 },
+                xAxis: { type: 'category', data: weeks, axisLabel: { fontSize: 10, fontWeight: 600 }, axisLine: { show: false }, axisTick: { show: false } },
+                yAxis: { type: 'value', splitLine: { lineStyle: { color: '#f1f5f9', type: 'dashed' } }, axisLabel: { fontSize: 9 }, max: maxV },
+                series: [
+                    { name: 'New Patients', type: 'bar', barWidth: 18, barGap: '20%', data: newP.map(function (v) { return { value: v, itemStyle: { color: '#1a4332', borderRadius: [4, 4, 0, 0] } }; }), label: { show: true, position: 'top', color: '#1a4332', fontSize: 9, fontWeight: 'bold', offset: [0, 6] } },
+                    { name: 'Returning (7d)', type: 'bar', barWidth: 18, data: rtn.map(function (v) { return { value: v, itemStyle: { color: '#10b981', borderRadius: [4, 4, 0, 0] } }; }), label: { show: true, position: 'top', color: '#10b981', fontSize: 9, fontWeight: 'bold', offset: [0, 6] } }
+                ]
             });
         }
 
@@ -207,190 +192,170 @@
         }
 
         /* ─── OPD TRENDS ─── */
-        function loadOPDTrends(f) {
-            post("GetOPDTrends", f, function (data) {
-                var chart = initChart("chartOPDTrends");
-                if (!chart) return;
-                var hrs = data.map(function (d) { return d.hour; });
-                var vals = data.map(function (d) { return d.value; });
-                var maxV = Math.max.apply(null, vals) * 1.25;
-                chart.setOption({
-                    tooltip: { trigger: 'axis' },
-                    grid: { left: 40, right: 30, top: 35, bottom: 25 },
-                    xAxis: { type: 'category', data: hrs, axisLabel: { fontSize: 10, fontWeight: 600 }, axisLine: { show: false }, axisTick: { show: false } },
-                    yAxis: { type: 'value', splitLine: { lineStyle: { color: '#f1f5f9', type: 'dashed' } }, axisLabel: { fontSize: 9 }, max: maxV },
-                    series: [{ type: 'line', smooth: true, data: vals, lineStyle: { color: '#1a4332', width: 3 }, itemStyle: { color: '#1a4332' }, areaStyle: { color: 'rgba(26,67,50,0.08)' }, symbol: 'circle', symbolSize: 6, label: { show: true, position: 'top', color: '#1a4332', fontSize: 9, fontWeight: 'bold', offset: [0, 6] } }]
-                });
+        function renderOPDTrends(data) {
+            var chart = initChart("chartOPDTrends");
+            if (!chart) return;
+            var hrs = data.map(function (d) { return d.hour; });
+            var vals = data.map(function (d) { return d.value; });
+            var maxV = Math.max.apply(null, vals) * 1.25;
+            chart.setOption({
+                tooltip: { trigger: 'axis' },
+                grid: { left: 40, right: 30, top: 35, bottom: 25 },
+                xAxis: { type: 'category', data: hrs, axisLabel: { fontSize: 10, fontWeight: 600 }, axisLine: { show: false }, axisTick: { show: false } },
+                yAxis: { type: 'value', splitLine: { lineStyle: { color: '#f1f5f9', type: 'dashed' } }, axisLabel: { fontSize: 9 }, max: maxV },
+                series: [{ type: 'line', smooth: true, data: vals, lineStyle: { color: '#1a4332', width: 3 }, itemStyle: { color: '#1a4332' }, areaStyle: { color: 'rgba(26,67,50,0.08)' }, symbol: 'circle', symbolSize: 6, label: { show: true, position: 'top', color: '#1a4332', fontSize: 9, fontWeight: 'bold', offset: [0, 6] } }]
             });
         }
 
         /* ─── AGE GROUP ─── */
-        function loadAgeGroup(f) {
-            post("GetAgeGroupData", f, function (data) {
-                var chart = initChart("chartAgeGroup");
-                if (!chart) return;
-                var colors = ['#1a4332', '#2d5a47', '#4a8268', '#6ba88a', '#92cea9', '#b8e4c7', '#d6f2e1'];
-                var ranges = data.map(function (d) { return d.range; });
-                var vals = data.map(function (d) { return d.value; });
-                var maxV = Math.max.apply(null, vals) * 1.25;
-                chart.setOption({
-                    tooltip: { trigger: 'axis', axisPointer: { type: 'shadow' } },
-                    grid: { left: 40, right: 30, top: 50, bottom: 30 },
-                    xAxis: { type: 'category', data: ranges, axisLabel: { fontSize: 10, fontWeight: 600 }, axisLine: { show: false }, axisTick: { show: false } },
-                    yAxis: { type: 'value', splitLine: { lineStyle: { color: '#f1f5f9', type: 'dashed' } }, axisLabel: { fontSize: 9 }, max: maxV },
-                    series: [{ type: 'bar', barWidth: 28, data: vals.map(function (v, i) { return { value: v, itemStyle: { color: colors[i], borderRadius: [8, 8, 0, 0] } }; }), label: { show: true, position: 'top', color: '#1a4332', fontSize: 9, fontWeight: 'bold', offset: [0, 6] } }]
-                });
+        function renderAgeGroup(data) {
+            var chart = initChart("chartAgeGroup");
+            if (!chart) return;
+            var colors = ['#1a4332', '#2d5a47', '#4a8268', '#6ba88a', '#92cea9', '#b8e4c7', '#d6f2e1'];
+            var ranges = data.map(function (d) { return d.range; });
+            var vals = data.map(function (d) { return d.value; });
+            var maxV = Math.max.apply(null, vals) * 1.25;
+            chart.setOption({
+                tooltip: { trigger: 'axis', axisPointer: { type: 'shadow' } },
+                grid: { left: 40, right: 30, top: 50, bottom: 30 },
+                xAxis: { type: 'category', data: ranges, axisLabel: { fontSize: 10, fontWeight: 600 }, axisLine: { show: false }, axisTick: { show: false } },
+                yAxis: { type: 'value', splitLine: { lineStyle: { color: '#f1f5f9', type: 'dashed' } }, axisLabel: { fontSize: 9 }, max: maxV },
+                series: [{ type: 'bar', barWidth: 28, data: vals.map(function (v, i) { return { value: v, itemStyle: { color: colors[i], borderRadius: [8, 8, 0, 0] } }; }), label: { show: true, position: 'top', color: '#1a4332', fontSize: 9, fontWeight: 'bold', offset: [0, 6] } }]
             });
         }
 
         /* ─── CONSULTATION DISTRIBUTION ─── */
-        function loadConsultDistribution(f) {
-            post("GetConsultationDistribution", f, function (data) {
-                var chart = initChart("chartConsultDistribution");
-                if (!chart) return;
-                var ranges = data.map(function (d) { return d.range; });
-                var vals = data.map(function (d) { return d.count; });
-                var maxIdx = 0;
-                for (var i = 0; i < vals.length; i++) { if (vals[i] > vals[maxIdx]) maxIdx = i; }
-                chart.setOption({
-                    tooltip: { trigger: 'axis', axisPointer: { type: 'shadow' } },
-                    grid: { left: 55, right: 50, top: 10, bottom: 25 },
-                    xAxis: { type: 'value', axisLabel: { fontSize: 9 }, splitLine: { show: false } },
-                    yAxis: { type: 'category', data: ranges, axisLabel: { fontSize: 11, fontWeight: 800 }, axisLine: { show: false }, axisTick: { show: false } },
-                    series: [{ type: 'bar', barWidth: 20, data: vals.map(function (v) { return { value: v, itemStyle: { color: '#1a4332', borderRadius: [0, 4, 4, 0] } }; }), label: { show: true, position: 'right', color: '#1a4332', fontSize: 11, fontWeight: 'bold', offset: [10, 0] } }]
-                });
-                $("#lblMostCommonRange").text(ranges[maxIdx]);
-                $("#lblMostCommonCount").text(fmt(vals[maxIdx]));
+        function renderConsultDistribution(data) {
+            var chart = initChart("chartConsultDistribution");
+            if (!chart) return;
+            var ranges = data.map(function (d) { return d.range; });
+            var vals = data.map(function (d) { return d.count; });
+            var maxIdx = 0;
+            for (var i = 0; i < vals.length; i++) { if (vals[i] > vals[maxIdx]) maxIdx = i; }
+            chart.setOption({
+                tooltip: { trigger: 'axis', axisPointer: { type: 'shadow' } },
+                grid: { left: 55, right: 50, top: 10, bottom: 25 },
+                xAxis: { type: 'value', axisLabel: { fontSize: 9 }, splitLine: { show: false } },
+                yAxis: { type: 'category', data: ranges, axisLabel: { fontSize: 11, fontWeight: 800 }, axisLine: { show: false }, axisTick: { show: false } },
+                series: [{ type: 'bar', barWidth: 20, data: vals.map(function (v) { return { value: v, itemStyle: { color: '#1a4332', borderRadius: [0, 4, 4, 0] } }; }), label: { show: true, position: 'right', color: '#1a4332', fontSize: 11, fontWeight: 'bold', offset: [10, 0] } }]
             });
+            $("#lblMostCommonRange").text(ranges[maxIdx]);
+            $("#lblMostCommonCount").text(fmt(vals[maxIdx]));
         }
 
         /* ─── GENDER ─── */
-        function loadGenderData(f) {
-            post("GetGenderData", f, function (d) {
-                var chart = initChart("chartGender");
-                if (!chart) return;
-                var maxP = Math.max(d.male.patients, d.female.patients) * 1.25;
-                var maxT = Math.max(d.male.avgTime, d.female.avgTime) * 1.35;
-                chart.setOption({
-                    tooltip: { trigger: 'axis' },
-                    legend: { data: ['Patients', 'Avg Time (min)'], bottom: 0, left: 'center', icon: 'circle', itemWidth: 8, itemHeight: 8, textStyle: { fontSize: 10 } },
-                    grid: { left: 50, right: 50, top: 50, bottom: 35 },
-                    xAxis: { type: 'category', data: ['Male', 'Female'], axisLabel: { fontSize: 11, fontWeight: 800 }, axisLine: { show: false }, axisTick: { show: false } },
-                    yAxis: [
-                        { type: 'value', splitLine: { lineStyle: { color: '#f1f5f9', type: 'dashed' } }, axisLabel: { fontSize: 9 }, max: maxP },
-                        { type: 'value', splitLine: { show: false }, axisLabel: { fontSize: 9 }, max: maxT }
-                    ],
-                    series: [
-                        { name: 'Patients', type: 'bar', barWidth: 28, barGap: '20%', data: [{ value: d.male.patients, itemStyle: { color: '#1a4332', borderRadius: [4, 4, 0, 0] } }, { value: d.female.patients, itemStyle: { color: '#10b981', borderRadius: [4, 4, 0, 0] } }], label: { show: true, position: 'top', color: '#1a4332', fontSize: 9, fontWeight: 'bold', offset: [0, 6] } },
-                        { name: 'Avg Time (min)', type: 'bar', barWidth: 18, yAxisIndex: 1, data: [{ value: d.male.avgTime, itemStyle: { color: '#9333ea', borderRadius: [4, 4, 0, 0] } }, { value: d.female.avgTime, itemStyle: { color: '#9333ea', borderRadius: [4, 4, 0, 0] } }], label: { show: true, position: 'top', color: '#9333ea', fontSize: 9, fontWeight: 'bold', offset: [0, 6] } }
-                    ]
-                });
+        function renderGenderData(d) {
+            var chart = initChart("chartGender");
+            if (!chart) return;
+            var maxP = Math.max(d.male.patients, d.female.patients) * 1.25;
+            var maxT = Math.max(d.male.avgTime, d.female.avgTime) * 1.35;
+            chart.setOption({
+                tooltip: { trigger: 'axis' },
+                legend: { data: ['Patients', 'Avg Time (min)'], bottom: 0, left: 'center', icon: 'circle', itemWidth: 8, itemHeight: 8, textStyle: { fontSize: 10 } },
+                grid: { left: 50, right: 50, top: 50, bottom: 35 },
+                xAxis: { type: 'category', data: ['Male', 'Female'], axisLabel: { fontSize: 11, fontWeight: 800 }, axisLine: { show: false }, axisTick: { show: false } },
+                yAxis: [
+                    { type: 'value', splitLine: { lineStyle: { color: '#f1f5f9', type: 'dashed' } }, axisLabel: { fontSize: 9 }, max: maxP },
+                    { type: 'value', splitLine: { show: false }, axisLabel: { fontSize: 9 }, max: maxT }
+                ],
+                series: [
+                    { name: 'Patients', type: 'bar', barWidth: 28, barGap: '20%', data: [{ value: d.male.patients, itemStyle: { color: '#1a4332', borderRadius: [4, 4, 0, 0] } }, { value: d.female.patients, itemStyle: { color: '#10b981', borderRadius: [4, 4, 0, 0] } }], label: { show: true, position: 'top', color: '#1a4332', fontSize: 9, fontWeight: 'bold', offset: [0, 6] } },
+                    { name: 'Avg Time (min)', type: 'bar', barWidth: 18, yAxisIndex: 1, data: [{ value: d.male.avgTime, itemStyle: { color: '#9333ea', borderRadius: [4, 4, 0, 0] } }, { value: d.female.avgTime, itemStyle: { color: '#9333ea', borderRadius: [4, 4, 0, 0] } }], label: { show: true, position: 'top', color: '#9333ea', fontSize: 9, fontWeight: 'bold', offset: [0, 6] } }
+                ]
             });
         }
 
         /* ─── SPECIALIST TABLE ─── */
-        function loadSpecialistTable(f) {
-            post("GetSpecialistConsultants", f, function (data) {
-                var html = "";
-                (data || []).forEach(function (d) {
-                    var name = d.name || "Unknown";
-                    var initial = name.split(' ').pop().charAt(0) || 'D';
-                    var appts = d.appointments || 0;
-                    var seen = d.patientsSeen || 0;
-                    var avg = d.avgPerDay || 0;
-                    var growth = d.growth || 0;
-                    var arrow = growth >= 0 ? '&#9650;' : '&#9660;';
-                    var cls = growth >= 0 ? 'growth-up' : 'growth-down';
-                    html += '<tr><td><div class="dept-badge"><span class="avatar">' + initial + '</span>' + name + '</div></td><td>' + fmt(appts) + '</td><td>' + fmt(seen) + '</td><td>' + avg + '</td><td class="' + cls + '">' + (growth >= 0 ? '+' : '') + growth + '% ' + arrow + '</td></tr>';
-                });
-                $("#tblSpecialist tbody").html(html);
+        function renderSpecialistTable(data) {
+            var html = "";
+            (data || []).forEach(function (d) {
+                var name = d.name || "Unknown";
+                var initial = name.split(' ').pop().charAt(0) || 'D';
+                var appts = d.appointments || 0;
+                var seen = d.patientsSeen || 0;
+                var avg = d.avgPerDay || 0;
+                var growth = d.growth || 0;
+                var arrow = growth >= 0 ? '&#9650;' : '&#9660;';
+                var cls = growth >= 0 ? 'growth-up' : 'growth-down';
+                html += '<tr><td><div class="dept-badge"><span class="avatar">' + initial + '</span>' + name + '</div></td><td>' + fmt(appts) + '</td><td>' + fmt(seen) + '</td><td>' + avg + '</td><td class="' + cls + '">' + (growth >= 0 ? '+' : '') + growth + '% ' + arrow + '</td></tr>';
             });
+            $("#tblSpecialist tbody").html(html);
         }
 
         /* ─── WALK-IN TABLE ─── */
-        function loadWalkInTable(f) {
-            post("GetWalkInConsultants", f, function (data) {
-                var html = "";
-                (data || []).forEach(function (d) {
-                    var name = d.name || "Unknown";
-                    var initial = name.split(' ').pop().charAt(0) || 'D';
-                    var seen = d.patientsSeen || 0;
-                    var avg = d.avgPerDay || 0;
-                    var growth = d.growth || 0;
-                    var arrow = growth >= 0 ? '&#9650;' : '&#9660;';
-                    var cls = growth >= 0 ? 'growth-up' : 'growth-down';
-                    html += '<tr><td><div class="dept-badge"><span class="avatar">' + initial + '</span>' + name + '</div></td><td>' + fmt(seen) + '</td><td>' + avg + '</td><td class="' + cls + '">' + (growth >= 0 ? '+' : '') + growth + '% ' + arrow + '</td></tr>';
-                });
-                $("#tblWalkIn tbody").html(html);
+        function renderWalkInTable(data) {
+            var html = "";
+            (data || []).forEach(function (d) {
+                var name = d.name || "Unknown";
+                var initial = name.split(' ').pop().charAt(0) || 'D';
+                var seen = d.patientsSeen || 0;
+                var avg = d.avgPerDay || 0;
+                var growth = d.growth || 0;
+                var arrow = growth >= 0 ? '&#9650;' : '&#9660;';
+                var cls = growth >= 0 ? 'growth-up' : 'growth-down';
+                html += '<tr><td><div class="dept-badge"><span class="avatar">' + initial + '</span>' + name + '</div></td><td>' + fmt(seen) + '</td><td>' + avg + '</td><td class="' + cls + '">' + (growth >= 0 ? '+' : '') + growth + '% ' + arrow + '</td></tr>';
             });
+            $("#tblWalkIn tbody").html(html);
         }
 
         /* ─── REVENUE TABLE ─── */
-        function loadRevenueTable(f) {
-            post("GetRevenueBreakdown", f, function (data) {
-                var html = "", tG = 0, tD = 0, tR = 0, tN = 0;
-                data.forEach(function (d) {
-                    html += '<tr><td>' + d.category + '</td><td>' + fmt(d.grossAmount) + '</td><td style="color:#d97706;">-' + fmt(d.discount) + '</td><td style="color:#dc2626;">' + (d.refund > 0 ? '-' + fmt(d.refund) : '0') + '</td><td>' + fmt(d.netCollection) + '</td></tr>';
-                    tG += d.grossAmount; tD += d.discount; tR += d.refund; tN += d.netCollection;
-                });
-                $("#tblRevenue tbody").html(html);
-                $("#tblRevenue tfoot td:eq(0)").text('GRAND TOTAL');
-                $("#tblRevenue tfoot td:eq(1)").text(fmt(tG));
-                $("#tblRevenue tfoot td:eq(2)").text('-' + fmt(tD));
-                $("#tblRevenue tfoot td:eq(3)").text('-' + fmt(tR));
-                $("#tblRevenue tfoot td:eq(4)").text(fmt(tN));
-                $("#lblNetCollection").text('Rs. ' + fmt(tN));
-                var eff = tG > 0 ? ((tN / tG) * 100).toFixed(1) : '0.0';
-                $("#lblCollectionEff").text(eff + '%');
+        function renderRevenueTable(data) {
+            var html = "", tG = 0, tD = 0, tR = 0, tN = 0;
+            data.forEach(function (d) {
+                html += '<tr><td>' + d.category + '</td><td>' + fmt(d.grossAmount) + '</td><td style="color:#d97706;">-' + fmt(d.discount) + '</td><td style="color:#dc2626;">' + (d.refund > 0 ? '-' + fmt(d.refund) : '0') + '</td><td>' + fmt(d.netCollection) + '</td></tr>';
+                tG += d.grossAmount; tD += d.discount; tR += d.refund; tN += d.netCollection;
             });
+            $("#tblRevenue tbody").html(html);
+            $("#tblRevenue tfoot td:eq(0)").text('GRAND TOTAL');
+            $("#tblRevenue tfoot td:eq(1)").text(fmt(tG));
+            $("#tblRevenue tfoot td:eq(2)").text('-' + fmt(tD));
+            $("#tblRevenue tfoot td:eq(3)").text('-' + fmt(tR));
+            $("#tblRevenue tfoot td:eq(4)").text(fmt(tN));
+            $("#lblNetCollection").text('Rs. ' + fmt(tN));
+            var eff = tG > 0 ? ((tN / tG) * 100).toFixed(1) : '0.0';
+            $("#lblCollectionEff").text(eff + '%');
         }
 
         /* ─── BILLING TABLE ─── */
-        function loadBillingTable(f) {
-            post("GetPatientBilling", f, function (data) {
-                var html = "", tR = 0, tN = 0, tC = 0, tA = 0;
-                data.forEach(function (d) {
-                    html += '<tr><td>' + d.department + '</td><td>' + fmt(d.registeredPatient) + '</td><td style="color:#059669;font-weight:800;">' + fmt(d.newPatient) + '</td><td>' + fmt(d.cardFee) + '</td><td>' + fmt(d.totalAmount) + '</td></tr>';
-                    tR += d.registeredPatient; tN += d.newPatient; tC += d.cardFee; tA += d.totalAmount;
-                });
-                $("#tblBilling tbody").html(html);
-                $("#tblBilling tfoot td:eq(0)").text('Total');
-                $("#tblBilling tfoot td:eq(1)").text(fmt(tR));
-                $("#tblBilling tfoot td:eq(2)").text(fmt(tN));
-                $("#tblBilling tfoot td:eq(3)").text(fmt(tC));
-                $("#tblBilling tfoot td:eq(4)").text(fmt(tA));
-                $("#lblTotalVisitedSum").text(fmt(tR + tN));
-                $("#lblGrandCollection").text(fmt(tA));
+        function renderBillingTable(data) {
+            var html = "", tR = 0, tN = 0, tC = 0, tA = 0;
+            data.forEach(function (d) {
+                html += '<tr><td>' + d.department + '</td><td>' + fmt(d.registeredPatient) + '</td><td style="color:#059669;font-weight:800;">' + fmt(d.newPatient) + '</td><td>' + fmt(d.cardFee) + '</td><td>' + fmt(d.totalAmount) + '</td></tr>';
+                tR += d.registeredPatient; tN += d.newPatient; tC += d.cardFee; tA += d.totalAmount;
             });
+            $("#tblBilling tbody").html(html);
+            $("#tblBilling tfoot td:eq(0)").text('Total');
+            $("#tblBilling tfoot td:eq(1)").text(fmt(tR));
+            $("#tblBilling tfoot td:eq(2)").text(fmt(tN));
+            $("#tblBilling tfoot td:eq(3)").text(fmt(tC));
+            $("#tblBilling tfoot td:eq(4)").text(fmt(tA));
+            $("#lblTotalVisitedSum").text(fmt(tR + tN));
+            $("#lblGrandCollection").text(fmt(tA));
         }
 
         /* ─── INVESTIGATION TABLE ─── */
-        function loadInvestigationTable(f) {
-            post("GetInvestigationSummary", f, function (data) {
-                var html = "", tO = 0, tP = 0, tA = 0;
-                data.forEach(function (d) {
-                    html += '<tr><td>' + d.departmentName + '</td><td>' + fmt(d.ordered) + '</td><td>' + fmt(d.performed) + '</td><td>' + fmt(d.amount) + '</td></tr>';
-                    tO += d.ordered; tP += d.performed; tA += d.amount;
-                });
-                $("#tblInvestigation tbody").html(html);
-                $("#tblInvestigation tfoot td:eq(0)").text('Total');
-                $("#tblInvestigation tfoot td:eq(1)").text(fmt(tO));
-                $("#tblInvestigation tfoot td:eq(2)").text(fmt(tP));
-                $("#tblInvestigation tfoot td:eq(3)").text(fmt(tA));
+        function renderInvestigationTable(data) {
+            var html = "", tO = 0, tP = 0, tA = 0;
+            data.forEach(function (d) {
+                html += '<tr><td>' + d.departmentName + '</td><td>' + fmt(d.ordered) + '</td><td>' + fmt(d.performed) + '</td><td>' + fmt(d.amount) + '</td></tr>';
+                tO += d.ordered; tP += d.performed; tA += d.amount;
             });
+            $("#tblInvestigation tbody").html(html);
+            $("#tblInvestigation tfoot td:eq(0)").text('Total');
+            $("#tblInvestigation tfoot td:eq(1)").text(fmt(tO));
+            $("#tblInvestigation tfoot td:eq(2)").text(fmt(tP));
+            $("#tblInvestigation tfoot td:eq(3)").text(fmt(tA));
         }
 
         /* ─── DEPT TILES ─── */
-        function loadDeptTiles(f) {
-            post("GetDepartmentTiles", f, function (data) {
-                var html = "";
-                data.forEach(function (d) {
-                    var arrow = d.isUp ? '&#9650;' : '&#9660;';
-                    var bgCls = d.isUp ? 'normal' : 'caution';
-                    html += '<div class="kpi-card" style="border-left-color:' + (d.isUp ? '#059669' : '#d97706') + ';"><div class="kpi-label">' + d.name + '</div><div class="kpi-value" style="font-size:22px;">' + fmt(d.count) + '</div><div class="kpi-status ' + bgCls + '">' + arrow + ' ' + (d.isUp ? '+' : '-') + d.change + '% <span class="vs-text">vs Prev</span></div></div>';
-                });
-                $("#deptTiles").html(html);
+        function renderDeptTiles(data) {
+            var html = "";
+            data.forEach(function (d) {
+                var arrow = d.isUp ? '&#9650;' : '&#9660;';
+                var bgCls = d.isUp ? 'normal' : 'caution';
+                html += '<div class="kpi-card" style="border-left-color:' + (d.isUp ? '#059669' : '#d97706') + ';"><div class="kpi-label">' + d.name + '</div><div class="kpi-value" style="font-size:22px;">' + fmt(d.count) + '</div><div class="kpi-status ' + bgCls + '">' + arrow + ' ' + (d.isUp ? '+' : '-') + d.change + '% <span class="vs-text">vs Prev</span></div></div>';
             });
+            $("#deptTiles").html(html);
         }
 
         function applyFilters() {
@@ -574,9 +539,12 @@
         }
         #pageLoader {
             position: fixed; inset: 0; z-index: 99999;
-            background: #f8fafc; display: flex;
+            background: rgba(248, 250, 252, 0.4);
+            display: flex;
             align-items: center; justify-content: center;
             transition: opacity 0.4s;
+            backdrop-filter: blur(2px);
+            -webkit-backdrop-filter: blur(2px);
         }
         #pageLoader.hidden { opacity: 0; pointer-events: none; }
         #pageLoader .spinner {

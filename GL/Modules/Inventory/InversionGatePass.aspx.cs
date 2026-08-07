@@ -66,6 +66,7 @@ namespace PMS.Inventory
             public int PODetailId { get; set; }
             public string Mfgdate { get; set; }
             public string Expdate { get; set; }
+            public string SaleRate { get; set; }
         }
         public class IsnpIGPMasterList
         {
@@ -177,6 +178,10 @@ namespace PMS.Inventory
                 if (POitem.Expdate != "")
                 {
                     ltd.ExpiryDate = Convert.ToDateTime(POitem.Expdate);
+                }
+                if (!string.IsNullOrEmpty(POitem.SaleRate))
+                {
+                    ltd.Sale_Rate = Convert.ToDecimal(POitem.SaleRate);
                 }
                 db.Igp_Details.InsertOnSubmit(ltd);
                 db.SubmitChanges();

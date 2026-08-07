@@ -242,6 +242,11 @@
                 $('#btnSave').attr('style', 'margin-top: 0px;').focusout();
                 $('#CloseSearchModel').click();
             }
+            else if (event.ctrlKey && event.code === 'KeyQ') {
+                event.preventDefault();
+                $('#medName').select2('close');
+                openQueue();
+            }
             else {
                 $('#btnSave').attr('style', 'margin-top: 0px;')
             }

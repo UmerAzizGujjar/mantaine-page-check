@@ -9,6 +9,8 @@
         var counter = 1;
         var append_data = '';
         var isSaving = false;
+        var isReplicate = false;
+        var replicateEnabled = '<%= ReplicateCode %>' === '01';
 
         var id = '<% =Request.QueryString["ID"] %>';
 
@@ -164,17 +166,24 @@
                 $("#btnsave").val('Update');
                 $("#CreatedByRow").css("display", "flex");
             }
+            $('#btnReplicate').on('click', function () {
+                isReplicate = true;
+                SaveTest();
+            });
             setTimeout(function () {
                 var status = $('#txt_Status').val();
                 if (status == "Approved") {
                     UserUnApproveButtonRights();
                     $('#btnsave').attr("disabled", 'disabled');
+                    $('#btnReplicate').hide();
                 }
                 if (status == "Cancelled") {
                     $('#btnsave').attr("disabled", 'disabled');
                     $('#btnsave').hide();
+                    $('#btnReplicate').hide();
                 }
                 if (status == "Created" || status == "Pending") {
+                    if (replicateEnabled) $('#btnReplicate').show();
                     if (id != "") {
                         CheckApprovalRightsAndShowButton(id);
                     }
@@ -347,6 +356,8 @@
                 "<td style='text-align:right;'><input type='text' name='txtUnitPrice' id='txtUnitPrice" + length + "' style='font-size:9px;width:68px!important;text-align:right;margin-top:2px;' autocomplete='off' value='" + Rate + "' onkeyup='calcutaeEstimCost(this)'/></td>" +
                 "<td style='text-align:right;'><input readonly type='text' name='txtEstimCost' id='txtEstimCost" + length + "' style='font-size:9px;width:78px!important;text-align:right;margin-top:2px;' /></td>" +
                 "<td style='text-align:left;'><input type='text' name='txtrdate' id='txtrdate" + length + "' style='font-size:9px;width:80px!important;margin-top:2px;' autocomplete='off'/></td>" +
+                "<td style='text-align:right;padding-top:7px!important;'>" + "</td>" +
+                "<td style='text-align:left;padding-top:7px!important;'>" + "</td>" +
                 "<td style='text-align:left;'><input type='text' name='remarks' id='remarks" + length + "' style='font-size:9px;width:100%;margin-top:2px;'/></td>" +
                 "<td style='display:none'>" + Item_ID + "</td>" +
                 "<td style='text-align:center;'><a href='#' onclick='Delete(this)'><i class='fa fa-trash' style='font-size:13px;margin-top:5px;color:#f30a0a;'></i></a></td>" +
@@ -408,6 +419,8 @@
                 "<td style='text-align:right;'><input type='text' name='txtUnitPrice' id='txtUnitPrice" + length + "' style='font-size:9px;width:68px!important;text-align:right;margin-top:2px;' autocomplete='off' onkeyup='calcutaeEstimCost(this)'/></td>" +
                 "<td style='text-align:right;'><input readonly type='text' name='txtEstimCost' id='txtEstimCost" + length + "' style='font-size:9px;width:78px!important;text-align:right;margin-top:2px;' /></td>" +
                 "<td style='text-align:left;'><input type='text' name='txtrdate' id='txtrdate" + length + "' style='font-size:9px;width:80px!important;margin-top:2px;' autocomplete='off'/></td>" +
+                "<td style='text-align:right;padding-top:7px!important;'>" + "</td>" +
+                "<td style='text-align:left;padding-top:7px!important;'>" + "</td>" +
                 "<td style='text-align:left;'><input type='text' name='remarks' id='remarks" + length + "' style='font-size:9px;width:100%;margin-top:2px;'/></td>" +
                 "<td style='display:none'>" + Item_ID + "</td>" +
                 "<td style='text-align:center;'><a href='#' onclick='Delete(this)'><i class='fa fa-trash' style='font-size:13px;margin-top:5px;color:#f30a0a;'></i></a></td>" +
@@ -490,6 +503,11 @@
                         return false;
                     }
                     if (parse[0].Active == true) {
+                        var lastQty = (parse[0].LastQty != null && parse[0].LastQty !== '') ? parseFloat(parse[0].LastQty).toFixed(2) : '';
+                        var lastReqDate = '';
+                        if (parse[0].LastRequiredDate != null && parse[0].LastRequiredDate !== '' && parse[0].LastRequiredDate !== 'null') {
+                            lastReqDate = $.datepicker.formatDate('dd M yy', new Date(parseInt(parse[0].LastRequiredDate.substring(6, 19))));
+                        }
                         $("#tblbodyPackage").append(
                             "<tr>" +
                             "<td style='text-align:center;padding-top:7px!important;'>" + length + "</td>" +
@@ -501,6 +519,8 @@
                             "<td style='text-align:right;'><input type='text' name='txtUnitPrice' id='txtUnitPrice" + length + "' style='font-size:9px;width:68px!important;text-align:right;margin-top:2px;' autocomplete='off' onkeyup='calcutaeEstimCost(this)'/></td>" +
                             "<td style='text-align:right;'><input readonly type='text' name='txtEstimCost' id='txtEstimCost" + length + "' style='font-size:9px;width:78px!important;text-align:right;margin-top:2px;' /></td>" +
                             "<td style='text-align:left;'><input type='text' name='txtrdate' id='txtrdate" + length + "' style='font-size:9px;width:80px!important;margin-top:2px;' autocomplete='off'/></td>" +
+                            "<td style='text-align:right;padding-top:7px!important;'>" + lastQty + "</td>" +
+                            "<td style='text-align:left;padding-top:7px!important;'>" + lastReqDate + "</td>" +
                             "<td style='text-align:left;'><input type='text' name='remarks' id='remarks" + length + "' style='font-size:9px;width:100%;margin-top:2px;'/></td>" +
                             "<td style='display:none'><input type='hidden' name='txtItemID' value='" + parse[0].Item_ID + "'/>" + parse[0].Item_ID + "</td>" +
                             "<td style='text-align:center;'><a href='#' onclick='Delete(this)'><i class='fa fa-trash' style='font-size:13px;margin-top:5px;color:#f30a0a;'></i></a></td>" +
@@ -564,14 +584,18 @@
             $("#btnsave").prop("disabled", true);
             var qtyOrAmtChck = false;
             var datecheck = '';
-            var PRId = (id == "") ? 0 : id;
+            var PRId = 0;
+            if (!isReplicate && id != "") {
+                PRId = id;
+            }
             var PrNum    = $('#txtPr_Num').val();
             var PrDate   = $('#txtPR_Date').val();
             var Pirority = $("#ddlPriority").val();
             var Warehouse = $("#ddlWarehouse").val();
             var RefNum   = $('#txtRef_Num').val();
             var remarks  = $('#txtRemarks').val();
-            var btnValue = $("#btnsave").val();
+            var btnValue = isReplicate ? "Replicate" : $("#btnsave").val();
+            isReplicate = false;
             var totCost  = $("#totCost").val() || 0;
             var dept     = $('#ddldept').val();
 
@@ -637,7 +661,7 @@
                             var msg = arr[0];
                             var id = arr[1];
                             sendFile(id, function () {
-                                SaveDetailPurchaseRequestion(id);
+                                SaveDetailPurchaseRequestion(id, btnValue);
                             });
                         },
                         failure: function (response) { isSaving = false; alert("In failure method"); }
@@ -646,20 +670,19 @@
             }
         }
 
-        function SaveDetailPurchaseRequestion(id) {
+        function SaveDetailPurchaseRequestion(id, btnValue) {
             debugger;
             var detailAry = [];
-            var btnValue = $("#btnsave").val();
             $.each($("#tblPackage").find('tbody').find('tr'), function (index, row) {
                 var Qty = $(row).find('td:eq(4) input').val();
                 var UnitPrice = $(row).find('td:eq(6) input').val();
                 var EstimateCost = $(row).find('td:eq(7) input').val();
                 var RDate = $(row).find('input[name=txtrdate]').val();
-                var Remarks = $(row).find('td:eq(9) input').val();
-                var itemId = $(row).find('td:eq(10)').text();
-                var MaterialRequestDetail_Id = $(row).find('td:eq(12)').text();
-                var MaterialRequest_Id = $(row).find('td:eq(13)').text();
-                var Req_Num = $(row).find('td:eq(14)').text();
+                var Remarks = $(row).find('td:eq(11) input').val();
+                var itemId = $(row).find('td:eq(12)').text();
+                var MaterialRequestDetail_Id = $(row).find('td:eq(14)').text();
+                var MaterialRequest_Id = $(row).find('td:eq(15)').text();
+                var Req_Num = $(row).find('td:eq(16)').text();
                 if (Qty && RDate && itemId) {
                     detailAry.push({ Qty: Qty, UnitPrice: UnitPrice, EstimateCost: EstimateCost, RDate: RDate, Remarks: Remarks, PRId: id, itemId: itemId, MaterialRequestDetail_Id: MaterialRequestDetail_Id, MaterialRequest_Id: MaterialRequest_Id, Req_Num: Req_Num });
                 }
@@ -677,7 +700,7 @@
                 success: function (response) {
                     var res = response.d;
                     if (res.startsWith("Success")) {
-                        var msg = (btnValue == "Save") ? 'Data Inserted Successfully' : 'Data Updated Successfully';
+                        var msg = (btnValue == "Replicate") ? 'Data Replicated Successfully' : (btnValue == "Save") ? 'Data Inserted Successfully' : 'Data Updated Successfully';
                         Swal.fire({ icon: 'success', title: 'Success!', text: msg, showConfirmButton: false, timer: 2500, customClass: { popup: 'swal-big-popup', title: 'swal-big-title', htmlContainer: 'swal-big-text' } });
                         window.location = 'PurchaseRequistion.aspx?ID=' + id;
                         $("#btnsave").prop("disabled", true);
@@ -775,6 +798,13 @@
                         var len = key + 1;
                         var uom = parse[key].UOM;
                         if (uom == null || uom == 'NULL' || uom == 'null') { uom = ""; }
+
+                        var lastReqDateDisplay = '';
+                        if (parse[key].LastRequiredDate) {
+                            var lastDateObj = new Date(parseInt(parse[key].LastRequiredDate.substring(6, 19)));
+                            lastReqDateDisplay = $.datepicker.formatDate('dd M yy', lastDateObj);
+                        }
+
                         row +=
                             '<tr>' +
                             '<td style="text-align:center;padding-top:7px!important;">' + len + '</td>' +
@@ -786,6 +816,8 @@
                             '<td style="text-align:right;"><input type="text" value="' + parseFloat(parse[key].UnitPrice).toFixed(2) + '" name="txtUnitPrice" id="txtUnitPrice' + counter + '" style="font-size:9px;width:68px!important;text-align:right;margin-top:2px;" autocomplete="off" onkeyup="calcutaeEstimCost(this)"/></td>' +
                             '<td style="text-align:right;"><input readonly type="text" value="' + parseFloat(parse[key].EstimateCost).toFixed(2) + '" name="txtEstimCost" id="txtEstimCost' + counter + '" style="font-size:9px;width:78px!important;text-align:right;margin-top:2px;" autocomplete="off"/></td>' +
                             '<td style="text-align:left;"><input type="text" name="txtrdate" id="txtrdate' + counter + '" style="font-size:9px;width:80px!important;margin-top:2px;" value="' + datetime + '"/></td>' +
+                            '<td style="text-align:right;padding-top:7px!important;">' + (parse[key].LastQty || 0) + '</td>' +
+                            '<td style="text-align:left;padding-top:7px!important;">' + lastReqDateDisplay + '</td>' +
                             '<td style="text-align:left;"><input type="text" name="remarks" id="remarks' + counter + '" style="font-size:9px;width:100%;margin-top:2px;" value="' + parse[key].Remarks + '"/></td>' +
                             '<td style="display:none">' + parse[key].itemId + '</td>' +
                             '<td style="text-align:center;"><a href="#" onclick="Delete(this)"><i class="fa fa-trash" style="font-size:13px;margin-top:5px;color:#f30a0a;"></i></a></td>' +
@@ -1174,6 +1206,8 @@
                     <th style="width:9%;  text-align:right;">Unit Price</th>
                     <th style="width:10%; text-align:right;">Estimated Cost</th>
                     <th style="width:10%; text-align:left;">Required Date</th>
+                    <th style="width:6%;  text-align:right;">Last Qty</th>   
+                    <th style="width:10%; text-align:left;">Last PR Date</th>
                     <th style="width:15%; text-align:left;">Remarks</th>
                     <th style="width:6%;  text-align:center;">Action</th>
                     <th style="display:none;">MaterialRequestDetail Id</th>
@@ -1208,6 +1242,9 @@
     <div class="row pr-action-buttons">
         <div class="col-lg-2 col-md-4 col-sm-12">
             <input type="button" class="btn btn-primry" value="Save" id="btnsave" onclick="SaveTest()" />
+        </div>
+        <div class="col-lg-2 col-md-4 col-sm-12">
+            <input type="button" class="btn btn-primry" value="Replicate" id="btnReplicate" style="display:none;" />
         </div>
         <div class="col-lg-2 col-md-4 col-sm-12">
             <input type="button" class="btn-gray" value="List" onclick="window.location = 'PurchaseRequistionView.aspx'" />
