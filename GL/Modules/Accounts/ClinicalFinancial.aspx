@@ -64,13 +64,14 @@
     if (rowsOPD.length === 0 && rowsIPD.length === 0 && rowsOPDShare.length === 0 && rowsReg.length === 0 && 
         rowsSpecialService.length === 0 && rowsProcedure.length === 0 && rowsDiagnostic.length === 0 && 
         rowsDiagnosticShare.length === 0 && rowsEMERGENCY.length === 0 && rowsSERVICE.length === 0 && 
-        rowsPHARMACY.length === 0 && rowsAdvance.length === 0) {
+        rowsPHARMACY.length === 0 && rowsAdvance.length === 0 && rowsRefund.length === 0) {
         isEmptyFound = true;
     }
 
     // Get all data from existing tables (keep your existing code for other tabs)
     rowsIPD.each(function () {
         let row = $(this);
+        let editableIPD = row.find('select:not(:disabled)').length > 0;
         let rowDataIPD = {
             financialdepartment: row.find('.financialDepartmentIPD').val(),
             categoryname: row.find('.categorynameIPD').val(),
@@ -78,7 +79,7 @@
             discount: row.find('.discountIPD').val(),
             revenue: row.find('.revenueIPD').val()
         };
-        if (rowDataIPD.categoryname == 0 || rowDataIPD.cashinhand == 0) {
+        if (editableIPD && (rowDataIPD.categoryname == 0 || rowDataIPD.cashinhand == 0)) {
             isEmptyFound = true;
         }
         if (categoryNamesIPD.has(rowDataIPD.categoryname)) {
@@ -91,6 +92,7 @@
     
     rowsOPD.each(function () {
         let row = $(this);
+        let editableOPD = row.find('select:not(:disabled)').length > 0;
         let rowDataOPD = {
             financialdepartment: row.find('.financialDepartmentOPD').val(),
             categoryname: row.find('.categorynameOPD').val(),
@@ -98,7 +100,7 @@
             discount: row.find('.discountOPD').val(),
             revenue: row.find('.revenueOPD').val()
         };
-        if (rowDataOPD.categoryname == 0 || rowDataOPD.cashinhand == 0 || rowDataOPD.discount == 0) {
+        if (editableOPD && (rowDataOPD.categoryname == 0 || rowDataOPD.cashinhand == 0 || rowDataOPD.discount == 0)) {
             isEmptyFound = true;
         }
         if (categoryNamesOPD.has(rowDataOPD.categoryname)) {
@@ -111,6 +113,7 @@
     
     rowsOPDShare.each(function () {
         let row = $(this);
+        let editableOPDShare = row.find('select:not(:disabled)').length > 0;
         let rowDataOPDShare = {
             financialdepartment: row.find('.financialDepartmentOPDShare').val(),
             categoryname: row.find('.categorynameOPDShare').val(),
@@ -118,7 +121,7 @@
             discount: row.find('.discountOPDShare').val(),
             revenue: row.find('.revenueOPDShare').val()
         };
-        if (rowDataOPDShare.categoryname == 0 || rowDataOPDShare.cashinhand == 0) {
+        if (editableOPDShare && (rowDataOPDShare.categoryname == 0 || rowDataOPDShare.cashinhand == 0)) {
             isEmptyFound = true;
         }
         if (categoryNamesOPDShare.has(rowDataOPDShare.categoryname)) {
@@ -131,6 +134,7 @@
     
     rowsReg.each(function () {
         let row = $(this);
+        let editableReg = row.find('select:not(:disabled)').length > 0;
         let rowDataReg = {
             financialdepartment: row.find('.financialDepartmentReg').val(),
             categoryname: row.find('.categorynameReg').val(),
@@ -138,7 +142,7 @@
             discount: row.find('.discountReg').val(),
             revenue: row.find('.revenueReg').val()
         };
-        if (rowDataReg.cashinhand == 0) {
+        if (editableReg && (rowDataReg.cashinhand == 0)) {
             isEmptyFound = true;
         }
         if (categoryNamesReg.has(rowDataReg.categoryname)) {
@@ -151,6 +155,7 @@
     
     rowsDiagnostic.each(function () {
         let row = $(this);
+        let editableDiagnostic = row.find('select:not(:disabled)').length > 0;
         let rowDataDiagnostic = {
             financialdepartment: row.find('.financialDepartmentDiagnostic').val(),
             categoryname: row.find('.categorynameDiagnostic').val(),
@@ -159,7 +164,7 @@
             revenue: row.find('.revenueDiagnostic').val(),
             expense: row.find('.expenseDiagnostic').val()
         };
-        if (rowDataDiagnostic.categoryname == 0 || rowDataDiagnostic.cashinhand == 0 || rowDataDiagnostic.discount == 0 || rowDataDiagnostic.expense == 0) {
+        if (editableDiagnostic && (rowDataDiagnostic.categoryname == 0 || rowDataDiagnostic.cashinhand == 0 || rowDataDiagnostic.discount == 0 || rowDataDiagnostic.expense == 0)) {
             isEmptyFound = true;
         }
         if (categoryNamesDiagnostic.has(rowDataDiagnostic.categoryname)) {
@@ -172,6 +177,7 @@
     
     rowsDiagnosticShare.each(function () {
         let row = $(this);
+        let editableDiagnosticShare = row.find('select:not(:disabled)').length > 0;
         let rowDataDiagnosticShare = {
             financialdepartment: row.find('.financialDepartmentDiagnosticShare').val(),
             categoryname: row.find('.categorynameDiagnosticShare').val(),
@@ -179,7 +185,7 @@
             discount: row.find('.discountDiagnosticShare').val(),
             revenue: row.find('.revenueDiagnosticShare').val()
         };
-        if (rowDataDiagnosticShare.categoryname == 0 || rowDataDiagnosticShare.cashinhand == 0) {
+        if (editableDiagnosticShare && (rowDataDiagnosticShare.categoryname == 0 || rowDataDiagnosticShare.cashinhand == 0)) {
             isEmptyFound = true;
         }
         if (categoryNamesDiagnosticShare.has(rowDataDiagnosticShare.categoryname)) {
@@ -192,6 +198,7 @@
     
     rowsSpecialService.each(function () {
         let row = $(this);
+        let editableSpecialService = row.find('select:not(:disabled)').length > 0;
         let rowDataSpecialService = {
             financialdepartment: row.find('.financialDepartmentSpecialServices').val(),
             categoryname: row.find('.categorynameSpecialServices').val(),
@@ -199,7 +206,7 @@
             discount: row.find('.discountSpecialServices').val(),
             revenue: row.find('.revenueSpecialServices').val()
         };
-        if (rowDataSpecialService.categoryname == 0 || rowDataSpecialService.cashinhand == 0 || rowDataSpecialService.discount == 0 ) {
+        if (editableSpecialService && (rowDataSpecialService.categoryname == 0 || rowDataSpecialService.cashinhand == 0 || rowDataSpecialService.discount == 0 )) {
             isEmptyFound = true;
         }
         if (categoryNamesSpecialService.has(rowDataSpecialService.categoryname)) {
@@ -212,6 +219,7 @@
     
     rowsProcedure.each(function () {
         let row = $(this);
+        let editableProcedure = row.find('select:not(:disabled)').length > 0;
         let rowDataProcedure = {
             financialdepartment: row.find('.financialDepartmentProcedure').val(),
             categoryname: row.find('.categorynameProcedure').val(),
@@ -219,7 +227,7 @@
             discount: row.find('.discountProcedure').val(),
             revenue: row.find('.revenueProcedure').val()
         };
-        if (rowDataProcedure.categoryname == 0 || rowDataProcedure.cashinhand == 0 || rowDataProcedure.discount == 0) {
+        if (editableProcedure && (rowDataProcedure.categoryname == 0 || rowDataProcedure.cashinhand == 0 || rowDataProcedure.discount == 0)) {
             isEmptyFound = true;
         }
         if (categoryNamesProcedure.has(rowDataProcedure.categoryname)) {
@@ -232,6 +240,7 @@
     
     rowsEMERGENCY.each(function () {
         let row = $(this);
+        let editableEMERGENCY = row.find('select:not(:disabled)').length > 0;
         let rowDataEMERGENCY = {
             financialdepartment: row.find('.financialDepartmentEMERGENCY').val(),
             categoryname: row.find('.categorynameEMERGENCY').val(),
@@ -239,7 +248,7 @@
             discount: row.find('.discountEMERGENCY').val(),
             revenue: row.find('.revenueEMERGENCY').val()
         };
-        if (rowDataEMERGENCY.categoryname == 0 || rowDataEMERGENCY.cashinhand == 0 || rowDataEMERGENCY.discount == 0) {
+        if (editableEMERGENCY && (rowDataEMERGENCY.categoryname == 0 || rowDataEMERGENCY.cashinhand == 0 || rowDataEMERGENCY.discount == 0)) {
             isEmptyFound = true;
         }
         if (categoryNamesEMERGENCY.has(rowDataEMERGENCY.categoryname)) {
@@ -252,6 +261,7 @@
     
     rowsSERVICE.each(function () {
         let row = $(this);
+        let editableSERVICE = row.find('select:not(:disabled)').length > 0;
         let rowDataSERVICE = {
             financialdepartment: row.find('.financialDepartmentSERVICE').val(),
             categoryname: row.find('.categorynameSERVICE').val(),
@@ -260,7 +270,7 @@
             revenue: row.find('.revenueSERVICE').val(),
             expense: row.find('.expenseSERVICE').val()
         };
-        if (rowDataSERVICE.categoryname == 0 || rowDataSERVICE.cashinhand == 0 || rowDataSERVICE.discount == 0 || rowDataSERVICE.expense == 0) {
+        if (editableSERVICE && (rowDataSERVICE.categoryname == 0 || rowDataSERVICE.cashinhand == 0 || rowDataSERVICE.discount == 0 || rowDataSERVICE.expense == 0)) {
             isEmptyFound = true;
         }
         if (categoryNamesSERVICE.has(rowDataSERVICE.categoryname)) {
@@ -273,6 +283,7 @@
     
          rowsPHARMACY.each(function () {
              let row = $(this);
+             let editablePHARMACY = row.find('select:not(:disabled)').length > 0;
              let rowDataPHARMACY = {
                  financialdepartment: row.find('.financialDepartmentPHARMACY').val(),
                  categoryname: row.find('.categorynamePHARMACY').val(),
@@ -282,7 +293,7 @@
                  cgs: row.find('.cgsPHARMACY').val(),
                  balanceaccount: row.find('.balanceaccountPHARMACY').val()
              };
-             if (rowDataPHARMACY.categoryname == 0 || rowDataPHARMACY.cashinhand == 0 || rowDataPHARMACY.discount == 0) {
+             if (editablePHARMACY && (rowDataPHARMACY.categoryname == 0 || rowDataPHARMACY.cashinhand == 0 || rowDataPHARMACY.discount == 0)) {
                  isEmptyFound = true;
              }
              if (categoryNamesPHARMACY.has(rowDataPHARMACY.categoryname)) {
@@ -296,6 +307,7 @@
     // Handle Advance tab data - Hard-coded category name "Advance" with value "01"
     rowsAdvance.each(function () {
         let row = $(this);
+        let editableAdvance = row.find('select:not(:disabled)').length > 0;
         let drValue = row.find('.drAdvance').val();
         let crValue = row.find('.crAdvance').val();
         
@@ -311,7 +323,7 @@
         let hasDr = drValue && drValue !== '0';
         let hasCr = crValue && crValue !== '0';
         
-        if ((!hasDr && !hasCr)) {
+        if (editableAdvance && (!hasDr && !hasCr)) {
             Swal.fire({
                 icon: 'error',
                 title: 'Error!',
@@ -320,10 +332,8 @@
                 timer: 2000
             });
             isEmptyFound = true;
-            return false;
+            return;
         }
-        
-        
         
         allData.push(rowDataAdvance);
     });
@@ -332,6 +342,7 @@
 
          rowsRefund.each(function () {
              let row = $(this);
+             let editableRefund = row.find('select:not(:disabled)').length > 0;
              let drValue = row.find('.drRefund').val();
              let crValue = row.find('.crRefund').val();
 
@@ -346,7 +357,7 @@
              let hasDr = drValue && drValue !== '0';
              let hasCr = crValue && crValue !== '0';
 
-             if ((!hasDr && !hasCr)) {
+             if (editableRefund && (!hasDr && !hasCr)) {
                  Swal.fire({
                      icon: 'error',
                      title: 'Error!',
@@ -355,30 +366,28 @@
                      timer: 2000
                  });
                  isEmptyFound = true;
-                 return false;
+                 return;
              }
-
-            
 
              allData.push(rowDataRefund);
          });
     
     // Check for empty fields
-    //if (isEmptyFound) {
-      //  Swal.fire({
-         //   icon: 'error',
-          //  title: 'Error!',
-           // text: 'Please fill all required fields in each row before submitting.',
-           // showConfirmButton: false,
-           // timer: 2000,
-           // customClass: {
-             //   popup: 'swal-big-popup',
-                //title: 'swal-big-title',
-               // htmlContainer: 'swal-big-text'
-          //  }
-       // });
-        //return;
-    //}
+    if (isEmptyFound) {
+        Swal.fire({
+            icon: 'error',
+            title: 'Error!',
+            text: 'Please fill all required fields in each row before submitting.',
+            showConfirmButton: false,
+            timer: 2000,
+            customClass: {
+                popup: 'swal-big-popup',
+                title: 'swal-big-title',
+                htmlContainer: 'swal-big-text'
+            }
+        });
+        return;
+    }
     
     if (duplicateFound) {
         Swal.fire({
@@ -422,11 +431,16 @@
                 }, 2500);
             },
             error: function (xhr, status, error) {
-                console.error("Error:", error);
+                console.error("Error:", xhr.responseText || error);
+                let msg = 'An error occurred while saving data.';
+                try {
+                    const resp = JSON.parse(xhr.responseText);
+                    if (resp && resp.Message) msg = resp.Message;
+                } catch (e) { }
                 Swal.fire({
                     icon: 'error',
                     title: 'Error!',
-                    text: 'An error occurred while saving data.',
+                    text: msg,
                     showConfirmButton: true
                 });
             }

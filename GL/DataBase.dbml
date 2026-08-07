@@ -9756,19 +9756,6 @@
       <Column Name="TotalSalesTax5" Type="System.String" DbType="VarChar(50)" CanBeNull="true" />
     </ElementType>
   </Function>
-  <Function Name="dbo.spGetAllitemsDetails" Method="spGetAllitemsDetails">
-    <Parameter Name="searchText" Type="System.String" DbType="NVarChar(100)" />
-    <Parameter Name="allowPharmacy" Type="System.Boolean" DbType="Bit" />
-    <Parameter Name="allowGeneralItem" Type="System.Boolean" DbType="Bit" />
-    <Parameter Name="warehouse" Type="System.Int32" DbType="Int" />
-    <ElementType Name="spGetAllitemsDetailsResult">
-      <Column Name="Item_ID" Type="System.Int32" DbType="Int NOT NULL" CanBeNull="false" />
-      <Column Name="Item_Code" Type="System.String" DbType="VarChar(15)" CanBeNull="true" />
-      <Column Name="Description" Type="System.String" DbType="VarChar(200)" CanBeNull="true" />
-      <Column Name="Unit" Type="System.String" DbType="VarChar(150) NOT NULL" CanBeNull="false" />
-      <Column Name="Active" Type="System.Boolean" DbType="Bit" CanBeNull="true" />
-    </ElementType>
-  </Function>
   <Function Name="dbo.GetPharmcyItemUomTotalStock" Method="GetPharmcyItemUomTotalStock" IsComposable="true">
     <Parameter Name="itemcode" Type="System.Int64" DbType="BigInt" />
     <Parameter Name="Inventory_Org" Parameter="inventory_Org" Type="System.String" DbType="VarChar(100)" />
@@ -13052,5 +13039,18 @@
   </Function>
   <Function Name="dbo.GetSale_InoviceNoCathLAb" Method="GetSale_InoviceNoCathLAb" IsComposable="true">
     <Return Type="System.String" />
+  </Function>
+  <Function Name="dbo.spGetAllitemsDetails" Method="spGetAllitemsDetails">
+    <Parameter Name="searchText" Type="System.String" DbType="NVarChar(100)" />
+    <Parameter Name="allowPharmacy" Type="System.Boolean" DbType="Bit" />
+    <Parameter Name="allowGeneralItem" Type="System.Boolean" DbType="Bit" />
+    <Parameter Name="warehouse" Type="System.Int32" DbType="Int" />
+    <ElementType Name="spGetAllitemsDetailsResult">
+      <Column Name="Item_ID" Type="System.Int32" DbType="Int NOT NULL" CanBeNull="false" />
+      <Column Name="Item_Code" Type="System.String" DbType="VarChar(15)" CanBeNull="true" />
+      <Column Name="Description" Type="System.String" DbType="VarChar(200)" CanBeNull="true" />
+      <Column Name="Unit" Type="System.String" DbType="VarChar(150) NOT NULL" CanBeNull="false" />
+      <Column Name="Active" Type="System.Boolean" DbType="Bit" CanBeNull="true" />
+    </ElementType>
   </Function>
 </Database>
