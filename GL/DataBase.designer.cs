@@ -1027,7 +1027,6 @@ namespace PMS
         partial void UpdateGRN_Detail(GRN_Detail instance);
         partial void DeleteGRN_Detail(GRN_Detail instance);
         #endregion
-
         public DataBaseDataContext() :
                 base(global::System.Configuration.ConfigurationManager.ConnectionStrings["ASPGLConnectionString"].ConnectionString, mappingSource)
         {
@@ -5789,6 +5788,12 @@ namespace PMS
         {
             IExecuteResult result = this.ExecuteMethodCall(this, ((MethodInfo)(MethodInfo.GetCurrentMethod())), igpID, user_id);
             return ((ISingleResult<sp_AutoGRNResult>)(result.ReturnValue));
+        }
+
+        [global::System.Data.Linq.Mapping.FunctionAttribute(Name = "dbo.GetSale_InoviceNoCathLAb", IsComposable = true)]
+        public string GetSale_InoviceNoCathLAb()
+        {
+            return ((string)(this.ExecuteMethodCall(this, ((MethodInfo)(MethodInfo.GetCurrentMethod()))).ReturnValue));
         }
     }
 
