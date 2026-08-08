@@ -1387,6 +1387,10 @@
                 LoadPOItemDetail(PO_ID);
                 syncMetaBar();
                 checkStatusButtons();
+
+                if (data.IsEditableAfterApproval === true) {
+                    $('#btnSave').prop('disabled', true);
+                }
                 $('#txtAdv_amou').val(data.Total_Adv_Amt);
                 $('#txtFurther_amou').val(data.Total_Further_Amt);
                 $('#ddlWarehouse').html(
