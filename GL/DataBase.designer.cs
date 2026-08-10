@@ -136246,6 +136246,8 @@ namespace PMS
 
         private System.Nullable<System.DateTime> _Payable_Date;
 
+        private System.Nullable<bool> _Is_Approval;
+
         private EntityRef<Ar_Billing> _Ar_Billing;
 
         #region Extensibility Method Definitions
@@ -136326,6 +136328,8 @@ namespace PMS
         partial void OnIsPayableChanged();
         partial void OnPayable_DateChanging(System.Nullable<System.DateTime> value);
         partial void OnPayable_DateChanged();
+        partial void OnIs_ApprovalChanging(System.Nullable<bool> value);
+        partial void OnIs_ApprovalChanged();
         #endregion
 
         public Ar_Billing_Detail()
@@ -137074,6 +137078,26 @@ namespace PMS
                     this._Payable_Date = value;
                     this.SendPropertyChanged("Payable_Date");
                     this.OnPayable_DateChanged();
+                }
+            }
+        }
+
+        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_Is_Approval", DbType = "Bit")]
+        public System.Nullable<bool> Is_Approval
+        {
+            get
+            {
+                return this._Is_Approval;
+            }
+            set
+            {
+                if ((this._Is_Approval != value))
+                {
+                    this.OnIs_ApprovalChanging(value);
+                    this.SendPropertyChanging();
+                    this._Is_Approval = value;
+                    this.SendPropertyChanged("Is_Approval");
+                    this.OnIs_ApprovalChanged();
                 }
             }
         }
@@ -180617,6 +180641,8 @@ namespace PMS
 
         private System.Nullable<bool> _AllowLineDiscount;
 
+        private System.Nullable<bool> _AllowApprovalitem;
+
         private System.Nullable<bool> _Allow_Sample_list;
 
         private System.Nullable<bool> _AllowTestlistDoctor;
@@ -180763,6 +180789,8 @@ namespace PMS
         partial void OnAllowAddPatientChanged();
         partial void OnAllowLineDiscountChanging(System.Nullable<bool> value);
         partial void OnAllowLineDiscountChanged();
+        partial void OnAllowApprovalitemChanging(System.Nullable<bool> value);
+        partial void OnAllowApprovalitemChanged();
         partial void OnAllow_Sample_listChanging(System.Nullable<bool> value);
         partial void OnAllow_Sample_listChanged();
         partial void OnAllowTestlistDoctorChanging(System.Nullable<bool> value);
@@ -181969,6 +181997,26 @@ namespace PMS
                     this._AllowLineDiscount = value;
                     this.SendPropertyChanged("AllowLineDiscount");
                     this.OnAllowLineDiscountChanged();
+                }
+            }
+        }
+
+        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_AllowApprovalitem", DbType = "Bit")]
+        public System.Nullable<bool> AllowApprovalitem
+        {
+            get
+            {
+                return this._AllowApprovalitem;
+            }
+            set
+            {
+                if ((this._AllowApprovalitem != value))
+                {
+                    this.OnAllowApprovalitemChanging(value);
+                    this.SendPropertyChanging();
+                    this._AllowApprovalitem = value;
+                    this.SendPropertyChanged("AllowApprovalitem");
+                    this.OnAllowApprovalitemChanged();
                 }
             }
         }

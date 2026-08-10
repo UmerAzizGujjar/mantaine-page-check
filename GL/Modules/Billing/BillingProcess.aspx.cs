@@ -1573,6 +1573,7 @@ namespace PMS
             public string ItemType { get; set; }
             public bool RecommendedByDoctor { get; set; }
             public bool ExcludedFromPayment { get; set; }
+            public bool SelectedForApproval { get; set; }
             public decimal Amount { get; set; }
             public decimal DisPer { get; set; }
             public decimal DisAmt { get; set; }
@@ -2063,7 +2064,8 @@ namespace PMS
                     Category_ID = dtls.CategoryID,
                     Test_Main_Department = dtls.MainDepartment,
                     Service_Date = DateTime.Now,
-                    Issue_Date = dtls.Test_CreatedDate
+                    Issue_Date = dtls.Test_CreatedDate,
+                    Is_Approval = dtls.SelectedForApproval
                 };
 
                 if (dtls.MainDepartment == "001") sum = Convert.ToDecimal(dtls.Consumed_Lab);
@@ -2131,6 +2133,7 @@ namespace PMS
                         existing.Item_Type = newItem.Item_Type;
                         existing.RecommendedByDoctor = newItem.RecommendedByDoctor;
                         existing.Is_Group_Category = newItem.Is_Group_Category;
+                        existing.Is_Approval = newItem.Is_Approval;
 
                         itemsToUpdate.Add(existing);
                     }
@@ -3492,6 +3495,7 @@ namespace PMS
                                d.Doctor_id,
                                d.RecommendedByDoctor,
                                m.Referred_By,
+                               d.Is_Approval,
                                d.Issue_Date
                            }).ToList();
 
@@ -3533,6 +3537,7 @@ namespace PMS
                                d.RecommendedByDoctor,
                                m.Referred_By
                                ,d.Issue_Date
+                               ,d.Is_Approval
                            }).ToList();
 
 
@@ -3549,7 +3554,7 @@ namespace PMS
                                        && (m.isCancel == false || m.isCancel == null)
                                  select m).ToList();
 
-            decimal total = pharmacyBills.Sum(m => m.Total_Amount ?? 0);
+            decimal total = pharmacyBills.Sum(m => m.Balance_Amount ?? 0);
 
             string dept = pharmacyBills
                 .Where(m => !string.IsNullOrEmpty(m.pharmacy_Department))
@@ -3563,7 +3568,7 @@ namespace PMS
             if (string.IsNullOrEmpty(dept)) dept = "011";
 
             string itemName = (from itm in db.INV_Items
-                               where itm.Item_ID == 95939
+                               where itm.Item_ID == 95948
                                select itm.Description).FirstOrDefault();
             if (string.IsNullOrEmpty(itemName)) itemName = "Pharmacy Bill";
 
@@ -3939,9 +3944,10 @@ namespace PMS
                             }
                         }
                         if (inpat.Discharge_Request == true) {
-                            pt.paid_amount = DBClass.getField("select sum(Received_Amount) from Ar_Billings where  In_Patient_ID =" + inpat.In_Patient_ID);                         
+                            pt.paid_amount = DBClass.getField("select sum(Received_Amount) from Ar_Billings where  In_Patient_ID =" + inpat.In_Patient_ID);
+                            pt.advance_amount = DBClass.getField("select sum(Advance_Amount) from AR_Advances where In_Patient_ID=" + inpat.In_Patient_ID);
                         }
-                        pt.advance_amount = DBClass.getField("select sum(Advance_Amount) from AR_Advances where In_Patient_ID=" + inpat.In_Patient_ID);
+                     
                         pt.Ward_Name = Ward;
                         pt.Admission_Date = Convert.ToString(inpat.Admission_Date);
                         pt.Discharge_On = Convert.ToString(inpat.Discharge_On);
@@ -4290,6 +4296,7 @@ namespace PMS
                                    Procedure_Required = DBClass.getField("select isnull(Procedure_Required,'0') as Procedure_Required from Inv_Items where Item_id=" + d.Item_ID),
                                    IsOpenBill = DBClass.getField("select isnull(Is_OpenBill,'0') as Is_OpenBill from Inv_Items where Item_id=" + d.Item_ID),
                                    d.Test_Main_Department,
+                                   d.Is_Approval,
                                    m.BillType
 
                                    //                               IsShare
@@ -4336,6 +4343,7 @@ namespace PMS
                                    Procedure_Required = DBClass.getField("select isnull(Procedure_Required,'0') as Procedure_Required from Inv_Items where Item_id=" + d.Item_ID),
                                    IsOpenBill = DBClass.getField("select isnull(Is_OpenBill,'0') as Is_OpenBill from Inv_Items where Item_id=" + d.Item_ID),
                                    d.Test_Main_Department,
+                                   d.Is_Approval,
                                    m.BillType
                                }).ToList();
                 return (new JavaScriptSerializer()).Serialize(Details);
@@ -5943,6 +5951,27 @@ namespace PMS
 
                     // Return true if permission is true, false otherwise
                     return userDiscountPermission == true;
+                }
+            }
+            catch (Exception ex)
+            {
+                return false;
+            }
+        }
+
+        [WebMethod]
+        public static bool AllowApprovalitem()
+        {
+            try
+            {
+                using (var db = new DataBaseDataContext(DBClass.ConnectionString()))
+                {
+                    var userApprovalPermission = (from user in db.aspnet_Users
+                                                  where user.UserId == AppConfig.UserID
+                                                  select user.AllowApprovalitem)
+                                           .FirstOrDefault();
+
+                    return userApprovalPermission == true;
                 }
             }
             catch (Exception ex)

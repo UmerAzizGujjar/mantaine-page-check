@@ -6194,6 +6194,7 @@
       <Column Name="Sample_Remarks" Type="System.String" DbType="NVarChar(500)" CanBeNull="true" />
       <Column Name="IsPayable" Type="System.Boolean" DbType="Bit" CanBeNull="true" />
       <Column Name="Payable_Date" Type="System.DateTime" DbType="DateTime" CanBeNull="true" />
+      <Column Name="Is_Approval" Type="System.Boolean" DbType="Bit" CanBeNull="true" />
       <Association Name="Ar_Billing_Ar_Billing_Detail" Member="Ar_Billing" ThisKey="Bill_ID" OtherKey="Bill_ID" Type="Ar_Billing" IsForeignKey="true" />
     </Type>
   </Table>
@@ -8127,6 +8128,7 @@
       <Column Name="user_till" Type="System.Boolean" DbType="Bit" CanBeNull="true" />
       <Column Name="AllowAddPatient" Type="System.Boolean" DbType="Bit" CanBeNull="true" />
       <Column Name="AllowLineDiscount" Type="System.Boolean" DbType="Bit" CanBeNull="true" />
+      <Column Name="AllowApprovalitem" Type="System.Boolean" DbType="Bit" CanBeNull="true" />
       <Column Name="Allow_Sample_list" Type="System.Boolean" DbType="Bit" CanBeNull="true" />
       <Column Name="AllowTestlistDoctor" Type="System.Boolean" DbType="Bit" CanBeNull="true" />
       <Column Name="Allow_Return_Queue" Type="System.Boolean" DbType="Bit" CanBeNull="true" />
