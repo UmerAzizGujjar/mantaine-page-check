@@ -3,8 +3,9 @@
 </asp:Content>
 <asp:Content ID="Content2" ContentPlaceHolderID="MainContent" runat="server">
     <h1>Un-posted Vouchers List</h1>
+     <div style="overflow-x:auto; overflow-y:auto; max-height:500px; width:100%;">
     <asp:GridView ID="GridView1" runat="server" AutoGenerateColumns="False" 
-        EnableModelValidation="True">
+        EnableModelValidation="True" CssClass="table table-hover table-striped table-bordered dataTable no-footer">
         <Columns>
             <asp:TemplateField>
             <ItemTemplate>
@@ -28,6 +29,7 @@
         </Columns>
     </asp:GridView>
     <br />
+         </div>
     <div class="row">
         <div class="col-lg-8 col-md-8 col-sm-8">
             <div class="row">
