@@ -445,14 +445,15 @@ function LoadAllitem(searchText) {
                 '<td style=" border: 1px solid #D9E4E6;"><input type="hidden" id="txtItemIdDir' + length + '" name="txtItemIdDir" value="' + item_id + '" style="width:50px !important;text-align:right" />' + length + '</td>' +
                 '<td style="padding-right: 3px!important;"><input type="hidden" name="txtItemCodeDir" id="txtItemCodeDir' + length + '"  value="' + item_code + '"  style="width:50px !important;text-align:right;font-size:9px;height:10px !important;"/> ' + item_code + ' </td>' +
                 '<td style="padding-left: 3px!important;"><input type="hidden" name="txtItemNameDir" id="txtItemNameDir' + length + '"  value="' + item_name + '" style="width:50px !important;text-align:left;font-size:9px;height:10px !important ;"/> ' + item_name + ' </td>' +
-                '<td><input type="text" id="txtGRNQtyDir' + length + '" style="text-align:center;width:145px!important;font-size:11px;height:27px;" name="txtGRNQtyDir" value="0" /></td>' +
-                '<td><input type="text" id="txtUOMQtyDir' + length + '" style="text-align:center;width:145px!important;font-size:11px;height:27px;" name="txtUOMQtyDir" value="' + uom_qty + '" /></td>' +
-                '<td><input type="text" name="BatchNoDir" id="BatchNoDir' + length + '"  value="" style="width:145px !important;text-align:center;font-size:11px;height:27px !important ;"/></td>' +
+                '<td><input type="text" id="txtGRNQtyDir' + length + '" style="text-align:center;width:125px!important;font-size:11px;height:27px;" name="txtGRNQtyDir" value="0" /></td>' +
+                '<td><input type="text" id="txtUOMQtyDir' + length + '" style="text-align:center;width:125px!important;font-size:11px;height:27px;" name="txtUOMQtyDir" value="' + uom_qty + '" /></td>' +
+                '<td><input type="text" name="BatchNoDir" id="BatchNoDir' + length + '"  value="" style="width:125px !important;text-align:center;font-size:11px;height:27px !important ;"/></td>' +
                 '<td><input type="text" style="text-align:center;font-size:9px;" name="txtMfgdateDir" id="txtMfgdateDir' + length + '"   readonly="readonly"/></td>' +
                 '<td><input type="text" style="text-align:center;font-size:9px;" name="ExpdateDir" id="ExpdateDir' + length + '"   readonly="readonly"/></td>' +
-                '<td><input type="text" id="txtBONQtyDir' + length + '" style="text-align:center;width:145px!important;font-size:11px;height:27px;" name="txtBONQtyDir" value="0" /></td>' +
+                '<td><input type="text" id="txtBONQtyDir' + length + '" style="text-align:center;width:125px!important;font-size:11px;height:27px;" name="txtBONQtyDir" value="0" /></td>' +
                 '<td><input type="text" style="text-align:center;font-size:11px;" name="txtRateDir" id="txtRateDir' + length + '"  value="' + rate + '" /></td>' +
-                '<td style="padding-right: 3px!important;text-align:center;"><input type="text" style="width:145px !important;text-align:right;font-size:11px;height:27px !important;" value="0" readonly="readonly"  id="txtamountDir' + length + '" name="txtamountDir" ></input></td>' +
+                '<td style="padding-right: 3px!important;text-align:center;"><input type="text" style="width:125px !important;text-align:right;font-size:11px;height:27px !important;" value="0" readonly="readonly"  id="txtamountDir' + length + '" name="txtamountDir" ></input></td>' +
+                '<td style="padding-right: 3px!important;text-align:center;"><input type="text" style="width:125px !important;text-align:right;font-size:11px;height:27px !important;" value="0"  id="txtSaleRateDir' + length + '" name="txtSaleRateDir" ></input></td>' +
                 '<td><a href="javascript:void(0)" onclick="ExcludeFromPayment(this)"><i class="glyphicon glyphicon-trash" style="font-size:11px;margin-left: 16px; color: #f30a0a;position:relative;left:-33px"></i></a> </td>' +
                 '</tr>';
 
@@ -538,22 +539,22 @@ function LoadGRNDetailDir(GRN_ID) {
                 value.Description +
                 '</td>' +
 
-                '<td><input type="text" id="txtGRNQtyDir' + rowlength + '" name="txtGRNQtyDir" value="' + parseFloat(value.GRNQty).toFixed(2) + '" style="text-align:center;width:145px;font-size:11px;height:27px;" /></td>' +
+                '<td><input type="text" id="txtGRNQtyDir' + rowlength + '" name="txtGRNQtyDir" value="' + parseFloat(value.GRNQty).toFixed(2) + '" style="text-align:center;width:125px;font-size:11px;height:27px;" /></td>' +
 
-                '<td><input type="text" id="txtUOMQtyDir' + rowlength + '" name="txtUOMQtyDir" value="' + value.UOM_Qty + '" style="text-align:center;width:145px;font-size:11px;height:27px;" /></td>' +
+                '<td><input type="text" id="txtUOMQtyDir' + rowlength + '" name="txtUOMQtyDir" value="' + value.UOM_Qty + '" style="text-align:center;width:125px;font-size:11px;height:27px;" /></td>' +
 
-                '<td><input type="text" id="BatchNoDir' + rowlength + '" name="BatchNoDir" value="' + value.BatchNum + '" style="text-align:center;width:145px;font-size:11px;height:27px;" /></td>' +
+                '<td><input type="text" id="BatchNoDir' + rowlength + '" name="BatchNoDir" value="' + value.BatchNum + '" style="text-align:center;width:125px;font-size:11px;height:27px;" /></td>' +
 
                 '<td><input type="text" id="txtMfgdateDir' + rowlength + '" name="txtMfgdateDir" value="' + MfgDate + '" readonly /></td>' +
 
                 '<td><input type="text" id="ExpdateDir' + rowlength + '" name="ExpdateDir" value="' + ExpiryDate + '" readonly /></td>' +
 
-                '<td><input type="text" id="txtBONQtyDir' + rowlength + '" name="txtBONQtyDir" value="' + value.BounusQty + '" style="text-align:center;width:145px;font-size:11px;height:27px;" /></td>' +
+                '<td><input type="text" id="txtBONQtyDir' + rowlength + '" name="txtBONQtyDir" value="' + value.BounusQty + '" style="text-align:center;width:125px;font-size:11px;height:27px;" /></td>' +
 
                 '<td><input type="text" id="txtRateDir' + rowlength + '" name="txtRateDir" value="' + parseFloat(value.Rate).toFixed(2) + '" style="text-align:center;font-size:11px;" /></td>' +
 
-                '<td><input type="text" id="txtamountDir' + rowlength + '" name="txtamountDir" value="' + parseFloat(value.Amount).toFixed(2) + '" readonly style="width:145px;text-align:right;font-size:11px;height:27px;" /></td>' +
-
+                '<td><input type="text" id="txtamountDir' + rowlength + '" name="txtamountDir" value="' + parseFloat(value.Amount).toFixed(2) + '" readonly style="width:125px;text-align:right;font-size:11px;height:27px;" /></td>' +
+                '<td><input type="text" id="txtSaleRateDir' + rowlength + '" name="txtSaleRateDir" value="' + parseFloat(value.Sale_Rate).toFixed(2) + '" readonly style="width:125px;text-align:right;font-size:11px;height:27px;" /></td>' +
                 '<td><a href="javascript:void(0)" onclick="ExcludeFromPayment(this)"><i class="glyphicon glyphicon-trash" style="font-size:11px;color:#f30a0a;"></i></a></td>' +
                 '</tr>';
 
@@ -959,7 +960,8 @@ function LoadGRNDetailDir(GRN_ID) {
                             'ExpdateDir': $(value).find('input[name=ExpdateDir]').val(),
                             'BONQtyDir': $(value).find('input[name=txtBONQtyDir]').val(),
                             'RateDir': $(value).find('input[name=txtRateDir]').val(),
-                            'AmountDir': $(value).find('input[name=txtamountDir]').val()
+                            'AmountDir': $(value).find('input[name=txtamountDir]').val(),
+                            'SaleRateDir': $(value).find('input[name=txtSaleRateDir]').val()
                         });
 
                     }
@@ -1336,6 +1338,7 @@ function LoadGRNDetailDir(GRN_ID) {
                             <th style="text-align: center;">Bounus Qty</th>
                             <th style="text-align: center;">Rate</th>
                             <th style="text-align: center;">Amount</th>
+                            <th style="text-align: center;">Sale Rate</th>
                             <th style="text-align: center;" id="thactiond">Action</th>
                         </tr>
                     </thead>
