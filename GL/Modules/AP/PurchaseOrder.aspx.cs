@@ -219,6 +219,11 @@ namespace PMS.AP
                               m.IsByDefault,
                               m.IsAdvancewithTax,
                               Vendor_Name = db.AP_Vendors.Where(po => po.Vendor_ID == m.Vendor_ID).Select(po => po.Vendor_Name),
+                              IsEditableAfterApproval = db.Sys_Approval_Logs
+                                  .Where(sal => sal.Entry_ID == PO_ID && sal.Form_ID == 3)
+                                  .OrderByDescending(sal => sal.Approve_Date)
+                                  .Select(sal => sal.IsEditableAfterApproval)
+                                  .FirstOrDefault() ?? false,
                           }).FirstOrDefault();
             return (new JavaScriptSerializer()).Serialize(Header);
         }

@@ -328,55 +328,62 @@ namespace PMS.Modules.Accounts
         [WebMethod]
         public static void InsertData(List<RowData> rows)
         {
-            DataBaseDataContext db = new DataBaseDataContext();
-
-            // Delete existing records
-            db.ClinicalAccountCategories.DeleteAllOnSubmit(db.ClinicalAccountCategories);
-            db.SubmitChanges();
-
-            // Reset identity
-            db.ExecuteCommand("DBCC CHECKIDENT ('ClinicalAccountCategory', RESEED, 0)");
-
-            foreach (RowData row in rows)
+            try
             {
-                string category = row.categoryname;
-                string financialDept = row.financialdepartment;
-                string financialDept_name = (from dv in db.DataValues
-                                             join ds in db.ValueSets
-                                             on dv.ValueSet_ID equals ds.ValueSet_ID
-                                             where ds.ValueSet_Name == "Clinical Financial Department" && dv.DataValue_Name == financialDept
-                                             select dv.DataValue_Description).FirstOrDefault();
+                DataBaseDataContext db = new DataBaseDataContext();
 
-                int cash = 0, discount = 0, revenue = 0, expense = 0, cgs = 0, balanceAccount = 0;
+                // Delete existing records
+                db.ClinicalAccountCategories.DeleteAllOnSubmit(db.ClinicalAccountCategories);
+                db.SubmitChanges();
 
-                // Parse values
-                int.TryParse(row.cashinhand, out cash);
-                int.TryParse(row.discount, out discount);
-                int.TryParse(row.revenue, out revenue);
-                int.TryParse(row.expense, out expense);
-                int.TryParse(row.cgs, out cgs);
-                int.TryParse(row.balanceaccount, out balanceAccount);
+                // Reset identity
+                db.ExecuteCommand("DBCC CHECKIDENT ('ClinicalAccountCategory', RESEED, 0)");
 
-                ClinicalAccountCategory table = new ClinicalAccountCategory
+                foreach (RowData row in rows)
                 {
-                    Fn_Department = financialDept,
-                    Fn_Department_Name = financialDept_name,
-                    CategoryName = category,
-                    CashInHand = cash,
-                    Discount = discount,
-                    Revenue = revenue,
-                    Expense = expense,
-                    CGS = string.IsNullOrEmpty(row.cgs) ? (int?)null : int.Parse(row.cgs),
-                    BalanceAccount = string.IsNullOrEmpty(row.balanceaccount) ? (int?)null : int.Parse(row.balanceaccount),
-                    CreatedBy = AppConfig.UserID,
-                    CreatedDate = DateTime.Now,
-                    IsCancel = false
-                };
+                    string category = row.categoryname;
+                    string financialDept = row.financialdepartment;
+                    string financialDept_name = (from dv in db.DataValues
+                                                 join ds in db.ValueSets
+                                                 on dv.ValueSet_ID equals ds.ValueSet_ID
+                                                 where ds.ValueSet_Name == "Clinical Financial Department" && dv.DataValue_Name == financialDept
+                                                 select dv.DataValue_Description).FirstOrDefault();
 
-                db.ClinicalAccountCategories.InsertOnSubmit(table);
+                    int cash = 0, discount = 0, revenue = 0, expense = 0, cgs = 0, balanceAccount = 0;
+
+                    // Parse values
+                    int.TryParse(row.cashinhand, out cash);
+                    int.TryParse(row.discount, out discount);
+                    int.TryParse(row.revenue, out revenue);
+                    int.TryParse(row.expense, out expense);
+                    int.TryParse(row.cgs, out cgs);
+                    int.TryParse(row.balanceaccount, out balanceAccount);
+
+                    ClinicalAccountCategory table = new ClinicalAccountCategory
+                    {
+                        Fn_Department = financialDept,
+                        Fn_Department_Name = financialDept_name,
+                        CategoryName = category,
+                        CashInHand = cash,
+                        Discount = discount,
+                        Revenue = revenue,
+                        Expense = expense,
+                        CGS = string.IsNullOrEmpty(row.cgs) ? (int?)null : int.Parse(row.cgs),
+                        BalanceAccount = string.IsNullOrEmpty(row.balanceaccount) ? (int?)null : int.Parse(row.balanceaccount),
+                        CreatedBy = AppConfig.UserID,
+                        CreatedDate = DateTime.Now,
+                        IsCancel = false
+                    };
+
+                    db.ClinicalAccountCategories.InsertOnSubmit(table);
+                }
+
+                db.SubmitChanges();
             }
-
-            db.SubmitChanges();
+            catch (Exception ex)
+            {
+                throw new Exception("Clinical Financial save failed: " + ex.Message, ex);
+            }
         }
         [WebMethod]
         public static List<RowData> loadSavedRowsAdvance()

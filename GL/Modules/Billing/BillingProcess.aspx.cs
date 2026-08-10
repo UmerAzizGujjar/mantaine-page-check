@@ -3540,6 +3540,43 @@ namespace PMS
         }
 
         [WebMethod]
+        public static string GetPharmacyBillTotal(int in_pat)
+        {
+            DataBaseDataContext db = new DataBaseDataContext();
+            var pharmacyBills = (from m in db.Ar_Billings
+                                 where m.In_Patient_ID == in_pat
+                                       && m.IsPharmacy == true
+                                       && (m.isCancel == false || m.isCancel == null)
+                                 select m).ToList();
+
+            decimal total = pharmacyBills.Sum(m => m.Total_Amount ?? 0);
+
+            string dept = pharmacyBills
+                .Where(m => !string.IsNullOrEmpty(m.pharmacy_Department))
+                .Select(m => m.pharmacy_Department).FirstOrDefault();
+
+            if (string.IsNullOrEmpty(dept))
+                dept = (from ip in db.In_Patients
+                        where ip.In_Patient_ID == in_pat
+                        select ip.Department).FirstOrDefault();
+
+            if (string.IsNullOrEmpty(dept)) dept = "011";
+
+            string itemName = (from itm in db.INV_Items
+                               where itm.Item_ID == 95939
+                               select itm.Description).FirstOrDefault();
+            if (string.IsNullOrEmpty(itemName)) itemName = "Pharmacy Bill";
+
+            return (new JavaScriptSerializer()).Serialize(new
+            {
+                PharmacyTotal = total,
+                BillCount = pharmacyBills.Count,
+                PharmacyDepartment = dept,
+                ItemName = itemName
+            });
+        }
+
+        [WebMethod]
         public static string GetDocAgreementValues(string doc_id, string test_id, string item_id, string item_name, string Aggreement_Type)
         {
             using (DataBaseDataContext db = new DataBaseDataContext())
