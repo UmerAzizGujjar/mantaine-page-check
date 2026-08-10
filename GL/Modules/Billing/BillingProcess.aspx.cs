@@ -3939,13 +3939,9 @@ namespace PMS
                             }
                         }
                         if (inpat.Discharge_Request == true) {
-                            pt.paid_amount = DBClass.getField("select sum(Received_Amount) from Ar_Billings where  In_Patient_ID =" + inpat.In_Patient_ID);
-                            pt.advance_amount = DBClass.getField("select sum(Advance_Amount) from AR_Advances where In_Patient_ID=" + inpat.In_Patient_ID); //newly added advance
-
-
-
+                            pt.paid_amount = DBClass.getField("select sum(Received_Amount) from Ar_Billings where  In_Patient_ID =" + inpat.In_Patient_ID);                         
                         }
-                       
+                        pt.advance_amount = DBClass.getField("select sum(Advance_Amount) from AR_Advances where In_Patient_ID=" + inpat.In_Patient_ID);
                         pt.Ward_Name = Ward;
                         pt.Admission_Date = Convert.ToString(inpat.Admission_Date);
                         pt.Discharge_On = Convert.ToString(inpat.Discharge_On);
