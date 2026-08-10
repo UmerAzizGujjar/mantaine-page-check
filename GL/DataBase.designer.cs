@@ -5309,13 +5309,6 @@ namespace PMS
             return ((ISingleResult<sp_GetTopSymptomsResult>)(result.ReturnValue));
         }
 
-        [global::System.Data.Linq.Mapping.FunctionAttribute(Name = "dbo.sp_GetPODetailByPOID")]
-        public ISingleResult<sp_GetPODetailByPOIDResult> sp_GetPODetailByPOID([global::System.Data.Linq.Mapping.ParameterAttribute(Name = "POId", DbType = "Int")] System.Nullable<int> pOId)
-        {
-            IExecuteResult result = this.ExecuteMethodCall(this, ((MethodInfo)(MethodInfo.GetCurrentMethod())), pOId);
-            return ((ISingleResult<sp_GetPODetailByPOIDResult>)(result.ReturnValue));
-        }
-
         [global::System.Data.Linq.Mapping.FunctionAttribute(Name = "dbo.sp_GetIGPDetailByIGPID")]
         public ISingleResult<sp_GetIGPDetailByIGPIDResult> sp_GetIGPDetailByIGPID([global::System.Data.Linq.Mapping.ParameterAttribute(Name = "IGPId", DbType = "Int")] System.Nullable<int> iGPId)
         {
@@ -5795,6 +5788,13 @@ namespace PMS
         {
             IExecuteResult result = this.ExecuteMethodCall(this, ((MethodInfo)(MethodInfo.GetCurrentMethod())), searchText, allowPharmacy, allowGeneralItem, warehouse);
             return ((ISingleResult<spGetAllitemsDetailsResult>)(result.ReturnValue));
+        }
+
+        [global::System.Data.Linq.Mapping.FunctionAttribute(Name = "dbo.sp_GetPODetailByPOID")]
+        public ISingleResult<sp_GetPODetailByPOIDResult> sp_GetPODetailByPOID([global::System.Data.Linq.Mapping.ParameterAttribute(Name = "POId", DbType = "Int")] System.Nullable<int> pOId)
+        {
+            IExecuteResult result = this.ExecuteMethodCall(this, ((MethodInfo)(MethodInfo.GetCurrentMethod())), pOId);
+            return ((ISingleResult<sp_GetPODetailByPOIDResult>)(result.ReturnValue));
         }
     }
 
@@ -206038,248 +206038,6 @@ namespace PMS
         }
     }
 
-    public partial class sp_GetPODetailByPOIDResult
-    {
-
-        private System.Nullable<int> _PO_ID;
-
-        private System.Nullable<decimal> _Qty;
-
-        private System.Nullable<decimal> _BlncQty;
-
-        private int _PO_Item_ID;
-
-        private System.Nullable<System.DateTime> _Delivery_Date;
-
-        private string _Item_Code;
-
-        private string _Description;
-
-        private string _Unit;
-
-        private System.Nullable<int> _Pack_Quantity;
-
-        private System.Nullable<decimal> _Purchase_Rate;
-
-        private System.Nullable<bool> _IsBatch;
-
-        private System.Nullable<decimal> _UOM_Qty;
-
-        private decimal _Bonus_Qty;
-
-        public sp_GetPODetailByPOIDResult()
-        {
-        }
-
-        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_PO_ID", DbType = "Int")]
-        public System.Nullable<int> PO_ID
-        {
-            get
-            {
-                return this._PO_ID;
-            }
-            set
-            {
-                if ((this._PO_ID != value))
-                {
-                    this._PO_ID = value;
-                }
-            }
-        }
-
-        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_Qty", DbType = "Decimal(18,4)")]
-        public System.Nullable<decimal> Qty
-        {
-            get
-            {
-                return this._Qty;
-            }
-            set
-            {
-                if ((this._Qty != value))
-                {
-                    this._Qty = value;
-                }
-            }
-        }
-
-        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_BlncQty", DbType = "Decimal(38,2)")]
-        public System.Nullable<decimal> BlncQty
-        {
-            get
-            {
-                return this._BlncQty;
-            }
-            set
-            {
-                if ((this._BlncQty != value))
-                {
-                    this._BlncQty = value;
-                }
-            }
-        }
-
-        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_PO_Item_ID", DbType = "Int NOT NULL")]
-        public int PO_Item_ID
-        {
-            get
-            {
-                return this._PO_Item_ID;
-            }
-            set
-            {
-                if ((this._PO_Item_ID != value))
-                {
-                    this._PO_Item_ID = value;
-                }
-            }
-        }
-
-        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_Delivery_Date", DbType = "DateTime")]
-        public System.Nullable<System.DateTime> Delivery_Date
-        {
-            get
-            {
-                return this._Delivery_Date;
-            }
-            set
-            {
-                if ((this._Delivery_Date != value))
-                {
-                    this._Delivery_Date = value;
-                }
-            }
-        }
-
-        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_Item_Code", DbType = "VarChar(15)")]
-        public string Item_Code
-        {
-            get
-            {
-                return this._Item_Code;
-            }
-            set
-            {
-                if ((this._Item_Code != value))
-                {
-                    this._Item_Code = value;
-                }
-            }
-        }
-
-        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_Description", DbType = "VarChar(200)")]
-        public string Description
-        {
-            get
-            {
-                return this._Description;
-            }
-            set
-            {
-                if ((this._Description != value))
-                {
-                    this._Description = value;
-                }
-            }
-        }
-
-        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_Unit", DbType = "VarChar(5)")]
-        public string Unit
-        {
-            get
-            {
-                return this._Unit;
-            }
-            set
-            {
-                if ((this._Unit != value))
-                {
-                    this._Unit = value;
-                }
-            }
-        }
-
-        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_Pack_Quantity", DbType = "Int")]
-        public System.Nullable<int> Pack_Quantity
-        {
-            get
-            {
-                return this._Pack_Quantity;
-            }
-            set
-            {
-                if ((this._Pack_Quantity != value))
-                {
-                    this._Pack_Quantity = value;
-                }
-            }
-        }
-
-        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_Purchase_Rate", DbType = "Decimal(18,2)")]
-        public System.Nullable<decimal> Purchase_Rate
-        {
-            get
-            {
-                return this._Purchase_Rate;
-            }
-            set
-            {
-                if ((this._Purchase_Rate != value))
-                {
-                    this._Purchase_Rate = value;
-                }
-            }
-        }
-
-        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_IsBatch", DbType = "Bit")]
-        public System.Nullable<bool> IsBatch
-        {
-            get
-            {
-                return this._IsBatch;
-            }
-            set
-            {
-                if ((this._IsBatch != value))
-                {
-                    this._IsBatch = value;
-                }
-            }
-        }
-
-        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_UOM_Qty", DbType = "Decimal(18,2)")]
-        public System.Nullable<decimal> UOM_Qty
-        {
-            get
-            {
-                return this._UOM_Qty;
-            }
-            set
-            {
-                if ((this._UOM_Qty != value))
-                {
-                    this._UOM_Qty = value;
-                }
-            }
-        }
-
-        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_Bonus_Qty", DbType = "Decimal(18,2) NOT NULL")]
-        public decimal Bonus_Qty
-        {
-            get
-            {
-                return this._Bonus_Qty;
-            }
-            set
-            {
-                if ((this._Bonus_Qty != value))
-                {
-                    this._Bonus_Qty = value;
-                }
-            }
-        }
-    }
-
     public partial class sp_GetIGPDetailByIGPIDResult
     {
 
@@ -244071,6 +243829,266 @@ namespace PMS
                 if ((this._Active != value))
                 {
                     this._Active = value;
+                }
+            }
+        }
+    }
+
+    public partial class sp_GetPODetailByPOIDResult
+    {
+
+        private System.Nullable<int> _PO_ID;
+
+        private System.Nullable<decimal> _Qty;
+
+        private System.Nullable<decimal> _BlncQty;
+
+        private int _PO_Item_ID;
+
+        private System.Nullable<System.DateTime> _Delivery_Date;
+
+        private string _Item_Code;
+
+        private string _Description;
+
+        private string _Unit;
+
+        private System.Nullable<int> _Pack_Quantity;
+
+        private System.Nullable<decimal> _Purchase_Rate;
+
+        private System.Nullable<bool> _IsBatch;
+
+        private decimal _UOM_Qty;
+
+        private decimal _Bonus_Qty;
+
+        private System.Nullable<decimal> _SaleRate;
+
+        public sp_GetPODetailByPOIDResult()
+        {
+        }
+
+        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_PO_ID", DbType = "Int")]
+        public System.Nullable<int> PO_ID
+        {
+            get
+            {
+                return this._PO_ID;
+            }
+            set
+            {
+                if ((this._PO_ID != value))
+                {
+                    this._PO_ID = value;
+                }
+            }
+        }
+
+        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_Qty", DbType = "Decimal(18,4)")]
+        public System.Nullable<decimal> Qty
+        {
+            get
+            {
+                return this._Qty;
+            }
+            set
+            {
+                if ((this._Qty != value))
+                {
+                    this._Qty = value;
+                }
+            }
+        }
+
+        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_BlncQty", DbType = "Decimal(38,2)")]
+        public System.Nullable<decimal> BlncQty
+        {
+            get
+            {
+                return this._BlncQty;
+            }
+            set
+            {
+                if ((this._BlncQty != value))
+                {
+                    this._BlncQty = value;
+                }
+            }
+        }
+
+        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_PO_Item_ID", DbType = "Int NOT NULL")]
+        public int PO_Item_ID
+        {
+            get
+            {
+                return this._PO_Item_ID;
+            }
+            set
+            {
+                if ((this._PO_Item_ID != value))
+                {
+                    this._PO_Item_ID = value;
+                }
+            }
+        }
+
+        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_Delivery_Date", DbType = "DateTime")]
+        public System.Nullable<System.DateTime> Delivery_Date
+        {
+            get
+            {
+                return this._Delivery_Date;
+            }
+            set
+            {
+                if ((this._Delivery_Date != value))
+                {
+                    this._Delivery_Date = value;
+                }
+            }
+        }
+
+        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_Item_Code", DbType = "VarChar(15)")]
+        public string Item_Code
+        {
+            get
+            {
+                return this._Item_Code;
+            }
+            set
+            {
+                if ((this._Item_Code != value))
+                {
+                    this._Item_Code = value;
+                }
+            }
+        }
+
+        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_Description", DbType = "VarChar(200)")]
+        public string Description
+        {
+            get
+            {
+                return this._Description;
+            }
+            set
+            {
+                if ((this._Description != value))
+                {
+                    this._Description = value;
+                }
+            }
+        }
+
+        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_Unit", DbType = "VarChar(5)")]
+        public string Unit
+        {
+            get
+            {
+                return this._Unit;
+            }
+            set
+            {
+                if ((this._Unit != value))
+                {
+                    this._Unit = value;
+                }
+            }
+        }
+
+        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_Pack_Quantity", DbType = "Int")]
+        public System.Nullable<int> Pack_Quantity
+        {
+            get
+            {
+                return this._Pack_Quantity;
+            }
+            set
+            {
+                if ((this._Pack_Quantity != value))
+                {
+                    this._Pack_Quantity = value;
+                }
+            }
+        }
+
+        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_Purchase_Rate", DbType = "Decimal(18,2)")]
+        public System.Nullable<decimal> Purchase_Rate
+        {
+            get
+            {
+                return this._Purchase_Rate;
+            }
+            set
+            {
+                if ((this._Purchase_Rate != value))
+                {
+                    this._Purchase_Rate = value;
+                }
+            }
+        }
+
+        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_IsBatch", DbType = "Bit")]
+        public System.Nullable<bool> IsBatch
+        {
+            get
+            {
+                return this._IsBatch;
+            }
+            set
+            {
+                if ((this._IsBatch != value))
+                {
+                    this._IsBatch = value;
+                }
+            }
+        }
+
+        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_UOM_Qty", DbType = "Decimal(18,2) NOT NULL")]
+        public decimal UOM_Qty
+        {
+            get
+            {
+                return this._UOM_Qty;
+            }
+            set
+            {
+                if ((this._UOM_Qty != value))
+                {
+                    this._UOM_Qty = value;
+                }
+            }
+        }
+
+        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_Bonus_Qty", DbType = "Decimal(18,2) NOT NULL")]
+        public decimal Bonus_Qty
+        {
+            get
+            {
+                return this._Bonus_Qty;
+            }
+            set
+            {
+                if ((this._Bonus_Qty != value))
+                {
+                    this._Bonus_Qty = value;
+                }
+            }
+        }
+
+        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_SaleRate", DbType = "Decimal(18,4)")]
+        public System.Nullable<decimal> SaleRate
+        {
+            get
+            {
+                return this._SaleRate;
+            }
+            set
+            {
+                if ((this._SaleRate != value))
+                {
+                    this._SaleRate = value;
                 }
             }
         }
