@@ -411,6 +411,46 @@
                     var poQty = parseFloat($(value).find('input[name="POQty"]').val()) || 0;
 
 
+                    if (txtuomqty == "" || txtuomqty == null) {
+                        proceed = false;
+                        Swal.fire({
+                            icon: 'error',
+                            title: 'Error!',
+                            text: 'Please enter UOM Qty for Item Code "' + item_code + '"',
+                            showConfirmButton: false,
+                            timer: 3000,
+                            customClass: {
+                                popup: 'swal-big-popup',
+                                title: 'swal-big-title',
+                                htmlContainer: 'swal-big-text'
+                            }
+                        });
+                        $($(value).find('td input[name=txtuomqty]')[0]).css('border-color', 'red');
+                        return false;
+                    } else {
+                        $($(value).find('td input[name=txtuomqty]')[0]).css('border-color', '');
+                    }
+
+                    if (isNaN(parseFloat(txtuomqty)) || parseFloat(txtuomqty) <= 0) {
+                        proceed = false;
+                        Swal.fire({
+                            icon: 'error',
+                            title: 'Error!',
+                            text: 'Please enter a valid UOM Qty (must be a positive number) for Item Code "' + item_code + '"',
+                            showConfirmButton: false,
+                            timer: 3000,
+                            customClass: {
+                                popup: 'swal-big-popup',
+                                title: 'swal-big-title',
+                                htmlContainer: 'swal-big-text'
+                            }
+                        });
+                        $($(value).find('td input[name=txtuomqty]')[0]).css('border-color', 'red');
+                        return false;
+                    } else {
+                        $($(value).find('td input[name=txtuomqty]')[0]).css('border-color', '');
+                    }
+
                     if (igpQTy <= 0) {
                         proceed = false;
 
