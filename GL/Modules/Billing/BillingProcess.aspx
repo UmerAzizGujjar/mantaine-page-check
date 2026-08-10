@@ -1,4 +1,4 @@
-﻿<%@ Page Title="" Language="C#" MasterPageFile="~/Site.Master" AutoEventWireup="true" CodeBehind="BillingProcess.aspx.cs" Inherits="PMS.BillingProcess" %>
+<%@ Page Title="" Language="C#" MasterPageFile="~/Site.Master" AutoEventWireup="true" CodeBehind="BillingProcess.aspx.cs" Inherits="PMS.BillingProcess" %>
 <asp:Content ID="Content1" ContentPlaceHolderID="HeadContent" runat="server">
         <link href="../../wwwroot/THEME_TIBBIT/CustomCSS/Billing.css" rel="stylesheet" />
     
@@ -1698,7 +1698,7 @@
                             TestDate = $.datepicker.formatDate('dd M yy', new Date(parseInt(value.Issue_Date.substring(6, 19))))
                         }
                         debugger;
-                        rows = '<tr><td style="text-align:left;">' + parseInt(parseInt(rowIndex) + 1) + '</td><td id="btndeletes"> <a href="javascript:void(0)" onclick="ExcludeFromPayment(this)" id="btnDelete" name="btndelBill">Delete</a> </td><td style="text-align:left;"><input type="hidden" name="hdnCategory_ID" value="' + value.Category_ID + '" /> <input type="hidden" name="hdnParentTrans_ID" value="' + value.ParentTrans_ID + '" /> <input type="hidden" name="hdnParentTrans_Name" value="' + value.ParentTrans_Name + '" /> <input type="hidden" name="hdnParentTrans_Type" value="' + value.ParentTrans_Type + '" /> <input type="hidden" name="hdnItemID" value="' + value.Item_ID + '" /> <input type="hidden" name="hdnItemName" value="' + value.Item_Name + '" /> <input type="hidden" name="hdnProcedure" value="" /><input type="hidden" name="hdnItemType" value="' + value.Item_Type + '" /><input type="hidden" name="hdnDisPer" value=' + parseFloat(value.Discount_Percentage.toFixed(6)) + '><input type="hidden" name="hdnDisAmount" value=' + parseFloat(value.Discount_Amount.toFixed(6)) + '><input type="hidden" name="hdnNet_Amount" value=' + parseFloat(value.Net_Amount.toFixed(6)) + '><input type="hidden" name="hdnRecommendedByDoctor" value="' + value.RecommendedByDoctor + '" />' + value.Item_Name + '</td><td>' + value.Remarks + '</td><td><input type="text" name="txtQty" value="' + value.Qty + '" style="width: 45px !important;" onkeyup="CulculateAmonutWithQty(this)"/><input type="hidden" name="txtActualAmount" value="' + value.Amount + '" /></td><td  id="amnt' + rowIndex + '" name"amnt" style="text-align:Right;"> ' + value.Amount + ' </td><td> <input type="text" name="DisPer" value="' + parseFloat(value.Discount_Percentage.toFixed(2)) + '"style="width: 37px !important;" onkeyup="CalculateSummarieDiscountPerWise(' + rowIndex + ')"/> </td><td> <input type="text" name="DisAmount" value="' + parseFloat(value.Discount_Amount.toFixed(2)) + '" style="width: 75px !important;" onkeyup="CalculateSummarieDiscountAmountWise(' + rowIndex + ')"/> </td> <td style="text-align:Right;"> ' + parseFloat(value.Net_Amount.toFixed(0)) + ' </td><td> <input type="text" id = "ds' + key + '" name="DocShare" value="' + parseFloat(value.Doctor_Share.toFixed(0)) + '" style="width: 75px !important;" onkeyup="calculateDoctorShare(' + rowIndex + ')"/> </td><td><input type="number" id="HocShare' + rowIndex + '" name="HocShare" value="' + parseFloat(value.Hospital_Share.toFixed(0)) + '"  style="width: 75px !important;" onkeyup="calculateDoctorShare()"/></td>><td><select id="ddldoctor' + rowIndex + '" name="ddlDoctor" onchange="GetDocAgreementValuess(this)"  class="ddlDoctor" >' + doctors + '</select> <input type="hidden" name="Main_Department" value="' + value.Test_Main_Department + '" /></td><td><input type="hidden" name="hdnTestCreatedDate" id="hdnTestCreatedDate" value="' + TestDate + '"/>' + TestDate + ' </td></tr>'
+                        rows = '<tr><td style="text-align:left;">' + parseInt(parseInt(rowIndex) + 1) + '</td><td id="btndeletes"> <a href="javascript:void(0)" onclick="ExcludeFromPayment(this)" id="btnDelete" name="btndelBill">Delete</a> </td><td style="text-align:left;"><input type="hidden" name="hdnCategory_ID" value="' + value.Category_ID + '" /> <input type="hidden" name="hdnParentTrans_ID" value="' + value.ParentTrans_ID + '" /> <input type="hidden" name="hdnParentTrans_Name" value="' + value.ParentTrans_Name + '" /> <input type="hidden" name="hdnParentTrans_Type" value="' + value.ParentTrans_Type + '" /> <input type="hidden" name="hdnItemID" value="' + value.Item_ID + '" /> <input type="hidden" name="hdnItemName" value="' + value.Item_Name + '" /> <input type="hidden" name="hdnProcedure" value="" /><input type="hidden" name="hdnItemType" value="' + value.Item_Type + '" /><input type="hidden" name="hdnDisPer" value=' + parseFloat(value.Discount_Percentage.toFixed(6)) + '><input type="hidden" name="hdnDisAmount" value=' + parseFloat(value.Discount_Amount.toFixed(6)) + '><input type="hidden" name="hdnNet_Amount" value=' + parseFloat(value.Net_Amount.toFixed(6)) + '><input type="hidden" name="hdnRecommendedByDoctor" value="' + value.RecommendedByDoctor + '" /><input type="hidden" name="hdnApproval" value="' + value.Is_Approval + '" />' + value.Item_Name + '</td><td>' + value.Remarks + '</td><td><input type="text" name="txtQty" value="' + value.Qty + '" style="width: 45px !important;" onkeyup="CulculateAmonutWithQty(this)"/><input type="hidden" name="txtActualAmount" value="' + value.Amount + '" /></td><td  id="amnt' + rowIndex + '" name"amnt" style="text-align:Right;"> ' + value.Amount + ' </td><td> <input type="text" name="DisPer" value="' + parseFloat(value.Discount_Percentage.toFixed(2)) + '"style="width: 37px !important;" onkeyup="CalculateSummarieDiscountPerWise(' + rowIndex + ')"/> </td><td> <input type="text" name="DisAmount" value="' + parseFloat(value.Discount_Amount.toFixed(2)) + '" style="width: 75px !important;" onkeyup="CalculateSummarieDiscountAmountWise(' + rowIndex + ')"/> </td> <td style="text-align:Right;"> ' + parseFloat(value.Net_Amount.toFixed(0)) + ' </td><td> <input type="text" id = "ds' + key + '" name="DocShare" value="' + parseFloat(value.Doctor_Share.toFixed(0)) + '" style="width: 75px !important;" onkeyup="calculateDoctorShare(' + rowIndex + ')"/> </td><td><input type="number" id="HocShare' + rowIndex + '" name="HocShare" value="' + parseFloat(value.Hospital_Share.toFixed(0)) + '"  style="width: 75px !important;" onkeyup="calculateDoctorShare()"/></td>><td><select id="ddldoctor' + rowIndex + '" name="ddlDoctor" onchange="GetDocAgreementValuess(this)"  class="ddlDoctor" >' + doctors + '</select> <input type="hidden" name="Main_Department" value="' + value.Test_Main_Department + '" /></td><td><input type="hidden" name="hdnTestCreatedDate" id="hdnTestCreatedDate" value="' + TestDate + '"/>' + TestDate + ' </td></tr>'
                         debugger;
 
 
@@ -1711,7 +1711,6 @@
                             $("#amnt" + rowIndex).attr('contenteditable', false);
                         }
                         updates();
-                        $('input[name="DisAmount"]').attr('disabled', true);
                         $('#ddldoctor' + rowIndex).val(value.Doctor_id);
 
                         $('#ddldoctor' + key + '').select2();
@@ -1747,11 +1746,11 @@
                         else {
                             TestDate = $.datepicker.formatDate('dd M yy', new Date(parseInt(value.Issue_Date.substring(6, 19))))
                         }
-                        rows = '<tr><td style="text-align:left;">' + parseInt(parseInt(rowIndex) + 1) + '</td><td id="btndeletes"> <a href="javascript:void(0)" onclick="ExcludeFromPayment(this)" id="btnDelete" name="btndelBill">Delete</a> </td><td style="text-align:left;"> <input type="hidden" name="hdnParentTrans_ID" value="' + value.ParentTrans_ID + '" /> <input type="hidden" name="hdnParentTrans_Name" value="' + value.ParentTrans_Name + '" /> <input type="hidden" name="hdnParentTrans_Type" value="' + value.ParentTrans_Type + '" /> <input type="hidden" name="hdnItemID" value="' + value.Item_ID + '" /> <input type="hidden" name="hdnItemName" value="' + value.Item_Name + '" /> <input type="hidden" name="hdnProcedure" value="" /><input type="hidden" name="hdnItemType" value="' + value.Item_Type + '" /><input type="hidden" name="hdnDisPer" value=' + parseFloat(value.Discount_Percentage.toFixed(6)) + '><input type="hidden" name="hdnDisAmount" value=' + parseFloat(value.Discount_Amount.toFixed(6)) + '><input type="hidden" name="hdnNet_Amount" value=' + parseFloat(value.Net_Amount.toFixed(6)) + '><input type="hidden" name="hdnRecommendedByDoctor" value="' + value.RecommendedByDoctor + '" />' + value.Item_Name + '</td><td>' + value.Remarks + '</td><td><input type="text" name="txtQty" value="' + value.Qty + '" style="width: 45px !important;" onkeyup="CulculateAmonutWithQty(this)"/><input type="hidden" name="txtActualAmount" value="' + value.Amount + '" /></td><td  id="amnt' + rowIndex + '" name"amnt" style="text-align:Right;"> ' + value.Amount + ' </td><td> <input type="text" name="DisPer" value="' + parseFloat(value.Discount_Percentage.toFixed(2)) + '"style="width: 37px !important;" onkeyup="CalculateSummarieDiscountPerWise(' + rowIndex + ')"/> </td><td> <input type="text" name="DisAmount" value="' + parseFloat(value.Discount_Amount.toFixed(2)) + '" style="width: 75px !important;" onkeyup="CalculateSummarieDiscountAmountWise(' + rowIndex + ')"/> </td> <td style="text-align:Right;"> ' + parseFloat(value.Net_Amount.toFixed(0)) + ' </td><td> <input type="text" id = "ds' + rowIndex + '" name="DocShare" value="' + parseFloat(value.Doctor_Share.toFixed(0)) + '" style="width: 75px !important;" onkeyup="calculateDoctorShare(' + rowIndex + ')"/> </td><td><input type="number" id="HocShare' + rowIndex + '" name="HocShare" value="' + parseFloat(value.Hospital_Share.toFixed(0)) + '"  style="width: 75px !important;" onkeyup="calculateDoctorShare()"/></td>><td><select id="ddldoctor' + rowIndex + '" name="ddlDoctor" onchange="GetDocAgreementValuess(this)"  class="ddlDoctor" >' + doctors + '</select> <input type="hidden" name="Main_Department" value="' + value.Test_Main_Department + '" /></td><td><input type="hidden" name="hdnTestCreatedDate" id="hdnTestCreatedDate" value="' + TestDate + '"/>' + TestDate + ' </td></tr>'
+                        debugger;
+                        rows = '<tr><td style="text-align:left;">' + parseInt(parseInt(rowIndex) + 1) + '</td><td id="btndeletes"> <a href="javascript:void(0)" onclick="ExcludeFromPayment(this)" id="btnDelete" name="btndelBill">Delete</a> </td><td style="text-align:left;"> <input type="hidden" name="hdnParentTrans_ID" value="' + value.ParentTrans_ID + '" /> <input type="hidden" name="hdnParentTrans_Name" value="' + value.ParentTrans_Name + '" /> <input type="hidden" name="hdnParentTrans_Type" value="' + value.ParentTrans_Type + '" /> <input type="hidden" name="hdnItemID" value="' + value.Item_ID + '" /> <input type="hidden" name="hdnItemName" value="' + value.Item_Name + '" /> <input type="hidden" name="hdnProcedure" value="" /><input type="hidden" name="hdnItemType" value="' + value.Item_Type + '" /><input type="hidden" name="hdnDisPer" value=' + parseFloat(value.Discount_Percentage.toFixed(6)) + '><input type="hidden" name="hdnDisAmount" value=' + parseFloat(value.Discount_Amount.toFixed(6)) + '><input type="hidden" name="hdnNet_Amount" value=' + parseFloat(value.Net_Amount.toFixed(6)) + '><input type="hidden" name="hdnRecommendedByDoctor" value="' + value.RecommendedByDoctor + '" /><input type="hidden" name="hdnApproval" value="' + value.Is_Approval + '" />' + value.Item_Name + '</td><td>' + value.Remarks + '</td><td><input type="text" name="txtQty" value="' + value.Qty + '" style="width: 45px !important;" onkeyup="CulculateAmonutWithQty(this)"/><input type="hidden" name="txtActualAmount" value="' + value.Amount + '" /></td><td  id="amnt' + rowIndex + '" name"amnt" style="text-align:Right;"> ' + value.Amount + ' </td><td> <input type="text" name="DisPer" value="' + parseFloat(value.Discount_Percentage.toFixed(2)) + '"style="width: 37px !important;" onkeyup="CalculateSummarieDiscountPerWise(' + rowIndex + ')"/> </td><td> <input type="text" name="DisAmount" value="' + parseFloat(value.Discount_Amount.toFixed(2)) + '" style="width: 75px !important;" onkeyup="CalculateSummarieDiscountAmountWise(' + rowIndex + ')"/> </td> <td style="text-align:Right;"> ' + parseFloat(value.Net_Amount.toFixed(0)) + ' </td><td> <input type="text" id = "ds' + rowIndex + '" name="DocShare" value="' + parseFloat(value.Doctor_Share.toFixed(0)) + '" style="width: 75px !important;" onkeyup="calculateDoctorShare(' + rowIndex + ')"/> </td><td><input type="number" id="HocShare' + rowIndex + '" name="HocShare" value="' + parseFloat(value.Hospital_Share.toFixed(0)) + '"  style="width: 75px !important;" onkeyup="calculateDoctorShare()"/></td>><td><select id="ddldoctor' + rowIndex + '" name="ddlDoctor" onchange="GetDocAgreementValuess(this)"  class="ddlDoctor" >' + doctors + '</select> <input type="hidden" name="Main_Department" value="' + value.Test_Main_Department + '" /></td><td><input type="hidden" name="hdnTestCreatedDate" id="hdnTestCreatedDate" value="' + TestDate + '"/>' + TestDate + ' </td></tr>'
 
                         $('#tblDetails tbody').append(rows);
                         CalculateSummarieDiscountPerWise(rowIndex);
-                        //$('input[name="DisAmount"]').attr('disabled', true);
                         $('#ddldoctor' + rowIndex).val(value.Doctor_id);
                         $('#ddldoctor' + key + '').select2();
                         rowIndex++;
@@ -2065,6 +2064,7 @@
                             }
                             var RecommendedByDoctor = $(value).find('input[name="hdnRecommendedByDoctor"]').val();
                             var ExcludedFromPayment = false;
+                            var SelectedForApproval = $(value).find('input[name="chkApproval"]').is(':checked');
                             var DisPer = $(value).find('input[name="hdnDisPer"]').val();
                             var DisAmt = $(value).find('input[name="hdnDisAmount"]').val();
                             var isProcedure = $(value).find('input[name="hdnProcedure"]').val();
@@ -2134,7 +2134,7 @@
                             var Net_Amount = $(value).find('input[name="hdnNet_Amount"]').val();
 
                             Net_Amount = (Qty * Amount) - DisAmt;
-                            Details.push({ ParentTrans_ID: ParentTrans_ID, ParentTrans_Name: ParentTrans_Name, ParentTrans_Type: ParentTrans_Type, ItemID: ItemID, CategoryID: Category_ID, ItemName: ItemName, ItemType: ItemType, Amount: Amount, RecommendedByDoctor: RecommendedByDoctor, ExcludedFromPayment: ExcludedFromPayment, DisPer: DisPer, DisAmt: DisAmt, Net_Amount: Net_Amount, Qty: Qty, Remarks: Remarks, MainDepartment: MainDepartment, Consumed_Lab: Consumed_Lab, Consumed_Ultra_Sound: Consumed_Ultra_Sound, Consumed_Xray: Consumed_Xray, Consumed_Scan: Consumed_Scan, Consumed_Blood: Consumed_Blood, Consumed_Item: Consumed_Item, Consumed_Procedure: Consumed_Procedure, Consumed_Package: Consumed_Package, DocShare: DocShare, HosShare: HosShare, Doctor_id: Doctor_id, Test_CreatedDate: Test_CreatedDate });
+                            Details.push({ ParentTrans_ID: ParentTrans_ID, ParentTrans_Name: ParentTrans_Name, ParentTrans_Type: ParentTrans_Type, ItemID: ItemID, CategoryID: Category_ID, ItemName: ItemName, ItemType: ItemType, Amount: Amount, RecommendedByDoctor: RecommendedByDoctor, ExcludedFromPayment: ExcludedFromPayment, SelectedForApproval: SelectedForApproval, DisPer: DisPer, DisAmt: DisAmt, Net_Amount: Net_Amount, Qty: Qty, Remarks: Remarks, MainDepartment: MainDepartment, Consumed_Lab: Consumed_Lab, Consumed_Ultra_Sound: Consumed_Ultra_Sound, Consumed_Xray: Consumed_Xray, Consumed_Scan: Consumed_Scan, Consumed_Blood: Consumed_Blood, Consumed_Item: Consumed_Item, Consumed_Procedure: Consumed_Procedure, Consumed_Package: Consumed_Package, DocShare: DocShare, HosShare: HosShare, Doctor_id: Doctor_id, Test_CreatedDate: Test_CreatedDate });
                         });
 
                         var totalDocShare = 0;
@@ -4223,11 +4223,14 @@
 
                 var Totalpayable = 0;
                 var finalAmountVal = $('#txtFinalAmount').val();
-                if (finalAmountVal && finalAmountVal != '0' && finalAmountVal != '' && !isNaN(parseFloat(finalAmountVal))) {
-                    Totalpayable = parseFloat(finalAmountVal).toFixed(0);
-                }
-                else if ($('#txtNetPayable').val() && $('#txtNetPayable').val() != '') {
+                // Prefer the live txtNetPayable (updated by every discount/qty/load
+                // path) and fall back to txtFinalAmount, so the balance reflects the
+                // current discounted net instead of a stale pre-discount value.
+                if ($('#txtNetPayable').val() && $('#txtNetPayable').val() != '') {
                     Totalpayable = parseFloat($('#txtNetPayable').val()).toFixed(0);
+                }
+                else if (finalAmountVal && finalAmountVal != '0' && finalAmountVal != '' && !isNaN(parseFloat(finalAmountVal))) {
+                    Totalpayable = parseFloat(finalAmountVal).toFixed(0);
                 }
 
                 if (AmtReceived != '' && !isNaN(parseFloat(AmtReceived))) {
@@ -4399,10 +4402,11 @@
             }
 
             function AddPharmacyBill(in_Pat) {
+                debugger;
                 if (!in_Pat || in_Pat == '0' || in_Pat == '' || in_Pat == 'null' || in_Pat == undefined) return;
 
                 var exists = $('#tblDetails tbody tr').filter(function () {
-                    return $(this).find('input[name="hdnItemID"]').val() == '95939';
+                    return $(this).find('input[name="hdnItemID"]').val() == '95948';
                 });
                 if (exists.length > 0) return;
 
@@ -4441,7 +4445,7 @@
                             '<input type="hidden" name="hdnParentTrans_ID" value="0" />' +
                             '<input type="hidden" name="hdnParentTrans_Name" value="InPatient" />' +
                             '<input type="hidden" name="hdnParentTrans_Type" value="Pharmacy" />' +
-                            '<input type="hidden" name="hdnItemID" value="95939" />' +
+                            '<input type="hidden" name="hdnItemID" value="95948" />' +
                             '<input type="hidden" name="hdnItemName" value="' + itemName + '" />' +
                             '<input type="hidden" name="hdnItemType" value="Service" />' +
                             '<input type="hidden" name="hdnCategory_ID" value="" />' +
@@ -4530,6 +4534,41 @@
             }
 
             var globalAllowLineDiscount = false; // Change from "0" to false
+            var globalAllowApprovalitem = false;
+
+            function getAllowApprovalitem() {
+                $.ajax({
+                    type: "POST",
+                    url: "BillingProcess.aspx/AllowApprovalitem",
+                    contentType: "application/json; charset=utf-8",
+                    dataType: "json",
+                    success: function (response) {
+                        globalAllowApprovalitem = response.d;
+                        applyApprovalPermission();
+                    },
+                    error: function (xhr, status, error) {
+                        console.error("Error fetching approval item setting:", error);
+                        globalAllowApprovalitem = false;
+                        applyApprovalPermission();
+                    }
+                });
+            }
+
+            // Show/hide the Appr. column based purely on the user's AllowApprovalitem
+            // right. The checkbox stays in the DOM (checked by default) so approval
+            // behavior for users without the right is unchanged.
+            function applyApprovalPermission() {
+                var hasRight = (globalAllowApprovalitem === true);
+                if ($('#thAppr').length) {
+                    if (hasRight) {
+                        $('#thAppr').show();
+                        $('input[name="chkApproval"]').closest('td').show();
+                    } else {
+                        $('#thAppr').hide();
+                        $('input[name="chkApproval"]').closest('td').hide();
+                    }
+                }
+            }
 
             function getAllowLineDiscount() {
                 debugger;
@@ -4562,17 +4601,32 @@
                     $("#txtDisAmt").attr('disabled', false);
                     console.log("Discount fields ENABLED for all rows");
                 } else {
-                    // Disable all discount fields
+                    // Disable all discount fields (values are NOT cleared so
+                    // discounts loaded from a previous bill stay displayed)
                     $('input[name="DisAmount"]').attr('disabled', true);
                     $('input[name="DisPer"]').attr('disabled', true);
                     $("#txtDisPer").attr('disabled', true);
                     $("#txtDisAmt").attr('disabled', true);
-                    // Clear any existing discount values when disabled
-                    $('input[name="DisAmount"]').val('0');
-                    $('input[name="DisPer"]').val('0');
-                    $("#txtDisPer").val(0);
-                    $("#txtDisAmt").val(0);
                     console.log("Discount fields DISABLED for all rows");
+                }
+            }
+
+            // Toggle discount field enable/disable based purely on rights.
+            // Unlike applyDiscountPermissionsToAllRows(), this NEVER clears values,
+            // so discounts loaded from a previous bill stay displayed when the
+            // user has no rights. Called from the tblDetails MutationObserver so
+            // every row added from any load path gets the correct rights state.
+            function applyDiscountPermissionState() {
+                if (globalAllowLineDiscount === true) {
+                    $('input[name="DisAmount"]').attr('disabled', false);
+                    $('input[name="DisPer"]').attr('disabled', false);
+                    $("#txtDisPer").attr('disabled', false);
+                    $("#txtDisAmt").attr('disabled', false);
+                } else {
+                    $('input[name="DisAmount"]').attr('disabled', true);
+                    $('input[name="DisPer"]').attr('disabled', true);
+                    $("#txtDisPer").attr('disabled', true);
+                    $("#txtDisAmt").attr('disabled', true);
                 }
             }
             var Item_Discount = 0;
@@ -6513,6 +6567,7 @@
                             + '<input type="hidden" name="hdnDisAmount" value="' + parseFloat(value.Discount_Amount.toFixed(6)) + '" />'
                             + '<input type="hidden" name="hdnNet_Amount" value="' + parseFloat(value.Net_Amount.toFixed(6)) + '" />'
                             + '<input type="hidden" name="hdnRecommendedByDoctor" value="' + value.RecommendedByDoctor + '" />'
+                            + '<input type="hidden" name="hdnApproval" value="' + value.Is_Approval + '" />'
                             + value.Item_Name
                             + '</td>'
                             + '<td>' + (value.Remarks || '') + '</td>'
@@ -7498,6 +7553,44 @@
 
             $(document).ready(function () {
 
+                // Auto-append an approval checkbox to every row added to tblDetails
+                // from anywhere (lab tests, radiology, procedures, packages, pharmacy,
+                // services, appointments, edit-mode loads, etc.). The checkbox is added
+                // as the LAST cell so existing td:eq(n) indexes are never disturbed.
+                function initApprovalCheckbox() {
+                    var tbody = document.querySelector('#tblDetails tbody');
+                    if (!tbody || tbody.getAttribute('data-approval-obs')) return;
+                    tbody.setAttribute('data-approval-obs', '1');
+                    new MutationObserver(function (mutations) {
+                        mutations.forEach(function (mutation) {
+                            mutation.addedNodes.forEach(function (node) {
+                                if (node.nodeType !== 1 || node.tagName !== 'TR') return;
+                                var $tr = $(node);
+                                if ($tr.find('input[name="chkApproval"]').length > 0) return;
+                                var hdnApproval = $tr.find('input[name="hdnApproval"]').val();
+                                var checked = true;
+                                if (hdnApproval !== undefined && hdnApproval !== null && hdnApproval !== '') {
+                                    var lower = hdnApproval.toLowerCase();
+                                    checked = !(lower === 'false' || lower === '0');
+                                }
+                                $tr.append('<td style="text-align:center;width:50px;"><input type="checkbox" name="chkApproval" ' + (checked ? 'checked="checked"' : '') + ' /></td>');
+                            });
+                        });
+                        // Enforce discount rights on every row added from any load path,
+                        // so discount fields are enabled only when the user has the right.
+                        if (typeof applyDiscountPermissionState === 'function') {
+                            applyDiscountPermissionState();
+                        }
+                        // Keep the Appr. column visible/hidden per the user's right.
+                        if (typeof applyApprovalPermission === 'function') {
+                            applyApprovalPermission();
+                        }
+                    }).observe(tbody, { childList: true });
+                }
+                initApprovalCheckbox();
+
+                getAllowApprovalitem();
+
                 var Bill_ID = '<%= Request.QueryString["Bill_ID"] %>';
                 var rgid = '<%= Request.QueryString["Reg_ID"] %>';
                 if (Bill_ID != "") {
@@ -8444,6 +8537,7 @@
                             <th style="width: 100px; text-align: left;">Hos Share </th>
                             <th style="width: 170px; text-align: left;">Doctor </th>
                             <th style="width: 170px; text-align: left;">Issue Date </th>
+                            <th style="width: 50px; text-align: left;" id="thAppr">Appr. </th>
                         </tr>
                     </thead>
                     <tbody>
