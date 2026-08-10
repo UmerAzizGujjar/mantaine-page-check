@@ -7912,6 +7912,7 @@
       <Column Name="New_ItemCode" Type="System.String" DbType="VarChar(20)" CanBeNull="true" />
       <Column Name="Account_ID" Type="System.Int32" DbType="Int" CanBeNull="true" />
       <Column Name="Service_Sub_Category" Type="System.String" DbType="VarChar(100)" CanBeNull="true" />
+      <Column Name="IsPharmacyBilling" Type="System.Boolean" DbType="Bit" CanBeNull="true" />
     </Type>
   </Table>
   <Table Name="dbo.MaterialIssueRequest_Detail" Member="MaterialIssueRequest_Details">

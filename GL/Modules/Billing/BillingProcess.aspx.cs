@@ -3556,31 +3556,27 @@ namespace PMS
 
             decimal total = pharmacyBills.Sum(m => m.Balance_Amount ?? 0);
 
-            string dept = pharmacyBills
-                .Where(m => !string.IsNullOrEmpty(m.pharmacy_Department))
-                .Select(m => m.pharmacy_Department).FirstOrDefault();
+            var pharmacyItem = (from itm in db.INV_Items
+                                where itm.IsPharmacyBilling == true
+                                select itm).FirstOrDefault();
 
-            if (string.IsNullOrEmpty(dept))
-                dept = (from ip in db.In_Patients
-                        where ip.In_Patient_ID == in_pat
-                        select ip.Department).FirstOrDefault();
+            int itemId = 0;
+            string itemName = "Pharmacy Bill";
 
-            if (string.IsNullOrEmpty(dept)) dept = "011";
-
-            string itemName = (from itm in db.INV_Items
-                               where itm.Item_ID == 95948
-                               select itm.Description).FirstOrDefault();
-            if (string.IsNullOrEmpty(itemName)) itemName = "Pharmacy Bill";
+            if (pharmacyItem != null)
+            {
+                itemId = pharmacyItem.Item_ID;
+                itemName = pharmacyItem.Description ?? "Pharmacy Bill";
+            }
 
             return (new JavaScriptSerializer()).Serialize(new
             {
                 PharmacyTotal = total,
                 BillCount = pharmacyBills.Count,
-                PharmacyDepartment = dept,
-                ItemName = itemName
+                ItemName = itemName,
+                ItemId = itemId
             });
         }
-
         [WebMethod]
         public static string GetDocAgreementValues(string doc_id, string test_id, string item_id, string item_name, string Aggreement_Type)
         {

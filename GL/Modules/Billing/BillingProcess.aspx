@@ -4402,85 +4402,85 @@
             }
 
             function AddPharmacyBill(in_Pat) {
-                debugger;
-                if (!in_Pat || in_Pat == '0' || in_Pat == '' || in_Pat == 'null' || in_Pat == undefined) return;
+    debugger;
+    if (!in_Pat || in_Pat == '0' || in_Pat == '' || in_Pat == 'null' || in_Pat == undefined) return;
 
-                var exists = $('#tblDetails tbody tr').filter(function () {
-                    return $(this).find('input[name="hdnItemID"]').val() == '95948';
-                });
-                if (exists.length > 0) return;
+    $.ajax({
+        type: "POST",
+        url: "BillingProcess.aspx/GetPharmacyBillTotal",
+        data: JSON.stringify({ 'in_pat': parseInt(in_Pat) }),
+        contentType: "application/json; charset=utf-8",
+        dataType: "json",
+        success: function (resp) {
+            var result = JSON.parse(resp.d);
+            var total = parseFloat(result.PharmacyTotal) || 0;
+            var count = parseInt(result.BillCount) || 0;
+            if (count == 0 || total <= 0) return;
 
-                $.ajax({
-                    type: "POST",
-                    url: "BillingProcess.aspx/GetPharmacyBillTotal",
-                    data: JSON.stringify({ 'in_pat': parseInt(in_Pat) }),
-                    contentType: "application/json; charset=utf-8",
-                    dataType: "json",
-                    success: function (resp) {
-                        var result = JSON.parse(resp.d);
-                        var total = parseFloat(result.PharmacyTotal) || 0;
-                        var count = parseInt(result.BillCount) || 0;
-                        if (count == 0 || total <= 0) return;
+            var itemName = result.ItemName || 'Pharmacy Bill';
+            var itemId = result.ItemId || 0;
+            
+            var exists = $('#tblDetails tbody tr').filter(function () {
+                return $(this).find('input[name="hdnItemID"]').val() == itemId.toString();
+            });
+            if (exists.length > 0) return;
 
-                        var dept = result.PharmacyDepartment || '011';
-                        var itemName = result.ItemName || 'Pharmacy Bill';
-                        var rowIndex = $('#tblDetails tbody tr').length;
-                        var TestDate = '<%= DateTime.Now.ToString("dd MMM yyyy") %>';
+            var rowIndex = $('#tblDetails tbody tr').length;
+            var TestDate = '<%= DateTime.Now.ToString("dd MMM yyyy") %>';
 
-                        var doctorSelect = '';
-                        if (typeof doctors !== 'undefined' && doctors) {
-                            doctorSelect =
-                                '<select id="ddldoctor' + (rowIndex + 1) + '" ' +
-                                'name="ddlDoctor" ' +
-                                'onchange="GetDocAgreementValuess(this)" ' +
-                                'class="ddlDoctor">' +
-                                doctors +
-                                '</select>';
-                        }
-
-                        var row = '<tr>' +
-                            '<td style="text-align:left;">' + (rowIndex + 1) + '</td>' +
-                            '<td><a href="javascript:void(0)" onclick="ExcludeFromPayment(this)">Delete</a></td>' +
-                            '<td style="text-align:left;">' +
-                            '<input type="hidden" name="hdnParentTrans_ID" value="0" />' +
-                            '<input type="hidden" name="hdnParentTrans_Name" value="InPatient" />' +
-                            '<input type="hidden" name="hdnParentTrans_Type" value="Pharmacy" />' +
-                            '<input type="hidden" name="hdnItemID" value="95948" />' +
-                            '<input type="hidden" name="hdnItemName" value="' + itemName + '" />' +
-                            '<input type="hidden" name="hdnItemType" value="Service" />' +
-                            '<input type="hidden" name="hdnCategory_ID" value="" />' +
-                            '<input type="hidden" name="hdnDisPer" value="0.00" />' +
-                            '<input type="hidden" name="hdnDisAmount" value="0.00" />' +
-                            '<input type="hidden" name="hdnNet_Amount" value="' + total + '" />' +
-                            '<input type="hidden" name="hdnRecommendedByDoctor" value="false" />' +
-                            itemName + '</td>' +
-                            '<td></td>' +
-                            '<td><input type="text" name="txtQty" value="1" disabled style="width:45px" onkeyup="CulculateAmonutWithQty(this)"/>' +
-                            '<input type="hidden" name="txtActualAmount" value="' + total + '" />' +
-                            '<input type="hidden" name="Main_Department" value="' + dept + '" /></td>' +
-                            '<td style="text-align:right" id="amnt' + rowIndex + '" name="amnt">' + total + '</td>' +
-                            '<td><input type="text" name="DisPer" value="0.00" style="width:37px" onkeyup="CalculateSummarieDiscountPerWise(' + rowIndex + ')" /></td>' +
-                            '<td><input type="text" name="DisAmount" value="" style="width:75px" onkeyup="CalculateSummarieDiscountAmountWise(' + rowIndex + ')" disabled /></td>' +
-                            '<td style="text-align:right;">' + total + '</td>' +
-                            '<td><input type="number" name="DocShare" id="DocShare' + rowIndex + '" value="0" style="width:75px" onkeyup="calculateDoctorShare()" /></td>' +
-                            '<td><input type="number" name="HocShare" id="HocShare' + rowIndex + '" value="0" style="width:75px" onkeyup="calculateDoctorShare()" /></td>' +
-                            '<td>' + doctorSelect + '</td>' +
-                            '<td><input type="hidden" name="hdnTestCreatedDate" value="' + TestDate + '"/>' + TestDate + '</td>' +
-                            '</tr>';
-
-                        $('#tblDetails tbody').append(row);
-                        if (doctorSelect != '') {
-                            $('#ddldoctor' + (rowIndex + 1)).select2();
-                        }
-                        CalculateSummarieDiscountPerWise(rowIndex);
-                        CalculateSummariesMaster(false);
-                        updates();
-                    },
-                    error: function (err) {
-                        console.error("Failed to load pharmacy bills", err);
-                    }
-                });
+            var doctorSelect = '';
+            if (typeof doctors !== 'undefined' && doctors) {
+                doctorSelect =
+                    '<select id="ddldoctor' + (rowIndex + 1) + '" ' +
+                    'name="ddlDoctor" ' +
+                    'onchange="GetDocAgreementValuess(this)" ' +
+                    'class="ddlDoctor">' +
+                    doctors +
+                    '</select>';
             }
+
+            var row = '<tr>' +
+                '<td style="text-align:left;">' + (rowIndex + 1) + '</td>' +
+                '<td><a href="javascript:void(0)" onclick="ExcludeFromPayment(this)">Delete</a></td>' +
+                '<td style="text-align:left;">' +
+                '<input type="hidden" name="hdnParentTrans_ID" value="0" />' +
+                '<input type="hidden" name="hdnParentTrans_Name" value="InPatient" />' +
+                '<input type="hidden" name="hdnParentTrans_Type" value="Pharmacy" />' +
+                '<input type="hidden" name="hdnItemID" value="' + itemId + '" />' +
+                '<input type="hidden" name="hdnItemName" value="' + itemName + '" />' +
+                '<input type="hidden" name="hdnItemType" value="Service" />' +
+                '<input type="hidden" name="hdnCategory_ID" value="" />' +
+                '<input type="hidden" name="hdnDisPer" value="0.00" />' +
+                '<input type="hidden" name="hdnDisAmount" value="0.00" />' +
+                '<input type="hidden" name="hdnNet_Amount" value="' + total + '" />' +
+                '<input type="hidden" name="hdnRecommendedByDoctor" value="false" />' +
+                itemName + '</td>' +
+                '<td></td>' +
+                '<td><input type="text" name="txtQty" value="1" disabled style="width:45px" onkeyup="CulculateAmonutWithQty(this)"/>' +
+                '<input type="hidden" name="txtActualAmount" value="' + total + '" /></td>' +
+                '<td style="text-align:right" id="amnt' + rowIndex + '" name="amnt">' + total + '</td>' +
+                '<td><input type="text" name="DisPer" value="0.00" style="width:37px" onkeyup="CalculateSummarieDiscountPerWise(' + rowIndex + ')" /></td>' +
+                '<td><input type="text" name="DisAmount" value="" style="width:75px" onkeyup="CalculateSummarieDiscountAmountWise(' + rowIndex + ')" disabled /></td>' +
+                '<td style="text-align:right;">' + total + '</td>' +
+                '<td><input type="number" name="DocShare" id="DocShare' + rowIndex + '" value="0" style="width:75px" onkeyup="calculateDoctorShare()" /></td>' +
+                '<td><input type="number" name="HocShare" id="HocShare' + rowIndex + '" value="0" style="width:75px" onkeyup="calculateDoctorShare()" /></td>' +
+                '<td>' + doctorSelect + '</td>' +
+                '<td><input type="hidden" name="hdnTestCreatedDate" value="' + TestDate + '"/>' + TestDate + '</td>' +
+                '</tr>';
+
+            $('#tblDetails tbody').append(row);
+            if (doctorSelect != '') {
+                $('#ddldoctor' + (rowIndex + 1)).select2();
+            }
+            CalculateSummarieDiscountPerWise(rowIndex);
+            CalculateSummariesMaster(false);
+            updates();
+        },
+        error: function (err) {
+            console.error("Failed to load pharmacy bills", err);
+        }
+    });
+}
 
             // New function to get panel rate for package items
             function getPackageItemPanelRate(panelId, itemId, itemType, rowIndex) {

@@ -174693,6 +174693,8 @@ namespace PMS
 
         private string _Service_Sub_Category;
 
+        private System.Nullable<bool> _IsPharmacyBilling;
+
         #region Extensibility Method Definitions
         partial void OnLoaded();
         partial void OnValidate(System.Data.Linq.ChangeAction action);
@@ -174921,6 +174923,8 @@ namespace PMS
         partial void OnAccount_IDChanged();
         partial void OnService_Sub_CategoryChanging(string value);
         partial void OnService_Sub_CategoryChanged();
+        partial void OnIsPharmacyBillingChanging(System.Nullable<bool> value);
+        partial void OnIsPharmacyBillingChanged();
         #endregion
 
         public INV_Item()
@@ -177164,6 +177168,26 @@ namespace PMS
                     this._Service_Sub_Category = value;
                     this.SendPropertyChanged("Service_Sub_Category");
                     this.OnService_Sub_CategoryChanged();
+                }
+            }
+        }
+
+        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_IsPharmacyBilling", DbType = "Bit")]
+        public System.Nullable<bool> IsPharmacyBilling
+        {
+            get
+            {
+                return this._IsPharmacyBilling;
+            }
+            set
+            {
+                if ((this._IsPharmacyBilling != value))
+                {
+                    this.OnIsPharmacyBillingChanging(value);
+                    this.SendPropertyChanging();
+                    this._IsPharmacyBilling = value;
+                    this.SendPropertyChanged("IsPharmacyBilling");
+                    this.OnIsPharmacyBillingChanged();
                 }
             }
         }
