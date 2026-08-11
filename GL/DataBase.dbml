@@ -6194,6 +6194,7 @@
       <Column Name="Sample_Remarks" Type="System.String" DbType="NVarChar(500)" CanBeNull="true" />
       <Column Name="IsPayable" Type="System.Boolean" DbType="Bit" CanBeNull="true" />
       <Column Name="Payable_Date" Type="System.DateTime" DbType="DateTime" CanBeNull="true" />
+      <Column Name="Is_Approval" Type="System.Boolean" DbType="Bit" CanBeNull="true" />
       <Association Name="Ar_Billing_Ar_Billing_Detail" Member="Ar_Billing" ThisKey="Bill_ID" OtherKey="Bill_ID" Type="Ar_Billing" IsForeignKey="true" />
     </Type>
   </Table>
@@ -7911,6 +7912,7 @@
       <Column Name="New_ItemCode" Type="System.String" DbType="VarChar(20)" CanBeNull="true" />
       <Column Name="Account_ID" Type="System.Int32" DbType="Int" CanBeNull="true" />
       <Column Name="Service_Sub_Category" Type="System.String" DbType="VarChar(100)" CanBeNull="true" />
+      <Column Name="IsPharmacyBilling" Type="System.Boolean" DbType="Bit" CanBeNull="true" />
     </Type>
   </Table>
   <Table Name="dbo.MaterialIssueRequest_Detail" Member="MaterialIssueRequest_Details">
@@ -8127,6 +8129,7 @@
       <Column Name="user_till" Type="System.Boolean" DbType="Bit" CanBeNull="true" />
       <Column Name="AllowAddPatient" Type="System.Boolean" DbType="Bit" CanBeNull="true" />
       <Column Name="AllowLineDiscount" Type="System.Boolean" DbType="Bit" CanBeNull="true" />
+      <Column Name="AllowApprovalitem" Type="System.Boolean" DbType="Bit" CanBeNull="true" />
       <Column Name="Allow_Sample_list" Type="System.Boolean" DbType="Bit" CanBeNull="true" />
       <Column Name="AllowTestlistDoctor" Type="System.Boolean" DbType="Bit" CanBeNull="true" />
       <Column Name="Allow_Return_Queue" Type="System.Boolean" DbType="Bit" CanBeNull="true" />
@@ -10563,24 +10566,6 @@
     <ElementType Name="sp_GetTopSymptomsResult">
       <Column Name="symtom_count" Type="System.Int32" DbType="Int" CanBeNull="true" />
       <Column Name="symtom_name" Type="System.String" DbType="VarChar(150)" CanBeNull="true" />
-    </ElementType>
-  </Function>
-  <Function Name="dbo.sp_GetPODetailByPOID" Method="sp_GetPODetailByPOID">
-    <Parameter Name="POId" Parameter="pOId" Type="System.Int32" DbType="Int" />
-    <ElementType Name="sp_GetPODetailByPOIDResult">
-      <Column Name="PO_ID" Type="System.Int32" DbType="Int" CanBeNull="true" />
-      <Column Name="Qty" Type="System.Decimal" DbType="Decimal(18,4)" CanBeNull="true" />
-      <Column Name="BlncQty" Type="System.Decimal" DbType="Decimal(38,2)" CanBeNull="true" />
-      <Column Name="PO_Item_ID" Type="System.Int32" DbType="Int NOT NULL" CanBeNull="false" />
-      <Column Name="Delivery_Date" Type="System.DateTime" DbType="DateTime" CanBeNull="true" />
-      <Column Name="Item_Code" Type="System.String" DbType="VarChar(15)" CanBeNull="true" />
-      <Column Name="Description" Type="System.String" DbType="VarChar(200)" CanBeNull="true" />
-      <Column Name="Unit" Type="System.String" DbType="VarChar(5)" CanBeNull="true" />
-      <Column Name="Pack_Quantity" Type="System.Int32" DbType="Int" CanBeNull="true" />
-      <Column Name="Purchase_Rate" Type="System.Decimal" DbType="Decimal(18,2)" CanBeNull="true" />
-      <Column Name="IsBatch" Type="System.Boolean" DbType="Bit" CanBeNull="true" />
-      <Column Name="UOM_Qty" Type="System.Decimal" DbType="Decimal(18,2)" CanBeNull="true" />
-      <Column Name="Bonus_Qty" Type="System.Decimal" DbType="Decimal(18,2) NOT NULL" CanBeNull="false" />
     </ElementType>
   </Function>
   <Function Name="dbo.sp_GetIGPDetailByIGPID" Method="sp_GetIGPDetailByIGPID">
@@ -13041,6 +13026,25 @@
   <Function Name="dbo.GetSale_InoviceNoCathLAb" Method="GetSale_InoviceNoCathLAb" IsComposable="true">
     <Return Type="System.String" />
   </Function>
+  <Function Name="dbo.sp_GetPODetailByPOID" Method="sp_GetPODetailByPOID">
+    <Parameter Name="POId" Parameter="pOId" Type="System.Int32" DbType="Int" />
+    <ElementType Name="sp_GetPODetailByPOIDResult">
+      <Column Name="PO_ID" Type="System.Int32" DbType="Int" CanBeNull="true" />
+      <Column Name="Qty" Type="System.Decimal" DbType="Decimal(18,4)" CanBeNull="true" />
+      <Column Name="BlncQty" Type="System.Decimal" DbType="Decimal(38,2)" CanBeNull="true" />
+      <Column Name="PO_Item_ID" Type="System.Int32" DbType="Int NOT NULL" CanBeNull="false" />
+      <Column Name="Delivery_Date" Type="System.DateTime" DbType="DateTime" CanBeNull="true" />
+      <Column Name="Item_Code" Type="System.String" DbType="VarChar(15)" CanBeNull="true" />
+      <Column Name="Description" Type="System.String" DbType="VarChar(200)" CanBeNull="true" />
+      <Column Name="Unit" Type="System.String" DbType="VarChar(5)" CanBeNull="true" />
+      <Column Name="Pack_Quantity" Type="System.Int32" DbType="Int" CanBeNull="true" />
+      <Column Name="Purchase_Rate" Type="System.Decimal" DbType="Decimal(18,2)" CanBeNull="true" />
+      <Column Name="IsBatch" Type="System.Boolean" DbType="Bit" CanBeNull="true" />
+      <Column Name="UOM_Qty" Type="System.Decimal" DbType="Decimal(18,2) NOT NULL" CanBeNull="false" />
+      <Column Name="Bonus_Qty" Type="System.Decimal" DbType="Decimal(18,2) NOT NULL" CanBeNull="false" />
+      <Column Name="SaleRate" Type="System.Decimal" DbType="Decimal(18,4)" CanBeNull="true" />
+    </ElementType>
+  </Function>
   <Function Name="dbo.spGetAllitemsDetails" Method="spGetAllitemsDetails">
     <Parameter Name="searchText" Type="System.String" DbType="NVarChar(100)" />
     <Parameter Name="allowPharmacy" Type="System.Boolean" DbType="Bit" />
@@ -13052,6 +13056,8 @@
       <Column Name="Description" Type="System.String" DbType="VarChar(200)" CanBeNull="true" />
       <Column Name="Unit" Type="System.String" DbType="VarChar(150) NOT NULL" CanBeNull="false" />
       <Column Name="Active" Type="System.Boolean" DbType="Bit" CanBeNull="true" />
+      <Column Name="LastQty" Type="System.Decimal" DbType="Decimal(18,2) NOT NULL" CanBeNull="false" />
+      <Column Name="LastRequiredDate" Type="System.DateTime" DbType="DateTime" CanBeNull="true" />
     </ElementType>
   </Function>
 </Database>

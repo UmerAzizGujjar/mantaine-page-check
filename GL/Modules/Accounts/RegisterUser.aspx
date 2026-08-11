@@ -96,6 +96,7 @@
                     $('#AllowDiscountAssign').prop('checked', data.AllowDiscountAssign);
                     $('#AllowTill').prop('checked', data.AllowTill);
                     $('#AllowLineDiscount').prop('checked', data.AllowLineDiscount);
+                    $('#AllowApprovalitem').prop('checked', data.AllowApprovalitem);
                     $('#AllowTestlistDoctor').prop('checked', data.AllowTestlistDoctor);
                 },
                 error: function (xhr, status, error) {
@@ -164,6 +165,7 @@
             var AllowDiscountAssign = $('#AllowDiscountAssign').prop('checked');
             var AllowTill = $('#AllowTill').prop('checked');
             var AllowLineDiscount = $('#AllowLineDiscount').prop('checked');
+            var AllowApprovalitem = $('#AllowApprovalitem').prop('checked');
             var AllowTestlistDoctor = $('#AllowTestlistDoctor').prop('checked');
             var AllowReglistPrint = $('#Allow_ReglistPrint').prop('checked');
             
@@ -309,6 +311,7 @@
                 "AllowDiscountAssign": AllowDiscountAssign,
                 "AllowTill": AllowTill,
                 "AllowLineDiscount": AllowLineDiscount,
+                "AllowApprovalitem": AllowApprovalitem,
                 "AllowReglistPrint": AllowReglistPrint,
                 "AllowTestlistDoctor": AllowTestlistDoctor
 
@@ -568,6 +571,9 @@
                                                          <input type="checkbox" class="form-check-input" id="AllowLineDiscount" name="AllowLineDiscount" />
                                                      </div>
                                                      <div class="form-check">
+                                                         <input type="checkbox" class="form-check-input" id="AllowApprovalitem" name="AllowApprovalitem" />
+                                                     </div>
+                                                     <div class="form-check">
                                                          <input type="checkbox" class="form-check-input" id="AllowTestlistDoctor" name="AllowTestlistDoctor" />
                                                      </div>
                                                      <div class="form-check">
@@ -648,6 +654,9 @@
                                                      </div>
                                                      <div class="form-check">
                                                          <label class="form-check-label" for="AllowLineDiscount">Allow Bill Discount</label>
+                                                     </div>
+                                                     <div class="form-check">
+                                                         <label class="form-check-label" for="AllowApprovalitem">Allow Approval Item</label>
                                                      </div>
                                                      <div class="form-check">
                                                          <label class="form-check-label" for="AllowTestlistDoctor">Allow Testlist Doctor</label>

@@ -2208,6 +2208,71 @@ namespace PMS.Modules.PatientManagement
         }
 
         [WebMethod]
+        public static string GetMedicineTemplateByItemCode(string itemCode)
+        {
+            DataBaseDataContext db = new DataBaseDataContext();
+            var tpl = (from mt in db.Medicines_Templates
+                       where (mt.Is_cancel == null || mt.Is_cancel == false)
+                             && mt.Item_Code == itemCode
+                       orderby mt.Medicine_Date descending
+                       select new
+                       {
+                           mt.Frequency,
+                           mt.Dosage_From,
+                           mt.Dosage_Qty,
+                           mt.Other_Instruction,
+                           mt.Recomended_Dosage,
+                           mt.Remarks
+                       }).FirstOrDefault();
+
+            if (tpl == null) return null;
+
+            // Returns BOTH the matched dropdown code (set on the dropdown) AND the raw
+            // template value. The raw value is used as a fallback into Special Instructions
+            // when the dropdown match fails (e.g. Urdu/local-language instructions that
+            // don't match any English dropdown options).
+            var result = new
+            {
+                Frequency = MatchDataValueCode(db, "Frequency", tpl.Frequency),
+                FrequencyRaw = tpl.Frequency,
+                Dosage_From = MatchDataValueCode(db, "Dosage Form", tpl.Dosage_From),
+                Dosage_FromRaw = tpl.Dosage_From,
+                Dose = MatchDataValueCode(db, "Dosage Quantity", tpl.Recomended_Dosage),
+                DoseRaw = tpl.Recomended_Dosage,
+                Other_Instruction = MatchDataValueCode(db, "Other Instruction", tpl.Other_Instruction),
+                Other_InstructionRaw = tpl.Other_Instruction,
+                Dosage_Qty = tpl.Dosage_Qty,
+                Remarks = tpl.Remarks
+            };
+            return (new JavaScriptSerializer()).Serialize(result);
+        }
+
+        private static string MatchDataValueCode(DataBaseDataContext db, string valueSetName, string templateValue)
+        {
+            if (string.IsNullOrWhiteSpace(templateValue)) return null;
+            var trimmed = templateValue.Trim();
+
+            // Try exact match on DataValue_Description first
+            var match = (from dv in db.DataValues
+                         join vs in db.ValueSets on dv.ValueSet_ID equals vs.ValueSet_ID
+                         where vs.ValueSet_Name == valueSetName
+                               && dv.DataValue_Description.Trim() == trimmed
+                         select dv.DataValue_Name).FirstOrDefault();
+            if (match != null) return match;
+
+            // Fallback: extract first alphabetic word (e.g., "BD" from "BD- ?? ?")
+            var firstWord = new string(trimmed.TakeWhile(char.IsLetter).ToArray());
+            if (string.IsNullOrEmpty(firstWord)) return null;
+
+            match = (from dv in db.DataValues
+                     join vs in db.ValueSets on dv.ValueSet_ID equals vs.ValueSet_ID
+                     where vs.ValueSet_Name == valueSetName
+                           && dv.DataValue_Description.Trim() == firstWord
+                     select dv.DataValue_Name).FirstOrDefault();
+            return match;
+        }
+
+        [WebMethod]
         public static string GetTemplate(string searchString)
         {
             DataBaseDataContext db = new DataBaseDataContext();

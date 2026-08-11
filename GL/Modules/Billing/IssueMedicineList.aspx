@@ -154,17 +154,17 @@
                             var date = full.Invoice_Date;
                             date = moment(date).format('DD-MMM-YYYY');
                             return date;
-                        }, "width": "8%", "orderable": true
+                        }, "width": "6%", "orderable": true
                     },
-                    { "data": "BillNo", "width": "8%", "orderable": false },
-                    { "data": "FBR_Number", "width": "8%", "orderable": false }, 
+                    { "data": "BillNo", "width": "7%", "orderable": false },
+                    { "data": "FBR_Number", "width": "7%", "orderable": false }, 
                     { "data": "Customer_Name", "width": "10%", "orderable": false },
-                    { "data": "Patient_ID", "name": "Patient_ID", "width": "8%", "orderable": true },                    
-                    { "data": "Referred_By_value", "width": "8%", "orderable": false },                  
-                    { "data": "pharmacy_Department", "width": "8%", "orderable": false },                  
+                    { "data": "Patient_ID", "name": "Patient_ID", "width": "7%", "orderable": true },                    
+                    { "data": "Referred_By_value", "width": "7%", "orderable": false },                  
+                    { "data": "pharmacy_Department", "width": "7%", "orderable": false },                  
                     {
                         "data": "Pharma_trans_Type",
-                        "width": "8%",
+                        "width": "7%",
                         "orderable": false,
                         "render": function (data) {
                             if (!data || data.trim() === "") {
@@ -177,7 +177,7 @@
                     { "data": "Discount_Amount", "width": "6%", "orderable": false },
                     { "data": "Received_Amount", "width": "6%", "orderable": false },
                     { "data": "Balance_Amount", "width": "6%", "orderable": false },
-                    { "data": "WareHouse", "width": "8%", "orderable": false },
+                    { "data": "WareHouse", "width": "9%", "orderable": false },
                     {
                         render: function (data, type, full) {
                             debugger;
@@ -188,7 +188,7 @@
                             var result;
                             result = res + print + voucher;
                             return result;
-                        }, "width": "8%", "orderable": false
+                        }, "width": "17%", "orderable": false
                     }
                 ],
                 "initComplete": function (settings, json) {
