@@ -599,6 +599,10 @@
     </script>
     <script id="functions" type="text/javascript">
         var globalFormType = '';
+        // Cache of Medicines_Template defaults keyed by panel serialNo (Item_Code/id).
+        // Used so the dropdown auto-fill sticks regardless of which AJAX response
+        // (template lookup vs. dropdown population) resolves first.
+        var templateValuesMap = {};
         function loadPolicyVisibility() {
             $.ajax({
                 type: "POST",
@@ -3020,13 +3024,8 @@ function LoadLabResultrpt() {
             const $checkbox = $(`#Medicenechk_${serialNo}`);
             const $icon = $(this).find('i');
 
-            // If details div already exists, remove it and return
-            if ($detailsDiv.length) {
-                $detailsDiv.slideUp(300, function () {
-                    $(this).remove();
-                });
-                return;
-            }
+            // If this panel is already open, do nothing (no toggle close).
+            if ($detailsDiv.length) return;
 
             // Remove all other details divs first
             $('.Medicene-details').each(function () {
@@ -3123,6 +3122,56 @@ function LoadLabResultrpt() {
 
             const $newDetailsDiv = $(`#MediceneDetails_${serialNo}`);
 
+            // Per-panel template cache (keyed by serialNo so overlapping opens don't collide)
+            templateValuesMap[serialNo] = null;
+
+            // Apply cached Medicines_Template values to the inputs of this panel.
+            // For each field, prefers the matched dropdown code (sets the dropdown).
+            // If the dropdown match fails (e.g. Urdu/local-language instructions that
+            // don't match any English dropdown options), the raw template value is
+            // appended to Special Instructions so nothing is lost.
+            // Idempotent: safe to call from multiple dropdown callbacks + the template
+            // callback without producing duplicate text.
+            function applyTemplateToDetails() {
+                var tpl = templateValuesMap[serialNo];
+                if (!tpl) return;
+
+                var $si = $('#specialinstructions_' + serialNo);
+                var si = $si.val() || '';
+
+                // Try to set the dropdown; if option missing, append the raw value to Special Instructions.
+                function applyOrFallback(code, raw, $select) {
+                    if (code && $select.find('option[value="' + code + '"]').length) {
+                        $select.val(code);
+                    } else if (raw && si.indexOf(raw) === -1) {
+                        si = si ? si + ' | ' + raw : raw;
+                    }
+                }
+
+                applyOrFallback(tpl.Frequency, tpl.FrequencyRaw, $('#medicenefrequency_' + serialNo));
+                applyOrFallback(tpl.Dosage_From, tpl.Dosage_FromRaw, $('#mediceneDosageFrom_' + serialNo));
+                applyOrFallback(tpl.Dose, tpl.DoseRaw, $('#mediceneDose_' + serialNo));
+                applyOrFallback(tpl.Other_Instruction, tpl.Other_InstructionRaw, $('#otherinstructions_' + serialNo));
+
+                // Remarks always goes to Special Instructions (free text). Combine with any
+                // unmatched values collected above.
+                var extras = [];
+                if (tpl.Remarks) extras.push(tpl.Remarks);
+                var unmatched = [];
+                if (tpl.FrequencyRaw && (!tpl.Frequency || !( $('#medicenefrequency_' + serialNo).find('option[value="' + tpl.Frequency + '"]').length))) unmatched.push(tpl.FrequencyRaw);
+                if (tpl.Dosage_FromRaw && (!tpl.Dosage_From || !( $('#mediceneDosageFrom_' + serialNo).find('option[value="' + tpl.Dosage_From + '"]').length))) unmatched.push(tpl.Dosage_FromRaw);
+                if (tpl.DoseRaw && (!tpl.Dose || !( $('#mediceneDose_' + serialNo).find('option[value="' + tpl.Dose + '"]').length))) unmatched.push(tpl.DoseRaw);
+                if (tpl.Other_InstructionRaw && (!tpl.Other_Instruction || !( $('#otherinstructions_' + serialNo).find('option[value="' + tpl.Other_Instruction + '"]').length))) unmatched.push(tpl.Other_InstructionRaw);
+
+                var combined = extras.concat(unmatched).filter(function (x) {
+                    return x && si.indexOf(x) === -1;
+                }).join(' | ');
+                if (combined) {
+                    si = si ? si + ' | ' + combined : combined;
+                }
+                if (si) $si.val(si);
+            }
+
             // Populate Dose dropdown and set existing value
             PageMethods.FillDosageQty(function (Dosage) {
                 var options = '<option value="">Select Dose</option>';
@@ -3135,6 +3184,7 @@ function LoadLabResultrpt() {
                 if (isEditMode && existingValues.dose) {
                     $(`#mediceneDose_${serialNo}`).val(existingValues.dose);
                 }
+                applyTemplateToDetails();
             });
 
             // Populate all dropdowns and set values
@@ -3148,6 +3198,7 @@ function LoadLabResultrpt() {
                 if (isEditMode && existingValues.dosageFrom) {
                     $(`#mediceneDosageFrom_${serialNo}`).val(existingValues.dosageFrom);
                 }
+                applyTemplateToDetails();
             });
 
             PageMethods.FillRoutesDropDown(function (Routes) {
@@ -3160,6 +3211,7 @@ function LoadLabResultrpt() {
                 if (isEditMode && existingValues.route) {
                     $(`#mediceneroute_${serialNo}`).val(existingValues.route);
                 }
+                applyTemplateToDetails();
             });
 
             PageMethods.FillFrequencyDropDown(function (Frequency) {
@@ -3173,6 +3225,7 @@ function LoadLabResultrpt() {
                 if (isEditMode && existingValues.frequency) {
                     $(`#medicenefrequency_${serialNo}`).val(existingValues.frequency);
                 }
+                applyTemplateToDetails();
             });
 
             PageMethods.FillOtherInstruction(function (Instructions) {
@@ -3185,6 +3238,7 @@ function LoadLabResultrpt() {
                 if (isEditMode && existingValues.otherInstruction) {
                     $(`#otherinstructions_${serialNo}`).val(existingValues.otherInstruction);
                 }
+                applyTemplateToDetails();
             });
 
             // Set other values
@@ -3195,6 +3249,21 @@ function LoadLabResultrpt() {
 
                 // Update button text
                 $('#addTest_' + serialNo).html('<i class="fa fa-plus-circle" style="color:black"></i> Update');
+            }
+
+            // Auto-load defaults from Medicines_Template for new (non-edit) entries.
+            // The values are cached per serialNo; each dropdown callback above also
+            // calls applyTemplateToDetails() so the value sticks regardless of which
+            // AJAX response resolves first.
+            if (!isEditMode) {
+                PageMethods.GetMedicineTemplateByItemCode(serialNo, function (res) {
+                    try {
+                        templateValuesMap[serialNo] = res ? JSON.parse(res) : null;
+                    } catch (e) {
+                        templateValuesMap[serialNo] = null;
+                    }
+                    applyTemplateToDetails();
+                });
             }
 
             // Show the details
