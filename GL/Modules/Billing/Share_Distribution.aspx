@@ -27,6 +27,17 @@
                 var discAmount = (shareableIncome * perc) / 100;
                 row.find('.net-amount').val(discAmount.toFixed(2));
                 CalculateRemainingIPDShare();
+                CalculateDoctorHospitalShare();
+            });
+
+            $(document).on('keyup', '.net-amount', function () {
+                var netAmount = parseFloat($(this).val()) || 0;
+                var shareableIncome = parseFloat($('#txtShareableIncome').val()) || 0;
+                var row = $(this).closest('tr');
+                var perc = shareableIncome > 0 ? (netAmount / shareableIncome) * 100 : 0;
+                row.find('.disc-perc').val(perc.toFixed(2));
+                CalculateRemainingIPDShare();
+                CalculateDoctorHospitalShare();
             });
         });
 
@@ -40,7 +51,7 @@
             $('#tblDoctorShareDetails tbody tr').each(function () {
 
                 var row = $(this);
-                var accountName = row.find('#Account_Name').val()?.trim().toUpperCase();
+                var accountName = row.find('input[name="Account_Name"]').val()?.trim().toUpperCase();
 
                 var netAmount = parseFloat(
                     row.find('.net-amount').val()
@@ -68,6 +79,38 @@
                 ipdRow.find('.net-amount').val(remainingAmount.toFixed(2));
             }
         }
+
+        function CalculateDoctorHospitalShare() {
+            debugger;
+            var doctorShare = 0;
+            var hospitalShare = 0;
+
+            $('#tblDoctorShareDetails tbody tr').each(function () {
+                debugger;
+                var accountName = $(this).find('input[name="Account_Name"]').val()?.trim().toUpperCase();
+                var netAmount = parseFloat(
+                    $(this).find('.net-amount').val()
+                ) || 0;
+                if (accountName === 'IPD SHARE') {
+                    hospitalShare  += netAmount;
+                }
+                else {
+                    doctorShare += netAmount;
+                }
+
+            });
+
+            $('#txtDoctorShare').val(doctorShare.toFixed(2));
+
+            var shareableIncome = parseFloat($('#txtShareableIncome').val()) || 0;
+            //var hospitalShare = shareableIncome - doctorShare;
+
+            if (hospitalShare < 0) {
+                hospitalShare = 0;
+            }
+
+            $('#txtHosShare').val(hospitalShare.toFixed(2));
+        }
         function LoadDistributionHead(Dist_ID) {
             var id = Dist_ID
             $.ajax({
@@ -91,6 +134,9 @@
                     $("#hdPatientID").val(parse[0].Patient_Id);
                     if (Voucher_Status != "Approved") {
                         $("#btnApprove").show()
+                    }
+                    else {
+                        $("#btnSave").val("Update").attr('disabled', true);
                     }
                     
 
@@ -124,7 +170,7 @@
                                     <input type="text" name="Account_Name" value="${value.Share_Account_Name}" readonly>
                                 </td>
                             
-                                <td style="text-align:center;">
+                                <td style="text-align:center;display: none">
                                     <input type="number" class="form-control total-amount"
                                            name="txtRevenuAmount" value="${value.Total_Amount}">
                                 </td>
@@ -134,7 +180,7 @@
                                            name="txtRevenuDiscPer" value="${value.Discount_Percentage}">
                                 </td>
                             
-                                <td style="text-align:center;">
+                                <td style="text-align:center; display: none">
                                     <input type="number" class="form-control disc-amount"
                                            name="txtRevenuDiscAmount" value="${value.Discount_Amount}">
                                 </td>
@@ -148,6 +194,7 @@
                 $('#tblDoctorShareDetails tbody')
                     .empty()
                     .append(rows);
+                CalculateDoctorHospitalShare();
             });
         }
         var shareableIncomes = 0;
@@ -579,13 +626,13 @@
             <tr>
                 <td style="text-align:center;"><input type="hidden" id="Account_ID" name="Account_ID" value="${accountId}"><input type="text" id="Account_Code" name="Account_Code" value="${accountCode}" readonly></td>
                 <td style="text-align:center;"><input type="text" id="Account_Name" name="Account_Name" value="${accountName}" readonly></td>
-                <td style="text-align:center;">
+                <td style="text-align:center;display: none">
                     <input type="number" class="form-control total-amount" id="txtRevenuAmount" name="txtRevenuAmount" value="0">
                 </td>
                 <td style="text-align:center;">
                     <input type="number" class="form-control disc-perc" id="txtRevenuDiscPer"  name="txtRevenuDiscPer" value="0">
                 </td>
-                <td style="text-align:center;">
+                <td style="text-align:center;display: none">
                     <input type="number" class="form-control disc-amount" id="txtRevenuDiscAmount"  name="txtRevenuDiscAmount" value="0">
                 </td>
                 <td style="text-align:center;">
@@ -595,6 +642,7 @@
         `;
 
             $('#tblDoctorShareDetails tbody').append(row);
+            CalculateDoctorHospitalShare();
         }
 
         debugger;
@@ -617,21 +665,22 @@
             <tr>
                 <td style="text-align:center;"><input type="hidden" id="Account_ID" name="Account_ID" value="${accountId}"><input type="text" id="Account_Code" name="Account_Code" value="${accountCode}" readonly></td>
                 <td style="text-align:center;"><input type="hidden" id="Doctor_ID" name="Doctor_ID" value="${doctorId}"><input type="text" id="Account_Name" name="Account_Name" value="${doctorText}" readonly></td>
-                <td style="text-align:center;">
+                <td style="text-align:center;display: none">
                     <input type="number" class="form-control total-amount" id="txtRevenuAmount" name="txtRevenuAmount" value="0">
                 </td>
                 <td style="text-align:center;">
                     <input type="number" class="form-control disc-perc" id="txtRevenuDiscPer"  name="txtRevenuDiscPer" value="0">
                 </td>
-                <td style="text-align:center;">
+                <td style="text-align:center;display: none">
                     <input type="number" class="form-control disc-amount" id="txtRevenuDiscAmount"  name="txtRevenuDiscAmount" value="0">
                 </td>
                 <td style="text-align:center;">
-                    <input type="number" class="form-control net-amount" id="txtRevenuNetAmount"  name="txtRevenuNetAmount" value="0" readonly>
+                    <input type="number" class="form-control net-amount" id="txtRevenuNetAmount"  name="txtRevenuNetAmount" value="0" >
                 </td>
             </tr>
         `;
             $('#tblDoctorShareDetails tbody').append(row);
+            CalculateDoctorHospitalShare();
         }
 
 
@@ -659,7 +708,7 @@
                            value="${item.Account_Name}" readonly>
                 </td>
 
-                <td style="text-align:center;">
+                <td style="text-align:center;display: none">
                     <input type="number" class="form-control total-amount"
                            name="txtRevenuAmount"
                            value="0" >
@@ -670,7 +719,7 @@
                            name="txtRevenuDiscPer" value="0">
                 </td>
 
-                <td style="text-align:center;">
+                <td style="text-align:center;display: none">
                     <input type="number" class="form-control disc-amount"
                            name="txtRevenuDiscAmount" value="0">
                 </td>
@@ -684,6 +733,8 @@
 
                     $('#tblDoctorShareDetails tbody').append(row);
                 });
+
+                CalculateDoctorHospitalShare();
 
             }, function (err) {
                 alert(err.get_message());
@@ -1255,6 +1306,10 @@
             <div class="col-lg-2 col-md-6 col-sm-6">
                 <input type="button" onclick="GenerateIPDRows();" class="btn-primry" value="Add IPD Revenue" id="generateRowss" />
             </div>
+            <div class="col-lg-2 col-md-6 col-sm-6">
+                <label>Doctor Share</label>
+                <input type="text" readonly class="btn-primry" value="0" id="txtDoctorShare" />
+            </div>
         </div>
         <div class="row" style="margin-top: 10px;" >
 
@@ -1269,6 +1324,11 @@
             <div class="col-lg-2 col-md-6 col-sm-6">
                 <input type="button" onclick="GenerateRows();" class="btn-primry" value="Add Doctor" id="generateRows" />
             </div>
+            
+            <div class="col-lg-2 col-md-6 col-sm-6">
+                <label>Hospital Share</label>
+                <input type="text" readonly class="btn-primry" value="0" id="txtHosShare" />
+            </div>
         </div>
 
         <div class="row">
@@ -1279,9 +1339,9 @@
                             <tr>
                                 <th style="text-align: center; width: 20%;">Account</th>
                                 <th style="text-align: center; width: 20%;">Doctor </th>
-                                <th style="text-align: center; width: 15%;">Total Amount</th>
-                                <th style="text-align: center; width: 15%;">Disc Percentage</th>
-                                <th style="text-align: center; width: 15%;">Disc Amount</th>
+                                <th style="text-align: center; width: 15%; display: none">Total Amount</th>
+                                <th style="text-align: center; width: 15%;">Share Percentage</th>
+                                <th style="text-align: center; width: 15%;display: none">Disc Amount</th>
                                 <th style="text-align: center; width: 15%;">Net Amount</th>
                             </tr>
                         </thead>
