@@ -1325,6 +1325,10 @@ namespace PMS
             decimal Total_CGSS = 0;
             Ar_Billing newBill;
 
+            // sys_param: "approval pharmacy" = "01" -> run approve pharmacy,
+            // otherwise skip the approval function.
+            bool approvePharmacy = db.sys_Parms.Any(p => p.Name == "approval pharmacy" && p.Code == "01");
+
             if (db.Connection.State != ConnectionState.Open)
                 db.Connection.Open();
 
@@ -1343,7 +1347,11 @@ namespace PMS
 
                     db.Transaction.Commit();
 
-                    ApprovePhramcy(newBillId.ToString());
+                    // sys_param "approval pharmacy" = "01" -> approve pharmacy, otherwise skip
+                    if (approvePharmacy)
+                    {
+                        ApprovePhramcy(newBillId.ToString());
+                    }
 
                     PostToFBRIfEnabled(newBillId);
 
@@ -1622,30 +1630,7 @@ namespace PMS
             return newBill;
         }
 
-        //private static decimal ReadCurrentStock(DataBaseDataContext db, int itemId, string batchNo)
-        //{
-        //    using (SqlCommand cmd = (SqlCommand)db.Connection.CreateCommand())
-        //    {
-        //        cmd.Transaction = (SqlTransaction)db.Transaction;
-
-        //        cmd.CommandText = @"
-        //    SELECT ISNULL(SUM(Qty), 0)
-        //    FROM vwBatch_Ledger
-        //    WHERE Item_ID = @id
-        //      AND Batch_No = @batch";
-
-        //        cmd.Parameters.AddWithValue("@id", itemId);
-        //        cmd.Parameters.AddWithValue("@batch", batchNo);
-
-        //        object result = cmd.ExecuteScalar();
-
-        //        if (result == null || result == DBNull.Value)
-        //            return 0m;
-
-        //        return Convert.ToDecimal(result);
-        //    }
-        //}
-
+      
         private static decimal ReadCurrentStock(DataBaseDataContext db, int itemId, string batchNo, string warehouse)
         {
             using (SqlCommand cmd = (SqlCommand)db.Connection.CreateCommand())
