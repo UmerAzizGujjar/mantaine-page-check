@@ -13026,19 +13026,6 @@
   <Function Name="dbo.GetSale_InoviceNoCathLAb" Method="GetSale_InoviceNoCathLAb" IsComposable="true">
     <Return Type="System.String" />
   </Function>
-  <Function Name="dbo.spGetAllitemsDetails" Method="spGetAllitemsDetails">
-    <Parameter Name="searchText" Type="System.String" DbType="NVarChar(100)" />
-    <Parameter Name="allowPharmacy" Type="System.Boolean" DbType="Bit" />
-    <Parameter Name="allowGeneralItem" Type="System.Boolean" DbType="Bit" />
-    <Parameter Name="warehouse" Type="System.Int32" DbType="Int" />
-    <ElementType Name="spGetAllitemsDetailsResult">
-      <Column Name="Item_ID" Type="System.Int32" DbType="Int NOT NULL" CanBeNull="false" />
-      <Column Name="Item_Code" Type="System.String" DbType="VarChar(15)" CanBeNull="true" />
-      <Column Name="Description" Type="System.String" DbType="VarChar(200)" CanBeNull="true" />
-      <Column Name="Unit" Type="System.String" DbType="VarChar(150) NOT NULL" CanBeNull="false" />
-      <Column Name="Active" Type="System.Boolean" DbType="Bit" CanBeNull="true" />
-    </ElementType>
-  </Function>
   <Function Name="dbo.sp_GetPODetailByPOID" Method="sp_GetPODetailByPOID">
     <Parameter Name="POId" Parameter="pOId" Type="System.Int32" DbType="Int" />
     <ElementType Name="sp_GetPODetailByPOIDResult">
@@ -13056,6 +13043,21 @@
       <Column Name="UOM_Qty" Type="System.Decimal" DbType="Decimal(18,2) NOT NULL" CanBeNull="false" />
       <Column Name="Bonus_Qty" Type="System.Decimal" DbType="Decimal(18,2) NOT NULL" CanBeNull="false" />
       <Column Name="SaleRate" Type="System.Decimal" DbType="Decimal(18,4)" CanBeNull="true" />
+    </ElementType>
+  </Function>
+  <Function Name="dbo.spGetAllitemsDetails" Method="spGetAllitemsDetails">
+    <Parameter Name="searchText" Type="System.String" DbType="NVarChar(100)" />
+    <Parameter Name="allowPharmacy" Type="System.Boolean" DbType="Bit" />
+    <Parameter Name="allowGeneralItem" Type="System.Boolean" DbType="Bit" />
+    <Parameter Name="warehouse" Type="System.Int32" DbType="Int" />
+    <ElementType Name="spGetAllitemsDetailsResult">
+      <Column Name="Item_ID" Type="System.Int32" DbType="Int NOT NULL" CanBeNull="false" />
+      <Column Name="Item_Code" Type="System.String" DbType="VarChar(15)" CanBeNull="true" />
+      <Column Name="Description" Type="System.String" DbType="VarChar(200)" CanBeNull="true" />
+      <Column Name="Unit" Type="System.String" DbType="VarChar(150) NOT NULL" CanBeNull="false" />
+      <Column Name="Active" Type="System.Boolean" DbType="Bit" CanBeNull="true" />
+      <Column Name="LastQty" Type="System.Decimal" DbType="Decimal(18,2) NOT NULL" CanBeNull="false" />
+      <Column Name="LastRequiredDate" Type="System.DateTime" DbType="DateTime" CanBeNull="true" />
     </ElementType>
   </Function>
 </Database>
