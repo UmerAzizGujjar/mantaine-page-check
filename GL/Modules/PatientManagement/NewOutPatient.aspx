@@ -2926,6 +2926,7 @@ function LoadLabResultrpt() {
             html += '<div id="previousMedicinesList">';
 
             PageMethods.GetPreviousMedicines(patientID, function (Medicines) {
+                debugger;
                 var medicineData = JSON.parse(Medicines);
 
                 if (medicineData.length === 0) {
@@ -2934,6 +2935,7 @@ function LoadLabResultrpt() {
                 }
 
                 $.each(medicineData, function (key, value) {
+                    debugger;
                     html += '<div class="Medicene-row" style="display: flex; align-items: center; justify-content: space-between; padding: 6px 0; cursor: pointer;" ' +
                         'onclick="ShowMediceneDetails(\'' + value.Item_Code + '\', \'' + value.Description.replace(/'/g, "\\'") + '\')">' +
                         '<div style="display: flex; align-items: center;">' +
@@ -3016,6 +3018,27 @@ function LoadLabResultrpt() {
                     $('#allMedicenes').html('<div style="padding: 10px; color: red;">Error loading items</div>');
                 }
             });
+        }
+        function setMedicineDropdownValue($select, value) {
+            if (!value) return;
+            value = String(value).trim();
+            if (!value) return;
+            if ($select.find('option[value="' + value + '"]').length) {
+                $select.val(value);
+                return;
+            }
+            function norm(s) {
+                return String(s).toLowerCase().replace(/\s+/g, ' ').replace(/\s+-\s+/g, '-').trim();
+            }
+            var nv = norm(value);
+            var exact = null, prefix = null, prefixLen = -1;
+            $select.find('option').each(function () {
+                var t = norm($(this).text());
+                if (t === nv) { exact = this; }
+                if (t.indexOf(nv) === 0 && t.length > prefixLen) { prefix = this; prefixLen = t.length; }
+            });
+            if (exact) exact.selected = true;
+            else if (prefix) prefix.selected = true;
         }
         function ShowMediceneDetails(serialNo, testName, isEditMode = false, existingValues = {}, totalStock = 0) {
             $('#11').click();
@@ -3182,7 +3205,7 @@ function LoadLabResultrpt() {
 
                 // Set existing value after dropdown is populated
                 if (isEditMode && existingValues.dose) {
-                    $(`#mediceneDose_${serialNo}`).val(existingValues.dose);
+                    setMedicineDropdownValue($(`#mediceneDose_${serialNo}`), existingValues.dose);
                 }
                 applyTemplateToDetails();
             });
@@ -3196,7 +3219,7 @@ function LoadLabResultrpt() {
                 $(`#mediceneDosageFrom_${serialNo}`).html(options);
 
                 if (isEditMode && existingValues.dosageFrom) {
-                    $(`#mediceneDosageFrom_${serialNo}`).val(existingValues.dosageFrom);
+                    setMedicineDropdownValue($(`#mediceneDosageFrom_${serialNo}`), existingValues.dosageFrom);
                 }
                 applyTemplateToDetails();
             });
@@ -3209,7 +3232,7 @@ function LoadLabResultrpt() {
                 $(`#mediceneroute_${serialNo}`).html(options);
 
                 if (isEditMode && existingValues.route) {
-                    $(`#mediceneroute_${serialNo}`).val(existingValues.route);
+                    setMedicineDropdownValue($(`#mediceneroute_${serialNo}`), existingValues.route);
                 }
                 applyTemplateToDetails();
             });
@@ -3223,7 +3246,7 @@ function LoadLabResultrpt() {
                 $(`#medicenefrequency_${serialNo}`).html(options);
 
                 if (isEditMode && existingValues.frequency) {
-                    $(`#medicenefrequency_${serialNo}`).val(existingValues.frequency);
+                    setMedicineDropdownValue($(`#medicenefrequency_${serialNo}`), existingValues.frequency);
                 }
                 applyTemplateToDetails();
             });
@@ -3236,7 +3259,7 @@ function LoadLabResultrpt() {
                 $(`#otherinstructions_${serialNo}`).html(options);
 
                 if (isEditMode && existingValues.otherInstruction) {
-                    $(`#otherinstructions_${serialNo}`).val(existingValues.otherInstruction);
+                    setMedicineDropdownValue($(`#otherinstructions_${serialNo}`), existingValues.otherInstruction);
                 }
                 applyTemplateToDetails();
             });
@@ -3387,6 +3410,7 @@ function LoadLabResultrpt() {
             $('#MediceneDetails_' + serialNo).remove();
         }
         function editMedicine(element) {
+            debugger;
             const $row = $(element).closest('tr');
             const serialNo = $row.find('input[name="uurowid"]').val();
             const testName = $row.find('td').eq(1).text().trim();
