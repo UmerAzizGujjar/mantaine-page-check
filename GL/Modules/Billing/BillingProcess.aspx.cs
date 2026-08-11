@@ -296,6 +296,49 @@ namespace PMS
             return result;
         }
 
+        [WebMethod]
+        public static string GetDischargeRequests(string SearchString)
+        {
+            using (DataBaseDataContext db = new DataBaseDataContext())
+            {
+                if (string.IsNullOrWhiteSpace(SearchString))
+                {
+                    SearchString = null;
+                }
+
+                var query = from ip in db.In_Patients
+                            join r in db.Reg_patients on ip.Patient_ID equals r.pat_id
+                            where ip.Company_ID == AppConfig.Company_ID
+                                  && ip.Discharge_Request == true
+                                  && (ip.Discharge == null || ip.Discharge == false)
+                                  && (ip.Final_Bill == null || ip.Final_Bill == false)
+                                  && (SearchString == null
+                                      || r.mr_no_sequence.Contains(SearchString)
+                                      || r.Full_Name.Contains(SearchString))
+                            orderby ip.Created_Time descending
+                            select new
+                            {
+                                In_Patient_ID = ip.In_Patient_ID,
+                                Reg_Patient_ID = r.pat_id,
+                                MR_No = r.mr_no_sequence,
+                                Full_Name = r.Full_Name,
+                                Age = r.Age_years,
+                                Gender = r.Gender,
+                                Doctor = (from d in db.HR_Employees
+                                          where d.Emp_ID == Convert.ToInt32(ip.Doctor)
+                                          select d.Emp_Name).FirstOrDefault() ?? "",
+                                Department = ip.Department,
+                                Ward_Name = (from w in db.Ward_Definitions
+                                             where w.Ward_ID == ip.Ward_ID
+                                             select w.Ward_Type).FirstOrDefault() ?? "",
+                                Bed_No = ip.Bed_No,
+                                Admission_Date = (System.DateTime?)ip.Admission_Date
+                            };
+
+                return (new JavaScriptSerializer()).Serialize(query.ToList());
+            }
+        }
+
 
 
         [WebMethod]
@@ -3507,6 +3550,16 @@ namespace PMS
         public static string LoadAllBillDetails(int in_pat)
         {
             DataBaseDataContext db = new DataBaseDataContext();
+
+            // If the final bill has already been made for this in-patient,
+            // do not load any bills against it again.
+            var isFinalBilled = (from ipd in db.In_Patients
+                                 where ipd.In_Patient_ID == in_pat
+                                       && ipd.Final_Bill == true
+                                 select ipd.In_Patient_ID).Any();
+            if (isFinalBilled)
+                return "[]";
+
             var Details = (from d in db.Ar_Billing_Details
                            join m in db.Ar_Billings
                             on d.Bill_ID equals m.Bill_ID
