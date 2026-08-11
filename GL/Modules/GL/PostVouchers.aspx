@@ -1,11 +1,24 @@
 ﻿<%@ Page Title="" Language="C#" MasterPageFile="~/Site.Master" AutoEventWireup="true" CodeBehind="PostVouchers.aspx.cs" Inherits="PMS.GL.PostVouchers" Theme="Default_Theme" %>
 <asp:Content ID="Content1" ContentPlaceHolderID="HeadContent" runat="server">
+    <script type="text/javascript">
+        $(document).ready(function () {
+            $('#<%= GridView1.ClientID %>').DataTable({
+                order: [],
+                columnDefs: [
+                    { orderable: false, targets: 0 },
+                    { searchable: false, targets: 3 }
+                ],
+                pageLength: 10
+            });
+        });
+    </script>
 </asp:Content>
 <asp:Content ID="Content2" ContentPlaceHolderID="MainContent" runat="server">
     <h1>Un-posted Vouchers List</h1>
      <div style="overflow-x:auto; overflow-y:auto; max-height:500px; width:100%;">
     <asp:GridView ID="GridView1" runat="server" AutoGenerateColumns="False" 
-        EnableModelValidation="True" CssClass="table table-hover table-striped table-bordered dataTable no-footer">
+        EnableModelValidation="True" CssClass="table table-hover table-striped table-bordered dataTable no-footer"
+        OnRowCreated="GridView1_RowCreated">
         <Columns>
             <asp:TemplateField>
             <ItemTemplate>

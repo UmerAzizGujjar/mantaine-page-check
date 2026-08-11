@@ -3465,6 +3465,35 @@ function CalculateReceivedAmount() {
                     var length = $("#tblDetails tr:gt(0)").length;
                     $('#Table_1 tr:gt(0)').remove();
                     var data = JSON.parse(msg.d);
+                    // Prevent adding the same item with the same batch twice
+                    var newItemId = String(data[0].Item_ID);
+                    var newBatch = String(data[0].BatchNum);
+                    var duplicate = false;
+                    $('#tblDetails tbody tr').each(function () {
+                        var existingItemId = $(this).find('input[name="ItemID"]').val();
+                        var existingBatch = $(this).find('input[name="BatchNo"]').val();
+                        if (existingItemId && String(existingItemId) === newItemId
+                            && existingBatch && String(existingBatch) === newBatch) {
+                            duplicate = true;
+                            return false;
+                        }
+                    });
+                    if (duplicate) {
+                        Swal.fire({
+                            icon: 'warning',
+                            title: 'Already Added!',
+                            text: 'This item with this batch is already added.',
+                            showConfirmButton: false,
+                            timer: 2500,
+                            customClass: {
+                                popup: 'swal-big-popup',
+                                title: 'swal-big-title',
+                                htmlContainer: 'swal-big-text'
+                            }
+                        });
+                        $('#ItemModal').modal('hide');
+                        return;
+                    }
                     debugger;
                     var Uomqty = data[0].UOM_Qty;
                     if (Uomqty == null) {
