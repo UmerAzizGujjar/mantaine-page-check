@@ -6,19 +6,21 @@
     <script type="text/javascript">
 
         $(document).ready(function () {
-            OPDloadSavedRows();
-            IPDloadSavedRows();
-            OPDShareloadSavedRows();
-            RegloadSavedRows();
-            DiagnosticloadSavedRows();
-            DiagnosticShareloadSavedRows();
-            SpecialServicesloadSavedRows();
-            EMERGENCYloadSavedRows();
-            SERVICEloadSavedRows();
-            ProcedureloadSavedRows();
-            PHARMACYloadSavedRows();
-            AdvanceloadSavedRows();
-            RefundloadSavedRows();
+            loadCommonDropdowns(function () {
+                OPDloadSavedRows();
+                IPDloadSavedRows();
+                OPDShareloadSavedRows();
+                RegloadSavedRows();
+                DiagnosticloadSavedRows();
+                DiagnosticShareloadSavedRows();
+                SpecialServicesloadSavedRows();
+                EMERGENCYloadSavedRows();
+                SERVICEloadSavedRows();
+                ProcedureloadSavedRows();
+                PHARMACYloadSavedRows();
+                AdvanceloadSavedRows();
+                RefundloadSavedRows();
+            });
         });
 
         //tabs 
@@ -26,9 +28,86 @@
             $("#tabs").tabs();
         });
 
+        // ===== Dropdown caching: fetch each dataset once, reuse everywhere =====
+        var dropdownCache = {
+            clinicalDept: '',
+            patientTypes: '',
+            mainTestDepts: '',
+            specialServices: '',
+            accounts: ''
+        };
+        var dropdownCacheLoaded = false;
+        var dropdownCacheLoading = false;
+        var pendingDropdownCallbacks = [];
+
+        function fetchDropdown(method) {
+            return $.ajax({
+                url: 'ClinicalFinancial.aspx/' + method,
+                type: 'POST',
+                contentType: 'application/json; charset=utf-8',
+                dataType: 'json'
+            }).then(function (response) {
+                return response.d ? JSON.parse(response.d) : response;
+            });
+        }
+
+        function buildOptions(data, isAccounts) {
+            var options = '<option value="0">Please Select</option>';
+            $.each(data, function (key, value) {
+                if (isAccounts) {
+                    options += '<option value="' + value.Account_ID + '">' + value.Account_Code + ' - ' + value.Account_Name + '</option>';
+                } else {
+                    options += '<option value="' + value.DataValue_Name + '">' + value.DataValue_Description + '</option>';
+                }
+            });
+            return options;
+        }
+
+        function loadCommonDropdowns(callback) {
+            if (dropdownCacheLoaded) {
+                if (callback) callback();
+                return;
+            }
+            if (dropdownCacheLoading) {
+                if (callback) pendingDropdownCallbacks.push(callback);
+                return;
+            }
+            dropdownCacheLoading = true;
+            $.when(
+                fetchDropdown('ClinicalFinancialDepartmentDropdown').then(function (d) { dropdownCache.clinicalDept = buildOptions(d, false); }),
+                fetchDropdown('PatientType').then(function (d) { dropdownCache.patientTypes = buildOptions(d, false); }),
+                fetchDropdown('MainTestDepartments').then(function (d) { dropdownCache.mainTestDepts = buildOptions(d, false); }),
+                fetchDropdown('SpecialServices').then(function (d) { dropdownCache.specialServices = buildOptions(d, false); }),
+                fetchDropdown('filldropdowns').then(function (d) { dropdownCache.accounts = buildOptions(d, true); })
+            ).done(function () {
+                dropdownCacheLoaded = true;
+                dropdownCacheLoading = false;
+                $('#OPD_ClinicalFinancialDepartment').html(dropdownCache.clinicalDept);
+                flushDropdownCallbacks(callback);
+            }).fail(function () {
+                dropdownCacheLoaded = true;
+                dropdownCacheLoading = false;
+                flushDropdownCallbacks(callback);
+            });
+        }
+
+        function flushDropdownCallbacks(immediate) {
+            if (immediate) immediate();
+            while (pendingDropdownCallbacks.length) {
+                (pendingDropdownCallbacks.shift())();
+            }
+        }
+
+        // Initialize select2 only on elements not already done, so repeated calls
+        // after each table load / add-row never rebuild existing widgets.
+        function initSelect2(scope) {
+            $(scope || document).find('.select2select:not(.s2-inited)').each(function () {
+                $(this).addClass('s2-inited').select2();
+            });
+        }
+
         //SAVE DATA
      function submitData() {
-    debugger;
     let isEmptyFound = false;
     let allData = [];
     let categoryNamesIPD = new Set();
@@ -504,7 +583,7 @@
                                     $('#tableOPD tbody').append(row);
                                 });
 
-                                $('.select2select').select2(); 
+                                initSelect2(); 
                             });
                         });
                     });
@@ -556,7 +635,7 @@ function AdvanceloadSavedRows() {
 
                         $('#tableAdvance tbody').append(row);
                     });
-                    $('.select2select').select2();
+                    initSelect2();
                 });
             });
         },
@@ -596,7 +675,7 @@ function addNewRowAdvance() {
             `;
             $('#tableAdvance tbody').append(newRow);
             $('.financialDepartmentAdvance option[value="013"]').prop('selected', true);
-            $('.select2select').select2();
+            initSelect2();
         });
     });
         }
@@ -632,7 +711,7 @@ function addNewRowAdvance() {
             `;
                     $('#tableRefund tbody').append(newRow);
                     $('.financialDepartmentRefund option[value="014"]').prop('selected', true);
-                    $('.select2select').select2();
+                    initSelect2();
                 });
             });
         }
@@ -681,7 +760,7 @@ function addNewRowAdvance() {
 
                                 $('#tableRefund tbody').append(row);
                             });
-                            $('.select2select').select2();
+                            initSelect2();
                         });
                     });
                 },
@@ -692,60 +771,6 @@ function addNewRowAdvance() {
         }
 
 
-        function RefundloadSavedRows() {
-            $.ajax({
-                type: "POST",
-                url: "ClinicalFinancial.aspx/loadSavedRowsRefund",
-                data: '{}',
-                contentType: "application/json; charset=utf-8",
-                dataType: "json",
-                success: function (response) {
-                    const savedData = response.d;
-                    console.log(savedData);
-                    getClinicalFinancialAcoountsDropdown(function (options) {
-                        getAccounts(function (optionsVen) {
-                            savedData.forEach(item => {
-                                let row = `
-                            <tr class="data-row">
-                                <td style="display: none">
-                                    <input type="hidden" class="financialDepartmentRefund" value="${item.financialdepartment}"/>
-                                 </td>
-                                 <td>
-                                    <input type="text" class="categorynameRefund form-control" value="Refund" disabled style="background-color: #f0f0f0;" />
-                                    <input type="hidden" class="categorynameRefundHidden" value="02" />
-                                 </td>
-                                 <td>
-                                    <select class="drRefund select2select" style="background-color: white;" disabled>
-                                        ${setSelected(optionsVen, item.dr)}
-                                    </select>
-                                 </td>
-                                 <td>
-                                    <select class="crRefund select2select" style="background-color: white;" disabled>
-                                        ${setSelected(optionsVen, item.cr)}
-                                    </select>
-                                 </td>
-                                 <td>
-                                    <a href="#" onclick="removeRow(this)">
-                                        <i class="fa fa-trash fa-lg" style="color: black;"></i>
-                                    </a>
-                                    <a href="#" onclick="enableSelectsInRow(this)" style="margin-left:20px">
-                                        <i class="fa fa-pencil fa-lg" style="color: black;"></i>
-                                    </a>
-                                 </td>
-                             </tr>`;
-
-                                $('#tableRefund tbody').append(row);
-                            });
-                            $('.select2select').select2();
-                        });
-                    });
-                },
-                error: function (xhr, status, error) {
-                    console.error("Error loading refund rows:", error);
-                }
-            });
-        }
-       
         //function IPDShareloadSavedRows() {
         //    $.ajax({
         //        type: "POST",
@@ -802,7 +827,7 @@ function addNewRowAdvance() {
         //                            $('#tableIPDShare tbody').append(row);
         //                        });
 
-        //                        $('.select2select').select2(); // reinit after DOM update
+        //                        initSelect2();
         //                    });
         //                });
         //            });
@@ -868,7 +893,7 @@ function addNewRowAdvance() {
                                     $('#tableIPD tbody').append(row);
                                 });
 
-                                $('.select2select').select2(); // reinit after DOM update
+                                initSelect2();
                             });
                        // });
                     });
@@ -931,7 +956,7 @@ function addNewRowAdvance() {
                                     $('#tableOPDShare tbody').append(row);
                                 });
 
-                                $('.select2select').select2(); // reinit after DOM update
+                                initSelect2();
                             });
                         });
                     });
@@ -994,7 +1019,7 @@ function addNewRowAdvance() {
                                     $('#tableReg tbody').append(row);
                                 });
 
-                                $('.select2select').select2(); // reinit after DOM update
+                                initSelect2();
                             });
                         });
                     });
@@ -1061,7 +1086,7 @@ function addNewRowAdvance() {
                                     $('#tableDiagnostic tbody').append(row);
                                 });
 
-                                $('.select2select').select2(); // reinit after DOM update
+                                initSelect2();
                             });
                         });
                     });
@@ -1124,7 +1149,7 @@ function addNewRowAdvance() {
                                     $('#tableDiagnosticShare tbody').append(row);
                                 });
 
-                                $('.select2select').select2(); // reinit after DOM update
+                                initSelect2();
                             });
                         });
                     });
@@ -1186,7 +1211,7 @@ function addNewRowAdvance() {
                                     $('#tableSpecialServices tbody').append(row);
                                 });
 
-                                $('.select2select').select2(); // reinit after DOM update
+                                initSelect2();
                             });
                         });
                     });
@@ -1249,7 +1274,7 @@ function addNewRowAdvance() {
                                     $('#tableEMERGENCY tbody').append(row);
                                 });
 
-                                $('.select2select').select2(); // reinit after DOM update
+                                initSelect2();
                             });
                         });
                     });
@@ -1311,7 +1336,7 @@ function addNewRowAdvance() {
                                 $('#tableProcedure tbody').append(row);
                             });
 
-                            $('.select2select').select2(); // reinit after DOM update
+                            initSelect2();
                         });
                     });
                 }
@@ -1378,7 +1403,7 @@ function addNewRowAdvance() {
                                 $('#tableSERVICE tbody').append(row);
                             });
 
-                            $('.select2select').select2(); // reinit after DOM update
+                            initSelect2();
                         });
                     });
                 }
@@ -1446,7 +1471,7 @@ function addNewRowAdvance() {
                                 $('.financialDepartmentPHARMACY option[value="005"]').prop('selected', true);
                                 $('#tablePHARMACY tbody').append(row);
                             });
-                            $('.select2select').select2();
+                            initSelect2();
                         });
                     });
                 }
@@ -1464,10 +1489,15 @@ function addNewRowAdvance() {
             let selects = row.querySelectorAll('select');
             selects.forEach(select => select.disabled = false);
         }
+        var parsedOptionsCache = {};
+
         function setSelected(optionsHtml, selectedValue) {
-            let parser = new DOMParser();
-            let doc = parser.parseFromString('<select>' + optionsHtml + '</select>', 'text/html');
-            let select = doc.querySelector('select');
+            let select = parsedOptionsCache[optionsHtml];
+            if (!select) {
+                let doc = new DOMParser().parseFromString('<select>' + optionsHtml + '</select>', 'text/html');
+                select = doc.querySelector('select');
+                parsedOptionsCache[optionsHtml] = select;
+            }
 
             select.querySelectorAll('option').forEach(option => {
                 if (option.value === selectedValue) {
@@ -1475,7 +1505,8 @@ function addNewRowAdvance() {
                 } else {
                     option.removeAttribute('selected');
                 }
-            }); return Array.from(select.options).map(opt => opt.outerHTML).join('');
+            });
+            return Array.from(select.options).map(opt => opt.outerHTML).join('');
         }
 
         //add new rows
@@ -1517,7 +1548,7 @@ function addNewRowAdvance() {
                               `;
                         $('#tableOPD tbody').append(newRow);
                         $('.financialDepartmentOPD option[value="001"]').prop('selected', true);
-                        $('.select2select').select2(); // initialize Select2
+                        initSelect2();
                     });
                 });
             });
@@ -1561,7 +1592,7 @@ function addNewRowAdvance() {
                             `;
                         $('#tableIPD tbody').append(newRow);
                         $('.financialDepartmentIPD option[value="011"]').prop('selected', true);
-                        $('.select2select').select2(); // initialize Select2
+                        initSelect2();
                     });
 
             });
@@ -1604,16 +1635,14 @@ function addNewRowAdvance() {
             `;
                         $('#tableOPDShare tbody').append(newRow);
                         $('.financialDepartmentOPDShare option[value="010"]').prop('selected', true);
-                        $('.select2select').select2(); // initialize Select2
+                        initSelect2();
                     });
                 });
             });
         }
         function addNewRowReg() {
             getClinicalFinancialAcoountsDropdown(function (options) {
-                debugger;
                 getAccounts(function (optionsVen) {
-                    debugger;
                         let newRow = `
                 <tr class="data-row">
                     <td style="display: none">
@@ -1650,7 +1679,7 @@ function addNewRowAdvance() {
             `;
                         $('#tableReg tbody').append(newRow);
                         $('.financialDepartmentReg option[value="009"]').prop('selected', true);
-                        $('.select2select').select2(); // initialize Select2
+                        initSelect2();
                     });
             });
         }
@@ -1692,7 +1721,7 @@ function addNewRowAdvance() {
             `;
                         $('#tableDiagnosticShare tbody').append(newRow);
                         $('.financialDepartmentDiagnosticShare option[value="008"]').prop('selected', true);
-                        $('.select2select').select2(); // initialize Select2
+                        initSelect2();
                   
 
                     });
@@ -1742,7 +1771,7 @@ function addNewRowAdvance() {
             `;
                         $('#tableDiagnostic tbody').append(newRow);
                         $('.financialDepartmentDiagnostic option[value="002"]').prop('selected', true);
-                        $('.select2select').select2(); // initialize Select2
+                        initSelect2();
                   
 
                     });
@@ -1787,7 +1816,7 @@ function addNewRowAdvance() {
             `;
                         $('#tableSpecialServices tbody').append(newRow);
                         $('.financialDepartmentSpecialServices option[value="006"]').prop('selected', true);
-                        $('.select2select').select2(); // initialize Select2
+                        initSelect2();
 
 
                     });
@@ -1795,7 +1824,6 @@ function addNewRowAdvance() {
             });
         }
         function addNewRowEMERGENCY() {
-            debugger;
             getClinicalFinancialAcoountsDropdown(function (options) {
                 getPatientTypes(function (categoryOptions) {
                     getAccounts(function (optionsVen) {
@@ -1833,7 +1861,7 @@ function addNewRowAdvance() {
             `;
                         $('#tableEMERGENCY tbody').append(newRow);
                         $('.financialDepartmentEMERGENCY option[value="003"]').prop('selected', true);
-                        $('.select2select').select2(); // initialize Select2
+                        initSelect2();
                     });
                 });
             });
@@ -1881,7 +1909,7 @@ function addNewRowAdvance() {
             `;
                     $('#tableSERVICE tbody').append(newRow);
                     $('.financialDepartmentSERVICE option[value="004"]').prop('selected', true);
-                    $('.select2select').select2(); // initialize Select2
+                    initSelect2();
                 });
             });
         }
@@ -1922,7 +1950,7 @@ function addNewRowAdvance() {
             `;
                     $('#tableProcedure tbody').append(newRow);
                     $('.financialDepartmentProcedure option[value="007"]').prop('selected', true);
-                    $('.select2select').select2(); 
+                    initSelect2(); 
                 });
             });
         }
@@ -1973,7 +2001,7 @@ function addNewRowAdvance() {
             </tr>`;
                     $('#tablePHARMACY tbody').append(newRow);
                     $('.financialDepartmentPHARMACY option[value="005"]').prop('selected', true);
-                    $('.select2select').select2();
+                    initSelect2();
                 });
             });
         }
@@ -1982,110 +2010,40 @@ function addNewRowAdvance() {
 
         //dropdowns
         function getPatientTypes(callback) {
-            $.ajax({
-                url: 'ClinicalFinancial.aspx/PatientType',
-                type: 'POST',
-                contentType: 'application/json; charset=utf-8',
-                dataType: 'json',
-                success: function (response) {
-                    let options = '<option value="0">Please Select</option>';
-                    let data = response.d ? JSON.parse(response.d) : response;
-                    $.each(data, function (key, value) {
-                        options += `<option value="${value.DataValue_Name}">${value.DataValue_Description}</option>`;
-                    });
-                    callback(options);
-                },
-                error: function (xhr, status, error) {
-                    console.error('Error fetching patient types:', error);
-                    callback('<option value="0">Error</option>');
-                }
+            if (dropdownCache.patientTypes) { callback(dropdownCache.patientTypes); return; }
+            loadCommonDropdowns(function () {
+                callback(dropdownCache.patientTypes || '<option value="0">Please Select</option>');
             });
         }
         function getMainTestDepartments(callback) {
-            $.ajax({
-                url: 'ClinicalFinancial.aspx/MainTestDepartments',
-                type: 'POST',
-                contentType: 'application/json; charset=utf-8',
-                dataType: 'json',
-                success: function (response) {
-                    let options = '<option value="0">Please Select</option>';
-                    let data = response.d ? JSON.parse(response.d) : response;
-                    $.each(data, function (key, value) {
-                        options += `<option value="${value.DataValue_Name}">${value.DataValue_Description}</option>`;
-                    });
-                    callback(options);
-                },
-                error: function (xhr, status, error) {
-                    console.error('Error fetching patient types:', error);
-                    callback('<option value="0">Error</option>');
-                }
+            if (dropdownCache.mainTestDepts) { callback(dropdownCache.mainTestDepts); return; }
+            loadCommonDropdowns(function () {
+                callback(dropdownCache.mainTestDepts || '<option value="0">Please Select</option>');
             });
         }
         function getSpecialServices(callback) {
-            $.ajax({
-                url: 'ClinicalFinancial.aspx/SpecialServices',
-                type: 'POST',
-                contentType: 'application/json; charset=utf-8',
-                dataType: 'json',
-                success: function (response) {
-                    let options = '<option value="0">Please Select</option>';
-                    let data = response.d ? JSON.parse(response.d) : response;
-                    $.each(data, function (key, value) {
-                        options += `<option value="${value.DataValue_Name}">${value.DataValue_Description}</option>`;
-                    });
-                    callback(options);
-                },
-                error: function (xhr, status, error) {
-                    console.error('Error fetching patient types:', error);
-                    callback('<option value="0">Error</option>');
-                }
+            if (dropdownCache.specialServices) { callback(dropdownCache.specialServices); return; }
+            loadCommonDropdowns(function () {
+                callback(dropdownCache.specialServices || '<option value="0">Please Select</option>');
             });
         }
         function getAccounts(callback) {
-            $.ajax({
-                url: 'ClinicalFinancial.aspx/filldropdowns',
-                type: 'POST',
-                contentType: 'application/json; charset=utf-8',
-                dataType: 'json',
-                success: function (response) {
-                    let options = '<option value="0">Please Select</option>';
-                    let data = JSON.parse(response.d);
-                    $.each(data, function (key, value) {
-                        options += `<option value="${value.Account_ID}">${value.Account_Code} - ${value.Account_Name}</option>`;
-                    });
-                    callback(options);
-                },
-                error: function (xhr, status, error) {
-                    console.error('Error fetching accounts:', error);
-                    callback('<option value="0">Error</option>');
-                }
+            if (dropdownCache.accounts) { callback(dropdownCache.accounts); return; }
+            loadCommonDropdowns(function () {
+                callback(dropdownCache.accounts || '<option value="0">Please Select</option>');
             });
         }
         function getClinicalFinancialAcoountsDropdown(callback) {
-            var options = '<option value="0">Please Select</option>';
-
-            $.ajax({
-                url: 'ClinicalFinancial.aspx/ClinicalFinancialDepartmentDropdown',
-                type: 'POST',
-                contentType: 'application/json; charset=utf-8',
-                dataType: 'json',
-                success: function (response) {
-                    var data = response.d ? JSON.parse(response.d) : response;
-                    $.each(data, function (key, value) {
-                        options += '<option value="' + value.DataValue_Name + '">' + value.DataValue_Description + '</option>';
-                    });
-                    callback(options);
-
-                    $('#OPD_ClinicalFinancialDepartment').html(options);
-
-
-                },
-                error: function (xhr, status, error) {
-                    console.error('Error fetching area data:', error);
-                }
+            if (dropdownCache.clinicalDept) {
+                $('#OPD_ClinicalFinancialDepartment').html(dropdownCache.clinicalDept);
+                if (callback) callback(dropdownCache.clinicalDept);
+                return dropdownCache.clinicalDept;
+            }
+            loadCommonDropdowns(function () {
+                $('#OPD_ClinicalFinancialDepartment').html(dropdownCache.clinicalDept || '');
+                if (callback) callback(dropdownCache.clinicalDept || '<option value="0">Please Select</option>');
             });
-
-            return options;
+            return '<option value="0">Please Select</option>';
         }
 
     </script>
