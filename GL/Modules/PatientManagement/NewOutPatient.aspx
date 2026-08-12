@@ -3020,12 +3020,12 @@ function LoadLabResultrpt() {
             });
         }
         function setMedicineDropdownValue($select, value) {
-            if (!value) return;
+            if (!value) return false;
             value = String(value).trim();
-            if (!value) return;
+            if (!value) return false;
             if ($select.find('option[value="' + value + '"]').length) {
                 $select.val(value);
-                return;
+                return true;
             }
             function norm(s) {
                 return String(s).toLowerCase().replace(/\s+/g, ' ').replace(/\s+-\s+/g, '-').trim();
@@ -3039,6 +3039,7 @@ function LoadLabResultrpt() {
             });
             if (exact) exact.selected = true;
             else if (prefix) prefix.selected = true;
+            return !!(exact || prefix);
         }
         function ShowMediceneDetails(serialNo, testName, isEditMode = false, existingValues = {}, totalStock = 0) {
             $('#11').click();
@@ -3161,31 +3162,31 @@ function LoadLabResultrpt() {
 
                 var $si = $('#specialinstructions_' + serialNo);
                 var si = $si.val() || '';
+                var unmatched = [];
 
-                // Try to set the dropdown; if option missing, append the raw value to Special Instructions.
+                // Try to set the dropdown by matched code; if that fails try to match
+                // the raw template value against the option text; if still unmatched,
+                // append the raw value to Special Instructions.
                 function applyOrFallback(code, raw, $select) {
                     if (code && $select.find('option[value="' + code + '"]').length) {
                         $select.val(code);
-                    } else if (raw && si.indexOf(raw) === -1) {
-                        si = si ? si + ' | ' + raw : raw;
+                    } else if (raw) {
+                        if (!setMedicineDropdownValue($select, raw)) {
+                            if (si.indexOf(raw) === -1 && unmatched.indexOf(raw) === -1) unmatched.push(raw);
+                        }
                     }
                 }
 
                 applyOrFallback(tpl.Frequency, tpl.FrequencyRaw, $('#medicenefrequency_' + serialNo));
                 applyOrFallback(tpl.Dosage_From, tpl.Dosage_FromRaw, $('#mediceneDosageFrom_' + serialNo));
                 applyOrFallback(tpl.Dose, tpl.DoseRaw, $('#mediceneDose_' + serialNo));
+                applyOrFallback(tpl.Route, tpl.RouteRaw, $('#mediceneroute_' + serialNo));
                 applyOrFallback(tpl.Other_Instruction, tpl.Other_InstructionRaw, $('#otherinstructions_' + serialNo));
 
                 // Remarks always goes to Special Instructions (free text). Combine with any
                 // unmatched values collected above.
                 var extras = [];
                 if (tpl.Remarks) extras.push(tpl.Remarks);
-                var unmatched = [];
-                if (tpl.FrequencyRaw && (!tpl.Frequency || !( $('#medicenefrequency_' + serialNo).find('option[value="' + tpl.Frequency + '"]').length))) unmatched.push(tpl.FrequencyRaw);
-                if (tpl.Dosage_FromRaw && (!tpl.Dosage_From || !( $('#mediceneDosageFrom_' + serialNo).find('option[value="' + tpl.Dosage_From + '"]').length))) unmatched.push(tpl.Dosage_FromRaw);
-                if (tpl.DoseRaw && (!tpl.Dose || !( $('#mediceneDose_' + serialNo).find('option[value="' + tpl.Dose + '"]').length))) unmatched.push(tpl.DoseRaw);
-                if (tpl.Other_InstructionRaw && (!tpl.Other_Instruction || !( $('#otherinstructions_' + serialNo).find('option[value="' + tpl.Other_Instruction + '"]').length))) unmatched.push(tpl.Other_InstructionRaw);
-
                 var combined = extras.concat(unmatched).filter(function (x) {
                     return x && si.indexOf(x) === -1;
                 }).join(' | ');

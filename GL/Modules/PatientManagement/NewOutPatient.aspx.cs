@@ -2221,7 +2221,7 @@ namespace PMS.Modules.PatientManagement
                            mt.Dosage_From,
                            mt.Dosage_Qty,
                            mt.Other_Instruction,
-                           mt.Recomended_Dosage,
+                           mt.Oral,
                            mt.Remarks
                        }).FirstOrDefault();
 
@@ -2237,8 +2237,10 @@ namespace PMS.Modules.PatientManagement
                 FrequencyRaw = tpl.Frequency,
                 Dosage_From = MatchDataValueCode(db, "Dosage Form", tpl.Dosage_From),
                 Dosage_FromRaw = tpl.Dosage_From,
-                Dose = MatchDataValueCode(db, "Dosage Quantity", tpl.Recomended_Dosage),
-                DoseRaw = tpl.Recomended_Dosage,
+                Dose = MatchDataValueCode(db, "Dosage Quantity", tpl.Dosage_Qty),
+                DoseRaw = tpl.Dosage_Qty,
+                Route = MatchDataValueCode(db, "Routes", tpl.Oral),
+                RouteRaw = tpl.Oral,
                 Other_Instruction = MatchDataValueCode(db, "Other Instruction", tpl.Other_Instruction),
                 Other_InstructionRaw = tpl.Other_Instruction,
                 Dosage_Qty = tpl.Dosage_Qty,

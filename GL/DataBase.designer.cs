@@ -93985,6 +93985,10 @@ namespace PMS
 
         private System.Nullable<decimal> _Bonus_Tax;
 
+        private string _Last_Vendor_Name;
+
+        private System.Nullable<decimal> _Last_PO_Rate;
+
         #region Extensibility Method Definitions
         partial void OnLoaded();
         partial void OnValidate(System.Data.Linq.ChangeAction action);
@@ -94061,6 +94065,10 @@ namespace PMS
         partial void OnBonus_QtyChanged();
         partial void OnBonus_TaxChanging(System.Nullable<decimal> value);
         partial void OnBonus_TaxChanged();
+        partial void OnLast_Vendor_NameChanging(string value);
+        partial void OnLast_Vendor_NameChanged();
+        partial void OnLast_PO_RateChanging(System.Nullable<decimal> value);
+        partial void OnLast_PO_RateChanged();
         #endregion
 
         public AP_Purchase_Order_Item()
@@ -94784,6 +94792,46 @@ namespace PMS
                     this._Bonus_Tax = value;
                     this.SendPropertyChanged("Bonus_Tax");
                     this.OnBonus_TaxChanged();
+                }
+            }
+        }
+
+        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_Last_Vendor_Name", DbType = "VarChar(200)")]
+        public string Last_Vendor_Name
+        {
+            get
+            {
+                return this._Last_Vendor_Name;
+            }
+            set
+            {
+                if ((this._Last_Vendor_Name != value))
+                {
+                    this.OnLast_Vendor_NameChanging(value);
+                    this.SendPropertyChanging();
+                    this._Last_Vendor_Name = value;
+                    this.SendPropertyChanged("Last_Vendor_Name");
+                    this.OnLast_Vendor_NameChanged();
+                }
+            }
+        }
+
+        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_Last_PO_Rate", DbType = "Decimal(18,2)")]
+        public System.Nullable<decimal> Last_PO_Rate
+        {
+            get
+            {
+                return this._Last_PO_Rate;
+            }
+            set
+            {
+                if ((this._Last_PO_Rate != value))
+                {
+                    this.OnLast_PO_RateChanging(value);
+                    this.SendPropertyChanging();
+                    this._Last_PO_Rate = value;
+                    this.SendPropertyChanged("Last_PO_Rate");
+                    this.OnLast_PO_RateChanged();
                 }
             }
         }

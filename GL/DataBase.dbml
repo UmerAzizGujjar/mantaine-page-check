@@ -4289,6 +4289,8 @@
       <Column Name="FurtherTax_Amount" Type="System.Decimal" DbType="Decimal(18,2)" CanBeNull="true" />
       <Column Name="Bonus_Qty" Type="System.Decimal" DbType="Decimal(18,2)" CanBeNull="true" />
       <Column Name="Bonus_Tax" Type="System.Decimal" DbType="Decimal(18,2)" CanBeNull="true" />
+      <Column Name="Last_Vendor_Name" Type="System.String" DbType="VarChar(200)" CanBeNull="true" />
+      <Column Name="Last_PO_Rate" Type="System.Decimal" DbType="Decimal(18,2)" CanBeNull="true" />
     </Type>
   </Table>
   <Table Name="dbo.IPD_Distribution_Detail" Member="IPD_Distribution_Details">
