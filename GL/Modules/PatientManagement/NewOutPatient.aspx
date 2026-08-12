@@ -599,6 +599,10 @@
     </script>
     <script id="functions" type="text/javascript">
         var globalFormType = '';
+        // Cache of Medicines_Template defaults keyed by panel serialNo (Item_Code/id).
+        // Used so the dropdown auto-fill sticks regardless of which AJAX response
+        // (template lookup vs. dropdown population) resolves first.
+        var templateValuesMap = {};
         function loadPolicyVisibility() {
             $.ajax({
                 type: "POST",
@@ -2922,6 +2926,7 @@ function LoadLabResultrpt() {
             html += '<div id="previousMedicinesList">';
 
             PageMethods.GetPreviousMedicines(patientID, function (Medicines) {
+                debugger;
                 var medicineData = JSON.parse(Medicines);
 
                 if (medicineData.length === 0) {
@@ -2930,6 +2935,7 @@ function LoadLabResultrpt() {
                 }
 
                 $.each(medicineData, function (key, value) {
+                    debugger;
                     html += '<div class="Medicene-row" style="display: flex; align-items: center; justify-content: space-between; padding: 6px 0; cursor: pointer;" ' +
                         'onclick="ShowMediceneDetails(\'' + value.Item_Code + '\', \'' + value.Description.replace(/'/g, "\\'") + '\')">' +
                         '<div style="display: flex; align-items: center;">' +
@@ -3013,6 +3019,28 @@ function LoadLabResultrpt() {
                 }
             });
         }
+        function setMedicineDropdownValue($select, value) {
+            if (!value) return false;
+            value = String(value).trim();
+            if (!value) return false;
+            if ($select.find('option[value="' + value + '"]').length) {
+                $select.val(value);
+                return true;
+            }
+            function norm(s) {
+                return String(s).toLowerCase().replace(/\s+/g, ' ').replace(/\s+-\s+/g, '-').trim();
+            }
+            var nv = norm(value);
+            var exact = null, prefix = null, prefixLen = -1;
+            $select.find('option').each(function () {
+                var t = norm($(this).text());
+                if (t === nv) { exact = this; }
+                if (t.indexOf(nv) === 0 && t.length > prefixLen) { prefix = this; prefixLen = t.length; }
+            });
+            if (exact) exact.selected = true;
+            else if (prefix) prefix.selected = true;
+            return !!(exact || prefix);
+        }
         function ShowMediceneDetails(serialNo, testName, isEditMode = false, existingValues = {}, totalStock = 0) {
             $('#11').click();
             const $row = $(`#Medicenechk_${serialNo}`).closest('.Medicene-row');
@@ -3020,13 +3048,8 @@ function LoadLabResultrpt() {
             const $checkbox = $(`#Medicenechk_${serialNo}`);
             const $icon = $(this).find('i');
 
-            // If details div already exists, remove it and return
-            if ($detailsDiv.length) {
-                $detailsDiv.slideUp(300, function () {
-                    $(this).remove();
-                });
-                return;
-            }
+            // If this panel is already open, do nothing (no toggle close).
+            if ($detailsDiv.length) return;
 
             // Remove all other details divs first
             $('.Medicene-details').each(function () {
@@ -3123,6 +3146,56 @@ function LoadLabResultrpt() {
 
             const $newDetailsDiv = $(`#MediceneDetails_${serialNo}`);
 
+            // Per-panel template cache (keyed by serialNo so overlapping opens don't collide)
+            templateValuesMap[serialNo] = null;
+
+            // Apply cached Medicines_Template values to the inputs of this panel.
+            // For each field, prefers the matched dropdown code (sets the dropdown).
+            // If the dropdown match fails (e.g. Urdu/local-language instructions that
+            // don't match any English dropdown options), the raw template value is
+            // appended to Special Instructions so nothing is lost.
+            // Idempotent: safe to call from multiple dropdown callbacks + the template
+            // callback without producing duplicate text.
+            function applyTemplateToDetails() {
+                var tpl = templateValuesMap[serialNo];
+                if (!tpl) return;
+
+                var $si = $('#specialinstructions_' + serialNo);
+                var si = $si.val() || '';
+                var unmatched = [];
+
+                // Try to set the dropdown by matched code; if that fails try to match
+                // the raw template value against the option text; if still unmatched,
+                // append the raw value to Special Instructions.
+                function applyOrFallback(code, raw, $select) {
+                    if (code && $select.find('option[value="' + code + '"]').length) {
+                        $select.val(code);
+                    } else if (raw) {
+                        if (!setMedicineDropdownValue($select, raw)) {
+                            if (si.indexOf(raw) === -1 && unmatched.indexOf(raw) === -1) unmatched.push(raw);
+                        }
+                    }
+                }
+
+                applyOrFallback(tpl.Frequency, tpl.FrequencyRaw, $('#medicenefrequency_' + serialNo));
+                applyOrFallback(tpl.Dosage_From, tpl.Dosage_FromRaw, $('#mediceneDosageFrom_' + serialNo));
+                applyOrFallback(tpl.Dose, tpl.DoseRaw, $('#mediceneDose_' + serialNo));
+                applyOrFallback(tpl.Route, tpl.RouteRaw, $('#mediceneroute_' + serialNo));
+                applyOrFallback(tpl.Other_Instruction, tpl.Other_InstructionRaw, $('#otherinstructions_' + serialNo));
+
+                // Remarks always goes to Special Instructions (free text). Combine with any
+                // unmatched values collected above.
+                var extras = [];
+                if (tpl.Remarks) extras.push(tpl.Remarks);
+                var combined = extras.concat(unmatched).filter(function (x) {
+                    return x && si.indexOf(x) === -1;
+                }).join(' | ');
+                if (combined) {
+                    si = si ? si + ' | ' + combined : combined;
+                }
+                if (si) $si.val(si);
+            }
+
             // Populate Dose dropdown and set existing value
             PageMethods.FillDosageQty(function (Dosage) {
                 var options = '<option value="">Select Dose</option>';
@@ -3133,8 +3206,9 @@ function LoadLabResultrpt() {
 
                 // Set existing value after dropdown is populated
                 if (isEditMode && existingValues.dose) {
-                    $(`#mediceneDose_${serialNo}`).val(existingValues.dose);
+                    setMedicineDropdownValue($(`#mediceneDose_${serialNo}`), existingValues.dose);
                 }
+                applyTemplateToDetails();
             });
 
             // Populate all dropdowns and set values
@@ -3146,8 +3220,9 @@ function LoadLabResultrpt() {
                 $(`#mediceneDosageFrom_${serialNo}`).html(options);
 
                 if (isEditMode && existingValues.dosageFrom) {
-                    $(`#mediceneDosageFrom_${serialNo}`).val(existingValues.dosageFrom);
+                    setMedicineDropdownValue($(`#mediceneDosageFrom_${serialNo}`), existingValues.dosageFrom);
                 }
+                applyTemplateToDetails();
             });
 
             PageMethods.FillRoutesDropDown(function (Routes) {
@@ -3158,8 +3233,9 @@ function LoadLabResultrpt() {
                 $(`#mediceneroute_${serialNo}`).html(options);
 
                 if (isEditMode && existingValues.route) {
-                    $(`#mediceneroute_${serialNo}`).val(existingValues.route);
+                    setMedicineDropdownValue($(`#mediceneroute_${serialNo}`), existingValues.route);
                 }
+                applyTemplateToDetails();
             });
 
             PageMethods.FillFrequencyDropDown(function (Frequency) {
@@ -3171,8 +3247,9 @@ function LoadLabResultrpt() {
                 $(`#medicenefrequency_${serialNo}`).html(options);
 
                 if (isEditMode && existingValues.frequency) {
-                    $(`#medicenefrequency_${serialNo}`).val(existingValues.frequency);
+                    setMedicineDropdownValue($(`#medicenefrequency_${serialNo}`), existingValues.frequency);
                 }
+                applyTemplateToDetails();
             });
 
             PageMethods.FillOtherInstruction(function (Instructions) {
@@ -3183,8 +3260,9 @@ function LoadLabResultrpt() {
                 $(`#otherinstructions_${serialNo}`).html(options);
 
                 if (isEditMode && existingValues.otherInstruction) {
-                    $(`#otherinstructions_${serialNo}`).val(existingValues.otherInstruction);
+                    setMedicineDropdownValue($(`#otherinstructions_${serialNo}`), existingValues.otherInstruction);
                 }
+                applyTemplateToDetails();
             });
 
             // Set other values
@@ -3195,6 +3273,21 @@ function LoadLabResultrpt() {
 
                 // Update button text
                 $('#addTest_' + serialNo).html('<i class="fa fa-plus-circle" style="color:black"></i> Update');
+            }
+
+            // Auto-load defaults from Medicines_Template for new (non-edit) entries.
+            // The values are cached per serialNo; each dropdown callback above also
+            // calls applyTemplateToDetails() so the value sticks regardless of which
+            // AJAX response resolves first.
+            if (!isEditMode) {
+                PageMethods.GetMedicineTemplateByItemCode(serialNo, function (res) {
+                    try {
+                        templateValuesMap[serialNo] = res ? JSON.parse(res) : null;
+                    } catch (e) {
+                        templateValuesMap[serialNo] = null;
+                    }
+                    applyTemplateToDetails();
+                });
             }
 
             // Show the details
@@ -3318,6 +3411,7 @@ function LoadLabResultrpt() {
             $('#MediceneDetails_' + serialNo).remove();
         }
         function editMedicine(element) {
+            debugger;
             const $row = $(element).closest('tr');
             const serialNo = $row.find('input[name="uurowid"]').val();
             const testName = $row.find('td').eq(1).text().trim();

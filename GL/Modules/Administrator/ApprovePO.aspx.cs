@@ -3,6 +3,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Web;
+using System.Web.Services;
 using System.Web.UI;
 using System.Web.UI.WebControls;
 
@@ -80,12 +81,24 @@ namespace PMS
                                    .Select(x => x.UserName)
                                    .FirstOrDefault(),
 
-                               Approve_By = string.Join(", ",
-                                   (from SAL in db.Sys_Approval_Logs
-                                    join user in db.aspnet_Users on SAL.Approve_By equals user.UserId into userGroup
-                                    from usr in userGroup.DefaultIfEmpty()
-                                    where g.Key.PO_ID == SAL.Entry_ID && SAL.Form_ID == 3
-                                    select usr.UserName ?? "").Distinct()),
+                               //Approve_By = string.Join(", ",
+                               //    (from SAL in db.Sys_Approval_Logs
+                               //     join user in db.aspnet_Users on SAL.Approve_By equals user.UserId into userGroup
+                               //     from usr in userGroup.DefaultIfEmpty()
+                               //     where g.Key.PO_ID == SAL.Entry_ID && SAL.Form_ID == 3
+                               //     select usr.UserName ?? "").Distinct()),
+
+                            Approve_By = string.Join(", ",
+                            (from SAL in db.Sys_Approval_Logs
+                             join user in db.aspnet_Users on SAL.Approve_By equals user.UserId into userGroup
+                             from usr in userGroup.DefaultIfEmpty()
+                             where g.Key.PO_ID == SAL.Entry_ID
+                                && SAL.Form_ID == 3
+                                && SAL.Entry_Status != "Created" 
+                                && !SAL.From_Name.Contains("Editable setting updated")
+                             select usr.UserName ?? "").Distinct()),
+
+
 
                                Department = db.GetDataValueName("Department", g.Key.Department),
 
@@ -107,11 +120,17 @@ namespace PMS
                                                  ((from prd_inner in db.Purchase_Requisition_Details
                                                    join pr_inner in db.Purchase_Requisitions on prd_inner.PR_ID equals pr_inner.PR_Id
                                                    where pr_inner.Status == "Approved" && pr_inner.Department == g.Key.Department
-                                                   select (decimal?)prd_inner.EstimateCost).Sum() ?? 0m)
+                                                   select (decimal?)prd_inner.EstimateCost).Sum() ?? 0m),
+
+                                                     IsEditableAfterApproval = db.Sys_Approval_Logs
+                                                    .Where(sal => sal.Entry_ID == g.Key.PO_ID && sal.Form_ID == 3)
+                                                    .OrderByDescending(sal => sal.Approve_Date)
+                                                    .Select(sal => sal.IsEditableAfterApproval)
+                                                    .FirstOrDefault() ?? false
                            })
                            .OrderByDescending(x => x.PO_No); // Added OrderByDescending to sort by PO_Number descending
 
-                bool hasEntryBudgetViewBtnRights = false;
+                 bool hasEntryBudgetViewBtnRights = false;
                 var uid = AppConfig.UserID;
                 hasEntryBudgetViewBtnRights = (from us in db.aspnet_Users
                                                where us.UserId == uid && us.IsShowBudget == true
@@ -401,6 +420,88 @@ namespace PMS
                 }
             }
             Response.Redirect(Request.RawUrl);
+        }
+
+        // Add this WebMethod at the end of your class
+        [WebMethod]
+        public static string SaveEditableSettings(string poIds, string checkValues)
+        {
+            try
+            {
+                using (DataBaseDataContext db = new DataBaseDataContext(DBClass.ConnectionString()))
+                {
+                    if (string.IsNullOrEmpty(poIds) || string.IsNullOrEmpty(checkValues))
+                    {
+                        return "Error: No data provided";
+                    }
+
+                    string[] poIdArray = poIds.Split(',');
+                    string[] checkValueArray = checkValues.Split(',');
+
+                    if (poIdArray.Length != checkValueArray.Length)
+                    {
+                        return "Error: Data mismatch";
+                    }
+
+                    for (int i = 0; i < poIdArray.Length; i++)
+                    {
+                        int poId = Convert.ToInt32(poIdArray[i].Trim());
+                        bool isEditable = Convert.ToBoolean(checkValueArray[i].Trim());
+
+                        var po = db.AP_Purchase_Orders
+                            .Where(p => p.PO_ID == poId && (p.Status == "Created" || p.Status == "Pending"))
+                            .FirstOrDefault();
+
+                        if (po == null) continue;
+
+                        var existingLog = db.Sys_Approval_Logs
+                            .Where(sal => sal.Entry_ID == poId && sal.Form_ID == 3)
+                            .OrderByDescending(sal => sal.Approve_Date)
+                            .FirstOrDefault();
+
+                        if (existingLog != null)
+                        {
+                            existingLog.IsEditableAfterApproval = isEditable;
+                        }
+                        else
+                        {
+                            var user_id = AppConfig.UserID;
+                            var SASD = (from tbl in db.Sys_Approval_Stage_Details
+                                        join SASM in db.Sys_Approval_Stage_Masters on tbl.Stage_ID equals SASM.Stage_ID
+                                        join SATD in db.Sys_Approval_Tempelate_Detail_Stages on SASM.Stage_ID equals SATD.StageId
+                                        join SATF in db.Sys_Approval_Tempelate_Detail_Forms on SATD.Tempelate_ID equals SATF.Tempelate_ID
+                                        where tbl.UserId == user_id && SATF.FormId == 3 && SASM.IsDeleted == false
+                                        select tbl).FirstOrDefault();
+
+                            if (SASD != null)
+                            {
+                                Sys_Approval_Log SAL = new Sys_Approval_Log();
+                                SAL.Approval_Template_ID = SASD.Stage_ID;
+                                SAL.Approval_Stage_ID = SASD.Stage_ID;
+                                SAL.Entry_ID = poId;
+                                SAL.Form_ID = 3;
+                                SAL.From_Name = "Purchase Order";
+                                SAL.Remarks = "Editable setting updated via Save Editable Settings button";
+                                SAL.Company_ID = AppConfig.Company_ID;
+                                SAL.IsFinalAprroval = false;
+                                SAL.Entry_Status = po.Status;
+                                SAL.Approve_By = user_id;
+                                SAL.Approve_Date = DateTime.Now;
+                                SAL.IsRejected = false;
+                                SAL.IsEditableAfterApproval = isEditable;
+                                db.Sys_Approval_Logs.InsertOnSubmit(SAL);
+                            }
+                        }
+                    }
+
+                    db.SubmitChanges();
+                    return "Success";
+                }
+            }
+            catch (Exception ex)
+            {
+                return "Error: " + ex.Message;
+            }
         }
     }
 }

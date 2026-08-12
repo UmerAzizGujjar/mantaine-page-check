@@ -98,17 +98,14 @@
     <script type="text/javascript">        
  
             $(document).ready(function () {
-        debugger;
             // Call highlight function when page loads
             setTimeout(function () {
                 highlightPendingRows();
         }, 100);
 
             $('#txt_search').keyup(function (e) {
-                debugger;
             var searchText = $('#txt_search').val().toLowerCase();
             var tbl = document.getElementById('<%= GridView1.ClientID %>');
-            debugger
             var getCellText = function (row, index) {
                 var cell = row.cells[index];
                 return cell ? cell.innerText.toLowerCase() : '';
@@ -152,7 +149,6 @@
         });
 
         function highlightPendingRows() {
-            debugger;
             var tbl = document.getElementById('<%= GridView1.ClientID %>');
             if (!tbl) return;
 
@@ -180,28 +176,134 @@
 
             // Make the function available globally for postbacks
             window.highlightPendingRows = highlightPendingRows;
-    });
+            });
+
+
+        function saveEditableCheckboxes() {
+            var selectedIds = [];
+            var checkValues = [];
+
+            var tbl = document.getElementById('<%= GridView1.ClientID %>');
+            if (!tbl) {
+                alert('Grid not found');
+                return;
+            }
+
+            var hasPending = false;
+
+            for (var i = 1; i < tbl.rows.length; i++) {
+                var row = tbl.rows[i];
+
+                // Find the PO ID - read from the hidden field in the row
+                var hf = row.querySelector('input[type="hidden"][id*="hfPO_ID"]');
+                if (!hf) {
+                    console.log('Row ' + i + ' - No PO ID found');
+                    continue;
+                }
+                var poId = hf.value;
+                poId = poId.trim();
+                console.log('Row ' + i + ' - PO ID: "' + poId + '"');
+
+                // Get Status - at index 6
+                var statusCell = row.cells[6];
+                if (!statusCell) {
+                    console.log('Row ' + i + ' - No status cell at index 6');
+                    continue;
+                }
+                var status = statusCell.innerText.trim().toLowerCase();
+                console.log('Row ' + i + ' - Status: "' + status + '"');
+
+                // Check for 'pending' OR 'created'
+                if (status === 'pending' || status === 'created') {
+                    hasPending = true;
+
+                    // Find the editable checkbox
+                    var checkboxes = row.querySelectorAll('input[type="checkbox"]');
+                    var editableCheckbox = null;
+
+                    // Look for checkbox with 'chkEditableAfterApproval' in the ID
+                    for (var c = 0; c < checkboxes.length; c++) {
+                        var chk = checkboxes[c];
+                        if (chk.id && chk.id.indexOf('chkEditableAfterApproval') !== -1) {
+                            editableCheckbox = chk;
+                            break;
+                        }
+                    }
+
+                    // If not found, use the last checkbox in the row (fallback)
+                    if (!editableCheckbox && checkboxes.length > 1) {
+                        editableCheckbox = checkboxes[checkboxes.length - 1];
+                    }
+
+                    if (editableCheckbox) {
+                        selectedIds.push(poId);
+                        checkValues.push(editableCheckbox.checked ? 'true' : 'false');
+                        console.log('Row ' + i + ' - Added PO ' + poId + ' with value: ' + editableCheckbox.checked);
+                    } else {
+                        console.log('Row ' + i + ' - No editable checkbox found');
+                    }
+                }
+            }
+
+            console.log('Selected IDs: ' + selectedIds.join(', '));
+            console.log('Check Values: ' + checkValues.join(', '));
+
+            if (!hasPending) {
+                alert('No pending or created PO rows found on this page.');
+                return;
+            }
+
+            if (selectedIds.length === 0) {
+                alert('No checkboxes found to save. Please make sure the "Editable After Approval" column is added.');
+                return;
+            }
+
+            $('#btnSaveCheckbox').prop('disabled', true).val('Saving...');
+
+            $.ajax({
+                type: "POST",
+                url: "ApprovePO.aspx/SaveEditableSettings",
+                data: JSON.stringify({
+                    poIds: selectedIds.join(','),
+                    checkValues: checkValues.join(',')
+                }),
+                contentType: "application/json; charset=utf-8",
+                dataType: "json",
+                success: function (response) {
+                    $('#btnSaveCheckbox').prop('disabled', false).val('Save Checkbox');
+                    if (response.d === "Success") {
+                        alert('Editable settings saved successfully for ' + selectedIds.length + ' PO(s)!');
+                        location.reload();
+                    } else {
+                        alert('Error: ' + response.d);
+                    }
+                },
+                error: function (xhr, status, error) {
+                    $('#btnSaveCheckbox').prop('disabled', false).val('Save Checkbox');
+                    alert('Error saving checkbox settings: ' + error);
+                }
+            });
+        }
     </script>
 
 </asp:Content>
 <asp:Content ID="Content2" ContentPlaceHolderID="MainContent" runat="server">
      <div class="row">
-     <div class="col-lg-8">
-         <div class="col-lg-2">
-
+    <div class="col-lg-8">
+        <div class="col-lg-2">
             <input type="text" id="txt_search"  name="txt_search" placeholder="Search..." />
-         </div>
-         <div class="col-lg-2">
-               <asp:Button ID="btnApprove" class="btn btn-primry" Text="Approve Selected PO" runat="server" SkinID="btnAutoWidth" OnClick="btnApprove_Click" />
-           
-         </div>
-         <div class="col-lg-2">
-              <asp:Button ID="btnCancel" class="btn btn-primry" Text="Reject Selected PO" runat="server" SkinID="btnAutoWidth" OnClick="btnCancel_Click" />
-
-
-         </div>
-     </div>
- </div>
+        </div>
+        <div class="col-lg-2">
+            <asp:Button ID="btnApprove" class="btn btn-primry" Text="Approve Selected PO" runat="server" SkinID="btnAutoWidth" OnClick="btnApprove_Click" />
+        </div>
+        <div class="col-lg-2">
+            <asp:Button ID="btnCancel" class="btn btn-primry" Text="Reject Selected PO" runat="server" SkinID="btnAutoWidth" OnClick="btnCancel_Click" />
+        </div>
+        <div class="col-lg-2">
+            <input type="button" id="btnSaveCheckbox" class="btn btn-primry" value="Save Checkbox" onclick="saveEditableCheckboxes()" style="background-color: #17a2b8; color: white; border-color: #17a2b8;" />
+        </div>
+    </div>
+</div>
 
 
 
@@ -221,6 +323,7 @@
             <asp:TemplateField HeaderStyle-Width="30px">
                 <ItemTemplate>
                     <asp:CheckBox ID="chkSelect" Text="" runat="server" Width="30px" />
+                    <asp:HiddenField ID="hfPO_ID" runat="server" Value='<%# Eval("PO_ID") %>' />
                 </ItemTemplate>
             </asp:TemplateField>
             <asp:TemplateField HeaderText="PO ID" Visible="False">
@@ -255,6 +358,17 @@
                         Text="Preview" Target="_blank" Style="display: block; width: 100%; text-align: center;" />
                 </ItemTemplate>
                 <HeaderStyle CssClass="header-center-align" />
+            </asp:TemplateField>
+            <asp:TemplateField HeaderText="Editable After Approval" ItemStyle-Width="150px" ItemStyle-HorizontalAlign="Center">
+                <HeaderTemplate>
+                    <div style="text-align: center; font-weight: bold; font-size: 11px;">Editable After<br />
+                        Approval</div>
+                </HeaderTemplate>
+                <ItemTemplate>
+                    <asp:CheckBox ID="chkEditableAfterApproval" runat="server"
+                        Checked='<%# Eval("IsEditableAfterApproval") != DBNull.Value && Convert.ToBoolean(Eval("IsEditableAfterApproval")) %>'
+                        Enabled='<%# Eval("Status") != null && Eval("Status").ToString().ToLower() == "pending" %>' />
+                </ItemTemplate>
             </asp:TemplateField>
             <asp:BoundField DataField="Department" HeaderText="Department" Visible="False" ItemStyle-HorizontalAlign="Center" ItemStyle-Width="150px" />
             <asp:BoundField DataField="TotalPRAmount" HeaderText="TotalPRAmt" HeaderStyle-Width="100px" Visible="False" ItemStyle-HorizontalAlign="Center" ItemStyle-Width="100px" />

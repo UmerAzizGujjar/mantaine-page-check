@@ -168,6 +168,7 @@ namespace PMS.Inventory
                     ltd.GRNQty = Convert.ToDecimal(item.GRNQtyDir);
                     ltd.Rate = Convert.ToDecimal(item.RateDir);
                     ltd.Amount = Convert.ToDecimal(item.AmountDir);
+                    ltd.Sale_Rate = Convert.ToDecimal(item.SaleRateDir);
                     ltd.Item_Id = Convert.ToInt32(DBClass.getField("select Item_Id from inv_items where Item_Code=" + Convert.ToInt32(item.ItemCodeDir)));
                     db.GRN_Details.InsertOnSubmit(ltd);
                     db.SubmitChanges();
@@ -237,7 +238,8 @@ namespace PMS.Inventory
                               d.ExpiryDate,
                               BounusQty = d.BounusQty,
                               d.Rate,
-                              d.Amount
+                              d.Amount,
+                              d.Sale_Rate
                           }).ToList();
 
             JavaScriptSerializer js = new JavaScriptSerializer();
@@ -398,6 +400,7 @@ namespace PMS.Inventory
             public string GRNQtyDir { get; set; }
             public string RateDir { get; set; }
             public string AmountDir { get; set; }
+            public string SaleRateDir { get; set; }
             public string UOMQtyDir { get; set; }
             public string BONQtyDir { get; set; }
             public string BatchNoDir { get; set; }

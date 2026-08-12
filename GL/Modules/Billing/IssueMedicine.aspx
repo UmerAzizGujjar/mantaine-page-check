@@ -1669,8 +1669,9 @@
             $('#txtDisAmt').val(Math.round(TotalDiscountAmount));
 
             var flatdisc = parseFloat($('#txtFlatDisc').val()) || 0;
-            var finalAmount = TotalAmount - TotalDiscountAmount - flatdisc;
-            CalculateSummarieDiscountPerWise
+            var masterDisc = parseFloat($('#txtDisAmt').val()) || 0;
+            var finalAmount = TotalAmount - TotalDiscountAmount - flatdisc - masterDisc;
+            if (finalAmount < 0) finalAmount = 0;
             if (blnceCondition == 'true') {
                 var AmtReceived = parseFloat($('#txtAmountReceived').val()) || 0;
                 var balance = finalAmount - AmtReceived;
@@ -1905,71 +1906,151 @@
             $('#txtDisAmt').val(totalLineDiscount);
             return totalLineDiscount;
         }
-        function CalculateSummariesMasterDiscount(AmtWise) {
-            debugger
-            if (!AmtWise) {
-                debugger
-                var disper = $('#txtDisPer').val() || 0;
-                var tableRowCount = $('#tblDetails tbody tr').length;
-                if (tableRowCount > 0 && parseFloat(disper) > 0) {
-                    var distributedDiscount = ApplyEqualMasterDiscountToRows(parseFloat(disper));
-                    $('#txtDisAmt').val(distributedDiscount);
-                }
-                else if (tableRowCount > 0 && parseFloat(disper) <= 0) {
-                    ApplyEqualMasterDiscountToRows(0);
-                }
-                var totalpayable = $('#txtTotalPayable').val() || 0;
-                var txtLineDisc = $('#txtLineDisc').val() || 0;
-                var txtMasterDisc = $('#txtDisAmt').val() || 0;
-                var netamt = parseFloat(parseFloat(totalpayable) - (parseFloat(txtLineDisc) + parseFloat(txtMasterDisc))).toFixed(2);
-                // $('#txtDisAmt').val(parseFloat(disAmt).toFixed(2));
-                //var disAmt = 0;
-                //if (disper > 0) {
-                //    if (tableRowCount > 0) {
-                //        disAmt = 0;
-                //    }
-                //    else {
-                //        disAmt = (netamt * disper) / 100;
-                //        disAmt = Math.round(disAmt);
-                //    }
-                //}
-                //else {
-                //    disAmt = 0;
-                //}
+        // function CalculateSummariesMasterDiscount(AmtWise) {
+        //     debugger
+        //     if (!AmtWise) {
+        //         debugger
+        //         var disper = $('#txtDisPer').val() || 0;
+        //         var tableRowCount = $('#tblDetails tbody tr').length;
+        //         if (tableRowCount > 0 && parseFloat(disper) > 0) {
+        //             var distributedDiscount = ApplyEqualMasterDiscountToRows(parseFloat(disper));
+        //             $('#txtDisAmt').val(distributedDiscount);
+        //         }
+        //         else if (tableRowCount > 0 && parseFloat(disper) <= 0) {
+        //             ApplyEqualMasterDiscountToRows(0);
+        //         }
+        //         var totalpayable = $('#txtTotalPayable').val() || 0;
+        //         var txtLineDisc = $('#txtLineDisc').val() || 0;
+        //         var txtMasterDisc = $('#txtDisAmt').val() || 0;
+        //         var netamt = parseFloat(parseFloat(totalpayable) - (parseFloat(txtLineDisc) + parseFloat(txtMasterDisc))).toFixed(2);
+        //         // $('#txtDisAmt').val(parseFloat(disAmt).toFixed(2));
+        //         //var disAmt = 0;
+        //         //if (disper > 0) {
+        //         //    if (tableRowCount > 0) {
+        //         //        disAmt = 0;
+        //         //    }
+        //         //    else {
+        //         //        disAmt = (netamt * disper) / 100;
+        //         //        disAmt = Math.round(disAmt);
+        //         //    }
+        //         //}
+        //         //else {
+        //         //    disAmt = 0;
+        //         //}
 
-            }
-            if (AmtWise) {
-                debugger
-                var txtDisAmt = $('#txtDisAmt').val() || 0;
-                var totalpayable = $('#txtTotalPayable').val() || 0;
-                var txtLineDisc = $('#txtLineDisc').val() || 0;
-                var netamt = parseFloat(parseFloat(totalpayable) - parseFloat(txtLineDisc)).toFixed(2);
-                var disper = 0;
-                if (txtDisAmt > 0) {
-                    disper = (txtDisAmt / netamt) * 100;
-                }
-                else {
-                    disper = 0;
-                }
-                $('#txtDisPer').val(parseFloat(disper).toFixed(2));
-            }
-            debugger;
-            var txtDisAmt = $('#txtDisAmt').val();
-            TotalAmount = $('#txtTotalPayable').val();
-            var txtLineDisc = parseFloat($('#txtLineDisc').val()) || 0;
-            var flatdisc = $('#txtFlatDisc').val();
-            if (flatdisc == "") {
-                flatdisc = 0;
-            }
-            var totamourcvd = $('#txtAmountReceived').val();
-            var finalbalance = parseFloat(TotalAmount) - parseFloat(txtLineDisc) - parseFloat(txtDisAmt).toFixed(2) - parseFloat(flatdisc);
-            if (blnceCondition == 'true') {
-                $('#txtBalances').val((finalbalance).toFixed());
-            }
-            else {
-                $('#txtAmountReceived').val((finalbalance).toFixed());
-            }
+        //     }
+        //     if (AmtWise) {
+        //         debugger
+        //         var txtDisAmt = $('#txtDisAmt').val() || 0;
+        //         var totalpayable = $('#txtTotalPayable').val() || 0;
+        //         var txtLineDisc = $('#txtLineDisc').val() || 0;
+        //         var netamt = parseFloat(parseFloat(totalpayable) - parseFloat(txtLineDisc)).toFixed(2);
+        //         var disper = 0;
+        //         if (txtDisAmt > 0) {
+        //             disper = (txtDisAmt / netamt) * 100;
+        //         }
+        //         else {
+        //             disper = 0;
+        //         }
+        //         $('#txtDisPer').val(parseFloat(disper).toFixed(2));
+        //     }
+        //     debugger;
+        //     var txtDisAmt = parseFloat($('#txtDisAmt').val()) || 0;
+        //     TotalAmount = parseFloat($('#txtTotalPayable').val()) || 0;
+        //     var txtLineDisc = parseFloat($('#txtLineDisc').val()) || 0;
+        //     var flatdisc = parseFloat($('#txtFlatDisc').val()) || 0;
+        //     var finalbalance = TotalAmount - txtLineDisc - txtDisAmt - flatdisc;
+        //     if (blnceCondition == 'true') {
+        //         var AmtReceived = parseFloat($('#txtAmountReceived').val()) || 0;
+        //         if (AmtReceived <= 0) {
+        //             AmtReceived = finalbalance;
+        //             $('#txtAmountReceived').val(finalbalance.toFixed());
+        //         }
+        //         var balance = finalbalance - AmtReceived;
+        //         if (balance < 0) balance = 0;
+        //         $('#txtBalances').val(balance.toFixed());
+        //     }
+        //     else {
+        //         $('#txtAmountReceived').val((finalbalance).toFixed());
+        //         $('#txtBalances').val('0');
+        //     }
+        //     sumdiscount()
+        // }
+
+        function CalculateSummariesMasterDiscount(AmtWise) {
+
+    if (!AmtWise) {
+
+        var disper = parseFloat($('#txtDisPer').val()) || 0;
+        var tableRowCount = $('#tblDetails tbody tr').length;
+
+        if (tableRowCount > 0 && disper > 0) {
+            var distributedDiscount = ApplyEqualMasterDiscountToRows(disper);
+            $('#txtDisAmt').val(parseFloat(distributedDiscount).toFixed(2));
         }
+        else if (tableRowCount > 0) {
+            ApplyEqualMasterDiscountToRows(0);
+            $('#txtDisAmt').val('0.00');
+        }
+
+    }
+    else {
+
+        var txtDisAmt = parseFloat($('#txtDisAmt').val()) || 0;
+        var totalpayable = parseFloat($('#txtTotalPayable').val()) || 0;
+        var txtLineDisc = parseFloat($('#txtLineDisc').val()) || 0;
+
+        var netamt = totalpayable - txtLineDisc;
+
+        var disper = 0;
+        if (netamt > 0) {
+            disper = (txtDisAmt / netamt) * 100;
+        }
+
+        $('#txtDisPer').val(disper.toFixed(2));
+    }
+
+    // Calculate amount after discount values are updated
+    setTimeout(function () {
+        CalculateReceivedAmount();
+    }, 1000);
+
+    sumdiscount();
+}
+function CalculateReceivedAmount() {
+      console.log("CalculateReceivedAmount Called");
+    var totalAmount = parseFloat($('#txtTotalPayable').val()) || 0;
+    var lineDisc = parseFloat($('#txtLineDisc').val()) || 0;
+    var masterDisc = parseFloat($('#txtDisAmt').val()) || 0;
+    var flatDisc = parseFloat($('#txtFlatDisc').val()) || 0;
+
+    var finalBalance = totalAmount - lineDisc - masterDisc - flatDisc;
+       console.log(totalAmount, lineDisc, masterDisc, flatDisc);
+    if (finalBalance < 0)
+        finalBalance = 0;
+        console.log(finalBalance);
+    if (blnceCondition == 'true') {
+
+        var amtReceived = parseFloat($('#txtAmountReceived').val()) || 0;
+
+        if (amtReceived <= 0) {
+            amtReceived = finalBalance;
+            $('#txtAmountReceived').val(amtReceived.toFixed(2));
+        }
+
+        var balance = finalBalance - amtReceived;
+
+        if (balance < 0)
+            balance = 0;
+
+        $('#txtBalances').val(balance.toFixed(2));
+    }
+    else {
+         console.log("Final Bill Inside Else" + finalBalance);
+        $('#txtAmountReceived').val(finalBalance.toFixed(2));
+        $('#txtBalances').val('0.00');
+    }
+}
 
         function Print_Prescription() {
             var id = $('#ddlPatient_No').val();
@@ -2060,15 +2141,22 @@
             $('#txtLineDisc').val(Math.round(TotalDiscountAmount));
 
             var flatdisc = parseFloat($('#txtFlatDisc').val()) || 0;
-            var finalAmount = TotalAmount - TotalDiscountAmount - flatdisc;
+            var masterDisc = parseFloat($('#txtDisAmt').val()) || 0;
+            var finalAmount = TotalAmount - TotalDiscountAmount - flatdisc - masterDisc;
+            if (finalAmount < 0) finalAmount = 0;
 
             if (blnceCondition == 'true') {
                 var AmtReceived = parseFloat($('#txtAmountReceived').val()) || 0;
+                if (AmtReceived <= 0) {
+                    AmtReceived = finalAmount;
+                    $('#txtAmountReceived').val(Math.round(finalAmount));
+                }
                 var balance = finalAmount - AmtReceived;
                 if (balance < 0) balance = 0;
                 $('#txtBalances').val(Math.round(balance));
             } else {
                 $('#txtAmountReceived').val(Math.round(finalAmount));
+                $('#txtBalances').val('0');
             }
         }
         function CheckSaleReturnAllow() {
@@ -2424,6 +2512,7 @@
                         }
                     }, 5);
                     CalculateSummarieDiscountPerWise(rowIndex);
+                     CalculateSummariesMasterDiscount(false);
                 }
             });
         }
@@ -3438,6 +3527,35 @@
                     var length = $("#tblDetails tr:gt(0)").length;
                     $('#Table_1 tr:gt(0)').remove();
                     var data = JSON.parse(msg.d);
+                    // Prevent adding the same item with the same batch twice
+                    var newItemId = String(data[0].Item_ID);
+                    var newBatch = String(data[0].BatchNum);
+                    var duplicate = false;
+                    $('#tblDetails tbody tr').each(function () {
+                        var existingItemId = $(this).find('input[name="ItemID"]').val();
+                        var existingBatch = $(this).find('input[name="BatchNo"]').val();
+                        if (existingItemId && String(existingItemId) === newItemId
+                            && existingBatch && String(existingBatch) === newBatch) {
+                            duplicate = true;
+                            return false;
+                        }
+                    });
+                    if (duplicate) {
+                        Swal.fire({
+                            icon: 'warning',
+                            title: 'Already Added!',
+                            text: 'This item with this batch is already added.',
+                            showConfirmButton: false,
+                            timer: 2500,
+                            customClass: {
+                                popup: 'swal-big-popup',
+                                title: 'swal-big-title',
+                                htmlContainer: 'swal-big-text'
+                            }
+                        });
+                        $('#ItemModal').modal('hide');
+                        return;
+                    }
                     debugger;
                     var Uomqty = data[0].UOM_Qty;
                     if (Uomqty == null) {
@@ -4926,11 +5044,11 @@
                     <div class="col-lg-6">
                         <label>Disc %</label>
 
-                        <input type="text" tabindex="18" id="txtDisPer" class="form-control me-2" onkeyup="CalculateSummariesMasterDiscount(false),sumdiscount()"  onblur="CalculateSummariesMasterDiscount(false),sumdiscount()"/>
+                        <input type="text" tabindex="18" id="txtDisPer" class="form-control me-2" onkeyup="CalculateSummariesMasterDiscount(false)"  onblur="CalculateSummariesMasterDiscount(false)"/>
                     </div>
                     <div class="col-lg-6 col-md-6 col-sm-12">
                         <label>Disc (Alt+D)</label>
-                        <input type="text" id="txtDisAmt" tabindex="19" class="form-control ms-2" disabled="disabled" onkeyup="CalculateSummariesMasterDiscount(true),sumdiscount()" onblur="CalculateSummariesMasterDiscount(true),sumdiscount()"/>
+                        <input type="text" id="txtDisAmt" tabindex="19" class="form-control ms-2" disabled="disabled" onkeyup="CalculateSummariesMasterDiscount(true)" onblur="CalculateSummariesMasterDiscount(true)"/>
 
                     </div>
 

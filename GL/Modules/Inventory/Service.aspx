@@ -367,6 +367,7 @@
                 var DepartmentId = $('#ddldepartment').val();
                 var Subcategory = $('#ddlSubcategory').val();
                 var isHospitalchk = $('#chkIsHospital').prop('checked');
+                var isPharmacyBilling = $('#chkIsPharmacyBilling').prop('checked');
                 var account = $('#ddlAccount').val();
                 var Id = 0;
                 if (id == "") {
@@ -438,6 +439,7 @@
                         "DepartmentId": DepartmentId,
                         "Subcategory": Subcategory,
                         "IsHospital": isHospitalchk,
+                        "IsPharmacyBilling": isPharmacyBilling,
                         "Account": account,
                     }),
                     contentType: "application/json; charset=utf-8",
@@ -663,6 +665,9 @@
                     }
                     if (parse.Hospital_Services == 1) {
                         $("#chkIsHospital").prop('checked', true);
+                    }
+                    if (parse.IsPharmacyBilling == 1) {
+                        $("#chkIsPharmacyBilling").prop('checked', true);
                     }
                     if (parse.Services == 1) {
                         $("#chkIsService").prop('checked', true);
@@ -1041,6 +1046,14 @@
                     <td style="width: 84px;">
                          <label for="chkOTProcedure">Fluid</label> 
                     </td>                   
+                </tr>
+                <tr>
+                    <td>
+                        <input type="checkbox" id="chkIsPharmacyBilling" name="chkIsPharmacyBilling" />
+                    </td>
+                    <td style="width: 84px;">
+                        <label for="chkIsPharmacyBilling">Pharmacy Billing</label>
+                    </td>
                 </tr>
             </table>
         </div>

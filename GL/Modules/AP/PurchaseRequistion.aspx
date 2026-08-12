@@ -203,6 +203,7 @@
             });
 
             function LoadAllitem(searchText) {
+                debugger;
                 var warehouse = $('#ddlWarehouse').val();
                 // Guard: if warehouse is mandatory and not selected, block the browse
                 if (warehouseCond == '01' && (!warehouse || warehouse === '0' || warehouse === '')) {
@@ -223,12 +224,27 @@
                             tableBody.html('<tr><td colspan="5" class="text-center text-muted" style="padding:18px;">No items found.</td></tr>');
                         } else {
                             $.each(items, function (index, item) {
+                                debugger;
+                                var lastReqDateDisplay = '';
+                                if (item.LastRequiredDate) {
+                                    try {
+                                        var dateObj = new Date(item.LastRequiredDate);
+                                        if (!isNaN(dateObj.getTime())) {
+                                            lastReqDateDisplay = $.datepicker.formatDate('dd M yy', dateObj);
+                                        }
+                                    } catch (e) {
+                                        lastReqDateDisplay = '';
+                                    }
+                                }
                                 var row = '<tr class="item-modal-row">' +
                                     '<td style="text-align:center;width:50px;"><button type="button" class="btn-item-pick" onclick="append(this)"><i class="fa fa-plus"></i></button></td>' +
                                     '<td style="display:none">' + item.Item_ID + '</td>' +
                                     '<td>' + item.Item_Code + '</td>' +
                                     '<td>' + item.Description + '</td>' +
                                     '<td>' + item.Unit + '</td>' +
+                                    '<td style="display:none">' + (item.Stock || '0') + '</td>' +
+                                    '<td style="display:none">' + (item.LastQty || '') + '</td>' +
+                                    '<td style="display:none">' + (item.LastRequiredDate || '') + '</td>' +
                                     '</tr>';
                                 tableBody.append(row);
                             });
@@ -391,12 +407,16 @@
         }
 
         function append(anchor) {
+            debugger;
             var row = $(anchor).closest('tr');
             var Item_ID   = $(row).find('td:eq(1)').text();
             var Item_Code = $(row).find('td:eq(2)').text();
             var Item_name = $(row).find('td:eq(3)').text();
             var unit      = $(row).find('td:eq(4)').text();
-            var stock = "0";
+            var stock = $(row).find('td:eq(5)').text() || '0';
+            var lastQty = $(row).find('td:eq(6)').text() || '';
+            var lastReqDate = $(row).find('td:eq(7)').text() || '';
+            console.log(lastReqDate);
             var exists = false;
             $('#tblbodyPackage tr').each(function () {
                 var existingItemCode = $(this).find('td:eq(1)').text();
@@ -408,6 +428,41 @@
             }
             var length = $("#tblbodyPackage tr").length;
             length++;
+
+            var formattedLastReqDate = '';
+            if (lastReqDate && lastReqDate !== '' && lastReqDate !== 'null') {
+                try {
+                    var dateValue = lastReqDate;
+                    var timestamp = null;
+
+                    if (typeof dateValue === 'string' && dateValue.match(/\/Date\((\d+)\)\//)) {
+                        var matches = dateValue.match(/\/Date\((\d+)\)\//);
+                        if (matches && matches.length > 1) {
+                            timestamp = parseInt(matches[1]);
+                        }
+                    }
+                    else if (!isNaN(dateValue) && dateValue.toString().length > 10) {
+                        timestamp = parseInt(dateValue);
+                    }
+
+                    if (timestamp !== null) {
+                        var dateObj = new Date(timestamp);
+                        if (!isNaN(dateObj.getTime())) {
+                            formattedLastReqDate = $.datepicker.formatDate('dd M yy', dateObj);
+                        }
+                    } else {
+                        var dateObj = new Date(dateValue);
+                        if (!isNaN(dateObj.getTime())) {
+                            formattedLastReqDate = $.datepicker.formatDate('dd M yy', dateObj);
+                        }
+                    }
+                } catch (e) {
+                    console.warn('Error parsing date:', lastReqDate, e);
+                    formattedLastReqDate = '';
+                }
+            }
+
+            console.log('Formatted Last Required Date:', formattedLastReqDate);
             $("#tblbodyPackage").append(
                 "<tr data-itemid='" + Item_ID + "'>" +
                 "<td style='text-align:center;padding-top:7px!important;'>" + length + "</td>" +
@@ -419,8 +474,8 @@
                 "<td style='text-align:right;'><input type='text' name='txtUnitPrice' id='txtUnitPrice" + length + "' style='font-size:9px;width:68px!important;text-align:right;margin-top:2px;' autocomplete='off' onkeyup='calcutaeEstimCost(this)'/></td>" +
                 "<td style='text-align:right;'><input readonly type='text' name='txtEstimCost' id='txtEstimCost" + length + "' style='font-size:9px;width:78px!important;text-align:right;margin-top:2px;' /></td>" +
                 "<td style='text-align:left;'><input type='text' name='txtrdate' id='txtrdate" + length + "' style='font-size:9px;width:80px!important;margin-top:2px;' autocomplete='off'/></td>" +
-                "<td style='text-align:right;padding-top:7px!important;'>" + "</td>" +
-                "<td style='text-align:left;padding-top:7px!important;'>" + "</td>" +
+                "<td style='text-align:right;padding-top:7px!important;'>" + lastQty + "</td>" +
+                "<td style='text-align:left;padding-top:7px!important;'>" + formattedLastReqDate + "</td>" +
                 "<td style='text-align:left;'><input type='text' name='remarks' id='remarks" + length + "' style='font-size:9px;width:100%;margin-top:2px;'/></td>" +
                 "<td style='display:none'>" + Item_ID + "</td>" +
                 "<td style='text-align:center;'><a href='#' onclick='Delete(this)'><i class='fa fa-trash' style='font-size:13px;margin-top:5px;color:#f30a0a;'></i></a></td>" +
@@ -1292,6 +1347,8 @@
                                     <th>Item Code</th>
                                     <th>Description</th>
                                     <th style="width:80px;">Unit</th>
+                                    <th style="display:none;">Last Qty</th>
+                                    <th style="display:none;">Last PR Date</th>
                                 </tr>
                             </thead>
                             <tbody id="itemsTableBody"></tbody>

@@ -204,6 +204,12 @@
                     else {
                         MfgDate = '';
                     }
+                    var saleRateValue = '';
+                    if (value.SaleRate != null && value.SaleRate != '') {
+                        saleRateValue = value.SaleRate;
+                    } else if (value.Sale_Rate != null && value.Sale_Rate != '') {
+                        saleRateValue = value.Sale_Rate;
+                    }
                     var test_array = $('#tblItemDescription').find('input[name=txtItemCode][value=' + value.itemcode + ']');
                     if (test_array.length > 0) {
 
@@ -245,7 +251,7 @@
 
                             '<td><input type="text" style="width:61px !important;text-align:center;font-size:9px;height:21px !important;" name="txtMfgdate" id="txtMfgdate' + (key + 1) + '"  value="' + MfgDate + '" readonly="readonly"/></td>' +
                             '<td><input type="text" style="width:61px !important;text-align:center;font-size:9px;height:21px !important;" name="Expdate" id="Expdate' + (key + 1) + '"  value="' + ExpiryDate + '" readonly="readonly"/></td>' +
-                            '<td><input type="text" style="width:65px !important;text-align:right;font-size:9px;height:21px !important;" name="SaleRate" id="SaleRate' + (key + 1) + '"  value="' + (value.Sale_Rate != null ? value.Sale_Rate : '') + '"/></td>' +
+                            '<td><input type="text" style="width:65px !important;text-align:right;font-size:9px;height:21px !important;" name="SaleRate" id="SaleRate' + (key + 1) + '"  value="' + saleRateValue + '"/></td>' +
                             '<td style="display:none"><input type="hidden" style="width:61px !important;text-align:center;font-size:9px;height:21px !important;" name="Isbatch" id="Isbatch' + rowlength + '" value="' + value.IsBatch + '" readonly="readonly"/></td>' +
                             '<td style="display:none;width:50px !important;text-align:right;font-size:9px;height:10px !important;"><input type="text" style="width:50px !important;text-align:right;font-size:9px;height:21px !important;position: relative;" value="0"  id="RejQty' + rowlength + '" name="RejQty"></input></td>' +
                             '<td><a href="javascript:void(0)" onclick="ExcludeFromPayment(this)"><i class="glyphicon glyphicon-trash" style="font-size: 13px;color: #f30a0a;position:relative;" i=""></i></a></td>' +
@@ -341,6 +347,9 @@
                     $($(value).find('td input[name=Expdate]')[0]).attr('disabled', true);
                     $($(value).find('td input[name=SaleRate]')[0]).prop('readonly', true);
                 } else {
+                    $($(value).find('td input[name=BatchNo]')[0]).prop('readonly', false);
+                    $($(value).find('td input[name=txtMfgdate]')[0]).removeAttr('disabled').prop('readonly', false);
+                    $($(value).find('td input[name=Expdate]')[0]).removeAttr('disabled').prop('readonly', false);
                     $($(value).find('td input[name=SaleRate]')[0]).prop('readonly', false);
                 }
             });
@@ -410,6 +419,46 @@
                     var igpQTy = parseFloat($($(value).find('td input[name=IgpQty]')[0]).val()) || 0;
                     var poQty = parseFloat($(value).find('input[name="POQty"]').val()) || 0;
 
+
+                    if (txtuomqty == "" || txtuomqty == null) {
+                        proceed = false;
+                        Swal.fire({
+                            icon: 'error',
+                            title: 'Error!',
+                            text: 'Please enter UOM Qty for Item Code "' + item_code + '"',
+                            showConfirmButton: false,
+                            timer: 3000,
+                            customClass: {
+                                popup: 'swal-big-popup',
+                                title: 'swal-big-title',
+                                htmlContainer: 'swal-big-text'
+                            }
+                        });
+                        $($(value).find('td input[name=txtuomqty]')[0]).css('border-color', 'red');
+                        return false;
+                    } else {
+                        $($(value).find('td input[name=txtuomqty]')[0]).css('border-color', '');
+                    }
+
+                    if (isNaN(parseFloat(txtuomqty)) || parseFloat(txtuomqty) <= 0) {
+                        proceed = false;
+                        Swal.fire({
+                            icon: 'error',
+                            title: 'Error!',
+                            text: 'Please enter a valid UOM Qty (must be a positive number) for Item Code "' + item_code + '"',
+                            showConfirmButton: false,
+                            timer: 3000,
+                            customClass: {
+                                popup: 'swal-big-popup',
+                                title: 'swal-big-title',
+                                htmlContainer: 'swal-big-text'
+                            }
+                        });
+                        $($(value).find('td input[name=txtuomqty]')[0]).css('border-color', 'red');
+                        return false;
+                    } else {
+                        $($(value).find('td input[name=txtuomqty]')[0]).css('border-color', '');
+                    }
 
                     if (igpQTy <= 0) {
                         proceed = false;
@@ -824,8 +873,8 @@
 
                             '<td><input type="text" style="width:61px !important;text-align:center;font-size:9px;height:21px !important;" name="txtMfgdate" id="txtMfgdate' + (key + 1) + '" value="' + formattedDate + '"/></td>' +
                             '<td><input type="text" style="width:61px !important;text-align:center;font-size:9px;height:21px !important;" name="Expdate" id="Expdate' + (key + 1) + '" value="" readonly="readonly"/></td>' +
-                            '<td><input type="text" style="width:65px !important;text-align:right;font-size:9px;height:21px !important;" name="SaleRate" id="SaleRate' + rowlength + '" value=""/></td>' +
-                            '<td style="display:none"><input type="hidden" style="width:61px !important;text-align:center;font-size:9px;height:21px !important;" name="Isbatch" id="Isbatch' + rowlength + '" value="' + value.IsBatch + '" readonly="readonly"/></td>' +
+                            '<td><input type="text" style="width:65px !important;text-align:right;font-size:9px;height:21px !important;" name="SaleRate" id="SaleRate' + rowlength + '" value="' + (value.SaleRate ? parseFloat(value.SaleRate).toFixed(2) : '') + '"/></td>' +
+                            '<td style="display:none"><input type="hidden" name="Isbatch" id="Isbatch' + rowlength + '" value="' + value.IsBatch + '" readonly="readonly"/></td>' +
                             '<td style="display:none;width:50px !important;text-align:right;font-size:9px;height:10px !important;"><input type="text" style="width:50px !important;text-align:right;font-size:9px;height:21px !important;position: relative;" value="0" id="RejQty' + rowlength + '" name="RejQty"></input></td>' +
                             '<td><a href="javascript:void(0)" onclick="ExcludeFromPayment(this)"><i class="glyphicon glyphicon-trash" style="font-size:11px;color: #f30a0a;position:relative;"></i></a> </td>' +
                             '</tr>';

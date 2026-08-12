@@ -296,6 +296,49 @@ namespace PMS
             return result;
         }
 
+        [WebMethod]
+        public static string GetDischargeRequests(string SearchString)
+        {
+            using (DataBaseDataContext db = new DataBaseDataContext())
+            {
+                if (string.IsNullOrWhiteSpace(SearchString))
+                {
+                    SearchString = null;
+                }
+
+                var query = from ip in db.In_Patients
+                            join r in db.Reg_patients on ip.Patient_ID equals r.pat_id
+                            where ip.Company_ID == AppConfig.Company_ID
+                                  && ip.Discharge_Request == true
+                                  && (ip.Discharge == null || ip.Discharge == false)
+                                  && (ip.Final_Bill == null || ip.Final_Bill == false)
+                                  && (SearchString == null
+                                      || r.mr_no_sequence.Contains(SearchString)
+                                      || r.Full_Name.Contains(SearchString))
+                            orderby ip.Created_Time descending
+                            select new
+                            {
+                                In_Patient_ID = ip.In_Patient_ID,
+                                Reg_Patient_ID = r.pat_id,
+                                MR_No = r.mr_no_sequence,
+                                Full_Name = r.Full_Name,
+                                Age = r.Age_years,
+                                Gender = r.Gender,
+                                Doctor = (from d in db.HR_Employees
+                                          where d.Emp_ID == Convert.ToInt32(ip.Doctor)
+                                          select d.Emp_Name).FirstOrDefault() ?? "",
+                                Department = ip.Department,
+                                Ward_Name = (from w in db.Ward_Definitions
+                                             where w.Ward_ID == ip.Ward_ID
+                                             select w.Ward_Type).FirstOrDefault() ?? "",
+                                Bed_No = ip.Bed_No,
+                                Admission_Date = (System.DateTime?)ip.Admission_Date
+                            };
+
+                return (new JavaScriptSerializer()).Serialize(query.ToList());
+            }
+        }
+
 
 
         [WebMethod]
@@ -1573,6 +1616,7 @@ namespace PMS
             public string ItemType { get; set; }
             public bool RecommendedByDoctor { get; set; }
             public bool ExcludedFromPayment { get; set; }
+            public bool SelectedForApproval { get; set; }
             public decimal Amount { get; set; }
             public decimal DisPer { get; set; }
             public decimal DisAmt { get; set; }
@@ -2063,7 +2107,8 @@ namespace PMS
                     Category_ID = dtls.CategoryID,
                     Test_Main_Department = dtls.MainDepartment,
                     Service_Date = DateTime.Now,
-                    Issue_Date = dtls.Test_CreatedDate
+                    Issue_Date = dtls.Test_CreatedDate,
+                    Is_Approval = dtls.SelectedForApproval
                 };
 
                 if (dtls.MainDepartment == "001") sum = Convert.ToDecimal(dtls.Consumed_Lab);
@@ -2131,6 +2176,7 @@ namespace PMS
                         existing.Item_Type = newItem.Item_Type;
                         existing.RecommendedByDoctor = newItem.RecommendedByDoctor;
                         existing.Is_Group_Category = newItem.Is_Group_Category;
+                        existing.Is_Approval = newItem.Is_Approval;
 
                         itemsToUpdate.Add(existing);
                     }
@@ -3492,6 +3538,7 @@ namespace PMS
                                d.Doctor_id,
                                d.RecommendedByDoctor,
                                m.Referred_By,
+                               d.Is_Approval,
                                d.Issue_Date
                            }).ToList();
 
@@ -3503,6 +3550,16 @@ namespace PMS
         public static string LoadAllBillDetails(int in_pat)
         {
             DataBaseDataContext db = new DataBaseDataContext();
+
+            // If the final bill has already been made for this in-patient,
+            // do not load any bills against it again.
+            var isFinalBilled = (from ipd in db.In_Patients
+                                 where ipd.In_Patient_ID == in_pat
+                                       && ipd.Final_Bill == true
+                                 select ipd.In_Patient_ID).Any();
+            if (isFinalBilled)
+                return "[]";
+
             var Details = (from d in db.Ar_Billing_Details
                            join m in db.Ar_Billings
                             on d.Bill_ID equals m.Bill_ID
@@ -3533,12 +3590,46 @@ namespace PMS
                                d.RecommendedByDoctor,
                                m.Referred_By
                                ,d.Issue_Date
+                               ,d.Is_Approval
                            }).ToList();
 
 
             return (new JavaScriptSerializer()).Serialize(Details);
         }
 
+        [WebMethod]
+        public static string GetPharmacyBillTotal(int in_pat)
+        {
+            DataBaseDataContext db = new DataBaseDataContext();
+            var pharmacyBills = (from m in db.Ar_Billings
+                                 where m.In_Patient_ID == in_pat
+                                       && m.IsPharmacy == true
+                                       && (m.isCancel == false || m.isCancel == null)
+                                 select m).ToList();
+
+            decimal total = pharmacyBills.Sum(m => m.Balance_Amount ?? 0);
+
+            var pharmacyItem = (from itm in db.INV_Items
+                                where itm.IsPharmacyBilling == true
+                                select itm).FirstOrDefault();
+
+            int itemId = 0;
+            string itemName = "Pharmacy Bill";
+
+            if (pharmacyItem != null)
+            {
+                itemId = pharmacyItem.Item_ID;
+                itemName = pharmacyItem.Description ?? "Pharmacy Bill";
+            }
+
+            return (new JavaScriptSerializer()).Serialize(new
+            {
+                PharmacyTotal = total,
+                BillCount = pharmacyBills.Count,
+                ItemName = itemName,
+                ItemId = itemId
+            });
+        }
         [WebMethod]
         public static string GetDocAgreementValues(string doc_id, string test_id, string item_id, string item_name, string Aggreement_Type)
         {
@@ -3902,9 +3993,10 @@ namespace PMS
                             }
                         }
                         if (inpat.Discharge_Request == true) {
-                            pt.paid_amount = DBClass.getField("select sum(Received_Amount) from Ar_Billings where  In_Patient_ID =" + inpat.In_Patient_ID);                         
+                            pt.paid_amount = DBClass.getField("select sum(Received_Amount) from Ar_Billings where  In_Patient_ID =" + inpat.In_Patient_ID);
+                            pt.advance_amount = DBClass.getField("select sum(Advance_Amount) from AR_Advances where In_Patient_ID=" + inpat.In_Patient_ID);
                         }
-                        pt.advance_amount = DBClass.getField("select sum(Advance_Amount) from AR_Advances where In_Patient_ID=" + inpat.In_Patient_ID);
+                     
                         pt.Ward_Name = Ward;
                         pt.Admission_Date = Convert.ToString(inpat.Admission_Date);
                         pt.Discharge_On = Convert.ToString(inpat.Discharge_On);
@@ -4253,6 +4345,7 @@ namespace PMS
                                    Procedure_Required = DBClass.getField("select isnull(Procedure_Required,'0') as Procedure_Required from Inv_Items where Item_id=" + d.Item_ID),
                                    IsOpenBill = DBClass.getField("select isnull(Is_OpenBill,'0') as Is_OpenBill from Inv_Items where Item_id=" + d.Item_ID),
                                    d.Test_Main_Department,
+                                   d.Is_Approval,
                                    m.BillType
 
                                    //                               IsShare
@@ -4299,6 +4392,7 @@ namespace PMS
                                    Procedure_Required = DBClass.getField("select isnull(Procedure_Required,'0') as Procedure_Required from Inv_Items where Item_id=" + d.Item_ID),
                                    IsOpenBill = DBClass.getField("select isnull(Is_OpenBill,'0') as Is_OpenBill from Inv_Items where Item_id=" + d.Item_ID),
                                    d.Test_Main_Department,
+                                   d.Is_Approval,
                                    m.BillType
                                }).ToList();
                 return (new JavaScriptSerializer()).Serialize(Details);
@@ -5906,6 +6000,27 @@ namespace PMS
 
                     // Return true if permission is true, false otherwise
                     return userDiscountPermission == true;
+                }
+            }
+            catch (Exception ex)
+            {
+                return false;
+            }
+        }
+
+        [WebMethod]
+        public static bool AllowApprovalitem()
+        {
+            try
+            {
+                using (var db = new DataBaseDataContext(DBClass.ConnectionString()))
+                {
+                    var userApprovalPermission = (from user in db.aspnet_Users
+                                                  where user.UserId == AppConfig.UserID
+                                                  select user.AllowApprovalitem)
+                                           .FirstOrDefault();
+
+                    return userApprovalPermission == true;
                 }
             }
             catch (Exception ex)

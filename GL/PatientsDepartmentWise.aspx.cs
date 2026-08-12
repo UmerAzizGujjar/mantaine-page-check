@@ -694,6 +694,7 @@ namespace PMS
                     Master.Label2.Text = x;
                     Master.GetMenuName();
                     tr1MedicalSubsidy.Visible = false;
+                    tr_Export.Visible = true;
                     dpROw.Visible = false;
                     trDoctor.Visible = false;
                     tr_Summary.Visible = true;
@@ -722,6 +723,7 @@ namespace PMS
                     Master.Label2.Text = x;
                     Master.GetMenuName();
                     tr1MedicalSubsidy.Visible = false;
+                    tr_Export.Visible = true;
                     dpROw.Visible = false;
                     trDoctor.Visible = false;
                     tr_Summary.Visible = true;
@@ -8085,6 +8087,7 @@ namespace PMS
 
                     DateDiv.Visible = true;
                     Time_Row.Visible = true;
+                    rowStock.Visible = true;
 
                     // ADDING NEW WAREHOUSE
                     DataBaseDataContext dbs = new DataBaseDataContext(DBClass.ConnectionString());

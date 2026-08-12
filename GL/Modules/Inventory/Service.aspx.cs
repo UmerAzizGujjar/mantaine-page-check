@@ -63,7 +63,7 @@ namespace PMS.Modules.Inventory
         }
         //
         [WebMethod]
-        public static string SaveItem(string Item_Code, string Desc, string Active, string PackUnit, string UomQty, string Menu, string ItemType, string ItemCategory, string FianceIntegration, string locatorAddress, string Lenght, string Width, string Heigth, string SalesRate, string PurchRate, string Remarks, string FinshProduct, string Consumable, string Saleable, string ItemGroup, string Warehouse, string Purchaseable, string Locator, string NonStockItem, string Fixasset, string MinimumStock, string Batch, string ReorderStock, string MaximumStock, string ATC, string GenericName, string ControllerDrug, string Narcotics, string Refregrator, string PharmacyItem, string ProcedureTypes, string Notes, string RadioCharges, string DentalItem, string Procedure, string LensRequired, string BedServices, string LabRequired, string PattHistoryRequired, string DoctorShare, string HospitalShare, string FitnessCertificate, string OtherServices, string Billing, string OTProcedure, string btnValue, string ItemId, string DepartmentId, string Subcategory, string IsHospital, string IsService,string fluid, string Procedure_Time, string Account)
+        public static string SaveItem(string Item_Code, string Desc, string Active, string PackUnit, string UomQty, string Menu, string ItemType, string ItemCategory, string FianceIntegration, string locatorAddress, string Lenght, string Width, string Heigth, string SalesRate, string PurchRate, string Remarks, string FinshProduct, string Consumable, string Saleable, string ItemGroup, string Warehouse, string Purchaseable, string Locator, string NonStockItem, string Fixasset, string MinimumStock, string Batch, string ReorderStock, string MaximumStock, string ATC, string GenericName, string ControllerDrug, string Narcotics, string Refregrator, string PharmacyItem, string ProcedureTypes, string Notes, string RadioCharges, string DentalItem, string Procedure, string LensRequired, string BedServices, string LabRequired, string PattHistoryRequired, string DoctorShare, string HospitalShare, string FitnessCertificate, string OtherServices, string Billing, string OTProcedure, string btnValue, string ItemId, string DepartmentId, string Subcategory, string IsHospital, string IsService,string fluid, string Procedure_Time, string Account, string IsPharmacyBilling)
         {
             string result = string.Empty;
             string Id = "";
@@ -161,6 +161,7 @@ namespace PMS.Modules.Inventory
                 obj.InventoryOrg = Warehouse;
                 obj.Hospital_Services = Convert.ToBoolean(IsHospital);
                 obj.Services = Convert.ToBoolean(IsService);
+                obj.IsPharmacyBilling = Convert.ToBoolean(IsPharmacyBilling);
                 if (DoctorShare != "")
                 {
                     obj.Doctor_Share = Convert.ToDecimal(DoctorShare);
@@ -317,6 +318,7 @@ namespace PMS.Modules.Inventory
                 obj.Company_ID = AppConfig.Company_ID;
                 obj.Book_ID = AppConfig.Book_ID;
                 obj.Services = Convert.ToBoolean(IsService);
+                obj.IsPharmacyBilling = Convert.ToBoolean(IsPharmacyBilling);
                 try
                 {
                     db.SubmitChanges();
@@ -405,9 +407,10 @@ namespace PMS.Modules.Inventory
                                      obj.InventoryOrg,
                                      obj.DepartmentId,
                                      obj.Service_Sub_Category,
-                                    obj.Hospital_Services,
-                                    obj.OTProcedure,
-                                    obj.Account_ID,
+                                     obj.Hospital_Services,
+                                     obj.OTProcedure,
+                                     obj.IsPharmacyBilling,
+                                     obj.Account_ID,
                                  }).FirstOrDefault();
                     result = (new JavaScriptSerializer()).Serialize(query).ToString();
                 }

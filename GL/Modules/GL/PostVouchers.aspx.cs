@@ -24,6 +24,14 @@ namespace PMS.GL
             }
         }
 
+        protected void GridView1_RowCreated(object sender, GridViewRowEventArgs e)
+        {
+            if (e.Row.RowType == DataControlRowType.Header)
+                e.Row.TableSection = TableRowSection.TableHeader;
+            if (e.Row.RowType == DataControlRowType.DataRow)
+                e.Row.TableSection = TableRowSection.TableBody;
+        }
+
         protected void btnApprove_Click(object sender, EventArgs e)
         {
             DataBaseDataContext db = new DataBaseDataContext(DBClass.ConnectionString());
