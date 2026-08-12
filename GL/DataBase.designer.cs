@@ -244081,6 +244081,8 @@ namespace PMS
 
         private System.Nullable<bool> _Active;
 
+        private System.Nullable<decimal> _Stock;
+
         private decimal _LastQty;
 
         private System.Nullable<System.DateTime> _LastRequiredDate;
@@ -244165,6 +244167,22 @@ namespace PMS
                 if ((this._Active != value))
                 {
                     this._Active = value;
+                }
+            }
+        }
+
+        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_Stock", DbType = "Decimal(18,2)")]
+        public System.Nullable<decimal> Stock
+        {
+            get
+            {
+                return this._Stock;
+            }
+            set
+            {
+                if ((this._Stock != value))
+                {
+                    this._Stock = value;
                 }
             }
         }

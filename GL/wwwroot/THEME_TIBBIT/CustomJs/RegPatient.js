@@ -583,7 +583,7 @@ function Get_Pat_Info(reg_id) {
 
             $('#txt_Mrno').val(data.Mr_No);
             $('#txt_name').val(data.Name);
-            $('#ddlRelation').val(data.Relation);
+            $('#ddlRelation').val(data.Relation).trigger('change');
             $('#txt_relation').val(data.FatherName);
             $('#txt_dob').val(data.Age); 
             $('#txt_mobile').val(data.Mobile);

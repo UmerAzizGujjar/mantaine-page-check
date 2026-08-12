@@ -242,6 +242,7 @@
                                     '<td>' + item.Item_Code + '</td>' +
                                     '<td>' + item.Description + '</td>' +
                                     '<td>' + item.Unit + '</td>' +
+                                    '<td style="display:none">' + (item.Stock || '0') + '</td>' +
                                     '<td style="display:none">' + (item.LastQty || '') + '</td>' +
                                     '<td style="display:none">' + (item.LastRequiredDate || '') + '</td>' +
                                     '</tr>';
@@ -412,9 +413,9 @@
             var Item_Code = $(row).find('td:eq(2)').text();
             var Item_name = $(row).find('td:eq(3)').text();
             var unit      = $(row).find('td:eq(4)').text();
-            var stock = "0";
-            var lastQty = $(row).find('td:eq(5)').text() || '';
-            var lastReqDate = $(row).find('td:eq(6)').text() || '';
+            var stock = $(row).find('td:eq(5)').text() || '0';
+            var lastQty = $(row).find('td:eq(6)').text() || '';
+            var lastReqDate = $(row).find('td:eq(7)').text() || '';
             console.log(lastReqDate);
             var exists = false;
             $('#tblbodyPackage tr').each(function () {
