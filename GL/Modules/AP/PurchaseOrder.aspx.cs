@@ -266,14 +266,14 @@ namespace PMS.AP
                                d.Bonus_Tax,
                                d.Bonus_Qty,
                                pr_id = DBClass.getField("select PR.PR_Num from Purchase_Requisition PR join Purchase_Requisition_Detail PRD on PR.PR_Id = PRD.PR_ID where PRD.PR_Detail_ID = " + d.PRDetailId),
-                               TotalStock = db.GetInvenrtoryItemUomTotalStock(d.Item_Id ?? 0, m.Ware_House),
-                               LastPORate = (from pd in db.AP_Purchase_Order_Items
-                                             join ph in db.AP_Purchase_Orders on pd.PO_ID equals ph.PO_ID
-                                             where pd.Item_Id == d.Item_Id
-                                             orderby ph.Creation_Time descending
-                                             select pd.Rate).FirstOrDefault() ?? d.Rate,
+TotalStock = db.GetInvenrtoryItemUomTotalStock(d.Item_Id ?? 0, m.Ware_House),
+                               LastPORate = d.Last_PO_Rate ?? (from pd in db.AP_Purchase_Order_Items
+                                              join ph in db.AP_Purchase_Orders on pd.PO_ID equals ph.PO_ID
+                                              where pd.Item_Id == d.Item_Id
+                                              orderby ph.Creation_Time descending
+                                              select pd.Rate).FirstOrDefault() ?? d.Rate,
 
-                               LastVendorName = (from pd in db.AP_Purchase_Order_Items
+                               LastVendorName = d.Last_Vendor_Name ?? (from pd in db.AP_Purchase_Order_Items
                                                  join ph in db.AP_Purchase_Orders on pd.PO_ID equals ph.PO_ID
                                                  join v in db.AP_Vendors on ph.Vendor_ID equals v.Vendor_ID
                                                  where pd.Item_Id == d.Item_Id
@@ -489,6 +489,8 @@ namespace PMS.AP
             public string BonusQty { get; set; }
             public string BonusTax { get; set; }
             public string UOM_Qty { get; set; }
+            public string LastVendorName { get; set; }
+            public string LastPORate { get; set; }
 
         }
         [WebMethod]
@@ -717,6 +719,15 @@ namespace PMS.AP
                 ltd.AdvanceTax_ID = Convert.ToInt32(POitem.AdvanceTax_ID);
                 ltd.PRDetailId = Convert.ToInt32(POitem.PRDetailId);
                 ltd.Item_Id = Convert.ToInt32(DBClass.getField("select Item_Id from inv_items where Item_Code=" + Convert.ToInt32(POitem.ItemCode)));
+                ltd.Last_Vendor_Name = POitem.LastVendorName;
+                if (!string.IsNullOrEmpty(POitem.LastPORate) && decimal.TryParse(POitem.LastPORate, out decimal lastPORate))
+                {
+                    ltd.Last_PO_Rate = lastPORate;
+                }
+                else
+                {
+                    ltd.Last_PO_Rate = null;
+                }
                 db.AP_Purchase_Order_Items.InsertOnSubmit(ltd);
                 db.SubmitChanges();
             }

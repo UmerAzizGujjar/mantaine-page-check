@@ -650,7 +650,7 @@
                 '<td style="padding-top: 7px!important; text-align:right;">' +
                 '<input type="text" readonly="readonly" id="txtLastPORate' + length + '" name="txtLastPORate" ' +
                 'style="width:50px !important;text-align:right;font-size:9px;height:20px;" value="' + parseFloat(lastPORate).toFixed(2) + '" />' +
-                '<td style="padding-top: 7px!important; text-align:center; font-size:9px;">' + (lastVendorName || '') + '</td>' + 
+                '<td style="padding-top: 7px!important; text-align:center; font-size:9px;"><input type="hidden" name="txtLastVendorName" value="' + (lastVendorName || '') + '" />' + (lastVendorName || '') + '</td>' + 
                 '<td style="padding-top: 7px!important;"><a href="javascript:void(0)" onclick="ExcludeFromPayment(this)"><i class="fa fa-trash" style="font-size: 13px;margin-left: 16px; color: #f30a0a;position:relative;left: -10px;"></i></a>  </td>' +
                 '</tr>';
         }
@@ -893,7 +893,9 @@
 
             });
             $('#ddlWarehouse').change(function () {
+                <% if (Request.QueryString["PO_ID"] == null) { %>
                 $("#ddlWarehouse").attr('disabled', true);
+                <% } %>
             });
 
             $('[id*=checkHeader]').click(function () {
@@ -1061,7 +1063,9 @@
             GetWareHouseCondition();
 
             $('#ddlWarehouse').change(function () {
+                <% if (Request.QueryString["PO_ID"] == null) { %>
                 $("#ddlWarehouse").attr('disabled', true);
+                <% } %>
             });
 
             $('[id*=checkHeader]').click(function () {
@@ -1393,12 +1397,14 @@
                 }
                 $('#txtAdv_amou').val(data.Total_Adv_Amt);
                 $('#txtFurther_amou').val(data.Total_Further_Amt);
-                $('#ddlWarehouse').html(
-                    $('<option>', {
+                lastLoadedWarehouse = data.Ware_House || '';
+                if ($('#ddlWarehouse option[value="' + lastLoadedWarehouse + '"]').length === 0) {
+                    $('#ddlWarehouse').append($('<option>', {
                         value: data.Ware_House,
                         text: data.Ware_HouseText
-                    })
-                );
+                    }));
+                }
+                $('#ddlWarehouse').val(lastLoadedWarehouse).trigger('change');
             },
                 function (error) {
                     alert(error.get_message());
@@ -1748,9 +1754,9 @@ function scheduleCalcTotal(delay) {
                             '<td style="text-align:center; font-weight:bold; color:#555;">' + (value.TotalStock != null ? value.TotalStock : '0') + '</td>' +
                             '<td style="padding-top: 7px!important; text-align:right;">' +
                             '<input type="text" readonly="readonly" id="txtLastPORate' + idx + '" name="txtLastPORate" ' +
-                            'style="width:50px !important;text-align:right;font-size:9px;height:20px;" value="' + parseFloat(safeVal(value.Rate, 0)).toFixed(2) + '" />' +
+                            'style="width:50px !important;text-align:right;font-size:9px;height:20px;" value="' + parseFloat(safeVal(value.LastPORate, 0)).toFixed(2) + '" />' +
                             '</td>' +
-                            '<td style="padding-top: 7px!important; text-align:center; font-size:9px;">' + (value.LastVendorName || '') + '</td>' + 
+                            '<td style="padding-top: 7px!important; text-align:center; font-size:9px;"><input type="hidden" name="txtLastVendorName" value="' + (value.LastVendorName || '') + '" />' + (value.LastVendorName || '') + '</td>' + 
                             '<td style="padding-top: 7px!important;"><a href="javascript:void(0)" onclick="ExcludeFromPayment(this)"><i class="fa fa-trash" style="font-size: 13px;margin-left: 16px; color: #f30a0a;position:relative;left: -10px;"><\/i><\/a>  <\/td>' +
                             '<\/tr>';
                         rowsHTML.push(row);
@@ -2227,6 +2233,7 @@ function scheduleCalcTotal(delay) {
         }
 
 
+        var lastLoadedWarehouse = '';
         function FillWarehouse() {
 
             var optionInv = '';
@@ -2238,6 +2245,9 @@ function scheduleCalcTotal(delay) {
                     optionInv += '<option value="' + value.DataValueName + '" >' + value.DataValueDescription + '</option>';
                 });
                 $('#ddlWarehouse').html(optionInv);
+                if (lastLoadedWarehouse) {
+                    $('#ddlWarehouse').val(lastLoadedWarehouse).trigger('change');
+                }
             });
         }
 
@@ -2795,6 +2805,7 @@ function scheduleCalcTotal(delay) {
                         Item_list.push({
                             'PRDetailId': $(value).find('td input[name=txtPRDId]').val(), 'ItemCode': $(value).find('td input[name=txtItemCode]').val(), 'ItemName': $(value).find('td input[name=txtItemName]').val(), 'Unit': $(value).find('td input[name=txtUnit]').val(), 'BonusQty': $(value).find('td input[name=txtBonusQty]').val(), 'Qty': $(value).find('td input[name=txtQty]').val(), 'UOM_Qty': $(value).find('td input[name=txtUOMQty]').val(), 'Rate': $(value).find('td input[name=txtRate]').val(), 'DisPer': $(value).find('td input[name=txtDisPer]').val(), 'DisAmount': $(value).find('td input[name=txtDisAmount]').val(), 'Amount': $(value).find('td input[name=txtTotalAmount]').val(), 'FedPercentId': $("#ddlFed" + (key + 1) + " option:selected").val(), 'Fed_Percentage': $($(value).find('td')[11]).text(), 'SalTax_Id': $("#ddlSTAX" + (key + 1) + " option:selected").val(), 'AdvanceTax_ID': $("#ddlAdvanceTax" + (key + 1) + " option:selected").val(), 'SalTax_Amount': $(value).find('td input[name=txtSalAmount]').val(), 'DateTime': $(value).find('td input[name=txtddate]').val(), 'AdvanceTax_Amount': $(value).find('td input[name=txtAdvanceTaxAmount]').val(), 'FurtherTax_Id': 0, 'FurtherTax_Percentage': $($(value).find('td input[name=ddlFurtherTax]')[0]).val() || 0, 'BonusTax': $(value).find('td input[name=txtBonusAmount]').val(),
                             'FurtherTax_Amount': $(value).find('td input[name=txtFurtherTaxAmount]').val(),
+                            'LastPORate': $(value).find('td input[name=txtLastPORate]').val(), 'LastVendorName': $(value).find('td input[name=txtLastVendorName]').val(),
 
                         });
                     }
@@ -3237,7 +3248,7 @@ function scheduleCalcTotal(delay) {
                 '<input type="text" readonly="readonly" id="txtLastPORate' + length + '" name="txtLastPORate" ' +
                 'style="width:50px !important;text-align:right;font-size:9px;height:20px;" value="' + last_po_rate + '" />' +
                 '</td>' +
-                '<td style="padding-top: 7px!important; text-align:center; font-size:9px;">' + last_vendor_name + '</td>' +
+                '<td style="padding-top: 7px!important; text-align:center; font-size:9px;"><input type="hidden" name="txtLastVendorName" value="' + (last_vendor_name || '') + '" />' + last_vendor_name + '</td>' +
                 '</td>' +
                 '<td style="padding-top: 7px!important;"><a href="javascript:void(0)" onclick="ExcludeFromPayment(this)"><i class="glyphicon glyphicon-trash" style="font-size: 13px;margin-left: 16px; color: #f30a0a;position:relative;left: -10px;"></i></a>   </td>' +
                 '</tr>';
