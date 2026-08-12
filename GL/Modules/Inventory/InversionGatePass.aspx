@@ -347,6 +347,9 @@
                     $($(value).find('td input[name=Expdate]')[0]).attr('disabled', true);
                     $($(value).find('td input[name=SaleRate]')[0]).prop('readonly', true);
                 } else {
+                    $($(value).find('td input[name=BatchNo]')[0]).prop('readonly', false);
+                    $($(value).find('td input[name=txtMfgdate]')[0]).removeAttr('disabled').prop('readonly', false);
+                    $($(value).find('td input[name=Expdate]')[0]).removeAttr('disabled').prop('readonly', false);
                     $($(value).find('td input[name=SaleRate]')[0]).prop('readonly', false);
                 }
             });
@@ -871,6 +874,7 @@
                             '<td><input type="text" style="width:61px !important;text-align:center;font-size:9px;height:21px !important;" name="txtMfgdate" id="txtMfgdate' + (key + 1) + '" value="' + formattedDate + '"/></td>' +
                             '<td><input type="text" style="width:61px !important;text-align:center;font-size:9px;height:21px !important;" name="Expdate" id="Expdate' + (key + 1) + '" value="" readonly="readonly"/></td>' +
                             '<td><input type="text" style="width:65px !important;text-align:right;font-size:9px;height:21px !important;" name="SaleRate" id="SaleRate' + rowlength + '" value="' + (value.SaleRate ? parseFloat(value.SaleRate).toFixed(2) : '') + '"/></td>' +
+                            '<td style="display:none"><input type="hidden" name="Isbatch" id="Isbatch' + rowlength + '" value="' + value.IsBatch + '" readonly="readonly"/></td>' +
                             '<td style="display:none;width:50px !important;text-align:right;font-size:9px;height:10px !important;"><input type="text" style="width:50px !important;text-align:right;font-size:9px;height:21px !important;position: relative;" value="0" id="RejQty' + rowlength + '" name="RejQty"></input></td>' +
                             '<td><a href="javascript:void(0)" onclick="ExcludeFromPayment(this)"><i class="glyphicon glyphicon-trash" style="font-size:11px;color: #f30a0a;position:relative;"></i></a> </td>' +
                             '</tr>';

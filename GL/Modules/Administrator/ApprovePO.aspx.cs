@@ -81,12 +81,24 @@ namespace PMS
                                    .Select(x => x.UserName)
                                    .FirstOrDefault(),
 
-                               Approve_By = string.Join(", ",
-                                   (from SAL in db.Sys_Approval_Logs
-                                    join user in db.aspnet_Users on SAL.Approve_By equals user.UserId into userGroup
-                                    from usr in userGroup.DefaultIfEmpty()
-                                    where g.Key.PO_ID == SAL.Entry_ID && SAL.Form_ID == 3
-                                    select usr.UserName ?? "").Distinct()),
+                               //Approve_By = string.Join(", ",
+                               //    (from SAL in db.Sys_Approval_Logs
+                               //     join user in db.aspnet_Users on SAL.Approve_By equals user.UserId into userGroup
+                               //     from usr in userGroup.DefaultIfEmpty()
+                               //     where g.Key.PO_ID == SAL.Entry_ID && SAL.Form_ID == 3
+                               //     select usr.UserName ?? "").Distinct()),
+
+                            Approve_By = string.Join(", ",
+                            (from SAL in db.Sys_Approval_Logs
+                             join user in db.aspnet_Users on SAL.Approve_By equals user.UserId into userGroup
+                             from usr in userGroup.DefaultIfEmpty()
+                             where g.Key.PO_ID == SAL.Entry_ID
+                                && SAL.Form_ID == 3
+                                && SAL.Entry_Status != "Created" 
+                                && !SAL.From_Name.Contains("Editable setting updated")
+                             select usr.UserName ?? "").Distinct()),
+
+
 
                                Department = db.GetDataValueName("Department", g.Key.Department),
 
@@ -118,7 +130,7 @@ namespace PMS
                            })
                            .OrderByDescending(x => x.PO_No); // Added OrderByDescending to sort by PO_Number descending
 
-                bool hasEntryBudgetViewBtnRights = false;
+                 bool hasEntryBudgetViewBtnRights = false;
                 var uid = AppConfig.UserID;
                 hasEntryBudgetViewBtnRights = (from us in db.aspnet_Users
                                                where us.UserId == uid && us.IsShowBudget == true

@@ -7245,6 +7245,58 @@
                 fillPendingPatientsLists()
             }
 
+            function openDischargeQueue() {
+                fillDischargeRequestsList();
+                $('#dischargeQueueModal').modal('show');
+            }
+
+            function RefreshDischargeQueue() {
+                $("#txtSearchDischarge").val('')
+                fillDischargeRequestsList()
+            }
+
+            function fillDischargeRequestsList() {
+                var SearchString = $("#txtSearchDischarge").val();
+                PageMethods.GetDischargeRequests(SearchString, function (data) {
+                    var parsedData = JSON.parse(data);
+                    var rows = '';
+
+                    $.each(parsedData, function (key, value) {
+                        var admissionDate = '';
+                        if (value.Admission_Date) {
+                            try {
+                                admissionDate = moment(new Date(parseInt(value.Admission_Date.substr(6)))).format('DD-MMM-YYYY');
+                            } catch (e) {
+                                admissionDate = '';
+                            }
+                        }
+
+                        rows += '<tr>' +
+                            '<td style="padding: 8px;">' + (value.MR_No || '') + '</td>' +
+                            '<td style="padding: 8px;">' + (value.Full_Name || '') + '</td>' +
+                            '<td style="padding: 8px;">' + (value.Age || '') + '</td>' +
+                            '<td style="padding: 8px;">' + (value.Doctor || '') + '</td>' +
+                            '<td style="padding: 8px;">' + (value.Department || '') + '</td>' +
+                            '<td style="padding: 8px;">' + (value.Ward_Name || '') + '</td>' +
+                            '<td style="padding: 8px;">' + (value.Bed_No || '') + '</td>' +
+                            '<td style="padding: 8px;">' + admissionDate + '</td>' +
+                            '<td style="text-align: center; width: 100px; padding: 8px;">' +
+                            '<a href="#" onclick="AddPatientDetail(\'' + value.Reg_Patient_ID + '\')" style="color: #28a745; font-size: 16px;" title="Select">' +
+                            '<i class="fa fa-pencil-square-o"></i></a>' +
+                            '</td>' +
+                            '</tr>';
+                    });
+
+                    $('#tblDischargeRequests tbody').html(rows);
+
+                    if (parsedData.length === 0) {
+                        $('#tblDischargeRequests tbody').html('<tr><td colspan="9" style="text-align: center; padding: 20px;">No discharge requests found</td></tr>');
+                    }
+                }, function (err) {
+                    $('#tblDischargeRequests tbody').html('<tr><td colspan="9" style="text-align: center; padding: 20px; color: red;">Error loading data</td></tr>');
+                });
+            }
+
             function fillmartial() {
                 var options = '<option value="0">Please Select</option>';
                 PageMethods.GetMartailStatus(function (data) {
@@ -8248,6 +8300,9 @@
                <input type="button" class="btn-primry" value="Queue" onclick="openQueue()" />
         </div>
            <div class="col-md-2 text-end">
+               <input type="button" class="btn-primry" value="Discharge Que" onclick="openDischargeQueue()" />
+        </div>
+           <div class="col-md-2 text-end">
     <input type="button" value="Appointment" id="btnAppointment" onclick="OpenAppointmentModal()" 
            class="btn-primry" style="border-radius: 28px; width: 100%;" />
 </div>
@@ -8885,6 +8940,52 @@
 
 
     <%--Patient Que Ends--%>
+
+    <%--Discharge Request Que Start--%>
+    <div id="dischargeQueueModal" class="modal fade scrollable-modal" data-backdrop="static" tabindex="-1" role="dialog">
+        <div class="modal-dialog modal-lg modal-dialog-centered modal-dialog-scrollable" role="document">
+            <div class="modal-content">
+                <div class="modal-body">
+                    <fieldset class="form-group">
+                        <div class="form-row">
+                            <div class="col-md-6">
+                                <label for="txtSearchDischarge">Search Discharge Requests:</label>
+                                <input type="text" id="txtSearchDischarge" class="form-control" onkeyup="fillDischargeRequestsList();" autocomplete="off" placeholder="Enter MR No or Patient Name" />
+                            </div>
+                            <div class="col-lg-2 text-end" style="margin-top:28px !important;">
+                                <a onclick="RefreshDischargeQueue()">
+                                    <i class="fa fa-refresh fa-2x"></i>
+                                </a>
+                            </div>
+                        </div>
+                    </fieldset>
+                    <div class="table-responsive previewTable" style="overflow:scroll;overflow-x: scroll;height: 433px;">
+                        <table class="table" id="tblDischargeRequests" style="overflow: scroll; height: auto;">
+                            <thead id="iheadDischarge">
+                                <tr>
+                                    <th>MR No</th>
+                                    <th>Patient Name</th>
+                                    <th>Age</th>
+                                    <th>Doctor</th>
+                                    <th>Department</th>
+                                    <th>Ward</th>
+                                    <th>Bed</th>
+                                    <th>Admission Date</th>
+                                    <th>Select</th>
+                                </tr>
+                            </thead>
+                            <tbody id="ibodyDischarge"></tbody>
+                        </table>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-gray" data-dismiss="modal">Close</button>
+                </div>
+            </div>
+        </div>
+    </div>
+    <%--Discharge Request Que Ends--%>
+
         <%--patient modal here--%>
 
           <div id="PatientModel" class="modal fade-in" role="dialog">

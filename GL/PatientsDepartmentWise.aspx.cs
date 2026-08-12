@@ -8087,6 +8087,7 @@ namespace PMS
 
                     DateDiv.Visible = true;
                     Time_Row.Visible = true;
+                    rowStock.Visible = true;
 
                     // ADDING NEW WAREHOUSE
                     DataBaseDataContext dbs = new DataBaseDataContext(DBClass.ConnectionString());
