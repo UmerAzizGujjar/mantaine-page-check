@@ -370,13 +370,14 @@ namespace PMS
             else if (reportName == "CathLabStockDetail")
             {
                 var logoPath = DBClass.getField("SELECT dbo.GetCompanyLogo()");
-
+                var stock = Request.QueryString["Stock"];
                 string warehouse = Request.QueryString["WareHouse"].ToString();
                 string StartDateTime = Request.QueryString["StartDateTime"].ToString();
                 string EndDateTime = Request.QueryString["EndDateTime"].ToString();
                 reportPath += "Inventory/rptCathLabStockDetail.rpt";
                 rd.Load(reportPath);
                 rd.SummaryInfo.ReportTitle = reportTitle;
+                rd.SetParameterValue("@Stock", stock);
                 rd.SetParameterValue("CompanyName", AppConfig.Company_Name);
                 rd.SetParameterValue("@StartDate", StartDateTime);
                 rd.SetParameterValue("@EndDate", EndDateTime);
