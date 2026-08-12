@@ -138183,6 +138183,20 @@ namespace PMS
 
         private string _Red_Other_Spec;
 
+        private System.Nullable<bool> _Red_Fracture;
+
+        private System.Nullable<bool> _Red_Cancer;
+
+        private System.Nullable<bool> _Red_Pacemaker;
+
+        private System.Nullable<bool> _Red_Pregnancy;
+
+        private System.Nullable<bool> _Red_Thrombosis;
+
+        private System.Nullable<bool> _Red_Infection;
+
+        private System.Nullable<bool> _Red_Bladder_Bowel;
+
         private string _Diagnosis;
 
         private string _Diag_Cervical;
@@ -138419,6 +138433,20 @@ namespace PMS
         partial void OnRed_ExerciseChanged();
         partial void OnRed_OtherChanging(System.Nullable<bool> value);
         partial void OnRed_OtherChanged();
+        partial void OnRed_FractureChanging(System.Nullable<bool> value);
+        partial void OnRed_FractureChanged();
+        partial void OnRed_CancerChanging(System.Nullable<bool> value);
+        partial void OnRed_CancerChanged();
+        partial void OnRed_PacemakerChanging(System.Nullable<bool> value);
+        partial void OnRed_PacemakerChanged();
+        partial void OnRed_PregnancyChanging(System.Nullable<bool> value);
+        partial void OnRed_PregnancyChanged();
+        partial void OnRed_ThrombosisChanging(System.Nullable<bool> value);
+        partial void OnRed_ThrombosisChanged();
+        partial void OnRed_InfectionChanging(System.Nullable<bool> value);
+        partial void OnRed_InfectionChanged();
+        partial void OnRed_Bladder_BowelChanging(System.Nullable<bool> value);
+        partial void OnRed_Bladder_BowelChanged();
         partial void OnRed_Other_SpecChanging(string value);
         partial void OnRed_Other_SpecChanged();
         partial void OnDiagnosisChanging(string value);
@@ -140130,6 +140158,146 @@ namespace PMS
                     this._Red_Exercise = value;
                     this.SendPropertyChanged("Red_Exercise");
                     this.OnRed_ExerciseChanged();
+                }
+            }
+        }
+
+        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_Red_Fracture", DbType = "Bit")]
+        public System.Nullable<bool> Red_Fracture
+        {
+            get
+            {
+                return this._Red_Fracture;
+            }
+            set
+            {
+                if ((this._Red_Fracture != value))
+                {
+                    this.OnRed_FractureChanging(value);
+                    this.SendPropertyChanging();
+                    this._Red_Fracture = value;
+                    this.SendPropertyChanged("Red_Fracture");
+                    this.OnRed_FractureChanged();
+                }
+            }
+        }
+
+        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_Red_Cancer", DbType = "Bit")]
+        public System.Nullable<bool> Red_Cancer
+        {
+            get
+            {
+                return this._Red_Cancer;
+            }
+            set
+            {
+                if ((this._Red_Cancer != value))
+                {
+                    this.OnRed_CancerChanging(value);
+                    this.SendPropertyChanging();
+                    this._Red_Cancer = value;
+                    this.SendPropertyChanged("Red_Cancer");
+                    this.OnRed_CancerChanged();
+                }
+            }
+        }
+
+        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_Red_Pacemaker", DbType = "Bit")]
+        public System.Nullable<bool> Red_Pacemaker
+        {
+            get
+            {
+                return this._Red_Pacemaker;
+            }
+            set
+            {
+                if ((this._Red_Pacemaker != value))
+                {
+                    this.OnRed_PacemakerChanging(value);
+                    this.SendPropertyChanging();
+                    this._Red_Pacemaker = value;
+                    this.SendPropertyChanged("Red_Pacemaker");
+                    this.OnRed_PacemakerChanged();
+                }
+            }
+        }
+
+        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_Red_Pregnancy", DbType = "Bit")]
+        public System.Nullable<bool> Red_Pregnancy
+        {
+            get
+            {
+                return this._Red_Pregnancy;
+            }
+            set
+            {
+                if ((this._Red_Pregnancy != value))
+                {
+                    this.OnRed_PregnancyChanging(value);
+                    this.SendPropertyChanging();
+                    this._Red_Pregnancy = value;
+                    this.SendPropertyChanged("Red_Pregnancy");
+                    this.OnRed_PregnancyChanged();
+                }
+            }
+        }
+
+        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_Red_Thrombosis", DbType = "Bit")]
+        public System.Nullable<bool> Red_Thrombosis
+        {
+            get
+            {
+                return this._Red_Thrombosis;
+            }
+            set
+            {
+                if ((this._Red_Thrombosis != value))
+                {
+                    this.OnRed_ThrombosisChanging(value);
+                    this.SendPropertyChanging();
+                    this._Red_Thrombosis = value;
+                    this.SendPropertyChanged("Red_Thrombosis");
+                    this.OnRed_ThrombosisChanged();
+                }
+            }
+        }
+
+        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_Red_Infection", DbType = "Bit")]
+        public System.Nullable<bool> Red_Infection
+        {
+            get
+            {
+                return this._Red_Infection;
+            }
+            set
+            {
+                if ((this._Red_Infection != value))
+                {
+                    this.OnRed_InfectionChanging(value);
+                    this.SendPropertyChanging();
+                    this._Red_Infection = value;
+                    this.SendPropertyChanged("Red_Infection");
+                    this.OnRed_InfectionChanged();
+                }
+            }
+        }
+
+        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_Red_Bladder_Bowel", DbType = "Bit")]
+        public System.Nullable<bool> Red_Bladder_Bowel
+        {
+            get
+            {
+                return this._Red_Bladder_Bowel;
+            }
+            set
+            {
+                if ((this._Red_Bladder_Bowel != value))
+                {
+                    this.OnRed_Bladder_BowelChanging(value);
+                    this.SendPropertyChanging();
+                    this._Red_Bladder_Bowel = value;
+                    this.SendPropertyChanged("Red_Bladder_Bowel");
+                    this.OnRed_Bladder_BowelChanged();
                 }
             }
         }

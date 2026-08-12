@@ -6327,6 +6327,13 @@
       <Column Name="Red_Exercise" Type="System.Boolean" DbType="Bit" CanBeNull="true" />
       <Column Name="Red_Other" Type="System.Boolean" DbType="Bit" CanBeNull="true" />
       <Column Name="Red_Other_Spec" Type="System.String" DbType="VarChar(100)" CanBeNull="true" />
+      <Column Name="Red_Fracture" Type="System.Boolean" DbType="Bit" CanBeNull="true" />
+      <Column Name="Red_Cancer" Type="System.Boolean" DbType="Bit" CanBeNull="true" />
+      <Column Name="Red_Pacemaker" Type="System.Boolean" DbType="Bit" CanBeNull="true" />
+      <Column Name="Red_Pregnancy" Type="System.Boolean" DbType="Bit" CanBeNull="true" />
+      <Column Name="Red_Thrombosis" Type="System.Boolean" DbType="Bit" CanBeNull="true" />
+      <Column Name="Red_Infection" Type="System.Boolean" DbType="Bit" CanBeNull="true" />
+      <Column Name="Red_Bladder_Bowel" Type="System.Boolean" DbType="Bit" CanBeNull="true" />
       <Column Name="Diagnosis" Type="System.String" DbType="VarChar(MAX)" CanBeNull="true" />
       <Column Name="Diag_Cervical" Type="System.String" DbType="VarChar(50)" CanBeNull="true" />
       <Column Name="Diag_Thoracic" Type="System.String" DbType="VarChar(50)" CanBeNull="true" />
