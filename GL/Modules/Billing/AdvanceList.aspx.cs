@@ -83,7 +83,7 @@ namespace PMS
         }
 
         [WebMethod]
-        public static object ViewList(int draw, int start, int length, string sortColumn, string sortColumnDirection, string searchValue)
+        public static object ViewList(int draw, int start, int length, string sortColumn, string sortColumnDirection, string searchValue, string patientStatusFilter)
         {
             try
             {
@@ -93,8 +93,16 @@ namespace PMS
 
                     var Total_Advances = _dbContext.AR_Advances.Count();
                     var Advances = from AR in _dbContext.AR_Advances
+                                   join rp in _dbContext.Reg_patients on AR.Patient_ID equals rp.pat_id into rpJoin
+                                   from rp in rpJoin.DefaultIfEmpty()
+                                   join ip in _dbContext.In_Patients on AR.In_Patient_ID equals ip.In_Patient_ID into ipJoin
+                                   from ip in ipJoin.DefaultIfEmpty()
                                    where
                                        ((AR.Advance_Amount.ToString().Contains(searchValue) || AR.Remarks.ToString().Contains(searchValue)))
+                                       && (string.IsNullOrEmpty(patientStatusFilter)
+                                           || patientStatusFilter == "all"
+                                           || (patientStatusFilter == "discharge" && ip.Discharge == true)
+                                           || (patientStatusFilter == "admit"     && (ip.Discharge == false || ip.Discharge == null)))
                                   select new
                                   {
                                       Advance_ID = AR.Advance_ID,
@@ -102,8 +110,8 @@ namespace PMS
                                       Advance_Amount = AR.Advance_Amount,
                                       Remarks = AR.Remarks,
                                       Status = AR.Status ?? "Created",
-                                      // MrNo = DBClass.GetMRNOBy_PatientID(Convert.ToInt32(AR.Patient_ID)),
-                                      MrNo = (from bl in _dbContext.Reg_patients where bl.pat_id == AR.Patient_ID select bl.Patient_No).FirstOrDefault(),
+                                      MrNo = rp != null ? rp.Patient_No : (int?)null,
+                                      PatientStatus = ip != null && ip.Discharge == true ? "Discharge" : "Admit",
                                   };
 
                     var FilteredCount = Advances.Count();
@@ -115,6 +123,9 @@ namespace PMS
                         case "MrNo":
                             Advances = sortColumnDirection == "asc" ? Advances.OrderBy(a => a.MrNo) : Advances.OrderByDescending(a => a.MrNo);
                            break;
+                        case "PatientStatus":
+                            Advances = sortColumnDirection == "asc" ? Advances.OrderBy(a => a.PatientStatus) : Advances.OrderByDescending(a => a.PatientStatus);
+                            break;
                         default:
                             Advances = Advances.OrderByDescending(a => a.Advance_ID);
                             break;

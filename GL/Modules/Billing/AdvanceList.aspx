@@ -195,7 +195,8 @@
                             length: data.length,
                             sortColumn: data.columns[data.order[0].column].name,
                             sortColumnDirection: data.order[0].dir,
-                            searchValue: data.search.value
+                            searchValue: data.search.value,
+                            patientStatusFilter: $('#ddlPatientStatusFilter').val() || 'all'
                         }),
                         contentType: "application/json; charset=utf-8",
                         dataType: "json",
@@ -247,6 +248,15 @@
                             } else {
                                 return '<span style="color: orange; font-weight: bold;">Created</span>';
                             }
+                        }
+                    },
+                    {
+                        "data": "PatientStatus", "name": "PatientStatus", "width": "10%", "orderable": true,
+                        "render": function (data) {
+                            if (data === "Discharge") {
+                                return '<span style="color: #dc3545; font-weight: bold;">Discharge</span>';
+                            }
+                            return '<span style="color: #28a745; font-weight: bold;">Admit</span>';
                         }
                     },
                     {
@@ -324,12 +334,29 @@
                     }
                 }
             });
+
+            $('#ddlPatientStatusFilter').select2({
+                width: '180px',
+                placeholder: 'Select status'
+            });
+
+            $('#ddlPatientStatusFilter').on('change', function () {
+                $('#tblAdvanceView').DataTable().ajax.reload();
+            });
         }
     </script>
 </asp:Content>
 
 <asp:Content ID="Content2" ContentPlaceHolderID="MainContent" runat="server">
     <div>
+        <div class="col-lg-2" style="margin-bottom: 10px;">
+            <label style="margin-right: 8px; font-weight: 600;">Patient Status:</label>
+            <select id="ddlPatientStatusFilter" style="width: 180px;">
+                <option value="all">All</option>
+                <option value="admit">Admit</option>
+                <option value="discharge">Discharge</option>
+            </select>
+        </div>
         <table id="tblAdvanceView" class="table table-hover table-striped table-bordered">
             <thead>
                 <tr>
@@ -340,7 +367,8 @@
                      <th>Advance Amount</th>
                      <th>Remarks</th>
                      <th>Status</th>
-                     <th>Action</th>                    
+                     <th>Patient Status</th>
+                     <th>Action</th>
                   </tr>
                 </thead>
                 <tbody>
