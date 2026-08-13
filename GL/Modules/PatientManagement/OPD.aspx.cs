@@ -18,6 +18,11 @@ namespace PMS.Modules.PatientManagement
 {
     public partial class OPD : System.Web.UI.Page
     {
+        // In-flight lock keyed by "Reg_PatId_Department". Detects simultaneous duplicate
+        // OPD saves (double-click / multi-tab / fast network) so only one is written.
+        private static readonly System.Collections.Concurrent.ConcurrentDictionary<string, byte> _opdSaveLocks =
+            new System.Collections.Concurrent.ConcurrentDictionary<string, byte>();
+
         protected void Page_Load(object sender, EventArgs e)
         {
             if (!IsPostBack)
@@ -1465,12 +1470,35 @@ namespace PMS.Modules.PatientManagement
             if (errors.Any())
                 return "ERROR: " + string.Join("; ", errors);
 
+            string lockKey = null;
+
             try
             {
                 using (var db = new DataBaseDataContext())
                 {
                     Patient pat = null;
                     bool isNew = string.IsNullOrEmpty(opdid) || opdid == "0" || opdid == "(New)";
+
+                   
+                    // finishes, so future legitimate visits can be saved normally.
+                    if (isNew)
+                    {
+                        int regidInt = data?.regid ?? 0;
+
+                        string deptForGuard = !string.IsNullOrEmpty(data.hdnDepartment) && data.hdnDepartment != "0"
+                            ? data.hdnDepartment
+                            : (!string.IsNullOrEmpty(data.Department) ? data.Department : null);
+
+                        if (regidInt > 0 && !string.IsNullOrEmpty(deptForGuard))
+                        {
+                            lockKey = regidInt + "_" + deptForGuard;
+
+                            if (!_opdSaveLocks.TryAdd(lockKey, 0))
+                            {
+                                return "ERROR: A duplicate OPD save for this patient and department is already in progress. Please wait and try again.";
+                            }
+                        }
+                    }
 
                     if (!isNew)
                     {
@@ -1669,12 +1697,26 @@ namespace PMS.Modules.PatientManagement
                         db.Patients.InsertOnSubmit(pat);
 
                     db.SubmitChanges();
+
+                    // Release the in-flight duplicate-save lock now that the save completed.
+                    if (lockKey != null)
+                    {
+                        byte removed;
+                        _opdSaveLocks.TryRemove(lockKey, out removed);
+                    }
+
                     return pat.Patient_ID.ToString();
                 }
             }
             catch (Exception ex)
             {
-                
+                // Release the in-flight duplicate-save lock on failure too.
+                if (lockKey != null)
+                {
+                    byte removed;
+                    _opdSaveLocks.TryRemove(lockKey, out removed);
+                }
+
                 return "ERROR: Failed to save OPD record. Please try again.";
             }
         }
