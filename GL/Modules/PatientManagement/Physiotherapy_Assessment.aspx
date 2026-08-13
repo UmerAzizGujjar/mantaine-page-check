@@ -4,7 +4,7 @@
 
     <link href="../../wwwroot/THEME_TIBBIT/CustomCSS/PhysiotherapyAssessment.css" rel="stylesheet" />
 
-</asp:Content>
+</asp:Content> 
 
 <asp:Content ID="Content2" ContentPlaceHolderID="MainContent" runat="server">
 
@@ -553,6 +553,27 @@
                     <label class="chk-item">
                         <input type="checkbox" id="chkRedExercise" />
                         Exercise</label>
+                    <label class="chk-item">
+                        <input type="checkbox" id="chkRedFracture" />
+                        Fracture</label>
+                    <label class="chk-item">
+                        <input type="checkbox" id="chkRedCancer" />
+                        Cancer/Tumour</label>
+                    <label class="chk-item">
+                        <input type="checkbox" id="chkRedPacemaker" />
+                        Pacemaker</label>
+                    <label class="chk-item">
+                        <input type="checkbox" id="chkRedPregnancy" />
+                        Pregnancy</label>
+                    <label class="chk-item">
+                        <input type="checkbox" id="chkRedThrombosis" />
+                        Thrombosis</label>
+                    <label class="chk-item">
+                        <input type="checkbox" id="chkRedInfection" />
+                        Infection</label>
+                    <label class="chk-item">
+                        <input type="checkbox" id="chkRedBladderBowel" />
+                        Loss of bladder &amp; bowel control</label>
                 </div>
                 <div style="margin-top: 2px">
                     <label class="chk-inline">
@@ -788,6 +809,10 @@
                 redUS: ck('chkRedUS'), redHeat: ck('chkRedHeat'),
                 redCold: ck('chkRedCold'), redTraction: ck('chkRedTraction'),
                 redMobilization: ck('chkRedMobilization'), redExercise: ck('chkRedExercise'),
+                redFracture: ck('chkRedFracture'), redCancer: ck('chkRedCancer'),
+                redPacemaker: ck('chkRedPacemaker'), redPregnancy: ck('chkRedPregnancy'),
+                redThrombosis: ck('chkRedThrombosis'), redInfection: ck('chkRedInfection'),
+                redBladderBowel: ck('chkRedBladderBowel'),
                 redOther: ck('chkRedOther'), redOtherSpec: v('txtRedOther'),
                 diagnosis: v('txtDiagnosis'),
                 diagCervical: v('ddlTestCervical'), diagThoracic: v('ddlTestThoracic'),
@@ -953,6 +978,10 @@
             setCk('chkRedUS', d.redUS); setCk('chkRedHeat', d.redHeat);
             setCk('chkRedCold', d.redCold); setCk('chkRedTraction', d.redTraction);
             setCk('chkRedMobilization', d.redMobilization); setCk('chkRedExercise', d.redExercise);
+            setCk('chkRedFracture', d.redFracture); setCk('chkRedCancer', d.redCancer);
+            setCk('chkRedPacemaker', d.redPacemaker); setCk('chkRedPregnancy', d.redPregnancy);
+            setCk('chkRedThrombosis', d.redThrombosis); setCk('chkRedInfection', d.redInfection);
+            setCk('chkRedBladderBowel', d.redBladderBowel);
             setCk('chkRedOther', d.redOther); setVal('txtRedOther', d.redOtherSpec);
             setVal('txtDiagnosis', d.diagnosis);
             setVal('ddlTestCervical', d.diagCervical); setVal('ddlTestThoracic', d.diagThoracic);

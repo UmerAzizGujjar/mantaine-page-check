@@ -189,11 +189,20 @@
 
         });
         window.addEventListener('keydown', function (event) {
+            if (window.__pharmSaving && (event.altKey || event.ctrlKey)) {
+                // block Alt+S / Ctrl+Q etc while a save is in flight
+                event.preventDefault();
+                return;
+            }
             if (event.altKey && event.code === 'KeyS') {
                 debugger;
                 event.preventDefault();
                 $('#medName').select2('close');
-                $('#btnSave').attr('style', 'background: green !important;margin-top: 0px;').focus();
+                $('#btnSave').attr('style', 'background: green !important;margin-top: 0px;').focus()
+                    .one('keydown', function (e) {
+                        // swallow the very next Enter/Space to prevent accidental double-fire
+                        if (e.which === 13 || e.which === 32) { e.preventDefault(); e.stopPropagation(); }
+                    });
                 //SearchPop();
                 GetPharmacyUser();
 
@@ -378,6 +387,13 @@
         });
         var ItemNames;
         var arr = [];
+
+        // --- single-flight guard for ALL save paths (main + SaleReturn) ---
+        window.__pharmSaving = false;
+        function isPharmSaveInProgress() { return window.__pharmSaving; }
+        function lockPharmSave()   { window.__pharmSaving = true;  $('#btnSave, #SaveVal, #btnSaveSaleReturn').attr('disabled', true); }
+        function unlockPharmSave() { window.__pharmSaving = false; $('#btnSave, #SaveVal, #btnSaveSaleReturn').attr('disabled', false); }
+
         function GetAllCashierUsers() {
             PageMethods.GetAllCashierUsers(function (data) {
                 var Parsed = JSON.parse(data);
@@ -518,6 +534,7 @@
                 debugger;
                 var keycode = (event.keyCode ? event.keyCode : event.which);
                 if (keycode == '13') {
+                    if (isPharmSaveInProgress()) return;
                     $('#SaveVal').focus().click();
                     $('#txtpass').focus().select();
                 }
@@ -1153,7 +1170,7 @@
 
             if (!total || total <= 0) {
                 proceed = false;
-                $('#btnSaveSaleReturn').attr('disabled', false);
+                unlockPharmSave();
                 Swal.fire({
                     icon: 'error',
                     title: 'Error!',
@@ -1171,7 +1188,7 @@
 
             if ($('#saleReturnTable tbody tr').length === 0) {
                 proceed = false;
-                $('#btnSaveSaleReturn').attr('disabled', false);
+                unlockPharmSave();
                 Swal.fire({
                     icon: 'error',
                     title: 'Error!',
@@ -1193,7 +1210,7 @@
 
                 if (!qty || qty <= 0) {
                     proceed = false;
-                    $('#btnSaveSaleReturn').attr('disabled', false);
+                    unlockPharmSave();
                     Swal.fire({
                         icon: 'error',
                         title: 'Error!',
@@ -1211,7 +1228,7 @@
 
                 if (!rate || rate <= 0) {
                     proceed = false;
-                    $('#btnSaveSaleReturn').attr('disabled', false);
+                    unlockPharmSave();
                     Swal.fire({
                         icon: 'error',
                         title: 'Error!',
@@ -1231,6 +1248,7 @@
         }
 
         function SearchReturnPop() {
+            if (isPharmSaveInProgress()) return;
             debugger;
             $('#SearchReturnModel').modal({
                 backdrop: 'static'
@@ -1243,6 +1261,8 @@
         }
         debugger;
         function SaveSaleReturn() {
+            if (isPharmSaveInProgress()) return;
+            lockPharmSave();
             debugger;
             $('#btnSaveSaleReturn').attr('disabled', true);
             var userC = $('#txtReturnuserCode').val();
@@ -1271,7 +1291,7 @@
                             htmlContainer: 'swal-big-text'
                         }
                     });
-                    $('#btnSaveSaleReturn').attr('disabled', false);
+                    unlockPharmSave();
                     return;
                 }
                 if (userC == userCode && userP == UserPass) {
@@ -1359,7 +1379,7 @@
                                 });
 
                                 isValid = false;
-                                $('#btnSaveSaleReturn').attr('disabled', false);
+                                unlockPharmSave();
                                 return false;
                             }
                             Item_list.push({
@@ -1377,6 +1397,7 @@
                             });
                         });
                         if (!isValid) {
+                            unlockPharmSave();
                             return; // Stop execution of SaveSaleReturn function
                         }
                         $('#btnSaveSaleReturn').attr('disabled', true);
@@ -1395,26 +1416,38 @@
                             'ItemList': Item_list
                         };
 
-                        PageMethods.SaveSaleReturnData(JSON.stringify(AllItemDetail), UserId, function (res) {
-                            var btnSave = $('#SSearchReturnPop').val();
-                            /*  if (btnSave == 'Save & Print' || btnSave == "Save & Print") {*/
-                            window.open('../../ReportViewer.aspx?ReportName=PharmacyReturnSlip&ReportTitle=Pharmacy Return Slip&Return_ID=' + JSON.parse(res));
-                            //}
-                            Swal.fire({
-                                icon: 'success',
-                                title: 'Success!',
-                                text: 'Data Saved Successfully',
-                                showConfirmButton: false,
-                                timer: 2500,
-                                customClass: {
-                                    popup: 'swal-big-popup',
-                                    title: 'swal-big-title',
-                                    htmlContainer: 'swal-big-text'
+                        try {
+                            PageMethods.SaveSaleReturnData(JSON.stringify(AllItemDetail), UserId,
+                                function (res) {
+                                    var btnSave = $('#SSearchReturnPop').val();
+                                    /*  if (btnSave == 'Save & Print' || btnSave == "Save & Print") {*/
+                                    window.open('../../ReportViewer.aspx?ReportName=PharmacyReturnSlip&ReportTitle=Pharmacy Return Slip&Return_ID=' + JSON.parse(res));
+                                    //}
+                                    Swal.fire({
+                                        icon: 'success',
+                                        title: 'Success!',
+                                        text: 'Data Saved Successfully',
+                                        showConfirmButton: false,
+                                        timer: 2500,
+                                        customClass: {
+                                            popup: 'swal-big-popup',
+                                            title: 'swal-big-title',
+                                            htmlContainer: 'swal-big-text'
+                                        }
+                                    });
+                                    // page reload clears the lock; no unlock needed
+                                    window.location = "IssueMedicine.aspx";
+                                },
+                                function (error) {
+                                    unlockPharmSave();
+                                    console.error("SaveSaleReturnData error:", error);
+                                    Swal.fire({ icon: 'error', title: 'Error', text: 'Return save failed.' });
                                 }
-                            });
-
-                            window.location = "IssueMedicine.aspx";
-                        });
+                            );
+                        } catch (ex) {
+                            unlockPharmSave();
+                            Swal.fire({ icon: 'error', title: 'Error', text: ex.message || 'Save failed.' });
+                        }
                     }
                 }
             });
@@ -2515,6 +2548,8 @@ function CalculateReceivedAmount() {
             }
         }
         function SaveDataWithoutUser() {
+            if (isPharmSaveInProgress()) return;
+            lockPharmSave();
             debugger;
             $('#SaveVal').attr('disabled', true);
             var userC = $('#txtuserCode').val();
@@ -2569,7 +2604,7 @@ function CalculateReceivedAmount() {
                         htmlContainer: 'swal-big-text'
                     }
                 });
-                $('#SaveVal').attr('disabled', false);
+                unlockPharmSave();
                 return;
             }
             
@@ -2639,7 +2674,7 @@ function CalculateReceivedAmount() {
             });
             debugger;
             if (hasInvalidStock) {
-                $('#SaveVal').attr('disabled', false);
+                unlockPharmSave();
                 return;
             }
             debugger;
@@ -2669,52 +2704,65 @@ function CalculateReceivedAmount() {
                 debugger;
                 patId = 0;
             }
-            PageMethods.SaveRecord(JSON.stringify(Parameters), Rbtn, UserId, patId, function (res) {
-                debugger;
-                var result = JSON.parse(res);
-                if (!result.Success) {
+            try {
+                PageMethods.SaveRecord(JSON.stringify(Parameters), Rbtn, UserId, patId, function (res) {
+                    debugger;
+                    var result = JSON.parse(res);
+                    if (!result.Success) {
+                        unlockPharmSave();
+                        Swal.fire({
+                            icon: 'error',
+                            title: 'Cannot Save!',
+                            text: result.Message,
+                            confirmButtonText: 'OK',
+                            confirmButtonColor: '#d33',
+                            customClass: {
+                                popup: 'swal-big-popup',
+                                title: 'swal-big-title',
+                                htmlContainer: 'swal-big-text'
+                            }
+                        });
+                        return;
+                    }
+                    isPatientDataSaved = true;
+                    var btnSave = $('#btnSave').val();
+                    if (btnSave == 'Save & Print(Alt+S)' || btnSave == "Save & Print(Alt+S)") {
+                        window.open('../../ReportViewer.aspx?ReportName=PharmacySlip&ReportTitle=PharmacySlip&Bill_ID=' + result.BillId);
+                    }
                     Swal.fire({
-                        icon: 'error',
-                        title: 'Cannot Save!',
-                        text: result.Message,
-                        confirmButtonText: 'OK',
-                        confirmButtonColor: '#d33',
+                        icon: 'success',
+                        title: 'Success!',
+                        text: 'Data Saved Successfully',
+                        showConfirmButton: false,
+                        timer: 2500,
                         customClass: {
                             popup: 'swal-big-popup',
                             title: 'swal-big-title',
                             htmlContainer: 'swal-big-text'
                         }
                     });
-                    $('#SaveVal').attr('disabled', false);
-                    return;
-                }
-                isPatientDataSaved = true; 
-                var btnSave = $('#btnSave').val();
-                if (btnSave == 'Save & Print(Alt+S)' || btnSave == "Save & Print(Alt+S)") {
-                    window.open('../../ReportViewer.aspx?ReportName=PharmacySlip&ReportTitle=PharmacySlip&Bill_ID=' + result.BillId);
-                }
-                Swal.fire({
-                    icon: 'success',
-                    title: 'Success!',
-                    text: 'Data Saved Successfully',
-                    showConfirmButton: false,
-                    timer: 2500,
-                    customClass: {
-                        popup: 'swal-big-popup',
-                        title: 'swal-big-title',
-                        htmlContainer: 'swal-big-text'
-                    }
+                    // page reload clears the lock; no unlock needed
+                    window.location.href = 'IssueMedicine.aspx';
+                },
+                function (error) {
+                    unlockPharmSave();
+                    console.error("SaveRecord async error:", error);
+                    Swal.fire({ icon: 'error', title: 'Error', text: 'Save failed. Please try again.' });
                 });
-                window.location.href = 'IssueMedicine.aspx';
-            });
+            } catch (ex) {
+                unlockPharmSave();
+                Swal.fire({ icon: 'error', title: 'Error', text: ex.message || 'Save failed.' });
+            }
 
         }
         function SaveData() {
+            if (isPharmSaveInProgress()) return;
+            lockPharmSave();
             debugger;
 
             // ============ STEP 1: VALIDATE IPD QUANTITIES ============
             if (!ValidateIPDQuantitiesOnly()) {
-                $('#SaveVal').attr('disabled', false);
+                unlockPharmSave();
                 return;
             }
 
@@ -2841,7 +2889,7 @@ function CalculateReceivedAmount() {
             });
 
             if (hasInvalidStock) {
-                $('#SaveVal').attr('disabled', false);
+                unlockPharmSave();
                 return;
             }
 
@@ -2888,53 +2936,59 @@ function CalculateReceivedAmount() {
                         showConfirmButton: false,
                         timer: 2000
                     });
-                    $('#SaveVal').attr('disabled', false);
+                    unlockPharmSave();
                     return;
                 }
 
                 if (userC == userCode && userP == UserPass) {
-                    PageMethods.SaveRecord(JSON.stringify(Parameters), Rbtn, UserId, patId,
-                        function (res) {
-                            debugger;
-                            var result = JSON.parse(res);
-                            if (!result.Success) {
+                    try {
+                        PageMethods.SaveRecord(JSON.stringify(Parameters), Rbtn, UserId, patId,
+                            function (res) {
+                                debugger;
+                                var result = JSON.parse(res);
+                                if (!result.Success) {
+                                    unlockPharmSave();
+                                    Swal.fire({
+                                        icon: 'error',
+                                        title: 'Cannot Save!',
+                                        text: result.Message,
+                                        confirmButtonText: 'OK',
+                                        confirmButtonColor: '#d33'
+                                    });
+                                    return;
+                                }
+                                isPatientDataSaved = true;
+                                var btnSave = $('#btnSave').val();
+                                if (btnSave == 'Save & Print(Alt+S)' || btnSave == "Save & Print(Alt+S)") {
+                                    window.open('../../ReportViewer.aspx?ReportName=PharmacySlip&ReportTitle=PharmacySlip&Bill_ID=' + result.BillId);
+                                }
+                                Swal.fire({
+                                    icon: 'success',
+                                    title: 'Success!',
+                                    text: 'Data Saved Successfully',
+                                    showConfirmButton: false,
+                                    timer: 2500
+                                });
+                                // page reload clears the lock; no unlock needed
+                                setTimeout(function () {
+                                    window.location.href = 'IssueMedicine.aspx';
+                                }, 2500);
+                            },
+                            function (error) {
+                                debugger;
+                                unlockPharmSave();
                                 Swal.fire({
                                     icon: 'error',
-                                    title: 'Cannot Save!',
-                                    text: result.Message,
-                                    confirmButtonText: 'OK',
-                                    confirmButtonColor: '#d33'
+                                    title: 'Error!',
+                                    text: error.get_message ? error.get_message() : 'An error occurred',
+                                    confirmButtonText: 'OK'
                                 });
-                                $('#SaveVal').attr('disabled', false);
-                                return;
                             }
-                            isPatientDataSaved = true;
-                            var btnSave = $('#btnSave').val();
-                            if (btnSave == 'Save & Print(Alt+S)' || btnSave == "Save & Print(Alt+S)") {
-                                window.open('../../ReportViewer.aspx?ReportName=PharmacySlip&ReportTitle=PharmacySlip&Bill_ID=' + result.BillId);
-                            }
-                            Swal.fire({
-                                icon: 'success',
-                                title: 'Success!',
-                                text: 'Data Saved Successfully',
-                                showConfirmButton: false,
-                                timer: 2500
-                            });
-                            setTimeout(function () {
-                                window.location.href = 'IssueMedicine.aspx';
-                            }, 2500);
-                        },
-                        function (error) {
-                            debugger;
-                            $('#SaveVal').attr('disabled', false);
-                            Swal.fire({
-                                icon: 'error',
-                                title: 'Error!',
-                                text: error.get_message ? error.get_message() : 'An error occurred',
-                                confirmButtonText: 'OK'
-                            });
-                        }
-                    );
+                        );
+                    } catch (ex) {
+                        unlockPharmSave();
+                        Swal.fire({ icon: 'error', title: 'Error', text: ex.message || 'Save failed.' });
+                    }
                 }
                 else {
                     Swal.fire({
@@ -2944,7 +2998,7 @@ function CalculateReceivedAmount() {
                         showConfirmButton: false,
                         timer: 2000
                     });
-                    $('#SaveVal').attr('disabled', false);
+                    unlockPharmSave();
                     return;
                 }
             });
@@ -3125,6 +3179,9 @@ function CalculateReceivedAmount() {
             });
         }
         function GetPharmacyUser() {
+            if (isPharmSaveInProgress()) return;
+            lockPharmSave();
+
             $.ajax({
                 type: "POST",
                 url: "IssueMedicine.aspx/GetUserFromSysParams",
@@ -3135,14 +3192,19 @@ function CalculateReceivedAmount() {
                     debugger;
                     var data = JSON.parse(msg.d);
                     if (data == '001') {
-                        SearchPop()
+                        // user-required path: open modal; release outer lock so user can interact.
+                        // The modal SaveVal re-acquires the lock inside SaveData().
+                        unlockPharmSave();
+                        SearchPop();
                     }
                     else {
-                        SaveDataWithoutUser()
+                        // no-user path: lock stays held through SaveDataWithoutUser() until success/error/redirect.
+                        SaveDataWithoutUser();
                     }
 
                 },
                 error: function (xhr, status, error) {
+                    unlockPharmSave();
                     console.error("Error in getWardAndBed: ", error);
                 }
             });
@@ -4294,6 +4356,7 @@ function CalculateReceivedAmount() {
             CalculateSummarieDiscountPerWise(rowIndex);
         }
         function SearchPop() {
+            if (isPharmSaveInProgress()) return;
             debugger;
             $('#SearchModel').modal({
                 backdrop: 'static'
