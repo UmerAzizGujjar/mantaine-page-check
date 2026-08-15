@@ -103,16 +103,17 @@ namespace PMS
                                            || patientStatusFilter == "all"
                                            || (patientStatusFilter == "discharge" && ip.Discharge == true)
                                            || (patientStatusFilter == "admit"     && (ip.Discharge == false || ip.Discharge == null)))
-                                  select new
-                                  {
-                                      Advance_ID = AR.Advance_ID,
-                                      Advance_Date = AR.Advance_Date,
-                                      Advance_Amount = AR.Advance_Amount,
-                                      Remarks = AR.Remarks,
-                                      Status = AR.Status ?? "Created",
-                                      MrNo = rp != null ? rp.Patient_No : (int?)null,
-                                      PatientStatus = ip != null && ip.Discharge == true ? "Discharge" : "Admit",
-                                  };
+                                   select new
+                                   {
+                                       Advance_ID = AR.Advance_ID,
+                                       Advance_Date = AR.Advance_Date,
+                                       Advance_Amount = AR.Advance_Amount,
+                                       Remarks = AR.Remarks,
+                                       Status = AR.Status ?? "Created",
+                                       MrNo = rp.mr_no_sequence ,
+                                       PatientStatus = ip != null && ip.Discharge == true ? "Discharge" : "Admit",
+                                       isCancelled = AR.isCancelled ?? false,
+                                   };
 
                     var FilteredCount = Advances.Count();
                     switch (sortColumn)

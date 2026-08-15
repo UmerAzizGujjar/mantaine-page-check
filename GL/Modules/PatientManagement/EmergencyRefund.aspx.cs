@@ -40,6 +40,7 @@ namespace PMS.Modules.PatientManagement
                                     emg.Actual_amount,
                                     emg.Is_Refund,
                                     emg.Doctor_ID,
+                                    emg.isCancel,
                                     pat.Patient_No,
                                     pat.Full_Name,
                                     pat.Gender,
@@ -72,7 +73,8 @@ namespace PMS.Modules.PatientManagement
                         Department = db.GetDataValueName("Patient Main Category", p.Patient_Main_Category),
                         Patient_Type = db.GetDataValueName("Patient Type", p.Patient_Type),
                         Emer_id = p.Emer_id,
-                        Is_Refund = p.Is_Refund ?? false
+                        Is_Refund = p.Is_Refund ?? false,
+                        isCancel = p.isCancel ?? false
                     }).ToList();
 
                     return new JavaScriptSerializer().Serialize(result);

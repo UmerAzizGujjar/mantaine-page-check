@@ -121,6 +121,15 @@
                     }
                     var p = patients[0];
 
+                    if (p.isCancel == true || p.isCancel === 1) {
+                        Swal.fire({
+                            title: "Emergency Cancelled",
+                            text: "This emergency has been cancelled and cannot be processed for refund.",
+                            icon: "warning",
+                            button: "OK"
+                        });
+                        return;
+                    }
                     if (p.Is_Refund == 1 || p.Is_Refund == true) {
                         Swal.fire({
                             title: "Already Refunded",
