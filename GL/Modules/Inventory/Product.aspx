@@ -1,6 +1,8 @@
 ﻿<%@ Page Title="" Language="C#" MasterPageFile="~/Site.Master" AutoEventWireup="true" CodeBehind="Product.aspx.cs" Inherits="PMS.Inventory.Product" %>
 <asp:Content ID="Content1" ContentPlaceHolderID="HeadContent" runat="server">
     <link href="../../wwwroot/THEME_TIBBIT/CustomCSS/Product.css" rel="stylesheet" />
+    <link href="../../wwwroot/THEME_TIBBIT/CustomCSS/vendor.css" rel="stylesheet" />
+    <link href="../../wwwroot/THEME_TIBBIT/CustomCSS/Service.css" rel="stylesheet" />
     <script type="text/javascript">
         var id = '<% =Request.QueryString["ID"] %>';
         $(document).ready(function () {
@@ -1624,132 +1626,186 @@
                 }
             });
         }
+
+        // ── Meta Bar sync (visual only — does not change any save/load logic) ──
+        function syncProductMeta() {
+            var code = $('#item_code').val();
+            if (code) {
+                $('#productCodeDisplay').text(code);
+            }
+        }
+        $(document).ready(function () {
+            var originalVal = $.fn.val;
+            $.fn.val = function (value) {
+                var res = originalVal.apply(this, arguments);
+                if (this.attr('id') === 'item_code' && arguments.length >= 1) {
+                    syncProductMeta();
+                }
+                return res;
+            };
+            $('#Active').change(function () {
+                if ($(this).is(':checked')) {
+                    $('#productActiveBadge').removeClass('badge-inactive').addClass('badge-active');
+                    $('#productActiveIcon').removeClass('fa-times-circle').addClass('fa-check-circle');
+                    $('#productActiveText').text('Active');
+                } else {
+                    $('#productActiveBadge').removeClass('badge-active').addClass('badge-inactive');
+                    $('#productActiveIcon').removeClass('fa-check-circle').addClass('fa-times-circle');
+                    $('#productActiveText').text('Inactive');
+                }
+            });
+            $('#Active').trigger('change');
+            syncProductMeta();
+        });
     </script>
 </asp:Content>
 <asp:Content ID="Content2" ContentPlaceHolderID="MainContent" runat="server">
-    <input type="hidden" name="item_rate_id" value="${rowId}" />
+<input type="hidden" name="item_rate_id" value="${rowId}" />
+
+    <!-- Meta Bar -->
+    <div class="pr-meta-bar">
+        <div class="meta-left">
+            <span class="meta-title"><i class="fa fa-cube"></i> Product Item</span>
+        </div>
+        <div class="meta-right">
+            <div class="meta-badge">
+                <span class="badge-label">Code:</span>
+                <span class="badge-value" id="productCodeDisplay">---</span>
+            </div>
+            <div class="meta-badge" id="productActiveBadge" style="cursor: pointer;" onclick="$('#Active').click();">
+                <i class="fa fa-check-circle" id="productActiveIcon"></i> <span id="productActiveText">Active</span>
+            </div>
+            <!-- Hidden inputs to retain logic -->
+            <input type="hidden" id="item_code" name="item_code" />
+            <input type="checkbox" id="Active" name="Active" style="display:none;" />
+        </div>
+    </div>
+
      <form  id="item">
-     <div class="row">
-         <div class="col-lg-3 col-md-6 col-sm-12 ">
-             <div class="form-group">
-                <label id="Lblitem_code">Item Code</label>
-                <input style="" type="text" class="form-control" id="item_code" name="item_code" placeholder="(New) " readonly="readonly" />
-             </div>
-         </div>
-
-         <div class="col-lg-3 col-md-6 col-sm-12">
-             <div class="form-group">
-                <label id="LblDescription">Description</label>   
-                <input type="text" class="form-control" id="txtDescription" name="txtDescription" autocomplete="off" style=""; />
-                 </div>
-            </div> 
-
-         <div class="col-lg-3 col-md-6 col-sm-12">
-               <div class="form-group">
-                <label id="Lblitem_type">Item Type</label>
-                 <select id="ddlitem_type"  class="form-control">
-                    <option>Please Select</option>
-                 </select>
-                   </div>
-            </div>
-
-         <div class="col-lg-3 col-md-6 col-sm-12">
-                 <div class="form-group">
-                  <label id="LblItemGroup">Item Group </label>
-                 <select id="ddlItemGroup" name="ddlItemGroup" class="form-control">
-                      <option value="0">Please Select</option>
-                </select>
-                     </div>
-               </div>
-         </div>
-
-         <div class="row">
-                  <div class="col-lg-2 col-md-6 col-sm-12">
-                    <label id="Lblpack_unit">UOM / Pack Size</label>
-                    <select id="ddlpack_unit">
-                       <option>Please Select</option>
-                   </select>    
-                 </div>    
-               
-                 <div class="col-lg-1 col-md-6 col-sm-12">
-                     <label id="lbl_UOMQty">UOM Qty</label>
-                     <input type="text" class="form-control" id="UOMQty" name="UOMQty" />
+        <div class="row">
+            <!-- Left Column: Basic & Pricing -->
+            <div class="col-lg-6 col-md-12 pr-cards-column">
+                <!-- Card 1: Basic Information -->
+                <div class="pr-primary-settings">
+                    <h5 class="pr-section-title" style="margin-top:0;"><i class="fa fa-info-circle"></i> Basic Information</h5>
+                    <div class="row">
+                        <div class="col-md-12">
+                            <label id="LblDescription">Description</label>
+                            <div class="input-group">
+                                <div class="input-group-prepend"><span class="input-group-text"><i class="fa fa-tag"></i></span></div>
+                                <input type="text" class="form-control" id="txtDescription" name="txtDescription" autocomplete="off" placeholder="Enter product description" />
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row mt-2">
+                        <div class="col-md-6 col-sm-12">
+                            <label id="Lblitem_type">Item Type</label>
+                            <select id="ddlitem_type" class="form-control"></select>
+                        </div>
+                        <div class="col-md-6 col-sm-12">
+                            <label id="LblItemGroup">Item Group</label>
+                            <select id="ddlItemGroup" name="ddlItemGroup" class="form-control"></select>
+                        </div>
+                    </div>
+                    <div class="row mt-2">
+                        <div class="col-md-8 col-sm-12">
+                            <label id="Lblpack_unit">UOM / Pack Size</label>
+                            <select id="ddlpack_unit" class="form-control"></select>
+                        </div>
+                        <div class="col-md-4 col-sm-12">
+                            <label id="lbl_UOMQty">UOM Qty</label>
+                            <input type="text" class="form-control" id="UOMQty" name="UOMQty" placeholder="0" />
+                        </div>
+                    </div>
                 </div>
-          <div class="col-lg-3 col-md-6 col-sm-12">
-       <div class="form-group">
-                <label id="Lblfiance_integration">Account Category</label> 
-                 <select id="ddlfiance_integration" class="form-control">
-                  <option value="0">Please Select</option>
-                  <option value="Yes">Yes</option>
-                  <option value="No">No</option>
-                </select>
-           </div>
-             </div>  
-         <div class="col-lg-3 col-md-6 col-sm-12">
-                   <div class="form-group">
-              <label id="LblwareHouse" style="width: 146px">WareHouse</label>
-                <select id="ddlwareHouse"  class="form-control">
-                     <option value="0">Please Select</option>
-                </select>
-                </div>       
-             </div> 
-         <div class="col-lg-3 col-md-6 col-sm-12 p-5" style="margin-top: 25px;">                
-             <div class="form-group form-check">
-                  <input type="checkbox" class="form-check-input" style="width:auto !important" id="Active" name="Active" />
-               <label class="form-check-label" id="LblActive" for="Active">Active</label>
-           
-            </div>
-            </div>          
-            </div>
-           
-          <div class="row">
-            <div class="col-lg-1 col-md-6 col-sm-12">
-                <label id="LbllocatorAddress">Locator</label>
-                <input type="text" class="form-control" id="txtlocatorAddress" name="locatorAddress" />
-            </div>
-           
-            <div class="col-lg-1 col-md-6 col-sm-21">
-                  <label id="Lblsales_Rate">Sale Rate</label> 
-                 <input type="text" class="form-control" id="sales_Rate" name="sales_Rate" />
-            </div> 
-            <div class="col-lg-1 col-md-6 col-sm-12" >       
-                  <label id="Lblpurch_rate">PR Rate</label>
-                  <input type="text" class="form-control" id="purch_rate" name="purch_rate" />
-             </div>
-              <div class="col-lg-1 col-md-6 col-sm-12">
-                  <label id="lblunitSize">Unit Size</label>
-                  <select id="ddlunitsize"></select>
-              </div>
-               <div class="col-lg-1 col-md-6 col-sm-12" >       
-                   <label id="lblunitsizeqty">Unit Size QTY</label>
-                   <input type="text" class="form-control" id="txtunitqty" name="purch_rate" />
-              </div>
-             <div class="col-lg-1 col-md-6 col-sm-12">
 
+                <!-- Card 2: Pricing & Packaging -->
+                <div class="pr-primary-settings">
+                    <h5 class="pr-section-title" style="margin-top:0;"><i class="fa fa-money"></i> Pricing &amp; Packaging</h5>
+                    <div class="row">
+                        <div class="col-md-6 col-sm-12">
+                            <label id="Lblsales_Rate">Sale Rate</label>
+                            <input type="text" class="form-control" id="sales_Rate" name="sales_Rate" placeholder="0.00" />
+                        </div>
+                        <div class="col-md-6 col-sm-12">
+                            <label id="Lblpurch_rate">PR Rate</label>
+                            <input type="text" class="form-control" id="purch_rate" name="purch_rate" placeholder="0.00" />
+                        </div>
+                    </div>
+                    <div class="row mt-2">
+                        <div class="col-md-6 col-sm-12">
+                            <label id="lblunitSize">Unit Size</label>
+                            <select id="ddlunitsize" class="form-control"></select>
+                        </div>
+                        <div class="col-md-6 col-sm-12">
+                            <label id="lblunitsizeqty">Unit Size QTY</label>
+                            <input type="text" class="form-control" id="txtunitqty" name="purch_rate" placeholder="0" />
+                        </div>
+                    </div>
+                    <div class="row mt-2">
+                        <div class="col-md-12">
+                            <label id="Lblremarks">Remarks</label>
+                            <input type="text" class="form-control" id="txtremarks" name="txtremarks" placeholder="Any additional remarks" />
+                        </div>
+                    </div>
+                </div>
             </div>
-              <div class="col-lg-1 col-md-6 col-sm-12" id="sehatCardRateContainer" style="display: none;">
-                <label id="LblsehatCardrate">Sehat Card Rate</label>
-                <input type="text" class="form-control" id="txtSehatCardRate" name="txtSehatCardRate" />
-            </div> 
-           
-           <div class="col-lg-5 col-md-12 col-sm-12">
-             <label id="Lblremarks">Remarks</label>
-              <input type="text" class="form-control" id="txtremarks" name="txtremarks" />           
-           </div>
+
+            <!-- Right Column: Inventory & Account -->
+            <div class="col-lg-6 col-md-12 pr-cards-column">
+                <!-- Card 3: Inventory & Account -->
+                <div class="pr-primary-settings">
+                    <h5 class="pr-section-title" style="margin-top:0;"><i class="fa fa-cubes"></i> Inventory &amp; Account</h5>
+                    <div class="row">
+                        <div class="col-md-12">
+                            <label id="Lblfiance_integration">Account Category</label>
+                            <select id="ddlfiance_integration" class="form-control"></select>
+                        </div>
+                    </div>
+                    <div class="row mt-2">
+                        <div class="col-md-8 col-sm-12">
+                            <label id="LblwareHouse">WareHouse</label>
+                            <select id="ddlwareHouse" class="form-control"></select>
+                        </div>
+                        <div class="col-md-4 col-sm-12">
+                            <label id="LbllocatorAddress">Locator</label>
+                            <input type="text" class="form-control" id="txtlocatorAddress" name="locatorAddress" placeholder="Locator" />
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Card 4: Sehat Card & Hidden Dimensions -->
+                <div class="pr-primary-settings" style="display:none;">
+                    <h5 class="pr-section-title" style="margin-top:0;"><i class="fa fa-heartbeat"></i> Sehat Card &amp; Dimensions</h5>
+                    <div class="row">
+                        <div class="col-md-12" id="sehatCardRateContainer" style="display: none;">
+                            <label id="LblsehatCardrate">Sehat Card Rate</label>
+                            <input type="text" class="form-control" id="txtSehatCardRate" name="txtSehatCardRate" placeholder="0.00" />
+                        </div>
+                    </div>
+                    <div class="vendor-info-callout" style="margin-top:10px;">
+                        <i class="fa fa-info-circle"></i>
+                        <span>The Sehat Card Rate field appears automatically when <strong>Sehat Sahulat</strong> is checked in the Hospital tab.</span>
+                    </div>
+                    <!-- Hidden dimensions preserved from original -->
+                    <div class="row mt-2" style="display:none">
+                        <div class="col-md-4">
+                            <label id="LblLength">Length</label>
+                            <input type="text" class="form-control" id="txtLength" name="txtLength" />
+                        </div>
+                        <div class="col-md-4">
+                            <label id="Lblwidth">Width</label>
+                            <input type="text" class="form-control" id="txtwidth" name="txtwidth" />
+                        </div>
+                        <div class="col-md-4">
+                            <label id="Lblheight">Height</label>
+                            <input type="text" class="form-control" id="txtheight" name="txtheight" />
+                        </div>
+                    </div>
+                </div>
             </div>
-            <div class="col-lg-1 col-md-6 col-sm-12"  style="display:none">
-                    <label id="LblLength">Length</label>
-                    <input type="text" class="form-control" id="txtLength" name="txtLength" />
-                </div> 
-                <div class="col-lg-1 col-md-6 col-sm-12"  style="display:none">
-                     <label id="Lblwidth">Width</label>
-                       <input type="text" class="form-control" id="txtwidth" name="txtwidth" />
-                </div> 
-                <div class="col-lg-1 col-md-6 col-sm-12"  style="display:none">
-                    <label id="Lblheight">Height</label>
-                    <input type="text" class="form-control" id="txtheight" name="txtheight" />
-            </div> 
-         </form>
+        </div>
+     </form>
 
 
     <table style="width: 100% !important">
@@ -2148,21 +2204,19 @@
         </div>
     </div>
 
-    <div class="row" style="margin-top:1%">
-         <div class="col-lg-8">
-            <div class="row">
-                  <div class="col-lg-2 col-md-4 col-sm-12">
-     <input type="button" class="btn-gray" value="View" id="btnBack" onclick="window.location = 'ProductsView.aspx'" />
-         </div>
-    <div class="col-lg-2 col-md-4 col-sm-12">
-     <input type="button" class="btn btn-primry" value="Save" id="btnValue" onclick="Saveitem()" />
-        </div>
-        <div class="col-lg-2 col-md-4 col-sm-12">
-    <input type="button" class="btn btn-yellow" value="New" onclick="NewPage()" />
+    <div class="pr-action-buttons">
+        <div class="row">
+            <div class="col-lg-2 col-md-4 col-sm-12">
+                <input type="button" class="btn btn-primry w-100" value="Save" id="btnValue" onclick="Saveitem()" />
+            </div>
+            <div class="col-lg-2 col-md-4 col-sm-12">
+                <input type="button" class="btn btn-gray w-100" value="View" id="btnBack" onclick="window.location = 'ProductsView.aspx'" />
+            </div>
+            <div class="col-lg-2 col-md-4 col-sm-12">
+                <input type="button" class="btn btn-yellow w-100" value="New" onclick="NewPage()" />
             </div>
         </div>
-            </div>
-        </div>
+    </div>
 
 
     

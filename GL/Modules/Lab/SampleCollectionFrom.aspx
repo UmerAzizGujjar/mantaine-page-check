@@ -2,7 +2,9 @@
 
 <asp:Content ID="Content1" ContentPlaceHolderID="HeadContent" runat="server">
     <link href="../../wwwroot/THEME_TIBBIT/CustomCSS/LabSample.css" rel="stylesheet" />
-    <script type="text/javascript">   
+    <link href="../../wwwroot/THEME_TIBBIT/CustomCSS/vendor.css" rel="stylesheet" />
+    <link href="../../wwwroot/THEME_TIBBIT/CustomCSS/custom-modals.css" rel="stylesheet" />
+    <script type="text/javascript">
 
 
         var CheckedTest = [];
@@ -1339,11 +1341,54 @@
                 }
             });
         }
+
+        // ── Meta Bar sync (visual only — does not change any save/load logic) ──
+        function syncSampleMeta() {
+            var code = $('#txtSample_No').val();
+            if (code) {
+                $('#sampleNoDisplay').text(code);
+            }
+            var branch = $('#ddlUserBranch option:selected').text();
+            if (branch && branch !== 'Loading...') {
+                $('#branchDisplay').text(branch);
+            }
+        }
+        $(document).ready(function () {
+            var originalVal = $.fn.val;
+            $.fn.val = function (value) {
+                var res = originalVal.apply(this, arguments);
+                if (this.attr('id') === 'txtSample_No' && arguments.length >= 1) {
+                    syncSampleMeta();
+                }
+                return res;
+            };
+            syncSampleMeta();
+            $(document).on('change', '#ddlUserBranch', function () {
+                syncSampleMeta();
+            });
+        });
     </script>
 </asp:Content>
 
 <asp:Content ID="Content2" ContentPlaceHolderID="MainContent" runat="server">
     <form id="item">
+        <!-- Meta Bar -->
+        <div class="pr-meta-bar">
+            <div class="meta-left">
+                <span class="meta-title"><i class="fa fa-flask"></i> Sample Collection</span>
+            </div>
+            <div class="meta-right">
+                <div class="meta-badge">
+                    <span class="badge-label">Sample No:</span>
+                    <span class="badge-value" id="sampleNoDisplay">---</span>
+                </div>
+                <div class="meta-badge">
+                    <span class="badge-label">Branch:</span>
+                    <span class="badge-value" id="branchDisplay">---</span>
+                </div>
+            </div>
+        </div>
+
         <div class="row">
             <!-- Left Card -->
             <div class="col-lg-5 col-md-5 col-sm-12">
@@ -1520,34 +1565,31 @@
 
 
             </div>
-            <div class="row">
-                <div class="col-lg-8">
-                    <div class="row">
-                <div class="col-lg-2 col-md-3 col-sm-4">
-                    <input id="btSnave" class="btn btn-primry" type="button" value="Save & Print" onclick="SaveTest()" />
-                    <input type="hidden" name="hdnDuplicateCheck" value="0" id="hdnDuplicateCheck" />
-                </div>
-                <div class="col-lg-2 col-md-3 col-sm-4">
-                    <input id="btnList" class="btn-gray" type="button" value="View" onclick="ListView()" />
-                </div>
-                <div class="col-lg-2 col-md-3 col-sm-4">
-                    <input id="btnNew" class="btn btn-yellow" type="button" value="New" onclick="NewEntry()" />
-                </div>
-                <div class="col-lg-2 col-md-3 col-sm-4">
-                    <input id="btnPrintBarcode" class="btn btn-primry" type="button" value="Barcode" onclick="PrintBarcode()" />
-                </div>
-                <div class="col-lg-2 col-md-3 col-sm-4">
-                    <input id="btnPrintQrCode" class="btn btn-primry" type="button" value="QR Code" onclick="PrintQrCode()" />
-                </div>
-                <div class="col-lg-2 col-md-3 col-sm-4">
-                    <input id="btnPrintOrder" class="btn btn-primry" type="button" value="Print Order" onclick="PrintOrder()" />
-                </div>
-                        <div class="col-lg-2 col-md-3 col-sm-4" >
-                        <input id="btnPrint" class="btn btn-primry" type="button" value="Print" onclick="Print()"/>
-                            </div>
+            <div class="pr-action-buttons">
+        <div class="row">
+            <div class="col-lg-2 col-md-3 col-sm-4">
+                <input id="btSnave" class="btn btn-primry w-100" type="button" value="Save & Print" onclick="SaveTest()" />
+                <input type="hidden" name="hdnDuplicateCheck" value="0" id="hdnDuplicateCheck" />
+            </div>
+            <div class="col-lg-2 col-md-3 col-sm-4">
+                <input id="btnList" class="btn-gray w-100" type="button" value="View" onclick="ListView()" />
+            </div>
+            <div class="col-lg-2 col-md-3 col-sm-4">
+                <input id="btnNew" class="btn btn-yellow w-100" type="button" value="New" onclick="NewEntry()" />
+            </div>
+            <div class="col-lg-2 col-md-3 col-sm-4">
+                <input id="btnPrintBarcode" class="btn btn-primry w-100" type="button" value="Barcode" onclick="PrintBarcode()" />
+            </div>
+            <div class="col-lg-2 col-md-3 col-sm-4">
+                <input id="btnPrintQrCode" class="btn btn-primry w-100" type="button" value="QR Code" onclick="PrintQrCode()" />
+            </div>
+            <div class="col-lg-2 col-md-3 col-sm-4">
+                <input id="btnPrintOrder" class="btn btn-primry w-100" type="button" value="Print Order" onclick="PrintOrder()" />
+            </div>
+            <div class="col-lg-2 col-md-3 col-sm-4">
+                <input id="btnPrint" class="btn btn-primry w-100" type="button" value="Print" onclick="Print()" />
             </div>
         </div>
-    </div>
     </div>
     </div>
 

@@ -1,6 +1,7 @@
 ﻿<%@ Page Title="" Language="C#" MasterPageFile="~/Site.Master" AutoEventWireup="true" CodeBehind="Service.aspx.cs" Inherits="PMS.Modules.Inventory.Service" %>
 <asp:Content ID="Content1" ContentPlaceHolderID="HeadContent" runat="server">
-      <link href="../../wwwroot/THEME_TIBBIT/CustomCSS/Product.css" rel="stylesheet" />
+      <link href="../../wwwroot/THEME_TIBBIT/CustomCSS/vendor.css" rel="stylesheet" />
+      <link href="../../wwwroot/THEME_TIBBIT/CustomCSS/Service.css" rel="stylesheet" />
     <script type="text/javascript">
         var id = '<% =Request.QueryString["ID"] %>';
         $(document).ready(function () {
@@ -18,7 +19,9 @@
             }
             else {
                 GetitemNum();
+                $("#Active").prop('checked', true);
             }
+            $('select').select2();
             $('#ddlAccount').select2();
         });
         $(function () {
@@ -45,6 +48,11 @@
                     }
                 });
                 $('#ddldepartment').html(optionsDepth);
+                if ($('#ddldepartment').data('select2')) {
+                    $('#ddldepartment').select2('destroy').select2();
+                } else {
+                    $('#ddldepartment').select2();
+                }
             });
         }
 
@@ -56,11 +64,15 @@
                     options += '<option value="' + value.DataValue_Name + '" >' + value.DataValue_Description + '</option>';
                 });
                 $('#ddlSubcategory').html(options);
-                $('#ddlSubcategory').select2();
+                if ($('#ddlSubcategory').data('select2')) {
+                    $('#ddlSubcategory').select2('destroy').select2();
+                } else {
+                    $('#ddlSubcategory').select2();
+                }
             });
         }
-        
-        
+
+
         function ActiveCheckRights() {
             debugger;
             $.ajax({
@@ -139,6 +151,15 @@
                 $('#ddlitem_Qty').html(optionItemCategory);
                 $('#ddlItemGroup').html(optionItemGroup);
                 $('#ddlwareHouse').html(optionInvOrg);
+
+                var select2Selectors = ['#ddlmanu', '#ddlpack_unit', '#ddlitem_type', '#ddlProcedureTypes', '#ddlitem_Qty', '#ddlItemGroup', '#ddlwareHouse'];
+                $.each(select2Selectors, function (i, sel) {
+                    if ($(sel).data('select2')) {
+                        $(sel).select2('destroy').select2();
+                    } else {
+                        $(sel).select2();
+                    }
+                });
             });
         }
         function FillAccountCategory() {
@@ -151,6 +172,11 @@
                     optionsAccCategory += '<option value="' + value.Account_Category_Id + '" >' + value.CategoryName + '</option>';
                 });
                 $('#ddlfiance_integration').html(optionsAccCategory);
+                if ($('#ddlfiance_integration').data('select2')) {
+                    $('#ddlfiance_integration').select2('destroy').select2();
+                } else {
+                    $('#ddlfiance_integration').select2();
+                }
             });
         }
         function FillAccounts() {
@@ -167,6 +193,11 @@
                         options += '<option value="' + value.Account_ID + '">' + value.Account_Code + ' - ' + value.Account_Name + '</option>';
                     });
                     $('#ddlAccount').html(options);
+                    if ($('#ddlAccount').data('select2')) {
+                        $('#ddlAccount').select2('destroy').select2();
+                    } else {
+                        $('#ddlAccount').select2();
+                    }
                 }
             });
         }
@@ -221,7 +252,7 @@
                 }
 
             }
-           
+
             var locatorAddress = $('#txtlocatorAddress').val();
             var fianceIntegration = $('#ddlfiance_integration').val();
             if (Desc == "") {
@@ -521,6 +552,36 @@
                 }
             });
         }
+        function syncServiceMeta() {
+            var code = $('#item_code').val();
+            if (code) {
+                $('#serviceCodeDisplay').text(code);
+            }
+        }
+
+        $(document).ready(function () {
+            var originalVal = $.fn.val;
+            $.fn.val = function (value) {
+                var res = originalVal.apply(this, arguments);
+                if (this.attr('id') === 'item_code' && arguments.length >= 1) {
+                    syncServiceMeta();
+                }
+                return res;
+            };
+
+            $('#Active').change(function () {
+                if ($(this).is(':checked')) {
+                    $('#serviceActiveBadge').removeClass('badge-inactive').addClass('badge-active');
+                    $('#serviceActiveIcon').removeClass('fa-times-circle').addClass('fa-check-circle');
+                    $('#serviceActiveText').text('Active');
+                } else {
+                    $('#serviceActiveBadge').removeClass('badge-active').addClass('badge-inactive');
+                    $('#serviceActiveIcon').removeClass('fa-check-circle').addClass('fa-times-circle');
+                    $('#serviceActiveText').text('Inactive');
+                }
+            });
+            $('#Active').trigger('change');
+        });
         function LoadItemInventory(id) {
             debugger;
             $.ajax({
@@ -675,6 +736,8 @@
                     if (parse.Infusion_Fluid == 1) {
                         $("#chckfluid").prop('checked', true);
                     }
+                    setTimeout(function () { $('#Active').trigger('change'); }, 100);
+                    setTimeout(function () { syncServiceMeta(); }, 200);
 
                 },
                 failure: function (response) {
@@ -686,393 +749,369 @@
     </script>
 </asp:Content>
 <asp:Content ID="Content2" ContentPlaceHolderID="MainContent" runat="server">
-        <form  id="item">
-     <div class="row">
-         <div class="col-lg-2 col-md-6 col-sm-12">
-             <div class="form-group">
-                <label id="Lblitem_code">Item Code</label>
-                <input style="" type="text" class="form-control" id="item_code" name="item_code" placeholder="(New) " readonly="readonly" />
-             </div>
-         </div>
-
-         <div class="col-lg-3 col-md-6 col-sm-12">
-             <div class="form-group">
-                <label id="LblDescription">Description</label>   
-                <input type="text" class="form-control" id="txtDescription" name="txtDescription" autocomplete="off" style=""; />
-                 </div>
-            </div> 
-
-         <div class="col-lg-2 col-md-6 col-sm-12">
-               <div class="form-group">
-                <label id="Lblitem_type">Item Type</label>
-                 <select id="ddlitem_type"  class="form-control">
-                    <option>Please Select</option>
-                 </select>
-                   </div>
-            </div>
-
-         <div class="col-lg-2 col-md-6 col-sm-12">
-                 <div class="form-group">
-                  <label id="LblItemGroup">Item Group </label>
-                 <select id="ddlItemGroup" name="ddlItemGroup" class="form-control">
-                </select>
-                     </div>
-               </div>
-
-         <div class="col-lg-3 col-md-6 col-sm-12">
-             <div class="form-group">
-                <label id="LblAccount">Account</label>
-                <select id="ddlAccount" class="form-control">
-                    <option value="0">Please Select</option>
-                </select>
-             </div>
-         </div>
-         </div>
-
-         <div class="row">
-                  <div class="col-lg-2 col-md-6 col-sm-12">
-                    <label id="Lblpack_unit">UOM</label>
-                    <select id="ddlpack_unit">
-                       <option>Select</option>
-                   </select>    
-                 </div>    
-               
-                 <div class="col-lg-1 col-md-6 col-sm-12">
-                     <label id="lbl_UOMQty">UOM Qty</label>
-                     <input type="text" class="form-control" id="UOMQty" name="UOMQty" />
-                </div>
-          <div class="col-lg-3 col-md-6 col-sm-12">
-       <div class="form-group">
-                <label id="Lblfiance_integration">Account Category</label> 
-                 <select id="ddlfiance_integration" class="form-control">
-                  <option>Please Select</option>
-                  <option value="Yes">Yes</option>
-                  <option value="No">No</option>
-                </select>
-           </div>
-             </div>  
-         <div class="col-lg-3 col-md-6 col-sm-12">
-                   <div class="form-group">
-              <label id="LblwareHouse" style="width: 146px">WareHouse</label>
-                <select id="ddlwareHouse"  class="form-control"></select>
-                </div>       
-             </div> 
-         <div class="col-lg-3 col-md-6 col-sm-12 p-5">
-                 
-             <div class="form-group form-check">
-               <label class="form-check-label" id="LblActive" for="Active">Active</label>
-            <input type="checkbox" class="form-check-input" style="width:auto !important" id="Active" name="Active" />
-            </div>
-            </div>
-            </div>
-           
-          <div class="row">
-            <div class="col-lg-1 col-md-6 col-sm-12">
-                <label id="LbllocatorAddress">Locator</label>
-                <input type="text" class="form-control" id="txtlocatorAddress" name="locatorAddress" />
-            </div>
-           
-            <div class="col-lg-1 col-md-6 col-sm-21">
-                  <label id="Lblsales_Rate">Sale Rate</label> 
-                 <input type="text" class="form-control" id="sales_Rate" name="sales_Rate" />
-            </div> 
-            <div class="col-lg-1 col-md-6 col-sm-12">       
-                  <label id="Lblpurch_rate">PR Rate</label>
-                  <input type="text" class="form-control" id="purch_rate" name="purch_rate" />
-             </div>
-            <div class="col-lg-1 col-md-6 col-sm-12">
-                <label id="LblLength">Length</label>
-                <input type="text" class="form-control" id="txtLength" name="txtLength" />
-            </div> 
-            <div class="col-lg-1 col-md-6 col-sm-12">
-                 <label id="Lblwidth">Width</label>
-                   <input type="text" class="form-control" id="txtwidth" name="txtwidth" />
-            </div> 
-            <div class="col-lg-1 col-md-6 col-sm-12">
-                <label id="Lblheight">Height</label>
-                <input type="text" class="form-control" id="txtheight" name="txtheight" />
-            </div> 
-           
-           <div class="col-lg-6 col-md-12 col-sm-12">
-             <label id="Lblremarks">Remarks</label>
-              <input type="text" class="form-control" id="txtremarks" name="txtremarks" />           
-           </div>
-            </div>
-            
-         </form>
-
-
-    <table style="width: 100% !important">
-    </table>       
-    <div id="tabs">
-        <ul>
-            <li><a href="#Tab-3" style="display:none;">General</a></li>
-            <li><a href="#Tab-4" style="display:none;">Pharmacy</a></li>
-            <li><a href="#Tab-1">Procedure</a></li>
-            <li><a href="#Tab-5" style="display:none;">Item Tags</a></li>
-            <li><a href="#Tab-6">Hospital</a></li>
-        </ul>
-        <div id="Tab-1" class="table-container">
-            <table style="padding: 20px; width: 900px; height: 94px;" class="table-responsive-lg table-responsive-md table-responsive-sm">
-                <tr>
-                    <td style="font-size: 15px;">Procedure Type:</td>
-                    <td>
-                        <div id="procedureTypes">
-                            <table>
-                                <tr>
-                                    <td class="col-lg-1 col-md-1 col-sm-2">
-                                        <label id="levl">Level1</label>
-                                    </td>
-                                    <td class="col-lg-3 col-md-3 col-sm-2">
-                                        <select id="ddlProcedureTypes">
-                                        </select>
-                                    </td>
-                                    <td class="col-lg-1 col-md-1 col-sm-2">
-                                        <label id="Notes">Notes</label>
-                                    </td>
-                                    <td class="col-lg-2 col-md-2 col-sm-2">
-                                        <textarea rows="2" cols="3" id="Note" name="Note" style="margin-left: 30px;width: 194px;margin-top: 3px;height: 30px;"></textarea>
-                                    </td>
-                                    <td class="col-lg-2 col-md-2 col-sm-2">
-                                        <label id="lblddldepartment">Department</label>
-                                    </td>
-                                    <td class="col-lg-3 col-md-3 col-sm-2">
-                                        <select id="ddldepartment" ></select>          
-                                    </td>                                 
-                                </tr>
-                                <tr>
-                                    <td class="col-lg-2 col-md-2 col-sm-2">
-                                        <label id="lblSubcategory">Sub Category</label>
-                                    </td>
-                                    <td class="col-lg-3 col-md-3 col-sm-2">
-                                        <select id="ddlSubcategory"></select>
-                                    </td>
-                                </tr>
-                            </table>
-                        </div>
-                    </td>
-                </tr>
-            </table>
-        </div>        
-        <div id="Tab-3">      
-            <table style="padding: 20px; width: 318px;" class="table-responsive-lg table-responsive-md">
-                <span style="font-size: 15px;">Stock Level</span>
-                <tr>
-                    <td>Minimum Stock</td>
-                    <td>
-                        <input type="text" id="minimum_stock" name="minimum_stock" /></td>
-                </tr>
-                <tr>
-                    <td>Reorder Stock</td>
-                    <td>
-                        <input type="text" id="Reorder_Stock" name="Reorder_Stock" /></td>
-                </tr>
-                <tr>
-                    <td>Maximum Stock</td>
-                    <td>
-                        <input type="text" id="Maximum_Stock" name="Maximum_Stock" /></td>
-                </tr>
-            </table>
-
+    <!-- Meta Bar -->
+    <div class="pr-meta-bar">
+        <div class="meta-left">
+            <span class="meta-title"><i class="fa fa-stethoscope"></i> Service Item</span>
         </div>
-        <div id="Tab-4" class="table-container">
-            
-            <table style="padding: 20px;" class="table-responsive-lg table-responsive-md table-responsive-sm">
-                <tr>
-                    <td style="width: 21px;">
-                        <input type="checkbox" id="Narcotics" name="Narcotics" />
-                    </td>
-                    <td style="width: 145px;">Narcotics</td>
-                    <td style="width: 21px;">
-                        <input type="checkbox" id="Refregrator" name="Refregrator" /></td>
-                    <td style="width: 84px;">Refregrator</td>
-                </tr>
-                <tr>
-                    <td style="width: 21px;">
-                        <input type="checkbox" id="controller_drug" name="controller_drug" />
-                    </td>
-                    <td style="width: 145px;">Controller Drug</td>
-                    <td style="width: 5px;">
-                        <input type="checkbox" id="PharmacyItem" name="PharmacyItem" /></td>
-                    <td style="width: 93px;">Pharmacy Item</td>
-                </tr>
-            </table>
-            <table>
-                <tr>
-                    <td>
-                        <label style="width: 71px;">ATC</label>
-                        <input style="width:auto !important" type="text" id="ATC" name="ATC" />
-                    </td>
-                    <td>
-                       <label id="Lblmanufacturer" style=" float: left; position: relative; width: 80px;margin-right: 14px; margin-bottom : 10px;margin-left: 16px">Manufacturer</label>
-                    </td>
-                    <td style="width: 170px !important;min-width:170px !important;" >  
-                        <select id="ddlmanu" style="height: 33px !important">
-                            <option>Please Select</option>
-                        </select>
-                    </td>
-                    <td><label id="Lblitem_Qty" style="display: inline-block; float: left; position: relative; width: 150px !important;margin-left: 33px;margin-bottom: 10px">Item Main Category</label></td>
-
-                    <td  style="width: 170px !important;min-width:170px !important;">
-                        
-                        <select id="ddlitem_Qty" style="height: 33px !important" name="ddlitem_Qty"></select>
-                    </td>
-                </tr>
-            </table>
-            <table style="margin-left:20px">
-                <tr>
-                    <td style="width: 71px;">Generic Name</td>
-                    <td>
-                        <input type="text" id="GenericName" name="GenericName" style="width: 775px!Important;margin-left: 7px" /></td>
-                </tr>
-            </table>            
-        </div>
-        <div id="Tab-5" >
-            <table>
-                <tr>
-                    <td style="width: 23px;">
-                        <input type="checkbox" id="Finished_Product" name="Finished_Product" /></td>
-                    <td style="width: 162px;">Finished Product</td>
-                    <td style="width: 23px;">
-                        <input type="checkbox" id="Consumable" name="Consumable" /></td>
-                    <td style="width: 84px;">Consumable</td>
-                </tr>
-                <tr>                   
-                    <td>
-                        <input type="checkbox" id="Purchaseable" name="Purchaseable" /></td>
-                    <td style="width: 84px;">Purchaseable</td>
-                    <td>
-                        <input type="checkbox" id="Saleable" name="Saleable" /></td>
-                    <td style="width: 84px;">Saleable</td>
-                </tr>   
-                <tr>
-                    <td>
-                        <input type="checkbox" id="IsNonStockItem" name="IsNonStockItem" /></td>
-                    <td style="width: 84px;">Non Stock Item</td>
-                    <td>
-                        <input type="checkbox" id="Isfixasset" name="Isfixasset" /></td>
-                    <td style="width: 84px;">Fix Asset</td>
-                </tr>
-                <tr>
-                    <td><input type="checkbox" id="Locator" name="Locator" /></td>
-                    <td style="width: 84px;">Locator</td>
-                    <td><input type="checkbox" id="IsBatch" name="IsBatch" /></td>
-                    <td style="width: 84px;">Batch</td>
-                </tr>
-            </table>
-        </div>
-        <div id="Tab-6">
-            <div class="row">
-                <div class="col-lg-1 col-md-4 col-sm-6">
-                    <label id="Label1">D.Share</label>
-                    <input type="text" id="txtDocShare" name="txtDocShare" autocomplete="off" />
-                </div>
-                <div class="col-lg-1 col-md-4 col-sm-6" style="margin-left:1%">
-                    <label id="Label2">H.Share</label>
-                    <input type="text" id="txtHospitalShare" name="txtHospitalShare" autocomplete="off"/>
-                    </div>
+        <div class="meta-right">
+            <div class="meta-badge">
+                <span class="badge-label">Code:</span>
+                <span class="badge-value" id="serviceCodeDisplay">---</span>
             </div>
-
-            <table>
-                <tr>
-                    <td style="width: 20px;">
-                        <input type="checkbox" id="radio_charges" name="radio_charges" />
-                    </td>
-                    <td style="width: 145px;" >Lab/Radiology Charges</td>
-                    <td style="width: 20px;">
-                        <input type="checkbox" id="Dental_Item" name="Dental_Item" /></td>
-                    <td style="width: 84px;">Dental Item</td>
-                </tr>
-                <tr>
-                    <td>
-                        <input type="checkbox" id="Procedure" name="Procedure" onchange="ShowProcTime();"/>
-                    </td>
-                    <td style="width: 84px;">Procedure</td>
-                    <td style="width: 5px;">
-                        <input type="checkbox" id="ckhBedServices" name="ckhBedServices" /></td>
-                    <td style="width: 84px;">Bed Services</td>
-                                        <td><label id="lblProcedure_Time" >Procedure Time</label></td>
-                    <td><input type="text" id="Procedure_Time"  /></td>
-                </tr>
-                <tr>
-                    <td>
-                        <input type="checkbox" id="chkLabRequired" name="chkLabRequired" />
-                    </td>
-                    <td style="width: 84px;">Lab Required</td>
-                    <td style="width: 5px;">
-                        <input type="checkbox" id="chkOtherServices" name="chkOtherServices" /></td>
-                    <td style="width: 84px;">Other Services</td>
-                </tr>
-                <tr>
-                    <td>
-                        <input type="checkbox" id="chkLensRequired" name="chkLensRequired" />
-                    </td>
-                    <td style="width: 84px;">Lens Required</td>
-                    <td style="width: 5px;">
-                        <input type="checkbox" id="chkFitnessCertificate" name="chkFitnessCertificate" /></td>
-                    <td style="width:133px;">Fitness Certificates</td>
-                </tr>
-                <tr>
-                    <td>
-                        <input type="checkbox" id="chkPattHistorRequired" name="chkPattHistorRequired" />
-                    </td>
-                    <td style="width: 84px;">Pat History Required</td>
-                    <td style="width: 5px;">
-                        <input type="checkbox" id="chkBillingRequired" name="chkBillingRequired" /></td>
-                    <td style="width: 84px;">Billing Required</td>
-                </tr>
-                <tr>
-                    <td>
-                        <input type="checkbox" id="chkIsHospital" name="chkIsHospital" />
-                    </td>
-                    <td style="width: 84px;">Is Hospital Required</td>
-                    <td>
-                        <input type="checkbox" id="chkOTProcedure" name="chkOTProcedure" />
-                    </td>
-                    <td style="width: 84px;">
-                        <label for="chkOTProcedure">OT Procedure</label>
-                    </td>
-                </tr>
-                <tr>
-                    <td>
-                         <input type="checkbox" id="chkIsService" name="chkIsService" />
-                    </td>
-                    <td style="width: 84px;">
-                         <label for="chkOTProcedure">Services Item</label> 
-                    </td>    
-                    <td>
-                         <input type="checkbox" id="chckfluid" name="chkIsfluid" />
-                    </td>
-                    <td style="width: 84px;">
-                         <label for="chkOTProcedure">Fluid</label> 
-                    </td>                   
-                </tr>
-                <tr>
-                    <td>
-                        <input type="checkbox" id="chkIsPharmacyBilling" name="chkIsPharmacyBilling" />
-                    </td>
-                    <td style="width: 84px;">
-                        <label for="chkIsPharmacyBilling">Pharmacy Billing</label>
-                    </td>
-                </tr>
-            </table>
+            <div class="meta-badge" id="serviceActiveBadge" style="cursor: pointer;" onclick="$('#Active').click();">
+                <i class="fa fa-check-circle" id="serviceActiveIcon"></i> <span id="serviceActiveText">Active</span>
+            </div>
+            <!-- Hidden inputs to retain logic -->
+            <input type="hidden" id="item_code" name="item_code" />
+            <input type="checkbox" id="Active" name="Active" style="display:none;" />
         </div>
     </div>
 
-    <div class="row" style="margin-top:1%">
-         <div class="col-lg-8">
-            <div class="row">
-                  <div class="col-lg-2 col-md-4 col-sm-12">
-     <input type="button" class="btn-gray" value="View" id="btnBack" onclick="window.location = 'ServiceView.aspx'" />
-         </div>
-    <div class="col-lg-2 col-md-4 col-sm-12">
-     <input type="button" class="btn btn-primry" value="Save" id="btnValue" onclick="Saveitem()" />
-        </div>
-        <div class="col-lg-2 col-md-4 col-sm-12">
-    <input type="button" class="btn btn-yellow" value="New" onclick="NewPage()" />
+    <form id="item">
+        <div class="row">
+            <!-- Left Column: Basic & Procedure -->
+            <div class="col-lg-6 col-md-12 pr-cards-column">
+                <!-- Card 1: Basic Information -->
+                <div class="pr-primary-settings">
+                    <h5 class="pr-section-title" style="margin-top:0;"><i class="fa fa-info-circle"></i> Basic Information</h5>
+                    <div class="row">
+                        <div class="col-md-12">
+                            <label id="LblDescription">Service / Item Description</label>
+                            <div class="input-group">
+                                <div class="input-group-prepend"><span class="input-group-text"><i class="fa fa-tag"></i></span></div>
+                                <input type="text" class="form-control" id="txtDescription" name="txtDescription" autocomplete="off" placeholder="Enter service or item name" />
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row mt-2">
+                        <div class="col-md-4 col-sm-12">
+                            <label id="Lblitem_type">Item Type</label>
+                            <select id="ddlitem_type" class="form-control"></select>
+                        </div>
+                        <div class="col-md-4 col-sm-12">
+                            <label id="LblItemGroup">Item Group</label>
+                            <select id="ddlItemGroup" name="ddlItemGroup" class="form-control"></select>
+                        </div>
+                        <div class="col-md-4 col-sm-12">
+                            <label id="LblAccount">Account</label>
+                            <select id="ddlAccount" class="form-control"></select>
+                        </div>
+                    </div>
+                    <div class="row mt-2">
+                        <div class="col-md-8 col-sm-12">
+                            <label id="Lblpack_unit">UOM (Pack Unit)</label>
+                            <select id="ddlpack_unit" class="form-control"></select>
+                        </div>
+                        <div class="col-md-4 col-sm-12">
+                            <label id="lbl_UOMQty">UOM Qty</label>
+                            <input type="text" class="form-control" id="UOMQty" name="UOMQty" placeholder="e.g. 1" />
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Card 2: Procedure Details -->
+                <div class="pr-primary-settings">
+                    <h5 class="pr-section-title" style="margin-top:0;"><i class="fa fa-medkit"></i> Procedure Details</h5>
+                    <div class="row">
+                        <div class="col-md-6 col-sm-12">
+                            <label id="levl">Procedure Type</label>
+                            <select id="ddlProcedureTypes" class="form-control"></select>
+                        </div>
+                        <div class="col-md-6 col-sm-12">
+                            <label id="lblddldepartment">Department</label>
+                            <select id="ddldepartment" class="form-control"></select>
+                        </div>
+                    </div>
+                    <div class="row mt-2">
+                        <div class="col-md-12">
+                            <label id="lblSubcategory">Sub Category</label>
+                            <select id="ddlSubcategory" class="form-control"></select>
+                        </div>
+                    </div>
+                    <div class="row mt-2">
+                        <div class="col-md-12">
+                            <label id="Notes">Notes</label>
+                            <textarea rows="2" id="Note" name="Note" class="form-control" style="height:60px !important; resize:vertical;" placeholder="Procedure notes"></textarea>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Right Column: Pricing, Inventory & Account -->
+            <div class="col-lg-6 col-md-12 pr-cards-column">
+                <!-- Card 3: Pricing & Inventory -->
+                <div class="pr-primary-settings">
+                    <h5 class="pr-section-title" style="margin-top:0;"><i class="fa fa-money"></i> Pricing & Inventory</h5>
+                    <div class="row">
+                        <div class="col-md-6 col-sm-12">
+                            <label id="Lblsales_Rate">Sale Rate</label>
+                            <input type="text" class="form-control" id="sales_Rate" name="sales_Rate" placeholder="0.00" />
+                        </div>
+                        <div class="col-md-6 col-sm-12">
+                            <label id="Lblpurch_rate">Purchase Rate</label>
+                            <input type="text" class="form-control" id="purch_rate" name="purch_rate" placeholder="0.00" />
+                        </div>
+                    </div>
+                    <div class="row mt-2">
+                        <div class="col-md-6 col-sm-12">
+                            <label id="Lblfiance_integration">Account Category</label>
+                            <select id="ddlfiance_integration" class="form-control"></select>
+                        </div>
+                        <div class="col-md-6 col-sm-12">
+                            <label id="LblwareHouse">Warehouse</label>
+                            <select id="ddlwareHouse" class="form-control"></select>
+                        </div>
+                    </div>
+                    <div class="row mt-2">
+                        <div class="col-md-6 col-sm-12">
+                            <label id="Lblitem_Qty">Item Main Category</label>
+                            <select id="ddlitem_Qty" class="form-control" name="ddlitem_Qty"></select>
+                        </div>
+                        <div class="col-md-6 col-sm-12">
+                            <label id="Lblmanufacturer">Manufacturer</label>
+                            <select id="ddlmanu" class="form-control"></select>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Card 4: Dimensions, Stock & Remarks -->
+                <div class="pr-primary-settings">
+                    <h5 class="pr-section-title" style="margin-top:0;"><i class="fa fa-cube"></i> Dimensions, Stock & Remarks</h5>
+                    <div class="row">
+                        <div class="col-md-4 col-sm-12">
+                            <label id="LbllocatorAddress">Locator</label>
+                            <input type="text" class="form-control" id="txtlocatorAddress" name="locatorAddress" placeholder="Locator address" />
+                        </div>
+                        <div class="col-md-4 col-sm-12">
+                            <label id="LblLength">Length</label>
+                            <input type="text" class="form-control" id="txtLength" name="txtLength" placeholder="L" />
+                        </div>
+                        <div class="col-md-4 col-sm-12">
+                            <label id="Lblwidth">Width</label>
+                            <input type="text" class="form-control" id="txtwidth" name="txtwidth" placeholder="W" />
+                        </div>
+                    </div>
+                    <div class="row mt-2">
+                        <div class="col-md-4 col-sm-12">
+                            <label id="Lblheight">Height</label>
+                            <input type="text" class="form-control" id="txtheight" name="txtheight" placeholder="H" />
+                        </div>
+                        <div class="col-md-4 col-sm-12">
+                            <label>Minimum Stock</label>
+                            <input type="text" class="form-control" id="minimum_stock" name="minimum_stock" placeholder="0" />
+                        </div>
+                        <div class="col-md-4 col-sm-12">
+                            <label>Reorder Stock</label>
+                            <input type="text" class="form-control" id="Reorder_Stock" name="Reorder_Stock" placeholder="0" />
+                        </div>
+                    </div>
+                    <div class="row mt-2">
+                        <div class="col-md-4 col-sm-12">
+                            <label>Maximum Stock</label>
+                            <input type="text" class="form-control" id="Maximum_Stock" name="Maximum_Stock" placeholder="0" />
+                        </div>
+                        <div class="col-md-8 col-sm-12">
+                            <label id="Lblremarks">Remarks</label>
+                            <input type="text" class="form-control" id="txtremarks" name="txtremarks" placeholder="Any additional remarks" />
+                        </div>
+                    </div>
+                </div>
             </div>
         </div>
+
+        <div id="tabs" style="margin-top: 20px;">
+            <ul>
+                <li><a href="#Tab-Hospital"><i class="fa fa-hospital-o"></i> Hospital</a></li>
+                <li style="display:none;"><a href="#Tab-Pharmacy"><i class="fa fa-medkit"></i> Pharmacy</a></li>
+                <li style="display:none;"><a href="#Tab-ItemTags"><i class="fa fa-tags"></i> Item Tags</a></li>
+                <li><a href="#Tab-ProcedureExtras"><i class="fa fa-clock-o"></i> Procedure Extras</a></li>
+            </ul>
+
+            <!-- Tab: Hospital Settings -->
+            <div id="Tab-Hospital">
+                <div class="pr-tab-card">
+                    <div class="pr-tab-card-grid">
+                        <div class="pr-check-row">
+                            <input type="checkbox" id="chkIsHospital" name="chkIsHospital" />
+                            <label for="chkIsHospital">Is Hospital Required</label>
+                        </div>
+                        <div class="pr-check-row">
+                            <input type="checkbox" id="chkIsService" name="chkIsService" />
+                            <label for="chkIsService">Services Item</label>
+                        </div>
+                        <div class="pr-check-row">
+                            <input type="checkbox" id="chkIsPharmacyBilling" name="chkIsPharmacyBilling" />
+                            <label for="chkIsPharmacyBilling">Pharmacy Billing</label>
+                        </div>
+                        <div class="pr-check-row">
+                            <input type="checkbox" id="radio_charges" name="radio_charges" />
+                            <label for="radio_charges">Lab / Radiology Charges</label>
+                        </div>
+                        <div class="pr-check-row">
+                            <input type="checkbox" id="Dental_Item" name="Dental_Item" />
+                            <label for="Dental_Item">Dental Item</label>
+                        </div>
+                        <div class="pr-check-row">
+                            <input type="checkbox" id="ckhBedServices" name="ckhBedServices" />
+                            <label for="ckhBedServices">Bed Services</label>
+                        </div>
+                        <div class="pr-check-row">
+                            <input type="checkbox" id="chkOTProcedure" name="chkOTProcedure" />
+                            <label for="chkOTProcedure">OT Procedure</label>
+                        </div>
+                        <div class="pr-check-row">
+                            <input type="checkbox" id="chckfluid" name="chkIsfluid" />
+                            <label for="chckfluid">Infusion Fluid</label>
+                        </div>
+                        <div class="pr-check-row">
+                            <input type="checkbox" id="chkLabRequired" name="chkLabRequired" />
+                            <label for="chkLabRequired">Lab Required</label>
+                        </div>
+                        <div class="pr-check-row">
+                            <input type="checkbox" id="chkOtherServices" name="chkOtherServices" />
+                            <label for="chkOtherServices">Other Services</label>
+                        </div>
+                        <div class="pr-check-row">
+                            <input type="checkbox" id="chkLensRequired" name="chkLensRequired" />
+                            <label for="chkLensRequired">Lens Required</label>
+                        </div>
+                        <div class="pr-check-row">
+                            <input type="checkbox" id="chkFitnessCertificate" name="chkFitnessCertificate" />
+                            <label for="chkFitnessCertificate">Fitness Certificates</label>
+                        </div>
+                        <div class="pr-check-row">
+                            <input type="checkbox" id="chkPattHistorRequired" name="chkPattHistorRequired" />
+                            <label for="chkPattHistorRequired">Pat History Required</label>
+                        </div>
+                        <div class="pr-check-row">
+                            <input type="checkbox" id="chkBillingRequired" name="chkBillingRequired" />
+                            <label for="chkBillingRequired">Billing Required</label>
+                        </div>
+                    </div>
+                    <div class="pr-divider"></div>
+                    <div class="row pr-share-row">
+                        <div class="col-md-3 col-sm-12">
+                            <label id="Label1">D. Share</label>
+                            <input type="text" id="txtDocShare" name="txtDocShare" autocomplete="off" class="form-control" placeholder="0" />
+                        </div>
+                        <div class="col-md-3 col-sm-12">
+                            <label id="Label2">H. Share</label>
+                            <input type="text" id="txtHospitalShare" name="txtHospitalShare" autocomplete="off" class="form-control" placeholder="0" />
+                        </div>
+                        <div class="col-md-6 col-sm-12 pr-share-hint">
+                            <i class="fa fa-info-circle"></i>
+                            Doctor Share + Hospital Share must equal <strong>100</strong> when Service is enabled.
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Tab: Pharmacy -->
+            <div id="Tab-Pharmacy">
+                <div class="pr-tab-card">
+                    <div class="pr-tab-card-grid">
+                        <div class="pr-check-row">
+                            <input type="checkbox" id="PharmacyItem" name="PharmacyItem" />
+                            <label for="PharmacyItem">Pharmacy Item</label>
+                        </div>
+                        <div class="pr-check-row">
+                            <input type="checkbox" id="controller_drug" name="controller_drug" />
+                            <label for="controller_drug">Controller Drug</label>
+                        </div>
+                        <div class="pr-check-row">
+                            <input type="checkbox" id="Narcotics" name="Narcotics" />
+                            <label for="Narcotics">Narcotics</label>
+                        </div>
+                        <div class="pr-check-row">
+                            <input type="checkbox" id="Refregrator" name="Refregrator" />
+                            <label for="Refregrator">Refrigerator</label>
+                        </div>
+                    </div>
+                    <div class="pr-divider"></div>
+                    <div class="row pr-pharmacy-row">
+                        <div class="col-md-3 col-sm-12">
+                            <label>ATC</label>
+                            <input type="text" id="ATC" name="ATC" class="form-control" placeholder="ATC code" />
+                        </div>
+                        <div class="col-md-9 col-sm-12">
+                            <label>Generic Name</label>
+                            <input type="text" id="GenericName" name="GenericName" class="form-control" placeholder="Enter generic name" />
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Tab: Item Tags -->
+            <div id="Tab-ItemTags">
+                <div class="pr-tab-card">
+                    <div class="pr-tab-card-grid">
+                        <div class="pr-check-row">
+                            <input type="checkbox" id="Finished_Product" name="Finished_Product" />
+                            <label for="Finished_Product">Finished Product</label>
+                        </div>
+                        <div class="pr-check-row">
+                            <input type="checkbox" id="Consumable" name="Consumable" />
+                            <label for="Consumable">Consumable</label>
+                        </div>
+                        <div class="pr-check-row">
+                            <input type="checkbox" id="Saleable" name="Saleable" />
+                            <label for="Saleable">Saleable</label>
+                        </div>
+                        <div class="pr-check-row">
+                            <input type="checkbox" id="Purchaseable" name="Purchaseable" />
+                            <label for="Purchaseable">Purchaseable</label>
+                        </div>
+                        <div class="pr-check-row">
+                            <input type="checkbox" id="IsNonStockItem" name="IsNonStockItem" />
+                            <label for="IsNonStockItem">Non Stock Item</label>
+                        </div>
+                        <div class="pr-check-row">
+                            <input type="checkbox" id="Isfixasset" name="Isfixasset" />
+                            <label for="Isfixasset">Fix Asset</label>
+                        </div>
+                        <div class="pr-check-row">
+                            <input type="checkbox" id="Locator" name="Locator" />
+                            <label for="Locator">Locator</label>
+                        </div>
+                        <div class="pr-check-row">
+                            <input type="checkbox" id="IsBatch" name="IsBatch" />
+                            <label for="IsBatch">Batch</label>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Tab: Procedure Extras (Procedure flag + Procedure Time) -->
+            <div id="Tab-ProcedureExtras">
+                <div class="pr-tab-card">
+                    <div class="pr-tab-card-grid">
+                        <div class="pr-check-row">
+                            <input type="checkbox" id="Procedure" name="Procedure" onchange="ShowProcTime();" />
+                            <label for="Procedure">Procedure</label>
+                        </div>
+                        <div class="pr-check-row" id="lblProcedure_Time">
+                            <label for="Procedure_Time">Procedure Time</label>
+                            <input type="text" id="Procedure_Time" name="Procedure_Time" class="form-control" placeholder="e.g. 30 min" style="max-width:200px;" />
+                        </div>
+                    </div>
+                </div>
             </div>
         </div>
+    </form>
+
+    <div class="pr-action-buttons">
+        <div class="row">
+            <div class="col-lg-2 col-md-4 col-sm-12">
+                <input type="button" class="btn btn-primry w-100" value="Save" id="btnValue" onclick="Saveitem()" />
+            </div>
+            <div class="col-lg-2 col-md-4 col-sm-12">
+                <input type="button" class="btn btn-gray w-100" value="View" onclick="ListView()" />
+            </div>
+            <div class="col-lg-2 col-md-4 col-sm-12">
+                <input type="button" class="btn btn-yellow w-100" value="New" onclick="NewPage()" />
+            </div>
+        </div>
+    </div>
 
 </asp:Content>
