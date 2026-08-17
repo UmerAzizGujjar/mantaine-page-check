@@ -2,6 +2,66 @@
 
 <asp:Content ID="Content1" ContentPlaceHolderID="HeadContent" runat="server">
     <link href="../../wwwroot/THEME_TIBBIT/CustomCSS/tablestyle.css" rel="stylesheet" />
+    <style type="text/css">
+        .pharma-action-btn {
+            display: inline-block;
+            min-width: 28px;
+            height: 28px;
+            line-height: 28px;
+            padding: 0 8px;
+            margin: 0 2px;
+            border-radius: 4px;
+            color: #ffffff !important;
+            text-align: center;
+            vertical-align: middle;
+            font-size: 12px;
+            cursor: pointer;
+            text-decoration: none;
+            transition: all 0.15s ease;
+            box-shadow: 0 1px 2px rgba(0, 0, 0, 0.1);
+        }
+
+        .pharma-action-btn i {
+            color: #ffffff !important;
+            font-size: 12px;
+            line-height: 1;
+        }
+
+        .pharma-action-btn:hover {
+            text-decoration: none;
+            color: #ffffff !important;
+            transform: translateY(-1px);
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.18);
+        }
+
+        .pharma-btn-upload {
+            background-color: #2563EB;
+        }
+
+        .pharma-btn-upload:hover {
+            background-color: #1D4ED8;
+        }
+
+        .pharma-btn-print {
+            background-color: #10B981;
+        }
+
+        .pharma-btn-print:hover {
+            background-color: #059669;
+        }
+
+        .pharma-btn-voucher {
+            background-color: #F59E0B;
+        }
+
+        .pharma-btn-voucher:hover {
+            background-color: #D97706;
+        }
+
+        #tbl a.pharma-action-btn {
+            color: #ffffff !important;
+        }
+    </style>
     <script type="text/javascript">
 
         $(document).ready(function () {
@@ -9,6 +69,16 @@
             LoadWarehouseDropdown();
             LoadPage();
 
+            $(document).on('change', '#header-check', function () {
+                var isChecked = $(this).prop('checked');
+                $('#tbl tbody .issue-checkbox:not(:disabled)').prop('checked', isChecked);
+            });
+
+            $(document).on('change', '.issue-checkbox', function () {
+                var totalCheckboxes = $('#tbl tbody .issue-checkbox:not(:disabled)').length;
+                var checkedCheckboxes = $('#tbl tbody .issue-checkbox:checked:not(:disabled)').length;
+                $('#header-check').prop('checked', totalCheckboxes > 0 && totalCheckboxes === checkedCheckboxes);
+            });
         });
         function LoadWarehouseDropdown() {
             $.ajax({
@@ -105,6 +175,116 @@
                             window.location = 'IssueMedicine.aspx';
                         }
                     },
+                    {
+                        text: '<i class="fa fa-check"></i> Approve Selected',
+                        className: 'dt-button buttons-copy buttons-html5',
+                        action: function () {
+                            var selectedIds = [];
+                            $('#tbl tbody .issue-checkbox:checked:not(:disabled)').each(function () {
+                                selectedIds.push($(this).val());
+                            });
+
+                            if (selectedIds.length === 0) {
+                                Swal.fire({
+                                    icon: 'warning',
+                                    title: 'No Selection',
+                                    text: 'Please select at least one record to approve (only Created records can be approved).',
+                                    confirmButtonColor: '#3085d6'
+                                });
+                                return;
+                            }
+
+                            Swal.fire({
+                                title: 'Confirm Approval',
+                                text: 'Are you sure you want to approve ' + selectedIds.length + ' record(s)?',
+                                icon: 'question',
+                                showCancelButton: true,
+                                confirmButtonColor: '#28a745',
+                                cancelButtonColor: '#d33',
+                                confirmButtonText: 'Yes, Approve!',
+                                cancelButtonText: 'Cancel'
+                            }).then((result) => {
+                                if (result.isConfirmed) {
+                                    Swal.fire({
+                                        title: 'Processing...',
+                                        text: 'Please wait',
+                                        allowOutsideClick: false,
+                                        showConfirmButton: false,
+                                        didOpen: () => { Swal.showLoading(); }
+                                    });
+
+                                    var successCount = 0;
+                                    var failedCount = 0;
+                                    var processed = 0;
+                                    var failedDetails = [];
+
+                                    selectedIds.forEach(function (billId) {
+                                        $.ajax({
+                                            type: "POST",
+                                            url: "IssueMedicine.aspx/ApprovePhramcy",
+                                            data: JSON.stringify({ billid: billId }),
+                                            contentType: "application/json; charset=utf-8",
+                                            dataType: "json",
+                                            success: function (response) {
+                                                processed++;
+                                                try {
+                                                    var resultData = JSON.parse(response);
+                                                    if (resultData && resultData.length > 0) {
+                                                        var first = resultData[0];
+                                                        if (first.Approved === true || first.approved === true || first.IsApproved === true) {
+                                                            successCount++;
+                                                        } else {
+                                                            failedCount++;
+                                                            failedDetails.push('Bill #' + billId + ': ' + (first.Message || first.message || 'Unknown response'));
+                                                        }
+                                                    } else {
+                                                        successCount++;
+                                                    }
+                                                } catch (e) {
+                                                    successCount++;
+                                                }
+                                                finalizeApproval();
+                                            },
+                                            error: function (xhr, status, error) {
+                                                processed++;
+                                                failedCount++;
+                                                var errMsg = xhr.responseText || error || 'Unknown error';
+                                                failedDetails.push('Bill #' + billId + ': ' + errMsg);
+                                                finalizeApproval();
+                                            }
+                                        });
+                                    });
+
+                                    function finalizeApproval() {
+                                        if (processed === selectedIds.length) {
+                                            var html = '<div style="text-align: left;">' +
+                                                '<p><strong>Total Selected:</strong> ' + selectedIds.length + '</p>' +
+                                                '<p style="color: green;"><strong>Approved:</strong> ' + successCount + '</p>' +
+                                                '<p style="color: red;"><strong>Failed:</strong> ' + failedCount + '</p>';
+                                            if (failedDetails.length > 0) {
+                                                html += '<hr><div style="max-height: 150px; overflow-y: auto; font-size: 12px;">';
+                                                for (var i = 0; i < failedDetails.length; i++) {
+                                                    html += '<p style="color: red;">' + failedDetails[i] + '</p>';
+                                                }
+                                                html += '</div>';
+                                            }
+                                            html += '</div>';
+
+                                            Swal.fire({
+                                                icon: successCount > 0 ? 'success' : 'error',
+                                                title: 'Approval Complete',
+                                                html: html,
+                                                confirmButtonColor: '#28a745'
+                                            }).then(() => {
+                                                $('#tbl').DataTable().ajax.reload();
+                                                $('#header-check').prop('checked', false);
+                                            });
+                                        }
+                                    }
+                                }
+                            });
+                        }
+                    },
                     'copy',
                     'excel',
                     'pdf',
@@ -146,7 +326,21 @@
                     });
                 },
                 "columns": [
-                    { "data": "Bill_ID", "visible": false, "width": "0%" },                                                        
+                    {
+                        "data": null,
+                        "width": "5%",
+                        "orderable": false,
+                        "render": function (data, type, full) {
+                            if (full.Status === "Approved") {
+                                return '<input type="checkbox" class="issue-checkbox" disabled />';
+                            }
+                            return '<input type="checkbox" class="issue-checkbox" value="' + full.Bill_ID + '" />';
+                        },
+                        "createdCell": function (td, cellData, rowData, row, col) {
+                            $(td).css('text-align', 'center');
+                        }
+                    },
+                    { "data": "Bill_ID", "visible": false, "width": "0%" },
                     {
                         "data": "Invoice_Date", "name": "Invoice_Date",
                         "render": function (data, type, full) {
@@ -179,16 +373,28 @@
                     { "data": "Balance_Amount", "width": "6%", "orderable": false },
                     { "data": "WareHouse", "width": "9%", "orderable": false },
                     {
+                        "data": "Status",
+                        "width": "8%",
+                        "orderable": true,
+                        "render": function (data) {
+                            if (data === "Approved") {
+                                return '<span style="background-color: #28a745; padding: 4px 8px; border-radius: 4px; color: white; font-size: 11px; font-weight: bold;">Approved</span>';
+                            } else {
+                                return '<span style="background-color: #ffc107; padding: 4px 8px; border-radius: 4px; color: #333; font-size: 11px; font-weight: bold;">Created</span>';
+                            }
+                        }
+                    },
+                    {
                         render: function (data, type, full) {
                             debugger;
-                            var res = '<a href="#" class="editListBtn" onclick="PrintInvoice(' + full.Bill_ID + ')" style="border-radius: 4px;  color: white; padding: 5px 8px 5px 8px;"><i class="fa fa-upload"></i></a>'
+                            var res = '<a href="#" class="pharma-action-btn pharma-btn-upload" onclick="PrintInvoice(' + full.Bill_ID + ')" title="Upload Slip"><i class="fa fa-upload"></i></a>';
 
-                            var print = '<a class="printListBtn" style="border-radius: 4px;margin-left: 4px;color: white;padding: 5px 8px 5px 8px;" href="#" onclick="PrintBill(' + full.Bill_ID + ')" id="btnprint"><i class="fa fa-print" ></i></a>';
-                            var voucher = '<a class="printListBtn" style="border-radius: 4px;margin-left: 4px;color: white;padding: 5px 8px 5px 8px;" href="#" onclick="PrintVoucher(' + full.Bill_ID + ')" id="btnvoucherprint"><i class="fa fa-print" ></i></a>';
+                            var print = '<a class="pharma-action-btn pharma-btn-print" href="#" onclick="PrintBill(' + full.Bill_ID + ')" id="btnprint" title="Print Bill"><i class="fa fa-print"></i></a>';
+                            var voucher = '<a class="pharma-action-btn pharma-btn-voucher" href="#" onclick="PrintVoucher(' + full.Bill_ID + ')" id="btnvoucherprint" title="Print Voucher"><i class="fa fa-file-text-o"></i></a>';
                             var result;
                             result = res + print + voucher;
                             return result;
-                        }, "width": "17%", "orderable": false
+                        }, "width": "13%", "orderable": false
                     }
                 ],
                 "initComplete": function (settings, json) {
@@ -260,12 +466,13 @@
             <table id="tbl" class="table table-bordered table-hover table-striped">
                 <thead id="ihead">
                     <tr>
+                        <th style="text-align:center;"><input type="checkbox" id="header-check" /></th>
                         <th style="display:none;">Bill_ID</th>
                         <th>Invoice Date</th>
                         <th>Inv No</th>
                         <th>FBR Number</th>
                         <th>Walking Customer</th>
-                        <th>MrNo.</th>                      
+                        <th>MrNo.</th>
                         <th>ReferBy</th>
                         <th>Main Department</th>
                         <th>Patient Type</th>
@@ -274,7 +481,8 @@
                         <th>Received Amount</th>
                         <th>Balance Amount</th>
                         <th>Ware House</th>
-                        <th>View</th>                      
+                        <th>Status</th>
+                        <th>View</th>
                     </tr>
                 </thead>
                 <tbody id="tbody">
