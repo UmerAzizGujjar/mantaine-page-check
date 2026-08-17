@@ -2934,6 +2934,25 @@ namespace PMS
                     ddlDepartments.Items.Clear();
                     ddlDepartments.Items.Add(new ListItem("Please Select", "0"));
                     ddlDepartments.DataBind();
+
+
+                    object valuset;
+                    valuset = DBClass.GetValueSet("Ware house");
+                    ddlwareHouse.DataSource = valuset;
+                    ddlwareHouse.DataTextField = "DataValue_Description";
+                    ddlwareHouse.DataValueField = "DataValue_Name";
+                    ddlwareHouse.Items.Clear();
+                    ddlwareHouse.Items.Add(new ListItem() { Text = "All", Value = "0" });
+                    ddlwareHouse.DataBind();
+                    Stock_Movement.Visible = true;
+
+
+                    ddlwareHouse.Visible = true;
+                    lblWarehouse.Visible = true;
+
+                    lbItemCategory.Visible = false;
+                    ddlItemCategory.Visible = false;
+
                 }
                 else if (this.PageTitle == "Vendor_Wise_Payment_Summary")
                 {
