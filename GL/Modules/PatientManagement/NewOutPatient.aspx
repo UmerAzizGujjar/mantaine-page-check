@@ -2951,7 +2951,7 @@ function LoadLabResultrpt() {
                         '</label>' +
                         '</div>' +
                         '<button type="button" class="Medicene-dropdown-btn" ' +
-                        'onclick="event.stopPropagation(); ShowMediceneDetails(\'' + value.Item_Code + '\', \'' + value.Description.replace(/'/g, "\\'") + '\')" ' +
+                        'onclick="event.stopPropagation(); ShowMediceneDetails(\'' + value.Item_Code + '\', \'' + value.Description.replace(/'/g, "\\'") + '\', false, {}, 0, this)" ' +
                         'style="background: none; border: none; cursor: pointer; padding: 2px 8px; margin-left: 8px;">' +
                         '<i class="fa fa-chevron-down" style="font-size: 12px; color: #888;"></i>' +
                         '</button>' +
@@ -2999,7 +2999,7 @@ function LoadLabResultrpt() {
                                     stockText +
                                     '</span>' +
                                     '<button type="button" class="Medicene-dropdown-btn" ' +
-                                    'onclick="event.stopPropagation(); ShowMediceneDetails(\'' + value.Item_Code + '\', \'' + value.Description.replace(/'/g, "\\'") + '\', false, {}, ' + (value.TotalStock || 0) + ')" ' +
+                                    'onclick="event.stopPropagation(); ShowMediceneDetails(\'' + value.Item_Code + '\', \'' + value.Description.replace(/'/g, "\\'") + '\', false, {}, ' + (value.TotalStock || 0) + ', this)" ' +
                                     'style="background: none; border: none; cursor: pointer; padding: 2px 8px; margin-left: 8px;">' +
                                     '<i class="fa fa-chevron-down" style="font-size: 12px; color: #888;"></i>' +
                                     '</button>' +
@@ -3041,15 +3041,21 @@ function LoadLabResultrpt() {
             else if (prefix) prefix.selected = true;
             return !!(exact || prefix);
         }
-        function ShowMediceneDetails(serialNo, testName, isEditMode = false, existingValues = {}, totalStock = 0) {
+        function ShowMediceneDetails(serialNo, testName, isEditMode = false, existingValues = {}, totalStock = 0, clickedEl) {
             $('#11').click();
             const $row = $(`#Medicenechk_${serialNo}`).closest('.Medicene-row');
             const $detailsDiv = $(`#MediceneDetails_${serialNo}`);
             const $checkbox = $(`#Medicenechk_${serialNo}`);
-            const $icon = $(this).find('i');
+            const $icon = clickedEl ? $(clickedEl).closest('.Medicene-dropdown-btn').find('i') : $();
 
             // If this panel is already open, do nothing (no toggle close).
-            if ($detailsDiv.length) return;
+            if ($detailsDiv.length) {
+                $detailsDiv.slideUp(300, function () {
+                    $(this).remove();
+                    $icon.removeClass('fa-chevron-up').addClass('fa-chevron-down');
+                });
+                return;
+            }
 
             // Remove all other details divs first
             $('.Medicene-details').each(function () {
