@@ -158,7 +158,7 @@ namespace PMS.AP
                 bool allowPharmacy = userPermissions?.AllowPharmacy ?? false;
                 bool allowGeneralItem = userPermissions?.AllowGeneralItems ?? false;
 
-                var itemDetail = db.spGetAllitemsDetails(searchText, allowPharmacy, allowGeneralItem,Convert.ToInt32(warehouse)).ToList();
+                var itemDetail = db.spGetAllitemsDetails(searchText, allowPharmacy, allowGeneralItem,warehouse).ToList();
                 return (new JavaScriptSerializer()).Serialize(itemDetail);
             }
         }
