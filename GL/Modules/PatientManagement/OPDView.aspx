@@ -186,6 +186,7 @@
                 "columns": [
                     { "data": null, "width": "3%", "orderable": false, "render": (data, type, full, meta) => meta.settings._iDisplayStart + meta.row + 1 },
                     { "data": "Patient_ID", "visible": false, "width": "0%", "orderable": false },
+                    { "data": "isCancel", "visible": false, "orderable": false, "width": "0%" },
                     { "data": "mr_no_sequence", "name": "mr_no_sequence", "width": "7%", "orderable": true },
                     { "data": "Opd_No", "name": "Opd_No", "width": "5%", "orderable": false },
                     { "data": "Token_No", "name": "Token_No", "width": "5%", "orderable": false },
@@ -204,6 +205,9 @@
                     },
                     {
                         "render": (data, type, full) => {
+                            if (full.isCancel === true) {
+                                return '<span style="color:#721c24; font-weight:bold;">Cancelled</span>';
+                            }
                             let res = `<a href="#" onclick="editOpen(${full.Patient_ID})" class="editListBtn" style="border-radius: 4px;padding: 5px 8px;"><i class="fa fa-pencil"></i></a>`;
                             let Del = `<a class="delListBtn" style="border-radius: 4px;margin-left: 4px;color: white;padding: 5px 8px;" href="#" onclick="cancelPatient(${full.Patient_ID}, '${full.Full_Name.replace(/'/g, "\\'")}')"><i class="fa fa-trash"></i></a>`;
                             let print = `<a class="printListBtn" style="border-radius: 4px;margin-left: 4px;color: white;padding: 5px 8px;" href="#" onclick="Print(${full.Patient_ID})"><i class="fa fa-print"></i></a>`;
@@ -214,6 +218,15 @@
                         "orderable": false
                     }
                 ],
+                "createdRow": function (row, data, dataIndex) {
+                    $(row).addClass('clickable-row');
+                    $(row).attr('data-patient-id', data.Patient_ID);
+                    if (data.isCancel === true) {
+                        $(row).attr('data-cancelled', '1');
+                        $(row).css('background-color', '#f8d7da');
+                        $(row).find('td').css('color', '#721c24');
+                    }
+                },
                 "initComplete": function (settings, json) {
                     const api = this.api();
                     if (savedVisibility && Array.isArray(savedVisibility)) {
@@ -271,6 +284,7 @@
                     <tr>
                         <th style="width:2% !important;">Sr#</th>                
                         <th style="display: none;">Patient ID</th>    
+                        <th style="display: none;">Is Cancel</th>
                         <th style="width: 8%;">MR No.</th>
                         <th style="width: 5%;">OPD</th>
                         <th style="width: 5%;">Token No</th>

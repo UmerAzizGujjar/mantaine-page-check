@@ -1836,7 +1836,7 @@ namespace PMS
                 var inpatid = DBClass.getField("select In_Patient_ID from AR_Advances where Patient_ID=" + PatientID + "order by Advance_ID desc");
                 if(inpatid != "There is no row at position 0.")
                 {
-                    pt.AdvanceAmount = DBClass.getField("select sum(Advance_Amount) from AR_Advances where In_Patient_ID=" + inpatid);
+                    pt.AdvanceAmount = DBClass.getField("select sum(Advance_Amount) from AR_Advances where In_Patient_ID=" + inpatid + " AND (isCancelled = 0 OR isCancelled IS NULL)");
                 }
                 return pt;
             }

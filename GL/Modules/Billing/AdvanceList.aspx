@@ -34,8 +34,7 @@
                 PageMethods.DeleteRecord(advid, function (msg) {
                     debugger;
                     if (msg == true) {
-                        GetAdvanceDetail();
-                        location.reload(); 
+                        $('#tblAdvanceView').DataTable().ajax.reload();
                     } else {
                         alert(msg);
                     }
@@ -195,7 +194,8 @@
                             length: data.length,
                             sortColumn: data.columns[data.order[0].column].name,
                             sortColumnDirection: data.order[0].dir,
-                            searchValue: data.search.value
+                            searchValue: data.search.value,
+                            patientStatusFilter: $('#ddlPatientStatusFilter').val() || 'all'
                         }),
                         contentType: "application/json; charset=utf-8",
                         dataType: "json",
@@ -227,6 +227,7 @@
                         }
                     },
                     { "data": "Advance_ID", "visible": false, "width": "0%" },
+                    { "data": "isCancelled", "visible": false, "orderable": false, "width": "0%" },
                     { "data": "MrNo", "name": "MrNo", "width": "10%", "orderable": true },
                     {
                         "data": "Advance_Date", "name": "Advance_Date",
@@ -250,20 +251,41 @@
                         }
                     },
                     {
+                        "data": "PatientStatus", "name": "PatientStatus", "width": "10%", "orderable": true,
+                        "render": function (data) {
+                            if (data === "Discharge") {
+                                return '<span style="color: #dc3545; font-weight: bold;">Discharge</span>';
+                            }
+                            return '<span style="color: #28a745; font-weight: bold;">Admit</span>';
+                        }
+                    },
+                    {
                         render: function (data, type, full) {
+                            if (full.isCancelled === true) {
+                                return '<span style="color:#721c24; font-weight:bold;">Cancelled</span>';
+                            }
                             var res = '<a href="#" class="editListBtn" onclick="EditAdvance(' + full.Advance_ID + ')" style="border-radius: 4px;color: white; padding: 5px 8px 5px 8px; background-color: #007bff;"><i class="fa fa-pencil"></i></a>';
                             var Del = '<a class="delListBtn" href="#" style="border-radius: 4px;margin-left: 4px;padding: 5px 8px 5px 8px; background-color: #dc3545; color: white;" onclick="DeleteAdv(' + full.Advance_ID + ')"><i class="fa fa-trash" aria-hidden="true"></i></a>';
-                            
+
                             // Only show print button if Status is Approved
                             var print = '';
                             if (full.Status === 'Approved') {
                                 print = '<a class="printListBtn" style="border-radius: 4px;margin-left: 4px;color: white;padding: 5px 8px 5px 8px; background-color: #17a2b8;" href="#" onclick="PrintReport(' + full.Advance_ID + ')" id="btnprint"><i class="fa fa-print" ></i></a>';
                             }
-                            
+
                             return res + Del + print;
                         }, "width": "10%", "orderable": false
                     }
                 ],
+                "createdRow": function (row, data, dataIndex) {
+                    $(row).addClass('clickable-row');
+                    $(row).attr('data-advance-id', data.Advance_ID);
+                    if (data.isCancelled === true) {
+                        $(row).attr('data-cancelled', '1');
+                        $(row).css('background-color', '#f8d7da');
+                        $(row).find('td').css('color', '#721c24');
+                    }
+                },
                 "initComplete": function (settings, json) {
                     const api = this.api();
                     
@@ -324,23 +346,42 @@
                     }
                 }
             });
+
+            $('#ddlPatientStatusFilter').select2({
+                width: '180px',
+                placeholder: 'Select status'
+            });
+
+            $('#ddlPatientStatusFilter').on('change', function () {
+                $('#tblAdvanceView').DataTable().ajax.reload();
+            });
         }
     </script>
 </asp:Content>
 
 <asp:Content ID="Content2" ContentPlaceHolderID="MainContent" runat="server">
     <div>
+        <div class="col-lg-2" style="margin-bottom: 10px;">
+            <label style="margin-right: 8px; font-weight: 600;">Patient Status:</label>
+            <select id="ddlPatientStatusFilter" style="width: 180px;">
+                <option value="all">All</option>
+                <option value="admit">Admit</option>
+                <option value="discharge">Discharge</option>
+            </select>
+        </div>
         <table id="tblAdvanceView" class="table table-hover table-striped table-bordered">
             <thead>
                 <tr>
                      <th style="width:5%"><input type="checkbox" id="chkSelectAllHeader" /></th>
                      <th style="display:none">Advance_ID</th>
+                     <th style="display:none">Is Cancel</th>
                      <th>Mr No#</th>
                      <th>Advance Date</th>
                      <th>Advance Amount</th>
                      <th>Remarks</th>
                      <th>Status</th>
-                     <th>Action</th>                    
+                     <th>Patient Status</th>
+                     <th>Action</th>
                   </tr>
                 </thead>
                 <tbody>

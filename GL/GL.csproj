@@ -1528,6 +1528,7 @@
     <Content Include="wwwroot\THEME_DEMO\CustomCSS\toggle.css" />
     <Content Include="wwwroot\THEME_DEMO\CustomCSS\Userview.css" />
     <Content Include="wwwroot\THEME_DEMO\CustomCSS\vendor.css" />
+    <Content Include="wwwroot\THEME_DEMO\CustomCSS\Service.css" />
     <Content Include="wwwroot\THEME_DEMO\CustomCSS\voucher.css" />
     <Content Include="wwwroot\THEME_DEMO\CustomJs\Appointment.js" />
     <Content Include="wwwroot\THEME_DEMO\CustomJs\EMR.js" />
@@ -1632,6 +1633,7 @@
     <Content Include="wwwroot\THEME_KALEEM\CustomCSS\toggle.css" />
     <Content Include="wwwroot\THEME_KALEEM\CustomCSS\Userview.css" />
     <Content Include="wwwroot\THEME_KALEEM\CustomCSS\vendor.css" />
+    <Content Include="wwwroot\THEME_KALEEM\CustomCSS\Service.css" />
     <Content Include="wwwroot\THEME_KALEEM\CustomCSS\voucher.css" />
     <Content Include="wwwroot\THEME_KALEEM\CustomJs\Appointment.js" />
     <Content Include="wwwroot\THEME_KALEEM\CustomJs\EMR.js" />
@@ -1737,6 +1739,7 @@
     <Content Include="wwwroot\THEME_CPTH\CustomCSS\toggle.css" />
     <Content Include="wwwroot\THEME_CPTH\CustomCSS\Userview.css" />
     <Content Include="wwwroot\THEME_CPTH\CustomCSS\vendor.css" />
+    <Content Include="wwwroot\THEME_CPTH\CustomCSS\Service.css" />
     <Content Include="wwwroot\THEME_CPTH\CustomCSS\voucher.css" />
     <Content Include="wwwroot\THEME_CPTH\CustomJs\Appointment.js" />
     <Content Include="wwwroot\THEME_CPTH\CustomJs\EMR.js" />
@@ -1834,6 +1837,7 @@
     <Content Include="wwwroot\THEME_SKINSTUDIO\CustomCSS\toggle.css" />
     <Content Include="wwwroot\THEME_SKINSTUDIO\CustomCSS\Userview.css" />
     <Content Include="wwwroot\THEME_SKINSTUDIO\CustomCSS\vendor.css" />
+    <Content Include="wwwroot\THEME_SKINSTUDIO\CustomCSS\Service.css" />
     <Content Include="wwwroot\THEME_SKINSTUDIO\CustomCSS\voucher.css" />
     <Content Include="wwwroot\THEME_SKINSTUDIO\CustomJs\Appointment.js" />
     <Content Include="wwwroot\THEME_SKINSTUDIO\CustomJs\EMR.js" />
@@ -1945,6 +1949,7 @@
     <Content Include="wwwroot\THEME_NHMC\CustomCSS\toggle.css" />
     <Content Include="wwwroot\THEME_NHMC\CustomCSS\Userview.css" />
     <Content Include="wwwroot\THEME_NHMC\CustomCSS\vendor.css" />
+    <Content Include="wwwroot\THEME_NHMC\CustomCSS\Service.css" />
     <Content Include="wwwroot\THEME_NHMC\CustomCSS\voucher.css" />
     <Content Include="wwwroot\THEME_NHMC\CustomJs\Appointment.js" />
     <Content Include="wwwroot\THEME_NHMC\CustomJs\EMR.js" />
@@ -2041,6 +2046,7 @@
     <Content Include="wwwroot\THEME_ASSIRAAT\CustomCSS\toggle.css" />
     <Content Include="wwwroot\THEME_ASSIRAAT\CustomCSS\Userview.css" />
     <Content Include="wwwroot\THEME_ASSIRAAT\CustomCSS\vendor.css" />
+    <Content Include="wwwroot\THEME_ASSIRAAT\CustomCSS\Service.css" />
     <Content Include="wwwroot\THEME_ASSIRAAT\CustomCSS\voucher.css" />
     <Content Include="wwwroot\THEME_ASSIRAAT\CustomJs\Appointment.js" />
     <Content Include="wwwroot\THEME_ASSIRAAT\CustomJs\EMR.js" />
@@ -2138,6 +2144,7 @@
     <Content Include="wwwroot\THEME_IITH\CustomCSS\toggle.css" />
     <Content Include="wwwroot\THEME_IITH\CustomCSS\Userview.css" />
     <Content Include="wwwroot\THEME_IITH\CustomCSS\vendor.css" />
+    <Content Include="wwwroot\THEME_IITH\CustomCSS\Service.css" />
     <Content Include="wwwroot\THEME_IITH\CustomCSS\voucher.css" />
     <Content Include="wwwroot\THEME_IITH\CustomJs\Appointment.js" />
     <Content Include="wwwroot\THEME_IITH\CustomJs\EMR.js" />
@@ -2234,6 +2241,7 @@
     <Content Include="wwwroot\THEME_KHURSHID\CustomCSS\toggle.css" />
     <Content Include="wwwroot\THEME_KHURSHID\CustomCSS\Userview.css" />
     <Content Include="wwwroot\THEME_KHURSHID\CustomCSS\vendor.css" />
+    <Content Include="wwwroot\THEME_KHURSHID\CustomCSS\Service.css" />
     <Content Include="wwwroot\THEME_KHURSHID\CustomCSS\voucher.css" />
     <Content Include="wwwroot\THEME_KHURSHID\CustomJs\Appointment.js" />
     <Content Include="wwwroot\THEME_KHURSHID\CustomJs\EMR.js" />
@@ -2329,6 +2337,7 @@
     <Content Include="wwwroot\THEME_NOOR\CustomCSS\toggle.css" />
     <Content Include="wwwroot\THEME_NOOR\CustomCSS\Userview.css" />
     <Content Include="wwwroot\THEME_NOOR\CustomCSS\vendor.css" />
+    <Content Include="wwwroot\THEME_NOOR\CustomCSS\Service.css" />
     <Content Include="wwwroot\THEME_NOOR\CustomCSS\voucher.css" />
     <Content Include="wwwroot\THEME_NOOR\CustomJs\Appointment.js" />
     <Content Include="wwwroot\THEME_NOOR\CustomJs\EMR.js" />
@@ -2424,6 +2433,7 @@
     <Content Include="wwwroot\THEME_PAKRED\CustomCSS\toggle.css" />
     <Content Include="wwwroot\THEME_PAKRED\CustomCSS\Userview.css" />
     <Content Include="wwwroot\THEME_PAKRED\CustomCSS\vendor.css" />
+    <Content Include="wwwroot\THEME_PAKRED\CustomCSS\Service.css" />
     <Content Include="wwwroot\THEME_PAKRED\CustomCSS\voucher.css" />
     <Content Include="wwwroot\THEME_PAKRED\CustomJs\Appointment.js" />
     <Content Include="wwwroot\THEME_PAKRED\CustomJs\EMR.js" />
@@ -2520,6 +2530,7 @@
     <Content Include="wwwroot\THEME_STANDARD\CustomCSS\toggle.css" />
     <Content Include="wwwroot\THEME_STANDARD\CustomCSS\Userview.css" />
     <Content Include="wwwroot\THEME_STANDARD\CustomCSS\vendor.css" />
+    <Content Include="wwwroot\THEME_STANDARD\CustomCSS\Service.css" />
     <Content Include="wwwroot\THEME_STANDARD\CustomCSS\voucher.css" />
     <Content Include="wwwroot\THEME_STANDARD\CustomJs\Appointment.js" />
     <Content Include="wwwroot\THEME_STANDARD\CustomJs\EMR.js" />
@@ -2618,6 +2629,7 @@
     <Content Include="wwwroot\THEME_TIBBIT\CustomCSS\toggle.css" />
     <Content Include="wwwroot\THEME_TIBBIT\CustomCSS\Userview.css" />
     <Content Include="wwwroot\THEME_TIBBIT\CustomCSS\vendor.css" />
+    <Content Include="wwwroot\THEME_TIBBIT\CustomCSS\Service.css" />
     <Content Include="wwwroot\THEME_TIBBIT\CustomCSS\voucher.css" />
     <Content Include="wwwroot\THEME_TIBBIT\CustomJs\Appointment.js" />
     <Content Include="wwwroot\THEME_TIBBIT\CustomJs\EMR.js" />

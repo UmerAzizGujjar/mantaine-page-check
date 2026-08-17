@@ -206,6 +206,7 @@
                             }
                         },
                         { "data": "Refund_ID", "visible": false, "width": "0%" },
+                        { "data": "isCancelled", "visible": false, "orderable": false, "width": "0%" },
                         { "data": "Bill_ID", "name": "Bill_ID", "width": "8%", "orderable": true },
                         { "data": "Bill_No", "width": "8%", "orderable": false },
                         {
@@ -239,6 +240,9 @@
                         },
                         {
                             render: function (data, type, full) {
+                                if (full.isCancelled === true) {
+                                    return '<span style="color:#721c24; font-weight:bold;">Cancelled</span>';
+                                }
                                 // Only show Edit button if status is not Approved
                                 var editBtn = '';
                                 var Del = '';
@@ -257,9 +261,18 @@
                             },
                             "width": "15%",
                             "orderable": false
-                        }
-                    ],
-                    "initComplete": function (settings, json) {
+                    }
+                ],
+                "createdRow": function (row, data, dataIndex) {
+                    $(row).addClass('clickable-row');
+                    $(row).attr('data-refund-id', data.Refund_ID);
+                    if (data.isCancelled === true) {
+                        $(row).attr('data-cancelled', '1');
+                        $(row).css('background-color', '#f8d7da');
+                        $(row).find('td').css('color', '#721c24');
+                    }
+                },
+                "initComplete": function (settings, json) {
                         const api = this.api();
                         if (savedVisibility && Array.isArray(savedVisibility)) {
                             if (savedVisibility.length === api.columns().count()) {
@@ -365,6 +378,7 @@
         <tr>
             <th style="text-align:center;"><input type="checkbox" id="header-check" /></th>
             <th>Refund_ID</th>
+            <th style="display:none">Is Cancel</th>
             <th>Bill_ID</th>
             <th>Bill No</th>
             <th>Refund_Date</th>

@@ -97,6 +97,7 @@
                 },
                 "columns": [
                     { "data": "Emergency_ID", "name": "Emergency_ID", "width": "0%", "visible": false },
+                    { "data": "isCancelled", "visible": false, "orderable": false, "width": "0%" },
                     { "data": "mr_no_sequence", "name": "mr_no_sequence", "width": "7%" },
                     { "data": "Full_Name", "width": "8%", "orderable": false },
                     { "data": "Father_Name", "width": "8%", "orderable": false },
@@ -157,6 +158,9 @@
                     },
                     {
                         render: function (data, type, full) {
+                            if (full.isCancelled === true) {
+                                return '<span style="color:#721c24; font-weight:bold;">Cancelled</span>';
+                            }
                             var res = '<a href="#" onclick="editOpen(' + full.Emergency_ID + ')" class="editListBtn" style="border-radius: 4px; color: white; padding: 5px 8px 5px 8px;"><i class="fa fa-pencil"></i></a>';
                             var Del = '<a class="delListBtn" href="#" style="border-radius: 4px;margin-left: 4px; color: white; padding: 5px 8px 5px 8px;" onclick=deleteConfirm(this)><i class="fa fa-trash" aria-hidden="true"></i></a>';
                             var print = '<a class="printListBtn" style="border-radius: 4px;margin-left: 4px;color: white;padding: 5px 8px 5px 8px;" href="#" onclick="PrintEmergencyPatient(' + full.Emergency_ID + ')" id="btnprint"><i class="fa fa-print"></i></a>';
@@ -171,7 +175,13 @@
                     }
                 ],
                 "createdRow": function (row, data, dataIndex) {
-                    if (data.AdmitDays >= 1 && (data.Discharge_ON == null || data.Discharge_ON === "")) {
+                    if (data.isCancelled === true) {
+                        $(row).css({
+                            "background-color": "#f8d7da",
+                            "color": "#721c24",
+                            "font-weight": "bold"
+                        });
+                    } else if (data.AdmitDays >= 1 && (data.Discharge_ON == null || data.Discharge_ON === "")) {
                         $(row).css({
                             "background-color": "#f8d7da",
                             "font-weight": "bold"
@@ -269,10 +279,11 @@
                 <div id="POdetails" style="margin-top: 15px;">
                     <div>
                         <table class="table table-hover table-striped table-bordered" id="tblResult" style="overflow: scroll; height: auto;">
-                           <thead id="ihead">
-                                <tr>
-                                    <th>Emergency ID</th>
-                                    <th>MR No.</th>
+                            <thead id="ihead">
+                                 <tr>
+                                     <th style="display:none;">Emergency ID</th>
+                                     <th style="display:none;">Is Cancel</th>
+                                     <th>MR No.</th>
                                     <th>Patient Name</th>
                                     <th>Father/Husband Name</th>
                                     <th>Admission Date</th>

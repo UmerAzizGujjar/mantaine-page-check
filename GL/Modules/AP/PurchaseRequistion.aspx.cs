@@ -158,7 +158,7 @@ namespace PMS.AP
                 bool allowPharmacy = userPermissions?.AllowPharmacy ?? false;
                 bool allowGeneralItem = userPermissions?.AllowGeneralItems ?? false;
 
-                var itemDetail = db.spGetAllitemsDetails(searchText, allowPharmacy, allowGeneralItem,Convert.ToInt32(warehouse)).ToList();
+                var itemDetail = db.spGetAllitemsDetails(searchText, allowPharmacy, allowGeneralItem,warehouse).ToList();
                 return (new JavaScriptSerializer()).Serialize(itemDetail);
             }
         }
@@ -399,6 +399,10 @@ namespace PMS.AP
             {
                 using (DataBaseDataContext db = new DataBaseDataContext())
                 {
+                        var prWarehouse = db.Purchase_Requisitions
+                       .Where(p => p.PR_Id == ID)
+                       .Select(p => p.Warehouse) 
+                       .FirstOrDefault();
                     var transDate = db.Purchase_Requisitions.Where(p => p.PR_Id == ID).Select(p => p.PR_Date).FirstOrDefault();
                     listItems = (from data in db.Purchase_Requisition_Details
                                  join inv in db.INV_Items
@@ -417,10 +421,11 @@ namespace PMS.AP
                                      RDate = Convert.ToDateTime(data.Required_Date),
                                      Remarks = data.Remarks,
                                      UOM = db.GetDataValueName("UOM", inv.Unit),
-                                     stock = db.GetItemBatchStock(data.Item_ID, string.Empty, "") ?? 0,
+                                     //stock = db.GetItemBatchStock(data.Item_ID, string.Empty, "") ?? 0,
+                                     stock = db.GetInvenrtoryItemUomTotalStock(data.Item_ID ?? 0, prWarehouse) ?? 0,
                                      MaterialRequestDetail_Id = Convert.ToInt32(data.MaterialRequestDetail_Id),
                                      MaterialRequest_Id = Convert.ToInt32(data.MaterialRequest_Id),
-                                     Req_Num = Convert.ToInt32(data.Req_Num),
+                                     Req_Num = Convert.ToInt32(data.Req_Num),                                    
                                      LastQty = (from prd in db.Purchase_Requisition_Details
                                                 join pr in db.Purchase_Requisitions on prd.PR_ID equals pr.PR_Id
                                                 where prd.Item_ID == data.Item_ID && pr.Status != "Cancelled"

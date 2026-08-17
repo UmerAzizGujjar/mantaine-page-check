@@ -169,7 +169,7 @@ namespace PMS
                                         where (
                                          (EP.Emergency_ID.ToString().Contains(searchValue) || p.mr_no_sequence.Contains(searchValue) || p.Full_Name.Contains(searchValue) || _dbContext.GetDataValueName("Patient Main Category", EP.Department).Contains(searchValue)))
                                         select new
-                                  {
+                                   {
                                       Emergency_ID = EP.Emergency_ID,
                                       Admission_Date = EP.Admission_Date,
                                       mr_no_sequence = p.mr_no_sequence,
@@ -184,7 +184,8 @@ namespace PMS
 
                                       Patinet_Condition = _dbContext.GetDataValueName("Patient Condition", EP.Emergency_Pat_Condition),
                                       AdmitDays = SqlMethods.DateDiffDay(EP.Admission_Date, DateTime.Now),
-                                      DateOfDeath = EP.DateOfDeath
+                                      DateOfDeath = EP.DateOfDeath,
+                                      isCancelled = EP.isCancelled ?? false
                                         };
 
                     if (filterStatus == "Admitted")

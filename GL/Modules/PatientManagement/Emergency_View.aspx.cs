@@ -77,12 +77,11 @@ namespace PMS.Modules.PatientManagement
                     var Total_emer = _dbContext.Emergencies.Count();
                     var emer = from e in _dbContext.Emergencies
                               join rg in _dbContext.Reg_patients on e.Reg_PatId equals rg.pat_id
-                              where (e.isCancel == false || e.isCancel == null) &&
-                                    (e.Emergency_No.ToString().Contains(searchValue) || 
-                                     e.mr_no_sequence.Contains(searchValue) || 
-                                     rg.Full_Name.Contains(searchValue) || 
-                                     rg.NIC.Contains(searchValue) || 
-                                     rg.Mobile1.Contains(searchValue) || 
+                              where (e.Emergency_No.ToString().Contains(searchValue) ||
+                                     e.mr_no_sequence.Contains(searchValue) ||
+                                     rg.Full_Name.Contains(searchValue) ||
+                                     rg.NIC.Contains(searchValue) ||
+                                     rg.Mobile1.Contains(searchValue) ||
                                      e.Emergency_Charges.ToString().Contains(searchValue) ||
                                      (isDateSearch && e.Created_Time >= searchDate && e.Created_Time < searchDate.AddDays(1)))
                               select new
@@ -98,8 +97,7 @@ namespace PMS.Modules.PatientManagement
                                   balance_amount = e.balance_amount ?? 0,
                                   Type = "Emergency" ,
                                   Patient_Type = _dbContext.GetDataValueName("Patient Type", e.Patient_Type),
-                                  // Note: OutPatientID column commented out as per requirement
-                                  // Type = string.IsNullOrEmpty(e.OutPatientID) ? "Emergency" : "Referred"
+                                  isCancel = e.isCancel ?? false,
                               };
 
 
