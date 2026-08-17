@@ -175,6 +175,10 @@ namespace PMS.Modules.PatientManagement
                 redTraction = entity.Red_Traction, redMobilization = entity.Red_Mobilization,
                 redExercise = entity.Red_Exercise, redOther = entity.Red_Other,
                 redOtherSpec = entity.Red_Other_Spec,
+                redFracture = entity.Red_Fracture, redCancer = entity.Red_Cancer,
+                redPacemaker = entity.Red_Pacemaker, redPregnancy = entity.Red_Pregnancy,
+                redThrombosis = entity.Red_Thrombosis, redInfection = entity.Red_Infection,
+                redBladderBowel = entity.Red_Bladder_Bowel,
                 diagnosis = entity.Diagnosis,
                 diagCervical = entity.Diag_Cervical, diagThoracic = entity.Diag_Thoracic,
                 diagLumbar = entity.Diag_Lumbar, diagShoulder = entity.Diag_Shoulder,
@@ -305,6 +309,10 @@ namespace PMS.Modules.PatientManagement
                     redTraction = entity.Red_Traction, redMobilization = entity.Red_Mobilization,
                     redExercise = entity.Red_Exercise, redOther = entity.Red_Other,
                     redOtherSpec = entity.Red_Other_Spec,
+                    redFracture = entity.Red_Fracture, redCancer = entity.Red_Cancer,
+                    redPacemaker = entity.Red_Pacemaker, redPregnancy = entity.Red_Pregnancy,
+                    redThrombosis = entity.Red_Thrombosis, redInfection = entity.Red_Infection,
+                    redBladderBowel = entity.Red_Bladder_Bowel,
                     diagnosis = entity.Diagnosis,
                     diagCervical = entity.Diag_Cervical, diagThoracic = entity.Diag_Thoracic,
                     diagLumbar = entity.Diag_Lumbar, diagShoulder = entity.Diag_Shoulder,
@@ -493,6 +501,13 @@ namespace PMS.Modules.PatientManagement
                 entity.Red_Traction = bval(data.redTraction);
                 entity.Red_Mobilization = bval(data.redMobilization);
                 entity.Red_Exercise = bval(data.redExercise);
+                entity.Red_Fracture = bval(data.redFracture);
+                entity.Red_Cancer = bval(data.redCancer);
+                entity.Red_Pacemaker = bval(data.redPacemaker);
+                entity.Red_Pregnancy = bval(data.redPregnancy);
+                entity.Red_Thrombosis = bval(data.redThrombosis);
+                entity.Red_Infection = bval(data.redInfection);
+                entity.Red_Bladder_Bowel = bval(data.redBladderBowel);
                 entity.Red_Other = bval(data.redOther);
                 entity.Red_Other_Spec = val(data.redOtherSpec);
 
@@ -700,6 +715,13 @@ namespace PMS.Modules.PatientManagement
             public bool? redTraction { get; set; }
             public bool? redMobilization { get; set; }
             public bool? redExercise { get; set; }
+            public bool? redFracture { get; set; }
+            public bool? redCancer { get; set; }
+            public bool? redPacemaker { get; set; }
+            public bool? redPregnancy { get; set; }
+            public bool? redThrombosis { get; set; }
+            public bool? redInfection { get; set; }
+            public bool? redBladderBowel { get; set; }
             public bool? redOther { get; set; }
             public string redOtherSpec { get; set; }
             public string diagnosis { get; set; }

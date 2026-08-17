@@ -2,7 +2,9 @@
 
 
 <asp:Content ID="Content1" ContentPlaceHolderID="HeadContent" runat="server">
-             <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" />
+    <link href="../../wwwroot/THEME_TIBBIT/CustomCSS/vendor.css" rel="stylesheet" />
+    <link href="../../wwwroot/THEME_TIBBIT/CustomCSS/Service.css" rel="stylesheet" />
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" />
     <link rel="stylesheet" href="https://pro.fontawesome.com/releases/v5.10.0/css/all.css" integrity="sha384-AYmEC3Yw5cVb3ZcuHtOA93w35dYTsvhLPVnYs9eStHfGJvOvKxVfELGroGkvsg+p" crossorigin="anonymous"/>
 
 
@@ -69,6 +71,37 @@
                     loadappt(ID);
                 }, 500);
             }
+        });
+
+        function syncPharmacyUserMeta() {
+            var code = $('#txtUserCode').val();
+            if (code) {
+                $('#pharmacyUserCodeDisplay').text(code);
+            }
+        }
+        $(document).ready(function () {
+            var originalVal = $.fn.val;
+            $.fn.val = function (value) {
+                var res = originalVal.apply(this, arguments);
+                if (this.attr('id') === 'txtUserCode' && arguments.length >= 1) {
+                    syncPharmacyUserMeta();
+                }
+                return res;
+            };
+
+            $('#ChkActive').change(function () {
+                if ($(this).is(':checked')) {
+                    $('#pharmacyActiveBadge').removeClass('badge-inactive').addClass('badge-active');
+                    $('#pharmacyActiveIcon').removeClass('fa-times-circle').addClass('fa-check-circle');
+                    $('#pharmacyActiveText').text('Active');
+                } else {
+                    $('#pharmacyActiveBadge').removeClass('badge-active').addClass('badge-inactive');
+                    $('#pharmacyActiveIcon').removeClass('fa-check-circle').addClass('fa-times-circle');
+                    $('#pharmacyActiveText').text('Inactive');
+                }
+            });
+            $('#ChkActive').trigger('change');
+            syncPharmacyUserMeta();
         });
 
 
@@ -140,6 +173,7 @@
                     $('#ChkActive').prop("checked", false)
 
                 }
+
             },
 
                 function (error) {
@@ -155,50 +189,86 @@
 
 <asp:Content ID="Content2" ContentPlaceHolderID="MainContent" runat="server">
 
-    <div class="row g-3">
-        <div class="col-lg-3 col-md-6 col-sm-12">
-            <label for="txtUserCode">UserCode:</label>
-            <input type="text" id="txtUserCode" class="form-control" autocomplete="off" />
+    <!-- Meta Bar -->
+    <div class="pr-meta-bar">
+        <div class="meta-left">
+            <span class="meta-title"><i class="fa fa-user-md"></i> Pharmacy User</span>
         </div>
-        <div class="col-lg-3 col-md-6 col-sm-12">
-            <label for="txtUserPass">Password:</label>
-            <div class="input-group">
-                <input type="password" id="txtUserPass" class="form-control" autocomplete="off" />
-                <button class="btn btn-outline-secondary" type="button" id="togglePassword">
-                    <i class="fa fa-eye" aria-hidden="true"></i>
-                </button>
+        <div class="meta-right">
+            <div class="meta-badge">
+                <span class="badge-label">Code:</span>
+                <span class="badge-value" id="pharmacyUserCodeDisplay">---</span>
+            </div>
+            <div class="meta-badge" id="pharmacyActiveBadge" style="cursor: pointer;" onclick="$('#ChkActive').click();">
+                <i class="fa fa-check-circle" id="pharmacyActiveIcon"></i> <span id="pharmacyActiveText">Active</span>
+            </div>
+            <!-- Hidden checkbox to retain logic -->
+            <input type="checkbox" id="ChkActive" style="display:none;" />
+        </div>
+    </div>
+
+    <div class="row">
+        <!-- Left Column: User Credentials -->
+        <div class="col-lg-6 col-md-12 pr-cards-column">
+            <div class="pr-primary-settings">
+                <h5 class="pr-section-title" style="margin-top:0;"><i class="fa fa-key"></i> User Credentials</h5>
+                <div class="row">
+                    <div class="col-md-12">
+                        <label for="txtUserCode">User Code *</label>
+                        <div class="input-group">
+                            <div class="input-group-prepend"><span class="input-group-text"><i class="fa fa-user"></i></span></div>
+                            <input type="text" id="txtUserCode" class="form-control" autocomplete="off" placeholder="Enter user code" />
+                        </div>
+                    </div>
+                </div>
+                <div class="row mt-2">
+                    <div class="col-md-12">
+                        <label for="txtUserPass">Password *</label>
+                        <div class="input-group">
+                            <input type="password" id="txtUserPass" class="form-control" autocomplete="off" placeholder="Enter password" />
+                            <button class="btn btn-outline-secondary" type="button" id="togglePassword">
+                                <i class="fa fa-eye" aria-hidden="true"></i>
+                            </button>
+                        </div>
+                    </div>
+                </div>
             </div>
         </div>
-        <div class="col-lg-3 col-md-6 col-sm-12">
-            <label for="txtName">Name:</label>
-            <input type="text" id="txtName" class="form-control" autocomplete="off" />
-        </div>
-        <div class="col-lg-3 col-md-6 col-sm-12 d-flex align-items-center">
-            <label for="ChkActive" class="me-2">Active:</label>
-            <input type="checkbox" id="ChkActive" />
+
+        <!-- Right Column: User Profile -->
+        <div class="col-lg-6 col-md-12 pr-cards-column">
+            <div class="pr-primary-settings">
+                <h5 class="pr-section-title" style="margin-top:0;"><i class="fa fa-id-card"></i> User Profile</h5>
+                <div class="row">
+                    <div class="col-md-12">
+                        <label for="txtName">Name</label>
+                        <div class="input-group">
+                            <div class="input-group-prepend"><span class="input-group-text"><i class="fa fa-tag"></i></span></div>
+                            <input type="text" id="txtName" class="form-control" autocomplete="off" placeholder="Enter user name" />
+                        </div>
+                    </div>
+                </div>
+                <div class="row mt-2">
+                    <div class="col-md-12">
+                        <label id="lblUsername" class="form-label" style="color:green; font-weight:600;"></label>
+                    </div>
+                </div>
+            </div>
         </div>
     </div>
 
-    <!-- Row 2 -->
-    <div class="row g-3">
-        <div class="col-lg-3 col-md-6 col-sm-12">
-            <label id="lblUsername" class="form-label"></label>
+    <div class="pr-action-buttons">
+        <div class="row">
+            <div class="col-lg-2 col-md-4 col-sm-12">
+                <input type="button" id="btnSave" class="btn btn-primry w-100" onclick="SaveRecord()" value="Save" />
+            </div>
+            <div class="col-lg-2 col-md-4 col-sm-12">
+                <input type="button" id="btnview" class="btn btn-gray w-100" onclick="window.location = 'Pharmacy_UserView.aspx'" value="List View" />
+            </div>
+            <div class="col-lg-2 col-md-4 col-sm-12">
+                <input type="button" id="btnnew" class="btn btn-yellow w-100" onclick="window.location = 'Pharmacy_Users.aspx'" value="New" />
+            </div>
         </div>
-    </div>
-
-    <!-- Row 3 -->
-    <div class="row g-3">
-       <div class="col-lg-8 col-md-8">
-            <div class="col-lg-2 col-md-4 col-sm-6">
-                 <input type="button" id="btnSave" class="btn btn-primry" onclick="SaveRecord()" value="Save" />
-             </div>
-            <div class="col-lg-2 col-md-4 col-sm-6">
-                 <input type="button" id="btnnew" class="btn btn-primry" onclick="window.location = 'Pharmacy_Users.aspx'" value="New" />
-             </div>
-            <div class="col-lg-2 col-md-4 col-sm-6">
-                 <input type="button" id="btnview" class="btn btn-primry" onclick="window.location = 'Pharmacy_UserView.aspx'" value="List View" />
-             </div>
-       </div>
     </div>
 
 

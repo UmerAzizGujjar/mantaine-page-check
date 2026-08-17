@@ -1027,7 +1027,6 @@ namespace PMS
         partial void UpdateSys_Approval_Log(Sys_Approval_Log instance);
         partial void DeleteSys_Approval_Log(Sys_Approval_Log instance);
         #endregion
-
         public DataBaseDataContext() :
                 base(global::System.Configuration.ConfigurationManager.ConnectionStrings["ASPGLConnectionString"].ConnectionString, mappingSource)
         {
@@ -5791,7 +5790,7 @@ namespace PMS
         }
 
         [global::System.Data.Linq.Mapping.FunctionAttribute(Name = "dbo.spGetAllitemsDetails")]
-        public ISingleResult<spGetAllitemsDetailsResult> spGetAllitemsDetails([global::System.Data.Linq.Mapping.ParameterAttribute(DbType = "NVarChar(100)")] string searchText, [global::System.Data.Linq.Mapping.ParameterAttribute(DbType = "Bit")] System.Nullable<bool> allowPharmacy, [global::System.Data.Linq.Mapping.ParameterAttribute(DbType = "Bit")] System.Nullable<bool> allowGeneralItem, [global::System.Data.Linq.Mapping.ParameterAttribute(DbType = "Int")] System.Nullable<int> warehouse)
+        public ISingleResult<spGetAllitemsDetailsResult> spGetAllitemsDetails([global::System.Data.Linq.Mapping.ParameterAttribute(DbType = "NVarChar(100)")] string searchText, [global::System.Data.Linq.Mapping.ParameterAttribute(DbType = "Bit")] System.Nullable<bool> allowPharmacy, [global::System.Data.Linq.Mapping.ParameterAttribute(DbType = "Bit")] System.Nullable<bool> allowGeneralItem, [global::System.Data.Linq.Mapping.ParameterAttribute(DbType = "VarChar(50)")] string warehouse)
         {
             IExecuteResult result = this.ExecuteMethodCall(this, ((MethodInfo)(MethodInfo.GetCurrentMethod())), searchText, allowPharmacy, allowGeneralItem, warehouse);
             return ((ISingleResult<spGetAllitemsDetailsResult>)(result.ReturnValue));
@@ -137791,6 +137790,20 @@ namespace PMS
 
         private string _Red_Other_Spec;
 
+        private System.Nullable<bool> _Red_Fracture;
+
+        private System.Nullable<bool> _Red_Cancer;
+
+        private System.Nullable<bool> _Red_Pacemaker;
+
+        private System.Nullable<bool> _Red_Pregnancy;
+
+        private System.Nullable<bool> _Red_Thrombosis;
+
+        private System.Nullable<bool> _Red_Infection;
+
+        private System.Nullable<bool> _Red_Bladder_Bowel;
+
         private string _Diagnosis;
 
         private string _Diag_Cervical;
@@ -138029,6 +138042,20 @@ namespace PMS
         partial void OnRed_OtherChanged();
         partial void OnRed_Other_SpecChanging(string value);
         partial void OnRed_Other_SpecChanged();
+        partial void OnRed_FractureChanging(System.Nullable<bool> value);
+        partial void OnRed_FractureChanged();
+        partial void OnRed_CancerChanging(System.Nullable<bool> value);
+        partial void OnRed_CancerChanged();
+        partial void OnRed_PacemakerChanging(System.Nullable<bool> value);
+        partial void OnRed_PacemakerChanged();
+        partial void OnRed_PregnancyChanging(System.Nullable<bool> value);
+        partial void OnRed_PregnancyChanged();
+        partial void OnRed_ThrombosisChanging(System.Nullable<bool> value);
+        partial void OnRed_ThrombosisChanged();
+        partial void OnRed_InfectionChanging(System.Nullable<bool> value);
+        partial void OnRed_InfectionChanged();
+        partial void OnRed_Bladder_BowelChanging(System.Nullable<bool> value);
+        partial void OnRed_Bladder_BowelChanged();
         partial void OnDiagnosisChanging(string value);
         partial void OnDiagnosisChanged();
         partial void OnDiag_CervicalChanging(string value);
@@ -139778,6 +139805,146 @@ namespace PMS
                     this._Red_Other_Spec = value;
                     this.SendPropertyChanged("Red_Other_Spec");
                     this.OnRed_Other_SpecChanged();
+                }
+            }
+        }
+
+        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_Red_Fracture", DbType = "Bit")]
+        public System.Nullable<bool> Red_Fracture
+        {
+            get
+            {
+                return this._Red_Fracture;
+            }
+            set
+            {
+                if ((this._Red_Fracture != value))
+                {
+                    this.OnRed_FractureChanging(value);
+                    this.SendPropertyChanging();
+                    this._Red_Fracture = value;
+                    this.SendPropertyChanged("Red_Fracture");
+                    this.OnRed_FractureChanged();
+                }
+            }
+        }
+
+        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_Red_Cancer", DbType = "Bit")]
+        public System.Nullable<bool> Red_Cancer
+        {
+            get
+            {
+                return this._Red_Cancer;
+            }
+            set
+            {
+                if ((this._Red_Cancer != value))
+                {
+                    this.OnRed_CancerChanging(value);
+                    this.SendPropertyChanging();
+                    this._Red_Cancer = value;
+                    this.SendPropertyChanged("Red_Cancer");
+                    this.OnRed_CancerChanged();
+                }
+            }
+        }
+
+        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_Red_Pacemaker", DbType = "Bit")]
+        public System.Nullable<bool> Red_Pacemaker
+        {
+            get
+            {
+                return this._Red_Pacemaker;
+            }
+            set
+            {
+                if ((this._Red_Pacemaker != value))
+                {
+                    this.OnRed_PacemakerChanging(value);
+                    this.SendPropertyChanging();
+                    this._Red_Pacemaker = value;
+                    this.SendPropertyChanged("Red_Pacemaker");
+                    this.OnRed_PacemakerChanged();
+                }
+            }
+        }
+
+        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_Red_Pregnancy", DbType = "Bit")]
+        public System.Nullable<bool> Red_Pregnancy
+        {
+            get
+            {
+                return this._Red_Pregnancy;
+            }
+            set
+            {
+                if ((this._Red_Pregnancy != value))
+                {
+                    this.OnRed_PregnancyChanging(value);
+                    this.SendPropertyChanging();
+                    this._Red_Pregnancy = value;
+                    this.SendPropertyChanged("Red_Pregnancy");
+                    this.OnRed_PregnancyChanged();
+                }
+            }
+        }
+
+        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_Red_Thrombosis", DbType = "Bit")]
+        public System.Nullable<bool> Red_Thrombosis
+        {
+            get
+            {
+                return this._Red_Thrombosis;
+            }
+            set
+            {
+                if ((this._Red_Thrombosis != value))
+                {
+                    this.OnRed_ThrombosisChanging(value);
+                    this.SendPropertyChanging();
+                    this._Red_Thrombosis = value;
+                    this.SendPropertyChanged("Red_Thrombosis");
+                    this.OnRed_ThrombosisChanged();
+                }
+            }
+        }
+
+        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_Red_Infection", DbType = "Bit")]
+        public System.Nullable<bool> Red_Infection
+        {
+            get
+            {
+                return this._Red_Infection;
+            }
+            set
+            {
+                if ((this._Red_Infection != value))
+                {
+                    this.OnRed_InfectionChanging(value);
+                    this.SendPropertyChanging();
+                    this._Red_Infection = value;
+                    this.SendPropertyChanged("Red_Infection");
+                    this.OnRed_InfectionChanged();
+                }
+            }
+        }
+
+        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_Red_Bladder_Bowel", DbType = "Bit")]
+        public System.Nullable<bool> Red_Bladder_Bowel
+        {
+            get
+            {
+                return this._Red_Bladder_Bowel;
+            }
+            set
+            {
+                if ((this._Red_Bladder_Bowel != value))
+                {
+                    this.OnRed_Bladder_BowelChanging(value);
+                    this.SendPropertyChanging();
+                    this._Red_Bladder_Bowel = value;
+                    this.SendPropertyChanged("Red_Bladder_Bowel");
+                    this.OnRed_Bladder_BowelChanged();
                 }
             }
         }
@@ -244081,9 +244248,9 @@ namespace PMS
 
         private System.Nullable<bool> _Active;
 
-        private System.Nullable<decimal> _Stock;
-
         private decimal _LastQty;
+
+        private System.Nullable<decimal> _Stock;
 
         private System.Nullable<System.DateTime> _LastRequiredDate;
 
@@ -244171,22 +244338,6 @@ namespace PMS
             }
         }
 
-        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_Stock", DbType = "Decimal(18,2)")]
-        public System.Nullable<decimal> Stock
-        {
-            get
-            {
-                return this._Stock;
-            }
-            set
-            {
-                if ((this._Stock != value))
-                {
-                    this._Stock = value;
-                }
-            }
-        }
-
         [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_LastQty", DbType = "Decimal(18,2) NOT NULL")]
         public decimal LastQty
         {
@@ -244199,6 +244350,22 @@ namespace PMS
                 if ((this._LastQty != value))
                 {
                     this._LastQty = value;
+                }
+            }
+        }
+
+        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_Stock", DbType = "Decimal(18,2)")]
+        public System.Nullable<decimal> Stock
+        {
+            get
+            {
+                return this._Stock;
+            }
+            set
+            {
+                if ((this._Stock != value))
+                {
+                    this._Stock = value;
                 }
             }
         }

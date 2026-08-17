@@ -138,10 +138,11 @@
                      }
                  });
              },
-             "columns": [
-                 { "data": null, "width": "4%", "orderable": false, "render": (data, type, full, meta) => meta.settings._iDisplayStart + meta.row + 1 },
-                 { "data": "Emer_id", "name": "Emer_id", "visible": false, "width": "0%", "orderable": false },
-                 { "data": "Emergency_No", "name": "Emergency_No", "width": "4%", "orderable": true },
+              "columns": [
+                  { "data": null, "width": "4%", "orderable": false, "render": (data, type, full, meta) => meta.settings._iDisplayStart + meta.row + 1 },
+                  { "data": "Emer_id", "name": "Emer_id", "visible": false, "width": "0%", "orderable": false },
+                  { "data": "isCancel", "visible": false, "orderable": false, "width": "0%" },
+                  { "data": "Emergency_No", "name": "Emergency_No", "width": "4%", "orderable": true },
                  { "data": "mr_no_sequence", "name": "mr_no_sequence", "width": "8%", "orderable": true },
            
                  { "data": "Full_Name", "width": "16%", "orderable": false },
@@ -169,19 +170,28 @@
                      "render": (data, type, full) => moment(full.Created_Time).format('DD-MMM-YYYY'),
                      "width": "10%"
                  },
-                 {
-                     "render": (data, type, full) => {
-                         let res = `<a href="#" onclick="editOpen(${full.Emer_id})" class="editListBtn" style="border-radius: 4px;padding: 5px 8px;"><i class="fa fa-pencil"></i></a>`;
-                         let Del = `<a class="delListBtn" style="border-radius: 4px;margin-left: 4px;color: white;padding: 5px 8px;" href="#" onclick="cancelPatient(${full.Emer_id}, '${full.Full_Name.replace(/'/g, "\\'")}')"><i class="fa fa-trash"></i></a>`;
-                         let print = `<a class="printListBtn" style="border-radius: 4px;margin-left: 4px;color: white;padding: 5px 8px;" href="#" onclick="Print(${full.Emer_id})"><i class="fa fa-print"></i></a>`;
-                         let btnprint = `<a class="printBtn" style="border-radius: 4px;margin-left: 4px;color: white;padding: 5px 8px;" href="#" onclick="PrintLTR(${full.Emer_id})"><i class="fa fa-print"></i></a>`;
-                         return res + Del + print + btnprint;
-                     },
-                     "width": "20%",
-                     "orderable": false
-                 }
-             ],
-             "initComplete": function (settings, json) {
+                  {
+                      "render": (data, type, full) => {
+                          if (full.isCancel === true) {
+                              return '<span style="color:#721c24; font-weight:bold;">Cancelled</span>';
+                          }
+                          let res = `<a href="#" onclick="editOpen(${full.Emer_id})" class="editListBtn" style="border-radius: 4px;padding: 5px 8px;"><i class="fa fa-pencil"></i></a>`;
+                          let Del = `<a class="delListBtn" style="border-radius: 4px;margin-left: 4px;color: white;padding: 5px 8px;" href="#" onclick="cancelPatient(${full.Emer_id}, '${full.Full_Name.replace(/'/g, "\\'")}')"><i class="fa fa-trash"></i></a>`;
+                          let print = `<a class="printListBtn" style="border-radius: 4px;margin-left: 4px;color: white;padding: 5px 8px;" href="#" onclick="Print(${full.Emer_id})"><i class="fa fa-print"></i></a>`;
+                          let btnprint = `<a class="printBtn" style="border-radius: 4px;margin-left: 4px;color: white;padding: 5px 8px;" href="#" onclick="PrintLTR(${full.Emer_id})"><i class="fa fa-print"></i></a>`;
+                          return res + Del + print + btnprint;
+                      },
+                      "width": "20%",
+                      "orderable": false
+                  }
+              ],
+              "createdRow": function (row, data, dataIndex) {
+                  if (data.isCancel === true) {
+                      $(row).css('background-color', '#f8d7da');
+                      $(row).find('td').css('color', '#721c24');
+                  }
+              },
+              "initComplete": function (settings, json) {
                  var lengthContainer = document.querySelector('#tblResult_length');
                  var lengthDropdown = document.querySelector('#tblResult_length select');
                  var label = document.querySelector('#tblResult_length label');
@@ -211,9 +221,10 @@
                  <table class="table table-hover table-striped table-bordered" id="tblResult" style="overflow: scroll; height: auto;">
                <thead id="ihead">
                  <tr>
-                     <th style="width:4% !important;">Sr#</th>                
-                     <th style="display: none;">Emergency ID</th>    
-                          <th style="6%">Emr No.</th>
+                      <th style="width:4% !important;">Sr#</th>                
+                      <th style="display: none;">Emergency ID</th>    
+                      <th style="display: none;">Is Cancel</th>
+                           <th style="6%">Emr No.</th>
                      <th style="width: 12%;">MR No.</th>
                 
                      <th style="width: 17%;">Name</th>

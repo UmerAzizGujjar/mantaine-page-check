@@ -6308,6 +6308,13 @@
       <Column Name="Red_Exercise" Type="System.Boolean" DbType="Bit" CanBeNull="true" />
       <Column Name="Red_Other" Type="System.Boolean" DbType="Bit" CanBeNull="true" />
       <Column Name="Red_Other_Spec" Type="System.String" DbType="VarChar(100)" CanBeNull="true" />
+      <Column Name="Red_Fracture" Type="System.Boolean" DbType="Bit" CanBeNull="true" />
+      <Column Name="Red_Cancer" Type="System.Boolean" DbType="Bit" CanBeNull="true" />
+      <Column Name="Red_Pacemaker" Type="System.Boolean" DbType="Bit" CanBeNull="true" />
+      <Column Name="Red_Pregnancy" Type="System.Boolean" DbType="Bit" CanBeNull="true" />
+      <Column Name="Red_Thrombosis" Type="System.Boolean" DbType="Bit" CanBeNull="true" />
+      <Column Name="Red_Infection" Type="System.Boolean" DbType="Bit" CanBeNull="true" />
+      <Column Name="Red_Bladder_Bowel" Type="System.Boolean" DbType="Bit" CanBeNull="true" />
       <Column Name="Diagnosis" Type="System.String" DbType="VarChar(MAX)" CanBeNull="true" />
       <Column Name="Diag_Cervical" Type="System.String" DbType="VarChar(50)" CanBeNull="true" />
       <Column Name="Diag_Thoracic" Type="System.String" DbType="VarChar(50)" CanBeNull="true" />
@@ -13051,15 +13058,15 @@
     <Parameter Name="searchText" Type="System.String" DbType="NVarChar(100)" />
     <Parameter Name="allowPharmacy" Type="System.Boolean" DbType="Bit" />
     <Parameter Name="allowGeneralItem" Type="System.Boolean" DbType="Bit" />
-    <Parameter Name="warehouse" Type="System.Int32" DbType="Int" />
+    <Parameter Name="warehouse" Type="System.String" DbType="VarChar(50)" />
     <ElementType Name="spGetAllitemsDetailsResult">
       <Column Name="Item_ID" Type="System.Int32" DbType="Int NOT NULL" CanBeNull="false" />
       <Column Name="Item_Code" Type="System.String" DbType="VarChar(15)" CanBeNull="true" />
       <Column Name="Description" Type="System.String" DbType="VarChar(200)" CanBeNull="true" />
       <Column Name="Unit" Type="System.String" DbType="VarChar(150) NOT NULL" CanBeNull="false" />
       <Column Name="Active" Type="System.Boolean" DbType="Bit" CanBeNull="true" />
-      <Column Name="Stock" Type="System.Decimal" DbType="Decimal(18,2)" CanBeNull="true" />
       <Column Name="LastQty" Type="System.Decimal" DbType="Decimal(18,2) NOT NULL" CanBeNull="false" />
+      <Column Name="Stock" Type="System.Decimal" DbType="Decimal(18,2)" CanBeNull="true" />
       <Column Name="LastRequiredDate" Type="System.DateTime" DbType="DateTime" CanBeNull="true" />
     </ElementType>
   </Function>

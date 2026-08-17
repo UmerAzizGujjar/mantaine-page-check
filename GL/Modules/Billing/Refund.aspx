@@ -111,7 +111,7 @@
                 var Description = '';
                 $.each(data, function (key, value) {
                     debugger;
-                    rows = '<tr></td> ' + value.Item_Name + '</td><td>' + value.Item_Name + '</td><td>' + value.Doctor_Share + '</td><td>' + value.Net_Amount + '  </td><td>' + value.Doctor_Refund + '  </td><td>' + value.Hospital_Refund + '  </td></tr>'
+                    rows = '<tr></td> ' + value.Item_Name + '</td><td>' + value.Item_Name + '</td><td>' + value.Doctor_Share + '</td><td>' + value.Net_Amount + '  </td><td>' + value.Doctor_Refund + '  </td><td>' + value.Hospital_Refund + '  </td><td></td></tr>'
                     $('#tblDetails tbody').append(rows);
                     rowIndex++;
                 });
@@ -239,6 +239,7 @@
                                 '<td style="text-align: center;">' + parse[i].Hospital_Share + '</td>' +
                                 '<td><input type="text" id="DocRefund' + rowIndex + '" name="DocRefund" value="0" style="width: 75px !important;" onkeyup="calculateDoctorShare()"/></td>' +
                                 '<td><input type="text" name="HosRefund" value="0" style="width: 75px !important;" onkeyup="calculateDoctorShare()"/></td>' +
+                                '<td style="text-align: center;"><input type="checkbox" name="chkRefund" onchange="autoFillShare(this)" /></td>' +
                                 '</tr>';
                             rowIndex++;
                         }
@@ -305,6 +306,20 @@
                     $('#Doctor_Share_Table tbody').append(rows);
                 }
             });
+        }
+        function autoFillShare(chk) {
+            debugger;
+            var row = $(chk).closest('tr');
+            var doctorShare = parseFloat(row.find('td:eq(4)').text()) || 0;
+            var hospitalShare = parseFloat(row.find('td:eq(5)').text()) || 0;
+            if ($(chk).is(':checked')) {
+                row.find('input[name="DocRefund"]').val(doctorShare);
+                row.find('input[name="HosRefund"]').val(hospitalShare);
+            } else {
+                row.find('input[name="DocRefund"]').val(0);
+                row.find('input[name="HosRefund"]').val(0);
+            }
+            calculateDoctorShare();
         }
         function calculateDoctorShare() {
             debugger;
@@ -938,6 +953,7 @@ function PrintVoucher() {
                                 <th>Hospital Share</th>
                                 <th>Doctor Refund</th>
                                 <th>Hospital Refund</th>
+                                <th>Select</th>
                             </tr>
                         </thead>
                         <tbody>
