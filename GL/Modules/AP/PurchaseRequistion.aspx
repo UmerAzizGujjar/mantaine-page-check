@@ -245,6 +245,7 @@
                                     '<td style="display:none">' + (item.Stock || '0') + '</td>' +
                                     '<td style="display:none">' + (item.LastQty || '') + '</td>' +
                                     '<td style="display:none">' + (item.LastRequiredDate || '') + '</td>' +
+                                    '<td style="display:none">' + (item.Last_PurchaseRate || '') + '</td>' +
                                     '</tr>';
                                 tableBody.append(row);
                             });
@@ -414,6 +415,7 @@
             var Item_name = $(row).find('td:eq(3)').text();
             var unit      = $(row).find('td:eq(4)').text();
             var stock = $(row).find('td:eq(5)').text() || '0';
+            var LastRate = $(row).find('td:eq(8)').text() || '0';
             var lastQty = $(row).find('td:eq(6)').text() || '';
             var lastReqDate = $(row).find('td:eq(7)').text() || '';
             console.log(lastReqDate);
@@ -471,7 +473,7 @@
                 "<td style='text-align:right;padding-top:7px!important;'>" + stock + "</td>" +
                 "<td style='text-align:right;'><input type='text' name='Qty' id='txtQty" + length + "' style='font-size:9px;width:58px!important;text-align:right;margin-top:2px;' autocomplete='off' onkeyup='calcutaeQty();calcutaeEstimatedCost(this)'/></td>" +
                 "<td style='text-align:left;padding-top:7px!important;'>" + unit + "</td>" +
-                "<td style='text-align:right;'><input type='text' name='txtUnitPrice' id='txtUnitPrice" + length + "' style='font-size:9px;width:68px!important;text-align:right;margin-top:2px;' autocomplete='off' onkeyup='calcutaeEstimCost(this)'/></td>" +
+                "<td style='text-align:right;'><input type='text' name='txtUnitPrice' id='txtUnitPrice" + length + "' value='" + LastRate + "' style='font-size:9px;width:68px!important;text-align:right;margin-top:2px;' autocomplete='off' onkeyup='calcutaeEstimCost(this)'/></td>" +
                 "<td style='text-align:right;'><input readonly type='text' name='txtEstimCost' id='txtEstimCost" + length + "' style='font-size:9px;width:78px!important;text-align:right;margin-top:2px;' /></td>" +
                 "<td style='text-align:left;'><input type='text' name='txtrdate' id='txtrdate" + length + "' style='font-size:9px;width:80px!important;margin-top:2px;' autocomplete='off'/></td>" +
                 "<td style='text-align:right;padding-top:7px!important;'>" + lastQty + "</td>" +
@@ -571,7 +573,7 @@
                             "<td style='text-align:right;padding-top:7px!important;'>" + parse[0].Stock + "</td>" +
                             "<td style='text-align:right;'><input type='text' name='Qty' id='txtQty" + length + "' style='font-size:9px;width:58px!important;text-align:right;margin-top:2px;' autocomplete='off' onkeyup='calcutaeQty();calcutaeEstimatedCost(this)'/></td>" +
                             "<td style='text-align:left;padding-top:7px!important;'>" + parse[0].Unit + "</td>" +
-                            "<td style='text-align:right;'><input type='text' name='txtUnitPrice' id='txtUnitPrice" + length + "' style='font-size:9px;width:68px!important;text-align:right;margin-top:2px;' autocomplete='off' onkeyup='calcutaeEstimCost(this)'/></td>" +
+                            "<td style='text-align:right;'><input type='text' name='txtUnitPrice' id='txtUnitPrice" + length + "' value = '" + parse[0].Last_PurchaseRate + "' style='font-size:9px;width:68px!important;text-align:right;margin-top:2px;' autocomplete='off' onkeyup='calcutaeEstimCost(this)'/></td>" +
                             "<td style='text-align:right;'><input readonly type='text' name='txtEstimCost' id='txtEstimCost" + length + "' style='font-size:9px;width:78px!important;text-align:right;margin-top:2px;' /></td>" +
                             "<td style='text-align:left;'><input type='text' name='txtrdate' id='txtrdate" + length + "' style='font-size:9px;width:80px!important;margin-top:2px;' autocomplete='off'/></td>" +
                             "<td style='text-align:right;padding-top:7px!important;'>" + lastQty + "</td>" +
