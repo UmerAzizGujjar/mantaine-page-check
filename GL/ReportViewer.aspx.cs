@@ -2570,6 +2570,7 @@ namespace PMS
                 rd.SetParameterValue("@StartDate", Convert.ToDateTime(Request.QueryString["sDate"]));
                 rd.SetParameterValue("@EndDate", Convert.ToDateTime(Request.QueryString["eDate"]));
                 rd.SetParameterValue("@VendorId", (Request.QueryString["Vendor"]).ToString());
+                rd.SetParameterValue("@Warehouse", Request.QueryString["WareHouse"]);
             }
             else if (reportName == "Vendor_Ledger")
             {
@@ -2886,6 +2887,7 @@ namespace PMS
                     rd.SetParameterValue("Title", reportTitle);
                     rd.SetParameterValue("CompanyName", AppConfig.Company_Name);
                     rd.SetParameterValue("Address", companyAddress);
+                    rd.SetParameterValue("@Warehouse", Request.QueryString["WareHouse"]);
                 }
             }
             else if (reportName == "Overall_Stock_Consumption_Details")

@@ -1808,7 +1808,9 @@
                     }
                     if (rptTitle == "Vendor_Wise_Transaction_Detail") {
 
-                        var url = 'ReportViewer.aspx?ReportName=Vendor_Wise_Transaction_Detail&ReportTitle=Vendor Wise Transaction Detail From  ' + $('#ctl00_MainContent_txtStart_Date').val() + ' to ' + $('#ctl00_MainContent_txtEnd_Date').val() + '&sDate=' + $('#ctl00_MainContent_txtStart_Date').val() + '&eDate=' + $('#ctl00_MainContent_txtEnd_Date').val() + '&Vendor=' + $('#ctl00_MainContent_ddlDepartments').val();
+                        var url = 'ReportViewer.aspx?ReportName=Vendor_Wise_Transaction_Detail&ReportTitle=Vendor Wise Transaction Detail From  '
+                            + $('#ctl00_MainContent_txtStart_Date').val() + ' to ' + $('#ctl00_MainContent_txtEnd_Date').val() + '&sDate=' + $('#ctl00_MainContent_txtStart_Date').val()
+                            + '&eDate=' + $('#ctl00_MainContent_txtEnd_Date').val() + '&Vendor=' + $('#ctl00_MainContent_ddlDepartments').val() + '&WareHouse=' + $('#ctl00_MainContent_ddlwareHouse').val();
                         window.open(url, '_blank');
                     }
                     if (rptTitle == "Vendor_Wise_Payment_Summary") {
