@@ -254,153 +254,112 @@
     <div class="container-fluid">
         <input type="hidden" id="hdRegPatId" />
         <input type="hidden" id="hdPatientID" />
-        <div class="row">
-            <!-- Left Card -->
-            <div class="col-lg-5 col-md-5 col-sm-12">
-                <div class="card">
-                    <div class="card-body">
-                        <div class="row">
-                            <div class="col-lg-4 col-md-5 col-sm-6 text-center">
-                                <div class="image-container">
-                                    <img src="~../../../../wwwroot/SOURCE_IMAGES/DASHBOARD_ICONS/billing2.png" alt="Patient Image" class="img-fluid rounded-circle patient-image" />
-                                </div>
-                            </div>
-                            <div class="col-lg-8 col-md-7 col-sm-6">
-                                <div class="row mb-3 mtt">
-                                    <div class="col-lg-4 col-md-5 col-sm-6">
-                                        <label>Emergency No:</label>
-                                    </div>
-                                    <div class="col-lg-8 col-md-7 col-sm-6 top">
-                                        <input type="text" id="txtEmergency_NO" class="form-control" />
-                                    </div>
-                                </div>
-                                <div class="row mb-3 mtt">
-                                    <div class="col-lg-4 col-md-5 col-sm-6">
-                                        <label>Patient Name :</label>
-                                    </div>
-                                    <div class="col-lg-8 col-md-7 col-sm-6 top">
-                                        <label id="lblPatienName"></label>
-                                    </div>
-                                </div>
-                                <div class="row mb-3 mtt">
-                                    <div class="col-lg-4 col-md-5 col-sm-6 formrgn">
-                                        <label>Contact No :</label>
-                                    </div>
-                                    <div class="col-lg-8 col-md-7 col-sm-6 top">
-                                        <label id="lblContactNo"></label>
-                                    </div>
-                                </div>
-                                <div class="row mb-3 mtt">
-                                    <div class="col-lg-4 col-md-5 col-sm-6 formrgn">
-                                        <label>Reg. Date :</label>
-                                    </div>
-                                    <div class="col-lg-8 col-md-7 col-sm-6 top">
-                                        <label id="lblRegDate"></label>
-                                    </div>
-                                </div>
-                                <div class="row mb-3 mtt">
-                                    <div class="col-lg-4 col-md-5 col-sm-6 formrgn">
-                                        <label>Gender :</label>
-                                    </div>
-                                    <div class="col-lg-8 col-md-7 col-sm-6 top">
-                                        <label id="lblGender"></label>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
+        <input type="hidden" id="txtRefundDate" class="datepicker" />
+
+        <div class="bp-meta-bar">
+            <div class="bp-meta-title">
+                <i class="fa fa-ambulance"></i>
+                <span>Emergency Refund</span>
+                <span class="bp-badge bp-badge--pending" id="refundStatusBadge">New Refund</span>
             </div>
-            <!-- Right Card -->
-            <div class="col-lg-5 col-md-5 col-sm-12">
-                <div class="card">
-                    <div class="card-body">
-                        <div class="row mb-3">
-                            <div class="col-lg-4 formrgn">
-                                <label>Age Years :</label>
-                            </div>
-                            <div class="col-lg-4">
-                                <label id="lblAgeYears"></label>
-                            </div>
-                        </div>
-                        <div class="row mb-3">
-                            <div class="col-lg-4 formrgn">
-                                <label>Address :</label>
-                            </div>
-                            <div class="col-lg-4">
-                                <label id="lblAddress"></label>
-                            </div>
-                        </div>
-                        <div class="row mb-3">
-                            <div class="col-lg-4 formrgn">
-                                <label>Patient Category :</label>
-                            </div>
-                            <div class="col-lg-4">
-                                <label id="lblPatientCategory"></label>
-                            </div>
-                        </div>
-                        <div class="row mb-3">
-                            <div class="col-lg-4 formrgn">
-                                <label>Department :</label>
-                            </div>
-                            <div class="col-lg-4">
-                                <label id="lblDepartment"></label>
-                            </div>
-                        </div>
-                        <div class="row mb-3" style="display:none">
-                            <div class="col-lg-4 formrgn">
-                                <label>MR No *:</label>
-                            </div>
-                            <div class="col-lg-4">
-                                <label id="lblMRNo"></label>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-            <div class="col-lg-1 col-md-4 col-sm-6">
-                <input type="button" value="Search" id="btnSearch" class="btn btn-primry" onclick="GetPatientDetailByEmergencyNO()" />
+            <div class="bp-meta-actions">
+                <button type="button" class="bp-meta-btn bp-meta-btn--search" id="btnSearch" onclick="GetPatientDetailByEmergencyNO()">
+                    <i class="fa fa-search"></i> Search Patient
+                </button>
             </div>
         </div>
 
-        <div class="row">
-            <div class="col-lg-2 col-md-6 col-sm-12">
-                <label>Doctor Share</label>
-                <input type="text" id="txtDoctorAmount" class="form-control text-right" disabled="disabled" />
+        <div class="bp-bento">
+            <div class="bp-card">
+                <div class="bp-card-header">
+                    <i class="fa fa-user-circle"></i>
+                    <span>Patient Information</span>
+                </div>
+                <div class="bp-card-body">
+                    <div class="bp-patient">
+                        <div class="bp-patient-avatar">
+                            <img src="~../../../../wwwroot/SOURCE_IMAGES/DASHBOARD_ICONS/billing2.png" alt="Patient" id="patientImage" />
+                        </div>
+                        <div class="bp-patient-info">
+                            <div class="bp-patient-name" id="lblPatienName">Patient Name</div>
+                            <dl class="bp-patient-grid">
+                                <dt>Emerg No</dt>
+                                <dd><input type="text" id="txtEmergency_NO" class="bp-input" style="height:26px;padding:3px 7px;" /></dd>
+                                <dt>Contact</dt><dd id="lblContactNo"></dd>
+                                <dt>Gender</dt><dd id="lblGender"></dd>
+                                <dt>Reg Date</dt><dd id="lblRegDate"></dd>
+                                <dt>MR No</dt><dd id="lblMRNo"></dd>
+                            </dl>
+                        </div>
+                    </div>
+                </div>
             </div>
-            <div class="col-lg-2 col-md-6 col-sm-12">
-                <label>Hospital Share</label>
-                <input type="text" id="txtHospitalShare" class="form-control text-right" disabled="disabled" />
-            </div>
-            <div class="col-lg-2 col-md-6 col-sm-12">
-                <label>Actual Amount</label>
-                <input type="text" id="txtActualAmount" class="form-control text-right" disabled="disabled" />
-            </div>
-            <div class="col-lg-2 col-md-6 col-sm-12">
-                <label>Hospital Refund</label>
-                <input type="text" id="txtHospitalRefund" class="form-control text-right" />
-            </div>
-            <div class="col-lg-2 col-md-6 col-sm-12">
-                <label>Doctor Refund</label>
-                <input type="text" id="txtDoctorRefund" class="form-control text-right" />
-            </div>
-            <div class="col-lg-2 col-md-6 col-sm-12">
-                <label>Total Refund</label>
-                <input type="text" id="TotalRefundAmount" class="form-control text-right" />
+
+            <div class="bp-card">
+                <div class="bp-card-header">
+                    <i class="fa fa-info-circle"></i>
+                    <span>Additional Details</span>
+                </div>
+                <div class="bp-card-body" style="padding:0;">
+                    <div class="bp-summary-row">
+                        <span class="bp-summary-label">Age</span>
+                        <span id="lblAgeYears" class="bp-summary-value bp-summary-value--readonly"></span>
+                    </div>
+                    <div class="bp-summary-row">
+                        <span class="bp-summary-label">Address</span>
+                        <span id="lblAddress" style="margin-left:auto;color:var(--bp-text);font-weight:600;text-align:right;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;max-width:65%;"></span>
+                    </div>
+                    <div class="bp-summary-row">
+                        <span class="bp-summary-label">Patient Category</span>
+                        <span id="lblPatientCategory" style="margin-left:auto;color:var(--bp-text);font-weight:600;"></span>
+                    </div>
+                    <div class="bp-summary-row">
+                        <span class="bp-summary-label">Department</span>
+                        <span id="lblDepartment" style="margin-left:auto;color:var(--bp-text);font-weight:600;"></span>
+                    </div>
+                </div>
             </div>
         </div>
-        
-        <div class="row mt-3">
-            <div class="col-lg-2 col-md-6 col-sm-12" style="display:none;">
-                <label>Refund Date</label>
-                <input type="text" id="txtRefundDate" class="form-control datepicker" />
+
+        <div class="bp-card">
+            <div class="bp-card-header">
+                <i class="fa fa-money"></i>
+                <span>Refund Details</span>
             </div>
-            <div class="col-lg-4 col-md-6 col-sm-12">
-                <label>Remarks</label>
-                <input type="text" id="txtRemarks" class="form-control" />
+            <div class="bp-card-body">
+                <div class="bp-bento bp-bento--4" style="gap:12px;">
+                    <div>
+                        <label class="bp-summary-label" style="display:block;margin-bottom:4px;">Doctor Share</label>
+                        <input type="text" id="txtDoctorAmount" class="bp-input" style="text-align:right;" disabled="disabled" />
+                    </div>
+                    <div>
+                        <label class="bp-summary-label" style="display:block;margin-bottom:4px;">Hospital Share</label>
+                        <input type="text" id="txtHospitalShare" class="bp-input" style="text-align:right;" disabled="disabled" />
+                    </div>
+                    <div>
+                        <label class="bp-summary-label" style="display:block;margin-bottom:4px;">Actual Amount</label>
+                        <input type="text" id="txtActualAmount" class="bp-input" style="text-align:right;" disabled="disabled" />
+                    </div>
+                    <div>
+                        <label class="bp-summary-label" style="display:block;margin-bottom:4px;">Hospital Refund</label>
+                        <input type="text" id="txtHospitalRefund" class="bp-input" style="text-align:right;" />
+                    </div>
+                    <div>
+                        <label class="bp-summary-label" style="display:block;margin-bottom:4px;">Doctor Refund</label>
+                        <input type="text" id="txtDoctorRefund" class="bp-input" style="text-align:right;" />
+                    </div>
+                    <div>
+                        <label class="bp-summary-label" style="display:block;margin-bottom:4px;">Total Refund</label>
+                        <input type="text" id="TotalRefundAmount" class="bp-input" style="text-align:right;font-weight:700;color:var(--bp-primary);" disabled="disabled" />
+                    </div>
+                    <div>
+                        <label class="bp-summary-label" style="display:block;margin-bottom:4px;">Remarks</label>
+                        <input type="text" id="txtRemarks" class="bp-input" />
+                    </div>
+                </div>
             </div>
         </div>
-        
+
         <div class="row mt-3">
             <div class="col-lg-8">
                 <div class="row">
