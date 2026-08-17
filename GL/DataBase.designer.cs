@@ -53457,6 +53457,10 @@ namespace PMS
 
         private System.Nullable<int> _Req_Num;
 
+        private System.Nullable<decimal> _Last_PR_Qty;
+
+        private System.Nullable<System.DateTime> _Last_PR_Date;
+
         #region Extensibility Method Definitions
         partial void OnLoaded();
         partial void OnValidate(System.Data.Linq.ChangeAction action);
@@ -53483,6 +53487,10 @@ namespace PMS
         partial void OnMaterialRequest_IdChanged();
         partial void OnReq_NumChanging(System.Nullable<int> value);
         partial void OnReq_NumChanged();
+        partial void OnLast_PR_QtyChanging(System.Nullable<decimal> value);
+        partial void OnLast_PR_QtyChanged();
+        partial void OnLast_PR_DateChanging(System.Nullable<System.DateTime> value);
+        partial void OnLast_PR_DateChanged();
         #endregion
 
         public Purchase_Requisition_Detail()
@@ -53706,6 +53714,46 @@ namespace PMS
                     this._Req_Num = value;
                     this.SendPropertyChanged("Req_Num");
                     this.OnReq_NumChanged();
+                }
+            }
+        }
+
+        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_Last_PR_Qty", DbType = "Decimal(18,4)")]
+        public System.Nullable<decimal> Last_PR_Qty
+        {
+            get
+            {
+                return this._Last_PR_Qty;
+            }
+            set
+            {
+                if ((this._Last_PR_Qty != value))
+                {
+                    this.OnLast_PR_QtyChanging(value);
+                    this.SendPropertyChanging();
+                    this._Last_PR_Qty = value;
+                    this.SendPropertyChanged("Last_PR_Qty");
+                    this.OnLast_PR_QtyChanged();
+                }
+            }
+        }
+
+        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_Last_PR_Date", DbType = "DateTime")]
+        public System.Nullable<System.DateTime> Last_PR_Date
+        {
+            get
+            {
+                return this._Last_PR_Date;
+            }
+            set
+            {
+                if ((this._Last_PR_Date != value))
+                {
+                    this.OnLast_PR_DateChanging(value);
+                    this.SendPropertyChanging();
+                    this._Last_PR_Date = value;
+                    this.SendPropertyChanged("Last_PR_Date");
+                    this.OnLast_PR_DateChanged();
                 }
             }
         }

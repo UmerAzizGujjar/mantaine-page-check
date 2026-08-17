@@ -317,6 +317,8 @@ namespace PMS.AP
                 obj.MaterialRequestDetail_Id = Convert.ToInt32(item.MaterialRequestDetail_Id);
                 obj.MaterialRequest_Id = Convert.ToInt32(item.MaterialRequest_Id);
                 obj.Req_Num = Convert.ToInt32(item.Req_Num);
+                obj.Last_PR_Qty = Convert.ToDecimal(item.Last_PR_Qty);
+                obj.Last_PR_Date = item.Last_PR_Date;
                 db.Purchase_Requisition_Details.InsertOnSubmit(obj);
 
                 try
@@ -423,20 +425,11 @@ namespace PMS.AP
                                      UOM = db.GetDataValueName("UOM", inv.Unit),
                                      //stock = db.GetItemBatchStock(data.Item_ID, string.Empty, "") ?? 0,
                                      stock = db.GetInvenrtoryItemUomTotalStock(data.Item_ID ?? 0, prWarehouse) ?? 0,
-                                     MaterialRequestDetail_Id = Convert.ToInt32(data.MaterialRequestDetail_Id),
-                                     MaterialRequest_Id = Convert.ToInt32(data.MaterialRequest_Id),
-                                     Req_Num = Convert.ToInt32(data.Req_Num),                                    
-                                     LastQty = (from prd in db.Purchase_Requisition_Details
-                                                join pr in db.Purchase_Requisitions on prd.PR_ID equals pr.PR_Id
-                                                where prd.Item_ID == data.Item_ID && pr.Status != "Cancelled"
-                                                orderby pr.Creation_Date descending
-                                                select prd.Qty).FirstOrDefault() ?? 0,
-
-                                     LastRequiredDate = (from prd in db.Purchase_Requisition_Details
-                                                         join pr in db.Purchase_Requisitions on prd.PR_ID equals pr.PR_Id
-                                                         where prd.Item_ID == data.Item_ID && pr.Status != "Cancelled"
-                                                         orderby pr.Creation_Date descending
-                                                         select prd.Required_Date).FirstOrDefault()
+                                      MaterialRequestDetail_Id = Convert.ToInt32(data.MaterialRequestDetail_Id),
+                                      MaterialRequest_Id = Convert.ToInt32(data.MaterialRequest_Id),
+                                      Req_Num = Convert.ToInt32(data.Req_Num),
+                                      Last_PR_Qty = data.Last_PR_Qty ?? 0,
+                                      Last_PR_Date = data.Last_PR_Date
 
                                  }).ToList();
                     result = (new JavaScriptSerializer()).Serialize(listItems).ToString();
@@ -694,8 +687,8 @@ namespace PMS.AP
             public int MaterialRequest_Id { get; set; }
             public int Req_Num { get; set; }
 
-            public decimal LastQty { get; set; }
-            public DateTime? LastRequiredDate { get; set; }
+            public decimal Last_PR_Qty { get; set; }
+            public DateTime? Last_PR_Date { get; set; }
 
         }
     }

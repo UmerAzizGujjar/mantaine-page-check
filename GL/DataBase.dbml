@@ -2359,6 +2359,8 @@
       <Column Name="MaterialRequestDetail_Id" Type="System.Int32" DbType="Int" CanBeNull="true" />
       <Column Name="MaterialRequest_Id" Type="System.Int32" DbType="Int" CanBeNull="true" />
       <Column Name="Req_Num" Type="System.Int32" DbType="Int" CanBeNull="true" />
+      <Column Name="Last_PR_Qty" Type="System.Decimal" DbType="Decimal(18,4)" CanBeNull="true" />
+      <Column Name="Last_PR_Date" Type="System.DateTime" DbType="DateTime" CanBeNull="true" />
     </Type>
   </Table>
   <Table Name="dbo.AP_RequestForQuotation_Vendors" Member="AP_RequestForQuotation_Vendors">
