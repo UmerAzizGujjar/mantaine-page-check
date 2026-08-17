@@ -9122,20 +9122,6 @@
       <Column Name="Qty" Type="System.Decimal" DbType="Decimal(38,4)" CanBeNull="true" />
     </ElementType>
   </Function>
-  <Function Name="dbo.sp_GetGIRDetailByGIRID" Method="sp_GetGIRDetailByGIRID">
-    <Parameter Name="MIRId" Parameter="mIRId" Type="System.Int32" DbType="Int" />
-    <ElementType Name="sp_GetGIRDetailByGIRIDResult">
-      <Column Name="MaterialRequestDetail_Id" Type="System.Int64" DbType="BigInt NOT NULL" CanBeNull="false" />
-      <Column Name="MaterialRequest_Id" Type="System.Int64" DbType="BigInt" CanBeNull="true" />
-      <Column Name="Req_Num" Type="System.Int64" DbType="BigInt" CanBeNull="true" />
-      <Column Name="Item_Id" Type="System.Int64" DbType="BigInt" CanBeNull="true" />
-      <Column Name="QTY" Type="System.Decimal" DbType="Decimal(38,4) NOT NULL" CanBeNull="false" />
-      <Column Name="Item_Code" Type="System.String" DbType="VarChar(15)" CanBeNull="true" />
-      <Column Name="Description" Type="System.String" DbType="VarChar(200)" CanBeNull="true" />
-      <Column Name="Unit" Type="System.String" DbType="VarChar(150) NOT NULL" CanBeNull="false" />
-      <Column Name="Rate" Type="System.Decimal" DbType="Decimal(18,4) NOT NULL" CanBeNull="false" />
-    </ElementType>
-  </Function>
   <Function Name="dbo.sp_FillTestsByCategory" Method="sp_FillTestsByCategory">
     <Parameter Name="CategoryID" Parameter="categoryID" Type="System.String" DbType="NVarChar(50)" />
     <Parameter Name="searchTexttest" Type="System.String" DbType="NVarChar(100)" />
@@ -13041,6 +13027,21 @@
       <Column Name="SaleRate" Type="System.Decimal" DbType="Decimal(18,4)" CanBeNull="true" />
     </ElementType>
   </Function>
+  <Function Name="dbo.sp_GetGIRDetailByGIRID" Method="sp_GetGIRDetailByGIRID">
+    <Parameter Name="MIRId" Parameter="mIRId" Type="System.Int32" DbType="Int" />
+    <ElementType Name="sp_GetGIRDetailByGIRIDResult">
+      <Column Name="MaterialRequestDetail_Id" Type="System.Int64" DbType="BigInt NOT NULL" CanBeNull="false" />
+      <Column Name="MaterialRequest_Id" Type="System.Int64" DbType="BigInt" CanBeNull="true" />
+      <Column Name="Req_Num" Type="System.Int64" DbType="BigInt" CanBeNull="true" />
+      <Column Name="Item_Id" Type="System.Int64" DbType="BigInt" CanBeNull="true" />
+      <Column Name="QTY" Type="System.Decimal" DbType="Decimal(38,4) NOT NULL" CanBeNull="false" />
+      <Column Name="Item_Code" Type="System.String" DbType="VarChar(15)" CanBeNull="true" />
+      <Column Name="Description" Type="System.String" DbType="VarChar(200)" CanBeNull="true" />
+      <Column Name="Unit" Type="System.String" DbType="VarChar(150) NOT NULL" CanBeNull="false" />
+      <Column Name="UOM_Qty" Type="System.Decimal" DbType="Decimal(18,2)" CanBeNull="true" />
+      <Column Name="Rate" Type="System.Decimal" DbType="Decimal(18,4) NOT NULL" CanBeNull="false" />
+    </ElementType>
+  </Function>
   <Function Name="dbo.spGetAllitemsDetails" Method="spGetAllitemsDetails">
     <Parameter Name="searchText" Type="System.String" DbType="NVarChar(100)" />
     <Parameter Name="allowPharmacy" Type="System.Boolean" DbType="Bit" />
@@ -13052,10 +13053,11 @@
       <Column Name="Description" Type="System.String" DbType="VarChar(200)" CanBeNull="true" />
       <Column Name="Unit" Type="System.String" DbType="VarChar(150) NOT NULL" CanBeNull="false" />
       <Column Name="Active" Type="System.Boolean" DbType="Bit" CanBeNull="true" />
+      <Column Name="UOM_Qty" Type="System.Decimal" DbType="Decimal(18,2)" CanBeNull="true" />
       <Column Name="LastQty" Type="System.Decimal" DbType="Decimal(18,2) NOT NULL" CanBeNull="false" />
       <Column Name="Stock" Type="System.Decimal" DbType="Decimal(18,2)" CanBeNull="true" />
       <Column Name="LastRequiredDate" Type="System.DateTime" DbType="DateTime" CanBeNull="true" />
-      <Column Name="Last_PurchaseRate" Type="System.Decimal" DbType="Decimal(18,4)" CanBeNull="true" />
+      <Column Name="Last_PurchaseRate" Type="System.Decimal" DbType="Decimal(37,6)" CanBeNull="true" />
     </ElementType>
   </Function>
   <Function Name="dbo.spGetitemsDetailswithStock" Method="spGetitemsDetailswithStock">
@@ -13069,6 +13071,7 @@
       <Column Name="Unit" Type="System.String" DbType="VarChar(150) NOT NULL" CanBeNull="false" />
       <Column Name="Stock" Type="System.Decimal" DbType="Decimal(18,2)" CanBeNull="true" />
       <Column Name="Active" Type="System.Boolean" DbType="Bit" CanBeNull="true" />
+      <Column Name="UOM_Qty" Type="System.Decimal" DbType="Decimal(18,2)" CanBeNull="true" />
       <Column Name="LastQty" Type="System.Decimal" DbType="Decimal(18,2) NOT NULL" CanBeNull="false" />
       <Column Name="Last_PurchaseRate" Type="System.Decimal" DbType="Decimal(18,4)" CanBeNull="true" />
       <Column Name="LastRequiredDate" Type="System.DateTime" DbType="DateTime" CanBeNull="true" />
