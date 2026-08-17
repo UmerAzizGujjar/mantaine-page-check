@@ -5,12 +5,46 @@
     <script type="text/javascript">
         $(document).ready(function () {
             $('#ctl00_lblMessage').hide();
+            LoadLocationFilter();
             LoadPage();
             $(document).on('change', '#select-all', function () {
                 var checked = $(this).is(':checked');
                 $('.select-row').prop('checked', checked);
             });
         });
+
+        function LoadLocationFilter() {
+            $.ajax({
+                type: "POST",
+                url: "InPatientsAdmissionList.aspx/GetWardsAndRooms",
+                contentType: "application/json; charset=utf-8",
+                dataType: "json",
+                success: function (response) {
+                    try {
+                        var items = JSON.parse(response.d);
+                        var $ddl = $('#ddlLocationFilter');
+                        $ddl.empty().append('<option value="all">All Wards/Rooms</option>');
+                        if (items && items.length > 0) {
+                            $.each(items, function (i, item) {
+                                $ddl.append(new Option(item.Name, item.Id));
+                            });
+                        }
+                        if ($.fn.select2) {
+                            $ddl.select2({
+                                width: '100%',
+                                placeholder: 'Filter by Ward/Room',
+                                allowClear: true
+                            });
+                        }
+                    } catch (e) {
+                        console.error("Error parsing wards/rooms: ", e);
+                    }
+                },
+                error: function (xhr, status, error) {
+                    console.error("Failed to load wards/rooms: ", error);
+                }
+            });
+        }
 
 
         function PrintSlip(In_Patient_ID) {
@@ -88,7 +122,8 @@
                             length: data.length,
                             sortColumn: data.columns[data.order[0].column].name,
                             sortColumnDirection: data.order[0].dir,
-                            searchValue: data.search.value
+                            searchValue: data.search.value,
+                            locationFilter: $('#ddlLocationFilter').val() || 'all'
                         }),
                         contentType: "application/json; charset=utf-8",
                         dataType: "json",
@@ -216,6 +251,10 @@
                         label.appendChild(lengthDropdown);
                     }
                 }
+            });
+
+            $('#ddlLocationFilter').on('change', function () {
+                $('#tblResult').DataTable().ajax.reload();
             });
         }
 
@@ -394,6 +433,14 @@
 <asp:Content ID="Content2" ContentPlaceHolderID="MainContent" runat="server">
     <div id="POdetails" style="margin-top: 15px;">
         <div>
+            <div class="row" style="margin-bottom: 10px;">
+                <div class="col-lg-2 col-md-4 col-sm-6">
+                    <label for="ddlLocationFilter" style="font-weight: 600; font-size: 13px;">Filter by Ward/Room:</label>
+                    <select id="ddlLocationFilter" style="width: 100%;">
+                        <option value="all">All Wards/Rooms</option>
+                    </select>
+                </div>
+            </div>
        <table class="table table-hover table-striped table-bordered" id="tblResult" style="overflow:scroll; height:auto;">
             <thead id="ihead">
                 <tr>

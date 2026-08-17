@@ -182,13 +182,31 @@ namespace PMS
         }
 
         [WebMethod]
-        public static object ViewList(int draw, int start, int length, string sortColumn, string sortColumnDirection, string searchValue)
+        public static object ViewList(int draw, int start, int length, string sortColumn, string sortColumnDirection, string searchValue, string locationFilter)
         {
             try
             {
                 using (var _dbContext = new DataBaseDataContext())
                 {
                     string userId = HttpContext.Current.Session["UserId"].ToString();
+
+                    string wardIdFilter = null;
+                    string roomIdFilter = null;
+                    if (!string.IsNullOrEmpty(locationFilter) && locationFilter != "all")
+                    {
+                        if (locationFilter.StartsWith("W_"))
+                        {
+                            int wid;
+                            if (int.TryParse(locationFilter.Substring(2), out wid))
+                                wardIdFilter = wid.ToString();
+                        }
+                        else if (locationFilter.StartsWith("R_"))
+                        {
+                            int rid;
+                            if (int.TryParse(locationFilter.Substring(2), out rid))
+                                roomIdFilter = rid.ToString();
+                        }
+                    }
 
                     var Total_Patients = _dbContext.In_Patients.Count();
                     var IN_Monitoring = from P in _dbContext.Reg_patients
@@ -201,6 +219,12 @@ namespace PMS
                                             _dbContext.GetDataValueName("Patient Main Category", IP.Department).Contains(searchValue) ||
                                             _dbContext.GetDataValueName("Patient Type", IP.Patient_Discount_Type).Contains(searchValue) ||
                                             SqlMethods.DateDiffDay(IP.Admission_Date, DateTime.Now).ToString().Contains(searchValue)
+                                        )
+                                        && (
+                                            wardIdFilter == null || (IP.Ward_ID != null && IP.Ward_ID.ToString() == wardIdFilter)
+                                        )
+                                        && (
+                                            roomIdFilter == null || (IP.Room_ID != null && IP.Room_ID.ToString() == roomIdFilter)
                                         )
                                         select new
                                         {
@@ -323,6 +347,43 @@ namespace PMS
             catch (Exception ex)
             {
                 throw;
+            }
+        }
+
+        [WebMethod]
+        public static string GetWardsAndRooms()
+        {
+            try
+            {
+                using (DataBaseDataContext db = new DataBaseDataContext())
+                {
+                    var wards = (from w in db.Ward_Definitions
+                                 select new
+                                 {
+                                     Id = "W_" + w.Ward_ID,
+                                     Name = "Ward: " + w.Ward_Type,
+                                     SortOrder = 1
+                                 }).ToList();
+
+                    var rooms = (from r in db.Rooms
+                                 select new
+                                 {
+                                     Id = "R_" + r.Room_ID,
+                                     Name = "Room: " + r.Name,
+                                     SortOrder = 2
+                                 }).ToList();
+
+                    var combined = wards.Concat(rooms)
+                                         .OrderBy(x => x.SortOrder)
+                                         .ThenBy(x => x.Name)
+                                         .ToList();
+
+                    return new JavaScriptSerializer().Serialize(combined);
+                }
+            }
+            catch (Exception ex)
+            {
+                return new JavaScriptSerializer().Serialize(new List<object>());
             }
         }
     }

@@ -559,7 +559,7 @@
                 return false;
             } else {
                 
-                var newRow = buildNewRow(length, PR_Num, itemcode, item_name, unit, Qty, UOM_Qty, Rate, pr_detail_id, total_stock, last_po_rate);
+                var newRow = buildNewRow(length, PR_Num, itemcode, item_name, unit, Qty, UOM_Qty, Rate, pr_detail_id, total_stock, last_po_rate, last_vendor_name);
                 $("#tblItemDescription tbody").append(newRow);
 
                 
@@ -620,7 +620,7 @@
         }
 
         // Helper function to build row HTML
-        function buildNewRow(length, PR_Num, itemcode, item_name, unit, Qty, UOM_Qty, Rate, pr_detail_id, total_stock, lastPORate,lastVendorName) {
+function buildNewRow(length, PR_Num, itemcode, item_name, unit, Qty, UOM_Qty, Rate, pr_detail_id, total_stock, lastPORate, last_vendor_name) {
             return '<tr>' +
                 '<td style="padding-top:7px!important;"><input type="hidden" id="txtPRDId' + length + '" name="txtPRDId" value="' + pr_detail_id + '" style="width: 75px !important;text-align:right" />' + length + '</td>' +
                 '<td style="padding-top: 7px!important;"><input type="hidden" name="txtPRNo" id="txtPRNO' + length + '" value="' + PR_Num + '" style="text-align:right ;width:50px !important;font-size:9px;height:20px;padding-top: 7px!important;padding-right: 3px!important;"/>' + PR_Num + '</td>' +
@@ -650,7 +650,7 @@
                 '<td style="padding-top: 7px!important; text-align:right;">' +
                 '<input type="text" readonly="readonly" id="txtLastPORate' + length + '" name="txtLastPORate" ' +
                 'style="width:50px !important;text-align:right;font-size:9px;height:20px;" value="' + parseFloat(lastPORate).toFixed(2) + '" />' +
-                '<td style="padding-top: 7px!important; text-align:center; font-size:9px;"><input type="hidden" name="txtLastVendorName" value="' + (lastVendorName || '') + '" />' + (lastVendorName || '') + '</td>' + 
+                '<td style="padding-top: 7px!important; text-align:center; font-size:9px;"><input type="hidden" name="txtLastVendorName" value="' + (last_vendor_name || '') + '" />' + (last_vendor_name || '') + '</td>' +
                 '<td style="padding-top: 7px!important;"><a href="javascript:void(0)" onclick="ExcludeFromPayment(this)"><i class="fa fa-trash" style="font-size: 13px;margin-left: 16px; color: #f30a0a;position:relative;left: -10px;"></i></a>  </td>' +
                 '</tr>';
         }
