@@ -8292,514 +8292,401 @@
          <input type="hidden" name="hdn_finalBill"  id="hdn_finalBill" />
         <input type="hidden" name="hdnAppointment_ID" value="0" id="hdnAppointment_ID" />
         <input type="hidden" id="hdnMainDepartmentFallback" value="" />     
-       <div class="row">
-           <div class="col-md-2 text-end">
-            <input type="button" value="Add Patient" id="btnSearchPatient" onclick="OpenModal()" class="btn-primry" style="border-radius: 28px; width: 100%;" />
-        </div>
-           <div class="col-md-2 text-end">
-               <input type="button" class="btn-primry" value="Queue" onclick="openQueue()" />
-        </div>
-           <div class="col-md-2 text-end">
-               <input type="button" class="btn-primry" value="Discharge Que" onclick="openDischargeQueue()" />
-        </div>
-           <div class="col-md-2 text-end">
-    <input type="button" value="Appointment" id="btnAppointment" onclick="OpenAppointmentModal()" 
-           class="btn-primry" style="border-radius: 28px; width: 100%;" />
-</div>
-       </div>
+<div class="bp-page">
 
-<div class="row">
-    <!-- Left Card -->
-    <div class="col-lg-5 col-md-5 col-sm-12">
-        <div class="card">
-            <div class="card-body">
-                <div class="row">
-                    <div class="col-lg-4 col-md-5 col-sm-6 text-center">
-                        <div class="image-container">
-                            <img src="~../../../../wwwroot/SOURCE_IMAGES/DASHBOARD_ICONS/billing2.png" alt="Patient Image" class="img-fluid rounded-circle patient-image" />
-                        </div>
+    <!-- ============ META BAR ============ -->
+    <div class="bp-meta-bar">
+        <div class="bp-meta-title">
+            <i class="fa fa-file-text-o"></i>
+            <span>Billing Process</span>
+            <span class="bp-badge bp-badge--new" id="billStatusBadge">New Bill</span>
+        </div>
+        <div class="bp-meta-actions">
+            <button type="button" class="bp-meta-btn" id="btnSearchPatient" onclick="OpenModal()">
+                <i class="fa fa-user-plus"></i> Add Patient
+            </button>
+            <button type="button" class="bp-meta-btn" onclick="openQueue()">
+                <i class="fa fa-list"></i> Queue
+            </button>
+            <button type="button" class="bp-meta-btn" onclick="openDischargeQueue()">
+                <i class="fa fa-sign-out"></i> Discharge Que
+            </button>
+            <button type="button" class="bp-meta-btn" id="btnAppointment" onclick="OpenAppointmentModal()">
+                <i class="fa fa-calendar"></i> Appointment
+            </button>
+        </div>
+    </div>
+
+    <!-- ============ PATIENT + BILL INFO BENTO ============ -->
+    <div class="bp-bento">
+
+        <!-- Patient Card -->
+        <div class="bp-card">
+            <div class="bp-card-header">
+                <i class="fa fa-user-circle"></i>
+                <span>Patient Information</span>
+                <span class="bp-card-badge" id="lblPatientDiscountType"></span>
+            </div>
+            <div class="bp-card-body">
+                <div class="bp-patient">
+                    <div class="bp-patient-avatar">
+                        <img src="~../../../../wwwroot/SOURCE_IMAGES/DASHBOARD_ICONS/billing2.png" alt="Patient" id="patientImage" />
                     </div>
-                    <div class="col-lg-8 col-md-7 col-sm-6">
-                        <div class="row mb-3 mtt">
-                            <div class="col-lg-5 col-md-5 col-sm-6  ">
-                                <label>Patient Name:</label>
-                            </div>
-                            <div class="col-lg-7 col-md-7 col-sm-6">
-                                <label id="lblPatienName"></label>
-                            </div>
-                        </div>
-                        <div class="row mb-3 mtt">
-                            <div class="col-lg-5 col-md-5 col-sm-6 formrgn">
-                                <label>Contact No:</label>
-                            </div>
-                            <div class="col-lg-7 col-md-7 col-sm-6">
-                                <label id="lblContactNo"></label>
-                            </div>
-                        </div>
-                        <div class="row mb-3 mtt">
-                            <div class="col-lg-5 col-md-5 col-sm-6 formrgn">
-                                <label>Gender:</label>
-                            </div>
-                            <div class="col-lg-7 col-md-7 col-sm-6">
-                                <label id="lblGender"></label>
-                            </div>
-                        </div>
-                        <div class="row mb-3 mtt">
-                            <div class="col-lg-5 col-md-5 col-sm-6 formrgn">
-                                <label>Age Years:</label>
-                            </div>
-                            <div class="col-lg-7 col-md-7 col-sm-6">
-                                <label id="lblAgeYears"></label>
-                            </div>
-                        </div>
-
-                        <div class="row mb-3 mtt">
-                            <div class="col-lg-5 col-md-5 col-sm-6 formrgn">
-                                <label>Reg Date</label>
-                            </div>
-                            <div class="col-lg-7 col-md-7 col-sm-6">
-                                <label id="lblRegDate"></label>
-                            </div>
-                        </div>
-
-                        <div class="row mb-3 mtt">
-                            <div class="col-lg-5 col-md-5 col-sm-6 formrgn">
-                                <label>Address:</label>
-                            </div>
-                            <div class="col-lg-7 col-md-7 col-sm-6">
-                                <label id="lblAddress"></label>
-                            </div>
-                        </div>
-                        <div class="row">
-                          <div class="col-md-5 formrgn">
-                                <label for="txtBillDate">Bill Date:</label>
-                            </div>
-                            <div class="col-md-6">
-                                <input type="text" id="txtBillDate" class="form-control" disabled />
-                            </div>
-                        </div>
+                    <div class="bp-patient-info">
+                        <div class="bp-patient-name" id="lblPatienName">Patient Name</div>
+                        <dl class="bp-patient-grid">
+                            <dt>Contact</dt><dd id="lblContactNo">—</dd>
+                            <dt>Gender</dt><dd id="lblGender">—</dd>
+                            <dt>Age</dt><dd id="lblAgeYears">—</dd>
+                            <dt>Reg Date</dt><dd id="lblRegDate">—</dd>
+                            <dt>Address</dt><dd id="lblAddress" style="white-space:normal;overflow:visible;text-overflow:clip;">—</dd>
+                            <dt>Bill Date</dt><dd><input type="text" id="txtBillDate" class="bp-input bp-input--readonly" disabled style="height:24px;font-size:11px;padding:2px 6px;" /></dd>
+                        </dl>
                     </div>
                 </div>
             </div>
         </div>
-    </div>
 
-    <!-- Right Card -->
-    <div class="col-lg-7 col-md-5 col-sm-12">
-        <div class="card">
-            <div class="card-body">
-                <div class="row mb-3">
-                    <div class="col-lg-3 col-md-5 col-sm-6 formrgn">
-                          <label for="txtMRNo">MR No *:</label>
-                        <input type="text" id="txtMRNo" class="form-control"  />
+        <!-- Bill Card -->
+        <div class="bp-card">
+            <div class="bp-card-header">
+                <i class="fa fa-file-text"></i>
+                <span>Bill Details</span>
+                <span class="bp-card-badge">#<span id="billNoBadge">New</span></span>
+            </div>
+            <div class="bp-card-body">
+                <div class="bp-bento bp-bento--4">
+                    <div class="bp-field">
+                        <label class="bp-label" for="txtMRNo">MR No <span class="bp-required">*</span></label>
+                        <input type="text" id="txtMRNo" class="bp-input" />
                     </div>
-                    <div class="col-lg-3 col-md-5 col-sm-6 formrgn">
-                        <label for="txtBillNo">Bill No:</label>
-                        <input type="text" id="txtBillNo" class="form-control" disabled="disabled" value="New" />
+                    <div class="bp-field">
+                        <label class="bp-label" for="txtBillNo">Bill No</label>
+                        <input type="text" id="txtBillNo" class="bp-input bp-input--readonly" disabled="disabled" value="New" />
                     </div>
-                    <div class="col-lg-3 col-md-5 col-sm-6 formrgn">
-                        <label>Patient Category:</label>
-                 
-                        <input type="text" id="lblPatientCategory"  disabled="disabled" class="form-control" />
+                    <div class="bp-field">
+                        <label class="bp-label">Patient Category</label>
+                        <input type="text" id="lblPatientCategory" disabled="disabled" class="bp-input bp-input--readonly" />
                     </div>
-                    <div class="col-lg-3 col-md-5 col-sm-6 formrgn">
-                        <label>Department:</label>
-                      
-                        <input type="text" id="lblDepartment" disabled="disabled" class="form-control" />
+                    <div class="bp-field">
+                        <label class="bp-label">Department</label>
+                        <input type="text" id="lblDepartment" disabled="disabled" class="bp-input bp-input--readonly" />
                     </div>
-                </div>  
-
-                <div class="row mb-3">
-                    <div class="col-lg-3 col-md-5 col-sm-6 formrgn3">
-                        <label>Category</label>
-                        <select id="txtMaindepartment"  class="form-select">
+                </div>
+                <div class="bp-bento bp-bento--4">
+                    <div class="bp-field">
+                        <label class="bp-label">Category</label>
+                        <select id="txtMaindepartment" class="bp-select">
                             <option></option>
                         </select>
                     </div>
-                    <div class="col-lg-3 col-md-5 col-sm-6 formrgn3">
-                        <label>Companies:</label>
-                   
-                        <select  disabled="disabled" id="lblOPDpnl" class="form-select">
+                    <div class="bp-field">
+                        <label class="bp-label">Companies</label>
+                        <select disabled="disabled" id="lblOPDpnl" class="bp-select">
                             <option></option>
                         </select>
                     </div>
-                    <div class="col-lg-3 col-md-5 col-sm-6 formrgn3">
-                        <label>Admit Date</label>
-                        <input type="text" id="txtadmitdate" disabled="disabled" class="form-control" />
+                    <div class="bp-field">
+                        <label class="bp-label">Admit Date</label>
+                        <input type="text" id="txtadmitdate" disabled="disabled" class="bp-input bp-input--readonly" />
                     </div>
-                    <div class="col-lg-3 col-md-5 col-sm-6 formrgn3">
-                        <label>Discharge Date</label>
-                        <input type="text" id="txtdischargedate" disabled="disabled" class="form-control" />
+                    <div class="bp-field">
+                        <label class="bp-label">Discharge Date</label>
+                        <input type="text" id="txtdischargedate" disabled="disabled" class="bp-input bp-input--readonly" />
                     </div>
-                <div class="row mb-3">
-                    <div class="col-lg-3 col-md-5 col-sm-6 formrgn2">
-                        <label>Ward Type</label>
-                        <input type="text" id="wardtype" disabled="disabled" class="form-control" />
+                </div>
+                <div class="bp-bento bp-bento--4">
+                    <div class="bp-field">
+                        <label class="bp-label">Ward Type</label>
+                        <input type="text" id="wardtype" disabled="disabled" class="bp-input bp-input--readonly" />
                     </div>
-
-                    <div class="col-lg-3 col-md-5 col-sm-6 formrgn2">
-                        <label>Bed No</label>
-                        <input type="text" id="bedno" disabled="disabled" class="form-control" />
+                    <div class="bp-field">
+                        <label class="bp-label">Bed No</label>
+                        <input type="text" id="bedno" disabled="disabled" class="bp-input bp-input--readonly" />
                     </div>
-
-                    <div class="col-lg-3 col-md-5 col-sm-6 formrgn2">
-                        <label>Room Type</label>
-                        <input type="text" id="txtroomtype" disabled="disabled" class="form-control" />
+                    <div class="bp-field">
+                        <label class="bp-label">Room Type</label>
+                        <input type="text" id="txtroomtype" disabled="disabled" class="bp-input bp-input--readonly" />
                     </div>
-                    <div class="col-lg-3 col-md-5 col-sm-6 formrgn2">
-                        <label>Room No</label>
-                        <input type="text" id="txtroomno"  disabled="disabled" class="form-control" />
+                    <div class="bp-field">
+                        <label class="bp-label">Room No</label>
+                        <input type="text" id="txtroomno" disabled="disabled" class="bp-input bp-input--readonly" />
                     </div>
                 </div>
             </div>
         </div>
     </div>
-        </div>
-        </div>
 
-    <!-- Eighth Row -->
-    <div class="row mb-2 align-items-center">
-        <div class="col-md-2">
-            <label for="ddlChargePolicy">Charge Policy: *</label>
-             <select id="ddlChargePolicy" class="form-select">
-                <option>Cash Patient</option>
-                <!-- Other options -->
-            </select>
+    <!-- ============ CHARGE POLICY & BILLING CONFIG ============ -->
+    <div class="bp-card">
+        <div class="bp-card-header">
+            <i class="fa fa-cog"></i>
+            <span>Billing Configuration</span>
         </div>
-           <div class="col-md-2">
-            <label for="ddlReffered_By">Referred By:</label>
-               <select id="ddlReffered_By" class="form-select">
-                <!-- Doctor options -->
-            </select>
-        </div>
-        <div class="col-md-2">
-        <label for="ddlcasher">Cashier:</label>
-              <select id="ddlcasher" class="form-select">
-                <option>Please Select</option>
-                <!-- Other options -->
-            </select>
-        </div>
-        <div class="col-md-2">
-           <label for="txtBillAmountToday">Total Bill Amount Today:</label>
-              <input type="text" id="txtBillAmountToday" class="form-control" disabled />
-        </div>        
-        <div class="col-lg-2">
-
-            <label>Procedure Description:</label>
-            <asp:DropDownList ID="ddlpro_dis" runat="server" AppendDataBoundItems="true"></asp:DropDownList>
-            <%--a--%>
-        </div>
-                <div class="col-md-2">
-        <label for="ddlpanel">Panel:</label>
-              <select id="ddlpanel" class="form-select">
-                <%--<option>Please Select</option>--%>
-                <!-- Other options -->
-            </select>
+        <div class="bp-card-body">
+            <div class="bp-bento bp-bento--6">
+                <div class="bp-field">
+                    <label class="bp-label" for="ddlChargePolicy">Charge Policy <span class="bp-required">*</span></label>
+                    <select id="ddlChargePolicy" class="bp-select">
+                        <option>Cash Patient</option>
+                    </select>
+                </div>
+                <div class="bp-field">
+                    <label class="bp-label" for="ddlReffered_By">Referred By</label>
+                    <select id="ddlReffered_By" class="bp-select"></select>
+                </div>
+                <div class="bp-field">
+                    <label class="bp-label" for="ddlcasher">Cashier</label>
+                    <select id="ddlcasher" class="bp-select">
+                        <option>Please Select</option>
+                    </select>
+                </div>
+                <div class="bp-field">
+                    <label class="bp-label" for="txtBillAmountToday">Total Bill Today</label>
+                    <input type="text" id="txtBillAmountToday" class="bp-input bp-input--readonly" disabled />
+                </div>
+                <div class="bp-field">
+                    <label class="bp-label">Procedure Description</label>
+                    <asp:DropDownList ID="ddlpro_dis" runat="server" AppendDataBoundItems="true" CssClass="bp-select"></asp:DropDownList>
+                </div>
+                <div class="bp-field">
+                    <label class="bp-label" for="ddlpanel">Panel</label>
+                    <select id="ddlpanel" class="bp-select"></select>
+                </div>
+                <div class="bp-field">
+                    <label class="bp-label">Bill Department</label>
+                    <select id="BillDepartment" class="bp-select"></select>
+                </div>
+                <div class="bp-field">
+                    <label class="bp-label">Bill Category</label>
+                    <select id="BillCategory" class="bp-select"></select>
+                </div>
+                <div class="bp-field">
+                    <label class="bp-label">Package Type</label>
+                    <input id="PackageType" type="text" readonly="readonly" class="bp-input bp-input--readonly" />
+                </div>
+                <div class="bp-field">
+                    <label class="bp-label">Package Name</label>
+                    <input id="PackageName" type="text" readonly="readonly" class="bp-input bp-input--readonly" />
+                </div>
+                <div class="bp-field">
+                    <label class="bp-label" for="ddlUserBranch">Branch</label>
+                    <select id="ddlUserBranch" class="bp-select">
+                        <option value="">Loading...</option>
+                    </select>
+                </div>
+                <div class="bp-field">
+                    <label class="bp-label">Patient Type</label>
+                    <select id="ddlPatientType" class="bp-select"></select>
+                </div>
+                <div class="bp-field">
+                    <label class="bp-label">Insurance Card No</label>
+                    <input type="text" id="txtInsuranceCardNo" class="bp-input bp-input--readonly" disabled="disabled" />
+                </div>
+                <div class="bp-field">
+                    <label class="bp-label" for="txtRemarks">Remarks</label>
+                    <input type="text" id="txtRemarks" class="bp-input" />
+                </div>
+            </div>
         </div>
     </div>
-    
-        <div class="row">
-              <div class="col-lg-2 col-md-3">
-            <label for="txtRemarks">Remarks:</label>
-                  <input type="text" id="txtRemarks" />
-        </div>
-              <div class="col-lg-2">
-                  <label>Bill Department</label>
-                  <select id="BillDepartment">
-                   
-                  </select>
-              </div>
-              <div class="col-lg-2">
-                  <label>Bill Category</label>
-                  <select id="BillCategory" ></select>
-              </div>
-                <div class="col-lg-2">
-                    <label>Package Type</label>
-                    <input id="PackageType" type="text" readonly="readonly" />
-                </div>
-                <div class="col-lg-2">
-                    <label>Package Name</label>
-                    <input id="PackageName" type="text" readonly="readonly" />
-                </div>
-            <div class="col-lg-2 col-md-4 col-sm-6">
-                <label for="ddlUserBranch">Branch</label>
-                <select id="ddlUserBranch" class="form-control">
-                    <option value="">Loading...</option>
-                </select>
-            </div>
 
-        
+    <!-- ============ ADD SERVICES TOOLBAR ============ -->
+    <div class="bp-toolbar">
+        <span class="bp-toolbar-label"><i class="fa fa-plus-circle"></i> Add Services</span>
+        <div class="bp-toolbar-divider"></div>
+        <input type="text" id="txtAddService" class="bp-input" placeholder="Type service / item name..." style="max-width:240px;" />
+        <button type="button" class="bp-btn bp-btn--primary bp-btn--sm" id="btnAddServiceOrItem" onclick="AddServiceOrItem()">
+            <i class="fa fa-plus"></i> Add Srvc / Itm
+        </button>
+        <button type="button" class="bp-btn bp-btn--outline bp-btn--sm" onclick="Populate()" id="btnAddTestAll">
+            <i class="fa fa-flask"></i> Add Test
+        </button>
+        <button type="button" class="bp-btn bp-btn--outline bp-btn--sm" onclick="PopulatePackage()" id="btnrecoomendpackage">
+            <i class="fa fa-cube"></i> View Package
+        </button>
+        <button type="button" class="bp-btn bp-btn--outline bp-btn--sm" onclick="PopulateDetails()" id="btnbilldetail">
+            <i class="fa fa-list-alt"></i> View Bills
+        </button>
+        <div style="display:none;">
+            <input style="display:none;" type="text" id="txtAddPackage" />
+            <input type="button" style="width:auto;display:none;" value="Add Package" onclick="AddPackage()" id="btnAddPackage" />
         </div>
-        <div class="row">
-            <div class="col-lg-2">
-                <label>Patient Type</label>
-                <select id="ddlPatientType">
-                </select>
-            </div>
-            <div class="col-lg-2 col-md-5 col-sm-6 formrgn">
-                <label>Insurance Card No:</label>
-                <input type="text" id="txtInsuranceCardNo" class="form-control" disabled="disabled" />
-            </div>
-        </div>
-        
-        <div class="row mtop">
-            <div class="col-lg-8">
-                <div class="row">
-                    <div class="col-lg-3">
-                        <input type="text" id="txtAddService" />
-                    </div>
-                    <div class="col-lg-2">
-                        <input type="button"  class="btn-primry" value="Add Srvc / Itm" id="btnAddServiceOrItem" onclick="AddServiceOrItem()" />
-                    </div>
-                    <div class="col-lg-2">
-                        <input type="button"  class="btn-primry" value="Add Test" onclick="Populate()" id="btnAddTestAll" />
-                    </div>
-                    <div class="col-lg-2">
-                        <input type="button"  class="btn-primry" value="View Package" onclick="PopulatePackage()" id="btnrecoomendpackage" />
-                    </div>
-                    <div class="col-lg-2">
-                        <input type="button"  class="btn-primry" value="View Bills" onclick="PopulateDetails()" id="btnbilldetail" />
-                    </div>
-                </div>
-            </div>
-        </div>
+    </div>
 
-        <div class="row">
-            <div style="display: none;">
-                <input style="display: none;" type="text" id="txtAddPackage" />
-                <input type="button" style="width: auto; display: none;" value="Add Package" onclick="AddPackage()" id="btnAddPackage" />
+    <!-- ============ SERVICE TABLE + SUMMARY PANEL ============ -->
+    <div class="bp-bento" style="grid-template-columns: minmax(0, 3fr) minmax(240px, 1fr);">
+
+        <!-- Service items table -->
+        <div class="bp-card">
+            <div class="bp-card-header">
+                <i class="fa fa-list-ul"></i>
+                <span>Service / Item Details</span>
+                <span class="bp-card-badge" id="rowCountBadge">0 items</span>
             </div>
-            <div class="col-lg-6" style="display: none;">
-                <label>Doctor Share Distribution</label>
-                <a href="javascript:void(0)" style="float: right; display: none;" onclick="Share_Doctor()">Add More</a>
-            </div>
-        </div>
-            <div class="row">
-                <div class="col-lg-9 table-container" style="overflow-y:scroll;height:300px">
-                    <table class="table blank"  id="tblDetails">
+            <div class="bp-table-container">
+                <table class="bp-table" id="tblDetails">
                     <thead>
                         <tr>
-                            <th style="width: 50px; text-align: left;">Sr. </th>
-                            <th style="width: 53px; text-align: left;">Action </th>
-                            <th style="text-align: left;width: 352px;">Description </th>
-                            <th style="text-align: left;width: 352px;">Remarks </th>
-                             <th style="width: 65px; text-align: left;">Qty </th>
-                            <th style="width: 60px; text-align: left;">Amount </th>
-                            <th style="width: 70px; text-align: left;">Dis % </th>
-                            <th style="width: 95px; text-align: left;">Dis Amount </th>
-                            <th style="width: 100px; text-align: left;">Net Amount </th>
-                            <th style="width: 100px; text-align: left;">Doc Share </th>
-                            <th style="width: 100px; text-align: left;">Hos Share </th>
-                            <th style="width: 170px; text-align: left;">Doctor </th>
-                            <th style="width: 170px; text-align: left;">Issue Date </th>
-                            <th style="width: 50px; text-align: left;" id="thAppr">Appr. </th>
+                            <th style="width:40px;">Sr.</th>
+                            <th style="width:60px;">Action</th>
+                            <th>Description</th>
+                            <th>Remarks</th>
+                            <th style="width:55px;">Qty</th>
+                            <th style="width:70px;">Amount</th>
+                            <th style="width:55px;">Dis %</th>
+                            <th style="width:75px;">Dis Amt</th>
+                            <th style="width:90px;">Net Amt</th>
+                            <th style="width:80px;">Doc Share</th>
+                            <th style="width:80px;">Hos Share</th>
+                            <th style="width:140px;">Doctor</th>
+                            <th style="width:130px;">Issue Date</th>
+                            <th style="width:55px;" id="thAppr">Appr.</th>
                         </tr>
                     </thead>
                     <tbody>
                     </tbody>
                 </table>
+            </div>
+        </div>
+
+        <!-- Summary panel -->
+        <div class="bp-summary">
+            <div class="bp-summary-header">
+                <i class="fa fa-calculator"></i>
+                <span>Bill Summary</span>
+            </div>
+
+            <div class="bp-summary-row">
+                <span class="bp-summary-label">Total Amount</span>
+                <input type="text" id="txtTotalAmount" class="bp-summary-value bp-summary-value--readonly" disabled="disabled" />
+            </div>
+            <div class="bp-summary-row">
+                <span class="bp-summary-label">Previous Amount</span>
+                <input type="text" id="txtprevious_Amount" class="bp-summary-value bp-summary-value--readonly" disabled="disabled" />
+            </div>
+            <div class="bp-summary-row">
+                <span class="bp-summary-label">Previous Paid</span>
+                <input type="text" id="txtprevious_paid" class="bp-summary-value bp-summary-value--readonly" disabled="disabled" />
+            </div>
+            <div class="bp-summary-row">
+                <span class="bp-summary-label">Previous Balance</span>
+                <input type="text" id="txt_balance" class="bp-summary-value bp-summary-value--readonly" disabled="disabled" />
+            </div>
+            <div class="bp-summary-row">
+                <span class="bp-summary-label">Total Payable</span>
+                <input type="text" id="txtTotalPayable" class="bp-summary-value bp-summary-value--readonly" disabled="disabled" />
+            </div>
+            <div class="bp-summary-row">
+                <span class="bp-summary-label">Over &amp; Above</span>
+                <input type="text" id="txtOver_and_Above" class="bp-summary-value bp-summary-value--readonly" disabled="disabled" />
+            </div>
+
+            <div class="bp-summary-row">
+                <span class="bp-summary-label">Discount</span>
+                <div class="bp-summary-inline">
+                    <input type="text" id="txtDisPer" placeholder="%" oninput="CalculateSummariesMaster(false)" />
+                    <input type="text" id="txtDisAmt" placeholder="Amt" readonly onkeyup="CalculateSummariesMaster(true)" />
                 </div>
-                <div class="col-lg-3">
-                        <div class="row" >
-         <div class="col-lg-5 col-md-4 col-sm-6">
-            <label>Total Amount</label>
-            </div>
-        <div class="col-lg-6 col-md-4 col-sm-6">
-             <input type="text" id="txtTotalAmount" style="height: 30px; text-align: right; font-size: 22px;" disabled="disabled" />
-            </div>
-    </div>
-
-    <div class="row">
-         <div class="col-lg-5 col-md-4 col-sm-6">
-            <label>Previous Amount</label>
-        </div>
-        <div class="col-lg-6 col-md-4 col-sm-6">
-            <input type="text" id="txtprevious_Amount" style="height: 30px; text-align: right; font-size: 22px;" disabled="disabled" />
-        </div>
-    </div>
-
-    <div class="row">
-         <div class="col-lg-5 col-md-4 col-sm-6">
-            <label>Previous Paid</label>
-        </div>
-        <div class="col-lg-6 col-md-4 col-sm-6">
-            <input type="text" id="txtprevious_paid" style="height: 30px; text-align: right; font-size: 22px;" disabled="disabled" />
-        </div>
-    </div>
-
-    <div class="row">
-         <div class="col-lg-5 col-md-4 col-sm-6">
-            <label>Previous Balance</label>
-        </div>
-            <div class="col-lg-6 col-md-4 col-sm-6">
-            <input type="text" id="txt_balance" style="height: 30px; text-align: right; font-size: 22px;" disabled="disabled" />
-        </div>
-        </div>
-    <div class="row">
-         <div class="col-lg-5 col-md-4 col-sm-6">
-            <label>Total Payable: </label>
             </div>
 
-          <div class="col-lg-6 col-md-4 col-sm-6">
-            <input type="text" id="txtTotalPayable" style="height: 30px;text-align: right; font-size: 22px;"  disabled="disabled" />
-         </div>
-   </div>
-     <div class="row">
-          <div class="col-lg-5 col-md-4 col-sm-6">
-             <label>Over and Above </label>
-             </div>
-         <div class="col-lg-6 col-md-4 col-sm-6">
-             <input type="text" id="txtOver_and_Above " style="height: 30px; text-align: right; font-size: 22px;" disabled="disabled" />
-        </div>
-         </div>
-
-    <div class="row">
-         <div class="col-lg-5 col-md-4 col-sm-6">
-            <label class="summary-label">Discount :</label>
-        </div>
-        <div class="col-lg-6 col-md-8 col-sm-12 discount-section">
-       <input type="text" id="txtDisPer" class="summary-input" style="width: 30% !important;height: 30px; text-align: right; font-size: 22px;" oninput="CalculateSummariesMaster(false)" />
-            
-            <input type="text" id="txtDisAmt" class="summary-input" style="width: 33% !important;height: 30px; text-align: right; font-size: 22px;" readonly onkeyup="CalculateSummariesMaster(true)" />
-            <label>%</label>
-        </div>
-        </div>
-                    <div class="row">
-                        <div class="col-lg-5 col-md-4 col-sm-6">
-                            <label class="summary-label">Sales Tax :</label>
-                        </div>
-                        <div class="col-lg-6 col-md-8 col-sm-12 discount-section">
-                            <select id="ddlSalesTax" class="form-control" style="text-align: right; font-size: 19px;" onchange="CalculateSalesTax()">
-                                <option value="0">Select Tax</option>
-                            </select>
-                        </div>
-                    </div>
-
-<input type="hidden" id="hdnSalesTaxID" value="0" />
-<input type="hidden" id="txtFinalAmount" value="0" />
-<input type="hidden" id="hdnBaseNetPayable" value="0" />
-<input type="hidden" id="hdnSalesTaxPercentage" value="0" />
-
-    <div class="row">
-         <div class="col-lg-5 col-md-4 col-sm-6">
-            <label>Net Payable:  </label>
-        </div>
-        <div class="col-lg-6 col-md-4 col-sm-6">
-            <input type="text" id="txtNetPayable" style="height: 30px; text-align: right; font-size: 22px; color: red !important;" disabled="disabled" />
-        </div>
-    </div>
-
-    <div class="row">
-         <div class="col-lg-5 col-md-4 col-sm-6">
-            <label>C. In Hand</label>
+            <div class="bp-summary-row">
+                <span class="bp-summary-label">Sales Tax</span>
+                <select id="ddlSalesTax" class="bp-summary-select" onchange="CalculateSalesTax()">
+                    <option value="0">Select Tax</option>
+                </select>
             </div>
-        <div class="col-lg-3 col-md-3 col-sm-4">
-            <select id="ddlCashInHand" class="form-control">
-                <option value="0">Select</option>
-            </select>
+
+            <input type="hidden" id="hdnSalesTaxID" value="0" />
+            <input type="hidden" id="txtFinalAmount" value="0" />
+            <input type="hidden" id="hdnBaseNetPayable" value="0" />
+            <input type="hidden" id="hdnSalesTaxPercentage" value="0" />
+
+            <div class="bp-summary-row bp-summary-row--net">
+                <span class="bp-summary-label">Net Payable</span>
+                <input type="text" id="txtNetPayable" class="bp-summary-value" style="background:rgba(255,255,255,0.95);color:var(--bp-primary);font-weight:700;" disabled="disabled" />
             </div>
-        <div class="col-lg-3 col-md-3 col-sm-4">
-            <input type="text" value="0" id="txtcashinhand" style="height: 30px;  text-align: right; font-size: 22px;" onkeyup="SumTotalAmountrecived()"/>
-            </div>
-    </div>
 
-     <div class="row">
-          <div class="col-lg-5 col-md-4 col-sm-6">
-             <label>Bank Amt</label>
-             </div>
-         <div class="col-lg-3 col-md-4 col-sm-6">
-             <select id="ddl_Bank" class="form-control" >
-               
-             </select>
-             </div>
-         <div class="col-lg-3 col-md-4 col-sm-6">
-             <input type="text" id="txtbankcash" value="0" style="height: 30px; text-align: right; font-size: 22px;" onkeyup="SumTotalAmountrecived()" />
-             </div>
-         </div>
-
-    <div class="row">
-         <div class="col-lg-5 col-md-4 col-sm-6">
-            <label>Amount Received:</label>
-        </div>
-        <div class="col-lg-6 col-md-4 col-sm-6">
-            <input type="text" id="txtAmountReceived" style="height: 30px; text-align: right; font-size: 22px;" onkeyup="CountBalance()" disabled="disabled" />
-        </div>
-    </div>
-
-    <div class="row">
-         <div class="col-lg-5 col-md-4 col-sm-6">
-            <label>Advance Amount</label>
-        </div>
-        <div class="col-lg-6 col-md-4 col-sm-6">
-            <input type="text" id="txtadvance_amount"  style="height: 30px; text-align: right; font-size: 22px;" disabled="disabled" />
-        </div>
-    </div>
-
-    <div class="row" style="display:none;">
-         <div class="col-lg-5 col-md-4 col-sm-6">
-            <label>Advance Amount</label>
-        </div>
-        <div class="col-lg-6 col-md-4 col-sm-6">
-            <input type="text" id="txtRefund_amount"  style="height: 30px; text-align: right; font-size: 22px;" disabled="disabled" />
-        </div>
-    </div>
-
-    <div class="row">
-         <div class="col-lg-5 col-md-4 col-sm-6">
-            <label>Balance:  </label>
-        </div>
-        <div class="col-lg-6 col-md-4 col-sm-6">
-            <input type="text" id="txtBalances" style="height: 30px; text-align: right; font-size: 22px; color: red;" disabled="disabled" />
-            <input type="hidden" id="txtPreviousBlnc" style="height: 30px; text-align: right; font-size: 22px; color: red;" disabled="disabled" />
-        </div>
-    </div>
+            <div class="bp-summary-row">
+                <span class="bp-summary-label">Cash in Hand</span>
+                <div class="bp-summary-inline">
+                    <select id="ddlCashInHand" class="bp-summary-select" style="width:auto;">
+                        <option value="0">Select</option>
+                    </select>
+                    <input type="text" value="0" id="txtcashinhand" onkeyup="SumTotalAmountrecived()" />
                 </div>
+            </div>
 
-                         </div>
-                        <div class="row mtop"  style="display:none;">
-                            <div class="col-lg-10" ></div>
-                            <div class="col-lg-1">
-                                Doctors Distribution
-                            </div> 
-                            <div class="col-lg-1">
-                             <input type="text" id="txtDoctorTotalDistribution"   disabled="disabled"/>
-                            </div>
-                        </div>                                                                                            
-              
-      
-        <div class="row" style="display:none;" id="dvSummary">
-            <div class="col-lg-6 col-md-8 col-sm-9"></div>
-            <div class="col-lg-2 col-md-4 col-sm-6">
-                <label style="margin-top:11%" >Total Doctor Share</label>
+            <div class="bp-summary-row">
+                <span class="bp-summary-label">Bank Amt</span>
+                <div class="bp-summary-inline">
+                    <select id="ddl_Bank" class="bp-summary-select" style="width:auto;"></select>
+                    <input type="text" id="txtbankcash" value="0" onkeyup="SumTotalAmountrecived()" />
                 </div>
-            <div class="col-lg-2 col-md-4 col-sm-6">
-                <input type="text" id="txtTotalDoctorShare" style="height: 30px; text-align: right; font-size: 22px;margin-top:11%" disabled="disabled" />
+            </div>
+
+            <div class="bp-summary-row bp-summary-row--total">
+                <span class="bp-summary-label">Amount Received</span>
+                <input type="text" id="txtAmountReceived" class="bp-summary-value bp-summary-value--readonly" style="background:rgba(255,255,255,0.85);" disabled="disabled" />
+            </div>
+
+            <div class="bp-summary-row">
+                <span class="bp-summary-label">Advance Amount</span>
+                <input type="text" id="txtadvance_amount" class="bp-summary-value bp-summary-value--readonly" disabled="disabled" />
+            </div>
+
+            <div class="bp-summary-row" style="display:none;">
+                <span class="bp-summary-label">Refund</span>
+                <input type="text" id="txtRefund_amount" class="bp-summary-value bp-summary-value--readonly" disabled="disabled" />
+            </div>
+
+            <div class="bp-summary-row bp-summary-row--balance">
+                <span class="bp-summary-label">Balance</span>
+                <input type="text" id="txtBalances" class="bp-summary-value bp-summary-value--readonly" style="background:rgba(255,255,255,0.85);" disabled="disabled" />
+                <input type="hidden" id="txtPreviousBlnc" />
             </div>
         </div>
+    </div>
 
-    
-            </div>
-   
-                    <div class="col-lg-6 table-container" style="overflow-y: scroll; height: 300px; display: none;">
-                        <table class="table table-container table-responsive" id="Doctor_Share_Table">
-                            <thead>
-                                <tr>
-                                    <th>Doctor Name</th>
-                                    <th>Share Type</th>
-                                    <th>Amount</th>
-                                    <th>Action</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                            </tbody>
-                        </table>
-                    </div>
+    <!-- ============ DOCTOR SHARE (hidden section) ============ -->
+    <div class="row mtop" style="display:none;">
+        <div class="col-lg-10"></div>
+        <div class="col-lg-1">Doctors Distribution</div>
+        <div class="col-lg-1">
+            <input type="text" id="txtDoctorTotalDistribution" disabled="disabled" />
+        </div>
+    </div>
 
+    <div class="row" style="display:none;" id="dvSummary">
+        <div class="col-lg-6 col-md-8 col-sm-9"></div>
+        <div class="col-lg-2 col-md-4 col-sm-6">
+            <label style="margin-top:11%;">Total Doctor Share</label>
+        </div>
+        <div class="col-lg-2 col-md-4 col-sm-6">
+            <input type="text" id="txtTotalDoctorShare" style="height:30px;text-align:right;font-size:22px;margin-top:11%;" disabled="disabled" />
+        </div>
+    </div>
 
-        <div class="row">
-            <div class="col-lg-8 mtop">
-                <div class="row">
-                    <div class="col-lg-2">
+    <div class="col-lg-6 table-container" style="overflow-y:scroll;height:300px;display:none;">
+        <table class="table table-container table-responsive" id="Doctor_Share_Table">
+            <thead>
+                <tr>
+                    <th>Doctor Name</th>
+                    <th>Share Type</th>
+                    <th>Amount</th>
+                    <th>Action</th>
+                </tr>
+            </thead>
+            <tbody></tbody>
+        </table>
+    </div>
+
+    <!-- ============ ACTION BUTTONS ============ -->
+    <div class="bp-card" style="padding:10px 14px;">
+      <div class="row">
+          <div class="col-lg-8 col-md-8 col-sm-8">
+              <div class="row">
+                 <div class="col-lg-2">
                         <input type="button" class="btn-primry" value="Save & Print" onclick="SaveRecord()" id="btnSave" />
                     </div>
                     <div class="col-lg-2">
@@ -8828,9 +8715,13 @@
                         <input type="button" style="width: 100px; display: none;" value="Patient Copy" name="name" onclick="BackToPrintPatient();"  />
                     
                     </div>
-                </div>
-            </div>
-        </div>
+              </div>
+          </div>
+      </div>
+    </div>
+
+</div>
+
         <%--modal here--%>
 
     
