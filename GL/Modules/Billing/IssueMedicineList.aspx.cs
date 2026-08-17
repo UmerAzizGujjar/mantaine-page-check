@@ -72,6 +72,7 @@ namespace PMS
                                             Pharma_trans_Type = AB.Pharma_trans_Type,
                                             pharmacy_Department = _dbContext.GetDataValueName("Patient Main Category", AB.pharmacy_Department),
                                             WareHouse = _dbContext.GetDataValueName("Ware House", AB.Ware_House) ?? "",
+                                            Status = AB.Status ?? "Created",
                                         };
 
                     var FilteredCount = IssueMedicine.Count();
