@@ -1027,7 +1027,6 @@ namespace PMS
         partial void UpdateSys_Approval_Log(Sys_Approval_Log instance);
         partial void DeleteSys_Approval_Log(Sys_Approval_Log instance);
         #endregion
-
         public DataBaseDataContext() :
                 base(global::System.Configuration.ConfigurationManager.ConnectionStrings["ASPGLConnectionString"].ConnectionString, mappingSource)
         {
@@ -5791,7 +5790,7 @@ namespace PMS
         }
 
         [global::System.Data.Linq.Mapping.FunctionAttribute(Name = "dbo.spGetAllitemsDetails")]
-        public ISingleResult<spGetAllitemsDetailsResult> spGetAllitemsDetails([global::System.Data.Linq.Mapping.ParameterAttribute(DbType = "NVarChar(100)")] string searchText, [global::System.Data.Linq.Mapping.ParameterAttribute(DbType = "Bit")] System.Nullable<bool> allowPharmacy, [global::System.Data.Linq.Mapping.ParameterAttribute(DbType = "Bit")] System.Nullable<bool> allowGeneralItem, [global::System.Data.Linq.Mapping.ParameterAttribute(DbType = "Int")] System.Nullable<int> warehouse)
+        public ISingleResult<spGetAllitemsDetailsResult> spGetAllitemsDetails([global::System.Data.Linq.Mapping.ParameterAttribute(DbType = "NVarChar(100)")] string searchText, [global::System.Data.Linq.Mapping.ParameterAttribute(DbType = "Bit")] System.Nullable<bool> allowPharmacy, [global::System.Data.Linq.Mapping.ParameterAttribute(DbType = "Bit")] System.Nullable<bool> allowGeneralItem, [global::System.Data.Linq.Mapping.ParameterAttribute(DbType = "VarChar(50)")] string warehouse)
         {
             IExecuteResult result = this.ExecuteMethodCall(this, ((MethodInfo)(MethodInfo.GetCurrentMethod())), searchText, allowPharmacy, allowGeneralItem, warehouse);
             return ((ISingleResult<spGetAllitemsDetailsResult>)(result.ReturnValue));
@@ -138041,6 +138040,8 @@ namespace PMS
         partial void OnRed_ExerciseChanged();
         partial void OnRed_OtherChanging(System.Nullable<bool> value);
         partial void OnRed_OtherChanged();
+        partial void OnRed_Other_SpecChanging(string value);
+        partial void OnRed_Other_SpecChanged();
         partial void OnRed_FractureChanging(System.Nullable<bool> value);
         partial void OnRed_FractureChanged();
         partial void OnRed_CancerChanging(System.Nullable<bool> value);
@@ -138055,8 +138056,6 @@ namespace PMS
         partial void OnRed_InfectionChanged();
         partial void OnRed_Bladder_BowelChanging(System.Nullable<bool> value);
         partial void OnRed_Bladder_BowelChanged();
-        partial void OnRed_Other_SpecChanging(string value);
-        partial void OnRed_Other_SpecChanged();
         partial void OnDiagnosisChanging(string value);
         partial void OnDiagnosisChanged();
         partial void OnDiag_CervicalChanging(string value);
@@ -139770,6 +139769,46 @@ namespace PMS
             }
         }
 
+        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_Red_Other", DbType = "Bit")]
+        public System.Nullable<bool> Red_Other
+        {
+            get
+            {
+                return this._Red_Other;
+            }
+            set
+            {
+                if ((this._Red_Other != value))
+                {
+                    this.OnRed_OtherChanging(value);
+                    this.SendPropertyChanging();
+                    this._Red_Other = value;
+                    this.SendPropertyChanged("Red_Other");
+                    this.OnRed_OtherChanged();
+                }
+            }
+        }
+
+        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_Red_Other_Spec", DbType = "VarChar(100)")]
+        public string Red_Other_Spec
+        {
+            get
+            {
+                return this._Red_Other_Spec;
+            }
+            set
+            {
+                if ((this._Red_Other_Spec != value))
+                {
+                    this.OnRed_Other_SpecChanging(value);
+                    this.SendPropertyChanging();
+                    this._Red_Other_Spec = value;
+                    this.SendPropertyChanged("Red_Other_Spec");
+                    this.OnRed_Other_SpecChanged();
+                }
+            }
+        }
+
         [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_Red_Fracture", DbType = "Bit")]
         public System.Nullable<bool> Red_Fracture
         {
@@ -139906,46 +139945,6 @@ namespace PMS
                     this._Red_Bladder_Bowel = value;
                     this.SendPropertyChanged("Red_Bladder_Bowel");
                     this.OnRed_Bladder_BowelChanged();
-                }
-            }
-        }
-
-        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_Red_Other", DbType = "Bit")]
-        public System.Nullable<bool> Red_Other
-        {
-            get
-            {
-                return this._Red_Other;
-            }
-            set
-            {
-                if ((this._Red_Other != value))
-                {
-                    this.OnRed_OtherChanging(value);
-                    this.SendPropertyChanging();
-                    this._Red_Other = value;
-                    this.SendPropertyChanged("Red_Other");
-                    this.OnRed_OtherChanged();
-                }
-            }
-        }
-
-        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_Red_Other_Spec", DbType = "VarChar(100)")]
-        public string Red_Other_Spec
-        {
-            get
-            {
-                return this._Red_Other_Spec;
-            }
-            set
-            {
-                if ((this._Red_Other_Spec != value))
-                {
-                    this.OnRed_Other_SpecChanging(value);
-                    this.SendPropertyChanging();
-                    this._Red_Other_Spec = value;
-                    this.SendPropertyChanged("Red_Other_Spec");
-                    this.OnRed_Other_SpecChanged();
                 }
             }
         }
@@ -244249,9 +244248,9 @@ namespace PMS
 
         private System.Nullable<bool> _Active;
 
-        private System.Nullable<decimal> _Stock;
-
         private decimal _LastQty;
+
+        private System.Nullable<decimal> _Stock;
 
         private System.Nullable<System.DateTime> _LastRequiredDate;
 
@@ -244339,22 +244338,6 @@ namespace PMS
             }
         }
 
-        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_Stock", DbType = "Decimal(18,2)")]
-        public System.Nullable<decimal> Stock
-        {
-            get
-            {
-                return this._Stock;
-            }
-            set
-            {
-                if ((this._Stock != value))
-                {
-                    this._Stock = value;
-                }
-            }
-        }
-
         [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_LastQty", DbType = "Decimal(18,2) NOT NULL")]
         public decimal LastQty
         {
@@ -244367,6 +244350,22 @@ namespace PMS
                 if ((this._LastQty != value))
                 {
                     this._LastQty = value;
+                }
+            }
+        }
+
+        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_Stock", DbType = "Decimal(18,2)")]
+        public System.Nullable<decimal> Stock
+        {
+            get
+            {
+                return this._Stock;
+            }
+            set
+            {
+                if ((this._Stock != value))
+                {
+                    this._Stock = value;
                 }
             }
         }
