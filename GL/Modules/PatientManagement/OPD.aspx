@@ -85,6 +85,7 @@
             LoadBankAccounts($('#ddlbankcash').val());
         });
         var cardvalidation;
+        var isSaving = false;
         function checkcardvalidation() {
 
             $.ajax({

@@ -1,4 +1,5 @@
 ﻿
+var isSaving = false;
 $(document).ready(function () {
     debugger;
     CheckCNICUpdateonCondition();
@@ -1425,6 +1426,8 @@ function Approve(pat_id) {
     });
 }
 function SaveData() {
+    if (isSaving) return;
+    isSaving = true;
     $('#btnsave').attr('disabled', true);
 
     var regid = $('#hdn_regid').val();
@@ -1674,6 +1677,8 @@ function SaveData() {
 
 
     if (isPatientAdmitted) {
+        isSaving = false;
+        $('#btnsave').attr('disabled', false);
         return;
     }
 
@@ -1738,6 +1743,7 @@ function SaveData() {
         dataType: "json",
         success: function (response) {
                     if (response.d.startsWith("ERROR:")) {
+                        isSaving = false;
                         $('#btnsave').attr('disabled', false);
                         Swal.fire({
                     icon: 'error',
@@ -1773,6 +1779,7 @@ function SaveData() {
             window.location.href = "OPDView.aspx";
         },
         error: function (xhr, status, error) {
+            isSaving = false;
             $('#btnsave').attr('disabled', false);
             console.error("Error: ", error);
             console.log("Response Text: ", xhr.responseText);

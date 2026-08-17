@@ -1,4 +1,5 @@
 
+var isSaving = false;
 $(document).ready(function () {
     debugger;
     isCNICValidationRequired();
@@ -1199,7 +1200,9 @@ function Approve(pat_id) {
     });
 }
 function SaveData() {
-    debugger;
+    if (isSaving) return;
+    isSaving = true;
+    $('#btnsave').attr('disabled', true);
 
     var regid = $('#hdn_regid').val();
     var appid = $('#hdn_aptid').val();
@@ -1263,6 +1266,8 @@ function SaveData() {
                 htmlContainer: 'swal-big-text'
             }
         });
+        isSaving = false;
+        $('#btnsave').attr('disabled', false);
         return;
     }
 
@@ -1279,6 +1284,8 @@ function SaveData() {
                 htmlContainer: 'swal-big-text'
             }
         });
+        isSaving = false;
+        $('#btnsave').attr('disabled', false);
         return;
     }
 
@@ -1300,6 +1307,8 @@ function SaveData() {
                 htmlContainer: 'swal-big-text'
             }
         });
+        isSaving = false;
+        $('#btnsave').attr('disabled', false);
         return;
     }
     if (!pat_category || pat_category === "0") {
@@ -1315,6 +1324,8 @@ function SaveData() {
                 htmlContainer: 'swal-big-text'
             }
         });
+        isSaving = false;
+        $('#btnsave').attr('disabled', false);
         return;
     }
 
@@ -1331,6 +1342,8 @@ function SaveData() {
                 htmlContainer: 'swal-big-text'
             }
         });
+        isSaving = false;
+        $('#btnsave').attr('disabled', false);
         return;
     }
 
@@ -1347,6 +1360,8 @@ function SaveData() {
                 htmlContainer: 'swal-big-text'
             }
         });
+        isSaving = false;
+        $('#btnsave').attr('disabled', false);
         return;
     }
 
@@ -1363,6 +1378,8 @@ function SaveData() {
                 htmlContainer: 'swal-big-text'
             }
         });
+        isSaving = false;
+        $('#btnsave').attr('disabled', false);
         return;
     }
 
@@ -1390,6 +1407,8 @@ function SaveData() {
             confirmButtonText: 'OK',
             confirmButtonColor: '#3085d6'
         });
+        isSaving = false;
+        $('#btnsave').attr('disabled', false);
         return;
     }
 
@@ -1439,6 +1458,8 @@ function SaveData() {
 
 
     if (isPatientAdmitted) {
+        isSaving = false;
+        $('#btnsave').attr('disabled', false);
         return;
     }
 
@@ -1514,6 +1535,8 @@ function SaveData() {
                         htmlContainer: 'swal-big-text'
                     }
                 });
+                isSaving = false;
+                $('#btnsave').attr('disabled', false);
                 return;
             }
 
@@ -1536,6 +1559,8 @@ function SaveData() {
             window.location.href = "OPDView.aspx";
         },
         error: function (xhr, status, error) {
+            isSaving = false;
+            $('#btnsave').attr('disabled', false);
             console.error("Error: ", error);
             console.log("Response Text: ", xhr.responseText);
             Swal.fire({
