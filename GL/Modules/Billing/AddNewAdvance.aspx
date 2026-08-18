@@ -452,143 +452,104 @@
 
     <div id="header" class="container-fluid">
         <input type="hidden" id="hdPatientID" />
-        <div class="row">
-            <!-- Left Card -->
-            <div class="col-lg-5 col-md-5 col-sm-12">
-                <div class="card">
-                    <div class="card-body">
-                        <div class="row">
-                            <div class="col-lg-5 col-md-5 col-sm-6 text-center">
-                                <div class="image-container">
-                                    <img src="~../../../../wwwroot/SOURCE_IMAGES/DASHBOARD_ICONS/AddAdvance.png" alt="Patient Image" class="img-fluid rounded-circle patient-image" />
-                                </div>
-                            </div>
-                            <div class="col-lg-7 col-md-5 col-sm-6">
-                                <div class="row mb-3 mtt">
-                                    <div class="col-lg-5 col-md-5 col-sm-6">
-                                        <label for="txtMRNo" class="form-label">MR No *:</label>
-                                    </div>
-                                    <div class="col-lg-7 col-md-5 col-sm-6 top">
-                                        <input type="text" id="txtMRNo" class="form-control" />
-                                    </div>
-                                </div>
-                                <div class="row mb-3 mtt">
-                                    <div class="col-lg-5 col-md-5 col-sm-6">
-                                        <label class="form-label">Patient Name :</label>
-                                    </div>
-                                    <div class="col-lg-7 col-md-5 col-sm-6 top">
-                                        <label id="lblPatienName"></label>
-                                    </div>
-                                </div>
-                                <div class="row mb-3 mtt">
-                                    <div class="col-lg-5 col-md-5 col-sm-6 formrgn">
-                                        <label class="form-label">Contact No :</label>
-                                    </div>
-                                    <div class="col-lg-7 col-md-5 col-sm-6 top">
-                                        <label id="lblContactNo"></label>
-                                    </div>
-                                </div>
-                                <div class="row mb-3 mtt">
-                                    <div class="col-lg-5 col-md-5 col-sm-6 formrgn">
-                                        <label class="form-label">Reg. Date :</label>
-                                    </div>
-                                    <div class="col-lg-7 col-md-5 col-sm-6 top">
-                                        <label id="lblRegDate"></label>
-                                    </div>
-                                </div>
-                                <div class="row mb-3 mtt">
-                                    <div class="col-lg-5 col-md-5 col-sm-6 formrgn">
-                                        <label class="form-label">Gender :</label>
-                                    </div>
-                                    <div class="col-lg-7 col-md-5 col-sm-6 top">
-                                        <label id="lblGender"></label>
-                                    </div>
-                                </div>
-                            </div>
+        <label id="lblOutput" style="background-color: silver; display: none;"></label>
+        <label id="lblOutputShow" style="margin-left: -214px; display: none;"></label>
+
+        <div class="bp-meta-bar">
+            <div class="bp-meta-title">
+                <i class="fa fa-money"></i>
+                <span>Advance Payment</span>
+                <span class="bp-badge bp-badge--new" id="advanceStatusBadge">New Advance</span>
+            </div>
+        </div>
+
+        <div class="bp-bento">
+            <div class="bp-card">
+                <div class="bp-card-header">
+                    <i class="fa fa-user-circle"></i>
+                    <span>Patient Information</span>
+                </div>
+                <div class="bp-card-body">
+                    <div class="bp-patient">
+                        <div class="bp-patient-avatar">
+                            <img src="~../../../../wwwroot/SOURCE_IMAGES/DASHBOARD_ICONS/AddAdvance.png" alt="Patient" id="patientImage" />
+                        </div>
+                        <div class="bp-patient-info">
+                            <div class="bp-patient-name" id="lblPatienName">Patient Name</div>
+                            <dl class="bp-patient-grid">
+                                <dt>MR No</dt>
+                                <dd><input type="text" id="txtMRNo" /></dd>
+                                <dt>Contact</dt><dd id="lblContactNo"></dd>
+                                <dt>Gender</dt><dd id="lblGender"></dd>
+                                <dt>Reg Date</dt><dd id="lblRegDate"></dd>
+                            </dl>
                         </div>
                     </div>
                 </div>
             </div>
-            <!-- Right Card -->
-            <div class="col-lg-5 col-md-5 col-sm-12">
-                <div class="card">
-                    <div class="card-body">
-                        <div class="row mb-3">
-                            <div class="col-lg-5 col-md-5 col-sm-6 formrgn">
-                                <label class="form-label">Age Years :</label>
-                            </div>
-                            <div class="col-lg-7 col-md-5 col-sm-6">
-                                <label id="lblAgeYears"></label>
-                            </div>
-                        </div>
-                        <div class="row mb-3">
-                            <div class="col-lg-5 col-md-5 col-sm-6 formrgn">
-                                <label class="form-label">Address :</label>
-                            </div>
-                            <div class="col-lg-7 col-md-5 col-sm-6">
-                                <label id="lblAddress"></label>
-                            </div>
-                        </div>
-                        <div class="row mb-3">
-                            <div class="col-lg-5 col-md-5 col-sm-6 formrgn">
-                                <label class="form-label">Patient Category :</label>
-                            </div>
-                            <div class="col-lg-7 col-md-5 col-sm-6">
-                                <label id="lblPatientCategory"></label>
-                            </div>
-                        </div>
-                        <div class="row mb-3">
-                            <div class="col-lg-5 col-md-5 col-sm-6 formrgn">
-                                <label class="form-label">Department :</label>
-                            </div>
-                            <div class="col-lg-7 col-md-5 col-sm-6">
-                                <label id="lblDepartment"></label>
-                            </div>
-                        </div>
-                        <div class="row mb-3">
-                            <div class="col-lg-5 col-md-5 col-sm-6 formrgn">
-                                <label class="form-label">InPatient Admit Category :</label>
-                            </div>
-                            <div class="col-lg-7 col-md-5 col-sm-6">
-                                <label id="lblPatientDiscountType" style="background-color: silver;"></label>
-                            </div>
-                        </div>
+
+            <div class="bp-card">
+                <div class="bp-card-header">
+                    <i class="fa fa-info-circle"></i>
+                    <span>Additional Details</span>
+                </div>
+                <div class="bp-card-body" style="padding:0;">
+                    <div class="bp-summary-row">
+                        <span class="bp-summary-label">Age</span>
+                        <span id="lblAgeYears" class="bp-summary-value bp-summary-value--readonly"></span>
+                    </div>
+                    <div class="bp-summary-row">
+                        <span class="bp-summary-label">Address</span>
+                        <span id="lblAddress" style="margin-left:auto;color:var(--bp-text);font-weight:600;text-align:right;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;max-width:65%;"></span>
+                    </div>
+                    <div class="bp-summary-row">
+                        <span class="bp-summary-label">Patient Category</span>
+                        <span id="lblPatientCategory" style="margin-left:auto;color:var(--bp-text);font-weight:600;"></span>
+                    </div>
+                    <div class="bp-summary-row">
+                        <span class="bp-summary-label">Department</span>
+                        <span id="lblDepartment" style="margin-left:auto;color:var(--bp-text);font-weight:600;"></span>
+                    </div>
+                    <div class="bp-summary-row">
+                        <span class="bp-summary-label">Admit Category</span>
+                        <span id="lblPatientDiscountType" style="margin-left:auto;color:var(--bp-text);font-weight:600;"></span>
                     </div>
                 </div>
             </div>
         </div>
 
-
-        <div class="row">
-           <div class="col-md-2 mb-3">
-                <label for="ddlPaymentType" class="form-label">Payment Type</label>
-                <select id="ddlPaymentType">
-                    <option value="0">Select</option>
-                    <option value="01">Cash</option>
-                    <option value="02">Bank</option>
-                </select>
+        <div class="bp-card">
+            <div class="bp-card-header">
+                <i class="fa fa-credit-card"></i>
+                <span>Advance Details</span>
             </div>
-            <div class="col-md-2 mb-3">
-                <label for="txtAdvanceDate" class="form-label">Advance Date :</label>
-                <input type="text" id="txtAdvanceDate" class="form-control" />
-            </div>
-            <div class="col-md-2 mb-3">
-                <label for="txtAdvanceAmount" class="form-label">Advance Amount *:</label>
-                <input type="text" id="txtAdvanceAmount" class="form-control" />
-            </div>
-            <div class="col-md-3 mb-3" style="display: none">
-                <label class="form-label">Output:</label>
-                <label id="lblOutput" style="background-color: silver;"></label>
-                <label id="lblOutputShow" style="margin-left: -214px;"></label>
-            </div>
-            <div class="col-md-3 mb-3">
-                <label for="txtRemarks" class="form-label">Remarks:</label>
-                <textarea id="txtRemarks" style="width: 100% !important; height: 35px !important;"
-                    class="form-control" cols="" rows="2"></textarea>
+            <div class="bp-card-body">
+                <div class="bp-bento bp-bento--4" style="gap:12px;">
+                    <div>
+                        <label class="bp-summary-label" style="display:block;margin-bottom:4px;">Payment Type</label>
+                        <select id="ddlPaymentType" class="bp-select">
+                            <option value="0">Select</option>
+                            <option value="01">Cash</option>
+                            <option value="02">Bank</option>
+                        </select>
+                    </div>
+                    <div>
+                        <label class="bp-summary-label" style="display:block;margin-bottom:4px;">Advance Date</label>
+                        <input type="text" id="txtAdvanceDate" class="bp-input datepicker" />
+                    </div>
+                    <div>
+                        <label class="bp-summary-label" style="display:block;margin-bottom:4px;">Advance Amount *</label>
+                        <input type="text" id="txtAdvanceAmount" class="bp-input" style="text-align:right;font-weight:700;color:var(--bp-primary);" />
+                    </div>
+                    <div>
+                        <label class="bp-summary-label" style="display:block;margin-bottom:4px;">Remarks</label>
+                        <textarea id="txtRemarks" class="bp-input" style="height:30px;resize:vertical;"></textarea>
+                    </div>
+                </div>
             </div>
         </div>
 
-        <div class="row">
+        <div class="row mt-3">
             <div class="col-lg-8">
                 <div class="row">
                     <div class="col-lg-2 col-md-3 col-sm-6">
