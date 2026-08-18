@@ -940,10 +940,18 @@
                                 status = 'Cancelled';
                             }
 
+                            var actions = '';
+                            if (status === 'Booked') {
+                                actions = '<td style="width: 250px;">' +
+                                    '<a href="#" onclick="Edit(' + data[i].Appointment_ID + ')" style="border-radius: 4px; background-color: #438eb9 ; color: white; padding: 4px 11px; margin-left: 9px;">Change Schedule</a>' +
+                                    '<a href="#" onclick="CancelAppointment(' + data[i].Appointment_ID + ')" style="border-radius: 4px; background-color: #ea0000; color: white; padding: 4px 11px; margin-left: 9px;">Cancel</a>' +
+                                    '</td>';
+                            } else {
+                                actions = '<td></td>';
+                            }
+
                             rows += '<tr>' +
-                                '<td>' + (i + 1) + '</td>' + '<td>' + data[i].Appointment_No + '</td>' + '<td>' + toTitleCase(data[i].Patient_Name.replace("_", " ")) + '</td>' + '<td>' + data[i].emp_name + '</td>' + '<td>' + data[i].Phone + '</td>' + '<td>' + App_Date + '</td>' + '<td>' + time + '</td>' + '<td name="statusCell">' + status + '</td>' + '<td style="display:none;" name="cancelAppointment">' + data[i].cancelAppointment + '</td>' + '<td style="width: 250px;">' + '<a href="#" onclick="Edit(' + data[i].Appointment_ID + ')" style="border-radius: 4px; background-color: #438eb9 ; color: white; padding: 4px 11px; margin-left: 9px;">Change Schedule</a>' +
-                                '<a href="#" onclick="CancelAppointment(' + data[i].Appointment_ID + ')" style="border-radius: 4px; background-color: #ea0000; color: white; padding: 4px 11px; margin-left: 9px;">Cancel</a>' +
-                                '</td>' +
+                                '<td>' + (i + 1) + '</td>' + '<td>' + data[i].Appointment_No + '</td>' + '<td>' + toTitleCase(data[i].Patient_Name.replace("_", " ")) + '</td>' + '<td>' + data[i].emp_name + '</td>' + '<td>' + data[i].Phone + '</td>' + '<td>' + App_Date + '</td>' + '<td>' + time + '</td>' + '<td name="statusCell">' + status + '</td>' + '<td style="display:none;" name="cancelAppointment">' + data[i].cancelAppointment + '</td>' + actions +
                                 '</tr>';
                         });
 
@@ -959,14 +967,14 @@
 
                             
                             if (status === "Visited") {
-                                $statusCell.css('background-color', '#77f577'); 
+                                $statusCell.css('color', '#1b7a1b').css('font-weight', 'bold'); 
                                 $(this).find('td:last a').hide();
                             } else if (status === "Booked") {
                                 $statusCell.css('background-color', '#ffdc86');
                             }
 
-                            if (cancel === "true") {
-                                $statusCell.css('background-color', '#FF6060'); 
+                            if (cancel === "true" || status === "Cancelled") {
+                                $statusCell.css('color', '#d32f2f').css('font-weight', 'bold'); 
                                 $(this).find('td:last a').hide(); 
                             }
                         });

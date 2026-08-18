@@ -200,10 +200,158 @@
         .labelIGP {
             font-size: 11px !important;
         }
+
+        /* ========== PAGE LOADER STYLES ========== */
+        #page-loader {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(255, 255, 255, 0.95);
+            z-index: 9999;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            flex-direction: column;
+            right: 0;
+            bottom: 0;
+        }
+
+        #page-loader .loader-container {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+        }
+
+        #page-loader .loader-spinner {
+            border: 5px solid #f3f3f3;
+            border-top: 5px solid #3498db;
+            border-radius: 50%;
+            width: 60px;
+            height: 60px;
+            animation: spin 1s linear infinite;
+            margin-bottom: 20px;
+        }
+
+        #page-loader .loader-text {
+            font-size: 16px;
+            color: #333;
+            font-weight: bold;
+            margin-top: 10px;
+        }
+
+        #page-loader .loader-progress {
+            width: 300px;
+            height: 6px;
+            background: #e0e0e0;
+            border-radius: 3px;
+            margin-top: 20px;
+            overflow: hidden;
+        }
+
+        #page-loader .loader-progress-bar {
+            height: 100%;
+            background: #3498db;
+            width: 0%;
+            transition: width 0.3s ease;
+            border-radius: 3px;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        #page-loader.hidden {
+            display: none;
+        }
+
+        #page-loader.show {
+            display: flex !important;
+        }
     </style>
     <script type="text/javascript">
         var GRN_ID = 0;
+        var loaderTimeout = null;
+
+        function showLoader(message, showProgressBar) {
+            if (loaderTimeout) {
+                clearTimeout(loaderTimeout);
+                loaderTimeout = null;
+            }
+            var $loader = $('#page-loader');
+            var $loaderText = $('.loader-text');
+            var $progressBar = $('.loader-progress');
+            var $progressBarFill = $('.loader-progress-bar');
+
+            if ($progressBarFill.length) {
+                $progressBarFill.css('width', '0%');
+            }
+            if (showProgressBar) {
+                $progressBar.show();
+            } else {
+                $progressBar.hide();
+            }
+            if (message) {
+                $loaderText.text(message);
+            } else {
+                $loaderText.text('Loading...');
+            }
+            $loader.removeClass('hidden').addClass('show').show();
+        }
+
+        function hideLoader() {
+            var $loader = $('#page-loader');
+            if (loaderTimeout) {
+                clearTimeout(loaderTimeout);
+            }
+            loaderTimeout = setTimeout(function () {
+                $loader.addClass('hidden').removeClass('show').hide();
+                loaderTimeout = null;
+            }, 300);
+        }
+
+        function updateLoaderProgress(percentage, message) {
+            var $progressBarFill = $('.loader-progress-bar');
+            var $loaderText = $('.loader-text');
+            if ($progressBarFill.length) {
+                $progressBarFill.css('width', percentage + '%');
+            }
+            if (message) {
+                $loaderText.text(message);
+            } else if (percentage < 100) {
+                $loaderText.text('Loading GRN items... ' + percentage + '%');
+            } else {
+                $loaderText.text('Finalizing...');
+            }
+        }
+
+        function initDatepickersInChunks(selector, options, onDone) {
+            var $inputs = $(selector);
+            var index = 0;
+            var chunkSize = 50;
+            var total = $inputs.length;
+            function processChunk() {
+                var end = Math.min(index + chunkSize, total);
+                for (; index < end; index++) {
+                    try {
+                        $($inputs[index]).datepicker(options);
+                    } catch (e) { }
+                }
+                if (index < total) {
+                    updateLoaderProgress(70 + Math.floor((index / total) * 25), 'Initializing dates... ' + index + '/' + total);
+                    setTimeout(processChunk, 0);
+                } else if (typeof onDone === 'function') {
+                    onDone();
+                }
+            }
+            setTimeout(processChunk, 0);
+        }
 $(document).ready(function() {
+    showLoader('Initializing...', false);
     var date = '<%= DateTime.Now%>';
     $('#itemInputSection').hide();
 
@@ -218,9 +366,14 @@ $(document).ready(function() {
             <% if (Request.QueryString["GRN_ID"] != null)
             { %>
             GRN_ID = '<%= Request.QueryString["GRN_ID"]%>'
+            showLoader('Loading GRN data...', true);
             LoadGRNData(GRN_ID);
             //$('#SaveButtonToBeHidden').hide();
             $('#thaction').hide();
+            <% } else { %>
+            setTimeout(function () {
+                hideLoader();
+            }, 500);
             <% } %>
             $('select').select2();
 
@@ -310,11 +463,9 @@ $(document).ready(function() {
         contentType: "application/json; charset=utf-8",
         dataType: "json",
         success: function (response) {
-            debugger;
             var code = JSON.parse(response.d);
             console.log("DirectGRN code:", response.d);
             if (code === "02") {
-                debugger
                 $('[name="grndirect"]').hide();
               
             }
@@ -358,7 +509,6 @@ function LoadAllitem(searchText) {
         return false;
     }
     else {
-        debugger;
         $.ajax({
             type: "POST",
             url: "GRN.aspx/GetAllitem",
@@ -394,7 +544,6 @@ function LoadAllitem(searchText) {
 }
 
         function appendSearchItem(anchor) {
-            debugger;
 
             // Check for projection type 002 requirements before adding item
             var warehouseId = $('#ddlInv_org').val();
@@ -481,7 +630,7 @@ function LoadAllitem(searchText) {
             }, 100);
 }
 function LoadGRNDetailDir(GRN_ID) {
-
+    updateLoaderProgress(30, 'Loading GRN items...');
     PageMethods.LoadGRNDetailDir(GRN_ID, function(resp) {
 
         var item = JSON.parse(resp);
@@ -489,6 +638,7 @@ function LoadGRNDetailDir(GRN_ID) {
         var iteration = 0;
         var ExpiryDate = '';
         var MfgDate = '';
+        updateLoaderProgress(40, 'Building table with ' + item.length + ' items...');
 
         $.each(item, function(key, value) {
 
@@ -560,31 +710,37 @@ function LoadGRNDetailDir(GRN_ID) {
 
         });
 
-        $('#tblItemDescriptionDir tbody').append(rows);
+        $('#tblItemDescriptionDir tbody').html(rows);
+        updateLoaderProgress(50, 'Rendering items...');
 
-        $('input[name="txtMfgdateDir"]').datepicker({
+        var dateOpts = {
             dateFormat: 'dd M yy',
             changeMonth: true,
             changeYear: true
-        });
+        };
 
-        $('input[name="ExpdateDir"]').datepicker({
-            dateFormat: 'dd M yy',
-            changeMonth: true,
-            changeYear: true
+        initDatepickersInChunks('input[name="txtMfgdateDir"]', dateOpts, function () {
+            initDatepickersInChunks('input[name="ExpdateDir"]', dateOpts, function () {
+                updateLoaderProgress(100, 'Finalizing...');
+                setTimeout(function () {
+                    hideLoader();
+                }, 400);
+            });
         });
 
     },
         function(error) {
+            hideLoader();
             alert(error.get_message());
         });
     $('#btnSave').val('Update');
         }
 
         function LoadGRNData(GRN_ID) {
+            updateLoaderProgress(5, 'Loading GRN header...');
             PageMethods.LoadGRNHeaderDetail(GRN_ID, function (resp) {
                 var data = JSON.parse(resp);
-                debugger;
+                updateLoaderProgress(15, 'Applying header data...');
                 var TrnsDate = new Date(parseInt(data.GRN_Date.substr(6)));
                 TrnsDate = moment(TrnsDate).format('L');
                 setTimeout(function () {
@@ -624,22 +780,23 @@ function LoadGRNDetailDir(GRN_ID) {
                 
             },
                 function (error) {
+                    hideLoader();
                     alert(error.get_message());
                 })
         }
 
 
         function LoadGRNDetail(GRN_ID) {
+            updateLoaderProgress(30, 'Loading GRN items...');
             PageMethods.LoadGRNDetail(GRN_ID, function (resp) {
-                debugger;
                 var item = (JSON.parse(resp));
                 var rows = '';
                 var Description = '';
                 var iteration = 0;
                 var ExpiryDate = '';
                 var MfgDate = '';
+                updateLoaderProgress(40, 'Building table with ' + item.length + ' items...');
                 $.each(item, function (key, value) {
-                    debugger;
                     if (value.BatchNum == null)
                         value.BatchNum = "";
                     var datetime = $.datepicker.formatDate('dd M yy', new Date(parseInt(item[key].PO_Date.substring(6, 19))));
@@ -681,14 +838,25 @@ function LoadGRNDetailDir(GRN_ID) {
                         '</td>' +
                         '</tr>';
                 });
-                debugger;
-                $('#tblItemDescription').append(rows);
-                $('input[name="txtPOdate"]').datepicker({ dateFormat: 'dd M yy' });
-                $('input[name="txtMfgdate"]').datepicker({ dateFormat: 'dd M yy' });
-                $('input[name="Expdate"]').datepicker({ dateFormat: 'dd M yy' });
-                $('#btnSave').val('Update');
+                $('#tblItemDescription tbody').html(rows);
+                updateLoaderProgress(50, 'Rendering items...');
+
+                var dateOpts = { dateFormat: 'dd M yy' };
+
+                initDatepickersInChunks('input[name="txtPOdate"]', dateOpts, function () {
+                    initDatepickersInChunks('input[name="txtMfgdate"]', dateOpts, function () {
+                        initDatepickersInChunks('input[name="Expdate"]', dateOpts, function () {
+                            $('#btnSave').val('Update');
+                            updateLoaderProgress(100, 'Finalizing...');
+                            setTimeout(function () {
+                                hideLoader();
+                            }, 400);
+                        });
+                    });
+                });
             },
                 function (error) {
+                    hideLoader();
                     alert(error.get_message());
                 })
         }
@@ -703,12 +871,9 @@ function LoadGRNDetailDir(GRN_ID) {
         }
 
         function GetDepartments() {
-            debugger;
             PageMethods.GetDepartments(function (Tests) {
-                debugger
                 optionsInv = '<option value="0">Please Select</option>';
                 $.each(JSON.parse(Tests), function (key, value) {
-                    debugger;
                     if (value.Type == "WareHouse") {
                         optionsInv += '<option value="' + value.DataValueName + '" >' + value.DataValueDescription + '</option>';
                     }
@@ -718,13 +883,10 @@ function LoadGRNDetailDir(GRN_ID) {
         }
 
         function GetProject() {
-            debugger;
             var optionProj = '';
             PageMethods.GetProjects(function (Tests) {
-                debugger
                 optionProj = '<option value="0">Please Select</option>';
                 $.each(JSON.parse(Tests), function (key, value) {
-                    debugger;
                     optionProj += '<option value="' + value.DataValueName + '" >' + value.DataValueDescription + '</option>';
                 });
                 $('#ddlProject').html(optionProj);
@@ -732,13 +894,10 @@ function LoadGRNDetailDir(GRN_ID) {
         }
 
         function FillVendors() {
-            debugger;
             var optionsVen = '';
             PageMethods.getVendorDDLlist(function (Tests) {
-                debugger
                 optionsVen = '<option value="0">Please Select</option>';
                 $.each(JSON.parse(Tests), function (key, value) {
-                    debugger;
                     if (value.Active == true) {
                         optionsVen += '<option value="' + value.VendorID + '" >' + value.VendorName + '</option>';
                     }
@@ -750,7 +909,6 @@ function LoadGRNDetailDir(GRN_ID) {
             });
         }
         function getIGPNumByVendor(item) {
-            debugger;
             var optionsIgp = '';
             var VendorId;
             VendorId = item;
@@ -758,32 +916,27 @@ function LoadGRNDetailDir(GRN_ID) {
                 VendorId = item;
             }
             PageMethods.GetIGPNoByVendor(VendorId, function (res) {
-                debugger;
                 var item = JSON.parse(res);
                 optionsIgp = '<option value="0">Please Select</option>';
                 $.each(item, function (key, value) {
                     optionsIgp += '<option value="' + value.Igp_Id + '" >' + value.Igp_num + '</option>';
                 })
-                debugger;
                 $("#ddlIgpNo option").remove();
                 $('#ddlIgpNo').html(optionsIgp);
             });
         }
 
         function PerformIGPSearch() {
-            debugger;
             var IGPId = $('#ddlIgpNo').val();
             var IGPNum = $("#ddlIgpNo option:selected").text();
             var blncQty = 0;
             if (IGPId != "") {
                 PageMethods.getIGPByID(IGPId, function (res) {
-                    debugger;
                     var item = JSON.parse(res);
                     var rows = '';
                     var iteration = 0;
                     $('#thaction').show();
                     $.each(item, function (key, value) {
-                        debugger;
                         if (value.BatchNum == null)
                             value.BatchNum = "";
                         var datetime = $.datepicker.formatDate('dd M yy', new Date(parseInt(item[key].PO_Date.substring(6, 19))));
@@ -831,7 +984,6 @@ function LoadGRNDetailDir(GRN_ID) {
                                 '</tr>';
                         }
                     });
-                    debugger;
                     $('#tblItemDescription').append(rows);
                     $('input[name="txtPOdate"]').datepicker({ dateFormat: 'dd M yy' });
                     $('input[name="txtMfgdate"]').datepicker({ dateFormat: 'dd M yy' });
@@ -858,7 +1010,6 @@ function LoadGRNDetailDir(GRN_ID) {
         }
 
         function ExcludeFromPayment(anchor) {
-            debugger;
             var a = confirm("Are you sure You want to delete");
             if (a == true) {
                 console.clear();
@@ -867,7 +1018,6 @@ function LoadGRNDetailDir(GRN_ID) {
             }
         }
         function SaveAllRecord() {
-            debugger;
             var status;
             var dateStatus;
             var btnSave = $('#btnSave').val();
@@ -905,9 +1055,7 @@ function LoadGRNDetailDir(GRN_ID) {
             }
             if (!$('#ddlVendor').hasClass('ErrorAlert') && !$('#ddlInv_org').hasClass('ErrorAlert') && !$('#tblItemDescription').hasClass('ErrorAlert')) {
                 var Item_list = [];
-                debugger;
                 table.find('tr').each(function (key, value) {
-                    debugger;
                     var AccQTy = $(value).find('td input[name=AccQty]').val();
                     var GRNdate = new Date(date).setHours(0, 0, 0, 0);
                     var ExpDate = new Date($(value).find('td input[name=Expdate]').val()).setHours(0, 0, 0, 0);
@@ -1006,7 +1154,6 @@ function LoadGRNDetailDir(GRN_ID) {
                     $('#btnsave').attr('disabled', true);
                     var AllItemDetail = { 'GRN_Num': GRN_Num, 'Date': date, 'VendorId': VendorId, 'remarks': Remarks, 'project': project, 'InvOrg': InvOrg, 'ItemList': Item_list, 'ItemListDir': ItemListDir, 'Is_Direct': Is_Direct };
                     PageMethods.SaveGRNDetail(btnSave, JSON.stringify(AllItemDetail), function (res) {
-                        debugger;
                         sendFile(res, function () {
                             Swal.fire({
                                 icon: 'success',
@@ -1045,7 +1192,6 @@ function LoadGRNDetailDir(GRN_ID) {
         }
       
         function CulculateRejQty(anchor) {
-            debugger;
             var row = $(anchor).parents('tr')[0];
             var IgpQty = $($(row).find('td input[name=IGPQty]')[0]).val();
             var AccQty = $($(row).find('td input[name=AccQty]')[0]).val();
@@ -1096,7 +1242,6 @@ function LoadGRNDetailDir(GRN_ID) {
             window.open(url, '_blank');
         }
         function sendFile(ID, callback) {
-            debugger;
             var fileInput = $('#choseGRNfile')[0];
             if (fileInput.files.length > 0) {
                 var data = new FormData();
@@ -1157,18 +1302,14 @@ function LoadGRNDetailDir(GRN_ID) {
 }
 
         function UserUnApproveButtonRights() {
-            debugger;
             $.ajax({
                 type: "POST",
                 url: "GRN.aspx/UserUnApproveEntryRights",
                 contentType: "application/json; charset=utf-8",
                 dataType: "json",
                 success: function (response) {
-                    debugger;
                     var hasRights = response.d;
-                    debugger;
                     if (hasRights) {
-                        debugger;
                         $('#btnUnApprove').show();
                     } else {
                         $('#btnUnApprove').hide();
@@ -1181,18 +1322,14 @@ function LoadGRNDetailDir(GRN_ID) {
             });
         }
         function UserApproveButtonRights() {
-            debugger;
             $.ajax({
                 type: "POST",
                 url: "GRN.aspx/UserUnApproveEntryRights",
                 contentType: "application/json; charset=utf-8",
                 dataType: "json",
                 success: function (response) {
-                    debugger;
                     var hasRights = response.d;
-                    debugger;
                     if (hasRights) {
-                        debugger;
                         $('#btnApprove').show();
                     } else {
                         $('#btnApprove').hide();
@@ -1204,10 +1341,8 @@ function LoadGRNDetailDir(GRN_ID) {
             });
         }
         function UnApprove() {
-            debugger;
             var GRNId = '<% =Request.QueryString["GRN_ID"] %>';
             PageMethods.UnApproveGRN(GRNId, function (Tests) {
-                debugger
                 var message = JSON.parse(Tests);
                 if (message[0].Column1 != "" || message[0].Column1 != null) {
                     alert(message[0].Column1);
@@ -1220,6 +1355,16 @@ function LoadGRNDetailDir(GRN_ID) {
 </asp:Content>
 <asp:Content ID="Content2" ContentPlaceHolderID="MainContent" runat="server">
     <form id="item">
+
+        <!-- PAGE LOADER -->
+        <div id="page-loader" style="display: none;">
+            <div class="loader-spinner"></div>
+            <div class="loader-text">Loading...</div>
+            <div class="loader-progress">
+                <div class="loader-progress-bar"></div>
+            </div>
+        </div>
+
         <div class="row">
             <div class="col-lg-3 col-md-6 col-sm-12">
                 <label id="LblIGP_Num" class="labelIGP">GRN No</label>

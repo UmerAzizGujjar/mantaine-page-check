@@ -975,6 +975,7 @@
                     {
                         $("#Active").prop('checked', false);
                     }
+                    $("#Active").trigger('change');
 
                     if (parse.issehatCard_item == 1) {
                         $("#chkSehatSahulat").prop('checked', true);
