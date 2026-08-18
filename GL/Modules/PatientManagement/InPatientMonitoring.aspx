@@ -1434,16 +1434,43 @@
                     return false;
                 }
                 var Frequency = $('#txtRecomended_Dosages').val();
-                //if (Frequency == "") {
-                //    alert("Please Select Frequency ")
-                //    return false;
-                //}
+                if (Frequency == "" || Frequency == null || Frequency == "0") {
+                    Swal.fire({
+                        icon: 'warning',
+                        title: 'Validation Error',
+                        text: 'Please select the Frequency.',
+                        confirmButtonColor: '#3085d6',
+                        confirmButtonText: 'OK'
+                    });
+                    $('#txtRecomended_Dosages').focus();
+                    return false;
+                }
+
+                var DosageQty = $('#ddlDosage_Qty').val();
+                if (DosageQty == "" || DosageQty == null || DosageQty == "0") {
+                    Swal.fire({
+                        icon: 'warning',
+                        title: 'Validation Error',
+                        text: 'Please enter the Dosage Qty.',
+                        confirmButtonColor: '#3085d6',
+                        confirmButtonText: 'OK'
+                    });
+                    $('#ddlDosage_Qty').focus();
+                    return false;
+                }
                 var DosageFrom = $('#ddlDosage_From').val();
-                //var Route = $('#Route').val();
-                //if (Route == "") {
-                //    alert("Please Select Route ")
-                //    return false;
-                //}
+                var Route = $('#Route').val();
+                if (Route == "" || Route == null || Route == "0") {
+                    Swal.fire({
+                        icon: 'warning',
+                        title: 'Validation Error',
+                        text: 'Please select the Route.',
+                        confirmButtonColor: '#3085d6',
+                        confirmButtonText: 'OK'
+                    });
+                    $('#Route').focus();
+                    return false;
+                }
                 //var Duration = $('#txtInjections').val();
                 //if (Duration == "") {
                 //    if (localStorage.IsPRN == 1 || localStorage.IsStat == 1) {

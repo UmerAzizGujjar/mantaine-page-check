@@ -1291,9 +1291,11 @@
         }
        
 
+
         
 
     </script>
+
 
 </asp:Content>
 <asp:Content ID="Content2" ContentPlaceHolderID="MainContent" runat="server">
@@ -1529,10 +1531,7 @@
                         <label class="opd-label" for="ddlbank">Bank</label>
                         <select id="ddlbank" class="opd-select"></select>
                     </div>
-                </div>
-
-                <div class="opd-form-row opd-form-row--4">
-                    <div class="opd-field" id="field_Address" style="grid-column: span 3;">
+                    <div class="opd-field" id="field_Address">
                         <label class="opd-label">Address</label>
                         <input type="text" id="txtAdrress" readonly="readonly" class="opd-input opd-input--readonly" />
                     </div>
@@ -1540,6 +1539,11 @@
                         <label class="opd-label">Remarks</label>
                         <input type="text" id="txtremarks" class="opd-input" />
                     </div>
+                </div>
+
+                <div class="opd-form-row opd-form-row--4">
+                    
+                    
                 </div>
 
                 <div class="opd-field" id="field_Dept_Token" style="display:none;">

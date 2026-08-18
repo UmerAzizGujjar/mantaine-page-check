@@ -96,60 +96,60 @@
 
     </style>
     <script type="text/javascript">        
- 
-            $(document).ready(function () {
+
+        $(document).ready(function () {
             // Call highlight function when page loads
             setTimeout(function () {
                 highlightPendingRows();
-        }, 100);
+            }, 100);
 
             $('#txt_search').keyup(function (e) {
-            var searchText = $('#txt_search').val().toLowerCase();
-            var tbl = document.getElementById('<%= GridView1.ClientID %>');
-            var getCellText = function (row, index) {
-                var cell = row.cells[index];
-                return cell ? cell.innerText.toLowerCase() : '';
-            };
+                var searchText = $('#txt_search').val().toLowerCase();
+                var tbl = document.getElementById('<%= GridView1.ClientID %>');
+                var getCellText = function (row, index) {
+                    var cell = row.cells[index];
+                    return cell ? cell.innerText.toLowerCase() : '';
+                };
 
-            for (var i = 1; i < tbl.rows.length; i++) {
-                var row = tbl.rows[i];
-                var ponum = getCellText(row, 1);
-                var podate = getCellText(row, 2);
-                var poamount = getCellText(row, 3);
-                var creator = getCellText(row, 4);
-                var remarks = getCellText(row, 5);
-                var status = getCellText(row, 6);
-                var approveBy = getCellText(row, 7);
-                var actions = getCellText(row, 8);
+                for (var i = 1; i < tbl.rows.length; i++) {
+                    var row = tbl.rows[i];
+                    var ponum = getCellText(row, 1);
+                    var podate = getCellText(row, 2);
+                    var poamount = getCellText(row, 3);
+                    var creator = getCellText(row, 4);
+                    var remarks = getCellText(row, 5);
+                    var status = getCellText(row, 6);
+                    var approveBy = getCellText(row, 7);
+                    var actions = getCellText(row, 8);
 
-                if (searchText.trim() === '' ||
-                    ponum.includes(searchText) ||
-                    podate.includes(searchText) ||
-                    poamount.includes(searchText) ||
-                    creator.includes(searchText) ||
-                    remarks.includes(searchText) ||
-                    status.includes(searchText) ||
-                    approveBy.includes(searchText) ||
-                    actions.includes(searchText)
-                ) {
-                    row.style.display = '';
-                    // Re-apply highlighting after search
-                    if (status === 'pending') {
-                        row.style.backgroundColor = "#ffe066";
-                    } else {
-                        // Reset background for non-pending rows
-                        if (row.style.backgroundColor === "rgb(255, 224, 102)" || row.style.backgroundColor === "#ffe066") {
-                            row.style.backgroundColor = "";
+                    if (searchText.trim() === '' ||
+                        ponum.includes(searchText) ||
+                        podate.includes(searchText) ||
+                        poamount.includes(searchText) ||
+                        creator.includes(searchText) ||
+                        remarks.includes(searchText) ||
+                        status.includes(searchText) ||
+                        approveBy.includes(searchText) ||
+                        actions.includes(searchText)
+                    ) {
+                        row.style.display = '';
+                        // Re-apply highlighting after search
+                        if (status === 'pending') {
+                            row.style.backgroundColor = "#ffe066";
+                        } else {
+                            // Reset background for non-pending rows
+                            if (row.style.backgroundColor === "rgb(255, 224, 102)" || row.style.backgroundColor === "#ffe066") {
+                                row.style.backgroundColor = "";
+                            }
                         }
+                    } else {
+                        row.style.display = 'none';
                     }
-                } else {
-                    row.style.display = 'none';
                 }
-            }
-        });
+            });
 
-        function highlightPendingRows() {
-            var tbl = document.getElementById('<%= GridView1.ClientID %>');
+                function highlightPendingRows() {
+                    var tbl = document.getElementById('<%= GridView1.ClientID %>');
             if (!tbl) return;
 
             console.log("GridView found, rows count: " + tbl.rows.length);
@@ -371,6 +371,7 @@
                 </ItemTemplate>
             </asp:TemplateField>
             <asp:BoundField DataField="Department" HeaderText="Department" Visible="False" ItemStyle-HorizontalAlign="Center" ItemStyle-Width="150px" />
+            <asp:BoundField DataField="WareHouse" HeaderText="Warehouse" Visible="False" ItemStyle-HorizontalAlign="Center" ItemStyle-Width="150px" />
             <asp:BoundField DataField="TotalPRAmount" HeaderText="TotalPRAmt" HeaderStyle-Width="100px" Visible="False" ItemStyle-HorizontalAlign="Center" ItemStyle-Width="100px" />
             <asp:BoundField DataField="TotalBudget" HeaderText="TotalBudget" HeaderStyle-Width="100px" Visible="False" ItemStyle-HorizontalAlign="Center" ItemStyle-Width="100px" />
             <asp:BoundField DataField="RemainingAmount" HeaderText="Balance" HeaderStyle-Width="100px" Visible="False" ItemStyle-HorizontalAlign="Center" ItemStyle-Width="100px" />

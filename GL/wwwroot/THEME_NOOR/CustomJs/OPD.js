@@ -642,7 +642,7 @@ function AddPatientsResult(Reg_Patient_ID, Patient_No, Full_Name, NIC, Mobile1, 
     cell.innerHTML = '<span class="HRcontent">' + Mobile1 + '</span>';
     cell = row.insertCell(-1);
     var actions = '';
-    actions += '<a class="tooltips" style="color:#438eb9 ;font-size:16px;display:flex;justify-content:center;" href="#" onclick=AddPatientDetail(' + Reg_Patient_ID + ')><i class="fa fa-plus-circle"></i><span class="tooltiptxt">Add</span></a>';
+    actions += '<a class="tooltips" style="color:#438eb9 ;font-size:16px;display:flex;justify-content:center;" href="#" onclick=AddPatientDetail(' + Reg_Patient_ID + ')><i class="fa fa-plus-circle"></i></a>';
     actions += '<a class="tooltips" style="color:#FDC303;font-size:16px;display:none" href="#" onclick=EditPatientDetail(' + Reg_Patient_ID + ')><i class="fa fa-pencil-square-o"></i><span class="tooltiptxt">Edit</span></a>';
     cell.innerHTML = actions;
 
@@ -1949,7 +1949,7 @@ function AddEmergencyPatientsResult(Patient_ID, Patient_No, Full_Name, Father_Na
     cell.innerHTML = '<span class="HRcontent">' + Mobile1 + '</span>';
     cell = row.insertCell(-1);
     var actions = '';
-    actions += '<a class="tooltips" style="color:#438eb9 ;font-size:16px;display:flex;justify-content:center;" href="#" onclick=AddEmergencyPatientDetail(' + Patient_ID + ')><i class="fa fa-plus-circle"></i><span class="tooltiptxt">Add</span></a>';
+    actions += '<a class="tooltips" style="color:#438eb9 ;font-size:16px;display:flex;justify-content:center;" href="#" onclick=AddEmergencyPatientDetail(' + Patient_ID + ')><i class="fa fa-plus-circle"></i></a>';
     actions += '<a class="tooltips" style="color:#FDC303;font-size:16px;display:none" href="#" onclick=EditEmergencyPatientDetail(' + Patient_ID + ')><i class="fa fa-pencil-square-o"></i><span class="tooltiptxt">Edit</span></a>';
     cell.innerHTML = actions;
 }

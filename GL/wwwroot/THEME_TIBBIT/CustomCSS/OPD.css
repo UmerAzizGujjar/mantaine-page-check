@@ -26,7 +26,7 @@
 .opd-page {
     padding: 10px 12px;
     background: var(--opd-bg);
-    min-height: 100vh;
+    /*min-height: 100vh;*/
 }
 
 /* ----- Meta bar ----- */
@@ -268,10 +268,22 @@
 
 .opd-stats-grid {
     display: grid;
-    grid-template-columns: 1fr 1fr;
+    grid-template-columns: repeat(3, 1fr);
     gap: 1px;
     background: var(--opd-border);
     border-top: 1px solid var(--opd-border);
+}
+
+@media (max-width: 768px) {
+    .opd-stats-grid {
+        grid-template-columns: repeat(2, 1fr);
+    }
+}
+
+@media (max-width: 480px) {
+    .opd-stats-grid {
+        grid-template-columns: 1fr;
+    }
 }
 
 .opd-stats-row {
@@ -552,7 +564,7 @@
 /* ----- Top-level layout ----- */
 .opd-layout {
     display: grid;
-    grid-template-columns: 1fr 240px;
+    grid-template-columns: 1fr 280px;
     gap: 10px;
     margin-bottom: 10px;
     align-items: stretch;

@@ -64,7 +64,8 @@ namespace PMS
                                a.Status,
                                a.PO_Date,
                                a.Created_By,
-                               Department = pr != null ? pr.Department : null
+                               Department = pr != null ? pr.Department : null,
+                               Ware_House = a.Ware_House
                            } into g
 
                            select new
@@ -88,19 +89,20 @@ namespace PMS
                                //     where g.Key.PO_ID == SAL.Entry_ID && SAL.Form_ID == 3
                                //     select usr.UserName ?? "").Distinct()),
 
-                            Approve_By = string.Join(", ",
+                               Approve_By = string.Join(", ",
                             (from SAL in db.Sys_Approval_Logs
                              join user in db.aspnet_Users on SAL.Approve_By equals user.UserId into userGroup
                              from usr in userGroup.DefaultIfEmpty()
                              where g.Key.PO_ID == SAL.Entry_ID
                                 && SAL.Form_ID == 3
-                                && SAL.Entry_Status != "Created" 
+                                && SAL.Entry_Status != "Created"
                                 && !SAL.From_Name.Contains("Editable setting updated")
                              select usr.UserName ?? "").Distinct()),
 
 
 
                                Department = db.GetDataValueName("Department", g.Key.Department),
+                               WareHouse = db.GetDataValueName("Ware House", g.Key.Ware_House),
 
                                TotalPRAmount = (from prd_inner in db.Purchase_Requisition_Details
                                                 join pr_inner in db.Purchase_Requisitions on prd_inner.PR_ID equals pr_inner.PR_Id
@@ -122,7 +124,7 @@ namespace PMS
                                                    where pr_inner.Status == "Approved" && pr_inner.Department == g.Key.Department
                                                    select (decimal?)prd_inner.EstimateCost).Sum() ?? 0m),
 
-                                                     IsEditableAfterApproval = db.Sys_Approval_Logs
+                               IsEditableAfterApproval = db.Sys_Approval_Logs
                                                     .Where(sal => sal.Entry_ID == g.Key.PO_ID && sal.Form_ID == 3)
                                                     .OrderByDescending(sal => sal.Approve_Date)
                                                     .Select(sal => sal.IsEditableAfterApproval)
@@ -130,7 +132,7 @@ namespace PMS
                            })
                            .OrderByDescending(x => x.PO_No); // Added OrderByDescending to sort by PO_Number descending
 
-                 bool hasEntryBudgetViewBtnRights = false;
+                bool hasEntryBudgetViewBtnRights = false;
                 var uid = AppConfig.UserID;
                 hasEntryBudgetViewBtnRights = (from us in db.aspnet_Users
                                                where us.UserId == uid && us.IsShowBudget == true
