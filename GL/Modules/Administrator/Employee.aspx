@@ -1,7 +1,7 @@
-﻿<%@ Page Title="" Language="C#" MasterPageFile="~/Site.Master" AutoEventWireup="true" CodeBehind="Employee.aspx.cs" Inherits="PMS.Employee" %>
+<%@ Page Title="" Language="C#" MasterPageFile="~/Site.Master" AutoEventWireup="true" CodeBehind="Employee.aspx.cs" Inherits="PMS.Employee" %>
 
 <asp:Content ID="Content1" ContentPlaceHolderID="HeadContent" runat="server">
-    <link href="../../wwwroot/lib/sweetalert/Employee.css" rel="stylesheet" />
+    <link href="../../wwwroot/THEME_TIBBIT/CustomCSS/Employee.css" rel="stylesheet" />
         <link href="../../wwwroot/lib/sweetalert/Toaster.css" rel="stylesheet" />
       <script type="text/javascript">
 
@@ -582,345 +582,338 @@
 </asp:Content>
 
 <asp:Content ID="Content2" ContentPlaceHolderID="MainContent" runat="server">
-            <div class="row">
-            <div class="col-lg-2 col-md-4 col-sm-6">
-                <label>Employee ID</label>
-               
-                <input readonly type="text" id="txtEmployeeID" value="(New)"  />
+<div class="emp-page">
 
-            </div>
-            <div class="col-lg-2 col-md-4 col-sm-6">
-                <label>Employee Code **</label>
-                <input type="text" id="txtEmployeeCode" name="txtEmployeeCode" disabled="disabled" />
-
-            </div>
-            <div class="col-lg-2 col-md-4 col-sm-6">
-                <label>Employee Name *</label>
-               <input type="text" id="txtEmployee_Name" name="txtEmployee_Name" autocomplete="off" />
-
-                <span id="errorEmployee_Name" class="validation" style="color:red; display:none;">
-  Employee Name is required.
-</span>
-            </div>
-            <div class="col-lg-2 col-md-4 col-sm-6">
-                <label>Father Name</label>
-                <input type="text" id="txtFather_Name" name="txtFather_Name" autocomplete="off" />
-
-            </div>
-            <div class="col-lg-2 col-md-4 col-sm-6">
-                <label>Date of Birth</label>
-                <input type="text" id="txtEmployee_Date_of_Birth" name="txtEmployee_Date_of_Birth" />
-
-            </div>
-            <div class="col-lg-2 col-md-4 col-sm-6">
-                <label>Panel Rate</label>
-                <input type="text" id="txtPanelAmount" name="txtPanelAmount" />
-            </div>
+    <!-- ============ META BAR ============ -->
+    <div class="emp-meta-bar">
+        <div class="emp-meta-title">
+            <i class="fa fa-user-md"></i>
+            <span>Employee</span>
+            <span class="emp-meta-badge" id="empMetaBadge">New</span>
         </div>
-        <br />
-        <div class="row">
-            <div class="col-lg-2 col-md-4 col-sm-6">
-                <label>Patient type</label>
-                <select id="ddlPatientType" name="ddlPatientType">
-                  <!-- Add <option> elements here -->
-                </select>
-
-            </div>
-            <div class="col-lg-2 col-md-4 col-sm-6">
-                <label>Department *</label>
-                <select id="ddlDepartment" name="ddlDepartment" >
-                  <!-- Add <option> elements here -->
-                </select>
-
-                
-            </div>
-            <div class="col-lg-2 col-md-4 col-sm-6">
-                <label>Designation</label>
-                <select id="ddlDesignation" name="ddlDesignation">
-                  <!-- Add <option> elements here -->
-                </select>
-
-            </div>
-            <div class="col-lg-2 col-md-4 col-sm-6">
-                <label>Mobile No</label>
-                
-                <input
-                  type="text"
-                  id="txtEmployee_Phone2"
-                  name="txtEmployee_Phone2"
-                  maxlength="11"
-                  autocomplete="off"
-                  oninput="this.value = this.value.replace(/[^0-9.]/g, '').replace(/(\..*)\./g, '$1');"
-                />
-
-            </div>
-            <div class="col-lg-2 col-md-4 col-sm-6">
-                <label>Home Phone</label>
-                <input
-                  type="text"
-                  id="txtEmployee_Phone1"
-                  name="txtEmployee_Phone1"
-                  maxlength="11"
-                  autocomplete="off"
-                  oninput="this.value = this.value.replace(/[^0-9.]/g, '').replace(/(\..*)\./g, '$1');"
-                />
-
-            </div>
-            <div class="col-lg-2 col-md-4 col-sm-6">
-                <label>Email</label>
-                <input type="text" id="txtEmployee_Email" name="txtEmployee_Email" autocomplete="off" />
-
-            </div>
-        </div>
-        <br />
-
-        <div class="row">
-            <div class="col-lg-2 col-md-4 col-sm-6">
-                <label>Patient Time</label>
-                <input type="text" id="txtPatient_Time" name="txtPatient_Time" />
-
-            </div>
-            <div class="col-lg-1 col-md-4 col-sm-6">
-                <label>Time In</label>
-                <input type="text" id="TxtTime_In" name="TxtTime_In" />
-
-            </div>
-            <div class="col-lg-1 col-md-4 col-sm-6">
-                <label>Time Out</label>
-                <input type="text" id="TxtTime_Out" name="TxtTime_Out" />
-            </div>
-            <div class="col-lg-1 col-md-4 col-sm-6">
-                <label>Start Date</label>
-                <input type="text" id="txtStartDate" name="txtStartDate" />
-            </div>
-            <div class="col-lg-1 col-md-4 col-sm-6">
-                <label>End Date</label>
-                <input type="text" id="txtEndDate" name="txtEndDate" />
-            </div>
-            <div class="col-lg-2 col-md-4 col-sm-6">
-                <label>Room #</label>
-                <select id="ddlRoom" name="ddlRoom">
-                </select>
-
-            </div>
-            <div class="col-lg-2 col-md-4 col-sm-6">
-                <label>Date of Joining</label>
-                <input type="text" id="txtEmployee_DOJ" name="txtEmployee_DOJ" />
-
-            </div>
-            <div class="col-lg-2 col-md-4 col-sm-6">
-                <label>Resign Date</label>
-                <input type="text" id="txtEmployee_Resign" name="txtEmployee_Resign" autocomplete="off" />
-
-            </div>
-        </div>
-        <br />
-        <div class="row">
-            <div class="col-lg-2 col-md-4 col-sm-6">
-                <label>Floor #</label>
-               <select id="ddlFloor" name="ddlFloor">
-                  <!-- Add your <option> elements here -->
-                </select>
-
-            </div>
-            <div class="col-lg-2 col-md-4 col-sm-6">
-                <label>Doctor Share</label>
-                <input type="text" id="txtDoctorShare" name="txtDoctorShare" autocomplete="off" />
-
-            </div>
-            <div class="col-lg-2 col-md-4 col-sm-6">
-                <label>Hospital Share</label>
-                <input type="text" id="txtHospital_Share" name="txtHospital_Share" />
-
-            </div>
-            <div class="col-lg-2 col-md-4 col-sm-6">
-                <label>Extension No</label>
-                <input type="text" id="Ext_txt" name="Ext_txt" />
-
-            </div>
-            <div class="col-lg-2 col-md-4 col-sm-6">
-                <label>Gross Pay</label>
-                <input type="text" id="txtGrossPay" name="txtGrossPay" autocomplete="off" />
-
-            </div>
-            <div class="col-lg-2 col-md-4 col-sm-6">
-                <label>Consultant Charges</label>
-                <input type="text" id="txtConsultant_Charges" name="txtConsultant_Charges" readonly autocomplete="off" />
-
-            </div>
-        </div>
-        <br />
-        <div class="row">
-            <div class="col-lg-2 col-md-4 col-sm-6">
-                <label>GL Account</label>
-                <input type="text" id="txtAccount_Code_Name" name="txtAccount_Code_Name" readonly />
-
-                <input type="hidden" id="hdfAccount_Name" name="hdfAccount_Name" />
-                <input type="hidden" id="hdfAccount_Code" name="hdfAccount_Code" />
-                <input type="hidden" id="hdfParent_Code" name="hdfParent_Code" />
-                <input type="hidden" id="hdfAccount_Serial" name="hdfAccount_Serial" />
-                <input type="hidden" id="hdfLevel" name="hdfLevel" />
-                <input type="hidden" id="hdfAccount_ID" name="hdfAccount_ID" />
-                <input type="hidden" id="hdfAccountExists" name="hdfAccountExists" />
-
-            </div>
-            <div class="col-lg-2 col-md-4 col-sm-6">
-                <label>Building</label>
-                <select id="ddlDoctorBuilding" name="ddlDoctorBuilding">
-                  <!-- Add your <option> elements here -->
-                </select>
-            </div>
-            <div class="col-lg-2 col-md-4 col-sm-6">
-                <label>Address</label>
-                <textarea
-                  id="txtEmployee_Address"
-                  name="txtEmployee_Address"
-                  rows="1"
-                  cols="50"
-                  style="width: 100%; height: 34px !important; border-radius: 5px !important;">
-                </textarea>
-
-
-
-            </div>
-            <div class="col-lg-2 col-md-4 col-sm-6">
-                <label>Remarks</label>
-                <textarea
-                  id="txtRemarks"
-                  name="txtRemarks"
-                  rows="1"
-                  cols="50"
-                  style="width: 100%; height: 34px !important; border-bottom-right-radius: 5px !important;">
-                </textarea>
-            </div>
-            <div class="col-lg-2 col-md-4 col-sm-6">
-                <label>Users</label>
-                <select id="ddluser" name="ddluser">
-                  <!-- Add your <option> elements here -->
-                </select>
-            </div>
-            <div class="col-lg-2 col-md-4 col-sm-6">
-                <div class="row">
-                <label id="Off_txt" for="">
-                  Off Days
-                </label>
-                </div>
-                <div class="row">
-                    <div class="col-lg-3 col-md-4 col-sm-6">
-                        Sun 
-                        <input type="checkbox" id="sun" name="sun" />
-
-                    </div>
-                    <div class="col-lg-3 col-md-4 col-sm-6">
-                        Mon 
-                <input type="checkbox" id="mon" name="mon" />
-
-                    </div>
-                    <div class="col-lg-3 col-md-4 col-sm-6">
-                        Tue 
-                      <input type="checkbox" id="tue" name="mon" />
-                    </div>
-                    <div class="col-lg-3 col-md-4 col-sm-6">
-                        Wed 
-                            <input type="checkbox" id="wed" name="mon" />
-                    </div>
-                </div>
-                <div class="row">
-                    <div class="col-lg-3 col-md-4 col-sm-6">
-                        Thur 
-                         <input type="checkbox" id="thur" name="mon" />
-                    </div>
-                    <div class="col-lg-3 col-md-4 col-sm-6">
-                        Fri 
-                <input type="checkbox" id="fri" name="mon" />
-                    </div>
-                    <div class="col-lg-3 col-md-4 col-sm-6">
-                        Sat 
-                        <input type="checkbox" id="sat" name="mon" />
-                    </div>
-                </div>
-            </div>
-        </div>
-        <div class="row">
-        </div>
-        <div class="row">
-              <div class="col-lg-2 col-md-4 col-sm-6">
-                  <label>Qualification</label>
-                   <input type="text" id="txtdoc_qualification" name="txtdoc_qualification" />
-              </div>
-            <div class="col-lg-2 col-md-4 col-sm-6">
-                <label>Dependent</label>
-                 <input type="text" id="txtdependent" name="txtdependent" />
-            </div>
-            <div class="col-lg-2 col-md-4 col-sm-6">
-                <label>Policy</label>
-                <select id="ddlPolicy" name="ddlPolicy" class="form-control">
-                    <option value="">Please Select</option>
-                </select>
-            </div>
-            <div class="col-lg-2 col-md-4 col-sm-6">
-                <label>NTN No.</label>
-                <input type="text" id="txtEmployee_NTN_No" name="txtEmployee_NTN_No" autocomplete="off" />
-            </div>
-                  <div class="col-lg-1 col-md-4 col-sm-6 custom-label-checkbox">
-                 <input type="checkbox" id="ChkDoctor" name="ChkDoctor" class="chkwdth" />
-                <label id="LblIsDoctor" for="ChkDoctor">Doctor</label>
-                
-
-            </div>
-            <div class="col-lg-1 col-md-4 col-sm-6 custom-label-checkbox">
-                <input type="checkbox" id="ChkVisting" name="ChkVisting" class="chkwdth" />
-                <label id="LblIsVisting" for="ChkVisting">Visting</label>
-            </div>
-
-            <div class="col-lg-1 col-md-4 col-sm-6 custom-label-checkbox">
-                <input type="checkbox" id="ChkEmployee" name="ChkEmployee" class="chkwdth" />
-                <label id="LblEmployee" for="ChkEmployee">Employee</label>
-            </div>
-            <div class="col-lg-1 col-md-4 col-sm-6 custom-label-checkbox">
-                <input type="checkbox" id="ChkBlockCategory" name="ChkBlockCategory" class="chkwdth" />
-                <label id="LblChkBlockCategory" for="ChkBlockCategory">Block Category</label>
-            </div>
-
-           
-        </div>
-    <div class="row">
-        <div class="col-lg-2 col-md-4 col-sm-6">
-            <label>PMDC</label>
-            <input type="text" id="txtPMDC" name="txtPMDC" />
+        <div class="emp-meta-actions">
+            <span class="emp-meta-badge"><i class="fa fa-calendar"></i> <%= DateTime.Now.ToString("dd MMM yyyy") %></span>
         </div>
     </div>
 
-    <div class="row">
-        <div class="col-lg-8 col-md-9 col-sm-6">
+    <!-- ============ HIDDEN FIELDS ============ -->
+    <input type="hidden" id="hdnEmp" name="hdnEmp" />
+    <input type="hidden" id="hdfAccount_Name" name="hdfAccount_Name" />
+    <input type="hidden" id="hdfAccount_Code" name="hdfAccount_Code" />
+    <input type="hidden" id="hdfParent_Code" name="hdfParent_Code" />
+    <input type="hidden" id="hdfAccount_Serial" name="hdfAccount_Serial" />
+    <input type="hidden" id="hdfLevel" name="hdfLevel" />
+    <input type="hidden" id="hdfAccount_ID" name="hdfAccount_ID" />
+    <input type="hidden" id="hdfAccountExists" name="hdfAccountExists" />
+    <input type="hidden" id="CustomerJSON" />
+
+    <!-- ============ ROW 1: BASIC INFO + CONTACT ============ -->
+    <div class="emp-cards-grid">
+
+    <!-- ============ BASIC INFO CARD ============ -->
+    <div class="emp-card">
+        <div class="emp-card-header">
+            <i class="fa fa-id-card"></i>
+            <span>Basic Information</span>
+            <span class="emp-card-badge">Identity</span>
+        </div>
+        <div class="emp-card-body">
+            <div class="emp-bento emp-bento--3">
+                <div class="emp-field">
+                    <label class="emp-label">Employee ID</label>
+                    <input readonly type="text" id="txtEmployeeID" value="(New)" class="emp-input emp-input--readonly" />
+                </div>
+                <div class="emp-field">
+                    <label class="emp-label">Employee Code <span class="emp-required">*</span></label>
+                    <input type="text" id="txtEmployeeCode" name="txtEmployeeCode" disabled="disabled" class="emp-input emp-input--readonly" />
+                </div>
+                <div class="emp-field">
+                    <label class="emp-label">Employee Name <span class="emp-required">*</span></label>
+                    <input type="text" id="txtEmployee_Name" name="txtEmployee_Name" autocomplete="off" class="emp-input" />
+                    <span id="errorEmployee_Name" class="emp-validation">Employee Name is required.</span>
+                </div>
+                <div class="emp-field">
+                    <label class="emp-label">Father Name</label>
+                    <input type="text" id="txtFather_Name" name="txtFather_Name" autocomplete="off" class="emp-input" />
+                </div>
+                <div class="emp-field">
+                    <label class="emp-label">Date of Birth</label>
+                    <input type="text" id="txtEmployee_Date_of_Birth" name="txtEmployee_Date_of_Birth" class="emp-input" />
+                </div>
+                <div class="emp-field">
+                    <label class="emp-label">Panel Rate</label>
+                    <input type="text" id="txtPanelAmount" name="txtPanelAmount" class="emp-input" />
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- ============ CONTACT & DEPARTMENT CARD ============ -->
+    <div class="emp-card">
+        <div class="emp-card-header">
+            <i class="fa fa-address-book"></i>
+            <span>Contact &amp; Department</span>
+        </div>
+        <div class="emp-card-body">
+            <div class="emp-bento emp-bento--3">
+                <div class="emp-field">
+                    <label class="emp-label">Patient Type</label>
+                    <select id="ddlPatientType" name="ddlPatientType" class="emp-select"></select>
+                </div>
+                <div class="emp-field">
+                    <label class="emp-label">Department <span class="emp-required">*</span></label>
+                    <select id="ddlDepartment" name="ddlDepartment" class="emp-select"></select>
+                    <span id="errorDepartment" class="emp-validation">Department is required.</span>
+                </div>
+                <div class="emp-field">
+                    <label class="emp-label">Designation</label>
+                    <select id="ddlDesignation" name="ddlDesignation" class="emp-select"></select>
+                </div>
+                <div class="emp-field">
+                    <label class="emp-label">Mobile No</label>
+                    <input type="text" id="txtEmployee_Phone2" name="txtEmployee_Phone2" maxlength="11" autocomplete="off" class="emp-input" oninput="this.value = this.value.replace(/[^0-9.]/g, '').replace(/(\..*)\./g, '$1');" />
+                </div>
+                <div class="emp-field">
+                    <label class="emp-label">Home Phone</label>
+                    <input type="text" id="txtEmployee_Phone1" name="txtEmployee_Phone1" maxlength="11" autocomplete="off" class="emp-input" oninput="this.value = this.value.replace(/[^0-9.]/g, '').replace(/(\..*)\./g, '$1');" />
+                </div>
+                <div class="emp-field">
+                    <label class="emp-label">Email</label>
+                    <input type="text" id="txtEmployee_Email" name="txtEmployee_Email" autocomplete="off" class="emp-input" />
+                </div>
+            </div>
+        </div>
+    </div>
+
+    </div>
+
+    <!-- ============ ROW 2: SCHEDULE + COMPENSATION ============ -->
+    <div class="emp-cards-grid">
+
+    <!-- ============ SCHEDULE CARD ============ -->
+    <div class="emp-card">
+        <div class="emp-card-header">
+            <i class="fa fa-clock-o"></i>
+            <span>Schedule</span>
+        </div>
+        <div class="emp-card-body">
+            <div class="emp-bento emp-bento--3">
+                <div class="emp-field">
+                    <label class="emp-label">Patient Time</label>
+                    <input type="text" id="txtPatient_Time" name="txtPatient_Time" class="emp-input" />
+                </div>
+                <div class="emp-field">
+                    <label class="emp-label">Time In</label>
+                    <input type="text" id="TxtTime_In" name="TxtTime_In" class="emp-input" />
+                </div>
+                <div class="emp-field">
+                    <label class="emp-label">Time Out</label>
+                    <input type="text" id="TxtTime_Out" name="TxtTime_Out" class="emp-input" />
+                </div>
+                <div class="emp-field">
+                    <label class="emp-label">Start Date</label>
+                    <input type="text" id="txtStartDate" name="txtStartDate" class="emp-input" />
+                </div>
+                <div class="emp-field">
+                    <label class="emp-label">End Date</label>
+                    <input type="text" id="txtEndDate" name="txtEndDate" class="emp-input" />
+                </div>
+                <div class="emp-field">
+                    <label class="emp-label">Room #</label>
+                    <select id="ddlRoom" name="ddlRoom" class="emp-select"></select>
+                </div>
+                <div class="emp-field">
+                    <label class="emp-label">Date of Joining</label>
+                    <input type="text" id="txtEmployee_DOJ" name="txtEmployee_DOJ" class="emp-input" />
+                </div>
+                <div class="emp-field">
+                    <label class="emp-label">Resign Date</label>
+                    <input type="text" id="txtEmployee_Resign" name="txtEmployee_Resign" autocomplete="off" class="emp-input" />
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- ============ COMPENSATION CARD ============ -->
+    <div class="emp-card">
+        <div class="emp-card-header">
+            <i class="fa fa-money"></i>
+            <span>Compensation</span>
+        </div>
+        <div class="emp-card-body">
+            <div class="emp-bento emp-bento--3">
+                <div class="emp-field">
+                    <label class="emp-label">Floor #</label>
+                    <select id="ddlFloor" name="ddlFloor" class="emp-select"></select>
+                </div>
+                <div class="emp-field">
+                    <label class="emp-label">Doctor Share</label>
+                    <input type="text" id="txtDoctorShare" name="txtDoctorShare" autocomplete="off" class="emp-input" />
+                </div>
+                <div class="emp-field">
+                    <label class="emp-label">Hospital Share</label>
+                    <input type="text" id="txtHospital_Share" name="txtHospital_Share" class="emp-input" />
+                </div>
+                <div class="emp-field">
+                    <label class="emp-label">Extension No</label>
+                    <input type="text" id="Ext_txt" name="Ext_txt" class="emp-input" />
+                </div>
+                <div class="emp-field">
+                    <label class="emp-label">Gross Pay</label>
+                    <input type="text" id="txtGrossPay" name="txtGrossPay" autocomplete="off" class="emp-input" />
+                </div>
+                <div class="emp-field">
+                    <label class="emp-label">Consultant Charges</label>
+                    <input type="text" id="txtConsultant_Charges" name="txtConsultant_Charges" readonly autocomplete="off" class="emp-input emp-input--readonly" />
+                </div>
+            </div>
+        </div>
+    </div>
+
+    </div>
+
+    <!-- ============ ROW 3: ACCOUNT + MEDICAL ============ -->
+    <div class="emp-cards-grid">
+
+    <!-- ============ ACCOUNT & LOCATION CARD ============ -->
+    <div class="emp-card">
+            <div class="emp-card-header">
+                <i class="fa fa-building"></i>
+                <span>Account &amp; Location</span>
+            </div>
+            <div class="emp-card-body">
+                <div class="emp-bento emp-bento--3">
+                    <div class="emp-field">
+                        <label class="emp-label">GL Account</label>
+                        <input type="text" id="txtAccount_Code_Name" name="txtAccount_Code_Name" readonly class="emp-input emp-input--readonly" />
+                    </div>
+                    <div class="emp-field">
+                        <label class="emp-label">Building</label>
+                        <select id="ddlDoctorBuilding" name="ddlDoctorBuilding" class="emp-select"></select>
+                    </div>
+                    <div class="emp-field">
+                        <label class="emp-label">Users</label>
+                        <select id="ddluser" name="ddluser" class="emp-select"></select>
+                    </div>
+                </div>
+                <div class="emp-bento emp-bento--2">
+                    <div class="emp-field">
+                        <label class="emp-label">Address</label>
+                        <textarea id="txtEmployee_Address" name="txtEmployee_Address" rows="2" class="emp-textarea"></textarea>
+                    </div>
+                    <div class="emp-field">
+                        <label class="emp-label">Remarks</label>
+                        <textarea id="txtRemarks" name="txtRemarks" rows="2" class="emp-textarea"></textarea>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    <!-- ============ MEDICAL & MISC CARD ============ -->
+    <div class="emp-card">
+        <div class="emp-card-header">
+            <i class="fa fa-medkit"></i>
+            <span>Medical &amp; Miscellaneous</span>
+        </div>
+        <div class="emp-card-body">
+            <div class="emp-bento emp-bento--3">
+                <div class="emp-field">
+                    <label class="emp-label">Qualification</label>
+                    <input type="text" id="txtdoc_qualification" name="txtdoc_qualification" class="emp-input" />
+                </div>
+                <div class="emp-field">
+                    <label class="emp-label">Dependent</label>
+                    <input type="text" id="txtdependent" name="txtdependent" class="emp-input" />
+                </div>
+                <div class="emp-field">
+                    <label class="emp-label">Policy</label>
+                    <select id="ddlPolicy" name="ddlPolicy" class="emp-select">
+                        <option value="">Please Select</option>
+                    </select>
+                </div>
+                <div class="emp-field">
+                    <label class="emp-label">NTN No.</label>
+                    <input type="text" id="txtEmployee_NTN_No" name="txtEmployee_NTN_No" autocomplete="off" class="emp-input" />
+                </div>
+                <div class="emp-field">
+                    <label class="emp-label">PMDC</label>
+                    <input type="text" id="txtPMDC" name="txtPMDC" class="emp-input" />
+                </div>
+            </div>
+        </div>
+    </div>
+
+    </div>
+
+    <!-- ============ ROW 4: OFF DAYS & FLAGS (SINGLE CARD) ============ -->
+    <div class="emp-cards-grid">
+
+    <!-- ============ OFF DAYS & FLAGS CARD ============ -->
+    <div class="emp-card">
+        <div class="emp-card-header">
+            <i class="fa fa-calendar-times-o"></i>
+            <span>Off Days &amp; Flags</span>
+        </div>
+        <div class="emp-card-body">
+            <div class="emp-check-group-title">
+                <i class="fa fa-calendar"></i> Mark Days Off
+            </div>
+            <div class="emp-day-chips">
+                <label class="emp-day-chip"><input type="checkbox" id="sun" name="sun" /> Sun</label>
+                <label class="emp-day-chip"><input type="checkbox" id="mon" name="mon" /> Mon</label>
+                <label class="emp-day-chip"><input type="checkbox" id="tue" name="tue" /> Tue</label>
+                <label class="emp-day-chip"><input type="checkbox" id="wed" name="wed" /> Wed</label>
+                <label class="emp-day-chip"><input type="checkbox" id="thur" name="thur" /> Thu</label>
+                <label class="emp-day-chip"><input type="checkbox" id="fri" name="fri" /> Fri</label>
+                <label class="emp-day-chip"><input type="checkbox" id="sat" name="sat" /> Sat</label>
+            </div>
+
+            <div class="emp-check-group-title" style="margin-top:10px;">
+                <i class="fa fa-flag"></i> Employee Flags
+            </div>
+            <div class="emp-flag-grid">
+                <label class="emp-flag-item">
+                    <input type="checkbox" id="ChkDoctor" name="ChkDoctor" class="chkwdth" />
+                    <span id="LblIsDoctor" class="emp-flag-label">Doctor</span>
+                </label>
+                <label class="emp-flag-item">
+                    <input type="checkbox" id="ChkVisting" name="ChkVisting" class="chkwdth" />
+                    <span id="LblIsVisting" class="emp-flag-label">Visting</span>
+                </label>
+                <label class="emp-flag-item">
+                    <input type="checkbox" id="ChkEmployee" name="ChkEmployee" class="chkwdth" />
+                    <span id="LblEmployee" class="emp-flag-label">Employee</span>
+                </label>
+                <label class="emp-flag-item">
+                    <input type="checkbox" id="ChkBlockCategory" name="ChkBlockCategory" class="chkwdth" />
+                    <span id="LblChkBlockCategory" class="emp-flag-label">Block Category</span>
+                </label>
+            </div>
+        </div>
+    </div>
+
+    </div>
+
+    <!-- ============ BUTTON ROW (TOP - unchanged design) ============ -->
+    <div class="emp-actions row">
+        <div class="col-lg-8">
             <div class="row">
                 <div class="col-lg-2 col-md-4 col-sm-6">
-                    <input type="button" class="btn btn-primry" onclick="saveData()" id="btnSave" value="Save" />
+                       <input type="button" class="btn btn-primry" onclick="saveData()" id="btnSave" value="Save" />
                 </div>
-                <div class="col-lg-2 col-md-4 col-sm-6 ">
+                <div class="col-lg-2 col-md-4 col-sm-6">
                     <input type="button" class="btn btn-gray" onclick="redirect()" id="btnBack" value="View" />
                 </div>
             </div>
         </div>
+     
+        
     </div>
 
-
-    <div class="row">
-        <div class="col-lg-0 col-md-4 col-sm-6" style="visibility: hidden">
-            <label>Govt.Hospital</label>
-            <input type="text" id="txtGovt_Hospital" name="txtGovt_Hospital" />
-
-        </div>
+    <div style="display:none">
+        <span id="lblMessage"></span>
     </div>
-        <span id="errorDepartment" style="color:red; display:none;">Department is required.</span>
-    
-    <table style="padding: 20px; width: 1130px; height: 210px;">
-        <tr>
-            <td colspan="6">
-               <span id="lblMessage"></span>
 
-            </td>
-        </tr>
-    </table>
-    <input type="hidden" id="hdnEmp" name="hdnEmp" />
+</div>
+
 </asp:Content>

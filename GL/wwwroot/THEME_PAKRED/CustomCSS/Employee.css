@@ -1,18 +1,591 @@
+/* ============================================
+   EMPLOYEE - Modern Compact Design
+   Theme-aware via CSS variables
+   ============================================ */
+
+:root {
+    --emp-primary: #c11718;
+    --emp-primary-hover: #9e1213;
+    --emp-primary-soft: rgba(193, 23, 24, 0.08);
+    --emp-primary-border: rgba(193, 23, 24, 0.25);
+    --emp-bg: #f4f6fa;
+    --emp-card: #ffffff;
+    --emp-text: #2c3e50;
+    --emp-muted: #7b8390;
+    --emp-border: #e6eaf0;
+    --emp-border-strong: #d6dce5;
+    --emp-shadow-sm: 0 1px 2px rgba(15, 23, 42, 0.04);
+    --emp-shadow: 0 2px 8px rgba(15, 23, 42, 0.06);
+    --emp-radius: 8px;
+    --emp-radius-sm: 5px;
+    --emp-font: 13px;
+}
+
+/* ----- Page wrapper ----- */
+.emp-page {
+    padding: 10px 12px;
+    background: var(--emp-bg);
+    min-height: 100vh;
+    width: 100%;
+    max-width: 100%;
+    overflow-x: hidden;
+    box-sizing: border-box;
+}
+
+.emp-page,
+.emp-page * {
+    box-sizing: border-box;
+    min-width: 0;
+}
+
+html, body {
+    overflow-x: hidden;
+    max-width: 100vw;
+}
+
+.emp-page input,
+.emp-page select,
+.emp-page textarea,
+.emp-page button,
+.emp-page .emp-card,
+.emp-page .emp-input,
+.emp-page .emp-select,
+.emp-page .emp-textarea,
+.emp-page .emp-bento,
+.emp-page .emp-field,
+.emp-page .emp-day-chip,
+.emp-page .emp-card-body,
+.emp-page .emp-flag-grid,
+.emp-page .emp-flag-item {
+    max-width: 100%;
+    min-width: 0;
+}
+
+/* ----- Meta bar ----- */
+.emp-meta-bar {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    background: linear-gradient(135deg, var(--emp-primary) 0%, var(--emp-primary-hover) 100%);
+    color: #fff;
+    padding: 8px 16px;
+    border-radius: var(--emp-radius);
+    margin-bottom: 10px;
+    box-shadow: var(--emp-shadow);
+}
+
+.emp-meta-bar .emp-meta-title {
+    font-size: 15px;
+    font-weight: 600;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.emp-meta-bar .emp-meta-title i {
+    font-size: 16px;
+}
+
+.emp-meta-bar .emp-meta-actions {
+    display: flex;
+    gap: 6px;
+    align-items: center;
+}
+
+.emp-meta-badge {
+    background: rgba(255, 255, 255, 0.22);
+    padding: 3px 10px;
+    border-radius: 10px;
+    font-size: 11px;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.3px;
+}
+
+/* ----- Card ----- */
+.emp-card {
+    background: var(--emp-card);
+    border: 1px solid var(--emp-border);
+    border-radius: var(--emp-radius);
+    box-shadow: var(--emp-shadow-sm);
+    margin-bottom: 10px;
+    overflow: hidden;
+    transition: box-shadow 0.18s ease;
+}
+
+.emp-card:hover {
+    box-shadow: var(--emp-shadow);
+}
+
+.emp-card-header {
+    background: linear-gradient(135deg, var(--emp-primary) 0%, var(--emp-primary-hover) 100%);
+    color: #fff;
+    padding: 7px 14px;
+    font-size: 12px;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.4px;
+    display: flex;
+    align-items: center;
+    gap: 7px;
+    border-bottom: 1px solid var(--emp-primary-border);
+}
+
+.emp-card-header i {
+    font-size: 13px;
+    opacity: 0.95;
+}
+
+.emp-card-header .emp-card-badge {
+    margin-left: auto;
+    background: rgba(255, 255, 255, 0.22);
+    padding: 2px 9px;
+    border-radius: 10px;
+    font-size: 10px;
+    letter-spacing: 0.3px;
+}
+
+.emp-card-body {
+    padding: 10px 12px;
+    display: flex;
+    flex-direction: column;
+    flex: 1;
+    min-height: 0;
+}
+
+.emp-card-body > .emp-bento:last-child {
+    flex: 1;
+}
+
+.emp-card-body > .emp-textarea:last-child,
+.emp-card-body textarea.emp-textarea {
+    min-height: 60px;
+}
+
+/* ----- Bento grid ----- */
+.emp-bento {
+    display: grid;
+    gap: 8px;
+}
+
+.emp-bento--6 {
+    grid-template-columns: repeat(6, 1fr);
+}
+
+.emp-bento--5 {
+    grid-template-columns: repeat(5, 1fr);
+}
+
+.emp-bento--4 {
+    grid-template-columns: repeat(4, 1fr);
+}
+
+.emp-bento--3 {
+    grid-template-columns: repeat(3, 1fr);
+}
+
+.emp-bento--2 {
+    grid-template-columns: 1fr 1fr;
+}
+
+@media (max-width: 992px) {
+    .emp-bento--6,
+    .emp-bento--5 {
+        grid-template-columns: repeat(3, 1fr);
+    }
+    .emp-bento--4,
+    .emp-bento--3 {
+        grid-template-columns: repeat(2, 1fr);
+    }
+    .emp-bento--2 {
+        grid-template-columns: 1fr;
+    }
+}
+
+@media (max-width: 600px) {
+    .emp-bento--6,
+    .emp-bento--5,
+    .emp-bento--4,
+    .emp-bento--3,
+    .emp-bento--2 {
+        grid-template-columns: 1fr;
+    }
+}
+
+/* ----- Page main 2-column grid: cards side-by-side ----- */
+.emp-cards-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 10px;
+    align-items: stretch;
+}
+
+.emp-cards-grid > .emp-card {
+    display: flex;
+    flex-direction: column;
+    min-width: 0;
+}
+
+.emp-cards-grid--full {
+    grid-template-columns: 1fr;
+}
+
+@media (max-width: 992px) {
+    .emp-cards-grid {
+        grid-template-columns: 1fr;
+    }
+}
+
+/* Cards inside grid should not double up margins */
+.emp-cards-grid .emp-card {
+    margin-bottom: 0;
+}
+
+/* ----- Field ----- */
+.emp-field {
+    display: flex;
+    flex-direction: column;
+    gap: 3px;
+    margin-bottom: 4px;
+    min-width: 0;
+}
+
+/* Make fields inside the last bento of a card-body stretch to fill remaining space */
+.emp-card-body > .emp-bento:last-child .emp-field {
+    flex: 1;
+}
+
+.emp-label {
+    font-size: 11px;
+    font-weight: 600;
+    color: var(--emp-muted);
+    text-transform: uppercase;
+    letter-spacing: 0.3px;
+    margin: 0;
+    display: flex;
+    align-items: center;
+    gap: 4px;
+}
+
+.emp-label .emp-required {
+    color: #dc3545;
+    margin-left: 2px;
+}
+
+.emp-input,
+.emp-select,
+.emp-textarea {
+    width: 100%;
+    padding: 4px 8px;
+    font-size: var(--emp-font);
+    border: 1px solid var(--emp-border-strong);
+    border-radius: var(--emp-radius-sm);
+    background: #fff;
+    color: var(--emp-text);
+    transition: all 0.15s ease;
+    height: 28px;
+    line-height: 1.2;
+    font-family: inherit;
+}
+
+.emp-textarea {
+    height: auto;
+    min-height: 56px;
+    resize: vertical;
+}
+
+.emp-input:focus,
+.emp-select:focus,
+.emp-textarea:focus {
+    outline: none;
+    border-color: var(--emp-primary);
+    box-shadow: 0 0 0 3px var(--emp-primary-soft);
+}
+
+.emp-input[disabled],
+.emp-select[disabled],
+.emp-input[readonly] {
+    background: #fafbfd;
+    color: var(--emp-muted);
+    cursor: not-allowed;
+}
+
+.emp-input--readonly {
+    background: #fafbfd !important;
+    color: var(--emp-text) !important;
+    font-weight: 500;
+}
+
+/* Select2 inside */
+.emp-field .select2-container .select2-selection--single {
+    height: 28px !important;
+    border: 1px solid var(--emp-border-strong) !important;
+    border-radius: var(--emp-radius-sm) !important;
+    padding: 2px 8px !important;
+}
+
+.emp-field .select2-container--default .select2-selection--single .select2-selection__rendered {
+    line-height: 24px !important;
+    font-size: var(--emp-font) !important;
+    color: var(--emp-text) !important;
+}
+
+.emp-field .select2-container--default .select2-selection--single .select2-selection__arrow {
+    height: 26px !important;
+}
+
+/* ----- Checkbox row ----- */
+.emp-check-row {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 12px;
+    align-items: center;
+    padding: 8px 12px;
+    background: #fafbfd;
+    border: 1px solid var(--emp-border);
+    border-radius: var(--emp-radius-sm);
+    margin-bottom: 8px;
+}
+
+.emp-check {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    cursor: pointer;
+    font-size: 12px;
+    font-weight: 500;
+    color: var(--emp-text);
+    text-transform: uppercase;
+    letter-spacing: 0.3px;
+}
+
+.emp-check input[type="checkbox"] {
+    width: 16px;
+    height: 16px;
+    cursor: pointer;
+    accent-color: var(--emp-primary);
+}
+
+.emp-check-group-title {
+    font-size: 11px;
+    font-weight: 700;
+    color: var(--emp-primary);
+    text-transform: uppercase;
+    letter-spacing: 0.3px;
+    margin-bottom: 4px;
+    display: flex;
+    align-items: center;
+    gap: 5px;
+}
+
+.emp-check-group-title i {
+    font-size: 12px;
+}
+
+/* ----- Off-days mini chips ----- */
+.emp-day-chips {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 4px;
+}
+
+.emp-day-chip {
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+    padding: 3px 8px;
+    background: #fff;
+    border: 1px solid var(--emp-border-strong);
+    border-radius: 14px;
+    font-size: 11px;
+    font-weight: 600;
+    color: var(--emp-text);
+    text-transform: uppercase;
+    cursor: pointer;
+    transition: all 0.15s ease;
+}
+
+.emp-day-chip input[type="checkbox"] {
+    width: 13px;
+    height: 13px;
+    cursor: pointer;
+    margin: 0;
+    accent-color: var(--emp-primary);
+}
+
+.emp-day-chip:hover {
+    border-color: var(--emp-primary);
+    background: var(--emp-primary-soft);
+}
+
+/* ----- Flags grid (no nested labels) ----- */
+.emp-flag-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 6px;
+}
+
+.emp-flag-item {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 6px 10px;
+    background: #fafbfd;
+    border: 1px solid var(--emp-border);
+    border-radius: var(--emp-radius-sm);
+    cursor: pointer;
+    font-size: 12px;
+    font-weight: 700;
+    color: var(--emp-text);
+    text-transform: uppercase;
+    letter-spacing: 0.3px;
+    transition: all 0.15s ease;
+    min-width: 0;
+    margin: 0;
+}
+
+.emp-flag-item:hover {
+    border-color: var(--emp-primary);
+    background: var(--emp-primary-soft);
+}
+
+.emp-flag-item input[type="checkbox"] {
+    width: 16px;
+    height: 16px;
+    cursor: pointer;
+    margin: 0;
+    padding: 0;
+    flex-shrink: 0;
+    accent-color: var(--emp-primary);
+}
+
+.emp-flag-label {
+    flex: 1;
+    min-width: 0;
+    color: var(--emp-text);
+    font-size: 12px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.3px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    line-height: 1.2;
+    cursor: pointer;
+}
+
+/* ----- Layout ----- */
+.emp-layout-2col {
+    display: grid;
+    grid-template-columns: minmax(0, 2fr) minmax(0, 1fr);
+    gap: 10px;
+    align-items: start;
+}
+
+@media (max-width: 992px) {
+    .emp-layout-2col {
+        grid-template-columns: 1fr;
+    }
+}
+
+/* ----- Helper utilities ----- */
+.emp-text-muted {
+    color: var(--emp-muted);
+}
+
+.emp-text-right {
+    text-align: right;
+}
+
+/* ----- Force Select2 dropdown ----- */
+.emp-field .select2-container--default .select2-dropdown {
+    z-index: 99999 !important;
+}
+
+.select2-search__field {
+    transform: translateZ(0);
+    -webkit-transform: translateZ(0);
+}
+
+/* ----- Validation ----- */
+.emp-validation {
+    color: var(--emp-danger, #dc3545);
+    font-size: 11px;
+    margin-top: 2px;
+    display: none;
+}
+
+/* ----- Special: checkbox inline (class from original) ----- */
 .custom-label-checkbox {
     display: flex;
     align-items: center;
-    justify-content: flex-start; /* Ensures alignment to the left */
-    gap: 10px; /* Adds spacing between the label and the checkbox */
-    margin-top: 30px;
-    margin-left: -14px;
+    justify-content: flex-start;
+    gap: 8px;
+    margin: 0;
+    padding: 4px 0;
 }
 
-    .custom-label-checkbox label {
-        margin: 0; /* Removes default margin */
-        line-height: 1.5; /* Ensures consistent vertical alignment */
-    }
+.custom-label-checkbox label {
+    margin: 0;
+    line-height: 1.4;
+    font-size: 12px;
+    font-weight: 600;
+    color: var(--emp-text);
+    text-transform: uppercase;
+    letter-spacing: 0.3px;
+    cursor: pointer;
+}
 
-    .custom-label-checkbox input[type="checkbox"] {
-        margin: 0; /* Removes any default margin on checkboxes */
-        width: auto; /* Ensures proper sizing */
-    }
+.custom-label-checkbox input[type="checkbox"] {
+    margin: 0;
+    width: 16px;
+    height: 16px;
+    cursor: pointer;
+    accent-color: var(--emp-primary);
+}
+
+/* Disable styling for legacy input styling clash */
+.emp-field input.emp-input,
+.emp-field select.emp-select,
+.emp-field textarea.emp-textarea {
+    width: 100% !important;
+    padding: 4px 8px !important;
+    font-size: 13px !important;
+    border: 1px solid var(--emp-border-strong) !important;
+    border-radius: var(--emp-radius-sm) !important;
+    background: #fff !important;
+    color: var(--emp-text) !important;
+    height: 28px !important;
+    line-height: 1.2 !important;
+    box-sizing: border-box !important;
+    margin: 0 !important;
+}
+
+/* ----- Animation ----- */
+@keyframes empFadeIn {
+    from { opacity: 0; transform: translateY(4px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+.emp-card {
+    animation: empFadeIn 0.2s ease;
+}
+
+/* ----- Strict reset for legend/textarea height ----- */
+.emp-card-body textarea {
+    height: auto !important;
+    min-height: 56px;
+}
+
+/* ----- Button row container ----- */
+.emp-actions {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    padding: 10px 12px;
+    background: #fff;
+    border: 1px solid var(--emp-border);
+    border-radius: var(--emp-radius);
+    box-shadow: var(--emp-shadow-sm);
+    margin-bottom: 10px;
+}
