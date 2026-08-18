@@ -26,6 +26,15 @@
     padding: 10px 12px;
     background: var(--emp-bg);
     min-height: 100vh;
+    max-width: 100%;
+    overflow-x: hidden;
+    box-sizing: border-box;
+}
+
+.emp-page * {
+    box-sizing: border-box;
+    max-width: 100%;
+    min-width: 0;
 }
 
 /* ----- Meta bar ----- */
@@ -114,6 +123,19 @@
 
 .emp-card-body {
     padding: 10px 12px;
+    display: flex;
+    flex-direction: column;
+    flex: 1;
+    min-height: 0;
+}
+
+.emp-card-body > .emp-bento:last-child {
+    flex: 1;
+}
+
+.emp-card-body > .emp-textarea:last-child,
+.emp-card-body textarea.emp-textarea {
+    min-height: 60px;
 }
 
 /* ----- Bento grid ----- */
@@ -122,22 +144,76 @@
     gap: 8px;
 }
 
-.emp-bento--6 { grid-template-columns: repeat(6, 1fr); }
-.emp-bento--5 { grid-template-columns: repeat(5, 1fr); }
-.emp-bento--4 { grid-template-columns: repeat(4, 1fr); }
-.emp-bento--3 { grid-template-columns: repeat(3, 1fr); }
-.emp-bento--2 { grid-template-columns: 1fr 1fr; }
+.emp-bento--6 {
+    grid-template-columns: repeat(6, 1fr);
+}
+
+.emp-bento--5 {
+    grid-template-columns: repeat(5, 1fr);
+}
+
+.emp-bento--4 {
+    grid-template-columns: repeat(4, 1fr);
+}
+
+.emp-bento--3 {
+    grid-template-columns: repeat(3, 1fr);
+}
+
+.emp-bento--2 {
+    grid-template-columns: 1fr 1fr;
+}
 
 @media (max-width: 992px) {
-    .emp-bento--6, .emp-bento--5 { grid-template-columns: repeat(3, 1fr); }
-    .emp-bento--4, .emp-bento--3 { grid-template-columns: repeat(2, 1fr); }
-    .emp-bento--2 { grid-template-columns: 1fr; }
+    .emp-bento--6,
+    .emp-bento--5 {
+        grid-template-columns: repeat(3, 1fr);
+    }
+    .emp-bento--4,
+    .emp-bento--3 {
+        grid-template-columns: repeat(2, 1fr);
+    }
+    .emp-bento--2 {
+        grid-template-columns: 1fr;
+    }
 }
 
 @media (max-width: 600px) {
-    .emp-bento--6, .emp-bento--5, .emp-bento--4, .emp-bento--3, .emp-bento--2 {
+    .emp-bento--6,
+    .emp-bento--5,
+    .emp-bento--4,
+    .emp-bento--3,
+    .emp-bento--2 {
         grid-template-columns: 1fr;
     }
+}
+
+/* ----- Page main 2-column grid: cards side-by-side ----- */
+.emp-cards-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 10px;
+    align-items: stretch;
+}
+
+.emp-cards-grid > .emp-card {
+    display: flex;
+    flex-direction: column;
+}
+
+.emp-cards-grid--full {
+    grid-template-columns: 1fr;
+}
+
+@media (max-width: 992px) {
+    .emp-cards-grid {
+        grid-template-columns: 1fr;
+    }
+}
+
+/* Cards inside grid should not double up margins */
+.emp-cards-grid .emp-card {
+    margin-bottom: 0;
 }
 
 /* ----- Field ----- */
@@ -146,6 +222,12 @@
     flex-direction: column;
     gap: 3px;
     margin-bottom: 4px;
+    min-width: 0;
+}
+
+/* Make fields inside the last bento of a card-body stretch to fill remaining space */
+.emp-card-body > .emp-bento:last-child .emp-field {
+    flex: 1;
 }
 
 .emp-label {
@@ -160,9 +242,14 @@
     gap: 4px;
 }
 
-.emp-label .emp-required { color: #dc3545; margin-left: 2px; }
+.emp-label .emp-required {
+    color: #dc3545;
+    margin-left: 2px;
+}
 
-.emp-input, .emp-select, .emp-textarea {
+.emp-input,
+.emp-select,
+.emp-textarea {
     width: 100%;
     padding: 4px 8px;
     font-size: var(--emp-font);
@@ -176,15 +263,23 @@
     font-family: inherit;
 }
 
-.emp-textarea { height: auto; min-height: 56px; resize: vertical; }
+.emp-textarea {
+    height: auto;
+    min-height: 56px;
+    resize: vertical;
+}
 
-.emp-input:focus, .emp-select:focus, .emp-textarea:focus {
+.emp-input:focus,
+.emp-select:focus,
+.emp-textarea:focus {
     outline: none;
     border-color: var(--emp-primary);
     box-shadow: 0 0 0 3px var(--emp-primary-soft);
 }
 
-.emp-input[disabled], .emp-select[disabled], .emp-input[readonly] {
+.emp-input[disabled],
+.emp-select[disabled],
+.emp-input[readonly] {
     background: #fafbfd;
     color: var(--emp-muted);
     cursor: not-allowed;
@@ -258,10 +353,16 @@
     gap: 5px;
 }
 
-.emp-check-group-title i { font-size: 12px; }
+.emp-check-group-title i {
+    font-size: 12px;
+}
 
 /* ----- Off-days mini chips ----- */
-.emp-day-chips { display: flex; flex-wrap: wrap; gap: 4px; }
+.emp-day-chips {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 4px;
+}
 
 .emp-day-chip {
     display: inline-flex;
@@ -301,15 +402,24 @@
 }
 
 @media (max-width: 992px) {
-    .emp-layout-2col { grid-template-columns: 1fr; }
+    .emp-layout-2col {
+        grid-template-columns: 1fr;
+    }
 }
 
 /* ----- Helper utilities ----- */
-.emp-text-muted { color: var(--emp-muted); }
-.emp-text-right { text-align: right; }
+.emp-text-muted {
+    color: var(--emp-muted);
+}
+
+.emp-text-right {
+    text-align: right;
+}
 
 /* ----- Force Select2 dropdown ----- */
-.emp-field .select2-container--default .select2-dropdown { z-index: 99999 !important; }
+.emp-field .select2-container--default .select2-dropdown {
+    z-index: 99999 !important;
+}
 
 .select2-search__field {
     transform: translateZ(0);
@@ -376,10 +486,25 @@
     to { opacity: 1; transform: translateY(0); }
 }
 
-.emp-card { animation: empFadeIn 0.2s ease; }
+.emp-card {
+    animation: empFadeIn 0.2s ease;
+}
 
 /* ----- Strict reset for legend/textarea height ----- */
 .emp-card-body textarea {
     height: auto !important;
     min-height: 56px;
+}
+
+/* ----- Button row container ----- */
+.emp-actions {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    padding: 10px 12px;
+    background: #fff;
+    border: 1px solid var(--emp-border);
+    border-radius: var(--emp-radius);
+    box-shadow: var(--emp-shadow-sm);
+    margin-bottom: 10px;
 }

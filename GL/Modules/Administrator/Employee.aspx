@@ -607,6 +607,9 @@
     <input type="hidden" id="hdfAccountExists" name="hdfAccountExists" />
     <input type="hidden" id="CustomerJSON" />
 
+    <!-- ============ ROW 1: BASIC INFO + CONTACT ============ -->
+    <div class="emp-cards-grid">
+
     <!-- ============ BASIC INFO CARD ============ -->
     <div class="emp-card">
         <div class="emp-card-header">
@@ -615,7 +618,7 @@
             <span class="emp-card-badge">Identity</span>
         </div>
         <div class="emp-card-body">
-            <div class="emp-bento emp-bento--6">
+            <div class="emp-bento emp-bento--3">
                 <div class="emp-field">
                     <label class="emp-label">Employee ID</label>
                     <input readonly type="text" id="txtEmployeeID" value="(New)" class="emp-input emp-input--readonly" />
@@ -652,7 +655,7 @@
             <span>Contact &amp; Department</span>
         </div>
         <div class="emp-card-body">
-            <div class="emp-bento emp-bento--6">
+            <div class="emp-bento emp-bento--3">
                 <div class="emp-field">
                     <label class="emp-label">Patient Type</label>
                     <select id="ddlPatientType" name="ddlPatientType" class="emp-select"></select>
@@ -682,6 +685,11 @@
         </div>
     </div>
 
+    </div>
+
+    <!-- ============ ROW 2: SCHEDULE + COMPENSATION ============ -->
+    <div class="emp-cards-grid">
+
     <!-- ============ SCHEDULE CARD ============ -->
     <div class="emp-card">
         <div class="emp-card-header">
@@ -689,7 +697,7 @@
             <span>Schedule</span>
         </div>
         <div class="emp-card-body">
-            <div class="emp-bento emp-bento--4">
+            <div class="emp-bento emp-bento--3">
                 <div class="emp-field">
                     <label class="emp-label">Patient Time</label>
                     <input type="text" id="txtPatient_Time" name="txtPatient_Time" class="emp-input" />
@@ -733,7 +741,7 @@
             <span>Compensation</span>
         </div>
         <div class="emp-card-body">
-            <div class="emp-bento emp-bento--6">
+            <div class="emp-bento emp-bento--3">
                 <div class="emp-field">
                     <label class="emp-label">Floor #</label>
                     <select id="ddlFloor" name="ddlFloor" class="emp-select"></select>
@@ -762,11 +770,13 @@
         </div>
     </div>
 
-    <!-- ============ 2-COL: ACCOUNT + LOCATIONS ============ -->
-    <div class="emp-layout-2col">
+    </div>
 
-        <!-- Account & Address -->
-        <div class="emp-card">
+    <!-- ============ ROW 3: ACCOUNT + MEDICAL ============ -->
+    <div class="emp-cards-grid">
+
+    <!-- ============ ACCOUNT & LOCATION CARD ============ -->
+    <div class="emp-card">
             <div class="emp-card-header">
                 <i class="fa fa-building"></i>
                 <span>Account &amp; Location</span>
@@ -799,51 +809,6 @@
             </div>
         </div>
 
-        <!-- Off Days + Checkboxes -->
-        <div class="emp-card">
-            <div class="emp-card-header">
-                <i class="fa fa-calendar-times-o"></i>
-                <span>Off Days &amp; Flags</span>
-            </div>
-            <div class="emp-card-body">
-                <div class="emp-check-group-title">
-                    <i class="fa fa-calendar"></i> Off Days
-                </div>
-                <div class="emp-day-chips">
-                    <label class="emp-day-chip"><input type="checkbox" id="sun" name="sun" /> Sun</label>
-                    <label class="emp-day-chip"><input type="checkbox" id="mon" name="mon" /> Mon</label>
-                    <label class="emp-day-chip"><input type="checkbox" id="tue" name="tue" /> Tue</label>
-                    <label class="emp-day-chip"><input type="checkbox" id="wed" name="wed" /> Wed</label>
-                    <label class="emp-day-chip"><input type="checkbox" id="thur" name="thur" /> Thu</label>
-                    <label class="emp-day-chip"><input type="checkbox" id="fri" name="fri" /> Fri</label>
-                    <label class="emp-day-chip"><input type="checkbox" id="sat" name="sat" /> Sat</label>
-                </div>
-
-                <div class="emp-check-group-title" style="margin-top:8px;">
-                    <i class="fa fa-flag"></i> Flags
-                </div>
-                <div class="emp-check-row">
-                    <label class="custom-label-checkbox">
-                        <input type="checkbox" id="ChkDoctor" name="ChkDoctor" class="chkwdth" />
-                        <label id="LblIsDoctor" for="ChkDoctor">Doctor</label>
-                    </label>
-                    <label class="custom-label-checkbox">
-                        <input type="checkbox" id="ChkVisting" name="ChkVisting" class="chkwdth" />
-                        <label id="LblIsVisting" for="ChkVisting">Visting</label>
-                    </label>
-                    <label class="custom-label-checkbox">
-                        <input type="checkbox" id="ChkEmployee" name="ChkEmployee" class="chkwdth" />
-                        <label id="LblEmployee" for="ChkEmployee">Employee</label>
-                    </label>
-                    <label class="custom-label-checkbox">
-                        <input type="checkbox" id="ChkBlockCategory" name="ChkBlockCategory" class="chkwdth" />
-                        <label id="LblChkBlockCategory" for="ChkBlockCategory">Block Category</label>
-                    </label>
-                </div>
-            </div>
-        </div>
-    </div>
-
     <!-- ============ MEDICAL & MISC CARD ============ -->
     <div class="emp-card">
         <div class="emp-card-header">
@@ -851,7 +816,7 @@
             <span>Medical &amp; Miscellaneous</span>
         </div>
         <div class="emp-card-body">
-            <div class="emp-bento emp-bento--5">
+            <div class="emp-bento emp-bento--3">
                 <div class="emp-field">
                     <label class="emp-label">Qualification</label>
                     <input type="text" id="txtdoc_qualification" name="txtdoc_qualification" class="emp-input" />
@@ -878,47 +843,77 @@
         </div>
     </div>
 
-    <!-- ============ BUTTON ROW (UNCHANGED) ============ -->
-    <div class="row">
-        <div class="col-lg-8 col-md-9 col-sm-6">
-            <div class="row">
-                <div class="col-lg-2 col-md-4 col-sm-6">
-                    <input type="button" class="btn btn-primry" onclick="saveData()" id="btnSave" value="Save" />
-                </div>
-                <div class="col-lg-2 col-md-4 col-sm-6 ">
-                    <input type="button" class="btn btn-gray" onclick="redirect()" id="btnBack" value="View" />
-                </div>
+    </div>
+
+    <!-- ============ ROW 4: OFF DAYS & FLAGS (SINGLE CARD) ============ -->
+    <div class="emp-cards-grid">
+
+    <!-- ============ OFF DAYS & FLAGS CARD ============ -->
+    <div class="emp-card">
+        <div class="emp-card-header">
+            <i class="fa fa-calendar-times-o"></i>
+            <span>Off Days &amp; Flags</span>
+        </div>
+        <div class="emp-card-body">
+            <div class="emp-check-group-title">
+                <i class="fa fa-calendar"></i> Mark Days Off
+            </div>
+            <div class="emp-day-chips">
+                <label class="emp-day-chip"><input type="checkbox" id="sun" name="sun" /> Sun</label>
+                <label class="emp-day-chip"><input type="checkbox" id="mon" name="mon" /> Mon</label>
+                <label class="emp-day-chip"><input type="checkbox" id="tue" name="tue" /> Tue</label>
+                <label class="emp-day-chip"><input type="checkbox" id="wed" name="wed" /> Wed</label>
+                <label class="emp-day-chip"><input type="checkbox" id="thur" name="thur" /> Thu</label>
+                <label class="emp-day-chip"><input type="checkbox" id="fri" name="fri" /> Fri</label>
+                <label class="emp-day-chip"><input type="checkbox" id="sat" name="sat" /> Sat</label>
+            </div>
+
+            <div class="emp-check-group-title" style="margin-top:10px;">
+                <i class="fa fa-flag"></i> Employee Flags
+            </div>
+            <div class="emp-flag-grid">
+                <label class="emp-flag-item">
+                    <input type="checkbox" id="ChkDoctor" name="ChkDoctor" class="chkwdth" />
+                    <span id="LblIsDoctor" class="emp-flag-label">Doctor</span>
+                </label>
+                <label class="emp-flag-item">
+                    <input type="checkbox" id="ChkVisting" name="ChkVisting" class="chkwdth" />
+                    <span id="LblIsVisting" class="emp-flag-label">Visting</span>
+                </label>
+                <label class="emp-flag-item">
+                    <input type="checkbox" id="ChkEmployee" name="ChkEmployee" class="chkwdth" />
+                    <span id="LblEmployee" class="emp-flag-label">Employee</span>
+                </label>
+                <label class="emp-flag-item">
+                    <input type="checkbox" id="ChkBlockCategory" name="ChkBlockCategory" class="chkwdth" />
+                    <span id="LblChkBlockCategory" class="emp-flag-label">Block Category</span>
+                </label>
             </div>
         </div>
     </div>
 
-    <!-- ============ HIDDEN LEGACY FIELDS ============ -->
-    <div class="row">
-        <div class="col-lg-0 col-md-4 col-sm-6" style="visibility: hidden">
-            <label>Govt.Hospital</label>
-            <input type="text" id="txtGovt_Hospital" name="txtGovt_Hospital" />
-        </div>
     </div>
 
-    <table style="padding: 20px; width: 1130px; height: 210px;">
-        <tr>
-            <td colspan="6">
-                <span id="lblMessage"></span>
-            </td>
-        </tr>
-    </table>
+    <!-- ============ BUTTON ROW (TOP - unchanged design) ============ -->
+    <div class="emp-actions row">
+        <div class="col-lg-8">
+            <div class="row">
+                <div class="col-lg-2 col-md-4 col-sm-6">
+                       <input type="button" class="btn btn-primry" onclick="saveData()" id="btnSave" value="Save" />
+                </div>
+                <div class="col-lg-2 col-md-4 col-sm-6">
+                    <input type="button" class="btn btn-gray" onclick="redirect()" id="btnBack" value="View" />
+                </div>
+            </div>
+        </div>
+     
+        
+    </div>
+
+    <div style="display:none">
+        <span id="lblMessage"></span>
+    </div>
 
 </div>
 
-        <span id="errorDepartment" style="color:red; display:none;">Department is required.</span>
-    
-    <table style="padding: 20px; width: 1130px; height: 210px;">
-        <tr>
-            <td colspan="6">
-               <span id="lblMessage"></span>
-
-            </td>
-        </tr>
-    </table>
-    <input type="hidden" id="hdnEmp" name="hdnEmp" />
 </asp:Content>
