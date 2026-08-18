@@ -1,4 +1,4 @@
-﻿<%@ Page Title="" Language="C#" MasterPageFile="~/Site.Master" AutoEventWireup="true" CodeBehind="Appointment.aspx.cs" Inherits="PMS.Appointment" %>
+<%@ Page Title="" Language="C#" MasterPageFile="~/Site.Master" AutoEventWireup="true" CodeBehind="Appointment.aspx.cs" Inherits="PMS.Appointment" %>
 
 <asp:Content ID="Content1" ContentPlaceHolderID="HeadContent" runat="server">
     <link href="../../wwwroot/THEME_TIBBIT/CustomCSS/Appointment.css" rel="stylesheet" />
@@ -2093,177 +2093,190 @@
         <label>ID</label>
         <input type="text" id="txt_ID" readonly="readonly" />
     </div>
-    <div class="row">
+<div class="apt-page">
 
-        <div class="col-lg-9 col-md-9 col-sm-9">
-            <div class="row">
-                <div class="col-lg-3 col-md-3 col-sm-6">
-                    <input type="hidden" id="hdfreg_ini_id" />
-                    <label>Appointment Number</label>
-                    <input type="text" id="txt_apt_no" class="form-control" readonly="readonly" autocomplete="off" />
-                </div>
-                <div class="col-lg-3 col-md-3 col-sm-6">
-                    <label>Patient Name</label>
-                    <input type="text" id="txt_pt_name" class="form-control" style="text-transform: capitalize;" autocomplete="off" />
-                </div>
-                <div class="col-lg-3 col-md-3 col-sm-6">
-                    <label>Phone #</label>
-                    <input type="text" id="txt_phone_no" class="form-control" maxlength="11" autocomplete="off" />
-                </div>
-                <div class="col-lg-3 col-md-3 col-sm-6">
-                    <label>Age</label>
-                    <input type="text" id="txt_age" class="form-control" autocomplete="off" />
-                </div>
-            </div>
-            <div class="row">
-                <div class="col-lg-3 col-md-3 col-sm-6">
-                    <label style="">Department</label>
-                    <select style="border-radius: 5px; height: 29px;" class="form-control ddldoc" id="ddlsubdepartment">
-                        <option></option>
-                    </select>
-                </div>
-                <div class="col-lg-3 col-md-3 col-sm-6">
-                    <label>Consultant</label>
-                    <select class="ddldoc form-control" id="ddl_colstnt" >
-                        <option></option>
-                    </select>
-                </div>
-               
-                <div class="col-lg-3 col-md-3 col-sm-6">
-                    <label>Date</label>
-                    <input type="text" id="txt_date" class="form-control" onchange="GetAppNoByDoctor()" autocomplete="off" />
-                </div>
-                <div class="col-lg-3 col-md-3 col-sm-6">
-                    <label>Time</label>
-                    <input type="text" readonly id="txt_time" class="form-control" autocomplete="off" />
-                </div>
-                <div class="col-lg-3 col-md-3 col-sm-6">
-                </div>
-            </div>
-     
-            <div class="row row_2" style="margin-top:1%">
-                <div class="col-lg-2 col-md-4 col-sm-6">
-                   <input type="button" class="btn-primry" id="btnSaveMessage" value="Save & Send Msg"/>
-                </div>
-                <div class="col-lg-2 col-md-4 col-sm-6">
-                    <input type="button" class="btn btn-yellow" id="btnSave" value="Save" />
-                </div>
-                <div class="col-lg-2 col-md-4 col-sm-6">
-                    <input type="button" class="btn-gray" value="View" id="btnBack" onclick="window.location = 'AppointmentView.aspx'" />
-                </div>
-                <div class="col-lg-2 col-md-4 col-sm-6">
-                    <input type="button" class="btn btn-yellow" value="New" id="btnNew" onclick="window.location = 'Appointment.aspx'" />
-                </div>
-                <div class="col-lg-2 col-md-4 col-sm-6">
-                    <input type="button" class="btn btn-yellow" value="Print" id="btnPrint" onclick="appointmentPatient_Print()" />
-                </div>
-            </div>
+    <!-- ============ META BAR ============ -->
+    <div class="apt-meta-bar">
+        <div class="apt-meta-title">
+            <i class="fa fa-calendar-plus-o"></i>
+            <span>Appointment</span>
+            <span class="apt-meta-badge" id="aptStatusBadge">New</span>
         </div>
-       <div class="col-lg-3 col-md-3 col-sm-3">
-            <div class="">
-                <div class="slot-container card" style="overflow: auto;height: 240px;">
-                    <h5 class="timeslotheaders">Time Slots</h5>
-                    <hr style="border: 1px solid #C4C4C4;">
-                    <div id="slotsGrid" class="slots-grid">
-                        <h3>Please Select Patient</h3>
+        <div class="apt-meta-actions">
+            <span class="apt-meta-badge"><i class="fa fa-calendar"></i> <%= DateTime.Now.ToString("dd MMM yyyy") %></span>
+        </div>
+    </div>
+
+    <!-- ============ APPOINTMENT FORM ============ -->
+    <input type="hidden" id="hdfreg_ini_id" />
+    <input type="hidden" id="txt_ID" readonly="readonly" />
+    <input type="hidden" id="txt_apt_no" />
+    <input type="hidden" id="txt_time" />
+
+    <div class="apt-layout">
+
+        <!-- Appointment Details Card -->
+        <div class="apt-card">
+            <div class="apt-card-header">
+                <i class="fa fa-calendar"></i>
+                <span>Appointment Details</span>
+                <span class="apt-card-badge" id="aptBadge">New</span>
+            </div>
+            <div class="apt-card-body">
+                <div class="apt-bento apt-bento--4">
+                    <div class="apt-field">
+                        <label class="apt-label">Appointment No</label>
+                        <input type="text" id="txt_apt_no_disp" class="apt-input apt-input--readonly" readonly="readonly" autocomplete="off" />
+                    </div>
+                    <div class="apt-field">
+                        <label class="apt-label">Patient Name</label>
+                        <input type="text" id="txt_pt_name" class="apt-input" style="text-transform: capitalize;" autocomplete="off" />
+                    </div>
+                    <div class="apt-field">
+                        <label class="apt-label">Phone #</label>
+                        <input type="text" id="txt_phone_no" class="apt-input" maxlength="11" autocomplete="off" />
+                    </div>
+                    <div class="apt-field">
+                        <label class="apt-label">Age</label>
+                        <input type="text" id="txt_age" class="apt-input" autocomplete="off" />
+                    </div>
+                </div>
+
+                <div class="apt-bento apt-bento--4">
+                    <div class="apt-field">
+                        <label class="apt-label">Department</label>
+                        <select class="apt-select ddldoc" id="ddlsubdepartment">
+                            <option></option>
+                        </select>
+                    </div>
+                    <div class="apt-field">
+                        <label class="apt-label">Consultant</label>
+                        <select class="apt-select ddldoc" id="ddl_colstnt">
+                            <option></option>
+                        </select>
+                    </div>
+                    <div class="apt-field">
+                        <label class="apt-label">Date</label>
+                        <input type="text" id="txt_date" class="apt-input" onchange="GetAppNoByDoctor()" autocomplete="off" />
+                    </div>
+                    <div class="apt-field">
+                        <label class="apt-label">Time</label>
+                        <input type="text" id="txt_time_disp" class="apt-input apt-input--readonly" readonly autocomplete="off" />
                     </div>
                 </div>
             </div>
         </div>
 
-
-
+        <!-- Time Slots Card -->
+        <div class="apt-slots-card">
+            <div class="apt-slots-header">
+                <i class="fa fa-clock-o"></i>
+                <span>Time Slots</span>
+            </div>
+            <div class="apt-slots-body">
+                <div id="slotsGrid" class="slots-grid">
+                    <h3>Please Select Patient</h3>
+                </div>
+            </div>
+        </div>
     </div>
-    <div class="row ">    
-        <div class="col-lg-2 col-md-3 col-sm-4">
-            <label>From</label>
-            <input type="text" id="txt_datefrom" />
-        </div>
-        <div class="col-lg-2 col-md-3 col-sm-4">
-            <label style="margin-left: 15px!important">To</label>
-            <input type="text" id="txt_dateto" />
-        </div>
-        <div class="col-lg-1 col-md-2 col-sm-3">
-            <label></label>
-            <input type="button" id="btnSearch" class="btn btn-primry" value="Search" />
+
+    <!-- ============ BUTTON ROW (UNCHANGED) ============ -->
+    <div class="row row_2" style="margin-top:1%">
+        <div class="col-lg-2 col-md-4 col-sm-6">
+            <input type="button" class="btn-primry" id="btnSaveMessage" value="Save & Send Msg"/>
         </div>
         <div class="col-lg-2 col-md-4 col-sm-6">
-            <label>Doctor</label>
-            <select id="chk_Doc" onchange="ddldocchange()">
-            </select>
+            <input type="button" class="btn btn-yellow" id="btnSave" value="Save" />
         </div>
-        <div class="col-lg-2 col-md-3 col-sm-4 mg">
-            <label></label>
-            <select id="chk_status" onchange="testddlchange()">
+        <div class="col-lg-2 col-md-4 col-sm-6">
+            <input type="button" class="btn-gray" value="View" id="btnBack" onclick="window.location = 'AppointmentView.aspx'" />
+        </div>
+        <div class="col-lg-2 col-md-4 col-sm-6">
+            <input type="button" class="btn btn-yellow" value="New" id="btnNew" onclick="window.location = 'Appointment.aspx'" />
+        </div>
+        <div class="col-lg-2 col-md-4 col-sm-6">
+            <input type="button" class="btn btn-yellow" value="Print" id="btnPrint" onclick="appointmentPatient_Print()" />
+        </div>
+    </div>
+
+    <!-- ============ FILTER ROW ============ -->
+    <div class="apt-filter-row">
+        <div class="apt-field">
+            <label class="apt-label">From</label>
+            <input type="text" id="txt_datefrom" class="apt-input" />
+        </div>
+        <div class="apt-field">
+            <label class="apt-label">To</label>
+            <input type="text" id="txt_dateto" class="apt-input" />
+        </div>
+        <button type="button" id="btnSearch" class="apt-btn-inline"><i class="fa fa-search"></i> Search</button>
+        <div class="apt-field">
+            <label class="apt-label">Doctor</label>
+            <select id="chk_Doc" onchange="ddldocchange()" class="apt-select"></select>
+        </div>
+        <div class="apt-field">
+            <label class="apt-label">Status</label>
+            <select id="chk_status" onchange="testddlchange()" class="apt-select">
                 <option>All</option>
                 <option>Visited</option>
                 <option>Booked</option>
             </select>
         </div>
+        <button type="button" id="btntoggle" class="apt-btn-inline apt-btn-inline--gray" onclick="toggleCalendar"><i class="fa fa-calendar"></i> Calendar View</button>
+    </div>
 
-        <div class="col-lg-2 col-md-2 col-sm-3">
-            <label></label>
-            <input type="button" id="btntoggle" class="btn btn-primry" onclick="toggleCalendar" value="Calendar View" />
+    <!-- ============ CALENDAR VIEW ============ -->
+    <div class="wrap calendar" style="display:none">
+        <div class="panel">
+            <div class="controls">
+                <div>
+                    <label for="calMonthSelect">Month:</label>
+                    <select id="calMonthSelect"></select>
+                </div>
+                <div>
+                    <label for="calYearSelect">Year:</label>
+                    <select id="calYearSelect"></select>
+                </div>
+                <button id="calGoBtn">Show</button>
+                <button id="calTodayBtn" class="muted-btn">Today</button>
+            </div>
+            <div id="calendarHeader" aria-live="polite"></div>
+            <div id="calendar" class="calendar" role="grid" aria-label="Appointment calendar">
+                <div class="cal-header">Sun</div>
+                <div class="cal-header">Mon</div>
+                <div class="cal-header">Tue</div>
+                <div class="cal-header">Wed</div>
+                <div class="cal-header">Thu</div>
+                <div class="cal-header">Fri</div>
+                <div class="cal-header">Sat</div>
+            </div>
         </div>
-
-
     </div>
-   <div class="wrap calendar" style="display:none" >
-    <div class="panel">
-  <div class="controls" style="margin-bottom: 15px; display: flex; gap: 10px; align-items: center;">
-      <div class="col-lg-2 col-md-6 cl-sm-12">
-          <label for="calMonthSelect">Month:</label>
-          <select id="calMonthSelect"></select>
-      </div>
-      <div class="col-lg-2 col-md-6 cl-sm-12">
-          <label for="calYearSelect">Year:</label>
-          <select id="calYearSelect"></select>
-      </div>
-    <button id="calGoBtn" class="btn btn-primry" style="padding: 4px 10px;">Show</button>
-    <button id="calTodayBtn" class="btn btn-gray" style="padding: 4px 10px;">Today</button>
-  </div>
-  <div id="calendarHeader" aria-live="polite"></div>
 
-          <div id="calendar" class="calendar" role="grid" aria-label="Appointment calendar">
-              <div class="cal-header">Sun</div>
-              <div class="cal-header">Mon</div>
-              <div class="cal-header">Tue</div>
-              <div class="cal-header">Wed</div>
-              <div class="cal-header">Thu</div>
-              <div class="cal-header">Fri</div>
-              <div class="cal-header">Sat</div>
-              <!-- day cells will be injected here -->
-          </div>
-      </div>
-  </div>
+    <!-- ============ LIST VIEW ============ -->
     <div class="row table-container list">
-
-        <table class="table" id="table_res" style="margin-left:11px !important">
-
-            <tr id="row_sample">
-                <th>S No.</th>
-                <th>APPT NO</th>
-                <th>PATIENT NAME</th>
-                <th>DOCTOR NAME</th>
-                <th>PHONE NUMBER</th>
-                <th>DATE</th>
-                <th>TIME</th>
-                <th>STATUS</th>
-                <th style="text-align: center;">ACTIONS</th>
-
-
-            </tr>
-
-            <tbody id="t_body">
-            </tbody>
-
-        </table>
-
-
-
+        <div class="apt-table-container">
+            <table class="apt-table" id="table_res">
+                <thead>
+                    <tr>
+                        <th>S No.</th>
+                        <th>APPT NO</th>
+                        <th>PATIENT NAME</th>
+                        <th>DOCTOR NAME</th>
+                        <th>PHONE NUMBER</th>
+                        <th>DATE</th>
+                        <th>TIME</th>
+                        <th>STATUS</th>
+                        <th style="text-align: center;">ACTIONS</th>
+                    </tr>
+                </thead>
+                <tbody id="t_body"></tbody>
+            </table>
+        </div>
     </div>
 
-
+</div>
 
     <div id="PatientsSearchModel" class="modal fade" data-backdrop="static" tabindex="-1" role="dialog">
         <div class="modal-dialog modal-lg modal-dialog-centered modal-dialog-scrollable" role="document">
@@ -2431,6 +2444,7 @@
         </div>
 
     </div>
+
 
 
 

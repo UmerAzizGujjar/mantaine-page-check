@@ -1,204 +1,580 @@
-﻿/* ---- Improved, polished minimal CSS ---- */
+﻿/* ============================================
+   APPOINTMENT - Modern Compact Design
+   Theme-aware via CSS variables
+   ============================================ */
+
 :root {
-    --bg: #f6f7fb;
-    --card: #ffffff;
-    --muted: #7b8390;
-    --text: #0f1724;
+    --apt-primary: #438eb9;
+    --apt-primary-hover: #367498;
+    --apt-primary-soft: rgba(67, 142, 185, 0.08);
+    --apt-primary-border: rgba(67, 142, 185, 0.25);
+    --apt-bg: #f4f6fa;
+    --apt-card: #ffffff;
+    --apt-text: #2c3e50;
+    --apt-muted: #7b8390;
+    --apt-border: #e6eaf0;
+    --apt-border-strong: #d6dce5;
+    --apt-shadow-sm: 0 1px 2px rgba(15, 23, 42, 0.04);
+    --apt-shadow: 0 2px 8px rgba(15, 23, 42, 0.06);
+    --apt-radius: 8px;
+    --apt-radius-sm: 5px;
+    --apt-font: 13px;
+
+    /* Calendar / tooltip accent colors */
     --accent-booked: #ffdc86;
     --accent-visited: #77f577;
     --accent-cancel: #ff6060;
-    --glass: rgba(255,255,255,0.6);
-    --shadow-1: 0 6px 18px rgba(15,23,42,0.06);
-    --radius: 10px;
-    --gap: 12px;
-    --max-width: 980px;
+    --shadow-1: 0 6px 18px rgba(15, 23, 42, 0.06);
 }
 
+/* ----- Page wrapper ----- */
+.apt-page {
+    padding: 10px 12px;
+    background: var(--apt-bg);
+    min-height: 100vh;
+}
 
+/* ----- Meta bar ----- */
+.apt-meta-bar {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    background: linear-gradient(135deg, var(--apt-primary) 0%, var(--apt-primary-hover) 100%);
+    color: #fff;
+    padding: 8px 16px;
+    border-radius: var(--apt-radius);
+    margin-bottom: 10px;
+    box-shadow: var(--apt-shadow);
+}
+
+.apt-meta-bar .apt-meta-title {
+    font-size: 15px;
+    font-weight: 600;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.apt-meta-bar .apt-meta-title i {
+    font-size: 16px;
+}
+
+.apt-meta-bar .apt-meta-actions {
+    display: flex;
+    gap: 6px;
+    align-items: center;
+}
+
+.apt-meta-badge {
+    background: rgba(255, 255, 255, 0.22);
+    padding: 3px 10px;
+    border-radius: 10px;
+    font-size: 11px;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.3px;
+}
+
+/* ----- Card ----- */
+.apt-card {
+    background: var(--apt-card);
+    border: 1px solid var(--apt-border);
+    border-radius: var(--apt-radius);
+    box-shadow: var(--apt-shadow-sm);
+    margin-bottom: 10px;
+    overflow: hidden;
+    transition: box-shadow 0.18s ease;
+}
+
+.apt-card:hover {
+    box-shadow: var(--apt-shadow);
+}
+
+.apt-card-header {
+    background: linear-gradient(135deg, var(--apt-primary) 0%, var(--apt-primary-hover) 100%);
+    color: #fff;
+    padding: 7px 14px;
+    font-size: 12px;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.4px;
+    display: flex;
+    align-items: center;
+    gap: 7px;
+    border-bottom: 1px solid var(--apt-primary-border);
+}
+
+.apt-card-header i {
+    font-size: 13px;
+    opacity: 0.95;
+}
+
+.apt-card-header .apt-card-badge {
+    margin-left: auto;
+    background: rgba(255, 255, 255, 0.22);
+    padding: 2px 9px;
+    border-radius: 10px;
+    font-size: 10px;
+    letter-spacing: 0.3px;
+}
+
+.apt-card-body {
+    padding: 10px 12px;
+}
+
+/* ----- Bento grid ----- */
+.apt-bento {
+    display: grid;
+    gap: 8px;
+}
+
+.apt-bento--4 {
+    grid-template-columns: repeat(4, 1fr);
+}
+
+.apt-bento--3 {
+    grid-template-columns: repeat(3, 1fr);
+}
+
+.apt-bento--2 {
+    grid-template-columns: 1fr 1fr;
+}
+
+@media (max-width: 992px) {
+    .apt-bento--4 {
+        grid-template-columns: 1fr 1fr;
+    }
+    .apt-bento--3,
+    .apt-bento--2 {
+        grid-template-columns: 1fr;
+    }
+}
+
+@media (max-width: 600px) {
+    .apt-bento--4,
+    .apt-bento--3,
+    .apt-bento--2 {
+        grid-template-columns: 1fr;
+    }
+}
+
+/* ----- Field ----- */
+.apt-field {
+    display: flex;
+    flex-direction: column;
+    gap: 3px;
+    margin-bottom: 4px;
+}
+
+.apt-label {
+    font-size: 11px;
+    font-weight: 600;
+    color: var(--apt-muted);
+    text-transform: uppercase;
+    letter-spacing: 0.3px;
+    margin: 0;
+}
+
+.apt-label .apt-required {
+    color: #dc3545;
+    margin-left: 2px;
+}
+
+.apt-input,
+.apt-select {
+    width: 100%;
+    padding: 4px 8px;
+    font-size: var(--apt-font);
+    border: 1px solid var(--apt-border-strong);
+    border-radius: var(--apt-radius-sm);
+    background: #fff;
+    color: var(--apt-text);
+    transition: all 0.15s ease;
+    height: 28px;
+    line-height: 1.2;
+}
+
+.apt-input:focus,
+.apt-select:focus {
+    outline: none;
+    border-color: var(--apt-primary);
+    box-shadow: 0 0 0 3px var(--apt-primary-soft);
+}
+
+.apt-input[disabled],
+.apt-select[disabled] {
+    background: #f5f7fa;
+    color: var(--apt-muted);
+    cursor: not-allowed;
+}
+
+.apt-input[readonly] {
+    background: #fafbfd;
+}
+
+.apt-input--readonly {
+    background: #fafbfd !important;
+    color: var(--apt-text) !important;
+    font-weight: 500;
+}
+
+/* Select2 inside */
+.apt-field .select2-container .select2-selection--single {
+    height: 28px !important;
+    border: 1px solid var(--apt-border-strong) !important;
+    border-radius: var(--apt-radius-sm) !important;
+    padding: 2px 8px !important;
+}
+
+.apt-field .select2-container--default .select2-selection--single .select2-selection__rendered {
+    line-height: 24px !important;
+    font-size: var(--apt-font) !important;
+    color: var(--apt-text) !important;
+}
+
+.apt-field .select2-container--default .select2-selection--single .select2-selection__arrow {
+    height: 26px !important;
+}
+
+/* ----- Layout ----- */
+.apt-layout {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) 280px;
+    gap: 10px;
+    margin-bottom: 10px;
+    align-items: start;
+}
+
+@media (max-width: 992px) {
+    .apt-layout {
+        grid-template-columns: 1fr;
+    }
+}
+
+/* ----- Filter row ----- */
+.apt-filter-row {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    align-items: end;
+    padding: 8px 12px;
+    background: #fafbfd;
+    border: 1px solid var(--apt-border);
+    border-radius: var(--apt-radius-sm);
+    margin-bottom: 10px;
+}
+
+.apt-filter-row .apt-field {
+    flex: 0 0 auto;
+    min-width: 140px;
+    margin-bottom: 0;
+}
+
+.apt-filter-row .apt-btn-inline {
+    flex: 0 0 auto;
+    height: 28px;
+    padding: 0 14px;
+    border: 1px solid var(--apt-primary);
+    background: var(--apt-primary);
+    color: #fff;
+    border-radius: var(--apt-radius-sm);
+    cursor: pointer;
+    font-size: 12px;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.3px;
+    display: inline-flex;
+    align-items: center;
+    gap: 5px;
+    transition: all 0.15s ease;
+}
+
+.apt-filter-row .apt-btn-inline:hover {
+    background: var(--apt-primary-hover);
+    border-color: var(--apt-primary-hover);
+}
+
+.apt-filter-row .apt-btn-inline--gray {
+    background: #6c757d;
+    border-color: #6c757d;
+}
+
+.apt-filter-row .apt-btn-inline--gray:hover {
+    background: #5a6268;
+    border-color: #5a6268;
+}
+
+/* ----- Time Slots ----- */
+.apt-slots-card {
+    background: #fff;
+    border: 1px solid var(--apt-border);
+    border-radius: var(--apt-radius);
+    box-shadow: var(--apt-shadow-sm);
+    overflow: hidden;
+}
+
+.apt-slots-header {
+    background: linear-gradient(135deg, var(--apt-primary) 0%, var(--apt-primary-hover) 100%);
+    color: #fff;
+    padding: 8px 14px;
+    font-size: 12px;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.4px;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+}
+
+.apt-slots-header i {
+    font-size: 13px;
+}
+
+.apt-slots-body {
+    padding: 10px 12px;
+    max-height: 240px;
+    overflow-y: auto;
+}
+
+.slots-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 6px;
+    width: 100%;
+}
+
+    .slots-grid h3 {
+        grid-column: span 2;
+        text-align: center;
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        font-size: 12px;
+        color: var(--apt-muted);
+        margin: 8px 0;
+    }
+
+.slot-btn {
+    display: inline-block;
+    width: 100%;
+    padding: 6px 8px;
+    text-align: center;
+    border: 1px solid var(--apt-border-strong);
+    border-radius: var(--apt-radius-sm);
+    background-color: #fff;
+    color: var(--apt-text);
+    cursor: pointer;
+    transition: all 0.15s ease;
+    font-size: 11px;
+    font-weight: 500;
+    line-height: 1.2;
+}
+
+    .slot-btn.booked {
+        background-color: #6c757d;
+        color: #fff;
+        border-color: #6c757d;
+        cursor: not-allowed;
+    }
+
+    .slot-btn:hover:not(.booked) {
+        background-color: var(--apt-primary);
+        color: #fff;
+        border-color: var(--apt-primary);
+    }
+
+    .slot-btn.selected {
+        background: linear-gradient(135deg, var(--apt-primary) 0%, var(--apt-primary-hover) 100%);
+        color: #fff;
+        border-color: var(--apt-primary);
+        box-shadow: 0 2px 6px var(--apt-primary-border);
+    }
+
+/* ----- Calendar (preserve existing) ----- */
+#calendarHeader {
+    font-size: 18px;
+    font-weight: 700;
+    margin: 8px 0 14px;
+    color: var(--apt-text);
+}
 
 .wrap {
-    max-width: var(--max-width);
-    margin: 26px auto;
-    padding: 20px
+    margin-bottom: 16px;
 }
 
 .panel {
-    background: linear-gradient(180deg, rgba(255,255,255,0.95), var(--card));
-    border-radius: 14px;
-    padding: 16px;
+    background: var(--apt-card);
+    border-radius: var(--apt-radius);
+    padding: 14px;
     box-shadow: var(--shadow-1);
-    border: 1px solid rgba(15,23,42,0.03);
+    border: 1px solid var(--apt-border);
 }
 
-/* Controls */
 .controls {
     display: flex;
     gap: 10px;
     align-items: center;
     flex-wrap: wrap;
-    margin-bottom: 12px
+    margin-bottom: 12px;
 }
 
     .controls label {
         font-size: 13px;
-        color: var(--muted);
-        margin-right: 6px
+        color: var(--apt-muted);
+        margin-right: 6px;
     }
 
     .controls select, .controls button {
         appearance: none;
         -webkit-appearance: none;
-        background: var(--glass);
-        border: 0px solid rgba(15,23,42,0.06);
-        padding: 8px 10px;
-        border-radius: 10px;
-        font-size: 14px;
-        color: var(--text);
+        background: #fff;
+        border: 1px solid var(--apt-border-strong);
+        padding: 6px 10px;
+        border-radius: var(--apt-radius-sm);
+        font-size: 13px;
+        color: var(--apt-text);
         min-width: 92px;
-        box-shadow: inset 0 -1px 0 rgba(255,255,255,0.6);
     }
 
     .controls button {
         cursor: pointer;
-        background: linear-gradient(180deg,#fff,var(--glass));
-        border-radius: 10px;
-        border: 1px solid rgba(15,23,42,0.06);
+        background: linear-gradient(135deg, var(--apt-primary) 0%, var(--apt-primary-hover) 100%);
+        color: #fff;
+        border-color: var(--apt-primary);
+        font-weight: 600;
+        text-transform: uppercase;
+        letter-spacing: 0.3px;
+        font-size: 11px;
+        padding: 6px 12px;
+    }
+
+    .controls button:hover {
+        background: var(--apt-primary-hover);
+        border-color: var(--apt-primary-hover);
     }
 
     .controls .muted-btn {
-        background: transparent;
-        border: 0;
-        color: var(--muted);
-        padding: 6px 8px
+        background: #6c757d;
+        border-color: #6c757d;
+        color: #fff;
     }
 
-/* header text */
-#calendarHeader {
-    font-size: 18px;
-    font-weight: 700;
-    margin: 8px 0 14px;
-    color: var(--text)
-}
-
-/* calendar grid */
 .calendar {
     display: grid;
-    grid-template-columns: repeat(7,1fr);
-    gap: var(--gap);
+    grid-template-columns: repeat(7, 1fr);
+    gap: 8px;
     align-items: start;
 }
 
 .cal-header {
     text-align: center;
-    color: var(--muted);
+    color: var(--apt-muted);
     font-size: 13px;
     font-weight: 600;
     padding-bottom: 6px;
 }
 
-/* day cell */
 .cal-day {
-    min-height: 92px;
+    min-height: 76px;
     background: transparent;
-    border-radius: 12px;
-    padding: 12px 10px;
+    border-radius: 8px;
+    padding: 8px 8px;
     position: relative;
     transition: transform .12s ease, background .12s ease;
     display: flex;
     flex-direction: column;
-    gap: 8px;
+    gap: 6px;
     justify-content: flex-start;
     align-items: flex-start;
     border: 1px solid transparent;
+    transform: none !important;
+    will-change: auto !important;
 }
 
     .cal-day.empty {
-        min-height: 64px
+        min-height: 56px;
     }
 
-    .cal-day:focus-within, .cal-day:hover {
-        transform: none !important; /* Critical: no transform on parent */
+    .cal-day:focus-within,
+    .cal-day:hover {
+        transform: none !important;
         z-index: 3;
-        box-shadow: 0 10px 30px rgba(2,6,23,0.08);
+        box-shadow: 0 10px 30px rgba(2, 6, 23, 0.08);
     }
 
-/* date circle (center-left) */
 .date-row {
     display: flex;
     align-items: center;
-    gap: 10px;
-    width: 100%
+    gap: 8px;
+    width: 100%;
 }
 
 .date-circle {
-    width: 44px;
-    height: 44px;
+    width: 38px;
+    height: 38px;
     border-radius: 50%;
     display: flex;
     align-items: center;
     justify-content: center;
     font-weight: 700;
-    font-size: 15px;
-    color: var(--text);
-    background: linear-gradient(180deg,rgba(255,255,255,0.9),rgba(250,250,250,0.9));
-    border: 1px solid rgba(15,23,42,0.04);
-    box-shadow: 0 6px 14px rgba(2,6,23,0.04);
+    font-size: 14px;
+    color: var(--apt-text);
+    background: linear-gradient(180deg, rgba(255, 255, 255, 0.9), rgba(250, 250, 250, 0.9));
+    border: 1px solid var(--apt-border);
+    box-shadow: 0 4px 10px rgba(2, 6, 23, 0.04);
     transition: transform .14s ease, box-shadow .14s ease;
 }
 
-/* colorful fill states (priority) */
 .status-Cancelled .date-circle {
-    background: linear-gradient(180deg,#ff6b6b,#ff5252);
+    background: linear-gradient(180deg, #ff6b6b, #ff5252);
     color: #fff;
-    box-shadow: 0 6px 22px rgba(255,96,96,0.18)
+    box-shadow: 0 6px 22px rgba(255, 96, 96, 0.18);
 }
 
 .status-Visited .date-circle {
-    background: linear-gradient(180deg,#aef99a,#66d94c);
+    background: linear-gradient(180deg, #aef99a, #66d94c);
     color: #08370a;
-    box-shadow: 0 8px 26px rgba(119,245,119,0.14)
+    box-shadow: 0 8px 26px rgba(119, 245, 119, 0.14);
 }
 
 .status-Booked .date-circle {
-    background: linear-gradient(180deg,#fff2cf,#ffd86a);
+    background: linear-gradient(180deg, #fff2cf, #ffd86a);
     color: #3c2b00;
-    box-shadow: 0 8px 22px rgba(255,220,134,0.12)
+    box-shadow: 0 8px 22px rgba(255, 220, 134, 0.12);
 }
 
-/* subtle text summary */
 .summary {
     display: flex;
-    gap: 8px;
+    gap: 4px;
     align-items: center;
-    font-size: 12px;
-    color: var(--muted);
-    flex-wrap: wrap
+    font-size: 10px;
+    color: var(--apt-muted);
+    flex-wrap: wrap;
 }
 
     .summary .pill {
-        padding: 6px 8px;
+        padding: 3px 6px;
         border-radius: 999px;
         font-weight: 600;
-        background: rgba(0,0,0,0.03);
+        background: rgba(0, 0, 0, 0.03);
     }
 
-/* tooltip (modern card) */
 .tooltip {
     position: absolute;
     pointer-events: auto;
     left: 16px;
-    top: 64px;
+    top: 60px;
     z-index: 40;
     min-width: 260px;
     max-width: 420px;
-    background: linear-gradient(180deg,#0f1724,#07101a);
+    background: linear-gradient(180deg, #0f1724, #07101a);
     color: #fff;
     padding: 10px;
-    border-radius: 12px;
-    box-shadow: 0 20px 50px rgba(2,6,23,0.45);
+    border-radius: 8px;
+    box-shadow: 0 20px 50px rgba(2, 6, 23, 0.45);
     display: none;
     transform-origin: left top;
-    border: 1px solid rgba(255,255,255,0.04);
+    border: 1px solid rgba(255, 255, 255, 0.04);
 }
 
     .tooltip::before {
@@ -208,31 +584,16 @@
         left: 26px;
         border-left: 8px solid transparent;
         border-right: 8px solid transparent;
-        border-bottom: 8px solid rgba(15,23,36,0.98);
-    }
-/* Ensure parent does not use transform (avoid stacking context issues) */
-/* Ensure parent does not use transform (avoid stacking context issues) */
-.cal-day {
-    transform: none !important; /* Only apply to parent, not children */
-    will-change: auto !important;
-}
-
-    /* Subtle scale applied to inner .date-circle only */
-    .cal-day:hover .date-circle,
-    .cal-day:focus-within .date-circle {
-        transform: scale(1.04);
+        border-bottom: 8px solid rgba(15, 23, 36, 0.98);
     }
 
-    /* Position tooltip tight under circle and make clickable */
     .cal-day .tooltip {
         pointer-events: auto;
-        top: 52px; /* move closer so there's no gap; tweak +/− 4px if needed */
-        left: 12px; /* nudge to overlap a bit */
+        top: 48px;
+        left: 12px;
         display: none;
     }
 
-    /* Force visible when class applied, with high z-index */
-    /* Force visible when class applied, with high z-index */
     .cal-day.show-tooltip .tooltip {
         display: block !important;
         pointer-events: auto !important;
@@ -240,156 +601,138 @@
         animation: fadeUp .12s ease forwards;
     }
 
-/* Optional: make tooltip appear using opacity (avoid animation issues with display) */
-/* If you want a smoother effect, switch to visibility/opacity toggling approach. */
-@keyframes fadeUp {
-    from {
-        opacity: 0;
+    .cal-day:hover .date-circle,
+    .cal-day:focus-within .date-circle {
+        transform: scale(1.04);
     }
 
-    to {
-        opacity: 1;
-    }
+@keyframes fadeUp {
+    from { opacity: 0; }
+    to { opacity: 1; }
 }
 
 .tt-item {
-    padding: 8px 0;
-    border-bottom: 1px dashed rgba(255,255,255,0.04)
+    padding: 6px 0;
+    border-bottom: 1px dashed rgba(255, 255, 255, 0.04);
 }
 
     .tt-item:last-child {
-        border-bottom: 0
+        border-bottom: 0;
     }
 
     .tt-item .name {
-        font-weight: 700
+        font-weight: 700;
     }
 
     .tt-item .meta {
-        font-size: 13px;
-        color: rgba(255,255,255,0.75);
-        margin-top: 6px;
+        font-size: 12px;
+        color: rgba(255, 255, 255, 0.75);
+        margin-top: 4px;
         display: flex;
-        gap: 8px;
-        flex-wrap: wrap
+        gap: 6px;
+        flex-wrap: wrap;
     }
 
     .tt-item .status-pill {
-        padding: 4px 8px;
+        padding: 3px 7px;
         border-radius: 999px;
         font-weight: 700;
-        font-size: 12px
+        font-size: 11px;
     }
 
     .tt-item .status-booked {
-        background: rgba(255,220,134,0.18);
-        color: #3c2b00
+        background: rgba(255, 220, 134, 0.18);
+        color: #3c2b00;
     }
 
     .tt-item .status-visited {
-        background: rgba(119,245,119,0.12);
-        color: #063a06
+        background: rgba(119, 245, 119, 0.12);
+        color: #063a06;
     }
 
     .tt-item .status-cancel {
-        background: rgba(255,96,96,0.16);
-        color: #fff
+        background: rgba(255, 96, 96, 0.16);
+        color: #fff;
     }
 
 .no-appointments {
-    font-size: 13px;
-    color: var(--muted);
-    padding-top: 6px
+    font-size: 11px;
+    color: var(--apt-muted);
+    padding-top: 4px;
 }
 
-/* responsive adjustments */
-@media (max-width:880px) {
-    .wrap {
-        padding: 12px
-    }
-
-    .date-circle {
-        width: 40px;
-        height: 40px;
-        font-size: 14px
-    }
-
-    .tooltip {
-        left: 10px;
-        right: 10px;
-        min-width: unset;
-        max-width: unset;
-        top: 58px
-    }
-}
-
-@media (max-width:520px) {
-    .calendar {
-        gap: 8px
-    }
-
-    .cal-day {
-        min-height: 72px;
-        padding: 10px
-    }
-
-    .date-circle {
-        width: 36px;
-        height: 36px;
-        font-size: 13px
-    }
-}
-
-
-
-#addNewbtn {
-    margin-top: 26px;
-}
-
-.slots-grid {
-    display: grid;
-    grid-template-columns: repeat(3, 1fr);
-    gap: 10px;
-    width: 100%; /* Ensure it takes full width of the container */
-}
-
-    .slots-grid h3 {
-        grid-column: span 3;
-        text-align: center;
-        white-space: nowrap;
-        overflow: hidden;
-        text-overflow: ellipsis;
-    }
-
-
-.slot-btn {
-    display: inline-block;
+/* ----- Appointments table list ----- */
+.apt-table {
     width: 100%;
-    padding: 10px;
-    text-align: center;
-    border: 2px solid #c1c1c1;
-    border-radius: 5px;
-    background-color: white;
-    color: black;
-    cursor: pointer;
-    transition: background-color 0.3s ease, color 0.3s ease;
+    border-collapse: collapse;
+    font-size: 12px;
+    background: #fff;
+    border-radius: var(--apt-radius);
+    overflow: hidden;
+    box-shadow: var(--apt-shadow-sm);
+    border: 1px solid var(--apt-border);
 }
 
-    .slot-btn.booked {
-        background-color: #484b4d;
-        color: white;
+    .apt-table th {
+        background: linear-gradient(135deg, var(--apt-primary) 0%, var(--apt-primary-hover) 100%);
+        color: #fff;
+        padding: 8px 10px;
+        text-align: left;
+        font-weight: 600;
+        font-size: 11px;
+        text-transform: uppercase;
+        letter-spacing: 0.3px;
     }
 
-    .slot-btn:hover:not(.booked) {
-        background-color: #FDC303;
-        color: white;
+    .apt-table td {
+        padding: 6px 10px;
+        border-bottom: 1px solid var(--apt-border);
+        color: var(--apt-text);
+        vertical-align: middle;
     }
 
-    .slot-btn.selected {
-        background-color: #438eb9;
-        color: white;
+    .apt-table tbody tr:nth-child(even) {
+        background: #fafbfd;
     }
 
+    .apt-table tbody tr:hover {
+        background: var(--apt-primary-soft);
+    }
+
+    .apt-table tbody tr:last-child td {
+        border-bottom: none;
+    }
+
+    .apt-table a {
+        display: inline-block;
+        padding: 3px 8px;
+        border-radius: 4px;
+        font-size: 11px;
+        font-weight: 600;
+        color: #fff;
+        text-decoration: none;
+        margin-right: 4px;
+        transition: opacity 0.15s ease;
+    }
+
+    .apt-table a:hover {
+        opacity: 0.85;
+    }
+
+    .apt-table a.apt-action-edit {
+        background: #438eb9;
+    }
+
+    .apt-table a.apt-action-cancel {
+        background: #c11718;
+    }
+
+.apt-table-container {
+    overflow: auto;
+    border-radius: var(--apt-radius);
+}
+
+/* ----- Patient Model ----- */
 #PatientModel {
     margin-top: 15px !important;
 }
@@ -398,63 +741,93 @@
     margin-top: 15px !important;
 }
 
-.card {
-    border: 1px solid #C4C4C4;
-    background-color: #f9f9f9;
-    border-radius: 10px;
-    padding: 15px;
+#addNewbtn {
+    margin-top: 12px;
 }
 
-.timeslotheaders {
-    text-align: center;
-    font-size: 25px;
-    color: #438eb9;
-}
-
-.mg {
-    margin-top: 5px;
-}
-
-.tooltips {
-    position: relative;
+/* ----- Patient status pills ----- */
+.apt-status {
     display: inline-block;
-    cursor: pointer;
+    padding: 2px 8px;
+    border-radius: 10px;
+    font-size: 10px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.3px;
 }
 
-    .tooltips .tooltiptxt {
-        visibility: hidden;
-        width: 100px !important;
-        background-color: #484B4D;
-        color: #fff;
-        text-align: center;
-        padding: 5px;
-        border-radius: 6px;
-        /* Position the tooltip above the icon */
-        position: absolute;
-        z-index: 1;
-        bottom: 125%; /* Position tooltip above the icon */
-        left: 50%;
-        margin-left: -60px; /* Center the tooltip */
-        /* Fade-in effect */
-        opacity: 0;
-        transition: opacity 0.3s;
+.apt-status--booked {
+    background: #ffdc86;
+    color: #3c2b00;
+}
+
+.apt-status--visited {
+    background: #77f577;
+    color: #063a06;
+}
+
+.apt-status--cancelled {
+    background: #ff6060;
+    color: #fff;
+}
+
+/* ----- Responsive ----- */
+@media (max-width: 880px) {
+    .date-circle {
+        width: 36px;
+        height: 36px;
+        font-size: 13px;
     }
 
-        .tooltips .tooltiptxt::after {
-            content: "";
-            position: absolute;
-            top: 100%; /* Arrow at the bottom of the tooltip */
-            left: 50%;
-            margin-left: -5px;
-            border-width: 5px;
-            border-style: solid;
-            border-color: #555 transparent transparent transparent;
-        }
-
-    /* Show the tooltip text when hovering over the icon */
-    .tooltips:hover .tooltiptxt {
-        visibility: visible;
-        opacity: 1;
-        font-size: 10px !important;
-        width: 100px !important;
+    .tooltip {
+        left: 8px;
+        right: 8px;
+        min-width: unset;
+        max-width: unset;
+        top: 56px;
     }
+}
+
+@media (max-width: 520px) {
+    .calendar {
+        gap: 6px;
+    }
+
+    .cal-day {
+        min-height: 60px;
+        padding: 8px;
+    }
+
+    .date-circle {
+        width: 32px;
+        height: 32px;
+        font-size: 12px;
+    }
+}
+
+/* ----- Force Select2 dropdown ----- */
+.apt-field .select2-container--default .select2-dropdown {
+    z-index: 99999 !important;
+}
+
+.select2-search__field {
+    transform: translateZ(0);
+    -webkit-transform: translateZ(0);
+}
+
+/* ----- Hover lift on cards/cards ----- */
+.apt-card-header,
+.apt-slots-header {
+    user-select: none;
+}
+
+/* ----- Animation ----- */
+@keyframes aptFadeIn {
+    from { opacity: 0; transform: translateY(4px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+.apt-card,
+.apt-slots-card {
+    animation: aptFadeIn 0.2s ease;
+}

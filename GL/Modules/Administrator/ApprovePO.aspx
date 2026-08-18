@@ -103,8 +103,20 @@
                 highlightPendingRows();
         }, 100);
 
+            // Load Ware House filter dropdown
+            FillWareHouseFilter();
+
             $('#txt_search').keyup(function (e) {
+            applyGridFilters();
+        });
+
+        $('#ddlFilterWareHouse').change(function () {
+            applyGridFilters();
+        });
+
+        function applyGridFilters() {
             var searchText = $('#txt_search').val().toLowerCase();
+            var wareHouseFilter = $('#ddlFilterWareHouse').val();
             var tbl = document.getElementById('<%= GridView1.ClientID %>');
             var getCellText = function (row, index) {
                 var cell = row.cells[index];
@@ -120,9 +132,10 @@
                 var remarks = getCellText(row, 5);
                 var status = getCellText(row, 6);
                 var approveBy = getCellText(row, 7);
-                var actions = getCellText(row, 8);
+                var warehouse = getCellText(row, 8);
+                var actions = getCellText(row, 9);
 
-                if (searchText.trim() === '' ||
+                var textMatch = searchText.trim() === '' ||
                     ponum.includes(searchText) ||
                     podate.includes(searchText) ||
                     poamount.includes(searchText) ||
@@ -130,14 +143,17 @@
                     remarks.includes(searchText) ||
                     status.includes(searchText) ||
                     approveBy.includes(searchText) ||
-                    actions.includes(searchText)
-                ) {
+                    warehouse.includes(searchText) ||
+                    actions.includes(searchText);
+
+                var warehouseMatch = !wareHouseFilter ||
+                    warehouse === wareHouseFilter.toLowerCase();
+
+                if (textMatch && warehouseMatch) {
                     row.style.display = '';
-                    // Re-apply highlighting after search
                     if (status === 'pending') {
                         row.style.backgroundColor = "#ffe066";
                     } else {
-                        // Reset background for non-pending rows
                         if (row.style.backgroundColor === "rgb(255, 224, 102)" || row.style.backgroundColor === "#ffe066") {
                             row.style.backgroundColor = "";
                         }
@@ -146,7 +162,7 @@
                     row.style.display = 'none';
                 }
             }
-        });
+        }
 
         function highlightPendingRows() {
             var tbl = document.getElementById('<%= GridView1.ClientID %>');
@@ -178,6 +194,29 @@
             window.highlightPendingRows = highlightPendingRows;
             });
 
+        function FillWareHouseFilter() {
+            $.ajax({
+                type: "POST",
+                url: "ApprovePO.aspx/fillWarehouse",
+                contentType: "application/json; charset=utf-8",
+                dataType: "json",
+                success: function (response) {
+                    try {
+                        var items = JSON.parse(response.d);
+                        var $ddl = $('#ddlFilterWareHouse');
+                        $ddl.empty().append('<option value="">All Ware Houses</option>');
+                        $.each(items, function (i, item) {
+                            $ddl.append('<option value="' + item.DataValueName + '">' + item.DataValueDescription + '</option>');
+                        });
+                    } catch (e) {
+                        console.error("Error loading warehouse filter:", e);
+                    }
+                },
+                error: function (xhr, status, error) {
+                    console.error("Failed to load warehouses:", error);
+                }
+            });
+        }
 
         function saveEditableCheckboxes() {
             var selectedIds = [];
@@ -289,9 +328,14 @@
 </asp:Content>
 <asp:Content ID="Content2" ContentPlaceHolderID="MainContent" runat="server">
      <div class="row">
-    <div class="col-lg-8">
+    <div class="col-lg-10">
         <div class="col-lg-2">
             <input type="text" id="txt_search"  name="txt_search" placeholder="Search..." />
+        </div>
+        <div class="col-lg-2">
+            <select id="ddlFilterWareHouse" class="form-control" style="border-radius: 5px; height: 29px;">
+                <option value="">All Ware Houses</option>
+            </select>
         </div>
         <div class="col-lg-2">
             <asp:Button ID="btnApprove" class="btn btn-primry" Text="Approve Selected PO" runat="server" SkinID="btnAutoWidth" OnClick="btnApprove_Click" />
@@ -346,6 +390,7 @@
             </asp:TemplateField>
             <asp:BoundField DataField="Status" HeaderText="Status" ItemStyle-HorizontalAlign="Center" ItemStyle-Width="100px" />
             <asp:BoundField DataField="Approve_By" HeaderText="Approve By" ItemStyle-Width="180px" />
+            <asp:BoundField DataField="Ware_House" HeaderText="Ware House" ItemStyle-HorizontalAlign="Center" ItemStyle-Width="150px" />
             <asp:TemplateField>
                 <HeaderTemplate>
                     <div style="width: 100px; text-align: center;">
