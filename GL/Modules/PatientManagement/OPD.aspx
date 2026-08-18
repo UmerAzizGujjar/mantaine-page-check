@@ -1,4 +1,4 @@
-﻿<%@ Page Title="" Language="C#" MasterPageFile="~/Site.Master" AutoEventWireup="true" CodeBehind="OPD.aspx.cs" Inherits="PMS.Modules.PatientManagement.OPD" %>
+<%@ Page Title="" Language="C#" MasterPageFile="~/Site.Master" AutoEventWireup="true" CodeBehind="OPD.aspx.cs" Inherits="PMS.Modules.PatientManagement.OPD" %>
 
 <asp:Content ID="Content1" ContentPlaceHolderID="HeadContent" runat="server">
 
@@ -1309,333 +1309,350 @@
     <input type="text" id="hdnhospShare" style="display: none;" />
     <input type="text" id="hdn_emer_reffered" style="display: none;" />
     <input type="text" id="hdn_dep_id" style="display: none;" />
-    <div class="row">
-      
+<div class="opd-page">
 
-
-
-
-        <div class="col-lg-9 col-md-9 col-sm-12 fields" >
-            <!-- Quick Actions row: four equal, high-contrast cards -->
-            <div class="row">
-                <!-- Card 1 -->
-                <div class="col-lg-3 col-md-3 col-sm-6 mb-3 fields">
-                    <div class="quick-actions" id="card-register" role="button" tabindex="0"
-                        onclick="addfunc()"
-                        onkeypress="if(event.key==='Enter'){ addfunc(); }"
-                        class="d-flex flex-column justify-content-center align-items-start">
-                        <div class="d-flex align-items-center">
-                            <img src="~~../../../../wwwroot/SOURCE_IMAGES/GENERAL_ICONS/adduser.png" alt="Register Icon" width="48" height="48" style="margin-right: 10px;">
-                            <div>
-                                <div style="font-weight: 700; font-size: 1.5rem;">Register a new patient</div>
-                                <div style="font-size: 0.95rem; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">Create a new patient record</div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- Card 2 -->
-                <div class="col-lg-3 col-md-3 col-sm-6 mb-3 fields">
-                    <div id="card-search-appointment" role="button" tabindex="0" onclick="SearchPop_App()" onkeypress="if(event.key==='Enter'){ SearchPop_App(); }"
-                        class="d-flex flex-column justify-content-center align-items-start quick-actions">
-                        <div class="d-flex align-items-center">
-                            <img src="~~../../../../wwwroot/SOURCE_IMAGES/GENERAL_ICONS/appointmenticon.png" alt="Search Appointment Icon" width="48" height="48" style="margin-right: 10px;">
-                            <div>
-                                <div style="font-weight: 700; font-size: 1.5rem;">Search in appointment</div>
-                                <div style="font-size: 0.95rem; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">Find patient appointments</div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- Card 3 -->
-                <div class="col-lg-3 col-md-3 col-sm-6 mb-3 fields">
-                    <div id="btnsearchpatlist" role="button" tabindex="0" onclick="/* add search patient function here, e.g. openPatientSearch() */" onkeypress="if(event.key==='Enter'){ /* openPatientSearch(); */ }"
-                        class="d-flex flex-column justify-content-center align-items-start quick-actions">
-                        <div class="d-flex align-items-center">
-                            <img src="~~../../../../wwwroot/SOURCE_IMAGES/GENERAL_ICONS/adduser.png" alt="Search Patient Icon" width="48" height="48" style="margin-right: 10px;">
-                            <div>
-                                <div style="font-weight: 700; font-size: 1.5rem;">Search an existing patient</div>
-                                <div style="font-size: 0.95rem; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">Lookup patient details</div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- Card 4 -->
-                <div class="col-lg-3 col-md-3 col-sm-6 mb-3 fields" id="EmerRefferedBy">
-                    <div id="btnsearchEmergencylist" role="button" tabindex="0" onclick="/* add emergency refer function here, e.g. referToEmergency() */" onkeypress="if(event.key==='Enter'){ /* referToEmergency(); */ }"
-                        class="d-flex flex-column justify-content-center align-items-start quick-actions">
-                        <div class="d-flex align-items-center">
-                            <img src="~~../../../../wwwroot/SOURCE_IMAGES/GENERAL_ICONS/adduser.png" alt="Emergency Refer Icon" width="48" height="48" style="margin-right: 10px;">
-                            <div>
-                                <div style="font-weight: 700; font-size: 1.5rem;">Emergency Refer Patient</div>
-                                <div style="font-size: 0.95rem; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">Refer patient to emergency</div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                <div class="col-lg-3 col-md-3 col-sm-6 mb-3 fields" id="RefferdBy">
-                    <div id="btnsearchReferlist" role="button" tabindex="0" onclick="openReferPatientModal()" onkeypress="if(event.key==='Enter'){ openReferPatientModal(); }"
-                        class="d-flex flex-column justify-content-center align-items-start quick-actions" style="cursor: pointer;">
-                        <div class="d-flex align-items-center">
-                            <img src="~~../../../../wwwroot/SOURCE_IMAGES/GENERAL_ICONS/adduser.png"
-                                alt="Refer Patient Icon" width="48" height="48" style="margin-right: 10px;">
-                            <div>
-                                <div style="font-weight: 700; font-size: 1.5rem;">Refer Patient</div>
-                                <div style="font-size: 0.95rem; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">
-                                    Refer an existing patient
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-
-            </div>
+    <!-- ============ META BAR ============ -->
+    <div class="opd-meta-bar">
+        <div class="opd-meta-title">
+            <i class="fa fa-stethoscope"></i>
+            <span>OPD - Patient Registration</span>
+            <span class="opd-meta-meta-badge" id="opdStatusBadge">New</span>
         </div>
-        <div class="col-lg-3 col-md-3 col-sm-4 fields" id="filtercard">
-            <div class="card3">
-                <span style="font-size: 15px;">Total OPD</span>
-                <span style="margin-left: 5px !important; font-weight: bold; font-size: 24px;" id="lbltotpat"  runat="server"></span>
-
-
-                <span style="font-size: 15px;">G-31</span>
-                <span style="margin-left: 5px !important; font-weight: bold; font-size: 24px;" id="lblg31"  runat="server"></span>
-
-                <span style="font-size: 15px;">G-30</span>
-                <span style="margin-left: 5px !important; font-weight: bold; font-size: 24px;" id="lblg30"  runat="server"></span>
-
-
-                <span style="font-size: 15px;">G-29</span>
-                <span style="margin-left: 5px !important; font-weight: bold; font-size: 24px;" id="lblg29"  runat="server"></span>
-
-                <div>
-                    <span style="font-size: 15px;">Recent Visit</span>
-                    <span style="margin-left: 5px !important; font-weight: bold; font-size: 24px;" id="Span2" class="blink" runat="server" clientidmode="Static"></span>
-
-                    <span style="font-size: 15px;">Previous Visit </span>
-                    <span style="margin-left: 5px !important; font-weight: bold; font-size: 24px;"
-                        id="Span6"
-                        class="blink"
-                        runat="server"
-                        clientidmode="Static"></span>
-                </div>
-            </div>
-           
+        <div class="opd-meta-actions">
+            <span class="opd-meta-meta-badge"><i class="fa fa-calendar"></i> <%= DateTime.Now.ToString("dd MMM yyyy") %></span>
         </div>
     </div>
 
-    <div class="row mtop">
-        <div class="col-lg-9 col-md-8 sm-12 fields">
-            <div class="card">
-                <div class="row show g-3">
+    <!-- ============ TOP SECTION: QUICK ACTIONS + STATS ============ -->
+    <div class="opd-layout">
 
-                    <input type="text" id="txt_reg_patno" style="display: none" />
-                    <div class="col-lg-3 col-md-6 col-sm-12" id="field_mr_no">
-                        <label>MR No</label>
-                        <input type="text" runat="server" id="txtPatient_ID" style="display: none" />
-                        <input type="text" id="txtpatient_no" style="display: none" />
-                        <input type="text" id="txtPatientNo" value="New" readonly="readonly" />
-                        <input type="hidden" id="hdnPatientID" runat="server" />
+        <!-- Quick Actions -->
+        <div class="opd-bento opd-bento--5">
+            <div class="opd-quick-action" id="card-register" role="button" tabindex="0"
+                onclick="addfunc()" onkeypress="if(event.key==='Enter'){ addfunc(); }">
+                <div class="opd-quick-action-icon">
+                    <i class="fa fa-user-plus"></i>
+                </div>
+                <div class="opd-quick-action-text">
+                    <div class="opd-quick-action-title">Register a new patient</div>
+                    <div class="opd-quick-action-subtitle">Create a new patient record</div>
+                </div>
+            </div>
+
+            <div class="opd-quick-action" id="card-search-appointment" role="button" tabindex="0"
+                onclick="SearchPop_App()" onkeypress="if(event.key==='Enter'){ SearchPop_App(); }">
+                <div class="opd-quick-action-icon">
+                    <i class="fa fa-calendar-check-o"></i>
+                </div>
+                <div class="opd-quick-action-text">
+                    <div class="opd-quick-action-title">Search in appointment</div>
+                    <div class="opd-quick-action-subtitle">Find patient appointments</div>
+                </div>
+            </div>
+
+            <div class="opd-quick-action" id="btnsearchpatlist" role="button" tabindex="0"
+                onclick="/* openPatientSearch() */" onkeypress="if(event.key==='Enter'){ /* openPatientSearch(); */ }">
+                <div class="opd-quick-action-icon">
+                    <i class="fa fa-search"></i>
+                </div>
+                <div class="opd-quick-action-text">
+                    <div class="opd-quick-action-title">Search an existing patient</div>
+                    <div class="opd-quick-action-subtitle">Lookup patient details</div>
+                </div>
+            </div>
+
+            <div class="opd-quick-action" id="EmerRefferedBy">
+                <div id="btnsearchEmergencylist" role="button" tabindex="0"
+                    onclick="/* referToEmergency() */" onkeypress="if(event.key==='Enter'){ /* referToEmergency(); */ }"
+                    style="display:flex;align-items:center;gap:10px;width:100%;">
+                    <div class="opd-quick-action-icon">
+                        <i class="fa fa-ambulance"></i>
                     </div>
-                    <div class="col-lg-3 col-md-6 col-sm-12 fields" id="field_Patient_name">
-                        <label>Name *</label>
-                        <input type="text" id="txt_patname" value="" readonly="readonly" />
+                    <div class="opd-quick-action-text">
+                        <div class="opd-quick-action-title">Emergency Refer</div>
+                        <div class="opd-quick-action-subtitle">Refer to emergency</div>
                     </div>
-                    <div class="col-lg-3 col-md-6 col-sm-12 fields" id="field_Last_name">
-                        <label>Last Name *</label>
-                        <input type="text" id="txt_F_Name" readonly="readonly" />
+                </div>
+            </div>
+
+            <div class="opd-quick-action" id="RefferdBy">
+                <div id="btnsearchReferlist" role="button" tabindex="0"
+                    onclick="openReferPatientModal()" onkeypress="if(event.key==='Enter'){ openReferPatientModal(); }"
+                    style="display:flex;align-items:center;gap:10px;width:100%;cursor:pointer;">
+                    <div class="opd-quick-action-icon">
+                        <i class="fa fa-share-square-o"></i>
                     </div>
-                    <div class="col-lg-3 col-md-6 col-sm-12 fields" id="field_OPD_No">
-                        <label>OpdNo *</label>
-                        <input type="text" id="txt_opd_no" value="New" readonly="readonly" />
+                    <div class="opd-quick-action-text">
+                        <div class="opd-quick-action-title">Refer Patient</div>
+                        <div class="opd-quick-action-subtitle">Refer an existing patient</div>
                     </div>
-                    <div class="col-lg-3 col-md-6 col-sm-12 fields" id="field_Mode_Reg">
-                        <label>Mode Of Presentation</label>
-                        <select id="ddlMode_Of_Registration" readonly="readonly"></select>
+                </div>
+            </div>
+        </div>
+
+        <!-- Stats Card -->
+        <div class="opd-stats" id="filtercard">
+            <div class="opd-stats-header">
+                <i class="fa fa-bar-chart"></i>
+                <span>OPD Stats</span>
+            </div>
+            <div class="opd-stats-grid">
+                <div class="opd-stats-row">
+                    <span class="opd-stats-label"><i class="fa fa-users"></i> Total</span>
+                    <span class="opd-stats-value opd-stats-value--primary" id="lbltotpat" runat="server">0</span>
+                </div>
+                <div class="opd-stats-row">
+                    <span class="opd-stats-label"><i class="fa fa-circle-o"></i> G-31</span>
+                    <span class="opd-stats-value" id="lblg31" runat="server">0</span>
+                </div>
+                <div class="opd-stats-row">
+                    <span class="opd-stats-label"><i class="fa fa-circle-o"></i> G-30</span>
+                    <span class="opd-stats-value" id="lblg30" runat="server">0</span>
+                </div>
+                <div class="opd-stats-row">
+                    <span class="opd-stats-label"><i class="fa fa-circle-o"></i> G-29</span>
+                    <span class="opd-stats-value" id="lblg29" runat="server">0</span>
+                </div>
+                <div class="opd-stats-row">
+                    <span class="opd-stats-label"><i class="fa fa-clock-o"></i> Recent</span>
+                    <span class="opd-stats-value opd-stats-value--blink" id="Span2" runat="server" clientidmode="Static">0</span>
+                </div>
+                <div class="opd-stats-row">
+                    <span class="opd-stats-label"><i class="fa fa-history"></i> Previous</span>
+                    <span class="opd-stats-value opd-stats-value--blink" id="Span6" runat="server" clientidmode="Static">0</span>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- ============ MAIN FORM: PATIENT INFO + DEPARTMENT/DOCTOR ============ -->
+    <div class="opd-form-layout">
+
+        <!-- Patient Info Card -->
+        <div class="opd-card">
+            <div class="opd-card-header">
+                <i class="fa fa-user"></i>
+                <span>Patient Information</span>
+                <span class="opd-card-badge" id="opdPatientBadge">New Patient</span>
+            </div>
+            <div class="opd-card-body">
+                <input type="text" id="txt_reg_patno" style="display: none" />
+                <input type="text" runat="server" id="txtPatient_ID" style="display: none" />
+                <input type="text" id="txtpatient_no" style="display: none" />
+                <input type="hidden" id="hdnPatientID" runat="server" />
+
+                <div class="opd-form-row opd-form-row--4">
+                    <div class="opd-field" id="field_mr_no">
+                        <label class="opd-label">MR No</label>
+                        <input type="text" id="txtPatientNo" value="New" readonly="readonly" class="opd-input opd-input--readonly" />
                     </div>
-                    <div class="col-lg-3 col-md-6 col-sm-12 fields" id="field_Mobile">
-                        <label>Mobile *</label>
-                        <input type="text" id="txtmobile" readonly="readonly" />
+                    <div class="opd-field" id="field_Patient_name">
+                        <label class="opd-label">Name <span class="opd-required">*</span></label>
+                        <input type="text" id="txt_patname" value="" readonly="readonly" class="opd-input opd-input--readonly" />
                     </div>
-                    <div class="col-lg-3 col-md-6 col-sm-12 fields" id="field_CNIC">
-                        <label>CNIC *</label>
-                        <input type="text" id="txtnic" value="" readonly="readonly" />
+                    <div class="opd-field" id="field_Last_name">
+                        <label class="opd-label">Last Name <span class="opd-required">*</span></label>
+                        <input type="text" id="txt_F_Name" readonly="readonly" class="opd-input opd-input--readonly" />
                     </div>
-                    <div class="col-lg-3 col-md-6 col-sm-12 fields" id="field_Category">
-                        <label>Patient Category</label>
-                        <select id="ddlPatient_Type" disabled>
+                    <div class="opd-field" id="field_OPD_No">
+                        <label class="opd-label">OPD No <span class="opd-required">*</span></label>
+                        <input type="text" id="txt_opd_no" value="New" readonly="readonly" class="opd-input opd-input--readonly" />
+                    </div>
+                </div>
+
+                <div class="opd-form-row opd-form-row--4">
+                    <div class="opd-field" id="field_Mode_Reg">
+                        <label class="opd-label">Mode Of Presentation</label>
+                        <select id="ddlMode_Of_Registration" readonly="readonly" class="opd-select"></select>
+                    </div>
+                    <div class="opd-field" id="field_Mobile">
+                        <label class="opd-label">Mobile <span class="opd-required">*</span></label>
+                        <input type="text" id="txtmobile" readonly="readonly" class="opd-input opd-input--readonly" />
+                    </div>
+                    <div class="opd-field" id="field_CNIC">
+                        <label class="opd-label">CNIC <span class="opd-required">*</span></label>
+                        <input type="text" id="txtnic" value="" readonly="readonly" class="opd-input opd-input--readonly" />
+                    </div>
+                    <div class="opd-field" id="field_Category">
+                        <label class="opd-label">Patient Category</label>
+                        <select id="ddlPatient_Type" disabled class="opd-select">
                             <option value="0">Select Category</option>
                         </select>
                     </div>
-                    <div class="col-lg-3 col-md-6 col-sm-12 fields" id="field_Martial_Status">
-                        <label>Martial Status</label>
-                        <select id="ddlmartialstatus" disabled>
+                </div>
+
+                <div class="opd-form-row opd-form-row--4">
+                    <div class="opd-field" id="field_Martial_Status">
+                        <label class="opd-label">Marital Status</label>
+                        <select id="ddlmartialstatus" disabled class="opd-select">
                             <option value="0">Select Status</option>
                         </select>
                     </div>
-                    <div class="col-lg-3 col-md-6 col-sm-12 fields" id="field_age">
-                        <label>Age</label>
-                        <input type="text" id="txtage" readonly="readonly" />
+                    <div class="opd-field" id="field_age">
+                        <label class="opd-label">Age</label>
+                        <input type="text" id="txtage" readonly="readonly" class="opd-input opd-input--readonly" />
                     </div>
-                    <div class="col-lg-3 col-md-6 col-sm-12 fields" id="field_Gender">
-                        <label>Gender</label>
-                        <select id="ddlGender" disabled>
+                    <div class="opd-field" id="field_Gender">
+                        <label class="opd-label">Gender</label>
+                        <select id="ddlGender" disabled class="opd-select">
                             <option value="0">Select Gender</option>
                         </select>
                     </div>
-                    <div class="col-lg-3 col-md-6 col-sm-12 fields" id="field_Fee">
-                        <label>Fee</label>
-                        <input type="text" id="txtfees" readonly="readonly" class="form-control" />
-                        <input type="text" id="txtactualfee" style="display: none;" class="form-control" />
+                    <div class="opd-field" id="field_Fee">
+                        <label class="opd-label">Fee</label>
+                        <input type="text" id="txtfees" readonly="readonly" class="opd-input opd-input--readonly" />
+                        <input type="text" id="txtactualfee" style="display: none;" class="opd-input" />
                     </div>
-                    <div class="col-lg-3 col-md-6 col-sm-12 fields" id="field_Services">
-                        <label>Services</label>
-                        <select id="ddlServices">
+                </div>
+
+                <div class="opd-form-row opd-form-row--4">
+                    <div class="opd-field" id="field_Services">
+                        <label class="opd-label">Services</label>
+                        <select id="ddlServices" class="opd-select">
                             <option value="0">Select Service</option>
                         </select>
                     </div>
-
-                    <div class="col-lg-3 col-md-12 col-sm-12" id="field_Address">
-                        <label>Address</label>
-                        <input type="text" id="txtAdrress" readonly="readonly" />
-                    </div>
-                   
-                       <div class="col-lg-3 col-md-8 col-sm-8" id="cashier" >
-                       <label>Cashier</label>
-                       <select id="ddlcashier" class="form-control">
+                    <div class="opd-field" id="cashier">
+                        <label class="opd-label">Cashier</label>
+                        <select id="ddlcashier" class="opd-select">
                             <option value="0">Select Cashier</option>
-                       </select>
-                   </div>
-                       <div class="col-lg-3 col-md-8 col-sm-8" id="PaymentMethod" >
-                       <label for="ddlbankcash">Payment method</label>
-                        <select id="ddlbankcash" onchange="LoadBankAccounts();" class="form-control" name="payment">   <!-- removed onchange -->
-                             <option value="02">Bank</option>
-                             <option value="01" selected>Cash</option>
-                         </select>
-                   </div>
-                       <div class="col-lg-3 col-md-8 col-sm-8" id="bank" >
-                           <label for="ddlbank">Bank</label>
-                        <select id="ddlbank" class="form-control">
-                            
                         </select>
-                   </div>
-                    <div class="col-lg-3 col-md-8 col-sm-8" id="remarks">
-                        <label>Remarks</label>
-                        <input type="text" id="txtremarks" />
                     </div>
-                    <div class="col-lg-3 col-md-6 col-sm-12 fields" style="display:none" id="field_Dept_Token">
-                        <label>Dept Token No</label>
-                        <input type="text" id="txtDeptToken" readonly="readonly" />
+                    <div class="opd-field" id="PaymentMethod">
+                        <label class="opd-label" for="ddlbankcash">Payment</label>
+                        <select id="ddlbankcash" onchange="LoadBankAccounts();" class="opd-select" name="payment">
+                            <option value="02">Bank</option>
+                            <option value="01" selected>Cash</option>
+                        </select>
+                    </div>
+                    <div class="opd-field" id="bank">
+                        <label class="opd-label" for="ddlbank">Bank</label>
+                        <select id="ddlbank" class="opd-select"></select>
                     </div>
                 </div>
 
+                <div class="opd-form-row opd-form-row--4">
+                    <div class="opd-field" id="field_Address" style="grid-column: span 3;">
+                        <label class="opd-label">Address</label>
+                        <input type="text" id="txtAdrress" readonly="readonly" class="opd-input opd-input--readonly" />
+                    </div>
+                    <div class="opd-field" id="remarks">
+                        <label class="opd-label">Remarks</label>
+                        <input type="text" id="txtremarks" class="opd-input" />
+                    </div>
+                </div>
 
-
-
-
+                <div class="opd-field" id="field_Dept_Token" style="display:none;">
+                    <label class="opd-label">Dept Token No</label>
+                    <input type="text" id="txtDeptToken" readonly="readonly" class="opd-input opd-input--readonly" />
+                </div>
             </div>
-
-
         </div>
 
-        <div class="col-lg-3 col-md-4 mtop" id="right-section">
-            <div class="row card2">
-                <!-- Other form elements -->
-                <div class="col-lg-12 col-md-12 col-sm-12" id="department">
-                    <label>Department</label>
-                    <select id="ddlDepartment" class="form-control">
-                        <option value="0">Select Department</option>
-                    </select>
+        <!-- Department / Doctor Card -->
+        <div id="right-section">
+            <div class="opd-card">
+                <div class="opd-card-header">
+                    <i class="fa fa-hospital-o"></i>
+                    <span>Visit Details</span>
                 </div>
-                <div class="col-lg-12 col-md-12 col-sm-12" id="field_Clinic">
-                    <label>Filter Clinic</label>
-                    <select id="ddlFilterClnic" class="form-control" disabled="disabled">
-                        <option value="0">Select Clinic</option>
-                    </select>
-                </div>
-                <div class="col-lg-12 col-md-12 col-sm-12" id="doctor">
-                    <label>Doctor</label>
-                    <select id="ddldoctor" class="form-control">
-                        <option value="0">Select Doctor</option>
-                    </select>
-                </div>
-                <div class="col-lg-12 col-md-12 col-sm-12" id="pnlcompany">
-                    <label>Panel company</label>
-                    <select id="ddlpanel" onchange="getpanelRate();" class="form-control">
-                        <option value="0">Select panel</option>
-                    </select>
-                </div>
-                <div class="col-lg-12 col-md-12 col-sm-12" id="employee">
-                    <label>Employee ID</label>
-                    <input type="text" id="txtemployee" class="form-control" />
-                </div>
-                <div class="col-lg-12 col-md-12 col-sm-12" id="EmployeeName">
-                    <label>Employee Name</label>
-                    <input type="text" id="empname" class="form-control" />
-                </div>
-                <div class="col-lg-12 col-md-12 col-sm-12" id="EmpDep">
-                    <label>Employee Department</label>
-                    <input type="text" id="EmpDept" class="form-control" />
-                </div>
-                <div class="col-lg-12 col-md-12 col-sm-12" id="refference">
-                    <label>Reference #</label>
-                    <input type="text" id="txtreferenceno" class="form-control" />
-                </div>
-                <div class="col-lg-12 col-md-12 col-sm-12" id="discount">
-                    <label>Discount %</label>
-                    <input type="text" id="txtdiscount" onchange="Calc_Discount()" class="form-control" />
-                </div>
-                <div class="col-lg-12 col-md-12 col-sm-12" id="StdName">
-                    <label>Student Name</label>
-                    <input type="text" id="txtStdName" class="form-control" />
-                </div>
-                <div class="col-lg-12 col-md-12 col-sm-12" id="rollno">
-                    <label>Roll No</label>
-                    <select id="ddlrollno" class="form-control">
-                        <option value="0">Select</option>
-                    </select>
-                </div>
-                <div class="col-lg-12 col-md-12 col-sm-12" id="class">
-                    <label>Class</label>
-                    <select id="ddlclass" class="form-control">
-                        <option value="0">Select</option>
-                    </select>
-                </div>
-                <div class="col-lg-12 col-md-12 col-sm-12" id="section">
-                    <label>Section</label>
-                    <select id="ddlsection" class="form-control">
-                        <option value="0">Select</option>
-                    </select>
-                </div>
-             
-                <div class="col-lg-12 col-md-12 col-sm-12" id="Field-CIH">
-                    <label>Cash In Hand</label>
-                    <select id="ddlCashInHand">
-                    </select>
-                </div>
-
-                <!-- Checkboxes Section -->
-                <div class="row " style="width: 100%;" id="Field_Card">
-                    <div class="col-lg-5 col-md-4 col-sm-6 d-flex align-items-center mtop mleft">
-                        <label for="chckcardissue" class="ml-2">Card</label>
-                        <input type="checkbox" id="chckcardissue" runat="server" class="custom-checkbox" onclick="DisableCardPrint()" />
+                <div class="opd-card-body">
+                    <div class="opd-field" id="department">
+                        <label class="opd-label">Department</label>
+                        <select id="ddlDepartment" class="opd-select">
+                            <option value="0">Select Department</option>
+                        </select>
+                    </div>
+                    <div class="opd-field" id="field_Clinic">
+                        <label class="opd-label">Filter Clinic</label>
+                        <select id="ddlFilterClnic" class="opd-select" disabled="disabled">
+                            <option value="0">Select Clinic</option>
+                        </select>
+                    </div>
+                    <div class="opd-field" id="doctor">
+                        <label class="opd-label">Doctor</label>
+                        <select id="ddldoctor" class="opd-select">
+                            <option value="0">Select Doctor</option>
+                        </select>
+                    </div>
+                    <div class="opd-field" id="pnlcompany">
+                        <label class="opd-label">Panel Company</label>
+                        <select id="ddlpanel" onchange="getpanelRate();" class="opd-select">
+                            <option value="0">Select panel</option>
+                        </select>
+                    </div>
+                    <div class="opd-field" id="discount">
+                        <label class="opd-label">Discount %</label>
+                        <input type="text" id="txtdiscount" onchange="Calc_Discount()" class="opd-input" />
+                    </div>
+                    <div class="opd-field" id="Field-CIH">
+                        <label class="opd-label">Cash In Hand</label>
+                        <select id="ddlCashInHand" class="opd-select"></select>
                     </div>
 
-                    <div class="col-lg-5 col-md-4 col-sm-6 d-flex align-items-center mtop" id="Field_freeCheck">
-                        <label for="chckfreecheck" class="ml-2 wdth">Is Revisit</label>
-                        <input type="checkbox" id="chckfreecheck" class="custom-checkbox " />
+                    <div class="opd-field" id="employee">
+                        <label class="opd-label">Employee ID</label>
+                        <input type="text" id="txtemployee" class="opd-input" />
                     </div>
-                </div>
-                <div class="row" style="width: 100%;" id="Follow_Up">
-                    <div class="col-lg-5 col-md-4 col-sm-6 d-flex align-items-center mtop" id="Field_FollowUP">
-                        <label for="lblfollowup" class="ml-2">Follow Up</label>
-                        <span id="follow_up"></span>
+                    <div class="opd-field" id="EmployeeName">
+                        <label class="opd-label">Employee Name</label>
+                        <input type="text" id="empname" class="opd-input" />
+                    </div>
+                    <div class="opd-field" id="EmpDep">
+                        <label class="opd-label">Employee Department</label>
+                        <input type="text" id="EmpDept" class="opd-input" />
+                    </div>
+                    <div class="opd-field" id="refference">
+                        <label class="opd-label">Reference #</label>
+                        <input type="text" id="txtreferenceno" class="opd-input" />
+                    </div>
+                    <div class="opd-field" id="StdName">
+                        <label class="opd-label">Student Name</label>
+                        <input type="text" id="txtStdName" class="opd-input" />
+                    </div>
+                    <div class="opd-field" id="rollno">
+                        <label class="opd-label">Roll No</label>
+                        <select id="ddlrollno" class="opd-select">
+                            <option value="0">Select</option>
+                        </select>
+                    </div>
+                    <div class="opd-field" id="class">
+                        <label class="opd-label">Class</label>
+                        <select id="ddlclass" class="opd-select">
+                            <option value="0">Select</option>
+                        </select>
+                    </div>
+                    <div class="opd-field" id="section">
+                        <label class="opd-label">Section</label>
+                        <select id="ddlsection" class="opd-select">
+                            <option value="0">Select</option>
+                        </select>
+                    </div>
+
+                    <!-- Checkboxes Section -->
+                    <div class="opd-check-row" id="Field_Card">
+                        <label class="opd-check">
+                            <input type="checkbox" id="chckcardissue" runat="server" class="custom-checkbox" onclick="DisableCardPrint()" />
+                            <span class="opd-check-label">Card</span>
+                        </label>
+                        <label class="opd-check" id="Field_freeCheck">
+                            <input type="checkbox" id="chckfreecheck" class="custom-checkbox" />
+                            <span class="opd-check-label">Is Revisit</span>
+                        </label>
+                    </div>
+                    <div class="opd-check-row" id="Follow_Up">
+                        <span class="opd-check-label" id="Field_FollowUP">
+                            <i class="fa fa-refresh" style="color:var(--opd-primary);"></i> Follow Up
+                            <span id="follow_up" class="opd-check-value"></span>
+                        </span>
                     </div>
                 </div>
             </div>
         </div>
     </div>
+
+</div>
+
     <div class="row">
         <div class=" col-lg-8">
             <div class="row mtop2">
