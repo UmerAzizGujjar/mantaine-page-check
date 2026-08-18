@@ -1,4 +1,4 @@
-/* ============================================
+﻿/* ============================================
    EMPLOYEE - Modern Compact Design
    Theme-aware via CSS variables
    ============================================ */
@@ -30,6 +30,60 @@
     overflow-x: hidden;
     box-sizing: border-box;
 }
+
+.emp-flag-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 4px;
+    width: 100%;
+}
+
+.emp-flag-item {
+    display: flex;
+    align-items: center;
+    gap: 4px;
+    padding: 3px 6px;
+    background: #fafbfd;
+    border: 1px solid var(--emp-border);
+    border-radius: var(--emp-radius-sm);
+    cursor: pointer;
+    transition: all 0.15s ease;
+    min-width: 0;
+    margin: 0;
+    width: 100%;
+    height: 24px;
+}
+
+    .emp-flag-item:hover {
+        border-color: var(--emp-primary);
+        background: var(--emp-primary-soft);
+    }
+
+    /* 🔥 Make checkbox smaller */
+    .emp-flag-item input[type="checkbox"] {
+        width: 13px !important;
+        height: 13px !important;
+        cursor: pointer;
+        margin: 0;
+        padding: 0;
+        flex-shrink: 0;
+        accent-color: var(--emp-primary);
+    }
+
+/* 🔥 Label - properly visible */
+.emp-flag-label {
+    color: var(--emp-text);
+    font-size: 10px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.2px;
+    line-height: 1.2;
+    cursor: pointer;
+    white-space: nowrap;
+    display: inline-block;
+    padding: 0;
+}
+
 
 .emp-page * {
     box-sizing: border-box;

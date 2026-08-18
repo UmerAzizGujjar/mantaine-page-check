@@ -1044,3 +1044,34 @@ div.token-input-dropdown {
 .bp-card, .bp-summary {
     animation: bpFadeIn 0.2s ease;
 }
+
+
+
+
+
+
+
+.bp-toolbar .token-input-list {
+    width: 350px !important;
+    min-width: 350px !important;
+    max-width: 350px !important;
+    box-sizing: border-box !important;
+}
+
+    .bp-toolbar .token-input-list ul {
+        width: 100% !important;
+        box-sizing: border-box !important;
+    }
+
+        .bp-toolbar .token-input-list ul li input {
+            border: 0;
+            width: 100% !important;
+            padding: 3px 8px;
+            background-color: white;
+            -webkit-appearance: caret;
+            box-sizing: border-box !important;
+        }
+
+.bp-toolbar .token-input-dropdown {
+    width: 350px !important;
+}

@@ -874,19 +874,19 @@
             <div class="emp-flag-grid">
                 <label class="emp-flag-item">
                     <input type="checkbox" id="ChkDoctor" name="ChkDoctor" class="chkwdth" />
-                    <span id="LblIsDoctor" class="emp-flag-label">Doctor</span>
+                    <span class="emp-flag-label">Doctor</span>
                 </label>
                 <label class="emp-flag-item">
                     <input type="checkbox" id="ChkVisting" name="ChkVisting" class="chkwdth" />
-                    <span id="LblIsVisting" class="emp-flag-label">Visting</span>
+                    <span class="emp-flag-label">Visiting</span>
                 </label>
                 <label class="emp-flag-item">
                     <input type="checkbox" id="ChkEmployee" name="ChkEmployee" class="chkwdth" />
-                    <span id="LblEmployee" class="emp-flag-label">Employee</span>
+                    <span class="emp-flag-label">Employee</span>
                 </label>
                 <label class="emp-flag-item">
                     <input type="checkbox" id="ChkBlockCategory" name="ChkBlockCategory" class="chkwdth" />
-                    <span id="LblChkBlockCategory" class="emp-flag-label">Block Category</span>
+                    <span class="emp-flag-label">Block Category</span>
                 </label>
             </div>
         </div>

@@ -8495,7 +8495,7 @@
     <div class="bp-toolbar">
         <span class="bp-toolbar-label"><i class="fa fa-plus-circle"></i> Add Services</span>
         <div class="bp-toolbar-divider"></div>
-        <input type="text" id="txtAddService" class="bp-input" placeholder="Type service / item name..." style="max-width:240px;" />
+        <input type="text" id="txtAddService" class="bp-input" placeholder="Type service / item name..." style="max-width:20% !important" />
         <button type="button" class="bp-btn bp-btn--primary bp-btn--sm" id="btnAddServiceOrItem" onclick="AddServiceOrItem()">
             <i class="fa fa-plus"></i> Add Srvc / Itm
         </button>
