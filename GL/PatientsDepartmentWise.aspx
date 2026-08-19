@@ -386,7 +386,8 @@
                     }
                     else if (rptTitle == "STM") {
                         debugger;
-                        var url = 'ReportViewer.aspx?ReportName=StockBalance&ReportTitle=Item Wise Stock Balance Report ' + $('#ctl00_MainContent_txtStart_Date').val() + '&sDate=' + $('#ctl00_MainContent_txtStart_Date').val() + '&warehouse=' + $('#ctl00_MainContent_ddlwareHouse').val() + '&ItemCategory=' + $('#ctl00_MainContent_ddlItemCategory').val() + '&itemCode=' + ((typeof ($("#txtItemCode").val()) != 'undefined' && $("#txtItemCode").val().toString() != "") ? $("#txtItemCode").val().toString().split('-')[0] : '');
+                        var exporttopdf = document.getElementById('<%= chkExportPDF.ClientID %>').checked;
+                        var url = 'ReportViewer.aspx?ReportName=StockBalance&ReportTitle=Item Wise Stock Balance Report ' + $('#ctl00_MainContent_txtStart_Date').val() + '&sDate=' + $('#ctl00_MainContent_txtStart_Date').val() + '&warehouse=' + $('#ctl00_MainContent_ddlwareHouse').val() + '&ItemCategory=' + $('#ctl00_MainContent_ddlItemCategory').val() + '&itemCode=' + ((typeof ($("#txtItemCode").val()) != 'undefined' && $("#txtItemCode").val().toString() != "") ? $("#txtItemCode").val().toString().split('-')[0] : '') + '&ExportPDF=' + exporttopdf;
                         window.open(url, '_blank');
                     }
                     //else if (rptTitle == "STM") {
@@ -403,22 +404,25 @@
                         window.open(url, '_blank');
                     }
                     else if (rptTitle == "MIR_summary") {
-
-                        var url = 'ReportViewer.aspx?ReportName=MIR_summary&ReportTitle=MIR Summary Report From  ' + $('#ctl00_MainContent_txtStart_Date').val() + ' to ' + $('#ctl00_MainContent_txtEnd_Date').val() + '&sDate=' + $('#ctl00_MainContent_txtStart_Date').val() + '&eDate=' + $('#ctl00_MainContent_txtEnd_Date').val() + '&Item=' + $('#ctl00_MainContent_ddlPatientType').val() + '&Department=' + ((typeof ($("#ctl00_MainContent_ddlDepartments").val()) != 'undefined') ? $("#ctl00_MainContent_ddlDepartments").val() : "0");
+                        var exporttopdf = document.getElementById('<%= chkExportPDF.ClientID %>').checked;
+                        var url = 'ReportViewer.aspx?ReportName=MIR_summary&ReportTitle=MIR Summary Report From  ' + $('#ctl00_MainContent_txtStart_Date').val() + ' to ' + $('#ctl00_MainContent_txtEnd_Date').val() + '&sDate=' + $('#ctl00_MainContent_txtStart_Date').val() + '&eDate=' + $('#ctl00_MainContent_txtEnd_Date').val() + '&Item=' + $('#ctl00_MainContent_ddlPatientType').val() + '&Department=' + ((typeof ($("#ctl00_MainContent_ddlDepartments").val()) != 'undefined') ? $("#ctl00_MainContent_ddlDepartments").val() : "0") + '&ExportPDF=' + exporttopdf;
                         window.open(url, '_blank');
                     }
                     else if (rptTitle == "SIN_summary") {
-                        var url = 'ReportViewer.aspx?ReportName=SIN_summary&ReportTitle=SIN Summary Report From   ' + $('#ctl00_MainContent_txtStart_Date').val() + ' to ' + $('#ctl00_MainContent_txtEnd_Date').val() + '&sDate=' + $('#ctl00_MainContent_txtStart_Date').val() + '&eDate=' + $('#ctl00_MainContent_txtEnd_Date').val() + '&Item=' + $('#ctl00_MainContent_ddlPatientType').val() + '&WareHouse=' + $('#ctl00_MainContent_ddlwareHouse').val() + '&ItemCategory=' + $('#ctl00_MainContent_ddlItemCategory').val() + '&Department=' + ((typeof ($("#ctl00_MainContent_ddlDepartments").val()) != 'undefined') ? $("#ctl00_MainContent_ddlDepartments").val() : "0");
+                        var exporttopdf = document.getElementById('<%= chkExportPDF.ClientID %>').checked;
+                        var url = 'ReportViewer.aspx?ReportName=SIN_summary&ReportTitle=SIN Summary Report From   ' + $('#ctl00_MainContent_txtStart_Date').val() + ' to ' + $('#ctl00_MainContent_txtEnd_Date').val() + '&sDate=' + $('#ctl00_MainContent_txtStart_Date').val() + '&eDate=' + $('#ctl00_MainContent_txtEnd_Date').val() + '&Item=' + $('#ctl00_MainContent_ddlPatientType').val() + '&WareHouse=' + $('#ctl00_MainContent_ddlwareHouse').val() + '&ItemCategory=' + $('#ctl00_MainContent_ddlItemCategory').val() + '&Department=' + ((typeof ($("#ctl00_MainContent_ddlDepartments").val()) != 'undefined') ? $("#ctl00_MainContent_ddlDepartments").val() : "0") + '&ExportPDF=' + exporttopdf;
                         window.open(url, '_blank');
 
                     }
                     else if (rptTitle == "MSR") {
-                        var url = 'ReportViewer.aspx?ReportName=MinimumStock&ReportTitle=Minimum Stock Report ' + '&Item=' + $('#ctl00_MainContent_ddlwareHouse').val() + '&ItemCategory=' + $('#ctl00_MainContent_ddlItemCategory').val();
+                        var exporttopdf = document.getElementById('<%= chkExportPDF.ClientID %>').checked;
+                        var url = 'ReportViewer.aspx?ReportName=MinimumStock&ReportTitle=Minimum Stock Report ' + '&Item=' + $('#ctl00_MainContent_ddlwareHouse').val() + '&ItemCategory=' + $('#ctl00_MainContent_ddlItemCategory').val() + '&ExportPDF=' + exporttopdf;
                         window.open(url, '_blank');
 
                     }
                     else if (rptTitle == 'GRN_and_Item_Wise_Report') {
-                        var url = 'ReportViewer.aspx?ReportName=GRN_and_Item_Wise_Report&ReportTitle= GRN & Item Wise Report From ' + $('#ctl00_MainContent_txtStart_Date').val() + ' ' + $('#ctl00_MainContent_txtSTime').val() + ' to ' + $('#ctl00_MainContent_txtEnd_Date').val() + '' + $('#ctl00_MainContent_txtETime').val() + '&sDate=' + $('#ctl00_MainContent_txtStart_Date').val() + '&eDate=' + $('#ctl00_MainContent_txtEnd_Date').val() + '&STime=' + $('#ctl00_MainContent_txtSTime').val() + '&ETime=' + $('#ctl00_MainContent_txtETime').val() + '&DepetID=' + $('#ctl00_MainContent_ddlDepartments').val();
+                        var exporttopdf = document.getElementById('<%= chkExportPDF.ClientID %>').checked;
+                        var url = 'ReportViewer.aspx?ReportName=GRN_and_Item_Wise_Report&ReportTitle= GRN & Item Wise Report From ' + $('#ctl00_MainContent_txtStart_Date').val() + ' ' + $('#ctl00_MainContent_txtSTime').val() + ' to ' + $('#ctl00_MainContent_txtEnd_Date').val() + '' + $('#ctl00_MainContent_txtETime').val() + '&sDate=' + $('#ctl00_MainContent_txtStart_Date').val() + '&eDate=' + $('#ctl00_MainContent_txtEnd_Date').val() + '&STime=' + $('#ctl00_MainContent_txtSTime').val() + '&ETime=' + $('#ctl00_MainContent_txtETime').val() + '&DepetID=' + $('#ctl00_MainContent_ddlDepartments').val() + '&ExportPDF=' + exporttopdf;
                         window.open(url, '_blank');
                     }
                     else if (rptTitle == "PharmacySaleReport") {
@@ -1255,6 +1259,7 @@
                     }
                     else if (rptTitle == "ActiveItems") {
                         debugger;
+                        var exporttopdf = document.getElementById('<%= chkExportPDF.ClientID %>').checked;
                         var status = $('#ctl00_MainContent_ddlStatus').val();
                         var itemFilter = $('#ctl00_MainContent_ddlItemFilter').val();
 
@@ -1262,7 +1267,8 @@
                         var url = 'ReportViewer.aspx?ReportName=ActiveItems' +
                             '&ReportTitle=Active Inventory Items Report from ' +
                             '&Status=' + status +
-                            '&ItemFilter=' + itemFilter;
+                            '&ItemFilter=' + itemFilter +
+                            '&ExportPDF=' + exporttopdf;
 
                         window.open(url, '_blank');
                     }
@@ -1807,15 +1813,15 @@
                         window.open(url, '_blank');
                     }
                     if (rptTitle == "Vendor_Wise_Transaction_Detail") {
-
+                        var exporttopdf = document.getElementById('<%= chkExportPDF.ClientID %>').checked;
                         var url = 'ReportViewer.aspx?ReportName=Vendor_Wise_Transaction_Detail&ReportTitle=Vendor Wise Transaction Detail From  '
                             + $('#ctl00_MainContent_txtStart_Date').val() + ' to ' + $('#ctl00_MainContent_txtEnd_Date').val() + '&sDate=' + $('#ctl00_MainContent_txtStart_Date').val()
-                            + '&eDate=' + $('#ctl00_MainContent_txtEnd_Date').val() + '&Vendor=' + $('#ctl00_MainContent_ddlDepartments').val() + '&WareHouse=' + $('#ctl00_MainContent_ddlwareHouse').val();
+                            + '&eDate=' + $('#ctl00_MainContent_txtEnd_Date').val() + '&Vendor=' + $('#ctl00_MainContent_ddlDepartments').val() + '&WareHouse=' + $('#ctl00_MainContent_ddlwareHouse').val() + '&ExportPDF=' + exporttopdf;
                         window.open(url, '_blank');
                     }
                     if (rptTitle == "Vendor_Wise_Payment_Summary") {
-
-                        var url = 'ReportViewer.aspx?ReportName=Vendor_Wise_Payment_Summary&ReportTitle=Vendor Wise Payment Summary From  ' + $('#ctl00_MainContent_txtStart_Date').val() + ' to ' + $('#ctl00_MainContent_txtEnd_Date').val() + '&sDate=' + $('#ctl00_MainContent_txtStart_Date').val() + '&eDate=' + $('#ctl00_MainContent_txtEnd_Date').val() + '&Vendor=' + $('#ctl00_MainContent_ddlDepartments').val();
+                        var exporttopdf = document.getElementById('<%= chkExportPDF.ClientID %>').checked;
+                        var url = 'ReportViewer.aspx?ReportName=Vendor_Wise_Payment_Summary&ReportTitle=Vendor Wise Payment Summary From  ' + $('#ctl00_MainContent_txtStart_Date').val() + ' to ' + $('#ctl00_MainContent_txtEnd_Date').val() + '&sDate=' + $('#ctl00_MainContent_txtStart_Date').val() + '&eDate=' + $('#ctl00_MainContent_txtEnd_Date').val() + '&Vendor=' + $('#ctl00_MainContent_ddlDepartments').val() + '&ExportPDF=' + exporttopdf;
                         window.open(url, '_blank');
                     }
                     if (rptTitle == "Bonus_Medicine_Detail_Report") {
@@ -1835,13 +1841,13 @@
                         window.open(url, '_blank');
                     }
                     if (rptTitle == "Inventory_Reconciliation_Report") {
-
-                        var url = 'ReportViewer.aspx?ReportName=Inventory_Reconciliation_Report&ReportTitle=GRN Vs PO Vs IGP Vs PR Reconciliation Report From  ' + $('#ctl00_MainContent_txtStart_Date').val() + ' to ' + $('#ctl00_MainContent_txtEnd_Date').val() + '&sDate=' + $('#ctl00_MainContent_txtStart_Date').val() + '&eDate=' + $('#ctl00_MainContent_txtEnd_Date').val() + '&Vendor=' + $('#ctl00_MainContent_ddlDepartments').val() + '&WareHouse=' + $('#ctl00_MainContent_ddlwareHouse').val();
+                        var exporttopdf = document.getElementById('<%= chkExportPDF.ClientID %>').checked;
+                        var url = 'ReportViewer.aspx?ReportName=Inventory_Reconciliation_Report&ReportTitle=GRN Vs PO Vs IGP Vs PR Reconciliation Report From  ' + $('#ctl00_MainContent_txtStart_Date').val() + ' to ' + $('#ctl00_MainContent_txtEnd_Date').val() + '&sDate=' + $('#ctl00_MainContent_txtStart_Date').val() + '&eDate=' + $('#ctl00_MainContent_txtEnd_Date').val() + '&Vendor=' + $('#ctl00_MainContent_ddlDepartments').val() + '&WareHouse=' + $('#ctl00_MainContent_ddlwareHouse').val() + '&ExportPDF=' + exporttopdf;
                         window.open(url, '_blank');
                     }
                     if (rptTitle == "Purchase_Register_Report") {
-
-                        var url = 'ReportViewer.aspx?ReportName=Purchase_Register_Report&ReportTitle=Purchase Register Report From  ' + $('#ctl00_MainContent_txtStart_Date').val() + ' to ' + $('#ctl00_MainContent_txtEnd_Date').val() + '&sDate=' + $('#ctl00_MainContent_txtStart_Date').val() + '&eDate=' + $('#ctl00_MainContent_txtEnd_Date').val() + '&Vendor=' + $('#ctl00_MainContent_ddlDepartments').val();
+                        var exporttopdf = document.getElementById('<%= chkExportPDF.ClientID %>').checked;
+                        var url = 'ReportViewer.aspx?ReportName=Purchase_Register_Report&ReportTitle=Purchase Register Report From  ' + $('#ctl00_MainContent_txtStart_Date').val() + ' to ' + $('#ctl00_MainContent_txtEnd_Date').val() + '&sDate=' + $('#ctl00_MainContent_txtStart_Date').val() + '&eDate=' + $('#ctl00_MainContent_txtEnd_Date').val() + '&Vendor=' + $('#ctl00_MainContent_ddlDepartments').val() + '&ExportPDF=' + exporttopdf;
                         window.open(url, '_blank');
                     }
                     if (rptTitle == "AdmitPatientList") {
@@ -1850,18 +1856,18 @@
                         window.open(url, '_blank');
                     }
                     if (rptTitle == "Purchase_Order_Report") {
-
-                        var url = 'ReportViewer.aspx?ReportName=Purchase_Order_Report&ReportTitle=Purchase Order Report From  ' + $('#ctl00_MainContent_txtStart_Date').val() + ' to ' + $('#ctl00_MainContent_txtEnd_Date').val() + '&sDate=' + $('#ctl00_MainContent_txtStart_Date').val() + '&eDate=' + $('#ctl00_MainContent_txtEnd_Date').val() + '&Vendor=' + $('#ctl00_MainContent_ddlDepartments').val() + '&WareHouse=' + $('#ctl00_MainContent_ddlwareHouse').val() + '&Status=' + $('#ctl00_MainContent_ddlStatus').val();
+                        var exporttopdf = document.getElementById('<%= chkExportPDF.ClientID %>').checked;
+                        var url = 'ReportViewer.aspx?ReportName=Purchase_Order_Report&ReportTitle=Purchase Order Report From  ' + $('#ctl00_MainContent_txtStart_Date').val() + ' to ' + $('#ctl00_MainContent_txtEnd_Date').val() + '&sDate=' + $('#ctl00_MainContent_txtStart_Date').val() + '&eDate=' + $('#ctl00_MainContent_txtEnd_Date').val() + '&Vendor=' + $('#ctl00_MainContent_ddlDepartments').val() + '&WareHouse=' + $('#ctl00_MainContent_ddlwareHouse').val() + '&Status=' + $('#ctl00_MainContent_ddlStatus').val() + '&ExportPDF=' + exporttopdf;
                         window.open(url, '_blank');
                     }
                     if (rptTitle == "Payment_to_Supplier_Report") {
-
-                        var url = 'ReportViewer.aspx?ReportName=Payment_to_Supplier_Report&ReportTitle=Payment to Supplier Report From  ' + $('#ctl00_MainContent_txtStart_Date').val() + ' to ' + $('#ctl00_MainContent_txtEnd_Date').val() + '&sDate=' + $('#ctl00_MainContent_txtStart_Date').val() + '&eDate=' + $('#ctl00_MainContent_txtEnd_Date').val() + '&Vendor=' + $('#ctl00_MainContent_ddlDepartments').val();
+                        var exporttopdf = document.getElementById('<%= chkExportPDF.ClientID %>').checked;
+                        var url = 'ReportViewer.aspx?ReportName=Payment_to_Supplier_Report&ReportTitle=Payment to Supplier Report From  ' + $('#ctl00_MainContent_txtStart_Date').val() + ' to ' + $('#ctl00_MainContent_txtEnd_Date').val() + '&sDate=' + $('#ctl00_MainContent_txtStart_Date').val() + '&eDate=' + $('#ctl00_MainContent_txtEnd_Date').val() + '&Vendor=' + $('#ctl00_MainContent_ddlDepartments').val() + '&ExportPDF=' + exporttopdf;
                         window.open(url, '_blank');
                     }
                     if (rptTitle == "Pending_Payment_Request_Report") {
-
-                        var url = 'ReportViewer.aspx?ReportName=Pending_Payment_Request_Report&ReportTitle=Pending Payment Request Report From  ' + $('#ctl00_MainContent_txtStart_Date').val() + ' to ' + $('#ctl00_MainContent_txtEnd_Date').val() + '&sDate=' + $('#ctl00_MainContent_txtStart_Date').val() + '&eDate=' + $('#ctl00_MainContent_txtEnd_Date').val();
+                        var exporttopdf = document.getElementById('<%= chkExportPDF.ClientID %>').checked;
+                        var url = 'ReportViewer.aspx?ReportName=Pending_Payment_Request_Report&ReportTitle=Pending Payment Request Report From  ' + $('#ctl00_MainContent_txtStart_Date').val() + ' to ' + $('#ctl00_MainContent_txtEnd_Date').val() + '&sDate=' + $('#ctl00_MainContent_txtStart_Date').val() + '&eDate=' + $('#ctl00_MainContent_txtEnd_Date').val() + '&ExportPDF=' + exporttopdf;
                         window.open(url, '_blank');
                     }
                      if (rptTitle == "VendorWiseLedger") {
@@ -1874,8 +1880,8 @@
                         window.open(url, '_blank');
                     }
                     if (rptTitle == "BER") {
-
-                        var url = 'ReportViewer.aspx?ReportName=BER&ReportTitle=Expiry Batch Report From  ' + $('#ctl00_MainContent_txtStart_Date').val() + ' to ' + $('#ctl00_MainContent_txtEnd_Date').val() + '&sDate=' + $('#ctl00_MainContent_txtStart_Date').val() + '&eDate=' + $('#ctl00_MainContent_txtEnd_Date').val() + '&Warehouse=' + $('#ctl00_MainContent_ddlDepartments').val() + '&Item=' + $('#ctl00_MainContent_ddlPatientType').val();
+                        var exporttopdf = document.getElementById('<%= chkExportPDF.ClientID %>').checked;
+                        var url = 'ReportViewer.aspx?ReportName=BER&ReportTitle=Expiry Batch Report From  ' + $('#ctl00_MainContent_txtStart_Date').val() + ' to ' + $('#ctl00_MainContent_txtEnd_Date').val() + '&sDate=' + $('#ctl00_MainContent_txtStart_Date').val() + '&eDate=' + $('#ctl00_MainContent_txtEnd_Date').val() + '&Warehouse=' + $('#ctl00_MainContent_ddlDepartments').val() + '&Item=' + $('#ctl00_MainContent_ddlPatientType').val() + '&ExportPDF=' + exporttopdf;
                         window.open(url, '_blank');
                     }
                     if (rptTitle == "InvoiceAging") {
@@ -2003,15 +2009,17 @@
                     }
                     else if (rptTitle == "PARLR") {
                         debugger;
+                        var exporttopdf = document.getElementById('<%= chkExportPDF.ClientID %>').checked;
                         var Items = ($("#ctl00_MainContent_ddlMainDepartment").val() !== undefined) ? $("#ctl00_MainContent_ddlMainDepartment").val() : "0";
                         var hideZeroBalance = document.getElementById('<%= chkZeroRecord.ClientID %>').checked;
-                        var url = 'ReportViewer.aspx?ReportName=PARLR&ReportTitle=Par and Reorder Level Report' + '&AccountCategory=' + $('#ctl00_MainContent_ddlTestName').val() + '&Items=' + Items + '&wareh=' + $('#ctl00_MainContent_ddlwareHouse').val() + '&HideZeroBalance=' + hideZeroBalance;
+                        var url = 'ReportViewer.aspx?ReportName=PARLR&ReportTitle=Par and Reorder Level Report' + '&AccountCategory=' + $('#ctl00_MainContent_ddlTestName').val() + '&Items=' + Items + '&wareh=' + $('#ctl00_MainContent_ddlwareHouse').val() + '&HideZeroBalance=' + hideZeroBalance + '&ExportPDF=' + exporttopdf;
                         window.open(url, '_blank');
                     }
                     else if (rptTitle == "SIH") {
                         var stock = $("#ctl00_MainContent_ddlStock").val();
                         debugger;
-                        var url = 'ReportViewer.aspx?ReportName=SIH&ReportTitle=Stock In Hand ' + '&stock=' + stock + '&WareHouse=' + $('#ctl00_MainContent_ddlwareHouse').val();
+                        var exporttopdf = document.getElementById('<%= chkExportPDF.ClientID %>').checked;
+                        var url = 'ReportViewer.aspx?ReportName=SIH&ReportTitle=Stock In Hand ' + '&stock=' + stock + '&WareHouse=' + $('#ctl00_MainContent_ddlwareHouse').val() + '&ExportPDF=' + exporttopdf;
                         window.open(url, '_blank');
                     }
                     else if (rptTitle == "Overall_Stock_Consumption_Details") {
