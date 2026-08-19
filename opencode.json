@@ -1,6 +1,27 @@
 {
   "$schema": "https://opencode.ai/config.json",
   "instructions": [".opencode/rules/*.md"],
+  "plugin": ["@dietrichgebert/ponytail", "opencode-caveman"],
+  "mcp": {
+    "context7": {
+      "type": "local",
+      "command": ["npx", "-y", "@upstash/context7-mcp"],
+      "enabled": true
+    },
+    "exa": {
+      "type": "local",
+      "command": ["npx", "-y", "exa-mcp-server"],
+      "env": {
+        "EXA_API_KEY": "YOUR_EXA_API_KEY"
+      },
+      "enabled": true
+    },
+    "duckduckgo": {
+      "type": "local",
+      "command": ["npx", "-y", "mcp-duckduckgo"],
+      "enabled": true
+    }
+  },
   "agent": {
     "build": {
       "permission": {

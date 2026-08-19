@@ -139,6 +139,19 @@
                         }, "width": "15%", "orderable": false
                     },
                     {
+                        "data": "Discharge_On",
+                        "name": "Discharge_On",
+                        "render": function (data, type, full) {
+                            if (!full.Discharge_On) {
+                                return '';
+                            }
+
+                            return moment(full.Discharge_On).format('DD-MMM-YYYY');
+                        },
+                        "width": "15%",
+                        "orderable": false
+                    },
+                    {
                         render: function (data, type, full) {
                             debugger;
                             var res = '<a href="#" onclick="editOpen(' + full.IN_Patient_ID + ')" class="editListBtn" style="border-radius: 4px;padding: 5px 8px 5px 8px;"><i class="fa fa-pencil"></i></a>'
@@ -393,6 +406,7 @@
                         <th>Father/Husband Name</th>
                         <th>Dept.</th>   
                        <th>Admission Date</th>
+                       <th>Discharge Date</th>
                         <th>Actions</th>
                     </tr>
                 </thead>
