@@ -56,80 +56,81 @@ namespace PMS
                                  && a.IsDeleted == false
                                  && (pr == null || userDepartments.Contains(pr.Department))
 
-                       group new { a, apoi, pr, prd } by new
-                       {
-                           a.PO_ID,
-                           a.PO_No,
-                           a.Remarks,
-                           a.Status,
-                           a.PO_Date,
-                           a.Created_By,
-                           a.Ware_House,
-                           Department = pr != null ? pr.Department : null
-                       } into g
+                           group new { a, apoi, pr, prd } by new
+                           {
+                               a.PO_ID,
+                               a.PO_No,
+                               a.Remarks,
+                               a.Status,
+                               a.PO_Date,
+                               a.Created_By,
+                               Department = pr != null ? pr.Department : null,
+                               Ware_House = a.Ware_House
+                           } into g
 
-                       select new
-                       {
-                           g.Key.PO_ID,
-                           g.Key.PO_No,
-                           g.Key.Remarks,
-                           g.Key.Status,
-                           g.Key.PO_Date,
-                           PO_Amount = g.Sum(x => (decimal?)x.apoi.Amount) ?? 0m,
+                           select new
+                           {
+                               g.Key.PO_ID,
+                               g.Key.PO_No,
+                               g.Key.Remarks,
+                               g.Key.Status,
+                               g.Key.PO_Date,
+                               PO_Amount = g.Sum(x => (decimal?)x.apoi.Amount) ?? 0m,
 
-                           Creator = db.aspnet_Users
-                               .Where(x => x.UserId == (g.Key.Created_By ?? Guid.Empty))
-                               .Select(x => x.UserName)
-                               .FirstOrDefault(),
+                               Creator = db.aspnet_Users
+                                   .Where(x => x.UserId == (g.Key.Created_By ?? Guid.Empty))
+                                   .Select(x => x.UserName)
+                                   .FirstOrDefault(),
 
-                           //Approve_By = string.Join(", ",
-                           //    (from SAL in db.Sys_Approval_Logs
-                           //     join user in db.aspnet_Users on SAL.Approve_By equals user.UserId into userGroup
-                           //     from usr in userGroup.DefaultIfEmpty()
-                           //     where g.Key.PO_ID == SAL.Entry_ID && SAL.Form_ID == 3
-                           //     select usr.UserName ?? "").Distinct()),
+                               //Approve_By = string.Join(", ",
+                               //    (from SAL in db.Sys_Approval_Logs
+                               //     join user in db.aspnet_Users on SAL.Approve_By equals user.UserId into userGroup
+                               //     from usr in userGroup.DefaultIfEmpty()
+                               //     where g.Key.PO_ID == SAL.Entry_ID && SAL.Form_ID == 3
+                               //     select usr.UserName ?? "").Distinct()),
 
-                        Approve_By = string.Join(", ",
-                        (from SAL in db.Sys_Approval_Logs
-                         join user in db.aspnet_Users on SAL.Approve_By equals user.UserId into userGroup
-                         from usr in userGroup.DefaultIfEmpty()
-                         where g.Key.PO_ID == SAL.Entry_ID
-                            && SAL.Form_ID == 3
-                            && SAL.Entry_Status != "Created" 
-                            && !SAL.From_Name.Contains("Editable setting updated")
-                         select usr.UserName ?? "").Distinct()),
+                               Approve_By = string.Join(", ",
+                            (from SAL in db.Sys_Approval_Logs
+                             join user in db.aspnet_Users on SAL.Approve_By equals user.UserId into userGroup
+                             from usr in userGroup.DefaultIfEmpty()
+                             where g.Key.PO_ID == SAL.Entry_ID
+                                && SAL.Form_ID == 3
+                                && SAL.Entry_Status != "Created"
+                                && !SAL.From_Name.Contains("Editable setting updated")
+                             select usr.UserName ?? "").Distinct()),
 
-                           Ware_House = db.GetDataValueName("Ware House", g.Key.Ware_House),
 
-                           Department = db.GetDataValueName("Department", g.Key.Department),
 
-                           TotalPRAmount = (from prd_inner in db.Purchase_Requisition_Details
-                                            join pr_inner in db.Purchase_Requisitions on prd_inner.PR_ID equals pr_inner.PR_Id
-                                            where pr_inner.Status == "Approved" && pr_inner.Department == g.Key.Department
-                                            select (decimal?)prd_inner.EstimateCost).Sum() ?? 0m,
+                               Department = db.GetDataValueName("Department", g.Key.Department),
+                               WareHouse = db.GetDataValueName("Ware House", g.Key.Ware_House),
 
-                           TotalBudget = (from ba in db.Budget_Accounts
-                                          join b in db.Budgets on ba.Budget_ID equals b.Budget_ID
-                                          where b.Budget_Status == "Approved" && ba.DepartmentId == g.Key.Department
-                                          select (decimal?)ba.DR).Sum() ?? 0m,
+                               TotalPRAmount = (from prd_inner in db.Purchase_Requisition_Details
+                                                join pr_inner in db.Purchase_Requisitions on prd_inner.PR_ID equals pr_inner.PR_Id
+                                                where pr_inner.Status == "Approved" && pr_inner.Department == g.Key.Department
+                                                select (decimal?)prd_inner.EstimateCost).Sum() ?? 0m,
 
-                           RemainingAmount = ((from ba in db.Budget_Accounts
-                                               join b in db.Budgets on ba.Budget_ID equals b.Budget_ID
-                                               where b.Budget_Status == "Approved" && ba.DepartmentId == g.Key.Department
-                                               select (decimal?)ba.DR).Sum() ?? 0m)
-                                             -
-                                             ((from prd_inner in db.Purchase_Requisition_Details
-                                               join pr_inner in db.Purchase_Requisitions on prd_inner.PR_ID equals pr_inner.PR_Id
-                                               where pr_inner.Status == "Approved" && pr_inner.Department == g.Key.Department
-                                               select (decimal?)prd_inner.EstimateCost).Sum() ?? 0m),
+                               TotalBudget = (from ba in db.Budget_Accounts
+                                              join b in db.Budgets on ba.Budget_ID equals b.Budget_ID
+                                              where b.Budget_Status == "Approved" && ba.DepartmentId == g.Key.Department
+                                              select (decimal?)ba.DR).Sum() ?? 0m,
 
-                                                   IsEditableAfterApproval = db.Sys_Approval_Logs
+                               RemainingAmount = ((from ba in db.Budget_Accounts
+                                                   join b in db.Budgets on ba.Budget_ID equals b.Budget_ID
+                                                   where b.Budget_Status == "Approved" && ba.DepartmentId == g.Key.Department
+                                                   select (decimal?)ba.DR).Sum() ?? 0m)
+                                                 -
+                                                 ((from prd_inner in db.Purchase_Requisition_Details
+                                                   join pr_inner in db.Purchase_Requisitions on prd_inner.PR_ID equals pr_inner.PR_Id
+                                                   where pr_inner.Status == "Approved" && pr_inner.Department == g.Key.Department
+                                                   select (decimal?)prd_inner.EstimateCost).Sum() ?? 0m),
+
+                               IsEditableAfterApproval = db.Sys_Approval_Logs
                                                     .Where(sal => sal.Entry_ID == g.Key.PO_ID && sal.Form_ID == 3)
                                                     .OrderByDescending(sal => sal.Approve_Date)
                                                     .Select(sal => sal.IsEditableAfterApproval)
                                                     .FirstOrDefault() ?? false
-                       })
-                       .OrderByDescending(x => x.PO_No); // Added OrderByDescending to sort by PO_Number descending
+                           })
+                           .OrderByDescending(x => x.PO_No); // Added OrderByDescending to sort by PO_Number descending
 
                 bool hasEntryBudgetViewBtnRights = false;
                 var uid = AppConfig.UserID;
@@ -502,31 +503,6 @@ namespace PMS
             catch (Exception ex)
             {
                 return "Error: " + ex.Message;
-            }
-        }
-
-        [WebMethod]
-        public static string fillWarehouse()
-        {
-            try
-            {
-                using (DataBaseDataContext db = new DataBaseDataContext(DBClass.ConnectionString()))
-                {
-                    var listItems = (from p in db.DataValues
-                                     join v in db.ValueSets on p.ValueSet_ID equals v.ValueSet_ID
-                                     where v.ValueSet_Description == "Ware House"
-                                     orderby p.DataValue_Name
-                                     select new
-                                     {
-                                         DataValueName = p.DataValue_Name,
-                                         DataValueDescription = p.DataValue_Description
-                                     }).ToList();
-                    return (new System.Web.Script.Serialization.JavaScriptSerializer()).Serialize(listItems);
-                }
-            }
-            catch (Exception ex)
-            {
-                return "[]";
             }
         }
     }

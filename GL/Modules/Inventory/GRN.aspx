@@ -332,8 +332,12 @@
         function initDatepickersInChunks(selector, options, onDone) {
             var $inputs = $(selector);
             var index = 0;
-            var chunkSize = 50;
+            var chunkSize = 25;
             var total = $inputs.length;
+            if (total === 0) {
+                if (typeof onDone === 'function') onDone();
+                return;
+            }
             function processChunk() {
                 var end = Math.min(index + chunkSize, total);
                 for (; index < end; index++) {
@@ -343,9 +347,30 @@
                 }
                 if (index < total) {
                     updateLoaderProgress(70 + Math.floor((index / total) * 25), 'Initializing dates... ' + index + '/' + total);
-                    setTimeout(processChunk, 0);
+                    requestAnimationFrame(processChunk);
                 } else if (typeof onDone === 'function') {
                     onDone();
+                }
+            }
+            requestAnimationFrame(processChunk);
+        }
+
+        function renderRowsInChunks($tbody, rowsArray, chunkSize, onProgress, onComplete) {
+            var index = 0;
+            var total = rowsArray.length;
+            var chunkDelay = 50;
+            function processChunk() {
+                var end = Math.min(index + chunkSize, total);
+                var chunkHTML = rowsArray.slice(index, end).join('');
+                $tbody[0].insertAdjacentHTML('beforeend', chunkHTML);
+                index = end;
+                if (typeof onProgress === 'function') {
+                    onProgress(Math.floor((index / total) * 40) + 50);
+                }
+                if (index < total) {
+                    setTimeout(processChunk, chunkDelay);
+                } else if (typeof onComplete === 'function') {
+                    onComplete();
                 }
             }
             setTimeout(processChunk, 0);
@@ -519,8 +544,9 @@ function LoadAllitem(searchText) {
                 var items = JSON.parse(response.d);
                 var tableBody = $('#itemsTableBody');
                 tableBody.empty();
+                var rows = [];
                 $.each(items, function (index, item) {
-                    var row = '<tr>' +
+                    rows.push('<tr>' +
                         '<td><input type="checkbox" class="itemCheckbox" onclick="appendSearchItem(this)"></td>' +
                         '<td style="display:none;">' + item.Item_ID + '</td>' +
                         '<td>' + item.Item_Code + '</td>' +
@@ -530,9 +556,9 @@ function LoadAllitem(searchText) {
                         '<td style="display:none;">' + (item.UOM_Qty || 1) + '</td>' +
                         '<td style="">' + (item.Last_GRN_Rate) + '</td>' +
                         '<td>' + (item.TotalStock || 0) + '</td>' +
-                        '</tr>';
-                    tableBody.append(row);
+                        '</tr>');
                 });
+                tableBody.html(rows.join(''));
                 $('#itemsModal').modal('show');
             },
             error: function (error) {
@@ -634,99 +660,95 @@ function LoadGRNDetailDir(GRN_ID) {
     PageMethods.LoadGRNDetailDir(GRN_ID, function(resp) {
 
         var item = JSON.parse(resp);
-        var rows = '';
-        var iteration = 0;
-        var ExpiryDate = '';
-        var MfgDate = '';
-        updateLoaderProgress(40, 'Building table with ' + item.length + ' items...');
+        var totalItems = item.length;
+        var baseCount = $("#tblItemDescriptionDir tbody tr").length;
+        $('#tblItemDescriptionDir tbody').empty();
+        updateLoaderProgress(40, 'Processing ' + totalItems + ' items...');
 
-        $.each(item, function(key, value) {
-
-            if (value.BatchNum == null)
-                value.BatchNum = "";
-
-            if (value.ExpiryDate != null) {
-                ExpiryDate = $.datepicker.formatDate('dd M yy',
-                    new Date(parseInt(value.ExpiryDate.substring(6, 19))));
-
-                if (ExpiryDate.includes("1963") || ExpiryDate.includes("1964") ||
-                    ExpiryDate.includes("1965") || ExpiryDate.includes("1966"))
-                    ExpiryDate = "";
-            }
-            else {
-                ExpiryDate = "";
-            }
-
-            if (value.MfgDate != null) {
-                MfgDate = $.datepicker.formatDate('dd M yy',
-                    new Date(parseInt(value.MfgDate.substring(6, 19))));
-
-                if (MfgDate.includes("1963") || MfgDate.includes("1964") ||
-                    MfgDate.includes("1965") || MfgDate.includes("1966"))
-                    MfgDate = "";
-            }
-            else {
-                MfgDate = "";
-            }
-
-            iteration++;
-
-            var rowlength = $("#tblItemDescriptionDir tbody tr").length + iteration;
-
-            rows += '<tr>' +
-                '<td style="border:1px solid #D9E4E6;">' +
-                '<input type="hidden" id="txtItemIdDir' + rowlength + '" name="txtItemIdDir" value="' + value.Item_Id + '" />' +
-                rowlength +
-                '</td>' +
-
-                '<td>' +
-                '<input type="hidden" id="txtItemCodeDir' + rowlength + '" name="txtItemCodeDir" value="' + value.ItemCode + '" />' +
-                value.ItemCode +
-                '</td>' +
-
-                '<td>' +
-                '<input type="hidden" id="txtItemNameDir' + rowlength + '" name="txtItemNameDir" value="' + value.Description + '" />' +
-                value.Description +
-                '</td>' +
-
-                '<td><input type="text" id="txtGRNQtyDir' + rowlength + '" name="txtGRNQtyDir" value="' + parseFloat(value.GRNQty).toFixed(2) + '" style="text-align:center;width:125px;font-size:11px;height:27px;" /></td>' +
-
-                '<td><input type="text" id="txtUOMQtyDir' + rowlength + '" name="txtUOMQtyDir" value="' + value.UOM_Qty + '" style="text-align:center;width:125px;font-size:11px;height:27px;" /></td>' +
-
-                '<td><input type="text" id="BatchNoDir' + rowlength + '" name="BatchNoDir" value="' + value.BatchNum + '" style="text-align:center;width:125px;font-size:11px;height:27px;" /></td>' +
-
-                '<td><input type="text" id="txtMfgdateDir' + rowlength + '" name="txtMfgdateDir" value="' + MfgDate + '" readonly /></td>' +
-
-                '<td><input type="text" id="ExpdateDir' + rowlength + '" name="ExpdateDir" value="' + ExpiryDate + '" readonly /></td>' +
-
-                '<td><input type="text" id="txtBONQtyDir' + rowlength + '" name="txtBONQtyDir" value="' + value.BounusQty + '" style="text-align:center;width:125px;font-size:11px;height:27px;" /></td>' +
-
-                '<td><input type="text" id="txtRateDir' + rowlength + '" name="txtRateDir" value="' + parseFloat(value.Rate).toFixed(2) + '" style="text-align:center;font-size:11px;" /></td>' +
-
-                '<td><input type="text" id="txtamountDir' + rowlength + '" name="txtamountDir" value="' + parseFloat(value.Amount).toFixed(2) + '" readonly style="width:125px;text-align:right;font-size:11px;height:27px;" /></td>' +
-                '<td><input type="text" id="txtSaleRateDir' + rowlength + '" name="txtSaleRateDir" value="' + parseFloat(value.Sale_Rate).toFixed(2) + '" readonly style="width:125px;text-align:right;font-size:11px;height:27px;" /></td>' +
-                '<td><a href="javascript:void(0)" onclick="ExcludeFromPayment(this)"><i class="glyphicon glyphicon-trash" style="font-size:11px;color:#f30a0a;"></i></a></td>' +
-                '</tr>';
-
-        });
-
-        $('#tblItemDescriptionDir tbody').html(rows);
-        updateLoaderProgress(50, 'Rendering items...');
-
+        var chunkSize = 20;
+        var index = 0;
+        var $tbody = $('#tblItemDescriptionDir tbody');
         var dateOpts = {
             dateFormat: 'dd M yy',
             changeMonth: true,
             changeYear: true
         };
 
-        initDatepickersInChunks('input[name="txtMfgdateDir"]', dateOpts, function () {
-            initDatepickersInChunks('input[name="ExpdateDir"]', dateOpts, function () {
-                updateLoaderProgress(100, 'Finalizing...');
-                setTimeout(function () {
-                    hideLoader();
-                }, 400);
-            });
-        });
+        function processItemChunk() {
+            var end = Math.min(index + chunkSize, totalItems);
+            for (; index < end; index++) {
+                var value = item[index];
+                var iteration = index + 1;
+                var rowlength = baseCount + iteration;
+                var ExpiryDate = '';
+                var MfgDate = '';
+
+                if (value.BatchNum == null)
+                    value.BatchNum = "";
+
+                if (value.ExpiryDate != null) {
+                    ExpiryDate = $.datepicker.formatDate('dd M yy',
+                        new Date(parseInt(value.ExpiryDate.substring(6, 19))));
+                    if (ExpiryDate.includes("1963") || ExpiryDate.includes("1964") ||
+                        ExpiryDate.includes("1965") || ExpiryDate.includes("1966"))
+                        ExpiryDate = "";
+                }
+
+                if (value.MfgDate != null) {
+                    MfgDate = $.datepicker.formatDate('dd M yy',
+                        new Date(parseInt(value.MfgDate.substring(6, 19))));
+                    if (MfgDate.includes("1963") || MfgDate.includes("1964") ||
+                        MfgDate.includes("1965") || MfgDate.includes("1966"))
+                        MfgDate = "";
+                }
+
+                var html = '<tr>' +
+                    '<td style="border:1px solid #D9E4E6;">' +
+                    '<input type="hidden" id="txtItemIdDir' + rowlength + '" name="txtItemIdDir" value="' + value.Item_Id + '" />' +
+                    rowlength +
+                    '</td>' +
+                    '<td>' +
+                    '<input type="hidden" id="txtItemCodeDir' + rowlength + '" name="txtItemCodeDir" value="' + value.ItemCode + '" />' +
+                    value.ItemCode +
+                    '</td>' +
+                    '<td>' +
+                    '<input type="hidden" id="txtItemNameDir' + rowlength + '" name="txtItemNameDir" value="' + value.Description + '" />' +
+                    value.Description +
+                    '</td>' +
+                    '<td><input type="text" id="txtGRNQtyDir' + rowlength + '" name="txtGRNQtyDir" value="' + parseFloat(value.GRNQty).toFixed(2) + '" style="text-align:center;width:125px;font-size:11px;height:27px;" /></td>' +
+                    '<td><input type="text" id="txtUOMQtyDir' + rowlength + '" name="txtUOMQtyDir" value="' + value.UOM_Qty + '" style="text-align:center;width:125px;font-size:11px;height:27px;" /></td>' +
+                    '<td><input type="text" id="BatchNoDir' + rowlength + '" name="BatchNoDir" value="' + value.BatchNum + '" style="text-align:center;width:125px;font-size:11px;height:27px;" /></td>' +
+                    '<td><input type="text" id="txtMfgdateDir' + rowlength + '" name="txtMfgdateDir" value="' + MfgDate + '" readonly /></td>' +
+                    '<td><input type="text" id="ExpdateDir' + rowlength + '" name="ExpdateDir" value="' + ExpiryDate + '" readonly /></td>' +
+                    '<td><input type="text" id="txtBONQtyDir' + rowlength + '" name="txtBONQtyDir" value="' + value.BounusQty + '" style="text-align:center;width:125px;font-size:11px;height:27px;" /></td>' +
+                    '<td><input type="text" id="txtRateDir' + rowlength + '" name="txtRateDir" value="' + parseFloat(value.Rate).toFixed(2) + '" style="text-align:center;font-size:11px;" /></td>' +
+                    '<td><input type="text" id="txtamountDir' + rowlength + '" name="txtamountDir" value="' + parseFloat(value.Amount).toFixed(2) + '" readonly style="width:125px;text-align:right;font-size:11px;height:27px;" /></td>' +
+                    '<td><input type="text" id="txtSaleRateDir' + rowlength + '" name="txtSaleRateDir" value="' + parseFloat(value.Sale_Rate).toFixed(2) + '" readonly style="width:125px;text-align:right;font-size:11px;height:27px;" /></td>' +
+                    '<td><a href="javascript:void(0)" onclick="ExcludeFromPayment(this)"><i class="glyphicon glyphicon-trash" style="font-size:11px;color:#f30a0a;"></i></a></td>' +
+                    '</tr>';
+                $tbody[0].insertAdjacentHTML('beforeend', html);
+            }
+
+            updateLoaderProgress(40 + Math.floor((index / totalItems) * 20), 'Rendering items... ' + index + '/' + totalItems);
+
+            if (index < totalItems) {
+                setTimeout(processItemChunk, 50);
+            } else {
+                updateLoaderProgress(60, 'Initializing datepickers...');
+                setTimeout(function() {
+                    initDatepickersInChunks('input[name="txtMfgdateDir"]', dateOpts, function () {
+                        initDatepickersInChunks('input[name="ExpdateDir"]', dateOpts, function () {
+                            updateLoaderProgress(100, 'Finalizing...');
+                            setTimeout(function () {
+                                hideLoader();
+                            }, 200);
+                        });
+                    });
+                }, 50);
+            }
+        }
+
+        setTimeout(processItemChunk, 100);
 
     },
         function(error) {
@@ -790,70 +812,93 @@ function LoadGRNDetailDir(GRN_ID) {
             updateLoaderProgress(30, 'Loading GRN items...');
             PageMethods.LoadGRNDetail(GRN_ID, function (resp) {
                 var item = (JSON.parse(resp));
-                var rows = '';
-                var Description = '';
-                var iteration = 0;
-                var ExpiryDate = '';
-                var MfgDate = '';
-                updateLoaderProgress(40, 'Building table with ' + item.length + ' items...');
-                $.each(item, function (key, value) {
-                    if (value.BatchNum == null)
-                        value.BatchNum = "";
-                    var datetime = $.datepicker.formatDate('dd M yy', new Date(parseInt(item[key].PO_Date.substring(6, 19))));
-                    var IGPdate = $.datepicker.formatDate('dd M yy', new Date(parseInt(item[key].IgpDate.substring(6, 19))));
-                    if (value.ExpiryDate != null) {
-                        ExpiryDate = $.datepicker.formatDate('dd M yy', new Date(parseInt(item[key].ExpiryDate.substring(6, 19))));
-                        var IsExist = (ExpiryDate.includes("1963" || "1964" || "1965" || "1966"))
-                        if (IsExist) ExpiryDate = "";
-                    }
-                    if (value.MfgDate != null) {
-                        MfgDate = $.datepicker.formatDate('dd M yy', new Date(parseInt(item[key].MfgDate.substring(6, 19))));
-                        var IsExist = (MfgDate.includes("1963" || "1964" || "1965" || "1966"))
-                        if (IsExist) MfgDate = "";
-                    }
-                    var RejQty = value.IGPQty - value.GRNQty;
-                    iteration++;
-                    var rowlength = (document.getElementById("tblItemDescription").rows.length + iteration) - 1;
-                    rows += '<tr>' +
-                        '<td style=" border: 1px solid #D9E4E6;"><input type="hidden" id="txtIgpDetailId' + rowlength + '" name="txtIgpDetailId" value="' + value.IGPDetailId + '" style="width:50px !important;text-align:right" />' + rowlength + '</td>' +
-                        '<td style="padding-right: 3px!important;"><input type="hidden" name="txtItemCode" id="txtItemCode' + rowlength + '"  value="' + value.Item_Code + '"  style="width:50px !important;text-align:right;font-size:9px;height:10px !important;"/> ' + value.Item_Code + ' </td>' +
-                        '<td style="padding-left: 3px!important;"><input type="hidden" name="txtItemName" id="txtItemName' + rowlength + '"  value="' + value.Description + '" style="width:50px !important;text-align:left;font-size:9px;height:10px !important ;"/> ' + value.Description + ' </td>' +
-                        '<td style="padding-left: 3px!important;"><input type="hidden" name="txtIgp_num" id="txtIgp_num' + rowlength + '"  value="' + value.IgpNum + '" />' + value.IgpNum + ' </td>' +
-                        '<td><input type="text" style="text-align:center;font-size:9px;" name="txtIGPdate" id="txtIGPdate' + rowlength + '"  value="' + IGPdate + '" readonly="readonly"/></td>' +
-                        '<td><input type="hidden" style="width:61px !important;text-align:center;font-size:9px;height:10px !important;" name="txtPO_No" id="txtPO_No' + rowlength + '"  value="' + value.PO_No + '" readonly="readonly"/>' + value.PO_No + '</td>' +
-                        '<td><input type="text" style="text-align:center;font-size:9px;" name="txtPOdate" id="txtPOdate' + rowlength + '"  value="' + datetime + '" readonly="readonly"/></td>' +
-                        '<td><input type="hidden" name="BatchNo" id="BatchNo' + rowlength + '"  value="' + value.BatchNum + '" style="width:50px !important;text-align:left;font-size:9px;height:10px !important ;"/>' + value.BatchNum + '</td>' +
-                        '<td><input type="text" style="text-align:center;font-size:9px;" name="txtMfgdate" id="txtMfgdate' + rowlength + '"  value="' + MfgDate + '" readonly="readonly"/></td>' +
-                        '<td><input type="text" style="text-align:center;font-size:9px;" name="Expdate" id="Expdate' + rowlength + '"  value="' + ExpiryDate + '" readonly="readonly"/></td>' +
-                        '<td style="text-align:right;"><input type="hidden" style="width:61px !important;text-align:center;font-size:9px;height:10px !important;" name="IGPQty" id="IGPQty' + rowlength + '"  value="' + parseFloat(value.IGPQty).toFixed(2) + '" />' + parseFloat(value.IGPQty).toFixed(2) + '</td>' +
-                        '<td style="padding-right: 3px!important;display:none;"><input type="hidden"  style="width: 50px !important;text-align:right;font-size:9px;height:10px !important;  id="AccQty' + rowlength + '" name="AccQty" style="width:50px !important;"></input>' + parseFloat(value.GRNQty).toFixed(2) + '</td>' +
-                        '<td style="padding-right: 3px!important;display:none;"><input type="hidden" style="width:50px !important;text-align:right;font-size:9px;height:10px !important;" value="' + parseFloat(RejQty).toFixed(2) + '"  id="RejQty' + rowlength + '" name="RejQty" >' + parseFloat(RejQty).toFixed(2) + '</input></td>' +
+                var totalItems = item.length;
+                var baseCount = document.getElementById("tblItemDescription").rows.length - 1;
+                $('#tblItemDescription tbody').empty();
+                updateLoaderProgress(40, 'Processing ' + totalItems + ' items...');
 
-                        '<td style="padding-right: 3px!important;text-align:right;"><input type="hidden" style="width:50px !important;text-align:right;font-size:9px;height:10px !important;" value="' + value.Amount + '"  id="txtpoamount' + rowlength + '" name="txtpoamount" >' + value.Amount + '</input></td>' +
-                        '<td style="width:50px !important;text-align:right;font-size:9px;height:10px !important;"><input type="hidden" style="width:50px !important;text-align:right;font-size:9px;height:10px !important;position: relative;left: -14px;" value="' + parseFloat(value.GRNQty).toFixed(2) + '"  id="GRNQty' + rowlength + '" name="GRNQty">' + parseFloat(value.GRNQty).toFixed(2) + '</input></td>' +
-                        '<td style="padding-right: 3px!important;text-align:right;">' +
-                        '<input type="hidden" name="SaleRate" id="SaleRate' + rowlength + '" ' +
-                        'value="' + (value.Sale_Rate != null ? parseFloat(value.Sale_Rate).toFixed(2) : '') + '" />' +
-                        (value.Sale_Rate != null ? parseFloat(value.Sale_Rate).toFixed(2) : '') +
-                        '</td>' +
-                        '</tr>';
-                });
-                $('#tblItemDescription tbody').html(rows);
-                updateLoaderProgress(50, 'Rendering items...');
-
+                var chunkSize = 20;
+                var index = 0;
+                var $tbody = $('#tblItemDescription tbody');
                 var dateOpts = { dateFormat: 'dd M yy' };
 
-                initDatepickersInChunks('input[name="txtPOdate"]', dateOpts, function () {
-                    initDatepickersInChunks('input[name="txtMfgdate"]', dateOpts, function () {
-                        initDatepickersInChunks('input[name="Expdate"]', dateOpts, function () {
-                            $('#btnSave').val('Update');
-                            updateLoaderProgress(100, 'Finalizing...');
-                            setTimeout(function () {
-                                hideLoader();
-                            }, 400);
-                        });
-                    });
-                });
+                function processItemChunk() {
+                    var end = Math.min(index + chunkSize, totalItems);
+                    for (; index < end; index++) {
+                        var value = item[index];
+                        var ExpiryDate = '';
+                        var MfgDate = '';
+                        var iteration = index + 1;
+                        var rowlength = baseCount + iteration;
+
+                        if (value.BatchNum == null)
+                            value.BatchNum = "";
+
+                        var datetime = $.datepicker.formatDate('dd M yy', new Date(parseInt(value.PO_Date.substring(6, 19))));
+                        var IGPdate = $.datepicker.formatDate('dd M yy', new Date(parseInt(value.IgpDate.substring(6, 19))));
+
+                        if (value.ExpiryDate != null) {
+                            ExpiryDate = $.datepicker.formatDate('dd M yy', new Date(parseInt(value.ExpiryDate.substring(6, 19))));
+                            if (ExpiryDate.includes("1963") || ExpiryDate.includes("1964") ||
+                                ExpiryDate.includes("1965") || ExpiryDate.includes("1966"))
+                                ExpiryDate = "";
+                        }
+                        if (value.MfgDate != null) {
+                            MfgDate = $.datepicker.formatDate('dd M yy', new Date(parseInt(value.MfgDate.substring(6, 19))));
+                            if (MfgDate.includes("1963") || MfgDate.includes("1964") ||
+                                MfgDate.includes("1965") || MfgDate.includes("1966"))
+                                MfgDate = "";
+                        }
+                        var RejQty = value.IGPQty - value.GRNQty;
+
+                        var html = '<tr>' +
+                            '<td style=" border: 1px solid #D9E4E6;"><input type="hidden" id="txtIgpDetailId' + rowlength + '" name="txtIgpDetailId" value="' + value.IGPDetailId + '" style="width:50px !important;text-align:right" />' + rowlength + '</td>' +
+                            '<td style="padding-right: 3px!important;"><input type="hidden" name="txtItemCode" id="txtItemCode' + rowlength + '"  value="' + value.Item_Code + '"  style="width:50px !important;text-align:right;font-size:9px;height:10px !important;"/> ' + value.Item_Code + ' </td>' +
+                            '<td style="padding-left: 3px!important;"><input type="hidden" name="txtItemName" id="txtItemName' + rowlength + '"  value="' + value.Description + '" style="width:50px !important;text-align:left;font-size:9px;height:10px !important ;"/> ' + value.Description + ' </td>' +
+                            '<td style="padding-left: 3px!important;"><input type="hidden" name="txtIgp_num" id="txtIgp_num' + rowlength + '"  value="' + value.IgpNum + '" />' + value.IgpNum + ' </td>' +
+                            '<td><input type="text" style="text-align:center;font-size:9px;" name="txtIGPdate" id="txtIGPdate' + rowlength + '"  value="' + IGPdate + '" readonly="readonly"/></td>' +
+                            '<td><input type="hidden" style="width:61px !important;text-align:center;font-size:9px;height:10px !important;" name="txtPO_No" id="txtPO_No' + rowlength + '"  value="' + value.PO_No + '" readonly="readonly"/>' + value.PO_No + '</td>' +
+                            '<td><input type="text" style="text-align:center;font-size:9px;" name="txtPOdate" id="txtPOdate' + rowlength + '"  value="' + datetime + '" readonly="readonly"/></td>' +
+                            '<td><input type="hidden" name="BatchNo" id="BatchNo' + rowlength + '"  value="' + value.BatchNum + '" style="width:50px !important;text-align:left;font-size:9px;height:10px !important ;"/>' + value.BatchNum + '</td>' +
+                            '<td><input type="text" style="text-align:center;font-size:9px;" name="txtMfgdate" id="txtMfgdate' + rowlength + '"  value="' + MfgDate + '" readonly="readonly"/></td>' +
+                            '<td><input type="text" style="text-align:center;font-size:9px;" name="Expdate" id="Expdate' + rowlength + '"  value="' + ExpiryDate + '" readonly="readonly"/></td>' +
+                            '<td style="text-align:right;"><input type="hidden" style="width:61px !important;text-align:center;font-size:9px;height:10px !important;" name="IGPQty" id="IGPQty' + rowlength + '"  value="' + parseFloat(value.IGPQty).toFixed(2) + '" />' + parseFloat(value.IGPQty).toFixed(2) + '</td>' +
+                            '<td style="padding-right: 3px!important;display:none;"><input type="hidden"  style="width: 50px !important;text-align:right;font-size:9px;height:10px !important;  id="AccQty' + rowlength + '" name="AccQty" style="width:50px !important;"></input>' + parseFloat(value.GRNQty).toFixed(2) + '</td>' +
+                            '<td style="padding-right: 3px!important;display:none;"><input type="hidden" style="width:50px !important;text-align:right;font-size:9px;height:10px !important;" value="' + parseFloat(RejQty).toFixed(2) + '"  id="RejQty' + rowlength + '" name="RejQty" >' + parseFloat(RejQty).toFixed(2) + '</input></td>' +
+                            '<td style="padding-right: 3px!important;text-align:right;"><input type="hidden" style="width:50px !important;text-align:right;font-size:9px;height:10px !important;" value="' + value.Amount + '"  id="txtpoamount' + rowlength + '" name="txtpoamount" >' + value.Amount + '</input></td>' +
+                            '<td style="width:50px !important;text-align:right;font-size:9px;height:10px !important;"><input type="hidden" style="width:50px !important;text-align:right;font-size:9px;height:10px !important;position: relative;left: -14px;" value="' + parseFloat(value.GRNQty).toFixed(2) + '"  id="GRNQty' + rowlength + '" name="GRNQty">' + parseFloat(value.GRNQty).toFixed(2) + '</input></td>' +
+                            '<td style="padding-right: 3px!important;text-align:right;">' +
+                            '<input type="hidden" name="SaleRate" id="SaleRate' + rowlength + '" ' +
+                            'value="' + (value.Sale_Rate != null ? parseFloat(value.Sale_Rate).toFixed(2) : '') + '" />' +
+                            (value.Sale_Rate != null ? parseFloat(value.Sale_Rate).toFixed(2) : '') +
+                            '</td>' +
+                            '</tr>';
+                        $tbody[0].insertAdjacentHTML('beforeend', html);
+                    }
+
+                    updateLoaderProgress(40 + Math.floor((index / totalItems) * 20), 'Rendering items... ' + index + '/' + totalItems);
+
+                    if (index < totalItems) {
+                        setTimeout(processItemChunk, 50);
+                    } else {
+                        updateLoaderProgress(60, 'Initializing datepickers...');
+                        setTimeout(function() {
+                            initDatepickersInChunks('input[name="txtPOdate"]', dateOpts, function () {
+                                initDatepickersInChunks('input[name="txtMfgdate"]', dateOpts, function () {
+                                    initDatepickersInChunks('input[name="Expdate"]', dateOpts, function () {
+                                        $('#btnSave').val('Update');
+                                        updateLoaderProgress(100, 'Finalizing...');
+                                        setTimeout(function () {
+                                            hideLoader();
+                                        }, 200);
+                                    });
+                                });
+                            });
+                        }, 50);
+                    }
+                }
+
+                setTimeout(processItemChunk, 100);
             },
                 function (error) {
                     hideLoader();
@@ -933,7 +978,7 @@ function LoadGRNDetailDir(GRN_ID) {
             if (IGPId != "") {
                 PageMethods.getIGPByID(IGPId, function (res) {
                     var item = JSON.parse(res);
-                    var rows = '';
+                    var rows = [];
                     var iteration = 0;
                     $('#thaction').show();
                     $.each(item, function (key, value) {
@@ -965,7 +1010,7 @@ function LoadGRNDetailDir(GRN_ID) {
                             return false;
                         }
                         else {
-                            rows += '<tr>' +
+                            rows.push('<tr>' +
                                 '<td style=" border: 1px solid #D9E4E6;"><input type="hidden" id="txtIgpDetailId' + rowlength + '" name="txtIgpDetailId" value="' + value.Igp_item_ID + '" style="width:50px !important;text-align:right" />' + rowlength + '</td>' +
                                 '<td style="padding-right: 3px!important;"><input type="hidden" name="txtItemCode" id="txtItemCode' + rowlength + '"  value="' + value.Item_Code + '"  style="width:50px !important;text-align:right;font-size:9px;height:10px !important;"/> ' + value.Item_Code + ' </td>' +
                                 '<td style="padding-left: 3px!important;"><input type="hidden" name="txtItemName" id="txtItemName' + rowlength + '"  value="' + value.Description + '" style="width:50px !important;text-align:left;font-size:9px;height:10px !important ;"/> ' + value.Description + ' </td>' +
@@ -981,10 +1026,10 @@ function LoadGRNDetailDir(GRN_ID) {
                                 '<td style="padding-right: 3px!important;"><input type="hidden" style="width:50px !important;text-align:right;font-size:9px;height:10px !important;" value="0"  id="RejQty' + rowlength + '" name="RejQty" ></input></td>' +
                                 '<td style="width:50px !important;text-align:right;font-size:9px;height:10px !important;"><input type="hidden" style="width:50px !important;text-align:right;font-size:9px;height:10px !important;position: relative;left: -14px;" value="0"  id="GRNQty' + rowlength + '" name="GRNQty"></input></td>' +
                                 '<td><a href="javascript:void(0)" onclick="ExcludeFromPayment(this)"><i class="glyphicon glyphicon-trash" style="font-size:11px;margin-left: 16px; color: #f30a0a;position:relative;left:-33px"></i></a> </td>' +
-                                '</tr>';
+                                '</tr>');
                         }
                     });
-                    $('#tblItemDescription').append(rows);
+                    $('#tblItemDescription').append(rows.join(''));
                     $('input[name="txtPOdate"]').datepicker({ dateFormat: 'dd M yy' });
                     $('input[name="txtMfgdate"]').datepicker({ dateFormat: 'dd M yy' });
                     $('input[name="Expdate"]').datepicker({ dateFormat: 'dd M yy' });
