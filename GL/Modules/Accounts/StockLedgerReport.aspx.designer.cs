@@ -150,6 +150,15 @@ namespace PMS
         protected global::System.Web.UI.WebControls.DropDownList ddlProcedureType;
 
         /// <summary>
+        /// chkExportPDF control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.HtmlControls.HtmlInputCheckBox chkExportPDF;
+
+        /// <summary>
         /// btnPreview control.
         /// </summary>
         /// <remarks>

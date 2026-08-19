@@ -26,13 +26,37 @@
     padding: 10px 12px;
     background: var(--emp-bg);
     min-height: 100vh;
+    width: 100%;
     max-width: 100%;
     overflow-x: hidden;
     box-sizing: border-box;
 }
 
+.emp-page,
 .emp-page * {
     box-sizing: border-box;
+    min-width: 0;
+}
+
+html, body {
+    overflow-x: hidden;
+    max-width: 100vw;
+}
+
+.emp-page input,
+.emp-page select,
+.emp-page textarea,
+.emp-page button,
+.emp-page .emp-card,
+.emp-page .emp-input,
+.emp-page .emp-select,
+.emp-page .emp-textarea,
+.emp-page .emp-bento,
+.emp-page .emp-field,
+.emp-page .emp-day-chip,
+.emp-page .emp-card-body,
+.emp-page .emp-flag-grid,
+.emp-page .emp-flag-item {
     max-width: 100%;
     min-width: 0;
 }
@@ -252,6 +276,7 @@
 .emp-cards-grid > .emp-card {
     display: flex;
     flex-direction: column;
+    min-width: 0;
 }
 
 .emp-cards-grid--full {
@@ -444,6 +469,62 @@
 .emp-day-chip:hover {
     border-color: var(--emp-primary);
     background: var(--emp-primary-soft);
+}
+
+/* ----- Flags grid (no nested labels) ----- */
+.emp-flag-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 6px;
+}
+
+.emp-flag-item {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 6px 10px;
+    background: #fafbfd;
+    border: 1px solid var(--emp-border);
+    border-radius: var(--emp-radius-sm);
+    cursor: pointer;
+    font-size: 12px;
+    font-weight: 700;
+    color: var(--emp-text);
+    text-transform: uppercase;
+    letter-spacing: 0.3px;
+    transition: all 0.15s ease;
+    min-width: 0;
+    margin: 0;
+}
+
+.emp-flag-item:hover {
+    border-color: var(--emp-primary);
+    background: var(--emp-primary-soft);
+}
+
+.emp-flag-item input[type="checkbox"] {
+    width: 16px;
+    height: 16px;
+    cursor: pointer;
+    margin: 0;
+    padding: 0;
+    flex-shrink: 0;
+    accent-color: var(--emp-primary);
+}
+
+.emp-flag-label {
+    flex: 1;
+    min-width: 0;
+    color: var(--emp-text);
+    font-size: 12px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.3px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    line-height: 1.2;
+    cursor: pointer;
 }
 
 /* ----- Layout ----- */

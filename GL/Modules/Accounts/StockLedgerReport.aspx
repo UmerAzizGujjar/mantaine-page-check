@@ -35,6 +35,7 @@
              loadItemList();
              FillAccountCategory();
              $('#<%= btnPreview.ClientID %>').click(function () {
+                 var exporttopdf = document.getElementById('<%= chkExportPDF.ClientID %>').checked;
                  var urlParams = new URLSearchParams(window.location.search);
                  var reportVersion = urlParams.get('ReportVersion'); // "2" or null
 
@@ -61,7 +62,8 @@
                          '&StartItemCode=' + encodeURIComponent(startItemCode) +
                          '&EndItemCode=' + encodeURIComponent(endItemCode) +
                          '&WareHouse=' + encodeURIComponent(ddlWare) +
-                         '&Inventory_Org=' + encodeURIComponent(ddlinvOrg);
+                         '&Inventory_Org=' + encodeURIComponent(ddlinvOrg) +
+                         '&ExportPDF=' + exporttopdf;
 
                      window.open(url, '_blank');
                  }
@@ -88,7 +90,7 @@
                          var ddlinvOrg = $('#ctl00_MainContent_ddlInventoryOrg').val();
                          var depid = $('#ddldepartment').val();
 
-                         var url = '../../ReportViewer.aspx?ReportName=Inventory_StockLedger_Report&ReportTitle=ItemWiseStockLedgerList&StartDate=' + StartDate + '&EndDate=' + EndDate + '&StartItemCode=' + startItemCode + '&EndItemCode=' + endItemCode + '&WareHouse=' + ddlWare + '&Inventory_Org=' + ddlinvOrg + '&Departemnt=' + depid + '';
+                         var url = '../../ReportViewer.aspx?ReportName=Inventory_StockLedger_Report&ReportTitle=ItemWiseStockLedgerList&StartDate=' + StartDate + '&EndDate=' + EndDate + '&StartItemCode=' + startItemCode + '&EndItemCode=' + endItemCode + '&WareHouse=' + ddlWare + '&Inventory_Org=' + ddlinvOrg + '&Departemnt=' + depid + '&ExportPDF=' + exporttopdf;
                          window.open(url);
                      }
                      else if (type == 'SSIW') {
@@ -96,7 +98,7 @@
                          EndDate = $('#txteDate').val();
                          var startItemCode = $('#ddlStartItemCode').val();
                          var endItemCode = $('#ddlEndItemCode').val();
-                         var url = '../../ReportViewer.aspx?ReportName=SaleSumaryItemWise&ReportTitle=Sale Sumary Item Wise&StartDate=' + StartDate + '&EndDate=' + EndDate + '&StartItemCode=' + startItemCode + '&EndItemCode=' + endItemCode + '';
+                         var url = '../../ReportViewer.aspx?ReportName=SaleSumaryItemWise&ReportTitle=Sale Sumary Item Wise&StartDate=' + StartDate + '&EndDate=' + EndDate + '&StartItemCode=' + startItemCode + '&EndItemCode=' + endItemCode + '&ExportPDF=' + exporttopdf;
                          window.open(url);
                      }
                      else if (type == 'BL') {
@@ -104,7 +106,7 @@
                          EndDate = $('#txteDate').val();
 
 
-                         var url = '../../ReportViewer.aspx?ReportName=Bill_Ledger_Report&ReportTitle=Bill Ledger Report From ' + StartDate + ' to ' + EndDate + '&StartDate=' + StartDate + '&EndDate=' + EndDate;
+                         var url = '../../ReportViewer.aspx?ReportName=Bill_Ledger_Report&ReportTitle=Bill Ledger Report From ' + StartDate + ' to ' + EndDate + '&StartDate=' + StartDate + '&EndDate=' + EndDate + '&ExportPDF=' + exporttopdf;
                          window.open(url);
                      }
                  }
@@ -223,6 +225,14 @@
             <tr id="rowProcedureType" runat="server" visible="false">
                 <td class="auto-style3">Procedure Type</td>
                 <td class="auto-style1"><asp:DropDownList ID="ddlProcedureType" runat="server"></asp:DropDownList></td>
+            </tr>
+            <tr id="rowExport">
+                <td class="auto-style2">Export to Excel</td>
+                <td>
+                    <div class="form-check" style="display: inline-flex; width: 26px;">
+                        <input runat="server" class="form-check-input" type="checkbox" id="chkExportPDF" />
+                    </div>
+                </td>
             </tr>
             </table>
         <br />

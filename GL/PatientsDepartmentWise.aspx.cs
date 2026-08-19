@@ -550,6 +550,7 @@ namespace PMS
                     dpROw.Visible = false;
                     trDoctor.Visible = false;
                     tr_Summary.Visible = false;
+                    tr_Export.Visible = true;
                     lblMultiSelect.Visible = false;
                     lblPatientType.Text = "Operators";
                     DateDiv.Visible = false;
@@ -2592,7 +2593,7 @@ namespace PMS
                     dpROw.Visible = false;
                     lblMultiSelect.Visible = false;
                     trDoctor.Visible = false;
-                    tr_Export.Visible = false;
+                    tr_Export.Visible = true;
                     DateDiv.Visible = true;
                     sttDate.Text = "End Date";
                     txtStart_Date.Visible = true;
@@ -2672,7 +2673,7 @@ namespace PMS
                     optRw.Visible = false;
                     AllowPatientRecord = false;
                     ddlPatientType.Visible = false;
-                    tr_Export.Visible = false;
+                    tr_Export.Visible = true;
 
                     object valusets;
                     DataBaseDataContext dbase = new DataBaseDataContext(DBClass.ConnectionString());
@@ -2746,7 +2747,7 @@ namespace PMS
                     ddlDepartments.DataValueField = "DataValue_Name";
                     ddlDepartments.Items.Add(new ListItem() { Text = "All", Value = "0" });
                     ddlDepartments.DataBind();
-                    tr_Export.Visible = false;
+                    tr_Export.Visible = true;
                 }
                 else if (PageTitle == "MSR")
                 {
@@ -2813,7 +2814,7 @@ namespace PMS
                     ddlDepartments.DataBind();
                     ddlDepartments.Visible = false;
                     lblDepartment.Visible = false;
-                    tr_Export.Visible = false;
+                    tr_Export.Visible = true;
                 }
                 else if (this.PageTitle == "MIR_summary")
                 {
@@ -2822,7 +2823,7 @@ namespace PMS
                     Master.GetMenuName();
                     object valusets;
                     tr_Summary.Visible = false;
-                    tr_Export.Visible = false;
+                    tr_Export.Visible = true;
                     DateDiv.Visible = true;
                     Time_Row.Visible = false;
                     lblMultiSelect.Visible = false;
@@ -2902,7 +2903,7 @@ namespace PMS
                     Master.GetMenuName();
                     object valusets;
                     tr_Summary.Visible = false;
-                    tr_Export.Visible = false;
+                    tr_Export.Visible = true;
                     DateDiv.Visible = true;
                     Time_Row.Visible = false;
                     lblMultiSelect.Visible = false;
@@ -2961,7 +2962,7 @@ namespace PMS
                     Master.GetMenuName();
                     object valusets;
                     tr_Summary.Visible = false;
-                    tr_Export.Visible = false;
+                    tr_Export.Visible = true;
                     DateDiv.Visible = true;
                     Time_Row.Visible = false;
                     lblMultiSelect.Visible = false;
@@ -3144,7 +3145,7 @@ namespace PMS
                     Master.Label2.Text = x;
                     Master.GetMenuName();
                     tr_Summary.Visible = false;
-                    tr_Export.Visible = false;
+                    tr_Export.Visible = true;
                     DateDiv.Visible = true;
                     Time_Row.Visible = true;
                     lblMultiSelect.Visible = false;
@@ -3406,7 +3407,7 @@ namespace PMS
                     Master.Label2.Text = x;
                     Master.GetMenuName();
                     tr_Summary.Visible = false;
-                    tr_Export.Visible = false;
+                    tr_Export.Visible = true;
                     DateDiv.Visible = true;
                     Time_Row.Visible = true;
                     lblMultiSelect.Visible = false;
@@ -3457,7 +3458,7 @@ namespace PMS
                     Master.Label2.Text = x;
                     Master.GetMenuName();
                     tr_Summary.Visible = false;
-                    tr_Export.Visible = false;
+                    tr_Export.Visible = true;
                     DateDiv.Visible = true;
                     Time_Row.Visible = true;
                     lblMultiSelect.Visible = false;
@@ -3491,7 +3492,7 @@ namespace PMS
                     Master.Label2.Text = x;
                     Master.GetMenuName();
                     tr_Summary.Visible = false;
-                    tr_Export.Visible = false;
+                    tr_Export.Visible = true;
                     DateDiv.Visible = true;
                     Time_Row.Visible = true;
                     lblMultiSelect.Visible = false;
@@ -3525,7 +3526,7 @@ namespace PMS
                     Master.Label2.Text = x;
                     Master.GetMenuName();
                     tr_Summary.Visible = false;
-                    tr_Export.Visible = false;
+                    tr_Export.Visible = true;
                     DateDiv.Visible = true;
                     Time_Row.Visible = true;
                     lblMultiSelect.Visible = false;
@@ -3640,7 +3641,7 @@ namespace PMS
                     Master.GetMenuName();
                     object valusets;
                     tr_Summary.Visible = false;
-                    tr_Export.Visible = false;
+                    tr_Export.Visible = true;
                     DateDiv.Visible = true;
                     Time_Row.Visible = false;
                     lblMultiSelect.Visible = false;
@@ -3813,6 +3814,7 @@ namespace PMS
                     trTestResult1.Visible = true;
                     ddlPatientType.Visible = false;
                     tr_Summary.Visible = false;
+                    tr_Export.Visible = true;
                     lblMultiSelect.Visible = false;
                     lblMedical.Text = "Item Group";
                     lblMedical.Visible = false;
@@ -3874,6 +3876,7 @@ namespace PMS
                     Master.GetMenuName();
 
                     rowStock.Visible = true;
+                    tr_Export.Visible = true;
 
                     txtStart_Date.Visible = false;
                     txtEnd_Date.Visible = false;

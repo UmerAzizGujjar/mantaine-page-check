@@ -24,6 +24,7 @@ namespace PMS
                         accountDiv.Visible = false;
                         stockDiv.Visible = false;
                         DateDiv.Visible = false;
+                        tr_Export.Visible = true;
                         string sqlUni = "Select 0 as Vendor_ID, 'All' as Vendor_Name union all ";
                         System.Data.DataTable dtVen = DBClass.getDataTable(sqlUni + " Select Vendor_ID, (convert(Varchar,Vendor_ID) + ' - ' + Vendor_Name) as Vendor_Name from AP_Vendors");
                         ddlVendor.DataSource = dtVen;
@@ -38,6 +39,7 @@ namespace PMS
                         accountDiv.Visible = false;
                         stockDiv.Visible = false;
                         DateDiv.Visible = true;
+                        tr_Export.Visible = true;
                         vendorTypeDiv.Visible = true;
                         vendorTypeDiv.Visible = true;
 
@@ -70,6 +72,7 @@ namespace PMS
                         accountDiv.Visible = false;
                         stockDiv.Visible = false;
                         DateDiv.Visible = true;
+                        tr_Export.Visible = true;
                         string sqlLUnin1 = "Select 0 as Vendor_ID, 'All' as Vendor_Name union all ";
                         System.Data.DataTable dtVende1 = DBClass.getDataTable(sqlLUnin1 + " Select Vendor_ID, (convert(Varchar,Vendor_ID) + ' - ' + Vendor_Name) as Vendor_Name from AP_Vendors");
                         ddlVendor.DataSource = dtVende1;
@@ -106,6 +109,7 @@ namespace PMS
                         accountDiv.Visible = false;
                         vendorTypeDiv.Visible = false;
                         stockDiv.Visible = false;
+                        tr_Export.Visible = true;
                         string sqlLiUnion = "Select 0 as Vendor_ID, 'All' as Vendor_Name union all ";
                         System.Data.DataTable dtVendorsss = DBClass.getDataTable(sqlLiUnion + " Select Vendor_ID, (convert(Varchar,Vendor_ID) + ' - ' + Vendor_Name) as Vendor_Name from AP_Vendors");
                         ddlVendor.DataSource = dtVendorsss;
@@ -118,7 +122,7 @@ namespace PMS
                         vendorDiv.Visible = true;
                         accountDiv.Visible = false;
                         vendorTypeDiv.Visible = false;
-                        tr_Export.Visible = false;
+                        tr_Export.Visible = true;
                         stockDiv.Visible = false;
                         string sqlLUnin = "Select 0 as Vendor_ID, 'All' as Vendor_Name union all ";
                         System.Data.DataTable dtVende = DBClass.getDataTable(sqlLUnin + " Select Vendor_ID, (convert(Varchar,Vendor_ID) + ' - ' + Vendor_Name) as Vendor_Name from AP_Vendors");
@@ -165,6 +169,7 @@ namespace PMS
                         vendorTypeDiv.Visible = false;
                         accountDiv.Visible = false;
                         DateDiv.Visible = true;
+                        tr_Export.Visible = true;
 
                         warehouseDiv.Visible = true;
                         object valusetss = DBClass.GetValueSet("Ware house");
@@ -254,19 +259,19 @@ namespace PMS
                 //    query = "ReportName=ItemWosePOSummary&ReportTitle=Item Wise PO Summary from " + txtStart_Date.Text + " to " + txtEnd_Date.Text + "&Vendor_ID=" + ddlVendor.SelectedValue + "&Item_ID=" + ddlLevels.SelectedValue + "&startDate=" + txtStart_Date.Text + "&endDate=" + txtEnd_Date.Text + "";
                 //    break;
                 case "VWPOS":
-                    query = "ReportName=VendorWisePOSummary&ReportTitle=Vendor Wise PO Summary&Vendor_ID=" + ddlVendor.SelectedValue + "";
+                    query = "ReportName=VendorWisePOSummary&ReportTitle=Vendor Wise PO Summary&Vendor_ID=" + ddlVendor.SelectedValue + "&ExportPDF=" + chkExportPDF.Checked;
                     break;
                 case "VWPS":
-                    query = "ReportName=VendorWisePurchaseSummary&ReportTitle=Vendor Wise Purchase Summary from " + txtStart_Date.Text + " to " + txtEnd_Date.Text + "&startDate=" + txtStart_Date.Text + "&endDate=" + txtEnd_Date.Text + "&VendorType=" + ddlVendorType.SelectedValue + "&VendorId=" + ddlVendor.SelectedValue;
+                    query = "ReportName=VendorWisePurchaseSummary&ReportTitle=Vendor Wise Purchase Summary from " + txtStart_Date.Text + " to " + txtEnd_Date.Text + "&startDate=" + txtStart_Date.Text + "&endDate=" + txtEnd_Date.Text + "&VendorType=" + ddlVendorType.SelectedValue + "&VendorId=" + ddlVendor.SelectedValue + "&ExportPDF=" + chkExportPDF.Checked;
                     break;
                 case "IGPS":
-                    query = "ReportName=VendorWiseIGPS&ReportTitle=Vendor Wise Inward Gate Pass Summary from " + txtStart_Date.Text + " to " + txtEnd_Date.Text + "&Vendor_ID=" + ddlVendor.SelectedValue + "&startDate=" + txtStart_Date.Text + "&endDate=" + txtEnd_Date.Text + "";
+                    query = "ReportName=VendorWiseIGPS&ReportTitle=Vendor Wise Inward Gate Pass Summary from " + txtStart_Date.Text + " to " + txtEnd_Date.Text + "&Vendor_ID=" + ddlVendor.SelectedValue + "&startDate=" + txtStart_Date.Text + "&endDate=" + txtEnd_Date.Text + "&ExportPDF=" + chkExportPDF.Checked;
                     break;
                 case "GRNS":
-                    query = "ReportName=VendorDetailsGRNS&ReportTitle=Good Receipt Note Summary from " + txtStart_Date.Text + " to " + txtEnd_Date.Text + "&Vendor_ID=" + ddlVendor.SelectedValue + "&startDate=" + txtStart_Date.Text + "&endDate=" + txtEnd_Date.Text + "";
+                    query = "ReportName=VendorDetailsGRNS&ReportTitle=Good Receipt Note Summary from " + txtStart_Date.Text + " to " + txtEnd_Date.Text + "&Vendor_ID=" + ddlVendor.SelectedValue + "&startDate=" + txtStart_Date.Text + "&endDate=" + txtEnd_Date.Text + "&ExportPDF=" + chkExportPDF.Checked;
                     break;
                 case "VWP":
-                    query = "ReportName=VendorWisePurchase&ReportTitle=Vendor Wise Purchase Detail from " + txtStart_Date.Text + " to " + txtEnd_Date.Text + "&startDate=" + txtStart_Date.Text + "&endDate=" + txtEnd_Date.Text + "&VendorType=" + ddlVendorType.SelectedValue + "&VendorId=" + ddlVendor.SelectedValue + "&Warehouse=" + ddlWarehouse.SelectedValue + "";
+                    query = "ReportName=VendorWisePurchase&ReportTitle=Vendor Wise Purchase Detail from " + txtStart_Date.Text + " to " + txtEnd_Date.Text + "&startDate=" + txtStart_Date.Text + "&endDate=" + txtEnd_Date.Text + "&VendorType=" + ddlVendorType.SelectedValue + "&VendorId=" + ddlVendor.SelectedValue + "&Warehouse=" + ddlWarehouse.SelectedValue + "&ExportPDF=" + chkExportPDF.Checked;
                     break;
                 case "SIH":
                     query = "ReportName=PharmacyStock&ReportTitle=Stock In Hand &Stock=" + ddlStock.SelectedValue + "";
@@ -276,7 +281,7 @@ namespace PMS
                     break;
 
                 case "Stock_Consumption_Details":
-                    query = "ReportName=Stock_Consumption_Details&ReportTitle=Stock Consumption Detail From" + txtStart_Date.Text + " to " + txtEnd_Date.Text + "&startDate=" + txtStart_Date.Text + "&endDate=" + txtEnd_Date.Text + "&Stock=" + ddlStock.SelectedValue + ""+ "&Warehouse=" + ddlWarehouse.SelectedValue + "";
+                    query = "ReportName=Stock_Consumption_Details&ReportTitle=Stock Consumption Detail From" + txtStart_Date.Text + " to " + txtEnd_Date.Text + "&startDate=" + txtStart_Date.Text + "&endDate=" + txtEnd_Date.Text + "&Stock=" + ddlStock.SelectedValue + ""+ "&Warehouse=" + ddlWarehouse.SelectedValue + "&ExportPDF=" + chkExportPDF.Checked;
                     break;
 
                 case "Pharmacy_Stock_Consumption_Details":
