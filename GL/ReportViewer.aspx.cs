@@ -199,6 +199,11 @@ namespace PMS
                         var rawVoucherId = DBClass.getField("select Voucher_ID from Advance_Payment where Advance_ID = " + transID);
                         VoucherId = rawVoucherId != null ? rawVoucherId.ToString() : "0"; // Default to "0" if null
                     }
+                    else if (transType == "ADVANCE")
+                    {
+                        var rawVoucherId = DBClass.getField("select Voucher_ID from AR_Advances where Advance_ID = " + transID);
+                        VoucherId = rawVoucherId != null ? rawVoucherId.ToString() : "0"; // Default to "0" if null
+                    }
 
                     else if (transType == "AJV")
                     {
