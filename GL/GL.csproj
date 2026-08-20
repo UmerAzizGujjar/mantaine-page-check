@@ -191,9 +191,7 @@
     <Reference Include="Infragistics4.WebUI.Documents.Excel.v12.1, Version=12.1.20121.2236, Culture=neutral, PublicKeyToken=7dd5c3163f2cd0cb, processorArchitecture=MSIL">
       <HintPath>C:\Program Files (x86)\Infragistics\NetAdvantage 2012.1\ASP.NET\CLR4.0\Bin\Infragistics4.WebUI.Documents.Excel.v12.1.dll</HintPath>
     </Reference>
-    <Reference Include="Infragistics4.WebUI.Documents.Core.v12.1, Version=12.1.20121.2236, Culture=neutral, PublicKeyToken=7dd5c3163f2cd0cb, processorArchitecture=MSIL">
-      <HintPath>C:\Program Files (x86)\Infragistics\NetAdvantage 2012.1\ASP.NET\CLR4.0\Bin\Infragistics4.WebUI.Documents.Core.v12.1.dll</HintPath>
-    </Reference>
+    
     <Reference Include="Infragistics35.WebUI.WebHtmlEditor.v12.1, Version=12.1.20121.2236, Culture=neutral, PublicKeyToken=7dd5c3163f2cd0cb, processorArchitecture=MSIL" />
     <Reference Include="GridMvc">
       <HintPath>..\packages\Grid.Mvc.3.0.0\lib\net40\GridMvc.dll</HintPath>
@@ -290,7 +288,7 @@
     <Content Include="Dependencies\GridMvc.dll" />
     <Content Include="Dependencies\Infragistics35.WebUI.WebHtmlEditor.v12.1.dll" />
     <Content Include="Dependencies\Infragistics4.Web.v12.1.dll" />
-    <Content Include="Dependencies\Infragistics4.WebUI.Documents.Core.v12.1.dll" />
+    
     <Content Include="Dependencies\Infragistics4.WebUI.Documents.Excel.v12.1.dll" />
     <Content Include="Dependencies\Infragistics4.WebUI.Documents.IO.v12.1.dll" />
     <Content Include="Dependencies\Infragistics4.WebUI.Documents.Reports.v12.1.dll" />

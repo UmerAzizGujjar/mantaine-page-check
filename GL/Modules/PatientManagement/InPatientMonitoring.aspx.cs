@@ -9,7 +9,7 @@ using System.Data.SqlClient;
 using System.Linq;
 using System.Web;
 using System.Web.Script.Serialization;
-using System.Web.Script.Services; 
+using System.Web.Script.Services;
 using System.Web.Services;
 using System.Web.UI;
 using System.Web.UI.WebControls;
@@ -120,7 +120,7 @@ namespace PMS
             try
             {
                 DataBaseDataContext db = new DataBaseDataContext(DBClass.ConnectionString());
-            
+
                 var qry1 = (from InPtMon in db.InPatient_Monitorings
                             join pat in db.Reg_patients
                             on InPtMon.Patient_ID equals pat.pat_id
@@ -139,12 +139,12 @@ namespace PMS
                                 //inptmi.Patient_Main_Category,
                                 InPtMon.Nursing_Plan,
 
-                              in_Patient = (from tbl in db.In_Patients
-                                                  where tbl.Patient_ID == Convert.ToInt32(InPtMon.Patient_ID)
+                                in_Patient = (from tbl in db.In_Patients
+                                              where tbl.Patient_ID == Convert.ToInt32(InPtMon.Patient_ID)
 
-                                  orderby tbl.Created_Time descending
-                                                  select tbl.In_Patient_ID).FirstOrDefault(),
-            }).FirstOrDefault();
+                                              orderby tbl.Created_Time descending
+                                              select tbl.In_Patient_ID).FirstOrDefault(),
+                            }).FirstOrDefault();
                 hdnInpatient_id.Value = qry1.in_Patient.ToString();
                 txtPatient_ID.Text = qry1.Patient_ID.ToString();
                 hdfPatient_ID.Value = qry1.Patient_ID.ToString();
@@ -159,12 +159,12 @@ namespace PMS
                 {
                     txt_Nursing_plan.Text = qry1.Nursing_Plan.Replace("<li>", "•").Trim().Replace("</li>", "").Trim();
                 }
-                if (qry1.Nurse_Name_Nurse_Note != null) 
+                if (qry1.Nurse_Name_Nurse_Note != null)
                 {
                     txt_Nurse_Name_Nursing.Text = qry1.Nurse_Name_Nurse_Note.Replace("<li>", "•").Trim().Replace("</li>", "").Trim();
 
                 }
-           
+
             }
             catch (Exception ex)
             {
@@ -253,7 +253,7 @@ namespace PMS
             {
                 var inPatmedicineList = (from pm in db.InPatient_Mon_InTakes
                                          where pm.Patient_ID == id
-                                         select new { pm.Intake_Date, pm.Qty, pm.Item, pm.Main_Item,Main_ItemName=db.GetDataValueName("Intake", pm.Main_Item)}).ToList();
+                                         select new { pm.Intake_Date, pm.Qty, pm.Item, pm.Main_Item, Main_ItemName = db.GetDataValueName("Intake", pm.Main_Item) }).ToList();
 
                 return (new JavaScriptSerializer()).Serialize(inPatmedicineList);
             }
@@ -266,7 +266,7 @@ namespace PMS
             {
                 var inPatmedicineList = (from pm in db.InPatient_Mon_InTakes
                                          where pm.InPatient_Mon_ID == id
-                                         select new { pm.Intake_Date, pm.Qty, pm.Item, pm.Main_Item,Main_ItemName=db.GetDataValueName("Intake", pm.Main_Item) }).ToList();
+                                         select new { pm.Intake_Date, pm.Qty, pm.Item, pm.Main_Item, Main_ItemName = db.GetDataValueName("Intake", pm.Main_Item) }).ToList();
 
                 return (new JavaScriptSerializer()).Serialize(inPatmedicineList);
             }
@@ -309,17 +309,17 @@ namespace PMS
             using (DataBaseDataContext db = new DataBaseDataContext())
             {
                 var inPatmedicineList = (from pm in db.InPatient_Monitoring_Details
-                                        
+
                                          where pm.Patient_ID == PatientID
 
-                                         select new { pm.Mon_Date, pm.Pulse_Min, pm.BP_mm_Hg, pm.Temp_C, pm.Respiration_Min, pm.Blood_Suger, pm.Weight_Kg, pm.Saturation,pm.With_Oxygen,pm.Room_Air,pm.Height_Cm,pm.BMI }).ToList();
+                                         select new { pm.Mon_Date, pm.Pulse_Min, pm.BP_mm_Hg, pm.Temp_C, pm.Respiration_Min, pm.Blood_Suger, pm.Weight_Kg, pm.Saturation, pm.With_Oxygen, pm.Room_Air, pm.Height_Cm, pm.BMI }).ToList();
 
 
                 return (new JavaScriptSerializer()).Serialize(inPatmedicineList);
             }
             return "";
         }
-      
+
         [WebMethod]
         public static string LoadOutputHistory(int id)
         {
@@ -504,7 +504,7 @@ namespace PMS
             {
                 var inPatROomsList = (from ipm in db.InPatient_Mon_InTakes
 
-                                      where ipm.Patient_ID == PatientID 
+                                      where ipm.Patient_ID == PatientID
 
                                       select new
                                       {
@@ -570,22 +570,22 @@ namespace PMS
                 var inPatROomsList = (from ipm in db.InPatient_Mon_Outputs
 
                                       where ipm.Patient_ID == PatientID && Convert.ToDateTime(ipm.Output_Date).Month == DateTime.Now.Month && Convert.ToDateTime(ipm.Output_Date).Year == DateTime.Now.Year && Convert.ToDateTime(ipm.Output_Date).Day == DateTime.Now.Day
-                                      group ipm by new 
-                                      { 
-                                           ipm.Urine,
-                                           ipm.Drain1,
-                                           ipm.Drain2,
-                                           ipm.Drain3,
-                                           ipm.NG,
-                                           ipm.Stool,
-                                           ipm.Vomiting,
-                                           ipm.Other
-                                      } into g 
+                                      group ipm by new
+                                      {
+                                          ipm.Urine,
+                                          ipm.Drain1,
+                                          ipm.Drain2,
+                                          ipm.Drain3,
+                                          ipm.NG,
+                                          ipm.Stool,
+                                          ipm.Vomiting,
+                                          ipm.Other
+                                      } into g
                                       select new
                                       {
 
                                           Qty = g.Sum(x => Convert.ToDouble(x.Urine) + Convert.ToDouble(x.Drain1) + Convert.ToDouble(x.Drain2) +
-                                              Convert.ToDouble(x.Drain3)+Convert.ToDouble( x.NG)+Convert.ToDouble(x.Stool)+Convert.ToDouble(x.Vomiting)+
+                                              Convert.ToDouble(x.Drain3) + Convert.ToDouble(x.NG) + Convert.ToDouble(x.Stool) + Convert.ToDouble(x.Vomiting) +
                                               Convert.ToDouble(x.Other))
                                       }).ToList();
                 return (new JavaScriptSerializer()).Serialize(inPatROomsList);
@@ -602,14 +602,21 @@ namespace PMS
                                          on pm.Patient_ID equals op.In_Patient_ID
                                          where op.Patient_ID == PatientID && pm.Transaction_Type == "InPatient"
                                          orderby pm.Medicine_Date descending
-                                         select new {
-                                             pm.chkDiccharge, pm.AttendingParamedical_Staff, pm.Frequency, pm.In_Patient_Medicine_ID, pm.Injections, 
+                                         select new
+                                         {
+                                             pm.chkDiccharge,
+                                             pm.AttendingParamedical_Staff,
+                                             pm.Frequency,
+                                             pm.In_Patient_Medicine_ID,
+                                             pm.Injections,
 
                                              pm.Medicine_Date,
-                                             pm.Medicine_Name, 
-                                             pm.Oral, pm.Patient_ID,
-                                             pm.Recomended_Dosage, 
-                                             op.Created_Time, pm.Doctor_ID,
+                                             pm.Medicine_Name,
+                                             pm.Oral,
+                                             pm.Patient_ID,
+                                             pm.Recomended_Dosage,
+                                             op.Created_Time,
+                                             pm.Doctor_ID,
                                              DoctorName = (from d in db.HR_Employees where d.Emp_ID == Convert.ToInt32(pm.Doctor_ID) select d.Emp_Name).FirstOrDefault(),
                                              pm.Dosage_From,
                                              pm.Dosage_Qty,
@@ -627,7 +634,7 @@ namespace PMS
             }
             return "";
         }
-        
+
         [WebMethod]
         public static string LoadMedicinesForHistory1(int PatientID)
         {
@@ -638,14 +645,21 @@ namespace PMS
                                          on pm.Patient_ID equals op.In_Patient_ID
                                          where op.Patient_ID == PatientID && pm.Transaction_Type == "InPatient"
                                          orderby pm.Medicine_Date descending
-                                         select new {
-                                             pm.chkDiccharge, pm.AttendingParamedical_Staff, pm.Frequency, pm.In_Patient_Medicine_ID, pm.Injections, 
+                                         select new
+                                         {
+                                             pm.chkDiccharge,
+                                             pm.AttendingParamedical_Staff,
+                                             pm.Frequency,
+                                             pm.In_Patient_Medicine_ID,
+                                             pm.Injections,
 
                                              pm.Medicine_Date,
-                                             pm.Medicine_Name, 
-                                             pm.Oral, pm.Patient_ID,
-                                             pm.Recomended_Dosage, 
-                                             op.Created_Time, pm.Doctor_ID,
+                                             pm.Medicine_Name,
+                                             pm.Oral,
+                                             pm.Patient_ID,
+                                             pm.Recomended_Dosage,
+                                             op.Created_Time,
+                                             pm.Doctor_ID,
                                              DoctorName = (from d in db.HR_Employees where d.Emp_ID == Convert.ToInt32(pm.Doctor_ID) select d.Emp_Name).FirstOrDefault(),
                                              pm.Dosage_From,
                                              pm.Dosage_Qty,
@@ -662,7 +676,7 @@ namespace PMS
         }
 
         [WebMethod]
-        public static int SavePatientMonitiring(string btnsave, string In_Mon_ID, string Nursing_Plan, string PatID,string Nurse_Name_N)
+        public static int SavePatientMonitiring(string btnsave, string In_Mon_ID, string Nursing_Plan, string PatID, string Nurse_Name_N)
         {
             InPatient_Monitoring ipm;
             int inPatMonID;
@@ -746,17 +760,17 @@ namespace PMS
                 med.Patient_ID = InPatientMonID;  // ONLY THIS - NO DELETE
             }
 
-         
+
 
             db.SubmitChanges();
             var InPatient = (from tbl in db.In_Patients
-                   where tbl.Patient_ID == Convert.ToInt32(PatID) && tbl.Discharge!=true
-                   select tbl).FirstOrDefault();
-           if (InPatient == null)
-           {
-               ipm.Dischage_ID = "1";
-               db.SubmitChanges();
-           }
+                             where tbl.Patient_ID == Convert.ToInt32(PatID) && tbl.Discharge != true
+                             select tbl).FirstOrDefault();
+            if (InPatient == null)
+            {
+                ipm.Dischage_ID = "1";
+                db.SubmitChanges();
+            }
 
             return InPatientMonID;
         }
@@ -818,12 +832,12 @@ namespace PMS
                     oInPatient_MoniteringDetail.Height_Cm = test.Height;
                     oInPatient_MoniteringDetail.BMI = test.BMI;
                     oInPatient_MoniteringDetail.Saturation = test.Saturation;
-                 
+
                     oInPatient_MoniteringDetail.Room_Air = test.Room_Air;
-                   
+
                     oInPatient_MoniteringDetail.With_Oxygen = test.With_Oxygen;
                     oInPatient_MoniteringDetail.Mon_Date = test.Date;
-                    
+
                     db.InPatient_Monitoring_Details.InsertOnSubmit(oInPatient_MoniteringDetail);
                     db.SubmitChanges();
                 }
@@ -907,7 +921,7 @@ namespace PMS
             public string Vomiting { get; set; }
             public string Stoma { get; set; }
             public string Other { get; set; }
-            
+
         }
         [WebMethod]
         public static string SaveOutputDetail(string btnsave, string OutputDetails)
@@ -1110,8 +1124,9 @@ namespace PMS
             using (DataBaseDataContext db = new DataBaseDataContext())
             {
                 var In_pat = (from ip in db.In_Patients
-                              where ip.Patient_ID == PatientID orderby ip.In_Patient_ID descending
-                              select ip.In_Patient_ID ).FirstOrDefault();
+                              where ip.Patient_ID == PatientID
+                              orderby ip.In_Patient_ID descending
+                              select ip.In_Patient_ID).FirstOrDefault();
 
                 var inPatmedicine = (from inPatmedicineList in db.In_Patient_Medicines
                                      where inPatmedicineList.Patient_ID == In_pat && inPatmedicineList.Transaction_Type == "InPatient"
@@ -1295,14 +1310,14 @@ namespace PMS
                                 string Item_Id;
                                 if (oIn_Patient_Medicine.ItemCode == "0")
                                 {
-                                  int  Item_Ids = (from inv in db.INV_Items where inv.Description == medicineName && inv.Is_Active == true && (inv.isCancel == null || inv.isCancel == false) select inv.Item_ID).FirstOrDefault();
+                                    int Item_Ids = (from inv in db.INV_Items where inv.Description == medicineName && inv.Is_Active == true && (inv.isCancel == null || inv.isCancel == false) select inv.Item_ID).FirstOrDefault();
                                     Item_Id = Convert.ToString(Item_Ids);
                                 }
                                 else
                                 {
                                     Item_Id = oIn_Patient_Medicine.ItemCode;
                                 }
-                            
+
 
                                 In_Patient_Medicine oIn_Patient_Medicine1 = new In_Patient_Medicine
                                 {
@@ -1327,7 +1342,9 @@ namespace PMS
                                     chkDiccharge = false,
                                     Username = oIn_Patient_Medicine.User ?? AppConfig.UserName,
                                     High_Risk_Drug = oIn_Patient_Medicine.High_Risk,
-                                    Max_PRN_Dose = oIn_Patient_Medicine.Max_PRN
+                                    Max_PRN_Dose = oIn_Patient_Medicine.Max_PRN,
+                                    is_rejected = false,
+                                    Status = null
                                 };
 
                                 if (!string.IsNullOrEmpty(oIn_Patient_Medicine.Start_Date_Time) &&
@@ -1436,7 +1453,9 @@ namespace PMS
                                     STAT = oIn_Patient_Medicine.STAT == "STAT" ? true : false,
                                     PRN = oIn_Patient_Medicine.PRN == "PRN" ? true : false,
                                     chkDiccharge = Convert.ToBoolean(oIn_Patient_Medicine.chkDiccharge),
-                                    Username = AppConfig.UserName
+                                    Username = AppConfig.UserName,
+                                    is_rejected = false,
+                                    Status = null
                                 };
 
                                 db.In_Patient_Medicines.InsertOnSubmit(oIn_Patient_Medicine1);
@@ -1482,10 +1501,10 @@ namespace PMS
                    where tbl.pat_id == Patien_No
                    select tbl).FirstOrDefault();
             var in_Patient = (from tbl in db.In_Patients
-                             where tbl.Patient_ID == int.Parse(PatientID)
+                              where tbl.Patient_ID == int.Parse(PatientID)
 
-                             orderby tbl.Created_Time descending
-                             select tbl.In_Patient_ID).FirstOrDefault();
+                              orderby tbl.Created_Time descending
+                              select tbl.In_Patient_ID).FirstOrDefault();
             if (pat != null)
             {
                 pt.Name = pat.Full_Name;
@@ -1617,7 +1636,7 @@ namespace PMS
                 details.Respiration_Min = Convert.ToInt32(dtrow[4]);
                 details.Weight_Kg = Convert.ToInt32(dtrow[5]);
                 details.Saturation = Convert.ToInt32(dtrow[6]);
-          
+
                 details.Blood_Suger = Convert.ToInt32(dtrow[7]);
                 dataList.Add(details);
             }
@@ -1648,7 +1667,7 @@ namespace PMS
             {
                 List2 details = new List2();
                 details.Mon_Date = Convert.ToDateTime(dtrow[0].ToString());
-                details.BP_mm_Hg =dtrow[1].ToString();
+                details.BP_mm_Hg = dtrow[1].ToString();
                 dataList.Add(details);
             }
             return dataList;
@@ -1725,8 +1744,8 @@ namespace PMS
             }
             return "";
         }
-        
-              [WebMethod]
+
+        [WebMethod]
         public static string GetInstructionEdit(int Patid)
         {
             using (DataBaseDataContext db = new DataBaseDataContext())
@@ -1734,7 +1753,7 @@ namespace PMS
                 var inPatmedicineList = (from inpat in db.In_Patients
                                          join pm in db.InPatient_Doctor_Notes
                                          on inpat.In_Patient_ID equals pm.In_Patient_ID
-                                         where pm.Patient_ID == Patid && (inpat.Discharge == false || inpat.Discharge==null) && pm.IsLatest == true && pm.status == "Saved"
+                                         where pm.Patient_ID == Patid && (inpat.Discharge == false || inpat.Discharge == null) && pm.IsLatest == true && pm.status == "Saved"
                                          select new
                                          {
                                              pm.IsLatest,
@@ -1746,7 +1765,7 @@ namespace PMS
                                              pm.Nurse_Name,
                                              DoctorName = (from d in db.HR_Employees where d.Emp_ID == Convert.ToInt32(pm.Doctor_ID) select d.Emp_Name).FirstOrDefault(),
                                              DoctorStatus = db.GetDataValueName("Doctor Status", pm.Doctor_Status)
-                                             
+
                                          }).ToList();
 
                 return (new JavaScriptSerializer()).Serialize(inPatmedicineList);
@@ -1759,14 +1778,14 @@ namespace PMS
             using (DataBaseDataContext db = new DataBaseDataContext())
             {
                 var inPatmedicineList = (from inpat in db.In_Patients
-                                         join  pm in db.InPatient_Doctor_Notes
+                                         join pm in db.InPatient_Doctor_Notes
                                          on inpat.In_Patient_ID equals pm.In_Patient_ID
-                                         where pm.Patient_ID == Patid  && (inpat.Discharge==false || inpat.Discharge==null) &&  (pm.IsLatest == false || pm.IsLatest==null) && pm.status == "Create"
+                                         where pm.Patient_ID == Patid && (inpat.Discharge == false || inpat.Discharge == null) && (pm.IsLatest == false || pm.IsLatest == null) && pm.status == "Create"
                                          select new
                                          {
                                              pm.Doctor_Note_ID,
-                                             Admission_Date=pm.Doctor_Note_Date,
-                                            RN_Special_Instruction=pm.Doctor_Instruction,
+                                             Admission_Date = pm.Doctor_Note_Date,
+                                             RN_Special_Instruction = pm.Doctor_Instruction,
                                              pm.Doctor_Status,
                                              pm.Progress_Note,
                                              pm.Doctor_ID,
@@ -1841,33 +1860,33 @@ namespace PMS
             return dataList;
         }
         [WebMethod]
-	
+
         public static List<List2> GetChartSaturation(int ID)
-	
+
         {
 
             DataTable dt = new DataTable();
 
             dt = DBClass.getDataTable("select Mon_Date,Saturation from InPatient_Monitoring_Detail where InPatient_Mon_ID=" + ID + "");
-	
+
             List<List2> dataList = new List<List2>();
-	
+
             foreach (DataRow dtrow in dt.Rows)
-	
+
             {
-	
+
                 List2 details = new List2();
-	
+
                 details.Mon_Date = Convert.ToDateTime(dtrow[0].ToString());
-	
+
                 details.Saturation = Convert.ToInt32(dtrow[1]);
 
                 dataList.Add(details);
-	
+
             }
-	
+
             return dataList;
-	
+
         }
 
         [WebMethod]
@@ -2267,7 +2286,7 @@ namespace PMS
                 using (var db = new DataBaseDataContext(DBClass.ConnectionString()))
                 {
                     var Monitoring = (from tbl in db.sys_Parms
-                                    where tbl.Name == "Monitoring Medicines tab"
+                                      where tbl.Name == "Monitoring Medicines tab"
                                       select tbl.Code)
                               .FirstOrDefault();
 
@@ -2294,16 +2313,6 @@ namespace PMS
                             }).ToList();
 
                 return new JavaScriptSerializer().Serialize(user);
-            }
-        }
-
-        [WebMethod]
-        public static bool IsPatientDischarged(int InPatientID)
-        {
-            using (DataBaseDataContext db = new DataBaseDataContext(DBClass.ConnectionString()))
-            {
-                return db.In_Patients
-                    .Any(ip => ip.In_Patient_ID == InPatientID && ip.Discharge == true);
             }
         }
         private void PopulateInPatientDataForMonitoring(int InPatient_ID)
@@ -2337,7 +2346,7 @@ namespace PMS
             }
         }
         [WebMethod]
-        public static string GetTestListForHistoryIPD(int in_patient_Id )
+        public static string GetTestListForHistoryIPD(int in_patient_Id)
         {
             DataBaseDataContext db = new DataBaseDataContext();
 
@@ -2346,7 +2355,7 @@ namespace PMS
                                      on lbtM.Lab_Test_ID equals lbtD.Lab_Test_ID
                                      join lab in db.Lab_Tests on lbtD.Test_ID equals lab.Test_ID
                                      join outpat in db.In_Patients
-                                     on lbtM.Patient_ID equals outpat.In_Patient_ID                        
+                                     on lbtM.Patient_ID equals outpat.In_Patient_ID
                                      join rp in db.Reg_patients
                                      on outpat.Patient_ID equals rp.pat_id
                                      join bd in db.Ar_Billing_Details
