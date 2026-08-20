@@ -3674,6 +3674,7 @@ function CalculateReceivedAmount() {
                         '<td>' + BedNo + '</td>' +
                         '<td>' + retdate + '</td>' +
                         '<td>' + actionButtons + '</td>' +
+                        '<td>' + (value.Rejected_By || '') + '</td>' +
                         '</tr>';
                 });
                 debugger;
@@ -5233,6 +5234,7 @@ function CalculateReceivedAmount() {
                                     <th>Bed</th>
                                     <th style="width:173px;">Created Time</th>
                                     <th>Select</th>
+                                    <th>Rejected By</th>
                                 </tr>
                             </thead>
                             <tbody id="ibody"></tbody>

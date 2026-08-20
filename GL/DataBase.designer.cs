@@ -241170,6 +241170,24 @@ namespace PMS
                 }
             }
         }
+
+        private string _Rejected_By;
+
+        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_Rejected_By", DbType = "NVarChar(256)")]
+        public string Rejected_By
+        {
+            get
+            {
+                return this._Rejected_By;
+            }
+            set
+            {
+                if ((this._Rejected_By != value))
+                {
+                    this._Rejected_By = value;
+                }
+            }
+        }
     }
 
     public partial class sp_GetMIRResult

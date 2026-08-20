@@ -12815,6 +12815,7 @@
       <Column Name="Ward_Name" Type="System.String" DbType="NVarChar(50)" CanBeNull="true" />
       <Column Name="Status" Type="System.String" DbType="NVarChar(150) NOT NULL" CanBeNull="false" />
       <Column Name="HasStat" Type="System.Boolean" DbType="Bit" CanBeNull="true" />
+      <Column Name="Rejected_By" Type="System.String" DbType="NVarChar(256)" CanBeNull="true" />
     </ElementType>
   </Function>
   <Function Name="dbo.GetPharmcyItemUomTotalStocksss" Method="GetPharmcyItemUomTotalStocksss" IsComposable="true">
