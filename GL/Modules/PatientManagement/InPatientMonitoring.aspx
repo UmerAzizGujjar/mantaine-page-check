@@ -993,6 +993,7 @@
             Sides();
             CheckMonitoringMedicines();
             loadNurseName();
+           // CheckDischarge();
 
             //$('#txtStopD').datepicker({
             //    dateFormat: 'mm/dd/yy', numberOfMonths: 1,
@@ -3072,7 +3073,8 @@
                 $("#hdnipd_id").val(data.d.in_patient_id);
                 console.log(data.d.in_patient_id);
 
-               
+               // CheckDischarge();
+
 
             }
         }
@@ -3861,6 +3863,28 @@
                 });
                 $('#ctl00_MainContent_ddlNurseName').html(options).select2();
             });
+        }
+
+        function CheckDischarge() {
+            var inPatID = $('#ctl00_MainContent_hdnInpatient_id').val(); // Get current InPatientID
+
+            if (inPatID && inPatID !== '0' && inPatID !== '' && inPatID !== '(New)') {
+                $.ajax({
+                    type: 'POST',
+                    url: 'InPatientMonitoring.aspx/IsPatientDischarged',
+                    contentType: 'application/json; charset=utf-8',
+                    data: JSON.stringify({ InPatientID: inPatID }),
+                    success: function (response) {
+                        if (response.d) {
+                            $('#btnSave').prop('disabled', true).css('opacity', '0.5');
+                            $('#btnSave').val('Patient Discharged - Cannot Save');
+                        } else {
+                            $('#btnSave').prop('disabled', false).css('opacity', '1');
+                            $('#btnSave').val('Save');
+                        }
+                    }
+                });
+            }
         }
     </script>
 
