@@ -993,7 +993,7 @@
             Sides();
             CheckMonitoringMedicines();
             loadNurseName();
-           // CheckDischarge();
+            CheckDischarge();
 
             //$('#txtStopD').datepicker({
             //    dateFormat: 'mm/dd/yy', numberOfMonths: 1,
@@ -3073,7 +3073,7 @@
                 $("#hdnipd_id").val(data.d.in_patient_id);
                 console.log(data.d.in_patient_id);
 
-               // CheckDischarge();
+                CheckDischarge();
 
 
             }
@@ -3877,7 +3877,7 @@
                     success: function (response) {
                         if (response.d) {
                             $('#btnSave').prop('disabled', true).css('opacity', '0.5');
-                            $('#btnSave').val('Patient Discharged - Cannot Save');
+                            $('#btnSave').val('Patient Discharged');
                         } else {
                             $('#btnSave').prop('disabled', false).css('opacity', '1');
                             $('#btnSave').val('Save');
