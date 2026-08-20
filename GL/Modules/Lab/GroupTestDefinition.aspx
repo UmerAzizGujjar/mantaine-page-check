@@ -297,6 +297,7 @@
              <option value="14">14-Ct Scan Radiology Report</option>
              <option value="15">15-MRI Radiology Report</option>
              <option value="16">16-ECG Cardiology Report</option>
+                    <option value="17">17-BioFire BioFire Test</option>
 
                 </select>
             </div>
