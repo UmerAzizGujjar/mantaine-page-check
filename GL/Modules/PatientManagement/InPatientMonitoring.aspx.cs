@@ -2315,6 +2315,16 @@ namespace PMS
                 return new JavaScriptSerializer().Serialize(user);
             }
         }
+
+        [WebMethod]
+        public static bool IsPatientDischarged(int InPatientID)
+        {
+            using (DataBaseDataContext db = new DataBaseDataContext(DBClass.ConnectionString()))
+            {
+                return db.In_Patients
+                    .Any(ip => ip.In_Patient_ID == InPatientID && ip.Discharge == true);
+            }
+        }
         private void PopulateInPatientDataForMonitoring(int InPatient_ID)
         {
             try
