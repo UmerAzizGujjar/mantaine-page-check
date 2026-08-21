@@ -105,7 +105,8 @@ namespace PMS.Inventory
                                                SaleRate = I.Sale_Rate ?? 0,
                                                Active = I.Active ?? false,
                                                WareHouse = _dbContext.GetDataValueName("Ware House", I.InventoryOrg) ?? "",
-                                              StockTotal = (_dbContext.GetInvenrtoryItemUomTotalStock(I.Item_ID, I.InventoryOrg))
+                                              StockTotal = (_dbContext.GetInvenrtoryItemUomTotalStock(I.Item_ID, I.InventoryOrg)),
+                                              CreatedBy = _dbContext.aspnet_Users.Where(x => x.UserId == I.Created_By).Select(x => x.UserName).FirstOrDefault()
                                            };
 
                     var FilteredCount = inv_Items.Count();

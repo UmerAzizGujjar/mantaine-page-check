@@ -399,6 +399,7 @@
                 var Subcategory = $('#ddlSubcategory').val();
                 var isHospitalchk = $('#chkIsHospital').prop('checked');
                 var isPharmacyBilling = $('#chkIsPharmacyBilling').prop('checked');
+                var doctorCompulsory = $('#chkDoctorCompulsory').prop('checked');
                 var account = $('#ddlAccount').val();
                 var Id = 0;
                 if (id == "") {
@@ -471,6 +472,7 @@
                         "Subcategory": Subcategory,
                         "IsHospital": isHospitalchk,
                         "IsPharmacyBilling": isPharmacyBilling,
+                        "Doctor_Compulsory": doctorCompulsory,
                         "Account": account,
                     }),
                     contentType: "application/json; charset=utf-8",
@@ -730,6 +732,9 @@
                     if (parse.IsPharmacyBilling == 1) {
                         $("#chkIsPharmacyBilling").prop('checked', true);
                     }
+                    if (parse.Doctor_Compulsory == 1) {
+                        $("#chkDoctorCompulsory").prop('checked', true);
+                    }
                     if (parse.Services == 1) {
                         $("#chkIsService").prop('checked', true);
                     }
@@ -987,6 +992,10 @@
                         <div class="pr-check-row">
                             <input type="checkbox" id="chkBillingRequired" name="chkBillingRequired" />
                             <label for="chkBillingRequired">Billing Required</label>
+                        </div>
+                        <div class="pr-check-row">
+                            <input type="checkbox" id="chkDoctorCompulsory" name="chkDoctorCompulsory" />
+                            <label for="chkDoctorCompulsory">Doctor Compulsory Name</label>
                         </div>
                     </div>
                     <div class="pr-divider"></div>

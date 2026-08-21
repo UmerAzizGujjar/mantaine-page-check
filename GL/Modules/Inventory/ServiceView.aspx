@@ -166,6 +166,7 @@
                             return data ? 'Active' : 'InActive';
                         }, "width": "5%",
                     },
+                    { "data": "CreatedBy", "width": "8%", "orderable": false },
                     {
                         "render": function (data, type, full) {
                             var res = '<a class="editListBtn"  href="#" onclick="Edit(' + full.Item_ID + ')" style="border-radius: 4px;margin-right: 4px;padding: 5px 8px 5px 8px;"><i class="fa fa-pencil"></i></a>';
@@ -298,6 +299,7 @@
                     <th>Sale Rate</th>
                     <th>Stock</th>
                     <th>Active</th>
+                     <th>Created by</th>   
                     <th>Action</th>
                 </tr>
             </thead>
