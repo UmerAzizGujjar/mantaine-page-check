@@ -4003,11 +4003,11 @@
                                  <div class="row">
                                      <div class="col-lg-3 col-md-3 col-sm-4">
                                          <span>Start Date</span>
-                                         <input type="text" id="txtStartD" />
+                                         <input type="text" id="txtStartD" disabled="disabled" />
                                      </div>
                                      <div class="col-lg-3 col-md-3 col-sm-4" style="margin-left: 0px !important">
                                          <span>Start Time</span>
-                                         <input type="text" id="txtStartT" />
+                                         <input type="text" id="txtStartT" disabled="disabled" />
                                      </div>
                                      <div class="col-lg-6 col-md-3 col-sm-4" id="MedicineName">
                                         <%-- <span id="lblMed">Medicine Name</span>
