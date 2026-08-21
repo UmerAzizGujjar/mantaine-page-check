@@ -134,8 +134,11 @@ namespace PMS
                                   Father_Name = p.Father_Name,
                                   Death_Date = ipd.DateOfDeath,
                                   Department = _dbContext.GetDataValueName("Patient Main Category", ipd.Department),
-                                  Discharge_On = ipd.Discharge_On
-
+                                  Discharge_On = ipd.Discharge_On,
+                                  Bed_No  = ipd.Bed_No,
+                                  Ward_Name = (from w in _dbContext.Ward_Definitions
+                                               where w.Ward_ID == ipd.Ward_ID
+                                               select w.Ward_Type).FirstOrDefault(),
 
                               };
 

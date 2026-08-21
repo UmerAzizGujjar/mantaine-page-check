@@ -136,7 +136,7 @@
                             var date = full.Admission_Date;
                             date = moment(date).format('DD-MMM-YYYY');
                             return date;
-                        }, "width": "15%", "orderable": false
+                        }, "width": "9%", "orderable": false
                     },
                     {
                         "data": "Discharge_On",
@@ -148,9 +148,12 @@
 
                             return moment(full.Discharge_On).format('DD-MMM-YYYY');
                         },
-                        "width": "15%",
+                        "width": "8%",
                         "orderable": false
                     },
+
+                    { "data": "Ward_Name", "width": "10%", "orderable": false },
+                    { "data": "Bed_No", "width": "6%", "orderable": false },
                     {
                         render: function (data, type, full) {
                             debugger;
@@ -407,6 +410,8 @@
                         <th>Dept.</th>   
                        <th>Admission Date</th>
                        <th>Discharge Date</th>
+                       <th>Ward Name</th>
+                       <th>Bed No</th>
                         <th>Actions</th>
                     </tr>
                 </thead>

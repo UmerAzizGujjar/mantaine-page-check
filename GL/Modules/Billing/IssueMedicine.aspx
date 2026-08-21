@@ -4066,6 +4066,13 @@ function CalculateReceivedAmount() {
                             var data = JSON.parse(msg.d);
                             var doctorId = data.DoctorInfo?.Doctor || 0;
                             var department = data.DoctorInfo?.Department || '';
+                            var mrNo = data.DoctorInfo?.MR_No || '';
+
+                            if (mrNo) {
+                                $('#txtPatientMRNo').val(mrNo);
+                            } else {
+                                $('#txtPatientMRNo').val('');
+                            }
                             $('#ddlDoctor').val(doctorId).trigger('change')
 
                             $('#ddlDepartment').val(department).trigger('change')
@@ -5022,6 +5029,10 @@ function CalculateReceivedAmount() {
                <div class="col-sm-1 col-md-2 col-lg-1">
                    <input type="button" class="btn-primry" value="Reset" id="btnResetForm" onclick="ResetPharmacyForm();"  />
                </div>
+                <div class="col-sm-12 col-md-4 col-lg-2">
+                    <label>MR_No:</label>
+                    <input type="text" id="txtPatientMRNo" class="form-control" readonly="readonly" style="background-color: #f5f5f5; font-weight: bold;" />
+                </div>
             </div>
 
         </div>

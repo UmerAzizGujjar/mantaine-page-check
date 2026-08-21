@@ -2762,7 +2762,8 @@
             var procedureContent = "";
             var procedureId = $('#ddlProcedureTemplates').val(); 
             var Medication_Doctor = $('#ddlMedictionDoctor').val(); 
-
+           // var mrNo = $('#txtMR_No').val() || '';
+            var mrNo = $('#ctl00_MainContent_txtMR_No').val() || '';
             if (typeof CKEDITOR !== 'undefined' && CKEDITOR.instances['txtViewTemplateContent']) {
                 procedureContent = CKEDITOR.instances['txtViewTemplateContent'].getData();
             } else {
@@ -2785,7 +2786,7 @@
                 txtshorttermrecentevents, txtadressrecallafter2minutes, txtlongtermremoteevents, txtadressrecallafter5minues, txtgeneralknowledgequestion, txtsimplearthemeticcalculation, txtabstrationconcertethinking, txtinsight, DermaFace, DermaNeck, DermaTrunk, DermaUpperLimb, DermaLowerLimb,
                 DermaFlexures, DermaGenitalias, DermaHair, DermaNail, DermaMucousMembrane,
                 DermaEyes, DermaEars, DermaNose, DermaLips, HBM_Problem, HBM_Caused, HBM_Started, HBM_Course, HBM_Treatment, HBM_Effects, PE_Pluse, PE_BP, PE_Temperature, PE_Weight, PE_RespiratoryRate, PE_Jaundice, PE_Anemia, PE_Cyanosis, PE_Clubbing, PE_JVP, PE_LymphNodes, PE_Edema, PE_Respiratory, PE_Cardiovascular, PE_Gastro_Intestinal, PE_Observation, PE_Cranial_Nerves, PE_Limb_Strength, PE_Spasticity, PE_Position, PE_Vibration, PE_Stereognosis, PE_Pain, PE_Biceps, PE_Triceps, PE_Brachioradialis, PE_Quadriceps, PE_Patellar, PE_Achilles, PE_Extensor, PE_Frontal, PE_Finger, PE_Heel, PE_Movements, PE_Gait, PE_Neck_Rigidity, PE_Kerning_Sign, PE_Brudzinki_Sign, For_Summary, For_Diagnosis, For_AxisI, For_AxisII, For_AxisIII, For_AxisIV, For_AxisV, For_PredisposingFactors, For_PrecipitatingFactors, For_PrepetuatingFactors, For_Investigation, For_Medical, For_Psychological, For_Major_Issues, For_Strengths, For_Goals, For_Strategies, txtPeads_weight, txtPeads_Length, txtPeads_HC, txtPeads_General_Appearance, chkPeads_Cyanosis, chkPeads_Jaundice, chkPeads_Lethargy, chkPeads_Rash, txtPeads_Others, chkPeads_Caput, chkPeads_Cephalhematoma, rdbPeads_Anterioropen, rdbPeads_AnteriorClose, chkPeads_Dextrocardia, chkPeads_Bulging, chkPeads_Murmur, txtPeads_HeartSound, chkPeads_Nasal, chkPeads_Recessions, txtPeads_AddedSounds, rdbPeads_Flat, rdbPeads_Distended, rdbPeads_Scaphoid, chkPeads_Liver, chkPeads_Spleen, txtPeads_GITOthers, chkPeads_Sucking, chkPeads_Rooting, chkPeads_Moro, txtPeads_CNSOthers, chkPeads_FullTerm, chkPeads_PreTerm, txtPeads_DateOfDelivery, txtPeads_TimeOfDelivery, rdbPeads_Booked, rdbPeads_UnBooked, chkPeads_DAIHandling, chkPeads_ANTURash, chkPeads_PIH, chkPeads_GDM, chkPeads_Vacinated, txtPeads_ANTOthers, rdbPeads_SVD, rdbPeads_LSCS, rdbPeads_Emergency, rdbPeads_Elective, txtPeads_PlaceOfDelivery, txtPeads_IndicationForLSCS, Peads_apgerScore1min, Peads_apgerScore5min, chkPeads_Resuscitation, txtPeads_NatalOthers, chkPeads_Moaning, chkPeads_RespDistress, chkPeads_PostNATALCyanosis, chkPeads_Fits, chkPeads_ReluctanceToFeed, txtPeads_PostNatalOthers, txtProcedure_Operation, txtProcedure_Detail, txtDignosis, txtDischarge_On, ddlDischarge_By, txtNext_Visit, txtAdvice, chkdischarge, patienttype, referto, referward, referbed_no, referroomno, referroomtype, RateBeats, ddlEmrgRhythm, ddlEmrgVolume, OthersRN, O2_Saturation_Oxygen1, O2_Saturation_Oxygen2, Saturation, HMFIntact, CranialNerves, SignsOfMeningism, HeartSound, Arrhythmias, AnyOtherAddedSound, AnyOtherFindings, NVB_Right, NVB_Left, Crepitation_Right, Crepitation_Left, Wheeze, Ranchi, AnyOtherSound, AbdomenSoft, Tenderness, Guarding, BowelSound, Distention, FluidThrill, ShiftingDullness, EpigastriaDiscomfort, RetrosternalBurning, Jondus, Pallor, Dehydration, GCSOrientation, ConsciousOrientely, Murmur, TextBoxCns, TextBoxCvs, TextBoxResp, TextBoxGit, TextBoxGpe, eye_response, motor_response, verbal_Response, accumulated_response, FurtherExplanation, PulseRate, BPDischarge, WeightDischarge, HeightDischarge, BMIDischarge, BSRDischarge, Tempdisch, volumedisc, RespRateDesc, Rhythmdischarge, Oxygen2_desc, saturationDis, Oxygen1, otherecdesc, Special_Instruction_Desc, FollowUpInstruction, OperationalDetails, Receiving_Date_Discharge, IdentificationMarks, DateOfDeath, TimeOfDeath, PlaceOfDeath, CauseOfDeath, IssuingOfficerName, DeathCertifiedby1, DeathCertifiedby2, BodyHandedOverTo, FamilyPersonName, CNIC, RelationWithDeceased, CMO_Police, ID, SULR, SULL, SLLR, SLLL, PULR, PULL, PLLR, PLLL, Torso, clinical_Notes, Doctor_Notes, Provisional_Diagnosis_Examination, doc, JVP, Edema, Cyanosis, Discharge_Request, ddlDischarge_Type, procedureContent, 
-                 procedureId,Medication_Doctor,hdfReceivingNoteID, hdfVitalDischargeID,
+                 procedureId,Medication_Doctor,hdfReceivingNoteID, hdfVitalDischargeID,mrNo,
                 function (response) {
                      
 
@@ -3537,7 +3538,7 @@
             }
         }
         function LoadMedicines() {
-             
+             debugger;
             if ($('#<%= txtIn_Patient_ID.ClientID%>').val() != '(New)') {
                 PageMethods.LoadMedicines($('#<%= txtIn_Patient_ID.ClientID%>').val(), function (res) {
                     var Medicines = JSON.parse(res);
@@ -3547,11 +3548,13 @@
                     var rowsPRN = '';
                     var rowsStat = '';
                     var role = '';
+                    var allowMedicationEdit = false; 
                     $.each(Medicines, function (key, value) {
-                         
+                         debugger;
                         var Username = '<%= AppConfig.UserName%>';
                         var timeStamp = parseInt(value.Medicine_Date.substr(6, 10));
                         role = value.userrole;
+                         allowMedicationEdit = value.AllowMedicationEdit;
 
                         var date = moment.unix(timeStamp).format('DD/MM/YYYY hh:mm:ss A');
                         var datearray = date.split("/");
@@ -3604,16 +3607,16 @@
                         $('#tblMedicinesListSTAT tbody').html(rowsStat);
                         $('#tblMedicinesListPRN tbody').html(rowsPRN);
 
-
+                if (allowMedicationEdit == true) {
+                    $('.eddit').show();
+                }
+                else {
+                    $('.eddit').hide();  
+                }
 
                     }, 6000)
 
-                    if (role == 'administrator' || role == "administrator") {
-                        $('.eddit').show();
-                    }
-                    else {
-                        $('.eddit').show();
-                    }
+                           
 
                 });
             }
@@ -7280,8 +7283,10 @@
 
                 $('#<%= vLbl_Patient_Type.ClientID%>').text(data.d.PatientType);
 
-
+                
                 $('#<%= vLbl_Patient_AdmitCatagory.ClientID%>').text(data.d.Type);
+                $('#<%= vLbl_WardName.ClientID%>').text(data.d.Ward_Name);
+                $('#<%= vLbl_BedNo.ClientID%>').text(data.d.Bed_No); 
                 var IPD_ID = data.d.IPD_ID;
                 if (IPD_ID == 0 || IPD_ID == 'null' || IPD_ID == null) {
                     alert("Please Create Admission First");
@@ -7679,6 +7684,14 @@
                                             <asp:Label ID="vLbl_Gender" runat="server"></asp:Label>
                                         </div>
                                     </div>
+                                    <div class="row mb-3 mtt">
+                                        <div class="col-lg-5 col-md-5 col-sm-6 formrgn">
+                                            <asp:Label ID="lblWardName" runat="server" Text="Ward Name :"></asp:Label>
+                                        </div>
+                                        <div class="col-lg-7 col-md-7 col-sm-6 top">
+                                            <asp:Label ID="vLbl_WardName" runat="server"></asp:Label>
+                                        </div>
+                                    </div>
                                  </div>
                               </div>
                          </div>
@@ -7727,6 +7740,14 @@
                     </div>
                     <div class="col-lg-7 col-md-5 col-sm-6 formrgn">
                         <asp:Label ID="vLbl_Patient_AdmitCatagory" runat="server"></asp:Label>
+                    </div>
+                </div>
+                <div class="row mb-3">
+                    <div class="col-lg-5 col-md-5 col-sm-6 formrgn">
+                        <asp:Label ID="Label137" runat="server" Text="Bed No :"></asp:Label>
+                    </div>
+                    <div class="col-lg-7 col-md-5 col-sm-6 formrgn">
+                        <asp:Label ID="vLbl_BedNo" runat="server"></asp:Label>
                     </div>
                 </div>
             </div>
@@ -8351,8 +8372,10 @@
                                         
                                         <input type="button" value="Regular Medicine" id="btnRegularMedicine" class="btn btn-primry" style="width: 15% !important;"/>
                                         <input type="button" value="STAT Medicine" class="btn btn-primry" id="btnSTATMedicine" style="width: 15% !important;"/>
-                                         <%--<input type="button" value="PRN Medicine" class="btn btn-primry" id="btnPRNMedicine" style="width:15% !important;"/>--%>                   
-                                         <input type="button" class="btn btn-primry" onclick="PrintMecicationDetail()" value="Regular Print" style="width:15% !important" />
+                                         <%--<input type="button" value="PRN Medicine" class="btn btn-primry" id="btnPRNMedicine" style="width:15% !important;"/>--%>
+                                        <input type="button" class="btn btn-primry" onclick="PrintMecicationDetail()" value="Regular Print" style="width: 15% !important" />
+                                            <label for="txtMR_No">MR No:</label>
+                                            <asp:TextBox ID="txtMR_No" runat="server" style="width: 180px !important;"></asp:TextBox>
                                   <%--      <input type="button" class="btn btn-primry" onclick="PrintMecicationDetailPRN()" value="STAT Print"  style="width: 15% !important;"/>
                                          <input type="button" class="btn btn-primry" onclick="PrintMecicationDetailSTAT()" value="PRN Print" style="width: 15% !important;" />--%>
                                         <h2>Regular Medicine</h2>
