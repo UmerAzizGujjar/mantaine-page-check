@@ -81,7 +81,8 @@ namespace PMS.Modules.Inventory
                                         Active = I.Active ?? false,
                                         WareHouse = _dbContext.GetDataValueName("Ware House", I.InventoryOrg) ?? "",
                                         Service_Sub_Category = _dbContext.GetDataValueName("Service Sub Category", I.Service_Sub_Category) ?? "",
-                                        StockTotal = (_dbContext.GetInvenrtoryItemUomTotalStock(I.Item_ID, I.InventoryOrg))
+                                        StockTotal = (_dbContext.GetInvenrtoryItemUomTotalStock(I.Item_ID, I.InventoryOrg)),
+                                        CreatedBy = _dbContext.aspnet_Users.Where(x => x.UserId == I.Created_By).Select(x => x.UserName).FirstOrDefault()
                                     };
                     if (filterStatus == "mapped")
                     {
