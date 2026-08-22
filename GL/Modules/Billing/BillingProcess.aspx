@@ -51,6 +51,7 @@
             var doctorsListGlobalResponse = '';
             var shareTypeGlobalResponse = '';
             var globalTestRate = '';
+            var compulsoryItemIds = [];
             function BackToPrint() {
                 var id = '<%=Request.QueryString["ID"]%>';
                 var newWindow = 'PrintReciept.aspx?Bill_ID=' + '<%= Request.QueryString["Bill_ID"]%>' + '&BillPatient_ID=' + document.getElementById('<%=hdfPatient_ID.ClientID%>').value;
@@ -1827,6 +1828,36 @@
             debugger;
             async function SaveRecord() {
                 debugger;
+                if (compulsoryItemIds && compulsoryItemIds.length > 0) {
+                    var missingDoctorRow = null;
+                    $('#tblDetails tbody tr').each(function () {
+                        var itemId = parseInt($(this).find('input[name="hdnItemID"]').val()) || 0;
+                        var itemName = $(this).find('input[name="hdnItemName"]').val() || 'this item';
+                        if (itemId > 0 && compulsoryItemIds.indexOf(itemId) !== -1) {
+                            var doctorId = $(this).find('select[name="ddlDoctor"]').val();
+                            if (!doctorId || doctorId === '' || doctorId === '0' || doctorId === null) {
+                                missingDoctorRow = itemName;
+                                return false;
+                            }
+                        }
+                    });
+                    if (missingDoctorRow) {
+                        Swal.fire({
+                            icon: 'error',
+                            title: 'Validation Failed!',
+                            text: 'Please select Doctor for ' + missingDoctorRow,
+                            confirmButtonText: 'OK',
+                            customClass: {
+                                popup: 'swal-big-popup',
+                                title: 'swal-big-title',
+                                htmlContainer: 'swal-big-text'
+                            }
+                        });
+                        $("#btnSave").prop("disabled", false);
+                        document.getElementById("hdnDuplicateCheck").value = "0";
+                        return;
+                    }
+                }
                 if (validateSave()) {
                     var val = document.getElementById("hdnDuplicateCheck").value;
                     var returnVal = false;
@@ -7810,6 +7841,19 @@
                 FillOtherTest();
                 FillMainTestDepartment();
                 FillChargePolicy();
+
+                $.ajax({
+                    type: "POST",
+                    url: "BillingProcess.aspx/GetDoctorCompulsoryItemIds",
+                    data: "{}",
+                    contentType: "application/json; charset=utf-8",
+                    dataType: "json",
+                    async: false,
+                    success: function (response) {
+                        try { compulsoryItemIds = JSON.parse(response.d) || []; }
+                        catch (e) { compulsoryItemIds = []; }
+                    }
+                });
              
                 LoadBillDepartment();
                 
