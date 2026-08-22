@@ -141,9 +141,12 @@ namespace PMS.AP
                                        Remarks = PR.Remarks,
                                        Status = PR.Status,
                                        Update_Date = PR.Update_Date,
+                                       Created_Date = PR.Creation_Date,
+                                       Approve_Time = PR.Approved_Time,
                                        TotalQty = (from x in _dbContext.Purchase_Requisition_Details where x.PR_ID == (long?)(long)PR.PR_Id select (decimal?)x.Qty).Sum() ?? 0,
                                        CreatedBY = _dbContext.aspnet_Users.Where(x => x.UserId == PR.Created_By).Select(x => x.UserName).FirstOrDefault(),
                                        UpdatedBY = _dbContext.aspnet_Users.Where(x => x.UserId == PR.Updated_By).Select(x => x.UserName).FirstOrDefault(),
+                                       Approved_By = _dbContext.aspnet_Users.Where(x => x.UserId == PR.Approved_By).Select(x => x.UserName).FirstOrDefault(),
                                    };
 
                     // Apply search filter if searchValue is not empty

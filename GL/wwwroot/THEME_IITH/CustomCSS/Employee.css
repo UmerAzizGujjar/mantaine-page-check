@@ -589,3 +589,216 @@ html, body {
     box-shadow: var(--emp-shadow-sm);
     margin-bottom: 10px;
 }
+
+
+
+
+
+
+/* ============================================
+   MISSING CSS FROM TIBBIT THEME
+   Added to IIth Theme - Colors preserved
+   ============================================ */
+
+/* ----- The missing .emp-flag-grid with compact styling from Tibbit ----- */
+.emp-flag-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 4px;
+    width: 100%;
+}
+
+.emp-flag-item {
+    display: flex;
+    align-items: center;
+    gap: 4px;
+    padding: 3px 6px;
+    background: #fafbfd;
+    border: 1px solid var(--emp-border);
+    border-radius: var(--emp-radius-sm);
+    cursor: pointer;
+    transition: all 0.15s ease;
+    min-width: 0;
+    margin: 0;
+    width: 100%;
+    height: 24px;
+}
+
+    .emp-flag-item:hover {
+        border-color: var(--emp-primary);
+        background: var(--emp-primary-soft);
+    }
+
+    /* 🔥 Make checkbox smaller - Tibbit style */
+    .emp-flag-item input[type="checkbox"] {
+        width: 13px !important;
+        height: 13px !important;
+        cursor: pointer;
+        margin: 0;
+        padding: 0;
+        flex-shrink: 0;
+        accent-color: var(--emp-primary);
+    }
+
+/* 🔥 Label - properly visible - Tibbit style */
+.emp-flag-label {
+    color: var(--emp-text);
+    font-size: 10px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.2px;
+    line-height: 1.2;
+    cursor: pointer;
+    white-space: nowrap;
+    display: inline-block;
+    padding: 0;
+}
+
+/* ----- Animation ----- */
+@keyframes empFadeIn {
+    from {
+        opacity: 0;
+        transform: translateY(4px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.emp-card {
+    animation: empFadeIn 0.2s ease;
+}
+
+/* ----- Strict reset for legend/textarea height ----- */
+.emp-card-body textarea {
+    height: auto !important;
+    min-height: 56px;
+}
+
+/* ----- Button row container ----- */
+.emp-actions {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    padding: 10px 12px;
+    background: #fff;
+    border: 1px solid var(--emp-border);
+    border-radius: var(--emp-radius);
+    box-shadow: var(--emp-shadow-sm);
+    margin-bottom: 10px;
+}
+
+/* ----- The missing .emp-flag-label compact styling from Tibbit ----- */
+/* This ensures the flag labels match Tibbit's compact design */
+.emp-flag-item .emp-flag-label {
+    color: var(--emp-text);
+    font-size: 10px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.2px;
+    line-height: 1.2;
+    cursor: pointer;
+    white-space: nowrap;
+    display: inline-block;
+    padding: 0;
+}
+
+/* ----- Ensure flag grid items maintain Tibbit's compact height ----- */
+.emp-flag-item {
+    height: 24px;
+    padding: 3px 6px;
+}
+
+/* ----- Additional missing styles from Tibbit ----- */
+
+/* Ensure proper spacing in card body for textarea */
+.emp-card-body > .emp-textarea:last-child,
+.emp-card-body textarea.emp-textarea {
+    min-height: 60px;
+}
+
+/* Make fields inside the last bento of a card-body stretch to fill remaining space */
+.emp-card-body > .emp-bento:last-child .emp-field {
+    flex: 1;
+}
+
+/* ----- Missing Select2 styles from Tibbit ----- */
+.emp-field .select2-container .select2-selection--single {
+    height: 28px !important;
+    border: 1px solid var(--emp-border-strong) !important;
+    border-radius: var(--emp-radius-sm) !important;
+    padding: 2px 8px !important;
+}
+
+.emp-field .select2-container--default .select2-selection--single .select2-selection__rendered {
+    line-height: 24px !important;
+    font-size: var(--emp-font) !important;
+    color: var(--emp-text) !important;
+}
+
+.emp-field .select2-container--default .select2-selection--single .select2-selection__arrow {
+    height: 26px !important;
+}
+
+/* ----- Force Select2 dropdown (from Tibbit) ----- */
+.emp-field .select2-container--default .select2-dropdown {
+    z-index: 99999 !important;
+}
+
+.select2-search__field {
+    transform: translateZ(0);
+    -webkit-transform: translateZ(0);
+}
+
+.emp-validation {
+    color: var(--emp-danger, #dc3545);
+    font-size: 11px;
+    margin-top: 2px;
+    display: none;
+}
+
+.custom-label-checkbox {
+    display: flex;
+    align-items: center;
+    justify-content: flex-start;
+    gap: 8px;
+    margin: 0;
+    padding: 4px 0;
+}
+
+    .custom-label-checkbox label {
+        margin: 0;
+        line-height: 1.4;
+        font-size: 12px;
+        font-weight: 600;
+        color: var(--emp-text);
+        text-transform: uppercase;
+        letter-spacing: 0.3px;
+        cursor: pointer;
+    }
+
+    .custom-label-checkbox input[type="checkbox"] {
+        margin: 0;
+        width: 16px;
+        height: 16px;
+        cursor: pointer;
+        accent-color: var(--emp-primary);
+    }
+
+.emp-field input.emp-input,
+.emp-field select.emp-select,
+.emp-field textarea.emp-textarea {
+    width: 100% !important;
+    padding: 4px 8px !important;
+    font-size: 13px !important;
+    border: 1px solid var(--emp-border-strong) !important;
+    border-radius: var(--emp-radius-sm) !important;
+    background: #fff !important;
+    color: var(--emp-text) !important;
+    height: 28px !important;
+    line-height: 1.2 !important;
+    box-sizing: border-box !important;
+    margin: 0 !important;
+}
