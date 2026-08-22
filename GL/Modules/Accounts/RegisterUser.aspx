@@ -98,6 +98,7 @@
                     $('#AllowLineDiscount').prop('checked', data.AllowLineDiscount);
                     $('#AllowApprovalitem').prop('checked', data.AllowApprovalitem);
                     $('#AllowTestlistDoctor').prop('checked', data.AllowTestlistDoctor);
+                    $('#Allow_Medication_Edit').prop('checked', data.Allow_Medication_Edit);
                 },
                 error: function (xhr, status, error) {
                     alert("Error: " + xhr.responseText);
@@ -167,6 +168,7 @@
             var AllowLineDiscount = $('#AllowLineDiscount').prop('checked');
             var AllowApprovalitem = $('#AllowApprovalitem').prop('checked');
             var AllowTestlistDoctor = $('#AllowTestlistDoctor').prop('checked');
+            var Allow_Medication_Edit = $('#Allow_Medication_Edit').prop('checked');
             var AllowReglistPrint = $('#Allow_ReglistPrint').prop('checked');
             
             var EmpCode = $('#EmpCode').val();
@@ -313,7 +315,8 @@
                 "AllowLineDiscount": AllowLineDiscount,
                 "AllowApprovalitem": AllowApprovalitem,
                 "AllowReglistPrint": AllowReglistPrint,
-                "AllowTestlistDoctor": AllowTestlistDoctor
+                "AllowTestlistDoctor": AllowTestlistDoctor,
+                "Allow_Medication_Edit": Allow_Medication_Edit
 
             };
 
@@ -757,6 +760,9 @@
                                                     <div class="form-check">
                                                         <input type="checkbox" class="form-check-input" id="Allow_ReglistPrint" name="Allow_ReglistPrint" />
                                                     </div>
+                                                    <div class="form-check">
+                                                        <input type="checkbox" class="form-check-input" id="Allow_Medication_Edit" name="Allow_Medication_Edit" />
+                                                    </div>
 
 
                                                  </div>
@@ -846,7 +852,10 @@
                                                     <div class="form-check">
                                                         <label class="form-check-label" for="Allow_ReglistPrint">Reg List Print</label>
                                                     </div>
-                                                 </div>
+                                                    <div class="form-check">
+                                                        <label class="form-check-label" for="Allow_Medication_Edit">Allow Medication Edit</label>
+                                                    </div>
+                                                  </div>
                                             </div>
                                             <div class="row">
                                                 <div class="form-check">

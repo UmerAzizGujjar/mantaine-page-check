@@ -132,6 +132,24 @@ namespace PMS
         protected global::System.Web.UI.WebControls.Label vLbl_Gender;
 
         /// <summary>
+        /// lblWardName control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.Label lblWardName;
+
+        /// <summary>
+        /// vLbl_WardName control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.Label vLbl_WardName;
+
+        /// <summary>
         /// LblIn_Patient_ID control.
         /// </summary>
         /// <remarks>
@@ -220,6 +238,24 @@ namespace PMS
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
         protected global::System.Web.UI.WebControls.Label vLbl_Patient_AdmitCatagory;
+
+        /// <summary>
+        /// Label137 control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.Label Label137;
+
+        /// <summary>
+        /// vLbl_BedNo control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.Label vLbl_BedNo;
 
         /// <summary>
         /// ddlDepartments control.
@@ -1066,6 +1102,15 @@ namespace PMS
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
         protected global::System.Web.UI.WebControls.CheckBox cbShifted_To_Observation_Room;
+
+        /// <summary>
+        /// txtMR_No control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.TextBox txtMR_No;
 
         /// <summary>
         /// lblDischarge_By control.

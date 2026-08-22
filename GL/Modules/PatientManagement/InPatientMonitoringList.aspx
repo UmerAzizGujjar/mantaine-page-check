@@ -95,6 +95,8 @@
                     { "data": "mr_no_sequence", "name": "mr_no_sequence", "width": "12%", "orderable": true },
                     { "data": "Full_Name", "width": "20%", "orderable": false },
                     { "data": "Father_Name", "width": "20%", "orderable": false },                   
+                    { "data": "Ward_Name", "width": "10%", "orderable": false },                   
+                    { "data": "Bed_No", "width": "10%", "orderable": false },                   
                     {
                         render: function (data, type, full) {
                             debugger;
@@ -192,6 +194,8 @@
                     <th>MR No</th>                                            
                     <th>Patient Name</th>                                            
                     <th>Father Name</th>                                            
+                    <th>Ward Name</th>                                            
+                    <th>Bed No</th>                                            
                     <th>Actions</th>
                 </tr>
             </thead>

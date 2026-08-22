@@ -1487,6 +1487,8 @@ namespace PMS
             public string Entry_Date;
             public string inPatient;
             public string in_patient_id;
+            public string Ward_Name; 
+            public string Bed_No;
         }
         [System.Web.Services.WebMethod]
 
@@ -1500,11 +1502,7 @@ namespace PMS
             pat = (from tbl in db.Reg_patients
                    where tbl.pat_id == Patien_No
                    select tbl).FirstOrDefault();
-            var in_Patient = (from tbl in db.In_Patients
-                              where tbl.Patient_ID == int.Parse(PatientID)
 
-                              orderby tbl.Created_Time descending
-                              select tbl.In_Patient_ID).FirstOrDefault();
             if (pat != null)
             {
                 pt.Name = pat.Full_Name;
@@ -1517,8 +1515,31 @@ namespace PMS
                 pt.Address = pat.Permanent_Address;
                 pt.Mobile = pat.Mobile1;
                 pt.Gender = db.GetDataValueName("Gender", pat.Gender);
-                pt.inPatient = in_Patient.ToString();
+                pt.inPatient = pat.pat_id.ToString();
                 pt.in_patient_id = DBClass.getField("select In_Patient_ID from In_Patient where Patient_ID =" + PatientID + " order by Created_Time desc");
+
+                var inPatientData = (from ip in db.In_Patients
+                                     join wd in db.Ward_Definitions on ip.Ward_ID equals wd.Ward_ID into wardJoin
+                                     from ward in wardJoin.DefaultIfEmpty()
+                                     where ip.Patient_ID == int.Parse(PatientID)
+                                     orderby ip.Created_Time descending
+                                     select new
+                                     {
+                                         WardName = ward != null ? ward.Ward_Type : "",
+                                         BedNo = ip.Bed_No
+                                     }).FirstOrDefault();
+
+                if (inPatientData != null)
+                {
+                    pt.Ward_Name = inPatientData.WardName ?? "";
+                    pt.Bed_No = inPatientData.BedNo != null ? inPatientData.BedNo.ToString() : "";
+                }
+                else
+                {
+                    pt.Ward_Name = "";
+                    pt.Bed_No = "";
+                }
+
                 return pt;
             }
             else
@@ -2333,7 +2354,15 @@ namespace PMS
                 var qry = (from ip in db.In_Patients
                            join p in db.Reg_patients on ip.Patient_ID equals p.pat_id
                            where ip.In_Patient_ID == InPatient_ID
-                           select new { ip, p }).FirstOrDefault();
+                           select new
+                           {
+                               ip,
+                               p,
+                               WardName = (from wd in db.Ward_Definitions
+                                           where wd.Ward_ID == ip.Ward_ID
+                                           select wd.Ward_Type).FirstOrDefault(),
+                               BedNo = ip.Bed_No
+                           }).FirstOrDefault();
 
                 if (qry != null)
                 {
@@ -2347,6 +2376,8 @@ namespace PMS
                     vLbl_Gender.Text = db.GetDataValueName("Gender", qry.p.Gender);
                     vLbl_Age.Text = qry.p.Age_years;
                     vLbl_RegDate.Text = qry.p.Created_time?.ToString(AppConfig.DateFormat) ?? "";
+                    vLbl_WardName.Text = qry.WardName ?? "";
+                    vLbl_BedNo.Text = qry.BedNo != null ? qry.BedNo.ToString() : "";
                 }
             }
             catch (Exception ex)

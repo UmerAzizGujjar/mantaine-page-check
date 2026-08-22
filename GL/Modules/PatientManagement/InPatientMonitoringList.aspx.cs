@@ -77,6 +77,14 @@ namespace PMS
                                         mr_no_sequence = P.mr_no_sequence,
                                         Full_Name = P.Full_Name,
                                         Father_Name = P.Father_Name,
+                                        Ward_Name = (from IP in _dbContext.In_Patients
+                                                     join w in _dbContext.Ward_Definitions on IP.Ward_ID equals w.Ward_ID
+                                                     where IP.Patient_ID == IPM.Patient_ID
+                                                     select w.Ward_Type).FirstOrDefault(),
+
+                                        Bed_No = (from IP in _dbContext.In_Patients
+                                                  where IP.Patient_ID == IPM.Patient_ID
+                                                  select IP.Bed_No).FirstOrDefault()
                                     };
 
                     var FilteredCount = IN_Monitoring.Count();

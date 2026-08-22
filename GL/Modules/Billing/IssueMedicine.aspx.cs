@@ -130,7 +130,8 @@ namespace PMS
                              {
                                  ip.Doctor,
                                  ip.Department,
-                                 ip.Panel_Company
+                                 ip.Panel_Company,
+                                 ip.MR_No
                              }).FirstOrDefault();
 
             var itemCodes = (from ip in db.In_Patient_Medicines

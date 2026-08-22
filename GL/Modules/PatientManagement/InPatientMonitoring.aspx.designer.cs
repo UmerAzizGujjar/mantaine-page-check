@@ -114,6 +114,24 @@ namespace PMS
         protected global::System.Web.UI.WebControls.Label vLbl_Gender;
 
         /// <summary>
+        /// lblWardName control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.Label lblWardName;
+
+        /// <summary>
+        /// vLbl_WardName control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.Label vLbl_WardName;
+
+        /// <summary>
         /// lblInPatient_Mon_ID control.
         /// </summary>
         /// <remarks>
@@ -184,6 +202,24 @@ namespace PMS
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
         protected global::System.Web.UI.WebControls.Label vLbl_Adress;
+
+        /// <summary>
+        /// lblBedNo control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.Label lblBedNo;
+
+        /// <summary>
+        /// vLbl_BedNo control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.Label vLbl_BedNo;
 
         /// <summary>
         /// upInPatForm control.
