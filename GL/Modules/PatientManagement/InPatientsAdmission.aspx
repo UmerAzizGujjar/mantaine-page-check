@@ -1530,7 +1530,7 @@
             }
         }
 
-        function saveAllRecord() {
+<%--        function saveAllRecord() {
             // $('#btnSave').attr('disabled', true);
             debugger;
             var btnsave = $('#btnSave').val();
@@ -2131,7 +2131,7 @@
 
                     }
                 });
-        }
+        }--%>
 
         function callNADRAAPI(inPatientID) {
             debugger;
@@ -3536,7 +3536,7 @@
                                 }
 
                             })
-
+                            window.location = "InPatientsAdmission.aspx?ID=" + response;
                             //  callNADRAAPI(response);
                         }
                         $('#btnSave').val("Update");
