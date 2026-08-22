@@ -165,6 +165,22 @@ namespace PMS
 
                 }
 
+                var inPatientData = (from ip in db.In_Patients
+                                     join wd in db.Ward_Definitions on ip.Ward_ID equals wd.Ward_ID into wardJoin
+                                     from ward in wardJoin.DefaultIfEmpty()
+                                     where ip.In_Patient_ID == Convert.ToInt32(qry1.in_Patient)
+                                     select new
+                                     {
+                                         WardName = ward != null ? ward.Ward_Type : "",
+                                         BedNo = ip.Bed_No
+                                     }).FirstOrDefault();
+
+                if (inPatientData != null)
+                {
+                    vLbl_WardName.Text = inPatientData.WardName ?? "";
+                    vLbl_BedNo.Text = inPatientData.BedNo != null ? inPatientData.BedNo.ToString() : "";
+                }
+
             }
             catch (Exception ex)
             {
@@ -1068,6 +1084,12 @@ namespace PMS
         {
             using (DataBaseDataContext db = new DataBaseDataContext())
             {
+                var ups = (from St in db.aspnet_Users
+                           where St.UserId == AppConfig.UserID
+                           select St.Allow_Medication_Edit).FirstOrDefault();
+
+                bool allowMedicationEdit = ups == true;
+
                 var inPatmedicine = (from inPatmedicineList in db.In_Patient_Medicines
                                      where inPatmedicineList.Patient_ID == PatientID && inPatmedicineList.Transaction_Type == "InPatient"
                                      orderby inPatmedicineList.Medicine_Date descending
@@ -1101,13 +1123,7 @@ namespace PMS
 
                                          DoctorName = (from d in db.HR_Employees where d.Emp_ID == Convert.ToInt32(inPatmedicineList.Doctor_ID) select d.Emp_Name).FirstOrDefault(),
 
-                                         userrole = (from u in db.aspnet_Users
-                                                     join ur in db.aspnet_UsersInRoles
-                                                     on u.UserId equals ur.UserId
-                                                     join r in db.aspnet_Roles
-                                                     on ur.RoleId equals r.RoleId
-                                                     where u.UserId == AppConfig.UserID
-                                                     select r.RoleName).FirstOrDefault()
+                                         AllowMedicationEdit = allowMedicationEdit
 
 
 
@@ -1123,6 +1139,12 @@ namespace PMS
         {
             using (DataBaseDataContext db = new DataBaseDataContext())
             {
+                var ups = (from St in db.aspnet_Users
+                           where St.UserId == AppConfig.UserID
+                           select St.Allow_Medication_Edit).FirstOrDefault();
+
+                bool allowMedicationEdit = ups == true;
+
                 var In_pat = (from ip in db.In_Patients
                               where ip.Patient_ID == PatientID
                               orderby ip.In_Patient_ID descending
@@ -1162,13 +1184,7 @@ namespace PMS
 
                                          DoctorName = (from d in db.HR_Employees where d.Emp_ID == Convert.ToInt32(inPatmedicineList.Doctor_ID) select d.Emp_Name).FirstOrDefault(),
 
-                                         userrole = (from u in db.aspnet_Users
-                                                     join ur in db.aspnet_UsersInRoles
-                                                     on u.UserId equals ur.UserId
-                                                     join r in db.aspnet_Roles
-                                                     on ur.RoleId equals r.RoleId
-                                                     where u.UserId == AppConfig.UserID
-                                                     select r.RoleName).FirstOrDefault()
+                                         AllowMedicationEdit = allowMedicationEdit
 
 
 

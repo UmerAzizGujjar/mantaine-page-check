@@ -2604,12 +2604,13 @@
                     var rowsPRN = '';
                     var rowsStat = '';
                     var role;
+                    var allowMedicationEdit = false; 
                     $.each(Medicines, function (key, value) {
                         debugger;
                         var Username = '<%= AppConfig.UserName%>';
                         var timeStamp = parseInt(value.Medicine_Date.substr(6, 10));
                         role = value.userrole;
-
+                        allowMedicationEdit = value.AllowMedicationEdit;
                         var date = moment.unix(timeStamp).format('DD/MM/YYYY hh:mm:ss A');
                         var datearray = date.split("/");
                         if (value.Other_Instruction == null || value.Other_Instruction == 'null') value.Other_Instruction = '';
@@ -2637,7 +2638,7 @@
                                 var s2 = parseInt(value.Stop_Date_Time.substr(6, 10));
                                 var Stop_Date = moment.unix(s2).format('MM/DD/YYYY hh:mm:ss A');
                             }
-                            rowsRegular += '<tr> <td> <input type="hidden" name="testDate" value="' + Start_Date + '">' + Start_Date + ' </td><td> ' + value.Medicine_Name + '</td><td> ' + value.Dosage_Qty + '</td><td> ' + value.Dosage_From + '</td> <td> ' + value.Frequency + ' </td><td> ' + value.Injections + '</td>   <td> ' + value.Oral + ' </td>  <td> <input type="text" class="form-control routeInput" value="' + Req_Qty + '"   name="IssueQty"  placeholder="Enter value" /></td><td> <input type="text" class="form-control routeInput" value="' + Rcv_Qty + '"   name="RecQty"  placeholder="Enter value" /></td> <td>' + Stop_Date + '</td> <td> ' + value.Other_Instruction + ' </td>' + '<td>' + value.AttendingParamedical_Staff + '</td><td>' + value.Username + '</td><td> <input type="text" class="form-control routeInput" value="' + Rtn_Qty+'"   name="RtnQty"  placeholder="Enter value" /></td><td><input type="hidden" name="uurowid" value=' + uuid() + ' />  </td><td style="display:none;">' + value.Item_Code +'</td></tr>';
+                            rowsRegular += '<tr> <td> <input type="hidden" name="testDate" value="' + Start_Date + '">' + Start_Date + ' </td><td> ' + value.Medicine_Name + '</td><td> ' + value.Dosage_Qty + '</td><td> ' + value.Dosage_From + '</td> <td> ' + value.Frequency + ' </td><td> ' + value.Injections + '</td>   <td> ' + value.Oral + ' </td>  <td> <input type="text" class="form-control routeInput" value="' + Req_Qty + '"   name="IssueQty"  placeholder="Enter value" /></td><td> <input type="text" class="form-control routeInput" value="' + Rcv_Qty + '"   name="RecQty"  placeholder="Enter value" /></td> <td>' + Stop_Date + '</td> <td> ' + value.Other_Instruction + ' </td>' + '<td>' + value.AttendingParamedical_Staff + '</td><td>' + value.Username + '</td><td> <input type="text" class="form-control routeInput" value="' + Rtn_Qty + '"   name="RtnQty"  placeholder="Enter value" /></td><td><td class="eddit"><a href="#" onclick="editMedicine(this)"> Edit </a> | <a href="#" onclick="deleteMedicine(this)"> Delete </a> <input type="hidden" name="uurowid" value=' + uuid() + ' />  </td><td style="display:none;">' + value.Item_Code + '</td></tr>';
 
                         }
                         else if (value.PRN == true) {
@@ -2662,17 +2663,17 @@
                         $('#tblMedicinesListSTAT tbody').html(rowsStat);
                         $('#tblMedicinesListPRN tbody').html(rowsPRN);
 
-
+                        if (allowMedicationEdit == true) {
+                            $('.eddit').show();
+                        }
+                        else {
+                            $('.eddit').hide();
+                        }
 
                     }, 6000)
 
 
-                    if (role == 'administrator' || role == "administrator") {
-                        $('.eddit').show();
-                    }
-                    else {
-                        $('.eddit').show();
-                    }
+                    
 
                 });
                    
@@ -2688,12 +2689,13 @@
                     var rowsPRN = '';
                     var rowsStat = '';
                     var role;
+                    var allowMedicationEdit = false;
                     $.each(Medicines, function (key, value) {
                         debugger;
                         var Username = '<%= AppConfig.UserName%>';
                         var timeStamp = parseInt(value.Medicine_Date.substr(6, 10));
                         role = value.userrole;
-
+                        allowMedicationEdit = value.AllowMedicationEdit;
                         var date = moment.unix(timeStamp).format('DD/MM/YYYY hh:mm:ss A');
                         var datearray = date.split("/");
                         if (value.Other_Instruction == null || value.Other_Instruction == 'null') value.Other_Instruction = '';
@@ -2721,7 +2723,7 @@
                                 var s2 = parseInt(value.Stop_Date_Time.substr(6, 10));
                                 var Stop_Date = moment.unix(s2).format('MM/DD/YYYY hh:mm:ss A');
                             }
-                            rowsRegular += '<tr> <td> <input type="hidden" name="testDate" value="' + Start_Date + '">' + Start_Date + ' </td><td> ' + value.Medicine_Name + '</td><td> ' + value.Dosage_Qty + '</td><td> ' + value.Dosage_From + '</td> <td> ' + value.Frequency + ' </td><td> ' + value.Injections + '</td>   <td> ' + value.Oral + ' </td>  <td> <input type="text" class="form-control routeInput" value="' + Req_Qty + '"   name="IssueQty"  placeholder="Enter value" /></td><td> <input type="text" class="form-control routeInput" value="' + Rcv_Qty + '"   name="RecQty"  placeholder="Enter value" /></td> <td>' + Stop_Date + '</td> <td> ' + value.Other_Instruction + ' </td>' + '<td>' + value.AttendingParamedical_Staff + '</td><td>' + value.Username + '</td><td> <input type="text" class="form-control routeInput"  value="' + Rtn_Qty +'"   name="RtnQty"  placeholder="Enter value" /></td><td><input type="hidden" name="uurowid" value=' + uuid() + ' />  </td><td style="display:none;"></td></tr>';
+                            rowsRegular += '<tr> <td> <input type="hidden" name="testDate" value="' + Start_Date + '">' + Start_Date + ' </td><td> ' + value.Medicine_Name + '</td><td> ' + value.Dosage_Qty + '</td><td> ' + value.Dosage_From + '</td> <td> ' + value.Frequency + ' </td><td> ' + value.Injections + '</td>   <td> ' + value.Oral + ' </td>  <td> <input type="text" class="form-control routeInput" value="' + Req_Qty + '"   name="IssueQty"  placeholder="Enter value" /></td><td> <input type="text" class="form-control routeInput" value="' + Rcv_Qty + '"   name="RecQty"  placeholder="Enter value" /></td> <td>' + Stop_Date + '</td> <td> ' + value.Other_Instruction + ' </td>' + '<td>' + value.AttendingParamedical_Staff + '</td><td>' + value.Username + '</td><td> <input type="text" class="form-control routeInput"  value="' + Rtn_Qty + '"   name="RtnQty"  placeholder="Enter value" /></td><td><a href="#" onclick="editMedicine(this)"> Edit </a> | <a href="#" onclick="deleteMedicine(this)"> Delete </a> <input type="hidden" name="uurowid" value=' + uuid() + ' />  </td><td style="display:none;"></td></tr>';
 
                         }
                         else if (value.PRN == true) {
@@ -2746,17 +2748,17 @@
                         $('#tblMedicinesListSTAT tbody').html(rowsStat);
                         $('#tblMedicinesListPRN tbody').html(rowsPRN);
 
-
+                        if (allowMedicationEdit == true) {
+                            $('.eddit').show();
+                        }
+                        else {
+                            $('.eddit').hide();
+                        }
 
                     }, 6000)
 
 
-                    if (role == 'administrator' || role == "administrator") {
-                        $('.eddit').show();
-                    }
-                    else {
-                        $('.eddit').show();
-                    }
+                    
 
                 });
                    }
