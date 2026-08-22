@@ -1784,6 +1784,18 @@ namespace PMS
             return SaveBill(Parameters);
         }
 
+        [WebMethod]
+        public static string GetDoctorCompulsoryItemIds()
+        {
+            using (DataBaseDataContext db = new DataBaseDataContext())
+            {
+                var ids = (from i in db.INV_Items
+                           where i.Doctor_Compulsory == true
+                           select i.Item_ID).ToList();
+                return new JavaScriptSerializer().Serialize(ids);
+            }
+        }
+
         public static string SaveBill(string Parameters)
         {
             DataBaseDataContext db = new DataBaseDataContext();
