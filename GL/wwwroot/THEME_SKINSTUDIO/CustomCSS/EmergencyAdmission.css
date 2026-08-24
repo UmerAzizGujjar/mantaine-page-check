@@ -1,0 +1,161 @@
+/* Emergency Admission - Theme: THEME_SKINSTUDIO */
+:root {
+    --em-primary: #308665;
+    --em-primary-hover: #256b50;
+    --em-primary-soft: rgba(48, 134, 101, 0.06);
+    --em-bg: #f0f2f5;
+    --em-card: #ffffff;
+    --em-text: #2c3e50;
+    --em-muted: #7b8a99;
+    --em-border: #e6eaf0;
+    --em-border-strong: #cdd4dc;
+    --em-shadow: 0 2px 12px rgba(15, 23, 42, 0.08);
+    --em-radius: 8px;
+    --em-radius-sm: 5px;
+}
+
+.card {
+    border: 1px solid var(--em-border) !important;
+    background: var(--em-card) !important;
+    border-radius: var(--em-radius) !important;
+    padding: 14px !important;
+    margin-bottom: 0 !important;
+    box-shadow: var(--em-shadow) !important;
+}
+
+.card-bodyy { padding: 0 !important; }
+
+.image-container {
+    width: 100px !important;
+    height: 100px !important;
+    border-radius: 50% !important;
+    background: linear-gradient(135deg, #308665 0%, #256b50 100%) !important;
+    display: flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    margin: 0 auto 6px !important;
+    box-shadow: 0 3px 10px rgba(48, 134, 101, 0.3) !important;
+    border: 3px solid rgba(255, 255, 255, 0.6) !important;
+}
+
+.image-container img {
+    width: 52px !important;
+    height: 52px !important;
+    filter: brightness(0) invert(1) !important;
+}
+
+.formrgn { margin-top: 2px !important; margin-bottom: 2px !important; }
+.top { margin-top: 2px !important; }
+
+.labels {
+    font-size: 10px !important;
+    font-weight: 700 !important;
+    color: var(--em-muted) !important;
+    text-transform: uppercase !important;
+    letter-spacing: 0.4px !important;
+}
+
+.md {
+    font-size: 12px !important;
+    font-weight: 600 !important;
+    color: var(--em-text) !important;
+}
+
+.form-label {
+    font-size: 10px !important;
+    font-weight: 700 !important;
+    color: var(--em-muted) !important;
+    text-transform: uppercase !important;
+    letter-spacing: 0.4px !important;
+    margin-bottom: 2px !important;
+    display: block;
+}
+
+.form-control-custom {
+    width: 100% !important;
+    padding: 4px 7px !important;
+    font-size: 12px !important;
+    border: 1px solid var(--em-border-strong) !important;
+    border-radius: var(--em-radius-sm) !important;
+    background: #fff !important;
+    color: var(--em-text) !important;
+    height: 26px !important;
+    line-height: 1.2 !important;
+    transition: border-color 0.15s, box-shadow 0.15s !important;
+}
+
+.form-control-custom:focus {
+    outline: none !important;
+    border-color: var(--em-primary) !important;
+    box-shadow: 0 0 0 3px var(--em-primary-soft) !important;
+}
+
+.form-control-custom.readonly,
+.form-control-custom[readonly],
+.form-control-custom:disabled {
+    background: #f8f9fb !important;
+    color: var(--em-muted) !important;
+}
+
+.row { margin-bottom: 6px !important; }
+.row:empty { display: none !important; }
+
+#EmergencyWaitingListModal .modal-header {
+    background: linear-gradient(135deg, #308665 0%, #256b50 100%) !important;
+    color: #fff !important;
+    padding: 10px 16px !important;
+}
+
+#EmergencyWaitingListModal .modal-title {
+    color: #fff !important;
+    font-size: 14px !important;
+    font-weight: 700 !important;
+}
+
+.table-custom {
+    font-size: 12px !important;
+    border-collapse: collapse !important;
+}
+
+.table-custom thead th {
+    background: linear-gradient(135deg, #308665 0%, #256b50 100%) !important;
+    color: #fff !important;
+    padding: 5px 10px !important;
+    font-size: 10px !important;
+    font-weight: 700 !important;
+    text-transform: uppercase !important;
+    letter-spacing: 0.4px !important;
+    border: none !important;
+}
+
+.table-custom tbody td {
+    padding: 4px 10px !important;
+    border-color: var(--em-border) !important;
+    color: var(--em-text) !important;
+    vertical-align: middle !important;
+}
+
+.table-custom tbody tr.table-success td { background: rgba(39, 174, 96, 0.06) !important; }
+.table-custom tbody tr.table-danger td { background: rgba(231, 76, 60, 0.05) !important; }
+
+.text-success { color: #27ae60 !important; font-weight: 700; }
+.text-danger { color: var(--em-primary) !important; font-weight: 700; }
+.text-warning { color: #d4a800 !important; font-weight: 700; }
+
+.modal-content {
+    border-radius: var(--em-radius) !important;
+    border: 1px solid var(--em-border) !important;
+    box-shadow: var(--em-shadow) !important;
+}
+
+.em-bed-col { padding-left: 10px !important; }
+
+@media (max-width: 768px) {
+    .card { padding: 10px !important; }
+    .form-control-custom { height: 24px !important; }
+    .em-bed-col { padding-left: 0 !important; margin-top: 8px; }
+}
+
+
+
+

@@ -1,28 +1,8 @@
 ﻿<%@ Page Title="" Language="C#" MasterPageFile="~/Site.Master" AutoEventWireup="true" CodeBehind="EmergencyAdmission.aspx.cs" Inherits="PMS.Modules.PatientManagement.EmergencyAdmission" %>
 
 <asp:Content ID="Content2" ContentPlaceHolderID="HeadContent" runat="server">
-    <style type="text/css">
-        .card {
-            border: 1px solid #C4C4C4;
-            background-color: #f9f9f9;
-            border-radius: 10px;
-            padding: 20px;
-            margin-bottom: 20px;
-            width: 100%;
-            overflow: hidden;
-        }
-
-        .top {
-            margin-top: 4px;
-        }
-
-        .formrgn {
-            margin-top: 10px;
-        }
-
-
-
-    </style>
+    <link href="../../wwwroot/THEME_TIBBIT/CustomCSS/OPD.css" rel="stylesheet" />
+    <link href="../../wwwroot/THEME_TIBBIT/CustomCSS/EmergencyAdmission.css" rel="stylesheet" />
     <script type="text/javascript">
         var currentEmergencyID = 0;
         var currentPatientID = 0;
@@ -712,24 +692,18 @@
                 <div class="col-lg-2">
                     <input type="button" class="btn btn-primry" value="WaitingList" onclick="openEmergencyWaitingListModal()" />
                 </div>
-
             </div>
         </div>
     </div>
     <div class="row">
-        <div class="col-lg-5">
+        <div class="col-lg-6">
             <div class="card">
                 <div class="card-bodyy">
                     <div class="row">
                         <div class="col-lg-3 col-md-3 col-sm-4 text-center">
-                            <div class="row">
-                                <div class="image-container">
-                                    <img src="~../../../../wwwroot/SOURCE_IMAGES/DASHBOARD_ICONS/Patient.png" alt="Patient Image" class="img-fluid patient-image" />
-                                </div>
+                            <div class="image-container">
+                                <img src="~../../../../wwwroot/SOURCE_IMAGES/DASHBOARD_ICONS/Patient.png" alt="Patient Image" class="img-fluid patient-image" />
                             </div>
-                            <div class="row">
-                            </div>
-
                         </div>
                         <div class="col-lg-9 col-md-9 col-sm-8">
                             <div class="row mb-3">
@@ -740,7 +714,6 @@
                                     <asp:Label ID="vlblPatients_Name" CssClass="md" runat="server"></asp:Label>
                                 </div>
                             </div>
-
                             <div class="row mb-3">
                                 <div class="col-md-5 col-sm-6 formrgn">
                                     <asp:Label ID="lblPatien_No" CssClass="labels" runat="server" Text="MR No:"></asp:Label>
@@ -749,7 +722,6 @@
                                     <asp:Label ID="Label200" CssClass="md" runat="server"></asp:Label>
                                 </div>
                             </div>
-
                             <div class="row mb-3">
                                 <div class="col-md-5 col-sm-6 formrgn">
                                     <asp:Label ID="lblPatien_ID" CssClass="labels" runat="server" Text="Emergency No:"></asp:Label>
@@ -758,7 +730,6 @@
                                     <asp:Label ID="Label1" CssClass="md" runat="server"></asp:Label>
                                 </div>
                             </div>
-
                             <div class="row mb-3">
                                 <div class="col-md-5 col-sm-6 formrgn">
                                     <asp:Label ID="lblAge_Years" CssClass="labels" runat="server" Text="Age (Years):"></asp:Label>
@@ -767,7 +738,6 @@
                                     <asp:Label ID="vLbl_Age" CssClass="md" runat="server"></asp:Label>
                                 </div>
                             </div>
-
                             <div class="row mb-3">
                                 <div class="col-md-5 col-sm-6 formrgn">
                                     <asp:Label ID="lblContactNo" CssClass="labels" runat="server" Text="Contact No:"></asp:Label>
@@ -781,7 +751,32 @@
                 </div>
             </div>
         </div>
-        <hr />
+        <div class="col-lg-6 em-bed-col">
+            <div style="overflow-y: auto; max-height: 220px;">
+                <table id="tblWards" class="table table-custom" style="float: right;">
+                    <thead>
+                        <tr>
+                            <th>MR No</th>
+                            <th>Bed No</th>
+                        </tr>
+                    </thead>
+                    <tbody></tbody>
+                </table>
+            </div>
+            <div id="divRoomsTable" style="display:none; margin-top: 8px;">
+                <div style="overflow-y: auto; max-height: 220px;">
+                    <table id="tblRooms" class="table table-custom" style="float: right;">
+                        <thead>
+                            <tr>
+                                <th>MR No</th>
+                                <th>Room No</th>
+                            </tr>
+                        </thead>
+                        <tbody></tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
     </div>
     <div class="row">
         <div class="col-lg-2 col-md-4 col-sm-12">
@@ -827,7 +822,6 @@
         <asp:Label CssClass="form-label required" ID="lblWard_No" runat="server" Text="Ward"></asp:Label>
         <asp:DropDownList ID="ddlWard_No" CssClass="form-control-custom" runat="server" AppendDataBoundItems="true" onChange="FillWardBeds()"></asp:DropDownList>
     </div>
-    <!-- NEW: Room Controls -->
     <div class="col-lg-2 col-md-4 col-sm-12" id="divRoomType" style="display:none;">
         <asp:Label CssClass="form-label" ID="lblRoom_Type" runat="server" Text="Room Type"></asp:Label>
         <asp:DropDownList ID="ddlRoom_Type" CssClass="form-control-custom" runat="server" AppendDataBoundItems="true" onChange="FillRooms()"></asp:DropDownList>
@@ -841,38 +835,6 @@
         <asp:TextBox ID="txtRoomBed_No" CssClass="form-control-custom" runat="server" Enabled="false"></asp:TextBox>
     </div>
 </div>
-<div class="row">
-    <div class="col-lg-4 col-md-6 col-sm-12">
-        <div style="overflow-y: scroll; max-height: 150px;">
-            <table id="tblWards" class="table table-responsive" style="float: right;">
-                <thead>
-                    <tr>
-                        <th>MR No</th>
-                        <th>Bed No</th>
-                    </tr>
-                </thead>
-                <tbody>
-                </tbody>
-            </table>
-        </div>
-    </div>
-    <!-- NEW: Room Table -->
-    <div class="col-lg-4 col-md-6 col-sm-12" id="divRoomsTable" style="display:none;">
-        <div style="overflow-y: scroll; max-height: 150px;">
-            <table id="tblRooms" class="table table-responsive" style="float: right;">
-                <thead>
-                    <tr>
-                        <th>MR No</th>
-                        <th>Room No</th>
-                    </tr>
-                </thead>
-                <tbody>
-                </tbody>
-            </table>
-        </div>
-    </div>
-</div>
-
     <div class="row">
         <div class="col-lg-8 col-md-8 co-sm-12">
             <div class="row">
@@ -895,20 +857,15 @@
                 <div class="modal-body">
                     <div id="EmergencyWaitingList">
                         <div class="row" style="margin-bottom: 15px">
-
                             <div class="col-lg-3">
                                 <input type="text" class="form-control" id="SearchEmergencyWaitingList" placeholder="Search..." />
                             </div>
-
                             <div class="col-lg-2">
                                 <a onclick="fillEmergencyWaitingList()" style="cursor: pointer;">
                                     <i class="fa fa-refresh fa-2x"></i>
                                 </a>
                             </div>
-
                         </div>
-
-
                         <div class="table-responsive previewTable" style="max-height: 400px; overflow-y: auto;">
                             <table class="table table-bordered table-custom" id="tblEmergencyWaitingList">
                                 <thead id="ihead">
@@ -929,7 +886,6 @@
                     </div>
                 </div>
                 <div class="modal-footer">
-
                     <button type="button" class="btn btn-gray" data-dismiss="modal">Close</button>
                 </div>
             </div>

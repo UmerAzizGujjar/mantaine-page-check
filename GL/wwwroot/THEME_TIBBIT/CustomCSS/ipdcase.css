@@ -92,9 +92,9 @@ tr, td {
     border-radius: 10px;
     padding: 20px;
     margin-bottom: 20px;
-    height: 255px !important;
+    min-height: 255px;
     width: 100%;
-    overflow: hidden;
+    overflow: visible;
 }
 
         .formrgn {
