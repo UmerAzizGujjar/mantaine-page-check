@@ -657,7 +657,7 @@
                 $.each($('#tblResult_services tbody tr'), function (key, value) {
                     debugger;
                     var hdn_test_id = $($(value).find('td input[name=txtestid]')[0]).val();
-                    var hdn_services = $($(value).find('td input[name=txtservices]')[0]).val();
+                    var hdn_services = '001';
                     var txtdep_bloodbank = $($(value).find('td input[name=txtdep]')[0]).val();
                     var Description = $($(value).find('td input[name=txtname]')[0]).val();
                     var hdn_agremntTypeId = $($(value).find('td input[name=agremntTypeId]')[0]).val();
