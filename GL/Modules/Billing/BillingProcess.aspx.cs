@@ -3697,7 +3697,7 @@ namespace PMS
                                   .Where(d => d.dd.AgrementTypeId == Aggreement_Type
                                            && d.dd.isactive == true
                                            && d.dd.services == null
-                                           && d.dd.test_id == Convert.ToInt32(test_id)
+                                          // && d.dd.test_id == Convert.ToInt32(test_id)
                                            && d.dd.item_id == 0
                                           && d.data.Doctor.ToString() == doc_id)
                                   .Select(d => new { d.dd.doc_share, d.dd.hos_share })
@@ -4005,7 +4005,7 @@ namespace PMS
                             }
                         }
                         if (inpat.Discharge_Request == true) {
-                            pt.paid_amount = DBClass.getField("select sum(Received_Amount) from Ar_Billings where  In_Patient_ID =" + inpat.In_Patient_ID);
+                            pt.paid_amount = DBClass.getField("select sum(Received_Amount) from Ar_Billings where  In_Patient_ID =" + inpat.In_Patient_ID + " AND (isCancelled = 0 OR isCancelled IS NULL) AND IsNull(final_bill_ipd,0) = 0");
                             pt.advance_amount = DBClass.getField("select sum(Advance_Amount) from AR_Advances where In_Patient_ID=" + inpat.In_Patient_ID + " AND (isCancelled = 0 OR isCancelled IS NULL)");
                         }
                      
