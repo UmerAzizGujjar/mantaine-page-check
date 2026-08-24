@@ -261,6 +261,46 @@
             }
         });
 
+        // Integer-only filter for qty inputs (allow digits + nav keys)
+        var __qtyWarnTs = 0;
+        $(document).on('keydown', 'input[name="txtQty"]', function (e) {
+            var k = e.keyCode || e.which;
+            // allow: backspace(8), delete(46), tab(9), escape(27), enter(13), arrows(37-40), home(36), end(35)
+            if (k == 8 || k == 9 || k == 13 || k == 27 || k == 35 || k == 36 ||
+                (k >= 37 && k <= 40) || (k >= 112 && k <= 123) || // F-keys
+                (e.ctrlKey || e.metaKey)) return;
+            // block anything not 0-9
+            if (k < 48 || k > 57) {
+                e.preventDefault();
+                var now = Date.now();
+                if (now - __qtyWarnTs > 1000) {
+                    __qtyWarnTs = now;
+                    Swal.fire({
+                        icon: 'warning', title: 'Invalid!', text: 'Only Numbers Allowed In Quantity',
+                        showConfirmButton: false, timer: 1500,
+                        customClass: { popup: 'swal-big-popup', title: 'swal-big-title', htmlContainer: 'swal-big-text' }
+                    });
+                }
+                return false;
+            }
+        });
+        $(document).on('input paste', 'input[name="txtQty"]', function (e) {
+            var v = $(this).val();
+            var cleaned = v.replace(/[^0-9]/g, '');
+            if (v !== cleaned) {
+                $(this).val(cleaned);
+                var now = Date.now();
+                if (now - __qtyWarnTs > 1000) {
+                    __qtyWarnTs = now;
+                    Swal.fire({
+                        icon: 'warning', title: 'Invalid!', text: 'Only Numbers Allowed In Quantity',
+                        showConfirmButton: false, timer: 1500,
+                        customClass: { popup: 'swal-big-popup', title: 'swal-big-title', htmlContainer: 'swal-big-text' }
+                    });
+                }
+            }
+        });
+
         $(document).keydown(function (e) {
             switch (e.which) {
                 case 40:
@@ -293,12 +333,41 @@
                     if (checkTable == "tblDetails") {
                         var attr_name = $(e.target).attr('name');
                         if (attr_name == 'txtQty') {
+                            var qtyVal = parseInt($(e.target).val(), 10);
+                            if (isNaN(qtyVal) || qtyVal <= 0) {
+                                e.preventDefault();
+                                Swal.fire({
+                                    icon: 'error', title: 'Error!', text: 'Quantity Must Be Greater Than 0',
+                                    showConfirmButton: false, timer: 2000,
+                                    customClass: { popup: 'swal-big-popup', title: 'swal-big-title', htmlContainer: 'swal-big-text' }
+                                });
+                                $(e.target).focus().select();
+                                break;
+                            }
                             if (showTemplate == "01") {
                                 OpenItemList();
+                            } else {
+                                e.preventDefault();
+                                e.stopPropagation();
+                                var $qty = $(e.target);
+                                $qty.blur();
+                                window.__skipMedNameChange = true;
+                                $('#medName').val(null).trigger('change');
+                                setTimeout(function () { window.__skipMedNameChange = false; }, 500);
+                                $('#medName').select2('open');
+                                var tries = 0;
+                                var focusSearch = function () {
+                                    tries++;
+                                    var $f = $('.select2-container--open .select2-search__field');
+                                    if ($f.length) {
+                                        $f.val('').focus();
+                                        if (document.activeElement === $f[0]) return true;
+                                    }
+                                    if (tries < 25) setTimeout(focusSearch, 40);
+                                    return false;
+                                };
+                                focusSearch();
                             }
-
-
-
                         }
                     }
                     break;
@@ -494,6 +563,7 @@
             });
             $("#medName").on('change', function (e) {
                 debugger;
+                if (window.__skipMedNameChange) return;
                 setTimeout(function () {
                     $('input[name="txtQty"]').focus().select();
                 }, 5);
@@ -3468,44 +3538,7 @@ function CalculateReceivedAmount() {
             });
         }
 
-        //function fillItemListsWareHouseWise() {
-        //    debugger;
-        //    var warehouse = $('#ddlWarehouse').find('option:selected').val();
-        //    var SearchString = $("#txtSearchitem").val();
-
-        //    PageMethods.GetItemList_WareHouseWise(warehouse,SearchString, function (data) {
-
-        //        var parsedData = JSON.parse(data);
-        //        var rows = '';
-
-        //        $.each(parsedData, function (i, value) {
-
-        //            rows += '<tr>' +
-        //                '<td class="text-center">' +
-        //                '<input type="checkbox" class="chkItem" ' +
-        //                'data-itemid="' + value.Item_ID + '" ' +
-        //                'data-warehouse="' + value.Ware_House + '" ' +
-        //                'onchange="ItemSelectionChanged(\'' + value.Item_ID + '\',\'' + value.Ware_House + '\')">' +
-        //                '</td>' +
-        //                '<td>' + value.Item_Code + '</td>' +
-        //                '<td>' + value.Description + '</td>' +
-        //                '<td class="text-end">' + value.Qty + '</td>' +
-        //                '<td>' + value.WareHouse_Name + '</td>' +
-        //                '<td class="text-end">' + parseFloat(value.Purchase_Rate).toFixed(2) + '</td>' +
-        //                '<td>' + value.UOM_Qty + '</td>' +
-        //                '<td>' + value.Manufacturer_Name + '</td>' +
-        //                '</tr>';
-
-        //        });
-
-        //        $("#tblItemList tbody").html(rows);
-        //        $(".se-pre-con").fadeOut("slow");
-
-        //    }, function (err) {
-        //        console.log(err);
-        //        $(".se-pre-con").fadeOut("slow");
-        //    });
-        //}
+        
         debugger;
         function ItemSelectionChanged(itemId, warehouse) {
             debugger;
