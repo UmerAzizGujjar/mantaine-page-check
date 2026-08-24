@@ -1936,6 +1936,61 @@ namespace PMS
                 return new JavaScriptSerializer().Serialize(result);
             }
         }
+        [WebMethod]
+        public static string GetPatientName(int patientId)
+        {
+            using (DataBaseDataContext db = new DataBaseDataContext())
+            {
+                var regPatient = (from p in db.Reg_patients
+                                  where p.pat_id == patientId
+                                  select p.Full_Name).FirstOrDefault();
+
+                if (!string.IsNullOrEmpty(regPatient))
+                {
+                    return (new JavaScriptSerializer()).Serialize(regPatient);
+                }
+
+                var inPatient = (from ip in db.In_Patients
+                                 join rp in db.Reg_patients on ip.Patient_ID equals rp.pat_id
+                                 where ip.In_Patient_ID == patientId
+                                 select rp.Full_Name).FirstOrDefault();
+
+                if (!string.IsNullOrEmpty(inPatient))
+                {
+                    return (new JavaScriptSerializer()).Serialize(inPatient);
+                }
+
+                var outPatient = (from op in db.Out_Patients
+                                  join rp in db.Reg_patients on op.Reg_PatId equals rp.pat_id
+                                  where op.Out_Patient_ID == patientId
+                                  select rp.Full_Name).FirstOrDefault();
+
+                if (!string.IsNullOrEmpty(outPatient))
+                {
+                    return (new JavaScriptSerializer()).Serialize(outPatient);
+                }
+
+                var emergencyPatient = (from ep in db.Emergency_Patients
+                                        join rp in db.Reg_patients on ep.Patient_ID equals rp.pat_id
+                                        where ep.Emergency_ID == patientId
+                                        select rp.Full_Name).FirstOrDefault();
+
+                return (new JavaScriptSerializer()).Serialize(emergencyPatient ?? "");
+            }
+        }
+
+        [WebMethod]
+        public static string GetPatientNameByRegId(int regPatId)
+        {
+            using (DataBaseDataContext db = new DataBaseDataContext())
+            {
+                var patient = (from p in db.Reg_patients
+                               where p.pat_id == regPatId
+                               select p.Full_Name).FirstOrDefault();
+
+                return (new JavaScriptSerializer()).Serialize(patient ?? "");
+            }
+        }
         //[WebMethod]
         //public static string AllInvoiceNumbers()
         //{

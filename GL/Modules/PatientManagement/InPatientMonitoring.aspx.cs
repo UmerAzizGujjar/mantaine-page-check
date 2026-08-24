@@ -246,6 +246,27 @@ namespace PMS
                          };
             return (new JavaScriptSerializer().Serialize(Routes));
         }
+
+        [WebMethod]
+        public static string MedicationRequestQty()
+        {
+            try
+            {
+                using (var db = new DataBaseDataContext(DBClass.ConnectionString()))
+                {
+                    var Medication = (from tbl in db.sys_Parms
+                                      where tbl.Name == "Medication Request Qty"
+                                      select tbl.Code)
+                              .FirstOrDefault();
+
+                    return Medication ?? "01";
+                }
+            }
+            catch (Exception ex)
+            {
+                return "0";
+            }
+        }
         [WebMethod]
         public static string FillDosageDropDown()
         {

@@ -4021,6 +4021,26 @@ function CalculateReceivedAmount() {
                 var prefix = parts[0];
                 var number = parts[1];
 
+                if (pat_Id && pat_Id != "0") {
+                    $.ajax({
+                        type: "POST",
+                        url: "IssueMedicine.aspx/GetPatientName",
+                        data: JSON.stringify({ patientId: pat_Id }),
+                        contentType: "application/json; charset=utf-8",
+                        dataType: "json",
+                        async: false,
+                        success: function (response) {
+                            var patientName = JSON.parse(response.d);
+                            if (patientName) {
+                                $('#CustomerName').val(patientName);
+                                $('#CustomerName').attr('disabled', true);
+                            }
+                        },
+                        error: function (xhr, status, error) {
+                            console.error("Error fetching patient name:", error);
+                        }
+                    });
+                }
 
                 var Pat_Id = pat_Id
                 itemIds = [];
@@ -4767,7 +4787,7 @@ function CalculateReceivedAmount() {
             $('#ddlDepartment').attr('disabled', false);
             $('#ddlWarehouse').prop('disabled', false);
             $('#ddlpanel').attr('disabled', false);
-
+            $('#CustomerName').val('').attr('disabled', false);
             
             $('#medName').val('').trigger('change');
 
@@ -4881,7 +4901,7 @@ function CalculateReceivedAmount() {
                     <input type="text" id="txtTransType" style="display: none" tabindex="1" class="form-control" />
                 </div>
                 <div class="col-sm-12 col-md-4 col-lg-2">
-                    <label id="LblCustomerName">Walk-in Customer:</label>
+                    <label id="LblCustomerName">Patient Name</label>
                     <input type="text" id="CustomerName" tabindex="2" autocomplete="off" class="form-control" />
                 </div>
                 <div class="col-sm-12 col-md-4 col-lg-2">

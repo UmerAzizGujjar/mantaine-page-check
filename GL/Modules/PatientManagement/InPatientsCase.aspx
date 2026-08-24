@@ -6360,6 +6360,21 @@
 
                 }
 
+                var medicationRequestCode = '';
+
+                $.ajax({
+                    type: "POST",
+                    url: "InPatientsCase.aspx/MedicationRequestQty",
+                    contentType: "application/json; charset=utf-8",
+                    dataType: "json",
+                    async: false, 
+                    success: function (response) {
+                        medicationRequestCode = response.d;
+                    },
+                    error: function () {
+                        medicationRequestCode = "01"; 
+                    }
+                });
                 var value = $('#txtPharmacyItem').val();
 
                 if ($('#txtPharmacyItem').val() == 'Select Medicine' || $('#txtPharmacyItem').val() == null || $('#txtPharmacyItem').val() == '0') {
@@ -6434,6 +6449,26 @@
 
                 var requestQty = $('#txtRequestQty').val() || 0;
                 if (requestQty == '' || isNaN(requestQty)) requestQty = 0;
+
+                var requestQty = $('#txtRequestQty').val();
+                if (requestQty == '' || isNaN(requestQty) || requestQty == null) {
+                    requestQty = 0;
+                } else {
+                    requestQty = parseFloat(requestQty);
+                }
+
+                if (medicationRequestCode === "01") {
+                    if (requestQty <= 0) {
+                        Swal.fire({
+                            icon: 'warning',
+                            title: 'Request Qty Required',
+                            text: 'Please enter a quantity greater than 0 for the medication request.',
+                            confirmButtonText: 'OK'
+                        });
+                        $('#txtRequestQty').focus();
+                        return false;
+                    }
+                }
                  
                 var rdRiskY = $('#rdRiskY').is(':checked');
                 if (rdRiskY == true) {
@@ -9268,7 +9303,7 @@
                                             <input type="text" id="txtService" name="txtService" runat="server" />
                                         </td>
                                         <td>
-                                            <input type="button" id="btnAddService" class="btn btn-primry" name="btnAddService" onclick="AddServiceOrItem()" value="Add Service" style="top: 3px; left: 20px;width:25% !important" />
+                                            <input type="button" id="btnAddService" class="btn btn-primry" name="btnAddService" onclick="AddServiceOrItem()" value="Add Service" style="top: 3px; left: 20px;" />
                                         </td>
                                     </tr>
                                 </tbody>

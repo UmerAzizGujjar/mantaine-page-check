@@ -982,6 +982,7 @@
         }
         var inpatient = 0;
         var TimePicker = '';
+        var medicationRequestCode = '01'; 
         $(document).ready(function () {
             $('textarea').addClass("todolist");
             $('#ctl00_MainContent_txtAreaOfInterest').removeClass('todolist');
@@ -1483,10 +1484,39 @@
                 //    }
                 //}
 
-                // ========== ADD: Get Request Qty value ==========
-                var requestQty = $('#txtRequestQty').val() || 0;
-                if (requestQty == '' || isNaN(requestQty)) requestQty = 0;
-                // ========== END ADD ==========
+                $.ajax({
+                    type: "POST",
+                    url: "InPatientMonitoring.aspx/MedicationRequestQty",
+                    contentType: "application/json; charset=utf-8",
+                    dataType: "json",
+                    async: false, 
+                    success: function (response) {
+                        medicationRequestCode = response.d;
+                    },
+                    error: function () {
+                        medicationRequestCode = "01"; 
+                    }
+                });
+
+                var requestQty = $('#txtRequestQty').val();
+                if (requestQty == '' || isNaN(requestQty) || requestQty == null) {
+                    requestQty = 0;
+                } else {
+                    requestQty = parseFloat(requestQty);
+                }
+
+                if (medicationRequestCode === "01") {
+                    if (requestQty <= 0) {
+                        Swal.fire({
+                            icon: 'warning',
+                            title: 'Request Qty Required',
+                            text: 'Please enter a quantity greater than 0 for the medication request.',
+                            confirmButtonText: 'OK'
+                        });
+                        $('#txtRequestQty').focus();
+                        return false;
+                    }
+                }
 
                 var datetime = '<%= DateTime.Now.ToString("MM/dd/yyyy hh:mm:ss A")%>';
                 var datetimeValue = '<%= DateTime.Now%>';
