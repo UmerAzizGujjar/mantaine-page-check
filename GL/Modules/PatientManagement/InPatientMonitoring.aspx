@@ -2400,8 +2400,9 @@
             var PatID = $('#<%= txtPatient_ID.ClientID%>').val();
             var Nursing_Plan = toHtml('#ctl00_MainContent_txt_Nursing_plan');
             var Nurse_Name_N = toHtml('#ctl00_MainContent_txt_Nurse_Name_Nursing');
+            var MR_No = $('#txtMR_No').val();
 
-            PageMethods.SavePatientMonitiring(btnsave, In_Mon_ID, Nursing_Plan, PatID, Nurse_Name_N, function (response) {
+            PageMethods.SavePatientMonitiring(btnsave, In_Mon_ID, Nursing_Plan, PatID, Nurse_Name_N, MR_No, function (response) {
 
                 alert("Data Has been Successfully Saved");
                 $('#btnSave').val("Update");
@@ -3118,6 +3119,14 @@
                 $('#ctl00_MainContent_hdnInpatient_id').val(data.d.inPatient);
                 $("#hdnipd_id").val(data.d.in_patient_id);
                 console.log(data.d.in_patient_id);
+
+                if (data.d.MR_No && data.d.MR_No !== '') {
+                    $('#txtMR_No').val(data.d.MR_No);
+                    $('#txtMR_No').prop('disabled', true);
+                } else {
+                    $('#txtMR_No').val('');
+                    $('#txtMR_No').prop('disabled', false);
+                }
 
                 CheckDischarge();
 
@@ -5256,6 +5265,8 @@
                                          <input type="button" id="RegulerMedicinePrint" class="btn btn-primry" onclick="PrintMecicationDetail()" value="Regular Print" style="width:15% !important" />
         <%--                                <input type="button" class="btn btn-primry" onclick="PrintMecicationDetailPRN()" value="STAT Print"  style="width: 15% !important;"/>
                                          <input type="button" class="btn btn-primry" onclick="PrintMecicationDetailSTAT()" value="PRN Print" style="width: 15% !important;" />--%>
+                                         <label for="txtMR_No" style="margin-left: 20px; margin-right: 5px;">MR No:</label>
+                                         <input type="text" id="txtMR_No" style="width: 180px !important;" />
                                         <h2>Regular Medicine</h2>
                                         <div style="overflow: scroll; height: 280px;">                                       
                                         <table class="table" id="tblMedicinesListRegular">

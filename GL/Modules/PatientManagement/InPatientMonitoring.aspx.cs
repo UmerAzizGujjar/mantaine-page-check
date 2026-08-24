@@ -172,13 +172,19 @@ namespace PMS
                                      select new
                                      {
                                          WardName = ward != null ? ward.Ward_Type : "",
-                                         BedNo = ip.Bed_No
+                                         BedNo = ip.Bed_No,
+                                         MR_No = ip.MR_No
                                      }).FirstOrDefault();
 
                 if (inPatientData != null)
                 {
                     vLbl_WardName.Text = inPatientData.WardName ?? "";
                     vLbl_BedNo.Text = inPatientData.BedNo != null ? inPatientData.BedNo.ToString() : "";
+                }
+
+                if (inPatientData != null && !string.IsNullOrEmpty(inPatientData.MR_No))
+                {
+                    ScriptManager.RegisterStartupScript(this.Page, this.GetType(), "SetMRNo", "$('#txtMR_No').val('" + inPatientData.MR_No + "').prop('disabled', true);", true);
                 }
 
             }
@@ -713,7 +719,7 @@ namespace PMS
         }
 
         [WebMethod]
-        public static int SavePatientMonitiring(string btnsave, string In_Mon_ID, string Nursing_Plan, string PatID, string Nurse_Name_N)
+        public static int SavePatientMonitiring(string btnsave, string In_Mon_ID, string Nursing_Plan, string PatID, string Nurse_Name_N, string MR_No = "")
         {
             InPatient_Monitoring ipm;
             int inPatMonID;
@@ -807,6 +813,19 @@ namespace PMS
             {
                 ipm.Dischage_ID = "1";
                 db.SubmitChanges();
+            }
+
+            if (!string.IsNullOrEmpty(MR_No))
+            {
+                var inPat = (from tbl in db.In_Patients
+                            where tbl.Patient_ID == Convert.ToInt32(PatID) && (tbl.Discharge == null || tbl.Discharge == false)
+                            orderby tbl.Created_Time descending
+                            select tbl).FirstOrDefault();
+                if (inPat != null)
+                {
+                    inPat.MR_No = MR_No;
+                    db.SubmitChanges();
+                }
             }
 
             return InPatientMonID;
@@ -1524,8 +1543,9 @@ namespace PMS
             public string Entry_Date;
             public string inPatient;
             public string in_patient_id;
-            public string Ward_Name; 
+            public string Ward_Name;
             public string Bed_No;
+            public string MR_No;
         }
         [System.Web.Services.WebMethod]
 
@@ -1554,6 +1574,7 @@ namespace PMS
                 pt.Gender = db.GetDataValueName("Gender", pat.Gender);
                 pt.inPatient = pat.pat_id.ToString();
                 pt.in_patient_id = DBClass.getField("select In_Patient_ID from In_Patient where Patient_ID =" + PatientID + " order by Created_Time desc");
+                pt.MR_No = DBClass.getField("select MR_No from In_Patient where Patient_ID =" + PatientID + " order by Created_Time desc") ?? "";
 
                 var inPatientData = (from ip in db.In_Patients
                                      join wd in db.Ward_Definitions on ip.Ward_ID equals wd.Ward_ID into wardJoin
