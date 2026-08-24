@@ -248,6 +248,14 @@
                     { "data": "Department", "orderable": false },
                     { "data": "TotalQty", className: "text-right", "orderable": false },
                     { "data": "Remarks", "orderable": false },
+                    {
+                        "data": "Created_Date",
+                        "render": function (data, type, full) {
+                            var date = full.Created_Date;
+                            date = moment(date).format('DD-MMM-YYYY');
+                            return date;
+                        }, "orderable": true
+                    },
                     { "data": "CreatedBY", "orderable": false },
                     { "data": "UpdatedBY", "orderable": false },
                     {
@@ -255,6 +263,19 @@
                         "render": function (data, type, full) {
                             var date = full.Update_Date;
                             if (!date) { 
+                                return '';
+                            }
+                            date = moment(date).format('DD-MMM-YYYY');
+                            return date;
+                        },
+                        "orderable": true
+                    },
+                    { "data": "Approved_By", "orderable": false },
+                    {
+                        "data": "Approve_Time",
+                        "render": function (data, type, full) {
+                            var date = full.Approve_Time;
+                            if (!date) {
                                 return '';
                             }
                             date = moment(date).format('DD-MMM-YYYY');
@@ -488,9 +509,12 @@
                     <th>Department</th>
                     <th>TotalQty</th>
                     <th>Remarks</th>
+                    <th>CReation Date</th>
                     <th>CreatedBY</th>                 
                     <th>UpdatedBY</th>                 
                     <th>UpdatedDate</th>                 
+                    <th>Approved By</th>                 
+                    <th>Approved Time</th>                 
                     <th>Status</th>
                     <th>Actions</th>
                 </tr>

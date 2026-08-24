@@ -8384,7 +8384,7 @@
                             <dt>Age</dt><dd id="lblAgeYears"></dd>
                             <dt>Reg Date</dt><dd id="lblRegDate"></dd>
                             <dt>Address</dt><dd id="lblAddress" style="white-space:normal;overflow:visible;text-overflow:clip;"></dd>
-                            <dt>Bill Date</dt><dd><input type="text" id="txtBillDate" class="bp-input bp-input--readonly" disabled style="height:24px;font-size:11px;padding:2px 6px;" /></dd>
+                            <dt>Bill Date</dt><dd><input type="text" id="txtBillDate" class="bp-input bp-input--readonly" disabled style="height:24px;font-size:11px;padding:2px 6px;max-width:130px;width:130px;" /></dd>
                         </dl>
                     </div>
                 </div>
@@ -8539,7 +8539,7 @@
     <div class="bp-toolbar">
         <span class="bp-toolbar-label"><i class="fa fa-plus-circle"></i> Add Services</span>
         <div class="bp-toolbar-divider"></div>
-        <input type="text" id="txtAddService" class="bp-input" placeholder="Type service / item name..." style="max-width:20% !important" />
+        <input type="text" id="txtAddService" class="bp-input" placeholder="Type service / item name..." style="max-width:30% !important; min-width:220px; flex: 0 1 280px;" />
         <button type="button" class="bp-btn bp-btn--primary bp-btn--sm" id="btnAddServiceOrItem" onclick="AddServiceOrItem()">
             <i class="fa fa-plus"></i> Add Srvc / Itm
         </button>
