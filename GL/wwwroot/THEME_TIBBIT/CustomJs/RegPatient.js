@@ -69,6 +69,7 @@
         { id: '#ddl_Gender', method: 'GetGender' },
         { id: '#ddlCountry', method: 'GetCountry' },
         { id: '#ddl_status', method: 'GetMartailStatus' },
+        { id: '#ddl_name', method: 'GetPrefix' },
         { id: '#txtarea', method: 'GetArea' },
         { id: '#txtcity', method: 'GetCity' },
         { id: '#ddl_bloodGroup', method: 'GetBloodBank' },
@@ -102,7 +103,7 @@
         });
     });
 
-    const staticDropdowns = ['#ddl_name', '#ddlRelation', '#PrefixAge'];
+    const staticDropdowns = ['#ddlRelation', '#PrefixAge'];
     staticDropdowns.forEach(id => {
         const $el = $(id);
         $el.select2();
@@ -330,6 +331,7 @@ function SavePatient() {
     $('#SavePatient_Data').attr('disabled', true);
     $('.span_txt').hide();
     var Prefix_PatientName = $('#ddl_name').val();
+    var Prefix_Text = $('#ddl_name option:selected').text().trim();
     var PatientName = $('#txt_name').val();
     var PatientID = $('#hdn_regid').val();
     // 1. Check if the name contains a dot (indicating an existing prefix)
@@ -338,8 +340,8 @@ function SavePatient() {
         // Then use .trim() to remove leading spaces
         PatientName = PatientName.substring(PatientName.indexOf('.') + 1).trim();
     }
-    // 2. Combine with the selected prefix
-    var Full_Name = Prefix_PatientName + " " + PatientName;
+    // 2. Combine with the selected prefix (use TEXT for display name)
+    var Full_Name = Prefix_Text + " " + PatientName;
      var RelationType = $('#ddlRelation').val();
     var Relation = $('#txt_relation').val();
     var Gender = $('#ddl_Gender').val();
@@ -493,6 +495,7 @@ function SavePatient() {
         "AntiForgeryToken": AntiForgeryToken,
         "bank_cash": bank_cash,
         "bank_account_id": bank_account_id,
+        "Prefix": Prefix_PatientName,
     });
 
     console.log(data);
@@ -632,6 +635,8 @@ function Get_Pat_Info(reg_id) {
             }
             if (data.MaritalStatus_text)
                 $('#ddl_status').html($('<option>', { value: data.Martial_Status, text: data.MaritalStatus_text }).prop('selected', true));
+            if (data.Prefix_text)
+                $('#ddl_name').html($('<option>', { value: data.Prefix, text: data.Prefix_text }).prop('selected', true));
             if (data.Country_text)
                 $('#ddlCountry').html($('<option>', { value: data.Country, text: data.Country_text }).prop('selected', true));
             if (data.BloodGroup_text)

@@ -357,10 +357,6 @@
                     <div class="col-lg-1 col-md-3 col-sm-6">
                         <label for="ddl_name">Name<span style="color: red;">*</span></label>
                         <select id="ddl_name" class="form-control">
-                            <option value="Mr.">Mr.</option>
-                            <option value="Mrs.">Mrs.</option>
-                            <option value="Ms.">Ms.</option>
-                            <option value="B/O.">B/O.</option>
                         </select>
                     </div>
 
