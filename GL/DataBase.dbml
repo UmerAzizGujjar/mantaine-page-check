@@ -11339,21 +11339,6 @@
       <Column Name="CGSRate" Type="System.Decimal" DbType="Decimal(18,2)" CanBeNull="true" />
     </ElementType>
   </Function>
-  <Function Name="dbo.sp_GetItemList_WareHouseWise" Method="sp_GetItemList_WareHouseWise">
-    <Parameter Name="WareHouse" Parameter="wareHouse" Type="System.String" DbType="VarChar(50)" />
-    <Parameter Name="Search" Parameter="search" Type="System.String" DbType="VarChar(500)" />
-    <ElementType Name="sp_GetItemList_WareHouseWiseResult">
-      <Column Name="Description" Type="System.String" DbType="VarChar(200)" CanBeNull="true" />
-      <Column Name="Item_Code" Type="System.String" DbType="VarChar(15)" CanBeNull="true" />
-      <Column Name="Item_ID" Type="System.Int32" DbType="Int NOT NULL" CanBeNull="false" />
-      <Column Name="WareHouse_Name" Type="System.String" DbType="VarChar(150)" CanBeNull="true" />
-      <Column Name="Ware_House" Type="System.String" DbType="NVarChar(50)" CanBeNull="true" />
-      <Column Name="Qty" Type="System.Decimal" DbType="Decimal(38,6)" CanBeNull="true" />
-      <Column Name="Manufacturer_Name" Type="System.String" DbType="VarChar(150) NOT NULL" CanBeNull="false" />
-      <Column Name="Purchase_Rate" Type="System.Double" DbType="Float" CanBeNull="true" />
-      <Column Name="UOM_Qty" Type="System.Decimal" DbType="Decimal(18,2)" CanBeNull="true" />
-    </ElementType>
-  </Function>
   <Function Name="dbo.spGetitemsDetails" Method="spGetitemsDetails">
     <Parameter Name="itemId" Type="System.Int32" DbType="Int" />
     <Parameter Name="DeptID" Parameter="deptID" Type="System.String" DbType="VarChar(50)" />
@@ -13082,6 +13067,22 @@
       <Column Name="G_Address" Type="System.String" DbType="NVarChar(500)" CanBeNull="true" />
       <Column Name="G_CNIC" Type="System.String" DbType="VarChar(500)" CanBeNull="true" />
       <Column Name="G_Phone" Type="System.String" DbType="VarChar(500)" CanBeNull="true" />
+    </ElementType>
+  </Function>
+  <Function Name="dbo.sp_GetItemList_WareHouseWise" Method="sp_GetItemList_WareHouseWise">
+    <Parameter Name="WareHouse" Parameter="wareHouse" Type="System.String" DbType="VarChar(50)" />
+    <Parameter Name="Search" Parameter="search" Type="System.String" DbType="VarChar(500)" />
+    <ElementType Name="sp_GetItemList_WareHouseWiseResult">
+      <Column Name="Description" Type="System.String" DbType="VarChar(200)" CanBeNull="true" />
+      <Column Name="Item_Code" Type="System.String" DbType="VarChar(15)" CanBeNull="true" />
+      <Column Name="Item_ID" Type="System.Int32" DbType="Int NOT NULL" CanBeNull="false" />
+      <Column Name="WareHouse_Name" Type="System.String" DbType="VarChar(150)" CanBeNull="true" />
+      <Column Name="Ware_House" Type="System.String" DbType="NVarChar(50)" CanBeNull="true" />
+      <Column Name="Qty" Type="System.Decimal" DbType="Decimal(38,6)" CanBeNull="true" />
+      <Column Name="Manufacturer_Name" Type="System.String" DbType="VarChar(150) NOT NULL" CanBeNull="false" />
+      <Column Name="Purchase_Rate" Type="System.Double" DbType="Float" CanBeNull="true" />
+      <Column Name="Locator" Type="System.String" DbType="NVarChar(450) NOT NULL" CanBeNull="false" />
+      <Column Name="UOM_Qty" Type="System.Decimal" DbType="Decimal(18,2)" CanBeNull="true" />
     </ElementType>
   </Function>
 </Database>
