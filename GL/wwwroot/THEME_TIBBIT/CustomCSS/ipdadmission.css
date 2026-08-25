@@ -1,13 +1,35 @@
-﻿.headingcolor {
-    color:black !important;
-    text-align:center !important;
+﻿/* ============================================
+   IPD Admission - Modern Compact Design
+   (mirrors BillingProcess bento pattern)
+   Theme color: #EFA63E (tibbit gold)
+   ============================================ */
+
+:root {
+    --ipd-primary: #EFA63E;
+    --ipd-primary-hover: #cb8d35;
+    --ipd-primary-soft: rgba(239, 166, 62, 0.08);
+    --ipd-bg: #f4f6fa;
+    --ipd-card: #ffffff;
+    --ipd-text: #2c3e50;
+    --ipd-muted: #7b8390;
+    --ipd-border: #e6eaf0;
+    --ipd-border-strong: #d6dce5;
+    --ipd-shadow-sm: 0 1px 2px rgba(15, 23, 42, 0.04);
+    --ipd-shadow: 0 2px 8px rgba(15, 23, 42, 0.06);
+    --ipd-radius: 8px;
+    --ipd-radius-sm: 5px;
+    --ipd-font: 13px;
 }
 
+/* ----- Original preserved styles ----- */
+.headingcolor {
+    color: black !important;
+    text-align: center !important;
+}
 
 #token-input-ctl00_MainContent_txtPatient_ID {
     box-shadow: 2px -2px 5px rgba(0, 0, 0, 0.2) !important;
 }
-
 
 .image-container {
     background-color: #D9D9D9;
@@ -20,14 +42,14 @@
     color: #FFC000 !important;
 }
 
-
 #tabs ul li a {
-    background-color: #EFA63E   !important;
+    background-color: var(--ipd-primary) !important;
     color: white;
     background: none;
     border: none;
     padding: 10px;
 }
+
 #PatientModel input[type="text"]:not(#txtAge_yearss),
 #PatientModel input[type="tel"],
 #PatientModel input[type="email"],
@@ -35,46 +57,41 @@
     text-transform: uppercase;
 }
 
-/* Keep the Age/DOB placeholder input as normal case */
 #PatientModel #txtAge_yearss {
     text-transform: none;
 }
 
-/* Optional: Keep select dropdowns normal (if you don't want them uppercase) */
 #PatientModel select {
     text-transform: none;
 }
+
 #tabs ul li.ui-tabs-active a {
     border-bottom: 1px solid aliceblue !important;
     color: white !important;
 }
-.mt{
-    margin-top:10px;
-}
-.card {
-    border: 1px solid #C4C4C4;
-    background-color: #f9f9f9;
-    border-radius: 10px;
-    padding: 20px;
-    margin-bottom: 20px;
-    height: 230px !important;
+
+.blink {
+    animation: blink-animation 1s steps(2, start) infinite;
 }
 
-.formrgn {
-    margin-top: 15px;
+@keyframes blink-animation {
+    to { visibility: hidden; }
 }
 
-.top {
-    margin-top: 13px;
+no-scrollbar {
+    -ms-overflow-style: none;
+    scrollbar-width: none;
 }
 
-.card-body p {
-    margin-bottom: 10px;
-    font-size: 14px;
+.no-scrollbar::-webkit-scrollbar {
+    display: none;
 }
 
-
-
+/* Ward/Room side tables: hidden by default, JS toggles via chkIssuance_Of_Select() */
+#tblWards,
+#tblRooms {
+    display: none;
+}
 
 @media (min-width: 768px) {
     .modal-dialog {
@@ -83,133 +100,391 @@
     }
 }
 
+/* ============================================
+   COMPACT OVERRIDES (replace old bulky card)
+   ============================================ */
 
+/* Old `.card` was 230px tall, 20px padding, 20px margin
+   This forced every card to look bloated and inconsistent.
+   We keep the class for backward compatibility but make
+   it compact and auto-height. */
+.card {
+    border: 1px solid var(--ipd-border);
+    background-color: #fff;
+    border-radius: var(--ipd-radius);
+    padding: 10px 14px;
+    margin-bottom: 10px;
+    height: auto !important;
+    box-shadow: var(--ipd-shadow-sm);
+    transition: box-shadow 0.18s ease;
+}
+.card:hover {
+    box-shadow: var(--ipd-shadow);
+}
+.card-body {
+    padding: 4px 0;
+}
+.card-body p {
+    margin-bottom: 6px;
+    font-size: 13px;
+}
 
-@media (min-width: 480px) {
-    .table th:nth-child(2) span {
-        display: block;
+/* Tighter spacing utilities */
+.mt {
+    margin-top: 6px !important;
+}
+.formrgn {
+    margin-top: 0 !important;
+}
+.top {
+    margin-top: 0 !important;
+}
+
+/* Section h2 inside IPD body */
+#Tab-1 h2,
+#Tab-14 h2 {
+    font-size: 14px !important;
+    margin: 6px 0 4px 0 !important;
+    font-weight: 600;
+    color: var(--ipd-text);
+}
+
+/* ============================================
+   IPD META BAR (top action bar)
+   Replaces the col-lg-2/col-lg-8 loose divs
+   ============================================ */
+.ipd-meta-bar {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    background: linear-gradient(135deg, var(--ipd-primary) 0%, var(--ipd-primary-hover) 100%);
+    color: #fff;
+    padding: 10px 18px;
+    border-radius: var(--ipd-radius);
+    margin-bottom: 14px;
+    box-shadow: var(--ipd-shadow);
+    flex-wrap: nowrap;
+}
+.ipd-meta-bar .ipd-meta-title {
+    font-size: 15px;
+    font-weight: 600;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    white-space: nowrap;
+    flex-shrink: 0;
+}
+.ipd-meta-bar .ipd-meta-title i {
+    font-size: 16px;
+}
+.ipd-meta-bar .ipd-meta-actions {
+    display: flex;
+    gap: 8px;
+    flex-wrap: nowrap;
+    align-items: center;
+}
+.ipd-meta-bar .ipd-meta-btn {
+    background: rgba(255, 255, 255, 0.28);
+    color: #fff;
+    border: 1.5px solid rgba(255, 255, 255, 0.55);
+    padding: 6px 14px;
+    white-space: nowrap;
+    border-radius: 14px;
+    font-size: 12px;
+    font-weight: 700;
+    cursor: pointer;
+    transition: all 0.18s ease;
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    text-transform: uppercase;
+    letter-spacing: 0.3px;
+    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
+    line-height: 1.3;
+}
+.ipd-meta-bar .ipd-meta-btn i {
+    font-size: 12px;
+}
+.ipd-meta-bar .ipd-meta-btn:hover {
+    background: rgba(255, 255, 255, 0.45);
+    border-color: rgba(255, 255, 255, 0.85);
+    transform: translateY(-1px);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+}
+
+/* ============================================
+   IPD CARD (patient info card)
+   Replaces the 230px fixed-height card
+   ============================================ */
+.ipd-card {
+    background: #fff;
+    border: 1px solid var(--ipd-border);
+    border-radius: var(--ipd-radius);
+    box-shadow: var(--ipd-shadow-sm);
+    margin-bottom: 16px;
+    padding: 14px 18px;
+    transition: box-shadow 0.18s ease;
+}
+.ipd-card:hover {
+    box-shadow: var(--ipd-shadow);
+}
+.ipd-card-header {
+    background: linear-gradient(135deg, var(--ipd-primary) 0%, var(--ipd-primary-hover) 100%);
+    color: #fff;
+    padding: 7px 14px;
+    font-size: 12px;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.4px;
+    display: flex;
+    align-items: center;
+    gap: 7px;
+    border-radius: var(--ipd-radius-sm);
+    margin: -14px -18px 12px -18px;
+}
+.ipd-card-header i {
+    font-size: 13px;
+}
+.ipd-card-body {
+    display: flex;
+    gap: 14px;
+    align-items: flex-start;
+}
+.ipd-card-avatar {
+    width: 80px;
+    height: 80px;
+    border-radius: 50%;
+    background: var(--ipd-bg);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+    overflow: hidden;
+    border: 2px solid #eef0f4;
+}
+.ipd-card-avatar img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+.ipd-card-info {
+    flex: 1;
+    min-width: 0;
+}
+.ipd-card-grid {
+    display: grid;
+    grid-template-columns: 100px 1fr;
+    gap: 6px 14px;
+    font-size: 13px;
+    align-items: center;
+}
+.ipd-card-grid dt {
+    color: var(--ipd-muted);
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.3px;
+    font-size: 11px;
+    line-height: 1.4;
+}
+.ipd-card-grid dd {
+    color: var(--ipd-text);
+    font-weight: 600;
+    margin: 0;
+    font-size: 13px;
+    line-height: 1.4;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+/* ============================================
+   IPD BENTO GRID
+   Replaces col-lg-3 col-md-4 col-sm-6 divs
+   ============================================ */
+.ipd-bento {
+    display: grid;
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+    gap: 12px 18px;
+    margin-bottom: 14px;
+}
+.ipd-bento--3 {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+}
+.ipd-bento--2 {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+}
+.ipd-bento--6 {
+    grid-template-columns: repeat(6, minmax(0, 1fr));
+    gap: 8px 10px;
+    align-content: start;
+    margin-bottom: 0;
+}
+/* Bento used to lay out cards (not fields) - 3 columns, responsive */
+.ipd-bento--cards {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+}
+/* Auto-fit bento: cards take as much room as available, min 320px each */
+.ipd-bento--auto {
+    grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+}
+@media (max-width: 1200px) {
+    .ipd-bento--cards {
+        grid-template-columns: 1fr 1fr;
     }
-
-
-
-    @media (min-width: 480px) {
-        .table td {
-            border: 1px solid #D9E4E6;
-        }
+}
+@media (max-width: 992px) {
+    .ipd-bento,
+    .ipd-bento--3,
+    .ipd-bento--6 {
+        grid-template-columns: 1fr 1fr;
     }
-
-
-
-    @media (min-width: 480px) {
-        .table th, .table td {
-            display: table-cell;
-            padding: 1em;
-        }
+    .ipd-bento--2 {
+        grid-template-columns: 1fr;
     }
-
-    .image-container {
-        background-color: #D9D9D9;
-        padding: 20px;
-        border-radius: 50%;
-        display: inline-block;
+    .ipd-bento--cards {
+        grid-template-columns: 1fr;
     }
-
-    .forcolor li a:hover {
-        color: #FFC000 !important;
+}
+@media (max-width: 600px) {
+    .ipd-bento,
+    .ipd-bento--3,
+    .ipd-bento--6,
+    .ipd-bento--2,
+    .ipd-bento--cards {
+        grid-template-columns: 1fr;
     }
+}
 
+/* ============================================
+   IPD FIELD (form field)
+   Replaces col-lg-3 col-md-4 col-sm-6 labels + inputs
+   ============================================ */
+.ipd-field {
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+    margin: 0;
+}
+.ipd-field > label,
+.ipd-label {
+    font-size: 11px;
+    font-weight: 600;
+    color: var(--ipd-muted);
+    text-transform: uppercase;
+    letter-spacing: 0.3px;
+    margin: 0;
+    line-height: 1.2;
+}
+.ipd-req {
+    color: #dc3545;
+    font-weight: 700;
+}
+.ipd-field > label .ipd-req,
+.ipd-label .ipd-req {
+    color: #dc3545;
+    margin-left: 2px;
+}
+.ipd-field input[type="text"],
+.ipd-field input[type="number"],
+.ipd-field input[type="date"],
+.ipd-field select,
+.ipd-field textarea,
+.ipd-input {
+    width: 100%;
+    padding: 4px 8px;
+    font-size: var(--ipd-font);
+    border: 1px solid var(--ipd-border-strong);
+    border-radius: var(--ipd-radius-sm);
+    background: #fff;
+    color: var(--ipd-text);
+    height: 30px;
+    line-height: 1.2;
+    box-sizing: border-box;
+    transition: all 0.15s ease;
+}
+.ipd-field textarea {
+    resize: none;
+    min-height: 30px;
+    overflow: auto;
+    font-family: inherit;
+}
+.ipd-field input[type="text"]:focus,
+.ipd-field input[type="number"]:focus,
+.ipd-field select:focus,
+.ipd-input:focus {
+    outline: none;
+    border-color: var(--ipd-primary);
+    box-shadow: 0 0 0 3px var(--ipd-primary-soft);
+}
+.ipd-field input[disabled],
+.ipd-field input[readonly] {
+    background: #fafbfd;
+    color: var(--ipd-text);
+}
+.ipd-field .select2-container .select2-selection--single {
+    height: 30px !important;
+    border: 1px solid var(--ipd-border-strong) !important;
+    border-radius: var(--ipd-radius-sm) !important;
+    padding: 2px 8px !important;
+}
+.ipd-field .select2-container--default .select2-selection--single .select2-selection__rendered {
+    line-height: 26px !important;
+    font-size: var(--ipd-font) !important;
+    color: var(--ipd-text) !important;
+}
+.ipd-field .select2-container--default .select2-selection--single .select2-selection__arrow {
+    height: 28px !important;
+}
 
-    #tabs ul li a {
-        background-color: #EFA63E !important;
-        color: white;
-        background: none;
-        border: none;
-        padding: 10px;
-    }
+/* ============================================
+   IPD SECTION TITLE (sub-section header)
+   Replaces plain `<h2>Admission Details : </h2>`
+   ============================================ */
+.ipd-section-title {
+    font-size: 11px;
+    font-weight: 700;
+    text-transform: uppercase;
+    color: var(--ipd-primary);
+    margin: 8px 0 4px 0;
+    letter-spacing: 0.4px;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    border-left: 3px solid var(--ipd-primary);
+    padding: 4px 8px;
+    background: #fafbfd;
+    border-radius: 0 var(--ipd-radius-sm) var(--ipd-radius-sm) 0;
+}
+.ipd-section-title i {
+    font-size: 12px;
+}
 
-    #tabs ul li.ui-tabs-active a {
-        border-bottom: 1px solid aliceblue !important;
-        color: white !important;
-    }
-
-    .card {
-        border: 1px solid #C4C4C4;
-        background-color: #f9f9f9;
-        border-radius: 10px;
-        padding: 20px;
-        margin-bottom: 20px;
-        height: 230px !important;
-    }
-
-    .formrgn {
-        margin-top: 15px;
-    }
-
-    .top {
-        margin-top: 13px;
-    }
-
-    .card-body p {
-        margin-bottom: 10px;
-        font-size: 14px;
-    }
-
-
-
-
-    @media (min-width: 768px) {
-        .modal-dialog {
-            width: 1060px;
-            margin: 30px auto;
-        }
-    }
-
-
-
-    @media (min-width: 480px) {
-        .table th:nth-child(2) span {
-            display: block;
-        }
-
-
-
-        @media (min-width: 480px) {
-            .table td {
-                border: 1px solid #D9E4E6;
-            }
-        }
-
-
-
-        @media (min-width: 480px) {
-            .table th, .table td {
-                display: table-cell;
-                padding: 1em;
-            }
-        }
-
-
-        #tblWards, #tblRooms {
-            display: none;
-        }
-
-        no-scrollbar {
-            -ms-overflow-style: none;
-            scrollbar-width: none;
-        }
-
-        .no-scrollbar::-webkit-scrollbar {
-            display: none;
-        }
-
-
-
-        .blink {
-            animation: blink-animation 1s steps(2, start) infinite;
-        }
-
-        @keyframes blink-animation {
-            to {
-                visibility: hidden;
-            }
-        }
+/* ============================================
+   Legacy form-area overrides
+   The old form used col-lg-3 with mt/formrgn/top
+   utility classes that added big gaps. Tighten them
+   inside the main admission tabs only.
+   ============================================ */
+#Tab-1 .row,
+#Tab-NextOfKin .row,
+#Tab-14 .row {
+    margin-bottom: 4px;
+}
+#Tab-1 .col-lg-3,
+#Tab-1 .col-lg-6,
+#Tab-14 .col-lg-3,
+#Tab-14 .col-lg-6 {
+    padding-left: 5px;
+    padding-right: 5px;
+    margin-bottom: 2px;
+}
+#Tab-1 .formrgn,
+#Tab-1 .top,
+#Tab-14 .formrgn,
+#Tab-14 .top {
+    margin-top: 0 !important;
+}
+#Tab-1 .row.mt,
+#Tab-14 .row.mt {
+    margin-top: 4px !important;
+}
