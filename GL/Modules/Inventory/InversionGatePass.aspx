@@ -343,9 +343,9 @@
                 if (batch == "false" || batch == 'null' || batch == null) {
                     debugger;
                     $($(value).find('td input[name=BatchNo]')[0]).prop('readonly', true);
-                    $($(value).find('td input[name=txtMfgdate]')[0]).attr('disabled', true);
-                    $($(value).find('td input[name=Expdate]')[0]).attr('disabled', true);
-                    $($(value).find('td input[name=SaleRate]')[0]).prop('readonly', true);
+                    $($(value).find('td input[name=txtMfgdate]')[0]).removeAttr('disabled').removeAttr('readonly');
+                    $($(value).find('td input[name=Expdate]')[0]).removeAttr('disabled').removeAttr('readonly');
+                    $($(value).find('td input[name=SaleRate]')[0]).removeAttr('readonly').prop('readonly', false);
                 } else {
                     $($(value).find('td input[name=BatchNo]')[0]).prop('readonly', false);
                     $($(value).find('td input[name=txtMfgdate]')[0]).removeAttr('disabled').prop('readonly', false);

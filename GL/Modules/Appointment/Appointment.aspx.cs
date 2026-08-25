@@ -82,6 +82,8 @@ namespace PMS
                     DateTime last24Hours = DateTime.Now.AddHours(-24);
 
                     var query = (from a in db.Appointment_Forms
+                                 join e in db.HR_Employees on a.Consultant_ID equals e.Emp_ID.ToString() into ej
+                                 from e in ej.DefaultIfEmpty()
                                  where a.App_Date >= last24Hours && a.App_Date <= DateTime.Now
                                  select new
                                  {
@@ -97,7 +99,7 @@ namespace PMS
                                      a.Status,
                                      a.cancelAppointment,
                                      a.created_time,
-                                     emp_name = (from data in db.HR_Employees where data.Emp_ID == Convert.ToInt32(a.Consultant_ID) select data.Emp_Name).FirstOrDefault(),
+                                     emp_name = e.Emp_Name,
                                  }).ToList().OrderByDescending(x => x.created_time);
 
                     result = (new JavaScriptSerializer()).Serialize(query).ToString();
@@ -113,6 +115,8 @@ namespace PMS
                 using (DataBaseDataContext db = new DataBaseDataContext())
                 {
                     var query = (from a in db.Appointment_Forms
+                                 join e in db.HR_Employees on a.Consultant_ID equals e.Emp_ID.ToString() into ej
+                                 from e in ej.DefaultIfEmpty()
                                  where a.App_Date.Value.Date >= dTimestDate && a.App_Date.Value.Date <= dTimeenDate
 
                                  select new
@@ -127,7 +131,8 @@ namespace PMS
                                      a.App_Date,
                                      a.Time,
                                      a.Status,
-                                     emp_name = (from data in db.HR_Employees where data.Emp_ID == Convert.ToInt32(a.Consultant_ID) select data.Emp_Name).FirstOrDefault(),
+                                     a.cancelAppointment,
+                                     emp_name = e.Emp_Name,
                                  }).ToList().OrderByDescending(x => x.App_Date);
                     result = (new JavaScriptSerializer()).Serialize(query).ToString();
                 }

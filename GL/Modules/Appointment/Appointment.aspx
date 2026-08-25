@@ -955,7 +955,8 @@
                                 '</tr>';
                         });
 
-                        $('#t_body').html(rows);
+                            $('#t_body').html(rows);
+                            __tBodyCache = rows;
 
                         $('#table_res tbody:eq(1) tr').each(function (key, value) {
                             debugger;
@@ -1448,65 +1449,57 @@
         }
 
 
-        var acc = false;
-        function toTitleCase(str) {
-            return str.replace(/[^a-zA-Z0-9]+(.)/g, function (match) {
-                return match.toUpperCase();
-            });
-        }
-
-         function ddldocchange() {
-             debugger;
-
-             var DocChk = $('#chk_Doc').find('option:selected').text();
-
-             if (DocChk == "Select Doctor") {
-                 acc = true;
-                 LoadPage();
-             } else {
-                 var tbl = document.getElementById('table_res');
-                 if (DocChk.trim() != '') {
-                     for (var i = 1; i < tbl.rows.length; i++) {
-                         if (tbl.rows[i].cells[3].innerText != DocChk) {
-                             var row = tbl.rows[i];
-                             row.style.display = 'none';
-                         } else {
-                             var row = tbl.rows[i];
-                             row.style.display = '';
-                         }
-                     }
-                 } else {
-                     for (var i = 1; i < tbl.rows.length; i++) {
-                         var row = tbl.rows[i];
-                         row.style.display = '';
-                     }
-                 }
-             }
-
-             if ($('.wrap.calendar').is(':visible')) {
-                 var currentMonthIndex, currentYear;
-
-                 if ($('#calMonthSelect').length && $('#calYearSelect').length) {
-                     currentMonthIndex = parseInt($('#calMonthSelect').val(), 10);
-                     currentYear = parseInt($('#calYearSelect').val(), 10);
-                 }
-                 else {
-                     var headerText = $('#calendarHeader').text().trim();
-                     if (headerText && !headerText.includes('Loading')) {
-                         var parts = headerText.split(' ');
-                         var monthName = parts[0];
-                         currentYear = parseInt(parts[1], 10);
-                         currentMonthIndex = moment().month(monthName).format('M') - 1;
-                     } else {
-                         var now = moment();
-                         currentYear = now.year();
-                         currentMonthIndex = now.month();
-                     }
-                 }
-
-                 loadCalendarForMonth(currentYear, currentMonthIndex, DocChk === "Select Doctor" ? null : DocChk);
-             }
+         var acc = false;
+         var __tBodyCache = null;
+         function toTitleCase(str) {
+             return str.replace(/[^a-zA-Z0-9]+(.)/g, function (match) {
+                 return match.toUpperCase();
+             });
          }
+
+          function ddldocchange() {
+              debugger;
+
+              var DocChk = $('#chk_Doc').find('option:selected').text();
+
+              if (DocChk == "Select Doctor") {
+                  acc = true;
+                  $('#t_body').html(__tBodyCache || '');
+                  LoadPage();
+              } else {
+                  if (__tBodyCache === null) __tBodyCache = $('#t_body').html();
+                  var rows = __tBodyCache.split(/<tr[\s>]/i).filter(function (r) { return r.indexOf('</tr>') !== -1; });
+                  var kept = [];
+                  for (var i = 0; i < rows.length; i++) {
+                      if (rows[i].indexOf('>' + DocChk + '<') !== -1) kept.push('<tr ' + rows[i]);
+                  }
+                  $('#t_body').html(kept.join(''));
+              }
+
+              if ($('.wrap.calendar').is(':visible')) {
+                  var currentMonthIndex, currentYear;
+
+                  if ($('#calMonthSelect').length && $('#calYearSelect').length) {
+                      currentMonthIndex = parseInt($('#calMonthSelect').val(), 10);
+                      currentYear = parseInt($('#calYearSelect').val(), 10);
+                  }
+                  else {
+                      var headerText = $('#calendarHeader').text().trim();
+                      if (headerText && !headerText.includes('Loading')) {
+                          var parts = headerText.split(' ');
+                          var monthName = parts[0];
+                          currentYear = parseInt(parts[1], 10);
+                          currentMonthIndex = moment().month(monthName).format('M') - 1;
+                      } else {
+                          var now = moment();
+                          currentYear = now.year();
+                          currentMonthIndex = now.month();
+                      }
+                  }
+
+                  loadCalendarForMonth(currentYear, currentMonthIndex, DocChk === "Select Doctor" ? null : DocChk);
+              }
+          }
         function CalculateDateOfBirth() {
             debugger;
             var now = moment();
@@ -1859,7 +1852,8 @@
          }
 
          function buildCalendar(year, month, appointmentsByDate) {
-             $('#calendar').find('.cal-day, .cal-day.empty').remove();
+              $(document).off('.cal');
+              $('#calendar').find('.cal-day, .cal-day.empty').remove();
              var firstOfMonth = moment([year, month, 1]);
              var daysInMonth = firstOfMonth.daysInMonth();
              var startDay = firstOfMonth.day();
@@ -2019,35 +2013,37 @@
                  $('#calendar').append($day);
              }
          }
-         function loadCalendarForMonth(year, month, doctorName = null) {
-             var start = moment([year, month, 1]).startOf('day').format('YYYY-MM-DD');
-             var end = moment([year, month, 1]).endOf('month').format('YYYY-MM-DD');
+         var __aptCache = {};
+         function loadCalendarForMonth(year, month, doctorName = null, presetData) {
+              var start = moment([year, month, 1]).startOf('day').format('YYYY-MM-DD');
+              var end = moment([year, month, 1]).endOf('month').format('YYYY-MM-DD');
+              var cacheKey = start + '|' + end;
 
-             $('#calendarHeader').text('Loading appointments...');
+              $('#calendarHeader').text('Loading appointments...');
 
-             if (typeof PageMethods !== 'undefined' && PageMethods.getlist) {
-                 PageMethods.getlist(start, end, function (data) {
-                     var parsed = [];
-                     if (!data || (Array.isArray(data) && data.length === 0)) {
-                         parsed = [];
-                     } else {
-                         try {
-                             parsed = (typeof data === 'string') ? JSON.parse(data) : data;
-                         } catch (e) {
-                             parsed = data || [];
-                         }
-                     }
+              function render(parsed) {
+                  if (doctorName && doctorName !== "Select Doctor") {
+                      parsed = parsed.filter(function (appt) { return appt.emp_name === doctorName; });
+                  }
+                  buildCalendar(year, month, mapAppointmentsByDate(parsed));
+              }
 
-                     if (doctorName && doctorName !== "Select Doctor") {
-                         parsed = parsed.filter(function (appt) {
-                             return appt.emp_name === doctorName;
-                         });
-                     }
+              if (presetData) { render(presetData); return; }
+              if (__aptCache[cacheKey]) { render(__aptCache[cacheKey]); return; }
 
-                     var mapped = mapAppointmentsByDate(parsed);
-                     buildCalendar(year, month, mapped);
-                 });
-             } else {
+              if (typeof PageMethods !== 'undefined' && PageMethods.getlist) {
+                  PageMethods.getlist(start, end, function (data) {
+                      var parsed = [];
+                      if (!data || (Array.isArray(data) && data.length === 0)) {
+                          parsed = [];
+                      } else {
+                          try { parsed = (typeof data === 'string') ? JSON.parse(data) : data; }
+                          catch (e) { parsed = data || []; }
+                      }
+                      __aptCache[cacheKey] = parsed;
+                      render(parsed);
+                  });
+              } else {
                  console.warn('PageMethods.getlist not found.');
                  var mock = generateMockDataForMonth(year, month);
                  setTimeout(function () {

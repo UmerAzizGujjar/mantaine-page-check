@@ -1588,10 +1588,32 @@ namespace PMS
                 newBillDetails.Req_qty = dtls.Req_qty;
                 newBillDetails.CGS = dtls.CGSAmount;
 
+                bool isBacth = (from inv in db.INV_Items
+                                where inv.Description == dtls.ItemName
+                                   && inv.Is_Active == true
+                                   && (inv.isCancel == null || inv.isCancel == false)
+                                select inv.IsBatch ?? false)
+                 .FirstOrDefault();
                 // decimal currentDbStock = ReadCurrentStock(db, Item_Id , dtls.batchno);
-                if (dtls.batchno != "" || dtls.batchno != null)
+                if (isBacth == true)
                 {
-                    decimal currentDbStock = ReadCurrentStock(db, Item_Id, dtls.batchno, data.warehouse);
+                    if (dtls.batchno != "" || dtls.batchno != null)
+                    {
+                        decimal currentDbStock = ReadCurrentStock(db, Item_Id, dtls.batchno, data.warehouse);
+                        if (currentDbStock < dtls.Qty)
+                        {
+                            throw new Exception(
+                                "Insufficient stock for " + dtls.ItemName +
+                                ". Available: " + currentDbStock +
+                                ", Requested: " + dtls.Qty + ".");
+                        }
+                        decimal newStock = currentDbStock - dtls.Qty;
+                        UpdateStockAtomic(db, Item_Id, newStock);
+                    }
+                }
+                else
+                {
+                    decimal currentDbStock = ReadCurrentStockWithoutBatch(db, Item_Id,  data.warehouse);
                     if (currentDbStock < dtls.Qty)
                     {
                         throw new Exception(
@@ -1601,6 +1623,7 @@ namespace PMS
                     }
                     decimal newStock = currentDbStock - dtls.Qty;
                     UpdateStockAtomic(db, Item_Id, newStock);
+
                 }
                 Total_CGSS += dtls.CGSAmount;
                 ListOfDetails.Add(newBillDetails);
@@ -1647,6 +1670,30 @@ namespace PMS
 
                 cmd.Parameters.AddWithValue("@id", itemId);
                 cmd.Parameters.AddWithValue("@batch", batchNo);
+                cmd.Parameters.AddWithValue("@warehouse", warehouse);
+
+                object result = cmd.ExecuteScalar();
+
+                if (result == null || result == DBNull.Value)
+                    return 0m;
+
+                return Convert.ToDecimal(result);
+            }
+        }
+      
+        private static decimal ReadCurrentStockWithoutBatch(DataBaseDataContext db, int itemId, string warehouse)
+        {
+            using (SqlCommand cmd = (SqlCommand)db.Connection.CreateCommand())
+            {
+                cmd.Transaction = (SqlTransaction)db.Transaction;
+
+                cmd.CommandText = @"
+            SELECT ISNULL(SUM(Qty), 0)
+            FROM vwBatch_Ledger
+            WHERE Item_ID = @id
+              AND Ware_House = @warehouse";
+
+                cmd.Parameters.AddWithValue("@id", itemId);
                 cmd.Parameters.AddWithValue("@warehouse", warehouse);
 
                 object result = cmd.ExecuteScalar();
