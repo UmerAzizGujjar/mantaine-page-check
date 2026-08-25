@@ -274,7 +274,7 @@ namespace PMS
                     query = "ReportName=VendorWisePurchase&ReportTitle=Vendor Wise Purchase Detail from " + txtStart_Date.Text + " to " + txtEnd_Date.Text + "&startDate=" + txtStart_Date.Text + "&endDate=" + txtEnd_Date.Text + "&VendorType=" + ddlVendorType.SelectedValue + "&VendorId=" + ddlVendor.SelectedValue + "&Warehouse=" + ddlWarehouse.SelectedValue + "&ExportPDF=" + chkExportPDF.Checked;
                     break;
                 case "SIH":
-                    query = "ReportName=PharmacyStock&ReportTitle=Stock In Hand &Stock=" + ddlStock.SelectedValue + "";
+                    query = "ReportName=PharmacyStock&ReportTitle=Stock In Hand &Stock=" + ddlStock.SelectedValue + "&ExportPDF=" + chkExportPDF.Checked;
                     break;
                 case "SIHD":
                     query = "ReportName=PharmacyStockDetail&ReportTitle=Stock In Hand Detail from " + txtStart_Date.Text + " to " + txtEnd_Date.Text + "&startDate=" + txtStart_Date.Text + "&endDate=" + txtEnd_Date.Text + "&WareHouse=" + ddlVendor.SelectedValue + "&ExportPDF=" + chkExportPDF.Checked;
