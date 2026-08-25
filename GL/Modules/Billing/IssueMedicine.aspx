@@ -236,6 +236,10 @@
                 $('#btnSave').attr('style', 'margin-top: 0px;').focusout();
                 $('#CloseSearchModel').click();
             }
+              else if (event.altKey && event.code === 'KeyP') {
+                    event.preventDefault();
+                    window.location.href = 'PharmacyItemsView.aspx';
+                }
             else if (event.altKey && event.code === 'KeyE') {
                 event.preventDefault();
                 $('#medName').select2('close');
@@ -2585,6 +2589,7 @@ function CalculateReceivedAmount() {
                         '<td style="text-align: center;"><a href="javascript:void(0)" onclick="ExcludeFromPayment(this)"><i class="fa fa-trash-o" style="font-size:17px"></i></a> </td>' +
                         '</tr>';
                     $('#tblDetails #tblbody').append(rows);
+                     $('#ddlWarehouse').attr('disabled',true);
                     setTimeout(function () {
                         $('#medName').select2('close');
                         $('input[name="txtQty"]').focus().select();

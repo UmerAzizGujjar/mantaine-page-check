@@ -631,118 +631,89 @@ namespace PMS
                 else if (Request.QueryString["Table"] == "INV_ItemsForPR")
                 {
                     DataBaseDataContext db = new DataBaseDataContext(DBClass.ConnectionString());
-                    string warehouseID = Request.QueryString["WarehouseID"];
                     var userPermissions = (from data in db.aspnet_Users
                                            where data.UserId == AppConfig.UserID
-                                           select new
-                                           {
-                                               data.AllowPharmacy,
-                                               data.AllowGeneralItems
-                                           }).FirstOrDefault();
+                                           select new { data.AllowPharmacy, data.AllowGeneralItems })
+                                          .FirstOrDefault();
 
                     bool allowPharmacy = userPermissions != null && Convert.ToBoolean(userPermissions.AllowPharmacy);
                     bool allowGeneralItem = userPermissions != null && Convert.ToBoolean(userPermissions.AllowGeneralItems);
-                    string sqlQuery;
-                    if (Request.QueryString["q"] != null)
-                    {
-                        if (allowPharmacy && allowGeneralItem)
-                        {
-                            sqlQuery = "Select *, isnull(dbo.GetDataValueName('UOM', i.Unit),'NIL') as UOM, (select top 1 CAST(ISNULL(Rate,0) as DECIMAL(18,2)) from AP_Purchase_Order_Items where Item_Id = i.Item_ID order by PO_Item_ID desc) as LastRate, (select ISNULL(sum(Qty),0) from vwBatch_Ledger where Item_ID = i.Item_ID) as Stock from INV_Items i Where Hospital_Services=0 and Services<>1 and Active=1 and Book_ID=" + AppConfig.Book_ID + " AND Description like'%" + Request.QueryString["q"] + "%'";                           
-                        }
-                        else if (allowPharmacy)
-                        {
-                            sqlQuery = "Select *, isnull(dbo.GetDataValueName('UOM', i.Unit),'NIL') as UOM, (select top 1 CAST(ISNULL(Rate,0) as DECIMAL(18,2)) from AP_Purchase_Order_Items where Item_Id = i.Item_ID order by PO_Item_ID desc) as LastRate, (select ISNULL(sum(Qty),0) from vwBatch_Ledger where Item_ID = i.Item_ID) as Stock from INV_Items i Where Pharmacy_Item=1 and IsPharmacyItem=1 and Hospital_Services=0 and Services<>1 and Active=1 and Book_ID=" + AppConfig.Book_ID +  " AND Description like'%" + Request.QueryString["q"] + "%'";                          
-                        }
-                        else
-                        {
-                            sqlQuery = "Select *, isnull(dbo.GetDataValueName('UOM', i.Unit),'NIL') as UOM, (select top 1 CAST(ISNULL(Rate,0) as DECIMAL(18,2)) from AP_Purchase_Order_Items where Item_Id = i.Item_ID order by PO_Item_ID desc) as LastRate, (select ISNULL(sum(Qty),0) from vwBatch_Ledger where Item_ID = i.Item_ID) as Stock from INV_Items i Where Pharmacy_Item<>1 and IsPharmacyItem<>1  and Hospital_Services=0 and Services<>1 and Active=1 and Book_ID=" + AppConfig.Book_ID + "  AND Description like'%" + Request.QueryString["q"] + "%'";                           
-                        }
-                    }
+
+                    string filterClause = "";
+                    if (allowPharmacy && allowGeneralItem)
+                        filterClause = "";
+                    else if (allowPharmacy)
+                        filterClause = "AND i.Pharmacy_Item = 1 AND i.IsPharmacyItem = 1";
                     else
-                    {
-                        if (allowPharmacy && allowGeneralItem)
-                        {
-                            sqlQuery = "Select * from INV_Items Where Hospital_Services=0 and Services<>1 and Active=1 and Book_ID=" + AppConfig.Book_ID;
-                        }
-                        else if (allowPharmacy)
-                        {
-                            sqlQuery = "Select * from INV_Items Where Pharmacy_Item=1 and IsPharmacyItem=1 and Hospital_Services=0 and Services<>1 and Active=1 and Book_ID=" + AppConfig.Book_ID;
-                        }
-                        else
-                        {
-                            sqlQuery = "Select * from INV_Items Where Pharmacy_Item<>1 and IsPharmacyItem<>1 and Hospital_Services=0 and Services<>1 and Active=1 and Book_ID=" + AppConfig.Book_ID;
-                        }
-                    }                   
-                    var serializer = new JavaScriptSerializer();
+                        filterClause = "AND (i.Pharmacy_Item <> 1 OR i.IsPharmacyItem <> 1)";
+
+                    string searchTerm = Request.QueryString["q"] ?? "";
+                    string safeSearch = searchTerm.Replace("'", "''");
+
+                    string sqlQuery = $@"
+        SELECT TOP 30 
+            i.Item_ID,
+            i.Item_Code,
+            i.Description,
+            i.Unit,
+            ISNULL(dbo.GetDataValueName('UOM', i.Unit), 'NIL') AS UOM,
+            ISNULL(po.LastRate, 0) AS Last_PurchaseRate,
+            ISNULL(st.Stock, 0) AS Stock,
+            ISNULL(lq.LastQty, 0) AS LastQty,
+            lq.LastRequiredDate
+        FROM INV_Items i
+        OUTER APPLY (
+            SELECT TOP 1 CAST(ISNULL(Rate, 0) AS DECIMAL(18,2)) AS LastRate
+            FROM AP_Purchase_Order_Items 
+            WHERE Item_Id = i.Item_ID 
+            ORDER BY PO_Item_ID DESC
+        ) po
+        OUTER APPLY (
+            SELECT ISNULL(SUM(Qty), 0) AS Stock
+            FROM vwBatch_Ledger 
+            WHERE Item_ID = i.Item_ID
+        ) st
+        OUTER APPLY (
+            SELECT TOP 1 
+                Qty AS LastQty,
+                Required_Date AS LastRequiredDate
+            FROM Purchase_Requisition_Detail 
+            WHERE Item_ID = i.Item_ID 
+            ORDER BY PR_Detail_ID DESC
+        ) lq
+        WHERE i.Hospital_Services = 0 
+          AND i.Services <> 1 
+          AND i.Active = 1 
+          AND i.Book_ID = {AppConfig.Book_ID}
+          {filterClause}
+          AND (i.Item_Code LIKE '%{safeSearch}%' OR i.Description LIKE '%{safeSearch}%')
+        ORDER BY i.Item_Code";
+
                     DataTable dt = DBClass.getDataTable(sqlQuery);
                     var items = new List<object>();
-
                     foreach (DataRow dr in dt.Rows)
                     {
                         items.Add(new
                         {
                             id = dr["Item_ID"].ToString(),
-                            name = dr["Item_Code"].ToString() + " - " + dr["Description"].ToString()
+                            name = dr["Item_Code"].ToString() + " - " + dr["Description"].ToString(),
+                            // Additional fields for immediate use
+                            Stock = dr["Stock"].ToString(),
+                            UOM_Qty = dr["UOM"].ToString(),
+                            Last_PurchaseRate = dr["Last_PurchaseRate"].ToString(),
+                            LastQty = dr["LastQty"].ToString(),
+                            LastRequiredDate = dr["LastRequiredDate"] != DBNull.Value
+                                ? Convert.ToDateTime(dr["LastRequiredDate"]).ToString("dd MMM yyyy")
+                                : "",
+                            Unit = dr["Unit"].ToString()
                         });
                     }
+
+                    var serializer = new JavaScriptSerializer();
                     Response.Write(serializer.Serialize(items));
                 }
 
-                //else if (Request.QueryString["Table"] == "INV_ItemsForPRwithWarehouse")
-                //{
-                //    DataBaseDataContext db = new DataBaseDataContext(DBClass.ConnectionString());
-                //    string warehouseID = Request.QueryString["WarehouseID"];
-                //    var userPermissions = (from data in db.aspnet_Users
-                //                           where data.UserId == AppConfig.UserID
-                //                           select new
-                //                           {
-                //                               data.AllowPharmacy,
-                //                               data.AllowGeneralItems
-                //                           }).FirstOrDefault();
 
-                //    bool allowPharmacy = userPermissions != null && Convert.ToBoolean(userPermissions.AllowPharmacy);
-                //    bool allowGeneralItem = userPermissions != null && Convert.ToBoolean(userPermissions.AllowGeneralItems);
-                //    string sqlQuery;
-                //    if (Request.QueryString["q"] != null)
-                //    {
-                //        if (allowPharmacy && allowGeneralItem)
-                //        {
-                //            sqlQuery = "Select *, isnull(dbo.GetDataValueName('UOM', i.Unit),'NIL') as UOM, (select top 1 CAST(ISNULL(Rate,0) as DECIMAL(18,2)) from AP_Purchase_Order_Items where Item_Id = i.Item_ID order by PO_Item_ID desc) as LastRate, (select ISNULL(sum(Qty),0) from vwBatch_Ledger where Item_ID = i.Item_ID) as Stock from INV_Items i Where Hospital_Services=0 and Services<>1 and Active=1 and Book_ID=" + AppConfig.Book_ID + " and InventoryOrg = " + warehouseID + " AND Description like'%" + Request.QueryString["q"] + "%'";
-                //        }
-                //        else if (allowPharmacy)
-                //        {
-                //            sqlQuery = "Select *, isnull(dbo.GetDataValueName('UOM', i.Unit),'NIL') as UOM, (select top 1 CAST(ISNULL(Rate,0) as DECIMAL(18,2)) from AP_Purchase_Order_Items where Item_Id = i.Item_ID order by PO_Item_ID desc) as LastRate, (select ISNULL(sum(Qty),0) from vwBatch_Ledger where Item_ID = i.Item_ID) as Stock from INV_Items i Where Pharmacy_Item=1 and IsPharmacyItem=1 and Hospital_Services=0 and Services<>1 and Active=1 and Book_ID=" + AppConfig.Book_ID + " and InventoryOrg = " + warehouseID + " AND Description like'%" + Request.QueryString["q"] + "%'";
-                //        }
-                //        else
-                //        {
-                //            sqlQuery = "Select *, isnull(dbo.GetDataValueName('UOM', i.Unit),'NIL') as UOM, (select top 1 CAST(ISNULL(Rate,0) as DECIMAL(18,2)) from AP_Purchase_Order_Items where Item_Id = i.Item_ID order by PO_Item_ID desc) as LastRate, (select ISNULL(sum(Qty),0) from vwBatch_Ledger where Item_ID = i.Item_ID) as Stock from INV_Items i Where Pharmacy_Item<>1 and IsPharmacyItem<>1  and Hospital_Services=0 and Services<>1 and Active=1 and Book_ID=" + AppConfig.Book_ID + " and InventoryOrg = " + warehouseID + " AND Description like'%" + Request.QueryString["q"] + "%'";
-                //        }
-                //    }
-                //    else
-                //    {
-                //        if (allowPharmacy && allowGeneralItem)
-                //        {
-                //            sqlQuery = "Select * from INV_Items Where Hospital_Services=0 and Services<>1 and Active=1 and Book_ID=" + AppConfig.Book_ID;
-                //        }
-                //        else if (allowPharmacy)
-                //        {
-                //            sqlQuery = "Select * from INV_Items Where Pharmacy_Item=1 and IsPharmacyItem=1 and Hospital_Services=0 and Services<>1 and Active=1 and Book_ID=" + AppConfig.Book_ID;
-                //        }
-                //        else
-                //        {
-                //            sqlQuery = "Select * from INV_Items Where Pharmacy_Item<>1 and IsPharmacyItem<>1 and Hospital_Services=0 and Services<>1 and Active=1 and Book_ID=" + AppConfig.Book_ID;
-                //        }
-                //    }
-                //    string result = "";
-                //    DataTable dt = DBClass.getDataTable(sqlQuery);
-
-                //    foreach (DataRow dr in dt.Rows)
-                //    {
-                //        result += (result == "") ? "" : ",";
-                //        result += @"{""id"":""" + dr["Item_ID"].ToString() + @""",""name"": """ + dr["Item_Code"].ToString() + " - " + dr["Description"].ToString() + @"""}";
-                //    }
-                //    Response.Write("[" + result + "]");
-                //}
                 else if (Request.QueryString["Table"] == "INV_ItemsForPRwithWarehouse")
                 {
                     DataBaseDataContext db = new DataBaseDataContext(DBClass.ConnectionString());
