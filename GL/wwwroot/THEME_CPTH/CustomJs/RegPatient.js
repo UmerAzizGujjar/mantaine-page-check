@@ -127,45 +127,7 @@
     });
 
     
-    if (!$('#txtAge_yearss').hasClass('hasDatepicker')) {
-        $('#txtAge_yearss').datepicker({
-            changeMonth: true,
-            changeYear: true,
-            yearRange: "-100:+0",
-            dateFormat: "dd/mm/yy",
-            onSelect: function (dateText) {
-                var selectedDate = $(this).datepicker('getDate');
-                if (selectedDate) {
-                    var today = new Date();
-                    var ageYears = today.getFullYear() - selectedDate.getFullYear();
-                    var ageMonths = today.getMonth() - selectedDate.getMonth();
-                    var ageDays = today.getDate() - selectedDate.getDate();
-
-                    if (ageMonths < 0 || (ageMonths === 0 && ageDays < 0)) {
-                        ageYears--;
-                    }
-
-                    if (ageYears > 0) {
-                        $('#txt_dob').val(ageYears);
-                        $('#PrefixAge').val('Year').trigger('change');
-                    } else {
-                        var monthDiff = (today.getMonth() - selectedDate.getMonth()) +
-                            (12 * (today.getFullYear() - selectedDate.getFullYear()));
-                        if (monthDiff > 0) {
-                            $('#txt_dob').val(monthDiff);
-                            $('#PrefixAge').val('Month').trigger('change');
-                        } else {
-                            var dayDiff = Math.floor((today - selectedDate) / (1000 * 60 * 60 * 24));
-                            if (dayDiff > 0) {
-                                $('#txt_dob').val(dayDiff);
-                                $('#PrefixAge').val('Day').trigger('change');
-                            }
-                        }
-                    }
-                }
-            }
-        });
-    }
+    initDatePicker();
 
     $('#txtAge_yearss').off('click').on('click', function () {
         if ($(this).datepicker('widget').is(':visible')) {
@@ -282,50 +244,42 @@ function CalculateDateOfBirth() {
     var dob = now.clone().subtract(parseInt(ageValue, 10), momentUnit);
     var finalDate = dob.format("DD/MM/YYYY");
 
-    var $input = $('#txtAge_yearss');
-    if (!$input.hasClass('hasDatepicker')) {
-        $input.datepicker({
-            changeMonth: true,
-            changeYear: true,
-            yearRange: "-100:+0",
-            dateFormat: "dd/mm/yy",
-            onSelect: function (dateText) {
-                var selectedDate = $(this).datepicker('getDate');
-                if (selectedDate) {
-                    var today = new Date();
-                    var ageYears = today.getFullYear() - selectedDate.getFullYear();
-                    var ageMonths = today.getMonth() - selectedDate.getMonth();
-                    var ageDays = today.getDate() - selectedDate.getDate();
-
-                    if (ageMonths < 0 || (ageMonths === 0 && ageDays < 0)) {
-                        ageYears--;
-                    }
-
-                    if (ageYears > 0) {
-                        $('#txt_dob').val(ageYears);
-                        $('#PrefixAge').val('Year').trigger('change');
-                    } else {
-                        var monthDiff = (today.getMonth() - selectedDate.getMonth()) +
-                            (12 * (today.getFullYear() - selectedDate.getFullYear()));
-                        if (monthDiff > 0) {
-                            $('#txt_dob').val(monthDiff);
-                            $('#PrefixAge').val('Month').trigger('change');
-                        } else {
-                            var dayDiff = Math.floor((today - selectedDate) / (1000 * 60 * 60 * 24));
-                            if (dayDiff > 0) {
-                                $('#txt_dob').val(dayDiff);
-                                $('#PrefixAge').val('Day').trigger('change');
-                            }
-                        }
-                    }
-                }
-            }
-        });
-    }
-
-    $input.datepicker('setDate', dob.toDate());
+    $('#txtAge_yearss').val(finalDate);
 }
 
+function initDatePicker() {
+    $('#txtAge_yearss').datepicker({
+        changeMonth: true,
+        changeYear: true,
+        yearRange: "-100:+0",
+        dateFormat: "dd/mm/yy",
+        onSelect: function (dateText) {
+            if (window._skipAgeCalc) return;
+            window._skipAgeCalc = true;
+            var d = $(this).datepicker('getDate');
+            if (!d) { window._skipAgeCalc = false; return; }
+            var today = moment();
+            var totalMonths = today.diff(moment(d), 'months');
+            var years = Math.floor(totalMonths / 12);
+            var months = totalMonths % 12;
+            var days = today.diff(moment(d), 'days');
+            if (today.date() < moment(d).date()) {
+                months--;
+            }
+            if (years > 0) {
+                $('#txt_dob').val(years);
+                $('#PrefixAge').val('Year').trigger('change');
+            } else if (months > 0) {
+                $('#txt_dob').val(months);
+                $('#PrefixAge').val('Month').trigger('change');
+            } else {
+                $('#txt_dob').val(days);
+                $('#PrefixAge').val('Day').trigger('change');
+            }
+            setTimeout(function() { window._skipAgeCalc = false; }, 100);
+        }
+    });
+}
 
 function SavePatient() {
     debugger;

@@ -426,7 +426,7 @@
                 window.open("GRN.aspx?GRN_ID="+ ID, "_blank");
             }
             else if (type == 'IGP') {
-                window.open("InversionGatePass.aspx?IGP_Id =" + ID, "_blank");
+                window.open("InversionGatePass.aspx?IGP_Id=" + ID, "_blank");
             }
             else if (type == 'PO') {
                 window.open("../AP/PurchaseOrder.aspx?PO_ID="+ ID, "_blank");

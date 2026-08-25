@@ -772,6 +772,28 @@
     color: #fff;
 }
 
+/* ----- Table row status colors ----- */
+.apt-table tbody tr.row-visited td {
+    color: #166b16 !important;
+    font-weight: bold !important;
+}
+
+.apt-table tbody tr.row-booked td {
+    color: #8B6914 !important;
+    font-weight: bold !important;
+}
+
+.apt-table tbody tr.row-cancelled td {
+    color: #b71c1c !important;
+    font-weight: bold !important;
+}
+
+.apt-table tbody tr.row-visited td a,
+.apt-table tbody tr.row-booked td a,
+.apt-table tbody tr.row-cancelled td a {
+    color: inherit !important;
+}
+
 /* ----- Responsive ----- */
 @media (max-width: 880px) {
     .date-circle {
