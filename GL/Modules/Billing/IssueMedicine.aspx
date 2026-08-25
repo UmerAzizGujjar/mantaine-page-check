@@ -142,7 +142,18 @@
    
 </style>
     <script type="text/javascript">
+        var srQtyFieldDisabled = false;
         $(document).ready(function () {
+            PageMethods.GetSRQty(function (res) {
+                try {
+                    var code = JSON.parse(res);
+                    srQtyFieldDisabled = (code === "01");
+                } catch (e) {
+                    srQtyFieldDisabled = false;
+                }
+            }, function (error) {
+                srQtyFieldDisabled = false;
+            });
             if (!$('#chkbatch').prop("checked")) {
                 $('#chkbatch').prop("checked", true);
             }
@@ -823,7 +834,7 @@
                                 '<td style="display:none"><input type="text" value="' + item.Bill_Details_ID + '" name="txtRBill_Details_ID" id="txtRBill_Details_ID"></td>' +
                                 '<td><input type="hidden" value="' + item.Description + '" name="txtRItemDescription" id="txtRItemDescription">' + item.Description + '</td>' +
                                 '<td style="display:none"><input type="text" name="txtRCheckQty" id="txtRCheckQty"  value="' + item.Qty + '" style="width: 100% !important; height: 22px; text-align: right;" ></td>' +
-                                '<td><input type="text" name="txtRQty" value="' + item.Qty + '"  style="width: 100% !important; height: 22px; text-align: right;" autocomplete="off"></td>' +
+'<td><input type="text" name="txtRQty" value="' + item.Qty + '"  style="width: 100% !important; height: 22px; text-align: right;" autocomplete="off"' + (srQtyFieldDisabled ? ' disabled="disabled"' : '') + '></td>' +
                                 '<td><input type="text" name="txtRStock" value="' + item.Total_Stock + '" style="width: 100% !important; height: 22px; text-align: center;" readonly></td>' +
                                 '<td><input type="text" name="txtRSalerate" value="' + item.Amount + '" style="width: 100% !important; height: 22px; text-align: right;" readonly></td>' +
                                 '<td><input type="text" name="txtRDisPer" value="' + item.Discount_Percentage + '" style="width: 100% !important; height: 22px; text-align: right;" readonly autocomplete="off"></td>' +
