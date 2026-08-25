@@ -38,6 +38,13 @@
         transform: translateZ(0);
         -webkit-transform: translateZ(0);
     }
+
+    #MainContent label,
+    #MainContent .control-label {
+        font-weight: 700 !important;
+        color: #000 !important;
+        opacity: 1 !important;
+    }
     </style>
 </asp:Content>
 <asp:Content ID="Content2" ContentPlaceHolderID="MainContent" runat="server">

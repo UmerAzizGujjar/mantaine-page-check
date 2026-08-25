@@ -188,6 +188,8 @@ namespace PMS.Modules.PatientManagement
             public string bank_account_id { get; set; }
             public string Gender { get; set; }
             public string Martial_Status { get; set; }
+            public string Prefix { get; set; }
+            public string Prefix_text { get; set; }
             public string Country { get; set; }
             public string Blood_Group { get; set; }
             public string val_area { get; set; }
@@ -290,6 +292,19 @@ namespace PMS.Modules.PatientManagement
         }
 
         [WebMethod]
+        public static string GetPrefix()
+        {
+            using (var db = new DataBaseDataContext())
+            {
+                var result = (from dv in db.DataValues
+                              join ds in db.ValueSets on dv.ValueSet_ID equals ds.ValueSet_ID
+                              where ds.ValueSet_Name == "Prefix"
+                              select new { dv.DataValue_Name, dv.DataValue_Description }).ToList();
+                return new JavaScriptSerializer().Serialize(result);
+            }
+        }
+
+        [WebMethod]
         public static string GetArea()
         {
             using (var db = new DataBaseDataContext())
@@ -335,7 +350,7 @@ namespace PMS.Modules.PatientManagement
                       string PatientID, string martail_status, string Age, string city, string area,
                       string city_val, string area_val, string Blood_Group, string State, string Country,
                        string cardfee, string OtherCnic, bool Monitoring, string AntiForgeryToken,
-                       string bank_cash, string bank_account_id)
+                       string bank_cash, string bank_account_id, string Prefix)
 
         {
 
@@ -489,6 +504,7 @@ namespace PMS.Modules.PatientManagement
                     pat.Monitoring = Monitoring;
                     pat.bank_cash = bank_cash;
                     pat.bank_account_id = bank_account_id;
+                    pat.Prefix = Prefix;
                     pat.Reprint = "1";
 
                     // Card Fee Safe Parse
@@ -637,8 +653,9 @@ namespace PMS.Modules.PatientManagement
                                        rg.Monitoring,
                                        rg.DOB,
                                        rg.IsRefunded,
-                                       rg.bank_cash,
-                                       rg.bank_account_id
+                                        rg.bank_cash,
+                                        rg.bank_account_id,
+                                        rg.Prefix
                                    }).FirstOrDefault();
 
                 if (patientRaw == null)
@@ -673,6 +690,8 @@ namespace PMS.Modules.PatientManagement
                           bank_account_id = patientRaw.bank_account_id ?? "",
                           Gender = patientRaw.Gender ?? "",
                           Martial_Status = patientRaw.Martial_Status ?? "",
+                          Prefix = patientRaw.Prefix ?? "",
+                          Prefix_text = HttpUtility.HtmlEncode(db.GetDataValueName("Prefix", patientRaw.Prefix) ?? ""),
                           Country = patientRaw.Country ?? "",
                           Blood_Group = patientRaw.Blood_Group ?? "",
                           val_area = patientRaw.val_area ?? "",

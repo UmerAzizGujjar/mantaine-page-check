@@ -33,6 +33,17 @@ namespace PMS
             return result;
         }
         [WebMethod]
+        public static string GetSRQty()
+        {
+            DataBaseDataContext db = new DataBaseDataContext(DBClass.ConnectionString());
+            var Qty = (from data in db.sys_Parms
+                        where data.Name == "Sale Return Qty field"
+                        select
+                          data.Code
+                        ).FirstOrDefault();
+            return (new JavaScriptSerializer()).Serialize(Qty);
+        }
+        [WebMethod]
         public static string CheckSaleReturnAllow()
         {
             DataBaseDataContext db = new DataBaseDataContext();

@@ -79,7 +79,17 @@ namespace PMS.AP
 
             return (new JavaScriptSerializer()).Serialize(query);
         }
-
+        [WebMethod]
+        public static string GetPRQty()
+        {
+            DataBaseDataContext db = new DataBaseDataContext(DBClass.ConnectionString());
+            var Qty = (from data in db.sys_Parms
+                        where data.Name == "Purchase Order Qty field"
+                        select
+                          data.Code
+                        ).FirstOrDefault();
+            return (new JavaScriptSerializer()).Serialize(Qty);
+        }
 
 
         [WebMethod]

@@ -142,7 +142,18 @@
    
 </style>
     <script type="text/javascript">
+        var srQtyFieldDisabled = false;
         $(document).ready(function () {
+            PageMethods.GetSRQty(function (res) {
+                try {
+                    var code = JSON.parse(res);
+                    srQtyFieldDisabled = (code === "01");
+                } catch (e) {
+                    srQtyFieldDisabled = false;
+                }
+            }, function (error) {
+                srQtyFieldDisabled = false;
+            });
             if (!$('#chkbatch').prop("checked")) {
                 $('#chkbatch').prop("checked", true);
             }
@@ -269,8 +280,8 @@
             if (k == 8 || k == 9 || k == 13 || k == 27 || k == 35 || k == 36 ||
                 (k >= 37 && k <= 40) || (k >= 112 && k <= 123) || // F-keys
                 (e.ctrlKey || e.metaKey)) return;
-            // block anything not 0-9
-            if (k < 48 || k > 57) {
+            // block anything not 0-9 (top row 48-57, numpad 96-105)
+            if ((k < 48 || k > 57) && (k < 96 || k > 105)) {
                 e.preventDefault();
                 var now = Date.now();
                 if (now - __qtyWarnTs > 1000) {
@@ -823,7 +834,7 @@
                                 '<td style="display:none"><input type="text" value="' + item.Bill_Details_ID + '" name="txtRBill_Details_ID" id="txtRBill_Details_ID"></td>' +
                                 '<td><input type="hidden" value="' + item.Description + '" name="txtRItemDescription" id="txtRItemDescription">' + item.Description + '</td>' +
                                 '<td style="display:none"><input type="text" name="txtRCheckQty" id="txtRCheckQty"  value="' + item.Qty + '" style="width: 100% !important; height: 22px; text-align: right;" ></td>' +
-                                '<td><input type="text" name="txtRQty" value="' + item.Qty + '"  style="width: 100% !important; height: 22px; text-align: right;" autocomplete="off"></td>' +
+'<td><input type="text" name="txtRQty" value="' + item.Qty + '"  style="width: 100% !important; height: 22px; text-align: right;" autocomplete="off"' + (srQtyFieldDisabled ? ' disabled="disabled"' : '') + '></td>' +
                                 '<td><input type="text" name="txtRStock" value="' + item.Total_Stock + '" style="width: 100% !important; height: 22px; text-align: center;" readonly></td>' +
                                 '<td><input type="text" name="txtRSalerate" value="' + item.Amount + '" style="width: 100% !important; height: 22px; text-align: right;" readonly></td>' +
                                 '<td><input type="text" name="txtRDisPer" value="' + item.Discount_Percentage + '" style="width: 100% !important; height: 22px; text-align: right;" readonly autocomplete="off"></td>' +
@@ -3450,6 +3461,7 @@ function CalculateReceivedAmount() {
                         '<td class="text-end">' + parseFloat(value.Purchase_Rate).toFixed(2) + '</td>' +
                         '<td>' + value.UOM_Qty + '</td>' +
                         '<td>' + value.Manufacturer_Name + '</td>' +
+                        '<td>' + (value.Locator || '') + '</td>' +
                         '</tr>';
                 });
 
@@ -5351,6 +5363,7 @@ function CalculateReceivedAmount() {
                                         <th>Purchase Rate</th>
                                         <th>Pack Unit</th>
                                         <th>Manufacturer</th>
+                                        <th>Locator</th>
                                         
                                     </tr>
                                 </thead>

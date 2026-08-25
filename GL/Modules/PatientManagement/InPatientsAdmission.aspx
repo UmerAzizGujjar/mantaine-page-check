@@ -5541,10 +5541,10 @@
 
             var Issuance_Of = document.getElementById('<%= ddlIssuance_Of.ClientID%>').value;
 
-            var wardDiv = document.getElementById('<%= ddlWard_No.ClientID%>').closest('.col-lg-3');
-            var bedDiv = document.getElementById('<%= txtBed_No.ClientID%>').closest('.col-lg-3');
-            var roomDiv = document.getElementById('<%= ddlRoom_No.ClientID%>').closest('.col-lg-3');
-            var roomTypeDiv = document.getElementById('<%= txtRoom_Type.ClientID%>').closest('.col-lg-3');
+            var wardDiv = document.getElementById('<%= ddlWard_No.ClientID%>').closest('.ipd-field') || document.getElementById('<%= ddlWard_No.ClientID%>').closest('.col-lg-3');
+            var bedDiv = document.getElementById('<%= txtBed_No.ClientID%>').closest('.ipd-field') || document.getElementById('<%= txtBed_No.ClientID%>').closest('.col-lg-3');
+            var roomDiv = document.getElementById('<%= ddlRoom_No.ClientID%>').closest('.ipd-field') || document.getElementById('<%= ddlRoom_No.ClientID%>').closest('.col-lg-3');
+            var roomTypeDiv = document.getElementById('<%= txtRoom_Type.ClientID%>').closest('.ipd-field') || document.getElementById('<%= txtRoom_Type.ClientID%>').closest('.col-lg-3');
 
             if (Issuance_Of == 0) {
                 document.getElementById('<%= ddlRoom_No.ClientID%>').value = 0;
@@ -7489,14 +7489,18 @@
     </style>
 </asp:Content>
 <asp:Content ID="Content2" ContentPlaceHolderID="MainContent" runat="server">
-    <div class="col-lg-8 col-md-10 col-sm-12">
-        <div class="row">
-            <div class="col-md-2 text-end">
-                <input type="button" value="Add Patient" id="btnSearchPatient" onclick="OpenModal()" class="btn-primry" />
-            </div>
-            <div class="col-lg-2 col-md-3 col-sm-3">
-                <input type="button" value="Admission Queue" id="btnReferAdmissions" onclick="OpenReferredModal()" class="btn-primry" />
-            </div>
+    <div class="ipd-meta-bar">
+        <div class="ipd-meta-title">
+            <i class="fa fa-bed"></i>
+            <span>In-Patient Admission</span>
+        </div>
+        <div class="ipd-meta-actions">
+            <button type="button" id="btnSearchPatient" onclick="OpenModal()" class="ipd-meta-btn">
+                <i class="fa fa-user-plus"></i> Add Patient
+            </button>
+            <button type="button" id="btnReferAdmissions" onclick="OpenReferredModal()" class="ipd-meta-btn">
+                <i class="fa fa-list"></i> Admission Queue
+            </button>
         </div>
     </div>
 
@@ -7698,115 +7702,82 @@
         <Triggers>        
         </Triggers>
         <ContentTemplate>
-             <div class="row">
-     <!-- Left Card -->
-     <div class="col-lg-5 col-md-5 col-sm-12">
-         <div class="card">
-             <div class="card-body">
-                 <div class="row">
-                     <div class="col-lg-4 col-md-5 col-sm-6 text-center">
-                         <div class="image-container">
-                             <img src="~../../../../wwwroot/SOURCE_IMAGES/DASHBOARD_ICONS/IpdAdmissions.png" alt="Patient Image" class="img-fluid rounded-circle patient-image">
-                         </div>
-                     </div>
-                     <div class="col-lg-8 col-md-7 col-sm-6">
-                         <div class="row mb-3 mtt">
-                             <div class="col-lg-5 col-md-5 col-sm-6">
-                                 <asp:Label ID="lblPatien_ID" runat="server" Text="MR No :*"></asp:Label>
-                             </div>
-                             <div class="col-lg-7 col-md-7 col-sm-6">
-                                 <asp:TextBox ID="txtPatient_ID" runat="server"></asp:TextBox>
-                                   <asp:HiddenField ID="hdfPatient_ID" runat="server" Value="(New)" ClientIDMode="Static" />
-                                 <asp:RequiredFieldValidator ID="rfvPatient_ID" runat="server" ControlToValidate="txtPatient_ID" ErrorMessage="Select Patient ID" Text="*"></asp:RequiredFieldValidator>
-                             </div>
-                         </div>
-                         <div class="row mb-3 mtt">
-                             <div class="col-lg-5 col-md-5 col-sm-6 ">
-                                 <asp:Label ID="lblPatient_Name" runat="server" Text="Patient Name :"></asp:Label>
-                             </div>
-                             <div class="col-lg-7 col-md-7 col-sm-6 ">
-                                  <asp:Label ID="vlblPatients_Name" runat="server"></asp:Label>
-                             </div>
-                         </div>
-                         <div class="row mb-3 mtt">
-                             <div class="col-lg-5 col-md-5 col-sm-6 formrgn">
-                                  <asp:Label ID="lblContactNo" runat="server" Text="Contact No :"></asp:Label>
-                             </div>
-                             <div class="col-lg-7 col-md-7 col-sm-6 top">
-                                 <asp:Label ID="vLbl_Contact" runat="server"></asp:Label>
-                             </div>
-                         </div>
-                         <div class="row mb-3 mtt">
-                             <div class="col-lg-5 col-md-5 col-sm-6 formrgn">
-                                 <asp:Label ID="lblAge_Years" runat="server" Text="Age Years :"></asp:Label>
-                             </div>
-                             <div class="col-lg-7 col-md-7 col-sm-6 top">
-                                 <asp:Label ID="vLbl_Age" runat="server"></asp:Label>
-                             </div>
-                         </div>
-                         <div class="row mb-3 mtt">
-                             <div class="col-lg-5 col-md-5 col-sm-6 formrgn">
-                                 <asp:Label ID="lblGender" runat="server" Text="Gender :"></asp:Label>
-                             </div>
-                             <div class="col-lg-7 col-md-7 col-sm-6 top">
-                                <asp:Label ID="vLbl_Gender" runat="server"></asp:Label>
-                             </div>
-                         </div>
-                     </div>
-                 </div>
-             </div>
-         </div>
-      </div>
-                 <!-- Right Card -->
-                 <div class="col-lg-5 col-md-5 col-sm-12">
-                     <div class="card">
-                         <div class="card-body">
-                             <div class="row mb-3">
-                                 <div class="col-lg-5 col-md-5 col-sm-6 formrgn">
-                                     <asp:Label ID="LblIn_Patient_ID" runat="server" Text="In Patient No"></asp:Label>
-                                 </div>
-                                 <div class="col-lg-4 col-md-5 col-sm-6">
-                                      <asp:TextBox ID="txtIn_Patient_ID" runat="server" Text="(New)" ReadOnly="True"></asp:TextBox>
-                                 </div>
-                             </div>
-                             <div class="row mb-3">
-                                 <div class="col-lg-5 col-md-5 col-sm-6 formrgn">
-                                    <asp:Label ID="LblReg_Date" runat="server" Text="Reg. Date:"></asp:Label>
-                                 </div>
-                                 <div class="col-lg-7 col-md-5 col-sm-6 top">
-                                       <asp:Label ID="vLbl_RegDate" runat="server"></asp:Label>
-                                 </div>
-                             </div>
-                              </div>
-                         <div class="row mb-3">
-                             <div class="col-lg-5 col-md-5 col-sm-6 formrgn">
-                                  <asp:Label ID="lblAdress" runat="server" Text="Address :"></asp:Label>
-                             </div>
-                             <div class="col-lg-7 col-md-5 col-sm-6 top">
-                                  <asp:Label ID="vLbl_Adress" runat="server"></asp:Label>
-                             </div>
-                         </div>
-                         <div class="row mb-3">
-                             <div class="col-lg-5 col-md-5 col-sm-6 formrgn">
-                                  <asp:Label ID="Label36" runat="server" Text="Patient Type:"></asp:Label>
-                             </div>
-                             <div class="col-lg-7 col-md-5 col-sm-6 top">
-                                <asp:Label ID="vLbl_Patient_Type" runat="server" style="background-color: silver;"></asp:Label>
-                             </div>
-                         </div>
-                         <div class="row mb-3">
-                             <div class="col-lg-5 col-md-5 col-sm-6 formrgn">
-                                <asp:Label ID="Label35" runat="server" Text="InPatient Admit Catagory :"></asp:Label>
-                             </div>
-                             <div class="col-lg-7 col-md-5 col-sm-6 top">
-                                  <asp:Label ID="vLbl_Patient_AdmitCatagory" runat="server" ></asp:Label>
-                             </div>
-                         </div>
-                             </div>
-                         </div>                    
+            <div class="ipd-bento ipd-bento--cards">
+                <!-- Left Card: Patient Identity -->
+                <div class="ipd-card">
+                    <div class="ipd-card-header">
+                        <i class="fa fa-user-circle"></i>
+                        <span>Patient Information</span>
                     </div>
-                 </div>
-                        
+                    <div class="ipd-card-body">
+                        <div class="ipd-card-avatar">
+                            <img src="~../../../../wwwroot/SOURCE_IMAGES/DASHBOARD_ICONS/IpdAdmissions.png" alt="Patient" />
+                        </div>
+                        <div class="ipd-card-info">
+                            <dl class="ipd-card-grid">
+                                <dt>MR No</dt>
+                                <dd>
+                                    <asp:TextBox ID="txtPatient_ID" runat="server" CssClass="ipd-input" Style="height:30px;"></asp:TextBox>
+                                    <asp:HiddenField ID="hdfPatient_ID" runat="server" Value="(New)" ClientIDMode="Static" />
+                                    <asp:RequiredFieldValidator ID="rfvPatient_ID" runat="server" ControlToValidate="txtPatient_ID" ErrorMessage="Select Patient ID" Text="*"></asp:RequiredFieldValidator>
+                                </dd>
+                                <dt>Name</dt>
+                                <dd><asp:Label ID="vlblPatients_Name" runat="server"></asp:Label></dd>
+                                <dt>Contact</dt>
+                                <dd><asp:Label ID="vLbl_Contact" runat="server"></asp:Label></dd>
+                                <dt>Age</dt>
+                                <dd><asp:Label ID="vLbl_Age" runat="server"></asp:Label></dd>
+                                <dt>Gender</dt>
+                                <dd><asp:Label ID="vLbl_Gender" runat="server"></asp:Label></dd>
+                            </dl>
+                        </div>
+                    </div>
+                </div>
+                <!-- Right Card: Admission Identity -->
+                <div class="ipd-card">
+                    <div class="ipd-card-header">
+                        <i class="fa fa-file-text-o"></i>
+                        <span>Admission Information</span>
+                    </div>
+                    <div class="ipd-card-body" style="display:block;">
+                        <dl class="ipd-card-grid">
+                            <dt>In-Patient No</dt>
+                            <dd>
+                                <asp:TextBox ID="txtIn_Patient_ID" runat="server" Text="(New)" ReadOnly="True" CssClass="ipd-input" Style="height:30px;width:160px;"></asp:TextBox>
+                            </dd>
+                            <dt>Reg. Date</dt>
+                            <dd><asp:Label ID="vLbl_RegDate" runat="server"></asp:Label></dd>
+                            <dt>Address</dt>
+                            <dd style="white-space:normal;overflow:visible;text-overflow:clip;"><asp:Label ID="vLbl_Adress" runat="server"></asp:Label></dd>
+                            <dt>Patient Type</dt>
+                            <dd><asp:Label ID="vLbl_Patient_Type" runat="server" style="background-color: silver;"></asp:Label></dd>
+                            <dt>Admit Cat.</dt>
+                            <dd><asp:Label ID="vLbl_Patient_AdmitCatagory" runat="server"></asp:Label></dd>
+                        </dl>
+                    </div>
+                </div>
+                <!-- Today Admission Card -->
+                <div class="ipd-card">
+                    <div class="ipd-card-header">
+                        <i class="fa fa-list"></i>
+                        <span>Today Admission</span>
+                    </div>
+                    <input type="text" id="txtSearchAdmission" placeholder="Search MR No or Department" onkeyup="PendingAdmisionPatients()" class="ipd-input" style="margin-bottom:6px;" />
+                    <div style="overflow-y: auto; max-height: 120px;">
+                        <table id="tblAdmisionPatient" class="table">
+                            <thead>
+                                <tr>
+                                    <th>MR No.</th>
+                                    <th>Dept</th>
+                                </tr>
+                            </thead>
+                            <tbody id="tblAdmisionPatientbody">
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+
             <div>
                 <div id="tabs">
                     <ul>
@@ -7817,248 +7788,188 @@
 
                     <div id="Tab-1">
                         <div id="OtherDetails">
-                            <div class="row">
-                                <div class="col-lg-4 col-md-6 col-sm-8">
-                                     <h2 >Admission Details : </h2>
+                            <div class="ipd-card">
+                                <div class="ipd-card-header">
+                                    <i class="fa fa-clipboard"></i>
+                                    <span>Admission Details</span>
                                 </div>
-                            </div>
-                            <div class="row mt">
-                                <div class="col-lg-9 col-mf-9 col-sm-8">
-                                      <div class="row">
-                                <div class="col-lg-3 col-md-4 col-sm-6">
-                                    <asp:Label ID="LblAdmission_Date" runat="server" Text="Admission Date"></asp:Label>
-                                    <asp:TextBox ID="txtAdmission_Date" runat="server" ReadOnly="true"></asp:TextBox>
-                                </div>
-                               <div class="col-lg-3 col-md-4 col-sm-6">
-                                     <asp:Label ID="lblMainCategory" runat="server" Text="Department"></asp:Label>
-                                    <asp:DropDownList ID="ddl_mainCategory" TabIndex="1" runat="server"  AppendDataBoundItems="true" Enabled="false" ></asp:DropDownList>
-                                </div>
-
-                                <div class="col-lg-3 col-md-4 col-sm-6">
-                                     <asp:Label ID="LblDepartment" runat="server" Text="SubDepartment"></asp:Label>
-                                    <asp:DropDownList ID="ddlDepartment"  runat="server" AppendDataBoundItems="true" onchange="Chk_Doctor_Info()"></asp:DropDownList>
-                                    <asp:UpdatePanel ID="UpdatePanel12" runat="server" UpdateMode="Always">
-                                        <ContentTemplate>
-                                            <asp:Button ID="btnGet_Doctor" Style="display: none;" Text="" runat="server" OnClick="btnGet_Doctor_Click" CausesValidation="false" />
-                                        </ContentTemplate>
-                                    </asp:UpdatePanel>
-                                </div>
-                                  <div class="col-lg-3 col-md-4 col-sm-6">
-                                    <asp:Label ID="Label34" runat="server" Text="InPatient Admit Catagory"></asp:Label>
-                                    <asp:DropDownList ID="ddlPatientType"  runat="server" AppendDataBoundItems="true" onChange="ChangePanel()"></asp:DropDownList>
-                                </div>
-                       
-                             
-                                
-                            </div>
-                            <div class="row mt">
-                                         <div class="col-lg-3 col-md-4 col-sm-6">
-                                    <asp:Label ID="LblDoctor" runat="server" Text="Admitting Doctor"></asp:Label>
-                                    <asp:UpdatePanel runat="server"  ID="UpdatePanel13">
-                                        <Triggers>
-                                            <asp:AsyncPostBackTrigger ControlID="ddlDepartment" />
-                                        </Triggers>
-                                        <ContentTemplate>
-                                            <asp:DropDownList ID="ddlDoctor" runat="server" AppendDataBoundItems="true"></asp:DropDownList>
-                                        </ContentTemplate>
-                                    </asp:UpdatePanel>
-                                </div>
-                                  <div class="col-lg-3 col-md-4 col-sm-6">
-                                    <asp:Label ID="lblpkgtype" runat="server" Text="Pacakge Type"></asp:Label>
-                                   <asp:DropDownList ID="ddlpacakagetype"  onchange="loadPackages()" runat="server" AppendDataBoundItems="true" ></asp:DropDownList>
-                                </div>
-                                 <div class="col-lg-3 col-md-4 col-sm-6">
-                                    <asp:Label ID="lblpackagename" runat="server" Text="Pacakge Name"></asp:Label>
-                                   <asp:DropDownList ID="ddlpackagename" runat="server" AppendDataBoundItems="true" ></asp:DropDownList>
-                                </div>
-                                  <div class="col-lg-3 col-md-4 col-sm-6">
-                                    <asp:Label ID="lblipdprocedures" runat="server" Text="Procedures"></asp:Label>
-                                   <asp:DropDownList ID="ddlipdProcedures"  runat="server" AppendDataBoundItems="true" ></asp:DropDownList>
-                                </div>
-                            </div>
-                            <div class="row mt">
-                               
-                                <div class="col-lg-3 col-md-4 col-sm-6">
-                                    <asp:Label ID="lblIssuance_Of" runat="server" Text="Admit To *"></asp:Label>
-                                    <td style="width: 203px">
-                                        <asp:UpdatePanel ID="UpdatePanel9"  runat="server">
+                            <div class="ipd-bento ipd-bento--6">
+                                    <div class="ipd-field">
+                                        <asp:Label ID="LblAdmission_Date" runat="server" CssClass="ipd-label" Text="Admission Date"></asp:Label>
+                                        <asp:TextBox ID="txtAdmission_Date" runat="server" ReadOnly="true" CssClass="ipd-input"></asp:TextBox>
+                                    </div>
+                                    <div class="ipd-field">
+                                        <asp:Label ID="lblMainCategory" runat="server" CssClass="ipd-label" Text="Department"></asp:Label>
+                                        <asp:DropDownList ID="ddl_mainCategory" TabIndex="1" runat="server" AppendDataBoundItems="true" Enabled="false" CssClass="ipd-input"></asp:DropDownList>
+                                    </div>
+                                    <div class="ipd-field">
+                                        <asp:Label ID="LblDepartment" runat="server" CssClass="ipd-label" Text="SubDepartment"></asp:Label>
+                                        <asp:DropDownList ID="ddlDepartment" runat="server" AppendDataBoundItems="true" onchange="Chk_Doctor_Info()" CssClass="ipd-input"></asp:DropDownList>
+                                        <asp:UpdatePanel ID="UpdatePanel12" runat="server" UpdateMode="Always">
                                             <ContentTemplate>
-                                                <asp:DropDownList ID="ddlIssuance_Of" runat="server" AppendDataBoundItems="true" onChange="chkIssuance_Of_Select()"></asp:DropDownList>
+                                                <asp:Button ID="btnGet_Doctor" Style="display: none;" Text="" runat="server" OnClick="btnGet_Doctor_Click" CausesValidation="false" />
+                                            </ContentTemplate>
+                                        </asp:UpdatePanel>
+                                    </div>
+                                    <div class="ipd-field">
+                                        <asp:Label ID="Label34" runat="server" CssClass="ipd-label" Text="InPatient Admit Catagory"></asp:Label>
+                                        <asp:DropDownList ID="ddlPatientType" runat="server" AppendDataBoundItems="true" onChange="ChangePanel()" CssClass="ipd-input"></asp:DropDownList>
+                                    </div>
+                                    <div class="ipd-field">
+                                        <asp:Label ID="LblDoctor" runat="server" CssClass="ipd-label" Text="Admitting Doctor"></asp:Label>
+                                        <asp:UpdatePanel runat="server" ID="UpdatePanel13">
+                                            <Triggers>
+                                                <asp:AsyncPostBackTrigger ControlID="ddlDepartment" />
+                                            </Triggers>
+                                            <ContentTemplate>
+                                                <asp:DropDownList ID="ddlDoctor" runat="server" AppendDataBoundItems="true" CssClass="ipd-input"></asp:DropDownList>
+                                            </ContentTemplate>
+                                        </asp:UpdatePanel>
+                                    </div>
+                                    <div class="ipd-field">
+                                        <asp:Label ID="lblpkgtype" runat="server" CssClass="ipd-label" Text="Pacakge Type"></asp:Label>
+                                        <asp:DropDownList ID="ddlpacakagetype" onchange="loadPackages()" runat="server" AppendDataBoundItems="true" CssClass="ipd-input"></asp:DropDownList>
+                                    </div>
+                                    <div class="ipd-field">
+                                        <asp:Label ID="lblpackagename" runat="server" CssClass="ipd-label" Text="Pacakge Name"></asp:Label>
+                                        <asp:DropDownList ID="ddlpackagename" runat="server" AppendDataBoundItems="true" CssClass="ipd-input"></asp:DropDownList>
+                                    </div>
+                                    <div class="ipd-field">
+                                        <asp:Label ID="lblipdprocedures" runat="server" CssClass="ipd-label" Text="Procedures"></asp:Label>
+                                        <asp:DropDownList ID="ddlipdProcedures" runat="server" AppendDataBoundItems="true" CssClass="ipd-input"></asp:DropDownList>
+                                    </div>
+                                    <div class="ipd-field">
+                                        <asp:Label ID="lblIssuance_Of" runat="server" CssClass="ipd-label" Text="Admit To *"></asp:Label>
+                                        <asp:UpdatePanel ID="UpdatePanel9" runat="server">
+                                            <ContentTemplate>
+                                                <asp:DropDownList ID="ddlIssuance_Of" runat="server" AppendDataBoundItems="true" onChange="chkIssuance_Of_Select()" CssClass="ipd-input"></asp:DropDownList>
                                             </ContentTemplate>
                                         </asp:UpdatePanel>
                                         <asp:RequiredFieldValidator ID="rfvIssuance_Of" ControlToValidate="ddlIssuance_Of" InitialValue="0" runat="server" ErrorMessage="Select Admit To" Text="*"></asp:RequiredFieldValidator>
-                                </div>
-                              
-                                <div class="col-lg-3 col-md-4 col-sm-6">
-                                        <asp:Label ID="lblWard_No" runat="server" Text="Ward *"></asp:Label>
-                                        <asp:UpdatePanel ID="UpdatePanel11"  runat="server" UpdateMode="Always">
+                                    </div>
+                                    <div class="ipd-field">
+                                        <asp:Label ID="lblWard_No" runat="server" CssClass="ipd-label" Text="Ward *"></asp:Label>
+                                        <asp:UpdatePanel ID="UpdatePanel11" runat="server" UpdateMode="Always">
                                             <ContentTemplate>
-                                                <asp:DropDownList ID="ddlWard_No" runat="server" AppendDataBoundItems="true" OnChange="FillWardBeds()" disabled="disabled"></asp:DropDownList>
+                                                <asp:DropDownList ID="ddlWard_No" runat="server" AppendDataBoundItems="true" OnChange="FillWardBeds()" disabled="disabled" CssClass="ipd-input"></asp:DropDownList>
                                             </ContentTemplate>
                                         </asp:UpdatePanel>
-                                </div>
-                                <div class="col-lg-3 col-md-4 col-sm-6">
-                                        <asp:Label ID="LblBed_No" runat="server" Text="Bed No"></asp:Label>
-                                        <asp:TextBox ID="txtBed_No"   runat="server" Enabled="true"></asp:TextBox>
-                                </div>
-                                <div class="col-lg-3 col-md-4 col-sm-6">
-                                        <asp:Label ID="lblRoom_No" runat="server" Text="Room_No *"></asp:Label>
-                                        <asp:DropDownList ID="ddlRoom_No"  runat="server" AppendDataBoundItems="true" AutoPostBack="true" disabled="disabled"></asp:DropDownList>
-                                </div>
-                                
-                              
-                            </div>
-                            <div class="row mt" >
-                                  <div class="col-lg-3 co-md-4 col-sm-6">
-                                        <asp:Label ID="LblRoom_Type" runat="server" Text="Room Type"></asp:Label>
-                                        <asp:UpdatePanel ID="UpdatePanel1"  runat="server">
+                                    </div>
+                                    <div class="ipd-field">
+                                        <asp:Label ID="LblBed_No" runat="server" CssClass="ipd-label" Text="Bed No"></asp:Label>
+                                        <asp:TextBox ID="txtBed_No" runat="server" Enabled="true" CssClass="ipd-input"></asp:TextBox>
+                                    </div>
+                                    <div class="ipd-field">
+                                        <asp:Label ID="lblRoom_No" runat="server" CssClass="ipd-label" Text="Room_No *"></asp:Label>
+                                        <asp:DropDownList ID="ddlRoom_No" runat="server" AppendDataBoundItems="true" AutoPostBack="true" disabled="disabled" CssClass="ipd-input"></asp:DropDownList>
+                                    </div>
+                                    <div class="ipd-field">
+                                        <asp:Label ID="LblRoom_Type" runat="server" CssClass="ipd-label" Text="Room Type"></asp:Label>
+                                        <asp:UpdatePanel ID="UpdatePanel1" runat="server">
                                             <ContentTemplate>
-                                                <asp:DropDownList ID="txtRoom_Type" runat="server" AppendDataBoundItems="true" AutoPostBack="true" onChange="FillRooms()"></asp:DropDownList>
+                                                <asp:DropDownList ID="txtRoom_Type" runat="server" AppendDataBoundItems="true" AutoPostBack="true" onChange="FillRooms()" CssClass="ipd-input"></asp:DropDownList>
                                             </ContentTemplate>
                                         </asp:UpdatePanel>
+                                    </div>
+                                    <div class="ipd-field">
+                                        <asp:Label ID="lblprocedurename" runat="server" CssClass="ipd-label" Text="Procedure Name"></asp:Label>
+                                        <asp:TextBox ID="txtprocedurename" runat="server" Enabled="true" CssClass="ipd-input"></asp:TextBox>
+                                    </div>
+                                    <div class="ipd-field">
+                                        <asp:Label ID="LblHealth_Complaints" runat="server" CssClass="ipd-label" Text="Health Complaint"></asp:Label>
+                                        <asp:TextBox ID="txtHealth_Complaints" runat="server" CssClass="ipd-input"></asp:TextBox>
+                                    </div>
+                                    <div class="ipd-field">
+                                        <asp:Label ID="lbladvamount" runat="server" CssClass="ipd-label" Text="Advance Amount"></asp:Label>
+                                        <asp:TextBox ID="txtadvamount" runat="server" Enabled="false" CssClass="ipd-input"></asp:TextBox>
+                                    </div>
+                                    <div class="ipd-field">
+                                        <asp:Label ID="lblfee" runat="server" CssClass="ipd-label" Text="Admission Fee"></asp:Label>
+                                        <asp:TextBox ID="txtadmissionfee" runat="server" Enabled="false" CssClass="ipd-input"></asp:TextBox>
+                                    </div>
+                                    <div class="ipd-field">
+                                        <asp:Label ID="lbldiscount" runat="server" CssClass="ipd-label" Text="Discount %"></asp:Label>
+                                        <asp:TextBox ID="txtDiscount" onchange="Calc_Discount()" runat="server" CssClass="ipd-input"></asp:TextBox>
+                                    </div>
+                                    <div class="ipd-field" style="display: none">
+                                        <asp:Label ID="LblExpected_Discharge_Date" runat="server" CssClass="ipd-label" Text="Expected Discharge Date"></asp:Label>
+                                        <asp:TextBox ID="txtExpected_Discharge_Date" runat="server" CssClass="ipd-input"></asp:TextBox>
+                                    </div>
                                 </div>
-                                 <div class="col-lg-3 col-md-4 col-sm-6 ">
-                                        <asp:Label ID="lblprocedurename" runat="server" Text="Procedure Name"></asp:Label>
-                                        <asp:TextBox ID="txtprocedurename"   runat="server" Enabled="true"></asp:TextBox>
-                                </div>
-                                     <div class="col-lg-6 col-md-7 col-sm-9">
-                                    <asp:Label ID="LblHealth_Complaints" runat="server" Text="Health Complaint "></asp:Label>
-                                        <asp:TextBox ID="txtHealth_Complaints" Rows="1" runat="server" TextMode="MultiLine" Style="width:100%" ></asp:TextBox>
-                                        <%--<asp:RequiredFieldValidator ID="rfvHealth_Complaints" ControlToValidate="txtHealth_Complaints" runat="server" ErrorMessage="Enter Health Complaint" Text="*"></asp:RequiredFieldValidator>--%>
-                                </div>
-                              
-                                
                             </div>
-                                    <div class="row mt">
-                                        <div class="col-lg-3 col-md-4 col-sm-6">
-                                            <asp:Label ID="lbladvamount" runat="server" Text="Advance Amount"></asp:Label>
-                                            <asp:TextBox ID="txtadvamount" runat="server" Enabled="false"></asp:TextBox>
-                                        </div>
-                                        <div class="col-lg-3 col-md-4 col-sm-6">
-                                            <asp:Label ID="lblfee" runat="server" Text="Admission Fee"></asp:Label>
-                                            <asp:TextBox ID="txtadmissionfee" runat="server" Enabled="false"></asp:TextBox>
-                                        </div>
-                                        <div class="col-lg-3 col-md-4 col-sm-6">
-                                            <asp:Label ID="lbldiscount" runat="server" Text="Discount %"></asp:Label>
-                                            <asp:TextBox ID="txtDiscount" onchange="Calc_Discount()" runat="server"></asp:TextBox>
-                                        </div>                                       
-                                        <div class="col-lg-3 col-md-4 col-sm-6" style="display: none">
-                                            <asp:Label ID="LblExpected_Discharge_Date" runat="server" Text="Expected Discharge Date"></asp:Label>
-                                            <asp:TextBox ID="txtExpected_Discharge_Date" runat="server"></asp:TextBox>
-                                        </div>
+                            <div class="ipd-bento ipd-bento--cards">
+                                <div class="ipd-card" id="panelshow" runat="server" style="display:none; grid-column: span 2;">
+                                    <div class="ipd-card-header">
+                                        <i class="fa fa-id-card"></i>
+                                        <span>Panel Details</span>
                                     </div>
-                                    
-                                </div>
-                                 <div class="col-lg-3 co-md-4 col-sm-6" style="margin-top:-4%" >                                                                       
-                                    <h2> Today Admission : </h2>
-                                     <input type="text" id="txtSearchAdmission"  placeholder="Search MR No or Department" onkeyup="PendingAdmisionPatients()" />
-                                    <div style="overflow: scroll; height: 190px;">
-                                    <table id="tblAdmisionPatient" class="table">
-                                        <thead>
-                                            <tr>
-                                                <th>MR No.</th>
-                                                <th>Dept</th>
-                                            </tr>
-                                        </thead>
-                                        <tbody id="tblAdmisionPatientbody">
-                                        </tbody>
-                                    </table>
-                                    </div>
-                                </div>
-
-
-
-
-                                <div class="row">
-                                    <div class="col-lg-3 co-md-4 col-sm-6">
-                                        <h2>Ward/Room</h2>
-                                        <div style="max-height: 190px; overflow-y: auto;">
-                                            <table id="tblWards" class="table">
-                                                <thead>
-                                                    <tr style="position: sticky; top: 0; z-index: 10; background: white;">
-                                                        <th>MR No. / Name</th>
-                                                        <th>Ward No</th>
-                                                    </tr>
-                                                </thead>
-                                                <tbody></tbody>
-                                            </table>
+                                    <div class="ipd-bento" style="grid-template-columns: 1fr 1fr;">
+                                        <div class="ipd-field">
+                                            <asp:Label ID="lblpanelcompanys" runat="server" CssClass="ipd-label" Text="Panel Companies"></asp:Label>
+                                            <asp:DropDownList ID="ddlpanelcompanys" TabIndex="1" runat="server" AppendDataBoundItems="true" CssClass="ipd-input"></asp:DropDownList>
                                         </div>
-                                        <div style="max-height: 190px; overflow-y: auto; margin-top: 10px;">
-                                            <table id="tblRooms" class="table">
-                                                <thead>
-                                                    <tr style="position: sticky; top: 0; z-index: 10; background: white;">
-                                                        <th>MR No. / Name</th>
-                                                        <th>Room No</th>
-                                                    </tr>
-                                                </thead>
-                                                <tbody></tbody>
-                                            </table>
+                                        <div class="ipd-field">
+                                            <asp:Label ID="Label37" runat="server" CssClass="ipd-label" Text="Card No / Policy No"></asp:Label>
+                                            <asp:TextBox ID="cardno" runat="server" CssClass="ipd-input"></asp:TextBox>
+                                        </div>
+                                        <div class="ipd-field">
+                                            <asp:Label ID="lblholder" runat="server" CssClass="ipd-label" Text="Card Holder Name"></asp:Label>
+                                            <asp:TextBox ID="txtcardHolderName" name="txtcardHolderName" runat="server" CssClass="ipd-input"></asp:TextBox>
+                                        </div>
+                                        <div class="ipd-field">
+                                            <asp:Label ID="lblcompanyname" runat="server" CssClass="ipd-label" Text="Company Name"></asp:Label>
+                                            <asp:TextBox ID="txtcompanyname" runat="server" CssClass="ipd-input"></asp:TextBox>
+                                        </div>
+                                        <div class="ipd-field">
+                                            <asp:Label ID="lbllimit" runat="server" CssClass="ipd-label" Text="Approve Limit"></asp:Label>
+                                            <asp:TextBox ID="txtapprovelimit" runat="server" CssClass="ipd-input"></asp:TextBox>
+                                        </div>
+                                        <div class="ipd-field">
+                                            <asp:Label ID="lblroomlimit" runat="server" CssClass="ipd-label" Text="Room Limit"></asp:Label>
+                                            <asp:TextBox ID="txtroomlimit" runat="server" CssClass="ipd-input"></asp:TextBox>
+                                        </div>
+                                        <div class="ipd-field">
+                                            <asp:Label ID="lblcardlimit" runat="server" CssClass="ipd-label" Text="Card Limit"></asp:Label>
+                                            <asp:TextBox ID="txtcardlimit" name="txtcardlimit" runat="server" CssClass="ipd-input"></asp:TextBox>
+                                        </div>
+                                        <div class="ipd-field">
+                                            <asp:Label ID="lblapprovedays" runat="server" CssClass="ipd-label" Text="Approve Days"></asp:Label>
+                                            <asp:TextBox ID="txtapprovedays" runat="server" CssClass="ipd-input"></asp:TextBox>
+                                        </div>
+                                        <div class="ipd-field" style="grid-column: span 2;">
+                                            <asp:Label ID="lblpvtcharges" runat="server" CssClass="ipd-label" Text="Private Charges Instruction"></asp:Label>
+                                            <asp:TextBox ID="txtpvtcharges" runat="server" CssClass="ipd-input"></asp:TextBox>
                                         </div>
                                     </div>
                                 </div>
-
-                        
-                            </div>
-                             
-                             <div class="row" id="panelshow" runat="server" style="display:none">
-                                 <h2 >Panel Details : </h2>
-                               <div class="col-lg-9 col-md-9">
-                                   <div class="row">
-                                            <div class="col-lg-3 col-md-4 col-sm-6">
-                                    <asp:Label ID="lblpanelcompanys" runat="server" Text="Panel Companies" ></asp:Label>
-                                    <asp:DropDownList ID="ddlpanelcompanys" TabIndex="1" runat="server" AppendDataBoundItems="true" ></asp:DropDownList>
+                                <div class="ipd-card">
+                                    <div class="ipd-card-header">
+                                        <i class="fa fa-bed"></i>
+                                        <span>Ward / Room</span>
+                                    </div>
+                                    <div style="max-height: 190px; overflow-y: auto;">
+                                        <table id="tblWards" class="table">
+                                            <thead>
+                                                <tr style="position: sticky; top: 0; z-index: 10; background: white;">
+                                                    <th>MR No. / Name</th>
+                                                    <th>Ward No</th>
+                                                </tr>
+                                            </thead>
+                                            <tbody></tbody>
+                                        </table>
+                                    </div>
+                                    <div style="max-height: 190px; overflow-y: auto; margin-top: 10px;">
+                                        <table id="tblRooms" class="table">
+                                            <thead>
+                                                <tr style="position: sticky; top: 0; z-index: 10; background: white;">
+                                                    <th>MR No. / Name</th>
+                                                    <th>Room No</th>
+                                                </tr>
+                                            </thead>
+                                            <tbody></tbody>
+                                        </table>
+                                    </div>
                                 </div>
-                               <div class="col-lg-3 col-md-4 col-sm-6">
-        
-                                     <asp:Label ID="Label37" runat="server" Text="Card No / Policy No"></asp:Label>
-                                    <asp:TextBox ID="cardno" runat="server"></asp:TextBox>
-                                    
-                                </div>  
-                                   <div class="col-lg-3 col-md-4 col-sm-6">
-        
-                                     <asp:Label ID="lblholder" runat="server" Text="Card Holder Name"></asp:Label>
-                                     <asp:TextBox ID="txtcardHolderName" name="txtcardHolderName" runat="server" ></asp:TextBox>
-                                    
-                                </div> 
-                                   <div class="col-lg-3 col-md-4 col-sm-6">
-        
-                                     <asp:Label ID="lblcompanyname" runat="server" Text="Company Name"></asp:Label>
-                                    <asp:TextBox ID="txtcompanyname" runat="server"></asp:TextBox>
-                                    
-                                </div>
-                                   </div>
-                               <div class="row mt">
-                                    <div class="col-lg-3 col-md-4 col-sm-6">
-                                    <asp:Label ID="lbllimit" runat="server" Text="Approve Limit" ></asp:Label>
-                                   <asp:TextBox ID="txtapprovelimit" runat="server"></asp:TextBox>
-                                </div>
-                               <div class="col-lg-3 col-md-4 col-sm-6">
-        
-                                     <asp:Label ID="lblroomlimit" runat="server" Text="Room Limit"></asp:Label>
-                                    <asp:TextBox ID="txtroomlimit" runat="server"></asp:TextBox>
-                                    
-                                </div>  
-                                   <div class="col-lg-3 col-md-4 col-sm-6">
-        
-                                     <asp:Label ID="lblcardlimit" runat="server" Text="Card Limit"></asp:Label>
-                                     <asp:TextBox ID="txtcardlimit" name="txtcardlimit" runat="server" ></asp:TextBox>
-                                    
-                                </div> 
-                                   <div class="col-lg-3 col-md-4 col-sm-6">
-        
-                                     <asp:Label ID="lblapprovedays" runat="server" Text="Approve Days"></asp:Label>
-                                    <asp:TextBox ID="txtapprovedays" runat="server"></asp:TextBox>
-                                    
-                                </div>
-                                   </div>
-                                   <div class="row mt">
-                                    <div class="col-lg-3 col-md-4 col-sm-6">
-                                    <asp:Label ID="lblpvtcharges" runat="server" Text="Private Charges Instruction" ></asp:Label>
-                                   <asp:TextBox ID="txtpvtcharges" runat="server"></asp:TextBox>
-                                     </div>
-                              
-                                   </div>
-                               </div>
                             </div>
                             <table style="padding: 20px">
                                 <tr>

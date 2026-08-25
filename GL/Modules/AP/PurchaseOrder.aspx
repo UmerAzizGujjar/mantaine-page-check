@@ -100,6 +100,7 @@
     <script type="text/javascript">
         var poid = '<% =Request.QueryString["PO_ID"] %>';
         var replicateEnabled = '<%= ReplicateCode %>' === '01';
+        var qtyFieldDisabled = false;
 
         /* ── PageMethod → AJAX helper ─────────────────────────── */
         function callPageMethod(methodName, params, successCallback, errorCallback) {
@@ -165,7 +166,8 @@
                 0, // pr_detail_id (0 for direct items)
                 item.TotalStock || 0,
                 item.Purchase_Rate || 0,
-                 item.LastVendorName || ""
+                 item.LastVendorName || "",
+                 false
             );
 
             $("#tblItemDescription tbody").append(newRow);
@@ -461,17 +463,18 @@
 
                         var newRow = buildNewRow(
                             length,
-                            "", 
+                            "",
                             itm.Item_Code,
                             itm.Description,
                             itm.UnitName || itm.Unit,
-                            1, 
-                            itm.Pack_Quantity || 1, 
+                            1,
+                            itm.Pack_Quantity || 1,
                             itm.Sale_Rate || 0,
-                            0, 
-                            0, 
-                            itm.Sale_Rate || 0 ,
-                            itm.LastVendorName || "" 
+                            0,
+                            0,
+                            itm.Sale_Rate || 0,
+                            itm.LastVendorName || "",
+                            false
                         );
 
                         $("#tblItemDescription tbody").append(newRow);
@@ -559,7 +562,7 @@
                 return false;
             } else {
                 
-                var newRow = buildNewRow(length, PR_Num, itemcode, item_name, unit, Qty, UOM_Qty, Rate, pr_detail_id, total_stock, last_po_rate, last_vendor_name);
+                var newRow = buildNewRow(length, PR_Num, itemcode, item_name, unit, Qty, UOM_Qty, Rate, pr_detail_id, total_stock, last_po_rate, last_vendor_name, qtyFieldDisabled);
                 $("#tblItemDescription tbody").append(newRow);
 
                 
@@ -620,7 +623,7 @@
         }
 
         // Helper function to build row HTML
-function buildNewRow(length, PR_Num, itemcode, item_name, unit, Qty, UOM_Qty, Rate, pr_detail_id, total_stock, lastPORate, last_vendor_name) {
+function buildNewRow(length, PR_Num, itemcode, item_name, unit, Qty, UOM_Qty, Rate, pr_detail_id, total_stock, lastPORate, last_vendor_name, disableQty) {
             return '<tr>' +
                 '<td style="padding-top:7px!important;"><input type="hidden" id="txtPRDId' + length + '" name="txtPRDId" value="' + pr_detail_id + '" style="width: 75px !important;text-align:right" />' + length + '</td>' +
                 '<td style="padding-top: 7px!important;"><input type="hidden" name="txtPRNo" id="txtPRNO' + length + '" value="' + PR_Num + '" style="text-align:right ;width:50px !important;font-size:9px;height:20px;padding-top: 7px!important;padding-right: 3px!important;"/>' + PR_Num + '</td>' +
@@ -628,7 +631,7 @@ function buildNewRow(length, PR_Num, itemcode, item_name, unit, Qty, UOM_Qty, Ra
                 '<td style="padding-top: 7px!important;padding-right: 3px!important;text-align:right!important;"><input type="hidden" name="txtItemCode" id="txtItemCode' + length + '" value="' + itemcode + '" style="width:50px !important;text-align:right;font-size:9px;height:20px;"/> ' + itemcode + '  </td>' +
                 '<td style="padding-left: 8px!important;padding-top: 7px!important;text-align:left!important;"><input type="hidden" name="txtItemName" id="txtItemName' + length + '" value="' + item_name + '"/> ' + item_name + '  </td>' +
                 '<td style="text-align:left!important;"> <input type="hidden" name="txtUnit" id="txtUnit' + length + '" value="' + unit + '" />' + unit + '  </td>' +
-                '<td><input type="text" id="txtQty' + length + '" style="text-align:right ;width:50px !important;font-size:9px;height:20px;" name="txtQty" onkeyup="CulculateAmonutWithQty(this)" value="' + Qty + '"/></td>' +
+                '<td><input type="text" id="txtQty' + length + '" style="text-align:right ;width:50px !important;font-size:9px;height:20px;" name="txtQty" onkeyup="CulculateAmonutWithQty(this)" value="' + Qty + '" ' + (disableQty ? 'disabled="disabled"' : '') + '/></td>' +
                 '<td><input type="text" id="txtUOMQty' + length + '" style="text-align:right;width:50px!important;font-size:9px;height:20px;" name="txtUOMQty" value="' + UOM_Qty + '" /></td>' +
                 '<td><input type="text" id="txtBonusQty' + length + '" style="text-align:right;width:50px!important;font-size:9px;height:20px;" name="txtBonusQty" value="0" data-toggle="tooltip" data-placement="bottom" title="Enter Bonus quantity in Loose"/></td>' +
                 '<td><input type="text" autocomplete="off" style="text-align:right ;width:50px !important;font-size:9px;height:20px;" onkeyup="CulculateAmonutWithQty(this)" name="txtRate" id="txtRate' + length + '" value="' + Rate + '" /></td>' +
@@ -741,6 +744,16 @@ function buildNewRow(length, PR_Num, itemcode, item_name, unit, Qty, UOM_Qty, Ra
             });
         }
         $(document).ready(function () {
+
+            // GetPRQty - determine if qty field should be disabled (code "01" = disabled)
+            callPageMethod('GetPRQty', function (res) {
+                try {
+                    var code = JSON.parse(res);
+                    qtyFieldDisabled = (code === "01");
+                } catch (e) {
+                    qtyFieldDisabled = false;
+                }
+            });
 
             // Show loader immediately
             showLoader('Initializing...', false);
