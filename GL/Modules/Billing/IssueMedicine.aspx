@@ -269,8 +269,8 @@
             if (k == 8 || k == 9 || k == 13 || k == 27 || k == 35 || k == 36 ||
                 (k >= 37 && k <= 40) || (k >= 112 && k <= 123) || // F-keys
                 (e.ctrlKey || e.metaKey)) return;
-            // block anything not 0-9
-            if (k < 48 || k > 57) {
+            // block anything not 0-9 (top row 48-57, numpad 96-105)
+            if ((k < 48 || k > 57) && (k < 96 || k > 105)) {
                 e.preventDefault();
                 var now = Date.now();
                 if (now - __qtyWarnTs > 1000) {
