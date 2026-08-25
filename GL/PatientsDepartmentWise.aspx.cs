@@ -3002,7 +3002,7 @@ namespace PMS
                     Master.GetMenuName();
                     object valusets;
                     tr_Summary.Visible = false;
-                    tr_Export.Visible = false;
+                    tr_Export.Visible = true;
                     DateDiv.Visible = true;
                     Time_Row.Visible = true;
                     lblMultiSelect.Visible = false;
@@ -5329,6 +5329,7 @@ namespace PMS
                     AllowPatientRecord = false;
                     lblMainDepartment.Visible = false;
                     lblMedical.Visible = false;
+                    tr_Export.Visible = true;
                     DateDiv.Visible = true;
                     Time_Row.Visible = true;
                     SetDepartent();
@@ -5382,6 +5383,7 @@ namespace PMS
                     trDoctor.Visible = false;
                     AllowPatientRecord = false;
                     lblMainDepartment.Visible = false;
+                    tr_Export.Visible = true;
                     lblMedical.Visible = false;
                     DateDiv.Visible = true;
                     Time_Row.Visible = true;
@@ -6093,7 +6095,7 @@ namespace PMS
 
                     lbItemCategory.Visible = false;
                     ddlItemCategory.Visible = false;
-
+                    tr_Export.Visible = true;
 
                 }
 
@@ -6325,6 +6327,7 @@ namespace PMS
 
                     lbItemCategory.Visible = false;
                     ddlItemCategory.Visible = false;
+                    tr_Export.Visible = true;
                 }
                 if (this.PageTitle == "Pharmacy_Profit_and_Loss_Report")
                 {
@@ -6367,6 +6370,7 @@ namespace PMS
 
                     lbItemCategory.Visible = false;
                     ddlItemCategory.Visible = false;
+                    tr_Export.Visible = true;
 
                 }
                 if (this.PageTitle == "Head_Wise_Discount_Report")
@@ -8053,7 +8057,7 @@ namespace PMS
                     ddlReportType.Visible = false;
                     txtMRNo.Visible = false;
                     lblMRNo.Visible = false;
-                    tr_Export.Visible = false;
+                    tr_Export.Visible = true;
                     ddlShift.Visible = false;
                     lbShift.Visible = false;
                     DateDiv.Visible = true;
@@ -8953,6 +8957,7 @@ namespace PMS
                     dpROw.Visible = false;
                     lblMultiSelect.Visible = false;
                     trDoctor.Visible = false;
+                    tr_Export.Visible = true;
                 }
                 if (PageTitle == "StockBalnce_Report")
                 {
@@ -8965,6 +8970,7 @@ namespace PMS
                     dpROw.Visible = false;
                     lblMultiSelect.Visible = false;
                     trDoctor.Visible = false;
+                    tr_Export.Visible = true;
                 }
                 if (PageTitle == "Oppening_Report")
                 {
