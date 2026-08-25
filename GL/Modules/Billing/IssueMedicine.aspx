@@ -2394,6 +2394,7 @@ function CalculateReceivedAmount() {
             var itemId = $('#medName').val();
 
             var pat_Id = $('#ddlPatient_No').val() || 0;
+            var warehouse = $('#ddlWarehouse').val() || 0;
             var PatNo = $('#ddlPatient_No option:selected').text();
             var parts = PatNo.split('-');
             var prefix = parts.length > 0 ? parts[0] : '';
@@ -2412,6 +2413,7 @@ function CalculateReceivedAmount() {
                 url: "IssueMedicine.aspx/MedicineDetailgetfromOPD",
                 data: JSON.stringify({
                     "itemId": itemId,
+                    "warehouse": warehouse,
                     "patientId": pat_Id,
                     "visitType": prefix
 
@@ -3459,6 +3461,7 @@ function CalculateReceivedAmount() {
                         '<td class="text-end">' + parseFloat(value.Purchase_Rate).toFixed(2) + '</td>' +
                         '<td>' + value.UOM_Qty + '</td>' +
                         '<td>' + value.Manufacturer_Name + '</td>' +
+                        '<td>' + (value.Locator || '') + '</td>' +
                         '</tr>';
                 });
 
@@ -5360,6 +5363,7 @@ function CalculateReceivedAmount() {
                                         <th>Purchase Rate</th>
                                         <th>Pack Unit</th>
                                         <th>Manufacturer</th>
+                                        <th>Locator</th>
                                         
                                     </tr>
                                 </thead>

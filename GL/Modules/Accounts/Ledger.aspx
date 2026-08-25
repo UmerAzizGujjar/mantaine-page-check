@@ -66,6 +66,7 @@ $(function () {
                     <asp:ListItem Value="All" Text="All"></asp:ListItem>
                     <asp:ListItem Value="0" Text="Zero"></asp:ListItem>
                     <asp:ListItem Value="1" Text="Greater Than Zero"></asp:ListItem>
+                    <asp:ListItem Value="2" Text="Less Than Zero"></asp:ListItem>
                 </asp:DropDownList>
             </div>
         </div>

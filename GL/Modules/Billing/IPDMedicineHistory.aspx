@@ -1,6 +1,43 @@
 ﻿<%@ Page Title="" Language="C#" MasterPageFile="~/Site.Master" AutoEventWireup="true" CodeBehind="IPDMedicineHistory.aspx.cs" Inherits="PMS.Modules.Billing.IPDMedicineHistory" %>
 <asp:Content ID="Content1" ContentPlaceHolderID="HeadContent" runat="server">
     <link href="../../wwwroot/THEME_TIBBIT/CustomCSS/tablestyle.css" rel="stylesheet" />
+    <style>
+        #tbl tr.row-rejected td {
+            background-color: #f8d7da !important;
+            color: #842029 !important;
+        }
+        #tbl tr.row-rejected td a {
+            pointer-events: none;
+            opacity: 0.6;
+        }
+        .badge-closed {
+            background-color: #dc3545;
+            color: #fff;
+            padding: 3px 8px;
+            border-radius: 3px;
+            font-size: 11px;
+            font-weight: 600;
+            display: inline-block;
+        }
+        #tbl td.rcv-over {
+            background-color: #fff3cd !important;
+            color: #856404 !important;
+            font-weight: 700 !important;
+        }
+        #tbl td.rcv-short {
+            background-color: #dc3545 !important;
+            color: #fff !important;
+            font-weight: 700 !important;
+            font-size: 14px !important;
+            text-shadow: 0 1px 1px rgba(0,0,0,0.4);
+            box-shadow: inset 0 0 0 2px #842029;
+        }
+        #tbl tr.row-rejected td.rcv-short {
+            background-color: #b02a37 !important;
+            color: #fff !important;
+            box-shadow: inset 0 0 0 2px #000;
+        }
+    </style>
     <script type="text/javascript">
 
     $(document).ready(function () {
@@ -120,12 +157,15 @@
                 {"data": "Father_Name","width": "8%","orderable": false },
                 { "data": "Ward_Name", "width": "8%", "orderable": false },
                 { "data": "Medicine_Name", "width": "12%", "orderable": false },
-                { "data": "Bed_No","width": "6%", "orderable": false },
-                { "data": "Rcv_Qty", "width": "6%", "orderable": false },
+                { "data": "Bed_No", "width": "6%", "orderable": false },
                 { "data": "Req_Qty", "width": "6%", "orderable": false },
+                { "data": "Rcv_Qty", "width": "6%", "orderable": false },
                 { "data": "Rtn_Qty", "width": "6%", "orderable": false },
                 {
                     render: function (data, type, full) {
+                        if (full.is_rejected == true || full.Status === "rejected") {
+                            return '<span class="badge-closed">Closed</span>';
+                        }
                         var btn =
                             '<a href="#" class="btn btn-primary btn-sm" onclick="ViewDetails(' + full.In_Patient_Medicine_ID + ')">' +
                             '<i class="fa fa-eye"></i></a>';
@@ -136,6 +176,19 @@
                     "orderable": false
                 }
             ],
+
+            "createdRow": function (row, data, dataIndex) {
+                if (data.is_rejected == true || data.Status === "rejected") {
+                    $(row).addClass('row-rejected');
+                }
+                var rcv = parseFloat(data.Rcv_Qty) || 0;
+                var req = parseFloat(data.Req_Qty) || 0;
+                if (req > 0 && rcv > req) {
+                    $(row).find('td:eq(8)').addClass('rcv-over');
+                } else if (req > 0 && rcv < req) {
+                    $(row).find('td:eq(8)').addClass('rcv-short');
+                }
+            },
 
             "initComplete": function (settings, json) {
 
@@ -220,8 +273,9 @@
                     <th>Ward</th>
                     <th>Medicine Name</th>
                     <th>Bed No</th>
-                    <th>Receive Qty</th>                
                     <th>Request Qty</th>
+                    <th>Receive Qty</th>                
+                 
                     <th>Return Qty</th>
                     <th>View</th>
                 </tr>
