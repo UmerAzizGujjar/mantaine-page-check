@@ -32,7 +32,7 @@ namespace PMS.Modules.Billing
                                           join wd in db.Ward_Definitions
                                               on ipd.Ward_ID equals wd.Ward_ID into wdGroup
                                           from wd in wdGroup.DefaultIfEmpty()
-                                          where (ipm.Rcv_Qty ?? 0) > 0
+                                          where (ipm.Req_Qty ?? 0) > 0
                                                 && ipm.Transaction_Type == "InPatient"
                                                 && (string.IsNullOrEmpty(searchValue)|| (rp.Full_Name != null && rp.Full_Name.Contains(searchValue))
                                                         || (rp.Father_Name != null && rp.Father_Name.Contains(searchValue)) || rp.pat_id.ToString().Contains(searchValue)
@@ -49,10 +49,11 @@ namespace PMS.Modules.Billing
                                               rp.mr_no_sequence,
                                               ipm.Medicine_Date,
                                               ipm.Transaction_Type,
-                                              ipm.Rcv_Qty,
-                                              ipm.Rtn_Qty,
-                                              ipm.Status,
-                                              Ward_Name = wd.Ward_Type,
+                                               ipm.Rcv_Qty,
+                                               ipm.Rtn_Qty,
+                                               ipm.Status,
+                                               ipm.is_rejected,
+                                               Ward_Name = wd.Ward_Type,
                                               ipd.Bed_No,
                                               ipm.Medicine_Name,
                                               ipm.Req_Qty,

@@ -3459,6 +3459,7 @@ function CalculateReceivedAmount() {
                         '<td class="text-end">' + parseFloat(value.Purchase_Rate).toFixed(2) + '</td>' +
                         '<td>' + value.UOM_Qty + '</td>' +
                         '<td>' + value.Manufacturer_Name + '</td>' +
+                        '<td>' + (value.Locator || '') + '</td>' +
                         '</tr>';
                 });
 
@@ -5360,6 +5361,7 @@ function CalculateReceivedAmount() {
                                         <th>Purchase Rate</th>
                                         <th>Pack Unit</th>
                                         <th>Manufacturer</th>
+                                        <th>Locator</th>
                                         
                                     </tr>
                                 </thead>

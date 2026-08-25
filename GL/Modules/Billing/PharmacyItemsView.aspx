@@ -1,6 +1,16 @@
 ﻿<%@ Page Title="" Language="C#" MasterPageFile="~/Site.Master" AutoEventWireup="true" CodeBehind="PharmacyItemsView.aspx.cs" Inherits="PMS.PharmacyItemsView" %>
 <asp:Content ID="Content1" ContentPlaceHolderID="HeadContent" runat="server">
     <link href="../../wwwroot/THEME_TIBBIT/CustomCSS/tablestyle.css" rel="stylesheet" />
+    <style>
+        #tbloutPatients td:last-child {
+            white-space: nowrap;
+        }
+        #tbloutPatients td:last-child a {
+            display: inline-block;
+            margin: 0 1px !important;
+            padding: 5px 7px !important;
+        }
+    </style>
     <script type="text/javascript">
         $(document).ready(function () {
             $('#ctl00_lblMessage').hide();
@@ -116,17 +126,18 @@
                 },
                 "columns": [
                     { "data": "Item_ID", "visible": false, "width": "0%" },
-                    { "data": "Item_Code", "name": "Item_Code", "width": "7%", "orderable": true },
+                    { "data": "Item_Code", "name": "Item_Code", "width": "5%", "orderable": true },
                     { "data": "Description", "width": "10%", "orderable": false },
-                    { "data": "Unit", "width": "7%", "orderable": false },
-                    { "data": "Sale_Rate", "width": "8%", "orderable": false },
-                    { "data": "Service", "width": "8%", "orderable": false },
-                    { "data": "AccountCategory", "width": "10%", "orderable": false },
-                    { "data": "PurchaseRate", "width": "8%", "orderable": false },
-                    { "data": "SaleRate", "width": "8%", "orderable": false },
-                    { "data": "WareHouse", "width": "10%", "orderable": false },
-                    { "data": "StockTotal", "width": "8%", "orderable": false },
-                    { "data": "CreatedBy", "width": "8%", "orderable": false },
+                    { "data": "Unit", "width": "5%", "orderable": false },
+                    { "data": "Sale_Rate", "width": "7%", "orderable": false },
+                    { "data": "Service", "width": "6%", "orderable": false },
+                    { "data": "AccountCategory", "width": "8%", "orderable": false },
+                    { "data": "PurchaseRate", "width": "7%", "orderable": false },
+                    { "data": "SaleRate", "width": "7%", "orderable": false },
+                    { "data": "WareHouse", "width": "8%", "orderable": false },
+                    { "data": "StockTotal", "width": "6%", "orderable": false },
+                    { "data": "CreatedBy", "width": "7%", "orderable": false },
+                    { "data": "LocatorAddress", "width": "8%", "orderable": false },
 
                    
                     {
@@ -140,7 +151,7 @@
                             var result;
                             result = res + Del + print;
                             return result;;
-                        }, "width": "10%", "orderable": false
+                        }, "width": "16%", "orderable": false
                     }
 
                 ],
@@ -259,8 +270,9 @@
                     <th>Purchase Rate</th>                                          
                     <th>Sale Rate</th>                                          
                     <th>Ware House</th>                                          
-                    <th>Stock</th>                                          
-                    <th>Created by</th>                                          
+                    <th>Stock</th>
+                    <th>Created by</th>
+                    <th>Locator Address</th>
                     <th>Actions</th>
                 </tr>
             </thead>
