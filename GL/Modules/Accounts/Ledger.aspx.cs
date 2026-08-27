@@ -3,6 +3,7 @@ using Infragistics.Documents.Reports.RTF;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Data;
 using System.Web;
 using System.Web.UI;
 using System.Web.UI.WebControls;
@@ -11,6 +12,26 @@ namespace PMS
 {
     public partial class Ledger : System.Web.UI.Page
     {
+        private DataTable GetUserWarehouses()
+        {
+            if (DBClass.IsAdministrator())
+            {
+                return DBClass.getDataTable(@"
+                    SELECT DataValue_Name AS Value, DataValue_Description AS Text
+                    FROM DataValues
+                    WHERE ValueSet_ID = 8
+                    ORDER BY CASE WHEN DataValue_Name = '0' THEN 0 ELSE 1 END, DataValue_Description");
+            }
+            return DBClass.getDataTable(@"
+    SELECT DISTINCT dv.DataValue_Name AS Value, dv.DataValue_Description AS Text
+    FROM WareHouse_Wise_User wu
+    INNER JOIN WareHouse_Wise_User_Detail wud ON wu.WareHouse_wise_User_Id = wud.WareHouse_wise_User_Id
+    INNER JOIN DataValues dv ON wud.WareHouse = dv.DataValue_Name
+    WHERE wu.User_Id = '" + AppConfig.UserID.ToString() + @"'
+      AND dv.ValueSet_ID = 8
+    ORDER BY dv.DataValue_Description");
+        }
+
         protected void Page_Load(object sender, EventArgs e)
         {
 
@@ -97,10 +118,9 @@ namespace PMS
                         ddlVendorType.DataBind();
 
                         warehouseDiv.Visible = true;
-                        object valuset = DBClass.GetValueSet("Ware house");
-                        ddlWarehouse.DataSource = valuset;
-                        ddlWarehouse.DataTextField = "DataValue_Description";
-                        ddlWarehouse.DataValueField = "DataValue_Name";
+                        ddlWarehouse.DataSource = GetUserWarehouses();
+                        ddlWarehouse.DataTextField = "Text";
+                        ddlWarehouse.DataValueField = "Value";
                         ddlWarehouse.DataBind();
                         ddlWarehouse.Items.Insert(0, new ListItem("All", "0"));
                         break;
@@ -172,10 +192,9 @@ namespace PMS
                         tr_Export.Visible = true;
 
                         warehouseDiv.Visible = true;
-                        object valusetss = DBClass.GetValueSet("Ware house");
-                        ddlWarehouse.DataSource = valusetss;
-                        ddlWarehouse.DataTextField = "DataValue_Description";
-                        ddlWarehouse.DataValueField = "DataValue_Name";
+                        ddlWarehouse.DataSource = GetUserWarehouses();
+                        ddlWarehouse.DataTextField = "Text";
+                        ddlWarehouse.DataValueField = "Value";
                         ddlWarehouse.DataBind();
                         ddlWarehouse.Items.Insert(0, new ListItem("All", "0"));
                         break;
@@ -197,10 +216,9 @@ namespace PMS
                         warehouseDiv.Visible = true;
                         tr_Export.Visible = true;
 
-                        object valusets = DBClass.GetValueSet("Ware house");
-                        ddlWarehouse.DataSource = valusets;
-                        ddlWarehouse.DataTextField = "DataValue_Description";
-                        ddlWarehouse.DataValueField = "DataValue_Name";
+                        ddlWarehouse.DataSource = GetUserWarehouses();
+                        ddlWarehouse.DataTextField = "Text";
+                        ddlWarehouse.DataValueField = "Value";
                         ddlWarehouse.DataBind();
                         ddlWarehouse.Items.Insert(0, new ListItem("All", "0"));
 
