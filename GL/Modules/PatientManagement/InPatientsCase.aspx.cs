@@ -4182,6 +4182,8 @@ namespace PMS
 
             public string PRN;
 
+            public string Unlisted_Med;
+
             public string Start_Date_Time { get; set; }
 
             public string Stop_Date_Time { get; set; }
@@ -4542,6 +4544,7 @@ namespace PMS
                             bool.TryParse(newMed.Regular, out bool isRegular);
                             bool.TryParse(newMed.STAT, out bool isStat);
                             bool.TryParse(newMed.PRN, out bool isPrn);
+                            bool.TryParse(newMed.Unlisted_Med, out bool isUnlistedMed);
 
                             In_Patient_Medicine newMedicine = new In_Patient_Medicine()
                             {
@@ -4561,6 +4564,7 @@ namespace PMS
                                 Regular = isRegular,
                                 STAT = isStat,
                                 PRN = isPrn,
+                                Unlisted_Med = isUnlistedMed,
                                 chkDiccharge = true,
                                 is_rejected = false,
                                 Status = null
@@ -4639,6 +4643,7 @@ namespace PMS
                             bool.TryParse(newMed.Regular, out bool isRegular);
                             bool.TryParse(newMed.STAT, out bool isStat);
                             bool.TryParse(newMed.PRN, out bool isPrn);
+                            bool.TryParse(newMed.Unlisted_Med, out bool isUnlistedMed);
 
                             In_Patient_Medicine newMedicine = new In_Patient_Medicine()
                             {
@@ -4657,6 +4662,7 @@ namespace PMS
                                 Regular = isRegular,
                                 STAT = isStat,
                                 PRN = isPrn,
+                                Unlisted_Med = isUnlistedMed,
                                 Max_PRN_Dose = newMed.Max_PRN,
                                 Username = newMed.User,
                                 High_Risk_Drug = newMed.High_Risk,
@@ -4812,13 +4818,14 @@ namespace PMS
                                          inPatmedicineList.Stop_Date_Time,
                                          inPatmedicineList.High_Risk_Drug,
                                          inPatmedicineList.Item_Code,
-                                         inPatmedicineList.Req_Qty,
+inPatmedicineList.Req_Qty,
                                          inPatmedicineList.Rcv_Qty,
                                          inPatmedicineList.Rtn_Qty,
+                                         inPatmedicineList.Unlisted_Med,
 
-                                         DoctorName = (from d in db.HR_Employees where d.Emp_ID == Convert.ToInt32(inPatmedicineList.Doctor_ID) select d.Emp_Name).FirstOrDefault(),
+                                          DoctorName = (from d in db.HR_Employees where d.Emp_ID == Convert.ToInt32(inPatmedicineList.Doctor_ID) select d.Emp_Name).FirstOrDefault(),
 
-                                         AllowMedicationEdit = allowMedicationEdit
+                                          AllowMedicationEdit = allowMedicationEdit
 
 
 
@@ -4852,11 +4859,12 @@ namespace PMS
                                          inPatmedicineList.Dosage_From,
                                          inPatmedicineList.Dosage_Qty,
                                          inPatmedicineList.Other_Instruction,
-                                         inPatmedicineList.STAT,
-                                         inPatmedicineList.Regular,
-                                         inPatmedicineList.PRN,
-                                         DoctorName = (from d in db.HR_Employees where d.Emp_ID == Convert.ToInt32(inPatmedicineList.Doctor_ID) select d.Emp_Name).FirstOrDefault(),
-                                     }
+inPatmedicineList.STAT,
+                                          inPatmedicineList.Regular,
+                                          inPatmedicineList.PRN,
+                                          inPatmedicineList.Unlisted_Med,
+                                          DoctorName = (from d in db.HR_Employees where d.Emp_ID == Convert.ToInt32(inPatmedicineList.Doctor_ID) select d.Emp_Name).FirstOrDefault(),
+                                      }
                     ).ToList();
                 return (new JavaScriptSerializer()).Serialize(inPatmedicine);
             }
@@ -4888,10 +4896,11 @@ namespace PMS
                                          inPatmedicineList.Dosage_Qty,
                                          inPatmedicineList.Other_Instruction,
 
-                                         inPatmedicineList.Item_Code,
-                                         DoctorName = inPatmedicineList.Username,
-                                         //DoctorName = (from d in db.HR_Employees where d.Emp_ID == Convert.ToInt32(inPatmedicineList.Doctor_ID) select d.Emp_Name).FirstOrDefault(),
-                                     }
+inPatmedicineList.Item_Code,
+                                          inPatmedicineList.Unlisted_Med,
+                                          DoctorName = inPatmedicineList.Username,
+                                          //DoctorName = (from d in db.HR_Employees where d.Emp_ID == Convert.ToInt32(inPatmedicineList.Doctor_ID) select d.Emp_Name).FirstOrDefault(),
+                                      }
                     ).ToList();
 
                 return (new JavaScriptSerializer()).Serialize(inPatmedicine);
