@@ -32,6 +32,43 @@
         debugger;
         var Global_Vital = 0;
 
+        function vitalsAreFilled() {
+            return $.trim($('#ctl00_MainContent_txtBP').val()) !== ''
+                && $.trim($('#ctl00_MainContent_txtPuls').val()) !== ''
+                && $.trim($('#ctl00_MainContent_txtTemp').val()) !== '';
+        }
+        function requireVitalsBeforeSave() {
+            if (Global_Vital === 1) return true;
+            if (!vitalsAreFilled()) {
+                Swal.fire({
+                    icon: 'warning',
+                    title: 'Vitals Required',
+                    text: 'Please add Vitals First',
+                    showConfirmButton: true,
+                    customClass: {
+                        popup: 'swal-big-popup',
+                        title: 'swal-big-title',
+                        htmlContainer: 'swal-big-text'
+                    }
+                });
+                return false;
+            }
+            return true;
+        }
+        function showVitalsRequiredAlert() {
+            Swal.fire({
+                icon: 'warning',
+                title: 'Vitals Required',
+                text: 'Please add Vitals First',
+                showConfirmButton: true,
+                customClass: {
+                    popup: 'swal-big-popup',
+                    title: 'swal-big-title',
+                    htmlContainer: 'swal-big-text'
+                }
+            });
+        }
+
         function loadAllDoctor() {
             debugger;
             PageMethods.loadAllDoc(function (res) {
@@ -1690,6 +1727,7 @@
             debugger;
             if (ids != "") {
                 debugger;
+                Global_Vital = 1;
                 loaddoctor(id);
 
             }
@@ -2648,7 +2686,7 @@
                     if (value.BP == null || value.BP == undefined || value.BP === '' || String(value.BP).trim() === '') {
                         status = 'Un Checked';
                     } else {
-                        status = 'Checked';
+                        status = 'Checked/Vitals Takens';
                         rowColorStyle = 'style="background-color: #aeffae !important;"';
                     }
 
@@ -3692,6 +3730,7 @@
             debugger;
             $('#btnSave_Vital').on("click", function () {
 
+                if (!requireVitalsBeforeSave()) return;
                 Global_Vital = 1;
                 SaveMedicinesAndTests();
             });
@@ -4484,6 +4523,7 @@
         }
 
         function SaveMedicinesAndTests() {
+            if (!requireVitalsBeforeSave()) return;
             $('#btnSave').attr('disabled', true);
             SaveMedicines();
             localStorage.SelectedTabID = $("#tabs").tabs("option", "active");
@@ -5245,6 +5285,12 @@
                 contentType: "application/json; charset=utf-8",
                 dataType: "json",
                 success: function (response) {
+                    if (response && response.d === "VitalsRequired") {
+                        showVitalsRequiredAlert();
+                        $('#btnSave').attr('disabled', false);
+                        return;
+                    }
+                    Global_Vital = 1;
                     Swal.fire({
                         icon: 'success',
                         title: 'Success!',
@@ -5257,7 +5303,7 @@
                             htmlContainer: 'swal-big-text'
                         }
                     });
-                    
+
                     debugger;
                     sendFile(response.d);
                     setTimeout(function () {
@@ -7158,7 +7204,7 @@
                 <div class =" col-lg-8">
                 <div class="button-row">
                     <div class="col-lg-2 col-md-4 col-sm-12">
-                        <input type="button" class="btn btn-primry" id="btnSave" value="Save" onclick="SaveMedicinesAndTests()" />
+                        <input type="button" class="btn btn-primry" id="btnSave" value="Save" onclick="if(requireVitalsBeforeSave()) SaveMedicinesAndTests();" />
                     </div>
                     <div class="col-lg-2 col-md-4 col-sm-12">
                         <input type="button" class="btn btn-yellow" value="New" name="btnName" onclick="NewWindow()" />
