@@ -6691,6 +6691,7 @@ if (localStorage.IsPRN == 1) {
                 $('#txtStopT').val('');
                 $('#ddlDosage_Qty').val('');
                 $('#txtPharmacyItem').val('');
+                $('#txtRequestQty').val('0');
             });
 
 

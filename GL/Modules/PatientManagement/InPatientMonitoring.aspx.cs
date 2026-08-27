@@ -1107,6 +1107,8 @@ namespace PMS
 
             public string PRN;
 
+            public string Unlisted_Med;
+
             public string Start_Date_Time { get; set; }
 
             public string Stop_Date_Time { get; set; }
@@ -1156,12 +1158,13 @@ namespace PMS
                                          inPatmedicineList.Req_Qty,
                                          inPatmedicineList.Rtn_Qty,
                                          inPatmedicineList.Username,
-                                         inPatmedicineList.Max_PRN_Dose,
+inPatmedicineList.Max_PRN_Dose,
                                          inPatmedicineList.Start_Date_Time,
                                          inPatmedicineList.Stop_Date_Time,
                                          inPatmedicineList.High_Risk_Drug,
+                                         inPatmedicineList.Unlisted_Med,
 
-                                         DoctorName = (from d in db.HR_Employees where d.Emp_ID == Convert.ToInt32(inPatmedicineList.Doctor_ID) select d.Emp_Name).FirstOrDefault(),
+                                          DoctorName = (from d in db.HR_Employees where d.Emp_ID == Convert.ToInt32(inPatmedicineList.Doctor_ID) select d.Emp_Name).FirstOrDefault(),
 
                                          AllowMedicationEdit = allowMedicationEdit
 
@@ -1217,12 +1220,13 @@ namespace PMS
                                          inPatmedicineList.Req_Qty,
                                          inPatmedicineList.Rtn_Qty,
                                          inPatmedicineList.Username,
-                                         inPatmedicineList.Max_PRN_Dose,
+inPatmedicineList.Max_PRN_Dose,
                                          inPatmedicineList.Start_Date_Time,
                                          inPatmedicineList.Stop_Date_Time,
                                          inPatmedicineList.High_Risk_Drug,
+                                         inPatmedicineList.Unlisted_Med,
 
-                                         DoctorName = (from d in db.HR_Employees where d.Emp_ID == Convert.ToInt32(inPatmedicineList.Doctor_ID) select d.Emp_Name).FirstOrDefault(),
+                                          DoctorName = (from d in db.HR_Employees where d.Emp_ID == Convert.ToInt32(inPatmedicineList.Doctor_ID) select d.Emp_Name).FirstOrDefault(),
 
                                          AllowMedicationEdit = allowMedicationEdit
 
@@ -1282,6 +1286,7 @@ namespace PMS
                         {
                             string medicineName = oIn_Patient_Medicine.Medicine_Name?.Trim() ?? "";
                             if (string.IsNullOrEmpty(medicineName)) continue;
+                            bool.TryParse(oIn_Patient_Medicine.Unlisted_Med, out bool isUnlistedMed);
                             var existingMedicine = existingMedicines
                                 .FirstOrDefault(p => p.Medicine_Name.Trim() == medicineName);
 
@@ -1303,6 +1308,7 @@ namespace PMS
                                 else if (existingMedicine.Regular != Convert.ToBoolean(oIn_Patient_Medicine.Regular)) hasChanges = true;
                                 else if (existingMedicine.STAT != Convert.ToBoolean(oIn_Patient_Medicine.STAT)) hasChanges = true;
                                 else if (existingMedicine.PRN != Convert.ToBoolean(oIn_Patient_Medicine.PRN)) hasChanges = true;
+                                else if (existingMedicine.Unlisted_Med != isUnlistedMed) hasChanges = true;
 
                                 if (hasChanges)
                                 {
@@ -1321,6 +1327,7 @@ namespace PMS
                                     existingMedicine.Regular = Convert.ToBoolean(oIn_Patient_Medicine.Regular);
                                     existingMedicine.STAT = Convert.ToBoolean(oIn_Patient_Medicine.STAT);
                                     existingMedicine.PRN = Convert.ToBoolean(oIn_Patient_Medicine.PRN);
+                                    existingMedicine.Unlisted_Med = isUnlistedMed;
                                     existingMedicine.Username = oIn_Patient_Medicine.User ?? AppConfig.UserName;
                                     existingMedicine.High_Risk_Drug = oIn_Patient_Medicine.High_Risk;
                                     existingMedicine.Max_PRN_Dose = oIn_Patient_Medicine.Max_PRN;
@@ -1395,6 +1402,7 @@ namespace PMS
                                     Regular = Convert.ToBoolean(oIn_Patient_Medicine.Regular),
                                     STAT = Convert.ToBoolean(oIn_Patient_Medicine.STAT),
                                     PRN = Convert.ToBoolean(oIn_Patient_Medicine.PRN),
+                                    Unlisted_Med = isUnlistedMed,
                                     chkDiccharge = false,
                                     Username = oIn_Patient_Medicine.User ?? AppConfig.UserName,
                                     High_Risk_Drug = oIn_Patient_Medicine.High_Risk,
