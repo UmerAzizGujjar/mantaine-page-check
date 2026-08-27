@@ -419,6 +419,37 @@ WHERE m.Creation_Date >= @s AND m.Creation_Date <= @e", conn))
         }
 
         [WebMethod(EnableSession = false)]
+        public static string GetPharmacySnapshotPB(string period, string startDate = null, string endDate = null)
+        {
+            try
+            {
+                DateTime sDate, eDate;
+                ResolveDates(period, startDate, endDate, out sDate, out eDate);
+
+                using (DataBaseDataContext db = new DataBaseDataContext())
+                {
+                    var pharmacyBills = from bill in db.Ar_Billings
+                                        where bill.IsPharmacy == true
+                                        && bill.Creation_Date >= sDate
+                                        && bill.Creation_Date <= eDate
+                                        && bill.Ware_House == "009"
+                                        select bill;
+
+                    return new JavaScriptSerializer().Serialize(new
+                    {
+                        HospitalCount = pharmacyBills.Count(b => b.Patient_ID > 0),
+                        WalkinCount = pharmacyBills.Count(b => b.Patient_ID == 0 || b.Patient_ID == null),
+                        Total = pharmacyBills.Count()
+                    });
+                }
+            }
+            catch (Exception ex)
+            {
+                return new JavaScriptSerializer().Serialize(new { Error = ex.Message });
+            }
+        }
+
+        [WebMethod(EnableSession = false)]
         public static string GetPharmacySnapshot(string period, string startDate = null, string endDate = null)
         {
             try
@@ -432,6 +463,7 @@ WHERE m.Creation_Date >= @s AND m.Creation_Date <= @e", conn))
                                         where bill.IsPharmacy == true
                                         && bill.Creation_Date >= sDate
                                         && bill.Creation_Date <= eDate
+                                        && bill.Ware_House == "008"
                                         select bill;
 
                     return new JavaScriptSerializer().Serialize(new
@@ -615,6 +647,42 @@ WHERE m.Creation_Date >= @s AND m.Creation_Date <= @e", conn))
                     System.Web.Configuration.WebConfigurationManager.ConnectionStrings["ASPGLConnectionString"].ConnectionString))
                 {
                     using (var cmd = new System.Data.SqlClient.SqlCommand("dbo.sp_YearlyPharmacySummary", conn))
+                    {
+                        cmd.CommandType = System.Data.CommandType.StoredProcedure;
+                        cmd.Parameters.AddWithValue("@Year", year);
+                        cmd.Parameters.AddWithValue("@Warehouse", warehouse ?? "0");
+                        conn.Open();
+                        using (var reader = cmd.ExecuteReader())
+                        {
+                            while (reader.Read())
+                            {
+                                var row = new Dictionary<string, object>();
+                                for (int i = 0; i < reader.FieldCount; i++)
+                                    row[reader.GetName(i)] = reader[i];
+                                rows.Add(row);
+                            }
+                        }
+                    }
+                }
+                return new JavaScriptSerializer().Serialize(rows);
+            }
+            catch (Exception ex)
+            {
+                return new JavaScriptSerializer().Serialize(new { Error = ex.Message + "|" + ex.GetType().Name + "|" + (ex.InnerException?.Message ?? "") });
+            }
+        }
+        
+
+        [WebMethod(EnableSession = false)]
+        public static string GetYearlyPharmacySummaryPB(int year, string warehouse = "0")
+        {
+            try
+            {
+                var rows = new List<Dictionary<string, object>>();
+                using (var conn = new System.Data.SqlClient.SqlConnection(
+                    System.Web.Configuration.WebConfigurationManager.ConnectionStrings["ASPGLConnectionString"].ConnectionString))
+                {
+                    using (var cmd = new System.Data.SqlClient.SqlCommand("dbo.sp_YearlyPharmacySummaryPB", conn))
                     {
                         cmd.CommandType = System.Data.CommandType.StoredProcedure;
                         cmd.Parameters.AddWithValue("@Year", year);
