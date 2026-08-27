@@ -10,6 +10,41 @@
     box-shadow: 2px -2px 5px rgba(0, 0, 0, 0.2) !important;
 }
 
+.unlisted-row {
+    background-color: #ffe6e6 !important;
+}
+
+.unlisted-tag {
+    display: inline-block;
+    background-color: #e74c3c;
+    color: #fff;
+    font-size: 10px;
+    font-weight: 600;
+    padding: 2px 6px;
+    border-radius: 3px;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+.unlisted-edit-badge {
+    display: inline-block;
+    background-color: #e74c3c;
+    color: #fff;
+    font-size: 11px;
+    font-weight: 600;
+    padding: 3px 8px;
+    border-radius: 3px;
+    margin-left: 8px;
+    text-transform: uppercase;
+}
+
+.unlisted-only-text {
+    color: #c0392b;
+    font-weight: 600;
+    font-size: 11px;
+    text-transform: uppercase;
+}
+
 .flexx {
     display: flex;
     align-items: center;
@@ -73,7 +108,7 @@ tr, td {
 }
 
 #tabs ul li a {
-    background-color: #308665db  !important;
+    background-color: #EFA63E   !important;
     color: white;
     background: none;
     border: none;
@@ -113,7 +148,7 @@ tr, td {
 }
 
 .color {
-    color:white !important;
+    color:black !important;
     text-align:center;
 }
 
@@ -143,7 +178,7 @@ tr, td {
             .table th {
                 display: none;
                 border: 1px solid #FFF;
-                background-color: #308665db;
+                background-color: #EFA63E ;
                 color: #FFF;
                 padding: 1em;
             }
@@ -246,3 +281,98 @@ tr, td {
 .mmtop {
     margin-top:6px !important;
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+/* Fix for select2 dropdown at 150% zoom */
+@media screen and (min-resolution: 144dpi) {
+    .select2-container--default .select2-selection--single {
+        height: auto !important;
+        min-height: 34px;
+    }
+
+        .select2-container--default .select2-selection--single .select2-selection__rendered {
+            line-height: 1.5 !important;
+            padding: 6px 20px 6px 8px !important;
+            white-space: normal !important;
+            word-wrap: break-word !important;
+        }
+
+        .select2-container--default .select2-selection--single .select2-selection__arrow {
+            height: 100% !important;
+            top: 0 !important;
+        }
+
+    .select2-dropdown {
+        font-size: 14px !important;
+    }
+
+    /* Fix for modal content at 150% zoom */
+    .modal-content {
+        width: 95% !important;
+        margin: 0 auto !important;
+        left: 0 !important;
+        right: 0 !important;
+    }
+
+    /* Adjust medication modal specifically */
+    #MedicationModel .modal-dialog {
+        width: 90% !important;
+        max-width: 900px !important;
+        margin: 30px auto !important;
+    }
+
+    #MedicationModel .modal-content {
+        width: 100% !important;
+        margin-left: 0 !important;
+    }
+
+    /* Make form inputs responsive */
+    #MedicationModel .col-lg-3,
+    #MedicationModel .col-lg-6,
+    #MedicationModel .col-lg-2 {
+        margin-bottom: 10px;
+    }
+
+    /* Fix select2 input field */
+    .select2-container {
+        width: 100% !important;
+    }
+
+    /* Make search field visible at zoom */
+    .select2-search__field {
+        width: 100% !important;
+        box-sizing: border-box !important;
+    }
+}
+
+/* For general responsive behavior at different zoom levels */
+@media screen and (max-width: 1366px) {
+    #MedicationModel .modal-dialog {
+        width: 95% !important;
+        max-width: 850px !important;
+    }
+}
+
+/* Ensure select2 renders properly in modal */
+.select2-container--default .select2-selection--single {
+    padding: 0 !important;
+}
+
+    .select2-container--default .select2-selection--single .select2-selection__rendered {
+        overflow: visible !important;
+        text-overflow: clip !important;
+        white-space: normal !important;
+        word-break: break-word !important;
+    }
