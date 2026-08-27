@@ -958,25 +958,22 @@
                             $('#t_body').html(rows);
                             __tBodyCache = rows;
 
-                        $('#table_res tbody:eq(1) tr').each(function (key, value) {
+                        $('#t_body tr').each(function (key, value) {
                             debugger;
-                            var $statusCell = $(this).find('td[name="statusCell"]'); 
+                            var $statusCell = $(this).find('td[name="statusCell"]');
                             var status = $statusCell.text();
-                            var app_date = $(this).find('td:eq(5)').text(); 
                             var cancel = $(this).find('td[name="cancelAppointment"]').text();
-                            var currentDate = moment().format('LL');
 
-                            
+                            $(this).removeClass('row-visited row-booked row-cancelled');
+
                             if (status === "Visited") {
-                                $statusCell.css('color', '#1b7a1b').css('font-weight', 'bold'); 
+                                $(this).addClass('row-visited');
                                 $(this).find('td:last a').hide();
                             } else if (status === "Booked") {
-                                $statusCell.css('background-color', '#ffdc86');
-                            }
-
-                            if (cancel === "true" || status === "Cancelled") {
-                                $statusCell.css('color', '#d32f2f').css('font-weight', 'bold'); 
-                                $(this).find('td:last a').hide(); 
+                                $(this).addClass('row-booked');
+                            } else if (cancel === "true" || status === "Cancelled") {
+                                $(this).addClass('row-cancelled');
+                                $(this).find('td:last a').hide();
                             }
                         });
                     }

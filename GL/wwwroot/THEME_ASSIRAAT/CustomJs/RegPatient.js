@@ -1,4 +1,4 @@
-﻿$(document).ready(function () {
+$(document).ready(function () {
 
 
     clearPatient();
@@ -127,45 +127,7 @@
     });
 
     
-    if (!$('#txtAge_yearss').hasClass('hasDatepicker')) {
-        $('#txtAge_yearss').datepicker({
-            changeMonth: true,
-            changeYear: true,
-            yearRange: "-100:+0",
-            dateFormat: "dd/mm/yy",
-            onSelect: function (dateText) {
-                var selectedDate = $(this).datepicker('getDate');
-                if (selectedDate) {
-                    var today = new Date();
-                    var ageYears = today.getFullYear() - selectedDate.getFullYear();
-                    var ageMonths = today.getMonth() - selectedDate.getMonth();
-                    var ageDays = today.getDate() - selectedDate.getDate();
-
-                    if (ageMonths < 0 || (ageMonths === 0 && ageDays < 0)) {
-                        ageYears--;
-                    }
-
-                    if (ageYears > 0) {
-                        $('#txt_dob').val(ageYears);
-                        $('#PrefixAge').val('Year').trigger('change');
-                    } else {
-                        var monthDiff = (today.getMonth() - selectedDate.getMonth()) +
-                            (12 * (today.getFullYear() - selectedDate.getFullYear()));
-                        if (monthDiff > 0) {
-                            $('#txt_dob').val(monthDiff);
-                            $('#PrefixAge').val('Month').trigger('change');
-                        } else {
-                            var dayDiff = Math.floor((today - selectedDate) / (1000 * 60 * 60 * 24));
-                            if (dayDiff > 0) {
-                                $('#txt_dob').val(dayDiff);
-                                $('#PrefixAge').val('Day').trigger('change');
-                            }
-                        }
-                    }
-                }
-            }
-        });
-    }
+    initDatePicker();
 
     $('#txtAge_yearss').off('click').on('click', function () {
         if ($(this).datepicker('widget').is(':visible')) {
@@ -173,8 +135,9 @@
         }
         $(this).datepicker('show');
     });
- 
+  
 });
+
 function fillDropdown($dropdown, methodName) {
     if ($dropdown.data('filled')) return;
 
@@ -266,6 +229,7 @@ function fillmrno() {
 
 
 function CalculateDateOfBirth() {
+    if (window._skipAgeCalc) return;
     var ageValue = $('#txt_dob').val();
     var unit = $('#PrefixAge').val();
 
@@ -280,56 +244,45 @@ function CalculateDateOfBirth() {
             unit === "Day" ? "days" : "years";
 
     var dob = now.clone().subtract(parseInt(ageValue, 10), momentUnit);
-    var finalDate = dob.format("DD/MM/YYYY");
+    $('#txtAge_yearss').val(dob.format("DD/MM/YYYY"));
+}
 
-    var $input = $('#txtAge_yearss');
-    if (!$input.hasClass('hasDatepicker')) {
-        $input.datepicker({
-            changeMonth: true,
-            changeYear: true,
-            yearRange: "-100:+0",
-            dateFormat: "dd/mm/yy",
-            onSelect: function (dateText) {
-                var selectedDate = $(this).datepicker('getDate');
-                if (selectedDate) {
-                    var today = new Date();
-                    var ageYears = today.getFullYear() - selectedDate.getFullYear();
-                    var ageMonths = today.getMonth() - selectedDate.getMonth();
-                    var ageDays = today.getDate() - selectedDate.getDate();
-
-                    if (ageMonths < 0 || (ageMonths === 0 && ageDays < 0)) {
-                        ageYears--;
-                    }
-
-                    if (ageYears > 0) {
-                        $('#txt_dob').val(ageYears);
-                        $('#PrefixAge').val('Year').trigger('change');
-                    } else {
-                        var monthDiff = (today.getMonth() - selectedDate.getMonth()) +
-                            (12 * (today.getFullYear() - selectedDate.getFullYear()));
-                        if (monthDiff > 0) {
-                            $('#txt_dob').val(monthDiff);
-                            $('#PrefixAge').val('Month').trigger('change');
-                        } else {
-                            var dayDiff = Math.floor((today - selectedDate) / (1000 * 60 * 60 * 24));
-                            if (dayDiff > 0) {
-                                $('#txt_dob').val(dayDiff);
-                                $('#PrefixAge').val('Day').trigger('change');
-                            }
-                        }
-                    }
-                }
+function initDatePicker() {
+    $('#txtAge_yearss').datepicker({
+        changeMonth: true,
+        changeYear: true,
+        yearRange: "-100:+0",
+        dateFormat: "dd/mm/yy",
+        onSelect: function (dateText) {
+            if (window._skipAgeCalc) return;
+            window._skipAgeCalc = true;
+            var d = $(this).datepicker('getDate');
+            if (!d) { window._skipAgeCalc = false; return; }
+            var today = moment();
+            var totalMonths = today.diff(moment(d), 'months');
+            var years = Math.floor(totalMonths / 12);
+            var months = totalMonths % 12;
+            var days = today.diff(moment(d), 'days');
+            if (today.date() < moment(d).date()) {
+                months--;
             }
-        });
-    }
-
-    $input.datepicker('setDate', dob.toDate());
+            if (years > 0) {
+                $('#txt_dob').val(years);
+                $('#PrefixAge').val('Year').trigger('change');
+            } else if (months > 0) {
+                $('#txt_dob').val(months);
+                $('#PrefixAge').val('Month').trigger('change');
+            } else {
+                $('#txt_dob').val(days);
+                $('#PrefixAge').val('Day').trigger('change');
+            }
+            setTimeout(function() { window._skipAgeCalc = false; }, 100);
+        }
+    });
 }
 
 
 function SavePatient() {
-    debugger;
-
     $('#SavePatient_Data').attr('disabled', true);
     $('.span_txt').hide();
     var Prefix_PatientName = $('#ddl_name').val();
@@ -497,6 +450,7 @@ function SavePatient() {
         "AntiForgeryToken": AntiForgeryToken,
         "bank_cash": bank_cash,
         "bank_account_id": bank_account_id,
+        "Prefix": Prefix_PatientName,
     });
 
     console.log(data);
@@ -635,21 +589,21 @@ function Get_Pat_Info(reg_id) {
                 $('#chkMonitoring').prop('checked', false).trigger('change');
             }
             if (data.MaritalStatus_text)
-                $('#ddl_status').html($('<option>', { value: '', text: data.MaritalStatus_text }).prop('selected', true));
+                $('#ddl_status').html($('<option>', { value: data.Martial_Status, text: data.MaritalStatus_text }).prop('selected', true));
             if (data.Prefix_text)
                 $('#ddl_name').html($('<option>', { value: data.Prefix, text: data.Prefix_text }).prop('selected', true));
             if (data.Country_text)
-                $('#ddlCountry').html($('<option>', { value: '', text: data.Country_text }).prop('selected', true));
+                $('#ddlCountry').html($('<option>', { value: data.Country, text: data.Country_text }).prop('selected', true));
             if (data.BloodGroup_text)
-                $('#ddl_bloodGroup').html($('<option>', { value: '', text: data.BloodGroup_text }).prop('selected', true));
+                $('#ddl_bloodGroup').html($('<option>', { value: data.Blood_Group, text: data.BloodGroup_text }).prop('selected', true));
             if (data.Area_text)
-                $('#txtarea').html($('<option>', { value: '', text: data.Area_text }).prop('selected', true));
+                $('#txtarea').html($('<option>', { value: data.val_area, text: data.Area_text }).prop('selected', true));
             if (data.Gender_text)
-                $('#ddl_Gender').html($('<option>', { value: '', text: data.Gender_text }).prop('selected', true));
+                $('#ddl_Gender').html($('<option>', { value: data.Gender, text: data.Gender_text }).prop('selected', true));
             if (data.State_text)
-                $('#ddlstate').html($('<option>', { value: '', text: data.State_text }).prop('selected', true));
+                $('#ddlstate').html($('<option>', { value: data.State, text: data.State_text }).prop('selected', true));
             if (data.City_text)
-                $('#txtcity').html($('<option>', { value: '', text: data.City_text }).prop('selected', true));
+                $('#txtcity').html($('<option>', { value: data.val_city, text: data.City_text }).prop('selected', true));
 
             $('#SavePatient_Data').val('Update');
             $('#btnPrint').show();
