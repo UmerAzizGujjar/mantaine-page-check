@@ -891,6 +891,23 @@ namespace PMS
                         result += @"{""id"":""" + dr["Patient_ID"].ToString() + @""",""name"": """ + dr["Patient_No"].ToString() + @"""}";
                     }
                     Response.Write("[" + result + "]");
+                }
+                else if (Request.QueryString["Table"] == "PatientsForBirthCertificate")
+                {
+                    string sqlQuery;
+                    if (Request.QueryString["q"] != null)
+                        sqlQuery = "Select top 1 pat_id as Patient_ID, mr_no_sequence as  Patient_No from Reg_patient Where mr_no_sequence = '" + Request.QueryString["q"].ToString() + "' order by Created_time desc";
+                    else
+                        sqlQuery = "Select distinct (select top 1 Patient_ID from Patients where Patient_No=p.Patient_No) Patient_ID, Patient_No from Patients p where isnull(IsRevisit,'0')=0 order by Created_Time desc";
+
+                    string result = "";
+                    DataTable dt = DBClass.getDataTable(sqlQuery);
+                    foreach (DataRow dr in dt.Rows)
+                    {
+                        result += (result == "") ? "" : ",";
+                        result += @"{""id"":""" + dr["Patient_ID"].ToString() + @""",""name"": """ + dr["Patient_No"].ToString() + @"""}";
+                    }
+                    Response.Write("[" + result + "]");
                 }               
                 else if (Request.QueryString["Table"] == "In_Patients")
                 {
