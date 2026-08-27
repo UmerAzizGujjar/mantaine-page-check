@@ -155,6 +155,14 @@
             }
         });
 
+        $(document).on('select2:open', '#txtPharmacyItem', function () {
+            var $dd = $('#select2-txtPharmacyItem-results').closest('.select2-container');
+            var $search = ($dd.length ? $dd : $('.select2-container--open')).find('.select2-search__field').first();
+            if ($search.length) {
+                setTimeout(function () { $search.trigger('focus'); }, 0);
+            }
+        });
+
         $(document).ready(function () {
              
             $("#tabs").tabs();
@@ -5603,7 +5611,17 @@
                     options += '<option value="' + value.Item_ID + '"> ' + value.Description + ' </option>';
                 });
                 $('#txtPharmacyItem').html(options);
-                $('#txtPharmacyItem').select2();
+                initMedicationSelect2();
+            });
+        }
+        function initMedicationSelect2() {
+            var $sel = $('#txtPharmacyItem');
+            if ($sel.data('select2')) { return; }
+            $sel.select2({
+                width: 'resolve',
+                placeholder: 'Select Medicine',
+                allowClear: true,
+                dropdownParent: $('#MedicationModel')
             });
         }
         var checkRepeateRecord = false;
