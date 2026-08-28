@@ -51,6 +51,21 @@ namespace PMS
             return data;
         }
         [WebMethod]
+        public static string GetLabTestInfo(int labTestId)
+        {
+            DataBaseDataContext db = new DataBaseDataContext(DBClass.ConnectionString());
+            var qry = (from lt in db.Laboratory_Tests
+                       join pat in db.Reg_patients on lt.Patient_ID equals pat.pat_id into a
+                       from pat in a.DefaultIfEmpty()
+                       where lt.Lab_Test_ID == labTestId
+                       select new {
+                           LabTestId = lt.Lab_Test_ID,
+                           PatientName = pat != null ? pat.Full_Name : "Walk-in",
+                           MR_No = pat != null ? pat.pat_id.ToString() : "--"
+                       }).FirstOrDefault();
+            return new JavaScriptSerializer().Serialize(qry);
+        }
+        [WebMethod]
         public static string LoadVitalParametersHistory(int patid)
         {
             DataBaseDataContext db = new DataBaseDataContext(DBClass.ConnectionString());
