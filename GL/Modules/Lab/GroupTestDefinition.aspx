@@ -45,6 +45,10 @@
                 chkPayment = urlParams.get('chkPayment');
                 Special_Test = urlParams.get('Special_Test');
                 Group_Depart = urlParams.get('Group_Depart');
+                var machineName = urlParams.get('machine_name');
+                var standardName = urlParams.get('StandardName');
+                $('#txtMachineName').val(machineName || '');
+                $('#txtStandardName').val(standardName || '');
                 $('#txtGroupTest').val(datavalueDescription);
                 $('#ddlrptColumns').val(reportColums);
                 $('#Rpt_Time').val(reportTime);
@@ -118,11 +122,13 @@
             var TestDeprtment = $("#ddlGroup_Department").val();
             var reporthour = $("#Rpt_Time").val();
             var reportDay = $("#Rpt_Day").val();
+            var machineName = $("#txtMachineName").val();
+            var standardName = $("#txtStandardName").val();
             if ($(Rpt_Time).val() == '')
                 reporthour = 0;
             if ($(Rpt_Day).val() == '')
                 reporthour = 0;
-            PageMethods.saveData(datavalueID, datavalueDescription, reportColums, Main_Department, reporthour, ipdData, opdData, addOrEdit, reportDay, FixedValue, Resultvalue, ListValue, ReqImage, TestDeprtment, chkPayment, chkSpecial_Test, onSuccess, onFail);
+            PageMethods.saveData(datavalueID, datavalueDescription, reportColums, Main_Department, reporthour, ipdData, opdData, addOrEdit, reportDay, FixedValue, Resultvalue, ListValue, ReqImage, TestDeprtment, chkPayment, chkSpecial_Test, machineName, standardName, onSuccess, onFail);
         }
         function GetMainDepartments(Division) {
             debugger;
@@ -279,6 +285,7 @@
                 <label>Group Test Name </label>
                 <input type="text" name="txtGroupTest" id="txtGroupTest" class="form-control" />
             </div>
+            
             <div class="col-lg-3 col-md-6 col-sm-12" id="tblMaster">
                 <label>Report Columns</label>
                 <select id="ddlrptColumns">
@@ -321,8 +328,17 @@
                 <select id="ddlGroup_Department">
                 </select>
             </div>
+        </div>
+        <div class="row">
+            <div class="col-lg-2 col-md-6 col-sm-12">
+                <label>Machine Name</label>
+                <input type="text" name="txtMachineName" id="txtMachineName" class="form-control" />
             </div>
-
+            <div class="col-lg-2 col-md-6 col-sm-12">
+                <label>Standard Name</label>
+                <input type="text" name="txtStandardName" id="txtStandardName" class="form-control" />
+            </div>
+        </div>
       
         <div class="row">
             <div class="col-lg-1 col-md-4 col-sm-6">

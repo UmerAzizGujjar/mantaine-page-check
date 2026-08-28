@@ -757,6 +757,7 @@
                     cache: true
                 }
             });
+            $('#ddlSaleReturnItems').prop('disabled', srQtyFieldDisabled);
         }
         function AddSaleReturnInvoiceMaster() {
             debugger
@@ -779,7 +780,7 @@
                         $('#txtSaleReturnFlatDisc').val(0);
                         $('#txtSaleReturnTotal').val(data[0].Received_Amount);
                         $('#ddlSaleReturnItems').val(0);
-                        $('#ddlSaleReturnItems').prop('disabled', true);
+                        $('#ddlSaleReturnItems').prop('disabled', srQtyFieldDisabled);
                         AddSaleReturnInvoiceDetails(invNo);
                     },
                 });
@@ -800,6 +801,7 @@
             $('#saleReturnTableBody').empty();
             $('#ddlInvoiceNumber').val(0).trigger('change');
             $('#ddlSaleReturnItems').val(0).trigger('change');
+            $('#ddlSaleReturnItems').prop('disabled', srQtyFieldDisabled);
 
         }
         function CalculateSaleReturnAdj() {
@@ -838,7 +840,7 @@
                                 '<td style="display:none"><input type="text" value="' + item.Bill_Details_ID + '" name="txtRBill_Details_ID" id="txtRBill_Details_ID"></td>' +
                                 '<td><input type="hidden" value="' + item.Description + '" name="txtRItemDescription" id="txtRItemDescription">' + item.Description + '</td>' +
                                 '<td style="display:none"><input type="text" name="txtRCheckQty" id="txtRCheckQty"  value="' + item.Qty + '" style="width: 100% !important; height: 22px; text-align: right;" ></td>' +
-'<td><input type="text" name="txtRQty" value="' + item.Qty + '"  style="width: 100% !important; height: 22px; text-align: right;" autocomplete="off"' + (srQtyFieldDisabled ? ' disabled="disabled"' : '') + '></td>' +
+'<td><input type="text" name="txtRQty" value="' + item.Qty + '"  style="width: 100% !important; height: 22px; text-align: right;" autocomplete="off"></td>' +
                                 '<td><input type="text" name="txtRStock" value="' + item.Total_Stock + '" style="width: 100% !important; height: 22px; text-align: center;" readonly></td>' +
                                 '<td><input type="text" name="txtRSalerate" value="' + item.Amount + '" style="width: 100% !important; height: 22px; text-align: right;" readonly></td>' +
                                 '<td><input type="text" name="txtRDisPer" value="' + item.Discount_Percentage + '" style="width: 100% !important; height: 22px; text-align: right;" readonly autocomplete="off"></td>' +
