@@ -113,42 +113,6 @@
         var btnVal = '';
         localStorage.IsDischarge = 0;
 
-        $(document).on('keyup', '.select2-search__field', function () {
-            var searchString = $(this).val();
-
-            if (searchString.length < 2) {
-                return;
-            }
-
-            $.ajax({
-                url: 'InPatientsCase.aspx/getpharmacyitems',
-                method: 'POST',
-                contentType: 'application/json',
-                data: JSON.stringify({ searchString: searchString }),
-                success: function (response) {
-                    try {
-                        var pharmacyItems = JSON.parse(response.d);
-                        var $select = $('#txtPharmacyItem');
-
-                        $.each(pharmacyItems, function (key, value) {
-                            var optionExists = $select.find('option[value="' + value.Item_ID + '"]').length > 0;
-                            if (!optionExists) {
-                                $select.append('<option value="' + value.Item_ID + '">' + value.Description + '</option>');
-                            }
-                        });
-
-                        $select.trigger('change');
-
-                    } catch (error) {
-                        console.error('Error parsing response:', error);
-                    }
-                },
-                error: function (xhr, status, error) {
-                    console.error('Error fetching data:', error);
-                }
-            });
-        });
-
         $(document).on('keydown', '.select2-search__field', function (event) {
             if (event.keyCode === 13) {
                 $('#txtPharmacyItem').select2('close');
@@ -160,6 +124,16 @@
             var $search = ($dd.length ? $dd : $('.select2-container--open')).find('.select2-search__field').first();
             if ($search.length) {
                 setTimeout(function () { $search.trigger('focus'); }, 0);
+            }
+        });
+
+        $(document).on('select2:select', '#txtPharmacyItem', function (e) {
+            var selected = e.params.data;
+            if (selected && selected.id && selected.text) {
+                var $sel = $('#txtPharmacyItem');
+                if ($sel.find('option[value="' + selected.id + '"]').length === 0) {
+                    $sel.append('<option value="' + selected.id + '">' + selected.text + '</option>');
+                }
             }
         });
 
@@ -5652,7 +5626,33 @@
                 width: 'resolve',
                 placeholder: 'Select Medicine',
                 allowClear: true,
-                dropdownParent: $('#MedicationModel')
+                dropdownParent: $('#MedicationModel'),
+                minimumInputLength: 1,
+                ajax: {
+                    url: 'InPatientsCase.aspx/getpharmacyitems',
+                    type: 'POST',
+                    dataType: 'json',
+                    contentType: 'application/json',
+                    processData: false,
+                    delay: 300,
+                    data: function (params) {
+                        return JSON.stringify({ searchString: params.term || '' });
+                    },
+                    processResults: function (response) {
+                        var items = [];
+                        try {
+                            items = JSON.parse(response.d);
+                        } catch (e) {
+                            console.error('Error parsing pharmacy items:', e);
+                        }
+                        return {
+                            results: $.map(items, function (item) {
+                                return { id: item.Item_ID, text: item.Description };
+                            })
+                        };
+                    },
+                    cache: true
+                }
             });
         }
         var checkRepeateRecord = false;
