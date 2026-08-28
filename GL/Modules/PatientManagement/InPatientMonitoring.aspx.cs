@@ -2196,15 +2196,19 @@ inPatmedicineList.Max_PRN_Dose,
         {
             using (DataBaseDataContext db = new DataBaseDataContext())
             {
+                string term = (searchString ?? "").Trim();
+
                 var pharmacyItems = (from d in db.INV_Items
-                                     where d.IsPharmacyItem == true && d.Description.Contains(searchString)
+                                     where d.IsPharmacyItem == true
                                      && (d.Short_Item == false || d.Short_Item == null)
+                                     && (d.Description.ToLower().Contains(term.ToLower())
+                                         || (d.Salt != null && d.Salt.ToLower().Contains(term.ToLower())))
                                      orderby d.Item_ID descending
                                      select new
                                      {
-                                         d.Item_ID,
-                                         Description = d.Description
-                                     }).Take(20).ToList();
+                                         Item_Code = d.Item_Code,
+                                         Description = (d.Salt != null ? (d.Salt + "-" + d.Description) : d.Description)
+                                     }).Take(50).ToList();
 
                 return (new JavaScriptSerializer().Serialize(pharmacyItems));
             }

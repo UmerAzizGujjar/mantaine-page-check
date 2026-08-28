@@ -883,7 +883,8 @@ namespace PMS
                         med.Status = "rejected";
                         med.is_rejected = true;
                         med.reject_by = AppConfig.UserID;
-                        //rejectedCount++;
+                        med.close_time = DateTime.Now;
+                      
                     }
 
                     db.SubmitChanges();

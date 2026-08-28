@@ -856,40 +856,53 @@
             }, 3000);
 
         }
-        $(document).on('keyup', '.select2-search__field', function () {
-            var searchString = $(this).val();
-
-            if (searchString.length < 2) {
-                return;
+        $(document).on('select2:select', '#txtPharmacyItem', function (e) {
+            var selected = e.params.data;
+            if (selected && selected.id && selected.text) {
+                var $sel = $('#txtPharmacyItem');
+                if ($sel.find('option[value="' + selected.id + '"]').length === 0) {
+                    $sel.append('<option value="' + selected.id + '">' + selected.text + '</option>');
+                }
             }
+        });
 
-            $.ajax({
-                url: 'InPatientMonitoring.aspx/getpharmacyitems',
-                method: 'POST',
-                contentType: 'application/json',
-                data: JSON.stringify({ searchString: searchString }),
-                success: function (response) {
-                    try {
-                        var pharmacyItems = JSON.parse(response.d);
-                        var $select = $('#txtPharmacyItem');
-
-                        $.each(pharmacyItems, function (key, value) {
-                            var optionExists = $select.find('option[value="' + value.Item_ID + '"]').length > 0;
-                            if (!optionExists) {
-                                $select.append('<option value="' + value.Item_ID + '">' + value.Description + '</option>');
-                            }
-                        });
-
-                        $select.trigger('change');
-
-                    } catch (error) {
-                        console.error('Error parsing response:', error);
-                    }
-                },
-                error: function (xhr, status, error) {
-                    console.error('Error fetching data:', error);
+        function applyMedicationQtyValidation() {
+            $('input[name=RecQty]').prop('disabled', true).addClass('qty-disabled');
+            $('input[name=IssueQty]').each(function () {
+                var $row = $(this).closest('tr');
+                var recQty = parseFloat($row.find('input[name=RecQty]').val()) || 0;
+                if (recQty > 0) {
+                    $(this).prop('disabled', true).addClass('qty-disabled');
+                } else {
+                    $(this).prop('disabled', false).removeClass('qty-disabled');
                 }
             });
+        }
+
+        $(document).on('input change', 'input[name=RtnQty]', function () {
+            var $row = $(this).closest('tr');
+            var recQty = parseFloat($row.find('input[name=RecQty]').val()) || 0;
+            var rtnQty = parseFloat($(this).val()) || 0;
+            if (rtnQty > recQty) {
+                Swal.fire({
+                    icon: 'warning',
+                    title: 'Invalid Return Quantity',
+                    text: 'Return Qty cannot be greater than Received Qty (' + recQty + ').'
+                });
+                $(this).val(recQty);
+            }
+        });
+
+        $(document).on('input change', 'input[name=RecQty]', function () {
+            applyMedicationQtyValidation();
+        });
+
+        $(document).on('focus', 'input[name=RecQty]', function () {
+            $(this).blur();
+        });
+
+        $('#MedicationModel').on('hidden.bs.modal', function () {
+            applyMedicationQtyValidation();
         });
         function FillDosage() {
             PageMethods.FillDosageDropDown(function (Dosage) {
@@ -919,7 +932,43 @@
                     options += '<option value="' + value.Item_Code + '"> ' + value.Description + ' </option>';
                 });
                 $('#txtPharmacyItem').html(options);
-                $('#txtPharmacyItem').select2();
+                initMedicationSelect2();
+            });
+        }
+        function initMedicationSelect2() {
+            var $sel = $('#txtPharmacyItem');
+            if ($sel.data('select2')) { return; }
+            $sel.select2({
+                width: 'resolve',
+                placeholder: 'Select Medicine',
+                allowClear: true,
+                dropdownParent: $('#MedicationModel'),
+                minimumInputLength: 1,
+                ajax: {
+                    url: 'InPatientMonitoring.aspx/getpharmacyitems',
+                    type: 'POST',
+                    dataType: 'json',
+                    contentType: 'application/json',
+                    processData: false,
+                    delay: 300,
+                    data: function (params) {
+                        return JSON.stringify({ searchString: params.term || '' });
+                    },
+                    processResults: function (response) {
+                        var items = [];
+                        try {
+                            items = JSON.parse(response.d);
+                        } catch (e) {
+                            console.error('Error parsing pharmacy items:', e);
+                        }
+                        return {
+                            results: $.map(items, function (item) {
+                                return { id: item.Item_Code, text: item.Description };
+                            })
+                        };
+                    },
+                    cache: true
+                }
             });
         }
         function FillOtherInstruction() {
@@ -1210,6 +1259,9 @@
             FillPharmacyItem();
             FillDosage();
             FillRoutes();
+            setTimeout(function () {
+                applyMedicationQtyValidation();
+            }, 7000);
             if ($('#<%= hdfPatient_ID.ClientID%>').val() != "(New)") {
                 CountTotalQty();
                 CountTotalQtyOutPut();
@@ -1631,6 +1683,8 @@
                         table.append(row);
 
                     }
+
+                    applyMedicationQtyValidation();
                 }
                 else if ($(this).val() == 'Update') {
                     debugger;
@@ -1711,6 +1765,7 @@
                         '<a href="#" onclick="editMedicine(this)"> Edit </a> <a href="#" onclick="deleteMedicine(this)"> Delete </a>'
                     }
 
+                    applyMedicationQtyValidation();
                 }
 
                 $('#txtRequestQty').val('0');
@@ -2749,6 +2804,8 @@
                             $('.eddit a').hide();
                         }
 
+                        applyMedicationQtyValidation();
+
                     }, 6000)
 
 
@@ -2833,6 +2890,8 @@
                         else {
                             $('.eddit a').hide();
                         }
+
+                        applyMedicationQtyValidation();
 
                     }, 6000)
 

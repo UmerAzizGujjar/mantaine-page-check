@@ -3684,6 +3684,9 @@ function CalculateReceivedAmount() {
                     debugger;
                     var TrnsDate = new Date(parseInt(value.Medicine_Date.substr(6)));
                     var retdate = moment(TrnsDate).format('LLLL');
+                    var closeDate = (value.Close_Time !== null && value.Close_Time !== undefined && value.Close_Time !== '')
+                        ? moment(new Date(parseInt(value.Close_Time.substr(6)))).format('LLLL')
+                        : '';
                     var WardName = (value.Ward_Name !== null && value.Ward_Name !== undefined) ? value.Ward_Name : '';
                     var BedNo = (value.Bed_No !== null && value.Bed_No !== undefined && value.Bed_No !== 0) ? value.Bed_No : '';
 
@@ -3725,6 +3728,7 @@ function CalculateReceivedAmount() {
                         '<td>' + WardName + '</td>' +
                         '<td>' + BedNo + '</td>' +
                         '<td>' + retdate + '</td>' +
+                        '<td>' + closeDate + '</td>' +
                         '<td>' + actionButtons + '</td>' +
                         '<td>' + (value.Rejected_By || '') + '</td>' +
                         '</tr>';
@@ -5316,6 +5320,7 @@ function CalculateReceivedAmount() {
                                     <th>Ward</th>
                                     <th>Bed</th>
                                     <th style="width:173px;">Created Time</th>
+                                    <th style="width:173px;">Close Time</th>
                                     <th>Select</th>
                                     <th>Rejected By</th>
                                 </tr>
