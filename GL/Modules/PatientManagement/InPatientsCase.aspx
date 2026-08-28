@@ -155,6 +155,18 @@
             }
         });
 
+        $(document).on('select2:open', '#txtPharmacyItem', function () {
+            var $dd = $('#select2-txtPharmacyItem-results').closest('.select2-container');
+            var $search = ($dd.length ? $dd : $('.select2-container--open')).find('.select2-search__field').first();
+            if ($search.length) {
+                setTimeout(function () { $search.trigger('focus'); }, 0);
+            }
+        });
+
+        $('#MedicationModel').on('hidden.bs.modal', function () {
+            $('#lblUnlistedEdit').remove();
+        });
+
         $(document).ready(function () {
              
             $("#tabs").tabs();
@@ -3378,7 +3390,7 @@
                 backdrop: 'static'
             });
             setTimeout(function () {
-                 
+
                 $('#txtMedicineName').val('');
                 $('#txtDosage').val('');
                 $('#txtRecomended_Dosage').val('');
@@ -3429,7 +3441,22 @@
                  
 
                 var s = medicine.filter(x => x.Description == $(row).find('td')[1].innerText);
-                $('#txtPharmacyItem').val(s[0].Item_ID).trigger('change');
+                if (s && s.length && s[0] && s[0].Item_ID) {
+                    $('#txtPharmacyItem').val(s[0].Item_ID).trigger('change');
+                } else {
+                    $('#txtPharmacyItem').val('').trigger('change');
+                }
+                var isUnlisted = $(row).find('input[name=hdnUnlistedMed]').val() === '1';
+                $('#lblUnlistedEdit').remove();
+                if (isUnlisted) {
+                    $('#MedicationModel .modal-header h4').after('<span id="lblUnlistedEdit" class="unlisted-edit-badge">Unlisted Medicine</span>');
+                    $('#txtMedicen').val($(row).find('td')[1].text().trim());
+                    $('#txtMedicen').show();
+                    $('#txtPharmacyItem').val('').trigger('change');
+                } else {
+                    $('#txtMedicen').val('');
+                    $('#txtMedicen').hide();
+                }
 
                 $("#ddlDosage_Qty").val(dosage_qty);
 
@@ -3487,7 +3514,7 @@
                         var docName = value.DoctorName || '';
 
                         // FIX: Match the exact 12 columns of the Discharge Table
-                        rows += '<tr>' +
+                        rows += '<tr' + (value.Unlisted_Med == true ? ' class="unlisted-row unlisted-saved"' : '') + '>' +
                             '<td> <input type="hidden" name="testDate" value="' + date + '">' + date + ' </td>' +
                             '<td><input type="hidden" name="hdnItemCode" value="' + itemCode + '"> ' + value.Medicine_Name + ' </td>' +
                             '<td> ' + dosageQty + '</td>' +
@@ -3498,7 +3525,7 @@
                             '<td> ' + otherIns + '</td>' +
                             '<td> ' + staff + ' </td>' +
                             '<td>' + docName + '</td>' +
-                            '<td><a href="#" onclick="editMedicine(this)"> Edit </a> | <a href="#" onclick="deleteMedicine(this)"> Delete </a> <input type="hidden" name="uurowid" value=' + uuid() + ' /> </td>' +
+                            '<td>' + (value.Unlisted_Med == true ? '<span class="unlisted-tag">Unlisted</span>' : '<a href="#" onclick="editMedicine(this)"> Edit </a> | <a href="#" onclick="deleteMedicine(this)"> Delete </a>') + ' <input type="hidden" name="uurowid" value=' + uuid() + ' /><input type="hidden" name="hdnUnlistedMed" value="' + (value.Unlisted_Med == true ? '1' : '0') + '" /> </td>' +
                             '<td style="display:none;">' + itemCode + '</td>' +
                             '</tr>';
                     });
@@ -3583,16 +3610,16 @@
                                 var s2 = parseInt(value.Stop_Date_Time.substr(6, 10));
                                 var Stop_Date = moment.unix(s2).format('MM/DD/YYYY hh:mm:ss A');
                             }
-                            rowsRegular += '<tr> <td> <input type="hidden" name="testDate" value="' + Start_Date + '">' + Start_Date + ' </td><td> ' + value.Medicine_Name + '</td><td> ' + value.Dosage_Qty + '</td><td> ' + value.Dosage_From + '</td> <td> ' + value.Frequency + ' </td><td> ' + value.Injections + '</td>   <td> ' + value.Oral + ' </td><td>' + Stop_Date + '</td> <td> ' + value.Other_Instruction + ' </td>' + '<td>' + value.AttendingParamedical_Staff + '</td><td>' + value.Username + '</td><td> <input type="text" class="form-control routeInput" value="' + Req_Qty + '"   name="IssueQty"  placeholder="Enter value" /></td><td> <input type="text" class="form-control routeInput" value="' + Rcv_Qty + '"   name="RecQty"  placeholder="Enter value" /></td><td> <input type="text" class="form-control routeInput" value="' + Rtn_Qty + '"   name="RtnQty"  placeholder="Enter value" /></td><td class="eddit"><a href="#" onclick="editMedicine(this)"> Edit </a> | <a href="#" onclick="deleteMedicine(this)"> Delete </a><input type="hidden" name="uurowid" value=' + uuid() + ' />  </td><td style="display:none;">' + value.Item_Code + '</td></tr>';
+                            rowsRegular += '<tr' + (value.Unlisted_Med == true ? ' class="unlisted-row unlisted-saved"' : '') + '> <td> <input type="hidden" name="testDate" value="' + Start_Date + '">' + Start_Date + ' </td><td> ' + value.Medicine_Name + '</td><td> ' + value.Dosage_Qty + '</td><td> ' + value.Dosage_From + '</td> <td> ' + value.Frequency + ' </td><td> ' + value.Injections + '</td>   <td> ' + value.Oral + ' </td><td>' + Stop_Date + '</td> <td> ' + value.Other_Instruction + ' </td>' + '<td>' + value.AttendingParamedical_Staff + '</td><td>' + value.Username + '</td><td> <input type="text" class="form-control routeInput" value="' + Req_Qty + '"   name="IssueQty"  placeholder="Enter value" /></td><td> <input type="text" class="form-control routeInput" value="' + Rcv_Qty + '"   name="RecQty"  placeholder="Enter value" /></td><td> <input type="text" class="form-control routeInput" value="' + Rtn_Qty + '"   name="RtnQty"  placeholder="Enter value" /></td><td class="eddit">' + (value.Unlisted_Med == true ? '<span class="unlisted-tag">Unlisted</span>' : '<a href="#" onclick="editMedicine(this)"> Edit </a> | <a href="#" onclick="deleteMedicine(this)"> Delete </a>') + '<input type="hidden" name="uurowid" value=' + uuid() + ' /><input type="hidden" name="hdnUnlistedMed" value="' + (value.Unlisted_Med == true ? '1' : '0') + '" />  </td><td style="display:none;">' + value.Item_Code + '</td></tr>';
 
                         }
                         else if (value.PRN == true) {
-                            rowsPRN += '<tr> <td> <input type="hidden" name="testDate" value="' + Start_Date + '">' + Start_Date + ' </td><td> ' + value.Medicine_Name + '</td><td> ' + value.Dosage_Qty + '</td><td> ' + value.Dosage_From + '</td> <td> ' + value.Frequency + ' </td><td> ' + value.Injections + '</td>   <td> ' + value.Oral + ' </td><td style="background-color: red;"> ' + value.Max_PRN_Dose + ' </td><td> ' + value.Other_Instruction + '</td>' + ' <td>' + value.AttendingParamedical_Staff + '</td><td>' + value.Username + '</td><td> <input type="text" class="form-control routeInput" value="' + Req_Qty + '"   name="IssueQty"  placeholder="Enter value" /></td><td> <input type="text" class="form-control routeInput" value="' + Rcv_Qty + '"   name="RecQty"  placeholder="Enter value" /></td><td> <input type="text" class="form-control routeInput" value="' + Rtn_Qty + '"   name="RtnQty"  placeholder="Enter value" /></td><td class="eddit"><a href="#" onclick="editMedicine(this)"> Edit </a> | <a href="#" onclick="deleteMedicine(this)"> Delete </a><input type="hidden" name="uurowid" value=' + uuid() + ' />  </td> <td style="display:none;">' + value.Item_Code + '</td></tr>';
+                            rowsPRN += '<tr' + (value.Unlisted_Med == true ? ' class="unlisted-row unlisted-saved"' : '') + '> <td> <input type="hidden" name="testDate" value="' + Start_Date + '">' + Start_Date + ' </td><td> ' + value.Medicine_Name + '</td><td> ' + value.Dosage_Qty + '</td><td> ' + value.Dosage_From + '</td> <td> ' + value.Frequency + ' </td><td> ' + value.Injections + '</td>   <td> ' + value.Oral + ' </td><td style="background-color: red;"> ' + value.Max_PRN_Dose + ' </td><td> ' + value.Other_Instruction + '</td>' + ' <td>' + value.AttendingParamedical_Staff + '</td><td>' + value.Username + '</td><td> <input type="text" class="form-control routeInput" value="' + Req_Qty + '"   name="IssueQty"  placeholder="Enter value" /></td><td> <input type="text" class="form-control routeInput" value="' + Rcv_Qty + '"   name="RecQty"  placeholder="Enter value" /></td><td> <input type="text" class="form-control routeInput" value="' + Rtn_Qty + '"   name="RtnQty"  placeholder="Enter value" /></td><td class="eddit">' + (value.Unlisted_Med == true ? '<span class="unlisted-tag">Unlisted</span>' : '<a href="#" onclick="editMedicine(this)"> Edit </a> | <a href="#" onclick="deleteMedicine(this)"> Delete </a>') + '<input type="hidden" name="uurowid" value=' + uuid() + ' /><input type="hidden" name="hdnUnlistedMed" value="' + (value.Unlisted_Med == true ? '1' : '0') + '" />  </td> <td style="display:none;">' + value.Item_Code + '</td></tr>';
 
                         }
                         else if (value.STAT == true) {
 
-                            rowsStat += '<tr> <td> <input type="hidden" name="testDate" value="' + Start_Date + '">' + Start_Date + ' </td><td> ' + value.Medicine_Name + '</td><td> ' + value.Dosage_Qty + '</td><td> ' + value.Dosage_From + '</td> <td> ' + value.Frequency + ' </td><td> ' + value.Injections + '</td>   <td> ' + value.Oral + ' </td><td> ' + value.Other_Instruction + '</td><td> ' + value.Other_Instruction + '</td>' + ' <td>' + value.AttendingParamedical_Staff + '</td>' + '<td>' + value.Username + '</td><td> <input type="text" class="form-control routeInput" value="' + Req_Qty + '"   name="IssueQty"  placeholder="Enter value" /></td><td> <input type="text" class="form-control routeInput" value="' + Rcv_Qty + '"   name="RecQty"  placeholder="Enter value" /></td><td> <input type="text" class="form-control routeInput" value="' + Rtn_Qty + '"   name="RtnQty"  placeholder="Enter value" /></td><td class="eddit"><a href="#" onclick="editMedicine(this)"> Edit </a> | <a href="#" onclick="deleteMedicine(this)"> Delete </a><input type="hidden" name="uurowid" value=' + uuid() + ' />  </td><td style="display:none;">' + value.Item_Code + '</td></tr>';
+                            rowsStat += '<tr' + (value.Unlisted_Med == true ? ' class="unlisted-row unlisted-saved"' : '') + '> <td> <input type="hidden" name="testDate" value="' + Start_Date + '">' + Start_Date + ' </td><td> ' + value.Medicine_Name + '</td><td> ' + value.Dosage_Qty + '</td><td> ' + value.Dosage_From + '</td> <td> ' + value.Frequency + ' </td><td> ' + value.Injections + '</td>   <td> ' + value.Oral + ' </td><td> ' + value.Other_Instruction + '</td><td> ' + value.Other_Instruction + '</td>' + ' <td>' + value.AttendingParamedical_Staff + '</td>' + '<td>' + value.Username + '</td><td> <input type="text" class="form-control routeInput" value="' + Req_Qty + '"   name="IssueQty"  placeholder="Enter value" /></td><td> <input type="text" class="form-control routeInput" value="' + Rcv_Qty + '"   name="RecQty"  placeholder="Enter value" /></td><td> <input type="text" class="form-control routeInput" value="' + Rtn_Qty + '"   name="RtnQty"  placeholder="Enter value" /></td><td class="eddit">' + (value.Unlisted_Med == true ? '<span class="unlisted-tag">Unlisted</span>' : '<a href="#" onclick="editMedicine(this)"> Edit </a> | <a href="#" onclick="deleteMedicine(this)"> Delete </a>') + '<input type="hidden" name="uurowid" value=' + uuid() + ' /><input type="hidden" name="hdnUnlistedMed" value="' + (value.Unlisted_Med == true ? '1' : '0') + '" />  </td><td style="display:none;">' + value.Item_Code + '</td></tr>';
 
                         }
 
@@ -3608,10 +3635,10 @@
                         $('#tblMedicinesListPRN tbody').html(rowsPRN);
 
                 if (allowMedicationEdit == true) {
-                    $('.eddit').show();
+                    $('.eddit a').show();
                 }
                 else {
-                    $('.eddit').hide();  
+                    $('.eddit a').hide();
                 }
 
                     }, 6000)
@@ -4039,6 +4066,7 @@
             var MedicinesList = [];
 
             Dtable.find('tbody tr').each(function (key, value) {
+                if ($(value).attr('data-new') !== 'true') return;
                 MedicinesList.push({
                     'Medicine_Date': $($(value).find('td')[0]).text().trim(),
                     'Medicine_Name': $($(value).find('td')[1]).text().trim(),
@@ -4053,7 +4081,8 @@
                     'ItemCode': $(value).find('input[name=hdnItemCode]').val(),
                     'Regular': false,
                     'STAT': false,
-                    'PRN': false
+                    'PRN': false,
+                    'Unlisted_Med': $(value).find('input[name=hdnUnlistedMed]').val() === '1'
                 });
             });
 
@@ -4061,6 +4090,7 @@
             var MedicineDetails = { PatientID: InPatID == '(New)' ? 0 : InPatID, MedicineList: MedicinesList }
 
             PageMethods.SaveDischargeMedicines(JSON.stringify(MedicineDetails), function (response) {
+                Dtable.find('tbody tr').removeAttr('data-new');
                 SaveDoctoreNote();
             });
         }
@@ -4178,6 +4208,7 @@
             var MedicinesListPRN = [];
             var MedicinesListSTAT = [];
             table.find('tbody tr').each(function (key, value) {
+                if ($(value).attr('data-new') !== 'true') return;
 
                 MedicinesList.push({
                     'Medicine_Date': $($(value).find('td')[0]).text(),
@@ -4201,9 +4232,11 @@
                     "Regular": true,
                     "STAT": false,
                     "PRN": false,
+                    "Unlisted_Med": $(value).find('input[name=hdnUnlistedMed]').val() === '1'
                 });
             });
             tableStat.find('tbody tr').each(function (key, value) {
+                if ($(value).attr('data-new') !== 'true') return;
 
                 MedicinesList.push({
                     'Medicine_Date': $($(value).find('td')[0]).text(),
@@ -4228,9 +4261,11 @@
                     "Regular": false,
                     "STAT": true,
                     "PRN": false,
+                    "Unlisted_Med": $(value).find('input[name=hdnUnlistedMed]').val() === '1'
                 });
             });
             tablePRN.find('tbody tr').each(function (key, value) {
+                if ($(value).attr('data-new') !== 'true') return;
 
                 MedicinesList.push({
                     'Medicine_Date': $($(value).find('td')[0]).text(),
@@ -4255,13 +4290,17 @@
                     "Regular": false,
                     "STAT": false,
                     "PRN": true,
+                    "Unlisted_Med": $(value).find('input[name=hdnUnlistedMed]').val() === '1'
                 });
             });
              
             var InPatID = $('#<%= txtIn_Patient_ID.ClientID%>').val();
             var MedicineDetails = { PatientID: InPatID == '(New)' ? 0 : InPatID, MedicineList: MedicinesList }
 
-            PageMethods.SaveMedicines(JSON.stringify(MedicineDetails), function (response) { SaveDischargeMedicines(); });
+            PageMethods.SaveMedicines(JSON.stringify(MedicineDetails), function (response) {
+                table.find('tbody tr, tableStat tbody tr, tablePRN tbody tr').removeAttr('data-new');
+                SaveDischargeMedicines();
+            });
         }
 
         function saveTests() {
@@ -5603,7 +5642,17 @@
                     options += '<option value="' + value.Item_ID + '"> ' + value.Description + ' </option>';
                 });
                 $('#txtPharmacyItem').html(options);
-                $('#txtPharmacyItem').select2();
+                initMedicationSelect2();
+            });
+        }
+        function initMedicationSelect2() {
+            var $sel = $('#txtPharmacyItem');
+            if ($sel.data('select2')) { return; }
+            $sel.select2({
+                width: 'resolve',
+                placeholder: 'Select Medicine',
+                allowClear: true,
+                dropdownParent: $('#MedicationModel')
             });
         }
         var checkRepeateRecord = false;
@@ -6404,6 +6453,7 @@
                 } else {
                     itemCode = '0';
                 }
+                var unlistedFlag = (itemCode === '0' || itemCode === 0 || itemCode === '' || itemCode === null) ? 1 : 0;
 
                 var Dose = $('#txtDosages').val();
                 if (Dose == "") {
@@ -6495,17 +6545,17 @@
                             otherIns = '';
                         }
 
-                        var row = '<tr> <td> <input type="hidden" name="testDate" value="' + complete + '">' + complete + ' </td><td><input type="hidden" name="hdnItemCode" value="' + itemCode + '"> ' + pharmacyITem + '</td><td> ' + $('#ddlDosage_Qty').val() + '</td><td> ' + $('#ddlDosage_From').find('option:selected').text() + '</td> <td> ' + $('#txtRecomended_Dosage').find('option:selected').text() + ' </td><td> ' + $('#txtInjection').val() + '</td>   <td> ' + $('#Routes').find('option:selected').text() + ' </td><td>' + completeStop + '</td> <td>' + otherIns + '</td>' + '<td> ' + $('#AttendingParamedicalStaff').val() + ' </td>' + '<td>' + username + '</td>' + '<td><input type="text" class="form-control routeInput" value="' + requestQty + '" name="IssueQty" placeholder="Enter value" /></td><td><input type="text" class="form-control routeInput" value="0" name="RecQty" placeholder="Enter value" /></td><td><input type="text" class="form-control routeInput" value="0" name="RtnQty" placeholder="Enter value" /></td>' + '<td><a href="#" onclick="editMedicine(this)"> Edit </a> | <a href="#" onclick="deleteMedicine(this)"> Delete </a> <input type="hidden" name="uurowid" value=' + uuid() + ' />  </td><td style="display:none;">' + itemCode + '</td></tr>';
+var row = '<tr' + (unlistedFlag === 1 ? ' class="unlisted-row"' : '') + ' data-new="true"> <td> <input type="hidden" name="testDate" value="' + complete + '">' + complete + ' </td><td><input type="hidden" name="hdnItemCode" value="' + itemCode + '"> ' + pharmacyITem + '</td><td> ' + $('#ddlDosage_Qty').val() + '</td><td> ' + $('#ddlDosage_From').find('option:selected').text() + '</td> <td> ' + $('#txtRecomended_Dosage').find('option:selected').text() + ' </td><td> ' + $('#txtInjection').val() + '</td>   <td> ' + $('#Routes').find('option:selected').text() + ' </td><td>' + completeStop + '</td> <td>' + otherIns + '</td>' + '<td> ' + $('#AttendingParamedicalStaff').val() + ' </td>' + '<td>' + username + '</td>' + '<td><input type="text" class="form-control routeInput" value="' + requestQty + '" name="IssueQty" placeholder="Enter value" /></td><td><input type="text" class="form-control routeInput" value="0" name="RecQty" placeholder="Enter value" /></td><td><input type="text" class="form-control routeInput" value="0" name="RtnQty" placeholder="Enter value" /></td>' + '<td>' + (unlistedFlag === 1 ? '<span class="unlisted-tag">Unlisted</span>' : '<a href="#" onclick="editMedicine(this)"> Edit </a> | <a href="#" onclick="deleteMedicine(this)"> Delete </a>') + ' <input type="hidden" name="uurowid" value=' + uuid() + ' /><input type="hidden" name="hdnUnlistedMed" value="' + unlistedFlag + '" />  </td><td style="display:none;">' + itemCode + '</td></tr>';
                        // var row = '<tr> <td> <input type="hidden" name="testDate" value="' + complete + '">' + complete + ' </td><td><input type="hidden" name="hdnItemCode" value="0"> ' + pharmacyITem + '</td><td> ' + $('#txtRecomended_Dosage').find('option:selected').text() + '</td><td> ' + $('#Routes').find('option:selected').text() + '</td><td> ' + $('#txtInjection').val() + '</td><td>' + $('#AttendingParamedicalStaff').val() + '</td><td> ' + $('#ddlDosage_From').find('option:selected').text() + ' </td> <td> ' + $('#ddlDosage_Qty').val() + ' </td>' + '<td> ' + $('#ddlOther_Instruction').find('option:selected').text() + ' </td>' + '<td>' + username + '</td><td><input type="text" class="form-control routeInput" value="0" name="IssueQty" placeholder="Enter value" /></td><td><input type="text" class="form-control routeInput" value="0" name="RecQty" placeholder="Enter value" /></td><td><input type="text" class="form-control routeInput" value="0" name="RtnQty" placeholder="Enter value" /></td><td> <a href="#" onclick="editMedicine(this)"> Edit </a> | <a href="#" onclick="deleteMedicine(this)"> Delete </a> <input type="hidden" name="uurowid" value=' + uuid() + ' />  </td><td style="display:none;">' + itemCode + '</td></tr>';
 
 
                         if (localStorage.IsStat == 1) {
 
-                            var row = '<tr> <td> <input type="hidden" name="testDate" value="' + complete + '">' + complete + ' </td><td><input type="hidden" name="hdnItemCode" value="' + itemCode + '"> ' + pharmacyITem + '</td><td> ' + $('#ddlDosage_Qty').val() + '</td><td> ' + $('#ddlDosage_From').find('option:selected').text() + '</td><td> ' + $('#txtRecomended_Dosage').find('option:selected').text() + '</td><td> ' + $('#txtInjection').val() + '</td><td> ' + $('#Routes').find('option:selected').text() + '</td><td> ' + $('#ddlOther_Instruction').find('option:selected').text() + '</td><td></td><td>' + $('#AttendingParamedicalStaff').val() + '</td><td>' + username + '</td><td><input type="text" class="form-control routeInput" value="' + requestQty + '" name="IssueQty" placeholder="Enter value" /></td><td><input type="text" class="form-control routeInput" value="0" name="RecQty" placeholder="Enter value" /></td><td><input type="text" class="form-control routeInput" value="0" name="RtnQty" placeholder="Enter value" /></td><td> <a href="#" onclick="editMedicine(this)"> Edit </a> | <a href="#" onclick="deleteMedicine(this)"> Delete </a> <input type="hidden" name="uurowid" value=' + uuid() + ' />  </td><td style="display:none;">' + itemCode + '</td></tr>';
+                            var row = '<tr' + (unlistedFlag === 1 ? ' class="unlisted-row"' : '') + ' data-new="true"> <td> <input type="hidden" name="testDate" value="' + complete + '">' + complete + ' </td><td><input type="hidden" name="hdnItemCode" value="' + itemCode + '"> ' + pharmacyITem + '</td><td> ' + $('#ddlDosage_Qty').val() + '</td><td> ' + $('#ddlDosage_From').find('option:selected').text() + '</td><td> ' + $('#txtRecomended_Dosage').find('option:selected').text() + '</td><td> ' + $('#txtInjection').val() + '</td><td> ' + $('#Routes').find('option:selected').text() + '</td><td> ' + $('#ddlOther_Instruction').find('option:selected').text() + '</td><td></td><td>' + $('#AttendingParamedicalStaff').val() + '</td><td>' + username + '</td><td><input type="text" class="form-control routeInput" value="' + requestQty + '" name="IssueQty" placeholder="Enter value" /></td><td><input type="text" class="form-control routeInput" value="0" name="RecQty" placeholder="Enter value" /></td><td><input type="text" class="form-control routeInput" value="0" name="RtnQty" placeholder="Enter value" /></td><td> <a href="#" onclick="editMedicine(this)"> Edit </a> | <a href="#" onclick="deleteMedicine(this)"> Delete </a> <input type="hidden" name="uurowid" value=' + uuid() + ' /><input type="hidden" name="hdnUnlistedMed" value="' + unlistedFlag + '" />  </td><td style="display:none;">' + itemCode + '</td></tr>';
                         }
                         if (localStorage.IsPRN == 1) {
-                             
-                            var row = '<tr> <td> <input type="hidden" name="testDate" value="' + complete + '">' + complete + ' </td><td><input type="hidden" name="hdnItemCode" value="' + itemCode + '"> ' + pharmacyITem + '</td><td> ' + $('#txtRecomended_Dosage').find('option:selected').text() + '</td><td> ' + $('#Routes').find('option:selected').text() + '</td><td> ' + $('#txtInjection').val() + '</td><td>' + $('#AttendingParamedicalStaff').val() + '</td><td> ' + $('#ddlDosage_From').find('option:selected').text() + ' </td> <td> ' + $('#ddlDosage_Qty').val() + ' </td>' + '<td> ' + $('#ddlOther_Instruction').find('option:selected').text() + ' </td>' + '<td>' + username + '</td><td><input type="text" class="form-control routeInput" value="' + requestQty + '" name="IssueQty" placeholder="Enter value" /></td><td><input type="text" class="form-control routeInput" value="0" name="RecQty" placeholder="Enter value" /></td><td><input type="text" class="form-control routeInput" value="0" name="RtnQty" placeholder="Enter value" /></td><td> <a href="#" onclick="editMedicine(this)"> Edit </a> | <a href="#" onclick="deleteMedicine(this)"> Delete </a> <input type="hidden" name="uurowid" value=' + uuid() + ' />  </td><td style="display:none;">' + itemCode + '</td></tr>';
+
+                            var row = '<tr> <td> <input type="hidden" name="testDate" value="' + complete + '">' + complete + ' </td><td><input type="hidden" name="hdnItemCode" value="' + itemCode + '"> ' + pharmacyITem + '</td><td> ' + $('#txtRecomended_Dosage').find('option:selected').text() + '</td><td> ' + $('#Routes').find('option:selected').text() + '</td><td> ' + $('#txtInjection').val() + '</td><td>' + $('#AttendingParamedicalStaff').val() + '</td><td> ' + $('#ddlDosage_From').find('option:selected').text() + ' </td> <td> ' + $('#ddlDosage_Qty').val() + ' </td>' + '<td> ' + $('#ddlOther_Instruction').find('option:selected').text() + ' </td>' + '<td>' + username + '</td><td><input type="text" class="form-control routeInput" value="' + requestQty + '" name="IssueQty" placeholder="Enter value" /></td><td><input type="text" class="form-control routeInput" value="0" name="RecQty" placeholder="Enter value" /></td><td><input type="text" class="form-control routeInput" value="0" name="RtnQty" placeholder="Enter value" /></td><td> <a href="#" onclick="editMedicine(this)"> Edit </a> | <a href="#" onclick="deleteMedicine(this)"> Delete </a> <input type="hidden" name="uurowid" value=' + uuid() + ' /><input type="hidden" name="hdnUnlistedMed" value="' + unlistedFlag + '" />  </td><td style="display:none;">' + itemCode + '</td></tr>';
                         }
                     }
                     else {
@@ -6521,7 +6571,7 @@
                         if (localStorage.IsPRN == 1) {
                              
 
-                            var row = '<tr> <td> <input type="hidden" name="testDate" value="' + complete + '">' + complete + ' </td><td><input type="hidden" name="hdnItemCode" value="' + itemCode + '"> ' + pharmacyITem + '</td><td> ' + $('#txtRecomended_Dosage').find('option:selected').text() + '</td><td> ' + $('#Routes').find('option:selected').text() + '</td><td> ' + $('#txtInjection').val() + '</td><td>' + $('#AttendingParamedicalStaff').val() + '</td><td> ' + $('#ddlDosage_From').find('option:selected').text() + ' </td> <td> ' + $('#ddlDosage_Qty').val() + ' </td>' + '<td> ' + $('#ddlOther_Instruction').find('option:selected').text() + ' </td>' + '<td>' + username + '</td><td><input type="text" class="form-control routeInput" value="' + requestQty + '" name="IssueQty" placeholder="Enter value" /></td><td><input type="text" class="form-control routeInput" value="0" name="RecQty" placeholder="Enter value" /></td><td><input type="text" class="form-control routeInput" value="0" name="RtnQty" placeholder="Enter value" /></td><td> <a href="#" onclick="editMedicine(this)"> Edit </a> | <a href="#" onclick="deleteMedicine(this)"> Delete </a> <input type="hidden" name="uurowid" value=' + uuid() + ' />  </td><td style="display:none;">' + itemCode + '</td></tr>';
+var row = '<tr' + (unlistedFlag === 1 ? ' class="unlisted-row"' : '') + ' data-new="true"> <td> <input type="hidden" name="testDate" value="' + complete + '">' + complete + ' </td><td><input type="hidden" name="hdnItemCode" value="' + itemCode + '"> ' + pharmacyITem + '</td><td> ' + $('#txtRecomended_Dosage').find('option:selected').text() + '</td><td> ' + $('#Routes').find('option:selected').text() + '</td><td> ' + $('#txtInjection').val() + '</td><td>' + $('#AttendingParamedicalStaff').val() + '</td><td> ' + $('#ddlDosage_From').find('option:selected').text() + ' </td> <td> ' + $('#ddlDosage_Qty').val() + ' </td>' + '<td> ' + $('#ddlOther_Instruction').find('option:selected').text() + ' </td>' + '<td>' + username + '</td><td><input type="text" class="form-control routeInput" value="' + requestQty + '" name="IssueQty" placeholder="Enter value" /></td><td><input type="text" class="form-control routeInput" value="0" name="RecQty" placeholder="Enter value" /></td><td><input type="text" class="form-control routeInput" value="0" name="RtnQty" placeholder="Enter value" /></td><td> <a href="#" onclick="editMedicine(this)"> Edit </a> | <a href="#" onclick="deleteMedicine(this)"> Delete </a> <input type="hidden" name="uurowid" value=' + uuid() + ' /><input type="hidden" name="hdnUnlistedMed" value="' + unlistedFlag + '" />  </td><td style="display:none;">' + itemCode + '</td></tr>';
                         }
                     }
                     if (localStorage.IsRegular == 1) {
@@ -6538,18 +6588,18 @@
                     }
                     else if (localStorage.IsDischarge == 1) {
                         // FIX: Build a specific 12-column row for the Discharge table
-                        var dischargeRow = '<tr>' +
+var dischargeRow = '<tr' + (unlistedFlag === 1 ? ' class="unlisted-row"' : '') + ' data-new="true">' +
                             '<td> <input type="hidden" name="testDate" value="' + complete + '">' + complete + ' </td>' +
                             '<td><input type="hidden" name="hdnItemCode" value="' + itemCode + '"> ' + pharmacyITem + '</td>' +
                             '<td> ' + $('#ddlDosage_Qty').val() + '</td>' +
                             '<td> ' + $('#ddlDosage_From').find('option:selected').text() + '</td>' +
-                            '<td> ' + $('#txtRecomended_Dosage').find('option:selected').text() + ' </td>' +
+                            '<td> ' + $('#txtRecomended_Dosage').find('option:selected').text() + '</td>' +
                             '<td> ' + $('#txtInjection').val() + '</td>' +
-                            '<td> ' + $('#Routes').find('option:selected').text() + ' </td>' +
+                            '<td> ' + $('#Routes').find('option:selected').text() + '</td>' +
                             '<td> ' + otherIns + '</td>' +
                             '<td> ' + $('#AttendingParamedicalStaff').val() + ' </td>' +
                             '<td>' + username + '</td>' +
-                            '<td><a href="#" onclick="editMedicine(this)"> Edit </a> | <a href="#" onclick="deleteMedicine(this)"> Delete </a> <input type="hidden" name="uurowid" value=' + uuid() + ' /> </td>' +
+                            '<td>' + (unlistedFlag === 1 ? '<span class="unlisted-tag">Unlisted</span>' : '<a href="#" onclick="editMedicine(this)"> Edit </a> | <a href="#" onclick="deleteMedicine(this)"> Delete </a>') + ' <input type="hidden" name="uurowid" value=' + uuid() + ' /><input type="hidden" name="hdnUnlistedMed" value="' + unlistedFlag + '" /> </td>' +
                             '<td style="display:none;">' + itemCode + '</td>' +
                             '</tr>';
 
@@ -6564,8 +6614,9 @@
                     var row = '';
                     if (localStorage.IsDischarge == 0) {
 
-                        if (localStorage.IsPRN == 1) {
+if (localStorage.IsPRN == 1) {
                             row = $('#tblMedicinesListPRN tbody tr').find('input[value=' + tid + ']').parents('tr')[0];
+                            $(row).attr('data-new', 'true');
                             $(row).find('td')[0].innerText = complete;
                             $(row).find('td')[1].innerText = $('#txtPharmacyItem').find('option:selected').text().trim();
                             $(row).find('td')[2].innerText = $('#ddlDosage_Qty').val();
@@ -6582,6 +6633,7 @@
                         }
                         else if (localStorage.IsStat == 1) {
                             row = $('#tblMedicinesListSTAT tbody tr').find('input[value=' + tid + ']').parents('tr')[0];
+                            $(row).attr('data-new', 'true');
                             $(row).find('td')[0].innerText = complete;
                             $(row).find('td')[1].innerText = $('#txtPharmacyItem').find('option:selected').text().trim();
                             $(row).find('td')[2].innerText = $('#ddlDosage_Qty').val();
@@ -6597,6 +6649,7 @@
                         else if (localStorage.IsRegular == 1) {
 
                             row = $('#tblMedicinesListRegular tbody tr').find('input[value=' + tid + ']').parents('tr')[0];
+                            $(row).attr('data-new', 'true');
                             $(row).find('td')[0].innerText = complete;
                             $(row).find('td')[1].innerText = $('#txtPharmacyItem').find('option:selected').text().trim();
                             $(row).find('td')[2].innerText = $('#ddlDosage_Qty').val();
@@ -6616,6 +6669,7 @@
                     }
                     else if (localStorage.IsDischarge == 1) {
                         row = $('#tblDischargeMedication tbody tr').find('input[value=' + tid + ']').parents('tr')[0];
+                        $(row).attr('data-new', 'true');
                         $(row).find('td')[1].innerText = $('#txtPharmacyItem').find('option:selected').text().trim();
                         $(row).find('td')[2].innerText = $('#MedicationModel select[name=RecomendedDosage]').find('option:selected').text();
                         $(row).find('td')[3].innerText = $('#MedicationModel select[name=Routes]').find('option:selected').text();
@@ -6649,6 +6703,7 @@
                 $('#txtStopT').val('');
                 $('#ddlDosage_Qty').val('');
                 $('#txtPharmacyItem').val('');
+                $('#txtRequestQty').val('0');
             });
 
 
@@ -6670,7 +6725,7 @@
 
                     }
 
-                    var row = '<tr> <td> ' + datetime + ' </td><td> ' + $('#txtMedicineName').find('option:selected').text() + '</td> <td> ' + $('#txtDosage').val() + ' </td> <td> ' + $('#txtRecomended_Dosage').find('option:selected').text() + '</td><td> ' + $('#Routes').find('option:selected').text() + ' </td> <td> ' + $('#txtInjection').val() + '</td><td><input type="hidden" name="txtDoctor" value="' + doctorVal + '" />' + doctor + '</td> <td> <a href="#" onclick="editMedicine(this)"> Edit </a> | <a href="#" onclick="deleteMedicine(this)"> Delete </a> <input type="hidden" name="uurowid" value=' + uuid() + ' />  </td> </tr>';
+                    var row = '<tr data-new="true"> <td> ' + datetime + ' </td><td> ' + $('#txtMedicineName').find('option:selected').text() + '</td> <td> ' + $('#txtDosage').val() + ' </td> <td> ' + $('#txtRecomended_Dosage').find('option:selected').text() + '</td><td> ' + $('#Routes').find('option:selected').text() + ' </td> <td> ' + $('#txtInjection').val() + '</td><td><input type="hidden" name="txtDoctor" value="' + doctorVal + '" />' + doctor + '</td> <td> <a href="#" onclick="editMedicine(this)"> Edit </a> | <a href="#" onclick="deleteMedicine(this)"> Delete </a> <input type="hidden" name="uurowid" value=' + uuid() + ' />  </td> </tr>';
 
                     var table = $('#tblDischargeMedication tbody');
                     table.append(row);
@@ -6680,6 +6735,7 @@
                     var tid = $('#MedicationModel input[name=uurowid]').val();
 
                     var row = $('#tblMedicinesList tbody tr').find('input[value=' + tid + ']').parents('tr')[0];
+                    $(row).attr('data-new', 'true');
 
                     $(row).find('td')[1].innerText = $('#MedicationModel select[name=txtMedicineName]').find('option:selected').text();
                     $(row).find('td')[2].innerText = $('#MedicationModel input[name=txtDosage]').val();
@@ -8453,7 +8509,7 @@
                                                 <th>Other Instruction</th>
                                                 <th>Special Instructions </th>
                                                 <th>Attending Paramedical Staff</th>
-                                                <th>Username</th>                                              
+                                                <th>Username</th>
                                                 <th>Request Qty </th>
                                                 <th>Received Qty </th>
                                                 <th>Return Qty </th>
@@ -8476,10 +8532,10 @@
                                                 <th>Frequency  </th>
                                                 <th>Duration </th>
                                                 <th>Route </th>                                                                                               
-                                                <th>Max Prn Dose/24 Hours</th>
+<th>Max Prn Dose/24 Hours</th>
                                                  <th>Other Instruction</th>
                                                    <th>Special Instructions </th>
-                                                 <th>Username</th>                                             
+                                                 <th>Username</th>
                                                <th style="WIDTH: 100PX;">Edit</th>
                                             </tr>
                                         </thead>

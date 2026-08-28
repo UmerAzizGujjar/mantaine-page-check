@@ -122,6 +122,16 @@ namespace PMS
                         ExportDiv.Visible = true;
                         DateDiv.Visible = true;
                         break;
+                    case "PLCC":
+                        AccountInfoDiv.Visible = false;
+                        AccountDiv.Visible = false;
+                        CostCenterDiv.Visible = true;
+                        plhAllAcounts.Visible = false;
+                        HideZerroBalance.Visible = false;
+                        ExportDiv.Visible = true;
+                        DateDiv.Visible = true;
+                        BindCostCenterDDL();
+                        break;
                     case "PLD":
                         DateDiv.Visible = true;
                         levelChekBox.Visible = true;
@@ -516,6 +526,9 @@ namespace PMS
                         break;
                     case "PL":
                         query = "ReportName=ProfitLoss&ReportTitle=Profit And Loss " + txtStart_Date.Text + " To " + txtEnd_Date.Text + "&StartDate=" + Convert.ToDateTime(txtStart_Date.Text).ToString("dd-MMM-yy") + "&EndDate=" + Convert.ToDateTime(txtEnd_Date.Text).ToString("dd-MMM-yy") + "&ExportPDF=" + chkExportPDF.Checked;
+                        break;
+                    case "PLCC":
+                        query = "ReportName=ProfitLossCostCenterWise&ReportTitle=Profit And Loss " + txtStart_Date.Text + " To " + txtEnd_Date.Text + "&StartDate=" + Convert.ToDateTime(txtStart_Date.Text).ToString("dd-MMM-yy") + "&EndDate=" + Convert.ToDateTime(txtEnd_Date.Text).ToString("dd-MMM-yy") + "&CostCenter=" + ddlCostCenter.SelectedValue + "&ExportPDF=" + chkExportPDF.Checked;
                         break;
                     case "TB":
                         query = "ReportName=TrailBalanceAt&ReportTitle=Trial Balance from  " + txtStart_Date.Text + " To " + txtEnd_Date.Text + "&startDate=" + txtStart_Date.Text + "&endDate=" + txtEnd_Date.Text + "&Level1=" + cbLevel1.Checked + "&Level2=" + cbLevel2.Checked + "&Level3=" + cbLevel3.Checked + "&Level4=" + cbLevel4.Checked + "&ExportPDF=" + chkExportPDF.Checked;

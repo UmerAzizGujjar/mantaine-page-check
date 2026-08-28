@@ -5460,6 +5460,27 @@ namespace PMS
 
                 }
             }
+            else if (reportName == "ProfitLossCostCenterWise")
+            {
+                if (Request.QueryString["StartDate"] != null && Request.QueryString["EndDate"] != null)
+                {
+                    string CostCenter = Request.QueryString["CostCenter"].ToString();
+                    string CostCenterName = Request.QueryString["CostCenterName"].ToString();
+
+                    reportPath += "GeneralLedger/rptPLCostCenterWise.rpt";
+                    rd.Load(reportPath);
+                    rd.SummaryInfo.ReportTitle = reportTitle;
+                    rd.SetParameterValue("CompanyName", AppConfig.Company_Name);
+                    rd.SetParameterValue("@Company_ID", AppConfig.Company_ID);
+                    rd.SetParameterValue("@Book_ID", AppConfig.Book_ID);
+                    rd.SetParameterValue("@StartDate", Convert.ToDateTime(Request.QueryString["StartDate"]));
+                    rd.SetParameterValue("@EndDate", Convert.ToDateTime(Request.QueryString["EndDate"]));
+                    rd.SetParameterValue("@CostCenter", CostCenter);
+                    rd.SetParameterValue("CostCenterName", CostCenterName);
+
+
+                }
+            }
             else if (reportName == "ProfitLossDetail")
             {
                 if (Request.QueryString["startDate"] != null && Request.QueryString["Level1"] != null
@@ -5593,9 +5614,9 @@ namespace PMS
                     rd.SetParameterValue("CompanyName", AppConfig.Company_Name);
                     rd.SetParameterValue("@fromdate", Convert.ToDateTime(Request.QueryString["startDate"]));
                     rd.SetParameterValue("@todate", Convert.ToDateTime(Request.QueryString["endDate"]));
-                    rd.SetParameterValue("@CostCenter", Request.QueryString["CostCenter"]);
                     rd.SetParameterValue("@Company_ID", AppConfig.Company_ID);
                     rd.SetParameterValue("@Book_ID", AppConfig.Book_ID);
+                    rd.SetParameterValue("@CostCenter", Request.QueryString["CostCenter"]);
                     rd.SetParameterValue("CostCenterName", Request.QueryString["CostCenterName"]);
 
                     if (Request.QueryString["AllAccounts"] != null && Request.QueryString["Account_Code"] != null)

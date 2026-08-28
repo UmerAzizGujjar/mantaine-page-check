@@ -23,6 +23,27 @@ namespace PMS
     {
         string PageTitle;
         public bool AllowPatientRecord = false;
+
+        private DataTable GetUserWarehouses()
+        {
+            if (DBClass.IsAdministrator())
+            {
+                return DBClass.getDataTable(@"
+                    SELECT DataValue_Name AS Value, DataValue_Description AS Text
+                    FROM DataValues
+                    WHERE ValueSet_ID = 8
+                    ORDER BY CASE WHEN DataValue_Name = '0' THEN 0 ELSE 1 END, DataValue_Description");
+            }
+            return DBClass.getDataTable(@"
+    SELECT DISTINCT dv.DataValue_Name AS Value, dv.DataValue_Description AS Text
+    FROM WareHouse_Wise_User wu
+    INNER JOIN WareHouse_Wise_User_Detail wud ON wu.WareHouse_wise_User_Id = wud.WareHouse_wise_User_Id
+    INNER JOIN DataValues dv ON wud.WareHouse = dv.DataValue_Name
+    WHERE wu.User_Id = '" + AppConfig.UserID.ToString() + @"'
+      AND dv.ValueSet_ID = 8
+    ORDER BY dv.DataValue_Description");
+        }
+
         protected void Page_Load(object sender, EventArgs e)
         {
             if (!Page.IsPostBack)
@@ -393,10 +414,9 @@ namespace PMS
                     //ADDING NEW WAREHOUSE
 
                     object valuset;
-                    valuset = DBClass.GetValueSet("Ware house");
-                    ddlwareHouse.DataSource = valuset;
-                    ddlwareHouse.DataTextField = "DataValue_Description";
-                    ddlwareHouse.DataValueField = "DataValue_Name";
+                    ddlwareHouse.DataSource = GetUserWarehouses();
+                    ddlwareHouse.DataTextField = "Text";
+                    ddlwareHouse.DataValueField = "Value";
                     ddlwareHouse.Items.Clear();
                     ddlwareHouse.Items.Add(new ListItem() { Text = "All", Value = "0" });
                     ddlwareHouse.DataBind();
@@ -1226,10 +1246,9 @@ namespace PMS
                     //ADDING NEW WAREHOUSE
 
                     object valuset;
-                    valuset = DBClass.GetValueSet("Ware house");
-                    ddlwareHouse.DataSource = valuset;
-                    ddlwareHouse.DataTextField = "DataValue_Description";
-                    ddlwareHouse.DataValueField = "DataValue_Name";
+                    ddlwareHouse.DataSource = GetUserWarehouses();
+                    ddlwareHouse.DataTextField = "Text";
+                    ddlwareHouse.DataValueField = "Value";
                     ddlwareHouse.Items.Clear();
                     ddlwareHouse.Items.Add(new ListItem() { Text = "All", Value = "0" });
                     ddlwareHouse.DataBind();
@@ -1481,10 +1500,9 @@ namespace PMS
                     //ADDING NEW WAREHOUSE
 
                     object valuset;
-                    valuset = DBClass.GetValueSet("Ware house");
-                    ddlwareHouse.DataSource = valuset;
-                    ddlwareHouse.DataTextField = "DataValue_Description";
-                    ddlwareHouse.DataValueField = "DataValue_Name";
+                    ddlwareHouse.DataSource = GetUserWarehouses();
+                    ddlwareHouse.DataTextField = "Text";
+                    ddlwareHouse.DataValueField = "Value";
                     ddlwareHouse.Items.Clear();
                     ddlwareHouse.Items.Add(new ListItem() { Text = "All", Value = "0" });
                     ddlwareHouse.DataBind();
@@ -1546,10 +1564,9 @@ namespace PMS
                     //ADDING NEW WAREHOUSE
 
                     object valuset;
-                    valuset = DBClass.GetValueSet("Ware house");
-                    ddlwareHouse.DataSource = valuset;
-                    ddlwareHouse.DataTextField = "DataValue_Description";
-                    ddlwareHouse.DataValueField = "DataValue_Name";
+                    ddlwareHouse.DataSource = GetUserWarehouses();
+                    ddlwareHouse.DataTextField = "Text";
+                    ddlwareHouse.DataValueField = "Value";
                     ddlwareHouse.Items.Clear();
                     ddlwareHouse.Items.Add(new ListItem() { Text = "All", Value = "0" });
                     ddlwareHouse.DataBind();
@@ -1609,10 +1626,9 @@ namespace PMS
                     //ADDING NEW WAREHOUSE
 
                     object valuset;
-                    valuset = DBClass.GetValueSet("Ware house");
-                    ddlwareHouse.DataSource = valuset;
-                    ddlwareHouse.DataTextField = "DataValue_Description";
-                    ddlwareHouse.DataValueField = "DataValue_Name";
+                    ddlwareHouse.DataSource = GetUserWarehouses();
+                    ddlwareHouse.DataTextField = "Text";
+                    ddlwareHouse.DataValueField = "Value";
                     ddlwareHouse.Items.Clear();
                     ddlwareHouse.Items.Add(new ListItem() { Text = "All", Value = "0" });
                     ddlwareHouse.DataBind();
@@ -1686,10 +1702,9 @@ namespace PMS
                     //ADDING NEW WAREHOUSE
 
                     object valuset;
-                    valuset = DBClass.GetValueSet("Ware house");
-                    ddlwareHouse.DataSource = valuset;
-                    ddlwareHouse.DataTextField = "DataValue_Description";
-                    ddlwareHouse.DataValueField = "DataValue_Name";
+                    ddlwareHouse.DataSource = GetUserWarehouses();
+                    ddlwareHouse.DataTextField = "Text";
+                    ddlwareHouse.DataValueField = "Value";
                     ddlwareHouse.Items.Clear();
                     ddlwareHouse.Items.Add(new ListItem() { Text = "All", Value = "0" });
                     ddlwareHouse.DataBind();
@@ -2014,10 +2029,9 @@ namespace PMS
                     //ADDING NEW WAREHOUSE
 
                     object valuset;
-                    valuset = DBClass.GetValueSet("Ware house");
-                    ddlwareHouse.DataSource = valuset;
-                    ddlwareHouse.DataTextField = "DataValue_Description";
-                    ddlwareHouse.DataValueField = "DataValue_Name";
+                    ddlwareHouse.DataSource = GetUserWarehouses();
+                    ddlwareHouse.DataTextField = "Text";
+                    ddlwareHouse.DataValueField = "Value";
                     ddlwareHouse.Items.Clear();
                     ddlwareHouse.Items.Add(new ListItem() { Text = "All", Value = "0" });
                     ddlwareHouse.DataBind();
@@ -2031,10 +2045,9 @@ namespace PMS
                     //ADDING NEW WAREHOUSE
 
                     object valusetz;
-                    valusetz = DBClass.GetValueSet("Ware house");
-                    ddlItemCategory.DataSource = valusetz;
-                    ddlItemCategory.DataTextField = "DataValue_Description";
-                    ddlItemCategory.DataValueField = "DataValue_Name";
+                    ddlItemCategory.DataSource = GetUserWarehouses();
+                    ddlItemCategory.DataTextField = "Text";
+                    ddlItemCategory.DataValueField = "Value";
                     ddlItemCategory.Items.Clear();
                     ddlItemCategory.Items.Add(new ListItem() { Text = "All", Value = "0" });
                     ddlItemCategory.DataBind();
@@ -2076,10 +2089,9 @@ namespace PMS
                     //ADDING NEW WAREHOUSE
 
                     object valuset;
-                    valuset = DBClass.GetValueSet("Ware house");
-                    ddlwareHouse.DataSource = valuset;
-                    ddlwareHouse.DataTextField = "DataValue_Description";
-                    ddlwareHouse.DataValueField = "DataValue_Name";
+                    ddlwareHouse.DataSource = GetUserWarehouses();
+                    ddlwareHouse.DataTextField = "Text";
+                    ddlwareHouse.DataValueField = "Value";
                     ddlwareHouse.Items.Clear();
                     ddlwareHouse.Items.Add(new ListItem() { Text = "All", Value = "0" });
                     ddlwareHouse.DataBind();
@@ -2563,10 +2575,9 @@ namespace PMS
                     Master.Label2.Text = x;
                     Master.GetMenuName();
                     object valuset;
-                    valuset = DBClass.GetValueSet("Ware house");
-                    ddlwareHouse.DataSource = valuset;
-                    ddlwareHouse.DataTextField = "DataValue_Description";
-                    ddlwareHouse.DataValueField = "DataValue_Name";
+                    ddlwareHouse.DataSource = GetUserWarehouses();
+                    ddlwareHouse.DataTextField = "Text";
+                    ddlwareHouse.DataValueField = "Value";
                     ddlwareHouse.Items.Clear();
                     ddlwareHouse.Items.Add(new ListItem() { Text = "All", Value = "0" });
                     ddlwareHouse.DataBind();
@@ -2700,10 +2711,9 @@ namespace PMS
                     tr1MedicalSubsidy.Visible = false;
                     DateDiv.Visible = true;
                     trDoctor.Visible = false;
-                    valusets = DBClass.GetValueSet("Ware house");
-                    ddlwareHouse.DataSource = valusets;
-                    ddlwareHouse.DataTextField = "DataValue_Description";
-                    ddlwareHouse.DataValueField = "DataValue_Name";
+                    ddlwareHouse.DataSource = GetUserWarehouses();
+                    ddlwareHouse.DataTextField = "Text";
+                    ddlwareHouse.DataValueField = "Value";
                     ddlwareHouse.Items.Clear();
                     ddlwareHouse.Items.Add(new ListItem() { Text = "All", Value = "0" });
                     ddlwareHouse.DataBind();
@@ -2762,10 +2772,9 @@ namespace PMS
                     lblMedical.Visible = false;
                     tr1MedicalSubsidy.Visible = false;
                     trDoctor.Visible = false;
-                    valusets = DBClass.GetValueSet("Ware house");
-                    ddlwareHouse.DataSource = valusets;
-                    ddlwareHouse.DataTextField = "DataValue_Description";
-                    ddlwareHouse.DataValueField = "DataValue_Name";
+                    ddlwareHouse.DataSource = GetUserWarehouses();
+                    ddlwareHouse.DataTextField = "Text";
+                    ddlwareHouse.DataValueField = "Value";
                     ddlwareHouse.Items.Clear();
                     ddlwareHouse.Items.Add(new ListItem() { Text = "All", Value = "0" });
                     ddlwareHouse.DataBind();
@@ -2938,10 +2947,9 @@ namespace PMS
 
 
                     object valuset;
-                    valuset = DBClass.GetValueSet("Ware house");
-                    ddlwareHouse.DataSource = valuset;
-                    ddlwareHouse.DataTextField = "DataValue_Description";
-                    ddlwareHouse.DataValueField = "DataValue_Name";
+                    ddlwareHouse.DataSource = GetUserWarehouses();
+                    ddlwareHouse.DataTextField = "Text";
+                    ddlwareHouse.DataValueField = "Value";
                     ddlwareHouse.Items.Clear();
                     ddlwareHouse.Items.Add(new ListItem() { Text = "All", Value = "0" });
                     ddlwareHouse.DataBind();
@@ -3039,10 +3047,9 @@ namespace PMS
                     //ADDING NEW WAREHOUSE
 
                     object valuset;
-                    valuset = DBClass.GetValueSet("Ware house");
-                    ddlwareHouse.DataSource = valuset;
-                    ddlwareHouse.DataTextField = "DataValue_Description";
-                    ddlwareHouse.DataValueField = "DataValue_Name";
+                    ddlwareHouse.DataSource = GetUserWarehouses();
+                    ddlwareHouse.DataTextField = "Text";
+                    ddlwareHouse.DataValueField = "Value";
                     ddlwareHouse.Items.Clear();
                     ddlwareHouse.Items.Add(new ListItem() { Text = "All", Value = "0" });
                     ddlwareHouse.DataBind();
@@ -3079,10 +3086,9 @@ namespace PMS
                     txtItemCode.Visible = false;
 
                     object valuset;
-                    valuset = DBClass.GetValueSet("Ware house");
-                    ddlwareHouse.DataSource = valuset;
-                    ddlwareHouse.DataTextField = "DataValue_Description";
-                    ddlwareHouse.DataValueField = "DataValue_Name";
+                    ddlwareHouse.DataSource = GetUserWarehouses();
+                    ddlwareHouse.DataTextField = "Text";
+                    ddlwareHouse.DataValueField = "Value";
                     ddlwareHouse.Items.Clear();
                     ddlwareHouse.Items.Add(new ListItem() { Text = "All", Value = "0" });
                     ddlwareHouse.DataBind();
@@ -3121,10 +3127,9 @@ namespace PMS
                     txtItemCode.Visible = false;
 
                     object valuset;
-                    valuset = DBClass.GetValueSet("Ware house");
-                    ddlwareHouse.DataSource = valuset;
-                    ddlwareHouse.DataTextField = "DataValue_Description";
-                    ddlwareHouse.DataValueField = "DataValue_Name";
+                    ddlwareHouse.DataSource = GetUserWarehouses();
+                    ddlwareHouse.DataTextField = "Text";
+                    ddlwareHouse.DataValueField = "Value";
                     ddlwareHouse.Items.Clear();
                     ddlwareHouse.Items.Add(new ListItem() { Text = "All", Value = "0" });
                     ddlwareHouse.DataBind();
@@ -3163,10 +3168,9 @@ namespace PMS
                     txtItemCode.Visible = false;
 
                     object valuset;
-                    valuset = DBClass.GetValueSet("Ware house");
-                    ddlwareHouse.DataSource = valuset;
-                    ddlwareHouse.DataTextField = "DataValue_Description";
-                    ddlwareHouse.DataValueField = "DataValue_Name";
+                    ddlwareHouse.DataSource = GetUserWarehouses();
+                    ddlwareHouse.DataTextField = "Text";
+                    ddlwareHouse.DataValueField = "Value";
                     ddlwareHouse.Items.Clear();
                     ddlwareHouse.Items.Add(new ListItem() { Text = "All", Value = "0" });
                     ddlwareHouse.DataBind();
@@ -3426,10 +3430,9 @@ namespace PMS
                     txtItemCode.Visible = false;
 
                     object valuset;
-                    valuset = DBClass.GetValueSet("Ware house");
-                    ddlwareHouse.DataSource = valuset;
-                    ddlwareHouse.DataTextField = "DataValue_Description";
-                    ddlwareHouse.DataValueField = "DataValue_Name";
+                    ddlwareHouse.DataSource = GetUserWarehouses();
+                    ddlwareHouse.DataTextField = "Text";
+                    ddlwareHouse.DataValueField = "Value";
                     ddlwareHouse.Items.Clear();
                     ddlwareHouse.Items.Add(new ListItem() { Text = "All", Value = "0" });
                     ddlwareHouse.DataBind();
@@ -3850,10 +3853,9 @@ namespace PMS
                     ddlTestName.DataBind();
                     Stock_Movement.Visible = true;
                     object valuset;
-                    valuset = DBClass.GetValueSet("Ware house");
-                    ddlwareHouse.DataSource = valuset;
-                    ddlwareHouse.DataTextField = "DataValue_Description";
-                    ddlwareHouse.DataValueField = "DataValue_Name";
+                    ddlwareHouse.DataSource = GetUserWarehouses();
+                    ddlwareHouse.DataTextField = "Text";
+                    ddlwareHouse.DataValueField = "Value";
                     ddlwareHouse.Items.Clear();
                     ddlwareHouse.Items.Add(new ListItem() { Text = "All", Value = "0" });
                     ddlwareHouse.DataBind();
@@ -3885,10 +3887,9 @@ namespace PMS
                     //ADDING NEW WAREHOUSE
 
                     object valuset;
-                    valuset = DBClass.GetValueSet("Ware house");
-                    ddlwareHouse.DataSource = valuset;
-                    ddlwareHouse.DataTextField = "DataValue_Description";
-                    ddlwareHouse.DataValueField = "DataValue_Name";
+                    ddlwareHouse.DataSource = GetUserWarehouses();
+                    ddlwareHouse.DataTextField = "Text";
+                    ddlwareHouse.DataValueField = "Value";
                     ddlwareHouse.Items.Clear();
                     ddlwareHouse.Items.Add(new ListItem() { Text = "All", Value = "0" });
                     ddlwareHouse.DataBind();
@@ -3915,10 +3916,9 @@ namespace PMS
                     //ADDING NEW WAREHOUSE
 
                     object valuset;
-                    valuset = DBClass.GetValueSet("Ware house");
-                    ddlwareHouse.DataSource = valuset;
-                    ddlwareHouse.DataTextField = "DataValue_Description";
-                    ddlwareHouse.DataValueField = "DataValue_Name";
+                    ddlwareHouse.DataSource = GetUserWarehouses();
+                    ddlwareHouse.DataTextField = "Text";
+                    ddlwareHouse.DataValueField = "Value";
                     ddlwareHouse.Items.Clear();
                     ddlwareHouse.Items.Add(new ListItem() { Text = "All", Value = "0" });
                     ddlwareHouse.DataBind();
@@ -3968,10 +3968,9 @@ namespace PMS
                     //ADDING NEW WAREHOUSE
 
                     object valuset;
-                    valuset = DBClass.GetValueSet("Ware house");
-                    ddlwareHouse.DataSource = valuset;
-                    ddlwareHouse.DataTextField = "DataValue_Description";
-                    ddlwareHouse.DataValueField = "DataValue_Name";
+                    ddlwareHouse.DataSource = GetUserWarehouses();
+                    ddlwareHouse.DataTextField = "Text";
+                    ddlwareHouse.DataValueField = "Value";
                     ddlwareHouse.Items.Clear();
                     ddlwareHouse.Items.Add(new ListItem() { Text = "All", Value = "0" });
                     ddlwareHouse.DataBind();
@@ -4597,10 +4596,9 @@ namespace PMS
                     //ADDING NEW WAREHOUSE
 
                     object valuset;
-                    valuset = DBClass.GetValueSet("Ware house");
-                    ddlwareHouse.DataSource = valuset;
-                    ddlwareHouse.DataTextField = "DataValue_Description";
-                    ddlwareHouse.DataValueField = "DataValue_Name";
+                    ddlwareHouse.DataSource = GetUserWarehouses();
+                    ddlwareHouse.DataTextField = "Text";
+                    ddlwareHouse.DataValueField = "Value";
                     ddlwareHouse.Items.Clear();
                     ddlwareHouse.Items.Add(new ListItem() { Text = "All", Value = "0" });
                     ddlwareHouse.DataBind();
@@ -4655,10 +4653,9 @@ namespace PMS
 
 
                     object valuset;
-                    valuset = DBClass.GetValueSet("Ware house");
-                    ddlwareHouse.DataSource = valuset;
-                    ddlwareHouse.DataTextField = "DataValue_Description";
-                    ddlwareHouse.DataValueField = "DataValue_Name";
+                    ddlwareHouse.DataSource = GetUserWarehouses();
+                    ddlwareHouse.DataTextField = "Text";
+                    ddlwareHouse.DataValueField = "Value";
                     ddlwareHouse.Items.Clear();
                     ddlwareHouse.Items.Add(new ListItem() { Text = "All", Value = "0" });
                     ddlwareHouse.DataBind();
@@ -4708,10 +4705,9 @@ namespace PMS
                     //ADDING NEW WAREHOUSE
 
                     object valuset;
-                    valuset = DBClass.GetValueSet("Ware house");
-                    ddlwareHouse.DataSource = valuset;
-                    ddlwareHouse.DataTextField = "DataValue_Description";
-                    ddlwareHouse.DataValueField = "DataValue_Name";
+                    ddlwareHouse.DataSource = GetUserWarehouses();
+                    ddlwareHouse.DataTextField = "Text";
+                    ddlwareHouse.DataValueField = "Value";
                     ddlwareHouse.Items.Clear();
                     ddlwareHouse.Items.Add(new ListItem() { Text = "All", Value = "0" });
                     ddlwareHouse.DataBind();
@@ -4768,10 +4764,9 @@ namespace PMS
                     //ADDING NEW WAREHOUSE
 
                     object valuset;
-                    valuset = DBClass.GetValueSet("Ware house");
-                    ddlwareHouse.DataSource = valuset;
-                    ddlwareHouse.DataTextField = "DataValue_Description";
-                    ddlwareHouse.DataValueField = "DataValue_Name";
+                    ddlwareHouse.DataSource = GetUserWarehouses();
+                    ddlwareHouse.DataTextField = "Text";
+                    ddlwareHouse.DataValueField = "Value";
                     ddlwareHouse.Items.Clear();
                     ddlwareHouse.Items.Add(new ListItem() { Text = "All", Value = "0" });
                     ddlwareHouse.DataBind();
@@ -4835,10 +4830,9 @@ namespace PMS
                     SetDepartent();
                     dpROw.Visible = false;
                     object valuset;
-                    valuset = DBClass.GetValueSet("Ware house");
-                    ddlwareHouse.DataSource = valuset;
-                    ddlwareHouse.DataTextField = "DataValue_Description";
-                    ddlwareHouse.DataValueField = "DataValue_Name";
+                    ddlwareHouse.DataSource = GetUserWarehouses();
+                    ddlwareHouse.DataTextField = "Text";
+                    ddlwareHouse.DataValueField = "Value";
                     ddlwareHouse.Items.Clear();
                     ddlwareHouse.Items.Add(new ListItem() { Text = "All", Value = "0" });
                     ddlwareHouse.DataBind();
@@ -4888,10 +4882,9 @@ namespace PMS
                     //ADDING NEW WAREHOUSE
 
                     object valuset;
-                    valuset = DBClass.GetValueSet("Ware house");
-                    ddlwareHouse.DataSource = valuset;
-                    ddlwareHouse.DataTextField = "DataValue_Description";
-                    ddlwareHouse.DataValueField = "DataValue_Name";
+                    ddlwareHouse.DataSource = GetUserWarehouses();
+                    ddlwareHouse.DataTextField = "Text";
+                    ddlwareHouse.DataValueField = "Value";
                     ddlwareHouse.Items.Clear();
                     ddlwareHouse.Items.Add(new ListItem() { Text = "All", Value = "0" });
                     ddlwareHouse.DataBind();
@@ -5338,10 +5331,9 @@ namespace PMS
                     trSearch1.Visible = true;
 
                     object valuset;
-                    valuset = DBClass.GetValueSet("Ware house");
-                    ddlwareHouse.DataSource = valuset;
-                    ddlwareHouse.DataTextField = "DataValue_Description";
-                    ddlwareHouse.DataValueField = "DataValue_Name";
+                    ddlwareHouse.DataSource = GetUserWarehouses();
+                    ddlwareHouse.DataTextField = "Text";
+                    ddlwareHouse.DataValueField = "Value";
                     ddlwareHouse.Items.Clear();
                     ddlwareHouse.Items.Add(new ListItem() { Text = "All", Value = "0" });
                     ddlwareHouse.DataBind();
@@ -5393,10 +5385,9 @@ namespace PMS
                     trSearch1.Visible = true;
 
                     object valuset;
-                    valuset = DBClass.GetValueSet("Ware house");
-                    ddlwareHouse.DataSource = valuset;
-                    ddlwareHouse.DataTextField = "DataValue_Description";
-                    ddlwareHouse.DataValueField = "DataValue_Name";
+                    ddlwareHouse.DataSource = GetUserWarehouses();
+                    ddlwareHouse.DataTextField = "Text";
+                    ddlwareHouse.DataValueField = "Value";
                     ddlwareHouse.Items.Clear();
                     ddlwareHouse.Items.Add(new ListItem() { Text = "All", Value = "0" });
                     ddlwareHouse.DataBind();
@@ -5447,10 +5438,9 @@ namespace PMS
                     //ADDING NEW WAREHOUSE
 
                     object valuset;
-                    valuset = DBClass.GetValueSet("Ware house");
-                    ddlwareHouse.DataSource = valuset;
-                    ddlwareHouse.DataTextField = "DataValue_Description";
-                    ddlwareHouse.DataValueField = "DataValue_Name";
+                    ddlwareHouse.DataSource = GetUserWarehouses();
+                    ddlwareHouse.DataTextField = "Text";
+                    ddlwareHouse.DataValueField = "Value";
                     ddlwareHouse.Items.Clear();
                     ddlwareHouse.Items.Add(new ListItem() { Text = "All", Value = "0" });
                     ddlwareHouse.DataBind();
@@ -5479,10 +5469,9 @@ namespace PMS
                     //ADDING NEW WAREHOUSE  
 
                     object valuset;
-                    valuset = DBClass.GetValueSet("Ware house");
-                    ddlwareHouse.DataSource = valuset;
-                    ddlwareHouse.DataTextField = "DataValue_Description";
-                    ddlwareHouse.DataValueField = "DataValue_Name";
+                    ddlwareHouse.DataSource = GetUserWarehouses();
+                    ddlwareHouse.DataTextField = "Text";
+                    ddlwareHouse.DataValueField = "Value";
                     ddlwareHouse.Items.Clear();
                     ddlwareHouse.Items.Add(new ListItem() { Text = "All", Value = "0" });
                     ddlwareHouse.DataBind();
@@ -6080,10 +6069,9 @@ namespace PMS
                     // ADDING NEW WAREHOSUE
 
                     object valuset;
-                    valuset = DBClass.GetValueSet("Ware house");
-                    ddlwareHouse.DataSource = valuset;
-                    ddlwareHouse.DataTextField = "DataValue_Description";
-                    ddlwareHouse.DataValueField = "DataValue_Name";
+                    ddlwareHouse.DataSource = GetUserWarehouses();
+                    ddlwareHouse.DataTextField = "Text";
+                    ddlwareHouse.DataValueField = "Value";
                     ddlwareHouse.Items.Clear();
                     ddlwareHouse.Items.Add(new ListItem() { Text = "All", Value = "0" });
                     ddlwareHouse.DataBind();
@@ -6312,10 +6300,9 @@ namespace PMS
 
                     // ADDING NEW  WAREHOUSE
                     object valuset;
-                    valuset = DBClass.GetValueSet("Ware house");
-                    ddlwareHouse.DataSource = valuset;
-                    ddlwareHouse.DataTextField = "DataValue_Description";
-                    ddlwareHouse.DataValueField = "DataValue_Name";
+                    ddlwareHouse.DataSource = GetUserWarehouses();
+                    ddlwareHouse.DataTextField = "Text";
+                    ddlwareHouse.DataValueField = "Value";
                     ddlwareHouse.Items.Clear();
                     ddlwareHouse.Items.Add(new ListItem() { Text = "All", Value = "0" });
                     ddlwareHouse.DataBind();
@@ -6355,10 +6342,9 @@ namespace PMS
                     //ADDING NEW WAREHOUSE
 
                     object valuset;
-                    valuset = DBClass.GetValueSet("Ware house");
-                    ddlwareHouse.DataSource = valuset;
-                    ddlwareHouse.DataTextField = "DataValue_Description";
-                    ddlwareHouse.DataValueField = "DataValue_Name";
+                    ddlwareHouse.DataSource = GetUserWarehouses();
+                    ddlwareHouse.DataTextField = "Text";
+                    ddlwareHouse.DataValueField = "Value";
                     ddlwareHouse.Items.Clear();
                     ddlwareHouse.Items.Add(new ListItem() { Text = "All", Value = "0" });
                     ddlwareHouse.DataBind();
@@ -8000,10 +7986,9 @@ namespace PMS
                     }
                     // ADDING NEW WAREHOUSE
                     object valuset;
-                    valuset = DBClass.GetValueSet("Ware house");
-                    ddlwareHouse.DataSource = valuset;
-                    ddlwareHouse.DataTextField = "DataValue_Description";
-                    ddlwareHouse.DataValueField = "DataValue_Name";
+                    ddlwareHouse.DataSource = GetUserWarehouses();
+                    ddlwareHouse.DataTextField = "Text";
+                    ddlwareHouse.DataValueField = "Value";
                     ddlwareHouse.Items.Clear();
                     ddlwareHouse.Items.Add(new ListItem() { Text = "All", Value = "0" });
                     ddlwareHouse.DataBind();
@@ -8074,10 +8059,9 @@ namespace PMS
                     }
                     // ADDING NEW WAREHOUSE
                     object valuset;
-                    valuset = DBClass.GetValueSet("Ware house");
-                    ddlwareHouse.DataSource = valuset;
-                    ddlwareHouse.DataTextField = "DataValue_Description";
-                    ddlwareHouse.DataValueField = "DataValue_Name";
+                    ddlwareHouse.DataSource = GetUserWarehouses();
+                    ddlwareHouse.DataTextField = "Text";
+                    ddlwareHouse.DataValueField = "Value";
                     ddlwareHouse.Items.Clear();
                     ddlwareHouse.Items.Add(new ListItem() { Text = "All", Value = "0" });
                     ddlwareHouse.DataBind();
@@ -9603,11 +9587,9 @@ namespace PMS
         {
             Stock_Movement.Visible = true;
             ddlwareHouse.Visible = true;
-            object valuset;
-            valuset = DBClass.GetValueSet("Ware house");
-            ddlwareHouse.DataSource = valuset;
-            ddlwareHouse.DataTextField = "DataValue_Description";
-            ddlwareHouse.DataValueField = "DataValue_Name";
+            ddlwareHouse.DataSource = GetUserWarehouses();
+            ddlwareHouse.DataTextField = "Text";
+            ddlwareHouse.DataValueField = "Value";
             ddlwareHouse.Items.Clear();
             ddlwareHouse.Items.Add(new ListItem() { Text = "All", Value = "0" });
             ddlwareHouse.DataBind();

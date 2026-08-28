@@ -1,6 +1,6 @@
 ﻿.hedingcolor {
-    color: white !important;
-    text-align: center !important;
+    color:black !important;
+    text-align:center !important;
 }
 
 
@@ -10,6 +10,34 @@
 
 #token-input-ctl00_MainContent_txtService {
     box-shadow: 2px -2px 5px rgba(0, 0, 0, 0.2) !important;
+}
+
+.unlisted-row {
+    background-color: #ffe6e6 !important;
+}
+
+.unlisted-tag {
+    display: inline-block;
+    background-color: #e74c3c;
+    color: #fff;
+    font-size: 10px;
+    font-weight: 600;
+    padding: 2px 6px;
+    border-radius: 3px;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+.unlisted-edit-badge {
+    display: inline-block;
+    background-color: #e74c3c;
+    color: #fff;
+    font-size: 11px;
+    font-weight: 600;
+    padding: 3px 8px;
+    border-radius: 3px;
+    margin-left: 8px;
+    text-transform: uppercase;
 }
 
 .card {
@@ -89,7 +117,7 @@
 }
 
     #tabs ul li a {
-        background-color: #308665db  !important;
+        background-color: #EFA63E   !important;
         color: white;
         background: none;
         border: none;
@@ -107,6 +135,11 @@
     display:flex;
     align-items:center;
 }
+
+
+
+
+
 
 
 
@@ -203,3 +236,6 @@
         white-space: normal !important;
         word-break: break-word !important;
     }
+
+
+

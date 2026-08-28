@@ -6,6 +6,7 @@
         var opdChartInstance = null;
         var billingChartInstance = null;
         var pharmacyChartInstance = null;
+        var pharmacyChartInstancehp = null;
         var clinicalChartInstance = null;
         var satisfactionChartInstance = null;
         var deptPctChart = null;
@@ -37,6 +38,7 @@
             loadSummaryCards();
             loadRevenueTrends(period, startDate, endDate);
             LoadPharmacySnapshot(period, startDate, endDate);
+            LoadPharmacySnapshothp(period, startDate, endDate);
             LoadBillingData(period, startDate, endDate);
             LoadClinicalOutcomes(period, startDate, endDate);
             LoadRegionalHeatmap(period, startDate, endDate);
@@ -169,6 +171,7 @@
                     case "heat": LoadRegionalHeatmap("custom", from, to); break;
                     case "dia": LoadDialysisLive("custom", from, to); break;
                     case "ph": LoadPharmacySnapshot("custom", from, to); break;
+                    case "hp": LoadPharmacySnapshothp("custom", from, to); break;
                     case "lab": LoadBillingData("custom", from, to); break;
                 }
             });
@@ -234,6 +237,32 @@
                 });
                 $.ajax({
                     type: "POST",
+                    url: "Chief_Executive_Dashboard.aspx/GetYearlyPharmacySummaryPB",
+                    data: JSON.stringify({ year: y, warehouse: pharmacyWarehouse }),
+                    contentType: "application/json; charset=utf-8",
+                    dataType: "json",
+                    success: function (res) {
+                        var data = JSON.parse(res.d);
+                        if (data.Error) return;
+                        var openingRow, purchaseRow, saleRow, closingRow;
+                        data.forEach(function (r) {
+                            if (r.Metric === 'Opening_Value') openingRow = r;
+                            else if (r.Metric === 'Purchase_Value') purchaseRow = r;
+                            else if (r.Metric === 'Sale_Value') saleRow = r;
+                            else if (r.Metric === 'Closing_Value') closingRow = r;
+                        });
+                        var po = openingRow ? (openingRow[cm]||0) : 0;
+                        var pp = purchaseRow ? (purchaseRow[cm]||0) : 0;
+                        var ps = saleRow ? (saleRow[cm]||0) : 0;
+                        var pc = closingRow ? (closingRow[cm]||0) : 0;
+                        $('#pharmOpeningPB').text('Rs. ' + fmt(po));
+                        $('#pharmPurchasePB').text('Rs. ' + fmt(pp));
+                        $('#pharmSalePB').text('Rs. ' + fmt(ps));
+                        $('#pharmClosingPB').text('Rs. ' + fmt(pc));
+                    }
+                });
+                $.ajax({
+                    type: "POST",
                     url: "Chief_Executive_Dashboard.aspx/GetYearlyPharmacyRevenue",
                     data: JSON.stringify({ year: y, warehouse: pharmacyWarehouse }),
                     contentType: "application/json; charset=utf-8",
@@ -278,6 +307,7 @@
                     case "heat": LoadRegionalHeatmap(m.period, m.startDate, m.endDate); break;
                     case "dia": LoadDialysisLive(m.period, m.startDate, m.endDate); break;
                     case "ph": LoadPharmacySnapshot(m.period, m.startDate, m.endDate); break;
+                    case "hp": LoadPharmacySnapshothp(m.period, m.startDate, m.endDate); break;
                     case "lab": LoadBillingData(m.period, m.startDate, m.endDate); break;
                 }
             });
@@ -622,7 +652,7 @@
             var data = { 'period': period, 'startDate': startDate || null, 'endDate': endDate || null };
             $.ajax({
                 type: "POST",
-                url: "Chief_Executive_Dashboard.aspx/GetPharmacySnapshot",
+                url: "Chief_Executive_Dashboard.aspx/GetPharmacySnapshotPB",
                 data: JSON.stringify(data),
                 contentType: "application/json; charset=utf-8",
                 dataType: "json",
@@ -650,6 +680,42 @@
                         }]
                     };
                     pharmacyChartInstance.setOption(option);
+                }
+            });
+        }
+
+        function LoadPharmacySnapshothp(period, startDate, endDate) {
+            var data = { 'period': period, 'startDate': startDate || null, 'endDate': endDate || null };
+            $.ajax({
+                type: "POST",
+                url: "Chief_Executive_Dashboard.aspx/GetPharmacySnapshot",
+                data: JSON.stringify(data),
+                contentType: "application/json; charset=utf-8",
+                dataType: "json",
+                success: function (response) {
+                    var r = JSON.parse(response.d);
+                    $('#lblPhHospitalhp').text(r.HospitalCount);
+                    $('#lblPhWalkinhp').text(r.WalkinCount);
+
+                    var dom = document.querySelector("#chartPharmacyDistributionhp");
+                    if (pharmacyChartInstancehp) pharmacyChartInstancehp.dispose();
+                    pharmacyChartInstancehp = echarts.init(dom);
+                    var option = {
+                        tooltip: { trigger: 'item', formatter: '{b}: {c}' },
+                        legend: { bottom: 0, left: 'center', icon: 'circle', itemWidth: 8, itemHeight: 8, textStyle: { fontSize: 10 } },
+                        series: [{
+                            type: 'pie',
+                            radius: ['45%', '60%'],
+                            center: ['50%', '45%'],
+                            avoidLabelOverlap: false,
+                            label: { show: false },
+                            data: [
+                                { value: r.HospitalCount, name: 'Hospital', itemStyle: { color: '#10b981' } },
+                                { value: r.WalkinCount, name: 'Walk-in', itemStyle: { color: '#94a3b8' } }
+                            ]
+                        }]
+                    };
+                    pharmacyChartInstancehp.setOption(option);
                 }
             });
         }
@@ -1175,6 +1241,34 @@
             });
         }
 
+        function openPharmacyPBModal() {
+            $('#pharmModal').addClass('open');
+            loadYearSelect('pharmYear');
+            loadPharmacyPBModal();
+        }
+        function closePharmacyPBModal() { $('#pharmModal').removeClass('open'); }
+        function loadPharmacyPBModal() {
+            var y = $('#pharmYear').val();
+            var pharmacyWarehouse = $('#ddlWarehousepharmacy').val() || '0';
+            $.ajax({
+                type: "POST",
+                url: "Chief_Executive_Dashboard.aspx/GetYearlyPharmacySummaryPB",
+                data: JSON.stringify({ year: parseInt(y), warehouse: pharmacyWarehouse }),
+                contentType: "application/json; charset=utf-8",
+                dataType: "json",
+                success: function (res) {
+                    var data = JSON.parse(res.d);
+                    if (data.Error) return;
+                    buildFullYearTable('tblPharmacy', data, {
+                        'Opening_Value': 'Opening Stock Value',
+                        'Purchase_Value': 'Purchase Value',
+                        'Sale_Value': 'Sale Value',
+                        'Closing_Value': 'Closing Value'
+                    });
+                }
+            });
+        }
+
         function openRevenueModal() {
             $('#revModal').addClass('open');
             loadYearSelect('revYear');
@@ -1257,8 +1351,8 @@
             grid-template-areas:
                 "period period period period"
                 "left opd opd dia"
-                "left dept dept ph"
-                "left trend trend lab"
+                "left dept dept hp"
+                "left trend trend ph"
                 "left trend trend lab";
         }
         #left-stack { grid-area: left; align-self: start; display: flex; flex-direction: column; gap: 10px; }
@@ -1546,6 +1640,7 @@
         }
         #dia { grid-area: dia; align-self: start; }
         #ph { grid-area: ph; align-self: start; }
+        #hp { grid-area: hp; align-self: start; }
         #lab { grid-area: lab; align-self: start; }
 
 
@@ -1658,6 +1753,32 @@
             margin-bottom: 4px;
         }
         .ph-stat-box .ph-stat-value {
+            font-size: 18px;
+            font-weight: 800;
+            color: #1f2937;
+        }
+
+        .hp-chart-wrap { height: 130px; margin-bottom: 6px; }
+        .hp-stats {
+            display: flex;
+            gap: 8px;
+        }
+        .hp-stat-box {
+            flex: 1;
+            background: #f9fafb;
+            padding: 8px;
+            border-radius: 8px;
+            text-align: center;
+            border: 1px solid #f3f4f6;
+        }
+        .hp-stat-box .hp-stat-label {
+            font-size: 9px;
+            color: #9ca3af;
+            text-transform: uppercase;
+            font-weight: 800;
+            margin-bottom: 4px;
+        }
+        .hp-stat-box .hp-stat-value {
             font-size: 18px;
             font-weight: 800;
             color: #1f2937;
@@ -2136,7 +2257,7 @@
         
         <div class="main-sub trend-sub" id="pharmStockCard">
             <div class="ms-title">Pharmacy Stock Analytics</div>
-            <div class="ts-badge" id="pharmBadge">PB-1</div>
+            <div class="ts-badge" id="pharmBadge">HP</div>
             <div class="ts-big-number" id="pharmOpening">Rs. 0.00</div>
             <div class="ts-metrics" id="pharmMetrics">
                 <div class="ts-row"><span class="ts-lbl">Purchase Value</span><span class="ts-val" id="pharmPurchase">Rs. 0.00</span></div>
@@ -2146,7 +2267,19 @@
             <div class="ts-expand" onclick="openPharmacyModal()">&#9655; Stock Movement Report</div>
         </div>
         
-        <div class="main-sub trend-sub" id="revPnLCard">
+        <div class="main-sub trend-sub" id="pharmStockCardPB">
+            <div class="ms-title">Pharmacy Stock Analytics</div>
+            <div class="ts-badge" id="pharmBadgePB">PB-1</div>
+            <div class="ts-big-number" id="pharmOpeningPB">Rs. 0.00</div>
+            <div class="ts-metrics" id="pharmMetricsPB">
+                <div class="ts-row"><span class="ts-lbl">Purchase Value</span><span class="ts-val" id="pharmPurchasePB">Rs. 0.00</span></div>
+                <div class="ts-row"><span class="ts-lbl">Sale Value</span><span class="ts-val" id="pharmSalePB">Rs. 0.00</span></div>
+                <div class="ts-row ts-total"><span class="ts-lbl">Closing Value</span><span class="ts-val" id="pharmClosingPB">Rs. 0.00</span></div>
+            </div>
+            <div class="ts-expand" onclick="openPharmacyPBModal()">&#9655; Stock Movement Report</div>
+        </div>
+        
+<%--        <div class="main-sub trend-sub" id="revPnLCard">
             <div class="ms-title">Revenue P&amp;L Summary</div>
             <div class="ts-badge" id="revBadge">Month-end Closing</div>
             <div class="ts-big-number" id="revGrossSale">Rs. 0.00</div>
@@ -2159,7 +2292,7 @@
                 <div class="ts-row ts-total"><span class="ts-lbl">Gross Profit</span><span class="ts-val" id="revGrossProfit">Rs. 0.00</span></div>
             </div>
             <div class="ts-expand" onclick="openRevenueModal()">&#9655; View 12-Month Report</div>
-        </div>
+        </div>--%>
     </div>
     
     <div class="heat-card">
@@ -2220,6 +2353,28 @@
                 </div>
                 <div class="live-number" id="lblLargeActive">0</div>
                 <i class="fa fa-area-chart live-bg-icon"></i>
+            </div>
+        </div>
+
+        <div class="bento-item" id="hp">
+            <div class="sect-title"><i class="fa fa-database" style="color:#10b981;"></i>Hospital Branch</div>
+            <div class="card-filter">
+                <input type="text" class="form-control datepicker" id="hpFrom" placeholder="From" style="width:85px;font-size:10px;padding:2px 4px;height:24px;" readonly />
+                <span style="font-size:10px;color:#6b7280;">-</span>
+                <input type="text" class="form-control datepicker" id="hpTo" placeholder="To" style="width:85px;font-size:10px;padding:2px 4px;height:24px;" readonly />
+                <button type="button" class="btn btn-sm btn-primry card-apply" data-card="hp" style="font-size:10px;height:24px;display:flex;align-items:center;justify-content:center;padding:0 10px;">Apply</button>
+                <button type="button" class="btn btn-sm btn-trash card-trash" data-card="hp" title="Reset to master"><i class="fa fa-trash"></i></button>
+            </div>
+            <div class="hp-chart-wrap"><div id="chartPharmacyDistributionhp" style="height: 100%; width: 100%;"></div></div>
+            <div class="hp-stats">
+                <div class="hp-stat-box">
+                    <div class="hp-stat-label">Hospital</div>
+                    <div class="hp-stat-value" id="lblPhHospitalhp">0</div>
+                </div>
+                <div class="hp-stat-box">
+                    <div class="hp-stat-label">Walk-in</div>
+                    <div class="hp-stat-value" id="lblPhWalkinhp">0</div>
+                </div>
             </div>
         </div>
 

@@ -277,7 +277,7 @@
         }
         function loadtokenInputsDefault() {
             debugger;
-            $('#ctl00_MainContent_txtPatient_ID').tokenInput("../../json.aspx?Table=Patients",
+            $('#ctl00_MainContent_txtPatient_ID').tokenInput("../../json.aspx?Table=PatientsForBirthCertificate",
                 {
 
                     tokenLimit: 1,
@@ -298,7 +298,7 @@
         }
         function loadtokenInputs(data) {
             debugger;
-            $("#ctl00_MainContent_txtPatient_ID").tokenInput("../../json.aspx?Table=Patients",
+            $("#ctl00_MainContent_txtPatient_ID").tokenInput("../../json.aspx?Table=PatientsForBirthCertificate",
                 {
                     prePopulate: data,
                     tokenLimit: 1,

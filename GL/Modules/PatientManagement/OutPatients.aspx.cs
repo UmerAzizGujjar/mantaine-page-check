@@ -1056,6 +1056,13 @@ namespace PMS
         {
             try
             {
+                if (string.IsNullOrWhiteSpace(data.BP_mm_Hg)
+                    || string.IsNullOrWhiteSpace(data.pulse_Min)
+                    || string.IsNullOrWhiteSpace(data.Temp_C))
+                {
+                    return "VitalsRequired";
+                }
+
                 var id = "";
                 using (DataBaseDataContext db = new DataBaseDataContext(DBClass.ConnectionString()))
                 {
