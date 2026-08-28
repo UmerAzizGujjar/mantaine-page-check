@@ -137,8 +137,46 @@
             }
         });
 
+        function applyMedicationQtyValidation() {
+            debugger;
+            $('input[name=RecQty]').prop('disabled', true).addClass('qty-disabled');
+            $('input[name=IssueQty]').each(function () {
+                var $row = $(this).closest('tr');
+                var recQty = parseFloat($row.find('input[name=RecQty]').val()) || 0;
+                if (recQty > 0) {
+                    $(this).prop('disabled', true).addClass('qty-disabled');
+                } else {
+                    $(this).prop('disabled', false).removeClass('qty-disabled');
+                }
+            });
+        }
+
+        $(document).on('input change', 'input[name=RtnQty]', function () {
+            debugger;
+            var $row = $(this).closest('tr');
+            var recQty = parseFloat($row.find('input[name=RecQty]').val()) || 0;
+            var rtnQty = parseFloat($(this).val()) || 0;
+            if (rtnQty > recQty) {
+                Swal.fire({
+                    icon: 'warning',
+                    title: 'Invalid Return Quantity',
+                    text: 'Return Qty cannot be greater than Received Qty (' + recQty + ').'
+                });
+                $(this).val(recQty);
+            }
+        });
+
+        $(document).on('input change', 'input[name=RecQty]', function () {
+            applyMedicationQtyValidation();
+        });
+
+        $(document).on('focus', 'input[name=RecQty]', function () {
+            $(this).blur();
+        });
+
         $('#MedicationModel').on('hidden.bs.modal', function () {
             $('#lblUnlistedEdit').remove();
+            applyMedicationQtyValidation();
         });
 
         $(document).ready(function () {
@@ -452,6 +490,10 @@
             $('#txtPharmacyItem').on('change', function () {
                 GetMedicineStock();
             });
+
+            setTimeout(function () {
+                applyMedicationQtyValidation();
+            }, 7000);
 
             fillPrimaryDiagnosis("");
             fillFinalDiagnosis("");
@@ -3615,6 +3657,8 @@
                     $('.eddit a').hide();
                 }
 
+                applyMedicationQtyValidation();
+
                     }, 6000)
 
                            
@@ -6606,6 +6650,8 @@ var dischargeRow = '<tr' + (unlistedFlag === 1 ? ' class="unlisted-row"' : '') +
                         var table = $('#tblDischargeMedication tbody');
                         table.append(dischargeRow);
                     }
+
+                    applyMedicationQtyValidation();
                 }
                 else if ($(this).val() == 'Update') {
                      
@@ -6682,6 +6728,7 @@ if (localStorage.IsPRN == 1) {
                         '<a href="#" onclick="editMedicine(this)"> Edit </a> | <a href="#" onclick="deleteMedicine(this)"> Delete </a>'
                     }
 
+                    applyMedicationQtyValidation();
                 }
 
 
