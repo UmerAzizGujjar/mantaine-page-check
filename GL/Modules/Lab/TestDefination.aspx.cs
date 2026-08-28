@@ -430,6 +430,8 @@ namespace PMS
 
             public bool Special_Test { get; set; }
             public string WaitingTime { get; set; }
+            public string MachineName { get; set; }
+            public string StandardName { get; set; }
             public List<TestValue> TestValues { get; set; }
             public List<IPDTestRate> IPDTestRates { get; set; }
             public List<OPDTestRate> OPDTestRates { get; set; }
@@ -569,6 +571,7 @@ namespace PMS
                 db.Lab_Tests.InsertOnSubmit(test);
                 db.SubmitChanges();
                 var id = test.Test_ID;
+                SaveMachineStandardName(id, record.MachineName, record.StandardName);
                 foreach (var test_value in record.TestValues)
                 {
                     Test_Value value = new Test_Value();
@@ -658,8 +661,9 @@ namespace PMS
                // }
 
                 test.Fixed_Value = record.FixedValue;
-                test.WaitingTime = int.TryParse(record.WaitingTime, out var temp) ? temp : (int?)0;
+                test.WaitingTime = int.TryParse(record.WaitingTime, out int wtemp) ? wtemp : (int?)0;
                 db.SubmitChanges();
+                SaveMachineStandardName(int.Parse(record.ID), record.MachineName, record.StandardName);
 
                 db.Test_Values.DeleteAllOnSubmit(
                                 (from tv in db.Test_Values
@@ -903,6 +907,45 @@ namespace PMS
             public string Levels { get; set; }
             public string FixValues { get; set; }
             public string CTScanLevelID { get; set; }
+        }
+
+        private static void SaveMachineStandardName(int testId, string machineName, string standardName)
+        {
+            using (SqlConnection conn = new SqlConnection(DBClass.ConnectionString()))
+            {
+                conn.Open();
+                string query = @"UPDATE Lab_Tests SET Machine_Name = @mn, StandardName = @sn WHERE Test_ID = @id";
+                using (SqlCommand cmd = new SqlCommand(query, conn))
+                {
+                    cmd.Parameters.AddWithValue("@mn", (object)machineName ?? DBNull.Value);
+                    cmd.Parameters.AddWithValue("@sn", (object)standardName ?? DBNull.Value);
+                    cmd.Parameters.AddWithValue("@id", testId);
+                    cmd.ExecuteNonQuery();
+                }
+            }
+        }
+
+        [WebMethod]
+        public static string GetMachineStandardName(int id)
+        {
+            using (SqlConnection conn = new SqlConnection(DBClass.ConnectionString()))
+            {
+                conn.Open();
+                string query = "SELECT Machine_Name, StandardName FROM Lab_Tests WHERE Test_ID = @id";
+                using (SqlCommand cmd = new SqlCommand(query, conn))
+                {
+                    cmd.Parameters.AddWithValue("@id", id);
+                    using (SqlDataReader dr = cmd.ExecuteReader())
+                    {
+                        if (dr.Read())
+                        {
+                            var result = new { Machine_Name = dr["Machine_Name"]?.ToString(), StandardName = dr["StandardName"]?.ToString() };
+                            return new JavaScriptSerializer().Serialize(result);
+                        }
+                    }
+                }
+            }
+            return "{}";
         }
     }
 }
