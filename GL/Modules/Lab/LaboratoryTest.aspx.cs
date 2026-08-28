@@ -54,16 +54,48 @@ namespace PMS
         public static string GetLabTestInfo(int labTestId)
         {
             DataBaseDataContext db = new DataBaseDataContext(DBClass.ConnectionString());
-            var qry = (from lt in db.Laboratory_Tests
-                       join pat in db.Reg_patients on lt.Patient_ID equals pat.pat_id into a
-                       from pat in a.DefaultIfEmpty()
-                       where lt.Lab_Test_ID == labTestId
-                       select new {
-                           LabTestId = lt.Lab_Test_ID,
-                           PatientName = pat != null ? pat.Full_Name : "Walk-in",
-                           MR_No = pat != null ? pat.pat_id.ToString() : "--"
-                       }).FirstOrDefault();
-            return new JavaScriptSerializer().Serialize(qry);
+            var labInfo = (from lt in db.Laboratory_Tests
+                           join pat in db.Reg_patients on lt.Patient_ID equals pat.pat_id into a
+                           from pat in a.DefaultIfEmpty()
+                           where lt.Lab_Test_ID == labTestId
+                           select new {
+                               LabTestId = lt.Lab_Test_ID,
+                               PatientName = pat != null ? pat.Full_Name : "Walk-in",
+                               MR_No = pat != null ? pat.pat_id.ToString() : "--"
+                           }).FirstOrDefault();
+
+            var details = (from td in db.Lab_Test_Details
+                          where td.Lab_Test_ID == labTestId
+                          select new {
+                              td.Test_ID,
+                              td.Catagory_ID
+                          }).Distinct().ToList();
+
+            var tests = details.Select(d => {
+                string testName;
+                string catId = d.Catagory_ID ?? "";
+                if (d.Test_ID > 0) {
+                    var t = db.Lab_Tests.Where(x => x.Test_ID == d.Test_ID).FirstOrDefault();
+                    testName = t != null ? t.Test_Name : "Unknown";
+                } else {
+                    testName = db.GetDataValueName("Test Groups", catId) ?? "Group Test";
+                }
+                return new {
+                    TestId = d.Test_ID,
+                    CategoryId = catId,
+                    TestName = testName,
+                    CategoryName = db.GetDataValueName("Test Groups", catId) ?? ""
+                };
+            }).ToList();
+
+            var result = new {
+                labInfo.LabTestId,
+                labInfo.PatientName,
+                labInfo.MR_No,
+                Tests = tests
+            };
+
+            return new JavaScriptSerializer().Serialize(result);
         }
         [WebMethod]
         public static string LoadVitalParametersHistory(int patid)
