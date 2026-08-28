@@ -1247,6 +1247,7 @@
             LoadInstructionEdit();
             $('#btnSave').val("Update");
             $('#loadingimage').hide();
+            loadReferenceInformation();
                 <%}%>
             $("#ctl00_MainContent_txtDate").datepicker({ dateFormat: 'mm/dd/yy' });
             $('#btnSaveMedicine').on("click", function () {
@@ -2388,7 +2389,35 @@
             $('#loadingimage').show();
             SavePatientMonitiring();
             SaveServices_Procedures();
+            SaveRefer();
             localStorage.SelectedTabID = $("#tabs").tabs("option", "active");
+        }
+
+                function SaveRefer() {
+            var ReferTo = document.getElementById('<%= ddlReferTo.ClientID%>').value;
+            var WardID = document.getElementById('<%= ddlwardsRef.ClientID%>').value;
+            var BedNo = document.getElementById('<%= txtBednoRef.ClientID%>').value;
+            var RoomID = document.getElementById('<%= ddlroomRef.ClientID%>').value;
+            var RoomType = document.getElementById('<%= ddlRoomTypeRef.ClientID%>').value;
+            var PatientID = document.getElementById('<%= hdfPatient_ID.ClientID%>').value;
+            var InPatientID = document.getElementById('<%= hdnInpatient_id.ClientID%>').value; // ← ADD THIS
+
+            if (ReferTo == "0" || ReferTo == "") {
+                $('#loadingimage').hide();
+                return;
+            }
+
+            // Pass InPatientID as the second parameter
+            PageMethods.SaveRefer(PatientID, InPatientID, ReferTo, WardID, BedNo, RoomID, RoomType, function (response) {
+                $('#loadingimage').hide();
+                if (response == "Success") {
+                    alert("Referral saved successfully");
+                    // Refresh previous info after saving
+                    loadReferenceInformation();
+                } else {
+                    alert("Referral Error: " + response);
+                }
+            });
         }
 
 
@@ -3081,6 +3110,7 @@
 
                             loadAjax();
                             LoadInstruction();
+                            loadReferenceInformation();
                         }
                         catch (err) {
                             alert(err.message);
@@ -3143,6 +3173,7 @@
                         debugger;
                         $("#hdfPatient_ID").val(item.id);
                         loadAjax();
+                        loadReferenceInformation();
                     }
                 });
         }
@@ -3947,6 +3978,141 @@
                 });
             }
         }
+
+        function chkrefer_Of_Select() {
+            $('#tblBedRef tbody tr').remove();
+            $('#tblRoomRef tbody tr').remove();
+
+            var Issuance_Of = document.getElementById('<%= ddlReferTo.ClientID%>').value;
+            if (Issuance_Of == 0) {
+                document.getElementById('<%= ddlroomRef.ClientID%>').value = 0;
+                document.getElementById('<%= ddlRoomTypeRef.ClientID%>').value = 0;
+                document.getElementById('<%= ddlwardsRef.ClientID%>').value = 0;
+                document.getElementById('<%= ddlroomRef.ClientID%>').disabled = true;
+                document.getElementById('<%= ddlRoomTypeRef.ClientID%>').disabled = true;
+                document.getElementById('<%= ddlwardsRef.ClientID%>').disabled = true;
+                document.getElementById('<%= ddlroomRef.ClientID%>').className = "dropdownBackgroud";
+                document.getElementById('<%= ddlwardsRef.ClientID%>').className = "dropdownBackgroud";
+
+                document.getElementById('tblBedRef').style.display = "none";
+                document.getElementById('tblRoomRef').style.display = "none";
+            }
+            else if (Issuance_Of == '001') {
+                document.getElementById('<%= ddlroomRef.ClientID%>').value = 0;
+                document.getElementById('<%= ddlRoomTypeRef.ClientID%>').value = 0;
+                document.getElementById('<%= ddlwardsRef.ClientID%>').disabled = false;
+                document.getElementById('<%= ddlroomRef.ClientID%>').disabled = true;
+                document.getElementById('<%= ddlRoomTypeRef.ClientID%>').disabled = true;
+                document.getElementById('<%= ddlroomRef.ClientID%>').className = "dropdownBackgroud";
+                document.getElementById('<%= ddlwardsRef.ClientID%>').className = "dropdownBackgroudWhite";
+
+                document.getElementById('tblBedRef').style.display = "table";
+                document.getElementById('tblRoomRef').style.display = "none";
+            }
+            else {
+                document.getElementById('<%= ddlwardsRef.ClientID%>').value = 0;
+                document.getElementById('<%= ddlwardsRef.ClientID%>').disabled = true;
+                document.getElementById('<%= ddlRoomTypeRef.ClientID%>').disabled = false;
+                document.getElementById('<%= ddlroomRef.ClientID%>').disabled = true;
+                document.getElementById('<%= ddlroomRef.ClientID%>').className = "dropdownBackgroudWhite";
+                document.getElementById('<%= ddlwardsRef.ClientID%>').className = "dropdownBackgroud";
+
+                document.getElementById('tblBedRef').style.display = "none";
+                document.getElementById('tblRoomRef').style.display = "table";
+            }
+        }
+
+        function FillWardBedsRefer() {
+            PageMethods.FillWardBeds($('#<%= ddlwardsRef.ClientID%>').find('option:selected')[0].value, function (res) {
+                var WardBeds = JSON.parse(res);
+                var rows = '';
+                $.each(WardBeds, function (key, value) {
+                    if (value.PatientNo == 0) {
+                        rows += '<tr> <td> ' + value.PatientNo + ' </td><td> <a href="#" onclick="SelectBedRefer(' + value.WardID + ',' + value.BedNo + ')" style="color:Green"> ' + value.BedNo + ' </a> </td></tr>';
+                    }
+                    else {
+                        rows += '<tr> <td> ' + value.PatientNo + ' </td><td ><font color="red"> ' + value.BedNo + '</font></td></tr>';
+                    }
+                });
+                $('#tblBedRef tbody tr').remove();
+                $('#tblBedRef tbody').html(rows);
+            });
+        }
+
+        function FillRoomsRefer() {
+            var RoomType = $('#<%= ddlRoomTypeRef.ClientID%>').val();
+            PageMethods.FillRooms(RoomType, function (res) {
+                var item = JSON.parse(res);
+                if (item != "") {
+                    var rows = '';
+                    var result;
+                    $.each(item, function (key, value) {
+                        var rows;
+                        if (value.PatientNmae == null)
+                            value.PatientNmae = 0;
+                        if (value.PatientNmae == 0) {
+                            rows = '<tr><td>' + value.PatientNmae + '</td><td><input type="hidden" name="ID" value="' + value.Room_ID + '"/><input type="hidden" name="Type" value="' + value.Room_Type + '"/><a href="#" onclick="SelectroomRefer(this)" style="color:green"> ' + value.Room_No + ' </a> </td></tr>';
+                        }
+                        else {
+                            rows = '<tr><td>' + value.PatientNmae + '</td><td><input type="hidden" name="ID" value="' + value.Room_ID + '"/><input type="hidden" name="Type" value="' + value.Room_Type + '"/><font color="red">' + value.Room_No + '</font></td></tr>';
+                        }
+                        $('#tblRoomRef').append(rows);
+                    });
+                }
+                else {
+                    $('#tblRoomRef tbody tr').remove();
+                }
+            });
+        }
+
+        function SelectroomRefer(anchor) {
+            var row = $(anchor).parents('tr')[0];
+            var ID = $($(row).find('td input[name=ID]')[0]).val();
+            var Type = $($(row).find('td input[name=Type]')[0]).val();
+            $('#<%= ddlroomRef.ClientID%>').val(ID);
+        }
+
+        function SelectBedRefer(WardID, BedNo) {
+            $('#<%= txtBednoRef.ClientID%>').val("");
+            $('#<%= txtBednoRef.ClientID%>').val(BedNo);
+        }
+
+        function loadReferenceInformation() {
+            var Patient_ID = $("#<%= hdfPatient_ID.ClientID%>").val();
+            if (Patient_ID && Patient_ID != "(New)") {
+                $.ajax({
+                    type: "POST",
+                    url: "InPatientMonitoring.aspx/loadReferenceInformation",
+                    data: "{'PatientID':" + Patient_ID + "}",
+                    contentType: "application/json; charset=utf-8",
+                    dataType: "json",
+                    success: OnSuccessReferenceRef,
+                    failure: function (response) {
+                        alert(response.d);
+                    }
+                });
+            }
+        }
+
+        function OnSuccessReferenceRef(response) {
+            var onsuccessreference = JSON.parse(response.d);
+
+            $('#txtdprevDepart').val(onsuccessreference.Reffer_To);
+
+            var room_type = onsuccessreference.Room_Type;
+            var ward_id = onsuccessreference.Ward_ID;
+            var bed_no = onsuccessreference.Bed_No;
+            var room_id = onsuccessreference.Room_ID;
+            var room_no = onsuccessreference.Room_No;
+            var Description = onsuccessreference.Description;
+            if (Description && Description.includes("Execute")) Description = "0";
+            if (room_no && room_no.includes("Execute")) room_no = "0";
+            var Ward_Complete = (Description == null ? "0" : Description) + '-' + (bed_no == null ? "0" : bed_no);
+            var room_complete = (room_type == null ? "0" : room_type) + '-' + (room_no == null ? "0" : room_no);
+
+            $('#txtWardBed').val(Ward_Complete);
+            $('#txtRoomBed').val(room_complete);
+        }
     </script>
 
 </asp:Content>
@@ -4203,7 +4369,7 @@
                 <li><a href="#Tab-6">Doctor Instruction</a></li>
                 <li><a href="#Tab-7">Nursing Plan</a></li>
                 <li><a href="#Tab-20">Investigation</a></li>
-               
+               <li><a href="#Tab-12">Refer</a></li>
 
             </ul>
             <div id="Tab-20">
@@ -4225,6 +4391,95 @@
          </tbody>
      </table>
  </div>
+            </div>
+            <div id="Tab-12" style="height:auto;">
+                <div class="row">
+                    <div class="col-lg-2 col-md-6 col-sm-8">
+                        <h2>Refer:</h2>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-lg-2 col-md-4 col-sm-6">
+                        <label>Previous Dept.</label>
+                        <input type="text" id="txtdprevDepart" disabled="disabled" />
+                    </div>
+                    <div class="col-lg-2 col-md-4 col-sm-6">
+                        <label>Previous Ward/Bed</label>
+                        <input type="text" id="txtWardBed" disabled="disabled" />
+                    </div>
+                    <div class="col-lg-2 col-md-4 col-sm-6">
+                        <label>Previous Room/Bed</label>
+                        <input type="text" id="txtRoomBed" disabled="disabled" />
+                    </div>
+                    <div class="col-lg-2 col-md-4 col-sm-6">
+                        <asp:Label ID="lblreferto" runat="server" Text="Refer To *"></asp:Label>
+                        <asp:UpdatePanel ID="UpdatePanelRef1" TabIndex="6" runat="server">
+                            <ContentTemplate>
+                                <asp:DropDownList ID="ddlReferTo" runat="server" Class="mmtop" AppendDataBoundItems="true" onChange="chkrefer_Of_Select()"></asp:DropDownList>
+                            </ContentTemplate>
+                        </asp:UpdatePanel>
+                        <asp:RequiredFieldValidator ID="rfvReferTo" ControlToValidate="ddlReferTo" InitialValue="0" runat="server" ErrorMessage="Select Refer To" Text="*"></asp:RequiredFieldValidator>
+                        <asp:UpdatePanel ID="UpdatePanelRef2" runat="server" UpdateMode="Always">
+                            <ContentTemplate>
+                                <asp:Label ID="lblAllocatedRoomWardRef" runat="server" />
+                            </ContentTemplate>
+                        </asp:UpdatePanel>
+                        <asp:UpdatePanel ID="UpdatePanelRef3" runat="server">
+                            <ContentTemplate>
+                                <asp:Button ID="btnAllocatedRoomwardCheckRefer" Style="display: none;" Text="Chk Allocated Room" runat="server" OnClick="btnAllocatedRoomwardCheckRefer_Click" CausesValidation="false" />
+                            </ContentTemplate>
+                        </asp:UpdatePanel>
+                    </div>
+                    <div class="col-lg-2 col-md-4 col-sm-6">
+                        <asp:Label ID="lblWardsRef" runat="server" Text="Ward *"></asp:Label>
+                        <asp:UpdatePanel ID="UpdatePanelWardRef" TabIndex="7" runat="server" UpdateMode="Always">
+                            <ContentTemplate>
+                                <asp:DropDownList ID="ddlwardsRef" Class="mmtop" runat="server" AppendDataBoundItems="true" OnChange="FillWardBedsRefer()" disabled="disabled"></asp:DropDownList>
+                            </ContentTemplate>
+                        </asp:UpdatePanel>
+                    </div>
+                    <div class="col-lg-2 col-md-4 col-sm-6">
+                        <asp:Label ID="lblBednoRef" runat="server" Text="Bed No"></asp:Label>
+                        <asp:TextBox ID="txtBednoRef" TabIndex="8" runat="server" Class="mmtop" Enabled="true"></asp:TextBox>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-lg-2 col-md-4 col-sm-6">
+                        <asp:Label ID="lblRoomRef" runat="server" Text="Room_No *"></asp:Label>
+                        <asp:DropDownList ID="ddlroomRef" TabIndex="9" runat="server" AppendDataBoundItems="true" disabled="disabled"></asp:DropDownList>
+                    </div>
+                    <div class="col-lg-2 col-md-4 col-sm-6">
+                        <asp:Label ID="lblroomtypeRef" runat="server" Text="Room Type"></asp:Label>
+                        <asp:UpdatePanel ID="UpdatePanelRoomTypeRef" TabIndex="10" runat="server">
+                            <ContentTemplate>
+                                <asp:DropDownList ID="ddlRoomTypeRef" runat="server" AppendDataBoundItems="true" AutoPostBack="true" onChange="FillRoomsRefer()"></asp:DropDownList>
+                            </ContentTemplate>
+                        </asp:UpdatePanel>
+                    </div>
+                    <div class="col-lg-4 col-md-6 col-sm-8 no-scrollbar" style="overflow: scroll; height: 250px;">
+                        <table id="tblBedRef" class="table">
+                            <thead>
+                                <tr style="position: sticky; top: 0;z-index: 10;">
+                                    <th>MR No.</th>
+                                    <th>Bed No</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                            </tbody>
+                        </table>
+
+                        <table id="tblRoomRef" class="table">
+                            <thead>
+                                <tr style="position: sticky; top: 0; z-index: 10;">
+                                    <th>MR No.</th>
+                                    <th>Room No</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
             </div>
             <div id="Tab-19">
                 <h2>Patients Waiting List Department Wise : </h2>

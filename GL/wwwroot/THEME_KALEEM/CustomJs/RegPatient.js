@@ -3,7 +3,7 @@
 
     clearPatient();
     isCNICValidationRequired();
-    
+
     MaskedInput({
         elm: document.getElementById('txt_mobile'),
         format: '+92__________',
@@ -65,7 +65,7 @@
     });
 
 
-    var  dropdowns = [
+    var dropdowns = [
         { id: '#ddl_Gender', method: 'GetGender' },
         { id: '#ddlCountry', method: 'GetCountry' },
         { id: '#ddl_status', method: 'GetMartailStatus' },
@@ -126,7 +126,7 @@
         });
     });
 
-    
+
     initDatePicker();
 
     $('#txtAge_yearss').off('click').on('click', function () {
@@ -135,8 +135,9 @@
         }
         $(this).datepicker('show');
     });
- 
+
 });
+
 function fillDropdown($dropdown, methodName) {
     if ($dropdown.data('filled')) return;
 
@@ -212,7 +213,7 @@ function fillmrno() {
         contentType: "application/json; charset=utf-8",
         dataType: "json",
         success: function (data) {
-          
+
             var max_mr = data.d;
             $('#txt_Mrno').val('New');
         },
@@ -228,6 +229,7 @@ function fillmrno() {
 
 
 function CalculateDateOfBirth() {
+    if (window._skipAgeCalc) return;
     var ageValue = $('#txt_dob').val();
     var unit = $('#PrefixAge').val();
 
@@ -242,9 +244,7 @@ function CalculateDateOfBirth() {
             unit === "Day" ? "days" : "years";
 
     var dob = now.clone().subtract(parseInt(ageValue, 10), momentUnit);
-    var finalDate = dob.format("DD/MM/YYYY");
-
-    $('#txtAge_yearss').val(finalDate);
+    $('#txtAge_yearss').val(dob.format("DD/MM/YYYY"));
 }
 
 function initDatePicker() {
@@ -276,14 +276,13 @@ function initDatePicker() {
                 $('#txt_dob').val(days);
                 $('#PrefixAge').val('Day').trigger('change');
             }
-            setTimeout(function() { window._skipAgeCalc = false; }, 100);
+            setTimeout(function () { window._skipAgeCalc = false; }, 100);
         }
     });
 }
 
-function SavePatient() {
-    debugger;
 
+function SavePatient() {
     $('#SavePatient_Data').attr('disabled', true);
     $('.span_txt').hide();
     var Prefix_PatientName = $('#ddl_name').val();
@@ -298,7 +297,7 @@ function SavePatient() {
     }
     // 2. Combine with the selected prefix (use TEXT for display name)
     var Full_Name = Prefix_Text + " " + PatientName;
-     var RelationType = $('#ddlRelation').val();
+    var RelationType = $('#ddlRelation').val();
     var Relation = $('#txt_relation').val();
     var Gender = $('#ddl_Gender').val();
     var Mobile = $('#txt_mobile').val();
@@ -451,6 +450,7 @@ function SavePatient() {
         "AntiForgeryToken": AntiForgeryToken,
         "bank_cash": bank_cash,
         "bank_account_id": bank_account_id,
+        "Prefix": Prefix_PatientName,
     });
 
     console.log(data);
@@ -541,9 +541,9 @@ function Get_Pat_Info(reg_id) {
 
             $('#txt_Mrno').val(data.Mr_No);
             $('#txt_name').val(data.Name);
-            $('#ddlRelation').val(data.Relation);
+            $('#ddlRelation').val(data.Relation).trigger('change');
             $('#txt_relation').val(data.FatherName);
-            $('#txt_dob').val(data.Age); 
+            $('#txt_dob').val(data.Age);
             $('#txt_mobile').val(data.Mobile);
             $('#txt_Address').val(data.Address);
             $('#hdn_regid').val(data.Reg_PatientID);
@@ -582,28 +582,28 @@ function Get_Pat_Info(reg_id) {
                 $bank.empty().append('<option value="">Select Account</option>').prop('disabled', true);
                 $bank.select2();
             }
-            
+
             if (data.Monitoring === true) {
                 $('#chkMonitoring').prop('checked', true).trigger('change');
             } else {
                 $('#chkMonitoring').prop('checked', false).trigger('change');
             }
             if (data.MaritalStatus_text)
-                $('#ddl_status').html($('<option>', { value: '', text: data.MaritalStatus_text }).prop('selected', true));
+                $('#ddl_status').html($('<option>', { value: data.Martial_Status, text: data.MaritalStatus_text }).prop('selected', true));
             if (data.Prefix_text)
                 $('#ddl_name').html($('<option>', { value: data.Prefix, text: data.Prefix_text }).prop('selected', true));
             if (data.Country_text)
-                $('#ddlCountry').html($('<option>', { value: '', text: data.Country_text }).prop('selected', true));
+                $('#ddlCountry').html($('<option>', { value: data.Country, text: data.Country_text }).prop('selected', true));
             if (data.BloodGroup_text)
-                $('#ddl_bloodGroup').html($('<option>', { value: '', text: data.BloodGroup_text }).prop('selected', true));
+                $('#ddl_bloodGroup').html($('<option>', { value: data.Blood_Group, text: data.BloodGroup_text }).prop('selected', true));
             if (data.Area_text)
-                $('#txtarea').html($('<option>', { value: '', text: data.Area_text }).prop('selected', true));
+                $('#txtarea').html($('<option>', { value: data.val_area, text: data.Area_text }).prop('selected', true));
             if (data.Gender_text)
-                $('#ddl_Gender').html($('<option>', { value: '', text: data.Gender_text }).prop('selected', true));
+                $('#ddl_Gender').html($('<option>', { value: data.Gender, text: data.Gender_text }).prop('selected', true));
             if (data.State_text)
-                $('#ddlstate').html($('<option>', { value: '', text: data.State_text }).prop('selected', true));
+                $('#ddlstate').html($('<option>', { value: data.State, text: data.State_text }).prop('selected', true));
             if (data.City_text)
-                $('#txtcity').html($('<option>', { value: '', text: data.City_text }).prop('selected', true));
+                $('#txtcity').html($('<option>', { value: data.val_city, text: data.City_text }).prop('selected', true));
 
             $('#SavePatient_Data').val('Update');
             $('#btnPrint').show();
@@ -612,7 +612,7 @@ function Get_Pat_Info(reg_id) {
             alert("Error loading patient data.");
             console.error("AJAX Error: ", response);
         }
-    });  
+    });
 }
 
 function isCNICValidationRequired() {
