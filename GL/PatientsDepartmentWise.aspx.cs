@@ -3642,7 +3642,6 @@ namespace PMS
                     string x = "Batch Expiry Report";
                     Master.Label2.Text = x;
                     Master.GetMenuName();
-                    object valusets;
                     tr_Summary.Visible = false;
                     tr_Export.Visible = true;
                     DateDiv.Visible = true;
@@ -3667,14 +3666,24 @@ namespace PMS
                     ddlPatientType.DataBind();
                     ddlPatientType.Visible = true;
                     lblPatientType.Visible = true;
+
+
+                    //valusets = DBClass.GetValueSet("Ware House");
+                    //ddlDepartments.DataSource = valusets;
+                    //ddlDepartments.Items.Clear();
+                    //ddlDepartments.DataTextField = "DataValue_Description";
+                    //ddlDepartments.DataValueField = "DataValue_Name";
+                    //ddlDepartments.Items.Clear();
+                    //ddlDepartments.Items.Add(new ListItem("Please Select", "0"));
+                    //ddlDepartments.DataBind();
+
+                    object valuset;
                     lblDepartment.Text = "Ware House";
-                    valusets = DBClass.GetValueSet("Ware House");
-                    ddlDepartments.DataSource = valusets;
+                    ddlDepartments.DataSource = GetUserWarehouses();
+                    ddlDepartments.DataTextField = "Text";
+                    ddlDepartments.DataValueField = "Value";
                     ddlDepartments.Items.Clear();
-                    ddlDepartments.DataTextField = "DataValue_Description";
-                    ddlDepartments.DataValueField = "DataValue_Name";
-                    ddlDepartments.Items.Clear();
-                    ddlDepartments.Items.Add(new ListItem("Please Select", "0"));
+                    ddlDepartments.Items.Add(new ListItem() { Text = "All", Value = "0" });
                     ddlDepartments.DataBind();
                 }
                 else if (this.PageTitle == "InvoiceAging")
