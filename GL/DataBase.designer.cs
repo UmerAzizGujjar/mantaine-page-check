@@ -182800,6 +182800,8 @@ namespace PMS
 
         private System.Nullable<decimal> _Rtn_Qty;
 
+        private System.Nullable<decimal> _Issue_Rcvd_Qty;
+
         private System.Nullable<bool> _Unlisted_Med;
 
         private System.Nullable<System.DateTime> _close_time;
@@ -182880,6 +182882,8 @@ namespace PMS
         partial void Onreject_byChanged();
         partial void OnRtn_QtyChanging(System.Nullable<decimal> value);
         partial void OnRtn_QtyChanged();
+        partial void OnIssue_Rcvd_QtyChanging(System.Nullable<decimal> value);
+        partial void OnIssue_Rcvd_QtyChanged();
         partial void OnUnlisted_MedChanging(System.Nullable<bool> value);
         partial void OnUnlisted_MedChanged();
         partial void Onclose_timeChanging(System.Nullable<System.DateTime> value);
@@ -183607,6 +183611,26 @@ namespace PMS
                     this._Rtn_Qty = value;
                     this.SendPropertyChanged("Rtn_Qty");
                     this.OnRtn_QtyChanged();
+                }
+            }
+        }
+
+        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_Issue_Rcvd_Qty", DbType = "Decimal(18,2)")]
+        public System.Nullable<decimal> Issue_Rcvd_Qty
+        {
+            get
+            {
+                return this._Issue_Rcvd_Qty;
+            }
+            set
+            {
+                if ((this._Issue_Rcvd_Qty != value))
+                {
+                    this.OnIssue_Rcvd_QtyChanging(value);
+                    this.SendPropertyChanging();
+                    this._Issue_Rcvd_Qty = value;
+                    this.SendPropertyChanged("Issue_Rcvd_Qty");
+                    this.OnIssue_Rcvd_QtyChanged();
                 }
             }
         }

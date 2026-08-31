@@ -8200,6 +8200,7 @@
       <Column Name="is_rejected" Type="System.Boolean" DbType="Bit" CanBeNull="true" />
       <Column Name="reject_by" Type="System.Guid" DbType="UniqueIdentifier" CanBeNull="true" />
       <Column Name="Rtn_Qty" Type="System.Decimal" DbType="Decimal(18,2)" CanBeNull="true" />
+      <Column Name="Issue_Rcvd_Qty" Type="System.Decimal" DbType="Decimal(18,2)" CanBeNull="true" />
       <Column Name="Unlisted_Med" Type="System.Boolean" DbType="Bit" CanBeNull="true" />
       <Column Name="close_time" Type="System.DateTime" DbType="DateTime" CanBeNull="true" />
     </Type>
