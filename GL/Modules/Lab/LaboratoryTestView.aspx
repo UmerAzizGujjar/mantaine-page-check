@@ -1,6 +1,7 @@
 ﻿<%@ Page Title="" Language="C#" MasterPageFile="~/Site.Master" AutoEventWireup="true" CodeBehind="LaboratoryTestView.aspx.cs" Inherits="PMS.LaboratoryTestView" %>
 <asp:Content ID="Content1" ContentPlaceHolderID="HeadContent" runat="server">
     <link href="../../wwwroot/THEME_TIBBIT/CustomCSS/tablestyle.css" rel="stylesheet" />
+    <script src="https://cdn.jsdelivr.net/npm/jsbarcode@3.11.5/dist/JsBarcode.all.min.js"></script>
 <script type="text/javascript">
     $(document).ready(function () {
         $('#ctl00_lblMessage').hide();
@@ -14,6 +15,26 @@
         var url = '../../ReportViewer.aspx?ReportName=LabSlip&ReportTitle=Department Of Pathology&Lab_ID=' + Test_ID;
         window.open(url, '_blank');
 
+    }
+    function PrintLabBarcodeFromView(labTestId) {
+        $.ajax({
+            type: "POST",
+            url: "LaboratoryTest.aspx/GetLabTestInfo",
+            data: JSON.stringify({ labTestId: parseInt(labTestId) }),
+            contentType: "application/json; charset=utf-8",
+            dataType: "json",
+            success: function (response) {
+                var data = JSON.parse(response.d);
+                data.Tests.forEach(function(test, index) {
+                    var printWindow = window.open('', 'PrintBarcode' + index, 'width=450,height=300');
+                    printWindow.document.write('<!DOCTYPE html><html><head><title>Print Lab Barcode</title><script src="https://cdn.jsdelivr.net/npm/jsbarcode@3.11.5/dist/JsBarcode.all.min.js"><\/script><style>*{margin:0;padding:0;box-sizing:border-box}body{font-family:Arial,sans-serif;background:#fff;-webkit-print-color-adjust:exact}@page{size:1.60in 1.00in;margin:0}@media print{body{margin:0}.print-btn{display:none!important}.barcode-card{page-break-after:always;break-after:page}}.barcode-container{display:flex;flex-direction:column;width:1.60in}.barcode-card{width:1.60in;height:1.00in;padding:3px 5px;display:flex;flex-direction:column;justify-content:space-between;align-items:center;text-align:center;overflow:hidden;background:#fff}.barcode-patient{font-size:8px;font-weight:bold;color:#000;width:100%;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}.barcode-testname{font-size:7px;color:#222;width:100%;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}.barcode-cat{font-size:6.5px;color:#555;width:100%;white-space:nowrap}.barcode-mrno{font-size:7px;color:#222;width:100%;white-space:nowrap}.barcode-svg-container{width:100%;display:flex;justify-content:center;align-items:center}.barcode-svg-container svg{max-width:100%;height:auto}.barcode-number{font-family:monospace;font-size:7px;font-weight:bold;color:#000}.barcode-footer{font-size:5.5px;color:#666}.print-btn{position:fixed;bottom:15px;right:15px;padding:10px 20px;background:#667eea;color:white;border:none;border-radius:4px;font-size:13px;cursor:pointer;z-index:1000}</style></head><body><div class="barcode-container"><div class="barcode-card"><div class="barcode-patient">' + data.PatientName + '</div><div class="barcode-testname">' + test.TestName + '</div><div class="barcode-cat">' + test.CategoryName + '</div><div class="barcode-mrno">MR: ' + data.MR_No + '</div><div class="barcode-svg-container"><svg id="labbarcode' + index + '" jsbarcode-format="CODE128" jsbarcode-value="' + data.LabTestId + '" jsbarcode-width="1" jsbarcode-height="20" jsbarcode-displayValue="false" jsbarcode-margin="0"></svg></div><div class="barcode-number">' + data.LabTestId + '</div><div class="barcode-footer">' + new Date().toLocaleString('en-PK') + '</div></div></div><button class="print-btn" onclick="window.print();">Print Label</button><script>window.onload=function(){JsBarcode("#labbarcode' + index + '").init();setTimeout(function(){window.print();},500)};<\/script></body></html>');
+                    printWindow.document.close();
+                });
+            },
+            error: function () {
+                Swal.fire({ icon: 'error', title: 'Error', text: 'Could not load lab test info.' });
+            }
+        });
     }
 
     function LoadPage() {
@@ -111,8 +132,9 @@
                         var res = '<a class="editListBtn" href="#" onclick="editOpen(' + full.Lab_Test_ID + ')" style="border-radius: 4px;padding: 5px 8px 5px 8px;"><i class="fa fa-pencil" ></i></a>'
 
                         var print = '<a class="printListBtn" style="border-radius: 4px;margin-left: 4px;color: white;padding: 5px 8px 5px 8px;" href="#" onclick="PrintTest(' + full.Test_ID + ')" id="btnprint"><i class="fa fa-print"></i></a>';
+                        var barcode = '<a class="barcodeListBtn" style="border-radius: 4px;margin-left: 4px;background:#764ba2;color: white;padding: 5px 8px 5px 8px;" href="#" onclick="PrintLabBarcodeFromView(' + full.Lab_Test_ID + ')" id="btnbarcode"><i class="fa fa-barcode"></i></a>';
                         var result;
-                        result = res  + print;
+                        result = res  + barcode + print;
                         return result;
 
                     }, "width": "10%", "orderable": false

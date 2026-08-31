@@ -1287,154 +1287,72 @@ inPatmedicineList.Max_PRN_Dose,
                             string medicineName = oIn_Patient_Medicine.Medicine_Name?.Trim() ?? "";
                             if (string.IsNullOrEmpty(medicineName)) continue;
                             bool.TryParse(oIn_Patient_Medicine.Unlisted_Med, out bool isUnlistedMed);
-                            var existingMedicine = existingMedicines
-                                .FirstOrDefault(p => p.Medicine_Name.Trim() == medicineName);
 
+                            System.Diagnostics.Debug.WriteLine("INSERTING new inpatient medicine: " + medicineName);
 
-
-                            if (existingMedicine != null)
+                            string Item_Id;
+                            if (oIn_Patient_Medicine.ItemCode == "0")
                             {
-                                bool hasChanges = false;
-                                if (existingMedicine.Frequency != oIn_Patient_Medicine.Frequency) hasChanges = true;
-                                else if (existingMedicine.Injections != oIn_Patient_Medicine.Injection) hasChanges = true;
-                                else if (existingMedicine.Oral != oIn_Patient_Medicine.Oral) hasChanges = true;
-                                else if (existingMedicine.Dosage_From != oIn_Patient_Medicine.Dosage_From) hasChanges = true;
-                                else if (existingMedicine.Dosage_Qty != oIn_Patient_Medicine.Dosage_Qty) hasChanges = true;
-                                else if (existingMedicine.Other_Instruction != oIn_Patient_Medicine.Other_Instruction) hasChanges = true;
-                                else if (existingMedicine.AttendingParamedical_Staff != oIn_Patient_Medicine.AttendingParamedical_Staff) hasChanges = true;
-                                else if (existingMedicine.Req_Qty != Convert.ToDecimal(oIn_Patient_Medicine.Issue_Qty)) hasChanges = true;
-                                else if (existingMedicine.Rcv_Qty != Convert.ToDecimal(oIn_Patient_Medicine.Rec_Qty)) hasChanges = true;
-                                else if (existingMedicine.Rtn_Qty != Convert.ToDecimal(oIn_Patient_Medicine.Rtn_Qty)) hasChanges = true;
-                                else if (existingMedicine.Regular != Convert.ToBoolean(oIn_Patient_Medicine.Regular)) hasChanges = true;
-                                else if (existingMedicine.STAT != Convert.ToBoolean(oIn_Patient_Medicine.STAT)) hasChanges = true;
-                                else if (existingMedicine.PRN != Convert.ToBoolean(oIn_Patient_Medicine.PRN)) hasChanges = true;
-                                else if (existingMedicine.Unlisted_Med != isUnlistedMed) hasChanges = true;
-
-                                if (hasChanges)
-                                {
-                                    System.Diagnostics.Debug.WriteLine("UPDATING inpatient medicine: " + medicineName);
-
-                                    existingMedicine.Frequency = oIn_Patient_Medicine.Frequency;
-                                    existingMedicine.Injections = oIn_Patient_Medicine.Injection;
-                                    existingMedicine.Oral = oIn_Patient_Medicine.Oral;
-                                    existingMedicine.Dosage_From = oIn_Patient_Medicine.Dosage_From;
-                                    existingMedicine.Dosage_Qty = oIn_Patient_Medicine.Dosage_Qty;
-                                    existingMedicine.Other_Instruction = oIn_Patient_Medicine.Other_Instruction;
-                                    existingMedicine.AttendingParamedical_Staff = oIn_Patient_Medicine.AttendingParamedical_Staff;
-                                    existingMedicine.Req_Qty = Convert.ToDecimal(oIn_Patient_Medicine.Issue_Qty);
-                                    existingMedicine.Rcv_Qty = Convert.ToDecimal(oIn_Patient_Medicine.Rec_Qty);
-                                    existingMedicine.Rtn_Qty = Convert.ToDecimal(oIn_Patient_Medicine.Rtn_Qty);
-                                    existingMedicine.Regular = Convert.ToBoolean(oIn_Patient_Medicine.Regular);
-                                    existingMedicine.STAT = Convert.ToBoolean(oIn_Patient_Medicine.STAT);
-                                    existingMedicine.PRN = Convert.ToBoolean(oIn_Patient_Medicine.PRN);
-                                    existingMedicine.Unlisted_Med = isUnlistedMed;
-                                    existingMedicine.Username = oIn_Patient_Medicine.User ?? AppConfig.UserName;
-                                    existingMedicine.High_Risk_Drug = oIn_Patient_Medicine.High_Risk;
-                                    existingMedicine.Max_PRN_Dose = oIn_Patient_Medicine.Max_PRN;
-
-                                    if (!string.IsNullOrEmpty(oIn_Patient_Medicine.Start_Date_Time) &&
-                                        oIn_Patient_Medicine.Start_Date_Time != "null" &&
-                                        oIn_Patient_Medicine.Start_Date_Time != "1/1/0001")
-                                    {
-                                        DateTime startDate;
-                                        if (DateTime.TryParse(oIn_Patient_Medicine.Start_Date_Time, out startDate) && startDate > DateTime.MinValue)
-                                        {
-                                            existingMedicine.Start_Date_Time = startDate;
-                                        }
-                                    }
-
-                                    if (!string.IsNullOrEmpty(oIn_Patient_Medicine.Stop_Date_Time) &&
-                                        oIn_Patient_Medicine.Stop_Date_Time != "null")
-                                    {
-                                        DateTime stopDateTime;
-                                        if (DateTime.TryParse(oIn_Patient_Medicine.Stop_Date_Time, out stopDateTime))
-                                        {
-                                            existingMedicine.Stop_Date_Time = stopDateTime;
-                                        }
-                                    }
-
-                                    updatedCount++;
-                                }
-                                else
-                                {
-                                    System.Diagnostics.Debug.WriteLine("SKIPPING (no changes) inpatient medicine: " + medicineName);
-                                }
+                                int Item_Ids = (from inv in db.INV_Items where inv.Description == medicineName && inv.Is_Active == true && (inv.isCancel == null || inv.isCancel == false) select inv.Item_ID).FirstOrDefault();
+                                Item_Id = Convert.ToString(Item_Ids);
                             }
                             else
                             {
-                                System.Diagnostics.Debug.WriteLine("INSERTING new inpatient medicine: " + medicineName);
-
-                                //var inventoryItem = db.INV_Items
-                                //    .Where(p => p.Item_Code == oIn_Patient_Medicine.ItemCode || p.Description == medicineName)
-                                //    .FirstOrDefault();
-
-                                //string itemId = inventoryItem != null ? inventoryItem.Item_ID.ToString() : oIn_Patient_Medicine.ItemCode;
-
-                                string Item_Id;
-                                if (oIn_Patient_Medicine.ItemCode == "0")
-                                {
-                                    int Item_Ids = (from inv in db.INV_Items where inv.Description == medicineName && inv.Is_Active == true && (inv.isCancel == null || inv.isCancel == false) select inv.Item_ID).FirstOrDefault();
-                                    Item_Id = Convert.ToString(Item_Ids);
-                                }
-                                else
-                                {
-                                    Item_Id = oIn_Patient_Medicine.ItemCode;
-                                }
-
-
-                                In_Patient_Medicine oIn_Patient_Medicine1 = new In_Patient_Medicine
-                                {
-                                    Patient_ID = targetPatientId,
-                                    Item_Code = Item_Id,
-                                    Medicine_Name = medicineName,
-                                    Transaction_Type = "InPatient",
-                                    Medicine_Date = oIn_Patient_Medicine.Medicine_Date,
-                                    Oral = oIn_Patient_Medicine.Oral,
-                                    Injections = oIn_Patient_Medicine.Injection,
-                                    Dosage_From = oIn_Patient_Medicine.Dosage_From,
-                                    AttendingParamedical_Staff = oIn_Patient_Medicine.AttendingParamedical_Staff,
-                                    Frequency = oIn_Patient_Medicine.Frequency,
-                                    Dosage_Qty = oIn_Patient_Medicine.Dosage_Qty,
-                                    Rtn_Qty = Convert.ToDecimal(oIn_Patient_Medicine.Rtn_Qty),
-                                    Rcv_Qty = Convert.ToDecimal(oIn_Patient_Medicine.Rec_Qty),
-                                    Req_Qty = Convert.ToDecimal(oIn_Patient_Medicine.Issue_Qty),
-                                    Other_Instruction = oIn_Patient_Medicine.Other_Instruction,
-                                    Regular = Convert.ToBoolean(oIn_Patient_Medicine.Regular),
-                                    STAT = Convert.ToBoolean(oIn_Patient_Medicine.STAT),
-                                    PRN = Convert.ToBoolean(oIn_Patient_Medicine.PRN),
-                                    Unlisted_Med = isUnlistedMed,
-                                    chkDiccharge = false,
-                                    Username = oIn_Patient_Medicine.User ?? AppConfig.UserName,
-                                    High_Risk_Drug = oIn_Patient_Medicine.High_Risk,
-                                    Max_PRN_Dose = oIn_Patient_Medicine.Max_PRN,
-                                    is_rejected = false,
-                                    Status = null
-                                };
-
-                                if (!string.IsNullOrEmpty(oIn_Patient_Medicine.Start_Date_Time) &&
-                                    oIn_Patient_Medicine.Start_Date_Time != "null" &&
-                                    oIn_Patient_Medicine.Start_Date_Time != "1/1/0001")
-                                {
-                                    DateTime startDate;
-                                    if (DateTime.TryParse(oIn_Patient_Medicine.Start_Date_Time, out startDate) && startDate > DateTime.MinValue)
-                                    {
-                                        oIn_Patient_Medicine1.Start_Date_Time = startDate;
-                                    }
-                                }
-
-                                if (!string.IsNullOrEmpty(oIn_Patient_Medicine.Stop_Date_Time) &&
-                                    oIn_Patient_Medicine.Stop_Date_Time != "null")
-                                {
-                                    DateTime stopDateTime;
-                                    if (DateTime.TryParse(oIn_Patient_Medicine.Stop_Date_Time, out stopDateTime))
-                                    {
-                                        oIn_Patient_Medicine1.Stop_Date_Time = stopDateTime;
-                                    }
-                                }
-
-                                db.In_Patient_Medicines.InsertOnSubmit(oIn_Patient_Medicine1);
-                                insertedCount++;
+                                Item_Id = oIn_Patient_Medicine.ItemCode;
                             }
+
+                            In_Patient_Medicine oIn_Patient_Medicine1 = new In_Patient_Medicine
+                            {
+                                Patient_ID = targetPatientId,
+                                Item_Code = Item_Id,
+                                Medicine_Name = medicineName,
+                                Transaction_Type = "InPatient",
+                                Medicine_Date = oIn_Patient_Medicine.Medicine_Date,
+                                Oral = oIn_Patient_Medicine.Oral,
+                                Injections = oIn_Patient_Medicine.Injection,
+                                Dosage_From = oIn_Patient_Medicine.Dosage_From,
+                                AttendingParamedical_Staff = oIn_Patient_Medicine.AttendingParamedical_Staff,
+                                Frequency = oIn_Patient_Medicine.Frequency,
+                                Dosage_Qty = oIn_Patient_Medicine.Dosage_Qty,
+                                Rtn_Qty = Convert.ToDecimal(oIn_Patient_Medicine.Rtn_Qty),
+                                Rcv_Qty = Convert.ToDecimal(oIn_Patient_Medicine.Rec_Qty),
+                                Req_Qty = Convert.ToDecimal(oIn_Patient_Medicine.Issue_Qty),
+                                Other_Instruction = oIn_Patient_Medicine.Other_Instruction,
+                                Regular = Convert.ToBoolean(oIn_Patient_Medicine.Regular),
+                                STAT = Convert.ToBoolean(oIn_Patient_Medicine.STAT),
+                                PRN = Convert.ToBoolean(oIn_Patient_Medicine.PRN),
+                                Unlisted_Med = isUnlistedMed,
+                                chkDiccharge = false,
+                                Username = oIn_Patient_Medicine.User ?? AppConfig.UserName,
+                                High_Risk_Drug = oIn_Patient_Medicine.High_Risk,
+                                Max_PRN_Dose = oIn_Patient_Medicine.Max_PRN,
+                                is_rejected = false,
+                                Status = null
+                            };
+
+                            if (!string.IsNullOrEmpty(oIn_Patient_Medicine.Start_Date_Time) &&
+                                oIn_Patient_Medicine.Start_Date_Time != "null" &&
+                                oIn_Patient_Medicine.Start_Date_Time != "1/1/0001")
+                            {
+                                DateTime startDate;
+                                if (DateTime.TryParse(oIn_Patient_Medicine.Start_Date_Time, out startDate) && startDate > DateTime.MinValue)
+                                {
+                                    oIn_Patient_Medicine1.Start_Date_Time = startDate;
+                                }
+                            }
+
+                            if (!string.IsNullOrEmpty(oIn_Patient_Medicine.Stop_Date_Time) &&
+                                oIn_Patient_Medicine.Stop_Date_Time != "null")
+                            {
+                                DateTime stopDateTime;
+                                if (DateTime.TryParse(oIn_Patient_Medicine.Stop_Date_Time, out stopDateTime))
+                                {
+                                    oIn_Patient_Medicine1.Stop_Date_Time = stopDateTime;
+                                }
+                            }
+
+                            db.In_Patient_Medicines.InsertOnSubmit(oIn_Patient_Medicine1);
+                            insertedCount++;
                         }
 
                         db.SubmitChanges();
@@ -1472,16 +1390,9 @@ inPatmedicineList.Max_PRN_Dose,
 
                     if (MedicineDetail.PatientID != 0)
                     {
-                        // Get ALL existing medicine names for this patient under "InPatientMonitring"
-                        var existingNames = db.In_Patient_Medicines
-                            .Where(p => p.Patient_ID == MedicineDetail.PatientID && p.Transaction_Type == "InPatientMonitring")
-                            .Select(p => p.Medicine_Name.Trim())
-                            .ToList();
-
                         System.Diagnostics.Debug.WriteLine("=== SaveMedicines (Monitoring) Debug ===");
                         System.Diagnostics.Debug.WriteLine("Patient ID: " + MedicineDetail.PatientID);
                         System.Diagnostics.Debug.WriteLine("Transaction Type: InPatientMonitring");
-                        System.Diagnostics.Debug.WriteLine("Existing medicines: " + string.Join(", ", existingNames));
 
                         int insertedCount = 0;
 
@@ -1493,42 +1404,34 @@ inPatmedicineList.Max_PRN_Dose,
 
                             if (string.IsNullOrEmpty(medicineName)) continue;
 
-                            // Only insert if name NOT in existing list
-                            if (!existingNames.Contains(medicineName))
-                            {
-                                System.Diagnostics.Debug.WriteLine("INSERTING new monitoring medicine: " + medicineName);
+                            System.Diagnostics.Debug.WriteLine("INSERTING new monitoring medicine: " + medicineName);
 
-                                In_Patient_Medicine oIn_Patient_Medicine1 = new In_Patient_Medicine()
-                                {
-                                    Patient_ID = Convert.ToInt32(MedicineDetail.PatientID),
-                                    Medicine_Name = medicineName,
-                                    Medicine_Date = oIn_Patient_Medicine.Medicine_Date,
-                                    Oral = oIn_Patient_Medicine.Oral,
-                                    Transaction_Type = "InPatientMonitring",  // Keep as InPatientMonitring
-                                    Injections = oIn_Patient_Medicine.Injection,
-                                    Recomended_Dosage = oIn_Patient_Medicine.Recomended_Dosage,
-                                    Frequency = oIn_Patient_Medicine.Frequency,
-                                    Nurse_Name = oIn_Patient_Medicine.Nurse_Name,
-                                    Dosage_Qty = oIn_Patient_Medicine.Dosage_Qty,
-                                    Dosage_From = oIn_Patient_Medicine.Dosage_From,
-                                    Other_Instruction = oIn_Patient_Medicine.Other_Instruction,
-                                    AttendingParamedical_Staff = oIn_Patient_Medicine.AttendingParamedical_Staff,
-                                    Regular = oIn_Patient_Medicine.Regular == "REGULAR" ? true : false,
-                                    STAT = oIn_Patient_Medicine.STAT == "STAT" ? true : false,
-                                    PRN = oIn_Patient_Medicine.PRN == "PRN" ? true : false,
-                                    chkDiccharge = Convert.ToBoolean(oIn_Patient_Medicine.chkDiccharge),
-                                    Username = AppConfig.UserName,
-                                    is_rejected = false,
-                                    Status = null
-                                };
-
-                                db.In_Patient_Medicines.InsertOnSubmit(oIn_Patient_Medicine1);
-                                insertedCount++;
-                            }
-                            else
+                            In_Patient_Medicine oIn_Patient_Medicine1 = new In_Patient_Medicine()
                             {
-                                System.Diagnostics.Debug.WriteLine("SKIPPING existing monitoring medicine: " + medicineName);
-                            }
+                                Patient_ID = Convert.ToInt32(MedicineDetail.PatientID),
+                                Medicine_Name = medicineName,
+                                Medicine_Date = oIn_Patient_Medicine.Medicine_Date,
+                                Oral = oIn_Patient_Medicine.Oral,
+                                Transaction_Type = "InPatientMonitring",  // Keep as InPatientMonitring
+                                Injections = oIn_Patient_Medicine.Injection,
+                                Recomended_Dosage = oIn_Patient_Medicine.Recomended_Dosage,
+                                Frequency = oIn_Patient_Medicine.Frequency,
+                                Nurse_Name = oIn_Patient_Medicine.Nurse_Name,
+                                Dosage_Qty = oIn_Patient_Medicine.Dosage_Qty,
+                                Dosage_From = oIn_Patient_Medicine.Dosage_From,
+                                Other_Instruction = oIn_Patient_Medicine.Other_Instruction,
+                                AttendingParamedical_Staff = oIn_Patient_Medicine.AttendingParamedical_Staff,
+                                Regular = oIn_Patient_Medicine.Regular == "REGULAR" ? true : false,
+                                STAT = oIn_Patient_Medicine.STAT == "STAT" ? true : false,
+                                PRN = oIn_Patient_Medicine.PRN == "PRN" ? true : false,
+                                chkDiccharge = Convert.ToBoolean(oIn_Patient_Medicine.chkDiccharge),
+                                Username = AppConfig.UserName,
+                                is_rejected = false,
+                                Status = null
+                            };
+
+                            db.In_Patient_Medicines.InsertOnSubmit(oIn_Patient_Medicine1);
+                            insertedCount++;
                         }
                         db.SubmitChanges();
                         System.Diagnostics.Debug.WriteLine($"=== SaveMedicines Complete - Inserted {insertedCount} medicines ===");
@@ -1691,6 +1594,36 @@ inPatmedicineList.Max_PRN_Dose,
             ddlMedicine_Type.DataValueField = "DataValue_Name";
             ddlMedicine_Type.Items.Add(new ListItem("Please Select", "0"));
             ddlMedicine_Type.DataBind();
+
+            valueset = DBClass.GetValueSet("Laundary From To");
+            ddlReferTo.DataSource = valueset;
+            ddlReferTo.DataTextField = "DataValue_Description";
+            ddlReferTo.DataValueField = "DataValue_Name";
+            ddlReferTo.Items.Add(new ListItem("Please Select", "0"));
+            ddlReferTo.DataBind();
+
+            valueset = DBClass.GetValueSet("Room Type");
+            ddlRoomTypeRef.DataSource = valueset;
+            ddlRoomTypeRef.DataTextField = "DataValue_Description";
+            ddlRoomTypeRef.DataValueField = "DataValue_Name";
+            ddlRoomTypeRef.Items.Add(new ListItem("Please Select", "0"));
+            ddlRoomTypeRef.DataBind();
+
+            var rooms = (from tbl in db.Rooms
+                         select tbl).ToList();
+            ddlroomRef.DataSource = rooms;
+            ddlroomRef.DataTextField = "Room_No";
+            ddlroomRef.DataValueField = "Room_ID";
+            ddlroomRef.Items.Add(new ListItem("Please Select", "0"));
+            ddlroomRef.DataBind();
+
+            var wards = (from tbl2 in db.Ward_Definitions
+                         select tbl2).ToList();
+            ddlwardsRef.DataSource = wards;
+            ddlwardsRef.DataTextField = "Ward_Type";
+            ddlwardsRef.DataValueField = "Ward_ID";
+            ddlwardsRef.Items.Add(new ListItem("Please Select", "0"));
+            ddlwardsRef.DataBind();
 
         }
         public class List2
@@ -2263,15 +2196,19 @@ inPatmedicineList.Max_PRN_Dose,
         {
             using (DataBaseDataContext db = new DataBaseDataContext())
             {
+                string term = (searchString ?? "").Trim();
+
                 var pharmacyItems = (from d in db.INV_Items
-                                     where d.IsPharmacyItem == true && d.Description.Contains(searchString)
+                                     where d.IsPharmacyItem == true
                                      && (d.Short_Item == false || d.Short_Item == null)
+                                     && (d.Description.ToLower().Contains(term.ToLower())
+                                         || (d.Salt != null && d.Salt.ToLower().Contains(term.ToLower())))
                                      orderby d.Item_ID descending
                                      select new
                                      {
-                                         d.Item_ID,
-                                         Description = d.Description
-                                     }).Take(20).ToList();
+                                         Item_Code = d.Item_Code,
+                                         Description = (d.Salt != null ? (d.Salt + "-" + d.Description) : d.Description)
+                                     }).Take(50).ToList();
 
                 return (new JavaScriptSerializer().Serialize(pharmacyItems));
             }
@@ -2579,6 +2516,312 @@ inPatmedicineList.Max_PRN_Dose,
             }
 
             return (new JavaScriptSerializer()).Serialize(AlltestListRefined);
+        }
+
+        public class Beds
+        {
+            public int WardID { get; set; }
+            public int PatientNo { get; set; }
+            public int BedNo { get; set; }
+        }
+        public class Rooms
+        {
+            public int WardID { get; set; }
+            public int PatientNo { get; set; }
+            public int BedNo { get; set; }
+        }
+
+        [WebMethod]
+        public static string loadReferenceInformation(string PatientID)
+        {
+            DataBaseDataContext db = new DataBaseDataContext();
+            var activeInPatient = db.In_Patients
+                .Where(ip => ip.Patient_ID == Convert.ToInt32(PatientID) && (ip.Discharge == null || ip.Discharge == false))
+                .OrderByDescending(ip => ip.In_Patient_ID)
+                .FirstOrDefault();
+
+            if (activeInPatient == null)
+                return new JavaScriptSerializer().Serialize(null);
+
+            // Safely get Room No
+            string roomNo = "";
+            if (activeInPatient.Room_ID.HasValue)
+            {
+                var room = db.Rooms.FirstOrDefault(r => r.Room_ID == activeInPatient.Room_ID.Value);
+                roomNo = room != null ? room.Room_No.ToString() : "";
+            }
+            // Safely get Ward Type
+            string wardType = "";
+            if (activeInPatient.Ward_ID.HasValue)
+            {
+                var ward = db.Ward_Definitions.FirstOrDefault(w => w.Ward_ID == activeInPatient.Ward_ID.Value);
+                wardType = ward != null ? ward.Ward_Type : "";
+            }
+            string roomType = db.GetDataValueName("Room Type", activeInPatient.Room_Type?.ToString() ?? "");
+            string refferTo = db.GetDataValueName("Patient Main Category", activeInPatient.Department?.ToString() ?? "");
+
+            var result = new
+            {
+                activeInPatient.Ward_ID,
+                Room_No = roomNo,
+                Description = wardType,
+                activeInPatient.Room_ID,
+                activeInPatient.Bed_No,
+                Room_Type = roomType,
+                Reffer_To = refferTo,
+            };
+            return new JavaScriptSerializer().Serialize(result);
+        }
+
+        [WebMethod]
+        public static string FillWardBeds(int WardID)
+        {
+            List<Beds> bdsList = new List<Beds>();
+            if (WardID > 0)
+            {
+                DataBaseDataContext db = new DataBaseDataContext();
+                string wardName = db.Ward_Definitions
+                            .Where(w => w.Ward_ID == WardID)
+                            .Select(w => w.Ward_Type)
+                            .FirstOrDefault();
+
+                int Beds = (int)(from bds in db.Ward_Definitions
+                                 where bds.Ward_ID == WardID
+                                 select bds.No_Of_Beds
+                           ).SingleOrDefault();
+                List<Ward_Allocation> Ward_AllocationList = db.Ward_Allocations.Where(w => w.Ward_ID == WardID).ToList();
+                for (int i = 1; i <= Beds; i++)
+                {
+                    var patID = (from p in db.Ward_Allocations
+                                 where p.Bed_No_Assigned == (int)(i) && p.Ward_ID == WardID && p.IsDischarge == false
+                                 select p.Patient_ID).FirstOrDefault();
+                    if (patID == null)
+                    {
+                        patID = 0;
+                    }
+                    else
+                    {
+                        patID = (from p in db.Reg_patients
+                                 where p.pat_id == patID
+                                 select p.Patient_No).FirstOrDefault();
+                    }
+                    if (patID == null)
+                    {
+                        patID = 0;
+                    }
+
+                    Beds b = new Beds();
+                    b.BedNo = i;
+                    b.PatientNo = (int)patID;
+                    b.WardID = WardID;
+                    bdsList.Add(b);
+                }
+            }
+            return (new JavaScriptSerializer()).Serialize(bdsList);
+        }
+
+        [WebMethod]
+        public static string FillRooms(string RoomType)
+        {
+            DataBaseDataContext db = new DataBaseDataContext(DBClass.ConnectionString());
+            var Rmdetail = (from rm in db.Rooms
+                            where rm.Room_Type == RoomType
+                            select new
+                            {
+                                rm.Room_No,
+                                rm.Room_ID,
+                                rm.Name,
+                                rm.Room_Type,
+                                PatientNmae = ((from room in db.Room_Allocations join p in db.Reg_patients on room.Patient_ID equals p.pat_id where room.Room_ID == rm.Room_ID && room.IsDischarge == false select p.Patient_No).FirstOrDefault()),
+                            }
+               ).ToList();
+            return (new JavaScriptSerializer()).Serialize(Rmdetail);
+        }
+
+        protected void btnAllocatedRoomwardCheckRefer_Click(object sender, EventArgs e)
+        {
+            DataBaseDataContext db = new DataBaseDataContext(DBClass.ConnectionString());
+            var countOfRoomRows = db.Room_Allocatrion_Histories.Where(m => m.Patient_ID == Convert.ToInt32(hdfPatient_ID.Value)).Count();
+            var countOfWardRows = db.Ward_Allocatrion_Histories.Where(m => m.Patient_ID == Convert.ToInt32(hdfPatient_ID.Value)).Count();
+            if (countOfRoomRows > 0 || countOfWardRows > 0)
+            {
+                if (countOfRoomRows > 0)
+                {
+                    var lastRowRoom = db.Room_Allocatrion_Histories.Where(m => m.Patient_ID == Convert.ToInt32(hdfPatient_ID.Value)).Skip(countOfRoomRows - 1).FirstOrDefault();
+                    if (lastRowRoom != null)
+                    {
+                        var roomType = (from rm in db.Rooms
+                                        join dv in db.DataValues on rm.Room_Type equals dv.DataValue_Name
+                                        join vs in db.ValueSets on dv.ValueSet_ID equals vs.ValueSet_ID
+                                        where rm.Room_ID == lastRowRoom.Room_ID && vs.ValueSet_Name == "Room Type"
+                                        select new
+                                        {
+                                            dv.DataValue_Description
+                                        }).FirstOrDefault();
+                        ddlReferTo.Enabled = true;
+                        ddlroomRef.Enabled = true;
+                        ddlroomRef.SelectedValue = lastRowRoom.Room_ID.ToString();
+                        ddlReferTo.SelectedIndex = 0;
+                        ddlReferTo.Enabled = false;
+                        ddlroomRef.Enabled = false;
+                        ddlroomRef.CssClass = "dropdownBackgroud";
+                        ddlRoomTypeRef.SelectedValue = roomType.DataValue_Description;
+                        lblAllocatedRoomWardRef.Text = "";
+                        lblAllocatedRoomWardRef.CssClass = "Success";
+                    }
+                }
+                else
+                {
+                    ddlroomRef.Enabled = false;
+                    ddlroomRef.CssClass = "dropdownBackgroud";
+                    ddlRoomTypeRef.SelectedIndex = 0;
+                }
+                if (countOfWardRows > 0)
+                {
+                    var lastRowWard = db.Ward_Allocatrion_Histories.Where(m => m.Patient_ID == Convert.ToInt32(hdfPatient_ID.Value)).Skip(countOfWardRows - 1).FirstOrDefault();
+                    if (lastRowWard != null)
+                    {
+                        ddlReferTo.CausesValidation = false;
+                        ddlReferTo.Enabled = true;
+                        ddlwardsRef.Enabled = true;
+                        ddlwardsRef.SelectedValue = lastRowWard.Ward_ID.ToString();
+                        ddlReferTo.SelectedIndex = 0;
+                        ddlReferTo.Enabled = false;
+                        ddlwardsRef.Enabled = false;
+                        ddlwardsRef.CssClass = "dropdownBackgroud";
+                        txtBednoRef.Text = lastRowWard.Bed_No.ToString();
+                        txtBednoRef.ReadOnly = true;
+                        lblAllocatedRoomWardRef.Text = "";
+                        lblAllocatedRoomWardRef.CssClass = "Success";
+                    }
+                }
+                else
+                {
+                    ddlwardsRef.Enabled = false;
+                    ddlwardsRef.CssClass = "dropdownBackgroud";
+                    txtBednoRef.Text = "";
+                    txtBednoRef.ReadOnly = true;
+                }
+            }
+            else
+            {
+                ddlReferTo.Enabled = true;
+                ddlReferTo.CssClass = "dropdownBackgroudWhite";
+                lblAllocatedRoomWardRef.Text = "No Room And Ward Assigned.";
+                lblAllocatedRoomWardRef.CssClass = "Error";
+            }
+        }
+
+        [WebMethod]
+        public static string SaveRefer(string PatientID, string InPatientID, string ReferTo, string WardID, string BedNo, string RoomID, string RoomType)
+        {
+            try
+            {
+                int patID = Convert.ToInt32(PatientID);
+                int inPatID = Convert.ToInt32(InPatientID);
+
+                using (DataBaseDataContext db = new DataBaseDataContext(DBClass.ConnectionString()))
+                {
+                    var inPatient = db.In_Patients.FirstOrDefault(ip => ip.In_Patient_ID == inPatID);
+                    if (inPatient == null)
+                        return "InPatient not found";
+
+                    var oldWardAlloc = db.Ward_Allocations
+                        .FirstOrDefault(wa => wa.InPatient_ID == inPatID.ToString() && wa.IsDischarge == false);
+                    if (oldWardAlloc != null)
+                    {
+                        oldWardAlloc.IsDischarge = true;
+                        oldWardAlloc.To_TimeDate = DateTime.Now;
+                    }
+
+                    var oldRoomAlloc = db.Room_Allocations
+                        .FirstOrDefault(ra => ra.In_Patient_ID == inPatID && ra.IsDischarge == false);
+                    if (oldRoomAlloc != null)
+                    {
+                        oldRoomAlloc.IsDischarge = true;
+                        oldRoomAlloc.To_Date = DateTime.Now;
+                    }
+
+                    if (ReferTo == "001") 
+                    {
+                        inPatient.Ward_ID = Convert.ToInt32(WardID);
+                        inPatient.Bed_No = Convert.ToInt32(BedNo);
+                        inPatient.Room_ID = null;
+                        inPatient.Room_Type = null;
+                        inPatient.Issuance_Of = ReferTo;
+                        inPatient.isReferred = true;
+
+                        var newWardAlloc = new Ward_Allocation
+                        {
+                            InPatient_ID = inPatID.ToString(),
+                            Patient_ID = patID,
+                            Ward_ID = Convert.ToInt32(WardID),
+                            Bed_No_Assigned = Convert.ToInt32(BedNo),
+                            Created_By = AppConfig.UserID,
+                            Created_Time = DateTime.Now,
+                            Book_ID = AppConfig.Book_ID,
+                            Company_ID = AppConfig.Company_ID,
+                            From_TimeDate = DateTime.Now,
+                            IsDischarge = false
+                        };
+                        db.Ward_Allocations.InsertOnSubmit(newWardAlloc);
+
+                        var duplicateBed = db.Ward_Allocations
+                            .Where(wa => wa.Ward_ID == Convert.ToInt32(WardID)
+                                      && wa.Bed_No_Assigned == Convert.ToInt32(BedNo)
+                                      && wa.InPatient_ID != inPatID.ToString()
+                                      && wa.IsDischarge == false)
+                            .FirstOrDefault();
+                        if (duplicateBed != null)
+                        {
+                            duplicateBed.IsDischarge = true;
+                            duplicateBed.To_TimeDate = DateTime.Now;
+                        }
+                    }
+                    else 
+                    {
+                        inPatient.Room_ID = Convert.ToInt32(RoomID);
+                        inPatient.Room_Type = RoomType;
+                        inPatient.Ward_ID = null;
+                        inPatient.Bed_No = null;
+                        inPatient.Issuance_Of = ReferTo;
+                        inPatient.isReferred = true;
+
+                        var newRoomAlloc = new Room_Allocation
+                        {
+                            In_Patient_ID = inPatID,
+                            Patient_ID = patID,
+                            Room_ID = Convert.ToInt32(RoomID),
+                            Room_Type = RoomType,
+                            Created_By = AppConfig.UserID,
+                            Created_Time = DateTime.Now,
+                            Book_ID = AppConfig.Book_ID,
+                            Company_ID = AppConfig.Company_ID,
+                            From_Date = DateTime.Now,
+                            IsDischarge = false
+                        };
+                        db.Room_Allocations.InsertOnSubmit(newRoomAlloc);
+
+                        var duplicateRoom = db.Room_Allocations
+                            .Where(ra => ra.Room_ID == Convert.ToInt32(RoomID)
+                                      && ra.In_Patient_ID != inPatID
+                                      && ra.IsDischarge == false)
+                            .FirstOrDefault();
+                        if (duplicateRoom != null)
+                        {
+                            duplicateRoom.IsDischarge = true;
+                            duplicateRoom.To_Date = DateTime.Now;
+                        }
+                    }
+
+                    db.SubmitChanges();
+                    return "Success";
+                }
+            }
+            catch (Exception ex)
+            {
+                return "Error: " + ex.Message;
+            }
         }
 
         public class LabTestClass

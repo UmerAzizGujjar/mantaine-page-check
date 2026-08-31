@@ -1671,7 +1671,7 @@ namespace PMS
 
         [WebMethod]
         public static string SaveRecord(int Patient_ID, string btnsave, string txtAdmission_Date, string ddlWard_No, string txtHealth_Complaints,/* DateTime txtExpected_Discharge_Date */ string BP_mm_Hg, string Temp_C, string BMI, string Weight, string Height, string BSR, string Respiration_Min, string txtRN_Special_Instruction, string Provisional_Diagnosis, string Reffer_To, string HistoryOfPeresentIllness, string HistoryOfFamily, string HistoryOfPastIllness, string SocioEconomicHistory, string Birth_History, string Reffer_No, string Drug_History, string Personal_History, string ObstetricHistory, string AllergiesHistory, string TreatmentHistory, string VaccinationHistory, string AnyOtherHistory, string ENT_Throat_IDL, string ENT_Throat_Nose, string ENT_Ear_Right, string Ent_Ear_Left, bool ENT_Rinnes_Right_PosNeg, bool ENT_Rinnes_Lft_PosNeg, bool ENT_Rinnes_Right_FalseNeg, bool ENT_Rinnes_Lft_FalseNeg, bool ENT_Webber_Central, bool ENT_Webber_Lateralized, bool ENT_Investigation_PTA, bool ENT_Investigation_Tympanometry, bool ENT_Rinnes_Right_Neg, bool ENT_Rinnes_Lft_Neg, bool ENT_Rinnes_Right_FNeg, bool ENT_Rinnes_Lft_FNeg, string txtInformant, string txtSourceOfReferral, bool chkNeckHolding, bool chkWalking, bool chkTalking, bool chkOthers, string txtMenarche, string txtMenstrual, string txtAttachmentSeparationfromParents, string txtHealth, bool chkNailBiting, bool chkTemperTantrums, bool chkBedWetting, string txtAcademics, string txtPeerRelationship, string txtBehaviour, string txtOccupationalHistory, string txtMaritalRelationshipSexualHistory, string txtSubstanceUse, string txtForensicUse, string txtRelationship, string txtLeisureActivities, string txtAttitudetoSelfandStandards, string txtPrevallingMood, string txtReactionPattrentoStress, string txtReligiousPracticesAttitute, string txtFather, string txtMother, string txtSiblings, string txtHomeAtmosphererelationshipsocialclass, string txtFamilialIllness, string txtActualandapparentage, string txtRace, string txtTattoosbodypiercingandscars, string txtBodyHabitus, string txttxtDress, string txtHygiene, string txtPsychomotorActivity, string txtInvoluntarymovements, string txtDystoniaEPS, string txtTardivedyskinesia, string txtTics, string txtTremors, string txtAttentivenesstointerview, string txtEyeContact, string txtLevelofConsciousness, string txtRate, string txtRhythm, string txtVolume, string txtTone, string txtModulationvar, string txtDepressed, string txtElated, string txtIrritable, string txtLabile, string txtIncongruent, string txtbluntingflatteningapathy, string txtThinkingPremeditation, string txtPlans,
-             string txtActions, string txtPreservative, string txtLoosAssociation, string txtTangentiaility, string txtCircumstantiality, string txtFlightofIdeas, string txtThoughtInsertion, string txtThoughtWithdrawal, string txtThoughBroadcasting, string txtThoughControl, string txtDellusion, string txtovervaluedideas, string txtDepresonalization, string txtDerealization, string txtthrougObsession, string txtthrougPhobies, string txtthrougHomocidialIdeas, string txtillusion, string txtHallucinationAuditoryVisualOlfactoryGustatoryTactile, string txtorientationtime, string txtplace, string txtperson, string txtAttentionConcentrationSerial7Test, string txtOrDaysOfWeekReverseOrder, string txtImmediatememory, string txtshorttermrecentevents, string txtadressrecallafter2minutes, string txtlongtermremoteevents, string txtadressrecallafter5minues, string txtgeneralknowledgequestion, string txtsimplearthemeticcalculation, string txtabstrationconcertethinking, string txtinsight, string DermaFace, string DermaNeck, string DermaTrunk, string DermaUpperLimb, string DermaLowerLimb, string DermaFlexures, string DermaGenitalias, string DermaHair, string DermaNail, string DermaMucousMembrane, string DermaEyes, string DermaEars, string DermaNose, string DermaLips, string HBM_Problem, string HBM_Caused, string HBM_Started, string HBM_Course, string HBM_Treatment, string HBM_Effects, string PE_Pluse, string PE_BP, string PE_Temperature, string PE_Weight, string PE_RespiratoryRate, string PE_Jaundice, string PE_Anemia, string PE_Cyanosis, string PE_Clubbing, string PE_JVP, string PE_LymphNodes, string PE_Edema, string PE_Respiratory, string PE_Cardiovascular, string PE_Gastro_Intestinal, string PE_Observation, string PE_Cranial_Nerves, string PE_Limb_Strength, string PE_Spasticity, string PE_Position, string PE_Vibration, string PE_Stereognosis, string PE_Pain, string PE_Biceps, string PE_Triceps, string PE_Brachioradialis, string PE_Quadriceps, string PE_Patellar, string PE_Achilles, string PE_Extensor, string PE_Frontal, string PE_Finger, string PE_Heel, string PE_Movements, string PE_Gait, bool PE_Neck_Rigidity, bool PE_Kerning_Sign, bool PE_Brudzinki_Sign, string For_Summary, string For_Diagnosis, string For_AxisI, string For_AxisII, string For_AxisIII, string For_AxisIV, string For_AxisV, string For_PredisposingFactors, string For_PrecipitatingFactors, string For_PrepetuatingFactors, string For_Investigation, string For_Medical, string For_Psychological, string For_Major_Issues, string For_Strengths, string For_Goals, string For_Strategies, string txtPeads_weight, string txtPeads_Length, string txtPeads_HC, string txtPeads_General_Appearance, bool chkPeads_Cyanosis, bool chkPeads_Jaundice, bool chkPeads_Lethargy, bool chkPeads_Rash, string txtPeads_Others, bool chkPeads_Caput, bool chkPeads_Cephalhematoma, bool rdbPeads_Anterioropen, bool rdbPeads_AnteriorClose, bool chkPeads_Dextrocardia, bool chkPeads_Bulging, bool chkPeads_Murmur, string txtPeads_HeartSound, bool chkPeads_Nasal, bool chkPeads_Recessions, string txtPeads_AddedSounds, bool rdbPeads_Flat, bool rdbPeads_Distended, bool rdbPeads_Scaphoid, bool chkPeads_Liver, bool chkPeads_Spleen, string txtPeads_GITOthers, bool chkPeads_Sucking, bool chkPeads_Rooting, bool chkPeads_Moro, string txtPeads_CNSOthers, bool chkPeads_FullTerm, bool chkPeads_PreTerm, DateTime txtPeads_DateOfDelivery, string txtPeads_TimeOfDelivery, bool rdbPeads_Booked, bool rdbPeads_UnBooked, bool chkPeads_DAIHandling, bool chkPeads_ANTURash, bool chkPeads_PIH, bool chkPeads_GDM, bool chkPeads_Vacinated, string txtPeads_ANTOthers, bool rdbPeads_SVD, bool rdbPeads_LSCS, bool rdbPeads_Emergency, bool rdbPeads_Elective, string txtPeads_PlaceOfDelivery, string txtPeads_IndicationForLSCS, string Peads_apgerScore1min, string Peads_apgerScore5min, bool chkPeads_Resuscitation, string txtPeads_NatalOthers, bool chkPeads_Moaning, bool chkPeads_RespDistress, bool chkPeads_PostNATALCyanosis, bool chkPeads_Fits, bool chkPeads_ReluctanceToFeed, string txtPeads_PostNatalOthers, string txtProcedure_Operation, string txtProcedure_Detail, string txtDignosis, string txtDischarge_On, string ddlDischarge_By, string txtNext_Visit, string txtAdvice, bool chkdischarge, string patienttype, string referto, string referward, string referbed_no, string referroomno, string referroomtype, string RateBeats, string ddlEmrgRhythm, string ddlEmrgVolume, string OthersRN, string O2_Saturation_Oxygen1, string O2_Saturation_Oxygen2, string Saturation, bool? HMFIntact, bool? CranialNerves, bool? SignsOfMeningism, bool? HeartSound, bool? Arrhythmias, bool? AnyOtherAddedSound, bool? AnyOtherFindings, bool? NVB_Right, bool? NVB_Left, bool? Crepitation_Right, bool? Crepitation_Left, bool? Wheeze, bool? Ranchi, bool? AnyOtherSound, bool? AbdomenSoft, bool? Tenderness, bool? Guarding, bool? BowelSound, bool? Distention, bool? FluidThrill, bool? ShiftingDullness, bool? EpigastriaDiscomfort, bool? RetrosternalBurning, bool? Jondus, bool? Pallor, bool? Dehydration, bool? GCSOrientation, bool? ConsciousOrientely, bool? Murmur, string TextBoxCns, string TextBoxCvs, string TextBoxResp, string TextBoxGit, string TextBoxGpe, string eye_response, string motor_response, string verbal_Response, string accumulated_response, string FurtherExplanation, string PulseRate, string BPDischarge, string WeightDischarge, string HeightDischarge, string BMIDischarge, string BSRDischarge, string Tempdisch, string volumedisc, string RespRateDesc, string Rhythmdischarge, string Oxygen2_desc, string saturationDis, string Oxygen1, string otherecdesc, string Special_Instruction_Desc, string FollowUpInstruction, string OperationalDetails, string Receiving_Date_Discharge, string IdentificationMarks, string DateOfDeath, string TimeOfDeath, string PlaceOfDeath, string CauseOfDeath, string IssuingOfficerName, string DeathCertifiedby1, string DeathCertifiedby2, string BodyHandedOverTo, string FamilyPersonName, string CNIC, string RelationWithDeceased, string CMO_Police, string ID, bool? SULR, bool? SULL, bool? SLLR, bool? SLLL, string PULR, string PULL, string PLLR, string PLLL, string Torso, string clinical_Notes, string Doctor_Notes, string Provisional_Diagnosis_Examination, string doc, bool? JVP, bool? Edema, bool? Cyanosis, bool Discharge_Request, string ddlDischarge_Type, string ProcedureTemplateContent, string ProcedureLevel_ID, string Medication_Doctor, string hdfReceivingNoteID, string hdfVitalDischargeID,string MR_No)
+             string txtActions, string txtPreservative, string txtLoosAssociation, string txtTangentiaility, string txtCircumstantiality, string txtFlightofIdeas, string txtThoughtInsertion, string txtThoughtWithdrawal, string txtThoughBroadcasting, string txtThoughControl, string txtDellusion, string txtovervaluedideas, string txtDepresonalization, string txtDerealization, string txtthrougObsession, string txtthrougPhobies, string txtthrougHomocidialIdeas, string txtillusion, string txtHallucinationAuditoryVisualOlfactoryGustatoryTactile, string txtorientationtime, string txtplace, string txtperson, string txtAttentionConcentrationSerial7Test, string txtOrDaysOfWeekReverseOrder, string txtImmediatememory, string txtshorttermrecentevents, string txtadressrecallafter2minutes, string txtlongtermremoteevents, string txtadressrecallafter5minues, string txtgeneralknowledgequestion, string txtsimplearthemeticcalculation, string txtabstrationconcertethinking, string txtinsight, string DermaFace, string DermaNeck, string DermaTrunk, string DermaUpperLimb, string DermaLowerLimb, string DermaFlexures, string DermaGenitalias, string DermaHair, string DermaNail, string DermaMucousMembrane, string DermaEyes, string DermaEars, string DermaNose, string DermaLips, string HBM_Problem, string HBM_Caused, string HBM_Started, string HBM_Course, string HBM_Treatment, string HBM_Effects, string PE_Pluse, string PE_BP, string PE_Temperature, string PE_Weight, string PE_RespiratoryRate, string PE_Jaundice, string PE_Anemia, string PE_Cyanosis, string PE_Clubbing, string PE_JVP, string PE_LymphNodes, string PE_Edema, string PE_Respiratory, string PE_Cardiovascular, string PE_Gastro_Intestinal, string PE_Observation, string PE_Cranial_Nerves, string PE_Limb_Strength, string PE_Spasticity, string PE_Position, string PE_Vibration, string PE_Stereognosis, string PE_Pain, string PE_Biceps, string PE_Triceps, string PE_Brachioradialis, string PE_Quadriceps, string PE_Patellar, string PE_Achilles, string PE_Extensor, string PE_Frontal, string PE_Finger, string PE_Heel, string PE_Movements, string PE_Gait, bool PE_Neck_Rigidity, bool PE_Kerning_Sign, bool PE_Brudzinki_Sign, string For_Summary, string For_Diagnosis, string For_AxisI, string For_AxisII, string For_AxisIII, string For_AxisIV, string For_AxisV, string For_PredisposingFactors, string For_PrecipitatingFactors, string For_PrepetuatingFactors, string For_Investigation, string For_Medical, string For_Psychological, string For_Major_Issues, string For_Strengths, string For_Goals, string For_Strategies, string txtPeads_weight, string txtPeads_Length, string txtPeads_HC, string txtPeads_General_Appearance, bool chkPeads_Cyanosis, bool chkPeads_Jaundice, bool chkPeads_Lethargy, bool chkPeads_Rash, string txtPeads_Others, bool chkPeads_Caput, bool chkPeads_Cephalhematoma, bool rdbPeads_Anterioropen, bool rdbPeads_AnteriorClose, bool chkPeads_Dextrocardia, bool chkPeads_Bulging, bool chkPeads_Murmur, string txtPeads_HeartSound, bool chkPeads_Nasal, bool chkPeads_Recessions, string txtPeads_AddedSounds, bool rdbPeads_Flat, bool rdbPeads_Distended, bool rdbPeads_Scaphoid, bool chkPeads_Liver, bool chkPeads_Spleen, string txtPeads_GITOthers, bool chkPeads_Sucking, bool chkPeads_Rooting, bool chkPeads_Moro, string txtPeads_CNSOthers, bool chkPeads_FullTerm, bool chkPeads_PreTerm, DateTime txtPeads_DateOfDelivery, string txtPeads_TimeOfDelivery, bool rdbPeads_Booked, bool rdbPeads_UnBooked, bool chkPeads_DAIHandling, bool chkPeads_ANTURash, bool chkPeads_PIH, bool chkPeads_GDM, bool chkPeads_Vacinated, string txtPeads_ANTOthers, bool rdbPeads_SVD, bool rdbPeads_LSCS, bool rdbPeads_Emergency, bool rdbPeads_Elective, string txtPeads_PlaceOfDelivery, string txtPeads_IndicationForLSCS, string Peads_apgerScore1min, string Peads_apgerScore5min, bool chkPeads_Resuscitation, string txtPeads_NatalOthers, bool chkPeads_Moaning, bool chkPeads_RespDistress, bool chkPeads_PostNATALCyanosis, bool chkPeads_Fits, bool chkPeads_ReluctanceToFeed, string txtPeads_PostNatalOthers, string txtProcedure_Operation, string txtProcedure_Detail, string txtDignosis, string txtDischarge_On, string ddlDischarge_By, string txtNext_Visit, string txtAdvice, bool chkdischarge, string patienttype, string referto, string referward, string referbed_no, string referroomno, string referroomtype, string RateBeats, string ddlEmrgRhythm, string ddlEmrgVolume, string OthersRN, string O2_Saturation_Oxygen1, string O2_Saturation_Oxygen2, string Saturation, bool? HMFIntact, bool? CranialNerves, bool? SignsOfMeningism, bool? HeartSound, bool? Arrhythmias, bool? AnyOtherAddedSound, bool? AnyOtherFindings, bool? NVB_Right, bool? NVB_Left, bool? Crepitation_Right, bool? Crepitation_Left, bool? Wheeze, bool? Ranchi, bool? AnyOtherSound, bool? AbdomenSoft, bool? Tenderness, bool? Guarding, bool? BowelSound, bool? Distention, bool? FluidThrill, bool? ShiftingDullness, bool? EpigastriaDiscomfort, bool? RetrosternalBurning, bool? Jondus, bool? Pallor, bool? Dehydration, bool? GCSOrientation, bool? ConsciousOrientely, bool? Murmur, string TextBoxCns, string TextBoxCvs, string TextBoxResp, string TextBoxGit, string TextBoxGpe, string eye_response, string motor_response, string verbal_Response, string accumulated_response, string FurtherExplanation, string PulseRate, string BPDischarge, string WeightDischarge, string HeightDischarge, string BMIDischarge, string BSRDischarge, string Tempdisch, string volumedisc, string RespRateDesc, string Rhythmdischarge, string Oxygen2_desc, string saturationDis, string Oxygen1, string otherecdesc, string Special_Instruction_Desc, string FollowUpInstruction, string OperationalDetails, string Receiving_Date_Discharge, string IdentificationMarks, string DateOfDeath, string TimeOfDeath, string PlaceOfDeath, string CauseOfDeath, string IssuingOfficerName, string DeathCertifiedby1, string DeathCertifiedby2, string BodyHandedOverTo, string FamilyPersonName, string CNIC, string RelationWithDeceased, string CMO_Police, string ID, bool? SULR, bool? SULL, bool? SLLR, bool? SLLL, string PULR, string PULL, string PLLR, string PLLL, string Torso, string clinical_Notes, string Doctor_Notes, string Provisional_Diagnosis_Examination, string doc, bool? JVP, bool? Edema, bool? Cyanosis, bool Discharge_Request, string ddlDischarge_Type, string ProcedureTemplateContent, string ProcedureLevel_ID, string Medication_Doctor, string hdfReceivingNoteID, string hdfVitalDischargeID, string MR_No)
         {
 
             using (DataBaseDataContext db = new DataBaseDataContext(DBClass.ConnectionString()))
@@ -2476,7 +2476,7 @@ namespace PMS
             public string Address;
             public string Entry_Date;
             public string IPD_ID;
-            public string Ward_Name;    
+            public string Ward_Name;
             public string Bed_No;
         }
 
@@ -2557,16 +2557,19 @@ namespace PMS
         {
             using (DataBaseDataContext db = new DataBaseDataContext())
             {
+                string term = (searchString ?? "").Trim();
+
                 var pharmacyItems = (from d in db.INV_Items
                                      where d.IsPharmacyItem == true
                                      && (d.Short_Item == false || d.Short_Item == null)
-                                     && d.Description.Contains(searchString)
+                                     && (d.Description.ToLower().Contains(term.ToLower())
+                                         || (d.Salt != null && d.Salt.ToLower().Contains(term.ToLower())))
                                      orderby d.Item_ID descending
                                      select new
                                      {
                                          d.Item_ID,
-                                         Description = d.Description
-                                     }).Take(20).ToList();
+                                         Description = (d.Salt != null ? (d.Salt + "-" + d.Description) : d.Description)
+                                     }).Take(50).ToList();
 
                 return (new JavaScriptSerializer().Serialize(pharmacyItems));
             }
@@ -4160,6 +4163,7 @@ namespace PMS
         }
         public class MedicineDetails
         {
+            public int ID { get; set; }
             public DateTime Medicine_Date { get; set; }
             public string Medicine_Name { get; set; }
             public string Recomended_Dosage { get; set; }
@@ -4505,76 +4509,100 @@ namespace PMS
                 JavaScriptSerializer js = new JavaScriptSerializer();
                 var MedicineDetail = js.Deserialize<Medicine>(MedicineDetails);
 
-                // Safety check in case the list comes back completely empty/null
+                // Safety check: ensure we have a list even if empty
                 MedicineDetail.MedicineList = MedicineDetail.MedicineList ?? new List<MedicineDetails>();
 
                 using (DataBaseDataContext db = new DataBaseDataContext(DBClass.ConnectionString()))
                 {
-                    // 1. Fetch the actual entity objects from DB (not just names) so we can delete them if needed
+                    // 1. Fetch existing discharge medicines for this patient
                     var existingMedicines = db.In_Patient_Medicines
                         .Where(p => p.Patient_ID == MedicineDetail.PatientID && p.Transaction_Type == "InPatient Discharge Medicine")
                         .ToList();
 
-                    var existingNames = existingMedicines.Select(p => p.Medicine_Name.Trim()).ToList();
-                    var incomingNames = MedicineDetail.MedicineList.Select(m => m.Medicine_Name.Trim()).ToList();
+                    // 2. Determine if the incoming list has any new items (ID == 0)
+                    bool hasNewItems = MedicineDetail.MedicineList.Any(m => m.ID == 0);
 
-                    System.Diagnostics.Debug.WriteLine("=== SaveDischargeMedicines Debug ===");
-
-                    // 2. DELETE LOGIC: Find medicines in DB that are missing from the incoming list
-                    var medicinesToDelete = existingMedicines
-                        .Where(p => !incomingNames.Contains(p.Medicine_Name.Trim()))
-                        .ToList();
-
-                    if (medicinesToDelete.Any())
+                    // 3. DELETE LOGIC – only perform deletion when:
+                    //    - the incoming list is NOT empty
+                    //    - there are NO new items (pure edit/delete mode)
+                    //    This prevents accidental deletion when adding new medicines or when the list is empty.
+                    if (MedicineDetail.MedicineList.Any() && !hasNewItems)
                     {
-                        System.Diagnostics.Debug.WriteLine($"DELETING {medicinesToDelete.Count} removed discharge medicines.");
-                        db.In_Patient_Medicines.DeleteAllOnSubmit(medicinesToDelete);
-                    }
+                        var incomingIds = MedicineDetail.MedicineList.Where(m => m.ID != 0).Select(m => m.ID).ToList();
+                        var toDelete = existingMedicines
+                            .Where(e => !incomingIds.Contains(e.In_Patient_Medicine_ID))
+                            .ToList();
 
-                    // 3. INSERT LOGIC
-                    foreach (MedicineDetails newMed in MedicineDetail.MedicineList)
-                    {
-                        string medicineName = newMed.Medicine_Name.Trim();
-
-                        if (!existingNames.Contains(medicineName))
+                        if (toDelete.Any())
                         {
-                            System.Diagnostics.Debug.WriteLine("INSERTING new discharge medicine: " + medicineName);
-
-                            // Safely parse booleans to avoid System.FormatException
-                            bool.TryParse(newMed.Regular, out bool isRegular);
-                            bool.TryParse(newMed.STAT, out bool isStat);
-                            bool.TryParse(newMed.PRN, out bool isPrn);
-                            bool.TryParse(newMed.Unlisted_Med, out bool isUnlistedMed);
-
-                            In_Patient_Medicine newMedicine = new In_Patient_Medicine()
-                            {
-                                Patient_ID = Convert.ToInt32(MedicineDetail.PatientID),
-                                Item_Code = newMed.ItemCode,
-                                Medicine_Name = medicineName,
-                                Transaction_Type = "InPatient Discharge Medicine",
-                                Medicine_Date = newMed.Medicine_Date,
-                                Oral = newMed.Oral,
-                                Injections = newMed.Injection,
-                                Dosage_From = newMed.Dosage_From,
-                                AttendingParamedical_Staff = newMed.AttendingParamedical_Staff,
-                                Frequency = newMed.Frequency,
-                                Dosage_Qty = newMed.Dosage_Qty,
-                                Other_Instruction = newMed.Other_Instruction,
-                                Username = newMed.User,
-                                Regular = isRegular,
-                                STAT = isStat,
-                                PRN = isPrn,
-                                Unlisted_Med = isUnlistedMed,
-                                chkDiccharge = true,
-                                is_rejected = false,
-                                Status = null
-                            };
-
-                            db.In_Patient_Medicines.InsertOnSubmit(newMedicine);
+                            db.In_Patient_Medicines.DeleteAllOnSubmit(toDelete);
+                            System.Diagnostics.Debug.WriteLine($"DELETED {toDelete.Count} discharge medicines.");
                         }
                     }
+                    else
+                    {
+                        System.Diagnostics.Debug.WriteLine("Skipping deletion (empty list or new items present).");
+                    }
 
-                    // 4. Save both deletes and inserts
+                    // 4. INSERT or UPDATE each incoming medicine
+                    foreach (MedicineDetails newMed in MedicineDetail.MedicineList)
+                    {
+                        // If the item has an ID > 0, try to update it
+                        if (newMed.ID > 0)
+                        {
+                            var existing = existingMedicines.FirstOrDefault(e => e.In_Patient_Medicine_ID == newMed.ID);
+                            if (existing != null)
+                            {
+                                // Update all relevant fields
+                                existing.Medicine_Name = newMed.Medicine_Name;
+                                existing.Dosage_Qty = newMed.Dosage_Qty;
+                                existing.Frequency = newMed.Frequency;
+                                existing.Injections = newMed.Injection;
+                                existing.Oral = newMed.Oral;
+                                existing.Dosage_From = newMed.Dosage_From;
+                                existing.Other_Instruction = newMed.Other_Instruction;
+                                existing.AttendingParamedical_Staff = newMed.AttendingParamedical_Staff;
+                                existing.Item_Code = newMed.ItemCode;
+                                // If you have Unlisted_Med as a string, convert accordingly
+                                existing.Unlisted_Med = (newMed.Unlisted_Med == "1" || newMed.Unlisted_Med == "true") ? true : false;
+                                // If you have other fields like Req_Qty, Rcv_Qty, update them here
+                                continue; // skip insertion
+                            }
+                        }
+
+                        // Otherwise, insert a new record (ID == 0 or not found)
+                        bool.TryParse(newMed.Regular, out bool isRegular);
+                        bool.TryParse(newMed.STAT, out bool isStat);
+                        bool.TryParse(newMed.PRN, out bool isPrn);
+                        bool.TryParse(newMed.Unlisted_Med, out bool isUnlistedMed);
+
+                        In_Patient_Medicine newMedicine = new In_Patient_Medicine()
+                        {
+                            Patient_ID = Convert.ToInt32(MedicineDetail.PatientID),
+                            Item_Code = newMed.ItemCode,
+                            Medicine_Name = newMed.Medicine_Name,
+                            Transaction_Type = "InPatient Discharge Medicine",
+                            Medicine_Date = newMed.Medicine_Date,
+                            Oral = newMed.Oral,
+                            Injections = newMed.Injection,
+                            Dosage_From = newMed.Dosage_From,
+                            AttendingParamedical_Staff = newMed.AttendingParamedical_Staff,
+                            Frequency = newMed.Frequency,
+                            Dosage_Qty = newMed.Dosage_Qty,
+                            Other_Instruction = newMed.Other_Instruction,
+                            Username = newMed.User,
+                            Regular = isRegular,
+                            STAT = isStat,
+                            PRN = isPrn,
+                            Unlisted_Med = isUnlistedMed,
+                            chkDiccharge = true,
+                            is_rejected = false,
+                            Status = null
+                        };
+
+                        db.In_Patient_Medicines.InsertOnSubmit(newMedicine);
+                    }
+
                     db.SubmitChanges();
                     System.Diagnostics.Debug.WriteLine("=== SaveDischargeMedicines Complete ===");
                 }
@@ -4609,15 +4637,24 @@ namespace PMS
 
                     System.Diagnostics.Debug.WriteLine("=== SaveMedicines Debug ===");
 
-                    // 2. DELETE LOGIC: Find medicines in DB that are missing from the incoming list
-                    var medicinesToDelete = existingMedicines
-                        .Where(p => !incomingNames.Contains(p.Medicine_Name.Trim()))
-                        .ToList();
-
-                    if (medicinesToDelete.Any())
+                    // 2. DELETE LOGIC: only delete rows when ALL payload rows have IDs (pure edit mode).
+                    // If any payload row has ID == 0 (new row added), skip DELETE to preserve existing rows.
+                    bool isAddingNew = MedicineDetail.MedicineList.Any(m => m.ID == 0);
+                    if (MedicineDetail.MedicineList.Any() && !isAddingNew)
                     {
-                        System.Diagnostics.Debug.WriteLine($"DELETING {medicinesToDelete.Count} removed medicines.");
-                        db.In_Patient_Medicines.DeleteAllOnSubmit(medicinesToDelete);
+                        var medicinesToDelete = existingMedicines
+                            .Where(p => !incomingNames.Contains(p.Medicine_Name.Trim()))
+                            .ToList();
+
+                        if (medicinesToDelete.Any())
+                        {
+                            System.Diagnostics.Debug.WriteLine($"DELETING {medicinesToDelete.Count} removed medicines.");
+                            db.In_Patient_Medicines.DeleteAllOnSubmit(medicinesToDelete);
+                        }
+                    }
+                    else
+                    {
+                        System.Diagnostics.Debug.WriteLine("ADD or empty-list mode: skipping DELETE to preserve existing rows.");
                     }
 
                     // 3. INSERT LOGIC
@@ -4625,7 +4662,7 @@ namespace PMS
                     {
                         string medicineName = newMed.Medicine_Name.Trim();
 
-                        if (!existingNames.Contains(medicineName))
+                        if (true)
                         {
                             System.Diagnostics.Debug.WriteLine("INSERTING new medicine: " + medicineName);
 
@@ -4818,14 +4855,14 @@ namespace PMS
                                          inPatmedicineList.Stop_Date_Time,
                                          inPatmedicineList.High_Risk_Drug,
                                          inPatmedicineList.Item_Code,
-inPatmedicineList.Req_Qty,
+                                         inPatmedicineList.Req_Qty,
                                          inPatmedicineList.Rcv_Qty,
                                          inPatmedicineList.Rtn_Qty,
                                          inPatmedicineList.Unlisted_Med,
 
-                                          DoctorName = (from d in db.HR_Employees where d.Emp_ID == Convert.ToInt32(inPatmedicineList.Doctor_ID) select d.Emp_Name).FirstOrDefault(),
+                                         DoctorName = (from d in db.HR_Employees where d.Emp_ID == Convert.ToInt32(inPatmedicineList.Doctor_ID) select d.Emp_Name).FirstOrDefault(),
 
-                                          AllowMedicationEdit = allowMedicationEdit
+                                         AllowMedicationEdit = allowMedicationEdit
 
 
 
@@ -4859,12 +4896,12 @@ inPatmedicineList.Req_Qty,
                                          inPatmedicineList.Dosage_From,
                                          inPatmedicineList.Dosage_Qty,
                                          inPatmedicineList.Other_Instruction,
-inPatmedicineList.STAT,
-                                          inPatmedicineList.Regular,
-                                          inPatmedicineList.PRN,
-                                          inPatmedicineList.Unlisted_Med,
-                                          DoctorName = (from d in db.HR_Employees where d.Emp_ID == Convert.ToInt32(inPatmedicineList.Doctor_ID) select d.Emp_Name).FirstOrDefault(),
-                                      }
+                                         inPatmedicineList.STAT,
+                                         inPatmedicineList.Regular,
+                                         inPatmedicineList.PRN,
+                                         inPatmedicineList.Unlisted_Med,
+                                         DoctorName = (from d in db.HR_Employees where d.Emp_ID == Convert.ToInt32(inPatmedicineList.Doctor_ID) select d.Emp_Name).FirstOrDefault(),
+                                     }
                     ).ToList();
                 return (new JavaScriptSerializer()).Serialize(inPatmedicine);
             }
@@ -4896,11 +4933,11 @@ inPatmedicineList.STAT,
                                          inPatmedicineList.Dosage_Qty,
                                          inPatmedicineList.Other_Instruction,
 
-inPatmedicineList.Item_Code,
-                                          inPatmedicineList.Unlisted_Med,
-                                          DoctorName = inPatmedicineList.Username,
-                                          //DoctorName = (from d in db.HR_Employees where d.Emp_ID == Convert.ToInt32(inPatmedicineList.Doctor_ID) select d.Emp_Name).FirstOrDefault(),
-                                      }
+                                         inPatmedicineList.Item_Code,
+                                         inPatmedicineList.Unlisted_Med,
+                                         DoctorName = inPatmedicineList.Username,
+                                         //DoctorName = (from d in db.HR_Employees where d.Emp_ID == Convert.ToInt32(inPatmedicineList.Doctor_ID) select d.Emp_Name).FirstOrDefault(),
+                                     }
                     ).ToList();
 
                 return (new JavaScriptSerializer()).Serialize(inPatmedicine);
@@ -7257,8 +7294,8 @@ inPatmedicineList.Item_Code,
                 using (var db = new DataBaseDataContext(DBClass.ConnectionString()))
                 {
                     var Medication = (from tbl in db.sys_Parms
-                                     where tbl.Name == "Medication Request Qty"
-                                     select tbl.Code)
+                                      where tbl.Name == "Medication Request Qty"
+                                      select tbl.Code)
                               .FirstOrDefault();
 
                     return Medication ?? "01";

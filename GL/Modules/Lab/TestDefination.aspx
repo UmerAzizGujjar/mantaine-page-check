@@ -891,6 +891,11 @@
 
                 GetUnits(data.Unit);
                 GetGroups(data.Group_Category);
+                PageMethods.GetMachineStandardName(id, function (res) {
+                    var ms = JSON.parse(res);
+                    $('#machine_name').val(ms.Machine_Name || '');
+                    $('#standard_name').val(ms.StandardName || '');
+                });
                 GETGenre(data.Genre);
                 GETDesignation(data.Test_Designation);
                 $("#ddlGroupHeader").val(data.Group_Header_L1);
@@ -1067,6 +1072,8 @@
             var waitingTimeValue = $(waiting_time).val();
             if (waitingTimeValue == '' || waitingTimeValue == null)
                 waitingTimeValue = "0";
+            var machine_name = $("#machine_name").val();
+            var standard_name = $("#standard_name").val();
 
             if (SelectedDepartmentID == "Radialogy") {
                 if ($(main_departments).val() == '' && $(test_rate).val() == '') {
@@ -1129,7 +1136,7 @@
                 test_extra_values.push(arr);
             });
 
-            var labTest = { 'ID': $(test_id).val(), 'Name': $(test_name).val(), 'MainDepartment': $(main_departments).val(), 'GroupDepartment': $(group_departments).val(), 'Group': $(groups).val(), 'Unit': $(units).val(), 'Note': $(test_note).val(), 'ValueType': $(value_type).val(), 'Rate': $(test_rate).val(), 'Active': $(test_active)[0].checked, 'cultural': $(Test_cultural)[0].checked, 'reportColums': $("#ddlrptColumns").val(), 'FixedValue': valueofTemplate, 'TestValues': test_values, 'IPDTestRates': IPD_Test_Rates, 'OPDTestRates': OPD_Test_Rates, 'SelectedDepartment': SelectedDepartment, 'out_source_lab_id': out_source_lab_id, 'reporthour': reporthour, 'reportDays': reportDays, 'GroupOrder': GroupOrder, 'Genre': $(genre).val(), 'Qty': $(qty).val(), 'Designation': $(Designation).val(), 'Group_Header_L1': Group_Header_L1, 'Altrasound_Level': Altrasound_Level, 'chk_value': chk_value, 'chk_template': chk_template, 'chk_listchooseresult': chk_listchooseresult, 'chk_resultTypeImage': chk_resultTypeImage, 'UltraValues': Ultra_value, 'chk_Levels': chk_Levels, 'chk_Payment': chk_Payment, 'Special_Test': Special_Test, 'WaitingTime': waitingTimeValue };
+            var labTest = { 'ID': $(test_id).val(), 'Name': $(test_name).val(), 'MainDepartment': $(main_departments).val(), 'GroupDepartment': $(group_departments).val(), 'Group': $(groups).val(), 'Unit': $(units).val(), 'Note': $(test_note).val(), 'ValueType': $(value_type).val(), 'Rate': $(test_rate).val(), 'Active': $(test_active)[0].checked, 'cultural': $(Test_cultural)[0].checked, 'reportColums': $("#ddlrptColumns").val(), 'FixedValue': valueofTemplate, 'TestValues': test_values, 'IPDTestRates': IPD_Test_Rates, 'OPDTestRates': OPD_Test_Rates, 'SelectedDepartment': SelectedDepartment, 'out_source_lab_id': out_source_lab_id, 'reporthour': reporthour, 'reportDays': reportDays, 'GroupOrder': GroupOrder, 'Genre': $(genre).val(), 'Qty': $(qty).val(), 'Designation': $(Designation).val(), 'Group_Header_L1': Group_Header_L1, 'Altrasound_Level': Altrasound_Level, 'chk_value': chk_value, 'chk_template': chk_template, 'chk_listchooseresult': chk_listchooseresult, 'chk_resultTypeImage': chk_resultTypeImage, 'UltraValues': Ultra_value, 'chk_Levels': chk_Levels, 'chk_Payment': chk_Payment, 'Special_Test': Special_Test, 'WaitingTime': waitingTimeValue, 'MachineName': machine_name, 'StandardName': standard_name };
             PageMethods.SaveTest(JSON.stringify(labTest), test_extra_values,
                 function (res) {
                     Swal.fire({
@@ -1608,28 +1615,38 @@
                 
                 <div class="row mb-3">
 
-                    <div class="col-md-3 col-lg-3">
+                    <div class="col-md-3 col-lg-2">
                         <label>Group Category</label>
                         <select id="groups" class="form-control">
                             <option value="">Select Group</option>
                         </select>
                     </div>
 
-                    <div class="col-md-3 col-lg-3">
+                    <div class="col-md-3 col-lg-2">
                         <label>Unit</label>
                         <select id="units" class="form-control">
                             <option value="">Select Unit</option>
                         </select>
                     </div>
 
-                    <div class="col-md-3">
+                    <div class="col-md-2">
                         <label>Out Source Labs</label>
                         <select id="ddlOutSourceLabs" class="form-control"></select>
                     </div>
 
-                    <div class="col-md-3 col-lg-3">
+                    <div class="col-md-3 col-lg-2">
                         <label>Rate</label>
                         <input type="text" name="test_rate" id="test_rate" class="form-control" value="" />
+                    </div>
+
+                    <div class="col-md-3 col-lg-2">
+                        <label>Machine Name</label>
+                        <input type="text" id="machine_name" class="form-control" />
+                    </div>
+
+                    <div class="col-md-3 col-lg-2">
+                        <label>Standard Name</label>
+                        <input type="text" id="standard_name" class="form-control" />
                     </div>
 
                 </div>
