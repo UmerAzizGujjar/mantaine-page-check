@@ -225,5 +225,148 @@ namespace PMS.Inventory
             }
         }
 
+        [WebMethod]
+        public static object GetMasterAndDetail(int invoiceId)
+        {
+            using (DataBaseDataContext db = new DataBaseDataContext())
+            {
+                var master = (from m in db.MaterialIssueRequests
+                              where m.MaterialRequest_Id == invoiceId
+                              select new
+                              {
+                                  m.Request_No,
+                                  m.MIRDate,
+                                  m.Priority,
+                                  Department = db.GetDataValueName("Department", m.Department),
+                                  m.Status,
+                                  m.Remarks,
+                                  m.Closing_Remarks,
+                                  CreatedBy = db.aspnet_Users.Where(x => x.UserId == m.Created_By).Select(x => x.UserName).FirstOrDefault(),
+                                  m.Approved_Time
+                              }).FirstOrDefault();
+
+                var detail = (from d in db.MaterialIssueRequest_Details
+                              join inv in db.INV_Items on d.Item_Id equals inv.Item_ID
+                              where d.MaterialRequest_Id == invoiceId
+                              select new
+                              {
+                                  inv.Item_Code,
+                                  inv.Description,
+                                  d.MIRQty,
+                                  IssuedQty = db.Store_Issue_Details.Where(s => s.MIR_Detail_Id == d.MaterialRequestDetail_Id).Sum(s => (decimal?)s.Issue_Qty) ?? 0,
+                                  Balance = d.MIRQty - (db.Store_Issue_Details.Where(s => s.MIR_Detail_Id == d.MaterialRequestDetail_Id).Sum(s => (decimal?)s.Issue_Qty) ?? 0)
+                              }).ToList();
+
+                return new
+                {
+                    Master = master,
+                    Detail = detail
+                };
+            }
+        }
+
+        [WebMethod]
+        public static List<object> GetAuditInfo(int invoiceId)
+        {
+            var result = new List<object>();
+
+            using (DataBaseDataContext db = new DataBaseDataContext())
+            {
+                // GIN
+                var ginList = (from sid in db.Store_Issue_Details
+                               join si in db.Store_Issues on sid.Store_Issue_Id equals si.Store_Issue_Id
+                               where sid.MIR_Id == (int)invoiceId
+                               select new
+                               {
+                                   T_Type = "GIN",
+                                   ID = si.Store_Issue_Id,
+                                   NUmber = si.Store_Issue_No,
+                                   Dates = si.Created_Time,
+                                   Status = si.Status
+                               }).Distinct().ToList<object>();
+                result.AddRange(ginList);
+
+                // PR
+                var prList = (from pr in db.Purchase_Requisitions
+                               where pr.MaterialRequest_Id == invoiceId
+                               select new
+                               {
+                                   T_Type = "PR",
+                                   ID = pr.PR_Id,
+                                   NUmber = pr.PR_Num,
+                                   Dates = pr.PR_Date,
+                                   Status = pr.Status
+                               }).Distinct().ToList<object>();
+                result.AddRange(prList);
+
+                // PO
+                var poList = (from prd in db.Purchase_Requisition_Details
+                               join poi in db.AP_Purchase_Order_Items on prd.PR_Detail_ID equals (long)poi.PRDetailId
+                               join po in db.AP_Purchase_Orders on poi.PO_ID equals po.PO_ID
+                               where prd.MaterialRequest_Id == invoiceId
+                               select new
+                               {
+                                   T_Type = "PO",
+                                   ID = po.PO_ID,
+                                   NUmber = po.PO_No,
+                                   Dates = po.PO_Date,
+                                   Status = po.Status
+                               }).Distinct().ToList<object>();
+                result.AddRange(poList);
+
+                // IGP
+                var igpList = (from poi in db.AP_Purchase_Order_Items
+                               join prd in db.Purchase_Requisition_Details on (long)poi.PRDetailId equals prd.PR_Detail_ID
+                               join igd in db.Igp_Details on poi.PO_Item_ID equals igd.PO_Item_ID
+                               join igm in db.Igp_masters on igd.Igp_Id equals igm.Igp_Id
+                               where prd.MaterialRequest_Id == invoiceId
+                               select new
+                               {
+                                   T_Type = "IGP",
+                                   ID = igm.Igp_Id,
+                                   NUmber = igm.Igp_num,
+                                   Dates = igm.Igp_date,
+                                   Status = igm.Status
+                               }).Distinct().ToList<object>();
+                result.AddRange(igpList);
+
+                // GRN
+                var grnList = (from igm in db.Igp_masters
+                               join grn in db.GRN_Masters on (int)igm.Igp_Id equals grn.IGP_Id
+                               join grnd in db.GRN_Details on grn.GRN_ID equals (int)grnd.GRNId
+                               join poi in db.AP_Purchase_Order_Items on grnd.PO_Item_Id equals poi.PO_Item_ID
+                               join prd in db.Purchase_Requisition_Details on (long)poi.PRDetailId equals prd.PR_Detail_ID
+                               where prd.MaterialRequest_Id == invoiceId
+                               select new
+                               {
+                                   T_Type = "GRN",
+                                   ID = grn.GRN_ID,
+                                   NUmber = grn.GRN_Num,
+                                   Dates = grn.GRN_Date,
+                                   Status = grn.Status
+                               }).Distinct().ToList<object>();
+                result.AddRange(grnList);
+
+                // Purchase Invoice
+                var piList = (from grnd in db.GRN_Details
+                               join pid in db.Purchase_Invoice_Details on grnd.GRN_detail_Id equals pid.GRN_detail_Id
+                               join pim in db.Purchase_Invoice_Masters on pid.PurchaseInvoiceId equals pim.PurchaseInvoiceId
+                               join poi in db.AP_Purchase_Order_Items on grnd.PO_Item_Id equals poi.PO_Item_ID
+                               join prd in db.Purchase_Requisition_Details on (long)poi.PRDetailId equals prd.PR_Detail_ID
+                               where prd.MaterialRequest_Id == invoiceId
+                               select new
+                               {
+                                   T_Type = "PUR Inv",
+                                   ID = pim.PurchaseInvoiceId,
+                                   NUmber = pim.InvoiceNum,
+                                   Dates = pim.CreatedDate,
+                                   Status = pim.Status
+                               }).Distinct().ToList<object>();
+                result.AddRange(piList);
+            }
+
+            return result;
+        }
+
     }
 }
