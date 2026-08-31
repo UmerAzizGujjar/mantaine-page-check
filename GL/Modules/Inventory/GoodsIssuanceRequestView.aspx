@@ -148,6 +148,7 @@
                     {
                         "data": null,
                         "render": function (data, type, full) {
+                            if (parseFloat(full.TotalIssuedQty) <= 0) return "";
                             return parseFloat(full.bln_Qty) > 0 ? "Partial" : "Complete";
                         },
                         "orderable": false

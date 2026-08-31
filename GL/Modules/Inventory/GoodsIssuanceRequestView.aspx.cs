@@ -115,6 +115,15 @@ namespace PMS.Inventory
         )
     )
 ).Sum() ?? 0,
+                                            TotalIssuedQty = (
+    from mid in _dbContext.MaterialIssueRequest_Details
+    where mid.MaterialRequest_Id == MIR.MaterialRequest_Id
+    select (decimal?)(
+        (from sid in _dbContext.Store_Issue_Details
+         where sid.MIR_Detail_Id == mid.MaterialRequestDetail_Id
+         select (decimal?)sid.Issue_Qty).Sum() ?? 0
+    )
+).Sum() ?? 0,
                                             ReViewRecommended = string.Join(",",
                                                                      (from sa in _dbContext.Sys_Approval_Logs
                                                                       join sasm in _dbContext.Sys_Approval_Stage_Masters
