@@ -270,8 +270,8 @@ namespace PMS.Inventory
                     stock.itemCode = item.Item_Code;
                     stock.batchNo = item.Batch_No;
                     stock.quantity = (int)item.Qty;
-                    //stock.Rate = item.Rate;
-                    //stock.Amount = item.Amount;
+                    stock.Rate = item.Rate ?? 0;
+                    stock.Amount = item.Amount ?? 0;
                     stock.description = (from itm in db.INV_Items where itm.Item_Code == stock.itemCode select itm.Description).FirstOrDefault();
                     stock.stockAvailable = GetStock(stock.itemCode, stock.batchNo, wareHouseFrom).stockAvailable;
                     stock.expiryDate = (!string.IsNullOrEmpty(item.Expiry_Date)) ? item.Expiry_Date.ToString() : "";
