@@ -208,9 +208,9 @@
                 calculatecurrentstock(Item_ID);
 
                 var warehouseVal = $('#ctl00_MainContent_ddl_Ware_House').val();
-                if (Item_ID && Item_ID !== "" && Item_ID !== "0" && warehouseVal && warehouseVal !== "0") {
-                    LoadPurchaseRate(Item_ID, warehouseVal);
-                }
+                // if (Item_ID && Item_ID !== "" && Item_ID !== "0" && warehouseVal && warehouseVal !== "0") {
+                //     LoadPurchaseRate(Item_ID, warehouseVal);
+                // }
             }
             $('.token-input-list').css('width', '368px');
         });

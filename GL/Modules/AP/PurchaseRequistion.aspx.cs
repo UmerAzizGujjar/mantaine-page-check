@@ -423,6 +423,7 @@ namespace PMS.AP
                                      RDate = Convert.ToDateTime(data.Required_Date),
                                      Remarks = data.Remarks,
                                      UOM = db.GetDataValueName("UOM", inv.Unit),
+                                     UOM_Qty = Convert.ToString(inv.UOM_Qty),
                                      //stock = db.GetItemBatchStock(data.Item_ID, string.Empty, "") ?? 0,
                                      stock = db.GetInvenrtoryItemUomTotalStock(data.Item_ID ?? 0, prWarehouse) ?? 0,
                                       MaterialRequestDetail_Id = Convert.ToInt32(data.MaterialRequestDetail_Id),
@@ -681,6 +682,7 @@ namespace PMS.AP
             public string itemId { get; set; }
             public string PR_Detail_ID { get; set; }
             public string UOM { get; set; }
+            public string UOM_Qty { get; set; }
             public string UnitPrice { get; set; }
             public string EstimateCost { get; set; }
             public int MaterialRequestDetail_Id { get; set; }

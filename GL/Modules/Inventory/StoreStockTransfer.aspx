@@ -476,7 +476,7 @@
                         $("#stocktable tbody").append("<tr id='" + data.d[i].itemCode + "^" + data.d[i].batchNo + "^" + data.d[i].quantity + "^" + data.d[i].Rate + "^" + data.d[i].Amount + "^" + data.d[i].expiryDate + "'>" +
                             "<td class='dn'><label class='srNo'>" + i + "</label></td>" +
                             "<td class=combat>" + data.d[i].itemCode + "</td><td class=combat>" + data.d[i].batchNo + "</td>" +
-                            "<td class=combat>" + data.d[i].description + "</td><td class='stkAvbl combat'>" + data.d[i].stockAvailable + "</td><td class=combat><span class='val'>" + data.d[i].quantity + "</span><input class ='editQnty dn' type='text' value='" + data.d[i].quantity + "' /></td><td class=combat><span class='val'>" + data.d[i].Rate + "</span><input class ='' type='text' value='" + data.d[i].Rate + "' /></td><td class=combat><span class='val'>" + data.d[i].Amount + "</span><input class ='' type='text' value='" + data.d[i].Amount + "' /></td>" +
+                            "<td class=combat>" + data.d[i].description + "</td><td class='stkAvbl combat'>" + data.d[i].stockAvailable + "</td><td class=combat><span class='val'>" + data.d[i].quantity + "</span><input class ='editQnty dn' type='text' value='" + data.d[i].quantity + "' /></td><td class=combat><span class='val'>" + data.d[i].Rate + "</span><input class ='dn' type='text' value='" + data.d[i].Rate + "' /></td><td class=combat><span class='val'>" + data.d[i].Amount + "</span><input class ='dn' type='text' value='" + data.d[i].Amount + "' /></td>" +
                             "<td><span class='editDelete'><a class='editQuantity' >Edit</a>  |  <a class='deleteStkItem' rel='" + data.d[0].stockTransferNo + "'>Delete</a></span><span class='dn' id='" + data.d[i].batchNo + "'><img src='/images/loading.gif' /></span></td></tr>"
                         );
                 });
@@ -731,7 +731,7 @@
                         if (wareHousefrom.indexOf(wareHouseTo) == -1) {
                             var html = "";
                             if ($("#btnUpdate").css("display") != "none") {
-                                html = "<td class=combat>" + itemCodeDescription + "</td><td class='stkAvbl combat'>" + stock + "</td><td class=combat><span class='val'>" + quantity + "</span><input class ='editQnty dn' type='text' value='" + quantity + "' /></td><td class=combat><span class='val'>" + Rate + "</span><input class ='' type='text' value='" + Rate + "' /></td><td class=combat><span class='val'>" + Amount + "</span><input class ='' type='text' value='" + Amount + "' /></td>" +
+                                html = "<td class=combat>" + itemCodeDescription + "</td><td class='stkAvbl combat'>" + stock + "</td><td class=combat><span class='val'>" + quantity + "</span><input class ='editQnty dn' type='text' value='" + quantity + "' /></td><td class=combat><span class='val'>" + Rate + "</span><input class ='dn' type='text' value='" + Rate + "' /></td><td class=combat><span class='val'>" + Amount + "</span><input class ='dn' type='text' value='" + Amount + "' /></td>" +
                                     "<td><span class='editDelete'><a class='editQuantity' >Edit</a>  |  <a class='deleteStkItem' rel='" + stkNo + "'>Delete</a></span><span class='dn' id='" + batcNo + "'><img src='/images/loading.gif' /></span></td>";
                             }
                             else {
@@ -848,7 +848,7 @@
                 var quantity = parseInt($(this).attr("id").split('^')[2]);
                 var Rate = parseFloat($(this).attr("id").split('^')[3]);
                 var Amount = parseFloat($(this).attr("id").split('^')[4]);
-                var expiry = $(this).attr("id").split('^')[4];
+                var expiry = $(this).attr("id").split('^')[5];
                 if (isUpdate)
                     quantity = (typeof ($(this).find('.val').text()) != 'undefined' && $(this).find('.val').text() != "") ? parseInt($(this).find('.val').text()) : -1;
                 var stock = /^[0-9]/.test($(this).find('.stkAvbl').text()) ? parseInt($(this).find('.stkAvbl').text()) : -1;
@@ -1108,10 +1108,14 @@
             var row = $(anchorTag).parents('tr')[0];
             var itemcode = $($(row).find('td')[1]).text();
             var qty = $($(row).find('td')[5]).text();
+            var rate = $($(row).find('td')[6]).find('.val').text();
+            var amount = $($(row).find('td')[7]).find('.val').text();
             $('#txtItemCode').tokenInput('clear');
             var tokenData = httpGet("../json.aspx?Table=INV_Items_STN&q=" + itemcode);
             $('#txtItemCode').tokenInput("add", { id: JSON.parse(tokenData)[0].id, name: JSON.parse(tokenData)[0].name });
             $('#Textquantity').val(qty);
+            $('#TextRate').val(rate);
+            $('#TextAmount').val(amount);
             $(row).remove();
         }
         function CalculateAmount() {
@@ -1230,7 +1234,7 @@
 
         <div class="col-lg-3 col-md-6 col-sm-12">
             <label for="Quantity">Quantity : </label>
-            <input class="form-control" type="text" id="Textquantity" onkeyup="CalculateAmount();" />
+            <input class="form-control" type="text" id="Textquantity" onkeyup="CalculateAmount();" onblur="CalculateAmount();" />
         </div>
         </div>
 
@@ -1243,12 +1247,11 @@
         </div>
         <div class="col-lg-3 col-md-8 col-sm-12">
             <label for="Stock">Rate :</label>
-             <input class="form-control" type="text" id="TextRate" readonly="readonly" />
-            
+             <input class="form-control" type="text" id="TextRate" onkeyup="CalculateAmount();" onblur="CalculateAmount();" />
         </div>
         <div class="col-lg-3 col-md-8 col-sm-12">
             <label for="Stock">Amount :</label>
-             <input class="form-control" type="text" id="TextAmount" readonly="readonly" />
+             <input class="form-control" type="text" id="TextAmount" />
             
         </div>
         <div class="col-lg-1 col-md-2 col-sm-4">           
