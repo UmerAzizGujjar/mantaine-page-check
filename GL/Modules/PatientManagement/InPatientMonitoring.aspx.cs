@@ -1083,9 +1083,11 @@ namespace PMS
 
             public int ActualPatientID { get; set; }
             public List<MedicineDetails> MedicineList { get; set; }
+            public List<int> DeletedMedicineIds { get; set; }
         }
         public class MedicineDetails
         {
+            public int ID { get; set; }
             public DateTime Medicine_Date { get; set; }
             public string Medicine_Name { get; set; }
             public string Recomended_Dosage { get; set; }
@@ -1100,6 +1102,7 @@ namespace PMS
             public string Rec_Qty;
             public string Rtn_Qty;
             public string Issue_Qty;
+            public string Issue_Rcvd_Qty;
 
             public string Regular;
 
@@ -1157,8 +1160,9 @@ namespace PMS
                                          inPatmedicineList.Rcv_Qty,
                                          inPatmedicineList.Req_Qty,
                                          inPatmedicineList.Rtn_Qty,
+                                         inPatmedicineList.Issue_Rcvd_Qty,
                                          inPatmedicineList.Username,
-inPatmedicineList.Max_PRN_Dose,
+ inPatmedicineList.Max_PRN_Dose,
                                          inPatmedicineList.Start_Date_Time,
                                          inPatmedicineList.Stop_Date_Time,
                                          inPatmedicineList.High_Risk_Drug,
@@ -1219,8 +1223,9 @@ inPatmedicineList.Max_PRN_Dose,
                                          inPatmedicineList.Rcv_Qty,
                                          inPatmedicineList.Req_Qty,
                                          inPatmedicineList.Rtn_Qty,
+                                         inPatmedicineList.Issue_Rcvd_Qty,
                                          inPatmedicineList.Username,
-inPatmedicineList.Max_PRN_Dose,
+ inPatmedicineList.Max_PRN_Dose,
                                          inPatmedicineList.Start_Date_Time,
                                          inPatmedicineList.Stop_Date_Time,
                                          inPatmedicineList.High_Risk_Drug,
@@ -1282,17 +1287,98 @@ inPatmedicineList.Max_PRN_Dose,
                         int insertedCount = 0;
                         int updatedCount = 0;
 
+                        // DELETE by ID: rows removed in UI are sent in DeletedMedicineIds.
+                        var deletedIds = (MedicineDetail.DeletedMedicineIds ?? new List<int>())
+                            .Distinct()
+                            .ToList();
+
+                        if (deletedIds.Any())
+                        {
+                            var toDelete = existingMedicines
+                                .Where(p => deletedIds.Contains(p.In_Patient_Medicine_ID))
+                                .ToList();
+
+                            if (toDelete.Any())
+                            {
+                                System.Diagnostics.Debug.WriteLine($"DELETING {toDelete.Count} medicines by ID.");
+                                db.In_Patient_Medicines.DeleteAllOnSubmit(toDelete);
+                            }
+                        }
+
                         foreach (MedicineDetails oIn_Patient_Medicine in MedicineDetail.MedicineList)
                         {
                             string medicineName = oIn_Patient_Medicine.Medicine_Name?.Trim() ?? "";
                             if (string.IsNullOrEmpty(medicineName)) continue;
                             bool.TryParse(oIn_Patient_Medicine.Unlisted_Med, out bool isUnlistedMed);
-
-                            System.Diagnostics.Debug.WriteLine("INSERTING new inpatient medicine: " + medicineName);
+                            bool.TryParse(oIn_Patient_Medicine.Regular, out bool isRegular);
+                            bool.TryParse(oIn_Patient_Medicine.STAT, out bool isStat);
+                            bool.TryParse(oIn_Patient_Medicine.PRN, out bool isPrn);
+                            decimal.TryParse(oIn_Patient_Medicine.Rtn_Qty, out decimal rtnQty);
+                            decimal.TryParse(oIn_Patient_Medicine.Rec_Qty, out decimal recQty);
+                            decimal.TryParse(oIn_Patient_Medicine.Issue_Qty, out decimal issueQty);
+                            bool hasIssueRcvd = decimal.TryParse(oIn_Patient_Medicine.Issue_Rcvd_Qty, out decimal issueRcvdQty);
 
                             string Item_Id;
                             int Item_Ids = (from inv in db.INV_Items where inv.Description.Trim() == medicineName && inv.Is_Active == true && (inv.isCancel == null || inv.isCancel == false) select inv.Item_ID).FirstOrDefault();
                             Item_Id = Convert.ToString(Item_Ids);
+
+                            // UPDATE existing row by ID (loaded rows carry their In_Patient_Medicine_ID)
+                            if (oIn_Patient_Medicine.ID > 0)
+                            {
+                                var existing = existingMedicines
+                                    .FirstOrDefault(p => p.In_Patient_Medicine_ID == oIn_Patient_Medicine.ID);
+
+                                if (existing != null)
+                                {
+                                    System.Diagnostics.Debug.WriteLine("UPDATING medicine by ID: " + medicineName);
+                                    existing.Item_Code = Item_Id;
+                                    existing.Medicine_Name = medicineName;
+                                    existing.Medicine_Date = oIn_Patient_Medicine.Medicine_Date;
+                                    existing.Oral = oIn_Patient_Medicine.Oral;
+                                    existing.Injections = oIn_Patient_Medicine.Injection;
+                                    existing.Dosage_From = oIn_Patient_Medicine.Dosage_From;
+                                    existing.AttendingParamedical_Staff = oIn_Patient_Medicine.AttendingParamedical_Staff;
+                                    existing.Frequency = oIn_Patient_Medicine.Frequency;
+                                    existing.Dosage_Qty = oIn_Patient_Medicine.Dosage_Qty;
+                                    existing.Rtn_Qty = rtnQty;
+                                    existing.Rcv_Qty = recQty;
+                                    existing.Req_Qty = issueQty;
+                                    existing.Issue_Rcvd_Qty = hasIssueRcvd ? issueRcvdQty : (decimal?)null;
+                                    existing.Other_Instruction = oIn_Patient_Medicine.Other_Instruction;
+                                    existing.Regular = isRegular;
+                                    existing.STAT = isStat;
+                                    existing.PRN = isPrn;
+                                    existing.Unlisted_Med = isUnlistedMed;
+                                    existing.High_Risk_Drug = oIn_Patient_Medicine.High_Risk;
+                                    existing.Max_PRN_Dose = oIn_Patient_Medicine.Max_PRN;
+
+                                    if (!string.IsNullOrEmpty(oIn_Patient_Medicine.Start_Date_Time) &&
+                                        oIn_Patient_Medicine.Start_Date_Time != "null" &&
+                                        oIn_Patient_Medicine.Start_Date_Time != "1/1/0001")
+                                    {
+                                        DateTime startDate;
+                                        if (DateTime.TryParse(oIn_Patient_Medicine.Start_Date_Time, out startDate) && startDate > DateTime.MinValue)
+                                        {
+                                            existing.Start_Date_Time = startDate;
+                                        }
+                                    }
+
+                                    if (!string.IsNullOrEmpty(oIn_Patient_Medicine.Stop_Date_Time) &&
+                                        oIn_Patient_Medicine.Stop_Date_Time != "null")
+                                    {
+                                        DateTime stopDateTime;
+                                        if (DateTime.TryParse(oIn_Patient_Medicine.Stop_Date_Time, out stopDateTime))
+                                        {
+                                            existing.Stop_Date_Time = stopDateTime;
+                                        }
+                                    }
+
+                                    updatedCount++;
+                                    continue;
+                                }
+                            }
+
+                            System.Diagnostics.Debug.WriteLine("INSERTING new inpatient medicine: " + medicineName);
 
                             In_Patient_Medicine oIn_Patient_Medicine1 = new In_Patient_Medicine
                             {
@@ -1307,13 +1393,14 @@ inPatmedicineList.Max_PRN_Dose,
                                 AttendingParamedical_Staff = oIn_Patient_Medicine.AttendingParamedical_Staff,
                                 Frequency = oIn_Patient_Medicine.Frequency,
                                 Dosage_Qty = oIn_Patient_Medicine.Dosage_Qty,
-                                Rtn_Qty = Convert.ToDecimal(oIn_Patient_Medicine.Rtn_Qty),
-                                Rcv_Qty = Convert.ToDecimal(oIn_Patient_Medicine.Rec_Qty),
-                                Req_Qty = Convert.ToDecimal(oIn_Patient_Medicine.Issue_Qty),
+                                Rtn_Qty = rtnQty,
+                                Rcv_Qty = recQty,
+                                Req_Qty = issueQty,
+                                Issue_Rcvd_Qty = hasIssueRcvd ? issueRcvdQty : (decimal?)null,
                                 Other_Instruction = oIn_Patient_Medicine.Other_Instruction,
-                                Regular = Convert.ToBoolean(oIn_Patient_Medicine.Regular),
-                                STAT = Convert.ToBoolean(oIn_Patient_Medicine.STAT),
-                                PRN = Convert.ToBoolean(oIn_Patient_Medicine.PRN),
+                                Regular = isRegular,
+                                STAT = isStat,
+                                PRN = isPrn,
                                 Unlisted_Med = isUnlistedMed,
                                 chkDiccharge = false,
                                 Username = oIn_Patient_Medicine.User ?? AppConfig.UserName,

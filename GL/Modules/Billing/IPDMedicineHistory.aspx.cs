@@ -57,6 +57,7 @@ namespace PMS.Modules.Billing
                                               ipd.Bed_No,
                                               ipm.Medicine_Name,
                                               ipm.Req_Qty,
+                                              ipm.Issue_Rcvd_Qty,
                                           };
 
                     var TotalRecords = MedicineHistory.Count();

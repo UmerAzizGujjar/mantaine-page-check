@@ -167,6 +167,20 @@
             }
         });
 
+        $(document).on('input change', 'input[name=issue_rcvd_qty]', function () {
+            var $row = $(this).closest('tr');
+            var recQty = parseFloat($row.find('input[name=RecQty]').val()) || 0;
+            var issueRcvdQty = parseFloat($(this).val()) || 0;
+            if (issueRcvdQty > recQty) {
+                Swal.fire({
+                    icon: 'warning',
+                    title: 'Invalid Issued Quantity',
+                    text: 'Issue Rcvd Qty cannot be greater than Received Qty (' + recQty + ').'
+                });
+                $(this).val(recQty);
+            }
+        });
+
         $(document).on('input change', 'input[name=RecQty]', function () {
             applyMedicationQtyValidation();
         });
@@ -8578,10 +8592,10 @@ if (localStorage.IsPRN == 1) {
                                                  <th>Special Instructions </th>
                                                 <th>Username</th>
                                                 <th>Request Qty </th>
-                                                <th>Received Qty </th>
+                                                <th>Issued Qty </th>
                                                 <th>Return Qty </th>
                                                 <th style="width: 100PX;">Edit</th>
-                                                <th>Issue Rcvd Qty</th>
+                                                <th>Rcvd Qty</th>
                                             </tr>
                                         </thead>
                                         <tbody>
@@ -8605,10 +8619,10 @@ if (localStorage.IsPRN == 1) {
                                                 <th>Attending Paramedical Staff</th>
                                                 <th>Username</th>
                                                 <th>Request Qty </th>
-                                                <th>Received Qty </th>
+                                                <th>Issued  Qty </th>
                                                 <th>Return Qty </th>
                                                 <th style="width: 100PX;">Edit</th>
-                                                <th>Issue Rcvd Qty</th>
+                                                <th>Rcvd Qty</th>
                                             </tr>
                                         </thead>
                                         <tbody>
