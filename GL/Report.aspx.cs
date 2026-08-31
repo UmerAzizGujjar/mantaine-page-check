@@ -528,7 +528,7 @@ namespace PMS
                         query = "ReportName=ProfitLoss&ReportTitle=Profit And Loss " + txtStart_Date.Text + " To " + txtEnd_Date.Text + "&StartDate=" + Convert.ToDateTime(txtStart_Date.Text).ToString("dd-MMM-yy") + "&EndDate=" + Convert.ToDateTime(txtEnd_Date.Text).ToString("dd-MMM-yy") + "&ExportPDF=" + chkExportPDF.Checked;
                         break;
                     case "PLCC":
-                        query = "ReportName=ProfitLossCostCenterWise&ReportTitle=Profit And Loss " + txtStart_Date.Text + " To " + txtEnd_Date.Text + "&StartDate=" + Convert.ToDateTime(txtStart_Date.Text).ToString("dd-MMM-yy") + "&EndDate=" + Convert.ToDateTime(txtEnd_Date.Text).ToString("dd-MMM-yy") + "&CostCenter=" + ddlCostCenter.SelectedValue + "&ExportPDF=" + chkExportPDF.Checked;
+                        query = "ReportName=ProfitLossCostCenterWise&ReportTitle=Profit And Loss " + txtStart_Date.Text + " To " + txtEnd_Date.Text + "&StartDate=" + Convert.ToDateTime(txtStart_Date.Text).ToString("dd-MMM-yy") + "&EndDate=" + Convert.ToDateTime(txtEnd_Date.Text).ToString("dd-MMM-yy") + "&CostCenter=" + ddlCostCenter.SelectedValue + "&CostCenterName=" + ddlCostCenter.SelectedItem.Text + "&ExportPDF=" + chkExportPDF.Checked;
                         break;
                     case "TB":
                         query = "ReportName=TrailBalanceAt&ReportTitle=Trial Balance from  " + txtStart_Date.Text + " To " + txtEnd_Date.Text + "&startDate=" + txtStart_Date.Text + "&endDate=" + txtEnd_Date.Text + "&Level1=" + cbLevel1.Checked + "&Level2=" + cbLevel2.Checked + "&Level3=" + cbLevel3.Checked + "&Level4=" + cbLevel4.Checked + "&ExportPDF=" + chkExportPDF.Checked;
