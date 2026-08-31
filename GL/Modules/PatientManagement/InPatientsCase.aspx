@@ -176,6 +176,8 @@
 
         $('#MedicationModel').on('hidden.bs.modal', function () {
             $('#lblUnlistedEdit').remove();
+            $('#txtPharmacyItem').prop('disabled', false).trigger('change.select2');
+            $('#Addmedicine').prop('disabled', false);
             applyMedicationQtyValidation();
         });
 
@@ -489,6 +491,24 @@
 
             $('#txtPharmacyItem').on('change', function () {
                 GetMedicineStock();
+            });
+
+            $('#txtPharmacyItem').on('select2:select', function () {
+                $('#Addmedicine').prop('disabled', true);
+                $('#txtMedicen').val('').hide();
+            });
+
+            $(document).on('input', '.select2-search__field', function () {
+                if ($(this).val() && $(this).val().trim() !== '') {
+                    $('#Addmedicine').prop('disabled', true);
+                    $('#txtMedicen').val('').hide();
+                }
+            });
+
+            $('#txtMedicen').on('focus input', function () {
+                if ($(this).val() !== '') {
+                    $('#txtPharmacyItem').prop('disabled', true).trigger('change.select2');
+                }
             });
 
             setTimeout(function () {
@@ -6652,6 +6672,10 @@ var dischargeRow = '<tr' + (unlistedFlag === 1 ? ' class="unlisted-row"' : '') +
                     }
 
                     applyMedicationQtyValidation();
+
+                    $('#txtPharmacyItem').prop('disabled', false).val(null).trigger('change').trigger('change.select2');
+                    $('#Addmedicine').prop('disabled', false);
+                    $('#txtMedicen').val('').hide();
                 }
                 else if ($(this).val() == 'Update') {
                      
@@ -7457,6 +7481,9 @@ if (localStorage.IsPRN == 1) {
         function NewMedicine() {
 
             $('#txtMedicen').show();
+            $('#txtPharmacyItem').val(null).trigger('change');
+            $('#txtPharmacyItem').prop('disabled', true).trigger('change.select2');
+            $('#Addmedicine').prop('disabled', false);
             var medicine = $('#txtMedicen').val();
             if (medicine != "") {
                 $('#txtMedicen').hide();

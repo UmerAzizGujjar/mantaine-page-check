@@ -4219,7 +4219,21 @@
 
 
                 $('#txtAmountReceived').val((Math.round(parseFloat(Cash_in_Hand)) + parseFloat(BankCash)).toFixed(0));
-                CountBalance()
+                CountBalance();
+
+                var totalPayable = parseFloat($('#txtNetPayable').val()) || 0;
+                var amountReceived = parseFloat($('#txtAmountReceived').val()) || 0;
+                var balance = parseFloat($('#txtBalances').val()) || 0;
+                if (amountReceived > totalPayable && balance < 0) {
+                    Swal.fire({
+                        icon: 'warning',
+                        title: 'Negative Balance',
+                        text: 'Balance is negative. Received amount must equal Net Payable.',
+                        confirmButtonText: 'OK'
+                    });
+                    $('#txtcashinhand').val(totalPayable.toFixed(0));
+                    SumTotalAmountrecived();
+                }
             }
             debugger;
             //function CountBalance() {

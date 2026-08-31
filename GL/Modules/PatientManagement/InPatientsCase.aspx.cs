@@ -4554,7 +4554,8 @@ namespace PMS
                             if (existing != null)
                             {
                                 // Update all relevant fields
-                                existing.Medicine_Name = newMed.Medicine_Name;
+                                string medicineNameUpd = (newMed.Medicine_Name ?? "").Trim();
+                                existing.Medicine_Name = medicineNameUpd;
                                 existing.Dosage_Qty = newMed.Dosage_Qty;
                                 existing.Frequency = newMed.Frequency;
                                 existing.Injections = newMed.Injection;
@@ -4562,7 +4563,10 @@ namespace PMS
                                 existing.Dosage_From = newMed.Dosage_From;
                                 existing.Other_Instruction = newMed.Other_Instruction;
                                 existing.AttendingParamedical_Staff = newMed.AttendingParamedical_Staff;
-                                existing.Item_Code = newMed.ItemCode;
+                                var inventoryItemUpd = db.INV_Items
+                                    .Where(p => p.Description.Trim() == medicineNameUpd)
+                                    .FirstOrDefault();
+                                existing.Item_Code = inventoryItemUpd != null ? inventoryItemUpd.Item_ID.ToString() : newMed.ItemCode;
                                 // If you have Unlisted_Med as a string, convert accordingly
                                 existing.Unlisted_Med = (newMed.Unlisted_Med == "1" || newMed.Unlisted_Med == "true") ? true : false;
                                 // If you have other fields like Req_Qty, Rcv_Qty, update them here
@@ -4576,11 +4580,21 @@ namespace PMS
                         bool.TryParse(newMed.PRN, out bool isPrn);
                         bool.TryParse(newMed.Unlisted_Med, out bool isUnlistedMed);
 
+                        string medicineName = (newMed.Medicine_Name ?? "").Trim();
+                        string itemCode = newMed.ItemCode;
+                        var inventoryItem = db.INV_Items
+                            .Where(p => p.Description.Trim() == medicineName)
+                            .FirstOrDefault();
+                        if (inventoryItem != null)
+                        {
+                            itemCode = inventoryItem.Item_ID.ToString();
+                        }
+
                         In_Patient_Medicine newMedicine = new In_Patient_Medicine()
                         {
                             Patient_ID = Convert.ToInt32(MedicineDetail.PatientID),
-                            Item_Code = newMed.ItemCode,
-                            Medicine_Name = newMed.Medicine_Name,
+                            Item_Code = itemCode,
+                            Medicine_Name = medicineName,
                             Transaction_Type = "InPatient Discharge Medicine",
                             Medicine_Date = newMed.Medicine_Date,
                             Oral = newMed.Oral,
@@ -4668,8 +4682,8 @@ namespace PMS
 
                             string itemCode = newMed.ItemCode;
                             var inventoryItem = db.INV_Items
-                                .Where(p => p.Description == newMed.Medicine_Name)
-                                .FirstOrDefault();
+                            .Where(p => p.Description.Trim() == newMed.Medicine_Name.Trim())
+                            .FirstOrDefault();
 
                             if (inventoryItem != null)
                             {

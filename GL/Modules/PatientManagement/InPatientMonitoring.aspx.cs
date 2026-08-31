@@ -1291,15 +1291,8 @@ inPatmedicineList.Max_PRN_Dose,
                             System.Diagnostics.Debug.WriteLine("INSERTING new inpatient medicine: " + medicineName);
 
                             string Item_Id;
-                            if (oIn_Patient_Medicine.ItemCode == "0")
-                            {
-                                int Item_Ids = (from inv in db.INV_Items where inv.Description == medicineName && inv.Is_Active == true && (inv.isCancel == null || inv.isCancel == false) select inv.Item_ID).FirstOrDefault();
-                                Item_Id = Convert.ToString(Item_Ids);
-                            }
-                            else
-                            {
-                                Item_Id = oIn_Patient_Medicine.ItemCode;
-                            }
+                            int Item_Ids = (from inv in db.INV_Items where inv.Description.Trim() == medicineName && inv.Is_Active == true && (inv.isCancel == null || inv.isCancel == false) select inv.Item_ID).FirstOrDefault();
+                            Item_Id = Convert.ToString(Item_Ids);
 
                             In_Patient_Medicine oIn_Patient_Medicine1 = new In_Patient_Medicine
                             {
@@ -1406,9 +1399,19 @@ inPatmedicineList.Max_PRN_Dose,
 
                             System.Diagnostics.Debug.WriteLine("INSERTING new monitoring medicine: " + medicineName);
 
+                            string itemCode = oIn_Patient_Medicine.ItemCode;
+                            var inventoryItem = db.INV_Items
+                                .Where(p => p.Description.Trim() == medicineName && p.Is_Active == true && (p.isCancel == null || p.isCancel == false))
+                                .FirstOrDefault();
+                            if (inventoryItem != null)
+                            {
+                                itemCode = inventoryItem.Item_ID.ToString();
+                            }
+
                             In_Patient_Medicine oIn_Patient_Medicine1 = new In_Patient_Medicine()
                             {
                                 Patient_ID = Convert.ToInt32(MedicineDetail.PatientID),
+                                Item_Code = itemCode,
                                 Medicine_Name = medicineName,
                                 Medicine_Date = oIn_Patient_Medicine.Medicine_Date,
                                 Oral = oIn_Patient_Medicine.Oral,
