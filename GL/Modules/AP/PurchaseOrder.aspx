@@ -2302,7 +2302,7 @@ function scheduleCalcTotal(delay) {
                 var Rate = parseFloat($row.find('input[name=txtRate]').val()) || 0;
                 var Qty = parseFloat($row.find('input[name=txtQty]').val()) || 0;
                 var amountExclusiveTaxes = Qty * Rate;
-                var UomQty = parseFloat($row.find('input[name=txtUOMQty]').val()) || 0;
+                var UomQty = parseFloat($row.find('input[name=txtUOMQty]').val()) || 1;
                 var PerPice = Rate / UomQty;
 
                 var rawPerVal = $row.find('input[name=txtDisPer]').val();
@@ -2443,7 +2443,7 @@ function scheduleCalcTotal(delay) {
                 var Rate = parseFloat($row.find('input[name=txtRate]').val()) || 0;
                 var Qty = parseFloat($row.find('input[name=txtQty]').val()) || 0;
                 var amountExclusiveTaxes = Qty * Rate;
-                var UomQty = parseFloat($row.find('input[name=txtUOMQty]').val()) || 0;
+                var UomQty = parseFloat($row.find('input[name=txtUOMQty]').val()) || 1;
                 var PerPice = Rate / UomQty;
 
                 if (amountExclusiveTaxes > 0) {

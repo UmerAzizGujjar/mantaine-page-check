@@ -75,7 +75,7 @@ namespace PMS
             return (new JavaScriptSerializer()).Serialize(dep);
         }
         [WebMethod]
-        public static bool saveData(int datavalueID, string datavalueName, string reportColums,string Main_Department, string reporthour, string[][] ipdRates, string[][] opdRates, string addOrEdit, string reportDay,bool FixedValue, bool Resultvalue, bool ListValue, bool ReqImage,string TestDeprtment,bool chkPayment,bool chkSpecial_Test)
+        public static bool saveData(int datavalueID, string datavalueName, string reportColums,string Main_Department, string reporthour, string[][] ipdRates, string[][] opdRates, string addOrEdit, string reportDay,bool FixedValue, bool Resultvalue, bool ListValue, bool ReqImage,string TestDeprtment,bool chkPayment,bool chkSpecial_Test, string rate)
         {
             bool status = false;
 
@@ -87,13 +87,13 @@ namespace PMS
                 {
                    
                        sql = "Delete Test_Defination_Detail_Rates where Test_ID = " + datavalueID + " and isnull(isGroupTest, 0) = 1;";
-                    sql += " Update DataValues set DataValue_Description = '" + datavalueName + "', Segment2 = '" + reportColums + "', Segment3 = '" + reporthour + "', Segment4 = '" + reportDay + "' , division='"+ Main_Department + "' ,Fixed_Value='" + FixedValue + "' ,Result_Value='"+ Resultvalue + "' ,List_Value='"+ ListValue + "',Required_Value='"+ ReqImage + "',Segment5='" + chkPayment + "' ,Group_Depart='" + TestDeprtment + "',Special_Test='" + chkSpecial_Test + "' where Datavalue_ID = " + datavalueID + "";
+                    sql += " Update DataValues set DataValue_Description = '" + datavalueName + "', Segment1 = '" + rate + "', Segment2 = '" + reportColums + "', Segment3 = '" + reporthour + "', Segment4 = '" + reportDay + "' , division='"+ Main_Department + "' ,Fixed_Value='" + FixedValue + "' ,Result_Value='"+ Resultvalue + "' ,List_Value='"+ ListValue + "',Required_Value='"+ ReqImage + "',Segment5='" + chkPayment + "' ,Group_Depart='" + TestDeprtment + "',Special_Test='" + chkSpecial_Test + "' where Datavalue_ID = " + datavalueID + "";
                     execute = DBClass.executeNonQueryWithoutBegin(sql);
                 }
                 else
                 {
                     string dvName = Convert.ToInt32(DBClass.getField("select max(convert(bigint,Datavalue_Name)) + 1 from DataValues where ValueSet_ID = 70 ")).ToString("000");
-                    sql = "insert into DataValues (ValueSet_ID, DataValue_Name, DataValue_Description, Segment2, Segment3, Segment4,division,Fixed_Value,Result_Value,List_Value,Required_Value,Segment5,Group_Depart,Special_Test) values (70, '" + dvName + "', '" + datavalueName + "','" + reportColums + "','" + reporthour + "','" + reportDay + "','"+ Main_Department + "','"+ FixedValue + "','"+ Resultvalue + "','"+ ListValue + "','"+ ReqImage + "',  '" + chkPayment + "'  ,'" + TestDeprtment + "','" + chkSpecial_Test + "')";
+                    sql = "insert into DataValues (ValueSet_ID, DataValue_Name, DataValue_Description, Segment1, Segment2, Segment3, Segment4,division,Fixed_Value,Result_Value,List_Value,Required_Value,Segment5,Group_Depart,Special_Test) values (70, '" + dvName + "', '" + datavalueName + "','" + rate + "','" + reportColums + "','" + reporthour + "','" + reportDay + "','"+ Main_Department + "','"+ FixedValue + "','"+ Resultvalue + "','"+ ListValue + "','"+ ReqImage + "',  '" + chkPayment + "'  ,'" + TestDeprtment + "','" + chkSpecial_Test + "')";
                     execute = DBClass.executeNonQueryWithoutBegin(sql);
                     datavalueID = (from m in db.DataValues where m.ValueSet_ID == 70 select m.DataValue_ID).Max();
                     if (datavalueID == null)

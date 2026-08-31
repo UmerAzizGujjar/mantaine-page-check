@@ -16,11 +16,11 @@
             var bool = '<%= Convert.ToBoolean(is_admin_Test_Rate)%>'
             if (bool == "True") {
                 $('#tblDetail').show();
-
+                $('#txtRate').prop('disabled', false);
             }
             else {
                 $('#tblDetail').hide();
-
+                $('#txtRate').prop('disabled', true);
             }
 
             debugger;
@@ -38,6 +38,7 @@
                 reportTime = urlParams.get('Segment3');
                 Reporting_Day = urlParams.get('Segment4');
                 Division = urlParams.get('Division');
+                rate = urlParams.get('Segment1');
                 Fixed_Value = urlParams.get('Fixed_Value');
                 Result_Value = urlParams.get('Result_Value');
                 List_Value = urlParams.get('List_Value');
@@ -46,6 +47,7 @@
                 Special_Test = urlParams.get('Special_Test');
                 Group_Depart = urlParams.get('Group_Depart');
                 $('#txtGroupTest').val(datavalueDescription);
+                $('#txtRate').val(rate);
                 $('#ddlrptColumns').val(reportColums);
                 $('#Rpt_Time').val(reportTime);
                 $('#Rpt_Day').val(Reporting_Day);
@@ -118,11 +120,12 @@
             var TestDeprtment = $("#ddlGroup_Department").val();
             var reporthour = $("#Rpt_Time").val();
             var reportDay = $("#Rpt_Day").val();
+            var rate = $('#txtRate').val();
             if ($(Rpt_Time).val() == '')
                 reporthour = 0;
             if ($(Rpt_Day).val() == '')
                 reporthour = 0;
-            PageMethods.saveData(datavalueID, datavalueDescription, reportColums, Main_Department, reporthour, ipdData, opdData, addOrEdit, reportDay, FixedValue, Resultvalue, ListValue, ReqImage, TestDeprtment, chkPayment, chkSpecial_Test, onSuccess, onFail);
+            PageMethods.saveData(datavalueID, datavalueDescription, reportColums, Main_Department, reporthour, ipdData, opdData, addOrEdit, reportDay, FixedValue, Resultvalue, ListValue, ReqImage, TestDeprtment, chkPayment, chkSpecial_Test, rate, onSuccess, onFail);
         }
         function GetMainDepartments(Division) {
             debugger;
@@ -320,6 +323,10 @@
                 <label>Group Department</label>
                 <select id="ddlGroup_Department">
                 </select>
+            </div>
+            <div class="col-lg-2 col-md-6 col-sm-12">
+                <label>Rate</label>
+                <input type="number" id="txtRate" class="form-control" disabled="disabled" />
             </div>
             </div>
 

@@ -35,6 +35,7 @@ namespace PMS
                                     {
                                         DataValue_ID =    D.DataValue_ID,
                                         DataValue_Description = D.DataValue_Description,
+                                        Segment1 = D.Segment1,
                                         Segment2 = D.Segment2,
                                         Segment3 = D.Segment3,
                                         Segment4 = D.Segment4,
