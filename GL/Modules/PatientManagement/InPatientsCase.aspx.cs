@@ -4160,6 +4160,7 @@ namespace PMS
         {
             public int PatientID { get; set; }
             public List<MedicineDetails> MedicineList { get; set; }
+            public List<int> DeletedMedicineIds { get; set; }
         }
         public class MedicineDetails
         {
@@ -4519,6 +4520,24 @@ namespace PMS
                         .Where(p => p.Patient_ID == MedicineDetail.PatientID && p.Transaction_Type == "InPatient Discharge Medicine")
                         .ToList();
 
+                    // 1b. DELETE LOGIC (by ID): rows removed in UI are sent in DeletedMedicineIds.
+                    var deletedIds = (MedicineDetail.DeletedMedicineIds ?? new List<int>())
+                        .Distinct()
+                        .ToList();
+
+                    if (deletedIds.Any())
+                    {
+                        var medicinesToDeleteById = existingMedicines
+                            .Where(p => deletedIds.Contains(p.In_Patient_Medicine_ID))
+                            .ToList();
+
+                        if (medicinesToDeleteById.Any())
+                        {
+                            System.Diagnostics.Debug.WriteLine($"DELETING {medicinesToDeleteById.Count} discharge medicines by ID.");
+                            db.In_Patient_Medicines.DeleteAllOnSubmit(medicinesToDeleteById);
+                        }
+                    }
+
                     // 2. Determine if the incoming list has any new items (ID == 0)
                     bool hasNewItems = MedicineDetail.MedicineList.Any(m => m.ID == 0);
 
@@ -4647,6 +4666,24 @@ namespace PMS
                         .ToList();
 
                     var existingNames = existingMedicines.Select(p => p.Medicine_Name.Trim()).ToList();
+
+                    // 1b. DELETE LOGIC (by ID): rows removed in UI are sent in DeletedMedicineIds.
+                    var deletedIds = (MedicineDetail.DeletedMedicineIds ?? new List<int>())
+                        .Distinct()
+                        .ToList();
+
+                    if (deletedIds.Any())
+                    {
+                        var medicinesToDeleteById = existingMedicines
+                            .Where(p => deletedIds.Contains(p.In_Patient_Medicine_ID))
+                            .ToList();
+
+                        if (medicinesToDeleteById.Any())
+                        {
+                            System.Diagnostics.Debug.WriteLine($"DELETING {medicinesToDeleteById.Count} medicines by ID.");
+                            db.In_Patient_Medicines.DeleteAllOnSubmit(medicinesToDeleteById);
+                        }
+                    }
                     var incomingNames = MedicineDetail.MedicineList.Select(m => m.Medicine_Name.Trim()).ToList();
 
                     System.Diagnostics.Debug.WriteLine("=== SaveMedicines Debug ===");

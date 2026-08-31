@@ -1,4 +1,4 @@
-﻿<%@ Page Title="" Language="C#" MasterPageFile="~/Site.Master" AutoEventWireup="true" CodeBehind="InPatientsCase.aspx.cs" Inherits="PMS.InPatientsCase" %>
+<%@ Page Title="" Language="C#" MasterPageFile="~/Site.Master" AutoEventWireup="true" CodeBehind="InPatientsCase.aspx.cs" Inherits="PMS.InPatientsCase" %>
 
 <asp:Content ID="Content1" ContentPlaceHolderID="HeadContent" runat="server">
     <link href="../../wwwroot/THEME_TIBBIT/CustomCSS/ipdcase.css" rel="stylesheet" />
@@ -111,6 +111,7 @@
             };
         })(jQuery);
         var btnVal = '';
+        var deletedMedicineIds = [];
         localStorage.IsDischarge = 0;
 
         $(document).on('keydown', '.select2-search__field', function (event) {
@@ -3511,6 +3512,19 @@
         function deleteMedicine(AnchorTag) {
 
             var row = $(AnchorTag).parents('tr')[0];
+            var recQty = parseFloat($(row).find('input[name=RecQty]').val()) || 0;
+            if (recQty > 0) {
+                Swal.fire({
+                    icon: 'warning',
+                    title: 'Cannot Delete',
+                    text: 'Medicine has Received Qty, cannot delete.'
+                });
+                return;
+            }
+            var medId = $(row).find('input[name=hdnMedId]').val();
+            if (medId && medId != '0') {
+                deletedMedicineIds.push(medId);
+            }
             row.remove();
         }
 
@@ -3561,7 +3575,7 @@
                             '<td> ' + otherIns + '</td>' +
                             '<td> ' + staff + ' </td>' +
                             '<td>' + docName + '</td>' +
-                            '<td>' + (value.Unlisted_Med == true ? '<span class="unlisted-tag">Unlisted</span>' : '<a href="#" onclick="editMedicine(this)"> Edit </a> | <a href="#" onclick="deleteMedicine(this)"> Delete </a>') + ' <input type="hidden" name="uurowid" value=' + uuid() + ' /><input type="hidden" name="hdnUnlistedMed" value="' + (value.Unlisted_Med == true ? '1' : '0') + '" /> </td>' +
+                            '<td>' + (value.Unlisted_Med == true ? '<span class="unlisted-tag">Unlisted</span>' : '<a href="#" onclick="editMedicine(this)"> Edit </a> | <a href="#" onclick="deleteMedicine(this)"> Delete </a>') + ' <input type="hidden" name="uurowid" value=' + uuid() + ' /><input type="hidden" name="hdnMedId" value="' + value.In_Patient_Medicine_ID + '" /><input type="hidden" name="hdnUnlistedMed" value="' + (value.Unlisted_Med == true ? '1' : '0') + '" /> </td>' +
                             '<td style="display:none;">' + itemCode + '</td>' +
                             '</tr>';
                     });
@@ -3646,16 +3660,16 @@
                                 var s2 = parseInt(value.Stop_Date_Time.substr(6, 10));
                                 var Stop_Date = moment.unix(s2).format('MM/DD/YYYY hh:mm:ss A');
                             }
-                            rowsRegular += '<tr' + (value.Unlisted_Med == true ? ' class="unlisted-row unlisted-saved"' : '') + '> <td> <input type="hidden" name="testDate" value="' + Start_Date + '">' + Start_Date + ' </td><td> ' + value.Medicine_Name + '</td><td> ' + value.Dosage_Qty + '</td><td> ' + value.Dosage_From + '</td> <td> ' + value.Frequency + ' </td><td> ' + value.Injections + '</td>   <td> ' + value.Oral + ' </td><td>' + Stop_Date + '</td> <td> ' + value.Other_Instruction + ' </td>' + '<td>' + value.AttendingParamedical_Staff + '</td><td>' + value.Username + '</td><td> <input type="text" class="form-control routeInput" value="' + Req_Qty + '"   name="IssueQty"  placeholder="Enter value" /></td><td> <input type="text" class="form-control routeInput" value="' + Rcv_Qty + '"   name="RecQty"  placeholder="Enter value" /></td><td> <input type="text" class="form-control routeInput" value="' + Rtn_Qty + '"   name="RtnQty"  placeholder="Enter value" /></td><td class="eddit">' + (value.Unlisted_Med == true ? '<span class="unlisted-tag">Unlisted</span>' : '<a href="#" onclick="editMedicine(this)"> Edit </a> | <a href="#" onclick="deleteMedicine(this)"> Delete </a>') + '<input type="hidden" name="uurowid" value=' + uuid() + ' /><input type="hidden" name="hdnUnlistedMed" value="' + (value.Unlisted_Med == true ? '1' : '0') + '" />  </td><td style="display:none;">' + value.Item_Code + '</td></tr>';
+                            rowsRegular += '<tr' + (value.Unlisted_Med == true ? ' class="unlisted-row unlisted-saved"' : '') + '> <td> <input type="hidden" name="testDate" value="' + Start_Date + '">' + Start_Date + ' </td><td> ' + value.Medicine_Name + '</td><td> ' + value.Dosage_Qty + '</td><td> ' + value.Dosage_From + '</td> <td> ' + value.Frequency + ' </td><td> ' + value.Injections + '</td>   <td> ' + value.Oral + ' </td><td>' + Stop_Date + '</td> <td> ' + value.Other_Instruction + ' </td>' + '<td>' + value.AttendingParamedical_Staff + '</td><td>' + value.Username + '</td><td> <input type="text" class="form-control routeInput" value="' + Req_Qty + '"   name="IssueQty"  placeholder="Enter value" /></td><td> <input type="text" class="form-control routeInput" value="' + Rcv_Qty + '"   name="RecQty"  placeholder="Enter value" /></td><td> <input type="text" class="form-control routeInput" value="' + Rtn_Qty + '"   name="RtnQty"  placeholder="Enter value" /></td><td class="eddit">' + (value.Unlisted_Med == true ? '<span class="unlisted-tag">Unlisted</span>' : '<a href="#" onclick="editMedicine(this)"> Edit </a> | <a href="#" onclick="deleteMedicine(this)"> Delete </a>') + '<input type="hidden" name="uurowid" value=' + uuid() + ' /><input type="hidden" name="hdnMedId" value="' + value.In_Patient_Medicine_ID + '" /><input type="hidden" name="hdnUnlistedMed" value="' + (value.Unlisted_Med == true ? '1' : '0') + '" />  </td><td style="display:none;">' + value.Item_Code + '</td></tr>';
 
                         }
                         else if (value.PRN == true) {
-                            rowsPRN += '<tr' + (value.Unlisted_Med == true ? ' class="unlisted-row unlisted-saved"' : '') + '> <td> <input type="hidden" name="testDate" value="' + Start_Date + '">' + Start_Date + ' </td><td> ' + value.Medicine_Name + '</td><td> ' + value.Dosage_Qty + '</td><td> ' + value.Dosage_From + '</td> <td> ' + value.Frequency + ' </td><td> ' + value.Injections + '</td>   <td> ' + value.Oral + ' </td><td style="background-color: red;"> ' + value.Max_PRN_Dose + ' </td><td> ' + value.Other_Instruction + '</td>' + ' <td>' + value.AttendingParamedical_Staff + '</td><td>' + value.Username + '</td><td> <input type="text" class="form-control routeInput" value="' + Req_Qty + '"   name="IssueQty"  placeholder="Enter value" /></td><td> <input type="text" class="form-control routeInput" value="' + Rcv_Qty + '"   name="RecQty"  placeholder="Enter value" /></td><td> <input type="text" class="form-control routeInput" value="' + Rtn_Qty + '"   name="RtnQty"  placeholder="Enter value" /></td><td class="eddit">' + (value.Unlisted_Med == true ? '<span class="unlisted-tag">Unlisted</span>' : '<a href="#" onclick="editMedicine(this)"> Edit </a> | <a href="#" onclick="deleteMedicine(this)"> Delete </a>') + '<input type="hidden" name="uurowid" value=' + uuid() + ' /><input type="hidden" name="hdnUnlistedMed" value="' + (value.Unlisted_Med == true ? '1' : '0') + '" />  </td> <td style="display:none;">' + value.Item_Code + '</td></tr>';
+                            rowsPRN += '<tr' + (value.Unlisted_Med == true ? ' class="unlisted-row unlisted-saved"' : '') + '> <td> <input type="hidden" name="testDate" value="' + Start_Date + '">' + Start_Date + ' </td><td> ' + value.Medicine_Name + '</td><td> ' + value.Dosage_Qty + '</td><td> ' + value.Dosage_From + '</td> <td> ' + value.Frequency + ' </td><td> ' + value.Injections + '</td>   <td> ' + value.Oral + ' </td><td style="background-color: red;"> ' + value.Max_PRN_Dose + ' </td><td> ' + value.Other_Instruction + '</td>' + ' <td>' + value.AttendingParamedical_Staff + '</td><td>' + value.Username + '</td><td> <input type="text" class="form-control routeInput" value="' + Req_Qty + '"   name="IssueQty"  placeholder="Enter value" /></td><td> <input type="text" class="form-control routeInput" value="' + Rcv_Qty + '"   name="RecQty"  placeholder="Enter value" /></td><td> <input type="text" class="form-control routeInput" value="' + Rtn_Qty + '"   name="RtnQty"  placeholder="Enter value" /></td><td class="eddit">' + (value.Unlisted_Med == true ? '<span class="unlisted-tag">Unlisted</span>' : '<a href="#" onclick="editMedicine(this)"> Edit </a> | <a href="#" onclick="deleteMedicine(this)"> Delete </a>') + '<input type="hidden" name="uurowid" value=' + uuid() + ' /><input type="hidden" name="hdnMedId" value="' + value.In_Patient_Medicine_ID + '" /><input type="hidden" name="hdnUnlistedMed" value="' + (value.Unlisted_Med == true ? '1' : '0') + '" />  </td> <td style="display:none;">' + value.Item_Code + '</td></tr>';
 
                         }
                         else if (value.STAT == true) {
 
-                            rowsStat += '<tr' + (value.Unlisted_Med == true ? ' class="unlisted-row unlisted-saved"' : '') + '> <td> <input type="hidden" name="testDate" value="' + Start_Date + '">' + Start_Date + ' </td><td> ' + value.Medicine_Name + '</td><td> ' + value.Dosage_Qty + '</td><td> ' + value.Dosage_From + '</td> <td> ' + value.Frequency + ' </td><td> ' + value.Injections + '</td>   <td> ' + value.Oral + ' </td><td> ' + value.Other_Instruction + '</td><td> ' + value.Other_Instruction + '</td>' + ' <td>' + value.AttendingParamedical_Staff + '</td>' + '<td>' + value.Username + '</td><td> <input type="text" class="form-control routeInput" value="' + Req_Qty + '"   name="IssueQty"  placeholder="Enter value" /></td><td> <input type="text" class="form-control routeInput" value="' + Rcv_Qty + '"   name="RecQty"  placeholder="Enter value" /></td><td> <input type="text" class="form-control routeInput" value="' + Rtn_Qty + '"   name="RtnQty"  placeholder="Enter value" /></td><td class="eddit">' + (value.Unlisted_Med == true ? '<span class="unlisted-tag">Unlisted</span>' : '<a href="#" onclick="editMedicine(this)"> Edit </a> | <a href="#" onclick="deleteMedicine(this)"> Delete </a>') + '<input type="hidden" name="uurowid" value=' + uuid() + ' /><input type="hidden" name="hdnUnlistedMed" value="' + (value.Unlisted_Med == true ? '1' : '0') + '" />  </td><td style="display:none;">' + value.Item_Code + '</td></tr>';
+                            rowsStat += '<tr' + (value.Unlisted_Med == true ? ' class="unlisted-row unlisted-saved"' : '') + '> <td> <input type="hidden" name="testDate" value="' + Start_Date + '">' + Start_Date + ' </td><td> ' + value.Medicine_Name + '</td><td> ' + value.Dosage_Qty + '</td><td> ' + value.Dosage_From + '</td> <td> ' + value.Frequency + ' </td><td> ' + value.Injections + '</td>   <td> ' + value.Oral + ' </td><td> ' + value.Other_Instruction + '</td><td> ' + value.Other_Instruction + '</td>' + ' <td>' + value.AttendingParamedical_Staff + '</td>' + '<td>' + value.Username + '</td><td> <input type="text" class="form-control routeInput" value="' + Req_Qty + '"   name="IssueQty"  placeholder="Enter value" /></td><td> <input type="text" class="form-control routeInput" value="' + Rcv_Qty + '"   name="RecQty"  placeholder="Enter value" /></td><td> <input type="text" class="form-control routeInput" value="' + Rtn_Qty + '"   name="RtnQty"  placeholder="Enter value" /></td><td class="eddit">' + (value.Unlisted_Med == true ? '<span class="unlisted-tag">Unlisted</span>' : '<a href="#" onclick="editMedicine(this)"> Edit </a> | <a href="#" onclick="deleteMedicine(this)"> Delete </a>') + '<input type="hidden" name="uurowid" value=' + uuid() + ' /><input type="hidden" name="hdnMedId" value="' + value.In_Patient_Medicine_ID + '" /><input type="hidden" name="hdnUnlistedMed" value="' + (value.Unlisted_Med == true ? '1' : '0') + '" />  </td><td style="display:none;">' + value.Item_Code + '</td></tr>';
 
                         }
 
@@ -4125,7 +4139,7 @@
             });
 
             var InPatID = $('#<%= txtIn_Patient_ID.ClientID%>').val();
-            var MedicineDetails = { PatientID: InPatID == '(New)' ? 0 : InPatID, MedicineList: MedicinesList }
+            var MedicineDetails = { PatientID: InPatID == '(New)' ? 0 : InPatID, MedicineList: MedicinesList, DeletedMedicineIds: deletedMedicineIds }
 
             PageMethods.SaveDischargeMedicines(JSON.stringify(MedicineDetails), function (response) {
                 Dtable.find('tbody tr').removeAttr('data-new');
@@ -4333,11 +4347,12 @@
             });
              
             var InPatID = $('#<%= txtIn_Patient_ID.ClientID%>').val();
-            var MedicineDetails = { PatientID: InPatID == '(New)' ? 0 : InPatID, MedicineList: MedicinesList }
+            var MedicineDetails = { PatientID: InPatID == '(New)' ? 0 : InPatID, MedicineList: MedicinesList, DeletedMedicineIds: deletedMedicineIds }
 
             PageMethods.SaveMedicines(JSON.stringify(MedicineDetails), function (response) {
                 table.find('tbody tr, tableStat tbody tr, tablePRN tbody tr').removeAttr('data-new');
                 SaveDischargeMedicines();
+                deletedMedicineIds = [];
             });
         }
 
