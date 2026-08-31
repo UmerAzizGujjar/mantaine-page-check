@@ -126,13 +126,12 @@
             var reportDay = $("#Rpt_Day").val();
             var machineName = $("#txtMachineName").val();
             var standardName = $("#txtStandardName").val();
-            var rate = $('#txtRate').val();
+            var TestRate = $('#txtRate').val();
             if ($(Rpt_Time).val() == '')
                 reporthour = 0;
             if ($(Rpt_Day).val() == '')
                 reporthour = 0;
-            PageMethods.saveData(datavalueID, datavalueDescription, reportColums, Main_Department, reporthour, ipdData, opdData, addOrEdit, reportDay, FixedValue, Resultvalue, ListValue, ReqImage, TestDeprtment, chkPayment, chkSpecial_Test, machineName, standardName, onSuccess, onFail);
-            PageMethods.saveData(datavalueID, datavalueDescription, reportColums, Main_Department, reporthour, ipdData, opdData, addOrEdit, reportDay, FixedValue, Resultvalue, ListValue, ReqImage, TestDeprtment, chkPayment, chkSpecial_Test, rate, onSuccess, onFail);
+            PageMethods.saveData(datavalueID, datavalueDescription, reportColums, Main_Department, reporthour, ipdData, opdData, addOrEdit, reportDay, FixedValue, Resultvalue, ListValue, ReqImage, TestDeprtment, chkPayment, chkSpecial_Test, machineName, standardName, TestRate,onSuccess, onFail);
         }
         function GetMainDepartments(Division) {
             debugger;
@@ -342,13 +341,14 @@
                 <label>Standard Name</label>
                 <input type="text" name="txtStandardName" id="txtStandardName" class="form-control" />
             </div>
-        </div>
-      
-            <div class="col-lg-2 col-md-6 col-sm-12">
+                        <div class="col-lg-2 col-md-6 col-sm-12">
                 <label>Rate</label>
                 <input type="number" id="txtRate" class="form-control" disabled="disabled" />
             </div>
-            </div>
+        </div>
+      
+
+            <%--</div>--%>
 
       
         <div class="row">
