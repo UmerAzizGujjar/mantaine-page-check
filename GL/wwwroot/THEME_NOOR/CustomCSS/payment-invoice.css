@@ -1,0 +1,36 @@
+/* ================================================================
+   payment-invoice.css  —  Payment Invoice form overrides
+   ================================================================ */
+
+/* Visible borders on inputs (override vendor.css cream border) */
+.pr-primary-settings input[type="text"],
+.pr-primary-settings input[type="file"],
+.pr-primary-settings select,
+.pr-primary-settings textarea {
+    border: 1px solid #d5d5d5 !important;
+    background: #fff !important;
+}
+
+.pr-primary-settings input[type="text"]:focus,
+.pr-primary-settings select:focus,
+.pr-primary-settings textarea:focus {
+    border-color: #438eb9 !important;
+}
+
+.pr-primary-settings input[readonly],
+.pr-primary-settings input[readonly="readonly"] {
+    background: #f5f5f5 !important;
+    color: #2c3e50 !important;
+}
+
+/* Equal height columns for Payment Details + Bank/Summary layout */
+.voucher-form-row {
+    align-items: stretch;
+}
+.voucher-form-row > [class*="col-"] {
+    display: flex;
+    flex-direction: column;
+}
+.voucher-form-row .pr-primary-settings {
+    flex: 1 1 auto;
+}

@@ -274,7 +274,7 @@
                         '<td id="td__child_txtcheqdateload' + rowIndex + '"><input style="background: #fff !important; border: 0px solid #fff !important;" type="text" readonly="readonly" id="txtcheqdate' + rowIndex + '" name="txtcheqdate" value="' + cheqdate + '" /></td>' +
                         '<td><input style="background: #fff !important; border: 0px solid #fff !important;" type="text" readonly="readonly" id="txt_debitamount' + rowIndex + '" name="txt_debitamount" value="' + debside + '" /></td>' +
                         '<td><input style="background: #fff !important; border: 0px solid #fff !important;" type="text" readonly="readonly" id="txt_creditamount' + rowIndex + '" name="txt_creditamount" value="' + credside + '" /></td>' +
-                        '<td><a onclick="editchildrow(this)" style="border-radius: 4px; background-color: #d4b7e7; color: black; padding: 4px 11px 4px 11px;   cursor:pointer!important;">Edit</a><a onclick="Delete(this)" style="border-radius: 4px;background-color: #e98383;color: white;padding: 4px 11px 4px 11px;cursor:pointer!important;">Delete</a></td>'
+                        '<td><a onclick="editchildrow(this)" class="editListBtn" style="border-radius: 4px; background-color: #007bff; color: white; padding: 5px 8px; cursor:pointer!important; margin-right:4px;"><i class="fa fa-pencil"></i></a><a onclick="Delete(this)" class="delListBtn" style="border-radius: 4px;background-color: #dc3545;color: white;padding: 5px 8px;cursor:pointer!important;"><i class="fa fa-trash"></i></a></td>'
                     '</tr>'
                     rowIndex++;
                 });
@@ -435,7 +435,7 @@
                 '<td id="td__child_txtcheqdate' + rowlength + '"><input style="background: #fff !important; border: 0px solid #fff !important;" type="text" readonly="readonly" id="txtcheqdate' + rowlength + '" name="txtcheqdate" value="' + txtdatechild + '" /></td>' +
                 '<td><input style="background: #fff !important; border: 0px solid #fff !important;" type="text" readonly="readonly" id="txt_debitamount' + rowlength + '" name="txt_debitamount" value="' + debitamount + '" /></td>' +
                 '<td><input style="background: #fff !important; border: 0px solid #fff !important;" type="text" readonly="readonly" id="txt_creditamount' + rowlength + '" name="txt_creditamount" value="' + creditamount + '" /></td>' +
-                '<td><a onclick="editchildrow(this)" style="border-radius: 4px; background-color: #d4b7e7; color: black; padding: 4px 11px 4px 11px;   cursor:pointer!important;">Edit</a><a onclick="Delete(this)" style="border-radius: 4px;background-color: #e98383;color: white;padding: 4px 11px 4px 11px;   cursor:pointer!important;">Delete</a></td>'
+                '<td><a onclick="editchildrow(this)" class="editListBtn" style="border-radius: 4px; background-color: #007bff; color: white; padding: 5px 8px; cursor:pointer!important; margin-right:4px;"><i class="fa fa-pencil"></i></a><a onclick="Delete(this)" class="delListBtn" style="border-radius: 4px;background-color: #dc3545;color: white;padding: 5px 8px;cursor:pointer!important;"><i class="fa fa-trash"></i></a></td>'
             '</tr>'
             debugger;
             if (serialnum > 0) {

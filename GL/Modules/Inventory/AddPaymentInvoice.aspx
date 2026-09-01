@@ -1,9 +1,13 @@
 ﻿<%@ Page Title="" Language="C#" MasterPageFile="~/Site.Master" AutoEventWireup="true" CodeBehind="AddPaymentInvoice.aspx.cs" Inherits="PMS.Inventory.AddPaymentInvoice" %>
 
 <asp:Content ID="Content1" ContentPlaceHolderID="HeadContent" runat="server">
-   
+    <link href="../../wwwroot/THEME_TIBBIT/CustomCSS/vendor.css" rel="stylesheet" />
+    <link href="../../wwwroot/THEME_TIBBIT/CustomCSS/PR.css" rel="stylesheet" />
+    <link href="../../wwwroot/THEME_TIBBIT/CustomCSS/payment-invoice.css" rel="stylesheet" />
+
         <script type="text/javascript">
             var InvType = '';
+            var bankAccountsCache = [];
             $(document).ready(function () {
                 UserRights();
                 $('#ddl_PaymentMode').select2();
@@ -85,6 +89,19 @@
                 $('#ctl00_MainContent_txtRemarks').focus();
             });
             var Inv_ID = '<%= Request.QueryString["Inv_ID"]%>'
+
+            $("input[name='rbtnAccType']").change(function () {
+                filterBankAccounts($(this).val());
+            });
+            $('#ddl_bankCash').on('change', function () {
+                var sel = $(this).find('option:selected');
+                var accType = sel.data('acc-type');
+                if (accType === 'cash') { $('#rbtnAccCash').prop('checked', true).trigger('change'); }
+                else if (accType === 'bank') { $('#rbtnAccBank').prop('checked', true).trigger('change'); }
+            });
+
+            syncPaymentBadges();
+            setInterval(syncPaymentBadges, 1000);
         });
         function Fillwtaxtype() {
             var options = '';
@@ -298,12 +315,34 @@
             var optionsBnk = '';
             PageMethods.GetBank(function (Tests) {
                 debugger
-                optionsBnk = '<option value="0">Please Select</option>';
-                $.each(JSON.parse(Tests), function (key, value) {
-                    optionsBnk += '<option value="' + value.Account_ID + '" >' + value.name + '</option>';
-                });
-                $('#ddl_bankCash').html(optionsBnk);
+                bankAccountsCache = JSON.parse(Tests) || [];
+                filterBankAccounts('all');
             });
+        }
+        function classifyAccount(name) {
+            if (!name) return 'bank';
+            var n = name.toLowerCase();
+            if (n.indexOf('cash') >= 0 || n.indexOf('petty') >= 0) return 'cash';
+            return 'bank';
+        }
+        function filterBankAccounts(type) {
+            var html = '<option value="0">Please Select</option>';
+            $.each(bankAccountsCache, function (key, value) {
+                var accType = classifyAccount(value.name);
+                if (type === 'all' || accType === type) {
+                    html += '<option value="' + value.Account_ID + '" data-acc-type="' + accType + '">' + value.name + '</option>';
+                }
+            });
+            $('#ddl_bankCash').html(html);
+        }
+        function syncPaymentBadges() {
+            $('#badgePaymentNo').text($('#txt_PaymentNo').val() || '---');
+            var d = $('#txt_paymentDate').val();
+            $('#badgePaymentDate').text(d || '---');
+            var modeText = $('#ddl_PaymentMode option:selected').text();
+            if (!modeText || modeText === 'Please Select') modeText = '---';
+            $('#badgePaymentMode').text(modeText);
+            $('#badgeStatus').text($('#txtStatusid').val() || '---');
         }
         function validateSave() {
             debugger;
@@ -563,7 +602,7 @@
                         '<td><input id="txtPaidAmount' + key + '" name="txtPaidAmount" value="' + value.TotalPaidAmount + '" type="text" style="width: 136px!important;border: none;"/></td>' +
                         '<td style="display:none"><input type="hidden" id="txtPurchaseInoviceId' + key + '" name="txtPurchaseInoviceId" value="' + value.PurchaseInvoiceId + '"/></td>' +
                         '<td style="display:none"><input type="hidden" id="txtPurchaseInoviceType' + key + '" name="txtPurchaseInoviceType" value="' + value.InvoiceType + '"/></td>' +
-                        '<td><a href="javascript:void(0)" onclick="ExcludeFromPayment(this)"><i class="glyphicon glyphicon-trash" style="font-size: 13px;margin-left: 16px; color: #f30a0a;position:relative;" i=""></i></a></td>' +
+                        '<td><a href="javascript:void(0)" onclick="ExcludeFromPayment(this)"><i class="fa fa-trash" style="font-size: 13px;margin-left: 16px; color: #f30a0a;position:relative;" i=""></i></a></td>' +
                         '</tr>'
                     length++;
                 });
@@ -637,7 +676,7 @@
                 '<td><input  readonly="readonly" style="width:133px!important;border: none" id="txtPaidAmount' + length + '" name="txtPaidAmount" value="' + balance + '" type="text" /></td>' +
                 '<td style="display:none"><input type="hidden" id="txtPurchaseInoviceId' + length + '" name="txtPurchaseInoviceId" value="' + PurchaseInvoiceId + '"/></td>' +
                 '<td style="display:none"><input type="hidden" id="txtPurchaseInoviceType' + length + '" name="txtPurchaseInoviceType" value="' + InvoiceType + '"/></td>' +
-                '<td><a href="javascript:void(0)" onclick="ExcludeFromPayment(this)"><i class="glyphicon glyphicon-trash" style="font-size: 13px;margin-left: 16px; color: #f30a0a;position:relative;" i=""></i></a></td>' +
+                '<td><a href="javascript:void(0)" onclick="ExcludeFromPayment(this)"><i class="fa fa-trash" style="font-size: 13px;margin-left: 16px; color: #f30a0a;position:relative;" i=""></i></a></td>' +
                 '</tr>'
             $("#tblItemDescription").append(rows);
             debugger
@@ -885,75 +924,126 @@
 </asp:Content>
 <asp:Content ID="Content2" ContentPlaceHolderID="MainContent" runat="server">
     <form id="item">
-        <div class="row">
-            <div class="col-lg-2 col-md-4 col-sm-6">
-                <label id="lb_PaymentNo" class="w115 fleft">Payment No</label>
-                <input id="txt_PaymentNo" class="form-control" type="text" name="txt_PaymentNo" readonly="readonly" />
+        <!-- Meta Bar -->
+        <div class="pr-meta-bar">
+            <div class="meta-left">
+                <span class="meta-title"><i class="fa fa-credit-card"></i> Payment Invoice</span>
             </div>
-            <div class="col-lg-2 col-md-4 col-sm-6">
-                <label id="lb_PaymentMode" class="w115 fleft">Payment Mode<span style="color: red;">*</span></label>
-                <select id="ddl_PaymentMode" class="form-control">
-                    <option value="0">Please Select</option>
-                </select>
-            </div>
-            <div class="col-lg-2 col-md-4 col-sm-6">
-                <label id="lb_paymentDate" class="w115">Payment Date</label>
-                <input id="txt_paymentDate" class="form-control" type="text" name="txt_paymentDate" />
-            </div>
-            <div class="col-lg-2 col-md-4 col-sm-6">
-                <label id="lb_documentNo" class="w115">Document No</label>
-                <input id="txt_documentNo" class="form-control" type="text" name="txt_documentNo" />
-            </div>
-            <div class="col-lg-2 col-md-4 col-sm-6">
-                <label id="lb_DocumentDate">Document Date</label>
-                <input id="txt_DocumentDate" class="form-control" type="text" name="" />
-            </div>
-            <div class="col-lg-2 col-md-3 col-sm-12">
-                <label id="lb_bankCash" class="w115 fleft">Bank Cash<span style="color: red;">*</span></label>
-                <select id="ddl_bankCash" class="form-control">
-                    <option>Please Select</option>
-                </select>
+            <div class="meta-right">
+                <div class="meta-badge"><span class="badge-label">No</span><span class="badge-value" id="badgePaymentNo">---</span></div>
+                <div class="meta-badge"><span class="badge-label">Date</span><span class="badge-value" id="badgePaymentDate">---</span></div>
+                <div class="meta-badge"><span class="badge-label">Mode</span><span class="badge-value" id="badgePaymentMode">---</span></div>
+                <div class="meta-badge"><span class="badge-label">Status</span><span class="badge-value" id="badgeStatus">---</span></div>
             </div>
         </div>
-        <div class="row">
-            <div class="col-lg-2 col-md-4 col-sm-6">
-                <label id="lb_venderName" class="w115 fleft">Vendor Name<span style="color: red;">*</span></label>
-                <select id="ddl_venderName" class="form-control">
-                    <option value="0">Please Select</option>
-                </select>
+
+        <div class="row voucher-form-row">
+            <!-- Left: Payment Details + Attachments -->
+            <div class="col-lg-8 col-md-12 pr-cards-column">
+                <div class="pr-primary-settings">
+                    <h5 class="pr-section-title" style="margin-top:0;"><i class="fa fa-file-text-o"></i> Payment Details</h5>
+                    <div class="row">
+                        <div class="col-lg-3 col-md-3 col-sm-6">
+                            <label>Payment No</label>
+                            <input id="txt_PaymentNo" class="form-control" type="text" name="txt_PaymentNo" readonly="readonly" />
+                        </div>
+                        <div class="col-lg-3 col-md-3 col-sm-6">
+                            <label>Payment Mode<span style="color: red;">*</span></label>
+                            <select id="ddl_PaymentMode" class="form-control">
+                                <option value="0">Please Select</option>
+                            </select>
+                        </div>
+                        <div class="col-lg-3 col-md-3 col-sm-6">
+                            <label>Payment Date</label>
+                            <input id="txt_paymentDate" class="form-control" type="text" name="txt_paymentDate" />
+                        </div>
+                        <div class="col-lg-3 col-md-3 col-sm-6">
+                            <label>Status</label>
+                            <input type="text" id="txtStatusid" readonly="readonly" class="form-control" />
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-lg-3 col-md-3 col-sm-6">
+                            <label>Document No</label>
+                            <input id="txt_documentNo" class="form-control" type="text" name="txt_documentNo" />
+                        </div>
+                        <div class="col-lg-3 col-md-3 col-sm-6">
+                            <label>Document Date</label>
+                            <input id="txt_DocumentDate" class="form-control" type="text" name="" />
+                        </div>
+                        <div class="col-lg-3 col-md-3 col-sm-6">
+                            <label>Vendor Name<span style="color: red;">*</span></label>
+                            <select id="ddl_venderName" class="form-control">
+                                <option value="0">Please Select</option>
+                            </select>
+                        </div>
+                        <div class="col-lg-3 col-md-3 col-sm-6">
+                            <label>&nbsp;</label>
+                            <button id="btn_ManInv" type="button" class="btn btn-primry" style="width:100%;"><i class="fa fa-plus"></i> Add Invoices</button>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="pr-primary-settings">
+                    <h5 class="pr-section-title" style="margin-top:0;"><i class="fa fa-paperclip"></i> Attachments & Remarks</h5>
+                    <div class="row">
+                        <div class="col-lg-4 col-md-4 col-sm-12">
+                            <label>Attachments</label>
+                            <input id="chosePaymentfile" type="file" name="chosePaymentfile" class="form-control" style="height:34px; padding:4px;" />
+                            <asp:HyperLink ID="HyperLink1" runat="server">Download</asp:HyperLink>
+                        </div>
+                        <div class="col-lg-8 col-md-8 col-sm-12">
+                            <label>Remarks</label>
+                            <textarea id="txt_remarks" class="form-control" name="txt_remarks" rows="1" cols="20" style="height:60px;"></textarea>
+                        </div>
+                    </div>
+                </div>
             </div>
-            <div class="col-lg-1 col-md-4 col-sm-6">
-                <input style="margin-top:25px" type="button" id="btn_ManInv" name="" value="Add" class="btn btn-primry"  />
+
+            <!-- Right: Account Filter + Summary -->
+            <div class="col-lg-4 col-md-12 pr-cards-column">
+                <div class="pr-primary-settings">
+                    <h5 class="pr-section-title" style="margin-top:0;"><i class="fa fa-bank"></i> Bank / Cash</h5>
+                    <div class="row">
+                        <div class="col-lg-12">
+                            <label>Account Type</label>
+                            <div class="source-toggle-pill" style="width: fit-content;">
+                                <label class="source-radio-option"><input type="radio" name="rbtnAccType" id="rbtnAccAll" value="all" checked /><span class="source-pill-label">All</span></label>
+                                <label class="source-radio-option"><input type="radio" name="rbtnAccType" id="rbtnAccCash" value="cash" /><span class="source-pill-label">Cash</span></label>
+                                <label class="source-radio-option"><input type="radio" name="rbtnAccType" id="rbtnAccBank" value="bank" /><span class="source-pill-label">Bank</span></label>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-lg-12">
+                            <label>Select Account<span style="color: red;">*</span></label>
+                            <select id="ddl_bankCash" class="form-control">
+                                <option>Please Select</option>
+                            </select>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="pr-primary-settings">
+                    <h5 class="pr-section-title" style="margin-top:0;"><i class="fa fa-calculator"></i> Summary</h5>
+                    <div class="row">
+                        <div class="col-lg-6 col-md-6 col-sm-6">
+                            <label>Adjusted</label>
+                            <input id="txt_invoiceAdjusted" class="form-control" type="text" name="txt_invoiceAdjusted" readonly="readonly" />
+                        </div>
+                        <div class="col-lg-6 col-md-6 col-sm-6">
+                            <label>Paid Amnt</label>
+                            <input id="txt_PaidAmount" type="text" name="txt_PaidAmount" readonly="readonly" class="form-control" />
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-lg-6 col-md-6 col-sm-6">
+                            <label>W Tax Amnt</label>
+                            <input id="txt_WTaxAmount" class="form-control" type="text" readonly="readonly" name="txt_WTaxAmount" />
+                        </div>
+                    </div>
+                </div>
             </div>
-            <div class="col-lg-1 col-md-4 col-sm-6">
-                <label id="lb_invoiceAdjusted"> Adjusted</label>
-                <input id="txt_invoiceAdjusted" class="form-control" type="text" name="txt_invoiceAdjusted" readonly="readonly" />
-            </div>
-            <div class="col-lg-2 col-md-4 col-sm-6">
-                <label id="lb_PaidAmount">Paid Amnt</label>
-                <input id="txt_PaidAmount" type="text" name="txt_PaidAmount" readonly="readonly" class="form-control" />
-            </div>
-            <div class="col-lg-2 col-md-4 col-sm-6">
-                <label id="lb_WTaxAmount" class="w115">W Tax Amnt</label>
-                <input id="txt_WTaxAmount" class="form-control" type="text" readonly="readonly" name="txt_WTaxAmount" />
-            </div>
-            <div class="col-lg-2 col-md-4 col-sm-6">
-                <label id="Label1">Status</label>
-                <input type="text" id="txtStatusid" readonly="readonly" class="form-control" />
-            </div>
-            <div class="col-lg-2 col-md-4 col-sm-6">
-                <label id="lb_Attachments" class="w115 fleft">Attachments</label>
-                <input id="chosePaymentfile" type="file" name="chosePaymentfile" />
-                <asp:HyperLink ID="HyperLink1" runat="server">Download</asp:HyperLink>
-            </div>
-        </div>
-        <div class="row">
-            <div class="col-lg-10 col-md-10 col-sm-12">
-                <label id="lb_remarks" >Remarks</label>
-                <textarea id="txt_remarks" class="form-control"  name="txt_remarks" rows="2" cols="12"> </textarea>
-            </div>
-          
-            
         </div>
     </form>
 
