@@ -237,6 +237,14 @@
             $("#ctl00_MainContent_txtStart_Date").datepicker({ dateFormat: "dd M yy" }).datepicker("setDate", new Date());
             $("#ctl00_MainContent_txtEnd_Date").datepicker({ dateFormat: "dd M yy" }).datepicker("setDate", new Date());
 
+            if (ReportTitle == "Stock_In_Hand_Detail") {
+                $("#ctl00_MainContent_txtStart_Date").datepicker("setDate", new Date(2020, 0, 1));
+                $("#ctl00_MainContent_txtEnd_Date").datepicker("setDate", new Date());
+            } else {
+                $("#ctl00_MainContent_txtStart_Date").datepicker("setDate", new Date());
+                $("#ctl00_MainContent_txtEnd_Date").datepicker("setDate", new Date());
+            }
+
             $('#ctl00_MainContent_txtSTime').ptTimeSelect({});
             $('#ctl00_MainContent_txtETime').ptTimeSelect({});
             $('#ctl00_MainContent_txtSTime').val('12:00 AM');
@@ -268,6 +276,8 @@
             $('#ctl00_MainContent_ddlStatus').select2();
             $('#ctl00_MainContent_ddlYear').select2();
             $('#ctl00_MainContent_ddlMonth').select2();
+
+
 
             $('#btnReset').click(function () {
 
@@ -324,6 +334,9 @@
                         var url = 'ReportViewer.aspx?ReportName=DoctorWisePatients&ReportTitle=Department Wise and Patient Wise Report from ' + $('#ctl00_MainContent_txtStart_Date').val() + ' to ' + $('#ctl00_MainContent_txtEnd_Date').val() + '&DoctorID=' + $('#ctl00_MainContent_ddlDoctor').val() + '&DepartmentID=' + $('#ctl00_MainContent_ddlDepartments').val() + '&PatientType=' + $('#ctl00_MainContent_ddlPatientType').val() + '&sDate=' + $('#ctl00_MainContent_txtStart_Date').val() + '&eDate=' + $('#ctl00_MainContent_txtEnd_Date').val() + '&STime=' + $('#ctl00_MainContent_txtSTime').val() + '&ETime=' + $('#ctl00_MainContent_txtETime').val() + '&ExportPDF=' + exporttopdf + '&Summary=' + summary + '&AllPatientsRecords=' + allPatientRecord + '&Operator=' + ((typeof ($("#ctl00_MainContent_ddloprators").val()) != 'undefined') ? $("#ctl00_MainContent_ddloprators").val() : "0");
                         window.open(url, '_blank');
                     }--%>
+
+
+
                     else if (rptTitle == "InPatients_Detail") {
                         var exporttopdf = document.getElementById('<%= chkExportPDF.ClientID %>').checked;
                         var allPatientRecord = document.getElementById('<%= chkAllPatientRecord.ClientID %>').checked;
