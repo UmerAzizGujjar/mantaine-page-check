@@ -181,6 +181,9 @@ namespace PMS
                         ddlVendor.AppendDataBoundItems = true;
                         ddlVendor.DataBind();
                         warehouseDiv.Visible = false;
+                        // ADDED THESE TWO LINES
+                        txtStart_Date.Text = "01 Jan 2020";
+                        txtEnd_Date.Text = DateTime.Now.ToString("dd MMM yyyy");
                         break;
 
                     case "Stock_Consumption_Details":

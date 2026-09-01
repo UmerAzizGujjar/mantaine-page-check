@@ -1,6 +1,8 @@
 ﻿<%@ Page Title="" Language="C#" MasterPageFile="~/Site.Master" AutoEventWireup="true" CodeBehind="Voucher.aspx.cs" Inherits="PMS.Voucher" %>
 
 <asp:Content ID="Content1" ContentPlaceHolderID="HeadContent" runat="server">
+    <link href="../../wwwroot/THEME_TIBBIT/CustomCSS/vendor.css" rel="stylesheet" />
+    <link href="../../wwwroot/THEME_TIBBIT/CustomCSS/PR.css" rel="stylesheet" />
     <link href="../../wwwroot/THEME_TIBBIT/CustomCSS/voucher.css" rel="stylesheet" />
 
     <script type="text/javascript">
@@ -121,6 +123,16 @@
                 loadtokenInputsByAccount_ID();
             });
 
+            function syncMetaBadges() {
+                $('#badgeType').text($('#txt_vcher_type').val() || '---');
+                $('#badgeNo').text($('#voucher_no').val() || '---');
+                var d = $('#txt_date').val();
+                if (d && d.indexOf('/') >= 0) { var p = d.split('/'); if (p.length === 3) d = p[1] + '/' + p[0] + '/' + p[2]; }
+                $('#badgeDate').text(d || '---');
+                $('#badgeStatus').text($('#txtstatus').val() || '---');
+            }
+            syncMetaBadges();
+            setInterval(syncMetaBadges, 1000);
         });
         function FillCostCenter() {
             debugger;
@@ -262,7 +274,7 @@
                         '<td id="td__child_txtcheqdateload' + rowIndex + '"><input style="background: #fff !important; border: 0px solid #fff !important;" type="text" readonly="readonly" id="txtcheqdate' + rowIndex + '" name="txtcheqdate" value="' + cheqdate + '" /></td>' +
                         '<td><input style="background: #fff !important; border: 0px solid #fff !important;" type="text" readonly="readonly" id="txt_debitamount' + rowIndex + '" name="txt_debitamount" value="' + debside + '" /></td>' +
                         '<td><input style="background: #fff !important; border: 0px solid #fff !important;" type="text" readonly="readonly" id="txt_creditamount' + rowIndex + '" name="txt_creditamount" value="' + credside + '" /></td>' +
-                        '<td><a onclick="editchildrow(this)" style="border-radius: 4px; background-color: #d4b7e7; color: black; padding: 4px 11px 4px 11px;   cursor:pointer!important;">Edit</a><a onclick="Delete(this)" style="border-radius: 4px;background-color: #e98383;color: white;padding: 4px 11px 4px 11px;cursor:pointer!important;">Delete</a></td>'
+                        '<td><a onclick="editchildrow(this)" class="editListBtn" style="border-radius: 4px; background-color: #007bff; color: white; padding: 5px 8px; cursor:pointer!important; margin-right:4px;"><i class="fa fa-pencil"></i></a><a onclick="Delete(this)" class="delListBtn" style="border-radius: 4px;background-color: #dc3545;color: white;padding: 5px 8px;cursor:pointer!important;"><i class="fa fa-trash"></i></a></td>'
                     '</tr>'
                     rowIndex++;
                 });
@@ -423,7 +435,7 @@
                 '<td id="td__child_txtcheqdate' + rowlength + '"><input style="background: #fff !important; border: 0px solid #fff !important;" type="text" readonly="readonly" id="txtcheqdate' + rowlength + '" name="txtcheqdate" value="' + txtdatechild + '" /></td>' +
                 '<td><input style="background: #fff !important; border: 0px solid #fff !important;" type="text" readonly="readonly" id="txt_debitamount' + rowlength + '" name="txt_debitamount" value="' + debitamount + '" /></td>' +
                 '<td><input style="background: #fff !important; border: 0px solid #fff !important;" type="text" readonly="readonly" id="txt_creditamount' + rowlength + '" name="txt_creditamount" value="' + creditamount + '" /></td>' +
-                '<td><a onclick="editchildrow(this)" style="border-radius: 4px; background-color: #d4b7e7; color: black; padding: 4px 11px 4px 11px;   cursor:pointer!important;">Edit</a><a onclick="Delete(this)" style="border-radius: 4px;background-color: #e98383;color: white;padding: 4px 11px 4px 11px;   cursor:pointer!important;">Delete</a></td>'
+                '<td><a onclick="editchildrow(this)" class="editListBtn" style="border-radius: 4px; background-color: #007bff; color: white; padding: 5px 8px; cursor:pointer!important; margin-right:4px;"><i class="fa fa-pencil"></i></a><a onclick="Delete(this)" class="delListBtn" style="border-radius: 4px;background-color: #dc3545;color: white;padding: 5px 8px;cursor:pointer!important;"><i class="fa fa-trash"></i></a></td>'
             '</tr>'
             debugger;
             if (serialnum > 0) {
@@ -705,148 +717,132 @@
 </asp:Content>
 <asp:Content ID="Content2" ContentPlaceHolderID="MainContent" runat="server">
 
-    <div class="row">
-        <!-- Left Column -->
-        <div class="col-lg-6">
-            <div class="row">
-                <div class="col-lg-4">
-                    <label>Type</label>
-                    <input class="form-control" value="BCR" type="text" id="txt_vcher_type" readonly="readonly" />
-                </div>
-                <div class="col-lg-4">
-                    <label>No</label>
-                    <input class="form-control" type="text" value="New" id="voucher_no" readonly="readonly" />
-                </div>
-                <div class="col-lg-4">
-                    <label>Date</label>
-                    <input class="form-control" type="text" id="txt_date" />
-                </div>
-               
-            </div>
-            <div class="row mt-3" style="margin-top:15px">
-                <div class="col-lg-4">
-                    <label>Ref Num</label>
-                    <input class="form-control" type="text" id="txt_ref_no" />
-                </div>
-                <div class="col-lg-4">
-                    <%--<label id="lblptn">Pay to Name</label>--%>
-                    <label id="lblptn" style="display: none;">Pay to Name</label>
-                    <label id="lblname" style="display: none;">Name</label>
-                    <label id="lbldocno" style="display: none;">Document #</label>
-                    <label id="lblreference" style="display: none;">Reference</label>
-                    <input class="form-control" type="text" id="txt_Ptn" />
-                </div>
-                <div class="col-lg-4">
-                    <label>Status</label>
-                    <input class="form-control" type="text" id="txtstatus" readonly="readonly" />
-                </div>
-            </div>
-            <div class="row mt-3" style="margin-top:16px">
-                 <div class="col-lg-4 col-md-4 col-sm-4">
-                       <label>Vendor Name</label>
-                      <select id="ddlVendor" class="form-control form-control-sm">
-                          <option value="0">Please Select</option>
-                      </select>
-                 </div>
-                <div class="col-lg-5 col-md-5 col-sm-5">
-                    <label>Description</label>
-                    <textarea class="form-control" id="txt_descrip_master" rows="1" cols="20"></textarea>
-                </div>
-                <div class="col-lg-3">
-                     <label id="lb_Attachments" class="w115 fleft">Attachments</label>
-                     <input id="ChoseVoucherfile" type="file" name="ChoseVoucherfile" />
-                     <asp:HyperLink ID="HyperLink1" runat="server">Download</asp:HyperLink>
-                 </div>
-            </div>
-            <div class="row">
-                <div class="col-lg-1 col-md-2 col-sm-2">
-                <%--<input type="checkbox" id="Cash" />--%> 
-                    <input type="radio" name="rbtn" id="chkAll" tabindex="11" value="rbtnAll" checked />
+    <!-- Meta Bar -->
+    <div class="pr-meta-bar">
+        <div class="meta-left">
+         
+        </div>
+        <div class="meta-right">
+            <div class="meta-badge"><span class="badge-label">Type</span><span class="badge-value" id="badgeType">---</span></div>
+            <div class="meta-badge"><span class="badge-label">No</span><span class="badge-value" id="badgeNo">---</span></div>
+            <div class="meta-badge"><span class="badge-label">Date</span><span class="badge-value" id="badgeDate">---</span></div>
+            <div class="meta-badge"><span class="badge-label">Status</span><span class="badge-value" id="badgeStatus">---</span></div>
+        </div>
+    </div>
 
-                </div>
-                     <div class="col-lg-2 col-md-4 col-sm-4">
-                <label>All</label>
+    <div class="row voucher-form-row">
+        <!-- Left: Voucher Details + Account Filter -->
+        <div class="col-lg-8 col-md-12 pr-cards-column">
+            <div class="pr-primary-settings">
+                <h5 class="pr-section-title" style="margin-top:0;"><i class="fa fa-file-text-o"></i> Voucher Details</h5>
+                <div class="row">
+                    <div class="col-lg-3 col-md-3 col-sm-6">
+                        <label>Type</label>
+                        <input class="form-control" value="BCR" type="text" id="txt_vcher_type" readonly="readonly" />
                     </div>
-                <div class="col-lg-1 col-md-2 col-sm-2">
-                <%--<input type="checkbox" id="Cash" />--%> 
-                    <input type="radio" name="rbtn" id="chkcash" tabindex="11" value="rbtncash"  />
+                    <div class="col-lg-3 col-md-3 col-sm-6">
+                        <label>No</label>
+                        <input class="form-control" type="text" value="New" id="voucher_no" readonly="readonly" />
+                    </div>
+                    <div class="col-lg-3 col-md-3 col-sm-6">
+                        <label>Date</label>
+                        <input class="form-control" type="text" id="txt_date" />
+                    </div>
+                    <div class="col-lg-3 col-md-3 col-sm-6">
+                        <label>Status</label>
+                        <input class="form-control" type="text" id="txtstatus" readonly="readonly" />
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-lg-4 col-md-4 col-sm-12">
+                        <label>Vendor Name</label>
+                        <select id="ddlVendor" class="form-control form-control-sm">
+                            <option value="0">Please Select</option>
+                        </select>
+                    </div>
+                    <div class="col-lg-4 col-md-4 col-sm-12">
+                        <label id="lblptn" style="display: none;">Pay to Name</label>
+                        <label id="lblname" style="display: none;">Name</label>
+                        <label id="lbldocno" style="display: none;">Document #</label>
+                        <label id="lblreference" style="display: none;">Reference</label>
 
-                </div>
-                     <div class="col-lg-2 col-md-4 col-sm-4">
-                <label>Cash</label>
+                        <input class="form-control" type="text" id="txt_ref_no" />
+                        <input class="form-control" type="text" id="txt_Ptn" style="display:none;" />
                     </div>
-                <div class="col-lg-1 col-md-2 col-sm-2">
-                <%--<input type="checkbox" id="Bank" />--%> 
-                     <input type="radio" name="rbtn" tabindex="12" id="chkBank" value="rbtnbank" />
+                    <div class="col-lg-4 col-md-4 col-sm-12">
+                        <label id="lb_Attachments" class="w115 fleft">Attachments</label>
+                        <input id="ChoseVoucherfile" type="file" name="ChoseVoucherfile" class="form-control" style="height:34px; padding:4px;" />
+                        <asp:HyperLink ID="HyperLink1" runat="server">Download</asp:HyperLink>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-lg-12">
+                        <label>Description</label>
+                        <textarea class="form-control" id="txt_descrip_master" rows="1" cols="20"></textarea>
+                    </div>
+                </div>
+            </div>
 
-                </div>
-                     <div class="col-lg-2 col-md-4 col-sm-4">
-                <label>Bank</label>
+            <div class="pr-primary-settings" style="max-width: 280px;">
+                <h5 class="pr-section-title" style="margin-top:0;"><i class="fa fa-filter"></i> Account Filter</h5>
+                <div class="row">
+                    <div class="col-lg-12">
+                        <div class="source-toggle-pill" style="width: fit-content;">
+                            <label class="source-radio-option"><input type="radio" name="rbtn" id="chkAll" tabindex="11" value="rbtnAll" checked /><span class="source-pill-label">All</span></label>
+                            <label class="source-radio-option"><input type="radio" name="rbtn" id="chkcash" tabindex="11" value="rbtncash" /><span class="source-pill-label">Cash</span></label>
+                            <label class="source-radio-option"><input type="radio" name="rbtn" tabindex="12" id="chkBank" value="rbtnbank" /><span class="source-pill-label">Bank</span></label>
+                        </div>
                     </div>
+                </div>
             </div>
         </div>
 
-        <!-- Right Column -->
-        <div class="col-lg-6">
-            <div class="row">
-                <!-- Currency Exchange Card -->
-                <div class="col-md-6">
-                    <div class="card">
-                        <div class="card-header" style="border-bottom-style: double;">
-                            <h4>Currency Exchange</h4>
-                        </div>
-                        <div class="card-body">
-                            <div class="row">
-                                <div class="col-lg-6 col-md-6 col-sm-6">
-                            <label>Currency</label>
-                            <select class="form-control" id="ddl_currency">
-                                <option>PKR</option>
-                                <option>USD</option>
-                                <option>AUD</option>
-                            </select>
-                            </div>
-                            <div class="col-lg-6 col-md-6 col-sm-6">
-                            <label class="mt-3">Exchange Rate</label>
-                            <input class="form-control" type="text" id="txt_exg_rate" value="1.00" readonly="readonly" />
-                        </div>
-                                </div>
-                        </div>
+        <!-- Right: Currency + Summary -->
+        <div class="col-lg-4 col-md-12 pr-cards-column">
+            <div class="pr-primary-settings">
+                <h5 class="pr-section-title" style="margin-top:0;"><i class="fa fa-exchange"></i> Currency Exchange</h5>
+                <div class="row">
+                    <div class="col-lg-7 col-md-7 col-sm-7">
+                        <label>Currency</label>
+                        <select class="form-control" id="ddl_currency">
+                            <option>PKR</option>
+                            <option>USD</option>
+                            <option>AUD</option>
+                        </select>
+                    </div>
+                    <div class="col-lg-5 col-md-5 col-sm-5">
+                        <label>Exchange Rate</label>
+                        <input class="form-control" type="text" id="txt_exg_rate" value="1.00" readonly="readonly" />
                     </div>
                 </div>
+            </div>
 
-                <!-- Voucher Summary Card -->
-                <div class="col-md-6">
-                    <div class="card">
-                        <div class="card-header" style="border-bottom-style: double;">
-                            <h4>Voucher Summary</h4>
-                        </div>
-                        <div class="card-body">
-                            <div class="row">
-                                <div class="col-md-6">
-                                    <label>Debit</label>
-                                    <input class="form-control" type="text" id="txt_debit" readonly="readonly" />
-                                </div>
-                                <div class="col-md-6">
-                                    <label>Credit</label>
-                                    <input class="form-control" type="text" id="txt_credit" readonly="readonly" />
-                                </div>
-                            </div>
-                            <div class="row mt-2">
-                                <div class="col-md-6">
-                                    <label>Diff</label>
-                                      <input class="form-control" type="text" id="txt_diff" readonly="readonly" />
-                                </div>
-                            </div>
-                        </div>
+            <div class="pr-primary-settings">
+                <h5 class="pr-section-title" style="margin-top:0;"><i class="fa fa-calculator"></i> Voucher Summary</h5>
+                <div class="row">
+                    <div class="col-lg-6 col-md-6 col-sm-6">
+                        <label>Debit</label>
+                        <input class="form-control" type="text" id="txt_debit" readonly="readonly" />
+                    </div>
+                    <div class="col-lg-6 col-md-6 col-sm-6">
+                        <label>Credit</label>
+                        <input class="form-control" type="text" id="txt_credit" readonly="readonly" />
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-lg-6 col-md-6 col-sm-6">
+                        <label>Difference</label>
+                        <input class="form-control" type="text" id="txt_diff" readonly="readonly" />
                     </div>
                 </div>
             </div>
         </div>
     </div>
 
-
-    <div class="col-12">
-        <div class="table-container" style="margin-top: 15px;">
+    <!-- Account Entries Table -->
+    <div class="pr-primary-settings" style="margin-top:8px;">
+        <h5 class="pr-section-title" style="margin-top:0;"><i class="fa fa-list"></i> Account Entries</h5>
+        <div class="table-container">
             <table class="table table-bordered" id="tbldescription">
                 <thead class="thead-light">
                     <tr style="color: black">
@@ -939,7 +935,6 @@
                     <input type="button" class="btn btn-primry" id="btnprint" value="Print" onclick="PrintReport()" />
                 </div>
             </div>
-
 
 
 
