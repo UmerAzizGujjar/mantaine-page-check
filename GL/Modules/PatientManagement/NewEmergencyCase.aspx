@@ -56,15 +56,30 @@
                 separator: '/'
             });
 
-            jQuery(function ($) {
-                MaskedInput({
-                    elm: document.getElementById('txtSearch'),
-                    format: '+92__________',
-                    separator: '-'
-                });
-                var phoneInput = document.getElementById('txtSearch');
-                var cursorPosition = 3;
-                phoneInput.setSelectionRange(cursorPosition, cursorPosition);
+            //jQuery(function ($) {
+            //    MaskedInput({
+            //        elm: document.getElementById('txtSearch'),
+            //        format: '+92__________',
+            //        separator: '-'
+            //    });
+            //    var phoneInput = document.getElementById('txtSearch');
+            //    var cursorPosition = 3;
+            //    phoneInput.setSelectionRange(cursorPosition, cursorPosition);
+            //});
+            $("#txtSearch").keyup(function (event) {
+                var SearchString = $('#txtSearch').val();
+                event.preventDefault();
+                if (SearchString === '')
+                    FillPatientsList();
+            });
+
+            $("#txtSearch").keyup(function (event) {
+
+                var SearchString = $('#txtSearch').val();
+                event.preventDefault();
+
+                PageMethods.AddPatient(SearchString, OnFilterPatients, OnFailPatients);
+
             });
             loadDepartments();
             fillmartial();
@@ -6546,13 +6561,15 @@
             <div class="modal-dialog">
                 <div class="modal-content" style="width: 1140px !important; margin-top: 116px; margin-left: -78px; height: 604px; position: relative;">
                     <fieldset style="padding-top: 20px; padding-left: 14px;">
-                        <div class="col-lg-3 col-md-4 col-sm-6">
-                            <label id="srchpat">Search Your Patients: </label>
-                            <input type="text" id="txtSearch" style="margin-left: 2px;" autocomplete="off" />
-                        </div>
-                        <div class="col-lg-2 col-md-4 col-sm-6">
-                            <label></label>
-                            <input type="button" class="btn btn-primry" id="addNewbtn" onclick="addfunc()" value="Add New" />
+                        <div class="row" style="margin-bottom: 15px;">
+                            <div class="col-lg-4 col-md-8 col-sm-8">
+                                <label id="srchpat" style="font-weight: bold; font-size: 16px;">Search Your Patients (Name, CNIC, Mobile): </label>
+                                <input type="text" id="txtSearch" style="margin-left: 10px; width: 60%; padding: 5px;" autocomplete="off" onkeyup="PerformPatientSearch()" placeholder="Type to search..." />
+                            </div>
+                            <div class="col-lg-4 col-md-4 col-sm-4" style="display: none">
+                                <label></label>
+                                <input type="button" class="btn btn-primry" id="addNewbtn" onclick="addfunc()" value="Add New Patient" />
+                            </div>
                         </div>
 
                     </fieldset>

@@ -7134,164 +7134,160 @@
       
 
 
-          function fillPendingPatientsLists() {
-    debugger;
-    var SearchString = $("#txtSearchmodal").val();
-    PageMethods.PendingPatients(SearchString, function (data) {
-        debugger;
-        var parsedData = JSON.parse(data);
-        var rows = '';
-
-        $.each(parsedData, function (key, value) {
-            var TrnsDate = new Date(parseInt(value.Created_Time.substr(6)));
-            var retdate = moment(TrnsDate).format('LLLL');
-
-            var actionsHtml = '';
-            var rowClass = '';
-            debugger;
-            
-            // Check if test is closed
-            if (value.is_Closed == true || value.is_Closed == 1) {
-                // Add light red background class for the entire row
-                rowClass = 'closed-row';
-                // Show prominent "CLOSED" badge
-                actionsHtml = '<span class="closed-badge">CLOSED</span>';
-            } else {
-                // Show icons for pending tests
-                actionsHtml =
-                    '<a href="#" onclick="AddPatientDetail(\'' + value.Actual_Patient_ID + '\')" style="margin-right: 8px; color: #28a745; font-size: 16px;" title="Edit">' +
-                    '<i class="fa fa-pencil-square-o"></i></a>' +
-                    '<a href="#" onclick="RejectTest(\'' + value.Lab_Test_Detail_ID + '\', \'' + (value.Full_Name || '').replace(/'/g, "\\'") + '\', \'' + (value.Item_Name || '').replace(/'/g, "\\'") + '\')" style="color: #dc3545; font-size: 16px;" title="Reject">' +
-                    '<i class="fa fa-ban"></i></a>';
-            }
-
-            rows += '<tr class="' + rowClass + '">' +
-                '<td style="padding: 8px;">' + (value.mr_no_sequence || '') + '</td>' +
-                '<td style="padding: 8px;">' + (value.Full_Name || '') + '</td>' +
-                '<td style="padding: 8px;">' + (value.Age_years || '') + '</td>' +
-                '<td style="padding: 8px;">' + (value.Item_Name || '') + '</td>' +
-                '<td style="padding: 8px;">' + (value.Transaction_Type || '') + '</td>' +
-                '<td style="padding: 8px;">' + (value.Referred_By || '') + '</td>' +
-                '<td style="padding: 8px;">' + (value.Main_Department || '') + '</td>' +
-                '<td style="padding: 8px;">' + (value.Ward_Name || '') + '</td>' +
-                '<td style="padding: 8px;">' + (value.Bed_No || '') + '</td>' +
-                '<td style="padding: 8px;">' + (value.Area_Of_Interest || '') + '</td>' +
-                '<td style="padding: 8px;">' + retdate + '</td>' +
-                '<td style="text-align: center; width: 100px; padding: 8px;">' + actionsHtml + '</td>' +
-                '</tr>';
-        });
-
-        debugger;
-        $('#tblPendingPatients tbody').html(rows);
-        
-        // Show message if no data
-        if (parsedData.length === 0) {
-            $('#tblPendingPatients tbody').html('<tr><td colspan="12" style="text-align: center; padding: 20px;">No pending tests found</td></tr>');
-        }
-        
-        $(".se-pre-con").fadeOut("slow");
-    }, function (exec) { 
-        debugger;
-        $('#tblPendingPatients tbody').html('<tr><td colspan="12" style="text-align: center; padding: 20px; color: red;">Error loading data</td></tr>');
-        $(".se-pre-con").fadeOut("slow");
-    });
-}
-            function RejectTest(labTestDetailId, patientName, testName) {
-    debugger;
-
-    if (!labTestDetailId || labTestDetailId == '0') {
-        Swal.fire({
-            icon: 'error',
-            title: 'Error!',
-            text: 'Invalid test record. Cannot reject.',
-            showConfirmButton: true,
-            confirmButtonText: 'OK'
-        });
-        return;
-    }
-
-    Swal.fire({
-        title: 'Reject Test?',
-        html: `Are you sure you want to Close <strong>${testName}</strong> for patient <strong>${patientName}</strong>?<br><br>This action cannot be undone.`,
-        icon: 'warning',
-        showCancelButton: true,
-        confirmButtonColor: '#d33',
-        cancelButtonColor: '#3085d6',
-        confirmButtonText: 'Yes, Close it!',
-        cancelButtonText: 'Cancel',
-        customClass: {
-            popup: 'swal-big-popup',
-            title: 'swal-big-title',
-            htmlContainer: 'swal-big-text'
-        }
-    }).then((result) => {
-        if (result.isConfirmed) {
-            // Show loading state
-            Swal.fire({
-                title: 'Processing...',
-                text: 'Rejecting the test request',
-                allowOutsideClick: false,
-                didOpen: () => {
-                    Swal.showLoading();
-                }
-            });
-            
-            debugger;
-            
-            // Use direct jQuery AJAX instead of PageMethods
-            $.ajax({
-                type: "POST",
-                url: "BillingProcess.aspx/RejectLabTestDetail",
-                data: JSON.stringify({ LabTestDetail_ID: labTestDetailId }),
-                contentType: "application/json; charset=utf-8",
-                dataType: "json",
-                success: function (response) {
+            function fillPendingPatientsLists() {
+                debugger;
+                var SearchString = $("#txtSearchmodal").val();
+                PageMethods.PendingPatients(SearchString, function (data) {
                     debugger;
-                    var result = JSON.parse(response.d);
-                    
-                    if (result.Success === true) {
-                        Swal.fire({
-                            icon: 'success',
-                            title: 'Rejected!',
-                            text: result.Message || 'Test has been Closed successfully.',
-                            showConfirmButton: false,
-                            timer: 2000
-                        });
-                        // Refresh the queue list
-                        setTimeout(function () {
-                            fillPendingPatientsLists();
-                        }, 2000);
-                    } else {
-                        Swal.fire({
-                            icon: 'error',
-                            title: 'Error!',
-                            text: result.Message || 'Failed to Closed the test.',
-                            showConfirmButton: false,
-                            timer: 2000
-                        });
+                    var parsedData = JSON.parse(data);
+                    var rows = '';
+
+                    $.each(parsedData, function (key, value) {
+                        var TrnsDate = new Date(parseInt(value.Created_Time.substr(6)));
+                        var retdate = moment(TrnsDate).format('LLLL');
+
+                        var actionsHtml = '';
+                        var rowClass = '';
+                        debugger;
+
+                        if (value.is_Closed == true || value.is_Closed == 1) {
+                            rowClass = 'closed-row';
+                            actionsHtml = '<span class="closed-badge">CLOSED</span>';
+                        } else {
+                            var patientId = value.Patient_ID || value.Actual_Patient_ID || '';
+                            actionsHtml =
+                                '<a href="#" onclick="AddPatientDetail(\'' + patientId + '\')" style="margin-right: 8px; color: #28a745; font-size: 16px;" title="Edit">' +
+                                '<i class="fa fa-pencil-square-o"></i></a>' +
+                                '<a href="#" onclick="RejectTest(\'' + value.Lab_Test_Detail_ID + '\', \'' + (value.Full_Name || '').replace(/'/g, "\\'") + '\', \'' + (value.Item_Name || '').replace(/'/g, "\\'") + '\')" style="color: #dc3545; font-size: 16px;" title="Reject">' +
+                                '<i class="fa fa-ban"></i></a>';
+                        }
+
+                        rows += '<tr class="' + rowClass + '">' +
+                            '<td style="padding: 8px;">' + (value.mr_no_sequence || '') + '</td>' +
+                            '<td style="padding: 8px;">' + (value.Full_Name || '') + '</td>' +
+                            '<td style="padding: 8px;">' + (value.Age_years || '') + '</td>' +
+                            '<td style="padding: 8px;">' + (value.Item_Name || '') + '</td>' +
+                            '<td style="padding: 8px;">' + (value.Transaction_Type || '') + '</td>' +
+                            '<td style="padding: 8px;">' + (value.Referred_By || '') + '</td>' +
+                            '<td style="padding: 8px;">' + (value.Main_Department || '') + '</td>' +
+                            '<td style="padding: 8px;">' + (value.Ward_Name || '') + '</td>' +
+                            '<td style="padding: 8px;">' + (value.Bed_No || '') + '</td>' +
+                            '<td style="padding: 8px;">' + (value.Area_Of_Interest || '') + '</td>' +
+                            '<td style="padding: 8px;">' + retdate + '</td>' +
+                            '<td style="text-align: center; width: 100px; padding: 8px;">' + actionsHtml + '</td>' +
+                            '</tr>';
+                    });
+
+                    debugger;
+                    $('#tblPendingPatients tbody').html(rows);
+
+                    if (parsedData.length === 0) {
+                        $('#tblPendingPatients tbody').html('<tr><td colspan="12" style="text-align: center; padding: 20px;">No pending tests found</td></tr>');
                     }
-                },
-                error: function (xhr, status, error) {
+
+                    $(".se-pre-con").fadeOut("slow");
+                }, function (exec) {
                     debugger;
-                    console.error("AJAX Error:", error);
-                    let errorMsg = "An error occurred while processing your request.";
-                    try {
-                        const response = JSON.parse(xhr.responseText);
-                        if (response.Message) errorMsg = response.Message;
-                    } catch(e) {}
-                    
+                    $('#tblPendingPatients tbody').html('<tr><td colspan="12" style="text-align: center; padding: 20px; color: red;">Error loading data</td></tr>');
+                    $(".se-pre-con").fadeOut("slow");
+                });
+            }
+            function RejectTest(labTestDetailId, patientName, testName) {
+                debugger;
+
+                if (!labTestDetailId || labTestDetailId == '0') {
                     Swal.fire({
                         icon: 'error',
                         title: 'Error!',
-                        text: errorMsg,
-                        showConfirmButton: false,
-                        timer: 2000
+                        text: 'Invalid test record. Cannot reject.',
+                        showConfirmButton: true,
+                        confirmButtonText: 'OK'
                     });
+                    return;
                 }
-            });
-        }
-    });
-}
+
+                Swal.fire({
+                    title: 'Reject Test?',
+                    html: `Are you sure you want to Close <strong>${testName}</strong> for patient <strong>${patientName}</strong>?<br><br>This action cannot be undone.`,
+                    icon: 'warning',
+                    showCancelButton: true,
+                    confirmButtonColor: '#d33',
+                    cancelButtonColor: '#3085d6',
+                    confirmButtonText: 'Yes, Close it!',
+                    cancelButtonText: 'Cancel',
+                    customClass: {
+                        popup: 'swal-big-popup',
+                        title: 'swal-big-title',
+                        htmlContainer: 'swal-big-text'
+                    }
+                }).then((result) => {
+                    if (result.isConfirmed) {
+                        // Show loading state
+                        Swal.fire({
+                            title: 'Processing...',
+                            text: 'Rejecting the test request',
+                            allowOutsideClick: false,
+                            didOpen: () => {
+                                Swal.showLoading();
+                            }
+                        });
+
+                        debugger;
+
+                        // Use direct jQuery AJAX instead of PageMethods
+                        $.ajax({
+                            type: "POST",
+                            url: "BillingProcess.aspx/RejectLabTestDetail",
+                            data: JSON.stringify({ LabTestDetail_ID: labTestDetailId }),
+                            contentType: "application/json; charset=utf-8",
+                            dataType: "json",
+                            success: function (response) {
+                                debugger;
+                                var result = JSON.parse(response.d);
+
+                                if (result.Success === true) {
+                                    Swal.fire({
+                                        icon: 'success',
+                                        title: 'Rejected!',
+                                        text: result.Message || 'Test has been Closed successfully.',
+                                        showConfirmButton: false,
+                                        timer: 2000
+                                    });
+                                    // Refresh the queue list
+                                    setTimeout(function () {
+                                        fillPendingPatientsLists();
+                                    }, 2000);
+                                } else {
+                                    Swal.fire({
+                                        icon: 'error',
+                                        title: 'Error!',
+                                        text: result.Message || 'Failed to Closed the test.',
+                                        showConfirmButton: false,
+                                        timer: 2000
+                                    });
+                                }
+                            },
+                            error: function (xhr, status, error) {
+                                debugger;
+                                console.error("AJAX Error:", error);
+                                let errorMsg = "An error occurred while processing your request.";
+                                try {
+                                    const response = JSON.parse(xhr.responseText);
+                                    if (response.Message) errorMsg = response.Message;
+                                } catch (e) { }
+
+                                Swal.fire({
+                                    icon: 'error',
+                                    title: 'Error!',
+                                    text: errorMsg,
+                                    showConfirmButton: false,
+                                    timer: 2000
+                                });
+                            }
+                        });
+                    }
+                });
+            }
             function RefreshQueue(){
                 $("#txtSearchmodal").val('')
                 fillPendingPatientsLists()

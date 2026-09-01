@@ -2186,45 +2186,88 @@ namespace PMS.Modules.PatientManagement
         }
         public class PatientsResult
         {
-            public string Full_Name;
-            public string NIC;
-            public string Reg_Patient_ID;
-            public string Age_years;
-            public string Patient_No;
-            public string Mobile1;
-            public string Father_Name;
+            public string Reg_Patient_ID { get; set; }
+            public string Patient_No { get; set; }
+            public string Full_Name { get; set; }
+            public string NIC { get; set; }
+            public string Mobile1 { get; set; }
+            public string Father_Name { get; set; }
 
+            public string Admitted_Status { get; set; }
+            public string Emergency_No { get; set; }
+            public string Emer_id { get; set; }
         }
         [WebMethod]
         public static List<PatientsResult> AddPatient(string SearchString)
         {
-
             string SearchSql = "";
-            if (SearchString == "")
-                SearchSql = "SELECT top 10 pat_id,isnull(mr_no_sequence,'')Patient_No,isnull(Full_Name,'')Full_Name,isnull(NIC,'')NIC,isnull(Mobile1,'') ContactNo,isnull(Father_Name,'')Father_Name FROM reg_patient where(1=1) and Patient_No<>0 and Patient_No is not null and isnull(isCancel,0)!=1 order by pat_id desc";
+
+            if (string.IsNullOrEmpty(SearchString))
+            {
+                SearchSql = @"
+            SELECT TOP 100 
+                r.pat_id,
+                ISNULL(r.mr_no_sequence, '') AS Patient_No,
+                ISNULL(r.Full_Name, '') AS Full_Name,
+                ISNULL(r.NIC, '') AS NIC,
+                ISNULL(r.Mobile1, '') AS ContactNo,
+                ISNULL(r.Father_Name, '') AS Father_Name,
+                ISNULL(e.Admitted_Status, '') AS Admitted_Status,
+                e.Emergency_No,
+                e.Emer_id
+            FROM reg_patient r
+            INNER JOIN Emergency e ON r.pat_id = e.Reg_PatId
+            WHERE r.Patient_No <> 0 
+              AND r.Patient_No IS NOT NULL 
+              AND ISNULL(r.isCancel, 0) != 1
+            ORDER BY r.pat_id DESC";
+            }
             else
-                SearchSql = "SELECT pat_id,isnull(mr_no_sequence,'')Patient_No,isnull(Full_Name,'')Full_Name,isnull(NIC,'')NIC,isnull(Mobile1,'') ContactNo,isnull(Father_Name,'')Father_Name FROM reg_patient where(1=1) and Patient_No<>0 and Patient_No is not null and isnull(isCancel,0)!=1 and (LTRIM(RTRIM(patient_no)) like '%" + SearchString.Trim() + "%' or  LTRIM(RTRIM(full_name)) like '%" + SearchString.Trim() + "%' or LTRIM(RTRIM(mobile1))  like '%" + SearchString.Trim() + "%' or LTRIM(RTRIM(nic))  like '%" + SearchString.Trim() + "%') order by pat_id desc";
+            {
+                string safeSearch = SearchString.Trim().Replace("'", "''");
+                SearchSql = $@"
+            SELECT TOP 100 
+                r.pat_id,
+                ISNULL(r.mr_no_sequence, '') AS Patient_No,
+                ISNULL(r.Full_Name, '') AS Full_Name,
+                ISNULL(r.NIC, '') AS NIC,
+                ISNULL(r.Mobile1, '') AS ContactNo,
+                ISNULL(r.Father_Name, '') AS Father_Name,
+                ISNULL(e.Admitted_Status, '') AS Admitted_Status,
+                e.Emergency_No,
+                e.Emer_id
+            FROM reg_patient r
+            INNER JOIN Emergency e ON r.pat_id = e.Reg_PatId
+            WHERE r.Patient_No <> 0 
+              AND r.Patient_No IS NOT NULL 
+              AND ISNULL(r.isCancel, 0) != 1
+              AND ( LTRIM(RTRIM(r.patient_no)) LIKE '%{safeSearch}%'
+                    OR LTRIM(RTRIM(r.full_name)) LIKE '%{safeSearch}%'
+                    OR LTRIM(RTRIM(r.mobile1)) LIKE '%{safeSearch}%'
+                    OR LTRIM(RTRIM(r.nic)) LIKE '%{safeSearch}%' )
+            ORDER BY r.pat_id DESC";
+            }
 
             DataTable dt = DBClass.getDataTable(SearchSql);
-
             List<PatientsResult> list = new List<PatientsResult>();
 
             foreach (DataRow dr in dt.Rows)
             {
                 PatientsResult rslt = new PatientsResult()
                 {
-                    Reg_Patient_ID = dr[0] == DBNull.Value ? "" : (string)dr[0].ToString(),
-                    Patient_No = dr[1] == DBNull.Value ? "" : (string)dr[1].ToString(),
-                    Full_Name = dr[2] == DBNull.Value ? "" : (string)dr[2],
-                    NIC = dr[3] == DBNull.Value ? "" : (string)dr[3],
-                    Mobile1 = dr[4] == DBNull.Value ? "" : (string)dr[4],
-                    Father_Name = dr[5] == DBNull.Value ? "" : (string)dr[5],
+                    Reg_Patient_ID = dr[0] == DBNull.Value ? "" : dr[0].ToString(),
+                    Patient_No = dr[1] == DBNull.Value ? "" : dr[1].ToString(),
+                    Full_Name = dr[2] == DBNull.Value ? "" : dr[2].ToString(),
+                    NIC = dr[3] == DBNull.Value ? "" : dr[3].ToString(),
+                    Mobile1 = dr[4] == DBNull.Value ? "" : dr[4].ToString(),
+                    Father_Name = dr[5] == DBNull.Value ? "" : dr[5].ToString(),
+                    Admitted_Status = dr[6] == DBNull.Value ? "" : dr[6].ToString(),
+                    Emergency_No = dr[7] == DBNull.Value ? "" : dr[7].ToString(),
+                    Emer_id = dr[8] == DBNull.Value ? "" : dr[8].ToString()
                 };
                 list.Add(rslt);
-                int number;
-                string value = "Hello";
-                bool result = Int32.TryParse(value, out number);
             }
+
             return list;
         }
         [WebMethod]

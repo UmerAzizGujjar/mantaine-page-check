@@ -183,6 +183,7 @@
                     { "data": "patientName", "name": "patientName", "width": "14%", "orderable": true },
                     { "data": "regTime", "name": "regTime", "width": "10%", "orderable": true },
                     { "data": "opdTime", "name": "opdTime", "width": "10%", "orderable": true },
+                    { "data": "vitalsTime", "name": "vitalsTime", "width": "10%", "orderable": true },
                     { "data": "outPatientTime", "name": "outPatientTime", "width": "10%", "orderable": true },
                     { "data": "labTime", "name": "labTime", "width": "10%", "orderable": true },
                     { "data": "medicineTime", "name": "medicineTime", "width": "10%", "orderable": true },
@@ -285,6 +286,7 @@
                                     <th>Patient Name</th>
                                     <th>Reg Date</th>
                                     <th>OPD Date</th>
+                                    <th>Vitals Date</th>
                                     <th>Out Patient</th>
                                     <th>Lab Date</th>
                                     <th>Medicine Date</th>

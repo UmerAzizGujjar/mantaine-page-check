@@ -1856,6 +1856,7 @@
             FillEyeMainTypesAndSubTypes();
             FillEyeSubTypeOnchangeOfEyeMainType();
             $("#ctl00_MainContent_FollowNoDate").datepicker();
+            $("#ctl00_MainContent_txtVitalsDate").datepicker();
             var today = new Date();
             var dd = today.getDate();
             var mm = today.getMonth() + 1;
@@ -4928,7 +4929,8 @@
                  Follow_Up : $('#ctl00_MainContent_ddlFOllowUp').val(),
                  Proto : $('#ctl00_MainContent_ddlProto').val(),
                  Follow_Date : $('#ctl00_MainContent_FollowNoDate').val(),
-                 pulse_Min : $('#ctl00_MainContent_txtPuls').val(),
+                 Vitals_Date : $('#ctl00_MainContent_txtVitalsDate').val(),
+                  pulse_Min : $('#ctl00_MainContent_txtPuls').val(),
                  L_M_P : $('#ctl00_MainContent_txtLMP').val(),
                  SPO2 : $('#ctl00_MainContent_txtspo2').val(),
                  pulse_Min : $('#ctl00_MainContent_txtPuls').val(),
@@ -6345,11 +6347,6 @@
                             </td>
                         </tr>
                         <tr>
-                            <td></td>
-                            <td></td>
-                            <td class="mgTab"></td>
-                        </tr>
-                        <tr>
                             <td>
                                 <asp:Label ID="LblPuls" runat="server" Text="Pulse (Beats/min)"></asp:Label>
 
@@ -6443,14 +6440,23 @@
                             </td>
                            
                           
-                           <td class="mgTab">
-                                <asp:Label ID="lblMUAC" runat="server" Text="MUAC(cm)"></asp:Label>
-
+                            <td class="mgTab">
+                                <asp:Label ID="LblVitalsDate" runat="server" Text="Vitals Date"></asp:Label>
                             </td>
                             <td>
-                                  <asp:TextBox ID="txtMUAC" runat="server" TabIndex="11"></asp:TextBox>
-
+                                <asp:TextBox ID="txtVitalsDate" runat="server" TabIndex="0"></asp:TextBox>
                             </td>
+
+                        </tr>
+                        <tr class="mtt-top">
+                            <td class="mgTab">
+                                 <asp:Label ID="lblMUAC" runat="server" Text="MUAC(cm)"></asp:Label>
+
+                             </td>
+                             <td>
+                                   <asp:TextBox ID="txtMUAC" runat="server" TabIndex="11"></asp:TextBox>
+
+                             </td>
 
                         </tr>
                         <tr style="display: none;">

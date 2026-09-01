@@ -1095,6 +1095,7 @@ namespace PMS
                         OPD.Respiration_Min = data.Respiration_Min;
                         OPD.Height_Cm = data.Height_Cm;
                         OPD.Weight_Kg = data.Weight_Kg;
+                        OPD.Vitals_Date = Convert.ToDateTime(data.Vitals_Date);
                         OPD.MUAC = data.MUAC;
                         OPD.OFC = data.OFC;
                         OPD.ProvisionalDiagnosis = data.Provisional_Diagnosis;
@@ -5603,6 +5604,7 @@ on d.Doctor_Id equals hr.Emp_ID
             public string Respiration_Min { get; set; }
             public string Height_Cm { get; set; }
             public string Weight_Kg { get; set; }
+            public string Vitals_Date { get; set; }
             public string Refer_To_Hospital { get; set; }
 
             public string Reffer_To { get; set; }

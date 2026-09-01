@@ -743,11 +743,21 @@
                 });
                 var patientID = '#<%= txtPatient_ID.ClientID %>';
                 var labTest = { 'PatientID': $(patientID).val(), 'TestList': test_list };
-                PageMethods.SaveTest(LabTestID, btnSave, transType, transID, JSON.stringify(labTest), function (res) {
-                    $('#ctl00_MainContent_saveLabTest').val("Update");
-                    localStorage.DeptID = $("#main-departments").val();
-                    window.location = "LaboratoryTest.aspx?ID=" + res.d; 
-                });
+                PageMethods.SaveTest(LabTestID, btnSave, transType, transID, JSON.stringify(labTest),
+                    function (res) {
+                        var newId = (typeof res === 'object' && res.hasOwnProperty('d')) ? res.d : res;
+                        if (!newId) {
+                            alert('Save failed – no ID returned.');
+                            return;
+                        }
+                        $('#ctl00_MainContent_saveLabTest').val("Update");
+                        localStorage.DeptID = $("#main-departments").val();
+                        window.location = "LaboratoryTest.aspx?ID=" + newId;
+                    },
+                    function (error) {
+                        alert('Error saving: ' + error.get_message());
+                    }
+                );
             });
         });
         function New() {
