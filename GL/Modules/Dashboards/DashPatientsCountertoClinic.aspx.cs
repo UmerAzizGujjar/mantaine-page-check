@@ -63,7 +63,7 @@ namespace PMS.Modules.Dashboards
                     patientName = x.Full_Name ?? "",
                     regTime = Fmt(x.Reg_Time),
                     opdTime = Fmt(x.Opd_Time),
-                    vitalsTime = Fmt(x.Vitals_Date),
+                    vitalsTime = !string.IsNullOrEmpty(x.Vitals_Date)? DateTime.Parse(x.Vitals_Date).ToString("dd-MMM-yyyy"): "",
                     outPatientTime = Fmt(x.Out_patient_Time),
                     labTime = Fmt(x.Lab_Time),
                     medicineTime = Fmt(x.Medicine_Time),

@@ -1660,6 +1660,7 @@ namespace PMS
             TxtBSR.Text = qry.BSR;
             txtMUAC.Text = qry.MUAC;
             txtOFC.Text = qry.OFC;
+            txtVitalsDate.Text = qry.Vitals_Date != null ? qry.Vitals_Date.Value.ToString("yyyy-MM-dd") : "";
             txtDevelopmentHistory.Text = qry.DevelopmentHistory;
             txtVaccinationHistory.Text = qry.VaccinationHistory;
             txtNutritionHistory.Text = qry.NutritionHistory;
