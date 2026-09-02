@@ -1014,6 +1014,21 @@ namespace PMS
                 rd.SetParameterValue("@Operator", Operator);
                 rd.SetParameterValue("@Department", departmentID);
                 rd.SetParameterValue("@DoctorID", doctorID);
+
+                try
+                {
+                    string subreportName = rd.Subreports[0].Name;
+                    rd.SetParameterValue("@FromDate", sqlStartDateTime, subreportName);
+                    rd.SetParameterValue("@ToDate", sqlEndDateTime, subreportName);
+                    rd.SetParameterValue("@Operator", Operator, subreportName);
+                    rd.SetParameterValue("@Department", departmentID, subreportName);
+                    rd.SetParameterValue("@DoctorID", doctorID, subreportName);
+
+                }
+                catch (Exception ex)
+                {
+
+                }
             }
 
             else if (reportName == "OPD_Department_Wise_Report")
