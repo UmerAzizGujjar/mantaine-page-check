@@ -306,7 +306,7 @@
                             }
 
                             return result;
-                        }, "orderable": false
+                        }, "orderable": false,"width": "7%"
                     }
                 ],
                 "initComplete": function (settings, json) {

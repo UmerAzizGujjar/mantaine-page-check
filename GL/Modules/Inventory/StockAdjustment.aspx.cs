@@ -591,6 +591,7 @@ namespace PMS
 
                     var grn = (from gd in db.GRN_Details
                                join gm in db.GRN_Masters on gd.GRNId equals gm.GRN_ID
+                               join i in db.INV_Items on gd.Item_Id equals i.Item_ID
                                where gd.Item_Id == itemIdInt
                                      && gm.InvOrgId == warehouseId
                                      && gm.Status == "Approved"
@@ -598,6 +599,9 @@ namespace PMS
                                select new
                                {
                                    Rate = gd.Rate,
+                                   UOM_Qty = gd.UOM_Qty.HasValue && gd.UOM_Qty.Value > 0
+                                       ? gd.UOM_Qty
+                                       : i.UOM_Qty,
                                    Date = gm.Creation_Date
                                }).FirstOrDefault();
 
@@ -615,12 +619,16 @@ namespace PMS
                     if (grn != null && adjustment != null)
                     {
                         purchaseRate = grn.Date >= adjustment.Date
-                            ? grn.Rate
+                            ? (grn.UOM_Qty.HasValue && grn.UOM_Qty.Value > 0
+                                ? grn.Rate / grn.UOM_Qty.Value
+                                : grn.Rate)
                             : adjustment.Rate;
                     }
                     else if (grn != null)
                     {
-                        purchaseRate = grn.Rate;
+                        purchaseRate = grn.UOM_Qty.HasValue && grn.UOM_Qty.Value > 0
+                            ? grn.Rate / grn.UOM_Qty.Value
+                            : grn.Rate;
                     }
                     else if (adjustment != null)
                     {

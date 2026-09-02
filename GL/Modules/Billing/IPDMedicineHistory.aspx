@@ -19,6 +19,15 @@
             font-weight: 600;
             display: inline-block;
         }
+        .badge-pending {
+            background-color: #ffc107;
+            color: #000;
+            padding: 3px 8px;
+            border-radius: 3px;
+            font-size: 11px;
+            font-weight: 600;
+            display: inline-block;
+        }
         #tbl td.rcv-over {
             background-color: #fff3cd !important;
             color: #856404 !important;
@@ -161,16 +170,25 @@
                 { "data": "Req_Qty", "width": "6%", "orderable": false },
                 { "data": "Rcv_Qty", "width": "6%", "orderable": false },
                 { "data": "Rtn_Qty", "width": "6%", "orderable": false },
+                { "data": "Issue_Rcvd_Qty", "width": "6%", "orderable": false },
                 {
                     render: function (data, type, full) {
-                        if (full.is_rejected == true || full.Status === "rejected") {
+                        var rejected = (full.is_rejected == true || full.Status === "rejected");
+                        var reqQty = parseFloat(full.Req_Qty) || 0;
+                        var issueRcvdQty = parseFloat(full.Issue_Rcvd_Qty) || 0;
+                        var fullyIssued = (reqQty > 0 && reqQty === issueRcvdQty);
+
+                        if (rejected && fullyIssued) {
+                            return '<span class="badge-closed">Issued/Closed</span>';
+                        }
+                        if (rejected) {
                             return '<span class="badge-closed">Closed</span>';
                         }
-                        var btn =
-                            '<a href="#" class="btn btn-primary btn-sm" onclick="ViewDetails(' + full.In_Patient_Medicine_ID + ')">' +
-                            '<i class="fa fa-eye"></i></a>';
-
-                        return btn;
+                        if (fullyIssued) {
+                            return '<a href="#" class="btn btn-primary btn-sm" onclick="ViewDetails(' + full.In_Patient_Medicine_ID + ')">' +
+                                '<i class="fa fa-eye"></i> View Issued</a>';
+                        }
+                        return '<span class="badge-pending">Pending</span>';
                     },
                     "width": "6%",
                     "orderable": false
@@ -274,9 +292,10 @@
                     <th>Medicine Name</th>
                     <th>Bed No</th>
                     <th>Request Qty</th>
-                    <th>Receive Qty</th>                
+                    <th>Issued Qty</th>                
                  
-                    <th>Return Qty</th>
+                    <th>Rcv Qty</th>
+                    <th>Issued Rcv Qty</th>
                     <th>View</th>
                 </tr>
             </thead>

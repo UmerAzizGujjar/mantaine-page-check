@@ -1095,7 +1095,18 @@ namespace PMS
                         OPD.Respiration_Min = data.Respiration_Min;
                         OPD.Height_Cm = data.Height_Cm;
                         OPD.Weight_Kg = data.Weight_Kg;
-                        OPD.MUAC = data.MUAC;
+                    // OPD.Vitals_Date = Convert.ToDateTime(data.Vitals_Date);
+                        DateTime vitalsDate;
+
+                        if (DateTime.TryParse(data.Vitals_Date, out vitalsDate))
+                        {
+                            OPD.Vitals_Date = vitalsDate;
+                        }
+                        else
+                        {
+                            OPD.Vitals_Date = null;
+                        }
+                    OPD.MUAC = data.MUAC;
                         OPD.OFC = data.OFC;
                         OPD.ProvisionalDiagnosis = data.Provisional_Diagnosis;
                         OPD.HistoryOfPeresentIllness = data.HistoryOfPeresentIllness;
@@ -1659,6 +1670,7 @@ namespace PMS
             TxtBSR.Text = qry.BSR;
             txtMUAC.Text = qry.MUAC;
             txtOFC.Text = qry.OFC;
+            txtVitalsDate.Text = qry.Vitals_Date != null ? qry.Vitals_Date.Value.ToString("yyyy-MM-dd") : "";
             txtDevelopmentHistory.Text = qry.DevelopmentHistory;
             txtVaccinationHistory.Text = qry.VaccinationHistory;
             txtNutritionHistory.Text = qry.NutritionHistory;
@@ -5603,6 +5615,7 @@ on d.Doctor_Id equals hr.Emp_ID
             public string Respiration_Min { get; set; }
             public string Height_Cm { get; set; }
             public string Weight_Kg { get; set; }
+            public string Vitals_Date { get; set; }
             public string Refer_To_Hospital { get; set; }
 
             public string Reffer_To { get; set; }

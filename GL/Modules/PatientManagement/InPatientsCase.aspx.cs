@@ -4160,6 +4160,7 @@ namespace PMS
         {
             public int PatientID { get; set; }
             public List<MedicineDetails> MedicineList { get; set; }
+            public List<int> DeletedMedicineIds { get; set; }
         }
         public class MedicineDetails
         {
@@ -4179,6 +4180,8 @@ namespace PMS
             public string Issue_Qty;
             public string Rec_Qty;
             public string Rtn_Qty;
+
+            public string Issue_Rcvd_Qty;
 
             public string Regular;
 
@@ -4519,6 +4522,24 @@ namespace PMS
                         .Where(p => p.Patient_ID == MedicineDetail.PatientID && p.Transaction_Type == "InPatient Discharge Medicine")
                         .ToList();
 
+                    // 1b. DELETE LOGIC (by ID): rows removed in UI are sent in DeletedMedicineIds.
+                    var deletedIds = (MedicineDetail.DeletedMedicineIds ?? new List<int>())
+                        .Distinct()
+                        .ToList();
+
+                    if (deletedIds.Any())
+                    {
+                        var medicinesToDeleteById = existingMedicines
+                            .Where(p => deletedIds.Contains(p.In_Patient_Medicine_ID))
+                            .ToList();
+
+                        if (medicinesToDeleteById.Any())
+                        {
+                            System.Diagnostics.Debug.WriteLine($"DELETING {medicinesToDeleteById.Count} discharge medicines by ID.");
+                            db.In_Patient_Medicines.DeleteAllOnSubmit(medicinesToDeleteById);
+                        }
+                    }
+
                     // 2. Determine if the incoming list has any new items (ID == 0)
                     bool hasNewItems = MedicineDetail.MedicineList.Any(m => m.ID == 0);
 
@@ -4554,7 +4575,8 @@ namespace PMS
                             if (existing != null)
                             {
                                 // Update all relevant fields
-                                existing.Medicine_Name = newMed.Medicine_Name;
+                                string medicineNameUpd = (newMed.Medicine_Name ?? "").Trim();
+                                existing.Medicine_Name = medicineNameUpd;
                                 existing.Dosage_Qty = newMed.Dosage_Qty;
                                 existing.Frequency = newMed.Frequency;
                                 existing.Injections = newMed.Injection;
@@ -4562,7 +4584,10 @@ namespace PMS
                                 existing.Dosage_From = newMed.Dosage_From;
                                 existing.Other_Instruction = newMed.Other_Instruction;
                                 existing.AttendingParamedical_Staff = newMed.AttendingParamedical_Staff;
-                                existing.Item_Code = newMed.ItemCode;
+                                var inventoryItemUpd = db.INV_Items
+                                    .Where(p => p.Description.Trim() == medicineNameUpd)
+                                    .FirstOrDefault();
+                                existing.Item_Code = inventoryItemUpd != null ? inventoryItemUpd.Item_ID.ToString() : newMed.ItemCode;
                                 // If you have Unlisted_Med as a string, convert accordingly
                                 existing.Unlisted_Med = (newMed.Unlisted_Med == "1" || newMed.Unlisted_Med == "true") ? true : false;
                                 // If you have other fields like Req_Qty, Rcv_Qty, update them here
@@ -4576,11 +4601,21 @@ namespace PMS
                         bool.TryParse(newMed.PRN, out bool isPrn);
                         bool.TryParse(newMed.Unlisted_Med, out bool isUnlistedMed);
 
+                        string medicineName = (newMed.Medicine_Name ?? "").Trim();
+                        string itemCode = newMed.ItemCode;
+                        var inventoryItem = db.INV_Items
+                            .Where(p => p.Description.Trim() == medicineName)
+                            .FirstOrDefault();
+                        if (inventoryItem != null)
+                        {
+                            itemCode = inventoryItem.Item_ID.ToString();
+                        }
+
                         In_Patient_Medicine newMedicine = new In_Patient_Medicine()
                         {
                             Patient_ID = Convert.ToInt32(MedicineDetail.PatientID),
-                            Item_Code = newMed.ItemCode,
-                            Medicine_Name = newMed.Medicine_Name,
+                            Item_Code = itemCode,
+                            Medicine_Name = medicineName,
                             Transaction_Type = "InPatient Discharge Medicine",
                             Medicine_Date = newMed.Medicine_Date,
                             Oral = newMed.Oral,
@@ -4632,7 +4667,23 @@ namespace PMS
                         .Where(p => p.Patient_ID == MedicineDetail.PatientID && p.Transaction_Type == "InPatient")
                         .ToList();
 
-                    var existingNames = existingMedicines.Select(p => p.Medicine_Name.Trim()).ToList();
+                    // 1b. DELETE LOGIC (by ID): rows removed in UI are sent in DeletedMedicineIds.
+                    var deletedIds = (MedicineDetail.DeletedMedicineIds ?? new List<int>())
+                        .Distinct()
+                        .ToList();
+
+                    if (deletedIds.Any())
+                    {
+                        var medicinesToDeleteById = existingMedicines
+                            .Where(p => deletedIds.Contains(p.In_Patient_Medicine_ID))
+                            .ToList();
+
+                        if (medicinesToDeleteById.Any())
+                        {
+                            System.Diagnostics.Debug.WriteLine($"DELETING {medicinesToDeleteById.Count} medicines by ID.");
+                            db.In_Patient_Medicines.DeleteAllOnSubmit(medicinesToDeleteById);
+                        }
+                    }
                     var incomingNames = MedicineDetail.MedicineList.Select(m => m.Medicine_Name.Trim()).ToList();
 
                     System.Diagnostics.Debug.WriteLine("=== SaveMedicines Debug ===");
@@ -4662,14 +4713,14 @@ namespace PMS
                     {
                         string medicineName = newMed.Medicine_Name.Trim();
 
-                        if (true)
+                        if (newMed.ID == 0)
                         {
                             System.Diagnostics.Debug.WriteLine("INSERTING new medicine: " + medicineName);
 
                             string itemCode = newMed.ItemCode;
                             var inventoryItem = db.INV_Items
-                                .Where(p => p.Description == newMed.Medicine_Name)
-                                .FirstOrDefault();
+                            .Where(p => p.Description.Trim() == newMed.Medicine_Name.Trim())
+                            .FirstOrDefault();
 
                             if (inventoryItem != null)
                             {
@@ -4709,7 +4760,8 @@ namespace PMS
                                 Stop_Date_Time = null,
                                 Req_Qty = decimal.TryParse(newMed.Issue_Qty, out decimal issueQty) ? issueQty : 0,
                                 Rcv_Qty = decimal.TryParse(newMed.Rec_Qty, out decimal recQty) ? recQty : 0,
-                                Rtn_Qty = decimal.TryParse(newMed.Rtn_Qty, out decimal rtnQty) ? rtnQty : 0
+                                Rtn_Qty = decimal.TryParse(newMed.Rtn_Qty, out decimal rtnQty) ? rtnQty : 0,
+                                Issue_Rcvd_Qty = decimal.TryParse(newMed.Issue_Rcvd_Qty, out decimal issueRcvdQty) ? issueRcvdQty : (decimal?)null
                             };
 
                             if (!string.IsNullOrEmpty(newMed.Start_Date_Time) && newMed.Start_Date_Time != "null" && newMed.Start_Date_Time != "1/1/0001")
@@ -4728,10 +4780,10 @@ namespace PMS
                         }
                     }
 
-                    // 3b. UPDATE LOGIC: Persist qty changes for medicines already in DB
+                    // 3b. UPDATE LOGIC: Persist qty changes for medicines already in DB (matched by ID)
                     foreach (MedicineDetails newMed in MedicineDetail.MedicineList)
                     {
-                        if (!existingNames.Contains(newMed.Medicine_Name.Trim()))
+                        if (newMed.ID <= 0)
                             continue;
 
                         decimal issueQty = decimal.TryParse(newMed.Issue_Qty, out decimal issueVal) ? issueVal : 0;
@@ -4739,17 +4791,21 @@ namespace PMS
                         decimal rtnQty = decimal.TryParse(newMed.Rtn_Qty, out decimal rtnVal) ? rtnVal : 0;
 
                         var existingMedicine = existingMedicines
-                            .FirstOrDefault(p => p.Medicine_Name.Trim() == newMed.Medicine_Name.Trim());
+                            .FirstOrDefault(p => p.In_Patient_Medicine_ID == newMed.ID);
+
+                        decimal? issueRcvd = decimal.TryParse(newMed.Issue_Rcvd_Qty, out decimal issueRcvdVal) ? issueRcvdVal : (decimal?)null;
 
                         if (existingMedicine != null &&
                             (existingMedicine.Req_Qty != issueQty ||
                              existingMedicine.Rcv_Qty != recQty ||
-                             existingMedicine.Rtn_Qty != rtnQty))
+                             existingMedicine.Rtn_Qty != rtnQty ||
+                             existingMedicine.Issue_Rcvd_Qty != issueRcvd))
                         {
                             System.Diagnostics.Debug.WriteLine("UPDATING qty for medicine: " + existingMedicine.Medicine_Name);
                             existingMedicine.Req_Qty = issueQty;
                             existingMedicine.Rcv_Qty = recQty;
                             existingMedicine.Rtn_Qty = rtnQty;
+                            existingMedicine.Issue_Rcvd_Qty = issueRcvd;
                         }
                     }
 
@@ -4858,6 +4914,7 @@ namespace PMS
                                          inPatmedicineList.Req_Qty,
                                          inPatmedicineList.Rcv_Qty,
                                          inPatmedicineList.Rtn_Qty,
+                                         inPatmedicineList.Issue_Rcvd_Qty,
                                          inPatmedicineList.Unlisted_Med,
 
                                          DoctorName = (from d in db.HR_Employees where d.Emp_ID == Convert.ToInt32(inPatmedicineList.Doctor_ID) select d.Emp_Name).FirstOrDefault(),

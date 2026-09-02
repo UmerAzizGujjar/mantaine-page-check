@@ -533,6 +533,21 @@
     margin-top: 15px !important;
 }
 
+#PatientModel input[type="text"]:not(#txtAge_yearss),
+#PatientModel input[type="tel"],
+#PatientModel input[type="email"],
+#PatientModel textarea {
+    text-transform: uppercase;
+}
+
+#PatientModel #txtAge_yearss {
+    text-transform: none;
+}
+
+#PatientModel select {
+    text-transform: none;
+}
+
 #PatientsSearchModel {
     margin-top: 15px !important;
 }

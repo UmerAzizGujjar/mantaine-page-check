@@ -2704,7 +2704,6 @@
     <Content Include="Reports\Inventory\rptMinimumStock.rpt" />
     <Content Include="Reports\Inventory\rptMIR_Summary_Department_Wise.rpt" />
     <Content Include="Reports\Inventory\rptSINSummary.rpt" />
-    <Content Include="Reports\Inventory\rptStockLedgerWareHouseWise.rpt" />
     <Content Include="Reports\Inventory\StockMovement.rpt" />
     <Content Include="Reports\Patients\OPDDetailReport.rpt" />
     <Content Include="Reports\Patients\rptCounsltant_Day_Wise_report.rpt" />
