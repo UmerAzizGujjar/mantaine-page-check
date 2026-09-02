@@ -4971,7 +4971,7 @@ namespace PMS
                 rd.SetParameterValue("CompanyName", AppConfig.Company_Name);
                 rd.SetParameterValue("Title", reportTitle);
                 rd.SetParameterValue("@startDate", StartDateTime);
-                rd.SetParameterValue("@EndDate", EndDateTime);
+                rd.SetParameterValue("@EndDate", EndDateTime);  
                 rd.SetParameterValue("@DepartmentID", departmentID);
                 rd.SetParameterValue("@filterClinic", FilterClinic);
                 rd.SetParameterValue("@patientType", patType);
