@@ -1095,8 +1095,18 @@ namespace PMS
                         OPD.Respiration_Min = data.Respiration_Min;
                         OPD.Height_Cm = data.Height_Cm;
                         OPD.Weight_Kg = data.Weight_Kg;
-                        OPD.Vitals_Date = Convert.ToDateTime(data.Vitals_Date);
-                        OPD.MUAC = data.MUAC;
+                    // OPD.Vitals_Date = Convert.ToDateTime(data.Vitals_Date);
+                        DateTime vitalsDate;
+
+                        if (DateTime.TryParse(data.Vitals_Date, out vitalsDate))
+                        {
+                            OPD.Vitals_Date = vitalsDate;
+                        }
+                        else
+                        {
+                            OPD.Vitals_Date = null;
+                        }
+                    OPD.MUAC = data.MUAC;
                         OPD.OFC = data.OFC;
                         OPD.ProvisionalDiagnosis = data.Provisional_Diagnosis;
                         OPD.HistoryOfPeresentIllness = data.HistoryOfPeresentIllness;
