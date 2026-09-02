@@ -5430,6 +5430,39 @@ namespace PMS
                         rd.RecordSelectionFormula = "{@Closing}<>0.00";
                 }
             }
+            else if (reportName == "BalanceSheetCostCenterWise")
+            {
+                if (Request.QueryString["startDate"] != null && Request.QueryString["Level1"] != null
+                   && Request.QueryString["Level2"] != null && Request.QueryString["Level3"] != null
+                   && Request.QueryString["Level4"] != null && Request.QueryString["stCode"] != null
+                   && Request.QueryString["enCode"] != null)
+                {
+
+                    string CostCenter = Request.QueryString["CostCenter"].ToString();
+                    string CostCenterName = Request.QueryString["CostCenterName"].ToString();
+
+
+                    reportPath += "GeneralLedger/rptBalanceSheetCostCenterWise.rpt";
+                    rd.Load(reportPath);
+                    rd.SummaryInfo.ReportTitle = reportTitle;
+                    rd.SetParameterValue("CompanyName", AppConfig.Company_Name);
+                    rd.SetParameterValue("@start_date", Convert.ToDateTime(Request.QueryString["startDate"]));
+                    rd.SetParameterValue("@stCode", Request.QueryString["stCode"]);
+                    rd.SetParameterValue("@enCode", Request.QueryString["enCode"]);
+                    rd.SetParameterValue("Level3", Request.QueryString["Level3"]);
+                    rd.SetParameterValue("Level1", Request.QueryString["Level1"]);
+                    rd.SetParameterValue("Level2", Request.QueryString["Level2"]);
+                    rd.SetParameterValue("Level4", Request.QueryString["Level4"]);
+                    rd.SetParameterValue("@Company_ID", AppConfig.Company_ID);
+                    rd.SetParameterValue("@Book_ID", AppConfig.Book_ID);
+
+                    rd.SetParameterValue("@CostCenter", CostCenter);
+                    rd.SetParameterValue("CostCenterName", CostCenterName);
+
+                    if (Request.QueryString["HideZeroBalance"] != null && Convert.ToBoolean(Request.QueryString["HideZeroBalance"]))
+                        rd.RecordSelectionFormula = "{@Closing}<>0.00";
+                }
+            }
             else if (reportName == "BalanceSheetComparison")
             {
                 if (Request.QueryString["startDate"] != null && Request.QueryString["Level1"] != null
