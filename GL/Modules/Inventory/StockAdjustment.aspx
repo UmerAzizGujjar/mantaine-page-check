@@ -205,7 +205,7 @@
             if (AdjustmentID != "(New)") {
                 var tokendata = [{ "id": Item_ID, "name": Item_Code + '-' + Item_Name, "Type": "", "Amount": '+0+' }];
                 loadtokenInputsForPRNo("#ctl00_MainContent_txtItem_Code", tokendata);
-                calculatecurrentstock(Item_ID);
+              //  calculatecurrentstock(Item_ID);
 
                 var warehouseVal = $('#ctl00_MainContent_ddl_Ware_House').val();
                 // if (Item_ID && Item_ID !== "" && Item_ID !== "0" && warehouseVal && warehouseVal !== "0") {
