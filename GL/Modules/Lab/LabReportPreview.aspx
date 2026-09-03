@@ -2122,7 +2122,7 @@
                             optionsList += '<option>' + parsedData[key].resultValueList[i] + ' </option>';
                         }
                         if (parsedData[key].Test_Value == null) parsedData[key].Test_Value = '';
-
+                        debugger;
 
                         var fixed = '';
                         var typeVal = '';
@@ -2178,7 +2178,7 @@
 
                         Lab_Test_Detail_ID = parsedData[key].Lab_Test_Detail_ID;
 
-
+                        debugger;
                         $('#tblgroupTestlist tbody').append(row);
                         if (parsedData[key].Result_Type_List == false) {
                             $('#ddlResultValue' + key + '').hide();

@@ -135,14 +135,14 @@ namespace PMS
             ddlPeads_apgerScore5min.Items.Add(new ListItem("Select Score", "0"));
             ddlPeads_apgerScore5min.DataBind();
             db = new DataBaseDataContext(DBClass.ConnectionString());
-            valueset = DBClass.GetValueSet("Doctor Status");
+            valueset = DBClass.GetValueSet("Designation");
             ddlMO_Doctor_Status.DataSource = valueset;
             ddlMO_Doctor_Status.DataTextField = "DataValue_Description";
             ddlMO_Doctor_Status.DataValueField = "DataValue_Name";
             ddlMO_Doctor_Status.Items.Add(new ListItem("Select", "0"));
             ddlMO_Doctor_Status.DataBind();
 
-            valueset = DBClass.GetValueSet("Doctor Status");
+            valueset = DBClass.GetValueSet("Designation");
             DocStatus.DataSource = valueset;
             DocStatus.DataTextField = "DataValue_Description";
             DocStatus.DataValueField = "DataValue_Name";
