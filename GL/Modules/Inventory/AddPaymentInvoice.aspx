@@ -93,7 +93,8 @@
             $("input[name='rbtnAccType']").change(function () {
                 filterBankAccounts($(this).val());
             });
-            $('#ddl_bankCash').on('change', function () {
+                $('#ddl_bankCash').on('change', function () {
+                    debugger;
                 var sel = $(this).find('option:selected');
                 var accType = sel.data('acc-type');
                 if (accType === 'cash') { $('#rbtnAccCash').prop('checked', true).trigger('change'); }
@@ -326,14 +327,23 @@
             return 'bank';
         }
         function filterBankAccounts(type) {
+            var prev = $('#ddl_bankCash').val();
             var html = '<option value="0">Please Select</option>';
+            var stillExists = false;
             $.each(bankAccountsCache, function (key, value) {
                 var accType = classifyAccount(value.name);
                 if (type === 'all' || accType === type) {
                     html += '<option value="' + value.Account_ID + '" data-acc-type="' + accType + '">' + value.name + '</option>';
+                    if (String(value.Account_ID) === String(prev)) stillExists = true;
                 }
             });
             $('#ddl_bankCash').html(html);
+            if (stillExists) {
+                $('#ddl_bankCash').val(prev);
+            } else {
+                $('#ddl_bankCash').val('0');
+            }
+            $('#ddl_bankCash').trigger('change.select2');
         }
         function syncPaymentBadges() {
             $('#badgePaymentNo').text($('#txt_PaymentNo').val() || '---');
