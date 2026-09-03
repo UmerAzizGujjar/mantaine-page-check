@@ -39,6 +39,16 @@ namespace PMS
                         HideZerroBalance.Visible = true;
                         ExportDiv.Visible = true;
                         break;
+                    case "BSDC":
+                        DateDiv.Visible = true;
+                        txtEnd_Date.Visible = false;
+                        enDate.Visible = false;
+                        levelChekBox.Visible = true;
+                        HideZerroBalance.Visible = true;
+                        ExportDiv.Visible = true;
+                        CostCenterDiv.Visible = true;
+                        BindCostCenterDDL();
+                        break;
                     case "BSC":
                         DateDiv.Visible = true;
                         txtEnd_Date.Visible = false;
@@ -126,11 +136,11 @@ namespace PMS
                         AccountInfoDiv.Visible = false;
                         AccountDiv.Visible = false;
                         CostCenterDiv.Visible = true;
+                        BindCostCenterDDL();
                         plhAllAcounts.Visible = false;
                         HideZerroBalance.Visible = false;
                         ExportDiv.Visible = true;
                         DateDiv.Visible = true;
-                        BindCostCenterDDL();
                         break;
                     case "PLD":
                         DateDiv.Visible = true;
@@ -636,6 +646,11 @@ namespace PMS
                         StartAccountCode = DBClass.getField("select ISNULL(min(account_code),0) as Min_AccountCode from GL_Accounts where Levels=4 and (Account_Code LIKE '1%' OR Account_Code LIKE '2%' OR Account_Code LIKE '3%')");
                         EndAccountCode = DBClass.getField("select ISNULL(max(account_code),0) as Min_AccountCode from GL_Accounts where Levels=4 and (Account_Code LIKE '1%' OR Account_Code LIKE '2%' OR Account_Code LIKE '3%')");
                         query = "ReportName=BalanceSheetDetail&ReportTitle=Balance Sheet Detail as on " + txtStart_Date.Text + "&startDate=" + txtStart_Date.Text + "&Level1=" + cbLevel1.Checked + "&Level2=" + cbLevel2.Checked + "&Level3=" + cbLevel3.Checked + "&Level4=" + cbLevel4.Checked + "&stCode=" + StartAccountCode + "&enCode=" + EndAccountCode + "&HideZeroBalance=" + cbHideZeroBalance.Checked + "" + "&ExportPDF=" + chkExportPDF.Checked;
+                        break;
+                    case "BSDC":
+                        StartAccountCode = DBClass.getField("select ISNULL(min(account_code),0) as Min_AccountCode from GL_Accounts where Levels=4 and (Account_Code LIKE '1%' OR Account_Code LIKE '2%' OR Account_Code LIKE '3%')");
+                        EndAccountCode = DBClass.getField("select ISNULL(max(account_code),0) as Min_AccountCode from GL_Accounts where Levels=4 and (Account_Code LIKE '1%' OR Account_Code LIKE '2%' OR Account_Code LIKE '3%')");
+                        query = "ReportName=BalanceSheetCostCenterWise&ReportTitle=Balance Sheet Detail as on " + txtStart_Date.Text + "&startDate=" + txtStart_Date.Text + "&Level1=" + cbLevel1.Checked + "&Level2=" + cbLevel2.Checked + "&Level3=" + cbLevel3.Checked + "&Level4=" + cbLevel4.Checked + "&stCode=" + StartAccountCode + "&enCode=" + EndAccountCode + "&HideZeroBalance=" + cbHideZeroBalance.Checked + "" + "&CostCenter=" + ddlCostCenter.SelectedValue + "&CostCenterName=" + ddlCostCenter.SelectedItem.Text + "&ExportPDF=" + chkExportPDF.Checked;
                         break;
                     case "BSC":
                         StartAccountCode = DBClass.getField("select ISNULL(min(account_code),0) as Min_AccountCode from GL_Accounts where Levels=4 and (Account_Code LIKE '1%' OR Account_Code LIKE '2%' OR Account_Code LIKE '3%')");
