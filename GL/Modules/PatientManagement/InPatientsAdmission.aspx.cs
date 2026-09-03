@@ -1077,6 +1077,39 @@ namespace PMS
                         }
                     }
 
+                    if (string.IsNullOrEmpty(ddlDepartment) || ddlDepartment == "0")
+                        return "SELECT_DEPARTMENT";
+
+                    if (string.IsNullOrEmpty(ddlIssuance_Of) || ddlIssuance_Of == "0")
+                        return "SELECT_ISSUANCE";
+
+                    if (PatientDiscountType == "03")
+                    {
+                        if (string.IsNullOrEmpty(panelcompanys) || panelcompanys == "0")
+                            return "SELECT_PANEL";
+                    }
+
+                    if (ddlIssuance_Of == "001")
+                    {
+                        if (string.IsNullOrEmpty(ddlWard_No) || ddlWard_No == "0")
+                            return "SELECT_WARD";
+                        if (string.IsNullOrEmpty(txtBed_No) || txtBed_No == "0")
+                            return "SELECT_BED";
+                    }
+                    else if (ddlIssuance_Of == "003")
+                    {
+                        if (string.IsNullOrEmpty(ddlWard_No) || ddlWard_No == "0")
+                            return "SELECT_WARD";
+                        if (string.IsNullOrEmpty(txtBed_No) || txtBed_No == "0")
+                            return "SELECT_BED";
+                        if (string.IsNullOrEmpty(ddlRoom_No) || ddlRoom_No == "0")
+                            return "SELECT_ROOM";
+                    }
+                    else
+                    {
+                        if (string.IsNullOrEmpty(ddlRoom_No) || ddlRoom_No == "0")
+                            return "SELECT_ROOM";
+                    }
 
                     if (btnsave == "Save")
                     {

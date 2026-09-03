@@ -54,12 +54,6 @@
             CheckCNICUpdateonCondition();
             isCNICValidationRequired();
 
-            $('#btnsaveprint').click(function () {
-
-
-
-                $("#ctl00_MainContent_panelshow").hide();
-            });
             $('#ctl00_MainContent_ddlPatientType').change(function () {
                 debugger;
                 $('#ctl00_MainContent_ddlPatientType').attr('disabled', true)
@@ -355,6 +349,23 @@
             debugger;
             $('#loadingimage').show();
             CheckExistInOutPatient();
+        }
+        function showSaveError(msg) {
+            $('#loadingimage').hide();
+            $('#btnSave').attr('disabled', false);
+            Swal.fire({
+                icon: 'error',
+                title: 'Error!',
+                text: msg,
+                showConfirmButton: false,
+                timer: 2500,
+                customClass: {
+                    popup: 'swal-big-popup',
+                    title: 'swal-big-title',
+                    htmlContainer: 'swal-big-text'
+                }
+            });
+            return false;
         }
         //var isCertificateGenrate = false;
         function GenrateCertificate() {
@@ -3299,6 +3310,18 @@
             if (InPatID == '(New)' || InPatID == '')
                 InPatID = 0;
             var refer_To = $("#ctl00_MainContent_ddlReferTo").val();
+
+            var wardControl = refer_To != "0" ? '#ctl00_MainContent_ddlwards' : '#ctl00_MainContent_ddlWard_No';
+            var wardVal = $(wardControl).val();
+            if (wardVal == "0" || wardVal == "" || wardVal == null) {
+                return showSaveError('Please Select Ward');
+            }
+            var bedControl = refer_To != "0" ? '#ctl00_MainContent_txtBedno' : '#ctl00_MainContent_txtBed_No';
+            var bedVal = $(bedControl).val();
+            if (bedVal == "" || isNaN(parseInt(bedVal, 10)) || parseInt(bedVal, 10) < 1) {
+                return showSaveError('Please Select Bed No');
+            }
+
             if (refer_To != "0") {
 
                 var ddlWard_No = $('#ctl00_MainContent_ddlwards').val();
@@ -3343,6 +3366,13 @@
             if (InPatID == '(New)' || InPatID == '')
                 InPatID = 0;
             var refer_To = $("#ctl00_MainContent_ddlReferTo").val();
+
+            var roomControl = refer_To != "0" ? '#ctl00_MainContent_ddlroom' : '#ctl00_MainContent_ddlRoom_No';
+            var roomVal = $(roomControl).val();
+            if (roomVal == "0" || roomVal == "" || roomVal == null) {
+                return showSaveError('Please Select Room No');
+            }
+
             if (refer_To != "0") {
                 var txtExpected_Discharge_Date = $('#ctl00_MainContent_txtExpected_Discharge_Date').val();
                 var ddlRoom_No = $('#ctl00_MainContent_ddlroom').val();
@@ -3505,6 +3535,32 @@
                     $('#btnSave').attr('disabled', false);
                     debugger;
                     var btn = btnVal;
+
+                    if (!/^\d+$/.test(String(response)) || String(response) == "0") {
+                        var codeMsg = {
+                            SELECT_DEPARTMENT: 'Please Select Department.',
+                            SELECT_ISSUANCE: 'Please Select Admit To.',
+                            SELECT_WARD: 'Please Select Ward.',
+                            SELECT_BED: 'Please Select Bed No.',
+                            SELECT_ROOM: 'Please Select Room No.',
+                            SELECT_PANEL: 'Please Select Panel Company.',
+                            BILL_EXISTS: 'Patient already has bill(s). Admission cannot be modified.'
+                        }[response];
+                        $('#loadingimage').hide();
+                        Swal.fire({
+                            icon: 'error',
+                            title: 'Error!',
+                            text: codeMsg || 'Data not Saved ! Please fill all required admission fields.',
+                            showConfirmButton: false,
+                            timer: 3000,
+                            customClass: {
+                                popup: 'swal-big-popup',
+                                title: 'swal-big-title',
+                                htmlContainer: 'swal-big-text'
+                            }
+                        });
+                        return;
+                    }
 
                     if (btn === 'btnSave') {
                         debugger;
@@ -3716,6 +3772,13 @@
                        return false;
                    }
 
+                   if (Admitcategory == "03") {
+                       var PanelCompany = $('#ctl00_MainContent_ddlpanelcompanys').val();
+                       if (PanelCompany == "0" || PanelCompany == "" || PanelCompany == null) {
+                           return showSaveError('Please Select Panel Company');
+                       }
+                   }
+
                    var Doctor = $('#ctl00_MainContent_ddlDoctor').val();
                    var Complain = $('#ctl00_MainContent_txtHealth_Complaints').val();
                    if (Doctor == "0" || Doctor == null) {
@@ -3734,6 +3797,11 @@
                            $('#loadingimage').hide();
                        });
                        return false;
+                   }
+
+                   var Department = $('#ctl00_MainContent_ddlDepartment').val();
+                   if (Department == "0" || Department == "" || Department == null) {
+                       return showSaveError('Please Select Department');
                    }
 
                    var ddlIssuance_Of = $('#ctl00_MainContent_ddlIssuance_Of').val();
@@ -3779,15 +3847,14 @@
                                $('#loadingimage').hide();
                                return false;
                            }
-                           SaveRoom();
-                       }
-                       else {
-                           $('#loadingimage').hide();
-                           return false;
-                       }
-                   }
-                   else {
-                       if (ddlIssuance_Of == "0") {
+                            SaveRoom();
+                        }
+                        else {
+                            return showSaveError('Please Select Valid Refer To option');
+                        }
+                    }
+                    else {
+                        if (ddlIssuance_Of == "0") {
                            Swal.fire({
                                icon: 'error',
                                title: 'Error!',
@@ -3843,15 +3910,14 @@
                                $('#loadingimage').hide();
                                return false;
                            }
-                           SaveRoom();
-                       }
-                       else {
-                           $('#loadingimage').hide();
-                           return false;
-                       }
-                   }
+                            SaveRoom();
+                        }
+                        else {
+                            return showSaveError('Please Select Valid Admit To option (Ward / Room)');
+                        }
+                    }
 
-                   localStorage.SelectedTabID = $("#tabs").tabs("option", "active");
+                    localStorage.SelectedTabID = $("#tabs").tabs("option", "active");
                    localStorage.DoctorID = $("#ctl00_MainContent_ddlMo_Doctor_Name").val();
                    localStorage.DesignationID = $("#ctl00_MainContent_ddlMO_Doctor_Status").val();
                }
