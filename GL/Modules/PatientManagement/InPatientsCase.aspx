@@ -10847,10 +10847,7 @@ if (localStorage.IsPRN == 1) {
                                                      <div class="col-lg-2 col-md-3 col-sm-12">
                                                          <input type="button" id="btnprintVital" value="Print" class="btn btn-primry" onclick="PrintVitalMedicationDetail()" />
                                                      </div>
-                                                      <div class="col-lg-2 col-md-3 col-sm-12">
-                                                          <input type="button" id="btnDischargeRequest" value="Discharge Request" class="btn btn-primry" onclick="DischargeRequest()" />
-                                                          <input type="hidden" runat="server" id="DischargeRequest" value='false'/>
-                                                      </div>
+                                                    
                                                       <div class="col-lg-2 col-md-3 col-sm-12" id="divAddDischargeDetails" style="display:none;">
                                                           <input type="button" id="btnAddDischargeDetails" value="Add Discharge Details" class="btn btn-primry" />
                                                       </div>
@@ -10971,6 +10968,10 @@ if (localStorage.IsPRN == 1) {
                   <div class="col-lg-2 col-md-3 col-sm-6">
                          <input type="button" class="btn btn-primry" value="Prescription" onclick="PrintInPatient();" id="btnPrintPrescription" /> 
                   </div>
+                              <div class="col-lg-2 col-md-3 col-sm-12">
+      <input type="button" id="btnDischargeRequest" value="Discharge Request" class="btn btn-primry" onclick="DischargeRequest()" />
+      <input type="hidden" runat="server" id="DischargeRequest" value='false'/>
+  </div>
                     <div class="col-lg-2 col-md-3 col-sm-6">
                           <asp:ValidationSummary ID="ValidationSummary1" runat="server" ForeColor="Red" HeaderText="Page Errors" ShowSummary="true" DisplayMode="BulletList" />
                           <asp:Label ID="lblMessage" runat="server"></asp:Label>
