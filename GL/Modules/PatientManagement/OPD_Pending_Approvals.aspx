@@ -1,100 +1,258 @@
-﻿<%@ Page Title="" Language="C#" MasterPageFile="~/Site.Master" AutoEventWireup="true" CodeBehind="OPD_Pending_Approvals.aspx.cs" Inherits="PMS.Modules.PatientManagement.OPDApproval" %>
-
+﻿<%@ Page Title="" Language="C#" MasterPageFile="~/Site.Master" AutoEventWireup="true" CodeBehind="OPD_Pending_Approvals.aspx.cs" Inherits="PMS.Modules.PatientManagement.OPD_Pending_Approvals" %>
 <asp:Content ID="Content1" ContentPlaceHolderID="HeadContent" runat="server">
+    <link href="../../wwwroot/THEME_TIBBIT/CustomCSS/tablestyle.css" rel="stylesheet" />
+
     <script type="text/javascript">
+        var oTable = null;
+        var selectedRows = {};
+
         $(document).ready(function () {
-            debugger;
             FillPatientType();
+            GetOPDToApproveList();
 
-
-            setTimeout(function () {
+            $('#ddlpatientType').on('change', function () {
                 GetOPDToApproveList();
-            }, 1000)
+            });
 
+            $(document).on('change', '#header-check', function () {
+                var isChecked = $(this).prop('checked');
+                if (!oTable) return;
+                oTable.rows().every(function () {
+                    var rowNode = $(this.node());
+                    var cb = rowNode.find('.chckrow');
+                    cb.prop('checked', isChecked).trigger('change');
+                });
+            });
 
-            $('[id*="Getrow"]').on('click', function () {
-                debugger; var isTrue = $('#Getrow').is(':checked');
-                if (isTrue) {
-                    debugger; $('.chckrow').prop('checked', true);
+            $(document).on('change', '.chckrow', function () {
+                var id = $(this).val();
+                if ($(this).is(':checked')) {
+                    if (oTable) {
+                        var rowData = oTable.row($(this).closest('tr')).data();
+                        if (rowData) selectedRows[id] = rowData;
+                    }
                 } else {
-                    debugger; $('.chckrow').prop('checked', false);
+                    delete selectedRows[id];
                 }
+                UpdateHeaderCheck();
+                UpdateTotals();
             });
 
             $('#btnApproved').on('click', function () {
-                debugger;
+                var ids = Object.keys(selectedRows);
+                if (ids.length === 0) {
+                    Swal.fire({
+                        icon: 'warning',
+                        title: 'No Selection',
+                        text: 'Please select at least one patient to approve.',
+                        confirmButtonColor: '#3085d6'
+                    });
+                    return;
+                }
 
-                $.each($('#tbloutPatients tbody tr'), function (key, value) {
-                    debugger;
-                    var chck = $($(value).find('td input[name=Getrow]')[0]).prop("checked");
-                    var patid = $($(value).find('td input[name=pat_id]')[0]).val();
-                    var Pat_Category = $($(value).find('td input[name=pat_type]')[0]).val();
+                Swal.fire({
+                    title: 'Confirm Approval',
+                    text: 'Approve ' + ids.length + ' patient(s) with a single OPD voucher?',
+                    icon: 'question',
+                    showCancelButton: true,
+                    confirmButtonColor: '#28a745',
+                    cancelButtonColor: '#d33',
+                    confirmButtonText: 'Yes, Approve!',
+                    cancelButtonText: 'Cancel'
+                }).then((result) => {
+                    if (!result.isConfirmed) return;
 
-                    debugger;
-                    if (chck == "true" || chck == true) {
-                        debugger;
-                        PageMethods.ApproveOPD(patid, Pat_Category, function (response) {
-                            debugger;
-                            var data = response;
-                            if (data == "Success") {
-                                // alert("Bill has been approved successfully");
+                    Swal.fire({
+                        title: 'Processing...',
+                        text: 'Please wait',
+                        allowOutsideClick: false,
+                        showConfirmButton: false,
+                        didOpen: () => { Swal.showLoading(); }
+                    });
 
+                    PageMethods.ApproveBulkOPD(ids.join(','), function (response) {
+                        try {
+                            var res = JSON.parse(response);
+                            if (res && res.length > 0 && res[0].Voucher_ID > 0) {
+                                var v = res[0];
+                                Swal.fire({
+                                    icon: 'success',
+                                    title: 'Voucher Posted',
+                                    html: 'Voucher No: <strong>' + v.Voucher_ID + '</strong>' +
+                                        '<br/>Patients: ' + v.Patient_Count +
+                                        '<br/>Gross: ' + v.Gross_Amount +
+                                        '<br/>Discount: ' + v.Discount_Amount +
+                                        '<br/>Receipt: ' + v.Receipt_Amount,
+                                    confirmButtonColor: '#28a745'
+                                }).then(function () {
+                                    window.location.href = 'OPD_Pending_Approvals.aspx';
+                                });
+                            } else {
+                                Swal.fire({
+                                    icon: 'error',
+                                    title: 'Approval Failed',
+                                    text: res[0].Message || 'Unknown error',
+                                    confirmButtonColor: '#d33'
+                                });
                             }
-
-
-
+                        } catch (e) {
+                            Swal.fire({
+                                icon: 'error',
+                                title: 'Error',
+                                text: 'Invalid response from server.',
+                                confirmButtonColor: '#d33'
+                            });
+                        }
+                    }, function (error) {
+                        Swal.fire({
+                            icon: 'error',
+                            title: 'Error',
+                            text: error.get_message ? error.get_message() : 'An error occurred',
+                            confirmButtonColor: '#d33'
                         });
-
-                    }
-                    else {
-
-                    }
-
-
-
-
-
+                    });
                 });
-                window.location.href = 'OPD_Pending_Approvals.aspx';
             });
-
-
         });
 
         function GetOPDToApproveList() {
             var pat_type = $('#ddlpatientType').val();
-            var search = $('#txtsearch').val();
+            if (!pat_type) pat_type = '0';
 
             $.ajax({
-                url: 'OPD_Pending_Approvals.aspx/LoadPatientsToApprove',
+                url: 'OPD_Pending_Approvals.aspx/LoadPatientsToApprove_OPD',
                 type: 'post',
                 contentType: 'application/json;charset=utf-8',
                 dataType: 'json',
-                data: JSON.stringify({ "pat_type": pat_type, "search": search }),
+                data: JSON.stringify({ "pat_type": pat_type, "search": "" }),
                 success: function (_data) {
-                    debugger;
-                    _data = JSON.parse(_data.d);
-                    console.log(_data);
-                    var mdTable = $('#tbloutPatients');
-                    $('#tbl tr:gt(0)').remove();
-                    table = $('#ibody');
-                    table.empty();
-                    debugger;
-                    $.each(_data, function (key, value) {
+                    var data = JSON.parse(_data.d);
+                    selectedRows = {};
+                    $('#header-check').prop('checked', false);
+                    UpdateTotals();
 
-
-                        debugger;
-                        $("#ibody").append('<tr><td style="display:none;"><input id="pat_id" name="pat_id" class="pat_id" type="hidden" value="' + value.Patient_ID + '" /></td><td style="display:none;"><input id="pat_type" name="pat_type" class="pat_type" type="hidden" value="' + value.Patient_Type + '" /></td><td><input id="Getrow" name="Getrow" class="chckrow" type="checkbox" /></td><td>' + value.mr_no_sequence + '</td><td>' + value.Opd_No + '</td><td>' + value.Full_Name + '</td><td>' + value.Pat_type + '</td><td>' + value.DeptName + '</td><td>' + value.Status + '</td></tr>');
-                        length++;
-
-
-                        return true;
-                    });
+                    if (!oTable) {
+                        BuildDataTable(data);
+                    } else {
+                        oTable.clear();
+                        oTable.rows.add(data);
+                        oTable.draw();
+                    }
                 },
-                error: function () {
-                    alert("Get Error");
+                error: function (xhr, status, error) {
+                    console.error(xhr.responseText);
                 }
             });
+        }
+
+        function BuildDataTable(data) {
+            oTable = $('#tblPendingOPD').DataTable({
+                "dom": 'lBfrtip',
+                "buttons": [
+                    'copy', 'excel', 'pdf',
+                    {
+                        extend: 'colvis',
+                        text: '<i class="fa fa-columns"></i> Columns',
+                        className: 'dt-button buttons-colvis',
+                        collectionLayout: 'fixed two-column',
+                        postfixButtons: ['colvisRestore']
+                    }
+                ],
+                "data": data,
+                "paging": true,
+                "pageLength": 25,
+                "ordering": true,
+                "columns": [
+                    {
+                        "data": null,
+                        "width": "4%",
+                        "orderable": false,
+                        "searchable": false,
+                        "className": "text-center",
+                        "render": function (data, type, full) {
+                            return '<input type="checkbox" class="chckrow" name="Getrow" value="' + full.Patient_ID + '" />';
+                        }
+                    },
+                    { "data": "Patient_ID", "visible": false, "searchable": false },
+                    { "data": "mr_no_sequence", "width": "12%" },
+                    { "data": "Opd_No", "width": "8%", "className": "text-center" },
+                    { "data": "Full_Name", "width": "20%" },
+                    { "data": "Pat_type", "width": "10%" },
+                    { "data": "DeptName", "width": "14%" },
+                    { "data": "Status", "width": "8%" },
+                    {
+                        "data": "Actual_Amount", "width": "10%",
+                        "type": "num-fmt",
+                        "className": "text-right",
+                        "render": function (d) { return (parseFloat(d) || 0).toFixed(2); }
+                    },
+                    {
+                        "data": "Receipt_Amount", "width": "10%",
+                        "type": "num-fmt",
+                        "className": "text-right",
+                        "render": function (d) { return (parseFloat(d) || 0).toFixed(2); }
+                    },
+                
+                    //{
+                    //    "data": "Hospital_Share", "width": "10%",
+                    //    "type": "num-fmt",
+                    //    "className": "text-right",
+                    //    "render": function (d) { return (parseFloat(d) || 0).toFixed(2); }
+                    //},
+                    {
+                        "data": "Discount_Amount", "width": "10%",
+                        "type": "num-fmt",
+                        "className": "text-right",
+                        "render": function (d) { return (parseFloat(d) || 0).toFixed(2); }
+                    }
+                ],
+                "language": {
+                    "search": "",
+                    "searchPlaceholder": "Search..."
+                },
+                "initComplete": function (settings, json) {
+                    var lengthContainer = document.querySelector('#tblPendingOPD_length');
+                    var lengthDropdown = document.querySelector('#tblPendingOPD_length select');
+                    var label = document.querySelector('#tblPendingOPD_length label');
+                    if (lengthDropdown && label && lengthContainer) {
+                        var labelText = document.createElement('span');
+                        labelText.textContent = 'Show entries ';
+                        labelText.style.marginTop = '10px';
+                        labelText.style.display = 'inline-block';
+                        lengthDropdown.style.width = '60px';
+                        label.innerHTML = '';
+                        label.style.display = 'inline-flex';
+                        label.style.marginTop = '17px';
+                        label.appendChild(labelText);
+                        label.appendChild(lengthDropdown);
+                    }
+                }
+            });
+        }
+
+        function UpdateHeaderCheck() {
+            var total = 0, checkedCount = 0;
+            if (oTable) {
+                oTable.rows().every(function () {
+                    var cb = $(this.node()).find('.chckrow');
+                    total++;
+                    if (cb.is(':checked')) checkedCount++;
+                });
+            }
+            $('#header-check').prop('checked', total > 0 && total === checkedCount);
+        }
+
+        function UpdateTotals() {
+            var recTotal = 0, discTotal = 0, actualTotal = 0;
+            Object.keys(selectedRows).forEach(function (id) {
+                var r = selectedRows[id];
+                actualTotal += parseFloat(r.Actual_Amount) || 0;
+                recTotal += parseFloat(r.Receipt_Amount) || 0;
+                discTotal += parseFloat(r.Discount_Amount) || 0;
+            });
+            $('#txtTotalActual').val(actualTotal.toFixed(2));
+            $('#txtTotalReceipt').val(recTotal.toFixed(2));
+            $('#txtTotalDiscount').val(discTotal.toFixed(2));
         }
 
         function FillPatientType() {
@@ -110,61 +268,63 @@
                     $.each(data, function (key, value) {
                         options += '<option value="' + value.DataValue_Name + '">' + value.DataValue_Description + '</option>';
                     });
-                    $('#ddlpatientType').html(options);
-
-
+                    $('#ddlpatientType').html(options).select2();
                 },
                 error: function (xhr, status, error) {
                     console.error('Error fetching area data:', error);
                 }
             });
-
-            return options;
         }
     </script>
 </asp:Content>
 <asp:Content ID="Content2" ContentPlaceHolderID="MainContent" runat="server">
 
-    <div class="row">
+    <div class="row" style="margin-bottom: 10px;">
         <div class="col-lg-2 col-md-2 col-sm-4">
-                <label>Patient Type</label>
-    <select id="ddlpatientType" onchange="GetOPDToApproveList()">
- 
-    </select>
+            <label>Patient Type</label>
+            <select id="ddlpatientType"></select>
         </div>
         <div class="col-lg-2 col-md-2 col-sm-4">
-             <label>Search</label>
-   <input type="text"  id="txtsearch" onkeyup ="GetOPDToApproveList()"  />
+            <label>Actual Amount</label>
+            <input type="text" id="txtTotalActual" class="form-control" readonly="readonly" style="text-align: right;" />
         </div>
         <div class="col-lg-2 col-md-2 col-sm-4">
-            <label></label>
-             <input type="button" value="Approve Selected Patients" class="btn btn-primry" id="btnApproved" />
+            <label>Receipt Amount</label>
+            <input type="text" id="txtTotalReceipt" class="form-control" readonly="readonly" style="text-align: right;" />
         </div>
+        <div class="col-lg-2 col-md-2 col-sm-4">
+            <label>Discount Amount</label>
+            <input type="text" id="txtTotalDiscount" class="form-control" readonly="readonly" style="text-align: right;" />
+        </div>
+        <div class="col-lg-2 col-md-2 col-sm-4">
+            <label>&nbsp;</label>
+            <input type="button" value="Approve Selected Patients" class="btn btn-primry" id="btnApproved" style="width: 100%;" />
+        </div>
+        <div class="col-lg-2 col-md-2 col-sm-4"></div>
     </div>
 
-
-   
     <div class="row">
-        <table class="table table-hover table-striped table-bordered" id="tbloutPatients" style="overflow: scroll; height: auto;">
-            <thead id="ihead">
-                <tr>
-                    <th style="width: 8%;">
-                        <input id="Getrow" class="chckrow" type="checkbox" /></th>
-                    <th class="hide">Pat ID</th>
-                    <th>MR No</th>
-                    <th>OPD No</th>
-                    <th>Patient Name</th>
-                    <th>PatientType</th>
-                    <th style="width: 8%;">Department</th>
-                    <th style="width: 8%;">Bill Status</th>
-
-
-                </tr>
-            </thead>
-            <tbody id="ibody">
-            </tbody>
-        </table>
+        <div class="col-lg-12" style="overflow-x: auto;">
+            <table id="tblPendingOPD" class="table table-hover table-striped table-bordered" style="width: 100%;">
+                <thead>
+                    <tr>
+                        <th style="text-align: center;">
+                            <input type="checkbox" id="header-check" /></th>
+                        <th style="display: none;">Pat ID</th>
+                        <th>MR No</th>
+                        <th>OPD No</th>
+                        <th>Patient Name</th>
+                        <th>PatientType</th>
+                        <th>Department</th>
+                        <th>Bill Status</th>
+                           <th>Actual Amount</th>
+                        <th>Receipt Amount</th>
+                      <%--  <th>Hospital Share</th>--%>
+                        <th>Discount Amount</th>
+                    </tr>
+                </thead>
+            </table>
+        </div>
     </div>
-
 
 </asp:Content>

@@ -11,7 +11,7 @@ namespace PMS.Modules.PatientManagement
 {
 
 
-    public partial class OPDApproval
+    public partial class OPD_Pending_Approvals
     {
     }
 }
