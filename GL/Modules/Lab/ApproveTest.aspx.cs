@@ -112,10 +112,9 @@ namespace PMS.Modules.Lab
                                           && (ar.isCancel == false || ar.isCancel == null)
                                            // && ltd.Approved_Time >= startDate
                                            //&& ltd.Approved_Time <= endDate
-                                           && ar.Bill_Date >= startDate
+&& ar.Bill_Date >= startDate
                                            && ar.Bill_Date <= endDate
-                                          && !db.Refunds.Any(r => r.Bill_ID == ar.Bill_ID)
-                                      select ltd).Count();
+                                       select ltd).Count();
 
                     var query = from lt in db.Laboratory_Tests
                                 join ltd in db.Lab_Test_Details on lt.Lab_Test_ID equals ltd.Lab_Test_ID
@@ -131,7 +130,6 @@ namespace PMS.Modules.Lab
                                     //&& ltd.Approved_Time <= endDate
                                     && ar.Bill_Date >= startDate
                                     && ar.Bill_Date <= endDate
-                                    && !db.Refunds.Any(r => r.Bill_ID == ar.Bill_ID)
                                 select new
                                 {
                                     ar.Bill_No,
@@ -142,6 +140,7 @@ namespace PMS.Modules.Lab
                                     pa.Full_Name,
                                     pa.Father_Name,
                                     bd.Bill_Details_ID,
+                                    bd.Is_Refunded,
                                     ltd.Lab_Test_Detail_ID,
                                     ltd.Lab_Test_ID,
                                     ltd.Test_ID,

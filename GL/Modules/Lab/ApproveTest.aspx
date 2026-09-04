@@ -156,6 +156,12 @@
                     { "data": null, "width": "4%", "orderable": false, "render": (data, type, full, meta) => meta.settings._iDisplayStart + meta.row + 1 },
                     { "data": "Bill_No", "name": "Bill_No", "width": "5%", "orderable": true },
                     {
+                        "data": "Is_Refunded", "name": "Is_Refunded", "width": "5%", "orderable": true,
+                        "render": function (data) {
+                            return data == 1 ? '<span style="color:#c00;font-weight:bold;">Refunded</span>' : '<span style="color:#080;">Active</span>';
+                        }
+                    },
+                    {
                         "data": "Bill_Date", "name": "Bill_Date",
                         "render": function (data, type, full) {
                             debugger;
@@ -751,6 +757,7 @@ function cleanPrint() {
                         <tr>
                             <th>Sr#</th>
                             <th>Bill No</th>
+                            <th>Status</th>
                             <th>Bill Date</th>
                             <th>MR No</th>
                             <th>Patient Name</th>

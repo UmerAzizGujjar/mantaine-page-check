@@ -868,16 +868,29 @@
             $('#txtMedicen').val('').hide();
         });
 
+        $(document).on('select2:close select2:unselect', '#txtPharmacyItem', function () {
+            var val = $('#txtPharmacyItem').val();
+            if (!val || val === '0') {
+                $('#Addmedicine').prop('disabled', false);
+            }
+        });
+
         $(document).on('input', '.select2-search__field', function () {
             if ($(this).val() && $(this).val().trim() !== '') {
                 $('#Addmedicine').prop('disabled', true);
                 $('#txtMedicen').val('').hide();
+            }
+            else if (!$('#txtPharmacyItem').val() || $('#txtPharmacyItem').val() === '0') {
+                $('#Addmedicine').prop('disabled', false);
             }
         });
 
         $('#txtMedicen').on('focus input', function () {
             if ($(this).val() !== '') {
                 $('#txtPharmacyItem').prop('disabled', true).trigger('change.select2');
+            }
+            else {
+                $('#txtPharmacyItem').prop('disabled', false).trigger('change.select2');
             }
         });
 
