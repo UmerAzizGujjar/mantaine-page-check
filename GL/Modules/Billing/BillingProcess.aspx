@@ -4224,7 +4224,7 @@
                 var totalPayable = parseFloat($('#txtNetPayable').val()) || 0;
                 var amountReceived = parseFloat($('#txtAmountReceived').val()) || 0;
                 var balance = parseFloat($('#txtBalances').val()) || 0;
-                if (amountReceived > totalPayable && balance < 0) {
+                if (amountReceived > totalPayable ) {
                     Swal.fire({
                         icon: 'warning',
                         title: 'Negative Balance',
@@ -6404,7 +6404,7 @@
                         }
                     }
 
-                    else if (((lblPatientCategory == "Private" || lblIn_Patient_Category == "Private")) && (lblIn_Patient_Category != "General")) {
+                    else if (((lblPatientCategory == "Panel" || lblIn_Patient_Category == "Panel")) && (lblIn_Patient_Category != "General")) {
                         var tokeinpt = $('#token-input-txtAddService').val();
                         if (typeof tokeinpt === 'undefined') {
                             tokenInputs('txtAddService', 'Inv_Items_Panel_Private');
