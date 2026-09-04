@@ -1357,7 +1357,12 @@ namespace PMS.Modules.PatientManagement
 
                     if (patient != null)
                     {
-                        patient.Card_fee = 100;
+                        decimal fee = Convert.ToDecimal((from tbl in db.sys_Parms
+                                                         where tbl.Name == "OPD Fee"
+                                                         select tbl.Code).FirstOrDefault() ?? "0");
+                        patient.Card_fee = fee;
+                        patient.updated_time = DateTime.Now;
+                        patient.updated_by = AppConfig.UserID;
                         db.SubmitChanges(); // LINQ-to-SQL uses SubmitChanges()
                         return new JavaScriptSerializer().Serialize(new { success = true });
                     }
