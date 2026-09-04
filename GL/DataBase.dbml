@@ -1868,20 +1868,6 @@
       <Column Name="Amount" Type="System.Decimal" DbType="Decimal(18,2)" CanBeNull="true" />
     </Type>
   </Table>
-  <Table Name="dbo.Stock_Transfer_Items" Member="Stock_Transfer_Items">
-    <Type Name="Stock_Transfer_Item">
-      <Column Name="Stock_Transfer_Items_ID" Type="System.Int64" DbType="BigInt NOT NULL IDENTITY" IsPrimaryKey="true" IsDbGenerated="true" CanBeNull="false" />
-      <Column Name="Stock_Transfer_ID" Type="System.Int64" DbType="BigInt" CanBeNull="true" />
-      <Column Name="Item_Code" Type="System.String" DbType="VarChar(50)" CanBeNull="true" />
-      <Column Name="Batch_No" Type="System.String" DbType="VarChar(50)" CanBeNull="true" />
-      <Column Name="Qty" Type="System.Decimal" DbType="Decimal(18,4)" CanBeNull="true" />
-      <Column Name="Expiry_Date" Type="System.String" DbType="VarChar(100)" CanBeNull="true" />
-      <Column Name="Rate" Type="System.Decimal" DbType="Decimal(18,4)" CanBeNull="true" />
-      <Column Name="Amount" Type="System.Decimal" DbType="Decimal(18,2)" CanBeNull="true" />
-      <Column Name="Item_Id" Type="System.Int32" DbType="Int" CanBeNull="true" />
-      <Association Name="Stock_Transfer_Stock_Transfer_Item" Member="Stock_Transfer" ThisKey="Stock_Transfer_ID" OtherKey="Stock_Transfer_ID" Type="Stock_Transfer" IsForeignKey="true" />
-    </Type>
-  </Table>
   <Table Name="dbo.Item_Replacement_Detail" Member="Item_Replacement_Details">
     <Type Name="Item_Replacement_Detail">
       <Column Name="Item_Replacement_Detail_Id" Type="System.Int64" DbType="BigInt NOT NULL IDENTITY" IsPrimaryKey="true" IsDbGenerated="true" CanBeNull="false" />
@@ -2154,29 +2140,6 @@
       <Column Name="IsDeleted" Type="System.Boolean" DbType="Bit" CanBeNull="true" />
       <Column Name="Deleted_Date" Type="System.DateTime" DbType="DateTime" CanBeNull="true" />
       <Column Name="Deleted_By" Type="System.Guid" DbType="UniqueIdentifier" CanBeNull="true" />
-    </Type>
-  </Table>
-  <Table Name="dbo.Stock_Transfer" Member="Stock_Transfers">
-    <Type Name="Stock_Transfer">
-      <Column Name="Stock_Transfer_ID" Type="System.Int64" DbType="BigInt NOT NULL IDENTITY" IsPrimaryKey="true" IsDbGenerated="true" CanBeNull="false" />
-      <Column Name="Stock_Transfer_No" Type="System.Int64" DbType="BigInt" CanBeNull="true" />
-      <Column Name="Stock_Transfer_Date" Type="System.DateTime" DbType="DateTime" CanBeNull="true" />
-      <Column Name="Ware_House_From" Type="System.String" DbType="VarChar(10)" CanBeNull="true" />
-      <Column Name="Ware_House_To" Type="System.String" DbType="VarChar(10)" CanBeNull="true" />
-      <Column Name="Created_By" Type="System.Guid" DbType="UniqueIdentifier" CanBeNull="true" />
-      <Column Name="Creation_Time" Type="System.DateTime" DbType="SmallDateTime" CanBeNull="true" />
-      <Column Name="Updated_By" Type="System.Guid" DbType="UniqueIdentifier" CanBeNull="true" />
-      <Column Name="Update_Time" Type="System.DateTime" DbType="SmallDateTime" CanBeNull="true" />
-      <Column Name="Approved_By" Type="System.Guid" DbType="UniqueIdentifier" CanBeNull="true" />
-      <Column Name="Approved_Time" Type="System.DateTime" DbType="SmallDateTime" CanBeNull="true" />
-      <Column Name="STN_Status" Type="System.String" DbType="VarChar(20)" CanBeNull="true" />
-      <Column Name="Remarks" Type="System.String" DbType="VarChar(300)" CanBeNull="true" />
-      <Column Name="Status" Type="System.String" DbType="VarChar(100)" CanBeNull="true" />
-      <Column Name="Transfer_Status" Type="System.String" DbType="VarChar(100)" CanBeNull="true" />
-      <Column Name="IsDeleted" Type="System.Boolean" DbType="Bit" CanBeNull="true" />
-      <Column Name="Deleted_By" Type="System.Guid" DbType="UniqueIdentifier" CanBeNull="true" />
-      <Column Name="Deleted_Date" Type="System.DateTime" DbType="DateTime" CanBeNull="true" />
-      <Association Name="Stock_Transfer_Stock_Transfer_Item" Member="Stock_Transfer_Items" ThisKey="Stock_Transfer_ID" OtherKey="Stock_Transfer_ID" Type="Stock_Transfer_Item" />
     </Type>
   </Table>
   <Table Name="dbo.InPatientServices" Member="InPatientServices">
@@ -8228,6 +8191,45 @@
       <Column Name="IHD" Type="System.Boolean" DbType="Bit" CanBeNull="true" />
       <Column Name="Asthma" Type="System.Boolean" DbType="Bit" CanBeNull="true" />
       <Column Name="Vitals_Date" Type="System.DateTime" DbType="DateTime" CanBeNull="true" />
+    </Type>
+  </Table>
+  <Table Name="dbo.Stock_Transfer" Member="Stock_Transfers">
+    <Type Name="Stock_Transfer">
+      <Column Name="Stock_Transfer_ID" Type="System.Int64" DbType="BigInt NOT NULL IDENTITY" IsPrimaryKey="true" IsDbGenerated="true" CanBeNull="false" />
+      <Column Name="Stock_Transfer_No" Type="System.Int64" DbType="BigInt" CanBeNull="true" />
+      <Column Name="Stock_Transfer_Date" Type="System.DateTime" DbType="DateTime" CanBeNull="true" />
+      <Column Name="Ware_House_From" Type="System.String" DbType="VarChar(10)" CanBeNull="true" />
+      <Column Name="Ware_House_To" Type="System.String" DbType="VarChar(10)" CanBeNull="true" />
+      <Column Name="Created_By" Type="System.Guid" DbType="UniqueIdentifier" CanBeNull="true" />
+      <Column Name="Creation_Time" Type="System.DateTime" DbType="SmallDateTime" CanBeNull="true" />
+      <Column Name="Updated_By" Type="System.Guid" DbType="UniqueIdentifier" CanBeNull="true" />
+      <Column Name="Update_Time" Type="System.DateTime" DbType="SmallDateTime" CanBeNull="true" />
+      <Column Name="Approved_By" Type="System.Guid" DbType="UniqueIdentifier" CanBeNull="true" />
+      <Column Name="Approved_Time" Type="System.DateTime" DbType="SmallDateTime" CanBeNull="true" />
+      <Column Name="STN_Status" Type="System.String" DbType="VarChar(20)" CanBeNull="true" />
+      <Column Name="Remarks" Type="System.String" DbType="VarChar(300)" CanBeNull="true" />
+      <Column Name="Status" Type="System.String" DbType="VarChar(100)" CanBeNull="true" />
+      <Column Name="Transfer_Status" Type="System.String" DbType="VarChar(100)" CanBeNull="true" />
+      <Column Name="IsDeleted" Type="System.Boolean" DbType="Bit" CanBeNull="true" />
+      <Column Name="Deleted_By" Type="System.Guid" DbType="UniqueIdentifier" CanBeNull="true" />
+      <Column Name="Deleted_Date" Type="System.DateTime" DbType="DateTime" CanBeNull="true" />
+      <Column Name="GRN_ID" Type="System.Int32" DbType="Int" CanBeNull="true" />
+      <Association Name="Stock_Transfer_Stock_Transfer_Item" Member="Stock_Transfer_Items" ThisKey="Stock_Transfer_ID" OtherKey="Stock_Transfer_ID" Type="Stock_Transfer_Item" />
+    </Type>
+  </Table>
+  <Table Name="dbo.Stock_Transfer_Items" Member="Stock_Transfer_Items">
+    <Type Name="Stock_Transfer_Item">
+      <Column Name="Stock_Transfer_Items_ID" Type="System.Int64" DbType="BigInt NOT NULL IDENTITY" IsPrimaryKey="true" IsDbGenerated="true" CanBeNull="false" />
+      <Column Name="Stock_Transfer_ID" Type="System.Int64" DbType="BigInt" CanBeNull="true" />
+      <Column Name="Item_Code" Type="System.String" DbType="VarChar(50)" CanBeNull="true" />
+      <Column Name="Batch_No" Type="System.String" DbType="VarChar(50)" CanBeNull="true" />
+      <Column Name="Qty" Type="System.Decimal" DbType="Decimal(18,4)" CanBeNull="true" />
+      <Column Name="Expiry_Date" Type="System.String" DbType="VarChar(100)" CanBeNull="true" />
+      <Column Name="Rate" Type="System.Decimal" DbType="Decimal(18,4)" CanBeNull="true" />
+      <Column Name="Amount" Type="System.Decimal" DbType="Decimal(18,2)" CanBeNull="true" />
+      <Column Name="Item_Id" Type="System.Int32" DbType="Int" CanBeNull="true" />
+      <Column Name="GRN_Detail_ID" Type="System.Int32" DbType="Int" CanBeNull="true" />
+      <Association Name="Stock_Transfer_Stock_Transfer_Item" Member="Stock_Transfer" ThisKey="Stock_Transfer_ID" OtherKey="Stock_Transfer_ID" Type="Stock_Transfer" IsForeignKey="true" />
     </Type>
   </Table>
   <Function Name="dbo.GetDataValueName" Method="GetDataValueName" IsComposable="true">

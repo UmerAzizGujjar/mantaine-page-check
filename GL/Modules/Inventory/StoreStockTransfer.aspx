@@ -50,6 +50,7 @@
     <script type="text/javascript">
         var stID = "";
         var wareHouses = [];
+        var selectedGRNId = 0;
 
         function callPageMethod(methodName, params, successCallback, errorCallback) {
             if (typeof params === 'function') {
@@ -74,6 +75,74 @@
         }
 
         function InitStock() {
+        }
+        function LoadApprovedGRNList() {
+            $.ajax({
+                type: "POST",
+                url: "StoreStockTransfer.aspx/GetApprovedGRNList",
+                data: JSON.stringify({}),
+                contentType: "application/json; charset=utf-8",
+                dataType: "json",
+                success: function (response) {
+                    var data = JSON.parse(response.d);
+                    var options = '<option value="0">Select GRN</option>';
+                    $.each(data, function (key, value) {
+                        options += '<option value="' + value.GRN_ID + '">' + value.GRN_Num + ' - ' + value.GRN_Date_Str + ' - ' + value.VendorName + '</option>';
+                    });
+                    $('#ddlGRN').html(options);
+                },
+                error: function (msg) {
+                    console.error("Could not load GRN list");
+                }
+            });
+        }
+        function LoadGRNDetails() {
+            debugger;
+            var grnId = $('#ddlGRN').val();
+            selectedGRNId = grnId;
+            if (grnId == "0" || grnId == null) {
+                $("#stocktable tbody").empty();
+                $("#ctl00_MainContent_Select_wareHouseFrom").val("0").trigger('change');
+                $("#ctl00_MainContent_Select_wareHouseFrom").attr("disabled", false);
+                return;
+            }
+            $.ajax({
+                type: "POST",
+                url: "StoreStockTransfer.aspx/GetGRNDetails",
+                data: JSON.stringify({ 'grnId': parseInt(grnId) }),
+                contentType: "application/json; charset=utf-8",
+                dataType: "json",
+                success: function (response) {
+                    debugger;
+                    var data = JSON.parse(response.d);
+                    if (!data || data.length == 0) {
+                        Swal.fire({ icon: 'error', title: 'Error!', text: 'No items found in this GRN', showConfirmButton: false, timer: 2000, customClass: { popup: 'swal-big-popup', title: 'swal-big-title', htmlContainer: 'swal-big-text' } });
+                        return;
+                    }
+                    var grnWarehouse = data[0].GRN_WareHouse || "";
+                    $("#ctl00_MainContent_Select_wareHouseFrom").val(grnWarehouse).trigger('change');
+                    $("#ctl00_MainContent_Select_wareHouseFrom").attr("disabled", true);
+                    $("#ctl00_MainContent_Select_wareHouseTo").attr("disabled", false);
+                    $("#stocktable tbody").empty();
+                    $.each(data, function (i, item) {
+                        var expDate = item.ExpiryDate_Str || item.ExpiryDate || '';
+                        var rowId = item.ItemCode + '^' + (item.BatchNum || '') + '^' + item.GRNQty + '^' + item.Rate + '^' + item.Amount + '^' + expDate;
+                        var rowCount = i + 1;
+                        var html = "<td class=combat>" + (item.Description || '') + "</td><td class='stkAvbl combat'>" + item.GRNQty + "</td>" +
+                            "<td class=combat>" + item.GRNQty + "</td>" +
+                            "<td class=combat>" + item.Rate + "</td>" +
+                            "<td class=combat>" + item.Amount + "</td>" +
+                            "<td><a class='deleteStkItem' rel='" + $("#ctl00_MainContent_txtStock_No").val() + "'>Delete</a></td>";
+                        $("#stocktable tbody").append("<tr data-grndetailid='" + (item.GRN_detail_Id || 0) + "' id='" + rowId + "'><td class='dn'><label class='srNo'>" + rowCount + "</label></td><td class=combat>" +
+                            item.ItemCode + "</td><td class=combat>" + (item.BatchNum || '') + "</td>" + html + "</tr>");
+                    });
+                    calculatequantity();
+                    CommonActions();
+                },
+                error: function (msg) {
+                    Swal.fire({ icon: 'error', title: 'Error!', text: 'Could not load GRN details', showConfirmButton: false, timer: 2000, customClass: { popup: 'swal-big-popup', title: 'swal-big-title', htmlContainer: 'swal-big-text' } });
+                }
+            });
         }
         function getstockdetailnum() {
             debugger;
@@ -365,6 +434,28 @@
                 });
             });
         }
+        function GRNWorkingCheck() {
+            $.ajax({
+                type: "POST",
+                url: "StoreStockTransfer.aspx/GRNWorking",
+                data: JSON.stringify({}),
+                contentType: "application/json; charset=utf-8",
+                dataType: "json",
+                success: function (response) {
+                    var code = JSON.parse(response.d);
+                    if (code == "02") {
+                        $("#grnDropdownRow").hide();
+                    } else {
+                        $("#grnDropdownRow").show();
+                        LoadApprovedGRNList();
+                    }
+                },
+                error: function (msg) {
+                    $("#grnDropdownRow").show();
+                    LoadApprovedGRNList();
+                }
+            });
+        }
         $(document).ready(function () {
             debugger;
             //UserRights();
@@ -375,6 +466,7 @@
             });
             $('select').select2();
             loadtokenInputsDefaultPRNo();
+            GRNWorkingCheck();
             if (window.location.href.indexOf("stID") != -1) {
                 stID = '<% =Request.QueryString["stID"] %>';
                 var stNo = '<% =Request.QueryString["stN"] %>';
@@ -451,11 +543,16 @@
                 $("#Remarks").val(data.d[0].remarks);
                 $("#txtstatus_trnsfer").val(data.d[0].Transfer_Status);
                 debugger;
+                var grnIdFromEdit = data.d[0].grnId || 0;
+                selectedGRNId = grnIdFromEdit;
                 setTimeout(function () {
                     $('#ctl00_MainContent_Select_wareHouseFrom').val(data.d[0].wareHouseFrom);
                     $('#ctl00_MainContent_Select_wareHouseFrom').trigger('change');
                     $('#ctl00_MainContent_Select_wareHouseTo').val(data.d[0].wareHouseTo);
                     $('#ctl00_MainContent_Select_wareHouseTo').trigger('change');
+                    if (grnIdFromEdit > 0) {
+                        $('#ddlGRN').val(grnIdFromEdit);
+                    }
                 }, 1500);
 
                 var checkstat = $("#txtstatus_trnsfer").val();
@@ -472,13 +569,16 @@
                 }
                 $("#stocktable tbody").empty();
                 $.each(data.d, function (i) {
-                    if (i > 0)
-                        $("#stocktable tbody").append("<tr id='" + data.d[i].itemCode + "^" + data.d[i].batchNo + "^" + data.d[i].quantity + "^" + data.d[i].Rate + "^" + data.d[i].Amount + "^" + data.d[i].expiryDate + "'>" +
+                    if (i > 0) {
+                        var grnDetailIdVal = data.d[i].grnDetailId || 0;
+                        var rowAttr = grnDetailIdVal > 0 ? " data-grndetailid='" + grnDetailIdVal + "'" : "";
+                        $("#stocktable tbody").append("<tr" + rowAttr + " id='" + data.d[i].itemCode + "^" + data.d[i].batchNo + "^" + data.d[i].quantity + "^" + data.d[i].Rate + "^" + data.d[i].Amount + "^" + data.d[i].expiryDate + "'>" +
                             "<td class='dn'><label class='srNo'>" + i + "</label></td>" +
                             "<td class=combat>" + data.d[i].itemCode + "</td><td class=combat>" + data.d[i].batchNo + "</td>" +
                             "<td class=combat>" + data.d[i].description + "</td><td class='stkAvbl combat'>" + data.d[i].stockAvailable + "</td><td class=combat><span class='val'>" + data.d[i].quantity + "</span><input class ='editQnty dn' type='text' value='" + data.d[i].quantity + "' /></td><td class=combat><span class='val'>" + data.d[i].Rate + "</span><input class ='dn' type='text' value='" + data.d[i].Rate + "' /></td><td class=combat><span class='val'>" + data.d[i].Amount + "</span><input class ='dn' type='text' value='" + data.d[i].Amount + "' /></td>" +
                             "<td><span class='editDelete'><a class='editQuantity' >Edit</a>  |  <a class='deleteStkItem' rel='" + data.d[0].stockTransferNo + "'>Delete</a></span><span class='dn' id='" + data.d[i].batchNo + "'><img src='/images/loading.gif' /></span></td></tr>"
                         );
+                    }
                 });
                 $("#StockTransferDate").attr('disabled', true);
                 debugger;
@@ -817,9 +917,10 @@
             var stnStatus = "Created";
             var trsnfrstatus = $('#txtstatus_trnsfer').val();
             var remarks = $("#Remarks").val();
+            var grnId = selectedGRNId || 0;
             $.ajax({
                 url: "StoreStockTransfer.aspx/AddStockMain",
-                data: '{"stockTransferNo":"' + stockNo + '", "stockTransferDate":"' + stockDate + '","wareHouseFrom":"' + wareHouseFrom + '","wareHouseTo":"' + wareHouseTo + '","stnStatus":"' + stnStatus + '","remarks":"' + remarks + '","trsnfrstatus":"' + trsnfrstatus + '"}',
+                data: '{"stockTransferDate":"' + stockDate + '","wareHouseFrom":"' + wareHouseFrom + '","wareHouseTo":"' + wareHouseTo + '","stnStatus":"' + stnStatus + '","remarks":"' + remarks + '","trsnfrstatus":"' + trsnfrstatus + '","grnId":"' + grnId + '"}',
                 dataType: "json",
                 type: "Post",
                 contentType: "application/json; charset=utf-8",
@@ -862,6 +963,7 @@
                     details.Amount = Amount;
                     details.stockTransferId = stockID;
                     details.expiryDate = expiry;
+                    details.grnDetailId = $(this).data('grndetailid') || 0;
                     detailAry.push(details);
                 }
                 else {
@@ -1205,15 +1307,11 @@
         </div>
         <div class="row">
         <div class="col-lg-3 col-md-6 col-sm-12">
-            
                 <label for="WHt">Ware House To:</label>
-           
                 <asp:DropDownList class="form-select" ID="Select_wareHouseTo" runat="server"></asp:DropDownList>
             </div>
-        
 
         <div class="col-lg-3 col-md-6 col-sm-12">
-            
                 <label for="ItemCode">Item Code : </label>
             
                 <input class="form-control" type="text" id="txtItemCode" />
@@ -1257,15 +1355,22 @@
         <div class="col-lg-1 col-md-2 col-sm-4">           
             <input id="BtnAdd" class="btn btn-primry" type="button" value="+" style="margin-top:25px" />               
         </div>
-        
-       <div class="col-lg-8 col-md-12 col-sm-12">
+            <div class="col-lg-2 col-md-6 col-sm-12" id="grnDropdownRow" style="display:none;">
+                <label for="ddlGRN">Select GRN :</label>
+                <select id="ddlGRN" class="form-select" style="width: 100%;" onchange="LoadGRNDetails();">
+                    <option value="0">Select GRN</option>
+                </select>
+            </div>
+            </div>
+    <div class="row">
+        <div class="col-lg-8 col-md-12 col-sm-12">
             <label for="Remarks">Remarks :</label>
             <input class="form-control" type="text" id="Remarks" />
-            
+
         </div>
-        
     </div>
 
+    
 
     <input type="hidden" id="expiry" />
    

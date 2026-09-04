@@ -95,7 +95,7 @@ namespace PMS.Inventory
             return st;
         }   
         [WebMethod]
-        public static string AddStockMain(DateTime stockTransferDate, string wareHouseFrom, string wareHouseTo, string stnStatus, string remarks, string trsnfrstatus)
+        public static string AddStockMain(DateTime stockTransferDate, string wareHouseFrom, string wareHouseTo, string stnStatus, string remarks, string trsnfrstatus, int grnId)
         {
             DataBaseDataContext db = new DataBaseDataContext(DBClass.ConnectionString());
             Stock_Transfer stockTranfer = new Stock_Transfer();
@@ -109,9 +109,10 @@ namespace PMS.Inventory
             stockTranfer.Remarks = remarks;
             stockTranfer.Status = "Created";
             stockTranfer.Transfer_Status = trsnfrstatus;
+            stockTranfer.GRN_ID = grnId > 0 ? (int?)grnId : null;
             db.Stock_Transfers.InsertOnSubmit(stockTranfer);
             db.SubmitChanges();
-            lastId = (int)stockTranfer.Stock_Transfer_ID; 
+            lastId = (int)stockTranfer.Stock_Transfer_ID;
             return "Successfully saved main Stock.";
         }
         [WebMethod]
@@ -132,6 +133,8 @@ namespace PMS.Inventory
                     stockTransferItem.Stock_Transfer_ID = lastId;
                     stockTransferItem.Expiry_Date = item.expiryDate;
                     stockTransferItem.Item_Id = Convert.ToInt32(DBClass.getField("Select Item_ID from Inv_items where Item_Code=" + item.itemCode));
+                    if (item.grnDetailId > 0)
+                        stockTransferItem.GRN_Detail_ID = item.grnDetailId;
                     db.Stock_Transfer_Items.InsertOnSubmit(stockTransferItem);
                     db.SubmitChanges();
                 }
@@ -184,6 +187,8 @@ namespace PMS.Inventory
                                 stockTransferItem.Stock_Transfer_ID = lastId;
                                 stockTransferItem.Expiry_Date = Stkitem.expiryDate;
                                 stockTransferItem.Item_Id = Convert.ToInt32(DBClass.getField("Select Item_ID from Inv_items where Item_Code=" + Stkitem.itemCode));
+                                if (Stkitem.grnDetailId > 0)
+                                    stockTransferItem.GRN_Detail_ID = Stkitem.grnDetailId;
                                 db.Stock_Transfer_Items.InsertOnSubmit(stockTransferItem);
                                 db.SubmitChanges();
                             }
@@ -228,6 +233,7 @@ namespace PMS.Inventory
                              st.Remarks,
                              st.Transfer_Status,
                              st.Status,
+                             st.GRN_ID
                          }).ToList();
             var queryItems = (from sti in db.Stock_Transfer_Items where (sti.Stock_Transfer_ID == Stock_Transfer_ID)
                               select new
@@ -240,7 +246,8 @@ namespace PMS.Inventory
                                   sti.Amount,
                                   sti.Rate,
                                   sti.Item_Id,
-                                  sti.Stock_Transfer_ID
+                                  sti.Stock_Transfer_ID,
+                                  sti.GRN_Detail_ID
                               }).ToList();
             try
             {
@@ -261,6 +268,7 @@ namespace PMS.Inventory
                         wareHouseFrom = stk.Ware_House_From;
                         stock.remarks = (!string.IsNullOrEmpty(stk.Remarks)) ? stk.Remarks.ToString() : "";
                         stock.Transfer_Status = stk.Transfer_Status;
+                        stock.grnId = stk.GRN_ID ?? 0;
                         stockList.Add(stock);
                     }
                 }
@@ -275,6 +283,7 @@ namespace PMS.Inventory
                     stock.description = (from itm in db.INV_Items where itm.Item_Code == stock.itemCode select itm.Description).FirstOrDefault();
                     stock.stockAvailable = GetStock(stock.itemCode, stock.batchNo, wareHouseFrom).stockAvailable;
                     stock.expiryDate = (!string.IsNullOrEmpty(item.Expiry_Date)) ? item.Expiry_Date.ToString() : "";
+                    stock.grnDetailId = item.GRN_Detail_ID ?? 0;
                     stockList.Add(stock);
                 }
                 return stockList;
@@ -306,6 +315,18 @@ namespace PMS.Inventory
                     tranObj.Rollback();
                 return "Error";
             }
+        }
+
+        [WebMethod]
+        public static string GRNWorking()
+        {
+            DataBaseDataContext db = new DataBaseDataContext(DBClass.ConnectionString());
+            var GRN = (from data in db.sys_Parms
+                        where data.Name == "Stock Transfer GRN Working"
+                        select
+                          data.Code
+                        ).FirstOrDefault();
+            return (new JavaScriptSerializer()).Serialize(GRN);
         }
         //[WebMethod]
         //public static decimal PerformBatchNoSearch(int ItemId, string wareHouse, string batchNo, string dateTime)
@@ -492,6 +513,69 @@ namespace PMS.Inventory
                 }
                 db.SubmitChanges();
                 return "Success";
+            }
+        }
+
+        [WebMethod]
+        public static string GetApprovedGRNList()
+        {
+            using (DataBaseDataContext db = new DataBaseDataContext(DBClass.ConnectionString()))
+            {
+                var data = (from grn in db.GRN_Masters
+                              join v in db.AP_Vendors on grn.VendorId equals v.Vendor_ID.ToString()
+                              where grn.Status == "Approved"
+                              orderby grn.GRN_Date descending
+                              select new
+                              {
+                                  grn.GRN_ID,
+                                  grn.GRN_Num,
+                                  grn.GRN_Date,
+                                  VendorName = v.Vendor_Name
+                              }).ToList();
+                var result = data.Select(x => new {
+                    x.GRN_ID,
+                    x.GRN_Num,
+                    GRN_Date_Str = x.GRN_Date.ToString("dd MMM yyyy"),
+                    x.VendorName
+                }).ToList();
+                return (new JavaScriptSerializer()).Serialize(result);
+            }
+        }
+
+        [WebMethod]
+        public static string GetGRNDetails(int grnId)
+        {
+            using (DataBaseDataContext db = new DataBaseDataContext(DBClass.ConnectionString()))
+            {
+                var grn = db.GRN_Masters.Where(x => x.GRN_ID == grnId).FirstOrDefault();
+                string warehouse = grn != null ? grn.InvOrgId : "";
+                var data = (from d in db.GRN_Details
+                              join i in db.INV_Items on d.Item_Id equals i.Item_ID into itemJoin
+                              from item in itemJoin.DefaultIfEmpty()
+                              where d.GRNId == grnId
+                              select new
+                              {
+                                  d.GRN_detail_Id,
+                                  d.ItemCode,
+                                  d.BatchNum,
+                                  d.GRNQty,
+                                  d.Rate,
+                                  d.Amount,
+                                  d.ExpiryDate,
+                                  Description = item != null ? item.Description : ""
+                              }).ToList();
+                var result = data.Select(x => new {
+                    x.GRN_detail_Id,
+                    x.ItemCode,
+                    x.BatchNum,
+                    x.GRNQty,
+                    x.Rate,
+                    x.Amount,
+                    ExpiryDate_Str = x.ExpiryDate.HasValue ? x.ExpiryDate.Value.ToString("dd MMM yyyy") : "",
+                    x.Description,
+                    GRN_WareHouse = warehouse
+                }).ToList();
+                return (new JavaScriptSerializer()).Serialize(result);
             }
         }
     }

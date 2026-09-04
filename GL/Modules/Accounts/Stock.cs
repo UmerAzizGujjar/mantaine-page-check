@@ -30,5 +30,7 @@ namespace PMS
         public string remarks { get; set; }
         public string Transfer_Status { get; set; }
         public decimal stockAvailable { get; set; }
+        public int grnId { get; set; }
+        public int grnDetailId { get; set; }
     }
 }
