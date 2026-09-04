@@ -51,18 +51,44 @@
             color: #fff !important;
             text-decoration: none;
         }
+
+        .editListBtn.disabled {
+            background-color: #ccc;
+            color: #fff !important;
+            cursor: not-allowed;
+            opacity: 0.6;
+            pointer-events: none;
+        }
     </style>
 
     <script type="text/javascript">
         var oTable;
+        var _editMode = "";
 
         $(document).ready(function () {
+            $.ajax({
+                type: "POST",
+                url: "DoctorPayables.aspx/GetEditMode",
+                contentType: "application/json; charset=utf-8",
+                dataType: "json",
+                async: false,
+                success: function (msg) {
+                    _editMode = (msg.d || "");
+                },
+                error: function () {
+                    _editMode = "";
+                }
+            });
             LoadPage();
             loadDoc();
         });
 
         function OpenList(id) {
-            window.open("DoctorPayables_Services.aspx?ID=" + id);
+            if (_editMode === "02") {
+                window.open("DoctorPayables_Services.aspx?ID=" + id);
+            } else if (_editMode === "01") {
+                window.open("DoctorPayableService_Standard.aspx?ID=" + id);
+            }
         }
 
         function calculateall() {
@@ -130,9 +156,14 @@
                                 '<td>' + (i + 1) + '</td>' +
                                 '<td style="display:none;"><input type="hidden" value="' + data[i].Balance + '" name="txtamount"></td>' +
                                 '<td>' + data[i].Name + '</td>' +
-                                '<td style="text-align:right;">' + bl.toLocaleString('en') + '</td>' +
-                                '<td style="text-align:center;"><a class="editListBtn" href="#" onclick="OpenList(' + data[i].Doctor_Id + ')"><i class="fa fa-pencil"></i></a></td>' +
-                                '</tr>';
+                                '<td style="text-align:right;">' + bl.toLocaleString('en') + '</td>';
+                            var editEnabled = (_editMode === "01" || _editMode === "02");
+                            if (editEnabled) {
+                                rows += '<td style="text-align:center;"><a class="editListBtn" href="#" onclick="OpenList(' + data[i].Doctor_Id + ')"><i class="fa fa-pencil"></i></a></td>';
+                            } else {
+                                rows += '<td style="text-align:center;"><span class="editListBtn disabled" title="Edit disabled"><i class="fa fa-pencil"></i></span></td>';
+                            }
+                            rows += '</tr>';
                         });
                         $('#Table_1 #tblbody').append(rows);
 
