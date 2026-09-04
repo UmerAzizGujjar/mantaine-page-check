@@ -584,6 +584,7 @@
     <Content Include="Modules\GL\Inv_OriginatorTempelatesView.aspx" />
     <Content Include="Modules\GL\Voucher.aspx" />
     <Content Include="Modules\GL\BudgetView.aspx" />
+    <Content Include="Modules\GL\AllVoucherList.aspx" />
     <Content Include="Modules\GL\VoucherView.aspx" />
     <Content Include="Modules\Lab\GroupTestDefinition.aspx" />
     <Content Include="Modules\Lab\GroupTestList.aspx" />
@@ -4848,6 +4849,13 @@
     </Compile>
     <Compile Include="Modules\GL\BudgetView.aspx.designer.cs">
       <DependentUpon>BudgetView.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="Modules\GL\AllVoucherList.aspx.cs">
+      <DependentUpon>AllVoucherList.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Modules\GL\AllVoucherList.aspx.designer.cs">
+      <DependentUpon>AllVoucherList.aspx</DependentUpon>
     </Compile>
     <Compile Include="Modules\GL\VoucherView.aspx.cs">
       <DependentUpon>VoucherView.aspx</DependentUpon>
