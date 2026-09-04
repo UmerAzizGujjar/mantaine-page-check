@@ -231,6 +231,20 @@ namespace PMS
                     catch { }
                 }
             }
+            else if (reportName == "All_Voucher")
+            {
+                if (Request.QueryString["TransID"] != null)
+                {
+                    reportPath += "Inventory/rptGLViewVoucher.rpt";
+                    rd.Load(reportPath);
+                    var VoucherId = Request.QueryString["TransID"];
+                    rd.SetParameterValue("@Voucher_ID", Convert.ToInt32(VoucherId));
+                    rd.SetParameterValue("CompanyName", AppConfig.Company_Name);
+                    rd.SetParameterValue("Title", Title);
+                    rd.SetParameterValue("UserName", AppConfig.UserName);
+                 
+                } 
+            }
             else if (reportName == "Voucher_GIN")
             {
                 if (Request.QueryString["TransID"] != null && Request.QueryString["TransType"] != null)
@@ -4971,7 +4985,7 @@ namespace PMS
                 rd.SetParameterValue("CompanyName", AppConfig.Company_Name);
                 rd.SetParameterValue("Title", reportTitle);
                 rd.SetParameterValue("@startDate", StartDateTime);
-                rd.SetParameterValue("@EndDate", EndDateTime);  
+                rd.SetParameterValue("@EndDate", EndDateTime);
                 rd.SetParameterValue("@DepartmentID", departmentID);
                 rd.SetParameterValue("@filterClinic", FilterClinic);
                 rd.SetParameterValue("@patientType", patType);
@@ -6544,14 +6558,14 @@ namespace PMS
                                 File.WriteAllBytes(tempQrPath, qrBytes);
                             }
                         }
-                    } 
+                    }
                 }
                 catch (Exception ex)
                 {
-                    
+
                 }
                 var qrcode = tempQrPath;
-                
+
                 rd.SetParameterValue("@Test_IDs", list);
                 rd.SetParameterValue("@Patient_ID", PatientsID);
                 rd.SetParameterValue("@Trans_IDs", transID);
