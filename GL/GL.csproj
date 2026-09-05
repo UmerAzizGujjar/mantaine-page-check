@@ -1,4 +1,4 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
+<?xml version="1.0" encoding="utf-8"?>
 <Project ToolsVersion="12.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
   <PropertyGroup>
@@ -340,6 +340,8 @@
     <Content Include="Modules\Administrator\User_BranchWiseList.aspx" />
     <Content Include="Modules\Appointment\Derma_Appointment.aspx" />
     <Content Include="Modules\Appointment\Derma_Appointment_List.aspx" />
+    <Content Include="Modules\Billing\AccountsReceivable.aspx" />
+    <Content Include="Modules\Billing\AccountsReceivableDetail.aspx" />
     <Content Include="Modules\Billing\BillApproval.aspx" />
     <Content Include="Modules\Billing\DiscountAssignedList.aspx" />
     <Content Include="Modules\Billing\DoctorPayables.aspx" />
@@ -3178,6 +3180,20 @@
     </Compile>
     <Compile Include="Modules\Appointment\Derma_Appointment_List.aspx.designer.cs">
       <DependentUpon>Derma_Appointment_List.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="Modules\Billing\AccountsReceivable.aspx.cs">
+      <DependentUpon>AccountsReceivable.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Modules\Billing\AccountsReceivable.aspx.designer.cs">
+      <DependentUpon>AccountsReceivable.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="Modules\Billing\AccountsReceivableDetail.aspx.cs">
+      <DependentUpon>AccountsReceivableDetail.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Modules\Billing\AccountsReceivableDetail.aspx.designer.cs">
+      <DependentUpon>AccountsReceivableDetail.aspx</DependentUpon>
     </Compile>
     <Compile Include="Modules\Billing\BillApproval.aspx.cs">
       <DependentUpon>BillApproval.aspx</DependentUpon>
