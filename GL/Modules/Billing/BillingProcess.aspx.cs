@@ -2097,6 +2097,9 @@ namespace PMS
 
             foreach (BillingProcessDetails dtls in data.Details)
             {
+                if (dtls.Test_CreatedDate == DateTime.MinValue)
+                    dtls.Test_CreatedDate = DateTime.Now;
+
                 Ar_Billing_Detail newBillDetails = new Ar_Billing_Detail
                 {
                     Bill_ID = newBill.Bill_ID,
