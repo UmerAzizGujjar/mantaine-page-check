@@ -49,6 +49,15 @@ namespace PMS.Modules.PatientManagement
             return (new JavaScriptSerializer()).Serialize(dept);
         }
         [WebMethod]
+        public static string GetOPDApprovalMode()
+        {
+            DataBaseDataContext db = new DataBaseDataContext(DBClass.ConnectionString());
+            var mode = (from data in db.sys_Parms
+                        where data.Name == "OPD Approval Mode"
+                        select data.Code).FirstOrDefault();
+            return (new JavaScriptSerializer()).Serialize(mode ?? "");
+        }
+        [WebMethod]
         public static string SaveCNIC(string Patient_ID, string enteredCNIC)
         {
             try

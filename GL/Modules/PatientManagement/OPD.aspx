@@ -10,7 +10,9 @@
         $(document).ready(function () {
             LoadClinicCard();
             loadCardfee();
-        
+
+            CheckOPDApprovalMode();
+
             var urlParams = new URLSearchParams(window.location.search);
             var patId = urlParams.get('ID');
             if (patId) {
@@ -601,6 +603,26 @@
                         }
                     });
                     location.reload();
+                }
+            });
+        }
+        function CheckOPDApprovalMode() {
+            $.ajax({
+                type: "POST",
+                url: "OPD.aspx/GetOPDApprovalMode",
+                contentType: "application/json; charset=utf-8",
+                dataType: "json",
+                success: function (response) {
+                    var mode = response.d ? JSON.parse(response.d) : response.d;
+                    if (mode == "02") {
+                        $('#divapprove').hide();
+                        $('#divvoucher').hide();
+                        $('#btnapprove').hide();
+                        $('#btnPrintVoucher').hide();
+                    }
+                },
+                error: function (xhr, status, error) {
+                    console.error("Error loading approval mode:", error);
                 }
             });
         }

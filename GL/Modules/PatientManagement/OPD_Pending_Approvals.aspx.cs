@@ -50,6 +50,39 @@ namespace PMS.Modules.PatientManagement
             return result;
         }
         [WebMethod]
+        public static string ApproveSingleOPD(string pat_id, string Pat_Category)
+        {
+            string result = string.Empty;
+
+            using (DataBaseDataContext db = new DataBaseDataContext())
+            using (SqlConnection con = new SqlConnection(db.Connection.ConnectionString))
+            using (SqlCommand cmd = new SqlCommand("dbo.SpApprove_Pending_OPD", con))
+            {
+                cmd.CommandType = CommandType.StoredProcedure;
+                cmd.Parameters.AddWithValue("@Pat_ID", Convert.ToInt64(pat_id));
+                cmd.Parameters.AddWithValue("@Pat_Category", (object)Pat_Category ?? "");
+                cmd.Parameters.AddWithValue("@user_id", AppConfig.UserID);
+                con.Open();
+
+                var rows = new List<Dictionary<string, object>>();
+                using (SqlDataReader reader = cmd.ExecuteReader())
+                {
+                    while (reader.Read())
+                    {
+                        var row = new Dictionary<string, object>();
+                        for (int i = 0; i < reader.FieldCount; i++)
+                        {
+                            row[reader.GetName(i)] = reader.IsDBNull(i) ? null : reader.GetValue(i);
+                        }
+                        rows.Add(row);
+                    }
+                }
+
+                result = (new JavaScriptSerializer()).Serialize(rows);
+            }
+            return result;
+        }
+        [WebMethod]
         public static string LoadPatientsToApprove_OPD(string pat_type, string search)
         {
             string result = string.Empty;

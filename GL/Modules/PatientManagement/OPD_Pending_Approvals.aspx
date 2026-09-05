@@ -12,25 +12,61 @@
 
             $('#ddlpatientType').on('change', function () {
                 GetOPDToApproveList();
+                if ($(this).val() !== '0') {
+                    DisablePatientType();
+                }
             });
 
             $(document).on('change', '#header-check', function () {
                 var isChecked = $(this).prop('checked');
                 if (!oTable) return;
+
+                var allMode = ($('#ddlpatientType').val() === '0');
+                var skipped = 0;
                 oTable.rows().every(function () {
                     var rowNode = $(this.node());
+                    var data = this.data();
+                    var isPrivate = data && data.Patient_Type === '02';
                     var cb = rowNode.find('.chckrow');
-                    cb.prop('checked', isChecked).trigger('change');
+                    if (isChecked && allMode && isPrivate) {
+                        skipped++;
+                        cb.prop('checked', false).trigger('change');
+                    } else {
+                        cb.prop('checked', isChecked).trigger('change');
+                    }
                 });
+                UpdateHeaderCheck();
+
+                if (isChecked && skipped > 0) {
+                    Swal.fire({
+                        icon: 'info',
+                        title: 'General Only Selected',
+                        text: skipped + ' Private patient(s) excluded. Select Private from Patient Type filter to approve Private.',
+                        timer: 3000,
+                        showConfirmButton: false
+                    });
+                }
             });
 
             $(document).on('change', '.chckrow', function () {
                 var id = $(this).val();
+                var rowData = oTable ? oTable.row($(this).closest('tr')).data() : null;
+                var isPrivate = rowData && rowData.Patient_Type === '02';
+                var allMode = ($('#ddlpatientType').val() === '0');
+
                 if ($(this).is(':checked')) {
-                    if (oTable) {
-                        var rowData = oTable.row($(this).closest('tr')).data();
-                        if (rowData) selectedRows[id] = rowData;
+                    if (isPrivate && allMode) {
+                        $(this).prop('checked', false);
+                        Swal.fire({
+                            icon: 'info',
+                            title: 'Private Excluded',
+                            text: 'Select Private from Patient Type filter to approve Private patients.',
+                            timer: 2500,
+                            showConfirmButton: false
+                        });
+                        return;
                     }
+                    if (rowData) selectedRows[id] = rowData;
                 } else {
                     delete selectedRows[id];
                 }
@@ -52,7 +88,7 @@
 
                 Swal.fire({
                     title: 'Confirm Approval',
-                    text: 'Approve ' + ids.length + ' patient(s) with a single OPD voucher?',
+                    text: 'Approve ' + ids.length + ' selected patient(s)?',
                     icon: 'question',
                     showCancelButton: true,
                     confirmButtonColor: '#28a745',
@@ -70,7 +106,11 @@
                         didOpen: () => { Swal.showLoading(); }
                     });
 
-                    PageMethods.ApproveBulkOPD(ids.join(','), function (response) {
+                    var patMode = $('#ddlpatientType').val();
+                    if (patMode === '02') {
+                        ApprovePrivateSequence(ids, 0, 0);
+                    } else {
+                        PageMethods.ApproveBulkOPD(ids.join(','), function (response) {
                         try {
                             var res = JSON.parse(response);
                             if (res && res.length > 0 && res[0].Voucher_ID > 0) {
@@ -111,9 +151,51 @@
                             confirmButtonColor: '#d33'
                         });
                     });
+                    }
                 });
             });
         });
+
+        function ApprovePrivateSequence(ids, idx, successCount) {
+            if (idx >= ids.length) {
+                Swal.fire({
+                    icon: successCount > 0 ? 'success' : 'error',
+                    title: successCount > 0 ? 'Vouchers Posted' : 'Approval Failed',
+                    text: successCount + ' of ' + ids.length + ' Private patient voucher(s) posted successfully.',
+                    confirmButtonColor: successCount > 0 ? '#28a745' : '#d33'
+                }).then(function () {
+                    window.location.href = 'OPD_Pending_Approvals.aspx';
+                });
+                return;
+            }
+
+            PageMethods.ApproveSingleOPD(ids[idx], '02', function (response) {
+                try {
+                    var res = JSON.parse(response);
+                    if (res && res.length > 0 && res[0].Voucher_ID > 0) {
+                        successCount++;
+                    }
+                } catch (e) {
+                }
+                ApprovePrivateSequence(ids, idx + 1, successCount);
+            }, function (error) {
+                ApprovePrivateSequence(ids, idx + 1, successCount);
+            });
+        }
+
+        function DisablePatientType() {
+            var $ddl = $('#ddlpatientType');
+            $ddl.prop('disabled', true);
+            var $container = $ddl.data('select2') ? $ddl.data('select2').$container : $ddl.next('.select2-container');
+            if ($container && $container.length) {
+                $container.addClass('select2-container--disabled');
+                $container.find('.select2-selection').css({
+                    'background-color': '#e9ecef',
+                    'pointer-events': 'none',
+                    'cursor': 'not-allowed'
+                });
+            }
+        }
 
         function GetOPDToApproveList() {
             var pat_type = $('#ddlpatientType').val();
@@ -161,6 +243,7 @@
                 "data": data,
                 "paging": true,
                 "pageLength": 25,
+                "lengthMenu": [[10, 25, 50, 100, -1], [10, 25, 50, 100, "All"]],
                 "ordering": true,
                 "columns": [
                     {
@@ -174,37 +257,45 @@
                         }
                     },
                     { "data": "Patient_ID", "visible": false, "searchable": false },
-                    { "data": "mr_no_sequence", "width": "12%" },
-                    { "data": "Opd_No", "width": "8%", "className": "text-center" },
-                    { "data": "Full_Name", "width": "20%" },
-                    { "data": "Pat_type", "width": "10%" },
-                    { "data": "DeptName", "width": "14%" },
-                    { "data": "Status", "width": "8%" },
+                    { "data": "mr_no_sequence", "width": "3%" },
+                    { "data": "Opd_No", "width": "3%", "className": "text-center" },
+                    { "data": "Full_Name", "width": "15%" },
+                    { "data": "Pat_type", "width": "4%" },
+                    { "data": "DeptName", "width": "5%" },
+                    { "data": "Status", "width": "3%" },
                     {
-                        "data": "Actual_Amount", "width": "10%",
+                        "data": "Actual_Amount", "width": "5%",
                         "type": "num-fmt",
                         "className": "text-right",
                         "render": function (d) { return (parseFloat(d) || 0).toFixed(2); }
                     },
                     {
-                        "data": "Receipt_Amount", "width": "10%",
+                        "data": "Receipt_Amount", "width": "5%",
                         "type": "num-fmt",
                         "className": "text-right",
                         "render": function (d) { return (parseFloat(d) || 0).toFixed(2); }
                     },
                 
-                    //{
-                    //    "data": "Hospital_Share", "width": "10%",
-                    //    "type": "num-fmt",
-                    //    "className": "text-right",
-                    //    "render": function (d) { return (parseFloat(d) || 0).toFixed(2); }
-                    //},
+                  
                     {
-                        "data": "Discount_Amount", "width": "10%",
+                        "data": "Discount_Amount", "width": "5%",
                         "type": "num-fmt",
                         "className": "text-right",
                         "render": function (d) { return (parseFloat(d) || 0).toFixed(2); }
-                    }
+                    },
+                    {
+                        "data": "Hospital_Share", "width": "4%",
+                        "type": "num-fmt",
+                        "className": "text-right",
+                        "render": function (d) { return (parseFloat(d) || 0).toFixed(2); }
+                    },
+                    {
+                        "data": "Doctor_Share", "width": "4%",
+                        "type": "num-fmt",
+                        "className": "text-right",
+                        "render": function (d) { return (parseFloat(d) || 0).toFixed(2); }
+                    },
+
                 ],
                 "language": {
                     "search": "",
@@ -319,8 +410,9 @@
                         <th>Bill Status</th>
                            <th>Actual Amount</th>
                         <th>Receipt Amount</th>
-                      <%--  <th>Hospital Share</th>--%>
                         <th>Discount Amount</th>
+                      <th>Hospital Share</th>
+                      <th>Doctor Share</th>
                     </tr>
                 </thead>
             </table>
