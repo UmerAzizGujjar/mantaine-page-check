@@ -1,5 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Data;
+using System.Data.SqlClient;
 using System.Linq;
 using System.Web;
 using System.Web.Script.Serialization;
@@ -22,16 +24,47 @@ namespace PMS.Modules.Billing
             string result = string.Empty;
 
             using (DataBaseDataContext db = new DataBaseDataContext())
+            using (SqlConnection con = new SqlConnection(db.Connection.ConnectionString))
+            using (SqlCommand cmd = new SqlCommand("dbo.sp_Load_Payables", con))
             {
-                var query = db.sp_Load_Payables().ToList();
+                cmd.CommandType = CommandType.StoredProcedure;
+                con.Open();
 
+                var rows = new List<Dictionary<string, object>>();
+                using (SqlDataReader reader = cmd.ExecuteReader())
+                {
+                    while (reader.Read())
+                    {
+                        var row = new Dictionary<string, object>();
+                        for (int i = 0; i < reader.FieldCount; i++)
+                        {
+                            row[reader.GetName(i)] = reader.IsDBNull(i) ? null : reader.GetValue(i);
+                        }
+                        rows.Add(row);
+                    }
+                }
 
-                result = (new JavaScriptSerializer()).Serialize(query).ToString();
+                result = (new JavaScriptSerializer()).Serialize(rows);
             }
             return result;
         }
 
 
+
+        [WebMethod]
+        public static string GetEditMode()
+        {
+            try
+            {
+                DataBaseDataContext db = new DataBaseDataContext();
+                var sysParm = db.sys_Parms.FirstOrDefault(p => p.Name == "Doctor Payable Edit Mode");
+                return (sysParm != null && !string.IsNullOrEmpty(sysParm.Code)) ? sysParm.Code : "";
+            }
+            catch (Exception ex)
+            {
+                return "";
+            }
+        }
 
         [WebMethod]
         public static string loadDoctors()

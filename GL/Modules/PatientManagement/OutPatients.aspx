@@ -1856,12 +1856,9 @@
             FillEyeMainTypesAndSubTypes();
             FillEyeSubTypeOnchangeOfEyeMainType();
             $("#ctl00_MainContent_FollowNoDate").datepicker();
-            $("#ctl00_MainContent_txtVitalsDate").datepicker();
             var today = new Date();
             var dd = today.getDate();
             var mm = today.getMonth() + 1;
-            $("#ctl00_MainContent_txtPeads_DateOfDelivery").datepicker();
-            $("#ctl00_MainContent_txtPeads_TimeOfDelivery").ptTimeSelect();
             var yyyy = today.getFullYear();
 
             if (dd < 10) {
@@ -1873,6 +1870,12 @@
             }
             debugger;
             today = mm + '/' + dd + '/' + yyyy;
+            if ($("#ctl00_MainContent_txtVitalsDate").val() == "") {
+                $("#ctl00_MainContent_txtVitalsDate").val(yyyy + '-' + mm + '-' + dd);
+            }
+            $("#ctl00_MainContent_txtVitalsDate").datepicker({ dateFormat: "yy-mm-dd", disabled: true });
+            $("#ctl00_MainContent_txtPeads_DateOfDelivery").datepicker();
+            $("#ctl00_MainContent_txtPeads_TimeOfDelivery").ptTimeSelect();
             $('#txtMedicen').hide();
             $('#<%= txtPatient_ID.ClientID%>').change(function () {
                 loadAjax();
@@ -2684,10 +2687,18 @@
                     var DoctorName = value.DoctorName ?? '';
                     var rowColorStyle = '';
 
-                    if (value.BP == null || value.BP == undefined || value.BP === '' || String(value.BP).trim() === '') {
-                        status = 'Un Checked';
+                    var isChecked = value.HasSymptoms === true;
+                    var isVitalsTaken = value.BP != null && String(value.BP).trim() !== '';
+
+                    if (isChecked) {
+                        status = 'Checked';
+                    } else if (isVitalsTaken) {
+                        status = 'Vitals Taken';
                     } else {
-                        status = 'Checked/Vitals Takens';
+                        status = 'Un Checked';
+                    }
+
+                    if (isChecked || isVitalsTaken) {
                         rowColorStyle = 'style="background-color: #aeffae !important;"';
                     }
 
@@ -3696,6 +3707,26 @@
                 LoadServices_Procedures();
                 Load_Proto();
 
+                setTimeout(function () {
+                    var bp = $('#ctl00_MainContent_txtBP').val();
+                    var vitalsTaken = bp != null && String(bp).trim() !== '';
+                    if (!vitalsTaken) {
+                        var tabs = $('#tabs').find('ul').find('li');
+                        var tabMap = { 2: 1, 3: 6, 4: 9, 5: 3, 6: 5, 7: 7, 8: 8 };
+                        for (var i in tabMap) {
+                            $(tabs[i]).hide();
+                            $('#Tab-' + tabMap[i]).hide();
+                        }
+                        $('#tabs').tabs('option', 'active', 1);
+                        Swal.fire({
+                            icon: 'warning',
+                            title: 'Vitals Required',
+                            text: 'Please take vitals first before proceeding.',
+                            timer: 2500,
+                            showConfirmButton: false
+                        });
+                    }
+                }, 800);
 
             }
 
@@ -4929,7 +4960,7 @@
                  Follow_Up : $('#ctl00_MainContent_ddlFOllowUp').val(),
                  Proto : $('#ctl00_MainContent_ddlProto').val(),
                  Follow_Date : $('#ctl00_MainContent_FollowNoDate').val(),
-                 Vitals_Date : $('#ctl00_MainContent_txtVitalsDate').val(),
+                 Vitals_Date : (function(){var d = new Date();function p(n){return (n < 10 ? '0' : '') + n;}return d.getFullYear() + '-' + p(d.getMonth() + 1) + '-' + p(d.getDate()) + ' ' + p(d.getHours()) + ':' + p(d.getMinutes()) + ':' + p(d.getSeconds());})(),
                   pulse_Min : $('#ctl00_MainContent_txtPuls').val(),
                  L_M_P : $('#ctl00_MainContent_txtLMP').val(),
                  SPO2 : $('#ctl00_MainContent_txtspo2').val(),
