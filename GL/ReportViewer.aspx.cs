@@ -3541,6 +3541,37 @@ namespace PMS
                 rd.SetParameterValue("@Patient_Type", PatType);
                 rd.SetParameterValue("CompanyLogo", logoPath);
             }
+            else if (reportName == "Excessive_Amount_Billing_Report")
+            {
+
+
+                var logoPath = DBClass.getField("SELECT dbo.GetCompanyLogo()");
+
+                string rptFileName = "TransactionalDetails/rptExcessive_Amount_Report.rpt";
+  
+                reportPath += rptFileName;
+                rd.Load(reportPath);
+
+                string stDate = Request.QueryString["sDate"].ToString();
+                string stTime = Request.QueryString["STime"].ToString();
+                string endDate = Request.QueryString["eDate"].ToString();
+                string endTime = Request.QueryString["ETime"].ToString();
+                string Operator = Request.QueryString["Operator"].ToString();
+                string doctorID = Request.QueryString["DoctorID"].ToString();
+
+                string parameterStDate = string.Empty;
+                string parameterEndDate = string.Empty;
+
+                this.getDateTimeDBFormate(stDate, stTime, out parameterStDate);
+                this.getDateTimeDBFormate(endDate, endTime, out parameterEndDate);
+                rd.SetParameterValue("@stDate", parameterStDate);
+                rd.SetParameterValue("@endDate", parameterEndDate);
+                rd.SetParameterValue("CompanyName", AppConfig.Company_Name);
+                rd.SetParameterValue("Title", reportTitle);
+                rd.SetParameterValue("@Operator", Operator);
+                rd.SetParameterValue("@DoctorID", doctorID);
+                rd.SetParameterValue("CompanyLogo", logoPath);
+            }
             else if (reportName == "StudentAttendanceList")
             {
                 string companyAddress = DBClass.getField("select Company_Address from sys_Companys where Company_ID = " + AppConfig.Company_ID + "").ToString();
