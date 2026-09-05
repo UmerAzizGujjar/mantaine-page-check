@@ -2199,7 +2199,12 @@ namespace PMS
                             Checked = ((from op in db.Out_Patients
                                         where op.Patient_ID == p.Patient_ID
                                         && op.Doctor_ID != null && op.Doctor_ID != ""
-                                        select op.Doctor_ID).FirstOrDefault()),        
+                                        select op.Doctor_ID).FirstOrDefault()),
+                            HasSymptoms = (from op in db.Out_Patients
+                                           where op.Patient_ID == p.Patient_ID
+                                              && op.HistoryOfPeresentIllness != null
+                                              && op.HistoryOfPeresentIllness != ""
+                                           select op.HistoryOfPeresentIllness).Any(),        
                             Token_No = (from t in db.Patients
                                         where t.Patient_ID < p.Patient_ID 
                                            && t.Created_Time.Value.Date == p.Created_Time.Value.Date

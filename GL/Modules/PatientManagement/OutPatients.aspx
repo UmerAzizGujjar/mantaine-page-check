@@ -2684,10 +2684,18 @@
                     var DoctorName = value.DoctorName ?? '';
                     var rowColorStyle = '';
 
-                    if (value.BP == null || value.BP == undefined || value.BP === '' || String(value.BP).trim() === '') {
-                        status = 'Un Checked';
+                    var isChecked = value.HasSymptoms === true;
+                    var isVitalsTaken = value.BP != null && String(value.BP).trim() !== '';
+
+                    if (isChecked) {
+                        status = 'Checked';
+                    } else if (isVitalsTaken) {
+                        status = 'Vitals Taken';
                     } else {
-                        status = 'Checked/Vitals Takens';
+                        status = 'Un Checked';
+                    }
+
+                    if (isChecked || isVitalsTaken) {
                         rowColorStyle = 'style="background-color: #aeffae !important;"';
                     }
 
@@ -3696,6 +3704,26 @@
                 LoadServices_Procedures();
                 Load_Proto();
 
+                setTimeout(function () {
+                    var bp = $('#ctl00_MainContent_txtBP').val();
+                    var vitalsTaken = bp != null && String(bp).trim() !== '';
+                    if (!vitalsTaken) {
+                        var tabs = $('#tabs').find('ul').find('li');
+                        var tabMap = { 2: 1, 3: 6, 4: 9, 5: 3, 6: 5, 7: 7, 8: 8 };
+                        for (var i in tabMap) {
+                            $(tabs[i]).hide();
+                            $('#Tab-' + tabMap[i]).hide();
+                        }
+                        $('#tabs').tabs('option', 'active', 1);
+                        Swal.fire({
+                            icon: 'warning',
+                            title: 'Vitals Required',
+                            text: 'Please take vitals first before proceeding.',
+                            timer: 2500,
+                            showConfirmButton: false
+                        });
+                    }
+                }, 800);
 
             }
 

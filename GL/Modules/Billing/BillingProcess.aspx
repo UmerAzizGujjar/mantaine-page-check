@@ -1589,14 +1589,26 @@
                     $('#txtcashinhand').val(data[0].Cash_In_Hand);
                     $('#txtbankcash').val(data[0].Bank_Cash);
 
+                    var $ddl = $('#ddlReffered_By');
 
-               
-                    $('#ddlReffered_By').html(
+                    $ddl.empty();
+
+                    $ddl.append(
                         $('<option>', {
                             value: data[0].Referred_By,
-                            text: data[0].Referred_By_Text
+                            text: data[0].Referred_By_Text,
+                            selected: true
                         })
                     );
+
+                    $ddl.val(data[0].Referred_By).trigger('change');
+               
+                    // $('#ddlReffered_By').html(
+                    //     $('<option>', {
+                    //         value: data[0].Referred_By,
+                    //         text: data[0].Referred_By_Text
+                    //     })
+                    // );
 
                     debugger;
                     LoadSalesTaxDefinitions(
@@ -1817,6 +1829,7 @@
                     alert("Please Select Charge Policy");
                     proceed = false;
                 }
+
                 return proceed;
             }
          function IsDiscountGiven() {
@@ -1844,6 +1857,8 @@
                             var doctorId = $(this).find('select[name="ddlDoctor"]').val();
                             if (!doctorId || doctorId === '' || doctorId === '0' || doctorId === null) {
                                 missingDoctorRow = itemName;
+                                $('#btnSave').prop('disabled', false);
+                                document.getElementById("hdnDuplicateCheck").value = "0";
                                 return false;
                             }
                         }
@@ -1882,6 +1897,8 @@
                         var disAmt = parseFloat($(value).find('input[name="DisAmount"]').val()) || 0;
                         if (disPer > 0 || disAmt > 0) {
                             isDiscountGiven = true;
+                            $('#btnSave').prop('disabled', false);
+                            document.getElementById("hdnDuplicateCheck").value = "0";
                             return false; // break loop
                         }
                     });
@@ -1903,6 +1920,8 @@
                             if (remarks === "" || remarks === ".") {
                                 missingRemarks = true;
                                 missingRowNumber = index + 1;
+                                $('#btnSave').prop('disabled', false);
+                                document.getElementById("hdnDuplicateCheck").value = "0";
                                 return false; // break each loop
                             }
                         }
@@ -2206,7 +2225,9 @@
                         debugger;
                         if (isAmountZero == true) {
                             alert("Amount Should not be zero");
-                            return true;
+                            $('#btnSave').prop('disabled', false);
+                            document.getElementById("hdnDuplicateCheck").value = "0";
+                            return ;
                         }
                         var Parameters = { Bill_ID: Bill_ID, Patient_ID: Patient_ID, Opd_id: Opd_id, Bill_Date: Bill_Date, Remarks: Remarks, TotalPayable: TotalPayable, Discount_Percentage: Discount_Percentage, Discount_Amount: Discount_Amount, Net_Amount: Net_Amount, Received_Amount: Received_Amount, Balance_Amount: Balance_Amount, ChargePolicy: ChargePolicy, Details: Details, Share: Share, referred_by_doctor: referred_by_doctor, bomItems: bomItems, Casher: Casher, Previous_Balance: Previous_Balance, Previous_Paid: Previous_Paid, Over_and_Above: Over_and_Above, Cash_In_Hand: Cash_In_Hand, Cash_In_Hand_Account: Cash_In_Hand_Account, Bank_Account: Bank_Account, Bank_Cash: Bank_Cash, Main_Department: Main_Department, PackageType: PackageType, PackageName: PackageName, finalbill: finalbill, BillDepartment: BillDepartment, BillCategory: BillCategory, hdn_docid: hdn_docid, opd_procedure: opd_procedure, bomTotalValue: bomTotalValue, SelectedBranchId: selectedBranchId,Patient_Type: Patient_Type, Sales_Tax_ID: $('#hdnSalesTaxID').val(), Sales_Tax_Percentage: $('#hdnSalesTaxPercentage').val(), Panel_Id: Panel_Id, Appointment_ID: $('#hdnAppointment_ID').val(), }; //Total_Doctor_Share: Total_Doctor_Share,
                         var rcptAmt = $('#txtAmountReceived').val();
