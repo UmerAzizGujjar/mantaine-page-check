@@ -1688,6 +1688,7 @@
                                 '<input type="hidden" name="hdnUnlistedMed" value="' + unlistedFlag + '" />' +
                                 '</td>' +
                                 '<td><input type="text" class="form-control routeInput" name="issue_rcvd_qty" value="0" placeholder="Enter value" /></td>' +
+                                '<td><input type="text" class="form-control routeInput" value="0" name="RtnQty" placeholder="Enter value" /></td>' +
                                 '</tr>';
                             // ========== END MODIFY ==========
 
@@ -2480,6 +2481,7 @@
                     "PRN": false,
                     'Issue_Qty': $($(value).find('td')[7]).find('input').val() || 0,
                     'Rec_Qty': $($(value).find('td')[8]).find('input').val() || 0,
+                    'Rtn_Qty': $(value).find('input[name=RtnQty]').val() || 0,
                     "Unlisted_Med": $(value).find('input[name=hdnUnlistedMed]').val() === '1'
                 });
             });
@@ -2860,7 +2862,7 @@
                         }
                         else if (value.STAT == true) {
 
-                            rowsStat += '<tr> <td> <input type="hidden" name="testDate" value="' + Start_Date + '">' + Start_Date + ' </td><td> ' + value.Medicine_Name + '</td><td> ' + value.Dosage_Qty + '</td><td> ' + value.Dosage_From + '</td> <td> ' + value.Frequency + ' </td><td> ' + value.Injections + '</td>   <td> ' + value.Oral + ' </td><td> <input type="text" class="form-control routeInput" value="' + Req_Qty + '"   name="IssueQty"  placeholder="Enter value" /></td><td> <input type="text" class="form-control routeInput" value="' + Rcv_Qty +'"   name="RecQty"  placeholder="Enter value" /></td><td> ' + value.Other_Instruction + '</td>' + ' <td>' + value.AttendingParamedical_Staff + '</td>' + '<td>' + value.Username + '</td><td><input type="hidden" name="uurowid" value=' + uuid() + ' /><input type="hidden" name="hdnMedId" value="' + value.In_Patient_Medicine_ID + '" />  </td><td><input type="text" class="form-control routeInput" name="issue_rcvd_qty" value="' + (value.Issue_Rcvd_Qty || 0) + '" placeholder="Enter value" /></td><td style="display:none;"></td></tr>';
+                            rowsStat += '<tr> <td> <input type="hidden" name="testDate" value="' + Start_Date + '">' + Start_Date + ' </td><td> ' + value.Medicine_Name + '</td><td> ' + value.Dosage_Qty + '</td><td> ' + value.Dosage_From + '</td> <td> ' + value.Frequency + ' </td><td> ' + value.Injections + '</td>   <td> ' + value.Oral + ' </td><td> <input type="text" class="form-control routeInput" value="' + Req_Qty + '"   name="IssueQty"  placeholder="Enter value" /></td><td> <input type="text" class="form-control routeInput" value="' + Rcv_Qty +'"   name="RecQty"  placeholder="Enter value" /></td><td> ' + value.Other_Instruction + '</td>' + ' <td>' + value.AttendingParamedical_Staff + '</td>' + '<td>' + value.Username + '</td><td><input type="hidden" name="uurowid" value=' + uuid() + ' /><input type="hidden" name="hdnMedId" value="' + value.In_Patient_Medicine_ID + '" />  </td><td><input type="text" class="form-control routeInput" name="issue_rcvd_qty" value="' + (value.Issue_Rcvd_Qty || 0) + '" placeholder="Enter value" /></td><td><input type="text" class="form-control routeInput" value="' + Rtn_Qty + '" name="RtnQty" placeholder="Enter value" /></td><td style="display:none;"></td></tr>';
 
                         }
 
@@ -2947,7 +2949,7 @@
                         }
                         else if (value.STAT == true) {
 
-                            rowsStat += '<tr' + (value.Unlisted_Med == true ? ' class="unlisted-row unlisted-saved"' : '') + '> <td> <input type="hidden" name="testDate" value="' + Start_Date + '">' + Start_Date + ' </td><td> ' + value.Medicine_Name + '</td><td> ' + value.Dosage_Qty + '</td><td> ' + value.Dosage_From + '</td> <td> ' + value.Frequency + ' </td><td> ' + value.Injections + '</td>   <td> ' + value.Oral + ' </td><td> <input type="text" class="form-control routeInput" value="' + Req_Qty + '"   name="IssueQty"  placeholder="Enter value" /></td><td> <input type="text" class="form-control routeInput" value="' + Rcv_Qty +'"   name="RecQty"  placeholder="Enter value" /></td><td> ' + value.Other_Instruction + '</td>' + ' <td>' + value.AttendingParamedical_Staff + '</td>' + '<td>' + value.Username + '</td><td class="eddit">' + (value.Unlisted_Med == true ? '<span class="unlisted-tag">Unlisted</span>' : '<a href="#" onclick="editMedicine(this)"> Edit </a> <a href="#" onclick="deleteMedicine(this)"> Delete </a>') + '<input type="hidden" name="uurowid" value=' + uuid() + ' /><input type="hidden" name="hdnMedId" value="' + value.In_Patient_Medicine_ID + '" /><input type="hidden" name="hdnUnlistedMed" value="' + (value.Unlisted_Med == true ? '1' : '0') + '" />  </td><td><input type="text" class="form-control routeInput" name="issue_rcvd_qty" value="' + (value.Issue_Rcvd_Qty || 0) + '" placeholder="Enter value" /></td><td style="display:none;"></td></tr>';
+                            rowsStat += '<tr' + (value.Unlisted_Med == true ? ' class="unlisted-row unlisted-saved"' : '') + '> <td> <input type="hidden" name="testDate" value="' + Start_Date + '">' + Start_Date + ' </td><td> ' + value.Medicine_Name + '</td><td> ' + value.Dosage_Qty + '</td><td> ' + value.Dosage_From + '</td> <td> ' + value.Frequency + ' </td><td> ' + value.Injections + '</td>   <td> ' + value.Oral + ' </td><td> <input type="text" class="form-control routeInput" value="' + Req_Qty + '"   name="IssueQty"  placeholder="Enter value" /></td><td> <input type="text" class="form-control routeInput" value="' + Rcv_Qty +'"   name="RecQty"  placeholder="Enter value" /></td><td> ' + value.Other_Instruction + '</td>' + ' <td>' + value.AttendingParamedical_Staff + '</td>' + '<td>' + value.Username + '</td><td class="eddit">' + (value.Unlisted_Med == true ? '<span class="unlisted-tag">Unlisted</span>' : '<a href="#" onclick="editMedicine(this)"> Edit </a> <a href="#" onclick="deleteMedicine(this)"> Delete </a>') + '<input type="hidden" name="uurowid" value=' + uuid() + ' /><input type="hidden" name="hdnMedId" value="' + value.In_Patient_Medicine_ID + '" /><input type="hidden" name="hdnUnlistedMed" value="' + (value.Unlisted_Med == true ? '1' : '0') + '" />  </td><td><input type="text" class="form-control routeInput" name="issue_rcvd_qty" value="' + (value.Issue_Rcvd_Qty || 0) + '" placeholder="Enter value" /></td><td><input type="text" class="form-control routeInput" value="' + Rtn_Qty + '" name="RtnQty" placeholder="Enter value" /></td><td style="display:none;"></td></tr>';
 
                         }
 
@@ -5726,6 +5728,7 @@
                                                     <th>Username</th>
                                                     <th>Edit</th>
                                                     <th>Rcvd Qty</th>
+                                                    <th>Rtn Qty</th>
                                                 </tr>
                                             </thead>
                                             <tbody></tbody>

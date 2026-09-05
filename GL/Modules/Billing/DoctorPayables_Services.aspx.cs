@@ -1,5 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Data;
+using System.Data.SqlClient;
 using System.Linq;
 using System.Web;
 using System.Web.Script.Serialization;
@@ -18,31 +20,44 @@ namespace PMS.Modules.Billing
         [WebMethod]
         public static string ViewList(int DocId, string startDate, string endDate)
         {
-            DateTime dTimestDate;
-            DateTime dTimeenDate;
+            var rows = new List<Dictionary<string, object>>();
 
-
-
-            if (startDate == "" || endDate == "")
+            using (DataBaseDataContext db = new DataBaseDataContext())
+            using (SqlConnection con = new SqlConnection(db.Connection.ConnectionString))
+            using (SqlCommand cmd = new SqlCommand("dbo.sp_Load_Payables_Details", con))
             {
-                DataBaseDataContext db = new DataBaseDataContext();
-                var Details = db.sp_Load_Payables_Details(DocId).ToList();
-                return (new JavaScriptSerializer()).Serialize(Details);
-            }
-            else
+                cmd.CommandType = CommandType.StoredProcedure;
+                cmd.Parameters.AddWithValue("@DocId", DocId);
+                con.Open();
 
+                using (SqlDataReader reader = cmd.ExecuteReader())
+                {
+                    while (reader.Read())
+                    {
+                        var row = new Dictionary<string, object>();
+                        for (int i = 0; i < reader.FieldCount; i++)
+                        {
+                            row[reader.GetName(i)] = reader.IsDBNull(i) ? null : reader.GetValue(i);
+                        }
+                        rows.Add(row);
+                    }
+                }
+            }
+
+            if (startDate != "" && endDate != "")
             {
-                dTimestDate = Convert.ToDateTime(startDate);
-                //dTimeenDate = Convert.ToDateTime(endDate);
-                dTimeenDate = Convert.ToDateTime(endDate).AddDays(1);
+                DateTime dTimestDate = Convert.ToDateTime(startDate);
+                DateTime dTimeenDate = Convert.ToDateTime(endDate).AddDays(1);
 
-                DataBaseDataContext db = new DataBaseDataContext();
-                var Details = db.sp_Load_Payables_Details(DocId).ToList().Where(x => x.Bill_Date >= dTimestDate && x.Bill_Date <= dTimeenDate).ToList().OrderByDescending(x => x.Bill_Date);
-                return (new JavaScriptSerializer()).Serialize(Details);
+                rows = rows.Where(x => x["Bill_Date"] != null &&
+                                       Convert.ToDateTime(x["Bill_Date"]) >= dTimestDate &&
+                                       Convert.ToDateTime(x["Bill_Date"]) <= dTimeenDate)
+                           .OrderByDescending(x => Convert.ToDateTime(x["Bill_Date"]))
+                           .ToList();
             }
 
+            return (new JavaScriptSerializer()).Serialize(rows);
         }
-
 
 
 

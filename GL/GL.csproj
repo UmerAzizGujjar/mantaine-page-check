@@ -343,6 +343,7 @@
     <Content Include="Modules\Billing\BillApproval.aspx" />
     <Content Include="Modules\Billing\DiscountAssignedList.aspx" />
     <Content Include="Modules\Billing\DoctorPayables.aspx" />
+    <Content Include="Modules\Billing\DoctorPayableService_Standard.aspx" />
     <Content Include="Modules\Billing\DoctorPayables_Services.aspx" />
     <Content Include="Modules\Billing\FBRBillingView.aspx" />
     <Content Include="Modules\Billing\DiscountAssigned.aspx" />
@@ -471,6 +472,7 @@
     <Content Include="Modules\Administrator\DoctorPayableView.aspx" />
     <Content Include="Modules\Administrator\Doctor_Payable.aspx" />
     <Content Include="Modules\PatientManagement\DeathDetailsList.aspx" />
+    <Content Include="Modules\PatientManagement\OPD_Pending_Approvals.aspx" />
     <Content Include="Modules\PatientManagement\Physiotherapy_Assessment.aspx" />
     <Content Include="Modules\PatientManagement\Birthcertificate.aspx" />
     <Content Include="Modules\PatientManagement\BirthCertificateView.aspx" />
@@ -3198,6 +3200,13 @@
     <Compile Include="Modules\Billing\DoctorPayables.aspx.designer.cs">
       <DependentUpon>DoctorPayables.aspx</DependentUpon>
     </Compile>
+    <Compile Include="Modules\Billing\DoctorPayableService_Standard.aspx.cs">
+      <DependentUpon>DoctorPayableService_Standard.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Modules\Billing\DoctorPayableService_Standard.aspx.designer.cs">
+      <DependentUpon>DoctorPayableService_Standard.aspx</DependentUpon>
+    </Compile>
     <Compile Include="Modules\Billing\DoctorPayables_Services.aspx.cs">
       <DependentUpon>DoctorPayables_Services.aspx</DependentUpon>
       <SubType>ASPXCodeBehind</SubType>
@@ -4219,6 +4228,13 @@
     </Compile>
     <Compile Include="Modules\PatientManagement\DeathDetailsList.aspx.designer.cs">
       <DependentUpon>DeathDetailsList.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="Modules\PatientManagement\OPD_Pending_Approvals.aspx.cs">
+      <DependentUpon>OPD_Pending_Approvals.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Modules\PatientManagement\OPD_Pending_Approvals.aspx.designer.cs">
+      <DependentUpon>OPD_Pending_Approvals.aspx</DependentUpon>
     </Compile>
     <Compile Include="Modules\PatientManagement\Physiotherapy_Assessment.aspx.cs">
       <DependentUpon>Physiotherapy_Assessment.aspx</DependentUpon>
