@@ -8,6 +8,7 @@
         $(document).ready(function () {
             debugger;
             CheckCNICUpdateonCondition();
+            CheckEmerDocTokenCondition();
             MaskedInput({
                 elm: document.getElementById('txt_mobile'),
                 format: '+92__________',
@@ -95,6 +96,7 @@
                 { id: '#ddlServices', method: 'GetServices' },
                 { id: '#ddlDepartment', method: 'GetDepartment' },
                 { id: '#ddldoctor', method: 'GetDoctor' },
+                { id: '#ddlEmerDoctor', method: 'GetDoctor' },
                 { id: '#ddlpanel', method: 'GetPanel' },
                 { id: '#ddlcashier', method: 'GetCasher' }
             ];
@@ -1082,6 +1084,27 @@
                 }
             });
         }
+        function CheckEmerDocTokenCondition() {
+            $.ajax({
+                type: "POST",
+                url: "EmergencyForm.aspx/EmerDocTokenCondition",
+                data: JSON.stringify({}),
+                contentType: "application/json; charset=utf-8",
+                dataType: "json",
+                success: function (response) {
+                    var val = JSON.parse(response.d);
+                    if (val === '02') {
+                        $('#emerDoctor').show();
+                    } else {
+                        $('#emerDoctor').hide();
+                    }
+                },
+                error: function (error) {
+                    console.error("Error checking token condition", error);
+                    $('#emerDoctor').hide();
+                }
+            });
+        }
 
         function SaveCNIC(enteredCNIC) {
             var Patient_ID = $('#hdn_regid').val();
@@ -1787,6 +1810,7 @@
             // Panel and Private fields
             var panel = $('#ddlpanel').val();
             var doctor = $('#ddldoctor').val();
+            var emerDoctor = $('#ddlEmerDoctor').val();
 
             // Validations
         // Only validate fee for non-panel categories
@@ -1863,7 +1887,8 @@
                 Remarks: Remarks,
                 AntiForgeryToken: hfAntiForgery,
                 panel: panel,
-                doctor: doctor
+                doctor: doctor,
+                emer_doctor: emerDoctor
             };
 
             $.ajax({
@@ -2424,6 +2449,12 @@
                     <div class="opd-field" id="doctor">
                         <label class="opd-label">Doctor</label>
                         <select id="ddldoctor" class="opd-select">
+                            <option value="0">Select Doctor</option>
+                        </select>
+                    </div>
+                    <div class="opd-field" id="emerDoctor" style="display:none;">
+                        <label class="opd-label">Token Doctor</label>
+                        <select id="ddlEmerDoctor" class="opd-select">
                             <option value="0">Select Doctor</option>
                         </select>
                     </div>

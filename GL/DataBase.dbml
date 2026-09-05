@@ -5937,6 +5937,7 @@
       <Column Name="isCancel" Type="System.Boolean" DbType="Bit" CanBeNull="true" />
       <Column Name="CancelRemarks" Type="System.String" DbType="VarChar(200)" CanBeNull="true" />
       <Column Name="tokenNo" Type="System.Int32" DbType="Int" CanBeNull="true" />
+      <Column Name="emer_doc_token" Type="System.Int32" DbType="Int" CanBeNull="true" />
       <Column Name="doc_fee" Type="System.String" DbType="VarChar(70)" CanBeNull="true" />
       <Column Name="mr_no_sequence" Type="System.String" DbType="NVarChar(50)" CanBeNull="true" />
       <Column Name="Reg_PatId" Type="System.Int32" DbType="Int" CanBeNull="true" />

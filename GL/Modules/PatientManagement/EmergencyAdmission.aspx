@@ -159,7 +159,7 @@
                 tbody.empty();
 
                 if (data.length === 0) {
-                    tbody.append('<tr><td colspan="7" class="text-center">No records found</td></tr>');
+                    tbody.append('<tr><td colspan="9" class="text-center">No records found</td></tr>');
                     return;
                 }
 
@@ -189,8 +189,10 @@
 
                     var row = '<tr>' +
                         '<td>' + item.Emergency_No + '</td>' +
+                        '<td><b>' + item.Doc_Token + '</b></td>' +
                         '<td>' + item.MR_No + '</td>' +
                         '<td>' + item.Patient_Name + '</td>' +
+                        '<td>' + item.Doctor_Name + '</td>' +
                         '<td>' + item.Age + '</td>' +
                         '<td>' + formattedTime + '</td>' +
                         '<td><span class="' + statusClass + '">' + item.Status + '</span></td>' +
@@ -871,8 +873,10 @@
                                 <thead id="ihead">
                                     <tr>
                                         <th>Emergency No</th>
+                                        <th>Doc Token</th>
                                         <th>MR No</th>
                                         <th>Patient Name</th>
+                                        <th>Doctor</th>
                                         <th>Age</th>
                                         <th style="width: 173px;">Created Time</th>
                                         <th>Status</th>

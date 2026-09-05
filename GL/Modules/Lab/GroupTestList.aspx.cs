@@ -46,7 +46,9 @@ namespace PMS
                                         Required_Value = D.Required_Value,
                                         Group_Depart =  D.Group_Depart,
                                         Segment5 =     D.Segment5,
-                                        Special_Test = D.Special_Test
+                                        Special_Test = D.Special_Test,
+                                        machine_name = D.machine_name,
+                                        StandardName = D.StandardName
                                     };
 
                     var FilteredCount = Grouptest.Count();

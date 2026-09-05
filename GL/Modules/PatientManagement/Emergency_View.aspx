@@ -143,9 +143,11 @@
                   { "data": "Emer_id", "name": "Emer_id", "visible": false, "width": "0%", "orderable": false },
                   { "data": "isCancel", "visible": false, "orderable": false, "width": "0%" },
                   { "data": "Emergency_No", "name": "Emergency_No", "width": "4%", "orderable": true },
+                  { "data": "emer_doc_token", "name": "emer_doc_token", "width": "5%", "orderable": true },
                  { "data": "mr_no_sequence", "name": "mr_no_sequence", "width": "8%", "orderable": true },
-           
+            
                  { "data": "Full_Name", "width": "16%", "orderable": false },
+                 { "data": "Doc_Name", "width": "12%", "orderable": false },
                  { 
                      "data": "Amount", 
                      "name": "Amount", 
@@ -225,9 +227,11 @@
                       <th style="display: none;">Emergency ID</th>    
                       <th style="display: none;">Is Cancel</th>
                            <th style="6%">Emr No.</th>
+                     <th style="width: 6%;">Doc Token</th>
                      <th style="width: 12%;">MR No.</th>
                 
                      <th style="width: 17%;">Name</th>
+                     <th style="width: 12%;">Doctor</th>
                      <th style="width: 12%;">Amount</th>
                      <th style="width: 12%;">Balance Amount</th>
                      <th style="width: 12%;">Department</th>

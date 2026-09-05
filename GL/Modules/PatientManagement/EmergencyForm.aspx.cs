@@ -1371,6 +1371,9 @@ namespace PMS.Modules.PatientManagement
                 {
                     Emergency pat = null;
                     bool isNew = string.IsNullOrEmpty(emer_id) || emer_id == "0" || emer_id == "(New)";
+                    bool emerTokenEnabled = (from sp in db.sys_Parms
+                                             where sp.Name == "Emer Doc Token"
+                                             select sp.Code).FirstOrDefault() == "02";
 
                     if (!isNew)
                     {
@@ -1431,7 +1434,12 @@ namespace PMS.Modules.PatientManagement
                         pat.Doctor_ID = "";
                         pat.PanelCompany = 0;
                     }
-                
+
+                    // Emergency token doctor (separate all-doctors dropdown).
+                    // When selected it drives Doctor_ID so emer_doc_token counts doctor-wise like OPD Doc_Token.
+                    if (emerTokenEnabled && !string.IsNullOrWhiteSpace(data.emer_doctor) && data.emer_doctor != "0")
+                        pat.Doctor_ID = data.emer_doctor;
+
 
                     // Fee & Discount
                     if (data.Fees >= 0)
@@ -1465,6 +1473,15 @@ namespace PMS.Modules.PatientManagement
 
                     if (!string.IsNullOrEmpty(data.accountid) && int.TryParse(data.accountid, out int accId))
                         pat.AccountID = accId;
+
+                    // emer_doc_token: per-doctor daily token (next day restarts at 1), mirroring OPD Doc_Token logic
+                    if (isNew && emerTokenEnabled && !string.IsNullOrWhiteSpace(pat.Doctor_ID) && pat.Doctor_ID != "0")
+                    {
+                        pat.emer_doc_token = db.Emergencies.Count(p =>
+                            p.Doctor_ID == pat.Doctor_ID &&
+                            p.Created_Time.HasValue &&
+                            p.Created_Time.Value.Date == DateTime.Now.Date) + 1;
+                    }
 
                     if (isNew)
                         db.Emergencies.InsertOnSubmit(pat);
@@ -1770,6 +1787,15 @@ namespace PMS.Modules.PatientManagement
                         select
                           data.Code
                         ).FirstOrDefault();
+            return (new JavaScriptSerializer()).Serialize(dept);
+        }
+        [WebMethod]
+        public static string EmerDocTokenCondition()
+        {
+            DataBaseDataContext db = new DataBaseDataContext(DBClass.ConnectionString());
+            var dept = (from data in db.sys_Parms
+                        where data.Name == "Emer Doc Token"
+                        select data.Code).FirstOrDefault();
             return (new JavaScriptSerializer()).Serialize(dept);
         }
         [WebMethod]
@@ -2604,6 +2630,7 @@ namespace PMS.Modules.PatientManagement
             public string AntiForgeryToken { get; set; }
             public string panel { get; set; }        // Panel company ID
             public string doctor { get; set; }       // Doctor ID
+            public string emer_doctor { get; set; }  // Emergency token doctor ID
             public string EmployeeDept { get; set; } // Employee department
         }
 
