@@ -234,6 +234,12 @@ namespace PMS
                         Gener = "0";
                     }
 
+                    bool isUrgent = false;
+                    if (SaveCheckedTest[i].Length > 7)
+                    {
+                        bool.TryParse(SaveCheckedTest[i][7], out isUrgent);
+                    }
+
                     Sample_Detail SDObj = new Sample_Detail()
                     {
                         Test_ID = Convert.ToInt32(SaveCheckedTest[i][1]),
@@ -244,6 +250,7 @@ namespace PMS
                         Remarks = rem[i][0].ToString(),
                         OutSource = rem[i][2].ToString(),
                         Sample_Collected = System.Convert.ToBoolean(rem[i][1]),
+                        IsUrgent = isUrgent,
                     };
 
                     // Generate accession number if OutSource is selected (not "0")
@@ -344,6 +351,12 @@ namespace PMS
 
                 for (int i = 0; i < SaveCheckedTest.Length; i++)
                 {
+                    bool isUrgent = false;
+                    if (SaveCheckedTest[i].Length > 7)
+                    {
+                        bool.TryParse(SaveCheckedTest[i][7], out isUrgent);
+                    }
+
                     Sample_Detail SDObj = new Sample_Detail()
                     {
                         Test_ID = Convert.ToInt32(SaveCheckedTest[i][1]),
@@ -354,6 +367,7 @@ namespace PMS
                         Remarks = rem[i][0].ToString(),
                         OutSource = rem[i][2].ToString(),
                         Sample_Collected = System.Convert.ToBoolean(rem[i][1]),
+                        IsUrgent = isUrgent,
                     };
 
                     // Generate accession number if OutSource is selected (not "0")
@@ -386,12 +400,13 @@ namespace PMS
                 try
                 {
                     db.SubmitChanges();
-                    return "Update";
                 }
                 catch (Exception ex)
                 {
                     return (new JavaScriptSerializer().Serialize(ex.Message));
                 }
+
+                return "Update";
             }
         }
         public class LabTest

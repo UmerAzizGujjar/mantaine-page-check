@@ -227,9 +227,13 @@
                             + '<td>'
                             + '<button type="button" class="btn btn-sm btn-success save-remarks-btn" onclick="saveRemarks(this)">Save</button>'
                             + '</td>'
+                            + '<td style="text-align:center;">'
+                            + '<input type="checkbox" class="chkUrgentModal" id="urgent_' + i + '" />'
+                            + '</td>'
                             + '<td>'
                             + '<input type="checkbox" class="' + parse[i].Item_Name + '" '
                             + 'value="' + parse[i].Item_ID + ',' + parse[i].Bill_Details_ID + ',' + PatientDep + ',' + parse[i].Gener + ',' + parse[i].Qty + '" '
+                            + 'data-urgent="false" '
                             + 'style="margin-top:-20px;" onclick="checkBoxClicked(this)" />'
                             + '</td>'
                             + '</tr>';
@@ -365,7 +369,8 @@
                                 for (var i = 0; i < length; i++) {
                                     var checked = '';
                                     debugger;
-                                    rows += '<tr><td style="display:none">' + parse[i].Test_ID + '</td><td style="display:none">' + parse[i].Bill_Details_ID + '</td><td style="text-align: center;">' + parse[i].Test_Name + '</td><td style="text-align: center;">' + parse[i].Dept + '</td><td style="text-align: center;">' + parse[i].Gener + '</td><td style="text-align: center;">' + parse[i].Qty + '</td><td style="text-align: center;"><input type="checkbox"  value="' + parse[i].Sample_Collected + '" id="Check' + i + '" name="Check"/><td style="text-align: center;"><input style="width: 150px;" type="text" name="Remarks" value="' + parse[i].Remarks + '" id="Remarks' + i + '"/></td></td><td><select id="ddlOutSource" name="ddlOutSource">' + option_OutSource + '</select></td><td style="text-align: center;"><a style="border-radius: 4px;background-color: #e98383;color: white;padding: 4px 11px 4px 11px;" href="#" onclick="DeleteTest(this)">Delete</a></td></tr>';
+                                    var urgentChecked = (parse[i].IsUrgent === true || parse[i].IsUrgent === 'true' || parse[i].IsUrgent === 1);
+                                    rows += '<tr><td style="display:none">' + parse[i].Test_ID + '</td><td style="display:none">' + parse[i].Bill_Details_ID + '</td><td style="text-align: center;">' + parse[i].Test_Name + '</td><td style="text-align: center;">' + parse[i].Dept + '</td><td style="text-align: center;">' + parse[i].Gener + '</td><td style="text-align: center;">' + parse[i].Qty + '</td><td style="text-align: center;"><input type="checkbox"  value="' + parse[i].Sample_Collected + '" id="Check' + i + '" name="Check"/></td><td style="text-align: center;"><input type="checkbox" name="chkUrgent" id="chkUrgent' + i + '" ' + (urgentChecked ? 'checked="checked"' : '') + '/></td><td style="text-align: center;"><input style="width: 150px;" type="text" name="Remarks" value="' + parse[i].Remarks + '" id="Remarks' + i + '"/></td></td><td><select id="ddlOutSource" name="ddlOutSource">' + option_OutSource + '</select></td><td style="text-align: center;"><a style="border-radius: 4px;background-color: #e98383;color: white;padding: 4px 11px 4px 11px;" href="#" onclick="DeleteTest(this)">Delete</a></td></tr>';
                                /*     $('select[name="ddlOutSource"]').eq(i).val(parse[i].OutSource);*/
                                 }
                                 debugger;
@@ -539,10 +544,18 @@
             var TempArray = [];
 
             var remarksValue = "";
+            var urgentValue = false;
             var $row = $(value).closest('tr');
             var $remarksInput = $row.find('.remarks-input-modal');
             if ($remarksInput.length > 0) {
                 remarksValue = $remarksInput.val();
+            }
+            var $urgentInput = $row.find('.chkUrgentModal');
+            if ($urgentInput.length > 0) {
+                urgentValue = $urgentInput.is(':checked');
+                value.setAttribute('data-urgent', urgentValue ? 'true' : 'false');
+            } else {
+                urgentValue = value.getAttribute('data-urgent') === 'true';
             }
 
             TempArray[0] = value.className;
@@ -551,7 +564,8 @@
             TempArray[3] = value.value.split(',')[2];
             TempArray[4] = value.value.split(',')[3];
             TempArray[5] = value.value.split(',')[4];
-            TempArray[6] = remarksValue;  
+            TempArray[6] = remarksValue;
+            TempArray[7] = urgentValue ? 'true' : 'false';
 
             if (value.checked == true) {
                 CheckedTest.push(TempArray);
@@ -565,6 +579,7 @@
                     '<td style="text-align: center;">' + TempArray[4] + '</td>' +
                     '<td style="text-align: center;">' + TempArray[5] + '</td>' +
                     '<td style="text-align: center;"><input type="checkbox" name="Check" checked="checked" disabled="disabled"/></td>' +
+                    '<td style="text-align: center;"><input type="checkbox" name="chkUrgent" ' + (urgentValue ? 'checked="checked"' : '') + '/></td>' +
                     '<td style="text-align: center;"><input type="text" name="Remarks" value="' + remarksValue.replace(/"/g, '&quot;') + '"/></td>' +
                     '<td style="text-align: center;">' +
                     '<select id="ddlOutsource" name="ddlOutSource">' + option_OutSource + '</select>' +
@@ -676,9 +691,13 @@
                                     + '<td>'
                                     + '<button type="button" class="btn btn-sm btn-success save-remarks-btn" onclick="saveRemarks(this)">Save</button>'
                                     + '</td>'
+                                    + '<td style="text-align:center;">'
+                                    + '<input type="checkbox" class="chkUrgentModal" id="urgent_' + i + '" />'
+                                    + '</td>'
                                     + '<td>'
                                     + '<input type="checkbox" class="' + parse[i].Item_Name + '" '
                                     + 'value="' + parse[i].Item_ID + ',' + parse[i].Bill_Details_ID + ',' + PateintDep + ',' + parse[i].Gener + ',' + parse[i].Qty + '" '
+                                    + 'data-urgent="false" '
                                     + 'style="margin-top:-20px;" onclick="checkBoxClicked(this)" />'
                                     + '</td>'
                                     + '</tr>';
@@ -743,7 +762,8 @@
                 TempRow[4] = $(this).find('td:eq(4)').text();
                 TempRow[5] = $(this).find('td:eq(5)').text();
                 TempRow[6] = $(this).find('td input[name=Remarks]').val();
-                TempRow[7] = $(this).find('td input[name=Check]')[0].checked;
+                TempRow[7] = $(this).find('td input[name=chkUrgent]').is(':checked') ? 'true' : 'false';
+                TempRow[8] = $(this).find('td input[name=Check]')[0].checked;
                 SelectedTestArray.push(TempRow);
             });
             return SelectedTestArray;
@@ -1554,6 +1574,7 @@
                             <th style="text-align: center; padding-left: 0px; padding-right: 0px">Gener</th>
                             <th style="text-align: center; padding-left: 0px; padding-right: 0px">Quantity</th>
                             <th style="text-align: center;">Collected</th>
+                            <th style="text-align: center; padding-left: 0px; padding-right: 0px;">Urgent</th>
                             <th style="text-align: center; padding-left: 0px; padding-right: 0px; width: 210px !important">Remarks</th>
                             <th style="text-align: center; padding-left: 0px; padding-right: 0px;">Out Source</th>
                             <th style="text-align: center;">Action</th>
@@ -1615,6 +1636,7 @@
                                     <th>Quantity</th>
                                     <th>Remarks</th>
                                      <th>Save</th>
+                                     <th>Urgent</th>
                                     <th><input type="checkbox" id="chkAll"  onclick="toggleAll(this)" /></th>
                                     
                                 </tr>
