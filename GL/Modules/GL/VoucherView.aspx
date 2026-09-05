@@ -32,6 +32,12 @@ $(document).ready(function () {
     });
 
     $('#txt_date').val('');
+
+    var getype = '<%= Request.QueryString["VoucherType"]%>';
+    if (getype === 'OPDJV') {
+        $('#btn_AddNew').hide();
+    }
+
     LoadPage();
 });
 
@@ -90,6 +96,7 @@ $(document).ready(function () {
                 case 'BRV': titleText = 'Bank Receipt Voucher'; break;
                 case 'JV': titleText = 'Journal Voucher'; break;
                 case 'DPV': titleText = 'Doctor Payment Voucher'; break;
+                case 'OPDJV': titleText = 'OPD Journal Voucher'; break;
             }
             $('#ctl00_lbl1').text(titleText);
 
@@ -320,7 +327,7 @@ function redirecttonew() {
                         <input type="button" class="btn btn-primry" onclick="LoadPageByYear()" value="Year" style="width: 100% !important" />
                     </div>
                     <div class="col-lg-2 col-md-4 col-sm-6" style="margin-bottom: 1%">
-                        <input type="button" class="btn btn-primry" onclick="redirecttonew()" value="Add New" style="width: 100% !important;" />
+                        <input type="button" id="btn_AddNew" class="btn btn-primry" onclick="redirecttonew()" value="Add New" style="width: 100% !important;" />
                     </div>
                 </div>
             </div>

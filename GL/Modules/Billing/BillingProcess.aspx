@@ -1772,10 +1772,13 @@
                             }
 
                             var TestDate;
+                            var CreatedDateHidden;
                             if (issueMs != null) {
                                 TestDate = $.datepicker.formatDate('dd M yy', new Date(issueMs));
+                                CreatedDateHidden = moment(new Date(issueMs)).format('DD MMM YYYY');
                             } else {
                                 TestDate = '<%= DateTime.Now.ToString("dd MMM yyyy") %>';
+                                CreatedDateHidden = '<%= DateTime.Now.ToString("dd MMM yyyy") %>';
                             }
 
                             var discountPer = n(value.Discount_Percentage);
@@ -1832,7 +1835,7 @@
                                 '<input type="hidden" name="Main_Department" value="' + (value.Test_Main_Department || '') + '" />' +
                                 '</td>' +
                                 '<td>' +
-                                (issueMs != null ? '<input type="hidden" name="hdnTestCreatedDate" id="hdnTestCreatedDate' + rowIndex + '" value="/Date(' + issueMs + ')/" />' : '') +
+                                '<input type="hidden" name="hdnTestCreatedDate" id="hdnTestCreatedDate' + rowIndex + '" value="' + CreatedDateHidden + '" />' +
                                 TestDate +
                                 ' </td>' +
                                 '</tr>';
@@ -2204,6 +2207,11 @@
                             var isProcedure = $(value).find('input[name="hdnProcedure"]').val();
                             var MainDepartment = $(value).find('input[name="Main_Department"]').val();
                             var Test_CreatedDate = $(value).find('input[name="hdnTestCreatedDate"]').val();
+
+                            if (Test_CreatedDate && /^\/Date\((\d+)\)\/$/.test(Test_CreatedDate)) {
+                                var dateMatch = Test_CreatedDate.match(/^\/Date\((\d+)\)\/$/);
+                                Test_CreatedDate = moment(new Date(parseInt(dateMatch[1]))).format('DD MMM YYYY');
+                            }
 
                             var docShareVal = parseFloat(DocShare) || 0;
                             var hosShareVal = parseFloat(HosShare) || 0;

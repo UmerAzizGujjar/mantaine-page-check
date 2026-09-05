@@ -614,18 +614,33 @@
                 dataType: "json",
                 success: function (response) {
                     var mode = response.d ? JSON.parse(response.d) : response.d;
-                    if (mode == "02") {
-                        $('#divapprove').hide();
-                        $('#divvoucher').hide();
-                        $('#btnapprove').hide();
-                        $('#btnPrintVoucher').hide();
-                    }
+                    approveButtonsHidden = (mode == "02");
+                    ApplyApprovalButtonsVisibility();
                 },
                 error: function (xhr, status, error) {
                     console.error("Error loading approval mode:", error);
                 }
             });
         }
+        var approveButtonsHidden = false;
+        function ApplyApprovalButtonsVisibility() {
+            var category = $('#ddlPatient_Type').val();
+            var hide = approveButtonsHidden && category == "01";
+            if (hide) {
+                $('#divapprove').hide();
+                $('#divvoucher').hide();
+                $('#btnapprove').hide();
+                $('#btnPrintVoucher').hide();
+            } else {
+                $('#divapprove').show();
+                $('#divvoucher').show();
+                $('#btnapprove').show();
+                $('#btnPrintVoucher').show();
+            }
+        }
+        $(document).on('change', '#ddlPatient_Type', function () {
+            ApplyApprovalButtonsVisibility();
+        });
         function getcardAmount() {
             var Pat_feeforCard = $('#ctl00_MainContent_chckcardissue').prop('checked');
             if (Pat_feeforCard == true) {
