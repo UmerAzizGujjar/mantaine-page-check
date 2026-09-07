@@ -7900,7 +7900,7 @@ namespace PMS
                     lblPatientType.Visible = false;
                     lblMultiSelect.Visible = false;
                     ddlPatientType.Visible = false;
-                    optRw.Visible = false;
+                    optRw.Visible = true;
                     trDoctor.Visible = false;
                     tr_Summary.Visible = false;
                     lblMainDepartment.Visible = false;
@@ -7910,6 +7910,18 @@ namespace PMS
                     lbShift.Visible = false;
                     DateDiv.Visible = true;
                     Time_Row.Visible = true;
+
+
+                    object valusets;
+                    DataBaseDataContext db = new DataBaseDataContext(DBClass.ConnectionString());
+                    valusets = from d in db.aspnet_Users
+                               select new { d.UserName, d.UserId };
+                    ddloprators.DataSource = valusets;
+                    ddloprators.DataTextField = "UserName";
+                    ddloprators.DataValueField = "UserId";
+                    ddloprators.Items.Add(new ListItem() { Text = "All", Value = "0" });
+                    ddloprators.DataBind();
+
                 }
 
                 else if (PageTitle == "RefundReport")
