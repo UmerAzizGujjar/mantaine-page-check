@@ -124,6 +124,16 @@
             color: #438eb9;
             font-weight: 700;
         }
+
+        .filter-bar select#ddlRecvAcc ~ .select2-container {
+            width: 340px !important;
+            max-width: 340px !important;
+        }
+
+        #btnTransfer:disabled {
+            opacity: 0.6;
+            cursor: not-allowed;
+        }
     </style>
 
     <script type="text/javascript">
@@ -133,9 +143,18 @@
         $(document).ready(function () {
             initDatepickers();
             LoadPage();
+            LoadAccounts();
 
             $('#btnSearch').click(function () {
                 LoadPage();
+            });
+
+            $('#ddlRecvAcc').on('change', function () {
+                updateTransferState();
+            });
+
+            $('#btnTransfer').click(function () {
+                TransferAndPost();
             });
 
             $('#myInput').on('input', function () {
@@ -214,6 +233,7 @@
             if (!data || data.length === 0) {
                 $('#lbl_TotalAmount').text('0');
                 $('#lbl_RowCount').text('0');
+                updateTransferState();
                 showLoader(false);
                 return;
             }
@@ -251,6 +271,7 @@
 
             $('#lbl_TotalAmount').text(totalShare.toLocaleString('en', { maximumFractionDigits: 2 }));
             $('#lbl_RowCount').text(_rowsData.length);
+            updateTransferState();
             showLoader(false);
         }
 
@@ -264,6 +285,112 @@
                 } else {
                     $tr.show();
                 }
+            });
+        }
+
+        function LoadAccounts() {
+            $.ajax({
+                type: "POST",
+                url: "AccountsReceivableDetail.aspx/LoadAccounts",
+                data: JSON.stringify({}),
+                contentType: "application/json; charset=utf-8",
+                dataType: "json",
+                success: function (response) {
+                    var data = JSON.parse(response.d);
+                    var options = '<option value="">Please Select</option>';
+                    $.each(data, function (i, a) {
+                        options += '<option value="' + a.Account_ID + '">' + escText(a.Account_Name) + ' (' + escText(a.Account_Code) + ')</option>';
+                    });
+                    $('#ddlRecvAcc').html(options).select2({ width: '260px' });
+                    updateTransferState();
+                },
+                error: function (err) {
+                    Swal.fire({ icon: 'error', title: 'Error', text: 'Accounts load failed.' });
+                }
+            });
+        }
+
+        function updateTransferState() {
+            var hasRows = _rowsData && _rowsData.length > 0;
+            var hasAcc = ($('#ddlRecvAcc').val() || '') !== '';
+            $('#btnTransfer').prop('disabled', !(hasRows && hasAcc));
+        }
+
+        function TransferAndPost() {
+            if (!_rowsData || _rowsData.length === 0) {
+                Swal.fire({ icon: 'warning', title: 'No Slips', text: 'No receivable slips to transfer.', confirmButtonColor: '#3085d6' });
+                return;
+            }
+
+            var accId = $('#ddlRecvAcc').val();
+            if (!accId) {
+                Swal.fire({ icon: 'warning', title: 'Select Account', text: 'Please select Received Through account.', confirmButtonColor: '#3085d6' });
+                return;
+            }
+
+            var total = parseFloat(($('#lbl_TotalAmount').text() || '0').replace(/,/g, '')) || 0;
+
+            Swal.fire({
+                title: 'Confirm Transfer',
+                html: 'Transfer <strong>' + addCommas(total) + '</strong> of ' + _rowsData.length + ' slip(s) from receivable temporary account<br/>to <strong>' + escText($('#ddlRecvAcc option:selected').text()) + '</strong>?<br/>ACCRCV voucher will be posted.',
+                icon: 'question',
+                showCancelButton: true,
+                confirmButtonColor: '#28a745',
+                cancelButtonColor: '#d33',
+                confirmButtonText: 'Yes, Post Voucher!',
+                cancelButtonText: 'Cancel'
+            }).then((result) => {
+                if (!result.isConfirmed) return;
+
+                Swal.fire({
+                    title: 'Processing...',
+                    text: 'Please wait',
+                    allowOutsideClick: false,
+                    showConfirmButton: false,
+                    didOpen: () => { Swal.showLoading(); }
+                });
+
+                var stDate = $('#txt_datefrom').val();
+                var endDate = $('#txt_dateto').val();
+
+                $.ajax({
+                    type: "POST",
+                    url: "AccountsReceivableDetail.aspx/TransferReceivable",
+                    data: JSON.stringify({ rtype: _type, startDate: stDate, endDate: endDate, accountID: parseInt(accId, 10) }),
+                    contentType: "application/json; charset=utf-8",
+                    dataType: "json",
+                    success: function (response) {
+                        try {
+                            var res = JSON.parse(response.d);
+                            if (res && res.length > 0 && res[0].Voucher_ID > 0) {
+                                var v = res[0];
+                                Swal.fire({
+                                    icon: 'success',
+                                    title: 'Voucher Posted',
+                                    html: 'Voucher No: <strong>' + v.Voucher_ID + '</strong>' +
+                                        '<br/>Slips: ' + v.Slip_Count +
+                                        '<br/>Amount: ' + addCommas(v.Transfer_Amount) +
+                                        '<br/>Received Through: ' + escText(v.Received_Through || ''),
+                                    confirmButtonColor: '#28a745'
+                                }).then(function () {
+                                    window.location.reload();
+                                });
+                            } else {
+                                Swal.fire({
+                                    icon: 'error',
+                                    title: 'Transfer Failed',
+                                    text: res[0].Message || 'Unknown error',
+                                    confirmButtonColor: '#d33'
+                                });
+                            }
+                        } catch (e) {
+                            Swal.fire({ icon: 'error', title: 'Error', text: 'Invalid response from server.', confirmButtonColor: '#d33' });
+                        }
+                    },
+                    error: function (err) {
+                        Swal.fire({ icon: 'error', title: 'Error', text: (err.responseText || 'Transfer failed') });
+                    }
+                });
             });
         }
     </script>
@@ -283,6 +410,16 @@
         </div>
         <div class="dp-tb">
             <input id="myInput" type="text" class="form-control ctl-search" placeholder="Search table.." />
+        </div>
+    </div>
+
+    <div class="row filter-bar dp-actionbar" style="margin-bottom: 10px;">
+        <div class="dp-tb">
+            <label for="ddlRecvAcc" class="ctl-label">Received Through</label>
+            <select id="ddlRecvAcc"></select>
+        </div>
+        <div class="dp-tb dp-tb-right">
+            <input type="button" id="btnTransfer" class="btn-primry" value="Transfer &amp; Post ACCRCV Voucher" disabled="disabled" />
         </div>
     </div>
 

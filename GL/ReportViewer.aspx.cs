@@ -6975,6 +6975,25 @@ namespace PMS
                 }
                 catch { }
             }
+            else if (reportName == "IPDEstimatedBill")
+            {
+                string InPatient_ID = Request.QueryString["InPatient_ID"].ToString();
+
+                var logoPath = DBClass.getField("SELECT dbo.GetCompanyLogo()");
+
+                reportPath += "InPatient/rptIPDEstimatedBill.rpt";
+                rd.Load(reportPath);
+                rd.SetParameterValue("CompanyName", AppConfig.Company_Name);
+                rd.SetParameterValue("CompanyLogo", logoPath);
+                rd.SetParameterValue("Address", DBClass.getField("select Company_Address from Sys_Companys where Company_ID = " + AppConfig.Company_ID + ""));
+                rd.SetParameterValue("@InPatient", Convert.ToInt32(InPatient_ID));
+                rd.SetParameterValue("@InPatient", Convert.ToInt32(InPatient_ID), rd.Subreports[0].Name.ToString());
+
+                try
+                {
+                }
+                catch { }
+            }
             else if (reportName == "Clinical_Summary")
             {
                 try
