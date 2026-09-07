@@ -129542,6 +129542,8 @@ namespace PMS
 
         private System.Nullable<int> _tokenNo;
 
+        private System.Nullable<int> _emer_doc_token;
+
         private string _doc_fee;
 
         private string _mr_no_sequence;
@@ -129672,6 +129674,8 @@ namespace PMS
         partial void OnCancelRemarksChanged();
         partial void OntokenNoChanging(System.Nullable<int> value);
         partial void OntokenNoChanged();
+        partial void Onemer_doc_tokenChanging(System.Nullable<int> value);
+        partial void Onemer_doc_tokenChanged();
         partial void Ondoc_feeChanging(string value);
         partial void Ondoc_feeChanged();
         partial void Onmr_no_sequenceChanging(string value);
@@ -130305,6 +130309,26 @@ namespace PMS
                     this._tokenNo = value;
                     this.SendPropertyChanged("tokenNo");
                     this.OntokenNoChanged();
+                }
+            }
+        }
+
+        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_emer_doc_token", DbType = "Int")]
+        public System.Nullable<int> emer_doc_token
+        {
+            get
+            {
+                return this._emer_doc_token;
+            }
+            set
+            {
+                if ((this._emer_doc_token != value))
+                {
+                    this.Onemer_doc_tokenChanging(value);
+                    this.SendPropertyChanging();
+                    this._emer_doc_token = value;
+                    this.SendPropertyChanged("emer_doc_token");
+                    this.Onemer_doc_tokenChanged();
                 }
             }
         }

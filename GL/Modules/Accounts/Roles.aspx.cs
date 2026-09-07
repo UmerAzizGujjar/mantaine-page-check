@@ -66,7 +66,7 @@ namespace PMS.Account
                                     where acc.Menu_Id == item.Menu_ID && acc.RoleId == RoleId
                                     select acc;
                     foreach (var itemAccess in qryAccess)
-                        tn.Checked = itemAccess.Access.Value;
+                        tn.Checked = itemAccess.Access.GetValueOrDefault();
                 }
                 tvMenus.Nodes.Add(tn);
                 addMenuLevel(tn, item.Menu_ID);
@@ -91,7 +91,7 @@ namespace PMS.Account
                                     where acc.Menu_Id == item.Menu_ID && acc.RoleId == RoleId
                                     select acc;
                     foreach (var itemAccess in qryAccess)
-                        tn.Checked = itemAccess.Access.Value;
+                        tn.Checked = itemAccess.Access.GetValueOrDefault();
                 }
                 parentTn.ChildNodes.Add(tn);
                 addMenuLevel(tn, item.Menu_ID);

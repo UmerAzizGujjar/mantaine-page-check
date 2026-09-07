@@ -45,7 +45,9 @@ namespace PMS.Modules.PatientManagement
                                      Age = p.Age_years ?? "",
                                      Created_Time = e.Created_Time,
                                      Status = e.Admitted_Status ?? "Pending",
-                                     Patient_ID = e.Reg_PatId
+                                     Patient_ID = e.Reg_PatId,
+                                     Doctor_ID = e.Doctor_ID,
+                                     Doc_Token = e.emer_doc_token ?? 0
                                  });
 
                     
@@ -55,14 +57,38 @@ namespace PMS.Modules.PatientManagement
                         query = query.Where(x =>
                             x.MR_No.ToLower().Contains(searchText) ||
                             x.Patient_Name.ToLower().Contains(searchText) ||
-                            x.Emergency_No.ToString().Contains(searchText)
+                            x.Emergency_No.ToString().Contains(searchText) ||
+                            x.Doc_Token.ToString().Contains(searchText)
                         );
                     }
 
                     
                     var emergencyList = query.Take(100).ToList();
 
-                    return new JavaScriptSerializer().Serialize(emergencyList);
+                    var docIdList = emergencyList
+                        .Select(x => { int v; return int.TryParse(x.Doctor_ID, out v) && v > 0 ? v : 0; })
+                        .Where(v => v > 0)
+                        .Distinct()
+                        .ToList();
+                    var docMap = db.HR_Employees
+                        .Where(em => docIdList.Contains(em.Emp_ID))
+                        .ToDictionary(em => em.Emp_ID.ToString(), em => em.Emp_Name);
+
+                    var result = emergencyList.Select(x => new
+                    {
+                        x.Emergency_ID,
+                        x.Emergency_No,
+                        x.MR_No,
+                        x.Patient_Name,
+                        x.Age,
+                        x.Created_Time,
+                        x.Status,
+                        x.Patient_ID,
+                        x.Doc_Token,
+                        Doctor_Name = (x.Doctor_ID != null && docMap.ContainsKey(x.Doctor_ID)) ? docMap[x.Doctor_ID] : ""
+                    }).ToList();
+
+                    return new JavaScriptSerializer().Serialize(result);
                 }
             }
             catch (Exception ex)

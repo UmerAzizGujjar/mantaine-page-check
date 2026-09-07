@@ -2,17 +2,134 @@
 
 <asp:Content ID="Content1" ContentPlaceHolderID="HeadContent" runat="server">
     <style>
-        #tblPermissions { width: 100%; border-collapse: collapse; }
-        #tblPermissions th, #tblPermissions td { border: 1px solid #ddd; padding: 8px; text-align: left; white-space: nowrap; }
-        #tblPermissions th { background-color: #f5f5f5; font-weight: 600; }
-        #tblPermissions tbody tr:nth-child(even) { background-color: #fafafa; }
-        #tblPermissions .cat-name { font-size: 16px; font-weight: 700; background-color: #e8e8e8; }
-        #tblPermissions .menu-name { padding-left: 24px !important; }
-        #tblPermissions .check-mark { color: #28a745; font-size: 18px; font-weight: bold; text-align: center; }
-        #tblPermissions .search-match td:first-child { background-color: #fff9c4 !important; }
-        #tblPermissions .search-mismatch { opacity: 0.35; }
+        :root {
+            --ad-primary: #c89b2c;
+            --ad-primary-soft: #f6efd9;
+            --ad-bg: #f4f6fa;
+            --ad-card: #ffffff;
+            --ad-border: #e6e9ef;
+            --ad-text: #1f2937;
+            --ad-muted: #6b7280;
+            --ad-success: #16a34a;
+            --ad-row-hover: #f9fafb;
+        }
+
+        body { background: var(--ad-bg); }
+
+        .ad-page { padding: 18px 22px 28px; }
+
+        .ad-header {
+            display: flex; align-items: center; justify-content: space-between;
+            gap: 14px; margin-bottom: 14px; flex-wrap: wrap;
+        }
+        .ad-title {
+            display: flex; align-items: center; gap: 12px;
+        }
+        .ad-title h2 {
+            margin: 0; font-size: 20px; font-weight: 700; color: var(--ad-text);
+            letter-spacing: .2px;
+        }
+        .ad-title .ad-sub {
+            font-size: 12px; color: var(--ad-muted);
+        }
+        .ad-title .ad-dot {
+            width: 10px; height: 10px; border-radius: 50%;
+            background: var(--ad-primary); box-shadow: 0 0 0 4px var(--ad-primary-soft);
+        }
+        .ad-actions { display: flex; gap: 8px; flex-wrap: wrap; }
+
+        .ad-card {
+            background: var(--ad-card); border: 1px solid var(--ad-border);
+            border-radius: 12px; box-shadow: 0 2px 10px rgba(15,23,42,.04);
+            overflow: hidden;
+        }
+
+        .ad-toolbar {
+            display: flex; align-items: center; justify-content: space-between;
+            gap: 12px; padding: 12px 14px; border-bottom: 1px solid var(--ad-border);
+            background: linear-gradient(180deg, #fbfbfd, #f5f7fb);
+        }
+        .ad-toolbar .ad-search {
+            position: relative; flex: 0 0 280px; max-width: 100%;
+        }
+        .ad-toolbar .ad-search i {
+            position: absolute; left: 10px; top: 50%; transform: translateY(-50%);
+            color: var(--ad-muted); font-size: 13px;
+        }
+        .ad-toolbar .ad-search input {
+            width: 100%; padding: 7px 10px 7px 30px;
+            border: 1px solid var(--ad-border); border-radius: 8px;
+            background: #fff; font-size: 13px; color: var(--ad-text);
+            transition: border-color .15s, box-shadow .15s;
+        }
+        .ad-toolbar .ad-search input:focus {
+            outline: none; border-color: var(--ad-primary);
+            box-shadow: 0 0 0 3px var(--ad-primary-soft);
+        }
+        .ad-toolbar .ad-meta {
+            font-size: 12px; color: var(--ad-muted);
+        }
+
+        .ad-table-wrap { overflow: auto; max-height: calc(100vh - 230px); }
+
+        #tblPermissions {
+            width: 100%; border-collapse: separate; border-spacing: 0;
+            font-size: 13px; color: var(--ad-text);
+        }
+        #tblPermissions thead th {
+            position: sticky; top: 0; z-index: 3;
+            background: #fff; color: var(--ad-text);
+            font-weight: 600; font-size: 12px; text-transform: uppercase;
+            letter-spacing: .4px; padding: 10px 12px;
+            border-bottom: 1px solid var(--ad-border);
+            white-space: nowrap; vertical-align: middle;
+        }
+        #tblPermissions thead th:first-child {
+            text-align: left; left: 0; z-index: 4; min-width: 260px;
+            background: #fff;
+        }
+        #tblPermissions thead th .col-select { width: 160px; }
+
+        #tblPermissions tbody td {
+            padding: 8px 12px; border-bottom: 1px solid var(--ad-border);
+            vertical-align: middle; white-space: nowrap;
+        }
+        #tblPermissions tbody td:first-child {
+            position: sticky; left: 0; z-index: 1; background: #fff;
+            border-right: 1px solid var(--ad-border);
+        }
+        #tblPermissions tbody tr:hover td { background: var(--ad-row-hover); }
+        #tblPermissions tbody tr:hover td:first-child { background: var(--ad-row-hover); }
+
+        #tblPermissions .cat-name {
+            background: var(--ad-primary-soft) !important;
+            color: #6b5313; font-weight: 700; font-size: 13px;
+            letter-spacing: .2px; text-transform: uppercase;
+            border-left: 3px solid var(--ad-primary);
+        }
+        #tblPermissions .cat-name td { padding: 10px 12px; }
+
+        #tblPermissions .menu-name { padding-left: 22px !important; color: #374151; }
+
+        #tblPermissions .check-mark {
+            display: inline-flex; align-items: center; justify-content: center;
+            width: 22px; height: 22px; border-radius: 50%;
+            background: rgba(22,163,74,.12); color: var(--ad-success);
+            font-weight: 700; font-size: 12px;
+        }
+        #tblPermissions .check-mark::before { content: "\f00c"; font-family: FontAwesome; }
+
+        #tblPermissions .search-match td:first-child {
+            background: #fff9c4 !important;
+        }
+        #tblPermissions .search-mismatch { opacity: .35; }
+
         .col-select { width: 180px; }
-        .table-wrap { overflow-x: auto; margin: 0; }
+
+        @media (max-width: 768px) {
+            .ad-toolbar .ad-search { flex: 1 1 100%; }
+            .ad-table-wrap { max-height: calc(100vh - 280px); }
+        }
     </style>
 </asp:Content>
 
@@ -34,22 +151,45 @@
         </div>
     </div>
 
-    <div style="margin-bottom: 6px;">
-        <button class="btn btn-primry btn-sm" onclick="exportExcel('User'); return false;" style="padding: 6px 20px; width: auto;"><i class="fa fa-file-excel-o"></i> Export Excel (User Wise)</button>
-        <button class="btn btn-primry btn-sm" onclick="exportExcel('Role'); return false;" style="padding: 6px 20px; width: auto;"><i class="fa fa-file-excel-o"></i> Export Excel (Role Wise)</button>
-    </div>
+    <div class="ad-page">
+        <div class="ad-header">
+            <div class="ad-title">
+                <span class="ad-dot"></span>
+                <div>
+                    <h2>Permission Matrix</h2>
+                    <div class="ad-sub">Roles &amp; Users vs. Menu Access</div>
+                </div>
+            </div>
+            <div class="ad-actions">
+                <button class="btn btn-primry btn-sm" onclick="exportExcel('User'); return false;">
+                    <i class="fa fa-file-excel-o"></i> Export User Wise
+                </button>
+                <button class="btn btn-primry btn-sm" onclick="exportExcel('Role'); return false;">
+                    <i class="fa fa-file-excel-o"></i> Export Role Wise
+                </button>
+            </div>
+        </div>
 
-    <div class="table-wrap">
-        <table id="tblPermissions" class="table table-bordered table-condensed">
-            <thead>
-                <tr>
-                    <th style="min-width: 260px;">
-                        <input type="text" id="txtSearch" placeholder="Search menu..." style="width: 200px; padding: 3px 6px; border: 1px solid #ccc; border-radius: 3px; float: right; margin-top: -2px;" />
-                    </th>
-                </tr>
-            </thead>
-            <tbody></tbody>
-        </table>
+        <div class="ad-card">
+            <div class="ad-toolbar">
+                <div class="ad-search">
+                    <i class="fa fa-search"></i>
+                    <input type="text" id="txtSearch" placeholder="Search menu..." />
+                </div>
+                <div class="ad-meta" id="adMeta">Loading...</div>
+            </div>
+
+            <div class="ad-table-wrap">
+                <table id="tblPermissions" class="table table-bordered table-condensed">
+                    <thead>
+                        <tr>
+                            <th>Menu</th>
+                        </tr>
+                    </thead>
+                    <tbody></tbody>
+                </table>
+            </div>
+        </div>
     </div>
 
     <script type="text/javascript">
@@ -77,10 +217,10 @@
                     items.forEach(function (item) {
                         $sel.append('<option value="' + item.id + '">' + escapeHtml(item.text) + '</option>');
                     });
-                    $sel.select2({ placeholder: "Select Role / User", allowClear: true, width: 180 });
+                    $sel.select2({ placeholder: "Select Role / User", allowClear: true, width: 160, dropdownParent: $th });
                 },
                 error: function () {
-                    $sel.select2({ placeholder: "Error loading", width: 180 });
+                    $sel.select2({ placeholder: "Error loading", width: 160, dropdownParent: $th });
                 }
             });
 
@@ -105,7 +245,7 @@
                             var menuId = $(this).data('menu-id');
                             var $cell = $(this).find('td[data-col="' + colIdx + '"]');
                             if (allowedIds.indexOf(menuId) > -1) {
-                                $cell.html('<span class="check-mark">&#10003;</span>');
+                                $cell.html('<span class="check-mark"></span>');
                             } else {
                                 $cell.html('');
                             }
@@ -133,6 +273,7 @@
                     $tbody.empty();
                     originalRows = [];
 
+                    var menuCount = 0;
                     categories.forEach(function (cat) {
                         var $catRow = $('<tr class="cat-row"></tr>');
                         $catRow.append('<td class="cat-name">' + escapeHtml(cat.CategoryName) + '</td>');
@@ -140,6 +281,7 @@
                         originalRows.push($catRow[0]);
 
                         cat.Menus.forEach(function (menu) {
+                            menuCount++;
                             var $mRow = $('<tr data-menu-id="' + menu.Menu_ID + '"></tr>');
                             $mRow.append('<td class="menu-name">' + escapeHtml(menu.Menu_Name) + '</td>');
                             $tbody.append($mRow);
@@ -151,6 +293,7 @@
                         addColumn(i);
                     }
 
+                    $('#adMeta').text(menuCount + ' menus across ' + categories.length + ' categories');
                     $('#loading').hide();
                 },
                 error: function (xhr, status, error) {

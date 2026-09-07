@@ -98,6 +98,8 @@ namespace PMS.Modules.PatientManagement
                                   Type = "Emergency" ,
                                   Patient_Type = _dbContext.GetDataValueName("Patient Type", e.Patient_Type),
                                   isCancel = e.isCancel ?? false,
+                                  Doctor_ID = e.Doctor_ID,
+                                  emer_doc_token = e.emer_doc_token ?? 0
                               };
 
 
@@ -117,6 +119,9 @@ namespace PMS.Modules.PatientManagement
                         case "mr_no_sequence":
                             emer = sortColumnDirection == "asc" ? emer.OrderBy(a => a.mr_no_sequence) : emer.OrderByDescending(a => a.mr_no_sequence);
                             break;
+                        case "emer_doc_token":
+                            emer = sortColumnDirection == "asc" ? emer.OrderBy(a => a.emer_doc_token) : emer.OrderByDescending(a => a.emer_doc_token);
+                            break;
                         case "Amount":
                             emer = sortColumnDirection == "asc" ? emer.OrderBy(a => a.Amount) : emer.OrderByDescending(a => a.Amount);
                             break;
@@ -128,8 +133,34 @@ namespace PMS.Modules.PatientManagement
 
                     var emergencyList = emer.Skip(start).Take(length).ToList();
 
+                    var docIdList = emergencyList
+                        .Select(x => { int v; return int.TryParse(x.Doctor_ID, out v) && v > 0 ? v : 0; })
+                        .Where(v => v > 0)
+                        .Distinct()
+                        .ToList();
+                    var docMap = _dbContext.HR_Employees
+                        .Where(em => docIdList.Contains(em.Emp_ID))
+                        .ToDictionary(em => em.Emp_ID.ToString(), em => em.Emp_Name);
 
-                    var jsonData = new { draw = draw, recordsFiltered = FilteredCount, recordsTotal = Total_emer, data = emergencyList };
+                    var rows = emergencyList.Select(x => new
+                    {
+                        x.Emer_id,
+                        x.Emergency_No,
+                        x.Created_Time,
+                        x.mr_no_sequence,
+                        x.Full_Name,
+                        x.NIC,
+                        x.Mobile1,
+                        x.Amount,
+                        x.balance_amount,
+                        x.Type,
+                        x.Patient_Type,
+                        x.isCancel,
+                        x.emer_doc_token,
+                        Doc_Name = (x.Doctor_ID != null && docMap.ContainsKey(x.Doctor_ID)) ? docMap[x.Doctor_ID] : ""
+                    }).ToList();
+
+                    var jsonData = new { draw = draw, recordsFiltered = FilteredCount, recordsTotal = Total_emer, data = rows };
                     return jsonData;
                 }
             }

@@ -76,6 +76,8 @@
                 "serverSide": true,
                 "dom": 'lBfrtip',
                 "lengthChange": true,
+                "pageLength": 50,
+                "lengthMenu": [[10, 25, 50, 100, -1], [10, 25, 50, 100, "All"]],
                 buttons: [
                     {
                         text: 'Add',
@@ -103,7 +105,7 @@
                         data: JSON.stringify({
                             draw: data.draw,
                             start: data.start,
-                            length: data.length,
+                            length: data.length === -1 ? 1000000 : data.length,
                             sortColumn: data.columns[data.order[0].column].name,
                             sortColumnDirection: data.order[0].dir,
                             searchValue: data.search.value,

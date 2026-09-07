@@ -48,6 +48,8 @@
                 Group_Depart = urlParams.get('Group_Depart');
                 var machineName = urlParams.get('machine_name');
                 var standardName = urlParams.get('StandardName');
+                machineName = (machineName && machineName != 'undefined' && machineName != 'null') ? machineName : '';
+                standardName = (standardName && standardName != 'undefined' && standardName != 'null') ? standardName : '';
                 $('#txtMachineName').val(machineName || '');
                 $('#txtStandardName').val(standardName || '');
                 $('#txtGroupTest').val(datavalueDescription);
