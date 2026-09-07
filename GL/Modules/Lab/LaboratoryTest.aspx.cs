@@ -1022,11 +1022,12 @@ namespace PMS
                                                   Group_Name = db.GetDataValueName("Test Groups", bill_details.Category_ID),
                                                   Rotation_ID = lbtD.Rotation_ID,
                                                   Rotation = ((from t in db.Lab_Tests where t.Test_ID == lbtD.Test_ID select db.GetDataValueName("Main Test                                                    Departments", t.Main_Department)).FirstOrDefault()) == "X-Ray" ? db.GetDataValueName("Test XRay Rotations", lbtD.Rotation_ID) : db.GetDataValueName("Test CT Scan Rotations", lbtD.Rotation_ID),
-                                                  lbtD.Special_Tests,
-                                                  lbtD.Area_Of_Interest,
-                                                  haveSample = (from s in db.Sample_Details where s.Bill_Detail_ID == bill_details.Bill_Details_ID select s).Count() == 0 ? false : true,
-                                                  bill_details.Bill_Details_ID
-                                              }
+                                                   lbtD.Special_Tests,
+                                                   lbtD.Area_Of_Interest,
+                                                    haveSample = (from s in db.Sample_Details where s.Bill_Detail_ID == bill_details.Bill_Details_ID select s).Count() == 0 ? false : true,
+                                                    IsUrgent = sd.IsUrgent,
+                                                    bill_details.Bill_Details_ID
+                                               }
                ).ToList();
             List<PendingLabTestClass> list = new List<PendingLabTestClass>();
             //****** OutPatients************
@@ -1211,6 +1212,7 @@ namespace PMS
                 obj.Department_ID = item.Department_ID;
                 obj.Remarks = item.Remarks;
                 obj.GroupName = item.Item_Name;
+                obj.IsUrgent = item.IsUrgent ?? false;
                 obj.Entry_Date = item.Created_time.ToString();
                 if (item.Recieved_ID != null)
                     obj.Recieved_ID = item.Recieved_ID;
@@ -1282,6 +1284,7 @@ namespace PMS
         {
             public string chkPackages;
             public bool IsBilled;
+            public bool IsUrgent;
             public string Lab_Test_Detail_ID;
             public string L_R_Rotation_ID;
             public string Date;

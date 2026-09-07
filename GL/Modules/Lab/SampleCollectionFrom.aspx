@@ -233,7 +233,7 @@
                             + '<td>'
                             + '<input type="checkbox" class="' + parse[i].Item_Name + '" '
                             + 'value="' + parse[i].Item_ID + ',' + parse[i].Bill_Details_ID + ',' + PatientDep + ',' + parse[i].Gener + ',' + parse[i].Qty + '" '
-                            + 'data-urgent="false" '
+                            + 'data-urgent="false" data-role="test-select" '
                             + 'style="margin-top:-20px;" onclick="checkBoxClicked(this)" />'
                             + '</td>'
                             + '</tr>';
@@ -697,7 +697,7 @@
                                     + '<td>'
                                     + '<input type="checkbox" class="' + parse[i].Item_Name + '" '
                                     + 'value="' + parse[i].Item_ID + ',' + parse[i].Bill_Details_ID + ',' + PateintDep + ',' + parse[i].Gener + ',' + parse[i].Qty + '" '
-                                    + 'data-urgent="false" '
+                                    + 'data-urgent="false" data-role="test-select" '
                                     + 'style="margin-top:-20px;" onclick="checkBoxClicked(this)" />'
                                     + '</td>'
                                     + '</tr>';
@@ -1292,10 +1292,10 @@
         }
 
         function toggleAll(source) {
-            var checkboxes = $('#tblDetailModelTable tbody input[type="checkbox"]');
+            var checkboxes = $('#tblDetailModelTable tbody input[data-role="test-select"]');
             checkboxes.each(function () {
-                this.checked = source.checked; 
-                checkBoxClicked(this); 
+                this.checked = source.checked;
+                checkBoxClicked(this);
             });
         }
 
