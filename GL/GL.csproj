@@ -395,6 +395,7 @@
     <Content Include="Modules\Inventory\ServiceView.aspx" />
     <Content Include="Modules\Lab\DispatchView.aspx" />
     <Content Include="Modules\Lab\Accessionview.aspx" />
+    <Content Include="Modules\Lab\LabApproveTest.aspx" />
     <Content Include="Modules\Lab\RadiologyResultsPreview.aspx" />
     <Content Include="Modules\Lab\RadiologyTestResult.aspx" />
     <Content Include="Modules\Lab\LaunchRadiAnt.aspx" />
@@ -3565,6 +3566,13 @@
     </Compile>
     <Compile Include="Modules\Lab\Accessionview.aspx.designer.cs">
       <DependentUpon>Accessionview.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="Modules\Lab\LabApproveTest.aspx.cs">
+      <DependentUpon>LabApproveTest.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Modules\Lab\LabApproveTest.aspx.designer.cs">
+      <DependentUpon>LabApproveTest.aspx</DependentUpon>
     </Compile>
     <Compile Include="Modules\Lab\RadiologyResultsPreview.aspx.cs">
       <DependentUpon>RadiologyResultsPreview.aspx</DependentUpon>
