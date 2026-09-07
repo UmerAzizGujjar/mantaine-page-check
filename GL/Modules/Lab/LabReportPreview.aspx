@@ -10,6 +10,7 @@
         var OrganismTypeGlobal = '';
         var testValueOptionsList = '';
         var globalTestId = '';
+        var activePatientId = '';
         function swipe(thi) {
             var largeImage = document.getElementsByName('other_amount');
             largeImage.style.display = 'block';
@@ -402,6 +403,7 @@
 
             $('#myModal').on('shown.bs.modal', function () {
                 $(this).off('focusin.modal');
+                updateModalPatientDetails();
             });
             // GetPendingList();   //  21-01-2021
             $('#btnGrowth').click(function () {
@@ -508,10 +510,7 @@
                             ApproveLab(singleTest);
                         }
                         
-                        $("[id$='_btnRefresh']").trigger('click');
-                        $('#myModal').modal('hide');
-                        $("#myModal tbody").empty();
-                        $("#tblsingleTest tbody").empty();
+                        refreshAfterSave();
                     }, function (onfailure) {
 
                         alert(onfailure);
@@ -546,10 +545,7 @@
                 if (test_list.length > 0) {
                     PageMethods.RejectTestDetail(Lab_ID, JSON.stringify(TesttDetails), function (response) {
                         debugger;
-                        $("[id$='_btnRefresh']").trigger('click');
-                        $('#myModal').modal('hide');
-                        $("#myModal tbody").empty();
-                        $("#tblsingleTest tbody").empty();
+                        refreshAfterSave();
                     }, function (onfailure) {
                         alert(onfailure);
                     });
@@ -626,9 +622,7 @@
                     //var TesttDetails = {test_list: test_list }
                     PageMethods.SaveGroupTest(Lab_ID, test_list, function (response) {
 
-
-                        $('#myModal').modal('hide');
-                        $("[id$='_btnRefresh']").trigger('click');
+                        refreshAfterSave();
 
                     });
                 }
@@ -687,7 +681,17 @@
                     if (chkBillID == "(New)") {
                         localStorage.Bill_No = chkBillID;
                     }
-                    $("[id$='_buttonimageuploadNotes']").trigger('click');
+                    if (filesComplete.length > 0) {
+                        $.ajax({
+                            url: "ImageUpload.ashx",
+                            type: "POST",
+                            data: dataImgs,
+                            contentType: false,
+                            processData: false,
+                            success: function (res) { console.log("Images Uploaded Successfully"); },
+                            error: function (err) { console.log("Image upload error: " + err.statusText); }
+                        });
+                    }
                     arr = [];
                     $("#ddllistType option").each(function (key, index) {
                         list = {};
@@ -733,7 +737,7 @@
                                 });
 
                             }
-                            setTimeout(function () { $('#myModal').modal('hide'); }, 3000);
+                            setTimeout(function () { refreshAfterSave(); }, 3000);
                         },
                         failure: function (response) {
                             alert(response.d);
@@ -1637,6 +1641,11 @@
                 $('#<%= vPatient_Category.ClientID %>').text(data.d.Patient_Category);
                 $('#<%= vLbl_Location.ClientID %>').text(data.d.Location);
 
+                if (data.d.Patient_No && data.d.Patient_No != "") {
+                    activePatientId = data.d.Patient_No;
+                    $("#hdnPatient_ID").val(data.d.Patient_No);
+                }
+
                 //GetLabDetailUsingLabID();
                 GetLabDetailAgainstBill();
             }
@@ -2422,10 +2431,16 @@
                 $('#<%= vLbl_Contact.ClientID %>').text(data.d.Mobile);
                 $('#<%= vPatient_Category.ClientID %>').text(data.d.Patient_Category);
                 $('#<%= vLbl_Location.ClientID %>').text(data.d.Location);
+
+                if (data.d.Patient_No && data.d.Patient_No != "") {
+                    activePatientId = data.d.Patient_No;
+                    $("#hdnPatient_ID").val(data.d.Patient_No);
+                }
+
                 if ($("#ctl00_MainContent_txtBilling").val() != "") { }
                 else {
                     GetLabDetail();
-                }                
+                }
             }
         }
 
@@ -2442,6 +2457,11 @@
                 $('#<%= vLbl_Contact.ClientID %>').text(data.d.Mobile);
                 $('#<%= vPatient_Category.ClientID %>').text(data.d.Patient_Category);
                 $('#<%= vLbl_Location.ClientID %>').text(data.d.Location);
+
+                if (data.d.Patient_No && data.d.Patient_No != "") {
+                    activePatientId = data.d.Patient_No;
+                    $("#hdnPatient_ID").val(data.d.Patient_No);
+                }
 
                 if (localStorage.billid == 0) {
                     GetLabDetail();
@@ -2605,6 +2625,129 @@
                     alert("Error: " + error.get_message());
                 }
             );
+        }
+
+        function refreshAfterSave() {
+            $('#myModal').modal('hide');
+            try { $("#myModal tbody").empty(); } catch (e) { }
+            try { $("#tblsingleTest tbody").empty(); } catch (e) { }
+
+            ResultedTestDetail();
+            LoadPendingSamples();
+
+            var billId = $("#hdBill_id").val();
+            if (billId && billId != "" && billId != "(New)") {
+                loadPatientDataUsingBillId();
+            }
+        }
+
+        function updateModalPatientDetails() {
+            var patientName = $('#<%= vlblPatients_Name.ClientID %>').text() || '--';
+            var age = $('#<%= vLbl_Age.ClientID %>').text() || '--';
+            var gender = $('#<%= vLbl_Gender.ClientID %>').text() || '--';
+            var pid = $('#hdnPatient_ID').val();
+            if (!pid || pid == '(New)') pid = activePatientId || '--';
+            var billNo = $('#hdnBill_No').val() || '--';
+            var billDate = $('#<%= vLbl_RegDate.ClientID %>').text() || '--';
+            var category = $('#<%= vPatient_Category.ClientID %>').text() || '--';
+
+            $('#modal_MRNo').text(pid);
+            $('#modal_PatientName').text(patientName);
+            $('#modal_Age').text(age);
+            $('#modal_Gender').text(gender);
+            $('#modal_Category').text(category);
+            $('#modal_BillNo').text(billNo);
+            $('#modal_BillDate').text(billDate);
+        }
+
+        function showTestHistory() {
+            var patientId = $('#hdnPatient_ID').val();
+            if (!patientId || patientId == "(New)") patientId = activePatientId;
+
+            if (!patientId || isNaN(parseInt(patientId))) {
+                Swal.fire({
+                    icon: 'warning',
+                    title: 'Warning!',
+                    text: 'Please select a patient first to view history.',
+                    showConfirmButton: false,
+                    timer: 2000,
+                    customClass: {
+                        popup: 'swal-big-popup',
+                        title: 'swal-big-title',
+                        htmlContainer: 'swal-big-text'
+                    }
+                });
+                return;
+            }
+
+            var testId = $('#hdtestdetailid').val();
+            var currentTestDetailID = (testId && !isNaN(parseInt(testId)) && parseInt(testId) > 0) ? parseInt(testId) : 0;
+            var targetTestID = (globalTestId && !isNaN(parseInt(globalTestId)) && parseInt(globalTestId) > 0) ? parseInt(globalTestId) : 0;
+
+            $('#tblHistoryBody').html('<tr><td colspan="4" class="text-center">Loading...</td></tr>');
+            $('#noHistoryMsg').hide();
+
+            $.ajax({
+                type: "POST",
+                url: "LabReportPreview.aspx/GetTestHistory",
+                data: JSON.stringify({
+                    patientID: parseInt(patientId),
+                    targetTestID: targetTestID,
+                    currentTestDetailID: currentTestDetailID
+                }),
+                contentType: "application/json; charset=utf-8",
+                dataType: "json",
+                success: function (response) {
+                    var data = typeof response.d === 'string' ? JSON.parse(response.d) : response.d;
+                    var tbody = $('#tblHistoryBody');
+                    tbody.empty();
+
+                    if (data && data.length > 0) {
+                        $.each(data, function (index, item) {
+                            var row = '<tr>' +
+                                '<td>' + (item.Bill_No || '') + '</td>' +
+                                '<td>' + (item.Bill_Date ? new Date(parseInt(item.Bill_Date.replace(/\/Date\((\d+)\)\//, '$1'))).toLocaleDateString() : '') + '</td>' +
+                                '<td>' + (item.Test_Name || '') + '</td>' +
+                                '<td>' +
+                                '<button type="button" class="btn btn-sm btn-primary" ' +
+                                'onclick="PreviewHistoryReport(\'' + item.Test_IDs + '\', \'' + item.Trans_IDs + '\', \'' + item.Lab_Test_Detail_ID + '\', \'' + item.Bill_Details_ID + '\')">Preview</button>' +
+                                '</td>' +
+                                '</tr>';
+                            tbody.append(row);
+                        });
+                    } else {
+                        $('#noHistoryMsg').show();
+                    }
+
+                    $('#historyModal').modal('show');
+                },
+                error: function (xhr, status, error) {
+                    console.error(error);
+                    Swal.fire({ icon: 'error', title: 'Error!', text: 'Failed to load history.' });
+                }
+            });
+        }
+
+        function PreviewHistoryReport(Test_IDs, Trans_IDs, Lab_Test_Detail_ID, Bill_Details_ID) {
+            var Patient_ID = $('#hdnPatient_ID').val() || '0';
+            var ChkLetterHead = true;
+            var Report_Column = '4';
+            Test_IDs = (Test_IDs || '').replace(/^,\s*/, '');
+            Trans_IDs = (Trans_IDs || '').replace(/^,\s*/, '');
+            Bill_Details_ID = (Bill_Details_ID || '').replace(/^,\s*/, '');
+            Lab_Test_Detail_ID = (Lab_Test_Detail_ID || '').replace(/^,\s*/, '');
+
+            var url = '../../ReportViewer.aspx?ReportName=TestResultQ' +
+                '&ReportTitle=Department Of Pathalogy' +
+                '&Test_IDs=' + encodeURIComponent(Test_IDs) +
+                '&test_wise_ids=' + encodeURIComponent(Patient_ID) +
+                '&TransID=' + encodeURIComponent(Trans_IDs) +
+                '&labTDetailsID=' + encodeURIComponent(Lab_Test_Detail_ID) +
+                '&BillDetailID=' + encodeURIComponent(Bill_Details_ID) +
+                '&ReportColumn=' + encodeURIComponent(Report_Column) +
+                '&ChkLetterHead=' + ChkLetterHead;
+
+            window.open(url, '_blank');
         }
 
     </script>
@@ -2923,6 +3066,23 @@
                 <button type="button" style="width: auto;" class="close" data-dismiss="modal">&times;</button>
                 <h4 class="modal-title" id="titleee">Add Test Result</h4>
             </div>
+            <div class="patient-basic-info" style="background: #f8f9fa; padding: 8px 15px; margin: 0 15px; border-radius: 6px; border-left: 4px solid #007bff;">
+                <div style="display: flex; flex-wrap: wrap; gap: 20px; align-items: center; font-size: 13px;">
+                    <div><strong>MR No:</strong> <span id="modal_MRNo">--</span></div>
+                    <div><strong>Name:</strong> <span id="modal_PatientName">--</span></div>
+                    <div><strong>Age:</strong> <span id="modal_Age">--</span></div>
+                    <div><strong>Gender:</strong> <span id="modal_Gender">--</span></div>
+                    <div><strong>Category:</strong> <span id="modal_Category">--</span></div>
+                    <div><strong>Bill No:</strong> <span id="modal_BillNo">--</span></div>
+                    <div><strong>Date:</strong> <span id="modal_BillDate">--</span></div>
+                </div>
+            </div>
+            <div class="row" style="margin-top: 5px; margin-bottom: 5px; margin-left: 15px; margin-right: 15px;">
+                <div class="col-lg-10"></div>
+                <div class="col-lg-2">
+                    <input type="button" id="btnViewHistory" class="btn btn-info btn-sm" name="btnViewHistory" value="View Test History" onclick="showTestHistory();" style="border-radius: 4px;" />
+                </div>
+            </div>
             <div id="dvSingleTestName">
                 <p id="pTestName" style="margin-left: 29px; font-size: 20px; color: blue;"></p>
             </div>
@@ -3050,6 +3210,39 @@
     </div>
     </div>
       </div>
+
+    <div id="historyModal" class="modal fade" role="dialog">
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal">&times;</button>
+                    <h4 class="modal-title">Test History</h4>
+                </div>
+                <div class="modal-body">
+                    <div class="table-responsive">
+                        <table class="table table-bordered table-hover" id="tblHistory">
+                            <thead>
+                                <tr>
+                                    <th>Bill No</th>
+                                    <th>Bill Date</th>
+                                    <th>Test</th>
+                                    <th>Action</th>
+                                </tr>
+                            </thead>
+                            <tbody id="tblHistoryBody">
+                            </tbody>
+                        </table>
+                    </div>
+                    <div id="noHistoryMsg" class="text-center text-muted" style="display: none;">No previous history found.</div>
+                </div>
+                <div class="modal-footer">
+                    <div class="col-lg-2">
+                        <input type="button" class="btn btn-default" data-dismiss="modal" value="Close" />
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
 
     <div class="row">
     <div class="col-lg-8">

@@ -1913,5 +1913,63 @@ namespace PMS
             }
         }
 
+        [WebMethod]
+        public static string GetTestHistory(int patientID, int targetTestID, int currentTestDetailID)
+        {
+            try
+            {
+                using (DataBaseDataContext db = new DataBaseDataContext())
+                {
+                    var query = from ltd in db.Lab_Test_Details
+                                join lt in db.Laboratory_Tests on ltd.Lab_Test_ID equals lt.Lab_Test_ID
+                                join ltest in db.Lab_Tests on ltd.Test_ID equals ltest.Test_ID
+                                join bd in db.Ar_Billing_Details on ltd.Bill_Details_ID equals bd.Bill_Details_ID
+                                join bill in db.Ar_Billings on bd.Bill_ID equals bill.Bill_ID
+                                join pat in db.Reg_patients on lt.Patient_ID equals pat.pat_id
+                                where lt.Patient_ID == patientID
+                                  && ltd.Is_Result == true
+                                select new
+                                {
+                                    Bill_No = bill.Bill_No,
+                                    Bill_Date = bill.Bill_Date,
+                                    Patient_Name = pat.Full_Name,
+                                    Test_Name = ltest.Test_Name,
+                                    Test_IDs = ltd.Test_ID.ToString(),
+                                    Trans_IDs = lt.Lab_Test_ID.ToString(),
+                                    Lab_Test_Detail_ID = ltd.Lab_Test_Detail_ID.ToString(),
+                                    Bill_Details_ID = bd.Bill_Details_ID.ToString(),
+                                    TestID = ltd.Test_ID,
+                                    LabTestDetailID = ltd.Lab_Test_Detail_ID
+                                };
+
+                    if (targetTestID > 0)
+                        query = query.Where(x => x.TestID == targetTestID);
+
+                    if (currentTestDetailID > 0)
+                        query = query.Where(x => x.LabTestDetailID != currentTestDetailID);
+
+                    var historyList = query.OrderByDescending(x => x.Bill_Date)
+                        .Take(20)
+                        .Select(x => new
+                        {
+                            x.Bill_No,
+                            x.Bill_Date,
+                            x.Patient_Name,
+                            x.Test_Name,
+                            x.Test_IDs,
+                            x.Trans_IDs,
+                            x.Lab_Test_Detail_ID,
+                            x.Bill_Details_ID
+                        }).ToList();
+
+                    return (new JavaScriptSerializer()).Serialize(historyList);
+                }
+            }
+            catch (Exception ex)
+            {
+                return "[]";
+            }
+        }
+
     }
 }
