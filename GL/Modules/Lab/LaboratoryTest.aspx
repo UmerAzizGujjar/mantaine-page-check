@@ -1813,8 +1813,8 @@
                                            <th>Test Name</th>
                                            <th>Area Of Interest</th>
                                            <th>Payment</th>
-                                           <th>Test Collected On</th>
-                                           <th>Test Ready On</th>
+                                           <th>Sample Collection</th>
+                                           <th>Received in Lab</th>
                                            <th>Test Collected By</th>
                                            <th>Performed By</th>
                                            <th>Urgent</th>
@@ -2023,6 +2023,7 @@
                              <th>Doctor Name</th>
                              <th>Dpt</th>
                              <th>Action</th>
+                             <th>Status</th>
                          </tr>
                      </thead>
                      <tbody>
