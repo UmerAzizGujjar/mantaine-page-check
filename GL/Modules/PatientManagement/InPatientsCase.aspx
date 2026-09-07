@@ -795,6 +795,13 @@
                 window.open('../../ReportViewer.aspx?ReportName=InpatientDetail&Title=In Patient Detail Print&InPatient_ID=' + id);
             }
         }
+        function PrintEstimatedBill() {
+             
+            var id = $('#ctl00_MainContent_txtIn_Patient_ID').val();
+            if (id != "") {
+                window.open('../../ReportViewer.aspx?ReportName=IPDEstimatedBill&Title=In Patient Detail Print&InPatient_ID=' + id);
+            }
+        }
 
         function PrintConsultant() {
 
@@ -10981,10 +10988,13 @@ if (localStorage.IsPRN == 1) {
                   <div class="col-lg-2 col-md-3 col-sm-6">
                          <input type="button" class="btn btn-primry" value="Prescription" onclick="PrintInPatient();" id="btnPrintPrescription" /> 
                   </div>
-                              <div class="col-lg-2 col-md-3 col-sm-12">
-      <input type="button" id="btnDischargeRequest" value="Discharge Request" class="btn btn-primry" onclick="DischargeRequest()" />
-      <input type="hidden" runat="server" id="DischargeRequest" value='false'/>
-  </div>
+                  <div class="col-lg-2 col-md-3 col-sm-12">
+                         <input type="button" id="btnDischargeRequest" value="Discharge Request" class="btn btn-primry" onclick="DischargeRequest()" />
+                         <input type="hidden" runat="server" id="DischargeRequest" value='false'/>
+                  </div>
+                  <div class="col-lg-2 col-md-3 col-sm-6">
+                         <input type="button" class="btn btn-primry" value="Estimated Bill" onclick="PrintEstimatedBill();" id="btnPrintEstimatedBill" /> 
+                  </div>
                     <div class="col-lg-2 col-md-3 col-sm-6">
                           <asp:ValidationSummary ID="ValidationSummary1" runat="server" ForeColor="Red" HeaderText="Page Errors" ShowSummary="true" DisplayMode="BulletList" />
                           <asp:Label ID="lblMessage" runat="server"></asp:Label>
