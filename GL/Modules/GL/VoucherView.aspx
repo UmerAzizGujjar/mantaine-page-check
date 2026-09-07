@@ -97,6 +97,7 @@ $(document).ready(function () {
                 case 'JV': titleText = 'Journal Voucher'; break;
                 case 'DPV': titleText = 'Doctor Payment Voucher'; break;
                 case 'OPDJV': titleText = 'OPD Journal Voucher'; break;
+                case 'ACCRCV': titleText = 'Accounts Receivable Voucher'; break;
             }
             $('#ctl00_lbl1').text(titleText);
 
