@@ -1850,6 +1850,12 @@
                 Swal.fire({ icon: 'error', title: 'Error!', text: 'Please select a doctor.', showConfirmButton: false, timer: 2000 });
                 return;
             }
+
+            if ($('#emerDoctor').is(':visible') && (!emerDoctor || emerDoctor === "0")) {
+                $('#btnsave').attr('disabled', false);
+                Swal.fire({ icon: 'error', title: 'Error!', text: 'Please select an emergency doctor.', showConfirmButton: false, timer: 2000 });
+                return;
+            }
           
             if ((pat_category === "01" || ["02"].includes(pat_category)) && (!hdnDepartment || hdnDepartment === "0")) {
                 $('#btnsave').attr('disabled', false);
