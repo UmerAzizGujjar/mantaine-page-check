@@ -680,6 +680,7 @@ function RecalculateAllVendorTotals() {
                 var grnnum = 0;
                 var grnrate = 0;
                 var uniqueRowCounter = 0;
+                var rowId = ''; 
                 selectedOptions = data;
                 $.each(data, function (key, value) {
                     debugger;
@@ -698,7 +699,7 @@ function RecalculateAllVendorTotals() {
                         venamount1 = '';
                     }
                     uniqueRowCounter++;
-                    var rowId = "RID_" + uniqueRowCounter;
+                    rowId = "RID_" + uniqueRowCounter; 
                     var timestamp = parseInt(value.ReqDate.match(/\d+/)[0]);
                     var date = new Date(timestamp);
                     var formattedDateForDatepicker = $.datepicker.formatDate('dd M yy', date);
@@ -751,7 +752,7 @@ function RecalculateAllVendorTotals() {
                         }
                         setTimeout(function () {
                             $($(row).find('td select[name=ddlItemSTAX]')).val(value.SalesTaxPer1);
-                        }, 2000); 
+                        }, 2000);
                     });
                 });
 
@@ -792,7 +793,7 @@ function RecalculateAllVendorTotals() {
                         }
                         setTimeout(function () {
                             $($(row).find('td select[name=ddlItemSTAX]')).val(value.SalesTaxPer2);
-                        }, 2000); 
+                        }, 2000);
                     });
                 });
                 $.each(data, function (key, value) {
@@ -833,7 +834,7 @@ function RecalculateAllVendorTotals() {
                         }
                         setTimeout(function () {
                             $($(row).find('td select[name=ddlItemSTAX]')).val(value.SalesTaxPer3);
-                        }, 2000); 
+                        }, 2000);
                     });
                 });
                 $.each(data, function (key, value) {
@@ -874,7 +875,7 @@ function RecalculateAllVendorTotals() {
                         }
                         setTimeout(function () {
                             $($(row).find('td select[name=ddlItemSTAX]')).val(value.SalesTaxPer4);
-                        }, 2000); 
+                        }, 2000);
                     });
                 });
 
@@ -916,7 +917,7 @@ function RecalculateAllVendorTotals() {
                         }
                         setTimeout(function () {
                             $($(row).find('td select[name=ddlItemSTAX]')).val(value.SalesTaxPer5);
-                        }, 2000); 
+                        }, 2000);
                     });
                 });
 
@@ -943,15 +944,15 @@ function RecalculateAllVendorTotals() {
                     }
                     else {
                         lastgrnrate = '';
-                    }                   
+                    }
                     debugger
                     rows6 += '<tr data-rowid="' + rowId + '">' +
-                            '<td style="display:none;" ><input style="width:80px!important;text-align:right;" type="text" id="txt_grnitemcode" name="txt_grnitemcode" value="' + value.Item_Code + '" readonly="readonly"></td>' +
-                            '<td><input style="width:80px!important;text-align:right;" type="text" id="txt_grnappamount" name="txt_grnappamount" value="' + TotalappAmou + '" readonly="readonly"></td>' +
-                            '<td style="display:none;">' + lastgrnum + '</td>' +
-                            '<td style="text-align:right;">' + lastgrnrate + '</td>' +
-                            '<td style="display:none;">' + value.Description + '</td>' +
-                            '</tr>'         
+                        '<td style="display:none;" ><input style="width:80px!important;text-align:right;" type="text" id="txt_grnitemcode" name="txt_grnitemcode" value="' + value.Item_Code + '" readonly="readonly"></td>' +
+                        '<td><input style="width:80px!important;text-align:right;" type="text" id="txt_grnappamount" name="txt_grnappamount" value="' + TotalappAmou + '" readonly="readonly"></td>' +
+                        '<td style="display:none;">' + lastgrnum + '</td>' +
+                        '<td style="text-align:right;">' + lastgrnrate + '</td>' +
+                        '<td style="display:none;">' + value.Description + '</td>' +
+                        '</tr>'
                 });
                 debugger
                 $("#grntablebody").append(rows6);
