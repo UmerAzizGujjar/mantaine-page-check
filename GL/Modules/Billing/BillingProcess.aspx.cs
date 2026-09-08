@@ -3571,6 +3571,7 @@ namespace PMS
             var isFinalBilled = (from ipd in db.In_Patients
                                  where ipd.In_Patient_ID == in_pat
                                        && ipd.Final_Bill == true
+                                       
                                  select ipd.In_Patient_ID).Any();
             if (isFinalBilled)
                 return "[]";
@@ -3579,6 +3580,7 @@ namespace PMS
                            join m in db.Ar_Billings
                             on d.Bill_ID equals m.Bill_ID
                            where m.In_Patient_ID == in_pat
+                           && (m.IsPharmacy == false || m.IsPharmacy == null)
                            select new
                            {
                                d.Amount,
