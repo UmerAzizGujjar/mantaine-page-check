@@ -1,4 +1,5 @@
 ﻿using Newtonsoft.Json;
+using Newtonsoft.Json.Linq;
 using System;
 using System.Collections.Generic;
 using System.Data;
@@ -236,6 +237,109 @@ namespace PMS
             catch (Exception ex)
             {
                 return JsonConvert.SerializeObject(new { error = ex.Message });
+            }
+        }
+
+        [WebMethod]
+        public static string GetBillAuditLogs(int billId)
+        {
+            try
+            {
+                using (var db = new DataBaseDataContext())
+                {
+                    var logRows = (from l in db.Ar_Billing_Logs
+                                   join u in db.aspnet_Users on l.Loged_By equals u.UserId into userJoin
+                                   from u in userJoin.DefaultIfEmpty()
+                                   where l.Bill_Id == billId
+                                   orderby l.Log_Time, l.Log_Id
+                                   select new
+                                   {
+                                       l.Log_Id,
+                                       l.Log_Time,
+                                       l.Master_Log,
+                                       l.Details_Log,
+                                       UserName = u != null ? u.UserName : null
+                                   }).ToList();
+
+                    var logs = logRows.Select(r => new
+                    {
+                        Log_Id = r.Log_Id,
+                        TimeText = r.Log_Time.HasValue ? r.Log_Time.Value.ToString("dd MMM yyyy hh:mm tt") : "",
+                        UserName = string.IsNullOrEmpty(r.UserName) ? "" : r.UserName,
+                        Master = ParseLogJson(r.Master_Log),
+                        Details = ParseLogJson(r.Details_Log)
+                    }).ToList();
+
+                    var bill = db.Ar_Billings.FirstOrDefault(b => b.Bill_ID == billId);
+
+                    object currentMaster = null;
+                    object currentDetails = null;
+
+                    if (bill != null)
+                    {
+                        currentMaster = new
+                        {
+                            Bill_No = bill.Bill_No,
+                            Patient_ID = bill.Patient_ID,
+                            Bill_Date = bill.Bill_Date.HasValue ? bill.Bill_Date.Value.ToString("yyyy-MM-dd HH:mm") : null,
+                            Cash_In_Hand = bill.Cash_In_Hand,
+                            Bank_Account = bill.Bank_Account,
+                            Discount_Amount = bill.Discount_Amount,
+                            Total_Amount = bill.Total_Amount,
+                            Net_Amount = bill.Net_Amount,
+                            Received_Amount = bill.Received_Amount,
+                            Balance_Amount = bill.Balance_Amount,
+                            Main_Department = bill.Main_Department,
+                            BillType = bill.BillType,
+                            In_Patient_ID = bill.In_Patient_ID
+                        };
+
+                        var detailRows = db.Ar_Billing_Details
+                            .Where(d => d.Bill_ID == billId)
+                            .Select(d => new
+                            {
+                                d.Bill_Details_ID,
+                                d.Bill_ID,
+                                d.Item_ID,
+                                d.Item_Name,
+                                d.Amount,
+                                d.Net_Amount,
+                                d.Discount_Amount,
+                                d.Qty,
+                                d.Item_Type,
+                                d.Doctor_id,
+                                d.Doctor_Share,
+                                d.Hospital_Share
+                            }).ToList();
+
+                        currentDetails = new { Billing_Details = detailRows };
+                    }
+
+                    return JsonConvert.SerializeObject(new
+                    {
+                        logs = logs,
+                        current = new { master = currentMaster, details = currentDetails }
+                    });
+                }
+            }
+            catch (Exception ex)
+            {
+                return JsonConvert.SerializeObject(new { error = ex.Message });
+            }
+        }
+
+        private static object ParseLogJson(string json)
+        {
+            if (string.IsNullOrWhiteSpace(json))
+                return null;
+
+            try
+            {
+                return JsonConvert.DeserializeObject<JToken>(json);
+            }
+            catch
+            {
+                return null;
             }
         }
 

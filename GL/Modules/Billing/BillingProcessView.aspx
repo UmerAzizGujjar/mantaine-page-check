@@ -2,6 +2,7 @@
 
 <asp:Content ID="Content1" ContentPlaceHolderID="HeadContent" runat="server">
     <link href="../../wwwroot/THEME_TIBBIT/CustomCSS/tablestyle.css" rel="stylesheet" />
+    <link href="../../wwwroot/THEME_TIBBIT/CustomCSS/custom-modals.css" rel="stylesheet" />
     <script src="https://cdn.datatables.net/buttons/2.4.2/js/buttons.colVis.min.js"></script>
     <style>
         .detail-container {
@@ -15,6 +16,277 @@
             .clickable-row:hover {
                 background-color: #f0f8ff;
             }
+
+        .logListBtn {
+            background-color: #455a64 !important;
+            color: #fff !important;
+        }
+
+            .logListBtn:hover {
+                background-color: #2f3d45 !important;
+            }
+
+        .bill-log-body {
+            background: #f4f6f9;
+            font-size: 12px;
+            color: #333;
+            padding: 0 !important;
+        }
+
+        .bl-scroll {
+            max-height: calc(100vh - 240px);
+            overflow-y: auto;
+            padding: 14px 16px;
+        }
+
+        .bl-loading {
+            text-align: center;
+            padding: 40px;
+            color: #888;
+        }
+
+            .bl-loading i {
+                margin-right: 6px;
+            }
+
+        .bl-empty {
+            text-align: center;
+            padding: 46px 10px;
+            color: #8a8f98;
+        }
+
+        .bl-empty-ico {
+            font-size: 46px;
+            color: #d5dae0;
+            display: block;
+            margin-bottom: 12px;
+        }
+
+        .bl-empty-title {
+            font-weight: 700;
+            font-size: 13px;
+            color: #5c636a;
+            display: block;
+        }
+
+        .bl-empty-sub {
+            font-size: 11.5px;
+            color: #9aa1a8;
+            margin-top: 4px;
+        }
+
+        .bl-card {
+            background: #fff;
+            border: 1px solid #e3e6ea;
+            border-radius: 8px;
+            margin-bottom: 14px;
+            overflow: hidden;
+            box-shadow: 0 1px 2px rgba(0,0,0,.05);
+        }
+
+        .bl-card-head {
+            display: flex;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 8px 12px;
+            padding: 9px 12px;
+            background: #fbfcfe;
+            border-bottom: 1px solid #eceef1;
+        }
+
+        .bl-seq {
+            background: #EFA63E;
+            color: #fff;
+            font-weight: 700;
+            font-size: 11px;
+            padding: 3px 11px;
+            border-radius: 12px;
+            white-space: nowrap;
+        }
+
+        .bl-seq-newest {
+            background: #cb8d35;
+        }
+
+        .bl-meta {
+            color: #6b7280;
+            font-size: 11px;
+            display: flex;
+            align-items: center;
+            gap: 4px;
+        }
+
+            .bl-meta i {
+                color: #b0b6be;
+            }
+
+        .bl-chips {
+            margin-left: auto;
+            display: flex;
+            gap: 6px;
+            flex-wrap: wrap;
+        }
+
+        .bl-chip {
+            font-size: 10.5px;
+            font-weight: 700;
+            padding: 2px 9px;
+            border-radius: 11px;
+            white-space: nowrap;
+        }
+
+        .bl-chip-add {
+            background: #e7f6ec;
+            color: #1c7d43;
+        }
+
+        .bl-chip-del {
+            background: #fdeaea;
+            color: #b02a37;
+        }
+
+        .bl-chip-mod {
+            background: #fff4e0;
+            color: #9a6700;
+        }
+
+        .bl-sec-label {
+            padding: 8px 12px;
+            font-weight: 700;
+            font-size: 11px;
+            text-transform: uppercase;
+            letter-spacing: .04em;
+            color: #69707a;
+            background: #f6f8fa;
+            border-bottom: 1px solid #eef0f3;
+        }
+
+        .bl-toggle {
+            cursor: pointer;
+            user-select: none;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+            .bl-toggle:hover {
+                background: #eef3f8;
+            }
+
+            .bl-toggle .fa {
+                font-size: 12px;
+                color: #b0b6be;
+                width: 10px;
+            }
+
+        .bl-table {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: 12px;
+            margin: 0;
+        }
+
+            .bl-table th {
+                background: #f8fafb;
+                font-size: 10.5px;
+                text-transform: uppercase;
+                letter-spacing: .03em;
+                color: #7d8790;
+                padding: 6px 12px;
+                border-bottom: 1px solid #e6e9ed;
+                white-space: nowrap;
+                text-align: left;
+            }
+
+            .bl-table td {
+                padding: 6px 12px;
+                border-bottom: 1px solid #f0f2f4;
+                vertical-align: top;
+                font-size: 12px;
+            }
+
+        .bl-table-cmp th:first-child,
+        .bl-table-cmp td:first-child {
+            width: 17%;
+        }
+
+        .bl-fld {
+            color: #5b636b;
+            font-weight: 600;
+            white-space: nowrap;
+        }
+
+        .bl-val {
+            color: #6f767d;
+        }
+
+        .bl-val-old {
+            color: #b02a37;
+            font-weight: 600;
+        }
+
+        .bl-val-new {
+            color: #1c7d43;
+            font-weight: 700;
+        }
+
+        .bl-arrow {
+            color: #c3c9cf;
+            text-align: center;
+            white-space: nowrap;
+            width: 34px;
+        }
+
+        .bl-none {
+            color: #9aa1a8;
+            font-style: italic;
+            padding: 8px 12px;
+        }
+
+        .bl-itemname {
+            font-weight: 600;
+            color: #37424c;
+        }
+
+        .bl-itemname-old {
+            text-decoration: line-through;
+            color: #b02a37;
+        }
+
+        .bl-itemname-new {
+            font-weight: 700;
+            color: #1c7d43;
+        }
+
+        .bl-diff-inline {
+            list-style: none;
+            margin: 0;
+            padding: 0;
+        }
+
+            .bl-diff-inline li {
+                font-size: 11.5px;
+                padding: 1px 0;
+                color: #4c545d;
+            }
+
+            .bl-diff-inline .d-old {
+                color: #b02a37;
+                text-decoration: line-through;
+            }
+
+            .bl-diff-inline .d-new {
+                color: #1c7d43;
+                font-weight: 700;
+            }
+
+        .bl-note {
+            padding: 8px 12px 10px;
+            color: #97a0a8;
+            font-style: italic;
+            font-size: 11px;
+            border-top: 1px dashed #e2e6ea;
+        }
     </style>
     <script type="text/javascript">
         $(document).ready(function () {
@@ -100,84 +372,7 @@
             window.open(url, '_blank');
         }
 
-        ////////function PrintBilling2(Bill_ID) {
-        ////////    var locationInfo = window.location;
-        //////////////    //var user_name = '<%= AppConfig.Company_Name %>';
-        //////    //var reportPath;  // ✅ declared properly
-
-        //////    //var locationInfo = window.location;
-
-        //////////////  //  var user_name = '<% =AppConfig.Company_Name %>';
-        ////////    var reportPath;
-        ////////    if (user_name == 'As-Siraat Serving Humanity') {
-        ////////        reportPath = '../../ReportViewer.aspx';
-        ////////    } else {
-        ////////        reportPath = 'ReportViewer.aspx';
-        ////////    }
-
-        ////////    // Build URL — different report name based on whether doctorId is passed
-        ////////    function buildUrl(doctorId) {
-        ////////        var base;
-        ////////        if (!locationInfo.origin.includes('localhost')) {
-        ////////            var urlInfo = window.location.href.split('/');
-        ////////            var ip = urlInfo[2];
-        ////////            var foldername = urlInfo[3];
-        ////////            base = 'http://' + ip + '/' + foldername + '/' + reportPath;
-        ////////        } else {
-        ////////            base = '/ReportViewer.aspx';
-        ////////        }
-
-        ////////        var reportName, reportTitle;
-
-        ////////        if (doctorId != null) {
-        ////////            // Doctor rows  → Consultant report
-        ////////            reportName = 'BillingBaseReport_Consultant';
-        ////////            reportTitle = 'Consultant%20Billing%20Report';
-        ////////        } else {
-        ////////            // No-doctor rows → Hospital Services report
-        ////////            reportName = 'BillingBaseReport_Hospital_Services';
-        ////////            reportTitle = 'Hospital%20Services%20Billing%20Report';
-        ////////        }
-
-        ////////        var url = base + '?ReportName=' + reportName
-        ////////            + '&ReportTitle=' + reportTitle
-        ////////            + '&Bill_ID=' + id;
-
-        ////////        if (doctorId != null) {
-        ////////            url += '&Doctor_ID=' + doctorId;
-        ////////        }
-
-        ////////        return url;
-
-        ////////    }
-        ////////    $.ajax({
-        ////////        type: "POST",
-        ////////        url: "BillingProcessView.aspx/GetDistinctDoctorsByBillId",
-        ////////        data: JSON.stringify({ 'Bill_Id': id }),
-        ////////        contentType: "application/json; charset=utf-8",
-        ////////        dataType: "json",
-        ////////        success: function (response) {
-        ////////            debugger;
-        ////////            var doctorIds = JSON.parse(response.d);
-
-        ////////            // Step 2: Open Hospital Services report (no doctor = NULL/0 rows)
-        ////////            setTimeout(function () {
-        ////////                window.open(buildUrl(null), '_blank');
-        ////////            }, 0);
-
-        ////////            // Step 3: Open one Consultant report per distinct doctor
-        ////////            $.each(doctorIds, function (index, item) {
-        ////////                setTimeout(function () {
-        ////////                    window.open(buildUrl(item.Doctor_ID), '_blank');
-        ////////                }, (index + 1) * 700);
-        ////////            });
-        ////////        },
-        ////////        error: function (err) {
-        ////////            console.error("Failed to fetch doctor IDs", err);
-        ////////            alert("Could not load doctor information for this bill.");
-        ////////        }
-        ////////    });
-        ////////}
+      
       
         function LoadPage() {
             let savedVisibility = null;
@@ -266,15 +461,15 @@
                             return date;
                         }, "width": "7%", "orderable": true
                     },
-                    { "data": "MrNo", "name": "MrNo", "width": "8%", "orderable": true },
+                    { "data": "MrNo", "name": "MrNo", "width": "5%", "orderable": true },
                     { "data": "Full_Name", "width": "13%", "orderable": false },
-                    { "data": "Total_Amount", "width": "7%", "orderable": false },
-                    { "data": "Discount_Percentage", "width": "8%", "orderable": false },
-                    { "data": "Discount_Amount", "width": "8%", "orderable": false },
-                    { "data": "Net_Amount", "width": "8%", "orderable": false },
-                    { "data": "Received_Amount", "name": "Received_Amount", "width": "8%", "orderable": false },
-                    { "data": "Balance_Amount", "width": "8%", "orderable": false },
-                    { "data": "Operator", "width": "9%", "orderable": false },
+                    { "data": "Total_Amount", "width": "5%", "orderable": false },
+                    { "data": "Discount_Percentage", "width": "3%", "orderable": false },
+                    { "data": "Discount_Amount", "width": "5%", "orderable": false },
+                    { "data": "Net_Amount", "width": "5%", "orderable": false },
+                    { "data": "Received_Amount", "name": "Received_Amount", "width": "5%", "orderable": false },
+                    { "data": "Balance_Amount", "width": "5%", "orderable": false },
+                    { "data": "Operator", "width": "6%", "orderable": false },
 
                     {
                         render: function (data, type, full) {
@@ -290,6 +485,8 @@
 
                             var print1 = '<a class="printListBtn" style="border-radius: 4px;margin-left: 4px;color: white;padding: 5px 8px 5px 8px;" href="#" onclick="PrintBilling1(' + full.Bill_ID + ')" id="btnprint1"><i class="fa fa-print"></i></a>';
 
+                            var logBtn = '<a class="logListBtn" style="border-radius: 4px;margin-left: 4px;color: white;padding: 5px 8px 5px 8px;" href="#" onclick="openBillLogs(' + full.Bill_ID + ',\'' + full.Bill_No + '\');return false;" title="View Change History"><i class="fa fa-history"></i></a>';
+
                             // Check if Balance_Amount is greater than 0 before showing receipt button
                             var receipt = '';
                             var balanceAmount = parseFloat(full.Balance_Amount);
@@ -301,10 +498,10 @@
                             }
 
                             var result;
-                            result = res + Del + print + print1 + receipt;
+                            result = res + logBtn + Del + print + print1 + receipt;
                             return result;
                         },
-                        "width": "25%",
+                        "width": "10%",
                         "orderable": false
                     }
 
@@ -550,6 +747,327 @@
             }
         }
 
+        // ================= BILL CHANGE HISTORY (Ar_Billing_Logs) =================
+
+        var BLMasterFields = [
+            { k: 'Total_Amount', l: 'Total Amount', kind: 'money' },
+            { k: 'Discount_Amount', l: 'Discount Amount', kind: 'money' },
+            { k: 'Net_Amount', l: 'Net Amount', kind: 'money' },
+            { k: 'Received_Amount', l: 'Received Amount', kind: 'money' },
+            { k: 'Balance_Amount', l: 'Balance Amount', kind: 'money' },
+            { k: 'Cash_In_Hand', l: 'Cash In Hand', kind: 'money' },
+            { k: 'Bank_Account', l: 'Bank Account', kind: 'text' },
+            { k: 'Bill_Date', l: 'Bill Date', kind: 'date' },
+            { k: 'Main_Department', l: 'Department', kind: 'dept' },
+            { k: 'BillType', l: 'Bill Type', kind: 'text' },
+            { k: 'In_Patient_ID', l: 'In-Patient ID', kind: 'int' }
+        ];
+
+        var BLItemFields = [
+            { k: 'Qty', l: 'Qty', kind: 'qty' },
+            { k: 'Amount', l: 'Amount', kind: 'money' },
+            { k: 'Discount_Amount', l: 'Discount', kind: 'money' },
+            { k: 'Net_Amount', l: 'Net Amount', kind: 'money' },
+            { k: 'Doctor_Share', l: 'Doctor Share', kind: 'money' },
+            { k: 'Hospital_Share', l: 'Hospital Share', kind: 'money' },
+            { k: 'Doctor_id', l: 'Doctor ID', kind: 'int' },
+            { k: 'Item_Name', l: 'Item Name', kind: 'text' }
+        ];
+
+        var BLDeptNames = { '001': 'Lab', '002': 'Ultrasound', '003': 'X-Ray', '004': 'CT Scan', '005': 'Blood Bank', '006': 'Consultant' };
+
+        function escHtml(s) {
+            return String(s == null ? '' : s)
+                .replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;')
+                .replace(/"/g, '&quot;').replace(/'/g, '&#39;');
+        }
+
+        function fmtMoney(v) {
+            if (v === null || v === undefined || v === '') return '';
+            var n = Number(v);
+            if (isNaN(n)) return String(v);
+            var neg = n < 0;
+            n = Math.abs(n);
+            var parts = n.toFixed(2).split('.');
+            parts[0] = parts[0].replace(/\B(?=(\d{3})+(?!\d))/g, ',');
+            return (neg ? '-' : '') + parts[0] + '.' + parts[1];
+        }
+
+        function fmtQty(v) {
+            if (v === null || v === undefined || v === '') return '';
+            var n = Number(v);
+            if (isNaN(n)) return String(v);
+            return Number.isInteger(n) ? String(n) : n.toFixed(2);
+        }
+
+        var BLMonths = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
+
+        function normDateText(v) {
+            if (v === null || v === undefined || v === '') return '';
+            var s = String(v);
+            var m = s.match(/^\/Date\((-?\d+)\)\/$/);
+            var d = null;
+            if (m) {
+                d = new Date(Number(m[1]));
+            } else if (/^\d{4}-\d{2}-\d{2}/.test(s)) {
+                d = new Date(s.replace(' ', 'T'));
+            } else {
+                return s;
+            }
+            if (isNaN(d.getTime())) return s;
+            var p = function (x) { return x < 10 ? '0' + x : '' + x; };
+            return p(d.getDate()) + '-' + BLMonths[d.getMonth()] + '-' + d.getFullYear() + ' ' + p(d.getHours()) + ':' + p(d.getMinutes());
+        }
+
+        function normByKind(kind, v) {
+            if (kind === 'money') return fmtMoney(v);
+            if (kind === 'qty') return fmtQty(v);
+            if (kind === 'int') return (v === null || v === undefined || v === '') ? '' : String(Number(v));
+            if (kind === 'date') return normDateText(v);
+            if (kind === 'dept') {
+                if (v === null || v === undefined || v === '') return '';
+                var key = String(v).trim();
+                return BLDeptNames[key] ? BLDeptNames[key] : String(v);
+            }
+            return (v === null || v === undefined) ? '' : String(v);
+        }
+
+        function hasOwn(o, k) {
+            return o !== null && typeof o === 'object' && Object.prototype.hasOwnProperty.call(o, k);
+        }
+
+        function detailArray(state) {
+            if (!state || !state.details || !state.details.Billing_Details) return [];
+            return state.details.Billing_Details;
+        }
+
+        function diffMaster(before, after) {
+            var rows = [];
+            if (!before || !after) return rows;
+            BLMasterFields.forEach(function (f) {
+                if (!hasOwn(before.master, f.k) || !hasOwn(after.master, f.k)) return;
+                var b = normByKind(f.kind, before.master[f.k]);
+                var a = normByKind(f.kind, after.master[f.k]);
+                if (b !== a) rows.push({ label: f.l, prev: b, cur: a });
+            });
+            return rows;
+        }
+
+        function diffDetails(before, after) {
+            var result = { added: [], removed: [], modified: [] };
+            if (!before || !after) return result;
+            var prevArr = detailArray(before);
+            var nextArr = detailArray(after);
+            var map = function (arr) {
+                var m = {};
+                arr.forEach(function (it) { m[String(it.Bill_Details_ID)] = it; });
+                return m;
+            };
+            var prevMap = map(prevArr);
+            var nextMap = map(nextArr);
+
+            nextArr.forEach(function (it) {
+                var id = String(it.Bill_Details_ID);
+                if (!hasOwn(prevMap, id)) {
+                    result.added.push(it);
+                }
+            });
+            prevArr.forEach(function (it) {
+                var id = String(it.Bill_Details_ID);
+                if (!hasOwn(nextMap, id)) {
+                    result.removed.push(it);
+                } else {
+                    var beforeIt = prevMap[id];
+                    var changes = [];
+                    BLItemFields.forEach(function (f) {
+                        var b = normByKind(f.kind, beforeIt[f.k]);
+                        var a = normByKind(f.kind, it[f.k]);
+                        if (b !== a) changes.push({ label: f.l, prev: b, cur: a });
+                    });
+                    if (changes.length > 0) {
+                        result.modified.push({ item: it, changes: changes });
+                    }
+                }
+            });
+            return result;
+        }
+
+        function itemRowCells(item, extraClass) {
+            return '<tr><td class="bl-itemname ' + (extraClass || '') + '">' + escHtml(item.Item_Name) + '</td>'
+                + '<td>' + fmtQty(item.Qty) + '</td>'
+                + '<td>' + fmtMoney(item.Amount) + '</td>'
+                + '<td>' + fmtMoney(item.Discount_Amount) + '</td>'
+                + '<td>' + fmtMoney(item.Net_Amount) + '</td></tr>';
+        }
+
+        function buildItemSectionHTML(diff) {
+            var html = '';
+            var any = diff.added.length > 0 || diff.removed.length > 0 || diff.modified.length > 0;
+            if (!any) return html;
+
+            html += '<div class="bl-sec-label bl-toggle bl-toggle-card" data-target="blcard' + (BLCardSeq++) + '">'
+                + '<i class="fa fa-caret-right"></i> Item Changes'
+                + '<span class="bl-chip bl-chip-add">+' + diff.added.length + '</span>'
+                + '<span class="bl-chip bl-chip-del">-' + diff.removed.length + '</span>'
+                + '<span class="bl-chip bl-chip-mod">~' + diff.modified.length + '</span>'
+                + '</div>';
+
+            html += '<div id="blcard' + (BLCardSeq - 1) + '" style="display:none;">';
+
+            if (diff.added.length > 0) {
+                html += '<div class="bl-sub-sec-head" style="color:#1c7d43;padding:8px 12px 2px;font-weight:700;">Items Added <span class="bl-chip bl-chip-add">' + diff.added.length + '</span></div>';
+                html += '<table class="bl-table"><thead><tr><th>Item</th><th>Qty</th><th>Amount</th><th>Discount</th><th>Net</th></tr></thead><tbody>';
+                diff.added.forEach(function (it) { html += itemRowCells(it, 'bl-itemname-new'); });
+                html += '</tbody></table>';
+            }
+
+            if (diff.removed.length > 0) {
+                html += '<div class="bl-sub-sec-head" style="color:#b02a37;padding:8px 12px 2px;font-weight:700;">Items Removed <span class="bl-chip bl-chip-del">' + diff.removed.length + '</span></div>';
+                html += '<table class="bl-table"><thead><tr><th>Item</th><th>Qty</th><th>Amount</th><th>Discount</th><th>Net</th></tr></thead><tbody>';
+                diff.removed.forEach(function (it) { html += itemRowCells(it, 'bl-itemname-old'); });
+                html += '</tbody></table>';
+            }
+
+            if (diff.modified.length > 0) {
+                html += '<div class="bl-sub-sec-head" style="color:#9a6700;padding:8px 12px 2px;font-weight:700;">Items Modified <span class="bl-chip bl-chip-mod">' + diff.modified.length + '</span></div>';
+                html += '<table class="bl-table"><thead><tr><th>Item</th><th>Field Changes</th></tr></thead><tbody>';
+                diff.modified.forEach(function (mod) {
+                    html += '<tr><td class="bl-itemname">' + escHtml(mod.item.Item_Name) + '</td><td><ul class="bl-diff-inline">';
+                    mod.changes.forEach(function (c) {
+                        html += '<li>' + escHtml(c.label) + ': <span class="d-old">' + escHtml(c.prev) + '</span> &rarr; <span class="d-new">' + escHtml(c.cur) + '</span></li>';
+                    });
+                    html += '</ul></td></tr>';
+                });
+                html += '</tbody></table>';
+            }
+
+            html += '</div>';
+            return html;
+        }
+
+        function buildRevisionHTML(evt, idx, total) {
+            var d = diffMaster(evt.before, evt.after);
+            var dd = diffDetails(evt.before, evt.after);
+            var noCurrent = (evt.after === null);
+
+            var chips = '';
+            if (d.length > 0) chips += '<span class="bl-chip bl-chip-mod">' + d.length + ' field' + (d.length > 1 ? 's' : '') + '</span>';
+            if (dd.added.length > 0) chips += '<span class="bl-chip bl-chip-add">+' + dd.added.length + ' item' + (dd.added.length > 1 ? 's' : '') + '</span>';
+            if (dd.removed.length > 0) chips += '<span class="bl-chip bl-chip-del">-' + dd.removed.length + ' item' + (dd.removed.length > 1 ? 's' : '') + '</span>';
+
+            var html = '<div class="bl-card">';
+            html += '<div class="bl-card-head">';
+            html += '<span class="bl-seq ' + (idx === 0 ? 'bl-seq-newest' : '') + '">' + (idx === 0 ? 'Latest Update' : 'Update #' + (total - idx)) + '</span>';
+            html += '<span class="bl-meta"><i class="fa fa-user-o"></i> ' + escHtml(evt.user) + '</span>';
+            html += '<span class="bl-meta"><i class="fa fa-clock-o"></i> ' + escHtml(evt.time) + '</span>';
+            html += '<span class="bl-chips">' + chips + '</span>';
+            html += '</div>';
+
+            html += '<div class="bl-card-body">';
+            if (noCurrent) {
+                html += '<div class="bl-note">Current bill data is no longer available (bill may have been deleted). Only the stored snapshot is shown.</div>';
+            }
+
+            if (d.length > 0) {
+                html += '<div class="bl-sec-label">Bill Summary &mdash; Changed Fields</div>';
+                html += '<div style="overflow-x:auto;"><table class="bl-table bl-table-cmp"><thead><tr><th>Field</th><th>Previous Value</th><th></th><th>Updated Value</th></tr></thead><tbody>';
+                d.forEach(function (row) {
+                    html += '<tr><td class="bl-fld">' + escHtml(row.label) + '</td>'
+                        + '<td class="bl-val bl-val-old">' + (row.prev === '' ? '&mdash;' : escHtml(row.prev)) + '</td>'
+                        + '<td class="bl-arrow"><i class="fa fa-long-arrow-right"></i></td>'
+                        + '<td class="bl-val bl-val-new">' + (row.cur === '' ? '&mdash;' : escHtml(row.cur)) + '</td></tr>';
+                });
+                html += '</tbody></table></div>';
+            } else {
+                html += '<div class="bl-none">No summary (amount / discount) field changes in this update.</div>';
+            }
+
+            html += buildItemSectionHTML(dd);
+            if (!dd.added.length && !dd.removed.length && !dd.modified.length) {
+                html += '<div class="bl-note">No item level changes in this update.</div>';
+            }
+            html += '</div>';
+            html += '</div>';
+            return html;
+        }
+
+        function openBillLogs(billId, billNo) {
+            var $body = $('#blModalBody');
+            $body.html('<div class="bl-loading"><i class="fa fa-spinner fa-spin"></i>Loading change history&hellip;</div>');
+            $('#blCount').text('');
+            $('#billLogTitle').text('Bill Change History' + (billNo ? ' - ' + billNo : ''));
+            $('#billLogModal').modal({ backdrop: 'static' });
+
+            $.ajax({
+                type: "POST",
+                url: "BillingProcessView.aspx/GetBillAuditLogs",
+                data: JSON.stringify({ billId: billId }),
+                contentType: "application/json; charset=utf-8",
+                dataType: "json",
+                success: function (response) {
+                    try {
+                        var payload = JSON.parse(response.d);
+                        renderBillLogs(payload);
+                    } catch (ex) {
+                        $body.html('<div class="bl-empty"><i class="fa fa-exclamation-triangle bl-empty-ico" style="color:#d8a25a;"></i><span class="bl-empty-title">Unable to load history</span><span class="bl-empty-sub">' + escHtml(ex.message) + '</span></div>');
+                    }
+                },
+                error: function (err) {
+                    $body.html('<div class="bl-empty"><i class="fa fa-exclamation-triangle bl-empty-ico" style="color:#d8a25a;"></i><span class="bl-empty-title">Unable to load history</span><span class="bl-empty-sub">Server error occurred while reading logs.</span></div>');
+                }
+            });
+        }
+
+        function renderBillLogs(payload) {
+            var $body = $('#blModalBody');
+            if (!payload || payload.error) {
+                $body.html('<div class="bl-empty"><i class="fa fa-exclamation-triangle bl-empty-ico" style="color:#d8a25a;"></i><span class="bl-empty-title">Unable to load history</span><span class="bl-empty-sub">' + escHtml(payload && payload.error ? payload.error : 'No data returned.') + '</span></div>');
+                return;
+            }
+
+            var logs = payload.logs || [];
+            var current = payload.current;
+
+            if (logs.length === 0) {
+                $body.html('<div class="bl-empty"><i class="fa fa-history bl-empty-ico"></i><span class="bl-empty-title">No update history found</span><span class="bl-empty-sub">Changes are logged automatically each time this bill is edited and saved.</span></div>');
+                $('#blCount').text('');
+                return;
+            }
+
+            var snapshots = logs.map(function (l) { return { master: l.Master, details: l.Details }; });
+            var hasCurrent = current && current.master;
+            if (hasCurrent) {
+                snapshots.push({ master: current.master, details: current.details });
+            }
+
+            var events = [];
+            for (var i = 0; i < logs.length; i++) {
+                events.push({
+                    user: logs[i].UserName,
+                    time: logs[i].TimeText,
+                    before: snapshots[i],
+                    after: (i + 1 < snapshots.length) ? snapshots[i + 1] : null
+                });
+            }
+            events.reverse();
+
+            BLCardSeq = 0;
+            var total = events.length;
+            var html = '';
+            for (var j = 0; j < events.length; j++) {
+                html += buildRevisionHTML(events[j], j, total);
+            }
+            $body.html(html);
+            $('#blCount').text(total + ' recorded update' + (total > 1 ? 's' : ''));
+        }
+
+        var BLCardSeq = 0;
+
+        $(document).on('click', '.bl-toggle-card', function () {
+            var id = $(this).data('target');
+            $('#' + id).toggle();
+            $(this).find('.fa').toggleClass('fa-caret-right fa-caret-down');
+        });
 
     </script>
 
@@ -579,6 +1097,37 @@
                 <tbody id="ibody">
                 </tbody>
             </table>
+        </div>
+    </div>
+
+    <div class="modal fade" id="billLogModal" tabindex="-1" role="dialog" aria-hidden="true">
+        <div class="modal-dialog custom-modal-dialog custom-modal-dialog-xl" role="document">
+            <div class="modal-content custom-modal-content">
+
+                <div class="modal-header custom-modal-header">
+                    <div class="custom-modal-title-wrap">
+                        <span class="custom-modal-icon"><i class="fa fa-history"></i></span>
+                        <h4 class="modal-title custom-modal-title" id="billLogTitle">Bill Change History</h4>
+                    </div>
+                    <button type="button" class="custom-modal-close" data-dismiss="modal" aria-label="Close">
+                        <i class="fa fa-times"></i>
+                    </button>
+                </div>
+
+                <div class="modal-body custom-modal-body bill-log-body">
+                    <div class="bl-scroll">
+                        <div id="blModalBody"></div>
+                    </div>
+                </div>
+
+                <div class="custom-modal-footer">
+                    <span class="custom-modal-count" id="blCount"></span>
+                    <button type="button" class="custom-modal-btn-close" data-dismiss="modal">
+                        <i class="fa fa-times-circle"></i> Close
+                    </button>
+                </div>
+
+            </div>
         </div>
     </div>
 </asp:Content>
