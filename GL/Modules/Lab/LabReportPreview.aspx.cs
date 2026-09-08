@@ -1884,7 +1884,7 @@ namespace PMS
                                join ab in db.Ar_Billing_Details on sd.Bill_Detail_ID equals ab.Bill_Details_ID
                                join bill in db.Ar_Billings on ab.Bill_ID equals bill.Bill_ID
                                join pat in db.Reg_patients on bill.Patient_ID equals pat.pat_id
-                               where sd.Sample_Collected == true
+                              where sd.Sample_Collected == true
                                   && (from ltd in db.Lab_Test_Details
                                       where ltd.Bill_Details_ID == ab.Bill_Details_ID
                                       && ltd.Is_Result == false
