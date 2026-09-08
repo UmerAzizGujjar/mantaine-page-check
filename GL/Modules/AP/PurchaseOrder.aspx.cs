@@ -5,6 +5,7 @@ using System.Collections.Generic;
 using System.Configuration;
 using System.Data;
 using System.Data.SqlClient;
+using System.Globalization;
 using System.Linq;
 using System.Security.Cryptography;
 using System.Web;
@@ -503,6 +504,106 @@ TotalStock = db.GetInvenrtoryItemUomTotalStock(d.Item_Id ?? 0, m.Ware_House),
             public string LastPORate { get; set; }
 
         }
+        // ================= PO CHANGE LOG SNAPSHOT HELPERS =================
+
+        private static string StrVal(object v)
+        {
+            if (v == null) return "";
+            return Convert.ToString(v, CultureInfo.InvariantCulture);
+        }
+
+        private static string NumVal(object v)
+        {
+            if (v == null) return "";
+            try { return Convert.ToDecimal(v).ToString("0.##", CultureInfo.InvariantCulture); }
+            catch { return ""; }
+        }
+
+        private static string DateVal(object v)
+        {
+            if (v == null) return "";
+            try { return Convert.ToDateTime(v).ToString("yyyy-MM-dd", CultureInfo.InvariantCulture); }
+            catch { return ""; }
+        }
+
+        private static Dictionary<string, string> BuildPOMasterSnapshot(AP_Purchase_Order po, DataBaseDataContext db)
+        {
+            string vendorName = "";
+            if (po.Vendor_ID != null)
+            {
+                var vn = (from v in db.AP_Vendors where v.Vendor_ID == po.Vendor_ID select v.Vendor_Name).FirstOrDefault();
+                if (vn != null) vendorName = vn;
+            }
+
+            string warehouseName = "";
+            if (!string.IsNullOrEmpty(po.Ware_House))
+            {
+                try { warehouseName = db.GetDataValueName("Ware House", po.Ware_House) ?? ""; }
+                catch { warehouseName = ""; }
+            }
+
+            var snap = new Dictionary<string, string>();
+            snap["PO_No"] = po.PO_No.HasValue ? po.PO_No.Value.ToString() : "";
+            snap["Ref_No"] = StrVal(po.Ref_No);
+            snap["Vendor_Name"] = vendorName;
+            snap["Ware_House"] = warehouseName;
+            snap["PO_Date"] = DateVal(po.PO_Date);
+            snap["Due_Date"] = DateVal(po.Due_Date);
+            snap["Sub_Total"] = NumVal(po.Sub_Total);
+            snap["Discount"] = NumVal(po.Discount);
+            snap["Frieght_Charges"] = NumVal(po.Frieght_Charges);
+            snap["Total_ST_Amount"] = NumVal(po.Total_ST_Amount);
+            snap["Total_Adv_Amt"] = NumVal(po.Total_Adv_Amt);
+            snap["Total_Further_Amt"] = NumVal(po.Total_Further_Amt);
+            snap["PO_Amount"] = NumVal(po.PO_Amount);
+            snap["PO_Type"] = StrVal(po.PO_Type);
+            snap["Payment_Terms"] = StrVal(po.Payment_Terms);
+            snap["Delivery_Terms"] = StrVal(po.Delivery_Terms);
+            snap["Status"] = StrVal(po.Status);
+            return snap;
+        }
+
+        private static object BuildPOItemsSnapshot(System.Collections.Generic.IEnumerable<AP_Purchase_Order_Item> rows)
+        {
+            return new
+            {
+                Items = rows.Select(i => new
+                {
+                    Item_Name = StrVal(i.Item_Name),
+                    Item_Code = i.Item_Code.HasValue ? i.Item_Code.Value.ToString() : "",
+                    PRDetailId = i.PRDetailId.HasValue ? i.PRDetailId.Value.ToString() : "",
+                    Qty = NumVal(i.Qty),
+                    UOM_Qty = NumVal(i.UOM_Qty),
+                    Rate = NumVal(i.Rate),
+                    Amount = NumVal(i.Amount),
+                    Discount_Percentage = NumVal(i.Discount_Percentage),
+                    Discount_Amount = NumVal(i.Discount_Amount),
+                    SalTax_Amount = NumVal(i.SalTax_Amount),
+                    AdvanceTax_Amount = NumVal(i.AdvanceTax_Amount),
+                    FurtherTax_Amount = NumVal(i.FurtherTax_Amount),
+                    Bonus_Tax = NumVal(i.Bonus_Tax),
+                    Delivery_Date = DateVal(i.Delivery_Date),
+                    Last_PO_Rate = NumVal(i.Last_PO_Rate)
+                }).ToList()
+            };
+        }
+
+        private static void WritePOChangeLog(DataBaseDataContext db, AP_Purchase_Order po, JavaScriptSerializer serializer)
+        {
+            var prevItems = db.AP_Purchase_Order_Items.Where(i => i.PO_ID == po.PO_ID).ToList();
+
+            AP_Purchase_Order_Log poLog = new AP_Purchase_Order_Log
+            {
+                PO_Id = po.PO_ID,
+                Master_Log = serializer.Serialize(BuildPOMasterSnapshot(po, db)),
+                Details_Log = serializer.Serialize(BuildPOItemsSnapshot(prevItems)),
+                Loged_By = AppConfig.UserID,
+                Log_Time = DateTime.Now
+            };
+
+            db.AP_Purchase_Order_Logs.InsertOnSubmit(poLog);
+        }
+
         [WebMethod]
         public static int SavePurchaseItemDetail(string btnSave, string AllItemDetail)
         {
@@ -519,6 +620,8 @@ TotalStock = db.GetInvenrtoryItemUomTotalStock(d.Item_Id ?? 0, m.Ware_House),
                 AP_Purchase_Order existingItem = db.AP_Purchase_Orders.SingleOrDefault(t => t.PO_No == int.Parse(record.Purchase_No));
                 if (existingItem != null)
                 {
+                    WritePOChangeLog(db, existingItem, oJS);
+
                     if (record.RefNo != "")
                     {
                         existingItem.Ref_No = record.RefNo;
