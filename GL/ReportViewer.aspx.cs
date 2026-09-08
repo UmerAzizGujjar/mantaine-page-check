@@ -8746,7 +8746,8 @@ namespace PMS
             {
                 reportPath += "TransactionalDetails/rptAdvancePaymentReport.rpt";
                 rd.Load(reportPath);
-                string Operator = Request.QueryString["Operator"].ToString();
+                rd.SetParameterValue("Title", reportTitle);
+                rd.SetParameterValue("CompanyName", AppConfig.Company_Name);
 
                 string stDate = Request.QueryString["StartDate"].ToString();
                 string stTime = Request.QueryString["StartTime"].ToString();
@@ -8760,11 +8761,8 @@ namespace PMS
                 this.getDateTimeDBFormate(stDate, stTime, out parameterStDate);
                 this.getDateTimeDBFormate(endDate, endTime, out parameterEndDate);
 
-                rd.SetParameterValue("Title", reportTitle);
-                rd.SetParameterValue("CompanyName", AppConfig.Company_Name);
                 rd.SetParameterValue("@FromDate", parameterStDate);
                 rd.SetParameterValue("@ToDate", parameterEndDate);
-                rd.SetParameterValue("@Operator", Operator);
             }
             else if (reportName == "RefundReport")
             {
