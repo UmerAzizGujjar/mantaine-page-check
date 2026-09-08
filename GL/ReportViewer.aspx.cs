@@ -743,8 +743,14 @@ namespace PMS
                 {
                     rd.SetParameterValue("QRImagePath", "");
                 }
-
-
+                try
+                {
+                    rd.SetParameterValue("@In_Patient_ID", in_patient_id, rd.Subreports[0].Name.ToString());
+                    rd.SetParameterValue("@In_Patient_ID", in_patient_id, rd.Subreports[1].Name.ToString());
+                    rd.SetParameterValue("@In_Patient_ID", in_patient_id, rd.Subreports[2].Name.ToString());
+                }
+                catch { 
+                }
             }
             else if (reportName == "DischargePrint")
             {
