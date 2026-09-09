@@ -4010,7 +4010,7 @@ namespace PMS
                             }
                         }
                         if (inpat.Discharge_Request == true) {
-                            pt.paid_amount = DBClass.getField("select sum(Received_Amount) from Ar_Billings where  In_Patient_ID =" + inpat.In_Patient_ID + " AND (isCancel = 0 OR isCancel IS NULL) AND IsNull(final_bill_ipd,0) = 0");
+                            pt.paid_amount = DBClass.getField("select sum(Received_Amount) from Ar_Billings where  In_Patient_ID =" + inpat.In_Patient_ID + " AND (isCancel = 0 OR isCancel IS NULL) AND ISNULL(IsPharmacy,0) = 0 AND IsNull(final_bill_ipd,0) = 0");
                            
                         }
                         pt.advance_amount = DBClass.getField("select sum(Advance_Amount) from AR_Advances where In_Patient_ID=" + inpat.In_Patient_ID + " AND (isCancelled = 0 OR isCancelled IS NULL)");
