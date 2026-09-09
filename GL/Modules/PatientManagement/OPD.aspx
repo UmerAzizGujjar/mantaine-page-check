@@ -2,7 +2,7 @@
 
 <asp:Content ID="Content1" ContentPlaceHolderID="HeadContent" runat="server">
 
-    <script src="../../wwwroot/THEME_TIBBIT/CustomJs/OPD.js" type="text/javascript"></script>
+    <script src="../../wwwroot/THEME_TIBBIT/CustomJs/OPD.js?v=<%= System.IO.File.GetLastWriteTimeUtc(Server.MapPath("~/wwwroot/THEME_TIBBIT/CustomJs/OPD.js")).Ticks %>" type="text/javascript"></script>
     <link href="../../wwwroot/THEME_TIBBIT/CustomCSS/OPD.css" rel="stylesheet" />
     <link href="../../wwwroot/lib/sweetalert/swalalert.css" rel="stylesheet" />
     <script type="text/javascript">
