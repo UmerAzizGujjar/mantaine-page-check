@@ -71,7 +71,7 @@ namespace PMS
                             let wardName = (activeWardId != null ? (from w in db.Ward_Definitions where w.Ward_ID == activeWardId select w.Ward_Type).FirstOrDefault() : null)
                             select new
                             {
-                                bill.Bill_Date,
+                                Bill_Date = bill.Creation_Date,
                                 bill.Bill_No,
                                 bill.Bill_ID,
                                 bill_details.Item_Name,
