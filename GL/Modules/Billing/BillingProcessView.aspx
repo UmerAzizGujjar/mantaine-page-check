@@ -858,35 +858,36 @@
             if (!before || !after) return result;
             var prevArr = detailArray(before);
             var nextArr = detailArray(after);
+            var keyOf = function (it) {
+                var id = (it.Item_ID === null || it.Item_ID === undefined) ? '' : String(it.Item_ID);
+                var type = (it.Item_Type === null || it.Item_Type === undefined) ? '' : String(it.Item_Type);
+                return id + '|' + type;
+            };
             var map = function (arr) {
                 var m = {};
-                arr.forEach(function (it) { m[String(it.Bill_Details_ID)] = it; });
+                arr.forEach(function (it) { m[keyOf(it)] = it; });
                 return m;
             };
             var prevMap = map(prevArr);
             var nextMap = map(nextArr);
 
             nextArr.forEach(function (it) {
-                var id = String(it.Bill_Details_ID);
-                if (!hasOwn(prevMap, id)) {
-                    result.added.push(it);
-                }
+                var k = keyOf(it);
+                if (!hasOwn(prevMap, k)) result.added.push(it);
             });
             prevArr.forEach(function (it) {
-                var id = String(it.Bill_Details_ID);
-                if (!hasOwn(nextMap, id)) {
+                var k = keyOf(it);
+                if (!hasOwn(nextMap, k)) {
                     result.removed.push(it);
                 } else {
-                    var beforeIt = prevMap[id];
+                    var beforeIt = prevMap[k];
                     var changes = [];
                     BLItemFields.forEach(function (f) {
                         var b = normByKind(f.kind, beforeIt[f.k]);
                         var a = normByKind(f.kind, it[f.k]);
                         if (b !== a) changes.push({ label: f.l, prev: b, cur: a });
                     });
-                    if (changes.length > 0) {
-                        result.modified.push({ item: it, changes: changes });
-                    }
+                    if (changes.length > 0) result.modified.push({ item: it, changes: changes });
                 }
             });
             return result;

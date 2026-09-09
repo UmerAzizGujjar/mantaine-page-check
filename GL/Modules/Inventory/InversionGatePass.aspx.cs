@@ -4,6 +4,7 @@ using System;
 using System.Collections.Generic;
 using System.Data;
 using System.Diagnostics;
+using System.Globalization;
 using System.IO;
 using System.Linq;
 using System.Web;
@@ -80,6 +81,116 @@ namespace PMS.Inventory
             public string InspRemarks { get; set; }
             public int PODetailId { get; set; }
         }
+        // ================= IGP CHANGE LOG SNAPSHOT HELPERS =================
+
+        private static string StrVal(object v)
+        {
+            if (v == null) return "";
+            return Convert.ToString(v, CultureInfo.InvariantCulture);
+        }
+
+        private static string NumVal(object v)
+        {
+            if (v == null) return "";
+            try { return Convert.ToDecimal(v).ToString("0.##", CultureInfo.InvariantCulture); }
+            catch { return ""; }
+        }
+
+        private static string DateVal(object v)
+        {
+            if (v == null) return "";
+            try { return Convert.ToDateTime(v).ToString("yyyy-MM-dd", CultureInfo.InvariantCulture); }
+            catch { return ""; }
+        }
+
+        private static Dictionary<string, string> BuildIGPMasterSnapshot(Igp_master igp, DataBaseDataContext dbc)
+        {
+            string vendorName = "";
+            int vendorId;
+            if (int.TryParse(igp.Vendor, out vendorId))
+            {
+                var vn = (from v in dbc.AP_Vendors where v.Vendor_ID == vendorId select v.Vendor_Name).FirstOrDefault();
+                if (vn != null) vendorName = vn;
+            }
+
+            string warehouseName = "";
+            if (!string.IsNullOrEmpty(igp.InvOrgId))
+            {
+                try { warehouseName = dbc.GetDataValueName("Ware House", igp.InvOrgId) ?? ""; }
+                catch { warehouseName = ""; }
+            }
+
+            var snap = new Dictionary<string, string>();
+            snap["Igp_No"] = StrVal(igp.Igp_num);
+            snap["Igp_Date"] = DateVal(igp.Igp_date);
+            snap["Vendor_Name"] = vendorName;
+            snap["Warehouse"] = warehouseName;
+            snap["DriverName"] = StrVal(igp.DriverName);
+            snap["VehicleNum"] = StrVal(igp.VehicleNum);
+            snap["BilityNum"] = StrVal(igp.BilityNum);
+            snap["Remarks"] = StrVal(igp.Remarks);
+            snap["Status"] = StrVal(igp.Status);
+            snap["Inspec_Status"] = StrVal(igp.Inspec_Status);
+            return snap;
+        }
+
+        private static object BuildIGPItemsSnapshot(DataBaseDataContext dbc, int igpId)
+        {
+            var rows = dbc.Igp_Details.Where(t => t.Igp_Id == igpId).ToList();
+
+            var ids = rows.Where(r => r.Item_Id.HasValue).Select(r => r.Item_Id.Value).Distinct().ToList();
+            var itemNames = new Dictionary<int, string>();
+            foreach (var id in ids)
+            {
+                var desc = dbc.INV_Items.Where(x => x.Item_ID == id).Select(x => x.Description).FirstOrDefault();
+                itemNames[id] = desc ?? "";
+            }
+
+            return new
+            {
+                Items = rows.Select(i =>
+                {
+                    string name = "";
+                    if (i.Item_Id.HasValue && itemNames.ContainsKey(i.Item_Id.Value))
+                        name = itemNames[i.Item_Id.Value];
+
+                    return new
+                    {
+                        Item_Name = name,
+                        Item_Code = i.Item_Code.HasValue ? i.Item_Code.Value.ToString() : "",
+                        PO_Item_ID = i.PO_Item_ID.HasValue ? i.PO_Item_ID.Value.ToString() : "",
+                        IGPQty = NumVal(i.IGPQty),
+                        POQty = NumVal(i.POQty),
+                        RcvQty = NumVal(i.RcvQty),
+                        BlncQty = NumVal(i.BlncQty),
+                        BounusQty = NumVal(i.BounusQty),
+                        InspecQty = NumVal(i.InspecQty),
+                        BatchNum = StrVal(i.BatchNum),
+                        MfgDate = DateVal(i.MfgDate),
+                        ExpiryDate = DateVal(i.ExpiryDate),
+                        Sale_Rate = NumVal(i.Sale_Rate),
+                        UOM_Qty = NumVal(i.UOM_Qty)
+                    };
+                }).ToList()
+            };
+        }
+
+        private static void WriteIGPChangeLog(DataBaseDataContext dbc, Igp_master igp, JavaScriptSerializer serializer)
+        {
+            int igpId = Convert.ToInt32(igp.Igp_Id);
+
+            IGP_Log log = new IGP_Log
+            {
+                Igp_Id = igpId,
+                Master_Log = serializer.Serialize(BuildIGPMasterSnapshot(igp, dbc)),
+                Details_Log = serializer.Serialize(BuildIGPItemsSnapshot(dbc, igpId)),
+                Loged_By = AppConfig.UserID,
+                Log_Time = DateTime.Now
+            };
+
+            dbc.IGP_Logs.InsertOnSubmit(log);
+        }
+
         [WebMethod]
         public static bool UserUnApproveEntryRights()
         {
@@ -113,6 +224,8 @@ namespace PMS.Inventory
             var lstItem = (from t in db.Igp_masters where t.Igp_num == int.Parse(record.Igp_num) select t).FirstOrDefault();
             if (btnSave == "Update")
             {
+                WriteIGPChangeLog(db, lstItem, oJS);
+
                 lstItem.Igp_num = Convert.ToInt32(record.Igp_num);
                 lstItem.Igp_date = Convert.ToDateTime(record.Date);
                 lstItem.VehicleNum = record.VehicleNum;

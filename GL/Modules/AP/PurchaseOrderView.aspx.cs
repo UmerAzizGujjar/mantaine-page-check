@@ -9,6 +9,9 @@ using System.Web.Script.Services;
 using System.Web.Services;
 using System.Web.UI;
 using System.Web.UI.WebControls;
+using Newtonsoft.Json;
+using Newtonsoft.Json.Linq;
+using System.Globalization;
 
 
 namespace PMS
@@ -152,6 +155,158 @@ namespace PMS
             catch (Exception ex)
             {
                 throw new Exception("Error fetching Purchase Order list", ex);
+            }
+        }
+
+        // ================= PO CHANGE HISTORY (AP_Purchase_Order_Logs) =================
+
+        private static string StrVal(object v)
+        {
+            if (v == null) return "";
+            return Convert.ToString(v, CultureInfo.InvariantCulture);
+        }
+
+        private static string NumVal(object v)
+        {
+            if (v == null) return "";
+            try { return Convert.ToDecimal(v).ToString("0.##", CultureInfo.InvariantCulture); }
+            catch { return ""; }
+        }
+
+        private static string DateVal(object v)
+        {
+            if (v == null) return "";
+            try { return Convert.ToDateTime(v).ToString("yyyy-MM-dd", CultureInfo.InvariantCulture); }
+            catch { return ""; }
+        }
+
+        private static JToken ParseLogJson(string json)
+        {
+            if (string.IsNullOrWhiteSpace(json))
+                return null;
+
+            try { return JsonConvert.DeserializeObject<JToken>(json); }
+            catch { return null; }
+        }
+
+        private static object BuildPOMasterSnapshot(AP_Purchase_Order po, DataBaseDataContext db)
+        {
+            string vendorName = "";
+            if (po.Vendor_ID != null)
+            {
+                var vn = (from v in db.AP_Vendors where v.Vendor_ID == po.Vendor_ID select v.Vendor_Name).FirstOrDefault();
+                if (vn != null) vendorName = vn;
+            }
+
+            string warehouseName = "";
+            if (!string.IsNullOrEmpty(po.Ware_House))
+            {
+                try { warehouseName = db.GetDataValueName("Ware House", po.Ware_House) ?? ""; }
+                catch { warehouseName = ""; }
+            }
+
+            var snap = new Dictionary<string, string>();
+            snap["PO_No"] = po.PO_No.HasValue ? po.PO_No.Value.ToString() : "";
+            snap["Ref_No"] = StrVal(po.Ref_No);
+            snap["Vendor_Name"] = vendorName;
+            snap["Ware_House"] = warehouseName;
+            snap["PO_Date"] = DateVal(po.PO_Date);
+            snap["Due_Date"] = DateVal(po.Due_Date);
+            snap["Sub_Total"] = NumVal(po.Sub_Total);
+            snap["Discount"] = NumVal(po.Discount);
+            snap["Frieght_Charges"] = NumVal(po.Frieght_Charges);
+            snap["Total_ST_Amount"] = NumVal(po.Total_ST_Amount);
+            snap["Total_Adv_Amt"] = NumVal(po.Total_Adv_Amt);
+            snap["Total_Further_Amt"] = NumVal(po.Total_Further_Amt);
+            snap["PO_Amount"] = NumVal(po.PO_Amount);
+            snap["PO_Type"] = StrVal(po.PO_Type);
+            snap["Payment_Terms"] = StrVal(po.Payment_Terms);
+            snap["Delivery_Terms"] = StrVal(po.Delivery_Terms);
+            snap["Status"] = StrVal(po.Status);
+            return snap;
+        }
+
+        private static object BuildPOItemsSnapshot(System.Collections.Generic.IEnumerable<AP_Purchase_Order_Item> rows)
+        {
+            return new
+            {
+                Items = rows.Select(i => new
+                {
+                    Item_Name = StrVal(i.Item_Name),
+                    Item_Code = i.Item_Code.HasValue ? i.Item_Code.Value.ToString() : "",
+                    PRDetailId = i.PRDetailId.HasValue ? i.PRDetailId.Value.ToString() : "",
+                    Qty = NumVal(i.Qty),
+                    UOM_Qty = NumVal(i.UOM_Qty),
+                    Rate = NumVal(i.Rate),
+                    Amount = NumVal(i.Amount),
+                    Discount_Percentage = NumVal(i.Discount_Percentage),
+                    Discount_Amount = NumVal(i.Discount_Amount),
+                    SalTax_Amount = NumVal(i.SalTax_Amount),
+                    AdvanceTax_Amount = NumVal(i.AdvanceTax_Amount),
+                    FurtherTax_Amount = NumVal(i.FurtherTax_Amount),
+                    Bonus_Tax = NumVal(i.Bonus_Tax),
+                    Delivery_Date = DateVal(i.Delivery_Date),
+                    Last_PO_Rate = NumVal(i.Last_PO_Rate)
+                }).ToList()
+            };
+        }
+
+        [WebMethod]
+        public static string GetPOLogs(int poId)
+        {
+            try
+            {
+                using (var db = new DataBaseDataContext())
+                {
+                    var logRows = (from l in db.AP_Purchase_Order_Logs
+                                   join u in db.aspnet_Users on l.Loged_By equals u.UserId into userJoin
+                                   from u in userJoin.DefaultIfEmpty()
+                                   where l.PO_Id == poId
+                                   orderby l.Log_Time, l.Log_Id
+                                   select new
+                                   {
+                                       l.Log_Id,
+                                       l.Log_Time,
+                                       l.Master_Log,
+                                       l.Details_Log,
+                                       UserName = u != null ? u.UserName : null
+                                   }).ToList();
+
+                    var logs = logRows.Select(r => new
+                    {
+                        Log_Id = r.Log_Id,
+                        TimeText = r.Log_Time.HasValue ? r.Log_Time.Value.ToString("dd MMM yyyy hh:mm tt") : "",
+                        UserName = string.IsNullOrEmpty(r.UserName) ? "" : r.UserName,
+                        Master = ParseLogJson(r.Master_Log),
+                        Details = ParseLogJson(r.Details_Log)
+                    }).ToList();
+
+                    var po = db.AP_Purchase_Orders.FirstOrDefault(p => p.PO_ID == poId);
+
+                    object currentMaster = null;
+                    object currentDetails = null;
+
+                    if (po != null)
+                    {
+                        currentMaster = BuildPOMasterSnapshot(po, db);
+
+                        var items = db.AP_Purchase_Order_Items
+                                      .Where(i => i.PO_ID == po.PO_ID)
+                                      .ToList();
+
+                        currentDetails = BuildPOItemsSnapshot(items);
+                    }
+
+                    return JsonConvert.SerializeObject(new
+                    {
+                        logs = logs,
+                        current = new { master = currentMaster, details = currentDetails }
+                    });
+                }
+            }
+            catch (Exception ex)
+            {
+                return JsonConvert.SerializeObject(new { error = ex.Message });
             }
         }
 

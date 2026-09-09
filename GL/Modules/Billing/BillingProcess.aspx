@@ -5669,7 +5669,7 @@
                 var AdvanceAmount = parseFloat($("#txtadvance_amount").val()) || 0;
                 var RefundAmount = parseFloat($("#txtRefund_amount").val()) || 0;
                 var TotalNetAmount = parseFloat($("#txtTotalAmount").val())
-                var AmtReceived = $('#txtAmountReceived').val();
+                var AmtReceived = parseFloat($('#txtAmountReceived').val()) || 0;
                 if ($('#txtTotalPayable').val() != '') {
                     if (AmtReceived != '') {
                         $('#txtBalances').val(((TotalNetAmount + PreviousAmount) - (AmtReceived + AdvanceAmount + PreviousPaid)).toFixed());
