@@ -383,21 +383,21 @@
               var lblMessage = $('#lblMessage').val();
               var CustomerJSON = $('#CustomerJSON').val() || '';
 
-              if (!txtEmployee_Date_of_Birth || txtEmployee_Date_of_Birth.trim() === '') {
-                  Swal.fire({
-                      icon: 'error',
-                      title: 'Error!',
-                      text: 'Please select Date of birth',
-                      showConfirmButton: false,
-                      timer: 2000,
-                      customClass: {
-                          popup: 'swal-big-popup',
-                          title: 'swal-big-title',
-                          htmlContainer: 'swal-big-text'
-                      }
-                  });
-                  return;
-              }
+              //if (!txtEmployee_Date_of_Birth || txtEmployee_Date_of_Birth.trim() === '') {
+              //    Swal.fire({
+              //        icon: 'error',
+              //        title: 'Error!',
+              //        text: 'Please select Date of birth',
+              //        showConfirmButton: false,
+              //        timer: 2000,
+              //        customClass: {
+              //            popup: 'swal-big-popup',
+              //            title: 'swal-big-title',
+              //            htmlContainer: 'swal-big-text'
+              //        }
+              //    });
+              //    return;
+              //}
 
               if (!txtEmployee_DOJ || txtEmployee_DOJ.trim() === '') {
                   Swal.fire({
