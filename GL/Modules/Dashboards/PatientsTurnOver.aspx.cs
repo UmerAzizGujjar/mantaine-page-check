@@ -53,24 +53,34 @@ namespace PMS.Modules.Dashboards
                     .Select(b => new { b.Patient_ID, b.Opd_Id, b.Bill_Date })
                     .ToList();
 
-                var regCreated = db.Reg_patients
-                    .Select(r => new { r.pat_id, r.Created_time })
-                    .ToDictionary(x => x.pat_id, x => x.Created_time);
+                var allOpdBills = db.Ar_Billings
+                    .Where(b => b.Opd_Id != null
+                             && (b.isCancel == false || b.isCancel == null)
+                             && (b.IsPharmacy == false || b.IsPharmacy == null))
+                    .Select(b => new { b.Patient_ID, b.Bill_Date })
+                    .ToList();
 
-                var opdIds = bills
+                var opdPatientIds = bills
                     .Where(b => b.Opd_Id != null && b.Patient_ID != null)
                     .Select(b => (int)b.Patient_ID)
                     .Distinct()
                     .ToList();
 
                 int opdNew = 0, opdRepeat = 0;
-                foreach (var id in opdIds)
+                foreach (var pid in opdPatientIds)
                 {
-                    if (regCreated.TryGetValue(id, out var created))
-                    {
-                        if (created >= from) opdNew++;
-                        else opdRepeat++;
-                    }
+                    var patientOpdBills = allOpdBills
+                        .Where(b => b.Patient_ID == pid)
+                        .OrderBy(b => b.Bill_Date)
+                        .ToList();
+
+                    if (patientOpdBills.Count == 0) continue;
+
+                    var firstOpdDate = patientOpdBills.First().Bill_Date;
+                    if (firstOpdDate >= from && firstOpdDate < toExclusive)
+                        opdNew++;
+                    else if (firstOpdDate < from && patientOpdBills.Any(b => b.Bill_Date >= from && b.Bill_Date < toExclusive))
+                        opdRepeat++;
                 }
 
                 kpi.OpdNew = opdNew;
@@ -79,11 +89,21 @@ namespace PMS.Modules.Dashboards
                 kpi.NewRegistrations = db.Reg_patients.Count(r =>
                     r.Created_time >= from && r.Created_time < toExclusive);
 
-                kpi.TotalBills = bills.Count;
+                kpi.TotalBills = bills
+                    .Where(b => b.Patient_ID != null)
+                    .Select(b => (int)b.Patient_ID)
+                    .Distinct()
+                    .Count();
 
                 var daily = bills
+                    .Where(b => b.Bill_Date.HasValue)
                     .GroupBy(b => b.Bill_Date.Value.Date)
-                    .Select(g => new { Day = g.Key, B = g.Count(), O = g.Count(b => b.Opd_Id != null) })
+                    .Select(g => new
+                    {
+                        Day = g.Key,
+                        B = g.Where(b => b.Patient_ID != null).Select(b => (int)b.Patient_ID).Distinct().Count(),
+                        O = g.Where(b => b.Opd_Id != null && b.Patient_ID != null).Select(b => (int)b.Patient_ID).Distinct().Count()
+                    })
                     .ToDictionary(x => x.Day, x => new { x.B, x.O });
 
                 int dayCount = (int)(toExclusive - from.Date).TotalDays;
