@@ -457,7 +457,8 @@
                         "render": function (data, type, full) {
                             debugger;
                             var date = full.Bill_Date;
-                            date = moment(date).format('DD-MMM-YYYY');
+                            // date = moment(date).format('DD-MMM-YYYY');
+                            date = moment(date).format('DD-MMM-YYYY hh:mm A');
                             return date;
                         }, "width": "7%", "orderable": true
                     },

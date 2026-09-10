@@ -9,6 +9,9 @@ using System.Web.Services;
 using System.Web.UI;
 using System.Web.UI.WebControls;
 using Telerik.Web;
+using Newtonsoft.Json;
+using Newtonsoft.Json.Linq;
+using System.Globalization;
 
 namespace PMS.Inventory
 {
@@ -201,6 +204,163 @@ namespace PMS.Inventory
             DataBaseDataContext db = new DataBaseDataContext();
             var Details = db.sp_AutoGRN(Convert.ToInt32(IgpId), user_id);
             return (new JavaScriptSerializer()).Serialize(Details);
+        }
+
+        // ================= IGP CHANGE HISTORY (IGP_Logs) =================
+
+        private static string StrVal(object v)
+        {
+            if (v == null) return "";
+            return Convert.ToString(v, CultureInfo.InvariantCulture);
+        }
+
+        private static string NumVal(object v)
+        {
+            if (v == null) return "";
+            try { return Convert.ToDecimal(v).ToString("0.##", CultureInfo.InvariantCulture); }
+            catch { return ""; }
+        }
+
+        private static string DateVal(object v)
+        {
+            if (v == null) return "";
+            try { return Convert.ToDateTime(v).ToString("yyyy-MM-dd", CultureInfo.InvariantCulture); }
+            catch { return ""; }
+        }
+
+        private static JToken ParseLogJson(string json)
+        {
+            if (string.IsNullOrWhiteSpace(json))
+                return null;
+
+            try { return JsonConvert.DeserializeObject<JToken>(json); }
+            catch { return null; }
+        }
+
+        private static object BuildIGPMasterSnapshot(Igp_master igp, DataBaseDataContext dbc)
+        {
+            string vendorName = "";
+            int vendorId;
+            if (int.TryParse(igp.Vendor, out vendorId))
+            {
+                var vn = (from v in dbc.AP_Vendors where v.Vendor_ID == vendorId select v.Vendor_Name).FirstOrDefault();
+                if (vn != null) vendorName = vn;
+            }
+
+            string warehouseName = "";
+            if (!string.IsNullOrEmpty(igp.InvOrgId))
+            {
+                try { warehouseName = dbc.GetDataValueName("Ware House", igp.InvOrgId) ?? ""; }
+                catch { warehouseName = ""; }
+            }
+
+            var snap = new Dictionary<string, string>();
+            snap["Igp_No"] = StrVal(igp.Igp_num);
+            snap["Igp_Date"] = DateVal(igp.Igp_date);
+            snap["Vendor_Name"] = vendorName;
+            snap["Warehouse"] = warehouseName;
+            snap["DriverName"] = StrVal(igp.DriverName);
+            snap["VehicleNum"] = StrVal(igp.VehicleNum);
+            snap["BilityNum"] = StrVal(igp.BilityNum);
+            snap["Remarks"] = StrVal(igp.Remarks);
+            snap["Status"] = StrVal(igp.Status);
+            snap["Inspec_Status"] = StrVal(igp.Inspec_Status);
+            return snap;
+        }
+
+        private static object BuildIGPItemsSnapshot(DataBaseDataContext dbc, int igpId)
+        {
+            var rows = dbc.Igp_Details.Where(t => t.Igp_Id == igpId).ToList();
+
+            var ids = rows.Where(r => r.Item_Id.HasValue).Select(r => r.Item_Id.Value).Distinct().ToList();
+            var itemNames = new Dictionary<int, string>();
+            foreach (var id in ids)
+            {
+                var desc = dbc.INV_Items.Where(x => x.Item_ID == id).Select(x => x.Description).FirstOrDefault();
+                itemNames[id] = desc ?? "";
+            }
+
+            return new
+            {
+                Items = rows.Select(i =>
+                {
+                    string name = "";
+                    if (i.Item_Id.HasValue && itemNames.ContainsKey(i.Item_Id.Value))
+                        name = itemNames[i.Item_Id.Value];
+
+                    return new
+                    {
+                        Item_Name = name,
+                        Item_Code = i.Item_Code.HasValue ? i.Item_Code.Value.ToString() : "",
+                        PO_Item_ID = i.PO_Item_ID.HasValue ? i.PO_Item_ID.Value.ToString() : "",
+                        IGPQty = NumVal(i.IGPQty),
+                        POQty = NumVal(i.POQty),
+                        RcvQty = NumVal(i.RcvQty),
+                        BlncQty = NumVal(i.BlncQty),
+                        BounusQty = NumVal(i.BounusQty),
+                        InspecQty = NumVal(i.InspecQty),
+                        BatchNum = StrVal(i.BatchNum),
+                        MfgDate = DateVal(i.MfgDate),
+                        ExpiryDate = DateVal(i.ExpiryDate),
+                        Sale_Rate = NumVal(i.Sale_Rate),
+                        UOM_Qty = NumVal(i.UOM_Qty)
+                    };
+                }).ToList()
+            };
+        }
+
+        [WebMethod]
+        public static string GetIGPLogs(int igpId)
+        {
+            try
+            {
+                using (var db = new DataBaseDataContext())
+                {
+                    var logRows = (from l in db.IGP_Logs
+                                   join u in db.aspnet_Users on l.Loged_By equals u.UserId into userJoin
+                                   from u in userJoin.DefaultIfEmpty()
+                                   where l.Igp_Id == igpId
+                                   orderby l.Log_Time, l.Log_Id
+                                   select new
+                                   {
+                                       l.Log_Id,
+                                       l.Log_Time,
+                                       l.Master_Log,
+                                       l.Details_Log,
+                                       UserName = u != null ? u.UserName : null
+                                   }).ToList();
+
+                    var logs = logRows.Select(r => new
+                    {
+                        Log_Id = r.Log_Id,
+                        TimeText = r.Log_Time.HasValue ? r.Log_Time.Value.ToString("dd MMM yyyy hh:mm tt") : "",
+                        UserName = string.IsNullOrEmpty(r.UserName) ? "" : r.UserName,
+                        Master = ParseLogJson(r.Master_Log),
+                        Details = ParseLogJson(r.Details_Log)
+                    }).ToList();
+
+                    var igp = db.Igp_masters.FirstOrDefault(x => x.Igp_Id == igpId);
+
+                    object currentMaster = null;
+                    object currentDetails = null;
+
+                    if (igp != null)
+                    {
+                        currentMaster = BuildIGPMasterSnapshot(igp, db);
+                        currentDetails = BuildIGPItemsSnapshot(db, Convert.ToInt32(igp.Igp_Id));
+                    }
+
+                    return JsonConvert.SerializeObject(new
+                    {
+                        logs = logs,
+                        current = new { master = currentMaster, details = currentDetails }
+                    });
+                }
+            }
+            catch (Exception ex)
+            {
+                return JsonConvert.SerializeObject(new { error = ex.Message });
+            }
         }
 
         [WebMethod]

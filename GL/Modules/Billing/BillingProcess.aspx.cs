@@ -1875,6 +1875,7 @@ namespace PMS
                         newBill.Main_Department,
                         newBill.BillType,
                         newBill.In_Patient_ID,
+                        newBill.Referred_By_Name,
                     },
                     Details = new
                     {
@@ -1919,6 +1920,7 @@ namespace PMS
             newBill.Opd_Id = data.Opd_id;
             newBill.Bill_Date = DateTime.Now;
             newBill.Remarks = data.Remarks;
+            newBill.Referred_By_Name = data.Referred_Doctor_Name;
             var opd_proc = data.opd_procedure;
 
             newBill.Appointment_id = data.Appointment_ID;
@@ -3290,6 +3292,7 @@ namespace PMS
             public string Casher { get; set; }
             public DateTime Bill_Date { get; set; }
             public string Remarks { get; set; }
+            public string Referred_Doctor_Name { get; set; }
             public decimal Discount_Percentage { get; set; }
             public decimal Previous_Balance { get; set; }
             public decimal Previous_Paid { get; set; }
@@ -3480,6 +3483,7 @@ namespace PMS
                             data.Received_Amount,
                             data.Charge_Policy,
                             data.Remarks,
+                            data.Referred_By_Name,
                             data.Total_Amount,
                             data.Updated_By,
                             data.Updation_Date,
@@ -4010,7 +4014,7 @@ namespace PMS
                             }
                         }
                         if (inpat.Discharge_Request == true) {
-                            pt.paid_amount = DBClass.getField("select sum(Received_Amount) from Ar_Billings where  In_Patient_ID =" + inpat.In_Patient_ID + " AND (isCancel = 0 OR isCancel IS NULL) AND IsNull(final_bill_ipd,0) = 0");
+                            pt.paid_amount = DBClass.getField("select sum(Received_Amount) from Ar_Billings where  In_Patient_ID =" + inpat.In_Patient_ID + " AND (isCancel = 0 OR isCancel IS NULL) AND ISNULL(IsPharmacy,0) = 0 AND IsNull(final_bill_ipd,0) = 0");
                            
                         }
                         pt.advance_amount = DBClass.getField("select sum(Advance_Amount) from AR_Advances where In_Patient_ID=" + inpat.In_Patient_ID + " AND (isCancelled = 0 OR isCancelled IS NULL)");
