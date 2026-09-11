@@ -2629,8 +2629,8 @@
 
         function refreshAfterSave() {
             $('#myModal').modal('hide');
-            try { $("#myModal tbody").empty(); } catch (e) { }
-            try { $("#tblsingleTest tbody").empty(); } catch (e) { }
+            try { $("#tblgroupTestlist tbody").empty(); } catch (e) { }
+            try { $("#tblOrganism tbody").empty(); } catch (e) { }
 
             ResultedTestDetail();
             LoadPendingSamples();
