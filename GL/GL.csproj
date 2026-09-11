@@ -1146,6 +1146,7 @@
     <Content Include="wwwroot\lib\ckeditor\styles.js" />
     <Content Include="wwwroot\lib\ckeditor\vendor\promise.js" />
     <Content Include="wwwroot\lib\datatable\buttons.dataTables.min.css" />
+    <Content Include="wwwroot\lib\echarts\echarts.min.js" />
     <Content Include="wwwroot\lib\datatable\buttons.html5.min.js" />
     <Content Include="wwwroot\lib\datatable\buttons.print.min.js" />
     <Content Include="wwwroot\lib\datatable\dataTables.buttons.min.js" />

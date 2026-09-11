@@ -6091,6 +6091,27 @@ namespace PMS
                 return "0";
             }
         }
+
+        [WebMethod]
+        public static string FinalBillButton()
+        {
+            try
+            {
+                using (var db = new DataBaseDataContext(DBClass.ConnectionString()))
+                {
+                    var FinalIPDBill = (from tbl in db.sys_Parms
+                                    where tbl.Name == "IPD Final Bill"
+                                    select tbl.Code)
+                              .FirstOrDefault();
+
+                    return FinalIPDBill ?? "01";
+                }
+            }
+            catch (Exception ex)
+            {
+                return "0";
+            }
+        }
         [WebMethod]
         public static string GetAutoRecvOPD()
         {
