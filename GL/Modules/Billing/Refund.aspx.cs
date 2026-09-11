@@ -375,11 +375,34 @@ namespace PMS
 
             try
             {
-                string message = "";
-                int voucherId = 0;
-
                 using (var db = new DataBaseDataContext())
                 {
+                    var approvalMode = db.sys_Parms
+                        .Where(p => p.Name == "Billing Refund Approval")
+                        .Select(p => p.Code)
+                        .FirstOrDefault();
+
+                    if (approvalMode == "02")
+                    {
+                        var refund = db.Refunds.FirstOrDefault(r => r.Refund_ID == Convert.ToInt32(refundId));
+                        if (refund != null)
+                        {
+                            refund.Status = "Approved";
+                            refund.approve_date = DateTime.Now;
+                            refund.approve_by = AppConfig.UserID;
+                            db.SubmitChanges();
+                        }
+                        return new JavaScriptSerializer().Serialize(new
+                        {
+                            Message = "Refund Approved Successfully",
+                            Voucher_ID = 0,
+                            Success = true
+                        });
+                    }
+
+                    string message = "";
+                    int voucherId = 0;
+
                     using (var conn = new SqlConnection(db.Connection.ConnectionString))
                     {
                         using (var cmd = new SqlCommand("SpApprove_Refund", conn))
@@ -400,16 +423,16 @@ namespace PMS
                             }
                         }
                     }
+
+                    var response = new
+                    {
+                        Message = message,
+                        Voucher_ID = voucherId,
+                        Success = voucherId > 0
+                    };
+
+                    return new JavaScriptSerializer().Serialize(response);
                 }
-
-                var response = new
-                {
-                    Message = message,
-                    Voucher_ID = voucherId,
-                    Success = voucherId > 0
-                };
-
-                return new JavaScriptSerializer().Serialize(response);
             }
             catch (Exception ex)
             {
