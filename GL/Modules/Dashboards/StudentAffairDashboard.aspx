@@ -1,7 +1,7 @@
 <%@ Page Title="" Language="C#" MasterPageFile="~/Site.Master" AutoEventWireup="true" CodeBehind="StudentAffairDashboard.aspx.cs" Inherits="PMS.Modules.Dashboards.StudentAffairDashboard" %>
 <asp:Content ID="Content1" ContentPlaceHolderID="HeadContent" runat="server">
 
-    <script src="https://cdn.jsdelivr.net/npm/echarts@5/dist/echarts.min.js"></script>
+    <script src="<%= Page.ResolveClientUrl("~/wwwroot/lib/echarts/echarts.min.js") %>"></script>
     <style type="text/css">
         .bento-grid {
             display: grid;
@@ -12,7 +12,8 @@
                 "s1 s2 s3 s4"
                 "trend trend status classdist"
                 "att att out out"
-                "recent recent recent recent";
+                "recent recent recent recent"
+                "enrol enrol enrol enrol";
         }
         .bento-item {
             background: #fff;
@@ -35,6 +36,28 @@
         #att-area { grid-area: att; align-self: start; }
         #out-area { grid-area: out; align-self: start; }
         #recent-area { grid-area: recent; align-self: start; }
+        #enrol-area { grid-area: enrol; align-self: start; }
+
+        .enrol-head { display: flex; justify-content: space-between; align-items: flex-start; gap: 12px; flex-wrap: wrap; }
+        .enrol-filters { display: flex; gap: 8px; align-items: center; flex-wrap: wrap; }
+        .enr-pills { display: flex; gap: 4px; }
+        .enr-pill { border: 1px solid #d1d5db; border-radius: 16px; padding: 3px 12px; font-size: 11px; font-weight: 600; background: #fff; color: #374151; cursor: pointer; }
+        .enr-pill.active { background: #8e0016; border-color: #8e0016; color: #fff; }
+        .enrol-counts { display: flex; gap: 10px; margin: 10px 0; flex-wrap: wrap; }
+        .ec-box { flex: 1; min-width: 100px; background: #f9fafb; border-radius: 8px; padding: 8px 12px; border-left: 3px solid #d1d5db; }
+        .ec-box.ec-active { border-left-color: #10b981; }
+        .ec-box.ec-inactive { border-left-color: #c11718; }
+        .ec-box .ec-n { font-size: 20px; font-weight: 800; color: #111827; }
+        .ec-box .ec-l { font-size: 9px; color: #6b7280; text-transform: uppercase; letter-spacing: 0.5px; }
+        .stu-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(150px, 1fr)); gap: 8px; max-height: 240px; overflow-y: auto; padding-right: 2px; }
+        .stu-card { position: relative; background: #fff; border: 1px solid #eef0f2; border-radius: 8px; padding: 8px 10px; }
+        .stu-card.active { border-left: 3px solid #10b981; }
+        .stu-card.inactive { border-left: 3px solid #c11718; opacity: 0.85; }
+        .stu-card .stu-name { font-size: 12px; font-weight: 700; color: #1f2937; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+        .stu-card .stu-meta { font-size: 10px; color: #6b7280; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+        .stu-card .stu-badge { position: absolute; top: 8px; right: 8px; font-size: 8px; font-weight: 700; text-transform: uppercase; padding: 1px 6px; border-radius: 8px; }
+        .stu-card.active .stu-badge { background: #d1fae5; color: #047857; }
+        .stu-card.inactive .stu-badge { background: #fee2e2; color: #b91c1c; }
 
         .main-heading { font-size: 13px; font-weight: 700; color: #1f2937; margin-bottom: 4px; }
         .sub-heading { font-size: 10px; color: #9ca3af; text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 10px; }
@@ -110,7 +133,7 @@
         function saInit(id) {
             saDispose(id);
             var dom = document.getElementById(id);
-            if (!dom) return null;
+            if (!dom || typeof echarts === 'undefined') return null;
             saCharts[id] = echarts.init(dom);
             return saCharts[id];
         }
@@ -121,6 +144,8 @@
         function saMoney(v) { return 'Rs. ' + saFmt(v); }
 
         function saAjax(url, data, fn) {
+            data = data || {};
+            for (var k in data) { if (data[k] === undefined) data[k] = null; }
             $.ajax({
                 type: "POST",
                 url: "StudentAffairDashboard.aspx/" + url,
@@ -129,12 +154,10 @@
                 dataType: "json",
                 success: function (res) {
                     var r = JSON.parse(res.d);
-                    if (r && r.Error) { console.error("[" + url + "] " + r.Error); return; }
+                    if (r && r.Error) { return; }
                     if (fn) fn(r);
                 },
-                error: function (xhr, status, err) {
-                    console.error("[" + url + "] AJAX Error: " + err + " | " + (xhr.responseText || '').substring(0, 200));
-                }
+                error: function () { }
             });
         }
         function saPillState() {
@@ -145,9 +168,15 @@
             return { period: p, startDate: s, endDate: e };
         }
 
+        function saLoadOverall() {
+            saAjax("GetOverallStats", {}, function (r) {
+                $("#valActive").text(saFmt(r.ActiveStudents));
+                $("#subActive").text(saFmt(r.InactiveStudents) + ' inactive / ' + saFmt(r.TotalStudents) + ' total');
+            });
+        }
+
         function saLoadStats(p, s, e) {
             saAjax("GetStats", { period: p, startDate: s, endDate: e }, function (r) {
-                $("#valActive").text(saFmt(r.ActiveStudents));
                 $("#valAdm").text(saFmt(r.NewAdmissions));
                 $("#valFees").text(saMoney(r.FeesGenerated));
                 $("#valColl").text(saMoney(r.Collections));
@@ -307,6 +336,42 @@
             });
         }
 
+        function saLoadEnrolmentFilters() {
+            saAjax("GetEnrolmentFilters", {}, function (r) {
+                var cOpts = '<option value="0">All Classes</option>';
+                (r.Classes || []).forEach(function (o) { cOpts += '<option value="' + o.Value + '">' + o.Label + '</option>'; });
+                var pOpts = '<option value="0">All Programs</option>';
+                (r.Programs || []).forEach(function (o) { pOpts += '<option value="' + o.Value + '">' + o.Label + '</option>'; });
+                $("#saClass").html(cOpts);
+                $("#saProgram").html(pOpts);
+                if ($.fn.select2) { $("#saClass, #saProgram").select2({ width: '100%' }); }
+                saLoadEnrolment();
+            });
+        }
+
+        function saLoadEnrolment() {
+            var cls = $("#saClass").val() || "0";
+            var prog = $("#saProgram").val() || "0";
+            var status = $(".enr-pill.active").data("status") || "";
+            saAjax("GetEnrolmentList", { cls: cls, prog: prog, status: status }, function (r) {
+                $("#enrTotal").text(saFmt(r.Total));
+                $("#enrActive").text(saFmt(r.Active));
+                $("#enrInactive").text(saFmt(r.Inactive));
+                $("#enrShown").text(saFmt(r.Shown));
+                var list = r.Students || [];
+                var html = list.length ? "" : '<div class="no-data" style="grid-column:1/-1;">No students match this filter</div>';
+                list.forEach(function (s) {
+                    var cls2 = s.Active ? "active" : "inactive";
+                    html += '<div class="stu-card ' + cls2 + '">' +
+                        '<span class="stu-badge">' + (s.Active ? 'Active' : 'Inactive') + '</span>' +
+                        '<div class="stu-name" title="' + s.Name + '">' + s.Name + '</div>' +
+                        '<div class="stu-meta">Roll: ' + (s.Roll || '-') + ' &bull; ' + (s.Class || '-') + '</div>' +
+                        '<div class="stu-meta">' + (s.Program || '-') + '</div></div>';
+                });
+                $("#stuGrid").html(html);
+            });
+        }
+
         function saSetPeriod(p, s, e) {
             $(".period-pill").removeClass("active");
             $(".period-pill[data-period='" + p + "']").addClass("active");
@@ -326,13 +391,11 @@
         }
 
         $(document).ajaxStop(function () { $(".bento-item").removeClass("card-loading"); });
-        $(document).ajaxError(function (e, xhr, settings) {
-            var m = settings.url ? settings.url.match(/\/(\w+)$/) : null;
-            console.error("[" + (m ? m[1] : 'unknown') + "] " + (xhr.responseText || '').substring(0, 300));
-        });
 
         $(document).ready(function () {
-            $(".datepicker").datepicker({ changeMonth: true, changeYear: true, dateFormat: "dd/mm/yy", yearRange: "-5:+0" });
+            if ($.fn.datepicker) {
+                $(".datepicker").datepicker({ changeMonth: true, changeYear: true, dateFormat: "dd/mm/yy", yearRange: "-5:+0" });
+            }
 
             $(".period-pill").click(function () {
                 var p = $(this).data("period");
@@ -351,12 +414,22 @@
                 if (s && e) saSetPeriod("custom", s, e);
             });
 
+            $("#saClass, #saProgram").on("change", function () { saLoadEnrolment(); });
+
+            $(".enr-pill").click(function () {
+                $(".enr-pill").removeClass("active");
+                $(this).addClass("active");
+                saLoadEnrolment();
+            });
+
             $(window).on("resize", function () {
                 for (var k in saCharts) { if (saCharts[k] && saCharts[k].resize) saCharts[k].resize(); }
             });
 
             saLoadDistribution();
             saLoadRecent();
+            saLoadOverall();
+            saLoadEnrolmentFilters();
             saSetPeriod("today");
         });
     </script>
@@ -387,7 +460,7 @@
         <div class="bento-item stat-card" id="stat-s1">
             <div class="sc-label">Active Students</div>
             <div class="sc-value" id="valActive">0</div>
-            <div class="sc-sub">Currently enrolled</div>
+            <div class="sc-sub" id="subActive">Overall &mdash; all students</div>
         </div>
 
         <div class="bento-item stat-card" id="stat-s2">
@@ -459,6 +532,31 @@
                 </thead>
                 <tbody></tbody>
             </table>
+        </div>
+
+        <div class="bento-item" id="enrol-area">
+            <div class="enrol-head">
+                <div>
+                    <div class="main-heading">Student Enrolment</div>
+                    <div class="sub-heading">Active &amp; inactive students</div>
+                </div>
+                <div class="enrol-filters">
+                    <select id="saClass" class="form-control"></select>
+                    <select id="saProgram" class="form-control"></select>
+                    <div class="enr-pills">
+                        <button type="button" class="enr-pill active" data-status="">All</button>
+                        <button type="button" class="enr-pill" data-status="active">Active</button>
+                        <button type="button" class="enr-pill" data-status="inactive">Inactive</button>
+                    </div>
+                </div>
+            </div>
+            <div class="enrol-counts">
+                <div class="ec-box"><div class="ec-n" id="enrTotal">0</div><div class="ec-l">Total</div></div>
+                <div class="ec-box ec-active"><div class="ec-n" id="enrActive">0</div><div class="ec-l">Active</div></div>
+                <div class="ec-box ec-inactive"><div class="ec-n" id="enrInactive">0</div><div class="ec-l">Inactive</div></div>
+                <div class="ec-box"><div class="ec-n" id="enrShown">0</div><div class="ec-l">Showing</div></div>
+            </div>
+            <div class="stu-grid" id="stuGrid"></div>
         </div>
 
     </div>

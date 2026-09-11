@@ -53,13 +53,13 @@ namespace PMS.Modules.Dashboards
             }
         }
 
-        private static Dictionary<string, string> LoadClassLabels(DataBaseDataContext db)
+        private static Dictionary<string, string> LoadValueSetLabels(DataBaseDataContext db, string setName)
         {
             Dictionary<string, string> map = new Dictionary<string, string>();
             try
             {
                 int? setId = (from v in db.ValueSets
-                              where v.ValueSet_Name == "Student Class"
+                              where v.ValueSet_Description == setName
                               select (int?)v.ValueSet_ID).FirstOrDefault();
                 if (setId != null)
                 {
@@ -80,6 +80,11 @@ namespace PMS.Modules.Dashboards
             return map;
         }
 
+        private static Dictionary<string, string> LoadClassLabels(DataBaseDataContext db)
+        {
+            return LoadValueSetLabels(db, "Student Class");
+        }
+
         private static string ClassLabel(string key, Dictionary<string, string> map)
         {
             if (string.IsNullOrEmpty(key)) return "Unassigned";
@@ -94,6 +99,34 @@ namespace PMS.Modules.Dashboards
         }
 
         [WebMethod(EnableSession = false)]
+        public static string GetOverallStats()
+        {
+            try
+            {
+                using (DataBaseDataContext db = new DataBaseDataContext())
+                {
+                    var rows = (from st in db.Reg_Students
+                                where (st.Is_Cancel == null || st.Is_Cancel == false)
+                                select new { st.Is_Active }).ToList();
+
+                    int active = rows.Count(x => x.Is_Active == null || x.Is_Active == true);
+                    int inactive = rows.Count(x => x.Is_Active == false);
+
+                    return new JavaScriptSerializer().Serialize(new
+                    {
+                        ActiveStudents = active,
+                        InactiveStudents = inactive,
+                        TotalStudents = rows.Count
+                    });
+                }
+            }
+            catch (Exception ex)
+            {
+                return new JavaScriptSerializer().Serialize(new { Error = ex.Message });
+            }
+        }
+
+        [WebMethod(EnableSession = false)]
         public static string GetStats(string period, string startDate = null, string endDate = null)
         {
             try
@@ -103,15 +136,10 @@ namespace PMS.Modules.Dashboards
 
                 using (DataBaseDataContext db = new DataBaseDataContext())
                 {
-                    int activeStudents = (from st in db.Reg_Students
-                                          where (st.Is_Cancel == null || st.Is_Cancel == false) &&
-                                                (st.Is_Active == null || st.Is_Active == true)
-                                          select st).Count();
-
                     int newAdmissions = (from st in db.Reg_Students
                                          where (st.Is_Cancel == null || st.Is_Cancel == false) &&
-                                               ((st.AdmissionDate != null && st.AdmissionDate >= sDate && st.AdmissionDate <= eDate) ||
-                                                (st.AdmissionDate == null && st.CreatedTime != null && st.CreatedTime >= sDate && st.CreatedTime <= eDate))
+                                               st.CreatedTime != null &&
+                                               st.CreatedTime >= sDate && st.CreatedTime <= eDate
                                          select st).Count();
 
                     decimal feesGenerated = (from f in db.Student_Fees
@@ -166,7 +194,6 @@ namespace PMS.Modules.Dashboards
 
                     return new JavaScriptSerializer().Serialize(new
                     {
-                        ActiveStudents = activeStudents,
                         NewAdmissions = newAdmissions,
                         FeesGenerated = feesGenerated,
                         Collections = collections,
@@ -358,6 +385,88 @@ namespace PMS.Modules.Dashboards
                         Total = total,
                         AttendanceRate = total > 0 ? Math.Round((double)present / total * 100, 1) : 0,
                         ByClass = byClass
+                    });
+                }
+            }
+            catch (Exception ex)
+            {
+                return new JavaScriptSerializer().Serialize(new { Error = ex.Message });
+            }
+        }
+
+        [WebMethod(EnableSession = false)]
+        public static string GetEnrolmentFilters()
+        {
+            try
+            {
+                using (DataBaseDataContext db = new DataBaseDataContext())
+                {
+                    var classes = (from dv in db.DataValues
+                                   join v in db.ValueSets on dv.ValueSet_ID equals v.ValueSet_ID
+                                   where v.ValueSet_Description == "Student Class"
+                                   orderby dv.DataValue_Description
+                                   select new { Value = dv.DataValue_Name, Label = dv.DataValue_Description }).ToList();
+
+                    var programs = (from dv in db.DataValues
+                                    join v in db.ValueSets on dv.ValueSet_ID equals v.ValueSet_ID
+                                    where v.ValueSet_Description == "Admission Category"
+                                    orderby dv.DataValue_Description
+                                    select new { Value = dv.DataValue_Name, Label = dv.DataValue_Description }).ToList();
+
+                    return new JavaScriptSerializer().Serialize(new { Classes = classes, Programs = programs });
+                }
+            }
+            catch (Exception ex)
+            {
+                return new JavaScriptSerializer().Serialize(new { Error = ex.Message });
+            }
+        }
+
+        [WebMethod(EnableSession = false)]
+        public static string GetEnrolmentList(string cls = null, string prog = null, string status = null)
+        {
+            try
+            {
+                using (DataBaseDataContext db = new DataBaseDataContext())
+                {
+                    string c = string.IsNullOrEmpty(cls) || cls == "0" ? "" : cls;
+                    string p = string.IsNullOrEmpty(prog) || prog == "0" ? "" : prog;
+
+                    var baseList = (from st in db.Reg_Students
+                                    where (st.Is_Cancel == null || st.Is_Cancel == false) &&
+                                          (c == "" || st.Class == c) &&
+                                          (p == "" || st.Program == p)
+                                    select new { st.Full_Name, st.Roll_No, st.Class, st.Program, st.Is_Active }).ToList();
+
+                    int active = baseList.Count(x => x.Is_Active == null || x.Is_Active == true);
+                    int inactive = baseList.Count(x => x.Is_Active == false);
+
+                    var classMap = LoadClassLabels(db);
+                    var progMap = LoadValueSetLabels(db, "Admission Category");
+
+                    var filtered = baseList.AsEnumerable();
+                    if (status == "active") filtered = filtered.Where(x => x.Is_Active == null || x.Is_Active == true);
+                    else if (status == "inactive") filtered = filtered.Where(x => x.Is_Active == false);
+
+                    var ordered = filtered.OrderBy(x => x.Full_Name).ToList();
+                    int shown = Math.Min(ordered.Count, 300);
+
+                    var students = ordered.Take(300).Select(x => new
+                    {
+                        Name = string.IsNullOrEmpty(x.Full_Name) ? "Unnamed" : x.Full_Name,
+                        Roll = x.Roll_No,
+                        Class = ClassLabel(x.Class, classMap),
+                        Program = ClassLabel(x.Program, progMap),
+                        Active = x.Is_Active == null || x.Is_Active == true
+                    }).ToList();
+
+                    return new JavaScriptSerializer().Serialize(new
+                    {
+                        Active = active,
+                        Inactive = inactive,
+                        Total = baseList.Count,
+                        Shown = shown,
+                        Students = students
                     });
                 }
             }
