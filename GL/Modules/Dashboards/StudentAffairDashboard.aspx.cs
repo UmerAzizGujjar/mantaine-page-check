@@ -20,6 +20,16 @@ namespace PMS.Modules.Dashboards
             startDate = DateTime.Today;
             endDate = DateTime.Now;
 
+            DateTime ps = DateTime.MinValue, pe = DateTime.MinValue;
+            bool hasStart = !string.IsNullOrEmpty(startDateStr) && DateTime.TryParseExact(startDateStr, "dd/MM/yyyy", CultureInfo.InvariantCulture, DateTimeStyles.None, out ps);
+            bool hasEnd = !string.IsNullOrEmpty(endDateStr) && DateTime.TryParseExact(endDateStr, "dd/MM/yyyy", CultureInfo.InvariantCulture, DateTimeStyles.None, out pe);
+            if (hasStart && hasEnd)
+            {
+                startDate = ps;
+                endDate = pe.Date.AddDays(1).AddTicks(-1);
+                return;
+            }
+
             switch (period.ToLower())
             {
                 case "yesterday":
@@ -40,11 +50,8 @@ namespace PMS.Modules.Dashboards
                     endDate = now;
                     break;
                 case "custom":
-                    DateTime ps, pe;
-                    if (!string.IsNullOrEmpty(startDateStr) && DateTime.TryParseExact(startDateStr, "dd/MM/yyyy", CultureInfo.InvariantCulture, DateTimeStyles.None, out ps))
-                        startDate = ps;
-                    if (!string.IsNullOrEmpty(endDateStr) && DateTime.TryParseExact(endDateStr, "dd/MM/yyyy", CultureInfo.InvariantCulture, DateTimeStyles.None, out pe))
-                        endDate = pe.Date.AddDays(1).AddTicks(-1);
+                    if (hasStart) startDate = ps;
+                    if (hasEnd) endDate = pe.Date.AddDays(1).AddTicks(-1);
                     break;
                 default:
                     startDate = DateTime.Today;

@@ -38,8 +38,8 @@
         #recent-area { grid-area: recent; align-self: start; }
         #enrol-area { grid-area: enrol; align-self: start; }
 
-        .enrol-head { display: flex; justify-content: space-between; align-items: flex-start; gap: 12px; flex-wrap: wrap; }
-        .enrol-filters { display: flex; gap: 8px; align-items: center; flex-wrap: wrap; }
+        .enrol-head { display: flex; flex-direction: column; align-items: flex-start; gap: 8px; }
+        .enrol-filters { display: flex; gap: 8px; align-items: center; flex-wrap: nowrap; }
         .enr-pills { display: flex; gap: 4px; }
         .enr-pill { border: 1px solid #d1d5db; border-radius: 16px; padding: 3px 12px; font-size: 11px; font-weight: 600; background: #fff; color: #374151; cursor: pointer; }
         .enr-pill.active { background: #8e0016; border-color: #8e0016; color: #fff; }
@@ -84,9 +84,13 @@
         .att-rate { font-size: 20px; font-weight: 800; color: #10b981; }
         .att-class-row { display: flex; align-items: center; gap: 8px; font-size: 10px; margin-bottom: 5px; }
         .att-class-row .ac-label { width: 96px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; color: #4b5563; }
-        .att-class-row .ac-bar-bg { flex: 1; background: #f3f4f6; border-radius: 4px; height: 8px; overflow: hidden; }
-        .att-class-row .ac-bar-fill { height: 100%; background: #10b981; border-radius: 4px; }
-        .att-class-row .ac-txt { width: 74px; text-align: right; color: #6b7280; }
+        .att-class-row .ac-bar-bg { flex: 1; display: flex; background: #f3f4f6; border-radius: 4px; height: 8px; overflow: hidden; }
+        .att-class-row .ac-bar-fill { height: 100%; background: #10b981; }
+        .att-class-row .ac-bar-abs { background: #ef4444; }
+        .att-class-row .ac-txt { width: 112px; text-align: right; color: #6b7280; white-space: nowrap; }
+        .att-class-row .ac-txt .ac-p { color: #10b981; font-weight: 700; }
+        .att-class-row .ac-txt .ac-a { color: #ef4444; font-weight: 700; }
+        .att-class-row .ac-txt .ac-t { color: #9ca3af; }
 
         .out-total { display: flex; align-items: baseline; gap: 8px; }
         .out-total .ot-value { font-size: 22px; font-weight: 800; color: #c11718; }
@@ -260,10 +264,13 @@
                 var list = r.ByClass || [];
                 var html = list.length ? "" : '<div class="no-data" style="padding:8px 0;">No data</div>';
                 list.forEach(function (c) {
-                    var pct = c.Total ? Math.round(c.Present / c.Total * 100) : 0;
+                    var tot = c.Total || 0;
+                    var pp = tot ? Math.round(c.Present / tot * 100) : 0;
+                    var ap = tot ? Math.round(c.Absent / tot * 100) : 0;
                     html += '<div class="att-class-row"><span class="ac-label" title="' + c.Label + '">' + c.Label + '</span>' +
-                        '<div class="ac-bar-bg"><div class="ac-bar-fill" style="width:' + pct + '%"></div></div>' +
-                        '<span class="ac-txt">P:' + c.Present + ' A:' + c.Absent + ' L:' + c.Leave + '</span></div>';
+                        '<div class="ac-bar-bg"><div class="ac-bar-fill" style="width:' + pp + '%"></div>' +
+                        '<div class="ac-bar-fill ac-bar-abs" style="width:' + ap + '%"></div></div>' +
+                        '<span class="ac-txt"><span class="ac-p">' + pp + '%</span> / <span class="ac-a">' + ap + '%</span> <span class="ac-t">(' + tot + ')</span></span></div>';
                 });
                 $("#attList").html(html);
 
@@ -344,7 +351,7 @@
                 (r.Programs || []).forEach(function (o) { pOpts += '<option value="' + o.Value + '">' + o.Label + '</option>'; });
                 $("#saClass").html(cOpts);
                 $("#saProgram").html(pOpts);
-                if ($.fn.select2) { $("#saClass, #saProgram").select2({ width: '100%' }); }
+                if ($.fn.select2) { $("#saClass, #saProgram").select2({ width: '170px' }); }
                 saLoadEnrolment();
             });
         }
@@ -372,6 +379,24 @@
             });
         }
 
+        function saFmtDate(d) {
+            var dd = ('0' + d.getDate()).slice(-2);
+            var mm = ('0' + (d.getMonth() + 1)).slice(-2);
+            return dd + '/' + mm + '/' + d.getFullYear();
+        }
+        function saPeriodRange(period) {
+            var today = new Date(), s = null, e = null, d;
+            if (period === "today") { s = saFmtDate(today); e = s; }
+            else if (period === "yesterday") { d = new Date(today); d.setDate(d.getDate() - 1); s = saFmtDate(d); e = s; }
+            else if (period === "week") {
+                d = new Date(today);
+                d.setDate(d.getDate() - ((today.getDay() + 6) % 7));
+                s = saFmtDate(d); e = saFmtDate(today);
+            }
+            else if (period === "month") { s = saFmtDate(new Date(today.getFullYear(), today.getMonth(), 1)); e = saFmtDate(today); }
+            else if (period === "year") { s = saFmtDate(new Date(today.getFullYear(), 0, 1)); e = saFmtDate(today); }
+            return { startDate: s, endDate: e };
+        }
         function saSetPeriod(p, s, e) {
             $(".period-pill").removeClass("active");
             $(".period-pill[data-period='" + p + "']").addClass("active");
@@ -381,6 +406,8 @@
                 if (e) $("#saEndDate").val(e);
             } else {
                 $(".custom-date-range").removeClass("visible");
+                var r = saPeriodRange(p);
+                if (r.startDate) { s = r.startDate; e = r.endDate; }
             }
             $(".bento-item:not(.period-bar)").addClass("card-loading");
             setTimeout(function () { $(".bento-item").removeClass("card-loading"); }, 120000);
@@ -523,7 +550,7 @@
             <div class="out-list" id="outList"></div>
         </div>
 
-        <div class="bento-item" id="recent-area">
+        <div class="bento-item" id="recent-area" style="display:none;">
             <div class="main-heading">Recent Approved Receipts</div>
             <div class="sub-heading">Latest 8</div>
             <table id="recent-table">

@@ -7538,6 +7538,41 @@
                 });
                 return options;
             }
+            function autoSelectGender() {
+                var prefix = $('#ddl_name').val();
+                var $gender = $('#ddl_Gender');
+                var MALE_VALUE = 'M';
+                var FEMALE_VALUE = 'F';
+                var targetValue = '';
+
+                if (prefix === 'Mr.') {
+                    targetValue = MALE_VALUE;
+                } else if (prefix === 'Mrs.' || prefix === 'Ms.') {
+                    targetValue = FEMALE_VALUE;
+                }
+
+                if (!targetValue || $gender.length === 0) return;
+
+                var optionsCount = $gender.find('option').length;
+                if (optionsCount <= 1) {
+                    var checkInterval = setInterval(function () {
+                        if ($gender.find('option').length > 1) {
+                            clearInterval(checkInterval);
+                            $gender.val(targetValue).trigger('change');
+                            if ($gender.hasClass('select2-hidden-accessible')) {
+                                $gender.trigger('select2:select');
+                            }
+                        }
+                    }, 100);
+                    setTimeout(function () { clearInterval(checkInterval); }, 5000);
+                    return;
+                }
+
+                $gender.val(targetValue).trigger('change');
+                if ($gender.hasClass('select2-hidden-accessible')) {
+                    $gender.trigger('select2:select');
+                }
+            }
             debugger;
             function EditPatientDetail(id) {
                 // First check permission
@@ -8060,6 +8095,7 @@
                     };
 
                     $("#ddlRelation").val(map[$(this).val()]);
+                    autoSelectGender();
                 });
 
                 CheckRemarksValidation();

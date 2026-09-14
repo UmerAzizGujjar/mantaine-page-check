@@ -91,35 +91,49 @@ namespace PMS
             GRD.DataSource = dt;
             GRD.DataBind();
             Session["dtDataValue"] = dt;
+            btnAdd.Text = "Add";
             GetNewValueSetName();
+        }
+
+        private void ShowSwal(string icon, string title)
+        {
+            string safe = title.Replace("'", "\\'");
+            string js = "showDvToast('" + icon + "', '" + safe + "');";
+            ScriptManager.RegisterStartupScript(this, this.GetType(), "dvSwal_" + Guid.NewGuid().ToString("N"), js, true);
         }
 
         protected void btnAdd_Click(object sender, EventArgs e)
         {
             if (txtDataValue_Name.Text != "" && txtDataValue_Description.Text!="")
             {
-                
-
                 dt = (DataTable)Session["dtDataValue"];
-                Boolean bol = Convert.ToBoolean(ViewState["check"]);
-                int index = Convert.ToInt32(ViewState["Index"]);
-                //int datavalue_id = Convert.ToInt32(ViewState["datavalue_id"]);
-                if (bol == true)
+
+                if (!string.IsNullOrEmpty(hfDataValue_ID.Value))
                 {
-                    bol = false;
-                    ViewState.Add("check", bol);
-                    DataRow[] row = dt.Select("Index = '" + index + "'");
-                    int datavalue_Id = Convert.ToInt32(row[0]["DataValue_ID"]);
-                    row[0]["Index"] = index;
-                    row[0]["DataValue_ID"] = datavalue_Id;
-                    row[0]["DataValue_Name"] = txtDataValue_Name.Text;
-                    row[0]["DataValue_Description"] = txtDataValue_Description.Text;
-                    row[0]["Segment1"] = txtSegment1.Text;
-                    row[0]["Segment2"] = txtSegment2.Text;
-                    lblMessage.Text = "";
+                    // UPDATE branch
+                    int datavalue_Id = Convert.ToInt32(hfDataValue_ID.Value);
+                    bool found = false;
+                    foreach (DataRow row in dt.Rows)
+                    {
+                        if (Convert.ToInt32(row["DataValue_ID"]) == datavalue_Id)
+                        {
+                            row["DataValue_Name"] = txtDataValue_Name.Text;
+                            row["DataValue_Description"] = txtDataValue_Description.Text;
+                            row["Segment1"] = txtSegment1.Text;
+                            row["Segment2"] = txtSegment2.Text;
+                            found = true;
+                            break;
+                        }
+                    }
+                    if (found)
+                    {
+                        lblMessage.Text = "";
+                        ShowSwal("success", "Item updated in staging");
+                    }
                 }
                 else
                 {
+                    // INSERT branch
                     bool val = true;
                     foreach (DataRow row in dt.Rows)
                     {
@@ -141,28 +155,34 @@ namespace PMS
                         dr["Segment2"] = txtSegment2.Text;
                         dt.Rows.Add(dr);
                         lblMessage.Text = "";
+                        ShowSwal("success", "Item added to staging");
                     }
-                    
-
                     else
                     {
                         lblMessage.Text = "Value Name already exist!";
+                        ShowSwal("error", "Value Name already exists");
                     }
                 }
 
                 Session["dtDataValue"] = dt;
                 GRD.DataSource = dt;
                 GRD.DataBind();
-                txtDataValue_Name.Text = "";
-                txtDataValue_Description.Text = "";
-                txtSegment1.Text = "";
-                txtSegment2.Text = "";
+
+                // Only clear form after INSERT — keep populated for Update
+                if (string.IsNullOrEmpty(hfDataValue_ID.Value))
+                {
+                    txtDataValue_Name.Text = "";
+                    txtDataValue_Description.Text = "";
+                    txtSegment1.Text = "";
+                    txtSegment2.Text = "";
+                }
                 txtDataValue_Name.Focus();
                 GetNewValueSetName();
             }
             else
             {
                 lblMessage.Text = "Datavalue name and description both are require.";
+                ShowSwal("warning", "Name and Description are required");
             }
         }
 
@@ -216,40 +236,42 @@ namespace PMS
             dt = null;
             Session["dtDataValue"] = dt;
             lblMessage.Text = "";
+            btnAdd.Text = "Add";
             GRD.DataSource = null;
             GRD.DataBind();
             ddlValueSet_SelectedIndexChanged(sender, e);
+            ShowSwal("success", "Saved successfully");
         }
 
         protected void GRD_SelectedIndexChanging(object sender, GridViewSelectEventArgs e)
         {
-            Boolean bol = true;
-            ViewState.Add("check", bol);
-            btnAdd.Text = "Update";
-            var ValueSet = ddlValueSet.SelectedValue.ToString();
+            dt = (DataTable)Session["dtDataValue"];
+            if (dt == null)
+            {
+                ShowSwal("warning", "Please select a value set first");
+                return;
+            }
+            if (e.NewSelectedIndex < 0 || e.NewSelectedIndex >= dt.Rows.Count) return;
 
+            DataRow row = dt.Rows[e.NewSelectedIndex];
+
+            var ValueSet = ddlValueSet.SelectedValue.ToString();
             if (ValueSet == "9")
             {
                 roomNo.Text = "Room No";
             }
             else { roomNo.Text = "Segment 2"; }
-           
-            dt = (DataTable)Session["dtDataValue"];
-            Label lblIndex = (Label)GRD.Rows[e.NewSelectedIndex].FindControl("lblIndex");
-            int index = Convert.ToInt32(lblIndex.Text);
-            ViewState.Add("Index", index);
-            DataRow[] row = dt.Select("Index = '" + index + "'");
-            int datavalue_Id = Convert.ToInt32(row[0]["DataValue_ID"]);
-            string Name = Convert.ToString(row[0]["DataValue_Name"]);
-            string description = Convert.ToString(row[0]["DataValue_Description"]);
-            string segment1 = Convert.ToString(row[0]["Segment1"]);
-            string segment2 = Convert.ToString(row[0]["Segment2"]);
-            txtDataValue_Name.Text = Name;
-            txtDataValue_Description.Text = description;
-            txtSegment1.Text = segment1;
-            txtSegment2.Text = segment2;
+
+            txtDataValue_Name.Text = Convert.ToString(row["DataValue_Name"]);
+            txtDataValue_Description.Text = Convert.ToString(row["DataValue_Description"]);
+            txtSegment1.Text = Convert.ToString(row["Segment1"]);
+            txtSegment2.Text = Convert.ToString(row["Segment2"]);
+
+            hfDataValue_ID.Value = Convert.ToString(row["DataValue_ID"]);
+            btnAdd.Text = "Update";
             lblMessage.Text = "";
-            ViewState.Add("datavalue_id", datavalue_Id);
+            ShowSwal("info", "Editing record - " + Convert.ToString(row["DataValue_Name"]));
+            txtDataValue_Name.Focus();
         }
 
         protected void btnDelete_Click(object sender, EventArgs e)
@@ -266,7 +288,8 @@ namespace PMS
             {
                 string TransType = record.Rows[0]["Trans_Type"].ToString();
                 string TransName = record.Rows[0]["Trans_Name"].ToString();
-                lblMessage.Text = "This record is in used in form <b>" + TransType + "</b> in <b>" + TransName + "</b>";
+                lblMessage.Text = "This record is in used in form " + TransType + " in " + TransName;
+                ShowSwal("error", "Record in use: " + TransType + " / " + TransName);
                 return;
             }
 
@@ -308,6 +331,7 @@ namespace PMS
             else
             {
                 lblMessage.Text = "Select any record before deletion...!";
+                ShowSwal("warning", "Select a record first");
             }
         }
         private void GetNewValueSetName()
