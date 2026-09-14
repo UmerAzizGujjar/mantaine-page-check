@@ -338,6 +338,7 @@
     <Content Include="Modules\Administrator\UserWiseDoctorList.aspx" />
     <Content Include="Modules\Administrator\User_BranchWise.aspx" />
     <Content Include="Modules\Administrator\User_BranchWiseList.aspx" />
+    <Content Include="Modules\Administrator\ValueSet.aspx" />
     <Content Include="Modules\Appointment\Derma_Appointment.aspx" />
     <Content Include="Modules\Appointment\Derma_Appointment_List.aspx" />
     <Content Include="Modules\Billing\AccountsReceivable.aspx" />
@@ -3168,6 +3169,13 @@
     </Compile>
     <Compile Include="Modules\Administrator\User_BranchWiseList.aspx.designer.cs">
       <DependentUpon>User_BranchWiseList.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="Modules\Administrator\ValueSet.aspx.cs">
+      <DependentUpon>ValueSet.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Modules\Administrator\ValueSet.aspx.designer.cs">
+      <DependentUpon>ValueSet.aspx</DependentUpon>
     </Compile>
     <Compile Include="Modules\Appointment\Derma_Appointment.aspx.cs">
       <DependentUpon>Derma_Appointment.aspx</DependentUpon>
