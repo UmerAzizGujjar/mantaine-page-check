@@ -5097,7 +5097,7 @@
                             <div class="col-lg-2 col-md-6 col-sm-12">
                                 <input type="button" class="btn-gray" id="btnBackList" value="View " onclick="BackToList()" />
                             </div>
-                            <div class="col-lg-2 col-md-6 col-sm-12">
+                            <div class="col-lg-3 col-md-6 col-sm-12">
                                 <input type="button" class="btn-primry" id="btnsaveprint" value="Save & Print" onclick="SaveInPatientAllRecord();" />
                             </div>
                             <div class="col-lg-3 col-md-6 col-sm-12">

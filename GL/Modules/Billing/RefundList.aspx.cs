@@ -234,28 +234,43 @@ namespace PMS
             {
                 using (var db = new DataBaseDataContext(DBClass.ConnectionString()))
                 {
+                    var approvalMode = db.sys_Parms
+                        .Where(p => p.Name == "Billing Refund Approval")
+                        .Select(p => p.Code)
+                        .FirstOrDefault();
+
                     var userId = AppConfig.UserID;
 
-                    using (var conn = new SqlConnection(db.Connection.ConnectionString))
+                    foreach (var idStr in refundIds)
                     {
-                        conn.Open();
-
-                        foreach (var idStr in refundIds)
+                        if (int.TryParse(idStr, out int refundId))
                         {
-                            if (int.TryParse(idStr, out int refundId))
+                            var refund = db.Refunds.FirstOrDefault(r => r.Refund_ID == refundId);
+                            if (refund == null) continue;
+
+                            if (approvalMode == "02")
                             {
-                                using (var cmd = new SqlCommand("SpApprove_Refund", conn))
+                                refund.Status = "Approved";
+                                refund.approve_date = DateTime.Now;
+                                refund.approve_by = userId;
+                            }
+                            else
+                            {
+                                using (var conn = new SqlConnection(db.Connection.ConnectionString))
                                 {
-                                    cmd.CommandType = CommandType.StoredProcedure;
-                                    cmd.Parameters.AddWithValue("@refundid", refundId);
-                                    cmd.Parameters.AddWithValue("@user_id", userId);
-
-
-                                    cmd.ExecuteNonQuery();
+                                    conn.Open();
+                                    using (var cmd = new SqlCommand("SpApprove_Refund", conn))
+                                    {
+                                        cmd.CommandType = CommandType.StoredProcedure;
+                                        cmd.Parameters.AddWithValue("@refundid", refundId);
+                                        cmd.Parameters.AddWithValue("@user_id", userId);
+                                        cmd.ExecuteNonQuery();
+                                    }
                                 }
                             }
                         }
                     }
+                    db.SubmitChanges();
                 }
                 return true;
             }
@@ -264,7 +279,6 @@ namespace PMS
                 return false;
             }
         }
-
         [WebMethod]
         public static bool RejectRefund(string refundId)
         {

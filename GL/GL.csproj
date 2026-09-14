@@ -338,6 +338,7 @@
     <Content Include="Modules\Administrator\UserWiseDoctorList.aspx" />
     <Content Include="Modules\Administrator\User_BranchWise.aspx" />
     <Content Include="Modules\Administrator\User_BranchWiseList.aspx" />
+    <Content Include="Modules\Administrator\ValueSet.aspx" />
     <Content Include="Modules\Appointment\Derma_Appointment.aspx" />
     <Content Include="Modules\Appointment\Derma_Appointment_List.aspx" />
     <Content Include="Modules\Billing\AccountsReceivable.aspx" />
@@ -366,6 +367,7 @@
     <Content Include="Modules\Dashboards\CEODashboardNew.aspx" />
     <Content Include="Modules\Dashboards\CEODashBorad.aspx" />
     <Content Include="Modules\Dashboards\Chief_Executive_Dashboard.aspx" />
+    <Content Include="Modules\Dashboards\StudentAffairDashboard.aspx" />
     <Content Include="Modules\Dashboards\DashPatientsCount.aspx" />
     <Content Include="Modules\Dashboards\DashPatientsCountertoClinic.aspx" />
     <Content Include="Modules\Dashboards\EMR.aspx" />
@@ -382,6 +384,7 @@
     <Content Include="Modules\Dashboards\Sales_Dashboard.aspx" />
     <Content Include="Modules\Dashboards\AnnexureDashboard.aspx" />
     <Content Include="Modules\Dashboards\ShortCuts.aspx" />
+    <Content Include="Modules\Dental\Alinger.aspx" />
     <Content Include="Modules\GL\FinancialLogs.aspx" />
     <Content Include="Modules\Inventory\AdvanceTaxDefinition.aspx" />
     <Content Include="Modules\Inventory\BOM.aspx" />
@@ -1145,6 +1148,7 @@
     <Content Include="wwwroot\lib\ckeditor\styles.js" />
     <Content Include="wwwroot\lib\ckeditor\vendor\promise.js" />
     <Content Include="wwwroot\lib\datatable\buttons.dataTables.min.css" />
+    <Content Include="wwwroot\lib\echarts\echarts.min.js" />
     <Content Include="wwwroot\lib\datatable\buttons.html5.min.js" />
     <Content Include="wwwroot\lib\datatable\buttons.print.min.js" />
     <Content Include="wwwroot\lib\datatable\dataTables.buttons.min.js" />
@@ -3169,6 +3173,13 @@
     <Compile Include="Modules\Administrator\User_BranchWiseList.aspx.designer.cs">
       <DependentUpon>User_BranchWiseList.aspx</DependentUpon>
     </Compile>
+    <Compile Include="Modules\Administrator\ValueSet.aspx.cs">
+      <DependentUpon>ValueSet.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Modules\Administrator\ValueSet.aspx.designer.cs">
+      <DependentUpon>ValueSet.aspx</DependentUpon>
+    </Compile>
     <Compile Include="Modules\Appointment\Derma_Appointment.aspx.cs">
       <DependentUpon>Derma_Appointment.aspx</DependentUpon>
       <SubType>ASPXCodeBehind</SubType>
@@ -3365,6 +3376,13 @@
     <Compile Include="Modules\Dashboards\Chief_Executive_Dashboard.aspx.designer.cs">
       <DependentUpon>Chief_Executive_Dashboard.aspx</DependentUpon>
     </Compile>
+    <Compile Include="Modules\Dashboards\StudentAffairDashboard.aspx.cs">
+      <DependentUpon>StudentAffairDashboard.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Modules\Dashboards\StudentAffairDashboard.aspx.designer.cs">
+      <DependentUpon>StudentAffairDashboard.aspx</DependentUpon>
+    </Compile>
     <Compile Include="Modules\Dashboards\DashPatientsCount.aspx.cs">
       <DependentUpon>DashPatientsCount.aspx</DependentUpon>
       <SubType>ASPXCodeBehind</SubType>
@@ -3476,6 +3494,13 @@
     </Compile>
     <Compile Include="Modules\Dashboards\ShortCuts.aspx.designer.cs">
       <DependentUpon>ShortCuts.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="Modules\Dental\Alinger.aspx.cs">
+      <DependentUpon>Alinger.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Modules\Dental\Alinger.aspx.designer.cs">
+      <DependentUpon>Alinger.aspx</DependentUpon>
     </Compile>
     <Compile Include="Modules\GL\FinancialLogs.aspx.cs">
       <DependentUpon>FinancialLogs.aspx</DependentUpon>

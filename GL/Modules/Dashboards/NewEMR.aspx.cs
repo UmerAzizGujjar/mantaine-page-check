@@ -309,176 +309,258 @@ namespace PMS.Modules.Dashboards
             }
         }
         [WebMethod]
-        public static object IPDViewList(int regID, int draw, int start, int length, string sortColumn, string sortColumnDirection, string searchValue)
+        public static object IPDViewList(int regID, int draw, int start, int length,
+                                  string sortColumn, string sortColumnDirection, string searchValue)
         {
             try
             {
                 using (var _dbContext = new DataBaseDataContext())
                 {
-                    // Total count
-                    var Total_pat = _dbContext.In_Patients.Count(ip => ip.Patient_ID == regID);
+                    // ✅ STEP 1: Base In_Patients
+                    var ipList = _dbContext.In_Patients
+                        .Where(ip => ip.Patient_ID == regID)
+                        .ToList();
 
-                    var query = from ip in _dbContext.In_Patients
-                                join emp in _dbContext.HR_Employees on ip.Doctor equals emp.Emp_ID.ToString() into empJoin
-                                from emp in empJoin.DefaultIfEmpty()
+                    var Total_pat = ipList.Count;
+                    if (Total_pat == 0)
+                    {
+                        return Newtonsoft.Json.JsonConvert.SerializeObject(new
+                        {
+                            draw = draw,
+                            recordsTotal = 0,
+                            recordsFiltered = 0,
+                            data = new List<object>()
+                        });
+                    }
 
-                                    // Join with Ward_Allocation to get current ward assignment
-                                join wa in _dbContext.Ward_Allocations on ip.In_Patient_ID.ToString() equals wa.InPatient_ID into wardAllocJoin
-                                from wa in wardAllocJoin
-                                    .Where(x => !(x.IsDischarge ?? true) && !(x.isCancelled ?? true))
-                                    .Take(1)
-                                    .DefaultIfEmpty()
+                    // In_Patient_ID is int
+                    var ipIds = ipList.Select(x => x.In_Patient_ID).ToList();
+                    // String version for Ward_Allocations.InPatient_ID which is string
+                    var ipIdStrings = ipIds.Select(id => id.ToString()).ToList();
 
-                                    // Join with Ward_Definition to get ward details
-                                join wd in _dbContext.Ward_Definitions on wa.Ward_ID equals wd.Ward_ID into wardDefJoin
-                                from wd in wardDefJoin.DefaultIfEmpty()
+                    // ✅ STEP 2: Ward allocations
+                    // InPatient_ID is STRING → use string comparison
+                    var wardAllocs = _dbContext.Ward_Allocations
+                        .Where(wa => wa.InPatient_ID != null
+                                  && ipIdStrings.Contains(wa.InPatient_ID)
+                                  && wa.IsDischarge != true
+                                  && (wa.isCancelled == null || wa.isCancelled != true))
+                        .ToList();
 
-                                    // Join with Room_Allocation to get current room
-                                join ra in _dbContext.Room_Allocations on ip.In_Patient_ID equals ra.In_Patient_ID into roomAllocJoin
-                                from ra in roomAllocJoin.Take(1).DefaultIfEmpty()
+                    // ✅ STEP 3: Ward definitions
+                    var wardIds = wardAllocs.Select(wa => wa.Ward_ID).Distinct().ToList();
+                    var wardDefs = _dbContext.Ward_Definitions
+                        .Where(wd => wardIds.Contains(wd.Ward_ID))
+                        .ToList();
 
-                                    // Join with Rooms
-                                join r in _dbContext.Rooms on ra.Room_ID equals r.Room_ID into roomJoin
-                                from r in roomJoin.DefaultIfEmpty()
+                    // ✅ STEP 4: Room allocations
+                    // In_Patient_ID is int? → use .HasValue + .Value
+                    var roomAllocs = _dbContext.Room_Allocations
+                        .Where(raRow => raRow.In_Patient_ID.HasValue
+                                     && ipIds.Contains(raRow.In_Patient_ID.Value))
+                        .ToList();
 
-                                    // Join for doctor assigned in ward
-                                join wardDoc in _dbContext.HR_Employees on wa.Doctor_Assigned equals wardDoc.Emp_ID into wardDocJoin
-                                from wardDoc in wardDocJoin.DefaultIfEmpty()
+                    var roomIds = roomAllocs.Select(raRow => raRow.Room_ID).Distinct().ToList();
+                    var rooms = _dbContext.Rooms
+                        .Where(roomRow => roomIds.Contains(roomRow.Room_ID))
+                        .ToList();
 
-                                where ip.Patient_ID == regID
-                                select new
-                                {
-                                    IPD_ID = ip.In_Patient_ID,
-                                    AdmissionDate = ip.Admission_Date,
-                                    Department = _dbContext.GetDataValueName("Patient Main Category", ip.Department) ?? "N/A",
-                                    WardType = wd != null ? wd.Ward_Type : "N/A",
-                                    WardNo = wd != null && !string.IsNullOrWhiteSpace(wd.Ward_No) ? wd.Ward_No: "N/A",
-                                    RoomNo = r != null ? r.Room_No : "N/A",
-                                    BedNo = wa != null ? (wa.Bed_No_Assigned.HasValue ? wa.Bed_No_Assigned.Value.ToString() : "N/A") : "N/A",
-                                    AttendingDoctor = wardDoc != null ? wardDoc.Emp_Name : (emp != null ? emp.Emp_Name : "N/A"),
-                                    ProvisionalDiagnosis = ip.Provisional_Diagnosis ?? "",
-                                    ExpectedDischargeDate = ip.Expected_Discharge_Date,
-                                    DischargeDate = ip.Discharge_On,
-                                    AdmissionType = ip.AdmissionType ?? "Regular",
-                                    Status = ip.Discharge.HasValue ?
-                                        (ip.Discharge.Value ? "Discharged" : "Admitted") :
-                                        (ip.Death_Certificate.HasValue && ip.Death_Certificate.Value ? "Deceased" : "Admitted"),
-                                    ReferringDoctor = ip.Referring_Doctor ?? ""
-                                };
+                    // ✅ STEP 5: Doctors
+                    // Emp_ID is int, Doctor_Assigned is int?
+                    var doctorEmpIds = wardAllocs
+                        .Where(wa => wa.Doctor_Assigned.HasValue && wa.Doctor_Assigned.Value > 0)
+                        .Select(wa => wa.Doctor_Assigned.Value)
+                        .ToList();
 
-                    // Apply search
+                    foreach (var ip in ipList)
+                    {
+                        if (!string.IsNullOrEmpty(ip.Doctor))
+                        {
+                            int docId;
+                            if (int.TryParse(ip.Doctor, out docId) && docId > 0)
+                                doctorEmpIds.Add(docId);
+                        }
+                    }
+                    doctorEmpIds = doctorEmpIds.Distinct().ToList();
+
+                    var doctors = _dbContext.HR_Employees
+                        .Where(e => doctorEmpIds.Contains(e.Emp_ID))   // Emp_ID is int
+                        .ToList();
+
+                    // ✅ STEP 6: Build in memory
+                    var allData = ipList.Select(ip =>
+                    {
+                        // wa.InPatient_ID is string, ip.In_Patient_ID is int
+                        var wa = wardAllocs.FirstOrDefault(w =>
+                            w.InPatient_ID == ip.In_Patient_ID.ToString());
+
+                        var wd = wa != null
+                            ? wardDefs.FirstOrDefault(w => w.Ward_ID == wa.Ward_ID)
+                            : null;
+
+                        // Room_Allocations.In_Patient_ID is int?
+                        var raRow = roomAllocs.FirstOrDefault(rm =>
+                            rm.In_Patient_ID.HasValue && rm.In_Patient_ID.Value == ip.In_Patient_ID);
+
+                        var room = raRow != null
+                            ? rooms.FirstOrDefault(rr => rr.Room_ID == raRow.Room_ID)
+                            : null;
+
+                        // Attending doctor
+                        string attendingDoctor = "N/A";
+                        if (wa != null && wa.Doctor_Assigned.HasValue)
+                        {
+                            var doc = doctors.FirstOrDefault(d => d.Emp_ID == wa.Doctor_Assigned.Value);
+                            if (doc != null) attendingDoctor = doc.Emp_Name ?? "N/A";
+                        }
+                        else if (!string.IsNullOrEmpty(ip.Doctor))
+                        {
+                            int docId;
+                            if (int.TryParse(ip.Doctor, out docId))
+                            {
+                                var doc = doctors.FirstOrDefault(d => d.Emp_ID == docId);
+                                if (doc != null) attendingDoctor = doc.Emp_Name ?? "N/A";
+                            }
+                        }
+
+                        // Department — GetDataValueName returns string, no .Value
+                        string deptName = ip.Department ?? "N/A";
+                        try
+                        {
+                            var resolved = _dbContext.GetDataValueName("Patient Main Category", ip.Department);
+                            if (!string.IsNullOrEmpty(resolved))
+                                deptName = resolved;
+                        }
+                        catch { /* keep code fallback */ }
+
+                        string status =
+                            ip.Discharge == true ? "Discharged" :
+                            (ip.Death_Certificate == true ? "Deceased" : "Admitted");
+
+                        return new
+                        {
+                            IPD_ID = ip.In_Patient_ID,
+                            AdmissionDate = ip.Admission_Date?.ToString("yyyy-MM-ddTHH:mm:ss"),
+                            Department = deptName,
+                            WardName = wd != null ? wd.Ward_Type : "N/A",
+                            RoomNo = room != null ? room.Room_No : "N/A",
+                            BedNo = wa != null && wa.Bed_No_Assigned.HasValue
+                                    ? wa.Bed_No_Assigned.Value.ToString() : "N/A",
+                            AttendingDoctor = attendingDoctor,
+                            ProvisionalDiagnosis = ip.Provisional_Diagnosis ?? "",
+                            ExpectedDischargeDate = ip.Expected_Discharge_Date?.ToString("yyyy-MM-ddTHH:mm:ss"),
+                            DischargeDate = ip.Discharge_On?.ToString("yyyy-MM-ddTHH:mm:ss"),
+                            Status = status,
+                            ReferringDoctor = ip.Referring_Doctor ?? "",
+                            AdmissionType = ip.AdmissionType ?? "Regular"
+                        };
+                    }).ToList();
+
+                    // ✅ STEP 7: Search
                     if (!string.IsNullOrEmpty(searchValue))
                     {
                         DateTime searchDate;
-                        bool isDateSearch = DateTime.TryParse(searchValue, out searchDate);
+                        bool isDateSearch = DateTime.TryParse(searchValue, out searchDate)
+                                            && searchDate.Year >= 1753;
+                        string datePrefix = isDateSearch ? searchDate.ToString("yyyy-MM-dd") : null;
 
-                        query = query.Where(x =>
+                        allData = allData.Where(x =>
                             x.IPD_ID.ToString().Contains(searchValue) ||
-                            (x.Department != null && x.Department.Contains(searchValue)) ||
-                            (x.WardType != null && x.WardType.Contains(searchValue)) ||
-                            (x.AttendingDoctor != null && x.AttendingDoctor.Contains(searchValue)) ||
-                            (x.AdmissionType != null && x.AdmissionType.Contains(searchValue)) ||
-                            x.Status.Contains(searchValue) ||
-                            x.BedNo.Contains(searchValue) ||
-                            x.RoomNo.Contains(searchValue) ||
-                            (x.ProvisionalDiagnosis != null && x.ProvisionalDiagnosis.Contains(searchValue)) ||
-                            (x.ReferringDoctor != null && x.ReferringDoctor.Contains(searchValue)) ||
+                            (!string.IsNullOrEmpty(x.Department) && x.Department.IndexOf(searchValue, StringComparison.OrdinalIgnoreCase) >= 0) ||
+                            (!string.IsNullOrEmpty(x.WardName) && x.WardName.IndexOf(searchValue, StringComparison.OrdinalIgnoreCase) >= 0) ||
+                            (!string.IsNullOrEmpty(x.AttendingDoctor) && x.AttendingDoctor.IndexOf(searchValue, StringComparison.OrdinalIgnoreCase) >= 0) ||
+                            (!string.IsNullOrEmpty(x.AdmissionType) && x.AdmissionType.IndexOf(searchValue, StringComparison.OrdinalIgnoreCase) >= 0) ||
+                            (!string.IsNullOrEmpty(x.Status) && x.Status.IndexOf(searchValue, StringComparison.OrdinalIgnoreCase) >= 0) ||
+                            (!string.IsNullOrEmpty(x.BedNo) && x.BedNo.Contains(searchValue)) ||
+                            (!string.IsNullOrEmpty(x.RoomNo) && x.RoomNo.Contains(searchValue)) ||
+                            (!string.IsNullOrEmpty(x.ProvisionalDiagnosis) && x.ProvisionalDiagnosis.IndexOf(searchValue, StringComparison.OrdinalIgnoreCase) >= 0) ||
+                            (!string.IsNullOrEmpty(x.ReferringDoctor) && x.ReferringDoctor.IndexOf(searchValue, StringComparison.OrdinalIgnoreCase) >= 0) ||
                             (isDateSearch && (
-                                (!x.AdmissionDate.HasValue || x.AdmissionDate.Value.Date == searchDate.Date) ||
-                                (!x.ExpectedDischargeDate.HasValue || x.ExpectedDischargeDate.Value.Date == searchDate.Date) ||
-                                (!x.DischargeDate.HasValue || x.DischargeDate.Value.Date == searchDate.Date)
+                                (!string.IsNullOrEmpty(x.AdmissionDate) && x.AdmissionDate.StartsWith(datePrefix)) ||
+                                (!string.IsNullOrEmpty(x.ExpectedDischargeDate) && x.ExpectedDischargeDate.StartsWith(datePrefix)) ||
+                                (!string.IsNullOrEmpty(x.DischargeDate) && x.DischargeDate.StartsWith(datePrefix))
                             ))
-                        );
+                        ).ToList();
                     }
 
-                    var FilteredCount = query.Count();
+                    var FilteredCount = allData.Count;
 
-                    // Sorting
-                    if (!string.IsNullOrEmpty(sortColumn))
+                    // ✅ STEP 8: Sorting
+                    switch (sortColumn)
                     {
-                        switch (sortColumn)
-                        {
-                            case "IPD_ID":
-                                query = sortColumnDirection == "asc" ? query.OrderBy(x => x.IPD_ID) : query.OrderByDescending(x => x.IPD_ID);
-                                break;
-                            case "AdmissionDate":
-                                query = sortColumnDirection == "asc"
-                                    ? query.OrderBy(x => x.AdmissionDate ?? DateTime.MaxValue)
-                                    : query.OrderByDescending(x => x.AdmissionDate ?? DateTime.MinValue);
-                                break;
-                            case "Department":
-                                query = sortColumnDirection == "asc" ? query.OrderBy(x => x.Department) : query.OrderByDescending(x => x.Department);
-                                break;
-                            case "WardName":
-                                query = sortColumnDirection == "asc" ? query.OrderBy(x => x.WardType) : query.OrderByDescending(x => x.WardType);
-                                break;
-                            case "AttendingDoctor":
-                                query = sortColumnDirection == "asc" ? query.OrderBy(x => x.AttendingDoctor) : query.OrderByDescending(x => x.AttendingDoctor);
-                                break;
-                            case "Status":
-                                query = sortColumnDirection == "asc" ? query.OrderBy(x => x.Status) : query.OrderByDescending(x => x.Status);
-                                break;
-                            case "ExpectedDischargeDate":
-                                query = sortColumnDirection == "asc"
-                                    ? query.OrderBy(x => x.ExpectedDischargeDate ?? DateTime.MaxValue)
-                                    : query.OrderByDescending(x => x.ExpectedDischargeDate ?? DateTime.MinValue);
-                                break;
-                            case "DischargeDate":
-                                query = sortColumnDirection == "asc"
-                                    ? query.OrderBy(x => x.DischargeDate ?? DateTime.MaxValue)
-                                    : query.OrderByDescending(x => x.DischargeDate ?? DateTime.MinValue);
-                                break;
-                            default:
-                                query = query.OrderByDescending(x => x.AdmissionDate ?? DateTime.MinValue);
-                                break;
-                        }
-                    }
-                    else
-                    {
-                        query = query.OrderByDescending(x => x.AdmissionDate ?? DateTime.MinValue);
+                        case "IPD_ID":
+                            allData = sortColumnDirection == "asc"
+                                ? allData.OrderBy(x => x.IPD_ID).ToList()
+                                : allData.OrderByDescending(x => x.IPD_ID).ToList();
+                            break;
+                        case "AdmissionDate":
+                            allData = sortColumnDirection == "asc"
+                                ? allData.OrderBy(x => x.AdmissionDate ?? "").ToList()
+                                : allData.OrderByDescending(x => x.AdmissionDate ?? "").ToList();
+                            break;
+                        case "Department":
+                            allData = sortColumnDirection == "asc"
+                                ? allData.OrderBy(x => x.Department).ToList()
+                                : allData.OrderByDescending(x => x.Department).ToList();
+                            break;
+                        case "WardName":
+                            allData = sortColumnDirection == "asc"
+                                ? allData.OrderBy(x => x.WardName).ToList()
+                                : allData.OrderByDescending(x => x.WardName).ToList();
+                            break;
+                        case "AttendingDoctor":
+                            allData = sortColumnDirection == "asc"
+                                ? allData.OrderBy(x => x.AttendingDoctor).ToList()
+                                : allData.OrderByDescending(x => x.AttendingDoctor).ToList();
+                            break;
+                        case "Status":
+                            allData = sortColumnDirection == "asc"
+                                ? allData.OrderBy(x => x.Status).ToList()
+                                : allData.OrderByDescending(x => x.Status).ToList();
+                            break;
+                        case "ExpectedDischargeDate":
+                            allData = sortColumnDirection == "asc"
+                                ? allData.OrderBy(x => x.ExpectedDischargeDate ?? "").ToList()
+                                : allData.OrderByDescending(x => x.ExpectedDischargeDate ?? "").ToList();
+                            break;
+                        case "DischargeDate":
+                            allData = sortColumnDirection == "asc"
+                                ? allData.OrderBy(x => x.DischargeDate ?? "").ToList()
+                                : allData.OrderByDescending(x => x.DischargeDate ?? "").ToList();
+                            break;
+                        default:
+                            allData = allData.OrderByDescending(x => x.AdmissionDate ?? "").ToList();
+                            break;
                     }
 
-                    // Apply paging and format dates as ISO strings
-                    var data = query.Skip(start).Take(length).AsEnumerable()
-                        .Select(x => new
-                        {
-                            IPD_ID = x.IPD_ID,
-                            AdmissionDate = x.AdmissionDate?.ToString("yyyy-MM-ddTHH:mm:ss"),
-                            Department = x.Department,
-                            WardName = x.WardType,
-                            RoomNo = x.RoomNo,
-                            BedNo = x.BedNo,
-                            AttendingDoctor = x.AttendingDoctor,
-                            ExpectedDischargeDate = x.ExpectedDischargeDate?.ToString("yyyy-MM-ddTHH:mm:ss"),
-                            DischargeDate = x.DischargeDate?.ToString("yyyy-MM-ddTHH:mm:ss"),
-                            Status = x.Status,
-                            ReferringDoctor = x.ReferringDoctor
-                        }).ToList();
+                    // ✅ STEP 9: Paging
+                    var pagedData = allData.Skip(start).Take(length).ToList();
 
-                    // Final result
                     var result = new
                     {
                         draw = draw,
                         recordsTotal = Total_pat,
                         recordsFiltered = FilteredCount,
-                        data = data
+                        data = pagedData
                     };
 
-                    // 🔑 Serialize to string so frontend can JSON.parse(json.d)
                     return Newtonsoft.Json.JsonConvert.SerializeObject(result);
                 }
             }
             catch (Exception ex)
             {
-                var errorResult = new
+                System.Diagnostics.Debug.WriteLine("IPDViewList ERROR: " + ex.Message);
+                System.Diagnostics.Debug.WriteLine("STACK: " + ex.StackTrace);
+
+                return Newtonsoft.Json.JsonConvert.SerializeObject(new
                 {
                     draw = draw,
                     recordsTotal = 0,
                     recordsFiltered = 0,
                     data = new List<object>(),
-                    error = ex.Message
-                };
-                return Newtonsoft.Json.JsonConvert.SerializeObject(errorResult);
+                    error = ex.Message,
+                    stackTrace = ex.StackTrace
+                });
             }
         }
 
@@ -626,7 +708,6 @@ namespace PMS.Modules.Dashboards
             {
                 using (var _dbContext = new DataBaseDataContext())
                 {
-                    // Get all patient IDs associated with this registration
                     var patientIds = _dbContext.Out_Patients
                         .Where(op => op.Reg_PatId == regID)
                         .Select(op => op.Out_Patient_ID)
@@ -638,9 +719,9 @@ namespace PMS.Modules.Dashboards
                             .Select(ep => ep.Emergency_ID))
                         .ToList();
 
-                    // Query medicines
                     var query = (from med in _dbContext.In_Patient_Medicines
-                                 where patientIds.Contains((int)med.Patient_ID)
+                                 where med.Patient_ID != null
+                                    && patientIds.Contains(med.Patient_ID.Value)
                                  select new
                                  {
                                      MedicineName = med.Medicine_Name,
@@ -653,26 +734,29 @@ namespace PMS.Modules.Dashboards
                                      Instructions = med.Other_Instruction
                                  });
 
-                    // Total count
                     var Total_pat = query.Count();
 
-                    // Apply search
+                    // Search
                     if (!string.IsNullOrEmpty(searchValue))
                     {
                         DateTime searchDate;
-                        bool isDateSearch = DateTime.TryParse(searchValue, out searchDate);
+                        bool isDateSearch = DateTime.TryParse(searchValue, out searchDate)
+                                            && searchDate.Year >= 1753;
 
                         query = query.Where(x =>
                             (x.MedicineName != null && x.MedicineName.Contains(searchValue)) ||
                             (x.Dosage != null && x.Dosage.Contains(searchValue)) ||
                             (x.Form != null && x.Form.Contains(searchValue)) ||
-                            (isDateSearch && x.PrescriptionDate == searchDate.Date)
+                            (isDateSearch && x.PrescriptionDate.HasValue
+                                && x.PrescriptionDate.Value.Year == searchDate.Year
+                                && x.PrescriptionDate.Value.Month == searchDate.Month
+                                && x.PrescriptionDate.Value.Day == searchDate.Day)
                         );
                     }
 
                     var FilteredCount = query.Count();
 
-                    // Sorting
+                    // Sorting — ✅ no DateTime.MinValue literals sent to SQL
                     if (!string.IsNullOrEmpty(sortColumn))
                     {
                         switch (sortColumn)
@@ -682,32 +766,39 @@ namespace PMS.Modules.Dashboards
                                     ? query.OrderBy(x => x.MedicineName)
                                     : query.OrderByDescending(x => x.MedicineName);
                                 break;
+
                             case "PrescriptionDate":
                                 query = sortColumnDirection == "asc"
-                                    ? query.OrderBy(x => x.PrescriptionDate ?? DateTime.MinValue)
-                                    : query.OrderByDescending(x => x.PrescriptionDate ?? DateTime.MinValue);
+                                    ? query.OrderBy(x => x.PrescriptionDate.HasValue)
+                                           .ThenBy(x => x.PrescriptionDate)
+                                    : query.OrderByDescending(x => x.PrescriptionDate.HasValue)
+                                           .ThenByDescending(x => x.PrescriptionDate);
                                 break;
+
                             case "Dosage":
                                 query = sortColumnDirection == "asc"
                                     ? query.OrderBy(x => x.Dosage)
                                     : query.OrderByDescending(x => x.Dosage);
                                 break;
+
                             case "Form":
                                 query = sortColumnDirection == "asc"
                                     ? query.OrderBy(x => x.Form)
                                     : query.OrderByDescending(x => x.Form);
                                 break;
+
                             default:
-                                query = query.OrderByDescending(x => x.PrescriptionDate ?? DateTime.MinValue);
+                                query = query.OrderByDescending(x => x.PrescriptionDate.HasValue)
+                                             .ThenByDescending(x => x.PrescriptionDate);
                                 break;
                         }
                     }
                     else
                     {
-                        query = query.OrderByDescending(x => x.PrescriptionDate ?? DateTime.MinValue);
+                        query = query.OrderByDescending(x => x.PrescriptionDate.HasValue)
+                                     .ThenByDescending(x => x.PrescriptionDate);
                     }
 
-                    // Apply paging and format dates as ISO strings
                     var data = query.Skip(start).Take(length).AsEnumerable()
                         .Select(x => new
                         {
@@ -719,137 +810,6 @@ namespace PMS.Modules.Dashboards
                             Frequency = x.Frequency ?? "N/A",
                             PrescriptionDate = x.PrescriptionDate?.ToString("yyyy-MM-ddTHH:mm:ss"),
                             Instructions = x.Instructions ?? "N/A"
-                        }).ToList();
-
-                    // Final result
-                    var result = new
-                    {
-                        draw = draw,
-                        recordsTotal = Total_pat,
-                        recordsFiltered = FilteredCount,
-                        data = data
-                    };
-
-                    // 🔑 Serialize to string so frontend can parse it
-                    return JsonConvert.SerializeObject(result);
-                }
-            }
-            catch (Exception ex)
-            {
-                var errorResult = new
-                {
-                    draw = draw,
-                    recordsTotal = 0,
-                    recordsFiltered = 0,
-                    data = new List<object>(),
-                    error = ex.Message
-                };
-                return JsonConvert.SerializeObject(errorResult);
-            }
-        }
-
-        [WebMethod]
-        public static object InvestigationViewList(int regID, int draw, int start, int length, string sortColumn, string sortColumnDirection, string searchValue)
-        {
-            try
-            {
-                using (var db = new DataBaseDataContext())
-                {
-                    // Get all patient IDs
-                    var patientIds = db.Out_Patients
-                        .Where(op => op.Reg_PatId == regID)
-                        .Select(op => op.Out_Patient_ID)
-                        .Concat(db.In_Patients
-                            .Where(ip => ip.Patient_ID == regID)
-                            .Select(ip => ip.In_Patient_ID))
-                        .Concat(db.Emergency_Patients
-                            .Where(ep => ep.Patient_ID == regID)
-                            .Select(ep => ep.Emergency_ID))
-                        .ToList();
-
-                    // Query investigation tests (Lab Dept: "001")
-                    var query = (from lbtM in db.Laboratory_Tests
-                                 join lbtD in db.Lab_Test_Details on lbtM.Lab_Test_ID equals lbtD.Lab_Test_ID
-                                 join lab in db.Lab_Tests on lbtD.Test_ID equals lab.Test_ID
-                                 where (patientIds.Contains(lbtD.Patient_ID) || lbtD.Patient_ID == regID)
-                                       && lbtD.Dept_ID == "001"
-                                 select new
-                                 {
-                                     Lab_Test_Detail_ID = lbtD.Lab_Test_Detail_ID,
-                                     Date = lbtD.Date,
-                                     Remark = lbtD.Remark,
-                                     Test_Name = db.Lab_Tests
-                                         .Where(t => t.Test_ID == lbtD.Test_ID)
-                                         .Select(t => t.Test_Name)
-                                         .FirstOrDefault(),
-                                     Special_Tests = lbtD.Special_Tests,
-                                     Area_Of_Interest = lbtD.Area_Of_Interest
-                                 });
-
-                    var Total_pat = query.Count();
-
-                    // Search
-                    if (!string.IsNullOrEmpty(searchValue))
-                    {
-                        DateTime searchDate;
-                        bool isDateSearch = DateTime.TryParse(searchValue, out searchDate);
-
-                        query = query.Where(x =>
-                            (x.Test_Name != null && x.Test_Name.Contains(searchValue)) ||
-                            (x.Remark != null && x.Remark.Contains(searchValue)) ||
-                            (x.Special_Tests != null && x.Special_Tests.Contains(searchValue)) ||
-                            (x.Area_Of_Interest != null && x.Area_Of_Interest.Contains(searchValue)) ||
-                            (isDateSearch && x.Date == searchDate.Date)
-                        );
-                    }
-
-                    var FilteredCount = query.Count();
-
-                    // Sorting
-                    if (!string.IsNullOrEmpty(sortColumn))
-                    {
-                        switch (sortColumn)
-                        {
-                            case "Test_Name":
-                                query = sortColumnDirection == "asc"
-                                    ? query.OrderBy(x => x.Test_Name)
-                                    : query.OrderByDescending(x => x.Test_Name);
-                                break;
-                            case "Date":
-                                query = sortColumnDirection == "asc"
-                                    ? query.OrderBy(x => x.Date ?? DateTime.MinValue)
-                                    : query.OrderByDescending(x => x.Date ?? DateTime.MinValue);
-                                break;
-                            case "Special_Tests":
-                                query = sortColumnDirection == "asc"
-                                    ? query.OrderBy(x => x.Special_Tests)
-                                    : query.OrderByDescending(x => x.Special_Tests);
-                                break;
-                            case "Area_Of_Interest":
-                                query = sortColumnDirection == "asc"
-                                    ? query.OrderBy(x => x.Area_Of_Interest)
-                                    : query.OrderByDescending(x => x.Area_Of_Interest);
-                                break;
-                            default:
-                                query = query.OrderByDescending(x => x.Date ?? DateTime.MinValue);
-                                break;
-                        }
-                    }
-                    else
-                    {
-                        query = query.OrderByDescending(x => x.Date ?? DateTime.MinValue);
-                    }
-
-                    // Format data
-                    var data = query.Skip(start).Take(length).AsEnumerable()
-                        .Select(x => new
-                        {
-                            Lab_Test_Detail_ID = x.Lab_Test_Detail_ID,
-                            Date = x.Date?.ToString("yyyy-MM-ddTHH:mm:ss"),
-                            Remark = x.Remark ?? "N/A",
-                            Test_Name = x.Test_Name ?? "N/A",
-                            Special_Tests = x.Special_Tests ?? "N/A",
-                            Area_Of_Interest = x.Area_Of_Interest ?? "N/A"
                         }).ToList();
 
                     var result = new
@@ -877,104 +837,305 @@ namespace PMS.Modules.Dashboards
         }
 
         [WebMethod]
+        public static object InvestigationViewList(int regID, int draw, int start, int length,
+                                             string sortColumn, string sortColumnDirection, string searchValue)
+        {
+            try
+            {
+                using (var db = new DataBaseDataContext())
+                {
+                    // ✅ STEP 1: Collect patient visit IDs (int? unified to avoid Concat errors)
+                    var outIds = db.Out_Patients
+                        .Where(op => op.Reg_PatId == regID)
+                        .Select(op => (int?)op.Out_Patient_ID)
+                        .ToList();
+
+                    var inIds = db.In_Patients
+                        .Where(ip => ip.Patient_ID == regID)
+                        .Select(ip => (int?)ip.In_Patient_ID)
+                        .ToList();
+
+                    var emrIds = db.Emergency_Patients
+                        .Where(ep => ep.Patient_ID == regID)
+                        .Select(ep => (int?)ep.Emergency_ID)
+                        .ToList();
+
+                    var patientIds = outIds.Concat(inIds).Concat(emrIds)
+                        .Where(id => id.HasValue)
+                        .Select(id => id.Value)
+                        .Distinct()
+                        .ToList();
+
+                    // ✅ STEP 2: Fetch Lab_Test_Details — Lab only
+                    // NOTE: Patient_ID is int (NOT nullable) → no HasValue/.Value
+                    var labDetails = db.Lab_Test_Details
+                        .Where(d => d.Dept_ID == "001"
+                                 && (patientIds.Contains(d.Patient_ID)
+                                     || d.Patient_ID == regID))
+                        .ToList();
+
+                    if (labDetails.Count == 0)
+                    {
+                        return Newtonsoft.Json.JsonConvert.SerializeObject(new
+                        {
+                            draw = draw,
+                            recordsTotal = 0,
+                            recordsFiltered = 0,
+                            data = new List<object>()
+                        });
+                    }
+
+                    // ✅ STEP 3: Load test names into a dictionary
+                    // Test_ID — try without .HasValue/.Value first
+                    var testIds = labDetails
+                        .Select(d => d.Test_ID)
+                        .Distinct()
+                        .ToList();
+
+                    var testMap = db.Lab_Tests
+                        .Where(t => testIds.Contains(t.Test_ID))
+                        .ToList()
+                        .ToDictionary(t => t.Test_ID, t => t.Test_Name);
+
+                    // ✅ STEP 4: Build in-memory list
+                    var allData = labDetails.Select(d => new
+                    {
+                        Lab_Test_Detail_ID = d.Lab_Test_Detail_ID,
+                        Date = d.Date,
+                        DateStr = d.Date?.ToString("yyyy-MM-ddTHH:mm:ss"),
+                        Remark = d.Remark ?? "N/A",
+                        Test_Name = testMap.ContainsKey(d.Test_ID)
+                                    ? testMap[d.Test_ID] : "N/A",
+                        Special_Tests = d.Special_Tests ?? "N/A",
+                        Area_Of_Interest = d.Area_Of_Interest ?? "N/A"
+                    }).ToList();
+
+                    var Total_pat = allData.Count;
+
+                    // ✅ STEP 5: Search (in memory)
+                    if (!string.IsNullOrEmpty(searchValue))
+                    {
+                        DateTime searchDate;
+                        bool isDateSearch = DateTime.TryParse(searchValue, out searchDate)
+                                            && searchDate.Year >= 1753;
+                        string datePrefix = isDateSearch ? searchDate.ToString("yyyy-MM-dd") : null;
+
+                        allData = allData.Where(x =>
+                            (!string.IsNullOrEmpty(x.Test_Name) && x.Test_Name.IndexOf(searchValue, StringComparison.OrdinalIgnoreCase) >= 0) ||
+                            (!string.IsNullOrEmpty(x.Remark) && x.Remark.IndexOf(searchValue, StringComparison.OrdinalIgnoreCase) >= 0) ||
+                            (!string.IsNullOrEmpty(x.Special_Tests) && x.Special_Tests.IndexOf(searchValue, StringComparison.OrdinalIgnoreCase) >= 0) ||
+                            (!string.IsNullOrEmpty(x.Area_Of_Interest) && x.Area_Of_Interest.IndexOf(searchValue, StringComparison.OrdinalIgnoreCase) >= 0) ||
+                            (isDateSearch && !string.IsNullOrEmpty(x.DateStr) && x.DateStr.StartsWith(datePrefix))
+                        ).ToList();
+                    }
+
+                    var FilteredCount = allData.Count;
+
+                    // ✅ STEP 6: Sorting (string-based — no SqlDateTime overflow)
+                    switch (sortColumn)
+                    {
+                        case "Test_Name":
+                            allData = sortColumnDirection == "asc"
+                                ? allData.OrderBy(x => x.Test_Name).ToList()
+                                : allData.OrderByDescending(x => x.Test_Name).ToList();
+                            break;
+                        case "Date":
+                            allData = sortColumnDirection == "asc"
+                                ? allData.OrderBy(x => x.DateStr ?? "").ToList()
+                                : allData.OrderByDescending(x => x.DateStr ?? "").ToList();
+                            break;
+                        case "Special_Tests":
+                            allData = sortColumnDirection == "asc"
+                                ? allData.OrderBy(x => x.Special_Tests).ToList()
+                                : allData.OrderByDescending(x => x.Special_Tests).ToList();
+                            break;
+                        case "Area_Of_Interest":
+                            allData = sortColumnDirection == "asc"
+                                ? allData.OrderBy(x => x.Area_Of_Interest).ToList()
+                                : allData.OrderByDescending(x => x.Area_Of_Interest).ToList();
+                            break;
+                        default:
+                            allData = allData.OrderByDescending(x => x.DateStr ?? "").ToList();
+                            break;
+                    }
+
+                    // ✅ STEP 7: Paging
+                    var pagedData = allData.Skip(start).Take(length)
+                        .Select(x => new
+                        {
+                            Lab_Test_Detail_ID = x.Lab_Test_Detail_ID,
+                            Date = x.DateStr,
+                            Remark = x.Remark,
+                            Test_Name = x.Test_Name,
+                            Special_Tests = x.Special_Tests,
+                            Area_Of_Interest = x.Area_Of_Interest
+                        }).ToList();
+
+                    var result = new
+                    {
+                        draw = draw,
+                        recordsTotal = Total_pat,
+                        recordsFiltered = FilteredCount,
+                        data = pagedData
+                    };
+
+                    return Newtonsoft.Json.JsonConvert.SerializeObject(result);
+                }
+            }
+            catch (Exception ex)
+            {
+                System.Diagnostics.Debug.WriteLine("InvestigationViewList ERROR: " + ex.Message);
+                System.Diagnostics.Debug.WriteLine("STACK: " + ex.StackTrace);
+
+                return Newtonsoft.Json.JsonConvert.SerializeObject(new
+                {
+                    draw = draw,
+                    recordsTotal = 0,
+                    recordsFiltered = 0,
+                    data = new List<object>(),
+                    error = ex.Message,
+                    stackTrace = ex.StackTrace
+                });
+            }
+        }
+
+        [WebMethod]
         public static object DiagnosticsViewList(int regID, int draw, int start, int length, string sortColumn, string sortColumnDirection, string searchValue)
         {
             try
             {
                 using (var db = new DataBaseDataContext())
                 {
-                    // Get all patient IDs
-                    var patientIds = db.Out_Patients
+                    // STEP 1: Collect patient visit IDs (Out_Patient_ID / In_Patient_ID / Emergency_ID)
+                    var outIds = db.Out_Patients
                         .Where(op => op.Reg_PatId == regID)
-                        .Select(op => op.Out_Patient_ID)
-                        .Concat(db.In_Patients
-                            .Where(ip => ip.Patient_ID == regID)
-                            .Select(ip => ip.In_Patient_ID))
-                        .Concat(db.Emergency_Patients
-                            .Where(ep => ep.Patient_ID == regID)
-                            .Select(ep => ep.Emergency_ID))
+                        .Select(op => (int?)op.Out_Patient_ID)
                         .ToList();
 
-                    // Query diagnostic tests (Non-Lab Dept)
-                    var query = (from lbtM in db.Laboratory_Tests
-                                 join lbtD in db.Lab_Test_Details on lbtM.Lab_Test_ID equals lbtD.Lab_Test_ID
-                                 join lab in db.Lab_Tests on lbtD.Test_ID equals lab.Test_ID
-                                 where (patientIds.Contains(lbtD.Patient_ID) || lbtD.Patient_ID == regID)
-                                       && lbtD.Dept_ID != "001"
-                                 select new
-                                 {
-                                     Lab_Test_Detail_ID = lbtD.Lab_Test_Detail_ID,
-                                     Date = lbtD.Date,
-                                     Remark = lbtD.Remark,
-                                     Department = db.GetDataValueName("Main Test Departments", lbtD.Dept_ID),
-                                     Test_Name = db.Lab_Tests
-                                         .Where(t => t.Test_ID == lbtD.Test_ID)
-                                         .Select(t => t.Test_Name)
-                                         .FirstOrDefault(),
-                                     Special_Tests = lbtD.Special_Tests,
-                                     Area_Of_Interest = lbtD.Area_Of_Interest,
-                                     Rotation = (db.GetDataValueName("Main Test Departments", lbtD.Dept_ID) == "X-Ray")
-                                         ? db.GetDataValueName("Test XRay Rotations", lbtD.Rotation_ID)
-                                         : db.GetDataValueName("Test CT Scan Rotations", lbtD.Rotation_ID)
-                                 });
+                    var inIds = db.In_Patients
+                        .Where(ip => ip.Patient_ID == regID)
+                        .Select(ip => (int?)ip.In_Patient_ID)
+                        .ToList();
 
-                    var Total_pat = query.Count();
+                    var emrIds = db.Emergency_Patients
+                        .Where(ep => ep.Patient_ID == regID)
+                        .Select(ep => (int?)ep.Emergency_ID)
+                        .ToList();
 
-                    // Search
+                    var patientIds = outIds.Concat(inIds).Concat(emrIds)
+                        .Where(id => id.HasValue)
+                        .Select(id => id.Value)
+                        .Distinct()
+                        .ToList();
+
+                    // STEP 2: Fetch Lab_Test_Details — exclude Lab dept (001)
+                    // Lab_Test_Details.Patient_ID is visit ID (Out_Patient_ID / In_Patient_ID / Emergency_ID)
+                    var labDetails = db.Lab_Test_Details
+                        .Where(d => d.Dept_ID != "001"
+                                 && (patientIds.Contains(d.Patient_ID)
+                                     || d.Patient_ID == regID))
+                        .ToList();
+
+                    if (labDetails.Count == 0)
+                    {
+                        return Newtonsoft.Json.JsonConvert.SerializeObject(new
+                        {
+                            draw = draw,
+                            recordsTotal = 0,
+                            recordsFiltered = 0,
+                            data = new List<object>()
+                        });
+                    }
+
+                    // STEP 3: Load test names + dept names into dictionaries
+                    var testIds = labDetails.Select(d => d.Test_ID).Distinct().ToList();
+
+                    var testMap = db.Lab_Tests
+                        .Where(t => testIds.Contains(t.Test_ID))
+                        .ToList()
+                        .ToDictionary(t => t.Test_ID, t => t);
+
+                    // STEP 4: Build in-memory list
+                    var allData = labDetails.Select(d =>
+                    {
+                        var lab = testMap.ContainsKey(d.Test_ID) ? testMap[d.Test_ID] : null;
+                        var mainDept = lab?.Main_Department ?? "";
+                        var deptName = db.GetDataValueName("Main Test Departments", mainDept);
+                        var isXRay = deptName == "X-Ray";
+
+                        return new
+                        {
+                            Lab_Test_Detail_ID = d.Lab_Test_Detail_ID,
+                            Date = d.Date,
+                            DateStr = d.Date?.ToString("yyyy-MM-ddTHH:mm:ss"),
+                            Remark = d.Remark ?? "N/A",
+                            Test_Name = lab?.Test_Name ?? "N/A",
+                            Department = deptName,
+                            Special_Tests = d.Special_Tests ?? "N/A",
+                            Area_Of_Interest = d.Area_Of_Interest ?? "N/A",
+                            Rotation = isXRay
+                                ? db.GetDataValueName("Test XRay Rotations", d.Rotation_ID)
+                                : db.GetDataValueName("Test CT Scan Rotations", d.Rotation_ID)
+                        };
+                    }).ToList();
+
+                    var Total_pat = allData.Count;
+
+                    // STEP 5: Search (in memory)
                     if (!string.IsNullOrEmpty(searchValue))
                     {
                         DateTime searchDate;
-                        bool isDateSearch = DateTime.TryParse(searchValue, out searchDate);
+                        bool isDateSearch = DateTime.TryParse(searchValue, out searchDate)
+                                            && searchDate.Year >= 1753;
+                        string datePrefix = isDateSearch ? searchDate.ToString("yyyy-MM-dd") : null;
 
-                        query = query.Where(x =>
-                            (x.Test_Name != null && x.Test_Name.Contains(searchValue)) ||
-                            (x.Department != null && x.Department.Contains(searchValue)) ||
-                            (x.Rotation != null && x.Rotation.Contains(searchValue)) ||
-                            (x.Remark != null && x.Remark.Contains(searchValue)) ||
-                            (x.Special_Tests != null && x.Special_Tests.Contains(searchValue)) ||
-                            (x.Area_Of_Interest != null && x.Area_Of_Interest.Contains(searchValue)) ||
-                            (isDateSearch && x.Date == searchDate.Date)
-                        );
+                        allData = allData.Where(x =>
+                            (!string.IsNullOrEmpty(x.Test_Name) && x.Test_Name.IndexOf(searchValue, StringComparison.OrdinalIgnoreCase) >= 0) ||
+                            (!string.IsNullOrEmpty(x.Department) && x.Department.IndexOf(searchValue, StringComparison.OrdinalIgnoreCase) >= 0) ||
+                            (!string.IsNullOrEmpty(x.Rotation) && x.Rotation.IndexOf(searchValue, StringComparison.OrdinalIgnoreCase) >= 0) ||
+                            (!string.IsNullOrEmpty(x.Remark) && x.Remark.IndexOf(searchValue, StringComparison.OrdinalIgnoreCase) >= 0) ||
+                            (!string.IsNullOrEmpty(x.Special_Tests) && x.Special_Tests.IndexOf(searchValue, StringComparison.OrdinalIgnoreCase) >= 0) ||
+                            (!string.IsNullOrEmpty(x.Area_Of_Interest) && x.Area_Of_Interest.IndexOf(searchValue, StringComparison.OrdinalIgnoreCase) >= 0) ||
+                            (isDateSearch && !string.IsNullOrEmpty(x.DateStr) && x.DateStr.StartsWith(datePrefix))
+                        ).ToList();
                     }
 
-                    var FilteredCount = query.Count();
+                    var FilteredCount = allData.Count;
 
-                    // Sorting
-                    if (!string.IsNullOrEmpty(sortColumn))
+                    // STEP 6: Sorting
+                    switch (sortColumn)
                     {
-                        switch (sortColumn)
-                        {
-                            case "Date":
-                                query = sortColumnDirection == "asc"
-                                    ? query.OrderBy(x => x.Date ?? DateTime.MinValue)
-                                    : query.OrderByDescending(x => x.Date ?? DateTime.MinValue);
-                                break;
-                            case "Department":
-                                query = sortColumnDirection == "asc"
-                                    ? query.OrderBy(x => x.Department)
-                                    : query.OrderByDescending(x => x.Department);
-                                break;
-                            default:
-                                query = query.OrderByDescending(x => x.Date ?? DateTime.MinValue);
-                                break;
-                        }
-                    }
-                    else
-                    {
-                        query = query.OrderByDescending(x => x.Date ?? DateTime.MinValue);
+                        case "Test_Name":
+                            allData = sortColumnDirection == "asc"
+                                ? allData.OrderBy(x => x.Test_Name).ToList()
+                                : allData.OrderByDescending(x => x.Test_Name).ToList();
+                            break;
+                        case "Date":
+                            allData = sortColumnDirection == "asc"
+                                ? allData.OrderBy(x => x.DateStr ?? "").ToList()
+                                : allData.OrderByDescending(x => x.DateStr ?? "").ToList();
+                            break;
+                        case "Department":
+                            allData = sortColumnDirection == "asc"
+                                ? allData.OrderBy(x => x.Department).ToList()
+                                : allData.OrderByDescending(x => x.Department).ToList();
+                            break;
+                        default:
+                            allData = allData.OrderByDescending(x => x.DateStr ?? "").ToList();
+                            break;
                     }
 
-                    // Format data
-                    var data = query.Skip(start).Take(length).AsEnumerable()
+                    // STEP 7: Paging
+                    var pagedData = allData.Skip(start).Take(length)
                         .Select(x => new
                         {
                             Lab_Test_Detail_ID = x.Lab_Test_Detail_ID,
-                            Date = x.Date?.ToString("yyyy-MM-ddTHH:mm:ss"),
-                            Remark = x.Remark ?? "N/A",
-                            Test_Name = x.Test_Name ?? "N/A",
-                            Special_Tests = x.Special_Tests ?? "N/A",
-                            Area_Of_Interest = x.Area_Of_Interest ?? "N/A",
-                            Department = x.Department ?? "N/A",
+                            Date = x.DateStr,
+                            Remark = x.Remark,
+                            Test_Name = x.Test_Name,
+                            Department = x.Department,
+                            Special_Tests = x.Special_Tests,
+                            Area_Of_Interest = x.Area_Of_Interest,
                             Rotation = x.Rotation ?? "N/A"
                         }).ToList();
 
@@ -983,15 +1144,15 @@ namespace PMS.Modules.Dashboards
                         draw = draw,
                         recordsTotal = Total_pat,
                         recordsFiltered = FilteredCount,
-                        data = data
+                        data = pagedData
                     };
 
-                    return JsonConvert.SerializeObject(result);
+                    return Newtonsoft.Json.JsonConvert.SerializeObject(result);
                 }
             }
             catch (Exception ex)
             {
-                return JsonConvert.SerializeObject(new
+                return Newtonsoft.Json.JsonConvert.SerializeObject(new
                 {
                     draw = draw,
                     recordsTotal = 0,

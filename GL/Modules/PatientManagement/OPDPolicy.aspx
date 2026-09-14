@@ -768,7 +768,7 @@
                                         <input type="button" class="btn-gray" onclick="clearAllRights()" value="Clear All" />
 
                                     </div>
-                                    <div class="col-lg-2 col-md-2 col-sm-2">
+                                    <div class="col-lg-3 col-md-2 col-sm-2">
                                         <input type="button" class="btn-gray" onclick="selectBasicFields()" value="Basic Fields" />
 
                                     </div>

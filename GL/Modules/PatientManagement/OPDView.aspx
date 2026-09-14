@@ -1,7 +1,7 @@
 ﻿ <%@ Page Title="" Language="C#" MasterPageFile="~/Site.Master" AutoEventWireup="true" CodeBehind="OPDView.aspx.cs" Inherits="PMS.Modules.PatientManagement.OPDView" %>
 
 <asp:Content ID="Content1" ContentPlaceHolderID="HeadContent" runat="server">
-    <script src="../../wwwroot/THEME_TIBBIT/CustomJs/OPDView.js" type="text/javascript"></script>
+    <script src="../../wwwroot/THEME_TIBBIT/CustomJs/OPDView.js?v=<%= System.IO.File.GetLastWriteTimeUtc(Server.MapPath("~/wwwroot/THEME_TIBBIT/CustomJs/OPDView.js")).Ticks %>" type="text/javascript"></script>
     <link href="../../wwwroot/THEME_TIBBIT/CustomCSS/tablestyle.css" rel="stylesheet" />
     <script type="text/javascript">
         $(document).ready(function () {

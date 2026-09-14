@@ -253,8 +253,7 @@
                         "name": "Bill_Date",
                         "render": function (data) {
                             if (!data) return '';
-                            // return moment(data).format("DD-MMM-YYYY");
-                            date = moment(date).format('DD-MMM-YYYY hh:mm A');
+                            return moment(data).format('DD-MMM-YYYY hh:mm A');
                         }
                     },
                     { "data": "Bill_No", "name": "Bill_No" },

@@ -136,6 +136,22 @@
                 window.open(url, '_blank');
 
             }
+                        function PrintFinalBill(In_Patient_ID) {
+                debugger;
+                if (typeof In_Patient_ID === 'undefined' || In_Patient_ID === null || In_Patient_ID === '') {
+                    In_Patient_ID = currentInPatientID || 0;
+                }
+                var id = '<%=Request.QueryString["Bill_ID"]%>';
+                var locationInfo = window.location;
+                var url = 'ReportViewer.aspx?ReportName=InPatient_Final_Bill&ReportTitle=IPD Final Bill Report&Inpatient_ID=' + In_Patient_ID;
+                if (!locationInfo.origin.includes('localhost') || locationInfo.origin.includes('localhost')) {
+                    var urlInfo = window.location.href.split('/');
+                    var ip = urlInfo[2];
+                    var foldername = urlInfo[3];
+                    url = 'http://' + ip + '/' + foldername + '/ReportViewer.aspx?ReportName=InPatient_Final_Bill&ReportTitle=IPD Final Bill Report&Inpatient_ID=' + In_Patient_ID;
+                }
+                window.open(url, '_blank');
+            }
             function PrintCRV1() {
                 debugger;
                 var id = '<%= Request.QueryString["Bill_ID"]%>';
@@ -6416,6 +6432,7 @@
                         packname = "Null";
                     }
                     var in_Pat = data.d.In_Patient_ID;
+                    $('#hdfPatient_ID').data('inpatid', in_Pat);     // added to get inpatient id 
                     var Request_Discharge = data.d.Request_Discharge;
 
                     var id = '<%= Request.QueryString["Bill_ID"]%>';
@@ -7521,6 +7538,41 @@
                 });
                 return options;
             }
+            function autoSelectGender() {
+                var prefix = $('#ddl_name').val();
+                var $gender = $('#ddl_Gender');
+                var MALE_VALUE = 'M';
+                var FEMALE_VALUE = 'F';
+                var targetValue = '';
+
+                if (prefix === 'Mr.') {
+                    targetValue = MALE_VALUE;
+                } else if (prefix === 'Mrs.' || prefix === 'Ms.') {
+                    targetValue = FEMALE_VALUE;
+                }
+
+                if (!targetValue || $gender.length === 0) return;
+
+                var optionsCount = $gender.find('option').length;
+                if (optionsCount <= 1) {
+                    var checkInterval = setInterval(function () {
+                        if ($gender.find('option').length > 1) {
+                            clearInterval(checkInterval);
+                            $gender.val(targetValue).trigger('change');
+                            if ($gender.hasClass('select2-hidden-accessible')) {
+                                $gender.trigger('select2:select');
+                            }
+                        }
+                    }, 100);
+                    setTimeout(function () { clearInterval(checkInterval); }, 5000);
+                    return;
+                }
+
+                $gender.val(targetValue).trigger('change');
+                if ($gender.hasClass('select2-hidden-accessible')) {
+                    $gender.trigger('select2:select');
+                }
+            }
             debugger;
             function EditPatientDetail(id) {
                 // First check permission
@@ -7799,6 +7851,13 @@
 
                 getAllowApprovalitem();
 
+                if (CheckIPDFinalBill()) {
+                    $("#btnIPDFinalPrint").show();
+                } else {
+                    $("#btnIPDFinalPrint").hide();
+                }
+
+
                 var Bill_ID = '<%= Request.QueryString["Bill_ID"] %>';
                 var rgid = '<%= Request.QueryString["Reg_ID"] %>';
                 if (Bill_ID != "") {
@@ -8036,6 +8095,7 @@
                     };
 
                     $("#ddlRelation").val(map[$(this).val()]);
+                    autoSelectGender();
                 });
 
                 CheckRemarksValidation();
@@ -8446,6 +8506,30 @@
             });
             return result;
         }
+                function CheckIPDFinalBill() {
+                var result = false;
+
+                $.ajax({
+                    type: "POST",
+                    url: "BillingProcess.aspx/FinalBillButton",
+                    contentType: "application/json; charset=utf-8",
+                    dataType: "json",
+                    async: false,
+
+                    success: function (response) {
+                        if (response.d === "01") {
+                            result = true;
+                        }
+                    },
+
+                    error: function (error) {
+                        console.error("Error checking Final Bill setting:", error);
+                        result = false;
+                    }
+                });
+
+                return result;
+            }
 
         </script>
         <asp:HiddenField runat="server" ID="hdfPatient_ID" ClientIDMode="Static" />
@@ -8874,6 +8958,7 @@
                     <div class="col-lg-2">
                         <input type="button" class="btn-primry" value="Print-2" onclick="PrintCRV2();"  style="width: 100px;" />
                     </div>
+
                             <div class="col-lg-2">
                         <input type="button" class="btn btn-gray" value="List View" onclick="window.open('BillingProcessView.aspx')" />
                     </div>
@@ -8883,6 +8968,9 @@
                     <div class="col-lg-2">
                         <input type="button" style="width: 110px; display: none;" id="btnPrintVoucher" class="btn btn-primry" value="Print Voucher" onclick="PrintVoucher();" />
                         <input type="button" style="width: 110px; display: none;" id="btnPrintVoucher2" class="btn btn-primry" value="Print Voucher 2"  onclick="PrintVoucher2();" />
+                        <input type="button" style="width: 110px;" id="btnIPDFinalPrint" class="btn btn-primry" 
+    value="Print Final Bill" 
+    onclick="PrintFinalBill($('#hdfPatient_ID').data('inpatid'));" />
                         <input type="button" style="width: 110px; display: none;" value="Hospital Print" onclick="PrintHospital();" />
                         <input type="button" style="width: 110px; display: none;" value="Consult Print" onclick="PrintConsultant();" />
                         <input type="button" style="width: 100px; display: none;" value="Patient Copy" name="name" onclick="BackToPrintPatient();"  />
