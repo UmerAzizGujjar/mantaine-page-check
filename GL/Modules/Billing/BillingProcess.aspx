@@ -136,6 +136,22 @@
                 window.open(url, '_blank');
 
             }
+                        function PrintFinalBill(In_Patient_ID) {
+                debugger;
+                if (typeof In_Patient_ID === 'undefined' || In_Patient_ID === null || In_Patient_ID === '') {
+                    In_Patient_ID = currentInPatientID || 0;
+                }
+                var id = '<%=Request.QueryString["Bill_ID"]%>';
+                var locationInfo = window.location;
+                var url = 'ReportViewer.aspx?ReportName=InPatient_Final_Bill&ReportTitle=IPD Final Bill Report&Inpatient_ID=' + In_Patient_ID;
+                if (!locationInfo.origin.includes('localhost') || locationInfo.origin.includes('localhost')) {
+                    var urlInfo = window.location.href.split('/');
+                    var ip = urlInfo[2];
+                    var foldername = urlInfo[3];
+                    url = 'http://' + ip + '/' + foldername + '/ReportViewer.aspx?ReportName=InPatient_Final_Bill&ReportTitle=IPD Final Bill Report&Inpatient_ID=' + In_Patient_ID;
+                }
+                window.open(url, '_blank');
+            }
             function PrintCRV1() {
                 debugger;
                 var id = '<%= Request.QueryString["Bill_ID"]%>';
@@ -1567,6 +1583,7 @@
                     $('#txtBillNo').val(data[0].Bill_No);
                     $("#txtBillDate").val(TrnsDate);
                     $('#txtRemarks').val(data[0].Remarks);
+                    $('#Referred_Doctor_Name').val(data[0].Referred_By_Name);
                     $('#txtTotalPayable').val(data[0].Net_Amount);
                     $('#txtTotalAmount').val(data[0].Total_Amount);
                     $('#txtDisPer').val(parseFloat(data[0].Discount_Percentage.toFixed(2)));
@@ -2047,6 +2064,7 @@
                         //}
                         var Bill_Date = $('#txtBillDate').val();
                         var Remarks = $('#txtRemarks').val();
+                        var Referred_Doctor_Name = $('#Referred_Doctor_Name').val();
                         //var TotalPayable = $('#txtTotalAmount').val();
                         var TotalPayable = parseFloat($('#txtTotalAmount').val()) || 0;
                         var Discount_Percentage = $('#txtDisPer').val();
@@ -2314,7 +2332,7 @@
                             document.getElementById("hdnDuplicateCheck").value = "0";
                             return ;
                         }
-                        var Parameters = { Bill_ID: Bill_ID, Patient_ID: Patient_ID, Opd_id: Opd_id, Bill_Date: Bill_Date, Remarks: Remarks, TotalPayable: TotalPayable, Discount_Percentage: Discount_Percentage, Discount_Amount: Discount_Amount, Net_Amount: Net_Amount, Received_Amount: Received_Amount, Balance_Amount: Balance_Amount, ChargePolicy: ChargePolicy, Details: Details, Share: Share, referred_by_doctor: referred_by_doctor, bomItems: bomItems, Casher: Casher, Previous_Balance: Previous_Balance, Previous_Paid: Previous_Paid, Over_and_Above: Over_and_Above, Cash_In_Hand: Cash_In_Hand, Cash_In_Hand_Account: Cash_In_Hand_Account, Bank_Account: Bank_Account, Bank_Cash: Bank_Cash, Main_Department: Main_Department, PackageType: PackageType, PackageName: PackageName, finalbill: finalbill, BillDepartment: BillDepartment, BillCategory: BillCategory, hdn_docid: hdn_docid, opd_procedure: opd_procedure, bomTotalValue: bomTotalValue, SelectedBranchId: selectedBranchId,Patient_Type: Patient_Type, Sales_Tax_ID: $('#hdnSalesTaxID').val(), Sales_Tax_Percentage: $('#hdnSalesTaxPercentage').val(), Panel_Id: Panel_Id, Appointment_ID: $('#hdnAppointment_ID').val(), }; //Total_Doctor_Share: Total_Doctor_Share,
+                        var Parameters = { Bill_ID: Bill_ID, Patient_ID: Patient_ID, Opd_id: Opd_id, Bill_Date: Bill_Date, Remarks: Remarks, TotalPayable: TotalPayable, Discount_Percentage: Discount_Percentage, Discount_Amount: Discount_Amount, Net_Amount: Net_Amount, Received_Amount: Received_Amount, Balance_Amount: Balance_Amount, ChargePolicy: ChargePolicy, Details: Details, Share: Share, referred_by_doctor: referred_by_doctor, bomItems: bomItems, Casher: Casher, Previous_Balance: Previous_Balance, Previous_Paid: Previous_Paid, Over_and_Above: Over_and_Above, Cash_In_Hand: Cash_In_Hand, Cash_In_Hand_Account: Cash_In_Hand_Account, Bank_Account: Bank_Account, Bank_Cash: Bank_Cash, Main_Department: Main_Department, PackageType: PackageType, PackageName: PackageName, finalbill: finalbill, BillDepartment: BillDepartment, BillCategory: BillCategory, hdn_docid: hdn_docid, opd_procedure: opd_procedure, bomTotalValue: bomTotalValue, SelectedBranchId: selectedBranchId, Patient_Type: Patient_Type, Sales_Tax_ID: $('#hdnSalesTaxID').val(), Sales_Tax_Percentage: $('#hdnSalesTaxPercentage').val(), Panel_Id: Panel_Id, Appointment_ID: $('#hdnAppointment_ID').val(), Referred_Doctor_Name: Referred_Doctor_Name }; //Total_Doctor_Share: Total_Doctor_Share,
                         var rcptAmt = $('#txtAmountReceived').val();
                         if (Patient_ID == '') {
                             alert('Select Patient.');
@@ -6414,6 +6432,7 @@
                         packname = "Null";
                     }
                     var in_Pat = data.d.In_Patient_ID;
+                    $('#hdfPatient_ID').data('inpatid', in_Pat);     // added to get inpatient id 
                     var Request_Discharge = data.d.Request_Discharge;
 
                     var id = '<%= Request.QueryString["Bill_ID"]%>';
@@ -7797,6 +7816,13 @@
 
                 getAllowApprovalitem();
 
+                if (CheckIPDFinalBill()) {
+                    $("#btnIPDFinalPrint").show();
+                } else {
+                    $("#btnIPDFinalPrint").hide();
+                }
+
+
                 var Bill_ID = '<%= Request.QueryString["Bill_ID"] %>';
                 var rgid = '<%= Request.QueryString["Reg_ID"] %>';
                 if (Bill_ID != "") {
@@ -8444,6 +8470,30 @@
             });
             return result;
         }
+                function CheckIPDFinalBill() {
+                var result = false;
+
+                $.ajax({
+                    type: "POST",
+                    url: "BillingProcess.aspx/FinalBillButton",
+                    contentType: "application/json; charset=utf-8",
+                    dataType: "json",
+                    async: false,
+
+                    success: function (response) {
+                        if (response.d === "01") {
+                            result = true;
+                        }
+                    },
+
+                    error: function (error) {
+                        console.error("Error checking Final Bill setting:", error);
+                        result = false;
+                    }
+                });
+
+                return result;
+            }
 
         </script>
         <asp:HiddenField runat="server" ID="hdfPatient_ID" ClientIDMode="Static" />
@@ -8653,6 +8703,10 @@
                 <div class="bp-field">
                     <label class="bp-label" for="txtRemarks">Remarks</label>
                     <input type="text" id="txtRemarks" class="bp-input" />
+                </div>
+                <div class="bp-field">
+                    <label class="bp-label" for="Referred Doctor">Referred Doctor</label>
+                    <input type="text" id="Referred_Doctor_Name" class="bp-input" />
                 </div>
             </div>
         </div>
@@ -8868,6 +8922,7 @@
                     <div class="col-lg-2">
                         <input type="button" class="btn-primry" value="Print-2" onclick="PrintCRV2();"  style="width: 100px;" />
                     </div>
+
                             <div class="col-lg-2">
                         <input type="button" class="btn btn-gray" value="List View" onclick="window.open('BillingProcessView.aspx')" />
                     </div>
@@ -8877,6 +8932,9 @@
                     <div class="col-lg-2">
                         <input type="button" style="width: 110px; display: none;" id="btnPrintVoucher" class="btn btn-primry" value="Print Voucher" onclick="PrintVoucher();" />
                         <input type="button" style="width: 110px; display: none;" id="btnPrintVoucher2" class="btn btn-primry" value="Print Voucher 2"  onclick="PrintVoucher2();" />
+                        <input type="button" style="width: 110px;" id="btnIPDFinalPrint" class="btn btn-primry" 
+    value="Print Final Bill" 
+    onclick="PrintFinalBill($('#hdfPatient_ID').data('inpatid'));" />
                         <input type="button" style="width: 110px; display: none;" value="Hospital Print" onclick="PrintHospital();" />
                         <input type="button" style="width: 110px; display: none;" value="Consult Print" onclick="PrintConsultant();" />
                         <input type="button" style="width: 100px; display: none;" value="Patient Copy" name="name" onclick="BackToPrintPatient();"  />

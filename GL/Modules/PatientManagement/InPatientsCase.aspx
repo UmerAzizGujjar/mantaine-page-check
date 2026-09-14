@@ -5805,15 +5805,18 @@
         }
         function toHtml(element) {
 
+            var val = $(element).val().trim();
+            if (!val) return '';
+
             var separator = /(\r\n|\n|\r)/gm;
-            if ($(element).val() == 'comma')
+            if (val == 'comma')
                 separator = /,/gm;
-            else if ($(element).val() == 'semicolon')
+            else if (val == 'semicolon')
                 separator = /;/gm;
-            else if ($(element).val() == '• ') {
+            else if (val == '• ') {
                 separator = /;/gm;
             }
-            var ss = '<li>' + $(element).val().trim().replace(separator, "</li>\n\t<li>") + '</li>';
+            var ss = '<li>' + val.replace(separator, "</li>\n\t<li>") + '</li>';
             var data = ss.replaceAll('•', '');
 
             return data;

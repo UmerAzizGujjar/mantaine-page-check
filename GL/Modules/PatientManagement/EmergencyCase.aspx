@@ -4785,6 +4785,11 @@ function setDropdownText(selector, text) {
                     AddRadialogyTest();
 
                 }
+                else if (maindpt == "008") {
+                    AddRadialogyTest();
+                    $('#divRotation').hide();
+                    $('#ddlXRayLF').hide();
+                }
                 else if (maindpt == "005") {
 
                     AddBloodTest();
@@ -4853,6 +4858,11 @@ function setDropdownText(selector, text) {
             else if (maindpt == "007") {
 
                 FillProcedure("007");
+                $('#divRotation').hide();
+                $('#ddlXRayLF').hide();
+            }
+            else if (maindpt == "008") {
+                FillTestsByCategory('008'); 
                 $('#divRotation').hide();
                 $('#ddlXRayLF').hide();
             }

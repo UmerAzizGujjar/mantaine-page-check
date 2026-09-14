@@ -156,33 +156,10 @@ namespace PMS
                 LoadMenus();
                 CalculateNotifications();
                 RightsForNotification();
-                //CalculateApprovedPRFSNotifications();
-                //UserRightsApprovedPRFSNotifications();
+              
             }
             generateDynamicMenu();
-            //string companyName = Session["Company_Name"] != null ? Session["Company_Name"].ToString() : string.Empty;
-            //if(companyName == "TibbIT By Garaj")
-            //{
-            //    tibbitFooter.Visible = true;
-
-            //}
-            //else if(companyName == "Hmis Standard")
-            //{
-            //    StandardFooter.Visible = true;
-
-            //}
-            //else if(companyName == "Imran Adrees Teaching Hospital")
-            //{
-            //    StandardFooter.Visible = true;
-            //}  
-            //else if(companyName == "THEME_TIBBIT")
-            //{
-            //    StandardFooter.Visible = true;
-            //}
-            //DataBaseDataContext db = new DataBaseDataContext();
-            //var userid = AppConfig.UserID;
-            //mbl_no.InnerText = (from a in db.aspnet_Users where a.UserId == userid select a.mobileno).FirstOrDefault();
-            //email.InnerText = (from a in db.aspnet_Memberships where a.UserId == userid select a.Email).FirstOrDefault();
+        
 
         }
 

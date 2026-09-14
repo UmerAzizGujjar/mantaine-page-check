@@ -142,13 +142,14 @@
                 },
                 "columns": [
                     { "data": "Vendor_ID", "visible": false, "width": "0%" },
-                    { "data": "Vendor_Name", "name": "Vendor_Name", "width": "15%", "orderable": true },
-                    { "data": "Contact_Person", "width": "13%", "orderable": false },
-                    { "data": "Vendor_Phone1", "width": "11%", "orderable": false },
-                    { "data": "Vendor_Address", "width": "25%", "orderable": false },
+                    { "data": "Vendor_Name", "name": "Vendor_Name", "width": "13%", "orderable": true },
+                    { "data": "Contact_Person", "width": "8%", "orderable": false },
+                    { "data": "Vendor_Phone1", "width": "9%", "orderable": false },
+                    { "data": "Vendor_Address", "width": "16%", "orderable": false },
                     { "data": "City", "width": "10%", "orderable": false },
                     { "data": "Vendor_NTN", "width": "10%", "orderable": false },
-                    { "data": "AccountID", "width": "10%", "orderable": false },
+                    { "data": "Vendor_Type", "width": "10%", "orderable": false },
+                    { "data": "AccountID", "width": "15%", "orderable": false },
                     {
                         render: function (data, type, full) {
                             debugger;
@@ -157,7 +158,7 @@
                             var result;
                             result = res + print;
                             return result;
-                        }, "width": "9%", "orderable": false
+                        }, "width": "15%", "orderable": false
                     }
                 ],
                 "initComplete": function (settings, json) {
@@ -298,6 +299,7 @@
                     <th>Address</th>
                     <th>City</th>
                     <th>NTN</th>
+                    <th>Vendor Type</th>
                     <th>Account</th>
                     <th>Actions</th>
                 </tr>

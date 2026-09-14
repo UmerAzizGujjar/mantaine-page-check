@@ -45,8 +45,8 @@ namespace PMS
                                   && (bill.isCancel == false || bill.isCancel == null)
                                  // && !db.Refunds.Any(r => r.Bill_ID == bill.Bill_ID)
                                  && (bill_details.Is_Refunded == false || bill_details.Is_Refunded == null)
-                                  && bill.Bill_Date >= startDateTime
-                                  && bill.Bill_Date < endDateTime
+                                  && bill.Creation_Date >= startDateTime
+                                  && bill.Creation_Date < endDateTime
                             let dept = (from ipd in db.In_Patients
                                         where ipd.Patient_ID == pat.pat_id
                                         orderby ipd.In_Patient_ID descending
@@ -71,7 +71,7 @@ namespace PMS
                             let wardName = (activeWardId != null ? (from w in db.Ward_Definitions where w.Ward_ID == activeWardId select w.Ward_Type).FirstOrDefault() : null)
                             select new
                             {
-                                bill.Bill_Date,
+                                Bill_Date = bill.Creation_Date,
                                 bill.Bill_No,
                                 bill.Bill_ID,
                                 bill_details.Item_Name,

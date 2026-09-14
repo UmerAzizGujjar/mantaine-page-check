@@ -4,7 +4,7 @@
 <asp:Content ID="Content1" ContentPlaceHolderID="HeadContent" runat="server">
     <link href="../../wwwroot/THEME_TIBBIT/CustomCSS/Student.css" rel="stylesheet" />
 
-    <script src="../../wwwroot/THEME_TIBBIT/CustomJs/Student.js"></script>
+    <script src="../../wwwroot/THEME_TIBBIT/CustomJs/Student.js?v=<%= System.IO.File.GetLastWriteTimeUtc(Server.MapPath("~/wwwroot/THEME_TIBBIT/CustomJs/Student.js")).Ticks %>"></script>
 
     <script type="text/javascript">
         $(document).ready(function () {

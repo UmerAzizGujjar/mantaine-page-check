@@ -3,7 +3,7 @@
 <asp:Content ID="Content1" ContentPlaceHolderID="HeadContent" runat="server">
     <link href="../../wwwroot/THEME_TIBBIT/CustomCSS/Appointment.css" rel="stylesheet" />
     <link href="../../wwwroot/THEME_TIBBIT/CustomCSS/swalalert.css" rel="stylesheet" />
-    <script src="../../wwwroot/THEME_TIBBIT/CustomJs/Appointment.js"></script>
+    <script src="../../wwwroot/THEME_TIBBIT/CustomJs/Appointment.js?v=<%= System.IO.File.GetLastWriteTimeUtc(Server.MapPath("~/wwwroot/THEME_TIBBIT/CustomJs/Appointment.js")).Ticks %>"></script>
      <script type="text/javascript">
         $(document).ready(function () {
             debugger;

@@ -87,6 +87,7 @@ namespace PMS.AP
                                            City = V.City,
                                            Vendor_NTN = V.Vendor_NTN,
                                            Account_ID = V.Account_ID, 
+                                           Vendor_Type = _dbContext.GetDataValueName("Vendor Type", V.VendorType),
                                            AccountID = (from a in _dbContext.GL_Accounts
                                                         where a.Account_ID == V.Account_ID
                                                         select new { Account = a.Account_Name }).FirstOrDefault().Account.ToString(),
@@ -109,6 +110,7 @@ namespace PMS.AP
                             v.Contact_Person.ToString().Contains(searchValue) ||
                             v.Vendor_Address.ToString().Contains(searchValue) ||
                             v.City.ToString().Contains(searchValue) ||
+                            v.Vendor_Type.ToString().Contains(searchValue) ||
                             v.Vendor_NTN.ToString().Contains(searchValue));
                     }
 
