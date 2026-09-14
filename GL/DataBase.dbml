@@ -8255,6 +8255,122 @@
       <Association Name="Ar_Billing_Ar_Billing_Detail" Member="Ar_Billing_Details" ThisKey="Bill_ID" OtherKey="Bill_ID" Type="Ar_Billing_Detail" />
     </Type>
   </Table>
+  <Table Name="dbo.Alinger" Member="Alingers">
+    <Type Name="Alinger">
+      <Column Name="Alinger_ID" Type="System.Int32" DbType="Int NOT NULL IDENTITY" IsPrimaryKey="true" IsDbGenerated="true" CanBeNull="false" />
+      <Column Name="Patient_ID" Type="System.Int32" DbType="Int" CanBeNull="true" />
+      <Column Name="chk_S1T1" Type="System.Boolean" DbType="Bit" CanBeNull="true" />
+      <Column Name="chk_S1T2" Type="System.Boolean" DbType="Bit" CanBeNull="true" />
+      <Column Name="chk_S1T3" Type="System.Boolean" DbType="Bit" CanBeNull="true" />
+      <Column Name="chk_S1T4" Type="System.Boolean" DbType="Bit" CanBeNull="true" />
+      <Column Name="chk_S1T5" Type="System.Boolean" DbType="Bit" CanBeNull="true" />
+      <Column Name="chk_S1T6" Type="System.Boolean" DbType="Bit" CanBeNull="true" />
+      <Column Name="chk_S1T7" Type="System.Boolean" DbType="Bit" CanBeNull="true" />
+      <Column Name="chk_S1T8" Type="System.Boolean" DbType="Bit" CanBeNull="true" />
+      <Column Name="chk_S2T1" Type="System.Boolean" DbType="Bit" CanBeNull="true" />
+      <Column Name="chk_S2T2" Type="System.Boolean" DbType="Bit" CanBeNull="true" />
+      <Column Name="chk_S2T3" Type="System.Boolean" DbType="Bit" CanBeNull="true" />
+      <Column Name="chk_S2T4" Type="System.Boolean" DbType="Bit" CanBeNull="true" />
+      <Column Name="chk_S2T5" Type="System.Boolean" DbType="Bit" CanBeNull="true" />
+      <Column Name="chk_S2T6" Type="System.Boolean" DbType="Bit" CanBeNull="true" />
+      <Column Name="chk_S2T7" Type="System.Boolean" DbType="Bit" CanBeNull="true" />
+      <Column Name="chk_S2T8" Type="System.Boolean" DbType="Bit" CanBeNull="true" />
+      <Column Name="chk_S3T1" Type="System.Boolean" DbType="Bit" CanBeNull="true" />
+      <Column Name="chk_S3T2" Type="System.Boolean" DbType="Bit" CanBeNull="true" />
+      <Column Name="chk_S3T3" Type="System.Boolean" DbType="Bit" CanBeNull="true" />
+      <Column Name="chk_S3T4" Type="System.Boolean" DbType="Bit" CanBeNull="true" />
+      <Column Name="chk_S3T5" Type="System.Boolean" DbType="Bit" CanBeNull="true" />
+      <Column Name="chk_S3T6" Type="System.Boolean" DbType="Bit" CanBeNull="true" />
+      <Column Name="chk_S3T7" Type="System.Boolean" DbType="Bit" CanBeNull="true" />
+      <Column Name="chk_S3T8" Type="System.Boolean" DbType="Bit" CanBeNull="true" />
+      <Column Name="chk_S4T1" Type="System.Boolean" DbType="Bit" CanBeNull="true" />
+      <Column Name="chk_S4T2" Type="System.Boolean" DbType="Bit" CanBeNull="true" />
+      <Column Name="chk_S4T3" Type="System.Boolean" DbType="Bit" CanBeNull="true" />
+      <Column Name="chk_S4T4" Type="System.Boolean" DbType="Bit" CanBeNull="true" />
+      <Column Name="chk_S4T5" Type="System.Boolean" DbType="Bit" CanBeNull="true" />
+      <Column Name="chk_S4T6" Type="System.Boolean" DbType="Bit" CanBeNull="true" />
+      <Column Name="chk_S4T7" Type="System.Boolean" DbType="Bit" CanBeNull="true" />
+      <Column Name="chk_S4T8" Type="System.Boolean" DbType="Bit" CanBeNull="true" />
+      <Column Name="Upper_Image_1" Type="System.String" DbType="NVarChar(MAX)" CanBeNull="true" />
+      <Column Name="Upper_Image_2" Type="System.String" DbType="NVarChar(MAX)" CanBeNull="true" />
+      <Column Name="Upper_Image_3" Type="System.String" DbType="NVarChar(MAX)" CanBeNull="true" />
+      <Column Name="Upper_Image_4" Type="System.String" DbType="NVarChar(MAX)" CanBeNull="true" />
+      <Column Name="Upper_Image_5" Type="System.String" DbType="NVarChar(MAX)" CanBeNull="true" />
+      <Column Name="Upper_Image_6" Type="System.String" DbType="NVarChar(MAX)" CanBeNull="true" />
+      <Column Name="Upper_Image_7" Type="System.String" DbType="NVarChar(MAX)" CanBeNull="true" />
+      <Column Name="Upper_Image_8" Type="System.String" DbType="NVarChar(MAX)" CanBeNull="true" />
+      <Column Name="Upper_Image_9" Type="System.String" DbType="NVarChar(MAX)" CanBeNull="true" />
+      <Column Name="Upper_Image_10" Type="System.String" DbType="NVarChar(MAX)" CanBeNull="true" />
+      <Column Name="Upper_Image_11" Type="System.String" DbType="NVarChar(MAX)" CanBeNull="true" />
+      <Column Name="Upper_Image_12" Type="System.String" DbType="NVarChar(MAX)" CanBeNull="true" />
+      <Column Name="Upper_Image_13" Type="System.String" DbType="NVarChar(MAX)" CanBeNull="true" />
+      <Column Name="Upper_Image_14" Type="System.String" DbType="NVarChar(MAX)" CanBeNull="true" />
+      <Column Name="Upper_Image_15" Type="System.String" DbType="NVarChar(MAX)" CanBeNull="true" />
+      <Column Name="Upper_Image_16" Type="System.String" DbType="NVarChar(MAX)" CanBeNull="true" />
+      <Column Name="Lower_Image_1" Type="System.String" DbType="NVarChar(MAX)" CanBeNull="true" />
+      <Column Name="Lower_Image_2" Type="System.String" DbType="NVarChar(MAX)" CanBeNull="true" />
+      <Column Name="Lower_Image_3" Type="System.String" DbType="NVarChar(MAX)" CanBeNull="true" />
+      <Column Name="Lower_Image_4" Type="System.String" DbType="NVarChar(MAX)" CanBeNull="true" />
+      <Column Name="Lower_Image_5" Type="System.String" DbType="NVarChar(MAX)" CanBeNull="true" />
+      <Column Name="Lower_Image_6" Type="System.String" DbType="NVarChar(MAX)" CanBeNull="true" />
+      <Column Name="Lower_Image_7" Type="System.String" DbType="NVarChar(MAX)" CanBeNull="true" />
+      <Column Name="Lower_Image_8" Type="System.String" DbType="NVarChar(MAX)" CanBeNull="true" />
+      <Column Name="Lower_Image_9" Type="System.String" DbType="NVarChar(MAX)" CanBeNull="true" />
+      <Column Name="Lower_Image_10" Type="System.String" DbType="NVarChar(MAX)" CanBeNull="true" />
+      <Column Name="Lower_Image_11" Type="System.String" DbType="NVarChar(MAX)" CanBeNull="true" />
+      <Column Name="Lower_Image_12" Type="System.String" DbType="NVarChar(MAX)" CanBeNull="true" />
+      <Column Name="Lower_Image_13" Type="System.String" DbType="NVarChar(MAX)" CanBeNull="true" />
+      <Column Name="Lower_Image_14" Type="System.String" DbType="NVarChar(MAX)" CanBeNull="true" />
+      <Column Name="Lower_Image_15" Type="System.String" DbType="NVarChar(MAX)" CanBeNull="true" />
+      <Column Name="Lower_Image_16" Type="System.String" DbType="NVarChar(MAX)" CanBeNull="true" />
+      <Column Name="Created_Time" Type="System.DateTime" DbType="DateTime" CanBeNull="true" />
+      <Column Name="Created_by" Type="System.Guid" DbType="UniqueIdentifier" CanBeNull="true" />
+      <Column Name="Updated_By" Type="System.Guid" DbType="UniqueIdentifier" CanBeNull="true" />
+      <Column Name="Updated_Time" Type="System.DateTime" DbType="DateTime" CanBeNull="true" />
+    </Type>
+  </Table>
+  <Table Name="dbo.Alinger_Detail" Member="Alinger_Details">
+    <Type Name="Alinger_Detail">
+      <Column Name="Alinger_Details_ID" Type="System.Int32" DbType="Int NOT NULL IDENTITY" IsPrimaryKey="true" IsDbGenerated="true" CanBeNull="false" />
+      <Column Name="Alinger_ID" Type="System.Int32" DbType="Int" CanBeNull="true" />
+      <Column Name="Patient_Id" Type="System.Int32" DbType="Int" CanBeNull="true" />
+      <Column Name="Arch" Type="System.String" DbType="VarChar(100)" CanBeNull="true" />
+      <Column Name="No_Of_Alinger" Type="System.String" DbType="VarChar(100)" CanBeNull="true" />
+      <Column Name="Material" Type="System.String" DbType="VarChar(100)" CanBeNull="true" />
+      <Column Name="Type_of_Alinger" Type="System.String" DbType="VarChar(100)" CanBeNull="true" />
+      <Column Name="Margin_of_Alinger" Type="System.String" DbType="VarChar(100)" CanBeNull="true" />
+      <Column Name="Thicker_of_Alinger" Type="System.String" DbType="VarChar(100)" CanBeNull="true" />
+      <Column Name="IsDispatch" Type="System.Boolean" DbType="Bit" CanBeNull="true" />
+      <Column Name="Template" Type="System.String" DbType="NVarChar(150)" CanBeNull="true" />
+    </Type>
+  </Table>
+  <Table Name="dbo.Alinger_Image" Member="Alinger_Images">
+    <Type Name="Alinger_Image">
+      <Column Name="Image_Id" Type="System.Int32" DbType="Int NOT NULL IDENTITY" IsPrimaryKey="true" IsDbGenerated="true" CanBeNull="false" />
+      <Column Name="Alinger_Id" Type="System.Int32" DbType="Int" CanBeNull="true" />
+      <Column Name="Image_Path" Type="System.String" DbType="NVarChar(MAX)" CanBeNull="true" />
+    </Type>
+  </Table>
+  <Table Name="dbo.Dispatch_Alinger" Member="Dispatch_Alingers">
+    <Type Name="Dispatch_Alinger">
+      <Column Name="Despatch_id" Type="System.Int32" DbType="Int NOT NULL IDENTITY" IsPrimaryKey="true" IsDbGenerated="true" CanBeNull="false" />
+      <Column Name="Alinger_id" Type="System.Int32" DbType="Int" CanBeNull="true" />
+      <Column Name="Alinger_detail_id" Type="System.Int32" DbType="Int" CanBeNull="true" />
+      <Column Name="Patient_id" Type="System.Int32" DbType="Int" CanBeNull="true" />
+      <Column Name="Mr_Sequnce" Type="System.String" DbType="VarChar(100)" CanBeNull="true" />
+      <Column Name="Patient_Name" Type="System.String" DbType="VarChar(100)" CanBeNull="true" />
+      <Column Name="Alinger_Creation_Date" Type="System.DateTime" DbType="DateTime" CanBeNull="true" />
+      <Column Name="Dispatch_Date" Type="System.DateTime" DbType="DateTime" CanBeNull="true" />
+      <Column Name="Company_Date" Type="System.DateTime" DbType="DateTime" CanBeNull="true" />
+      <Column Name="Received_Date" Type="System.DateTime" DbType="DateTime" CanBeNull="true" />
+      <Column Name="Remarks" Type="System.String" DbType="VarChar(MAX)" CanBeNull="true" />
+      <Column Name="Created_Date" Type="System.DateTime" DbType="DateTime" CanBeNull="true" />
+      <Column Name="Created_By" Type="System.Guid" DbType="UniqueIdentifier" CanBeNull="true" />
+      <Column Name="Updated_Date" Type="System.DateTime" DbType="DateTime" CanBeNull="true" />
+      <Column Name="Updated_By" Type="System.Guid" DbType="UniqueIdentifier" CanBeNull="true" />
+      <Column Name="isReceived" Type="System.Boolean" DbType="Bit" CanBeNull="true" />
+    </Type>
+  </Table>
   <Function Name="dbo.GetDataValueName" Method="GetDataValueName" IsComposable="true">
     <Parameter Name="ValueSetName" Parameter="valueSetName" Type="System.String" DbType="VarChar(150)" />
     <Parameter Name="DataValueName" Parameter="dataValueName" Type="System.String" DbType="VarChar(50)" />

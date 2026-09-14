@@ -384,6 +384,7 @@
     <Content Include="Modules\Dashboards\Sales_Dashboard.aspx" />
     <Content Include="Modules\Dashboards\AnnexureDashboard.aspx" />
     <Content Include="Modules\Dashboards\ShortCuts.aspx" />
+    <Content Include="Modules\Dental\Alinger.aspx" />
     <Content Include="Modules\GL\FinancialLogs.aspx" />
     <Content Include="Modules\Inventory\AdvanceTaxDefinition.aspx" />
     <Content Include="Modules\Inventory\BOM.aspx" />
@@ -3493,6 +3494,13 @@
     </Compile>
     <Compile Include="Modules\Dashboards\ShortCuts.aspx.designer.cs">
       <DependentUpon>ShortCuts.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="Modules\Dental\Alinger.aspx.cs">
+      <DependentUpon>Alinger.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Modules\Dental\Alinger.aspx.designer.cs">
+      <DependentUpon>Alinger.aspx</DependentUpon>
     </Compile>
     <Compile Include="Modules\GL\FinancialLogs.aspx.cs">
       <DependentUpon>FinancialLogs.aspx</DependentUpon>
