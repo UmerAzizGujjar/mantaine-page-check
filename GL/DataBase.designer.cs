@@ -1044,9 +1044,15 @@ namespace PMS
         partial void InsertDispatch_Alinger(Dispatch_Alinger instance);
         partial void UpdateDispatch_Alinger(Dispatch_Alinger instance);
         partial void DeleteDispatch_Alinger(Dispatch_Alinger instance);
+        partial void InsertCrown_Bridge(Crown_Bridge instance);
+        partial void UpdateCrown_Bridge(Crown_Bridge instance);
+        partial void DeleteCrown_Bridge(Crown_Bridge instance);
+        partial void InsertIndirect_Veneer(Indirect_Veneer instance);
+        partial void UpdateIndirect_Veneer(Indirect_Veneer instance);
+        partial void DeleteIndirect_Veneer(Indirect_Veneer instance);
         #endregion
         public DataBaseDataContext() :
-     base(global::System.Configuration.ConfigurationManager.ConnectionStrings["ASPGLConnectionString"].ConnectionString, mappingSource)
+  base(global::System.Configuration.ConfigurationManager.ConnectionStrings["ASPGLConnectionString"].ConnectionString, mappingSource)
         {
             OnCreated();
         }
@@ -3807,6 +3813,22 @@ namespace PMS
             get
             {
                 return this.GetTable<Dispatch_Alinger>();
+            }
+        }
+
+        public System.Data.Linq.Table<Crown_Bridge> Crown_Bridges
+        {
+            get
+            {
+                return this.GetTable<Crown_Bridge>();
+            }
+        }
+
+        public System.Data.Linq.Table<Indirect_Veneer> Indirect_Veneers
+        {
+            get
+            {
+                return this.GetTable<Indirect_Veneer>();
             }
         }
 
@@ -187314,6 +187336,274 @@ namespace PMS
                     this._isReceived = value;
                     this.SendPropertyChanged("isReceived");
                     this.OnisReceivedChanged();
+                }
+            }
+        }
+
+        public event PropertyChangingEventHandler PropertyChanging;
+
+        public event PropertyChangedEventHandler PropertyChanged;
+
+        protected virtual void SendPropertyChanging()
+        {
+            if ((this.PropertyChanging != null))
+            {
+                this.PropertyChanging(this, emptyChangingEventArgs);
+            }
+        }
+
+        protected virtual void SendPropertyChanged(String propertyName)
+        {
+            if ((this.PropertyChanged != null))
+            {
+                this.PropertyChanged(this, new PropertyChangedEventArgs(propertyName));
+            }
+        }
+    }
+
+    [global::System.Data.Linq.Mapping.TableAttribute(Name = "dbo.Crown_Bridge")]
+    public partial class Crown_Bridge : INotifyPropertyChanging, INotifyPropertyChanged
+    {
+
+        private static PropertyChangingEventArgs emptyChangingEventArgs = new PropertyChangingEventArgs(String.Empty);
+
+        private int _Crown_Bridges_ID;
+
+        private System.Nullable<int> _Alinger_ID;
+
+        private System.Nullable<int> _Patient_Id;
+
+        private string _Crown_Bridges_Name;
+
+        #region Extensibility Method Definitions
+        partial void OnLoaded();
+        partial void OnValidate(System.Data.Linq.ChangeAction action);
+        partial void OnCreated();
+        partial void OnCrown_Bridges_IDChanging(int value);
+        partial void OnCrown_Bridges_IDChanged();
+        partial void OnAlinger_IDChanging(System.Nullable<int> value);
+        partial void OnAlinger_IDChanged();
+        partial void OnPatient_IdChanging(System.Nullable<int> value);
+        partial void OnPatient_IdChanged();
+        partial void OnCrown_Bridges_NameChanging(string value);
+        partial void OnCrown_Bridges_NameChanged();
+        #endregion
+
+        public Crown_Bridge()
+        {
+            OnCreated();
+        }
+
+        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_Crown_Bridges_ID", AutoSync = AutoSync.OnInsert, DbType = "Int NOT NULL IDENTITY", IsPrimaryKey = true, IsDbGenerated = true)]
+        public int Crown_Bridges_ID
+        {
+            get
+            {
+                return this._Crown_Bridges_ID;
+            }
+            set
+            {
+                if ((this._Crown_Bridges_ID != value))
+                {
+                    this.OnCrown_Bridges_IDChanging(value);
+                    this.SendPropertyChanging();
+                    this._Crown_Bridges_ID = value;
+                    this.SendPropertyChanged("Crown_Bridges_ID");
+                    this.OnCrown_Bridges_IDChanged();
+                }
+            }
+        }
+
+        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_Alinger_ID", DbType = "Int")]
+        public System.Nullable<int> Alinger_ID
+        {
+            get
+            {
+                return this._Alinger_ID;
+            }
+            set
+            {
+                if ((this._Alinger_ID != value))
+                {
+                    this.OnAlinger_IDChanging(value);
+                    this.SendPropertyChanging();
+                    this._Alinger_ID = value;
+                    this.SendPropertyChanged("Alinger_ID");
+                    this.OnAlinger_IDChanged();
+                }
+            }
+        }
+
+        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_Patient_Id", DbType = "Int")]
+        public System.Nullable<int> Patient_Id
+        {
+            get
+            {
+                return this._Patient_Id;
+            }
+            set
+            {
+                if ((this._Patient_Id != value))
+                {
+                    this.OnPatient_IdChanging(value);
+                    this.SendPropertyChanging();
+                    this._Patient_Id = value;
+                    this.SendPropertyChanged("Patient_Id");
+                    this.OnPatient_IdChanged();
+                }
+            }
+        }
+
+        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_Crown_Bridges_Name", DbType = "VarChar(100)")]
+        public string Crown_Bridges_Name
+        {
+            get
+            {
+                return this._Crown_Bridges_Name;
+            }
+            set
+            {
+                if ((this._Crown_Bridges_Name != value))
+                {
+                    this.OnCrown_Bridges_NameChanging(value);
+                    this.SendPropertyChanging();
+                    this._Crown_Bridges_Name = value;
+                    this.SendPropertyChanged("Crown_Bridges_Name");
+                    this.OnCrown_Bridges_NameChanged();
+                }
+            }
+        }
+
+        public event PropertyChangingEventHandler PropertyChanging;
+
+        public event PropertyChangedEventHandler PropertyChanged;
+
+        protected virtual void SendPropertyChanging()
+        {
+            if ((this.PropertyChanging != null))
+            {
+                this.PropertyChanging(this, emptyChangingEventArgs);
+            }
+        }
+
+        protected virtual void SendPropertyChanged(String propertyName)
+        {
+            if ((this.PropertyChanged != null))
+            {
+                this.PropertyChanged(this, new PropertyChangedEventArgs(propertyName));
+            }
+        }
+    }
+
+    [global::System.Data.Linq.Mapping.TableAttribute(Name = "dbo.Indirect_Veneer")]
+    public partial class Indirect_Veneer : INotifyPropertyChanging, INotifyPropertyChanged
+    {
+
+        private static PropertyChangingEventArgs emptyChangingEventArgs = new PropertyChangingEventArgs(String.Empty);
+
+        private int _Indirect_Veneers_Id;
+
+        private System.Nullable<int> _Alinger_ID;
+
+        private System.Nullable<int> _Patient_Id;
+
+        private string _Indirect_Veneers_Name;
+
+        #region Extensibility Method Definitions
+        partial void OnLoaded();
+        partial void OnValidate(System.Data.Linq.ChangeAction action);
+        partial void OnCreated();
+        partial void OnIndirect_Veneers_IdChanging(int value);
+        partial void OnIndirect_Veneers_IdChanged();
+        partial void OnAlinger_IDChanging(System.Nullable<int> value);
+        partial void OnAlinger_IDChanged();
+        partial void OnPatient_IdChanging(System.Nullable<int> value);
+        partial void OnPatient_IdChanged();
+        partial void OnIndirect_Veneers_NameChanging(string value);
+        partial void OnIndirect_Veneers_NameChanged();
+        #endregion
+
+        public Indirect_Veneer()
+        {
+            OnCreated();
+        }
+
+        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_Indirect_Veneers_Id", AutoSync = AutoSync.OnInsert, DbType = "Int NOT NULL IDENTITY", IsPrimaryKey = true, IsDbGenerated = true)]
+        public int Indirect_Veneers_Id
+        {
+            get
+            {
+                return this._Indirect_Veneers_Id;
+            }
+            set
+            {
+                if ((this._Indirect_Veneers_Id != value))
+                {
+                    this.OnIndirect_Veneers_IdChanging(value);
+                    this.SendPropertyChanging();
+                    this._Indirect_Veneers_Id = value;
+                    this.SendPropertyChanged("Indirect_Veneers_Id");
+                    this.OnIndirect_Veneers_IdChanged();
+                }
+            }
+        }
+
+        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_Alinger_ID", DbType = "Int")]
+        public System.Nullable<int> Alinger_ID
+        {
+            get
+            {
+                return this._Alinger_ID;
+            }
+            set
+            {
+                if ((this._Alinger_ID != value))
+                {
+                    this.OnAlinger_IDChanging(value);
+                    this.SendPropertyChanging();
+                    this._Alinger_ID = value;
+                    this.SendPropertyChanged("Alinger_ID");
+                    this.OnAlinger_IDChanged();
+                }
+            }
+        }
+
+        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_Patient_Id", DbType = "Int")]
+        public System.Nullable<int> Patient_Id
+        {
+            get
+            {
+                return this._Patient_Id;
+            }
+            set
+            {
+                if ((this._Patient_Id != value))
+                {
+                    this.OnPatient_IdChanging(value);
+                    this.SendPropertyChanging();
+                    this._Patient_Id = value;
+                    this.SendPropertyChanged("Patient_Id");
+                    this.OnPatient_IdChanged();
+                }
+            }
+        }
+
+        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_Indirect_Veneers_Name", DbType = "VarChar(100)")]
+        public string Indirect_Veneers_Name
+        {
+            get
+            {
+                return this._Indirect_Veneers_Name;
+            }
+            set
+            {
+                if ((this._Indirect_Veneers_Name != value))
+                {
+                    this.OnIndirect_Veneers_NameChanging(value);
+                    this.SendPropertyChanging();
+                    this._Indirect_Veneers_Name = value;
+                    this.SendPropertyChanged("Indirect_Veneers_Name");
+                    this.OnIndirect_Veneers_NameChanged();
                 }
             }
         }

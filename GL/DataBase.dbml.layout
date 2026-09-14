@@ -2264,5 +2264,17 @@
         <elementListCompartment Id="23d4eb9b-d112-4292-9ca0-7875b2c97801" absoluteBounds="59.39, 61.46, 1.9700000000000002, 3.3262125651041665" name="DataPropertiesCompartment" titleTextColor="Black" itemTextColor="Black" />
       </nestedChildShapes>
     </classShape>
+    <classShape Id="ad919290-3bdf-41e6-8da4-aeba020d34fe" absoluteBounds="65.5, 65.375, 2, 1.5785953776041666">
+      <DataClassMoniker Name="/DataBaseDataContext/Crown_Bridge" />
+      <nestedChildShapes>
+        <elementListCompartment Id="c2043335-ee38-4d06-8ec6-9986c19a2505" absoluteBounds="65.515, 65.835, 1.9700000000000002, 1.0185953776041665" name="DataPropertiesCompartment" titleTextColor="Black" itemTextColor="Black" />
+      </nestedChildShapes>
+    </classShape>
+    <classShape Id="438547d9-23d3-49bc-bc3f-419850daf02f" absoluteBounds="59.75, 65.75, 2, 1.5785953776041666">
+      <DataClassMoniker Name="/DataBaseDataContext/Indirect_Veneer" />
+      <nestedChildShapes>
+        <elementListCompartment Id="b5b03a63-3160-4a4d-a174-b5663c6848ae" absoluteBounds="59.765, 66.21, 1.9700000000000002, 1.0185953776041665" name="DataPropertiesCompartment" titleTextColor="Black" itemTextColor="Black" />
+      </nestedChildShapes>
+    </classShape>
   </nestedChildShapes>
 </ordesignerObjectsDiagram>

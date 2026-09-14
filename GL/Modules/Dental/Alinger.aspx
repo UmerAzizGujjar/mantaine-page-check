@@ -2,15 +2,8 @@
 
 <asp:Content ID="Content1" ContentPlaceHolderID="HeadContent" runat="server">
 
-    <script type="text/javascript" src="Scripts/jquery.tokeninput.js"></script>
-    <script type="text/javascript" src="<%=Page.ResolveUrl("~/Scripts/jquery.tokeninput.js") %>"></script>
-    <link rel="stylesheet" type="text/css" href="<%=Page.ResolveUrl("~/Styles/jquery.datetimepicker.css") %>" />
-    <link href="Styles/jquery.ptTimeSelect.css" rel="stylesheet" />
-    <script src="Scripts/jquery.ptTimeSelect.js" type="text/javascript"></script>
-    <link href="css/report.css" rel="stylesheet" />
-    <script src="<%=Page.ResolveUrl("~/Scripts/jquery.datetimepicker.js") %>" type="text/javascript"></script>
-    <link href="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.3/css/select2.min.css" rel="stylesheet" />
-    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.3/js/select2.min.js"></script>
+
+    <link href="<%=Page.ResolveUrl("~/wwwroot/THEME_TIBBIT/CustomCSS/PhysiotherapyAssessment.css") %>" rel="stylesheet" />
 
     <style type="text/css">
         .textComment {
@@ -134,6 +127,122 @@
         #vitalparams tr td {
             padding-left: 5px;
         }
+
+        .grid-scroll {
+            max-height: 190px;
+            overflow: auto;
+            margin-top: 6px;
+        }
+
+        .btn-xs {
+            font-size: 11px !important;
+            padding: 2px 8px !important;
+        }
+
+        .dental-chart-card {
+            background: #fff;
+            border: 1.5px solid #e4e4e4;
+            border-radius: 8px;
+            padding: 12px;
+            margin-bottom: 16px;
+            transition: box-shadow 0.25s ease, border-color 0.25s ease;
+        }
+
+        .dental-chart-card:hover {
+            border-color: #EFA63E;
+            box-shadow: 0 4px 16px rgba(239, 166, 62, 0.1);
+        }
+
+        .dental-chart-card .bento-title {
+            font-size: 14px;
+            margin-bottom: 8px;
+            padding-bottom: 6px;
+        }
+
+        .dental-legend {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 8px;
+            margin-bottom: 6px;
+        }
+
+        .dental-legend-item {
+            font-size: 11px;
+            font-weight: 600;
+            color: #777;
+            display: inline-flex;
+            align-items: center;
+            gap: 5px;
+        }
+
+        .dental-swatch {
+            width: 14px;
+            height: 14px;
+            border-radius: 3px;
+            background: #EFA63E;
+            display: inline-block;
+        }
+
+        .dental-chart-wrap {
+            width: 100%;
+        }
+
+        #odontogramSvg {
+            width: 100%;
+            height: auto;
+            display: block;
+        }
+
+        .gum {
+            fill: none;
+            stroke: #f0b8b8;
+            stroke-width: 20;
+            stroke-linecap: round;
+        }
+
+        .tooth {
+            cursor: pointer;
+        }
+
+        .tooth-shape {
+            fill: #ffffff;
+            stroke: #b0b0b0;
+            stroke-width: 2;
+            transition: all 0.15s ease;
+        }
+
+        .tooth:hover .tooth-shape {
+            stroke: #EFA63E;
+            fill: #FDF5E6;
+        }
+
+        .tooth.selected .tooth-shape {
+            fill: #EFA63E;
+            stroke: #b8770f;
+        }
+
+        .tooth-num {
+            font-size: 13px;
+            font-weight: 800;
+            fill: #777;
+            pointer-events: none;
+        }
+
+        .tooth.selected .tooth-num {
+            fill: #fff;
+        }
+
+        .quad-label {
+            font-size: 10px;
+            font-weight: 700;
+            fill: #aaa;
+            letter-spacing: 0.4px;
+        }
+
+        .tooth-inputs {
+            display: none;
+        }
     </style>
     <script type="text/javascript">
 
@@ -203,30 +312,7 @@
             LoadVeneer();
             LoadAlinger();
             bindControls();
-            ;
-            debugger;
-           // var Out_Patient_id = '<%= Request.QueryString["ID"]%>'
-            var Out_Patient_id = $('#ctl00_MainContent_txtAlinger_ID').val()
-            if (Out_Patient_id != null) {
-                debugger;
-            }
-            if (Out_Patient_id != "") {
-                setTimeout(function () {
-                    $("#tabs").tabs("option", "active", 1);
-                }, 8000);
-            }
-            else {
-                setTimeout(function () {
-                    $("#ctl00_MainContent_ddlDepartment").val(0);
-                    $("#tabs").tabs("option", "active", 0);
-                    $('#ui-id-20').hide();
-                    $('#ui-id-21').hide();
-                    $('#ui-id-19').hide();
-                }, 3000);
-            }
-        });
-        $(function () {
-            $("#tabs").tabs();
+            buildOdontogram();
         });
 
         function Edit_Alinger(AnchorTag) {
@@ -399,7 +485,7 @@
             var hdFile_ID = $("#hdfPatient_ID").val();
             if (hdFile_ID != "(New)") {
                 var Patient_ID = $("#hdfPatient_ID").val();
-                var tokendata = httpGet("json.aspx?Table=Patients&Record=Edit&q=" + Patient_ID);
+                var tokendata = httpGet("../../json.aspx?Table=Patients&Record=Edit&q=" + Patient_ID);
                 loadtokenInputs(JSON.parse(tokendata));
             }
             else {
@@ -408,7 +494,7 @@
         };
         function loadtokenInputs(data) {
             debugger;
-            $("#ctl00_MainContent_txtPatient_ID").tokenInput("/json.aspx?Table=Patients",
+            $("#ctl00_MainContent_txtPatient_ID").tokenInput("../../json.aspx?Table=Patients",
                 {
                     prePopulate: data,
                     tokenLimit: 1,
@@ -420,7 +506,7 @@
                 });
         }
         function loadtokenInputsDefault() {
-            $('#ctl00_MainContent_txtPatient_ID').tokenInput("json.aspx?Table=Patients",
+            $('#ctl00_MainContent_txtPatient_ID').tokenInput("../../json.aspx?Table=Patients",
                 {
                     tokenLimit: 1,
                     onAdd: function (item) {
@@ -592,542 +678,407 @@
             document.getElementById("<%=fileUpload_CF_AT.ClientID%>").click();
         }
 
+        function setToothClass(g, on) {
+            if (!g) return;
+            var cls = g.getAttribute('class') || 'tooth';
+            var has = (' ' + cls + ' ').indexOf(' selected ') > -1;
+            if (on && !has) {
+                g.setAttribute('class', cls + ' selected');
+            } else if (!on && has) {
+                g.setAttribute('class', (' ' + cls + ' ').replace(' selected ', ' ').replace(/\s+/g, ' ').trim());
+            }
+        }
+
+        function dentalToggle(key) {
+            var $cb = $('input[id$="CHK_' + key + '"]');
+            if (!$cb.length) return;
+            var on = !$cb.prop('checked');
+            $cb.prop('checked', on);
+            setToothClass(document.querySelector('.tooth[data-key="' + key + '"]'), on);
+        }
+
+        function dentalSelectAll(on) {
+            var teeth = document.querySelectorAll('.tooth');
+            for (var i = 0; i < teeth.length; i++) {
+                var key = teeth[i].getAttribute('data-key');
+                $('input[id$="CHK_' + key + '"]').prop('checked', on);
+                setToothClass(teeth[i], on);
+            }
+        }
+
+        function buildOdontogram() {
+            var svg = document.getElementById('odontogramSvg');
+            if (!svg) return;
+            var NS = 'http://www.w3.org/2000/svg';
+            var upper = ['S1T8', 'S1T7', 'S1T6', 'S1T5', 'S1T4', 'S1T3', 'S1T2', 'S1T1', 'S2T1', 'S2T2', 'S2T3', 'S2T4', 'S2T5', 'S2T6', 'S2T7', 'S2T8'];
+            var lower = ['S4T8', 'S4T7', 'S4T6', 'S4T5', 'S4T4', 'S4T3', 'S4T2', 'S4T1', 'S3T1', 'S3T2', 'S3T3', 'S3T4', 'S3T5', 'S3T6', 'S3T7', 'S3T8'];
+
+            function addLabel(x, y, text) {
+                var t = document.createElementNS(NS, 'text');
+                t.setAttribute('x', x);
+                t.setAttribute('y', y);
+                t.setAttribute('class', 'quad-label');
+                t.setAttribute('text-anchor', 'middle');
+                t.textContent = text;
+                svg.appendChild(t);
+            }
+
+            function toothShape(num) {
+                switch (num) {
+                    case 1: return { w: 24, h: 38, cusps: 0 };
+                    case 2: return { w: 22, h: 36, cusps: 0 };
+                    case 3: return { w: 22, h: 38, cusps: 1 };
+                    case 4: return { w: 26, h: 33, cusps: 2 };
+                    case 5: return { w: 26, h: 32, cusps: 2 };
+                    case 6: return { w: 30, h: 30, cusps: 2 };
+                    case 7: return { w: 30, h: 29, cusps: 2 };
+                    default: return { w: 27, h: 27, cusps: 2 };
+                }
+            }
+
+            function toothPath(w, h, cusps) {
+                var hw = w / 2, hh = h / 2;
+                var r = Math.min(hw, 6);
+                var d = 'M ' + (-hw + r) + ' ' + (-hh);
+                d += ' Q 0 ' + (-hh - 3) + ' ' + (hw - r) + ' ' + (-hh);
+                d += ' Q ' + hw + ' ' + (-hh) + ' ' + hw + ' ' + (-hh + r);
+                d += ' L ' + (hw * 0.92) + ' ' + (hh - r * 1.2);
+                if (cusps === 1) {
+                    d += ' Q ' + (hw * 0.55) + ' ' + (hh + 2) + ' 0 ' + (hh + 4);
+                    d += ' Q ' + (-hw * 0.55) + ' ' + (hh + 2) + ' ' + (-hw * 0.92) + ' ' + (hh - r * 1.2);
+                } else if (cusps === 2) {
+                    d += ' Q ' + (hw * 0.5) + ' ' + (hh + 3) + ' ' + (hw * 0.25) + ' ' + (hh + 1);
+                    d += ' Q 0 ' + (hh - 2) + ' ' + (-hw * 0.25) + ' ' + (hh + 1);
+                    d += ' Q ' + (-hw * 0.5) + ' ' + (hh + 3) + ' ' + (-hw * 0.92) + ' ' + (hh - r * 1.2);
+                } else {
+                    d += ' L ' + (-hw * 0.92) + ' ' + (hh - r * 1.2);
+                }
+                d += ' L ' + (-hw) + ' ' + (-hh + r);
+                d += ' Q ' + (-hw) + ' ' + (-hh) + ' ' + (-hw + r) + ' ' + (-hh);
+                d += ' Z';
+                return d;
+            }
+
+            function addGum(d) {
+                var p = document.createElementNS(NS, 'path');
+                p.setAttribute('d', d);
+                p.setAttribute('class', 'gum');
+                svg.appendChild(p);
+            }
+
+            function makeRow(keys, isUpper) {
+                keys.forEach(function (key, i) {
+                    var t = (i - 7.5) / 7.5;
+                    var x = 40 + i * 34;
+                    var y = isUpper ? (104 + 52 * (1 - t * t)) : (264 - 52 * (1 - t * t));
+                    var rot = t * 16;
+                    var cfg = toothShape(parseInt(key.charAt(3), 10));
+                    var g = document.createElementNS(NS, 'g');
+                    g.setAttribute('class', 'tooth');
+                    g.setAttribute('data-key', key);
+                    g.setAttribute('transform', 'translate(' + x + ',' + y + ') rotate(' + rot + ')');
+                    var path = document.createElementNS(NS, 'path');
+                    path.setAttribute('d', toothPath(cfg.w, cfg.h, cfg.cusps));
+                    path.setAttribute('class', 'tooth-shape');
+                    if (!isUpper) path.setAttribute('transform', 'scale(1,-1)');
+                    g.appendChild(path);
+                    var txt = document.createElementNS(NS, 'text');
+                    txt.setAttribute('class', 'tooth-num');
+                    txt.setAttribute('text-anchor', 'middle');
+                    txt.setAttribute('dy', '4');
+                    txt.textContent = key.charAt(3);
+                    g.appendChild(txt);
+                    g.addEventListener('click', function () { dentalToggle(key); });
+                    svg.appendChild(g);
+                });
+            }
+
+            addGum('M 30 94 Q 300 192 570 94');
+            addGum('M 30 274 Q 300 176 570 274');
+            makeRow(upper, true);
+            makeRow(lower, false);
+            addLabel(80, 64, 'UPPER LEFT (S1)');
+            addLabel(520, 64, 'UPPER RIGHT (S2)');
+            addLabel(80, 336, 'LOWER LEFT (S4)');
+            addLabel(520, 336, 'LOWER RIGHT (S3)');
+
+            var teeth = document.querySelectorAll('.tooth');
+            for (var i = 0; i < teeth.length; i++) {
+                var key = teeth[i].getAttribute('data-key');
+                setToothClass(teeth[i], $('input[id$="CHK_' + key + '"]').prop('checked'));
+            }
+        }
 
     </script>
 </asp:Content>
 <asp:Content ID="Content2" ContentPlaceHolderID="MainContent" runat="server">
-    <div style="width: 100%">
-        <div style="width: 100%">
-            <table style="padding: 20px; width: 700px; height: 161px;">
-                <%--<load main content>--%>
+    <div class="row">
+        <div class="col-lg-7 col-md-7">
 
-                <tr>
-                    <td>
-                        <asp:Label ID="lblPatien_ID" runat="server" Text="MR No *"></asp:Label>
-                    </td>
-                    <td style="width: 203px;">
-                        <asp:TextBox ID="txtPatient_ID" runat="server"></asp:TextBox>
-                    </td>
-                    <td>
-                        <asp:RequiredFieldValidator ID="rfvPatient_ID" runat="server" ErrorMessage="Enter Patient ID" Text="*" ControlToValidate="txtPatient_ID" ForeColor="Red"></asp:RequiredFieldValidator>
-                    </td>
-                    <td class="mg">
-                        <asp:Label ID="LblOut_Patient_ID" runat="server" Text="Out Patient ID"></asp:Label>
-
-                    </td>
-                    <td>
-                        <asp:TextBox ID="txtAlinger_ID" runat="server" ReadOnly="True"></asp:TextBox>
-                    </td>
-                </tr>
-                <tr>
-                    <td>
-                        <asp:Label ID="lblPatient_Name" runat="server" Text="Patient Name :"></asp:Label>
-                    </td>
-                    <td style="width: 203px">
-                        <asp:Label ID="vlblPatients_Name" runat="server"></asp:Label>
-                    </td>
-                    <td></td>
-                    <td class="mg">
-                        <asp:Label ID="lblContactNo" runat="server" Text="Contact No :"></asp:Label>
-                    </td>
-                    <td>
-                        <asp:Label ID="vLbl_Contact" runat="server"></asp:Label>
-                    </td>
-                </tr>
-                <tr>
-                    <td>
-                        <asp:Label ID="LblReg_Date" runat="server" Text="Reg. Date:"></asp:Label>
-                    </td>
-                    <td style="width: 203px">
-                        <asp:Label ID="vLbl_RegDate" runat="server"></asp:Label>
-                    </td>
-                    <td></td>
-                    <td class="mg">
-                        <asp:Label ID="lblGender" runat="server" Text="Gender :"></asp:Label>
-                    </td>
-                    <td>
-                        <asp:Label ID="vLbl_Gender" runat="server"></asp:Label>
-                    </td>
-                </tr>
-                <tr>
-                    <td>
-                        <asp:Label ID="lblAge_Years" runat="server" Text="Age Years :"></asp:Label>
-                    </td>
-                    <td style="width: 203px">
-                        <asp:Label ID="vLbl_Age" runat="server"></asp:Label>
-
-                    </td>
-                    <td></td>
-                    <td class="mg">
-                        <asp:Label ID="lblAdress" runat="server" Text="Address :"></asp:Label>
-                    </td>
-                    <td>
-                        <asp:Label ID="vLbl_Adress" runat="server"></asp:Label>
-                    </td>
-                </tr>
-                <tr>
-                    <td>
-                        <asp:Label ID="LblPatient_Status" runat="server" Text="Patient Category"></asp:Label>
-                    </td>
-                    <td style="width: 203px;">
-                        <asp:Label ID="vLbl_PatientCategory" runat="server"></asp:Label>
-
-                    </td>
-                    <td></td>
-                    <td class="mg">
-                        <asp:Label ID="dlbldpt" runat="server" Text="Department"></asp:Label></td>
-                    <td>
-                        <asp:Label ID="lblDpt" runat="server" Text=""></asp:Label></td>
-                </tr>
-                <tr>
-                    <td>
-                        <asp:Label ID="dlblFollowNo" runat="server" Text="Follow No"></asp:Label>
-                    </td>
-                    <td>
-                        <span id="lblFollow" runat="server"></span>
-                    </td>
-                </tr>
-            </table>
-
-        </div>
-        <br />
-    </div>
-    <style>
-        .profile-images-card {
-            margin: auto;
-            /* display: table;*/
-            background: #fff;
-            padding: 30px 50px;
-        }
-
-        .profile-images {
-            width: 190px;
-            height: 180px;
-            background: #fff;
-            overflow: hidden;
-        }
-
-            .profile-images img {
-                width: 100%;
-                height: 100%;
-                object-fit: cover;
-            }
-
-        .custom-file label {
-            cursor: pointer;
-            color: #000;
-            text-align: center;
-            display: table;
-            margin: auto;
-            margin-top: 15px;
-        }
-
-        #alinger {
-            width: 100%;
-            height: 100%;
-            border: 1px solid grey;
-            border-radius: 3px 4px;
-        }
-
-        .alinger1 {
-            margin-left: 40px;
-            /*  border-bottom: 1px solid grey;
-                border-radius:3px 4px;*/
-        }
-
-            .alinger1 h1 {
-                font-size: 25px !important;
-                font-weight: 900 !important;
-            }
-
-        img {
-            width: 120px;
-            height: 120px;
-            /*margin-left:90px;*/
-        }
-
-        .checkboxR {
-            float: right;
-            width: 20px;
-            height: 20px;
-        }
-
-        .checkboxL {
-            width: 20px;
-            height: 20px;
-        }
-
-        #containerAT {
-            /*max-width: 500px;*/
-            padding: 10px;
-            overflow: auto;
-        }
-    </style>
-    <div style="width: 100%">
-
-        <div id="tabs">
-            <ul>
-                <li><a href="#Tab-4">Images</a></li>
-                <li><a href="#Tab-1">Alinger</a></li>
-                <li><a href="#Tab-2">Crown and Bridges</a></li>
-                <li><a href="#Tab-3">Indirect Veneers</a></li>
-
-            </ul>
-            <div id="Tab-1">
-                <div class="alinger1">
-                    <h1>Alinger:</h1>
-                    <div class="Alingerdetail" style="width: 100%;">
-                        <div class="col-sm-4">
-                            <div class="Row1">
-                                <label>Arch</label>
-
-                            </div>
-                            <div class="Row2">
-
-                                <asp:DropDownList ID="ddlarch" runat="server" AppendDataBoundItems="true" TabIndex="3"></asp:DropDownList>
-                            </div>
-                        </div>
-                        <div class="col-sm-4">
-                            <div class="Row1">
-                                <label>No.of Alinger</label>
-
-                            </div>
-                            <div class="Row2">
-
-                                <asp:DropDownList ID="ddlno_of_alinger" runat="server" AppendDataBoundItems="true" TabIndex="3"></asp:DropDownList>
-                            </div>
-                        </div>
-                        <div class="col-sm-4">
-                            <div class="Row1">
-                                <label>Material</label>
-                            </div>
-                            <div class="Row2">
-
-                                <asp:DropDownList ID="ddlMaterial" runat="server" AppendDataBoundItems="true" TabIndex="3"></asp:DropDownList>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="Alingerdetail" style="width: 100%">
-
-                        <div class="col-sm-4">
-                            <div class="Row1">
-                                <label>
-                                    Margin of Alinger
-                                </label>
-
-                            </div>
-                            <div class="Row2">
-                                <asp:DropDownList ID="ddlMargin" runat="server" AppendDataBoundItems="true" TabIndex="3"></asp:DropDownList>
-                            </div>
-                        </div>
-                        <div class="col-sm-4">
-                            <div class="Row1">
-                                <label>Type of Alinger</label>
-                            </div>
-                            <div class="Row2">
-                                <asp:DropDownList ID="ddlType_of_Alinger" runat="server" AppendDataBoundItems="true" TabIndex="3"></asp:DropDownList>
-                            </div>
-                        </div>
-                        <div class="col-sm-4">
-                            <div class="Row1">
-                                <label>Thicker</label>
-                            </div>
-                            <div class="Row2">
-                                <asp:DropDownList ID="ddlThicker" runat="server" AppendDataBoundItems="true" TabIndex="3"></asp:DropDownList>
-                            </div>
-                        </div>
-                        <%-- --%>
-                    </div>
-                      <div class="Alingerdetail" style="width: 100%;">
-                          <div class="col-sm-4">
-                        <div class="Row1">
-                            <label>Template</label>
-                        </div>
-                        <div class="Row2">
-                            <asp:DropDownList ID="ddlTemplate" runat="server" AppendDataBoundItems="true" TabIndex="3"></asp:DropDownList>
-                        </div>
-                    </div>
-                          </div>
-                    <div class="Alingerdetail" style="width: 100%">
-                        <div class="col-sm-4" style="margin-left: 385px;">
-                            <div class="Row1" style="margin-top: 23px;">
-                                <input type="button" value="ADD" id="AddAlinger" />
-                            </div>
-                        </div>
-                    </div>
-                    <div class="row" style="width: 1040px; margin-left: 40px;">
-                        <div id="dvtblAlinger" style="margin-left: -55px; margin-top: 230px; width: 1000px; height: 184px; overflow: scroll;">
-
-                            <table class="table" style="height: 30px; overflow: scroll; margin-left: 7px;" id="tblAlinger">
-                                <thead>
-                                    <th style="display: none;">Row ID</th>
-                                    <th style="display: none;">Symtom ID</th>
-                                    <th style="width: 100px !important;">Arch </th>
-                                    <th style="width: 25px !important;">No.of Alinger </th>
-                                    <th style="width: 100px !important;">Material</th>
-                                    <th style="width: 100px !important;">Margin of Alinger</th>
-                                    <th style="width: 100px !important;">Type of Alinger</th>
-                                    <th style="width: 100px !important;">Thicker of Alinger</th>
-                                    <th style="width: 100px !important;">Template of Alinger</th>
-                                    <th style="width: 50px !important;">Edit</th>
-                                </thead>
-                                <tbody>
-                                </tbody>
-                            </table>
-
-                        </div>
-
-
-
-
-
-                    </div>
-                    <%--<div class="row" style="margin-top:25px;margin-left:400px"><input type="button" id="btnSaveAlinger" value="Save" onclick="Saver_Alinger()" /></div>--%>
-                </div>
-            </div>
-            <div id="Tab-2">
-                <div class="alinger1">
-                    <h1>Crown Bridge</h1>
-                    <div class="row" style="width: 100%">
-                        <div class="col-sm-4">
-                            <div class="Row1">
-                                <label>Types Of Crown Bridge</label>
-
-                            </div>
-                            <div class="Row2">
-                                <asp:DropDownList ID="ddlCrown_bridge" runat="server" AppendDataBoundItems="true" TabIndex="3"></asp:DropDownList>
-                            </div>
-                        </div>
-                        <div class="col-sm-2">
-                            <div class="Row1" style="margin-top: 23px; margin-left: -185px;">
-                                <input type="button" value="ADD" id="AddCrownBridge" />
-                            </div>
-                        </div>
-                        <div id="dvtblCrown" class="col-sm-6" style="margin-left: 105px; margin-top: -10px; height: 125px; width: 390px; overflow: scroll;">
-
-                            <table class="table" style="width: 490px; height: 30px; overflow: scroll; margin-left: 7px;" id="tblCrown">
-                                <thead>
-                                    <th style="display: none;">Row ID</th>
-                                    <th style="display: none;">Symtom ID</th>
-                                    <th style="width: 100px !important;">Types Of Crown Bridge</th>
-
-                                    <th style="width: 50px !important;">Edit</th>
-                                </thead>
-                                <tbody>
-                                </tbody>
-                            </table>
-
-                        </div>
-                    </div>
-
-                    <div class="row">
-
-                        <div style="/*border: 1px solid; */ width: 400px; height: 250px; margin-top: 140px; margin-left: 250px;">
-                            <div class="check-box1" style="border-right: 1px  solid; width: 200px; height: 100px;">
-                                <div>
-                                    <h4>Upper left Alinger</h4>
-                                </div>
-                                <div>
-                                    <asp:Label ID="lblT1" runat="server" Text=" T1"></asp:Label><asp:CheckBox ID="CHK_S1T1" runat="server"></asp:CheckBox>
-                                    <asp:Label ID="lblT2" runat="server" Text=",T2"></asp:Label><asp:CheckBox ID="CHK_S1T2" runat="server"></asp:CheckBox>
-                                    <asp:Label ID="lblT3" runat="server" Text=",T3"></asp:Label><asp:CheckBox ID="CHK_S1T3" runat="server"></asp:CheckBox>
-                                    <asp:Label ID="lblT4" runat="server" Text=",T4"></asp:Label><asp:CheckBox ID="CHK_S1T4" runat="server"></asp:CheckBox>
-                                </div>
-                                <div>
-                                    <asp:Label ID="lblT5" runat="server" Text=" T5"></asp:Label><asp:CheckBox ID="CHK_S1T5" runat="server"></asp:CheckBox>
-                                    <asp:Label ID="lblT6" runat="server" Text=",T6"></asp:Label><asp:CheckBox ID="CHK_S1T6" runat="server"></asp:CheckBox>
-                                    <asp:Label ID="lblT7" runat="server" Text=",T7"></asp:Label><asp:CheckBox ID="CHK_S1T7" runat="server"></asp:CheckBox>
-                                    <asp:Label ID="lblT8" runat="server" Text=",T8"></asp:Label><asp:CheckBox ID="CHK_S1T8" runat="server"></asp:CheckBox>
-                                </div>
-                            </div>
-                            <div class="check-box4" style="border-top: 1px  solid; width: 200px; height: 100px;">
-                                <div style="margin-left: 2px;">
-                                    <h4 style="margin-top: 1px">Lower Left Alinger</h4>
-
-                                </div>
-                                <div style="margin-left: 2px;">
-                                    <asp:Label ID="lblT9" runat="server" Text=" T1"></asp:Label><asp:CheckBox ID="CHK_S4T1" runat="server"></asp:CheckBox>
-                                    <asp:Label ID="lblT10" runat="server" Text=",T2"></asp:Label><asp:CheckBox ID="CHK_S4T2" runat="server"></asp:CheckBox>
-                                    <asp:Label ID="lblT11" runat="server" Text=",T3"></asp:Label><asp:CheckBox ID="CHK_S4T3" runat="server"></asp:CheckBox>
-                                    <asp:Label ID="lblT12" runat="server" Text=",T4"></asp:Label><asp:CheckBox ID="CHK_S4T4" runat="server"></asp:CheckBox>
-                                </div>
-                                <div style="margin-left: 2px;">
-                                    <asp:Label ID="lblT13" runat="server" Text=" T5"></asp:Label><asp:CheckBox ID="CHK_S4T5" runat="server"></asp:CheckBox>
-                                    <asp:Label ID="lblT14" runat="server" Text=",T6"></asp:Label><asp:CheckBox ID="CHK_S4T6" runat="server"></asp:CheckBox>
-                                    <asp:Label ID="lblT15" runat="server" Text=",T7"></asp:Label><asp:CheckBox ID="CHK_S4T7" runat="server"></asp:CheckBox>
-                                    <asp:Label ID="lblT16" runat="server" Text=",T8"></asp:Label><asp:CheckBox ID="CHK_S4T8" runat="server"></asp:CheckBox>
-                                </div>
-                            </div>
-                            <div class="check-box2" style="border-bottom: 1px  solid; width: 200px; height: 100px; margin-left: 200px; margin-top: -209px">
-                                <div style="margin-left: 5px;">
-                                    <h4>Upper Right Alinger</h4>
-                                </div>
-                                <div style="margin-left: 5px;">
-                                    <asp:Label ID="lblT17" runat="server" Text=" T1"></asp:Label><asp:CheckBox ID="CHK_S2T1" runat="server"></asp:CheckBox>
-                                    <asp:Label ID="lblT18" runat="server" Text=",T2"></asp:Label><asp:CheckBox ID="CHK_S2T2" runat="server"></asp:CheckBox>
-                                    <asp:Label ID="lblT19" runat="server" Text=",T3"></asp:Label><asp:CheckBox ID="CHK_S2T3" runat="server"></asp:CheckBox>
-                                    <asp:Label ID="lblT20" runat="server" Text=",T4"></asp:Label><asp:CheckBox ID="CHK_S2T4" runat="server"></asp:CheckBox>
-                                </div>
-                                <div style="margin-left: 2px;">
-                                    <asp:Label ID="lblT21" runat="server" Text=" T5"></asp:Label><asp:CheckBox ID="CHK_S2T5" runat="server"></asp:CheckBox>
-                                    <asp:Label ID="lblT22" runat="server" Text=",T6"></asp:Label><asp:CheckBox ID="CHK_S2T6" runat="server"></asp:CheckBox>
-                                    <asp:Label ID="lblT23" runat="server" Text=",T7"></asp:Label><asp:CheckBox ID="CHK_S2T7" runat="server"></asp:CheckBox>
-                                    <asp:Label ID="lblT24" runat="server" Text=",T8"></asp:Label><asp:CheckBox ID="CHK_S2T8" runat="server"></asp:CheckBox>
-                                </div>
-                            </div>
-                            <div class="check-box3" style="border-left: 1px solid; width: 200px; height: 100px; margin-left: 199px; margin-top: -10px">
-                                <div style="margin-left: 5px;">
-                                    <h4>Lower Right Alinger</h4>
-                                </div>
-                                <div style="margin-left: 5px;">
-                                    <asp:Label ID="lblT25" runat="server" Text=" T1"></asp:Label><asp:CheckBox ID="CHK_S3T1" runat="server"></asp:CheckBox>
-                                    <asp:Label ID="lblT26" runat="server" Text=",T2"></asp:Label><asp:CheckBox ID="CHK_S3T2" runat="server"></asp:CheckBox>
-                                    <asp:Label ID="lblT27" runat="server" Text=",T3"></asp:Label><asp:CheckBox ID="CHK_S3T3" runat="server"></asp:CheckBox>
-                                    <asp:Label ID="lblT28" runat="server" Text=",T4"></asp:Label><asp:CheckBox ID="CHK_S3T4" runat="server"></asp:CheckBox>
-                                </div>
-                                <div style="margin-left: 5px;">
-                                    <asp:Label ID="lblT29" runat="server" Text=" T5"></asp:Label><asp:CheckBox ID="CHK_S3T5" runat="server"></asp:CheckBox>
-                                    <asp:Label ID="lblT30" runat="server" Text=",T6"></asp:Label><asp:CheckBox ID="CHK_S3T6" runat="server"></asp:CheckBox>
-                                    <asp:Label ID="lblT31" runat="server" Text=",T7"></asp:Label><asp:CheckBox ID="CHK_S3T7" runat="server"></asp:CheckBox>
-                                    <asp:Label ID="lblT32" runat="server" Text=",T8"></asp:Label><asp:CheckBox ID="CHK_S3T8" runat="server"></asp:CheckBox>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-            <div id="Tab-3">
-                <div class="alinger1">
-                    <h1>Indirect Veneers:</h1>
-                    <div class="row" style="width: 100%">
-                        <div class="col-sm-4">
-                            <div class="Row1">
-                                <label>Indirect Veneers</label>
-
-                            </div>
-                            <div class="Row2">
-                                <asp:DropDownList ID="ddlIndirectveneer" runat="server" AppendDataBoundItems="true" TabIndex="3"></asp:DropDownList>
-                            </div>
-                        </div>
-                        <div class="col-sm-2">
-                            <div class="Row1" style="margin-top: 23px; margin-left: -155px;">
-                                <input type="button" value="ADD" id="AddIndirectveneer" />
-                            </div>
-                        </div>
-                        <div id="dvtblveneer" class="col-sm-6" style="margin-left: 105px; margin-top: -10px; height: 125px; width: 390px; overflow: scroll;">
-
-                            <table class="table" style="width: 490px; height: 25px; overflow: scroll; margin-left: 7px;" id="tblveneer">
-                                <thead>
-                                    <th style="display: none;">Row ID</th>
-                                    <th style="display: none;">Symtom ID</th>
-                                    <th style="width: 100px !important;">Indirect Veneers</th>
-
-                                    <th style="width: 50px !important;">Edit</th>
-                                </thead>
-                                <tbody>
-                                </tbody>
-                            </table>
-
-                        </div>
-                    </div>
-                </div>
-            </div>
-            <div id="Tab-4">
-
-                <div class="row" style="margin-top: 25px; text-align: center;">
-                    <div class="col-lg-4" style="padding-top: 25px;">
-                        <input
-                            id="Button_AT"
-                            type="button"
-                            onclick="triggerATFileUpload()"
-                            value="Upload Images"
-                            title="Upload Files Only" />
-                        <asp:FileUpload
-                            ID="fileUpload_CF_AT"
-                            runat="server"
-                            multiple="multiple"
-                            AllowMultiple="true"
-                            onchange="readIMGsingle(this)"
-                            Style="visibility: hidden;" />
-                        <div id="containerAT" style="margin-top: 15px; display: flex; padding-left: 105px;"></div>
-                    </div>
-
-                    <div class="col-lg-4" style="padding-top: 25px; text-align: center;">
-                        <input
-                            id="Button_OP"
-                            type="button"
-                            onclick="triggerOPFileUpload()"
-                            value="Upload Images"
-                            title="Upload Files Only" />
-                        <asp:FileUpload
-                            ID="fileUpload_CF_OP"
-                            runat="server"
-                            multiple="multiple"
-                            AllowMultiple="true"
-                            onchange="readIMGsingle(this)"
-                            Style="visibility: hidden;" />
-                        <div id="containerOP" style="margin-top: 15px; display: flex; padding-left: 105px;"></div>
-                    </div>
-
-                    <div class="col-lg-4" style="padding-top: 25px; text-align: center;">
-                        <input
-                            id="Button_CT"
-                            type="button"
-                            onclick="triggerCTFileUpload()"
-                            value="Upload Images"
-                            title="Upload Files Only" />
-                        <asp:FileUpload
-                            ID="fileUpload_CF_CT"
-                            runat="server"
-                            multiple="multiple"
-                            AllowMultiple="true"
-                            onchange="readIMGsingle(this)"
-                            Style="visibility: hidden;" />
-                        <div id="containerCT" style="margin-top: 15px; display: flex; padding-left: 105px;"></div>
-                    </div>
-                </div>
-
+            <div class="bento-card">
+                <div class="bento-title">Patient Information</div>
                 <div class="row">
-                    <div id="ImageContainer" style="height: 200px; display: flex; margin-top: 30px;"></div>
+                    <div class="col-lg-4 col-md-4">
+                        <div class="form-group">
+                            <label><asp:Label ID="lblPatien_ID" runat="server" Text="MR No *"></asp:Label></label>
+                            <asp:TextBox ID="txtPatient_ID" runat="server" CssClass="form-control"></asp:TextBox>
+                            <asp:RequiredFieldValidator ID="rfvPatient_ID" runat="server" ErrorMessage="Enter Patient ID" Text="*" ControlToValidate="txtPatient_ID" ForeColor="Red"></asp:RequiredFieldValidator>
+                        </div>
+                    </div>
+                    <div class="col-lg-4 col-md-4">
+                        <div class="form-group">
+                            <label><asp:Label ID="LblOut_Patient_ID" runat="server" Text="Out Patient ID"></asp:Label></label>
+                            <asp:TextBox ID="txtAlinger_ID" runat="server" ReadOnly="True" CssClass="form-control"></asp:TextBox>
+                        </div>
+                    </div>
+                    <div class="col-lg-4 col-md-4">
+                        <div class="form-group">
+                            <label><asp:Label ID="dlblFollowNo" runat="server" Text="Follow No"></asp:Label></label>
+                            <span id="lblFollow" runat="server" class="readonly-text"></span>
+                        </div>
+                    </div>
                 </div>
+                <div class="patient-meta">
+                    <div class="meta-item"><span class="meta-label">Patient:</span> <asp:Label ID="vlblPatients_Name" runat="server"></asp:Label></div>
+                    <div class="meta-item"><span class="meta-label">Age:</span> <asp:Label ID="vLbl_Age" runat="server"></asp:Label></div>
+                    <div class="meta-item"><span class="meta-label">Gender:</span> <asp:Label ID="vLbl_Gender" runat="server"></asp:Label></div>
+                    <div class="meta-item"><span class="meta-label">Contact:</span> <asp:Label ID="vLbl_Contact" runat="server"></asp:Label></div>
+                    <div class="meta-item"><span class="meta-label">Reg. Date:</span> <asp:Label ID="vLbl_RegDate" runat="server"></asp:Label></div>
+                    <div class="meta-item"><span class="meta-label">Address:</span> <asp:Label ID="vLbl_Adress" runat="server"></asp:Label></div>
+                    <div class="meta-item"><span class="meta-label">Category:</span> <asp:Label ID="vLbl_PatientCategory" runat="server"></asp:Label></div>
+                    <div class="meta-item"><span class="meta-label">Department:</span> <asp:Label ID="lblDpt" runat="server" Text=""></asp:Label></div>
+                </div>
+                <asp:HiddenField ID="hdfPatient_ID" Value="(New)" runat="server" ClientIDMode="Static" />
+                <span style="display: none">
+                    <asp:Label ID="lblPatient_Name" runat="server" Text="Patient Name :"></asp:Label>
+                    <asp:Label ID="lblContactNo" runat="server" Text="Contact No :"></asp:Label>
+                    <asp:Label ID="LblReg_Date" runat="server" Text="Reg. Date:"></asp:Label>
+                    <asp:Label ID="lblGender" runat="server" Text="Gender :"></asp:Label>
+                    <asp:Label ID="lblAge_Years" runat="server" Text="Age Years :"></asp:Label>
+                    <asp:Label ID="lblAdress" runat="server" Text="Address :"></asp:Label>
+                    <asp:Label ID="LblPatient_Status" runat="server" Text="Patient Category"></asp:Label>
+                    <asp:Label ID="dlbldpt" runat="server" Text="Department"></asp:Label>
+                </span>
+            </div>
 
+            <div class="bento-card">
+                <div class="bento-title">Aligner</div>
+                <div class="row">
+                    <div class="col-lg-3 col-md-3">
+                        <div class="form-group">
+                            <label>Arch</label>
+                            <asp:DropDownList ID="ddlarch" runat="server" AppendDataBoundItems="true" CssClass="form-control"></asp:DropDownList>
+                        </div>
+                    </div>
+                    <div class="col-lg-3 col-md-3">
+                        <div class="form-group">
+                            <label>No. of Aligner</label>
+                            <asp:DropDownList ID="ddlno_of_alinger" runat="server" AppendDataBoundItems="true" CssClass="form-control"></asp:DropDownList>
+                        </div>
+                    </div>
+                    <div class="col-lg-3 col-md-3">
+                        <div class="form-group">
+                            <label>Material</label>
+                            <asp:DropDownList ID="ddlMaterial" runat="server" AppendDataBoundItems="true" CssClass="form-control"></asp:DropDownList>
+                        </div>
+                    </div>
+                    <div class="col-lg-3 col-md-3">
+                        <div class="form-group">
+                            <label>Margin of Aligner</label>
+                            <asp:DropDownList ID="ddlMargin" runat="server" AppendDataBoundItems="true" CssClass="form-control"></asp:DropDownList>
+                        </div>
+                    </div>
+                    <div class="col-lg-3 col-md-3">
+                        <div class="form-group">
+                            <label>Type of Aligner</label>
+                            <asp:DropDownList ID="ddlType_of_Alinger" runat="server" AppendDataBoundItems="true" CssClass="form-control"></asp:DropDownList>
+                        </div>
+                    </div>
+                    <div class="col-lg-3 col-md-3">
+                        <div class="form-group">
+                            <label>Thicker</label>
+                            <asp:DropDownList ID="ddlThicker" runat="server" AppendDataBoundItems="true" CssClass="form-control"></asp:DropDownList>
+                        </div>
+                    </div>
+                    <div class="col-lg-3 col-md-3">
+                        <div class="form-group">
+                            <label>Template</label>
+                            <asp:DropDownList ID="ddlTemplate" runat="server" AppendDataBoundItems="true" CssClass="form-control"></asp:DropDownList>
+                        </div>
+                    </div>
+                    <div class="col-lg-3 col-md-3">
+                        <div class="form-group">
+                            <label>&nbsp;</label>
+                            <input type="button" value="ADD" id="AddAlinger" class="btn btn-primry" style="display: block; width: 100%" />
+                        </div>
+                    </div>
+                </div>
+                <div class="grid-scroll">
+                    <table class="diag-table" id="tblAlinger">
+                        <thead>
+                            <tr>
+                                <th>Arch</th>
+                                <th>No.</th>
+                                <th>Material</th>
+                                <th>Margin</th>
+                                <th>Type</th>
+                                <th>Thicker</th>
+                                <th>Template</th>
+                                <th>Edit</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
 
+            <div class="row">
+                <div class="col-lg-6 col-md-6">
+                    <div class="bento-card">
+                        <div class="bento-title">Crown &amp; Bridges</div>
+                        <div class="row">
+                            <div class="col-lg-9 col-md-9">
+                                <div class="form-group">
+                                    <label>Type of Crown / Bridge</label>
+                                    <asp:DropDownList ID="ddlCrown_bridge" runat="server" AppendDataBoundItems="true" CssClass="form-control"></asp:DropDownList>
+                                </div>
+                            </div>
+                            <div class="col-lg-3 col-md-3">
+                                <div class="form-group">
+                                    <label>&nbsp;</label>
+                                    <input type="button" value="ADD" id="AddCrownBridge" class="btn btn-primry" style="display: block; width: 100%" />
+                                </div>
+                            </div>
+                        </div>
+                        <div class="grid-scroll">
+                            <table class="diag-table" id="tblCrown">
+                                <thead>
+                                    <tr>
+                                        <th>Type of Crown / Bridge</th>
+                                        <th>Edit</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-lg-6 col-md-6">
+                    <div class="bento-card">
+                        <div class="bento-title">Indirect Veneers</div>
+                        <div class="row">
+                            <div class="col-lg-9 col-md-9">
+                                <div class="form-group">
+                                    <label>Indirect Veneer</label>
+                                    <asp:DropDownList ID="ddlIndirectveneer" runat="server" AppendDataBoundItems="true" CssClass="form-control"></asp:DropDownList>
+                                </div>
+                            </div>
+                            <div class="col-lg-3 col-md-3">
+                                <div class="form-group">
+                                    <label>&nbsp;</label>
+                                    <input type="button" value="ADD" id="AddIndirectveneer" class="btn btn-primry" style="display: block; width: 100%" />
+                                </div>
+                            </div>
+                        </div>
+                        <div class="grid-scroll">
+                            <table class="diag-table" id="tblveneer">
+                                <thead>
+                                    <tr>
+                                        <th>Indirect Veneer</th>
+                                        <th>Edit</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="bento-card">
+                <div class="bento-title">Images</div>
+                <div class="row">
+                    <div class="col-lg-4 col-md-4" style="text-align: center">
+                        <input id="Button_AT" type="button" class="btn btn-primry" onclick="triggerATFileUpload()" value="Upload (AT)" title="Upload Files Only" />
+                        <asp:FileUpload ID="fileUpload_CF_AT" runat="server" multiple="multiple" AllowMultiple="true" onchange="readIMGsingle(this)" Style="visibility: hidden;" />
+                        <div id="containerAT" style="margin-top: 10px; display: flex; justify-content: center; flex-wrap: wrap; gap: 6px;"></div>
+                    </div>
+                    <div class="col-lg-4 col-md-4" style="text-align: center">
+                        <input id="Button_OP" type="button" class="btn btn-primry" onclick="triggerOPFileUpload()" value="Upload (OP)" title="Upload Files Only" />
+                        <asp:FileUpload ID="fileUpload_CF_OP" runat="server" multiple="multiple" AllowMultiple="true" onchange="readIMGsingle(this)" Style="visibility: hidden;" />
+                        <div id="containerOP" style="margin-top: 10px; display: flex; justify-content: center; flex-wrap: wrap; gap: 6px;"></div>
+                    </div>
+                    <div class="col-lg-4 col-md-4" style="text-align: center">
+                        <input id="Button_CT" type="button" class="btn btn-primry" onclick="triggerCTFileUpload()" value="Upload (CT)" title="Upload Files Only" />
+                        <asp:FileUpload ID="fileUpload_CF_CT" runat="server" multiple="multiple" AllowMultiple="true" onchange="readIMGsingle(this)" Style="visibility: hidden;" />
+                        <div id="containerCT" style="margin-top: 10px; display: flex; justify-content: center; flex-wrap: wrap; gap: 6px;"></div>
+                    </div>
+                </div>
+                <div id="ImageContainer" style="min-height: 90px; display: flex; flex-wrap: wrap; gap: 10px; margin-top: 14px; justify-content: center;"></div>
+            </div>
+
+            <div class="body-save-row">
+                <asp:Button ID="btnSave" runat="server" CssClass="btn btn-primry" TabIndex="22" Text="Save" OnClientClick="this.disabled = true; Save_Alinger();" UseSubmitBehavior="false" OnClick="btnSave_Click" />
+                <input type="button" value="New" class="btn btn-gray" onclick="NewWindow()" />
+                <input type="button" id="btnBackList" value="List View" class="btn btn-gray" onclick="BackToList()" />
+            </div>
+            <asp:Label ID="Label1" runat="server"></asp:Label>
+            <asp:ValidationSummary ID="ValidationSummary2" runat="server" ForeColor="Red" HeaderText="Page Errors" ShowSummary="true" DisplayMode="List" />
+
+        </div>
+        <div class="col-lg-5 col-md-5">
+
+            <div class="dental-chart-card">
+                <div class="bento-title">Dental Chart</div>
+                <div class="dental-legend">
+                    <span class="dental-legend-item"><span class="dental-swatch"></span> Selected Tooth</span>
+                    <span class="dental-quick">
+                        <button type="button" class="btn btn-gray btn-xs" onclick="dentalSelectAll(true)">All</button>
+                        <button type="button" class="btn btn-gray btn-xs" onclick="dentalSelectAll(false)">None</button>
+                    </span>
+                </div>
+                <div class="dental-chart-wrap">
+                    <svg id="odontogramSvg" viewBox="0 0 600 360" preserveAspectRatio="xMidYMid meet"></svg>
+                </div>
+                <div class="tooth-inputs">
+                    <asp:CheckBox ID="CHK_S1T1" runat="server" />
+                    <asp:CheckBox ID="CHK_S1T2" runat="server" />
+                    <asp:CheckBox ID="CHK_S1T3" runat="server" />
+                    <asp:CheckBox ID="CHK_S1T4" runat="server" />
+                    <asp:CheckBox ID="CHK_S1T5" runat="server" />
+                    <asp:CheckBox ID="CHK_S1T6" runat="server" />
+                    <asp:CheckBox ID="CHK_S1T7" runat="server" />
+                    <asp:CheckBox ID="CHK_S1T8" runat="server" />
+                    <asp:CheckBox ID="CHK_S2T1" runat="server" />
+                    <asp:CheckBox ID="CHK_S2T2" runat="server" />
+                    <asp:CheckBox ID="CHK_S2T3" runat="server" />
+                    <asp:CheckBox ID="CHK_S2T4" runat="server" />
+                    <asp:CheckBox ID="CHK_S2T5" runat="server" />
+                    <asp:CheckBox ID="CHK_S2T6" runat="server" />
+                    <asp:CheckBox ID="CHK_S2T7" runat="server" />
+                    <asp:CheckBox ID="CHK_S2T8" runat="server" />
+                    <asp:CheckBox ID="CHK_S3T1" runat="server" />
+                    <asp:CheckBox ID="CHK_S3T2" runat="server" />
+                    <asp:CheckBox ID="CHK_S3T3" runat="server" />
+                    <asp:CheckBox ID="CHK_S3T4" runat="server" />
+                    <asp:CheckBox ID="CHK_S3T5" runat="server" />
+                    <asp:CheckBox ID="CHK_S3T6" runat="server" />
+                    <asp:CheckBox ID="CHK_S3T7" runat="server" />
+                    <asp:CheckBox ID="CHK_S3T8" runat="server" />
+                    <asp:CheckBox ID="CHK_S4T1" runat="server" />
+                    <asp:CheckBox ID="CHK_S4T2" runat="server" />
+                    <asp:CheckBox ID="CHK_S4T3" runat="server" />
+                    <asp:CheckBox ID="CHK_S4T4" runat="server" />
+                    <asp:CheckBox ID="CHK_S4T5" runat="server" />
+                    <asp:CheckBox ID="CHK_S4T6" runat="server" />
+                    <asp:CheckBox ID="CHK_S4T7" runat="server" />
+                    <asp:CheckBox ID="CHK_S4T8" runat="server" />
+                </div>
             </div>
 
         </div>
-        <div style="padding-left: 40px; padding-top: 20px; margin-left: 45px;">
-            <table style="padding: 20px; width: 471px; height: 100px;">
-                <tr>
-
-                    <asp:HiddenField ID="hdfPatient_ID" Value="(New)" runat="server" ClientIDMode="Static" />
-
-                </tr>
-                <tr>
-                    <td>
-                        <asp:Button ID="btnSave" runat="server" TabIndex="22" Text="Save" OnClientClick="this.disabled = true; Save_Alinger();" UseSubmitBehavior="false" OnClick="btnSave_Click" />
-                        &nbsp;
-                 <input type="button" value="Clear" name="name" onclick="ClearAll();" style="display: none;" />
-                        &nbsp;
-                <input type="button" value="New" name="btnName" onclick="NewWindow()" />
-                        <input type="button" value="Print" name="name" onclick="PrintInpatientReceipt();" style="width: 100px;" />
-                        &nbsp;
-                 <input type="button" id="btnBackList" value="List View" onclick="BackToList()" />
-                    </td>
-                </tr>
-                <tr>
-                    <td>
-                        <asp:Label ID="Label1" runat="server"></asp:Label>
-                    </td>
-                </tr>
-                <tr>
-                    <td>
-                        <asp:ValidationSummary ID="ValidationSummary2" runat="server"
-                            ForeColor="Red" HeaderText="Page Errors"
-                            ShowSummary="true" DisplayMode="List" />
-                    </td>
-                </tr>
-            </table>
-        </div>
     </div>
-
 </asp:Content>
