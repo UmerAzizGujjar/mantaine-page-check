@@ -112,6 +112,7 @@ namespace PMS.Modules.Accounts
                              AllowDiscountAssign = p.AllowDiscount_assign,
                                 AllowTill = p.user_till,
                               Allow_Medication_Edit = p.Allow_Medication_Edit,
+                             AllowPendingApprovalList = p.Allow_Pending_Approval_List,
                           }).FirstOrDefault();
             string data = string.Empty;
             data = new JavaScriptSerializer().Serialize(users);
@@ -239,6 +240,7 @@ namespace PMS.Modules.Accounts
                     user.AllowRegListPrint = data.AllowReglistPrint;
                     user.AllowTestlistDoctor = data.AllowTestlistDoctor;
                     user.Allow_Medication_Edit = data.Allow_Medication_Edit;
+                    user.Allow_Pending_Approval_List = data.AllowPendingApprovalList;
                     membership.mobileno = data.Mobile;
                     membership.Email = data.Email;
                     membership.LoweredEmail = data.Email.ToLower();
@@ -307,6 +309,7 @@ namespace PMS.Modules.Accounts
                 newuser.AllowRegListPrint = data.AllowReglistPrint;
                 newuser.AllowTestlistDoctor = data.AllowTestlistDoctor;
                 newuser.Allow_Medication_Edit = data.Allow_Medication_Edit;
+                newuser.Allow_Pending_Approval_List = data.AllowPendingApprovalList;
                 newuser.AllowUnapproveVoucher = data.AllowUnapproveVouchers;
                 newuser.IsAnonymous = data.IsAnonymous;
                 newuser.EditEmergency = data.EditEmergency;
@@ -468,6 +471,7 @@ namespace PMS.Modules.Accounts
             public bool BlockUser { get; set; }
             public bool AllowemergencyDiscount { get; set; }
             public bool Allow_Medication_Edit { get; set; }
+            public bool AllowPendingApprovalList { get; set; }
         }
 
     }
