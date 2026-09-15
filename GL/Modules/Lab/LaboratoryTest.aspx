@@ -55,6 +55,299 @@
     margin-right: 6px;
     cursor: pointer;
 }
+
+/* ===================== Layout polish (design only) ===================== */
+.lab-page { padding-bottom: 16px; }
+
+/* ── Compact tables (override AddNewLabTest.css 1em padding) ── */
+.lab-page .table {
+    width: 100% !important;
+    margin-bottom: 0 !important;
+    font-size: 12px !important;
+    background: #fff !important;
+}
+.lab-page .table th {
+    display: table-cell !important;
+    background: #EFA63E !important;
+    background-image: none !important;
+    color: #fff !important;
+    font-size: 10.5px !important;
+    font-weight: 700 !important;
+    text-transform: uppercase;
+    letter-spacing: .04em;
+    padding: 7px 10px !important;
+    border: none !important;
+    border-bottom: 1px solid #EFA63E !important;
+    text-align: left !important;
+    white-space: nowrap;
+    vertical-align: middle !important;
+}
+.lab-page .table td {
+    display: table-cell !important;
+    padding: 6px 10px !important;
+    font-size: 12px !important;
+    border: none !important;
+    border-bottom: 1px solid #f0f0f0 !important;
+    vertical-align: middle !important;
+    text-align: left !important;
+    background: transparent !important;
+    max-width: none !important;
+    word-wrap: normal !important;
+}
+.lab-page .table tbody tr:nth-child(even) { background: #fbfcfe; }
+.lab-page .table tbody tr:hover { background: #EFA63E12; }
+.lab-page .table td a { color: #d29237 !important; font-weight: 700; text-decoration: none !important; }
+.lab-page .table td a:hover { text-decoration: underline !important; }
+.lab-page .table td input[type="text"],
+.lab-page .table td select {
+    height: 28px !important;
+    padding: 3px 7px !important;
+    font-size: 11.5px !important;
+    border: 1px solid #d9dee3 !important;
+    border-radius: 3px !important;
+    background: #fff !important;
+    box-shadow: none !important;
+}
+.lab-page .table td input[type="checkbox"] { position: static !important; margin: 0 !important; }
+
+/* ── Patient info cards ── */
+.lab-page .lab-cards-row {
+    display: flex !important;
+    flex-wrap: wrap;
+}
+.lab-page .lab-cards-row > [class*="col-"] {
+    display: flex;
+    flex-direction: column;
+}
+.lab-page .lab-cards-row .card { flex: 1 1 auto; }
+.lab-page .card {
+    height: auto !important;
+    min-height: 100%;
+    background: #fff !important;
+    border: 1px solid #fdf2e2 !important;
+    border-left: 3px solid #EFA63E !important;
+    border-radius: 8px !important;
+    padding: 16px 18px !important;
+    margin-bottom: 16px !important;
+    box-shadow: 0 4px 12px rgba(0,0,0,.04) !important;
+}
+.lab-page .card-body { padding: 0 !important; }
+.lab-page .card .image-container {
+    background: #f7f8fa !important;
+    padding: 14px !important;
+    border-radius: 50%;
+    display: inline-block;
+}
+.lab-page .card .patient-image { max-width: 110px; }
+.lab-page .card label {
+    font-size: 11px !important;
+    font-weight: 700 !important;
+    color: #555 !important;
+    text-transform: uppercase;
+    letter-spacing: .03em;
+    margin-bottom: 2px !important;
+}
+.lab-page .card-body p { margin-bottom: 0 !important; font-size: 13px !important; }
+.lab-page .mtt { margin-top: 0 !important; margin-bottom: 8px !important; }
+.lab-page .formrgn { margin-top: 6px !important; }
+.lab-page .top { margin-top: 0 !important; }
+.lab-page .detail { margin-top: 6px !important; }
+.lab-page #txtMRNOSearch {
+    height: 30px !important;
+    font-size: 12px !important;
+    border: 1px solid #e0e0e0 !important;
+    border-radius: 4px !important;
+    padding: 4px 8px !important;
+    width: 100% !important;
+    box-shadow: none !important;
+}
+
+/* ── Field rows ── */
+.lab-field > label,
+.lab-field > span {
+    font-size: 11px !important;
+    font-weight: 700 !important;
+    color: #555 !important;
+    text-transform: uppercase;
+    letter-spacing: .03em;
+    display: block;
+    margin-bottom: 3px !important;
+    line-height: 1.2;
+    min-height: 15px;
+}
+.lab-field select,
+.lab-field input[type="text"] {
+    height: 30px !important;
+    font-size: 12px !important;
+    border: 1px solid #e0e0e0 !important;
+    border-radius: 4px !important;
+    padding: 4px 8px !important;
+    width: 100% !important;
+    background: #fff !important;
+    box-shadow: none !important;
+}
+.lab-field select:focus,
+.lab-field input[type="text"]:focus {
+    border-color: #EFA63E !important;
+    box-shadow: 0 0 0 3px #EFA63E25 !important;
+    outline: none !important;
+}
+.lab-field .lab-inline { display: flex; align-items: center; gap: 7px; height: 30px; }
+.lab-field .lab-inline label { margin: 0 !important; }
+.lab-field .lab-inline input[type="checkbox"] {
+    width: 15px;
+    height: 15px;
+    margin: 0 !important;
+    position: static !important;
+}
+.lab-page .lab-validator {
+    min-height: 18px;
+    padding-top: 0;
+    color: #c5221f;
+    font-weight: 700;
+    font-size: 12px;
+}
+.lab-page .lab-validator .lab-inline { height: auto; min-height: 30px; }
+.lab-modal .lab-modal-fields { margin-bottom: 10px; }
+.lab-modal .lab-modal-fields > [class*="col-"] { margin-bottom: 10px; }
+.lab-modal .lab-modal-fields select,
+.lab-modal .lab-modal-fields input[type="text"] {
+    width: 100% !important;
+    height: 32px !important;
+    font-size: 12px !important;
+    border: 1px solid #e0e0e0 !important;
+    border-radius: 4px !important;
+    padding: 4px 8px !important;
+    background: #fff !important;
+    box-shadow: none !important;
+}
+.lab-modal .lab-modal-fields input[type="button"] { height: 32px; }
+
+/* ── Panels ── */
+.lab-panel {
+    background: #fff;
+    border: 1px solid #fdf2e2;
+    border-left: 3px solid #EFA63E;
+    border-radius: 8px;
+    margin-bottom: 16px;
+    box-shadow: 0 4px 12px rgba(0,0,0,.04);
+    overflow: hidden;
+}
+.lab-panel-head {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+    padding: 9px 16px;
+    background: linear-gradient(90deg, #EFA63E10, #fff);
+    border-bottom: 1px solid #EFA63E30;
+}
+.lab-panel-head h1,
+.lab-panel-head h2 {
+    margin: 0 !important;
+    font-size: 13px !important;
+    font-weight: 700 !important;
+    color: #EFA63E !important;
+    text-transform: uppercase;
+    letter-spacing: .05em;
+    text-align: left !important;
+}
+.lab-panel-head .lab-panel-link {
+    font-size: 11px;
+    font-weight: 700;
+    color: #7a6530 !important;
+    text-transform: uppercase;
+    letter-spacing: .04em;
+    text-decoration: none !important;
+    background: #fdf7ef;
+    border: 1px solid #f0e0c8;
+    border-radius: 14px;
+    padding: 3px 12px;
+    white-space: nowrap;
+}
+.lab-panel-head .lab-panel-link:hover { background: #EFA63E; color: #fff !important; border-color: #EFA63E; }
+.lab-scroll { max-height: 260px; overflow: auto; }
+
+/* ── Vitals ── */
+.lab-page .vitalsTable {
+    border: 1px solid #eef0f3 !important;
+    border-radius: 8px !important;
+    padding: 0 !important;
+    background: #fff !important;
+    margin-bottom: 16px !important;
+    overflow: hidden;
+}
+.lab-page .vitalsTable > div:first-child {
+    padding: 9px 16px;
+    background: linear-gradient(90deg, #EFA63E10, #fff);
+    border-bottom: 1px solid #EFA63E30;
+}
+.lab-page .vitalsTable > div:first-child h4 {
+    background: none !important;
+    color: #EFA63E !important;
+    font-size: 13px !important;
+    font-weight: 700 !important;
+    text-transform: uppercase;
+    letter-spacing: .05em;
+    height: auto !important;
+    width: auto !important;
+    padding: 0 !important;
+    margin: 0 !important;
+    border-radius: 0 !important;
+}
+.lab-page .vitalsTable .MyTable { margin-bottom: 0 !important; }
+
+/* ── Action row ── */
+.lab-page .lab-actions {
+    margin-top: 16px;
+    padding-top: 14px;
+    border-top: 1px solid #fdf2e2;
+}
+.lab-page .lab-actions .row > [class*="col-"] { margin-bottom: 8px; }
+.lab-page .lab-actions input[type="button"],
+.lab-page .lab-actions input[type="submit"] { width: 100%; }
+
+/* ── Modals ── */
+.lab-page .modal .modal-content,
+.lab-modal .modal-content {
+    border-radius: 10px;
+    border: none;
+    box-shadow: 0 10px 40px rgba(0,0,0,.18);
+}
+.lab-page .modal .modal-header,
+.lab-modal .modal-header {
+    background: linear-gradient(90deg, #EFA63E10, #fff);
+    border-bottom: 1px solid #EFA63E30;
+    border-radius: 10px 10px 0 0;
+    padding: 12px 18px;
+}
+.lab-page .modal .modal-title,
+.lab-modal .modal-title {
+    font-size: 14px;
+    font-weight: 700;
+    color: #EFA63E;
+    text-transform: uppercase;
+    letter-spacing: .04em;
+}
+.lab-modal .modal-body { padding: 16px 18px; }
+.lab-modal .modal-body h2,
+.lab-modal .modal-body h4 {
+    font-size: 13px !important;
+    font-weight: 700 !important;
+    color: #EFA63E !important;
+    text-transform: uppercase;
+    letter-spacing: .05em;
+    margin: 0 0 6px !important;
+}
+.lab-modal textarea {
+    width: 100% !important;
+    min-height: 70px;
+    font-size: 12px !important;
+    border: 1px solid #e0e0e0 !important;
+    border-radius: 4px !important;
+    padding: 6px 8px !important;
+    box-shadow: none !important;
+}
     </style>
     <script type="text/javascript">
 
@@ -1539,15 +1832,15 @@
 </asp:Content>
 <asp:Content ID="Content2" ContentPlaceHolderID="MainContent" runat="server">
     
-    <div id="PatientDetail" style="width: 100%">
+    <div id="PatientDetail" class="lab-page" style="width: 100%">
         <asp:UpdatePanel ID="UpdatePanel1" runat="server" UpdateMode="Conditional">
             <Triggers>
                 <asp:AsyncPostBackTrigger ControlID="chkCustomer" EventName="CheckedChanged" />
             </Triggers>
             <ContentTemplate>
-                <div class="row">
+                <div class="row lab-cards-row">
     <!-- Left Card -->
-    <div class="col-lg-5 col-md-5 col-sm-12">
+    <div class="col-lg-6 col-md-6 col-sm-12">
         <div class="card">
             <div class="card-body">
                 <div class="row">
@@ -1603,7 +1896,7 @@
         </div>
            </div>
                     <!-- Right Card -->
-                    <div class="col-lg-5 col-md-5 col-sm-12">
+                    <div class="col-lg-6 col-md-6 col-sm-12">
                         <div class="card">
                             <div class="card-body">
                                 <div class="row mb-3">
@@ -1650,13 +1943,14 @@
                             </div>
                         </div>
                     </div>
-                  <div class="row" style="margin-bottom: 15px">
-      <div class="col-lg-2 col-md-3 col-sm-3">
+                  <div class="row">
+      <div class="col-lg-3 col-md-4 col-sm-6 lab-field">
+          <label>Patient Category</label>
           <select id="ddlmaindepartment" onchange="LoadVitalParameters();"></select>
       </div>
   </div>
   <div class="main-row ">
-      <div class="row vitalsTable" id="opdvitals" style="margin-left: -2px;">
+      <div class="vitalsTable" id="opdvitals">
 
           <div style="display: flex; align-items: center; justify-content: space-between; width: 100%;">
               <h4 style="height: 30px; background-color: #f0f1f3; width: 125px; padding: 5px 12px; border-radius: 8px; margin: 0;">Latest Vitals
@@ -1687,7 +1981,7 @@
 
 
       </div>
-      <div class="roww vitalsTable" id="ipdvitals" style="margin-left: -2px;">
+      <div class="vitalsTable" id="ipdvitals">
           <div style="display: flex; align-items: center; justify-content: space-between; width: 100%;">
               <h4 style="height: 30px; background-color: #f0f1f3; width: 125px; padding: 5px 12px; border-radius: 8px; margin: 0;">Latest Vitals
               </h4>
@@ -1709,7 +2003,7 @@
               </tbody>
           </table>
       </div>
-      <div class="roww vitalsTable" id="emergencyVital" style="margin-left: -2px;">
+      <div class="vitalsTable" id="emergencyVital">
           <div style="display: flex; align-items: center; justify-content: space-between; width: 100%;">
               <h4 style="height: 30px; background-color: #f0f1f3; width: 125px; padding: 5px 12px; border-radius: 8px; margin: 0;">Latest Vitals
               </h4>
@@ -1735,132 +2029,104 @@
                 
                 <form id="item">
                     <div class="row">
-                        <div class="col-lg-2 col-md-3 col-sm-4">
+                        <div class="col-lg-2 col-md-3 col-sm-4 lab-field">
                             <asp:Label ID="Label2" runat="server" Text="Lab Test ID :"></asp:Label>
                             <asp:TextBox ID="txtLab_Test_ID" runat="server" ReadOnly="True"></asp:TextBox>
                         </div>
-                        <div class="col-lg-2 col-md-3 col-sm-4">
+                        <div class="col-lg-3 col-md-3 col-sm-4 lab-field">
                             <label>Search By Date:</label>
                             <select id="main-departments" onchange="TestDetail()"></select>
                         </div>
-                        <div class="col-lg-1 col-md-3 col-sm-4" style="margin-top:1%">
+                        <div class="col-lg-3 col-md-3 col-sm-4 lab-field">
                             <label>For Today:</label>
+                            <div class="lab-inline">
+                                <input type="checkbox" id="chkTodayAll" onchange="getTests_WRT_Date()" />
+                                <span>Today's list only</span>
                             </div>
-                        <div class="col-lg-1 col-md-3 col-sm-4" style="margin-top:1%">
-                            <input type="checkbox" id="chkTodayAll" onchange="getTests_WRT_Date()" />
+                        </div>
+                        <div class="col-lg-4 col-md-3 col-sm-12 lab-field lab-validator">
+                            <label>&nbsp;</label>
+                            <div class="lab-inline">
+                                <asp:CheckBox Text="(Walk-in Customer)" ID="chkCustomer" runat="server" onclick="" OnCheckedChanged="chkCustomer_CheckedChanged" AutoPostBack="true" Style="display: none" />
+                                <asp:RequiredFieldValidator ID="rfvPatient_ID" runat="server" ControlToValidate="txtPatient_ID" ErrorMessage="Select Patient ID" Text="*"></asp:RequiredFieldValidator>
+                            </div>
                         </div>
                     </div>
-                        
-                     </form>
-               
-                <table>
-                    <tr>
-                        <td>
-                            <table>
-                                <tr>
-                                    <td style="width: 111px;"></td>
-                                    <td></td>
-                                    <td>
-                                        <asp:CheckBox Text="(Walk-in Customer)" ID="chkCustomer" runat="server" onclick="" OnCheckedChanged="chkCustomer_CheckedChanged" AutoPostBack="true" Style="display: none" />
-                                        <asp:RequiredFieldValidator ID="rfvPatient_ID" runat="server" ControlToValidate="txtPatient_ID" ErrorMessage="Select Patient ID" Text="*"></asp:RequiredFieldValidator>
-                                    </td>
-                                </tr>
-                            </table>
-                        </td>
-                    </tr>
-                </table>
-                
+                </form>
 
-                                <div class="row">
-                    <div class="col-12">
-                        <div class="table-responsive">
-                            <table class="table" >
+                <div class="lab-panel">
+                    <div class="lab-panel-head">
+                        <h1 class="headingcolor">Test Calling List</h1>
+                        <a href="#" id="testViewDetails" class="lab-panel-link">Enlarge</a>
+                    </div>
+                    <div id="dvtblSymtomps" class="lab-scroll">
+                        <table class="table" id="tblPendingPatients">
+                            <thead>
                                 <tr>
-                                    <td class="lab-head" >
-                                        <h1 class="headingcolor">Test Calling List</h1>
-                                    </td>
+                                    <th></th>
+                                    <th>Bill Date</th>
+                                    <th>Bill No</th>
+                                    <th>Name</th>
+                                    <th>Test Name</th>
+                                    <th>Remarks</th>
+                                    <th>Dpt</th>
+                                    <th>CNIC</th>
+                                    <th>Mobile</th>
+                                    <th>Action</th>
+                                    <th>Status</th>
                                 </tr>
-                                <tr>
-                                    <a href="#" id="testViewDetails">Enlarge</a>
-                                </tr>
-                                <tr>
-                                    <td>
-                                        <div id="dvtblSymtomps" class="table-responsive" style="height: 207px; overflow-y: auto; overflow-x: auto;">
-                                            <table class="table" id="tblPendingPatients">
-                                                <thead>
-                                                    <tr>
-                                                        <th></th>
-                                                        <th>Bill Date</th>
-                                                        <th>Bill No</th>
-                                                        <th>Name</th>
-                                                        <th>Test Name</th>
-                                                        <th>Remarks</th>
-                                                        <th>Dpt</th>
-                                                        <th>CNIC</th>
-                                                        <th>Mobile</th>
-                                                        <th>Action</th>
-                                                        <th>Status</th>
-                                                    </tr>
-                                                </thead>
-                                                <tbody></tbody>
-                                            </table>
-                                        </div>
-                                    </td>
-                                </tr>
-                            </table>
-                        </div>
+                            </thead>
+                            <tbody></tbody>
+                        </table>
                     </div>
                 </div>
-                   <div class="row">
-                       <div class="col-12">
-                           <div class="table-responsive" style="margin-top: 20px;overflow-y:scroll;height:180px;">
-                               <table id="tbltestDetail" class="table table-bordered table-striped">
-                                   <thead>
-                                       <tr>
-                                           <th>Bill Date</th>
-                                           <th>Test Name</th>
-                                           <th>Area Of Interest</th>
-                                           <th>Payment</th>
-                                           <th>Sample Collection</th>
-                                           <th>Received in Lab</th>
-                                           <th>Test Collected By</th>
-                                           <th>Performed By</th>
-                                           <th>Urgent</th>
-                                           <th>Remarks</th>
-                                           <th>Action</th>
-                                       </tr>
-                                   </thead>
-                                   <tbody id="tbltest"></tbody>
-                               </table>
-                           </div>
+                   <div class="lab-panel">
+                       <div class="lab-panel-head">
+                           <h2 class="headingcolor">Selected Tests</h2>
+                       </div>
+                       <div class="lab-scroll">
+                           <table id="tbltestDetail" class="table">
+                               <thead>
+                                   <tr>
+                                       <th>Bill Date</th>
+                                       <th>Test Name</th>
+                                       <th>Area Of Interest</th>
+                                       <th>Payment</th>
+                                       <th>Sample Collection</th>
+                                       <th>Received in Lab</th>
+                                       <th>Test Collected By</th>
+                                       <th>Performed By</th>
+                                       <th>Urgent</th>
+                                       <th>Remarks</th>
+                                       <th>Action</th>
+                                   </tr>
+                               </thead>
+                               <tbody id="tbltest"></tbody>
+                           </table>
                        </div>
                    </div>
-                <div class="row">
-                      <div class="table-responsive" style="width: 100%; overflow: scroll; height: 300px;">
-                
-                               <table class="table" id="tblHistoryTests">
-                                    <thead>
-                                        <tr>
-                                            <td colspan="12">
-                                                <div id="HeaderTests">
-                                                    <h2 class="headingcolor">Previous History</h2>
-                                                </div>
-                                            </td>
-                                        </tr>
-                                        <tr>
-                                            <th>Test Collected Date</th>
-                                            <th>Test Ready Date</th>
-                                            <th>Bill No</th>
-                                            <th>Mr NO</th>
-                                            <th style="width: 563px">Test Name</th>
-                                            <th>Test Collected By</th>
-                                            <th>Result</th>
-                                        </tr>
-                                    </thead>
-                                    <tbody id="testbody">
-                                    </tbody>
-                                </table>
-
+                <div class="lab-panel">
+                    <div class="lab-panel-head">
+                        <div id="HeaderTests">
+                            <h2 class="headingcolor">Previous History</h2>
+                        </div>
+                    </div>
+                    <div class="lab-scroll" style="max-height: 320px;">
+                        <table class="table" id="tblHistoryTests">
+                            <thead>
+                                <tr>
+                                    <th>Test Collected Date</th>
+                                    <th>Test Ready Date</th>
+                                    <th>Bill No</th>
+                                    <th>Mr NO</th>
+                                    <th style="width: 563px">Test Name</th>
+                                    <th>Test Collected By</th>
+                                    <th>Result</th>
+                                </tr>
+                            </thead>
+                            <tbody id="testbody">
+                            </tbody>
+                        </table>
                     </div>
                 </div>
                  
@@ -1885,7 +2151,7 @@
 
 
 
-                <div class="col-lg-8" style="margin-top:1%">
+                <div class="col-12 lab-actions">
                     <div class="row">
                 <div class="col-lg-2 col-md-3 col-sm-4">
                    <asp:Button ID="saveLabTest" runat="server" value="Save" class="btn btn-primry"  Text="Save" OnClientClick="this.disabled = true;" UseSubmitBehavior="false" TabIndex="20"/>                  
@@ -1895,7 +2161,7 @@
                 <input type="button" class="btn btn-yellow"  value="New" id="btnNew" onclick="New()" />
                     </div>
                 <div class="col-lg-2 col-md-3 col-sm-4">
-                <input type="button" id="btnBackList" class="btn-gray" value="View " onclick="BackToList()" style="margin-left:10px" />
+                <input type="button" id="btnBackList" class="btn-gray" value="View " onclick="BackToList()" />
                     </div>
               <div class="col-lg-2 col-md-3 col-sm-4">
                  <input type="button" value="Reported Slip" class="btn btn-primry" id="print-slip" />
@@ -1905,37 +2171,22 @@
                      </div>
                     </div>
                     </div>
-                <div id="myModal" class="modal fade" role="dialog">
+                <div id="myModal" class="modal fade lab-modal" role="dialog">
                     <div class="modal-dialog">
-                        
-                        <div class="modal-content" style="width: 414px; margin-left: 296px;">
+                        <div class="modal-content">
                             <div class="modal-header">
                                 <button type="button" style="width: auto;" class="close" data-dismiss="modal">&times;</button>
                                 <h4 class="modal-title">View Test Images and Report</h4>
                             </div>
                             <div class="modal-body">
-                                <table>
-                                    <tr>
-                                        <td>
-                                            <input type="hidden" id="type" />
-                                            <input type="hidden" id="IDtest" />
-                                        </td>
-                                        <td>
-                                            <div style="margin-top: -15px; margin-left: 38px;">
-                                                <table border="0" cellpadding="0" cellspacing="5">
-                                                    <tr>
-                                                        <td>
-                                                            <div id="errorMsg" class="formLabel" style="color: red; display: none">No Image Uploaded.</div>
-                                             <div id="dvPreview" style="white-space: nowrap; overflow-x: visible; overflow-y: hidden; width: 260px;"></div>
-                                                        </td>
-                                                    </tr>
-                                                </table>
-                                                <input type="button" class="btn btn-primry" id="Button1" value="View Print Report"  onclick  ="ShowReport()" />
-                                                <input type="hidden" id="Hidden1" />
-                                            </div>
-                                        </td>
-                                    </tr>
-                                </table>
+                                <input type="hidden" id="type" />
+                                <input type="hidden" id="IDtest" />
+                                <div id="errorMsg" class="formLabel" style="color: red; display: none">No Image Uploaded.</div>
+                                <div id="dvPreview" style="white-space: nowrap; overflow-x: auto; overflow-y: hidden; min-height: 70px;"></div>
+                                <div style="margin-top: 12px;">
+                                    <input type="button" class="btn btn-primry" id="Button1" value="View Print Report" onclick="ShowReport()" />
+                                </div>
+                                <input type="hidden" id="Hidden1" />
                             </div>
                         </div>
                     </div>
@@ -1943,112 +2194,102 @@
             </ContentTemplate>
         </asp:UpdatePanel>
     </div>
-    <div id="MedicationModel" class="modal fade" role="dialog">
-        <div class="modal-dialog">
-            
-            <div class="modal-content" style="width: 1000px; margin-left: -270px; height: 412px;">
+    <div id="MedicationModel" class="modal fade lab-modal" role="dialog">
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content">
                 <div class="modal-header">
                     <button type="button" style="width: auto;" class="close" data-dismiss="modal">&times;</button>
                     <h4 class="modal-title">Add Test</h4>
                 </div>
-                <div style="margin-top: 2px; margin-left: 57px;" id="lab">
-                    <h2>Lab Tests : </h2>
-                </div>
-                <div style="margin-top: -48px; margin-left: 433px;" id="radtest4">
-                    <h2>Radiology Tests : </h2>
-                </div>
-                <table style="margin-left: 218px; width: 43px;">
-                    <tr>
-                        <td id="labtest">
+                <div class="modal-body">
+                    <div class="row">
+                        <div class="col-md-6" id="lab">
+                            <h2>Lab Tests : </h2>
+                        </div>
+                        <div class="col-md-6" id="radtest4">
+                            <h2>Radiology Tests : </h2>
+                        </div>
+                    </div>
+                    <div class="row lab-modal-fields">
+                        <div class="col-md-5" id="labtest">
                             <select id="ddlLabTest">
                                 <option value="">Select Department</option>
                             </select>
-                        </td>
-                        <td id="labtest1">
-                            <input type="button" value="Add Test" id="add-new-testDirect" />
-                        </td>
-                        <td id="radtest1">
+                        </div>
+                        <div class="col-md-3" id="labtest1">
+                            <input type="button" class="btn btn-primry" value="Add Test" id="add-new-testDirect" />
+                        </div>
+                        <div class="col-md-12" id="radtest1">
                             <button type="button" id="btnultrasound" class="btn btn-info" onclick="FillTestsByCategory('002')">UltraSound</button>
                             <button type="button" id="btnXray" class="btn btn-info" value="X-Ray" onclick="FillTestsByCategory('003')">X-Ray</button>
                             <button type="button" id="btnCTscan" value="CT Scan" class="btn btn-info" onclick="FillTestsByCategory('004')">CT Scan</button>
-                        </td>
-                        <td id="radtest2">
-                            <select id="groupsCat" style="width: 175px !IMPORTANT;">
+                        </div>
+                        <div class="col-md-5" id="radtest2">
+                            <select id="groupsCat" style="width: 100%;">
                             </select>
                             <div id="divRotation">
                                 <select id="ddlRotation" style="display: none;">
                                 </select>
                             </div>
                             <div id="divX_Ray">
-                                <select id="ddlXRayLF" style="display: none; width: 73px !important; margin-left: 101px; margin-top: -28px; height: 28px;">
+                                <select id="ddlXRayLF" style="display: none;">
                                     <option value="0"></option>
                                     <option value="L">Left</option>
                                     <option value="R">Right</option>
                                 </select>
                             </div>
-                        </td>
-                        <td id="radtest3">
-                            <input type="button" value="Add Test" id="add-new-testList" />
-                        </td>
-                    </tr>
-                    <tr>
-                        <td>
-                            <h2>Special Test </h2>
-                        </td>
-                    </tr>
-                    <tr>
-                        <td>
+                        </div>
+                        <div class="col-md-3" id="radtest3">
+                            <input type="button" class="btn btn-primry" value="Add Test" id="add-new-testList" />
+                        </div>
+                    </div>
+                    <div class="row lab-modal-fields">
+                        <div class="col-md-6">
+                            <h2>Special Test</h2>
                             <asp:TextBox ID="txtSpecialTests" runat="server" TextMode="MultiLine"></asp:TextBox>
-                        </td>
-                        <td></td>
-                        <td>
-                            <label style="width: 100px;">Area Of Interest</label>
-                        </td>
-                        <td>
-                            <asp:TextBox ID="txtAreaOfInterest" runat="server" TextMode="MultiLine"></asp:TextBox></td>
-                    </tr>
-                </table>
+                        </div>
+                        <div class="col-md-6">
+                            <h2>Area Of Interest</h2>
+                            <asp:TextBox ID="txtAreaOfInterest" runat="server" TextMode="MultiLine"></asp:TextBox>
+                        </div>
+                    </div>
+                </div>
             </div>
         </div>
     </div>
-        <center>
-    <div id="TestViewDetail" class="modal fade" style="height:auto;overflow:hidden!important;margin:30px;padding-right:0px !important">
-        <div>
-            
-             <div class="modal-content">
-                  <div class="panel-heading">
-                     <button type="button" style="width: auto;" class="close" data-dismiss="modal">&times;</button>
-                    <h3>Test View</h3>
-                 </div>
-               <div>
-                 <table class="table" style=" table-layout: fixed;" id="tstHeaderModal">
-                     <thead>
-                         <tr>
-                             <th>Date</th>
-                             <th>MR No</th>
-                             <th>Name</th>
-                             <th>Test Name</th>
-                             <th>Doctor Name</th>
-                             <th>Dpt</th>
-                             <th>Action</th>
-                             <th>Status</th>
-                         </tr>
-                     </thead>
-                     <tbody>
-                       
-                     </tbody>
-                 </table>
-                 </div>
-                   <div style="max-height:500px;overflow:auto;margin-top: -15px">
-          <table id="tstDetailModal" class="table" style="table-layout: fixed;">             
-              <tbody></tbody>            
-          </table>
+    <div id="TestViewDetail" class="modal fade lab-modal" role="dialog">
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" style="width: auto;" class="close" data-dismiss="modal">&times;</button>
+                    <h3 class="modal-title">Test View</h3>
+                </div>
+                <div class="modal-body">
+                    <table class="table" id="tstHeaderModal">
+                        <thead>
+                            <tr>
+                                <th>Date</th>
+                                <th>MR No</th>
+                                <th>Name</th>
+                                <th>Test Name</th>
+                                <th>Doctor Name</th>
+                                <th>Dpt</th>
+                                <th>Action</th>
+                                <th>Status</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                        </tbody>
+                    </table>
+                    <div class="lab-scroll" style="max-height: 420px; margin-top: 10px;">
+                        <table id="tstDetailModal" class="table">
+                            <tbody></tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
         </div>
-
-             </div>
     </div>
-        </div>
-</center>
 </asp:Content>
 
 
