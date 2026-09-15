@@ -350,6 +350,18 @@
             }, function (error) {
                 alert('Error checking rights: ' + error.get_message());
             });
+            PageMethods.CheckPendingApprovallistRights(function(response) {
+                var hasRights = JSON.parse(response);
+
+                if (hasRights === true) {
+                    $('#Resultlist').show();
+                    CheckPendingApprovallistRights();
+                } else {
+                    $('#Resultlist').hide();
+                }
+            }, function(error) {
+                alert('Error checking rights: ' + error.get_message());
+            });
             var PatientID = '<%=Request.QueryString["PatientID"]%>';
             if (PatientID != "") {
                 fillTokenInput(PatientID);

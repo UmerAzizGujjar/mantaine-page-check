@@ -99,6 +99,7 @@
                     $('#AllowApprovalitem').prop('checked', data.AllowApprovalitem);
                     $('#AllowTestlistDoctor').prop('checked', data.AllowTestlistDoctor);
                     $('#Allow_Medication_Edit').prop('checked', data.Allow_Medication_Edit);
+                    $('#Allow_Pending_Approval_List').prop('checked', data.AllowPendingApprovalList);
                 },
                 error: function (xhr, status, error) {
                     alert("Error: " + xhr.responseText);
@@ -169,6 +170,7 @@
             var AllowApprovalitem = $('#AllowApprovalitem').prop('checked');
             var AllowTestlistDoctor = $('#AllowTestlistDoctor').prop('checked');
             var Allow_Medication_Edit = $('#Allow_Medication_Edit').prop('checked');
+            var AllowPendingApprovalList = $('#Allow_Pending_Approval_List').prop('checked');
             var AllowReglistPrint = $('#Allow_ReglistPrint').prop('checked');
             
             var EmpCode = $('#EmpCode').val();
@@ -316,7 +318,8 @@
                 "AllowApprovalitem": AllowApprovalitem,
                 "AllowReglistPrint": AllowReglistPrint,
                 "AllowTestlistDoctor": AllowTestlistDoctor,
-                "Allow_Medication_Edit": Allow_Medication_Edit
+                "Allow_Medication_Edit": Allow_Medication_Edit,
+                "AllowPendingApprovalList": AllowPendingApprovalList
 
             };
 
@@ -763,6 +766,9 @@
                                                     <div class="form-check">
                                                         <input type="checkbox" class="form-check-input" id="Allow_Medication_Edit" name="Allow_Medication_Edit" />
                                                     </div>
+                                                    <div class="form-check">
+                                                        <input type="checkbox" class="form-check-input" id="Allow_Pending_Approval_List" name="Allow_Pending_Approval_List" />
+                                                    </div>
 
 
                                                  </div>
@@ -855,6 +861,10 @@
                                                     <div class="form-check">
                                                         <label class="form-check-label" for="Allow_Medication_Edit">Allow Medication Edit</label>
                                                     </div>
+                                                    <div class="form-check">
+                                                        <label class="form-check-label" for="Allow_Pending_Approval_List">Pending Approval List</label>
+                                                    </div>
+                                                  </div>
                                                   </div>
                                             </div>
                                             <div class="row">

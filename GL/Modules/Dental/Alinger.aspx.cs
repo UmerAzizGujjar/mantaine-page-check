@@ -172,17 +172,19 @@ namespace PMS
         {
             DataBaseDataContext db = new DataBaseDataContext();
           var  AlingerID= ( from a in db.Alingers join
-                         pt in db.Reg_patients on a.Patient_ID equals pt.pat_id
+                         pt in db.Patients on a.Patient_ID equals pt.Patient_ID
                  where a.Alinger_ID== Out_Patient_id
                  select new
                  {
-                     pt.pat_id,
+                     pt.Patient_ID,
                      pt.Full_Name,
-                     pt.Created_time,
-                     pt.mr_no_sequence,
-                     pt.Permanent_Address,
-                     //pt.Patient_Main_Category,
+                     pt.Entry_Date,
+                     pt.Mr_No_Sequence,
+                     pt.Created_Time,
+                     pt.Address,
+                     pt.Patient_Main_Category,
                      pt.Mobile1,
+                     pt.Permanent_Address,
                      pt.Gender,
                      pt.Age_years,
                      a.Alinger_ID,
@@ -221,13 +223,13 @@ namespace PMS
                  }).FirstOrDefault();
             if (AlingerID != null)
             {
-                hdfPatient_ID.Value= AlingerID.pat_id.ToString();
+                hdfPatient_ID.Value= AlingerID.Patient_ID.ToString();
                 txtAlinger_ID.Text = AlingerID.Alinger_ID.ToString();
-                txtPatient_ID.Text = AlingerID.pat_id.ToString();
+                txtPatient_ID.Text = AlingerID.Patient_ID.ToString();
                 vlblPatients_Name.Text = AlingerID.Full_Name;
                 vLbl_Age.Text = AlingerID.Age_years;
                 vLbl_Gender.Text = AlingerID.Gender;
-                vLbl_RegDate.Text = AlingerID.Created_time.Value.ToString(AppConfig.DateFormat);
+                vLbl_RegDate.Text = AlingerID.Created_Time.Value.ToString(AppConfig.DateFormat);
                // vLbl_Adress.Text = AlingerID.Address;
                 vLbl_Contact.Text = AlingerID.Mobile1;
                 vLbl_PatientCategory.Text = AlingerID.Gender;

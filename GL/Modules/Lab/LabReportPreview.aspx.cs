@@ -1011,6 +1011,17 @@ namespace PMS
         }
 
         [WebMethod]
+        public static string CheckPendingApprovallistRights()
+        {
+            DataBaseDataContext db = new DataBaseDataContext();
+            var ups = (from St in db.aspnet_Users
+                       where St.UserId == AppConfig.UserID
+                       select St.Allow_Pending_Approval_List).FirstOrDefault();
+
+            return (new JavaScriptSerializer()).Serialize(ups);
+        }
+
+        [WebMethod]
         public static Detail GetDetail(string PatientID)
         {
 

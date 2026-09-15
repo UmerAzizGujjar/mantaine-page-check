@@ -8371,22 +8371,6 @@
       <Column Name="isReceived" Type="System.Boolean" DbType="Bit" CanBeNull="true" />
     </Type>
   </Table>
-  <Table Name="dbo.Crown_Bridge" Member="Crown_Bridges">
-    <Type Name="Crown_Bridge">
-      <Column Name="Crown_Bridges_ID" Type="System.Int32" DbType="Int NOT NULL IDENTITY" IsPrimaryKey="true" IsDbGenerated="true" CanBeNull="false" />
-      <Column Name="Alinger_ID" Type="System.Int32" DbType="Int" CanBeNull="true" />
-      <Column Name="Patient_Id" Type="System.Int32" DbType="Int" CanBeNull="true" />
-      <Column Name="Crown_Bridges_Name" Type="System.String" DbType="VarChar(100)" CanBeNull="true" />
-    </Type>
-  </Table>
-  <Table Name="dbo.Indirect_Veneer" Member="Indirect_Veneers">
-    <Type Name="Indirect_Veneer">
-      <Column Name="Indirect_Veneers_Id" Type="System.Int32" DbType="Int NOT NULL IDENTITY" IsPrimaryKey="true" IsDbGenerated="true" CanBeNull="false" />
-      <Column Name="Alinger_ID" Type="System.Int32" DbType="Int" CanBeNull="true" />
-      <Column Name="Patient_Id" Type="System.Int32" DbType="Int" CanBeNull="true" />
-      <Column Name="Indirect_Veneers_Name" Type="System.String" DbType="VarChar(100)" CanBeNull="true" />
-    </Type>
-  </Table>
   <Function Name="dbo.GetDataValueName" Method="GetDataValueName" IsComposable="true">
     <Parameter Name="ValueSetName" Parameter="valueSetName" Type="System.String" DbType="VarChar(150)" />
     <Parameter Name="DataValueName" Parameter="dataValueName" Type="System.String" DbType="VarChar(50)" />

@@ -2,6 +2,7 @@
  
 <asp:Content ID="Content2" ContentPlaceHolderID="HeadContent" runat="server">
  <link href="../../wwwroot/THEME_TIBBIT/CustomCSS/tablestyle.css" rel="stylesheet" />
+
  <script type="text/javascript">
      $(document).ready(function () {
          debugger;
@@ -139,38 +140,37 @@
                  });
              },
               "columns": [
-                  { "data": null, "width": "4%", "orderable": false, "render": (data, type, full, meta) => meta.settings._iDisplayStart + meta.row + 1 },
+                  { "data": null, "width": "3%", "orderable": false, "render": (data, type, full, meta) => meta.settings._iDisplayStart + meta.row + 1 },
                   { "data": "Emer_id", "name": "Emer_id", "visible": false, "width": "0%", "orderable": false },
                   { "data": "isCancel", "visible": false, "orderable": false, "width": "0%" },
                   { "data": "Emergency_No", "name": "Emergency_No", "width": "4%", "orderable": true },
                   { "data": "emer_doc_token", "name": "emer_doc_token", "width": "5%", "orderable": true },
-                 { "data": "mr_no_sequence", "name": "mr_no_sequence", "width": "8%", "orderable": true },
-            
-                 { "data": "Full_Name", "width": "16%", "orderable": false },
-                 { "data": "Doc_Name", "width": "12%", "orderable": false },
+                 { "data": "mr_no_sequence", "name": "mr_no_sequence", "width": "7%", "orderable": true },    
+                 { "data": "Full_Name", "width": "10%", "orderable": false },
+                 { "data": "Doc_Name", "width": "8%", "orderable": false },
                  { 
                      "data": "Amount", 
                      "name": "Amount", 
-                     "width": "9%", 
+                     "width": "8%", 
                      "orderable": true,
                      "render": (data, type, full) => data ? parseFloat(data).toFixed(2) : "0.00"
                  },
                  { 
                      "data": "balance_amount", 
                      "name": "balance_amount", 
-                     "width": "4%", 
+                     "width": "6%", 
                      "orderable": true,
                      "render": (data, type, full) => data ? parseFloat(data).toFixed(2) : "0.00"
                  },
 
-                 { "data": "Type", "width": "10%", "orderable": false },
+                 { "data": "Type", "width": "8%", "orderable": false },
                  { "data": "Patient_Type", "width": "6%", "orderable": false },
-                 { "data": "NIC", "width": "10%", "orderable": false },
-                 { "data": "Mobile1", "width": "10%", "orderable": false },
+                 { "data": "NIC", "width": "8%", "orderable": false },
+                 { "data": "Mobile1", "width": "8%", "orderable": false },
                  {
                      "data": "Created_Time", "name": "Created_Time",
                      "render": (data, type, full) => moment(full.Created_Time).format('DD-MMM-YYYY'),
-                     "width": "10%"
+                     "width": "7%"
                  },
                   {
                       "render": (data, type, full) => {
@@ -183,7 +183,7 @@
                           let btnprint = `<a class="printBtn" style="border-radius: 4px;margin-left: 4px;color: white;padding: 5px 8px;" href="#" onclick="PrintLTR(${full.Emer_id})"><i class="fa fa-print"></i></a>`;
                           return res + Del + print + btnprint;
                       },
-                      "width": "20%",
+                      "width": "22%",
                       "orderable": false
                   }
               ],
@@ -223,23 +223,22 @@
                  <table class="table table-hover table-striped table-bordered" id="tblResult" style="overflow: scroll; height: auto;">
                <thead id="ihead">
                  <tr>
-                      <th style="width:4% !important;">Sr#</th>                
+                      <th>Sr#</th>                
                       <th style="display: none;">Emergency ID</th>    
                       <th style="display: none;">Is Cancel</th>
-                           <th style="6%">Emr No.</th>
-                     <th style="width: 6%;">Doc Token</th>
-                     <th style="width: 12%;">MR No.</th>
-                
-                     <th style="width: 17%;">Name</th>
-                     <th style="width: 12%;">Doctor</th>
-                     <th style="width: 12%;">Amount</th>
-                     <th style="width: 12%;">Balance Amount</th>
-                     <th style="width: 12%;">Department</th>
-                     <th style="width: 12%;">Patient Type</th>
-                     <th style="width: 12%;">CNIC</th>
-                     <th style="width: 12%;">Mobile</th>
-                     <th style="width: 10%;">Date</th>
-                     <th style="width: 18% !important;">Actions</th>
+                      <th>Emr No.</th>
+                     <th >Doc Token</th>
+                     <th>MR No.</th>              
+                     <th>Name</th>
+                     <th>Doctor</th>
+                     <th>Amount</th>
+                     <th>Balance Amount</th>
+                     <th>Department</th>
+                     <th>Patient Type</th>
+                     <th>CNIC</th>
+                     <th>Mobile</th>
+                     <th>Date</th>
+                     <th>Actions</th>
                  </tr>
              </thead>
                      <tbody id="ibody">
