@@ -2879,6 +2879,11 @@
     <Content Include="upload\UploadAdvancePaymentFiles.ashx" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="DataBase1.designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>DataBase.dbml</DependentUpon>
+    </Compile>
     <Compile Include="Modules\Accounts\ClinicalFinancial.aspx.cs">
       <DependentUpon>ClinicalFinancial.aspx</DependentUpon>
       <SubType>ASPXCodeBehind</SubType>
