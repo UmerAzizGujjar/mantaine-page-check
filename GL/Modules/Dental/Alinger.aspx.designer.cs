@@ -33,15 +33,6 @@ namespace PMS
         protected global::System.Web.UI.WebControls.TextBox txtPatient_ID;
 
         /// <summary>
-        /// rfvPatient_ID control.
-        /// </summary>
-        /// <remarks>
-        /// Auto-generated field.
-        /// To modify move field declaration from designer file to code-behind file.
-        /// </remarks>
-        protected global::System.Web.UI.WebControls.RequiredFieldValidator rfvPatient_ID;
-
-        /// <summary>
         /// LblOut_Patient_ID control.
         /// </summary>
         /// <remarks>

@@ -248,10 +248,6 @@
 
         $(document).ready(function () {
             LoadPatientCategory();
-            $('#<%= txtAlinger_ID.ClientID%>').change(function () {
-                loadAjax();
-                $('#<%= txtPatient_ID.ClientID%>').val($('#<%= hdfPatient_ID.ClientID%>').val());
-            });
 
             <%if (Request.QueryString["ID"] != null)
         {%>
@@ -311,7 +307,6 @@
             LoadCrownBrigdes();
             LoadVeneer();
             LoadAlinger();
-            bindControls();
             buildOdontogram();
         });
 
@@ -324,7 +319,7 @@
             $('#ctl00_MainContent_ddlThicker').find('option:contains(' + $(row).find('td')[5].innerText + ')')[0].selected = true;
             $('#ctl00_MainContent_ddlTemplate').find('option:contains(' + $(row).find('td')[6].innerText + ')')[0].selected = true;
         }
-       
+
         function Delete_Alinger(row) {
             debugger;
             $($(row).parents('tr')[0]).remove();
@@ -350,7 +345,7 @@
                     'Crown_Bridges_Name': $($(value).find('td')[0]).text(),
                 });
             });
-            var PatientID = $('#<%= txtPatient_ID.ClientID%>').val();
+            var PatientID = $('#hdfPatient_ID').val();
             var Alingerid = $('#<%= txtAlinger_ID.ClientID%>').val();
             if (Alingerid == '(New)' || Alingerid == '')
                 Alingerid = 0;
@@ -371,7 +366,7 @@
                     'Indirect_Veneers_Name': $($(value).find('td')[0]).text(),
                 });
             });
-            var PatientID = $('#<%= txtPatient_ID.ClientID%>').val();
+            var PatientID = $('#hdfPatient_ID').val();
             var Alingerid = $('#<%= txtAlinger_ID.ClientID%>').val();
             if (Alingerid == '(New)' || Alingerid == '')
                 Alingerid = 0;
@@ -392,7 +387,7 @@
 
                 });
             });
-            var PatientID = $('#<%= txtPatient_ID.ClientID%>').val();
+            var PatientID = $('#hdfPatient_ID').val();
             var Alingerid = $('#<%= txtAlinger_ID.ClientID%>').val();
             if (Alingerid == '(New)' || Alingerid == '')
                 Alingerid = 0;
@@ -406,7 +401,7 @@
         function LoadVeneer() {
             debugger;
             var AlingerID = '<%= Request.QueryString["ID"]%>'
-            if (AlingerID != '(New)') {
+            if (AlingerID != '' && AlingerID != '(New)') {
                 PageMethods.LoadVeneer(AlingerID, function (res) {
                     var Alignerss = JSON.parse(res);
                     debugger;
@@ -423,7 +418,7 @@
         function LoadAlinger() {
             debugger;
             var AlingerID = '<%= Request.QueryString["ID"]%>'
-            if (AlingerID != '(New)') {
+            if (AlingerID != '' && AlingerID != '(New)') {
                 PageMethods.LoadAlinger(AlingerID, function (res) {
                     var Alignerss = JSON.parse(res);
                     debugger;
@@ -440,7 +435,7 @@
         function LoadCrownBrigdes() {
             debugger;
             var AlingerID = '<%= Request.QueryString["ID"]%>'
-            if (AlingerID != '(New)') {
+            if (AlingerID != '' && AlingerID != '(New)') {
                 PageMethods.LoadCrownBrigdes(AlingerID, function (res) {
                     var Alignerss = JSON.parse(res);
                     debugger;
@@ -460,13 +455,6 @@
         function BackToList() {
             window.location = "AlingerList.aspx";
         }
-        function httpGet(theUrl) {
-            var xmlHttp = null;
-            xmlHttp = new XMLHttpRequest();
-            xmlHttp.open("GET", theUrl, false);
-            xmlHttp.send(null);
-            return xmlHttp.responseText;
-        }
         function LoadPatientCategory() {
             var Patient_ID = $("#<%= hdfPatient_ID.ClientID %>").val();
             if (Patient_ID != '(New)') {
@@ -481,88 +469,6 @@
                 }, function (e) { });
             }
         }
-        function bindControls() {
-            var hdFile_ID = $("#hdfPatient_ID").val();
-            if (hdFile_ID != "(New)") {
-                var Patient_ID = $("#hdfPatient_ID").val();
-                var tokendata = httpGet("../../json.aspx?Table=Patients&Record=Edit&q=" + Patient_ID);
-                loadtokenInputs(JSON.parse(tokendata));
-            }
-            else {
-                loadtokenInputsDefault();
-            }
-        };
-        function loadtokenInputs(data) {
-            debugger;
-            $("#ctl00_MainContent_txtPatient_ID").tokenInput("../../json.aspx?Table=Patients",
-                {
-                    prePopulate: data,
-                    tokenLimit: 1,
-                    onAdd: function (item) {
-                        $("#hdfPatient_ID").val(item.id);
-                        debugger;
-                        loadAjax();
-                    }
-                });
-        }
-        function loadtokenInputsDefault() {
-            $('#ctl00_MainContent_txtPatient_ID').tokenInput("../../json.aspx?Table=Patients",
-                {
-                    tokenLimit: 1,
-                    onAdd: function (item) {
-                        try {
-
-                            $("#hdfPatient_ID").val(item.id);
-                            localStorage.PatientIDforNewForm = item.id;
-                            loadAjax();
-                        }
-                        catch (err) {
-                            alert(err.message);
-                        }
-                    }
-                });
-        }
-        debugger;
-        function loadAjax() {
-            debugger;
-            var Patient_ID = $("#<%= hdfPatient_ID.ClientID %>").val();
-            if (Patient_ID != '(New)') {
-                localStorage.PatientIDforNewForm = Patient_ID;
-                $.ajax({
-                    type: "POST",
-                    url: "Alinger.aspx/GetDetail",
-                    data: "{'PatientID':" + Patient_ID + "}",
-                    contentType: "application/json; charset=utf-8",
-                    dataType: "json",
-                    success: OnSuccess,
-                    failure: function (response) {
-                    }
-                });
-            }
-        }
-        function OnSuccess(data) {
-            if (data.d != '') {
-                var mydate = new Date(Date.parse(data.d.Entry_Date));
-                var dateR = mydate.toLocaleDateString();
-                $('#<%= vlblPatients_Name.ClientID %>').text(ReplaceNullWith_Space(data.d.Name));
-                $('#<%= vLbl_Age.ClientID %>').text(ReplaceNullWith_Space(data.d.Age));
-                $('#<%= vLbl_Gender.ClientID %>').text(ReplaceNullWith_Space(data.d.Gender));
-                $('#<%= vLbl_RegDate.ClientID %>').text(dateR);
-                $('#<%= vLbl_Adress.ClientID %>').text(ReplaceNullWith_Space(data.d.Address));
-                $('#<%= vLbl_Contact.ClientID %>').text(ReplaceNullWith_Space(data.d.Mobile));
-                $('#<%= lblDpt.ClientID %>').text(ReplaceNullWith_Space(data.d.department));
-                $('#<%= vLbl_PatientCategory.ClientID %>').text(ReplaceNullWith_Space(data.d.Patient_Type));
-                $('#<%= lblFollow.ClientID %>').text(ReplaceNullWith_Space(data.d.Follow));
-            }
-        }
-        function ReplaceNullWith_Space(Data) {
-            if (Data == "null")
-                return " ";
-            else
-                return Data;
-        }
-
-
         function LoadAlingerFormImages() {
             debugger;
             var Alinger_Id = '<%= Request.QueryString["ID"]%>';
@@ -820,9 +726,8 @@
                 <div class="row">
                     <div class="col-lg-4 col-md-4">
                         <div class="form-group">
-                            <label><asp:Label ID="lblPatien_ID" runat="server" Text="MR No *"></asp:Label></label>
-                            <asp:TextBox ID="txtPatient_ID" runat="server" CssClass="form-control"></asp:TextBox>
-                            <asp:RequiredFieldValidator ID="rfvPatient_ID" runat="server" ErrorMessage="Enter Patient ID" Text="*" ControlToValidate="txtPatient_ID" ForeColor="Red"></asp:RequiredFieldValidator>
+                            <label><asp:Label ID="lblPatien_ID" runat="server" Text="MR No"></asp:Label></label>
+                            <asp:TextBox ID="txtPatient_ID" runat="server" ReadOnly="True" CssClass="form-control"></asp:TextBox>
                         </div>
                     </div>
                     <div class="col-lg-4 col-md-4">
@@ -1020,9 +925,9 @@
                 <div id="ImageContainer" style="min-height: 90px; display: flex; flex-wrap: wrap; gap: 10px; margin-top: 14px; justify-content: center;"></div>
             </div>
 
-            <div class="body-save-row">
+            <div class="body-save-row" >
                 <asp:Button ID="btnSave" runat="server" CssClass="btn btn-primry" TabIndex="22" Text="Save" OnClientClick="this.disabled = true; Save_Alinger();" UseSubmitBehavior="false" OnClick="btnSave_Click" />
-                <input type="button" value="New" class="btn btn-gray" onclick="NewWindow()" />
+                <input style="display:none" type="button" value="New" class="btn btn-gray" onclick="NewWindow()" />
                 <input type="button" id="btnBackList" value="List View" class="btn btn-gray" onclick="BackToList()" />
             </div>
             <asp:Label ID="Label1" runat="server"></asp:Label>

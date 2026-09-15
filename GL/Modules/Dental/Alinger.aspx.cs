@@ -1,15 +1,16 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Data;
+using System.Data.SqlClient;
+using System.IO;
 using System.Linq;
+using System.Security.Cryptography;
 using System.Web;
+using System.Web.Script.Serialization;
+using System.Web.Services;
 using System.Web.UI;
 using System.Web.UI.WebControls;
-using System.Data.SqlClient;
-using System.Data;
-using System.Web.Services;
-using System.Web.Script.Serialization;
-using System.IO;
-using System.Security.Cryptography;
+using static PMS.Alinger;
 
 namespace PMS
 {
@@ -21,23 +22,27 @@ namespace PMS
         protected void Page_Load(object sender, EventArgs e)
         {
 
-           
-                if (!Page.IsPostBack)
-                {
+
+            if (!Page.IsPostBack)
+            {
                 db = new DataBaseDataContext();
                 BlankForm();
-                    txtAlinger_ID.Text = "(New)";
-                    BindingDropDown();
-                    
+                txtAlinger_ID.Text = "(New)";
+                BindingDropDown();
 
-                    if (Request.QueryString["ID"] != null)
-                    {
-                        FillOutPatientForm(Convert.ToInt32(Request.QueryString["ID"]));
-                                           
-                    }
+
+                if (Request.QueryString["ID"] != null)
+                {
+                    FillOutPatientForm(Convert.ToInt32(Request.QueryString["ID"]));
+
                 }
+                else if (Request.QueryString["OutPatientID"] != null)
+                {
+                    FillPatientForm(Convert.ToInt32(Request.QueryString["OutPatientID"]));
+                }
+            }
 
-            
+
         }
         private void BindingDropDown()
         {
@@ -110,7 +115,7 @@ namespace PMS
             ddlno_of_alinger.Items.Add(new ListItem("Please Select", "0"));
             ddlno_of_alinger.DataBind();
         }
-      
+
         public class Detail
         {
             public string Name;
@@ -155,7 +160,7 @@ namespace PMS
                 pt.Address = pat.Permanent_Address;
                 pt.Mobile = pat.Mobile1;
                 pt.Entry_Date = pat.Created_Time.ToString();
-               // pt.department = pat.Patient_Main_Category;
+                // pt.department = pat.Patient_Main_Category;
                 pt.department = db.GetDataValueName("Patient Main Category", pat.Patient_Main_Category);
                 pt.Gender = db.GetDataValueName("Gender", pat.Gender);
                 pt.Patient_Type = db.GetDataValueName("Patient Type", pat.Patient_Type);
@@ -167,71 +172,108 @@ namespace PMS
             else
                 return pt;
         }
+        protected void FillPatientForm(int Out_Patient_ID)
+        {
+            DataBaseDataContext db = new DataBaseDataContext(DBClass.ConnectionString());
+            var qry = (from op in db.Out_Patients
+                       join p in db.Patients on op.Patient_ID equals p.Patient_ID
+                       join rp in db.Reg_patients on p.Reg_PatId equals rp.pat_id
+                       where op.Out_Patient_ID == Out_Patient_ID
+                       select new
+                       {
+                           rp.pat_id,
+                           rp.Created_time,
+                           rp.Permanent_Address,
+                           p.Full_Name,
+                           p.Age_years,
+                           p.Gender,
+                           p.Mobile1,
+                           p.Patient_No,
+                           p.Patient_Main_Category
+                       }).FirstOrDefault();
+            if (qry != null)
+            {
+                hdfPatient_ID.Value = qry.pat_id.ToString();
+                txtPatient_ID.Text = "MR-" + qry.Patient_No;
+                vlblPatients_Name.Text = qry.Full_Name;
+                vLbl_Age.Text = qry.Age_years;
+                vLbl_Gender.Text = db.GetDataValueName("Gender", qry.Gender);
+                vLbl_Contact.Text = qry.Mobile1;
+                vLbl_Adress.Text = qry.Permanent_Address;
+                if (qry.Created_time.HasValue)
+                    vLbl_RegDate.Text = qry.Created_time.Value.ToString(AppConfig.DateFormat);
+                vLbl_PatientCategory.Text = db.GetDataValueName("Patient Main Category", qry.Patient_Main_Category);
+                lblDpt.Text = db.GetDataValueName("Patient Main Category", qry.Patient_Main_Category);
+                var count = db.Reg_patients.Count(v => v.Patient_No == qry.Patient_No);
+                lblFollow.InnerText = count.ToString();
+            }
+        }
         //[WebMethod]
         protected void FillOutPatientForm(int Out_Patient_id)
         {
             DataBaseDataContext db = new DataBaseDataContext();
-          var  AlingerID= ( from a in db.Alingers join
-                         pt in db.Reg_patients on a.Patient_ID equals pt.pat_id
-                 where a.Alinger_ID== Out_Patient_id
-                 select new
-                 {
-                     pt.pat_id,
-                     pt.Full_Name,
-                     pt.Created_time,
-                     pt.mr_no_sequence,
-                     pt.Permanent_Address,
-                     //pt.Patient_Main_Category,
-                     pt.Mobile1,
-                     pt.Gender,
-                     pt.Age_years,
-                     a.Alinger_ID,
-                     a.chk_S1T1,
-                     a.chk_S1T2,
-                     a.chk_S1T3,
-                     a.chk_S1T4,
-                     a.chk_S1T5,
-                     a.chk_S1T6,
-                     a.chk_S1T7,
-                     a.chk_S1T8,
-                     a.chk_S2T1,
-                     a.chk_S2T2,
-                     a.chk_S2T3,
-                     a.chk_S2T4,
-                     a.chk_S2T5,
-                     a.chk_S2T6,
-                     a.chk_S2T7,
-                     a.chk_S2T8,
-                     a.chk_S3T1,
-                     a.chk_S3T2,
-                     a.chk_S3T3,
-                     a.chk_S3T4,
-                     a.chk_S3T5,
-                     a.chk_S3T6,
-                     a.chk_S3T7,
-                     a.chk_S3T8,
-                     a.chk_S4T1,
-                     a.chk_S4T2,
-                     a.chk_S4T3,
-                     a.chk_S4T4,
-                     a.chk_S4T5,
-                     a.chk_S4T6,
-                     a.chk_S4T7,
-                     a.chk_S4T8
-                 }).FirstOrDefault();
+            var AlingerID = (from a in db.Alingers
+                             join
+                           pt in db.Reg_patients on a.Patient_ID equals pt.pat_id
+                             where a.Alinger_ID == Out_Patient_id
+                             select new
+                             {
+                                 pt.pat_id,
+                                 pt.Full_Name,
+                                 pt.Created_time,
+                                 pt.mr_no_sequence,
+                                 pt.Permanent_Address,
+                                 //pt.Patient_Main_Category,
+                                 pt.Mobile1,
+                                 pt.Gender,
+                                 pt.Age_years,
+                                 a.Alinger_ID,
+                                 a.chk_S1T1,
+                                 a.chk_S1T2,
+                                 a.chk_S1T3,
+                                 a.chk_S1T4,
+                                 a.chk_S1T5,
+                                 a.chk_S1T6,
+                                 a.chk_S1T7,
+                                 a.chk_S1T8,
+                                 a.chk_S2T1,
+                                 a.chk_S2T2,
+                                 a.chk_S2T3,
+                                 a.chk_S2T4,
+                                 a.chk_S2T5,
+                                 a.chk_S2T6,
+                                 a.chk_S2T7,
+                                 a.chk_S2T8,
+                                 a.chk_S3T1,
+                                 a.chk_S3T2,
+                                 a.chk_S3T3,
+                                 a.chk_S3T4,
+                                 a.chk_S3T5,
+                                 a.chk_S3T6,
+                                 a.chk_S3T7,
+                                 a.chk_S3T8,
+                                 a.chk_S4T1,
+                                 a.chk_S4T2,
+                                 a.chk_S4T3,
+                                 a.chk_S4T4,
+                                 a.chk_S4T5,
+                                 a.chk_S4T6,
+                                 a.chk_S4T7,
+                                 a.chk_S4T8
+                             }).FirstOrDefault();
             if (AlingerID != null)
             {
-                hdfPatient_ID.Value= AlingerID.pat_id.ToString();
+                hdfPatient_ID.Value = AlingerID.pat_id.ToString();
                 txtAlinger_ID.Text = AlingerID.Alinger_ID.ToString();
-                txtPatient_ID.Text = AlingerID.pat_id.ToString();
+                txtPatient_ID.Text = "MR-" + AlingerID.mr_no_sequence;
                 vlblPatients_Name.Text = AlingerID.Full_Name;
                 vLbl_Age.Text = AlingerID.Age_years;
                 vLbl_Gender.Text = AlingerID.Gender;
                 vLbl_RegDate.Text = AlingerID.Created_time.Value.ToString(AppConfig.DateFormat);
-               // vLbl_Adress.Text = AlingerID.Address;
+                // vLbl_Adress.Text = AlingerID.Address;
                 vLbl_Contact.Text = AlingerID.Mobile1;
                 vLbl_PatientCategory.Text = AlingerID.Gender;
-                CHK_S1T1.Checked = AlingerID.chk_S1T1 ?? false;             
+                CHK_S1T1.Checked = AlingerID.chk_S1T1 ?? false;
                 CHK_S1T2.Checked = AlingerID.chk_S1T2 ?? false;
                 CHK_S1T3.Checked = AlingerID.chk_S1T3 ?? false;
                 CHK_S1T4.Checked = AlingerID.chk_S1T4 ?? false;
@@ -292,9 +334,9 @@ namespace PMS
         {
             DataBaseDataContext db = new DataBaseDataContext();
             var data = (from op in db.Alingers
-                       join ai in db.Alinger_Images 
-                        on op.Alinger_ID equals ai.Alinger_Id
-                        where  op.Alinger_ID == Convert.ToInt32(Alinger_Id)
+                        join ai in db.Alinger_Images
+                         on op.Alinger_ID equals ai.Alinger_Id
+                        where op.Alinger_ID == Convert.ToInt32(Alinger_Id)
                         select new
                         {
                             Image_ID = ai.Image_Id,
@@ -340,7 +382,7 @@ namespace PMS
             OP_Count = Convert.ToInt32(OPCount);
             AT_Count = Convert.ToInt32(ATCount);
             CT_Count = Convert.ToInt32(CTCount);
-     
+
         }
 
         protected void btnSave_Click(object sender, EventArgs e)
@@ -408,7 +450,7 @@ namespace PMS
                 alingers.chk_S4T8 = CHK_S4T8.Checked;
 
                 db.SubmitChanges();
-                List<Alinger_Detail> list = db.Alinger_Details.Where(p => p.Alinger_ID == 0 ).ToList();
+                List<Alinger_Detail> list = db.Alinger_Details.Where(p => p.Alinger_ID == 0).ToList();
                 foreach (Alinger_Detail med in list)
                 {
                     med.Alinger_ID = alingers.Alinger_ID;
@@ -426,7 +468,7 @@ namespace PMS
                 db.SubmitChanges();
                 if (fileUpload_CF_OP.HasFile)
                 {
-                    SaveUploadedFiles(Request.Files, Alingerid,  "OP");
+                    SaveUploadedFiles(Request.Files, Alingerid, "OP");
                 }
                 //if (fileUpload_CF_AT.HasFile)
                 //{
@@ -499,11 +541,11 @@ namespace PMS
                 Response.Write($"Error saving image reference in database: {ex.Message}");
             }
         }
-    
+
 
         public void BlankForm()
         {
-          //  txtPatient_ID.Text = "";        
+            //  txtPatient_ID.Text = "";        
             vLbl_Contact.Text = "";
             vLbl_RegDate.Text = "";
             vLbl_Age.Text = "";
@@ -514,7 +556,7 @@ namespace PMS
             //lblFollow.Text = "";
 
         }
-       
+
         public class Alingers
         {
             public int Alingerid { get; set; }
@@ -523,7 +565,7 @@ namespace PMS
         }
         public class AlingerDetails
         {
-            
+
             public string Alinger_Details_ID { get; set; }
             public string Material { get; set; }
             public string Type_of_Alinger { get; set; }
@@ -532,8 +574,8 @@ namespace PMS
             public string Arch { get; set; }
             public string Thicker_of_Alinger { get; set; }
             public string Template_of_Alinger { get; set; }
-        } 
-       
+        }
+
         [WebMethod]
         public static void Save_Alinger(string AlingerDetails)
         {
@@ -544,9 +586,9 @@ namespace PMS
 
                 using (DataBaseDataContext db = new DataBaseDataContext(DBClass.ConnectionString()))
                 {
-                    
+
                     /********************Deleting Previous 0 Value Saved Rows.***********************************/
-                    List<Alinger_Detail> Alinger_DetailList = db.Alinger_Details.Where(i => i.Alinger_ID == 0 ).ToList();
+                    List<Alinger_Detail> Alinger_DetailList = db.Alinger_Details.Where(i => i.Alinger_ID == 0).ToList();
                     db.Alinger_Details.DeleteAllOnSubmit(Alinger_DetailList);
                     db.SubmitChanges();
 
@@ -576,9 +618,9 @@ namespace PMS
                             Material = oAlingerDetaile.Material,
                             Arch = oAlingerDetaile.Arch,
                             Margin_of_Alinger = oAlingerDetaile.Margin_of_Alinger,
-                         
+
                             Thicker_of_Alinger = oAlingerDetaile.Thicker_of_Alinger,
-                            
+
                             Template = oAlingerDetaile.Template_of_Alinger,
                             No_Of_Alinger = oAlingerDetaile.No_Of_Alinger,
 
@@ -595,7 +637,7 @@ namespace PMS
             {
             }
             //return "";
-            
+
         }
         public class CrownBridge
         {
@@ -618,7 +660,7 @@ namespace PMS
                 var data = js.Deserialize<CrownBridge>(SymtomsList);
                 using (DataBaseDataContext db = new DataBaseDataContext(DBClass.ConnectionString()))
                 {
-                    
+
                     int couterNewRecords = 0;
                     /*********************Deleting Previous Entry On Every Insert Or Update*************************/
                     List<Crown_Bridge> CrownBridgeLists = db.Crown_Bridges.Where(i => i.Alinger_ID == 0).ToList();
@@ -641,8 +683,8 @@ namespace PMS
                             Alinger_ID = data.Alingerid,
                             Patient_Id = data.PatientID,
                             Crown_Bridges_Name = oCrownBridgeDetail.Crown_Bridges_Name,
-                            Crown_Bridges_ID =Convert.ToInt32(oCrownBridgeDetail.Crown_Bridges_ID),
-                            
+                            Crown_Bridges_ID = Convert.ToInt32(oCrownBridgeDetail.Crown_Bridges_ID),
+
                         };
                         db.Crown_Bridges.InsertOnSubmit(oSysmtopm);
                         couterNewRecords++;
@@ -655,7 +697,7 @@ namespace PMS
 
             }
             return "";
-        }       
+        }
         public class IndirectVeneer
         {
             public int Alingerid { get; set; }
@@ -700,8 +742,8 @@ namespace PMS
                             Alinger_ID = data.Alingerid,
                             Patient_Id = data.PatientID,
                             Indirect_Veneers_Name = oSymtomsList.Indirect_Veneers_Name,
-                            Indirect_Veneers_Id =Convert.ToInt32(oSymtomsList.Indirect_Veneers_Id),
-                            
+                            Indirect_Veneers_Id = Convert.ToInt32(oSymtomsList.Indirect_Veneers_Id),
+
                         };
                         db.Indirect_Veneers.InsertOnSubmit(oSysmtopm);
                         couterNewRecords++;
@@ -735,7 +777,7 @@ namespace PMS
                 return (new JavaScriptSerializer()).Serialize(VeneerList);
             }
             return "";
-        }  
+        }
         [WebMethod]
         public static string LoadCrownBrigdes(int AlingerID)
         {

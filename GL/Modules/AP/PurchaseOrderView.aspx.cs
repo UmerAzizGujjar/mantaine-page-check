@@ -297,10 +297,58 @@ namespace PMS
                         currentDetails = BuildPOItemsSnapshot(items);
                     }
 
+                    var approvalRows = (from a in db.Sys_Approval_Logs
+                                        join st in db.Sys_Approval_Stage_Masters on a.Approval_Stage_ID equals st.Stage_ID into stageJoin
+                                        from st in stageJoin.DefaultIfEmpty()
+                                        join au in db.aspnet_Users on a.Approve_By equals au.UserId into apprJoin
+                                        from au in apprJoin.DefaultIfEmpty()
+                                        join ru in db.aspnet_Users on a.Rejected_By equals ru.UserId into rejJoin
+                                        from ru in rejJoin.DefaultIfEmpty()
+                                        where a.Entry_ID == poId && a.Form_ID == 3
+                                        orderby a.Approve_Date, a.ID
+                                        select new
+                                        {
+                                            a.ID,
+                                            StageName = st != null ? st.Stage_Name : null,
+                                            a.Entry_Status,
+                                            a.IsFinalAprroval,
+                                            a.IsRejected,
+                                            a.Is_ByPassed,
+                                            a.IsEditableAfterApproval,
+                                            Approver = au != null ? au.UserName : null,
+                                            Rejector = ru != null ? ru.UserName : null,
+                                            a.Approve_Date,
+                                            a.Rejected_Date,
+                                            a.Approval_Remarks,
+                                            a.Rejection_Remarks,
+                                            a.Remarks,
+                                            a.From_Name
+                                        }).ToList();
+
+                    var approvals = approvalRows.Select(r => new
+                    {
+                        ID = r.ID,
+                        StageName = StrVal(r.StageName),
+                        Status = StrVal(r.Entry_Status),
+                        IsFinal = r.IsFinalAprroval ?? false,
+                        IsRejected = r.IsRejected ?? false,
+                        IsByPassed = r.Is_ByPassed ?? false,
+                        IsEditableAfterApproval = r.IsEditableAfterApproval ?? false,
+                        User = !string.IsNullOrEmpty(r.Rejector) ? r.Rejector : StrVal(r.Approver),
+                        DateText = (r.Rejected_Date ?? r.Approve_Date).HasValue
+                            ? (r.Rejected_Date ?? r.Approve_Date).Value.ToString("dd MMM yyyy hh:mm tt")
+                            : "",
+                        Remarks = !string.IsNullOrEmpty(r.Rejection_Remarks)
+                            ? r.Rejection_Remarks
+                            : (!string.IsNullOrEmpty(r.Approval_Remarks) ? r.Approval_Remarks : StrVal(r.Remarks)),
+                        FromName = StrVal(r.From_Name)
+                    }).ToList();
+
                     return JsonConvert.SerializeObject(new
                     {
                         logs = logs,
-                        current = new { master = currentMaster, details = currentDetails }
+                        current = new { master = currentMaster, details = currentDetails },
+                        approvals = approvals
                     });
                 }
             }

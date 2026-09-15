@@ -1098,13 +1098,13 @@ namespace PMS
                     // OPD.Vitals_Date = Convert.ToDateTime(data.Vitals_Date);
                         DateTime vitalsDate;
 
-                        if (DateTime.TryParse(data.Vitals_Date, out vitalsDate))
+                        if (!string.IsNullOrWhiteSpace(data.Vitals_Date) && DateTime.TryParse(data.Vitals_Date, out vitalsDate))
                         {
                             OPD.Vitals_Date = vitalsDate;
                         }
-                        else
+                        else if (OPD.Vitals_Date == null)
                         {
-                            OPD.Vitals_Date = null;
+                            OPD.Vitals_Date = DateTime.Now;
                         }
                     OPD.MUAC = data.MUAC;
                         OPD.OFC = data.OFC;
@@ -4244,6 +4244,7 @@ on p.Reg_PatId equals rp.pat_id
             public string RN_Special_Instruction;
             public string RN_Patient_General_Condition;
             public string Status;
+            public DateTime? Vitals_Date;
             public string EDD { get; set; }
             public string BSR { get; set; }
             public string BMI { get; set; }
@@ -4306,6 +4307,7 @@ on p.Reg_PatId equals rp.pat_id
                                       //op.Receiving_date,
                                       //op.RN_Special_Instruction,
                                       //op.RN_Patient_General_Condition,
+                                      op.Vitals_Date,
                                       op.Created_Time
                                   }).ToList();
             List<VitalParameterClass> list = new List<VitalParameterClass>();
@@ -4328,6 +4330,7 @@ on p.Reg_PatId equals rp.pat_id
                 obj.RN_Special_Instruction = "";
                 obj.RN_Patient_General_Condition = "";
                 obj.Created_Time = Convert.ToDateTime(item.Created_Time);
+                obj.Vitals_Date = item.Vitals_Date;
                 obj.BSR = (item.BSR != null) ? item.BSR : "";
                 obj.EDD = (item.EDD != null) ? item.EDD : "";
                 obj.BMI = (item.BMI != null) ? item.BMI : "";
