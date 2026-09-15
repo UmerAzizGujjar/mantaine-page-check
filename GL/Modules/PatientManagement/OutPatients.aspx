@@ -31,6 +31,7 @@
         });
         debugger;
         var Global_Vital = 0;
+        var isVitalSave = false;
 
         function vitalsAreFilled() {
             return $.trim($('#ctl00_MainContent_txtBP').val()) !== ''
@@ -864,7 +865,8 @@
                     var rows = '';
                     $.each(Data, function (key, value) {
                         var TrnsDate = new Date(parseInt(value.Created_Time.substr(6)));
-                        var retdate = moment(TrnsDate).format('LLLL');
+                        var VitalsDate = (value.Vitals_Date != null && value.Vitals_Date != '') ? new Date(parseInt(value.Vitals_Date.substr(6))) : TrnsDate;
+                        var retdate = moment(VitalsDate).format('DD/MM/YYYY hh:mm:ss A');
                         rows += '<tr> <td value="' + value.Out_Patient_ID + '"> ' + retdate + ' </td><td>' + value.Status + '</td> <td> ' + value.Pulse_Min
                             + ' </td> <td> ' + value.Temp_C + ' </td> <td> ' + value.Height_Cm + ' </td><td> ' + value.L_M_P + ' </td><td> ' + value.SPO2 + ' </td><td> ' + value.BSR + ' </td><td> ' + value.BMI + ' </td><td> ' + value.BP_mm_Hg + ' </td> <td> ' + value.Respiration_Min + ' </td> <td> ' + value.Weight_Kg + ' </td><td><a href="#" onclick="LoadVitalFromhistory(' + value.Out_Patient_ID + ')"><i class="fa fa-upload"></i></a> </td> </tr>';
                     });
@@ -3764,6 +3766,7 @@
 
                 if (!requireVitalsBeforeSave()) return;
                 Global_Vital = 1;
+                isVitalSave = true;
                 SaveMedicinesAndTests();
             });
             $('#btnSaveMedicine').on("click", function () {
@@ -4960,7 +4963,7 @@
                  Follow_Up : $('#ctl00_MainContent_ddlFOllowUp').val(),
                  Proto : $('#ctl00_MainContent_ddlProto').val(),
                  Follow_Date : $('#ctl00_MainContent_FollowNoDate').val(),
-                 Vitals_Date : (function(){var d = new Date();function p(n){return (n < 10 ? '0' : '') + n;}return d.getFullYear() + '-' + p(d.getMonth() + 1) + '-' + p(d.getDate()) + ' ' + p(d.getHours()) + ':' + p(d.getMinutes()) + ':' + p(d.getSeconds());})(),
+                 Vitals_Date : isVitalSave ? (function(){var d = new Date();function p(n){return (n < 10 ? '0' : '') + n;}return d.getFullYear() + '-' + p(d.getMonth() + 1) + '-' + p(d.getDate()) + ' ' + p(d.getHours()) + ':' + p(d.getMinutes()) + ':' + p(d.getSeconds());})() : "",
                   pulse_Min : $('#ctl00_MainContent_txtPuls').val(),
                  L_M_P : $('#ctl00_MainContent_txtLMP').val(),
                  SPO2 : $('#ctl00_MainContent_txtspo2').val(),
@@ -6552,7 +6555,7 @@
                                                  </td>
                                              </tr>
                                              <tr>
-                                                 <th>Date</th>
+                                                 <th>Vitals Date / Time</th>
                                                  <th>Status</th>
                                                  <th>Pulse</th>
                                                  <th>Temp</th>
