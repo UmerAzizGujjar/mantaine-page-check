@@ -2,7 +2,119 @@
 <asp:Content ID="Content1" ContentPlaceHolderID="HeadContent" runat="server">
     <script src="../../wwwroot/THEME_TIBBIT/CustomJs/RegPatient.js?v=<%= System.IO.File.GetLastWriteTime(Server.MapPath("~/wwwroot/THEME_TIBBIT/CustomJs/RegPatient.js")).Ticks %>" type="text/javascript"></script>
     <link href="../../wwwroot/THEME_TIBBIT/CustomCSS/RegPat.css" rel="stylesheet" />
-   
+    <link href="../../wwwroot/THEME_TIBBIT/CustomCSS/vendor.css" rel="stylesheet" />
+    <link href="../../wwwroot/THEME_TIBBIT/CustomCSS/Datavalue.css" rel="stylesheet" />
+    <style>
+        /* ===================== Compact form layout ===================== */
+        .reg-page { padding-bottom: 16px; }
+
+        .reg-page .pr-meta-bar { margin-bottom: 16px; padding: 6px 16px; }
+        .reg-page .pr-primary-settings { margin-bottom: 16px; }
+        .reg-page .pr-section-title {
+            margin: 0 -20px 12px -20px !important;
+            padding: 9px 20px !important;
+        }
+
+        /* kill the 1.5rem gap RegPat.css adds between rows */
+        .reg-page .row + .row { margin-top: 0 !important; }
+        .reg-page .pr-primary-settings .row { margin-bottom: 10px; }
+        .reg-page .pr-primary-settings .row:last-child { margin-bottom: 0; }
+
+        .reg-page .pr-primary-settings label {
+            font-size: 11px !important;
+            font-weight: 700 !important;
+            color: #555 !important;
+            text-transform: uppercase;
+            letter-spacing: .03em;
+            display: block;
+            margin-bottom: 3px !important;
+            min-height: 15px;
+            line-height: 1.2;
+        }
+        .reg-page .pr-primary-settings input[type="text"],
+        .reg-page .pr-primary-settings select {
+            font-size: 12px !important;
+            height: 32px !important;
+            padding: 5px 10px !important;
+            border: 1px solid #e0e0e0 !important;
+            border-radius: 4px !important;
+            background: #fff !important;
+            box-shadow: none !important;
+            width: 100% !important;
+        }
+        .reg-page .pr-primary-settings input[type="text"]:focus,
+        .reg-page .pr-primary-settings select:focus {
+            border-color: #EFA63E !important;
+            box-shadow: 0 0 0 3px #EFA63E25 !important;
+            outline: none !important;
+        }
+        .reg-page .pr-primary-settings input[type="text"][disabled],
+        .reg-page .pr-primary-settings input[type="text"][readonly] {
+            background: #f5f6f8 !important;
+            color: #8a8f98 !important;
+        }
+
+        /* ── Select2 to match ── */
+        .reg-page .pr-primary-settings .select2-container { width: 100% !important; }
+        .reg-page .pr-primary-settings .select2-selection {
+            height: 32px !important;
+            border: 1px solid #e0e0e0 !important;
+            border-radius: 4px !important;
+            padding: 3px 8px !important;
+            font-size: 12px !important;
+            background: #fff !important;
+        }
+        .reg-page .pr-primary-settings .select2-selection__rendered { line-height: 24px !important; }
+        .reg-page .pr-primary-settings .select2-selection__arrow { height: 30px !important; }
+        .reg-page .pr-primary-settings .select2-container--focus .select2-selection,
+        .reg-page .pr-primary-settings .select2-container--open .select2-selection {
+            border-color: #EFA63E !important;
+            box-shadow: 0 0 0 3px #EFA63E25 !important;
+        }
+
+        /* ── Inline validation text ── */
+        .reg-page .span_txt {
+            color: #c5221f !important;
+            font-size: 11px !important;
+            font-weight: 600;
+            margin-top: 3px !important;
+            display: block;
+        }
+
+        /* ── Checkbox pill ── */
+        .reg-page .lab-check {
+            display: inline-flex;
+            align-items: center;
+            gap: 7px;
+            height: 32px;
+            padding: 0 13px;
+            background: #fdf7ef;
+            border: 1px solid #f0e0c8;
+            border-radius: 16px;
+            font-size: 11px;
+            font-weight: 700;
+            color: #7a6530;
+            text-transform: uppercase;
+            letter-spacing: .03em;
+            cursor: pointer;
+            white-space: nowrap;
+        }
+        .reg-page .lab-check input[type="checkbox"] {
+            margin: 0 !important;
+            position: static !important;
+            width: 15px;
+            height: 15px;
+        }
+
+        /* ── Action row ── */
+        .reg-page .reg-actions {
+            margin-top: 16px;
+            padding-top: 14px;
+            border-top: 1px solid #fdf2e2;
+        }
+        .reg-page .reg-actions .row > [class*="col-"] { margin-bottom: 8px; }
+        .reg-page .reg-actions input[type="button"] { width: 100%; }
+    </style>
     <script type="text/javascript">
         $(document).ready(function () {
             loadCardfee();
@@ -331,231 +443,220 @@
 </asp:Content>
 
 <asp:Content ID="Content2" ContentPlaceHolderID="MainContent" runat="server">
-    <!-- Patient Details Section -->
-    <div class="row">
-        <div class="col-lg-11 col-md-10 col-sm-12">
-            <div class="card">
-                <input type="hidden" id="hfAntiForgery" runat="server" />
-                <input type="hidden" id="hdfPatient_ID" />
-                <input type="hidden" id="hdn_regid" />
+    <div class="reg-page">
 
-                <!-- 
-                    IMPORTANT: All elements are now ordered in the exact sequence 
-                    you want Tab to follow. Select2 will create a focusable container 
-                    right after each <select>, so the natural DOM order works perfectly.
-                -->
+        <input type="hidden" id="hfAntiForgery" runat="server" />
+        <input type="hidden" id="hdfPatient_ID" />
+        <input type="hidden" id="hdn_regid" />
 
-                <!-- Row 1: MR No (disabled), Name (prefix & text), Relation (prefix & text), Age (dropdown & input & display) -->
-                <div class="row">
-                    <!-- MR No (disabled, not focusable) -->
-                    <div class="col-lg-1 col-md-3 col-sm-6">
-                        <label for="txt_Mrno">MR No</label>
-                        <input type="text" id="txt_Mrno" class="form-control" disabled />
-                    </div>
+        <div class="pr-meta-bar">
+            <div class="meta-left">
+                <%--<span class="meta-title"><i class="fa fa-user-plus"></i> Patient Registration</span>--%>
+            </div>
+            <div class="meta-right"></div>
+        </div>
 
-                    <!-- Name prefix (Select2) – Tab order position 1 -->
-                    <div class="col-lg-1 col-md-3 col-sm-6">
-                        <label for="ddl_name">Name<span style="color: red;">*</span></label>
-                        <select id="ddl_name" class="form-control">
-                        </select>
-                    </div>
+        <!-- Patient Details -->
+        <div class="pr-primary-settings">
+            <h5 class="pr-section-title"><i class="fa fa-user"></i> Patient Information</h5>
 
-                    <!-- Name text – position 2 -->
-                    <div class="col-lg-3 col-md-6 col-sm-9">
-                        <label></label>
-                        <input name="dob" style="margin-top: 6px" type="text" id="txt_name" class="form-control" />
-                        <span id="firstname-error" class="span_txt" style="display: none;">Please Enter First Name</span>
-                    </div>
-
-                    <!-- Relation prefix – position 3 -->
-                    <div class="col-lg-1 col-md-3 col-sm-6">
-                        <label for="ddlRelation">Relation<span style="color: red;">*</span></label>
-                        <select id="ddlRelation" class="form-control">
-                            <option value="S/O">S/O</option>
-                            <option value="W/O">W/O</option>
-                            <option value="D/O">D/O</option>
-                        </select>
-                    </div>
-
-                    <!-- Relation text – position 4 -->
-                    <div class="col-lg-3 col-md-6 col-sm-9">
-                        <label></label>
-                        <input type="text" style="margin-top: 6px" id="txt_relation" class="form-control" />
-                        <span id="relation-error" class="span_txt" style="display: none;">Please Enter Last Name</span>
-                    </div>
-
-                    <!-- Age unit dropdown (Select2) – position 5 -->
-                    <div style="margin-top: 6px" class="col-lg-1 col-md-3 col-sm-6">
-                        <label></label>
-                        <select onchange="CalculateDateOfBirth();" id="PrefixAge" class="form-control">
-                            <option value="Year">Year</option>
-                            <option value="Month">Month</option>
-                            <option value="Day">Day</option>
-                        </select>
-                    </div>
-
-                    <!-- DOB input – position 6 -->
-                    <div class="col-lg-1 col-md-3 col-sm-6">
-                        <label for="PrefixAge">DOB<span style="color: red;">*</span></label>
-                        <input type="text" id="txt_dob" class="form-control" placeholder="Enter Age" onchange="CalculateDateOfBirth();" />
-                    </div>
-
-                    <!-- Age display – position 7 -->
-                    <div class="col-lg-1 col-md-3 col-sm-6">
-                        <label></label>
-                        <input type="text" id="txtAge_yearss" style="margin-top: 7px" class="form-control" placeholder="dd/mm/yy" />
-                        <span id="age-error" class="span_txt" style="display: none;">Enter Age</span>
-                    </div>
+            <!-- Row 1: MR No, Name (prefix + text), Relation (prefix + text), Age (unit + value + DOB) -->
+            <div class="row">
+                <div class="col-lg-1 col-md-3 col-sm-6">
+                    <label for="txt_Mrno">MR No</label>
+                    <input type="text" id="txt_Mrno" class="form-control" disabled />
                 </div>
 
-                <!-- Row 2: Gender, Marital Status, Mobile, Blood Group, CNIC, Other CNIC -->
-                <div class="row">
-                    <!-- Gender (Select2) – position 8 -->
-                    <div class="col-lg-2 col-md-6 col-sm-9">
-                        <label for="ddl_Gender">Gender<span style="color: red;">*</span></label>
-                        <select id="ddl_Gender" class="form-control">
-                            <option value="0">Select Gender</option>
-                        </select>
-                    </div>
-
-                    <!-- Marital Status (Select2) – position 9 -->
-                    <div class="col-lg-2 col-md-4 col-sm-6">
-                        <label for="ddl_status">Marital Status<span style="color: red;">*</span></label>
-                        <select id="ddl_status" class="form-control">
-                            <option value="0">Select Martial Status</option>
-                        </select>
-                    </div>
-
-                    <!-- Mobile – position 10 -->
-                    <div class="col-lg-2 col-md-4 col-sm-6">
-                        <label for="txt_mobile">Mobile<span style="color: red;">*</span></label>
-                        <input type="text" id="txt_mobile" class="form-control" />
-                        <span id="mobile-error" class="span_txt" style="display: none;">Please Enter Phone Number</span>
-                    </div>
-
-                    <!-- Blood Group (Select2) – position 11 -->
-                    <div class="col-lg-2 col-md-4 col-sm-6">
-                        <label for="ddl_bloodGroup">Blood Group<span></span></label>
-                        <select id="ddl_bloodGroup" class="form-control">
-                            <option value="0">Select Blood Group</option>
-                        </select>
-                    </div>
-
-                    <!-- CNIC – position 12 -->
-                    <div class="col-lg-2 col-md-4 col-sm-6">
-                        <label for="txt_cnic">CNIC<span style="color: red;">*</span></label>
-                        <input type="text" id="txt_cnic" class="form-control" />
-                    </div>
-
-                    <!-- Other CNIC – position 13 -->
-                    <div class="col-lg-2 col-md-4 col-sm-6">
-                        <label for="txt_OtherCnic">Other CNIC</label>
-                        <input type="text" id="txt_OtherCnic" class="form-control" />
-                    </div>
+                <div class="col-lg-1 col-md-3 col-sm-6">
+                    <label for="ddl_name">Name<span style="color: red;">*</span></label>
+                    <select id="ddl_name" class="form-control">
+                    </select>
                 </div>
 
-                <!-- Row 3: Country, Province, City, Area, Address, Fee -->
-                <div class="row">
-                    <!-- Country (Select2) – position 14 -->
-                    <div class="col-lg-2 col-md-4 col-sm-6">
-                        <label>Country</label>
-                        <select id="ddlCountry" class="form-control">
-                            <option value="0">Select Country</option>
-                        </select>
-                    </div>
+                <div class="col-lg-3 col-md-6 col-sm-9">
+                    <label>&nbsp;</label>
+                    <input name="dob" type="text" id="txt_name" class="form-control" placeholder="First Name" />
+                    <span id="firstname-error" class="span_txt" style="display: none;">Please Enter First Name</span>
+                </div>
 
-                    <!-- Province (Select2) – position 15 -->
-                    <div class="col-lg-2 col-md-4 col-sm-6">
-                        <label for="ddlstate">Province</label>
-                        <select id="ddlstate" class="form-control">
-                            <option value="0">Select Province</option>
-                        </select>
-                    </div>
+                <div class="col-lg-1 col-md-3 col-sm-6">
+                    <label for="ddlRelation">Relation<span style="color: red;">*</span></label>
+                    <select id="ddlRelation" class="form-control">
+                        <option value="S/O">S/O</option>
+                        <option value="W/O">W/O</option>
+                        <option value="D/O">D/O</option>
+                    </select>
+                </div>
 
-                    <!-- City (Select2) – position 16 -->
-                    <div class="col-lg-2 col-md-4 col-sm-6">
-                        <label for="txtcity">City</label>
-                        <select id="txtcity" class="form-control">
-                            <option value="0">Select City</option>
-                        </select>
-                    </div>
+                <div class="col-lg-3 col-md-6 col-sm-9">
+                    <label>&nbsp;</label>
+                    <input type="text" id="txt_relation" class="form-control" placeholder="Relation Name" />
+                    <span id="relation-error" class="span_txt" style="display: none;">Please Enter Last Name</span>
+                </div>
 
-                    <!-- Area (Select2) – position 17 -->
-                    <div class="col-lg-2 col-md-4 col-sm-6">
-                        <label for="txtarea">Area</label>
-                        <select id="txtarea" class="form-control">
-                            <option value="0">Select Area</option>
-                        </select>
-                    </div>
-                    <div class="col-lg-2 col-md-4 col-sm-6" >
-               
-                     <label for="ddlbankcash">Payment method</label>
-                   <select id="ddlbankcash" class="form-control" name="payment">   <!-- removed onchange -->
+                <div class="col-lg-1 col-md-3 col-sm-6">
+                    <label>&nbsp;</label>
+                    <select onchange="CalculateDateOfBirth();" id="PrefixAge" class="form-control">
+                        <option value="Year">Year</option>
+                        <option value="Month">Month</option>
+                        <option value="Day">Day</option>
+                    </select>
+                </div>
+
+                <div class="col-lg-1 col-md-3 col-sm-6">
+                    <label for="txt_dob">DOB<span style="color: red;">*</span></label>
+                    <input type="text" id="txt_dob" class="form-control" placeholder="Enter Age" onchange="CalculateDateOfBirth();" />
+                </div>
+
+                <div class="col-lg-1 col-md-3 col-sm-6">
+                    <label>&nbsp;</label>
+                    <input type="text" id="txtAge_yearss" class="form-control" placeholder="dd/mm/yy" />
+                    <span id="age-error" class="span_txt" style="display: none;">Enter Age</span>
+                </div>
+            </div>
+
+            <!-- Row 2: Gender, Marital Status, Mobile, Blood Group, CNIC, Other CNIC -->
+            <div class="row">
+                <div class="col-lg-2 col-md-4 col-sm-6">
+                    <label for="ddl_Gender">Gender<span style="color: red;">*</span></label>
+                    <select id="ddl_Gender" class="form-control">
+                        <option value="0">Select Gender</option>
+                    </select>
+                </div>
+
+                <div class="col-lg-2 col-md-4 col-sm-6">
+                    <label for="ddl_status">Marital Status<span style="color: red;">*</span></label>
+                    <select id="ddl_status" class="form-control">
+                        <option value="0">Select Martial Status</option>
+                    </select>
+                </div>
+
+                <div class="col-lg-2 col-md-4 col-sm-6">
+                    <label for="txt_mobile">Mobile<span style="color: red;">*</span></label>
+                    <input type="text" id="txt_mobile" class="form-control" placeholder="03xx-xxxxxxx" />
+                    <span id="mobile-error" class="span_txt" style="display: none;">Please Enter Phone Number</span>
+                </div>
+
+                <div class="col-lg-2 col-md-4 col-sm-6">
+                    <label for="ddl_bloodGroup">Blood Group</label>
+                    <select id="ddl_bloodGroup" class="form-control">
+                        <option value="0">Select Blood Group</option>
+                    </select>
+                </div>
+
+                <div class="col-lg-2 col-md-4 col-sm-6">
+                    <label for="txt_cnic">CNIC<span style="color: red;">*</span></label>
+                    <input type="text" id="txt_cnic" class="form-control" placeholder="xxxxx-xxxxxxx-x" />
+                </div>
+
+                <div class="col-lg-2 col-md-4 col-sm-6">
+                    <label for="txt_OtherCnic">Other CNIC</label>
+                    <input type="text" id="txt_OtherCnic" class="form-control" placeholder="xxxxx-xxxxxxx-x" />
+                </div>
+            </div>
+        </div>
+
+        <!-- Contact, Address & Payment -->
+        <div class="pr-primary-settings">
+            <h5 class="pr-section-title"><i class="fa fa-map-marker"></i> Contact, Address &amp; Payment</h5>
+
+            <!-- Row 3: Country, Province, City, Area, Payment method, Bank/Cash -->
+            <div class="row">
+                <div class="col-lg-2 col-md-4 col-sm-6">
+                    <label>Country</label>
+                    <select id="ddlCountry" class="form-control">
+                        <option value="0">Select Country</option>
+                    </select>
+                </div>
+
+                <div class="col-lg-2 col-md-4 col-sm-6">
+                    <label for="ddlstate">Province</label>
+                    <select id="ddlstate" class="form-control">
+                        <option value="0">Select Province</option>
+                    </select>
+                </div>
+
+                <div class="col-lg-2 col-md-4 col-sm-6">
+                    <label for="txtcity">City</label>
+                    <select id="txtcity" class="form-control">
+                        <option value="0">Select City</option>
+                    </select>
+                </div>
+
+                <div class="col-lg-2 col-md-4 col-sm-6">
+                    <label for="txtarea">Area</label>
+                    <select id="txtarea" class="form-control">
+                        <option value="0">Select Area</option>
+                    </select>
+                </div>
+
+                <div class="col-lg-2 col-md-4 col-sm-6">
+                    <label for="ddlbankcash">Payment method</label>
+                    <select id="ddlbankcash" class="form-control" name="payment">
                         <option value="02">Bank</option>
                         <option value="01" selected>Cash</option>
                     </select>
-                    </div>
-                    <div class="col-lg-2 col-md-4 col-sm-6"  >
-                        <label for="ddlbank">Bank/Cash</label>
-                        <select id="ddlbank" class="form-control">
-                            
-                        </select>
-                    </div>
-
-                    <!-- Address – position 18 -->
-                    
-
-                    <!-- Fee – position 19 -->
-                 
                 </div>
-                <div class="row">
-                    <div class="col-lg-3 col-md-6 col-sm-8">
-                        <label for="txt_Address">Address<span style="color: red;">*</span></label>
-                        <input type="text" id="txt_Address" class="form-control" />
-                        <span id="address-error" class="span_txt" style="display: none;">Please Enter Address</span>
-                    </div>
-                       <div class="col-lg-1 col-md-4 col-sm-6">
-                       <label for="lblfee">Fee<span style="color: red;">*</span></label>
-                       <input type="text" id="txtCardFee" class="form-control" />
-                   </div>
-                </div>
-                <!-- Monitoring (hidden by default) – position 20 -->
-                <div class="row" id="MonitoringDiv">
-                    <div class="col-lg-1 col-md-4 col-sm-6">
-                        <label for="chkMonitoring">Monitoring</label>
-                        <input type="checkbox" id="chkMonitoring" />
-                    </div>
+
+                <div class="col-lg-2 col-md-4 col-sm-6">
+                    <label for="ddlbank">Bank/Cash</label>
+                    <select id="ddlbank" class="form-control">
+                    </select>
                 </div>
             </div>
-        </div>
-    </div>
 
-    <!-- Buttons Row – positions 21 to 25 -->
-    <div class="row">
-        <div class="col-lg-8">
+            <!-- Row 4: Address, Fee, Monitoring -->
             <div class="row">
-                <div class="col-lg-2 col-md-3 col-sm-3 text-center">
-                    <input type="button" id="SavePatient_Data" class="btn-primry" onclick="SavePatient();" value="Save&Print" />
+                <div class="col-lg-6 col-md-6 col-sm-12">
+                    <label for="txt_Address">Address<span style="color: red;">*</span></label>
+                    <input type="text" id="txt_Address" class="form-control" placeholder="House / Street / Town" />
+                    <span id="address-error" class="span_txt" style="display: none;">Please Enter Address</span>
                 </div>
-                <div class="col-lg-2 col-md-2 col-sm-3 text-center">
-                    <input type="button" id="btnlist" class="btn-gray" onclick="window.location = 'RegList.aspx'" value="View" />
+
+                <div class="col-lg-2 col-md-3 col-sm-6">
+                    <label for="lblfee">Fee<span style="color: red;">*</span></label>
+                    <input type="text" id="txtCardFee" class="form-control" />
                 </div>
-                <div class="col-lg-2 col-md-2 col-sm-3">
-                    <input type="button" id="btnPrint" class="btn btn-primry" onclick="PrintReceipt()" value="Print" />
-                </div>
-                  <div class="col-lg-2 col-md-2 col-sm-3" id="divcardfront">
-                    <input type="button" name="btnPrintCard" class="btn-primry" id="btnPrintCardFront" onclick="PrintPatientCard()" value="Front Card" />
-                </div>
-                <div class="col-lg-2 col-md-2 col-sm-3" id="divcardback">
-                    <input type="button" name="btnPrintCard" class="btn-primry" id="btnPrintCardBack" onclick="PrintPatientBackCard()" value="Back Card" />
-                </div>
-                <div class="col-lg-2 col-md-2 col-sm-3">
-                    <input type="button" id="btnRefund" class="btn btn-primry" onclick="RefundRegisterFee()" value="Refund" />
-                </div>
-                <div class="col-lg-2 col-md-2 col-sm-3">
-                    <input type="button" id="btnVoucher" class="btn btn-primry" onclick="PrintVoucher()" value="Voucher" />
+
+                <!-- Monitoring (hidden by default) -->
+                <div class="col-lg-4 col-md-3 col-sm-6" id="MonitoringDiv">
+                    <label>Monitoring</label>
+                    <label class="lab-check"><input type="checkbox" id="chkMonitoring" /> Enable Monitoring</label>
                 </div>
             </div>
         </div>
+
+        <!-- Buttons -->
+        <div class="row reg-actions">
+            <div class="col-12">
+                <div class="col-lg-8">
+                    <div class="row">
+                    <div class="col-lg-2 col-md-3 col-sm-6">
+                        <input type="button" id="SavePatient_Data" class="btn-primry" onclick="SavePatient();" value="Save&Print" />
+                    </div>
+                    <div class="col-lg-2 col-md-3 col-sm-6">
+                        <input type="button" id="btnlist" class="btn-gray" onclick="window.location = 'RegList.aspx'" value="View" />
+                    </div>
+                    <div class="col-lg-2 col-md-3 col-sm-6">
+                        <input type="button" id="btnPrint" class="btn btn-primry" onclick="PrintReceipt()" value="Print" />
+                    </div>
+                    <div class="col-lg-2 col-md-3 col-sm-6" id="divcardfront">
+                        <input type="button" name="btnPrintCard" class="btn-primry" id="btnPrintCardFront" onclick="PrintPatientCard()" value="Front Card" />
+                    </div>
+                    <div class="col-lg-2 col-md-3 col-sm-6" id="divcardback">
+                        <input type="button" name="btnPrintCard" class="btn-primry" id="btnPrintCardBack" onclick="PrintPatientBackCard()" value="Back Card" />
+                    </div>
+                    <div class="col-lg-2 col-md-3 col-sm-6">
+                        <input type="button" id="btnRefund" class="btn btn-primry" onclick="RefundRegisterFee()" value="Refund" />
+                    </div>
+                    <div class="col-lg-2 col-md-3 col-sm-6">
+                        <input type="button" id="btnVoucher" class="btn btn-primry" onclick="PrintVoucher()" value="Voucher" />
+                    </div>
+                </div>
+                </div>
+                
+            </div>
+        </div>
+
     </div>
 </asp:Content>
