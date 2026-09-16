@@ -1379,7 +1379,7 @@
                 button_text_name = name;
                 localStorage.IsDischarge = 0;
 
-                $("#btnSaveMedicine").val('Save');
+                $("#btnSaveMedicines").val('Save');
                 $('#MedicationModel').modal({
                     backdrop: 'static'
                 });
@@ -1408,7 +1408,7 @@
                 button_text_name = name;
                 localStorage.IsDischarge = 0;
 
-                $("#btnSaveMedicine").val('Save');
+                $("#btnSaveMedicines").val('Save');
                 $('#MedicationModel').modal({
                     backdrop: 'static'
                 });
@@ -1442,7 +1442,7 @@
                 button_text_name = name;
                 localStorage.IsDischarge = 0;
 
-                $("#btnSaveMedicine").val('Save');
+                $("#btnSaveMedicines").val('Save');
                 $('#MedicationModel').modal({
                     backdrop: 'static'
                 });
