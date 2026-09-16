@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Infragistics.Documents.Reports.Report;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Web;
@@ -105,6 +106,9 @@ namespace PMS
                                   NIC = a.NIC,
                                   Permanent_Address = a.Permanent_Address,
                                   Created_time = a.Created_time,
+                                  CreatedBy = _dbContext.aspnet_Users.Where(x => x.UserId == a.Created_by).Select(x => x.UserName).FirstOrDefault() ?? "",
+                                  Updated_By = _dbContext.aspnet_Users.Where(x => x.UserId == a.updated_by).Select(x => x.UserName).FirstOrDefault() ?? "",
+                                  Charged_by = _dbContext.aspnet_Users.Where(x => x.UserId == a.Charged_by).Select(x => x.UserName).FirstOrDefault() ?? "",
                               };
 
                     var FilteredCount = pat.Count();

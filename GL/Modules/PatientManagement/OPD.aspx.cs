@@ -1372,7 +1372,7 @@ namespace PMS.Modules.PatientManagement
                         patient.Card_fee = fee;
                         patient.updated_time = DateTime.Now;
                         //patient.updated_by = AppConfig.UserID;
-                        //patient.charged_by = AppConfig.UserID;
+                        patient.Charged_by = AppConfig.UserID;
                         db.SubmitChanges(); // LINQ-to-SQL uses SubmitChanges()
                         return new JavaScriptSerializer().Serialize(new { success = true });
                     }
