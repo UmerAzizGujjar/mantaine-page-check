@@ -2,12 +2,324 @@
 
 <asp:Content ID="Content1" ContentPlaceHolderID="HeadContent" runat="server">
     <link href="../../wwwroot/THEME_TIBBIT/CustomCSS/TestDefinition.css" rel="stylesheet" />
+    <link href="../../wwwroot/THEME_TIBBIT/CustomCSS/vendor.css" rel="stylesheet" />
+    <link href="../../wwwroot/THEME_TIBBIT/CustomCSS/Datavalue.css" rel="stylesheet" />
     <style>
         #TblUltra_Value a, 
         #TblXRay_Value a, 
         #TblMRI_Value a, 
         #TblCTScan_Value a {
             pointer-events: auto !important;
+        }
+
+        /* ===================== Compact form layout ===================== */
+        .td-page {
+            padding-bottom: 12px;
+        }
+
+        /* ── Meta bar ── */
+        .td-page .pr-meta-bar {
+            margin-bottom: 16px;
+            padding: 6px 16px;
+        }
+        .td-page .meta-badge {
+            padding: 3px 10px;
+        }
+        .td-page .meta-badge .badge-label {
+            margin: 0;
+        }
+        .td-page #test_id {
+            width: 72px !important;
+            height: 26px !important;
+            padding: 2px 6px !important;
+            border: 1px solid #f0e0c8 !important;
+            border-radius: 4px !important;
+            background: #fff !important;
+            box-shadow: none !important;
+            font-size: 12px !important;
+            font-weight: 700 !important;
+            color: #d29237 !important;
+            text-align: center;
+        }
+
+        /* ── Cards ── */
+        .td-page .pr-primary-settings {
+            margin-bottom: 16px;
+        }
+        .td-page .pr-cards-column {
+            margin-bottom: 16px;
+        }
+        .td-page .pr-cards-column .pr-primary-settings {
+            flex: 0 0 auto;
+        }
+        .td-page .pr-cards-column .pr-primary-settings:only-child {
+            flex: 1 1 auto;
+        }
+        .td-page .pr-cards-column .pr-primary-settings:last-child {
+            margin-bottom: 0 !important;
+        }
+        .td-page .pr-section-title {
+            margin: 0 -20px 12px -20px !important;
+            padding: 9px 20px !important;
+        }
+        .td-page .pr-primary-settings label {
+            font-size: 11px !important;
+            margin-bottom: 3px !important;
+            letter-spacing: .03em;
+        }
+        .td-page .pr-primary-settings .row {
+            margin-bottom: 10px;
+        }
+        .td-page .pr-primary-settings .row:last-child {
+            margin-bottom: 0;
+        }
+        .td-page .pr-primary-settings input[type="text"],
+        .td-page .pr-primary-settings input[type="number"],
+        .td-page .pr-primary-settings select {
+            font-size: 12px !important;
+            height: 32px !important;
+            padding: 5px 10px !important;
+            border: 1px solid #e0e0e0 !important;
+            border-radius: 4px !important;
+            background: #fff !important;
+            box-shadow: none !important;
+        }
+        .td-page .pr-primary-settings input[type="text"]:focus,
+        .td-page .pr-primary-settings input[type="number"]:focus,
+        .td-page .pr-primary-settings select:focus {
+            border-color: #EFA63E !important;
+            box-shadow: 0 0 0 3px #EFA63E25 !important;
+            outline: none !important;
+        }
+
+        /* ── Checkbox pills ── */
+        .td-page .td-check {
+            display: inline-flex !important;
+            align-items: center;
+            gap: 6px;
+            height: 28px;
+            padding: 0 11px;
+            margin: 0 !important;
+            background: #fdf7ef;
+            border: 1px solid #f0e0c8;
+            border-radius: 15px;
+            font-size: 11px !important;
+            font-weight: 700 !important;
+            color: #7a6530 !important;
+            text-transform: uppercase;
+            letter-spacing: .03em;
+            cursor: pointer;
+            user-select: none;
+            white-space: nowrap !important;
+            flex: 0 0 auto;
+        }
+        .td-page .td-check input[type="checkbox"] {
+            margin: 0 !important;
+            position: static !important;
+        }
+        .td-page .td-check-row {
+            display: flex !important;
+            flex-wrap: wrap;
+            align-items: center;
+            gap: 8px;
+            margin: 0;
+        }
+        .td-page .td-check-row .td-check {
+            margin: 0 !important;
+        }
+
+        /* ── Tables (override TestDefinition.css) ── */
+        .td-page .table,
+        .td-page .tab {
+            width: 100% !important;
+            margin: 0 0 10px 0 !important;
+            background: #fff !important;
+            color: #444 !important;
+            border: 1px solid #eee !important;
+            border-radius: 4px;
+            overflow: hidden;
+        }
+        .td-page .table th,
+        .td-page .tab th,
+        .td-page .table thead th,
+        .td-page .tab thead th {
+            display: table-cell !important;
+            background: #EFA63E !important;
+            background-image: none !important;
+            color: #fff !important;
+            font-size: 10px !important;
+            font-weight: 700 !important;
+            text-transform: uppercase;
+            letter-spacing: .04em;
+            padding: 7px 10px !important;
+            border: none !important;
+            border-bottom: 1px solid #EFA63E !important;
+            text-align: left !important;
+            white-space: nowrap;
+        }
+        .td-page .table td,
+        .td-page .tab td,
+        .td-page .table td:first-child,
+        .td-page .tab td:first-child {
+            display: table-cell !important;
+            padding: 6px 10px !important;
+            font-size: 12px !important;
+            border: none !important;
+            border-right: none !important;
+            border-bottom: 1px solid #f0f0f0 !important;
+            vertical-align: middle !important;
+            max-width: none !important;
+            word-wrap: normal !important;
+            text-align: left !important;
+            background: transparent !important;
+        }
+        .td-page .table tbody tr:nth-child(even),
+        .td-page .tab tbody tr:nth-child(even) {
+            background: #fbfcfe;
+        }
+        .td-page .table tbody tr:hover,
+        .td-page .tab tbody tr:hover {
+            background: #EFA63E12;
+        }
+        .td-page .table td a,
+        .td-page .tab td a {
+            color: #d29237 !important;
+            font-weight: 700;
+        }
+
+        /* ── Tab tables: stop card styles leaking into grid cells ── */
+        .td-page #tabs .table,
+        .td-page #tabs .tab {
+            table-layout: auto !important;
+        }
+        .td-page #tabs .table th,
+        .td-page #tabs .tab th {
+            width: auto !important;
+            white-space: nowrap;
+        }
+        .td-page #tabs .table td,
+        .td-page #tabs .tab td {
+            padding: 5px 8px !important;
+        }
+        .td-page #tabs .table select,
+        .td-page #tabs .table input[type="text"],
+        .td-page #tabs .table input[type="number"] {
+            width: auto !important;
+            max-width: 100%;
+            height: 27px !important;
+            padding: 2px 6px !important;
+            font-size: 11px !important;
+            border: 1px solid #d9dee3 !important;
+            border-radius: 3px !important;
+            background: #fff !important;
+            box-shadow: none !important;
+        }
+        .td-page #tabs .table textarea {
+            width: 100%;
+            font-size: 11px;
+        }
+        .td-page #tabs .td-table-scroll {
+            max-height: 220px;
+            overflow-y: auto;
+        }
+
+        /* ── Result section band ── */
+        .td-page .table-container {
+            border: none;
+            background: transparent;
+        }
+        .td-page #value_box {
+            width: auto !important;
+            height: auto !important;
+            margin: 0 0 10px 0 !important;
+            padding: 9px 16px !important;
+            background: linear-gradient(90deg, #EFA63E, #f0b45e) !important;
+            background-image: linear-gradient(90deg, #EFA63E, #f0b45e) !important;
+            border-radius: 6px !important;
+            color: #fff !important;
+            text-align: left !important;
+        }
+        .td-page #value_box span {
+            padding-left: 0 !important;
+            line-height: normal !important;
+            font-size: 13px !important;
+            font-weight: 700 !important;
+            letter-spacing: .05em;
+            text-transform: uppercase;
+        }
+
+        /* ── Tabs ── */
+        .td-page #tabs {
+            border: 1px solid #eee;
+            border-radius: 6px;
+            background: #fff;
+            padding: 0;
+        }
+        .td-page #tabs ul {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 5px;
+            margin: 0;
+            padding: 7px 9px;
+            list-style: none;
+            background: #faf7f2;
+            border: none;
+            border-bottom: 1px solid #f0e0c8;
+        }
+        .td-page #tabs ul li {
+            margin: 0;
+            border: none;
+            background: none;
+        }
+        .td-page #tabs ul li a,
+        .td-page #tabs ul li.ui-tabs-active a {
+            display: inline-block;
+            background: #fff !important;
+            background-image: none !important;
+            color: #7a6530 !important;
+            border: 1px solid #f0e0c8 !important;
+            border-radius: 14px !important;
+            padding: 5px 14px !important;
+            font-size: 11px !important;
+            font-weight: 700 !important;
+            text-transform: uppercase;
+            letter-spacing: .03em;
+        }
+        .td-page #tabs ul li.ui-tabs-active a {
+            background: #EFA63E !important;
+            border-color: #EFA63E !important;
+            color: #fff !important;
+        }
+        .td-page #tabs > div {
+            padding: 14px 16px !important;
+            border: none !important;
+            background: #fff;
+        }
+        .td-page #tabs fieldset {
+            border: 1px solid #eee !important;
+            border-radius: 6px;
+            padding: 8px 14px 14px !important;
+            margin: 0 !important;
+            min-width: 0;
+        }
+        .td-page #tabs legend {
+            font-size: 12px !important;
+            font-weight: 700 !important;
+            color: #7a6530 !important;
+            padding: 0 8px !important;
+            width: auto !important;
+            border: none !important;
+        }
+        .td-page #tabs .td-scroll {
+            max-height: 220px;
+            overflow-y: auto;
+        }
+        .td-page #tabs .td-list-scroll {
+            max-height: 150px;
+            overflow-y: auto;
+        }
+        .td-page #tabs .btn-primry {
+            margin-bottom: 8px;
         }
     </style>
     <script type="text/javascript">
@@ -1574,181 +1886,188 @@
 
 </asp:Content>
 <asp:Content ID="Content2" ContentPlaceHolderID="MainContent" runat="server">
-    <div id="PatientDetail">
+    <div id="PatientDetail" class="td-page">
         <contenttemplate>
-                <div class="row mb-3">
-                    <div class="col-md-3 col-lg-3">
-                        <label for="test_id">ID</label>
+         
+              
+            <div class="pr-meta-bar">
+                <div class="meta-left">
+                    
+                </div>
+                <div class="meta-right">
+                    <div class="meta-badge">
+                        <span class="badge-label">ID:</span>
+                        <input type="text" id="test_id" readonly="readonly" value="(New)" />
+                    </div>
+                </div>
+            </div>
+    
+
+            <div class="row">
+                <div class="col-lg-6 col-md-12 pr-cards-column">
+                    <div class="pr-primary-settings">
+                        <h5 class="pr-section-title"><i class="fa fa-info-circle"></i> Test Information</h5>
                         <div class="row">
-                            <div class="col-md-4 col-lg-3">
-                                <input type="text" id="test_id" class="form-control" readonly="readonly" value="(New)" />
-                            </div>
-                            <div class="col-md-7 col-lg-9">
+                            <div class="col-md-4 col-lg-4">
+                                <label for="ddlTestDpt">Test Main Department</label>
                                 <select id="ddlTestDpt" class="form-control" onchange="hideFields()">
                                     <option value="">Select Test Main Department</option>
                                 </select>
                             </div>
-                        </div>
-                    </div>
 
-                    <div class="col-md-3 col-lg-3" id="TestNameRow">
-                        <label for="test_name">Test Name</label>
-                        <input type="text" id="test_name" class="form-control" required />
-                    </div>
-
-                    <div class="col-md-3 col-lg-3">
-                        <label for="main-departments">Main Department</label>
-                        <select id="main-departments" class="form-control">
-                            <option value="">Select Department</option>
-                        </select>
-                    </div>
-
-
-                    <div class="col-md-3 col-lg-3">
-                        <label for="group-departments">Group Department</label>
-                        <select id="group-departments" class="form-control">
-                            <option value="">Select Department</option>
-                        </select>
-                    </div>
-                </div>
-
-                
-                <div class="row mb-3">
-
-                    <div class="col-md-3 col-lg-2">
-                        <label>Group Category</label>
-                        <select id="groups" class="form-control">
-                            <option value="">Select Group</option>
-                        </select>
-                    </div>
-
-                    <div class="col-md-3 col-lg-2">
-                        <label>Unit</label>
-                        <select id="units" class="form-control">
-                            <option value="">Select Unit</option>
-                        </select>
-                    </div>
-
-                    <div class="col-md-2">
-                        <label>Out Source Labs</label>
-                        <select id="ddlOutSourceLabs" class="form-control"></select>
-                    </div>
-
-                    <div class="col-md-3 col-lg-2">
-                        <label>Rate</label>
-                        <input type="text" name="test_rate" id="test_rate" class="form-control" value="" />
-                    </div>
-
-                    <div class="col-md-3 col-lg-2">
-                        <label>Machine Name</label>
-                        <input type="text" id="machine_name" class="form-control" />
-                    </div>
-
-                    <div class="col-md-3 col-lg-2">
-                        <label>Standard Name</label>
-                        <input type="text" id="standard_name" class="form-control" />
-                    </div>
-
-                </div>
-
-            <div class="row mb-3">
-                <div class="col-md-3 col-lg-3">
-                    <label>Designation *</label>
-                    <select id="ddlDesignation" class="form-control">
-                    </select>
-                </div>
-                <div class="col-md-3 col-lg-3">
-                    <label>Sample Genre</label>
-
-                    <select id="ddlGenre" class="form-control"></select>
-                </div>
-
-                <div class="col-md-3 col-lg-3">
-                    <label>Report Columns</label>
-                    <select id="ddlrptColumns">
-                        <option value="2">2-Fixed Or DropDown</option>
-                        <option value="3">3-DropDown and Fixed</option>
-                        <option value="4">4-Table Range and Fixed</option>
-                        <option value="5">5-Value Range Table</option>
-                        <option value="6">6-Cutt Off</option>
-                        <option value="7">7-Result Organism</option>
-                        <option value="8">8-Ultrasound Fixed</option>
-                        <option value="9">9-Value Range</option>
-                        <option value="10">10-Blood Bank Report</option>
-                        <option value="11">11-Fixed,Patient Value and Result Report</option>
-                        <option value="12">12-Histopathology Report</option>
-                        <option value="13">13-X-Ray Radiology Report</option>
-                        <option value="14">14-Ct Scan Radiology Report</option>
-                        <option value="15">15-MRI Radiology Report</option>
-                        <option value="16">16-ECG Cardiology Report</option>
-                        <option value="17">17-BioFire BioFire Test</option>
-
-                    </select>
-                </div>
-
-                <div class="col-md-6 col-lg-1">
-                    <label>Quantity (ml)</label>
-                    <input type="text" id="txtQty" class="form-control" />
-                </div>
-
-                <div class="col-md-6 col-lg-2">
-                    <label>Order</label>
-
-                    <input type="number" step="1" min="1" id="txtOrder" class="form-control" />
-                </div>
-            </div>
-
-                
-                <div class="row mb-3">
-                    <div class="col-md-3 col-lg-3">
-                        <label>Reporting Time:</label>
-                        <div class="row">
-                            <div class="col-md-6">
-                                <input type="number" step="1" min="1" id="Rpt_Time" class="form-control" />
+                            <div class="col-md-4 col-lg-4" id="TestNameRow">
+                                <label for="test_name">Test Name</label>
+                                <input type="text" id="test_name" class="form-control" required />
                             </div>
-                            <div class="col-md-6">
-                                <select id="Rpt_Day" class="form-control">
-                                    <option value="001">Hrs</option>
-                                    <option value="002">Days</option>
+
+                            <div class="col-md-4 col-lg-4">
+                                <label for="main-departments">Main Department</label>
+                                <select id="main-departments" class="form-control">
+                                    <option value="">Select Department</option>
+                                </select>
+                            </div>
+
+                            <div class="col-md-4 col-lg-4">
+                                <label for="group-departments">Group Department</label>
+                                <select id="group-departments" class="form-control">
+                                    <option value="">Select Department</option>
+                                </select>
+                            </div>
+
+                            <div class="col-md-4 col-lg-4">
+                                <label>Group Category</label>
+                                <select id="groups" class="form-control">
+                                    <option value="">Select Group</option>
+                                </select>
+                            </div>
+
+                            <div class="col-md-4 col-lg-4">
+                                <label>Unit</label>
+                                <select id="units" class="form-control">
+                                    <option value="">Select Unit</option>
+                                </select>
+                            </div>
+
+                            <div class="col-md-4 col-lg-4">
+                                <label>Out Source Labs</label>
+                                <select id="ddlOutSourceLabs" class="form-control"></select>
+                            </div>
+
+                            <div class="col-md-4 col-lg-4">
+                                <label>Designation *</label>
+                                <select id="ddlDesignation" class="form-control">
                                 </select>
                             </div>
                         </div>
                     </div>
-                    <div class="col-md-3 col-lg-3">
-                        <label>Group Header L1</label>
-                        <select id="ddlGroupHeader" class="form-control"></select>
-                    </div>
-                     <div class="col-md-2 col-lg-1">
-      <label>Waiting Time(min.)</label>
- <input type="number" step="1" min="1" id="waiting_time" class="form-control" />
- </div>
-                    <div class="col-md-2 col-lg-1">
-                        <input type="checkbox" id="test_active" checked="checked" name="test_active" />
-                        <label for="test_active">Active</label>
-                    </div>
-                    <div class="col-md-2 col-lg-1">
-                        <input type="checkbox" id="Test_cultural" name="Test_cultural" />
-                        <label for="Test_cultural">Is cultural</label>
-                    </div>
-                    <div class="col-md-2 col-lg-1">
-                        <input type="checkbox" id="chkLevel" name="chkLevel" />
-                        <label for="chkLevel">Ultrasound</label>
-                    </div>
-                    <div class="col-md-2 col-lg-1">
-                        <input type="checkbox" id="chkPayment" name="chkPayment" />
-                        <label for="chkPayment">Payment</label>
-                    </div>
-                    <div class="col-md-2 col-lg-1">
-                        <input type="checkbox" id="chkSpecial_Test" name="chkSpecial_Test" />
-                        <label for="chkSpecial_Test">Special Test</label>
+
+                    <div class="pr-primary-settings">
+                        <h5 class="pr-section-title"><i class="fa fa-check-square-o"></i> Options</h5>
+                        <div class="row">
+                            <div class="col-md-12 td-check-row">
+                                <label class="td-check"><input type="checkbox" id="test_active" checked="checked" name="test_active" /> Active</label>
+                                <label class="td-check"><input type="checkbox" id="Test_cultural" name="Test_cultural" />cultural</label>
+                                <label class="td-check"><input type="checkbox" id="chkLevel" name="chkLevel" /> Ultrasound</label>
+                                <label class="td-check"><input type="checkbox" id="chkPayment" name="chkPayment" /> Payment</label>
+                                <label class="td-check"><input type="checkbox" id="chkSpecial_Test" name="chkSpecial_Test" /> Special Test</label>
+                            </div>
+                        </div>
                     </div>
                 </div>
+
+                <div class="col-lg-6 col-md-12 pr-cards-column">
+                    <div class="pr-primary-settings">
+                        <h5 class="pr-section-title"><i class="fa fa-sliders"></i> Pricing &amp; Scheduling</h5>
+                        <div class="row">
+                            <div class="col-md-4 col-lg-4">
+                                <label>Rate</label>
+                                <input type="text" name="test_rate" id="test_rate" class="form-control" value="" />
+                            </div>
+
+                            <div class="col-md-4 col-lg-4">
+                                <label>Machine Name</label>
+                                <input type="text" id="machine_name" class="form-control" />
+                            </div>
+
+                            <div class="col-md-4 col-lg-4">
+                                <label>Standard Name</label>
+                                <input type="text" id="standard_name" class="form-control" />
+                            </div>
+
+                            <div class="col-md-4 col-lg-4">
+                                <label>Sample Genre</label>
+                                <select id="ddlGenre" class="form-control"></select>
+                            </div>
+
+                            <div class="col-md-4 col-lg-4">
+                                <label>Report Columns</label>
+                                <select id="ddlrptColumns" class="form-control">
+                                    <option value="2">2-Fixed Or DropDown</option>
+                                    <option value="3">3-DropDown and Fixed</option>
+                                    <option value="4">4-Table Range and Fixed</option>
+                                    <option value="5">5-Value Range Table</option>
+                                    <option value="6">6-Cutt Off</option>
+                                    <option value="7">7-Result Organism</option>
+                                    <option value="8">8-Ultrasound Fixed</option>
+                                    <option value="9">9-Value Range</option>
+                                    <option value="10">10-Blood Bank Report</option>
+                                    <option value="11">11-Fixed,Patient Value and Result Report</option>
+                                    <option value="12">12-Histopathology Report</option>
+                                    <option value="13">13-X-Ray Radiology Report</option>
+                                    <option value="14">14-Ct Scan Radiology Report</option>
+                                    <option value="15">15-MRI Radiology Report</option>
+                                    <option value="16">16-ECG Cardiology Report</option>
+                                    <option value="17">17-BioFire BioFire Test</option>
+                                </select>
+                            </div>
+
+                            <div class="col-md-4 col-lg-4">
+                                <label>Quantity (ml)</label>
+                                <input type="text" id="txtQty" class="form-control" />
+                            </div>
+
+                            <div class="col-md-4 col-lg-4">
+                                <label>Order</label>
+                                <input type="number" step="1" min="1" id="txtOrder" class="form-control" />
+                            </div>
+
+                            <div class="col-md-4 col-lg-4">
+                                <label>Reporting Time</label>
+                                <div class="row">
+                                    <div class="col-md-6">
+                                        <input type="number" step="1" min="1" id="Rpt_Time" class="form-control" />
+                                    </div>
+                                    <div class="col-md-6">
+                                        <select id="Rpt_Day" class="form-control">
+                                            <option value="001">Hrs</option>
+                                            <option value="002">Days</option>
+                                        </select>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="col-md-4 col-lg-4">
+                                <label>Group Header L1</label>
+                                <select id="ddlGroupHeader" class="form-control"></select>
+                            </div>
+
+                            <div class="col-md-4 col-lg-4">
+                                <label>Waiting Time (min.)</label>
+                                <input type="number" step="1" min="1" id="waiting_time" class="form-control" />
+                            </div>
+
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="pr-primary-settings">
+                <h5 class="pr-section-title"><i class="fa fa-money"></i> Test Rates</h5>
                 <div class="row">
-                    <div class="col-md-8 mb-4 col-lg-6 col-sm-12">
+                    <div class="col-md-6 col-lg-6 col-sm-12">
                         <div id="dvIPDRates">
-                            <fieldset class="mt-n3">
+                            <fieldset>
                                 <legend>IPD Test Rates</legend>
-                                <a href="javascript:void(0)" class="fa fa-plus iconAdd" style="font-size: 20px;float:right;margin-top:-20px;" onclick="IPD_value()"></a>
+                                <a href="javascript:void(0)" class="fa fa-plus iconAdd" style="font-size: 18px;float:right;margin-top:-18px;" onclick="IPD_value()"></a>
                                 <div class="table-responsive" style="max-height: 217px;">
                                     <table class="table" id="IPD_Test_Rate_Table">
                                         <thead>
@@ -1765,11 +2084,11 @@
                             </fieldset>
                         </div>
                     </div>
-                    <div class="col-md-8 mb-4 col-lg-6 col-sm-12">
+                    <div class="col-md-6 col-lg-6 col-sm-12">
                         <div id="dvOPDRats">
-                            <fieldset class="mt-n3">
+                            <fieldset>
                                 <legend>OPD Test Rates</legend>
-                                <a href="javascript:void(0)" class="fa fa-plus iconAdd" style="font-size: 20px;float:right;margin-top:-20px;"  onclick="OPD_value()"></a>
+                                <a href="javascript:void(0)" class="fa fa-plus iconAdd" style="font-size: 18px;float:right;margin-top:-18px;"  onclick="OPD_value()"></a>
                                 <div class="table-responsive" style="max-height: 217px;">
                                     <table class="table" id="OPD_Test_Rate_Table">
                                         <thead>
@@ -1787,11 +2106,14 @@
                         </div>
                     </div>
                 </div>
-            <div class="table-container">
-                <div id="value_box" style="height: 42px!Important; margin: 9px;">
-                    <span style="line-height: 36px; padding-left: 90px; font-size: 19px;">Test Result Possibility</span>
-                </div>
-                <div style="width: 850px">
+            </div>
+            <div class="pr-primary-settings">
+                <h5 class="pr-section-title"><i class="fa fa-flask"></i> Result Configuration</h5>
+                <div class="table-container">
+                    <div id="value_box">
+                        <span>Test Result Possibility</span>
+                    </div>
+                    <div>
                     <div id="tabs">
                         <ul>
                             <li><a href="#Tab-1">Value Range Result</a></li>
@@ -1808,6 +2130,7 @@
                                 <fieldset>
                                     <input type="button" class="btn btn-primry" id="loadCTScans" value="CTScan Format" style="width: auto !important;" />
                                     <a href="javascript:void(0)" style="font-size: 20px; float: right;" class="fa fa-plus iconAdd" onclick="CTScan_value()"></a>
+                                    <div class="td-table-scroll">
                                     <table id="TblCTScan_Value" class="table">
                                         <thead>
                                             <tr>
@@ -1818,6 +2141,7 @@
                                         </thead>
                                         <tbody></tbody>
                                     </table>
+                                    </div>
                                     <div class="col-lg-3">
                                         <input type="button" class="btn btn-primry" name="Save" id="btnSaveCTScan" value="Save" />
                                     </div>
@@ -1829,6 +2153,7 @@
                                 <fieldset>
                                     <input type="button" class="btn btn-primry" id="loadMRIs" value="MRI Format" style="width: auto !important;" />
                                     <a href="javascript:void(0)" style="font-size: 20px; float: right;" class="fa fa-plus iconAdd" onclick="MRI_value()"></a>
+                                    <div class="td-table-scroll">
                                     <table id="TblMRI_Value" class="table">
                                         <thead>
                                             <tr>
@@ -1839,6 +2164,7 @@
                                         </thead>
                                         <tbody></tbody>
                                     </table>
+                                    </div>
                                     <div class="col-lg-3">
                                         <input type="button" class="btn btn-primry" name="Save" id="btnSaveMRI" value="Save" />
                                     </div>
@@ -1850,6 +2176,7 @@
                                 <fieldset>
                                     <input type="button" class="btn btn-primry" id="loadXRays" value="X-Ray Format" style="width: auto !important;" />
                                     <a href="javascript:void(0)" style="font-size: 20px; float: right;" class="fa fa-plus iconAdd" onclick="XRay_value()"></a>
+                                    <div class="td-table-scroll">
                                     <table id="TblXRay_Value" class="table">
                                         <thead>
                                             <tr>
@@ -1860,6 +2187,7 @@
                                         </thead>
                                         <tbody></tbody>
                                     </table>
+                                    </div>
                                     <div class="col-lg-3">
                                         <input type="button" class="btn btn-primry" name="Save" id="btnSaveXRay" value="Save" />
                                     </div>
@@ -1871,6 +2199,7 @@
                                 <fieldset>
                                     <input type="button" class="btn btn-primry" id="loadultraSounds" value="Ultrasound Format" style="width: auto !important;" />
                                     <a href="javascript:void(0)" style=" font-size: 20px; float: right;" class="fa fa-plus iconAdd" onclick="Level_value()"></a>
+                                    <div class="td-table-scroll">
                                     <table id="TblUltra_Value" class="table">
                                         <thead>
                                             <tr>
@@ -1881,6 +2210,7 @@
                                         </thead>
                                         <tbody></tbody>
                                     </table>
+                                    </div>
                                     <div class="col-lg-3">
                                         <input type="button" class="btn btn-primry" name="Save" id="btnSaveUltrasound" value="Save" />
                                     </div>
@@ -1894,6 +2224,7 @@
                                 <fieldset>
                                     <legend>Values: &nbsp;&nbsp;<input type="checkbox" id="chkvalue" name="chkvalue" /></legend>
                                     <a href="javascript:void(0)" style=" font-size: 20px; float: right;" class="fa fa-plus iconAdd" onclick="new_value()"></a>
+                                    <div class="td-table-scroll">
                                     <table id="TestValues" class="table">
                                         <thead>
                                             <tr>
@@ -1906,6 +2237,7 @@
                                         <tbody>
                                         </tbody>
                                     </table>
+                                    </div>
                                 </fieldset>
                             </div>
                         </div>
@@ -1963,6 +2295,7 @@
                             <input type="button" name="Save" class="btn btn-primry"  id="btnSave" value="Save"  />
                    </div>
                </div>
+            </div>
             </div>
             </div>
             </div>

@@ -6194,7 +6194,7 @@
             $(".todolist").focus(function (event) {
 
                 if (document.getElementById(event.currentTarget.id).value === '') {
-                    document.getElementById(event.currentTarget.id).value += '• ';
+                    document.getElementById(event.currentTarget.id).value += '\u2022 ';
                 }
             });
             $(".todolist").keyup(function (event) {
@@ -6202,7 +6202,7 @@
                 var keycode = (event.keyCode ? event.keyCode : event.which);
                 if (keycode == '13') {
                     var text = $('#' + event.currentTarget.id + '').val();
-                    text += "• ";
+                    text += "\u2022 ";
                     $('#' + event.currentTarget.id + '').val(text);
                 }
 
