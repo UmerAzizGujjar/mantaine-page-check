@@ -247,7 +247,7 @@ namespace PMS
                     }
 
                     FBRInvoiceMaster objInv = new FBRInvoiceMaster();
-                    
+
                     objInv.InvoiceNumber = billing.Bill_No;
                     objInv.POSID = Convert.ToInt32(POSID);
                     objInv.USIN = USIN;
@@ -256,11 +256,11 @@ namespace PMS
                     objInv.BuyerCNIC = "";
                     objInv.BuyerName = "";
                     objInv.BuyerPhoneNumber = "";
-                    
+
                     var totalAmount = selectedDetails.Sum(bd => bd.Amount ?? 0);
                     var totalDiscount = selectedDetails.Sum(bd => bd.Discount_Amount ?? 0);
                     var netAmount = totalAmount - totalDiscount;
-                    
+
                     objInv.TotalBillAmount = Convert.ToDouble(netAmount);
                     objInv.TotalQuantity = Convert.ToDouble(selectedDetails.Count);
                     objInv.TotalSaleValue = Convert.ToDouble(totalAmount);
@@ -274,13 +274,14 @@ namespace PMS
 
                     HttpClient client = new HttpClient();
                     string Token = "";
-                    string apiUrl = "http://localhost:8524/api/IMSFiscal/GetInvoiceNumberByModel";
-                    
+                    //string apiUrl = "http://localhost:8524/api/IMSFiscal/GetInvoiceNumberByModel";
+                    string apiUrl = URL;
+
                     client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", Token);
                     StringContent content = new StringContent(JsonConvert.SerializeObject(objInv), Encoding.UTF8, "application/json");
-                    
+
                     System.Net.ServicePointManager.ServerCertificateValidationCallback = delegate { return true; };
-                    
+
                     HttpResponseMessage response = client.PostAsync(apiUrl, content).Result;
 
                     if (response.IsSuccessStatusCode)
@@ -299,9 +300,9 @@ namespace PMS
                             {
                                 MarkDetailsAsFbrPosted(db, selectedDetails.Select(x => x.Bill_Details_ID).ToList());
 
-                                return JsonConvert.SerializeObject(new 
-                                { 
-                                    success = true, 
+                                return JsonConvert.SerializeObject(new
+                                {
+                                    success = true,
                                     message = string.Format("Bill {0} posted to FBR successfully. Invoice No: {1}", billing.Bill_No, FBR_Invoice_No)
                                 });
                             }
@@ -354,7 +355,7 @@ namespace PMS
                 {
                     hsCode = itemCodeLookup[detail.Item_ID.Value];
                 }
-                
+
                 items.Add(new FBRInvoiceDetail
                 {
                     ItemCode = "ITEM001",
@@ -451,7 +452,7 @@ namespace PMS
                 Bitmap qrCodeImage = qrCode.GetGraphic(20);
 
                 string webRootPath = HostingEnvironment.MapPath("~/wwwroot");
-                
+
                 if (!Directory.Exists(webRootPath))
                 {
                     Directory.CreateDirectory(webRootPath);
