@@ -83,6 +83,8 @@ namespace PMS
                                   join u in _dbContext.aspnet_Users on b.Created_By equals u.UserId
                                   where (b.Total_Amount != null || b.Discount_Amount != null)
                                         && (b.isCancel == null || b.isCancel == false)
+                                        && (b.IsCathLab == null || b.IsCathLab == false)
+                                        && (b.IsPharmacy == null || b.IsPharmacy == false)
                                   select new
                                   {
                                       Bill_No = b.Bill_No,
