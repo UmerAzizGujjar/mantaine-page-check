@@ -637,6 +637,18 @@
                 window.open('Physiotherapy_Assessment.aspx?ID=' + outPatId, '_blank');
             }
         }
+        function ShowAlingerModel() {
+            var outPatId = $('#ctl00_MainContent_txtOut_Patient_ID').val();
+            if (outPatId === '(New)' || outPatId === '' || outPatId === undefined) {
+                Swal.fire({
+                    icon: 'warning',
+                    title: 'Save Required',
+                    text: 'Please save the patient form first before opening Aligner.'
+                });
+            } else {
+                window.open('../Dental/Alinger.aspx?OutPatientID=' + outPatId, '_blank');
+            }
+        }
 
         function ShowPeadsModel() {
             $('#ModelPeads').modal({
@@ -5768,7 +5780,10 @@
                                     <img src="~../../../../wwwroot/SOURCE_IMAGES/GENERAL_ICONS/FrontPatientModel.png" alt="Physio" style="width:100px;cursor:pointer" onclick="ShowPhysioModel()" />
                                     <span style="font-weight:bold">Physiotherapy</span>
                                 </td>
-                                <td class="icon-cell"></td>
+                                <td class="icon-cell">
+                                    <img src="~../../../../wwwroot/SOURCE_IMAGES/GENERAL_ICONS/tooth.svg" alt="Aligner" style="width:100px;cursor:pointer" onclick="ShowAlingerModel()" />
+                                    <span style="font-weight:bold">Aligner</span>
+                                </td>
                                 <td class="icon-cell"></td>
                             </tr>
                         </table>

@@ -1020,7 +1020,24 @@
 
                                         debugger;
                                         TestDetail(id)
+
+                                        //window.open('../../ReportViewer.aspx?ReportName=LabSlip&ReportTitle=Department Of Pathology&Lab_ID=' + id);
+                                        var user_name = '<% =AppConfig.Company_Name %>';
+                                        // 'id' is the newly generated Sample ID returned by SaveTest
+                                        var sampleID = id;
+
+                                        // Also store it in hidden field for future use
+                                        $("#hdSample_ID").val(sampleID);
+
+                                        if (user_name == 'Central Park Teaching Hospital') {
+                                            
+                                            window.open('../../ReportViewer.aspx?ReportName=LabSlip&ReportTitle=Department Of Pathology&Lab_ID=' + id);
+                                            window.open('../../ReportViewer.aspx?ReportName=LabBarcode&ReportTitle=Lab Barcode Report&Sample_ID=' + sampleID);
+                                        }
+                                        else {
                                         window.open('../../ReportViewer.aspx?ReportName=LabSlip&ReportTitle=Department Of Pathology&Lab_ID=' + id);
+                                        }
+
                                         window.location = "SampleCollectionFrom.aspx?sampleID=" + id;
                                     }
                                     else {

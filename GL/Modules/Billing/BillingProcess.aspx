@@ -3580,6 +3580,13 @@
                 var Qty = 0;
                 var TotalDiscountAmount = 0;
                 var TotalNetAmount = 0;
+
+                // var TotalAmounts = parseFloat($("#txtTotalAmount").val()) || 0;
+                // var PreviousPaid = parseFloat($("#txtprevious_paid").val()) || 0;
+                // var PreviousAmount = parseFloat($("#txtprevious_Amount").val()) || 0;
+                // var PreviousBalance = parseFloat($("#txt_balance").val()) || 0;
+                // var AdvanceAmount = parseFloat($("#txtadvance_amount").val()) || 0;
+                // var RefundAmount = parseFloat($("#txtRefund_amount").val()) || 0;
                 $.each($('#tblDetails tbody tr'), function (key, value) {
                     debugger;
                     debugger;
@@ -3600,15 +3607,25 @@
                     TotalNetAmount += parseFloat($($(value).find('td')[8]).text());
                 });
                 debugger;
-                $('#txtTotalPayable').val(TotalAmount.toFixed());
+
+                var PreviousPaid = parseFloat($("#txtprevious_paid").val()) || 0;
+                var PreviousAmount = parseFloat($("#txtprevious_Amount").val()) || 0;
+                var PreviousBalance = parseFloat($("#txt_balance").val()) || 0;
+                var AdvanceAmount = parseFloat($("#txtadvance_amount").val()) || 0;
+                var RefundAmount = parseFloat($("#txtRefund_amount").val()) || 0;
+                var TotalAmounts = TotalAmount - PreviousPaid - TotalDiscountAmount;
+
+                $('#txtTotalPayable').val(TotalAmounts.toFixed());
                 $('#txtDisAmt').val(TotalDiscountAmount.toFixed());
-                $('#txtNetPayable').val(TotalNetAmount.toFixed());
+                $('#txtNetPayable').val(TotalAmounts.toFixed());
                 var AmtReceived = $('#txtAmountReceived').val();
                 if ($('#txtTotalPayable').val() != '') {
                     debugger;
                     if (AmtReceived != '') {
                         debugger;
-                        $('#txtBalances').val((TotalNetAmount - AmtReceived).toFixed());
+                        $('#txtBalances').val(((parseFloat(TotalNetAmount) + parseFloat(PreviousAmount)) -
+                            (parseFloat(AmtReceived) + parseFloat(AdvanceAmount) + parseFloat(PreviousPaid))
+                        ).toFixed());
                     }
                     else
                         $('#txtBalances').val(TotalNetAmount.toFixed());

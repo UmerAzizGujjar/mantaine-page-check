@@ -83,6 +83,8 @@ namespace PMS
                                   join u in _dbContext.aspnet_Users on b.Created_By equals u.UserId
                                   where (b.Total_Amount != null || b.Discount_Amount != null)
                                         && (b.isCancel == null || b.isCancel == false)
+                                        && (b.IsCathLab == null || b.IsCathLab == false)
+                                        && (b.IsPharmacy == null || b.IsPharmacy == false)
                                   select new
                                   {
                                       Bill_No = b.Bill_No,
@@ -216,6 +218,7 @@ namespace PMS
                     var URL = db.sys_Parms.FirstOrDefault(p => p.Name == "FBR Credentials")?.Segment1;
                     var POSID = db.sys_Parms.FirstOrDefault(p => p.Name == "FBR Credentials")?.Code;
                     var USIN = db.sys_Parms.FirstOrDefault(p => p.Name == "FBR Credentials")?.Segment2;
+                    var Token_fbr = db.sys_Parms.FirstOrDefault(p => p.Name == "FBR Credentials")?.Segment3;
                     if (billing == null)
                     {
                         return JsonConvert.SerializeObject(new { success = false, message = "Bill not found" });
@@ -245,7 +248,7 @@ namespace PMS
                     }
 
                     FBRInvoiceMaster objInv = new FBRInvoiceMaster();
-                    
+
                     objInv.InvoiceNumber = billing.Bill_No;
                     objInv.POSID = Convert.ToInt32(POSID);
                     objInv.USIN = USIN;
@@ -254,11 +257,11 @@ namespace PMS
                     objInv.BuyerCNIC = "";
                     objInv.BuyerName = "";
                     objInv.BuyerPhoneNumber = "";
-                    
+
                     var totalAmount = selectedDetails.Sum(bd => bd.Amount ?? 0);
                     var totalDiscount = selectedDetails.Sum(bd => bd.Discount_Amount ?? 0);
                     var netAmount = totalAmount - totalDiscount;
-                    
+
                     objInv.TotalBillAmount = Convert.ToDouble(netAmount);
                     objInv.TotalQuantity = Convert.ToDouble(selectedDetails.Count);
                     objInv.TotalSaleValue = Convert.ToDouble(totalAmount);
@@ -270,25 +273,39 @@ namespace PMS
                     objInv.InvoiceType = 1;
                     objInv.Items = BuildFBRItems(selectedDetails, db);
 
+                    System.Net.ServicePointManager.SecurityProtocol =
+                        System.Net.SecurityProtocolType.Tls12 | System.Net.SecurityProtocolType.Tls13;
+
                     HttpClient client = new HttpClient();
-                    string Token = "";
-                    string apiUrl = "http://localhost:8524/api/IMSFiscal/GetInvoiceNumberByModel";
-                    
+                    string Token = db.sys_Parms.FirstOrDefault(p => p.Name == "FBR Credentials")?.Segment3;
+                    if (string.IsNullOrWhiteSpace(Token))
+                        Token = Token_fbr;
+                    //string apiUrl = "http://localhost:8524/api/IMSFiscal/GetInvoiceNumberByModel";
+                    string apiUrl = URL;
+
                     client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", Token);
                     StringContent content = new StringContent(JsonConvert.SerializeObject(objInv), Encoding.UTF8, "application/json");
-                    
+
                     System.Net.ServicePointManager.ServerCertificateValidationCallback = delegate { return true; };
-                    
+
                     HttpResponseMessage response = client.PostAsync(apiUrl, content).Result;
+                    string result = response.Content.ReadAsStringAsync().Result;
+                    System.Diagnostics.Debug.WriteLine("FBR POST " + apiUrl + " -> " + (int)response.StatusCode + " : " + result);
 
                     if (response.IsSuccessStatusCode)
                     {
-                        string result = response.Content.ReadAsStringAsync().Result;
-                        char[] separator = { '"' };
-                        String[] strlist = result.Split(separator, StringSplitOptions.RemoveEmptyEntries);
-
-                        string FBR_Invoice_No = strlist.Length > 3 ? strlist[3] : string.Empty;
-                        string FbrError = strlist.Length > 15 ? strlist[15] : string.Empty;
+                        string FBR_Invoice_No = null;
+                        string FbrError = null;
+                        try
+                        {
+                            var jo = Newtonsoft.Json.Linq.JObject.Parse(result);
+                            FBR_Invoice_No = (string)(jo["InvoiceNumber"] ?? jo["invoiceNumber"] ?? jo["FBRInvoiceNumber"] ?? jo["FBR_Invoice_No"]);
+                            FbrError = (string)(jo["Error"] ?? jo["error"] ?? jo["ErrorMessage"] ?? jo["Response"]);
+                        }
+                        catch
+                        {
+                            FbrError = result;
+                        }
 
                         if (!string.IsNullOrEmpty(FBR_Invoice_No) && FBR_Invoice_No != "Not Available")
                         {
@@ -297,9 +314,9 @@ namespace PMS
                             {
                                 MarkDetailsAsFbrPosted(db, selectedDetails.Select(x => x.Bill_Details_ID).ToList());
 
-                                return JsonConvert.SerializeObject(new 
-                                { 
-                                    success = true, 
+                                return JsonConvert.SerializeObject(new
+                                {
+                                    success = true,
                                     message = string.Format("Bill {0} posted to FBR successfully. Invoice No: {1}", billing.Bill_No, FBR_Invoice_No)
                                 });
                             }
@@ -315,7 +332,7 @@ namespace PMS
                     }
                     else
                     {
-                        return JsonConvert.SerializeObject(new { success = false, message = "FBR API Response Failed: " + response.StatusCode });
+                        return JsonConvert.SerializeObject(new { success = false, message = "FBR API Response Failed (" + (int)response.StatusCode + "): " + result });
                     }
                 }
             }
@@ -352,7 +369,7 @@ namespace PMS
                 {
                     hsCode = itemCodeLookup[detail.Item_ID.Value];
                 }
-                
+
                 items.Add(new FBRInvoiceDetail
                 {
                     ItemCode = "ITEM001",
@@ -449,7 +466,7 @@ namespace PMS
                 Bitmap qrCodeImage = qrCode.GetGraphic(20);
 
                 string webRootPath = HostingEnvironment.MapPath("~/wwwroot");
-                
+
                 if (!Directory.Exists(webRootPath))
                 {
                     Directory.CreateDirectory(webRootPath);
