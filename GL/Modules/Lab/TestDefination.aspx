@@ -2114,6 +2114,7 @@
                         <span>Test Result Possibility</span>
                     </div>
                     <div>
+                        <div class="col-lg-8 col-md-12 col-sm-12">
                     <div id="tabs">
                         <ul>
                             <li><a href="#Tab-1">Value Range Result</a></li>
@@ -2142,7 +2143,7 @@
                                         <tbody></tbody>
                                     </table>
                                     </div>
-                                    <div class="col-lg-3">
+                                    <div class="col-lg-2">
                                         <input type="button" class="btn btn-primry" name="Save" id="btnSaveCTScan" value="Save" />
                                     </div>
                                 </fieldset>
@@ -2165,7 +2166,7 @@
                                         <tbody></tbody>
                                     </table>
                                     </div>
-                                    <div class="col-lg-3">
+                                    <div class="col-lg-2">
                                         <input type="button" class="btn btn-primry" name="Save" id="btnSaveMRI" value="Save" />
                                     </div>
                                 </fieldset>
@@ -2188,7 +2189,7 @@
                                         <tbody></tbody>
                                     </table>
                                     </div>
-                                    <div class="col-lg-3">
+                                    <div class="col-lg-2">
                                         <input type="button" class="btn btn-primry" name="Save" id="btnSaveXRay" value="Save" />
                                     </div>
                                 </fieldset>
@@ -2211,7 +2212,7 @@
                                         <tbody></tbody>
                                     </table>
                                     </div>
-                                    <div class="col-lg-3">
+                                    <div class="col-lg-2">
                                         <input type="button" class="btn btn-primry" name="Save" id="btnSaveUltrasound" value="Save" />
                                     </div>
                                 </fieldset>
@@ -2258,7 +2259,7 @@
                                         <div class="col-lg-8">
                                             <input type="text" id="Lab_Test_Multiple_Value" placeholder="Enter Value" />
                                         </div>
-                                        <div class="col-lg-4">
+                                        <div class="col-lg-2">
                                             <input type="button" class="btn btn-primry" id="btn_Lab_Test_Multiple_Value" value="Add" />
                                         </div>
                                     </div>
@@ -2284,6 +2285,7 @@
 
                         </div>
                     </div>
+                            </div>
                 </div>
                <div class="row" style="margin-top:1%">
                    <div class="col-lg-8">

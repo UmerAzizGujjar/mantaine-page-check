@@ -541,7 +541,7 @@
                         <div class="gt-rate-wrap">
                             <table class="table" id="IPD_Test_Rate_Table">
                                 <thead>
-                                    <tr><a href="javascript:void(0)" class="fa fa-plus iconAdd" onclick="generateIPDRow()" style="font-size: 18px;float: right;margin-top: -8px;"></a></tr>
+                                    <tr><a href="javascript:void(0)" class="fa fa-plus iconAdd" onclick="generateIPDRow()" style="font-size: 18px;float: right;"></a></tr>
                                     <tr>
                                         <th style="width: 135px;">Patient Category</th>
                                         <th style="width: 72px;">Rate</th>
@@ -558,7 +558,7 @@
                         <div class="gt-rate-wrap">
                             <table class="table" id="OPD_Test_Rate_Table">
                                 <thead>
-                                    <tr> <a href="javascript:void(0)" class="fa fa-plus iconAdd" onclick="generateOPDRow()" style="font-size: 18px;float: right;margin-top: -8px;"></a></tr>
+                                    <tr> <a href="javascript:void(0)" class="fa fa-plus iconAdd" onclick="generateOPDRow()" style="font-size: 18px;float: right;"></a></tr>
                                     <tr>
                                         <th style="width: 135px;">Patient Category</th>
                                         <th style="width: 72px;">Rate</th>
