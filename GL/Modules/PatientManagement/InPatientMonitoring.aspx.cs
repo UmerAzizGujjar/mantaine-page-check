@@ -1244,6 +1244,13 @@ namespace PMS
                 return (new JavaScriptSerializer()).Serialize(inPatmedicine);
             }
         }
+        private static string Clean(string s, int maxLen)
+        {
+            if (string.IsNullOrEmpty(s)) return s;
+            s = s.Trim();
+            if (maxLen > 0 && s.Length > maxLen) s = s.Substring(0, maxLen);
+            return s;
+        }
         [WebMethod]
         public static string SaveMedicinesforMon(string MedicineDetails)
         {
@@ -1263,14 +1270,24 @@ namespace PMS
                                       orderby ip.In_Patient_ID descending
                                       select ip.In_Patient_ID).FirstOrDefault();
                         targetPatientId = In_pat;
-                    }
-                    else
-                    {
-                        var latestInPatient = (from ip in db.In_Patients
-                                               where ip.Patient_ID == MedicineDetail.ActualPatientID
+
+                        // Fallback: PatientID may itself be an In_Patient_ID
+                        if (targetPatientId == 0)
+                        {
+                            targetPatientId = (from ip in db.In_Patients
+                                               where ip.In_Patient_ID == MedicineDetail.PatientID
                                                orderby ip.In_Patient_ID descending
                                                select ip.In_Patient_ID).FirstOrDefault();
-                        targetPatientId = latestInPatient;
+                        }
+                    }
+
+                    // Fallback: resolve from the actual patient id (Reg Patient_ID)
+                    if (targetPatientId == 0 && MedicineDetail.ActualPatientID > 0)
+                    {
+                        targetPatientId = (from ip in db.In_Patients
+                                           where ip.Patient_ID == MedicineDetail.ActualPatientID
+                                           orderby ip.In_Patient_ID descending
+                                           select ip.In_Patient_ID).FirstOrDefault();
                     }
 
                     if (targetPatientId > 0)
@@ -1309,6 +1326,15 @@ namespace PMS
                         {
                             string medicineName = oIn_Patient_Medicine.Medicine_Name?.Trim() ?? "";
                             if (string.IsNullOrEmpty(medicineName)) continue;
+                            // Guard: keep values within their DB column lengths so one bad value cannot fail the whole save
+                            oIn_Patient_Medicine.Medicine_Name = Clean(medicineName, 500);
+                            oIn_Patient_Medicine.Frequency = Clean(oIn_Patient_Medicine.Frequency, 500);
+                            oIn_Patient_Medicine.Oral = Clean(oIn_Patient_Medicine.Oral, 500);
+                            oIn_Patient_Medicine.Injection = Clean(oIn_Patient_Medicine.Injection, 0);
+                            oIn_Patient_Medicine.Dosage_From = Clean(oIn_Patient_Medicine.Dosage_From, 100);
+                            oIn_Patient_Medicine.Dosage_Qty = Clean(oIn_Patient_Medicine.Dosage_Qty, 100);
+                            oIn_Patient_Medicine.Other_Instruction = Clean(oIn_Patient_Medicine.Other_Instruction, 500);
+                            medicineName = oIn_Patient_Medicine.Medicine_Name;
                             bool.TryParse(oIn_Patient_Medicine.Unlisted_Med, out bool isUnlistedMed);
                             bool.TryParse(oIn_Patient_Medicine.Regular, out bool isRegular);
                             bool.TryParse(oIn_Patient_Medicine.STAT, out bool isStat);

@@ -6378,6 +6378,23 @@ namespace PMS
                     rd.SetParameterValue("QRImagePath", "");
                 }
             }
+            else if (reportName == "DailyCashCollectionSummary")
+            {
+                string year = Request.QueryString["Year"].ToString();
+                string Month = Request.QueryString["Month"].ToString();
+
+                var logoPath = DBClass.getField("SELECT dbo.GetCompanyLogo()");
+                string rptFileName = "Billings/rptDailyCashCollectionSummaryReport.rpt";
+                reportPath += rptFileName;
+
+                rd.Load(reportPath);
+                rd.SetParameterValue("CompanyName", AppConfig.Company_Name);
+                rd.SetParameterValue("Title", reportTitle);
+                rd.SetParameterValue("CompanyLogo", logoPath);
+                rd.SetParameterValue("@Year", year);
+                rd.SetParameterValue("@Month", Month);
+
+            }
             else if (reportName == "BillingBaseReport_Thermal")
             {
                 var billId = Convert.ToInt32(Request.QueryString["Bill_ID"]);

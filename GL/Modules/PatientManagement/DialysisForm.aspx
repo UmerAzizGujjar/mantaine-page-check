@@ -3,6 +3,8 @@
  
 <asp:Content ID="Content1" ContentPlaceHolderID="HeadContent" runat="server">
      <link href="../../wwwroot/lib/sweetalert/swalalert.css" rel="stylesheet" />
+    <link href="../../wwwroot/THEME_TIBBIT/CustomCSS/vendor.css" rel="stylesheet" />
+    <link href="../../wwwroot/THEME_TIBBIT/CustomCSS/Datavalue.css" rel="stylesheet" />
     <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.29.4/moment.min.js"></script>
     <script type="text/javascript">
         var currentDialysisId = '';
@@ -1765,9 +1767,323 @@
             margin: 0 10px;
         }
     }
+
+    /* ===================== Design polish ===================== */
+    .dl-page { padding-bottom: 16px; }
+    .dl-page .pr-meta-bar { margin-bottom: 16px; padding: 6px 16px; }
+    .dl-page .dialysis-top-buttons { margin-bottom: 16px; }
+
+    /* ── Cards ── */
+    .dl-page .form-card {
+        border: 1px solid #fdf2e2 !important;
+        border-left: 3px solid #EFA63E !important;
+        border-radius: 8px !important;
+        box-shadow: 0 4px 12px rgba(0,0,0,.04) !important;
+        padding: 16px 18px !important;
+    }
+    .dl-page .dl-card-head {
+        margin: -16px -18px 16px -18px;
+        padding: 9px 18px;
+        background: linear-gradient(90deg, #EFA63E10, #fff);
+        border-bottom: 1px solid #EFA63E30;
+        border-radius: 8px 8px 0 0;
+        font-size: 12.5px;
+        font-weight: 700;
+        color: #EFA63E;
+        text-transform: uppercase;
+        letter-spacing: .05em;
+    }
+    .dl-page .dl-card-head i { margin-right: 7px; opacity: .85; }
+
+    /* ── Fields ── */
+    .dl-page .dialysis-form-row { margin: 0 -8px 8px -8px !important; }
+    .dl-page .dialysis-field { padding: 0 8px !important; margin-bottom: 10px !important; }
+    .dl-page label,
+    .dl-page .dialysis-field > label {
+        display: block !important;
+        margin-top: 0 !important;
+        margin-bottom: 3px !important;
+        font-size: 11px !important;
+        font-weight: 700 !important;
+        color: #555 !important;
+        text-transform: uppercase;
+        letter-spacing: .03em;
+        line-height: 1.2;
+        min-height: 15px;
+    }
+    .dl-page .dialysis-field > input,
+    .dl-page .dialysis-field > select,
+    .dl-page .dialysis-field > textarea {
+        width: 100% !important;
+        height: 32px !important;
+        padding: 5px 10px !important;
+        font-size: 12px !important;
+        border: 1px solid #e0e0e0 !important;
+        border-radius: 4px !important;
+        background: #fff !important;
+        box-shadow: none !important;
+        color: #333 !important;
+    }
+    .dl-page .dialysis-field > textarea { height: auto !important; resize: vertical; }
+    .dl-page .dialysis-field > input:focus,
+    .dl-page .dialysis-field > select:focus,
+    .dl-page .dialysis-field > textarea:focus {
+        border-color: #EFA63E !important;
+        box-shadow: 0 0 0 3px #EFA63E25 !important;
+        outline: none !important;
+    }
+    .dl-page #txtDialysisNo,
+    .dl-page #txtPostDuration {
+        background: #f5f6f8 !important;
+        color: #8a8f98 !important;
+    }
+
+    /* ── Select2 ── */
+    .dl-page .select2-container { width: 100% !important; }
+    .dl-page .select2-selection {
+        height: 32px !important;
+        border: 1px solid #e0e0e0 !important;
+        border-radius: 4px !important;
+        padding: 3px 8px !important;
+        font-size: 12px !important;
+        background: #fff !important;
+    }
+    .dl-page .select2-selection__rendered { line-height: 24px !important; }
+    .dl-page .select2-selection__arrow { height: 30px !important; }
+    .dl-page .select2-container--focus .select2-selection,
+    .dl-page .select2-container--open .select2-selection {
+        border-color: #EFA63E !important;
+        box-shadow: 0 0 0 3px #EFA63E25 !important;
+    }
+
+    /* ── Patient info / progress ── */
+    .dl-page .cardd,
+    .dl-page .step-summary-card {
+        height: 100%;
+        background: #fff !important;
+        border: 1px solid #fdf2e2 !important;
+        border-left: 3px solid #EFA63E !important;
+        border-radius: 8px !important;
+        box-shadow: 0 4px 12px rgba(0,0,0,.04) !important;
+    }
+    .dl-page .card-bodyy { padding: 14px 16px !important; }
+    .dl-page .step-summary-card { padding: 14px 16px !important; }
+    .dl-page .labels {
+        font-size: 11px !important;
+        font-weight: 700 !important;
+        color: #555 !important;
+        text-transform: uppercase;
+        letter-spacing: .03em;
+    }
+    .dl-page .md { font-size: 12.5px !important; color: #333 !important; font-weight: 600; }
+    .dl-page .info-row { margin-bottom: 6px !important; }
+    .dl-page .patient-image { max-width: 76px; border-radius: 8px; }
+    .dl-page .step-summary-card h6 {
+        font-size: 12px !important;
+        font-weight: 700 !important;
+        color: #EFA63E !important;
+        text-transform: uppercase;
+        letter-spacing: .05em;
+        margin-bottom: 12px !important;
+    }
+
+    /* ── Step nav ── */
+    .dl-page .step-navigation { margin: 0 !important; padding: 0 !important; }
+    .dl-page .step-icon {
+        width: 42px;
+        height: 42px;
+        font-size: 18px;
+        margin-bottom: 6px;
+        box-shadow: 0 2px 6px rgba(0,0,0,.08);
+    }
+    .dl-page .step-item.active .step-icon { background-color: #EFA63E; color: #fff; }
+    .dl-page .step-item.completed .step-icon { background-color: #2e7d32; color: #fff; }
+    .dl-page .step-label {
+        font-size: 10.5px;
+        font-weight: 700;
+        text-transform: uppercase;
+        letter-spacing: .04em;
+    }
+    .dl-page .step-item.active .step-label { color: #EFA63E; }
+    .dl-page .step-arrow { font-size: 16px; color: #d5dae0; margin: 0 12px 22px; }
+
+    /* ── Tables ── */
+    .dl-page #tblVitalSigns,
+    .dl-page #tblPatientsResult { width: 100% !important; border-collapse: collapse !important; }
+    .dl-page #tblVitalSigns th,
+    .dl-page #tblPatientsResult th {
+        background: #EFA63E !important;
+        background-image: none !important;
+        color: #fff !important;
+        font-size: 10px !important;
+        font-weight: 700 !important;
+        text-transform: uppercase;
+        letter-spacing: .04em;
+        padding: 7px 9px !important;
+        border: none !important;
+        border-bottom: 1px solid #EFA63E !important;
+        text-align: left !important;
+        white-space: nowrap;
+    }
+    .dl-page #tblVitalSigns td,
+    .dl-page #tblPatientsResult td {
+        padding: 5px 9px !important;
+        font-size: 12px !important;
+        color: #444 !important;
+        border: none !important;
+        border-bottom: 1px solid #f0f0f0 !important;
+        vertical-align: middle !important;
+    }
+    .dl-page #tblVitalSigns tbody tr:nth-child(even),
+    .dl-page #tblPatientsResult tbody tr:nth-child(even) { background: #fbfcfe !important; }
+    .dl-page #tblVitalSigns tbody tr:hover,
+    .dl-page #tblPatientsResult tbody tr:hover { background: #EFA63E12 !important; }
+    .dl-page #vitalSignsBody input {
+        width: 100% !important;
+        height: 28px !important;
+        padding: 3px 6px !important;
+        font-size: 11.5px !important;
+        border: 1px solid #d9dee3 !important;
+        border-radius: 3px !important;
+        box-shadow: none !important;
+    }
+    .dl-page .table-responsive { border-radius: 6px; }
+
+    /* ── Action row (buttons untouched) ── */
+    .dl-page .dialysis-action-buttons {
+        margin-top: 16px !important;
+        padding-top: 14px !important;
+        border-top: 1px solid #fdf2e2 !important;
+        gap: 10px !important;
+    }
+
+    /* ── Modals ── */
+    .dl-page .modal-content {
+        border-radius: 10px;
+        border: none;
+        box-shadow: 0 10px 40px rgba(0,0,0,.18);
+    }
+    .dl-page .modal-header {
+        background: linear-gradient(90deg, #EFA63E10, #fff);
+        border-bottom: 1px solid #EFA63E30;
+        border-radius: 10px 10px 0 0;
+        padding: 12px 18px;
+    }
+    .dl-page .modal-title {
+        font-size: 14px;
+        font-weight: 700;
+        color: #EFA63E;
+        text-transform: uppercase;
+        letter-spacing: .04em;
+    }
+    .dl-page .modal-body { padding: 16px 18px; }
+    .dl-page .modal-body .row { margin-left: -8px !important; margin-right: -8px !important; }
+    .dl-page .modal-body [class*="col-"] { padding-left: 8px !important; padding-right: 8px !important; }
+    .dl-page .modal-body label { margin-top: 0 !important; margin-bottom: 3px !important; }
+    .dl-page .modal-body .form-control,
+    .dl-page .modal-body select {
+        width: 100% !important;
+        height: 32px !important;
+        font-size: 12px !important;
+        margin-top: 0 !important;
+    }
+    .dl-page .modal-body textarea.form-control { height: auto !important; }
+
+    /* ── Kill horizontal overflow ── */
+    html, body { overflow-x: hidden !important; max-width: 100% !important; }
+    .dl-page { width: 100%; max-width: 100%; }
+    .dl-page .container-fluid { max-width: 100%; padding-left: 10px; padding-right: 10px; }
+    .dl-page .dialysis-form-row { max-width: 100%; }
+    .dl-page .dialysis-field { min-width: 0 !important; box-sizing: border-box !important; }
+
+    /* exact column widths so a row can never exceed 100% */
+    .dl-page .dialysis-field-20  { flex: 0 0 20% !important;    max-width: 20% !important; }
+    .dl-page .dialysis-field-25  { flex: 0 0 25% !important;    max-width: 25% !important; }
+    .dl-page .dialysis-field-33  { flex: 0 0 33.33% !important; max-width: 33.33% !important; }
+    .dl-page .dialysis-field-50  { flex: 0 0 50% !important;    max-width: 50% !important; }
+    .dl-page .dialysis-field-75  { flex: 0 0 75% !important;    max-width: 75% !important; }
+    .dl-page .dialysis-field-100 { flex: 0 0 100% !important;   max-width: 100% !important; }
+
+    .dl-page .table-responsive { max-width: 100%; overflow-x: auto; }
+    .dl-page #tblVitalSigns { table-layout: auto; }
+    .dl-page #tblVitalSigns th { white-space: normal !important; }
+    .dl-page .dialysis-action-buttons { flex-wrap: wrap; }
+    .dl-page .dialysis-top-buttons { flex-wrap: wrap; }
+    .dl-page .modal-dialog { max-width: 95%; }
+
+    @media (max-width: 992px) {
+        .dl-page .dialysis-field-20, .dl-page .dialysis-field-25,
+        .dl-page .dialysis-field-33, .dl-page .dialysis-field-50 {
+            flex: 0 0 50% !important;
+            max-width: 50% !important;
+        }
+    }
+    @media (max-width: 576px) {
+        .dl-page .dialysis-field-20, .dl-page .dialysis-field-25,
+        .dl-page .dialysis-field-33, .dl-page .dialysis-field-50 {
+            flex: 0 0 100% !important;
+            max-width: 100% !important;
+        }
+    }
+
+    /* ── Existing patient modal ── */
+    .dl-page #PatientsSearchModel .modal-dialog { width: 880px; max-width: 95%; }
+    .dl-page #PatientsSearchModel .modal-body {
+        max-height: none !important;
+        overflow: visible !important;
+        padding: 16px 18px !important;
+    }
+    .dl-page #PatientsSearchModel .dl-search-bar {
+        display: flex;
+        align-items: flex-end;
+        gap: 12px;
+        margin-bottom: 14px;
+        padding: 12px 14px;
+        background: #faf7f2;
+        border: 1px solid #f0e0c8;
+        border-radius: 6px;
+    }
+    .dl-page #PatientsSearchModel .dl-search-bar .dl-search-field {
+        flex: 1 1 auto;
+        min-width: 0;
+    }
+    .dl-page #PatientsSearchModel .dl-search-bar label {
+        font-size: 11px !important;
+        font-weight: 700 !important;
+        color: #7a6530 !important;
+        text-transform: uppercase;
+        letter-spacing: .04em;
+        margin-bottom: 3px !important;
+    }
+    .dl-page #tblPatientsResult tbody td { padding: 7px 9px !important; }
+    .dl-page #tblPatientsResult td:last-child { text-align: center; }
+    .dl-page .dl-table-scroll {
+        max-height: 380px;
+        overflow: auto;
+        border: 1px solid #eee;
+        border-radius: 6px;
+    }
+    .dl-page #tblPatientsResult { margin-bottom: 0 !important; }
+    .dl-page #tblPatientsResult thead th {
+        position: sticky;
+        top: 0;
+        z-index: 2;
+    }
+    .dl-page #tblPatientsResult td:last-child,
+    .dl-page #tblPatientsResult th:last-child {
+        text-align: center;
+        width: 72px;
+    }
+    .dl-page #tblPatientsResult td[colspan] {
+        text-align: center;
+        padding: 30px 10px;
+        color: #9aa1a8;
+        font-style: italic;
+    }
 </style>
 </asp:Content>
 <asp:Content ID="Content2" ContentPlaceHolderID="MainContent" runat="server">
+    <div class="dl-page">
 
      <div class="container-fluid">
          <asp:HiddenField ID="hdfDialysisId" runat="server" ClientIDMode="Static" />
@@ -1776,6 +2092,13 @@
          <asp:HiddenField ID="hdfStep1Saved" runat="server" ClientIDMode="Static" Value="false" />
          <asp:HiddenField ID="hdfStep2Saved" runat="server" ClientIDMode="Static" Value="false" />
          <asp:HiddenField ID="hdfNewPatientId" runat="server" ClientIDMode="Static" />
+
+         <div class="pr-meta-bar">
+             <div class="meta-left">
+                 <span class="meta-title"><i class="fa fa-tint"></i> Dialysis Form</span>
+             </div>
+             <div class="meta-right"></div>
+         </div>
 
          <div class="dialysis-top-buttons">
              <button type="button" class="btn-primry" id="btnAddNewPatient">
@@ -1851,6 +2174,7 @@
          <!-- Step 1: Pre Dialysis -->
          <div class="form-section active" id="section1">
              <div class="form-card">
+                 <div class="dl-card-head"><i class="fa fa-hourglass-start"></i> Pre-Dialysis Assessment</div>
                  <div class="dialysis-form-row">
                      <div class="dialysis-field dialysis-field-20">
                          <label>Vascular Access<span class="required">*</span></label>
@@ -2004,6 +2328,7 @@
          <!-- Step 2: During Dialysis -->
          <div class="form-section" id="section2">
              <div class="form-card">
+                 <div class="dl-card-head"><i class="fa fa-heartbeat"></i> During Dialysis &mdash; Vital Signs</div>
                  <div class="dialysis-form-row">
                      <div class="dialysis-field dialysis-field-100">
                          <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px;">
@@ -2054,6 +2379,7 @@
          <!-- Step 3: Post Dialysis -->
          <div class="form-section" id="section3">
              <div class="form-card">
+                 <div class="dl-card-head"><i class="fa fa-clipboard-check"></i> Post-Dialysis Summary</div>
                  <div class="dialysis-form-row">
                      <div class="dialysis-field dialysis-field-20">
                          <label>Start Time<span class="required">*</span></label>
@@ -2127,17 +2453,21 @@
      <div id="PatientsSearchModel" class="modal fade" data-backdrop="static" tabindex="-1" role="dialog">
          <div class="modal-dialog modal-lg modal-dialog-centered modal-dialog-scrollable" role="document">
              <div class="modal-content">
+                 <div class="modal-header">
+                     <h5 class="modal-title">Select Patient</h5>
+                     <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                         <span aria-hidden="true">&times;</span>
+                     </button>
+                 </div>
                  <div class="modal-body">
-                     <fieldset class="form-group">
-                         <div class="form-row">
-                             <div class="col-md-3">
-                                 <h5>Search Your Patients:</h5>
-                                 <input type="text" id="txtPatientSearch" class="form-control" autocomplete="off" placeholder="Enter patient name or MR No." />
-                             </div>
+                     <div class="dl-search-bar">
+                         <div class="dl-search-field">
+                             <label for="txtPatientSearch">Search Patient</label>
+                             <input type="text" id="txtPatientSearch" class="form-control" autocomplete="off" placeholder="Enter patient name or MR No." />
                          </div>
-                     </fieldset>
-                     <div class="table-responsive">
-                         <table class="table table-hover table-striped table-bordered" id="tblPatientsResult">
+                     </div>
+                     <div class="dl-table-scroll">
+                         <table class="table" id="tblPatientsResult">
                              <thead>
                                  <tr>
                                      <th style="display:none;">Patient ID</th>
@@ -2180,16 +2510,16 @@
                         </div>
                         <div class="col-lg-1 col-md-4 col-sm-6">
                             <label for="ddl_name">Name<span style="color: red;">*</span></label>
-                            <select id="ddl_name" class="form-control" style="width: 137%">
+                            <select id="ddl_name" class="form-control">
                                 <option value="Mr.">Mr.</option>
                                 <option value="Mrs.">Mrs.</option>
                                 <option value="Ms.">Ms.</option>
                                 <option value="B/O.">B/O.</option>
                             </select>
                         </div>
-                        <div class="col-lg-3 col-md-4 col-sm-6" style="margin-top: 7px">
-                            <label></label>
-                            <input name="dob" type="text" id="txt_name" class="form-control" />
+                        <div class="col-lg-3 col-md-4 col-sm-6">
+                            <label>&nbsp;</label>
+                            <input name="dob" type="text" id="txt_name" class="form-control" placeholder="First Name" />
                         </div>
                         <div class="col-lg-2 col-md-4 col-sm-6">
                             <label for="ddlRelation">Relation<span style="color: red;">*</span></label>
@@ -2200,8 +2530,8 @@
                             </select>
                         </div>
                         <div class="col-lg-3 col-md-4 col-sm-6">
-                            <label></label>
-                            <input type="text" id="txt_relation" class="form-control" style="margin-top: 5px" />
+                            <label>&nbsp;</label>
+                            <input type="text" id="txt_relation" class="form-control" placeholder="Relation Name" />
                         </div>
                     </div>
 
@@ -2214,12 +2544,12 @@
                                 <option value="Day">Day</option>
                             </select>
                         </div>
-                        <div class="col-lg-1 col-md-4 col-sm-6" style="margin-top: 8px;">
-                            <label></label>
-                            <input type="text" id="txt_dob" class="form-control" placeholder="DOB" onchange="CalculateDateOfBirth();" style="width: 137% !important" />
+                        <div class="col-lg-1 col-md-4 col-sm-6">
+                            <label>&nbsp;</label>
+                            <input type="text" id="txt_dob" class="form-control" placeholder="DOB" onchange="CalculateDateOfBirth();" />
                         </div>
-                        <div class="col-lg-3 col-md-4 col-sm-6" style="margin-top: 7px;">
-                            <label></label>
+                        <div class="col-lg-3 col-md-4 col-sm-6">
+                            <label>&nbsp;</label>
                             <input type="text" id="txtAge_yearss" class="form-control" placeholder="dd mmyy" />
                         </div>
                         <div class="col-lg-2 col-md-4 col-sm-6">
@@ -2245,13 +2575,13 @@
                                 <option value="0">Select Marial</option>
                             </select>
                         </div>
-                        <div class="col-lg-2 colmd-4 col-sm-6">
+                        <div class="col-lg-2 col-md-4 col-sm-6">
                             <label>Country</label>
                             <select id="ddlCountry" class="form-control">
                                 <option value="0">Select Country</option>
                             </select>
                         </div>
-                        <div class="col-lg-3 colmd-4 col-sm-6">
+                        <div class="col-lg-3 col-md-4 col-sm-6">
                             <label>Province</label>
                             <select id="ddl_Province" class="form-control" >
                                 <option value="0">Select Province</option>
@@ -2260,7 +2590,7 @@
                     </div>
 
                     <div class="row">
-                        <div class="col-lg-3 colmd-4 col-sm-6">
+                        <div class="col-lg-3 col-md-4 col-sm-6">
                             <label for="txtcity">City</label>
                             <select id="txtcity" class="form-control" >
                                 <option value="0">Select City</option>
@@ -2292,4 +2622,5 @@
         </div>
     </div>
 
+    </div>
 </asp:Content>

@@ -215,7 +215,7 @@
                     populateYears();
                 }, 100);
             }
-            if (ReportTitle == "DailyPharmacyOverallSummary") {
+            if (ReportTitle == "DailyPharmacyOverallSummary" || ReportTitle == "DailyCashCollectionSummaryReport") {
                 $('#<%= YearDiv.ClientID %>').show();
             $('#<%= MonthDiv.ClientID %>').show();
             $('#<%= DateDiv.ClientID %>').hide();
@@ -438,6 +438,28 @@
                         var url = 'ReportViewer.aspx?ReportName=GRN_and_Item_Wise_Report&ReportTitle= GRN & Item Wise Report From ' + $('#ctl00_MainContent_txtStart_Date').val() + ' ' + $('#ctl00_MainContent_txtSTime').val() + ' to ' + $('#ctl00_MainContent_txtEnd_Date').val() + '' + $('#ctl00_MainContent_txtETime').val() + '&sDate=' + $('#ctl00_MainContent_txtStart_Date').val() + '&eDate=' + $('#ctl00_MainContent_txtEnd_Date').val() + '&STime=' + $('#ctl00_MainContent_txtSTime').val() + '&ETime=' + $('#ctl00_MainContent_txtETime').val() + '&DepetID=' + $('#ctl00_MainContent_ddlDepartments').val() + '&ExportPDF=' + exporttopdf;
                         window.open(url, '_blank');
                     }
+                    else if (rptTitle == "DailyCashCollectionSummaryReport") {
+                        debugger;
+                        var exporttopdf = document.getElementById('<%= chkExportPDF.ClientID %>').checked;
+                        $('#<%= YearDiv.ClientID %>').show();
+                        $('#<%= MonthDiv.ClientID %>').show();
+                        $('#<%= DateDiv.ClientID %>').hide();
+                        $('#<%= Time_Row.ClientID %>').hide();
+                        var selectedYear = $('#ctl00_MainContent_ddlYear').val();
+                        var selectedMonth = $('#ctl00_MainContent_ddlMonth').val();
+
+                        if (selectedYear === "0") {
+                            alert('Please select a year');
+                            return;
+                        }
+                        if (selectedMonth === "0") {
+                            alert('Please select a month');
+                            return;
+                        }
+                        var url = 'ReportViewer.aspx?ReportName=DailyCashCollectionSummary&ReportTitle=Pharmacy Overall Summary Report FY' + '&Year=' + selectedYear + '&Month=' + selectedMonth + '&ExportPDF=' + exporttopdf;
+                        window.open(url, '_blank');
+                    }
+
                     else if (rptTitle == "PharmacySaleReport") {
                         debugger;
                         //var summary = $('#chkSummary').prop('checked') ? "true" : "false";

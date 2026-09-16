@@ -5463,6 +5463,20 @@ namespace PMS
                     ddlItemCategory.Visible = false;
 
                 }
+                if (this.PageTitle == "DailyCashCollectionSummaryReport")
+                {
+
+                    string x = "Daily Cash Collection Summary";
+                    Master.Label2.Text = x;
+
+                    Master.GetMenuName();
+
+                    dpROw.Visible = false;
+                    YearDiv.Visible = true;
+                    MonthDiv.Visible = true;
+                    tr_Export.Visible = true;
+
+                }
                 if (this.PageTitle == "DailyPharmacyOverallSummary")
                 {
 
