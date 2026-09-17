@@ -3,6 +3,7 @@ using Infragistics.Documents.Reports.Report;
 using System;
 using System.Collections.Generic;
 using System.Data;
+using System.Data.SqlClient;
 using System.Diagnostics;
 using System.Globalization;
 using System.IO;
@@ -18,6 +19,8 @@ namespace PMS.Inventory
     public partial class InversionGatePass : System.Web.UI.Page
     {
         DataBaseDataContext db = new DataBaseDataContext();
+        private const string IgpSaveLockResource = "IGP_Number_Allocation";
+        private const int IgpSaveLockTimeoutMs = 10000;
         protected void Page_Load(object sender, EventArgs e)
         {
             HyperLink1.Visible = false;
@@ -221,85 +224,121 @@ namespace PMS.Inventory
             DataBaseDataContext db = new DataBaseDataContext(DBClass.ConnectionString());
             JavaScriptSerializer oJS = new JavaScriptSerializer();
             var record = oJS.Deserialize<MasterIGPList>(AllItemDetail);
-            var lstItem = (from t in db.Igp_masters where t.Igp_num == int.Parse(record.Igp_num) select t).FirstOrDefault();
-            if (btnSave == "Update")
-            {
-                WriteIGPChangeLog(db, lstItem, oJS);
 
-                lstItem.Igp_num = Convert.ToInt32(record.Igp_num);
-                lstItem.Igp_date = Convert.ToDateTime(record.Date);
-                lstItem.VehicleNum = record.VehicleNum;
-                lstItem.DriverName = record.DriverName;
-                lstItem.BilityNum = record.BilityNum;
-                lstItem.Update_Date = DateTime.Now;
-                lstItem.Updated_By = AppConfig.UserID;
-                lstItem.InvOrgId = record.InvOrg;
-                db.SubmitChanges();
-                IgpNo = lstItem.Igp_Id.ToString();
-            }
-            else
-            {
-                obj.Igp_num = Convert.ToInt32(record.Igp_num);
-                obj.Igp_date = Convert.ToDateTime(record.Date);
-                obj.VehicleNum = record.VehicleNum;
-                obj.DriverName = record.DriverName;
-                obj.BilityNum = record.BilityNum;
-                obj.Vendor = record.Vendor;
-                obj.InvType = "SmpPO";
-                obj.Remarks = record.remarks;
-                obj.Creation_Date = DateTime.Now;
-                obj.Created_By = AppConfig.UserID;
-                obj.Company_ID = AppConfig.Company_ID;
-                obj.IsDeleted = false;
-                obj.Status = "Created";
-                obj.InvOrgId = record.InvOrg;
-                db.Igp_masters.InsertOnSubmit(obj);
-                db.SubmitChanges();
-                IgpNo = obj.Igp_Id.ToString();
-            }
-            ///**********Deleting Previous details**************/
+            if (db.Connection.State != ConnectionState.Open)
+                db.Connection.Open();
 
-            if (btnSave == "Update")
+            using (db.Transaction = db.Connection.BeginTransaction(IsolationLevel.Serializable))
             {
-                List<Igp_Detail> lstPOItemDetails = db.Igp_Details.Where(t => t.Igp_Id == int.Parse(IgpNo)).ToList(); db.Igp_Details.DeleteAllOnSubmit(lstPOItemDetails);
-                db.SubmitChanges();
-            }
-            foreach (var POitem in record.ItemList)
-            {
-                Igp_Detail ltd = new Igp_Detail();
-                ltd.Item_Code = Convert.ToInt32(POitem.ItemCode);
-                ltd.Igp_Id = int.Parse(IgpNo);
-                ltd.Qty = Convert.ToDecimal(POitem.Qty);
-                ltd.RcvQty = Convert.ToDecimal(POitem.RcvQty);
-                ltd.BlncQty = Convert.ToDecimal(POitem.BlncQty);
-                ltd.POQty = Convert.ToDecimal(POitem.POQty);
-                ltd.IGPQty = Convert.ToDecimal(POitem.IgpQty);
-                ltd.BounusQty = Convert.ToDecimal(POitem.BounusQty);
-                ltd.POQty = Convert.ToDecimal(POitem.POQty);
-                ltd.PO_Item_ID = Convert.ToInt32(POitem.PODetailId);
-                ltd.Item_Id = Convert.ToInt32(DBClass.getField("select Item_Id from inv_items where Item_Code=" + Convert.ToInt32(POitem.ItemCode)));
-                ltd.BatchNum = POitem.BatchNo;
-                if (POitem.txtuomqty != 0)
+                try
                 {
-                    ltd.UOM_Qty = POitem.txtuomqty;
+                    AcquireIgpSaveLock(db);
+
+                    var lstItem = (from t in db.Igp_masters where t.Igp_num == int.Parse(record.Igp_num) select t).FirstOrDefault();
+                    if (btnSave == "Update")
+                    {
+                        WriteIGPChangeLog(db, lstItem, oJS);
+
+                        lstItem.Igp_num = Convert.ToInt32(record.Igp_num);
+                        lstItem.Igp_date = Convert.ToDateTime(record.Date);
+                        lstItem.VehicleNum = record.VehicleNum;
+                        lstItem.DriverName = record.DriverName;
+                        lstItem.BilityNum = record.BilityNum;
+                        lstItem.Update_Date = DateTime.Now;
+                        lstItem.Updated_By = AppConfig.UserID;
+                        lstItem.InvOrgId = record.InvOrg;
+                        db.SubmitChanges();
+                        IgpNo = lstItem.Igp_Id.ToString();
+                    }
+                    else
+                    {
+                        obj.Igp_num = DBClass.GetNewNumber("Igp_num", "Igp_master", "");
+                        obj.Igp_date = Convert.ToDateTime(record.Date);
+                        obj.VehicleNum = record.VehicleNum;
+                        obj.DriverName = record.DriverName;
+                        obj.BilityNum = record.BilityNum;
+                        obj.Vendor = record.Vendor;
+                        obj.InvType = "SmpPO";
+                        obj.Remarks = record.remarks;
+                        obj.Creation_Date = DateTime.Now;
+                        obj.Created_By = AppConfig.UserID;
+                        obj.Company_ID = AppConfig.Company_ID;
+                        obj.IsDeleted = false;
+                        obj.Status = "Created";
+                        obj.InvOrgId = record.InvOrg;
+                        db.Igp_masters.InsertOnSubmit(obj);
+                        db.SubmitChanges();
+                        IgpNo = obj.Igp_Id.ToString();
+                    }
+                    ///**********Deleting Previous details**************/
+
+                    if (btnSave == "Update")
+                    {
+                        List<Igp_Detail> lstPOItemDetails = db.Igp_Details.Where(t => t.Igp_Id == int.Parse(IgpNo)).ToList(); db.Igp_Details.DeleteAllOnSubmit(lstPOItemDetails);
+                        db.SubmitChanges();
+                    }
+                    foreach (var POitem in record.ItemList)
+                    {
+                        Igp_Detail ltd = new Igp_Detail();
+                        ltd.Item_Code = Convert.ToInt32(POitem.ItemCode);
+                        ltd.Igp_Id = int.Parse(IgpNo);
+                        ltd.Qty = Convert.ToDecimal(POitem.Qty);
+                        ltd.RcvQty = Convert.ToDecimal(POitem.RcvQty);
+                        ltd.BlncQty = Convert.ToDecimal(POitem.BlncQty);
+                        ltd.POQty = Convert.ToDecimal(POitem.POQty);
+                        ltd.IGPQty = Convert.ToDecimal(POitem.IgpQty);
+                        ltd.BounusQty = Convert.ToDecimal(POitem.BounusQty);
+                        ltd.POQty = Convert.ToDecimal(POitem.POQty);
+                        ltd.PO_Item_ID = Convert.ToInt32(POitem.PODetailId);
+                        ltd.Item_Id = Convert.ToInt32(DBClass.getField("select Item_Id from inv_items where Item_Code=" + Convert.ToInt32(POitem.ItemCode)));
+                        ltd.BatchNum = POitem.BatchNo;
+                        if (POitem.txtuomqty != 0)
+                        {
+                            ltd.UOM_Qty = POitem.txtuomqty;
+                        }
+
+                        if (POitem.Mfgdate != "")
+                        {
+                            ltd.MfgDate = Convert.ToDateTime(POitem.Mfgdate);
+                        }
+                        if (POitem.Expdate != "")
+                        {
+                            ltd.ExpiryDate = Convert.ToDateTime(POitem.Expdate);
+                        }
+                        if (!string.IsNullOrEmpty(POitem.SaleRate))
+                        {
+                            ltd.Sale_Rate = Convert.ToDecimal(POitem.SaleRate);
+                        }
+                        db.Igp_Details.InsertOnSubmit(ltd);
+                        db.SubmitChanges();
+                    }
+
+                    db.Transaction.Commit();
                 }
-             
-                if (POitem.Mfgdate != "")
+                catch
                 {
-                    ltd.MfgDate = Convert.ToDateTime(POitem.Mfgdate);
+                    try { if (db.Transaction != null) db.Transaction.Rollback(); } catch { }
+                    throw;
                 }
-                if (POitem.Expdate != "")
-                {
-                    ltd.ExpiryDate = Convert.ToDateTime(POitem.Expdate);
-                }
-                if (!string.IsNullOrEmpty(POitem.SaleRate))
-                {
-                    ltd.Sale_Rate = Convert.ToDecimal(POitem.SaleRate);
-                }
-                db.Igp_Details.InsertOnSubmit(ltd);
-                db.SubmitChanges();
             }
             return int.Parse(IgpNo);
+        }
+
+        private static void AcquireIgpSaveLock(DataBaseDataContext db)
+        {
+            int lockResult;
+            using (SqlCommand cmd = (SqlCommand)db.Connection.CreateCommand())
+            {
+                cmd.Transaction = (SqlTransaction)db.Transaction;
+                cmd.CommandText = "DECLARE @r INT; EXEC @r = sp_getapplock @Resource=@res, @LockMode='Exclusive', @LockOwner='Transaction', @LockTimeout=@lt; SELECT @r;";
+                cmd.Parameters.AddWithValue("@res", IgpSaveLockResource);
+                cmd.Parameters.AddWithValue("@lt", IgpSaveLockTimeoutMs);
+                lockResult = Convert.ToInt32(cmd.ExecuteScalar());
+            }
+            if (lockResult < 0)
+            {
+                throw new Exception("Another IGP is being saved by a different user. Please try again in a moment.");
+            }
         }
 
 
