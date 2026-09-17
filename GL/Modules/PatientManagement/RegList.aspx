@@ -376,6 +376,23 @@
                     },
                     { data: "NIC" },
                     { data: "Mobile1" },
+                    {
+                        data: "Charged_by",
+                        name: "Charged_by",
+                        render: function(data, type, full, meta) {
+                            if (data && data.toString().trim() !== '') {
+                                return data;
+                            }
+
+                            if (full.Updated_By && full.Updated_By.toString().trim() !== '') {
+                                return full.Updated_By;
+                            }
+                            if (full.CreatedBy && full.CreatedBy.toString().trim() !== '') {
+                                return full.CreatedBy;
+                            }
+                            return '-';
+                        }
+                    },
                     { data: "Permanent_Address" },
                     {
                         data: null,
@@ -499,6 +516,7 @@
                         <th>Created Date</th>
                         <th>CNIC</th>
                         <th>Phone Number</th>
+                        <th>Charged By</th>
                         <th>Address</th>
                         <th>Action</th>
                     </tr>

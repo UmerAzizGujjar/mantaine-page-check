@@ -506,7 +506,9 @@ namespace PMS.Modules.PatientManagement
                     pat.bank_account_id = bank_account_id;
                     pat.Prefix = Prefix;
                     pat.Reprint = "1";
-
+                    pat.Charged_by = AppConfig.UserID;
+                    pat.charge_time = DateTime.Now;
+                    pat.Remarks = "Card Fee Charge Via OPD Time";
                     // Card Fee Safe Parse
                     decimal cardFeeValue = 0;
                     if (!string.IsNullOrWhiteSpace(cardfee))
