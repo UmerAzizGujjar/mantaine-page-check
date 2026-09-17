@@ -1051,9 +1051,8 @@ namespace PMS
         partial void UpdateReg_patient(Reg_patient instance);
         partial void DeleteReg_patient(Reg_patient instance);
         #endregion
-
         public DataBaseDataContext() :
-                base(global::System.Configuration.ConfigurationManager.ConnectionStrings["ASPGLConnectionString"].ConnectionString, mappingSource)
+              base(global::System.Configuration.ConfigurationManager.ConnectionStrings["ASPGLConnectionString"].ConnectionString, mappingSource)
         {
             OnCreated();
         }
@@ -186562,6 +186561,10 @@ namespace PMS
 
         private System.Nullable<System.Guid> _Charged_by;
 
+        private System.Nullable<System.DateTime> _charge_time;
+
+        private string _Remarks;
+
         private EntitySet<Birth_Certificate> _Birth_Certificates;
 
         #region Extensibility Method Definitions
@@ -186664,6 +186667,10 @@ namespace PMS
         partial void OnPrefixChanged();
         partial void OnCharged_byChanging(System.Nullable<System.Guid> value);
         partial void OnCharged_byChanged();
+        partial void Oncharge_timeChanging(System.Nullable<System.DateTime> value);
+        partial void Oncharge_timeChanged();
+        partial void OnRemarksChanging(string value);
+        partial void OnRemarksChanged();
         #endregion
 
         public Reg_patient()
@@ -187628,6 +187635,46 @@ namespace PMS
                     this._Charged_by = value;
                     this.SendPropertyChanged("Charged_by");
                     this.OnCharged_byChanged();
+                }
+            }
+        }
+
+        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_charge_time", DbType = "DateTime")]
+        public System.Nullable<System.DateTime> charge_time
+        {
+            get
+            {
+                return this._charge_time;
+            }
+            set
+            {
+                if ((this._charge_time != value))
+                {
+                    this.Oncharge_timeChanging(value);
+                    this.SendPropertyChanging();
+                    this._charge_time = value;
+                    this.SendPropertyChanged("charge_time");
+                    this.Oncharge_timeChanged();
+                }
+            }
+        }
+
+        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_Remarks", DbType = "NVarChar(150)")]
+        public string Remarks
+        {
+            get
+            {
+                return this._Remarks;
+            }
+            set
+            {
+                if ((this._Remarks != value))
+                {
+                    this.OnRemarksChanging(value);
+                    this.SendPropertyChanging();
+                    this._Remarks = value;
+                    this.SendPropertyChanged("Remarks");
+                    this.OnRemarksChanged();
                 }
             }
         }

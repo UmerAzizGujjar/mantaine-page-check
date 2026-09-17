@@ -8386,6 +8386,8 @@
       <Column Name="bank_account_id" Type="System.String" DbType="NVarChar(150)" CanBeNull="true" />
       <Column Name="Prefix" Type="System.String" DbType="NVarChar(50)" CanBeNull="true" />
       <Column Name="Charged_by" Type="System.Guid" DbType="UniqueIdentifier" CanBeNull="true" />
+      <Column Name="charge_time" Type="System.DateTime" DbType="DateTime" CanBeNull="true" />
+      <Column Name="Remarks" Type="System.String" DbType="NVarChar(150)" CanBeNull="true" />
       <Association Name="Reg_patient_Birth_Certificate" Member="Birth_Certificates" ThisKey="pat_id" OtherKey="Patient_ID" Type="Birth_Certificate" />
     </Type>
   </Table>

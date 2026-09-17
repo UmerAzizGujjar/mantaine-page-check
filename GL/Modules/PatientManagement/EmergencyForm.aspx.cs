@@ -1249,7 +1249,14 @@ namespace PMS.Modules.PatientManagement
 
                     if (patient != null)
                     {
-                        patient.Card_fee = 100;
+                        decimal fee = Convert.ToDecimal((from tbl in db.sys_Parms
+                                                         where tbl.Name == "OPD Fee"
+                                                         select tbl.Code).FirstOrDefault() ?? "0");
+                        patient.Card_fee = fee;
+                        //patient.updated_by = AppConfig.UserID;
+                        patient.Charged_by = AppConfig.UserID;
+                        patient.charge_time = DateTime.Now;
+                        patient.Remarks = "Card Fee Charge Via Emergency Time";
                         db.SubmitChanges(); // LINQ-to-SQL uses SubmitChanges()
                         return new JavaScriptSerializer().Serialize(new { success = true });
                     }
