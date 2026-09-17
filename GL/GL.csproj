@@ -308,6 +308,7 @@
     <Content Include="Modules\Administrator\AddDoctor_Packages.aspx" />
     <Content Include="Modules\Administrator\AddHospital.aspx" />
     <Content Include="Modules\Administrator\AddPanel_Packages.aspx" />
+    <Content Include="Modules\Administrator\MRNoLookup.aspx" />
     <Content Include="Modules\Administrator\PharmacyTemplate.aspx" />
     <Content Include="Modules\Administrator\ApproveGoodsReturn.aspx" />
     <Content Include="Modules\Administrator\Procedure_Template.aspx" />
@@ -2962,6 +2963,13 @@
     </Compile>
     <Compile Include="Modules\Administrator\AddPanel_Packages.aspx.designer.cs">
       <DependentUpon>AddPanel_Packages.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="Modules\Administrator\MRNoLookup.aspx.cs">
+      <DependentUpon>MRNoLookup.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Modules\Administrator\MRNoLookup.aspx.designer.cs">
+      <DependentUpon>MRNoLookup.aspx</DependentUpon>
     </Compile>
     <Compile Include="Modules\Administrator\PharmacyTemplate.aspx.cs">
       <DependentUpon>PharmacyTemplate.aspx</DependentUpon>
