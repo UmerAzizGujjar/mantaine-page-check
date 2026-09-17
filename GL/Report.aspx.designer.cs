@@ -726,6 +726,33 @@ namespace PMS
         protected global::System.Web.UI.WebControls.Label lblHideZeroBalance;
 
         /// <summary>
+        /// hideStartDateRow control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.HtmlControls.HtmlTable hideStartDateRow;
+
+        /// <summary>
+        /// cbHideStartDate control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.CheckBox cbHideStartDate;
+
+        /// <summary>
+        /// lblHideStartDate control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.Label lblHideStartDate;
+
+        /// <summary>
         /// VoucherDiv control.
         /// </summary>
         /// <remarks>

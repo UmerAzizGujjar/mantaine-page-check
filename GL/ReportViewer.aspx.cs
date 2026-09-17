@@ -6054,7 +6054,7 @@ namespace PMS
             else if (reportName == "TrailBalanceAt")
             {
                 if (Request.QueryString["startDate"] != null && Request.QueryString["Level1"] != null
-                  && Request.QueryString["Level2"] != null && Request.QueryString["Level3"] != null
+                    && Request.QueryString["Level2"] != null && Request.QueryString["Level3"] != null
                   && Request.QueryString["Level4"] != null)
                 {
                     reportPath += "GeneralLedger/rptTrialBalance.rpt";
@@ -6063,7 +6063,7 @@ namespace PMS
                     rd.SetParameterValue("CompanyName", AppConfig.Company_Name);
 
                     rd.SetParameterValue("@start_date", Convert.ToDateTime(Request.QueryString["startDate"]));
-                    rd.SetParameterValue("@end_date", Convert.ToDateTime(Request.QueryString["startDate"]));
+                    rd.SetParameterValue("@end_date", Convert.ToDateTime(Request.QueryString["endDate"]));
 
                     rd.SetParameterValue("Level3", Request.QueryString["Level3"]);
                     rd.SetParameterValue("Level1", Request.QueryString["Level1"]);

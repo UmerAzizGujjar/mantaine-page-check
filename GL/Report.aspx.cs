@@ -239,6 +239,7 @@ namespace PMS
                         AccountInfoDiv.Visible = false;
                         AccountDiv.Visible = false;
                         plhAllAcounts.Visible = false;
+                        hideStartDateRow.Visible = true;
                         break;
                     case "TC":
                         DateDiv.Visible = true;
@@ -541,7 +542,31 @@ namespace PMS
                         query = "ReportName=ProfitLossCostCenterWise&ReportTitle=Profit And Loss " + txtStart_Date.Text + " To " + txtEnd_Date.Text + "&StartDate=" + Convert.ToDateTime(txtStart_Date.Text).ToString("dd-MMM-yy") + "&EndDate=" + Convert.ToDateTime(txtEnd_Date.Text).ToString("dd-MMM-yy") + "&CostCenter=" + ddlCostCenter.SelectedValue + "&CostCenterName=" + ddlCostCenter.SelectedItem.Text + "&ExportPDF=" + chkExportPDF.Checked;
                         break;
                     case "TB":
-                        query = "ReportName=TrailBalanceAt&ReportTitle=Trial Balance from  " + txtStart_Date.Text + " To " + txtEnd_Date.Text + "&startDate=" + txtStart_Date.Text + "&endDate=" + txtEnd_Date.Text + "&Level1=" + cbLevel1.Checked + "&Level2=" + cbLevel2.Checked + "&Level3=" + cbLevel3.Checked + "&Level4=" + cbLevel4.Checked + "&ExportPDF=" + chkExportPDF.Checked;
+                        DateTime tbStartDate;
+
+                        if (cbHideStartDate.Checked)
+                        {
+                            // When Hide Start Date is checked, report starts from 01-Jul-2020
+                            tbStartDate = new DateTime(2020, 7, 1);
+                        }
+                        else
+                        {
+                            // Otherwise use the selected start date
+                            tbStartDate = Convert.ToDateTime(txtStart_Date.Text);
+                        }
+
+                        query = "ReportName=TrailBalanceAt"
+                            + "&ReportTitle=Trial Balance from " + tbStartDate.ToString("dd-MMM-yyyy")
+                            + " To " + Convert.ToDateTime(txtEnd_Date.Text).ToString("dd-MMM-yyyy")
+                            + "&startDate=" + tbStartDate.ToString("yyyy-MM-dd")
+                            + "&endDate=" + Convert.ToDateTime(txtEnd_Date.Text).ToString("yyyy-MM-dd")
+                            + "&Level1=" + cbLevel1.Checked
+                            + "&Level2=" + cbLevel2.Checked
+                            + "&Level3=" + cbLevel3.Checked
+                            + "&Level4=" + cbLevel4.Checked
+                            + "&checkHide=" + cbHideStartDate.Checked
+                            + "&ExportPDF=" + chkExportPDF.Checked;
+
                         break;
                     case "TBD":
                         query = "ReportName=TrailByDate&ReportTitle=Trail Balance from " + txtStart_Date.Text + " to " + txtEnd_Date.Text + "&startDate=" + txtStart_Date.Text + "&endDate=" + txtEnd_Date.Text + "&ExportPDF=" + chkExportPDF.Checked;
