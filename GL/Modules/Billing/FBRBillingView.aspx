@@ -370,50 +370,87 @@
             return html;
         }
         function PostToFBR(billId, btn) {
-            if (!confirm('Are you sure you want to post this bill to FBR?')) {
-                return;
-            }
+            Swal.fire({
+                icon: 'question',
+                title: 'Post to FBR?',
+                text: 'Are you sure you want to post the selected item(s) of this bill to FBR?',
+                showCancelButton: true,
+                confirmButtonText: 'Yes, Post',
+                cancelButtonText: 'Cancel',
+                confirmButtonColor: '#28a745'
+            }).then(function (confirmResult) {
+                if (!confirmResult.isConfirmed) {
+                    return;
+                }
 
-            // Get selected items
-            var selectedItems = [];
-            $('input.item-checkbox:checked').each(function () {
-                selectedItems.push($(this).attr('data-detail-id'));
-            });
+                // Get selected items
+                var selectedItems = [];
+                $('input.item-checkbox:checked').each(function () {
+                    selectedItems.push($(this).attr('data-detail-id'));
+                });
 
-            if (selectedItems.length === 0) {
-                alert('Please select at least one item to post to FBR');
-                return;
-            }
+                if (selectedItems.length === 0) {
+                    Swal.fire({
+                        icon: 'warning',
+                        title: 'No Items Selected',
+                        text: 'Please select at least one item to post to FBR.'
+                    });
+                    return;
+                }
 
-            // Show loading
-            $(btn).prop('disabled', true).text('Processing...');
+                // Show loading
+                $(btn).prop('disabled', true).text('Processing...');
 
-            $.ajax({
-                type: "POST",
-                url: "FBRBillingView.aspx/PostToFBR",
-                data: JSON.stringify({ 
-                    billId: billId,
-                    selectedDetailIds: selectedItems 
-                }),
-                contentType: "application/json; charset=utf-8",
-                dataType: "json",
-                success: function (response) {
-                    if (response.d) {
-                        var result = JSON.parse(response.d);
+                $.ajax({
+                    type: "POST",
+                    url: "FBRBillingView.aspx/PostToFBR",
+                    data: JSON.stringify({
+                        billId: billId,
+                        selectedDetailIds: selectedItems
+                    }),
+                    contentType: "application/json; charset=utf-8",
+                    dataType: "json",
+                    success: function (response) {
+                        var result = null;
+                        try {
+                            result = JSON.parse(response.d);
+                        } catch (e) {
+                            result = { success: false, message: response.d };
+                        }
+
                         if (result.success) {
-                            alert(result.message);
-                            location.reload();
+                            Swal.fire({
+                                icon: 'success',
+                                title: 'Posted to FBR',
+                                text: result.message,
+                                confirmButtonText: 'OK'
+                            }).then(function () {
+                                location.reload();
+                            });
                         } else {
-                            alert('Error: ' + result.message);
+                            Swal.fire({
+                                icon: 'error',
+                                title: 'FBR Posting Failed',
+                                text: result.message || 'Unknown error occurred.',
+                                confirmButtonText: 'OK'
+                            });
                             $(btn).prop('disabled', false).text('Post to FBR');
                         }
+                    },
+                    error: function (xhr, status, error) {
+                        var msg = error;
+                        if (xhr && xhr.responseText) {
+                            msg = xhr.responseText;
+                        }
+                        Swal.fire({
+                            icon: 'error',
+                            title: 'FBR Posting Failed',
+                            text: msg,
+                            confirmButtonText: 'OK'
+                        });
+                        $(btn).prop('disabled', false).text('Post to FBR');
                     }
-                },
-                error: function (xhr, status, error) {
-                    alert('Error posting to FBR: ' + error);
-                    $(btn).prop('disabled', false).text('Post to FBR');
-                    console.log(xhr.responseText);
-                }
+                });
             });
         }
     </script>

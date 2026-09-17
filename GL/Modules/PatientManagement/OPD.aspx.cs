@@ -1370,9 +1370,10 @@ namespace PMS.Modules.PatientManagement
                                                          where tbl.Name == "OPD Fee"
                                                          select tbl.Code).FirstOrDefault() ?? "0");
                         patient.Card_fee = fee;
-                        patient.updated_time = DateTime.Now;
                         //patient.updated_by = AppConfig.UserID;
-                        //patient.charged_by = AppConfig.UserID;
+                        patient.Charged_by = AppConfig.UserID;
+                        patient.charge_time = DateTime.Now;
+                        patient.Remarks = "Card Fee Charge Via OPD Time";
                         db.SubmitChanges(); // LINQ-to-SQL uses SubmitChanges()
                         return new JavaScriptSerializer().Serialize(new { success = true });
                     }
