@@ -2554,6 +2554,17 @@ namespace PMS
                 rd.SummaryInfo.ReportTitle = reportTitle;
                 rd.SetParameterValue("@Adv_IDs", Request.QueryString["Adv_IDs"]);
             }
+            else if (reportName == "PrintAdvanceThermalReport")
+            {
+
+                reportPath += "Billings/rptPrintAdvanceReportThermal.rpt";
+                rd.Load(reportPath);
+                var logoPath = DBClass.getField("SELECT dbo.GetCompanyLogo()");      // Added by 
+                rd.SetParameterValue("CompanyName", AppConfig.Company_Name);         // Added by
+                rd.SetParameterValue("CompanyLogo", logoPath);                       // Added by
+                rd.SummaryInfo.ReportTitle = reportTitle;
+                rd.SetParameterValue("@Adv_IDs", Request.QueryString["Adv_IDs"]);
+            }
             else if (reportName == "PrintRefundReport")
             {
                 var refundid = Request.QueryString["Refund_ID"].ToString();
