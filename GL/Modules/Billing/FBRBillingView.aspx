@@ -247,6 +247,13 @@
                 }
             });
 
+            // Post to FBR button (delegated so it works inside DataTables child rows)
+            $(document).on('click', '.post-fbr-btn', function (e) {
+                e.preventDefault();
+                e.stopPropagation();
+                PostToFBR($(this).attr('data-bill-id'), this);
+            });
+
             $('#btnApplyDateFilter').on('click', function () {
                 table.ajax.reload();
             });
@@ -353,7 +360,7 @@
             // Button Container (Aligned to the right)
             if (!isPosted) {
                 html += '<div style="text-align: right; margin-top: 15px; padding-top: 10px;">';
-                html += '<button class="post-fbr-btn" onclick="PostToFBR(' + billId + ', this)" style="padding: 8px 16px; cursor: pointer;">Post to FBR</button>';
+                html += '<button type="button" class="post-fbr-btn" data-bill-id="' + billId + '" style="padding: 8px 16px; cursor: pointer;">Post to FBR</button>';
                 html += '</div>';
             } else if (qrPath) {
                 var normalizedQrPath = qrPath.replace('~', '');
@@ -370,6 +377,11 @@
             return html;
         }
         function PostToFBR(billId, btn) {
+            console.log('PostToFBR called, billId=', billId);
+            if (typeof Swal === 'undefined') {
+                alert('SweetAlert is not loaded. billId=' + billId);
+                return;
+            }
             Swal.fire({
                 icon: 'question',
                 title: 'Post to FBR?',

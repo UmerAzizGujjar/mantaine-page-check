@@ -488,6 +488,7 @@
             <li><a href="#Tab-2">Income Accounts</a></li>
             <li><a href="#Tab-3">Libilitiy Accounts</a></li>
             <li><a href="#Tab-4">Fees</a></li>
+            <li><a href="#Tab-5" style="display:none;">Digital Invoicing</a></li>
         </ul>
         <div id="Tab-1">
             <h2>GL Accounts</h2>
@@ -645,6 +646,51 @@
                         </td>
                 
                 
+        </div>
+        <div id="Tab-5">
+            <h2>FBR Digital Invoicing (DI) Credentials</h2>
+            <table style="width: 1000px;">
+                <tr>
+                    <td>Post URL (Sandbox/Production):</td>
+                    <td colspan="3"><asp:TextBox ID="txtDI_PostUrl" runat="server" Width="600px"></asp:TextBox></td>
+                </tr>
+                <tr>
+                    <td>Validate URL:</td>
+                    <td colspan="3"><asp:TextBox ID="txtDI_ValidateUrl" runat="server" Width="600px"></asp:TextBox></td>
+                </tr>
+                <tr>
+                    <td>Security Token:</td>
+                    <td colspan="3"><asp:TextBox ID="txtDI_Token" runat="server" Width="600px"></asp:TextBox></td>
+                </tr>
+                <tr>
+                    <td>Seller NTN / CNIC:</td>
+                    <td><asp:TextBox ID="txtDI_SellerNTN" runat="server" Width="250px"></asp:TextBox></td>
+                    <td>Seller Business Name:</td>
+                    <td><asp:TextBox ID="txtDI_SellerName" runat="server" Width="250px"></asp:TextBox></td>
+                </tr>
+                <tr>
+                    <td>Seller Province:</td>
+                    <td><asp:TextBox ID="txtDI_SellerProvince" runat="server" Width="250px"></asp:TextBox></td>
+                    <td>Seller Address:</td>
+                    <td><asp:TextBox ID="txtDI_SellerAddress" runat="server" Width="250px"></asp:TextBox></td>
+                </tr>
+                <tr>
+                    <td>Buyer Registration Type:</td>
+                    <td><asp:TextBox ID="txtDI_RegistrationType" runat="server" Width="250px"></asp:TextBox></td>
+                    <td>Scenario Id (Sandbox):</td>
+                    <td><asp:TextBox ID="txtDI_ScenarioId" runat="server" Width="250px"></asp:TextBox></td>
+                </tr>
+                <tr>
+                    <td>Invoice Type:</td>
+                    <td><asp:TextBox ID="txtDI_InvoiceType" runat="server" Width="250px"></asp:TextBox></td>
+                    <td>Rate:</td>
+                    <td><asp:TextBox ID="txtDI_Rate" runat="server" Width="250px"></asp:TextBox></td>
+                </tr>
+                <tr>
+                    <td>Sale Type:</td>
+                    <td colspan="3"><asp:TextBox ID="txtDI_SaleType" runat="server" Width="250px"></asp:TextBox></td>
+                </tr>
+            </table>
         </div>
     </div>
     <div style="padding-left: 0px; padding-top: 20px" class="row">

@@ -4,6 +4,310 @@
 
     <link href="../../wwwroot/THEME_TIBBIT/CustomCSS/Receipts.css" rel="stylesheet" />
      <link href="../../wwwroot/lib/sweetalert/swalalert.css" rel="stylesheet" />
+    <link href="../../wwwroot/THEME_TIBBIT/CustomCSS/vendor.css" rel="stylesheet" />
+    <link href="../../wwwroot/THEME_TIBBIT/CustomCSS/Datavalue.css" rel="stylesheet" />
+    <style>
+        /* ===================== Receipts page polish ===================== */
+        .rc-page { padding-bottom: 16px; }
+        .rc-page .pr-meta-bar { margin-bottom: 16px; padding: 6px 16px; }
+        .rc-page .hr_receipt {
+            margin: 14px 0 !important;
+            border: none !important;
+            border-top: 1px solid #fdf2e2 !important;
+        }
+
+        /* ── Summary tiles ── */
+        .rc-page #divReceiptsBoxes { margin-bottom: 4px; }
+        .rc-page #divReceiptsBoxes > [class*="col-"] { margin-bottom: 12px; }
+        .rc-page .card1 {
+            background: #fff !important;
+            border: 1px solid #fdf2e2 !important;
+            border-left: 3px solid #EFA63E !important;
+            border-radius: 8px !important;
+            padding: 0 !important;
+            margin-bottom: 0 !important;
+            box-shadow: 0 4px 12px rgba(0,0,0,.04) !important;
+            overflow: hidden;
+            height: 100%;
+        }
+        .rc-page .card1 .card-header {
+            background: linear-gradient(90deg, #EFA63E10, #fff) !important;
+            border-bottom: 1px solid #EFA63E30 !important;
+            color: #7a6530 !important;
+            font-size: 10.5px !important;
+            font-weight: 700 !important;
+            text-transform: uppercase;
+            letter-spacing: .04em;
+            padding: 7px 12px !important;
+        }
+        .rc-page .card1 .card-body { padding: 10px 12px !important; }
+        .rc-page .card1 .card-title,
+        .rc-page .card1 h4 {
+            margin: 0 !important;
+            font-size: 17px !important;
+            font-weight: 700 !important;
+            color: #2f3d45 !important;
+            line-height: 1.2 !important;
+        }
+
+        /* ── Info cards ── */
+        .rc-page .card {
+            background: #fff !important;
+            border: 1px solid #fdf2e2 !important;
+            border-left: 3px solid #EFA63E !important;
+            border-radius: 8px !important;
+            padding: 14px 16px !important;
+            margin-bottom: 16px !important;
+            box-shadow: 0 4px 12px rgba(0,0,0,.04) !important;
+            height: auto !important;
+        }
+        .rc-page .card-body { padding: 0 !important; }
+        .rc-page .card label {
+            font-size: 11px !important;
+            font-weight: 700 !important;
+            color: #555 !important;
+            text-transform: uppercase;
+            letter-spacing: .03em;
+            margin-bottom: 2px !important;
+        }
+        .rc-page .card .image-container {
+            background: #f7f8fa !important;
+            padding: 12px !important;
+            border-radius: 50%;
+            display: inline-block;
+        }
+        .rc-page .card .patient-image { max-width: 76px; border-radius: 8px; }
+        .rc-page .mtt { margin-top: 0 !important; margin-bottom: 8px !important; }
+        .rc-page .formrgn, .rc-page .top { margin-top: 0 !important; }
+        .rc-page .card input[type="text"] {
+            height: 30px !important;
+            width: 100% !important;
+            font-size: 12px !important;
+            border: 1px solid #e0e0e0 !important;
+            border-radius: 4px !important;
+            padding: 4px 8px !important;
+            background: #fff !important;
+            box-shadow: none !important;
+        }
+        .rc-page .card input[type="text"][disabled] { background: #f5f6f8 !important; color: #8a8f98 !important; }
+
+        /* ── Entry form panels ── */
+        .rc-page .cards {
+            background: #fff !important;
+            border: 1px solid #fdf2e2 !important;
+            border-left: 3px solid #EFA63E !important;
+            border-radius: 8px !important;
+            padding: 14px 16px !important;
+            margin-bottom: 16px !important;
+            box-shadow: 0 4px 12px rgba(0,0,0,.04) !important;
+            height: 100%;
+        }
+        .rc-page .cards .card-body { padding: 0 !important; }
+        .rc-page .cards label {
+            font-size: 11px !important;
+            font-weight: 700 !important;
+            color: #555 !important;
+            text-transform: uppercase;
+            letter-spacing: .03em;
+            margin-bottom: 3px !important;
+            display: block;
+        }
+        .rc-page .cards .mb-3 { margin-bottom: 10px !important; }
+        .rc-page .cards input[type="text"] {
+            height: 32px !important;
+            width: 100% !important;
+            font-size: 12px !important;
+            border: 1px solid #e0e0e0 !important;
+            border-radius: 4px !important;
+            padding: 5px 10px !important;
+            background: #fff !important;
+            box-shadow: none !important;
+        }
+        .rc-page .cards input[type="text"]:focus {
+            border-color: #EFA63E !important;
+            box-shadow: 0 0 0 3px #EFA63E25 !important;
+            outline: none !important;
+        }
+        .rc-page .cards input[disabled] { background: #f5f6f8 !important; color: #8a8f98 !important; }
+        .rc-page .cards .fieldcolor {
+            background: #EFA63E !important;
+            border-color: #EFA63E !important;
+            color: #fff !important;
+            font-weight: 700 !important;
+        }
+        .rc-page .form-check { display: flex; align-items: center; gap: 8px; padding: 0 !important; }
+        .rc-page .form-check label { margin: 0 !important; }
+        .rc-page .form-check input[type="checkbox"] { width: 16px !important; height: 16px !important; margin: 0 !important; }
+
+        /* ── Entry lists ── */
+        .rc-page .self {
+            position: relative !important;
+            width: 100% !important;
+            height: auto !important;
+            border: none !important;
+            border-radius: 8px 8px 0 0 !important;
+            background: linear-gradient(90deg, #EFA63E10, #fff) !important;
+            background-image: linear-gradient(90deg, #EFA63E10, #fff) !important;
+            color: #EFA63E !important;
+            text-align: left !important;
+            font-size: 12px !important;
+            font-weight: 700 !important;
+            text-transform: uppercase;
+            letter-spacing: .05em;
+            padding: 8px 12px !important;
+            margin: 0 !important;
+            border-bottom: 1px solid #EFA63E30 !important;
+        }
+        .rc-page .self2 {
+            width: 100% !important;
+            height: auto !important;
+            background: #fff !important;
+            border: 1px solid #fdf2e2 !important;
+            border-left: 3px solid #EFA63E !important;
+            border-radius: 8px !important;
+            margin: 0 0 16px 0 !important;
+            box-shadow: 0 4px 12px rgba(0,0,0,.04) !important;
+            overflow: hidden;
+        }
+        .rc-page .self2 > div {
+            width: 100% !important;
+            max-height: 170px;
+            overflow: auto !important;
+        }
+        .rc-page .self2 .table { margin: 0 !important; }
+        .rc-page #lblTotalReceiptsmsg,
+        .rc-page #lblTotalBillsmsg {
+            display: block;
+            padding: 6px 12px;
+            font-size: 11px;
+            font-weight: 700;
+            color: #7a6530;
+            background: #fdf7ef;
+            border-top: 1px solid #f0e0c8;
+        }
+
+        /* ── Tables (beat the Receipts.css yellow / 1em / width:100% rules) ── */
+        .rc-page .table {
+            width: 100% !important;
+            margin-bottom: 0 !important;
+            background: #fff !important;
+            border-collapse: collapse !important;
+        }
+        .rc-page .table th {
+            background: #EFA63E !important;
+            background-image: none !important;
+            color: #fff !important;
+            font-size: 10px !important;
+            font-weight: 700 !important;
+            text-transform: uppercase;
+            letter-spacing: .03em;
+            padding: 6px 8px !important;
+            border: none !important;
+            border-bottom: 1px solid #EFA63E !important;
+            text-align: left !important;
+            width: auto !important;
+            position: static !important;
+            transform: none !important;
+            top: auto !important;
+            left: auto !important;
+            right: auto !important;
+        }
+        .rc-page .table td {
+            padding: 5px 8px !important;
+            font-size: 11.5px !important;
+            color: #444 !important;
+            border: none !important;
+            border-bottom: 1px solid #f0f0f0 !important;
+            text-align: left !important;
+            width: auto !important;
+            background: transparent !important;
+            position: static !important;
+            transform: none !important;
+            top: auto !important;
+            left: auto !important;
+            right: auto !important;
+        }
+        .rc-page .table tbody tr:nth-child(even) { background: #fbfcfe; }
+        .rc-page .table tbody tr:hover { background: #EFA63E12; }
+        .rc-page .table td a { color: #d29237 !important; font-weight: 700; text-decoration: none !important; }
+
+        /* ── Action row (button styles untouched) ── */
+        .rc-page .rc-actions { margin-top: 4px; padding-top: 14px; border-top: 1px solid #fdf2e2; }
+        .rc-page .rc-actions > [class*="col-"] { margin-bottom: 8px; }
+
+        /* ── Discharge modal ── */
+        .rc-page .modal-content {
+            border-radius: 10px;
+            border: none;
+            box-shadow: 0 10px 40px rgba(0,0,0,.18);
+        }
+        .rc-page .modal-header {
+            background: linear-gradient(90deg, #EFA63E10, #fff);
+            border-bottom: 1px solid #EFA63E30;
+            border-radius: 10px 10px 0 0;
+            padding: 12px 18px;
+        }
+        .rc-page .modal-title {
+            font-size: 14px;
+            font-weight: 700;
+            color: #EFA63E;
+            text-transform: uppercase;
+            letter-spacing: .04em;
+        }
+        .rc-page .modal-body { padding: 16px 18px; }
+        .rc-page legend {
+            font-size: 12px !important;
+            font-weight: 700 !important;
+            color: #7a6530 !important;
+            padding: 0 8px !important;
+            width: auto !important;
+            border: none !important;
+            margin-bottom: 8px !important;
+        }
+        .rc-page .rc-svc-row { display: flex; gap: 10px; align-items: center; }
+        .rc-page .rc-svc-row .select2-container { flex: 1 1 auto; min-width: 0; width: 100% !important; }
+        .rc-page .rc-svc-row > input[type="button"] { flex: 0 0 auto; }
+        .rc-page .rc-modal-sub {
+            font-size: 12px !important;
+            font-weight: 700 !important;
+            color: #EFA63E !important;
+            text-transform: uppercase;
+            letter-spacing: .05em;
+            margin: 0 0 8px !important;
+        }
+        .rc-page .rc-modal-scroll {
+            max-height: 250px;
+            overflow: auto;
+            border: 1px solid #eee;
+            border-radius: 6px;
+        }
+        .rc-page .rc-sum-table { width: 100%; margin-top: 12px; }
+        .rc-page .rc-sum-table td {
+            padding: 5px 8px !important;
+            font-size: 12px !important;
+            border: none !important;
+            vertical-align: middle !important;
+        }
+        .rc-page .rc-sum-table input[type="text"] {
+            height: 30px !important;
+            width: 100% !important;
+            font-size: 12px !important;
+            border: 1px solid #e0e0e0 !important;
+            border-radius: 4px !important;
+            padding: 4px 8px !important;
+            background: #fff !important;
+            box-shadow: none !important;
+        }
+        .rc-page .rc-sum-table input[disabled] { background: #f5f6f8 !important; color: #8a8f98 !important; }
+        .rc-page .modal-body select.form-control { height: 32px !important; font-size: 12px !important; }
+        .rc-page .modal-body .select2-selection {
+            height: 32px !important;
+            font-size: 12px !important;
+            border: 1px solid #e0e0e0 !important;
+            border-radius: 4px !important;
+            background: #fff !important;
+        }
+    </style>
 </asp:Content>
 <asp:Content ID="Content2" ContentPlaceHolderID="MainContent" runat="server">
 
@@ -1564,6 +1868,15 @@
         }
 
     </script>
+    <div class="rc-page">
+
+        <div class="pr-meta-bar">
+            <div class="meta-left">
+                <span class="meta-title"><i class="fa fa-receipt"></i> Patient Receipts</span>
+            </div>
+            <div class="meta-right"></div>
+        </div>
+
     <div class="row">
         <input type="hidden" name="hdnDuplicateCheck" value="0" id="hdnDuplicateCheck" />
         <div class="row mb-3" id="divReceiptsBoxes">
@@ -1893,7 +2206,7 @@
                 </div>
             </div>
                 </div>
-                <div class="row">
+                <div class="row rc-actions">
                       <div class="col-lg-2 col-md-3 col-sm-4">
                           <input type="button" class="btn btn-primry" style="width:auto" value="Save" onclick="SaveRecord()" id="btnSave" />
                   </div>
@@ -2192,110 +2505,97 @@
         </table>
     </div>
     <div id="DischargeModel" class="modal fade" role="dialog">
-        <div class="modal-dialog">
-            <div class="modal-content" style="width: 1120px; margin-left: -219px; margin-top: 100px;">
+        <div class="modal-dialog" style="width: 1080px; max-width: 96%;">
+            <div class="modal-content">
                 <div class="modal-header">
                     <button type="button" style="width: auto;" class="close" data-dismiss="modal">&times;</button>
                     <h4 class="modal-title">Add Discharge</h4>
                 </div>
 
                 <div class="modal-body">
-                    <fieldset>
-                        <legend>Discharge Charges Details</legend>
-                        <table style="width: 408px;">
-                            <tr>
-                                <td style="width: 110px"><span>Service Type:-</span></td>
-                                <td style="width: 234px">
-                                    <select id="ddlServiceTypes" name="ddlServiceTypes">
-                                    </select>
-                                </td>
-                                <td>
-                                    <input type="button" id="btnAddDischarge" class="btn btn-primry" value="Add Service" onclick="AddServices()"/>
-                                </td>
-                            </tr>
-                        </table>
-                        <div style="height: 272px;overflow:scroll;width: 556px;">
-                        <table id="tblDischarge" class="table" style="width: 540px;">
-                            <thead>
-                                <tr>
-                                    <th>Sr.</th>
-                                    <th>Description</th>
-                                    <th style="width: 95px;"> Qty</th>
-                                    <th style="width: 115px;">Amount</th>
-                                     <th style="width: 115px;">Net Amount</th>
-                                </tr>
-                            </thead>
-                            <tbody id="tblDischargeBody">
-                            </tbody>
-                        </table>
+                    <div class="row">
+                        <div class="col-md-12">
+                            <label for="ddlServiceTypes">Service Type</label>
+                            <div class="rc-svc-row">
+                                <select id="ddlServiceTypes" name="ddlServiceTypes" class="form-control"></select>
+                                <input type="button" id="btnAddDischarge" class="btn btn-primry" value="Add Service" onclick="AddServices()" />
                             </div>
-                        <div id="dvDischargeSummary">
-                            <table style="width: 449px;margin-top: 28px;">
-                                <tr>
-                                    <td>Total Amount:
-                                    </td>
-                                    <td>
-                                        <input type="text" id="txtDischargeTotalAmount" disabled="disabled" />
-                                    </td>
-                                </tr>
-                                <tr>
-                                    <td>Discount %:
-                                    </td>
-                                    <td>
-                                     <input type="text" id="txtDischargeDiscountPercentage" style="width: 46px !important;" onkeyup="UpdateDiscountPercentage()"/>
-                                        %
-                                        <input type="text" id="txtDischargeDiscountAmount" style="width: 105px !important;" onkeyup="UpdateDiscountAmount()" />
-                                    </td>
-
-                                </tr>
-                                <tr>
-                                    <td>Net Amount:
-                                    </td>
-                                    <td>
-                                        <input type="text" id="txtDischargeNetAmount" disabled="disabled" />
-                                    </td>
-                                </tr>
-                            </table>
                         </div>
+                    </div>
 
-                        <div style="margin-left: 588px; margin-top: -420px !important; height: 272px;overflow:scroll;">
-                            <table id="tblInvestigationDetails" class="table" style="width: 99.5% !important;">
-                                <thead>
+                    <div class="row" style="margin-top: 14px;">
+                        <div class="col-md-6">
+                            <h5 class="rc-modal-sub">Discharge Charges Details</h5>
+                            <div class="rc-modal-scroll">
+                                <table id="tblDischarge" class="table">
+                                    <thead>
+                                        <tr>
+                                            <th>Sr.</th>
+                                            <th>Description</th>
+                                            <th style="width: 95px;">Qty</th>
+                                            <th style="width: 115px;">Amount</th>
+                                            <th style="width: 115px;">Net Amount</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody id="tblDischargeBody">
+                                    </tbody>
+                                </table>
+                            </div>
+                            <div id="dvDischargeSummary">
+                                <table class="rc-sum-table">
                                     <tr>
-                                        <th>Sr.</th>
-                                        <th>Date</th>
-                                        <th>Test Name</th>
-                                        <th>Amount</th>
+                                        <td>Total Amount:</td>
+                                        <td><input type="text" id="txtDischargeTotalAmount" disabled="disabled" /></td>
                                     </tr>
-                                </thead>
-                                <tbody id="tblInvestigationDetailsBody">
-                                </tbody>
-                            </table>                            
+                                    <tr>
+                                        <td>Discount %:</td>
+                                        <td>
+                                            <input type="text" id="txtDischargeDiscountPercentage" style="width: 70px !important;" onkeyup="UpdateDiscountPercentage()" />
+                                            <span style="padding: 0 4px;">%</span>
+                                            <input type="text" id="txtDischargeDiscountAmount" style="width: 120px !important;" onkeyup="UpdateDiscountAmount()" />
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td>Net Amount:</td>
+                                        <td><input type="text" id="txtDischargeNetAmount" disabled="disabled" /></td>
+                                    </tr>
+                                </table>
+                            </div>
                         </div>
-                        <div style="margin-left: 668px; width: 420px !important; margin-top: 66px;">
-                            <table style="width: inherit;">
-                                <tr>
-                                    <td>Investigation Available Limit:
-                                    </td>
-                                    <td>
-                                        <input type="text" id="txtInvestigationAvailableLimit" value="0" disabled="disabled" />
-                                    </td>
-                                </tr>
-                                <tr>
-                                    <td>Investigation Amount:
-                                    </td>
-                                    <td>
-                                        <input type="text" id="txtInvestigationAmount" value="0" disabled="disabled" />
-                                    </td>
-                                </tr>
 
+                        <div class="col-md-6">
+                            <h5 class="rc-modal-sub">Investigation Details</h5>
+                            <div class="rc-modal-scroll">
+                                <table id="tblInvestigationDetails" class="table">
+                                    <thead>
+                                        <tr>
+                                            <th>Sr.</th>
+                                            <th>Date</th>
+                                            <th>Test Name</th>
+                                            <th>Amount</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody id="tblInvestigationDetailsBody">
+                                    </tbody>
+                                </table>
+                            </div>
+                            <table class="rc-sum-table">
+                                <tr>
+                                    <td>Investigation Available Limit:</td>
+                                    <td><input type="text" id="txtInvestigationAvailableLimit" value="0" disabled="disabled" /></td>
+                                </tr>
+                                <tr>
+                                    <td>Investigation Amount:</td>
+                                    <td><input type="text" id="txtInvestigationAmount" value="0" disabled="disabled" /></td>
+                                </tr>
                             </table>
                         </div>
-                    </fieldset>
+                    </div>
+
                     <input type="hidden" name="uurowid" value="" />
                 </div>
                 <div class="modal-footer">
-                    <input type="button" value="Save Discharge Details" class="btn btn-primry" style="width: 185px !important;" onclick="GetDischargeAmount()" data-dismiss="modal"/>
+                    <input type="button" value="Save Discharge Details" class="btn btn-primry" onclick="GetDischargeAmount()" data-dismiss="modal" />
                 </div>
             </div>
         </div>
@@ -2515,5 +2815,6 @@
             </table>
                
        
+    </div>
     </div>
 </asp:Content>

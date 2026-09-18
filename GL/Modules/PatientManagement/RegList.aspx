@@ -34,18 +34,7 @@
             });
         }
 
-        //function PrintReceipt(pat_id) {
-        //    var locationInfo = window.location;
-        //    var url = "/ReportViewer.aspx?ReportName=Reg_Patient_Print&Title=Register Patient Print &Patient_ID=" + pat_id;
-
-        //    if (!locationInfo.origin.includes('localhost')) {
-        //        var urlInfo = window.location.href.split('/');
-        //        var ip = urlInfo[2];
-        //        var foldername = urlInfo[3];
-        //        url = 'http://' + ip + '/' + foldername + "/ReportViewer.aspx?ReportName=Reg_Patient_Print&Title=Register Patient Print &Patient_ID=" + pat_id;
-        //    }
-        //    window.open(url, '_blank');
-        //}
+    
 
         function PrintReceipt(pat_id) {
             $.ajax({

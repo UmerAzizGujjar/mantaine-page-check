@@ -24,6 +24,12 @@
             $('#ctl00_MainContent_ddlDepartment').select2();
             $('#ctl00_MainContent_ddlSalesman').select2();
             $('#ctl00_MainContent_ddlVoucher_Type').select2();
+
+            $('#cbHideStartDate').on('change', function () {
+                var hidden = this.checked;
+                $('#ctl00_MainContent_stDate').toggle(!hidden);
+                $('#ctl00_MainContent_txtStart_Date').toggle(!hidden);
+            });
         });
        
         
@@ -439,6 +445,18 @@
                     <asp:Label Text="Hide Zero Balance" runat="server" ID="lblHideZeroBalance"/></td>
             </tr> 
         </table>
+        
+        <table id="hideStartDateRow" runat="server" visible="false">
+            <tr>
+                <td>
+                    <asp:CheckBox runat="server" ID="cbHideStartDate" ClientIDMode="Static" />
+                </td>
+                <td>
+                    <asp:Label Text="As On" runat="server" ID="lblHideStartDate" />
+                </td>
+            </tr>
+        </table>
+
          &nbsp;&nbsp;
          <div class="row" id="VoucherDiv" runat="server" visible="false">
             <div class="col-lg-3 col-md-6 col-sm-12">

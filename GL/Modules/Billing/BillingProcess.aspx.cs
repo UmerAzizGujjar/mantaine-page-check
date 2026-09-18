@@ -3317,6 +3317,7 @@ namespace PMS
 
                 pt.Name = pat.Full_Name;
                 pt.Gender = pat.Gender;
+                pt.FatherName = pat.Father_Name;
                 if(pat.Age_years == null)
                 {
                     pt.Age = "";
@@ -3833,6 +3834,7 @@ namespace PMS
             public string Balance { get; set; }
             public string PreviousTotalAmount { get; set; }
             public string InsuranceCardNo { get; set; }
+            public string FatherName { get; set; }
 
 
         }
