@@ -87,6 +87,11 @@
       <SpecificVersion>False</SpecificVersion>
       <HintPath>Dependencies\CKEditor.NET.dll</HintPath>
     </Reference>
+    <Reference Include="Oracle.ManagedDataAccess, Version=4.122.19.1, Culture=neutral, PublicKeyToken=89b483f429c47342, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>Dependencies\Oracle.ManagedDataAccess.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
     <Reference Include="CrystalDecisions.CrystalReports.Engine, Version=13.0.2000.0, Culture=neutral, PublicKeyToken=692fbea5521e1304, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
       <HintPath>Dependencies\CrystalDecisions.CrystalReports.Engine.dll</HintPath>
@@ -308,6 +313,8 @@
     <Content Include="Modules\Administrator\AddDoctor_Packages.aspx" />
     <Content Include="Modules\Administrator\AddHospital.aspx" />
     <Content Include="Modules\Administrator\AddPanel_Packages.aspx" />
+    <Content Include="Modules\Administrator\MRNoLookup.aspx" />
+    <Content Include="Modules\Administrator\EMRLookup.aspx" />
     <Content Include="Modules\Administrator\PharmacyTemplate.aspx" />
     <Content Include="Modules\Administrator\ApproveGoodsReturn.aspx" />
     <Content Include="Modules\Administrator\Procedure_Template.aspx" />
@@ -344,6 +351,7 @@
     <Content Include="Modules\Billing\AccountsReceivable.aspx" />
     <Content Include="Modules\Billing\AccountsReceivableDetail.aspx" />
     <Content Include="Modules\Billing\BillApproval.aspx" />
+    <Content Include="Modules\Billing\DIBillingView.aspx" />
     <Content Include="Modules\Billing\DiscountAssignedList.aspx" />
     <Content Include="Modules\Billing\DoctorPayables.aspx" />
     <Content Include="Modules\Billing\DoctorPayableService_Standard.aspx" />
@@ -2963,6 +2971,20 @@
     <Compile Include="Modules\Administrator\AddPanel_Packages.aspx.designer.cs">
       <DependentUpon>AddPanel_Packages.aspx</DependentUpon>
     </Compile>
+    <Compile Include="Modules\Administrator\MRNoLookup.aspx.cs">
+      <DependentUpon>MRNoLookup.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Modules\Administrator\MRNoLookup.aspx.designer.cs">
+      <DependentUpon>MRNoLookup.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="Modules\Administrator\EMRLookup.aspx.cs">
+      <DependentUpon>EMRLookup.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Modules\Administrator\EMRLookup.aspx.designer.cs">
+      <DependentUpon>EMRLookup.aspx</DependentUpon>
+    </Compile>
     <Compile Include="Modules\Administrator\PharmacyTemplate.aspx.cs">
       <DependentUpon>PharmacyTemplate.aspx</DependentUpon>
       <SubType>ASPXCodeBehind</SubType>
@@ -3214,6 +3236,13 @@
     </Compile>
     <Compile Include="Modules\Billing\BillApproval.aspx.designer.cs">
       <DependentUpon>BillApproval.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="Modules\Billing\DIBillingView.aspx.cs">
+      <DependentUpon>DIBillingView.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Modules\Billing\DIBillingView.aspx.designer.cs">
+      <DependentUpon>DIBillingView.aspx</DependentUpon>
     </Compile>
     <Compile Include="Modules\Billing\DiscountAssignedList.aspx.cs">
       <DependentUpon>DiscountAssignedList.aspx</DependentUpon>
@@ -4009,6 +4038,7 @@
     <Compile Include="App_Themes\App_Data\AppConfig.cs" />
     <Compile Include="App_Themes\App_Data\CommonMethods.cs" />
     <Compile Include="App_Themes\App_Data\DBClass.cs" />
+    <Compile Include="App_Themes\App_Data\EMRDb.cs" />
     <Compile Include="App_Themes\App_Data\Employee.cs" />
     <Compile Include="App_Themes\App_Data\EmployeeData.cs" />
     <Compile Include="App_Themes\App_Data\MyWebRequest.cs" />

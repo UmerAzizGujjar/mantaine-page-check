@@ -6284,6 +6284,7 @@
                     $('#lblPatienName').text(ReplaceNullWith_Space(data.d.Name));
                     $('#lblAgeYears').text(ReplaceNullWith_Space(data.d.Age));
                     $('#lblGender').text(ReplaceNullWith_Space(data.d.Gender));
+                    $('#lblFatherName').text(ReplaceNullWith_Space(data.d.FatherName));
                     $('#lblRegDate').text(dateR);
                     $('#lblAddress').text(ReplaceNullWith_Space(data.d.Address));
                     $('#lblContactNo').text(ReplaceNullWith_Space(data.d.Mobile));
@@ -8605,6 +8606,7 @@
                     <div class="bp-patient-info">
                         <div class="bp-patient-name" id="lblPatienName">Patient Name</div>
                         <dl class="bp-patient-grid">
+                            <dt>Guardian Name</dt><dd id="lblFatherName"></dd>
                             <dt>Contact</dt><dd id="lblContactNo"></dd>
                             <dt>Gender</dt><dd id="lblGender"></dd>
                             <dt>Age</dt><dd id="lblAgeYears"></dd>

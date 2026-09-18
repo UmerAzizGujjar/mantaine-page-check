@@ -39,6 +39,19 @@ namespace PMS
             txtMiscellenousIncomeAccount.Text = LoadParametersData("Miscelleneous_Income_Account");
             txtMiscellenousLossAccount.Text = LoadParametersData("Miscelleneous_Loss_Account");
             txtPatientCardAmount.Text = LoadParametersData("Patient Card No");
+
+            txtDI_PostUrl.Text = LoadParam("FBR_DI_PostUrl", "https://gw.fbr.gov.pk/di_data/v1/di/postinvoicedata_sb");
+            txtDI_ValidateUrl.Text = LoadParam("FBR_DI_ValidateUrl", "https://gw.fbr.gov.pk/di_data/v1/di/validateinvoicedata_sb");
+            txtDI_Token.Text = LoadParam("FBR_DI_Token");
+            txtDI_SellerNTN.Text = LoadParam("FBR_DI_SellerNTN");
+            txtDI_SellerName.Text = LoadParam("FBR_DI_SellerName");
+            txtDI_SellerProvince.Text = LoadParam("FBR_DI_SellerProvince");
+            txtDI_SellerAddress.Text = LoadParam("FBR_DI_SellerAddress");
+            txtDI_RegistrationType.Text = LoadParam("FBR_DI_RegistrationType", "Registered");
+            txtDI_ScenarioId.Text = LoadParam("FBR_DI_ScenarioId", "SN001");
+            txtDI_InvoiceType.Text = LoadParam("FBR_DI_InvoiceType", "Sale Invoice");
+            txtDI_Rate.Text = LoadParam("FBR_DI_Rate", "18%");
+            txtDI_SaleType.Text = LoadParam("FBR_DI_SaleType", "Services at standard rate");
         }
 
         public void Save()
@@ -61,6 +74,47 @@ namespace PMS
             SaveData("Miscelleneous_Income_Account", txtMiscellenousIncomeAccount.Text);
             SaveData("Miscelleneous_Loss_Account", txtMiscellenousLossAccount.Text);
             SaveData("Patient Card No", txtPatientCardAmount.Text);
+
+            SaveParam("FBR_DI_PostUrl", txtDI_PostUrl.Text.Trim());
+            SaveParam("FBR_DI_ValidateUrl", txtDI_ValidateUrl.Text.Trim());
+            SaveParam("FBR_DI_Token", txtDI_Token.Text.Trim());
+            SaveParam("FBR_DI_SellerNTN", txtDI_SellerNTN.Text.Trim());
+            SaveParam("FBR_DI_SellerName", txtDI_SellerName.Text.Trim());
+            SaveParam("FBR_DI_SellerProvince", txtDI_SellerProvince.Text.Trim());
+            SaveParam("FBR_DI_SellerAddress", txtDI_SellerAddress.Text.Trim());
+            SaveParam("FBR_DI_RegistrationType", txtDI_RegistrationType.Text.Trim());
+            SaveParam("FBR_DI_ScenarioId", txtDI_ScenarioId.Text.Trim());
+            SaveParam("FBR_DI_InvoiceType", txtDI_InvoiceType.Text.Trim());
+            SaveParam("FBR_DI_Rate", txtDI_Rate.Text.Trim());
+            SaveParam("FBR_DI_SaleType", txtDI_SaleType.Text.Trim());
+        }
+
+        public string LoadParam(string ParameterName, string DefaultValue = "")
+        {
+            using (DataBaseDataContext db = new DataBaseDataContext())
+            {
+                var p = db.sys_Parms.FirstOrDefault(x => x.Name == ParameterName && x.Company_ID == AppConfig.Company_ID);
+                if (p == null || string.IsNullOrEmpty(p.Segment1))
+                    return DefaultValue;
+                return p.Segment1;
+            }
+        }
+
+        public void SaveParam(string ParameterName, string ParameterValue)
+        {
+            using (DataBaseDataContext db = new DataBaseDataContext())
+            {
+                var p = db.sys_Parms.FirstOrDefault(x => x.Name == ParameterName && x.Company_ID == AppConfig.Company_ID);
+                if (p == null)
+                {
+                    p = new sys_Parm();
+                    p.Name = ParameterName;
+                    p.Company_ID = AppConfig.Company_ID;
+                    db.sys_Parms.InsertOnSubmit(p);
+                }
+                p.Segment1 = ParameterValue;
+                db.SubmitChanges();
+            }
         }
 
         public void SaveData(string ParameterName, string ParameterValue)
