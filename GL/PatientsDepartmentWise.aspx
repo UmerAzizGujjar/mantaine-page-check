@@ -473,6 +473,28 @@
                         window.open(url, '_blank');
 
                     }
+
+                    else if (rptTitle == "InPatientPharmacySaleReport") {
+                         debugger;
+                         
+                         
+                         var exporttopdf = document.getElementById('<%= chkExportPDF.ClientID %>').checked;
+                         var sDate = new Date($("#ctl00_MainContent_txtStart_Date").val());
+                         var eDate = new Date($("#ctl00_MainContent_txtEnd_Date").val());
+                         var sSDate = sDate.getDay();
+                         var eEDate = eDate.getDay();
+                         var url = 'ReportViewer.aspx?ReportName=InPatientPharmacySaleReport&ReportTitle=Pharmacy Sale Report from ' +
+                             $('#ctl00_MainContent_txtStart_Date').val() + ' ' + $('#ctl00_MainContent_txtSTime').val() + '  ' +
+                             sSDate + ' to ' + $('#ctl00_MainContent_txtEnd_Date').val() + ' ' + $('#ctl00_MainContent_txtETime').val() + ' ' +
+                             eEDate + '&StartDateTime=' + $('#ctl00_MainContent_txtStart_Date').val() + ' ' + $('#ctl00_MainContent_txtSTime').val() +
+                             '&EndDateTime=' + $('#ctl00_MainContent_txtEnd_Date').val() + ' ' + $('#ctl00_MainContent_txtETime').val() +
+                             '&Operator=' + ((typeof ($("#ctl00_MainContent_ddloprators").val()) != 'undefined') ? $("#ctl00_MainContent_ddloprators").val() : "0") +
+                             '&ItemID=' + $('#ctl00_MainContent_ddlItemName').val() + '&warehouse=' + $('#ctl00_MainContent_ddlwareHouse').val() + '&Patient_Type=' + ((typeof ($("#ctl00_MainContent_ddlPatientType").val()) != 'undefined') ? $("#ctl00_MainContent_ddlPatientType").val() : "0") +
+                             '&ExportPDF=' + exporttopdf;
+                         window.open(url, '_blank');
+
+                           }
+
                     else if (rptTitle == "PharmacySaleReport_PaymentWise") {
                         debugger;
                         var sDate = new Date($("#ctl00_MainContent_txtStart_Date").val());
