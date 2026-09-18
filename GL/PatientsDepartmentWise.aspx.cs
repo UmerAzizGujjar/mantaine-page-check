@@ -8157,6 +8157,87 @@ namespace PMS
 
 
                 }
+
+                else if (this.PageTitle == "InPatientPharmacySaleReport")
+                {
+                    string x = "IPD Pharmacy Sale Report";
+                    Master.Label2.Text = x;
+                    Master.GetMenuName();
+                    lblMainDepartment.Visible = false;
+                    ddlDepartments.Visible = false;
+                    lblDepartment.Visible = false;
+                    lblPatientType.Visible = true;
+                    lblMultiSelect.Visible = false;
+                    ddlPatientType.Visible = true;
+                    optRw.Visible = false;
+                    trDoctor.Visible = false;
+                    tr_Summary.Visible = false;
+                    trSearch1.Visible = true;
+                    lblMainDepartment.Visible = false;
+                    dpROw.Visible = true;
+                    ddlReportType.Visible = false;
+                    txtMRNo.Visible = false;
+                    lblMRNo.Visible = false;
+                    tr_Export.Visible = true;
+                    ddlShift.Visible = false;
+                    lbShift.Visible = false;
+                    DateDiv.Visible = true;
+                    Time_Row.Visible = true;
+                    if (AllowPatientRecord)
+                    {
+                        optRw.Visible = true;
+                        DataTable dt1 = DBClass.getDataTable("select * from Pharmacy_Users where isActive=1");
+                        ddloprators.DataSource = dt1;
+                        ddloprators.DataTextField = "UserName";
+                        ddloprators.DataValueField = "UserID";
+                        ddloprators.Items.Add(new ListItem() { Text = "All", Value = "0" });
+                        ddloprators.DataBind();
+                    }
+
+                    object valusets;
+                    valusets = DBClass.GetValueSet("Patient Type");
+                    ddlPatientType.DataSource = valusets;
+                    ddlPatientType.DataTextField = "DataValue_Description";
+                    ddlPatientType.DataValueField = "DataValue_Name";
+                    ddlPatientType.Items.Add(new ListItem() { Text = "Select Type", Value = "0" });
+                    ddlPatientType.DataBind();
+                    optRw.Visible = true;
+
+
+
+
+                    // ADDING NEW WAREHOUSE
+                    object valuset;
+                    ddlwareHouse.DataSource = GetUserWarehouses();
+                    ddlwareHouse.DataTextField = "Text";
+                    ddlwareHouse.DataValueField = "Value";
+                    ddlwareHouse.Items.Clear();
+                    ddlwareHouse.Items.Add(new ListItem() { Text = "All", Value = "0" });
+                    ddlwareHouse.DataBind();
+                    Stock_Movement.Visible = true;
+
+
+                    ddlwareHouse.Visible = true;
+                    lblWarehouse.Visible = true;
+
+                    lbItemCategory.Visible = false;
+                    ddlItemCategory.Visible = false;
+
+
+
+                    DataBaseDataContext dbs = new DataBaseDataContext(DBClass.ConnectionString());
+                    var serviceList = (from sl in dbs.INV_Items
+                                       where sl.Active == true && sl.IsPharmacyItem == true
+                                       select new { sl.Item_ID, sl.Description }).ToList();
+
+                    ddlItemName.DataSource = serviceList;
+                    ddlItemName.DataValueField = "Item_ID";
+                    ddlItemName.DataTextField = "Description";
+                    ddlItemName.Items.Add(new ListItem() { Text = "All", Value = "0" });
+                    ddlItemName.DataBind();
+
+
+                }
                 else if (this.PageTitle == "CathLabStockInHand")
                 {
                     string x = "Cath Lab Stock in Hand Report";

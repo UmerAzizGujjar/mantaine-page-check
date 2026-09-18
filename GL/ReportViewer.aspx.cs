@@ -250,8 +250,8 @@ namespace PMS
                     rd.SetParameterValue("CompanyName", AppConfig.Company_Name);
                     rd.SetParameterValue("Title", Title);
                     rd.SetParameterValue("UserName", AppConfig.UserName);
-                 
-                } 
+
+                }
             }
             else if (reportName == "Voucher_GIN")
             {
@@ -3118,6 +3118,36 @@ namespace PMS
                     rd.SetParameterValue("CompanyLogo", logoPath);
                     rd.Subreports[0].RecordSelectionFormula = "{spSaleReport;1.TotalAmount} < 0";
                 }
+            }
+
+
+            else if (reportName == "InPatientPharmacySaleReport")
+            {
+
+                var logoPath = DBClass.getField("SELECT dbo.GetCompanyLogo()");
+
+                string rptFileName = "Pharmacy/rptInPatientPharmacySaleReport.rpt";
+                //bool CheckSummary = Convert.ToBoolean(Request.QueryString["Summary"]);
+               
+                string StartDateTime = Request.QueryString["StartDateTime"].ToString();
+                string EndDateTime = Request.QueryString["EndDateTime"].ToString();
+                string ItemID = Request.QueryString["ItemID"].ToString();
+                string PatType = Request.QueryString["Patient_Type"].ToString();
+
+
+                reportPath += rptFileName;
+                rd.Load(reportPath);
+                rd.SetParameterValue("@FromDate", StartDateTime);
+                rd.SetParameterValue("@ToDate", EndDateTime);
+                rd.SetParameterValue("@Item_ID", ItemID);
+                rd.SetParameterValue("@Warehouse", Request.QueryString["WareHouse"]);
+                rd.SetParameterValue("CompanyName", AppConfig.Company_Name);
+                rd.SetParameterValue("Title", reportTitle);
+                rd.SetParameterValue("@UserId", Request.QueryString["Operator"]);
+                rd.SetParameterValue("@Patient_Category", PatType);
+                rd.SetParameterValue("CompanyLogo", logoPath);
+
+
             }
             else if (reportName == "PharmacySaleReport_PaymentWise")
             {
