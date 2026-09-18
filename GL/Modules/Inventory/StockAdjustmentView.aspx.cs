@@ -1,8 +1,12 @@
 ﻿using System;
+using System.Collections.Generic;
+using System.Globalization;
 using System.Linq;
 using System.Web;
 using System.Web.Services;
 using System.Web.UI.WebControls;
+using Newtonsoft.Json;
+using Newtonsoft.Json.Linq;
 
 namespace PMS.Inventory
 {
@@ -130,6 +134,196 @@ Rate = ISA.Rate,
             catch (Exception ex)
             {
                 throw;
+            }
+        }
+
+        // ================= STOCK ADJUSTMENT CHANGE HISTORY (INV_Stock_Adjustment_Logs) =================
+
+        private static string StrVal(object v)
+        {
+            if (v == null) return "";
+            return Convert.ToString(v, CultureInfo.InvariantCulture);
+        }
+
+        private static string NumVal(object v)
+        {
+            if (v == null) return "";
+            try { return Convert.ToDecimal(v).ToString("0.##", CultureInfo.InvariantCulture); }
+            catch { return ""; }
+        }
+
+        private static string DateVal(object v)
+        {
+            if (v == null) return "";
+            try { return Convert.ToDateTime(v).ToString("yyyy-MM-dd", CultureInfo.InvariantCulture); }
+            catch { return ""; }
+        }
+
+        private static JToken ParseLogJson(string json)
+        {
+            if (string.IsNullOrWhiteSpace(json))
+                return null;
+
+            try { return JsonConvert.DeserializeObject<JToken>(json); }
+            catch { return null; }
+        }
+
+        private static object BuildStockAdjMasterSnapshot(INV_Stock_Adjustment adj, DataBaseDataContext db)
+        {
+            string warehouseName = "";
+            if (!string.IsNullOrEmpty(adj.Ware_House))
+            {
+                try { warehouseName = db.GetDataValueName("Ware House", adj.Ware_House) ?? ""; }
+                catch { warehouseName = ""; }
+            }
+
+            string reasonName = "";
+            if (!string.IsNullOrEmpty(adj.Reason_Why))
+            {
+                try { reasonName = db.GetDataValueName("Reason Needed", adj.Reason_Why) ?? ""; }
+                catch { reasonName = ""; }
+            }
+
+            var snap = new Dictionary<string, string>();
+            snap["Adjustment_No"] = adj.Adjustment_No.HasValue ? adj.Adjustment_No.Value.ToString() : "";
+            snap["Adjustment_Date"] = DateVal(adj.Adjustment_Date);
+            snap["Ware_House"] = warehouseName;
+            snap["Status"] = StrVal(adj.Status);
+            snap["Reason_Why"] = reasonName;
+            snap["Batch_No"] = StrVal(adj.Batch_No);
+            snap["Expire_Date"] = DateVal(adj.Expire_Date);
+            snap["Remarks"] = StrVal(adj.Remarks);
+            snap["Update_Time"] = DateVal(adj.Update_Time);
+            return snap;
+        }
+
+        private static object BuildStockAdjDetailSnapshot(DataBaseDataContext db, INV_Stock_Adjustment adj)
+        {
+            string itemName = "";
+            if (!string.IsNullOrEmpty(adj.Item_Id))
+            {
+                int itemId;
+                if (int.TryParse(adj.Item_Id, out itemId))
+                {
+                    var itm = db.INV_Items.Where(x => x.Item_ID == itemId)
+                                           .Select(x => new { x.Description })
+                                           .FirstOrDefault();
+                    if (itm != null) itemName = itm.Description ?? "";
+                }
+            }
+
+            var items = new List<object>();
+            items.Add(new
+            {
+                Item_Code = StrVal(adj.Item_Code),
+                Item_Name = itemName,
+                Qty = NumVal(adj.Qty),
+                Rate = NumVal(adj.Rate),
+                Amount = NumVal(adj.Amount)
+            });
+
+            return new { Items = items };
+        }
+
+        [WebMethod]
+        public static string GetSTOCKADJLogs(int adjId)
+        {
+            try
+            {
+                using (var db = new DataBaseDataContext())
+                {
+                    var logRows = (from l in db.INV_Stock_Adjustment_Logs
+                                   join u in db.aspnet_Users on l.Loged_By equals u.UserId into userJoin
+                                   from u in userJoin.DefaultIfEmpty()
+                                   where l.Adjustment_Id == adjId
+                                   orderby l.Log_Time, l.Log_Id
+                                   select new
+                                   {
+                                       l.Log_Id,
+                                       l.Log_Time,
+                                       l.Master_Log,
+                                       l.Details_Log,
+                                       UserName = u != null ? u.UserName : null
+                                   }).ToList();
+
+                    var logs = logRows.Select(r => new
+                    {
+                        Log_Id = r.Log_Id,
+                        TimeText = r.Log_Time.HasValue ? r.Log_Time.Value.ToString("dd MMM yyyy hh:mm tt") : "",
+                        UserName = string.IsNullOrEmpty(r.UserName) ? "" : r.UserName,
+                        Master = ParseLogJson(r.Master_Log),
+                        Details = ParseLogJson(r.Details_Log)
+                    }).ToList();
+
+                    var adj = db.INV_Stock_Adjustments.FirstOrDefault(x => x.Adjustment_ID == adjId);
+
+                    object currentMaster = null;
+                    object currentDetails = null;
+
+                    if (adj != null)
+                    {
+                        currentMaster = BuildStockAdjMasterSnapshot(adj, db);
+                        currentDetails = BuildStockAdjDetailSnapshot(db, adj);
+                    }
+
+                    var approvalRows = (from a in db.Sys_Approval_Logs
+                                        join st in db.Sys_Approval_Stage_Masters on a.Approval_Stage_ID equals st.Stage_ID into stageJoin
+                                        from st in stageJoin.DefaultIfEmpty()
+                                        join au in db.aspnet_Users on a.Approve_By equals au.UserId into apprJoin
+                                        from au in apprJoin.DefaultIfEmpty()
+                                        join ru in db.aspnet_Users on a.Rejected_By equals ru.UserId into rejJoin
+                                        from ru in rejJoin.DefaultIfEmpty()
+                                        where a.Entry_ID == adjId && a.Form_ID == 3
+                                        orderby a.Approve_Date, a.ID
+                                        select new
+                                        {
+                                            a.ID,
+                                            StageName = st != null ? st.Stage_Name : null,
+                                            a.Entry_Status,
+                                            a.IsFinalAprroval,
+                                            a.IsRejected,
+                                            a.Is_ByPassed,
+                                            a.IsEditableAfterApproval,
+                                            Approver = au != null ? au.UserName : null,
+                                            Rejector = ru != null ? ru.UserName : null,
+                                            a.Approve_Date,
+                                            a.Rejected_Date,
+                                            a.Approval_Remarks,
+                                            a.Rejection_Remarks,
+                                            a.Remarks,
+                                            a.From_Name
+                                        }).ToList();
+
+                    var approvals = approvalRows.Select(r => new
+                    {
+                        ID = r.ID,
+                        StageName = StrVal(r.StageName),
+                        Status = StrVal(r.Entry_Status),
+                        IsFinal = r.IsFinalAprroval ?? false,
+                        IsRejected = r.IsRejected ?? false,
+                        IsByPassed = r.Is_ByPassed ?? false,
+                        IsEditableAfterApproval = r.IsEditableAfterApproval ?? false,
+                        User = !string.IsNullOrEmpty(r.Rejector) ? r.Rejector : StrVal(r.Approver),
+                        DateText = (r.Rejected_Date ?? r.Approve_Date).HasValue
+                            ? (r.Rejected_Date ?? r.Approve_Date).Value.ToString("dd MMM yyyy hh:mm tt")
+                            : "",
+                        Remarks = !string.IsNullOrEmpty(r.Rejection_Remarks)
+                            ? r.Rejection_Remarks
+                            : (!string.IsNullOrEmpty(r.Approval_Remarks) ? r.Approval_Remarks : StrVal(r.Remarks)),
+                        FromName = StrVal(r.From_Name)
+                    }).ToList();
+
+                    return JsonConvert.SerializeObject(new
+                    {
+                        logs = logs,
+                        current = new { master = currentMaster, details = currentDetails },
+                        approvals = approvals
+                    });
+                }
+            }
+            catch (Exception ex)
+            {
+                return JsonConvert.SerializeObject(new { error = ex.Message });
             }
         }
     }
