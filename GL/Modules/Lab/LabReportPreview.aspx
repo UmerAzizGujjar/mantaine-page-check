@@ -573,6 +573,7 @@
                     var test_list = [];
                     var Rem = CKEDITOR.instances.txtMaster_Remarks.getData();
                     table.find('tr:gt(0)').each(function (key, value) {
+                        if ($(value).hasClass('ckd-epi-row')) return;
                         //new code 
 
                         var Rem2 = CKEDITOR.instances['txtfixedTypeGroup' + key + ''].getData();
@@ -759,6 +760,7 @@
 
             });
             $('#tblgroupTestlist tbody td').click(function () {
+                if ($(this).closest('tr').hasClass('ckd-epi-row')) return;
 
                 //var cid = $(this).attr('id');
                 //alert(cid);
@@ -1857,6 +1859,72 @@
         var arrayTemp = '';
         var bill_detailid = '';
         var detail_id = '';
+        var ckdEpiActive = false;
+
+        function ckdEpiGetCreatinine() {
+            var val = '';
+            $('#tblgroupTestlist tbody tr').each(function () {
+                var name = $(this).find('td:eq(1)').text().trim().toLowerCase();
+                if (name.indexOf('creatinine') !== -1) {
+                    var t = $(this).find('td:eq(3) .editable-div').text().trim();
+                    if (t) val = t;
+                }
+            });
+            return val;
+        }
+
+        function ckdEpiFindTargetRow() {
+            var target = null;
+            $('#tblgroupTestlist tbody tr').each(function () {
+                if ($(this).hasClass('ckd-epi-row')) return;
+                var name = $(this).find('td:eq(1)').text().trim().toLowerCase();
+                if (name.indexOf('gfr') !== -1) {
+                    target = $(this);
+                    return false;
+                }
+            });
+            return target;
+        }
+
+        // CKD-EPI 2021 race-free. Reference: 60M Scr1.2=69.2, 60F Scr1.2=51.8, 40M Scr1.0=97.6
+        function ckdEpiCompute(scr, age, female) {
+            var k = female ? 0.7 : 0.9;
+            var a = female ? -0.241 : -0.302;
+            return 142 * Math.pow(Math.min(scr / k, 1), a) * Math.pow(Math.max(scr / k, 1), -1.200) * Math.pow(0.9938, age) * (female ? 1.012 : 1);
+        }
+
+        function renderCkdEpi() {
+            $('#ckdEpiRow').remove();
+            var scr = parseFloat(ckdEpiGetCreatinine());
+            var age = parseInt(($('#<%= vLbl_Age.ClientID %>').text() || '').replace(/[^0-9]/g, ''), 10);
+            var female = /^f/i.test(($('#<%= vLbl_Gender.ClientID %>').text() || '').trim());
+            var value = (isNaN(scr) || scr <= 0 || isNaN(age) || age <= 0) ? '' : ckdEpiCompute(scr, age, female).toFixed(1);
+
+            var target = ckdEpiFindTargetRow();
+            if (target) {
+                var $val = target.find('td:eq(3) .editable-div');
+                if ($val.length && $val.attr('contenteditable') && value) {
+                    $val.text(value);
+                    return;
+                }
+            }
+
+            var display = value ? value + ' mL/min/1.73m\u00B2' : '--';
+            var row = '<tr id="ckdEpiRow" class="ckd-epi-row"><td style="display:none"></td>' +
+                '<td><b>eGFR (CKD-EPI)</b></td><td></td>' +
+                '<td><span id="ckdEpiValue">' + display + '</span></td>' +
+                '<td></td><td></td><td></td></tr>';
+            $('#tblgroupTestlist tbody').append(row);
+        }
+
+        $(function () {
+            $(document).on('input keyup', '#tblgroupTestlist .editable-div', function () {
+                if (ckdEpiActive) {
+                    renderCkdEpi();
+                }
+            });
+        });
+
         function EditData($this) {
             debugger;
             var Lab_Test_Detail_ID = '';
@@ -1864,6 +1932,7 @@
             var LabID = $($($this).parents('tr')[0]).find('td:nth-child(2)')[0].innerText;
             $("#hdnLab_Test_ID").val(LabID);
             var row = $($this).parents('tr')[0];
+            var testName = $($($this).parents('tr')[0]).find('td:nth-child(4)').text().trim();
             CatID = $($(row).find('td input[name=labtestDID]')[0]).val();
 
             globalTestId = $($(row).find('td input[name=labtestDID]')[0]).val();
@@ -2320,6 +2389,13 @@
                 }
 
 
+
+                ckdEpiActive = testName.toLowerCase().indexOf('renal function test') !== -1;
+                if (ckdEpiActive) {
+                    renderCkdEpi();
+                } else {
+                    $('#ckdEpiRow').remove();
+                }
 
                 $('#myModal').modal({
                     backdrop: 'static'
