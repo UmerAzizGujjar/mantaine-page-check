@@ -87,7 +87,10 @@ namespace PMS.Modules.Administrator
                             Hospital_Share = d.Hospital_Share ?? 0,
                             Doctor_Share = d.Doctor_Share ?? 0,
                             Expiry_Date = d.Expiry_Date.HasValue ? d.Expiry_Date.Value.ToString("dd MMM yyyy") : "",
-                            IsActive = d.IsActive ?? false
+                            IsActive = d.IsActive ?? false,
+                            IsTime = d.IsTime ?? false,
+                            Start_Time = d.Start_Time.HasValue ? d.Start_Time.Value.ToString(@"hh\:mm") : "",
+                            End_Time = d.End_Time.HasValue ? d.End_Time.Value.ToString(@"hh\:mm") : ""
                         })
                         .ToList();
 
@@ -127,6 +130,14 @@ namespace PMS.Modules.Administrator
                             existing.Doctor_Share = policy.Doctor_Share;
                             existing.Expiry_Date = policy.Expiry_Date;
                             existing.IsActive = policy.IsActive;
+                            existing.IsTime = policy.IsTime;
+                            existing.Start_Time = string.IsNullOrEmpty(policy.Start_Time)
+                                                    ? (TimeSpan?)null
+                                                    : TimeSpan.Parse(policy.Start_Time);
+                            existing.End_Time = string.IsNullOrEmpty(policy.End_Time)
+                                                    ? (TimeSpan?)null
+                                                    : TimeSpan.Parse(policy.End_Time);
+
                             existing.Updated_At = DateTime.Now;
                             existing.Updated_By = AppConfig.UserID;
                         }
@@ -143,6 +154,14 @@ namespace PMS.Modules.Administrator
                                 Doctor_Share = policy.Doctor_Share,
                                 Expiry_Date = policy.Expiry_Date,
                                 IsActive = policy.IsActive,
+                                IsTime = policy.IsTime,
+                                Start_Time = string.IsNullOrEmpty(policy.Start_Time)
+                                                ? (TimeSpan?)null
+                                                : TimeSpan.Parse(policy.Start_Time),
+                                End_Time = string.IsNullOrEmpty(policy.End_Time)
+                                                ? (TimeSpan?)null
+                                                : TimeSpan.Parse(policy.End_Time),
+
                                 Created_At = DateTime.Now,
                                 Is_Cancel = false,
                                 Created_By = AppConfig.UserID
@@ -176,6 +195,9 @@ namespace PMS.Modules.Administrator
             public bool IsActive { get; set; }
             public string Created_By { get; set; }
             public string Updated_By { get; set; }
+            public bool IsTime { get; set; }
+            public string Start_Time { get; set; }
+            public string End_Time { get; set; }
         }
     }
 }
