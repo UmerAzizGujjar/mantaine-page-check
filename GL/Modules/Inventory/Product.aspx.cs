@@ -533,6 +533,8 @@ List<BatchNum> batchList, List<PatientTypeList> PatientTypeList, List<WarehouseM
                     if (obj == null)
                         return "Error";
 
+                    INVItemLogHelper.WriteItemChangeLog(db, obj, new System.Web.Script.Serialization.JavaScriptSerializer());
+
                     obj.Description = Desc;
                     obj.Active = Convert.ToBoolean(Active);
                     obj.Is_Active = Convert.ToBoolean(Active);
