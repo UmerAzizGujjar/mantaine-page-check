@@ -6812,6 +6812,7 @@
       <Column Name="Expense" Type="System.Int32" DbType="Int" CanBeNull="true" />
       <Column Name="CGS" Type="System.Int32" DbType="Int" CanBeNull="true" />
       <Column Name="BalanceAccount" Type="System.Int32" DbType="Int" CanBeNull="true" />
+      <Column Name="CostCenter" Type="System.String" DbType="NVarChar(50)" CanBeNull="true" />
     </Type>
   </Table>
   <Table Name="dbo.Igp_Detail" Member="Igp_Details">

@@ -150263,6 +150263,8 @@ namespace PMS
 
         private System.Nullable<int> _BalanceAccount;
 
+        private string _CostCenter;
+
         #region Extensibility Method Definitions
         partial void OnLoaded();
         partial void OnValidate(System.Data.Linq.ChangeAction action);
@@ -150299,6 +150301,8 @@ namespace PMS
         partial void OnCGSChanged();
         partial void OnBalanceAccountChanging(System.Nullable<int> value);
         partial void OnBalanceAccountChanged();
+        partial void OnCostCenterChanging(string value);
+        partial void OnCostCenterChanged();
         #endregion
 
         public ClinicalAccountCategory()
@@ -150622,6 +150626,26 @@ namespace PMS
                     this._BalanceAccount = value;
                     this.SendPropertyChanged("BalanceAccount");
                     this.OnBalanceAccountChanged();
+                }
+            }
+        }
+
+        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_CostCenter", DbType = "NVarChar(50)")]
+        public string CostCenter
+        {
+            get
+            {
+                return this._CostCenter;
+            }
+            set
+            {
+                if ((this._CostCenter != value))
+                {
+                    this.OnCostCenterChanging(value);
+                    this.SendPropertyChanging();
+                    this._CostCenter = value;
+                    this.SendPropertyChanged("CostCenter");
+                    this.OnCostCenterChanged();
                 }
             }
         }
