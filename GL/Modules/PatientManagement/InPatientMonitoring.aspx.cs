@@ -1367,6 +1367,7 @@ namespace PMS
                                     existing.Frequency = oIn_Patient_Medicine.Frequency;
                                     existing.Dosage_Qty = oIn_Patient_Medicine.Dosage_Qty;
                                     existing.Rtn_Qty = rtnQty;
+                                    if (existing.Rcv_Qty != recQty || (existing.Issue_Rcvd_Qty ?? 0) != issueRcvdQty) { existing.Receive_Time = DateTime.Now; }
                                     existing.Rcv_Qty = recQty;
                                     existing.Req_Qty = issueQty;
                                     existing.Issue_Rcvd_Qty = hasIssueRcvd ? issueRcvdQty : (decimal?)null;
@@ -1433,7 +1434,9 @@ namespace PMS
                                 High_Risk_Drug = oIn_Patient_Medicine.High_Risk,
                                 Max_PRN_Dose = oIn_Patient_Medicine.Max_PRN,
                                 is_rejected = false,
-                                Status = null
+                                Status = null,
+                                Request_Time = DateTime.Now,
+                                Receive_Time = (recQty > 0 || (hasIssueRcvd && issueRcvdQty > 0)) ? DateTime.Now : (System.DateTime?)null
                             };
 
                             if (!string.IsNullOrEmpty(oIn_Patient_Medicine.Start_Date_Time) &&

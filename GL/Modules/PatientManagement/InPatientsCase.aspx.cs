@@ -4761,7 +4761,9 @@ namespace PMS
                                 Req_Qty = decimal.TryParse(newMed.Issue_Qty, out decimal issueQty) ? issueQty : 0,
                                 Rcv_Qty = decimal.TryParse(newMed.Rec_Qty, out decimal recQty) ? recQty : 0,
                                 Rtn_Qty = decimal.TryParse(newMed.Rtn_Qty, out decimal rtnQty) ? rtnQty : 0,
-                                Issue_Rcvd_Qty = decimal.TryParse(newMed.Issue_Rcvd_Qty, out decimal issueRcvdQty) ? issueRcvdQty : (decimal?)null
+                                Issue_Rcvd_Qty = decimal.TryParse(newMed.Issue_Rcvd_Qty, out decimal issueRcvdQty) ? issueRcvdQty : (decimal?)null,
+                                Request_Time = DateTime.Now,
+                                Receive_Time = (recQty > 0 || issueRcvdQty > 0) ? DateTime.Now : (System.DateTime?)null
                             };
 
                             if (!string.IsNullOrEmpty(newMed.Start_Date_Time) && newMed.Start_Date_Time != "null" && newMed.Start_Date_Time != "1/1/0001")
@@ -4803,6 +4805,7 @@ namespace PMS
                         {
                             System.Diagnostics.Debug.WriteLine("UPDATING qty for medicine: " + existingMedicine.Medicine_Name);
                             existingMedicine.Req_Qty = issueQty;
+                            if (existingMedicine.Rcv_Qty != recQty || (existingMedicine.Issue_Rcvd_Qty ?? 0) != issueRcvd) { existingMedicine.Receive_Time = DateTime.Now; }
                             existingMedicine.Rcv_Qty = recQty;
                             existingMedicine.Rtn_Qty = rtnQty;
                             existingMedicine.Issue_Rcvd_Qty = issueRcvd;

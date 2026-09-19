@@ -7612,6 +7612,9 @@
       <Column Name="Issue_Rcvd_Qty" Type="System.Decimal" DbType="Decimal(18,2)" CanBeNull="true" />
       <Column Name="Unlisted_Med" Type="System.Boolean" DbType="Bit" CanBeNull="true" />
       <Column Name="close_time" Type="System.DateTime" DbType="DateTime" CanBeNull="true" />
+      <Column Name="Request_Time" Type="System.DateTime" DbType="DateTime" CanBeNull="true" />
+      <Column Name="Receive_Time" Type="System.DateTime" DbType="DateTime" CanBeNull="true" />
+      <Column Name="Issue_Date" Type="System.DateTime" DbType="DateTime" CanBeNull="true" />
     </Type>
   </Table>
   <Table Name="dbo.DataValues" Member="DataValues">

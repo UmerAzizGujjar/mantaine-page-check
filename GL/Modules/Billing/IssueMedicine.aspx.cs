@@ -1124,6 +1124,10 @@ namespace PMS
                         {
                             decimal currentRcv = medicineRecord.Rcv_Qty ?? 0;
                             medicineRecord.Rcv_Qty = currentRcv + receivedQty;
+                            if (medicineRecord.Issue_Date == null)
+                            {
+                                medicineRecord.Issue_Date = DateTime.Now;
+                            }
                             db.SubmitChanges();
                         }
                     }

@@ -51,9 +51,11 @@ namespace PMS
                                         where AB.IsPharmacy == true &&
                                               (string.IsNullOrEmpty(warehouseId) || warehouseId == "0" || AB.Ware_House == warehouseId) &&
                                               (
+                                                  (AB.Seq_InvoiceNo != null && AB.Seq_InvoiceNo.Contains(searchValue)) ||
                                                   (AB.Customer_Name != null && AB.Customer_Name.Contains(searchValue)) ||
                                                   (AB.Referred_By_value != null && AB.Referred_By_value.Contains(searchValue)) ||
                                                   (AB.Received_Amount != null && AB.Received_Amount.ToString().Contains(searchValue)) ||
+                                                  (AB.FBR_No != null && AB.FBR_No.Contains(searchValue)) ||
                                                   _dbContext.Reg_patients.Any(rg =>rg.pat_id == AB.Patient_ID && rg.mr_no_sequence != null && rg.mr_no_sequence.Contains(searchValue))
                                               )
                                         select new

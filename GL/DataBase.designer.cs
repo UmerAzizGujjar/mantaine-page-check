@@ -168627,6 +168627,12 @@ namespace PMS
 
         private System.Nullable<System.DateTime> _close_time;
 
+        private System.Nullable<System.DateTime> _Request_Time;
+
+        private System.Nullable<System.DateTime> _Receive_Time;
+
+        private System.Nullable<System.DateTime> _Issue_Date;
+
         #region Extensibility Method Definitions
         partial void OnLoaded();
         partial void OnValidate(System.Data.Linq.ChangeAction action);
@@ -168709,6 +168715,12 @@ namespace PMS
         partial void OnUnlisted_MedChanged();
         partial void Onclose_timeChanging(System.Nullable<System.DateTime> value);
         partial void Onclose_timeChanged();
+        partial void OnRequest_TimeChanging(System.Nullable<System.DateTime> value);
+        partial void OnRequest_TimeChanged();
+        partial void OnReceive_TimeChanging(System.Nullable<System.DateTime> value);
+        partial void OnReceive_TimeChanged();
+        partial void OnIssue_DateChanging(System.Nullable<System.DateTime> value);
+        partial void OnIssue_DateChanged();
         #endregion
 
         public In_Patient_Medicine()
@@ -169492,6 +169504,66 @@ namespace PMS
                     this._close_time = value;
                     this.SendPropertyChanged("close_time");
                     this.Onclose_timeChanged();
+                }
+            }
+        }
+
+        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_Request_Time", DbType = "DateTime")]
+        public System.Nullable<System.DateTime> Request_Time
+        {
+            get
+            {
+                return this._Request_Time;
+            }
+            set
+            {
+                if ((this._Request_Time != value))
+                {
+                    this.OnRequest_TimeChanging(value);
+                    this.SendPropertyChanging();
+                    this._Request_Time = value;
+                    this.SendPropertyChanged("Request_Time");
+                    this.OnRequest_TimeChanged();
+                }
+            }
+        }
+
+        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_Receive_Time", DbType = "DateTime")]
+        public System.Nullable<System.DateTime> Receive_Time
+        {
+            get
+            {
+                return this._Receive_Time;
+            }
+            set
+            {
+                if ((this._Receive_Time != value))
+                {
+                    this.OnReceive_TimeChanging(value);
+                    this.SendPropertyChanging();
+                    this._Receive_Time = value;
+                    this.SendPropertyChanged("Receive_Time");
+                    this.OnReceive_TimeChanged();
+                }
+            }
+        }
+
+        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_Issue_Date", DbType = "DateTime")]
+        public System.Nullable<System.DateTime> Issue_Date
+        {
+            get
+            {
+                return this._Issue_Date;
+            }
+            set
+            {
+                if ((this._Issue_Date != value))
+                {
+                    this.OnIssue_DateChanging(value);
+                    this.SendPropertyChanging();
+                    this._Issue_Date = value;
+                    this.SendPropertyChanged("Issue_Date");
+                    this.OnIssue_DateChanged();
                 }
             }
         }
