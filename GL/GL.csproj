@@ -3615,6 +3615,7 @@
     <Compile Include="Modules\Inventory\ServiceView.aspx.designer.cs">
       <DependentUpon>ServiceView.aspx</DependentUpon>
     </Compile>
+    <Compile Include="Modules\Inventory\INVItemLogHelper.cs" />
     <Compile Include="Modules\Lab\DispatchView.aspx.cs">
       <DependentUpon>DispatchView.aspx</DependentUpon>
       <SubType>ASPXCodeBehind</SubType>

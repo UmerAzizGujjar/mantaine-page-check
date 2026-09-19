@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.IO;
 using System.Linq;
 using System.Web;
@@ -164,11 +165,122 @@ namespace PMS.Inventory
             }
         }
 
+        // ================= GIR CHANGE LOG SNAPSHOT HELPERS =================
+
+        private static string StrVal(object v)
+        {
+            if (v == null) return "";
+            return Convert.ToString(v, CultureInfo.InvariantCulture);
+        }
+
+        private static string NumVal(object v)
+        {
+            if (v == null) return "";
+            try { return Convert.ToDecimal(v).ToString("0.##", CultureInfo.InvariantCulture); }
+            catch { return ""; }
+        }
+
+        private static string DateVal(object v)
+        {
+            if (v == null) return "";
+            try { return Convert.ToDateTime(v).ToString("yyyy-MM-dd", CultureInfo.InvariantCulture); }
+            catch { return ""; }
+        }
+
+        private static Dictionary<string, string> BuildGIRMasterSnapshot(PMS.MaterialIssueRequest gir, DataBaseDataContext dbc)
+        {
+            string deptName = "";
+            if (!string.IsNullOrEmpty(gir.Department))
+            {
+                try { deptName = dbc.GetDataValueName("Department", gir.Department) ?? ""; }
+                catch { deptName = ""; }
+            }
+
+            string warehouseName = "";
+            if (!string.IsNullOrEmpty(gir.InventoryOrganization))
+            {
+                try { warehouseName = dbc.GetDataValueName("Ware House", gir.InventoryOrganization) ?? ""; }
+                catch { warehouseName = ""; }
+            }
+
+            var snap = new Dictionary<string, string>();
+            snap["Gir_No"] = StrVal(gir.Request_No);
+            snap["Gir_Date"] = DateVal(gir.MIRDate);
+            snap["Priority"] = gir.Priority == "1" ? "High" : "Low";
+            snap["Department"] = deptName;
+            snap["Warehouse"] = warehouseName;
+            snap["Remarks"] = StrVal(gir.Remarks);
+            snap["Status"] = StrVal(gir.Status);
+            snap["Closing_Remarks"] = StrVal(gir.Closing_Remarks);
+            snap["Is_Closed"] = gir.Is_Closed_GIR.HasValue && gir.Is_Closed_GIR.Value ? "Yes" : "No";
+            return snap;
+        }
+
+        private static object BuildGIRDetailSnapshot(DataBaseDataContext dbc, long girId)
+        {
+            var rows = dbc.MaterialIssueRequest_Details.Where(t => t.MaterialRequest_Id == girId).ToList();
+
+            var ids = rows.Where(r => r.Item_Id.HasValue).Select(r => (int)r.Item_Id.Value).Distinct().ToList();
+            var itemNames = new Dictionary<int, string>();
+            var itemCodes = new Dictionary<int, string>();
+            foreach (var id in ids)
+            {
+                var itm = dbc.INV_Items.Where(x => x.Item_ID == id)
+                                       .Select(x => new { x.Description, x.Item_Code })
+                                       .FirstOrDefault();
+                itemNames[id] = itm != null ? (itm.Description ?? "") : "";
+                itemCodes[id] = itm != null ? (itm.Item_Code ?? "") : "";
+            }
+
+            return new
+            {
+                Items = rows.Select(i =>
+                {
+                    string name = "";
+                    string code = "";
+                    if (i.Item_Id.HasValue)
+                    {
+                        int key = (int)i.Item_Id.Value;
+                        if (itemNames.ContainsKey(key)) name = itemNames[key];
+                        if (itemCodes.ContainsKey(key)) code = itemCodes[key];
+                    }
+
+                    return new
+                    {
+                        Item_Name = name,
+                        Item_Code = code,
+                        MIRQty = NumVal(i.MIRQty),
+                        Last_MIR_Qty = NumVal(i.Last_MIR_Qty),
+                        Last_SIN_Qty = NumVal(i.Last_SIN_Qty),
+                        Remarks = StrVal(i.Remarks),
+                        Last_GIR_Date = DateVal(i.Last_GIR_Date)
+                    };
+                }).ToList()
+            };
+        }
+
+        private static void WriteGIRChangeLog(DataBaseDataContext dbc, PMS.MaterialIssueRequest gir, JavaScriptSerializer serializer)
+        {
+            long girId = gir.MaterialRequest_Id;
+
+            GIR_Log log = new GIR_Log
+            {
+                Gir_Id = girId,
+                Master_Log = serializer.Serialize(BuildGIRMasterSnapshot(gir, dbc)),
+                Details_Log = serializer.Serialize(BuildGIRDetailSnapshot(dbc, girId)),
+                Loged_By = AppConfig.UserID,
+                Log_Time = DateTime.Now
+            };
+
+            dbc.GIR_Logs.InsertOnSubmit(log);
+        }
+
         [WebMethod]
 
         public static string SaveMIR(int MIRId, string MIRNum, string MIRDate, string Pirority, string dept, string remarks, string WareHouse, string btnValue)
         {
             DataBaseDataContext db = new DataBaseDataContext();
+            JavaScriptSerializer oJS = new JavaScriptSerializer();
             PMS.MaterialIssueRequest obj = new PMS.MaterialIssueRequest();
             var MIRid = string.Empty;
             if (btnValue == "Save" || btnValue == "Replicate")
@@ -188,6 +300,8 @@ namespace PMS.Inventory
             else
             {
                 obj = (from data in db.MaterialIssueRequests.Where(x => x.MaterialRequest_Id.Equals(MIRId)) select data).FirstOrDefault();
+                WriteGIRChangeLog(db, obj, oJS);
+
                 obj.Request_No = Convert.ToInt32(MIRNum);
                 obj.MIRDate = Convert.ToDateTime(MIRDate);
                 obj.Priority = Pirority;

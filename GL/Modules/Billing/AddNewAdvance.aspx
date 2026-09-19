@@ -80,6 +80,19 @@
         }
         window.open(url, '_blank');
     }
+    function PrintAdvanceThermal() {
+        debugger;
+        var reg_id = '<% =Request.QueryString["advID"] %>';
+        var locationInfo = window.location;
+        var url = "/ReportViewer.aspx?ReportName=PrintAdvanceThermalReport&Title=Advane Payment Thermal Print &Adv_IDs=" + reg_id;
+        if (!locationInfo.origin.includes('localhost')) {
+            var urlInfo = window.location.href.split('/');
+            var ip = urlInfo[2];
+            var foldername = urlInfo[3];
+            url = 'http://' + ip + '/' + foldername + "/ReportViewer.aspx?ReportName=PrintAdvanceThermalReport&Title=Advane Payment Thermal Print &Adv_IDs=" + reg_id;
+        }
+        window.open(url, '_blank');
+    }
 
     function LoadPatientDetails(advID) {
         debugger;
@@ -563,6 +576,9 @@
                     </div>
                     <div class="col-lg-2 col-md-2 col-sm-3">
                         <input type="button" id="btnPrint" class="btn btn-primry" onclick="PrintAdvance()" value="Print" />
+                    </div>
+                    <div class="col-lg-2 col-md-2 col-sm-3">
+                        <input type="button" id="btnPrint1" class="btn btn-primry" onclick="PrintAdvanceThermal()" value="Print2" />
                     </div>
                     <div class="col-lg-2 col-md-2 col-sm-3" id="divApproveContainer">
                         <input type="button" id="btnApprove" class="btn btn-primry" onclick="ApproveAdvance()" value="Approve" />

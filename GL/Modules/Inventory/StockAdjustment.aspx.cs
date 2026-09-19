@@ -2,6 +2,7 @@
 using System;
 using System.Collections.Generic;
 using System.Data;
+using System.Globalization;
 using System.Linq;
 using System.Web;
 using System.Web.Script.Serialization;
@@ -143,6 +144,101 @@ namespace PMS
             ddlReasonNeeded.DataBind();
         }
 
+        // ================= STOCK ADJUSTMENT CHANGE LOG HELPERS =================
+
+        private static string StrVal(object v)
+        {
+            if (v == null) return "";
+            return Convert.ToString(v, CultureInfo.InvariantCulture);
+        }
+
+        private static string NumVal(object v)
+        {
+            if (v == null) return "";
+            try { return Convert.ToDecimal(v).ToString("0.##", CultureInfo.InvariantCulture); }
+            catch { return ""; }
+        }
+
+        private static string DateVal(object v)
+        {
+            if (v == null) return "";
+            try { return Convert.ToDateTime(v).ToString("yyyy-MM-dd", CultureInfo.InvariantCulture); }
+            catch { return ""; }
+        }
+
+        private static Dictionary<string, string> BuildStockAdjMasterSnapshot(INV_Stock_Adjustment adj, DataBaseDataContext db)
+        {
+            string warehouseName = "";
+            if (!string.IsNullOrEmpty(adj.Ware_House))
+            {
+                try { warehouseName = db.GetDataValueName("Ware House", adj.Ware_House) ?? ""; }
+                catch { warehouseName = ""; }
+            }
+
+            string reasonName = "";
+            if (!string.IsNullOrEmpty(adj.Reason_Why))
+            {
+                try { reasonName = db.GetDataValueName("Reason Needed", adj.Reason_Why) ?? ""; }
+                catch { reasonName = ""; }
+            }
+
+            var snap = new Dictionary<string, string>();
+            snap["Adjustment_No"] = adj.Adjustment_No.HasValue ? adj.Adjustment_No.Value.ToString() : "";
+            snap["Adjustment_Date"] = DateVal(adj.Adjustment_Date);
+            snap["Ware_House"] = warehouseName;
+            snap["Status"] = StrVal(adj.Status);
+            snap["Reason_Why"] = reasonName;
+            snap["Batch_No"] = StrVal(adj.Batch_No);
+            snap["Expire_Date"] = DateVal(adj.Expire_Date);
+            snap["Remarks"] = StrVal(adj.Remarks);
+            snap["Update_Time"] = DateVal(adj.Update_Time);
+            return snap;
+        }
+
+        private static object BuildStockAdjDetailSnapshot(DataBaseDataContext db, INV_Stock_Adjustment adj)
+        {
+            string itemName = "";
+            if (!string.IsNullOrEmpty(adj.Item_Id))
+            {
+                int itemId;
+                if (int.TryParse(adj.Item_Id, out itemId))
+                {
+                    var itm = db.INV_Items.Where(x => x.Item_ID == itemId)
+                                           .Select(x => new { x.Description })
+                                           .FirstOrDefault();
+                    if (itm != null) itemName = itm.Description ?? "";
+                }
+            }
+
+            var items = new List<object>();
+            items.Add(new
+            {
+                Item_Code = StrVal(adj.Item_Code),
+                Item_Name = itemName,
+                Qty = NumVal(adj.Qty),
+                Rate = NumVal(adj.Rate),
+                Amount = NumVal(adj.Amount)
+            });
+
+            return new { Items = items };
+        }
+
+        private static void WriteSTOCKADJChangeLog(DataBaseDataContext db, INV_Stock_Adjustment adj, JavaScriptSerializer serializer)
+        {
+            if (adj == null) return;
+
+            INV_Stock_Adjustment_Log log = new INV_Stock_Adjustment_Log
+            {
+                Adjustment_Id = adj.Adjustment_ID,
+                Master_Log = serializer.Serialize(BuildStockAdjMasterSnapshot(adj, db)),
+                Details_Log = serializer.Serialize(BuildStockAdjDetailSnapshot(db, adj)),
+                Loged_By = AppConfig.UserID,
+                Log_Time = DateTime.Now
+            };
+
+            db.INV_Stock_Adjustment_Logs.InsertOnSubmit(log);
+        }
+
         protected void btnSave_Click(object sender, EventArgs e)
         {
             lblMessage.Text = "";
@@ -223,6 +319,9 @@ namespace PMS
                 Stock_Adj = (from tbl in db.INV_Stock_Adjustments
                              where tbl.Adjustment_ID == Convert.ToInt32(txtAdjustment_ID.Text)
                              select tbl).SingleOrDefault();
+
+                WriteSTOCKADJChangeLog(db, Stock_Adj, new System.Web.Script.Serialization.JavaScriptSerializer());
+
                 Stock_Adj.Updated_By = AppConfig.UserID;
                 Stock_Adj.Update_Time = DateTime.Now;
                 Stock_Adj.Adjustment_No = Convert.ToInt32(txtAdjustment_ID.Text);

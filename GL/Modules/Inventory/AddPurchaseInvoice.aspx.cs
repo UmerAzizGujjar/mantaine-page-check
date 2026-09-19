@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.Linq;
 using System.Web;
 using System.Web.Script.Serialization;
@@ -198,6 +199,145 @@ namespace PMS.Inventory
             var listPurchaseDetails = db.sp_GetGRNDetailByVendorId_DirectGRN(Convert.ToInt32(vendorId), Is_Direct).ToList();
             return (new JavaScriptSerializer()).Serialize(listPurchaseDetails);
         }
+        // ================= PURCHASE INVOICE CHANGE LOG HELPERS =================
+
+        private static string StrVal(object v)
+        {
+            if (v == null) return "";
+            return Convert.ToString(v, CultureInfo.InvariantCulture);
+        }
+
+        private static string NumVal(object v)
+        {
+            if (v == null) return "";
+            try { return Convert.ToDecimal(v).ToString("0.##", CultureInfo.InvariantCulture); }
+            catch { return ""; }
+        }
+
+        private static string DateVal(object v)
+        {
+            if (v == null) return "";
+            try { return Convert.ToDateTime(v).ToString("yyyy-MM-dd", CultureInfo.InvariantCulture); }
+            catch { return ""; }
+        }
+
+        private static Dictionary<string, string> BuildPIMasterSnapshot(Purchase_Invoice_Master pi, DataBaseDataContext db)
+        {
+            string vendorName = "";
+            if (!string.IsNullOrEmpty(pi.VendorId))
+            {
+                int vid;
+                if (int.TryParse(pi.VendorId, out vid))
+                {
+                    var vn = (from v in db.AP_Vendors where v.Vendor_ID == vid select v.Vendor_Name).FirstOrDefault();
+                    if (vn != null) vendorName = vn;
+                }
+            }
+
+            string currencyName = "";
+            if (!string.IsNullOrEmpty(pi.CurrencyId))
+            {
+                try { currencyName = db.GetDataValueName("Currency", pi.CurrencyId) ?? ""; }
+                catch { currencyName = ""; }
+            }
+
+            string invoiceTypeName = "";
+            if (!string.IsNullOrEmpty(pi.InvoiceTypeId))
+            {
+                try { invoiceTypeName = db.GetDataValueName("Invoice Type", pi.InvoiceTypeId) ?? ""; }
+                catch { invoiceTypeName = ""; }
+            }
+
+            var snap = new Dictionary<string, string>();
+            snap["InvoiceNum"] = pi.InvoiceNum.HasValue ? pi.InvoiceNum.Value.ToString() : "";
+            snap["Invoice_Type"] = invoiceTypeName;
+            snap["Invoice_Date"] = DateVal(pi.InvoiceDate);
+            snap["Vendor_Name"] = vendorName;
+            snap["Ref_Invoice_Num"] = StrVal(pi.RefInvoiceNum);
+            snap["SalTax_Invoice_Num"] = StrVal(pi.SalTaxInvocieNum);
+            snap["Accounting_Date"] = DateVal(pi.AccountingDate);
+            snap["Due_Date"] = DateVal(pi.DueDate);
+            snap["Currency"] = currencyName;
+            snap["ExRate"] = NumVal(pi.ExRate);
+            snap["Ex_Date"] = DateVal(pi.ExDate);
+            snap["Total_Invoice_Amount"] = NumVal(pi.Total_Invoice_Amount);
+            snap["Total_Advance_Adjusted"] = NumVal(pi.Total_Advance_Adjusted);
+            snap["Discount_Amount"] = NumVal(pi.Discount_Amount);
+            snap["Net_Amount"] = NumVal(pi.Net_Amount);
+            snap["Direct_GRN"] = (pi.is_DirtGRN.HasValue && pi.is_DirtGRN.Value) ? "Yes" : "No";
+            snap["Remarks"] = StrVal(pi.Remarks);
+            snap["Status"] = StrVal(pi.Status);
+            snap["Update_Time"] = DateVal(pi.UpdatedDate);
+            return snap;
+        }
+
+        private static object BuildPIDetailSnapshot(DataBaseDataContext db, long purchaseInvoiceId)
+        {
+            var rows = db.Purchase_Invoice_Details.Where(t => t.PurchaseInvoiceId == purchaseInvoiceId).ToList();
+
+            var ids = rows.Where(r => r.ItemId.HasValue).Select(r => (int)r.ItemId.Value).Distinct().ToList();
+            var itemNames = new Dictionary<int, string>();
+            var itemCodes = new Dictionary<int, string>();
+            foreach (var id in ids)
+            {
+                var itm = db.INV_Items.Where(x => x.Item_ID == id)
+                                       .Select(x => new { x.Description, x.Item_Code })
+                                       .FirstOrDefault();
+                itemNames[id] = itm != null ? (itm.Description ?? "") : "";
+                itemCodes[id] = itm != null ? (itm.Item_Code ?? "") : "";
+            }
+
+            return new
+            {
+                Items = rows.Select(i =>
+                {
+                    string name = "";
+                    string code = "";
+                    if (i.ItemId.HasValue)
+                    {
+                        int key = (int)i.ItemId.Value;
+                        if (itemNames.ContainsKey(key)) name = itemNames[key];
+                        if (itemCodes.ContainsKey(key)) code = itemCodes[key];
+                    }
+
+                    return new
+                    {
+                        Item_Name = name,
+                        Item_Code = code,
+                        GRNDetailId = i.GRN_detail_Id.HasValue ? i.GRN_detail_Id.Value.ToString() : "",
+                        BatchNum = StrVal(i.BatchNum),
+                        Qty = NumVal(i.Qty),
+                        Rate = NumVal(i.Rate),
+                        Amount = NumVal(i.Amount),
+                        TotalAmount = NumVal(i.TotalAmount),
+                        DiscPer = NumVal(i.DiscPer),
+                        DiscAmt = NumVal(i.DiscAmt),
+                        Stax_Amount = NumVal(i.Stax_Amount),
+                        AdvTax_Amount = NumVal(i.AdvTax_Amount),
+                        FurtherTax_Amount = NumVal(i.FurtherTax_Amount),
+                        Bonus_Qty = NumVal(i.Bonus_Qty),
+                        Bonus_Tax = NumVal(i.Bonus_Tax)
+                    };
+                }).ToList()
+            };
+        }
+
+        private static void WritePIChangeLog(DataBaseDataContext db, Purchase_Invoice_Master pi, JavaScriptSerializer serializer)
+        {
+            if (pi == null) return;
+
+            Purchase_Invoice_Log log = new Purchase_Invoice_Log
+            {
+                PurchaseInvoiceId = pi.PurchaseInvoiceId,
+                Master_Log = serializer.Serialize(BuildPIMasterSnapshot(pi, db)),
+                Details_Log = serializer.Serialize(BuildPIDetailSnapshot(db, pi.PurchaseInvoiceId)),
+                Loged_By = AppConfig.UserID,
+                Log_Time = DateTime.Now
+            };
+
+            db.Purchase_Invoice_Logs.InsertOnSubmit(log);
+        }
+
         [WebMethod]
         public static int SaveInvoice(string btnSave, string AllItemDetail)
         {
@@ -214,6 +354,8 @@ namespace PMS.Inventory
                            select t).FirstOrDefault();
             if (btnSave == "Update")
             {
+                WritePIChangeLog(db, lstItem, oJS);
+
                 lstItem.InvoiceNum = Convert.ToInt64(record.InvoiceNum);
                 lstItem.InvoiceTypeId = record.InvoiceType;
                 lstItem.UpdatedDate = DateTime.Now;

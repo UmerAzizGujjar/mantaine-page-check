@@ -331,6 +331,112 @@
             font-size: 11px;
             border-top: 1px dashed #e2e6ea;
         }
+
+        /* ===== Approval Log portion ===== */
+        .ap-section {
+            margin-top: 18px;
+            padding-top: 14px;
+            border-top: 2px solid #dfe4ea;
+        }
+
+        .ap-section-head {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            padding: 0 2px 10px;
+        }
+
+        .ap-section-ico {
+            color: #3498db;
+            font-size: 16px;
+        }
+
+        .ap-section-title {
+            font-weight: 800;
+            font-size: 14px;
+            color: #2f3d45;
+            letter-spacing: .02em;
+        }
+
+        .ap-section-count {
+            margin-left: auto;
+            font-size: 11px;
+            font-weight: 700;
+            color: #6b7280;
+            background: #eef2f6;
+            border-radius: 11px;
+            padding: 2px 10px;
+        }
+
+        .ap-card {
+            border-left: 4px solid #cbd5e1;
+        }
+
+        .ap-badge {
+            font-size: 10.5px;
+            font-weight: 800;
+            padding: 3px 11px;
+            border-radius: 11px;
+            white-space: nowrap;
+            text-transform: uppercase;
+            letter-spacing: .03em;
+        }
+
+        .ap-badge-app {
+            background: #e7f6ec;
+            color: #1c7d43;
+        }
+
+        .ap-badge-pend {
+            background: #fff4e0;
+            color: #9a6700;
+        }
+
+        .ap-badge-rej {
+            background: #fdeaea;
+            color: #b02a37;
+        }
+
+        .ap-stage {
+            font-weight: 700;
+            font-size: 12px;
+            color: #37424c;
+        }
+
+        .ap-tag {
+            font-size: 10px;
+            font-weight: 700;
+            padding: 2px 8px;
+            border-radius: 9px;
+            background: #eef2f6;
+            color: #5b636b;
+        }
+
+        .ap-tag-final {
+            background: #e7f0fb;
+            color: #1b48ed;
+        }
+
+        .ap-tag-bypass {
+            background: #f3e8fd;
+            color: #6b21a8;
+        }
+
+        .ap-tag-edit {
+            background: #e0f7fa;
+            color: #0e7490;
+        }
+
+        .ap-remarks {
+            padding: 8px 12px;
+            font-size: 12px;
+            color: #4c545d;
+        }
+
+            .ap-remarks i {
+                color: #b0b6be;
+                margin-right: 4px;
+            }
     </style>
     
     <script type="text/javascript">
@@ -865,13 +971,14 @@
                     result.removed.push(it);
                 } else {
                     var beforeIt = prevMap[k];
+                    var nextIt = nextMap[k];
                     var changes = [];
                     IGPItemFields.forEach(function (f) {
                         var b = normByKind(f.kind, beforeIt[f.k]);
-                        var a = normByKind(f.kind, it[f.k]);
+                        var a = normByKind(f.kind, nextIt[f.k]);
                         if (b !== a) changes.push({ label: f.l, prev: b, cur: a });
                     });
-                    if (changes.length > 0) result.modified.push({ item: it, changes: changes });
+                    if (changes.length > 0) result.modified.push({ item: nextIt, changes: changes });
                 }
             });
             return result;
@@ -1011,9 +1118,14 @@
 
             var logs = payload.logs || [];
             var current = payload.current;
+            var approvals = payload.approvals || [];
 
             if (logs.length === 0) {
-                $body.html('<div class="bl-empty"><i class="fa fa-history bl-empty-ico"></i><span class="bl-empty-title">No update history found</span><span class="bl-empty-sub">Changes are logged automatically each time this gate pass is edited and saved.</span></div>');
+                var emptyHtml = '<div class="bl-empty"><i class="fa fa-history bl-empty-ico"></i><span class="bl-empty-title">No update history found</span><span class="bl-empty-sub">Changes are logged automatically each time this gate pass is edited and saved.</span></div>';
+                if (approvals.length > 0) {
+                    emptyHtml += buildApprovalTrailHTML(approvals);
+                }
+                $body.html(emptyHtml);
                 return;
             }
 
@@ -1039,7 +1151,55 @@
             for (var j = 0; j < events.length; j++) {
                 html += buildRevisionHTML(events[j], j, total);
             }
+
+            if (approvals.length > 0) {
+                html += buildApprovalTrailHTML(approvals);
+            }
+
             $body.html(html);
+        }
+
+        function approvalStatusMeta(a) {
+            var s = String(a.Status || '').toLowerCase();
+            if (a.IsRejected || s === 'rejected' || s === 'cancelled') {
+                return { cls: 'ap-badge-rej', text: a.Status || 'Rejected' };
+            }
+            if (s === 'approved') return { cls: 'ap-badge-app', text: 'Approved' };
+            return { cls: 'ap-badge-pend', text: a.Status || 'Pending' };
+        }
+
+        function buildApprovalTrailHTML(approvals) {
+            var html = '<div class="ap-section">';
+            html += '<div class="ap-section-head">'
+                + '<span class="ap-section-ico"><i class="fa fa-check-square-o"></i></span>'
+                + '<span class="ap-section-title">Approval Log</span>'
+                + '<span class="ap-section-count">' + approvals.length + ' entr' + (approvals.length > 1 ? 'ies' : 'y') + '</span>'
+                + '</div>';
+
+            approvals.forEach(function (a) {
+                var meta = approvalStatusMeta(a);
+                var tags = '';
+                if (a.IsFinal) tags += '<span class="ap-tag ap-tag-final">Final</span>';
+                if (a.IsByPassed) tags += '<span class="ap-tag ap-tag-bypass">By-passed</span>';
+                if (a.IsEditableAfterApproval) tags += '<span class="ap-tag ap-tag-edit">Editable</span>';
+
+                html += '<div class="bl-card ap-card">';
+                html += '<div class="bl-card-head">';
+                html += '<span class="ap-badge ' + meta.cls + '">' + escHtml(meta.text) + '</span>';
+                if (a.StageName) html += '<span class="ap-stage">' + escHtml(a.StageName) + '</span>';
+                html += '<span class="bl-meta"><i class="fa fa-user-o"></i> ' + escHtml(a.User || '\u2014') + '</span>';
+                if (a.DateText) html += '<span class="bl-meta"><i class="fa fa-clock-o"></i> ' + escHtml(a.DateText) + '</span>';
+                html += '<span class="bl-chips">' + tags + '</span>';
+                html += '</div>';
+
+                if (a.Remarks) {
+                    html += '<div class="bl-card-body"><div class="ap-remarks"><i class="fa fa-comment-o"></i> ' + escHtml(a.Remarks) + '</div></div>';
+                }
+                html += '</div>';
+            });
+
+            html += '</div>';
+            return html;
         }
 
     </script>

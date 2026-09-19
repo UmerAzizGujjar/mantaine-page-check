@@ -211,6 +211,7 @@ namespace PMS.Modules.Inventory
             {
                 int id = Convert.ToInt32(ItemId);
                 obj = db.INV_Items.Where(x => x.Item_ID == id).FirstOrDefault();
+                INVItemLogHelper.WriteItemChangeLog(db, obj, new System.Web.Script.Serialization.JavaScriptSerializer());
                 Packages_Detail pkg = new Packages_Detail();
                 pkg = db.Packages_Details.Where(y => y.Item_Code == obj.Item_ID).FirstOrDefault();
                 obj.Description = Desc;

@@ -7,7 +7,7 @@
             fillDepartment();
             let depID = '<%= Request.QueryString["Dep_ID"] %>';
 
-            fillDepartment(function () { 
+            fillDepartment(function () {
                 fillPolicy(function () {
                     bindEvents();
                     DepartmentPercentageValidation();
@@ -23,7 +23,7 @@
             });
 
             $(document).on('keyup', 'input[name="Discount_Percentage"]', function () {
-                let $row = $(this).closest('tr'); 
+                let $row = $(this).closest('tr');
 
                 let fees = parseFloat($row.find('input[name="Fees"]').val()) || 0;
                 let discountPercentage = parseFloat($(this).val()) || 0;
@@ -31,6 +31,13 @@
                 let discountAmount = (fees * discountPercentage) / 100;
 
                 $row.find('input[name="Discount_Amount"]').val(discountAmount.toFixed(2));
+            });
+
+            $(document).on('change', '[name="IsTime"]', function () {
+                const $row = $(this).closest('tr');
+                const isChecked = $(this).is(':checked');
+                $row.find('[name="Start_Time"]').prop('disabled', !isChecked);
+                $row.find('[name="End_Time"]').prop('disabled', !isChecked);
             });
 
         });
@@ -108,6 +115,10 @@
                         row.find('[name="Doctor_Share"]').val(d.Doctor_Share);
                         row.find('[name="Expiry_Date"]').val(d.Expiry_Date);
                         row.find('[name="Active"]').prop("checked", d.IsActive);
+                        const isTime = d.IsTime === true;
+                        row.find('[name="IsTime"]').prop("checked", isTime);
+                        row.find('[name="Start_Time"]').val(d.Start_Time || '').prop('disabled', !isTime);
+                        row.find('[name="End_Time"]').val(d.End_Time || '').prop('disabled', !isTime);
 
                         row.find('[name="Department"]').select2({ width: '100%' });
                         row.find('[name="Policy_ID"]').select2({ width: '100%' });
@@ -127,8 +138,6 @@
 
 
 
-
-        
 
 
 
@@ -170,6 +179,9 @@
         <td><input type="text" name="Doctor_Share" class="form-control" placeholder="Doctor %"></td>
         <td><input type="text" name="Expiry_Date" class="form-control expiryDate" placeholder="Select Date" readonly></td>
         <td><input type="checkbox" name="Active"></td>
+        <td><input type="checkbox" name="IsTime" class="isTimeCheck"></td>
+        <td><input type="time" name="Start_Time" class="form-control" disabled></td>
+        <td><input type="time" name="End_Time" class="form-control" disabled></td>
         <td>
             <i class="fa fa-trash text-danger btnDeleteRow" 
                style="cursor:pointer; font-size:18px;" 
@@ -227,6 +239,8 @@
             $("#policyTable tbody tr").each(function () {
                 let dept = $(this).find('[name="Department"] option:selected');
                 let policy = $(this).find('[name="Policy_ID"] option:selected');
+                let isTimeChecked = $(this).find('[name="IsTime"]').is(":checked"); 
+
                 data.push({
                     Dep_ID: $(this).data("id") || 0,
                     Department_ID: dept.val(),
@@ -239,7 +253,10 @@
                     Hospital_Share: $(this).find('[name="Hospital_Share"]').val(),
                     Doctor_Share: $(this).find('[name="Doctor_Share"]').val(),
                     Expiry_Date: $(this).find('[name="Expiry_Date"]').val(),
-                    IsActive: $(this).find('[name="Active"]').prop("checked")
+                    IsActive: $(this).find('[name="Active"]').prop("checked"),
+                    IsTime: isTimeChecked,
+                    Start_Time: isTimeChecked ? $(this).find('[name="Start_Time"]').val() : null,
+                    End_Time: isTimeChecked ? $(this).find('[name="End_Time"]').val() : null
                 });
             });
             return data;
@@ -307,6 +324,38 @@
                 return;
             }
 
+            // NEW: Validate Time fields when IsTime is checked
+            let hasInvalidTime = false;
+            $('#policyTable tbody tr').each(function () {
+                const $row = $(this);
+                if ($row.find('[name="IsTime"]').is(":checked")) {
+                    if (!$row.find('[name="Start_Time"]').val() || !$row.find('[name="End_Time"]').val()) {
+                        hasInvalidTime = true;
+                        $row.find('[name="Start_Time"], [name="End_Time"]').css("border", "2px solid red");
+                    } else {
+                        $row.find('[name="Start_Time"], [name="End_Time"]').css("border", "");
+                    }
+                } else {
+                    $row.find('[name="Start_Time"], [name="End_Time"]').css("border", "");
+                }
+            });
+
+            if (hasInvalidTime) {
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Error!',
+                    text: 'Start Time and End Time are required when "Is Time" is checked.',
+                    showConfirmButton: false,
+                    timer: 2000,
+                    customClass: {
+                        popup: 'swal-big-popup',
+                        title: 'swal-big-title',
+                        htmlContainer: 'swal-big-text'
+                    }
+                });
+                return;
+            }
+
             $.ajax({
                 type: "POST",
                 url: "Department_Assign_Policy.aspx/SaveMultipleDepartmentPolicies",
@@ -341,7 +390,6 @@
         }
 
 
-        
 
 
     </script>
@@ -367,6 +415,9 @@
                 <th>Doctor Share</th>
                 <th>Expiry Date</th>
                 <th>Active</th>
+                <th>Time Check</th>
+                <th>Start Time</th>
+                <th>End Time</th>
                 <th>Action</th>
             </tr>
         </thead>

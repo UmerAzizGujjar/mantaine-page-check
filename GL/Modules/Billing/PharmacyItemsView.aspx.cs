@@ -169,5 +169,11 @@ namespace PMS
                 throw;
             }
         }
+
+        [WebMethod]
+        public static string GetItemLogs(long itemId)
+        {
+            return INVItemLogHelper.GetItemLogsPayload(itemId);
+        }
     }
 }
