@@ -3456,15 +3456,25 @@ namespace PMS
                         pt.MainDepartment = "02";
                         pt.Department = "";
 
-                        var emer = (from tbl in db.Emergencies
-                                    where tbl.Reg_PatId == pat.pat_id
-                                    orderby tbl.Created_Time descending
-                                    select tbl).FirstOrDefault();
-                        if (emer != null)
+                        // Priority 1: Department entered on Emergency Admission / Emergency Case (Emergency_Patient.Department)
+                        if (!string.IsNullOrEmpty(Emer_Pat.Department))
                         {
-                            pt.Bill_Department = emer.Patient_Main_Category;
-                            pt.Cost_Center = emer.Cost_Center;
-                            pt.Department = db.GetDataValueName("Patient Main Category", emer.Patient_Main_Category);
+                            pt.Bill_Department = Emer_Pat.Department;
+                            pt.Department = db.GetDataValueName("Patient Main Category", Emer_Pat.Department);
+                        }
+                        else
+                        {
+                            // Fallback: Department saved on Emergency Form (Emergency.Patient_Main_Category)
+                            var emer = (from tbl in db.Emergencies
+                                        where tbl.Reg_PatId == pat.pat_id
+                                        orderby tbl.Created_Time descending
+                                        select tbl).FirstOrDefault();
+                            if (emer != null)
+                            {
+                                pt.Bill_Department = emer.Patient_Main_Category;
+                                pt.Cost_Center = emer.Cost_Center;
+                                pt.Department = db.GetDataValueName("Patient Main Category", emer.Patient_Main_Category);
+                            }
                         }
                     } 
                 }
