@@ -1163,6 +1163,14 @@ namespace PMS
                     shiftId = "4";
 
                 string Operator = Request.QueryString["Operator"].ToString();
+
+                string CheckSummary = Request.QueryString["Summary"].ToString();
+                if (CheckSummary == "true")
+                {
+                    rptFileName = "Patients/OPDDepartmentWiseSummaryReport.rpt";
+                    reportTitle = "All Cash Collection Summary From " + Request.QueryString["StartDateTime"].ToString() + "to" + Request.QueryString["EndDateTime"].ToString();
+                }
+
                 reportPath += rptFileName;
                 rd.Load(reportPath);
                 rd.SetParameterValue("@Company_ID", AppConfig.Company_ID);
