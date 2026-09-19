@@ -1817,7 +1817,7 @@
                                 '<input type="hidden" name="hdnParentTrans_ID" value="' + (value.ParentTrans_ID || 0) + '" />' +
                                 '<input type="hidden" name="hdnParentTrans_Name" value="' + (value.ParentTrans_Name || '') + '" />' +
                                 '<input type="hidden" name="hdnParentTrans_Type" value="' + (value.ParentTrans_Type || 0) + '" />' +
-                                '<input type="hidden" name="hdnItemID" value="' + (value.Item_ID || '') + '" />' +
+                                '<input type="hidden" name="hdnItemID" value="' + (value.Item_ID || 0) + '" />' +
                                 '<input type="hidden" name="hdnItemName" value="' + (value.Item_Name || '') + '" />' +
                                 '<input type="hidden" name="hdnProcedure" value="" />' +
                                 '<input type="hidden" name="hdnItemType" value="' + (value.Item_Type || '') + '" />' +
