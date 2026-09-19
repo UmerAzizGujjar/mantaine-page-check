@@ -406,6 +406,10 @@
             if (activeSelect2Id) {
                 var $select = $('#' + activeSelect2Id);
 
+                if (activeSelect2Id !== 'ddlMedicine') {
+                    return;
+                }
+
                 if (searchString.length < 2) {
                     $select.empty();
                     $select.append('<option value="0">Please Select</option><option disabled style="color:#999;">Please type 2 or more characters to search</option>');
