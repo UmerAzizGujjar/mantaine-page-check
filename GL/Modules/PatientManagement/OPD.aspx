@@ -50,11 +50,13 @@
                 $('#ddlemployee').select2();
                 $('#ddldoctor').select2();
                 $('#ddlDepartment').select2();
+                $('#ddlCostCenter').select2();
                 $('#ddlFilterClnic').select2();
                 $('#ddlServices').select2();
             }
             $('#ddlbankcash').select2();
             $('#ddlbank').select2();
+            $('#ddlCostCenter').select2();
             if (reg_id != "" && added == "true") {
                 Get_Pat_Info(reg_id);
 
@@ -357,6 +359,7 @@
             "remarks": "remarks",
             "PaymentMethod": "PaymentMethod",
             "bank": "bank",
+            "costcenter": "CostCenter",
         };
 
         function loadPermissions(callback) {
@@ -1626,8 +1629,12 @@
                 </div>
 
                 <div class="opd-form-row opd-form-row--4">
-                    
-                    
+                    <div class="opd-field" id="costcenter">
+                        <label class="opd-label">Cost Center</label>
+                        <select id="ddlCostCenter" class="opd-select">
+                            <option value="0">Select Cost Center</option>
+                        </select>
+                    </div>
                 </div>
 
                 <div class="opd-field" id="field_Dept_Token" style="display:none;">

@@ -2195,6 +2195,23 @@
       <Column Name="Updated_Time" Type="System.DateTime" DbType="DateTime" CanBeNull="true" />
     </Type>
   </Table>
+  <Table Name="dbo.CostCenter_Wise_Department" Member="CostCenter_Wise_Departments">
+    <Type Name="CostCenter_Wise_Department">
+      <Column Name="CostCenter_wise_Department_Id" Type="System.Int32" DbType="Int NOT NULL IDENTITY" IsPrimaryKey="true" IsDbGenerated="true" CanBeNull="false" />
+      <Column Name="CostCenter" Type="System.String" DbType="VarChar(100)" CanBeNull="true" />
+      <Column Name="Created_By" Type="System.Guid" DbType="UniqueIdentifier" CanBeNull="true" />
+      <Column Name="Created_Time" Type="System.DateTime" DbType="DateTime" CanBeNull="true" />
+      <Column Name="Updated_By" Type="System.Guid" DbType="UniqueIdentifier" CanBeNull="true" />
+      <Column Name="Updated_Time" Type="System.DateTime" DbType="DateTime" CanBeNull="true" />
+    </Type>
+  </Table>
+  <Table Name="dbo.CostCenter_Wise_Department_Detail" Member="CostCenter_Wise_Department_Details">
+    <Type Name="CostCenter_Wise_Department_Detail">
+      <Column Name="CostCenter_wise_Detail_Id" Type="System.Int32" DbType="Int NOT NULL IDENTITY" IsPrimaryKey="true" IsDbGenerated="true" CanBeNull="false" />
+      <Column Name="CostCenter_wise_Department_Id" Type="System.Int32" DbType="Int" CanBeNull="true" />
+      <Column Name="Department" Type="System.String" DbType="VarChar(100)" CanBeNull="true" />
+    </Type>
+  </Table>
   <Table Name="dbo.Doctor_Rouster_Details" Member="Doctor_Rouster_Details">
     <Type Name="Doctor_Rouster_Detail">
       <Column Name="Rouster_Detail_Id" Type="System.Int32" DbType="Int NOT NULL IDENTITY" IsPrimaryKey="true" IsDbGenerated="true" CanBeNull="false" />
@@ -4224,6 +4241,8 @@
       <Column Name="Doc_No" Type="System.String" DbType="VarChar(200)" CanBeNull="true" />
       <Column Name="File_Path" Type="System.String" DbType="VarChar(MAX)" CanBeNull="true" />
       <Column Name="Vendor_ID" Type="System.Int32" DbType="Int" CanBeNull="true" />
+      <Column Name="Cost_Center" Type="System.String" DbType="VarChar(100)" CanBeNull="true" />
+      <Column Name="Department" Type="System.String" DbType="VarChar(100)" CanBeNull="true" />
     </Type>
   </Table>
   <Table Name="dbo.Store_Issue" Member="Store_Issues">
@@ -5955,6 +5974,7 @@
       <Column Name="IsPayable" Type="System.Boolean" DbType="Bit" CanBeNull="true" />
       <Column Name="bank_cash" Type="System.String" DbType="NVarChar(150)" CanBeNull="true" />
       <Column Name="bank_account_id" Type="System.String" DbType="NVarChar(150)" CanBeNull="true" />
+      <Column Name="Cost_Center" Type="System.String" DbType="VarChar(100)" CanBeNull="true" />
     </Type>
   </Table>
   <Table Name="dbo.Emergency" Member="Emergencies">
@@ -6974,6 +6994,7 @@
       <Column Name="Service_Sub_Category" Type="System.String" DbType="VarChar(100)" CanBeNull="true" />
       <Column Name="IsPharmacyBilling" Type="System.Boolean" DbType="Bit" CanBeNull="true" />
       <Column Name="Doctor_Compulsory" Type="System.Boolean" DbType="Bit" CanBeNull="true" />
+      <Column Name="Cost_Center" Type="System.String" DbType="VarChar(100)" CanBeNull="true" />
     </Type>
   </Table>
   <Table Name="dbo.In_Patient" Member="In_Patients">
@@ -7528,6 +7549,7 @@
       <Column Name="ProcedureLevel_ID" Type="System.Int32" DbType="Int" CanBeNull="true" />
       <Column Name="Medication_Refer_Doctor" Type="System.String" DbType="VarChar(50)" CanBeNull="true" />
       <Column Name="MR_No" Type="System.String" DbType="NVarChar(50)" CanBeNull="true" />
+      <Column Name="Cost_Center" Type="System.String" DbType="VarChar(100)" CanBeNull="true" />
     </Type>
   </Table>
   <Table Name="dbo.Lab_Tests" Member="Lab_Tests">
@@ -8176,6 +8198,7 @@
       <Column Name="Doctor_Share_Voucher_Status" Type="System.String" DbType="VarChar(50)" CanBeNull="true" />
       <Column Name="Patient_Type" Type="System.String" DbType="VarChar(50)" CanBeNull="true" />
       <Column Name="Referred_By_Name" Type="System.String" DbType="VarChar(100)" CanBeNull="true" />
+      <Column Name="Cost_Center" Type="System.String" DbType="VarChar(100)" CanBeNull="true" />
       <Association Name="Ar_Billing_Ar_Billing_Detail" Member="Ar_Billing_Details" ThisKey="Bill_ID" OtherKey="Bill_ID" Type="Ar_Billing_Detail" />
     </Type>
   </Table>

@@ -1039,6 +1039,57 @@ namespace PMS
         }
 
         [WebMethod]
+        public static string GetCostCenter()
+        {
+            DataBaseDataContext db = new DataBaseDataContext();
+
+            var Dis = (from d in db.DataValues
+                       join v in db.ValueSets
+                       on d.ValueSet_ID equals v.ValueSet_ID
+                       where v.ValueSet_Name == "Cost Center"
+                       select new
+                       {
+                           d.DataValue_Name,
+                           d.DataValue_Description
+                       }).ToList();
+
+            return (new JavaScriptSerializer().Serialize(Dis));
+        }
+
+        [WebMethod]
+        public static string GetCostCenterByDepartment(string department)
+        {
+            DataBaseDataContext db = new DataBaseDataContext();
+
+            var allCostCenters = (from d in db.DataValues
+                                  join v in db.ValueSets
+                                  on d.ValueSet_ID equals v.ValueSet_ID
+                                  where v.ValueSet_Name == "Cost Center"
+                                  select new
+                                  {
+                                      d.DataValue_Name,
+                                      d.DataValue_Description
+                                  }).ToList();
+
+            var mapped = (from m in db.CostCenter_Wise_Departments
+                          join dt in db.CostCenter_Wise_Department_Details
+                              on m.CostCenter_wise_Department_Id equals dt.CostCenter_wise_Department_Id
+                          where dt.Department == department
+                          select m.CostCenter).Distinct().ToList();
+
+            var Dis = mapped.Select(cc => new
+            {
+                DataValue_Name = cc,
+                DataValue_Description = allCostCenters
+                    .Where(c => c.DataValue_Name == cc)
+                    .Select(c => c.DataValue_Description)
+                    .FirstOrDefault() ?? cc
+            }).ToList();
+
+            return (new JavaScriptSerializer().Serialize(Dis));
+        }
+
+        [WebMethod]
         public static string PatientType()
         {
             string data = string.Empty;
@@ -1947,6 +1998,7 @@ namespace PMS
             newBill.Main_Department = data.Main_Department;
             newBill.Bill_Department = data.BillDepartment;
             newBill.Bill_Category = data.BillCategory;
+            newBill.Cost_Center = data.CostCenter;
             newBill.CGS_Procedure_BOM = Convert.ToDecimal(data.bomTotalValue);
             newBill.Sales_Tax_ID = data.Sales_Tax_ID;
             newBill.Sales_Tax_Percentage = data.Sales_Tax_Percentage;
@@ -2638,6 +2690,7 @@ namespace PMS
 
             public string BillDepartment { get; set; }
             public string BillCategory { get; set; }
+            public string CostCenter { get; set; }
             public string bomTotalValue { get; set; }
             public string PackageType { get; set; }
             public string Casher { get; set; }
@@ -2856,6 +2909,7 @@ namespace PMS
                             data.Referred_By,
                             data.Bill_Category,
                             data.Bill_Department,
+                            data.Cost_Center,
                             data.Sales_Tax_ID,
                             data.Sales_Tax_Percentage,
                             data.Patient_Type,
@@ -3375,6 +3429,8 @@ namespace PMS
                         pt.Discharge_On = Convert.ToString(inpat.Discharge_On);
                         pt.Bed_No = Convert.ToString(inpat.Bed_No);
                         pt.Department = db.GetDataValueName("Patient Main Category", inpat.Department);
+                        pt.Bill_Department = inpat.Department;
+                        pt.Cost_Center = inpat.Cost_Center;
                         pt.MainDepartment = "03";
                         pt.Package_Type = inpat.Package_Type_Id;
                         pt.Package_Name = inpat.Package_Name_Id;
@@ -3399,6 +3455,17 @@ namespace PMS
                         pt.Bed_No = Convert.ToString(Emer_Pat.Bed_No);
                         pt.MainDepartment = "02";
                         pt.Department = "";
+
+                        var emer = (from tbl in db.Emergencies
+                                    where tbl.Reg_PatId == pat.pat_id
+                                    orderby tbl.Created_Time descending
+                                    select tbl).FirstOrDefault();
+                        if (emer != null)
+                        {
+                            pt.Bill_Department = emer.Patient_Main_Category;
+                            pt.Cost_Center = emer.Cost_Center;
+                            pt.Department = db.GetDataValueName("Patient Main Category", emer.Patient_Main_Category);
+                        }
                     } 
                 }
                 else if (patientOPD != null)
@@ -3411,6 +3478,9 @@ namespace PMS
                     pt.Bed_No = "";
                     pt.Room_Name = "";
                     pt.MainDepartment = "01";
+                    pt.Bill_Department = patientOPD.Patient_Main_Category;
+                    pt.Cost_Center = patientOPD.Cost_Center;
+                    pt.Department = db.GetDataValueName("Patient Main Category", patientOPD.Patient_Main_Category);
                 }
                 else
                 {
@@ -3422,6 +3492,12 @@ namespace PMS
                     pt.Bed_No = "";
                     pt.Room_Name = "";
                     pt.MainDepartment = "01";
+                    if (patient != null)
+                    {
+                        pt.Bill_Department = patient.Patient_Main_Category;
+                        pt.Cost_Center = patient.Cost_Center;
+                        pt.Department = db.GetDataValueName("Patient Main Category", patient.Patient_Main_Category);
+                    }
                 }
                 if (DiscountAssignedPatient != null)
                 {
@@ -3806,6 +3882,10 @@ namespace PMS
             public string In_Patient_ID { get; set; }
 
             public string Department { get; set; }
+
+            public string Bill_Department { get; set; }
+
+            public string Cost_Center { get; set; }
 
             public string Admission_Date { get; set; }
             public string Discharge_On { get; set; }

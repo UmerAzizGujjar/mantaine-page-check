@@ -1,4 +1,4 @@
-﻿
+
 var isSaving = false;
 $(document).ready(function () {
     debugger;
@@ -126,6 +126,7 @@ $(document).ready(function () {
             $element.prop('disabled', false);
             const deptHandler = function () {
                 var selectedDept = $('#ddlDepartment').val();
+                loadCostCentersByDepartment(selectedDept);
                 checkOutPatientDischarge(selectedDept, function(hasActiveOPD) {
                     if (!hasActiveOPD) {
                         loaddoctor();
@@ -265,6 +266,44 @@ function fillDropdown($dropdown, methodName) {
         error: function (xhr, status, error) {
             console.error(`Error fetching ${methodName}:`, error);
             $dropdown.data('filled', false);
+        }
+    });
+}
+
+function loadCostCentersByDepartment(department) {
+    var $cc = $('#ddlCostCenter');
+    if (!$cc.length) return;
+
+    if (!department || department === '0' || department === '') {
+        $cc.html('<option value="0">Select Cost Center</option>');
+        if ($cc.hasClass('select2-hidden-accessible')) { $cc.trigger('change'); }
+        return;
+    }
+
+    $.ajax({
+        type: "POST",
+        url: "OPD.aspx/GetCostCenterByDepartment",
+        data: JSON.stringify({ department: department }),
+        contentType: "application/json; charset=utf-8",
+        dataType: "json",
+        success: function (response) {
+            var data = [];
+            try { data = JSON.parse(response.d); } catch (e) { data = []; }
+            var options = '<option value="0">Select Cost Center</option>';
+            $.each(data, function (key, value) {
+                options += '<option value="' + value.DataValue_Name + '">' + value.DataValue_Description + '</option>';
+            });
+            $cc.html(options);
+            var realOptions = $cc.find('option').filter(function () { return $(this).val() !== '0'; });
+            if (realOptions.length === 1) {
+                $cc.val(realOptions.val());
+            } else {
+                $cc.val('0');
+            }
+            if ($cc.hasClass('select2-hidden-accessible')) { $cc.trigger('change'); }
+        },
+        error: function (xhr, status, error) {
+            console.error("Error loading cost centers by department:", error);
         }
     });
 }
@@ -1446,6 +1485,7 @@ function SaveData() {
     var Martial_Status = $('#ddlmartialstatus').val();
     var Address = $('#txtAdrress').val();
     var Department = $('#ddlDepartment').val();
+    var CostCenter = $('#ddlCostCenter').val();
 
     var hdnDepartment = $("#hdn_dep_id").val();
     var doctor = $('#ddldoctor').val();
@@ -1700,6 +1740,7 @@ function SaveData() {
         Martial_Status: Martial_Status,
         Address: Address,
         Department: Department,
+        CostCenter: CostCenter,
         hdnDepartment: hdnDepartment,
         doctor: doctor,
         employee: employee,
@@ -2046,6 +2087,12 @@ function loadPatientDetail(OPDID) {
                 $('<option>', {
                     value: data.Patient_Main_Category,
                     text: data.Category_text
+                })
+            ).attr('disabled', true);
+            $('#ddlCostCenter').html(
+                $('<option>', {
+                    value: data.Cost_Center,
+                    text: data.Cost_Center_text
                 })
             ).attr('disabled', true);
             $('#ddldoctor').html(
