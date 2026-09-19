@@ -1413,7 +1413,7 @@ namespace PMS
                                 Item_Code = Item_Id,
                                 Medicine_Name = medicineName,
                                 Transaction_Type = "InPatient",
-                                Medicine_Date = oIn_Patient_Medicine.Medicine_Date,
+                                Medicine_Date = DateTime.Now,
                                 Oral = oIn_Patient_Medicine.Oral,
                                 Injections = oIn_Patient_Medicine.Injection,
                                 Dosage_From = oIn_Patient_Medicine.Dosage_From,
@@ -1529,7 +1529,7 @@ namespace PMS
                                 Patient_ID = Convert.ToInt32(MedicineDetail.PatientID),
                                 Item_Code = itemCode,
                                 Medicine_Name = medicineName,
-                                Medicine_Date = oIn_Patient_Medicine.Medicine_Date,
+                                Medicine_Date = DateTime.Now,
                                 Oral = oIn_Patient_Medicine.Oral,
                                 Transaction_Type = "InPatientMonitring",  // Keep as InPatientMonitring
                                 Injections = oIn_Patient_Medicine.Injection,

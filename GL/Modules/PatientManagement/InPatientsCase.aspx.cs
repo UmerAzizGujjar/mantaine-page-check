@@ -4739,7 +4739,7 @@ namespace PMS
                                 Item_Code = itemCode,
                                 Medicine_Name = medicineName,
                                 Transaction_Type = "InPatient",
-                                Medicine_Date = newMed.Medicine_Date,
+Medicine_Date = DateTime.Now,
                                 Oral = newMed.Oral,
                                 Injections = newMed.Injection,
                                 Dosage_From = newMed.Dosage_From,
