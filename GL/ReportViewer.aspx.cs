@@ -754,8 +754,7 @@ namespace PMS
             }
             else if (reportName == "InPatient_Final_Bill")
             {
-                //var user_id = 
-                var in_patient_id = Request.QueryString["Inpatient_ID"].ToString();
+                var billId = Request.QueryString["Bill_ID"].ToString();
                 var logoPath = DBClass.getField("SELECT dbo.GetCompanyLogo()");
                 string companyAddress = DBClass.getField("select Company_Address from sys_Companys where Company_ID = " + AppConfig.Company_ID + "").ToString();
                 var user_id = AppConfig.UserID;
@@ -769,7 +768,8 @@ namespace PMS
                 rd.SetParameterValue("CompanyLogo", logoPath);
                 rd.SetParameterValue("Title", reportTitle);
                 rd.SetParameterValue("Address", companyAddress);
-                rd.SetParameterValue("@In_Patient_ID", in_patient_id);
+
+                try { rd.SetParameterValue("@Bill_ID", Convert.ToInt32(billId)); } catch { }
 
                 // ===== DYNAMIC QR CODE GENERATION (NO DATABASE STORAGE) =====
                 try
@@ -781,7 +781,8 @@ namespace PMS
                ISNULL(rp.Gender, '') AS Gender
         FROM Reg_patient rp
         JOIN In_Patient ip ON ip.patient_id = rp.pat_id
-        WHERE ip.In_Patient_ID = {in_patient_id}";
+        JOIN Ar_Billings ab ON ab.In_Patient_ID = ip.In_Patient_ID
+        WHERE ab.Bill_ID = {Convert.ToInt64(billId)}";
 
                     DataTable patientData = DBClass.getDataTable(sql);
 
@@ -790,7 +791,7 @@ namespace PMS
                         string qrContent = $"MR:{patientData.Rows[0]["mr_no_sequence"]}|Name:{patientData.Rows[0]["Full_Name"]}|Age:{patientData.Rows[0]["Age_years"]}|Gender:{patientData.Rows[0]["Gender"]}";
 
                         // Save to temp file instead of passing bytes
-                        string tempQrPath = Path.Combine(Path.GetTempPath(), $"QR_{in_patient_id}_{Guid.NewGuid()}.png");
+                        string tempQrPath = Path.Combine(Path.GetTempPath(), $"QR_{billId}_{Guid.NewGuid()}.png");
 
                         using (QRCodeGenerator qrGenerator = new QRCodeGenerator())
                         {
@@ -816,11 +817,11 @@ namespace PMS
                 }
                 try
                 {
-                    rd.SetParameterValue("@In_Patient_ID", in_patient_id, rd.Subreports[0].Name.ToString());
-                    rd.SetParameterValue("@In_Patient_ID", in_patient_id, rd.Subreports[1].Name.ToString());
-                    rd.SetParameterValue("@In_Patient_ID", in_patient_id, rd.Subreports[2].Name.ToString());
+                    rd.SetParameterValue("@Bill_ID", Convert.ToInt32(billId), rd.Subreports[0].Name.ToString());
+                    rd.SetParameterValue("@Bill_ID", Convert.ToInt32(billId), rd.Subreports[1].Name.ToString());
+                    rd.SetParameterValue("@Bill_ID", Convert.ToInt32(billId), rd.Subreports[2].Name.ToString());
                 }
-                catch { 
+                catch {
                 }
             }
             else if (reportName == "DischargePrint")
