@@ -21,6 +21,23 @@
     #Queue{
         font-weight:bold;
     }
+
+    #QueueList .table-responsive.previewTable {
+        max-height: 420px;
+        overflow-y: auto;
+    }
+    #QueueList #tblPendingPatients thead th {
+        position: sticky;
+        top: 0;
+        background-color: #f5f7fa;
+        z-index: 2;
+        box-shadow: inset 0 -1px 0 #ddd;
+    }
+    #QueueList #tblPendingPatients {
+        width: 100%;
+        border-collapse: separate;
+        border-spacing: 0;
+    }
     .stat-row {
     background-color: #ffcccc !important; /* light red */
 }
@@ -201,6 +218,9 @@
             AllowadjustmentEdit();
             LoadQueueCount();
             $('#filterTransactionType').on('change', function () {
+                filterPendingPatients();
+            });
+            $('#filterStatus').on('change', function () {
                 filterPendingPatients();
             });
 
@@ -878,10 +898,14 @@
         }
         function filterPendingPatients() {
             var selected = $('#filterTransactionType').val();
+            var statusSel = $('#filterStatus').val();
             $('#tblPendingPatients tbody tr').each(function () {
                 // Department is the 3rd column (index 2)
                 var dept = $(this).find('td:eq(2)').text().trim();
-                if (selected === 'all' || dept === selected) {
+                var rowStatus = $(this).attr('data-status') || 'open';
+                var deptMatch = (selected === 'all' || dept === selected);
+                var statusMatch = (statusSel === 'all' || rowStatus === statusSel);
+                if (deptMatch && statusMatch) {
                     $(this).show();
                 } else {
                     $(this).hide();
@@ -3686,6 +3710,11 @@ function CalculateReceivedAmount() {
             var SearchString = $("#txtSearchmodal").val();
             PageMethods.PendingPatients(SearchString, function (data) {
                 var parsedData = JSON.parse(data);
+                parsedData.sort(function (a, b) {
+                    var aClosed = (a.Status === 'rejected' || a.Status === '1' || a.Status === 1) ? 1 : 0;
+                    var bClosed = (b.Status === 'rejected' || b.Status === '1' || b.Status === 1) ? 1 : 0;
+                    return aClosed - bClosed;
+                });
                 var rows = '';
                 debugger;
                 $.each(parsedData, function (key, value) {
@@ -3749,7 +3778,7 @@ function CalculateReceivedAmount() {
                     }
 
                     // Build the table row with the computed class
-                    rows += '<tr class="' + rowClass + '">' +
+                    rows += '<tr class="' + rowClass + '" data-status="' + (isRejected ? 'closed' : 'open') + '">' +
                         '<td>' + value.mr_no_sequence + '</td>' +
                         '<td>' + value.Full_Name + '</td>' +
                         '<td>' + value.Transaction_Type + '</td>' +
@@ -5377,6 +5406,16 @@ function CalculateReceivedAmount() {
                                 <option value="IPD">IPD</option>
                                 <option value="OPD">OPD</option>
                                 <option value="EMR">EMR</option>
+                            </select>
+                        </div>
+
+                        <!-- Status Filter Dropdown -->
+                        <div class="col-md-3">
+                            <label for="filterStatus">Status:</label>
+                            <select id="filterStatus" class="form-control">
+                                <option value="open" selected>Open</option>
+                                <option value="closed">Closed</option>
+                                <option value="all">All</option>
                             </select>
                         </div>
 

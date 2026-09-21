@@ -731,6 +731,8 @@
     <Content Include="upload\VouchersUpload.aspx" />
     <Content Include="Modules\Administrator\WareHouseWiseUser.aspx" />
     <Content Include="Modules\Administrator\WareHouseWiseUserList.aspx" />
+    <Content Include="Modules\Administrator\CostCenterWiseDepartment.aspx" />
+    <Content Include="Modules\Administrator\CostCenterWiseDepartmentList.aspx" />
     <Content Include="Modules\Administrator\WithHoldingTaxAccountDefinition.aspx" />
     <Content Include="bin\PMS.dll.config" />
     <Content Include="upload\UploadEmergency.ashx" />
@@ -6181,6 +6183,20 @@
     </Compile>
     <Compile Include="Modules\Administrator\WareHouseWiseUserList.aspx.designer.cs">
       <DependentUpon>WareHouseWiseUserList.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="Modules\Administrator\CostCenterWiseDepartment.aspx.cs">
+      <DependentUpon>CostCenterWiseDepartment.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Modules\Administrator\CostCenterWiseDepartment.aspx.designer.cs">
+      <DependentUpon>CostCenterWiseDepartment.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="Modules\Administrator\CostCenterWiseDepartmentList.aspx.cs">
+      <DependentUpon>CostCenterWiseDepartmentList.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Modules\Administrator\CostCenterWiseDepartmentList.aspx.designer.cs">
+      <DependentUpon>CostCenterWiseDepartmentList.aspx</DependentUpon>
     </Compile>
     <Compile Include="WebForm1.aspx.cs">
       <DependentUpon>WebForm1.aspx</DependentUpon>

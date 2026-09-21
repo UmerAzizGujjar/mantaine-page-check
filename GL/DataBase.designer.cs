@@ -2201,6 +2201,22 @@ namespace PMS
             }
         }
 
+        public System.Data.Linq.Table<CostCenter_Wise_Department> CostCenter_Wise_Departments
+        {
+            get
+            {
+                return this.GetTable<CostCenter_Wise_Department>();
+            }
+        }
+
+        public System.Data.Linq.Table<CostCenter_Wise_Department_Detail> CostCenter_Wise_Department_Details
+        {
+            get
+            {
+                return this.GetTable<CostCenter_Wise_Department_Detail>();
+            }
+        }
+
         public System.Data.Linq.Table<Doctor_Rouster_Detail> Doctor_Rouster_Details
         {
             get
@@ -50567,6 +50583,298 @@ namespace PMS
         }
     }
 
+    [global::System.Data.Linq.Mapping.TableAttribute(Name = "dbo.CostCenter_Wise_Department")]
+    public partial class CostCenter_Wise_Department : INotifyPropertyChanging, INotifyPropertyChanged
+    {
+
+        private static PropertyChangingEventArgs emptyChangingEventArgs = new PropertyChangingEventArgs(String.Empty);
+
+        private int _CostCenter_wise_Department_Id;
+
+        private string _CostCenter;
+
+        private System.Nullable<System.Guid> _Created_By;
+
+        private System.Nullable<System.DateTime> _Created_Time;
+
+        private System.Nullable<System.Guid> _Updated_By;
+
+        private System.Nullable<System.DateTime> _Updated_Time;
+
+        #region Extensibility Method Definitions
+        partial void OnLoaded();
+        partial void OnValidate(System.Data.Linq.ChangeAction action);
+        partial void OnCreated();
+        partial void OnCostCenter_wise_Department_IdChanging(int value);
+        partial void OnCostCenter_wise_Department_IdChanged();
+        partial void OnCostCenterChanging(string value);
+        partial void OnCostCenterChanged();
+        partial void OnCreated_ByChanging(System.Nullable<System.Guid> value);
+        partial void OnCreated_ByChanged();
+        partial void OnCreated_TimeChanging(System.Nullable<System.DateTime> value);
+        partial void OnCreated_TimeChanged();
+        partial void OnUpdated_ByChanging(System.Nullable<System.Guid> value);
+        partial void OnUpdated_ByChanged();
+        partial void OnUpdated_TimeChanging(System.Nullable<System.DateTime> value);
+        partial void OnUpdated_TimeChanged();
+        #endregion
+
+        public CostCenter_Wise_Department()
+        {
+            OnCreated();
+        }
+
+        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_CostCenter_wise_Department_Id", AutoSync = AutoSync.OnInsert, DbType = "Int NOT NULL IDENTITY", IsPrimaryKey = true, IsDbGenerated = true)]
+        public int CostCenter_wise_Department_Id
+        {
+            get
+            {
+                return this._CostCenter_wise_Department_Id;
+            }
+            set
+            {
+                if ((this._CostCenter_wise_Department_Id != value))
+                {
+                    this.OnCostCenter_wise_Department_IdChanging(value);
+                    this.SendPropertyChanging();
+                    this._CostCenter_wise_Department_Id = value;
+                    this.SendPropertyChanged("CostCenter_wise_Department_Id");
+                    this.OnCostCenter_wise_Department_IdChanged();
+                }
+            }
+        }
+
+        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_CostCenter", DbType = "VarChar(100)")]
+        public string CostCenter
+        {
+            get
+            {
+                return this._CostCenter;
+            }
+            set
+            {
+                if ((this._CostCenter != value))
+                {
+                    this.OnCostCenterChanging(value);
+                    this.SendPropertyChanging();
+                    this._CostCenter = value;
+                    this.SendPropertyChanged("CostCenter");
+                    this.OnCostCenterChanged();
+                }
+            }
+        }
+
+        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_Created_By", DbType = "UniqueIdentifier")]
+        public System.Nullable<System.Guid> Created_By
+        {
+            get
+            {
+                return this._Created_By;
+            }
+            set
+            {
+                if ((this._Created_By != value))
+                {
+                    this.OnCreated_ByChanging(value);
+                    this.SendPropertyChanging();
+                    this._Created_By = value;
+                    this.SendPropertyChanged("Created_By");
+                    this.OnCreated_ByChanged();
+                }
+            }
+        }
+
+        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_Created_Time", DbType = "DateTime")]
+        public System.Nullable<System.DateTime> Created_Time
+        {
+            get
+            {
+                return this._Created_Time;
+            }
+            set
+            {
+                if ((this._Created_Time != value))
+                {
+                    this.OnCreated_TimeChanging(value);
+                    this.SendPropertyChanging();
+                    this._Created_Time = value;
+                    this.SendPropertyChanged("Created_Time");
+                    this.OnCreated_TimeChanged();
+                }
+            }
+        }
+
+        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_Updated_By", DbType = "UniqueIdentifier")]
+        public System.Nullable<System.Guid> Updated_By
+        {
+            get
+            {
+                return this._Updated_By;
+            }
+            set
+            {
+                if ((this._Updated_By != value))
+                {
+                    this.OnUpdated_ByChanging(value);
+                    this.SendPropertyChanging();
+                    this._Updated_By = value;
+                    this.SendPropertyChanged("Updated_By");
+                    this.OnUpdated_ByChanged();
+                }
+            }
+        }
+
+        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_Updated_Time", DbType = "DateTime")]
+        public System.Nullable<System.DateTime> Updated_Time
+        {
+            get
+            {
+                return this._Updated_Time;
+            }
+            set
+            {
+                if ((this._Updated_Time != value))
+                {
+                    this.OnUpdated_TimeChanging(value);
+                    this.SendPropertyChanging();
+                    this._Updated_Time = value;
+                    this.SendPropertyChanged("Updated_Time");
+                    this.OnUpdated_TimeChanged();
+                }
+            }
+        }
+
+        public event PropertyChangingEventHandler PropertyChanging;
+
+        public event PropertyChangedEventHandler PropertyChanged;
+
+        protected virtual void SendPropertyChanging()
+        {
+            if ((this.PropertyChanging != null))
+            {
+                this.PropertyChanging(this, emptyChangingEventArgs);
+            }
+        }
+
+        protected virtual void SendPropertyChanged(String propertyName)
+        {
+            if ((this.PropertyChanged != null))
+            {
+                this.PropertyChanged(this, new PropertyChangedEventArgs(propertyName));
+            }
+        }
+    }
+
+    [global::System.Data.Linq.Mapping.TableAttribute(Name = "dbo.CostCenter_Wise_Department_Detail")]
+    public partial class CostCenter_Wise_Department_Detail : INotifyPropertyChanging, INotifyPropertyChanged
+    {
+
+        private static PropertyChangingEventArgs emptyChangingEventArgs = new PropertyChangingEventArgs(String.Empty);
+
+        private int _CostCenter_wise_Detail_Id;
+
+        private System.Nullable<int> _CostCenter_wise_Department_Id;
+
+        private string _Department;
+
+        #region Extensibility Method Definitions
+        partial void OnLoaded();
+        partial void OnValidate(System.Data.Linq.ChangeAction action);
+        partial void OnCreated();
+        partial void OnCostCenter_wise_Detail_IdChanging(int value);
+        partial void OnCostCenter_wise_Detail_IdChanged();
+        partial void OnCostCenter_wise_Department_IdChanging(System.Nullable<int> value);
+        partial void OnCostCenter_wise_Department_IdChanged();
+        partial void OnDepartmentChanging(string value);
+        partial void OnDepartmentChanged();
+        #endregion
+
+        public CostCenter_Wise_Department_Detail()
+        {
+            OnCreated();
+        }
+
+        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_CostCenter_wise_Detail_Id", AutoSync = AutoSync.OnInsert, DbType = "Int NOT NULL IDENTITY", IsPrimaryKey = true, IsDbGenerated = true)]
+        public int CostCenter_wise_Detail_Id
+        {
+            get
+            {
+                return this._CostCenter_wise_Detail_Id;
+            }
+            set
+            {
+                if ((this._CostCenter_wise_Detail_Id != value))
+                {
+                    this.OnCostCenter_wise_Detail_IdChanging(value);
+                    this.SendPropertyChanging();
+                    this._CostCenter_wise_Detail_Id = value;
+                    this.SendPropertyChanged("CostCenter_wise_Detail_Id");
+                    this.OnCostCenter_wise_Detail_IdChanged();
+                }
+            }
+        }
+
+        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_CostCenter_wise_Department_Id", DbType = "Int")]
+        public System.Nullable<int> CostCenter_wise_Department_Id
+        {
+            get
+            {
+                return this._CostCenter_wise_Department_Id;
+            }
+            set
+            {
+                if ((this._CostCenter_wise_Department_Id != value))
+                {
+                    this.OnCostCenter_wise_Department_IdChanging(value);
+                    this.SendPropertyChanging();
+                    this._CostCenter_wise_Department_Id = value;
+                    this.SendPropertyChanged("CostCenter_wise_Department_Id");
+                    this.OnCostCenter_wise_Department_IdChanged();
+                }
+            }
+        }
+
+        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_Department", DbType = "VarChar(100)")]
+        public string Department
+        {
+            get
+            {
+                return this._Department;
+            }
+            set
+            {
+                if ((this._Department != value))
+                {
+                    this.OnDepartmentChanging(value);
+                    this.SendPropertyChanging();
+                    this._Department = value;
+                    this.SendPropertyChanged("Department");
+                    this.OnDepartmentChanged();
+                }
+            }
+        }
+
+        public event PropertyChangingEventHandler PropertyChanging;
+
+        public event PropertyChangedEventHandler PropertyChanged;
+
+        protected virtual void SendPropertyChanging()
+        {
+            if ((this.PropertyChanging != null))
+            {
+                this.PropertyChanging(this, emptyChangingEventArgs);
+            }
+        }
+
+        protected virtual void SendPropertyChanged(String propertyName)
+        {
+            if ((this.PropertyChanged != null))
+            {
+                this.PropertyChanged(this, new PropertyChangedEventArgs(propertyName));
+            }
+        }
+    }
+
     [global::System.Data.Linq.Mapping.TableAttribute(Name = "dbo.Doctor_Rouster_Details")]
     public partial class Doctor_Rouster_Detail : INotifyPropertyChanging, INotifyPropertyChanged
     {
@@ -92614,6 +92922,10 @@ namespace PMS
 
         private System.Nullable<int> _Vendor_ID;
 
+        private string _Cost_Center;
+
+        private string _Department;
+
         #region Extensibility Method Definitions
         partial void OnLoaded();
         partial void OnValidate(System.Data.Linq.ChangeAction action);
@@ -92674,6 +92986,10 @@ namespace PMS
         partial void OnFile_PathChanged();
         partial void OnVendor_IDChanging(System.Nullable<int> value);
         partial void OnVendor_IDChanged();
+        partial void OnCost_CenterChanging(string value);
+        partial void OnCost_CenterChanged();
+        partial void OnDepartmentChanging(string value);
+        partial void OnDepartmentChanged();
         #endregion
 
         public GL_Voucher()
@@ -93237,6 +93553,46 @@ namespace PMS
                     this._Vendor_ID = value;
                     this.SendPropertyChanged("Vendor_ID");
                     this.OnVendor_IDChanged();
+                }
+            }
+        }
+
+        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_Cost_Center", DbType = "VarChar(100)")]
+        public string Cost_Center
+        {
+            get
+            {
+                return this._Cost_Center;
+            }
+            set
+            {
+                if ((this._Cost_Center != value))
+                {
+                    this.OnCost_CenterChanging(value);
+                    this.SendPropertyChanging();
+                    this._Cost_Center = value;
+                    this.SendPropertyChanged("Cost_Center");
+                    this.OnCost_CenterChanged();
+                }
+            }
+        }
+
+        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_Department", DbType = "VarChar(100)")]
+        public string Department
+        {
+            get
+            {
+                return this._Department;
+            }
+            set
+            {
+                if ((this._Department != value))
+                {
+                    this.OnDepartmentChanging(value);
+                    this.SendPropertyChanging();
+                    this._Department = value;
+                    this.SendPropertyChanged("Department");
+                    this.OnDepartmentChanged();
                 }
             }
         }
@@ -126701,6 +127057,8 @@ namespace PMS
 
         private string _bank_account_id;
 
+        private string _Cost_Center;
+
         #region Extensibility Method Definitions
         partial void OnLoaded();
         partial void OnValidate(System.Data.Linq.ChangeAction action);
@@ -127079,6 +127437,8 @@ namespace PMS
         partial void Onbank_cashChanged();
         partial void Onbank_account_idChanging(string value);
         partial void Onbank_account_idChanged();
+        partial void OnCost_CenterChanging(string value);
+        partial void OnCost_CenterChanged();
         #endregion
 
         public Patient()
@@ -130826,6 +131186,26 @@ namespace PMS
             }
         }
 
+        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_Cost_Center", DbType = "VarChar(100)")]
+        public string Cost_Center
+        {
+            get
+            {
+                return this._Cost_Center;
+            }
+            set
+            {
+                if ((this._Cost_Center != value))
+                {
+                    this.OnCost_CenterChanging(value);
+                    this.SendPropertyChanging();
+                    this._Cost_Center = value;
+                    this.SendPropertyChanged("Cost_Center");
+                    this.OnCost_CenterChanged();
+                }
+            }
+        }
+
         public event PropertyChangingEventHandler PropertyChanging;
 
         public event PropertyChangedEventHandler PropertyChanged;
@@ -130981,6 +131361,8 @@ namespace PMS
 
         private string _bank_account_id;
 
+        private string _Cost_Center;
+
         #region Extensibility Method Definitions
         partial void OnLoaded();
         partial void OnValidate(System.Data.Linq.ChangeAction action);
@@ -131113,6 +131495,8 @@ namespace PMS
         partial void Onbank_cashChanged();
         partial void Onbank_account_idChanging(string value);
         partial void Onbank_account_idChanged();
+        partial void OnCost_CenterChanging(string value);
+        partial void OnCost_CenterChanged();
         #endregion
 
         public Emergency()
@@ -132396,6 +132780,26 @@ namespace PMS
                     this._bank_account_id = value;
                     this.SendPropertyChanged("bank_account_id");
                     this.Onbank_account_idChanged();
+                }
+            }
+        }
+
+        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_Cost_Center", DbType = "VarChar(100)")]
+        public string Cost_Center
+        {
+            get
+            {
+                return this._Cost_Center;
+            }
+            set
+            {
+                if ((this._Cost_Center != value))
+                {
+                    this.OnCost_CenterChanging(value);
+                    this.SendPropertyChanging();
+                    this._Cost_Center = value;
+                    this.SendPropertyChanged("Cost_Center");
+                    this.OnCost_CenterChanged();
                 }
             }
         }
@@ -149859,6 +150263,8 @@ namespace PMS
 
         private System.Nullable<int> _BalanceAccount;
 
+        private string _CostCenter;
+
         #region Extensibility Method Definitions
         partial void OnLoaded();
         partial void OnValidate(System.Data.Linq.ChangeAction action);
@@ -149895,6 +150301,8 @@ namespace PMS
         partial void OnCGSChanged();
         partial void OnBalanceAccountChanging(System.Nullable<int> value);
         partial void OnBalanceAccountChanged();
+        partial void OnCostCenterChanging(string value);
+        partial void OnCostCenterChanged();
         #endregion
 
         public ClinicalAccountCategory()
@@ -150218,6 +150626,26 @@ namespace PMS
                     this._BalanceAccount = value;
                     this.SendPropertyChanged("BalanceAccount");
                     this.OnBalanceAccountChanged();
+                }
+            }
+        }
+
+        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_CostCenter", DbType = "NVarChar(50)")]
+        public string CostCenter
+        {
+            get
+            {
+                return this._CostCenter;
+            }
+            set
+            {
+                if ((this._CostCenter != value))
+                {
+                    this.OnCostCenterChanging(value);
+                    this.SendPropertyChanging();
+                    this._CostCenter = value;
+                    this.SendPropertyChanged("CostCenter");
+                    this.OnCostCenterChanged();
                 }
             }
         }
@@ -155485,6 +155913,8 @@ namespace PMS
 
         private string _MR_No;
 
+        private string _Cost_Center;
+
         #region Extensibility Method Definitions
         partial void OnLoaded();
         partial void OnValidate(System.Data.Linq.ChangeAction action);
@@ -156589,6 +157019,8 @@ namespace PMS
         partial void OnMedication_Refer_DoctorChanged();
         partial void OnMR_NoChanging(string value);
         partial void OnMR_NoChanged();
+        partial void OnCost_CenterChanging(string value);
+        partial void OnCost_CenterChanged();
         #endregion
 
         public In_Patient()
@@ -167596,6 +168028,26 @@ namespace PMS
             }
         }
 
+        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_Cost_Center", DbType = "VarChar(100)")]
+        public string Cost_Center
+        {
+            get
+            {
+                return this._Cost_Center;
+            }
+            set
+            {
+                if ((this._Cost_Center != value))
+                {
+                    this.OnCost_CenterChanging(value);
+                    this.SendPropertyChanging();
+                    this._Cost_Center = value;
+                    this.SendPropertyChanged("Cost_Center");
+                    this.OnCost_CenterChanged();
+                }
+            }
+        }
+
         public event PropertyChangingEventHandler PropertyChanging;
 
         public event PropertyChangedEventHandler PropertyChanged;
@@ -168627,6 +169079,12 @@ namespace PMS
 
         private System.Nullable<System.DateTime> _close_time;
 
+        private System.Nullable<System.DateTime> _Request_Time;
+
+        private System.Nullable<System.DateTime> _Receive_Time;
+
+        private System.Nullable<System.DateTime> _Issue_Date;
+
         #region Extensibility Method Definitions
         partial void OnLoaded();
         partial void OnValidate(System.Data.Linq.ChangeAction action);
@@ -168709,6 +169167,12 @@ namespace PMS
         partial void OnUnlisted_MedChanged();
         partial void Onclose_timeChanging(System.Nullable<System.DateTime> value);
         partial void Onclose_timeChanged();
+        partial void OnRequest_TimeChanging(System.Nullable<System.DateTime> value);
+        partial void OnRequest_TimeChanged();
+        partial void OnReceive_TimeChanging(System.Nullable<System.DateTime> value);
+        partial void OnReceive_TimeChanged();
+        partial void OnIssue_DateChanging(System.Nullable<System.DateTime> value);
+        partial void OnIssue_DateChanged();
         #endregion
 
         public In_Patient_Medicine()
@@ -169492,6 +169956,66 @@ namespace PMS
                     this._close_time = value;
                     this.SendPropertyChanged("close_time");
                     this.Onclose_timeChanged();
+                }
+            }
+        }
+
+        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_Request_Time", DbType = "DateTime")]
+        public System.Nullable<System.DateTime> Request_Time
+        {
+            get
+            {
+                return this._Request_Time;
+            }
+            set
+            {
+                if ((this._Request_Time != value))
+                {
+                    this.OnRequest_TimeChanging(value);
+                    this.SendPropertyChanging();
+                    this._Request_Time = value;
+                    this.SendPropertyChanged("Request_Time");
+                    this.OnRequest_TimeChanged();
+                }
+            }
+        }
+
+        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_Receive_Time", DbType = "DateTime")]
+        public System.Nullable<System.DateTime> Receive_Time
+        {
+            get
+            {
+                return this._Receive_Time;
+            }
+            set
+            {
+                if ((this._Receive_Time != value))
+                {
+                    this.OnReceive_TimeChanging(value);
+                    this.SendPropertyChanging();
+                    this._Receive_Time = value;
+                    this.SendPropertyChanged("Receive_Time");
+                    this.OnReceive_TimeChanged();
+                }
+            }
+        }
+
+        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_Issue_Date", DbType = "DateTime")]
+        public System.Nullable<System.DateTime> Issue_Date
+        {
+            get
+            {
+                return this._Issue_Date;
+            }
+            set
+            {
+                if ((this._Issue_Date != value))
+                {
+                    this.OnIssue_DateChanging(value);
+                    this.SendPropertyChanging();
+                    this._Issue_Date = value;
+                    this.SendPropertyChanged("Issue_Date");
+                    this.OnIssue_DateChanged();
                 }
             }
         }
@@ -180725,6 +181249,8 @@ namespace PMS
 
         private string _Referred_By_Name;
 
+        private string _Cost_Center;
+
         private EntitySet<Ar_Billing_Detail> _Ar_Billing_Details;
 
         #region Extensibility Method Definitions
@@ -180905,6 +181431,8 @@ namespace PMS
         partial void OnPatient_TypeChanged();
         partial void OnReferred_By_NameChanging(string value);
         partial void OnReferred_By_NameChanged();
+        partial void OnCost_CenterChanging(string value);
+        partial void OnCost_CenterChanged();
         #endregion
 
         public Ar_Billing()
@@ -182649,6 +183177,26 @@ namespace PMS
                     this._Referred_By_Name = value;
                     this.SendPropertyChanged("Referred_By_Name");
                     this.OnReferred_By_NameChanged();
+                }
+            }
+        }
+
+        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_Cost_Center", DbType = "VarChar(100)")]
+        public string Cost_Center
+        {
+            get
+            {
+                return this._Cost_Center;
+            }
+            set
+            {
+                if ((this._Cost_Center != value))
+                {
+                    this.OnCost_CenterChanging(value);
+                    this.SendPropertyChanging();
+                    this._Cost_Center = value;
+                    this.SendPropertyChanged("Cost_Center");
+                    this.OnCost_CenterChanged();
                 }
             }
         }

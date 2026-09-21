@@ -970,6 +970,13 @@
                                         <div class="field-desc">bank</div>
                                     </div>
                                 </div>
+                                <div class="right-item" onclick="toggleRight(this)">
+                                    <input type="checkbox" id="CostCenter" name="rights[]" value="CostCenter" />
+                                    <div>
+                                        <label for="CostCenter">Cost Center</label>
+                                        <div class="field-desc">Cost Center dropdown</div>
+                                    </div>
+                                </div>
                             </div>
                         </div>
                     </div>

@@ -28,6 +28,15 @@
             font-weight: 600;
             display: inline-block;
         }
+        .badge-issued {
+            background-color: #198754;
+            color: #fff;
+            padding: 3px 8px;
+            border-radius: 3px;
+            font-size: 11px;
+            font-weight: 600;
+            display: inline-block;
+        }
         #tbl td.rcv-over {
             background-color: #fff3cd !important;
             color: #856404 !important;
@@ -167,10 +176,31 @@
                 { "data": "Ward_Name", "width": "8%", "orderable": false },
                 { "data": "Medicine_Name", "width": "12%", "orderable": false },
                 { "data": "Bed_No", "width": "6%", "orderable": false },
+                {
+                    "data": "Request_Time", "name": "Request_Time",
+                    "render": function (data, type, full) {
+                        if (full.Request_Time == null) return '';
+                        return moment(full.Request_Time).format('DD-MMM-YYYY hh:mm A');
+                    }, "width": "9%", "orderable": true
+                },
                 { "data": "Req_Qty", "width": "6%", "orderable": false },
                 { "data": "Rcv_Qty", "width": "6%", "orderable": false },
+                {
+                    "data": "Issue_Date", "name": "Issue_Date",
+                    "render": function (data, type, full) {
+                        if (full.Issue_Date == null) return '';
+                        return moment(full.Issue_Date).format('DD-MMM-YYYY hh:mm A');
+                    }, "width": "9%", "orderable": true
+                },
                 { "data": "Rtn_Qty", "width": "6%", "orderable": false },
                 { "data": "Issue_Rcvd_Qty", "width": "6%", "orderable": false },
+                {
+                    "data": "Receive_Time", "name": "Receive_Time",
+                    "render": function (data, type, full) {
+                        if (full.Receive_Time == null) return '';
+                        return moment(full.Receive_Time).format('DD-MMM-YYYY hh:mm A');
+                    }, "width": "16%", "orderable": true
+                },
                 {
                     render: function (data, type, full) {
                         var rejected = (full.is_rejected == true || full.Status === "rejected");
@@ -185,8 +215,7 @@
                             return '<span class="badge-closed">Closed</span>';
                         }
                         if (fullyIssued) {
-                            return '<a href="#" class="btn btn-primary btn-sm" onclick="ViewDetails(' + full.In_Patient_Medicine_ID + ')">' +
-                                '<i class="fa fa-eye"></i> View Issued</a>';
+                            return '<span class="badge-issued">Issued</span>';
                         }
                         return '<span class="badge-pending">Pending</span>';
                     },
@@ -291,11 +320,13 @@
                     <th>Ward</th>
                     <th>Medicine Name</th>
                     <th>Bed No</th>
-                    <th>Request Qty</th>
-                    <th>Issued Qty</th>                
-                 
+                    <th>Request Time</th>
+                    <th>Issued Qty</th>
                     <th>Rcv Qty</th>
+                    <th>Issue Time </th>
+                    <th>Rtn Qty</th>
                     <th>Issued Rcv Qty</th>
+                    <th>Issued Rcv Time</th>
                     <th>View</th>
                 </tr>
             </thead>

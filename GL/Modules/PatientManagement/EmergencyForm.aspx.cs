@@ -1415,6 +1415,7 @@ namespace PMS.Modules.PatientManagement
                     pat.Mode_Of_Registration = data.modeof_presentation;
                     pat.Patient_Type = data.pat_category;
                     pat.Patient_Main_Category = data.hdnDepartment;
+                    pat.Cost_Center = data.CostCenter;
                     pat.employee_ID = data.employee_id?.ToString();
                     pat.Actual_amount = data.Actual_Fees;
                     pat.Remarks = data.Remarks;
@@ -2262,6 +2263,8 @@ namespace PMS.Modules.PatientManagement
                     Receipt_Amount = patient.Receipt_Amount,
                     Actual_amount = patient.Actual_amount,
                     Category_text = Encode(db.GetDataValueName("Patient Main Category", patient.Patient_Main_Category)),
+                    Cost_Center = Encode(patient.Cost_Center),
+                    Cost_Center_text = Encode(db.GetDataValueName("Cost Center", patient.Cost_Center)),
                     Type_text = Encode(db.GetDataValueName("Patient Type", patient.Patient_Type)),
                     Doc_text = Encode(
                         patient.Doctor_ID == null || !int.TryParse(patient.Doctor_ID.ToString(), out _)
@@ -2611,6 +2614,56 @@ namespace PMS.Modules.PatientManagement
             public string pat_id;
         }
 
+        [WebMethod]
+        public static string GetCostCenter()
+        {
+            using (var db = new DataBaseDataContext())
+            {
+                var query = (from p in db.DataValues
+                             join v in db.ValueSets on p.ValueSet_ID equals v.ValueSet_ID
+                             where v.ValueSet_Description == "Cost Center"
+                             select new
+                             {
+                                 p.DataValue_Name,
+                                 p.DataValue_Description
+                             }).ToList();
+                return (new JavaScriptSerializer()).Serialize(query);
+            }
+        }
+
+        [WebMethod]
+        public static string GetCostCenterByDepartment(string department)
+        {
+            using (var db = new DataBaseDataContext())
+            {
+                var allCostCenters = (from p in db.DataValues
+                                      join v in db.ValueSets on p.ValueSet_ID equals v.ValueSet_ID
+                                      where v.ValueSet_Description == "Cost Center"
+                                      select new
+                                      {
+                                          p.DataValue_Name,
+                                          p.DataValue_Description
+                                      }).ToList();
+
+                var mapped = (from m in db.CostCenter_Wise_Departments
+                              join d in db.CostCenter_Wise_Department_Details
+                                  on m.CostCenter_wise_Department_Id equals d.CostCenter_wise_Department_Id
+                              where d.Department == department
+                              select m.CostCenter).Distinct().ToList();
+
+                var result = mapped.Select(cc => new
+                {
+                    DataValue_Name = cc,
+                    DataValue_Description = allCostCenters
+                        .Where(c => c.DataValue_Name == cc)
+                        .Select(c => c.DataValue_Description)
+                        .FirstOrDefault() ?? cc
+                }).ToList();
+
+                return (new JavaScriptSerializer()).Serialize(result);
+            }
+        }
+
         public class MasterList
         {
             public string regid { get; set; }
@@ -2620,6 +2673,7 @@ namespace PMS.Modules.PatientManagement
             public string modeof_presentation { get; set; }
             public string pat_category { get; set; }
             public string hdnDepartment { get; set; }
+            public string CostCenter { get; set; }
             public string employee { get; set; }
             public string employee_id { get; set; }
             public string EmployeeName { get; set; }

@@ -430,6 +430,7 @@ namespace PMS
                             txtBed_No.Text = qry.Bed_No.ToString();
                     }
                     ddlDepartment.SelectedValue = qry.Department;
+                    hdnCostCenter.Value = db.In_Patients.Where(ip => ip.In_Patient_ID == qry.In_Patient_ID).Select(ip => ip.Cost_Center).FirstOrDefault();
                     db = new DataBaseDataContext(DBClass.ConnectionString());
                     List<HR_Employee> EmpList = new List<HR_Employee>();
                     EmpList = (from tbl in db.HR_Employees
@@ -1029,9 +1030,59 @@ namespace PMS
             }
         }
         [WebMethod]
+        public static string GetCostCenter()
+        {
+            using (var db = new DataBaseDataContext())
+            {
+                var query = (from p in db.DataValues
+                             join v in db.ValueSets on p.ValueSet_ID equals v.ValueSet_ID
+                             where v.ValueSet_Description == "Cost Center"
+                             select new
+                             {
+                                 p.DataValue_Name,
+                                 p.DataValue_Description
+                             }).ToList();
+                return (new JavaScriptSerializer()).Serialize(query);
+            }
+        }
+
+        [WebMethod]
+        public static string GetCostCenterByDepartment(string department)
+        {
+            using (var db = new DataBaseDataContext())
+            {
+                var allCostCenters = (from p in db.DataValues
+                                      join v in db.ValueSets on p.ValueSet_ID equals v.ValueSet_ID
+                                      where v.ValueSet_Description == "Cost Center"
+                                      select new
+                                      {
+                                          p.DataValue_Name,
+                                          p.DataValue_Description
+                                      }).ToList();
+
+                var mapped = (from m in db.CostCenter_Wise_Departments
+                              join d in db.CostCenter_Wise_Department_Details
+                                  on m.CostCenter_wise_Department_Id equals d.CostCenter_wise_Department_Id
+                              where d.Department == department
+                              select m.CostCenter).Distinct().ToList();
+
+                var result = mapped.Select(cc => new
+                {
+                    DataValue_Name = cc,
+                    DataValue_Description = allCostCenters
+                        .Where(c => c.DataValue_Name == cc)
+                        .Select(c => c.DataValue_Description)
+                        .FirstOrDefault() ?? cc
+                }).ToList();
+
+                return (new JavaScriptSerializer()).Serialize(result);
+            }
+        }
+
+        [WebMethod]
         public static string SaveAllRecord(
         int Patient_ID, string btnsave, string txtAdmission_Date, string patient_name,
-        string patient_age, string patient_number, string ddlDepartment, string ddlDoctor,
+        string patient_age, string patient_number, string ddlDepartment, string CostCenter, string ddlDoctor,
         string txtHealth_Complaints, DateTime txtExpected_Discharge_Date, string ddlIssuance_Of,
         string ddlWard_No, string txtBed_No, string ddlRoom_No, string txtRoom_Type,
         string PatientDiscountType, string panelCompany, string admissionType, string sehatCardNo,
@@ -1169,6 +1220,7 @@ namespace PMS
                     OPD.Admission_Fees = int.Parse(fee);
                     OPD.Admission_Date = Convert.ToDateTime(txtAdmission_Date);
                     OPD.Department = ddlDepartment;
+                    OPD.Cost_Center = CostCenter;
 
                     decimal discountValue = 0;
                     if (!decimal.TryParse(Discount, out discountValue))

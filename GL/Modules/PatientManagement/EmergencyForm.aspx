@@ -138,6 +138,7 @@
                 if (item.id === '#ddlDepartment') {
                     $element.prop('disabled', false);
                     const deptHandler = function () {
+                        loadCostCentersByDepartment($('#ddlDepartment').val());
                         loaddoctor();  // This will now check type === "03" and skip getGeneralFee
                     };
                     if (!isInsideModal) {
@@ -203,7 +204,47 @@
                 });
 
             });
+
+            $('#ddlCostCenter').select2();
         });
+
+        function loadCostCentersByDepartment(department) {
+            var $cc = $('#ddlCostCenter');
+            if (!$cc.length) return;
+
+            if (!department || department === '0' || department === '') {
+                $cc.html('<option value="0">Select Cost Center</option>');
+                if ($cc.hasClass('select2-hidden-accessible')) { $cc.trigger('change'); }
+                return;
+            }
+
+            $.ajax({
+                type: "POST",
+                url: "EmergencyForm.aspx/GetCostCenterByDepartment",
+                data: JSON.stringify({ department: department }),
+                contentType: "application/json; charset=utf-8",
+                dataType: "json",
+                success: function (response) {
+                    var data = [];
+                    try { data = JSON.parse(response.d); } catch (e) { data = []; }
+                    var options = '<option value="0">Select Cost Center</option>';
+                    $.each(data, function (key, value) {
+                        options += '<option value="' + value.DataValue_Name + '">' + value.DataValue_Description + '</option>';
+                    });
+                    $cc.html(options);
+                    var realOptions = $cc.find('option').filter(function () { return $(this).val() !== '0'; });
+                    if (realOptions.length === 1) {
+                        $cc.val(realOptions.val());
+                    } else {
+                        $cc.val('0');
+                    }
+                    if ($cc.hasClass('select2-hidden-accessible')) { $cc.trigger('change'); }
+                },
+                error: function (xhr, status, error) {
+                    console.error("Error loading cost centers by department:", error);
+                }
+            });
+        }
         function loadFee() {
             debugger;
 
@@ -687,6 +728,12 @@
                         $('<option>', {
                             value: data.Patient_Main_Category,
                             text: data.Category_text
+                        })
+                    ).attr('disabled', true);
+                    $('#ddlCostCenter').html(
+                        $('<option>', {
+                            value: data.Cost_Center,
+                            text: data.Cost_Center_text
                         })
                     ).attr('disabled', true);
                     $('#ddldoctor').html(
@@ -1789,6 +1836,7 @@
             var modeof_presentation = $('#ddlMode_Of_Registration').val();
             var pat_category = $('#ddlPatient_Type').val();
             var hdnDepartment = $('#ddlDepartment').val();
+            var CostCenter = $('#ddlCostCenter').val();
             var employee = $('#txtemployee').val();
             var employee_id_raw = $('#Employe_id').val();
             var employee_id = employee_id_raw === "" || !employee_id_raw ? null : parseInt(employee_id_raw);
@@ -1876,6 +1924,7 @@
                 modeof_presentation: modeof_presentation,
                 pat_category: pat_category,
                 hdnDepartment: hdnDepartment,
+                CostCenter: CostCenter,
                 employee: employee,
                 employee_id: employee_id,
                 EmployeeName: EmployeeName,
@@ -2444,6 +2493,12 @@
                         <label class="opd-label">Department</label>
                         <select id="ddlDepartment" class="opd-select">
                             <option value="0">Select Department</option>
+                        </select>
+                    </div>
+                    <div class="opd-field" id="costcenter" style="display:none;">
+                        <label class="opd-label">Cost Center</label>
+                        <select id="ddlCostCenter" class="opd-select">
+                            <option value="0">Select Cost Center</option>
                         </select>
                     </div>
                     <div class="opd-field" id="field_Clinic">

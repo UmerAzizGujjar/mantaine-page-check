@@ -34,7 +34,8 @@
             patientTypes: '',
             mainTestDepts: '',
             specialServices: '',
-            accounts: ''
+            accounts: '',
+            costCenters: ''
         };
         var dropdownCacheLoaded = false;
         var dropdownCacheLoading = false;
@@ -78,7 +79,8 @@
                 fetchDropdown('PatientType').then(function (d) { dropdownCache.patientTypes = buildOptions(d, false); }),
                 fetchDropdown('MainTestDepartments').then(function (d) { dropdownCache.mainTestDepts = buildOptions(d, false); }),
                 fetchDropdown('SpecialServices').then(function (d) { dropdownCache.specialServices = buildOptions(d, false); }),
-                fetchDropdown('filldropdowns').then(function (d) { dropdownCache.accounts = buildOptions(d, true); })
+                fetchDropdown('filldropdowns').then(function (d) { dropdownCache.accounts = buildOptions(d, true); }),
+                fetchDropdown('CostCenterDropdown').then(function (d) { dropdownCache.costCenters = buildOptions(d, false); })
             ).done(function () {
                 dropdownCacheLoaded = true;
                 dropdownCacheLoading = false;
@@ -175,6 +177,7 @@
         let rowDataOPD = {
             financialdepartment: row.find('.financialDepartmentOPD').val(),
             categoryname: row.find('.categorynameOPD').val(),
+            costcenter: row.find('.costcenterOPD').val(),
             cashinhand: row.find('.cashinhandOPD').val(),
             discount: row.find('.discountOPD').val(),
             revenue: row.find('.revenueOPD').val()
@@ -238,6 +241,7 @@
         let rowDataDiagnostic = {
             financialdepartment: row.find('.financialDepartmentDiagnostic').val(),
             categoryname: row.find('.categorynameDiagnostic').val(),
+            costcenter: row.find('.costcenterDiagnostic').val(),
             cashinhand: row.find('.cashinhandDiagnostic').val(),
             discount: row.find('.discountDiagnostic').val(),
             revenue: row.find('.revenueDiagnostic').val(),
@@ -281,6 +285,7 @@
         let rowDataSpecialService = {
             financialdepartment: row.find('.financialDepartmentSpecialServices').val(),
             categoryname: row.find('.categorynameSpecialServices').val(),
+            costcenter: row.find('.costcenterSpecialServices').val(),
             cashinhand: row.find('.cashinhandSpecialServices').val(),
             discount: row.find('.discountSpecialServices').val(),
             revenue: row.find('.revenueSpecialServices').val()
@@ -344,6 +349,7 @@
         let rowDataSERVICE = {
             financialdepartment: row.find('.financialDepartmentSERVICE').val(),
             categoryname: row.find('.categorynameSERVICE').val(),
+            costcenter: row.find('.costcenterSERVICE').val(),
             cashinhand: row.find('.cashinhandSERVICE').val(),
             discount: row.find('.discountSERVICE').val(),
             revenue: row.find('.revenueSERVICE').val(),
@@ -366,6 +372,7 @@
              let rowDataPHARMACY = {
                  financialdepartment: row.find('.financialDepartmentPHARMACY').val(),
                  categoryname: row.find('.categorynamePHARMACY').val(),
+                 costcenter: row.find('.costcenterPHARMACY').val(),
                  cashinhand: row.find('.cashinhandPHARMACY').val(),
                  discount: row.find('.discountPHARMACY').val(),
                  revenue: row.find('.revenuePHARMACY').val(),
@@ -540,6 +547,8 @@
                     getClinicalFinancialAcoountsDropdown(function (options) {
                         getPatientTypes(function (categoryOptions) {
                             getAccounts(function (optionsVen) {
+                                var costCenterOptions = '';
+                                getCostCenters(function (c) { costCenterOptions = c; });
 
                                 savedData.forEach(item => {
                                     let row = `
@@ -551,6 +560,11 @@
                                             <td>
                                                 <select class="categorynameOPD select2select" style="background-color: white; height:32px;" disabled>
                                                     ${setSelected(categoryOptions, item.categoryname)}
+                                                </select>
+                                            </td>
+                                            <td>
+                                                <select class="costcenterOPD select2select" style="background-color: white;" disabled>
+                                                    ${setSelected(costCenterOptions, item.costcenter)}
                                                 </select>
                                             </td>
                                             <td>
@@ -1039,6 +1053,8 @@ function addNewRowAdvance() {
                     getClinicalFinancialAcoountsDropdown(function (options) {
                         getMainTestDepartments(function (categoryOptions) {
                             getAccounts(function (optionsVen) {
+                                var costCenterOptions = '';
+                                getCostCenters(function (c) { costCenterOptions = c; });
 
                                 savedData.forEach(item => {
                                     let row = `
@@ -1049,6 +1065,11 @@ function addNewRowAdvance() {
                                             <td>
                                                 <select class="categorynameDiagnostic select2select" style="background-color: white; height:32px;" disabled>
                                                     ${setSelected(categoryOptions, item.categoryname)}
+                                                </select>
+                                            </td>
+                                            <td>
+                                                <select class="costcenterDiagnostic select2select" style="background-color: white;" disabled>
+                                                    ${setSelected(costCenterOptions, item.costcenter)}
                                                 </select>
                                             </td>
                                             <td>
@@ -1169,6 +1190,8 @@ function addNewRowAdvance() {
                     getClinicalFinancialAcoountsDropdown(function (options) {
                         getMainTestDepartments(function (categoryOptions) {
                             getAccounts(function (optionsVen) {
+                                var costCenterOptions = '';
+                                getCostCenters(function (c) { costCenterOptions = c; });
 
                                 savedData.forEach(item => {
                                     let row = `
@@ -1179,6 +1202,11 @@ function addNewRowAdvance() {
                                             <td>
                                                 <select class="categorynameSpecialServices select2select" style="background-color: white; height:32px;" disabled>
                                                     ${setSelected(categoryOptions, item.categoryname)}
+                                                </select>
+                                            </td>
+                                            <td>
+                                                <select class="costcenterSpecialServices select2select" style="background-color: white;" disabled>
+                                                    ${setSelected(costCenterOptions, item.costcenter)}
                                                 </select>
                                             </td>
                                             <td>
@@ -1354,6 +1382,8 @@ function addNewRowAdvance() {
                     console.log(savedData);
                     getClinicalFinancialAcoountsDropdown(function (options) {
                         getAccounts(function (optionsVen) {
+                            var costCenterOptions = '';
+                            getCostCenters(function (c) { costCenterOptions = c; });
 
                             savedData.forEach(item => {
                                 let row = `
@@ -1366,6 +1396,11 @@ function addNewRowAdvance() {
         <select class="categorynameSERVICE" style="background-color: white; height:32px;" disabled>
             <option value="0">Please Select</option>
             <option value="001" selected>Service</option>
+        </select>
+    </td>
+    <td>
+        <select class="costcenterSERVICE select2select" style="background-color: white;" disabled>
+            ${setSelected(costCenterOptions, item.costcenter)}
         </select>
     </td>
     <td>
@@ -1421,6 +1456,9 @@ function addNewRowAdvance() {
                     console.log(savedData);
                     getClinicalFinancialAcoountsDropdown(function (options) {
                         getAccounts(function (optionsVen) {
+                            var costCenterOptions = '';
+                            getCostCenters(function (c) { costCenterOptions = c; });
+
                             savedData.forEach(item => {
                                 let row = `
                         <tr class="data-row">
@@ -1431,6 +1469,11 @@ function addNewRowAdvance() {
                                 <select class="categorynamePHARMACY" style="background-color: white; height:32px;" disabled>
                                     <option value="0">Please Select</option>
                                     <option value="001" ${item.categoryname === "001" ? "selected" : ""}>Medicene</option>
+                                </select>
+                            </td>
+                            <td>
+                                <select class="costcenterPHARMACY select2select" style="background-color: white;" disabled>
+                                    ${setSelected(costCenterOptions, item.costcenter)}
                                 </select>
                             </td>
                             <td>
@@ -1514,6 +1557,8 @@ function addNewRowAdvance() {
             getClinicalFinancialAcoountsDropdown(function (options) {
                 getPatientTypes(function (categoryOptions) {
                     getAccounts(function (optionsVen) {
+                        var costCenterOptions = '';
+                        getCostCenters(function (c) { costCenterOptions = c; });
                         let newRow = `
                                   <tr class="data-row">
                                       <td style="display: none">
@@ -1521,6 +1566,11 @@ function addNewRowAdvance() {
                                       <td>
                                           <select class="categorynameOPD select2select" style="background-color: white; height:32px;">
                                               ${categoryOptions}
+                                          </select>
+                                      </td>
+                                      <td>
+                                          <select class="costcenterOPD select2select" style="background-color: white;">
+                                              ${costCenterOptions}
                                           </select>
                                       </td>
                                       <td>
@@ -1732,6 +1782,8 @@ function addNewRowAdvance() {
             getClinicalFinancialAcoountsDropdown(function (options) {
                 getMainTestDepartments(function (categoryOptions) {
                     getAccounts(function (optionsVen) {
+                        var costCenterOptions = '';
+                        getCostCenters(function (c) { costCenterOptions = c; });
                         let newRow = `
                 <tr class="data-row">
                     <td style="display: none">
@@ -1739,6 +1791,11 @@ function addNewRowAdvance() {
                     <td>
                         <select class="categorynameDiagnostic select2select" style="background-color: white; height:32px;">
                             ${categoryOptions}
+                        </select>
+                    </td>
+                    <td>
+                        <select class="costcenterDiagnostic select2select" style="background-color: white;">
+                            ${costCenterOptions}
                         </select>
                     </td>
                     <td>
@@ -1782,6 +1839,8 @@ function addNewRowAdvance() {
             getClinicalFinancialAcoountsDropdown(function (options) {
                 getSpecialServices(function (categoryOptions) {
                     getAccounts(function (optionsVen) {
+                        var costCenterOptions = '';
+                        getCostCenters(function (c) { costCenterOptions = c; });
                         let newRow = `
                 <tr class="data-row">
                     <td style="display: none">
@@ -1789,6 +1848,11 @@ function addNewRowAdvance() {
                     <td>
                         <select class="categorynameSpecialServices select2select" style="background-color: white; height:32px;">
                             ${categoryOptions}
+                        </select>
+                    </td>
+                    <td>
+                        <select class="costcenterSpecialServices select2select" style="background-color: white;">
+                            ${costCenterOptions}
                         </select>
                     </td>
                     <td>
@@ -1869,6 +1933,8 @@ function addNewRowAdvance() {
         function addNewRowSERVICE() {
             getClinicalFinancialAcoountsDropdown(function (options) {
                 getAccounts(function (optionsVen) {
+                    var costCenterOptions = '';
+                    getCostCenters(function (c) { costCenterOptions = c; });
                     let newRow = `
                 <tr class="data-row">
                     <td style="display: none">
@@ -1877,6 +1943,11 @@ function addNewRowAdvance() {
                         <select class="categorynameSERVICE" disabled style="background-color: white; height:32px;">
                             <option value="0">Please Select</option>
                             <option value="001" selected >Service</option>
+                        </select>
+                    </td>
+                    <td>
+                        <select class="costcenterSERVICE select2select" style="background-color: white;">
+                            ${costCenterOptions}
                         </select>
                     </td>
                     <td>
@@ -1957,6 +2028,8 @@ function addNewRowAdvance() {
         function addNewRowPHARMACY() {
             getClinicalFinancialAcoountsDropdown(function (options) {
                 getAccounts(function (optionsVen) {
+                    var costCenterOptions = '';
+                    getCostCenters(function (c) { costCenterOptions = c; });
                     let newRow = `
             <tr class="data-row">
                 <td style="display: none">
@@ -1966,6 +2039,11 @@ function addNewRowAdvance() {
                     <select disabled class="categorynamePHARMACY" style="background-color: white; height:32px;">
                         <option value="0">Please Select</option>
                         <option value="001" selected>Medicene</option>
+                    </select>
+                </td>
+                <td>
+                    <select class="costcenterPHARMACY select2select" style="background-color: white;">
+                        ${costCenterOptions}
                     </select>
                 </td>
                 <td>
@@ -2033,6 +2111,12 @@ function addNewRowAdvance() {
                 callback(dropdownCache.accounts || '<option value="0">Please Select</option>');
             });
         }
+        function getCostCenters(callback) {
+            if (dropdownCache.costCenters) { callback(dropdownCache.costCenters); return; }
+            loadCommonDropdowns(function () {
+                callback(dropdownCache.costCenters || '<option value="0">Please Select</option>');
+            });
+        }
         function getClinicalFinancialAcoountsDropdown(callback) {
             if (dropdownCache.clinicalDept) {
                 $('#OPD_ClinicalFinancialDepartment').html(dropdownCache.clinicalDept);
@@ -2083,8 +2167,9 @@ function addNewRowAdvance() {
                 <thead id="theadOPD">
                     <tr>
                         <th style="display: none">Financial Department  </th>
-                        <th style="width: 16%;">Category Name         </th>
-                        <th style="width: 25%;">Cash in Hand (C.I.H.) </th>
+                        <th style="width: 14%;">Category Name         </th>
+                        <th style="width: 14%;">Cost Center           </th>
+                        <th style="width: 22%;">Cash in Hand (C.I.H.) </th>
                         <th style="width: 25%;">Discount              </th>
                         <th style="width: 25%;">Revenue               </th>
                         <th style="width: 9%;">Action                </th>
@@ -2232,8 +2317,9 @@ function addNewRowAdvance() {
                 <thead id="theadDiagnostic">
                     <tr>
                         <th style="display: none">Financial Department  </th>
-                        <th style="width: 16%;">Category Name         </th>
-                        <th style="width: 25%;">Cash in Hand (C.I.H.) </th>
+                        <th style="width: 14%;">Category Name         </th>
+                        <th style="width: 14%;">Cost Center           </th>
+                        <th style="width: 22%;">Cash in Hand (C.I.H.) </th>
                         <th style="width: 25%;">Discount              </th>
                         <th style="width: 25%;">Revenue               </th>
                         <th style="width: 25%;">Expense               </th>
@@ -2284,8 +2370,9 @@ function addNewRowAdvance() {
                <thead id="theadSpecialServices">
                    <tr>
                        <th style="display: none">Financial Department  </th>
-                       <th style="width: 16%;">Category Name         </th>
-                       <th style="width: 25%;">Cash in Hand (C.I.H.) </th>
+                       <th style="width: 14%;">Category Name         </th>
+                       <th style="width: 14%;">Cost Center           </th>
+                       <th style="width: 22%;">Cash in Hand (C.I.H.) </th>
                        <th style="width: 25%;">Discount              </th>
                        <th style="width: 25%;">Revenue               </th>
                        <th style="width: 9%;">Action                </th>
@@ -2360,8 +2447,9 @@ function addNewRowAdvance() {
                 <thead id="theadSERVICE">
                     <tr>
                         <th style="display: none">Financial Department  </th>
-                        <th style="width: 16%;">Category Name         </th>
-                        <th style="width: 25%;">Cash in Hand (C.I.H.) </th>
+                        <th style="width: 14%;">Category Name         </th>
+                        <th style="width: 14%;">Cost Center           </th>
+                        <th style="width: 22%;">Cash in Hand (C.I.H.) </th>
                         <th style="width: 25%;">Discount              </th>
                         <th style="width: 25%;">Revenue               </th>
                         <th style="width: 25%;">Expense               </th>
@@ -2386,8 +2474,9 @@ function addNewRowAdvance() {
                 <thead id="theadPHARMACY">
                     <tr>
                         <th style="display: none">Financial Department</th>
-                        <th style="width: 12%;">Category Name</th>
-                        <th style="width: 18%;">Cash in Hand (C.I.H.)</th>
+                        <th style="width: 10%;">Category Name</th>
+                        <th style="width: 10%;">Cost Center</th>
+                        <th style="width: 16%;">Cash in Hand (C.I.H.)</th>
                         <th style="width: 18%;">Discount</th>
                         <th style="width: 18%;">Revenue</th>
                         <th style="width: 18%;">CGS</th>

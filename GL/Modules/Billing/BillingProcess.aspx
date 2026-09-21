@@ -1489,6 +1489,58 @@
                     //$('#BillDepartment').attr('disabled', true);
                 });
             }
+            var suppressBillDeptChange = false;
+            function LoadCostCenterByDepartment(department, selectedCostCenter) {
+                var $cc = $('#ddlCostCenter');
+                if (!$cc.length) return;
+
+                if (!department || department === '0' || department === '') {
+                    $cc.html('<option value="0">Please Select</option>');
+                    $cc.attr('disabled', true);
+                    if ($cc.hasClass('select2-hidden-accessible')) { $cc.trigger('change'); }
+                    return;
+                }
+
+                $.ajax({
+                    type: "POST",
+                    url: "BillingProcess.aspx/GetCostCenterByDepartment",
+                    data: JSON.stringify({ department: department }),
+                    contentType: "application/json; charset=utf-8",
+                    dataType: "json",
+                    success: function (response) {
+                        var data = [];
+                        try { data = JSON.parse(response.d); } catch (e) { data = []; }
+
+                        var options = '<option value="0">Please Select</option>';
+                        $.each(data, function (key, value) {
+                            options += '<option value="' + value.DataValue_Name + '" >' + value.DataValue_Description + '</option>';
+                        });
+                        $cc.html(options);
+
+                        if (selectedCostCenter) {
+                            if ($cc.find('option[value="' + selectedCostCenter + '"]').length === 0) {
+                                $cc.append('<option value="' + selectedCostCenter + '">' + selectedCostCenter + '</option>');
+                            }
+                            $cc.val(selectedCostCenter);
+                        } else {
+                            var realOptions = $cc.find('option').filter(function () { return $(this).val() !== '0'; });
+                            if (realOptions.length === 1) {
+                                $cc.val(realOptions.val());
+                            }
+                        }
+
+                        $cc.attr('disabled', true);
+                        if ($cc.hasClass('select2-hidden-accessible')) { $cc.trigger('change'); }
+                    },
+                    error: function (xhr, status, error) {
+                        console.error("Error loading cost centers by department:", error);
+                    }
+                });
+            }
+            $(document).on('change', '#BillDepartment', function () {
+                if (suppressBillDeptChange) return;
+                LoadCostCenterByDepartment($(this).val());
+            });
             function LoadPatientType() {
                 PageMethods.PatientType(function (data) {
                     var options = '<option value="0" >Please Select</option>';
@@ -1640,6 +1692,7 @@
                         })
                     );
                     $('#BillDepartment').attr('disabled', true);
+                    LoadCostCenterByDepartment(data[0].Bill_Department, data[0].Cost_Center);
                     $('#BillCategory').html(
                         $('<option>', {
                             value: data[0].Bill_Category,
@@ -2093,6 +2146,7 @@
                         var PackageType = $('#hdn_pkgtype').val();
                         var PackageName = $('#hdn_pkgname').val();
                         var BillDepartment = $('#BillDepartment').val();
+                        var CostCenter = $('#ddlCostCenter').val();
                         var BillCategory = $('#BillCategory').val();
                         var bomTotalValue = $('#bomTotalValue').val();
                         var selectedBranchId = $('#ddlUserBranch').val();
@@ -2332,7 +2386,7 @@
                             document.getElementById("hdnDuplicateCheck").value = "0";
                             return ;
                         }
-                        var Parameters = { Bill_ID: Bill_ID, Patient_ID: Patient_ID, Opd_id: Opd_id, Bill_Date: Bill_Date, Remarks: Remarks, TotalPayable: TotalPayable, Discount_Percentage: Discount_Percentage, Discount_Amount: Discount_Amount, Net_Amount: Net_Amount, Received_Amount: Received_Amount, Balance_Amount: Balance_Amount, ChargePolicy: ChargePolicy, Details: Details, Share: Share, referred_by_doctor: referred_by_doctor, bomItems: bomItems, Casher: Casher, Previous_Balance: Previous_Balance, Previous_Paid: Previous_Paid, Over_and_Above: Over_and_Above, Cash_In_Hand: Cash_In_Hand, Cash_In_Hand_Account: Cash_In_Hand_Account, Bank_Account: Bank_Account, Bank_Cash: Bank_Cash, Main_Department: Main_Department, PackageType: PackageType, PackageName: PackageName, finalbill: finalbill, BillDepartment: BillDepartment, BillCategory: BillCategory, hdn_docid: hdn_docid, opd_procedure: opd_procedure, bomTotalValue: bomTotalValue, SelectedBranchId: selectedBranchId, Patient_Type: Patient_Type, Sales_Tax_ID: $('#hdnSalesTaxID').val(), Sales_Tax_Percentage: $('#hdnSalesTaxPercentage').val(), Panel_Id: Panel_Id, Appointment_ID: $('#hdnAppointment_ID').val(), Referred_Doctor_Name: Referred_Doctor_Name }; //Total_Doctor_Share: Total_Doctor_Share,
+                        var Parameters = { Bill_ID: Bill_ID, Patient_ID: Patient_ID, Opd_id: Opd_id, Bill_Date: Bill_Date, Remarks: Remarks, TotalPayable: TotalPayable, Discount_Percentage: Discount_Percentage, Discount_Amount: Discount_Amount, Net_Amount: Net_Amount, Received_Amount: Received_Amount, Balance_Amount: Balance_Amount, ChargePolicy: ChargePolicy, Details: Details, Share: Share, referred_by_doctor: referred_by_doctor, bomItems: bomItems, Casher: Casher, Previous_Balance: Previous_Balance, Previous_Paid: Previous_Paid, Over_and_Above: Over_and_Above, Cash_In_Hand: Cash_In_Hand, Cash_In_Hand_Account: Cash_In_Hand_Account, Bank_Account: Bank_Account, Bank_Cash: Bank_Cash, Main_Department: Main_Department, PackageType: PackageType, PackageName: PackageName, finalbill: finalbill, BillDepartment: BillDepartment, CostCenter: CostCenter, BillCategory: BillCategory, hdn_docid: hdn_docid, opd_procedure: opd_procedure, bomTotalValue: bomTotalValue, SelectedBranchId: selectedBranchId, Patient_Type: Patient_Type, Sales_Tax_ID: $('#hdnSalesTaxID').val(), Sales_Tax_Percentage: $('#hdnSalesTaxPercentage').val(), Panel_Id: Panel_Id, Appointment_ID: $('#hdnAppointment_ID').val(), Referred_Doctor_Name: Referred_Doctor_Name }; //Total_Doctor_Share: Total_Doctor_Share,
                         var rcptAmt = $('#txtAmountReceived').val();
                         if (Patient_ID == '') {
                             alert('Select Patient.');
@@ -6294,6 +6348,21 @@
                     $('#lblDepartment').val(data.d.Department);
                     $('#txt_balance').val(data.d.Balance);
                     $('#txtInsuranceCardNo').val(ReplaceNullWith_Space(data.d.InsuranceCardNo));
+
+                    // Auto-load department saved in OPD / IPD / Emergency into Bill Department
+                    var billDept = data.d.Bill_Department;
+                    if (billDept) {
+                        var $bd = $('#BillDepartment');
+                        if ($bd.find('option[value="' + billDept + '"]').length === 0) {
+                            $bd.append('<option value="' + billDept + '">' + ReplaceNullWith_Space(data.d.Department) + '</option>');
+                        }
+                        suppressBillDeptChange = true;
+                        $bd.val(billDept).trigger('change');
+                        suppressBillDeptChange = false;
+                    }
+
+                    // Cost center follows the Bill Department; preselect the saved one
+                    LoadCostCenterByDepartment(billDept, data.d.Cost_Center);
                     //$('#txtMaindepartment').val(data.d.MainDepartment).trigger('change');
                     
                                 
@@ -8058,7 +8127,9 @@
                 });
              
                 LoadBillDepartment();
-                
+                $('#ddlCostCenter').select2();
+                $('#ddlCostCenter').attr('disabled', true);
+
                 LoadBillPatCategory();
                 fillCashInHand();
 
@@ -8728,6 +8799,10 @@
                 <div class="bp-field">
                     <label class="bp-label">Bill Department</label>
                     <select id="BillDepartment" class="bp-select"></select>
+                </div>
+                <div class="bp-field">
+                    <label class="bp-label">Cost Center</label>
+                    <select id="ddlCostCenter" class="bp-select"></select>
                 </div>
                 <div class="bp-field">
                     <label class="bp-label">Bill Category</label>

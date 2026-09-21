@@ -26,6 +26,7 @@ namespace PMS.Modules.Accounts
                             select new RowData
                             {
                                 categoryname = x.CategoryName,
+                                costcenter = x.CostCenter,
                                 cashinhand = x.CashInHand.ToString(),
                                 discount = x.Discount.ToString(),
                                 revenue = x.Revenue.ToString(),
@@ -105,6 +106,7 @@ namespace PMS.Modules.Accounts
                             select new RowData
                             {
                                 categoryname = x.CategoryName,
+                                costcenter = x.CostCenter,
                                 cashinhand = x.CashInHand.ToString(),
                                 discount = x.Discount.ToString(),
                                 revenue = x.Revenue.ToString(),
@@ -163,6 +165,7 @@ namespace PMS.Modules.Accounts
                             select new RowData
                             {
                                 categoryname = x.CategoryName,
+                                costcenter = x.CostCenter,
                                 cashinhand = x.CashInHand.ToString(),
                                 discount = x.Discount.ToString(),
                                 revenue = x.Revenue.ToString(),
@@ -183,6 +186,7 @@ namespace PMS.Modules.Accounts
                             select new RowData
                             {
                                 categoryname = x.CategoryName,
+                                costcenter = x.CostCenter,
                                 cashinhand = x.CashInHand.ToString(),
                                 discount = x.Discount.ToString(),
                                 revenue = x.Revenue.ToString(),
@@ -203,6 +207,7 @@ namespace PMS.Modules.Accounts
                             select new RowData
                             {
                                 categoryname = x.CategoryName,
+                                costcenter = x.CostCenter,
                                 cashinhand = x.CashInHand.ToString(),
                                 discount = x.Discount.ToString(),
                                 revenue = x.Revenue.ToString(),
@@ -311,6 +316,26 @@ namespace PMS.Modules.Accounts
             return data;
         }
         [WebMethod]
+        public static string CostCenterDropdown()
+        {
+            string data = string.Empty;
+
+            using (DataBaseDataContext db = new DataBaseDataContext())
+            {
+                var result = (from dv in db.DataValues
+                              join ds in db.ValueSets
+                              on dv.ValueSet_ID equals ds.ValueSet_ID
+                              where ds.ValueSet_Description == "Cost Center"
+                              select new
+                              {
+                                  dv.DataValue_Name,
+                                  dv.DataValue_Description
+                              }).ToList();
+                data = new JavaScriptSerializer().Serialize(result);
+            }
+            return data;
+        }
+        [WebMethod]
         public static string filldropdowns()
         {
             DataBaseDataContext db = new DataBaseDataContext();
@@ -359,11 +384,14 @@ namespace PMS.Modules.Accounts
                     int.TryParse(row.cgs, out cgs);
                     int.TryParse(row.balanceaccount, out balanceAccount);
 
+                    string costCenter = (string.IsNullOrEmpty(row.costcenter) || row.costcenter == "0") ? null : row.costcenter;
+
                     ClinicalAccountCategory table = new ClinicalAccountCategory
                     {
                         Fn_Department = financialDept,
                         Fn_Department_Name = financialDept_name,
                         CategoryName = category,
+                        CostCenter = costCenter,
                         CashInHand = cash,
                         Discount = discount,
                         Revenue = revenue,
@@ -450,6 +478,7 @@ namespace PMS.Modules.Accounts
             public string financialdepartment_name { get; set; }
             public string financialdepartment { get; set; }
             public string categoryname { get; set; }
+            public string costcenter { get; set; }
             public string cashinhand { get; set; }
             public string discount { get; set; }
             public string revenue { get; set; }
