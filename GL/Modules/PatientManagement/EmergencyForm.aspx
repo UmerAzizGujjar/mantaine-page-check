@@ -2495,7 +2495,7 @@
                             <option value="0">Select Department</option>
                         </select>
                     </div>
-                    <div class="opd-field" id="costcenter">
+                    <div class="opd-field" id="costcenter" style="display:none;">
                         <label class="opd-label">Cost Center</label>
                         <select id="ddlCostCenter" class="opd-select">
                             <option value="0">Select Cost Center</option>
