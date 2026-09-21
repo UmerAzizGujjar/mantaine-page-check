@@ -51,6 +51,10 @@
         }
         $(document).ready(function () {
             getprvpat_id();
+            FillCostCenterByDepartment($('#ctl00_MainContent_ddlDepartment').val());
+            $(document).on('change', '#ctl00_MainContent_ddlDepartment', function () {
+                FillCostCenterByDepartment($(this).val());
+            });
             CheckCNICUpdateonCondition();
             isCNICValidationRequired();
 
@@ -345,6 +349,48 @@
             }
 
         });
+        function FillCostCenterByDepartment(department) {
+            var $cc = $('#ddlCostCenter');
+            if (!$cc.length) return;
+
+            if (!department || department === '0' || department === '') {
+                $cc.html('<option value="0">Select Cost Center</option>');
+                if ($cc.hasClass('select2-hidden-accessible')) { $cc.trigger('change'); }
+                return;
+            }
+
+            $.ajax({
+                type: "POST",
+                url: "InPatientsAdmission.aspx/GetCostCenterByDepartment",
+                data: JSON.stringify({ department: department }),
+                contentType: "application/json; charset=utf-8",
+                dataType: "json",
+                success: function (response) {
+                    var data = [];
+                    try { data = JSON.parse(response.d); } catch (e) { data = []; }
+                    var options = '<option value="0">Select Cost Center</option>';
+                    $.each(data, function (key, value) {
+                        options += '<option value="' + value.DataValue_Name + '">' + value.DataValue_Description + '</option>';
+                    });
+                    $cc.html(options);
+                    var realOptions = $cc.find('option').filter(function () { return $(this).val() !== '0'; });
+                    var savedCostCenter = $('#<%= hdnCostCenter.ClientID %>').val();
+                    if (savedCostCenter && $cc.find('option[value="' + savedCostCenter + '"]').length) {
+                        $cc.val(savedCostCenter);
+                    } else if (realOptions.length === 1) {
+                        $cc.val(realOptions.val());
+                    }
+                    if ($cc.hasClass('select2-hidden-accessible')) {
+                        $cc.trigger('change');
+                    } else {
+                        $cc.select2();
+                    }
+                },
+                error: function (xhr, status, error) {
+                    console.error("Error loading cost centers by department:", error);
+                }
+            });
+        }
         function saveprint() {
             debugger;
             $('#loadingimage').show();
@@ -3424,6 +3470,7 @@
 
             var txtAdmission_Date = $('#ctl00_MainContent_txtAdmission_Date').val();
             var ddlDepartment = $('#ctl00_MainContent_ddlDepartment').val();
+            var ddlCostCenter = $('#ddlCostCenter').val();
             var ddlDoctor = $('#ctl00_MainContent_ddlDoctor').val();
 
             var main_department = $('#ctl00_MainContent_ddl_mainCategory').val();
@@ -3517,7 +3564,7 @@
 
             PageMethods.SaveAllRecord(
                 Patient_ID, btnsave, txtAdmission_Date, patient_name, patient_age, patient_number,
-                ddlDepartment, ddlDoctor, txtHealth_Complaints, txtExpected_Discharge_Date,
+                ddlDepartment, ddlCostCenter, ddlDoctor, txtHealth_Complaints, txtExpected_Discharge_Date,
                 ddlIssuance_Of, ddlWard_No, txtBed_No, ddlRoom_No, txtRoom_Type,
                 PatientDiscountType, panelCompany, admissionType, sehatCardNo, visitId,
                 CardHolderName, InsuranceCardNo, PolicyHolderName, Sehat_Holder,
@@ -7876,6 +7923,13 @@
                                                 <asp:Button ID="btnGet_Doctor" Style="display: none;" Text="" runat="server" OnClick="btnGet_Doctor_Click" CausesValidation="false" />
                                             </ContentTemplate>
                                         </asp:UpdatePanel>
+                                    </div>
+                                    <div class="ipd-field">
+                                        <label class="ipd-label" for="ddlCostCenter">Cost Center</label>
+                                        <select id="ddlCostCenter" class="ipd-input">
+                                            <option value="0">Select Cost Center</option>
+                                        </select>
+                                        <asp:HiddenField ID="hdnCostCenter" runat="server" />
                                     </div>
                                     <div class="ipd-field">
                                         <asp:Label ID="Label34" runat="server" CssClass="ipd-label" Text="InPatient Admit Catagory"></asp:Label>

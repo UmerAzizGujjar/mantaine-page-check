@@ -196,6 +196,12 @@ namespace PMS.Inventory
             }
         }
 
+        [WebMethod]
+        public static string GetItemLogs(long itemId)
+        {
+            return INVItemLogHelper.GetItemLogsPayload(itemId);
+        }
+
     }
 }
 

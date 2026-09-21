@@ -1,12 +1,15 @@
 ﻿using PMS.Inventory;
 using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.Linq;
 using System.Web;
 using System.Web.Script.Services;
 using System.Web.Services;
 using System.Web.UI;
 using System.Web.UI.WebControls;
+using Newtonsoft.Json;
+using Newtonsoft.Json.Linq;
 
 namespace PMS
 {
@@ -170,6 +173,215 @@ namespace PMS
             catch (Exception ex)
             {
                 throw new Exception("Error fetching Store Issue list", ex);
+            }
+        }
+
+        // ================= GIN CHANGE HISTORY (Store_Issue_Logs) =================
+
+        private static string StrVal(object v)
+        {
+            if (v == null) return "";
+            return Convert.ToString(v, CultureInfo.InvariantCulture);
+        }
+
+        private static string NumVal(object v)
+        {
+            if (v == null) return "";
+            try { return Convert.ToDecimal(v).ToString("0.##", CultureInfo.InvariantCulture); }
+            catch { return ""; }
+        }
+
+        private static string DateVal(object v)
+        {
+            if (v == null) return "";
+            try { return Convert.ToDateTime(v).ToString("yyyy-MM-dd", CultureInfo.InvariantCulture); }
+            catch { return ""; }
+        }
+
+        private static JToken ParseLogJson(string json)
+        {
+            if (string.IsNullOrWhiteSpace(json))
+                return null;
+
+            try { return JsonConvert.DeserializeObject<JToken>(json); }
+            catch { return null; }
+        }
+
+        private static object BuildGINMasterSnapshot(Store_Issue si, DataBaseDataContext db)
+        {
+            string deptName = "";
+            if (!string.IsNullOrEmpty(si.Department_Id))
+            {
+                try { deptName = db.GetDataValueName("Department", si.Department_Id) ?? ""; }
+                catch { deptName = ""; }
+            }
+
+            string warehouseName = "";
+            if (!string.IsNullOrEmpty(si.Organization_Id))
+            {
+                try { warehouseName = db.GetDataValueName("Ware House", si.Organization_Id) ?? ""; }
+                catch { warehouseName = ""; }
+            }
+
+            var snap = new Dictionary<string, string>();
+            snap["Store_Issue_No"] = si.Store_Issue_No.HasValue ? si.Store_Issue_No.Value.ToString() : "";
+            snap["Date"] = DateVal(si.Created_Time);
+            snap["Department"] = deptName;
+            snap["Ware_House"] = warehouseName;
+            snap["MR_No"] = StrVal(si.MR_No);
+            snap["Status"] = StrVal(si.Status);
+            snap["Approved_Time"] = DateVal(si.Approved_Time);
+            snap["Update_Time"] = DateVal(si.Update_Time);
+            return snap;
+        }
+
+        private static object BuildGINDetailSnapshot(DataBaseDataContext db, int storeIssueId)
+        {
+            var rows = db.Store_Issue_Details.Where(t => t.Store_Issue_Id == storeIssueId).ToList();
+
+            var ids = rows.Where(r => r.Item_Id.HasValue).Select(r => (int)r.Item_Id.Value).Distinct().ToList();
+            var itemNames = new Dictionary<int, string>();
+            var itemCodes = new Dictionary<int, string>();
+            foreach (var id in ids)
+            {
+                var itm = db.INV_Items.Where(x => x.Item_ID == id)
+                                       .Select(x => new { x.Description, x.Item_Code })
+                                       .FirstOrDefault();
+                itemNames[id] = itm != null ? (itm.Description ?? "") : "";
+                itemCodes[id] = itm != null ? (itm.Item_Code ?? "") : "";
+            }
+
+            return new
+            {
+                Items = rows.Select(i =>
+                {
+                    string name = "";
+                    string code = "";
+                    if (i.Item_Id.HasValue)
+                    {
+                        int key = (int)i.Item_Id.Value;
+                        if (itemNames.ContainsKey(key)) name = itemNames[key];
+                        if (itemCodes.ContainsKey(key)) code = itemCodes[key];
+                    }
+
+                    return new
+                    {
+                        Item_Name = name,
+                        Item_Code = code,
+                        MIRDetailId = i.MIR_Detail_Id.HasValue ? i.MIR_Detail_Id.Value.ToString() : "",
+                        Qty = NumVal(i.MIR_Qty),
+                        Issue_Qty = NumVal(i.Issue_Qty),
+                        Balance_Qty = NumVal(i.Balance_Qty),
+                        Store_Stock = StrVal(i.Store_Stock),
+                        Department = StrVal(i.Department),
+                        BatchNum = StrVal(i.BatchNum),
+                        Remarks = StrVal(i.Remarks),
+                        CGS = NumVal(i.CGS),
+                        Last_Issue_Date = DateVal(i.Last_issue_date)
+                    };
+                }).ToList()
+            };
+        }
+
+        [WebMethod]
+        public static string GetGINLogs(int siId)
+        {
+            try
+            {
+                using (var db = new DataBaseDataContext())
+                {
+                    var logRows = (from l in db.Store_Issue_Logs
+                                   join u in db.aspnet_Users on l.Loged_By equals u.UserId into userJoin
+                                   from u in userJoin.DefaultIfEmpty()
+                                   where l.Store_Issue_Id == siId
+                                   orderby l.Log_Time, l.Log_Id
+                                   select new
+                                   {
+                                       l.Log_Id,
+                                       l.Log_Time,
+                                       l.Master_Log,
+                                       l.Details_Log,
+                                       UserName = u != null ? u.UserName : null
+                                   }).ToList();
+
+                    var logs = logRows.Select(r => new
+                    {
+                        Log_Id = r.Log_Id,
+                        TimeText = r.Log_Time.HasValue ? r.Log_Time.Value.ToString("dd MMM yyyy hh:mm tt") : "",
+                        UserName = string.IsNullOrEmpty(r.UserName) ? "" : r.UserName,
+                        Master = ParseLogJson(r.Master_Log),
+                        Details = ParseLogJson(r.Details_Log)
+                    }).ToList();
+
+                    var si = db.Store_Issues.FirstOrDefault(x => x.Store_Issue_Id == siId);
+
+                    object currentMaster = null;
+                    object currentDetails = null;
+
+                    if (si != null)
+                    {
+                        currentMaster = BuildGINMasterSnapshot(si, db);
+                        currentDetails = BuildGINDetailSnapshot(db, si.Store_Issue_Id);
+                    }
+
+                    var approvalRows = (from a in db.Sys_Approval_Logs
+                                        join st in db.Sys_Approval_Stage_Masters on a.Approval_Stage_ID equals st.Stage_ID into stageJoin
+                                        from st in stageJoin.DefaultIfEmpty()
+                                        join au in db.aspnet_Users on a.Approve_By equals au.UserId into apprJoin
+                                        from au in apprJoin.DefaultIfEmpty()
+                                        join ru in db.aspnet_Users on a.Rejected_By equals ru.UserId into rejJoin
+                                        from ru in rejJoin.DefaultIfEmpty()
+                                        where a.Entry_ID == siId && a.Form_ID == 6
+                                        orderby a.Approve_Date, a.ID
+                                        select new
+                                        {
+                                            a.ID,
+                                            StageName = st != null ? st.Stage_Name : null,
+                                            a.Entry_Status,
+                                            a.IsFinalAprroval,
+                                            a.IsRejected,
+                                            a.Is_ByPassed,
+                                            a.IsEditableAfterApproval,
+                                            Approver = au != null ? au.UserName : null,
+                                            Rejector = ru != null ? ru.UserName : null,
+                                            a.Approve_Date,
+                                            a.Rejected_Date,
+                                            a.Approval_Remarks,
+                                            a.Rejection_Remarks,
+                                            a.Remarks,
+                                            a.From_Name
+                                        }).ToList();
+
+                    var approvals = approvalRows.Select(r => new
+                    {
+                        ID = r.ID,
+                        StageName = StrVal(r.StageName),
+                        Status = StrVal(r.Entry_Status),
+                        IsFinal = r.IsFinalAprroval ?? false,
+                        IsRejected = r.IsRejected ?? false,
+                        IsByPassed = r.Is_ByPassed ?? false,
+                        IsEditableAfterApproval = r.IsEditableAfterApproval ?? false,
+                        User = !string.IsNullOrEmpty(r.Rejector) ? r.Rejector : StrVal(r.Approver),
+                        DateText = (r.Rejected_Date ?? r.Approve_Date).HasValue
+                            ? (r.Rejected_Date ?? r.Approve_Date).Value.ToString("dd MMM yyyy hh:mm tt")
+                            : "",
+                        Remarks = !string.IsNullOrEmpty(r.Rejection_Remarks)
+                            ? r.Rejection_Remarks
+                            : (!string.IsNullOrEmpty(r.Approval_Remarks) ? r.Approval_Remarks : StrVal(r.Remarks)),
+                        FromName = StrVal(r.From_Name)
+                    }).ToList();
+
+                    return JsonConvert.SerializeObject(new
+                    {
+                        logs = logs,
+                        current = new { master = currentMaster, details = currentDetails },
+                        approvals = approvals
+                    });
+                }
+            }
+            catch (Exception ex)
+            {
+                return JsonConvert.SerializeObject(new { error = ex.Message });
             }
         }
     }

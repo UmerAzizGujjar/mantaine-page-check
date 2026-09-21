@@ -272,3 +272,15 @@ td {
         .dt-button-collection .dt-button.active::before {
             color: white !important;
         }
+
+/* Action column: keep action buttons on one line, prevent overlap */
+table.dataTable > tbody > tr > td:last-child,
+table.dataTable > thead > tr > th:last-child {
+    white-space: nowrap;
+}
+
+table.dataTable td.action-col,
+table.dataTable th.action-col {
+    white-space: nowrap;
+    text-align: center;
+}

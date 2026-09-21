@@ -21,12 +21,35 @@
     #Queue{
         font-weight:bold;
     }
+
+    #QueueList .table-responsive.previewTable {
+        max-height: 420px;
+        overflow-y: auto;
+    }
+    #QueueList #tblPendingPatients thead th {
+        position: sticky;
+        top: 0;
+        background-color: #f5f7fa;
+        z-index: 2;
+        box-shadow: inset 0 -1px 0 #ddd;
+    }
+    #QueueList #tblPendingPatients {
+        width: 100%;
+        border-collapse: separate;
+        border-spacing: 0;
+    }
     .stat-row {
     background-color: #ffcccc !important; /* light red */
 }
     .table-active {
     background-color:#fcce58 !important;
 }
+    .on-hold-row {
+        background-color: #fff3cd !important; /* yellow */
+    }
+    #remarksModal .modal-dialog {
+        max-width: 500px;
+    }
     
     #tblDetails td {
         padding: 6px 8px !important;
@@ -195,6 +218,9 @@
             AllowadjustmentEdit();
             LoadQueueCount();
             $('#filterTransactionType').on('change', function () {
+                filterPendingPatients();
+            });
+            $('#filterStatus').on('change', function () {
                 filterPendingPatients();
             });
 
@@ -872,10 +898,14 @@
         }
         function filterPendingPatients() {
             var selected = $('#filterTransactionType').val();
+            var statusSel = $('#filterStatus').val();
             $('#tblPendingPatients tbody tr').each(function () {
                 // Department is the 3rd column (index 2)
                 var dept = $(this).find('td:eq(2)').text().trim();
-                if (selected === 'all' || dept === selected) {
+                var rowStatus = $(this).attr('data-status') || 'open';
+                var deptMatch = (selected === 'all' || dept === selected);
+                var statusMatch = (statusSel === 'all' || rowStatus === statusSel);
+                if (deptMatch && statusMatch) {
                     $(this).show();
                 } else {
                     $(this).hide();
@@ -3680,6 +3710,11 @@ function CalculateReceivedAmount() {
             var SearchString = $("#txtSearchmodal").val();
             PageMethods.PendingPatients(SearchString, function (data) {
                 var parsedData = JSON.parse(data);
+                parsedData.sort(function (a, b) {
+                    var aClosed = (a.Status === 'rejected' || a.Status === '1' || a.Status === 1) ? 1 : 0;
+                    var bClosed = (b.Status === 'rejected' || b.Status === '1' || b.Status === 1) ? 1 : 0;
+                    return aClosed - bClosed;
+                });
                 var rows = '';
                 debugger;
                 $.each(parsedData, function (key, value) {
@@ -3698,10 +3733,15 @@ function CalculateReceivedAmount() {
                     // NEW: Check if this patient has at least one STAT medicine
                     var hasStat = value.HasStat === true || value.HasStat === 1;
 
-                    // Determine row class: STAT takes precedence over rejected (red is more important)
+                    // Check if on hold
+                    var isHold = value.IsHold === true || value.IsHold === 1 || value.IsHold === 'true' || value.Status === 'Hold';
+
+                    // Determine row class: STAT > on-hold > rejected
                     var rowClass = '';
                     if (hasStat) {
                         rowClass = 'stat-row';            // red background
+                    } else if (isHold) {
+                        rowClass = 'on-hold-row';         // yellow background
                     } else if (isRejected) {
                         rowClass = 'rejected-row';        // light pink / grey
                     }
@@ -3721,8 +3761,24 @@ function CalculateReceivedAmount() {
                         actionButtons = '<span class="badge badge-danger" style="background-color: #dc3545; padding: 5px 10px; border-radius: 3px; cursor: default;">Closed</span>';
                     }
 
+                    // Build remarks display + edit button (only for non-rejected)
+                    var remarkText = value.Remarks || '';
+                    var remarkCell = '';
+                    if (!isRejected) {
+                        remarkCell = '<div style="display:flex;align-items:center;gap:6px;">' +
+                            '<span title="' + (remarkText || '').replace(/"/g, '&quot;') + '" style="max-width:180px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">' +
+                            (remarkText || '<em style="color:#999;">No remark</em>') +
+                            '</span>' +
+                            '<a href="javascript:void(0)" onclick="openRemarksModal(' + value.In_Patient_Medicine_ID + ', \'' + (value.Medicine_Name || '').replace(/'/g, "\\'") + '\')" title="Add/Edit Remarks">' +
+                            '<i class="fa fa-comment-o" style="color:#007bff;"></i>' +
+                            '</a>' +
+                            '</div>';
+                    } else {
+                        remarkCell = remarkText || '';
+                    }
+
                     // Build the table row with the computed class
-                    rows += '<tr class="' + rowClass + '">' +
+                    rows += '<tr class="' + rowClass + '" data-status="' + (isRejected ? 'closed' : 'open') + '">' +
                         '<td>' + value.mr_no_sequence + '</td>' +
                         '<td>' + value.Full_Name + '</td>' +
                         '<td>' + value.Transaction_Type + '</td>' +
@@ -3733,6 +3789,7 @@ function CalculateReceivedAmount() {
                         '<td>' + closeDate + '</td>' +
                         '<td>' + actionButtons + '</td>' +
                         '<td>' + (value.Rejected_By || '') + '</td>' +
+                        '<td>' + remarkCell + '</td>' +
                         '</tr>';
                 });
                 debugger;
@@ -3741,6 +3798,58 @@ function CalculateReceivedAmount() {
                 filterPendingPatients();
             }, function (err) {
                 console.log(err);
+            });
+        }
+
+        function openRemarksModal(medicineId, medicineName) {
+            $('#hdnRemarkMedicineId').val(medicineId);
+            $('#txtRemarkMedicineName').val(medicineName || '');
+            $('#txtMedicineRemark').val('');
+            $('#chkOnHold').prop('checked', false);
+            PageMethods.GetMedicineRemark(medicineId, function (data) {
+                try {
+                    var r = JSON.parse(data);
+                    $('#txtMedicineRemark').val(r.Remarks || '');
+                    $('#chkOnHold').prop('checked', r.IsHold === true || r.Status === 'Hold');
+                } catch (e) { /* ignore */ }
+                $('#remarksModal').modal('show');
+                setTimeout(function () { $('#txtMedicineRemark').focus(); }, 300);
+            }, function (err) {
+                $('#remarksModal').modal('show');
+            });
+        }
+
+        function SaveMedicineRemark() {
+            var id = $('#hdnRemarkMedicineId').val();
+            var remarks = $('#txtMedicineRemark').val();
+            var isHold = $('#chkOnHold').is(':checked');
+            if (!id) { return; }
+            lockPharmSave();
+            PageMethods.SaveMedicineRemark(id, remarks, isHold, function (response) {
+                unlockPharmSave();
+                var r = JSON.parse(response);
+                if (r.Success) {
+                    Swal.fire({
+                        icon: 'success', title: 'Saved!', text: r.Message,
+                        showConfirmButton: false, timer: 1500,
+                        customClass: { popup: 'swal-big-popup', title: 'swal-big-title', htmlContainer: 'swal-big-text' }
+                    });
+                    $('#remarksModal').modal('hide');
+                    fillPendingPatientsLists();
+                } else {
+                    Swal.fire({
+                        icon: 'error', title: 'Error!', text: r.Message,
+                        showConfirmButton: false, timer: 2000,
+                        customClass: { popup: 'swal-big-popup', title: 'swal-big-title', htmlContainer: 'swal-big-text' }
+                    });
+                }
+            }, function (err) {
+                unlockPharmSave();
+                Swal.fire({
+                    icon: 'error', title: 'Error!', text: err.get_message(),
+                    showConfirmButton: false, timer: 2000,
+                    customClass: { popup: 'swal-big-popup', title: 'swal-big-title', htmlContainer: 'swal-big-text' }
+                });
             });
         }
         function openReturnQueue() {
@@ -5300,6 +5409,16 @@ function CalculateReceivedAmount() {
                             </select>
                         </div>
 
+                        <!-- Status Filter Dropdown -->
+                        <div class="col-md-3">
+                            <label for="filterStatus">Status:</label>
+                            <select id="filterStatus" class="form-control">
+                                <option value="open" selected>Open</option>
+                                <option value="closed">Closed</option>
+                                <option value="all">All</option>
+                            </select>
+                        </div>
+
                         <!-- Refresh button -->
                         <div class="col-md-2 text-end">
                             <a onclick="RefreshQueue()" style="cursor:pointer;">
@@ -5325,6 +5444,7 @@ function CalculateReceivedAmount() {
                                     <th style="width:173px;">Close Time</th>
                                     <th>Select</th>
                                     <th>Rejected By</th>
+                                    <th>Remarks</th>
                                 </tr>
                             </thead>
                             <tbody id="ibody"></tbody>
@@ -5340,6 +5460,40 @@ function CalculateReceivedAmount() {
     </div>
 </div>
 
+
+    <div id="remarksModal" class="modal fade" data-backdrop="static" tabindex="-1" role="dialog">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header" style="background:#007bff;color:#fff;">
+                <h5 class="modal-title"><i class="fa fa-comment-o"></i> Add Remarks</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close" style="color:#fff;opacity:1;">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <input type="hidden" id="hdnRemarkMedicineId" />
+                <div class="form-group">
+                    <label>Medicine:</label>
+                    <input type="text" id="txtRemarkMedicineName" class="form-control" readonly />
+                </div>
+                <div class="form-group">
+                    <label for="txtMedicineRemark">Remarks:</label>
+                    <textarea id="txtMedicineRemark" class="form-control" rows="4" style="resize:vertical;"></textarea>
+                </div>
+                <div class="form-group">
+                    <label style="font-weight:600;">
+                        <input type="checkbox" id="chkOnHold" /> Mark as On Hold
+                    </label>
+                    <small class="text-muted" style="display:block;margin-left:22px;">On-hold rows display with yellow background.</small>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-gray" data-dismiss="modal">Close</button>
+                <button type="button" class="btn btn-primry" id="btnSaveRemark" onclick="SaveMedicineRemark()">Save</button>
+            </div>
+        </div>
+    </div>
+</div>
 
     <%--Patient Que Ends--%>
 

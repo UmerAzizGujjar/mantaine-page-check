@@ -649,10 +649,76 @@ namespace PMS
             using (DataBaseDataContext db = new DataBaseDataContext())
             {
                 var query = db.Sp_GetLast24Hours_Medicines(SearchString).ToList();
-                result = (new JavaScriptSerializer()).Serialize(query).ToString();
+                var ids = query.Select(x => x.In_Patient_Medicine_ID).ToList();
+                var meta = db.In_Patient_Medicines
+                    .Where(m => ids.Contains(m.In_Patient_Medicine_ID))
+                    .Select(m => new { m.In_Patient_Medicine_ID, m.Remarks, m.Status })
+                    .ToDictionary(m => m.In_Patient_Medicine_ID);
 
+                var jsonArr = Newtonsoft.Json.Linq.JArray.FromObject(query);
+                foreach (var item in jsonArr)
+                {
+                    int id = (int)item["In_Patient_Medicine_ID"];
+                    if (meta.ContainsKey(id))
+                    {
+                        item["Remarks"] = meta[id].Remarks ?? "";
+                        item["IsHold"] = meta[id].Status == "Hold";
+                    }
+                    else
+                    {
+                        item["Remarks"] = "";
+                        item["IsHold"] = false;
+                    }
+                }
+                result = jsonArr.ToString(Newtonsoft.Json.Formatting.None);
             }
             return result;
+        }
+
+        [WebMethod]
+        public static string GetMedicineRemark(int MedicineId)
+        {
+            using (DataBaseDataContext db = new DataBaseDataContext())
+            {
+                var med = db.In_Patient_Medicines.FirstOrDefault(m => m.In_Patient_Medicine_ID == MedicineId);
+                if (med == null)
+                {
+                    return JsonConvert.SerializeObject(new { Remarks = "", IsHold = false, Status = "" });
+                }
+                return JsonConvert.SerializeObject(new
+                {
+                    Remarks = med.Remarks ?? "",
+                    IsHold = med.Status == "Hold",
+                    Status = med.Status ?? ""
+                });
+            }
+        }
+
+        [WebMethod]
+        public static string SaveMedicineRemark(int MedicineId, string Remarks, bool IsHold)
+        {
+            try
+            {
+                using (DataBaseDataContext db = new DataBaseDataContext())
+                {
+                    var med = db.In_Patient_Medicines.FirstOrDefault(m => m.In_Patient_Medicine_ID == MedicineId);
+                    if (med == null)
+                    {
+                        return JsonConvert.SerializeObject(new { Success = false, Message = "Record not found." });
+                    }
+                    med.Remarks = Remarks ?? "";
+                    if (med.Status != "rejected")
+                    {
+                        med.Status = IsHold ? "Hold" : null;
+                    }
+                    db.SubmitChanges();
+                    return JsonConvert.SerializeObject(new { Success = true, Message = "Remarks saved successfully." });
+                }
+            }
+            catch (Exception ex)
+            {
+                return JsonConvert.SerializeObject(new { Success = false, Message = "Error: " + ex.Message });
+            }
         }
        
         [WebMethod]
@@ -1124,6 +1190,10 @@ namespace PMS
                         {
                             decimal currentRcv = medicineRecord.Rcv_Qty ?? 0;
                             medicineRecord.Rcv_Qty = currentRcv + receivedQty;
+                            if (medicineRecord.Issue_Date == null)
+                            {
+                                medicineRecord.Issue_Date = DateTime.Now;
+                            }
                             db.SubmitChanges();
                         }
                     }

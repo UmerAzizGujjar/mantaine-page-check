@@ -1895,26 +1895,18 @@
 
         function renderCkdEpi() {
             $('#ckdEpiRow').remove();
+            var target = ckdEpiFindTargetRow();
+            if (!target) return;
+
             var scr = parseFloat(ckdEpiGetCreatinine());
             var age = parseInt(($('#<%= vLbl_Age.ClientID %>').text() || '').replace(/[^0-9]/g, ''), 10);
             var female = /^f/i.test(($('#<%= vLbl_Gender.ClientID %>').text() || '').trim());
             var value = (isNaN(scr) || scr <= 0 || isNaN(age) || age <= 0) ? '' : ckdEpiCompute(scr, age, female).toFixed(1);
 
-            var target = ckdEpiFindTargetRow();
-            if (target) {
-                var $val = target.find('td:eq(3) .editable-div');
-                if ($val.length && $val.attr('contenteditable') && value) {
-                    $val.text(value);
-                    return;
-                }
+            var $val = target.find('td:eq(3) .editable-div');
+            if ($val.length) {
+                $val.text(value ? value + ' mL/min/1.73m\u00B2' : '--');
             }
-
-            var display = value ? value + ' mL/min/1.73m\u00B2' : '--';
-            var row = '<tr id="ckdEpiRow" class="ckd-epi-row"><td style="display:none"></td>' +
-                '<td><b>eGFR (CKD-EPI)</b></td><td></td>' +
-                '<td><span id="ckdEpiValue">' + display + '</span></td>' +
-                '<td></td><td></td><td></td></tr>';
-            $('#tblgroupTestlist tbody').append(row);
         }
 
         $(function () {

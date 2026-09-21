@@ -1189,6 +1189,7 @@
                     else if (rptTitle == "OPD_Department_Wise_Report") {
                         debugger;
                         //   var summary = document.getElementById('<%= chkSummary.ClientID %>').checked;
+                        var summary = document.getElementById('<%= chkSummary.ClientID %>').checked;
                      var exporttopdf = document.getElementById('<%= chkExportPDF.ClientID %>').checked;
                         var startDate = $('#ctl00_MainContent_txtStart_Date').val();
                         var startTime = $('#ctl00_MainContent_txtSTime').val();
@@ -1204,6 +1205,7 @@
                             '&StartDateTime=' + encodeURIComponent(startDateTime) +
                             '&EndDateTime=' + encodeURIComponent(endDateTime) +
                        //     '&Summary=' + summary +
+                            '&Summary=' + summary +
                             '&Shift=' + encodeURIComponent(ddlShift) +
                             '&DoctorID=' + $('#ctl00_MainContent_ddlDoctor').val() +
                             '&Operator=' + ((typeof ($("#ctl00_MainContent_ddloprators").val()) != 'undefined') ? $("#ctl00_MainContent_ddloprators").val() : "0") +

@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Drawing;
+using System.Globalization;
 using System.Linq;
 using System.Web;
 using System.Web.Script.Serialization;
@@ -269,6 +270,120 @@ namespace PMS.Inventory
             decimal st = (decimal)db.GetItemBatchStock(ItemId, batchNo, wareHouse);
             return st;
         }
+        // ================= GIN CHANGE LOG SNAPSHOT HELPERS =================
+
+        private static string StrVal(object v)
+        {
+            if (v == null) return "";
+            return Convert.ToString(v, CultureInfo.InvariantCulture);
+        }
+
+        private static string NumVal(object v)
+        {
+            if (v == null) return "";
+            try { return Convert.ToDecimal(v).ToString("0.##", CultureInfo.InvariantCulture); }
+            catch { return ""; }
+        }
+
+        private static string DateVal(object v)
+        {
+            if (v == null) return "";
+            try { return Convert.ToDateTime(v).ToString("yyyy-MM-dd", CultureInfo.InvariantCulture); }
+            catch { return ""; }
+        }
+
+        private static Dictionary<string, string> BuildGINMasterSnapshot(Store_Issue si, DataBaseDataContext db)
+        {
+            string deptName = "";
+            if (!string.IsNullOrEmpty(si.Department_Id))
+            {
+                try { deptName = db.GetDataValueName("Department", si.Department_Id) ?? ""; }
+                catch { deptName = ""; }
+            }
+
+            string warehouseName = "";
+            if (!string.IsNullOrEmpty(si.Organization_Id))
+            {
+                try { warehouseName = db.GetDataValueName("Ware House", si.Organization_Id) ?? ""; }
+                catch { warehouseName = ""; }
+            }
+
+            var snap = new Dictionary<string, string>();
+            snap["Store_Issue_No"] = si.Store_Issue_No.HasValue ? si.Store_Issue_No.Value.ToString() : "";
+            snap["Date"] = DateVal(si.Created_Time);
+            snap["Department"] = deptName;
+            snap["Ware_House"] = warehouseName;
+            snap["MR_No"] = StrVal(si.MR_No);
+            snap["Status"] = StrVal(si.Status);
+            snap["Approved_Time"] = DateVal(si.Approved_Time);
+            snap["Update_Time"] = DateVal(si.Update_Time);
+            return snap;
+        }
+
+        private static object BuildGINDetailSnapshot(DataBaseDataContext db, int storeIssueId)
+        {
+            var rows = db.Store_Issue_Details.Where(t => t.Store_Issue_Id == storeIssueId).ToList();
+
+            var ids = rows.Where(r => r.Item_Id.HasValue).Select(r => (int)r.Item_Id.Value).Distinct().ToList();
+            var itemNames = new Dictionary<int, string>();
+            var itemCodes = new Dictionary<int, string>();
+            foreach (var id in ids)
+            {
+                var itm = db.INV_Items.Where(x => x.Item_ID == id)
+                                       .Select(x => new { x.Description, x.Item_Code })
+                                       .FirstOrDefault();
+                itemNames[id] = itm != null ? (itm.Description ?? "") : "";
+                itemCodes[id] = itm != null ? (itm.Item_Code ?? "") : "";
+            }
+
+            return new
+            {
+                Items = rows.Select(i =>
+                {
+                    string name = "";
+                    string code = "";
+                    if (i.Item_Id.HasValue)
+                    {
+                        int key = (int)i.Item_Id.Value;
+                        if (itemNames.ContainsKey(key)) name = itemNames[key];
+                        if (itemCodes.ContainsKey(key)) code = itemCodes[key];
+                    }
+
+                    return new
+                    {
+                        Item_Name = name,
+                        Item_Code = code,
+                        MIRDetailId = i.MIR_Detail_Id.HasValue ? i.MIR_Detail_Id.Value.ToString() : "",
+                        Qty = NumVal(i.MIR_Qty),
+                        Issue_Qty = NumVal(i.Issue_Qty),
+                        Balance_Qty = NumVal(i.Balance_Qty),
+                        Store_Stock = StrVal(i.Store_Stock),
+                        Department = StrVal(i.Department),
+                        BatchNum = StrVal(i.BatchNum),
+                        Remarks = StrVal(i.Remarks),
+                        CGS = NumVal(i.CGS),
+                        Last_Issue_Date = DateVal(i.Last_issue_date)
+                    };
+                }).ToList()
+            };
+        }
+
+        private static void WriteGINChangeLog(DataBaseDataContext db, Store_Issue si, JavaScriptSerializer serializer)
+        {
+            if (si == null) return;
+
+            Store_Issue_Log log = new Store_Issue_Log
+            {
+                Store_Issue_Id = si.Store_Issue_Id,
+                Master_Log = serializer.Serialize(BuildGINMasterSnapshot(si, db)),
+                Details_Log = serializer.Serialize(BuildGINDetailSnapshot(db, si.Store_Issue_Id)),
+                Loged_By = AppConfig.UserID,
+                Log_Time = DateTime.Now
+            };
+
+            db.Store_Issue_Logs.InsertOnSubmit(log);
+        }
+
         [WebMethod]
         public static int Save(string btnSave, string AllItemDetail)
         {
@@ -282,6 +397,8 @@ namespace PMS.Inventory
                            select t).FirstOrDefault();
             if (btnSave == "Update")
             {
+                WriteGINChangeLog(db, lstItem, oJS);
+
                 lstItem.Organization_Id = record.inventory_id;
                 lstItem.Department_Id = record.department_id;
                 lstItem.Update_Time = DateTime.Now;

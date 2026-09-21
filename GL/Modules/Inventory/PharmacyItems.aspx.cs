@@ -110,6 +110,7 @@ namespace PMS
                 inv_Item = (from tbl in db.INV_Items
                             where tbl.Item_ID == Convert.ToInt32(hdfItem_Code.Value)
                             select tbl).FirstOrDefault();
+                INVItemLogHelper.WriteItemChangeLog(db, inv_Item, new System.Web.Script.Serialization.JavaScriptSerializer());
                 inv_Item.Updated_By = AppConfig.UserID;
                 inv_Item.Updated_Time = DateTime.Now;
 

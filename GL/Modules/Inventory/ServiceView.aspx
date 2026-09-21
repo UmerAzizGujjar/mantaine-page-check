@@ -2,6 +2,9 @@
 
 <asp:Content ID="Content1" ContentPlaceHolderID="HeadContent" runat="server">
      <link href="../../wwwroot/THEME_TIBBIT/CustomCSS/tablestyle.css" rel="stylesheet" />
+     <link href="../../wwwroot/THEME_TIBBIT/CustomCSS/custom-modals.css" rel="stylesheet" />
+     <link href="../../wwwroot/THEME_TIBBIT/CustomCSS/item-logs.css" rel="stylesheet" />
+    <script src="../../wwwroot/THEME_TIBBIT/CustomJs/item-logs.js"></script>
     <script type="text/javascript">
 
         $(document).ready(function () {
@@ -170,11 +173,12 @@
                     {
                         "render": function (data, type, full) {
                             var res = '<a class="editListBtn"  href="#" onclick="Edit(' + full.Item_ID + ')" style="border-radius: 4px;margin-right: 4px;padding: 5px 8px 5px 8px;"><i class="fa fa-pencil"></i></a>';
+                            var logBtn = '<a class="logListBtn" style="border-radius:4px;margin-left:4px;color:white;padding:5px 8px;" href="#" onclick="openItemLogsModal(\'ServiceView.aspx/GetItemLogs\',' + full.Item_ID + ',\'' + full.ItemCode + '\');return false;" title="View Change History"><i class="fa fa-history"></i></a>';
                             var print = '<a class="printListBtn" style="border-radius: 4px;margin-left: 4px;padding: 5px 8px 5px 8px;" href="#" onclick="PrintTest(' + full.Test_ID + ')" id="btnprint"><i class="fa fa-print" ></i></a>';
                             var result;
-                            result = res + print;
+                            result = res + logBtn + print;
                             return result;
-                        }, "width": "8%",
+                        }, "width": "9%",
                     }
                 ],
                 "initComplete": function (settings, json) {
@@ -305,5 +309,26 @@
             </thead>
             <tbody id="tblbody"></tbody>
         </table>
+    </div>
+
+    <div class="modal fade" id="itemLogModal" tabindex="-1" role="dialog" aria-hidden="true">
+        <div class="modal-dialog custom-modal-dialog custom-modal-dialog-xl" role="document">
+            <div class="modal-content custom-modal-content">
+                <div class="modal-header custom-modal-header">
+                    <div class="custom-modal-title-wrap">
+                        <span class="custom-modal-icon"><i class="fa fa-history"></i></span>
+                        <h4 class="modal-title custom-modal-title" id="itemLogTitle">Item Change History</h4>
+                    </div>
+                    <button type="button" class="custom-modal-close" data-dismiss="modal" aria-label="Close"><i class="fa fa-times"></i></button>
+                </div>
+                <div class="modal-body custom-modal-body item-log-body">
+                    <div class="bl-scroll"><div id="itemLogBody"></div></div>
+                </div>
+                <div class="custom-modal-footer">
+                    <span class="custom-modal-count" id="itemLogCount"></span>
+                    <button type="button" class="custom-modal-btn-close" data-dismiss="modal"><i class="fa fa-times-circle"></i> Close</button>
+                </div>
+            </div>
+        </div>
     </div>
 </asp:Content>

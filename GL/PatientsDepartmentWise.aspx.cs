@@ -232,7 +232,7 @@ namespace PMS
                     Master.GetMenuName();
                     tr1MedicalSubsidy.Visible = false;
                     dpROw.Visible = true;
-                    tr_Summary.Visible = false;      // changed
+                    tr_Summary.Visible = true;      // changed
                     tr_Export.Visible = true;
                     lblMultiSelect.Visible = false;
                     object valusets;

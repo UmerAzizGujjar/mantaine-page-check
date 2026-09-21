@@ -2195,6 +2195,23 @@
       <Column Name="Updated_Time" Type="System.DateTime" DbType="DateTime" CanBeNull="true" />
     </Type>
   </Table>
+  <Table Name="dbo.CostCenter_Wise_Department" Member="CostCenter_Wise_Departments">
+    <Type Name="CostCenter_Wise_Department">
+      <Column Name="CostCenter_wise_Department_Id" Type="System.Int32" DbType="Int NOT NULL IDENTITY" IsPrimaryKey="true" IsDbGenerated="true" CanBeNull="false" />
+      <Column Name="CostCenter" Type="System.String" DbType="VarChar(100)" CanBeNull="true" />
+      <Column Name="Created_By" Type="System.Guid" DbType="UniqueIdentifier" CanBeNull="true" />
+      <Column Name="Created_Time" Type="System.DateTime" DbType="DateTime" CanBeNull="true" />
+      <Column Name="Updated_By" Type="System.Guid" DbType="UniqueIdentifier" CanBeNull="true" />
+      <Column Name="Updated_Time" Type="System.DateTime" DbType="DateTime" CanBeNull="true" />
+    </Type>
+  </Table>
+  <Table Name="dbo.CostCenter_Wise_Department_Detail" Member="CostCenter_Wise_Department_Details">
+    <Type Name="CostCenter_Wise_Department_Detail">
+      <Column Name="CostCenter_wise_Detail_Id" Type="System.Int32" DbType="Int NOT NULL IDENTITY" IsPrimaryKey="true" IsDbGenerated="true" CanBeNull="false" />
+      <Column Name="CostCenter_wise_Department_Id" Type="System.Int32" DbType="Int" CanBeNull="true" />
+      <Column Name="Department" Type="System.String" DbType="VarChar(100)" CanBeNull="true" />
+    </Type>
+  </Table>
   <Table Name="dbo.Doctor_Rouster_Details" Member="Doctor_Rouster_Details">
     <Type Name="Doctor_Rouster_Detail">
       <Column Name="Rouster_Detail_Id" Type="System.Int32" DbType="Int NOT NULL IDENTITY" IsPrimaryKey="true" IsDbGenerated="true" CanBeNull="false" />
@@ -3977,6 +3994,76 @@
       <Column Name="Log_Time" Type="System.DateTime" DbType="DateTime" CanBeNull="true" />
     </Type>
   </Table>
+  <Table Name="dbo.GRN_Logs" Member="GRN_Logs">
+    <Type Name="GRN_Log">
+      <Column Name="Log_Id" Type="System.Int32" DbType="Int NOT NULL IDENTITY" IsPrimaryKey="true" IsDbGenerated="true" CanBeNull="false" />
+      <Column Name="Grn_Id" Type="System.Int32" DbType="Int" CanBeNull="true" />
+      <Column Name="Master_Log" Type="System.String" DbType="NVarChar(MAX)" CanBeNull="true" />
+      <Column Name="Details_Log" Type="System.String" DbType="NVarChar(MAX)" CanBeNull="true" />
+      <Column Name="Loged_By" Type="System.Guid" DbType="UniqueIdentifier" CanBeNull="true" />
+      <Column Name="Log_Time" Type="System.DateTime" DbType="DateTime" CanBeNull="true" />
+    </Type>
+  </Table>
+  <Table Name="dbo.GIR_Logs" Member="GIR_Logs">
+    <Type Name="GIR_Log">
+      <Column Name="Log_Id" Type="System.Int32" DbType="Int NOT NULL IDENTITY" IsPrimaryKey="true" IsDbGenerated="true" CanBeNull="false" />
+      <Column Name="Gir_Id" Type="System.Int64" DbType="BigInt" CanBeNull="true" />
+      <Column Name="Master_Log" Type="System.String" DbType="NVarChar(MAX)" CanBeNull="true" />
+      <Column Name="Details_Log" Type="System.String" DbType="NVarChar(MAX)" CanBeNull="true" />
+      <Column Name="Loged_By" Type="System.Guid" DbType="UniqueIdentifier" CanBeNull="true" />
+      <Column Name="Log_Time" Type="System.DateTime" DbType="DateTime" CanBeNull="true" />
+    </Type>
+  </Table>
+  <Table Name="dbo.Store_Issue_Logs" Member="Store_Issue_Logs">
+    <Type Name="Store_Issue_Log">
+      <Column Name="Log_Id" Type="System.Int32" DbType="Int NOT NULL IDENTITY" IsPrimaryKey="true" IsDbGenerated="true" CanBeNull="false" />
+      <Column Name="Store_Issue_Id" Type="System.Int32" DbType="Int" CanBeNull="true" />
+      <Column Name="Master_Log" Type="System.String" DbType="NVarChar(MAX)" CanBeNull="true" />
+      <Column Name="Details_Log" Type="System.String" DbType="NVarChar(MAX)" CanBeNull="true" />
+      <Column Name="Loged_By" Type="System.Guid" DbType="UniqueIdentifier" CanBeNull="true" />
+      <Column Name="Log_Time" Type="System.DateTime" DbType="DateTime" CanBeNull="true" />
+    </Type>
+  </Table>
+  <Table Name="dbo.INV_Stock_Adjustment_Logs" Member="INV_Stock_Adjustment_Logs">
+    <Type Name="INV_Stock_Adjustment_Log">
+      <Column Name="Log_Id" Type="System.Int32" DbType="Int NOT NULL IDENTITY" IsPrimaryKey="true" IsDbGenerated="true" CanBeNull="false" />
+      <Column Name="Adjustment_Id" Type="System.Int32" DbType="Int" CanBeNull="true" />
+      <Column Name="Master_Log" Type="System.String" DbType="NVarChar(MAX)" CanBeNull="true" />
+      <Column Name="Details_Log" Type="System.String" DbType="NVarChar(MAX)" CanBeNull="true" />
+      <Column Name="Loged_By" Type="System.Guid" DbType="UniqueIdentifier" CanBeNull="true" />
+      <Column Name="Log_Time" Type="System.DateTime" DbType="DateTime" CanBeNull="true" />
+    </Type>
+  </Table>
+  <Table Name="dbo.Purchase_Invoice_Logs" Member="Purchase_Invoice_Logs">
+    <Type Name="Purchase_Invoice_Log">
+      <Column Name="Log_Id" Type="System.Int32" DbType="Int NOT NULL IDENTITY" IsPrimaryKey="true" IsDbGenerated="true" CanBeNull="false" />
+      <Column Name="PurchaseInvoiceId" Type="System.Int64" DbType="BigInt" CanBeNull="true" />
+      <Column Name="Master_Log" Type="System.String" DbType="NVarChar(MAX)" CanBeNull="true" />
+      <Column Name="Details_Log" Type="System.String" DbType="NVarChar(MAX)" CanBeNull="true" />
+      <Column Name="Loged_By" Type="System.Guid" DbType="UniqueIdentifier" CanBeNull="true" />
+      <Column Name="Log_Time" Type="System.DateTime" DbType="DateTime" CanBeNull="true" />
+    </Type>
+  </Table>
+  <Table Name="dbo.Payment_Invoice_Logs" Member="Payment_Invoice_Logs">
+    <Type Name="Payment_Invoice_Log">
+      <Column Name="Log_Id" Type="System.Int32" DbType="Int NOT NULL IDENTITY" IsPrimaryKey="true" IsDbGenerated="true" CanBeNull="false" />
+      <Column Name="PaymentInvoiceId" Type="System.Int64" DbType="BigInt" CanBeNull="true" />
+      <Column Name="Master_Log" Type="System.String" DbType="NVarChar(MAX)" CanBeNull="true" />
+      <Column Name="Details_Log" Type="System.String" DbType="NVarChar(MAX)" CanBeNull="true" />
+      <Column Name="Loged_By" Type="System.Guid" DbType="UniqueIdentifier" CanBeNull="true" />
+      <Column Name="Log_Time" Type="System.DateTime" DbType="DateTime" CanBeNull="true" />
+    </Type>
+  </Table>
+  <Table Name="dbo.INV_Item_Logs" Member="INV_Item_Logs">
+    <Type Name="INV_Item_Log">
+      <Column Name="Log_Id" Type="System.Int32" DbType="Int NOT NULL IDENTITY" IsPrimaryKey="true" IsDbGenerated="true" CanBeNull="false" />
+      <Column Name="Item_ID" Type="System.Int32" DbType="Int" CanBeNull="true" />
+      <Column Name="Master_Log" Type="System.String" DbType="NVarChar(MAX)" CanBeNull="true" />
+      <Column Name="Details_Log" Type="System.String" DbType="NVarChar(MAX)" CanBeNull="true" />
+      <Column Name="Loged_By" Type="System.Guid" DbType="UniqueIdentifier" CanBeNull="true" />
+      <Column Name="Log_Time" Type="System.DateTime" DbType="DateTime" CanBeNull="true" />
+    </Type>
+  </Table>
   <Table Name="dbo.HospitalDetail" Member="HospitalDetails">
     <Type Name="HospitalDetail">
       <Column Name="Id" Type="System.Int32" DbType="Int NOT NULL IDENTITY" IsPrimaryKey="true" IsDbGenerated="true" CanBeNull="false" />
@@ -4154,6 +4241,8 @@
       <Column Name="Doc_No" Type="System.String" DbType="VarChar(200)" CanBeNull="true" />
       <Column Name="File_Path" Type="System.String" DbType="VarChar(MAX)" CanBeNull="true" />
       <Column Name="Vendor_ID" Type="System.Int32" DbType="Int" CanBeNull="true" />
+      <Column Name="Cost_Center" Type="System.String" DbType="VarChar(100)" CanBeNull="true" />
+      <Column Name="Department" Type="System.String" DbType="VarChar(100)" CanBeNull="true" />
     </Type>
   </Table>
   <Table Name="dbo.Store_Issue" Member="Store_Issues">
@@ -5885,6 +5974,7 @@
       <Column Name="IsPayable" Type="System.Boolean" DbType="Bit" CanBeNull="true" />
       <Column Name="bank_cash" Type="System.String" DbType="NVarChar(150)" CanBeNull="true" />
       <Column Name="bank_account_id" Type="System.String" DbType="NVarChar(150)" CanBeNull="true" />
+      <Column Name="Cost_Center" Type="System.String" DbType="VarChar(100)" CanBeNull="true" />
     </Type>
   </Table>
   <Table Name="dbo.Emergency" Member="Emergencies">
@@ -6722,6 +6812,7 @@
       <Column Name="Expense" Type="System.Int32" DbType="Int" CanBeNull="true" />
       <Column Name="CGS" Type="System.Int32" DbType="Int" CanBeNull="true" />
       <Column Name="BalanceAccount" Type="System.Int32" DbType="Int" CanBeNull="true" />
+      <Column Name="CostCenter" Type="System.String" DbType="NVarChar(50)" CanBeNull="true" />
     </Type>
   </Table>
   <Table Name="dbo.Igp_Detail" Member="Igp_Details">
@@ -6904,6 +6995,7 @@
       <Column Name="Service_Sub_Category" Type="System.String" DbType="VarChar(100)" CanBeNull="true" />
       <Column Name="IsPharmacyBilling" Type="System.Boolean" DbType="Bit" CanBeNull="true" />
       <Column Name="Doctor_Compulsory" Type="System.Boolean" DbType="Bit" CanBeNull="true" />
+      <Column Name="Cost_Center" Type="System.String" DbType="VarChar(100)" CanBeNull="true" />
     </Type>
   </Table>
   <Table Name="dbo.In_Patient" Member="In_Patients">
@@ -7458,6 +7550,7 @@
       <Column Name="ProcedureLevel_ID" Type="System.Int32" DbType="Int" CanBeNull="true" />
       <Column Name="Medication_Refer_Doctor" Type="System.String" DbType="VarChar(50)" CanBeNull="true" />
       <Column Name="MR_No" Type="System.String" DbType="NVarChar(50)" CanBeNull="true" />
+      <Column Name="Cost_Center" Type="System.String" DbType="VarChar(100)" CanBeNull="true" />
     </Type>
   </Table>
   <Table Name="dbo.Lab_Tests" Member="Lab_Tests">
@@ -7542,6 +7635,9 @@
       <Column Name="Issue_Rcvd_Qty" Type="System.Decimal" DbType="Decimal(18,2)" CanBeNull="true" />
       <Column Name="Unlisted_Med" Type="System.Boolean" DbType="Bit" CanBeNull="true" />
       <Column Name="close_time" Type="System.DateTime" DbType="DateTime" CanBeNull="true" />
+      <Column Name="Request_Time" Type="System.DateTime" DbType="DateTime" CanBeNull="true" />
+      <Column Name="Receive_Time" Type="System.DateTime" DbType="DateTime" CanBeNull="true" />
+      <Column Name="Issue_Date" Type="System.DateTime" DbType="DateTime" CanBeNull="true" />
     </Type>
   </Table>
   <Table Name="dbo.DataValues" Member="DataValues">
@@ -8103,6 +8199,7 @@
       <Column Name="Doctor_Share_Voucher_Status" Type="System.String" DbType="VarChar(50)" CanBeNull="true" />
       <Column Name="Patient_Type" Type="System.String" DbType="VarChar(50)" CanBeNull="true" />
       <Column Name="Referred_By_Name" Type="System.String" DbType="VarChar(100)" CanBeNull="true" />
+      <Column Name="Cost_Center" Type="System.String" DbType="VarChar(100)" CanBeNull="true" />
       <Association Name="Ar_Billing_Ar_Billing_Detail" Member="Ar_Billing_Details" ThisKey="Bill_ID" OtherKey="Bill_ID" Type="Ar_Billing_Detail" />
     </Type>
   </Table>

@@ -1163,6 +1163,14 @@ namespace PMS
                     shiftId = "4";
 
                 string Operator = Request.QueryString["Operator"].ToString();
+
+                string CheckSummary = Request.QueryString["Summary"].ToString();
+                if (CheckSummary == "true")
+                {
+                    rptFileName = "Patients/OPDDepartmentWiseSummaryReport.rpt";
+                    reportTitle = "All Cash Collection Summary From " + Request.QueryString["StartDateTime"].ToString() + "to" + Request.QueryString["EndDateTime"].ToString();
+                }
+
                 reportPath += rptFileName;
                 rd.Load(reportPath);
                 rd.SetParameterValue("@Company_ID", AppConfig.Company_ID);
@@ -2547,6 +2555,17 @@ namespace PMS
             {
 
                 reportPath += "Billings/rptPrintAdvanceReport.rpt";
+                rd.Load(reportPath);
+                var logoPath = DBClass.getField("SELECT dbo.GetCompanyLogo()");      // Added by 
+                rd.SetParameterValue("CompanyName", AppConfig.Company_Name);         // Added by
+                rd.SetParameterValue("CompanyLogo", logoPath);                       // Added by
+                rd.SummaryInfo.ReportTitle = reportTitle;
+                rd.SetParameterValue("@Adv_IDs", Request.QueryString["Adv_IDs"]);
+            }
+            else if (reportName == "PrintAdvanceThermalReport")
+            {
+
+                reportPath += "Billings/rptPrintAdvanceReportThermal.rpt";
                 rd.Load(reportPath);
                 var logoPath = DBClass.getField("SELECT dbo.GetCompanyLogo()");      // Added by 
                 rd.SetParameterValue("CompanyName", AppConfig.Company_Name);         // Added by

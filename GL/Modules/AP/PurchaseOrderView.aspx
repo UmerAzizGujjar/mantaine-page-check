@@ -934,13 +934,14 @@
                     result.removed.push(it);
                 } else {
                     var beforeIt = prevMap[k];
+                    var nextIt = nextMap[k];
                     var changes = [];
                     POItemFields.forEach(function (f) {
                         var b = normByKind(f.kind, beforeIt[f.k]);
-                        var a = normByKind(f.kind, it[f.k]);
+                        var a = normByKind(f.kind, nextIt[f.k]);
                         if (b !== a) changes.push({ label: f.l, prev: b, cur: a });
                     });
-                    if (changes.length > 0) result.modified.push({ item: it, changes: changes });
+                    if (changes.length > 0) result.modified.push({ item: nextIt, changes: changes });
                 }
             });
             return result;

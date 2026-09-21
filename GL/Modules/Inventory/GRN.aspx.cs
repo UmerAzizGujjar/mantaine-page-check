@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.Linq;
 using System.Web;
 using System.Web.Script.Serialization;
@@ -85,6 +86,112 @@ namespace PMS.Inventory
                         select data.Code).FirstOrDefault();
             return (new JavaScriptSerializer()).Serialize(code);
         }
+        // ================= GRN CHANGE LOG SNAPSHOT HELPERS =================
+
+        private static string StrVal(object v)
+        {
+            if (v == null) return "";
+            return Convert.ToString(v, CultureInfo.InvariantCulture);
+        }
+
+        private static string NumVal(object v)
+        {
+            if (v == null) return "";
+            try { return Convert.ToDecimal(v).ToString("0.##", CultureInfo.InvariantCulture); }
+            catch { return ""; }
+        }
+
+        private static string DateVal(object v)
+        {
+            if (v == null) return "";
+            try { return Convert.ToDateTime(v).ToString("yyyy-MM-dd", CultureInfo.InvariantCulture); }
+            catch { return ""; }
+        }
+
+        private static Dictionary<string, string> BuildGRNMasterSnapshot(GRN_Master grn, DataBaseDataContext dbc)
+        {
+            string vendorName = "";
+            int vendorId;
+            if (int.TryParse(grn.VendorId, out vendorId))
+            {
+                var vn = (from v in dbc.AP_Vendors where v.Vendor_ID == vendorId select v.Vendor_Name).FirstOrDefault();
+                if (vn != null) vendorName = vn;
+            }
+
+            string warehouseName = "";
+            if (!string.IsNullOrEmpty(grn.InvOrgId))
+            {
+                try { warehouseName = dbc.GetDataValueName("Ware House", grn.InvOrgId) ?? ""; }
+                catch { warehouseName = ""; }
+            }
+
+            var snap = new Dictionary<string, string>();
+            snap["Grn_No"] = StrVal(grn.GRN_Num);
+            snap["Grn_Date"] = DateVal(grn.GRN_Date);
+            snap["Vendor_Name"] = vendorName;
+            snap["Warehouse"] = warehouseName;
+            snap["Project"] = StrVal(grn.Project);
+            snap["Remarks"] = StrVal(grn.Remarks);
+            snap["Status"] = StrVal(grn.Status);
+            snap["Is_Direct"] = grn.is_Direct.HasValue && grn.is_Direct.Value ? "Yes" : "No";
+            return snap;
+        }
+
+        private static object BuildGRNDetailSnapshot(DataBaseDataContext dbc, int grnId)
+        {
+            var rows = dbc.GRN_Details.Where(t => t.GRNId == grnId).ToList();
+
+            var ids = rows.Where(r => r.Item_Id.HasValue).Select(r => r.Item_Id.Value).Distinct().ToList();
+            var itemNames = new Dictionary<int, string>();
+            foreach (var id in ids)
+            {
+                var desc = dbc.INV_Items.Where(x => x.Item_ID == id).Select(x => x.Description).FirstOrDefault();
+                itemNames[id] = desc ?? "";
+            }
+
+            return new
+            {
+                Items = rows.Select(i =>
+                {
+                    string name = "";
+                    if (i.Item_Id.HasValue && itemNames.ContainsKey(i.Item_Id.Value))
+                        name = itemNames[i.Item_Id.Value];
+
+                    return new
+                    {
+                        Item_Name = name,
+                        Item_Code = StrVal(i.ItemCode),
+                        IGPDetailId = i.IGPDetailId.HasValue ? i.IGPDetailId.Value.ToString() : "",
+                        GRNQty = NumVal(i.GRNQty),
+                        UOM_Qty = NumVal(i.UOM_Qty),
+                        Rate = NumVal(i.Rate),
+                        Amount = NumVal(i.Amount),
+                        Sale_Rate = NumVal(i.Sale_Rate),
+                        BatchNum = StrVal(i.BatchNum),
+                        BounusQty = NumVal(i.BounusQty),
+                        MfgDate = DateVal(i.MfgDate),
+                        ExpiryDate = DateVal(i.ExpiryDate)
+                    };
+                }).ToList()
+            };
+        }
+
+        private static void WriteGRNChangeLog(DataBaseDataContext dbc, GRN_Master grn, JavaScriptSerializer serializer)
+        {
+            int grnId = Convert.ToInt32(grn.GRN_ID);
+
+            GRN_Log log = new GRN_Log
+            {
+                Grn_Id = grnId,
+                Master_Log = serializer.Serialize(BuildGRNMasterSnapshot(grn, dbc)),
+                Details_Log = serializer.Serialize(BuildGRNDetailSnapshot(dbc, grnId)),
+                Loged_By = AppConfig.UserID,
+                Log_Time = DateTime.Now
+            };
+
+            dbc.GRN_Logs.InsertOnSubmit(log);
+        }
+
         [WebMethod]
         public static int SaveGRNDetail(string btnSave, string AllItemDetail)
         {
@@ -98,6 +205,8 @@ namespace PMS.Inventory
                            select t).FirstOrDefault();
             if (btnSave == "Update")
             {
+                WriteGRNChangeLog(db, lstItem, oJS);
+
                 lstItem.GRN_Num = Convert.ToInt32(record.GRN_Num);
                 lstItem.GRN_Date = Convert.ToDateTime(record.Date);
                 lstItem.VendorId = record.VendorId;
