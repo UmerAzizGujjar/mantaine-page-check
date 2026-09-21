@@ -1700,7 +1700,7 @@
                     var rows = '';
                     var gcs = "";
                     $.each(Data, function (key, value) {
-                        if (value.RateBeats == "" && value.Emergency_Rhythm == null && value.Emergency_Volume == null && (value.OthersRecieveNote == "<li></li>" || value.OthersRecieveNote == "") && value.BP_mm_Hg == "___/___" && value.O2_Saturation == "" && value.O2_Saturation_Oxygen1 == "" && value.O2_Saturation_Oxygen2 == "" && (value.RN_Special_Instruction == "<li></li>" || value.RN_Special_Instruction == "") && (value.OthersRecieveNote == "<li></li>" || value.OthersRecieveNote == "") && value.Temp_C == "") {
+                        if (value.RateBeats == "" && value.Emergency_Rhythm == null && value.Emergency_Volume == null && (value.OthersRecieveNote == "<li></li>" || value.OthersRecieveNote == "") && value.BP_mm_Hg == "___/___" && value.O2_Saturation == "" && value.O2_Saturation_Oxygen1 == "" && value.O2_Saturation_Oxygen2 == "" && (value.RN_Special_Instruction == "<li></li>" || value.RN_Special_Instruction == "") && (value.OthersRecieveNote == "<li></li>" || value.OthersRecieveNote == "") && value.Temp_C == "" && (value.FollowUpInstruction == null || value.FollowUpInstruction == "") && (value.OperationalDetails == null || value.OperationalDetails == "")) {
                             // Do nothing
                         }
                         else {
@@ -1724,7 +1724,7 @@
                             }
 
                             rows += '<tr><td> ' + retdateRec + ' </td><td> ' + value.Status + ' </td> <td> ' + value.RateBeats
-                                + ' </td> <td> ' + value.Temp_C + ' </td> <td> ' + value.Emergency_Rhythm + ' </td><td> ' + value.Emergency_Volume + ' </td> <td> ' + value.BP_mm_Hg + ' </td><td> ' + value.OthersRecieveNote + ' </td> <td> ' + value.Respiration_Min + ' </td><td> ' + value.RN_Special_Instruction + ' </td><td> ' + value.O2_Saturation + ' </td><td>' + value.O2_Saturation_Oxygen1 + '</td><td>' + value.O2_Saturation_Oxygen2 + '</td><td>' + value.Blood_Suger + '</td><td>' + value.BMI + '</td><td>' + value.Weight_Kg + '</td><td>' + value.Height_cm + '</td><td>' + value.User_Name + '</td>' + actionHtml + '</tr>';
+                                + ' </td> <td> ' + value.Temp_C + ' </td> <td> ' + value.Emergency_Rhythm + ' </td><td> ' + value.Emergency_Volume + ' </td> <td> ' + value.BP_mm_Hg + ' </td><td> ' + value.OthersRecieveNote + ' </td> <td> ' + value.Respiration_Min + ' </td><td> ' + value.RN_Special_Instruction + ' </td><td> ' + value.O2_Saturation + ' </td><td>' + value.O2_Saturation_Oxygen1 + '</td><td>' + value.O2_Saturation_Oxygen2 + '</td><td>' + value.Blood_Suger + '</td><td>' + value.BMI + '</td><td>' + value.Weight_Kg + '</td><td>' + value.Height_cm + '</td><td>' + value.User_Name + '</td><td>' + (value.FollowUpInstruction || '') + '</td><td>' + (value.OperationalDetails || '') + '</td>' + actionHtml + '</tr>';
                         }
                     });
 
@@ -1776,6 +1776,8 @@
                     $("[id$='txtRN_Special_Instruction_Desc']").val(data.RN_Special_Instruction);
                     $("[id$='txtsaturationDis']").val(data.O2_Saturation);
                     $("[id$='txtOxygen1']").val(data.O2_Saturation_Oxygen1);
+                    $("[id$='txtFollowUpInstruction']").val(data.FollowUpInstruction || '');
+                    $("[id$='txtOperationalDetails']").val(data.OperationalDetails || '');
                 }
             }, function (err) { console.error("Error fetching IPD Discharge Note:", err); });
         }
@@ -10918,7 +10920,7 @@ if (localStorage.IsPRN == 1) {
                                     <table class="table" id="tblVitalParametersHistoryDesc" >
     <thead>
         <tr>
-            <td colspan="21">
+            <td colspan="23">
                 <div id="tblHistoryHeaderDesc">
                     <h2 class="color">Previous History</h2>
                 </div>
@@ -10943,6 +10945,8 @@ if (localStorage.IsPRN == 1) {
             <th>O2 Wt</th>
             <th>O2 Ht</th>
             <th>Username</th>
+            <th>Follow Up Instructions</th>
+            <th>Operation Details</th>
             <th>Action</th> <!-- ACTION COLUMN ADDED HERE -->
         </tr>
     </thead>
