@@ -51,6 +51,7 @@ namespace PMS.Inventory
             public string remarks { get; set; }
             public string InvOrg { get; set; }
             public string InvType { get; set; }
+            public string Branch { get; set; }
             public List<DetailIGPList> ItemList { get; set; }
         }
 
@@ -217,6 +218,39 @@ namespace PMS.Inventory
         }
 
         [WebMethod]
+        public static string GetUserBranch()
+        {
+            using (var db = new DataBaseDataContext(DBClass.ConnectionString()))
+            {
+                var branchIds = (from bwd in db.Branch_Wise_User_Details
+                                 where bwd.User_Id == AppConfig.UserID
+                                 select bwd.Brancg).ToList();
+
+                if (!branchIds.Any())
+                    return "null";
+
+                var validBranches = new List<object>();
+
+                foreach (var brancg in branchIds)
+                {
+                    if (int.TryParse(brancg, out int branchId))
+                    {
+                        var branch = db.Branches.FirstOrDefault(b => b.branch_ID == branchId);
+                        if (branch != null)
+                        {
+                            validBranches.Add(new { branch_ID = branchId, branch_Name = branch.branch_Name });
+                        }
+                    }
+                }
+
+                if (!validBranches.Any())
+                    return "null";
+
+                return new JavaScriptSerializer().Serialize(validBranches);
+            }
+        }
+
+        [WebMethod]
         public static int SaveIgpDetail(string btnSave, string AllItemDetail)
         {
             Igp_master obj = new Igp_master();
@@ -247,6 +281,7 @@ namespace PMS.Inventory
                         lstItem.Update_Date = DateTime.Now;
                         lstItem.Updated_By = AppConfig.UserID;
                         lstItem.InvOrgId = record.InvOrg;
+                        lstItem.Branch_Id = string.IsNullOrEmpty(record.Branch) ? (int?)null : Convert.ToInt32(record.Branch);
                         db.SubmitChanges();
                         IgpNo = lstItem.Igp_Id.ToString();
                     }
@@ -266,6 +301,7 @@ namespace PMS.Inventory
                         obj.IsDeleted = false;
                         obj.Status = "Created";
                         obj.InvOrgId = record.InvOrg;
+                        obj.Branch_Id = string.IsNullOrEmpty(record.Branch) ? (int?)null : Convert.ToInt32(record.Branch);
                         db.Igp_masters.InsertOnSubmit(obj);
                         db.SubmitChanges();
                         IgpNo = obj.Igp_Id.ToString();
@@ -412,6 +448,7 @@ namespace PMS.Inventory
                               m.Status,
                               m.InvOrgId,
                               m.Inspec_Status,
+                              m.Branch_Id,
                               Vendor_Name = db.AP_Vendors.Where(po => po.Vendor_ID == Convert.ToInt32(m.Vendor)).Select(po => po.Vendor_Name),
                               PO_ID = (from d in db.Igp_Details
                                        where d.Igp_Id == IGP_ID

@@ -280,6 +280,39 @@ namespace PMS.Inventory
         }
 
         [WebMethod]
+        public static string GetUserBranch()
+        {
+            using (var db = new DataBaseDataContext(DBClass.ConnectionString()))
+            {
+                var branchIds = (from bwd in db.Branch_Wise_User_Details
+                                 where bwd.User_Id == AppConfig.UserID
+                                 select bwd.Brancg).ToList();
+
+                if (!branchIds.Any())
+                    return "null";
+
+                var validBranches = new List<object>();
+
+                foreach (var brancg in branchIds)
+                {
+                    if (int.TryParse(brancg, out int branchId))
+                    {
+                        var branch = db.Branches.FirstOrDefault(b => b.branch_ID == branchId);
+                        if (branch != null)
+                        {
+                            validBranches.Add(new { branch_ID = branchId, branch_Name = branch.branch_Name });
+                        }
+                    }
+                }
+
+                if (!validBranches.Any())
+                    return "null";
+
+                return new JavaScriptSerializer().Serialize(validBranches);
+            }
+        }
+
+        [WebMethod]
         public static int SavePaymentInvoice(string btnSave, string AllItemDetail)
         {
             string PaymentInvoiceId = "";
@@ -320,6 +353,7 @@ namespace PMS.Inventory
                     lstItem.WTaxAmount = Convert.ToDecimal(record.WTaxAmount);
                 }
                 lstItem.Remarks = record.Remarks;
+                lstItem.Branch_id = string.IsNullOrEmpty(record.Branch) ? (int?)null : Convert.ToInt32(record.Branch);
                 db.SubmitChanges();
                 PaymentInvoiceId = lstItem.PaymentInvoiceId.ToString();
             }
@@ -349,6 +383,7 @@ namespace PMS.Inventory
                     PO.WTaxAmount = Convert.ToDecimal(record.WTaxAmount);
                 }
                 PO.Remarks = record.Remarks;
+                PO.Branch_id = string.IsNullOrEmpty(record.Branch) ? (int?)null : Convert.ToInt32(record.Branch);
                 PO.CreatedDate = DateTime.Now;
                 PO.CreatedBy = AppConfig.UserID;
                 PO.Company_ID = AppConfig.Company_ID;
@@ -414,6 +449,7 @@ namespace PMS.Inventory
                               m.Status,
                               m.FilePath,
                               m.FileType,
+                              m.Branch_id,
                               Vendor_Name = db.AP_Vendors.Where(po => po.Vendor_ID == Convert.ToInt32(m.Vendor_ID)).Select(po => po.Vendor_Name),
                           }).FirstOrDefault();
             return (new JavaScriptSerializer()).Serialize(Header);

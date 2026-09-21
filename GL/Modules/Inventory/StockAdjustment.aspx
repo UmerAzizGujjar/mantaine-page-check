@@ -8,6 +8,29 @@
         var Stock_ID = 0;
         var warehouseCond;
         var gridItems = [];
+        var savedBranch = null;
+
+        function loadUserBranch() {
+            PageMethods.GetUserBranch(function (result) {
+                if (!result || result === "null") {
+                    $('#ddlBranch').empty().append('<option value="0">No Branch Assigned</option>');
+                    return;
+                }
+                var branches = JSON.parse(result);
+                $('#ddlBranch').empty();
+                branches.forEach(function (branch) {
+                    $('#ddlBranch').append('<option value="' + branch.branch_ID + '">' + branch.branch_Name + '</option>');
+                });
+                if (branches.length === 1) {
+                    $('#ddlBranch').val(branches[0].branch_ID);
+                } else {
+                    $('#ddlBranch').prepend('<option value="0">Please Select</option>').val('0');
+                }
+                if (savedBranch) {
+                    $('#ddlBranch').val(savedBranch).trigger('change');
+                }
+            });
+        }
 
         function callPageMethod(methodName, params, successCallback, errorCallback) {
             if (typeof params === 'function') {
@@ -85,6 +108,9 @@
             GetWareHouseCondition();
             GetMultipleBatchCondition();
             UserRights();
+            savedBranch = $('#<%= hdnBranch_Id.ClientID %>').val();
+            $('#ddlBranch').select2({ width: '100%' });
+            loadUserBranch();
 
             // Initialize TokenInput for Item Selection
             $('#ctl00_MainContent_txtItem_Code').tokenInput(function () {
@@ -737,6 +763,13 @@
                 <asp:Label ID="lb_currentStock" runat="server" Text="Current Stock"></asp:Label>
                 <asp:TextBox runat="server" ID="txtcurrentStock" ReadOnly="True" />               
                 <asp:HiddenField ID="hndcheckbatch" runat="server" />                 
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-lg-2 col-md-3 col-sm-4">
+                <label id="LblBranch">Branch</label>
+                <select id="ddlBranch" name="ddlBranch" class="form-control" style="width: 100%; height: 35px;"></select>
+                <asp:HiddenField runat="server" ID="hdnBranch_Id" />
             </div>
         </div>
         <div class="row">

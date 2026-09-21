@@ -7,6 +7,29 @@
 
         var vendor_Id_Global = 0;
         var _gloabal = '';
+        var savedBranch = null;
+
+        function loadUserBranch() {
+            PageMethods.GetUserBranch(function (result) {
+                if (!result || result === "null") {
+                    $('#ddlBranch').empty().append('<option value="0">No Branch Assigned</option>');
+                    return;
+                }
+                var branches = JSON.parse(result);
+                $('#ddlBranch').empty();
+                branches.forEach(function (branch) {
+                    $('#ddlBranch').append('<option value="' + branch.branch_ID + '">' + branch.branch_Name + '</option>');
+                });
+                if (branches.length === 1) {
+                    $('#ddlBranch').val(branches[0].branch_ID);
+                } else {
+                    $('#ddlBranch').prepend('<option value="0">Please Select</option>').val('0');
+                }
+                if (savedBranch) {
+                    $('#ddlBranch').val(savedBranch).trigger('change');
+                }
+            });
+        }
         function Fillwtaxtype() {
             debugger;
             var optionsVen = '';
@@ -122,6 +145,7 @@
             var currentDate = $.datepicker.formatDate("dd M yy", new Date());
             $datepicker.val(currentDate);
             $('select').select2();
+            loadUserBranch();
             GetNewInvoiceNo();
             GetDepartments();
             FillVendors();
@@ -643,6 +667,10 @@
                 $('#txt_exRate').val(data.ExRate);
                 $('#txt_Remarks').val(data.Remarks);
                 $('#txt_exDate').val(ExDate);
+                savedBranch = data.Branch_id;
+                if (savedBranch) {
+                    $('#ddlBranch').val(savedBranch).trigger('change');
+                }
                 $('#tot_inv_amount').val(data.Total_Invoice_Amount);
                 $('#tot_adjusted_advance').val(data.Total_Advance_Adjusted);
                 $('#net_amount').val(data.Net_Amount);
@@ -837,6 +865,7 @@
                 var ExRate = $('#txt_exRate').val();
                 var Remarks = $('#txt_Remarks').val();
                 var ExDate = $('#txt_exDate').val();
+                var Branch = $('#ddlBranch').val();
                 var totalinvoiceamount = $('#tot_inv_amount').val();
                 var totaladvanceadjusted = $('#tot_adjusted_advance').val();
                 var totalnetamount = $('#net_amount').val();
@@ -881,7 +910,7 @@
                         'advadjusted': $(value).find('td input[name=adjusted_Amount]').val()
                     });
                 });
-                var AllItemDetail = { 'disc_amount': disc_amount, 'totalnetamount': totalnetamount, 'totaladvanceadjusted': totaladvanceadjusted, 'totalinvoiceamount': totalinvoiceamount, 'InvoiceNum': InvoiceNum, 'InvoiceType': InvoiceTyp, 'VendorId': VendorId, 'RefInvoiceNum': RefInvoiceno, 'SalTaxInvoiceNum': StaxInvoice, 'InvoiceDate': InvoiceDate, 'AccountingDate': AccountingDate, 'DueDate': DueDate, 'Currency': CurrencyId, 'ExRate': ExRate, 'Remarks': Remarks, 'ExDate': ExDate, 'ItemList': Item_list, 'Itemlist2': Item_list2, 'Is_Direct': Is_Direct };
+                var AllItemDetail = { 'disc_amount': disc_amount, 'totalnetamount': totalnetamount, 'totaladvanceadjusted': totaladvanceadjusted, 'totalinvoiceamount': totalinvoiceamount, 'InvoiceNum': InvoiceNum, 'InvoiceType': InvoiceTyp, 'VendorId': VendorId, 'RefInvoiceNum': RefInvoiceno, 'SalTaxInvoiceNum': StaxInvoice, 'InvoiceDate': InvoiceDate, 'AccountingDate': AccountingDate, 'DueDate': DueDate, 'Currency': CurrencyId, 'ExRate': ExRate, 'Remarks': Remarks, 'Branch': Branch, 'ExDate': ExDate, 'ItemList': Item_list, 'Itemlist2': Item_list2, 'Is_Direct': Is_Direct };
                 PageMethods.SaveInvoice(btnSave, JSON.stringify(AllItemDetail), function (res) {
                     debugger;
                     Swal.fire({
@@ -1505,6 +1534,12 @@
                 <input type="text" name="txt_Remarks" id="txt_Remarks"  />
             </div>
             
+            <div class="col-lg-2 col-md-4 col-sm-6">
+                <label id="lb_Branch">Branch</label>
+                <select id="ddlBranch" class="form-control">
+                    <option value="0">Please Select</option>
+                </select>
+            </div>
             <div class="col-lg-2 col-md-4 col-sm-6">
                 <label id="lb_attachments">Attachments</label>
                 <input type="file" name="txt_attachments" id="txt_attachments" />

@@ -444,7 +444,10 @@ namespace PMS
 
                 employee.Emp_Name = dataa.txtEmployee_Name;
                 employee.Father_Name = dataa.txtFather_Name;
-                employee.DOB = Convert.ToDateTime(dataa.txtEmployee_Date_of_Birth);
+                if (!string.IsNullOrEmpty(dataa.txtEmployee_Date_of_Birth))
+                    employee.DOB = Convert.ToDateTime(dataa.txtEmployee_Date_of_Birth);
+                else
+                    employee.DOB = null;
                 employee.Department = dataa.ddlDepartment;
                 employee.Policy_id = dataa.ddlPolicy;
                 employee.userid = Convert.ToString(dataa.ddluser);
@@ -521,7 +524,10 @@ namespace PMS
                 employee.Mobile = dataa.txtEmployee_Phone2;
                 employee.NTN_No = dataa.txtEmployee_NTN_No;
                 employee.Email = dataa.txtEmployee_Email;
-                employee.DOJ = Convert.ToDateTime(dataa.txtEmployee_DOJ);
+                if (!string.IsNullOrEmpty(dataa.txtEmployee_DOJ))
+                    employee.DOJ = Convert.ToDateTime(dataa.txtEmployee_DOJ);
+                else
+                    employee.DOJ = null;
                 if (!string.IsNullOrEmpty(dataa.txtStartDate))
                 {
                     employee.st_day = Convert.ToDateTime(dataa.txtStartDate);

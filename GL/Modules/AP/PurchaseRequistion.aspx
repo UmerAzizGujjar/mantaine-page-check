@@ -138,6 +138,8 @@
             $('#ddlWarehouse').select2();
             $('#ddldept').select2();
             $('#ddlPriority').select2();
+            $('#ddlBranch').select2();
+            loadUserBranch();
             $('#ctl00_MainContent_ddlGIR').select2();
 
             initSourceToggle();
@@ -501,6 +503,29 @@
         var savedPriority = null;
         var savedDept = null;
         var savedWarehouse = null;
+        var savedBranch = null;
+
+        function loadUserBranch() {
+            PageMethods.GetUserBranch(function (result) {
+                if (!result || result === "null") {
+                    $('#ddlBranch').empty().append('<option value="0">No Branch Assigned</option>');
+                    return;
+                }
+                var branches = JSON.parse(result);
+                $('#ddlBranch').empty();
+                branches.forEach(function (branch) {
+                    $('#ddlBranch').append('<option value="' + branch.branch_ID + '">' + branch.branch_Name + '</option>');
+                });
+                if (branches.length === 1) {
+                    $('#ddlBranch').val(branches[0].branch_ID);
+                } else {
+                    $('#ddlBranch').prepend('<option value="0">Please Select</option>').val('0');
+                }
+                if (savedBranch) {
+                    $('#ddlBranch').val(savedBranch).trigger('change');
+                }
+            });
+        }
 
         function FillDepartments() {
             PageMethods.filldepartments(function (Tests) {
@@ -672,6 +697,7 @@
             isReplicate = false;
             var totCost  = $("#totCost").val() || 0;
             var dept     = $('#ddldept').val();
+            var branch   = $('#ddlBranch').val();
 
             if (warehouseCond == "01" && Warehouse == '0') {
                 Swal.fire({ icon: 'error', title: 'Error!', text: 'Please Select Warehouse', showConfirmButton: false, timer: 2000, customClass: { popup: 'swal-big-popup', title: 'swal-big-title', htmlContainer: 'swal-big-text' } });
@@ -726,7 +752,7 @@
                     $.ajax({
                         type: "post",
                         url: "PurchaseRequistion.aspx/SavePurchaseRequistion",
-                        data: JSON.stringify({ "PRid": PRId, "PrNum": PrNum, "PrDate": PrDate, "Pirority": Pirority, "Warehouse": Warehouse, "dept": dept, "RefNum": RefNum, "remarks": remarks, "btnValue": btnValue }),
+                        data: JSON.stringify({ "PRid": PRId, "PrNum": PrNum, "PrDate": PrDate, "Pirority": Pirority, "Warehouse": Warehouse, "dept": dept, "RefNum": RefNum, "remarks": remarks, "btnValue": btnValue, "branch": branch }),
                         contentType: "application/json; charset=utf-8",
                         dataType: "json",
                         success: function (response) {
@@ -825,6 +851,10 @@
                     savedPriority = parse.Priority;
                     savedDept = parse.Department;
                     savedWarehouse = parse.Warehouse;
+                    savedBranch = parse.Branch_Id;
+                    if (savedBranch) {
+                        $('#ddlBranch').val(savedBranch).trigger('change');
+                    }
 
                     // Fallback: also try setting them right away in case dropdowns loaded fast
                     if ($('#ddlPriority option[value="' + savedPriority + '"]').length) {
@@ -1176,10 +1206,16 @@
                 </select>
             </div>
             <div class="col-lg-2 col-md-4 col-sm-6 col-xs-12">
+                <label id="LblBranch">Branch</label>
+                <select id="ddlBranch" class="form-select">
+                    <option value="0">Please Select</option>
+                </select>
+            </div>
+            <div class="col-lg-2 col-md-4 col-sm-6 col-xs-12">
                 <label id="LblRef_Num">Ref #</label>
                 <input type="text" class="form-control" id="txtRef_Num" name="txtRef_Num" placeholder="Reference no." autocomplete="off" />
             </div>
-            <div class="col-lg-4 col-md-8 col-sm-12 col-xs-12">
+            <div class="col-lg-2 col-md-8 col-sm-12 col-xs-12">
                 <label id="lblrem">Remarks</label>
                 <input id="txtRemarks" type="text" class="form-control" placeholder="Enter any remarks..." />
             </div>

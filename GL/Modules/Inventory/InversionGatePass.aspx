@@ -3,6 +3,30 @@
 <asp:Content ID="Content1" ContentPlaceHolderID="HeadContent" runat="server">
     <link href="../../wwwroot/THEME_TIBBIT/CustomCSS/IGP.css" rel="stylesheet" />
     <script type="text/javascript">
+        var savedBranch = null;
+
+        function loadUserBranch() {
+            PageMethods.GetUserBranch(function (result) {
+                if (!result || result === "null") {
+                    $('#ddlBranch').empty().append('<option value="0">No Branch Assigned</option>');
+                    return;
+                }
+                var branches = JSON.parse(result);
+                $('#ddlBranch').empty();
+                branches.forEach(function (branch) {
+                    $('#ddlBranch').append('<option value="' + branch.branch_ID + '">' + branch.branch_Name + '</option>');
+                });
+                if (branches.length === 1) {
+                    $('#ddlBranch').val(branches[0].branch_ID);
+                } else {
+                    $('#ddlBranch').prepend('<option value="0">Please Select</option>').val('0');
+                }
+                if (savedBranch) {
+                    $('#ddlBranch').val(savedBranch).trigger('change');
+                }
+            });
+        }
+
         $(document).ready(function () {
             UserRights();
             var currentDate = new Date();
@@ -30,6 +54,7 @@
                 SaveAllRecord();
             });
             $('select').select2();
+            loadUserBranch();
             var IgpID = '<%= Request.QueryString["IGP_ID"] %>';
             if (IgpID == '') {
                 $('#btn_Print').hide();
@@ -105,6 +130,10 @@
                 $('#txtRemarks').val(data.Remarks);
                 $('#txtStatus').val(data.Status);
                 $('#txtStatusInspec').val(data.Inspec_Status);
+                savedBranch = data.Branch_Id;
+                if (savedBranch) {
+                    $('#ddlBranch').val(savedBranch).trigger('change');
+                }
                 var status = $('#txtStatus').val();
                 var inspstatus = $('#txtStatusInspec').val();
                 if (inspstatus == "Approved") {
@@ -627,6 +656,7 @@
                 var Bility_No = $('#txtBility_No').val();
                 var Remarks = $('#txtRemarks').val();
                 var InvOrg = $('#ddlInv_Org').val();
+                var Branch = $('#ddlBranch').val();
                 if (!InvOrg || InvOrg === "0") {
                     Swal.fire({
                         icon: 'warning',
@@ -648,7 +678,7 @@
                     debugger;
                     Item_list.push({ 'PODetailId': $(value).find('td input[name=txtPODetailId]').val(), 'ItemCode': $(value).find('td input[name=txtItemCode]').val(), 'RcvQty': $(value).find('td input[name=RcvQty]').val(), 'POQty': $(value).find('td input[name=POQty]').val(), 'BatchNo': $(value).find('td input[name=BatchNo]').val(), 'txtuomqty': $(value).find('td input[name=txtuomqty]').val(), 'BlncQty': $(value).find('td input[name=blncQty]').val(), 'IgpQty': $(value).find('td input[name=IgpQty]').val(), 'InspecQty': $(value).find('td input[name=InspQty]').val(), 'BounusQty': $(value).find('td input[name=BounusQty]').val(), 'Mfgdate': $(value).find('td input[name=txtMfgdate]').val(), 'Expdate': $(value).find('td input[name=Expdate]').val(), 'SaleRate': $(value).find('td input[name=SaleRate]').val(), });
                 });
-                var AllItemDetail = { 'Igp_num': IgpNo, 'Date': date, 'Vendor': Vendor, 'DriverName': DriverName, 'VehicleNum': VehicleNum, 'BilityNum': Bility_No, 'remarks': Remarks, 'InvOrg': InvOrg, 'ItemList': Item_list };
+                var AllItemDetail = { 'Igp_num': IgpNo, 'Date': date, 'Vendor': Vendor, 'DriverName': DriverName, 'VehicleNum': VehicleNum, 'BilityNum': Bility_No, 'remarks': Remarks, 'InvOrg': InvOrg, 'Branch': Branch, 'ItemList': Item_list };
                 PageMethods.SaveIgpDetail(btnSave, JSON.stringify(AllItemDetail), function (res) {
                     debugger;
 
@@ -1347,6 +1377,12 @@
             <div class="col-lg-3 col-md-6 col-sm-12 mb-3">
                 <label id="lblBility_No" class="labelIGP">Bility #</label>
                 <input type="text" class="form-control" id="txtBility_No" name="txtBility_No" />
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-lg-3 col-md-6 col-sm-12 mb-3">
+                <label id="LblBranch" class="labelIGP">Branch</label>
+                <select class="form-control" id="ddlBranch" name="ddlBranch"></select>
             </div>
         </div>
         <div class="row">

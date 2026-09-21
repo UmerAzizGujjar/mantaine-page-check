@@ -276,8 +276,41 @@ namespace PMS.Inventory
         }
 
         [WebMethod]
+        public static string GetUserBranch()
+        {
+            using (var db = new DataBaseDataContext(DBClass.ConnectionString()))
+            {
+                var branchIds = (from bwd in db.Branch_Wise_User_Details
+                                 where bwd.User_Id == AppConfig.UserID
+                                 select bwd.Brancg).ToList();
 
-        public static string SaveMIR(int MIRId, string MIRNum, string MIRDate, string Pirority, string dept, string remarks, string WareHouse, string btnValue)
+                if (!branchIds.Any())
+                    return "null";
+
+                var validBranches = new List<object>();
+
+                foreach (var brancg in branchIds)
+                {
+                    if (int.TryParse(brancg, out int branchId))
+                    {
+                        var branch = db.Branches.FirstOrDefault(b => b.branch_ID == branchId);
+                        if (branch != null)
+                        {
+                            validBranches.Add(new { branch_ID = branchId, branch_Name = branch.branch_Name });
+                        }
+                    }
+                }
+
+                if (!validBranches.Any())
+                    return "null";
+
+                return new JavaScriptSerializer().Serialize(validBranches);
+            }
+        }
+
+        [WebMethod]
+
+        public static string SaveMIR(int MIRId, string MIRNum, string MIRDate, string Pirority, string dept, string remarks, string WareHouse, string btnValue, string branch)
         {
             DataBaseDataContext db = new DataBaseDataContext();
             JavaScriptSerializer oJS = new JavaScriptSerializer();
@@ -295,6 +328,7 @@ namespace PMS.Inventory
                 obj.Created_By = AppConfig.UserID;
                 obj.Company_ID = AppConfig.Company_ID;
                 obj.Status = "Created";
+                obj.Branch_Id = string.IsNullOrEmpty(branch) ? (int?)null : Convert.ToInt32(branch);
                 db.MaterialIssueRequests.InsertOnSubmit(obj);
             }
             else
@@ -310,6 +344,7 @@ namespace PMS.Inventory
                 obj.Remarks = remarks;
                 obj.Update_Date = DateTime.Now;
                 obj.Updated_By = AppConfig.UserID;
+                obj.Branch_Id = string.IsNullOrEmpty(branch) ? (int?)null : Convert.ToInt32(branch);
             }
             try
             {
@@ -464,6 +499,7 @@ namespace PMS.Inventory
                                      data.Employee,
                                      data.MIRDate,
                                      data.Status,
+                                     data.Branch_Id,
                                  }).FirstOrDefault();
                     result = (new JavaScriptSerializer()).Serialize(query).ToString();
                 }
