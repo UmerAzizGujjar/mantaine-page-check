@@ -101,6 +101,29 @@
         var poid = '<% =Request.QueryString["PO_ID"] %>';
         var replicateEnabled = '<%= ReplicateCode %>' === '01';
         var qtyFieldDisabled = false;
+        var savedBranch = null;
+
+        function loadUserBranch() {
+            callPageMethod('GetUserBranch', function (result) {
+                if (!result || result === "null") {
+                    $('#ddlBranch').empty().append('<option value="0">No Branch Assigned</option>');
+                    return;
+                }
+                var branches = JSON.parse(result);
+                $('#ddlBranch').empty();
+                branches.forEach(function (branch) {
+                    $('#ddlBranch').append('<option value="' + branch.branch_ID + '">' + branch.branch_Name + '</option>');
+                });
+                if (branches.length === 1) {
+                    $('#ddlBranch').val(branches[0].branch_ID);
+                } else {
+                    $('#ddlBranch').prepend('<option value="0">Please Select</option>').val('0');
+                }
+                if (savedBranch) {
+                    $('#ddlBranch').val(savedBranch).trigger('change');
+                }
+            });
+        }
 
         /* ── PageMethod → AJAX helper ─────────────────────────── */
         function callPageMethod(methodName, params, successCallback, errorCallback) {
@@ -952,6 +975,8 @@ function buildNewRow(length, PR_Num, itemcode, item_name, unit, Qty, UOM_Qty, Ra
             FillStaxtype();
             FillAdvancetaxtype();
             FillFurtherTaxType();
+            $('#ddlBranch').select2();
+            loadUserBranch();
 
             // Set default dates
             var currentDate = new Date();
@@ -2259,7 +2284,11 @@ function scheduleCalcTotal(delay) {
                 });
                 $('#ddlWarehouse').html(optionInv);
                 if (lastLoadedWarehouse) {
-                    $('#ddlWarehouse').val(lastLoadedWarehouse).trigger('change');
+                $('#ddlWarehouse').val(lastLoadedWarehouse).trigger('change');
+                savedBranch = data.Branch_Id;
+                if (savedBranch) {
+                    $('#ddlBranch').val(savedBranch).trigger('change');
+                }
                 }
             });
         }
@@ -2788,6 +2817,7 @@ function scheduleCalcTotal(delay) {
                 var NetAmount = $('#ctl00_MainContent_Net_Amount').val();
                 var PaymentTerms = $('#ctl00_MainContent_ddlpayment').val();
                 var Warehouse = $('#ddlWarehouse').val();
+                var Branch = $('#ddlBranch').val();
                 var Term_ID = $('#ctl00_MainContent_ddlTerm').val();
                 var DeliveryTerms = $('#ctl00_MainContent_ddlDelivery').val();
                 var Freight = $('#ctl00_MainContent_Freight').val();
@@ -2843,7 +2873,7 @@ function scheduleCalcTotal(delay) {
                 }
                 else {
                     var AllItemDetail = {
-                        'txtst_amou': txtst_amou, 'Adv_amount': Adv_amount, 'transtype': transtype, 'txtcsmasterid': txtcsmasterid, 'PO_ID': PO_ID, 'SubTotal': SubTotal, 'DiscountAmount': DiscountAmount, 'NetAmount': NetAmount, 'Purchase_Date': Purchase_Date, 'Purchase_No': Purchase_No, 'RefNo': RefNo, 'VendorName': VendorName, 'Remarks': Remarks, 'Warranty': Warranty, 'Disclaimer': Disclaimer, 'PaymentTerms': PaymentTerms, 'Term_ID': Term_ID, 'DeliveryTerms': DeliveryTerms, 'FreightCharges': Freight, 'POType': POType, 'Due_Date': Due_Date, 'ItemList': Item_list, 'Warehouse': Warehouse, 'Further_amount': Further_amount, 'ProjectionDate': ProjectionDate,'ProjectionType': ProjectionType, 'IsManual': IsManual,
+                        'txtst_amou': txtst_amou, 'Adv_amount': Adv_amount, 'transtype': transtype, 'txtcsmasterid': txtcsmasterid, 'PO_ID': PO_ID, 'SubTotal': SubTotal, 'DiscountAmount': DiscountAmount, 'NetAmount': NetAmount, 'Purchase_Date': Purchase_Date, 'Purchase_No': Purchase_No, 'RefNo': RefNo, 'VendorName': VendorName, 'Remarks': Remarks, 'Warranty': Warranty, 'Disclaimer': Disclaimer, 'PaymentTerms': PaymentTerms, 'Term_ID': Term_ID, 'DeliveryTerms': DeliveryTerms, 'FreightCharges': Freight, 'POType': POType, 'Due_Date': Due_Date, 'ItemList': Item_list, 'Warehouse': Warehouse, 'Branch': Branch, 'Further_amount': Further_amount, 'ProjectionDate': ProjectionDate,'ProjectionType': ProjectionType, 'IsManual': IsManual,
                         'IsByDefault': IsByDefault, 'IsAdvanceWithTax': IsAdvanceWithTax };
                     callPageMethod('SavePurchaseItemDetail', { btnSave: btnSave, AllItemDetail: JSON.stringify(AllItemDetail) }, function (res) {
                         debugger;
@@ -3408,86 +3438,88 @@ function scheduleCalcTotal(delay) {
 
         <div class="pr-primary-settings">
 
+            <div style="display:none;">
+                <asp:Label ID="LabelPurchase_Date" runat="server" Text="Date"></asp:Label>
+                <asp:RequiredFieldValidator ID="rfvPurchaseDate" runat="server" InitialValue="0" ControlToValidate="txtPurchase_Date" ErrorMessage="*" Display="Dynamic"></asp:RequiredFieldValidator>
+                <asp:TextBox runat="server" ID="txtPurchase_Date" class="form-control" />
+                <asp:Label ID="lblStatus" runat="server" Text="Status"></asp:Label>
+                <asp:TextBox runat="server" ReadOnly="true" ID="txtStatus" class="form-control" />
+            </div>
+
             <div class="row">
-                <div class="col-lg-3 col-md-6 col-sm-12">
+                <div class="col-lg-2 col-md-4 col-sm-6 col-xs-12">
                     <asp:Label ID="LabelPurchase_No" runat="server" Text="PO No."></asp:Label>
                     <asp:TextBox runat="server" ID="txtPurchase_No" class="form-control" ReadOnly="true" />
                     <asp:HiddenField ID="hdnPurchase_ID" runat="server" ClientIDMode="Static" />
                     <asp:TextBox runat="server" ID="txtPurchase_ID" Visible="false" ReadOnly="true" Width="0" />
                 </div>
-                <div style="display:none;">
-                    <asp:Label ID="LabelPurchase_Date" runat="server" Text="Date"></asp:Label>
-                    <asp:RequiredFieldValidator ID="rfvPurchaseDate" runat="server" InitialValue="0" ControlToValidate="txtPurchase_Date" ErrorMessage="*" Display="Dynamic"></asp:RequiredFieldValidator>
-                    <asp:TextBox runat="server" ID="txtPurchase_Date" class="form-control" />
-                </div>
-                <div class="col-lg-3 col-md-6 col-sm-12">
+                <div class="col-lg-2 col-md-4 col-sm-6 col-xs-12">
                     <asp:Label ID="lblDueDate" runat="server" Text="Due Date"></asp:Label>
                     <asp:TextBox runat="server" ID="txtdueDate" class="form-control" />
                 </div>
-                <div style="display:none;">
-                    <asp:Label ID="lblStatus" runat="server" Text="Status"></asp:Label>
-                    <asp:TextBox runat="server" ReadOnly="true" ID="txtStatus" class="form-control" />
-                </div>
-                <div class="col-lg-3 col-md-6 col-sm-12" id="projectiondate">
+                <div class="col-lg-2 col-md-4 col-sm-6 col-xs-12" id="projectiondate">
                     <asp:Label ID="lblprojectiondate" runat="server" Text="Projection Date"></asp:Label>
                     <asp:TextBox runat="server" ID="txtProjection_Date" class="form-control" />
                 </div>
-                <div class="col-lg-3 col-md-6 col-sm-12" id="projectiontype">
+                <div class="col-lg-2 col-md-4 col-sm-6 col-xs-12" id="projectiontype">
                     <asp:Label ID="lblddlprojection" runat="server" Text="Projection" Style="">Projection<span style="color: red">*</span></asp:Label>
                     <asp:DropDownList runat="server" ID="ddlprojection" class="form-control" AppendDataBoundItems="true"></asp:DropDownList>
+                </div>
+                <div class="col-lg-2 col-md-4 col-sm-6 col-xs-12">
+                    <asp:Label ID="lblSupplier_ID" runat="server" Text="Vendor">Vendor <span style="color: red;">*</span></asp:Label>
+                    <asp:DropDownList runat="server" ID="ddlVendor" class="form-control" AppendDataBoundItems="true"></asp:DropDownList>
+                </div>
+                <div class="col-lg-2 col-md-4 col-sm-6 col-xs-12">
+                    <asp:Label ID="lblPOType" runat="server" Text="P.O Type"></asp:Label>
+                    <asp:DropDownList runat="server" ID="ddlPOType" class="form-control" AppendDataBoundItems="true"></asp:DropDownList>
                 </div>
             </div>
 
             <div class="row">
-                <div class="col-lg-3 col-md-6 col-sm-12">
-                    <asp:Label ID="lblSupplier_ID" runat="server" Text="Vendor">Vendor <span style="color: red;">*</span></asp:Label>
-                    <asp:DropDownList runat="server" ID="ddlVendor" class="form-control" AppendDataBoundItems="true"></asp:DropDownList>
-                </div>
-                <div class="col-lg-3 col-md-6 col-sm-12">
-                    <asp:Label ID="lblPOType" runat="server" Text="P.O Type"></asp:Label>
-                    <asp:DropDownList runat="server" ID="ddlPOType" class="form-control" AppendDataBoundItems="true"></asp:DropDownList>
-                </div>
-                <div class="col-lg-3 col-md-6 col-sm-12">
+                <div class="col-lg-2 col-md-4 col-sm-6 col-xs-12">
                     <asp:Label ID="lblpayment" runat="server" Text="Payment Mode" Style="">Mode of Payment<span style="color: red">*</span></asp:Label>
                     <asp:DropDownList runat="server" ID="ddlpayment" class="form-control" AppendDataBoundItems="true"></asp:DropDownList>
                 </div>
-                <div class="col-lg-3 col-md-6 col-sm-12" id="warehouse">
+                <div class="col-lg-2 col-md-4 col-sm-6 col-xs-12" id="warehouse">
                     <label id="LblWarehouse">WareHouse<span style="color: red">*</span></label>
                     <select id="ddlWarehouse" onchange="getprNoBy_WareHouse(this)" class="form-select">
                         <option value="0">Please Select</option>
                     </select>
                 </div>
-            </div>
-
-            <div class="row">
-                <div class="col-lg-3 col-md-6 col-sm-12">
+                <div class="col-lg-2 col-md-4 col-sm-6 col-xs-12">
                     <asp:Label ID="lblReference" runat="server" Text="Ref. No"></asp:Label>
                     <asp:TextBox runat="server" ID="txtPurchase_Reference" class="form-control" />
                 </div>
-                <div class="col-lg-3 col-md-6 col-sm-12">
+                <div class="col-lg-2 col-md-4 col-sm-6 col-xs-12">
                     <asp:Label ID="lblTerm_ID" runat="server" Text="Payment Terms"></asp:Label>
                     <asp:DropDownList runat="server" ID="ddlTerm" class="form-control" AppendDataBoundItems="true"></asp:DropDownList>
                 </div>
-                <div class="col-lg-3 col-md-6 col-sm-12">
+                <div class="col-lg-2 col-md-4 col-sm-6 col-xs-12">
                     <asp:Label ID="lblDelivery" runat="server" Text="Delivery Terms"></asp:Label>
                     <asp:DropDownList runat="server" ID="ddlDelivery" class="form-control" AppendDataBoundItems="true"></asp:DropDownList>
                 </div>
-                <div class="col-lg-3 col-md-6 col-sm-12">
+                <div class="col-lg-2 col-md-4 col-sm-6 col-xs-12">
                     <asp:Label ID="lblFreight" runat="server" Text="Freight Amount"></asp:Label>
                     <asp:TextBox runat="server" ID="Freight" onkeyup="calcTotal()" class="form-control" />
                 </div>
             </div>
 
             <div class="row">
-                <div class="col-lg-6 col-md-8 col-sm-12">
+                <div class="col-lg-2 col-md-4 col-sm-6 col-xs-12">
                     <asp:Label ID="lblRemarks" runat="server" Text="Remarks"></asp:Label>
                     <asp:TextBox runat="server" ID="txtRemarks" class="form-control" />
                 </div>
-                <div class="col-lg-3 col-md-6 col-sm-12">
+                <div class="col-lg-2 col-md-4 col-sm-6 col-xs-12">
                     <asp:Label ID="lblWarranty" runat="server" Text="Warranty"></asp:Label>
                     <asp:TextBox runat="server" ID="txtWarranty" class="form-control" />
                 </div>
-                <div class="col-lg-3 col-md-6 col-sm-12">
+                <div class="col-lg-2 col-md-4 col-sm-6 col-xs-12">
+                    <label id="LblBranch">Branch</label>
+                    <select id="ddlBranch" class="form-select">
+                        <option value="0">Please Select</option>
+                    </select>
+                </div>
+                <div class="col-lg-2 col-md-4 col-sm-6 col-xs-12">
                     <asp:Label ID="LblDisclaimer" runat="server" Text="Disclaimer"></asp:Label>
                     <asp:TextBox runat="server" ID="txtDisclaimer" class="form-control" />
                 </div>

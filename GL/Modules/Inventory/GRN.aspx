@@ -276,6 +276,29 @@
     <script type="text/javascript">
         var GRN_ID = 0;
         var loaderTimeout = null;
+        var savedBranch = null;
+
+        function loadUserBranch() {
+            PageMethods.GetUserBranch(function (result) {
+                if (!result || result === "null") {
+                    $('#ddlBranch').empty().append('<option value="0">No Branch Assigned</option>');
+                    return;
+                }
+                var branches = JSON.parse(result);
+                $('#ddlBranch').empty();
+                branches.forEach(function (branch) {
+                    $('#ddlBranch').append('<option value="' + branch.branch_ID + '">' + branch.branch_Name + '</option>');
+                });
+                if (branches.length === 1) {
+                    $('#ddlBranch').val(branches[0].branch_ID);
+                } else {
+                    $('#ddlBranch').prepend('<option value="0">Please Select</option>').val('0');
+                }
+                if (savedBranch) {
+                    $('#ddlBranch').val(savedBranch).trigger('change');
+                }
+            });
+        }
 
         function showLoader(message, showProgressBar) {
             if (loaderTimeout) {
@@ -401,6 +424,7 @@ $(document).ready(function() {
             }, 500);
             <% } %>
             $('select').select2();
+            loadUserBranch();
 
             var GRN_ID = '<%= Request.QueryString["GRN_ID"]%>';
             if (GRN_ID == '') {
@@ -789,6 +813,10 @@ function LoadGRNDetailDir(GRN_ID) {
                     $('#ddlProject').val(data.Project).trigger('change');
                 }, 1000);
                 $('#txtRemarks').val(data.Remarks);
+                savedBranch = data.Branch_Id;
+                if (savedBranch) {
+                    $('#ddlBranch').val(savedBranch).trigger('change');
+                }
                 setTimeout(function () {
                     getIGPNumByVendor(data.VendorId);
                 }, 3000);
@@ -1072,6 +1100,7 @@ function LoadGRNDetailDir(GRN_ID) {
             var Remarks = $('#txtRemarks').val();
             var InvOrg = $('#ddlInv_org').val();
             var project = $('#ddlProject').val();
+            var Branch = $('#ddlBranch').val();
             var table = $('#tblItemDescriptionDetail');
             var tableDir = $('#tblItemDescriptionDetailDir');
             var Is_Direct = $('#dircGRN').is(':checked');
@@ -1197,7 +1226,7 @@ function LoadGRNDetailDir(GRN_ID) {
                 }
                 else {
                     $('#btnsave').attr('disabled', true);
-                    var AllItemDetail = { 'GRN_Num': GRN_Num, 'Date': date, 'VendorId': VendorId, 'remarks': Remarks, 'project': project, 'InvOrg': InvOrg, 'ItemList': Item_list, 'ItemListDir': ItemListDir, 'Is_Direct': Is_Direct };
+                    var AllItemDetail = { 'GRN_Num': GRN_Num, 'Date': date, 'VendorId': VendorId, 'remarks': Remarks, 'project': project, 'InvOrg': InvOrg, 'Branch': Branch, 'ItemList': Item_list, 'ItemListDir': ItemListDir, 'Is_Direct': Is_Direct };
                     PageMethods.SaveGRNDetail(btnSave, JSON.stringify(AllItemDetail), function (res) {
                         sendFile(res, function () {
                             Swal.fire({
@@ -1454,6 +1483,13 @@ function LoadGRNDetailDir(GRN_ID) {
                  <textarea id="txtRemarks" class="form-control" rows="2" cols="20"></textarea>
              </div>
          </div>
+
+        <div class="row">
+            <div class="col-lg-3 col-md-6 col-sm-12">
+                <label id="LblBranch" class="labelIGP">Branch</label>
+                <select id="ddlBranch" class="form-control"></select>
+            </div>
+        </div>
 
         <div class="row">
             <div class="col-lg-3 col-md-6 col-sm-12">

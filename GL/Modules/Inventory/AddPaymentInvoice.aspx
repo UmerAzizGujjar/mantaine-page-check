@@ -8,11 +8,36 @@
         <script type="text/javascript">
             var InvType = '';
             var bankAccountsCache = [];
+            var savedBranch = null;
+
+            function loadUserBranch() {
+                PageMethods.GetUserBranch(function (result) {
+                    if (!result || result === "null") {
+                        $('#ddlBranch').empty().append('<option value="0">No Branch Assigned</option>');
+                        return;
+                    }
+                    var branches = JSON.parse(result);
+                    $('#ddlBranch').empty();
+                    branches.forEach(function (branch) {
+                        $('#ddlBranch').append('<option value="' + branch.branch_ID + '">' + branch.branch_Name + '</option>');
+                    });
+                    if (branches.length === 1) {
+                        $('#ddlBranch').val(branches[0].branch_ID);
+                    } else {
+                        $('#ddlBranch').prepend('<option value="0">Please Select</option>').val('0');
+                    }
+                    if (savedBranch) {
+                        $('#ddlBranch').val(savedBranch).trigger('change');
+                    }
+                });
+            }
             $(document).ready(function () {
                 UserRights();
                 $('#ddl_PaymentMode').select2();
                 $('#ddl_venderName').select2();
                 $('#ddl_bankCash').select2();
+                $('#ddlBranch').select2();
+                loadUserBranch();
                 $('#btnSave').click(function () {
                     SaveAllRecord();
                 });
@@ -489,6 +514,7 @@
                 var InvoiceAdjusted = $('#txt_invoiceAdjusted').val();
                 var WTaxAmount = $('#txt_WTaxAmount').val();
                 var Remarks = $('#txt_remarks').val();
+                var Branch = $('#ddlBranch').val();
                 var table = $('#tblItemDescriptionDetail');
                 var Item_list = [];
                 table.find('tr').each(function (key, value) {
@@ -497,7 +523,7 @@
                     });
                 });
                 $('#btnSave').attr('disabled', true);
-                var AllItemDetail = { 'PaymentNum': PaymentNo, 'PaymentDate': PaymentDate, 'AccountId': AccountId, 'PaymentModeId': PaymentMode, 'DocumentNum': DocumentNo, 'DocumentDate': DocumentDate, 'Vendorid': VendorId, 'PaidAmount': PaidAmount, 'InvoiceAdjusted': InvoiceAdjusted, 'WTaxAmount': WTaxAmount, 'Remarks': Remarks, 'ItemList': Item_list };
+                var AllItemDetail = { 'PaymentNum': PaymentNo, 'PaymentDate': PaymentDate, 'AccountId': AccountId, 'PaymentModeId': PaymentMode, 'DocumentNum': DocumentNo, 'DocumentDate': DocumentDate, 'Vendorid': VendorId, 'PaidAmount': PaidAmount, 'InvoiceAdjusted': InvoiceAdjusted, 'WTaxAmount': WTaxAmount, 'Remarks': Remarks, 'Branch': Branch, 'ItemList': Item_list };
                 PageMethods.SavePaymentInvoice(btnSave, JSON.stringify(AllItemDetail), function (res) {
                     Swal.fire({
                         icon: 'success',
@@ -545,6 +571,10 @@
                 $('#txt_WTaxAmount').val(data.WTaxAmount);
                 $('#txt_remarks').val(data.Remarks);
                 $('#txtStatusid').val(data.Status);
+                savedBranch = data.Branch_id;
+                if (savedBranch) {
+                    $('#ddlBranch').val(savedBranch).trigger('change');
+                }
                 debugger;
                 var checkstatus = $('#txtStatusid').val();
                 if (checkstatus == 'Approved') {
@@ -1002,7 +1032,13 @@
                             <input id="chosePaymentfile" type="file" name="chosePaymentfile" class="form-control" style="height:34px; padding:4px;" />
                             <asp:HyperLink ID="HyperLink1" runat="server">Download</asp:HyperLink>
                         </div>
-                        <div class="col-lg-8 col-md-8 col-sm-12">
+                        <div class="col-lg-2 col-md-4 col-sm-12">
+                            <label>Branch</label>
+                            <select id="ddlBranch" class="form-control">
+                                <option value="0">Please Select</option>
+                            </select>
+                        </div>
+                        <div class="col-lg-6 col-md-8 col-sm-12">
                             <label>Remarks</label>
                             <textarea id="txt_remarks" class="form-control" name="txt_remarks" rows="1" cols="20" style="height:60px;"></textarea>
                         </div>

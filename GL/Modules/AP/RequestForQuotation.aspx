@@ -11,6 +11,29 @@
     </style>
     <script type="text/javascript">
         var _gloabal = '';
+        var savedBranch = null;
+
+        function loadUserBranch() {
+            PageMethods.GetUserBranch(function (result) {
+                if (!result || result === "null") {
+                    $('#ddlBranch').empty().append('<option value="0">No Branch Assigned</option>');
+                    return;
+                }
+                var branches = JSON.parse(result);
+                $('#ddlBranch').empty();
+                branches.forEach(function (branch) {
+                    $('#ddlBranch').append('<option value="' + branch.branch_ID + '">' + branch.branch_Name + '</option>');
+                });
+                if (branches.length === 1) {
+                    $('#ddlBranch').val(branches[0].branch_ID);
+                } else {
+                    $('#ddlBranch').prepend('<option value="0">Please Select</option>').val('0');
+                }
+                if (savedBranch) {
+                    $('#ddlBranch').val(savedBranch).trigger('change');
+                }
+            });
+        }
         function Filltaxtype() {
             debugger;
             var optionsVen = '';
@@ -57,6 +80,8 @@
             Filltaxtype();
 
             $('#ctl00_MainContent_ddlVendors').select2({ dropdownParent: $('#VendorModal') });
+            $('#ddlBranch').select2();
+            loadUserBranch();
             var currentDate = new Date();
             var formattedDate = $.datepicker.formatDate('dd M yy', currentDate);
             $("#txtRFQ_Date").val(formattedDate).datepicker({ dateFormat: 'dd M yy', readOnly: true });
@@ -159,6 +184,10 @@
                 setTimeout(function () {
                     $('#ctl00_MainContent_ddlWareHouse').val(data.Ware_House).trigger('change');
                 }, 1500);
+                savedBranch = data.Branch_Id;
+                if (savedBranch) {
+                    $('#ddlBranch').val(savedBranch).trigger('change');
+                }
                 LoadRFQItemDetail(RFQ_ID);
                 setTimeout(function () {
                     LoadRFQVendor(RFQ_ID);
@@ -341,6 +370,7 @@
                 var DueDate = $('#ctl00_MainContent_txtDue_Date').val();
                 var PaymentTerms = $('#ctl00_MainContent_ddlPaymentTerms').val();
                 var wareHouse = $('#ctl00_MainContent_ddlWareHouse').val();
+                var Branch = $('#ddlBranch').val();
                 var Term_ID = $('#ctl00_MainContent_ddlTerm').val();
                 var QuotationValidty = $('#ctl00_MainContent_txtquotationValidty').val();
                 var table1 = $('#tblItemDescriptionDetail');
@@ -377,7 +407,7 @@
                 }
                 else {
                     $('#btnsave').attr('disabled', true);
-                    var AllItemDetail = { 'RFQ_ID': RFQ_ID, 'RFQ_Date': RFQ_Date, 'RFQ_No': RFQ_No, 'RefNo': RefNo, 'DueDate': DueDate, 'Term_ID': Term_ID, 'PaymentTerms': PaymentTerms, 'wareHouse': wareHouse, 'QuotationValidty': QuotationValidty, 'Remarks': Remarks, 'ItemList': Item_list, 'Vendorlist': Vendor_list };
+                    var AllItemDetail = { 'RFQ_ID': RFQ_ID, 'RFQ_Date': RFQ_Date, 'RFQ_No': RFQ_No, 'RefNo': RefNo, 'DueDate': DueDate, 'Term_ID': Term_ID, 'PaymentTerms': PaymentTerms, 'wareHouse': wareHouse, 'Branch': Branch, 'QuotationValidty': QuotationValidty, 'Remarks': Remarks, 'ItemList': Item_list, 'Vendorlist': Vendor_list };
                     PageMethods.SaveRFQItemDetail(btnSave, JSON.stringify(AllItemDetail), function (res) {
                         debugger;
                         if (btnSave == "Update") {
@@ -716,7 +746,13 @@
             <asp:Label ID="lblwarehouse" runat="server" Text="Ware House"></asp:Label>
             <asp:DropDownList runat="server" ID="ddlWareHouse"  class="form-control" AppendDataBoundItems="true"></asp:DropDownList>
         </div>
-        <div class="col-lg-7 col-md-12 col-sm-12">
+        <div class="col-lg-3 col-md-6 col-sm-12">
+            <label id="lblBranch">Branch</label>
+            <select id="ddlBranch" class="form-control">
+                <option value="0">Please Select</option>
+            </select>
+        </div>
+        <div class="col-lg-4 col-md-12 col-sm-12">
             <asp:Label ID="lblRemarks" runat="server" Text="Remarks"></asp:Label>
             <asp:TextBox runat="server" ID="txtRemarks" class="form-control" />
         </div>

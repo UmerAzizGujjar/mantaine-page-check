@@ -120,6 +120,49 @@ namespace PMS.AP
         }
 
         [WebMethod]
+        public static string GetUserBranch()
+        {
+            using (var db = new DataBaseDataContext(DBClass.ConnectionString()))
+            {
+                var branchIds = (from bwd in db.Branch_Wise_User_Details
+                                 where bwd.User_Id == AppConfig.UserID
+                                 select bwd.Brancg).ToList();
+
+                if (!branchIds.Any())
+                    return "null";
+
+                var validBranches = new List<object>();
+
+                foreach (var brancg in branchIds)
+                {
+                    if (int.TryParse(brancg, out int branchId))
+                    {
+                        var branch = db.Branches.FirstOrDefault(b => b.branch_ID == branchId);
+                        if (branch != null)
+                        {
+                            validBranches.Add(new { branch_ID = branchId, branch_Name = branch.branch_Name });
+                        }
+                    }
+                }
+
+                if (!validBranches.Any())
+                    return "null";
+
+                return new JavaScriptSerializer().Serialize(validBranches);
+            }
+        }
+
+        [WebMethod]
+        public static string GetCSBranch(int CM_ID)
+        {
+            DataBaseDataContext db = new DataBaseDataContext();
+            var branch = (from m in db.CS_Vendor_Masters
+                          where m.CS_Ven_Master_ID == CM_ID
+                          select m.Branch_Id).FirstOrDefault();
+            return (new JavaScriptSerializer()).Serialize(branch);
+        }
+
+        [WebMethod]
         public static string SaveCSData(string btnSave, string AllItemDetail)
         {
             string cmid = "";
@@ -143,6 +186,7 @@ namespace PMS.AP
                 lstItem.CS_Validity = record.csvalidity;
                 lstItem.Remarks = record.remarks;
                 lstItem.Ware_House = record.WareHouse;
+                lstItem.Branch_Id = string.IsNullOrEmpty(record.Branch) ? (int?)null : Convert.ToInt32(record.Branch);
                 lstItem.Term_Id = record.Term_Id;
 
                 if (record.date != "")
@@ -413,6 +457,7 @@ namespace PMS.AP
                 CM.IsDeleted = false;
                 CM.Remarks = record.remarks;
                 CM.Ware_House = record.WareHouse;
+                CM.Branch_Id = string.IsNullOrEmpty(record.Branch) ? (int?)null : Convert.ToInt32(record.Branch);
                 CM.Term_Id = record.Term_Id;
                 if (record.date != "")
                 {
@@ -827,6 +872,7 @@ namespace PMS.AP
             public string txtstatus { get; set; }
             public string csno { get; set; }
             public string WareHouse { get; set; }
+            public string Branch { get; set; }
             public string date { get; set; }
             public string csvalidity { get; set; }
             public string remarks { get; set; }

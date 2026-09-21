@@ -194,6 +194,39 @@ namespace PMS.AP
             }
         }
         [WebMethod]
+        public static string GetUserBranch()
+        {
+            using (var db = new DataBaseDataContext(DBClass.ConnectionString()))
+            {
+                var branchIds = (from bwd in db.Branch_Wise_User_Details
+                                 where bwd.User_Id == AppConfig.UserID
+                                 select bwd.Brancg).ToList();
+
+                if (!branchIds.Any())
+                    return "null";
+
+                var validBranches = new List<object>();
+
+                foreach (var brancg in branchIds)
+                {
+                    if (int.TryParse(brancg, out int branchId))
+                    {
+                        var branch = db.Branches.FirstOrDefault(b => b.branch_ID == branchId);
+                        if (branch != null)
+                        {
+                            validBranches.Add(new { branch_ID = branchId, branch_Name = branch.branch_Name });
+                        }
+                    }
+                }
+
+                if (!validBranches.Any())
+                    return "null";
+
+                return new JavaScriptSerializer().Serialize(validBranches);
+            }
+        }
+
+        [WebMethod]
         public static string LoadPOHeaderDetail(int PO_ID)
         {
             DataBaseDataContext db = new DataBaseDataContext();
@@ -201,10 +234,11 @@ namespace PMS.AP
                           where m.PO_ID == PO_ID
                           select new
                           {
-                              m.CS_Master_ID,
-                              m.PO_ID,
-                              m.Ware_House,
-                              Ware_HouseText = (db.GetDataValueName("Ware House", m.Ware_House)),
+                               m.CS_Master_ID,
+                               m.PO_ID,
+                               m.Ware_House,
+                               m.Branch_Id,
+                               Ware_HouseText = (db.GetDataValueName("Ware House", m.Ware_House)),
                               m.PO_No,
                               m.PO_Date,
                               m.Due_Date,
@@ -465,6 +499,7 @@ TotalStock = db.GetInvenrtoryItemUomTotalStock(d.Item_Id ?? 0, m.Ware_House),
             public string ImagePath { get; set; }
             public string POType { get; set; }
             public string WareHouse { get; set; }
+            public string Branch { get; set; }
             public string Further_amount { get; set; }
             public DateTime? ProjectionDate { get; set; }
             public string ProjectionType { get; set; }
@@ -633,6 +668,7 @@ TotalStock = db.GetInvenrtoryItemUomTotalStock(d.Item_Id ?? 0, m.Ware_House),
                     existingItem.Warranty = record.Warranty;
                     existingItem.Disclaimer = record.Disclaimer;
                     existingItem.Ware_House = record.WareHouse;
+                    existingItem.Branch_Id = string.IsNullOrEmpty(record.Branch) ? (int?)null : Convert.ToInt32(record.Branch);
                     if (record.txtcsmasterid != "")
                     {
                         existingItem.CS_Master_ID = Convert.ToInt32(record.txtcsmasterid);
@@ -699,6 +735,7 @@ TotalStock = db.GetInvenrtoryItemUomTotalStock(d.Item_Id ?? 0, m.Ware_House),
                 PO.Warranty = record.Warranty;
                 PO.Disclaimer = record.Disclaimer;
                 PO.Ware_House = record.WareHouse;
+                PO.Branch_Id = string.IsNullOrEmpty(record.Branch) ? (int?)null : Convert.ToInt32(record.Branch);
                 if (record.SubTotal != "")
                 {
                     PO.Sub_Total = Convert.ToDecimal(record.SubTotal);

@@ -54513,6 +54513,8 @@ namespace PMS
 
         private System.Nullable<System.DateTime> _Deleted_Time;
 
+        private System.Nullable<int> _Branch_Id;
+
         #region Extensibility Method Definitions
         partial void OnLoaded();
         partial void OnValidate(System.Data.Linq.ChangeAction action);
@@ -54577,6 +54579,8 @@ namespace PMS
         partial void OnDeletedByChanged();
         partial void OnDeleted_TimeChanging(System.Nullable<System.DateTime> value);
         partial void OnDeleted_TimeChanged();
+        partial void OnBranch_IdChanging(System.Nullable<int> value);
+        partial void OnBranch_IdChanged();
         #endregion
 
         public Igp_master()
@@ -55180,6 +55184,26 @@ namespace PMS
                     this._Deleted_Time = value;
                     this.SendPropertyChanged("Deleted_Time");
                     this.OnDeleted_TimeChanged();
+                }
+            }
+        }
+
+        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_Branch_Id", DbType = "Int")]
+        public System.Nullable<int> Branch_Id
+        {
+            get
+            {
+                return this._Branch_Id;
+            }
+            set
+            {
+                if ((this._Branch_Id != value))
+                {
+                    this.OnBranch_IdChanging(value);
+                    this.SendPropertyChanging();
+                    this._Branch_Id = value;
+                    this.SendPropertyChanged("Branch_Id");
+                    this.OnBranch_IdChanged();
                 }
             }
         }
@@ -55895,6 +55919,8 @@ namespace PMS
 
         private System.Nullable<bool> _IsNotificationViewed;
 
+        private System.Nullable<int> _Branch_Id;
+
         #region Extensibility Method Definitions
         partial void OnLoaded();
         partial void OnValidate(System.Data.Linq.ChangeAction action);
@@ -55945,6 +55971,8 @@ namespace PMS
         partial void OnFile_PathChanged();
         partial void OnIsNotificationViewedChanging(System.Nullable<bool> value);
         partial void OnIsNotificationViewedChanged();
+        partial void OnBranch_IdChanging(System.Nullable<int> value);
+        partial void OnBranch_IdChanged();
         #endregion
 
         public Purchase_Requisition()
@@ -56408,6 +56436,26 @@ namespace PMS
                     this._IsNotificationViewed = value;
                     this.SendPropertyChanged("IsNotificationViewed");
                     this.OnIsNotificationViewedChanged();
+                }
+            }
+        }
+
+        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_Branch_Id", DbType = "Int")]
+        public System.Nullable<int> Branch_Id
+        {
+            get
+            {
+                return this._Branch_Id;
+            }
+            set
+            {
+                if ((this._Branch_Id != value))
+                {
+                    this.OnBranch_IdChanging(value);
+                    this.SendPropertyChanging();
+                    this._Branch_Id = value;
+                    this.SendPropertyChanged("Branch_Id");
+                    this.OnBranch_IdChanged();
                 }
             }
         }
@@ -77852,6 +77900,8 @@ namespace PMS
 
         private string _Ware_House;
 
+        private System.Nullable<int> _Branch_Id;
+
         #region Extensibility Method Definitions
         partial void OnLoaded();
         partial void OnValidate(System.Data.Linq.ChangeAction action);
@@ -77904,6 +77954,8 @@ namespace PMS
         partial void OnFile_PathChanged();
         partial void OnWare_HouseChanging(string value);
         partial void OnWare_HouseChanged();
+        partial void OnBranch_IdChanging(System.Nullable<int> value);
+        partial void OnBranch_IdChanged();
         #endregion
 
         public AP_RequestForQuotation()
@@ -78391,6 +78443,26 @@ namespace PMS
             }
         }
 
+        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_Branch_Id", DbType = "Int")]
+        public System.Nullable<int> Branch_Id
+        {
+            get
+            {
+                return this._Branch_Id;
+            }
+            set
+            {
+                if ((this._Branch_Id != value))
+                {
+                    this.OnBranch_IdChanging(value);
+                    this.SendPropertyChanging();
+                    this._Branch_Id = value;
+                    this.SendPropertyChanged("Branch_Id");
+                    this.OnBranch_IdChanged();
+                }
+            }
+        }
+
         public event PropertyChangingEventHandler PropertyChanging;
 
         public event PropertyChangedEventHandler PropertyChanged;
@@ -78460,6 +78532,8 @@ namespace PMS
 
         private string _Ware_House;
 
+        private System.Nullable<int> _Branch_Id;
+
         #region Extensibility Method Definitions
         partial void OnLoaded();
         partial void OnValidate(System.Data.Linq.ChangeAction action);
@@ -78506,6 +78580,8 @@ namespace PMS
         partial void OnTerm_IdChanged();
         partial void OnWare_HouseChanging(string value);
         partial void OnWare_HouseChanged();
+        partial void OnBranch_IdChanging(System.Nullable<int> value);
+        partial void OnBranch_IdChanged();
         #endregion
 
         public CS_Vendor_Master()
@@ -78929,6 +79005,26 @@ namespace PMS
                     this._Ware_House = value;
                     this.SendPropertyChanged("Ware_House");
                     this.OnWare_HouseChanged();
+                }
+            }
+        }
+
+        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_Branch_Id", DbType = "Int")]
+        public System.Nullable<int> Branch_Id
+        {
+            get
+            {
+                return this._Branch_Id;
+            }
+            set
+            {
+                if ((this._Branch_Id != value))
+                {
+                    this.OnBranch_IdChanging(value);
+                    this.SendPropertyChanging();
+                    this._Branch_Id = value;
+                    this.SendPropertyChanged("Branch_Id");
+                    this.OnBranch_IdChanged();
                 }
             }
         }
@@ -93336,6 +93432,8 @@ namespace PMS
 
         private string _MR_No;
 
+        private System.Nullable<int> _Branch_Id;
+
         #region Extensibility Method Definitions
         partial void OnLoaded();
         partial void OnValidate(System.Data.Linq.ChangeAction action);
@@ -93382,6 +93480,8 @@ namespace PMS
         partial void OnFile_PathChanged();
         partial void OnMR_NoChanging(string value);
         partial void OnMR_NoChanged();
+        partial void OnBranch_IdChanging(System.Nullable<int> value);
+        partial void OnBranch_IdChanged();
         #endregion
 
         public Store_Issue()
@@ -93805,6 +93905,26 @@ namespace PMS
                     this._MR_No = value;
                     this.SendPropertyChanged("MR_No");
                     this.OnMR_NoChanged();
+                }
+            }
+        }
+
+        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_Branch_Id", DbType = "Int")]
+        public System.Nullable<int> Branch_Id
+        {
+            get
+            {
+                return this._Branch_Id;
+            }
+            set
+            {
+                if ((this._Branch_Id != value))
+                {
+                    this.OnBranch_IdChanging(value);
+                    this.SendPropertyChanging();
+                    this._Branch_Id = value;
+                    this.SendPropertyChanged("Branch_Id");
+                    this.OnBranch_IdChanged();
                 }
             }
         }
@@ -112822,6 +112942,8 @@ namespace PMS
 
         private System.Nullable<System.DateTime> _Deleted_Date;
 
+        private System.Nullable<int> _Branch_Id;
+
         #region Extensibility Method Definitions
         partial void OnLoaded();
         partial void OnValidate(System.Data.Linq.ChangeAction action);
@@ -112880,6 +113002,8 @@ namespace PMS
         partial void OnDeleted_ByChanged();
         partial void OnDeleted_DateChanging(System.Nullable<System.DateTime> value);
         partial void OnDeleted_DateChanged();
+        partial void OnBranch_IdChanging(System.Nullable<int> value);
+        partial void OnBranch_IdChanged();
         #endregion
 
         public INV_Stock_Adjustment()
@@ -113323,6 +113447,26 @@ namespace PMS
                     this._Reason_Why = value;
                     this.SendPropertyChanged("Reason_Why");
                     this.OnReason_WhyChanged();
+                }
+            }
+        }
+
+        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_Branch_Id", DbType = "Int")]
+        public System.Nullable<int> Branch_Id
+        {
+            get
+            {
+                return this._Branch_Id;
+            }
+            set
+            {
+                if ((this._Branch_Id != value))
+                {
+                    this.OnBranch_IdChanging(value);
+                    this.SendPropertyChanging();
+                    this._Branch_Id = value;
+                    this.SendPropertyChanged("Branch_Id");
+                    this.OnBranch_IdChanged();
                 }
             }
         }
@@ -114218,6 +114362,8 @@ namespace PMS
 
         private string _Closing_Remarks;
 
+        private System.Nullable<int> _Branch_Id;
+
         #region Extensibility Method Definitions
         partial void OnLoaded();
         partial void OnValidate(System.Data.Linq.ChangeAction action);
@@ -114262,6 +114408,8 @@ namespace PMS
         partial void OnIs_Closed_GIRChanged();
         partial void OnClosing_RemarksChanging(string value);
         partial void OnClosing_RemarksChanged();
+        partial void OnBranch_IdChanging(System.Nullable<int> value);
+        partial void OnBranch_IdChanged();
         #endregion
 
         public MaterialIssueRequest()
@@ -114665,6 +114813,26 @@ namespace PMS
                     this._Closing_Remarks = value;
                     this.SendPropertyChanged("Closing_Remarks");
                     this.OnClosing_RemarksChanged();
+                }
+            }
+        }
+
+        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_Branch_Id", DbType = "Int")]
+        public System.Nullable<int> Branch_Id
+        {
+            get
+            {
+                return this._Branch_Id;
+            }
+            set
+            {
+                if ((this._Branch_Id != value))
+                {
+                    this.OnBranch_IdChanging(value);
+                    this.SendPropertyChanging();
+                    this._Branch_Id = value;
+                    this.SendPropertyChanged("Branch_Id");
+                    this.OnBranch_IdChanged();
                 }
             }
         }
@@ -131699,6 +131867,8 @@ namespace PMS
 
         private System.Nullable<bool> _IsAdvancewithTax;
 
+        private System.Nullable<int> _Branch_Id;
+
         #region Extensibility Method Definitions
         partial void OnLoaded();
         partial void OnValidate(System.Data.Linq.ChangeAction action);
@@ -131799,6 +131969,8 @@ namespace PMS
         partial void Onprojection_typeChanged();
         partial void OnIsAdvancewithTaxChanging(System.Nullable<bool> value);
         partial void OnIsAdvancewithTaxChanged();
+        partial void OnBranch_IdChanging(System.Nullable<int> value);
+        partial void OnBranch_IdChanged();
         #endregion
 
         public AP_Purchase_Order()
@@ -132762,6 +132934,26 @@ namespace PMS
                     this._IsAdvancewithTax = value;
                     this.SendPropertyChanged("IsAdvancewithTax");
                     this.OnIsAdvancewithTaxChanged();
+                }
+            }
+        }
+
+        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_Branch_Id", DbType = "Int")]
+        public System.Nullable<int> Branch_Id
+        {
+            get
+            {
+                return this._Branch_Id;
+            }
+            set
+            {
+                if ((this._Branch_Id != value))
+                {
+                    this.OnBranch_IdChanging(value);
+                    this.SendPropertyChanging();
+                    this._Branch_Id = value;
+                    this.SendPropertyChanged("Branch_Id");
+                    this.OnBranch_IdChanged();
                 }
             }
         }
@@ -145749,6 +145941,8 @@ namespace PMS
 
         private System.Nullable<bool> _is_Direct;
 
+        private System.Nullable<int> _Branch_Id;
+
         private EntitySet<ItemSelection_Barcode> _ItemSelection_Barcodes;
 
         #region Extensibility Method Definitions
@@ -145805,6 +145999,8 @@ namespace PMS
         partial void OnTotal_AmountChanged();
         partial void Onis_DirectChanging(System.Nullable<bool> value);
         partial void Onis_DirectChanged();
+        partial void OnBranch_IdChanging(System.Nullable<int> value);
+        partial void OnBranch_IdChanged();
         #endregion
 
         public GRN_Master()
@@ -146309,6 +146505,26 @@ namespace PMS
                     this._is_Direct = value;
                     this.SendPropertyChanged("is_Direct");
                     this.Onis_DirectChanged();
+                }
+            }
+        }
+
+        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_Branch_Id", DbType = "Int")]
+        public System.Nullable<int> Branch_Id
+        {
+            get
+            {
+                return this._Branch_Id;
+            }
+            set
+            {
+                if ((this._Branch_Id != value))
+                {
+                    this.OnBranch_IdChanging(value);
+                    this.SendPropertyChanging();
+                    this._Branch_Id = value;
+                    this.SendPropertyChanged("Branch_Id");
+                    this.OnBranch_IdChanged();
                 }
             }
         }

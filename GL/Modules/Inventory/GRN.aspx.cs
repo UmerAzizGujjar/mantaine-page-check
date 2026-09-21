@@ -193,6 +193,39 @@ namespace PMS.Inventory
         }
 
         [WebMethod]
+        public static string GetUserBranch()
+        {
+            using (var db = new DataBaseDataContext(DBClass.ConnectionString()))
+            {
+                var branchIds = (from bwd in db.Branch_Wise_User_Details
+                                 where bwd.User_Id == AppConfig.UserID
+                                 select bwd.Brancg).ToList();
+
+                if (!branchIds.Any())
+                    return "null";
+
+                var validBranches = new List<object>();
+
+                foreach (var brancg in branchIds)
+                {
+                    if (int.TryParse(brancg, out int branchId))
+                    {
+                        var branch = db.Branches.FirstOrDefault(b => b.branch_ID == branchId);
+                        if (branch != null)
+                        {
+                            validBranches.Add(new { branch_ID = branchId, branch_Name = branch.branch_Name });
+                        }
+                    }
+                }
+
+                if (!validBranches.Any())
+                    return "null";
+
+                return new JavaScriptSerializer().Serialize(validBranches);
+            }
+        }
+
+        [WebMethod]
         public static int SaveGRNDetail(string btnSave, string AllItemDetail)
         {
             GRN_Master obj = new GRN_Master();
@@ -216,6 +249,7 @@ namespace PMS.Inventory
                 lstItem.Update_Date = DateTime.Now;
                 lstItem.Updated_By = AppConfig.UserID;
                 lstItem.Company_ID = AppConfig.Company_ID;
+                lstItem.Branch_Id = string.IsNullOrEmpty(record.Branch) ? (int?)null : Convert.ToInt32(record.Branch);
                 db.SubmitChanges();
                 GRNNo = lstItem.GRN_ID.ToString();
             }
@@ -232,6 +266,7 @@ namespace PMS.Inventory
                 obj.Created_By = AppConfig.UserID;
                 obj.Company_ID = AppConfig.Company_ID;
                 obj.Status = "Created";
+                obj.Branch_Id = string.IsNullOrEmpty(record.Branch) ? (int?)null : Convert.ToInt32(record.Branch);
                 db.GRN_Masters.InsertOnSubmit(obj);
                 db.SubmitChanges();
                 GRNNo = obj.GRN_ID.ToString();
@@ -306,6 +341,7 @@ namespace PMS.Inventory
                               m.Status,
                               m.Project,
                               m.is_Direct,
+                              m.Branch_Id,
                               Vendor_Name = db.AP_Vendors.Where(po => po.Vendor_ID == Convert.ToInt32(m.VendorId)).Select(po => po.Vendor_Name),
                           }).FirstOrDefault();
             return (new JavaScriptSerializer()).Serialize(Header);
@@ -485,6 +521,7 @@ namespace PMS.Inventory
             public string InvOrg { get; set; }
             public string project { get; set; }
             public bool Is_Direct { get; set; }
+            public string Branch { get; set; }
             public List<DetailGRNList> ItemList { get; set; }
             public List<DetailGRNListDir> ItemListDir { get; set; }
         }

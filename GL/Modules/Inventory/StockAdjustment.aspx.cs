@@ -378,6 +378,10 @@ namespace PMS
             if (txtExpiredate.Text != "")
                 Stock_Adj.Expire_Date = Convert.ToDateTime(txtExpiredate.Text);
 
+            int branchIdParsed;
+            if (int.TryParse(Request.Form["ddlBranch"], out branchIdParsed))
+                Stock_Adj.Branch_Id = branchIdParsed;
+
             if (btnSave.Text == "Save")
             {
                 db.INV_Stock_Adjustments.InsertOnSubmit(Stock_Adj);
@@ -423,6 +427,7 @@ namespace PMS
                 txtAmount.Text = Stock_adj.Amount.ToString();
                 txtRemarks.Text = Stock_adj.Remarks;
                 txt_status.Text = Stock_adj.Status;
+                hdnBranch_Id.Value = Stock_adj.Branch_Id.HasValue ? Stock_adj.Branch_Id.Value.ToString() : "";
                 ddlReasonNeeded.SelectedValue = Stock_adj.Reason_Why;
                 hdnDescription.Value = Item_NAme;
                 if (ddl_Ware_House.Items.FindByValue(Stock_adj.Ware_House) != null)
@@ -430,6 +435,39 @@ namespace PMS
                 btnSave.Text = "Update";            
             }
         }
+        [WebMethod]
+        public static string GetUserBranch()
+        {
+            using (var db = new DataBaseDataContext(DBClass.ConnectionString()))
+            {
+                var branchIds = (from bwd in db.Branch_Wise_User_Details
+                                 where bwd.User_Id == AppConfig.UserID
+                                 select bwd.Brancg).ToList();
+
+                if (!branchIds.Any())
+                    return "null";
+
+                var validBranches = new List<object>();
+
+                foreach (var brancg in branchIds)
+                {
+                    if (int.TryParse(brancg, out int branchId))
+                    {
+                        var branch = db.Branches.FirstOrDefault(b => b.branch_ID == branchId);
+                        if (branch != null)
+                        {
+                            validBranches.Add(new { branch_ID = branchId, branch_Name = branch.branch_Name });
+                        }
+                    }
+                }
+
+                if (!validBranches.Any())
+                    return "null";
+
+                return new JavaScriptSerializer().Serialize(validBranches);
+            }
+        }
+
         [WebMethod]
         public static string GetWareHouseCondition()
         {
