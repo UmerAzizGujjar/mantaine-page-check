@@ -838,10 +838,12 @@
             $('#ddlInvoiceNumber').empty();
 
             // Initialize Select2 with AJAX search
+            var regIdForMin = parseInt($('#ddlpat_no').val() || '0');
+            if (isNaN(regIdForMin)) regIdForMin = 0;
             $('#ddlInvoiceNumber').select2({
                 placeholder: "Search Invoice Number",
                 allowClear: true,
-                minimumInputLength: 1,
+                minimumInputLength: (regIdForMin > 0) ? 0 : 1,
                 ajax: {
                     url: 'IssueMedicine.aspx/AllInvoiceNumbers',
                     type: 'POST',
