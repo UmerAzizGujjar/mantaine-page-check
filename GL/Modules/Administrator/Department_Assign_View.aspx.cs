@@ -62,6 +62,10 @@ namespace PMS.Modules.Administrator
                                                 Fees = a.Fees,
                                                 Hospital_Share = a.Hospital_Share,
                                                 Doctor_Share = a.Doctor_Share,
+                                                a.IsTime,
+                                                a.Start_Time,
+                                                a.End_Time,
+                                                a.Expiry_Date,
                                             };
 
                     var FilteredCount = Department_Assign.Count();
@@ -76,7 +80,20 @@ namespace PMS.Modules.Administrator
                             break;
                     }
 
-                    var PolicyList = Department_Assign.Skip(start).Take(length).ToList();
+                    var rawList = Department_Assign.Skip(start).Take(length).ToList();
+
+                    var PolicyList = rawList.Select(a => new
+                    {
+                        a.Dep_ID,
+                        a.Department,
+                        a.Policy_Name,
+                        a.Fees,
+                        a.Hospital_Share,
+                        a.Doctor_Share,
+                        Time_In = a.Start_Time.HasValue ? DateTime.Today.Add(a.Start_Time.Value).ToString("hh:mm tt") : "",
+                        Time_Out = a.End_Time.HasValue ? DateTime.Today.Add(a.End_Time.Value).ToString("hh:mm tt") : "",
+                        Expiry_Date = a.Expiry_Date.HasValue ? a.Expiry_Date.Value.ToString("dd-MM-yyyy") : ""
+                    }).ToList();
 
                     var jsonData = new
                     {
