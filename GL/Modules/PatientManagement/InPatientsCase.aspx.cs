@@ -2335,7 +2335,7 @@ namespace PMS
                     db.SubmitChanges();
                 }
 
-                if (PulseRate == "" && (Rhythmdischarge == null || Rhythmdischarge == "0") && (volumedisc == null || volumedisc == "0") && (otherecdesc == "" || otherecdesc == "<li></li>") && (BPDischarge == "" || BPDischarge == "___/___") && Tempdisch == "" && RespRateDesc == "" && (Oxygen2_desc == "" || Oxygen2_desc == "<li></li>") && (Special_Instruction_Desc == "" || Special_Instruction_Desc == "<li></li>" || Special_Instruction_Desc == "• "))
+                if (PulseRate == "" && (Rhythmdischarge == null || Rhythmdischarge == "0") && (volumedisc == null || volumedisc == "0") && (otherecdesc == "" || otherecdesc == "<li></li>") && (BPDischarge == "" || BPDischarge == "___/___") && Tempdisch == "" && RespRateDesc == "" && (Oxygen2_desc == "" || Oxygen2_desc == "<li></li>") && (Special_Instruction_Desc == "" || Special_Instruction_Desc == "<li></li>" || Special_Instruction_Desc == "• ") && string.IsNullOrEmpty(FollowUpInstruction) && string.IsNullOrEmpty(OperationalDetails))
                 {
 
                 }
@@ -6281,6 +6281,8 @@ Medicine_Date = DateTime.Now,
             public string O2_Saturation_Oxygen1;
             public string O2_Saturation_Oxygen2;
             public string User_Name;
+            public string OperationalDetails;
+            public string FollowUpInstruction;
 
         }
         [WebMethod]
@@ -6316,9 +6318,11 @@ Medicine_Date = DateTime.Now,
                                        op.O2_Saturation_Oxygen2,
                                        op.BMI,
                                        op.Blood_Suger,
-                                       op.Weight_Kg,
-                                       op.Height_cm,
-                                       user = db.aspnet_Users.Where(x => x.UserId == op.user_id).Select(x => x.UserName).FirstOrDefault(),
+                                        op.Weight_Kg,
+                                        op.Height_cm,
+                                        op.operation_details_box,
+                                        op.follow_up_instructions,
+                                        user = db.aspnet_Users.Where(x => x.UserId == op.user_id).Select(x => x.UserName).FirstOrDefault(),
 
 
                                    }).ToList();
@@ -6385,6 +6389,8 @@ Medicine_Date = DateTime.Now,
                 obj.Blood_Suger = item.Blood_Suger != null ? item.Blood_Suger.ToString() : "";
                 obj.Weight_Kg = item.Weight_Kg != null ? item.Weight_Kg.ToString() : "";
                 obj.Height_cm = item.Height_cm != null ? item.Height_cm.ToString() : "";
+                obj.OperationalDetails = item.operation_details_box ?? "";
+                obj.FollowUpInstruction = item.follow_up_instructions ?? "";
 
                 list.Add(obj);
             }
@@ -6503,7 +6509,9 @@ Medicine_Date = DateTime.Now,
                     rawNote.RN_Special_Instruction,
                     rawNote.O2_Saturation,
                     rawNote.O2_Saturation_Oxygen1,
-                    rawNote.O2_Saturation_Oxygen2
+                    rawNote.O2_Saturation_Oxygen2,
+                    rawNote.operation_details_box,
+                    rawNote.follow_up_instructions
                 };
 
                 // 3. Serialize the local object to JSON

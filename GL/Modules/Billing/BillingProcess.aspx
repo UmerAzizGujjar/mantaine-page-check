@@ -136,19 +136,16 @@
                 window.open(url, '_blank');
 
             }
-                        function PrintFinalBill(In_Patient_ID) {
+                        function PrintFinalBill() {
                 debugger;
-                if (typeof In_Patient_ID === 'undefined' || In_Patient_ID === null || In_Patient_ID === '') {
-                    In_Patient_ID = currentInPatientID || 0;
-                }
                 var id = '<%=Request.QueryString["Bill_ID"]%>';
                 var locationInfo = window.location;
-                var url = 'ReportViewer.aspx?ReportName=InPatient_Final_Bill&ReportTitle=IPD Final Bill Report&Inpatient_ID=' + In_Patient_ID;
+                var url = 'ReportViewer.aspx?ReportName=InPatient_Final_Bill&ReportTitle=IPD Final Bill Report&Bill_ID=' + id;
                 if (!locationInfo.origin.includes('localhost') || locationInfo.origin.includes('localhost')) {
                     var urlInfo = window.location.href.split('/');
                     var ip = urlInfo[2];
                     var foldername = urlInfo[3];
-                    url = 'http://' + ip + '/' + foldername + '/ReportViewer.aspx?ReportName=InPatient_Final_Bill&ReportTitle=IPD Final Bill Report&Inpatient_ID=' + In_Patient_ID;
+                    url = 'http://' + ip + '/' + foldername + '/ReportViewer.aspx?ReportName=InPatient_Final_Bill&ReportTitle=IPD Final Bill Report&Bill_ID=' + id;
                 }
                 window.open(url, '_blank');
             }
@@ -9064,7 +9061,7 @@
                         <input type="button" style="width: 110px; display: none;" id="btnPrintVoucher2" class="btn btn-primry" value="Print Voucher 2"  onclick="PrintVoucher2();" />
                         <input type="button" style="width: 110px;" id="btnIPDFinalPrint" class="btn btn-primry" 
     value="Print Final Bill" 
-    onclick="PrintFinalBill($('#hdfPatient_ID').data('inpatid'));" />
+    onclick="PrintFinalBill();" />
                         <input type="button" style="width: 110px; display: none;" value="Hospital Print" onclick="PrintHospital();" />
                         <input type="button" style="width: 110px; display: none;" value="Consult Print" onclick="PrintConsultant();" />
                         <input type="button" style="width: 100px; display: none;" value="Patient Copy" name="name" onclick="BackToPrintPatient();"  />

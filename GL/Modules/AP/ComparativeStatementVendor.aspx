@@ -23,6 +23,30 @@
 
         var lowrate = parseInt(0);
 
+        var savedBranch = null;
+
+        function loadUserBranch() {
+            PageMethods.GetUserBranch(function (result) {
+                if (!result || result === "null") {
+                    $('#ddlBranch').empty().append('<option value="0">No Branch Assigned</option>');
+                    return;
+                }
+                var branches = JSON.parse(result);
+                $('#ddlBranch').empty();
+                branches.forEach(function (branch) {
+                    $('#ddlBranch').append('<option value="' + branch.branch_ID + '">' + branch.branch_Name + '</option>');
+                });
+                if (branches.length === 1) {
+                    $('#ddlBranch').val(branches[0].branch_ID);
+                } else {
+                    $('#ddlBranch').prepend('<option value="0">Please Select</option>').val('0');
+                }
+                if (savedBranch) {
+                    $('#ddlBranch').val(savedBranch).trigger('change');
+                }
+            });
+        }
+
         var _gloabal = '';
         function Filltaxtype() {
             debugger;
@@ -58,6 +82,8 @@
             GetWareHouseCondition();
             setTimeout(function () {
                 $('#ddlWarehouse').select2();
+                $('#ddlBranch').select2();
+                loadUserBranch();
             }, 2500);
             $('[id*=checkHeader]').click(function () {
                 var isTrue = $('#checkHeader').is(':checked');
@@ -563,6 +589,12 @@ function RecalculateAllVendorTotals() {
                 var data = JSON.parse(resp);
                 $('#txt_CSno').val(data.CS_Ven_No);
                 $('#ddlWarehouse').val(data.Ware_House);
+                PageMethods.GetCSBranch(CM_ID, function (branchId) {
+                    savedBranch = (branchId === null || branchId === undefined || branchId === '') ? null : branchId;
+                    if (savedBranch) {
+                        $('#ddlBranch').val(savedBranch).trigger('change');
+                    }
+                });
                 $('#txt_Cs_Validity').val(data.CS_Validity);
                 $('#txtSTAmount_Vend1').val(data.TotalSalesTax1);
                 $('#txtSTAmount_Vend2').val(data.TotalSalesTax2);
@@ -1452,6 +1484,7 @@ function RecalculateAllVendorTotals() {
             var csvalidity = $('#txt_Cs_Validity').val();
             var remarks = $('#txt_remarks').val();
             var Warehouse = $('#ddlWarehouse').val();
+            var Branch = $('#ddlBranch').val();
             var txtstatus = $('#txt_status').val();
             var Term_Id =$('#ctl00_MainContent_ddlterms').val();
 
@@ -1746,6 +1779,7 @@ function RecalculateAllVendorTotals() {
                 'txtstatus': txtstatus,
                 'Term_Id': Term_Id,
                 'Warehouse': Warehouse,
+                'Branch': Branch,
 
                 'Item_list1': Item_list1,
                 'Item_list2': Item_list2,
@@ -1999,6 +2033,16 @@ function RecalculateAllVendorTotals() {
                         </div>
                         <div class="col-lg-6 col-md-4 col-sm-6 mt-1">
                             <select id="ddlWarehouse" onchange="getprNoBy_WareHouseCS()" style="width: 100% !important">
+                                <option value="0">Please Select</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-lg-4 col-md-4 col-sm-6">
+                            <label id="LblBranch">Branch</label>
+                        </div>
+                        <div class="col-lg-6 col-md-4 col-sm-6 mt-1">
+                            <select id="ddlBranch" style="width: 100% !important">
                                 <option value="0">Please Select</option>
                             </select>
                         </div>

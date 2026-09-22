@@ -2264,6 +2264,20 @@ namespace PMS
             return (new JavaScriptSerializer().Serialize(data));
         }
 
+        //[WebMethod]
+        //public static string FillDoctorsByDepartment(string DepartmentId)
+        //{
+        //    DataBaseDataContext db = new DataBaseDataContext();
+
+        //    List<HR_Employee> EmpList = new List<HR_Employee>();
+        //    EmpList = (from tbl in db.HR_Employees
+        //               where tbl.IsDoctor == true
+        //               //&& tbl.Department == DepartmentId && (tbl.Designation == "004" || tbl.Designation == "005" || tbl.Designation == "005" || tbl.Designation == "006" || tbl.Designation == "007" || tbl.Designation == "008"))
+        //               select tbl).ToList();
+        //    return (new JavaScriptSerializer().Serialize(EmpList));
+
+        //}
+
         [WebMethod]
         public static string FillDoctorsByDepartment(string DepartmentId)
         {
@@ -2272,10 +2286,10 @@ namespace PMS
             List<HR_Employee> EmpList = new List<HR_Employee>();
             EmpList = (from tbl in db.HR_Employees
                        where tbl.IsDoctor == true
-                       //&& tbl.Department == DepartmentId && (tbl.Designation == "004" || tbl.Designation == "005" || tbl.Designation == "005" || tbl.Designation == "006" || tbl.Designation == "007" || tbl.Designation == "008"))
+                       && tbl.Department == DepartmentId                  
                        select tbl).ToList();
-            return (new JavaScriptSerializer().Serialize(EmpList));
 
+            return (new JavaScriptSerializer()).Serialize(EmpList);
         }
 
         [System.Web.Services.WebMethod]
@@ -4469,6 +4483,27 @@ namespace PMS
 
 
 
+        }
+
+        [WebMethod]
+        public static string GetDepartment()
+        {
+            string data = string.Empty;
+
+            using (DataBaseDataContext db = new DataBaseDataContext())
+            {
+                var result = (from dv in db.DataValues
+                              join ds in db.ValueSets
+                              on dv.ValueSet_ID equals ds.ValueSet_ID
+                              where ds.ValueSet_Name == "Patient Main Category"
+                              select new
+                              {
+                                  dv.DataValue_Name,
+                                  dv.DataValue_Description
+                              }).ToList();
+                data = new JavaScriptSerializer().Serialize(result);
+            }
+            return data;
         }
 
         [WebMethod]

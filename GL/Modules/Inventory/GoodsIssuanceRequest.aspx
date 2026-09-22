@@ -8,6 +8,29 @@
         var replicateEnabled = '<%= ReplicateCode %>' === '01';
         debugger;
         var id = '<% =Request.QueryString["ID"] %>';
+        var savedBranch = null;
+
+        function loadUserBranch() {
+            PageMethods.GetUserBranch(function (result) {
+                if (!result || result === "null") {
+                    $('#ddlBranch').empty().append('<option value="0">No Branch Assigned</option>');
+                    return;
+                }
+                var branches = JSON.parse(result);
+                $('#ddlBranch').empty();
+                branches.forEach(function (branch) {
+                    $('#ddlBranch').append('<option value="' + branch.branch_ID + '">' + branch.branch_Name + '</option>');
+                });
+                if (branches.length === 1) {
+                    $('#ddlBranch').val(branches[0].branch_ID);
+                } else {
+                    $('#ddlBranch').prepend('<option value="0">Please Select</option>').val('0');
+                }
+                if (savedBranch) {
+                    $('#ddlBranch').val(savedBranch).trigger('change');
+                }
+            });
+        }
         $(document).ready(function () {
         
             $('#txtItem').tokenInput(function () {
@@ -52,6 +75,8 @@
             $('#ddldept').select2();
             $('#ddlwarehouse').select2();
             $('#ddlPriority').select2();
+            $('#ddlBranch').select2();
+            loadUserBranch();
             var currentDate = new Date();
             var formattedDate = $.datepicker.formatDate('dd M yy', currentDate);
             $("#txtMIR_Date").val(formattedDate).datepicker({ dateFormat: 'dd M yy', readOnly: true });
@@ -418,6 +443,7 @@
             var Pirority = $("#ddlPriority :selected").val();
             var dept = $('#ddldept :selected').val();
             var WareHouse = $('#ddlwarehouse :selected').val();
+            var Branch = $('#ddlBranch').val();
             var remarks = $('#txtRemarks').val();
             var itemId = $('#hditemID').val();
             var btnValue = isReplicate ? "Replicate" : $("#btnsave").val();
@@ -494,6 +520,7 @@
                             "remarks": remarks,
                             "WareHouse": WareHouse,
                             "btnValue": btnValue,
+                            "branch": Branch,
                         }),
                         contentType: "application/json; charset=utf-8",
                         dataType: "json",
@@ -656,6 +683,10 @@
                     }, 1000);
                     $('#txtRemarks').val(parse.Remarks);
                     $('#txt_Status').val(parse.Status);
+                    savedBranch = parse.Branch_Id;
+                    if (savedBranch) {
+                        $('#ddlBranch').val(savedBranch).trigger('change');
+                    }
                     if (parse.Status == "Approved") {
                         debugger;
                         $('#btnsave').attr("disabled", 'disabled');
@@ -864,6 +895,12 @@
 
 
 
+        </div>
+        <div class="row">
+            <div class="col-lg-3 col-md-6 col-sm-12">
+                <label id="LblBranch">Branch</label>
+                <select id="ddlBranch" class="form-control"></select>
+            </div>
         </div>
         <div class="row">
             <div class="col-lg-12 col-md-12 col-sm-12">

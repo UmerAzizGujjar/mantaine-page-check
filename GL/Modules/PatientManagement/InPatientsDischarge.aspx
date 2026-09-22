@@ -17,7 +17,18 @@
         localStorage.IsDischarge = 0;
         $(document).ready(function () {
             debugger;
-
+            filldepartment();
+            $('#ddlDepartments').on('change', function () {
+                var deptId = $(this).val();
+                PageMethods.FillDoctorsByDepartment(deptId, function (response) {
+                    var doctors = JSON.parse(response);
+                    var options = '<option value="0">Please Select</option>';
+                    $.each(doctors, function (k, v) {
+                        options += '<option value="' + v.Emp_ID + '">' + v.Emp_Name + '</option>';
+                    });
+                    $('#<%= ddlDischarge_By.ClientID %>').html(options);
+                });
+            });
             MaskedInput({
                 elm: document.getElementById('ctl00_MainContent_txtCNIC'),
                 format: '_____-_______-_',
@@ -4741,6 +4752,21 @@
 `;
         document.head.appendChild(style);
 
+
+        function filldepartment() {
+    var options = '<option value="0">Please Select</option>';
+    PageMethods.GetDepartment(function (data) {
+        $.each(JSON.parse(data), function (key, value) {
+            options += '<option value="' + value.DataValue_Name + '" >' + value.DataValue_Description + '</option>';
+        });
+        $('#ddlDepartments').html(options);
+        $('#ddlDepartments').select2();
+
+    });
+    return options;
+}
+
+
     </script>
 
    
@@ -4990,6 +5016,10 @@
                                 </div>
                             </div>
                             <div class="row">
+                                <div class="col-lg-2 col-md-4 col-m-6">
+                                    <label class="emp-label">Department <span class="emp-required">*</span></label>
+                                    <select id="ddlDepartments" name="ddlDepartments" class="emp-select"></select>
+                                </div>
                                 <div class="col-lg-2 col-md-4 col-m-6">
                                     <asp:Label ID="lblDischarge_By" runat="server" Text="Advise By"></asp:Label>
                                     <asp:UpdatePanel runat="server" ID="UpdatePanel2">

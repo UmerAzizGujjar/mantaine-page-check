@@ -5,12 +5,38 @@
 
     <script type="text/javascript">
         var selectedOptions = '';
+        var savedBranch = null;
+
+        function loadUserBranch() {
+            PageMethods.GetUserBranch(function (result) {
+                if (!result || result === "null") {
+                    $('#ddlBranch').empty().append('<option value="0">No Branch Assigned</option>');
+                    return;
+                }
+                var branches = JSON.parse(result);
+                $('#ddlBranch').empty();
+                branches.forEach(function (branch) {
+                    $('#ddlBranch').append('<option value="' + branch.branch_ID + '">' + branch.branch_Name + '</option>');
+                });
+                if (branches.length === 1) {
+                    $('#ddlBranch').val(branches[0].branch_ID);
+                } else {
+                    $('#ddlBranch').prepend('<option value="0">Please Select</option>').val('0');
+                }
+                if (savedBranch) {
+                    $('#ddlBranch').val(savedBranch).trigger('change');
+                }
+            });
+        }
+
         $(document).ready(function () { 
             $('#ddlMIR').select2();
             LoadOrganizations();
             GetWareHouseCondition();   
             GetGIRCloseCondition();   
             LoadDepartments();
+            $('#ddlBranch').select2();
+            loadUserBranch();
             // Move this OUTSIDE the document ready function or ensure it's properly bound
             // Use event delegation or ensure the DOM is ready
             $(document).ready(function () {
@@ -610,7 +636,8 @@
                 if (checkstock == true) {
                     return false;
                 }
-                var AllItemDetail = { 'StoreIssue_id': StoreIssue_id, 'Store_Issue_No': store_no, 'MRNo': MRNo, 'comapny_id': comapny_id, 'department_id': department_id, 'inventory_id': inventory_id, 'ItemList': Item_list };
+                var Branch = $('#ddlBranch').val();
+                var AllItemDetail = { 'StoreIssue_id': StoreIssue_id, 'Store_Issue_No': store_no, 'MRNo': MRNo, 'comapny_id': comapny_id, 'department_id': department_id, 'inventory_id': inventory_id, 'Branch': Branch, 'ItemList': Item_list };
                 var department_id = $('#ddlDepartment').val();
                 var inventory_id = $('#ddlInventoryOrg').val();
                 var length = $("#tblStoreIssueBote tr:gt(0)").length;
@@ -1261,6 +1288,10 @@
                 var result = JSON.parse(res);
                 $('#txtStoreissueNo').val(result[0].Store_Issue_No);
                 $('#txtStatus').val(result[0].Status);
+                savedBranch = result[0].Branch_Id;
+                if (savedBranch) {
+                    $('#ddlBranch').val(savedBranch).trigger('change');
+                }
                 var organizationId = result[0].Organization_Id;
                 setTimeout(function () {
                     $('#ddlInventoryOrg').val(organizationId).trigger('change');
@@ -1628,6 +1659,10 @@
             <div class="col-lg-2 col-md-6 col-sm-12">
                 <label>Status</label>
                 <input type="text" id="txtStatus" class="form-control" name="txtStatus" readonly="readonly" />
+            </div>
+            <div class="col-lg-2 col-md-6 col-sm-12">
+                <label>Branch</label>
+                <select id="ddlBranch" class="form-control"></select>
             </div>
             <div class="col-lg-3 col-md-6 col-sm-12">
                 <label class="col-form-label">Attachment</label>

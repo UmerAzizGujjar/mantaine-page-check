@@ -134,6 +134,39 @@ namespace PMS.AP
         }
 
         [WebMethod]
+        public static string GetUserBranch()
+        {
+            using (var db = new DataBaseDataContext(DBClass.ConnectionString()))
+            {
+                var branchIds = (from bwd in db.Branch_Wise_User_Details
+                                 where bwd.User_Id == AppConfig.UserID
+                                 select bwd.Brancg).ToList();
+
+                if (!branchIds.Any())
+                    return "null";
+
+                var validBranches = new List<object>();
+
+                foreach (var brancg in branchIds)
+                {
+                    if (int.TryParse(brancg, out int branchId))
+                    {
+                        var branch = db.Branches.FirstOrDefault(b => b.branch_ID == branchId);
+                        if (branch != null)
+                        {
+                            validBranches.Add(new { branch_ID = branchId, branch_Name = branch.branch_Name });
+                        }
+                    }
+                }
+
+                if (!validBranches.Any())
+                    return "null";
+
+                return new JavaScriptSerializer().Serialize(validBranches);
+            }
+        }
+
+        [WebMethod]
         public static String Getitem(int ItemID, string PRDate)
         {
             using (DataBaseDataContext db = new DataBaseDataContext())
@@ -247,7 +280,7 @@ namespace PMS.AP
 
 
         [WebMethod]
-        public static string SavePurchaseRequistion(int PRid, string PrNum, string PrDate, string dept, string Pirority, string Warehouse, string RefNum, string remarks, string btnValue)
+        public static string SavePurchaseRequistion(int PRid, string PrNum, string PrDate, string dept, string Pirority, string Warehouse, string RefNum, string remarks, string btnValue, string branch)
         {
             DataBaseDataContext db = new DataBaseDataContext();
             Purchase_Requisition obj = new Purchase_Requisition();
@@ -259,6 +292,7 @@ namespace PMS.AP
                 obj.PR_Date = Convert.ToDateTime(PrDate);
                 obj.Priority = Pirority;
                 obj.Warehouse = Warehouse;
+                obj.Branch_Id = string.IsNullOrEmpty(branch) ? (int?)null : Convert.ToInt32(branch);
                 obj.Department = dept;
                 obj.Ref_Num = RefNum;
                 obj.Remarks = remarks;
@@ -283,6 +317,7 @@ namespace PMS.AP
                 query.PR_Date = Convert.ToDateTime(PrDate);
                 query.Priority = Pirority;
                 query.Warehouse = Warehouse;
+                query.Branch_Id = string.IsNullOrEmpty(branch) ? (int?)null : Convert.ToInt32(branch);
                 query.Department = dept;
                 query.Ref_Num = RefNum;
                 query.Remarks = remarks;
@@ -410,6 +445,7 @@ namespace PMS.AP
                                      pr.PR_Num,
                                      pr.Priority,
                                      pr.Warehouse,
+                                     pr.Branch_Id,
                                      pr.Remarks,
                                      pr.PR_Id,
                                      pr.Ref_Num,

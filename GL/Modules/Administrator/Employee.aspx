@@ -520,7 +520,21 @@
                   dataType: "json",
                   success: function (data) {
                       debugger;
-                      var ini_patientID = data.d;
+                      var result = data.d;
+                      if (result !== "Saved Successfully!") {
+                          Swal.fire({
+                              icon: 'error',
+                              title: 'Error!',
+                              text: result || 'Save failed. Please try again.',
+                              showConfirmButton: true,
+                              customClass: {
+                                  popup: 'swal-big-popup',
+                                  title: 'swal-big-title',
+                                  htmlContainer: 'swal-big-text'
+                              }
+                          });
+                          return;
+                      }
                       Swal.fire({
                           icon: 'success',
                           title: 'Success!',

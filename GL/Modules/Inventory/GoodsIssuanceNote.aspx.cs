@@ -385,6 +385,39 @@ namespace PMS.Inventory
         }
 
         [WebMethod]
+        public static string GetUserBranch()
+        {
+            using (var db = new DataBaseDataContext(DBClass.ConnectionString()))
+            {
+                var branchIds = (from bwd in db.Branch_Wise_User_Details
+                                 where bwd.User_Id == AppConfig.UserID
+                                 select bwd.Brancg).ToList();
+
+                if (!branchIds.Any())
+                    return "null";
+
+                var validBranches = new List<object>();
+
+                foreach (var brancg in branchIds)
+                {
+                    if (int.TryParse(brancg, out int branchId))
+                    {
+                        var branch = db.Branches.FirstOrDefault(b => b.branch_ID == branchId);
+                        if (branch != null)
+                        {
+                            validBranches.Add(new { branch_ID = branchId, branch_Name = branch.branch_Name });
+                        }
+                    }
+                }
+
+                if (!validBranches.Any())
+                    return "null";
+
+                return new JavaScriptSerializer().Serialize(validBranches);
+            }
+        }
+
+        [WebMethod]
         public static int Save(string btnSave, string AllItemDetail)
         {
             string store_issue_id = "";
@@ -404,6 +437,7 @@ namespace PMS.Inventory
                 lstItem.Update_Time = DateTime.Now;
                 lstItem.Updated_By = AppConfig.UserID;
                 lstItem.Store_Issue_No = Convert.ToInt32(record.Store_Issue_No);
+                lstItem.Branch_Id = string.IsNullOrEmpty(record.Branch) ? (int?)null : Convert.ToInt32(record.Branch);
                 db.SubmitChanges();
                 store_issue_id = record.StoreIssue_id;
             }
@@ -418,6 +452,7 @@ namespace PMS.Inventory
                 si.Store_Issue_No = DBClass.GetNewNumber("Store_Issue_No", "Store_Issue", "");
                 si.Status = "Created";
                 si.IsDeleted = false;
+                si.Branch_Id = string.IsNullOrEmpty(record.Branch) ? (int?)null : Convert.ToInt32(record.Branch);
                 db.Store_Issues.InsertOnSubmit(si);
                 db.SubmitChanges();
                 store_issue_id = si.Store_Issue_Id.ToString();
@@ -562,6 +597,7 @@ namespace PMS.Inventory
             public string department_id { get; set; }
             public string Store_Issue_No { get; set; }
             public string MRNo { get; set; }
+            public string Branch { get; set; }
         public List<StoreIssueDetail> ItemList { get; set; }
         }
         public class StoreIssueDetail
