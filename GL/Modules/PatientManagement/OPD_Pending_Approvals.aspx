@@ -91,6 +91,26 @@
                     return;
                 }
 
+                if ($('#ddlpatientType').val() !== '02') {
+                    var costCenters = {};
+                    ids.forEach(function (id) {
+                        var cc = (selectedRows[id].CostCenter || '').toString().trim();
+                        if (cc) costCenters[cc] = true;
+                    });
+                    var ccList = Object.keys(costCenters);
+                    if (ccList.length > 1) {
+                        Swal.fire({
+                            icon: 'warning',
+                            title: 'Different Cost Centers',
+                            html: 'Selected patients belong to different cost centers:<br/><strong>' +
+                                ccList.join(', ') +
+                                '</strong><br/><br/>Please select patients from a single cost center.',
+                            confirmButtonColor: '#d33'
+                        });
+                        return;
+                    }
+                }
+
                 Swal.fire({
                     title: 'Confirm Approval',
                     text: 'Approve ' + ids.length + ' selected patient(s)?',
@@ -269,7 +289,7 @@
                     { "data": "Full_Name", "width": "15%" },
                     { "data": "Pat_type", "width": "4%" },
                     { "data": "DeptName", "width": "5%" },
-                    { "data": "Cost_Center_text", "width": "8%", "defaultContent": "" },
+                    { "data": "CostCenter", "width": "8%", "defaultContent": "" },
                     { "data": "Status", "width": "3%" },
                     {
                         "data": "Actual_Amount", "width": "5%",

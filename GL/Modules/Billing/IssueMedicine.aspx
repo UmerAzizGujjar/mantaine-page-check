@@ -3840,6 +3840,18 @@ function CalculateReceivedAmount() {
         }
 
 
+        function parsePharmDate(v) {
+            if (v === null || v === undefined || v === '') return null;
+            var s = String(v);
+            var d;
+            if (s.indexOf('/Date(') === 0) {
+                d = new Date(parseInt(s.substr(6), 10));
+            } else {
+                d = new Date(s);
+            }
+            return isNaN(d.getTime()) ? null : d;
+        }
+
         function fillPendingPatientsLists() {
             debugger;
             var SearchString = $("#txtSearchmodal").val();
@@ -3854,11 +3866,10 @@ function CalculateReceivedAmount() {
                 debugger;
                 $.each(parsedData, function (key, value) {
                     debugger;
-                    var TrnsDate = new Date(parseInt(value.Medicine_Date.substr(6)));
-                    var retdate = moment(TrnsDate).format('LLLL');
-                    var closeDate = (value.Close_Time !== null && value.Close_Time !== undefined && value.Close_Time !== '')
-                        ? moment(new Date(parseInt(value.Close_Time.substr(6)))).format('LLLL')
-                        : '';
+                    var TrnsDate = parsePharmDate(value.Medicine_Date);
+                    var retdate = TrnsDate ? moment(TrnsDate).format('LLLL') : '';
+                    var closeVal = parsePharmDate(value.Close_Time);
+                    var closeDate = closeVal ? moment(closeVal).format('LLLL') : '';
                     var WardName = (value.Ward_Name !== null && value.Ward_Name !== undefined) ? value.Ward_Name : '';
                     var BedNo = (value.Bed_No !== null && value.Bed_No !== undefined && value.Bed_No !== 0) ? value.Bed_No : '';
 
