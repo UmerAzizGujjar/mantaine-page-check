@@ -83,7 +83,7 @@ namespace PMS.Modules.PatientManagement
             return result;
         }
         [WebMethod]
-        public static string LoadPatientsToApprove_OPD(string pat_type, string search)
+        public static string LoadPatientsToApprove_OPD(string pat_type, string search, string cost_center)
         {
             string result = string.Empty;
 
@@ -94,6 +94,7 @@ namespace PMS.Modules.PatientManagement
                 cmd.CommandType = CommandType.StoredProcedure;
                 cmd.Parameters.AddWithValue("@pat_type", (object)pat_type ?? "0");
                 cmd.Parameters.AddWithValue("@search", (object)search ?? "");
+                cmd.Parameters.AddWithValue("@cost_center", (object)cost_center ?? "0");
                 con.Open();
 
                 var rows = new List<Dictionary<string, object>>();
@@ -125,6 +126,26 @@ namespace PMS.Modules.PatientManagement
                               join ds in db.ValueSets
                               on dv.ValueSet_ID equals ds.ValueSet_ID
                               where ds.ValueSet_Name == "Patient Type"
+                              select new
+                              {
+                                  dv.DataValue_Name,
+                                  dv.DataValue_Description
+                              }).ToList();
+                data = new JavaScriptSerializer().Serialize(result);
+            }
+            return data;
+        }
+        [WebMethod]
+        public static string CostCenter()
+        {
+            string data = string.Empty;
+
+            using (DataBaseDataContext db = new DataBaseDataContext())
+            {
+                var result = (from dv in db.DataValues
+                              join ds in db.ValueSets
+                              on dv.ValueSet_ID equals ds.ValueSet_ID
+                              where ds.ValueSet_Name == "Cost Center"
                               select new
                               {
                                   dv.DataValue_Name,

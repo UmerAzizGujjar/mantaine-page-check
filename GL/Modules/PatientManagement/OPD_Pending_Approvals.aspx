@@ -8,6 +8,7 @@
 
         $(document).ready(function () {
             FillPatientType();
+            FillCostCenter();
             GetOPDToApproveList();
 
             $('#ddlpatientType').on('change', function () {
@@ -15,6 +16,10 @@
                 if ($(this).val() !== '0') {
                     DisablePatientType();
                 }
+            });
+
+            $('#ddlCostCenter').on('change', function () {
+                GetOPDToApproveList();
             });
 
             $(document).on('change', '#header-check', function () {
@@ -200,13 +205,15 @@
         function GetOPDToApproveList() {
             var pat_type = $('#ddlpatientType').val();
             if (!pat_type) pat_type = '0';
+            var cost_center = $('#ddlCostCenter').val();
+            if (!cost_center) cost_center = '0';
 
             $.ajax({
                 url: 'OPD_Pending_Approvals.aspx/LoadPatientsToApprove_OPD',
                 type: 'post',
                 contentType: 'application/json;charset=utf-8',
                 dataType: 'json',
-                data: JSON.stringify({ "pat_type": pat_type, "search": "" }),
+                data: JSON.stringify({ "pat_type": pat_type, "search": "", "cost_center": cost_center }),
                 success: function (_data) {
                     var data = JSON.parse(_data.d);
                     selectedRows = {};
@@ -262,6 +269,7 @@
                     { "data": "Full_Name", "width": "15%" },
                     { "data": "Pat_type", "width": "4%" },
                     { "data": "DeptName", "width": "5%" },
+                    { "data": "Cost_Center_text", "width": "8%", "defaultContent": "" },
                     { "data": "Status", "width": "3%" },
                     {
                         "data": "Actual_Amount", "width": "5%",
@@ -366,6 +374,27 @@
                 }
             });
         }
+
+        function FillCostCenter() {
+            var options = '<option value="0">All Cost Centers</option>';
+
+            $.ajax({
+                url: 'OPD_Pending_Approvals.aspx/CostCenter',
+                type: 'POST',
+                contentType: 'application/json; charset=utf-8',
+                dataType: 'json',
+                success: function (response) {
+                    var data = response.d ? JSON.parse(response.d) : response;
+                    $.each(data, function (key, value) {
+                        options += '<option value="' + value.DataValue_Name + '">' + value.DataValue_Description + '</option>';
+                    });
+                    $('#ddlCostCenter').html(options).select2();
+                },
+                error: function (xhr, status, error) {
+                    console.error('Error fetching cost center data:', error);
+                }
+            });
+        }
     </script>
 </asp:Content>
 <asp:Content ID="Content2" ContentPlaceHolderID="MainContent" runat="server">
@@ -374,6 +403,10 @@
         <div class="col-lg-2 col-md-2 col-sm-4">
             <label>Patient Type</label>
             <select id="ddlpatientType"></select>
+        </div>
+        <div class="col-lg-2 col-md-2 col-sm-4">
+            <label>Cost Center</label>
+            <select id="ddlCostCenter"></select>
         </div>
         <div class="col-lg-2 col-md-2 col-sm-4">
             <label>Actual Amount</label>
@@ -407,6 +440,7 @@
                         <th>Patient Name</th>
                         <th>PatientType</th>
                         <th>Department</th>
+                        <th>Cost Center</th>
                         <th>Bill Status</th>
                            <th>Actual Amount</th>
                         <th>Receipt Amount</th>
