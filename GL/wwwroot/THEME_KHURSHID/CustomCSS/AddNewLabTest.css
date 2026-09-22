@@ -84,3 +84,15 @@
 .detail {
     margin-top: 3%;
 }
+/* Lab page theme variables */
+:root {
+    --lab-primary: #c11718;
+    --lab-rgb: 193, 23, 24;
+    --lab-hover: #9e1213;
+    --lab-link: #a81415;
+    --lab-soft: #fbeaea;
+    --lab-soft-bg: #fdf4f4;
+    --lab-soft-border: #f2d3d3;
+    --lab-ink: #7a1415;
+}
+

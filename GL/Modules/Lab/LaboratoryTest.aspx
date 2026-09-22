@@ -3,7 +3,7 @@
 <asp:Content ID="Content1" ContentPlaceHolderID="HeadContent" runat="server">
     <link href="../../wwwroot/THEME_TIBBIT/CustomCSS/AddNewLabTest.css" rel="stylesheet" />
     <script src="https://cdn.jsdelivr.net/npm/jsbarcode@3.11.5/dist/JsBarcode.all.min.js"></script>
-    <style>
+    <style type="text/css">
         
 .MyTable {
     width: 100%;
@@ -68,7 +68,7 @@
 }
 .lab-page .table th {
     display: table-cell !important;
-    background: #EFA63E !important;
+    background: var(--lab-primary) !important;
     background-image: none !important;
     color: #fff !important;
     font-size: 10.5px !important;
@@ -77,7 +77,7 @@
     letter-spacing: .04em;
     padding: 7px 10px !important;
     border: none !important;
-    border-bottom: 1px solid #EFA63E !important;
+    border-bottom: 1px solid var(--lab-primary) !important;
     text-align: left !important;
     white-space: nowrap;
     vertical-align: middle !important;
@@ -95,8 +95,8 @@
     word-wrap: normal !important;
 }
 .lab-page .table tbody tr:nth-child(even) { background: #fbfcfe; }
-.lab-page .table tbody tr:hover { background: #EFA63E12; }
-.lab-page .table td a { color: #d29237 !important; font-weight: 700; text-decoration: none !important; }
+.lab-page .table tbody tr:hover { background: rgba(var(--lab-rgb), .07); }
+.lab-page .table td a { color: var(--lab-link) !important; font-weight: 700; text-decoration: none !important; }
 .lab-page .table td a:hover { text-decoration: underline !important; }
 .lab-page .table td input[type="text"],
 .lab-page .table td select {
@@ -124,8 +124,8 @@
     height: auto !important;
     min-height: 100%;
     background: #fff !important;
-    border: 1px solid #fdf2e2 !important;
-    border-left: 3px solid #EFA63E !important;
+    border: 1px solid var(--lab-soft) !important;
+    border-left: 3px solid var(--lab-primary) !important;
     border-radius: 8px !important;
     padding: 16px 18px !important;
     margin-bottom: 16px !important;
@@ -188,8 +188,8 @@
 }
 .lab-field select:focus,
 .lab-field input[type="text"]:focus {
-    border-color: #EFA63E !important;
-    box-shadow: 0 0 0 3px #EFA63E25 !important;
+    border-color: var(--lab-primary) !important;
+    box-shadow: 0 0 0 3px rgba(var(--lab-rgb), .15) !important;
     outline: none !important;
 }
 .lab-field .lab-inline { display: flex; align-items: center; gap: 7px; height: 30px; }
@@ -226,8 +226,8 @@
 /* ── Panels ── */
 .lab-panel {
     background: #fff;
-    border: 1px solid #fdf2e2;
-    border-left: 3px solid #EFA63E;
+    border: 1px solid var(--lab-soft);
+    border-left: 3px solid var(--lab-primary);
     border-radius: 8px;
     margin-bottom: 16px;
     box-shadow: 0 4px 12px rgba(0,0,0,.04);
@@ -239,15 +239,15 @@
     justify-content: space-between;
     gap: 12px;
     padding: 9px 16px;
-    background: linear-gradient(90deg, #EFA63E10, #fff);
-    border-bottom: 1px solid #EFA63E30;
+    background: linear-gradient(90deg, rgba(var(--lab-rgb), .06), #fff);
+    border-bottom: 1px solid rgba(var(--lab-rgb), .19);
 }
 .lab-panel-head h1,
 .lab-panel-head h2 {
     margin: 0 !important;
     font-size: 13px !important;
     font-weight: 700 !important;
-    color: #EFA63E !important;
+    color: var(--lab-primary) !important;
     text-transform: uppercase;
     letter-spacing: .05em;
     text-align: left !important;
@@ -255,17 +255,17 @@
 .lab-panel-head .lab-panel-link {
     font-size: 11px;
     font-weight: 700;
-    color: #7a6530 !important;
+    color: var(--lab-ink) !important;
     text-transform: uppercase;
     letter-spacing: .04em;
     text-decoration: none !important;
-    background: #fdf7ef;
-    border: 1px solid #f0e0c8;
+    background: var(--lab-soft-bg);
+    border: 1px solid var(--lab-soft-border);
     border-radius: 14px;
     padding: 3px 12px;
     white-space: nowrap;
 }
-.lab-panel-head .lab-panel-link:hover { background: #EFA63E; color: #fff !important; border-color: #EFA63E; }
+.lab-panel-head .lab-panel-link:hover { background: var(--lab-primary); color: #fff !important; border-color: var(--lab-primary); }
 .lab-scroll { max-height: 260px; overflow: auto; }
 
 /* ── Vitals ── */
@@ -279,12 +279,12 @@
 }
 .lab-page .vitalsTable > div:first-child {
     padding: 9px 16px;
-    background: linear-gradient(90deg, #EFA63E10, #fff);
-    border-bottom: 1px solid #EFA63E30;
+    background: linear-gradient(90deg, rgba(var(--lab-rgb), .06), #fff);
+    border-bottom: 1px solid rgba(var(--lab-rgb), .19);
 }
 .lab-page .vitalsTable > div:first-child h4 {
     background: none !important;
-    color: #EFA63E !important;
+    color: var(--lab-primary) !important;
     font-size: 13px !important;
     font-weight: 700 !important;
     text-transform: uppercase;
@@ -301,7 +301,7 @@
 .lab-page .lab-actions {
     margin-top: 16px;
     padding-top: 14px;
-    border-top: 1px solid #fdf2e2;
+    border-top: 1px solid var(--lab-soft);
 }
 .lab-page .lab-actions .row > [class*="col-"] { margin-bottom: 8px; }
 .lab-page .lab-actions input[type="button"],
@@ -316,8 +316,8 @@
 }
 .lab-page .modal .modal-header,
 .lab-modal .modal-header {
-    background: linear-gradient(90deg, #EFA63E10, #fff);
-    border-bottom: 1px solid #EFA63E30;
+    background: linear-gradient(90deg, rgba(var(--lab-rgb), .06), #fff);
+    border-bottom: 1px solid rgba(var(--lab-rgb), .19);
     border-radius: 10px 10px 0 0;
     padding: 12px 18px;
 }
@@ -325,7 +325,7 @@
 .lab-modal .modal-title {
     font-size: 14px;
     font-weight: 700;
-    color: #EFA63E;
+    color: var(--lab-primary);
     text-transform: uppercase;
     letter-spacing: .04em;
 }
@@ -334,7 +334,7 @@
 .lab-modal .modal-body h4 {
     font-size: 13px !important;
     font-weight: 700 !important;
-    color: #EFA63E !important;
+    color: var(--lab-primary) !important;
     text-transform: uppercase;
     letter-spacing: .05em;
     margin: 0 0 6px !important;

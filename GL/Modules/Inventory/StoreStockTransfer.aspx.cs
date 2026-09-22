@@ -84,6 +84,21 @@ namespace PMS.Inventory
             var Details = db.sp_Unapprovestocknew(Convert.ToInt32(stockid));
             return (new JavaScriptSerializer()).Serialize(Details);
         }
+        [WebMethod]
+        public static bool UserUnApproveEntryRights()
+        {
+            using (DataBaseDataContext db = new DataBaseDataContext())
+            {
+                var userPermissions = (from data in db.aspnet_Users
+                                       where data.UserId == AppConfig.UserID
+                                       select new
+                                       {
+                                           data.IsInventoryUnApprove
+                                       }).FirstOrDefault();
+                bool UnApproveRight = userPermissions?.IsInventoryUnApprove ?? false;
+                return UnApproveRight;
+            }
+        }
         //GET available stock
         [WebMethod]
         public static Stock GetStock(string itemCode, string batchNo, string wareHouse)

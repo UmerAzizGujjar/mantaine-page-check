@@ -528,21 +528,11 @@
         function lockPharmSave()   { window.__pharmSaving = true;  $('#btnSave, #SaveVal, #btnSaveSaleReturn').attr('disabled', true); }
         function unlockPharmSave() { window.__pharmSaving = false; $('#btnSave, #SaveVal, #btnSaveSaleReturn').attr('disabled', false); }
 
-        // Direct print pharmacy slip without opening ReportViewer window
+        // Open pharmacy slip print in a NEW window.
         function DirectPrintPharmacySlip(billId) {
-            if (!billId) return;
+            if (!billId) return null;
             var url = '../../ReportViewer.aspx?ReportName=PharmacySlip&ReportTitle=PharmacySlip&Bill_ID=' + billId;
-            var $f = $('#printFrame');
-            if (!$f.length) {
-                $f = $('<iframe id="printFrame" style="position:absolute;left:-10000px;width:0;height:0;border:0;"></iframe>').appendTo('body');
-            }
-            $f.off('load.printFrame').on('load.printFrame', function () {
-                try {
-                    this.contentWindow.focus();
-                    this.contentWindow.print();
-                } catch (e) { console.warn('DirectPrint failed', e); }
-            });
-            $f.attr('src', url);
+            return window.open(url, '_blank');
         }
 
         // Alt+D — direct delete the focused row in tblDetails
@@ -2997,7 +2987,10 @@ function CalculateReceivedAmount() {
                         }
                     });
                     // page reload clears the lock; no unlock needed
-                    window.location.href = 'IssueMedicine.aspx';
+                    // delayed so the print window can open and (quick mode) auto-close first
+                    setTimeout(function () {
+                        window.location.href = 'IssueMedicine.aspx';
+                    }, 2500);
                 },
                 function (error) {
                     unlockPharmSave();
@@ -5813,8 +5806,6 @@ function CalculateReceivedAmount() {
             </div>
         </div>
     </div>
-
-    <iframe id="printFrame" name="printFrame" style="position:absolute;left:-10000px;width:0;height:0;border:0;visibility:hidden;"></iframe>
 
     <div class="modal fade" id="itemHistoryModal" tabindex="-1" role="dialog">
         <div class="modal-dialog modal-lg" role="document">

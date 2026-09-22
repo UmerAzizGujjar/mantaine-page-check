@@ -562,6 +562,7 @@
                     $("#lblstatus").show();
                     $("#txtstatus_trnsfer").show();
                     $("#btnSave").hide();
+                    UserUnApproveButtonRights();
 
                 }
                 if (checkstat == 'Created' || checkstat == null || checkstat == '') {
@@ -1264,6 +1265,49 @@
             });
         }
 
+        function UserUnApproveButtonRights() {
+            debugger;
+            $.ajax({
+                type: "POST",
+                url: "StoreStockTransfer.aspx/UserUnApproveEntryRights",
+                contentType: "application/json; charset=utf-8",
+                dataType: "json",
+                success: function (response) {
+                    debugger;
+                    var hasRights = response.d;
+                    debugger;
+                    if (hasRights) {
+                        debugger;
+                        $('#btnUnApprove').show();
+                    } else {
+                        $('#btnUnApprove').hide();
+                    }
+                },
+                failure: function (response) {
+                    alert("Failed to retrieve User UnApprove Button Rights.");
+                }
+            });
+        }
+        function UnApproveSTORESTOCKTRANSFERFromEdit() {
+            var transferId = stID;
+            Swal.fire({
+                title: 'UnApprove Stock Transfer?',
+                icon: 'question',
+                showCancelButton: true,
+                confirmButtonText: 'Yes, UnApprove',
+                cancelButtonText: 'Cancel',
+                input: 'textarea',
+                inputPlaceholder: 'Unapproval remarks (optional)...',
+                customClass: { popup: 'swal-big-popup', title: 'swal-big-title', htmlContainer: 'swal-big-text' }
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    callPageMethod('UnApprovercvstats', { stockid: transferId }, function (resp) {
+                        Swal.fire({ icon: 'success', title: 'UnApproved!', text: 'Stock Transfer has been unapproved successfully.', showConfirmButton: false, timer: 2000, customClass: { popup: 'swal-big-popup', title: 'swal-big-title', htmlContainer: 'swal-big-text' } }).then(function () { location.reload(); });
+                    });
+                }
+            });
+        }
+
         if (stID != "") {
             setTimeout(function() {
                 var status = $("#txtstatus_trnsfer").val();
@@ -1414,6 +1458,9 @@
                 </div>
                 <div class="col-lg-2 col-md-2 col-sm-3">
                     <input type="button" style="display:none" class="btn btn-primry" value="Approve" id="btnApprove" onclick="ApproveSTORESTOCKTRANSFERFromEdit()" />
+                </div>
+                <div class="col-lg-2 col-md-2 col-sm-3">
+                    <input type="button" style="display:none" class="btn btn-primry" value="UnApprove" id="btnUnApprove" onclick="UnApproveSTORESTOCKTRANSFERFromEdit()" />
                 </div>
              </div>
         </div>
