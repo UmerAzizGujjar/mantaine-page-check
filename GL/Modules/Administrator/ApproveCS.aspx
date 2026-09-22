@@ -77,7 +77,7 @@
 
         $.ajax({
             type: "POST",
-            url: "ApproveCS.aspx/ApproveSelectedCSs",
+            url: "ApproveCS.aspx/RejectSelectedCSs",
             contentType: "application/json; charset=utf-8",
             data: JSON.stringify({ CSItems: selectedData }),
             success: function (response) {

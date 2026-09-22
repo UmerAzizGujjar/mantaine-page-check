@@ -915,7 +915,7 @@ namespace PMS
                 pat.Created_by = AppConfig.UserID;
                 pat.iscancel = false;
                 pat.Martial_Status = martail_status;
-                pat.Card_fee = Convert.ToDecimal(txtfees);
+              //  pat.Card_fee = Convert.ToDecimal(txtfees);
                 if (string.IsNullOrWhiteSpace(Date_Of_Birth))
                 {
                     pat.DOB = null;

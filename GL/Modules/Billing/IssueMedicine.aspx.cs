@@ -126,7 +126,39 @@ namespace PMS
         }
 
 
-
+        [WebMethod]
+        public static string GetItemSalesHistory(int itemId)
+        {
+            try
+            {
+                using (DataBaseDataContext db = new DataBaseDataContext())
+                {
+                    var data = (from bd in db.Ar_Billing_Details
+                                join b in db.Ar_Billings on bd.Bill_ID equals b.Bill_ID
+                                where bd.Item_ID == itemId
+                                   && bd.Item_Type == "Medicine"
+                                   && (b.isCancel == false || b.isCancel == null)
+                                orderby b.Bill_Date descending
+                                select new
+                                {
+                                    Bill_No = b.Bill_No,
+                                    Bill_Date = b.Bill_Date,
+                                    Qty = bd.Qty,
+                                    Rate = bd.Amount,
+                                    Batch_No = bd.Batch_No,
+                                    Patient_ID = b.Patient_ID,
+                                    PatientName = (from p in db.Patients
+                                                   where p.Patient_ID == b.Patient_ID
+                                                   select p.Full_Name).FirstOrDefault()
+                                }).Take(50).ToList();
+                    return JsonConvert.SerializeObject(data);
+                }
+            }
+            catch (Exception ex)
+            {
+                return "[]";
+            }
+        }
 
 
         [WebMethod]

@@ -138,7 +138,21 @@ namespace PMS.AP
         {
             using (DataBaseDataContext db = new DataBaseDataContext())
             {
-                var itemDetail = db.spGetitemsDetailswithStock(ItemID, PRDate, "").ToList();
+                var itemDetail = db.spGetitemsDetailswithStock(ItemID, PRDate, "")
+                    .Select(x => new
+                    {
+                        x.Item_ID,
+                        x.Item_Code,
+                        x.Description,
+                        x.Unit,
+                        x.Stock,
+                        x.Active,
+                        x.UOM_Qty,
+                        x.LastQty,
+                        x.Last_PurchaseRate,
+                        x.LastRequiredDate,
+                        Last_PR_No = GetLastPRNo(db, x.Item_ID, 0)
+                    }).ToList();
                 return (new JavaScriptSerializer()).Serialize(itemDetail);
             }
         }
@@ -158,9 +172,33 @@ namespace PMS.AP
                 bool allowPharmacy = userPermissions?.AllowPharmacy ?? false;
                 bool allowGeneralItem = userPermissions?.AllowGeneralItems ?? false;
 
-                var itemDetail = db.spGetAllitemsDetails(searchText, allowPharmacy, allowGeneralItem,warehouse).ToList();
+                var itemDetail = db.spGetAllitemsDetails(searchText, allowPharmacy, allowGeneralItem, warehouse)
+                    .Select(x => new
+                    {
+                        x.Item_ID,
+                        x.Item_Code,
+                        x.Description,
+                        x.Unit,
+                        x.UOM_Qty,
+                        x.Stock,
+                        x.LastQty,
+                        x.LastRequiredDate,
+                        x.Last_PurchaseRate,
+                        Last_PR_No = GetLastPRNo(db, x.Item_ID, 0)
+                    }).ToList();
                 return (new JavaScriptSerializer()).Serialize(itemDetail);
             }
+        }
+
+        private static string GetLastPRNo(DataBaseDataContext db, int itemId, int excludePRId)
+        {
+            var q = from d in db.Purchase_Requisition_Details
+                    join p in db.Purchase_Requisitions on d.PR_ID equals p.PR_Id
+                    where d.Item_ID == itemId && p.PR_Id != excludePRId
+                    orderby p.PR_Date descending, p.PR_Id descending
+                    select (System.Nullable<int>)p.PR_Num;
+            var num = q.FirstOrDefault();
+            return num.HasValue ? num.Value.ToString() : "";
         }
         [WebMethod]
         public static int GetPR()
@@ -319,6 +357,7 @@ namespace PMS.AP
                 obj.Req_Num = Convert.ToInt32(item.Req_Num);
                 obj.Last_PR_Qty = Convert.ToDecimal(item.Last_PR_Qty);
                 obj.Last_PR_Date = item.Last_PR_Date;
+                obj.Last_PR_No = Convert.ToString(item.Last_PR_No);
                 db.Purchase_Requisition_Details.InsertOnSubmit(obj);
 
                 try
@@ -429,10 +468,11 @@ namespace PMS.AP
                                       MaterialRequestDetail_Id = Convert.ToInt32(data.MaterialRequestDetail_Id),
                                       MaterialRequest_Id = Convert.ToInt32(data.MaterialRequest_Id),
                                       Req_Num = Convert.ToInt32(data.Req_Num),
-                                      Last_PR_Qty = data.Last_PR_Qty ?? 0,
-                                      Last_PR_Date = data.Last_PR_Date
+Last_PR_Qty = data.Last_PR_Qty ?? 0,
+                                      Last_PR_Date = data.Last_PR_Date,
+                                      Last_PR_No = data.Last_PR_No
 
-                                 }).ToList();
+                                  }).ToList();
                     result = (new JavaScriptSerializer()).Serialize(listItems).ToString();
                 }
             }
@@ -691,6 +731,7 @@ namespace PMS.AP
 
             public decimal Last_PR_Qty { get; set; }
             public DateTime? Last_PR_Date { get; set; }
+            public string Last_PR_No { get; set; }
 
         }
     }

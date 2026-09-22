@@ -56,6 +56,13 @@
         vertical-align: middle !important;
         white-space: nowrap;
     }
+
+    #tblDetails tr.pharm-row-focused,
+    #tblDetails tr.pharm-row-focused td {
+        background-color: #fff3cd !important;
+        outline: 2px solid #ffc107;
+        outline-offset: -2px;
+    }
     
     #tblDetails th {
         padding: 10px 8px !important;
@@ -166,6 +173,9 @@
 </style>
     <script type="text/javascript">
         var srQtyFieldDisabled = false;
+        var __billIdQS = '<%= Request.QueryString["Bill_ID"]%>' || '';
+        window.__lastBillId = window.__lastBillId || null;
+        window.__saveMode = window.__saveMode || 'save_and_print';
         $(document).ready(function () {
             PageMethods.GetSRQty(function (res) {
                 try {
@@ -235,12 +245,11 @@
                 debugger;
                 event.preventDefault();
                 $('#medName').select2('close');
+                window.__saveMode = 'save_only';
                 $('#btnSave').attr('style', 'background: green !important;margin-top: 0px;').focus()
                     .one('keydown', function (e) {
-                        // swallow the very next Enter/Space to prevent accidental double-fire
                         if (e.which === 13 || e.which === 32) { e.preventDefault(); e.stopPropagation(); }
                     });
-                //SearchPop();
                 GetPharmacyUser();
 
                 $('#txtuserCode').focus();
@@ -264,13 +273,28 @@
             }
               else if (event.altKey && event.code === 'KeyP') {
                     event.preventDefault();
-                    window.location.href = 'PharmacyItemsView.aspx';
+                    window.__saveMode = 'save_and_print';
+                    $('#medName').select2('close');
+                    $('#btnSave').attr('style', 'background: green !important;margin-top: 0px;').focus()
+                        .one('keydown', function (e) {
+                            if (e.which === 13 || e.which === 32) { e.preventDefault(); e.stopPropagation(); }
+                        });
+                    GetPharmacyUser();
+                    $('#txtuserCode').focus();
                 }
             else if (event.altKey && event.code === 'KeyE') {
                 event.preventDefault();
                 $('#medName').select2('close');
                 $('#btnSave').attr('style', 'margin-top: 0px;').focusout();
                 $('#CloseSearchModel').click();
+            }
+            else if (event.altKey && event.code === 'KeyD') {
+                event.preventDefault();
+                DirectDeleteFocusedRow();
+            }
+            else if (event.altKey && event.code === 'KeyH') {
+                event.preventDefault();
+                ShowItemSalesHistory();
             }
             else if (event.altKey && event.code === 'KeyD') {
                 event.preventDefault();
@@ -503,6 +527,115 @@
         function isPharmSaveInProgress() { return window.__pharmSaving; }
         function lockPharmSave()   { window.__pharmSaving = true;  $('#btnSave, #SaveVal, #btnSaveSaleReturn').attr('disabled', true); }
         function unlockPharmSave() { window.__pharmSaving = false; $('#btnSave, #SaveVal, #btnSaveSaleReturn').attr('disabled', false); }
+
+        // Direct print pharmacy slip without opening ReportViewer window
+        function DirectPrintPharmacySlip(billId) {
+            if (!billId) return;
+            var url = '../../ReportViewer.aspx?ReportName=PharmacySlip&ReportTitle=PharmacySlip&Bill_ID=' + billId;
+            var $f = $('#printFrame');
+            if (!$f.length) {
+                $f = $('<iframe id="printFrame" style="position:absolute;left:-10000px;width:0;height:0;border:0;"></iframe>').appendTo('body');
+            }
+            $f.off('load.printFrame').on('load.printFrame', function () {
+                try {
+                    this.contentWindow.focus();
+                    this.contentWindow.print();
+                } catch (e) { console.warn('DirectPrint failed', e); }
+            });
+            $f.attr('src', url);
+        }
+
+        // Alt+D — direct delete the focused row in tblDetails
+        function DirectDeleteFocusedRow() {
+            var $row = getPharmFocusedRow();
+            if (!$row || !$row.length) {
+                Swal.fire({ icon: 'info', title: 'No row focused', text: 'Click a row in the items list, then press Alt+D.', showConfirmButton: false, timer: 1800, customClass: { popup: 'swal-big-popup', title: 'swal-big-title', htmlContainer: 'swal-big-text' } });
+                return;
+            }
+            ExcludeFromPayment($row.find('a[onclick*="ExcludeFromPayment"]')[0] || $row[0]);
+        }
+
+        // Alt+H — show past sales of focused row's item
+        function ShowItemSalesHistory() {
+            var $row = getPharmFocusedRow();
+            if (!$row || !$row.length) {
+                Swal.fire({ icon: 'info', title: 'No row focused', text: 'Click a row in the items list, then press Alt+H.', showConfirmButton: false, timer: 1800, customClass: { popup: 'swal-big-popup', title: 'swal-big-title', htmlContainer: 'swal-big-text' } });
+                return;
+            }
+            var itemId = $row.find('input[name="ItemID"]').val();
+            var itemName = $row.find('input[name="Itemdesc"]').val() || '';
+            if (!itemId) {
+                Swal.fire({ icon: 'warning', title: 'No Item', text: 'Focused row has no item id.', showConfirmButton: false, timer: 1800, customClass: { popup: 'swal-big-popup', title: 'swal-big-title', htmlContainer: 'swal-big-text' } });
+                return;
+            }
+            $('#itemHistoryModalLabel').text('Previous Sales — ' + itemName);
+            var $tb = $('#itemHistoryTableBody');
+            $tb.html('<tr><td colspan="6" class="text-center text-muted" style="padding:14px;">Loading…</td></tr>');
+            $('#itemHistoryModal').modal('show');
+            $.ajax({
+                type: 'POST',
+                url: 'IssueMedicine.aspx/GetItemSalesHistory',
+                data: JSON.stringify({ itemId: itemId }),
+                contentType: 'application/json; charset=utf-8',
+                dataType: 'json',
+                success: function (resp) {
+                    var rows;
+                    try { rows = JSON.parse(resp.d); } catch (e) { rows = []; }
+                    if (!rows || rows.length === 0) {
+                        $tb.html('<tr><td colspan="6" class="text-center text-muted" style="padding:14px;">No previous sales found.</td></tr>');
+                        return;
+                    }
+                    var html = '';
+                    rows.forEach(function (r) {
+                        var d = r.Bill_Date ? moment(r.Bill_Date).format('DD-MMM-YYYY') : '';
+                        html += '<tr>' +
+                            '<td style="text-align:left;">' + (r.Bill_No || '') + '</td>' +
+                            '<td style="text-align:left;">' + d + '</td>' +
+                            '<td style="text-align:left;">' + (r.PatientName || (r.Patient_ID ? 'MR#' + r.Patient_ID : '')) + '</td>' +
+                            '<td style="text-align:right;">' + (r.Qty != null ? r.Qty : 0) + '</td>' +
+                            '<td style="text-align:right;">' + (r.Rate != null ? parseFloat(r.Rate).toFixed(2) : '0.00') + '</td>' +
+                            '<td style="text-align:left;">' + (r.Batch_No || '') + '</td>' +
+                            '</tr>';
+                    });
+                    $tb.html(html);
+                },
+                error: function () {
+                    $tb.html('<tr><td colspan="6" class="text-center text-danger" style="padding:14px;">Error loading history.</td></tr>');
+                }
+            });
+        }
+
+        // Track focused row in tblDetails — fallback for Alt+D / Alt+H
+        window.__pharmFocusedRow = null;
+        function setPharmFocusedRow(row) {
+            $('#tblDetails tr.pharm-row-focused').removeClass('pharm-row-focused');
+            if (row && row.length) {
+                row.addClass('pharm-row-focused');
+                window.__pharmFocusedRow = row;
+            } else {
+                window.__pharmFocusedRow = null;
+            }
+        }
+        function getPharmFocusedRow() {
+            var ae = document.activeElement;
+            var $row = $(ae).closest('#tblDetails tr');
+            if ($row.length) {
+                setPharmFocusedRow($row);
+                return $row;
+            }
+            if (window.__pharmFocusedRow && window.__pharmFocusedRow.length &&
+                window.__pharmFocusedRow.closest('body').length) {
+                return window.__pharmFocusedRow;
+            }
+            return null;
+        }
+        $(document).on('click focusin', '#tblDetails tr', function () {
+            setPharmFocusedRow($(this));
+        });
+        $(document).on('focusin', '#tblDetails input, #tblDetails select, #tblDetails button, #tblDetails a', function () {
+            var $r = $(this).closest('#tblDetails tr');
+            if ($r.length) setPharmFocusedRow($r);
+        });
 
         function GetAllCashierUsers() {
             PageMethods.GetAllCashierUsers(function (data) {
@@ -2845,9 +2978,9 @@ function CalculateReceivedAmount() {
                         return;
                     }
                     isPatientDataSaved = true;
-                    var btnSave = $('#btnSave').val();
-                    if (btnSave == 'Save & Print(Alt+S)' || btnSave == "Save & Print(Alt+S)") {
-                        window.open('../../ReportViewer.aspx?ReportName=PharmacySlip&ReportTitle=PharmacySlip&Bill_ID=' + result.BillId);
+                    window.__lastBillId = result.BillId;
+                    if (window.__saveMode === 'save_and_print') {
+                        DirectPrintPharmacySlip(result.BillId);
                     }
                     Swal.fire({
                         icon: 'success',
@@ -3078,9 +3211,9 @@ function CalculateReceivedAmount() {
                                     return;
                                 }
                                 isPatientDataSaved = true;
-                                var btnSave = $('#btnSave').val();
-                                if (btnSave == 'Save & Print(Alt+S)' || btnSave == "Save & Print(Alt+S)") {
-                                    window.open('../../ReportViewer.aspx?ReportName=PharmacySlip&ReportTitle=PharmacySlip&Bill_ID=' + result.BillId);
+                                window.__lastBillId = result.BillId;
+                                if (window.__saveMode === 'save_and_print') {
+                                    DirectPrintPharmacySlip(result.BillId);
                                 }
                                 Swal.fire({
                                     icon: 'success',
@@ -5157,7 +5290,7 @@ function CalculateReceivedAmount() {
                
                   <div class="col-sm-2 col-md-2 col-lg-2">
                       <label></label>
-                  <input type="button" class="btn btn-primry w-100 w-md-auto" id="btnSave" tabindex="10" value="Save & Print(Alt+S)" onclick="GetPharmacyUser()" />
+                  <input type="button" class="btn btn-primry w-100 w-md-auto" id="btnSave" tabindex="10" value="Save &amp; Print (Alt+P)" onclick="GetPharmacyUser()" />
               </div>
                 
                <div class="col-lg-2 col-md-4 col-sm-6">
@@ -5674,6 +5807,34 @@ function CalculateReceivedAmount() {
                         <input type="button" class="btn btn-primry" id="btnSaveSaleReturn" onclick="SaveSaleReturn()" value="Save" style="width: 30% !important;" />
                         <input type="button" class="btn-gray" id="CloseSearchReturnModel" value="Close" data-dismiss="modal" style="width: 30% !important;" />
                     </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <iframe id="printFrame" name="printFrame" style="position:absolute;left:-10000px;width:0;height:0;border:0;visibility:hidden;"></iframe>
+
+    <div class="modal fade" id="itemHistoryModal" tabindex="-1" role="dialog">
+        <div class="modal-dialog modal-lg" role="document">
+            <div class="modal-content">
+                <div class="modal-header" style="background:#f5f7fa;">
+                    <h4 class="modal-title" id="itemHistoryModalLabel">Previous Sales</h4>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                </div>
+                <div class="modal-body" style="max-height:420px;overflow-y:auto;">
+                    <table class="table table-bordered table-striped" style="font-size:12px;margin-bottom:0;">
+                        <thead>
+                            <tr style="background:#f5f7fa;">
+                                <th style="text-align:left;">Bill No</th>
+                                <th style="text-align:left;">Bill Date</th>
+                                <th style="text-align:left;">Patient</th>
+                                <th style="text-align:right;">Qty</th>
+                                <th style="text-align:right;">Rate</th>
+                                <th style="text-align:left;">Batch</th>
+                            </tr>
+                        </thead>
+                        <tbody id="itemHistoryTableBody"></tbody>
+                    </table>
                 </div>
             </div>
         </div>

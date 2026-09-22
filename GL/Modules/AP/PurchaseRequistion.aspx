@@ -247,6 +247,7 @@
                                     '<td style="display:none">' + (item.LastQty || '') + '</td>' +
                                     '<td style="display:none">' + (item.LastRequiredDate || '') + '</td>' +
                                     '<td style="display:none">' + (item.Last_PurchaseRate || '') + '</td>' +
+                                    '<td style="display:none">' + (item.Last_PR_No || '') + '</td>' +
                                     '</tr>';
                                 tableBody.append(row);
                             });
@@ -377,6 +378,7 @@
                 "<td style='text-align:right;'><input type='text' name='txtUnitPrice' id='txtUnitPrice" + length + "' style='font-size:9px;width:68px!important;text-align:right;margin-top:2px;' autocomplete='off' value='" + Rate + "' onkeyup='calcutaeEstimCost(this)'/></td>" +
                 "<td style='text-align:right;'><input readonly type='text' name='txtEstimCost' id='txtEstimCost" + length + "' style='font-size:9px;width:78px!important;text-align:right;margin-top:2px;' /></td>" +
                 "<td style='text-align:left;'><input type='text' name='txtrdate' id='txtrdate" + length + "' style='font-size:9px;width:80px!important;margin-top:2px;' autocomplete='off'/></td>" +
+                "<td style='text-align:left;padding-top:7px!important;'>" + "</td>" +
                 "<td style='text-align:right;padding-top:7px!important;'>" + "</td>" +
                 "<td style='text-align:left;padding-top:7px!important;'>" + "</td>" +
                 "<td style='text-align:left;'><input type='text' name='remarks' id='remarks" + length + "' style='font-size:9px;width:100%;margin-top:2px;'/></td>" +
@@ -423,6 +425,7 @@
             var LastRate = $(row).find('td:eq(9)').text() || '0';
             var lastQty = $(row).find('td:eq(7)').text() || '';
             var lastReqDate = $(row).find('td:eq(8)').text() || '';
+            var lastPRNo = $(row).find('td:eq(10)').text() || '';
             console.log(lastReqDate);
             var exists = false;
             $('#tblbodyPackage tr').each(function () {
@@ -482,6 +485,7 @@
                 "<td style='text-align:right;'><input type='text' name='txtUnitPrice' id='txtUnitPrice" + length + "' value='" + LastRate + "' style='font-size:9px;width:68px!important;text-align:right;margin-top:2px;' autocomplete='off' onkeyup='calcutaeEstimCost(this)'/></td>" +
                 "<td style='text-align:right;'><input readonly type='text' name='txtEstimCost' id='txtEstimCost" + length + "' style='font-size:9px;width:78px!important;text-align:right;margin-top:2px;' /></td>" +
                 "<td style='text-align:left;'><input type='text' name='txtrdate' id='txtrdate" + length + "' style='font-size:9px;width:80px!important;margin-top:2px;' autocomplete='off'/></td>" +
+                "<td style='text-align:left;padding-top:7px!important;'>" + lastPRNo + "</td>" +
                 "<td style='text-align:right;padding-top:7px!important;'>" + lastQty + "</td>" +
                 "<td style='text-align:left;padding-top:7px!important;'>" + formattedLastReqDate + "</td>" +
                 "<td style='text-align:left;'><input type='text' name='remarks' id='remarks" + length + "' style='font-size:9px;width:100%;margin-top:2px;'/></td>" +
@@ -568,6 +572,7 @@
                     if (parse[0].Active == true) {
                         var lastQty = (parse[0].LastQty != null && parse[0].LastQty !== '' && parse[0].LastQty !== 'null') ? parseFloat(parse[0].LastQty).toFixed(2) : '0';
                         var lastReqDate = '';
+                        var lastPRNo = (parse[0].Last_PR_No != null && parse[0].Last_PR_No !== '' && parse[0].Last_PR_No !== 'null') ? parse[0].Last_PR_No : '';
                         if (parse[0].LastRequiredDate != null && parse[0].LastRequiredDate !== '' && parse[0].LastRequiredDate !== 'null') {
                             try {
                                 var dateVal = parse[0].LastRequiredDate;
@@ -593,6 +598,7 @@
                             "<td style='text-align:right;'><input type='text' name='txtUnitPrice' id='txtUnitPrice" + length + "' value = '" + parse[0].Last_PurchaseRate + "' style='font-size:9px;width:68px!important;text-align:right;margin-top:2px;' autocomplete='off' onkeyup='calcutaeEstimCost(this)'/></td>" +
                             "<td style='text-align:right;'><input readonly type='text' name='txtEstimCost' id='txtEstimCost" + length + "' style='font-size:9px;width:78px!important;text-align:right;margin-top:2px;' /></td>" +
                             "<td style='text-align:left;'><input type='text' name='txtrdate' id='txtrdate" + length + "' style='font-size:9px;width:80px!important;margin-top:2px;' autocomplete='off'/></td>" +
+                            "<td style='text-align:left;padding-top:7px!important;'>" + lastPRNo + "</td>" +
                             "<td style='text-align:right;padding-top:7px!important;'>" + lastQty + "</td>" +
                             "<td style='text-align:left;padding-top:7px!important;'>" + lastReqDate + "</td>" +
                             "<td style='text-align:left;'><input type='text' name='remarks' id='remarks" + length + "' style='font-size:9px;width:100%;margin-top:2px;'/></td>" +
@@ -752,15 +758,16 @@
                 var UnitPrice = $(row).find('td:eq(7) input').val();
                 var EstimateCost = $(row).find('td:eq(8) input').val();
                 var RDate = $(row).find('input[name=txtrdate]').val();
-                var Remarks = $(row).find('td:eq(12) input').val();
-                var itemId = $(row).find('td:eq(13)').text();
-                var MaterialRequestDetail_Id = $(row).find('td:eq(15)').text();
-                var MaterialRequest_Id = $(row).find('td:eq(16)').text();
-                var Req_Num = $(row).find('td:eq(17)').text();
-                var Last_PR_Qty = $(row).find('td:eq(10)').text() || '0';
-                var Last_PR_Date = $(row).find('td:eq(11)').text() || '';
+                var Remarks = $(row).find('td:eq(13) input').val();
+                var itemId = $(row).find('td:eq(14)').text();
+                var MaterialRequestDetail_Id = $(row).find('td:eq(16)').text();
+                var MaterialRequest_Id = $(row).find('td:eq(17)').text();
+                var Req_Num = $(row).find('td:eq(18)').text();
+                var Last_PR_No = $(row).find('td:eq(10)').text() || '';
+                var Last_PR_Qty = $(row).find('td:eq(11)').text() || '0';
+                var Last_PR_Date = $(row).find('td:eq(12)').text() || '';
                 if (Qty && RDate && itemId) {
-                    detailAry.push({ Qty: Qty, UnitPrice: UnitPrice, EstimateCost: EstimateCost, RDate: RDate, Remarks: Remarks, PRId: id, itemId: itemId, MaterialRequestDetail_Id: MaterialRequestDetail_Id, MaterialRequest_Id: MaterialRequest_Id, Req_Num: Req_Num, Last_PR_Qty: Last_PR_Qty, Last_PR_Date: Last_PR_Date });
+                    detailAry.push({ Qty: Qty, UnitPrice: UnitPrice, EstimateCost: EstimateCost, RDate: RDate, Remarks: Remarks, PRId: id, itemId: itemId, MaterialRequestDetail_Id: MaterialRequestDetail_Id, MaterialRequest_Id: MaterialRequest_Id, Req_Num: Req_Num, Last_PR_Qty: Last_PR_Qty, Last_PR_Date: Last_PR_Date, Last_PR_No: Last_PR_No });
                 }
             });
             if (detailAry.length === 0) {
@@ -907,6 +914,7 @@
                             '<td style="text-align:right;"><input type="text" value="' + parseFloat(parse[key].UnitPrice).toFixed(2) + '" name="txtUnitPrice" id="txtUnitPrice' + counter + '" style="font-size:9px;width:68px!important;text-align:right;margin-top:2px;" autocomplete="off" onkeyup="calcutaeEstimCost(this)"/></td>' +
                             '<td style="text-align:right;"><input readonly type="text" value="' + parseFloat(parse[key].EstimateCost).toFixed(2) + '" name="txtEstimCost" id="txtEstimCost' + counter + '" style="font-size:9px;width:78px!important;text-align:right;margin-top:2px;" autocomplete="off"/></td>' +
                             '<td style="text-align:left;"><input type="text" name="txtrdate" id="txtrdate' + counter + '" style="font-size:9px;width:80px!important;margin-top:2px;" value="' + datetime + '"/></td>' +
+                            '<td style="text-align:left;padding-top:7px!important;">' + (parse[key].Last_PR_No || '') + '</td>' +
                             '<td style="text-align:right;padding-top:7px!important;">' + (parse[key].Last_PR_Qty || 0) + '</td>' +
                             '<td style="text-align:left;padding-top:7px!important;">' + lastReqDateDisplay + '</td>' +
                             '<td style="text-align:left;"><input type="text" name="remarks" id="remarks' + counter + '" style="font-size:9px;width:100%;margin-top:2px;" value="' + parse[key].Remarks + '"/></td>' +
@@ -1298,7 +1306,8 @@
                     <th style="width:9%;  text-align:right;">Unit Price</th>
                     <th style="width:10%; text-align:right;">Estimated Cost</th>
                     <th style="width:10%; text-align:left;">Required Date</th>
-                    <th style="width:6%;  text-align:right;">Last Qty</th>   
+                    <th style="width:8%;  text-align:right;">Last PR No</th>
+                    <th style="width:6%;  text-align:right;">Last Qty</th>
                     <th style="width:10%; text-align:left;">Last PR Date</th>
                     <th style="width:15%; text-align:left;">Remarks</th>
                     <th style="width:6%;  text-align:center;">Action</th>
@@ -1387,6 +1396,7 @@
                                     <th style="width:80px; text-align:right;">UOM Qty</th>
                                     <th style="display:none;">Last Qty</th>
                                     <th style="display:none;">Last PR Date</th>
+                                    <th style="display:none;">Last PR No</th>
                                 </tr>
                             </thead>
                             <tbody id="itemsTableBody"></tbody>
