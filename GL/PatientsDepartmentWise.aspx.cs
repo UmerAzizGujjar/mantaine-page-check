@@ -4198,6 +4198,7 @@ namespace PMS
                     string x = "Student Fee Details Report";
                     Master.Label2.Text = x;
                     Master.GetMenuName();
+                    tr_Export.Visible = true;
                     tr_Summary.Visible = false;
                     tr1MedicalSubsidy.Visible = false;
                     lblMainDepartment.Visible = false;
@@ -4243,6 +4244,7 @@ namespace PMS
                     string x = "Student Fee Receivable Details Class Wise Report";
                     Master.Label2.Text = x;
                     Master.GetMenuName();
+                    tr_Export.Visible = true;
                     tr_Summary.Visible = false;
                     tr1MedicalSubsidy.Visible = false;
                     lblMainDepartment.Visible = false;
@@ -4281,6 +4283,7 @@ namespace PMS
                     string x = "Student Fee Details Session Wise Report";
                     Master.Label2.Text = x;
                     Master.GetMenuName();
+                    tr_Export.Visible = true;
                     tr_Summary.Visible = false;
                     tr1MedicalSubsidy.Visible = false;
                     lblMainDepartment.Visible = false;
@@ -4319,6 +4322,7 @@ namespace PMS
                     string x = "Student Fee Receipts Details";
                     Master.Label2.Text = x;
                     Master.GetMenuName();
+                    tr_Export.Visible = true;
                     tr_Summary.Visible = false;
                     tr1MedicalSubsidy.Visible = false;
                     lblMainDepartment.Visible = false;
@@ -4364,6 +4368,7 @@ namespace PMS
                     string x = "Student Receipt Details Balance";
                     Master.Label2.Text = x;
                     Master.GetMenuName();
+                    tr_Export.Visible = true;
                     tr_Summary.Visible = false;
                     tr1MedicalSubsidy.Visible = false;
                     lblMainDepartment.Visible = false;
@@ -4409,6 +4414,7 @@ namespace PMS
                     string x = "Student Receipt Class Wise Details Received";
                     Master.Label2.Text = x;
                     Master.GetMenuName();
+                    tr_Export.Visible = true;
                     tr_Summary.Visible = false;
                     tr1MedicalSubsidy.Visible = false;
                     lblMainDepartment.Visible = false;
@@ -4447,6 +4453,7 @@ namespace PMS
                     string x = "Student Receipt Class Wise Details Balance";
                     Master.Label2.Text = x;
                     Master.GetMenuName();
+                    tr_Export.Visible = true;
                     tr_Summary.Visible = false;
                     tr1MedicalSubsidy.Visible = false;
                     lblMainDepartment.Visible = false;
@@ -4485,6 +4492,7 @@ namespace PMS
                     string x = "Student Receipt Session Wise Details Received";
                     Master.Label2.Text = x;
                     Master.GetMenuName();
+                    tr_Export.Visible = true;
                     tr_Summary.Visible = false;
                     tr1MedicalSubsidy.Visible = false;
                     lblMainDepartment.Visible = false;
@@ -4523,6 +4531,7 @@ namespace PMS
                     string x = "Student Receipt Session Wise Details Balance";
                     Master.Label2.Text = x;
                     Master.GetMenuName();
+                    tr_Export.Visible = true;
                     tr_Summary.Visible = false;
                     tr1MedicalSubsidy.Visible = false;
                     lblMainDepartment.Visible = false;
