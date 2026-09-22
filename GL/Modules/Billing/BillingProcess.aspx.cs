@@ -2010,7 +2010,7 @@ namespace PMS
             newBill.Discount_Amount = data.Discount_Amount;
             newBill.Total_Amount = data.TotalPayable;
             newBill.Net_Amount = data.Net_Amount;
-            newBill.final_bill_ipd = data.finalbill;
+            newBill.final_bill_ipd = data.finalbill || (newBill.final_bill_ipd ?? false);
             newBill.Received_Amount = data.Received_Amount;
             newBill.Balance_Amount = data.Balance_Amount;
             newBill.Charge_Policy = data.ChargePolicy;

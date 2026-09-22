@@ -103,6 +103,11 @@
                 highlightPendingRows();
         }, 100);
 
+            $('#<%= GridView1.ClientID %>').on('change', 'input[type="checkbox"][id*="chkSelect"]', function () {
+                var anyChecked = $('#<%= GridView1.ClientID %> input[type="checkbox"][id*="chkSelect"]:checked').length > 0;
+                $('#btnSaveCheckbox').prop('disabled', anyChecked);
+            });
+
             $('#txt_search').keyup(function (e) {
             var searchText = $('#txt_search').val().toLowerCase();
             var tbl = document.getElementById('<%= GridView1.ClientID %>');
