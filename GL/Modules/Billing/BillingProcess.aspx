@@ -149,6 +149,16 @@
                 }
                 window.open(url, '_blank');
             }
+            function PrintEstimatedBill() {
+                debugger;
+                var InPatientID = $('#hdfPatient_ID').data('inpatid');
+
+                if (InPatientID && InPatientID != "0" && InPatientID != 0 && InPatientID != "") {
+                    window.open('../../ReportViewer.aspx?ReportName=InPatient_Advance_Bill&ReportTitle=Estimated Bill Report&Inpatient_ID=' + InPatientID);
+                } else {
+                    alert("No active in-patient admission found for this patient.");
+                }
+            }
             function PrintCRV1() {
                 debugger;
                 var id = '<%= Request.QueryString["Bill_ID"]%>';
@@ -1714,6 +1724,7 @@
                     if (status != "Approved") {
                         $('#btnApprove').show();
                     }
+
 
                    
 
@@ -7935,9 +7946,7 @@
 
                 getAllowApprovalitem();
 
-                if (CheckIPDFinalBill()) {
-                    $("#btnIPDFinalPrint").show();
-                } else {
+                if (!CheckIPDFinalBill()) {
                     $("#btnIPDFinalPrint").hide();
                 }
 
@@ -9059,9 +9068,8 @@
                     <div class="col-lg-2">
                         <input type="button" style="width: 110px; display: none;" id="btnPrintVoucher" class="btn btn-primry" value="Print Voucher" onclick="PrintVoucher();" />
                         <input type="button" style="width: 110px; display: none;" id="btnPrintVoucher2" class="btn btn-primry" value="Print Voucher 2"  onclick="PrintVoucher2();" />
-                        <input type="button" style="width: 110px;" id="btnIPDFinalPrint" class="btn btn-primry" 
-    value="Print Final Bill" 
-    onclick="PrintFinalBill();" />
+                        <input type="button" style="width: 110px;" id="btnIPDFinalPrint" runat="server" class="btn btn-primry" value="Print Final Bill" onclick="PrintFinalBill();" />
+                        <input type="button" style="width: 130px;" id="btnEstimatedBill" runat="server" class="btn btn-primry" value="Estimated Bill" onclick="PrintEstimatedBill();" />
                         <input type="button" style="width: 110px; display: none;" value="Hospital Print" onclick="PrintHospital();" />
                         <input type="button" style="width: 110px; display: none;" value="Consult Print" onclick="PrintConsultant();" />
                         <input type="button" style="width: 100px; display: none;" value="Patient Copy" name="name" onclick="BackToPrintPatient();"  />

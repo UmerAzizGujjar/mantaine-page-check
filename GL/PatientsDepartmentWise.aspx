@@ -249,6 +249,16 @@
             $('#ctl00_MainContent_txtETime').ptTimeSelect({});
             $('#ctl00_MainContent_txtSTime').val('12:00 AM');
             $('#ctl00_MainContent_txtETime').val('11:59 PM');
+
+            // "As On" checkbox: hide Start Date and use default date (add more reports with ||)
+            if (ReportTitle == "CathLabStockInHand" /* || ReportTitle == "OtherReport" */) {
+                $('#cbHideStartDate').on('change', function () {
+                    var hidden = this.checked;
+                    $('#<%= sttDate.ClientID %>').toggle(!hidden);
+                    $('#<%= txtStart_Date.ClientID %>').toggle(!hidden);
+                });
+            }
+
             $('#ctl00_MainContent_ddlDepartments').select2();
             $('#ctl00_MainContent_ddlPaymentType').select2();
             $('#ctl00_MainContent_ddlPatientType').select2();
@@ -308,7 +318,8 @@
                 $('#ctl00_MainContent_txtETime').val();
 
 
-                if ($('#ctl00_MainContent_txtStart_Date').val() == '' && error == 0) {
+                var asOn = $('#cbHideStartDate').is(':checked');
+                if ($('#ctl00_MainContent_txtStart_Date').val() == '' && !asOn && error == 0) {
                     alert('Please Select Start Date');
                     error = 1;
                 }
@@ -508,11 +519,13 @@
                     else if (rptTitle == "CathLabStockInHand") {
                         var stock = $("#ctl00_MainContent_ddlStock").val();
                         debugger;
+                        var asOn = $('#cbHideStartDate').is(':checked');
+                        var startDateTime = asOn ? '01-Jul-2020 12:00 AM' : ($('#ctl00_MainContent_txtStart_Date').val() + ' ' + $('#ctl00_MainContent_txtSTime').val());
                         var sDate = new Date($("#ctl00_MainContent_txtStart_Date").val());
                         var eDate = new Date($("#ctl00_MainContent_txtEnd_Date").val());
                         var sSDate = sDate.getDay();
                         var eEDate = eDate.getDay();
-                        var url = 'ReportViewer.aspx?ReportName=CathLabStockDetail&ReportTitle=Cath Lab Stock in Hand Report from ' + $('#ctl00_MainContent_txtStart_Date').val() + ' ' + $('#ctl00_MainContent_txtSTime').val() + '  ' + sSDate + ' to ' + $('#ctl00_MainContent_txtEnd_Date').val() + ' ' + $('#ctl00_MainContent_txtETime').val() + ' ' + eEDate + '&StartDateTime=' + $('#ctl00_MainContent_txtStart_Date').val() + ' ' + $('#ctl00_MainContent_txtSTime').val() + '&EndDateTime=' + $('#ctl00_MainContent_txtEnd_Date').val() + ' ' + $('#ctl00_MainContent_txtETime').val() + '&stock=' + stock + '&WareHouse=' + $('#ctl00_MainContent_ddlwareHouse').val();
+                        var url = 'ReportViewer.aspx?ReportName=CathLabStockDetail&ReportTitle=Cath Lab Stock in Hand ' + (asOn ? 'as on ' : 'Report from ' + $('#ctl00_MainContent_txtStart_Date').val() + ' ' + $('#ctl00_MainContent_txtSTime').val() + '  ' + sSDate + ' to ') + $('#ctl00_MainContent_txtEnd_Date').val() + ' ' + $('#ctl00_MainContent_txtETime').val() + ' ' + eEDate + '&StartDateTime=' + startDateTime + '&EndDateTime=' + $('#ctl00_MainContent_txtEnd_Date').val() + ' ' + $('#ctl00_MainContent_txtETime').val() + '&stock=' + stock + '&WareHouse=' + $('#ctl00_MainContent_ddlwareHouse').val();
                         window.open(url, '_blank');
 
                     }
@@ -2370,6 +2383,14 @@
             <div class="col-lg-3 col-md-3 col-sm-12">
                 <asp:Label ID="endTime" runat="server" Text="End Time" CssClass="form-label"></asp:Label>
                 <asp:TextBox runat="server" ID="txtETime" CssClass="form-control"></asp:TextBox>
+            </div>
+        </div>
+        <div class="row mb-3" id="hideStartDateRow" runat="server" visible="false">
+            <div class="col-lg-3 col-md-4 col-sm-12">
+                <div class="form-check" style="display: inline-flex;">
+                    <input runat="server" class="form-check-input" type="checkbox" id="cbHideStartDate" ClientIDMode="Static" />
+                    <label class="form-check-label" for="cbHideStartDate" style="margin-left: 8px; white-space: nowrap;">As On</label>
+                </div>
             </div>
         </div>
         <div class="row mb-3">
