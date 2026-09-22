@@ -821,22 +821,70 @@ namespace PMS.Modules.PatientManagement
         {
             using (DataBaseDataContext db = new DataBaseDataContext())
             {
-                var today = DateTime.Today.Date;
-                string formattedDate = DateTime.Today.ToString("yyyy-MM-dd");
-                var fee = (from tbl in db.Policy_Department_Assignments
-                           where tbl.Department_ID == Department_id
-                                 && tbl.IsActive == true
-                                 && tbl.Expiry_Date >= Convert.ToDateTime(formattedDate)
-                           orderby tbl.Policy_Assign_Dep_id descending
-                           select new
-                           {
-                               Code = tbl.Fees,
-                               Receipt_fee = (tbl.Fees ?? 0) - (tbl.Discount_Amount ?? 0),
-                               Discount_Percentage = tbl.Discount_Percentage,
-                               D_Share = tbl.Doctor_Share,
-                               H_Share = tbl.Hospital_Share
-                           }).FirstOrDefault();
-                return (new JavaScriptSerializer()).Serialize(fee);
+                DateTime today = DateTime.Today;
+                TimeSpan currentTime = DateTime.Now.TimeOfDay;
+
+                var candidates = (from tbl in db.Policy_Department_Assignments
+                                  where tbl.Department_ID == Department_id
+                                        && tbl.IsActive == true
+                                        && tbl.Is_Cancel == false
+                                        && tbl.Expiry_Date >= today
+                                  orderby tbl.Policy_Assign_Dep_id descending
+                                  select new
+                                  {
+                                      tbl.Policy_Assign_Dep_id,
+                                      tbl.IsTime,
+                                      tbl.Start_Time,
+                                      tbl.End_Time,
+                                      Code = tbl.Fees,
+                                      Discount_Amount = tbl.Discount_Amount ?? 0,
+                                      Discount_Percentage = tbl.Discount_Percentage,
+                                      D_Share = tbl.Doctor_Share,
+                                      H_Share = tbl.Hospital_Share
+                                  }).ToList();
+
+                bool TimeMatches(TimeSpan? s, TimeSpan? e)
+                {
+                    if (!s.HasValue || !e.HasValue) return false;
+
+                    TimeSpan start = s.Value;
+                    TimeSpan end = e.Value;
+
+                    if (start <= end)
+                        return currentTime >= start && currentTime <= end;
+
+                    return currentTime >= start || currentTime <= end;
+                }
+
+                var matched = candidates.FirstOrDefault(tbl =>
+                    tbl.IsTime == true && TimeMatches(tbl.Start_Time, tbl.End_Time));
+
+                if (matched == null)
+                {
+                    matched = candidates.FirstOrDefault(tbl =>
+                        tbl.IsTime == null || tbl.IsTime == false);
+                }
+
+                if (matched == null)
+                {
+                    return new JavaScriptSerializer().Serialize(new
+                    {
+                        Code = 0m,
+                        Receipt_fee = 0m,
+                        Discount_Percentage = 0m,
+                        D_Share = 0m,
+                        H_Share = 0m
+                    });
+                }
+
+                return new JavaScriptSerializer().Serialize(new
+                {
+                    Code = matched.Code,
+                    Receipt_fee = (matched.Code ?? 0m) - matched.Discount_Amount,
+                    Discount_Percentage = matched.Discount_Percentage,
+                    D_Share = matched.D_Share,
+                    H_Share = matched.H_Share
+                });
             }
         }
 
@@ -1218,6 +1266,9 @@ namespace PMS.Modules.PatientManagement
                       (from tbl in db.sys_Parms
                        where tbl.Name == "OPD Fee"
                        select tbl.Code).FirstOrDefault());
+                pat.charge_time = DateTime.Now;
+                pat.Charged_by = AppConfig.UserID;
+                pat.Remarks = "Card Fee Charge Via Emergency Time";
                 var company = db.sys_Companies.FirstOrDefault(c => c.Company_ID == AppConfig.Company_ID);
                 string companyCode = company?.CompanyCode ?? "HOSP";
                 pat.mr_no_sequence = string.IsNullOrWhiteSpace(companyCode) ? PatientNumber : $"{companyCode}-{PatientNumber}";

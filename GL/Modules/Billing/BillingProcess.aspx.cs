@@ -25,6 +25,33 @@ namespace PMS
         protected void Page_Load(object sender, EventArgs e)
         {
             BindingDropDown();
+            SetFinalBillButtonVisibility();
+        }
+
+        private void SetFinalBillButtonVisibility()
+        {
+            btnIPDFinalPrint.Visible = false;
+            btnEstimatedBill.Visible = false;
+            long billId;
+            if (long.TryParse(Request.QueryString["Bill_ID"], out billId) && billId > 0)
+            {
+                object flag = DBClass.getField("SELECT ISNULL(final_bill_ipd, 0) FROM Ar_Billings WHERE Bill_ID = " + billId);
+
+                string flagStr = (flag == null || flag == DBNull.Value) ? "" : flag.ToString().Trim();
+                bool isFinal = flagStr == "1" || flagStr.Equals("true", StringComparison.OrdinalIgnoreCase);
+
+                btnIPDFinalPrint.Visible = isFinal;
+
+                // Estimated bill only shows when final bill not saved yet for this bill
+                // and the bill has an in-patient admission against it.
+                object inPatient = DBClass.getField("SELECT ISNULL(In_Patient_ID, 0) FROM Ar_Billings WHERE Bill_ID = " + billId);
+
+                string ipStr = (inPatient == null || inPatient == DBNull.Value) ? "0" : inPatient.ToString().Trim();
+                long ipVal = 0;
+                long.TryParse(ipStr, out ipVal);
+
+                btnEstimatedBill.Visible = !isFinal && ipVal > 0;
+            }
         }
         private void BindingDropDown()
         {

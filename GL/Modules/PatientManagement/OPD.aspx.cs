@@ -1408,7 +1408,9 @@ namespace PMS.Modules.PatientManagement
                          (from tbl in db.sys_Parms
                           where tbl.Name == "OPD Fee"
                           select tbl.Code).FirstOrDefault());
-
+                pat.charge_time = DateTime.Now;
+                pat.Charged_by = AppConfig.UserID;
+                pat.Remarks = "Card Fee Charge Via OPD Time";
                 db.Reg_patients.InsertOnSubmit(pat);
                 db.SubmitChanges();
             }

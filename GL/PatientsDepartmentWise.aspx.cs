@@ -8247,6 +8247,7 @@ namespace PMS
                     DateDiv.Visible = true;
                     Time_Row.Visible = true;
                     rowStock.Visible = true;
+                    hideStartDateRow.Visible = true;   // "As On" — add more reports: if (PageTitle == "CathLabStockInHand" || PageTitle == "Other")
 
                     // ADDING NEW WAREHOUSE
                     DataBaseDataContext dbs = new DataBaseDataContext(DBClass.ConnectionString());

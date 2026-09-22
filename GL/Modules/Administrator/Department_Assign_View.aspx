@@ -67,6 +67,9 @@
               { "data": "Fees", "width": "15%", "orderable": false },
               { "data": "Hospital_Share", "width": "15%", "orderable": false },
               { "data": "Doctor_Share", "width": "15%", "orderable": false },
+              { "data": "Time_In", "width": "8%", "orderable": false },
+              { "data": "Time_Out", "width": "8%", "orderable": false },
+              { "data": "Expiry_Date", "width": "8%", "orderable": false },
               {
                   render: function (data, type, full) {
                       var res = '<a href="#" class="editListBtn" onclick="editOpen(' + full.Dep_ID + ')" style="border-radius: 4px;   padding: 5px 8px 5px 8px;"><i  class="fa fa-pencil"></i></a>';
@@ -190,6 +193,9 @@
                     <th>Fees</th>
                     <th>Hospital Share</th>
                     <th>Doctor Share</th>
+                    <th>Start Time</th>
+                    <th>End Time</th>
+                    <th>Expiry Date</th>
                     <th>Action</th>
                 </tr>
             </thead>

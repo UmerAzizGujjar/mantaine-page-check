@@ -470,6 +470,9 @@ namespace PMS.Modules.PatientManagement
                         pat.Patient_No = Convert.ToInt32(PatientNumber);
                         pat.walkin = false;
                         pat.Created_time = DateTime.Now;
+                        pat.charge_time = DateTime.Now;
+                        pat.Remarks = "Card Fee Charge Via OPD Time";
+                        pat.Charged_by = AppConfig.UserID;
 
                         if (Guid.TryParse(HttpContext.Current.Session["UserID"]?.ToString(), out Guid userId))
                             pat.Created_by = userId;
@@ -506,9 +509,9 @@ namespace PMS.Modules.PatientManagement
                     pat.bank_account_id = bank_account_id;
                     pat.Prefix = Prefix;
                     pat.Reprint = "1";
-                    pat.Charged_by = AppConfig.UserID;
-                    pat.charge_time = DateTime.Now;
-                    pat.Remarks = "Card Fee Charge Via OPD Time";
+                    
+                    //pat.charge_time = DateTime.Now;
+                    //pat.Remarks = "Card Fee Charge Via OPD Time";
                     // Card Fee Safe Parse
                     decimal cardFeeValue = 0;
                     if (!string.IsNullOrWhiteSpace(cardfee))

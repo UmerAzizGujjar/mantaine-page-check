@@ -769,7 +769,7 @@ namespace PMS
                 rd.SetParameterValue("Title", reportTitle);
                 rd.SetParameterValue("Address", companyAddress);
 
-                try { rd.SetParameterValue("@Bill_ID", Convert.ToInt32(billId)); } catch { }
+                rd.SetParameterValue("@Bill_ID", billId);
 
                 // ===== DYNAMIC QR CODE GENERATION (NO DATABASE STORAGE) =====
                 try
@@ -782,7 +782,7 @@ namespace PMS
         FROM Reg_patient rp
         JOIN In_Patient ip ON ip.patient_id = rp.pat_id
         JOIN Ar_Billings ab ON ab.In_Patient_ID = ip.In_Patient_ID
-        WHERE ab.Bill_ID = {Convert.ToInt64(billId)}";
+        WHERE ab.Bill_ID = {billId}";
 
                     DataTable patientData = DBClass.getDataTable(sql);
 
