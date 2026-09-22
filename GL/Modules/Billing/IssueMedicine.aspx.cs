@@ -2051,6 +2051,11 @@ namespace PMS
                 query = query.Where(x => x.Patient_ID == reg_id);
             }
 
+            else if (string.IsNullOrEmpty(searchTerm))
+            {
+                return new JavaScriptSerializer().Serialize(new object[0]);
+            }
+
             // If user is searching
             if (!string.IsNullOrEmpty(searchTerm))
             {
