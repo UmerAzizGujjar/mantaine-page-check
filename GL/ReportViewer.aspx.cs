@@ -6216,6 +6216,13 @@ namespace PMS
                 rd.SetParameterValue("@BillId", Convert.ToInt32(Request.QueryString["Bill_ID"]));
                 rd.SetParameterValue("CompanyLogo", logoPath);
             }
+            else if (reportName == "MedicineLabel")
+            {
+                // one small medicine label per line of the bill (spMedicineLabelPrint)
+                reportPath += "Pharmacy/rptMedicineLabel.rpt";
+                rd.Load(reportPath);
+                rd.SetParameterValue("@BillId", Convert.ToInt32(Request.QueryString["Bill_ID"]));
+            }
             else if (reportName == "PharmacyReturnSlip")
             {
                 var logoPath = DBClass.getField("SELECT dbo.GetCompanyLogo()");
