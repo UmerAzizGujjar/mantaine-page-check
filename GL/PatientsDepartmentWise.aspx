@@ -2079,6 +2079,17 @@
                         var url = 'ReportViewer.aspx?ReportName=Narcotic_Medicine_Report&ReportTitle=Narcotic Medicine Report From  ' + startDateTime + ' to ' + endDateTime + '&StartDateTime=' + encodeURIComponent(startDateTime) + '&EndDateTime=' + encodeURIComponent(endDateTime);
                         window.open(url, '_blank');
                     }
+                    if (rptTitle == "Narcotic_Medicine_Register_Report") {
+                        debugger;
+                        var startDate = $('#ctl00_MainContent_txtStart_Date').val();
+                        var startTime = $('#ctl00_MainContent_txtSTime').val()
+                        var endDate = $('#ctl00_MainContent_txtEnd_Date').val();
+                        var endTime = $('#ctl00_MainContent_txtETime').val();
+                        var startDateTime = startDate + ' ' + startTime;
+                        var endDateTime = endDate + ' ' + endTime;
+                        var url = 'ReportViewer.aspx?ReportName=Narcotic_Medicine_Register_Report&ReportTitle=Narcotic Medicine Report From  ' + startDateTime + ' to ' + endDateTime + '&StartDateTime=' + encodeURIComponent(startDateTime) + '&EndDateTime=' + encodeURIComponent(endDateTime);
+                        window.open(url, '_blank');
+                    }
                     if (rptTitle == "Lab_Test_Result_Culture") {
                         debugger;
                         var startDate = $('#ctl00_MainContent_txtStart_Date').val();

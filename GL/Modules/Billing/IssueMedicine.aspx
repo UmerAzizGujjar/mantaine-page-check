@@ -5611,7 +5611,7 @@ function CalculateReceivedAmount() {
             </div>
             <div class="modal-body">
                 <input type="hidden" id="hdnRemarkMedicineId" />
-                <div class="form-group">
+                <div class="form-group" style="display:none">
                     <label>Medicine:</label>
                     <input type="text" id="txtRemarkMedicineName" class="form-control" readonly />
                 </div>
