@@ -422,6 +422,17 @@ namespace PMS
                     {
                         ddlRoom_No.SelectedValue = qry.Room_ID.ToString();
                         txtRoom_Type.SelectedValue = qry.Room_Type.ToString();
+
+                        ddlRoomBed.Items.Clear();
+                        if (qry.Bed_No != null && qry.Bed_No != 0)
+                        {
+                            ddlRoomBed.Items.Add(new ListItem("Bed " + qry.Bed_No, qry.Bed_No.ToString()));
+                            ddlRoomBed.SelectedValue = qry.Bed_No.ToString();
+                        }
+                        else
+                        {
+                            ddlRoomBed.Items.Add(new ListItem("Full Room", ""));
+                        }
                     }
                     if (qry.Issuance_Of == "001")
                     {
@@ -1099,7 +1110,8 @@ namespace PMS
         string BirthMotherOccupation, string BirthMotherNationality, string BirthRegNumber,
         string BirthRegDate, string BirthRegistrar, string BirthUnionCouncil,
         string BirthAddress, string BirthCity, string BirthProvince, string BirthPostalCode,
-        string BirthReligion, string BirthAttendant, string BirthRemarks, bool isCertificateGenrate)
+        string BirthReligion, string BirthAttendant, string BirthRemarks, bool isCertificateGenrate,
+        string roomBed)
         {
             In_Patient OPD = null;
             using (DataBaseDataContext db = new DataBaseDataContext(DBClass.ConnectionString()))
@@ -1251,7 +1263,7 @@ namespace PMS
                         OPD.Room_ID = Convert.ToInt32(ddlRoom_No);
                         OPD.Room_Type = txtRoom_Type.ToString();
                         OPD.Ward_ID = null;
-                        OPD.Bed_No = null;
+                        OPD.Bed_No = (string.IsNullOrEmpty(roomBed) || roomBed == "0") ? (int?)null : Convert.ToInt32(roomBed);
                         Ward_Allocation ward = db.Ward_Allocations.Where(w => w.Patient_ID == Patient_ID).FirstOrDefault();
                         if (ward != null)
                             ward.IsDischarge = true;
@@ -3851,27 +3863,80 @@ namespace PMS
         public static string FillRooms(string RoomType)
         {
             DataBaseDataContext db = new DataBaseDataContext(DBClass.ConnectionString());
-            var Rmdetail = (from rm in db.Rooms
-                            where rm.Room_Type == RoomType
-                            select new
-                            {
-                                rm.Room_No,
-                                rm.Room_ID,
-                                rm.Name,
-                                rm.Room_Type,
-                                PatientNmae = (from room in db.Room_Allocations join p in db.Reg_patients on room.Patient_ID equals p.pat_id where room.Room_ID == rm.Room_ID && room.IsDischarge == false
-                                               select (p.Patient_No + " - " + p.Full_Name)).FirstOrDefault(),
-                            }
-               ).ToList();
-            return (new JavaScriptSerializer()).Serialize(Rmdetail);
+
+            var roomsList = (from rm in db.Rooms
+                             where rm.Room_Type == RoomType
+                             select rm).ToList();
+            var activeAllocs = db.Room_Allocations.Where(a => a.IsDischarge == false).ToList();
+
+            var Rmdetail = roomsList.Select(rm =>
+            {
+                var active = activeAllocs.Where(a => a.Room_ID == rm.Room_ID).ToList();
+                bool multi = rm.Is_Multiple_Beds == true;
+                int n = rm.No_Of_Beds.HasValue && rm.No_Of_Beds.Value > 0 ? rm.No_Of_Beds.Value : 1;
+                bool fullRoomTaken = active.Any(a => !a.Bed_No.HasValue);
+                var takenBeds = active.Where(a => a.Bed_No.HasValue).Select(a => a.Bed_No.Value).Distinct().ToList();
+                bool fullRoomFree = active.Count == 0;
+                bool isFull;
+                string freeBeds = "";
+                if (!multi)
+                {
+                    isFull = active.Count > 0;
+                }
+                else
+                {
+                    isFull = fullRoomTaken || takenBeds.Count >= n;
+                    freeBeds = string.Join(",", Enumerable.Range(1, n).Where(b => !takenBeds.Contains(b)));
+                }
+                string pname = (from a in active
+                                join p in db.Reg_patients on a.Patient_ID equals p.pat_id
+                                select (p.Patient_No + " - " + p.Full_Name)).FirstOrDefault();
+                return new
+                {
+                    rm.Room_No,
+                    rm.Room_ID,
+                    rm.Name,
+                    rm.Room_Type,
+                    Is_Multiple_Beds = multi,
+                    No_Of_Beds = n,
+                    FreeBeds = freeBeds,
+                    FullRoomFree = fullRoomFree,
+                    IsFull = isFull,
+                    PatientNmae = pname
+                };
+            }).ToList();
+            return (new JavaScriptSerializer().Serialize(Rmdetail));
         }
 
         [WebMethod]
-        public static string SaveRoomInformation(string btnsave, int PatID, int InPatID, string ddlRoom_No, string txtRoom_Type, string txtExpected_Discharge_Date, string ddlDoctor, bool DichargChk)
+        public static string SaveRoomInformation(string btnsave, int PatID, int InPatID, string ddlRoom_No, string txtRoom_Type, string txtExpected_Discharge_Date, string ddlDoctor, bool DichargChk, string roomBed)
         {
             try
             {
                 DataBaseDataContext db = new DataBaseDataContext(DBClass.ConnectionString());
+
+                int roomId = Convert.ToInt32(ddlRoom_No);
+                int patId = Convert.ToInt32(PatID);
+                int? bedNo = (string.IsNullOrEmpty(roomBed) || roomBed == "0") ? (int?)null : Convert.ToInt32(roomBed);
+
+                if (DichargChk == false)
+                {
+                    if (bedNo.HasValue)
+                    {
+                        bool bedTaken = db.Room_Allocations.Any(a => a.Room_ID == roomId && a.Bed_No == bedNo.Value
+                            && a.IsDischarge == false && !(a.In_Patient_ID == InPatID && a.Patient_ID == patId));
+                        if (bedTaken)
+                            return "ROOM_BED_TAKEN";
+                    }
+                    else
+                    {
+                        bool roomOccupied = db.Room_Allocations.Any(a => a.Room_ID == roomId
+                            && a.IsDischarge == false && !(a.In_Patient_ID == InPatID && a.Patient_ID == patId));
+                        if (roomOccupied)
+                            return "ROOM_NOT_FREE";
+                    }
+                }
+
                 Room_Allocation room_aloct;
                 room_aloct = (from tbl in db.Room_Allocations
                               where tbl.Room_Type == txtRoom_Type
@@ -3913,6 +3978,7 @@ namespace PMS
                 room_aloct.Room_ID = Convert.ToInt32(ddlRoom_No);
 
                 room_aloct.Room_Type = txtRoom_Type;
+                room_aloct.Bed_No = bedNo;
 
                 if (DichargChk == true)
                 {

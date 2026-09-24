@@ -174,6 +174,7 @@ Swal.fire({
                     Session["Company_Name"] = ((DropDownList)UserLogin.FindControl("ddlCompany")).SelectedItem.Text;
                     Session["Company_ID"] = ((DropDownList)UserLogin.FindControl("ddlCompany")).SelectedValue;
                     Session["Book_ID"] = Book_ID;
+                    Session["PwdStamp"] = membershipRecord.Password;
 
                     MembershipUser user = Membership.GetUser(userName);
                     if (user != null)
@@ -361,6 +362,9 @@ Swal.fire({{
                 if (userRecord != null)
                 {
                     userRecord.LastActivityDate = DateTime.Now;
+                    Session["PwdStamp"] = (from m in db.aspnet_Memberships
+                                           where m.UserId == userRecord.UserId
+                                           select m.Password).FirstOrDefault();
                     db.SubmitChanges();
                 }
             }

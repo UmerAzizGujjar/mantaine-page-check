@@ -151,6 +151,31 @@ namespace PMS
                 Response.Redirect("~/Login.aspx");
 
             }
+
+            string sessionUserName = Convert.ToString(Session["UserName"]);
+            string sessionPwdStamp = Convert.ToString(Session["PwdStamp"]);
+            using (DataBaseDataContext stampDb = new DataBaseDataContext())
+            {
+                string currentPwdStamp = (from u in stampDb.aspnet_Users
+                                          join m in stampDb.aspnet_Memberships on u.UserId equals m.UserId
+                                          where u.UserName == sessionUserName
+                                          select m.Password).FirstOrDefault();
+
+                if (currentPwdStamp == null || currentPwdStamp != sessionPwdStamp)
+                {
+                    FormsAuthentication.SignOut();
+
+                    HttpCookie expiredAuthCookie = new HttpCookie(FormsAuthentication.FormsCookieName, "");
+                    expiredAuthCookie.Expires = DateTime.Now.AddYears(-1);
+                    expiredAuthCookie.Path = "/";
+                    Response.Cookies.Add(expiredAuthCookie);
+
+                    Session.Clear();
+                    Session.Abandon();
+                    Response.Redirect("~/Login.aspx");
+                }
+            }
+
             if (!IsPostBack)
             {
                 LoadMenus();

@@ -1021,6 +1021,7 @@
       <Column Name="In_Patient_ID" Type="System.Int32" DbType="Int" CanBeNull="true" />
       <Column Name="IsDischarge" Type="System.Boolean" DbType="Bit" CanBeNull="true" />
       <Column Name="Room_Type" Type="System.String" DbType="VarChar(50)" CanBeNull="true" />
+      <Column Name="Bed_No" Type="System.Int32" DbType="Int" CanBeNull="true" />
     </Type>
   </Table>
   <Table Name="dbo.Discharge" Member="Discharges">
@@ -1941,6 +1942,8 @@
       <Column Name="Book_ID" Type="System.Int32" DbType="Int" CanBeNull="true" />
       <Column Name="IS_Active" Type="System.Boolean" DbType="Bit" CanBeNull="true" />
       <Column Name="OPDRoom" Type="System.Boolean" DbType="Bit" CanBeNull="true" />
+      <Column Name="Is_Multiple_Beds" Type="System.Boolean" DbType="Bit" CanBeNull="true" />
+      <Column Name="No_Of_Beds" Type="System.Int32" DbType="Int" CanBeNull="true" />
     </Type>
   </Table>
   <Table Name="dbo.AP_RequestForQuotation_Items" Member="AP_RequestForQuotation_Items">

@@ -70,6 +70,40 @@ namespace PMS
             txtFloorNo.Text = "";
             txtLocation.Text = "";
             ddlWarden.SelectedIndex = 0;
+            chkMultipleBeds.Checked = false;
+            txtNoOfBeds.Text = "";
+            lblPerBedCharge.Text = "-";
+        }
+
+        private bool TryParseBeds(out int beds)
+        {
+            beds = 0;
+            if (!int.TryParse(txtNoOfBeds.Text.Trim(), out beds))
+                return false;
+            return beds >= 2;
+        }
+
+        private void UpdatePerBedHint()
+        {
+            decimal charges;
+            if (!decimal.TryParse(txtRoom_Charges.Text.Trim(), out charges))
+            {
+                lblPerBedCharge.Text = "-";
+                return;
+            }
+
+            int beds = 1;
+            if (chkMultipleBeds.Checked && int.TryParse(txtNoOfBeds.Text.Trim(), out beds) && beds >= 2)
+                lblPerBedCharge.Text = (charges / beds).ToString("0.##");
+            else
+                lblPerBedCharge.Text = charges.ToString("0.##");
+        }
+
+        private void ShowError(string message)
+        {
+            string safe = message.Replace("'", "\\'");
+            ScriptManager.RegisterStartupScript(this.Page, this.GetType(), "roomErr",
+                "if(typeof Swal!=='undefined'){Swal.fire({icon:'error',title:'Error!',text:'" + safe + "'});}else{alert('" + safe + "');}", true);
         }
 
         private void LoadRoomData(int Rm_id)
@@ -91,6 +125,10 @@ namespace PMS
                 txtRoom_Charges.Text = Convert.ToString(rm.Room_Charges);
                 ddlWarden.SelectedValue = rm.Warden;
 
+                chkMultipleBeds.Checked = rm.Is_Multiple_Beds == true;
+                txtNoOfBeds.Text = chkMultipleBeds.Checked && rm.No_Of_Beds.HasValue ? rm.No_Of_Beds.Value.ToString() : "";
+                UpdatePerBedHint();
+
                 btnSave.Text = "Update";
             }
         }
@@ -101,6 +139,15 @@ namespace PMS
             try
             {
                 DataBaseDataContext db = new DataBaseDataContext();
+
+                bool isMultipleBeds = chkMultipleBeds.Checked;
+                int bedCount = 1;
+                if (isMultipleBeds && !TryParseBeds(out bedCount))
+                {
+                    ShowError("Enter a valid No. of Beds (2 or more).");
+                    return;
+                }
+
                 if (btnSave.Text == "Save")
                 {
                     Room rm = new  Room();
@@ -113,6 +160,8 @@ namespace PMS
                     rm.Location = txtLocation.Text;
                     rm.Warden = ddlWarden.SelectedValue;
                     rm.Room_Charges = Convert.ToDecimal(txtRoom_Charges.Text);
+                    rm.Is_Multiple_Beds = isMultipleBeds;
+                    rm.No_Of_Beds = isMultipleBeds ? (int?)bedCount : 1;
                     rm.Created_By = AppConfig.UserID;
                     rm.Created_Time = DateTime.Now;
                     rm.Book_ID = AppConfig.Book_ID;
@@ -133,6 +182,16 @@ namespace PMS
                                 where tbl.Room_ID == id
                                 select tbl).FirstOrDefault();
 
+                        if (!isMultipleBeds && rm.Is_Multiple_Beds == true)
+                        {
+                            bool occupied = db.Room_Allocations.Any(w => w.Room_ID == id && w.IsDischarge == false);
+                            if (occupied)
+                            {
+                                ShowError("Cannot disable multiple beds: this room has active bed allocations. Discharge them first.");
+                                return;
+                            }
+                        }
+
                         rm.Room_No = Convert.ToString(txtRoom_No.Text);
                         rm.Name = txtName.Text;
                         rm.Building_Type = ddlBuildingType.SelectedValue;
@@ -141,6 +200,8 @@ namespace PMS
                         rm.Location = txtLocation.Text;
                         rm.Warden = ddlWarden.SelectedValue;
                         rm.Room_Charges = Convert.ToDecimal(txtRoom_Charges.Text);
+                        rm.Is_Multiple_Beds = isMultipleBeds;
+                        rm.No_Of_Beds = isMultipleBeds ? (int?)bedCount : 1;
 
                         rm.Updated_By = AppConfig.UserID;
                         rm.Updated_Time = DateTime.Now;
@@ -181,6 +242,7 @@ namespace PMS
                 txtRoom_Charges.Text = charges.ToString();
 
             }
+            UpdatePerBedHint();
             ScriptManager.RegisterStartupScript(this.Page, this.GetType(), "bindDate", "bindDate();", true);
         }
 

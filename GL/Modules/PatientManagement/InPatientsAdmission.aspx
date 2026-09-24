@@ -3424,11 +3424,15 @@
                 var ddlRoom_No = $('#ctl00_MainContent_ddlroom').val();
                 var txtRoom_Type = $('#ctl00_MainContent_ddlRoomType').val();
                 var ddlDoctor = $('#ctl00_MainContent_ddlDoctor').val();
+                var roomBed = '';
 
                 var DichargChk = document.getElementById("ctl00_MainContent_cbDicharg_Slip").checked;
-                PageMethods.SaveRoomInformation(btnsave, PatID, InPatID, ddlRoom_No, txtRoom_Type, txtExpected_Discharge_Date, ddlDoctor, DichargChk, function (response) {
+                PageMethods.SaveRoomInformation(btnsave, PatID, InPatID, ddlRoom_No, txtRoom_Type, txtExpected_Discharge_Date, ddlDoctor, DichargChk, roomBed, function (response) {
                     debugger;
-
+                    if (response) {
+                        return showSaveError(response === 'ROOM_BED_TAKEN' ? 'This bed is already occupied. Please choose another bed.'
+                            : response === 'ROOM_NOT_FREE' ? 'This room is not free. Discharge the occupant first.' : response);
+                    }
                     SaveAllRecords();
                 });
             }
@@ -3437,10 +3441,14 @@
                 var ddlDoctor = $('#ctl00_MainContent_ddlDoctor').val();
                 var ddlRoom_No = $('#ctl00_MainContent_ddlRoom_No').val();
                 var txtRoom_Type = $('#ctl00_MainContent_txtRoom_Type').val();
+                var roomBed = $('#ctl00_MainContent_ddlRoomBed').val() || '';
                 var DichargChk = document.getElementById("ctl00_MainContent_cbDicharg_Slip").checked;
-                PageMethods.SaveRoomInformation(btnsave, PatID, InPatID, ddlRoom_No, txtRoom_Type, txtExpected_Discharge_Date, ddlDoctor, DichargChk, function (response) {
+                PageMethods.SaveRoomInformation(btnsave, PatID, InPatID, ddlRoom_No, txtRoom_Type, txtExpected_Discharge_Date, ddlDoctor, DichargChk, roomBed, function (response) {
                     debugger;
-
+                    if (response) {
+                        return showSaveError(response === 'ROOM_BED_TAKEN' ? 'This bed is already occupied. Please choose another bed.'
+                            : response === 'ROOM_NOT_FREE' ? 'This room is not free. Discharge the occupant first.' : response);
+                    }
                     SaveAllRecords();
                 });
 
@@ -3506,6 +3514,7 @@
             var txtBed_No = $('#ctl00_MainContent_txtBed_No').val();
             var ddlRoom_No = $('#ctl00_MainContent_ddlRoom_No').val();
             var txtRoom_Type = $('#ctl00_MainContent_txtRoom_Type').val();
+            var roomBed = $('#ctl00_MainContent_ddlRoomBed').val() || '';
 
             var admissionType = "0";
             var sehatCardNo = "0";
@@ -3577,7 +3586,7 @@
                 BirthFatherNationality, BirthMotherName, BirthMotherCNIC, BirthMotherOccupation,
                 BirthMotherNationality, BirthRegNumber, BirthRegDate, BirthRegistrar,
                 BirthUnionCouncil, BirthAddress, BirthCity, BirthProvince, BirthPostalCode,
-                BirthReligion, BirthAttendant, BirthRemarks, isCertificateGenrate,
+                BirthReligion, BirthAttendant, BirthRemarks, isCertificateGenrate, roomBed,
                 function (response) {
                     $('#btnSave').attr('disabled', false);
                     debugger;
@@ -3591,6 +3600,8 @@
                             SELECT_BED: 'Please Select Bed No.',
                             SELECT_ROOM: 'Please Select Room No.',
                             SELECT_PANEL: 'Please Select Panel Company.',
+                            ROOM_BED_TAKEN: 'This bed is already occupied. Please choose another bed.',
+                            ROOM_NOT_FREE: 'This room is not free. Discharge the occupant first.',
                             BILL_EXISTS: 'Patient already has bill(s). Admission cannot be modified.'
                         }[response];
                         $('#loadingimage').hide();
@@ -5658,6 +5669,7 @@
             var bedDiv = document.getElementById('<%= txtBed_No.ClientID%>').closest('.ipd-field') || document.getElementById('<%= txtBed_No.ClientID%>').closest('.col-lg-3');
             var roomDiv = document.getElementById('<%= ddlRoom_No.ClientID%>').closest('.ipd-field') || document.getElementById('<%= ddlRoom_No.ClientID%>').closest('.col-lg-3');
             var roomTypeDiv = document.getElementById('<%= txtRoom_Type.ClientID%>').closest('.ipd-field') || document.getElementById('<%= txtRoom_Type.ClientID%>').closest('.col-lg-3');
+            var roomBedDiv = document.getElementById('<%= ddlRoomBed.ClientID%>').closest('.ipd-field');
 
             if (Issuance_Of == 0) {
                 document.getElementById('<%= ddlRoom_No.ClientID%>').value = 0;
@@ -5678,6 +5690,7 @@
                 bedDiv.style.display = "none";
                 roomDiv.style.display = "none";
                 roomTypeDiv.style.display = "none";
+                roomBedDiv.style.display = "none";
             }
             else if (Issuance_Of == '001') {
                 document.getElementById('<%= ddlRoom_No.ClientID%>').value = 0;
@@ -5698,6 +5711,7 @@
                 bedDiv.style.display = "block";
                 roomDiv.style.display = "none";
                 roomTypeDiv.style.display = "none";
+                roomBedDiv.style.display = "none";
             }
             else {
                 document.getElementById('<%= ddlWard_No.ClientID%>').value = 0;
@@ -5716,6 +5730,7 @@
                 bedDiv.style.display = "block";
                 roomDiv.style.display = "block";
                 roomTypeDiv.style.display = "block";
+                roomBedDiv.style.display = "block";
             }
         }
 
@@ -5877,13 +5892,16 @@
                     var result;
                     $.each(item, function (key, value) {
                         var rows;
-                        if (value.PatientNmae == null || value.PatientNmae == "0")
-                            value.PatientNmae = 0;
-                        if (value.PatientNmae == 0) {
-                            rows = '<tr><td>' + value.PatientNmae + '</td><td><input type="hidden" name="ID" value="' + value.Room_ID + '"/><input type="hidden" name="Type" value="' + value.Room_Type + '"/><a href="#" onclick="Selectroom(this)" style="color:green"> ' + value.Room_No + ' </a> </td></tr>';
+                        var pname = (value.PatientNmae == null) ? '' : value.PatientNmae;
+                        var freeLabel = value.Is_Multiple_Beds
+                            ? ('Free' + (value.FreeBeds ? ' (Beds: ' + value.FreeBeds + ')' : ''))
+                            : 'Free';
+                        if (value.IsFull) {
+                            rows = '<tr><td>' + pname + '</td><td><input type="hidden" name="ID" value="' + value.Room_ID + '"/><input type="hidden" name="Type" value="' + value.Room_Type + '"/><font color="red">' + value.Room_No + '</font></td></tr>';
                         }
                         else {
-                            rows = '<tr><td>' + value.PatientNmae + '</td><td><input type="hidden" name="ID" value="' + value.Room_ID + '"/><input type="hidden" name="Type" value="' + value.Room_Type + '"/><font color="red">' + value.Room_No + '</font></td></tr>';
+                            var label = pname ? pname : freeLabel;
+                            rows = '<tr><td>' + label + '</td><td><input type="hidden" name="ID" value="' + value.Room_ID + '"/><input type="hidden" name="Type" value="' + value.Room_Type + '"/><input type="hidden" name="Multi" value="' + (value.Is_Multiple_Beds ? 1 : 0) + '"/><input type="hidden" name="FreeBeds" value="' + (value.FreeBeds || '') + '"/><input type="hidden" name="FreeRoom" value="' + (value.FullRoomFree ? 1 : 0) + '"/><a href="#" onclick="Selectroom(this)" style="color:green"> ' + value.Room_No + ' </a> </td></tr>';
                         }
                         $('#tblRooms').append(rows);
                     });
@@ -5979,6 +5997,22 @@
             var Type = $($(row).find('td input[name=Type]')[0]).val();
             $('#ctl00_MainContent_ddlRoom_No').val(ID);
 
+            var multi = $($(row).find('td input[name=Multi]')[0]).val() === '1';
+            var free = $($(row).find('td input[name=FreeBeds]')[0]).val() || '';
+            var freeRoom = $($(row).find('td input[name=FreeRoom]')[0]).val() === '1';
+
+            var ddl = $('#ctl00_MainContent_ddlRoomBed');
+            ddl.empty();
+            if (multi) {
+                var opts = '<option value="">Select Bed</option>';
+                if (freeRoom) opts += '<option value="">Full Room</option>';
+                $.each(free.split(','), function (i, b) {
+                    if (b !== '') opts += '<option value="' + b + '">Bed ' + b + '</option>';
+                });
+                ddl.html(opts).prop('disabled', false);
+            } else {
+                ddl.html('<option value="">Full Room</option>').prop('disabled', false);
+            }
         }
         function SelectroomRefer(anchor) {
             var row = $(anchor).parents('tr')[0];
@@ -7990,6 +8024,10 @@
                                                 <asp:DropDownList ID="txtRoom_Type" runat="server" AppendDataBoundItems="true" AutoPostBack="true" onChange="FillRooms()" CssClass="ipd-input"></asp:DropDownList>
                                             </ContentTemplate>
                                         </asp:UpdatePanel>
+                                    </div>
+                                    <div class="ipd-field" id="divRoomBed" style="display:none;">
+                                        <asp:Label ID="lblRoomBed" runat="server" CssClass="ipd-label" Text="Bed"></asp:Label>
+                                        <asp:DropDownList ID="ddlRoomBed" runat="server" AppendDataBoundItems="true" CssClass="ipd-input"></asp:DropDownList>
                                     </div>
                                     <div class="ipd-field">
                                         <asp:Label ID="lblprocedurename" runat="server" CssClass="ipd-label" Text="Procedure Name"></asp:Label>

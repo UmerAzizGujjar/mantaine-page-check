@@ -26040,6 +26040,8 @@ namespace PMS
 
         private string _Room_Type;
 
+        private System.Nullable<int> _Bed_No;
+
         #region Extensibility Method Definitions
         partial void OnLoaded();
         partial void OnValidate(System.Data.Linq.ChangeAction action);
@@ -26074,6 +26076,8 @@ namespace PMS
         partial void OnIsDischargeChanged();
         partial void OnRoom_TypeChanging(string value);
         partial void OnRoom_TypeChanged();
+        partial void OnBed_NoChanging(System.Nullable<int> value);
+        partial void OnBed_NoChanged();
         #endregion
 
         public Room_Allocation()
@@ -26377,6 +26381,26 @@ namespace PMS
                     this._Room_Type = value;
                     this.SendPropertyChanged("Room_Type");
                     this.OnRoom_TypeChanged();
+                }
+            }
+        }
+
+        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_Bed_No", DbType = "Int")]
+        public System.Nullable<int> Bed_No
+        {
+            get
+            {
+                return this._Bed_No;
+            }
+            set
+            {
+                if ((this._Bed_No != value))
+                {
+                    this.OnBed_NoChanging(value);
+                    this.SendPropertyChanging();
+                    this._Bed_No = value;
+                    this.SendPropertyChanged("Bed_No");
+                    this.OnBed_NoChanged();
                 }
             }
         }
@@ -45083,6 +45107,10 @@ namespace PMS
 
         private System.Nullable<bool> _OPDRoom;
 
+        private System.Nullable<bool> _Is_Multiple_Beds;
+
+        private System.Nullable<int> _No_Of_Beds;
+
         #region Extensibility Method Definitions
         partial void OnLoaded();
         partial void OnValidate(System.Data.Linq.ChangeAction action);
@@ -45121,6 +45149,10 @@ namespace PMS
         partial void OnIS_ActiveChanged();
         partial void OnOPDRoomChanging(System.Nullable<bool> value);
         partial void OnOPDRoomChanged();
+        partial void OnIs_Multiple_BedsChanging(System.Nullable<bool> value);
+        partial void OnIs_Multiple_BedsChanged();
+        partial void OnNo_Of_BedsChanging(System.Nullable<int> value);
+        partial void OnNo_Of_BedsChanged();
         #endregion
 
         public Room()
@@ -45464,6 +45496,46 @@ namespace PMS
                     this._OPDRoom = value;
                     this.SendPropertyChanged("OPDRoom");
                     this.OnOPDRoomChanged();
+                }
+            }
+        }
+
+        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_Is_Multiple_Beds", DbType = "Bit")]
+        public System.Nullable<bool> Is_Multiple_Beds
+        {
+            get
+            {
+                return this._Is_Multiple_Beds;
+            }
+            set
+            {
+                if ((this._Is_Multiple_Beds != value))
+                {
+                    this.OnIs_Multiple_BedsChanging(value);
+                    this.SendPropertyChanging();
+                    this._Is_Multiple_Beds = value;
+                    this.SendPropertyChanged("Is_Multiple_Beds");
+                    this.OnIs_Multiple_BedsChanged();
+                }
+            }
+        }
+
+        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_No_Of_Beds", DbType = "Int")]
+        public System.Nullable<int> No_Of_Beds
+        {
+            get
+            {
+                return this._No_Of_Beds;
+            }
+            set
+            {
+                if ((this._No_Of_Beds != value))
+                {
+                    this.OnNo_Of_BedsChanging(value);
+                    this.SendPropertyChanging();
+                    this._No_Of_Beds = value;
+                    this.SendPropertyChanged("No_Of_Beds");
+                    this.OnNo_Of_BedsChanged();
                 }
             }
         }
