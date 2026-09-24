@@ -2731,6 +2731,7 @@
     <Content Include="Reports\Patients\rptCounsltant_Wise_stat_report.rpt" />
     <Content Include="Reports\Patients\rptPatients_Info.rpt" />
     <Content Include="Reports\Pharmacy\rptMedicineExpiry.rpt" />
+    <Content Include="Reports\Pharmacy\rptMedicineLabel.rpt" />
     <Content Include="Reports\Pharmacy\rptPharmacyStock.rpt" />
     <Content Include="Reports\Pharmacy\rptSaleReport.rpt" />
     <Content Include="Reports\Pharmacy\rptSaleReportSummary.rpt" />

@@ -136,7 +136,7 @@
                 window.open(url, '_blank');
 
             }
-                        function PrintFinalBill() {
+            function PrintFinalBill() {
                 debugger;
                 var id = '<%=Request.QueryString["Bill_ID"]%>';
                 var locationInfo = window.location;
@@ -149,16 +149,30 @@
                 }
                 window.open(url, '_blank');
             }
-            function PrintEstimatedBill() {
+            function PrintIPDBill() {
                 debugger;
-                var InPatientID = $('#hdfPatient_ID').data('inpatid');
-
-                if (InPatientID && InPatientID != "0" && InPatientID != 0 && InPatientID != "") {
-                    window.open('../../ReportViewer.aspx?ReportName=InPatient_Advance_Bill&ReportTitle=Estimated Bill Report&Inpatient_ID=' + InPatientID);
-                } else {
-                    alert("No active in-patient admission found for this patient.");
+                var id = '<%=Request.QueryString["Bill_ID"]%>';
+                var locationInfo = window.location;
+                            var url = 'ReportViewer.aspx?ReportName=IPD_Bill_Base_Print&ReportTitle=IPD Bill Report&Bill_ID=' + id;
+                if (!locationInfo.origin.includes('localhost') || locationInfo.origin.includes('localhost')) {
+                    var urlInfo = window.location.href.split('/');
+                    var ip = urlInfo[2];
+                    var foldername = urlInfo[3];
+                    url = 'http://' + ip + '/' + foldername + '/ReportViewer.aspx?ReportName=IPD_Bill_Base_Print&ReportTitle=IPD Bill Report&Bill_ID=' + id;
                 }
+                window.open(url, '_blank');
             }
+            //function PrintEstimatedBill() {
+            //    debugger;
+            //    var InPatientID = $('#hdfPatient_ID').data('inpatid');
+
+            //    if (InPatientID && InPatientID != "0" && InPatientID != 0 && InPatientID != "") {
+            //        window.open('../../ReportViewer.aspx?ReportName=InPatient_Advance_Bill&ReportTitle=Estimated Bill Report&Inpatient_ID=' + InPatientID);
+            //    } else {
+            //        alert("No active in-patient admission found for this patient.");
+            //    }
+            //}
+
             function PrintCRV1() {
                 debugger;
                 var id = '<%= Request.QueryString["Bill_ID"]%>';
@@ -9069,7 +9083,7 @@
                         <input type="button" style="width: 110px; display: none;" id="btnPrintVoucher" class="btn btn-primry" value="Print Voucher" onclick="PrintVoucher();" />
                         <input type="button" style="width: 110px; display: none;" id="btnPrintVoucher2" class="btn btn-primry" value="Print Voucher 2"  onclick="PrintVoucher2();" />
                         <input type="button" style="width: 110px;" id="btnIPDFinalPrint" runat="server" class="btn btn-primry" value="Print Final Bill" onclick="PrintFinalBill();" />
-                        <input type="button" style="width: 130px;" id="btnEstimatedBill" runat="server" class="btn btn-primry" value="Estimated Bill" onclick="PrintEstimatedBill();" />
+                        <input type="button" style="width: 130px;" id="btnEstimatedBill" runat="server" class="btn btn-primry" value="IPD Bill" onclick="PrintIPDBill();" />
                         <input type="button" style="width: 110px; display: none;" value="Hospital Print" onclick="PrintHospital();" />
                         <input type="button" style="width: 110px; display: none;" value="Consult Print" onclick="PrintConsultant();" />
                         <input type="button" style="width: 100px; display: none;" value="Patient Copy" name="name" onclick="BackToPrintPatient();"  />
