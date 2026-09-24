@@ -429,6 +429,9 @@ namespace PMS
                 if (qury3 == "There is no row at position 0.")
                     qury3 = "";
                 lbl1.Text = qury3;
+                string rptTitle = Request.QueryString["rptTitle"] ?? "";
+                if (rptTitle.StartsWith("Student", StringComparison.OrdinalIgnoreCase))
+                    lbl1.Text = "Student";
                 if (!Get_URL().Contains("PatientsDepartmentWise.aspx"))
                 {
                     // Update lbl2 only if it's not set by PatientsDepartmentWise
