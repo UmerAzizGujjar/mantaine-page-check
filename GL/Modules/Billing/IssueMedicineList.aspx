@@ -58,6 +58,14 @@
             background-color: #D97706;
         }
 
+        .pharma-btn-label {
+            background-color: #8B5CF6;
+        }
+
+        .pharma-btn-label:hover {
+            background-color: #7C3AED;
+        }
+
         #tbl a.pharma-action-btn {
             color: #ffffff !important;
         }
@@ -127,6 +135,10 @@
             var url = '../../ReportViewer.aspx?ReportName=PharmacySlip&ReportTitle=PharmacySlip&Bill_ID=' + Bill_ID;
             window.open(url, '_blank');
 
+        }
+        function PrintMedicineLabel(Bill_ID) {
+            var url = '../../ReportViewer.aspx?ReportName=MedicineLabel&ReportTitle=MedicineLabel&Bill_ID=' + Bill_ID;
+            window.open(url, '_blank');
         }
         function PrintVoucher(Bill_ID) {
             var url = '../../ReportViewer.aspx?ReportName=Voucher&ReportTitle=PharmacySlip&TransID=' + Bill_ID + '&TransType=PSV';
@@ -390,11 +402,12 @@
                             var res = '<a href="#" class="pharma-action-btn pharma-btn-upload" onclick="PrintInvoice(' + full.Bill_ID + ')" title="Upload Slip"><i class="fa fa-upload"></i></a>';
 
                             var print = '<a class="pharma-action-btn pharma-btn-print" href="#" onclick="PrintBill(' + full.Bill_ID + ')" id="btnprint" title="Print Bill"><i class="fa fa-print"></i></a>';
+                            var label = '<a class="pharma-action-btn pharma-btn-label" href="#" onclick="PrintMedicineLabel(' + full.Bill_ID + ')" id="btnlabelprint" title="Print Medicine Labels"><i class="fa fa-tag"></i></a>';
                             var voucher = '<a class="pharma-action-btn pharma-btn-voucher" href="#" onclick="PrintVoucher(' + full.Bill_ID + ')" id="btnvoucherprint" title="Print Voucher"><i class="fa fa-file-text-o"></i></a>';
                             var result;
-                            result = res + print + voucher;
+                            result = res + print + label + voucher;
                             return result;
-                        }, "width": "13%", "orderable": false
+                        }, "width": "15%", "orderable": false
                     }
                 ],
                 "initComplete": function (settings, json) {

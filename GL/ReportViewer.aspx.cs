@@ -824,6 +824,78 @@ namespace PMS
                 catch {
                 }
             }
+            else if (reportName == "IPD_Bill_Base_Print")
+            {
+                var billId = Request.QueryString["Bill_ID"].ToString();
+                var logoPath = DBClass.getField("SELECT dbo.GetCompanyLogo()");
+                string companyAddress = DBClass.getField("select Company_Address from sys_Companys where Company_ID = " + AppConfig.Company_ID + "").ToString();
+                var user_id = AppConfig.UserID;
+                var userName = DBClass.getField($"SELECT dbo.getUserName('{user_id}')");
+
+
+                reportPath += "InPatient/rptIPD_Final_Bill_Print.rpt";
+                rd.Load(reportPath);
+                rd.SetParameterValue("CompanyName", AppConfig.Company_Name);
+                rd.SetParameterValue("User_ID", userName);
+                rd.SetParameterValue("CompanyLogo", logoPath);
+                rd.SetParameterValue("Title", reportTitle);
+                rd.SetParameterValue("Address", companyAddress);
+
+                rd.SetParameterValue("@Bill_ID", billId);
+
+                // ===== DYNAMIC QR CODE GENERATION (NO DATABASE STORAGE) =====
+                try
+                {
+                    string sql = $@"
+        SELECT ISNULL(rp.mr_no_sequence, '') AS mr_no_sequence,
+               ISNULL(rp.Full_Name, '') AS Full_Name,
+               ISNULL(CONVERT(VARCHAR, rp.Age_years), '') AS Age_years,
+               ISNULL(rp.Gender, '') AS Gender
+        FROM Reg_patient rp
+        JOIN In_Patient ip ON ip.patient_id = rp.pat_id
+        JOIN Ar_Billings ab ON ab.In_Patient_ID = ip.In_Patient_ID
+        WHERE ab.Bill_ID = {billId}";
+
+                    DataTable patientData = DBClass.getDataTable(sql);
+
+                    if (patientData.Rows.Count > 0)
+                    {
+                        string qrContent = $"MR:{patientData.Rows[0]["mr_no_sequence"]}|Name:{patientData.Rows[0]["Full_Name"]}|Age:{patientData.Rows[0]["Age_years"]}|Gender:{patientData.Rows[0]["Gender"]}";
+
+                        // Save to temp file instead of passing bytes
+                        string tempQrPath = Path.Combine(Path.GetTempPath(), $"QR_{billId}_{Guid.NewGuid()}.png");
+
+                        using (QRCodeGenerator qrGenerator = new QRCodeGenerator())
+                        {
+                            QRCodeData qrCodeData = qrGenerator.CreateQrCode(qrContent, QRCodeGenerator.ECCLevel.Q);
+                            using (PngByteQRCode qrCodeImage = new PngByteQRCode(qrCodeData))
+                            {
+                                byte[] qrBytes = qrCodeImage.GetGraphic(10);
+                                File.WriteAllBytes(tempQrPath, qrBytes);
+                            }
+                        }
+
+                        // Pass FILE PATH as string parameter
+                        rd.SetParameterValue("QRImagePath", tempQrPath);
+                    }
+                    else
+                    {
+                        rd.SetParameterValue("QRImagePath", "");
+                    }
+                }
+                catch (Exception ex)
+                {
+                    rd.SetParameterValue("QRImagePath", "");
+                }
+                try
+                {
+                    rd.SetParameterValue("@Bill_ID", Convert.ToInt32(billId), rd.Subreports[0].Name.ToString());
+                    rd.SetParameterValue("@Bill_ID", Convert.ToInt32(billId), rd.Subreports[1].Name.ToString());
+                    rd.SetParameterValue("@Bill_ID", Convert.ToInt32(billId), rd.Subreports[2].Name.ToString());
+                }
+                catch {
+                }
+            }
             else if (reportName == "DischargePrint")
             {
 
@@ -4100,6 +4172,23 @@ namespace PMS
                 rd.SetParameterValue("CompanyLogo", logoPath);
                 rd.SetParameterValue("Address", companyAddress);
             }
+            else if (reportName == "Narcotic_Medicine_Register_Report")
+            {
+
+                string StartDateTime = Request.QueryString["StartDateTime"].ToString();
+                string EndDateTime = Request.QueryString["EndDateTime"].ToString();
+                string companyAddress = DBClass.getField("select Company_Address from sys_Companys where Company_ID = " + AppConfig.Company_ID + "").ToString();
+                var logoPath = DBClass.getField("SELECT dbo.GetCompanyLogo()");
+
+                reportPath += "Pharmacy/rpt_Narcotics_Register.rpt";
+                rd.Load(reportPath);
+                rd.SetParameterValue("CompanyName", AppConfig.Company_Name);
+                rd.SetParameterValue("Title", reportTitle);
+                rd.SetParameterValue("@startDate", StartDateTime);
+                rd.SetParameterValue("@endDate", EndDateTime);
+                rd.SetParameterValue("CompanyLogo", logoPath);
+                rd.SetParameterValue("Address", companyAddress);
+            }
             else if (reportName == "Lab_Test_Result_Culture")
             {
 
@@ -6143,6 +6232,13 @@ namespace PMS
                 rd.SetParameterValue("Address", companyAddress);
                 rd.SetParameterValue("@BillId", Convert.ToInt32(Request.QueryString["Bill_ID"]));
                 rd.SetParameterValue("CompanyLogo", logoPath);
+            }
+            else if (reportName == "MedicineLabel")
+            {
+                // one small medicine label per line of the bill (spMedicineLabelPrint)
+                reportPath += "Pharmacy/rptMedicineLabel.rpt";
+                rd.Load(reportPath);
+                rd.SetParameterValue("@BillId", Convert.ToInt32(Request.QueryString["Bill_ID"]));
             }
             else if (reportName == "PharmacyReturnSlip")
             {

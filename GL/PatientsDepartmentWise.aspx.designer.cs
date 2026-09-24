@@ -969,24 +969,6 @@ namespace PMS
         protected global::System.Web.UI.HtmlControls.HtmlGenericControl Time_Row;
 
         /// <summary>
-        /// hideStartDateRow control.
-        /// </summary>
-        /// <remarks>
-        /// Auto-generated field.
-        /// To modify move field declaration from designer file to code-behind file.
-        /// </remarks>
-        protected global::System.Web.UI.HtmlControls.HtmlGenericControl hideStartDateRow;
-
-        /// <summary>
-        /// cbHideStartDate control.
-        /// </summary>
-        /// <remarks>
-        /// Auto-generated field.
-        /// To modify move field declaration from designer file to code-behind file.
-        /// </remarks>
-        protected global::System.Web.UI.HtmlControls.HtmlInputCheckBox cbHideStartDate;
-
-        /// <summary>
         /// sttTime control.
         /// </summary>
         /// <remarks>
@@ -1021,6 +1003,24 @@ namespace PMS
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
         protected global::System.Web.UI.WebControls.TextBox txtETime;
+
+        /// <summary>
+        /// hideStartDateRow control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.HtmlControls.HtmlGenericControl hideStartDateRow;
+
+        /// <summary>
+        /// cbHideStartDate control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.HtmlControls.HtmlInputCheckBox cbHideStartDate;
 
         /// <summary>
         /// tr_Export control.

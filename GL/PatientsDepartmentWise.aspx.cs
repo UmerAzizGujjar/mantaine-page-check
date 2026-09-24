@@ -3382,6 +3382,15 @@ namespace PMS
                     Time_Row.Visible = true;
                     AllowPatientRecord = false;
                 }
+                else if (this.PageTitle == "Narcotic_Medicine_Register_Report")
+                {
+                    string x = "Narcotic Medicine Report";
+                    Master.Label2.Text = x;
+                    Master.GetMenuName();
+                    DateDiv.Visible = true;
+                    Time_Row.Visible = true;
+                    AllowPatientRecord = false;
+                }
                 else if (this.PageTitle == "Lab_Test_Result_Culture")
                 {
                     string x = "Lab Test Result Culture Report";
