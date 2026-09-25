@@ -83,9 +83,14 @@ namespace PMS.Modules.PatientManagement
             return result;
         }
         [WebMethod]
-        public static string LoadPatientsToApprove_OPD(string pat_type, string search, string cost_center)
+        public static string LoadPatientsToApprove_OPD(string pat_type, string search, string cost_center, string start_date, string end_date)
         {
             string result = string.Empty;
+
+            DateTime startDt;
+            DateTime endDt;
+            object startParam = DateTime.TryParse(start_date, out startDt) ? (object)startDt : DBNull.Value;
+            object endParam = DateTime.TryParse(end_date, out endDt) ? (object)endDt : DBNull.Value;
 
             using (DataBaseDataContext db = new DataBaseDataContext())
             using (SqlConnection con = new SqlConnection(db.Connection.ConnectionString))
@@ -95,6 +100,8 @@ namespace PMS.Modules.PatientManagement
                 cmd.Parameters.AddWithValue("@pat_type", (object)pat_type ?? "0");
                 cmd.Parameters.AddWithValue("@search", (object)search ?? "");
                 cmd.Parameters.AddWithValue("@cost_center", (object)cost_center ?? "0");
+                cmd.Parameters.AddWithValue("@start_date", startParam);
+                cmd.Parameters.AddWithValue("@end_date", endParam);
                 con.Open();
 
                 var rows = new List<Dictionary<string, object>>();

@@ -9,6 +9,7 @@
         $(document).ready(function () {
             FillPatientType();
             FillCostCenter();
+            InitDateFilters();
             GetOPDToApproveList();
 
             $('#ddlpatientType').on('change', function () {
@@ -202,18 +203,55 @@
             }
         }
 
+        function pad2(n) { return n < 10 ? '0' + n : '' + n; }
+
+        function fmtDateTime(d) {
+            return d.getFullYear() + '-' + pad2(d.getMonth() + 1) + '-' + pad2(d.getDate()) +
+                ' ' + pad2(d.getHours()) + ':' + pad2(d.getMinutes());
+        }
+
+        function InitDateFilters() {
+            var now = new Date();
+            var start = new Date(now.getFullYear(), now.getMonth(), now.getDate(), 0, 0);
+            var end = new Date(now.getFullYear(), now.getMonth(), now.getDate(), 23, 59);
+
+            $('#txtStartDate').val(fmtDateTime(start)).datetimepicker({
+                format: 'Y-m-d H:i',
+                step: 5,
+                onChangeDateTime: function () { GetOPDToApproveList(); }
+            });
+
+            $('#txtEndDate').val(fmtDateTime(end)).datetimepicker({
+                format: 'Y-m-d H:i',
+                step: 5,
+                onChangeDateTime: function () { GetOPDToApproveList(); }
+            });
+        }
+
         function GetOPDToApproveList() {
             var pat_type = $('#ddlpatientType').val();
             if (!pat_type) pat_type = '0';
             var cost_center = $('#ddlCostCenter').val();
             if (!cost_center) cost_center = '0';
+            var start_date = $('#txtStartDate').val() || '';
+            var end_date = $('#txtEndDate').val() || '';
+
+            if (start_date && end_date && new Date(start_date.replace(' ', 'T')) > new Date(end_date.replace(' ', 'T'))) {
+                Swal.fire({
+                    icon: 'warning',
+                    title: 'Invalid Range',
+                    text: 'Start date/time cannot be later than end date/time.',
+                    confirmButtonColor: '#d33'
+                });
+                return;
+            }
 
             $.ajax({
                 url: 'OPD_Pending_Approvals.aspx/LoadPatientsToApprove_OPD',
                 type: 'post',
                 contentType: 'application/json;charset=utf-8',
                 dataType: 'json',
-                data: JSON.stringify({ "pat_type": pat_type, "search": "", "cost_center": cost_center }),
+                data: JSON.stringify({ "pat_type": pat_type, "search": "", "cost_center": cost_center, "start_date": start_date, "end_date": end_date }),
                 success: function (_data) {
                     var data = JSON.parse(_data.d);
                     selectedRows = {};
@@ -398,6 +436,17 @@
     </script>
 </asp:Content>
 <asp:Content ID="Content2" ContentPlaceHolderID="MainContent" runat="server">
+
+    <div class="row" style="margin-bottom: 10px;">
+        <div class="col-lg-3 col-md-3 col-sm-6">
+            <label>Start Date / Time</label>
+            <input type="text" id="txtStartDate" class="form-control" readonly="readonly" />
+        </div>
+        <div class="col-lg-3 col-md-3 col-sm-6">
+            <label>End Date / Time</label>
+            <input type="text" id="txtEndDate" class="form-control" readonly="readonly" />
+        </div>
+    </div>
 
     <div class="row" style="margin-bottom: 10px;">
         <div class="col-lg-2 col-md-2 col-sm-4">
