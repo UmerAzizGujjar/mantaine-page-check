@@ -28,6 +28,14 @@
         function goToListView() {
             window.location.href = '<%= ResolveUrl("~/Modules/WardAndRooms/RoomView.aspx") %>';
         }
+        function toggleBeds(cb) {
+            var div = document.getElementById('divNoOfBeds');
+            if (div) div.style.display = cb.checked ? 'block' : 'none';
+        }
+        $(document).ready(function () {
+            var cb = document.getElementById('<%= chkMultipleBeds.ClientID %>');
+            if (cb) toggleBeds(cb);
+        });
     </script>
 </asp:Content>
 <asp:Content ID="Content2" ContentPlaceHolderID="MainContent" runat="server">
@@ -115,6 +123,7 @@
                             </Triggers>
                             <ContentTemplate>
                                 <asp:TextBox ID="txtRoom_Charges" runat="server" CssClass="form-control"></asp:TextBox>
+                                <div class="text-muted" style="font-size:11px; margin-top:3px;">Per-bed charge (auto): <asp:Label ID="lblPerBedCharge" runat="server" Text="-"></asp:Label></div>
                             </ContentTemplate>
                         </asp:UpdatePanel>
                         <asp:RequiredFieldValidator ID="RequiredFieldValidator1" runat="server" ControlToValidate="txtRoom_Charges" ErrorMessage="Enter Charges" Text="*"></asp:RequiredFieldValidator>
@@ -125,6 +134,22 @@
                                     <asp:Image ID="image1" ImageUrl="~/images/loading.gif" runat="server" Width="32px" /></div>
                             </ProgressTemplate>
                         </asp:UpdateProgress>
+                    </div>
+                </div>
+                <div class="row" style="margin-top:10px;">
+                    <div class="col-md-6 col-sm-12">
+                        <label style="font-weight:normal; margin-top:6px;">
+                            <asp:CheckBox ID="chkMultipleBeds" runat="server" onclick="toggleBeds(this);" /> Multiple Beds
+                        </label>
+                        <div class="text-muted" style="font-size:11px;">Tick to allocate this room bed-wise (each bed separately).</div>
+                    </div>
+                    <div class="col-md-6 col-sm-12" id="divNoOfBeds" style="display:none;">
+                        <asp:Label ID="lblNoOfBeds" runat="server" Text="No. of Beds *" CssClass="pr-asp-label"></asp:Label>
+                        <div class="input-group">
+                            <div class="input-group-prepend"><span class="input-group-text"><i class="fa fa-th"></i></span></div>
+                            <asp:TextBox ID="txtNoOfBeds" runat="server" CssClass="form-control"></asp:TextBox>
+                        </div>
+                        <div class="text-muted" style="font-size:11px;">e.g. 2 for a twin-sharing room.</div>
                     </div>
                 </div>
             </div>

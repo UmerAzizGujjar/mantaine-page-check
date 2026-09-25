@@ -35,7 +35,10 @@ namespace PMS
                                      Floor_No = r.Floor_No,
                                      Location = r.Location,
                                      Warden = r.Warden,
-                                     Charges_Per_Day = r.Room_Charges
+                                     Charges_Per_Day = r.Room_Charges,
+                                     Beds = r.No_Of_Beds,
+                                     Is_Multiple_Beds = r.Is_Multiple_Beds,
+                                     Per_Bed_Charge = (r.Is_Multiple_Beds == true && r.No_Of_Beds > 0) ? (r.Room_Charges / r.No_Of_Beds) : r.Room_Charges
                                  };
 
                 if (!string.IsNullOrEmpty(searchValue))

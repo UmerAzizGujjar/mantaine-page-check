@@ -34,6 +34,17 @@
              GetDepartments();
              loadItemList();
              FillAccountCategory();
+             $('#txtsTime').ptTimeSelect({});
+             $('#txteTime').ptTimeSelect({});
+             $('#txtsTime').val('12:00 AM');
+             $('#txteTime').val('11:59 PM');
+             loadItemCodeList();
+             loadManufacturerList();
+             if ('<%= Request.QueryString["rptTitle"] %>' == 'IWNSRC') {
+                 $('#ctl00_MainContent_rowItem').hide();
+                 $('#ctl00_MainContent_rowWareHouse').hide();
+                 $('#ctl00_MainContent_rowInventory_Org').hide();
+             }
              $('#<%= btnPreview.ClientID %>').click(function () {
                  var exporttopdf = document.getElementById('<%= chkExportPDF.ClientID %>').checked;
                  var urlParams = new URLSearchParams(window.location.search);
@@ -65,6 +76,29 @@
                          '&Inventory_Org=' + encodeURIComponent(ddlinvOrg) +
                          '&ExportPDF=' + exporttopdf;
 
+                     window.open(url, '_blank');
+                 }
+                 else if (type == 'IWNSRC')
+                 {
+                     $('#ctl00_MainContent_rowItem').hide();
+                     $('#ctl00_MainContent_rowWareHouse').hide();
+                     $('#ctl00_MainContent_rowInventory_Org').hide();
+
+                     var exporttopdf = document.getElementById('<%= chkExportPDF.ClientID %>').checked;
+                     var stockOnly = document.getElementById('chkStockOnly').checked;
+                     var startDateTime = $('#txtsDate').val() + ' ' + $('#txtsTime').val();
+                     var endDateTime = $('#txteDate').val() + ' ' + $('#txteTime').val();
+
+                     var url = '../../ReportViewer.aspx?ReportName=ItemWiseNetSaleConcise'
+                         + '&ReportTitle=' + encodeURIComponent('Item Wise Net Sales from ' + startDateTime + ' to ' + endDateTime)
+                         + '&StartDate=' + encodeURIComponent($('#txtsDate').val())
+                         + '&StartTime=' + encodeURIComponent($('#txtsTime').val())
+                         + '&EndDate=' + encodeURIComponent($('#txteDate').val())
+                         + '&EndTime=' + encodeURIComponent($('#txteTime').val())
+                         + '&ItemCode=' + encodeURIComponent($('#ddlItemName').val() || '0')
+                         + '&Manufacturer=' + encodeURIComponent($('#ddlManufacturer').val() || '0')
+                         + '&StockOnly=' + stockOnly
+                         + '&ExportPDF=' + exporttopdf;
                      window.open(url, '_blank');
                  }
                  else
@@ -151,7 +185,7 @@
              return options;
          }
 
-            function loadItemList(rowlength) {
+function loadItemList(rowlength) {
                 debugger;
                 var optionsitem = '';
                 var length = rowlength;
@@ -164,7 +198,35 @@
                     });
                     $('#ddlStartItemCode').html(optionsitem);                    
                     $('#ddlEndItemCode').html(optionsitem);
-                             
+                              
+                },
+               function (error) {
+                   alert(error.get_message());
+               });
+            }
+
+            function loadItemCodeList() {
+                PageMethods.loadItemCodeList(function (resp) {
+                    var optionsitem = '<option value="0">Please Select</option>';
+                    $.each(JSON.parse(resp), function (key, value) {
+                        optionsitem += '<option value="' + value.Item_Code + '" >' + value.name + '</option>';
+                    });
+                    $('#ddlItemName').html(optionsitem);
+                    $('#ddlItemName').trigger('change');
+                },
+               function (error) {
+                   alert(error.get_message());
+               });
+            }
+
+            function loadManufacturerList() {
+                PageMethods.GetManufacturers(function (resp) {
+                    var options = '<option value="0">Please Select</option>';
+                    $.each(JSON.parse(resp), function (key, value) {
+                        options += '<option value="' + value.DataValue_Description + '" >' + value.DataValue_Description + '</option>';
+                    });
+                    $('#ddlManufacturer').html(options);
+                    $('#ddlManufacturer').trigger('change');
                 },
                function (error) {
                    alert(error.get_message());
@@ -187,6 +249,36 @@
                     <input type="text" id="txteDate" name="txtsDate"/>        
                 </td>
              </tr>  
+            <tr id="rowTimes">
+                <td class="auto-style2">Start Time </td>
+                <td>
+                    <input type="text" id="txtsTime" name="txtsTime" />
+                </td>
+                <td class="auto-style4"></td>
+                <td class="auto-style5">End Time </td>
+                <td>
+                    <input type="text" id="txteTime" name="txteTime" />
+                </td>
+            </tr>
+            <tr id="rowItemName">
+                <td class="auto-style2">Item Name </td>
+                <td>
+                    <select id="ddlItemName"></select>
+                </td>
+                <td class="auto-style4"></td>
+                <td class="auto-style5">Manufacturer </td>
+                <td>
+                    <select id="ddlManufacturer"></select>
+                </td>
+            </tr>
+            <tr id="rowStockOnly">
+                <td class="auto-style2">Only Stock &gt; 0</td>
+                <td>
+                    <div class="form-check" style="display: inline-flex; width: 26px;">
+                        <input class="form-check-input" type="checkbox" id="chkStockOnly" />
+                    </div>
+                </td>
+            </tr>
             <tr id="rowItem" runat="server">
                 <td class="auto-style2">Start Item Code </td>
                 <td>

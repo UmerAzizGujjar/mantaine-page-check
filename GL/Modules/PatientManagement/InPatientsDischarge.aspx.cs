@@ -1983,6 +1983,27 @@ namespace PMS
                 }
                 OPD.Discharge = chkdischarge;
 
+                if (chkdischarge == true)
+                {
+                    var activeRooms = db.Room_Allocations
+                        .Where(r => r.Patient_ID == Convert.ToInt32(Patient_ID) && r.In_Patient_ID == Convert.ToInt32(ID) && r.IsDischarge == false)
+                        .ToList();
+                    foreach (var room in activeRooms)
+                    {
+                        room.IsDischarge = true;
+                        room.To_Date = DateTime.Now;
+                    }
+
+                    var activeWards = db.Ward_Allocations
+                        .Where(w => w.Patient_ID == Convert.ToInt32(Patient_ID) && w.InPatient_ID == ID.ToString() && w.IsDischarge == false)
+                        .ToList();
+                    foreach (var ward in activeWards)
+                    {
+                        ward.IsDischarge = true;
+                        ward.To_TimeDate = DateTime.Now;
+                    }
+                }
+
                 OPD.Prevention_Precaution = txtAdvice;
                 if (btnsave == "Save")
                 {

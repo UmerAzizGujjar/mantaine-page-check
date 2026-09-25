@@ -94,11 +94,12 @@ namespace PMS
                     var Total_pat = _dbContext.Reg_patients.Count();
                     var pat = from a in _dbContext.Reg_patients
                               where (
-                                    (a.Patient_No.ToString().Contains(searchValue) || a.Mobile1.Contains(searchValue) ||a.mr_no_sequence.Contains(searchValue) || a.Full_Name.Contains(searchValue) || a.NIC.Contains(searchValue)))
+                                    (a.Patient_No.ToString().Contains(searchValue) || a.Mobile1.Contains(searchValue) ||a.mr_no_sequence.Contains(searchValue) || a.Old_Mr_no_sequence.Contains(searchValue) || a.Full_Name.Contains(searchValue) || a.NIC.Contains(searchValue)))
                               select new
                               {
                                   pat_id = a.pat_id,
                                   MRNO = a.mr_no_sequence,
+                                  Old_Mr_no_sequence = a.Old_Mr_no_sequence,
                                   Patient_No = a.Patient_No,
                                   Full_Name = a.Full_Name,
                                   Age_years = a.Age_years,

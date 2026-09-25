@@ -66,14 +66,21 @@ namespace PMS
                                            select new{
                                                rm.Room_ID,
                                                Room_Type = db.GetDataValueName("Room Type", rm.Room_Type),
-                                               rm.Room_Charges
+                                               rm.Room_Charges,
+                                               rm.Is_Multiple_Beds,
+                                               rm.No_Of_Beds
                                            }).FirstOrDefault();
                     if (RoomTypeQry != null)
                     {
                         txtRoom_Type.Text = RoomTypeQry.Room_Type;
 
                         if (RoomTypeQry.Room_Charges != null)
-                            txtRoom_Charges.Text = RoomTypeQry.Room_Charges.ToString();
+                        {
+                            decimal charge = RoomTypeQry.Room_Charges.Value;
+                            if (RoomTypeQry.Is_Multiple_Beds == true && RoomTypeQry.No_Of_Beds > 0)
+                                charge = charge / RoomTypeQry.No_Of_Beds.Value;
+                            txtRoom_Charges.Text = charge.ToString("0.##");
+                        }
                     }
                 }
 
@@ -224,7 +231,9 @@ namespace PMS
                               select new
                               {
                                   Room_Type = db.GetDataValueName("Room Type", tbl_room.Room_Type),
-                                  tbl_room.Room_Charges
+                                  tbl_room.Room_Charges,
+                                  tbl_room.Is_Multiple_Beds,
+                                  tbl_room.No_Of_Beds
                               }).FirstOrDefault();
 
             if (room_Specs != null)
@@ -232,7 +241,12 @@ namespace PMS
                 txtRoom_Type.Text = room_Specs.Room_Type;
 
                 if (room_Specs.Room_Charges != null)
-                    txtRoom_Charges.Text = room_Specs.Room_Charges.ToString();
+                {
+                    decimal charge = room_Specs.Room_Charges.Value;
+                    if (room_Specs.Is_Multiple_Beds == true && room_Specs.No_Of_Beds > 0)
+                        charge = charge / room_Specs.No_Of_Beds.Value;
+                    txtRoom_Charges.Text = charge.ToString("0.##");
+                }
             }
         }
 

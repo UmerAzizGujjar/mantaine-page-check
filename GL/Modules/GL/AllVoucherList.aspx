@@ -31,7 +31,7 @@
         }
 
         function LoadPage() {
-            $("#example").DataTable({
+            var table = $("#example").DataTable({
                 "processing": true,
                 "serverSide": true,
                 "destroy": true,
@@ -82,6 +82,10 @@
                     }
                 ],
                 "order": [[0, "desc"]]
+            });
+
+            $('#ddlVoucherType, #ddlVoucherName').off('change.avf').on('change.avf', function () {
+                table.ajax.reload();
             });
 }
 function PrintReport(ID, Voucher_Type ) {

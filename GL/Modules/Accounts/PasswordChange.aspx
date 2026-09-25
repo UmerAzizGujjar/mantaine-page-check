@@ -53,7 +53,7 @@
                                     htmlContainer: 'swal-big-text'
                                 }
                             }).then(function () {
-                                window.location.reload();
+                                window.location.href = '../../Login.aspx';
                             });
                         }
                         else {

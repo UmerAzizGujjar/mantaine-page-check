@@ -289,7 +289,7 @@
                 lengthChange: true,
                 columnDefs: savedVisibility ? [] : [
                     { targets: [0], visible: false },
-                    { targets: [8], className: "noVis" }
+                    { targets: [9], className: "noVis" }
                 ],
 
                 buttons: [
@@ -354,6 +354,7 @@
                 columns: [
                     { data: "pat_id", visible: false, orderable: false },
                     { data: "MRNO", name: "MRNO" },
+                    { data: "Old_Mr_no_sequence", name: "Old_Mr_no_sequence" },
                     { data: "Full_Name" },
                     { data: "Age_years", name: "Age_years" },
                     {
@@ -415,7 +416,7 @@
                             api.columns().every(function (index) {
                                 if (index === 0) {
                                     this.visible(false); 
-                                } else if (index === 8) {
+                                } else if (index === 9) {
                                     this.visible(true); 
                                 } else {
                                     this.visible(savedVisibility[index]);
@@ -500,6 +501,7 @@
                     <tr>
                         <th>Pat ID</th>
                         <th>MR No.</th>
+                        <th>Old MR No.</th>
                         <th>Name</th>
                         <th>Age</th>
                         <th>Created Date</th>
