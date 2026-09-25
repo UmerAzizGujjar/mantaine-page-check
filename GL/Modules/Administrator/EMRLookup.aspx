@@ -122,10 +122,10 @@
                 contentType: "application/json; charset=utf-8",
                 dataType: "json",
                 success: function (response) {
-                    renderDataTable('#tblServices', response.d || [], true);
+                    renderDataTable('#tblServices', response.d || [], true, false);
                 },
                 error: function () {
-                    renderDataTable('#tblServices', [], true);
+                    renderDataTable('#tblServices', [], true, false);
                 }
             });
         }
@@ -144,13 +144,13 @@
                 dataType: "json",
                 success: function (response) {
                     var rows = response.d || [];
-                    renderDataTable('#tblRadiology', rows, false);
+                    renderDataTable('#tblRadiology', rows, false, true);
                     if (rows.length === 0) {
                         swalMsg('info', 'No Result', 'No radiology result for order ' + orderNo);
                     }
                 },
                 error: function () {
-                    renderDataTable('#tblRadiology', [], false);
+                    renderDataTable('#tblRadiology', [], false, true);
                     swalMsg('error', 'Error!', 'Failed to fetch radiology results.');
                 }
             });
@@ -209,7 +209,7 @@
             $t.html(html);
         }
 
-        function renderDataTable(selector, rows, withAction) {
+        function renderDataTable(selector, rows, withAction, withSearch) {
             var $t = $(selector);
 
             if ($.fn.DataTable.isDataTable(selector)) {
@@ -257,7 +257,7 @@
                 "paging": true,
                 "pageLength": 10,
                 "lengthMenu": [10, 25, 50, 100],
-                "searching": true,
+                "searching": !!withSearch,
                 "ordering": true,
                 "info": true,
                 "scrollX": true,
