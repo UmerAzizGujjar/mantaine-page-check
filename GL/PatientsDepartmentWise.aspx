@@ -516,6 +516,21 @@
                         window.open(url, '_blank');
 
                     }
+                    else if (rptTitle == "ManufacturerWiseStockInHand") {
+                        var exporttopdf = document.getElementById('<%= chkExportPDF.ClientID %>').checked;
+                        var endDate = $('#ctl00_MainContent_txtEnd_Date').val();
+                        var manufacturer = $('#ctl00_MainContent_ddlDepartments').val() || '0';
+                        var itemName = $('#ctl00_MainContent_ddlItemName').val() || '0';
+                        var warehouse = $('#ctl00_MainContent_ddlwareHouse').val() || '0';
+                        var url = 'ReportViewer.aspx?ReportName=ManufacturerWiseStockInHand'
+                            + '&ReportTitle=' + encodeURIComponent('Manufacturer Wise Stock in Hand as on ' + endDate)
+                            + '&ItemName=' + encodeURIComponent(itemName)
+                            + '&Manufacturer=' + encodeURIComponent(manufacturer)
+                            + '&Warehouse=' + encodeURIComponent(warehouse)
+                            + '&EndDate=' + encodeURIComponent(endDate)
+                            + '&ExportPDF=' + exporttopdf;
+                        window.open(url, '_blank');
+                    }
                     else if (rptTitle == "CathLabStockInHand") {
                         var stock = $("#ctl00_MainContent_ddlStock").val();
                         debugger;
@@ -2386,7 +2401,7 @@
             </div>
         </div>
         <div class="row mb-3" id="DateDiv" runat="server" visible="false">
-            <div class="col-lg-3 col-md-3 col-sm-12">
+            <div class="col-lg-3 col-md-3 col-sm-12" id="startDateColumn" runat="server">
                 <asp:Label ID="sttDate" runat="server" Text="Start Date" CssClass="form-label"></asp:Label>
                 <asp:TextBox runat="server" ID="txtStart_Date" CssClass="form-control datepicker"></asp:TextBox>
             </div>

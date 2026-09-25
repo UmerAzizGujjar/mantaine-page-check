@@ -3082,6 +3082,51 @@ namespace PMS
                     rd.SetParameterValue("Address", companyAddress);
                 }
             }
+            else if (reportName == "ManufacturerWiseStockInHand")
+            {
+                DateTime endDate = DateTime.Today;
+                string endDateValue = Request.QueryString["EndDate"];
+                if (!String.IsNullOrWhiteSpace(endDateValue) &&
+                    !DateTime.TryParse(endDateValue, System.Globalization.CultureInfo.InvariantCulture, System.Globalization.DateTimeStyles.None, out endDate) &&
+                    !DateTime.TryParse(endDateValue, System.Globalization.CultureInfo.CurrentCulture, System.Globalization.DateTimeStyles.None, out endDate))
+                {
+                    throw new ArgumentException("EndDate must be a valid date.");
+                }
+
+                string itemName = Request.QueryString["ItemName"];
+                string manufacturer = Request.QueryString["Manufacturer"];
+                string warehouse = Request.QueryString["Warehouse"];
+                string logoPath = DBClass.getField("SELECT dbo.GetCompanyLogo()");
+                DataTable stockData = new DataTable();
+
+                using (SqlConnection connection = new SqlConnection(DBClass.ConnectionString()))
+                using (SqlCommand command = new SqlCommand("dbo.spManufacturerWiseStockInHand", connection))
+                {
+                    command.CommandType = CommandType.StoredProcedure;
+                    command.CommandTimeout = 120;
+                    command.Parameters.Add("@ItemName", SqlDbType.NVarChar, 250).Value =
+                        String.IsNullOrWhiteSpace(itemName) ? (object)DBNull.Value : itemName;
+                    command.Parameters.Add("@Manufacturer", SqlDbType.VarChar, 250).Value =
+                        String.IsNullOrWhiteSpace(manufacturer) ? (object)DBNull.Value : manufacturer;
+                    command.Parameters.Add("@Warehouse", SqlDbType.VarChar, 250).Value =
+                        String.IsNullOrWhiteSpace(warehouse) ? (object)DBNull.Value : warehouse;
+                    command.Parameters.Add("@EndDate", SqlDbType.Date).Value = endDate.Date;
+                    command.Parameters.Add("@CompanyID", SqlDbType.Int).Value = Convert.ToInt32(AppConfig.Company_ID);
+
+                    using (SqlDataAdapter adapter = new SqlDataAdapter(command))
+                    {
+                        adapter.Fill(stockData);
+                    }
+                }
+
+                reportPath += "Pharmacy/rptManufacturerWiseStockInHand.rpt";
+                rd.Load(reportPath);
+                rd.SetDataSource(stockData);
+                rd.SummaryInfo.ReportTitle = reportTitle;
+                rd.SetParameterValue("CompanyName", AppConfig.Company_Name);
+                rd.SetParameterValue("Title", String.IsNullOrWhiteSpace(reportTitle) ? "Manufacturer Wise Stock in Hand Report" : reportTitle);
+                rd.SetParameterValue("CompanyLogo", logoPath);
+            }
             else if (reportName == "Stock_Consumption_Details")
             {
                 if (Request.QueryString["Stock"] != null)

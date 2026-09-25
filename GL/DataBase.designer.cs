@@ -186348,6 +186348,8 @@ namespace PMS
 
         private string _mr_no_sequence;
 
+        private string _Old_Mr_no_sequence;
+
         private string _Reation_prefix;
 
         private string _Relation_prefix;
@@ -186454,6 +186456,8 @@ namespace PMS
         partial void Onfilter_clinicChanged();
         partial void Onmr_no_sequenceChanging(string value);
         partial void Onmr_no_sequenceChanged();
+        partial void OnOld_Mr_no_sequenceChanging(string value);
+        partial void OnOld_Mr_no_sequenceChanged();
         partial void OnReation_prefixChanging(string value);
         partial void OnReation_prefixChanged();
         partial void OnRelation_prefixChanging(string value);
@@ -186882,6 +186886,26 @@ namespace PMS
                     this._mr_no_sequence = value;
                     this.SendPropertyChanged("mr_no_sequence");
                     this.Onmr_no_sequenceChanged();
+                }
+            }
+        }
+
+        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_Old_Mr_no_sequence", DbType = "NVarChar(50)")]
+        public string Old_Mr_no_sequence
+        {
+            get
+            {
+                return this._Old_Mr_no_sequence;
+            }
+            set
+            {
+                if ((this._Old_Mr_no_sequence != value))
+                {
+                    this.OnOld_Mr_no_sequenceChanging(value);
+                    this.SendPropertyChanging();
+                    this._Old_Mr_no_sequence = value;
+                    this.SendPropertyChanged("Old_Mr_no_sequence");
+                    this.OnOld_Mr_no_sequenceChanged();
                 }
             }
         }
