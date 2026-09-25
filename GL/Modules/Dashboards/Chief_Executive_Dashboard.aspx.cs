@@ -68,9 +68,12 @@ namespace PMS.Modules.Dashboards
                 using (DataBaseDataContext db = new DataBaseDataContext())
                 {
                     decimal RegSum = (from p in db.Reg_patients
-                                          where p.Created_time >= sDate && p.Created_time <= eDate
+                                          where p.charge_time >= sDate && p.charge_time <= eDate
                                           select (decimal?)p.Card_fee).Sum() ?? 0;
                     decimal patientSum = (from p in db.Patients
+                                          where p.Created_Time >= sDate && p.Created_Time <= eDate
+                                          select (decimal?)p.Receipt_Amount).Sum() ?? 0;
+                    decimal EMRSum = (from p in db.Emergencies
                                           where p.Created_Time >= sDate && p.Created_Time <= eDate
                                           select (decimal?)p.Receipt_Amount).Sum() ?? 0;
 
@@ -81,7 +84,7 @@ namespace PMS.Modules.Dashboards
                                           where b.Creation_Date >= sDate && b.Creation_Date <= eDate && b.IsPharmacy == true && b.Ware_House == "008"
                                        select (decimal?)b.Received_Amount).Sum() ?? 0;
 
-                    decimal totalRevenue = patientSum + billingSum + RegSum + PharSum;
+                    decimal totalRevenue = patientSum + billingSum + RegSum + PharSum + EMRSum;
 
                     return new JavaScriptSerializer().Serialize(new
                     {
@@ -108,6 +111,58 @@ namespace PMS.Modules.Dashboards
                     decimal opdRevenue = (from p in db.Patients
                                           where p.Created_Time >= sDate && p.Created_Time <= eDate
                                           select (decimal?)p.Receipt_Amount).Sum() ?? 0;
+
+                    return new JavaScriptSerializer().Serialize(new
+                    {
+                        OPDRevenue = opdRevenue
+                    });
+                }
+            }
+            catch (Exception ex)
+            {
+                return new JavaScriptSerializer().Serialize(new { Error = ex.Message });
+            }
+        }
+
+        [WebMethod(EnableSession = false)]
+        public static string GetEMRSaleRevenue(string period, string startDate = null, string endDate = null)
+        {
+            try
+            {
+                DateTime sDate, eDate;
+                ResolveDates(period, startDate, endDate, out sDate, out eDate);
+
+                using (DataBaseDataContext db = new DataBaseDataContext())
+                {
+                    decimal opdRevenue = (from p in db.Emergencies
+                                          where p.Created_Time >= sDate && p.Created_Time <= eDate
+                                          select (decimal?)p.Receipt_Amount).Sum() ?? 0;
+
+                    return new JavaScriptSerializer().Serialize(new
+                    {
+                        OPDRevenue = opdRevenue
+                    });
+                }
+            }
+            catch (Exception ex)
+            {
+                return new JavaScriptSerializer().Serialize(new { Error = ex.Message });
+            }
+        }
+
+        [WebMethod(EnableSession = false)]
+        public static string GetCardFeeRevenue(string period, string startDate = null, string endDate = null)
+        {
+            try
+            {
+                DateTime sDate, eDate;
+                ResolveDates(period, startDate, endDate, out sDate, out eDate);
+
+                using (DataBaseDataContext db = new DataBaseDataContext())
+                {
+                    decimal opdRevenue = (from p in db.Reg_patients
+                                          where p.charge_time >= sDate && p.charge_time <= eDate
+                                          select (decimal?)p.Card_fee).Sum() ?? 0;
 
                     return new JavaScriptSerializer().Serialize(new
                     {
@@ -194,6 +249,35 @@ namespace PMS.Modules.Dashboards
                     var labSum = (from b in db.Ar_Billings
                                   where b.Creation_Date >= sDate && b.Creation_Date <= eDate
                                   where db.Ar_Billing_Details.Any(d => d.Bill_ID == b.Bill_ID && deptCodes.Contains(d.Test_Main_Department))
+                                  select (decimal?)b.Received_Amount).Sum() ?? 0;
+
+                    return new JavaScriptSerializer().Serialize(new
+                    {
+                        LabRevenue = labSum
+                    });
+                }
+            }
+            catch (Exception ex)
+            {
+                return new JavaScriptSerializer().Serialize(new { Error = ex.Message });
+            }
+        }
+
+        [WebMethod(EnableSession = false)]
+        public static string GetServicesRevenue(string period, string startDate = null, string endDate = null)
+        {
+            try
+            {
+                DateTime sDate, eDate;
+                ResolveDates(period, startDate, endDate, out sDate, out eDate);
+
+                using (DataBaseDataContext db = new DataBaseDataContext())
+                {
+                    //string[] deptCodes = { "001", "002", "003", "008", "005" };
+
+                    var labSum = (from b in db.Ar_Billings
+                                  where b.Creation_Date >= sDate && b.Creation_Date <= eDate
+                                  where db.Ar_Billing_Details.Any(d => d.Bill_ID == b.Bill_ID && d.Item_Type.Contains("Service"))
                                   select (decimal?)b.Received_Amount).Sum() ?? 0;
 
                     return new JavaScriptSerializer().Serialize(new
@@ -834,10 +918,13 @@ WHERE m.Creation_Date >= @s AND m.Creation_Date <= @e", conn))
                 DateTime trendEnd = endMonthStart;
 
                 var monthPatients = new Dictionary<string, decimal>();
+                var monthCardfee = new Dictionary<string, decimal>();
+                var monthEMRPatients = new Dictionary<string, decimal>();
                 var monthBillings = new Dictionary<string, decimal>();
                 var monthPharmacy = new Dictionary<string, decimal>();
                 var monthPB = new Dictionary<string, decimal>();
                 var monthLab = new Dictionary<string, decimal>();
+                var monthServices = new Dictionary<string, decimal>();
 
                 using (var conn = new System.Data.SqlClient.SqlConnection(
                     System.Web.Configuration.WebConfigurationManager.ConnectionStrings["ASPGLConnectionString"].ConnectionString))
@@ -856,6 +943,36 @@ WHERE m.Creation_Date >= @s AND m.Creation_Date <= @e", conn))
                             {
                                 string key = r["Yr"].ToString() + "-" + r["Mn"].ToString().PadLeft(2, '0');
                                 monthPatients[key] = (decimal)r["val"];
+                            }
+                    }
+
+                    using (var cmd = new System.Data.SqlClient.SqlCommand(
+                        @"SELECT YEAR(charge_time) AS Yr, MONTH(charge_time) AS Mn, ISNULL(SUM(Card_fee), 0) AS val
+                          FROM Reg_patient WHERE charge_time >= @ts AND charge_time < @te
+                          GROUP BY YEAR(charge_time), MONTH(charge_time)", conn))
+                    {
+                        cmd.Parameters.AddWithValue("@ts", trendStart);
+                        cmd.Parameters.AddWithValue("@te", trendEnd);
+                        using (var r = cmd.ExecuteReader())
+                            while (r.Read())
+                            {
+                                string key = r["Yr"].ToString() + "-" + r["Mn"].ToString().PadLeft(2, '0');
+                                monthCardfee[key] = (decimal)r["val"];
+                            }
+                    }
+
+                    using (var cmd = new System.Data.SqlClient.SqlCommand(
+                        @"SELECT YEAR(Created_Time) AS Yr, MONTH(Created_Time) AS Mn, ISNULL(SUM(Receipt_Amount), 0) AS val
+                          FROM Emergency WHERE Created_Time >= @ts AND Created_Time < @te
+                          GROUP BY YEAR(Created_Time), MONTH(Created_Time)", conn))
+                    {
+                        cmd.Parameters.AddWithValue("@ts", trendStart);
+                        cmd.Parameters.AddWithValue("@te", trendEnd);
+                        using (var r = cmd.ExecuteReader())
+                            while (r.Read())
+                            {
+                                string key = r["Yr"].ToString() + "-" + r["Mn"].ToString().PadLeft(2, '0');
+                                monthEMRPatients[key] = (decimal)r["val"];
                             }
                     }
 
@@ -922,7 +1039,25 @@ WHERE m.Creation_Date >= @s AND m.Creation_Date <= @e", conn))
                             }
                     }
 
-                    decimal curP = 0, curB = 0, curPh = 0,curPBh = 0, curL = 0;
+                    using (var cmd = new System.Data.SqlClient.SqlCommand(
+                        @"SELECT YEAR(b.Creation_Date) AS Yr, MONTH(b.Creation_Date) AS Mn, ISNULL(SUM(b.Received_Amount), 0) AS val
+                          FROM Ar_Billings b
+                          WHERE b.Creation_Date >= @ts AND b.Creation_Date < @te AND EXISTS (
+                              SELECT 1 FROM Ar_Billing_Details d
+                              WHERE d.Bill_ID = b.Bill_ID AND  d.Item_Type IN ('Service'))
+                          GROUP BY YEAR(b.Creation_Date), MONTH(b.Creation_Date)", conn))
+                    {
+                        cmd.Parameters.AddWithValue("@ts", trendStart);
+                        cmd.Parameters.AddWithValue("@te", trendEnd);
+                        using (var r = cmd.ExecuteReader())
+                            while (r.Read())
+                            {
+                                string key = r["Yr"].ToString() + "-" + r["Mn"].ToString().PadLeft(2, '0');
+                                monthServices[key] = (decimal)r["val"];
+                            }
+                    }
+
+                    decimal curP = 0, curB = 0, curPh = 0,curPBh = 0,curEMR = 0, curL = 0, curS = 0, curCard =0;
 
                     using (var cmd = new System.Data.SqlClient.SqlCommand(
                         "SELECT ISNULL(SUM(Receipt_Amount), 0) FROM Patients WHERE Created_Time >= @cs AND Created_Time <= @ce", conn))
@@ -930,6 +1065,22 @@ WHERE m.Creation_Date >= @s AND m.Creation_Date <= @e", conn))
                         cmd.Parameters.AddWithValue("@cs", endMonthStart);
                         cmd.Parameters.AddWithValue("@ce", endPointEnd);
                         curP = (decimal)cmd.ExecuteScalar();
+                    }
+
+                    using (var cmd = new System.Data.SqlClient.SqlCommand(
+                        "SELECT ISNULL(SUM(Card_fee), 0) FROM Reg_patient WHERE charge_time >= @cs AND charge_time <= @ce", conn))
+                    {
+                        cmd.Parameters.AddWithValue("@cs", endMonthStart);
+                        cmd.Parameters.AddWithValue("@ce", endPointEnd);
+                        curCard = (decimal)cmd.ExecuteScalar();
+                    }
+
+                    using (var cmd = new System.Data.SqlClient.SqlCommand(
+                        "SELECT ISNULL(SUM(Receipt_Amount), 0) FROM Emergency WHERE Created_Time >= @cs AND Created_Time <= @ce", conn))
+                    {
+                        cmd.Parameters.AddWithValue("@cs", endMonthStart);
+                        cmd.Parameters.AddWithValue("@ce", endPointEnd);
+                        curEMR = (decimal)cmd.ExecuteScalar();
                     }
 
                     using (var cmd = new System.Data.SqlClient.SqlCommand(
@@ -976,13 +1127,28 @@ WHERE m.Creation_Date >= @s AND m.Creation_Date <= @e", conn))
                         curL = (decimal)cmd.ExecuteScalar();
                     }
 
+                    using (var cmd = new System.Data.SqlClient.SqlCommand(
+                        @"SELECT ISNULL(SUM(b.Received_Amount), 0)
+                          FROM Ar_Billings b
+                          WHERE b.Creation_Date >= @cs AND b.Creation_Date <= @ce AND EXISTS (
+                              SELECT 1 FROM Ar_Billing_Details d
+                              WHERE d.Bill_ID = b.Bill_ID AND  d.Item_Type IN ('Service'))", conn))
+                    {
+                        cmd.Parameters.AddWithValue("@cs", endMonthStart);
+                        cmd.Parameters.AddWithValue("@ce", endPointEnd);
+                        curS = (decimal)cmd.ExecuteScalar();
+                    }
+
                     string[] shortMonths = { "Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec" };
                     var labels = new List<string>();
                     var hospital = new List<decimal>();
                     var opd = new List<decimal>();
+                    var EMR = new List<decimal>();
+                    var card = new List<decimal>();
                     var pharmacy = new List<decimal>();
                     var PB = new List<decimal>();
                     var lab = new List<decimal>();
+                    var Services = new List<decimal>();
 
                     for (var d = trendStart; d < trendEnd; d = d.AddMonths(1))
                     {
@@ -993,25 +1159,34 @@ WHERE m.Creation_Date >= @s AND m.Creation_Date <= @e", conn))
                         hospital.Add(pv + bv);
                         opd.Add(pv);
                         pharmacy.Add(monthPharmacy.ContainsKey(key) ? monthPharmacy[key] : 0);
+                        EMR.Add(monthEMRPatients.ContainsKey(key) ? monthEMRPatients[key] : 0);
+                        card.Add(monthCardfee.ContainsKey(key) ? monthCardfee[key] : 0);
                         PB.Add(monthPB.ContainsKey(key) ? monthPB[key] : 0);
                         lab.Add(monthLab.ContainsKey(key) ? monthLab[key] : 0);
+                        Services.Add(monthServices.ContainsKey(key) ? monthServices[key] : 0);
                     }
 
                     labels.Add(shortMonths[endPointDate.Month - 1]);
                     hospital.Add(curP + curB);
                     opd.Add(curP);
+                    EMR.Add(curEMR);
+                    card.Add(curCard);
                     pharmacy.Add(curPh);
                     PB.Add(curPBh);
                     lab.Add(curL);
+                    Services.Add(curS);
 
                     return new JavaScriptSerializer().Serialize(new
                     {
                         labels = labels,
                         hospital = hospital,
                         opd = opd,
+                        EMR = EMR,
+                        card = card,
                         pharmacy = pharmacy,
                         PB = PB,
-                        lab = lab
+                        lab = lab,
+                        Services = Services
                     });
                 }
             }
