@@ -1,0 +1,163 @@
+- generic [ref=f28e3]:
+  - complementary [ref=f28e4]:
+    - generic [ref=f28e5]:
+      - generic [ref=f28e6]: H
+      - generic [ref=f28e7]: National Hospital & Lab
+    - navigation [ref=f28e8]:
+      - generic [ref=f28e9]:
+        - generic [ref=f28e10]: Patient Management
+        - link "Patient Registration" [ref=f28e11] [cursor=pointer]:
+          - /url: /patients/register
+        - link "Registration List" [ref=f28e16] [cursor=pointer]:
+          - /url: /patients/reglist
+      - generic [ref=f28e19]:
+        - generic [ref=f28e20]: OPD
+        - link "New OPD Visit" [ref=f28e21] [cursor=pointer]:
+          - /url: /opd
+        - link "OPD List (Today)" [ref=f28e25] [cursor=pointer]:
+          - /url: /opd/list
+    - generic [ref=f28e30]:
+      - generic [ref=f28e31]: Z
+      - generic [ref=f28e32]:
+        - generic [ref=f28e33]: zz_react_test
+        - button "Logout" [ref=f28e34] [cursor=pointer]
+  - generic [ref=f28e35]:
+    - banner [ref=f28e36]:
+      - generic [ref=f28e37]: New OPD Visit
+      - generic [ref=f28e38]:
+        - generic [ref=f28e39]: National Hospital & Lab
+        - generic [ref=f28e40]: zz_react_test
+    - main [ref=f28e41]:
+      - generic [ref=f28e42]:
+        - generic [ref=f28e43]:
+          - heading "1. Select Registered Patient" [level=5] [ref=f28e44]
+          - generic [ref=f28e45]:
+            - textbox "Search MR No, Name, Mobile, CNIC…" [active] [ref=f28e46]: ZZ Test
+            - button "New Registration" [ref=f28e47] [cursor=pointer]
+          - generic [ref=f28e246]: NH-45728 — ZZ Test · ZZ Tester · +929230011122
+        - generic [ref=f28e48]:
+          - heading "2. OPD Visit Details" [level=5] [ref=f28e49]
+          - generic [ref=f28e50]:
+            - generic [ref=f28e51]:
+              - generic [ref=f28e52]: MR No
+              - textbox [disabled] [ref=f28e53]
+            - generic [ref=f28e54]:
+              - generic [ref=f28e55]: Mode of Presentation
+              - generic [ref=f28e56]:
+                - log [ref=f28e58]
+                - generic [ref=f28e60]:
+                  - generic [ref=f28e61]: Select Mode
+                  - combobox [ref=f28e63]
+            - generic [ref=f28e68]:
+              - generic [ref=f28e69]: Patient Category*
+              - generic [ref=f28e70]:
+                - log [ref=f28e72]
+                - generic [ref=f28e74]:
+                  - generic [ref=f28e75]: Select Category
+                  - combobox [ref=f28e77]
+            - generic [ref=f28e82]:
+              - generic [ref=f28e83]: Department
+              - generic [ref=f28e84]:
+                - log [ref=f28e86]
+                - generic [ref=f28e88]:
+                  - generic [ref=f28e89]: Select Department
+                  - combobox [ref=f28e91]
+            - generic [ref=f28e96]:
+              - generic [ref=f28e97]: Doctor
+              - generic [ref=f28e98]:
+                - log [ref=f28e100]
+                - generic [ref=f28e102]:
+                  - generic [ref=f28e103]: Select Doctor
+                  - combobox [ref=f28e105]
+          - generic [ref=f28e110]:
+            - generic [ref=f28e111]:
+              - generic [ref=f28e112]: Service
+              - generic [ref=f28e113]:
+                - log [ref=f28e115]
+                - generic [ref=f28e117]:
+                  - generic [ref=f28e118]: Select Service
+                  - combobox [ref=f28e120]
+            - generic [ref=f28e125]:
+              - generic [ref=f28e126]: Filter Clinic
+              - generic [ref=f28e127]:
+                - log [ref=f28e129]
+                - generic [ref=f28e131]:
+                  - generic [ref=f28e132]: Select Clinic
+                  - combobox [ref=f28e134]
+            - generic [ref=f28e139]:
+              - generic [ref=f28e140]: Cashier
+              - generic [ref=f28e141]:
+                - log [ref=f28e143]
+                - generic [ref=f28e145]:
+                  - generic [ref=f28e146]: Select Cashier
+                  - combobox [ref=f28e148]
+            - generic [ref=f28e153]:
+              - generic [ref=f28e154]: Cash In Hand Account*
+              - generic [ref=f28e155]:
+                - log [ref=f28e157]
+                - generic [ref=f28e159]:
+                  - generic [ref=f28e160]: Select Account
+                  - combobox [ref=f28e162]
+            - generic [ref=f28e167]:
+              - generic [ref=f28e168]: Cost Center
+              - generic [ref=f28e169]:
+                - log [ref=f28e171]
+                - generic [ref=f28e173]:
+                  - generic [ref=f28e174]: Select Cost Center
+                  - combobox [ref=f28e176]
+          - generic [ref=f28e181]:
+            - generic [ref=f28e182]:
+              - generic [ref=f28e183]: Fee*
+              - spinbutton [ref=f28e184]: "0"
+            - generic [ref=f28e185]:
+              - generic [ref=f28e186]: Discount
+              - spinbutton [ref=f28e187]
+            - generic [ref=f28e188]:
+              - generic [ref=f28e189]: Actual Fee
+              - spinbutton [ref=f28e190]: "0"
+            - generic [ref=f28e191]:
+              - generic [ref=f28e192]: Payment method
+              - generic [ref=f28e193]:
+                - log [ref=f28e195]
+                - generic [ref=f28e197]:
+                  - generic [ref=f28e198]: Cash
+                  - combobox [ref=f28e200]
+            - generic [ref=f28e205]:
+              - generic [ref=f28e206]: Bank/Cash
+              - generic:
+                - log
+                - generic: Select Account
+          - generic [ref=f28e207]:
+            - generic [ref=f28e208]:
+              - generic [ref=f28e209]: Panel Company
+              - generic [ref=f28e210]:
+                - log [ref=f28e212]
+                - generic [ref=f28e214]:
+                  - generic [ref=f28e215]: Select Panel (for panel patients)
+                  - combobox [ref=f28e217]
+            - generic [ref=f28e222]:
+              - generic [ref=f28e223]: Remarks
+              - textbox [ref=f28e224]
+            - generic [ref=f28e225]:
+              - generic [ref=f28e226]: Refference No
+              - textbox [ref=f28e227]
+          - generic [ref=f28e228]:
+            - generic [ref=f28e229]:
+              - generic [ref=f28e230]: Employee Name
+              - textbox [ref=f28e231]
+            - generic [ref=f28e232]:
+              - generic [ref=f28e233]: Employee Department
+              - textbox [ref=f28e234]
+            - generic [ref=f28e235]:
+              - generic [ref=f28e236]: Dependent
+              - textbox [ref=f28e237]
+          - generic [ref=f28e238]:
+            - generic [ref=f28e239] [cursor=pointer]:
+              - checkbox "Free Check" [ref=f28e240]
+              - text: Free Check
+            - generic [ref=f28e241] [cursor=pointer]:
+              - checkbox "Issue Card" [ref=f28e242]
+              - text: Issue Card
+        - generic [ref=f28e243]:
+          - button "Save&Print" [ref=f28e244] [cursor=pointer]
+          - button "OPD List" [ref=f28e245] [cursor=pointer]

@@ -1,0 +1,11 @@
+- generic [ref=f13e4]:
+  - generic [ref=f13e5]:
+    - generic [ref=f13e6]: H
+    - generic [ref=f13e7]: Hospital Portal
+  - generic [ref=f13e8]: Company
+  - combobox [ref=f13e9]
+  - generic [ref=f13e10]: Username
+  - textbox [active] [ref=f13e11]
+  - generic [ref=f13e12]: Password
+  - textbox [ref=f13e13]
+  - button "Sign In" [ref=f13e14] [cursor=pointer]

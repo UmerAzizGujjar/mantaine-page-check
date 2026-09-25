@@ -386,6 +386,28 @@
                 });
             }
 
+            function CheckBillingSaveButton() {
+                $.ajax({
+                    type: "POST",
+                    url: "BillingProcess.aspx/BillingSaveButtonVisible",
+                    data: "{}",
+                    contentType: "application/json; charset=utf-8",
+                    dataType: "json",
+                    success: function (response) {
+                        if (JSON.parse(response.d) == '01') {
+                            $('#divSaveOnly').show();
+                            $('#btnSaveOnly').show();
+                        }
+                        else {
+                            $('#divSaveOnly').hide();
+                        }
+                    },
+                    error: function (error) {
+                        console.error("Error fetching Billing Save Button parm", error);
+                    }
+                });
+            }
+
             function handleDiscountChange() {
                 var value = $('#txtDisPer').val();
                 // Ensure we have the latest value
@@ -1829,7 +1851,7 @@
                         rowIndex++;
 
                     });
-                    $('#btnSave').val('Update');
+                    $('.billing-save').val('Update');
                     $('#btnPrint').show();
 
 
@@ -1977,7 +1999,7 @@
                         $('#ddlShareType' + i + '').val(Sharetype);
                     }
                     calculateDoctorShare();
-                    $('#btnSave').val('Update');
+                    $('.billing-save').val('Update');
                 },
                     function (error) {
                         alert(error.get_message());
@@ -2018,7 +2040,7 @@
             var Consumed_Procedure = 0;
             var Consumed_Package = 0;
             debugger;
-            async function SaveRecord() {
+            async function SaveRecord(skipPrint) {
                 debugger;
                 if (compulsoryItemIds && compulsoryItemIds.length > 0) {
                     var missingDoctorRow = null;
@@ -2029,7 +2051,7 @@
                             var doctorId = $(this).find('select[name="ddlDoctor"]').val();
                             if (!doctorId || doctorId === '' || doctorId === '0' || doctorId === null) {
                                 missingDoctorRow = itemName;
-                                $('#btnSave').prop('disabled', false);
+                                $('.billing-save').prop('disabled', false);
                                 document.getElementById("hdnDuplicateCheck").value = "0";
                                 return false;
                             }
@@ -2047,7 +2069,7 @@
                                 htmlContainer: 'swal-big-text'
                             }
                         });
-                        $("#btnSave").prop("disabled", false);
+                        $(".billing-save").prop("disabled", false);
                         document.getElementById("hdnDuplicateCheck").value = "0";
                         return;
                     }
@@ -2069,7 +2091,7 @@
                         var disAmt = parseFloat($(value).find('input[name="DisAmount"]').val()) || 0;
                         if (disPer > 0 || disAmt > 0) {
                             isDiscountGiven = true;
-                            $('#btnSave').prop('disabled', false);
+                            $('.billing-save').prop('disabled', false);
                             document.getElementById("hdnDuplicateCheck").value = "0";
                             return false; // break loop
                         }
@@ -2092,7 +2114,7 @@
                             if (remarks === "" || remarks === ".") {
                                 missingRemarks = true;
                                 missingRowNumber = index + 1;
-                                $('#btnSave').prop('disabled', false);
+                                $('.billing-save').prop('disabled', false);
                                 document.getElementById("hdnDuplicateCheck").value = "0";
                                 return false; // break each loop
                             }
@@ -2111,14 +2133,14 @@
                                 htmlContainer: 'swal-big-text'
                             }
                         });
-                        $("#btnSave").prop("disabled", false);
+                        $(".billing-save").prop("disabled", false);
                         document.getElementById("hdnDuplicateCheck").value = "0";
                         return; // Stop execution
                     }
                 }
             }
                         
-                        $('#btnSave').attr('disabled', 'disabled');
+                        $('.billing-save').attr('disabled', 'disabled');
                         document.getElementById("hdnDuplicateCheck").value = "1";
                         var Bill_ID = '';
                         var Bill_Type = '';
@@ -2223,7 +2245,7 @@
                                 }
                             })
                             if (!result.isConfirmed) {
-                                $("#btnSave").prop("disabled", false);
+                                $(".billing-save").prop("disabled", false);
                                 document.getElementById("hdnDuplicateCheck").value = "0";
                                 return;
                             }
@@ -2324,7 +2346,7 @@
                                         htmlContainer: 'swal-big-text'
                                     }
                                 });
-                                $('#btnSave').prop('disabled', false);
+                                $('.billing-save').prop('disabled', false);
                                 document.getElementById("hdnDuplicateCheck").value = "0";
                                 return false;
                             }
@@ -2397,14 +2419,14 @@
                                     htmlContainer: 'swal-big-text'
                                 }
                             });
-                            $('#btnSave').prop('disabled', false);
+                            $('.billing-save').prop('disabled', false);
                             document.getElementById("hdnDuplicateCheck").value = "0";
                             return;
                         }
                         debugger;
                         if (isAmountZero == true) {
                             alert("Amount Should not be zero");
-                            $('#btnSave').prop('disabled', false);
+                            $('.billing-save').prop('disabled', false);
                             document.getElementById("hdnDuplicateCheck").value = "0";
                             return ;
                         }
@@ -2443,7 +2465,7 @@
                                                 htmlContainer: 'swal-big-text'
                                             }
                                         }).then(() => {
-                                            $('#btnSave').prop('disabled', false);
+                                            $('.billing-save').prop('disabled', false);
                                             document.getElementById("hdnDuplicateCheck").value = "0";
                                         });
                                         return;
@@ -2453,7 +2475,7 @@
                                     const billId = (result.billId || result || '').toString().trim();
                                     if (!billId || isNaN(billId)) {
                                         Swal.fire('Error!', 'Invalid Bill ID returned: ' + billId, 'error').then(() => {
-                                            $('#btnSave').prop('disabled', false);
+                                            $('.billing-save').prop('disabled', false);
                                             document.getElementById("hdnDuplicateCheck").value = "0";
                                         });
                                         return;
@@ -2473,7 +2495,9 @@
                                     });
 
                                     const encodedBillId = encodeURIComponent(billId);
-                                    window.open('../../ReportViewer.aspx?ReportName=BillingBaseReport&ReportTitle=Billing%20Base%20Report&Bill_ID=' + encodedBillId);
+                                    if (!skipPrint) {
+                                        window.open('../../ReportViewer.aspx?ReportName=BillingBaseReport&ReportTitle=Billing%20Base%20Report&Bill_ID=' + encodedBillId);
+                                    }
 
                                     setTimeout(function () {
                                         window.location.href = 'BillingProcess.aspx?Bill_ID=' + encodedBillId;
@@ -2489,7 +2513,7 @@
                                         text: 'Network error: ' + (error.get_message?.() || error),
                                         confirmButtonText: 'OK'
                                     }).then(() => {
-                                        $('#btnSave').prop('disabled', false);
+                                        $('.billing-save').prop('disabled', false);
                                         document.getElementById("hdnDuplicateCheck").value = "0";
                                     });
                                 });
@@ -2498,7 +2522,7 @@
                                 //else {
                                 //    // Receipts exist — block save
                                 //    alert('Delete Following Receipts:- ' + receipts);
-                                //    $('#btnSave').prop('disabled', false);
+                                //    $('.billing-save').prop('disabled', false);
                                 //    document.getElementById("hdnDuplicateCheck").value = "0";
                                 //}
                             }, function (error) {
@@ -2509,7 +2533,7 @@
                                     text: 'Error: ' + (error.get_message?.() || error),
                                     confirmButtonText: 'OK'
                                 }).then(() => {
-                                    $('#btnSave').prop('disabled', false);
+                                    $('.billing-save').prop('disabled', false);
                                     document.getElementById("hdnDuplicateCheck").value = "0";
                                 });
                             });
@@ -2544,7 +2568,7 @@
                                                     htmlContainer: 'swal-big-text'
                                                 }
                                             }).then(() => {
-                                                $('#btnSave').prop('disabled', false);
+                                                $('.billing-save').prop('disabled', false);
                                                 document.getElementById("hdnDuplicateCheck").value = "0";
                                             });
                                             return;
@@ -2554,7 +2578,7 @@
                                         const billId = (result.billId || result || '').toString().trim();
                                         if (!billId || isNaN(billId)) {
                                             Swal.fire('Error!', 'Invalid Bill ID returned: ' + billId, 'error').then(() => {
-                                                $('#btnSave').prop('disabled', false);
+                                                $('.billing-save').prop('disabled', false);
                                                 document.getElementById("hdnDuplicateCheck").value = "0";
                                             });
                                             return;
@@ -2574,7 +2598,9 @@
                                         });
 
                                         const encodedBillId = encodeURIComponent(billId);
-                                        window.open('../../ReportViewer.aspx?ReportName=BillingBaseReport&ReportTitle=Billing%20Base%20Report&Bill_ID=' + encodedBillId);
+                                        if (!skipPrint) {
+                                            window.open('../../ReportViewer.aspx?ReportName=BillingBaseReport&ReportTitle=Billing%20Base%20Report&Bill_ID=' + encodedBillId);
+                                        }
 
                                         setTimeout(function () {
                                             window.location.href = 'BillingProcess.aspx?Bill_ID=' + encodedBillId;
@@ -2590,7 +2616,7 @@
                                             text: 'Network error: ' + (error.get_message?.() || error),
                                             confirmButtonText: 'OK'
                                         }).then(() => {
-                                            $('#btnSave').prop('disabled', false);
+                                            $('.billing-save').prop('disabled', false);
                                             document.getElementById("hdnDuplicateCheck").value = "0";
                                         });
                                     });
@@ -2599,7 +2625,7 @@
                                 else {
                                     // Receipts exist — block save
                                     alert('Delete Following Receipts:- ' + receipts);
-                                    $('#btnSave').prop('disabled', false);
+                                    $('.billing-save').prop('disabled', false);
                                     document.getElementById("hdnDuplicateCheck").value = "0";
                                 }
                             }, function (error) {
@@ -2610,7 +2636,7 @@
                                     text: 'Error: ' + (error.get_message?.() || error),
                                     confirmButtonText: 'OK'
                                 }).then(() => {
-                                    $('#btnSave').prop('disabled', false);
+                                    $('.billing-save').prop('disabled', false);
                                     document.getElementById("hdnDuplicateCheck").value = "0";
                                 });
                             });
@@ -7012,7 +7038,7 @@
 
                     });
 
-                    $('#btnSave').val('Update');
+                    $('.billing-save').val('Update');
                 },
                     function (error) {
                         alert(error.get_message());
@@ -8032,6 +8058,7 @@
                 });
                 CheckReceiptsUpdateonBilling();
                 CheckCNICUpdateonCondition();
+                CheckBillingSaveButton();
                 LoadPatientType();
                 $.ajax({
                     type: "POST",
@@ -8291,10 +8318,10 @@
 
                         if (editrights == "true") {
 
-                            $('#btnSave').attr('disabled', false);
+                            $('.billing-save').attr('disabled', false);
                         }
                         else {
-                            $('#btnSave').attr('disabled', true);
+                            $('.billing-save').attr('disabled', true);
                         }
 
                     },
@@ -9058,7 +9085,10 @@
           <div class="col-lg-8 col-md-8 col-sm-8">
               <div class="row">
                  <div class="col-lg-2">
-                        <input type="button" class="btn-primry" value="Save & Print" onclick="SaveRecord()" id="btnSave" />
+                        <input type="button" class="btn-primry billing-save" value="Save & Print" onclick="SaveRecord()" id="btnSave" />
+                    </div>
+                    <div class="col-lg-2" id="divSaveOnly" style="display:none;">
+                        <input type="button" class="btn-primry billing-save" value="Save" onclick="SaveRecord(true)" id="btnSaveOnly" style="display:none;" />
                     </div>
                     <div class="col-lg-2">
                         <input type="button" class="btn btn-yellow" value="New" onclick="window.location = 'BillingProcess.aspx'" />

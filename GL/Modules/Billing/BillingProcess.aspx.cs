@@ -161,6 +161,15 @@ namespace PMS
             return (new JavaScriptSerializer()).Serialize(dept);
         }
         [WebMethod]
+        public static string BillingSaveButtonVisible()
+        {
+            DataBaseDataContext db = new DataBaseDataContext(DBClass.ConnectionString());
+            var code = (from data in db.sys_Parms
+                        where data.Name == "Billing Save Button"
+                        select data.Code).FirstOrDefault();
+            return (new JavaScriptSerializer()).Serialize(code);
+        }
+        [WebMethod]
         public static string CheckBillingServicesDeptWise()
         {
             DataBaseDataContext db = new DataBaseDataContext(DBClass.ConnectionString());

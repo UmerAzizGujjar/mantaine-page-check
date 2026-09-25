@@ -1,0 +1,15 @@
+- generic [ref=f2e1]:
+  - generic [ref=f2e4]:
+    - heading [level=2] [ref=f2e13]: Hospital Login
+    - generic [ref=f2e6]: Company
+    - combobox [ref=f2e7]
+    - generic [ref=f2e8]: Username
+    - textbox [ref=f2e9]: VisionPlus
+    - generic [ref=f2e10]: Password
+    - textbox [ref=f2e11]: "11"
+    - button [ref=f2e14] [cursor=pointer]: Sign In
+  - dialog [ref=f2e16]:
+    - heading "Login Failed" [level=2] [ref=f2e21]
+    - generic [ref=f2e22]: Invalid password. 6 attempt(s) remaining.
+    - text: "!"
+    - button "OK" [active] [ref=f2e24] [cursor=pointer]
