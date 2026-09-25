@@ -924,6 +924,14 @@ namespace PMS
         protected global::System.Web.UI.HtmlControls.HtmlGenericControl DateDiv;
 
         /// <summary>
+        /// startDateColumn control.
+        /// </summary>
+        /// <remarks>
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.HtmlControls.HtmlGenericControl startDateColumn;
+
+        /// <summary>
         /// sttDate control.
         /// </summary>
         /// <remarks>
