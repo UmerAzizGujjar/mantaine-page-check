@@ -149,5 +149,39 @@ namespace PMS
             return result;
         }
 
+        [WebMethod]
+
+        public static string loadItemCodeList()
+        {
+            string result = string.Empty;
+            DataBaseDataContext db = new DataBaseDataContext();
+            var itemsList = (from i in db.INV_Items
+                             where i.Book_ID == 1
+                             select new { i.Item_Code, name = i.Item_Code + '-' + i.Description })
+                 .ToList();
+            if (itemsList != null)
+            {
+                result = (new JavaScriptSerializer()).Serialize(itemsList);
+            }
+            return result;
+        }
+
+        [WebMethod]
+
+        public static string GetManufacturers()
+        {
+            DataBaseDataContext db = new DataBaseDataContext();
+            var manufacturers = (from dv in db.DataValues
+                                 join ds in db.ValueSets
+                                 on dv.ValueSet_ID equals ds.ValueSet_ID
+                                 where ds.ValueSet_Name == "Manufacture Company"
+                                 select new
+                                 {
+                                     dv.DataValue_Name,
+                                     dv.DataValue_Description
+                                 }).ToList();
+            return (new JavaScriptSerializer()).Serialize(manufacturers);
+        }
+
     }
 }

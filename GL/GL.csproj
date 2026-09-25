@@ -2733,6 +2733,7 @@
     <Content Include="Reports\Pharmacy\rptMedicineExpiry.rpt" />
     <Content Include="Reports\Pharmacy\rptMedicineLabel.rpt" />
     <Content Include="Reports\Pharmacy\rptPharmacyStock.rpt" />
+    <Content Include="Reports\Pharmacy\rptManufacturerWiseStockInHand.rpt" />
     <Content Include="Reports\Pharmacy\rptSaleReport.rpt" />
     <Content Include="Reports\Pharmacy\rptSaleReportSummary.rpt" />
     <Content Include="Reports\Pharmacy\rptSupplierWisePurchase.rpt" />

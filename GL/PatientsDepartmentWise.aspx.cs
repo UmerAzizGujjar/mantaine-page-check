@@ -8256,6 +8256,80 @@ namespace PMS
 
 
                 }
+                else if (this.PageTitle == "ManufacturerWiseStockInHand")
+                {
+                    Master.Label2.Text = "Manufacturer Wise Stock in Hand Report";
+                    Master.GetMenuName();
+
+                    DateDiv.Visible = true;
+                    startDateColumn.Visible = false;
+                    endDate.Text = "As On Date";
+                    Time_Row.Visible = false;
+                    tr_Export.Visible = true;
+                    hideStartDateRow.Visible = false;
+
+                    dpROw.Visible = true;
+                    lblDepartment.Visible = true;
+                    lblDepartment.Text = "Manufacturer";
+                    ddlDepartments.Visible = true;
+                    ddlPatientType.Visible = false;
+                    lblPatientType.Visible = false;
+                    lblMultiSelect.Visible = false;
+                    ddlDepartments.DataSource = DBClass.getDataTable(@"
+                        SELECT ManufacturerValue, ManufacturerText
+                        FROM
+                        (
+                            SELECT DISTINCT
+                                COALESCE(NULLIF(LTRIM(RTRIM(dbo.GetDataValueName('Manufacture Company', i.Manufacturer_Name))), ''),
+                                         NULLIF(LTRIM(RTRIM(i.Manufacturer_Name)), ''), 'Unassigned') AS ManufacturerValue,
+                                COALESCE(NULLIF(LTRIM(RTRIM(dbo.GetDataValueName('Manufacture Company', i.Manufacturer_Name))), ''),
+                                         NULLIF(LTRIM(RTRIM(i.Manufacturer_Name)), ''), 'Unassigned') AS ManufacturerText
+                            FROM dbo.INV_Items AS i
+                            WHERE ISNULL(i.IsPharmacyItem, 0) = 1
+                              AND ISNULL(i.Active, 0) = 1
+                              AND ISNULL(i.Is_Active, 0) = 1
+                              AND ISNULL(i.isCancel, 0) = 0
+                        ) AS Manufacturers
+                        ORDER BY ManufacturerText");
+                    ddlDepartments.DataValueField = "ManufacturerValue";
+                    ddlDepartments.DataTextField = "ManufacturerText";
+                    ddlDepartments.Items.Clear();
+                    ddlDepartments.Items.Add(new ListItem("All", "0"));
+                    ddlDepartments.DataBind();
+
+                    Stock_Movement.Visible = true;
+                    ddlwareHouse.DataSource = GetUserWarehouses();
+                    ddlwareHouse.DataTextField = "Text";
+                    ddlwareHouse.DataValueField = "Value";
+                    ddlwareHouse.Items.Clear();
+                    ddlwareHouse.Items.Add(new ListItem("All", "0"));
+                    ddlwareHouse.DataBind();
+                    ddlwareHouse.Visible = true;
+                    lblWarehouse.Visible = true;
+                    lbItemCategory.Visible = false;
+                    ddlItemCategory.Visible = false;
+
+                    trSearch1.Visible = true;
+                    ddlItemName.Visible = true;
+                    DataTable itemList = DBClass.getDataTable(@"
+                        SELECT DISTINCT Description
+                        FROM dbo.INV_Items
+                        WHERE ISNULL(IsPharmacyItem, 0) = 1
+                          AND ISNULL(Active, 0) = 1
+                          AND ISNULL(Is_Active, 0) = 1
+                          AND ISNULL(isCancel, 0) = 0
+                        ORDER BY Description");
+                    ddlItemName.DataSource = itemList;
+                    ddlItemName.DataValueField = "Description";
+                    ddlItemName.DataTextField = "Description";
+                    ddlItemName.Items.Clear();
+                    ddlItemName.Items.Add(new ListItem("All", "0"));
+                    ddlItemName.DataBind();
+
+                    rowStock.Visible = false;
+                    optRw.Visible = false;
+                    tr_Summary.Visible = false;
+                }
                 else if (this.PageTitle == "CathLabStockInHand")
                 {
                     string x = "Cath Lab Stock in Hand Report";
