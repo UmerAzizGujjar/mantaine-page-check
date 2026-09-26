@@ -1,0 +1,155 @@
+/* ===================== Group Test Definition form layout (theme-mapped) ===================== */
+/* ===================== Compact form layout ===================== */
+.gt-page {
+    padding-bottom: 12px;
+}
+
+/* â”€â”€ Meta bar â”€â”€ */
+.gt-page .pr-meta-bar {
+    margin-bottom: 16px;
+    padding: 6px 16px;
+}
+.gt-page .meta-badge {
+    padding: 3px 10px;
+}
+
+/* â”€â”€ Cards â”€â”€ */
+.gt-page .pr-primary-settings {
+    margin-bottom: 16px;
+}
+.gt-page .pr-section-title {
+    margin: 0 -20px 12px -20px !important;
+    padding: 9px 20px !important;
+}
+.gt-page .pr-primary-settings label {
+    font-size: 11px !important;
+    margin-bottom: 3px !important;
+    letter-spacing: .03em;
+}
+.gt-page .pr-primary-settings .row {
+    margin-bottom: 10px;
+}
+.gt-page .pr-primary-settings .row:last-child {
+    margin-bottom: 0;
+}
+.gt-page .pr-primary-settings input[type="text"],
+.gt-page .pr-primary-settings input[type="number"],
+.gt-page .pr-primary-settings select {
+    font-size: 12px !important;
+    height: 32px !important;
+    padding: 5px 10px !important;
+    border: 1px solid #e0e0e0 !important;
+    border-radius: 4px !important;
+    background: #fff !important;
+    box-shadow: none !important;
+    width: 100% !important;
+}
+.gt-page .pr-primary-settings input[type="text"]:focus,
+.gt-page .pr-primary-settings input[type="number"]:focus,
+.gt-page .pr-primary-settings select:focus {
+    border-color: #438eb9 !important;
+    box-shadow: 0 0 0 3px #438eb925 !important;
+    outline: none !important;
+}
+
+/* â”€â”€ Checkbox pills â”€â”€ */
+.gt-page .gt-check {
+    display: inline-flex !important;
+    align-items: center;
+    gap: 6px;
+    height: 28px;
+    padding: 0 11px;
+    margin: 0 !important;
+    background: #F2F7FA;
+    border: 1px solid #D9E8F1;
+    border-radius: 15px;
+    font-size: 11px !important;
+    font-weight: 700 !important;
+    color: #2C5C78 !important;
+    text-transform: uppercase;
+    letter-spacing: .03em;
+    cursor: pointer;
+    user-select: none;
+    white-space: nowrap !important;
+    flex: 0 0 auto;
+}
+.gt-page .gt-check input[type="checkbox"] {
+    margin: 0 !important;
+    position: static !important;
+}
+.gt-page .gt-check-row {
+    display: flex !important;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 8px;
+    margin: 0;
+}
+
+/* â”€â”€ Rates tables â”€â”€ */
+.gt-page .table {
+    width: 100% !important;
+    margin: 0 0 10px 0 !important;
+    background: #fff !important;
+    border: 1px solid #eee !important;
+    border-radius: 4px;
+    overflow: hidden;
+    table-layout: auto !important;
+}
+.gt-page .table th {
+    background: #438eb9 !important;
+    background-image: none !important;
+    color: #fff !important;
+    font-size: 10px !important;
+    font-weight: 700 !important;
+    text-transform: uppercase;
+    letter-spacing: .04em;
+    padding: 7px 10px !important;
+    border: none !important;
+    border-bottom: 1px solid #438eb9 !important;
+    text-align: left !important;
+    white-space: nowrap;
+    width: auto !important;
+}
+.gt-page .table td {
+    padding: 5px 8px !important;
+    font-size: 12px !important;
+    border: none !important;
+    border-bottom: 1px solid #f0f0f0 !important;
+    vertical-align: middle !important;
+    text-align: left !important;
+    background: transparent !important;
+}
+.gt-page .table tbody tr:nth-child(even) {
+    background: #fbfcfe;
+}
+.gt-page .table tbody tr:hover {
+    background: #438eb912;
+}
+.gt-page .table td a {
+    color: #367498 !important;
+    font-weight: 700;
+}
+.gt-page .pr-primary-settings .table select,
+.gt-page .pr-primary-settings .table input[type="text"] {
+    width: auto !important;
+    height: 27px !important;
+    padding: 2px 6px !important;
+    font-size: 11px !important;
+    border: 1px solid #d9dee3 !important;
+    border-radius: 3px !important;
+    background: #fff !important;
+    box-shadow: none !important;
+}
+.gt-page legend {
+    font-size: 12px !important;
+    font-weight: 700 !important;
+    color: #2C5C78 !important;
+    padding: 0 8px !important;
+    width: auto !important;
+    border: none !important;
+    margin-bottom: 6px !important;
+}
+.gt-page .gt-rate-wrap {
+    max-height: 240px;
+    overflow-y: auto;
+}

@@ -179563,6 +179563,8 @@ namespace PMS
 
         private System.Nullable<decimal> _Over_and_Above;
 
+        private System.Nullable<decimal> _Refund_Amount;
+
         private System.Nullable<decimal> _Cash_In_Hand;
 
         private string _Cash_In_Hand_Account;
@@ -180861,6 +180863,24 @@ namespace PMS
                     this._Over_and_Above = value;
                     this.SendPropertyChanged("Over_and_Above");
                     this.OnOver_and_AboveChanged();
+                }
+            }
+        }
+
+        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_Refund_Amount", DbType = "Decimal(18,2)")]
+        public System.Nullable<decimal> Refund_Amount
+        {
+            get
+            {
+                return this._Refund_Amount;
+            }
+            set
+            {
+                if ((this._Refund_Amount != value))
+                {
+                    this.SendPropertyChanging();
+                    this._Refund_Amount = value;
+                    this.SendPropertyChanged("Refund_Amount");
                 }
             }
         }

@@ -1,4 +1,4 @@
-﻿.hedingcolor {
+.hedingcolor {
     color:black !important;
     text-align:center !important;
 }
@@ -117,7 +117,7 @@
 }
 
     #tabs ul li a {
-        background-color: #EFA63E   !important;
+        background-color: #438eb9   !important;
         color: white;
         background: none;
         border: none;

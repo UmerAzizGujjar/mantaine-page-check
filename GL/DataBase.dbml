@@ -8116,6 +8116,7 @@
       <Column Name="Appointment_id" Type="System.Int32" DbType="Int" CanBeNull="true" />
       <Column Name="Appointment_type" Type="System.String" DbType="NVarChar(150)" CanBeNull="true" />
       <Column Name="Is_Refund" Type="System.Boolean" DbType="Bit" CanBeNull="true" />
+      <Column Name="Refund_Amount" Type="System.Decimal" DbType="Decimal(18,2)" CanBeNull="true" />
       <Column Name="FBR_No" Type="System.String" DbType="NVarChar(150)" CanBeNull="true" />
       <Column Name="QrCode_path" Type="System.String" DbType="NVarChar(150)" CanBeNull="true" />
       <Column Name="final_bill_ipd" Type="System.Boolean" DbType="Bit" CanBeNull="true" />

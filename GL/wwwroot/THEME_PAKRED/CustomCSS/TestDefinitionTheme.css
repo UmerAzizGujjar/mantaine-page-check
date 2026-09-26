@@ -1,0 +1,317 @@
+/* ===================== Test Definition form layout (theme-mapped) ===================== */
+#TblUltra_Value a,
+#TblXRay_Value a,
+#TblMRI_Value a,
+#TblCTScan_Value a {
+    pointer-events: auto !important;
+}
+
+/* ===================== Compact form layout ===================== */
+.td-page {
+    padding-bottom: 12px;
+}
+
+/* â”€â”€ Meta bar â”€â”€ */
+.td-page .pr-meta-bar {
+    margin-bottom: 16px;
+    padding: 6px 16px;
+}
+.td-page .meta-badge {
+    padding: 3px 10px;
+}
+.td-page .meta-badge .badge-label {
+    margin: 0;
+}
+.td-page #test_id {
+    width: 72px !important;
+    height: 26px !important;
+    padding: 2px 6px !important;
+    border: 1px solid #F3D1D1 !important;
+    border-radius: 4px !important;
+    background: #fff !important;
+    box-shadow: none !important;
+    font-size: 12px !important;
+    font-weight: 700 !important;
+    color: #9e1213 !important;
+    text-align: center;
+}
+
+/* â”€â”€ Cards â”€â”€ */
+.td-page .pr-primary-settings {
+    margin-bottom: 16px;
+}
+.td-page .pr-cards-column {
+    margin-bottom: 16px;
+}
+.td-page .pr-cards-column .pr-primary-settings {
+    flex: 0 0 auto;
+}
+.td-page .pr-cards-column .pr-primary-settings:only-child {
+    flex: 1 1 auto;
+}
+.td-page .pr-cards-column .pr-primary-settings:last-child {
+    margin-bottom: 0 !important;
+}
+.td-page .pr-section-title {
+    margin: 0 -20px 12px -20px !important;
+    padding: 9px 20px !important;
+}
+.td-page .pr-primary-settings label {
+    font-size: 11px !important;
+    margin-bottom: 3px !important;
+    letter-spacing: .03em;
+}
+.td-page .pr-primary-settings .row {
+    margin-bottom: 10px;
+}
+.td-page .pr-primary-settings .row:last-child {
+    margin-bottom: 0;
+}
+.td-page .pr-primary-settings input[type="text"],
+.td-page .pr-primary-settings input[type="number"],
+.td-page .pr-primary-settings select {
+    font-size: 12px !important;
+    height: 32px !important;
+    padding: 5px 10px !important;
+    border: 1px solid #e0e0e0 !important;
+    border-radius: 4px !important;
+    background: #fff !important;
+    box-shadow: none !important;
+}
+.td-page .pr-primary-settings input[type="text"]:focus,
+.td-page .pr-primary-settings input[type="number"]:focus,
+.td-page .pr-primary-settings select:focus {
+    border-color: #c11718 !important;
+    box-shadow: 0 0 0 3px #c1171825 !important;
+    outline: none !important;
+}
+
+/* â”€â”€ Checkbox pills â”€â”€ */
+.td-page .td-check {
+    display: inline-flex !important;
+    align-items: center;
+    gap: 6px;
+    height: 28px;
+    padding: 0 11px;
+    margin: 0 !important;
+    background: #FBEFEF;
+    border: 1px solid #F3D1D1;
+    border-radius: 15px;
+    font-size: 11px !important;
+    font-weight: 700 !important;
+    color: #7D0F10 !important;
+    text-transform: uppercase;
+    letter-spacing: .03em;
+    cursor: pointer;
+    user-select: none;
+    white-space: nowrap !important;
+    flex: 0 0 auto;
+}
+.td-page .td-check input[type="checkbox"] {
+    margin: 0 !important;
+    position: static !important;
+}
+.td-page .td-check-row {
+    display: flex !important;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 8px;
+    margin: 0;
+}
+.td-page .td-check-row .td-check {
+    margin: 0 !important;
+}
+
+/* â”€â”€ Tables (override TestDefinition.css) â”€â”€ */
+.td-page .table,
+.td-page .tab {
+    width: 100% !important;
+    margin: 0 0 10px 0 !important;
+    background: #fff !important;
+    color: #444 !important;
+    border: 1px solid #eee !important;
+    border-radius: 4px;
+    overflow: hidden;
+}
+.td-page .table th,
+.td-page .tab th,
+.td-page .table thead th,
+.td-page .tab thead th {
+    display: table-cell !important;
+    background: #c11718 !important;
+    background-image: none !important;
+    color: #fff !important;
+    font-size: 10px !important;
+    font-weight: 700 !important;
+    text-transform: uppercase;
+    letter-spacing: .04em;
+    padding: 7px 10px !important;
+    border: none !important;
+    border-bottom: 1px solid #c11718 !important;
+    text-align: left !important;
+    white-space: nowrap;
+}
+.td-page .table td,
+.td-page .tab td,
+.td-page .table td:first-child,
+.td-page .tab td:first-child {
+    display: table-cell !important;
+    padding: 6px 10px !important;
+    font-size: 12px !important;
+    border: none !important;
+    border-right: none !important;
+    border-bottom: 1px solid #f0f0f0 !important;
+    vertical-align: middle !important;
+    max-width: none !important;
+    word-wrap: normal !important;
+    text-align: left !important;
+    background: transparent !important;
+}
+.td-page .table tbody tr:nth-child(even),
+.td-page .tab tbody tr:nth-child(even) {
+    background: #fbfcfe;
+}
+.td-page .table tbody tr:hover,
+.td-page .tab tbody tr:hover {
+    background: #c1171812;
+}
+.td-page .table td a,
+.td-page .tab td a {
+    color: #9e1213 !important;
+    font-weight: 700;
+}
+
+/* â”€â”€ Tab tables: stop card styles leaking into grid cells â”€â”€ */
+.td-page #tabs .table,
+.td-page #tabs .tab {
+    table-layout: auto !important;
+}
+.td-page #tabs .table th,
+.td-page #tabs .tab th {
+    width: auto !important;
+    white-space: nowrap;
+}
+.td-page #tabs .table td,
+.td-page #tabs .tab td {
+    padding: 5px 8px !important;
+}
+.td-page #tabs .table select,
+.td-page #tabs .table input[type="text"],
+.td-page #tabs .table input[type="number"] {
+    width: auto !important;
+    max-width: 100%;
+    height: 27px !important;
+    padding: 2px 6px !important;
+    font-size: 11px !important;
+    border: 1px solid #d9dee3 !important;
+    border-radius: 3px !important;
+    background: #fff !important;
+    box-shadow: none !important;
+}
+.td-page #tabs .table textarea {
+    width: 100%;
+    font-size: 11px;
+}
+.td-page #tabs .td-table-scroll {
+    max-height: 220px;
+    overflow-y: auto;
+}
+
+/* â”€â”€ Result section band â”€â”€ */
+.td-page .table-container {
+    border: none;
+    background: transparent;
+}
+.td-page #value_box {
+    width: auto !important;
+    height: auto !important;
+    margin: 0 0 10px 0 !important;
+    padding: 9px 16px !important;
+    background: linear-gradient(90deg, #c11718, #CD4546) !important;
+    background-image: linear-gradient(90deg, #c11718, #CD4546) !important;
+    border-radius: 6px !important;
+    color: #fff !important;
+    text-align: left !important;
+}
+.td-page #value_box span {
+    padding-left: 0 !important;
+    line-height: normal !important;
+    font-size: 13px !important;
+    font-weight: 700 !important;
+    letter-spacing: .05em;
+    text-transform: uppercase;
+}
+
+/* â”€â”€ Tabs â”€â”€ */
+.td-page #tabs {
+    border: 1px solid #eee;
+    border-radius: 6px;
+    background: #fff;
+    padding: 0;
+}
+.td-page #tabs ul {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 5px;
+    margin: 0;
+    padding: 7px 9px;
+    list-style: none;
+    background: #FDF6F6;
+    border: none;
+    border-bottom: 1px solid #F3D1D1;
+}
+.td-page #tabs ul li {
+    margin: 0;
+    border: none;
+    background: none;
+}
+.td-page #tabs ul li a,
+.td-page #tabs ul li.ui-tabs-active a {
+    display: inline-block;
+    background: #fff !important;
+    background-image: none !important;
+    color: #7D0F10 !important;
+    border: 1px solid #F3D1D1 !important;
+    border-radius: 14px !important;
+    padding: 5px 14px !important;
+    font-size: 11px !important;
+    font-weight: 700 !important;
+    text-transform: uppercase;
+    letter-spacing: .03em;
+}
+.td-page #tabs ul li.ui-tabs-active a {
+    background: #c11718 !important;
+    border-color: #c11718 !important;
+    color: #fff !important;
+}
+.td-page #tabs > div {
+    padding: 14px 16px !important;
+    border: none !important;
+    background: #fff;
+}
+.td-page #tabs fieldset {
+    border: 1px solid #eee !important;
+    border-radius: 6px;
+    padding: 8px 14px 14px !important;
+    margin: 0 !important;
+    min-width: 0;
+}
+.td-page #tabs legend {
+    font-size: 12px !important;
+    font-weight: 700 !important;
+    color: #7D0F10 !important;
+    padding: 0 8px !important;
+    width: auto !important;
+    border: none !important;
+}
+.td-page #tabs .td-scroll {
+    max-height: 220px;
+    overflow-y: auto;
+}
+.td-page #tabs .td-list-scroll {
+    max-height: 150px;
+    overflow-y: auto;
+}
+.td-page #tabs .btn-primry {
+    margin-bottom: 8px;
+}
