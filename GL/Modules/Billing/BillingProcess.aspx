@@ -1688,6 +1688,20 @@
                     $('#txtAmountReceived').val(data[0].Received_Amount);
                     debugger;
                     $('#txtBalances').val(data[0].Balance_Amount);
+
+                    // Refund: edit mode only, IPD bill (show for negative or positive balance)
+                    var refundAmount = parseFloat(data[0].Refund_Amount) || 0;
+                    var isIpdBill = String(data[0].Main_Department) === '03';
+                    if (isIpdBill) {
+                        $('#txtRefund_amount').val(refundAmount);
+                        $('#rowRefund').show();
+                        if (parseFloat(data[0].Balance_Amount) < 0) {
+                            $('#txtBalances').val((parseFloat(data[0].Balance_Amount) + refundAmount).toFixed(0));
+                        }
+                    } else {
+                        $('#txtRefund_amount').val(0);
+                        $('#rowRefund').hide();
+                    }
                     $('#ddlChargePolicy').val(data[0].Charge_Policy);
 
 
@@ -3988,13 +4002,13 @@
                     if ($('#txtTotalPayable').val() != '') {
                         if (AmtReceived != '') {
                             debugger;
-                            $('#txtBalances').val((TotalNetAmount - AmtReceived).toFixed(0));
+                            $('#txtBalances').val(ApplyRefundToBalance(TotalNetAmount - AmtReceived).toFixed(0));
                         }
                         else
-                            $('#txtBalances').val(TotalNetAmount.toFixed(0));
+                            $('#txtBalances').val(ApplyRefundToBalance(TotalNetAmount).toFixed(0));
                     }
                     else {
-                        $('#txtBalances').val(TotalNetAmount.toFixed(0));
+                        $('#txtBalances').val(ApplyRefundToBalance(TotalNetAmount).toFixed(0));
                     }
 
                     CalculateSalesTax();
@@ -4010,13 +4024,13 @@
                 if ($('#txtTotalPayable').val() != '') {
                     if (AmtReceived != '') {
                         debugger;
-                        $('#txtBalances').val((TotalNetAmount - AmtReceived).toFixed(0));
+                        $('#txtBalances').val(ApplyRefundToBalance(TotalNetAmount - AmtReceived).toFixed(0));
                     }
                     else
-                        $('#txtBalances').val(TotalNetAmount.toFixed(0));
+                        $('#txtBalances').val(ApplyRefundToBalance(TotalNetAmount).toFixed(0));
                 }
                 else {
-                    $('#txtBalances').val(TotalNetAmount.toFixed(0));
+                    $('#txtBalances').val(ApplyRefundToBalance(TotalNetAmount).toFixed(0));
                 }
 
                 CalculateSalesTax();
@@ -4507,6 +4521,14 @@
             //    }
             //}
             debugger;
+            // Refund reduces a negative balance (moves it toward zero)
+            function ApplyRefundToBalance(balance) {
+                var refund = parseFloat($('#txtRefund_amount').val()) || 0;
+                if (refund > 0 && balance < 0) {
+                    balance = balance + refund;
+                }
+                return balance;
+            }
             function CountBalance() {
                 debugger;
                 var PreviousPaid = parseFloat($("#txtprevious_paid").val()) || 0;
@@ -4530,11 +4552,13 @@
 
                 if (AmtReceived != '' && !isNaN(parseFloat(AmtReceived))) {
                     var balance = (parseFloat(Totalpayable) + PreviousAmount) - (parseFloat(AmtReceived) + AdvanceAmount);
+                    balance = ApplyRefundToBalance(balance);
                     $('#txtBalances').val(balance.toFixed(0));
                     $('#txtPreviousBlnc').val(balance.toFixed(0));
                 }
                 else {
                     var balance = (parseFloat(Totalpayable) + PreviousAmount) - (AdvanceAmount);
+                    balance = ApplyRefundToBalance(balance);
                     $('#txtBalances').val(balance.toFixed(0));
                     $('#txtPreviousBlnc').val(balance.toFixed(0));
                 }
@@ -9033,7 +9057,7 @@
                 <input type="text" id="txtadvance_amount" class="bp-summary-value bp-summary-value--readonly" disabled="disabled" />
             </div>
 
-            <div class="bp-summary-row" style="display:none;">
+            <div class="bp-summary-row" id="rowRefund" style="display:none;">
                 <span class="bp-summary-label">Refund</span>
                 <input type="text" id="txtRefund_amount" class="bp-summary-value bp-summary-value--readonly" disabled="disabled" />
             </div>

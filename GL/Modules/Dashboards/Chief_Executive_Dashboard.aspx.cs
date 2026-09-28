@@ -417,12 +417,12 @@ namespace PMS.Modules.Dashboards
                     conn.Open();
 
                     using (System.Data.SqlClient.SqlCommand cmd = new System.Data.SqlClient.SqlCommand(@"
-SELECT
-    AVG(CASE WHEN p.Patient_Type = '01' THEN DATEDIFF(MINUTE, p.Entry_Date, op.Created_Time) END) AS AvgGeneral,
-    AVG(CASE WHEN p.Patient_Type = '02' THEN DATEDIFF(MINUTE, p.Entry_Date, op.Created_Time) END) AS AvgPrivate
-FROM Patients p
-INNER JOIN Out_Patient op ON p.Patient_ID = op.Patient_ID
-WHERE p.Created_Time >= @s AND p.Created_Time <= @e", conn))
+                            SELECT
+                                AVG(CASE WHEN p.Patient_Type = '01' THEN DATEDIFF(MINUTE, p.Entry_Date, op.Created_Time) END) AS AvgGeneral,
+                                AVG(CASE WHEN p.Patient_Type = '02' THEN DATEDIFF(MINUTE, p.Entry_Date, op.Created_Time) END) AS AvgPrivate
+                            FROM Patients p
+                            INNER JOIN Out_Patient op ON p.Patient_ID = op.Patient_ID
+                            WHERE p.Created_Time >= @s AND p.Created_Time <= @e", conn))
                     {
                         cmd.Parameters.AddWithValue("@s", sDate);
                         cmd.Parameters.AddWithValue("@e", eDate);
@@ -437,12 +437,12 @@ WHERE p.Created_Time >= @s AND p.Created_Time <= @e", conn))
                     }
 
                     using (System.Data.SqlClient.SqlCommand cmd = new System.Data.SqlClient.SqlCommand(@"
-SELECT
-    COUNT(CASE WHEN d.Test_Main_Department = '001' THEN 1 END) AS DiagCount,
-    COUNT(CASE WHEN d.Test_Main_Department = '005' THEN 1 END) AS PhysioCount
-FROM Ar_Billings m
-INNER JOIN Ar_Billing_Details d ON m.Bill_ID = d.Bill_ID
-WHERE m.Creation_Date >= @s AND m.Creation_Date <= @e", conn))
+                           SELECT
+                               COUNT(CASE WHEN d.Test_Main_Department = '001' THEN 1 END) AS DiagCount,
+                               COUNT(CASE WHEN d.Test_Main_Department = '005' THEN 1 END) AS PhysioCount
+                           FROM Ar_Billings m
+                           INNER JOIN Ar_Billing_Details d ON m.Bill_ID = d.Bill_ID
+                           WHERE m.Creation_Date >= @s AND m.Creation_Date <= @e", conn))
                     {
                         cmd.Parameters.AddWithValue("@s", sDate);
                         cmd.Parameters.AddWithValue("@e", eDate);
@@ -574,31 +574,58 @@ WHERE m.Creation_Date >= @s AND m.Creation_Date <= @e", conn))
                     DateTime sDate, eDate;
                     ResolveDates(period, startDate, endDate, out sDate, out eDate);
 
-                    var registrations = db.Patients.Where(p =>
+                    int registrations = db.Patients.Where(p =>
                         p.Patient_Main_Category == "042" &&
                         p.Entry_Date >= sDate &&
                         p.Entry_Date <= eDate
-                    ).ToList();
+                    ).Count();
 
-                    var regIds = registrations.Select(p => p.Reg_PatId).ToList();
-                    var sessions = db.Out_Patients.Where(op =>
-                        regIds.Contains(op.Reg_PatId) &&
-                        op.Created_Time >= sDate &&
-                        op.Created_Time <= eDate
-                    ).ToList();
+                    int performedCount = (
+                        from p in db.Patients
+                        join op in db.Out_Patients
+                            on p.Patient_ID equals op.Patient_ID
+                        where p.Entry_Date >= sDate
+                           && p.Entry_Date <= eDate
+                           && p.Patient_Main_Category == "042"
+                           && op.Discharge == true
+                        select op
+                    ).Count();
 
-                    int performedCount = registrations.Count;
+                    int activeCount = (
+                        from p in db.Patients
+                        join op in db.Out_Patients
+                            on p.Patient_ID equals op.Patient_ID
+                        where p.Entry_Date >= sDate
+                           && p.Entry_Date <= eDate
+                           && p.Patient_Main_Category == "042"
+                           && (op.Discharge == false || op.Discharge == null)
+                        select p
+                    ).Count();
 
-                    int activeCount = registrations.Count(r => {
-                        var session = sessions.OrderByDescending(s => s.Created_Time)
-                                              .FirstOrDefault(s => s.Reg_PatId == r.Reg_PatId);
+                    //var regIds = registrations.Select(p => p.Patient_ID).ToList();
+                    //var sessions = db.Out_Patients.Where(op =>
+                    //    regIds.Contains(Convert.ToInt32( op.Patient_ID)) &&
+                    //    op.Created_Time >= sDate &&
+                    //    op.Created_Time <= eDate
+                    //).ToList();
 
-                        return session == null || (session.Discharge != true);
-                    });
+                    //int performedCount = registrations.Count(r => {
+                    //    var session = sessions.OrderByDescending(s => s.Created_Time)
+                    //                          .FirstOrDefault(s => s.Patient_ID == r.Patient_ID);
+
+                    //    return session == null || (session.Discharge == true);
+                    //}); ;
+
+                    //int activeCount = registrations.Count(r => {
+                    //    var session = sessions.OrderByDescending(s => s.Created_Time)
+                    //                          .FirstOrDefault(s => s.Patient_ID == r.Patient_ID);
+
+                    //    return session == null || (session.Discharge != true);
+                    //});
 
                     return new JavaScriptSerializer().Serialize(new
                     {
-                        ActiveSessions = activeCount,
+                        ActiveSessions = registrations,
                         PerformedToday = performedCount,
                         ActiveNow = activeCount 
                     });
@@ -659,7 +686,7 @@ WHERE m.Creation_Date >= @s AND m.Creation_Date <= @e", conn))
                 {
                     var departments = (from dv in db.DataValues
                                        join vs in db.ValueSets on dv.ValueSet_ID equals vs.ValueSet_ID
-                                       where vs.ValueSet_Name == "Patient Main Category"
+                                       where vs.ValueSet_Name == "Mode Of Registration"
                                        select new
                                        {
                                            dv.DataValue_Name,
@@ -675,8 +702,63 @@ WHERE m.Creation_Date >= @s AND m.Creation_Date <= @e", conn))
             }
         }
 
-        [WebMethod(EnableSession = false)]
-        public static string GetClinicalOutcomes(string period, string department, string startDate = null, string endDate = null)
+        //[WebMethod(EnableSession = false)]
+        //public static string GetClinicalOutcomes(string period, string department, string startDate = null, string endDate = null)
+        //{
+        //    try
+        //    {
+        //        using (DataBaseDataContext db = new DataBaseDataContext())
+        //        {
+        //            DateTime sDate, eDate;
+        //            ResolveDates(period, startDate, endDate, out sDate, out eDate);
+        //            if (department == "02")
+        //            {
+        //                var query = db.Emergency_Patients.Where(ep =>
+        //                    ep.Admission_Date >= sDate && ep.Admission_Date <= eDate);
+        //            }
+        //            else if(department == "03")
+        //            {
+        //                var ipdquery = db.In_Patients.Where(ipd => ipd.Admission_Date >= sDate && ipd.Admission_Date <= eDate);
+        //            }
+        //            //if (!string.IsNullOrEmpty(department) && department != "0")
+        //            //    query = query.Where(ep => ep.Department == department);
+
+        //            //var patients = query.ToList();
+
+        //            //var er = patients.Where(p => p.Department == "01").ToList();
+        //            //var ipd = patients.Where(p => p.Department != "01").ToList();
+
+        //            var result = new
+        //            {
+        //                ER = new
+        //                {
+        //                    Discharges = er.Count(p => p.Discharge == true),
+        //                    Deaths = er.Count(p => p.DateOfDeath != null),
+        //                    Referrals = er.Count(p => p.isReferred == true)
+        //                },
+        //                IPD = new
+        //                {
+        //                    Discharges = ipd.Count(p => p.Discharge == true),
+        //                    Deaths = ipd.Count(p => p.DateOfDeath != null),
+        //                    Referrals = ipd.Count(p => p.isReferred == true)
+        //                }
+        //            };
+
+        //            return new JavaScriptSerializer().Serialize(result);
+        //        }
+        //    }
+        //    catch (Exception ex)
+        //    {
+        //        return new JavaScriptSerializer().Serialize(new { Error = ex.Message });
+        //    }
+        //}
+ 
+[WebMethod(EnableSession = false)]
+public static string GetClinicalOutcomes(
+    string period,
+    string department,
+    string startDate = null,
+    string endDate = null)
         {
             try
             {
@@ -685,30 +767,47 @@ WHERE m.Creation_Date >= @s AND m.Creation_Date <= @e", conn))
                     DateTime sDate, eDate;
                     ResolveDates(period, startDate, endDate, out sDate, out eDate);
 
-                    var query = db.Emergency_Patients.Where(ep =>
-                        ep.Admission_Date >= sDate && ep.Admission_Date <= eDate);
+                    // ER
+                    var er = db.Emergency_Patients
+                        .Where(ep =>
+                            ep.Created_Time >= sDate &&
+                            ep.Created_Time <= eDate);
 
-                    if (!string.IsNullOrEmpty(department) && department != "0")
-                        query = query.Where(ep => ep.Department == department);
+                    // IPD
+                    var ipd = db.In_Patients
+                        .Where(ipdPatient =>
+                            ipdPatient.Created_Time >= sDate &&
+                            ipdPatient.Created_Time <= eDate);
 
-                    var patients = query.ToList();
+                    // Apply department filter
+                    if (department == "02")
+                    {
+                        // ER only
+                        ipd = ipd.Where(x => false);
+                    }
+                    else if (department == "03")
+                    {
+                        // IPD only
+                        er = er.Where(x => false);
+                    }
 
-                    var er = patients.Where(p => p.Department == "01").ToList();
-                    var ipd = patients.Where(p => p.Department != "01").ToList();
+                    var erPatients = er.ToList();
+                    var ipdPatients = ipd.ToList();
 
                     var result = new
                     {
                         ER = new
                         {
-                            Discharges = er.Count(p => p.Discharge == true),
-                            Deaths = er.Count(p => p.DateOfDeath != null),
-                            Referrals = er.Count(p => p.isReferred == true)
+                            Discharges = erPatients.Count(p => p.Discharge == true),
+                            Deaths = erPatients.Count(p => p.DateOfDeath != null),
+                            Referrals = erPatients.Count(p => p.isReferred == true)
                         },
+
                         IPD = new
                         {
-                            Discharges = ipd.Count(p => p.Discharge == true),
-                            Deaths = ipd.Count(p => p.DateOfDeath != null),
-                            Referrals = ipd.Count(p => p.isReferred == true)
+                            Discharges = ipdPatients.Count(p => p.Discharge == true),
+                            Deaths = ipdPatients.Count(p => p.DateOfDeath != null),
+                            Referrals = ipdPatients.Count(p => p.isReferred == true)
                         }
                     };
 
@@ -717,9 +816,13 @@ WHERE m.Creation_Date >= @s AND m.Creation_Date <= @e", conn))
             }
             catch (Exception ex)
             {
-                return new JavaScriptSerializer().Serialize(new { Error = ex.Message });
+                return new JavaScriptSerializer().Serialize(
+                    new { Error = ex.Message }
+                );
             }
         }
+
+
 
         [WebMethod(EnableSession = false)]
         public static string GetYearlyPharmacySummary(int year, string warehouse = "0")

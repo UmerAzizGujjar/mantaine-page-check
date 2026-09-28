@@ -1331,6 +1331,50 @@ namespace PMS
             }
             return result;
         }
+
+        [WebMethod]
+        public static string GetMedicineDetailsBatch(string itemIds, string warehouse, int patientId, string visitType, string hdndiscountType)
+        {
+            var ids = new List<int>();
+            foreach (string s in (itemIds ?? "").Split(','))
+            {
+                int itemId;
+                if (int.TryParse((s ?? "").Trim(), out itemId) && itemId > 0) ids.Add(itemId);
+            }
+
+            // key by position so duplicate item codes keep producing duplicate rows (same as old serial loop)
+            var map = new System.Collections.Concurrent.ConcurrentDictionary<int, Newtonsoft.Json.Linq.JObject>();
+            System.Threading.Tasks.Parallel.For(0, ids.Count,
+                new System.Threading.Tasks.ParallelOptions { MaxDegreeOfParallelism = 8 },
+                i =>
+                {
+                    int itemId = ids[i];
+                    try
+                    {
+                        var detail = Newtonsoft.Json.Linq.JArray.Parse(MedicineDetailgetfromOPD(itemId, warehouse, patientId, visitType));
+                        if (detail.Count == 0) return;
+                        var batches = Newtonsoft.Json.Linq.JArray.Parse(GetBatchNumbers(itemId, warehouse));
+                        string firstBatch = batches.Count > 0 ? (string)batches[0]["BatchNum"] : "";
+                        var stock = Newtonsoft.Json.Linq.JArray.Parse(GetStockByBatch(itemId, hdndiscountType ?? "", firstBatch, warehouse));
+                        map[i] = new Newtonsoft.Json.Linq.JObject
+                        {
+                            ["detail"] = detail[0],
+                            ["batches"] = batches,
+                            ["stock"] = stock.Count > 0 ? stock[0] : new Newtonsoft.Json.Linq.JObject()
+                        };
+                    }
+                    catch { }
+                });
+
+            var arr = new Newtonsoft.Json.Linq.JArray();
+            for (int i = 0; i < ids.Count; i++)
+            {
+                Newtonsoft.Json.Linq.JObject obj;
+                if (map.TryGetValue(i, out obj)) arr.Add(obj);
+            }
+            return arr.ToString(Newtonsoft.Json.Formatting.None);
+        }
+
         public class Medicines
         {
             public int Bill_ID { get; set; }

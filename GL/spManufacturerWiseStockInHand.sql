@@ -12,7 +12,7 @@ BEGIN
 
     ;WITH StockData AS
     (
-        SELECT v.Item_ID, SUM(v.Qty) AS Stock_Qty
+        SELECT v.Item_ID, SUM(v.Qty) AS Stock_Qty, AVG(v.Rate) AS Avg_Rate, SUM(v.Amount) AS Stock_Value
         FROM dbo.vwBatch_Ledger AS v
         WHERE v.Trans_Date < DATEADD(day, 1, @EndDate)
           AND ISNULL(v.isCancel, 0) = 0
@@ -27,14 +27,14 @@ BEGIN
             i.Item_ID,
             i.Item_Code AS Alias_Name,
             i.Description AS Item_Name,
-            CAST(ISNULL(i.Avg_Amount, 0) AS decimal(19,4)) AS Unit_Price,
+            CAST(ISNULL(s.Avg_Rate, 0) AS decimal(19,4)) AS Unit_Price,
             CAST(ISNULL(s.Stock_Qty, 0) AS decimal(19,4)) AS Stock_Qty,
             ISNULL(dbo.GetDataValueName('Item Category', i.Item_Category), '') AS Item_Category,
             ISNULL(dbo.GetDataValueName('Item Group', i.ItemGroupId), '') AS Item_Class,
             CAST(ISNULL(i.Purchase_Rate, 0) AS decimal(19,4)) AS Purchase_Price,
             CAST(ISNULL(i.Sale_Rate, 0) AS decimal(19,4)) AS Sale_Price,
             CAST(ISNULL(i.UOM_Qty, 1) AS decimal(19,4)) AS Pack_Unit,
-            CAST(ISNULL(s.Stock_Qty, 0) * ISNULL(i.Avg_Amount, 0) AS decimal(19,4)) AS Stock_Value,
+            CAST(ISNULL(s.Stock_Value, 0) AS decimal(19,4)) AS Stock_Value,
             COALESCE(NULLIF(LTRIM(RTRIM(dbo.GetDataValueName('Manufacture Company', i.Manufacturer_Name))), ''),
                      NULLIF(LTRIM(RTRIM(i.Manufacturer_Name)), ''), 'Unassigned') AS Manufacturer_Name
         FROM dbo.INV_Items AS i
