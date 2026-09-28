@@ -1,0 +1,48 @@
+- generic [ref=f12e3]:
+  - complementary [ref=f12e4]:
+    - generic [ref=f12e5]:
+      - generic [ref=f12e6]: H
+      - generic [ref=f12e7]: National Hospital & Lab
+    - navigation [ref=f12e8]:
+      - generic [ref=f12e9]: Patient Management
+      - link "Patient Registration" [ref=f12e10] [cursor=pointer]:
+        - /url: /patients/register
+      - link "Registration List" [ref=f12e15] [cursor=pointer]:
+        - /url: /patients/reglist
+    - generic [ref=f12e19]:
+      - generic [ref=f12e20]: Z
+      - generic [ref=f12e21]:
+        - generic [ref=f12e22]: zz_react_test
+        - button "Logout" [ref=f12e23] [cursor=pointer]
+  - generic [ref=f12e24]:
+    - banner [ref=f12e25]:
+      - generic [ref=f12e26]: Registration List
+      - generic [ref=f12e27]:
+        - generic [ref=f12e28]: National Hospital & Lab
+        - generic [ref=f12e29]: zz_react_test
+    - main [ref=f12e30]:
+      - generic [ref=f12e31]:
+        - generic [ref=f12e32]:
+          - textbox "Search MR No, Name, Mobile, CNIC…" [ref=f12e33]
+          - button "Search" [ref=f12e34] [cursor=pointer]
+          - button "New Patient" [ref=f12e35] [cursor=pointer]
+        - table [ref=f12e37]:
+          - rowgroup [ref=f12e38]:
+            - row [ref=f12e39]:
+              - columnheader "MR NO" [ref=f12e40]
+              - columnheader "Patient No" [ref=f12e41]
+              - columnheader "Name" [ref=f12e42]
+              - columnheader "Age" [ref=f12e43]
+              - columnheader "Mobile" [ref=f12e44]
+              - columnheader "CNIC" [ref=f12e45]
+              - columnheader "Address" [ref=f12e46]
+              - columnheader "Created Time" [ref=f12e47]
+              - columnheader "Created By" [ref=f12e48]
+              - columnheader "Charged By" [ref=f12e49]
+          - rowgroup [ref=f12e50]:
+            - row [ref=f12e51]:
+              - cell "No records found." [ref=f12e52]
+        - generic [ref=f12e53]:
+          - button "Prev" [disabled] [ref=f12e54]
+          - generic [ref=f12e55]: Showing 1–0 of 0
+          - button "Next" [disabled] [ref=f12e56]

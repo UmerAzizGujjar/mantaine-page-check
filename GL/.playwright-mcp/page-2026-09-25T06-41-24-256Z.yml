@@ -1,0 +1,134 @@
+- generic [ref=f4e13]:
+  - banner [ref=f4e14]:
+    - generic [ref=f4e15]: National Hospital & Lab
+    - navigation [ref=f4e16]:
+      - link "Patient Registration" [ref=f4e17] [cursor=pointer]:
+        - /url: /patients/register
+      - link "Registration List" [ref=f4e18] [cursor=pointer]:
+        - /url: /patients/reglist
+    - generic [ref=f4e19]:
+      - generic [ref=f4e20]: zz_react_test
+      - button "Logout" [ref=f4e21] [cursor=pointer]
+  - main [ref=f4e22]:
+    - generic [ref=f4e23]:
+      - generic [ref=f4e24]:
+        - heading "Patient Information" [level=5] [ref=f4e25]
+        - generic [ref=f4e26]:
+          - generic [ref=f4e27]:
+            - generic [ref=f4e28]: MR No
+            - textbox [disabled] [ref=f4e29]: New
+          - generic [ref=f4e30]:
+            - generic [ref=f4e31]: Name*
+            - generic [ref=f4e32]:
+              - log [ref=f4e34]
+              - generic [ref=f4e36]:
+                - generic [ref=f4e37]: Prefix
+                - combobox [ref=f4e39]
+          - textbox "First Name" [ref=f4e46]: ZZ Test
+          - generic [ref=f4e47]:
+            - generic [ref=f4e48]: Relation*
+            - generic [ref=f4e49]:
+              - log [ref=f4e51]
+              - generic [ref=f4e53]:
+                - generic [ref=f4e54]: S/O
+                - combobox [ref=f4e56]
+          - textbox "Relation Name" [ref=f4e63]: ZZ Tester
+          - generic [ref=f4e66]:
+            - log [ref=f4e68]
+            - generic [ref=f4e70]:
+              - generic [ref=f4e71]: Year
+              - combobox [ref=f4e73]
+          - generic [ref=f4e78]:
+            - generic [ref=f4e79]: DOB*
+            - textbox "Enter Age" [ref=f4e80]: "30"
+          - textbox "dd/mm/yyyy" [ref=f4e85]: 25/09/1996
+        - generic [ref=f4e86]:
+          - generic [ref=f4e87]:
+            - generic [ref=f4e88]: Gender*
+            - generic [ref=f4e89]:
+              - log [ref=f4e91]: 4 results available.Use Up and Down to choose options, press Enter to select the currently focused option, press Escape to exit the menu, press Tab to select the option and exit the menu.
+              - generic [ref=f4e93]:
+                - generic [ref=f4e94]: Select Gender
+                - combobox [expanded] [active] [ref=f4e96]
+              - listbox [ref=f4e226]:
+                - option "New Born Baby" [ref=f4e227]
+                - option "Female" [ref=f4e228]
+                - option "Male" [ref=f4e229]
+                - option "Transgender" [ref=f4e230]
+          - generic [ref=f4e101]:
+            - generic [ref=f4e102]: Marital Status*
+            - generic [ref=f4e103]:
+              - log [ref=f4e105]
+              - generic [ref=f4e107]:
+                - generic [ref=f4e108]: Select Martial Status
+                - combobox [ref=f4e110]
+          - generic [ref=f4e115]:
+            - generic [ref=f4e116]: Mobile*
+            - textbox "+92xxxxxxxxxx" [ref=f4e117]: "+929230011122"
+          - generic [ref=f4e118]:
+            - generic [ref=f4e119]: Blood Group
+            - generic [ref=f4e120]:
+              - log [ref=f4e122]
+              - generic [ref=f4e124]:
+                - generic [ref=f4e125]: Select Blood Group
+                - combobox [ref=f4e127]
+          - generic [ref=f4e132]:
+            - generic [ref=f4e133]: CNIC*
+            - textbox "xxxxx-xxxxxxx-x" [ref=f4e134]: 35202-1234567-1
+          - generic [ref=f4e135]:
+            - generic [ref=f4e136]: Other CNIC
+            - textbox "xxxxx-xxxxxxx-x" [ref=f4e137]
+      - generic [ref=f4e138]:
+        - heading "Contact, Address & Payment" [level=5] [ref=f4e139]
+        - generic [ref=f4e140]:
+          - generic [ref=f4e141]:
+            - generic [ref=f4e142]: Country
+            - generic [ref=f4e143]:
+              - log [ref=f4e145]
+              - generic [ref=f4e147]:
+                - generic [ref=f4e148]: Select Country
+                - combobox [ref=f4e150]
+          - generic [ref=f4e155]:
+            - generic [ref=f4e156]: Province
+            - generic [ref=f4e157]:
+              - log [ref=f4e159]
+              - generic [ref=f4e161]:
+                - generic [ref=f4e162]: Select Province
+                - combobox [ref=f4e164]
+          - generic [ref=f4e169]:
+            - generic [ref=f4e170]: City
+            - generic [ref=f4e171]:
+              - log [ref=f4e173]
+              - generic [ref=f4e175]:
+                - generic [ref=f4e176]: Select City
+                - combobox [ref=f4e178]
+          - generic [ref=f4e183]:
+            - generic [ref=f4e184]: Area
+            - generic [ref=f4e185]:
+              - log [ref=f4e187]
+              - generic [ref=f4e189]:
+                - generic [ref=f4e190]: Select Area
+                - combobox [ref=f4e192]
+          - generic [ref=f4e197]:
+            - generic [ref=f4e198]: Payment method
+            - generic [ref=f4e199]:
+              - log [ref=f4e201]
+              - generic [ref=f4e203]:
+                - generic [ref=f4e204]: Cash
+                - combobox [ref=f4e206]
+          - generic [ref=f4e211]:
+            - generic [ref=f4e212]: Bank/Cash
+            - generic:
+              - log
+              - generic: Select Account
+        - generic [ref=f4e213]:
+          - generic [ref=f4e214]:
+            - generic [ref=f4e215]: Address*
+            - textbox "House / Street / Town" [ref=f4e216]: ZZ Test Address
+          - generic [ref=f4e217]:
+            - generic [ref=f4e218]: Fee*
+            - textbox [disabled] [ref=f4e219]: "0"
+      - generic [ref=f4e221]:
+        - button "Save&Print" [ref=f4e222] [cursor=pointer]
+        - button "View" [ref=f4e223] [cursor=pointer]
+        - generic [ref=f4e224]: National Hospital & Lab

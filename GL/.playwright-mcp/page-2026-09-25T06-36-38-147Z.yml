@@ -1,0 +1,9 @@
+- generic [ref=f2e4]:
+  - heading "Hospital Login" [level=2] [ref=f2e5]
+  - generic [ref=f2e6]: Company
+  - combobox [ref=f2e7]
+  - generic [ref=f2e8]: Username
+  - textbox [active] [ref=f2e9]
+  - generic [ref=f2e10]: Password
+  - textbox [ref=f2e11]
+  - button "Sign In" [ref=f2e12] [cursor=pointer]

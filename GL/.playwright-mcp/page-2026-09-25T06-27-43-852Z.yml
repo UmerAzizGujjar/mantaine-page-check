@@ -1,0 +1,15 @@
+- generic [active] [ref=e1]:
+  - generic [ref=e4]:
+    - heading [level=2] [ref=e13]: Hospital Login
+    - generic [ref=e6]: Company
+    - combobox [ref=e7]
+    - generic [ref=e8]: Username
+    - textbox [ref=e9]: test_invalid_user
+    - generic [ref=e10]: Password
+    - textbox [ref=e11]: wrongpassGoogle1234#
+    - button [ref=e14] [cursor=pointer]: Sign In
+  - dialog [ref=e16]:
+    - heading "Login Failed" [level=2] [ref=e21]
+    - generic [ref=e22]: Invalid username or password.
+    - text: "!"
+    - button "OK" [disabled] [ref=e24]

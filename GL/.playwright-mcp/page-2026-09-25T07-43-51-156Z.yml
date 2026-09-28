@@ -1,0 +1,167 @@
+- generic [ref=f40e3]:
+  - complementary [ref=f40e4]:
+    - generic [ref=f40e5]:
+      - generic [ref=f40e6]: H
+      - generic [ref=f40e7]: National Hospital & Lab
+    - navigation [ref=f40e8]:
+      - generic [ref=f40e9]:
+        - generic [ref=f40e10]: Patient Management
+        - link "Patient Registration" [ref=f40e11] [cursor=pointer]:
+          - /url: /patients/register
+        - link "Registration List" [ref=f40e16] [cursor=pointer]:
+          - /url: /patients/reglist
+      - generic [ref=f40e19]:
+        - generic [ref=f40e20]: OPD
+        - link "New OPD Visit" [ref=f40e21] [cursor=pointer]:
+          - /url: /opd
+        - link "OPD List (Today)" [ref=f40e25] [cursor=pointer]:
+          - /url: /opd/list
+    - generic [ref=f40e30]:
+      - generic [ref=f40e31]: Z
+      - generic [ref=f40e32]:
+        - generic [ref=f40e33]: zz_react_test
+        - button "Logout" [ref=f40e34] [cursor=pointer]
+  - generic [ref=f40e35]:
+    - banner [ref=f40e36]:
+      - generic [ref=f40e37]: New OPD Visit
+      - generic [ref=f40e38]:
+        - generic [ref=f40e39]: National Hospital & Lab
+        - generic [ref=f40e40]: zz_react_test
+    - main [ref=f40e41]:
+      - generic [ref=f40e42]:
+        - generic [ref=f40e43]:
+          - heading "1. Select Registered Patient" [level=5] [ref=f40e44]
+          - generic [ref=f40e45]:
+            - textbox "Search MR No, Name, Mobile, CNIC…" [ref=f40e46]
+            - button "New Registration" [ref=f40e47] [cursor=pointer]
+          - generic [ref=f40e248]:
+            - generic [ref=f40e249]: NH-45728 — ZZ Test
+            - generic [ref=f40e250]: ZZ Tester · 30Y · Male · +929230011122
+            - generic [ref=f40e251]: "Previous visits: 0"
+        - generic [ref=f40e48]:
+          - heading "2. OPD Visit Details" [level=5] [ref=f40e49]
+          - generic [ref=f40e50]:
+            - generic [ref=f40e51]:
+              - generic [ref=f40e52]: MR No
+              - textbox [disabled] [ref=f40e53]: NH-45728
+            - generic [ref=f40e54]:
+              - generic [ref=f40e55]: Mode of Presentation
+              - generic [ref=f40e56]:
+                - log [ref=f40e58]
+                - generic [ref=f40e60]:
+                  - generic [ref=f40e61]: Select Mode
+                  - combobox [ref=f40e63]
+            - generic [ref=f40e68]:
+              - generic [ref=f40e69]: Patient Category*
+              - generic [ref=f40e70]:
+                - log [ref=f40e72]
+                - generic [ref=f40e74]:
+                  - generic [ref=f40e257]: General
+                  - combobox [ref=f40e77]
+            - generic [ref=f40e82]:
+              - generic [ref=f40e83]: Department
+              - generic [ref=f40e84]:
+                - log [ref=f40e86]: option Medicine, selected.
+                - generic [ref=f40e88]:
+                  - generic [ref=f40e300]: Medicine
+                  - combobox [active] [ref=f40e91]
+            - generic [ref=f40e96]:
+              - generic [ref=f40e97]: Doctor
+              - generic [ref=f40e98]:
+                - log [ref=f40e100]
+                - generic [ref=f40e102]:
+                  - generic [ref=f40e103]: Select Doctor
+                  - combobox [ref=f40e105]
+          - generic [ref=f40e110]:
+            - generic [ref=f40e111]:
+              - generic [ref=f40e112]: Service
+              - generic [ref=f40e113]:
+                - log [ref=f40e115]
+                - generic [ref=f40e117]:
+                  - generic [ref=f40e118]: Select Service
+                  - combobox [ref=f40e120]
+            - generic [ref=f40e125]:
+              - generic [ref=f40e126]: Filter Clinic
+              - generic [ref=f40e127]:
+                - log [ref=f40e129]
+                - generic [ref=f40e131]:
+                  - generic [ref=f40e132]: Select Clinic
+                  - combobox [ref=f40e134]
+            - generic [ref=f40e139]:
+              - generic [ref=f40e140]: Cashier
+              - generic [ref=f40e141]:
+                - log [ref=f40e143]
+                - generic [ref=f40e145]:
+                  - generic [ref=f40e146]: Select Cashier
+                  - combobox [ref=f40e148]
+            - generic [ref=f40e153]:
+              - generic [ref=f40e154]: Cash In Hand Account*
+              - generic [ref=f40e155]:
+                - log [ref=f40e157]
+                - generic [ref=f40e159]:
+                  - generic [ref=f40e160]: Select Account
+                  - combobox [ref=f40e162]
+            - generic [ref=f40e167]:
+              - generic [ref=f40e168]: Cost Center
+              - generic [ref=f40e169]:
+                - log [ref=f40e171]
+                - generic [ref=f40e173]:
+                  - generic [ref=f40e174]: Select Cost Center
+                  - combobox [ref=f40e176]
+          - generic [ref=f40e181]:
+            - generic [ref=f40e182]:
+              - generic [ref=f40e183]: Fee*
+              - spinbutton [ref=f40e184]: "0"
+              - generic [ref=f40e301]: "Policy fee: 0"
+            - generic [ref=f40e185]:
+              - generic [ref=f40e186]: Discount
+              - spinbutton [ref=f40e187]
+            - generic [ref=f40e188]:
+              - generic [ref=f40e189]: Actual Fee
+              - spinbutton [ref=f40e190]: "0"
+            - generic [ref=f40e191]:
+              - generic [ref=f40e192]: Payment method
+              - generic [ref=f40e193]:
+                - log [ref=f40e195]
+                - generic [ref=f40e197]:
+                  - generic [ref=f40e198]: Cash
+                  - combobox [ref=f40e200]
+            - generic [ref=f40e205]:
+              - generic [ref=f40e206]: Bank/Cash
+              - generic:
+                - log
+                - generic: Select Account
+          - generic [ref=f40e207]:
+            - generic [ref=f40e208]:
+              - generic [ref=f40e209]: Panel Company
+              - generic [ref=f40e210]:
+                - log [ref=f40e212]
+                - generic [ref=f40e214]:
+                  - generic [ref=f40e215]: Select Panel (for panel patients)
+                  - combobox [ref=f40e217]
+            - generic [ref=f40e222]:
+              - generic [ref=f40e223]: Remarks
+              - textbox [ref=f40e224]
+            - generic [ref=f40e225]:
+              - generic [ref=f40e226]: Refference No
+              - textbox [ref=f40e227]
+          - generic [ref=f40e228]:
+            - generic [ref=f40e229]:
+              - generic [ref=f40e230]: Employee Name
+              - textbox [ref=f40e231]
+            - generic [ref=f40e232]:
+              - generic [ref=f40e233]: Employee Department
+              - textbox [ref=f40e234]
+            - generic [ref=f40e235]:
+              - generic [ref=f40e236]: Dependent
+              - textbox [ref=f40e237]
+          - generic [ref=f40e238]:
+            - generic [ref=f40e239] [cursor=pointer]:
+              - checkbox "Free Check" [ref=f40e240]
+              - text: Free Check
+            - generic [ref=f40e241] [cursor=pointer]:
+              - checkbox "Issue Card" [ref=f40e242]
+              - text: Issue Card
+        - generic [ref=f40e243]:
+          - button "Save&Print" [ref=f40e244] [cursor=pointer]
+          - button "OPD List" [ref=f40e245] [cursor=pointer]

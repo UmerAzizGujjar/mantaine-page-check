@@ -469,7 +469,26 @@
                     { "data": "Discount_Amount", "width": "5%", "orderable": false },
                     { "data": "Net_Amount", "width": "5%", "orderable": false },
                     { "data": "Received_Amount", "name": "Received_Amount", "width": "5%", "orderable": false },
-                    { "data": "Balance_Amount", "width": "5%", "orderable": false },
+                    {
+                        "data": "Balance_Amount", "name": "Balance_Amount", "width": "5%", "orderable": false,
+                        "render": function (data, type, full) {
+                            var bal = parseFloat(data) || 0;
+                            var ref = parseFloat(full.Refund_Amount) || 0;
+                            // Move balance toward zero by the refunded amount
+                            if (ref !== 0 && bal !== 0) {
+                                bal = (bal < 0) ? (bal + ref) : (bal - ref);
+                            }
+                            return bal.toFixed(2);
+                        }
+                    },
+                    {
+                        "data": "Refund_Amount", "name": "Refund_Amount", "width": "5%", "orderable": false,
+                        "render": function (data, type, full) {
+                            if (data === null || data === undefined || data === '') return '0.00';
+                            var n = Number(data);
+                            return isNaN(n) ? data : n.toFixed(2);
+                        }
+                    },
                     { "data": "Operator", "width": "6%", "orderable": false },
 
                     {
@@ -498,8 +517,16 @@
                                 // receipt = '<a class="disabledBtn" style="border-radius: 4px;margin-left: 4px;color: gray;padding: 5px 8px 5px 8px; cursor: not-allowed; opacity: 0.5;" title="Balance is zero - No receipt needed"><i class="fa fa-money"></i></a>';
                             }
 
+                            // Advance Refund button only when there is a refundable negative balance and no refund yet
+                            var advRefund = '';
+                            var hasRefund = (full.Has_Refund === true || full.Has_Refund === 'true');
+                            var negBal = parseFloat(full.Negative_Balance) || 0;
+                            if (!hasRefund && negBal > 0) {
+                                advRefund = '<a class="advRefundBtn" style="border-radius: 4px;margin-left: 4px;padding: 5px 8px 5px 8px;" href="#" onclick="openAdvanceRefund(' + full.Bill_ID + ');return false;" title="Advance Refund"><i class="fa fa-reply"></i></a>';
+                            }
+
                             var result;
-                            result = res + logBtn + Del + print + print1 + receipt;
+                            result = res + logBtn + Del + print + print1 + receipt + advRefund;
                             return result;
                         },
                         "width": "10%",
@@ -615,6 +642,82 @@
             debugger;
          
             window.location.href = 'Receipts.aspx?Bill_No=' + encodeURIComponent(billNo) + '&Bill_ID=' + billId;
+        }
+
+        function openAdvanceRefund(billId) {
+            $.ajax({
+                type: "POST",
+                url: "BillingProcessView.aspx/GetBillAdvanceRefundInfo",
+                data: JSON.stringify({ billId: billId }),
+                contentType: "application/json; charset=utf-8",
+                dataType: "json",
+                success: function (response) {
+                    var d = JSON.parse(response.d);
+                    if (d.Error) {
+                        Swal.fire({ icon: 'error', title: 'Error!', text: d.Error, confirmButtonText: 'OK' });
+                        return;
+                    }
+                    var nb = parseFloat(d.NegativeBalance) || 0;
+                    if (nb <= 0) {
+                        Swal.fire({ icon: 'info', title: 'No Negative Balance', text: 'There is no refundable negative balance for this bill/admission.', confirmButtonText: 'OK' });
+                        return;
+                    }
+                    Swal.fire({
+                        title: 'Advance Refund',
+                        html: '<div style="text-align:left;font-size:14px;line-height:1.6;">'
+                            + '<div><b>Bill:</b> ' + (d.Bill_No || '') + '</div>'
+                            + '<div><b>Patient:</b> ' + (d.Full_Name || '') + '</div>'
+                            + '<div><b>Total Advance:</b> ' + d.Total_Advance + '</div>'
+                            + '<div><b>Bill Net:</b> ' + d.BillNet + '</div>'
+                            + '<div><b>Already Refunded:</b> ' + d.AlreadyRefunded + '</div>'
+                            + '<div style="margin-top:6px;"><b>Negative Balance:</b> <span style="color:#b02a37;font-weight:700;">' + nb + '</span></div>'
+                            + '<input id="swalRefundAmt" class="swal2-input" type="number" value="' + nb + '" step="1" min="1" style="margin-top:10px;">'
+                            + '<textarea id="swalRefundRemarks" class="swal2-textarea" placeholder="Remarks" style="margin-top:6px;"></textarea>'
+                            + '</div>',
+                        showCancelButton: true,
+                        confirmButtonText: 'Refund',
+                        focusConfirm: false,
+                        preConfirm: function () {
+                            var amt = parseFloat(document.getElementById('swalRefundAmt').value) || 0;
+                            if (amt <= 0) { Swal.showValidationMessage('Amount must be greater than zero'); return false; }
+                            if (amt > nb) { Swal.showValidationMessage('Amount cannot exceed negative balance (' + nb + ')'); return false; }
+                            return {
+                                amount: Math.round(amt),
+                                remarks: document.getElementById('swalRefundRemarks').value
+                            };
+                        }
+                    }).then(function (res) {
+                        if (!res.isConfirmed) return;
+                        $.ajax({
+                            type: "POST",
+                            url: "BillingProcessView.aspx/SaveBillAdvanceRefund",
+                            data: JSON.stringify({
+                                billId: billId,
+                                refundDate: new Date().toISOString(),
+                                remarks: res.value.remarks,
+                                amount: res.value.amount
+                            }),
+                            contentType: "application/json; charset=utf-8",
+                            dataType: "json",
+                            success: function (r2) {
+                                var out = r2.d;
+                                if (out && out.indexOf('Error') === 0) {
+                                    Swal.fire({ icon: 'error', title: 'Error!', text: out, confirmButtonText: 'OK' });
+                                    return;
+                                }
+                                Swal.fire({ icon: 'success', title: 'Saved', text: 'Advance refund created (pending approval). Refund No: ' + out, confirmButtonText: 'OK' });
+                                $('#tbloutPatients').DataTable().ajax.reload(null, false);
+                            },
+                            error: function (x, e) {
+                                Swal.fire({ icon: 'error', title: 'Error!', text: e, confirmButtonText: 'OK' });
+                            }
+                        });
+                    });
+                },
+                error: function (x, e) {
+                    Swal.fire({ icon: 'error', title: 'Error!', text: 'Could not load refund info', confirmButtonText: 'OK' });
+                }
+            });
         }
         function BuildDetailsHTML(details) {
             var html = '<div class="detail-container">';
@@ -1092,6 +1195,7 @@
                         <th>Net Amount</th>
                         <th>Received Amount</th>
                         <th>Balance Amount</th>
+                        <th>Refund Amount</th>
                         <th>Operator</th>
                         <th>Actions</th>
                     </tr>
