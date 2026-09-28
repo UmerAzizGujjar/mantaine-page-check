@@ -4487,134 +4487,110 @@ function CalculateReceivedAmount() {
             var prefix = parts.length > 0 ? parts[0] : '';
             var warehouse = $('#ddlWarehouse').val();
 
-            var totalItems = itemIds.length;  
-            var loadedItems = 0;          
+            var totalItems = itemIds.length;
+            var loadedItems = 0;
 
-            itemIds.forEach(function (itemCode) {
-                debugger;
-                var itemId = itemCode;
-                var rowIndex = parseInt($('#tblDetails tbody tr').length);
-                var rows;
+            if (!itemIds || itemIds.length === 0) return;
 
-                $.ajax({
-                    type: "post",
-                    url: "IssueMedicine.aspx/MedicineDetailgetfromOPD",
-                    data: JSON.stringify({
-                        "itemId": itemId,
-                        "patientId": pat_Id,
-                        "warehouse": warehouse,
-                        "visitType": prefix
-                    }),
-                    dataType: 'JSON',
-                    contentType: "application/json; charset=utf-8",
-                    async: false,
-                    success: function (msg) {
-                        var data = JSON.parse(msg.d);
-                        if (!data || data.length === 0) {
-                            console.warn("Item not found: " + itemId);
-                            loadedItems++;
-                            return;  
-                        }
-                        var Uomqty = data[0].UOM_Qty;
-                        if (Uomqty == null) {
-                            Uomqty = 0;
-                        } else {
-                            Uomqty = data[0].UOM_Qty;
-                        }
-                        var SaleRate = data[0].Sale_Rate;
-                        if (SaleRate == null) {
-                            SaleRate = 0;
-                        } else {
-                            SaleRate = data[0].Sale_Rate;
-                        }
-                        var date = data[0].ExpiryDate;
-                        var discountBlock = data[0].Discount_Block;
+            $.ajax({
+                type: "post",
+                url: "IssueMedicine.aspx/GetMedicineDetailsBatch",
+                data: JSON.stringify({
+                    itemIds: itemIds.join(','),
+                    warehouse: warehouse,
+                    patientId: pat_Id,
+                    visitType: prefix,
+                    hdndiscountType: $('#hdndiscountType').val()
+                }),
+                dataType: 'JSON',
+                contentType: "application/json; charset=utf-8",
+                success: function (msg) {
+                    var data = JSON.parse(msg.d);
+                    var html = '';
+                    var lowStock = [];
+                    data.forEach(function (entry, index) {
+                        var d = entry.detail;
+                        var rowIndex = index;
+                        var Uomqty = (d.UOM_Qty == null) ? 0 : d.UOM_Qty;
+                        var SaleRate = (d.Sale_Rate == null) ? 0 : d.Sale_Rate;
+                        var discountBlock = d.Discount_Block;
                         var isDiscountDisabled = (discountBlock == 1 || discountBlock === true);
-                        var requestedQty = (data[0].RequestedQty && data[0].RequestedQty > 0) ? data[0].RequestedQty : 0;
+                        var requestedQty = (d.RequestedQty && d.RequestedQty > 0) ? d.RequestedQty : 0;
                         var disDisabledAttr = isDiscountDisabled ? 'disabled' : '';
-                        date = moment(date).format('D-MMM-YYYY');
 
-                        rows =
-                            '<tr><td style="display:none;"><input type="hidden" value="' + data[0].Item_ID + '" name="ItemID" id="ItemID" > ' + data[0].Item_ID + '</td>' +
+                        var batchOptions = '';
+                        var firstBatch = '';
+                        if (entry.batches && entry.batches.length > 0) {
+                            $.each(entry.batches, function (key, value) {
+                                batchOptions += '<option value="' + value.BatchNum + '"' + (key === 0 ? ' selected="selected"' : '') + '>' + value.BatchNum + '</option>';
+                            });
+                            firstBatch = entry.batches[0].BatchNum;
+                        } else {
+                            batchOptions = '<option value="0">No Batch Available</option>';
+                        }
+
+                        var st = entry.stock || {};
+                        var stock = st.Total_Stock || 0;
+                        var stockRate = st.Sale_Rate || 0;
+                        var CGSrate = st.CGSRate || 0;
+                        var expDate = st.ExpiryDate ? moment(st.ExpiryDate).format('D-MMM-YYYY') : '';
+                        var mini = st.Mini_stock;
+                        if (stock <= mini) {
+                            lowStock.push(d.Description + ' (Batch: ' + firstBatch + ' - Stock: ' + stock + ')');
+                        }
+
+                        html +=
+                            '<tr><td style="display:none;"><input type="hidden" value="' + d.Item_ID + '" name="ItemID" id="ItemID" > ' + d.Item_ID + '</td>' +
                             '<td> ' + (rowIndex + 1) + '</td>' +
-                            '<td style="display:none;"><input type="hidden" value="' + data[0].Item_Code + '" name="ItemIDcode" id="ItemIDcode" > ' + data[0].Item_Code + '</td>' +
-                            '<td><input type="hidden" value="' + data[0].Description + '" name="Itemdesc" id="Itemdesc" >' + data[0].Description + '</td>' +
-                            '<td style="display:none"><input type="hidden" value="' + data[0].Unit + '" name="txtUom" id="txtUom" >' + data[0].Unit + '</td>' +
+                            '<td style="display:none;"><input type="hidden" value="' + d.Item_Code + '" name="ItemIDcode" id="ItemIDcode" > ' + d.Item_Code + '</td>' +
+                            '<td><input type="hidden" value="' + d.Description + '" name="Itemdesc" id="Itemdesc" >' + d.Description + '</td>' +
+                            '<td style="display:none"><input type="hidden" value="' + d.Unit + '" name="txtUom" id="txtUom" >' + d.Unit + '</td>' +
                             '<td><input type="hidden" value="' + Uomqty + '" name="UomQty" id="UomQty"  >' + Uomqty + '</td>' +
                             '<td><input type="text" name="txtQty" value="1" min="1" style="width: 62px !important;margin-left: -7px;position: absolute;height:22px;text-align: right;" class="height_height" onkeyup="CulculateAmonutWithQty(this)" onblur="CulculateAmonutWithQty(this)" autocomplete="off" onclick="this.select();" /></td>' +
-                            '<td><input type="number" name="txtStock" id="txtStock' + (rowIndex + 1) + '" value="0" style="width: 65px !important;margin-left: -2px;position: absolute;height:22px;text-align: right;" class="height_height" readonly/></td>' +
-                            '<td style="text-align: right;" ><input type="text" disabled value="' + SaleRate + '" name="txtSalerate" id="txtSalerate' + (rowIndex + 1) + '" ></td>' +
+                            '<td><input type="number" name="txtStock" id="txtStock' + (rowIndex + 1) + '" value="' + stock + '" style="width: 65px !important;margin-left: -2px;position: absolute;height:22px;text-align: right;" class="height_height" readonly/></td>' +
+                            '<td style="text-align: right;" ><input type="text" disabled value="' + stockRate + '" name="txtSalerate" id="txtSalerate' + (rowIndex + 1) + '" ></td>' +
                             '<td><input type="number" name="DisPer" value="0"' + disDisabledAttr + ' min="0" class="height_height orderchange" style="text-align: right;margin-left: -4px;position: absolute;height:22px;" onkeyup="CalculateSummarieDiscountPerWise(' + rowIndex + '),sumdiscount()" autocomplete="off" onclick="this.select();" /> </td>' +
                             '<td><input type="text" readonly name="DisAmount"' + disDisabledAttr + ' class="height_height orderchangeDiscount" value="" style="width: 60px !important;text-align: right;margin-left: -4px;position: absolute;height:22px;"  /></td>' +
-                            '<td style="text-align:Right;"></td>' +
-                            '<td><select id="ddlbatch' + (rowIndex + 1) + '" name="ddlbatch" onchange="updateStock(this)" Tabindex="' + (12 + (rowIndex * 3)) + '"></select></td>' +
-                            '<td style="display:none;"><input type="text"  id="txtCGSRate' + (rowIndex + 1) + '" value="' + data[0].CGSRate + '" name="txtCGSRate" class="" /> </td>' +
-                            '<td><input type="text" disabled name="exp_date" id="exp_date' + (rowIndex + 1) + '" class=""  style="width: 87px !important;text-align: right;margin-left: -4px;position: absolute;height:22px;" /></td>' +
+                            '<td style="text-align:Right;">' + stockRate + '</td>' +
+                            '<td><select id="ddlbatch' + (rowIndex + 1) + '" name="ddlbatch" onchange="updateStock(this)" Tabindex="' + (12 + (rowIndex * 3)) + '">' + batchOptions + '</select></td>' +
+                            '<td style="display:none;"><input type="text"  id="txtCGSRate' + (rowIndex + 1) + '" value="' + CGSrate + '" name="txtCGSRate" class="" /> </td>' +
+                            '<td><input type="text" disabled name="exp_date" id="exp_date' + (rowIndex + 1) + '" class="" value="' + expDate + '" style="width: 87px !important;text-align: right;margin-left: -4px;position: absolute;height:22px;" /></td>' +
                             '<td><input type="text" disabled name="LineDiscount" class="" value="0" style="width: 76px !important;text-align: right;margin-left: -4px;position: absolute;height:22px;" /></td>' +
-                            '<td style="display:none;"><input type="text" disabled id="BatchNo' + (rowIndex + 1) + '" name="BatchNo" class="" value="' + data[0].BatchNum + ' "/> </td>' +
+                            '<td style="display:none;"><input type="text" disabled id="BatchNo' + (rowIndex + 1) + '" name="BatchNo" class="" value="' + firstBatch + ' "/> </td>' +
                             '<td style="display:none;"><input type="text"  id="txtCGSAmount' + (rowIndex + 1) + '" name="txtCGSAmount" class="" value="0"/> </td>' +
-                            '<td style="display:none;"><input type="hidden" value="' + data[0].Item_ID + '" name="hdnItemID" id="hdnItemID" > ' + data[0].Item_ID + '</td>' +
+                            '<td style="display:none;"><input type="hidden" value="' + d.Item_ID + '" name="hdnItemID" id="hdnItemID" > ' + d.Item_ID + '</td>' +
                             '<td><input type="text" name="Remarks" class="" value="" style="width: 100% !important; height: 22px; text-align: left;" /></td>' +
                             '<td style="text-align: center;"><input type="text" name="ReqQty" value="' + requestedQty + '" style="width: 60px !important;text-align: center;background-color:#f5f5f5;" readonly /></td>' +
                             '<td style="text-align: center;"><a href="javascript:void(0)" onclick="ExcludeFromPayment(this)"><i class="fa fa-trash-o" style="font-size:17px"></i></a> </td>' +
                             '</tr>';
-                        $('#tblDetails tbody').append(rows);
+                    });
+                    $('#tblDetails tbody').append(html);
 
-                        //PageMethods.GetBatchNumbers(itemId, warehouse, function (data) {
-                        //    debugger;
-                        //    var parsedData = JSON.parse(data);
-                        //    var options = '<option value="0" >Please Select</option>';
+                    data.forEach(function (entry, index) {
+                        CalculateSummarieDiscountPerWise(index);
+                    });
 
-                        //    $.each(parsedData, function (key, value) {
-                        //        options += '<option value="' + value.BatchNum + '" >' + value.BatchNum + '</option>';
-                        //    });
-                        //    $('#ddlbatch' + (rowIndex + 1)).html(options);
-                        //}, function (error) {
-                        //    alert(error.get_message());
-                        //});
-
-                        PageMethods.GetBatchNumbers(itemId, warehouse, function (data) {
-                            debugger;
-                            var parsedData = JSON.parse(data);
-                            var options = '';
-
-                            if (parsedData && parsedData.length > 0) {
-                                $.each(parsedData, function (key, value) {
-                                    if (key === 0) {
-                                        options += '<option value="' + value.BatchNum + '" selected="selected">' + value.BatchNum + '</option>';
-                                    } else {
-                                        options += '<option value="' + value.BatchNum + '">' + value.BatchNum + '</option>';
-                                    }
-                                });
-                            } else {
-                                options = '<option value="0">No Batch Available</option>';
-                            }
-
-                            var selectElement = $('#ddlbatch' + (rowIndex + 1));
-                            selectElement.html(options);
-                            selectElement.trigger('change');
-
-                            loadedItems++;  
-                            if (loadedItems === totalItems) {
-                                $('#ddlWarehouse').prop('disabled', true); 
-                            }
-
-                        }, function (error) {
-                            alert(error.get_message());
-                            loadedItems++;  
+                    if (lowStock.length) {
+                        Swal.fire({
+                            icon: 'warning',
+                            title: 'Minimum Stock Alert — ' + lowStock.length + ' item(s)',
+                            html: lowStock.join('<br>'),
+                            customClass: { popup: 'swal-big-popup', title: 'swal-big-title', htmlContainer: 'swal-big-text' }
                         });
-
-                        setTimeout(function () {
-                            $('#medName').select2('close');
-                            $('input[name="txtQty"]').focus().select();
-                        }, 5);
-                        CalculateSummarieDiscountPerWise(rowIndex);
-                    },
-                    error: function (xhr, status, error) {
-                        console.log("Error fetching medicine details: " + error);
-                        loadedItems++;  
                     }
-                });
+
+                    if (data.length === totalItems) {
+                        $('#ddlWarehouse').prop('disabled', true);
+                    }
+
+                    setTimeout(function () {
+                        $('#medName').select2('close');
+                        $('input[name="txtQty"]').focus().select();
+                    }, 5);
+                },
+                error: function (xhr, status, error) {
+                    console.log("Error fetching medicine details batch: " + error);
+                }
             });
         }
         function updateStock(anchors) {
