@@ -2792,6 +2792,7 @@
     <Content Include="Reports\Inventory\rptIGP_Print.rpt" />
     <Content Include="Reports\Inventory\rptInspection.rpt" />
     <Content Include="Reports\Inventory\rptInv_Store_Issue.rpt" />
+    <Content Include="Reports\Inventory\rptItemWiseNetSale.rpt" />
     <Content Include="Reports\Inventory\rptMIRBasePrint.rpt" />
     <Content Include="Reports\Inventory\rptPR_Print.rpt" />
     <Content Include="Reports\Accounts\rptVoucher.rpt" />
