@@ -5400,6 +5400,21 @@ namespace PMS
                 rd.SetParameterValue("@stDate", StartDateTime);
                 rd.SetParameterValue("@endDate", EndDateTime);
             }
+            else if (reportName == "RevenuseCardFee")
+            {
+                string rptFileName = "AccountAndFinance/rptpatientRegFeeReport.rpt";
+                string StartDateTime = Request.QueryString["StartDateTime"].ToString();
+                string EndDateTime = Request.QueryString["EndDateTime"].ToString();
+                var logoPath = DBClass.getField("SELECT dbo.GetCompanyLogo()");
+                reportPath += rptFileName;
+
+                rd.Load(reportPath);
+                rd.SetParameterValue("CompanyName", AppConfig.Company_Name);
+                rd.SetParameterValue("Title", reportTitle);
+                rd.SetParameterValue("@sdate", StartDateTime);
+                rd.SetParameterValue("@edate", EndDateTime);
+                rd.SetParameterValue("CompanyLogo", logoPath);
+            }
             else if (reportName == "Head_Wise_Discount_Report")
             {
                 string rptFileName = "TransactionalDetails/rptHeadWiseDiscountReport.rpt";

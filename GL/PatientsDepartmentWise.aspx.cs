@@ -1167,6 +1167,49 @@ namespace PMS
                         ddloprators.DataBind();
                     }
                 }
+                //Revenue - Card Fee
+                if (PageTitle == "RevenuseCardFee")
+                {
+                    string x = "Patient Registration Fee Report";
+                    Master.Label2.Text = x;
+                    Master.GetMenuName();
+                    tr1MedicalSubsidy.Visible = true;
+                    dpROw.Visible = false;
+                    SetDepartent();
+                    DateDiv.Visible = true;
+                    Time_Row.Visible = true;
+                    ddlDepartments.Visible = false;
+                    lblDepartment.Visible = false;
+                    ddlMedicalSubsidy.Visible = false;
+                    lblMedical.Visible = false;
+                    lblMultiSelect.Visible = false;
+                    ddlShift.Visible = false;
+                    lbShift.Visible = false;
+                    tr_Export.Visible = false;
+                    trDoctor.Visible = false;
+                    tr_Summary.Visible = false;
+                    lblPatientType.Visible = false;
+                    lblPatientType.Text = "Patient Type";
+                    object valusets;
+                    DataTable dt = DBClass.getDataTable("select * from HR_Employees where IsDoctor=1");
+                    ddlDoctor.DataSource = dt;
+                    ddlDoctor.DataValueField = "Emp_ID";
+                    ddlDoctor.DataTextField = "Emp_Name";
+                    ddlDoctor.Items.Add(new ListItem() { Value = "0", Text = "All Doctors" });
+                    ddlDoctor.DataBind();
+                    ddlDoctor.Visible = false;
+                    ddlPatientType.Visible = false;
+                    DataBaseDataContext db = new DataBaseDataContext(DBClass.ConnectionString());
+                    valusets = (from p in db.DataValues where p.ValueSet_ID == 3162 orderby p.DataValue_Description select new { p.DataValue_Name, p.DataValue_Description }).ToList();
+                    ddlFilterClinic.DataSource = valusets;
+                    ddlFilterClinic.DataTextField = "DataValue_Description";
+                    ddlFilterClinic.DataValueField = "DataValue_Name";
+                    ddlFilterClinic.Items.Add(new ListItem() { Text = "All", Value = "0" });
+                    ddlFilterClinic.DataBind();
+                    op_FilterClinic.Visible = false;
+                    ddlReportType.Visible = false;
+                    lbservieType.Visible = false;
+                }
                 //Revenue - Department Wise Summary
                 if (PageTitle == "RevenuseSummary")
                 {
