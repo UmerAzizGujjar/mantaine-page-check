@@ -319,24 +319,24 @@
 
                  proceed = false;
             }
-            if (fianceIntegration == "0") {
-                Swal.fire({
-                    icon: 'error',
-                    title: 'Error!',
-                    text: 'Please Select Account Category',
-                    showConfirmButton: false,
-                    timer: 2000,
-                    customClass: {
-                        popup: 'swal-big-popup',
-                        title: 'swal-big-title',
-                        htmlContainer: 'swal-big-text'
-                    }
-                });
+            // if (fianceIntegration == "0") {
+            //     Swal.fire({
+            //         icon: 'error',
+            //         title: 'Error!',
+            //         text: 'Please Select Account Category',
+            //         showConfirmButton: false,
+            //         timer: 2000,
+            //         customClass: {
+            //             popup: 'swal-big-popup',
+            //             title: 'swal-big-title',
+            //             htmlContainer: 'swal-big-text'
+            //         }
+            //     });
 
-                 proceed = false;
-            }
+        //          proceed = false;
+        //     }
             return proceed;
-        }
+         }
         function Saveitem() {
             if (validateSave()) {
                 debugger;

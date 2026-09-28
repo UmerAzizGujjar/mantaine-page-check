@@ -40,10 +40,16 @@
              $('#txteTime').val('11:59 PM');
              loadItemCodeList();
              loadManufacturerList();
+             loadSupplierList();
              if ('<%= Request.QueryString["rptTitle"] %>' == 'IWNSRC') {
                  $('#ctl00_MainContent_rowItem').hide();
                  $('#ctl00_MainContent_rowWareHouse').hide();
                  $('#ctl00_MainContent_rowInventory_Org').hide();
+             }
+             if ('<%= Request.QueryString["rptTitle"] %>' == 'IWNSR') {
+                 $('#ctl00_MainContent_rowItem').hide();
+                 $('#ctl00_MainContent_rowInventory_Org').hide();
+                 $('#rowStockOnly').hide();
              }
              $('#<%= btnPreview.ClientID %>').click(function () {
                  var exporttopdf = document.getElementById('<%= chkExportPDF.ClientID %>').checked;
@@ -98,6 +104,25 @@
                          + '&ItemCode=' + encodeURIComponent($('#ddlItemName').val() || '0')
                          + '&Manufacturer=' + encodeURIComponent($('#ddlManufacturer').val() || '0')
                          + '&StockOnly=' + stockOnly
+                         + '&ExportPDF=' + exporttopdf;
+                     window.open(url, '_blank');
+                 }
+                 else if (type == 'IWNSR')
+                 {
+                     var exporttopdf = document.getElementById('<%= chkExportPDF.ClientID %>').checked;
+                     var startDateTime = $('#txtsDate').val() + ' ' + $('#txtsTime').val();
+                     var endDateTime = $('#txteDate').val() + ' ' + $('#txteTime').val();
+
+                     var url = '../../ReportViewer.aspx?ReportName=ItemWiseNetSale'
+                         + '&ReportTitle=' + encodeURIComponent('Item Wise Net Sales from ' + startDateTime + ' to ' + endDateTime)
+                         + '&StartDate=' + encodeURIComponent($('#txtsDate').val())
+                         + '&StartTime=' + encodeURIComponent($('#txtsTime').val())
+                         + '&EndDate=' + encodeURIComponent($('#txteDate').val())
+                         + '&EndTime=' + encodeURIComponent($('#txteTime').val())
+                         + '&ItemCode=' + encodeURIComponent($('#ddlItemName').val() || '0')
+                         + '&Manufacturer=' + encodeURIComponent($('#ddlManufacturer').val() || '0')
+                         + '&Supplier=' + encodeURIComponent($('#ddlSupplier').val() || '0')
+                         + '&Warehouse=' + encodeURIComponent($('#ddlWareHouse').val() || '0')
                          + '&ExportPDF=' + exporttopdf;
                      window.open(url, '_blank');
                  }
@@ -233,6 +258,20 @@ function loadItemList(rowlength) {
                });
             }
 
+            function loadSupplierList() {
+                PageMethods.GetSuppliers(function (resp) {
+                    var options = '<option value="0">Please Select</option>';
+                    $.each(JSON.parse(resp), function (key, value) {
+                        options += '<option value="' + value.Vendor_ID + '" >' + value.Vendor_Name + '</option>';
+                    });
+                    $('#ddlSupplier').html(options);
+                    $('#ddlSupplier').trigger('change');
+                },
+               function (error) {
+                   alert(error.get_message());
+               });
+            }
+
      </script>
 </asp:Content>
 <asp:Content ID="Content2" ContentPlaceHolderID="MainContent" runat="server">   
@@ -270,6 +309,15 @@ function loadItemList(rowlength) {
                 <td>
                     <select id="ddlManufacturer"></select>
                 </td>
+            </tr>
+            <tr id="rowSupplierName">
+                <td class="auto-style2">Supplier Name </td>
+                <td>
+                    <select id="ddlSupplier"></select>
+                </td>
+                <td class="auto-style4"></td>
+                <td class="auto-style5"></td>
+                <td></td>
             </tr>
             <tr id="rowStockOnly">
                 <td class="auto-style2">Only Stock &gt; 0</td>

@@ -21,7 +21,7 @@ namespace PMS
             bool hasEntryRights = false;
             using (DataBaseDataContext db = new DataBaseDataContext())
             {
-                var form_id = 1;
+                var form_id = 2;
                 var user_id = AppConfig.UserID;
 
                 hasEntryRights = (from SASD in db.Sys_Approval_Stage_Details

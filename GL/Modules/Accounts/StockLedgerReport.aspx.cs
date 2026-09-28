@@ -63,6 +63,11 @@ namespace PMS
                     }
                 }
                 rowInventory_Org.Visible = true;
+                if (pageTitle == "IWNSR")
+                {
+                    rowItem.Visible = false;
+                    rowInventory_Org.Visible = false;
+                }
                 if (pageTitle == "BL")
                 {
                     rowItem.Visible = false;
@@ -181,6 +186,19 @@ namespace PMS
                                      dv.DataValue_Description
                                  }).ToList();
             return (new JavaScriptSerializer()).Serialize(manufacturers);
+        }
+
+        [WebMethod]
+
+        public static string GetSuppliers()
+        {
+            System.Data.DataTable dt = DBClass.getDataTable("SELECT Vendor_ID, Vendor_Name FROM AP_Vendors WHERE ISNULL(IsActive,1) = 1 ORDER BY Vendor_Name");
+            List<object> suppliers = new List<object>();
+            foreach (System.Data.DataRow row in dt.Rows)
+            {
+                suppliers.Add(new { Vendor_ID = row["Vendor_ID"], Vendor_Name = row["Vendor_Name"] });
+            }
+            return (new JavaScriptSerializer()).Serialize(suppliers);
         }
 
     }

@@ -519,16 +519,10 @@
                     else if (rptTitle == "ManufacturerWiseStockInHand") {
                         var exporttopdf = document.getElementById('<%= chkExportPDF.ClientID %>').checked;
                         var endDate = $('#ctl00_MainContent_txtEnd_Date').val();
-                        var manufacturer = $('#ctl00_MainContent_ddlDepartments').val() || '0';
-                        var itemName = $('#ctl00_MainContent_ddlItemName').val() || '0';
-                        var warehouse = $('#ctl00_MainContent_ddlwareHouse').val() || '0';
-                        var url = 'ReportViewer.aspx?ReportName=ManufacturerWiseStockInHand'
-                            + '&ReportTitle=' + encodeURIComponent('Manufacturer Wise Stock in Hand as on ' + endDate)
-                            + '&ItemName=' + encodeURIComponent(itemName)
-                            + '&Manufacturer=' + encodeURIComponent(manufacturer)
-                            + '&Warehouse=' + encodeURIComponent(warehouse)
-                            + '&EndDate=' + encodeURIComponent(endDate)
-                            + '&ExportPDF=' + exporttopdf;
+                        var manufacturer = $('#ctl00_MainContent_ddlDepartments').val();
+                        var itemName = $('#ctl00_MainContent_ddlItemName').val();
+                        var warehouse = $('#ctl00_MainContent_ddlwareHouse').val();
+                        var url = 'ReportViewer.aspx?ReportName=ManufacturerWiseStockInHand&ReportTitle=' + encodeURIComponent('Manufacturer Wise Stock in Hand as on ' + endDate) + '&ItemName=' + encodeURIComponent(itemName) + '&Manufacturer=' + encodeURIComponent(manufacturer) + '&Warehouse=' + encodeURIComponent(warehouse) + '&EndDate=' + encodeURIComponent(endDate) + '&ExportPDF=' + exporttopdf;
                         window.open(url, '_blank');
                     }
                     else if (rptTitle == "CathLabStockInHand") {
@@ -1549,6 +1543,11 @@
                     else if (rptTitle == "RevenuseSummary") {
                         debugger;
                         var url = 'ReportViewer.aspx?ReportName=RevenuseSummary&ReportTitle=Revenuse Department Wise Summary Report from ' + $('#ctl00_MainContent_txtStart_Date').val() + ' ' + $('#ctl00_MainContent_txtSTime').val() + ' to ' + $('#ctl00_MainContent_txtEnd_Date').val() + ' ' + $('#ctl00_MainContent_txtETime').val() + '&StartDateTime=' + $('#ctl00_MainContent_txtStart_Date').val() + ' ' + $('#ctl00_MainContent_txtSTime').val() + '&EndDateTime=' + $('#ctl00_MainContent_txtEnd_Date').val() + ' ' + $('#ctl00_MainContent_txtETime').val();
+                        window.open(url, '_blank');
+                    }
+                    else if (rptTitle == "RevenuseCardFee") {
+                        debugger;
+                        var url = 'ReportViewer.aspx?ReportName=RevenuseCardFee&ReportTitle=Patient Reg Fee Report from ' + $('#ctl00_MainContent_txtStart_Date').val() + ' ' + $('#ctl00_MainContent_txtSTime').val() + ' to ' + $('#ctl00_MainContent_txtEnd_Date').val() + ' ' + $('#ctl00_MainContent_txtETime').val() + '&StartDateTime=' + $('#ctl00_MainContent_txtStart_Date').val() + ' ' + $('#ctl00_MainContent_txtSTime').val() + '&EndDateTime=' + $('#ctl00_MainContent_txtEnd_Date').val() + ' ' + $('#ctl00_MainContent_txtETime').val();
                         window.open(url, '_blank');
                     }
                     else if (rptTitle == "Head_Wise_Discount_Report") {
