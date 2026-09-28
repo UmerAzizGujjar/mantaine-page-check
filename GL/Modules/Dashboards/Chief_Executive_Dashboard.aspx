@@ -27,9 +27,12 @@
             showAllLoading();
             LoadHospitalRevenue(period, startDate, endDate);
             LoadOPDSaleRevenue(period, startDate, endDate);
+            LoadEMRSaleRevenue(period, startDate, endDate);
+            LoadCardFeeRevenue(period, startDate, endDate);
             LoadPharmacyRevenue(period, startDate, endDate);
             LoadPBRevenue(period, startDate, endDate);
             LoadLabRadiologyRevenue(period, startDate, endDate);
+            LoadServicesRevenue(period, startDate, endDate);
             LoadOPDChart(period, startDate, endDate);
             LoadOPDVolume(period, startDate, endDate);
             LoadWaitTimeTrends(period, startDate, endDate);
@@ -413,6 +416,62 @@
             });
         }
 
+        function LoadEMRSaleRevenue(period, startDate, endDate) {
+            var data = { 'period': period, 'startDate': startDate || null, 'endDate': endDate || null };
+            $.ajax({
+                type: "POST",
+                url: "Chief_Executive_Dashboard.aspx/GetEMRSaleRevenue",
+                data: JSON.stringify(data),
+                contentType: "application/json; charset=utf-8",
+                dataType: "json",
+                success: function (data) {
+                    var result = JSON.parse(data.d);
+                    if (result.Error) {
+                        $('#lblEMRRevenue').text('0');
+                        $('#lblEMRDate').text('Error loading data');
+                    } else {
+                        var formatted = parseFloat(result.OPDRevenue).toLocaleString('en-PK', {
+                            minimumFractionDigits: 0,
+                            maximumFractionDigits: 0
+                        });
+                        $('#lblEMRRevenue').text(formatted);
+                        $('#lblEMRDate').text(result.DateRange);
+                    }
+                },
+                error: function () {
+                    $('#lblEMRRevenue').text('0');
+                }
+            });
+        }
+
+        function LoadCardFeeRevenue(period, startDate, endDate) {
+            var data = { 'period': period, 'startDate': startDate || null, 'endDate': endDate || null };
+            $.ajax({
+                type: "POST",
+                url: "Chief_Executive_Dashboard.aspx/GetCardFeeRevenue",
+                data: JSON.stringify(data),
+                contentType: "application/json; charset=utf-8",
+                dataType: "json",
+                success: function (data) {
+                    var result = JSON.parse(data.d);
+                    if (result.Error) {
+                        $('#lblCardfeeRevenue').text('0');
+                        $('#lblCardfeeDate').text('Error loading data');
+                    } else {
+                        var formatted = parseFloat(result.OPDRevenue).toLocaleString('en-PK', {
+                            minimumFractionDigits: 0,
+                            maximumFractionDigits: 0
+                        });
+                        $('#lblCardfeeRevenue').text(formatted);
+                        $('#lblCardfeeDate').text(result.DateRange);
+                    }
+                },
+                error: function () {
+                    $('#lblCardfeeRevenue').text('0');
+                }
+            });
+        }
+
         function LoadPharmacyRevenue(period, startDate, endDate) {
             var data = { 'period': period, 'startDate': startDate || null, 'endDate': endDate || null };
             $.ajax({
@@ -493,6 +552,34 @@
                 },
                 error: function () {
                     $('#lblLabRevenue').text('0');
+                }
+            });
+        }
+
+        function LoadServicesRevenue(period, startDate, endDate) {
+            var data = { 'period': period, 'startDate': startDate || null, 'endDate': endDate || null };
+            $.ajax({
+                type: "POST",
+                url: "Chief_Executive_Dashboard.aspx/GetServicesRevenue",
+                data: JSON.stringify(data),
+                contentType: "application/json; charset=utf-8",
+                dataType: "json",
+                success: function (data) {
+                    var result = JSON.parse(data.d);
+                    if (result.Error) {
+                        $('#lblServicesRevenue').text('0');
+                        $('#lblServicesDate').text('Error loading data');
+                    } else {
+                        var formatted = parseFloat(result.LabRevenue).toLocaleString('en-PK', {
+                            minimumFractionDigits: 0,
+                            maximumFractionDigits: 0
+                        });
+                        $('#lblServicesRevenue').text(formatted);
+                        $('#lblServicesDate').text(result.DateRange);
+                    }
+                },
+                error: function () {
+                    $('#lblServicesRevenue').text('0');
                 }
             });
         }
@@ -1035,14 +1122,20 @@
                     if (d.Error) return;
                     renderSparkline("sparkRevenue", d.hospital, d.labels);
                     renderSparkline("sparkOPD", d.opd, d.labels);
+                    renderSparkline("sparkEMR", d.EMR, d.labels);
+                    renderSparkline("sparkCard", d.card, d.labels);
                     renderSparkline("sparkPharmacy", d.pharmacy, d.labels);
                     renderSparkline("sparkPB", d.PB, d.labels);
                     renderSparkline("sparkLab", d.lab, d.labels);
+                    renderSparkline("sparkServices", d.Services, d.labels);
                     checkBlink("sparkRevenue", d.hospital);
                     checkBlink("sparkOPD", d.opd);
+                    checkBlink("sparkEMR", d.EMR);
+                    checkBlink("sparkCard", d.card);
                     checkBlink("sparkPharmacy", d.pharmacy);
                     checkBlink("sparkPB", d.PB);
                     checkBlink("sparkLab", d.lab);
+                    checkBlink("sparkServices", d.Services);
                 }
             });
         }
@@ -2054,6 +2147,16 @@
                 <div class="rev-chart" id="sparkOPD"></div>
             </div>
             <div class="bento-item rev-item">
+                <div class="rev-label">EMR Sale Revenue</div>
+                <div class="rev-value">Rs. <span id="lblEMRRevenue">0</span></div>
+                <div class="rev-chart" id="sparkEMR"></div>
+            </div>
+            <div class="bento-item rev-item">
+                <div class="rev-label">Card Fee Revenue</div>
+                <div class="rev-value">Rs. <span id="lblCardfeeRevenue">0</span></div>
+                <div class="rev-chart" id="sparkCard"></div>
+            </div>
+            <div class="bento-item rev-item">
                 <div class="rev-label">Pharmacy Revenue</div>
                 <div class="rev-value">Rs. <span id="lblPharmacyRevenue">0</span></div>
                 <div class="rev-chart" id="sparkPharmacy"></div>
@@ -2067,6 +2170,11 @@
                 <div class="rev-label">Lab & Radiology Revenue</div>
                 <div class="rev-value">Rs. <span id="lblLabRevenue">0</span></div>
                 <div class="rev-chart" id="sparkLab"></div>
+            </div>
+            <div class="bento-item rev-item">
+                <div class="rev-label">Services Revenue</div>
+                <div class="rev-value">Rs. <span id="lblServicesRevenue">0</span></div>
+                <div class="rev-chart" id="sparkServices"></div>
             </div>
             <div class="bento-item" style="padding:10px;">
                 <div class="sect-title" style="margin:0 0 6px 0;">Clinical Outcomes (IPD/ER)</div>

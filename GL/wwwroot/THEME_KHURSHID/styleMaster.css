@@ -20701,3 +20701,13 @@ select option {
     font-weight: bold;
     color: #000000;
 }
+
+/* Advance Refund action button (theme primary) */
+.advRefundBtn {
+    background-color: #c11718 !important;
+    color: #fff !important;
+}
+
+.advRefundBtn:hover {
+    background-color: #9e1213 !important;
+}

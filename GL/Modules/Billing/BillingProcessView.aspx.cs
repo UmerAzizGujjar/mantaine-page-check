@@ -148,25 +148,26 @@ namespace PMS
                                    where (b.Total_Amount != null || b.Discount_Amount != null)
                                         && (b.IsPharmacy == null || b.IsPharmacy == false)
                                         && (b.IsCathLab == null || b.IsCathLab == false)
-                                  select new
-                                  {
-                                      Bill_No = b.Bill_No,
-                                      Bill_Date = b.Creation_Date,
-                                      Remarks = b.Remarks,
-                                      Total_Amount = b.Total_Amount,
-                                      Discount_Amount = b.Discount_Amount,
+                                   select new
+                                   {
+                                       Bill_No = b.Bill_No,
+                                       Bill_Date = b.Creation_Date,
+                                       Remarks = b.Remarks,
+                                       Total_Amount = b.Total_Amount,
+                                       Discount_Amount = b.Discount_Amount,
 
-                                      // Calculate Discount_Percentage safely
-                                      Discount_Percentage = b.Total_Amount.HasValue && b.Total_Amount.Value > 0
+                                       // Calculate Discount_Percentage safely
+                                       Discount_Percentage = b.Total_Amount.HasValue && b.Total_Amount.Value > 0
     ? Math.Round((b.Discount_Amount ?? 0) / b.Total_Amount.Value * 100, 2, MidpointRounding.AwayFromZero)
     : 0,
 
-                                      Net_Amount = b.Net_Amount,
-                                      Received_Amount = b.Received_Amount,
-                                      Balance_Amount = b.Balance_Amount,
-                                      MrNo = p.mr_no_sequence,
-                                      Full_Name = p.Full_Name,
+                                       Net_Amount = b.Net_Amount,
+                                       Received_Amount = b.Received_Amount,
+                                       Balance_Amount = b.Balance_Amount,
+                                       MrNo = p.mr_no_sequence,
+                                       Full_Name = p.Full_Name,
                                        Bill_ID = b.Bill_ID,
+                                       In_Patient_ID = b.In_Patient_ID,
                                        Operator = u.UserName,
                                        isCancel = b.isCancel
                                    };
@@ -195,12 +196,54 @@ namespace PMS
                     // Apply pagination
                     var patientList = Billing.Skip(start).Take(length).ToList();
 
+                    // Refund totals per bill/admission (computed separately, then merged in memory)
+                    var billIds = patientList.Select(x => (long)x.Bill_ID).ToList();
+                    var ipdIds = patientList.Where(x => x.In_Patient_ID.HasValue)
+                                            .Select(x => x.In_Patient_ID.Value).ToList();
+
+                    var refundRows = _dbContext.Refunds
+                        .Where(r => (r.isCancelled == null || r.isCancelled == false)
+                                 && (r.Status == null || (r.Status != "Rejected" && r.Status != "UnApproved"))
+                                 && ((r.Bill_ID != null && billIds.Contains(r.Bill_ID.Value))
+                                  || (r.Bill_ID == null && r.In_Patient_ID != null && ipdIds.Contains(r.In_Patient_ID.Value))))
+                        .Select(r => new { r.Bill_ID, r.In_Patient_ID, r.Refund_Amount, r.Status })
+                        .ToList();
+
+                    // Refundable negative balance = magnitude of the bill's negative Balance_Amount
+                    var data = patientList.Select(x => new
+                    {
+                        x.Bill_No,
+                        x.Bill_Date,
+                        x.Remarks,
+                        x.Total_Amount,
+                        x.Discount_Amount,
+                        x.Discount_Percentage,
+                        x.Net_Amount,
+                        x.Received_Amount,
+                        x.Balance_Amount,
+                        x.MrNo,
+                        x.Full_Name,
+                        x.Bill_ID,
+                        x.Operator,
+                        x.isCancel,
+                        Refund_Amount = refundRows
+                            .Where(r => ((r.Bill_ID != null && r.Bill_ID == (long)x.Bill_ID)
+                                      || (r.Bill_ID == null && r.In_Patient_ID == x.In_Patient_ID))
+                                     && r.Status == "Approved")
+                            .Sum(r => (decimal?)(r.Refund_Amount ?? 0)) ?? 0,
+                        Has_Refund = refundRows.Any(r => (r.Bill_ID != null && r.Bill_ID == (long)x.Bill_ID)
+                                      || (r.Bill_ID == null && r.In_Patient_ID == x.In_Patient_ID)),
+                        Negative_Balance = (x.Balance_Amount.HasValue && x.Balance_Amount.Value < 0)
+                            ? (0m - x.Balance_Amount.Value)
+                            : 0m
+                    }).ToList();
+
                     var jsonData = new
                     {
                         draw = draw,
                         recordsFiltered = FilteredCount,
                         recordsTotal = Total_Billing,
-                        data = patientList
+                        data = data
                     };
 
                     return jsonData;
@@ -425,6 +468,114 @@ namespace PMS
             {
                 // Optional: Log the exception to your error log
                 System.Diagnostics.Debug.WriteLine("Reprint Count Error: " + ex.Message);
+            }
+        }
+
+        [WebMethod]
+        public static string GetBillAdvanceRefundInfo(int billId)
+        {
+            try
+            {
+                using (var db = new DataBaseDataContext())
+                {
+                    var bill = db.Ar_Billings.FirstOrDefault(b => b.Bill_ID == billId);
+                    if (bill == null)
+                        return (new JavaScriptSerializer()).Serialize(new { Error = "Bill not found." });
+
+                    long? ipd = bill.In_Patient_ID;
+                    int patientId = bill.Patient_ID ?? 0;
+
+                    decimal advance = 0;
+                    decimal billNet = 0;
+                    decimal alreadyRefunded = 0;
+
+                    if (ipd.HasValue)
+                    {
+                        advance = db.AR_Advances
+                            .Where(a => a.In_Patient_ID == ipd.Value && (a.isCancelled == null || a.isCancelled == false))
+                            .Sum(a => (decimal?)a.Advance_Amount) ?? 0;
+
+                        var billRecords = db.Ar_Billings
+                            .Where(b => b.In_Patient_ID == ipd.Value && (b.isCancel == null || b.isCancel == false))
+                            .ToList();
+                        var finalBills = billRecords.Where(b => b.final_bill_ipd == true).ToList();
+                        billNet = (finalBills.Count > 0 ? finalBills : billRecords).Sum(b => b.Net_Amount ?? 0);
+
+                        alreadyRefunded = db.Refunds
+                            .Where(r => r.In_Patient_ID == ipd.Value
+                                     && (r.isCancelled == null || r.isCancelled == false)
+                                     && (r.Status == null || (r.Status != "Rejected" && r.Status != "UnApproved")))
+                            .Sum(r => (decimal?)r.Refund_Amount) ?? 0;
+                    }
+
+                    var pat = db.Reg_patients.FirstOrDefault(p => p.pat_id == patientId);
+
+                    // Refundable amount = magnitude of the bill's negative Balance_Amount
+                    decimal negativeBalance = (bill.Balance_Amount.HasValue && bill.Balance_Amount.Value < 0)
+                        ? (0m - bill.Balance_Amount.Value)
+                        : 0m;
+
+                    return (new JavaScriptSerializer()).Serialize(new
+                    {
+                        Patient_ID = patientId,
+                        In_Patient_ID = ipd,
+                        Bill_No = bill.Bill_No,
+                        Full_Name = pat != null ? pat.Full_Name : "",
+                        Total_Advance = advance,
+                        BillNet = billNet,
+                        AlreadyRefunded = alreadyRefunded,
+                        NegativeBalance = negativeBalance
+                    });
+                }
+            }
+            catch (Exception ex)
+            {
+                return (new JavaScriptSerializer()).Serialize(new { Error = ex.Message });
+            }
+        }
+
+        [WebMethod]
+        public static string SaveBillAdvanceRefund(int billId, string refundDate, string remarks, int amount)
+        {
+            try
+            {
+                if (amount <= 0)
+                    return "Error: refund amount must be greater than zero.";
+
+                using (var db = new DataBaseDataContext())
+                {
+                    var bill = db.Ar_Billings.FirstOrDefault(b => b.Bill_ID == billId);
+                    if (bill == null)
+                        return "Error: bill not found.";
+
+                    DateTime dt;
+                    if (!DateTime.TryParse(refundDate, out dt))
+                        dt = DateTime.Now;
+
+                    Refund r = new Refund();
+                    r.Patient_ID = bill.Patient_ID;
+                    r.In_Patient_ID = bill.In_Patient_ID;
+                    r.Bill_ID = billId;
+                    r.Refund_Date = dt;
+                    r.Refund_Amount = amount;
+                    r.Remarks = remarks;
+                    r.Created_By = AppConfig.UserID;
+                    r.Creation_Date = DateTime.Now;
+                    r.Status = "Created";
+
+                    db.Refunds.InsertOnSubmit(r);
+
+                    // Persist the refunded amount against the bill
+                    bill.Refund_Amount = (bill.Refund_Amount ?? 0) + amount;
+
+                    db.SubmitChanges();
+
+                    return r.Refund_ID.ToString();
+                }
+            }
+            catch (Exception ex)
+            {
+                return "Error: " + ex.Message;
             }
         }
 
