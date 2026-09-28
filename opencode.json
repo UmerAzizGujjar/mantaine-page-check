@@ -9,16 +9,13 @@
       "enabled": true
     },
     "exa": {
-      "type": "local",
-      "command": ["npx", "-y", "exa-mcp-server"],
-      "env": {
-        "EXA_API_KEY": "YOUR_EXA_API_KEY"
-      },
+      "type": "remote",
+      "url": "https://mcp.exa.ai/mcp",
       "enabled": true
     },
     "duckduckgo": {
       "type": "local",
-      "command": ["npx", "-y", "mcp-duckduckgo"],
+      "command": ["bunx", "-y", "duckduckgo-websearch"],
       "enabled": true
     }
   },
