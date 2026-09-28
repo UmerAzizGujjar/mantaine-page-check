@@ -2946,6 +2946,7 @@ namespace PMS
                             data.Bill_Category,
                             data.Bill_Department,
                             data.Cost_Center,
+                            data.Refund_Amount,
                             data.Sales_Tax_ID,
                             data.Sales_Tax_Percentage,
                             data.Patient_Type,
