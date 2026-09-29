@@ -1229,7 +1229,9 @@ namespace PMS
                     if (fee.Trim() == string.Empty)
                         fee = "0";
 
-                    OPD.Admission_Fees = int.Parse(fee);
+                    int baseFee = 0;
+                    int.TryParse(fee, out baseFee);
+
                     OPD.Admission_Date = Convert.ToDateTime(txtAdmission_Date);
                     OPD.Department = ddlDepartment;
                     OPD.Cost_Center = CostCenter;
@@ -1239,6 +1241,11 @@ namespace PMS
                     {
                         discountValue = 0;
                     }
+
+                    int netFee = baseFee - (int)Math.Round(baseFee * discountValue / 100m);
+
+                    OPD.Total_Amount = baseFee.ToString();
+                    OPD.Admission_Fees = netFee;
                     OPD.Discount = discountValue;
 
                     if (ddlIssuance_Of == "001")
