@@ -2107,14 +2107,16 @@ namespace PMS
         {
             using (DataBaseDataContext db = new DataBaseDataContext())
             {
-                var regPatient = (from p in db.Reg_patients
-                                  where p.pat_id == patientId
-                                  select p.Full_Name).FirstOrDefault();
+                //var regPatient = (from p in db.Reg_patients
+                //                  where p.pat_id == patientId
+                //                  select p.Full_Name).FirstOrDefault();
 
-                if (!string.IsNullOrEmpty(regPatient))
-                {
-                    return (new JavaScriptSerializer()).Serialize(regPatient);
-                }
+        
+
+                //if (!string.IsNullOrEmpty(regPatient))
+                //{
+                //    return (new JavaScriptSerializer()).Serialize(regPatient);
+                //}
 
                 var inPatient = (from ip in db.In_Patients
                                  join rp in db.Reg_patients on ip.Patient_ID equals rp.pat_id
