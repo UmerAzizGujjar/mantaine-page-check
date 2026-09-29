@@ -19,7 +19,7 @@ namespace PMS
             string id = context.Request.QueryString["ID"];
 
             // Validate the ID (e.g., check for null or empty)
-            if (string.IsNullOrEmpty(id))
+            if (string.IsNullOrEmpty(id) || !int.TryParse(id, out _))
             {
                 context.Response.StatusCode = 400; // Bad Request
                 context.Response.Write("ID parameter is missing or invalid.");
@@ -46,7 +46,7 @@ namespace PMS
             catch (Exception ex)
             {
                 context.Response.StatusCode = 500; // Internal Server Error
-                context.Response.Write("An error occurred while downloading the file: " + ex.Message);
+                context.Response.Write("An error occurred while downloading the file.");
             }
         }
 
@@ -55,7 +55,7 @@ namespace PMS
             // Perform a database query to retrieve the file path based on the provided ID
             // string connectionString = "ASPGLConnectionString";
             string connectionString = ConfigurationManager.ConnectionStrings["ASPGLConnectionString"].ConnectionString;
-            string query = "SELECT PDF_File FROM Out_Patient WHERE Out_Patient_ID = " + id;
+            string query = "SELECT PDF_File FROM Out_Patient WHERE Out_Patient_ID = @ID";
 
             using (SqlConnection connection = new SqlConnection(connectionString))
             {

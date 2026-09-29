@@ -363,3 +363,13 @@ MigrationBackup/
 # Fody - auto-generated XML schema
 FodyWeavers.xsd
 /GL/upload/UploadPRFilesImages
+# Local artifacts (never commit)
+GL/upload/
+GL/Operation_Booking_Images/
+GL/PatientQRs/
+GL/TempQR/
+GL/App_Data/*.log
+GL/*.rar
+GL/web.config.backup
+GL/*- Backup.rdlc
+packages/
