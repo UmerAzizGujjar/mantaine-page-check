@@ -10807,6 +10807,27 @@ namespace PMS
                 rd.SetParameterValue("Address", Address);
                 rd.SetParameterValue("Phone", Phone);
             }
+            else if (reportName == "RegisteredPatientPrint")
+            {
+                // Registered patient id (Reg_patient.pat_id) - printed from the OPD card fee prompt
+                int regPatId = 0;
+                int.TryParse(Request.QueryString["pat_id"], out regPatId);
+                var logoPath = DBClass.getField("SELECT dbo.GetCompanyLogo()");
+
+                reportPath += "Patients/rptRegisteredPatientPrint.rpt";
+                rd.Load(reportPath);
+                // data source is spRegisteredPatientPrint(@OPD_ID = reg_patient.pat_id)
+                rd.SetParameterValue("@OPD_ID", regPatId);
+
+                // Reg fee is picked up from Reg_patient.Card_fee
+                decimal regFee = 0m;
+                decimal.TryParse(DBClass.getField("SELECT ISNULL(Card_fee,0) FROM reg_patient WHERE pat_id = " + regPatId), out regFee);
+                rd.SetParameterValue("RegFee", (regFee == Math.Truncate(regFee)) ? regFee.ToString("N0") : regFee.ToString("N2"));
+
+                rd.SetParameterValue("CompanyName", AppConfig.Company_Name);
+                rd.SetParameterValue("CompanyLogo", logoPath);
+                rd.SetParameterValue("Address", DBClass.getField("select Company_Address from Sys_Companys where Company_ID = " + AppConfig.Company_ID + ""));
+            }
 
 
             else if (reportName == "EmergencyPrint")
@@ -10890,7 +10911,7 @@ namespace PMS
             #region "set report connection#
             string UserID = SSB.UserID;
             string Password = SSB.Password;
-            string DBName = SSB.InitialCatalog;
+            string DBName = SSB.InitialCatalog; 
             string ServerName = SSB.DataSource;
 
             rd.SetDatabaseLogon(UserID, Password, ServerName, DBName);
