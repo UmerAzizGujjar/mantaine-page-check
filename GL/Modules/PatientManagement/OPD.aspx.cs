@@ -1448,7 +1448,8 @@ namespace PMS.Modules.PatientManagement
                         patient.charge_time = DateTime.Now;
                         patient.Remarks = "Card Fee Charge Via OPD Time";
                         db.SubmitChanges(); // LINQ-to-SQL uses SubmitChanges()
-                        return new JavaScriptSerializer().Serialize(new { success = true });
+                        //return new JavaScriptSerializer().Serialize(new { success = true });
+                        return new JavaScriptSerializer().Serialize(new { success = true, message = "Card fee of Rs. " + fee.ToString("N0") + " charged successfully." });
                     }
                     else
                     {
