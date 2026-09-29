@@ -3772,6 +3772,41 @@ namespace PMS
                 rd.SetParameterValue("@Patient_Type", PatType);
                 rd.SetParameterValue("CompanyLogo", logoPath);
             }
+            else if (reportName == "Operator_Wise_Final_Billing_Report")
+            {
+
+
+                var logoPath = DBClass.getField("SELECT dbo.GetCompanyLogo()");
+
+                string rptFileName = "TransactionalDetails/rptOperatorWise_Final_Bill_Report.rpt";
+                
+
+                
+                reportPath += rptFileName;
+                rd.Load(reportPath);
+
+                string stDate = Request.QueryString["sDate"].ToString();
+                string stTime = Request.QueryString["STime"].ToString();
+                string endDate = Request.QueryString["eDate"].ToString();
+                string endTime = Request.QueryString["ETime"].ToString();
+                string Operator = Request.QueryString["Operator"].ToString();
+                string PatType = Request.QueryString["Patient_Type"].ToString();
+
+                string parameterStDate = string.Empty;
+                string parameterEndDate = string.Empty;
+
+                this.getDateTimeDBFormate(stDate, stTime, out parameterStDate);
+                this.getDateTimeDBFormate(endDate, endTime, out parameterEndDate);
+              
+                rd.SetParameterValue("@stDate", parameterStDate);
+                rd.SetParameterValue("@endDate", parameterEndDate);
+                rd.SetParameterValue("@CompanyID", AppConfig.Company_ID);
+                rd.SetParameterValue("CompanyName", AppConfig.Company_Name);
+                rd.SetParameterValue("Title", "Operator Wise Billing");
+                rd.SetParameterValue("@Operator", Operator);
+                rd.SetParameterValue("@Patient_Type", PatType);
+                rd.SetParameterValue("CompanyLogo", logoPath);
+            }
             else if (reportName == "Excessive_Amount_Billing_Report")
             {
 
@@ -10875,7 +10910,7 @@ namespace PMS
                 || reportName == "Daily_Sale_Summary" || reportName == "StockAdjustment" || reportName == "PharmacyStockBatchWise" || reportName == "Item_Wise_Gross_Profit" || reportName == "YearlyPharmacyOverallSummaryReport"                 || reportName == "PharmacySaleReport" || reportName == "Pharmacy_Profit_and_Loss_Report" || reportName == "Item_Wise_Purchase_Report" || reportName == "Item_Wise_Margin_Report" || reportName == "Sale_Report_Summary" || reportName == "Sale_Return_Report" || reportName == "OppeningReport" || reportName == "PO_Summarry" || reportName == "PharmacyStock" || reportName == "Bonus_Medicine_Detail_Report" || reportName == "StockCategoryValuationReport"
                 || reportName == "Student_Fee_Details_Report" || reportName == "Student_Fee_Details_Class_Report" || reportName == "Student_Fee_Details_Session_Report"
                 || reportName == "Student_Receipt_Details_Report_Received" || reportName == "Student_Receipt_Details_Report_Balance"
-                || reportName == "Student_Receipt_Class_Details_Report_Received" || reportName == "Student_Receipt_Class_Details_Report_Balance"
+                || reportName == "Student_Receipt_Class_Details_Report_Received" || reportName == "Student_Receipt_Class_Details_Report_Balance" || reportName == "Operator_Wise_Final_Billing_Report"
                 || reportName == "Student_Receipt_Session_Details_Report_Received" || reportName == "Student_Receipt_Session_Details_Report_Balance")
             {
                 string Export_To_Excel = Request.QueryString["ExportPDF"].ToString();
