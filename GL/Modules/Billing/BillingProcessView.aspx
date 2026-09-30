@@ -494,6 +494,17 @@
                             if (full.isCancel === true) {
                                 return '<span style="color:#721c24; font-weight:bold;">Cancelled</span>';
                             }
+                            // Admission finalized: older (non-final) bills are locked
+                            var logBtn = '<a class="logListBtn" style="border-radius: 4px;margin-left: 4px;color: white;padding: 5px 8px 5px 8px;" href="#" onclick="openBillLogs(' + full.Bill_ID + ',\'' + full.Bill_No + '\');return false;" title="View Change History"><i class="fa fa-history"></i></a>';
+
+                            if (full.Admission_Has_Final_Bill === true && full.Is_Final_Bill !== true) {
+                                return '<span style="background:#eef0f3;color:#6b7280;font-size:10.5px;font-weight:700;padding:3px 9px;border-radius:11px;white-space:nowrap;margin-right:4px;display:inline-block;vertical-align:middle;">Bill Finalized</span>' + logBtn;
+                            }
+
+                            var finalBadge = '';
+                            if (full.Is_Final_Bill === true) {
+                                finalBadge = '<span style="background:#e7f6ec;color:#1c7d43;font-size:10.5px;font-weight:700;padding:3px 9px;border-radius:11px;white-space:nowrap;margin-right:4px;display:inline-block;vertical-align:middle;">Final Bill</span>';
+                            }
                             var res = '<a href="#" class="editListBtn" onclick="editOpen(' + full.Bill_ID + ')" style="border-radius: 4px;color: white; padding: 5px 8px 5px 8px;"><i class="fa fa-pencil"></i></a>'
 
                             var Del = '<a class="delListBtn" href="#" style="border-radius: 4px;margin-left: 4px; color: white; padding: 5px 8px 5px 8px;" onclick=cancelPatient(this)><i class="fa fa-trash" aria-hidden="true"></i></a>';
@@ -501,8 +512,6 @@
                             var print = '<a class="printListBtn" style="border-radius: 4px;margin-left: 4px;color: white;padding: 5px 8px 5px 8px;" href="#" onclick="PrintBilling(' + full.Bill_ID + ')" id="btnprint"><i class="fa fa-print"></i></a>';
 
                             var print1 = '<a class="printListBtn" style="border-radius: 4px;margin-left: 4px;color: white;padding: 5px 8px 5px 8px;" href="#" onclick="PrintBilling1(' + full.Bill_ID + ')" id="btnprint1"><i class="fa fa-print"></i></a>';
-
-                            var logBtn = '<a class="logListBtn" style="border-radius: 4px;margin-left: 4px;color: white;padding: 5px 8px 5px 8px;" href="#" onclick="openBillLogs(' + full.Bill_ID + ',\'' + full.Bill_No + '\');return false;" title="View Change History"><i class="fa fa-history"></i></a>';
 
                             // Check if Balance_Amount is greater than 0 before showing receipt button
                             var receipt = '';
@@ -523,7 +532,7 @@
                             }
 
                             var result;
-                            result = res + logBtn + Del + print + print1 + receipt + advRefund;
+                            result = finalBadge + res + logBtn + Del + print + print1 + receipt + advRefund;
                             return result;
                         },
                         "width": "10%",
@@ -534,6 +543,11 @@
                 "createdRow": function (row, data, dataIndex) {
                     $(row).addClass('clickable-row');
                     $(row).attr('data-bill-id', data.Bill_ID);
+                    if (data.Is_Final_Bill === true) {
+                        $(row).attr('data-final-bill', '1');
+                        $(row).css('background-color', '#d4edda');
+                        $(row).find('td').css('color', '#155724');
+                    }
                     if (data.isCancel === true) {
                         $(row).attr('data-cancelled', '1');
                         $(row).css('background-color', '#f8d7da');

@@ -73,7 +73,7 @@ namespace PMS
             }
             catch (Exception ex)
             {
-                context.Response.Write("Error: " + ex.Message);
+                context.Response.Write("Error while saving the file.");
             }
         }
 
