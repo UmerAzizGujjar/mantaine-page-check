@@ -169,7 +169,8 @@ namespace PMS
                                        Bill_ID = b.Bill_ID,
                                        In_Patient_ID = b.In_Patient_ID,
                                        Operator = u.UserName,
-                                       isCancel = b.isCancel
+                                       isCancel = b.isCancel,
+                                       final_bill_ipd = b.final_bill_ipd
                                    };
 
                     // Total records that match base filters (not affected by search)
@@ -201,6 +202,15 @@ namespace PMS
                     var ipdIds = patientList.Where(x => x.In_Patient_ID.HasValue)
                                             .Select(x => x.In_Patient_ID.Value).ToList();
 
+                    // Admissions that already have a final bill (non-cancelled)
+                    var finalBillIpdIds = _dbContext.Ar_Billings
+                        .Where(b => b.In_Patient_ID != null && ipdIds.Contains(b.In_Patient_ID.Value)
+                                 && b.final_bill_ipd == true
+                                 && (b.isCancel == null || b.isCancel == false))
+                        .Select(b => b.In_Patient_ID.Value)
+                        .Distinct()
+                        .ToList();
+
                     var refundRows = _dbContext.Refunds
                         .Where(r => (r.isCancelled == null || r.isCancelled == false)
                                  && (r.Status == null || (r.Status != "Rejected" && r.Status != "UnApproved"))
@@ -226,6 +236,8 @@ namespace PMS
                         x.Bill_ID,
                         x.Operator,
                         x.isCancel,
+                        Is_Final_Bill = x.final_bill_ipd == true,
+                        Admission_Has_Final_Bill = x.In_Patient_ID.HasValue && finalBillIpdIds.Contains(x.In_Patient_ID.Value),
                         Refund_Amount = refundRows
                             .Where(r => ((r.Bill_ID != null && r.Bill_ID == (long)x.Bill_ID)
                                       || (r.Bill_ID == null && r.In_Patient_ID == x.In_Patient_ID))

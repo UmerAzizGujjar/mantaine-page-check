@@ -158,7 +158,7 @@ FROM EMR.PATIENT PAT,
      EMR.LOCATION LOC,
      EMR.ORDER_DETAIL OD
 WHERE (OD.PATIENT_ID = :patid
-       OR OD.PATIENT_ID IN (SELECT MERGE_PATIENT_ID FROM EMR.MERGE_PATIENT WHERE PATIENT_ID = :patid2))
+       OR OD.PATIENT_ID IN (SELECT MERGE_PATIENT_ID FROM EMR.MERGE_PATIENT WHERE PATIENT_ID = :patid))
   AND OD.COMPLETE_ORDER_NO = IVD.COMPLETE_ORDER_NO
   AND OD.PATIENT_ID = PAT.PATIENT_ID
   AND OD.PATIENT_ID = IMS.PATIENT_ID
@@ -185,32 +185,6 @@ WHERE (OD.PATIENT_ID = :patid
   AND DEP.ID = OD.DEPARTMENT_ID
 ORDER BY IMS.INVOICE_DATE DESC";
 
-        // Client Oracle (EMR) - Radiology Results
-        private const string RadiologySql = @"
-SELECT IR.RTH, IR.TEXT_RESULT, IR.STUDY_INTEGRATED, IR.IMAGING_NO,
-       IR.PROCEDURE_INFORMATION,
-       NVL(IR.CLINICAL_INFORMATION,' ') AS INFORMATION,
-       NVL(IR.STUDY_PROTOCOL,' ') AS STUDY_PROTOCOL,
-       USR.NAME AS VERIFY_BY, IR.DS,
-       TO_CHAR(IR.RESULT_DATE,'DD-MON-YY') AS VERIFIED_DATE,
-       NVL(IR.CONCLUSION,' ') AS CONCLUSION
-FROM EMR.IMAGING_RESULTS IR, EMR.USERS USR
-WHERE IR.COMPLETE_ORDER_NO = :orderNo
-  AND IR.ORDER_DETAIL_ID = :detailId
-  AND NVL(IR.VERIFIED_BY,'GENERAL') = USR.USER_NAME";
-
-        private const string RadiologyNoDetailSql = @"
-SELECT IR.RTH, IR.TEXT_RESULT, IR.STUDY_INTEGRATED, IR.IMAGING_NO,
-       IR.PROCEDURE_INFORMATION,
-       NVL(IR.CLINICAL_INFORMATION,' ') AS INFORMATION,
-       NVL(IR.STUDY_PROTOCOL,' ') AS STUDY_PROTOCOL,
-       USR.NAME AS VERIFY_BY, IR.DS,
-       TO_CHAR(IR.RESULT_DATE,'DD-MON-YY') AS VERIFIED_DATE,
-       NVL(IR.CONCLUSION,' ') AS CONCLUSION
-FROM EMR.IMAGING_RESULTS IR, EMR.USERS USR
-WHERE IR.COMPLETE_ORDER_NO = :orderNo
-  AND NVL(IR.VERIFIED_BY,'GENERAL') = USR.USER_NAME";
-
         protected void Page_Load(object sender, EventArgs e)
         {
         }
@@ -229,64 +203,45 @@ WHERE IR.COMPLETE_ORDER_NO = :orderNo
             }
         }
 
-        [WebMethod]
-        public static List<Dictionary<string, string>> GetPatient(string key)
+        public sealed class PatientLookupResult
         {
-            List<Dictionary<string, string>> result = new List<Dictionary<string, string>>();
+            public List<Dictionary<string, string>> Patient { get; set; }
+            public List<Dictionary<string, string>> Services { get; set; }
+            public string ServicesError { get; set; }
+        }
+
+        [WebMethod]
+        public static PatientLookupResult GetPatientLookup(string key)
+        {
+            PatientLookupResult result = new PatientLookupResult
+            {
+                Patient = new List<Dictionary<string, string>>(),
+                Services = new List<Dictionary<string, string>>()
+            };
 
             if (string.IsNullOrWhiteSpace(key))
             {
                 return result;
             }
+
+            key = key.Trim();
 
             DataTable dt = EMRDb.GetDataTable(ConnectionName, PatientSql,
-                new EMRDb.DbParam("patid", key.Trim()));
+                new EMRDb.DbParam("patid", key));
+            result.Patient = EMRDb.ToRows(dt);
 
-            return EMRDb.ToRows(dt);
-        }
-
-        [WebMethod]
-        public static List<Dictionary<string, string>> GetServices(string key)
-        {
-            List<Dictionary<string, string>> result = new List<Dictionary<string, string>>();
-
-            if (string.IsNullOrWhiteSpace(key))
+            try
             {
-                return result;
+                DataTable services = EMRDb.GetDataTable(ConnectionName, ServicesSql,
+                    new EMRDb.DbParam("patid", key));
+                result.Services = EMRDb.ToRows(services);
+            }
+            catch (Exception ex)
+            {
+                result.ServicesError = ex.Message;
             }
 
-            DataTable dt = EMRDb.GetDataTable(ConnectionName, ServicesSql,
-                new EMRDb.DbParam("patid", key.Trim()),
-                new EMRDb.DbParam("patid2", key.Trim()));
-
-            return EMRDb.ToRows(dt);
-        }
-
-        [WebMethod]
-        public static List<Dictionary<string, string>> GetRadiology(string orderNo, string detailId)
-        {
-            List<Dictionary<string, string>> result = new List<Dictionary<string, string>>();
-
-            if (string.IsNullOrWhiteSpace(orderNo))
-            {
-                return result;
-            }
-
-            DataTable dt;
-
-            if (string.IsNullOrWhiteSpace(detailId))
-            {
-                dt = EMRDb.GetDataTable(ConnectionName, RadiologyNoDetailSql,
-                    new EMRDb.DbParam("orderNo", orderNo.Trim()));
-            }
-            else
-            {
-                dt = EMRDb.GetDataTable(ConnectionName, RadiologySql,
-                    new EMRDb.DbParam("orderNo", orderNo.Trim()),
-                    new EMRDb.DbParam("detailId", detailId.Trim()));
-            }
-
-            return EMRDb.ToRows(dt);
+            return result;
         }
     }
 }
