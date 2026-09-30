@@ -147,7 +147,6 @@
                    
                     {
                         render: function (data, type, full) {
-                            debugger;
                             var res = '<a href="#" class="editListBtn" onclick="editOpen(' + full.Item_ID + ')" style="border-radius: 4px;padding: 5px 8px 5px 8px;"><i class="fa fa-pencil"></i></a>'
 
                             var Del = '<a class="delListBtn" href="#" style="border-radius: 4px;margin-left: 4px; color: white; padding: 5px 8px 5px 8px;" onclick=deleteConfirm(this)><i class="fa fa-trash" aria-hidden="true"></i></a>';
@@ -212,7 +211,6 @@
         }
 
         function editOpen(id) {
-            debugger;
             window.location.href = "../../Modules/Inventory/Product.aspx?ID=" + id + "";
 
         }

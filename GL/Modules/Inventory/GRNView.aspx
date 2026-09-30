@@ -650,7 +650,6 @@
                 }
             });
             $('#tblResult tbody').on('click', 'tr', function () { 
-                debugger;
                 var row = table.row(this);
                 var data = row.data();
                 if (!data) return;
@@ -760,7 +759,6 @@
             });
         }
         function ViewPage(id, type) {
-            debugger;
             var ID = id
             if (type == 'GRN') {
                 window.open("GRN.aspx?GRN_ID="+ ID, "_blank");

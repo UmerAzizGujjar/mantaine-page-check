@@ -775,7 +775,6 @@ h5 {
         }
 
         function ViewPage(id, type) {
-            debugger;
             var ID =id
             if (type == 'GRN') {
                 window.open("GRN.aspx?GRN_ID=" + ID, "_blank");

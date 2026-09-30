@@ -477,12 +477,10 @@
 
         let chart;
         function LoadAreaWiseCount(startdate, Enddate) {
-            debugger;
             var txt_sdate = startdate
             var txt_edate = Enddate
             var Area_Count = [];
             PageMethods.GetAreaWisePatientsCount(txt_sdate, txt_edate, function (resp) {
-                debugger;
                 const data = JSON.parse(resp);
                 const labels = data.map(item => item.Area_Name);
                 const areaCounts = data.map(item => item.Counts);
@@ -718,12 +716,10 @@
         }
         let chart_proc;
         function LoadProcedureCount(startdate, Enddate) {
-            debugger;
             var txt_sdate = startdate
             var txt_edate = Enddate
             var Area_Count = [];
             PageMethods.GetProcdureCount(txt_sdate, txt_edate, function (resp) {
-                debugger;
                 const data = JSON.parse(resp);
                 const labels = data.map(item => item.Item_Name);
                 const ItemCounts = data.map(item => item.TotalCount);
@@ -794,7 +790,6 @@
                 alert(error.get_message());
             });
         }
-        debugger;
         let Docchart;
         function ChartfDocPatientCount(startdate, Enddate) {
             PageMethods.GetDocPatientCount(startdate, Enddate, function (resp) {
@@ -866,7 +861,6 @@
             }
 
             PageMethods.GetAppointmentCountByDoctor(formatDate(startdate), formatDate(Enddate), function (resp) {
-                debugger;
                 try {
                     var parsedData = JSON.parse(resp);
 
@@ -1031,12 +1025,10 @@
         let chart_Avg;
 
         function LoadOverallSatisfaction(startdate, Enddate) {
-            debugger;
             var txt_sdate = startdate;
             var txt_edate = Enddate;
 
             PageMethods.GetGetOverallSatisfaction(txt_sdate, txt_edate, function (resp) {
-                debugger;
                 try {
                     const data = JSON.parse(resp);
                     const averageValue = parseFloat(data.OverallAverageSatisfaction) || 0;
@@ -1208,7 +1200,6 @@
         let DeptChart;
         function ChartfDeptPatientCount(startdate, Enddate) {
             PageMethods.GetDepartmentPatientCount(startdate, Enddate, function (resp) {
-                debugger;
                 var parsedData = JSON.parse(resp);
 
                 var series = parsedData.map(item => item.Total_Count);

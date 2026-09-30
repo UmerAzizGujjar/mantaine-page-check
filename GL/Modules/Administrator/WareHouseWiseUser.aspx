@@ -16,7 +16,6 @@
         });
 
         function SaveAllRecord() {
-            debugger;
             var tableItems = $('#tblItemDescription');
             var btnSave = $('#btn_Save').val();
             var idParam = '';
@@ -29,7 +28,6 @@
             }
             var AllItemDetail = [];
             tableItems.find('tr:gt(0)').each(function (key, value) {
-                debugger;
                 arr = {};
                 arr.userid = $('#ddl_users').val();
                 arr.WareHouse = $(value).find('td input[name=Warehouse_wise_User_id]').val();
@@ -85,12 +83,9 @@
         function LoadDetail(id) {
             var rows = '';
             PageMethods.LoadDetail(id, function (res) {
-                debugger;
                 var result = JSON.parse(res);
                 $.each(result, function (key, value) {
-                    debugger;
                     setTimeout(function () {
-                        debugger;
                         $("#ddl_users").val(value.User_Id);
                         $("#ddl_users").trigger('change');
                         $('#ddl_users').attr('disabled', 'disabled');
@@ -113,7 +108,6 @@
         }
 
         function FillUsers() {
-            debugger;
             var options = '';
             PageMethods.FillUsers(function (result) {
                 options = '<option value="0">Please Select</option>';
@@ -124,10 +118,8 @@
             });
         }
         function GetWareHouseByUserId() {
-            debugger;
             var optionsPO = '';
             PageMethods.GetWHByUserId(function (res) {
-                debugger;
                 var b = JSON.parse(res);
                 optionsPO = '<option value="0">Please Select</option>';
                 $.each(b, function (key, value) {
@@ -137,7 +129,6 @@
             });
         }
         function Addrow() {
-            debugger;
             var user_id = $('#ddl_users').val();
             var username = $('#ddl_users :selected').text();
             var WareHouse = $('#ddlWareHouse :selected').text();
@@ -193,7 +184,6 @@
             }
         }
         function Delete(row) {
-            debugger;
             var a = confirm("Are you sure You want to delete");
             if (a == true) {
                 $(row).closest('tr').remove();

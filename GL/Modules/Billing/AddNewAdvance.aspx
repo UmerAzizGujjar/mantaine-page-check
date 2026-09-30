@@ -8,7 +8,6 @@
     $(document).ready(function () {
         $("#txtAdvanceDate").datepicker({ dateFormat: 'mm/dd/yy' });
         $("#txtAdvanceDate").val($.datepicker.formatDate('mm/dd/yy', new Date()));
-        debugger;
         LoadTokenInputsDefaultMRNo();
 
         var advID = '<% =Request.QueryString["advID"] %>';
@@ -19,7 +18,6 @@
         var PatientId_QS = '<% =Request.QueryString["Reg_ID"] %>';
 
         if (PatientId_QS != "") {
-            debugger;
             var tokendata = httpGet("../../json.aspx?Table=PatientsFetchByID&q=" + PatientId_QS);
             $('#txtMRNo').tokenInput("add", { id: JSON.parse(tokendata)[0].id, name: JSON.parse(tokendata)[0].name, readonly: true });
         }
@@ -27,7 +25,6 @@
     });
 
     function OnSuccess(data) {
-        debugger;
         if (data.d != '') {
             if (data.d.Patient_Discount_Type == null)
                 data.d.Patient_Discount_Type = "";
@@ -68,7 +65,6 @@
     }
 
     function PrintAdvance() {
-        debugger;
         var reg_id = '<% =Request.QueryString["advID"] %>';
         var locationInfo = window.location;
         var url = "/ReportViewer.aspx?ReportName=PrintAdvanceReport&Title=Advane Payment Print &Adv_IDs=" + reg_id;
@@ -81,7 +77,6 @@
         window.open(url, '_blank');
     }
     function PrintAdvanceThermal() {
-        debugger;
         var reg_id = '<% =Request.QueryString["advID"] %>';
         var locationInfo = window.location;
         var url = "/ReportViewer.aspx?ReportName=PrintAdvanceThermalReport&Title=Advane Payment Thermal Print &Adv_IDs=" + reg_id;
@@ -95,7 +90,6 @@
     }
 
     function LoadPatientDetails(advID) {
-        debugger;
         var AdvanceId = advID;
         $.ajax({
             type: "POST",
@@ -111,7 +105,6 @@
     }
 
     function LoadTokenInputsDefaultMRNo() {
-        debugger;
         $("#txtMRNo").tokenInput("../../json.aspx?Table=Patients",
             {
                 tokenLimit: 1,
@@ -128,7 +121,6 @@
     }
 
     function GetPatientDetail() {
-        debugger;
         var Patient_ID = $('#hdPatientID').val();
         $.ajax({
             type: "POST",
@@ -152,7 +144,6 @@
     }
 
    function OnSuccesss(data) {
-    debugger;
     var parseData = JSON.parse(data.d);
     if (data.d != '') {
         if (data.d.Patient_Discount_Type == null)
@@ -198,7 +189,6 @@
     }
 
     function PrintVoucher() {
-        debugger;
         var advID = '<%= Request.QueryString["advID"] %>' || '0';
         advID = advID.trim() === "" ? "0" : advID;
         var locationInfo = window.location;
@@ -213,7 +203,6 @@
     }
 
     function SaveRecord() {
-    debugger;
     $('#btnSave').attr('disabled', true);
     var Patient_ID = $('#hdPatientID').val();
     var advanceAmount = $("#txtAdvanceAmount").val();
@@ -249,7 +238,6 @@
             contentType: "application/json; charset=utf-8",
             dataType: "json",
             success: function (response) {
-                debugger;
                 var Parse = JSON.parse(response.d);
                 if (Parse == null) {
                     alert("First create In Patient of : " + $("#txtMRNo").val());
@@ -257,7 +245,6 @@
                     return;
                 }
                 else {
-                    debugger;
                     $.ajax({
                         type: "POST",
                         url: "AddNewAdvance.aspx/SaveAdvance",
@@ -323,7 +310,6 @@
         $('#btnApprove').attr('disabled', true);
         var advanceid = '<% =Request.QueryString["advID"] %>';
         PageMethods.Approve_Advance(advanceid, function (response) {
-            debugger;
             try {
                 var result = JSON.parse(response);
                 if (result && result.Message) {
@@ -378,7 +364,6 @@
             }
         }, function (error) {
             $('#btnApprove').attr('disabled', false);
-            debugger;
             console.error("PageMethods error:", error);
             Swal.fire({
                 icon: 'error',
@@ -393,7 +378,6 @@
         $('#btnUnApprove').attr('disabled', true);
         var advid = '<% =Request.QueryString["advID"] %>';
         PageMethods.unApproveAdvance(advid, function (response) {
-            debugger;
             try {
                 var result = JSON.parse(response);
                 if (result && result.Message) {
@@ -448,7 +432,6 @@
             }
         }, function (error) {
             $('#btnUnApprove').attr('disabled', false);
-            debugger;
             console.error("PageMethods error:", error);
             Swal.fire({
                 icon: 'error',

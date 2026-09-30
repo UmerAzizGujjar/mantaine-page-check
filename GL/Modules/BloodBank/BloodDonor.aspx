@@ -39,7 +39,6 @@
             }
         }
         function loadtokenInputsDefault() {
-            debugger;
             $('#ctl00_MainContent_txtDonee_Name').tokenInput("../../json.aspx?Table=Patients",
              {
                  tokenLimit: 1,
@@ -55,7 +54,6 @@
              });
         }
         function loadtokenInputs(data) {
-            debugger;
             $("#ctl00_MainContent_txtDonee_Name").tokenInput("../../json.aspx?Table=Patients",
                 {
                     prePopulate: data,

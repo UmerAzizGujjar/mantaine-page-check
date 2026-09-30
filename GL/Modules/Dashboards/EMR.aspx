@@ -9,7 +9,6 @@
 
     <script type="text/javascript">
         $(document).ready(function () {
-            debugger;
 
 
 
@@ -48,9 +47,7 @@
 
         }
         function loadtokenInputsByMrNo(data) {
-            debugger;
             var newbox = $('#ctl00_MainContent_txtPatNO').val();
-            debugger;
 
             if (newbox != null || newbox == "(New)") {
                 $("#ctl00_MainContent_txtPatNO").tokenInput("../../json.aspx?Table=Patients",
@@ -69,7 +66,6 @@
         }
 
         function fetchPatientInfo() {
-            debugger;
             var Patient_ID = $("#hdfReg_ID").val();
 
             $.ajax({
@@ -79,7 +75,6 @@
                 contentType: "application/json; charset=utf-8",
                 dataType: "json",
                 success: function (resp) {
-                    debugger;
                     var data = JSON.parse(resp.d);
 
                     $('#patname').text(data.Name);
@@ -110,7 +105,6 @@
                 contentType: "application/json; charset=utf-8",
                 dataType: "json",
                 success: function (resp) {
-                    debugger;
                     var data = JSON.parse(resp.d);
                     console.log(data);
                     if (data && data.doctor) {
@@ -145,7 +139,6 @@
                 contentType: "application/json; charset=utf-8",
                 dataType: "json",
                 success: function (resp) {
-                    debugger;
                     var data = JSON.parse(resp.d);
                     if (data && data.doctor) {
                         $('#prvDoctor').text(data.doctor.Emp_Name);
@@ -178,7 +171,6 @@
                 contentType: "application/json; charset=utf-8",
                 dataType: "json",
                 success: function (resp) {
-                    debugger;
                     var data = JSON.parse(resp.d);
                     $("#opd").text(data.OutPatientCount);
                     $("#ipd").text(data.InPatientCount);
@@ -217,7 +209,6 @@
             return options;
         }
         function LoadVitalParameters() {
-            debugger;
             var patid = $("#hdfReg_ID").val();
             var category = $('#ddlmaindepartment').val();
             //if (patid != null) {
@@ -242,7 +233,6 @@
                     contentType: "application/json; charset=utf-8",
                     dataType: "json",
                     success: function (res) {
-                        debugger;
                         var rows = '';
                         $.each(JSON.parse(res.d), function (key, value) {
                             var date = moment(value.Created_Time).format('DD-MM-YY');
@@ -379,7 +369,6 @@
                         if (value.L_R_Rotation_ID == null) value.L_R_Rotation_ID = "";
                         var datearray = date.split("/");
                         var newdate = datearray[1] + '/' + datearray[0] + '/' + datearray[2];
-                        debugger;
                         if (value.isApproved == true) {
                             Result = "View Result";
                             Sample = "Yes";
@@ -433,7 +422,6 @@
                         if (value.L_R_Rotation_ID == null) value.L_R_Rotation_ID = "";
                         var datearray = date.split("/");
                         var newdate = datearray[1] + '/' + datearray[0] + '/' + datearray[2];
-                        debugger;
                         if (value.isApproved == true) {
                             Result = "View Result";
                             Sample = "Yes";
@@ -487,7 +475,6 @@
                         if (value.L_R_Rotation_ID == null) value.L_R_Rotation_ID = "";
                         var datearray = date.split("/");
                         var newdate = datearray[1] + '/' + datearray[0] + '/' + datearray[2];
-                        debugger;
                         if (value.isApproved == true) {
                             Result = "View Result";
                             Sample = "Yes";
@@ -535,7 +522,6 @@
         var chart;
 
         function createChartOPD() {
-            debugger;
             var patid = $("#hdfReg_ID").val();
             var category = $('#ddlmaindepartment').val();
 
@@ -605,7 +591,6 @@
                 PageMethods.GetTotalVisits(
                     patid,
                     function (resp) {
-                        debugger;
                         var data = JSON.parse(resp);
                         buildChart(data, 'OutPatient');
                     },
@@ -617,7 +602,6 @@
                 PageMethods.GetTotalVisitsEmergency(
                     patid,
                     function (resp) {
-                        debugger;
                         var data = JSON.parse(resp);
                         buildChart(data, 'Emergency');
                     },
@@ -629,7 +613,6 @@
                 PageMethods.GetTotalVisitsIPD(
                     patid,
                     function (resp) {
-                        debugger;
                         var data = JSON.parse(resp);
                         buildChart(data, 'InPatient');
                     },
@@ -654,7 +637,6 @@
 
         //let chart;
         //function createChartOPD() {
-        //    debugger;
         //    var patid = $("#hdfReg_ID").val();
         //    var category = $('#ddlmaindepartment').val();
 
@@ -666,7 +648,6 @@
 
         //    if (category == "01") {
         //        PageMethods.GetTotalVisits(patid, function (resp) {
-        //            debugger;
         //            var data = JSON.parse(resp);
 
         //            var labDataset = {
@@ -723,7 +704,6 @@
 
         //    if (category == "03") {
         //        PageMethods.GetTotalVisitsIPD(patid, function (resp) {
-        //            debugger;
         //            var data = JSON.parse(resp);
 
         //            var labDataset = {
@@ -780,7 +760,6 @@
 
         //    if (category == "02") {
         //        PageMethods.GetTotalVisitsEmergency(patid, function (resp) {
-        //            debugger;
         //            var data = JSON.parse(resp);
 
         //            var labDataset = {
@@ -836,7 +815,6 @@
         //    }
         //}
         function fetchPatientDepOPD() {
-            debugger;
             var Patient_ID = $("#hdfReg_ID").val();
             var category = $('#ddlmaindepartment').val();
             var boxContainer_ipd = $("#boxContainer_IPD");
@@ -850,7 +828,6 @@
                     contentType: "application/json; charset=utf-8",
                     dataType: "json",
                     success: function (resp) {
-                        debugger;
                         var data = JSON.parse(resp.d);
 
                         var boxContainer = $("#boxContainer");
@@ -898,7 +875,6 @@
                     contentType: "application/json; charset=utf-8",
                     dataType: "json",
                     success: function (resp) {
-                        debugger;
                         var data = JSON.parse(resp.d);
 
                         var boxContainer = $("#boxContainer_IPD");

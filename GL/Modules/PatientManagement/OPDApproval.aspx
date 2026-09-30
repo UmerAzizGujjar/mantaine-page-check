@@ -3,7 +3,6 @@
 <asp:Content ID="Content1" ContentPlaceHolderID="HeadContent" runat="server">
     <script type="text/javascript">
         $(document).ready(function () {
-            debugger;
             FillPatientType();
 
 
@@ -13,28 +12,23 @@
 
 
             $('[id*="Getrow"]').on('click', function () {
-                debugger; var isTrue = $('#Getrow').is(':checked');
+                 var isTrue = $('#Getrow').is(':checked');
                 if (isTrue) {
-                    debugger; $('.chckrow').prop('checked', true);
+                     $('.chckrow').prop('checked', true);
                 } else {
-                    debugger; $('.chckrow').prop('checked', false);
+                     $('.chckrow').prop('checked', false);
                 }
             });
 
             $('#btnApproved').on('click', function () {
-                debugger;
 
                 $.each($('#tbloutPatients tbody tr'), function (key, value) {
-                    debugger;
                     var chck = $($(value).find('td input[name=Getrow]')[0]).prop("checked");
                     var patid = $($(value).find('td input[name=pat_id]')[0]).val();
                     var Pat_Category = $($(value).find('td input[name=pat_type]')[0]).val();
 
-                    debugger;
                     if (chck == "true" || chck == true) {
-                        debugger;
                         PageMethods.ApproveOPD(patid, Pat_Category, function (response) {
-                            debugger;
                             var data = response;
                             if (data == "Success") {
                                 // alert("Bill has been approved successfully");
@@ -72,18 +66,15 @@
                 dataType: 'json',
                 data: JSON.stringify({ "pat_type": pat_type, "search": search }),
                 success: function (_data) {
-                    debugger;
                     _data = JSON.parse(_data.d);
                     console.log(_data);
                     var mdTable = $('#tbloutPatients');
                     $('#tbl tr:gt(0)').remove();
                     table = $('#ibody');
                     table.empty();
-                    debugger;
                     $.each(_data, function (key, value) {
 
 
-                        debugger;
                         $("#ibody").append('<tr><td style="display:none;"><input id="pat_id" name="pat_id" class="pat_id" type="hidden" value="' + value.Patient_ID + '" /></td><td style="display:none;"><input id="pat_type" name="pat_type" class="pat_type" type="hidden" value="' + value.Patient_Type + '" /></td><td><input id="Getrow" name="Getrow" class="chckrow" type="checkbox" /></td><td>' + value.mr_no_sequence + '</td><td>' + value.Opd_No + '</td><td>' + value.Full_Name + '</td><td>' + value.Pat_type + '</td><td>' + value.DeptName + '</td><td>' + value.Status + '</td></tr>');
                         length++;
 

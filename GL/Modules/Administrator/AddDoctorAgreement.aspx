@@ -8,7 +8,6 @@
               <% if (Request.QueryString["doc_id"] != null)
         { %>
             var doc_ids = '<%= Request.QueryString["doc_id"]%>'
-            debugger
             EditMasterForm(doc_ids);
             $('#btnValue').val('Update');
              <% }%>
@@ -21,7 +20,6 @@
             $('#ddl_Doctor').select2();
             $('#ddl_AgrementType').select2();
             $('#ddl_Agrementdept').select2();
-            debugger;
             if (id != "") {
                 $("#btnValue").val('Update');
                 $("#btnValue").hide();
@@ -36,12 +34,9 @@
 
         });
         function GetDoctors() {
-            debugger;
             var optionsVen = '<option value="0">Please Select</option>';
             PageMethods.GetDoctorName(function (Tests) {
-                debugger
                 $.each(JSON.parse(Tests), function (key, value) {
-                    debugger;
                     optionsVen += '<option value="' + value.Emp_ID + '" >' + value.Emp_Name + '</option>';
                 });
                 $('#ddl_Doctor').html(optionsVen);
@@ -248,7 +243,6 @@
 
         //validation for persentage
         function GetSumOfDiscount() {
-            debugger;
             var doctor_share = $('#txtDocShare').val();
             var hospital_Share = $('#txtHospitalShare').val();
             if (doctor_share == "") doctor_share = 0;
@@ -258,7 +252,6 @@
             if (sum_of_share == 100) {
             }
             else {
-                debugger;
                 alert('Sum of Share Should Be 100 %');
                 if (doctor_share > 100) {
                     if (sum_of_share > 100) {
@@ -335,25 +328,21 @@
             });
         }
 
-        debugger;
         function EditMasterForm(doc_ids) {
             PageMethods.editMaster(doc_ids, function (resp) {
                 var doc_data = JSON.parse(resp);
-                debugger;
                 $('#doc_id').val(doc_data.Doc_agreemnt_id);
                 setTimeout(function () {
                     $('#ddl_Doctor').val(doc_data.Doctor).trigger('change');
                 }, 1500);
                 $('#txtdocamount').val(doc_data.Doc_account);
             });
-            debugger;
             setTimeout(function () {
                 editDetail(doc_ids);
             }, 4500);
         }
         function editDetail(doc_ids) {
             $("#btnSave").attr('disabled', true);
-            debugger;
             $.ajax({
                 type: "post",
                 url: "AddDoctorAgreement.aspx/EditDetail",
@@ -363,7 +352,6 @@
                 contentType: "application/json; charset=utf-8",
                 datatype: "json",
                 success: function (response) {
-                    debugger;
                     var doctor_data = JSON.parse(response.d);
                     var mdTable = $('#tblResult');
                     var mdTablexray = $('#tblResults');
@@ -373,7 +361,6 @@
                     var mdTable_bloodbank = $('#tblResult_bloodbank');
                     var mdTable_mri = $('#tblResult_mri');
                     var mdTable_service = $('#tblResult_services');
-                    debugger;
                     $(doctor_data).each(function (index, md) {
 
                         if (md.Department == "OPD") {
@@ -392,7 +379,6 @@
                             $('#ddl_labtest_Agrementdept').val(md.AgrementDepartmentId).trigger('change');
                             mdTable.append('<tr><td style="display:none;"><input type="hidden" name="txtestid" id="txtestid" value="' + md.test_id + '" /></td><td style="display:none;"><input type="hidden" name="txtdoc_id" id="txtdoc_id" value="' + md.Doc_agreement_id + '" /></td><td style="display:none;"><input type="hidden" name="txtestid" id="txtestid" value="' + md.item_id + '" /></td><td style="display:none;"><input type="hidden" name="txtdep" id="txtdep" value="' + md.Department + '" /></td><td><input type="text" readonly name="txtname" id="txtname" value="' + md.test_description + '" /></td><td style="display:none;"><input type="hidden" readonly id="agremntTypeId" name="agremntTypeId" value="' + md.AgrementTypeId + '" /></td><td><input type="text" readonly name="agremntType" id="agremntType" value="' + md.AgrementType + '" /></td><td style="display:none;"><input type="hidden"readonly id="agremntDeptId" name="agremntDeptId" value="' + md.AgrementDepartmentId + '" /></td><td><input type="text" readonly name="agremntDept" id="agremntDept" value="' + md.AgrementDepartment + '" /></td><td><input type="text" readonly name="txtrate" id="txtrate" value="' + md.Actual_amount + '" /></td><td><input type="text"  name="txtdiscount" id="txtdiscount" onchange="calculatedisc(this);" value="' + md.dicount + '" /></td><td><input type="text" readonly name="txtnetamount" id="txtnetamount" value="' + md.Net_amount + '" /></td><td><input type="text"  name="Txtdocshare" id="Txtdocshare" onchange="hosp_doc(this);" value="' + md.doc_share + '" /></td><td><input type="text" readonly name="Txthocshare" id="Txthocshare" value="' + md.hos_share + '" /></td><td><a href="#" class="btn-primry delete-row-lab" style="border-radius: 50%; display: inline-block; width: 27px; height: 24px; text-align: center"><i class="fa fa-trash" style="color: white;"></i></a></td></tr>');
                         }
-                        debugger;
                         if (md.Department == "003") {
                             $('#ddlmaindep_xray').val('003').trigger('change');
                             $('#ddlmaindep_xray').attr('disabled', true);
@@ -430,7 +416,6 @@
                             $('#ddl_mri_Agrementdept').val(md.AgrementDepartmentId).trigger('change');
                             mdTable_mri.append('<tr><td style="display:none;"><input type="hidden" name="txtestid" id="txtestid" value="' + md.test_id + '" /></td><td style="display:none;"><input type="hidden" name="txtestid" id="txtestid" value="' + md.item_id + '" /></td><td style="display:none;"><input type="hidden" name="txtdep" id="txtdep" value="' + md.Department + '" /></td><td><input type="text" readonly name="txtname" id="txtname" value="' + md.test_description + '" /></td><td style="display:none;"><input type="hidden" readonly id="agremntTypeId" name="agremntTypeId" value="' + md.AgrementTypeId + '" /></td><td><input type="text" readonly name="agremntType" id="agremntType" value="' + md.AgrementType + '" /></td><td style="display:none;"><input type="hidden"readonly id="agremntDeptId" name="agremntDeptId" value="' + md.AgrementDepartmentId + '" /></td><td><input type="text" readonly name="agremntDept" id="agremntDept" value="' + md.AgrementDepartment + '" /></td><td><input type="text" readonly name="txtrate" id="txtrate" value="' + md.Actual_amount + '" /></td><td><input type="text"  name="txtdiscount" id="txtdiscount" onchange="calculatedisc(this);" value="' + md.dicount + '" /></td><td><input type="text" readonly name="txtnetamount" id="txtnetamount" value="' + md.Net_amount + '" /></td><td><input type="text"  name="Txtdocshare" id="Txtdocshare" onchange="hosp_doc(this);" value="' + md.doc_share + '" /></td><td><input type="text" readonly name="Txthocshare" id="Txthocshare" value="' + md.hos_share + '" /></td><td><a href="#" class="btn-primry delete-row-MRI" style="border-radius: 50%; display: inline-block; width: 27px; height: 24px; text-align: center"><i class="fa fa-trash" style="color: white;"></i></a></td></tr>');
                         }
-                        debugger;
                         if (md.services == "001") {
                             $('#ddlmaindep_Services').val('001').trigger('change');
                             $('#ddlmaindep_Services').attr('disabled', true);
@@ -444,7 +429,6 @@
             });
         }
         function toasterMessage(isError = false, title, message) {
-            debugger;
             toastr.options = {
                 "closeButton": true,
                 "debug": false,
@@ -471,7 +455,6 @@
         function loaddoctordata() {
             var doctor_id = $('#ddl_Doctor').val();
             PageMethods.LoaddoctorInfo(doctor_id, function (Tests) {
-                debugger;
                 var data = JSON.parse(Tests);
                 var abc = data.accountname;
                 var def = data.Account_ID;
@@ -479,15 +462,11 @@
                 $('#txtdocamount').val(kfg);
             });
         }
-        debugger;
         var doc_idss;
         function saveLabtest() {
-            debugger;
             $("#btnValue").prop("disabled", true);
             var btnsaves = $('#btnValue').val();
-            debugger;
             if (btnsaves == "Update") {
-                debugger;
                 doc_idss = $('#doc_id').val();
             }
             else {
@@ -512,11 +491,9 @@
             var save_blood_bank = [];
             var save_Services = [];
             var save_mri = [];
-            debugger;
             //multiple loops here
             if ($('#tblResult_Opd tbody tr').length > 0) {
                 $.each($('#tblResult_Opd tbody tr'), function (key, value) {
-                    debugger;
                     var hdn_test_id = $($(value).find('td input[name=txtestid]')[0]).val();
                     var txtdep = $($(value).find('td input[name=txtdep]')[0]).val();
                     var Description = $($(value).find('td input[name=txtname]')[0]).val();
@@ -536,7 +513,6 @@
 
             if ($('#tblResult tbody tr').length > 0) {
                 $.each($('#tblResult tbody tr'), function (key, value) {
-                    debugger;
                     var hdn_test_id = $($(value).find('td input[name=txtestid]')[0]).val();
                     var txtdep = $($(value).find('td input[name=txtdep]')[0]).val();
                     var Description = $($(value).find('td input[name=txtname]')[0]).val();
@@ -556,7 +532,6 @@
 
             if ($('#tblResults tbody tr').length > 0) {
                 $.each($('#tblResults tbody tr'), function (key, value) {
-                    debugger;
                     var hdn_test_id = $($(value).find('td input[name=txtestid]')[0]).val();
                     var txtdep_xray = $($(value).find('td input[name=txtdep]')[0]).val();
                     var Description = $($(value).find('td input[name=txtname]')[0]).val();
@@ -576,7 +551,6 @@
 
             if ($('#tblResult_ultra tbody tr').length > 0) {
                 $.each($('#tblResult_ultra tbody tr'), function (key, value) {
-                    debugger;
                     var hdn_test_id = $($(value).find('td input[name=txtestid]')[0]).val();
                     var txtdep_ultra = $($(value).find('td input[name=txtdep]')[0]).val();
                     var Description = $($(value).find('td input[name=txtname]')[0]).val();
@@ -596,7 +570,6 @@
 
             if ($('#tblResult_ctscan tbody tr').length > 0) {
                 $.each($('#tblResult_ctscan tbody tr'), function (key, value) {
-                    debugger;
                     var hdn_test_id = $($(value).find('td input[name=txtestid]')[0]).val();
                     var txtdep_ctscan = $($(value).find('td input[name=txtdep]')[0]).val();
                     var Description = $($(value).find('td input[name=txtname]')[0]).val();
@@ -616,7 +589,6 @@
 
             if ($('#tblResult_bloodbank tbody tr').length > 0) {
                 $.each($('#tblResult_bloodbank tbody tr'), function (key, value) {
-                    debugger;
                     var hdn_test_id = $($(value).find('td input[name=txtestid]')[0]).val();
                     var txtdep_bloodbank = $($(value).find('td input[name=txtdep]')[0]).val();
                     var Description = $($(value).find('td input[name=txtname]')[0]).val();
@@ -636,7 +608,6 @@
 
             if ($('#tblResult_mri tbody tr').length > 0) {
                 $.each($('#tblResult_mri tbody tr'), function (key, value) {
-                    debugger;
                     var hdn_test_id = $($(value).find('td input[name=txtestid]')[0]).val();
                     var txtdep_mir = $($(value).find('td input[name=txtdep]')[0]).val();
                     var Description = $($(value).find('td input[name=txtname]')[0]).val();
@@ -655,7 +626,6 @@
             }
             if ($('#tblResult_services tbody tr').length > 0) {
                 $.each($('#tblResult_services tbody tr'), function (key, value) {
-                    debugger;
                     var hdn_test_id = $($(value).find('td input[name=txtestid]')[0]).val();
                     var hdn_services = '001';
                     var txtdep_bloodbank = $($(value).find('td input[name=txtdep]')[0]).val();
@@ -681,9 +651,7 @@
             });
         }
 
-        debugger;
         function calculatedisc(row) {
-            debugger;
             var discamount = $(row).closest('tr').find('td input[name=txtdiscount]').val() || 0;
             var test_rate = $(row).closest('tr').find('td input[name=txtrate]').val() || 0;
             var percent = (test_rate * discamount) / 100;
@@ -729,14 +697,11 @@
             }
 
         }
-        debugger;
         function hosp_doc(row) {
-            debugger;
             syncRowFromAmount($(row).closest('tr'), false);
         }
 
         function hosp_doc_per(row) {
-            debugger;
             syncRowFromPercentage($(row).closest('tr'));
         }
 
@@ -768,7 +733,6 @@
                     success: function (response) {
                         let parsedData = JSON.parse(response.d);
                         let rows = '';
-                        debugger
                         $.each(parsedData, function (key, item) {
                             var sale_rat = item.Sale_Rate;
                             if (sale_rat == null || sale_rat == 'null') {
@@ -805,7 +769,6 @@
             $('#btnservicesModalOk').click(function () {
                 let newRowsAdded = false;
                 $('#modalBodyservicesTable tbody input.select-row:checked').each(function () {
-                    debugger
                     let row = $(this).closest('tr');
                     let name = row.find('input[name="txtname"]').val();
                     let agremntType = $('#ddl_services_AgrementType option:selected').text();
@@ -886,7 +849,6 @@
                     success: function (response) {
                         let parsedData = JSON.parse(response.d);
                         let rows = '';
-                        debugger
                         $.each(parsedData, function (key, item) {
                             rows += `<tr>
                         <td><input type="checkbox" class="select-row"></td>
@@ -919,7 +881,6 @@
             $('#btnMRIModalOk').click(function () {
                 let newRowsAdded = false;
                 $('#modalBodyMRITable tbody input.select-row:checked').each(function () {
-                    debugger
                     let row = $(this).closest('tr');
                     let name = row.find('input[name="txtname"]').val();
                     let agremntType = $('#ddl_mri_AgrementType option:selected').text();
@@ -1002,7 +963,6 @@
                     success: function (response) {
                         let parsedData = JSON.parse(response.d);
                         let rows = '';
-                        debugger
                         $.each(parsedData, function (key, item) {
                             rows += `<tr>
                                     <td><input type="checkbox" class="select-row"></td>
@@ -1035,7 +995,6 @@
             $('#btnBloodbankModalOk').click(function () {
                 let newRowsAdded = false;
                 $('#modalBodyBloodbankTable tbody input.select-row:checked').each(function () {
-                    debugger
                     let row = $(this).closest('tr');
                     let name = row.find('input[name="txtname"]').val();
                     let agremntType = $('#ddl_bloodbank_AgrementType option:selected').text();
@@ -1118,7 +1077,6 @@
                     success: function (response) {
                         let parsedData = JSON.parse(response.d);
                         let rows = '';
-                        debugger
                         $.each(parsedData, function (key, item) {
                             rows += `<tr>
                         <td><input type="checkbox" class="select-row"></td>
@@ -1151,7 +1109,6 @@
             $('#btnctscanModalOk').click(function () {
                 let newRowsAdded = false;
                 $('#modalBodyctscanTable tbody input.select-row:checked').each(function () {
-                    debugger
                     let row = $(this).closest('tr');
                     let name = row.find('input[name="txtname"]').val();
                     let agremntType = $('#ddl_CTScan_AgrementType option:selected').text();
@@ -1234,7 +1191,6 @@
                     success: function (response) {
                         let parsedData = JSON.parse(response.d);
                         let rows = '';
-                        debugger
                         $.each(parsedData, function (key, item) {
                             rows += `<tr>
                                     <td><input type="checkbox" class="select-row"></td>
@@ -1267,7 +1223,6 @@
             $('#btnultrasoundModalOk').click(function () {
                 let newRowsAdded = false;
                 $('#modalBodyultrasoundTable tbody input.select-row:checked').each(function () {
-                    debugger
                     let row = $(this).closest('tr');
                     let name = row.find('input[name="txtname"]').val();
                     let agremntType = $('#ddl_ultrasounds_AgrementType option:selected').text();
@@ -1351,7 +1306,6 @@
                     success: function (response) {
                         let parsedData = JSON.parse(response.d);
                         let rows = '';
-                        debugger
                         $.each(parsedData, function (key, item) {
                             rows += `<tr>
                         <td><input type="checkbox" class="select-row"></td>
@@ -1384,7 +1338,6 @@
             $('#btnxrayModalOk').click(function () {
                 let newRowsAdded = false;
                 $('#modalBodyxrayTable tbody input.select-row:checked').each(function () {
-                    debugger
                     let row = $(this).closest('tr');
                     let name = row.find('input[name="txtname"]').val();
                     let agremntType = $('#ddl_xray_AgrementType option:selected').text();
@@ -1471,7 +1424,6 @@
                         let groupTests = parsedData.GroupTests;
                         let allTests = labTests.concat(groupTests);
                         let rows = '';
-                        debugger
                         $.each(allTests, function (key, item) {
                             rows += `<tr>
                                     <td><input type="checkbox" class="select-row"></td>
@@ -1506,7 +1458,6 @@
             $('#btnLabModalOk').click(function () {
                 let newRowsAdded = false;
                 $('#modalBodyLabTable tbody input.select-row:checked').each(function () {
-                    debugger
                     let row = $(this).closest('tr');
                     let name = row.find('input[name="txtname"]').val();
                     let agremntType = $('#ddl_labtest_AgrementType option:selected').text();

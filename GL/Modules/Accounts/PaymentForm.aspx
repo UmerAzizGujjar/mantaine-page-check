@@ -57,7 +57,6 @@
         }
 
         function LoadTransactionDetails(Bill_ID) {
-            debugger;
             PageMethods.LoadTransactionDetails(Bill_ID, function (resp) {
                 var data = (JSON.parse(resp));
                 var rows = '';
@@ -82,7 +81,6 @@
         }
           function SaveRecord()
             {
-                debugger;
              
                     var val = document.getElementById("hdnDuplicateCheck").value;
                     var returnVal = false;
@@ -130,7 +128,6 @@
                         var isAmountZero = false;
                         $.each($('#tblDetails tbody tr'), function (key, value)
                         {
-                            debugger;
                             var ParentTrans_ID = $(value).find('input[name="hdnParentTrans_ID"]').val();
 
                             var ParentTrans_Name = $(value).find('input[name="hdnParentTrans_Name"]').val();
@@ -162,7 +159,6 @@
                             Details.push({ ParentTrans_ID: ParentTrans_ID, ParentTrans_Name: ParentTrans_Name, ParentTrans_Type: ParentTrans_Type, ItemID: ItemID, CategoryID: Category_ID, ItemName: ItemName, ItemType: ItemType, Amount: Amount, RecommendedByDoctor: RecommendedByDoctor, ExcludedFromPayment: ExcludedFromPayment, DisPer: DisPer, DisAmt: DisAmt, Net_Amount: Net_Amount, Qty: Qty, Remarks: Remarks, DocShare: DocShare, MainDepartment: MainDepartment });
                         });
                      
-                        debugger;
                         if (isAmountZero == true) {
                             alert("Amount Should not be zero");
                             return true;
@@ -177,7 +173,6 @@
                             alert('Select Patient.');
                             //return;
                         }
-                        debugger;
                       
                                 PageMethods.SaveRecord(JSON.stringify(Parameters), function (resp) {
 
@@ -229,7 +224,6 @@
             return xmlHttp.responseText;
         }
         function CulculateAmonutWithQty(anchor) {
-            debugger;
             var row = $(anchor).parents('tr')[0];
             var CalAmount = $($(row).find('td input[name=txtActualAmount]')[0]).val();
             var Qty = $($(row).find('td input[name=txtQty]')[0]).val();
@@ -266,7 +260,6 @@
                 return Data;
         }
         function OnSuccess(data) {
-            debugger;
             var roomward = "";
             if (data.d != '') {
 
@@ -314,7 +307,6 @@
                     }
                 }
                 else {
-                    debugger;
                     patient_id_old = ReplaceNullWith_Space(data.d.Previous_inpatient)
                     $('#lblPatientDiscountType').text(ReplaceNullWith_Space(data.d.Patient_Discount_Type));
                 }
@@ -336,13 +328,11 @@
             CalculateTotals();
         }
         function CalculateTotals() {
-            debugger;
             var Amount = 0;
             var DisAmt = 0;
             var NetAmount = 0;
 
             $.each($('#tblDetails tbody tr'), function (key, value) {
-                debugger;
                 //Amount += parseFloat($($(value).find('td')[4]).text());
                 Amount += parseFloat($(this).closest("tr").find("td:eq(5)").text());
                 DisAmt += parseFloat($(value).find('input[name="DisAmount"]').val());
@@ -371,7 +361,6 @@
         }
           function AddServiceOrItem()
             {
-                debugger;
                
                     var Type = '';
                     var Item_Id = $('#txtAddService').val();
@@ -394,7 +383,6 @@
                     {
 
                         // localStorage.DocShare
-                        debugger;
                         var rows = '<tr><td style="text-align:left;">' + parseInt(parseInt(rowIndex) + 1) + '</td><td> <a href="javascript:void(0)" onclick="ExcludeFromPayment(this)">Delete</a> </td><td style="text-align:left;"> <input type="hidden" name="hdnParentTrans_ID" value="0" /> <input type="hidden" name="hdnParentTrans_Name" value="InPatient" /> <input type="hidden" name="hdnParentTrans_Type" value="" /> <input type="hidden" name="hdnItemID" value="' + localStorage.SelectedItemID + '" /> <input type="hidden" name="hdnItemName" value="' + localStorage.SelectedItemName + '" /> <input type="hidden" name="hdnDisPer" value="0"/><input type="hidden" name="hdnDisAmount" value="0.00"/><input type="hidden" name="hdnNet_Amount" value=' + localStorage.SelectedItemAmount + '/><input type="hidden" name="hdnItemType" value="' + localStorage.SelectedItemType + '" /><input type="hidden" name="hdnRecommendedByDoctor" value="' + false + '" />' + localStorage.SelectedItemName + '</td><td style="display:none;"> 0</td><td><input type="text" name="txtQty" value="1" style="width: 45px !important;" onkeyup="CulculateAmonutWithQty(this)"/><input type="hidden" name="txtActualAmount" value="' + localStorage.SelectedItemAmount + '"  /></td><td style="text-align:Right;" contenteditable onkeyup="CalculateSummarieDiscountPerWise(' + rowIndex + ')"> ' + localStorage.SelectedItemAmount + '</td><td style="display:none;"> <input type="text" name="DisPer" value="0"style="width: 37px !important;" onkeyup="CalculateSummarieDiscountPerWise(' + rowIndex + ')"/> </td><td style="display:none;"> <input type="text" name="DisAmount" value="" style="width: 75px !important;" onkeyup="CalculateSummarieDiscountAmountWise(' + rowIndex + ')"/> </td> <td style="text-align:Right;display:none;">' + localStorage.SelectedItemAmount + '</td><td style="display:none;"><input type="number" id="ds' + rowIndex + '" name="DocShare" value="' + 0 + '"  style="width: 75px !important;" onkeyup="calculateDoctorShare()"/></td> </tr>'
                     }
                     else
@@ -408,7 +396,6 @@
                   
                     CalculateSummarieDiscountPerWise(rowIndex);
                     //editable some Items
-                    debugger;
                    
                     var user_name = '<% =AppConfig.UserName %>';
                     // Ali.Tariq
@@ -426,7 +413,6 @@
              
             }
         function CalculateSummarieDiscountPerWise(rowIndex) {
-            debugger;
             AssignValue(txtDisPer, 0);
             AssignValue(txtDisAmt, 0);
             AssignValue(txtAmountReceived, 0);
@@ -451,7 +437,6 @@
                     $(value).find('input[name="hdnDisAmount"]').val(DisAmt.toFixed(6));
                     NetAmount = Amount - DisAmt;
                     $($(value).find('td')[8]).text(NetAmount.toFixed(0));
-                    debugger;
                     $(value).find('input[name="hdnNet_Amount"]').val(NetAmount.toFixed(6));
                 }
                 Amount = $($(value).find('td')[5]).text();
@@ -483,13 +468,11 @@
             }
         }
         function tokenInputs(textboxID, tblName, OnAddFun) {
-            debugger;
             $('#' + textboxID).tokenInput("json.aspx?Table=" + tblName,
              {
                  tokenLimit: 1,
                  onAdd:
                      function (item) {
-                         debugger;
                          try {
 
                              if (tblName == 'Patients') {
@@ -499,7 +482,6 @@
                              }
 
                              else if (tblName == 'INV_ItemsPayment') {
-                                 debugger;
 
                                  localStorage.SelectedItemID = item.id;
                                  localStorage.SelectedItemType = item.Type;
@@ -625,7 +607,6 @@
 
 
             PageMethods.FillTestsByCategory(CategoryID, function (Tests) {
-                debugger;
                 var options = '<option value="0" >Please Select</option>';
                 $.each(JSON.parse(Tests), function (key, value) {
                     options += '<option value="' + value.Test_ID + '" >' + value.Test_Name + '</option>';
@@ -653,7 +634,6 @@
         }
         var temp_Patient = 0;
         function AddAllTest() {
-            debugger;
             var maindpt = $('#ddlMainTestDepartment').val();
             var CheckTest = $('#ddlTestList').val();
 
@@ -682,7 +662,6 @@
                     contentType: "application/json; charset=utf-8",
                     dataType: "json",
                     success: function (response) {
-                        debugger;
                         if (response.d != 0) {
                             //Test_Rate = response.d;
                             globalTestRate = response.d;
@@ -712,7 +691,6 @@
                         //var pat_type = $("#lblPatientCategory").text();
                         //if (pat_type == "Private") {
                         //    $("#tblDetails tr").each(function () {
-                        //        debugger;
                         //        $(this).find("td:eq(5)").attr('contenteditable', 'True');
 
 
@@ -727,13 +705,10 @@
         }
          function AddLabTest(maindpt)
             {
-                debugger;
                 var remarks = $("#Remarks").val();
                 var test = $('#ddlTestList').find('option:selected').text();
                 PageMethods.GetLabTestDDLDetails(test,maindpt, function (res) {
-                    debugger;
                     $.each(JSON.parse(res), function (key, value) {
-                        debugger;
                         var Result = 'Result';
                         var test = $('#ddlTestList').val();
                         var date = '<%= DateTime.Now %>';
@@ -768,7 +743,6 @@
                             value.Group_Category == "0";
 
                           
-                            debugger;
                             var rows = '<tr><td style="text-align:left;">' + parseInt(parseInt(rowIndex) + 1) + '</td><td> <a href="javascript:void(0)" onclick="ExcludeFromPayment(this)">Delete</a> </td><td style="text-align:left;"> <input type="hidden" name="hdnParentTrans_ID" value="' + ParentTransID + '" /> <input type="hidden" name="hdnParentTrans_Name" value="' + (CheckInPatientObject == true ? 'InPatient' : '') + '" /> <input type="hidden" name="hdnParentTrans_Type" value="' + ParentTransType + '" /> <input type="hidden" name="hdnItemID" value="' + value.Test_ID + '" /> <input type="hidden" name="hdnItemName" value="' + value.Test_Name + '" /> <input type="hidden" name="hdnItemType" value="Test" /> <input type="hidden" name="hdnCategory_ID" value="' + value.Group_Category + '" /><input type="hidden" name="hdnDisPer" value="0"/><input type="hidden" name="hdnDisAmount" value="0.00"/><input type="hidden" name="hdnNet_Amount" value=' + globalTestRate + '/> <input type="hidden" name="hdnRecommendedByDoctor" value="' + false + '" />' + value.Test_Name + '</td><td style="display:none;"><input type="hidden" name="txtActualAmount" value="' + globalTestRate + '" /></td><td contenteditable><input type="text" name="txtQty" value="1" style="width: 45px !important;" onkeyup="CulculateAmonutWithQty(this)"/><input type="hidden" name="txtActualAmount" value="' + globalTestRate + '" /></td><td contenteditable style="text-align:Right;" onkeyup="CalculateSummarieDiscountPerWise(' + rowIndex + ')"> ' + globalTestRate + ' </td><td style="display:none;"> <input type="text" name="DisPer" value="0"style="width: 37px !important;" onkeyup="CalculateSummarieDiscountPerWise(' + rowIndex + ')"/> </td><td style="display:none;"> <input type="text" name="DisAmount" value="" style="width: 75px !important;" onkeyup="CalculateSummarieDiscountAmountWise(' + rowIndex + ')"/> </td> <td style="text-align:Right;display:none;"><td style="display:none;"> <input type="text" name="DocShare" id="ds' + rowIndex + '"  value="' + 0 + '"  style="width: 75px !important;"onkeyup="calculateDoctorShare()"/><input type="hidden" name="Main_Department" value="' + maindpt + '" /></td></tr>'
 
                             var rowstbl = '<tr><td style="text-align:left;">' + parseInt(parseInt(rowIndex) + 1) + '</td><td> <a href="javascript:void(0)" onclick="ExcludeFromPayment(this)">Delete</a> </td><td style="text-align:left;"> <input type="hidden" name="hdnParentTrans_ID" value="' + ParentTransID + '" /> <input type="hidden" name="hdnParentTrans_Name"  value="' + (CheckInPatientObject == true ? 'InPatient' : '') + '" /> <input type="hidden" name="hdnParentTrans_Type" value="' + ParentTransType + '" /> <input type="hidden" name="hdnItemID" value="' + value.Test_ID + '" /> <input type="hidden" name="hdnItemName" value="' + value.Test_Name + '" /> <input type="hidden" name="hdnItemType" value="Test" /> <input type="hidden" name="hdnCategory_ID" value="' + value.Group_Category + '" /> <input type="hidden" name="hdnRecommendedByDoctor" value="' + false + '" />' + value.Test_Name + '</td><td>' + remarks + '</td><td><input type="text" name="txtQty disabled=disabled" value="1" style="width: 45px !important;" onkeyup="CulculateAmonutWithQty(this)"/><input type="hidden" name="txtActualAmount" value="' + globalTestRate + '" /><input type="hidden" name="Main_Department" value="' + maindpt +'" /></td><td>' + globalTestRate + '</td></tr>'
@@ -801,7 +775,6 @@
          }
         var Test_Rate = 0;
          function AddRadialogyTest() {
-                debugger;
                 var remarks = $('#Remarks').val();
            $("#btnXray").removeClass("btn-danger").addClass("btn-info");
            $('#btnultrasound').removeClass('btn-danger').addClass('btn-info');
@@ -823,7 +796,6 @@
                         contentType: "application/json; charset=utf-8",
                         dataType: "json",
                         success: function (data) {
-                            debugger;
                             var data = JSON.parse(data.d);
                             TestMainDepartmentName = data[0].MainDepartment;
                             var Rate = data[0].Rate;
@@ -871,7 +843,6 @@
         var patient_id_old = 0;
         var CheckInPatientObject = true;
             function AddProcedureTest() {
-                debugger;
                 var remarks = $('#Remarks').val();
                 var Result = 'Result';
                 var test = $('#ddlTestList').val();
@@ -886,7 +857,6 @@
                     contentType: "application/json; charset=utf-8",
                     dataType: "json",
                     success: function (data) {
-                        debugger;
                       
                         var data = JSON.parse(data.d);
                         TestMainDepartmentName = data[0].MainDepartment;
@@ -925,7 +895,6 @@
                 });
             }
         function LoadTestByDepartment() {
-            debugger;
             var maindpt = $('#ddlMainTestDepartment').val();
             if (maindpt == "0") {
                 $('#ddlTestList').val("");

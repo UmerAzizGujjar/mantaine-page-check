@@ -39,7 +39,6 @@
         });
 
         function InpatientDischargePrint(In_Patient_ID) {
-            debugger;
 
             var user_name = '<% =AppConfig.Company_Name %>';
             if (user_name == 'Imran Idrees Teaching Hospital') {
@@ -172,7 +171,6 @@
                     {
                         "data": "Admission_Date", "name": "Admission_Date",
                         "render": function (data, type, full) {
-                            debugger;
                             var date = full.Admission_Date;
                             date = moment(date).format('DD-MMM-YYYY');
                             return date;
@@ -188,7 +186,6 @@
                     {
                         "data": "Discharge_On", "name": "Discharge_On",
                         "render": function (data, type, full) {
-                            debugger;
                             var date = full.Discharge_On;
                             date = moment(date).format('DD-MMM-YYYY');
                             return date;
@@ -199,7 +196,6 @@
                     
                     {
                         render: function (data, type, full) {
-                            debugger;
                             var res = '<a href="#" class="editListBtn" onclick="editOpen(' + full.In_Patient_ID + ')" style="border-radius: 4px; color: white; padding: 5px 8px 5px 8px;"><i class="fa fa-pencil"></i></a>'
 
                             /* var Del = '<a href="#" style="border-radius: 4px; background-color: #ad170c;margin-left: 4px; color: white; padding: 5px 8px 5px 8px;" onclick=deleteConfirm(this)><i class="fa fa-trash" aria-hidden="true"></i></a>';*/
@@ -334,7 +330,6 @@
             );
         }
         function deleteConfirm(anchorTag) {
-            debugger;
             var table = $('#tblResult').DataTable();
             var row = $(anchorTag).closest('tr');
             var rowData = table.row(row).data();

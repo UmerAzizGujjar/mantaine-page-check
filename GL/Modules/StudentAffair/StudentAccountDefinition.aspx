@@ -4,7 +4,6 @@
     
     <script type="text/javascript">
         function Addrow() {
-            debugger;
             var rows = '';
             var rowlength = tblItemDescription.rows.length;
             rows += '<tr>' +
@@ -36,17 +35,14 @@
 
 
         function loadItemList(rowlength) {
-            debugger;
             var optionsitem = '';
             var length = rowlength;
             $('#AccruedIncome' + length + '').select2();
             $('#NetIncome' + length + '').select2();
 
             PageMethods.loadAccountList(function (resp) {
-                debugger;
                 optionsitem = '<option value="0">Please Select</option>';
                 $.each(JSON.parse(resp), function (key, value) {
-                    debugger;
                     optionsitem += '<option value="' + value.Account_ID + '" >' + value.name + '</option>';
                 });
 
@@ -65,13 +61,11 @@
 
 
         function SaveAllRecord() {
-            debugger;
             var btnSave = 'Update';
             var tableItems = $('#tblItemDescription');
             var Account_list = [];
 
             tableItems.find('tr:gt(0)').each(function (key, value) {
-                debugger;
                 Account_list.push({
                     'Account_Category_Id': $(value).find('td input[name=AccountId]').val(),
                     'txtCategory': $(value).find('td input[name=txtCategory]').val(),
@@ -85,7 +79,6 @@
             });
             var AllItemDetail = { 'btnSave': btnSave, 'AccountList': Account_list };
             PageMethods.SaveAccount(btnSave, JSON.stringify(AllItemDetail), function (res) {
-                debugger;
 
                 Swal.fire({
                     icon: 'success',
@@ -108,7 +101,6 @@
         function LoadAccount() {
             var rows = '';
             PageMethods.LoadAccount(function (resp) {
-                debugger;
 
                 var data = (JSON.parse(resp));
 
@@ -116,7 +108,6 @@
                 var rowIndex = parseInt((parseInt($('#tblItemDescriptionDetail tbody tr').length)));
 
                 $.each(data, function (key, value) {
-                    debugger;
                     rows += '<tr>' +
                         '<td style="display:none"><input type=text class="form-control" id="AccountId' + (key + 1) + '" name="AccountId" style="width:164px !important;font-size: 10px !important;height:10px!important;"  value=' + data[key].Account_Category_Id + ' readonly=readonly /></td>' +
 
@@ -140,7 +131,6 @@
                     '</tr>';
 
                 });
-                debugger;
                 $('#tblItemDescriptionDetail').append(rows);
                 $.each(selectedOptions, function (key, value) {
                     loadItemList(key + 1);
@@ -165,7 +155,6 @@
         }
 
         function ExcludeFromPayment(anchor) {
-            debugger;
             var a = confirm("Are you sure You want to delete");
             if (a == true) {
                 console.clear();
@@ -176,7 +165,6 @@
 
 
         function EditRow(rowlength) {
-            debugger;
             var length = rowlength;
             $('#txtCategory' + length).attr("readonly", false);
             $('#AccruedIncome' + length).prop("disabled", false).trigger('change');

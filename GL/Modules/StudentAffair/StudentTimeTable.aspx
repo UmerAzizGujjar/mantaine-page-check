@@ -67,14 +67,12 @@
             GetVenu();
             GetTeacher();
             
-            debugger;
                  <% if (Request.QueryString["ID"] != null)
                   { %>
                         var Stu_ID = '<%= Request.QueryString["ID"]%>'
                         EditMasterSubject(Stu_ID);
                     <% }%>
             $('#ddlClass').on("change", function () {
-                debugger;
                 program = $('#program').val();
                 classs = $('#ddlClass').val();
                 GetSubject();
@@ -231,7 +229,6 @@
         }
 
         function Addrow() {
-            debugger;
             var program = $("#program").val();
             var ClassName = $("#ddlClass option:selected").text();
             var ClassVal = $('#ddlClass').val();
@@ -243,7 +240,6 @@
             var rows = '';
 
             var rowlength = tblItemDescription.rows.length;
-            debugger;
             rows += '<tr Class="rowtr">' +
                 '<td style = "width: 78px !important;"><input style="display:none;" type="text" name="clas" id="clas' + rowlength + '"  value="' + ClassVal + '" />' + ClassName + '</td>' +
                 '<td><input type="text"" style="width: 110px!important;font-size: 12px;height: 23px;" name="Date" id="txt_Date' + parseInt(parseInt(rowlength)) + '" value=""  /></td>' +
@@ -277,7 +273,6 @@
                 '<td><input style = "margin-left: 15px !important;" type="Checkbox" name="chkhldy" id="chkhldy' + rowlength + '"  value=""/></td>' + '<td><input style = "margin-left: 12px !important; width: 15px !important;" type="Checkbox" name="chkbrk" id="chkbrks' + rowlength + '"  value=""/></td>' +
                 '<td><a href="#" onclick ="Delete(this)"><i class="glyphicon glyphicon-trash"  style="width:15px !important;font-size: 13px;color:#f30a0a;position:relative; margin-left: 12px !important;"></i></a></td>'
             '</tr>'
-            debugger;
             if (ClassVal == "0") {
                 $('#tblPerson').attr('disabled', false);
                 Swal.fire({
@@ -330,7 +325,6 @@
                 return;
             }
             if (ClassVal !== "04" && ClassVal !== "05" && (!block || !module)) {
-                debugger;
                 Swal.fire({
                     icon: 'error',
                     title: 'Error!',
@@ -357,10 +351,8 @@
        
 
             $('#ddlbatchs' + rowlength + '').on('change', function () {
-                debugger;
                 var subject1 = $(this).find(':selected').text();
                 if (subject1 != "") {
-                    debugger;
                     $('#whole' + rowlength + '').attr('disabled', true);
                     $('#ddlgroups' + rowlength + '').attr('disabled', true);
                 }
@@ -368,10 +360,8 @@
             });
 
             $('#ddlbatchs' + rowlength + '').on('change', function () {
-                debugger;
                 var subject1 = $(this).find(':selected').text();
                 if (subject1 == "Please Select" || subject1 == 'Please Select') {
-                    debugger;
                     $('#whole' + rowlength + '').attr('disabled', false);
                     $('#ddlgroups' + rowlength + '').attr('disabled', false);
                     $('#ddlbatchs' + rowlength + '').attr('disabled', false)
@@ -382,10 +372,8 @@
 
 
             $('#ddlgroups' + rowlength + '').on('change', function () {
-                debugger;
                 var subject1 = $(this).find(':selected').text();
                 if (subject1 != "") {
-                    debugger;
                     $('#whole' + rowlength + '').attr('disabled', true);
                     $('#ddlbatchs' + rowlength + '').attr('disabled', true);
                 }
@@ -393,10 +381,8 @@
 
 
             $('#ddlgroups' + rowlength + '').on('change', function () {
-                debugger;
                 var subject1 = $(this).find(':selected').text();
                 if (subject1 == "Please Select" || subject1 == 'Please Select') {
-                    debugger;
                     $('#whole' + rowlength + '').attr('disabled', false);
                     $('#ddlgroups' + rowlength + '').attr('disabled', false);
                     $('#ddlbatchs' + rowlength + '').attr('disabled', false)
@@ -406,7 +392,6 @@
         
 
            $('#whole' + rowlength + '').on('change', function () {
-               debugger;
 
                    if ($('#whole' + rowlength + '').is(':checked'))
                    {
@@ -419,9 +404,7 @@
                    }
            });
             $('#chkhldy' + rowlength + '').on('change', function () {
-                debugger;
                 if ($('#chkhldy' + rowlength + '').is(':checked')) {
-                    debugger;
                     $('#ddlbatchs' + rowlength + '').attr('disabled', true);
                     $('#ddlgroups' + rowlength + '').attr('disabled', true);
                     $('#ddlitmeCode' + rowlength + '').attr('disabled', true);
@@ -432,7 +415,6 @@
                     $('#ddlVenue' + rowlength + '').attr('disabled', true);
                 }
                 else {
-                    debugger;
                     $('#ddlbatchs' + rowlength + '').attr('disabled', false);
                     $('#ddlgroups' + rowlength + '').attr('disabled', false);
                     $('#ddlitmeCode' + rowlength + '').attr('disabled', false);
@@ -444,9 +426,7 @@
                 }
             });
             $('#chkbrks' + rowlength + '').on('change', function () {
-                debugger;
                 if ($('#chkbrks' + rowlength + '').is(':checked')) {
-                    debugger;
                     $('#ddlbatchs' + rowlength + '').attr('disabled', true);
                     $('#ddlgroups' + rowlength + '').attr('disabled', true);
                     $('#ddlitmeCode' + rowlength + '').attr('disabled', true);
@@ -455,7 +435,6 @@
                     $('#ddlVenue' + rowlength + '').attr('disabled', true);
                 }
                 else {
-                    debugger;
                     $('#ddlbatchs' + rowlength + '').attr('disabled', false);
                     $('#ddlgroups' + rowlength + '').attr('disabled', false);
                     $('#ddlitmeCode' + rowlength + '').attr('disabled', false);
@@ -466,9 +445,7 @@
                 }
             });
            
-            debugger;
             $(function () {
-                debugger;
                 var date = new Date();
                 var dayNo = date.getDay();
                 var mindate = (dayNo);
@@ -476,7 +453,6 @@
                 $('input[name="Date"]').datepicker({
                     dateFormat: 'dd/mm/yy',
                     onSelect: function (dateText, inst) {
-                        debugger;
                         var day = dateText.split('/');
                         var today = new Date(parseInt(day[2]), parseInt(day[1]) - 1, parseInt(day[0]), null, null, null, null);
                         $(this).val(dateText + ' - ' + d[today.getDay()]);
@@ -551,7 +527,6 @@
             var ddlProgram = $("#program").find('option:selected').val();
             var ddlWeek = $("#ddlWeek").find('option:selected').val();
 
-            debugger;
 
             var locationInfo = window.location;
 
@@ -597,7 +572,6 @@
                     contentType: 'application/json; charset=utf-8',
                     dataType: 'json',
                     success: function (response) {
-                        debugger;
                         const data = JSON.parse(response.d);
                         //$targetDropdown.val('');
                         //$targetDropdown.empty();
@@ -625,7 +599,6 @@
         
         var GetVenue;
         function GetVenu() {
-            debugger;
             Getven = '';
             $.ajax({
                 url: 'StudentTimeTable.aspx/GetVenues',
@@ -645,7 +618,6 @@
 
         var GetTeacher;
         function GetTeacher() {
-            debugger;
             Gettech = '';
             $.ajax({
                 url: 'StudentTimeTable.aspx/GetTeachers',
@@ -662,9 +634,7 @@
                 },
             });
         }       
-        debugger;
         function Delete(row) {
-            debugger;
             var a = confirm("Are you sure You want to delete");
             if (a == true) {
                 $(row).closest('tr').remove();
@@ -677,7 +647,6 @@
             }
         }
         function EditMasterSubject(Stu_ID) {
-            debugger;
             $('#editLoader').show();
             PageMethods.editMaster(Stu_ID, function (resp) {
                 var studata = JSON.parse(resp);
@@ -975,7 +944,6 @@
         //    $('input[name="FTime"]').ptTimeSelect({});
         //}
         function Replicates() {
-                debugger;
                 var Subject_id = $('#Subject_id').val();
                 var program = $('#program').val();
                 var ddlClass = $('#ddlClass').val();
@@ -983,7 +951,6 @@
                 var ddlBlock = $('#ddlBlock').val();
                 var ddlModule = $('#ddlModule').val();
                 var Save_list = [];
-                debugger;
                 $.each($('#tblItemDescription tbody tr'), function (key, value) {
                     var Class = $($(value).find('td input[name=clas]')[0]).val();
                     var txtClass = $($(value).find('td input[name=clas]')[0]).text();
@@ -991,16 +958,13 @@
                     var dt = new Date();
                     var time = dt.getHours() + ":" + dt.getMinutes() + ":" + dt.getSeconds();
                     var Dte = Dates.split('-');
-                    debugger;
                     Dated = Dte[0];
                     var today = Dated.trim();
                     var day = today.split('/');
                     var dat = new Date(parseInt(day[2]), parseInt(day[1]) - 1, parseInt(day[0]), null, null, null, null);
-                    debugger;
 
                     DayName = Dte[1];
                     var day = DayName.trim();
-                    debugger;
                     var TTime = $($(value).find('td input[name=TTime]')[0]).val();
                     if (TTime == null || TTime == 0 || TTime == "") {
                         TTime = time;
@@ -1013,7 +977,6 @@
 
 
 
-                    debugger;                 
                     var TTime = $($(value).find('td input[name=TTime]')[0]).val();
                     if (TTime == null || TTime == 0 || TTime == "") {
                         TTime = time; 
@@ -1057,7 +1020,6 @@
                 });
         }
         function SaveSubject() {
-            debugger;
             var Subject_id = $('#Subject_id').val();
             var btnSave = $('#btnSave').val();
 
@@ -1116,7 +1078,6 @@
             }
 
             var Save_list = [];
-            debugger;
             $.each($('#tblItemDescription tbody tr'), function (key, value) {
                 var Class = $($(value).find('td input[name=clas]')[0]).val();
                 var txtClass = $($(value).find('td input[name=clas]')[0]).text();
@@ -1124,16 +1085,13 @@
                 var dt = new Date();
                 var time = dt.getHours() + ":" + dt.getMinutes() + ":" + dt.getSeconds();
                 var Dte = Dates.split('-');
-                debugger;
                 Dated = Dte[0];
                 var today = Dated.trim();
                 var day = today.split('/');
                 var dat = new Date(parseInt(day[2]), parseInt(day[1]) - 1, parseInt(day[0]), null, null, null, null);
-                debugger;
 
                 DayName = Dte[1];
                 var day = DayName.trim();
-                debugger;
                 var TTime = $($(value).find('td input[name=TTime]')[0]).val();
                 if (TTime == null || TTime == 0 || TTime == "") {
                     TTime = time;

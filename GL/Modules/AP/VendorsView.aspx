@@ -197,13 +197,11 @@ font-weight: bold !important;
                         "type": "GET",
                         "dataType": "JSON",
                         "data": function (d) {
-                            debugger;
 
                             return d;
                         },
 
                         "dataSrc": function (json) {
-                            debugger;
                             json.draw = json.d.draw;
                             json.recordsTotal = json.d.recordsTotal;
                             json.recordsFiltered = json.d.recordsFiltered;
@@ -223,7 +221,6 @@ font-weight: bold !important;
                         
                         {
                             render: function (data, type, full) {
-                                debugger;
                                 var res = '<a href="#" onclick="Edit(' + full.Vendor_ID + ')" style="border-radius: 4px;margin-right: 4px; background-color: #5399af; color: white; padding: 5px 8px 5px 8px;"><i class="fa-solid fa-eye"></i></a>';
 
                               /*  var del = '<a style="border-radius: 4px; background-color: red; color: white; padding: 5px 8px 5px 8px;" href="#" onclick="deleteConfirm(' + full.Vendor_ID+')" id="btnDel' + (full + 1) + '"><i class="fa-solid fa-trash"></i></a>';*/
@@ -274,7 +271,6 @@ font-weight: bold !important;
         //        url: "VendorView.aspx/isDeleteAllow",
         //        data: "",
         //        success: function (resp) {
-        //            debugger;
         //            if (resp.d == true) {
         //                isDele = true;
         //            }
@@ -298,7 +294,6 @@ font-weight: bold !important;
            
         //      var IgpId=ID;
         //      PageMethods.AutoGRN(IgpId, function (Tests) {
-        //          debugger
         //          var message = JSON.parse(Tests);
         //          if (message[0].Column1 != "" || message[0].Column1 != null) {
                      
@@ -315,7 +310,6 @@ font-weight: bold !important;
         //}
 
         function deleteConfirm(Vendor_ID) {
-            debugger;
             //var row = $(anchorTag).parents('tr')[0];
 
 
@@ -324,7 +318,6 @@ font-weight: bold !important;
 
             if (confirm('Are you sure want to delete this record')) {
                 PageMethods.DeleteRecord(Vendor_ID, function (msg) {
-                    debugger
                     $(row).remove();
                   
                 }, OnFail);

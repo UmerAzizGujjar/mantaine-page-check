@@ -44,7 +44,6 @@
                 success: function (response) {
                     var parsed_data = JSON.parse(response.d);
                     console.log(parsed_data);
-                    debugger;
                     $("#ddl_transType").val(parsed_data[0].Trans_type);
                     $("#transactionno").val(parsed_data[0].Trans_type);
                     $("#txtRemarks").val(parsed_data[0].Trans_type);
@@ -98,7 +97,6 @@
                 contentType: "application/json; charset=utf-8",
                 dataType: "json",
                 success: function (response) {
-                    debugger;
                     var tbody = $('#tblDepreciation tbody');
                     tbody.empty(); // Clear existing rows if needed
 
@@ -538,16 +536,13 @@
         var monthlyPolicy;
         var yearlyPolicy;
         function CheckPolicy() {
-            debugger;
             $.ajax({
                 type: "POST",
                 url: "AssetDepereciation.aspx/Check_DepPolicy",
                 contentType: "application/json; charset=utf-8",
                 dataType: "json",
                 success: function (response) {
-                    debugger;
                     var policies = response.d;
-                    debugger;
                     monthlyPolicy = policies.Monthly;
                     yearlyPolicy = policies.Yearly;
 

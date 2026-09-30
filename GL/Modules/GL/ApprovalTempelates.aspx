@@ -22,12 +22,10 @@
                 window.location.href = "ApprovalTempelatesView.aspx";
             });
             $('#btnSave').on('click', function () {
-                debugger
                 var id = $('#txtTempelateID').val();
                 if (id == "") {
                     id = "";
                 }
-                debugger
                 var btnValue = $("#btnSave").val();
                 var txttempelateName = $("#txtTempName").val();
                 var txttempelateDescription = $("#txtTempelateDescription").val();
@@ -48,11 +46,9 @@
                     });
                     return false;
                 }
-                debugger
                 var checkedPurchasesFormIDs = [];
                 var checkedPurchasesCheckBoxIDs = [];
                 $("#<%=chkPurchases.ClientID%> input[type='checkbox']:checked").each(function () {
-                    debugger
                     var checkboxID = $(this).attr('id');
                     var index = checkboxID.split('_').pop();
                     var formID = $("#ctl00_MainContent_PurchasehidFormID_" + index).val();
@@ -63,7 +59,6 @@
                 var checkedInventoryFormIDs = [];
                 var checkedInventoryCheckBoxIDs = [];
                 $("#<%=chkInventory.ClientID%> input[type='checkbox']:checked").each(function () {
-                    debugger
                     var checkboxID = $(this).attr('id');
                     var index = checkboxID.split('_').pop();
                     var formID = $("#ctl00_MainContent_InventoryhidFormID_" + index).val();
@@ -74,7 +69,6 @@
                 var checkedAccountPayableFormIDs = [];
                 var checkedAccountPayableCheckBoxIDs = [];
                 $("#<%=chkAccountPayable.ClientID%> input[type='checkbox']:checked").each(function () {
-                    debugger
                     var checkboxID = $(this).attr('id');
                     var index = checkboxID.split('_').pop();
                     var formID = $("#ctl00_MainContent_AccountPayablehidFormID_" + index).val();
@@ -82,7 +76,6 @@
                     checkedAccountPayableCheckBoxIDs.push(checkboxID);
                 });
 
-                debugger
                 var StageList = new Array();
                 var list = document.getElementById('Stageslist');
                 if (list.rows.length <= 1) {
@@ -122,7 +115,6 @@
                     }
                     StageList[key + 1] = new Array(ddlstages);
                 });
-                debugger
                 $.ajax({
                     type: "POST",
                     url: "ApprovalTempelates.aspx/Save",
@@ -186,25 +178,20 @@
         }
 
         function LoadFormIds(id) {
-            debugger
             var rows = '';
             PageMethods.LoadFormIds(id, function (resp) {
-                debugger;
                 var data = JSON.parse(resp);
                 console.log(data);
                 data.forEach(function (checkboxId) {
                     console.log(checkboxId);
-                    debugger
                     $('#' + checkboxId).prop('checked', true);
                 });
             });
         }
 
         function LoadStageId(id) {
-            debugger
             var rows = '';
             PageMethods.LoadStageId(id, function (resp) {
-                debugger;
                 var data = JSON.parse(resp);
                 var rowIndex = $('#appStagess tbody tr').length;
                 $.each(data, function (key, value) {
@@ -257,7 +244,6 @@
         }
 
         function AppendStages() {
-            debugger
             var NoStageselect = false;
             $('#appStagess select').each(function () {
                 if ($(this).val() === "0") {
@@ -311,7 +297,6 @@
                 });
         }
         function ExcludeFromPayment(anchor) {
-            debugger;
             Swal.fire({
                 icon: 'warning',
                 title: 'Are you sure?',

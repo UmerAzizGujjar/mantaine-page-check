@@ -7,7 +7,6 @@
 
 
         $(document).ready(function () {
-            debugger;
             $('#ctl00_lblMessage').hide();
             LoadPage();
 
@@ -15,7 +14,6 @@
         });
 
         function PrintoutPatient(Out_Patient_ID) {
-            debugger;
             var url = '../../ReportViewer.aspx?ReportName=OutPatient&Title=Out Patient Report&outPatientID=' + Out_Patient_ID;
             window.open(url, '_blanks');
         }
@@ -47,7 +45,6 @@
         }
 
         function deleteConfirm(anchorTag) {
-            debugger;
             var row = $(anchorTag).parents('tr')[0];
             var OutPatientID = $(anchorTag).data('id');
 
@@ -67,7 +64,6 @@
 
 
         function PrintVoucher(id) {
-            debugger;
 
             var locationInfo = window.location;
             var url = '../../ReportViewer.aspx?ReportName=Voucher&ReportTitle=OPD Voucher&TransID=' + id + '&TransType=OPDShare';

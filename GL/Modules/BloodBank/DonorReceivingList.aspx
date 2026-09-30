@@ -5,7 +5,6 @@
     <script type="text/javascript">
 
         $(document).ready(function () {
-            debugger;
             $('#ctl00_lblMessage').hide();
             LoadPage();
 
@@ -13,7 +12,6 @@
         });
 
         function prints(Donor_Id) {
-            debugger;
             var url = '../../ReportViewer.aspx?ReportName=BasePrintDonor&ReportTitle=Department Of Pathology&Donor_ID=' + Donor_Id;
             window.open(url, '_blank');
 
@@ -66,7 +64,6 @@
                     {
                         "data": "WholeBlood_Expiry", "name": "WholeBlood_Expiry",
                         "render": function (data, type, full) {
-                            debugger;
                             var date = full.WholeBlood_Expiry;
                             date = moment(date).format('DD-MMM-YYYY');
                             return date;
@@ -75,7 +72,6 @@
                     {
                         "data": "PCVExpiry", "name": "PCVExpiry",
                         "render": function (data, type, full) {
-                            debugger;
                             var date = full.PCVExpiry;
                             date = moment(date).format('DD-MMM-YYYY');
                             return date;
@@ -84,7 +80,6 @@
                     {
                         "data": "FFPsExpiry", "name": "FFPsExpiry",
                         "render": function (data, type, full) {
-                            debugger;
                             var date = full.FFPsExpiry;
                             date = moment(date).format('DD-MMM-YYYY');
                             return date;
@@ -93,7 +88,6 @@
                     {
                         "data": "Platelets_Expiry", "name": "Platelets_Expiry",
                         "render": function (data, type, full) {
-                            debugger;
                             var date = full.Platelets_Expiry;
                             date = moment(date).format('DD-MMM-YYYY');
                             return date;
@@ -101,7 +95,6 @@
                     },
                     {
                         render: function (data, type, full) {
-                            debugger;
                             var res = '<a class="editListBtn" href="#" onclick="Edit(' + full.Blood_Division_Id + ')" style="border-radius: 4px;padding: 5px 8px 5px 8px;"><i class="fa fa-pencil"></i></a>'
 
 
@@ -137,7 +130,6 @@
 
 
         function Delete(anchorTag) {
-            debugger;
 
             var row = $(anchorTag).parents('tr')[0];
             var id = $($(row).find('td')[0]).text();

@@ -141,10 +141,8 @@
         });
       
    
-        debugger;
         var userupdate;
         function updatebill() {
-            debugger;
             $.ajax({
                 type: "POST",
                 url: "StudentsList.aspx/updatebills",
@@ -153,7 +151,6 @@
                 dataType: "json",
                 async: true,
                 success: function (data) {
-                    debugger;
                     userupdate = data.d;
 
 
@@ -168,12 +165,9 @@
             window.open("AddStudent.aspx?ID=" + id + "");
 
         }
-        debugger;
         function deleteConfirm(anchorTag) {
-            debugger;
             var row = $(anchorTag).parents('tr')[0];
             var StudentId = $($(row).find('td input[name=txt_Student_Id]')[0]).val();
-            debugger;
             if (confirm('Are you sure want to delete this record')) {
                 PageMethods.DeleteRecord(StudentId, function (msg) {
                     if (msg == "Delete") {
@@ -209,9 +203,7 @@
 
 
         function UpdateData() {
-            debugger;
             if (userupdate == false || userupdate == "False" || userupdate == 'False') {
-                debugger;
                 alert("You Dont Have Rights");
                 $('#update').attr('disabled', true)
                 return;
@@ -220,7 +212,6 @@
 
                 $('#update').attr('disabled', false);
             }
-            debugger;
       
             var table = $('#studentsTable tbody');
             var Update_list = [];
@@ -246,7 +237,6 @@
                 contentType: "application/json; charset=utf-8",
                 success: function (msg) {
                     //success message
-                    debugger;
                     swal({
                         title: "Data Successfully Save!",
                         icon: "success",
@@ -279,7 +269,6 @@
 
 
         function Selectfunc() {
-            debugger;
             var currentYear = (new Date).getFullYear();
 
             var slct_value = $("#ddlProgram").val();
@@ -319,11 +308,8 @@
                 contentType: 'application/json;charset=utf-8',
                 dataType: 'json',
                 success: function (data) {
-                    debugger;
                     Getprgrm = '<option value="0">Please Select</option>';
-                    debugger;
                     $.each(JSON.parse(data.d), function (key, value) {
-                        debugger;
 
                         Getprgrm += '<option value="' + value.DataValueName + '" >' + value.DataValueDescription + '</option>';
                     });
@@ -341,11 +327,9 @@
                 contentType: 'application/json;charset=utf-8',
                 dataType: 'json',
                 success: function (data) {
-                    debugger;
                     GetBatch = '<option value="0">Select</option>';
 
                     $.each(JSON.parse(data.d), function (key, value) {
-                        debugger;
 
                         GetBatch += '<option value="' + value.DataValueName + '" >' + value.DataValueDescription + '</option>';
                     });
@@ -361,11 +345,9 @@
                 contentType: 'application/json;charset=utf-8',
                 dataType: 'json',
                 success: function (data) {
-                    debugger;
                     GetGroup = '<option value="0">Select</option>';
 
                     $.each(JSON.parse(data.d), function (key, value) {
-                        debugger;
 
                         GetGroup += '<option value="' + value.DataValue_Name + '" >' + value.DataValue_Description + '</option>';
                     });
@@ -373,7 +355,6 @@
                 },
             });
         }
-        debugger;
         //function LoadData() {
 
         //    var Class = $('#ddlFromClass').find('option:selected').val();
@@ -385,7 +366,6 @@
         //    var ddlGroup = $("#ddlGroup").find('option:selected').val();
         //    var txt_WholeClass = $("#txt_WholeClass").prop("checked");
 
-        //    debugger;
         //    $.ajax({
 
         //        type: "POST",

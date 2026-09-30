@@ -4,7 +4,6 @@
        <link href="../../wwwroot/THEME_TIBBIT/CustomCSS/tablestyle.css" rel="stylesheet" />
   <script type="text/javascript">
       $(document).ready(function () {
-          debugger;
           $('#ctl00_lblMessage').hide();
           LoadPage();
       });
@@ -83,7 +82,6 @@
                   { "data": "Remarks" ,"orderable": false },                
                   {
                       render: function (data, type, full) {
-                          debugger;
                           var res = '<a href="#" class="editListBtn" onclick="editOpen(' + full.Package_ID + ')" style="border-radius: 4px; color: white; padding: 5px 8px 5px 8px;"><i class="fa fa-pencil"></i></a>'
                           var del = '<a href="#" onclick="delete_package(' + full.Package_ID + ')" class="editListBtn" style="border-radius: 4px;padding: 5px 8px 5px 8px;"><i class="fa fa-trash"></i></a>'
 

@@ -7,10 +7,8 @@
             loaddoctor();
             loadPharmcayList();
             FillMainTestDepartment();
-            debugger;
             var id = '<% =Request.QueryString["ID"] %>';
             if (id != "") {
-                debugger;
                 $('#btnSave').val('Update');
                 LoadMasterData(id);
                 setTimeout(function () {
@@ -30,7 +28,6 @@
                 contentType: "application/json; charset=utf-8",
                 dataType: "json",
                 success: function (response) {
-                    debugger;
                     var parsed_Data = JSON.parse(response.d);
                     $("#txtTempelateID").val(parsed_Data.Template_Id);
 
@@ -45,13 +42,10 @@
         }
 
         function FillProcedure(deptID) {
-            debugger;
             var options = '<option value="0" >Please Select</option>';
 
             PageMethods.GetProcedure(deptID, function (item) {
-                debugger;
                 $.each(JSON.parse(item), function (key, value) {
-                    debugger;
                     options += '<option value="' + value.Test_ID + '" >' + value.Test_Name + '</option>';
                 });
 
@@ -62,9 +56,7 @@
         }
 
         function LoadMedicineData(id) {
-            debugger;
             PageMethods.LoadMedicineData(id, function (resp) {
-                debugger;
                 var datas = JSON.parse(resp);
 
 
@@ -94,9 +86,7 @@
         }
 
         function LoadTestData(id) {
-            debugger;
             PageMethods.LoadTestData(id, function (resp) {
-                debugger;
                 var datas = JSON.parse(resp);
 
                 // Clear existing rows before appending new ones
@@ -137,15 +127,12 @@
                 });
             });
         }
-        debugger;
         var Medics = '';
         function loadOriginatorsItemList(Medicine_ids) {
-            debugger
             var item = Medicine_ids
             PageMethods.Loadpharmacyitems(item, function (resp) {
                 optionsUser = '<option value="0">Please Select</option>';
                 $.each(JSON.parse(resp), function (key, value) {
-                    debugger;
                     Medics += '<option value="' + value.Item_Code + '" >' + value.Description + '</option>';
                 });
 
@@ -197,7 +184,6 @@
             });
         }
         function FillLabTests() {
-            debugger;
             var options = '<option value="0" >Please Select</option>';
             PageMethods.GetLabTests(function (Tests) {
                 $.each(JSON.parse(Tests), function (key, value) {
@@ -210,7 +196,6 @@
         }
 
         function FillTestsByCategory(CategoryID) {
-            debugger;
             var options = '<option value="0" >Please Select</option>';
 
             if (CategoryID == '002') {
@@ -228,10 +213,8 @@
                 $('#ddlXRayLF').show();
 
                 PageMethods.GetRotationsCategoryWise('Test XRay Rotations', function (GetRotations) {
-                    debugger;
                     var options = '<option value="0" >Select</option>';
                     $.each(JSON.parse(GetRotations), function (key, value) {
-                        debugger;
                         options += '<option value="' + value.DataValue_Name + '" >' + value.DataValue_Description + '</option>';
                     });
                     $('#ddlRotation option').remove()
@@ -240,7 +223,6 @@
                 });
             }
             else if (CategoryID == '004') {
-                debugger;
                 $("#btnCTscan").removeClass("btn-info").addClass("btn-danger");
                 $('#btnultrasound').removeClass('btn-danger').addClass('btn-info');
                 $('#btnXray').removeClass('btn-danger').addClass('btn-info');
@@ -248,7 +230,6 @@
                 $('#ddlRotation').show();
 
                 PageMethods.GetRotationsCategoryWise('Test CT Scan Rotations', function (GetRotations) {
-                    debugger;
                     var options = '<option value="0" >Select</option>';
                     $.each(JSON.parse(GetRotations), function (key, value) {
                         options += '<option value="' + value.DataValue_Name + '">' + value.DataValue_Description + '</option>';
@@ -261,10 +242,8 @@
 
 
             PageMethods.FillTestsByCategory(CategoryID, function (Tests) {
-                debugger;
                 var options = '<option value="0" >Please Select</option>';
                 $.each(JSON.parse(Tests), function (key, value) {
-                    debugger;
                     options += '<option value="' + value.Test_ID + '">' + value.Test_Name + '</option>';
                 });
                 $('#ddlTestList').html(options);
@@ -272,7 +251,6 @@
             });
         }
         function LoadTestByDepartment() {
-            debugger;
             var maindpt = $('#ddlDepartment').val();
             if (maindpt == "0") {
                 $('#ddlTestList').val("");
@@ -320,9 +298,7 @@
                 $('#ddlXRayLF').hide();
             }
         }
-        debugger;
         function AppendTest() {
-            debugger
             var selectedDepartment = $('#ddlDepartment option:selected');
             var departmentValue = selectedDepartment.val();
             var departmentText = selectedDepartment.text();
@@ -368,7 +344,6 @@
             }
         }
         function AppendMed() {
-            debugger
             var selectedOption = $('#ddlMedicine option:selected');
             var selectedValue = selectedOption.val();
             var selectedText = selectedOption.text();
@@ -400,7 +375,6 @@
             console.log('Opened Select2 element with ID:', activeSelect2Id);
         });
         $(document).on('input', '.select2-search__field', function () {
-            debugger;
             var searchString = $(this).val();
 
             if (activeSelect2Id) {
@@ -446,14 +420,12 @@
 
 
         function ExcludeFromPayment(anchor) {
-            debugger;
             var a = confirm("Are you sure You want to delete");
             if (a == true) {
                 var row = $(anchor).parents('tr')[0];
                 row.remove();
             }
         }
-        debugger;
 
         function SaveRecord() {
             var Temp_Id = $('#txtTempelateID').val();

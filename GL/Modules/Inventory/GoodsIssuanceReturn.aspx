@@ -58,7 +58,6 @@
                  LoadDetail(SI_ID);
                  setTimeout(function () {
                      $.each(selectedOptions, function (key, value) {
-                         debugger;
                          $('#ddlBatchNum' + (key + 1) + '').val(selectedOptions[key].BatchNum);
                      });
                  }, 5000)
@@ -134,7 +133,6 @@
                  });
              });
              $('#btnSave').on('click', function () {
-                 debugger;
                  var checkstock = false;
                  var status;
                  var btnSave = $('#btnSave').val();
@@ -327,7 +325,6 @@
              return ddlHTML;
          }
          function append(anchor) {
-             debugger;
              count = 0;
              var rows = '';
              var row = $(anchor).parents('tr')[0];
@@ -488,7 +485,6 @@
          }
          function LoadDetail(SI_ID) {
              PageMethods.LoadDetail(SI_ID, function (res) {
-                 debugger;
                  var result = JSON.parse(res);
                  selectedOptions = result;
                  var rows = '';
@@ -528,7 +524,6 @@
              var SINId = '<% =Request.QueryString["SI_ID"] %>';
                 var user_id = '<% =AppConfig.UserID %>';
                 PageMethods.ApproveSIN(SINId,user_id, function (Tests) {
-                  debugger
                   var message = JSON.parse(Tests);
                   if (message[0].Column1 != null || message[0].Column1 != "")
                   {
@@ -541,7 +536,6 @@
           function UnApprove() {              
               var SINId = '<% =Request.QueryString["SI_ID"] %>';
               PageMethods.UnApproveSIN(SINId, function (Tests) {
-                  debugger
                   var message = JSON.parse(Tests);
                   if (message[0].Column1 !="" || message[0].Column1 !=null) {
                       alert(message[0].Column1);

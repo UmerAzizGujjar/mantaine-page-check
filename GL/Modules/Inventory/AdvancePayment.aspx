@@ -168,7 +168,6 @@
     }
 
     function calculatetax() {
-        debugger;
         var taxperc = $('#ddl_withholdtax :selected').text().trim();
         if (taxperc === 'Please Select') {
             taxperc = 0;
@@ -208,9 +207,7 @@
     }
 
     function SaveAllRecord() {
-        debugger;
         $("#btn_Save").prop("disabled", true);
-        debugger;
         var btnSave = $('#btn_Save').val();
         var advanceno = $('#advanceno').val();
         var txtdate = $('#txtdate').val();
@@ -266,7 +263,6 @@
             $("#btn_Save").prop("disabled", false);
             return false;
         }
-        debugger;
         var txtPoAmount = parseFloat(PoAmount);
         var advamt = parseFloat(advance_amount);
         var chkWHTax = $('#chkWHTax').prop('checked');
@@ -315,7 +311,6 @@
         $("#btn_Save").prop("disabled", true);
         var AllItemDetail = { 'advanceno': advanceno, 'txtdate': txtdate, 'ddl_vendor': ddl_vendor, 'PoID': PoID, 'PoAmount': PoAmount, 'balance_amount': balance_amount, 'referno': referno, 'ddl_paidthrough': ddl_paidthrough, 'advance_amount': advance_amount, 'ddl_withholdtax': ddl_withholdtax, 'withhold_tax_amount': withhold_tax_amount, 'txt_remarks': txt_remarks, 'txt_status': txt_status, 'txt_paidamount': txt_paidamount, 'txtTotalAmount': txtTotalAmount, 'chkWHTax': chkWHTax };
         PageMethods.SaveAdvancePayment(btnSave, JSON.stringify(AllItemDetail), function (res) {
-            debugger;
             sendFile(res);
             Swal.fire({
                 icon: 'success',
@@ -335,11 +330,8 @@
         });
     }
     function loadadvancepayment(Adv_ID) {
-        debugger;
         PageMethods.loadadvanceheader(Adv_ID, function (resp) {
-            debugger;
             var data = JSON.parse(resp);
-            debugger;
             var txtdate = $.datepicker.formatDate('dd M yy', new Date(parseInt(data.Date.substring(6, 19))));
             $('#txtdate').val(txtdate);
             $('#advanceno').val(data.Advance_No);
@@ -404,18 +396,14 @@
         });
     }
     function UserRights() {
-        debugger;
         $.ajax({
             type: "POST",
             url: "AdvancePayment.aspx/UserEntryRights",
             contentType: "application/json; charset=utf-8",
             dataType: "json",
             success: function (response) {
-                debugger;
                 var hasRights = response.d;
-                debugger;
                 if (hasRights) {
-                    debugger;
                     $('#btn_Save').show();
                 } else {
                     $('#btn_Save').hide();
@@ -427,10 +415,8 @@
         });
     }
     <%--function Approve() {
-        debugger;
         var AdvID = '<% =Request.QueryString["Adv_ID"] %>';
         PageMethods.ApprovePayment(AdvID, function (Tests) {
-            debugger
             var message = JSON.parse(Tests);
             if (message[0].Message != null || message[0].Message != "") {
                 alert(message[0].Message);
@@ -439,10 +425,8 @@
         });
     }
     function UnApprove() {
-        debugger;
         var AdvID = '<% =Request.QueryString["Adv_ID"] %>';
         PageMethods.UnApprovePayment(AdvID, function (Tests) {
-            debugger
             var message = JSON.parse(Tests);
             if (message[0].Column1 != "" || message[0].Column1 != null) {
                 alert(message[0].Column1);
@@ -494,10 +478,8 @@
             });
         }
         function sendFile(ID) {
-            debugger;
             var fileInput = $('#choseAdPaymentfile')[0];
             if (fileInput.files.length > 0) {
-                debugger;
                 var data = new FormData();
                 data.append('file', $('#choseAdPaymentfile')[0].files[0]);
                 data.append('ID', ID);

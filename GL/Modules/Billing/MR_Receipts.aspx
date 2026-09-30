@@ -25,7 +25,6 @@
         var TotalAmount = 0;
         var TotalReceipt_Amount = 0;
         function CountNetAmount() {
-            debugger;
             var ReceiptAmount = $('#txtReceiptAmount').val();
             if (ReceiptAmount == "")
                 ReceiptAmount = 0.00
@@ -41,7 +40,6 @@
 
 
         function GetDischargeServiceDetails(Receipt_ID) {
-            debugger;
             if (Receipt_ID != 0) {
                 PageMethods.GetDischargeServiceDetails(Receipt_ID, function (data) {
                     $('#tblDischarge tbody tr').remove();
@@ -113,7 +111,6 @@
             });
         }
         function GetInvestigationDetails(PatientID) {
-            debugger;
             PageMethods.GetInvestigationDetails(PatientID, function (data) {
                 $('#tblInvestigationDetails tbody tr').remove();
                 var rowNo = 0;
@@ -197,7 +194,6 @@
             }, 500);
         }
         function PrintCashReceipt() {
-            debugger;
             var RcptID = '<%= Request.QueryString["Receipt_ID"]%>';
 
             if (Receipt_ID == '') {
@@ -212,7 +208,6 @@
         }
 
         function PrintCashReceipfft() {
-            debugger;
             var chkdischarge = document.getElementById('chkDischarge').checked;
             var MRNo = $('#txtMRNo').val();
             if (chkdischarge == true) {
@@ -268,7 +263,6 @@
                         var date = response.d.Bill_Date;
                         var finaldate = moment(date).format('L');
                         $('#lblDateTimerptdis').text(finaldate);
-                        debugger;
                         $('#lblTotalPayable').text(CurrencyFormatted(response.d.Total_Amount));
 
                         $('#lblDiscount').text(CurrencyFormatted(response.d.Discount_Percentage));
@@ -407,7 +401,6 @@
         }
         // Function to auto-load bill when opened from BillingProcessView
         function AutoLoadBill(billNo, billId) {
-            debugger;
             // Set the MR No / Bill No token input
             if ($('#txtMRNo').length) {
                 // Try to set the token input value
@@ -722,7 +715,6 @@
                     onAdd:
                         function (item) {
                             try {
-                                debugger;
                                 if (tblName == 'Patients') {
                                     Patient_ID = item.id;
                                     Clear(false, true);
@@ -745,7 +737,6 @@
         }
 
         function FillTokenInputForMRNo() {
-            debugger;
             if (Patient_ID == '') {
 
                 tokenInputs('txtMRNo', 'Patients');
@@ -759,7 +750,6 @@
         }
 
         function LoadPatientDetails() {
-            debugger;
             $.ajax({
                 type: "POST",
                 url: "MR_Receipts.aspx/GetPatientDetails",
@@ -779,7 +769,6 @@
                 var data = JSON.parse(resp);
 
                 if (data != null) {
-                    debugger;
                     if (data.Room_Name == null)
                         data.Room_Name = "";
                     if (data.Ward_Name == null)
@@ -889,7 +878,6 @@
                 return Data;
         }
         function OnSuccess(data) {
-            debugger;
             if (data.d != '') {
                 $('#lblPatienName').text(ReplaceNullWith_Space(data.d.Name));
                 $('#lblAgeYears').text(ReplaceNullWith_Space(data.d.Age));
@@ -903,7 +891,6 @@
         var NewPatientID = "";
         var NewBillId = "";
         function LoadRecord() {
-            debugger;
             var RcptID = '<%= Request.QueryString["Receipt_ID"]%>';
             if (Receipt_ID == '')
                 Receipt_ID = 0
@@ -923,7 +910,6 @@
                 var DischargeAmount = 0.00;
                 var NetAmount = "";
                 $.each(rec, function (key, value) {
-                    debugger;
                     Receipt_ID = value.Receipt_ID;
                     NewPatientID = value.Patient_ID;
                     NewBillId = value.Bill_No;
@@ -951,7 +937,6 @@
                     NetAmount = value.NetAmount;
 
                 });
-                debugger;
                 Patient_ID = NewPatientID;
                 Bill_ID = NewBillId;
 
@@ -959,7 +944,6 @@
 
                 var TrnsDate = new Date(parseInt(Receipt_Date.substr(6)));
                 TrnsDate = moment(TrnsDate).format('DD-MMM-YYYY');
-                debugger;
                 $('#txtReceiptDate').val(TrnsDate);
                 $('#txtRemarks').val(NweRemarks);
                 $('#txtReceiptAmount').val(parseInt(ReceiptAmount) + parseInt(DischargeAmount));
@@ -1060,7 +1044,6 @@
             UpdateAmount()
         }
         function UpdateAmount() {
-            debugger;
             var NetAmount = 0;
             var ServiceAmount = 0;
             var TotalAmount = 0;

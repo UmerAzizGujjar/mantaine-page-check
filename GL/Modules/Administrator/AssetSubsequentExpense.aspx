@@ -69,7 +69,6 @@
             var list = [];
 
             table.find('tr:gt(0)').each(function (key, value) {
-                debugger;
                 var ExpenseDate = $(value).find('input[name="ExpenseDate"]').val();
                 var ExpenseRefrence = $(value).find('input[name="ExpenseReference"]').val();
                 var ExpenseDetail = $(value).find('input[name="ExpenseDetails"]').val();
@@ -342,11 +341,9 @@
         }
 
         function Approve_AssetExpense() {
-            debugger;
             var expense_ID = '<% =Request.QueryString["ID"] %>';
   
             PageMethods.approveExpense(expense_ID, function (Tests) {
-                debugger
                 var message = JSON.parse(Tests);
                 if (message[0].Message != null || message[0].Message != "") {
 
@@ -356,11 +353,9 @@
             });
         }
         function UnApprove_AssetExpense() {
-            debugger;
             var expense_ID = '<% =Request.QueryString["ID"] %>';
   
             PageMethods.UnapproveExpense(expense_ID, function (Tests) {
-                debugger
                 var message = JSON.parse(Tests);
                 if (message[0].Message != null || message[0].Message != "") {
                     alert(message[0].Message);

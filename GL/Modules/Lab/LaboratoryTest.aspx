@@ -389,7 +389,6 @@
             return options;
         }
         function LoadVitalParameters() {
-            debugger;
             var patid = $('#<%= txtPatient_ID.ClientID%>').val();
             var category = $('#ddlmaindepartment').val();
             //if (patid != null) {
@@ -414,7 +413,6 @@
                     contentType: "application/json; charset=utf-8",
                     dataType: "json",
                     success: function (res) {
-                        debugger;
                         var rows = '';
                         $.each(JSON.parse(res.d), function (key, value) {
                             var date = moment(value.Created_Time).format('DD-MM-YY');
@@ -540,7 +538,6 @@
                     backdrop: 'static'
                 });
 
-                debugger;
                 $('#tblPendingPatients tbody tr').remove();
                 $('#tblPendingPatients tbody').html(rows);
                 var s = $(anchor);
@@ -559,7 +556,6 @@
                
             $('#main-departments').val(localStorage.DeptID);
             jQuery(window).on("load", function () {
-                debugger;
                 $('#main-departments').val(localStorage.DeptID);
 
             });
@@ -573,7 +569,6 @@
                 LoadVitalParameters();
             });
             $('#txtMRNOSearch').on('keyup', function (e) {
-                debugger;
                 var MRno = $('#txtMRNOSearch').val();
                 var tbl = document.getElementById('tblPendingPatients');
                 if (MRno.trim() != '') {
@@ -843,7 +838,6 @@
                 });
         }
         function loadAjax() {
-            debugger;
             var Patient_ID = $("#<%= hdfPatient_ID.ClientID %>").val();
             $.ajax({
                 type: "POST",
@@ -857,10 +851,8 @@
                 }
             });
         }
-        debugger;
 
         function OnSuccess(data) {
-            debugger;
             if (data.d != '') {
                 var mydate = new Date(Date.parse(data.d.Entry_Date));
                 var dateR = mydate.toLocaleDateString();
@@ -1045,7 +1037,6 @@
             });
 
             $('#ctl00_MainContent_saveLabTest').click(function () {
-                debugger;
                
                 var btnSave = $('#ctl00_MainContent_saveLabTest').val();
                
@@ -1211,7 +1202,6 @@
 
 
         function SearchByMRNoTestDetail() {
-            debugger;
             var MRno = $('#txtMRNOSearch').val();
             var SelectedDepartment = $('#main-departments').find('option:selected')[0].value;
             if (MRno == "") {
@@ -1269,9 +1259,7 @@
                     }, function (exec) { alert(exec.getmessage()); })
                 }
                 else {
-                    debugger;
                     PageMethods.MRNOPendingTest(SelectedDepartment, MRno, function (data) {
-                        debugger;
                         var parsedData = sortByUrgent(JSON.parse(data));
                         var rows = '';
                         $.each(parsedData, function (key, value) {
@@ -1331,7 +1319,6 @@
         }
 
         function TestDetail() {
-            debugger;
             var SelectedDepartment = $('#main-departments').find('option:selected')[0].value;
             if (SelectedDepartment == "001") {
 
@@ -1357,7 +1344,6 @@
                         }
                         if (value.chkPackages == null)
                             value.chkPackages = "0";
-                        debugger;
                         var retdate = moment(value.Date).format('DD-MMM-YYYY hh:mm A');
 
                         if (value.Test_ID != 0) {
@@ -1461,7 +1447,6 @@
         
 
         function getTests_WRT_Date() {
-            debugger;
         
 
             var CheckAll = $('#chkTodayAll').prop('checked');
@@ -1491,7 +1476,6 @@
 
 
         function ShowAllTestDateWise() {
-            debugger;
            
 
             var SelectedDepartment = $('#main-departments').find('option:selected')[0].value;
@@ -1502,7 +1486,6 @@
                     var parsedData = sortByUrgent(JSON.parse(data));
                     var rows = '';
                     $.each(parsedData, function (key, value) {
-                        debugger;
                         if (value.DoctorName == null || value.DoctorName == "0")
                             value.DoctorName = "";
                         if (value.Rotation == null)
@@ -1607,7 +1590,6 @@
         var ChkPackeges = "null";
 
         function select3(anchor) {
-            debugger;
 
             var row = $(anchor).parents('tr')[0];
             var RecievedID = $($(row).find('td input[name=RecievedID]')[0]).val();
@@ -1775,7 +1757,6 @@
 
                     var row = '<tr><td><input type="hidden" name="testDate" value="' + trnsid + '"><input type="hidden" name="LabTestDetali" value="' + LTestid + '"><input type="hidden" name="ParrentLabTestDetali" value="0"><input type="hidden" name="Bill_Details_ID" value="' + Bill_Details_ID + '"><input type="hidden" name="GroupCatID" value="' + testCatID + '"/><input type="hidden" name="LabTestID" value="' + LabTestID + '"/><input type="hidden" name="ParentLabTestID" value="0"/><input type="hidden" name="billNum" value="' + BillNo + '"/>' + RetDate + '</td><td><input type="hidden" name="testID" value="' + testID + '" /><input type="hidden" name="txtRotation" value="' + txtRotation + '"> <input type="hidden" name="txtddlXRayLF_Name" value="' + txtddlXRayLF_Name + '">' + name + '</td><td><input type="hidden" name="txtArea" value="' + Area + '" />' + Area + '</td><td><input type="checkbox" disabled id="Payment' + df + '" name="payment"  style="width: 92px;height: 17px;"/><input name="Type" value="' + type + '" style="display:none"/></td><td> <input type="text"  value="" id="txtCollectionDate' + df + '" disabled="disabled"  name="txtCollectionDate" style="width:167px !important;" /></td><td>  <input type="text" id="txtReadyBy' + df + '" name="txtReadyBy" style="width:167px !important;" /></td><td> <input type="text" id="txtCollectionBy" name="txtCollectionBy" style="width:94px !important;"value="' + userName + '"/></td><td> <input type="text"  id="txtPerformedBy" name="txtPerformedBy" style="width:94px !important;" value="' + userName + '"/></td><td><input type="checkbox"  id="Emergancy' + df + '" name="Emergancy" onclick="EnableRemarks(this)"  style="width: 92px;height: 17px;"/></td><td><input type="text" name="txtRemarks"  style="width: 138px !important;display:none"></input></td><td><input type="hidden" name="rowid" value="' + uuid() + '" /><a href="javascript:void(0)" onclick="deleteTest(this)">Delete</a></td></tr>';
                     $('#tbltestDetail').append(row);
-                    debugger;
                     var s = $(anchor);
                     $(s).closest('tr').remove();
                 }

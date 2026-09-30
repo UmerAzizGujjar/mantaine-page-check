@@ -282,7 +282,6 @@ function initDatePicker() {
 }
 
 function SavePatient() {
-    debugger;
 
     $('#SavePatient_Data').attr('disabled', true);
     $('.span_txt').hide();

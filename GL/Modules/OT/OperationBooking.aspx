@@ -9,7 +9,6 @@
 
 
         $(document).ready(function () {
-            debugger;
             $('#lblTotalhr').hide();
             $('#TotalTimehr').hide();
             $('#btnPrintConsent').hide();
@@ -28,7 +27,6 @@
 
             });
             $("#txtSearch").keypress(function (event) {
-                debugger;
                 var SearchString = $('#txtSearch').val();
                 if (event.which == 13) {
                     {
@@ -61,9 +59,7 @@
             FillDosageQty();
             FillPanel();
 
-            debugger;
             if (chk != "") {
-                debugger;
                 $('#lblTotalhr').show();
                 $('#TotalTimehr').show();
                 LoadMedicationHistory(chk);
@@ -78,7 +74,6 @@
             }
 
             $('#btnAddMedicine').on("click", function () {
-                debugger;
 
                 $("#btnSaveMedicine").val('Save');
                 $('#MedicationModel').modal({
@@ -97,7 +92,6 @@
             });
 
             $('#btnSaveMedicine').on("click", function () {
-                debugger;
                 if ($('#txtPharmacyItem').find('option:selected').text().trim() == 'Reassurance') {
                     $('#txtDosage').val("0");
 
@@ -164,16 +158,13 @@
 
 
                 if ($(this).val() == 'Save') {
-                    debugger;
                     var medicine = ''
                     var pharmacyItem = $('#txtPharmacyItem').val();
                     var itemCode = $('#txtPharmacyItem').find('option:selected').val();
                     if (medicine == '') {
-                        debugger;
                         var row = '<tr> <td> <input type="hidden" name="testDate" value="' + datetime + '">' + datetime + ' </td><td><input type="hidden" name="hdnItemCode" value="0"> ' + pharmacyITem + '</td> <td> ' + $('#Routes').find('option:selected').text() + ' </td> <td> ' + $('#ddlDosage_From').find('option:selected').text() + '</td> <td>' + $('#ddlDosage_Qty').find('option:selected').text() + '</td> <td> <a href="#" onclick="editMedicine(this)"> Edit </a>  |  <a href="#" onclick="deleteMedicine(this)"> Delete </a> <input type="hidden" name="uurowid" value=' + uuid() + ' /> </td></tr>';
                     }
                     else {
-                        debugger;
                         var row = '<tr> <td> <input type="hidden" name="testDate" value="' + datetime + '">' + datetime + ' </td><td> <input type="hidden" name="hdnItemCode" value="' + pharmacyItem + '"> ' + pharmacyITem + '</td> <td> ' + $('#Routes').find('option:selected').text() + ' </td> <td> ' + $('#ddlDosage_From').find('option:selected').text() + '</td> <td> ' + $('#ddlDosage_Qty').find('option:selected').text() + '</td> <td> <a href="#" onclick="editMedicine(this)"> Edit </a> | <a href="#" onclick="deleteMedicine(this)"> Delete </a> <input type="hidden" name="uurowid" value=' + uuid() + ' /> </td> </tr>';
                     }
 
@@ -181,7 +172,6 @@
                     table.append(row);
                 }
                 else if ($(this).val() == 'Update') {
-                    debugger;
                     var tid = $('#MedicationModel input[name=uurowid]').val();
 
                     var row = $('#tblMedicinesList tbody tr').find('input[value=' + tid + ']').parents('tr')[0];
@@ -202,7 +192,6 @@
             });
 
             $('#ddl_ctgry').on('change', function () {
-                debugger;
                 var $this = $(this).val();
                 if ($this == '01') {
                     $('.forPanel').hide();
@@ -221,7 +210,6 @@
             });
 
             $("#ctl00_MainContent_ddlProcedureNames").on("change", function () {
-                debugger;
                 var val = $(this).val();
 
                 if (val !== "0") {
@@ -233,7 +221,6 @@
             });
 
             $("#ctl00_MainContent_txtOTHealth_Complaints").on("change", function () {
-                debugger;
                 var text = $(this).val();
                 if (text !== "") {
                     $("#ctl00_MainContent_ddlProcedureNames").attr("disabled", true);
@@ -250,7 +237,6 @@
         });
 
         function AddNewPatient() {
-            debugger;
             $('#ddl_pnl_cpy').next(".select2-container").hide();
             $('#hdfPatient_ID').val('(New)');
             clearPatient();
@@ -271,7 +257,6 @@
         }
 
         function clearPatient() {
-            debugger;
             $('#txt_name').val("");
             $('#txt_relation').val("");
             $('#txt_mobile').val("");
@@ -353,7 +338,6 @@
 
             PageMethods.GetDepartment(function (Tests) {
                 $.each(JSON.parse(Tests), function (key, value) {
-                    debugger;
                     if (value.Department_ID == 'All_Departments') {
                         options += '<option value="' + value.DataValue_Name + '" >' + value.DataValue_Description + '</option>';
 
@@ -362,7 +346,6 @@
                     }
 
                     else {
-                        debugger;
                         options2 += '<option value="' + value.DataValue_Name + '" >' + value.DataValue_Description + '</option>';
                         $('#ddltest_main_dpt').html(options2);
                         $('#ddltest_main_dpt').val(value.DataValue_Name);
@@ -416,7 +399,6 @@
 
 
         function FillList() {
-            debugger;
             $('#tblResult tbody').empty();
 
             var SearchString = '';
@@ -454,7 +436,6 @@
 
 
         function AddResult(Patient_ID, Patient_No, Full_Name, NIC, Mobile1, Father_Name) {
-            debugger;
             tblLength = tblResult.rows.length;
 
             var row = ibody.insertRow(-1);
@@ -486,7 +467,6 @@
 
 
         function AddDetail(id) {
-            debugger;
 
             toastr.success('Patient Proceed');
             $('#hdfPatient_ID').val(id);
@@ -555,7 +535,6 @@
         function OnSuccessEdit(data) {
 
             if (data.d != '') {
-                debugger;
                 $("#txt_name").val(data.d.Name);
                 $("#ddl_Gender").val(data.d.Gender).change();
                 var newValue = data.d.Age.replace('Y', '');
@@ -596,7 +575,6 @@
 
 
         function ObPrint() {
-            debugger;
             var Op_Booking = $("#ctl00_MainContent_txtPatient_ID").val();
             if (Op_Booking == "") {
                 alert("Please select MR No first");
@@ -612,7 +590,6 @@
             }
         }
         function SavePatient() {
-            debugger;
             $('#SavePatient_Data').attr('disabled', true);
             var Prefix_PatientName = $('#ddl_name').val();
             var PatientName = $('#txt_name').val();
@@ -681,7 +658,6 @@
                 contentType: "application/json; charset=utf-8",
                 dataType: "json",
                 success: function (data) {
-                    debugger;
                     var patientID = data.d;
                     toastr.success('Your Record Save and Load Successfully');
                     $('#PatientModel').modal('hide');
@@ -703,7 +679,6 @@
         }
 
         function LoadPatientDetails() {
-            debugger;
             var Patient_ID = $('#hdfPatient_ID').val();
 
             $.ajax({
@@ -720,7 +695,6 @@
         }
 
         function OnSuccess1(data) {
-            debugger;
             if (data.d != '') {
 
                 if (data.d.Patient_Discount_Type == null)
@@ -790,11 +764,9 @@
         }
 
         function LoadConsentFormImages(patientId) {
-            debugger;
             var Op_Booking_Id = $("#<%=txtOperation_Booking_ID.ClientID%>").val();
 
             PageMethods.LoadConsentImages(patientId, Op_Booking_Id, function (res) {
-                debugger;
                 var container = '';
                 container = $('#containerOP');
                 if (res == null || res == "[]" || res == "undefined") {
@@ -962,7 +934,6 @@
         }
 
         function deleteImage(imageURL) {
-            debugger;
             var imageSRC = $($(imageURL)[0]).attr('src');
             var CF_Type = $($(imageURL)[0]).attr('data-id');
             var Op_Booking_Id = $("#<%=txtOperation_Booking_ID.ClientID%>").val();
@@ -993,18 +964,15 @@
         }
 
         function Save() {
-            debugger;
             PageMethods.Save(JSON.stringify(OpCount), JSON.stringify(ATCount), function (res) {
             });
         }
 
         function SaveMedicines() {
-            debugger;
             var table = $('#tblMedicinesList');
             var MedicinesList = [];
             table.find('tbody tr').each(function (key, value) {
                 var date = '<%= DateTime.Now%>'
-                debugger;
                 MedicinesList.push({
                     'Medicine_Date': $(value).find('td input[name=testDate]').val(),
                     'Medicine_Name': $($(value).find('td')[1]).text().trim(),
@@ -1029,7 +997,6 @@
         }
 
         function LoadMedicationHistory(PatientID) {
-            debugger;
             $('#dvHistoryMedication').hide();
             if (PatientID != '(New)') {
                 $('#HeaderHistoryMedication').html('<h2>Loading Previous History Please Wait....</h2>')
@@ -1079,7 +1046,6 @@
         }
 
         function editMedicine(AnchorTag) {
-            debugger;
             $('#MedicationModel').modal({
                 backdrop: 'static'
             });
@@ -1162,7 +1128,6 @@
 
 
         function readIMGsingle(input) {
-            debugger;
 
             var container = ($(input)[0].id == "ctl00_MainContent_fileUpload_CF_OP") ? "#containerOP" : "#containerAT";
             var CF_Type = ($(input)[0].id == "ctl00_MainContent_fileUpload_CF_OP") ? "op" : "at";
@@ -1213,7 +1178,6 @@
         }
 
         function viewLargeImage(id) {
-            debugger;
             var newTab = window.open();
             var path = $("#" + id + "").attr("src");
             newTab.document.body.innerHTML = '<img src="' + path + '" width="1101px" height="881px">';
@@ -1229,7 +1193,6 @@
         }
 
         function SaveTransferDetails() {
-            debugger;
             var referTo = $("#ctl00_MainContent_ddlReferTo").val();
             if (referTo == "0") {
                 alert("Please select Ward or Room !");
@@ -1274,7 +1237,6 @@
                 contentType: "application/json; charset=utf-8",
                 dataType: "json",
                 success: function (data) {
-                    debugger;
                     alert(data.d);
 
                 },
@@ -1294,7 +1256,6 @@
                 contentType: "application/json; charset=utf-8",
                 dataType: "json",
                 success: function (response) {
-                    debugger;
                     var result = JSON.parse(response.d);
                     var optionsList = "<option value=0>Please Select</option>";
                     $(result).each(function (key, index) {
@@ -1318,7 +1279,6 @@
                 contentType: "application/json; charset=utf-8",
                 dataType: "json",
                 success: function (response) {
-                    debugger;
                     var result = JSON.parse(response.d);
                     var optionsList = "<option value=0>Please Select</option>";
                     $(result).each(function (key, index) {
@@ -1344,7 +1304,6 @@
                 contentType: "application/json; charset=utf-8",
                 dataType: "json",
                 success: function (response) {
-                    debugger;
                     var result = JSON.parse(response.d);
                     var optionsList = "<option value=0>Please Select</option>";
                     $(result).each(function (key, index) {
@@ -1386,7 +1345,6 @@
                             row += '<tr style="background-color:' + rowColor + '"><td style="display:none;">' + parsed_data[key].pat_id + '</td><td>' + parsed_data[key].Patient_No + '</td><td>' + parsed_data[key].Full_Name + '</td><td>' + parsed_data[key].PatientType + '</td><td>' + parsed_data[key].DoctorName + '</td><td style="width: 25%; text-align: center;">' + parsed_data[key].ProcedureName + '</td><td>' + File_No + '</td><td>' + InPatientNo + '</td><td>' + parsed_data[key].Age_years + '</td><td>' + parsed_data[key].Gender + '</td><td>' + parsed_data[key].OperationStatus + '</td><td><a href="#" onclick="Select(this)">Select</a></td></tr>';
 
                         });
-                        debugger;
                         $('#patientOT tr:gt(0)').remove();
                         $('#patientOT tbody').append(row);
                     }, error: function () {
@@ -1398,7 +1356,6 @@
 
         function Select(row) {
             $(row).click(event.preventDefault);
-            debugger;
             var patient_id = $($(row).closest('tr')[0]).find('td:eq(0)').text();
             window.location.href = "OperationBooking.aspx?ID=" + patient_id;
 
@@ -1414,7 +1371,6 @@
         }
         var Total_OT_Time;
         function bindDate() {
-            debugger;
             $("#ctl00_MainContent_txtDate_Operation").datepicker({ dateFormat: 'mm/dd/yy' });
             $("#ctl00_MainContent_txtDate_Of_Approval").datepicker({ dateFormat: 'mm/dd/yy' });
             $("#ctl00_MainContent_txtOperationDate").datepicker({ dateFormat: 'mm/dd/yy' });
@@ -1507,7 +1463,6 @@
         }
 
         function loadtokenInputsDefault() {
-            debugger;
 
             $('#ctl00_MainContent_txtPatient_ID').tokenInput("../../json.aspx?Table=Patients",
                 {
@@ -1556,7 +1511,6 @@
         }
 
         function loadReferenceInformation() {
-            debugger;
             var Patient_ID = $("#<%= hdfPatient_ID.ClientID %>").val();
             $.ajax({
                 type: "POST",
@@ -1572,7 +1526,6 @@
 
         }
         function OnSuccessReference(response) {
-            debugger;
             if (onsuccessreference != null) {
 
                 var onsuccessreference = JSON.parse(response.d);
@@ -1608,7 +1561,6 @@
         }
 
         function loadtokenInputs(data) {
-            debugger;
 
             $("#ctl00_MainContent_txtPatient_ID").tokenInput("../../json.aspx?Table=Patients",
                 {
@@ -1622,7 +1574,6 @@
         }
 
         function FillWardBedsRefer() {
-            debugger;
             PageMethods.FillWardBeds($('#ctl00_MainContent_ddlwards').find('option:selected')[0].value, function (res) {
                 var WardBeds = JSON.parse(res);
                 var rows = '';
@@ -1640,16 +1591,13 @@
         }
 
         function FillRoomsRefer() {
-            debugger;
             var RoomType = $('#ctl00_MainContent_ddlRoomType').val();
             PageMethods.FillRooms(RoomType, function (res) {
-                debugger;
                 var item = JSON.parse(res);
                 if (item != "") {
                     var rows = '';
                     var result;
                     $.each(item, function (key, value) {
-                        debugger;
                         var rows;
                         if (value.PatientNmae == null)
                             value.PatientNmae = 0;
@@ -1669,7 +1617,6 @@
         }
 
         function PrintVoucher() {
-            debugger
 
             var Op_Booking = $("#<%=txtOperation_Booking_ID.ClientID%>").val();
             window.open('ReportViewer.aspx ? ReportName = OperationBooking & ReportTitle=Operation Booking Print&Booking_ID=' + Op_Booking);
@@ -1678,7 +1625,6 @@
 
 
         function Print() {
-            debugger
 
             var Op_Booking = $("#<%=txtOperation_Booking_ID.ClientID%>").val();
             window.open('ReportViewer.aspx?ReportName=PrintConsent&ReportTitle=Operation Booking Print Consent&Booking_ID=' + Op_Booking);

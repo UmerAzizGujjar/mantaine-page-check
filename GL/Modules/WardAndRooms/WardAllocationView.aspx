@@ -61,7 +61,6 @@
               {
                   "data": "From_TimeDate", "name": "From_TimeDate",
                   "render": function (data, type, full) {
-                      debugger;
                       var date = full.From_TimeDate;
                       date = moment(date).format('DD-MMM-YYYY');
                       return date;
@@ -70,7 +69,6 @@
               {
                   "data": "To_TimeDate", "name": "To_TimeDate",
                   "render": function (data, type, full) {
-                      debugger;
                       var date = full.To_TimeDate;
                       date = moment(date).format('DD-MMM-YYYY');
                       return date;
@@ -78,7 +76,6 @@
               },
               {
                   render: function (data, type, full) {
-                      debugger;
                       var res = '<a href="#" class="editListBtn" onclick="Edit(\'' + full.Ward_Allocation_ID + '\')" style="border-radius: 4px; margin-right: 4px;padding: 5px 8px;"><i class="fa fa-pencil"></i></a>';
 
                       var Delete = '<a class="delListBtn" style="border-radius: 4px;margin-left: 4px;padding: 5px 8px 5px 8px;" href="#" data-id="' + full.Ward_Allocation_ID + '" onclick="deleteConfirm(this)"><i class="fa fa-trash"></i></a>';
@@ -114,13 +111,11 @@
       });
   }
 
-  debugger;
   function Edit(id) {
       window.open("WardAllocation.aspx?ID=" + id + "");
     }
 
     function deleteConfirm(anchorTag) {
-        debugger;
         var WardAllocationID = $(anchorTag).data('id');
         if (confirm('Are you sure you want to delete this record?')) {
             PageMethods.DeleteRecord(WardAllocationID, function (msg) {

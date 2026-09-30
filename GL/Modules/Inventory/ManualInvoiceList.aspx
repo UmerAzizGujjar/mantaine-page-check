@@ -27,11 +27,9 @@
             window.location.href = "AddManualInvoice.aspx?Inv_ID=" + ID;
         }
         function deleteConfirm(ID) {
-            debugger;
             var ManID = ID;
             if (confirm('Are you sure want to delete this record')) {
                 PageMethods.DeleteRecord(ManID, function (msg) {
-                    debugger
                     window.location.reload();
                 });
             }

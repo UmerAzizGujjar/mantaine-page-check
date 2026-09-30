@@ -234,7 +234,6 @@
         }
 
         function collectPolicies() {
-            debugger;
             let data = [];
             $("#policyTable tbody tr").each(function () {
                 let dept = $(this).find('[name="Department"] option:selected');
@@ -263,7 +262,6 @@
         }
 
         function savePolicies() {
-            debugger;
             let data = collectPolicies();
             if (data.length === 0) {
                 Swal.fire({

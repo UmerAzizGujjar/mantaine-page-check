@@ -66,7 +66,6 @@
 
 
         function toggle(source) {
-            debugger;
             var checkboxes = document.querySelectorAll('input[type="checkbox"]');
             for (var i = 0; i < checkboxes.length; i++) {
 
@@ -81,16 +80,13 @@
 
         var index = 0;
         function ShowReport() {
-            debugger;
             var textInput = [];
-            // debugger;td:eq(10) #Report_Colum
+            // td:eq(10) #Report_Colum
             var ChkLetterHead = $("#ChkIs_latterhead").prop('checked');
             var CheckUnApprove = 0;
             $("#tblLabTest tr").find('td:eq(15) #Report_Colum').map(function () {
-                debugger;
 
                 if (textInput.indexOf(this.value) === -1) {
-                    debugger;
                     textInput.push(this.value);
                 }
 
@@ -168,9 +164,7 @@
 
                                 return false;
                             }
-                            debugger;
                             if (index == Report_Column.trim()) {
-                                debugger;
                                 var transIds = $(this).find('td:eq(1)').text();
                                 ListTransID += ', ' + transIds;
                                 var billdetailid = $(this).find('input[name="Bill_Details_ID"]').val();
@@ -195,7 +189,6 @@
                         } // check false
                         //loop end
                     });
-                    debugger;
                     ListTransID = ListTransID.replace(', ', '');
                     ListOfTestIDs = ListOfTestIDs.replace(', ', '');
                     ListBillDetailID = ListBillDetailID.replace(', ', '');
@@ -247,7 +240,6 @@
                 async: true,
                 success: function (response) {
                     console.log(response);
-                    debugger;
                     var data = typeof response.d === 'string' ? JSON.parse(response.d) : response.d;
                     AllowLab = data.allow_lab;
                     AllowUltra = data.allow_ultra;
@@ -307,7 +299,6 @@
             }
             bindControls();
             $('#ddlTestDepartment').change(function (e) {
-                debugger;
                 //var CheckAll = $('#chkTodayAll').checked;
 
                 var Dept = $("#ddlTestDepartment option:selected").text();
@@ -398,7 +389,6 @@
                 });
             });
             $('#btnApprove').click(function () {
-                debugger;
                 test_list = [];
                 var tbl = $("#tblgroupTestlist tbody tr");
 
@@ -442,12 +432,10 @@
                 }
             });
             $('#btnReject').click(function () {
-                debugger;
                 localStorage.isSaved = 1;
                 test_list = [];
                 var tbl = $("#tblgroupTestlist tbody tr");
                 $.each(tbl, function (key, val) {
-                    debugger;
                     var name = $(val).find('input[name="testDepartment"]').attr('name');
                     if (name == "testDepartment") {
                     }
@@ -468,7 +456,6 @@
                 var TesttDetails = { Lab_ID: Lab_ID == '(New)' ? 0 : Lab_ID, test_list: test_list }
                 if (test_list.length > 0) {
                     PageMethods.RejectTestDetail(Lab_ID, JSON.stringify(TesttDetails), function (response) {
-                        debugger;
                         $("[id$='_btnRefresh']").trigger('click');
                         $('#myModal').modal('hide');
                         $("#myModal tbody").empty();
@@ -481,9 +468,7 @@
 
             $('#saveTest').click(function () {
                 localStorage.isSaved = 1;
-                debugger;
                 if (isGroup) { //Save group Test
-                    debugger;
                     var table = $('#tblgroupTestlist');
                     var test_list = [];
                     var Rem = CKEDITOR.instances.txtMaster_Remarks.getData();
@@ -541,7 +526,6 @@
 
                     });
                     var Lab_ID = $("#<%= hdnLab_Test_ID.ClientID %>").val();
-                    debugger;
                     var chkBillID = $("#hdBill_id").val();
                     if (chkBillID == "(New)") {
                         localStorage.Bill_No = chkBillID;
@@ -558,7 +542,6 @@
                 else //Save Single Test
                 {
 
-                    debugger;
                     var labTestDetailID = $("#ltdID").val();
                     var Lab_ID = $("#<%= hdnLab_Test_ID.ClientID %>").val();
                     //TestID = $($(row).find('td input[name=labtestDID]')[0]).val();
@@ -738,10 +721,8 @@
         });
 
         function ApproveedLab() {
-            debugger;
             var BillId = '<% =Request.QueryString["Bill_ID"] %>';
             PageMethods.approve_Bill(BillId, function (Tests) {
-                debugger
                 var message = JSON.parse(Tests);
                 if (message[0].Message != null || message[0].Message != "") {
                     Swal.fire({
@@ -833,7 +814,6 @@
             }
         }
         function readIMGsingle(input) {
-            debugger;
             var countFiles = $(input)[0].files.length;
             var imgPath = $(input)[0].value;
             var extn = imgPath.substring(imgPath.lastIndexOf('.') + 1).toLowerCase();
@@ -954,9 +934,7 @@
                     }
                 });
         }
-        debugger;
         function bindControls() {
-            debugger;
             var storageBillNo = localStorage.Bill_No;
             if (storageBillNo != "(New)") {
                 $("#ctl00_MainContent_txtBilling").val(storageBillNo);
@@ -967,7 +945,6 @@
             }
 
             var hdFile_ID = $("#hdnPatient_ID").val();
-            debugger;
             if (hdFile_ID != "(New)") {
 
                 var Patient_ID = $("#hdnPatient_ID").val();
@@ -1032,12 +1009,10 @@
 
 
         function loadtokenInputsDefault() {
-            debugger;
             $('#ctl00_MainContent_txtPatient_ID').tokenInput("../../json.aspx?Table=LabResultPatient",
                 {
                     tokenLimit: 1,
                     onAdd: function (item) {
-                        debugger;
                         try {
                             localStorage.billid = 0
                             localStorage.patientid = 1
@@ -1052,9 +1027,7 @@
                     }
                 });
         }
-        debugger;
         function loadPatientData() {
-            debugger;
             var Patient_ID = $("#<%= hdnPatient_ID.ClientID %>").val();
             var Lab_ID = $("#<%= hdnLab_Test_ID.ClientID %>").val();
             var Lab_id = $("#ctl00_MainContent_txtLab_Test_ID").val();
@@ -1074,7 +1047,6 @@
         }
 
         function GetLabDetailAgainstBill() {
-            debugger;
             var Patient_ID = $("#<%= hdnPatient_ID.ClientID %>").val();
             var Bill_ID = $("#hdBill_id").val();
             if (Patient_ID == null || Patient_ID == "" || Patient_ID == "(New)") {
@@ -1084,7 +1056,6 @@
                 Bill_ID = 0;
             }
             PageMethods.GetLabDetailByBill_id(Patient_ID, Bill_ID, function (res) {
-                debugger;
                 var Test = JSON.parse(res);
                 var rows = '';
                 var preview = '';
@@ -1148,7 +1119,6 @@
         function removeDuplicates() {
             var seen = {};
             $('#tblLabTest tr ').each(function () {
-                debugger;
                 var test_id = $(this).find('td:eq(1) #labtestDID').val();
                 var test_name = $(this).find('td:eq(3)').text();
                 var date = $(this).find('td:eq(5)').text();
@@ -1163,9 +1133,7 @@
             });
 
         }
-        debugger;
         //function PreviewReport($this) {
-        //    debugger;
         //    var tbl = $($($this).parents('tr')[0]);
         //    // var Patient_ID = $('#hdnPatient_ID').val();
         //    var hdn_Patient_ID = tbl.find("td").find("input[id=Patient_Id]").val();
@@ -1185,7 +1153,6 @@
         //    var billdetailid = tbl.find('td:eq(14) #Bill_Details_ID').val()
         //    var testIds = tbl.find('td:eq(10) #ListOfTestIDs').val();
         //    if (testIds == "null" || testIds == '') {
-        //        debugger;
         //        //testIds = tbl.find('td:eq(1) #labtestDID').val();
         //        testIds = tbl.find('td:eq(1) #labtestDID').val();
         //        //testIds = tbl.find('td:eq(1)').find('input').attr('labid')
@@ -1203,7 +1170,6 @@
         //}
 
         function PreviewReport($this) {
-            debugger;
             var $row = $($this).closest('tr');
 
             var ChkLetterHead = true;
@@ -1241,7 +1207,6 @@
 
         var test_wise_id;
         function GetLabDetail() {
-            debugger;
             var Patient_ID = $("#<%= hdnPatient_ID.ClientID %>").val();
             var Lab_ID = $("#<%= hdnLab_Test_ID.ClientID %>").val();
             if (Patient_ID == null || Patient_ID == "" || Patient_ID == "(New)") {
@@ -1254,7 +1219,6 @@
                 Lab_ID = 0;
             }
             PageMethods.GetLabDetail(Patient_ID, Lab_ID, function (res) {
-                debugger;
                 var Test = JSON.parse(res);
                 var rows = '';
                 var preview = '';
@@ -1333,7 +1297,6 @@
 
         // Pending
         function GetLabDetailUsingLabID() {
-            debugger;
             var Lab_ID = $("#<%= hdnLab_Test_ID.ClientID %>").val();
             PageMethods.GetLabDetailUsingLabID(Lab_ID, function (res) {
                 var Test = JSON.parse(res);
@@ -1427,9 +1390,7 @@
                 }
             });
         }
-        debugger;
         function loadPatientDataUsingBillId() {
-            debugger;
             var Bill_No = $("#hdnBill_No").val();
             localStorage.Bill_No = Bill_No;
 
@@ -1447,9 +1408,7 @@
                 }
             });
         }
-        debugger;
         function OnSuccessBill(data) {
-            debugger;
             if (data.d != '') {
 
                 var mydate = new Date(Date.parse(data.d.Entry_Date));
@@ -1580,7 +1539,6 @@
 
         });
         function loadpatientdetailbybarcode() {
-            debugger;
             var Bill_No = $("#hdnBill_No").val();
             localStorage.Bill_No = Bill_No;
 
@@ -1674,7 +1632,6 @@
         var bill_detailid = '';
         var detail_id = '';
         function EditData($this) {
-            debugger;
             var Lab_Test_Detail_ID = '';
             var LabID = $("#<%= hdnLab_Test_ID.ClientID %>").val();
             var LabID = $($($this).parents('tr')[0]).find('td:nth-child(2)')[0].innerText;
@@ -1708,7 +1665,6 @@
             $('#myModal').modal('hide');
             PageMethods.LoadTestCatogry(LabID, CatID, billDetailID, function (res) {
 
-                debugger;
                 var parsedData = JSON.parse(res);
                 console.log(parsedData)
                 var row = '';
@@ -2219,9 +2175,7 @@
 
         }
         function OnSuccess(data) {
-            debugger;
             if (data.d != '') {
-                debugger;
                 var mydate = new Date(Date.parse(data.d.Entry_Date));
                 var dateR = mydate.toLocaleDateString();
                 var tokendata = httpGet("../../json.aspx?Table=Patients&Record=Edit&q=" + data.d.Patient_No);

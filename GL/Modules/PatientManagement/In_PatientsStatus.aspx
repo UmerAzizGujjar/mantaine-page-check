@@ -16,7 +16,6 @@
              $('#ctl00_MainContent_ddlStatus').select2();
 
              $('#<%= btnPreview.ClientID %>').click(function () {
-                 debugger;
 
                  var error = 0;
 

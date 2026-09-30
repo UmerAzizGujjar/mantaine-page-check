@@ -94,7 +94,6 @@
 
 
             $('#ddldate').on("change", function () {
-                debugger;
                 program = $('#program').val();
                 classs = $('#Class').val();
                 week = $('#ddlWeek').val();
@@ -108,7 +107,6 @@
       
 
             $('#Subject').on("change", function () {
-                debugger;
 
                 Prac = $('#Practical').val();
                 Subj = $('#Subject').val();
@@ -116,7 +114,6 @@
             })
 
             $('#Practical').on("change", function () {
-                debugger;
                 Prac = $('#Practical').val();
                 Subj = $('#Subject').val();
                 GetTime();
@@ -126,7 +123,6 @@
        
 
             $('#ddlWeek').on("change", function () {
-                debugger;
                 clas = $('#Class').val();
                 prgrm = $('#program').val();
                 week = $('#ddlWeek').val();
@@ -165,7 +161,6 @@
 
 
             $('#Time').on("change", function () {
-                debugger;
                 program = $('#program').val();
                 classs = $('#Class').val();
                 StudId = $('#Time option:selected').text();
@@ -182,10 +177,8 @@
             $('#btnPrint').attr("disabled", true);
 
             $('[id*=Present]').on('click', function () {
-                debugger;
                 var isTrue = $('[id=Present]').is(':checked');
                 if (isTrue) {
-                    debugger;
                     $('.chckP').prop('checked', true);
                     $('.chckL').prop('checked', false);
                     $('.chckA').prop('checked', false);
@@ -193,13 +186,11 @@
 
                 }
                 else {
-                    debugger;
                     $('.chckP').prop('checked', false);
                 }
             });
 
             $('[id*=Leave]').on('click', function () {
-                debugger;
                 var isTrue = $('[id=Leave]').is(':checked');
                 if (isTrue) {
                     $('.chckL').prop('checked', true);
@@ -229,33 +220,26 @@
             });
 
             $('[id*="Getrow"]').on('click', function () {
-                debugger;
                 var isTrue = $('#Getrow').is(':checked');
                 if (isTrue) {
-                    debugger;
                     $('.chckrow').prop('checked', true);
                 }
                 else {
-                    debugger;
                     $('.chckrow').prop('checked', false);
                 }
             });
 
             $('#ddlBatch').on('change', function () {
-                debugger;
                 var subject1 = $(this).find(':selected').text();
                 if (subject1 != "") {
-                    debugger;
                     $('#txt_WholeClass').attr('disabled', true);
                     $('#ddlGroup').attr('disabled', true);
                 }
 
             });
             $('#ddlBatch').on('change', function () {
-                debugger;
                 var subject1 = $(this).find(':selected').text();
                 if (subject1 == "Select" || subject1 == 'Select') {
-                    debugger;
                     $('#txt_WholeClass').attr('disabled', false);
                     $('#ddlGroup').attr('disabled', false);
                     $('#ddlBatch').attr('disabled', false)
@@ -286,10 +270,8 @@
 
 
             $('#ddlGroup').on('change', function () {
-                debugger;
                 var subject1 = $(this).find(':selected').text();
                 if (subject1 != "") {
-                    debugger;
                     $('#txt_WholeClass').attr('disabled', true);
                     $('#ddlBatch').attr('disabled', true);
                 }
@@ -317,11 +299,9 @@
 
 
             //$('#ddlGroup').on('change', function () {
-            //    debugger;
         
             //    var subject1 = $(this).find(':selected').text();
             //    if (subject1 == "Select" || subject1 == 'Select') {
-            //        debugger;
             //        $('#txt_WholeClass').attr('disabled', false);
             //        $('#ddlGroup').attr('disabled', false);
             //        $('#ddlBatch').attr('disabled', false)
@@ -332,7 +312,6 @@
 
 
             $('#txt_WholeClass').on('change', function () {
-                debugger;
 
                 if ($('#txt_WholeClass').is(':checked')) {
                     $('#ddlBatch').attr('disabled', true)
@@ -345,7 +324,6 @@
             })
 
 
-            debugger;
             $("#txt_WholeClass").prop('checked', true)
         })
 
@@ -461,7 +439,6 @@
             var std_Class = $('#Class').val();
            
             
-            debugger;
             GetStudentweek = '';
             $.ajax({
                 url: 'StudentAttendance.aspx/GetWeeks',
@@ -477,9 +454,7 @@
 
                 success: function (data) {
                     GetStudentweek = '<option value="0">Please Select</option>';
-                    debugger;
                     $.each(JSON.parse(data.d), function (key, value) {
-                        debugger;
                         GetStudentweek += '<option value="' + value.Weeks + '" >' + value.Week_text + '</option>';
                     });
                     $('#ddlWeek').html(GetStudentweek).trigger('change.select2');
@@ -497,7 +472,6 @@
             var module = $('#ddlModule').val();
             var dt = new Date(parseInt(date.substr(6)));
             dt = moment(dt).format('L');
-            debugger;
             Getgrp = '';
             $.ajax({
                 url: 'StudentAttendance.aspx/GetSubj',
@@ -516,9 +490,7 @@
 
                 success: function (data) {
                     GetStudentSubject = '<option value="0">Please Select</option>';
-                    debugger;
                     $.each(JSON.parse(data.d), function (key, value) {
-                        debugger;
                         GetStudentSubject += '<option value="' + value.Subject_Detail_ID + '" >' + value.Subject_Name + '</option>';
                     });
                     $('#Subject').html(GetStudentSubject).trigger('change.select2');
@@ -563,7 +535,6 @@
             var Module = $('#ddlModule').val();
             var dt = new Date(parseInt(dat.substr(6)));
             dt = moment(dt).format('L');
-            debugger;
             $.ajax({
                 url: 'StudentAttendance.aspx/GetTime',
                 data: JSON.stringify({
@@ -582,7 +553,6 @@
                 success: function (data) {
                     getTime = '<option value="0">Please Select</option>';
                     $.each(JSON.parse(data.d), function (key, value) {
-                        debugger;
                         var Fromtime = moment(value.FromTime).format('h:mm a');
                         var Totime = moment(value.ToTime).format('h:mm a');
                         getTime += '<option value="' + value.Std_Id + '" >' + Fromtime + ' - ' + Totime + '</option>';
@@ -597,7 +567,6 @@
 
         function Getnewdate() {
             var getTimes = ''
-            debugger;
             $.ajax({
                 url: 'StudentAttendance.aspx/GetDateOfAttendance',
                 data: JSON.stringify({
@@ -633,10 +602,8 @@
         var ToTime;
 
         var isAttendance;
-        debugger;
         function GetAttendaceDetail() {
 
-            debugger;
             var date = $("#ddldate").val();
             var dt = new Date(parseInt(date.substr(6)));
             dt = moment(dt).format('L');
@@ -668,12 +635,10 @@
                 contentType: 'application/json;charset=utf-8',
                 dataType: 'json',
                 success: function (_data) {
-                    debugger;
                     _data = JSON.parse(_data.d);
                     var Attendance = $('#tblStutimetable');
                     $('#tblStutimetable tr:gt(0)').remove();
                     $(_data).each(function (index, md) {
-                        debugger;
                         isAttendance = md.isAttendance;
 
                         var timm = new Date(parseInt(md.Date.substr(6)));
@@ -687,9 +652,7 @@
 
                         var srnumber = index + 1;
                         Attendance.append('<tr><td style="display:none"><input type="hidden" id="ATime' + srnumber + '" name="ATime" value="' + timee + '" /></td>  <td> <input type="Checkbox" name="Getrow" id="Getrow' + srnumber + '" class="chckrow">  </td>   <td style="width:40px !important;"> <input type="hidden" id="FTtime' + srnumber + '" name="FTtime" value="' + FrTotime + '" /> ' + srnumber + '</td><td><input style="height:25px; width: 120px !important; margin-bottom:0px;" disabled type="text" id="Date' + srnumber + '" name="Date" value="' + dt + '-' + md.Day_Name + '" /></td> <td> From <input style="height:25px; width: 70px !important; margin-bottom:0px;"  type="text" id="frtime' + srnumber + '" name="FTime" value="' + time + '" /> To <input style="height:25px; width: 70px !important; margin-bottom:0px;"  type="text" id="trtime' + srnumber + '" name="TTime" value="' + ttime + '" /></td>  <td style="width:10px;"> <input type="hidden" name="Stud_Id" id="Stud_Id' + srnumber + '" value="' + md.Student_Id + '" ><input style="height:25px; width: 153px !important; margin-bottom:0px;" disabled type="text" id="StuName' + srnumber + '" name="StuName" value="' + md.Full_Name + '" /></td>   <td style="width:10px;"><input style="height:25px; width: 62px !important; margin-bottom:0px;" disabled type="text" id="Roll_No' + srnumber + '" name="Roll_No" value="' + md.Roll_No + '" /></td>    <td style="font-size: 12px; font-weight: bold; padding-top: 14px; width:25px !important;">' + md.ClassName + ' </td><td style="display:none"><input type="hidden" id="class' + srnumber + '" name="class" value="' + clasvalue + '" /> </td> <td><input style="height:25px; width:75px !important; margin-bottom:0px;" disabled type="text" id="batchs' + srnumber + '" name="batchs" value="' + md.Batch + '" /></td>   <td><input style="height:25px; width: 75px !important; margin-bottom:0px;" disabled type="text" id="groups' + srnumber + '" name="groups" value="' + md.Group + '" /></td>                      <td style="font-size: 12px; font-weight: bold; padding-top: 14px;">' + Subject + '</td><td style="display:none"> <input type="hidden" id="Subject' + srnumber + '" name="Subject" value="' + subvalue + '" /></td><td style="font-size: 12px; font-weight: bold; padding-top: 14px;"> ' + md.SubSubject + '</td><td style="display:none"><input type="hidden" id="Practical' + srnumber + '" name="Practical" value="' + Pracvalue + '" /></td><td style = "width: 42px !important;">P <input type="Checkbox" id="Present' + srnumber + '" name="Present"  class ="chckP"></td>        <td  style = "width: 42px !important;">A <input type="Checkbox" id="Absent' + srnumber + '" name="Absent"  class ="chckA"></td>         <td  style = "width: 42px !important;">L <input type="Checkbox" id="Leave' + srnumber + '"  name="Leave"  class ="chckL"></td> </tr>');
-                        debugger;
                         $('#Present' + srnumber + '').on("change", function () {
-                            debugger;
 
                             var isTrue = ($('#Present' + srnumber + '').is(':checked'))
                             if (isTrue) {
@@ -698,9 +661,7 @@
                             }
                         });
 
-                        debugger;
                         $('#Absent' + srnumber + '').on("change", function () {
-                            debugger;
 
                             var isTrue = ($('#Absent' + srnumber + '').is(':checked'))
                             if (isTrue) {
@@ -709,9 +670,7 @@
                             }
                         });
 
-                        debugger;
                         $('#Leave' + srnumber + '').on("change", function () {
-                            debugger;
 
                             var isTrue = ($('#Leave' + srnumber + '').is(':checked'))
                             if (isTrue) {
@@ -729,7 +688,6 @@
                         ToDate();
                         FromDate();
                     });
-                    debugger;
                     if (isAttendance == 'Attendance') {
                         $('#Save').attr("disabled", true);
                         $('#AttendanceProc').attr("disabled", true);
@@ -760,7 +718,6 @@
 
         var ups;
         function UserRoless() {
-            debugger;
             $.ajax({
                 type: "POST",
                 url: "StudentAttendance.aspx/UserRoles",
@@ -787,7 +744,6 @@
      
         function Print() {
 
-            debugger;
             var date = $("#ddldate").val();
             var dt = new Date(parseInt(date.substr(6)));
             dt = moment(dt).format('L');
@@ -805,13 +761,11 @@
             var txt_WholeClass = $('#txt_WholeClass').prop("checked");
             Pracvalue = $("#Practical").val();
 
-            debugger;
 
             window.open('../../ReportViewer.aspx?ReportName=AttendanceReport&ReportTitle=Student Attendance Report' + '&FTime=' + FromTime + '&TTime=' + ToTime + '&classs=' + classs + '&program=' + program + '&date=' + dt + '&Group=' + Group + '&bathc=' + bathc + '&txt_WholeClass=' + txt_WholeClass);
         }
 
         function ProcessAttendance() {
-            //debugger;
 
 
             $('#Save').attr('disabled', true);
@@ -838,11 +792,9 @@
 
                 PageMethods.AttendanceProcess(JSON.stringify(Paramaters), function (data) {
 
-                    debugger;
                     var _data = JSON.parse(data);
                     var attendance = _data[0].isAttendance;
                     var attendanceTime = _data[0].AttendanceTime;
-                    debugger;
 
                     var atime = moment(attendanceTime).format("HH:mm:ss");
 
@@ -851,7 +803,6 @@
                         $($(value).closest('tr').find('td input[name=ATime]')[0]).val(atime);//('checked', true);
                     }
                     else {
-                        debugger;
 
                         $($(value).closest('tr').find('td input[name=Absent]')[0]).prop('checked', true);
                     }
@@ -869,12 +820,9 @@
 
         var RowNo;
         function UpdateAttendance() {
-            debugger;
             var table = $('#tbody');
             var Update_list = [];
-            debugger;
             table.find('tr input[name=Getrow]:checked').each(function (key, value) {
-                debugger;
                 var ti = $($(value).closest('tr').find('td input[name=FTtime]')[0]).val();
                 var ft = ti.split("-");
                 var frmtim = ft[0];
@@ -898,7 +846,6 @@
                     'chkAbsent': $($(value).closest('tr').find('td input[name=Absent]')[0]).prop("checked"),
                     'chkLeave': $($(value).closest('tr').find('td input[name=Leave] ')[0]).prop("checked"),
                 });
-                debugger;
             });
             if (Update_list.length == 0) {
                 Swal.fire({
@@ -956,15 +903,10 @@
         var clasvalue;
         var subvalue;
         var Pracvalue;
-        debugger;
         function SaveAttendance() {
-            debugger;
             var Save_list = [];
-            debugger;
-            debugger;
             $.each($('#tblStutimetable tbody tr'), function (key, value) {
 
-                debugger;
                 var Student_Id = $($(value).find('td input[name=Stud_Id]')[0]).val();
                 var FromTotime = $($(value).find('td input[name=FTtime]')[0]).val();
                 var ft = FromTotime.split("-");
@@ -987,11 +929,8 @@
                 var ATime = $($(value).find('td input[name=ATime]')[0]).val();
 
                 var Dte = Dates.split('-');
-                debugger;
                 Dated = Dte[0];
-                debugger;
                 var dat = Dated.trim();
-                debugger;
                 DayName = Dte[1];
                 var day = DayName.trim();
 
@@ -1002,19 +941,15 @@
                 });
             });
 
-            debugger;
             var Parameter = { "Save_list": Save_list, };
 
-            debugger;
             PageMethods.SaveAttendance(JSON.stringify(Parameter), function (res) {
-                debugger;
                 _data = JSON.parse(res);
 
                 $('#tblStutimetable tr:gt(0)').remove();
 
                 var Attendance = $('#tbody');
                 $(_data).each(function (index, md) {
-                    debugger;
 
                     var St_id = md.Student_Id;
                     var sname = md.Student_Name;
@@ -1034,7 +969,6 @@
 
 
                     length++;
-                    debugger;
                     if (p == "True" || p == true) {
                         $('#Present' + srnumber + '').attr('checked', true);
                     }
@@ -1048,7 +982,6 @@
                     }
 
                     $('#Present' + srnumber + '').on("change", function () {
-                        debugger;
 
                         var isTrue = ($('#Present' + srnumber + '').is(':checked'))
                         if (isTrue) {
@@ -1057,9 +990,7 @@
                         }
                     });
 
-                    debugger;
                     $('#Absent' + srnumber + '').on("change", function () {
-                        debugger;
 
                         var isTrue = ($('#Absent' + srnumber + '').is(':checked'))
                         if (isTrue) {
@@ -1068,9 +999,7 @@
                         }
                     });
 
-                    debugger;
                     $('#Leave' + srnumber + '').on("change", function () {
-                        debugger;
 
                         var isTrue = ($('#Leave' + srnumber + '').is(':checked'))
                         if (isTrue) {

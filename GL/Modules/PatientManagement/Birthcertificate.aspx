@@ -66,10 +66,8 @@
                 var cursorPosition = 3;
                 phoneInput.setSelectionRange(cursorPosition, cursorPosition);
             });
-            debugger;
             var BC_ID = '<%= Request.QueryString["BC_ID"]%>';
             if (BC_ID != "") {
-                debugger;
                 LoadBirthCertificate(BC_ID);
                 $("#btnsave").val("Update")
             }
@@ -194,9 +192,7 @@
             xmlHttp.send(null);
             return xmlHttp.responseText;
         }
-        debugger;
         function bindControls() {
-            debugger;
             var hdFile_ID = $("#hdfPatient_ID").val();
             if (hdFile_ID != "") {
                 var Patient_ID = $("#hdfPatient_ID").val();
@@ -222,7 +218,6 @@
                 success: function (response) {
 
                     var data = JSON.parse(response.d);
-                    debugger;
                     if (data != null) {
 
                         $('#hdfPatient_ID').val(data.Patient_ID);
@@ -276,7 +271,6 @@
 
         }
         function loadtokenInputsDefault() {
-            debugger;
             $('#ctl00_MainContent_txtPatient_ID').tokenInput("../../json.aspx?Table=PatientsForBirthCertificate",
                 {
 
@@ -297,7 +291,6 @@
             );
         }
         function loadtokenInputs(data) {
-            debugger;
             $("#ctl00_MainContent_txtPatient_ID").tokenInput("../../json.aspx?Table=PatientsForBirthCertificate",
                 {
                     prePopulate: data,
@@ -311,7 +304,6 @@
         }
 
         function loadAjax() {
-            debugger;
             var Patient_ID = $("#hdfPatient_ID").val();
             $.ajax({
                 type: "POST",
@@ -327,7 +319,6 @@
         }
 
         function OnSuccess(data) {
-            debugger;
             if (data.d != '') {
 
                 if (data.d.PatientType == null)
@@ -417,7 +408,6 @@
         }
 
         function selectPatient(Patient_ID) {
-            debugger;
             $('#ctl00_MainContent_txtPatient_ID').tokenInput('clear');
             var tokenData = httpGet("../../json.aspx?Table=Patients&Record=Edit&q=" + Patient_ID);
             var parsedData = JSON.parse(tokenData);
@@ -432,7 +422,6 @@
             //LoadHistory();
         }
        <%--function selectPatient(Patient_ID) {
-            debugger;
             $('#ctl00_MainContent_txtPatient_ID').tokenInput('clear');
             var tokenData = httpGet("../../json.aspx?Table=Patients&Record=Edit&q=" + Patient_ID);
             var parsedData = JSON.parse(tokenData);
@@ -445,7 +434,6 @@
             $('#txtIn_Patient_ID').val("(New)");
         }--%>
         function OpenModal() {
-            debugger;
             $('#PatientsSearchModel').modal({
                 backdrop: 'static'
             });
@@ -455,7 +443,6 @@
             $('#ClosePatientsSearchModel').show();
         }
         function FillPatientsList() {
-            debugger;
             $('#tblPatientsResult tbody').empty();
             var SearchString = '';
             PageMethods.AddPatient(SearchString, OnFilterPatients, OnFailPatients);
@@ -469,9 +456,7 @@
             }
         }
         var btnVal = '';
-        debugger;
         function SavePatient() {
-            debugger;
             $('#SavePatient_Data').attr('disabled', true);
             var Prefix_PatientName = $('#ddl_name').val();
             var PatientName = $('#txt_name').val();
@@ -578,7 +563,6 @@
                 contentType: "application/json; charset=utf-8",
                 dataType: "json",
                 success: function (response) {
-                    debugger;
 
                     // Check if CNIC already exists
                     if (response.d === "CNIC_EXISTS") {
@@ -727,9 +711,7 @@
             $('#updatePatient_Data').hide();
             $('#RevistPat').hide();
         }
-        debugger;
         function fillmrnos() {
-            debugger;
             var data = {};
             $.ajax({
                 type: "POST",
@@ -738,7 +720,6 @@
                 contentType: "application/json; charset=utf-8",
                 dataType: "json",
                 success: function (data) {
-                    debugger;
                     var max_mr = data.d;
                     $('#txt_Mrno').val('New');
                 },
@@ -751,7 +732,6 @@
             alert(exc.get_message());
         }
         function AddNewPatient() {
-            debugger;
             $('#ddl_pnl_cpy').next(".select2-container").hide();
             clearPatient();
             $('#hdfPatient_ID').val('(New)');
@@ -770,7 +750,6 @@
             window.open("BirthCertificateView.aspx", '_blank');
         }
         function AddPatientsResult(Reg_Patient_ID, Patient_No, Full_Name, NIC, Mobile1, Father_Name) {
-            debugger;
             tblLength = tblPatientsResult.rows.length;
             var row = iPatientsBody.insertRow(-1);
             var cell;
@@ -794,7 +773,6 @@
             cell.innerHTML = actions;
         }
         function addfunc() {
-            debugger;
             var maskedValue = $('#txtSearch').val();
             var unmaskedValue = maskedValue.replace(/_/g, '');
             var Ph_sNOs = unmaskedValue.length;
@@ -829,14 +807,12 @@
             CheckAndLoadWalkinPatientRegFee();
         }
         function CheckAndLoadWalkinPatientRegFee() {
-            debugger;
             $.ajax({
                 type: "POST",
                 url: "Birthcertificate.aspx/IsWalkinPatientRegFeeActive",
                 contentType: "application/json; charset=utf-8",
                 dataType: "json",
                 success: function (response) {
-                    debugger;
                     var isActive = response.d;
 
                     if (isActive == "01") {
@@ -863,14 +839,12 @@
         }
 
         function GetWalkinPatientRegFee() {
-            debugger;
             $.ajax({
                 type: "POST",
                 url: "Birthcertificate.aspx/GetWalkinPatientRegFee",
                 contentType: "application/json; charset=utf-8",
                 dataType: "json",
                 success: function (response) {
-                    debugger;
                     var fee = response.d;
                     if (fee && fee != '0' && fee != 'null' && fee != '') {
                         fee = fee.replace(/["']/g, '');
@@ -887,7 +861,6 @@
         }
         var isAdd = false;
         function AddPatientDetail(Reg_Patient_ID) {
-            debugger;
             try {
                 isAdd = true;
                 window.location.href = "Birthcertificate.aspx?Reg_ID=" + Reg_Patient_ID;
@@ -968,11 +941,8 @@
         }
         var inPatientID;
         var Discharged;
-        debugger;
         function OnSuccessEdit(data) {
-            debugger;
             if (data.d != '') {
-                debugger;
 
                 inPatientID = data.d.Inpat;
                 Discharged = data.d.Discharged;
@@ -1019,7 +989,6 @@
         }
         //var isCertificateGenrate = false;
         function GenrateCertificate() {
-            debugger;
             var inPatientID = $('#ctl00_MainContent_txtIn_Patient_ID').val();
 
 
@@ -1058,7 +1027,6 @@
 
         function PrintGenrateCertificate(Birth_Certificate_ID)
         {
-            debugger;
             var url = '../../ReportViewer.aspx?ReportName=Birth_Certificate&ReportTitle=Admission Slip Report&Inpatient_ID=' + Birth_Certificate_ID;
             window.open(url, '_blank');
 
@@ -1071,7 +1039,6 @@
            
             var BC_ID = '<%= Request.QueryString["BC_ID"]%>';
             if (BC_ID == "") {
-                debugger;
                 var Birth_Id = 0;
             }
             else {

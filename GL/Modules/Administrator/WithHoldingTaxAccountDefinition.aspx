@@ -15,7 +15,6 @@
             setTimeout(function () { LoadAccount(); }, 400);
         });
         function SaveAllRecord() {
-            debugger;
             var btnSave = 'Update';
             var tableItems = $('#tblItemDescription');
             var Account_list = [];
@@ -23,7 +22,6 @@
 
                 var taxType = $(value).find('td input[name=Tax_Type]').val();
                 var WithHoldTaxPerc = $(value).find('td input[name=WithHold_Tax_Perc]').val();
-                debugger;
                 if (taxType && WithHoldTaxPerc) {
                     Account_list.push({
                         'WithHold_Tax_ID': $(value).find('td input[name=WithHold_Tax_ID]').val(),
@@ -40,7 +38,6 @@
             });
             var AllItemDetail = { 'btnSave': btnSave, 'AccountList': Account_list };
             PageMethods.savewithholdtaxinfo(btnSave, JSON.stringify(AllItemDetail), function (res) {
-                debugger;
                 Swal.fire({
                     icon: 'success',
                     title: 'Success!',
@@ -61,7 +58,6 @@
         function LoadAccount() {
             var rows = '';
             PageMethods.LoadAccount(function (resp) {
-                debugger;
                 var data = (JSON.parse(resp));
                 selectedOptions = data;
                 var rowIndex = parseInt((parseInt($('#tblItemDescription tbody tr').length)));
@@ -82,18 +78,15 @@
                      '</td>' +
                     '</tr>';
                 });
-                debugger;
                 $('#tblItemDescriptionDetail').append(rows);
                 $('input').attr('autocomplete', 'off');
                 $('select').select2();
                 $.each(selectedOptions, function (key, value) {
                     setTimeout(function ()
                     {
-                        debugger;
                         $('#Account_ID_Payable'+(key+1)+'').val(value.Account_ID_Payable).prop("disabled", true).trigger('change');
                     }, 3000);
                     setTimeout(function () {
-                        debugger;
                         $('#Account_Code_Recvable'+(key+1)+'').val(value.Account_Code_Recvable).prop("disabled", true).trigger('change');
                     }, 3000);
                 });
@@ -101,7 +94,6 @@
         }
 
         function Addrow() {
-            debugger;
             var rows = '';
             var rowlength = tblItemDescription.rows.length;
             rows += '<tr>' +
@@ -152,7 +144,6 @@
             var ID = $(row).closest('tr').find('td select[name=Account_ID_Payable] :selected').val();
 
             PageMethods.loadpayablegl(ID, function (Tests) {
-                debugger
                 $.each(JSON.parse(Tests), function (key, value) {
                     $(row).closest('tr').find('td input[name=Description_Payable]').val(value.name);
                 });
@@ -161,7 +152,6 @@
         function loadrecvablegl(row) {
             var ID = $(row).closest('tr').find('td select[name=Account_Code_Recvable] :selected').val();
             PageMethods.loadrecvablegl(ID, function (Tests) {
-                debugger
                 $.each(JSON.parse(Tests), function (key, value) {
                     $(row).closest('tr').find('td input[name=Description_Recvable]').val(value.name);
                 });

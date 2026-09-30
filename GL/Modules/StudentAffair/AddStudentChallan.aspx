@@ -64,7 +64,6 @@
         function checkstudentexist() {
 
 
-            debugger;
             checkedstudent = false;
 
             var Student_ID = $('#ddl_rollno').val();
@@ -86,12 +85,10 @@
                 return false;
             }
 
-            debugger;
 
 
 
             PageMethods.CheckStudentExist(Student_ID, function (res) {
-                debugger;
 
                 if (parseInt(res) <= 0) {
 
@@ -126,14 +123,12 @@
 
             });
 
-            debugger;
 
         }
 
 
         function checktotalamount_Receivable() {
 
-            debugger;
 
             var Student_ID = $('#ddl_rollno').val();
             if (Student_ID == 0) {
@@ -170,7 +165,6 @@
             var Misc_Fee1 = $('#Misc_Fee').val();
 
             var totalamount = 0;
-            debugger;
 
 
             if (Test_Fee1 == "") {
@@ -238,14 +232,11 @@
 
             totalamount = parseFloat(Admission_Fee1) + parseFloat(Tuition_Fee1) + parseFloat(Library_Magazine_Fund1) + parseFloat(Reg_Fee1) + parseFloat(Degree_Fee1) + parseFloat(Security_Fee1) + parseFloat(Hostel_Fee1) + parseFloat(Examination_Fee1) + parseFloat(Remaining_Tuition_Fee1) + parseFloat(Other_Fee1) + parseFloat(Student_Card_Fee1) + parseFloat(Remaining_Hostel_Fee1) + parseFloat(Test_Fee1) + parseFloat(Misc_Fee1) + parseFloat(Prospectus_Fee1);
 
-            debugger;
 
             PageMethods.checkrecvablefee(Student_ID, function (res) {
-                debugger;
 
                 if (parseInt(totalamount) > parseFloat(res)) {
 
-                    debugger;
                     Swal.fire({
                         icon: 'error',
                         title: 'Error!',
@@ -283,7 +274,6 @@
 
         function SaveAllRecord() {
 
-            debugger;
 
 
             if (checkedstudent == true) {
@@ -342,7 +332,6 @@
 
             var AllItemDetail = { 'Student_ID': Student_ID, 'txthiddenchallanno': txthiddenchallanno, 'Challan_ID': Challan_ID, 'txt_issueDate': txt_issueDate, 'txt_dueDate': txt_dueDate, 'txt_challanNo': txt_challanNo, 'Admission_Fee': Admission_Fee, 'Tuition_Fee': Tuition_Fee, 'Library_Magazine_Fund': Library_Magazine_Fund, 'Reg_Fee': Reg_Fee, 'Degree_Fee': Degree_Fee, 'Security_Fee': Security_Fee, 'Hostel_Fee': Hostel_Fee, 'Examination_Fee': Examination_Fee, 'Remaining_Tuition_Fee': Remaining_Tuition_Fee, 'Other_Fee': Other_Fee, 'Student_Card_Fee': Student_Card_Fee, 'Remaining_Hostel_Fee': Remaining_Hostel_Fee, 'Prospectus_Fee': Prospectus_Fee, 'Test_Fee': Test_Fee, 'Misc_Fee': Misc_Fee };
             PageMethods.SaveChallanAmount(btnsave, JSON.stringify(AllItemDetail), function (res) {
-                debugger;
 
                 Swal.fire({
                     icon: 'success',
@@ -368,7 +357,6 @@
 
 
         function PrintChallan() {
-            debugger
             var id = '<%= Request.QueryString["Challan_ID"]%>';
             var locationInfo = window.location;
             var url = '/ReportViewer.aspx?ReportName=ChallanPrint&ReportTitle=Student Challan Print&TransID=' + id + '';
@@ -389,7 +377,6 @@
 
             PageMethods.LoadChallan(ChallanID, function (resp) {
                 var data = JSON.parse(resp);
-                debugger;
                 var DueDatesss = new Date(parseInt(data.DueDate.substr(6)));
                 DueDatesss = moment(DueDatesss).format('L');
 
@@ -469,15 +456,12 @@
 
 
         function GetStudentRollNo() {
-            debugger;
 
             var optionsVen = '<option value="0">Please Select</option>';
 
             PageMethods.GetStudentRollNos(function (Tests) {
-                debugger
 
                 $.each(JSON.parse(Tests), function (key, value) {
-                    debugger;
                     optionsVen += '<option value="' + value.Student_Id + '" >' + value.Roll_No + '</option>';
                 });
                 $('#ddl_rollno').html(optionsVen);

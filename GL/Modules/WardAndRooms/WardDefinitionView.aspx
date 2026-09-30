@@ -4,7 +4,6 @@
     <script type="text/javascript">
 
         $(document).ready(function () {
-            debugger;
             $('#ctl00_lblMessage').hide();
             LoadPage();
 
@@ -83,7 +82,6 @@
                     { "data": "No_Of_Beds", "orderable": false }, 
                     {
                         render: function (data, type, full) {
-                            debugger;
                             var res = '<a class="editListBtn" href="#" onclick="Edit(' + full.Ward_ID + ')" style="border-radius: 4px;margin-right: 4px;padding: 5px 8px 5px 8px;"><i  class="fa fa-pencil"></i></a>'
                                 ;
 
@@ -116,10 +114,8 @@
                 }
             });
         }
-        debugger;
 
         function Edit(ID) {
-            debugger;
             window.location.href = "WardDefinition.aspx?ID=" + ID;
 
         }

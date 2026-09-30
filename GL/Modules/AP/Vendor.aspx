@@ -56,7 +56,6 @@
            
             });
             $('#btnGetAllItems').on('click', function () {
-                debugger;
                 LoadAllitem('');
             });
 
@@ -68,7 +67,6 @@
         })
         var id = '<% =Request.QueryString["ID"] %>';
         function printPerson() {
-            debugger;
             var locationInfo = window.location;
             var url = '/ReportViewer.aspx?ReportName=VendorPerson&ReportTitle=Vendor Person&ID=' + id;
             if (!locationInfo.origin.includes('localhost')) {
@@ -104,7 +102,6 @@
             });
         }
         function printVendorCompany() {
-            debugger;
             var locationInfo = window.location;
             var url = '/ReportViewer.aspx?ReportName=VendorCompany&ReportTitle=Vendor Company&ID=' + id;
             if (!locationInfo.origin.includes('localhost')) {
@@ -116,7 +113,6 @@
             window.open(url, '_blank');
         }
         function printvendorGeneralItem() {
-            debugger;
             var locationInfo = window.location;
             var url = '/ReportViewer.aspx?ReportName=VendorGeneralItem&ReportTitle=Vendor General Item&ID=' + id;
             if (!locationInfo.origin.includes('localhost')) {
@@ -128,7 +124,6 @@
             window.open(url, '_blank');
         }
         function printPharmacyItem() {
-            debugger;
             var locationInfo = window.location;
             var url = '/ReportViewer.aspx?ReportName=PharmacyItem&ReportTitle=Vendor Pharmacy Item&ID=' + id;
             if (!locationInfo.origin.includes('localhost')) {
@@ -141,9 +136,7 @@
         }
         function LoadVendorDetail(VenId) {
             PageMethods.LoadVendorDetail(VenId, function (resp) {
-                debugger;
                 var data = JSON.parse(resp);
-                debugger;
                 $('#btnSave').val();
                 if (data.IsActive == true) {
                     $("#Active").prop('checked', true);
@@ -203,7 +196,6 @@
                             alert("Error: " + err.get_message());
                         });
                 }
-                debugger;
                 setTimeout(function () {
                     $('#manufacturerDropdown').val(data.manufacture_id).trigger('change');
                 }, 1000);
@@ -263,9 +255,7 @@
         }
 
         function LoadVendorPerson(VenId) {
-            debugger
             PageMethods.LoadVendorPerson(VenId, function (resp) {
-                debugger;
                 var data = (JSON.parse(resp));
                 var rows = '';
                 var rowIndex = parseInt((parseInt($('#tblItemDescription tbody tr').length)));
@@ -284,9 +274,7 @@
         }
 
         function LoadVendorGeneralItem(VenId) {
-            debugger
             PageMethods.LoadVendorGeneralItems(VenId, function (resp) {
-                debugger;
                 var data = (JSON.parse(resp));
                 var rows = '';
                 selectedOptions = data;
@@ -308,9 +296,7 @@
             })
         }
         function LoadVendorPharmacyItem(VenId) {
-            debugger
             PageMethods.LoadVendorPharmacyItems(VenId, function (resp) {
-                debugger;
                 var data = (JSON.parse(resp));
                 var rows = '';
                 selectedOptions = data;
@@ -333,9 +319,7 @@
         }
 
         function LoadVendorCompany(VenId) {
-            debugger
             PageMethods.LoadVendorCompanies(VenId, function (resp) {
-                debugger;
                 var data = (JSON.parse(resp));
                 var rows = '';
                 selectedOptions = data;
@@ -358,7 +342,6 @@
         });
 
         function Addrow() {
-            debugger;
             var rows = '';
             var rowlength = tblItemDescription.rows.length;
             rows += '<tr>' +
@@ -373,7 +356,6 @@
         }
 
         function AppendvendorGeneralItem() {
-            debugger;
             var rows = '';
             var rowlength = VendorGeneralItemlist.rows.length;
             rows += '<tr>' +
@@ -389,7 +371,6 @@
             loadGeneralItemList(rowlength);
         }
         function AppendvendorPharmacyItem() {
-            debugger;
             var rows = '';
             var rowlength = VendorPharmacyItemlist.rows.length;
             rows += '<tr>' +
@@ -406,7 +387,6 @@
         }
         var currentSrNo = 1;
         function AppendvendorCompany() {
-            debugger;
             var rows = '';
             var rowlength = VendorCompanieslist.rows.length;
             rows += '<tr>' +
@@ -418,7 +398,6 @@
             currentSrNo++;
         }
         function ExcludeFromPayment(anchor) {
-            debugger;
             Swal.fire({
                 title: 'Are you sure?',
                 text: "You want to delete this record",
@@ -441,14 +420,11 @@
             });
         }
         function loadGeneralItemList(rowlength) {
-            debugger;
             var optionsitem = '';
             var length = rowlength;
             PageMethods.loadGeneralItemList(function (resp) {
-                debugger;
                 optionsitem = '<option value="0">Select</option>';
                 $.each(JSON.parse(resp), function (key, value) {
-                    debugger;
                     optionsitem += '<option value="' + value.Item_ID + '" >' + value.name + '</option>';
                 });
                 $('#txtItemCode' + length + '').html(optionsitem);
@@ -460,15 +436,12 @@
         }
 
         function loadPharmacyItemList(rowlength) {
-            debugger;
             var optionsitem = '';
             var length = rowlength;
 
             PageMethods.loadPharmacyItemList(function (resp) {
-                debugger;
                 optionsitem = '<option value="0">Select</option>';
                 $.each(JSON.parse(resp), function (key, value) {
-                    debugger;
                     optionsitem += '<option value="' + value.Item_ID + '" >' + value.name + '</option>';
                 });
                 $('#txtItemCode' + length + '').html(optionsitem);
@@ -483,7 +456,6 @@
         }
 
         function GetPharmacyItemDetail(item) {
-            debugger;
             var itemID = item.value;
             $.ajax({
                 type: "POST",
@@ -560,7 +532,6 @@
             });
         }
         function GetGeneralItemDetail(item) {
-            debugger;
             var itemID = item.value;
             $.ajax({
                 type: "POST",
@@ -635,7 +606,6 @@
             });
         }
         function SaveAllRecord() {
-            debugger;
             var btnSave = $('#btnSave').val();
             var VendorName = $('#txtVendorName').val();
             if (VendorName == '') {
@@ -891,7 +861,6 @@
 
 
         function appendSearchItem(checkbox) {
-            debugger;
             var row = $(checkbox).closest('tr');
             var itemId = row.find('td:eq(1)').text().trim();
             var itemCode = row.find('td:eq(2)').text().trim();
@@ -982,7 +951,6 @@
         }
 
         function removePharmacyItem(row) {
-            debugger;
             Swal.fire({
                 title: 'Are you sure?',
                 text: "You want to remove this item",

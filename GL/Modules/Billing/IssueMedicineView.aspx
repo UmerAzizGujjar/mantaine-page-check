@@ -134,7 +134,6 @@
         });
 
         function SearchByParameter() {
-            debugger;
             var MrNo = $('#txtMRNo').val();
             var billNo = $('#txtBIllNo').val();
             var Date = $('#txtDate').val();
@@ -142,7 +141,6 @@
         }
 
         function FillList() {
-            debugger;
             var CheckDate = false;
             var billNo = '';
             var MrNo = '';

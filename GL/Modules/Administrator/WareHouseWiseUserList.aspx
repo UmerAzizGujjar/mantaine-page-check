@@ -58,7 +58,6 @@
                     {
                         "data": "Created_Time", "name": "Created_Time",
                         "render": function (data, type, full) {
-                            debugger;
                             var date = full.Created_Time;
                             date = moment(date).format('DD-MMM-YYYY');
                             return date;
@@ -66,7 +65,6 @@
                     },
                     {
                         render: function (data, type, full) {
-                            debugger;
                             var res = '<a href="#" onclick="Edit(\'' + full.WareHouse_wise_User_Id + '\')" class="editListBtn" style="border-radius: 4px; margin-right: 4px;padding: 5px 8px;"><i class="fa fa-pencil"></i></a>';
 
                             var Delete = '<a  class="delListBtn" style="border-radius: 4px;margin-left: 4px;padding: 5px 8px 5px 8px;" href="#" data-id="' + full.WareHouse_wise_User_Id + '" onclick="deleteConfirm(this)"><i class="fa fa-trash"></i></a>';
@@ -108,12 +106,10 @@
             window.location.href = "WareHouseWiseUser.aspx?ID=" + ID;
         }
         function deleteConfirm(anchorTag) {
-            debugger;
             var warehouseWiseUserId = $(anchorTag).data('id');
 
             if (confirm('Are you sure you want to delete this record?')) {
                 PageMethods.DeleteRecord(warehouseWiseUserId, function (msg) {
-                    debugger;
                     $(anchorTag).closest('tr').remove();
                     window.location.reload();
                 }, OnFail);

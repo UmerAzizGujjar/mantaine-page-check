@@ -12,12 +12,10 @@ $(document).ready(function () {
     setTimeout(function () { LoadAccount(); }, 2000);
 });
 function SaveAllRecord() {
-    debugger;
     var btnSave = 'Update';
     var tableItems = $('#tblItemDescription');
     var Advancelist = [];
     tableItems.find('tr:gt(0)').each(function (key, value) {
-        debugger;
         var taxType = $(value).find('td input[name=Tax_Type]').val();
         var taxPerc = $(value).find('td input[name=Advance_Tax_Perc]').val();
         if (taxType && taxPerc) {
@@ -36,7 +34,6 @@ function SaveAllRecord() {
     });
     var AllItemDetail = { 'btnSave': btnSave, 'Advancelist': Advancelist };
     PageMethods.savewithholdAdvancetax(btnSave, JSON.stringify(AllItemDetail), function (res) {
-        debugger;
         alert('Data Save Successfully');
         window.location.href = 'AdvanceTaxDefinition.aspx';
         $('#btnSave').val("Update");
@@ -44,15 +41,12 @@ function SaveAllRecord() {
 }
 
         function LoadAccount() {
-            debugger
             var rows = '';
             PageMethods.LoadAccount(function (resp) {
-                debugger
                 var data = (JSON.parse(resp));
                 selectedOptions = data;
                 var rowIndex = parseInt((parseInt($('#tblItemDescription tbody tr').length)));
                 $.each(data, function (key, value) {
-                    debugger
                     var chk_STWH_checked = value.S_W_H_Tax ? 'checked="checked"' : '';
                     var chk_Active_checked = value.Active ? 'checked="checked"' : '';
                     rows += '<tr>' +

@@ -25,7 +25,6 @@
         });
 
         function appointmentPatient_Print(Appointment_ID) {
-            debugger;
 
              var locationInfo = window.location;
             var url = "/ReportViewer.aspx?ReportName=Appointment_Patient_Print&Title=Appointment Patient Print &appointmentId=" + Appointment_ID;
@@ -247,9 +246,7 @@
             window.open("Appointment.aspx?APPID=" + id + "");
 
         }
-        debugger;
         function deleteConfirm(anchorTag) {
-            debugger;
 
 
             var row = $(anchorTag).parents('tr')[0];

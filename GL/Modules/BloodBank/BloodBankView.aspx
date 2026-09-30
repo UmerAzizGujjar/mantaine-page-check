@@ -4,7 +4,6 @@
     <script type="text/javascript">
 
         $(document).ready(function () {
-            debugger;
             $('#ctl00_lblMessage').hide();
             LoadPage();
 
@@ -59,7 +58,6 @@
                     {
                         "data": "Receiving_Date", "name": "Receiving_Date",
                         "render": function (data, type, full) {
-                            debugger;
                             var date = full.Receiving_Date;
                             date = moment(date).format('DD-MMM-YYYY');
                             return date;
@@ -68,7 +66,6 @@
                     {
                         "data": "Blood_Issuance_Date_Time", "name": "Blood_Issuance_Date_Time",
                         "render": function (data, type, full) {
-                            debugger;
                             var date = full.Blood_Issuance_Date_Time;
                             date = moment(date).format('DD-MMM-YYYY');
                             return date;
@@ -77,7 +74,6 @@
                     {
                         "data": "Expiry_Date", "name": "Expiry_Date",
                         "render": function (data, type, full) {
-                            debugger;
                             var date = full.Expiry_Date;
                             date = moment(date).format('DD-MMM-YYYY');
                             return date;
@@ -85,7 +81,6 @@
                     },
                     {
                         render: function (data, type, full) {
-                            debugger;
                             var res = '<a class="editListBtn" href="#" onclick="Edit(' + full.Blood_ID + ')" style="border-radius: 4px;padding: 5px 8px 5px 8px;"><i class="fa fa-pencil"></i></a>'
 
 

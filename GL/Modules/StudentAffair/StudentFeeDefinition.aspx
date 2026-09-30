@@ -74,15 +74,12 @@
 
 
         function GetStudentRollNo() {
-            debugger;
 
             var optionsVen = '<option value="0">Please Select</option>';
 
             PageMethods.GetStudentRollNos(function (Tests) {
-                debugger
 
                 $.each(JSON.parse(Tests), function (key, value) {
-                    debugger;
                     optionsVen += '<option value="' + value.Student_Id + '" >' + value.Roll_No + '</option>';
                 });
                 $('#ddl_rollno').html(optionsVen);
@@ -92,10 +89,8 @@
 
 
         function LoadStudentData(Fee_ID) {
-            debugger;
             PageMethods.LoadStudentData(Fee_ID, function (resp) {
                 var studata = JSON.parse(resp);
-                debugger;
 
                 $('#savebtn').val('Update');
                 $('#txt_feecode').val(studata.Fee_No);
@@ -113,7 +108,6 @@
 
                 var status = $('#txt_status').val();
                 if (status == "Approved") {
-                    debugger;
                     $('#savebtn').attr("disabled", 'disabled');
                     $('#btnApprove').attr("disabled", 'disabled');
                     $('#btnApprove').hide();
@@ -123,7 +117,6 @@
 
                 }
                 if (status == "Created") {
-                    debugger;
                     $('#btnApprove').attr("disabled", false);
                     $('#btnUnApprove').attr("disabled", 'disabled');
                     $('#btnUnApprove').hide();
@@ -175,7 +168,6 @@
 
 
             PageMethods.LoadChildData(Fee_ID, function (resp) {
-                debugger;
 
                 var data = (JSON.parse(resp));
 
@@ -183,7 +175,6 @@
                 var rowIndex = parseInt((parseInt($('#tblItemDescription tbody tr').length)));
 
                 $.each(data, function (key, value) {
-                    debugger;
                     rows += '<tr>' +
 
                         '<td ><input type=text id="txt_id" name="txt_id"  value="' + (key + 1) + '" readonly="readonly" /></td>' +
@@ -207,7 +198,6 @@
 
                     rowlength++;
                 });
-                debugger;
                 $('#tblItemDescriptionDetail').append(rows);
 
                 calculatetotalamount();
@@ -224,7 +214,6 @@
 
 
         function EditRow(rowlength) {
-            debugger;
             var length = rowlength;
             console.log(length);
 
@@ -241,15 +230,12 @@
 
 
         function GetFeeType() {
-            debugger;
             var optionsDepth = '';
 
             PageMethods.GetFeeTypes(function (Tests) {
-                debugger
                 optionsDepth = '<option value="0">Please Select</option>';
 
                 $.each(JSON.parse(Tests), function (key, value) {
-                    debugger;
 
                     optionsDepth += '<option value="' + value.DataValueName + '" >' + value.DataValueDescription + '</option>';
                 });
@@ -271,15 +257,12 @@
 
 
         function GetStudentClasses() {
-            debugger;
             var optionsDepth = '';
 
             PageMethods.GetStudentClass(function (Tests) {
-                debugger
                 optionsDepth = '<option value="0">Please Select</option>';
 
                 $.each(JSON.parse(Tests), function (key, value) {
-                    debugger;
 
                     optionsDepth += '<option value="' + value.DataValueName + '" >' + value.DataValueDescription + '</option>';
                 });
@@ -306,7 +289,6 @@
 
 
         function SaveAllRecord() {
-            debugger;
             var status;
 
             var btnSave = $('#savebtn').val();
@@ -366,7 +348,6 @@
 
             tableItems.find('tr:gt(0)').each(function (key, value) {
 
-                debugger;
                 ItemList.push({
 
 
@@ -386,11 +367,9 @@
             });
 
 
-            debugger;
             $('#savebtn').attr('disabled', true);
             var AllItemDetail = { 'txt_feecode': txt_feecode, 'txt_feedate': txt_feedate, 'ddl_rollno': ddl_rollno, 'txt_studentname': txt_studentname, 'txt_fname': txt_fname, 'ddlstu_class': ddlstu_class, 'txt_Total_amount': txt_Total_amount, 'txt_status': txt_status, 'txt_st_gl_Acc': txt_st_gl_Acc, 'ItemList': ItemList };
             PageMethods.SaveStudentFee(btnSave, JSON.stringify(AllItemDetail), function (res) {
-                debugger;
                 Swal.fire({
                     icon: 'success',
                     title: 'Success!',
@@ -416,9 +395,7 @@
 
             var ID = $('#ddl_rollno').val();
 
-            debugger;
             PageMethods.loadstudentinfoss(ID, function (Tests) {
-                debugger;
 
                 var data = JSON.parse(Tests);
                 $('#txt_studentname').val(data.Full_Name);
@@ -436,7 +413,6 @@
 
         function calculatetotalamount() {
 
-            debugger;
 
             var TotalAmount = 0;
 
@@ -458,11 +434,9 @@
         }
 
         function Approve() {
-            debugger;
             var FeeID = '<% =Request.QueryString["Fee_ID"] %>';
             var FeeDate = $('#txt_feedate').val();
             PageMethods.ApproveStudent(FeeID, FeeDate, function (Tests) {
-                debugger;
                 var message = JSON.parse(Tests);
                 if (message[0].Message != null || message[0].Message != "") {
                     alert(message[0].Message);
@@ -473,10 +447,8 @@
         }
 
         function UnApprove() {
-            debugger;
             var FeeID = '<% =Request.QueryString["Fee_ID"] %>';
             PageMethods.UnApproveStudent(FeeID, function (Tests) {
-                debugger
                 var message = JSON.parse(Tests);
                 if (message[0].Column1 != "" || message[0].Column1 != null) {
                     alert(message[0].Column1);
@@ -488,7 +460,6 @@
         }
 
         function PrintVoucher() {
-            debugger
             var id = '<%= Request.QueryString["Fee_ID"]%>';
             var locationInfo = window.location;
             var url = '/ReportViewer.aspx?ReportName=Voucher&ReportTitle=SFV Voucher&TransID=' + id + '&TransType=SFV';
@@ -502,7 +473,6 @@
         }
 
         function PrintChallan() {
-            debugger
             var id = '<%= Request.QueryString["Fee_ID"]%>';
             var locationInfo = window.location;
             var url = '/ReportViewer.aspx?ReportName=ChallanPrint&ReportTitle=Student Challan Print&TransID=' + id + '';
@@ -528,7 +498,6 @@
             var rowlength = tblItemDescription.rows.length;
 
             PageMethods.LoadAutoChildData(function (resp) {
-                debugger;
 
                 var data = (JSON.parse(resp));
 
@@ -536,7 +505,6 @@
                 var rowIndex = parseInt((parseInt($('#tblItemDescription tbody tr').length)));
 
                 $.each(data, function (key, value) {
-                    debugger;
                     rows += '<tr>' +
 
 
@@ -559,7 +527,6 @@
 
                     rowlength++;
                 });
-                debugger;
                 $('#tblItemDescriptionDetail').append(rows);
 
                 calculatetotalamount();
@@ -572,12 +539,10 @@
 
 
         function AddChallanAmounts() {
-            debugger;
 
             $('#tblPOItemstModelTable tbody tr').remove();
             var rows = "";
 
-            debugger;
 
             rows =
 

@@ -132,7 +132,6 @@
         function getExDateDonor(id, bagno)
         {
             PageMethods.getExpiryDate(id, bagno, function (resp) {
-                debugger;
                 var data = JSON.parse(resp);
 
                 var Expirydate = '';
@@ -203,12 +202,10 @@
 
 
                 $.each(JSON.parse(resp), function (key, value) {
-                    debugger;
                     if (value.SumQty == "0") {
 
                     }
                     else {
-                        debugger;
                        
                         optionsVen += '<option value="' + value.D_bagno + '" >' + value.D_bagno + '</option>';
                        
@@ -231,7 +228,6 @@
 
 
         function getComponents(component) {
-            debugger;
             var bagnum = $('#dllbagnum :selected').text();
             PageMethods.getComponents(bagnum, function (resp) {
 
@@ -264,18 +260,14 @@
                 }
                 $.each(data.Components, function (key, value)
                 {
-                    debugger;
                     for (var i = 1; i <= value.Qty; i++)
                     {
-                        debugger;
                         optionsVen += '<option value="' + value.Blood_Platelets_Id + '" >' + value.Blood_Platelets_Name + '</option>';
                     }
                     $("#ddlComponents").html(optionsVen);
                     if (typeof component === 'undefined') {
-                        debugger;
                     }
                     else {
-                        debugger;
                         $("#ddlComponents").val(component);
                     }
 
@@ -312,7 +304,6 @@
                 var rcvdate = new Date(parseInt(data.D_Date.substr(6)));
                 rcvdate = moment(rcvdate).format('L');
 
-                debugger;
 
                 $("#txtExpiry_Date").val(Expirydate);
                 $("#txtReceiving_Date").val(rcvdate);
@@ -413,7 +404,6 @@
         var isProceed = true;
         var isExpired = true;
         function SaveAllRecord() {
-            debugger;
             isProceed = true;
             isExpired = true;
 
@@ -500,7 +490,6 @@
 
             if (typeof components === 'undefined' || components == '') components = 0;
             if ($("#ddlBlood_Group").val().trim() == "Please Select" || $("#ddlrhtype").val().trim() == "Please Select" || $("#dllbagnum").val() == "Please Select" || $("#dllbagnum").val() == null || $("#txtBlood_Charges").val() == "") {
-                debugger;
                 if ($("#ddlBlood_Group").val().trim() == "Please Select") {
                     Swal.fire({
                         icon: 'error',
@@ -640,7 +629,6 @@
 
 
         function LoadBloodData(ID) {
-            debugger;
             PageMethods.loadheaderdata(ID, function (resp) {
                 var data = JSON.parse(resp);
                 var component = data.Component;
@@ -721,7 +709,6 @@
 
 
                 setTimeout(function () {
-                    debugger;
                    
                     var optionsVen = '<option value="' + data.Bag_No + '" >' + data.Bag_No + '</option>';
                     $("#dllbagnum").html(optionsVen);

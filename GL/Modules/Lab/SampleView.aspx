@@ -9,7 +9,6 @@
 
        
         function Edit(ID) {
-            debugger;
             window.location.href = "SampleCollectionFrom.aspx?ID=" + ID;
         }
 

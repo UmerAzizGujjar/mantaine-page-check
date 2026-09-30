@@ -59,13 +59,11 @@
         }
 
         function Edit(ID, StuID) {
-            debugger;
             window.location.href = "StudentReceipt.aspx?Stu_RecptID=" + ID + "&Stu_ID=" + StuID;
 
         }
 
         function PrintVoucher(Student_Receipt_ID) {
-            debugger
             var locationInfo = window.location;
             var url = '/ReportViewer.aspx?ReportName=Voucher&ReportTitle=SRV Voucher&TransID=' + Student_Receipt_ID + '&TransType=SRV';
             if (!locationInfo.origin.includes('localhost')) {
@@ -169,7 +167,6 @@
 
 
         function cancelReceipt(ReceiptId) {
-            debugger;
             if (confirm("Are you sure you want to cancel this Receipt?")) {
                 $.ajax({
                     type: "POST",

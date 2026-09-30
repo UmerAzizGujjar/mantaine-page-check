@@ -3,7 +3,6 @@
     <link href="../../wwwroot/THEME_TIBBIT/CustomCSS/tablestyle.css" rel="stylesheet" />
        <script type="text/javascript">
            $(document).ready(function () {
-               debugger;
                $('#ctl00_lblMessage').hide();
                
 
@@ -165,7 +164,6 @@
             }
 
             function DeleteData(id) {
-                debugger;
                 $.ajax({
                     url: 'SubjectList.aspx/DeleteSubject',
                     type: 'post',
@@ -176,7 +174,6 @@
                         "Id": id,
                     }),
                     success: function () {
-                        debugger;
                         alert('delete success !!');
                         window.location.reload();
                         

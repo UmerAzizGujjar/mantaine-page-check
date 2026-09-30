@@ -41,9 +41,7 @@
             });
         }
         function LoadRousterData(Rouster_id) {
-            debugger;
             PageMethods.LoadRousterData(Rouster_id, function (resp) {
-                debugger;
                 var data = JSON.parse(resp);
                 console.log(data)
                 $('#Month_id').val(data.Period_Id).trigger('change');
@@ -56,7 +54,6 @@
         }
         function LoadRousterDetailsData(Rouster_id) {
             PageMethods.LoadRousterDetailsData(Rouster_id, function (resp) {
-                debugger;
                 var data = JSON.parse(resp);
                 var tbody = $('#dtShifts tbody');
                 var idCounter = 1;
@@ -159,9 +156,7 @@
         }
 
 
-        debugger
         function SaveAllRecord() {
-            debugger;
             var Rouster_id = '<%= Request.QueryString["ID"] %>';
             if (Rouster_id == '') {
                 Rouster_id = 0;
@@ -187,7 +182,6 @@
                     } else {
                         $('#dtShifts tbody tr').each(function () {
                             $(this).find('td').each(function () {
-                                debugger;
                                 const dayLabel = $(this).find('label[for^="Day"]').text();
                                 const dateLabels = $(this).find('input[name^="Date_"]');
                                 const timeInInput = $(this).find('input[name^="Time_In"]');
@@ -216,9 +210,7 @@
                             Details: Details,
                             Period_Id: Period_Id
                         };
-                        debugger;
                         PageMethods.SaveRecord(JSON.stringify(AllRecord), function (resp) {
-                            debugger;
                             alert('Data Successfully Saved');
                             window.location = "Employee_Roster.aspx"
                         }, function (error) {
@@ -230,7 +222,6 @@
             else {
                 $('#dtShifts tbody tr').each(function () {
                     $(this).find('td').each(function () {
-                        debugger;
                         const dayLabel = $(this).find('label[for^="Day"]').text();
                         const dateLabels = $(this).find('input[name^="Date_"]');
                         const timeInInput = $(this).find('input[name^="Time_In"]');
@@ -259,9 +250,7 @@
                     Details: Details,
                     Period_Id: Period_Id
                 };
-                debugger;
                 PageMethods.SaveRecord(JSON.stringify(AllRecord), function (resp) {
-                    debugger;
                     alert('Data Successfully Saved');
                     window.location = "Employee_Roster.aspx?ID=" + Rouster_id
                 }, function (error) {

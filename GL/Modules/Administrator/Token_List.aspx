@@ -17,7 +17,6 @@
     </style>
       <script type="text/javascript">
           $(document).ready(function () {
-              debugger;
               privatecheck();
               setTimeout(function () {
                   checkprivateorgeneral();
@@ -26,9 +25,7 @@
 
 
           });
-          debugger;
           function checkprivateorgeneral() {
-              debugger;
 
               GetLatest_doc_Token();
               GetLatestToken();
@@ -36,7 +33,6 @@
           //var Filter;
           //var chckfilter;
           //    function FilterClininc() {
-          //        debugger;
           //        $.ajax({
           //            type: "POST",
           //            url: 'TokenList.aspx/getfilter',
@@ -45,7 +41,6 @@
           //            dataType: "json",
           //            async: true,
           //            success: function (data) {
-          //                debugger;
           //                Filter = data.d;
 
           //                var parsedData = JSON.parse(Filter);
@@ -64,7 +59,6 @@
           var doc;
           var doc_check;
           function getdoctor() {
-              debugger;
               $.ajax({
                   type: "POST",
                   url: 'Token_List.aspx/getdoctor',
@@ -73,7 +67,6 @@
                   dataType: "json",
                   async: true,
                   success: function (data) {
-                      debugger;
                       doc = data.d;
 
                       var parsedData = JSON.parse(doc);
@@ -97,20 +90,17 @@
                   contentType: 'application/json;charset=utf-8',
                   dataType: 'json',
                   success: function (_data) {
-                      debugger;
                       _data = JSON.parse(_data.d);
                       var mdTable = $('#tbloutPatients');
                       $('#tbl tr:gt(0)').remove();
                       table = $('#ibody');
                       var rows = '';
                       table.empty();
-                      debugger;
 
                       /*$('#Filter_List').text('Filter Clininc')*/
 
                       $.each(_data, function (key, value) {
                           bill_id = value.Bill_ID;
-                          debugger;
 
                           var rowColor = '';
 
@@ -147,14 +137,12 @@
                   contentType: 'application/json;charset=utf-8',
                   dataType: 'json',
                   success: function (_data) {
-                      debugger;
                       _data = JSON.parse(_data.d);
                       var mdTable = $('#tblprivatepatient');
                       $('#tbl tr:gt(0)').remove();
                       table = $('#ibody_pvt');
                       var rows = '';
                       table.empty();
-                      debugger;
 
                       //$('#forfilter').hide();
 
@@ -164,7 +152,6 @@
                           //var a = value.doc_name;
                           //$('#Filter_List').html('<span style="font-size:50px;" class="highlight blink">' + a + '</span> Patient List');
 
-                          debugger;
 
                           var rowColors = '';
                           if (!isFirstRowAppended) {
@@ -193,7 +180,6 @@
 
           var isprivate;
           function privatecheck() {
-              debugger;
               $.ajax({
                   type: "POST",
                   url: "Token_List.aspx/isprivate",
@@ -202,7 +188,6 @@
                   dataType: "json",
                   async: true,
                   success: function (data) {
-                      debugger;
                       isprivate = data.d;
 
                   },

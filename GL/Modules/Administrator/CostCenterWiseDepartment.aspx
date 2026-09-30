@@ -17,20 +17,15 @@
         });
 
         function FillCostCenter() {
-            debugger;
             PageMethods.FillCostCenter(function (result) {
-                debugger;
                 var options = '<option value="0">Please Select</option>';
                 $.each(JSON.parse(result), function (key, value) {
-                    debugger;
                     options += '<option value="' + value.DataValueName + '" >' + value.DataValueDescription + '</option>';
                 });
-                debugger;
                 $('#ddlCostCenter').html(options);
             });
         }
         function fillDepartment() {
-            debugger;
             PageMethods.fillDepartment(function (result) {
                 var options = '<option value="0">Please Select</option>';
                 $.each(JSON.parse(result), function (key, value) {
@@ -40,7 +35,6 @@
             });
         }
         function LoadDetail(id) {
-            debugger;
             var rows = '';
             PageMethods.LoadDetail(id, function (res) {
                 var result = JSON.parse(res);
@@ -66,14 +60,12 @@
             });
         }
         function Delete(row) {
-            debugger;
             var a = confirm("Are you sure You want to delete");
             if (a == true) {
                 $(row).closest('tr').remove();
             }
         }
         function Addrow() {
-            debugger;
             var costCenter = $('#ddlCostCenter').val();
             var department_id = $('#ddlDepartment').val();
             var department = $('#ddlDepartment :selected').text();
@@ -151,7 +143,6 @@
             $('#ddlCostCenter').attr('disabled', 'disabled');
         }
         function SaveAllRecord() {
-            debugger;
             var tableItems = $('#tblItemDescription');
             var btnSave = $('#btn_Save').val();
             var idParam = '';

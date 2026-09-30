@@ -69,7 +69,6 @@
         
             $(document).ready(function () {
                 $('#Accessbtn').click(function () {
-                    debugger;
                     var username = $('#username').val();
                     var password = $('#password').val();
                     if (username === "" || password === "") {

@@ -317,7 +317,6 @@
         var TotalAmount = 0;
         var TotalReceipt_Amount = 0;
         function CountNetAmount() {
-            debugger;
             var txtReceiptAmount = $('#txtNetBalance').val();
             var ReceiptAmount = $('#txtReceiptAmount').val();
             if (ReceiptAmount == "")
@@ -328,7 +327,6 @@
         }
 
         function DischargeCheck() {
-            debugger;
             var dd = document.getElementById('chkDischarge').checked;
 
             if ($('#chkDischarge').is(':checked') == true) {
@@ -355,7 +353,6 @@
         }
 
         function GetDischargeServiceDetails(Receipt_ID) {
-            debugger;
             if (Receipt_ID != 0) {
                 PageMethods.GetDischargeServiceDetails(Receipt_ID, function (data) {
                     $('#tblDischarge tbody tr').remove();
@@ -427,7 +424,6 @@
             });
         }
         function GetInvestigationDetails(PatientID) {
-            debugger;
             PageMethods.GetInvestigationDetails(PatientID, function (data) {
                 $('#tblInvestigationDetails tbody tr').remove();
                 var rowNo = 0;
@@ -511,7 +507,6 @@
             }, 500);
         }
         function PrintCashReceipt() {
-            debugger;
             var RcptID = '<%= Request.QueryString["Receipt_ID"]%>';
 
             if (Receipt_ID == '') {
@@ -526,7 +521,6 @@
         }
 
         function PrintCashReceipfft() {
-            debugger;
             var chkdischarge = document.getElementById('chkDischarge').checked;
             var MRNo = $('#txtMRNo').val();
             if (chkdischarge == true) {
@@ -582,7 +576,6 @@
                         var date = response.d.Bill_Date;
                         var finaldate = moment(date).format('L');
                         $('#lblDateTimerptdis').text(finaldate);
-                        debugger;
                         $('#lblTotalPayable').text(CurrencyFormatted(response.d.Total_Amount));
 
                         $('#lblDiscount').text(CurrencyFormatted(response.d.Discount_Percentage));
@@ -721,7 +714,6 @@
         }
         // Function to auto-load bill when opened from BillingProcessView
         function AutoLoadBill(billNo, billId) {
-            debugger;
             // Set the MR No / Bill No token input
             if ($('#txtMRNo').length) {
                 // Try to set the token input value
@@ -974,15 +966,12 @@
         }
 
         function LoadBills() {
-            debugger;
             var BillID = 0;
             var Bill_no = $("#txtMRNo").val();
             PageMethods.LoadBills(Patient_ID, Bill_no, function (resp) {
-                debugger;
                 $('#tblBills tbody tr').remove();
 
                 $.each(JSON.parse(resp), function (key, value) {
-                    debugger;
                     var TrnsDate = new Date(parseInt(value.Bill_Date.substr(6)));
                     if (value.PackageName == null) {
                         value.PackageName = "";
@@ -1032,7 +1021,6 @@
     });
        }
         function LoadAdvance() {
-            debugger;
             PageMethods.LoadAdvances(Patient_ID, function (resp) {
 
                 $('#tblAdvance tbody tr').remove();
@@ -1053,7 +1041,6 @@
 
                     $('#txtNetReceivable').css('background-color', 'red');
                 });
-                debugger;
                 var netBalance_Amt = $('#txtNetBalance').val();
                 var Total_amt = parseInt(AllTotalAmount) - (parseInt(TotalAmount) + parseInt(TotalReceipt_Amount));
                 $('#totalAdvanceAmount').val(TotalAmount);
@@ -1074,9 +1061,7 @@
         }
 
         function LoadReceipts(BillID) {
-            debugger;
             PageMethods.LoadReceipts(BillID, function (resp) {
-                debugger;
                 $('#tblReceipts tbody tr').remove();
 
                 var NoOf_Bills = $('#tblBills tbody tr').length;
@@ -1091,13 +1076,11 @@
                 $('#txtNetBalance').val(JSON.parse(resp));
                 var TotalReceiptAmount = 0;
                 $.each(JSON.parse(resp), function (key, value) {
-                    debugger;
                     var row = '';
                     if (value.Receipt_Date == undefined) {
 
                     }
                     else {
-                        debugger;
                         var TrnsDate = new Date(parseInt(value.Receipt_Date.substr(6)));
                         TrnsDate = moment(TrnsDate).format('DD-MMM-YYYY');
                         row = '<tr> <td> <a href="javascript:void(0)" onclick="LoadReceiptByClick(' + value.Receipt_ID + ')" > ' + value.Receipt_No + ' </a> </                      td>  <td> ' + value.Bill_No + ' </td> <td> ' + TrnsDate + ' </td> <td> ' + value.Amount + ' </td> <td> ' + value.Remarks + ' </td> </tr>';
@@ -1132,7 +1115,6 @@
         }
 
         function SaveRecord() {
-            debugger;
             $('#btnSave').attr('disabled', true);
             var val = document.getElementById("hdnDuplicateCheck").value;
             var returnVal = false;
@@ -1232,7 +1214,6 @@
                     Discharge_Amount = 0;
                 Receipt_Amount = Receipt_Amount - Discharge_Amount;
                 PageMethods.SaveReceipt(Receipt_ID, Patient_ID, Receipt_Date, Remarks, Receipt_Amount, Bill_ID, Discharge, Discharge_Amount, function (resp) {
-                    debugger;
                     if (Receipt_ID == 0)
                         $('#lblmsg').text('Record Saved Successfully.');
                     else
@@ -1276,7 +1257,6 @@
                     onAdd:
                         function (item) {
                             try {
-                                debugger;
                                 if (tblName == 'BillNoFetchByID') {
                                     Patient_ID = item.type;
                                     Clear(false, true);
@@ -1300,7 +1280,6 @@
         }
 
         function FillTokenInputForMRNo() {
-            debugger;
             if (Patient_ID == '') {
 
                 tokenInputs('txtMRNo', 'BillNoFetchByID');
@@ -1314,7 +1293,6 @@
         }
 
         function LoadPatientDetails() {
-            debugger;
             $.ajax({
                 type: "POST",
                 url: "Receipts.aspx/GetPatientDetails",
@@ -1334,7 +1312,6 @@
                 var data = JSON.parse(resp);
 
                 if (data != null) {
-                    debugger;
                     if (data.Room_Name == null)
                         data.Room_Name = "";
                     if (data.Ward_Name == null)
@@ -1380,7 +1357,6 @@
                 return Data;
         }
         function OnSuccess(data) {
-            debugger;
             if (data.d != '') {
                 var mydate = new Date(Date.parse(data.d.Entry_Date));
                 var dateR = mydate.toLocaleDateString();
@@ -1399,7 +1375,6 @@
         var NewPatientID = "";
         var NewBillId = "";
         function LoadRecord() {
-            debugger;
             var RcptID = '<%= Request.QueryString["Receipt_ID"]%>';
             if (Receipt_ID == '')
                 Receipt_ID = 0
@@ -1419,7 +1394,6 @@
                 var DischargeAmount = 0.00;
                 var NetAmount = "";
                 $.each(rec, function (key, value) {
-                    debugger;
                     Receipt_ID = value.Receipt_ID;
                     NewPatientID = value.Patient_ID;
                     NewBillId = value.Bill_No;
@@ -1447,7 +1421,6 @@
                     NetAmount = value.NetAmount;
 
                 });
-                debugger;
                 Patient_ID = NewPatientID;
                 Bill_ID = NewBillId;
 
@@ -1455,7 +1428,6 @@
 
                 var TrnsDate = new Date(parseInt(Receipt_Date.substr(6)));
                 TrnsDate = moment(TrnsDate).format('DD-MMM-YYYY');
-                debugger;
                 $('#txtReceiptDate').val(TrnsDate);
                 $('#txtRemarks').val(NweRemarks);
                 $('#txtReceiptAmount').val(parseInt(ReceiptAmount) + parseInt(DischargeAmount));
@@ -1556,7 +1528,6 @@
             UpdateAmount()
         }
         function UpdateAmount() {
-            debugger;
             var NetAmount = 0;
             var ServiceAmount = 0;
             var TotalAmount = 0;

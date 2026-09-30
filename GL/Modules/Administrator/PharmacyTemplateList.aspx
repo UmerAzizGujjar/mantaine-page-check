@@ -6,7 +6,6 @@
     <script type="text/javascript">
 
         $(document).ready(function () {
-            debugger;
             $('#ctl00_lblMessage').hide();
             LoadPage();
 
@@ -138,7 +137,6 @@
                 $(this).addClass('shown');
             });
         }
-        debugger;
 
         function Edit(ID) {
             window.location.href = "PharmacyTemplate.aspx?ID=" + ID;

@@ -128,7 +128,6 @@
                  }
                  else
                  {
-                     debugger;
                      if (type == 'ITL')
                      {
                          var invOrg = $('#ctl00_MainContent_ddlInventoryOrg').val();
@@ -172,16 +171,13 @@
              });
          });
             function GetDepartments() {
-            debugger;
             var optionsDepth = '';
 
             PageMethods.GetDepartments(function (Tests) {
-                debugger
                 optionsDepth = '<option value="0">Please Select</option>';
                 optionsInv = '<option value="0">Please Select</option>';
 
                 $.each(JSON.parse(Tests), function (key, value) {
-                    debugger;
                     if (value.Type == "Dept") {
                         optionsDepth += '<option value="' + value.DataValueName + '" >' + value.DataValueDescription + '</option>';
                     }
@@ -199,7 +195,6 @@
              PageMethods.getAccountCategory(function (data) {
                  var testsData = JSON.parse(data);
 
-                 debugger;
 
                  $.each(JSON.parse(data), function (key, value) {
                      options += '<option value="' + value.Account_Category_Id + '" >' + value.CategoryName + '</option>';
@@ -211,14 +206,11 @@
          }
 
 function loadItemList(rowlength) {
-                debugger;
                 var optionsitem = '';
                 var length = rowlength;
                 PageMethods.loadItemList(function (resp) {
-                    debugger;
                     optionsitem = '<option value="0">Please Select</option>';
                     $.each(JSON.parse(resp), function (key, value) {
-                        debugger;
                         optionsitem += '<option value="' + value.Item_ID + '" >' + value.name + '</option>';
                     });
                     $('#ddlStartItemCode').html(optionsitem);                    

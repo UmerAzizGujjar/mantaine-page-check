@@ -49,12 +49,9 @@
 
         var _gloabal = '';
         function Filltaxtype() {
-            debugger;
             var optionsVen = '';
             PageMethods.gettaxtype(function (Tests) {
-                debugger
                 $.each(JSON.parse(Tests), function (key, value) {
-                    debugger;
                     optionsVen += '<option value="' + value.Sales_Tax_ID + '" >' + value.Sales_Tax_Perc + '</option>';
                 });
                 _gloabal = optionsVen;
@@ -88,11 +85,9 @@
             $('[id*=checkHeader]').click(function () {
                 var isTrue = $('#checkHeader').is(':checked');
                 if (isTrue) {
-                    debugger;
                     $('.chktd').prop('checked', true);
                     setTimeout(function () {
                         $("#tblPRItemstModelTable tr:gt(0) input[type=checkbox]:checked ").each(function (key, value) {
-                            debugger;
                             var row = $(this);
                             appendrow(row);
                         });
@@ -109,7 +104,6 @@
             setTimeout(function () {
                 Filltaxtype();
             }, 200);
-            debugger;
             <% if (Request.QueryString["CM_ID"] != null)
             { %>
                 var CM_ID = '<%= Request.QueryString["CM_ID"]%>'
@@ -151,18 +145,14 @@
         });
 
         function UserRights() {
-            debugger;
             $.ajax({
                 type: "POST",
                 url: "ComparativeStatementVendor.aspx/UserEntryRights",
                 contentType: "application/json; charset=utf-8",
                 dataType: "json",
                 success: function (response) {
-                    debugger;
                     var hasRights = response.d;
-                    debugger;
                     if (hasRights) {
-                        debugger;
                         $('#btn_Save').show();
                     } else {
                         $('#btn_Save').hide();
@@ -187,7 +177,6 @@
         }
         var warehouseCond;
         function GetWareHouseCondition() {
-            debugger;
             $.ajax({
                 type: "POST",
                 url: "ComparativeStatementVendor.aspx/GetWareHouseCondition",
@@ -195,7 +184,6 @@
                 contentType: "application/json; charset=utf-8",
                 dataType: "json",
                 success: function (response) {
-                    debugger;
                     warehouseCond = JSON.parse(response.d);
                     if (warehouseCond == '01') {
                         $('#warehouserow').show();
@@ -213,21 +201,17 @@
         }
 
         function ddlPrNoChanged() {
-            debugger
             var pr_id = $("#<%= ddlPrNo.ClientID %>").val();
             LoadPrNoDetail(pr_id);
             $('#PRItemsModel').modal('show');
             $('#txt_remarks').focus();
         }
         function LoadPrNoDetail(pr_id) {
-            debugger;
             PageMethods.getPRByID(pr_id, function (data) {
-                debugger;
                 var Test = JSON.parse(data);
                 $('#tblPRItemstModelTable tbody tr').remove();
                 var rows = "";
                 for (var i = 0; i < Test.length; i++) {
-                    debugger;
                     rows = '<tr><td><input class="chktd" id="chktd" name="chktd" type="checkbox" style=" margin-top: -2px; margin-left: 1px;" onclick="appendrow(this)"/></td><td style="display:none;">' + Test[i].PR_ID + '</td><td style="display:none;">' + Test[i].PR_Num + '</td><td style="display:none;">' + Test[i].Item_ID + '</td><td style="text-align:left">' + Test[i].Description + '</td><td style="text-align:center;">' + parseFloat(Test[i].Qty).toFixed(2)
                         + '</td><td style="display:none;">' + Test[i].Item_Code + '</td><td style="text-align:center">' + Test[i].Unit + '</td><td style="display:none;">' + Test[i].Required_Date + '</td><td style="display:none;">' + Test[i].PR_Detail_ID + '</td></tr>';
                     $('#tblPRItemstModelTable tbody').append(rows);
@@ -239,7 +223,6 @@
         }
 
         //function appendrow(anchor) {
-        //    debugger;
         //    var row = $(anchor).parents('tr')[0];
         //    var prid = $($(row).find('td')[1]).text();
         //    var prnum = $($(row).find('td')[2]).text();
@@ -301,7 +284,6 @@
         //        length++;
         //        $('input[name="txt_reqdate"]').datepicker({ dateFormat: 'dd M yy' }).attr('readonly', 'readonly');
                 
-        //        debugger
         //        var prid = $($(row).find('td')[1]).text();
         //        var prnum = $($(row).find('td')[2]).text();
         //        var itemid = $($(row).find('td')[3]).text();
@@ -353,7 +335,6 @@
 
 
 function appendrow(anchor) {
-   debugger;
 
    var row = $(anchor).parents('tr')[0];
 
@@ -486,7 +467,6 @@ function appendrow(anchor) {
            .attr('readonly', 'readonly');
 
        // Continue with your remaining code...
-debugger;
 
 var prid = $($(row).find('td')[1]).text();
 var prnum = $($(row).find('td')[2]).text();
@@ -584,7 +564,6 @@ function RecalculateAllVendorTotals() {
         }
 
         function LoadVenData(CM_ID) {
-            debugger
             PageMethods.LoadVenHeader(CM_ID, function (resp) {
                 var data = JSON.parse(resp);
                 $('#txt_CSno').val(data.CS_Ven_No);
@@ -698,9 +677,7 @@ function RecalculateAllVendorTotals() {
         }
 
         function LoadVenDetails(CM_ID) {
-            debugger
             PageMethods.LoadVenDetail(CM_ID, function (resp) {
-                debugger;
                 var data = (JSON.parse(resp));
                 var rowsitem = '';
                 var rows1 = '';
@@ -715,7 +692,6 @@ function RecalculateAllVendorTotals() {
                 var rowId = ''; 
                 selectedOptions = data;
                 $.each(data, function (key, value) {
-                    debugger;
                     var checkrate1 = value.Rate1;
                     if (checkrate1 != null) {
                         var rate1 = value.Rate1;
@@ -775,7 +751,6 @@ function RecalculateAllVendorTotals() {
                 $("#tblItemDescription11").append(rows1);
 
                 $("#tblItemDescription11").each(function (key, value) {
-                    debugger;
                     var row = $(this);
                     $.each(selectedOptions, function (key, value) {
                         var checkbit1 = value.Vendor_bit_1;
@@ -789,7 +764,6 @@ function RecalculateAllVendorTotals() {
                 });
 
                 $.each(data, function (key, value) {
-                    debugger
                     var checkrate2 = value.Rate2;
                     if (checkrate2 != null) {
                         var rate2 = value.Rate2;
@@ -816,7 +790,6 @@ function RecalculateAllVendorTotals() {
                 });
                 $("#tblItemDescription21").append(rows2);
                 $("#tblItemDescription21").each(function (key, value) {
-                    debugger;
                     var row = $(this);
                     $.each(selectedOptions, function (key, value) {
                         var checkbit2 = value.Vendor_bit_2;
@@ -829,7 +802,6 @@ function RecalculateAllVendorTotals() {
                     });
                 });
                 $.each(data, function (key, value) {
-                    debugger
                     var checkrate3 = value.Rate3;
                     if (checkrate3 != null) {
                         var rate3 = value.Rate3;
@@ -857,7 +829,6 @@ function RecalculateAllVendorTotals() {
                 $("#tblItemDescription31").append(rows3);
 
                 $("#tblItemDescription31").each(function (key, value) {
-                    debugger;
                     var row = $(this);
                     $.each(selectedOptions, function (key, value) {
                         var checkbit3 = value.Vendor_bit_3;
@@ -870,7 +841,6 @@ function RecalculateAllVendorTotals() {
                     });
                 });
                 $.each(data, function (key, value) {
-                    debugger
                     var checkrate4 = value.Rate4;
                     if (checkrate4 != null) {
                         var rate4 = value.Rate4;
@@ -898,7 +868,6 @@ function RecalculateAllVendorTotals() {
                 $("#tblItemDescription41").append(rows4);
 
                 $("#tblItemDescription41").each(function (key, value) {
-                    debugger;
                     var row = $(this);
                     $.each(selectedOptions, function (key, value) {
                         var checkbit4 = value.Vendor_bit_4;
@@ -912,7 +881,6 @@ function RecalculateAllVendorTotals() {
                 });
 
                 $.each(data, function (key, value) {
-                    debugger
                     var checkrate5 = value.Rate5;
                     if (checkrate5 != null) {
                         var rate5 = value.Rate5;
@@ -940,7 +908,6 @@ function RecalculateAllVendorTotals() {
                 $("#tblItemDescription51").append(rows5);
 
                 $("#tblItemDescription51").each(function (key, value) {
-                    debugger;
                     var row = $(this);
                     $.each(selectedOptions, function (key, value) {
                         var checkbit5 = value.Vendor_bit_5;
@@ -954,7 +921,6 @@ function RecalculateAllVendorTotals() {
                 });
 
                 $.each(data, function (key, value) {
-                    debugger
                     document.getElementById("grntable").style.marginTop = "145px";
                     var chktotappamount = value.Total_App_Amount;
                     if (chktotappamount != null) {
@@ -977,7 +943,6 @@ function RecalculateAllVendorTotals() {
                     else {
                         lastgrnrate = '';
                     }
-                    debugger
                     rows6 += '<tr data-rowid="' + rowId + '">' +
                         '<td style="display:none;" ><input style="width:80px!important;text-align:right;" type="text" id="txt_grnitemcode" name="txt_grnitemcode" value="' + value.Item_Code + '" readonly="readonly"></td>' +
                         '<td><input style="width:80px!important;text-align:right;" type="text" id="txt_grnappamount" name="txt_grnappamount" value="' + TotalappAmou + '" readonly="readonly"></td>' +
@@ -986,7 +951,6 @@ function RecalculateAllVendorTotals() {
                         '<td style="display:none;">' + value.Description + '</td>' +
                         '</tr>'
                 });
-                debugger
                 $("#grntablebody").append(rows6);
 
                 $('#btn_Save').val('Update');
@@ -1047,7 +1011,6 @@ function RecalculateAllVendorTotals() {
         }      
 
         function CalculateAmonut($this) {
-            debugger;         
 
             var vendors = [
                 $('#txt_vendorName_vendor1').val(),
@@ -1174,7 +1137,6 @@ function RecalculateAllVendorTotals() {
             var TotalAmount = 0;
 
             $.each($('#' + tableid + ' tbody tr'), function (key, value) {
-                debugger
 
                 var qty = $($(value).find('td input[name=txt_qty]')).val();
                 var rate = $($(value).find('td input[name=txt_rate]')).val();
@@ -1340,7 +1302,6 @@ function RecalculateAllVendorTotals() {
         }
 
         function calculate2($this) {
-            debugger
             var tableid = $($this).closest('table').attr('id');
 
             if (tableid == 'bottomtable1') {
@@ -1381,7 +1342,6 @@ function RecalculateAllVendorTotals() {
 
         function FillVendors() {
             PageMethods.getVendorDDLlist(function (Tests) {
-                debugger
                 optionsVen = '<option value="0">Please Select</option>';
                 $.each(JSON.parse(Tests), function (key, value) {
                     optionsVen += '<option value="' + value.Vendor_ID + '" >' + value.Vendor_Name + '</option>';
@@ -1395,7 +1355,6 @@ function RecalculateAllVendorTotals() {
         }
         
         function appendtogrn(anchor) {
-            debugger;
             var row = $(anchor).closest('tr');
             var Qty = row.find('input[name=txt_qty]').val();
             var Rate = row.find('input[name=txt_rate]').val();
@@ -1461,7 +1420,6 @@ function RecalculateAllVendorTotals() {
              }
             var totalamt = parseFloat(amount1 + amount2 + amount3 + amount4 + amount5); 
             var checkboxChecked = row.find('input[name=chkselect]').is(':checked');
-            debugger;
             $('#grntable tbody tr').each(function () {
                 var grnitemcode = $(this).find('input[name=txt_grnitemcode]').val();
                 if (grnitemcode == itemcodevendor) {
@@ -1472,12 +1430,10 @@ function RecalculateAllVendorTotals() {
                     }
                 }
             });
-            debugger
             CalculateAmonut($(anchor));
         }
 
         function SaveAllRecord() {
-            debugger;
             var btnSave = $('#btn_Save').val();
             var csno = $('#txt_CSno').val();
             var date = $('#txt_Date').val();
@@ -1659,7 +1615,6 @@ function RecalculateAllVendorTotals() {
             var GRNItem_list = [];
 
             table1.find('tr').each(function (key, value) {
-                debugger;
                     Item_list1.push({
                         'vendbit1': $(value).find('input[name="chkselect"]').prop('checked'),
                         'prno': $(value).find('td input[name=txt_prnum]').val(),
@@ -1677,7 +1632,6 @@ function RecalculateAllVendorTotals() {
 
 
             table2.find('tr').each(function (key, value) {               
-                    debugger;
                     Item_list2.push({
                         'vendbit2': $(value).find('input[name="chkselect"]').prop('checked'),
                         'qty2': $(value).find('td input[name=txt_qty]').val(),
@@ -1688,7 +1642,6 @@ function RecalculateAllVendorTotals() {
             });
 
             table3.find('tr').each(function (key, value) {                
-                    debugger;
                     Item_list3.push({
                         'vendbit3': $(value).find('input[name="chkselect"]').prop('checked'),
                         'qty3': $(value).find('td input[name=txt_qty]').val(),
@@ -1699,7 +1652,6 @@ function RecalculateAllVendorTotals() {
             });
 
             table4.find('tr').each(function (key, value) {
-                debugger;              
                     Item_list4.push({
                         'vendbit4': $(value).find('input[name="chkselect"]').prop('checked'),
                         'qty4': $(value).find('td input[name=txt_qty]').val(),
@@ -1710,7 +1662,6 @@ function RecalculateAllVendorTotals() {
             });
 
             table5.find('tr').each(function (key, value) {
-                debugger;               
                     Item_list5.push({
                         'vendbit5': $(value).find('input[name="chkselect"]').prop('checked'),
                         'qty5': $(value).find('td input[name=txt_qty]').val(),
@@ -1721,7 +1672,6 @@ function RecalculateAllVendorTotals() {
             });
 
             table6.find('tr').each(function (key, value) {
-                debugger;
                 GRNItem_list.push({
                     'lastgrnnumber': $($(value).find('td')[2]).text(),
                     'lastgrnrate': $($(value).find('td')[3]).text(),
@@ -1789,7 +1739,6 @@ function RecalculateAllVendorTotals() {
                 'GRNItem_list': GRNItem_list,
             };
             PageMethods.SaveCSData(btnSave, JSON.stringify(AllItemDetail), function (res) {
-                debugger;
                 var ID = res;
                 sendFile(ID, function () {
                     Swal.fire({
@@ -1815,10 +1764,8 @@ function RecalculateAllVendorTotals() {
      
 
         function UnApprove() {
-            debugger;
             var cm_id = '<% =Request.QueryString["CM_ID"] %>';
             PageMethods.UnApprovecsven(cm_id, function (Tests) {
-                debugger
                 var message = JSON.parse(Tests);
                 if (message[0].Column1 != "" || message[0].Column1 != null) {
                     alert(message[0].Column1);
@@ -1828,18 +1775,14 @@ function RecalculateAllVendorTotals() {
         }
 
         function UserUnApproveButtonRights() {
-            debugger;
             $.ajax({
                 type: "POST",
                 url: "ComparativeStatementVendor.aspx/UserUnApproveEntryRights",
                 contentType: "application/json; charset=utf-8",
                 dataType: "json",
                 success: function (response) {
-                    debugger;
                     var hasRights = response.d;
-                    debugger;
                     if (hasRights) {
-                        debugger;
                         $('#Unapprovebtn').show();
                     } else {
                         $('#Unapprovebtn').hide();
@@ -1921,7 +1864,6 @@ function RecalculateAllVendorTotals() {
             });
         }
         function sendFile(ID, callback) {
-            debugger;
             var fileInput = $('#uploadcsfile')[0];
             if (fileInput.files.length > 0) {
             var data = new FormData();
@@ -1944,7 +1886,6 @@ function RecalculateAllVendorTotals() {
             }
         }
         function getprNoBy_WareHouseCS() {
-            debugger;
             var optionsRFQ = '';
             var Warehouse = $("#ddlWarehouse").val();
            // Warehouse = item.value;
@@ -1952,7 +1893,6 @@ function RecalculateAllVendorTotals() {
                 Warehouse = '0';
             }
             PageMethods.GetPRNoByWarehouse_CS(Warehouse, function (res) {
-                debugger;
                 var item = JSON.parse(res);
                 optionsRFQ = '<option value="0">Please Select</option>';
                 $.each(item, function (key, value) {
@@ -1964,7 +1904,6 @@ function RecalculateAllVendorTotals() {
         }
         function Print() {
             var CS_ID = '<%= Request.QueryString["CM_ID"]%>'
-            debugger;
             var locationInfo = window.location;
             var user_name = '<% =AppConfig.Company_Name %>';
             if (user_name == 'As-Siraat Serving Humanity') {

@@ -171,11 +171,9 @@
         var _queryAccountID = '<%= Request.QueryString["AccountID"] %>';
 
         $(document).ready(function () {
-            debugger;
             initDatepickers();
             applyQueryDates();
             loadAccounts(function () {
-                debugger;
                 initFilters();
                 LoadPage(_DocId);
             });
@@ -326,7 +324,6 @@
         }
 
         function LoadPage(DocId) {
-            debugger;
             if (_loading) return;
             _loading = true;
 

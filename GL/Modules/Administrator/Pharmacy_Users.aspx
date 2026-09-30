@@ -30,11 +30,9 @@
             $("#txtUserCode").focus();
             GetAllCashierUsers();
             $("#txtUserCode").on('change', function (e) {
-                debugger;
                 var userCode = $('#txtUserCode').val();
                 breakout = false;
                 $(arr).filter(function (i, n) {
-                    debugger;
                     if (userCode == n.User_Code) {
                         $('#lblUsername').text("Code Already Exist").css("color", "Red");
                         breakout = true;
@@ -54,7 +52,6 @@
 
 
             $("#togglePassword").click(function () {
-                debugger;
                 $(this).toggleClass("fa-eye fa-eye-slash");
 
                 var x = document.getElementById("txtUserPass");
@@ -64,7 +61,6 @@
                     x.type = "password";
                 }
             });
-            debugger;
             var ID = '<%= Request.QueryString["ID"]%>';
             if (ID != "" || ID != '') {
                 setTimeout(function () {
@@ -108,7 +104,6 @@
 
         function SaveRecord()
         {
-            debugger;
             var UserID = '';
             UserID = '<%= Request.QueryString["ID"]%>'
             if (UserID == '' || UserID == "" || UserID == null || UserID == 'null') {
@@ -158,9 +153,7 @@
         }
 
         function loadappt(ID) {
-            debugger;
             PageMethods.loadData(ID, function (resp) {
-                debugger;
                 var data = JSON.parse(resp);
                 $('#btnSave').val("Update")
                 $('#txtUserCode').val(data[0].User_Code);

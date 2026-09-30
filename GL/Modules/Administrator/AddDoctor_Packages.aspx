@@ -4,14 +4,12 @@
      <link href="../../wwwroot/lib/sweetalert/swalalert.css" rel="stylesheet" />
      <script type="text/javascript">
  $(document).ready(function () {
-     debugger;
      var Item_Code = $("#hdfItem_Code").val();
      FillLabTests();
      GetPanelItems();
      LoadDetailDoctor();
 
      $('#btnSave').click(function () {
-         debugger;
          var btnSave = $('#btnSave').val();
          var PAckID = $('#hdnPackage_ID').val();
 
@@ -34,7 +32,6 @@
              PerDay_Charges = 0.00
          }
          table.find('tr').each(function (key, value) {
-             debugger;
              var Amount = $(value).find('td input[name=txAmount]').val();
              if (Amount == "" || Amount == null) Amount = 0;
              var isExpense = $(value).find('td input[name=chkExpense]').is(':checked') ? true : false;
@@ -91,7 +88,6 @@
      });
      var id = '<% =Request.QueryString["Doc_Package_id"] %>';
      if (id != "") {
-         debugger;
          PopulatePackage(id);
          LoadDoctor();
          $('#btnSave').val('Update');
@@ -181,13 +177,11 @@
 
 
          function PopulatePackageDetail(id) {
-             debugger;
              PageMethods.GetPackageDetail(id, function (res) {
                  var item = JSON.parse(res);
                  var rows = '';
                  var result;
                  $.each(item, function (key, value) {
-                     debugger;
                      var lenght = tblbodyPackage.rows.length + 1;
                      var desc = (value.Item_Type != 'Test') ? value.Item_Code + "-" + value.itemanme : " " + value.itemanme;
 
@@ -259,7 +253,6 @@
                  contentType: "application/json; charset=utf-8",
                  dataType: "json",
                  success: function (data) {
-                     debugger;
                      $.each(JSON.parse(data.d), function (key, value) {
                          options += '<option value="' + value.Item_ID + '" Rate="' + value.Sale_Rate + '" >' + value.Description + '</option>';
                      });
@@ -367,7 +360,6 @@
 
          function LoadDoctor() {
 
-             debugger;
              var id = '<% =Request.QueryString["Doc_Package_id"] %>';
              $.ajax({
                  type: "POST",
@@ -379,11 +371,9 @@
                  dataType: "json",
                  success: function (response) {
                      var parsed_Data = JSON.parse(response.d);
-                     debugger;
                      var rows = '';
                      for (var i = 1; i <= parsed_Data.length; i++) {
                          generateRows();
-                         debugger;
                          $('#Select' + i + '').val(parsed_Data[i - 1].Doctor_Id);
                          $('#Departments' + i + '').val(parsed_Data[i - 1].Department_Id);
                      }
@@ -414,7 +404,6 @@
              });
          }
          function LoadDetailDoctor() {
-             debugger;
              var options = '<option value="0">Select Doctor</option>';
              $.ajax({
                  type: "post",
@@ -424,7 +413,6 @@
                  dataType: "json",
                  async: false,
                  success: function (response) {
-                     debugger;
                      $.each(JSON.parse(response.d), function (key, value) {
 
                          options += '<option value="' + value.Emp_ID + '">' + value.Emp_Name + '</option>';

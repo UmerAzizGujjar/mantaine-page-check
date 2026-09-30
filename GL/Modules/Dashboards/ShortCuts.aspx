@@ -336,9 +336,7 @@
              success: function (response) {
                  showLoading();
                  var allowedMenus = response.d; 
-                 debugger;
                  console.log("User has access to menus:", allowedMenus);
-                 debugger;
                
                  var shortcutToMenuMap = {
                      
@@ -351,17 +349,13 @@
                      "shortcut-Account-Section": "mnushAccounts",
                      "shortcut-Admin-Section": "mnushAdministration"
                  };
-                 debugger;
        
                  Object.keys(shortcutToMenuMap).forEach(function (shortcutId) {
-                     debugger;
                      var requiredMenuName = shortcutToMenuMap[shortcutId];
 
                      if (allowedMenus.includes(requiredMenuName)) {
-                         debugger;
                          $("#" + shortcutId).show();
                      } else {
-                         debugger;
                          $("#" + shortcutId).hide();
                          console.log("Hiding:", shortcutId, "→ Needs:", requiredMenuName);
                      }

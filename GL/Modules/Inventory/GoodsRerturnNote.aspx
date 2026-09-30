@@ -28,7 +28,6 @@
             });
 
             $('#btnAdd').on('click', function () {
-                debugger;
                 var GIN_id = $("#ddlGIN").val();
                 LoadGINMaster(GIN_id);
             });
@@ -37,9 +36,7 @@
         var warehouseid = '';
        
         function LoadGRNMaster(SR_ID) {
-            debugger
             PageMethods.LoadMaster(SR_ID, function (res) {
-                debugger
                 var result = JSON.parse(res);
                 $('#txtStoreReturnNo').val(result[0].Store_Return_NO);
                 $('#txtStatus').val(result[0].Status);
@@ -55,9 +52,7 @@
             });
         }
         function LoadGRNDetail(GIN_id) {
-            debugger
             PageMethods.LoadDetail(GIN_id, function (data) {
-                debugger
                 var parsed_Date = JSON.parse(data);
                 var rows = "";
                 for (var i = 0; i < parsed_Date.length; i++) {
@@ -95,7 +90,6 @@
         }
         var warehouseCond;
         function GetWareHouseCondition() {
-            debugger;
             $.ajax({
                 type: "POST",
                 url: "GoodsRerturnNote.aspx/GetWareHouseCondition",
@@ -103,7 +97,6 @@
                 contentType: "application/json; charset=utf-8",
                 dataType: "json",
                 success: function (response) {
-                    debugger;
                     warehouseCond = JSON.parse(response.d);
                     if (warehouseCond == '01') {
 
@@ -152,7 +145,6 @@
         }
 
         function GetGIN() {
-            debugger;
             var warehouse = $("#ddlInventoryOrg").val();
             if (warehouse == null || warehouse == undefined) {
                 warehouse = '0';
@@ -177,9 +169,7 @@
             });
         }
         function LoadGINMaster(GIN_id) {
-            debugger
             PageMethods.LoadSINMaster(GIN_id, function (data) {
-                debugger
                 var parsed_Date = JSON.parse(data);
                 departmentid = parsed_Date[0].Department_Id;
                 warehouseid = parsed_Date[0].Organization_Id;
@@ -192,9 +182,7 @@
             });
         }
         function LoadGINDetail(GIN_id) {
-            debugger
             PageMethods.LoadSINDetail(GIN_id, function (data) {
-                debugger
                 var parsed_Date = JSON.parse(data);
                 var rows = "";
                 for (var i = 0; i < parsed_Date.length; i++) {
@@ -239,9 +227,7 @@
                 row.remove();
             }
         }
-        debugger;
         function CalculateBlance(anchor) {
-            debugger;
             var row = $(anchor).parents('tr')[0];
             var Return_Qty = $($(row).find('input[name=Return_Qty]')).val();
             var Issue_Qty = $($(row).find('input[name=Issue_Qty]')).val();
@@ -253,7 +239,6 @@
            
         }
         function SaveRecord() {
-            debugger;
             var checkstock = false;
             var btnSave = $('#btnSave').val();
             var table = $('#tblGINItems');
@@ -271,7 +256,6 @@
             }
             var Item_list = [];
             table.find('tr:gt(0)').each(function (key, value) {
-                debugger;
                 var StoreStock = $(value).find('td input[name=SaveTimeStock]').val();
                 var item_Id = $(value).find('td input[name=item_Id]').val();
                 var Store_Issue_Detail_Id = $(value).find('td input[name=Store_Issue_Detail_Id]').val();
@@ -327,7 +311,6 @@
 
             var AllItemDetail = { 'StoreReturn_id': StoreReturn_id, 'Store_Return_No': Store_Return_No, 'GIN': GIN, 'department_id': department_id, 'inventory_id': inventory_id, 'ItemList': Item_list };
             PageMethods.Save(btnSave, JSON.stringify(AllItemDetail), function (res) {
-                debugger;
                // sendFile(res);
                 Swal.fire({
                     icon: 'success',

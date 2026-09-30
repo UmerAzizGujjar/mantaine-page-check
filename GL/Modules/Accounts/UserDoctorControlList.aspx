@@ -5,7 +5,6 @@
              LoadPage();
          });
          function LoadPage() {
-             debugger;
              $.ajax({
                  type: "POST",
                  url: "UserDoctorControlList.aspx/LoadMaster",
@@ -13,13 +12,11 @@
                  contentType: "application/json; charset=utf-8",
                  dataType: "json",
                  success: function (response) {
-                     debugger;
                      var parsedData = JSON.parse(response.d);
                      var row = '';
                      var Priority = '';
                      var selectedOptions = parsedData;
                      $.each(parsedData, function (key, index) {
-                         debugger;
                          var tDate = new Date(parseInt(parsedData[key].Created_Time.substr(6)));
                          tDate = moment(tDate).format('L');
                          row += '<tr><td>' + (key + 1) + '</td><td style="display:none">' + parsedData[key].User_Branch_Master_Id + '</td><td>' + parsedData[key].user_name + '</td><td>' + tDate + '</td><td><a href="#" onclick="Edit(' + parsedData[key].User_Branch_Master_Id + ')" style="border-radius: 4px; background-color: #d4b7e7; color: black; padding: 4px 11px 4px 11px;">View</a></td></tr>';
@@ -37,11 +34,9 @@
 
          }
          function deleteConfirm(User_Branch_Master_Id) {
-             debugger;
              var ID = User_Branch_Master_Id;
              if (confirm('Are you sure want to delete this record')) {
                  PageMethods.DeleteRecord(ID, function (msg) {
-                     debugger
                      window.location.href = 'UserControlList.aspx';
                  }, OnFail);
              }

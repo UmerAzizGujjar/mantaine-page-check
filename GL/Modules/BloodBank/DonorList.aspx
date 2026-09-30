@@ -6,7 +6,6 @@
 
     <script type="text/javascript">
         $(document).ready(function () {
-            debugger;
             $('#ctl00_lblMessage').hide();
             LoadPage();
 
@@ -14,7 +13,6 @@
         });
 
         function prints(Donor_Id) {
-            debugger;
             var url = '../../ReportViewer.aspx?ReportName=BasePrintDonor&ReportTitle=Department Of Pathology&Donor_ID=' + Donor_Id;
             window.open(url, '_blank');
 
@@ -93,7 +91,6 @@
                     {
                         "data": "D_Date", "name": "D_Date",
                         "render": function (data, type, full) {
-                            debugger;
                             var date = full.D_Date;
                             date = moment(date).format('DD-MMM-YYYY');
                             return date;
@@ -105,7 +102,6 @@
                     { "data": "RH_Type", "name": "RH_Type", "width": "10%", "orderable": false },
                     {
                         render: function (data, type, full) {
-                            debugger;
                             var res = '<a class="editListBtn" href="#" onclick="Edit(' + full.Donor_Id + ')" style="border-radius: 4px;padding: 5px 8px 5px 8px;"><i class="fa fa-pencil"></i></a>'
 
                             var print = '<a class="printListBtn" style="border-radius: 4px;margin-left: 4px;color: white;padding: 5px 8px 5px 8px;" href="#" onclick="prints(' + full.Donor_Id + ')" id="btnprint"><i class="fa fa-print"></i></a>';
@@ -168,7 +164,6 @@
 
 
         function Delete(anchorTag) {
-            debugger;
 
             var row = $(anchorTag).parents('tr')[0];
             var id = $($(row).find('td')[0]).text();

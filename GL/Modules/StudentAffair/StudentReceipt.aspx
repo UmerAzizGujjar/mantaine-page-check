@@ -21,7 +21,6 @@
             $("#txtReceiptDate").val($.datepicker.formatDate('dd M yy', new Date()));
             //FillTokenInputForMRNo();
 
-            debugger;
 
             var id = '<%= Request.QueryString["Stu_RecptID"]%>';
 
@@ -35,7 +34,6 @@
 
                 if (id != "") {
 
-                    debugger;
 
                     var getstudentID = '<%= Request.QueryString["Stu_ID"]%>';
 
@@ -56,7 +54,6 @@
             return xmlHttp.responseText;
         }
         function LoadStudentDetails(selectedClassID = null) {
-            debugger;
             var StudentID = $('#ddlStu_roll_no').val();
             PageMethods.GetStudentDetails(StudentID, function (resp) {
                 var data = JSON.parse(resp);
@@ -83,7 +80,6 @@
 
                 var checkid = '<%= Request.QueryString["Stu_RecptID"]%>';
 
-                debugger;
                 if (checkid == '') {
                     $('#tblDetails tbody').html('');
                 }
@@ -112,14 +108,11 @@
         }
 
         function FillChallanNos(stu_ID) {
-            debugger;
             var challans = '';
 
             PageMethods.FillChallanNo(stu_ID, function (Tests) {
-                debugger
                 challans = '<option value="0">Please Select</option>';
                 $.each(JSON.parse(Tests), function (key, value) {
-                    debugger;
                     challans += '<option value="' + value.Seq_Challan_No + '" >' + value.Seq_Challan_No + '</option>';
                 });
                 $('#ddl_challan_nos').html(challans);
@@ -128,7 +121,6 @@
 
 
         function LoadStudentChild() {
-            debugger;
             var StudentID = $('#ddlStu_roll_no').val();
             var ClassID = $('#ddlClass').val();
 
@@ -139,7 +131,6 @@
 
 
             PageMethods.LoadStudentChilds(StudentID, ClassID, function (resp) {
-                debugger;
                 var data = (JSON.parse(resp));
                 var rows = '';
                 var rowIndex = 0; 
@@ -178,7 +169,6 @@
 
 
         function ExcludeFromPayment(anchor) {
-            debugger;
             var a = confirm("Are you sure You want to delete");
             if (a == true) {
                 console.clear();
@@ -191,7 +181,6 @@
 
         function calculatetotal(row) {
 
-            debugger;
 
             var netamount = 0;
             var balanceamount = 0;
@@ -269,7 +258,6 @@
                     txtrecamount2 = 0;
                 }
 
-                debugger;
 
                 total_bal_amount += parseFloat(txtamount);
 
@@ -299,7 +287,6 @@
         }
 
         function Voucher() {
-            debugger
             var id = '<%= Request.QueryString["Stu_RecptID"]%>';
             var locationInfo = window.location;
             var url = '/ReportViewer.aspx?ReportName=Voucher&ReportTitle=ACV Voucher&TransID=' + id + '&TransType=ACV';
@@ -316,7 +303,6 @@
 
         function calculatetotal2() {
 
-            debugger;
 
             var netpayable = 0;
 
@@ -324,7 +310,6 @@
 
             var extradiscountperc = 0;
 
-            debugger;
 
             var txtTotalPayable = $('#txtTotalPayable').val();
 
@@ -358,7 +343,6 @@
 
         var ItemList = [];
         function SaveAllRecord() {
-            debugger;
 
             var checkbankcash = $("#ddl_bankCash").val();
 
@@ -402,9 +386,7 @@
 
             var table = $('#tblDetailsbody');
 
-            debugger;
             table.find('tr').each(function (key, value) {
-                debugger;
                 ItemList.push({
                     'txtamount': $(value).find('td input[name=txtamount]').val(), 'txtdiscamount': $(value).find('td input[name=txtdiscamount]').val(), 'txtnetamount': $(value).find('td input[name=txtnetamount]').val(), 'txtrecamount': $(value).find('td input[name=txtrecamount]').val(), 'txtbal_amount': $(value).find('td input[name=txtbal_amount]').val(), 'feetypeid': $(value).find('td input[name=feetypeid]').val(), 'txt_AccountID': $(value).find('td input[name=txt_AccountID]').val(), 'txtfeeno': $(value).find('td input[name=txtfeeno]').val(), 'stu_fee_childID': $(value).find('td input[name=stu_fee_childID]').val(),
 
@@ -413,12 +395,10 @@
                 });
             });
 
-            debugger;
             var AllItemDetail = { 'studentid': studentid, 'txt_DocNo': txt_DocNo, 'Class': Class, 'txtStatus': txtStatus, 'Stu_recptNo': Stu_recptNo, 'ddl_bankCash': ddl_bankCash, 'txtReceiptDate': txtReceiptDate, 'txtRemarks': txtRemarks, 'txtTotalPayable': txtTotalPayable, 'txtDisPer': txtDisPer, 'txtDisAmt': txtDisAmt, 'txtNetPayable': txtNetPayable, 'txtAmountReceived': txtAmountReceived, 'txtBalances': txtBalances, 'ItemList': ItemList };
 
             PageMethods.SaveStudentReceipt(btnSave, JSON.stringify(AllItemDetail), function (res) {
 
-                debugger;
                 Swal.fire({
                     icon: 'success',
                     title: 'Success!',
@@ -442,12 +422,10 @@
             });
         }
 
-        debugger;
         function LoadMasterData(RecptID) {
 
             PageMethods.LoadHeaderData(RecptID, function (resp) {
                 var data = JSON.parse(resp);
-                debugger;
                 var RecpDate = new Date(parseInt(data.Student_Receipt_Date.substr(6)));
                 RecpDate = moment(RecpDate).format('L');
 
@@ -486,7 +464,6 @@
 
                 var status = $('#txtStatus').val();
                 if (status == "Approved") {
-                    debugger;
                     $('#btnSave').attr("disabled", 'disabled');
                     $('#btnApprove').attr("disabled", 'disabled');
                     $('#btnApprove').hide();
@@ -496,7 +473,6 @@
                     $('#btnUnApprove').attr("disabled", false);
                 }
                 if (status == "Created") {
-                    debugger;
                     $('#btnApprove').attr("disabled", false);
                     $('#btnUnApprove').attr("disabled", 'disabled');
                     $('#btnUnApprove').hide();
@@ -538,16 +514,13 @@
         function LoadStudentChildEditMode(RecptID) {
 
             PageMethods.LoadStudentChildDataEditMode(RecptID, function (resp) {
-                debugger;
                 var data = (JSON.parse(resp));
                 var rows = '';
                 var rowIndex = parseInt((parseInt($('#tblDetails tbody tr').length)));
                 selectedOptions = data;
                 $.each(data, function (key, value) {
-                    debugger;
 
                     rowIndex = rowIndex + 1;
-                    debugger;
                     rows += '<tr>' +
 
                         '<td style="display:none;"><input type="hidden" style="width:100% !important;" readonly="readonly" name="stu_fee_childID" id="stu_fee_childID' + (key + 1) + '"  value="' + value.Student_Fee_Detail_ID + '" /></td>' +
@@ -600,10 +573,8 @@
 
 
         function Approve() {
-            debugger;
             var RecptID = '<% =Request.QueryString["Stu_RecptID"] %>';
             PageMethods.ApproveReceipt(RecptID, function (Tests) {
-                debugger;
                 var message = JSON.parse(Tests);
                 if (message[0].Message != null || message[0].Message != "") {
                     alert(message[0].Message);
@@ -617,10 +588,8 @@
 
 
         function UnApprove() {
-            debugger;
             var RecptID = '<% =Request.QueryString["Stu_RecptID"] %>';
             PageMethods.UnApproveReceipt(RecptID, function (Tests) {
-                debugger
                 var message = JSON.parse(Tests);
                 if (message[0].Column1 != "" || message[0].Column1 != null) {
                     alert(message[0].Column1);
@@ -632,7 +601,6 @@
 
         }
         function GetStudentRollNos() {
-            debugger;
 
             var optionsVen = '<option value="0">Please Select</option>';
 
@@ -650,7 +618,6 @@
 
 
         function PrintVoucher() {
-            debugger
             var id = '<%= Request.QueryString["Stu_RecptID"]%>';
             var locationInfo = window.location;
             var url = '/ReportViewer.aspx?ReportName=Voucher&ReportTitle=SRV Voucher&TransID=' + id + '&TransType=SRV';

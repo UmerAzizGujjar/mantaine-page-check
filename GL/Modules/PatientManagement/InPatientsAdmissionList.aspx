@@ -48,13 +48,11 @@
 
 
         function PrintSlip(In_Patient_ID) {
-            debugger;
             var url = '../../ReportViewer.aspx?ReportName=AdminissionSlip&ReportTitle=Admission Slip Report&Inpatient_ID=' + In_Patient_ID;
             window.open(url, '_blank');
             
         }
         function PrintBirthCertificate(In_Patient_ID) {
-            debugger;
             var url = '../../ReportViewer.aspx?ReportName=Birth_Certificate&ReportTitle=Admission Slip Report&Inpatient_ID=' + In_Patient_ID;
             window.open(url, '_blank');
             
@@ -264,7 +262,6 @@
 
        
         function deleteConfirm(anchorTag) {
-            debugger;
             var table = $('#tblResult').DataTable();
             var row = $(anchorTag).closest('tr');
             var rowData = table.row(row).data();
@@ -357,7 +354,6 @@
         }
 
         $(document).on('click', '#btnConfirmDischarge', function () {
-            debugger;
             const doctorId = $('#ddlDischargeDoctor').val();
 
             if (!doctorId) {
@@ -395,7 +391,6 @@
                             dischargeDoctorId: parseInt(doctorId)
                         }),
                         success: function (response) {
-                            debugger;
                             Swal.close();
                             $('#dischargeModal').modal('hide');
 

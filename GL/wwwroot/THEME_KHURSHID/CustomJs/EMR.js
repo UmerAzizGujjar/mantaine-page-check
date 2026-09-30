@@ -1,14 +1,11 @@
   <script type="text/javascript">
         $(document).ready(function () {
-            debugger;
             loadtokenInputsByMrNo();
             FillModePresentation();
             $("#ipdvitals").hide();
         });
         function loadtokenInputsByMrNo(data) {
-            debugger;
             var newbox = $('#ctl00_MainContent_txtPatNO').val();
-            debugger;
 
             if (newbox != null || newbox == "(New)") {
                 $("#ctl00_MainContent_txtPatNO").tokenInput("../../json.aspx?Table=Patients",
@@ -27,7 +24,6 @@
         }
 
         function fetchPatientInfo() {
-            debugger;
             var Patient_ID = $("#hdfReg_ID").val();
 
             $.ajax({
@@ -37,7 +33,6 @@
                 contentType: "application/json; charset=utf-8",
                 dataType: "json",
                 success: function (resp) {
-                    debugger;
                     var data = JSON.parse(resp.d);
 
                     $('#patname').text(data.Name);
@@ -68,7 +63,6 @@
                 contentType: "application/json; charset=utf-8",
                 dataType: "json",
                 success: function (resp) {
-                    debugger;
                     var data = JSON.parse(resp.d);
                     console.log(data);
                     if (data && data.doctor) {
@@ -102,7 +96,6 @@
                 contentType: "application/json; charset=utf-8",
                 dataType: "json",
                 success: function (resp) {
-                    debugger;
                     var data = JSON.parse(resp.d);
                     if (data && data.doctor) {
                         $('#prvDoctor').text(data.doctor.Emp_Name);  // Display doctor name
@@ -135,7 +128,6 @@
                 contentType: "application/json; charset=utf-8",
                 dataType: "json",
                 success: function (resp) {
-                    debugger;
                     var data = JSON.parse(resp.d);
                     $("#opd").text(data.OutPatientCount);
                     $("#ipd").text(data.InPatientCount);
@@ -176,7 +168,6 @@
 
 
         function LoadVitalParameters() {
-            debugger;
             var patid = $("#hdfReg_ID").val();
             var category = $('#ddlmaindepartment').val();
 
@@ -188,7 +179,6 @@
                     contentType: "application/json; charset=utf-8",
                     dataType: "json", // Expect JSON response
                     success: function (res) {
-                        debugger;
                         var rows = '';
                         $.each(JSON.parse(res.d), function (key, value) {
                             var date = moment(value.Created_Time).format('DD-MM-YY');
@@ -307,7 +297,6 @@
         let chart; // Declare globally to maintain state
 
         function createChartOPD() {
-            debugger;
             var patid = $("#hdfReg_ID").val();
             var category = $('#ddlmaindepartment').val();
 
@@ -319,7 +308,6 @@
 
             if (category == "01") {
                 PageMethods.GetTotalVisits(patid, function (resp) {
-                    debugger;
                     var data = JSON.parse(resp);
 
                     var labDataset = {
@@ -376,7 +364,6 @@
 
             if (category == "03") {
                 PageMethods.GetTotalVisitsIPD(patid, function (resp) {
-                    debugger;
                     var data = JSON.parse(resp);
 
                     var labDataset = {
@@ -433,7 +420,6 @@
 
             if (category == "02") {
                 PageMethods.GetTotalVisitsEmergency(patid, function (resp) {
-                    debugger;
                     var data = JSON.parse(resp);
 
                     var labDataset = {

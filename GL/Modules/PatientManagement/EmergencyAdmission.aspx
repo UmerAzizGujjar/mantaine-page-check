@@ -209,7 +209,6 @@
 
 
         function handleStatusChange(selectElement) {
-            debugger;
 
 
             var status = $(selectElement).val();

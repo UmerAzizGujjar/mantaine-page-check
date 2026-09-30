@@ -98,7 +98,6 @@
         }
 
         function ActiveCheckRights() {
-            debugger;
             $.ajax({
                 type: "POST",
                 url: "Product.aspx/CheckActiveAllow",
@@ -107,7 +106,6 @@
                 dataType: "json",
                 async: true,
                 success: function (data) {
-                    debugger;
                     var checkActive = data.d;
 
                     if (checkActive == "true") {
@@ -175,7 +173,6 @@
         }
 
         function validateSave() {
-            debugger;
             var proceed = true;
             var Desc = $('#txtDescription').val();
             var itemType = $('#ddlitem_type').val();
@@ -188,7 +185,6 @@
             var consumable = $('#Consumable').prop('checked');
             var Fixasset = $('#Isfixasset').prop('checked');
             var saleable = $('#Saleable').prop('checked');
-            debugger;
             if (Desc == "") {
                 Swal.fire({
                     icon: 'error',
@@ -392,9 +388,7 @@
 
 
         function LoadBatchData(id) {
-            debugger;
             PageMethods.LoadBatchsRate(id, function (resp) {
-                debugger;
                 var datas = JSON.parse(resp);
                 $.each(datas, function (key, data) {
                     var Batch_Num = data.Batch_Num || '';
@@ -432,7 +426,6 @@
             });
         }
         function ExcludeFromPayment(anchor) {
-            debugger;
             var a = confirm("Are you sure You want to delete");
             if (a == true) {
                 var row = $(anchor).parents('tr')[0];
@@ -440,16 +433,13 @@
             }
         }
         function getbatchfrom_grn() {
-            debugger;
             var item_id = '<% =Request.QueryString["ID"] %>';
             var warehouse = $('#ddlWare').val();
             //var item_id = id
             PageMethods.Getbatch_grn(item_id, warehouse, function (data) {
                 var parsedData = JSON.parse(data);
                 var options = '<option value="0" >Please Select</option>';
-                debugger;
                 $.each(parsedData.GRN_Details, function (key, value) {
-                    debugger;
                     options += '<option value="' + value.BatchNum +
                         '" data-uomqty="' + value.uomqty + '">' +
                         value.BatchNum + '</option>';
@@ -460,7 +450,6 @@
                         '" data-uomqty="0">' +   
                         value.BatchNum + '</option>';
                 });
-                debugger;
                 $('#ddlBatchNum').html(options);
                 $('#ddlBatchNum').select2();
                 $('.select2-container--default').css('width', "150px")
@@ -469,7 +458,6 @@
             });
         }
         function AppendBatch() {
-            debugger;
             var selectedOption = $('#ddlBatchNum option:selected');
             var selectedValue = selectedOption.val();
             var selectedText = selectedOption.text();
@@ -511,7 +499,6 @@
                 contentType: "application/json; charset=utf-8",
                 dataType: "json",
                 success: function (msg) {
-                    debugger;
                     var data = JSON.parse(msg.d);
                     if (data == '001') {
                         $(".DiscountBlock").show();
@@ -539,7 +526,6 @@
         }
         function Saveitem() {
             if (validateSave()) {
-                debugger;
                 var item_Code = $("#item_code").val();
                 var desc = $("#txtDescription").val();
                 var active = $('#Active').prop('checked');
@@ -755,11 +741,9 @@
                     contentType: "application/json; charset=utf-8",
                     dataType: "json",
                     success: function (response) {
-                        debugger;
                         var msg = response.d;
                         var Split = msg.split("-");
                         if (Split[0] == "Success") {
-                            debugger;
                             Swal.fire({
                                 icon: 'success',
                                 title: 'Success!',
@@ -775,7 +759,6 @@
                             window.location.href = 'Product.aspx?ID=' + Split[1];
                         }
                         if (Split[0] == "Update") {
-                            debugger;
                             Swal.fire({
                                 icon: 'success',
                                 title: 'Success!',
@@ -829,7 +812,6 @@
                 contentType: "application/json; charset=utf-8",
                 dataType: "json",
                 success: function (response) {
-                    debugger;
                     var id = response.d;
                     $("#item_code").val(id);
                 },
@@ -851,7 +833,6 @@
             });
         }
         function LoadItemInventory(id) {
-            debugger;
             $.ajax({
                 type: "POST",
                 url: "Product.aspx/LoadItemInventory",
@@ -861,7 +842,6 @@
                 contentType: "application/json; charset=utf-8",
                 dataType: "json",
                 success: function (response) {
-                    debugger;
                     var parse = JSON.parse(response.d);
                     $('#item_code').val(parse.Item_Code);
                     $('#txtDescription').val(parse.Description);

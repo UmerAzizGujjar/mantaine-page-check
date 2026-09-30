@@ -6,7 +6,6 @@
     <script type="text/javascript">
         
         $(document).ready(function () {
-            debugger;
             CheckCNICUpdateonCondition();
             CheckEmerDocTokenCondition();
             MaskedInput({
@@ -40,7 +39,6 @@
                 FillPatientsList();
             });
             $("#txtSearch").keypress(function (event) {
-                debugger;
                 var SearchString = $('#txtSearch').val();
                 if (event.which == 13) {
                     {
@@ -67,7 +65,6 @@
             var reg_id = '<%= Request.QueryString["ID"] %>';
             var added = '<%= Request.QueryString["isAdd"] %>';
             var EMERID = '<%= Request.QueryString["EMERID"] %>'
-            debugger;
             $("#hdn_EmergencyFormId").val(EMERID);
             if (EMERID != "") {
 
@@ -76,7 +73,6 @@
 
             }
             if (reg_id != "" && added == "true") {
-                debugger;
                 Get_Pat_Info(reg_id);
 
                 $('#ddlPatient_Type').attr('disabled', false);
@@ -172,7 +168,6 @@
                 var added = '<%= Request.QueryString["isAdd"] %>';
 
                 if (Reffered_id_opd != "" && added == "true") {
-                    debugger;
                     $("#hdn_emer_reffered").val(Reffered_id_opd);
                     $("#hdn_opdId").val(refferopd_id);
                     $('#ddlPatient_Type').attr('disabled', false);
@@ -246,7 +241,6 @@
             });
         }
         function loadFee() {
-            debugger;
 
             var Doc = $('#ddldoctor').val();
             var opdid = $('#hdn_EmergencyFormId').val();
@@ -280,7 +274,6 @@
                             contentType: "application/json; charset=utf-8",
                             dataType: "json",
                             success: function (response) {
-                                debugger;
                                 var res = typeof response.d === 'string' ? JSON.parse(response.d) : response.d;
 
                                 if (!res.success) {
@@ -297,7 +290,6 @@
                                         }
                                     });
                                 } else {
-                                    debugger;
                                     var fee = parseFloat(res.fee) || 0;
                                     var disper = parseFloat(res.discount_percentage) || 0;
                                     var afterdiscountfee = fee - ((fee * disper) / 100);
@@ -333,7 +325,6 @@
                 contentType: "application/json; charset=utf-8",
                 dataType: "json",
                 success: function (response) {
-                    debugger;
                     var blockInfo = JSON.parse(response.d);
 
                     if (blockInfo && blockInfo.error) {
@@ -342,7 +333,6 @@
                         return;
                     }
                     if (blockInfo.offDays && blockInfo.offDays !== "" && blockInfo.Block_category === true && blockInfo.Patient_Type === selectedPatientType) {
-                        debugger;
                         let offDays = blockInfo.offDays.toLowerCase().split(',').map(x => x.trim());
                         let today = new Date();
                         let todayDay = today.toLocaleString("en-US", { weekday: 'short' }).toLowerCase();
@@ -425,7 +415,6 @@
             });
         }
         function getspecialfees(Doc) {
-            debugger
             $.ajax({
                 type: "POST",
                 url: "EmergencyForm.aspx/loadSpecialFees",
@@ -503,7 +492,6 @@
         }
 
         function AllowOPdEdit() {
-            debugger;
             $.ajax({
                 type: "POST",
                 url: "EmergencyForm.aspx/checlkeditRights",
@@ -512,7 +500,6 @@
                 dataType: "json",
                 async: true,
                 success: function (data) {
-                    debugger;
                     editrights = data.d;
 
                     if (editrights == "true") {
@@ -532,7 +519,6 @@
 
         }
         function loaddata() {
-            debugger;
             var Category = $('#ddlPatient_Type').val();
 
             $('#txtfees').val('');
@@ -648,7 +634,6 @@
       
      
         function loadPatientDetail(EMERID) {
-            debugger;
             $('#btnsave').val('Update');
             $('#btnsave').attr('disabled', true);
             AllowOPdEdit();
@@ -659,7 +644,6 @@
                 contentType: "application/json; charset=utf-8",
                 dataType: "json",
                 success: function (resp) {
-                    debugger;
                     var data = JSON.parse(resp.d);
                     var stat = data.status;
                     //if (stat == "Approved") {
@@ -765,7 +749,6 @@
 
                     $('#txtfees').val(data.Receipt_Amount).attr('disabled', true);
                     $('#txtactualfee').val(data.Actual_amount);
-                    debugger;
                     //if (stat != "Approved") {
                     //    $('#divapprove').show();
                     //    $('#divvoucher').hide();
@@ -782,7 +765,6 @@
             });
         }
         function AddPatientDetail(reg_id) {
-            debugger;
             try {
                 isAdd = true;
                 window.location.href = "EmergencyForm.aspx?ID=" + reg_id + "&isAdd=" + isAdd;
@@ -796,7 +778,6 @@
             alert(exc.get_message());
         }
         function FillPatientsList() {
-            debugger;
             $('#tblPatientsResult tbody').empty();
 
             var SearchString = '';
@@ -854,7 +835,6 @@
                 contentType: "application/json; charset=utf-8",
                 dataType: "json",
                 success: function (resp) {
-                    debugger;
                     var data = JSON.parse(resp.d);
 
                     $('#txtPatientNo').val(data.Mr_No);
@@ -964,8 +944,6 @@
                 contentType: "application/json; charset=utf-8",
                 dataType: "json",
                 success: function (response) {
-                    debugger;
-                    debugger;
                     cardvalidation = JSON.parse(response.d);
                     if (cardvalidation == '01') {
                         var reg_id = '<%= Request.QueryString["ID"] %>'
@@ -1088,7 +1066,6 @@
         }
         function Approveviasysparams(pat_id) {
             PageMethods.ApproveRegpatient(pat_id, function (Tests) {
-                debugger
                 var message = JSON.parse(Tests);
                 if (message[0].Message != null || message[0].Message != "") {
                     Swal.fire({
@@ -1117,7 +1094,6 @@
                 contentType: "application/json; charset=utf-8",
                 dataType: "json",
                 success: function (response) {
-                    debugger;
                     var CNICss = JSON.parse(response.d);
                     if (CNICss == '01') {
                         CNICs = true;
@@ -1165,7 +1141,6 @@
                 contentType: "application/json; charset=utf-8",
                 dataType: "json",
                 success: function (response) {
-                    debugger;
                     var doctorIds = JSON.parse(response.d);
 
                 },
@@ -1185,7 +1160,6 @@
                 contentType: "application/json; charset=utf-8",
                 dataType: "json",
                 success: function (response) {
-                    debugger;
                     var doctorIds = JSON.parse(response.d);
 
                 },
@@ -1221,7 +1195,6 @@
             return options;
         }
         function getGeneralFee() {
-            debugger;
 
             var Department_id = $('#ddlDepartment').val();
             var emer_reffered = $("#hdn_emer_reffered").val();
@@ -1266,7 +1239,6 @@
                 contentType: 'application/json; charset=utf-8',
                 dataType: 'json',
                 success: function (resp) {
-                    debugger;
 
                     try {
                         var data = JSON.parse(resp.d);
@@ -1279,7 +1251,6 @@
                             ? data.Discount_Percentage
                             : 0;
                         var Receipt_fee = data && data.Receipt_fee !== undefined ? data.Receipt_fee : 0;
-                        debugger;
                         $('#txtactualfee').val(code);
 
                         if (
@@ -1295,7 +1266,6 @@
                             $('#hdnhospShare').val(hShare);
                         }
                         else {
-                            debugger;
                             $('#txtdiscount').val(Discount_Percentage);
                             $('#txtdiscount').attr('disabled', false);
                             $('#txtfees').val(Receipt_fee.toFixed(2));
@@ -1399,7 +1369,6 @@
             });
         }
         function loaddoctor() {
-            debugger;
             var dpt = $('#ddlDepartment').val();
             var type = $('#ddlPatient_Type').val();
 
@@ -1410,7 +1379,6 @@
                 contentType: "application/json; charset=utf-8",
                 dataType: "json",
                 success: function (response) {
-                    debugger;
                     var doctor = JSON.parse(response.d);
                     var options = '<option value=""> Please Select </option>';
 
@@ -1443,7 +1411,6 @@
 
 
         //function loadalldoctor() {
-        //    debugger;
         //    $.ajax({
         //        type: "POST",
         //        url: "EmergencyForm.aspx/LoadEmplData",
@@ -1451,7 +1418,6 @@
         //        contentType: "application/json; charset=utf-8",
         //        dataType: "json",
         //        success: function (response) {
-        //            debugger;
         //            var doctors = JSON.parse(response.d);  // Now this will be an array
         //            var options = '<option value=""> Please Select </option>';
 
@@ -1525,14 +1491,12 @@
             return options;
         }
         function addfunc() {
-            debugger;
 
             AddNewPatient();
 
 
 
 
-            debugger;
 
             $('#ClosePatientsSearchModel').click();
             fillmrno();
@@ -1542,7 +1506,6 @@
             $('#txt_name').focus();
         }
         function AddNewPatient() {
-            debugger;
             $('#ddl_pnl_cpy').next(".select2-container").hide();
 
             clearPatient();
@@ -1576,7 +1539,6 @@
                 contentType: "application/json; charset=utf-8",
                 dataType: "json",
                 success: function (data) {
-                    debugger;
                     var max_mr = data.d;
                     $('#txt_Mrno').val('New');
                 },
@@ -1586,7 +1548,6 @@
             });
         }
         function SavePatient() {
-            debugger;
 
             // Disable the save button immediately to prevent multiple clicks
             $('#SavePatient_Data').attr('disabled', true);
@@ -1708,7 +1669,6 @@
                 contentType: "application/json; charset=utf-8",
                 dataType: "json",
                 success: function (response) {
-                    debugger;
 
                     // Check if CNIC already exists
                     if (response.d === "CNIC_EXISTS") {
@@ -1779,7 +1739,6 @@
             });
         }
         function get_pat_initial_info(ini_patientID) {
-            debugger;
             try {
                 isAdd = true;
                 window.location.href = "EmergencyForm.aspx?ID=" + ini_patientID + "&isAdd=" + isAdd;
@@ -1993,14 +1952,12 @@
             });
         }
         function Print() {
-            debugger;
             var Emer_id = '<%= Request.QueryString["EMERID"] %>'
             var url = '../../ReportViewer.aspx?ReportName=Emergency_Patient_Print&Title=Emergency Print&Emergency_Id=' + Emer_id;
             window.open(url, '_blank');
 
         }
         function PrintLTR() {
-            debugger;
             var Emer_id = '<%= Request.QueryString["EMERID"] %>'
             var url = '../../ReportViewer.aspx?ReportName=Emergency_Patient_Print_LTR&Title=Emergency Print&Emergency_Id=' + Emer_id;
             window.open(url, '_blank');
@@ -2081,7 +2038,6 @@
                 contentType: "application/json; charset=utf-8",
                 dataType: "json",
                 success: function (resp) {
-                    debugger;
                     var data = JSON.parse(resp.d);
 
                     $('#txtbalance').val(data.Fees);
@@ -2113,7 +2069,6 @@
                 contentType: "application/json; charset=utf-8",
                 dataType: "json",
                 success: function (resp) {
-                    debugger;
                     var data = JSON.parse(resp.d);
                     $('#txtPatientNo').val(data.Mr_No);
                     $('#txtpatient_no').val(data.pat_no);
@@ -2127,7 +2082,6 @@
                     $('#ctl00_MainContent_lblNoOfDays').html(data.DaysSinceLatestVisit);
                     $('#ctl00_MainContent_lblNoOfDays2').html(data.DaysSinceSecondLatestVisit);
 
-                    debugger;
 
                     $('#ddlmartialstatus').html(
                         $('<option>', {
@@ -2189,14 +2143,12 @@
             });
         }
         function CheckAndLoadWalkinPatientRegFee() {
-            debugger;
             $.ajax({
                 type: "POST",
                 url: "EmergencyForm.aspx/IsWalkinPatientRegFeeActive",
                 contentType: "application/json; charset=utf-8",
                 dataType: "json",
                 success: function (response) {
-                    debugger;
                     var isActive = response.d;
 
                     if (isActive == "01") {
@@ -2223,14 +2175,12 @@
         }
 
         function GetWalkinPatientRegFee() {
-            debugger;
             $.ajax({
                 type: "POST",
                 url: "EmergencyForm.aspx/GetWalkinPatientRegFee",
                 contentType: "application/json; charset=utf-8",
                 dataType: "json",
                 success: function (response) {
-                    debugger;
                     var fee = response.d;
                     if (fee && fee != '0' && fee != 'null' && fee != '') {
                         fee = fee.replace(/["']/g, '');
@@ -2248,7 +2198,6 @@
 
         var originalFee;
         function Calc_Discount() {
-            debugger;
 
             var disc_perc = $('#txtdiscount').val();
             var actualFee = $('#txtactualfee').val();

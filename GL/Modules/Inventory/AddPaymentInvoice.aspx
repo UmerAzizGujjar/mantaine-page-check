@@ -94,11 +94,8 @@
                 if (isTrue) {
                     $('.chktd').prop('checked', true);
                     setTimeout(function () {
-                        debugger
                         $("#tblPOItemstModelTable tr:gt(0) input[type=checkbox]:checked ").each(function (key, value) {
-                            debugger
                             var row = $(this);
-                            debugger
                             append(row);
                         });
                     }, 1000);
@@ -108,7 +105,6 @@
                 }
             });
             $('#btn_ManInv').on('click', function () {
-                debugger
                 var vendorId = $("#ddl_venderName").val();
                 GetManualInvoiceDetailAndGetPurchaseInvoiceNDetailByVendorId(vendorId);
                 $('#ctl00_MainContent_txtRemarks').focus();
@@ -119,7 +115,6 @@
                 filterBankAccounts($(this).val());
             });
                 $('#ddl_bankCash').on('change', function () {
-                    debugger;
                 var sel = $(this).find('option:selected');
                 var accType = sel.data('acc-type');
                 if (accType === 'cash') { $('#rbtnAccCash').prop('checked', true).trigger('change'); }
@@ -173,18 +168,14 @@
             });
         }
         function UserRights() {
-            debugger;
             $.ajax({
                 type: "POST",
                 url: "AddPaymentInvoice.aspx/UserEntryRights",
                 contentType: "application/json; charset=utf-8",
                 dataType: "json",
                 success: function (response) {
-                    debugger;
                     var hasRights = response.d;
-                    debugger;
                     if (hasRights) {
-                        debugger;
                         $('#btnSave').show();
                     } else {
                         $('#btnSave').hide();
@@ -207,11 +198,8 @@
                 }
             });
         }
-        debugger;
         function LoadPurchaseInvoiceNDetail(vendorId) {
-            debugger
             PageMethods.getPurchaseInvoiceNDetailByVendorId(vendorId, function (data) {
-                debugger
                 var Test = JSON.parse(data);
                 $('#tblPOItemstModelTable tbody tr').remove();
                 var rows = "";
@@ -246,11 +234,8 @@
                 row.remove();
             }
         }
-        debugger;
         function GetManualInvoiceDetailAndGetPurchaseInvoiceNDetailByVendorId(vendorId) {
-            debugger
             PageMethods.GetManualInvoiceDetailAndGetPurchaseInvoiceNDetailByVendorId(vendorId, function (data) {
-                debugger;
                 var Test = JSON.parse(data);
                 $('#tblPOItemstModelTable tbody tr').remove();
                 var rows = "";
@@ -262,7 +247,6 @@
                     else {
                         InvType = 'MINV';
                     }
-                    debugger;
                     rows = '<tr>' +
                         '<td><input class="chktd" id="chktd" name="chktd" type="checkbox" style=" margin-top: -2px; margin-left: 0px;height: 36px;" onclick="append(this)"/></td>' +
                         '<td style="display:none">' + Test[i].ManualInvoiceId + '</td> ' +
@@ -295,7 +279,6 @@
         function FillzerobalanceVendors(invid) {
             var optionsVen = '';
             PageMethods.getzeroVendorDDLlist(invid, function (Tests) {
-                debugger
                 $.each(JSON.parse(Tests), function (key, value) {
                     optionsVen += '<option value="' + value.Vendor_ID + '" >' + value.Vendor_Name + '</option>';
                 });
@@ -307,7 +290,6 @@
         function FillVendors() {
             var optionsVen = '';
             PageMethods.getVendorDDLlist(function (Tests) {
-                debugger
                 optionsVen = '<option value="0">Please Select</option>';
                 $.each(JSON.parse(Tests), function (key, value) {
                     if (value.IsActive == 0) {
@@ -324,7 +306,6 @@
             var optionsDeptfill = '<option value="0">Please Select</option>';
             var optionfed = '';
             PageMethods.GetPaymentMode(function (Tests) {
-                debugger
                 optionfed = '<option value="0">Please Select</option>';
                 $.each(JSON.parse(Tests), function (key, value) {
                     if (value.Type == "Pay") {
@@ -340,7 +321,6 @@
         function FillBank() {
             var optionsBnk = '';
             PageMethods.GetBank(function (Tests) {
-                debugger
                 bankAccountsCache = JSON.parse(Tests) || [];
                 filterBankAccounts('all');
             });
@@ -380,7 +360,6 @@
             $('#badgeStatus').text($('#txtStatusid').val() || '---');
         }
         function validateSave() {
-            debugger;
             var proceed = true;
             var Vendor = $('#ddl_venderName').val();
             var PaymentMode = $('#ddl_PaymentMode').val();
@@ -453,9 +432,7 @@
                 $('#tblItemDescription').removeClass('ErrorAlert');
             }
             if (document.getElementById('tblItemDescription').rows.length > 1) {
-                debugger;
                 $.each($('#tblItemDescription tbody tr'), function (key, value) {
-                    debugger;
                     var blnceamt = parseFloat($($(value).find('td input[name=txtBalance]')[0]).val()) || 0;
                     var adjAmt = parseFloat($(value).find('input[name="txtAdjusted"]').val()) || 0;
                     if (adjAmt > blnceamt) {
@@ -476,10 +453,8 @@
                     }
                 });
             }
-            debugger;
             return proceed;
         }
-        debugger;
         function PrintPaymentDetail() {
             var id = '<% =Request.QueryString["Inv_ID"] %>';
             var locationInfo = window.location;
@@ -499,9 +474,7 @@
             window.open(url, '_blank');
         }
         function SaveAllRecord() {
-            debugger;
             if (validateSave()) {
-                debugger;
                 var btnSave = $('#btnSave').val();
                 var PaymentNo = $('#txt_PaymentNo').val();
                 var PaymentDate = $('#txt_paymentDate').val();
@@ -539,7 +512,6 @@
                     });
                     sendFile(res);
                     setTimeout(function () {
-                        debugger;
                         window.location = "AddPaymentInvoice.aspx?Inv_ID=" + res;
                         $('#btnSave').val("Update");
                     }, 2000);
@@ -547,9 +519,7 @@
             }
         }
         function LoadPaymentInvoiceHeader(Inv_ID) {
-            debugger;
             PageMethods.LoadPaymentInvoiceHeaderDetail(Inv_ID, function (resp) {
-                debugger;
                 var data = JSON.parse(resp);
                 var PaymentDate = $.datepicker.formatDate('dd M yy', new Date(parseInt(data.PaymentDate.substring(6, 19))));
                 $('#txt_paymentDate').val(PaymentDate);
@@ -575,19 +545,15 @@
                 if (savedBranch) {
                     $('#ddlBranch').val(savedBranch).trigger('change');
                 }
-                debugger;
                 var checkstatus = $('#txtStatusid').val();
                 if (checkstatus == 'Approved') {
-                    debugger;
                     $('#btnSave').attr("disabled", 'disabled');
                     $('#btnSave').hide();
                     UserUnApproveButtonRights();
                     $('#btnVoucher').show();
                     $('#btn_Print').show();
                 }
-                debugger;
                 if (checkstatus == 'Created' || checkstatus == 'Pending') {
-                    debugger;
                     $('#btnSave').attr("disabled", false);
                     $('#btnSave').show();
                     $('#btnVoucher').hide();
@@ -596,7 +562,6 @@
                         CheckPAYMENTApprovalRightsAndShowButton(Inv_ID);
                     }
                 }
-                debugger;
                 FillzerobalanceVendors(Inv_ID);
                 LoadPaymnetInvocieDetail(Inv_ID)
                 $('#btnSave').val("Update");
@@ -607,11 +572,8 @@
                 })
         }
         //advance
-        debugger;
         function LoadPaymnetInvocieDetail(Inv_ID) {
-            debugger;
             PageMethods.LoadPaymentInvoiceDetail(Inv_ID, function (resp) {
-                debugger;
                 var data = (JSON.parse(resp));
                 var rows = '';
                 selectedOptions = data;
@@ -658,9 +620,7 @@
                 function (error) {
                 })
         }
-        debugger;
         function append(anchor) {
-            debugger;
             var row = $(anchor).parents('tr')[0];
             var PurchaseInvoiceId = $($(row).find('td')[1]).text();
             var Invoicenum = $($(row).find('td')[2]).text();
@@ -719,14 +679,12 @@
                 '<td><a href="javascript:void(0)" onclick="ExcludeFromPayment(this)"><i class="fa fa-trash" style="font-size: 13px;margin-left: 16px; color: #f30a0a;position:relative;" i=""></i></a></td>' +
                 '</tr>'
             $("#tblItemDescription").append(rows);
-            debugger
             populateWithTaxddl(length);
             populateSalTaxddl(length, SalTaxid);
             length++;
         }
 
         function populateSalTaxddl(rowId, id) {
-            debugger
             PageMethods.getStaxtype(function (response) {
                 var options = '<option value="0">Please Select</option>';
                 $.each(JSON.parse(response), function (key, value) {
@@ -740,7 +698,6 @@
         }
 
         function populateWithTaxddl(rowId) {
-            debugger
             PageMethods.getwtaxtype(function (response) {
                 var options = '<option value="0">Please Select</option>';
                 $.each(JSON.parse(response), function (key, value) {
@@ -752,16 +709,13 @@
         }
 
 
-        debugger;
         function calcutae() {
-            debugger;
             var TotalinvoiceAdjusted = 0;
             var TotalPaidAmount = 0;
             var totalcheckpaidamou = 0;
             var totaltaxamount = 0;
 
             $.each($('#tblItemDescription tbody tr'), function (key, value) {
-                debugger;
                 var InvoiceAjust = parseFloat($($(value).find('td input[name=txtAdjusted]')[0]).val()) || 0;
                 var balance = parseFloat($($(value).find('td input[name=txtBalance]')[0]).val()) || 0;
                 var InvoiceDeduction = parseFloat($($(value).find('td input[name=txtDedcution]')[0]).val()) || 0;
@@ -809,12 +763,10 @@
         }
         
 
-       <%-- debugger;
+       <%--
         function Approve() {
-            debugger;
             var InvId = '<% =Request.QueryString["Inv_ID"] %>';
             PageMethods.ApprovePayment(InvId, function (Tests) {
-                debugger
                 var message = JSON.parse(Tests);
                 if (message[0].Message != null || message[0].Message != "") {
                     alert(message[0].Message);
@@ -822,11 +774,9 @@
                 }
             });
         }--%>
-        debugger;
         function UnApprove() {
             var InvId = '<% =Request.QueryString["Inv_ID"] %>';
             PageMethods.UnApprovePayment(InvId, function (Tests) {
-                debugger
                 var message = JSON.parse(Tests);
                 if (message[0].Column1 != "" || message[0].Column1 != null) {
                     alert(message[0].Column1);
@@ -834,9 +784,7 @@
                 }
             });
         }
-        debugger;
         function PrintVoucher() {
-            debugger;
             var InvId = '<% =Request.QueryString["Inv_ID"] %>';
             var locationInfo = window.location;
             var user_name = '<% =AppConfig.Company_Name %>';
@@ -848,7 +796,6 @@
 
                 var url = '/ReportViewer.aspx?ReportName=Voucher&ReportTitle=Payment Voucher&TransID=' + InvId + '&TransType=Pay';
                 if (!locationInfo.origin.includes('localhost')) {
-                    debugger;
                     var urlInfo = window.location.href.split('/');
                     var ip = urlInfo[2];
                     var foldername = urlInfo[3];
@@ -858,10 +805,8 @@
             }
 
             function sendFile(ID) {
-                debugger;
                 var fileInput = $('#chosePaymentfile')[0];
                 if (fileInput.files.length > 0) {
-                    debugger;
                     var data = new FormData();
                     data.append('file', $('#chosePaymentfile')[0].files[0]);
                     data.append('ID', ID);
@@ -881,18 +826,14 @@
                 }
             }
             function UserUnApproveButtonRights() {
-                debugger;
                 $.ajax({
                     type: "POST",
                     url: "AddPaymentInvoice.aspx/UserUnApproveEntryRights",
                     contentType: "application/json; charset=utf-8",
                     dataType: "json",
                     success: function (response) {
-                        debugger;
                         var hasRights = response.d;
-                        debugger;
                         if (hasRights) {
-                            debugger;
                             $('#btnUnApprove').show();
                         } else {
                             $('#btnUnApprove').hide();

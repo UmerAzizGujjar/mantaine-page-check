@@ -11,11 +11,9 @@
         window.location.href = "BOM.aspx?ID=" + ID;
        }
        function deleteConfirm(ID) {
-           debugger;
            var itemID = ID;
            if (confirm('Are you sure want to delete this record')) {
                PageMethods.DeleteRecord(itemID, function (msg) {
-                   debugger;
                    location.reload();
                });
            }

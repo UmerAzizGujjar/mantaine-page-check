@@ -330,7 +330,6 @@
                 contentType: "application/json; charset=utf-8",
                 dataType: "json",
                 success: function (resp) {
-                    debugger;
                     var data = JSON.parse(resp.d);
 
                     // Assign values to input fields
@@ -372,7 +371,6 @@
                         contentType: "application/json; charset=utf-8",
                         dataType: "json",
                         success: function (resp) {
-                            debugger;
                             var data = JSON.parse(resp.d);
                             if (data == "1") {
                                 Swal.fire({
@@ -523,7 +521,6 @@
 
                     {
                         render: function (data, type, full) {
-                            debugger;
                             var res = '<a href="#" onclick="editOpen(' + full.branch_ID + ')" class="editListBtn" style="border-radius: 4px;padding: 5px 8px 5px 8px;"><i class="fa fa-pencil"></i></a>'
 
                            

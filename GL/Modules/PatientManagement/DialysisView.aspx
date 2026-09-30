@@ -5,7 +5,6 @@
 <script type="text/javascript">
 
     $(document).ready(function () {
-        debugger;
         $('#ctl00_lblMessage').hide();
         LoadPage();
     });
@@ -15,7 +14,6 @@
     }
 
     function deleteConfirm(ID) {
-        debugger;
         if (confirm('Are you sure want to delete this record')) {
             PageMethods.DeleteRecord(ID, function (msg) {
                 location.reload();
@@ -24,7 +22,6 @@
     }
 
     function LoadPage() {
-        debugger
         $("#example").DataTable({
             "processing": true,
             "serverSide": true,
@@ -79,7 +76,6 @@
                 { "data": "Date", width: "20%", "orderable": false },
                 {
                     render: function (data, type, full) {
-                        debugger;
                         var res = '<a class="editListBtn"  href="#" onclick="editOpen(\'' + full.Dialysis_ID + '\')" style="border-radius: 4px;margin-right: 4px;padding: 5px 8px 5px 8px;"><i class="fa fa-pencil"></i></a>'
 
                         var Delete = '<a class="delListBtn" style="border-radius: 4px;margin-left: 4px;padding: 5px 8px 5px 8px;" href="#"  onclick="deleteConfirm(\'' + full.Dialysis_ID + '\')"><i class="fa fa-trash"></i></a>';

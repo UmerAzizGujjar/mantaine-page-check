@@ -50,7 +50,6 @@
         <% } %>
 
             $('#btnSave').click(function () {
-                debugger;
                 SaveAllRecord();
             });
             $('select').select2();
@@ -79,18 +78,14 @@
 
 
         function UserRights() {
-            debugger;
             $.ajax({
                 type: "POST",
                 url: "InversionGatePass.aspx/UserEntryRights",
                 contentType: "application/json; charset=utf-8",
                 dataType: "json",
                 success: function (response) {
-                    debugger;
                     var hasRights = response.d;
-                    debugger;
                     if (hasRights) {
-                        debugger;
                         $('#SaveButtonToBeHidden').show();
                     } else {
                         $('#SaveButtonToBeHidden').hide();
@@ -104,12 +99,9 @@
 
 
 
-        debugger;
         function LoadIGPData(IGP_ID) {
-            debugger;
             PageMethods.LoadIGPHeaderDetail(IGP_ID, function (resp) {
                 var data = JSON.parse(resp);
-                debugger;
                 var TrnsDate = $.datepicker.formatDate('dd M yy', new Date(parseInt(data.Igp_date.substring(6, 19))));
                 $('#IGP_Num').val(data.Igp_num);
                 $('#txtDate').val(TrnsDate);
@@ -123,7 +115,6 @@
                 //setTimeout(function () {
                 //    $('#ddlPONo').val(data.PO_ID).trigger('change');
                 //}, 1000);
-                debugger;
                 $('#DriverName').val(data.DriverName);
                 $('#txtVehiclenum').val(data.VehicleNum);
                 $('#txtBility_No').val(data.BilityNum);
@@ -156,13 +147,11 @@
                     $('#btnInspec').show();
                 }
                 if (status == "Approved") {
-                    debugger;
                     UserUnApproveButtonRights();
                     $('#SaveButtonToBeHidden').attr("disabled", 'disabled');
                     $('#SaveButtonToBeHidden').hide();
                 }
                 if (status == "Created" || status == "Pending") {
-                    debugger;
                     $('#btnPrintInspec').hide();
                     $('#btnPrintInspec').attr("disabled", 'disabled');
                     $('#btnInspec').hide();
@@ -202,7 +191,6 @@
         }
         function LoadIGPDetail(IGP_ID) {
             PageMethods.LoadIGPetail(IGP_ID, function (resp) {
-                debugger;
                 var data = (JSON.parse(resp));
                 var rows = '';
                 var ExpiryDate = '';
@@ -210,12 +198,10 @@
                 var datetime = '';
                 selectedOptions = data;
                 $.each(data, function (key, value) {
-                    debugger;
                     // $('#ddlPONo').val(value.PO_ID);
                     if (data[key].Delivery_Date != null) {
                         datetime = $.datepicker.formatDate('dd M yy', new Date(parseInt(data[key].Delivery_Date.substring(6, 19))));
                     }
-                    debugger;
                     var rowlength = tblItemDescription.rows.length;
                     if (value.Unit_ID == null)
                         value.Unit_ID = "";
@@ -258,7 +244,6 @@
                         return false;
                     }
                     else {
-                        debugger;
                         rows += '<tr>' +
                             '<td style=" border: 1px solid #D9E4E6;"><input type="hidden" id="txtPODetailId' + (key + 1) + '" name="txtPODetailId" value="' + value.PO_Item_ID + '" style="width:50px !important;text-align:right" />' + (key + 1) + '</td>' +
                             '<td align="right !important" style="padding-right: 3px!important;"><input type="hidden" name="txtPONO" id="txtPONO' + (key + 1) + '"  value="' + value.PO_No + '"  style="width:50px !important;text-align:right;font-size:9px;height:10px !important;"/>' + value.PO_No + '</td>' +
@@ -302,7 +287,6 @@
 
                 //$('input[name="Expdate"]').datepicker({ dateFormat: 'dd M yy' });
                 $.each(selectedOptions, function (key, value) {
-                    debugger;
                     $("#ddlFed" + (key + 1)).val(value.FedPercent_Id);
                     $("#ddlSTAX" + (key + 1)).val(value.SalTax_Id);
                 });
@@ -313,7 +297,6 @@
                 })
         }
         function BatchValidation(row) {
-            debugger;
             var _this = $(row).closest('tr')[0];
             var batch = $(_this).find('td input[name="Isbatch"]').val();
             var batch_no = $(_this).find('td input[name="BatchNo"]').val();
@@ -364,13 +347,9 @@
             }
         }
         function BatchValidation2() {
-            debugger;
             $.each($('#tblItemDescription tbody tr'), function (key, value) {
-                debugger;
                 var batch = $($(value).find('td input[name=Isbatch]')[0]).val();
-                debugger;
                 if (batch == "false" || batch == 'null' || batch == null) {
-                    debugger;
                     $($(value).find('td input[name=BatchNo]')[0]).prop('readonly', true);
                     $($(value).find('td input[name=txtMfgdate]')[0]).removeAttr('disabled').removeAttr('readonly');
                     $($(value).find('td input[name=Expdate]')[0]).removeAttr('disabled').removeAttr('readonly');
@@ -385,7 +364,6 @@
             disablepo();
         }
         function validateSave() {
-            debugger
             var proceed = true;
             var date = $('#txtDate').val();
             var Vendor = $('#ddlVendor').val();
@@ -430,12 +408,10 @@
                 $('#tblItemDescription').removeClass('ErrorAlert');
             }
             if (document.getElementById('tblItemDescription').rows.length > 1) {
-                debugger
                 if (!validateBatchDuplicates()) {
                     return false;
                 }
                 $.each($('#tblItemDescription tbody tr'), function (key, value) {
-                    debugger
                     var GRNdate = new Date(date).setHours(0, 0, 0, 0);
                     var ExpDateValue = $($(value).find('td input[name=Expdate]')[0]).val();
                     var MfgDateValue = $($(value).find('td input[name=txtMfgdate]')[0]).val();
@@ -536,7 +512,6 @@
                             }
                         });
                     }
-                    debugger;
                     if (Isbatch == "true") {
                         if (BatchNo == "") {
                             proceed = false;
@@ -617,7 +592,6 @@
                     }
 
                     if (Isbatch == "false" || Isbatch == 'null' || Isbatch == null) {
-                        debugger;
                         var message = "Batch is false,You can't enter batch number against Item Code " + item_code + ",Please check batch to true in items";
                         if (BatchNo != "") {
                             Swal.fire({
@@ -643,9 +617,7 @@
         }
 
         function SaveAllRecord() {
-            debugger;
             if (validateSave()) {
-                debugger
                 $('#ddlVendor').prop('disabled', false);
                 var btnSave = $('#btnSave').val();
                 var IgpNo = $('#IGP_Num').val();
@@ -671,16 +643,12 @@
                     return;
                 }
                 var table = $('#tblItemDescriptionDetail');
-                debugger;
                 var Item_list = [];
-                debugger;
                 table.find('tr').each(function (key, value) {
-                    debugger;
                     Item_list.push({ 'PODetailId': $(value).find('td input[name=txtPODetailId]').val(), 'ItemCode': $(value).find('td input[name=txtItemCode]').val(), 'RcvQty': $(value).find('td input[name=RcvQty]').val(), 'POQty': $(value).find('td input[name=POQty]').val(), 'BatchNo': $(value).find('td input[name=BatchNo]').val(), 'txtuomqty': $(value).find('td input[name=txtuomqty]').val(), 'BlncQty': $(value).find('td input[name=blncQty]').val(), 'IgpQty': $(value).find('td input[name=IgpQty]').val(), 'InspecQty': $(value).find('td input[name=InspQty]').val(), 'BounusQty': $(value).find('td input[name=BounusQty]').val(), 'Mfgdate': $(value).find('td input[name=txtMfgdate]').val(), 'Expdate': $(value).find('td input[name=Expdate]').val(), 'SaleRate': $(value).find('td input[name=SaleRate]').val(), });
                 });
                 var AllItemDetail = { 'Igp_num': IgpNo, 'Date': date, 'Vendor': Vendor, 'DriverName': DriverName, 'VehicleNum': VehicleNum, 'BilityNum': Bility_No, 'remarks': Remarks, 'InvOrg': InvOrg, 'Branch': Branch, 'ItemList': Item_list };
                 PageMethods.SaveIgpDetail(btnSave, JSON.stringify(AllItemDetail), function (res) {
-                    debugger;
 
                     Swal.fire({
                         icon: 'success',
@@ -703,10 +671,8 @@
             }
         }
         function sendFile(ID, callback) {
-            debugger;
             var fileInput = $('#fileUpload1')[0];
             if (fileInput.files.length > 0) {
-                debugger;
                 var data = new FormData();
                 data.append('file', $('#fileUpload1')[0].files[0]);
                 data.append('ID', ID);
@@ -775,9 +741,7 @@
                 $('#ddlVendor').html(optionsVen);
             });
         }
-        debugger;
         //function getPONumByVendor(item) {
-        //    debugger;
         //    var optionsPO = '';
         //    var VendorId;
         //    VendorId = item.value;
@@ -948,7 +912,6 @@
             }
         }
         function ExcludeFromPayment(anchor) {
-            debugger;
             var a = confirm("Are you sure You want to delete");
             if (a == true) {
                 console.clear();
@@ -957,7 +920,6 @@
             }
         }
         function PrintInwardGatePassDetail() {
-            debugger;
             var id = '<% =Request.QueryString["IGP_ID"] %>';
             var locationInfo = window.location;
 
@@ -977,9 +939,7 @@
             }
             window.open(url, '_blank');
         }
-        debugger;
         function disablepo() {
-            debugger;
             var POField = $('#ddlPONo').val();
             if (POField != "0") {
                 $('#AdvddlPONo').attr('disabled', true);
@@ -989,7 +949,6 @@
             }
         }
         function PrintInspection() {
-            debugger;
             var id = '<% =Request.QueryString["IGP_ID"] %>';
             var locationInfo = window.location;
 
@@ -1012,7 +971,6 @@
 
 
         function ApproveInspecModal() {
-            debugger;
             if ($('#tblItemDescription tbody tr').length === 0) {
 
                 Swal.fire({
@@ -1031,7 +989,6 @@
                 return;
             }
             $('#InspmodalItemDescription tbody').empty();
-            debugger;
             $('#tblItemDescription tbody tr').each(function (index) {
                 var poDetailId = $(this).find('input[name="txtPODetailId"]').val();
                 var poQty = $(this).find('input[name="POQty"]').val();
@@ -1052,7 +1009,6 @@
             $('#inspecModal').modal('show');
         }
         function ApproveInspec() {
-            debugger;
             var isValid = true;
             var tblLength = $("#InspmodalItemDescription tr:gt(0)").length;
 
@@ -1078,7 +1034,6 @@
                 $('#InspmodalItemDescription').removeClass('ErrorAlert');
             }
             if (document.getElementById('InspmodalItemDescription').rows.length > 1) {
-                debugger;
                 $.each($('#InspmodalItemDescription tbody tr'), function (key, value) {
                     var igpQty = parseFloat($(value).find('td input[name=IgpQty]').val());
                     var inspQty = parseFloat($(value).find('td input[name=InspQty]').val());
@@ -1124,10 +1079,8 @@
                 var AllItemDetail = { 'IgpId': IgpId, 'ItemList': Item_list };
 
                 PageMethods.SaveIgpInspectonDetail(JSON.stringify(AllItemDetail), function (res) {
-                    debugger;
                     if (res == 1) {
                         PageMethods.ApproveIgpInspec(IgpId, function (Tests) {
-                            debugger;
                             var message = JSON.parse(Tests);
                             if (message[0].Column1 == "1" || message[0].Column1 === "1") {
                                 Swal.fire({
@@ -1199,10 +1152,8 @@
         }
 
         function UnApproveInspec() {
-            debugger;
             var IgpId = '<% =Request.QueryString["IGP_ID"] %>';
             PageMethods.UnApproveIgpInspec(IgpId, function (Tests) {
-                debugger
                 var message = JSON.parse(Tests);
                 if (message[0].Column1 != "" || message[0].Column1 != null) {
                     alert(message[0].Column1);
@@ -1211,18 +1162,14 @@
             });
         }
         function UserUnApproveButtonRights() {
-            debugger;
             $.ajax({
                 type: "POST",
                 url: "InversionGatePass.aspx/UserUnApproveEntryRights",
                 contentType: "application/json; charset=utf-8",
                 dataType: "json",
                 success: function (response) {
-                    debugger;
                     var hasRights = response.d;
-                    debugger;
                     if (hasRights) {
-                        debugger;
                         $('#btnUnApprove').show();
                     } else {
                         $('#btnUnApprove').hide();
@@ -1234,10 +1181,8 @@
             });
         }
         function UnApprove() {
-            debugger;
             var IgpId = '<% =Request.QueryString["IGP_ID"] %>';
             PageMethods.UnApproveIgP(IgpId, function (Tests) {
-                debugger
                 var message = JSON.parse(Tests);
                 if (message[0].Column1 != "" || message[0].Column1 != null) {
                     alert(message[0].Column1);

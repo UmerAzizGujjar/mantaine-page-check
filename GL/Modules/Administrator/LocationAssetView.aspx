@@ -9,7 +9,6 @@
     </style>
     <script type="text/javascript">
         $(document).ready(function () {
-            debugger
             LoadPage();
 
             $("#btnSave").click(function (event) {
@@ -43,7 +42,6 @@
         //    window.location.href = "LocationAsset.aspx";
         //}
         function LoadPage() {
-            debugger
             $("#example").DataTable({
                 "processing": true,
                 "serverSide": true,
@@ -100,7 +98,6 @@
                     { "data": "Location_Description", "width": "50%" },
                     {
                         "render": function (data, type, full) {
-                            debugger;
                             var res = '<a class="editListBtn" href="#" onclick="Edit(' + full.Location_ID + ', \'' + full.Location_Code + '\', \'' + full.Location_Description + '\')" style="border-radius: 4px;margin-right: 4px;padding: 5px 8px 5px 8px;"><i class="fa fa-pencil"></i></a>';
 
                             var print = '<a class="printListBtn" style="border-radius: 4px;margin-left: 4px;color: white;padding: 5px 8px 5px 8px;" href="#" onclick="PrintTest(' + full.Location_ID + ')" id="btnprint"><i class="fa fa-print"></i></a>';
@@ -126,7 +123,6 @@
 
         let isSaving = false;
         function SaveLocation() {
-            debugger;
             if (isSaving) return;
             isSaving = true;
 
@@ -155,7 +151,6 @@
                 contentType: "application/json; charset=utf-8",
                 dataType: "json",
                 success: function (response) {
-                    debugger;
                     var res = response.d;
                     if (res.startsWith("Success")) {
                         var message = (btnValue === "Update") ? "Data updated successfully" : "Data saved successfully";

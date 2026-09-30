@@ -4,12 +4,10 @@
     <link href="../../wwwroot/THEME_TIBBIT/CustomCSS/tablestyle.css" rel="stylesheet" />
     <script type="text/javascript">
         $(document).ready(function () {
-            debugger;
             $('#ctl00_lblMessage').hide();
             LoadPage();
 
         });
-        debugger;
         function LoadPage() {
             let savedVisibility = null;
 
@@ -81,7 +79,6 @@
                     {
                         "data": "Created_Time",
                         "render": function (data, type, full) {
-                            debugger;
                             var date = full.Created_Time;
                             date = moment(date).format('DD-MMM-YYYY');
                             return date;
@@ -89,7 +86,6 @@
                     },
                     {
                         render: function (data, type, full) {
-                            debugger;
                             var res = '<a class="editListBtn" href="#" onclick="editOpen(\'' + full.User_Branch_Master_Id + '\')" style="border-radius: 4px; margin-right: 4px;padding: 5px 8px;"><i class="fa fa-pencil"></i></a>';
 
 
@@ -157,11 +153,9 @@
 
         }
         function deleteConfirm(User_Branch_Master_Id) {
-            debugger;
             var ID = User_Branch_Master_Id;
             if (confirm('Are you sure want to delete this record')) {
                 PageMethods.DeleteRecord(ID, function (msg) {
-                    debugger
                     window.location.href = 'UserControlList.aspx';
                 }, OnFail);
             }

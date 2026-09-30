@@ -26,14 +26,12 @@
                 $('#txtRate').prop('disabled', true);
             }
 
-            debugger;
             GetGroupDepartments();
             GetPatientTypes();
             GetMainDepartments();
             var urlParams = new URLSearchParams(location.search);
            
             if (urlParams.get('DataValue_ID') != null) {
-                debugger;
                 addOrEdit = 'EDIT';
                 datavalueID = urlParams.get('DataValue_ID');
                 datavalueDescription = urlParams.get('DataValue_Description');
@@ -95,7 +93,6 @@
         });
 
         function saveData() {
-            debugger;
 
             var tblIPDList = document.getElementById('IPD_Test_Rate_Table');
             var ipdData = new Array();
@@ -139,19 +136,16 @@
             PageMethods.saveData(datavalueID, datavalueDescription, reportColums, Main_Department, reporthour, ipdData, opdData, addOrEdit, reportDay, FixedValue, Resultvalue, ListValue, ReqImage, TestDeprtment, chkPayment, chkSpecial_Test, machineName, standardName, TestRate,onSuccess, onFail);
         }
         function GetMainDepartments(Division) {
-            debugger;
             var options = '<option value="0">Select Department</option>';
             PageMethods.GetMainDepartments(function (departments) {
                 $.each(JSON.parse(departments), function (key, value) {
                     options += '<option value="' + value.DataValue_Name + '" >' + value.DataValue_Description + '</option>';
                 });
                 $('#ddlMainDepartment').html(options);
-                debugger;
                 var urlParams = new URLSearchParams(location.search);
                 
                 if (urlParams.get('DataValue_ID') != null) {
                     if (Division == 'null' || Division == null) Division = 0;
-                    debugger;
                     $('#ddlMainDepartment').val(Division);
                 }
             });
@@ -174,10 +168,8 @@
         function onFail() { alert('Error'); };
 
         function getSavedRates(datavalueID, patientType) {
-            debugger;
             PageMethods.getSavedRates(datavalueID, patientType,
                 function (d) {
-                    debugger;
                     var data = JSON.parse(d);
                     
                     if (patientType == 'IPD') {
@@ -208,7 +200,6 @@
             });
         }
         function GetPatientTypes() {
-            debugger;
             var options = '<option value="">Select Category</option>';
             $.ajax({
                 type: "post",
@@ -233,7 +224,6 @@
         }
 
         function generateIPDRow() {
-            debugger;
             var rowID = document.getElementById('IPD_Test_Rate_Table').rows.length - 1;
             var html = '<tr id = "ipdRow' + rowID + '">' +
                 '<td><select style="width: 145px !important;" id = "ipdSelect' + rowID + '">' + Patients_Categories + '</select></td>' +
@@ -246,7 +236,6 @@
         }
 
         function generateOPDRow() {
-            debugger;
             var rowID = document.getElementById('OPD_Test_Rate_Table').rows.length - 1;
             var html = '<tr id = "opdRow' + rowID + '">' +
                 '<td><select style="width: 145px !important;" id = "opdSelect' + rowID + '">' + Patients_Categories + '</select></td>' +
@@ -259,7 +248,6 @@
         }
 
         function DeleteRate(reference) {
-            debugger;
             Swal.fire({
                 icon: 'warning',
                 title: 'Are you sure?',

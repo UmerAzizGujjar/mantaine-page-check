@@ -208,7 +208,6 @@
                 {
                     "data": "PAYMENTDATE", "name": "PAYMENTDATE",
                     "render": function (data, type, full) {
-                        debugger;
                         var date = full.PAYMENTDATE;
                         date = moment(date).format('DD-MMM-YYYY');
                         return date;

@@ -6,7 +6,6 @@
        
     <script type="text/javascript">
         function LoadPatientDetails() {
-            debugger;
             var Patient_ID = $('#hdfPatient_ID').val();
 
             $.ajax({
@@ -34,7 +33,6 @@
 
 
         function OnSuccess(data) {
-            debugger;
             var roomward = "";
             if (data.d != '') {
                 var mydate = new Date(Date.parse(data.d.Entry_Date));
@@ -55,13 +53,11 @@
 
 
             function tokenInputs(textboxID, tblName, OnAddFun) {
-                debugger;
                 $('#' + textboxID).tokenInput("json.aspx?Table=" + tblName,
                     {
                         tokenLimit: 1,
                         onAdd:
                             function (item) {
-                                debugger;
                                 try {
 
                                     if (tblName == 'Patients') {
@@ -104,7 +100,6 @@
 
 
         function ddlchange() {
-            debugger;
 
             var ddlchk = $('#ctl00_MainContent_ddlDiscountCAtegory').find('option:selected').text();
 
@@ -217,7 +212,6 @@
         }
 
         function LoadDiscountDetail(id) {
-            debugger;
             var Patient_ID = $('#hdfPatient_ID').val();
 
             $.ajax({
@@ -234,11 +228,9 @@
             });
         }
         function OnSuccessdt(dataa) {
-            debugger;
 
             var parsed_Data = JSON.parse(dataa.d);
             $('#tableDis tr:gt(0)').each(function (key, value) {
-                debugger;
                 if (typeof parsed_Data[key] === 'undefined') {
 
 
@@ -266,7 +258,6 @@
 
 
         }
-            debugger;
             $('#btnSave').on('click', function ()
             {
                 var patient_Id = $('#txtMRNo').val();
@@ -282,7 +273,6 @@
                   var id = '<%=Request.QueryString["ID"]%>';
                 table.find('tbody tr').each(function (key, value)
                 {
-                    debugger;
                     var dis_Amt = $($(value).find("td")[3]).find("input[name=disAmount]").val();
                     var dis_per = $($(value).find("td")[2]).find("input[name=disPer]").val();
                     if (dis_Amt == "") dis_Amt = 0;

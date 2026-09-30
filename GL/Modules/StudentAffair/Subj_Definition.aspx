@@ -221,14 +221,12 @@
         }
 
         function saveSubjectDefinition() {
-            debugger;
             const program = $('#ddlProgram').val();
             const studentClass = $('#ddlClass').val();
             const block = $('#ddlBlock').val();
             const module = $('#ddlModule').val();
             const subjects = getSubjects();
             const masterId = $('#hfMasterId').val();
-            debugger;
             if (!program) {
                 Swal.fire({
                     icon: 'error',
@@ -261,9 +259,7 @@
                 });
                 return;
             }
-            debugger;
             if (studentClass !== "04" && studentClass !== "05" && (!block || !module)) {
-                debugger;
                 Swal.fire({
                     icon: 'error',
                     title: 'Error!',
@@ -298,7 +294,6 @@
             }
 
             const btnsave = masterId ? "Update" : "Insert";
-            debugger;
             const data = {
                 btnsave: btnsave,
                 AllItemDetail: JSON.stringify({

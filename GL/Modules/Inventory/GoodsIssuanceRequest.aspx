@@ -6,7 +6,6 @@
         var counter = 1;
         var isReplicate = false;
         var replicateEnabled = '<%= ReplicateCode %>' === '01';
-        debugger;
         var id = '<% =Request.QueryString["ID"] %>';
         var savedBranch = null;
 
@@ -37,7 +36,6 @@
 
                 if (warehouseCond == '01') {
                     var warehouseVal = $('#ddlwarehouse').val();
-                    debugger;
                     if (!warehouseVal || warehouseVal === "0" || warehouseVal === "") {
 
                         return "";
@@ -56,7 +54,6 @@
                 searchingText: "Searching...",
                
                 onAdd: function (item) {
-                    debugger;
                     $("#hditemID").val(item.id);
                     $("#txtItem").val(item.name);
                     GetItemDetail();
@@ -99,13 +96,11 @@
             setTimeout(function () {
                 var status = $('#txt_Status').val();
                 if (status == "Approved") {
-                    debugger;
                     UserUnApproveButtonRights();
                     $('#btnsave').attr("disabled", 'disabled');
                     $('#btnReplicate').hide();
                 }
                 if (status == "Created") {
-                    debugger;
                 }
                 if (status == "Created" || status == "Pending") {
                     if (replicateEnabled) $('#btnReplicate').show();
@@ -125,7 +120,6 @@
                 contentType: "application/json; charset=utf-8",
                 dataType: "json",
                 success: function (response) {
-                    debugger;
                     warehouseCond = JSON.parse(response.d);
                     if (warehouseCond == '01') {
                         //$('#warehouse').show();
@@ -140,18 +134,14 @@
             });
         }
         function UserRights() {
-            debugger;
             $.ajax({
                 type: "POST",
                 url: "GoodsIssuanceRequest.aspx/UserEntryRights",
                 contentType: "application/json; charset=utf-8",
                 dataType: "json",
                 success: function (response) {
-                    debugger;
                     var hasRights = response.d;
-                    debugger;
                     if (hasRights) {
-                        debugger;
                         $('#btnsave').show();
                     } else {
                         $('#btnsave').hide();
@@ -166,26 +156,20 @@
 
 
         function FillDepartments() {
-            debugger;
             var optionsDPT = '';
             PageMethods.filldepartments(function (Tests) {
-                debugger
                 optionsDPT = '<option value="0">Please Select</option>';
                 $.each(JSON.parse(Tests), function (key, value) {
-                    debugger;
                     optionsDPT += '<option value="' + value.DataValueName + '" >' + value.DataValueDescription + '</option>';
                 });
                 $('#ddldept').html(optionsDPT);
             });
         }
         function FillWarehouses() {
-            debugger;
             var optionsWarehouse = '';
             PageMethods.getwarehouseLlist(function (Tests) {
-                debugger
                 optionsWarehouse = '<option value="0">Please Select</option>';
                 $.each(JSON.parse(Tests), function (key, value) {
-                    debugger;
                     optionsWarehouse += '<option value="' + value.DataValueName + '" >' + value.DataValueDescription + '</option>';
                 });
                 $('#ddlwarehouse').html(optionsWarehouse);
@@ -198,7 +182,6 @@
             $(row).closest('tr').remove();
         }
         function GetItemDetail() {
-            debugger
             var itemID = $("#hditemID").val();
 
             var deptID = $('#ddldept').val();
@@ -213,7 +196,6 @@
                 dataType: "json",
                 success: function (response) {
                     var find = false;
-                    debugger;
                     var parse = JSON.parse(response.d);
                     var length = $("#tblbodyPackage tr").length;
                     if (length > 0) {
@@ -225,17 +207,14 @@
                     var selectedItemID = String(itemID).trim();
 
                     $('#tblbodyPackage tr').each(function () {
-                        debugger;
                         var existingItemID = String($(this).find('td:eq(9)').text()).trim();
 
                         if (existingItemID == selectedItemID) {
-                            debugger;
                             find = true;
                             return false;
                         }
                     });
                     if (find == true) {
-                        debugger;
 
                         Swal.fire({
                             icon: 'error',
@@ -315,18 +294,14 @@
             });
         }
         function UserUnApproveButtonRights() {
-            debugger;
             $.ajax({
                 type: "POST",
                 url: "GoodsIssuanceRequest.aspx/UserUnApproveEntryRights",
                 contentType: "application/json; charset=utf-8",
                 dataType: "json",
                 success: function (response) {
-                    debugger;
                     var hasRights = response.d;
-                    debugger;
                     if (hasRights) {
-                        debugger;
                         $('#btnUnApproveToBeHidden').show();
                     } else {
                         $('#btnUnApproveToBeHidden').hide();
@@ -432,7 +407,6 @@
             });
         }
         function SaveTest() {
-            debugger;
             var MIRId = 0;
             if (!isReplicate && id != "") {
                 MIRId = id;
@@ -525,7 +499,6 @@
                         contentType: "application/json; charset=utf-8",
                         dataType: "json",
                         success: function (response) {
-                            debugger;
                             var res = response.d;
                             var arr = res.split('-');
                             var msg = arr[0];
@@ -545,11 +518,9 @@
         }
         function SaveMIRDetail(id) {
             var MIRDate = new Date($('#txtMIR_Date').val());
-            debugger;
             var detailAry = [];
             var btnValue = $("#btnsave").val();
             $.each($("#tblPackage").find('tbody').find('tr'), function (index) {
-                debugger
                 details = {};
                 details.MIRQty = $(this).find('td:eq(4) input').val();
                 details.Last_MIR_Qty = $(this).find('td:eq(5)').text();
@@ -592,7 +563,6 @@
                     contentType: "application/json; charset=utf-8",
                     dataType: "json",
                     success: function (response) {
-                        debugger;
                         var res = response.d;
                         var arr = res.split('-')[1];
             var btnValue = isReplicate ? "Replicate" : $("#btnsave").val();
@@ -657,7 +627,6 @@
             }
         }
         function LoadMIRMaster(id) {
-            debugger;
             $.ajax({
                 type: "POST",
                 url: "GoodsIssuanceRequest.aspx/LoadMIR",
@@ -667,7 +636,6 @@
                 contentType: "application/json; charset=utf-8",
                 dataType: "json",
                 success: function (response) {
-                    debugger;
                     var parse = JSON.parse(response.d);
                     $('#txtReq_Num').val(parse.Request_No);
                     var datetime = $.datepicker.formatDate('dd M yy', new Date(parseInt(parse.MIRDate.substring(6, 19))))
@@ -688,7 +656,6 @@
                         $('#ddlBranch').val(savedBranch).trigger('change');
                     }
                     if (parse.Status == "Approved") {
-                        debugger;
                         $('#btnsave').attr("disabled", 'disabled');
 
                     }
@@ -725,7 +692,6 @@
             });
         }
         function LoadLoadMIRDetail(id) {
-            debugger;
             $.ajax({
                 type: "POST",
                 url: "GoodsIssuanceRequest.aspx/LoadMIRDetail",
@@ -735,11 +701,9 @@
                 contentType: "application/json; charset=utf-8",
                 dataType: "json",
                 success: function (response) {
-                    debugger;
                     var parse = JSON.parse(response.d);
                     var row = '';
                     $.each(parse, function (key, value) {
-                        debugger;
                         var len = key + 1;
                         var filePath = parse[key].FilePath || '';
                         var downloadLink = filePath ? '<a href="' + filePath + '" target="_blank" style="margin-right:4px;" title="Download"><i class="glyphicon glyphicon-download-alt"></i></a>' : '';
@@ -799,7 +763,6 @@
             });
         }
         function sendFile(ID, callback) {
-            debugger;
             var fileInput = $('#choseGIRfile')[0];
             if (fileInput.files.length > 0) {
                 var data = new FormData();
@@ -823,10 +786,8 @@
             }
         }
         function calcutaeQty() {
-            debugger;
             var TotalQty = 0;
             $.each($('#tblPackage tbody tr'), function (key, value) {
-                debugger;
                 var inputElement = $(value).find('td input[name=Qty]')[0];
                 var Qty = $(inputElement).val();
 
@@ -835,7 +796,6 @@
                 var parsedQty = parseFloat(Qty) || 0;
                 TotalQty += parsedQty;
             });
-            debugger;
             $('#totQty').val(TotalQty);
         }
     </script>

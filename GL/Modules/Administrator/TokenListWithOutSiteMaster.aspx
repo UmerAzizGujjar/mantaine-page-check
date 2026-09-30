@@ -165,7 +165,6 @@
             return options;
         }
         function GetLatestToken() {
-            debugger;
             var patientType = $('#ddlPatientType').val();
             var department = $('#ddldepartment').val();
             if (patientType == null) {
@@ -181,17 +180,14 @@
                 dataType: 'json',
                 data: JSON.stringify({ patientType: patientType, department: department }),
                 success: function (_data) {
-                    debugger;
                     _data = JSON.parse(_data.d);
                     var mdTable = $('#tblgnrltoken');
                     $('#tbl tr:gt(0)').remove();
                     table = $('#ibody');
                     var rows = '';
                     table.empty();
-                    debugger;
                     $.each(_data, function (key, value) {
                         bill_id = value.Bill_ID;
-                        debugger;
 
                         $("#ibody").append('<tr style=""><td style="display:none;"><input id="Bil_id" name="patientid" class="patientid" type="hidden" value="' + value.Patient_ID + '" /><input id="Bil_id" name="patientid" class="patientid" type="hidden" value="' + value.filter_clinic + '" /></td><td  style="font-size:25px;font-weight:bold;text-align: center;">' + value.tokenNo + '</td><td  style="font-size:25px;font-weight:bold;text-align: center;">' + value.mr_no_sequence + '</td><td  style="font-size:25px;font-weight:bold;text-align: center;">' + value.Full_Name + '</td></tr>');
                         length++;
@@ -218,14 +214,12 @@
                 dataType: 'json',
                 data: JSON.stringify({ doc_Id: doc_Id }),
                 success: function (_data) {
-                    debugger;
                     _data = JSON.parse(_data.d);
                     var mdTable = $('#tblprivatepatient');
                     $('#tbl tr:gt(0)').remove();
                     table = $('#ibody_pvt');
                     var rows = '';
                     table.empty();
-                    debugger;
                     var isFirstRowAppended = false;
 
                     $.each(_data, function (key, value) {

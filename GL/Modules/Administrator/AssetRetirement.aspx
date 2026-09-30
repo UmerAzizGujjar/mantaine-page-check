@@ -43,7 +43,6 @@
                success: function (response) {
                    var parsed_data = JSON.parse(response.d);
                    console.log(parsed_data);
-                   debugger;
                    $("#ddl_transType").val(parsed_data[0].TransType);
                    $("#transactionno").val(parsed_data[0].TransNo);
                   

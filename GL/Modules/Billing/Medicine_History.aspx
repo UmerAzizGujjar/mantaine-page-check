@@ -93,7 +93,6 @@
                     {
                         "data": "Invoice_Date", "name": "Invoice_Date",
                         "render": function (data, type, full) {
-                            debugger;
                             var date = full.Invoice_Date;
                             date = moment(date).format('DD-MMM-YYYY');
                             return date;
@@ -110,7 +109,6 @@
                     { "data": "Balance_Amount", "width": "8%", "orderable": false },
                     {
                         render: function (data, type, full) {
-                            debugger;
                             var res = '<a href="#" class="editListBtn" onclick="PrintInvoice(' + full.Bill_ID + ')" style="border-radius: 4px;  color: white; padding: 5px 8px 5px 8px;"><i class="fa fa-upload"></i></a>'
 
                             var print = '<a class="printListBtn" style="border-radius: 4px;margin-left: 4px;color: white;padding: 5px 8px 5px 8px;" href="#" onclick="PrintBill(' + full.Bill_ID + ')" id="btnprint"><i class="fa fa-print" ></i></a>';

@@ -11,7 +11,6 @@
             GetStudentprogram();
             GetStudentClass();
 
-            debugger;
               <% if (Request.QueryString["ID"] != null)
         { %>
             var Stu_ID = '<%= Request.QueryString["ID"]%>'
@@ -27,7 +26,6 @@
         var newTextBoxDiv;
 
         function addSubject() {
-            debugger;
 
             var newTextBoxDiv = $(document.createElement('div'))
                 .attr("id", 'subject' + counter)
@@ -61,7 +59,6 @@
 
 
         function RmvSubject(counterr) {
-            debugger;
 
             var lblid = '#lbl' + counterr;
             var inputid = '#subject3' + counterr;
@@ -82,12 +79,10 @@
             count -= 2;
         }
         function SubjectList() {
-            debugger;
             window.location.href = "SubjectList.aspx";
 
         }
         function FormOpen() {
-            debugger;
             window.location.href = "SubjectDefinition.aspx";
         }
         function GetStudentprogram() {
@@ -98,11 +93,8 @@
                 contentType: 'application/json;charset=utf-8',
                 dataType: 'json',
                 success: function (data) {
-                    debugger;
                     Getprgrm = '<option value="0">Please Select</option>';
-                    debugger;
                     $.each(JSON.parse(data.d), function (key, value) {
-                        debugger;
 
                         Getprgrm += '<option value="' + value.DataValueName + '" >' + value.DataValueDescription + '</option>';
                     });
@@ -120,11 +112,8 @@
                 contentType: 'application/json;charset=utf-8',
                 dataType: 'json',
                 success: function (data) {
-                    debugger;
                     GetClass = '<option value="0">Select</option>';
-                    debugger;
                     $.each(JSON.parse(data.d), function (key, value) {
-                        debugger;
 
                         GetClass += '<option value="' + value.DataValueName + '" >' + value.DataValueDescription + '</option>';
                     });
@@ -135,7 +124,6 @@
             });
         }
         function Selectfunc() {
-            debugger;
             var slct_value = $("#ddlProgram").val();
 
             if (slct_value == 01) {
@@ -160,9 +148,7 @@
                 $($('#ddlClass').find('option')[5]).hide();
             }
         }
-        debugger;
         function SaveSubject() {
-            debugger;
             var Subject_id = $('#Subject_id').val();
             var btnSave = $('#btnSave').val();
             var ddlProgram = $('#ddlProgram').val();
@@ -207,7 +193,6 @@
 
             var Arr = [];
             $('input[name="subject"]').each(function () {
-                debugger;
                 var Subject = $(this).val();
 
                 Arr.push({
@@ -220,7 +205,6 @@
 
             var Arr1 = [];
             $('input[name="hdnsubject"]').each(function () {
-                debugger;
 
                 var subjectDetailID = $(this).val();
 
@@ -238,7 +222,6 @@
 
             var Subject1;
             for (let i = 0; i < Arr.length; i++) {
-                debugger;
 
                 var subjectDetailID1 = undefined;
 
@@ -256,7 +239,6 @@
             }
 
 
-            debugger;
             var AllSubject = {
                 Subject_id: Subject_id, ddlProgram: ddlProgram, ddlClass: ddlClass, Arr: Arr2,
             };
@@ -301,10 +283,8 @@
         }
 
         function editDetail(Stu_ID) {
-            debugger;
             PageMethods.EditDetail(Stu_ID, function (resp) {
                 var studata = JSON.parse(resp);
-                debugger;
                 var dataCounts = studata.length - 1;
                 if (dataCounts == 2) {
                     var NewCount = dataCounts - 1;
@@ -329,7 +309,6 @@
                 }
 
                 else if (dataCounts == 3) {
-                    debugger;
 
                     var NewCount = dataCounts - 2;
                     for (let i = 0; i < NewCount; i++) {
@@ -363,7 +342,6 @@
                 }
 
                 else if (dataCounts == 4) {
-                    debugger;
                     var NewCount = dataCounts - 1;
 
                     for (let i = 0; i < NewCount; i++) {
@@ -398,7 +376,6 @@
 
 
                         else if (dataCounts == 5) {
-                        debugger;
                         var NewCount = dataCounts - 3;
                         for (let i = 0; i < NewCount; i++) {
 
@@ -431,7 +408,6 @@
                     }
 
                 else if (dataCounts == 6) {
-                    debugger;
                     var NewCount = dataCounts - 2;
 
                     for (let i = 0; i < NewCount; i++) {
@@ -464,7 +440,6 @@
                 }
 
                 else if (dataCounts == 7) {
-                    debugger;
                     var NewCount = dataCounts - 4;
 
                     for (let i = 0; i < NewCount; i++) {
@@ -498,7 +473,6 @@
                 }
 
                 else if (dataCounts == 8) {
-                    debugger;
                     var NewCount = dataCounts - 4;
 
                     for (let i = 0; i < NewCount; i++) {
@@ -532,7 +506,6 @@
                 }
 
                 else if (dataCounts == 9) {
-                    debugger;
                     var NewCount = dataCounts - 5;
 
                     for (let i = 0; i < NewCount; i++) {
@@ -553,7 +526,6 @@
                 }
 
                 else if (dataCounts == 10) {
-                    debugger;
                     var NewCount = dataCounts - 5;
 
                     for (let i = 0; i < NewCount; i++) {
@@ -588,7 +560,6 @@
 
 
                 else if (dataCounts == 11) {
-                    debugger;
                     var NewCount = dataCounts - 6;
 
                     for (let i = 0; i < NewCount; i++) {
@@ -611,7 +582,6 @@
                     }
                 }
                 else if (dataCounts == 12) {
-                    debugger;
                     var NewCount = dataCounts - 6;
 
                     for (let i = 0; i < NewCount; i++) {
@@ -633,7 +603,6 @@
                     }
                 }
                 else if (dataCounts == 13) {
-                    debugger;
                     var NewCount = dataCounts - 7;
 
                     for (let i = 0; i < NewCount; i++) {
@@ -655,7 +624,6 @@
                     }
                 }
                 else if (dataCounts == 14) {
-                    debugger;
                     var NewCount = dataCounts - 7;
 
                     for (let i = 0; i < NewCount; i++) {
@@ -678,7 +646,6 @@
                     }
                 }
                 else if (dataCounts == 15) {
-                    debugger;
                     var NewCount = dataCounts - 8;
 
                     for (let i = 0; i < NewCount; i++) {
@@ -701,7 +668,6 @@
                     }
                 }
                 else if (dataCounts == 16) {
-                    debugger;
                     var NewCount = dataCounts - 8;
 
                     for (let i = 0; i < NewCount; i++) {
@@ -724,7 +690,6 @@
                     }
                 }
                 else if (dataCounts == 17) {
-                    debugger;
                     var NewCount = dataCounts - 9;
 
                     for (let i = 0; i < NewCount; i++) {
@@ -747,7 +712,6 @@
                     }
                 }
                 else if (dataCounts == 18) {
-                    debugger;
                     var NewCount = dataCounts - 9;
 
                     for (let i = 0; i < NewCount; i++) {
@@ -770,7 +734,6 @@
                     }
                 }
                 else if (dataCounts == 19) {
-                    debugger;
                     var NewCount = dataCounts - 10;
 
                     for (let i = 0; i < NewCount; i++) {
@@ -793,7 +756,6 @@
                     }
                 }
                 else if (dataCounts == 20) {
-                    debugger;
                     var NewCount = dataCounts - 10;
 
                     for (let i = 0; i < NewCount; i++) {
@@ -816,23 +778,19 @@
                         count += 2;
                     }
                 }
-                debugger;
 
                 $('input[name="subject"]').each(function (key, value) {
-                    debugger;
                     if (studata[key] != undefined || studata[key] != null) {
                         $("#" + value.id).val(studata[key].Subject_Name);
                     }
 
 
                 });
-                debugger;
 
                 $('input[name="hdnsubject"]').each(function (key, value) {
                     if (studata[key] != undefined || studata[key] != null) {
                         $("#" + value.id).val(studata[key].Subject_Detail_ID);
                     }
-                    debugger;
 
 
                 });

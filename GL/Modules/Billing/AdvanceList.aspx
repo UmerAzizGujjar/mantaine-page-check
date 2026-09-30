@@ -19,20 +19,16 @@
         }
 
         function PrintReport(Advance_ID) {
-            debugger;
             window.open('../../ReportViewer.aspx?ReportName=PrintAdvanceReport&ReportTitle= AdvancePrint&Adv_IDs=' + Advance_ID);
         }
 
         function EditAdvance(advId) {
-            debugger;
             window.open("AddNewAdvance.aspx?advID=" + advId);
         }
 
         function DeleteAdv(advid) {
-            debugger;
             if (confirm('Are you sure want to delete this record')) {
                 PageMethods.DeleteRecord(advid, function (msg) {
-                    debugger;
                     if (msg == true) {
                         $('#tblAdvanceView').DataTable().ajax.reload();
                     } else {

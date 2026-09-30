@@ -10,7 +10,6 @@
         var CheckedTest = [];
 
         $(document).ready(function () {
-            debugger;
 
             loadRangeType();
             loadUserBranch();
@@ -18,7 +17,6 @@
             FillSampleStatus();
             GetacknowlagmentCondition();
             $('#btnDetail').on('click', function () {
-                debugger;
                 if (localStorage.IsBill == 0) {
                     PopUPDetail();
                     $('#TestItemsModel').modal({
@@ -36,11 +34,9 @@
             });
             var sampleID = '<%= Request.QueryString["SampleId"]%>';
              var sampleNo = '<%= Request.QueryString["SampleNo"]%>';
-             debugger;
              var Patient_ID = '<%= Request.QueryString["Patient_ID"]%>';
              FillEmployeeNames();
              if (sampleID != "") {
-                 debugger;
                  LoadTestEditMode(sampleID);
                  getSampleCode();
              }
@@ -48,11 +44,9 @@
                  GetNextSampleNo();
                  GetNextSampleSequence();
              }
-             debugger;
              GetPendingList();
              loadtokenInputsDefaultPRNo();
              loadtokenInputsDefaultBill();
-             debugger;
              var date = '<%= DateTime.Now %>';
              $("#txtSampleCollected_Date").val(date);
 
@@ -60,7 +54,6 @@
                  FillTokenInputForMRNo(Patient_ID);
              }
              $('#txtMRNOSearch').keyup(function (e) {
-                 debugger;
 
 
                  var MRno = $('#txtMRNOSearch').val();
@@ -96,7 +89,6 @@
                 contentType: "application/json; charset=utf-8",
                 dataType: "json",
                 success: function (response) {
-                    debugger;
                     acknowlagment = JSON.parse(response.d);                   
                 },
                 error: function (error) {
@@ -105,12 +97,10 @@
             });
         }
         function FillTokenInputForMRNoQ() {
-            debugger;
             var PatientID = '<%= Request.QueryString["ID"]%>';
 
 
             if (PatientID != "") {
-                debugger;
                 $('#txtMRNo').tokenInput('clear');
                 var tokendata = httpGet("../../json.aspx?Table=PatientsFetchByID&q=" + PatientID);
 
@@ -122,7 +112,6 @@
             }
         }
         function loadtokenInputsDefaultBill() {
-            debugger;
             $('#txtBillNo').tokenInput("../../json.aspx?Table=Billing",
                 {
                     tokenLimit: 1,
@@ -138,7 +127,6 @@
                             else {
 
                             }
-                            debugger;
 
 
                             GetPatientDetail();
@@ -163,7 +151,6 @@
 
         }
         function PopUPDetailBill() {
-            debugger;
             var BillId = $("#hdBillID").val();
             var ids = [];
 
@@ -189,7 +176,6 @@
                 success: function (response) {
                     var Branch = $('#ddlUserBranch').val();
                     var parse = JSON.parse(response.d);
-                    debugger;
 
                     if (parse.length === 0) {
                         $("#listModel").show();
@@ -271,7 +257,6 @@
         }
 
         function getSampleCode() {
-            debugger;
             var sampleID = '<%= Request.QueryString["SampleId"]%>';
              var sampleNo = '<%= Request.QueryString["SampleNo"]%>';
             $.ajax({
@@ -283,7 +268,6 @@
                 contentType: "application/json; charset=utf-8",
                 dataType: "json",
                 success: function (response) {
-                    debugger;
                     var parse = response.d;
 
 
@@ -296,7 +280,6 @@
         }
 
         function GetPendingList() {
-            debugger;
             $.ajax({
                 type: "post",
                 url: "SampleCollectionFrom.aspx/PendingSampleList",
@@ -309,7 +292,6 @@
                     var parse = JSON.parse(response.d);
                     var rows = "";
                     for (var i = 0; i < parse.length; i++) {
-                        debugger;
                         var TrnsDate = parseInt(parse[i].Creation_Date.substr(6));
                         TrnsDate = moment(TrnsDate).format('DD-MMM-YYYY hh:mm A');
 
@@ -324,9 +306,7 @@
         }
 
         function LoadTestEditMode(sampleID) {
-            debugger;
             if (sampleID.length > 0) {
-                debugger;
                 $.ajax({
                     type: "post",
                     url: "SampleCollectionFrom.aspx/LoadSampleHeader",
@@ -336,7 +316,6 @@
                     contentType: "application/json; charset=utf-8",
                     dataType: "json",
                     success: function (response) {
-                        debugger;
                         var parse = JSON.parse(response.d);
                         var length = parse.length;
                         $('#token-input-txtBillNo').attr('disabled', 'disabled');
@@ -350,7 +329,6 @@
                         setTimeout(function () {
                             $("#ddlSample_Status").val(parse[0].Sample_Status).trigger();
                         }, 2000);
-                        debugger;
                         $.ajax({
                             type: "post",
                             url: "SampleCollectionFrom.aspx/LoadSampleDetail",
@@ -360,20 +338,16 @@
                             contentType: "application/json; charset=utf-8",
                             dataType: "json",
                             success: function (response) {
-                                debugger;
                                 var parse = JSON.parse(response.d);
                                 var parse_for_check = parse;
                                 var length = parse.length;
                                 var rows;
-                                debugger;
                                 for (var i = 0; i < length; i++) {
                                     var checked = '';
-                                    debugger;
                                     var urgentChecked = (parse[i].IsUrgent === true || parse[i].IsUrgent === 'true' || parse[i].IsUrgent === 1);
                                     rows += '<tr><td style="display:none">' + parse[i].Test_ID + '</td><td style="display:none">' + parse[i].Bill_Details_ID + '</td><td style="text-align: center;">' + parse[i].Test_Name + '</td><td style="text-align: center;">' + parse[i].Dept + '</td><td style="text-align: center;">' + parse[i].Gener + '</td><td style="text-align: center;">' + parse[i].Qty + '</td><td style="text-align: center;"><input type="checkbox"  value="' + parse[i].Sample_Collected + '" id="Check' + i + '" name="Check"/></td><td style="text-align: center;"><input type="checkbox" name="chkUrgent" id="chkUrgent' + i + '" ' + (urgentChecked ? 'checked="checked"' : '') + '/></td><td style="text-align: center;"><input style="width: 150px;" type="text" name="Remarks" value="' + parse[i].Remarks + '" id="Remarks' + i + '"/></td></td><td><select id="ddlOutSource" name="ddlOutSource">' + option_OutSource + '</select></td><td style="text-align: center;"><a style="border-radius: 4px;background-color: #e98383;color: white;padding: 4px 11px 4px 11px;" href="#" onclick="DeleteTest(this)">Delete</a></td></tr>';
                                /*     $('select[name="ddlOutSource"]').eq(i).val(parse[i].OutSource);*/
                                 }
-                                debugger;
                                 $('#CollectedSample tbody tr').remove();
                                 $('#CollectedSample tbody').append(rows);
                                 for (var i = 0; i < parse.length; i++) {
@@ -390,7 +364,6 @@
                                 });
 
                                 $('#btSnave').val('Update');
-                                debugger;
                                 CheckedTest = CollectedSampleTableArray();
                             },
                             failure: function (response) {
@@ -406,11 +379,9 @@
         }
 
         function DeleteTest(RowReference) {
-            debugger;
             var row = $(RowReference).parents('tr')[0];
 
             if (confirm('Are you sure want to delete this record')) {
-                debugger;
                 var length = CheckedTest.length;
                 for (var i = 0; i < length; i++) {
                     if (CheckedTest[i][0] == $($(row).find('td')[0]).text()) {
@@ -423,7 +394,6 @@
         }
 
         function FillTokenInputForMRNo(PatientID) {
-            debugger;
 
             if (PatientID != "") {
                 $('#txtMR_No').tokenInput('clear');
@@ -447,7 +417,6 @@
         }
 
         function FillEmployeeNames() {
-            debugger;
 
             $.ajax({
                 type: "post",
@@ -456,7 +425,6 @@
                 contentType: "application/json; charset=utf-8",
                 dataType: "json",
                 success: function (response) {
-                    debugger;
                     var parse = JSON.parse(response.d);
                     var length = parse.length;
 
@@ -464,7 +432,6 @@
                     for (var i = 0; i < length; i++) {
                         rows += '<option value="' + parse[i].Emp_ID + '">' + parse[i].Emp_Name + '</option>';
                     }
-                    debugger;
                     $("#Emp_Name option").remove();
                     $("#Emp_Name").append(rows);
 
@@ -487,14 +454,12 @@
                     $("#txtSample_No").val(response.d);
                 },
                 failure: function (response) {
-                    debugger;
                     alert("error!");
                 }
             });
         }
 
         function GetNextSampleSequence() {
-            debugger;
             $.ajax({
                 type: "POST",
                 url: "SampleCollectionFrom.aspx/GetSampleSequenceId",
@@ -502,7 +467,6 @@
                 contentType: "application/json; charset=utf-8",
                 dataType: "json",
                 success: function (response) {
-                    debugger;
                     var maxno = response.d;
                     var date = new Date().getFullYear().toString().substr(-2);
                     SampleNoWithYear = (date + '-' + maxno); 
@@ -532,7 +496,6 @@
             option_OutSource = '<option value="0">Select Lab</option>';
             PageMethods.FillOutSource(function (data) {
                 $.each(JSON.parse(data), function (key, value) {
-                    debugger;
                     option_OutSource += '<option value="' + value.DataValue_Name + '" >' + value.DataValue_Description + '</option>';
                 });
             });
@@ -540,7 +503,6 @@
         }
 
         function checkBoxClicked(value) {
-            debugger;
             var TempArray = [];
 
             var remarksValue = "";
@@ -569,7 +531,6 @@
 
             if (value.checked == true) {
                 CheckedTest.push(TempArray);
-                debugger;
                 var row;
                 row = '<tr id="' + TempArray[1] + '">' +
                     '<td style="display:none;">' + TempArray[1] + '</td>' +
@@ -591,7 +552,6 @@
 
                 $('#CollectedSample tbody').append(row);
             } else if (value.checked == false) {
-                debugger;
                 var length = CheckedTest.length;
                 for (var i = 0; i < length; i++) {
                     if (CheckedTest[i][1] == value.value.split(',')[0]) {
@@ -607,7 +567,6 @@
         }
 
         function PopUPDetail() {
-            debugger;
             var mrNo = $("#hdPatientID").val();
             var ids = [];
 
@@ -620,11 +579,9 @@
                     ids[i] = CheckedTest[i][2];
                 }
             }
-            debugger;
             var PateintDep;
             mrNo = mrNo.trim();
             if (mrNo != "") {
-                debugger;
                 var pateintNo = $("#txtMR_No").val().toString().split('-')[0];
                 $.ajax({
                     type: "POST",
@@ -637,15 +594,12 @@
                     async: false,
                     success: function (data) {
                         var parse1 = JSON.parse(data.d)
-                        debugger;
                         PateintDep = parse1;
                     },
                     failure: function (response) {
-                        debugger;
                         alert("error!");
                     }
                 });
-                debugger;
                 $.ajax({
                     type: "POST",
                     url: "SampleCollectionFrom.aspx/GetTestDetail",
@@ -657,10 +611,8 @@
                     dataType: "json",
                     success: function (response) {
                         var parse = JSON.parse(response.d)
-                        debugger;
                         var Branch = $('#ddlUserBranch').val();
                         var length = CheckedTest.length;
-                        debugger;
                         if (parse[0].Branch_Id != Branch) {
                             Swal.fire({
                                 icon: 'error',
@@ -674,7 +626,6 @@
                         if (parse.length != 0) {
                             var rows = "";
                             for (var i = 0; i < parse.length; i++) {
-                                debugger;
                                 var sampleRemarks = (parse[i].Sample_Remarks || '').replace(/"/g, '&quot;');
 
                                 rows += '<tr>'
@@ -704,7 +655,6 @@
                             }
                             $('#tblDetailModelTable tbody tr').remove();
                             $('#tblDetailModelTable tbody').append(rows);
-                            debugger;
                             $('#TestItemsModel').modal({
                                 backdrop: 'static'
                             });
@@ -720,7 +670,6 @@
                         }
                     },
                     failure: function (response) {
-                        debugger;
                         alert("error!");
                     }
                 });
@@ -737,10 +686,8 @@
         }
 
         function CollectedSampleRemarksArray() {
-            debugger;
             var RemArray = [];
             $("table#CollectedSample tbody tr").each(function () {
-                debugger;
                 var tmpArr = [];
                 tmpArr[0] = $(this).find('td input[name=Remarks]').val();
                 tmpArr[1] = $(this).find('td input[name=Check]')[0].checked;
@@ -750,10 +697,8 @@
             return RemArray;
         }
         function CollectedSampleTableArray() {
-            debugger;
             var SelectedTestArray = [];
             $("table#CollectedSample tbody tr").each(function () {
-                debugger;
                 var TempRow = [];
                 TempRow[0] = $(this).find('td:eq(2)').text();
                 TempRow[1] = $(this).find('td:eq(0)').text();
@@ -828,10 +773,8 @@
 
         function GetPatientDetail() {
             $("#listModel").hide();
-            debugger;
             var patientID = $("#hdPatientID").val();
 
-            debugger;
             $.ajax({
                 type: "POST",
                 url: "SampleCollectionFrom.aspx/GetPatient",
@@ -841,7 +784,6 @@
                 contentType: "application/json; charset=utf-8",
                 dataType: "json",
                 success: function (response) {
-                    debugger;
                     var parse = JSON.parse(response.d);
 
                     $("#vlblPatients_Name").text(parse[0].Full_Name);
@@ -858,7 +800,6 @@
             });
         }
         function GetSelectedDetail(Bill_No) {
-            debugger;
             localStorage.IsBill = 1;
 
             if (Bill_No != "") {
@@ -878,26 +819,21 @@
             }
         }
 
-        debugger;
         function Print() {
-            debugger;
             var sampleID = $("#hdSample_ID").val();
             window.open('../../ReportViewer.aspx?ReportName=LabSlip&ReportTitle=Department Of Pathology&Lab_ID=' + sampleID);
         }
         function PrintBarcode() {
-            debugger;
             var sampleID = $("#hdSample_ID").val();
             window.open('../../ReportViewer.aspx?ReportName=LabBarcode&ReportTitle=Lab Barcode Report&Sample_ID=' + sampleID);
 
         }
         function PrintQrCode() {
-            debugger;
             var sampleID = $("#hdSample_ID").val();
             window.open('../../ReportViewer.aspx?ReportName=LabQrCode&ReportTitle=Lab QrCode Report&Sample_ID=' + sampleID);
 
         }
             function PrintOrder() {
-        debugger;
         var sampleID = $("#hdSample_ID").val();
         window.open('../../ReportViewer.aspx?ReportName=LabBarcodeSlip&ReportTitle=Department Of Pathology&Sample_ID=' + sampleID);
     }
@@ -930,7 +866,6 @@
                 document.getElementById("hdnDuplicateCheck").value = "1";
                 var cbEmployee = document.getElementById("Emp_Name");
                 var employeeID = cbEmployee.options[cbEmployee.selectedIndex].value;
-                debugger;
                 var collectedDate = $("#txtSampleCollected_Date").val();
                 var Remarks = $("#txtRemarks").val();
                 var sampleStatus = $("#ddlSample_Status   option:selected").val();
@@ -960,9 +895,7 @@
                 var rem = CollectedSampleRemarksArray();
 
 
-                debugger;
                 if (collectedDate != "" && mrNo != "") {
-                    debugger;
                     if (length == 0) {
                         Swal.fire({
                             icon: 'error',
@@ -979,9 +912,7 @@
 
                     }
                     else {
-                        debugger;
                         if ($('#btSnave').val() == 'Save & Print') {
-                            debugger;
                             $.ajax({
                                 type: "POST",
                                 url: "SampleCollectionFrom.aspx/SaveTest",
@@ -1001,7 +932,6 @@
                                 dataType: "json",
 
                                 success: function (response) {
-                                    debugger;
                                     var splitted = response.d.split('-')[0];
                                     var id = response.d.split('-')[1];
                                     if (splitted == "Save") {
@@ -1018,7 +948,6 @@
                                             }
                                         });
 
-                                        debugger;
                                         TestDetail(id)
 
                                         //window.open('../../ReportViewer.aspx?ReportName=LabSlip&ReportTitle=Department Of Pathology&Lab_ID=' + id);
@@ -1045,13 +974,11 @@
                                     }
                                 },
                                 failure: function (response) {
-                                    debugger;
                                     alert("In failure method");
                                 }
                             });
                         }
                         if ($('#btSnave').val() == 'Update') {
-                            debugger;
                             var sampleID = $("#hdSample_ID").val();
                             $.ajax({
                                 type: "POST",
@@ -1071,7 +998,6 @@
                                 dataType: "json",
 
                                 success: function (response) {
-                                    debugger;
                                     if (response.d == "Update") {
                                         TestDetail(sampleID);
                                         Swal.fire({
@@ -1087,7 +1013,6 @@
                                             }
                                         });
 
-                                        debugger;
                                         window.location = "SampleCollectionFrom.aspx?sampleID=" + SampleId;
 
                                         $("#txtMR_No").tokenInput("clear");
@@ -1101,7 +1026,6 @@
                                     }
                                 },
                                 failure: function (response) {
-                                    debugger;
                                     alert("In failure method");
                                 }
                             });
@@ -1131,10 +1055,8 @@
             }
         }
         function TestDetail(id) {
-            debugger;
             var SelectedDepartment = "001";
             PageMethods.AllPendingLabTestDetail(SelectedDepartment, id, function (data) {
-                debugger;
                 var parsedData = JSON.parse(data);
                 var rows = '';
                 $.each(parsedData, function (key, value) {
@@ -1159,7 +1081,6 @@
                     var mydate = new Date(Date.parse(value.Date));
                     var retdate = mydate.toLocaleDateString();
 
-                    debugger;
                     if (value.Test_ID != 0) {
                         if (value.Recieved_ID != 0) {
                             rows += '<tr id="row' + key + '"><td><input type="hidden" name="chkPackages" value="' + value.chkPackages + '"/><input type="hidden" name="OPD" value="' + value.Out_Patient_ID + '"/><input type="hidden" name="Bill_Details_ID" value="' + value.Bill_Details_ID + '"/><input type="hidden" name="Sample_Date" value="' + value.Sample_Date + '"/><input type="hidden" name="outSource" value="' + value.Outsource + '"/><input type="hidden" name="Sample_User" value="' + value.Sample_User + '"/><input type="hidden" name="RecievedID" value="' + value.Recieved_ID + '"/><input type="hidden" name="Paymentcheck" value="' + value.IsBilled + '"/><input type="hidden" name="Detail" value="' + value.Lab_Test_Detail_ID + '"/><input type="hidden" name="LabTestID" value="' + value.Lab_Test_ID + '"/>' + retdate + '</td>' + ' <td>' + value.Sample_No + '</td>' + ' <td><input type="hidden" name="txtAreaofInterest" value="' + value.Area_Of_Interest + '"/><input type="hidden" name="Patient_ID" value="' + value.Patient_ID + '"/><input type="hidden"  id="txtMRNO' + key + '" value="' + value.Patient_No + '"/>' + value.Patient_No + '</td> ' + '<td>' + value.Name + '</td> ' + '<td style="display:none">' + value.Test_ID + '</td>' + '<td><input type="hidden" id="txtID" value="' + value.Test_ID + '"/><input type="hidden" name="testCatID" value="0"/>' + value.Test_Name + '</input></td> ' + '<td>' + value.Remarks + '</td> ' + '<td>' + value.Transaction_Type + '</td>' + '<td> <a href="#" onclick=select3(this) style="color:red">Select</a> </td> </tr>';
@@ -1181,7 +1102,6 @@
                 });
                 $('#tblPendingPatients tbody').html(rows);
                 $('#tblPendingPatients tbody tr').each(function (key, value) {
-                    debugger;
                     select3(value, id);
 
                 });
@@ -1193,7 +1113,6 @@
         }
 
         function select3(value, id) {
-            debugger;
 
             var row = value;
             var RecievedID = $($(row).find('td input[name=RecievedID]')[0]).val();
@@ -1275,15 +1194,12 @@
                  $('#txtReadyBy' + df).val(date);
                  $('#txtCollectionDate' + df).val(date);
             }
-            debugger;
             if (acknowlagment == '01') {
-                debugger;
                 SavelabTest(id);
             }
              
          }
         function SavelabTest(id) {
-            debugger;
             var btnSave = "Save";
             var table = $('#tbltest');
             var test_list = [];
@@ -1317,7 +1233,6 @@
         }
 
         function saveRemarks(button) {
-            debugger;
             var $row = $(button).closest('tr');
             var remarksInput = $row.find('.remarks-input-modal');
             var remarks = remarksInput.val();

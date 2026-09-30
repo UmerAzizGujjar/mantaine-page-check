@@ -17,7 +17,6 @@
                 url: "AdvancePaymentView.aspx/isDeleteAllow",
                 data: "",
                 success: function (resp) {
-                    debugger;
                     if (resp.d == true) {
                         isDele = true;
                     }
@@ -47,12 +46,10 @@
             window.open(url, '_blank');
         }
         function deleteConfirm(anchorTag) {
-            debugger;
             var row = $(anchorTag).parents('tr')[0];
             var AdvID = $($(row).find('td')[0]).text();
             if (confirm('Are you sure want to delete this record')) {
                 PageMethods.DeleteRecord(AdvID, function (msg) {
-                    debugger
                     $(row).remove();
                 }, OnFail);
             }

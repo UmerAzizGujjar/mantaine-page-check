@@ -6,7 +6,6 @@
 
     <script type="text/javascript">
         var year = false;
-        debugger;
         function PrintTest(id) {
             window.open('ReportViewer.aspx?ReportName=TestDefination&ReportTitle= Test Defination&Test_IDs=' + id);
         }
@@ -186,7 +185,6 @@
         //    if (getmonth == "December") {
         //        getmonth = "12"
         //    }
-        //    debugger;
         //    $.ajax({
         //        type: "POST",
         //        url: "BudgetView.aspx/VoucherViewList",
@@ -206,7 +204,6 @@
         //                var data = JSON.parse(data.d);
         //                var abc = '<td><i class="ace-icon fa fa-pencil bigger-130"></i><i class="ace-icon fa fa-trash bigger-130" onclick="deleteConfirm(this)" id="btnDel"></i><i class="ace-icon fa fa-print bigger-130" id="btnprint"></i></td>'
         //                $.each(data, function (i, item) {
-        //                    debugger;
         //                    var vdate = new Date(parseInt(data[i].Budget_Date.substr(6)));
         //                    vdate = moment(vdate).format('L');
         //                    var cDate = new Date(parseInt(data[i].Creation_Time.substr(6)));
@@ -234,11 +231,8 @@
         //                $('#example').html('<h3>No users are available</h3>');
         //            }
         //            year = false;
-        //            debugger;
         //            $.each(data, function (key, value) {
-        //                debugger;
         //                if (data[key].Budget_Status != "Created") {
-        //                    debugger;
         //                    $('#btnDel' + (key + 1) + '').hide();
         //                    $('#btnApprove' + (key + 1) + '').hide();
         //                }
@@ -253,7 +247,6 @@
         var globalvalue = 0;
         function addCommas(num) {
             globalvalue = 0;
-            debugger;
             var str = num.toString().split('.');
             if (str[0].length >= 4) {
                 str[0] = str[0].replace(/(\d)(?=(\d{3})+$)/g, '$1,');
@@ -307,21 +300,17 @@
             window.location.href = "Budget.aspx?VID=" + ID;
         }
         function deleteConfirm(ID) {
-            debugger;
             var BugetID = ID;
             if (confirm('Are you sure want to delete this record')) {
                 PageMethods.DeleteRecord(BugetID, function (msg) {
-                    debugger;
                     location.reload();
                 });
             }
         }
 
         function ApproveBudget(ID) {
-            debugger;
             var BugetID = ID;
             PageMethods.ApproveRecord(BugetID, function (msg) {
-                debugger;
                 if (msg) {
                     alert("Approved successfully");
                     location.reload();
@@ -329,7 +318,6 @@
                     alert("Approval failed. Please try again.");
                 }
             }, function (error) {
-                debugger;
                 alert("An error occurred: " + error.get_message());
             });
         }

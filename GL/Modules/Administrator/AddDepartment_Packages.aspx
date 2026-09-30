@@ -5,14 +5,12 @@
 
     <script type="text/javascript">
     $(document).ready(function () {
-        debugger;
         var Item_Code = $("#hdfItem_Code").val();
         FillLabTests();
         GetPanelItems();
         GetDepartment();
 
         $('#btnSave').click(function () {
-            debugger;
             var btnSave = $('#btnSave').val();
             var PAckID = $('#hdnPackage_ID').val();
 
@@ -37,7 +35,6 @@
             }
 
             table.find('tr').each(function (key, value) {
-                debugger;
                 var Amount = $(value).find('td input[name=txAmount]').val();
                 if (Amount == "" || Amount == null) Amount = 0;
                 var isExpense = $(value).find('td input[name=chkExpense]').is(':checked') ? true : false;
@@ -93,7 +90,6 @@
         });
         var id = '<% =Request.QueryString["Dep_Package_id"] %>';
         if (id != "") {
-            debugger;
             PopulatePackage(id);
             LoadDepartment();
             $('#btnSave').val('Update');
@@ -173,14 +169,12 @@
         }
 
         function PopulatePackageDetail(id) {
-            debugger;
             PageMethods.GetPackageDetail(id, function (res) {
 
                 var item = JSON.parse(res);
                 var rows = '';
                 var result;
                 $.each(item, function (key, value) {
-                    debugger;
                     var lenght = tblbodyPackage.rows.length + 1;
                     var desc = (value.Item_Type != 'Test') ? value.Item_Code + "-" + value.itemanme : " " + value.itemanme;
                     var expenseChecked = (value.IsExpense === true) ? "checked" : "";
@@ -225,7 +219,6 @@
         }
 
         function LoadDepartment() {
-            debugger;
             var id = '<%= Request.QueryString["Dep_Package_id"] %>';
             $.ajax({
                 type: "POST",
@@ -237,14 +230,12 @@
                 dataType: "json",
                 success: function (response) {
                     var parsed_Data = JSON.parse(response.d);
-                    debugger;
                     var rows = '';
                     for (var i = 1; i <= parsed_Data.length; i++) {
                         generateRows();
 
                         GetDepartment();
 
-                        debugger;
                         $('#Departments' + i + '').val(parsed_Data[i - 1].Department_Id);
                     }
                 },
@@ -267,7 +258,6 @@
             contentType: "application/json; charset=utf-8",
             dataType: "json",
             success: function (data) {
-                debugger;
                 $.each(JSON.parse(data.d), function (key, value) {
                     options += '<option value="' + value.Item_ID + '" Rate="' + value.Sale_Rate + '" >' + value.Description + '</option>';
                 });
@@ -335,7 +325,6 @@
             calculateTotals();
         }
     function new_value() {
-        debugger;
 
         var discount = $('#ctl00_MainContent_txtDiscount').val();
         var item = $('#ddlItems').val();

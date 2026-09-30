@@ -35,12 +35,9 @@
             });
         }
         function Filltaxtype() {
-            debugger;
             var optionsVen = '';
             PageMethods.gettaxtype(function (Tests) {
-                debugger
                 $.each(JSON.parse(Tests), function (key, value) {
-                    debugger;
                     optionsVen += '<option value="' + value.Sales_Tax_ID + '" >' + value.Sales_Tax_Perc + '</option>';
                 });
                 _gloabal = optionsVen;
@@ -50,7 +47,6 @@
 
         $(document).ready(function () {
             $('#btnSelectVendor').on('click', function () {
-                debugger
                 $('#VendorModal').modal('show');
             });
             GetWareHouseCondition();
@@ -63,11 +59,9 @@
             $('[id*=checkHeader]').click(function () {
                 var isTrue = $('#checkHeader').is(':checked');
                 if (isTrue) {
-                    debugger;
                     $('.chktd').prop('checked', true);
                     setTimeout(function () {
                         $("#tblRFQItemstModelTable tr:gt(0) input[type=checkbox]:checked ").each(function (key, value) {
-                            debugger;
                             var row = $(this);
                             append(row);
                         });
@@ -105,7 +99,6 @@
             setTimeout(function () {
                 var status = $('#ctl00_MainContent_txtStatus').val();
                 if (status == "Approved") {
-                    debugger;
                     $('#btnSave').attr("disabled", 'disabled');
                 }
                 if (status == "Created") {
@@ -122,7 +115,6 @@
                 contentType: "application/json; charset=utf-8",
                 dataType: "json",
                 success: function (response) {
-                    debugger;
                     warehouseCond = JSON.parse(response.d);
                     if (warehouseCond == '01') {
                         $('#warehouse').show();
@@ -145,7 +137,6 @@
                 });
         }
         function getprNoBy_WareHouseRFQ() {
-            debugger;
          
             PageMethods.GetPRNoByWarehouse_RFQ(function (res) {
                 var item = JSON.parse(res);
@@ -161,7 +152,6 @@
         function LoadRFQData(RFQ_ID) {
             PageMethods.LoadRFQHeaderDetail(RFQ_ID, function (resp) {
                 var data = JSON.parse(resp);
-                debugger;
                 var TrnsDate = $.datepicker.formatDate('dd M yy', new Date(parseInt(data.RFQ_Date.substring(6, 19))));
                 $('#ctl00_MainContent_txtRFQ_Date').val(TrnsDate);
                 var Due_Date = $.datepicker.formatDate('dd M yy', new Date(parseInt(data.DueDate.substring(6, 19))));
@@ -200,13 +190,11 @@
 
         function LoadRFQItemDetail(RFQ_ID) {
             PageMethods.LoadRFQItemDetail(RFQ_ID, function (resp) {
-                debugger;
                 var data = (JSON.parse(resp));
                 selectedOptions = data;
                 var rows = '';
                 var TrnsDate = '';
                 $.each(data, function (key, value) {
-                    debugger;
                     if (value.Required_Date != null) {
                         TrnsDate = $.datepicker.formatDate('dd M yy', new Date(parseInt(data[key].Required_Date.substring(6, 19))));
                     }
@@ -237,7 +225,6 @@
                 });
                 $('#tblItemDescription tbody').html(rows);
                 $.each(selectedOptions, function (key, value) {
-                    debugger;
                     $("#ddlSTAX" + (key + 1)).val(value.SalTax_Id);
                 });
                 $('input[name="txtreqdate"]').datepicker({ dateFormat: 'dd M yy' }).attr('readonly', 'readonly');
@@ -249,7 +236,6 @@
         }
 
         function GetWareHouse() {
-            debugger;
             var prno = $("#ctl00_MainContent_ddlPrNo").val();
             PageMethods.GetwarehousebyPrno(prno, function (res) {
                 var item = JSON.parse(res);
@@ -259,14 +245,11 @@
             });
         }
         function LoadRFQVendor(RFQ_ID) {
-            debugger;
             PageMethods.LoadRFQVendors(RFQ_ID, function (resp) {
-                debugger;
                 var data = (JSON.parse(resp));
                 selectedOptions = data;
                 var rows = '';
                 $.each(data, function (key, value) {
-                    debugger;
                     rows += '<tr style="height: 20px !important">' +
                         '<td style="display:none;height: 20px !important;"><input type="text" name="txt_Vendor_id" id="txt_Vendor_id' + (key + 1) + '" value="' + value.VendorId + '""/>' + value.VendorId + '</td>' +
                         '<td><input type="text" readonly="readonly" id="txt_vendorName' + (key + 1) + '" name="txt_vendorName" style="width:100%;" value=' + value.VendorName + '></input></td>' +
@@ -280,7 +263,6 @@
                 })
         }
         function validateSave() {
-            debugger;
             var proceed = true;
             var table = $('#tblItemDescriptionDetail');
             var DueDate = $('#ctl00_MainContent_txtDue_Date').val();
@@ -358,9 +340,7 @@
             return proceed;
         }
         function SaveAllRecord() {
-            debugger
             if (validateSave()) {
-                debugger;
                 var status;
                 var btnSave = $('#btnSave').val();
                 var RefNo = $('#ctl00_MainContent_txtRFQ_Reference').val();
@@ -378,15 +358,12 @@
                 var RFQ_ID = $('#hdnRFQ_ID').val();
                 var Item_list = [];
                 var Vendor_list = [];
-                debugger;
                 if (RFQ_No == "(New)" || RFQ_No == "")
                     RFQ_No = "0";
                 table1.find('tr').each(function (key, value) {
-                    debugger;
                     Item_list.push({ 'PRDetailId': $(value).find('td input[name=txtPRDId]').val(), 'ItemCode': $(value).find('td input[name=txtItemCode]').val(), 'ItemName': $(value).find('td input[name=txtItemName]').val(), 'Unit': $(value).find('td input[name=txtUnit]').val(), 'Qty': $(value).find('td input[name=txtQty]').val(), 'UnitPrice': $(value).find('td input[name=txtUnitPrice]').val(), 'TotalPrice': $(value).find('td input[name=txtTotalPrice]').val(), 'SalTax_Id': $("#ddlSTAX" + (key + 1) + " option:selected").val(), 'Required_Date': $(value).find('td input[name=txtreqdate]').val() });
                 });
                 table2.find('tr').each(function (key, value) {
-                    debugger;
                     Vendor_list.push({ 'VendorID': $(value).find('td input[name=txt_Vendor_id]').val(), 'VendorName': $(value).find('td input[name=txt_vendorName]').val() });
                 });
                 if (status == false) {
@@ -409,7 +386,6 @@
                     $('#btnsave').attr('disabled', true);
                     var AllItemDetail = { 'RFQ_ID': RFQ_ID, 'RFQ_Date': RFQ_Date, 'RFQ_No': RFQ_No, 'RefNo': RefNo, 'DueDate': DueDate, 'Term_ID': Term_ID, 'PaymentTerms': PaymentTerms, 'wareHouse': wareHouse, 'Branch': Branch, 'QuotationValidty': QuotationValidty, 'Remarks': Remarks, 'ItemList': Item_list, 'Vendorlist': Vendor_list };
                     PageMethods.SaveRFQItemDetail(btnSave, JSON.stringify(AllItemDetail), function (res) {
-                        debugger;
                         if (btnSave == "Update") {
                             Swal.fire({
                                 icon: 'success',
@@ -448,14 +424,11 @@
             }
         }
         function LoadPrNoDetail(pr_id) {
-            debugger;
             PageMethods.getPRByID(pr_id, function (data) {
-                debugger;
                 var Test = JSON.parse(data);
                 $('#tblRFQItemstModelTable tbody tr').remove();
                 var rows = "";
                 for (var i = 0; i < Test.length; i++) {
-                    debugger;
                     rows = '<tr><td style="width:50px !important"><input class="chktd" id="chktd" name="chktd" type="checkbox" style=" margin-top: -2px; margin-left: 1px;" onclick="append(this)"/></td><td style="display:none;">' + Test[i].PR_ID + '</td><td style="display:none;">' + Test[i].PR_Num + '</td><td style="display:none;">' + Test[i].Item_ID + '</td><td style="text-align:left">' + Test[i].Description + '</td><td style="width: 80px;text-align:right">' + parseFloat(Test[i].Qty).toFixed(2)
                         + '</td><td style="display:none;">' + Test[i].Item_Code + '</td><td style="width: 100px;text-align:center">' + Test[i].Unit + '</td><td style="display:none;">' + parseFloat(Test[i].UnitPrice).toFixed(2) + '</td><td style="display:none;">' + Test[i].Required_Date + '</td><td style="display:none;">' + Test[i].PR_Detail_ID + '</td></tr>';
                     $('#tblRFQItemstModelTable tbody').append(rows);
@@ -466,7 +439,6 @@
             });
         }
         function append(anchor) {
-            debugger;
             var row = $(anchor).parents('tr')[0];
             var prid = $($(row).find('td')[1]).text();
             var prnum = $($(row).find('td')[2]).text();
@@ -538,14 +510,12 @@
 
 
         function calcTotal() {
-            debugger
             var totprice = 0;
             var amtwithtaxprice = 0;
             var STpercent = 0;
             var STAmount = 0;
             var tbl = document.getElementById('tblItemDescription');
             $.each($('#tblItemDescription tbody tr'), function (key, value) {
-                debugger;
                 var Rate = $($(value).find('td input[name=txtUnitPrice]')[0]).val();
                 var Qty = $($(value).find('td input[name=txtQty]')[0]).val();
                 if (Qty != undefined || Rate != undefined) {
@@ -564,14 +534,11 @@
         }
 
         function PrintRFQDetail() {
-            debugger;
             var id = '<% =Request.QueryString["RFQ_ID"] %>';
             if (id != '' && id != null && id != undefined) {
                 PageMethods.GetVendorsforReports(id, function (Tests) {
-                    debugger
                     var message = JSON.parse(Tests);
                     for (var i = 0; i < message.length; i++) {
-                        debugger;
                         var locationInfo = window.location;
 
                         var user_name = '<% =AppConfig.Company_Name %>';
@@ -603,7 +570,6 @@
         }
 
         function Addrow() {
-            debugger;
             var vendorName = $('#ctl00_MainContent_ddlVendors :selected').text();
             var Vendor_id = $('#ctl00_MainContent_ddlVendors').val();
             if (Vendor_id == 0) {
@@ -643,7 +609,6 @@
             else {
                 var rows = '';
                 var rowlength = tblVendorDetails.rows.length;
-                debugger
                 rows += '<tr style="height: 20px !important">' +
                     '<td style="display:none;height: 20px !important;"><input type="text" name="txt_Vendor_id" id="txt_Vendor_id' + rowlength + '" value=' + Vendor_id + ' />' + Vendor_id + '</td>' +
                     '<td style="height:20px !important;">' +
@@ -656,10 +621,8 @@
             }
         }
         function sendFile(ID, callback) {
-            debugger;
             var fileInput = $('#choseRFQfile')[0];
             if (fileInput.files.length > 0) {
-                debugger;
                 var data = new FormData();
                 data.append('file', $('#choseRFQfile')[0].files[0]);
                 data.append('ID', ID);

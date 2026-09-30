@@ -93,17 +93,14 @@
             }
 
         }
-        debugger;
         //fees of doctor
 
         function loadRegistrationFee() {
-            debugger;
             loadDepartmentByDoctor();
 
             var res = '';
             var Doc = $('#ctl00_MainContent_ddlDoctorName').val();
             PageMethods.loadRegistrationFees(Doc, function (res) {
-                debugger;
                 var fee = JSON.parse(res);
                 if (fee == null) {
                     res = '';
@@ -124,13 +121,11 @@
 
         }
         function loadDepartmentByDoctor() {
-            debugger;
             var Type = $('#ctl00_MainContent_ddlPatient_Type').val();
             if (Type == '02') {
                 var doc = $('#ctl00_MainContent_ddlDoctorName').val();
                 PageMethods.loadDpt(doc, function (res) {
                     var dep = JSON.parse(res);
-                    debugger;
                     var opt;
 
 
@@ -154,7 +149,6 @@
         }
         $(document).ready(function () {
             $("#tabs").on('click', 'li', function () {
-                debugger;
                 var activeTab = $(this).find('a').html();
                 if (activeTab == "Contact Information") $("#ctl00_MainContent_txtTemporary_Address").focus();
 
@@ -185,7 +179,6 @@
                 window.open('PrintReciept.aspx?Patient_ID=' + id, '_blank');
             }--%>
             var action = '<%=(Request.QueryString != null)?Request.QueryString["action"]:""%>'
-            debugger;
             if (action == "print") {
                 var id = document.getElementById('<%=hdnPatientID.ClientID%>').value;
                 window.open('/ReportViewer.aspx?ReportName=PatientSlip&ReportTitle=OPD Slip&Patient_ID=' + id, '_blank');
@@ -211,9 +204,7 @@
             });
         }
 
-        debugger;
         function SaveBroughtByInformation() {
-            debugger;
             //comment code 15jan
             //        var cnic = $("#ctl00_MainContent_txtPatient_NIC").val(); //cnic validation
             ///*        if (!(/^[0-9]{5}-[0-9]{7}-[0-9]{1}/).test(cnic))*/  //cnic validation
@@ -371,11 +362,8 @@
                 });
             }
         }
-        debugger;
         function LoadData() {
-            debugger;
             var Type = document.getElementById('ctl00_MainContent_ddlPatient_Type').value;
-            debugger;
             if (Type == "04") {
                 //$('#ctl00_MainContent_ddlDoctorName').show();
                 //$('#ctl00_MainContent_lblDOctorName').show();
@@ -629,7 +617,6 @@
         }
 
         function SearchPop() {
-            debugger;
             $('#SearchModel').modal({
                 backdrop: 'static'
             });
@@ -640,9 +627,7 @@
 
 
         function FillList() {
-            debugger;
             $('#tblResult tbody').empty();
-            debugger;
             var SearchString = '';
 
             PageMethods.Search(SearchString, OnFilter, OnFail);
@@ -659,7 +644,6 @@
         }
         var reg_id;
         function AddResult(Appointment_ID, Appointment_No, Patient_Name, Emp_name, Age, Phone, pat_id) {
-            debugger;
             reg_id = pat_id;
             $('#hdnAptId').val(Appointment_ID);
             tblLength = tblResult.rows.length;
@@ -746,7 +730,6 @@
             if (Pat_feeforCard == true) {
                 var Pat_idforCard = '<% =Request.QueryString["ID"] %>';
                 PageMethods.CardFee(Pat_idforCard, function (Tests) {
-                    debugger;
                     alert('Card Has Been Issued');
                 });
             }
@@ -791,10 +774,8 @@
             //window.open('ReportViewer.aspx?ReportName=PrintPatientBackCard&ReportTitle=Patient Registration Card&MrNo=' + $("#ctl00_MainContent_txtPatient_ID").val(), '_blanks');
             Patient_ID = document.getElementById('<%=hdnPatientID.ClientID%>').value            var url = "ReportViewer.aspx?ReportName=PrintPatientBackCard&ReportTitle=Patient Registration Card&MrNo=" + Patient_ID;            window.open(url);
         }
-        debugger;
 
         $(document).ready(function () {
-            debugger;
             fillgender();
             fillmartial();
             fillCity();
@@ -805,10 +786,8 @@
 
 
 
-            debugger;
 
             $("#txtSearch").keypress(function (event) {
-                debugger;
                 var SearchString = $('#txtSearch').val();
                 if (event.which == 13) {
                     {
@@ -828,7 +807,6 @@
             });
 
             $("#txtSearchmodal").keypress(function (event) {
-                debugger;
                 var SearchString = $('#txtSearchmodal').val();
                 if (event.which == 13) {
                     {
@@ -847,7 +825,6 @@
 
             });
             $("#txtSearch_rff").keypress(function (event) {
-                debugger;
                 var SearchString = $('#txtSearch_rff').val();
                 if (event.which == 13) {
                     {
@@ -889,7 +866,6 @@
             });
             var ids = '<%=Request.QueryString["ID"]%>';
             if (ids == '' || ids == "") {
-                debugger;
 
                 // $('#addNewbtn').attr("disabled", true);
 
@@ -946,18 +922,14 @@
                 }
             });
         });
-        debugger;
         function getTotalCountPatient() {
-            debugger;
             $.ajax({
                 type: "POST",
                 url: "Patients.aspx/GetCount",
                 contentType: "application/json; charset=utf-8",
                 dataType: "json",
                 success: function (data) {
-                    debugger;
                     var dataaa = JSON.parse(data.d);
-                    debugger;
                     // Update your UI elements with the received data
                     $('#lblTotalPatients').text(dataaa.TotalPatients);
                     $('#lblFilterClinic1').text(dataaa.Filter1);
@@ -975,11 +947,10 @@
 
         function PrintReceipt() {
 
-            debugger;            Patient_ID = document.getElementById('<%=hdnPatientID.ClientID%>').value            var url = "ReportViewer.aspx?ReportName=PatientSlip&Title=OPD Slip&Patient_ID=" + Patient_ID;            window.open(url);
+            Patient_ID = document.getElementById('<%=hdnPatientID.ClientID%>').value            var url = "ReportViewer.aspx?ReportName=PatientSlip&Title=OPD Slip&Patient_ID=" + Patient_ID;            window.open(url);
 
         }
         function SearchPatients() {
-            debugger;
             $('#PatientsSearchModel').modal({
                 backdrop: 'static'
 
@@ -993,9 +964,7 @@
 
         }
 
-        debugger;
         function FillPatientsList() {
-            debugger;
             $('#tblPatientsResult tbody').empty();
 
             var SearchString = '';
@@ -1005,7 +974,6 @@
 
 
         function fillrefferedpat() {
-            debugger;
             $('#tblPatientsReffered tbody').empty();
 
             var SearchString = '';
@@ -1057,7 +1025,6 @@
 
         var isAdd = false;
         function AddPatientDetail(Reg_Patient_ID) {
-            debugger;
             try {
                 isAdd = true;
                 var apt_id = appointment_id;
@@ -1070,7 +1037,6 @@
         }
 
         function get_pat_initial_info(ini_patientID) {
-            debugger;
             try {
                 isAdd = true;
                 window.location.href = "Patients.aspx?ID=" + ini_patientID + "&isAdd=" + isAdd;
@@ -1081,7 +1047,6 @@
 
         }
         function AddPatientsRFFResult(Reg_Patient_ID, Patient_No, Full_Name, NIC, Mobile1, Father_Name, OPD_ID) {
-            debugger;
             tblLength = tblPatientsReffered.rows.length;
 
             var row = iPatients_rffBody.insertRow(-1);
@@ -1110,7 +1075,6 @@
             cell.innerHTML = actions;
         }
         function AddPatientsResult(Reg_Patient_ID, Patient_No, Full_Name, NIC, Mobile1, Father_Name) {
-            debugger;
             tblLength = tblPatientsResult.rows.length;
 
             var row = iPatientsBody.insertRow(-1);
@@ -1135,7 +1099,6 @@
             actions += '<a style="color:#15ab02db;font-size:16px;" class="fa fa-plus" href="#" onclick=AddPatientDetail(' + Reg_Patient_ID + ')></a>&nbsp;|&nbsp;&nbsp;<a style="color:#0a32a0db;font-size:16px;" class="fa fa-pencil" href="#" onclick=EditPatientDetail(' + Reg_Patient_ID + ')></a>';
             cell.innerHTML = actions;
         }
-        debugger;
         function EditPatientDetail(id) {
 
             var Patient_ID = $('#hdfPatient_ID').val();
@@ -1175,11 +1138,8 @@
 
         var inPatientID;
         var Discharged;
-        debugger;
         function OnSuccessEdit(data) {
-            debugger;
             if (data.d != '') {
-                debugger;
 
                 inPatientID = data.d.Inpat;
                 Discharged = data.d.Discharged;
@@ -1228,16 +1188,13 @@
             }
 
         }
-        debugger;
         function SavePatient() {
-            debugger;
             $('#SavePatient_Data').attr('disabled', true);
             var Prefix_PatientName = $('#ddl_name').val();
             var PatientName = $('#txt_name').val();
             var PatientID = $('#hdfPatient_ID').val();
 
             var Full_Name = Prefix_PatientName + PatientName;
-            debugger;
             var RelationType = $('#ddlRelation').val();
             var Relation = $('#txt_relation').val();
             var Gender = $('#ddl_Gender').val();
@@ -1294,7 +1251,6 @@
                 contentType: "application/json; charset=utf-8",
                 dataType: "json",
                 success: function (data) {
-                    debugger;
                     var ini_patientID = data.d;
 
                     alert('Your Record Save and Load Successfully');
@@ -1311,7 +1267,6 @@
             });
         }
         function get_pat_initial_info(ini_patientID) {
-            debugger;
             try {
                 isAdd = true;
                 window.location.href = "Patients.aspx?ID=" + ini_patientID + "&isAdd=" + isAdd;
@@ -1325,7 +1280,6 @@
 
             var ID = appointment_id;
 
-            debugger;
             $.ajax({
                 type: "POST",
                 url: "Patients.aspx/AptPatient",
@@ -1337,7 +1291,6 @@
                 contentType: "application/json; charset=utf-8",
                 dataType: "json",
                 success: function (data) {
-                    debugger;
                     var dataaa = JSON.parse(data.d);
 
                     //alert(data.d);
@@ -1361,7 +1314,6 @@
         var appointment_id;
         var reg_ids;
         function AddDetail(id, reg_id) {
-            debugger;
             alert('Patient Proceed');
             appointment_id = id;
             reg_ids = reg_id;
@@ -1369,7 +1321,6 @@
             $('#CloseSearchModel_apt').hide();
             $('#modal-backdrop in').hide();
             $('#ctl00_MainContent_hdnAptId').attr('value', id);
-            debugger;
             AddPatientDetail_apt();
 
 
@@ -1377,7 +1328,6 @@
 
         var isAdds = false;
         function AddPatientDetail_apt() {
-            debugger;
             try {
                 isAdds = true;
                 var apt_id = appointment_id;
@@ -1392,7 +1342,6 @@
         var register_ids;
         var isReffered = false;
         function AddDetail_Rff(OPD_ID, Reg_Patient_ID) {
-            debugger;
             alert('Patient Proceed');
             rff_id = OPD_ID;
             register_ids = Reg_Patient_ID;
@@ -1405,7 +1354,6 @@
         }
 
         function addfunc() {
-            debugger;
             var maskedValue = $('#txtSearch').val();
             var unmaskedValue = maskedValue.replace(/_/g, '');
             var Ph_sNOs = unmaskedValue.length;
@@ -1418,7 +1366,6 @@
 
 
 
-            debugger;
 
             $('#ClosePatientsSearchModel').click();
             fillmrno();
@@ -1438,7 +1385,6 @@
                 contentType: "application/json; charset=utf-8",
                 dataType: "json",
                 success: function (data) {
-                    debugger;
                     var max_mr = data.d;
                     $('#txt_Mrno').val('New');
                 },
@@ -1457,7 +1403,6 @@
                 contentType: "application/json; charset=utf-8",
                 dataType: "json",
                 success: function (data) {
-                    debugger;
                     var max_mr = data.d;
                     $('#ctl00_MainContent_txt_opd_no').val(max_mr);
                 },
@@ -1468,7 +1413,6 @@
         }
 
         function AddNewPatient() {
-            debugger;
             $('#ddl_pnl_cpy').next(".select2-container").hide();
 
             clearPatient();
@@ -1556,9 +1500,7 @@
                 $('#btnPrintBackCard').attr('disabled', true);
             }
         }
-        debugger;
         function CalculateDateOfBirth() {
-            debugger;
             var now = moment();
             var year = $('#txt_dob').val();
             var calcualteDate = now.subtract('years', year);

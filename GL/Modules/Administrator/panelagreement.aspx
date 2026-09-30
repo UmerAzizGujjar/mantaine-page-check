@@ -27,7 +27,6 @@
                 window.location.href = "PanelView.aspx";
             })
             $('#btnSave').on('click', function () {
-                debugger;
                 var id = '<% =Request.QueryString["ID"] %>';
                 if (id != "") {
 
@@ -122,7 +121,6 @@
 
         });
         function ReplicatePanel() {
-            debugger;
             var valid = true;
             var cmp_name = $("#txtCompanyName").val();
             var no_of_emp = $("#txtEmpNo").val() || 0;
@@ -332,7 +330,6 @@
             }
         }
         function AddTestRow() {
-            debugger;
             var maindpt = $('#ddlMainTestDepartment').val();
             var testGroupCatVal = $("#ddlTestList option:selected").attr('groupCat');
 

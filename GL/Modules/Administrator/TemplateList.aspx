@@ -5,7 +5,6 @@
     <script type="text/javascript">
 
         $(document).ready(function () {
-            debugger;
             $('#ctl00_lblMessage').hide();
             LoadPage();
 
@@ -59,7 +58,6 @@
                     { "data": "AttendingParamedical_Staff", "orderable": false },
                     {
                         render: function (data, type, full) {
-                            debugger;
                             var res = '<a class="editListBtn"  href="#" onclick="Edit(' + full.TemplateID + ')" style="border-radius: 4px;margin-right: 4px;padding: 5px 8px 5px 8px;"><i class="fa fa-pencil"></i></a>'
                                 ;
                             var print = '<a class="printListBtn" style="border-radius: 4px;margin-left: 4px;padding: 5px 8px 5px 8px;" href="#" onclick="PrintTest(' + full.Test_ID + ')" id="btnprint"><i class="fa fa-print"></i></a>';
@@ -93,19 +91,15 @@
                 }
             });
         }
-        debugger;
 
         function Edit(ID) {
-            debugger;
             window.location.href = "MedicineTemplate.aspx?ID=" + ID;
            
         }
         function deleteConfirm(ID) {
-            debugger;
             var itemID = ID;
             if (confirm('Are you sure want to delete this record')) {
                 PageMethods.DeleteRecord(itemID, function (msg) {
-                    debugger;
                     location.reload();
                 });
             }

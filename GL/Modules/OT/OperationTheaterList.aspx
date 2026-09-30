@@ -5,7 +5,6 @@
 
     <script type="text/javascript">
         $(document).ready(function () {
-            debugger;
             $('#ctl00_lblMessage').hide();
             LoadPage();
 
@@ -13,7 +12,6 @@
         });
 
         function editOpen(id) {
-            debugger;
             window.open("OperationBooking.aspx?ID=" + id + "");
         }
 
@@ -158,7 +156,6 @@
                     {
                         "data": "Created_Time", "name": "Created_Time",
                         "render": function (data, type, full) {
-                            debugger;
                             var date = full.Created_Time;
                             date = moment(date).format('DD-MMM-YYYY');
                             return date;
@@ -166,7 +163,6 @@
                     },
                     {
                         render: function (data, type, full) {
-                            debugger;
                             var res = '<a href="#" class="editListBtn" onclick="editOpen(' + full.Operation_Booking_ID + ')" style="border-radius: 4px;padding: 5px 8px 5px 8px;"><i class="fa fa-pencil"></i></a>'
                             var del = '<a href="#" onclick="delete_id(' + full.Operation_Booking_ID + ')" class="editListBtn" style="border-radius: 4px;padding: 5px 8px 5px 8px;"><i class="fa fa-trash"></i></a>'
 

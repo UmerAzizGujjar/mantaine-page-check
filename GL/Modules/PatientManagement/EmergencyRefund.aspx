@@ -31,7 +31,6 @@
         }
 
         function OnSuccesss(response) {
-            debugger;
             var data = JSON.parse(response.d);
             if (!data.Refund_ID) {
                 alert("Refund not found.");

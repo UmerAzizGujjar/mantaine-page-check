@@ -4,7 +4,6 @@
     <script type="text/javascript">
 
         $(document).ready(function () {
-            debugger;
             $('#ctl00_lblMessage').hide();
             LoadPage();
             loadDoctors();
@@ -106,7 +105,6 @@
                     {
                         "data": "Appointment_Date", "name": "Appointment_Date",
                         "render": function (data, type, full) {
-                            debugger;
                             var date = full.Appointment_Date;
                             date = moment(date).format('DD-MMM-YYYY');
                             return date;
@@ -117,7 +115,6 @@
                     {
                         "data": "Creation_Date", "name": "Creation_Date",
                         "render": function (data, type, full) {
-                            debugger;
                             var date = full.Creation_Date;
                             date = moment(date).format('DD-MMM-YYYY');
                             return date;
@@ -125,7 +122,6 @@
                     },               
                     {
                         render: function (data, type, full) {
-                            debugger;
                             var res = '<a href="#" onclick="editOpen(' + full.Derma_Appointment_Id + ')" class="editListBtn" style="border-radius: 4px;padding: 5px 8px 5px 8px;"><i class="fa fa-pencil"></i></a>'
 
                             var result;

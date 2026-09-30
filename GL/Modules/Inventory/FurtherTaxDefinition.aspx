@@ -5,7 +5,6 @@
         var _global_receiveable = '';
 
         $(document).ready(function () {
-            debugger;
             loadItemList();
             loadrecvablaccountegl();
             loadpayableaccountgl();
@@ -52,7 +51,6 @@
         }
 
         function LoadAccount() {
-            debugger;
             var rows = '';
             PageMethods.LoadAccount(function (resp) {
                 var data = JSON.parse(resp);

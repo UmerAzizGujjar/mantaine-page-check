@@ -139,7 +139,6 @@
         });
 
         function applyMedicationQtyValidation() {
-            debugger;
             $('input[name=RecQty]').prop('disabled', true).addClass('qty-disabled');
             $('input[name=IssueQty]').each(function () {
                 var $row = $(this).closest('tr');
@@ -153,7 +152,6 @@
         }
 
         $(document).on('input change', 'input[name=RtnQty]', function () {
-            debugger;
             var $row = $(this).closest('tr');
             var recQty = parseFloat($row.find('input[name=RecQty]').val()) || 0;
             var rtnQty = parseFloat($(this).val()) || 0;
@@ -1695,7 +1693,6 @@
         function LoadVitalParametersHistoryDischarge(PatientID) {
             if (PatientID != "(New)") {
                 PageMethods.LoadVitalParametersHistoryDischarge(PatientID, function (res) {
-                    debugger;
                     var Data = JSON.parse(res);
                     var rows = '';
                     var gcs = "";
@@ -3574,7 +3571,6 @@
             });
         }
         function LoadDischargeMedicines() {
-            debugger;
             if ($('#<%= txtIn_Patient_ID.ClientID%>').val() != '(New)') {
                 PageMethods.LoadDischageMedicines($('#<%= txtIn_Patient_ID.ClientID%>').val(), function (res) {
                     var Medicines = JSON.parse(res);
@@ -3651,7 +3647,6 @@
             }
         }
         function LoadMedicines() {
-             debugger;
             if ($('#<%= txtIn_Patient_ID.ClientID%>').val() != '(New)') {
                 PageMethods.LoadMedicines($('#<%= txtIn_Patient_ID.ClientID%>').val(), function (res) {
                     var Medicines = JSON.parse(res);
@@ -3663,7 +3658,6 @@
                     var role = '';
                     var allowMedicationEdit = false; 
                     $.each(Medicines, function (key, value) {
-                         debugger;
                         var Username = '<%= AppConfig.UserName%>';
                         var timeStamp = parseInt(value.Medicine_Date.substr(6, 10));
                         role = value.userrole;
@@ -3875,7 +3869,6 @@
             if (PatientID != '(New)') {
                 $('#tblHistoryTests tbody tr').remove();
                 PageMethods.GetTestListForHistory(PatientID, function (res) {
-                    debugger;
                     var test = JSON.parse(res);
                     var rows = '';
                     var Sample = 'No';
@@ -4149,7 +4142,6 @@
 
 
         function SaveDischargeMedicines() {
-            debugger;
             var Dtable = $('#tblDischargeMedication');
             var MedicinesList = [];
 
@@ -4289,7 +4281,6 @@
         }
 
         function SaveMedicines() {
-            debugger;
             var table = $('#tblMedicinesListRegular');
             var tablePRN = $('#tblMedicinesListPRN');
             var tableStat = $('#tblMedicinesListSTAT');
@@ -6526,7 +6517,6 @@
 
             });
             $('#btnSaveMedicine').on("click", function () {
-                debugger;
 
                 if ($('#txtPharmacyItem').find('option:selected').text().trim() == 'Reassurance') {
                     $('#txtDosage').val("0");
@@ -6689,7 +6679,6 @@ var row = '<tr' + (unlistedFlag === 1 ? ' class="unlisted-row"' : '') + ' data-n
                         }
                     }
                     else {
-                        debugger;
                         //var row = '<tr> <td> <input type="hidden" name="testDate" value="' + complete + '">' + complete + ' </td><td><input type="hidden" name="hdnItemCode" value="0"> ' + pharmacyITem + '</td><td> ' + $('#txtRecomended_Dosage').find('option:selected').text() + '</td><td> ' + $('#Routes').find('option:selected').text() + '</td><td> ' + $('#txtInjection').val() + '</td><td>' + $('#AttendingParamedicalStaff').val() + '</td><td> ' + $('#ddlDosage_From').find('option:selected').text() + ' </td> <td> ' + $('#ddlDosage_Qty').val() + ' </td>' + '<td> ' + $('#ddlOther_Instruction').find('option:selected').text() + ' </td>' + '<td>' + username + '</td><td><input type="text" class="form-control routeInput" value="0" name="IssueQty" placeholder="Enter value" /></td><td><input type="text" class="form-control routeInput" value="0" name="RecQty" placeholder="Enter value" /></td><td><input type="text" class="form-control routeInput" value="0" name="RtnQty" placeholder="Enter value" /></td><td> <a href="#" onclick="editMedicine(this)"> Edit </a> | <a href="#" onclick="deleteMedicine(this)"> Delete </a> <input type="hidden" name="uurowid" value=' + uuid() + ' />  </td><td><input type="text" class="form-control routeInput" name="issue_rcvd_qty" value="0" placeholder="Enter value" /></td><td style="display:none;">' + itemCode + '</td></tr>';
                         var row = '<tr> <td> <input type="hidden" name="testDate" value="' + complete + '">' + complete + ' </td><td><input type="hidden" name="hdnItemCode" value="' + itemCode + '"> ' + pharmacyITem + '</td><td> ' + $('#ddlDosage_Qty').val() + '</td><td> ' + $('#ddlDosage_From').find('option:selected').text() + '</td> <td> ' + $('#txtRecomended_Dosage').find('option:selected').text() + ' </td><td> ' + $('#txtInjection').val() + '</td>   <td> ' + $('#Routes').find('option:selected').text() + ' </td><td>' + completeStop + '</td> <td>' + otherIns + '</td>' + '<td> ' + $('#AttendingParamedicalStaff').val() + ' </td>' + '<td>' + username + '</td>' + '<td><input type="text" class="form-control routeInput" value="' + requestQty + '" name="IssueQty" placeholder="Enter value" /></td><td><input type="text" class="form-control routeInput" value="0" name="RecQty" placeholder="Enter value" /></td><td><input type="text" class="form-control routeInput" value="0" name="RtnQty" placeholder="Enter value" /></td>' + '<td><a href="#" onclick="editMedicine(this)"> Edit </a> | <a href="#" onclick="deleteMedicine(this)"> Delete </a> <input type="hidden" name="uurowid" value=' + uuid() + ' />  </td><td><input type="text" class="form-control routeInput" name="issue_rcvd_qty" value="0" placeholder="Enter value" /></td><td style="display:none;">' + itemCode + '</td></tr>';
 

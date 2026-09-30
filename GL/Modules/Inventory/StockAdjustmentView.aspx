@@ -395,7 +395,6 @@
 
 
             function PrintVoucher(Adjustment_Id) {
-                debugger;
                 var locationInfo = window.location;
 
 
@@ -417,7 +416,6 @@
             }
 
             function PrintStockAdjustment(Adjustment_Id) {
-                debugger;
                 var id =  Adjustment_Id;
      var locationInfo = window.location;
 

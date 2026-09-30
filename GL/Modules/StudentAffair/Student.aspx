@@ -15,7 +15,6 @@
             GetSessions();
             $('#ddl_session').select2();
 
-            debugger;
         <% if (Request.QueryString["Stu_ID"] != null)
         { %>
             var Stu_ID = '<%= Request.QueryString["Stu_ID"]%>'
@@ -47,15 +46,12 @@
 
 
         function GetSessions() {
-            debugger;
             var optionsDepth = '';
 
             PageMethods.GetSession(function (Tests) {
-                debugger
                 optionsDepth = '<option value="0">Please Select</option>';
 
                 $.each(JSON.parse(Tests), function (key, value) {
-                    debugger;
 
                     optionsDepth += '<option value="' + value.DataValueName + '" >' + value.DataValueDescription + '</option>';
                 });
@@ -67,10 +63,8 @@
 
 
         function LoadStudentData(Stu_ID) {
-            debugger;
             PageMethods.LoadStudentData(Stu_ID, function (resp) {
                 var studata = JSON.parse(resp);
-                debugger;
                 $('#savebtn').val('Update');
 
                 var stDate = '';
@@ -143,15 +137,12 @@
    
 
         function GetAdmissionCategories() {
-            debugger;
             var optionsDepth = '';
 
             PageMethods.GetAdmisionCategory(function (Tests) {
-                debugger;
                 optionsDepth = '<option value="0">Please Select</option>';
 
                 $.each(JSON.parse(Tests), function (key, value) {
-                    debugger;
 
                     optionsDepth += '<option value="' + value.DataValueName + '" >' + value.DataValueDescription + '</option>';
                 });
@@ -159,7 +150,6 @@
             });
         }
        
-        debugger;
         function Getnewstudentcode() {
             PageMethods.Getnewstudentno(function (resp) {
                 $('#txt_StudentCode').val(resp);
@@ -172,7 +162,6 @@
 
 
         function SaveAllRecord() {
-            debugger;
             var status;
             var btnSave = $('#savebtn').val();
             var txt_StudentCode = $('#txt_StudentCode').val();
@@ -194,14 +183,12 @@
 
             var txt_Date = $('#txt_Date').val();
 
-            debugger;
             $('#btnSave').attr('disabled', true);
             var AllItemDetail = { 'txt_StudentCode': txt_StudentCode, 'txt_Date': txt_Date, 'txt_studentname': txt_studentname, 'txt_rollno': txt_rollno, 'txt_fname': txt_fname, 'txt_phone': txt_phone, 'txt_email': txt_email, 'ddladmsn_category': ddladmsn_category, 'txt_address': txt_address, 'ddl_session': ddl_session, 'txt_glaccount': txt_glaccount };
 
 
 
             PageMethods.SaveInvoice(btnSave, JSON.stringify(AllItemDetail), function (res) {
-                debugger;
                 alert('Data Save Successfully');
                 window.location = "Student.aspx?Stu_ID=" + res;
                 $('#savebtn').val("Update");

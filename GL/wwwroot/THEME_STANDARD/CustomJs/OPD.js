@@ -1,6 +1,5 @@
 
 $(document).ready(function () {
-    debugger;
     isCNICValidationRequired();
 
     $('.show').show();
@@ -10,12 +9,10 @@ $(document).ready(function () {
     $('#btn-opdprint').hide();
     /*  $('#divvoucher').hide();*/
     $("#tabs").on('click', 'li', function () {
-        debugger;
         var activeTab = $(this).find('a').html();
         if (activeTab == "Contact Information") $("#ctl00_MainContent_txtTemporary_Address").focus();
 
     });
-    debugger;
 
     $('#btnsearchpatlist').click(function () {
         $("#PatientsSearchModel").modal('show');
@@ -31,7 +28,6 @@ $(document).ready(function () {
         FillReferPatientsList();
     });
     $("#txtSearch").keypress(function (event) {
-        debugger;
         var SearchString = $('#txtSearch').val();
         if (event.which == 13) {
             {
@@ -50,7 +46,6 @@ $(document).ready(function () {
     });
 
     $("#txtSearchmodal").keypress(function (event) {
-        debugger;
         var SearchString = $('#txtSearchmodal').val();
         if (event.which == 13) {
             {
@@ -336,7 +331,6 @@ function showhide() {
     $('#StdName').hide();
 }
 function FillPatientsList() {
-    debugger;
     $('#tblPatientsResult tbody').empty();
 
     var SearchString = '';
@@ -362,7 +356,6 @@ function Get_Pat_Info_Reffer(reg_id) {
         contentType: "application/json; charset=utf-8",
         dataType: "json",
         success: function (resp) {
-            debugger;
             var data = JSON.parse(resp.d);
             $('#txtPatientNo').val(data.Mr_No);
             $('#txtpatient_no').val(data.pat_no);
@@ -376,7 +369,6 @@ function Get_Pat_Info_Reffer(reg_id) {
             $('#ctl00_MainContent_lblNoOfDays').html(data.DaysSinceLatestVisit);
             $('#ctl00_MainContent_lblNoOfDays2').html(data.DaysSinceSecondLatestVisit);
 
-            debugger;
 
             $('#ddlmartialstatus').html(
                 $('<option>', {
@@ -445,7 +437,6 @@ function Get_Pat_Info_Apt(reg_id, apt_Id) {
         contentType: "application/json; charset=utf-8",
         dataType: "json",
         success: function (resp) {
-            debugger;
             var data = JSON.parse(resp.d);
             $('#txtPatientNo').val(data.Mr_No);
             $('#txtpatient_no').val(data.pat_no);
@@ -461,7 +452,6 @@ function Get_Pat_Info_Apt(reg_id, apt_Id) {
             $('#ctl00_MainContent_lblNoOfDays').html(data.DaysSinceLatestVisit);
             $('#ctl00_MainContent_lblNoOfDays2').html(data.DaysSinceSecondLatestVisit);
 
-            debugger;
 
             $('#ddlmartialstatus').html(
                 $('<option>', {
@@ -531,7 +521,6 @@ function Get_Pat_Info(reg_id) {
         contentType: "application/json; charset=utf-8",
         dataType: "json",
         success: function (resp) {
-            debugger;
             var data = JSON.parse(resp.d);
 
             $('#txtPatientNo').val(data.Mr_No);
@@ -571,14 +560,12 @@ function Get_Pat_Info(reg_id) {
 }
 
 function addfunc() {
-    debugger;
 
     AddNewPatient();
 
 
 
 
-    debugger;
 
     $('#ClosePatientsSearchModel').click();
     fillmrno();
@@ -588,7 +575,6 @@ function addfunc() {
     $('#txt_name').focus();
 }
 function AddNewPatient() {
-    debugger;
     $('#ddl_pnl_cpy').next(".select2-container").hide();
 
     clearPatient();
@@ -651,7 +637,6 @@ function AddPatientsResult(Reg_Patient_ID, Patient_No, Full_Name, NIC, Mobile1, 
 }
 
 function AddPatientDetail(reg_id) {
-    debugger;
     try {
         isAdd = true;
         window.location.href = "OPD.aspx?ID=" + reg_id + "&isAdd=" + isAdd;
@@ -665,7 +650,6 @@ function AddPatientDetail(reg_id) {
 
 
 function SearchPop_App() {
-    debugger;
     $('#SearchModel_App').modal({
         backdrop: 'static'
     });
@@ -676,9 +660,7 @@ function SearchPop_App() {
 
 
 function FillList() {
-    debugger;
     $('#tblResult tbody').empty();
-    debugger;
     var SearchString = '';
 
     PageMethods.SearchAppointment(SearchString, OnFilter, OnFail);
@@ -695,7 +677,6 @@ function OnFilter(data) {
 }
 var reg_id;
 function AddResult_Appointment(Appointment_ID, Appointment_No, App_Date, Patient_Name, Emp_name, Age, Phone, pat_id) {
-    debugger;
     reg_id = pat_id;
     $('#hdnAptId').val(Appointment_ID);
     tblLength = tblResult.rows.length;
@@ -738,7 +719,6 @@ function ClearResults() {
 var appointment_id;
 var reg_ids;
 function AddDetail(id, reg_id) {
-    debugger;
     Swal.fire({
         icon: 'success',
         title: 'Success!',
@@ -759,7 +739,6 @@ function AddDetail(id, reg_id) {
     $('#hdn_aptid').attr('value', id);
     $('#hdn_aptid').val(appointment_id);
     $('#hdn_regid').val(reg_ids);
-    debugger;
     AddPatientDetail_apt();
 
 
@@ -767,7 +746,6 @@ function AddDetail(id, reg_id) {
 
 var isAdds = false;
 function AddPatientDetail_apt() {
-    debugger;
     try {
         isAdds = true;
         var apt_id = appointment_id;
@@ -864,7 +842,6 @@ function FillUserAccount() {
 var originalFee;
 
 function Calc_Discount() {
-    debugger;
 
     var disc_perc = $('#txtdiscount').val();
     var actualFee = $('#txtactualfee').val();
@@ -901,7 +878,6 @@ function getGeneralFee() {
         contentType: 'application/json; charset=utf-8',
         dataType: 'json',
         success: function (resp) {
-            debugger;
             var data = JSON.parse(resp.d);
             var Category = $('#ddlPatient_Type').val();
             if (Category == "06") {
@@ -962,7 +938,6 @@ function fillArea() {
 }
 var editrights;
 function AllowOPdEdit() {
-    debugger;
     $.ajax({
         type: "POST",
         url: "OPD.aspx/checlkeditRights",
@@ -971,7 +946,6 @@ function AllowOPdEdit() {
         dataType: "json",
         async: true,
         success: function (data) {
-            debugger;
             editrights = data.d;
 
             if (editrights == "true") {
@@ -997,7 +971,6 @@ function AllowOPdEdit() {
 
 
 
-debugger;
 function CalculateDateOfBirth() {
     var Numbers = $('#PrefixAge').val();
     var CalDob = $('#txt_dob').val();
@@ -1047,7 +1020,6 @@ function fillmrno() {
         contentType: "application/json; charset=utf-8",
         dataType: "json",
         success: function (data) {
-            debugger;
             var max_mr = data.d;
             $('#txt_Mrno').val('New');
         },
@@ -1057,7 +1029,6 @@ function fillmrno() {
     });
 }
 function SavePatient() {
-    debugger;
     var Prefix_PatientName = $('#ddl_name').val();
     var PatientName = $('#txt_name').val();
     var PatientID = $('#hdfPatient_ID').val();
@@ -1176,7 +1147,6 @@ function SavePatient() {
         contentType: "application/json; charset=utf-8",
         dataType: "json",
         success: function (response) {
-            debugger;
             if (response.d === "CNIC_EXISTS") {
                 Swal.fire({
                     title: 'CNIC Already Exists!',
@@ -1225,7 +1195,6 @@ function SavePatient() {
 }
 function Approve(pat_id) {
     PageMethods.ApproveRegpatient(pat_id, function (Tests) {
-        debugger
         var message = JSON.parse(Tests);
         if (message[0].Message != null || message[0].Message != "") {
             Swal.fire({
@@ -1244,7 +1213,6 @@ function Approve(pat_id) {
     });
 }
 function SaveData() {
-    debugger;
 
     var regid = $('#hdn_regid').val();
     var appid = $('#hdn_aptid').val();
@@ -1601,7 +1569,6 @@ function SaveData() {
     });
 }
 function get_pat_initial_info(ini_patientID) {
-    debugger;
     try {
         isAdd = true;
         window.location.href = "OPD.aspx?ID=" + ini_patientID + "&isAdd=" + isAdd;
@@ -1625,7 +1592,6 @@ function loadDepartment(Doc) {
             contentType: "application/json; charset=utf-8",
             dataType: "json",
             success: function (response) {
-                debugger;
                 var data = JSON.parse(response.d);
 
                 $('#ddlDepartment').html(
@@ -1660,7 +1626,6 @@ function loadEmpData() {
             contentType: "application/json; charset=utf-8",
             dataType: "json",
             success: function (resp) {
-                debugger;
                 var data = JSON.parse(resp.d);
 
                 $('#txtdependent').val(data.Dependent);
@@ -1682,7 +1647,6 @@ function get_totalpatient() {
         contentType: 'application/json; charset=utf-8',
         dataType: 'json',
         success: function (response) {
-            debugger;
             // Parse the JSON string inside response.d
             var data = JSON.parse(response.d); // ASP.NET wraps in .d
 
@@ -1741,7 +1705,6 @@ function getpanelRate() {
         contentType: "application/json; charset=utf-8",
         dataType: "json",
         success: function (resp) {
-            debugger;
             var data = JSON.parse(resp.d);
 
             $('#txtfees').val(data.Fees);
@@ -1755,7 +1718,6 @@ function getpanelRate() {
 }
 
 function loadPatientDetail(OPDID) {
-    debugger;
     $('#btnsave').val('Update');
     $('#btnsave').attr('disabled', true);
     AllowOPdEdit();
@@ -1767,7 +1729,6 @@ function loadPatientDetail(OPDID) {
         contentType: "application/json; charset=utf-8",
         dataType: "json",
         success: function (resp) {
-            debugger;
             var data = JSON.parse(resp.d);
             var stat = data.status;
             if (stat == "Approved") {
@@ -1881,7 +1842,6 @@ function loadPatientDetail(OPDID) {
 
             $('#txtfees').val(data.Receipt_Amount).attr('disabled', true);
             $('#txtactualfee').val(data.Actual_amount);
-            debugger;
             if (stat != "Approved") {
                 $('#divapprove').show();
                 $('#divvoucher').hide();
@@ -1911,7 +1871,6 @@ $(document).ready(function () {
 
 
 function FillEmergencyPatientsList() {
-    debugger;
     $('#tblEmergencyResult tbody').empty();
 
     var SearchString = '';
@@ -1964,7 +1923,6 @@ function AddEmergencyPatientsResult(Patient_ID, Patient_No, Full_Name, Father_Na
 }
 
 function AddEmergencyPatientDetail(reg_id) {
-    debugger;
     try {
         isAdd = true;
         window.location.href = "OPD.aspx?Reffered_id=" + reg_id + "&isAdd=" + isAdd;
@@ -2043,7 +2001,6 @@ function AddReferPatientDetail(reg_id, OPDID) {
 
 // OPD.js
 function OPD_Print(OPD_ID, company_name) {
-    debugger;
     if (!OPD_ID) {
         console.error("OPD_ID is missing");
         return;
