@@ -200,6 +200,8 @@
         }
 
         $(document).ready(function () {
+            $('#btnPrint').prop('disabled', true);
+
             $('#txtKey').on('keypress', function (e) {
                 if (e.which === 13) {
                     e.preventDefault();
@@ -207,6 +209,13 @@
                 }
             });
         });
+
+        var lastPatientRow = null;
+        var lastServices = [];
+
+        function isPrintDataAvailable() {
+            return (lastPatientRow !== null) || (lastServices.length > 0);
+        }
 
         function SearchPatient() {
             var key = $('#txtKey').val().trim();
@@ -231,6 +240,10 @@
 
                     var res = response.d || {};
                     var rows = res.Patient || [];
+
+                    lastPatientRow = rows.length ? rows[0] : null;
+                    lastServices = res.Services || [];
+                    $('#btnPrint').prop('disabled', !isPrintDataAvailable());
 
                     if (rows.length === 0) {
                         renderHeader(null);
@@ -365,6 +378,84 @@
                 "order": []
             });
         }
+
+        function PrintReport() {
+            if (!isPrintDataAvailable()) {
+                swalMsg('warning', 'Nothing to Print', 'Search a patient first.');
+                return;
+            }
+
+            var w = window.open('', '_blank');
+
+            if (!w) {
+                swalMsg('error', 'Popup Blocked', 'Please allow pop-ups to print the report.');
+                return;
+            }
+
+            var css = '<style>' +
+                '@page { size: A4 landscape; margin: 8mm; }' +
+                'html, body { margin: 0; }' +
+                'body { font-family: Arial, sans-serif; font-size: 11px; color: #222; }' +
+                'h1 { font-size: 15px; margin: 0 0 2px; }' +
+                '.sub { color: #666; font-size: 10px; margin-bottom: 8px; }' +
+                'h2 { font-size: 12px; margin: 10px 0 5px; border-bottom: 1px solid #999; padding-bottom: 2px; }' +
+                '.kv { display: grid; grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); gap: 4px 12px; }' +
+                '.kv-item { border-bottom: 1px solid #ddd; padding: 2px 0; min-width: 0; }' +
+                '.kv-k { display: block; font-size: 9px; text-transform: uppercase; letter-spacing: .3px; color: #777; }' +
+                '.kv-v { display: block; font-size: 11px; overflow-wrap: anywhere; }' +
+                'table { width: 100%; border-collapse: collapse; }' +
+                'th, td { border: 1px solid #bbb; padding: 2px 4px; text-align: left; vertical-align: top; white-space: nowrap; font-size: 10px; }' +
+                'th { background: #f0f0f0; font-size: 9px; text-transform: uppercase; }' +
+                '</style>';
+
+            var html = '<html><head><meta charset="utf-8" /><title>EMR Patient Report</title>' + css + '</head><body>';
+
+            html += '<h1>Client EMR Patient Report</h1>';
+            html += '<div class="sub">Printed: ' + escapeHtml(new Date().toLocaleString()) + '</div>';
+
+            if (lastPatientRow) {
+                html += '<h2>Patient Information</h2><div class="kv">';
+                $.each(lastPatientRow, function (k, v) {
+                    html += '<div class="kv-item">' +
+                        '<span class="kv-k">' + escapeHtml(String(k).replace(/_/g, ' ')) + '</span>' +
+                        '<span class="kv-v">' + escapeHtml(v) + '</span>' +
+                        '</div>';
+                });
+                html += '</div>';
+            }
+
+            html += '<h2>Patient Services (' + lastServices.length + ')</h2>';
+
+            if (lastServices.length === 0) {
+                html += '<p>No record found.</p>';
+            } else {
+                var cols = [];
+                $.each(lastServices[0], function (k) { cols.push(k); });
+
+                html += '<table><thead><tr>';
+                $.each(cols, function (i, c) {
+                    html += '<th>' + escapeHtml(String(c).replace(/_/g, ' ')) + '</th>';
+                });
+                html += '</tr></thead><tbody>';
+
+                $.each(lastServices, function (i, r) {
+                    html += '<tr>';
+                    $.each(cols, function (j, c) {
+                        html += '<td>' + escapeHtml(r[c]) + '</td>';
+                    });
+                    html += '</tr>';
+                });
+
+                html += '</tbody></table>';
+            }
+
+            html += '<script>window.onload = function () { window.print(); };</' + 'script>';
+            html += '</body></html>';
+
+            w.document.open();
+            w.document.write(html);
+            w.document.close();
+        }
     </script>
 </asp:Content>
 
@@ -380,6 +471,7 @@
                        placeholder="e.g. 001000071011" />
                 <input class="btn-primry emr-btn" type="button" id="btnSearch" value="Search" onclick="SearchPatient()" />
                 <input class="btn-primry emr-btn" type="button" id="btnTest" value="Test Connection" onclick="TestConnection()" />
+                <input class="btn-primry emr-btn" type="button" id="btnPrint" value="Print" onclick="PrintReport()" />
             </div>
         </div>
 

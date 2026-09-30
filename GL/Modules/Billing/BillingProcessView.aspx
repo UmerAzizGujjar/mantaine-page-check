@@ -5,6 +5,16 @@
     <link href="../../wwwroot/THEME_TIBBIT/CustomCSS/custom-modals.css" rel="stylesheet" />
     <script src="https://cdn.datatables.net/buttons/2.4.2/js/buttons.colVis.min.js"></script>
     <style>
+        .bp-date-filter { display: flex; flex-wrap: wrap; align-items: center; gap: 10px 14px; margin-bottom: 10px; }
+        .bp-date-filter label.fl { margin: 0; font-weight: 600; }
+        .bp-date-filter input[type=date] { width: 160px; display: inline-block; }
+        .bp-switch { position: relative; display: inline-block; width: 44px; height: 24px; margin: 0; }
+        .bp-switch input { opacity: 0; width: 0; height: 0; }
+        .bp-slider { position: absolute; cursor: pointer; inset: 0; background: #ccc; border-radius: 24px; transition: .2s; }
+        .bp-slider:before { content: ""; position: absolute; height: 18px; width: 18px; left: 3px; top: 3px; background: #fff; border-radius: 50%; transition: .2s; }
+        .bp-switch input:checked + .bp-slider { background: #2e7d32; }
+        .bp-switch input:checked + .bp-slider:before { transform: translateX(20px); }
+
         .detail-container {
             padding: 15px;
         }
@@ -291,10 +301,56 @@
     <script type="text/javascript">
         $(document).ready(function () {
             $('#ctl00_lblMessage').hide();
+            initDateFilter();   // default: current month, filter ON
             LoadPage();
 
 
         });
+
+        /* ---------- Start / End date filter (default = current month) ---------- */
+        function pad2(n) { return n < 10 ? '0' + n : '' + n; }
+        function fmtYMD(d) { return d.getFullYear() + '-' + pad2(d.getMonth() + 1) + '-' + pad2(d.getDate()); }
+
+        function setCurrentMonthDates() {
+            var now = new Date();
+            $('#txtFromDate').val(fmtYMD(new Date(now.getFullYear(), now.getMonth(), 1)));
+            $('#txtToDate').val(fmtYMD(new Date(now.getFullYear(), now.getMonth() + 1, 0)));
+        }
+
+        function reloadBillList() {
+            if ($.fn.DataTable.isDataTable('#tbloutPatients')) {
+                $('#tbloutPatients').DataTable().ajax.reload();
+            }
+        }
+
+        function initDateFilter() {
+            setCurrentMonthDates();
+            $('#chkDateFilter').prop('checked', true);
+            $('#lblDateFilterState').text('Current month');
+
+            // Toggle: ON = date filter (current month), OFF = clear dates and show all data
+            $('#chkDateFilter').on('change', function () {
+                if (this.checked) {
+                    setCurrentMonthDates();
+                    $('#txtFromDate, #txtToDate').prop('disabled', false);
+                    $('#lblDateFilterState').text('Current month');
+                } else {
+                    $('#txtFromDate, #txtToDate').val('').prop('disabled', true);
+                    $('#lblDateFilterState').text('All data');
+                }
+                reloadBillList();
+            });
+
+            $('#txtFromDate, #txtToDate').on('change', function () {
+                var f = $('#txtFromDate').val(), t = $('#txtToDate').val();
+                if (f && t && f > t) {
+                    Swal.fire({ icon: 'warning', title: 'Invalid Date Range', text: 'Start date cannot be after end date.' });
+                    return;
+                }
+                $('#lblDateFilterState').text('Custom range');
+                reloadBillList();
+            });
+        }
 
         function IncrementReprintCount(billId) {
             if (!billId || billId == '0' || billId == '') return;
@@ -431,7 +487,8 @@
                             sortColumn: data.columns[data.order[0].column].name,
                             sortColumnDirection: data.order[0].dir,
                             searchValue: data.search.value,
-                            mainDeptFilter: $('#ddlMainDeptFilter').val() || 'all'
+                            fromDate: $('#txtFromDate').val() || '',
+                            toDate: $('#txtToDate').val() || ''
                         }),
                         contentType: "application/json; charset=utf-8",
                         dataType: "json",
@@ -459,11 +516,10 @@
                             // date = moment(date).format('DD-MMM-YYYY');
                             date = moment(date).format('DD-MMM-YYYY hh:mm A');
                             return date;
-                        }, "width": "8%", "orderable": true
+                        }, "width": "7%", "orderable": true
                     },
                     { "data": "MrNo", "name": "MrNo", "width": "5%", "orderable": true },
                     { "data": "Full_Name", "width": "13%", "orderable": false },
-                    { "data": "Main_Department", "width": "5%", "orderable": false },
                     { "data": "Total_Amount", "width": "5%", "orderable": false },
                     { "data": "Discount_Percentage", "width": "3%", "orderable": false },
                     { "data": "Discount_Amount", "width": "5%", "orderable": false },
@@ -627,27 +683,6 @@
                     row.child('<div style="padding:20px;text-align:center;">Loading...</div>').show();
                     tr.addClass('shown');
                     LoadBillDetails(billId, row);
-                }
-            });
-
-            $.ajax({
-                type: "POST",
-                url: "BillingProcessView.aspx/GetMainDepartments",
-                contentType: "application/json; charset=utf-8",
-                dataType: "json",
-                success: function (response) {
-                    var list = JSON.parse(response.d);
-                    var $sel = $('#ddlMainDeptFilter');
-                    $.each(list, function (i, it) {
-                        $sel.append($('<option>').val(it.DataValue_Name).text(it.DataValue_Description));
-                    });
-                    $sel.select2({ width: '220px', placeholder: 'Select department' });
-                    $sel.on('change', function () {
-                        $('#tbloutPatients').DataTable().ajax.reload();
-                    });
-                },
-                error: function () {
-                    console.error("Failed to load main departments");
                 }
             });
         }
@@ -1209,12 +1244,18 @@
 
 </asp:Content>
 <asp:Content ID="Content2" ContentPlaceHolderID="MainContent" runat="server">
-    <div class="row" style="margin-bottom: 10px;">
-        <div class="col-lg-2">
-            <label style="margin-right: 8px; font-weight: 600;">Main Department:</label>
-            <select id="ddlMainDeptFilter" style="width: 220px;">
-                <option value="all">All</option>
-            </select>
+    <div class="row">
+        <div class="col-lg-12 col-md-12 col-sm-12 bp-date-filter">
+            <label class="fl" for="txtFromDate">Start Date</label>
+            <input type="date" id="txtFromDate" class="form-control" />
+            <label class="fl" for="txtToDate">End Date</label>
+            <input type="date" id="txtToDate" class="form-control" />
+            <label class="fl" for="chkDateFilter">Date Filter</label>
+            <label class="bp-switch" title="Off = clear dates and show all data">
+                <input type="checkbox" id="chkDateFilter" checked="checked" />
+                <span class="bp-slider"></span>
+            </label>
+            <span id="lblDateFilterState" class="text-muted">Current month</span>
         </div>
     </div>
     <div class="row">
@@ -1228,7 +1269,6 @@
                         <th>Bill Date</th>
                         <th>MR No</th>
                         <th>Name</th>
-                        <th>Main Department</th>
                         <th>Total Amount</th>
                         <th>Discount Percentage</th>
                         <th>Discount Amount</th>
