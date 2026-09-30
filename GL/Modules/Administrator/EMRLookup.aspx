@@ -35,7 +35,7 @@
             display: flex;
             flex-wrap: wrap;
             align-items: center;
-            gap: 8px;
+            gap: 6px;
         }
 
         .emr-search-row label {
@@ -48,7 +48,7 @@
         .emr-search-row .textEntry {
             flex: 1 1 240px;
             max-width: 340px;
-            height: 34px;
+            height: 30px;
             border-radius: 8px !important;
         }
 
@@ -155,10 +155,8 @@
         }
 
         .emr-btn {
-            border-radius: 50px;
-            width: 150px;
-            height: 34px;
-            padding: 0 14px;
+            width: auto !important;
+            flex: 0 0 auto;
         }
     </style>
 
