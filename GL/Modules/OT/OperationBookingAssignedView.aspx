@@ -43,7 +43,6 @@
 
         var get_row = '';
         function Save(row) {
-            debugger;
             get_row = row;
             var fitness_id = $($(row).closest('tr')[0]).find('td:eq(0)').text();
             var Patient_Type = $($(row).closest('tr')[0]).find('td span[name=PatientType]').text();
@@ -54,7 +53,6 @@
                 contentType: "application/json; charset=utf-8",
                 dataType: "json",
                 success: function (response) {
-                    debugger;
                     if (response.d == "Prepared") {
                         $($(row).closest('tr')[0]).find('td input[name="btnSave"]').attr('disabled', true);
                         window.location.reload();
@@ -77,7 +75,6 @@
                 contentType: "application/json; charset=utf-8",
                 dataType: "json",
                 success: function (response) {
-                    debugger;
                     var result = JSON.parse(response.d);
                     optionsList = "<option value=0>Please Select</option>"
                     for (var i = 0; i <= result.length; i++) {
@@ -106,7 +103,6 @@
                     dataType: "json",
                     success: function (data) {
                         var row = '';
-                        debugger;
                         var parsed_data = JSON.parse(data.d);
                         jsonParsedData = parsed_data;
                         $.each(parsed_data, function (key, index) {
@@ -118,10 +114,8 @@
                             else {
                                 btn = '<input type="button" value="Prepared" name="btnSave"  onclick="Save(this);"/>';
                             }
-                            debugger;
                             row += '<tr><td style="display:none">' + parsed_data[key].In_Patient_ID + '</td><td style="display:none;"><input type="checkbox" class ="chcktbl" id="chcktbl" name="chkReport" value="false"/></td><td>' + parsed_data[key].Sr_No + '</td><td>' + parsed_data[key].Patient_No + '</td><td>' + parsed_data[key].Full_Name + '</td><td>' + parsed_data[key].Age_years + '</td><td>' + parsed_data[key].Gender + '</td><td>' + parsed_data[key].Bill_No + '</td><td style="text-align: center;"><span name="PatientType">' + parsed_data[key].PatientType + '</span></td><td> <select name="ddltestperfomedBy" id="ddldoc' + key + '" style="width: 124px!important;">' + optionsList + '</select></td><td><input type="text" name="txtrdate" id="txtot' + key + '" style="width: 128px!important;" autocomplete="off" value="' + $.datepicker.formatDate('dd M yy', new Date(parseInt(parsed_data[key].Operation_Date.substring(6, 19)))) + '"/></td><td> ' + parsed_data[key].Package_Name + ' </td><td>' + btn + ' </td></tr>';
                             if (parsed_data[key].Status) {
-                                debugger;
                                 $(row).find('td input[name="btnSave"]').removeAttr("disabled");
                             }
                             else {

@@ -25,7 +25,6 @@
 
             PageMethods.GetDashBoardDetails(function (resp) {
                 $.each(JSON.parse(resp), function (key, value) {
-                    debugger;
                     var url = value.URL.replace('~', '');
                     url = url.replace('/', '');
                     var find = $("a[href='" + url + "']").parent();

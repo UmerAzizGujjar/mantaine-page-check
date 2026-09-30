@@ -164,7 +164,6 @@
                     {
                         "data": "Bill_Date", "name": "Bill_Date",
                         "render": function (data, type, full) {
-                            debugger;
                             var date = full.Bill_Date;
                             date = moment(date).format('DD-MMM-YYYY');
                             return date;

@@ -5,7 +5,6 @@
     <script type="text/javascript">
 
         $(document).ready(function () {
-            debugger;
             $('#ctl00_lblMessage').hide();
             LoadPage();
 
@@ -22,7 +21,6 @@
             if (!confirm("Are you sure you want to delete"))
                 return;
             else {
-                debugger;
 
                 $.ajax({
                     type: "POST",
@@ -113,7 +111,6 @@
 
                     {
                         render: function (data, type, full) {
-                            debugger;
                             var res = '<a class="editListBtn" href="#" onclick="Edit(' + full.Asset_Definition_Id + ')" style="border-radius: 4px;padding: 5px 8px 5px 8px;"><i class="fa fa-pencil"></i></a>'
 
                             var print = '<a class="printListBtn" style="border-radius: 4px;margin-left: 4px;color: white;padding: 5px 8px 5px 8px;" href="#" onclick="PrintTest(' + full.Test_ID + ')" id="btnprint"><i class="fa fa-print"></i></a>';

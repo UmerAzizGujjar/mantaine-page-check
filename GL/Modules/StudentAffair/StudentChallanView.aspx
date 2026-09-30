@@ -10,7 +10,6 @@
 
         });
         function PrintTest(id) {
-            debugger;
             var locationInfo = window.location;
             var url = '/ReportViewer.aspx?ReportName=ChallanPrint&ReportTitle=Student Challan Print&TransID=' + id + '';
             if (!locationInfo.origin.includes('localhost')) {
@@ -64,7 +63,6 @@
                     {
                         "data": "IssueDate", "name": "IssueDate",
                         "render": function (data, type, full) { 
-                            debugger;
                             var date = full.IssueDate;
                             date = moment(date).format('DD-MMM-YYYY');
                             return date;
@@ -73,7 +71,6 @@
                     {
                         "data": "DueDate", "name": "DueDate",
                         "render": function (data, type, full) {
-                            debugger;
                             var date = full.DueDate;
                             date = moment(date).format('DD-MMM-YYYY');
                             return date;
@@ -85,7 +82,6 @@
                     { "data": "StudentName", "width": "10%", "orderable": false },
                     {
                         render: function (data, type, full) {
-                            debugger;
                             var res = '<a class="editListBtn" href="#" onclick="Edit(' + full.Challan_ID + ')" style="border-radius: 4px;padding: 5px 8px 5px 8px;"><i class="fa fa-pencil"></i></a>'
 
                             var Del = '<a href="#" class="delListBtn" style="border-radius: 4px;margin-left: 4px;padding: 5px 8px;" onclick="cancelChallan(' + full.Challan_ID + ')"><i class="fa fa-trash"></i></a>';
@@ -122,7 +118,6 @@
         }
 
         function cancelChallan(challanId) {
-            debugger;
             if (confirm("Are you sure you want to cancel this challan?")) {
                 $.ajax({
                     type: "POST",
@@ -152,14 +147,12 @@
         }
 
         function deleteConfirm(ID) {
-            debugger;
             var ChallanID = ID;
 
             if (confirm('Are you sure want to delete this record')) {
                 PageMethods.DeleteRecord(ChallanID, function (msg) {
                    
                     location.reload();
-                    debugger
                     $(row).remove();
                 }, OnFail);
             }

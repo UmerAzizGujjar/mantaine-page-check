@@ -22,7 +22,6 @@
                 contentType: "application/json; charset=utf-8",
                 dataType: "json",
                 success: function (response) {
-                    debugger;
                     if (response.d == "success") {
                         alert("Record has been deleted successfully");
                         window.location.href = "PanelView.aspx";

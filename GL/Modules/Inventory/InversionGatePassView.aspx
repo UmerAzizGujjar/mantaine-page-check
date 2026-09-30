@@ -451,7 +451,6 @@
        
 
         function PrintInwardGatePassDetail(Igp_Id) {
-            debugger;
             var locationInfo = window.location;
             var user_name = '<% =AppConfig.Company_Name %>';
             if (user_name == 'As-Siraat Serving Humanity') {
@@ -472,7 +471,6 @@
         function AutoGRN(ID) {
             var IgpId = ID;
             PageMethods.AutoGRN(IgpId, function (Tests) {
-                debugger
                 var message = JSON.parse(Tests);
                 if (message[0].Column1 != "" || message[0].Column1 != null) {
                     location.reload();
@@ -487,7 +485,6 @@
         function advautogrn(ID) {
             var IgpId = ID;
             PageMethods.AdvAutoGRN(IgpId, function (Tests) {
-                debugger
                 var message = JSON.parse(Tests);
                 if (message[0].Column1 != "" || message[0].Column1 != null) {
                     location.reload();
@@ -495,12 +492,10 @@
             });
         }
         function deleteConfirm(anchorTag) {
-            debugger;
             var row = $(anchorTag).parents('tr')[0];
             var IgpID = $($(row).find('td')[0]).text();
             if (confirm('Are you sure want to delete this record')) {
                 PageMethods.DeleteRecord(IgpID, function (msg) {
-                    debugger
                     $(row).remove();
                 }, OnFail);
             }
@@ -820,7 +815,6 @@
             });
         }
         function ViewPage(id, type) {
-            debugger;
             var ID = id
             if (type == 'GRN') {
                 window.open("GRN.aspx?GRN_ID=" + ID, "_blank");

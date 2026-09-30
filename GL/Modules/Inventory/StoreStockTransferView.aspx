@@ -4,7 +4,6 @@
       <link href="../../wwwroot/THEME_TIBBIT/CustomCSS/tablestyle.css" rel="stylesheet" />
     <script type="text/javascript">
         $(document).ready(function () {
-            debugger;
             $('#ctl00_lblMessage').hide();
             LoadPage();
 
@@ -113,7 +112,6 @@
                     {
                         "data": "Stock_Transfer_Date", "name": "Stock_Transfer_Date",
                         "render": function (data, type, full) {
-                            debugger;
                             var date = full.Stock_Transfer_Date;
                             date = moment(date).format('DD-MMM-YYYY');
                             return date;
@@ -125,7 +123,6 @@
                     { "data": "Status", "width": "10%", "orderable": false },
                     {
                         render: function (data, type, full) {
-                            debugger;
                             var res = '<a href="#" class="editListBtn" onclick="Edit(' + full.Stock_Transfer_ID + ')" style="border-radius: 4px;  color: white; padding: 5px 8px 5px 8px;"><i class="fa fa-pencil"></i></a>'
 
                             var print = '<a class="printListBtn" style="border-radius: 4px;margin-left: 4px;color: white;padding: 5px 8px 5px 8px;" href="#" onclick="PrintStoreTransfer(' + full.Stock_Transfer_ID + ')" id="btnprint"><i class="fa fa-print"></i></a>';

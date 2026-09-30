@@ -5,7 +5,6 @@
     <link href="../../wwwroot/CustomCSS/tablestyle.css" rel="stylesheet" />
     <script type="text/javascript">
         $(document).ready(function () {
-            debugger;
             $('#ctl00_lblMessage').hide();
             LoadPage();
 
@@ -18,7 +17,6 @@
         }
 
         function cancelPatient(patid , patname) {
-            debugger;
             var PatID = patid;
             var PatNo = patname;
 
@@ -92,7 +90,6 @@
                     {
                         "data": "Created_Time",
                         "render": function (data, type, full) {
-                            debugger;
                             var date = full.Created_Time;
                             date = moment(date).format('DD-MMM-YYYY');
                             return date;
@@ -100,7 +97,6 @@
                     },
                     {
                         render: function (data, type, full) {
-                            debugger;
                             var res = '<a href="#" onclick="editOpen(' + full.Patient_ID + ')" style="border-radius: 4px; background-color: #1f1fe3; color: white; padding: 5px 8px 5px 8px;"><i style="color:white !important;" class="fa fa-pencil"></i></a>'
                             var print = '<a style="border-radius: 4px;background-color:#ad170c;margin-left: 4px;color: white;padding: 5px 8px 5px 8px;" href="#" data-id="' + full.Patient_ID + '" onclick="cancelPatient( ' + full.Patient_ID + ', \'' + full.Full_Name + '\')"><i class="fa fa-trash"style="color:white !important;"></i></a>';
 

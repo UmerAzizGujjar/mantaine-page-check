@@ -127,7 +127,6 @@
                     {
                         "data": "Receipt_Date", "name": "Receipt_Date",
                         "render": function (data, type, full) {
-                            debugger;
                             var date = full.Receipt_Date;
                             date = moment(date).format('DD-MMM-YYYY');
                             return date;
@@ -141,7 +140,6 @@
                     {
                         "data": "Creation_Date", "name": "Creation_Date",
                         "render": function (data, type, full) {
-                            debugger;
                             var date = full.Creation_Date;
                             date = moment(date).format('DD-MMM-YYYY');
                             return date;
@@ -236,7 +234,6 @@
         }
         function CancelConfirm(anchorTag) {
 
-            debugger;
             var row = $(anchorTag).parents('tr')[0];
             var Receipt_ID = $($(row).find('td')[0]).text();
             var Receipt_No = $($(row).find('td')[1]).text();

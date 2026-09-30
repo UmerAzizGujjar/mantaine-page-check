@@ -589,7 +589,6 @@
         });
 
         $(document).ready(function () {
-            debugger;
             $('#ctl00_lblMessage').hide();
             LoadPage();
         });
@@ -688,9 +687,7 @@
             window.location.href = "OPDPolicy.aspx?Company_ID=" + id;
         }
 
-        debugger;
         function loadCompanyEdit(companyId) {
-            debugger;
             $.ajax({
                 url: 'OPDPolicy.aspx/GetCompanyDetails',
                 type: 'POST',

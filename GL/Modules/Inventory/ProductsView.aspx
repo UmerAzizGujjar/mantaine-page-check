@@ -28,15 +28,12 @@
             window.open('ReportViewer.aspx?ReportName=TestDefination&ReportTitle= Test Defination&Test_IDs=' + id);
         }
         function Edit(ID) {
-            debugger;
             window.location.href = "Product.aspx?ID=" + ID;
         }
         function deleteConfirm(ID) {
-            debugger;
             var itemID = ID;
             if (confirm('Are you sure want to delete this record')) {
                 PageMethods.DeleteRecord(itemID, function (msg) {
-                    debugger;
                     location.reload();
                 });
             }

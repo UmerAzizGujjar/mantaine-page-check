@@ -11,7 +11,6 @@
         });
 
         function ShowReport(Test_ID) {
-            debugger;
             window.open('../../ReportViewer.aspx?ReportName=TestDefination&ReportTitle= Test Defination&Test_IDs=' + Test_ID);
         }
 
@@ -191,13 +190,11 @@
         }
         
         function viewTestRateList() {
-            debugger;
             window.open('../../ReportViewer.aspx?ReportName=TestRateList&ReportTitle=Test Rate List');
             //window.open('ReportViewer.aspx?ReportName=TestRateList&ReportTitle=Test Rate List');
         }
 
         function viewGroupTest(row) {
-            debugger;
             var groupName = $(row).parents('tr:first').find("td:eq(4)").text();
             window.open('ReportViewer.aspx?ReportName=GroupTestDefinition&ReportTitle=Group Test&GroupCategoryName=' + groupName.trim() + '');
         }
@@ -224,14 +221,12 @@
         }
 
         function changeActiveStatus(row) {
-            debugger;
             var testID = $(row).parents('tr:first').children('td').first().next().text();
             var status = $('#chk' + testID + '')[0].checked;
             PageMethods.changeActiveStatus(testID, status);
         }
 
         function PrintTest(row) {
-            debugger;
             //var Test_ID = $(row).parents('tr:first').children('td').first().next().text();
             window.open('ReportViewer.aspx?ReportName=TestDefination&ReportTitle= Test Defination&Test_IDs=' + row);
         }

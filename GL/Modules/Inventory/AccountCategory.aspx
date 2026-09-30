@@ -166,7 +166,6 @@
     </style>
     <script type="text/javascript">
         function Addrow() {
-            debugger;
             var rows = '';
             var rowlength = tblItemDescription.rows.length;
             rows += '<tr>' +
@@ -203,7 +202,6 @@
             });
         });
         function loadItemList(rowlength) {
-            debugger;
             var optionsitem = '';
             var length = rowlength;
             $('#txtAccountCode' + length + '').select2();
@@ -229,7 +227,6 @@
                 });
         }
         function SaveAllRecord() {
-            debugger;
             var btnSave = 'Update';
             var tableItems = $('#tblItemDescription');
             var Account_list = [];
@@ -271,7 +268,6 @@
         function LoadAccount() {
             var rows = '';
             PageMethods.LoadAccount(function (resp) {
-                debugger;
                 var data = (JSON.parse(resp));
                 selectedOptions = data;
                 var rowIndex = parseInt((parseInt($('#tblItemDescriptionDetail tbody tr').length)));

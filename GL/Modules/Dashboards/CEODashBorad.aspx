@@ -68,7 +68,6 @@
                 dataType: "json",
                 async: false,
                 success: function (data) {
-                    debugger;
                     var parsedData = JSON.parse(data.d);
                     var total = parsedData.TotalPatients || 0;
 
@@ -92,7 +91,6 @@
             });
         }
         function LoadAppointmentsOPDCount(startdate, Enddate) {
-            debugger;
             var txt_sdate = startdate;
             var txt_edate = Enddate;
             $.ajax({
@@ -107,7 +105,6 @@
                 async: false,
                 success: function (data) {
                     var parsedData = JSON.parse(data.d);
-                    debugger;
                     // total comes from DOM
                     var total = parseInt($('#lblTotalPatient').text()) || 0;
                     var deptpats = parseInt($('#lblDepartmentPatient').text()) || 0;
@@ -339,12 +336,10 @@
 
         let chart;
         function LoadAreaWiseCount(startdate, Enddate) {
-            debugger;
             var txt_sdate = startdate
             var txt_edate = Enddate
             var Area_Count = [];
             PageMethods.GetAreaWisePatientsCount(txt_sdate, txt_edate, function (resp) {
-                debugger;
                 const data = JSON.parse(resp);
                 const labels = data.map(item => item.Area_Name);
                 const areaCounts = data.map(item => item.Counts);
@@ -589,12 +584,10 @@
         }
         let chart_proc;
         function LoadProcedureCount(startdate, Enddate) {
-            debugger;
             var txt_sdate = startdate
             var txt_edate = Enddate
             var Area_Count = [];
             PageMethods.GetProcdureCount(txt_sdate, txt_edate, function (resp) {
-                debugger;
                 const data = JSON.parse(resp);
                 const labels = data.map(item => item.Item_Name);
                 const ItemCounts = data.map(item => item.TotalCount);
@@ -672,7 +665,6 @@
             var txt_edate = Enddate;
 
             PageMethods.GetDocPatientCount(txt_sdate, txt_edate, function (resp) {
-                debugger;
                 var parsedData = JSON.parse(resp);
                 var series = [];
                 var label = [];
@@ -723,7 +715,6 @@
             }
 
             PageMethods.GetAppointmentCountByDoctor(formatDate(startdate), formatDate(Enddate), function (resp) {
-                debugger;
                 try {
                     var parsedData = JSON.parse(resp);
 
@@ -874,12 +865,10 @@
             var txt_sdate = startdate;
             var txt_edate = Enddate;
             PageMethods.GetPatientCountsAndNetAmount(txt_sdate, txt_edate, function (res) {
-                debugger;
                 var Investigations = JSON.parse(res);
                 var rows = '';
                 $('#tabPatientCount tbody').empty();
                 $.each(Investigations, function (key, value) {
-                    debugger;
                     rows += '<tr> <td>' + value.Category + ' </td><td> ' + value.Total_Count + ' </td><td> ' + value.Card_Receipt_Amount + ' </td><td> ' + value.Receipt_Amount + ' </td></tr>';
                 });
                 $('#tabPatientCount tbody').append(rows);
@@ -890,12 +879,10 @@
         let chart_Avg;
 
         function LoadOverallSatisfaction(startdate, Enddate) {
-            debugger;
             var txt_sdate = startdate;
             var txt_edate = Enddate;
 
             PageMethods.GetGetOverallSatisfaction(txt_sdate, txt_edate, function (resp) {
-                debugger;
                 try {
                     const data = JSON.parse(resp);
 

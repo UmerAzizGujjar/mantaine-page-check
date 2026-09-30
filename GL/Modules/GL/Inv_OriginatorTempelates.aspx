@@ -23,12 +23,10 @@
                 window.location.href = "Inv_OriginatorTempelatesView.aspx";
             });
             $('#btnSave').on('click', function () {
-                debugger
                 var id = $('#txtOrignatorTempelateID').val();
                 if (id == "") {
                     id = "";
                 }
-                debugger
                 var btnValue = $("#btnSave").val();
                 var txttempelateName = $("#txtOrignatorTempName").val();
                 var txttempelateDescription = $("#txtOrignatorTempelateDescription").val();
@@ -48,7 +46,6 @@
                     });
                     return false;
                 }
-                debugger
                 var UserList = new Array();
                 var list = document.getElementById('Originatorlist');
                 if (list.rows.length <= 1) {
@@ -86,11 +83,9 @@
                     }
                     UserList[key + 1] = new Array(ddlUser);
                 });
-                debugger
                 var checkedPurchasesFormIDs = [];
                 var checkedPurchasesCheckBoxIDs = [];
                 $("#<%=chkPurchases.ClientID%> input[type='checkbox']:checked").each(function () {
-                    debugger
                     var checkboxID = $(this).attr('id');
                     var index = checkboxID.split('_').pop();
                     var formID = $("#ctl00_MainContent_PurchasehidFormID_" + index).val();
@@ -101,7 +96,6 @@
                 var checkedInventoryFormIDs = [];
                 var checkedInventoryCheckBoxIDs = [];
                 $("#<%=chkInventory.ClientID%> input[type='checkbox']:checked").each(function () {
-                    debugger
                     var checkboxID = $(this).attr('id');
                     var index = checkboxID.split('_').pop();
                     var formID = $("#ctl00_MainContent_InventoryhidFormID_" + index).val();
@@ -112,7 +106,6 @@
                 var checkedAccountPayableFormIDs = [];
                 var checkedAccountPayableCheckBoxIDs = [];
                 $("#<%=chkAccountPayable.ClientID%> input[type='checkbox']:checked").each(function () {
-                    debugger
                     var checkboxID = $(this).attr('id');
                     var index = checkboxID.split('_').pop();
                     var formID = $("#ctl00_MainContent_AccountPayablehidFormID_" + index).val();
@@ -120,7 +113,6 @@
                     checkedAccountPayableCheckBoxIDs.push(checkboxID);
                 });
 
-                debugger
                 $.ajax({
                     type: "POST",
                     url: "Inv_OriginatorTempelates.aspx/Save",
@@ -234,21 +226,17 @@
         }
 
         function LoadFormIds(id) {
-            debugger
             var rows = '';
             PageMethods.LoadFormIds(id, function (resp) {
-                debugger;
                 var data = JSON.parse(resp);
                 console.log(data);
                 data.forEach(function (checkboxId) {
                     console.log(checkboxId);
-                    debugger
                     $('#' + checkboxId).prop('checked', true);
                 });
             });
         }
         function AppendUser() {
-            debugger
             var NoUserselect = false;
             $('#appusers select').each(function () {
                 if ($(this).val() === "0") {
@@ -303,7 +291,6 @@
 
 
         function ExcludeFromPayment(anchor) {
-            debugger;
             Swal.fire({
                 icon: 'warning',
                 title: 'Are you sure?',

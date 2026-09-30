@@ -11,7 +11,6 @@
            //           setInterval(time, 1000);
            ////import * as a from "./Scripts/jquery.datetimepicker";
            //           function time() {
-           //               debugger;
            //               var d = new Date();
            //               var h = d.getHours();
            //               var m = d.getMinutes();
@@ -28,7 +27,6 @@
                LoadPage();
 
                $("#btn-Book").click(function () {
-                   debugger;
                    window.open("Appointment.aspx?ID=" + chkID + "");
                });
 
@@ -36,7 +34,6 @@
            });
 
            function AttendanceChange(row) {
-               debugger;
                // var status = $(row).val();
 
                var present_Status = $(row).val();
@@ -67,7 +64,6 @@
                            alert("Status has been changed successfully");
                            location.reload();
                        }
-                       debugger;
                    }, error: function () {
                    }
                });
@@ -79,7 +75,6 @@
 
            function RemarksChanges(row)
            {
-               debugger;
                var remarks = $(row).val();
                var doctor_id = $(row).closest('tr').find('td:Eq(1)').text();
                $.ajax({
@@ -100,7 +95,6 @@
                            alert("Remarks has been saved successfully");
                            location.reload();
                        }
-                       debugger;
                    }, error: function () {
                    }
                });
@@ -112,7 +106,6 @@
           
 
            function selectchk(ID) {
-               debugger;
 
                onlyOne(ID);
 
@@ -135,14 +128,12 @@
                var row_Color = "";
                var present_Selected = "selected";
                var absent_Selected = "";
-               debugger;
                $.ajax({
                    type: "POST",
                    url: "Consultantsinformation.aspx/ViewList",
                    contentType: "application/json; charset=utf-8",
                    dataType: "json",
                    success: function (data) {
-                       debugger;
                        // var table;
                        var Priority = '';
                        // table = $('#tblRes').table();
@@ -153,7 +144,6 @@
                            var rows = '';
                            $.each(data, function (i, item)
                            {
-                               debugger;
                               
                                var Today = '<%= DateTime.Now.ToString("ddd", new System.Globalization.CultureInfo("en-US")) %>';
 
@@ -227,7 +217,6 @@
                        }
                        //tblRes.draw();
 
-                       debugger;
                    }
                });
 

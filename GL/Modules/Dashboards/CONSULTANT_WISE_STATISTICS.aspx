@@ -63,7 +63,6 @@
 
       });
       function SearchDate() {
-          debugger;
           var startdate = $('#StartDate').val();
           var enddate = $('#EndDate').val();
           var selectedDoctors = getSelectedDoctors();
@@ -78,7 +77,6 @@
               dataType: "json",
               async: false,
               success: function (response) {
-                  debugger;
                   var options = '';
                   var Parsed_Data = JSON.parse(response.d);
                   $.each(Parsed_Data, function (key, value) {
@@ -105,7 +103,6 @@
 
       let chart;
       function ChartQtyofDoc(startdate, enddate, doctorArray) {
-          debugger;
           var txt_sdate = formatDate(startdate);
           var txt_edate = formatDate(enddate);
 
@@ -118,7 +115,6 @@
           var doctorArrayJson = JSON.stringify(doctorArray);
 
           PageMethods.GetTotalDoctor(txt_sdate, txt_edate, doctorArrayJson, function (resp) {
-              debugger;
               var data = JSON.parse(resp);
               var labels = [];
               var seriesPatientCount = [];

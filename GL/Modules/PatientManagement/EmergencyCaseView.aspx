@@ -12,13 +12,11 @@
 
 
         function PrintEmergencyPatient(Emergency_ID) {
-            debugger;
           
             var url = '../../ReportViewer.aspx?ReportName=Emergencypatient&Title=Emergency Patient Report&Emergency_ID=' + Emergency_ID;
              window.open(url, '_blank');
         }
         function PrintEmergencyPatientCertificate(Emergency_ID) {
-            debugger;
             var url = '../../ReportViewer.aspx?ReportName=EmergencyPrint&Title=Emergency Patient Report&Emergency_ID=' + Emergency_ID;
              window.open(url, '_blank');
         }
@@ -241,7 +239,6 @@
         }
 
         function deleteConfirm(anchorTag) {
-            debugger;
             var table = $('#tblResult').DataTable();
             var row = $(anchorTag).closest('tr');
             var rowData = table.row(row).data();

@@ -249,12 +249,9 @@
             });
         }
         function FillStaxtype() {
-            debugger;
             var options = '<option value="0">0</option>';
             callPageMethod('getwtaxtype', function (Tests) {
-                debugger
                 $.each(JSON.parse(Tests), function (key, value) {
-                    debugger;
                     options += '<option value="' + value.Sales_Tax_ID + '" >' + value.Sales_Tax_Perc + '</option>';
                 });
                 $('.ddlSTAX').html(options);
@@ -262,12 +259,9 @@
             });
         }
         function FillAdvancetaxtype() {
-            debugger;
             var options = '<option value="0">0</option>';
             callPageMethod('getAdvanceTaxType', function (Tests) {
-                debugger
                 $.each(JSON.parse(Tests), function (key, value) {
-                    debugger;
                     options += '<option value="' + value.Advance_Tax_ID + '" >' + value.Advance_Tax_Perc + '</option>';
                 });
                 $('.ddlAdvanceTax').html(options);
@@ -390,7 +384,6 @@
             return (((sign) ? '' : '-') + num);
         }
         function GetDetail(PO_No) {
-            debugger;
             callPageMethod('GetPODetail', { PO_No: PO_No }, function (res) {
                 var Test = JSON.parse(res);
 
@@ -406,7 +399,6 @@
             });
         }
         function removeCommas(str) {
-            debugger;
             while (str.search(",") >= 1) {
                 str = (str + "").replace(',', '');
             }
@@ -414,7 +406,6 @@
         };
 
         function PrintPurchaseOrderDetail() {
-            debugger;
             var id = '<% =Request.QueryString["PO_ID"] %>';
             var locationInfo = window.location;
 
@@ -435,7 +426,6 @@
             window.open(url, '_blank');
         }
         function PrintPurchaseOrderDetail2() {
-            debugger;
             var id = '<% =Request.QueryString["PO_ID"] %>';
             var locationInfo = window.location;
 
@@ -457,7 +447,6 @@
         }
 
         function append(anchor, isBulk = false) {
-            debugger;
 
             if (typeof anchor === 'string' || typeof anchor === 'number') {
                 var itemId = anchor;
@@ -725,7 +714,6 @@ function buildNewRow(length, PR_Num, itemcode, item_name, unit, Qty, UOM_Qty, Ra
             return xmlHttp.responseText;
         }
         function LoadPrNoDetail(pr_id) {
-            debugger;
             callPageMethod('getPurchaseByID', { PRID: pr_id }, function (data) {
                 var Test = JSON.parse(data);
                 $('#tblPOItemstModelTable tbody tr').remove();
@@ -756,7 +744,6 @@ function buildNewRow(length, PR_Num, itemcode, item_name, unit, Qty, UOM_Qty, Ra
         function loaddata() {
             callPageMethod('getDDLlist', function (Tests) {
                 $.each(JSON.parse(Tests), function (key, value) {
-                    debugger;
                     if (value.Type == "Sal") {
                         optionsList += '<option value="' + value.DataValueName + '" >' + value.DataValueDescription + '</option>';
                     }
@@ -829,7 +816,6 @@ function buildNewRow(length, PR_Num, itemcode, item_name, unit, Qty, UOM_Qty, Ra
                 }
             });
             $('#ctl00_MainContent_ddlVendor').change(function () {
-                debugger;
                 if (vendorChanging) return;
 
                 var vendorId = $(this).val();
@@ -858,10 +844,8 @@ function buildNewRow(length, PR_Num, itemcode, item_name, unit, Qty, UOM_Qty, Ra
                     }, 100);
                     return;
                 }
-                debugger;
                 // User said NO - load directly
                 if (!projectionChosen) {
-                    debugger;
                     loadVendorItems(vendorId);
                     return;
                 }
@@ -918,7 +902,6 @@ function buildNewRow(length, PR_Num, itemcode, item_name, unit, Qty, UOM_Qty, Ra
                 }
                 // User said YES - validate warehouse
 
-                debugger;
                 // All good
                 if (projType == "001") {
                     loadVendorItems(vendorId);
@@ -1061,7 +1044,6 @@ function buildNewRow(length, PR_Num, itemcode, item_name, unit, Qty, UOM_Qty, Ra
             $('#txtItem').focus();
 
             $('#btnGetAllItems').on('click', function () {
-                debugger;
                 if (warehouseCond === '01') {
                     var warehouseVal = $('#ddlWarehouse').val();
                     if (!warehouseVal || warehouseVal === '0' || warehouseVal === '') {
@@ -1207,18 +1189,14 @@ function buildNewRow(length, PR_Num, itemcode, item_name, unit, Qty, UOM_Qty, Ra
 
 
         function UserRights() {
-            debugger;
             $.ajax({
                 type: "POST",
                 url: "PurchaseOrder.aspx/UserEntryRights",
                 contentType: "application/json; charset=utf-8",
                 dataType: "json",
                 success: function (response) {
-                    debugger;
                     var hasRights = response.d;
-                    debugger;
                     if (hasRights) {
-                        debugger;
                         $('#btnSave').show();
                     } else {
                         $('#btnSave').hide();
@@ -1383,7 +1361,6 @@ function buildNewRow(length, PR_Num, itemcode, item_name, unit, Qty, UOM_Qty, Ra
         function LoadPurchaseOrderData(PO_ID) {
             callPageMethod('LoadPOHeaderDetail', { PO_ID: PO_ID }, function (resp) {
                 var data = JSON.parse(resp);
-                debugger;
                 var datetime = $.datepicker.formatDate('dd M yy', new Date(parseInt(data.PO_Date.substring(6, 19))));
                 $('#ctl00_MainContent_txtPurchase_Date').val(datetime);
                 if (data.Due_Date != null || data.Due_Date != undefined) {
@@ -1559,9 +1536,7 @@ function buildNewRow(length, PR_Num, itemcode, item_name, unit, Qty, UOM_Qty, Ra
         //    var optionsSal = '';
         //    var optionFed = '';
         //    callPageMethod('getDDLlist', function (Tests) {
-        //        debugger
         //        $.each(JSON.parse(Tests), function (key, value) {
-        //            debugger;
         //            if (value.Type == "Sal") {
         //                optionsSal += '<option value="' + value.DataValueName + '" >' + value.DataValueDescription + '</option>';
         //            }
@@ -1571,12 +1546,10 @@ function buildNewRow(length, PR_Num, itemcode, item_name, unit, Qty, UOM_Qty, Ra
         //        });
         //    });
         //    callPageMethod('LoadPOItemDetail', { PO_ID: PO_ID }, function (resp) {
-        //        debugger;
         //        var data = (JSON.parse(resp));
         //        selectedOptions = data;
         //        var TrnsDate = '';
         //        $.each(data, function (key, value) {
-        //            debugger;
 
         //            if (value.Delivery_Date != null) {
         //                TrnsDate = $.datepicker.formatDate('dd M yy', new Date(parseInt(data[key].Delivery_Date.substring(6, 19))));
@@ -1633,7 +1606,6 @@ function buildNewRow(length, PR_Num, itemcode, item_name, unit, Qty, UOM_Qty, Ra
 
         //        setTimeout(function () {
         //            $.each(selectedOptions, function (key, value) {
-        //                debugger;
         //                $('#ddlSTAX' + (key + 1)).val(value.SalTax_Id).trigger('change');
         //                // $('#ddlFurtherTax' + (key + 1)).val(value.FurtherTax_Id).trigger('change');
         //                $('#ddlFurtherTax' + (key + 1)).val(value.FurtherTax_Percentage != null ? value.FurtherTax_Percentage : '0');
@@ -1710,9 +1682,7 @@ function scheduleCalcTotal(delay) {
 }
 
         function calcTotal(forceNow) {
-            debugger;
             if (forceNow === true) {
-                debugger;
         runCalcTotalCore();
         return;
     }
@@ -1995,7 +1965,6 @@ function scheduleCalcTotal(delay) {
             $("#hdfitem_name").val(name);
         }
         function getprNoBy_WareHouse(item) {
-            debugger;
             var optionsPR = '';
             var Warehouse;
             Warehouse = item.value;
@@ -2013,7 +1982,6 @@ function scheduleCalcTotal(delay) {
             });
         }
         function getprNoBy() {
-            debugger;
             var optionsPR = '';
             var Warehouse;
 
@@ -2042,7 +2010,6 @@ function scheduleCalcTotal(delay) {
                 contentType: "application/json; charset=utf-8",
                 dataType: "json",
                 success: function (response) {
-                    debugger;
                     warehouseCond = JSON.parse(response.d);
                     if (warehouseCond == '01') {
                         $('#warehouse').show();
@@ -2124,13 +2091,10 @@ function scheduleCalcTotal(delay) {
             document.getElementById('oDarkScreen').style.display = "none";
         }
         function PerformPRSearch() {
-            debugger;
             var PRId = $('#ctl00_MainContent_ddlPrNo').val();
             var optionFed = '';
             callPageMethod('getDDLlist', function (Tests) {
-                debugger
                 $.each(JSON.parse(Tests), function (key, value) {
-                    debugger;
                     if (value.Type == "Sal") {
                         optionsSal += '<option value="' + value.DataValueName + '" >' + value.DataValueDescription + '</option>';
                     }
@@ -2141,12 +2105,10 @@ function scheduleCalcTotal(delay) {
             });
             if (PRId != "") {
                 callPageMethod('getPurchaseByID', { PRID: PRId }, function (res) {
-                    debugger;
                     var item = JSON.parse(res);
                     var rows = '';
                     var iteration = 0;
                     $.each(item, function (key, value) {
-                        debugger;
                         if (value.Unit == null)
                             value.Unit = "";
                         if (value.UnitName == null)
@@ -2181,7 +2143,6 @@ function scheduleCalcTotal(delay) {
                             '<td><input type="text" name="txtddate" id="txtddate' + rowlength + '" style="width:50px !important;text-align:center;font-size:9px;height:20px;" /></td>' +
                             '<td><a href="javascript:void(0)" onclick="ExcludeFromPayment(this)">Delete</a> </td></tr>';
                     });
-                    debugger;
                     $('#tblItemDescription').append(rows);
                     $('input[name="txtddate"]').datepicker({ dateFormat: 'dd M yy' }).attr('readonly', 'readonly');
 
@@ -2206,14 +2167,12 @@ function scheduleCalcTotal(delay) {
         }
         
         function CulculateAmonut() {
-            debugger;
             var amtwithdis = 0;
             var TotalAmount = 0;
             var TotalDiscountAmount = 0;
             var TotalNetAmount = 0;
 
             $.each($('#tblItemDescription tbody tr'), function (key, value) {
-                debugger;
                 var DisPer = 0;
                 var Rate = parseFloat($($(value).find('td input[name=txtRate]')[0]).val()) || 0;
                 var Qty = parseFloat($($(value).find('td input[name=txtQty]')[0]).val()) || 0;
@@ -2242,7 +2201,6 @@ function scheduleCalcTotal(delay) {
         }
 
         function ExcludeFromPayment(anchor) {
-            debugger;
             var a = confirm("Are you sure You want to delete");
             if (a == true) {
                 var row = $(anchor).parents('tr')[0];
@@ -2251,13 +2209,10 @@ function scheduleCalcTotal(delay) {
             }
         }
         function FillDepartments() {
-            debugger;
             var optionsDPT = '';
             var optionInv = '';
             callPageMethod('getDDLlist', function (Tests) {
-                debugger
                 $.each(JSON.parse(Tests), function (key, value) {
-                    debugger;
                     if (value.Type == "DPT") {
                         optionsDPT += '<option value="' + value.DataValueName + '" >' + value.DataValueDescription + '</option>';
                     }
@@ -2389,7 +2344,6 @@ function scheduleCalcTotal(delay) {
                 totalFurtherAmount += FurtherAmount;
 
 
-                debugger;
                 var STAmount = parseFloat((STpercent / 100) * baseAmount);
                 $row.find('input[name=txtSalAmount]').val(STAmount.toFixed(2));
                 totalstamount += STAmount;
@@ -2560,7 +2514,6 @@ function scheduleCalcTotal(delay) {
         }
 
         function calcFurtherTaxFromAmount(anchor) {
-            debugger;
             var row = $(anchor).closest('tr');
             $(anchor).attr('data-manual', 'true');
 
@@ -2615,7 +2568,6 @@ function scheduleCalcTotal(delay) {
 
 
         function validateSave() {
-            debugger
             $("#btnSave").prop("disabled", true);
             var proceed = true;
             var table = $('#tblItemDescriptionDetail');
@@ -2796,11 +2748,9 @@ function scheduleCalcTotal(delay) {
             return proceed;
         }
         function SaveAllRecord() {
-            debugger
             $("#btnSave").prop("disabled", true);
             calcTotal(true);
             if (validateSave()) {
-                debugger;
                 var status;
                 var btnSave = $('#btnSave').val();
                 var RefNo = $('#ctl00_MainContent_txtPurchase_Reference').val();
@@ -2834,11 +2784,9 @@ function scheduleCalcTotal(delay) {
                 var IsAdvanceWithTax = $('#IsadvancewithTax').is(':checked');
                 var IsByDefault = $('#chkByDefault').is(':checked');
                 var Item_list = [];
-                debugger;
                 if (Purchase_No == "(New)" || Purchase_No == "")
                     Purchase_No = "0";
                 table.find('tr').each(function (key, value) {
-                    debugger;
                     var PurchaseDate = new Date(Purchase_Date).setHours(0, 0, 0, 0);
                     var DeliveryDate = new Date($(value).find('td input[name=txtddate]').val()).setHours(0, 0, 0, 0);
                     if (PurchaseDate > DeliveryDate) {
@@ -2876,7 +2824,6 @@ function scheduleCalcTotal(delay) {
                         'txtst_amou': txtst_amou, 'Adv_amount': Adv_amount, 'transtype': transtype, 'txtcsmasterid': txtcsmasterid, 'PO_ID': PO_ID, 'SubTotal': SubTotal, 'DiscountAmount': DiscountAmount, 'NetAmount': NetAmount, 'Purchase_Date': Purchase_Date, 'Purchase_No': Purchase_No, 'RefNo': RefNo, 'VendorName': VendorName, 'Remarks': Remarks, 'Warranty': Warranty, 'Disclaimer': Disclaimer, 'PaymentTerms': PaymentTerms, 'Term_ID': Term_ID, 'DeliveryTerms': DeliveryTerms, 'FreightCharges': Freight, 'POType': POType, 'Due_Date': Due_Date, 'ItemList': Item_list, 'Warehouse': Warehouse, 'Branch': Branch, 'Further_amount': Further_amount, 'ProjectionDate': ProjectionDate,'ProjectionType': ProjectionType, 'IsManual': IsManual,
                         'IsByDefault': IsByDefault, 'IsAdvanceWithTax': IsAdvanceWithTax };
                     callPageMethod('SavePurchaseItemDetail', { btnSave: btnSave, AllItemDetail: JSON.stringify(AllItemDetail) }, function (res) {
-                        debugger;
                         sendFile(res);
                         Swal.fire({
                             icon: 'success',
@@ -2898,10 +2845,8 @@ function scheduleCalcTotal(delay) {
         }
 
         function UnApprove() {
-            debugger;
             var POid = '<% =Request.QueryString["PO_ID"] %>';
             callPageMethod('UnApprovePO', { POid: POid }, function (Tests) {
-                debugger
                 var message = JSON.parse(Tests);
                 if (message[0].Column1 != "" || message[0].Column1 != null) {
                     alert(message[0].Column1);
@@ -3013,18 +2958,14 @@ function scheduleCalcTotal(delay) {
 
 
         function UserUnApproveButtonRights() {
-            debugger;
             $.ajax({
                 type: "POST",
                 url: "PurchaseOrder.aspx/UserUnApproveEntryRights",
                 contentType: "application/json; charset=utf-8",
                 dataType: "json",
                 success: function (response) {
-                    debugger;
                     var hasRights = response.d;
-                    debugger;
                     if (hasRights) {
-                        debugger;
                         $('#btnUnApprove').show();
                     } else {
                         $('#btnUnApprove').hide();
@@ -3048,10 +2989,8 @@ function scheduleCalcTotal(delay) {
             });
         }
         function sendFile(ID) {
-            debugger;
             var fileInput = $('#chosePofile')[0];
             if (fileInput.files.length > 0) {
-                debugger;
                 var data = new FormData();
                 data.append('file', $('#chosePofile')[0].files[0]);
                 data.append('ID', ID);
@@ -3074,7 +3013,6 @@ function scheduleCalcTotal(delay) {
         // Load items from INV_Items table into search modal
         function LoadAllitem(searchText) {
             var warehouseId = $("#ddlWarehouse").val();
-            debugger;
             $.ajax({
                 type: "POST",
                 url: "PurchaseOrder.aspx/GetAllitem",
@@ -3158,7 +3096,6 @@ function scheduleCalcTotal(delay) {
         }
         // Modified appendSearchItem function with projection type 002 support
         function appendSearchItem(anchor) {
-            debugger;
 
             // Check for projection type 002 requirements before adding item
             var projectionType = $('#ctl00_MainContent_ddlprojection').val();

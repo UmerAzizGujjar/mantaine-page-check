@@ -81,12 +81,10 @@
         }
 
         function CalculateDoctorHospitalShare() {
-            debugger;
             var doctorShare = 0;
             var hospitalShare = 0;
 
             $('#tblDoctorShareDetails tbody tr').each(function () {
-                debugger;
                 var accountName = $(this).find('input[name="Account_Name"]').val()?.trim().toUpperCase();
                 var netAmount = parseFloat(
                     $(this).find('.net-amount').val()
@@ -122,7 +120,6 @@
                 contentType: "application/json; charset=utf-8",
                 dataType: "json",
                 success: function (response) {
-                    debugger;
                     var parse = JSON.parse(response.d);
                     var TrnsDate = new Date(parseInt(parse[0].Distribution_Date.substr(6)));
                     TrnsDate = moment(TrnsDate).format('DD-MMM-YYYY');
@@ -206,7 +203,6 @@
                 var rows = '';
 
                 $.each(data, function (key, value) {
-                    debugger;
                     var options = Account.replace(
                         `value="${value.Account_Id}"`,
                         `value="${value.Account_Id}" selected`
@@ -248,7 +244,6 @@
 
         function CalculateRemainingIPDRevenue() {
 
-            debugger;
 
             var totalDistributed = 0;
             var ipdamt = 0;
@@ -310,7 +305,6 @@
             $("#txtShareableIncome").val(remaining.toFixed(2))
         }
         function AddDistributionRow() {
-            debugger;
             var description = $('#IPD_Discription').val();
             var amount = parseFloat($('#Dist_Amount').val()) || 0;
 
@@ -385,7 +379,6 @@
             CalculateRemainingIPDRevenue();
         }
         function GetPatientDetailByBillID(BillId) {
-            debugger;
             $.ajax({
                 type: "post",
                 url: "Share_Distribution.aspx/LoadPatientDetailsByBillID",
@@ -399,9 +392,7 @@
             });
         }
         function OnSuccess(data) {
-            debugger;
             var parse = JSON.parse(data.d);
-            debugger;
             $('#hdPatientID').text(parse[0].Patient_ID);
             $('#hdBillID').text(parse[0].bill_ID);
             $('#lblMRNo').text(parse[0].Patient_No);
@@ -451,7 +442,6 @@
         }
 
         function GetPatientDetailByBill() {
-            debugger;
             var Bill_No = $('#txtBillNo').val();
             $.ajax({
                 type: "post",
@@ -471,7 +461,6 @@
                 contentType: "application/json; charset=utf-8",
                 dataType: "json",
                 success: function (response) {
-                    debugger;
 
                     var parse = JSON.parse(response.d);
                     var rows = '';
@@ -516,7 +505,6 @@
         }
 
         function LoadDetailDoctor() {
-            debugger;
             var options = '<option value="0">Select Doctor</option>';
             $.ajax({
                 type: "post",
@@ -526,7 +514,6 @@
                 dataType: "json",
                 async: false,
                 success: function (response) {
-                    debugger;
                     $.each(JSON.parse(response.d), function (key, value) {
 
                         options += '<option value="' + value.Emp_ID + '">' + value.Emp_Name + '</option>';
@@ -607,9 +594,7 @@
                 },
             });
         }
-        debugger;
         function GenerateIPDRows() {
-            debugger;
 
             var accountId = $('#ddlIpdAccount').val();
             var IPDShare = $('#IPD_Share').val();
@@ -645,7 +630,6 @@
             CalculateDoctorHospitalShare();
         }
 
-        debugger;
         function GenerateRows() {
 
             var doctorId = $('#ddlDoctor').val();
@@ -744,10 +728,8 @@
 
 
 
-        debugger;
         function SaveRecord() {
             $('#btnSave').attr('disabled', true);
-                debugger;
                 var Patient_ID = $("#hdPatientID").text();
                 var Bill_ID = $("#hdBillID").text();
                 var remarks = $("#txtRemarks").text();
@@ -773,7 +755,6 @@
                 });
                 var IPDDistribution = [];
             $.each($('#tblDoctorShareDetails tbody tr'), function (key, value) {
-                    debugger;
                     var Account_ID = $(value).find('input[name="Account_ID"]').val();
                     var Doctor_ID = $(value).find('input[name="Doctor_ID"]').val();
                     var Account_Name = $(value).find('input[name="Account_Name"]').val();
@@ -791,7 +772,6 @@
             if (saveVal == "Save") {
 
                 PageMethods.CheckBillExist(Bill_ID, function (res) {
-                    debugger;
                     if (res == true) {
                         Swal.fire({
                             icon: 'error',
@@ -855,12 +835,10 @@
         }
         function Approve() {
             $('#btnApprove').attr('disabled', true);
-            debugger;
 
             var BillId = '<%= Request.QueryString["ID"] %>';
 
             PageMethods.approve_Bill(BillId, function (response) {
-                debugger;
 
                 var result = JSON.parse(response);
 
@@ -902,11 +880,9 @@
         }
 
             <%--function Approve() {
-                debugger;
                
                 var BillId = '<% =Request.QueryString["ID"] %>';
                 PageMethods.approve_Bill(BillId, function (Tests) {
-                 debugger
                  var message = JSON.parse(Tests);
                  if (message[0].Message != null || message[0].Message != "") {
                      Swal.fire({
@@ -1052,7 +1028,6 @@
 
 
         function PrintDistributionVoucher() {
-            debugger;
             var id = '<%=Request.QueryString["ID"]%>';
                         var locationInfo = window.location;
             var url = 'ReportViewer.aspx?ReportName=Voucher&ReportTitle=OPD Voucher&TransID=' + id + '&TransType=IPD_Dist';
@@ -1066,7 +1041,6 @@
         }
 
         function PrintDoctorVoucher() {
-            debugger;
             var id = '<%=Request.QueryString["ID"]%>';
                         var locationInfo = window.location;
                         var url = 'ReportViewer.aspx?ReportName=Voucher&ReportTitle=OPD Voucher&TransID=' + id + '&TransType=IPD_Share';

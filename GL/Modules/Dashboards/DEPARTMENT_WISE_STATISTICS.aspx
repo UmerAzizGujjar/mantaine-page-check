@@ -30,7 +30,6 @@
 
 
             $('#ddlDoctor').change(function () {
-                debugger
                 var dt = $('#StartDate').val();
                 var dts = $('#EndDate').val();
                 ChartQtyofDoc(dt, dts);
@@ -38,7 +37,6 @@
             });
         });
         function SearchDate() {
-            debugger;
             var dt = $('#StartDate').val();
             var dts = $('#EndDate').val();
 
@@ -52,7 +50,6 @@
                 dataType: "json",
                 async: false,
                 success: function (response) {
-                    debugger;
                     var options = '<option value="All">Please Select </option>';
                     var Parsed_Data = JSON.parse(response.d);
                     $.each(Parsed_Data, function (key, value) {
@@ -71,12 +68,10 @@
 
         let chart;
         function ChartQtyofDoc(startdate, Enddate) {
-            debugger;
             var txt_sdate = $('#StartDate').val();
             var txt_edate = $('#EndDate').val();
             var Doctor = $('#ddlDoctor').val();
             PageMethods.GetTotalDepartment(txt_sdate, txt_edate, Doctor, function (resp) {
-                debugger;
                 var data = JSON.parse(resp);
                 var labels = [];
                 var seriesPatientCount = [];

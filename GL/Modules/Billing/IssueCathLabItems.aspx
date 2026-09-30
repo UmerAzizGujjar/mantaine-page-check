@@ -42,7 +42,6 @@
         });
         window.addEventListener('keydown', function (event) {
             if (event.altKey && event.code === 'KeyS') {
-                debugger;
                 event.preventDefault();
                 $('#medName').select2('close');
                 $('#btnSave').attr('style', 'background: green !important;margin-top: -5px;').focus();
@@ -139,12 +138,10 @@
 
             });
             $("#txtReturnuserCode").on('change', function (e) {
-                debugger;
                 var userCode = $('#txtReturnuserCode').val();
                 var Nusername;
                 breakout = false;
                 $(arr).filter(function (i, n) {
-                    debugger;
                     if (userCode == n.User_Code) {
                         $('#lblReturnUsername').text(n.Username).css("color", "black");
                         breakout = true;
@@ -163,20 +160,16 @@
 
             });
         });
-        debugger;
         $(function () {
-            debugger;
             items = []
             loadmed();
             loadDepartment();
             loadDoctors();
-            debugger;
             pageSize = 50
             jQuery.fn.select2.amd.require(["select2/data/array", "select2/utils"],
 
                 function (ArrayData, Utils) {
                     function CustomData($element, options) {
-                        debugger;
                         CustomData.__super__.constructor.call(this, $element, options);
                     }
                     Utils.Extend(CustomData, ArrayData);
@@ -199,7 +192,6 @@
                         callback(data);
                     };
                     $(document).ready(function () {
-                        debugger;
                         $("#medName").select2({
                             ajax: {},
                             dataAdapter: CustomData,
@@ -222,7 +214,6 @@
                 });
             });
         }
-        debugger
         function loadDoctors() {
      
             PageMethods.loadDoctors(function (data) {
@@ -238,7 +229,6 @@
                     alert(error.get_message());
                 });
         }
-        debugger
         function loadDepartment() {
             
             PageMethods.GetDepartment(function (data) {
@@ -265,12 +255,10 @@
                 $('#lblUsername').text('');
             });
             $("#txtuserCode").on('change', function (e) {
-                debugger;
                 var userCode = $('#txtuserCode').val();
                 var Nusername;
                 breakout = false;
                 $(arr).filter(function (i, n) {
-                    debugger;
                     if (userCode == n.User_Code) {
                         $('#lblUsername').text(n.Username).css("color", "black");
                         breakout = true;
@@ -287,7 +275,6 @@
             });
             $("#chkprint").prop("checked", true);
             $("#chkbatch").prop("checked", true);
-            debugger;
             var btch = $('#chkbatch').prop("checked");
             if (btch == false) {
                 $('.batchdiv').hide();
@@ -300,7 +287,6 @@
             $('#row22').hide();
             LoadTokenInputsDefaultMRNo();
             $("#chkprint").on('change', function (e) {
-                debugger;
                 var checkPrint = $('#chkprint').is(":checked");
                 if (checkPrint == false) {
                     $('#btnSave').val("Save").css("width", "8.333%");
@@ -309,13 +295,11 @@
                 }
             });
             $("#medName").on('change', function (e) {
-                debugger;
                 setTimeout(function () {
                     $('input[name="txtQty"]').focus().select();
                 }, 5);
             });
             $('input[name="rbtn"]').on('change', function (e) {
-                debugger;
                 var chkbtn = $('input[name="rbtn"]:checked').val();
                 if (chkbtn == 'rbtnHospital') {
                     $('#txtDisPer').attr("disabled", true);
@@ -347,7 +331,6 @@
                 }
             });
             $('#SearchModel').on('keypress', function (event) {
-                debugger;
                 var keycode = (event.keyCode ? event.keyCode : event.which);
                 if (keycode == '13') {
                     $('#SaveVal').focus().click();
@@ -367,7 +350,6 @@
 
             // Open the modal for Sale Return
             $('#btnSaleReturn').click(function () {
-                debugger
                 $('#SaleReturnModal').modal('show');
                 loadInvoiceNumbers();
                 loadSaleReturnItems();
@@ -509,7 +491,6 @@
             });
         }
         function AddSaleReturnInvoiceMaster() {
-            debugger
             var invNo = $('#ddlInvoiceNumber').val();
             if (invNo) {
                 $.ajax({
@@ -520,7 +501,6 @@
                     contentType: "application/json; charset=utf-8",
                     async: false,
                     success: function (msg) {
-                        debugger
                         var data = JSON.parse(msg.d);
                         $('#txtSaleReturnTotalPayable').val(data[0].Total_Amount);
                         $('#txtSaleReturnDisPer').val(data[0].Discount_Percentage);
@@ -537,7 +517,6 @@
 
         }
         function RefreshSaleReturnModal() {
-            debugger;
             $('#ddlInvoiceNumber').prop('disabled', false);
             $('#ddlpat_no').prop('disabled', false);
             $('#ddlSaleReturnItems').prop('disabled', false);
@@ -553,7 +532,6 @@
 
         }
         function CalculateSaleReturnAdj() {
-            debugger;
             var total = parseFloat($('#txtSaleReturnTotalPayable').val()) || 0;
             var disamt = parseFloat($('#txtSaleReturnDisAmt').val()) || 0;
             var linedisamt = parseFloat($('#txtSaleReturnLineDisc').val()) || 0;
@@ -563,11 +541,9 @@
                 net = 0;
             }
             $('#txtSaleReturnTotal').val(net.toFixed());
-            debugger;
         }
 
         function AddSaleReturnInvoiceDetails(invNo) {
-            debugger
             var BillId = invNo;
             var wareHouse = $("#ddl_Warehouse").val();
             if (BillId) {
@@ -705,10 +681,8 @@
 
 
         function updateReturnStock(anchors) {
-            debugger;
             var row = $(anchors).closest('tr');
             var rowIndex = row.index();
-            debugger;
             var selectId = $(anchors).attr('id');
             var idParts = selectId.split('txtRBatch_Nos');
             if (idParts.length > 1) {
@@ -735,7 +709,6 @@
                 contentType: "application/json; charset=utf-8",
                 async: false,
                 success: function (stockMsg) {
-                    debugger;
                     var stockData = JSON.parse(stockMsg.d);
                     var stock = stockData[0].Total_Stock || 0;
                     var rate = stockData[0].Sale_Rate || 0;
@@ -744,7 +717,6 @@
                     var Mini_Stocks = stockData[0].Mini_stock;
 
                     date = moment(date).format('D-MMM-YYYY');
-                    debugger;
                     $('#txtRStock' + counter).val(stock);
                     $('#txtRCGSRate' + counter).val(CGSRate);
                 },
@@ -981,7 +953,6 @@
         }
 
         function validateSaleReturn() {
-            debugger
             var proceed = true;
             var total = $('#txtSaleReturnTotalPayable').val() || 0;
 
@@ -1066,7 +1037,6 @@
         }
 
         function SearchReturnPop() {
-            debugger;
             $('#SearchReturnModel').modal({
                 backdrop: 'static'
             });
@@ -1076,9 +1046,7 @@
             $('#lblReturnUsername').text('');
             $('#txtReturnpass').text('');
         }
-        debugger;
         function SaveSaleReturn() {
-            debugger;
             $('#btnSaveSaleReturn').attr('disabled', true);
             var userC = $('#txtReturnuserCode').val();
             var userP = $('#txtReturnpass').val();
@@ -1086,7 +1054,6 @@
             var UserPass;
             var UserId;
             PageMethods.loadData(userC, function (resp) {
-                debugger;
                 var data = JSON.parse(resp);
                 if (data.length != 0) {
                     userCode = data[0].User_Code;
@@ -1110,7 +1077,6 @@
                     return;
                 }
                 if (userC == userCode && userP == UserPass) {
-                    debugger;
                     if (validateSaleReturn()) {
                         var BillId = $('#ddlInvoiceNumber').val() || 0;
                         var Patient_id = $('#ddlpat_no').val() || 0;
@@ -1125,10 +1091,8 @@
                         var TotalDisAmt = $('#txtSaleReturnDisAmt').val() || 0;
                         var AdjustmentAmt = $('#txtSaleReturnFlatDisc').val() || 0;
                         var Remarks = $('#txtSaleReturnRemarks').val() || '';
-                        debugger;
                         //var WareHouse = $('#ddl_Warehouse').val() || 0;
                         //if (WareHouse == 0) {
-                        //    debugger;
                         //    Swal.fire({
                         //        icon: 'error',
                         //        title: 'Error!',
@@ -1149,7 +1113,6 @@
                         var Item_list = [];
                         var isValid = true;
                         table.find('tr').each(function () {
-                            debugger;
                             var itemID = $(this).find('input[name="txtRItemID"]').val() || 0;
                             var billDetailsID = $(this).find('input[name="txtRBill_Details_ID"]').val() || 0;
                             var itemName = $(this).find('input[name="txtRItemDescription"]').val() || 0;
@@ -1163,7 +1126,6 @@
                             var lineDiscount = $(this).find('input[name="txtLineTotal"]').val() || 0;
                             
 
-                            debugger;
                             var CGSAmount = CGSRate * qty;
 
                             if (Batch_No == 'Please Select' || Batch_No == '0' || Batch_No == "") {
@@ -1243,7 +1205,6 @@
 
         }
 
-        debugger;
         var addedItemIDs = [];
         var items = [];
         var addedItemIDs = [];
@@ -1297,11 +1258,9 @@
                  return;
              }
 
-             debugger;
 
              // First, check if this barcode number is already sold in database
              PageMethods.CheckBarcodeSoldStatus(barcodeNumber, function (response) {
-                 debugger;
                  var result;
                  try {
                      result = JSON.parse(response);
@@ -1353,7 +1312,6 @@
 
                  // If not sold and not in current bill, proceed with loading the medicine
                  PageMethods.loadMedicineByID(barcodeNumber, function (data) {
-                     debugger;
                      var parsed;
                      try {
                          parsed = JSON.parse(data);
@@ -1421,7 +1379,6 @@
                  console.error("Error checking barcode status:", error);
                  // On error, still try to load the medicine as fallback
                  PageMethods.loadMedicineByID(barcodeNumber, function (data) {
-                     debugger;
                      var parsed;
                      try {
                          parsed = JSON.parse(data);
@@ -1549,7 +1506,6 @@
         var counts = 0;
         var NegQty = false;
         function CulculateAmonutWithQty(anchor) {
-            debugger;
             counts = counts + 1;
             var row = $(anchor).parents('tr')[0];
             var CalAmount = $($(row).find('td')[8]).text();
@@ -1599,7 +1555,6 @@
             CountBalance(); 
         }
         function Invoice() {
-            debugger;
             var search = $('#Inv_No').val();
             $.ajax({
                 url: 'IssueCathLabItems.aspx/Preview',
@@ -1610,7 +1565,6 @@
                     "search": search,
                 }),
                 success: function (result) {
-                    debugger;
                     var result1 = JSON.parse(result.d);
                     if (result.d == '[]') {
                         alert('No Result Found')
@@ -1630,9 +1584,7 @@
             CalculateTotals();
 
             CountBalance(); 
-            debugger;
             $("#tblDetails tbody tr").each(function (key) {
-                debugger;
                 $(this).children("td")[0].innerHTML = key + 1;
                 $(this).find('.orderchange').find('input').attr("onkeyup", "CalculateSummarieDiscountPerWise(" + (key) + ")");
                 $(this).find('td:eq(1)').text(key + 1);
@@ -1640,7 +1592,6 @@
         }
 
         function CalculateTotals() {
-            debugger;
             var Amount = 0;
             var DisAmt = 0;
             var AmntFinal = 0;
@@ -1648,7 +1599,6 @@
             var Qty = 0;
             var ttlDisAmnt = 0;
             $.each($('#tblDetails tbody tr'), function (key, value) {
-                debugger;
                 Amount = parseFloat($($(value).find('td')[8]).text());
                 DisAmt = parseFloat($(value).find('input[name="DisAmount"]').val());
                 Qty = parseFloat($(value).find('input[name="txtQty"]').val());
@@ -1656,7 +1606,6 @@
                 AmntFinal += (Amount * Qty);
                 ttlDisAmnt += DisAmt
             });
-            debugger;
             Math.round($('#txtTotalPayable').val((AmntFinal).toFixed(0)), 0);
 
             $('#txtDisAmt').val(parseInt(Math.round(ttlDisAmnt)));
@@ -1672,7 +1621,6 @@
 
                 if ($('#txtTotalPayable').val() != '') {
                     if (AmtReceived != '') {
-                        debugger;
                         var balance = parseFloat(NetAmount - AmtReceived);
 
                         $('#txtBalances').val(Math.round(parseFloat(balance)));
@@ -1691,7 +1639,6 @@
         }
 
         function toasterMessage(isError = false, title, message) {
-            debugger;
             toastr.options = {
                 "closeButton": true,
                 "debug": false,
@@ -1716,7 +1663,6 @@
                 toastr.success(message, title);
         }
         //function CountBalance() {
-        //    debugger;
         //    var TtlPayable = $('#txtTotalPayable').val();
         //    if (TtlPayable == "") {
         //        TtlPayable = 0;
@@ -1740,7 +1686,6 @@
         //    }
         //}
         function CountBalance() {
-            debugger;
             var TtlPayable = parseFloat($('#txtTotalPayable').val()) || 0;
             var ttlDisc = parseFloat($('#txtDisAmt').val()) || 0;          
             var tllDisc = parseFloat($('#txtLineDisc').val()) || 0;        
@@ -1755,7 +1700,6 @@
             $('#txtBalances').val(Math.round(Balance));
         }
         function sumdiscount() {
-            debugger;
             var txtLineDisc = parseFloat($('#txtLineDisc').val()) || 0;
             var txtDisAmt = parseFloat($('#txtDisAmt').val()) || 0;
             var txtAmountReceived = parseFloat($('#txtAmountReceived').val()) || 0;
@@ -1765,7 +1709,6 @@
             $('#txttotalDisc').val(totalDisc);
         }
         function CalculateSummarieDiscountAmountWise(rowIndex) {
-            debugger;
             isMax = 0;
             AssignValue(txtDisPer, 0);
             AssignValue(txtDisAmt, 0);
@@ -1812,7 +1755,6 @@
                     $(value).find('input[name="DisPer"]').val('0');
                     $($(value).find('td')[11]).text(Amount);
                 }
-                debugger;
                 Amount = $($(value).find('td')[8]).text();
                 TotalAmount += parseFloat(Amount * Qty).toFixed(0);
                 TotalDiscountAmount += Math.round(parseFloat($(value).find('input[name="DisAmount"]').val()));
@@ -1822,7 +1764,6 @@
                 }
                 TotalNetAmount += parseFloat($($(value).find('td')[11]).text());
             });
-            debugger;
             $('#txtTotalPayable').val(TotalAmount.toFixed());
             $('#txtDisAmt').val(TotalDiscountAmount.toFixed(2));
             if (blnceCondition == 'true') {
@@ -1834,7 +1775,6 @@
             }
         }
         function ApplyEqualMasterDiscountToRows(masterDisPer) {
-            debugger;
             var totalLineDiscount = 0;
             var rowCount = $('#tblDetails tbody tr').length;
             if (rowCount <= 0) {
@@ -1846,22 +1786,18 @@
             var roundedPerItemDisPer = parseFloat(perItemDisPer.toFixed(2));
 
             $.each($('#tblDetails tbody tr'), function (key, value) {
-                debugger;
                 var rowNetAmount = parseFloat($($(value).find('td')[11]).text()) || 0;
                 var rowLineDiscount = Math.round((rowNetAmount * roundedPerItemDisPer) / 100);
 
                 $(value).find('input[name="LineDiscount"]').val(rowLineDiscount);
                 totalLineDiscount += rowLineDiscount;
             });
-            debugger;
             totalLineDiscount = Math.round(totalLineDiscount);
             $('#txtDisAmt').val(totalLineDiscount);
             return totalLineDiscount;
         }
         function CalculateSummariesMasterDiscount(AmtWise) {
-            debugger
             if (!AmtWise) {
-                debugger
                 var disper = $('#txtDisPer').val() || 0;
                 var tableRowCount = $('#tblDetails tbody tr').length;
                 if (tableRowCount > 0 && parseFloat(disper) > 0) {
@@ -1892,7 +1828,6 @@
                
             }
             if (AmtWise) {
-                debugger
                 var txtDisAmt = $('#txtDisAmt').val() || 0;
                 var totalpayable = $('#txtTotalPayable').val() || 0;
                 var txtLineDisc = $('#txtLineDisc').val() || 0;
@@ -1906,7 +1841,6 @@
                 }
                 $('#txtDisPer').val(parseFloat(disper).toFixed(2));
             }
-            debugger;
             var txtDisAmt = $('#txtDisAmt').val();
             TotalAmount = $('#txtTotalPayable').val();
             var txtLineDisc = parseFloat($('#txtLineDisc').val()) || 0;
@@ -1946,9 +1880,7 @@
         }
         var isMax = 0;
         var TDis = 0;
-        debugger;
         function CalculateSummarieDiscountPerWise(rowIndex) {
-            debugger;
             isMax = 0;
             AssignValue(txtDisPer, 0);
             AssignValue(txtDisAmt, 0);
@@ -1966,7 +1898,6 @@
                 TDis = 0;
                 var Qty = $($(value).find('td input[name=txtQty]')[0]).val().trim();
                 if (rowIndex == parseInt(key)) {
-                    debugger;
                     var Amountsss = $($(value).find('td input[name=txtSalerate]')[0]).val();
                     console.log(Amountsss)
                     Amount = $($(value).find('td input[name=txtSalerate]')[0]).val().trim();
@@ -1986,7 +1917,6 @@
                 }
                 if (parseInt(TDis) >= NtAmt && NegQty == false) {
                     isMax = 1;
-                    debugger;
                     $(value).find('input[name="DisAmount"]').val('0');
                     $(value).find('input[name="DisPer"]').val('0');
                     $($(value).find('td')[11]).text(NtAmt);
@@ -2001,7 +1931,6 @@
                 NetAmount = (Amount * Qty) - DisAmt;
                 TotalNetAmount += NetAmount;
             });
-            debugger;
             $('#txtTotalPayable').val(TotalAmount.toFixed());
             $('#txtBalances').val(TotAmount);
 
@@ -2025,7 +1954,6 @@
             }
         }
         function CheckSaleReturnAllow() {
-            debugger;
             $.ajax({
                 type: "POST",
                 url: "IssueCathLabItems.aspx/CheckSaleReturnAllow",
@@ -2034,7 +1962,6 @@
                 dataType: "json",
                 async: true,
                 success: function (data) {
-                    debugger;
                     var checkActive = data.d;
 
                     if (checkActive == "true") {
@@ -2051,7 +1978,6 @@
             });
         }
         function getOPDandIPDNO(pat_id) {
-            debugger;
             PageMethods.GetOPDandIPDNO(pat_id, function (data) {
                 var parsedData = JSON.parse(data);
                 var options = '<option value="0" >Please Select</option>';
@@ -2075,7 +2001,6 @@
             })
         }
         function getbatchfrom_grn() {
-            debugger;
 
             var Inv_batch = $('#chkbatch').prop("checked");
 
@@ -2089,10 +2014,8 @@
                 var med_id = $('#medName').find('option:selected').val();
 
                 PageMethods.GetinvBatch(med_id, function (dataa) {
-                    debugger;
                     var parsedDataa = JSON.parse(dataa);
                     if (parsedDataa == true) {
-                        debugger
                         var warehouse = $("#ddlWarehouse").val()
 
                         if (warehouse == "0") {
@@ -2112,11 +2035,9 @@
                             return;
                         }
                         PageMethods.Getbatch_grn(med_id, warehouse, function (data) {
-                            debugger;                          
                             var parsedData = JSON.parse(data);
                             console.log(parsedData)
                             var options = '<option value="0" >Please Select</option>';
-                            debugger;
                             $.each(parsedData, function (key, value) {
                                 console.log(value)
                                 options += '<option value="' + value.BatchNum + '" >' + value.BatchNum + '</option>';
@@ -2124,7 +2045,6 @@
                             $('#batchno').html(options);
                             $('#batchno').select2();
                             var isbatch = $('#chkbatch').prop("checked");
-                            debugger;
                             if (isbatch == true) {
                                 $('#batchno').show();
                                 $('#batchno').prop('disabled', false);
@@ -2148,7 +2068,6 @@
             }
         }
         function AddnonBatchItems() {
-            debugger;
             var itemId = $('#medName').val();
 
             var rowIndex = parseInt($('#tblDetails tbody tr').length);
@@ -2178,7 +2097,6 @@
                     var length = $("#tblDetails tr:gt(0)").length;
                     $('#Table_1 tr:gt(0)').remove();
                     var data = JSON.parse(msg.d);
-                    debugger;
                     var Uomqty = data[0].UOM_Qty;
                     if (Uomqty == null) {
                         Uomqty = 0;
@@ -2195,7 +2113,6 @@
                     var isBarcodeScan = barcodeValue !== '';
                     var qtyDisabledAttr = isBarcodeScan ? 'disabled' : '';
 
-                    debugger;
                     rows = '<tr><td> ' + parseInt(parseInt(rowIndex) + 1) + '</td>' +
 
                         '<td style="display:none;"><input type="hidden" value="' + data[0].Item_Code + '" name="ItemIDcode" id="ItemIDcode" ></td>' +
@@ -2243,9 +2160,7 @@
                 }
             });
         }
-        debugger;
         function AddMedicineDetail() {
-            debugger;
             var itemId = $('#medName').find('option:selected').val();
             var Batch = $('#batchno').find('option:selected').val();
             var warehouse = $('#ddlWarehouse').find('option:selected').val();
@@ -2298,7 +2213,6 @@
                     var length = $("#tblDetails tr:gt(0)").length;
                     $('#Table_1 tr:gt(0)').remove();
                     var data = JSON.parse(msg.d);
-                    debugger;
                     var Uomqty = data[0].UOM_Qty;
                     if (Uomqty == null) {
                         Uomqty = 0;
@@ -2318,7 +2232,6 @@
                     var isBarcodeScan = barcodeValue !== '';
                     var qtyDisabledAttr = isBarcodeScan ? 'disabled' : '';
 
-                    debugger;
                     rows = '<tr><td style="display:none;"><input type="hidden" value="' + data[0].Item_ID + '" name="ItemID" id="ItemID" ></td>' +
 
                         '<td> ' + parseInt(parseInt(rowIndex) + 1) + '</td>' +
@@ -2368,7 +2281,6 @@
             });
         }
         function adjustment() {
-            debugger;
             var ttlpayable = $('#txtTotalPayable').val();
             if (ttlpayable == "") {
                 ttlpayable = 0;
@@ -2399,7 +2311,6 @@
             }
         }
         function SaveDataWithoutUser() {
-            debugger;
             $('#SaveVal').attr('disabled', true);
             var userC = $('#txtuserCode').val();
             var userP = $('#txtpass').val();
@@ -2408,7 +2319,6 @@
             var UserId = 0
 
 
-            debugger;
             var Bill_ID = '';
             Bill_ID = '<%= Request.QueryString["Bill_ID"]%>'
             if (Bill_ID == '')
@@ -2469,7 +2379,6 @@
             var hasInvalidStock = false;
             var Save_list = [];
             $.each($('#tblDetails tbody tr'), function (key, value) {
-                debugger;
                 var Itemid = $($(value).find('td input[name=ItemID]')[0]).val();
                 var ItemName = $($(value).find('td input[name=Itemdesc]')[0]).val();
                 var Qty = $($(value).find('td input[name=txtQty]')[0]).val();
@@ -2521,12 +2430,10 @@
                     Itemid: Itemid, ItemName: ItemName, Qty: Qty, Stock: Stock, Amount: Amount, DiscPer: DiscPer, DiscAmount: DiscAmount, NetAmount: NetAmount, batchno: batchno, CGSAmount: CGSAmount, hdnItemid: hdnItemid, LineDiscount: LineDiscount, BarcodeId: BarcodeId,
                 });
             });
-            debugger;
             if (hasInvalidStock) {
                 $('#SaveVal').attr('disabled', false);
                 return;
             }
-            debugger;
             var Parameters = {
                 "Bill_ID": Bill_ID,
                 "Patient_ID": Patient_ID,
@@ -2550,11 +2457,9 @@
 
             };
             if (patId == undefined) {
-                debugger;
                 patId = 0;
             }
             PageMethods.SaveRecord(JSON.stringify(Parameters), Rbtn, UserId, patId, function (res) {
-                debugger;
                 var btnSave = $('#btnSave').val();
                 if (btnSave == 'Save & Print(Alt+S)' || btnSave == "Save & Print(Alt+S)") {
                     window.open('../../ReportViewer.aspx?ReportName=CathLabBillingBasePrint&ReportTitle=CathLab Print&Bill_ID=' + JSON.parse(res));
@@ -2577,7 +2482,6 @@
         }
 
         function SaveData() {
-            debugger;
             $('#SaveVal').attr('disabled', true);
             var userC = $('#txtuserCode').val();
             var userP = $('#txtpass').val();
@@ -2585,7 +2489,6 @@
             var UserPass;
             var UserId;
             PageMethods.loadData(userC, function (resp) {
-                debugger;
                 var data = JSON.parse(resp);
                 if (data.length != 0) {
                     userCode = data[0].User_Code;
@@ -2609,7 +2512,6 @@
                     return;
                 }
                 if (userC == userCode && userP == UserPass) {
-                    debugger;
                     var Bill_ID = '';
                     Bill_ID = '<%= Request.QueryString["Bill_ID"]%>'
                     if (Bill_ID == '')
@@ -2649,7 +2551,6 @@
                     var Save_list = [];
 
                     $.each($('#tblDetails tbody tr'), function (key, value) {
-                        debugger;
                         
                         var ItemName = $($(value).find('td input[name=Itemdesc]')[0]).val();
                         var Qty = $($(value).find('td input[name=txtQty]')[0]).val();
@@ -2703,12 +2604,10 @@
                             Itemid: Itemid, ItemName: ItemName, Qty: Qty, Stock: Stock, Amount: Amount, DiscPer: DiscPer, DiscAmount: DiscAmount, NetAmount: NetAmount, batchno: batchno, CGSAmount: CGSAmount, hdnItemid: hdnItemid, LineDiscount: LineDiscount, Remarks: Remarks, BarcodeId: BarcodeId,
                         });
                     });
-                    debugger;
                     if (hasInvalidStock) {
                         $('#SaveVal').attr('disabled', false);
                         return;
                     }
-                    debugger;
                     var Parameters = {
                         "Bill_ID": Bill_ID,
                         "Patient_ID": Patient_ID,
@@ -2730,11 +2629,9 @@
                         "Panel_Id": $('#ddlpanel').val()
                     };
                     if (patId == undefined) {
-                        debugger;
                         patId = 0;
                     }
                     PageMethods.SaveRecord(JSON.stringify(Parameters), Rbtn, UserId, patId, function (res) {
-                        debugger;
                         var btnSave = $('#btnSave').val();
                         if (btnSave == 'Save & Print(Alt+S)' || btnSave == "Save & Print(Alt+S)") {
                             window.open('../../ReportViewer.aspx?ReportName=CathLabBillingBasePrint&ReportTitle=CathLab Billing&Bill_ID=' + JSON.parse(res));
@@ -2773,19 +2670,16 @@
                 }
             });
         }
-        debugger;
         var out_Patient_Id;
         var MrNo;
         var ItemCode;
         var Opd_ID;
         var pat_id;
         //function LoadTokenInputsDefaultMRNo() {
-        //    debugger;
 
         //    $("#txtMRNo").tokenInput("../../json.aspx?Table=PatientsForPharmacy", {
         //        tokenLimit: 1,
         //        onAdd: function (item) {
-        //            debugger;
         //            try {
         //                pat_id = item.id;
         //                /*  LoadPriscription();*/
@@ -2801,11 +2695,9 @@
         //    });
          //}
          function LoadTokenInputsDefaultMRNo() {
-             debugger;
              $("#txtMRNo").tokenInput("../../json.aspx?Table=PatientsForPharmacy", {
                  tokenLimit: 1,
                  onAdd: function (item) {
-                     debugger;
                      try {
                          pat_id = item.id;
                          out_Patient_Id = pat_id;
@@ -2818,7 +2710,6 @@
                              contentType: "application/json; charset=utf-8",
                              dataType: "json",
                              success: function (response) {
-                                 debugger;
                                  var data = response.d ? JSON.parse(response.d) : response;
 
                                  if (data) {
@@ -2858,7 +2749,6 @@
          }
         var opdId;
         function getOPDID(pat_id) {
-            debugger;
 
             $.ajax({
                 type: "POST",
@@ -2867,7 +2757,6 @@
                 contentType: "application/json; charset=utf-8",
                 dataType: "json",
                 success: function (response) {
-                    debugger;
                     var opdId = response.d;
 
                     if (opdId && opdId !== "") {
@@ -2896,7 +2785,6 @@
                 contentType: "application/json; charset=utf-8",
                 dataType: "json",
                 success: function (msg) {
-                    debugger;
                     var data = JSON.parse(msg.d);
                     if (data == '001') {
                         SearchPop()
@@ -2920,7 +2808,6 @@
                 contentType: "application/json; charset=utf-8",
                 dataType: "json",
                 success: function (msg) {
-                    debugger;
                     var data = JSON.parse(msg.d);
                     if (data == '01') {
                         //blnceCondition = 'true'
@@ -2947,7 +2834,6 @@
 
 
         //function getIPDID(pat_id) {
-        //    debugger;
 
         //    $.ajax({
         //        type: "POST",
@@ -2956,7 +2842,6 @@
         //        contentType: "application/json; charset=utf-8",
         //        dataType: "json",
         //        success: function (response) {
-        //            debugger;
         //            var result = response.d;
         //            if (result === "10") {
         //                $("#txtTransType").val('IPD Sehat Patient');
@@ -2976,7 +2861,6 @@
         //}
 
         function getIPDID(pat_id) {
-            debugger;
 
             $.ajax({
                 type: "POST",
@@ -2985,7 +2869,6 @@
                 contentType: "application/json; charset=utf-8",
                 dataType: "json",
                 success: function (response) {
-                    debugger;
                     var result = JSON.parse(response.d);
                     var discountType = result.DiscountType;
                     var typeName = result.TypeName;
@@ -3009,7 +2892,6 @@
 
 
         function GetPatientDetail() {
-            debugger;
             var Patient_ID = $('#hdPatientID').val();
             $.ajax({
                 type: "POST",
@@ -3024,7 +2906,6 @@
             });
         }
         function openQueue() {
-            debugger;
             fillPendingPatientsLists();
             $('#queueModal').modal('show');
         }
@@ -3080,9 +2961,7 @@
     });
 }
 
-        debugger;
         //function hideModel(pat_id, mr_no_sequence) {
-        //    debugger;
         //    console.log(pat_id, mr_no_sequence);
         //    $('#queueModal').modal('hide');
         //    $('#token-input-txtMRNo').val(mr_no_sequence)
@@ -3099,7 +2978,6 @@
             getOPDandIPDNO(pat_id);
         }
         function OnSuccess(data) {
-            debugger;
             if (data.d !== '') {
                 $('#row22').show();
                 $('#lblPatienName').text(ReplaceNullWith_Space(data.d.Name));
@@ -3114,10 +2992,8 @@
             else
                 return Data;
         }
-        debugger;
         var itemIds;
         function getitem_code() {
-            debugger;
             var warehouse = $("#ddlWarehouse").val()
             if (warehouse == "0") {
                 Swal.fire({
@@ -3157,7 +3033,6 @@
                         contentType: "application/json; charset=utf-8",
                         async: false,
                         success: function (msg) {
-                            debugger;
 
                             var data = JSON.parse(msg.d);
                             var doctorId = data.DoctorInfo?.Doctor_ID || 0;
@@ -3167,7 +3042,6 @@
                             $('#ddlDoctor').attr('disabled', true);
                             $('#ddlDepartment').attr('disabled', true);
                             $.each(data.ItemCodes, function (index, value) {
-                                debugger;
                                 itemIds.push(value);
                             });
                         }
@@ -3184,7 +3058,6 @@
                         contentType: "application/json; charset=utf-8",
                         async: false,
                         success: function (msg) {
-                            debugger;
                             var data = JSON.parse(msg.d);
                             var doctorId = data.DoctorInfo?.Doctor || 0;
                             var department = data.DoctorInfo?.Department || '';
@@ -3208,9 +3081,7 @@
                                 $('#ddlpanel').attr('disabled', false);
                             }
                             getWardAndBed(pat_Id)
-                            debugger;
                             $.each(data.ItemCodes, function (key, value) {
-                                debugger;
                                 itemIds.push(value);
 
                             });
@@ -3229,12 +3100,9 @@
                         contentType: "application/json; charset=utf-8",
                         async: false,
                         success: function (msg) {
-                            debugger;
                             var data = JSON.parse(msg.d);
                             // getWardAndBed(pat_Id)
-                            debugger;
                             $.each(data, function (key, value) {
-                                debugger;
                                 itemIds.push(value);
 
                             });
@@ -3253,7 +3121,6 @@
                 contentType: "application/json; charset=utf-8",
                 dataType: "json",
                 success: function (msg) {
-                    debugger;
 
                     var data = JSON.parse(msg.d);
 
@@ -3267,11 +3134,8 @@
                 }
             });
         }
-        debugger;
         function AddMedicineDetailFormOPD(itemIds) {
-            debugger;
             itemIds.forEach(function (itemCode) {
-                debugger;
                 var itemId = itemCode;
                 var rowIndex = parseInt($('#tblDetails tbody tr').length);
                 var rows;
@@ -3289,7 +3153,6 @@
                         $('#Table_1 tr:gt(0)').remove();
                         var data = JSON.parse(msg.d);
                         
-                        debugger;
                         var Uomqty = data[0].UOM_Qty;
                         if (Uomqty == null) {
                             Uomqty = 0;
@@ -3335,7 +3198,6 @@
                         $('#tblDetails tbody').append(rows);
                         //onkeyup = "CalculateSummarieDiscountAmountWise(' + rowIndex + ')"
                         PageMethods.GetBatchNumbers(itemId, warehouse, function (data) {
-                            debugger;
                             var parsedData = JSON.parse(data);
                             var options = '<option value="0" >Please Select</option>';
 
@@ -3359,12 +3221,10 @@
             });
         }
         function updateStock(anchors) {
-            debugger;
             var row = $(anchors).closest('tr');
             var rowIndex = row.index();
             var hdndiscountType = $('#hdndiscountType').val();
             var warehouse = $('#ddlWarehouse').find('option:selected').val();
-            debugger;
             var selectId = $(anchors).attr('id');
             var idParts = selectId.split('ddlbatch');
             if (idParts.length > 1) {
@@ -3388,7 +3248,6 @@
                 contentType: "application/json; charset=utf-8",
                 async: false,
                 success: function (stockMsg) {
-                    debugger;
                     var stockData = JSON.parse(stockMsg.d);
                     var stock = stockData[0].Total_Stock || 0;
                     var rate = stockData[0].Sale_Rate || 0;
@@ -3400,7 +3259,6 @@
                         alert("Minimum Stock Alert");
                     }
                     date = moment(date).format('D-MMM-YYYY');
-                    debugger;
                     console.log(rate)
                     $('#txtStock' + counter).val(stock);
                     $('#txtSalerate' + counter).val(rate);
@@ -3417,7 +3275,6 @@
             CalculateSummarieDiscountPerWise(rowIndex);
         }
         function SearchPop() {
-            debugger;
             $('#SearchModel').modal({
                 backdrop: 'static'
             });
@@ -3522,9 +3379,7 @@
                 }
             );
         }
-        debugger;
         function DisableWareHouse() {
-            debugger;
 
             var mro = $("#txtMRNo").val();
 
@@ -3536,7 +3391,6 @@
 
         }
         function DisableSaleReturnWareHouse() {
-            debugger;
 
             var mro = $("#txtMRNo").val();
 
@@ -3572,7 +3426,6 @@
 
         var editrights;
         function AllowadjustmentEdit() {
-            debugger;
             $.ajax({
                 type: "POST",
                 url: "IssueCathLabItems.aspx/CheckEditAdjustment",
@@ -3581,7 +3434,6 @@
                 dataType: "json",
                 async: true,
                 success: function (data) {
-                    debugger;
                     editrights = data.d;
 
                     if (editrights == "true") {
@@ -3633,7 +3485,6 @@
 
         //        success: function (response) {
 
-        //            debugger;
 
         //            $('#ddlInvoiceNumber').empty();
         //            $('#ddlInvoiceNumber').append('<option value="">--Select Invoice--</option>');

@@ -5,10 +5,8 @@
  <script type="text/javascript">
      $(document).ready(function () {
          FillDoctors();
-         debugger;
 
          $('#btnSaveLab').click(function () {
-             debugger;
              var Labfooter = CKEDITOR.instances.labFooter.getData();
              var LabfooterTwo = CKEDITOR.instances.labFooterTwo.getData();
              var DoctorName = $('#ddlDoctor option:selected').text();
@@ -28,7 +26,6 @@
                  contentType: "application/json; charset=utf-8",
                  dataType: "json",
                  success: function (data) {
-                     debugger;
                      if (data.d == 'Successfull') {
                          alert("Save Successfully ");
                      }
@@ -68,7 +65,6 @@
          });
          var id = '<%= Request.QueryString["id"] %>'
          if (id != "") {
-             debugger;
              loadLabFooterTem(id)
              //loadLabFooter(id);
              //loadLabFooterTwo(id);
@@ -76,7 +72,6 @@
      }
      function loadLabFooterTem(id) {
          PageMethods.LoadLabFooterTEmandid(id,function (data) {
-             debugger;
              var res = JSON.parse(data);
              $('#templateName').val(res.TemplateName);
              $('#ddlDoctor').val(res.DoctorId).trigger('change');
@@ -85,7 +80,6 @@
      }
      function loadLabFooter(id) {
          PageMethods.LoadLabFooter(id,function (data) {
-             debugger;
              var res = JSON.parse(data);
              // Set footer
              $('#labFooter').text(res.DataValue_Description);
@@ -95,7 +89,6 @@
      }
      function loadLabFooterTwo(id) {
          PageMethods.LoadLabFooterTwo(id,function (data) {
-             debugger;
              var Footertwo = JSON.parse(data);
              $('#labFooterTwo').text(Footertwo);
              CKEDITOR.instances.labFooterTwo.setData(Footertwo);

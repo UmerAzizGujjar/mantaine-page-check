@@ -34,26 +34,21 @@
 
         var serialnum = '';
         $(document).ready(function () {
-            debugger
             $('#txt_debitamount').on('focus', function () {
-                debugger
                 $('#txt_creditamount').prop('readonly', true).val('');
                 $(this).prop('readonly', false);
             });
 
             $('#txt_creditamount').on('focus', function () {
-                debugger
                 $('#txt_debitamount').prop('readonly', true).val('');
                 $(this).prop('readonly', false);
             });
 
             $('#txt_debitamount').on('input', function () {
-                debugger
                 $('#txt_creditamount').prop('readonly', true).val('');
             });
 
             $('#txt_creditamount').on('input', function () {
-                debugger
                 $('#txt_debitamount').prop('readonly', true).val('');
             });
 
@@ -81,46 +76,36 @@
             $("#txt_date").datepicker({ dateFormat: 'mm/dd/yy' }).attr('readonly', 'readonly');
             date = moment(date).format('L');
             $("#txt_date").val(date);
-            debugger;
             var accountid = 0;
             loadtokenInputsByAccount_ID();
         });
         function FillCostCenter() {
-            debugger;
             var optionInv = '';
             optionInv = '<option value="0">Please Select</option>';
             PageMethods.fillcostcenterss(function (Tests) {
-                debugger
                 $.each(JSON.parse(Tests), function (key, value) {
-                    debugger;
                     optionInv += '<option value="' + value.DataValueName + '" >' + value.DataValueDescription + '</option>';
                 });
                 $('#ddlcostcenter').html(optionInv);
             });
         }
         function FillDepartment() {
-            debugger;
             var optiondep = '';
             optiondep = '<option value="0">Please Select</option>';
             PageMethods.filldepartments(function (Tests) {
-                debugger
                 $.each(JSON.parse(Tests), function (key, value) {
-                    debugger;
                     optiondep += '<option value="' + value.DataValueName + '" >' + value.DataValueDescription + '</option>';
                 });
                 $('#ddldepartment').html(optiondep);
             });
         }
         function submitText(row) {
-            debugger;
             var current_narration = $(row).closest('tr').find('td input[name=txtnarration]').val();
             $("#bodyModal").html(current_narration);
         }
         function LoadVoucherHeader(VID) {
-            debugger
             PageMethods.LoadVoucherMaster(VID, function (resp) {
                 var data = JSON.parse(resp);
-                debugger;
                 var txtdate = new Date(parseInt(data.Budget_Date.substr(6)));
                 txtdate = moment(txtdate).format('L');
                 $('#txt_vcher_type').val(data.Budget_Type);
@@ -145,9 +130,7 @@
                 })
         }
         function LoadVoucherDetail(VID) {
-            debugger
             PageMethods.LoadVoucherChild(VID, function (resp) {
-                debugger;
                 var data = (JSON.parse(resp));
                 var rows = '';
                 var rowIndex = parseInt((parseInt($('#tbldescription tbody tr').length)));
@@ -183,7 +166,6 @@
                     if (departmentId == null) {
                         departmentId = 0;
                     }
-                    debugger;
                     rows += '<tr>' +
                         '<td>' + rowIndex + '</td>' +
                         '<td style="display:none!important;"><input style="background: #fff !important; border: 0px solid #fff !important;" type="text" readonly="readonly" id="rowid' + rowIndex + '" name="rowid" value="' + rowIndex + '" /></td>' +
@@ -206,7 +188,6 @@
                 $("#tbldescriptionbody").append(rows);
                 calculatedifference();
                 $('#btnsave').val('Update');
-                debugger;
                 var data = $('#tbldescriptionbody');
             },
                 function (error) {
@@ -220,7 +201,6 @@
             window.location.href = "Budget.aspx";
         }
         function loadtokenInputsByAccount_ID() {
-            debugger;
             var tokendata;
             try {
                 $("#txtAccountName").tokenInput("../../json.aspx",
@@ -228,7 +208,6 @@
                         tokenLimit: 1,
                         onAdd: function (item) {
                             try {
-                                debugger;
                                 var account_id = item.id;
                                 var account_name = item.name;
                                 $("#hdfAccount_Code").val(account_id);
@@ -250,7 +229,6 @@
             return xmlHttp.responseText;
         }
         function append() {
-            debugger;
             var rows = '';
             var txtaccountscode = $('#hdfAccount_Code').val();
             var txtaccountsname = $('#txtAccountName').val();
@@ -262,7 +240,6 @@
             var ddldepartmentid = $('#ddldepartment :selected').val();
             if (ddldepartmentname == "Please Select") ddldepartmentname = '';
 
-            debugger;
             var txtnarration = $('#txtnarration').val();
             var getype = 'BJV'
             var debitamount = $('#txt_debitamount').val();
@@ -340,9 +317,7 @@
                 '<td><input style="background: #fff !important; border: 0px solid #fff !important;" type="text" readonly="readonly" id="txt_creditamount' + rowlength + '" name="txt_creditamount" value="' + creditamount + '" /></td>' +
                 '<td><a onclick="editchildrow(this)" style="border-radius: 4px; background-color: #d4b7e7; color: black; padding: 4px 11px 4px 11px;   cursor:pointer!important;">Edit</a><a onclick="Delete(this)" style="border-radius: 4px;background-color: #e98383;color: white;padding: 4px 11px 4px 11px;   cursor:pointer!important;">Delete</a></td>'
             '</tr>'
-            debugger;
             if (serialnum > 0) {
-                debugger;
                 $('#txtaccountcode' + serialnum + '').val(txtaccountscode);
                 $('#txtaccountname' + serialnum + '').val(txtaccountsname);
                 $('#ddlcostcentername' + serialnum + '').val(ddlcostcentername);
@@ -364,19 +339,16 @@
             rowlength++;
         }
         function Delete(row) {
-            debugger;
             $(row).closest('tr').remove();
             calculatedifference();
         }
         function calculatedifference() {
-            debugger;
             var debitside = 0;
             var creditside = 0;
             var balance = 0;
             var totaldebit = 0;
             var totalcredit = 0;
             $.each($('#tbldescription tbody tr'), function (key, value) {
-                debugger;
                 debitside = $($(value).find('td input[name=txt_debitamount]')[0]).val();
                 creditside = $($(value).find('td input[name=txt_creditamount]')[0]).val();
                 if (debitside == "") {
@@ -394,20 +366,16 @@
             $('#txt_diff').val(parseFloat(balance));
         }
         function SaveAllRecord() {
-            debugger
             elementIsClicked = true;
-            debugger;
             var status;
             var btnSave = $('#btnsave').val();
             var type = $('#txt_vcher_type').val();
             var budgetno = $('#voucher_no').val();
             var status = $('#txtstatus').val();
             if (status == 'Cancalled') {
-                debugger;
                 status = 'Created'
             }
             if (status == '') {
-                debugger;
                 status = 'Created'
             }
             var txtdate = $('#txt_date').val();
@@ -435,9 +403,7 @@
             var editmode_budgetID = '<% =Request.QueryString["VID"] %>';
             var table = $('#tbldescriptionbody');
             var Item_list = [];
-            debugger;
             table.find('tr').each(function (key, value) {
-                debugger;
                 Item_list.push({
                     'accountcode': $(value).find('td input[name=txtaccountcode]').val(),
                     'txtdebamount': $(value).find('td input[name=txt_debitamount]').val(),
@@ -450,10 +416,8 @@
                     'txtaccountname': $(value).find('td input[name=txtaccountname]').val(),
                 });
             });
-            debugger;
             var AllItemDetail = { 'Item_list': Item_list, 'editmode_budgetID': editmode_budgetID, 'budgetno': budgetno, 'type': type, 'txtdate': txtdate, 'descriptionmaster': descriptionmaster, 'totaldebit': totaldebit, 'totalcredit': totalcredit, 'status': status };
             PageMethods.Savealldata(btnSave, JSON.stringify(AllItemDetail), function (res) {
-                debugger;
                 if (res == "Period closed for this month. You cannot add or edit Voucher.") {
 
                     Swal.fire({
@@ -492,10 +456,8 @@
 
         function UnApprove() {
             elementIsClicked = true;
-            debugger;
             var VID = '<% =Request.QueryString["VID"] %>';
             PageMethods.UnApproveVoucher(VID, function (Tests) {
-                debugger
                
                 Swal.fire({
                     icon: 'success',
@@ -523,11 +485,9 @@
             }
         }
         function editchildrow(anchorTag) {
-            debugger
             var values = [];
             var one = '';
             var two = '';
-            debugger;
             var table = $('#tbldescriptionbody');
             var row = $(anchorTag).parents('tr')[0];
             serialnum = $($(row).find('td')[0]).text();
@@ -546,7 +506,6 @@
             var txtnarration = $($(row).find('td input[name="txtnarration"]')).val();
             var debtitvalue = $($(row).find('td input[name="txt_debitamount"]')).val();
             var creditvalue = $($(row).find('td input[name="txt_creditamount"]')).val();
-            debugger
             $('#txtAccountName').tokenInput('clear');
             $('#txtAccountName').tokenInput("add", { id: accountid, name: accComplete });
             $('#ddlcostcenter').val(costcenterid).trigger('change');

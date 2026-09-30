@@ -7,12 +7,10 @@
 
 
         $(document).ready(function () {
-            debugger;
             $('#ctl00_lblMessage').hide();
             LoadPage();
 
         });
-        debugger;
         function PrintTest(id) {
             window.open('ReportViewer.aspx?ReportName=TestDefination&ReportTitle= Test Defination&Test_IDs=' + id);
         }
@@ -58,7 +56,6 @@
                     { "data": "Doctor_Id", "orderable": false },
                     {
                         render: function (data, type, full) {
-                            debugger;
                             var res = '<a class="editListBtn" href="#" onclick="editOpen(' + full.TemplateID + ')" style="border-radius: 4px;margin-right: 4px;padding: 5px 8px 5px 8px;"><i class="fa fa-pencil"></i></a>'
                                 ;
                             var print = '<a class="printListBtn" style="border-radius: 4px;margin-left: 4px;padding: 5px 8px 5px 8px;" href="#" onclick="PrintTest(' + full.Test_ID + ')" id="btnprint"><i class="fa fa-print" ></i></a>';
@@ -97,9 +94,7 @@
             window.open("Doctor_Template.aspx?ID=" + Tem_Id);
         }
 
-        debugger;
         function deleteConfirm(anchorTag) {
-            debugger;
 
 
             var row = $(anchorTag).parents('tr')[0];

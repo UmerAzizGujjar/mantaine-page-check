@@ -18,7 +18,6 @@ $(document).ready(function () {
         }
     })
 
-    debugger;
     GetStudentprogram();
     GetStudentClass();
     GetBloodGroup();
@@ -35,12 +34,10 @@ $(function () {
     });
 })
 function listopen() {
-    debugger;
     window.location.href = "StudentsList.aspx";
 
 }
 function FormOpen() {
-    debugger;
     window.location.href = "AddStudent.aspx";
 }
 
@@ -52,11 +49,8 @@ function GetStudentprogram() {
         contentType: 'application/json;charset=utf-8',
         dataType: 'json',
         success: function (data) {
-            debugger;
             Getprgrm = '<option value="0">Please Select</option>';
-            debugger;
             $.each(JSON.parse(data.d), function (key, value) {
-                debugger;
 
                 Getprgrm += '<option value="' + value.DataValueName + '" >' + value.DataValueDescription + '</option>';
             });
@@ -87,11 +81,8 @@ function GetGl_Code() {
         contentType: 'application/json;charset=utf-8',
         dataType: 'json',
         success: function (data) {
-            debugger;
             GetGl = '<option value="0">Select</option>';
-            debugger;
             $.each(JSON.parse(data.d), function (key, value) {
-                debugger;
 
                 GetGl += '<option value="' + value.DataValueName + '" >' + value.DataValueDescription + '</option>';
             });
@@ -111,11 +102,8 @@ function GetStudentClass() {
         contentType: 'application/json;charset=utf-8',
         dataType: 'json',
         success: function (data) {
-            debugger;
             GetClass = '<option value="0">Select</option>';
-            debugger;
             $.each(JSON.parse(data.d), function (key, value) {
-                debugger;
 
                 GetClass += '<option value="' + value.DataValueName + '" >' + value.DataValueDescription + '</option>';
             });
@@ -133,11 +121,9 @@ function GetBloodGroup() {
         contentType: 'application/json;charset=utf-8',
         dataType: 'json',
         success: function (data) {
-            debugger;
             GetbldGroup = '<option value="0">Select</option>';
 
             $.each(JSON.parse(data.d), function (key, value) {
-                debugger;
 
                 GetbldGroup += '<option value="' + value.DataValueName + '" >' + value.DataValueDescription + '</option>';
             });
@@ -153,11 +139,9 @@ function GetBatch() {
         contentType: 'application/json;charset=utf-8',
         dataType: 'json',
         success: function (data) {
-            debugger;
             GetBatch = '<option value="0">Select</option>';
 
             $.each(JSON.parse(data.d), function (key, value) {
-                debugger;
 
                 GetBatch += '<option value="' + value.DataValueName + '" >' + value.DataValueDescription + '</option>';
             });
@@ -173,11 +157,9 @@ function GetGroup() {
         contentType: 'application/json;charset=utf-8',
         dataType: 'json',
         success: function (data) {
-            debugger;
             GetGroup = '<option value="0">Select</option>';
 
             $.each(JSON.parse(data.d), function (key, value) {
-                debugger;
 
                 GetGroup += '<option value="' + value.DataValue_Name + '" >' + value.DataValue_Description + '</option>';
             });
@@ -186,24 +168,19 @@ function GetGroup() {
     });
 }
 function LoadStudentData(Stu_ID) {
-    debugger;
     PageMethods.LoadStudentData(Stu_ID, function (resp) {
         var studata = JSON.parse(resp);
-        debugger;
         $('#btnSave').val('Update');
         var stDate = '';
         if (studata.DOB != null) {
             stDate = new Date(parseInt(studata.DOB.substr(6)));
             stDate = moment(stDate).format('L');
         }
-        debugger;
         var admDate = '';
         if (studata.AdmissionDate != null) {
-            debugger;
             admDate = new Date(parseInt(studata.AdmissionDate.substr(6)));
             admDate = moment(admDate).format('L');
         }
-        debugger;
         $('#Student_Id').val(studata.Student_Id);
         $('#Rollnum').val(studata.Roll_No);
         $('#admission').val(studata.Admission);
@@ -216,7 +193,6 @@ function LoadStudentData(Stu_ID) {
         $('#Per_Address').val(studata.Permanent_Address);
         $('#EmailAdrr').val(studata.Email_Adress);
         $('#txt_Date').val(stDate);
-        debugger;
         $('#txtadmDate').val(admDate)
         $('#St_CNIC').val(studata.Student_CNIC);
         setTimeout(function () {
@@ -286,7 +262,6 @@ function LoadStudentData(Stu_ID) {
     })
 }
 function Selectfunc() {
-    debugger;
     var currentYear = (new Date).getFullYear();
 
     var slct_value = $("#ddlProgram").val();

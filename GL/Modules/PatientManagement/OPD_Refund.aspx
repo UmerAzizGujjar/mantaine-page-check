@@ -124,7 +124,6 @@
         }
 
         function PrintRefund() {
-            debugger;
             var refundID = '<% =Request.QueryString["RefundID"] %>';
             if (!refundID) {
                 var urlParams = new URLSearchParams(window.location.search);

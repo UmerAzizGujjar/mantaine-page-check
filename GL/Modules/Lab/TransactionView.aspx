@@ -5,7 +5,6 @@
     <script type="text/javascript">
         var tag;
         $(document).ready(function () {
-            debugger;
             $("#myInput").on("keyup", function () {
                 var value = $(this).val().toLowerCase();
                 $("#ibody tr").filter(function () {
@@ -23,7 +22,6 @@
             tag = '<%= Request.QueryString["Tag"]%>';
             searchbuton();
             $('#btnProceed').on('click', function () {
-                debugger;
                 var status = '';
                 var dataList = new Array();
                 var table = document.getElementById('ibody');
@@ -35,7 +33,6 @@
                         var dispatchDate = $('#DispatchDate' + i).val();
                         var receiveDate = $('#ReceiveDate' + i).val();
                         if (dispatchDate != '' && receiveDate != '') {
-                            debugger;
                             dataList[i] = new Array(testDetailID, dispatchDate, receiveDate);
                         }
                         status = 'Pending';
@@ -44,7 +41,6 @@
                 }
                 else if (tag == 'DispatchedTestList') {
 
-                    debugger;
                     for (var i = 0; i < table.rows.length; i++) {
                         var testDetailID = $('#Lab_Test_Detail_ID' + i).text();
                         var isChecked = $('#chk' + testDetailID).prop("checked");
@@ -77,7 +73,6 @@
         });
 
         function clickonnsearch() {
-            debugger;
             var patient_No = $('#pickSearch').val();
             
             $.ajax(
@@ -93,17 +88,14 @@
                            dataType: "json",
 
                            success: function (response) {
-                               debugger;
 
                                var parse = JSON.parse(response.d);
                                var length = parse.length;
                                var rows = '';
                                var columnsName = '';
-                               debugger;
                                Clear();
 
                                if (tag == "SampleView") {
-                                   debugger;
                                    $("#ctl00_lbl2").text("Sample View");
                                    $("#ctl00_lbl1").text("Transaction View");
                                    for (var i = 0; i < length; i++) {
@@ -120,7 +112,6 @@
 
         };
         function ClearResults() {
-            debugger
             while (ibody.rows.length > 0) {
 
                 ibody.deleteRow(1);
@@ -129,7 +120,6 @@
 
         }
         function Clear() {
-            debugger
 
 
             $('#tblResult tbody').empty();
@@ -154,7 +144,6 @@
 
            
             function GetColumnNames() {
-                debugger;
                 $.ajax({
                     type: "post",
                     url: "TransactionView.aspx/GetColumns",
@@ -164,7 +153,6 @@
                     contentType: "application/json; charset=utf-8",
                     dataType: "json",
                     success: function (response) {
-                        debugger;
                       
 
                         if (response.d == "No") {
@@ -227,7 +215,6 @@
                                 columnsName += '<tr><th style="display:none">' + parse[0].replace(/_/g, ' ') + '</th><th>' + parse[1].replace(/_/g, ' ') + '</th><th>' + parse[2].replace(/_/g, ' ') + '</th><th>' + parse[3].replace(/_/g, ' ') + '</th><th>' + parse[4].replace(/_/g, ' ') + '</th><th>Action</th>'
                             }
                             else if (tag == "Schedule") {
-                                debugger;
                                 $("#ctl00_lbl2").text("Schedule");
                                 $("#ctl00_lbl1").text("Transaction View");
                                 $("#showHideScheduleHeadr").hide();
@@ -236,7 +223,6 @@
                                 columnsName += '<tr><th style="display:none">' + parse[0].replace(/_/g, ' ') + '</th><th>' + parse[4].replace(/_/g, ' ') + '</th><th>' + parse[2].replace(/_/g, ' ') + '</th><th>' + parse[3].replace(/_/g, ' ') + '</th><th>Action</th></tr>';
                             }
                             else if (tag == "OutSourceTestStatusList") {
-                                debugger;
                                 $("#ctl00_lbl2").text("Pending Test List");
                                 $("#ctl00_lbl1").text("Transaction View");
                                 $("#ShowHideOutSourceTestStatusList").hide();
@@ -244,7 +230,6 @@
                                 columnsName += '<tr><th>' + parse[1].replace(/_/g, ' ') + '</th><th>' + parse[2].replace(/_/g, ' ') + '</th><th style="display:none;">' + parse[3].replace(/_/g, ' ') + '</th><th>' + parse[4].replace(/_/g, ' ') + '</th><th>' + parse[5].replace(/_/g, ' ') + '</th><th>' + parse[6].replace(/_/g, ' ') + '</th><th>Dispatch Date</th><th>Receive Date</th></tr>'
                             }
                             else if (tag == "DispatchedTestList") {
-                                debugger;
                                 $("#ctl00_lbl2").text("Dispatch Test List");
                                 $("#ctl00_lbl1").text("Transaction View");
                                 $("#ShowHideOutSourceTestStatusList").hide();
@@ -269,7 +254,6 @@
 
 
             function GetTableData() {
-                debugger;
                 $.ajax({
                     type: "post",
                     url: "TransactionView.aspx/GetData",
@@ -279,7 +263,6 @@
                     contentType: "application/json; charset=utf-8",
                     dataType: "json",
                     success: function (response) {
-                        debugger;
                         var parse = JSON.parse(response.d);
                         var length = parse.length;
 
@@ -310,16 +293,13 @@
                         else if (tag == "Schedule") {
                             $("#ctl00_lbl2").text("Schedule");
                             $("#ctl00_lbl1").text("Transaction View");
-                            debugger;
                             for (var i = 0; i < length; i++) {
-                                debugger;
                              
                                 rows += '<tr><td style="display:none">' + parse[i].schedule_id + '</td><td>' + parse[i].schedule_no + '</td><td>' + parse[i].Days + '</td><td>' + parse[i].Emp_Name + '</td><td><a style="border-radius: 4px; background-color: #d4b7e7; color: black; padding: 4px 11px 4px 11px;" href="Schedule.aspx?ScheduleID=' + parse[i].schedule_id + '">Edit</a> </td></tr>';
                             }
                         }
                            
                         else if (tag == "DispatchedTestList") {
-                            debugger;
                             $("#ctl00_lbl2").text("Dispatch Test List");
                             $("#ctl00_lbl1").text("Transaction View");
                             $("#btnProceed").show();
@@ -330,7 +310,6 @@
                                     '<td>' + parse[i].Patient_No + '</td><td>' + parse[i].Full_Name + '</td><td  id="Lab_Test_Detail_ID' + i + '" style="display:none;">' + parse[i].Lab_Test_Detail_ID + '</td><td>' + parse[i].Test_NAme + '</td><td>' + parse[i].Rate + '</td><td><input type="text" id="DispatchDate' + i + '"  value="' + parse[i].Dispatch_Date + '"/></td><td><input type="text" id="ReceiveDate' + i + '"  value="' + parse[i].Dispatch_Date + '"/></td></tr>'
                             }
                         }
-                        debugger;
                         $("#ibody").append(rows).find('input[id^=DispatchDate],input[id^=ReceiveDate]').datepicker(
             { dateFormat: 'dd/mm/yy' });
                        
@@ -343,11 +322,9 @@
             }
 
             function DeleteTest(RowReference) {
-                debugger;
                 var row = $(RowReference).parents('tr')[0];
                 var id = $($(row).find('td')[0]).text();
                 if (confirm('Are you sure want to delete this record')) {
-                    debugger;
                     $.ajax({
                         type: "post",
                         url: "TransactionView.aspx/DeleteRecord",
@@ -358,7 +335,6 @@
                         contentType: "application/json; charset=utf-8",
                         dataType: "json",
                         success: function (response) {
-                            debugger;
                             if (JSON.parse(response.d) == "Deleted" || JSON.parse(response.d) == true) {
                                 $("#VULookup").show();
                                 $("#ibody tr").remove();
@@ -376,9 +352,7 @@
                 }
             }
         }
-        debugger;
         function PrintSample(Sample_ID) {
-            debugger;
             var sampleID = Sample_ID;
 
             var user_name = '<% =AppConfig.Company_Name %>';

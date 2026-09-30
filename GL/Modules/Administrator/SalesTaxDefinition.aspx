@@ -13,12 +13,10 @@
             setTimeout(function () { LoadAccount(); }, 2000);
         });
         function SaveAllRecord() {
-            debugger;
             var btnSave = 'Update';
             var tableItems = $('#tblItemDescription');
             var Account_list = [];
             tableItems.find('tr:gt(0)').each(function (key, value) {
-                debugger;
                 var taxType = $(value).find('td input[name=Tax_Type]').val();
                 var salesTaxPerc = $(value).find('td input[name=Sales_Tax_Perc]').val();
                 if (taxType && salesTaxPerc) {
@@ -38,7 +36,6 @@
             });
             var AllItemDetail = { 'btnSave': btnSave, 'AccountList': Account_list };
             PageMethods.savewithholdtaxinfo(btnSave, JSON.stringify(AllItemDetail), function (res) {
-                debugger;
                 Swal.fire({
                     icon: 'success',
                     title: 'Success!',
@@ -58,15 +55,12 @@
         }
 
         function LoadAccount() {
-            debugger
             var rows = '';
             PageMethods.LoadAccount(function (resp) {
-                debugger
                 var data = (JSON.parse(resp));
                 selectedOptions = data;
                 var rowIndex = parseInt((parseInt($('#tblItemDescription tbody tr').length)));
                 $.each(data, function (key, value) {
-                    debugger
                     var chk_STWH_checked = value.S_W_H_Tax ? 'checked="checked"' : '';
                     var chk_Active_checked = value.Active ? 'checked="checked"' : '';
                     var chk_IsBilling_checked = value.IsBilling ? 'checked="checked"' : '';

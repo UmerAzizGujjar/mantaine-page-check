@@ -7,7 +7,6 @@
 
         function abc() {
 
-            debugger;
             var isTrue = $('#checkoutdoor').is(':checked');
             if (isTrue) {
                 var fghjh = 'Outdoor';
@@ -32,7 +31,6 @@
             });
         }
         function Result() {
-            debugger;
             var hbs = $("#ddlhbs").val();
             var hcv = $("#ddlHCV").val();
             var hiv = $("#ddlHiV").val();
@@ -141,11 +139,9 @@
 
 
             $('#ctl00_MainContent_txtDateDonation').on('change', function () {
-                debugger;
                 $('#ctl00_MainContent_chkFirstTime').css('pointer-events', 'none');
             });
             $('#ctl00_MainContent_chkFirstTime').on('change', function () {
-                debugger;
                 if (this.checked) {
                     $('#ctl00_MainContent_txtDateDonation').prop('disabled', true);
                 }
@@ -390,7 +386,6 @@
         }
 
         function prints() {
-            debugger;
             var id = '<%=Request.QueryString["ID"]%>';
             if (id != null) {
                 window.open('ReportViewer.aspx?ReportName=BasePrintDonor&ReportTitle=Department Of Pathology&Donor_ID=' + id);
@@ -455,10 +450,8 @@
 
             });
         }
-        debugger;
         function getRecords(id) {
 
-            debugger;
             $.ajax({
                 type: "POST",
                 url: "Donors.aspx/getRecords",
@@ -482,7 +475,6 @@
                     $("#yacu").prop('checked', parsed_data[0].D_yacu);
                     $("#nacu").prop('checked', parsed_data[0].D_nacu);
 
-                    debugger;
 
                     $("#ymal").prop('checked', parsed_data[0].D_ymal);
                     $("#nmal").prop('checked', parsed_data[0].D_nmal);
@@ -610,7 +602,6 @@
 
                     $("#ctl00_MainContent_txtCenterDuration").val(parsed_data[0].Donor_CenterDonation);
 
-                    debugger;
 
                     if (Patient_Id == 0) {
 
@@ -627,7 +618,6 @@
                     }
                     else {
 
-                        debugger;
                         $('#ctl00_MainContent_txtPatient_ID').tokenInput('clear');
                         var tokenData = httpGet("../../json.aspx?Table=Patients&Record=Edit&q=" + Patient_Id);
                         var parsedData = JSON.parse(tokenData);
@@ -648,9 +638,7 @@
         var isDonorRepeated = true;
 
         function SaveDonorHistory() {
-            debugger;
             if (validateSaveTabFirst()) {
-                debugger;
                 setTimeout(function () {
                     var Patient_id = $("#ctl00_MainContent_txtPatient_ID").val();
                     var bgno = $("#txtbgno").val();
@@ -752,13 +740,11 @@
                     var outdoor = $('#token-input-ctl00_MainContent_txtPatient_ID').val();
                     var first_time_Blood = $('#ctl00_MainContent_chkFirstTime').prop('checked');
                     if (isUpdateValue == "(New)") isUpdateValue = 0;
-                    debugger
                     var end = new Date().toLocaleDateString();
                     var start = new Date(datedonation).toLocaleDateString();
                     const monthDifference = moment(new Date(end)).diff(new Date(start), 'days', true);
                     var days = Math.floor(monthDifference);
                     if (days < 90) {
-                        debugger;
                         //alert("Last date of donation is less then 3 months")
 
                     }
@@ -882,7 +868,6 @@
         }
 
         function CheckExitsBag(id) {
-            debugger;
             $.ajax({
                 type: "POST",
                 url: "Donors.aspx/CheckExitsBag",
@@ -893,7 +878,6 @@
                 contentType: "application/json; charset=utf-8",
                 dataType: "json",
                 success: function (response) {
-                    debugger;
                     var Check = response.d;
                     if (Check == true) {
 
@@ -918,7 +902,6 @@
                 contentType: "application/json; charset=utf-8",
                 dataType: "json",
                 success: function (response) {
-                    debugger;
                     var Check = response.d;
                     if (Check == true) {
 
@@ -948,7 +931,6 @@
             var id = '<%=Request.QueryString["ID"]%>';
             
 
-            debugger;
 
             var pulse = $("#txtpulse").val();
             var bp = $("#txtbp").val();
@@ -968,7 +950,6 @@
             var fit = $("#yfit").prop('checked');
             var unfit = $("#nunfit").prop('checked');
             if (fit == false && unfit == false) {
-                debugger
                 isProceed = false;
 
             }
@@ -977,9 +958,7 @@
             var id = $("#yfit").prop('checked');
             var bgno = $('#txtbgno').val();
             if (id == true) {
-                debugger;
                 if (bgno == "") {
-                    debugger;
                    
                 }
             }
@@ -1047,7 +1026,6 @@
             return isProceed;
         }
         function validateSaveTabFirst() {//
-            debugger;
             isProceed = true;
             isDonorRepeated = true;
             var Patient_id = $("#ctl00_MainContent_txtPatient_ID").val();
@@ -1254,13 +1232,11 @@
 
 
             if (isUpdateValue == "(New)") isUpdateValue = 0;
-            debugger
             var end = new Date().toLocaleDateString();
             var start = new Date(datedonation).toLocaleDateString();
             const monthDifference = moment(new Date(end)).diff(new Date(start), 'days', true);
             var days = Math.floor(monthDifference);
             if (days < 90) {
-                debugger;
                 Swal.fire({
                     icon: 'error',
                     title: 'Error!',
@@ -1316,9 +1292,7 @@
         var donor_Saved = 0;
         function SaveDonationRecord() {
             if (validateSaveTabSecond()) {
-                debugger;
                 setTimeout(function () {
-                    debugger;
                     var Patient_id = $("#ctl00_MainContent_txtPatient_ID").val();
                     var bgno = $("#txtbgno").val();
                     var donr_no = $("#ctl00_MainContent_txtDonorno").val();
@@ -1451,7 +1425,6 @@
         }
 
         function loadtokenInputsDefault() {
-            debugger;
             $('#ctl00_MainContent_txtPatient_ID').tokenInput("../../json.aspx?Table=PatientsForDonor",
                 {
 

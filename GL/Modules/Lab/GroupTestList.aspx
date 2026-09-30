@@ -96,7 +96,6 @@
                          { "data": "DataValue_Description", "name": "DataValue_Description", "orderable": true },                        
                          {
                              render: function (data, type, full) {
-                                 debugger;
                                   var res = '<a href="GroupTestDefinition.aspx?DataValue_ID=' + full.DataValue_ID + '&DataValue_Description=' + full.DataValue_Description + '&Segment1=' + full.Segment1 + '&Segment2=' + full.Segment2 + '&Segment3=' + full.Segment3 + '&Segment4=' + full.Segment4 + '&Division=' + full.Division + '&Fixed_Value=' + full.Fixed_Value + '&Result_Value=' + full.Result_Value +
                                       '&List_Value=' + full.List_Value + '&Required_Value=' + full.Required_Value + '&chkPayment=' + full.Segment5 + '&Group_Depart=' + full.Group_Depart + '&Special_Test=' + full.Special_Test + '&machine_name=' + (full.machine_name || '') + '&StandardName=' + (full.StandardName || '') + '" style="border-radius: 4px; margin-right: 4px;padding: 5px 8px;" class="editListBtn"><i class="fa fa-pencil"></i></a>';
 

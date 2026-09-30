@@ -43,13 +43,11 @@
                     $('#btnVoucher').hide();
                 }
                 if (status == "Approved") {
-                    debugger;
                     UserUnApproveButtonRights();
                     $('#btn_Save').attr("disabled", true);
                     $('#btnVoucher').show();
                 }
                 if (status == "Created" || status == "Pending") {
-                    debugger;
                     $('#btnVoucher').hide();
                     if (Inv_ID != '') {
                         CheckMIApprovalRightsAndShowButton(Inv_ID);
@@ -79,18 +77,14 @@
             });
         }
         function UserRights() {
-            debugger;
             $.ajax({
                 type: "POST",
                 url: "AddManualInvoice.aspx/UserEntryRights",
                 contentType: "application/json; charset=utf-8",
                 dataType: "json",
                 success: function (response) {
-                    debugger;
                     var hasRights = response.d;
-                    debugger;
                     if (hasRights) {
-                        debugger;
                         $('#btn_Save').show();
                     } else {
                         $('#btn_Save').hide();
@@ -115,10 +109,8 @@
         }
       
         function UnApprove() {
-            debugger;
             var InvId = '<% =Request.QueryString["Inv_ID"] %>';
            PageMethods.UnApproveManualInvoice(InvId, function (Tests) {
-               debugger
                var message = JSON.parse(Tests);
                if (message[0].Column1 != "" || message[0].Column1 != null) {
                    alert(message[0].Column1);
@@ -169,7 +161,6 @@
                 }
             });
         }
-        debugger;
         function PrintVoucher() {
             var id = '<% =Request.QueryString["Inv_ID"] %>';
                 var locationInfo = window.location;
@@ -198,13 +189,10 @@
                     })
             }
             function FillVendors() {
-                debugger;
                 var optionsVen = '';
                 PageMethods.getVendorDDLlist(function (Tests) {
-                    debugger
                     optionsVen = '<option value="0">Please Select</option>';
                     $.each(JSON.parse(Tests), function (key, value) {
-                        debugger;
                         if (value.Active == true) {
                             optionsVen += '<option value="' + value.VendorID + '" >' + value.VendorName + '</option>';
                         }
@@ -216,7 +204,6 @@
                 });
             }
             function Addrow() {
-                debugger;
                 var rows = '';
                 var rowlength = tblItemDescription.rows.length;
                 rows += '<tr>' +
@@ -252,7 +239,6 @@
                 loadItemList(rowlength);
             }
             function validateSave() {
-                debugger;
                 var proceed = true;
                 var table = $('#tblItemDescriptionDetail');
                 var Vendor = $('#ddl_Supplier').val();
@@ -287,7 +273,6 @@
                 }
                 if (document.getElementById('tblItemDescription').rows.length > 1) {
                     table.find('tr').each(function (key, value) {
-                        debugger;
                         var AccountId = $(value).find('td select[name=tblddl_AccountCode]').val();
                         var QTy = $(value).find('td input[name=tbltxt_Qty]').val();
                         var Rate = $(value).find('td input[name=tbltxt_Rate]').val();
@@ -346,10 +331,8 @@
                 return proceed;
             }
             function calcutaeAmount() {
-                debugger;
                 var TotalAmount = 0;
                 $.each($('#tblItemDescription tbody tr'), function (key, value) {
-                    debugger;
                     var Qty = $($(value).find('td input[name=tbltxt_Qty]')[0]).val();
                     var Rate = $($(value).find('td input[name=tbltxt_Rate]')[0]).val();
                     var stvalue = $(value).find('td select[name=ddlstax] :selected').text();
@@ -375,7 +358,6 @@
                 $('input[name=txt_GrandTotal]').val(TotalAmount);
             }
             function SaveAllRecord() {
-                debugger;
                 if (validateSave()) {
                     var btnSave = $('#btn_Save').val();
                     var InvoiceNum = $('#txt_Invoice').val();
@@ -384,11 +366,8 @@
                     var RefInvoiceNumber = $('#txt_RefInvoice_Number').val();
                     var Remarks = $('#txtRemarks').val();
                     var table = $('#tblItemDescriptionDetail');
-                    debugger;
                     var Item_list = [];
-                    debugger;
                     table.find('tr').each(function (key, value) {
-                        debugger;
                         Item_list.push({
                             'AccountId': $(value).find('td select[name=tblddl_AccountCode]').val(),
                             'Description': $(value).find('td input[name=tbltxt_Description]').val(),
@@ -402,7 +381,6 @@
                     });
                     var AllItemDetail = { 'Invoice_num': InvoiceNum, 'Date': Date, 'VendorId': VendorId, 'RefInvoicenum': RefInvoiceNumber, 'Remarks': Remarks, 'ItemList': Item_list };
                     PageMethods.SaveInvoice(btnSave, JSON.stringify(AllItemDetail), function (res) {
-                        debugger;
                         sendFile(res);
                         Swal.fire({
                             icon: 'success',
@@ -425,7 +403,6 @@
             function LoadInvoiceData(Inv_ID) {
                 PageMethods.LoadManualInvoiceHeaderDetail(Inv_ID, function (resp) {
                     var data = JSON.parse(resp);
-                    debugger;
 
                     var datetime = $.datepicker.formatDate('dd M yy', new Date(parseInt(data.ManualInvoiceDate.substring(6, 19))))
                     $('#txt_Date').val(datetime);
@@ -452,12 +429,10 @@
                 var rows = '';
                 var TotalAmount = 0;
                 PageMethods.LoadInvocieDetail(Inv_ID, function (resp) {
-                    debugger;
                     var data = (JSON.parse(resp));
                     selectedOptions = data;
                     var rowIndex = parseInt((parseInt($('#tblItemDescriptionDetail tbody tr').length)));
                     $.each(data, function (key, value) {
-                        debugger;
                         rows += '<tr>' +
                             '<td class="th_Sp_Color">' +
                             '<select name="tblddl_AccountCode" id="tblddl_AccountCode' + +(key + 1) + '"></select>' +
@@ -489,7 +464,6 @@
                             '</tr>'
                         TotalAmount += value.TotalAmount;
                     });
-                    debugger;
                     $('#tblItemDescriptionDetail').append(rows);
                     $('input').attr('autocomplete', 'off');
                     rowsoneditmode = tblItemDescriptionDetail.rows.length;
@@ -509,7 +483,6 @@
                 });
             }
             function ExcludeFromPayment(anchor) {
-                debugger;
                 var a = confirm("Are you sure You want to delete");
                 if (a == true) {
                     console.clear();
@@ -521,10 +494,8 @@
                 var length = rowlength;
                 $('#tblddl_AccountCode' + length + '').select2();
                 PageMethods.loadAccountList(function (resp) {
-                    debugger;
                     optionsitem = '<option value="0">Please Select</option>';
                     $.each(JSON.parse(resp), function (key, value) {
-                        debugger;
                         optionsitem += '<option value="' + value.Account_ID + '" >' + value.name + '</option>';
                     });
                     $('#tblddl_AccountCode' + length + '').html(optionsitem);
@@ -535,11 +506,9 @@
                 var optionsDPT = '';
                 var optionInv = '';
                 PageMethods.getDDLlist(function (Tests) {
-                    debugger
                     optionsDPT = '<option value="0">Please Select</option>';
                     optionInv = '<option value="0">Please Select</option>';
                     $.each(JSON.parse(Tests), function (key, value) {
-                        debugger;
                         if (value.Type == "DPT") {
                             optionsDPT += '<option value="' + value.DataValueName + '" >' + value.DataValueDescription + '</option>';
                         }
@@ -552,13 +521,10 @@
             }
             var _gloabal = '';
             function Fillwtaxtype() {
-                debugger;
                 var optionsVen = '';
                 PageMethods.getwtaxtype(function (Tests) {
-                    debugger
                     optionsVen = '<option value="0">Please Select</option>';
                     $.each(JSON.parse(Tests), function (key, value) {
-                        debugger;
                         optionsVen += '<option value="' + value.Sales_Tax_ID + '" >' + value.Sales_Tax_Perc + '</option>';
                     });
                     _gloabal = optionsVen;
@@ -566,18 +532,14 @@
             }
 
             function UserUnApproveButtonRights() {
-                debugger;
                 $.ajax({
                     type: "POST",
                     url: "AddManualInvoice.aspx/UserUnApproveEntryRights",
                     contentType: "application/json; charset=utf-8",
                     dataType: "json",
                     success: function (response) {
-                        debugger;
                         var hasRights = response.d;
-                        debugger;
                         if (hasRights) {
-                            debugger;
                             $('#btn_UnApprove').show();
                         } else {
                             $('#btn_UnApprove').hide();
@@ -602,10 +564,8 @@
             }
 
             function sendFile(ID) {
-                debugger;
                 var fileInput = $('#choseMIfile')[0];
                 if (fileInput.files.length > 0) {
-                    debugger;
                     var data = new FormData();
                     data.append('file', $('#choseMIfile')[0].files[0]);
                     data.append('ID', ID);

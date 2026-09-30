@@ -11,7 +11,6 @@
       
        
         function PrintInvoice(key) {
-            debugger;
             //var BillId = $('#BillId' + key).val();
             window.open('../../ReportViewer.aspx?ReportName=PharmacyReturnSlip&ReportTitle=PharmacySlip&Return_ID=' + key);
 
@@ -69,7 +68,6 @@
                     {
                         "data": "Created_Date", "name": "Created_Date",
                         "render": function (data, type, full) {
-                            debugger;
                             var date = full.Created_Date;
                             date = moment(date).format('DD-MMM-YYYY');
                             return date;
@@ -82,7 +80,6 @@
                     { "data": "UserName", "width": "10%", },
                     {
                         render: function (data, type, full) {
-                            debugger;
                             var res = '<a href="#" onclick="PrintInvoice(' + full.Return_ID + ')" style="border-radius: 4px; background-color: #1f1fe3; color: white; padding: 5px 8px 5px 8px;"><i style="color:white !important;" class="fa fa-upload"></i></a>'
                       
                             var result;

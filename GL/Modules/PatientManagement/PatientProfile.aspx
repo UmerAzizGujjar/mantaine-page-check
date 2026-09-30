@@ -114,7 +114,6 @@
                  onAdd:
                      function (item) {
                          try {
-                             debugger;
                              if (tblName == 'Patients') {
                                  alert(item.id);
                                 $("#hdfPatient_ID").val(item.id);
@@ -236,7 +235,6 @@
                         Result = "Waiting";
                         Sample = "Yes";
                     }
-                    debugger;
                     if (value.Test_ID != 0) {
                         if (value.Department_ID == "001") {
                             row = '<tr><td><input type="hidden" name="testDate" value="' + date + '">' + date + '</td> <td>' + value.Status + '</td> <td><input type="hidden" name="testID" value="' + value.Test_ID + '" /> <input type="hidden" name="txtValueType" value="' + value.Value_Type + '"/><input type="hidden" name="txtRecievedID" value="' + value.Recieved_ID + '"/><input type="hidden" name="txtRotation" value="0"><input type="hidden" name="txtGroupCategory" value="0"> <input type="hidden" name="txtDeptID" value="' + value.Department_ID + '"/> ' + (value.DepartmentName == null ? '' : value.DepartmentName + ', ') + ' ' + value.Test_Name + ' ' + (value.GroupName == null ? ' ' : ', ' + value.GroupName) + '</td><td>' + Sample + '</td><td>' + (value.Is_Result == true ? '<a href="javascript:void(0)"onclick="EditResultInPatient(this)" style="text-decoration: underline; color: #2a6496; font-size: 14px;">' + Result + '</a>' : Result + '') + ' </td><td> <input type="hidden" name="txtSpecial_Test" value="' + value.Special_Tests + '"/> ' + value.Special_Tests + '  </td><td><input type="hidden" name="txtArea_Of_Interest" value="' + value.Area_Of_Interest + '"/> ' + value.Area_Of_Interest + ' </td><td>' + value.DoctorName + ' <input type="hidden" name="Docid" value="' + value.Doctor + '" </td> </tr>';
@@ -262,7 +260,6 @@
             // }
         }
         function EditResultInPatient(anchor) {
-            debugger;
 
             var row = $(anchor).parents('tr')[0];
             var CatagoryID = $($(row).find('td input[name=txtGroupCategory]')[0]).val();

@@ -209,7 +209,6 @@
         function Loaddetail(id) {
             var rows = '';
             PageMethods.LoadDetails(id, function (resp) {
-                debugger;
                 var data = JSON.parse(resp);
                 var rowIndex = $('#tblItemDescriptionDetail tbody tr').length;
                 $.each(data, function (key, value) {

@@ -5,7 +5,6 @@
     <script type="text/javascript">
 
         function PrintReport(Purchase_Return_ID) {
-            debugger;
             var id = Purchase_Return_ID;
             var locationInfo = window.location;
             var user_name = '<% =AppConfig.Company_Name %>';
@@ -31,11 +30,9 @@
             window.location.href = "AddPurchaseReturn.aspx?ID=" + ID;
         }
         function deleteConfirm(ID) {
-            debugger;
             var ReturnID = ID;
             if (confirm('Are you sure want to delete this record')) {
                 PageMethods.DeleteRecord(ReturnID, function (msg) {
-                    debugger
                     window.location.reload();
                 });
             }

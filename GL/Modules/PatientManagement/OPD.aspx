@@ -70,9 +70,7 @@
                 $('#ddlPatient_Type').attr('disabled', false);
                 //$('#ddlcashier').attr('disabled', true);
             }
-            debugger;
             if (Reffered_id != "" && added == "true") {
-                debugger;
 
                 $("#hdn_emer_reffered").val(Reffered_id);
                 console.log(Reffered_id);
@@ -146,8 +144,6 @@
                 contentType: "application/json; charset=utf-8",
                 dataType: "json",
                 success: function (response) {
-                    debugger;
-                    debugger;
                     cardvalidation = JSON.parse(response.d);
                     if (cardvalidation == '01') {
                         var reg_id = '<%= Request.QueryString["ID"] %>'
@@ -299,7 +295,6 @@
         }
         function Approveviasysparams(pat_id) {
             PageMethods.ApproveRegpatient(pat_id, function (Tests) {
-                debugger
                 var message = JSON.parse(Tests);
                 if (message[0].Message != null || message[0].Message != "") {
                     Swal.fire({
@@ -425,10 +420,8 @@
         }
 
         function loaddata() {
-            debugger;
             var Category = $('#ddlPatient_Type').val();
             // $('#ddlPatient_Type').attr('disabled', true);
-            debugger;
             if (Category == "0") {
 
                 $('.show').show();
@@ -639,7 +632,6 @@
             var Pat_Category = $('#ddlPatient_Type').val();
 
             PageMethods.approvepatient(pat_id, Pat_Category, function (Tests) {
-                debugger
                 var message = JSON.parse(Tests);
                 if (message[0].Message != null || message[0].Message != "") {
                     Swal.fire({
@@ -698,7 +690,6 @@
             if (Pat_feeforCard == true) {
                 var Pat_idforCard = $('#hdn_opdId').val();
                 PageMethods.CardFee(Pat_idforCard, function (Tests) {
-                    debugger;
                     Swal.fire({
                         icon: 'success',
                         title: 'Success!',
@@ -729,7 +720,6 @@
 
             }
 
-            debugger;
             PrintPatientCard();
 
 
@@ -737,7 +727,6 @@
 
 
         function OPD_Form_Print() {
-            debugger;
             var ID = '<%= Request.QueryString["OPDID"]%>';
             var locationInfo = window.location;
             var url = "/ReportViewer.aspx?ReportName=OPDForm&Title=OPD FORM &OPD_ID=" + ID;
@@ -749,13 +738,10 @@
             }
             window.open(url, '_blank');
         }
-        debugger
         function PrintPatientCard() {
-            debugger
             $('#ctl00_MainContent_chckcardissue').attr('disabled', true);
 
             var ID = '<%= Request.QueryString["OPDID"]%>';
-            debugger
             $.ajax({
                 type: "POST",
                 url: "OPD.aspx/CardFee",
@@ -764,7 +750,6 @@
                 dataType: "json",
                 success: function (msg) {
                     if (msg.d == "success")
-                        debugger;
                     console.log(msg.d);
                     var url = "../../ReportViewer.aspx?ReportName=PrintPatientCard&ReportTitle=OPD Patient Card&MrNo=" + ID;
 
@@ -787,7 +772,6 @@
 
 
         function PrintVoucher() {
-            debugger;
             var id = '<% =Request.QueryString["OPDID"] %>';
             var locationInfo = window.location;
             var url = '../../ReportViewer.aspx?ReportName=Voucher&ReportTitle=OPD Voucher&TransID=' + id + '&TransType=OPD';
@@ -801,7 +785,6 @@
         }
 
         //function loaddoctor() {
-        //    debugger;
         //    var appointmentid = $("#hdn_aptid").val();
         //    var opdid = $('#hdn_opdId').val();
 
@@ -809,7 +792,6 @@
 
         //    }
         //    else {
-        //        debugger;
         //        var dpt = $('#ddlDepartment').val();
 
         //        $.ajax({
@@ -819,20 +801,17 @@
         //            contentType: "application/json; charset=utf-8",
         //            dataType: "json",
         //            success: function (response) {
-        //                debugger;
         //                var doctor = JSON.parse(response.d);
         //                var options = '<option value=""> Please Select </option>';
 
         //                $.each(doctor, function (key, value) {
         //                    options += '<option value="' + value.Emp_ID + '">' + value.Emp_Name + '</option>';
         //                });
-        //                debugger;
 
         //                $('#ddldoctor').html(options);
         //                var type = $('#ddlPatient_Type').val();
 
         //                if (type != "02" ) {
-        //                    debugger;
 
         //                    getGeneralFee();
         //                }
@@ -854,7 +833,6 @@
                 contentType: "application/json; charset=utf-8",
                 dataType: "json",
                 success: function (response) {
-                    debugger;
                     var doctor = JSON.parse(response.d);
                     var options = '<option value=""> Please Select </option>';
 
@@ -921,7 +899,6 @@
 }
 
         function getGeneralFee() {
-            debugger;
 
             var Department_id = $('#ddlDepartment').val();
             var emer_reffered = $("#hdn_emer_reffered").val();
@@ -953,7 +930,6 @@
                 contentType: 'application/json; charset=utf-8',
                 dataType: 'json',
                 success: function (resp) {
-                    debugger;
 
                     try {
                         var data = JSON.parse(resp.d);
@@ -966,7 +942,6 @@
                             ? data.Discount_Percentage
                             : 0;
                         var Receipt_fee = data && data.Receipt_fee !== undefined ? data.Receipt_fee : 0;
-                        debugger;
                         $('#txtactualfee').val(code);
 
 
@@ -985,7 +960,6 @@
                             $('#hdnhospShare').val(hShare);
                         }
                         else {
-                            debugger;
                             $('#txtdiscount').val(Discount_Percentage);
                             $('#txtdiscount').attr('disabled', false);
                             $('#txtfees').val(Receipt_fee.toFixed(2));
@@ -993,7 +967,6 @@
                             $('#hdnDocshare').val(dShare);
                             $('#hdnhospShare').val(hShare);
                         }
-                        debugger;
                         if (parseFloat(code) === 0) {
                             Swal.fire({
                                 icon: 'warning',
@@ -1047,7 +1020,6 @@
                         }
                     });
 
-                    debugger;
                     $('#txtfees').val("0");
                     $('#hdnDocshare').val("0");
                     $('#hdnhospShare').val("0");
@@ -1057,7 +1029,6 @@
             });
         }
         function loaddoctor() {
-            debugger;
             var dept_gnl = $('#ddlDepartment').val();
             var appointmentid = $("#hdn_aptid").val();
             var opdid = $('#hdn_opdId').val();
@@ -1075,7 +1046,6 @@
                     contentType: "application/json; charset=utf-8",
                     dataType: "json",
                     success: function (response) {
-                        debugger;
                         var doctor = JSON.parse(response.d);
                         var options = '<option value=""> Please Select </option>';
 
@@ -1086,7 +1056,6 @@
                         $('#ddldoctor').html(options);
                         var type = $('#ddlPatient_Type').val();
                         if (type != "02" && type != "52") {
-                            debugger;
                             getGeneralFee();
                         }
                       
@@ -1102,7 +1071,6 @@
 
 
         function loadFee() {
-            debugger;
 
             var Doc = $('#ddldoctor').val();
             var opdid = $('#hdn_opdId').val();
@@ -1131,7 +1099,6 @@
                             contentType: "application/json; charset=utf-8",
                             dataType: "json",
                             success: function (response) {
-                                debugger;
                                 var res = typeof response.d === 'string' ? JSON.parse(response.d) : response.d;
 
                                 if (!res.success) {
@@ -1148,7 +1115,6 @@
                                         }
                                     });
                                 } else {
-                                    debugger;
                                     var fee = parseFloat(res.fee) || 0;
                                     var disper = parseFloat(res.discount_percentage) || 0;
                                     var afterdiscountfee = fee - ((fee * disper) / 100);
@@ -1178,9 +1144,7 @@
         }
 
 
-        debugger;
         function getspecialfees(Doc) {
-            debugger
             $.ajax({
                 type: "POST",
                 url: "OPD.aspx/loadSpecialFees",
@@ -1222,7 +1186,6 @@
                 contentType: "application/json; charset=utf-8",
                 dataType: "json",
                 success: function (response) {
-                    debugger;
                     var blockInfo = JSON.parse(response.d);
 
                     if (blockInfo && blockInfo.error) {
@@ -1231,7 +1194,6 @@
                         return;
                     }
                     if (blockInfo.offDays && blockInfo.offDays !== "" && blockInfo.Block_category === true && blockInfo.Patient_Type === selectedPatientType) {
-                        debugger;
                         let offDays = blockInfo.offDays.toLowerCase().split(',').map(x => x.trim());
                         let today = new Date();
                         let todayDay = today.toLocaleString("en-US", { weekday: 'short' }).toLowerCase();

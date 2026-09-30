@@ -63,7 +63,6 @@
                     { "data": "IsActive", "orderable": false, "width": "3%" },
                     {
                         render: function (data, type, full) {
-                            debugger;
                             var res = '<a href="#" class="editListBtn" onclick="Edit(\'' + full.Menu_ID + '\')" style="border-radius: 4px; margin-right: 4px;padding: 5px 8px;"><i class="fa fa-pencil"></i></a>';
 
                             var Delete = '<a class="delListBtn" style="border-radius: 4px;margin-left: 4px;padding: 5px 8px 5px 8px;" href="#"  onclick="deleteConfirm(' + full.Menu_ID + ')"><i class="fa fa-trash"></i></a>';
@@ -100,7 +99,6 @@
         }
 
         function deleteConfirm(ID) {
-            debugger;
             if (confirm('Are you sure want to delete this record')) {
                 PageMethods.DeleteRecord(ID, function (msg) {
                     location.reload();
@@ -108,7 +106,6 @@
             }
         }
 
-        debugger;
         function Edit(id) {
             window.open("Menu.aspx?ID=" + id + "");
         }

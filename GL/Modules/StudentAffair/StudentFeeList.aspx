@@ -11,7 +11,6 @@
 
 
      function Edit(ID) {
-         debugger;
          window.location.href = "StudentFeeDefinition.aspx?Fee_ID=" + ID;
      }
      function PrintTest(id) {
@@ -63,7 +62,6 @@
                  { "data": "StudentClass", "width": "10%", "orderable": false },
                  {
                      render: function (data, type, full) {
-                         debugger;
                          var res = '<a class="editListBtn" href="#" onclick="Edit(' + full.Fee_ID + ')" style="border-radius: 4px;padding: 5px 8px 5px 8px;"><i class="fa fa-pencil"></i></a>'
 
                          var Del = '<a href="#" class="delListBtn" style="border-radius: 4px;margin-left: 4px; color: white; padding: 5px 8px;" onclick="cancelFee(' + full.Fee_ID + ')"><i class="fa fa-trash"></i></a>';
@@ -101,7 +99,6 @@
 
 
      function cancelFee(FeeId) {
-         debugger;
          if (confirm("Are you sure you want to cancel this Fee?")) {
              $.ajax({
                  type: "POST",

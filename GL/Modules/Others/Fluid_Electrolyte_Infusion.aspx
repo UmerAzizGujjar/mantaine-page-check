@@ -34,7 +34,6 @@
             var infVol = '';
 
             PageMethods.InfusionVOL(function (Tests) {
-                debugger
                 optionsInf = '<option value="0">Please Select</option>';
 
                 $.each(JSON.parse(Tests), function (key, value) {
@@ -52,7 +51,6 @@
             var optionsAdd = '';
 
             PageMethods.AdditiveDose(function (Tests) {
-                debugger
                 optadd = '<option value="0">Please Select</option>';
 
                 $.each(JSON.parse(Tests), function (key, value) {
@@ -70,7 +68,6 @@
             var optionsRate = '';
 
             PageMethods.InfusionRate(function (Tests) {
-                debugger
                 optRate = '<option value="0">Please Select</option>';
 
                 $.each(JSON.parse(Tests), function (key, value) {
@@ -88,7 +85,6 @@
             var optionsRate = '';
 
             PageMethods.Routes(function (Tests) {
-                debugger
                 optRoute = '<option value="0">Please Select</option>';
 
                 $.each(JSON.parse(Tests), function (key, value) {
@@ -106,11 +102,9 @@
             var optionsRate = '';
 
             PageMethods.InfussionPharmacy(function (Tests) {
-                debugger
                 opt_Pharm = '<option value="0">Please Select</option>';
 
                 $.each(JSON.parse(Tests), function (key, value) {
-                    debugger;
                     opt_Pharm += '<option value="' + value.Item_ID + '" >' + value.Description + '</option>';
                 });
                 $('#ddl_InsFluid').html(opt_Pharm);
@@ -124,7 +118,6 @@
 
 
             PageMethods.additive(function (Tests) {
-                debugger
                 opt_additive = '<option value="0">Please Select</option>';
 
                 $.each(JSON.parse(Tests), function (key, value) {
@@ -140,7 +133,6 @@
 
         function SaveAllRecord() {
 
-            debugger;
 
             var btnSave = $('#btnSave').val();
             var ddl_Infs_fluid = $('#ddl_InsFluid').val();
@@ -162,7 +154,6 @@
                 'Route': ddl_Route, 'Infusion_Order_ID': editmode_ID
             };
             PageMethods.SaveInfs(btnSave, JSON.stringify(AllItemDetail), function (res) {
-                debugger;
                   
                     alert('Data Save Successfully');
 
@@ -174,7 +165,6 @@
         }
 
         //function loadData_ddl(Order_ID) {
-        //    debugger;
         //    PageMethods.LoadData(Order_ID, function (resp) {
         //        var data = JSON.parse(resp);
 
@@ -209,7 +199,6 @@
         var txt_primaaryid = 0;
 
         function Edit(row) {
-            debugger;
 
             txt_primaaryid = $(row).closest('tr').find('td input[name=txt_primaaryid]').val();
 
@@ -239,11 +228,9 @@
 
 
         function LoadPage() {
-            debugger;
         
             //Append data from data base table
 
-            debugger;
             $.ajax({
                 type: "POST",
                 url: "Fluid_Electrolyte_Infusion.aspx/ViewList",
@@ -256,7 +243,6 @@
                 dataType: "json",
 
                 success: function (data) {
-                    debugger;
                     var Priority = '';
                     var length = $("#table_res tr:gt(0)").length;
 
@@ -267,7 +253,6 @@
                         $.each(data, function (i, item) {
                             var C_date = moment(data[i].Create_Time).format('ll');
                             var C_Time = moment(data[i].Create_Time).format('LT');
-                            debugger;
                             
                             //<input type="text" readonly id="txt_infusionfluid_name' + (i + 1) + '" name="txt_infusionfluid_name" value="' + data[i].Infusion_Fluidname + '" />
 
@@ -281,7 +266,6 @@
                     else {
 
                     }
-                    debugger;
                 }
             });
         }

@@ -55,7 +55,6 @@
 
             // Shift button - now with time and conflict checks
             $('#btnshiftApt').on('click', function () {
-                debugger;
                 var ShiftDate = $('#txt_shiftdate').val();
                 var ShiftDoctorId = $('#ddlShiftDoctor').val();
                 var ShiftTime = $('#ddlShiftTime').val();
@@ -132,7 +131,6 @@
         }
 
         function getpage() {
-            debugger;
             var stDate;
             var endDate;
             if (stDate == null) {
@@ -156,30 +154,23 @@
             }
 
             PageMethods.getlist(stDate, endDate, doc_id, function (data) {
-                debugger;
                 if (data.length === 0) {
                     $("#table_res tbody").empty();
                     return false;
                 }
                 else {
-                    debugger;
                     abc = false;
                     var Priority = '';
                     var length = $("#table_res tr:gt(0)").length;
-                    debugger;
                     if (data != '') {
                         var data = JSON.parse(data);
                         var rows = '';
-                        debugger;
                         $.each(data, function (i, item) {
-                            debugger;
                             var App_Date = moment(data[i].App_Date).format('LL');
                             var time = moment(data[i].Time).format('h:mm a');
                             var app_id = data[i].Appointment_ID;
-                            debugger;
                             rows += '<tr><td style="display:none;"><input id="app_id" name="app_id" class="app_id" type="hidden" value="' + app_id + '" /></td><td><input id="Getrow" name="Getrow" class="chckrow" type="checkbox" /></td><td>' + data[i].Appointment_No + '</td><td>' + toTitleCase(data[i].Patient_Name.replace("_", " ")) + '</td><td>' + data[i].emp_name + '</td><td>' + App_Date + '</td></tr>';
                         });
-                        debugger;
                         $('#t_body').html(rows);
 
                         $('#table_res tbody:eq(1) tr').each(function (key, value) {
@@ -198,9 +189,7 @@
         }
 
         function loaddoctor() {
-            debugger;
             PageMethods.LoadDoctor(function (res) {
-                debugger;
                 var doctor = JSON.parse(res);
                 var options = '<option value="0" >Please Select </option>';
                 $.each(doctor, function (key, value) {
@@ -220,7 +209,6 @@
         }
 
         function ddldocchange() {
-            debugger;
             var DocChk = $('#chk_Doc').find('option:selected').text();
             getpage();
             if (DocChk == "Select Doctor") {

@@ -490,7 +490,6 @@
             window.location.href = "PurchaseOrder.aspx?PO_ID=" + ID;
         }
         function Print(id) {
-            debugger;
             var locationInfo = window.location;
             var user_name = '<% =AppConfig.Company_Name %>';
             if (user_name == 'As-Siraat Serving Humanity') {
@@ -583,7 +582,6 @@
                     {
                         "data": "Date",
                         "render": function (data, type, full) {
-                            debugger;
                             var date = full.Date;
                             date = moment(date).format('DD-MMM-YYYY');
                             return date;
@@ -598,7 +596,6 @@
                     { "data": "Approvedby", "width": "10%", "orderable": false },
                     {
                         "render": function (data, type, full) {
-                            debugger;
                             var res = '<a href="#" class="editListBtn" onclick="Edit(' + full.POID + ')" style="border-radius: 4px;margin-right: 4px;padding: 5px 8px 5px 8px;"><i class="fa fa-pencil"></i></a>'
 
                             var logBtn = '<a class="logListBtn" style="border-radius: 4px;margin-left: 4px;color: white;padding: 5px 8px 5px 8px;" href="#" onclick="openPOLogs(' + full.POID + ',\'' + full.PONo + '\');return false;" title="View Change History"><i class="fa fa-history"></i></a>';
@@ -778,7 +775,6 @@
             });
         }
         function ViewPage(id, type) {
-            debugger;
             var ID = id
             if (type == 'GRN') {
                 window.open("../Inventory/GRN.aspx?GRN_ID=" + ID, "_blank");

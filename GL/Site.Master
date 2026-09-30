@@ -78,7 +78,6 @@
     <script type="text/javascript">
         //jQuery.browser = {};
         //(function () {
-        //    debugger;
         //    jQuery.browser.msie = false;
         //    jQuery.browser.version = 0;
         //    if (navigator.userAgent.match(/MSIE ([0-9]+)\./)) {
@@ -763,77 +762,62 @@
             $(".nav").css('display', 'block');
         }
         function RedirectToPR() {
-            debugger;
             window.history.replaceState({}, document.title, "/");
             window.location.href = "/Modules/Administrator/ApprovePR.aspx";
         }
         function RedirectToRFQ() {
-            debugger;
             window.history.replaceState({}, document.title, "/");
             window.location.href = "/Modules/Administrator/ApproveRFQ.aspx";
         }
         function RedirectToCS() {
-            debugger;
             window.history.replaceState({}, document.title, "/");
             window.location.href = "/Modules/Administrator/ApproveCS.aspx";
         }
         function RedirectToPO() {
-            debugger;
             window.history.replaceState({}, document.title, "/");
             window.location.href = "/Modules/Administrator/ApprovePO.aspx";
         }
         function RedirectToIGP() {
-            debugger;
             window.history.replaceState({}, document.title, "/");
             window.location.href = "/Modules/Administrator/ApproveIGP.aspx";
         }
         function RedirectToGRN() {
-            debugger;
             window.history.replaceState({}, document.title, "/");
             window.location.href = "/Modules/Administrator/ApproveGRN.aspx";
         }
         function RedirectToGIR() {
-            debugger;
             window.history.replaceState({}, document.title, "/");
             window.location.href = "/Modules/Administrator/ApproveGIR.aspx";
         }
         function RedirectToGIN() {
-            debugger;
             window.history.replaceState({}, document.title, "/");
             window.location.href = "/Modules/Administrator/ApproveGIN.aspx";
         }
         function RedirectToStockAdj() {
-            debugger;
             window.history.replaceState({}, document.title, "/");
             window.location.href = "/Modules/Administrator/ApproveStockAdj.aspx";
         }
         function RedirectToStoreStockTransfer() {
-            debugger;
             window.history.replaceState({}, document.title, "/");
             window.location.href = "/Modules/Administrator/ApproveStoreStockTransfer.aspx";
         }
         function RedirectToMI() {
-            debugger;
             window.history.replaceState({}, document.title, "/");
             window.location.href = "/Modules/Administrator/ApproveMI.aspx";
         }
         function RedirectToPI() {
-            debugger;
             window.history.replaceState({}, document.title, "/");
             window.location.href = "/Modules/Administrator/ApprovePI.aspx";
         }
         function RedirectToPayment() {
-            debugger;
             window.history.replaceState({}, document.title, "/");
             window.location.href = "/Modules/Administrator/ApprovePayment.aspx";
         }
         function RedirectToAdvance() {
-            debugger;
             window.history.replaceState({}, document.title, "/");
             window.location.href = "/Modules/Administrator/Approveadvance.aspx";
         }
         function RedirectToApprovedPRFsAck() {
-            debugger;
             window.history.replaceState({}, document.title, "/");
             window.location.href = "/Modules/Administrator/ApprovedPRFsAck.aspx";
         }
@@ -1245,13 +1229,11 @@ top: auto;
             });
 
             $('.nav li').click(function () {
-                debugger
                 $(this).addClass('active').siblings().removeClass('active');
             });
         });
         $(document).ready(function () {
 
-            debugger
             $('#ctl00_sidebar').delay(2000).fadeIn();
             var sessionTimeoutWarning ="<%= System.Configuration.ConfigurationManager.AppSettings["SessionTimeoutWarning"].ToString()%>";
             var sessionTimeout = "<%= Session.Timeout %>";
@@ -1318,7 +1300,6 @@ top: auto;
                 }
 
                 function postTill(methodName, onSuccess) {
-                    debugger;
                     $.ajax({
                         type: 'POST',
                         url: webMethodBase + methodName,

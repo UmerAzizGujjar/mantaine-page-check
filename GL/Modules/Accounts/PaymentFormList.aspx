@@ -55,7 +55,6 @@
         });
         
         function SearchByParameter() {
-            debugger;
             var MrNo = $('#txtMRNo').val();
             var TransactionNo = $('#txtTransactionNo').val();
             var Date = $('#txtDate').val();
@@ -63,7 +62,6 @@
         }
 
         function FillList() {
-            debugger;
             var CheckDate = false;
             var TransactionNo = '';
             var MrNo = '';
@@ -150,7 +148,6 @@
         }
         function CancelConfirm(anchorTag) {
 
-            debugger;
 
             var row = $(anchorTag).parents('tr')[0];
             var Bill_ID = $($(row).find('td')[0]).text();
@@ -163,7 +160,6 @@
 
         }
         function cancelPatient(anchorTag) {
-            debugger;
 
             var row = $(anchorTag).parents('tr')[0];
             var Bill_ID = $($(row).find('td')[0]).text();

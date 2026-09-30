@@ -130,12 +130,10 @@
         function PopulatePackageDetail(id) {
 
             PageMethods.GetPackageDetail(id, function (res) {
-                debugger;
                 var item = JSON.parse(res);
                 var rows = '';
                 var result;
                 $.each(item, function (key, value) {
-                    debugger;
                     if (value.itemanme == null) {
                         var itemanme = value.GroupName;
                     }
@@ -200,7 +198,6 @@
 
             FillLabTests();
             $('#btnSave').click(function () {
-                debugger;
                 var btnSave = $('#btnSave').val();
                 var PAckID = $('#hdnPackage_ID').val();
 
@@ -214,7 +211,6 @@
                 var PackageType = $('#ctl00_MainContent_ddlPackageType').val();
                 var duration = $('#ctl00_MainContent_txtDuration').val();
                 var PerDay_Charges = $('#ctl00_MainContent_txtPerDayCharges').val() == '' ? 0 : $('#ctl00_MainContent_txtPerDayCharges').val();
-                debugger;
                 table.find('tr').each(function (key, value) {
 
                     Pkg_list.push({ 'Item': $(value).find('td input[name=txtDes]').val(), 'QTy': $(value).find('td input[name=txtQTy]').val(), 'Price': $(value).find('td input[name=txPrice]').val(), 'Amount': $(value).find('td input[name=txAmount]').val(), 'ItemType': $(value).find('td input[name=ItemType]').val(), 'Category_ID': $(value).find('td input[name=hdnCategory_ID]').val() });
@@ -319,12 +315,10 @@
 
 
             $('#add-new-testDirect').click(function () {
-                debugger;
                 var test = $('#ddlLabTest').find('option:selected').text();
                 PageMethods.GetLabTestDDLDetails(test, function (res) {
                     console.clear();
                     $.each(JSON.parse(res), function (key, value) {
-                        debugger;
                         var Result = 'Result';
                         var test = $('#ddlLabTest').val();
                         var date = '<%= DateTime.Now %>';

@@ -5,7 +5,6 @@
 
  <script type="text/javascript">
      $(document).ready(function () {
-         debugger;
          $('#ctl00_lblMessage').hide();
          LoadPage();
 
@@ -40,7 +39,6 @@
          });
      }
      function cancelPatient(emerid, patname) {
-         debugger;
          var EmerID = emerid;
          var PatName = patname;
 
@@ -82,13 +80,11 @@
         
      }
      function Print(Emer_id) {
-         debugger;
          var url = '../../ReportViewer.aspx?ReportName=Emergency_Patient_Print&Title=Emergency Print&Emergency_Id=' + Emer_id;
          window.open(url, '_blank');
 
      }
      function PrintLTR(Emer_id) {
-         debugger;
          var url = '../../ReportViewer.aspx?ReportName=Emergency_Patient_Print_LTR&Title=Emergency Print&Emergency_Id=' + Emer_id;
          window.open(url, '_blank');
 

@@ -28,7 +28,6 @@
 
         });
         function sendFile(ID) {
-            debugger;
             var data = new FormData();
             data.append('file', $('#fileupload')[0].files[0]);
             data.append('ID', ID);
@@ -53,7 +52,6 @@
         }
     
         function SaveStudent() {
-            debugger;
             var Student_Id = $('#Student_Id').val();
             Student_Id = '<%= Request.QueryString["ID"]%>'
 
@@ -98,7 +96,6 @@
             var hdfLevel = $('#hdfLevel').val();
             var hdfAccount_Code = $('#hdfAccount_Code').val();
          
-            debugger;
 
             if (newSelect == "0" && fullname == "") {
 
@@ -193,7 +190,6 @@
             var AllRecords = { 'Student_Id': Student_Id, 'Rollnum': Rollnum, 'admission': admission, 'fullname': fullname, 'Father_Name': Father_Name, 'Guard_Name': Guard_Name, 'Cust_Address': Cust_Address, 'StdCntct_No': StdCntct_No, 'Fcntc_No': Fcntc_No, 'Per_Address': Per_Address, 'EmailAdrr': EmailAdrr, 'txt_Date': txt_Date, 'txtadmDate': txtadmDate, 'St_CNIC': St_CNIC, 'Bld_group': Bld_group, 'Domicile': Domicile, 'Ft_CNIC': Ft_CNIC, 'txtDisease_alergy': txtDisease_alergy, 'Std_Status': Std_Status, 'ddlProgram': ddlProgram, 'ddlBatch': ddlBatch, 'ddlGroup': ddlGroup, 'txt_WholeClass': txt_WholeClass, 'ddlClass': ddlClass, 'txtSession': txtSession, 'Gl_code': Gl_code, 'Is_Active': Is_Active, 'hdfAccount_ID': hdfAccount_ID, 'hdfParent_Code': hdfParent_Code, 'hdfAccount_Serial': hdfAccount_Serial, 'hdfLevel': hdfLevel, 'hdfAccount_Code': hdfAccount_Code };
             
             PageMethods.SaveStudentData(btnsave, JSON.stringify(AllRecords), function (res) {
-                debugger;
                
                 sendFile(res);
 

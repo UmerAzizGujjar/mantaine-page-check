@@ -21,7 +21,6 @@
             });
         });
         function FillAssetSubCategory() {
-            debugger
             var optionDepriciation = '';
             PageMethods.fillAssetSubCategories(function (Tests) {
                 optionDepriciation = '<option value="0">Please Select</option>';
@@ -33,7 +32,6 @@
         }
 
         function LoadAssetSubCategoryDetailData() {
-            debugger
             $.ajax({
                 type: "POST",
                 url: "AssetSubCategory.aspx/LoadDetailAssetSubCategories",
@@ -78,7 +76,6 @@
         }
 
         function AppendRow() {
-            debugger
             var assetCategoryValue = $('#ddl_AssetCategory').val() || 0;
             var assetCategoryText = $('#ddl_AssetCategory option:selected').text();
             var assetSubCategoryName = $('#txtAssetSubCategoryName').val().trim();
@@ -192,7 +189,6 @@
 
 
         function editRow(button) {
-            debugger
             var $row = $(button).closest('tr');
             var assetCategoryValue = $row.find('td:eq(1)').text();
             var assetCategoryText = $row.find('td:eq(2)').text(); 
@@ -214,7 +210,6 @@
             });
         }
         function SaveDetailAssetSubCategory() {
-            debugger
             var detailAry = [];
             $("#tblDetials tbody tr").each(function (index, row) {
               

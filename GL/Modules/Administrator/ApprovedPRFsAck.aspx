@@ -147,7 +147,6 @@
                 {
                     "data": "PRDATE", "name": "PRDATE",
                     "render": function (data, type, full) {
-                        debugger;
                         var date = full.PRDATE;
                         date = moment(date).format('DD-MMM-YYYY');
                         return date;

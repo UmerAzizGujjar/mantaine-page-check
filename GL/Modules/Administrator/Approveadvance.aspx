@@ -208,7 +208,6 @@
                 {
                     "data": "ADVANCEDATE", "name": "ADVANCEDATE",
                     "render": function (data, type, full) {
-                        debugger;
                         var date = full.ADVANCEDATE;
                         date = moment(date).format('DD-MMM-YYYY');
                         return date;

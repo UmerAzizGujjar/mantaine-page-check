@@ -35,14 +35,11 @@
             window.location = "ServiceView.aspx";
         }
         function GetDepartments() {
-            debugger;
             var optionsDepth = '';
 
             PageMethods.GetDepartments(function (Tests) {
-                debugger
                 optionsDepth = '<option value="0">Please Select</option>';
                 $.each(JSON.parse(Tests), function (key, value) {
-                    debugger;
                     if (value.Type == "Dept") {
                         optionsDepth += '<option value="' + value.DataValueName + '" >' + value.DataValueDescription + '</option>';
                     }
@@ -74,7 +71,6 @@
 
 
         function ActiveCheckRights() {
-            debugger;
             $.ajax({
                 type: "POST",
                 url: "Service.aspx/CheckActiveAllow",
@@ -83,7 +79,6 @@
                 dataType: "json",
                 async: true,
                 success: function (data) {
-                    debugger;
                     var checkActive = data.d;
 
                     if (checkActive == "true") {
@@ -100,7 +95,6 @@
             });
         }
         function FillDepartments() {
-            debugger;
             var optionsManu = '<option value="0">Please Select</option>';
             var optionPUnit = '<option value="0">Select</option>';
             var optionItemTyp = '<option value="0">Please Select</option>';
@@ -112,9 +106,7 @@
             var optionItemGroup = '<option value="0">Please Select</option>';
             var optionInvOrg = '<option value="0">Please Select</option>';
             PageMethods.getDDLlist(function (Tests) {
-                debugger
                 $.each(JSON.parse(Tests), function (key, value) {
-                    debugger;
                     if (value.Type == "Manu") {
                         optionsManu += '<option value="' + value.DataValueName + '" >' + value.DataValueDescription + '</option>';
                     }
@@ -163,12 +155,9 @@
             });
         }
         function FillAccountCategory() {
-            debugger;
             var optionsAccCategory = '<option value="0">Please Select</option>';
             PageMethods.getAccountCategory(function (Tests) {
-                debugger
                 $.each(JSON.parse(Tests), function (key, value) {
-                    debugger;
                     optionsAccCategory += '<option value="' + value.Account_Category_Id + '" >' + value.CategoryName + '</option>';
                 });
                 $('#ddlfiance_integration').html(optionsAccCategory);
@@ -202,7 +191,6 @@
             });
         }
         function validateSave() {
-            debugger;
             var proceed = true;
             var TotalShare = 0;
             var Desc = $('#txtDescription').val();
@@ -339,7 +327,6 @@
          }
         function Saveitem() {
             if (validateSave()) {
-                debugger;
                 var item_Code = $("#item_code").val();
                 var desc = $("#txtDescription").val();
                 var active = $('#Active').prop('checked');
@@ -478,7 +465,6 @@
                     contentType: "application/json; charset=utf-8",
                     dataType: "json",
                     success: function (response) {
-                        debugger;
                         var msg = response.d;
                         var Split = msg.split("-");
                         if (Split[0] == "Success") {
@@ -545,7 +531,6 @@
                 contentType: "application/json; charset=utf-8",
                 dataType: "json",
                 success: function (response) {
-                    debugger;
                     var id = response.d;
                     $("#item_code").val(id);
                 },
@@ -585,7 +570,6 @@
             $('#Active').trigger('change');
         });
         function LoadItemInventory(id) {
-            debugger;
             $.ajax({
                 type: "POST",
                 url: "Service.aspx/LoadItemInventory",
@@ -595,7 +579,6 @@
                 contentType: "application/json; charset=utf-8",
                 dataType: "json",
                 success: function (response) {
-                    debugger;
                     var parse = JSON.parse(response.d);
                     $('#item_code').val(parse.Item_Code);
                     $('#txtDescription').val(parse.Description);
@@ -624,7 +607,6 @@
                         $('#ddlItemGroup').val(parse.ItemGroupId).trigger('change');
                     }, 1000);
                     setTimeout(function () {
-                        debugger;
                         $('#ddlwareHouse').val(parse.InventoryOrg).trigger('change');
                     }, 2000);
                     setTimeout(function () {

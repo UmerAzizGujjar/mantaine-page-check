@@ -3,7 +3,6 @@
     <link href="../../wwwroot/THEME_TIBBIT/CustomCSS/tablestyle.css" rel="stylesheet" />
      <script type="text/javascript">
      $(document).ready(function () {
-         debugger;
          $('#ctl00_lblMessage').hide();
          LoadPage();
      });
@@ -52,7 +51,6 @@
                  {
                      "data": "Date", "name": "Date",
                      "render": function (data, type, full) {
-                         debugger;
                          var date = full.Date;
                          date = moment(date).format('DD-MMM-YYYY');
                          return date;

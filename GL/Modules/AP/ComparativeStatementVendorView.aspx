@@ -11,10 +11,8 @@
             window.location.href = "ComparativeStatementVendor.aspx?CM_ID=" + ID + "";
         }
         function AutoPO(ID) {
-            debugger
             var CSID = ID;
             PageMethods.AutoPO(CSID, function (Tests) {
-                debugger
                 var message = JSON.parse(Tests);
                 if (message[0].Column1 != "" || message[0].Column1 != null) {
                     location.reload();
@@ -24,7 +22,6 @@
 
 
         function Print(CSVENID) {
-             debugger;
             var locationInfo = window.location;
 
             var user_name = '<% =AppConfig.Company_Name %>';
@@ -125,7 +122,6 @@
                     { "data": "PoStatus", "orderable": false },
                     {
                         "render": function (data, type, row) {
-                            debugger;
                             var btnPoVisible = 'style="display:none;"';
                             var res = '<a class="editListBtn" href="#" onclick="Edit(' + row.CSVENID + ')" ' + 'style="border-radius: 4px; margin-right: 4px;padding: 5px 8px;"><i ' + ' class="fa fa-pencil"></i></a>';
                             if (row.CSVENSTATUS == "Approved" && row.IsAuto != true) {

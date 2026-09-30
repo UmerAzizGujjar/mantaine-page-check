@@ -66,7 +66,6 @@
             LoadFinalDiagnosisTable();
         }
         function fetchPatientInfo() {
-            debugger;
             var Patient_ID = $("#hdfReg_ID").val();
 
             $.ajax({
@@ -76,7 +75,6 @@
                 contentType: "application/json; charset=utf-8",
                 dataType: "json",
                 success: function (resp) {
-                    debugger;
                     var data = JSON.parse(resp.d);
 
                     $('#patname').text(data.Name);
@@ -108,7 +106,6 @@
                 contentType: "application/json; charset=utf-8",
                 dataType: "json",
                 success: function (resp) {
-                    debugger;
                     var data = JSON.parse(resp.d);
                     console.log(data);
                     if (data && data.doctor) {
@@ -143,7 +140,6 @@
                 contentType: "application/json; charset=utf-8",
                 dataType: "json",
                 success: function (resp) {
-                    debugger;
                     var data = JSON.parse(resp.d);
                     if (data && data.doctor) {
                         $('#prvDoctor').text(data.doctor.Emp_Name);
@@ -180,7 +176,6 @@
                 contentType: "application/json; charset=utf-8",
                 dataType: "json",
                 success: function (resp) {
-                    debugger;
                     var data = JSON.parse(resp.d);
                     $("#opdVisits").text(data.OutPatientCount);
                     $("#ipdVisits").text(data.InPatientCount);

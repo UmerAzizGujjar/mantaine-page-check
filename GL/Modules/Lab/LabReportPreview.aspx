@@ -68,7 +68,6 @@
 
 
         function toggle(source) {
-            debugger;
             var checkboxes = document.querySelectorAll('input[type="checkbox"]');
             for (var i = 0; i < checkboxes.length; i++) {
 
@@ -83,7 +82,6 @@
 
         var index = 0;
         function ShowReport() {
-            debugger;
 
             var ChkLetterHead = false;
             var $chkLetterHead = $("#ChkIs_latterhead");
@@ -226,7 +224,6 @@
                 contentType: "application/json; charset=utf-8",
                 dataType: "json",
                 success: function (response) {
-                    debugger;
                     SharingPolicy = JSON.parse(response.d);
                 },
                 error: function (error) {
@@ -281,7 +278,6 @@
                 async: true,
                 success: function (response) {
                     console.log(response);
-                    debugger;
                     var data = typeof response.d === 'string' ? JSON.parse(response.d) : response.d;
                     AllowLab = data.allow_lab;
                     AllowUltra = data.allow_ultra;
@@ -368,7 +364,6 @@
             }
             bindControls();
             $('#ddlTestDepartment').change(function (e) {
-                debugger;
                 //var CheckAll = $('#chkTodayAll').checked;
 
                 var Dept = $("#ddlTestDepartment option:selected").text();
@@ -478,12 +473,10 @@
                 });
             });
             $('#btnApprove').click(function () {
-                debugger;
                 test_list = [];
                 var tbl = $("#tblgroupTestlist tbody tr");
 
                 $.each(tbl, function (key, val) {
-                    debugger
                     var testDetailId = $(val).find('td:eq(0)').text().trim();
                     if (testDetailId != null && testDetailId !== "" && testDetailId > 0) {
                         test_list.push({ 'TestDID': testDetailId });
@@ -516,9 +509,7 @@
                 if (test_list.length > 0) {
                     let singleTest = test_list[0].TestDID;
                     PageMethods.ApproveTestDetailCat(Lab_ID, JSON.stringify(TesttDetails), function (response) {
-                        debugger;
                         if (SharingPolicy == '001') {
-                            debugger;
                             ApproveLab(singleTest);
                         }
                         
@@ -530,12 +521,10 @@
                 }
             });
             $('#btnReject').click(function () {
-                debugger;
                 localStorage.isSaved = 1;
                 test_list = [];
                 var tbl = $("#tblgroupTestlist tbody tr");
                 $.each(tbl, function (key, val) {
-                    debugger;
                     var name = $(val).find('input[name="testDepartment"]').attr('name');
                     if (name == "testDepartment") {
                     }
@@ -556,7 +545,6 @@
                 var TesttDetails = { Lab_ID: Lab_ID == '(New)' ? 0 : Lab_ID, test_list: test_list }
                 if (test_list.length > 0) {
                     PageMethods.RejectTestDetail(Lab_ID, JSON.stringify(TesttDetails), function (response) {
-                        debugger;
                         refreshAfterSave();
                     }, function (onfailure) {
                         alert(onfailure);
@@ -566,9 +554,7 @@
 
             $('#saveTest').click(function () {
                 localStorage.isSaved = 1;
-                debugger;
                 if (isGroup) { //Save group Test
-                    debugger;
                     var table = $('#tblgroupTestlist');
                     var test_list = [];
                     var Rem = CKEDITOR.instances.txtMaster_Remarks.getData();
@@ -627,7 +613,6 @@
 
                     });
                     var Lab_ID = $("#<%= hdnLab_Test_ID.ClientID %>").val();
-                    debugger;
                     var chkBillID = $("#hdBill_id").val();
                     if (chkBillID == "(New)") {
                         localStorage.Bill_No = chkBillID;
@@ -642,7 +627,6 @@
                 else //Save Single Test
                 {
 
-                    debugger;
                     var labTestDetailID = $("#ltdID").val();
                     var Lab_ID = $("#<%= hdnLab_Test_ID.ClientID %>").val();
                     //TestID = $($(row).find('td input[name=labtestDID]')[0]).val();
@@ -769,7 +753,6 @@
             });
             // Approve Test Result
             //$('#btnApprove').click(function () {
-            //    debugger;
             //    localStorage.isSaved = 1;
             //    $('#mTestName')
             //    $('#mTestGroup')
@@ -802,7 +785,6 @@
             //    }
             //    else {
 
-            //        debugger;
             //        var data = JSON.stringify({ TestDetailID: testID, TestValue: testvalue, Template: template, Diagnosis: diagnosis, Notes: notes, });
             //        $.ajax({
             //            type: "POST",
@@ -811,7 +793,6 @@
             //            contentType: "application/json; charset=utf-8",
             //            dataType: "json",
             //            success: function (data) {
-            //                debugger;
             //                //ApproveLab();
             //                //$('#mTestValue').val('');
             //                $('#mTestDiagnosis').val('');
@@ -835,10 +816,8 @@
         });
 
         function ApproveLab(singleTest) {
-            debugger;
             var labtestID = singleTest;
             PageMethods.approve_LabShare(labtestID, function (Tests) {
-                debugger
                 var message = JSON.parse(Tests);
                 if (message[0].Message != null || message[0].Message != "") {
                     Swal.fire({
@@ -859,11 +838,9 @@
             });
         }
         function PrintVoucher() {
-            debugger;
             test_list = [];
             var tbl = $("#tblgroupTestlist tbody tr");
             $.each(tbl, function (key, val) {
-                debugger;
                 var name = $(val).find('input[name="testDepartment"]').attr('name');
                 if (name == "testDepartment") {
                 }
@@ -965,7 +942,6 @@
             }
         }
         function readIMGsingle(input) {
-            debugger;
             var countFiles = $(input)[0].files.length;
             var imgPath = $(input)[0].value;
             var extn = imgPath.substring(imgPath.lastIndexOf('.') + 1).toLowerCase();
@@ -1080,9 +1056,7 @@
                     }
                 });
         }
-        debugger;
         function bindControls() {
-            debugger;
             var storageBillNo = localStorage.Bill_No;
             if (storageBillNo != "(New)") {
                 $("#ctl00_MainContent_txtBilling").val(storageBillNo);
@@ -1093,7 +1067,6 @@
             }
 
             var hdFile_ID = $("#hdnPatient_ID").val();
-            debugger;
             if (hdFile_ID != "(New)") {
 
                 var Patient_ID = $("#hdnPatient_ID").val();
@@ -1158,12 +1131,10 @@
 
             
         function loadtokenInputsDefault() {
-            debugger;
             $('#ctl00_MainContent_txtPatient_ID').tokenInput("../../json.aspx?Table=LabResultPatient",
                 {
                     tokenLimit: 1,
                     onAdd: function (item) {
-                        debugger;
                         try {
                             localStorage.billid = 0
                             localStorage.patientid = 1
@@ -1178,9 +1149,7 @@
                     }
                 });
         }
-        debugger;
         function loadPatientData() {
-            debugger;
             var Patient_ID = $("#<%= hdnPatient_ID.ClientID %>").val();
             var Lab_ID = $("#<%= hdnLab_Test_ID.ClientID %>").val();
             var Lab_id = $("#ctl00_MainContent_txtLab_Test_ID").val();
@@ -1200,7 +1169,6 @@
         }
 
         function GetLabDetailAgainstBill() {
-            debugger;
             var Patient_ID = $("#<%= hdnPatient_ID.ClientID %>").val();
             var Bill_ID = $("#hdBill_id").val();
             if (Patient_ID == null || Patient_ID == "" || Patient_ID == "(New)") {
@@ -1210,7 +1178,6 @@
                 Bill_ID = 0;
             }
             PageMethods.GetLabDetailByBill_id(Patient_ID, Bill_ID, function (res) {
-                debugger;
                 var Test = JSON.parse(res);
                 var rows = '';
                 var preview = '';
@@ -1231,7 +1198,6 @@
                     return ""
                 }
                 $.each(Test, function (key, value) {
-                    debugger;
 
                     if (value.MainDepartment == null)
                         value.MainDepartment = "";
@@ -1248,7 +1214,6 @@
                     else {
                         result = "Add Result"
                     }
-                    debugger;
                     var dd = tbltestid.rows.length;
                     var main_dep = value.Test_Main_Department;
                     test_wise_id = value.patient_ID;
@@ -1256,7 +1221,6 @@
                     // Get Area_Of_Interest value
                     var areaOfInterest = value.Area_Of_Interest || '';
 
-                    debugger;
                     if (value.Group_Category != "") {
                         if (value.Is_Result == true && value.Is_Approve == true) {
                             result = "View Result";
@@ -1269,19 +1233,15 @@
                             rows += '<tr><td><input type="checkbox" name="chkReport" value=""/></td><td><input type="hidden" name="labtestDID" id="labtestDID" value="' + value.Test_ID + '" />' + value.Lab_Test_ID + '</td><td style="display:none">' + value.Lab_Test_Detail_ID + '</td><td style="color:red"><input type="hidden"  value="' + value.Parent_Transaction_Type + '" />' + value.Test_Name + '</td><td><input type="hidden"  value="' + value.Parent_Transaction_Type_ID + '" />' + value.Rejected_Reason + '</td><td>' + value.Service_Date + '</td><td>' + value.Unit_Name + '</td><td>' + value.TestDepartment + '</td><td>' + value.Test_Performed_By + '</td><td>' + value.Result_Time + '</td><td>' + value.Approved_By + '</td><td>' + value.Approved_Time + '</td><td style="display:none;">' + (value.Status ? 'Paid' : 'Unpaid') + '</td><td><input type="hidden" id="valuetype" value="' + value.ValueType + '"><a href="javascript:void(0)" onclick="EditData(this)"><span id="result' + value.Lab_Test_ID + '">' + result + '</span></a>| <a href="javascript:void(0)" onclick="PreviewReport(this)"><span id="isApprove" value="' + value.Is_Approve + '"></span></a></td><td>' + areaOfInterest + '</td><td class="tdemergency"><input type="hidden" id="emergency" value="' + value.Test_ID + '"/>' + value.Emergancy + '</td><td style="display:none;"><input type="hidden" name="Group_Category" id="GroupCategory" value="' + value.Group_Category + '" /><input type="hidden" name="List_Of_Test_IDs" id="ListOfTestIDs" value="' + value.ListOfTestIDs + '"/><input type="hidden" name="Bill_Details_ID" id="Bill_Details_ID" value="' + value.Bill_Details_ID + '"/><input type="hidden" name="Report_Colum" id="Report_Colum" value="' + value.Report_Colum + '"/><input type="hidden" name="test_wise_id" id="test_wise_id" value="' + test_wise_id + '"/><input type="hidden" name="Area_Of_Interest" value="' + areaOfInterest + '" /></td></tr>';
                         }
                         else if (AllowLab == false && main_dep == "001") {
-                            debugger;
                             rows += '<tr style="display:none;"><td><input type="checkbox" name="chkReport" value=""/></td><td><input type="hidden" name="labtestDID" id="labtestDID" value="' + value.Test_ID + '" />' + value.Lab_Test_ID + '</td><td style="display:none">' + value.Lab_Test_Detail_ID + '</td><td><input type="hidden" value="' + value.Parent_Transaction_Type + '" />' + value.Test_Name + '</td><td><input type="hidden"  value="' + value.Parent_Transaction_Type_ID + '" />' + value.Rejected_Reason + '</td><td>' + value.Service_Date + '</td><td>' + value.Unit_Name + '</td><td>' + value.TestDepartment + '</td><td>' + value.Test_Performed_By + '</td><td>' + value.Result_Time + '</td><td>' + value.Approved_By + '</td><td>' + value.Approved_Time + '</td><td style="display:none;">' + (value.Status ? 'Paid' : 'Unpaid') + '</td><td class="tdemergency"><input type="hidden" id="emergency" value="' + value.Test_ID + '"/>' + value.Emergancy + '</td><td>' + areaOfInterest + '</td><td style="display:none;"><input type="hidden" name="Group_Category" id="GroupCategory" value="' + value.Group_Category + '" /><input type="hidden" name="List_Of_Test_IDs" id="ListOfTestIDs" value="' + value.ListOfTestIDs + '"/><input type="hidden" name="Bill_Details_ID" id="Bill_Details_ID" value="' + value.Bill_Details_ID + '"/><input type="hidden" name="Report_Colum" id="Report_Colum" value="' + value.Report_Colum + '"/><input type="hidden" name="test_wise_id" id="test_wise_id" value="' + test_wise_id + '"/><input type="hidden" name="Area_Of_Interest" value="' + areaOfInterest + '" /></td></tr>';
                         }
                         else if (AllowUltra == false && main_dep == "002") {
-                            debugger;
                             rows += '<tr style="display:none;"><td><input type="checkbox" name="chkReport" value=""/></td><td><input type="hidden" name="labtestDID" id="labtestDID" value="' + value.Test_ID + '" />' + value.Lab_Test_ID + '</td><td style="display:none">' + value.Lab_Test_Detail_ID + '</td><td><input type="hidden" value="' + value.Parent_Transaction_Type + '" />' + value.Test_Name + '</td><td><input type="hidden"  value="' + value.Parent_Transaction_Type_ID + '" />' + value.Rejected_Reason + '</td><td>' + value.Service_Date + '</td><td>' + value.Unit_Name + '</td><td>' + value.TestDepartment + '</td><td>' + value.Test_Performed_By + '</td><td>' + value.Result_Time + '</td><td>' + value.Approved_By + '</td><td>' + value.Approved_Time + '</td><td style="display:none;">' + (value.Status ? 'Paid' : 'Unpaid') + '</td><td class="tdemergency"><input type="hidden" id="emergency" value="' + value.Test_ID + '"/>' + value.Emergancy + '</td><td>' + areaOfInterest + '</td><td style="display:none;"><input type="hidden" name="Group_Category" id="GroupCategory" value="' + value.Group_Category + '" /><input type="hidden" name="List_Of_Test_IDs" id="ListOfTestIDs" value="' + value.ListOfTestIDs + '"/><input type="hidden" name="Bill_Details_ID" id="Bill_Details_ID" value="' + value.Bill_Details_ID + '"/><input type="hidden" name="Report_Colum" id="Report_Colum" value="' + value.Report_Colum + '"/><input type="hidden" name="test_wise_id" id="test_wise_id" value="' + test_wise_id + '"/><input type="hidden" name="Area_Of_Interest" value="' + areaOfInterest + '" /></td></tr>';
                         }
                         else if (Allow_Xray == false && main_dep == "003") {
-                            debugger;
                             rows += '<tr style="display:none;"><td><input type="checkbox" name="chkReport" value=""/></td><td><input type="hidden" name="labtestDID" id="labtestDID" value="' + value.Test_ID + '" />' + value.Lab_Test_ID + '</td><td style="display:none">' + value.Lab_Test_Detail_ID + '</td><td><input type="hidden" value="' + value.Parent_Transaction_Type + '" />' + value.Test_Name + '</td><td><input type="hidden"  value="' + value.Parent_Transaction_Type_ID + '" />' + value.Rejected_Reason + '</td><td>' + value.Service_Date + '</td><td>' + value.Unit_Name + '</td><td>' + value.TestDepartment + '</td><td>' + value.Test_Performed_By + '</td><td>' + value.Result_Time + '</td><td>' + value.Approved_By + '</td><td>' + value.Approved_Time + '</td><td style="display:none;">' + (value.Status ? 'Paid' : 'Unpaid') + '</td><td class="tdemergency"><input type="hidden" id="emergency" value="' + value.Test_ID + '"/>' + value.Emergancy + '</td><td>' + areaOfInterest + '</td><td style="display:none;"><input type="hidden" name="Group_Category" id="GroupCategory" value="' + value.Group_Category + '" /><input type="hidden" name="List_Of_Test_IDs" id="ListOfTestIDs" value="' + value.ListOfTestIDs + '"/><input type="hidden" name="Bill_Details_ID" id="Bill_Details_ID" value="' + value.Bill_Details_ID + '"/><input type="hidden" name="Report_Colum" id="Report_Colum" value="' + value.Report_Colum + '"/><input type="hidden" name="test_wise_id" id="test_wise_id" value="' + test_wise_id + '"/><input type="hidden" name="Area_Of_Interest" value="' + areaOfInterest + '" /></td></tr>';
                         }
                         else if (Allow_blood == false && main_dep == "005") {
-                            debugger;
                             rows += '<tr style="display:none;"><td><input type="checkbox" name="chkReport" value=""/></td><td><input type="hidden" name="labtestDID" id="labtestDID" value="' + value.Test_ID + '" />' + value.Lab_Test_ID + '</td><td style="display:none">' + value.Lab_Test_Detail_ID + '</td><td><input type="hidden" value="' + value.Parent_Transaction_Type + '" />' + value.Test_Name + '</td><td><input type="hidden"  value="' + value.Parent_Transaction_Type_ID + '" />' + value.Rejected_Reason + '</td><td>' + value.Service_Date + '</td><td>' + value.Unit_Name + '</td><td>' + value.TestDepartment + '</td><td>' + value.Test_Performed_By + '</td><td>' + value.Result_Time + '</td><td>' + value.Approved_By + '</td><td>' + value.Approved_Time + '</td><td style="display:none;">' + (value.Status ? 'Paid' : 'Unpaid') + '</td><td class="tdemergency"><input type="hidden" id="emergency" value="' + value.Test_ID + '"/>' + value.Emergancy + '</td><td>' + areaOfInterest + '</td><td style="display:none;"><input type="hidden" name="Group_Category" id="GroupCategory" value="' + value.Group_Category + '" /><input type="hidden" name="List_Of_Test_IDs" id="ListOfTestIDs" value="' + value.ListOfTestIDs + '"/><input type="hidden" name="Bill_Details_ID" id="Bill_Details_ID" value="' + value.Bill_Details_ID + '"/><input type="hidden" name="Report_Colum" id="Report_Colum" value="' + value.Report_Colum + '"/><input type="hidden" name="test_wise_id" id="test_wise_id" value="' + test_wise_id + '"/><input type="hidden" name="Area_Of_Interest" value="' + areaOfInterest + '" /></td></tr>';
                         }
                         else {
@@ -1292,31 +1252,25 @@
                         }
                     } else {
                         if (value.Is_Result == true && value.Is_Approve == true) {
-                            debugger;
                             result = "View Result";
                             preview = "Preview";
                             rows += '<tr><td><input type="checkbox" name="chkReport" value=""/></td><td><input type="hidden" name="labtestDID" id="labtestDID" value="' + value.Test_ID + '" />' + value.Lab_Test_ID + '</td><td style="display:none">' + value.Lab_Test_Detail_ID + '</td><td><input type="hidden" value="' + value.Parent_Transaction_Type + '" />' + value.Test_Name + '</td><td><input type="hidden"  value="' + value.Parent_Transaction_Type_ID + '" />' + value.Rejected_Reason + '</td><td>' + value.Service_Date + '</td><td>' + value.Unit_Name + '</td><td>' + value.TestDepartment + '</td><td>' + value.Test_Performed_By + '</td><td>' + value.Result_Time + '</td><td>' + value.Approved_By + '</td><td>' + value.Approved_Time + '</td><td style="display:none;">' + (value.Status ? 'Paid' : 'Unpaid') + '</td><td><input type="hidden" id="valuetype" value="' + value.ValueType + '"><a href="javascript:void(0)" onclick="EditData(this)"><span id="result' + value.Lab_Test_Detail_ID + '">' + result + '</span></a>| <a href="javascript:void(0)" onclick="PreviewReport(this)"><span id="isApprove" value="' + value.Is_Approve + '">' + preview + '</span></a></td><td>' + areaOfInterest + '</td><td class="tdemergency"><input type="hidden" id="emergency" value="' + value.Test_ID + '"/>' + value.Emergancy + '</td><td style="display:none;"><input type="hidden" name="Group_Category" id="GroupCategory" value="' + value.Group_Category + '" /><input type="hidden" name="List_Of_Test_IDs" id="ListOfTestIDs" value="' + value.ListOfTestIDs + '"/><input type="hidden" name="Bill_Details_ID" id="Bill_Details_ID" value="' + value.Bill_Details_ID + '"/><input type="hidden" name="Report_Colum" id="Report_Colum" value="' + value.Report_Colum + '"/><input type="hidden" name="test_wise_id" id="test_wise_id" value="' + test_wise_id + '"/><input type="hidden" name="Area_Of_Interest" value="' + areaOfInterest + '" /></td></tr>';
                         }
                         //Only View Result Will Show
                         else if (value.Is_Result == true && value.Is_Approve == false) {
-                            debugger;
                             result = "View Result";
                             rows += '<tr><td><input type="checkbox" name="chkReport" value=""/></td><td><input type="hidden" name="labtestDID" id="labtestDID" value="' + value.Test_ID + '" />' + value.Lab_Test_ID + '</td><td style="display:none">' + value.Lab_Test_Detail_ID + '</td><td><input type="hidden" value="' + value.Parent_Transaction_Type + '" />' + value.Test_Name + '</td><td><input type="hidden"  value="' + value.Parent_Transaction_Type_ID + '" />' + value.Rejected_Reason + '</td><td>' + value.Service_Date + '</td><td>' + value.Unit_Name + '</td><td>' + value.TestDepartment + '</td><td>' + value.Test_Performed_By + '</td><td>' + value.Result_Time + '</td><td>' + value.Approved_By + '</td><td>' + value.Approved_Time + '</td><td style="display:none;">' + (value.Status ? 'Paid' : 'Unpaid') + '</td><td><input type="hidden" id="valuetype" value="' + value.ValueType + '"><a href="javascript:void(0)" onclick="EditData(this)"><span id="result' + value.Lab_Test_ID + '">' + result + '</span></a> | <a href="javascript:void(0)" onclick="PreviewReport(this)"><span id="isApprove" value="' + value.Is_Approve + '"></span></a></td><td>' + areaOfInterest + '</td><td class="tdemergency"><input type="hidden" id="emergency" value="' + value.Test_ID + '"/>' + value.Emergancy + '</td><td style="display:none;"><input type="hidden" name="Group_Category" id="GroupCategory" value="' + value.Group_Category + '" /><input type="hidden" name="List_Of_Test_IDs" id="ListOfTestIDs" value="' + value.ListOfTestIDs + '"/><input type="hidden" name="Bill_Details_ID" id="Bill_Details_ID" value="' + value.Bill_Details_ID + '"/><input type="hidden" name="Report_Colum" id="Report_Colum" value="' + value.Report_Colum + '"/><input type="hidden" name="test_wise_id" id="test_wise_id" value="' + test_wise_id + '"/><input type="hidden" name="Area_Of_Interest" value="' + areaOfInterest + '" /></td></tr>';
                         }
                         else if (AllowUltra == false && main_dep == "002") {
-                            debugger;
                             rows += '<tr style="display:none;"><td><input type="checkbox" name="chkReport" value=""/></td><td><input type="hidden" name="labtestDID" id="labtestDID" value="' + value.Test_ID + '" />' + value.Lab_Test_ID + '</td><td style="display:none">' + value.Lab_Test_Detail_ID + '</td><td><input type="hidden" value="' + value.Parent_Transaction_Type + '" />' + value.Test_Name + '</td><td><input type="hidden"  value="' + value.Parent_Transaction_Type_ID + '" />' + value.Rejected_Reason + '</td><td>' + value.Service_Date + '</td><td>' + value.Unit_Name + '</td><td>' + value.TestDepartment + '</td><td>' + value.Test_Performed_By + '</td><td>' + value.Result_Time + '</td><td>' + value.Approved_By + '</td><td>' + value.Approved_Time + '</td><td style="display:none;">' + (value.Status ? 'Paid' : 'Unpaid') + '</td><td class="tdemergency"><input type="hidden" id="emergency" value="' + value.Test_ID + '"/>' + value.Emergancy + '</td><td>' + areaOfInterest + '</td><td style="display:none;"><input type="hidden" name="Group_Category" id="GroupCategory" value="' + value.Group_Category + '" /><input type="hidden" name="List_Of_Test_IDs" id="ListOfTestIDs" value="' + value.ListOfTestIDs + '"/><input type="hidden" name="Bill_Details_ID" id="Bill_Details_ID" value="' + value.Bill_Details_ID + '"/><input type="hidden" name="Report_Colum" id="Report_Colum" value="' + value.Report_Colum + '"/><input type="hidden" name="test_wise_id" id="test_wise_id" value="' + test_wise_id + '"/><input type="hidden" name="Area_Of_Interest" value="' + areaOfInterest + '" /></td></tr>';
                         }
                         else if (Allow_Xray == false && main_dep == "003") {
-                            debugger;
                             rows += '<tr style="display:none;"><td><input type="checkbox" name="chkReport" value=""/></td><td><input type="hidden" name="labtestDID" id="labtestDID" value="' + value.Test_ID + '" />' + value.Lab_Test_ID + '</td><td style="display:none">' + value.Lab_Test_Detail_ID + '</td><td><input type="hidden" value="' + value.Parent_Transaction_Type + '" />' + value.Test_Name + '</td><td><input type="hidden"  value="' + value.Parent_Transaction_Type_ID + '" />' + value.Rejected_Reason + '</td><td>' + value.Service_Date + '</td><td>' + value.Unit_Name + '</td><td>' + value.TestDepartment + '</td><td>' + value.Test_Performed_By + '</td><td>' + value.Result_Time + '</td><td>' + value.Approved_By + '</td><td>' + value.Approved_Time + '</td><td style="display:none;">' + (value.Status ? 'Paid' : 'Unpaid') + '</td><td class="tdemergency"><input type="hidden" id="emergency" value="' + value.Test_ID + '"/>' + value.Emergancy + '</td><td>' + areaOfInterest + '</td><td style="display:none;"><input type="hidden" name="Group_Category" id="GroupCategory" value="' + value.Group_Category + '" /><input type="hidden" name="List_Of_Test_IDs" id="ListOfTestIDs" value="' + value.ListOfTestIDs + '"/><input type="hidden" name="Bill_Details_ID" id="Bill_Details_ID" value="' + value.Bill_Details_ID + '"/><input type="hidden" name="Report_Colum" id="Report_Colum" value="' + value.Report_Colum + '"/><input type="hidden" name="test_wise_id" id="test_wise_id" value="' + test_wise_id + '"/><input type="hidden" name="Area_Of_Interest" value="' + areaOfInterest + '" /></td></tr>';
                         }
                         else if (AllowLab == false && main_dep == "001") {
-                            debugger;
                             rows += '<tr style="display:none;"><td><input type="checkbox" name="chkReport" value=""/></td><td><input type="hidden" name="labtestDID" id="labtestDID" value="' + value.Test_ID + '" />' + value.Lab_Test_ID + '</td><td style="display:none">' + value.Lab_Test_Detail_ID + '</td><td><input type="hidden" value="' + value.Parent_Transaction_Type + '" />' + value.Test_Name + '</td><td><input type="hidden"  value="' + value.Parent_Transaction_Type_ID + '" />' + value.Rejected_Reason + '</td><td>' + value.Service_Date + '</td><td>' + value.Unit_Name + '</td><td>' + value.TestDepartment + '</td><td>' + value.Test_Performed_By + '</td><td>' + value.Result_Time + '</td><td>' + value.Approved_By + '</td><td>' + value.Approved_Time + '</td><td style="display:none;">' + (value.Status ? 'Paid' : 'Unpaid') + '</td><td class="tdemergency"><input type="hidden" id="emergency" value="' + value.Test_ID + '"/>' + value.Emergancy + '</td><td>' + areaOfInterest + '</td><td style="display:none;"><input type="hidden" name="Group_Category" id="GroupCategory" value="' + value.Group_Category + '" /><input type="hidden" name="List_Of_Test_IDs" id="ListOfTestIDs" value="' + value.ListOfTestIDs + '"/><input type="hidden" name="Bill_Details_ID" id="Bill_Details_ID" value="' + value.Bill_Details_ID + '"/><input type="hidden" name="Report_Colum" id="Report_Colum" value="' + value.Report_Colum + '"/><input type="hidden" name="test_wise_id" id="test_wise_id" value="' + test_wise_id + '"/><input type="hidden" name="Area_Of_Interest" value="' + areaOfInterest + '" /></td></tr>';
                         }
                         else if (Allow_blood == false && main_dep == "005") {
-                            debugger;
                             rows += '<tr style="display:none;"><td><input type="checkbox" name="chkReport" value=""/></td><td><input type="hidden" name="labtestDID" id="labtestDID" value="' + value.Test_ID + '" />' + value.Lab_Test_ID + '</td><td style="display:none">' + value.Lab_Test_Detail_ID + '</td><td><input type="hidden" value="' + value.Parent_Transaction_Type + '" />' + value.Test_Name + '</td><td><input type="hidden"  value="' + value.Parent_Transaction_Type_ID + '" />' + value.Rejected_Reason + '</td><td>' + value.Service_Date + '</td><td>' + value.Unit_Name + '</td><td>' + value.TestDepartment + '</td><td>' + value.Test_Performed_By + '</td><td>' + value.Result_Time + '</td><td>' + value.Approved_By + '</td><td>' + value.Approved_Time + '</td><td style="display:none;">' + (value.Status ? 'Paid' : 'Unpaid') + '</td><td class="tdemergency"><input type="hidden" id="emergency" value="' + value.Test_ID + '"/>' + value.Emergancy + '</td><td>' + areaOfInterest + '</td><td style="display:none;"><input type="hidden" name="Group_Category" id="GroupCategory" value="' + value.Group_Category + '" /><input type="hidden" name="List_Of_Test_IDs" id="ListOfTestIDs" value="' + value.ListOfTestIDs + '"/><input type="hidden" name="Bill_Details_ID" id="Bill_Details_ID" value="' + value.Bill_Details_ID + '"/><input type="hidden" name="Report_Colum" id="Report_Colum" value="' + value.Report_Colum + '"/><input type="hidden" name="test_wise_id" id="test_wise_id" value="' + test_wise_id + '"/><input type="hidden" name="Area_Of_Interest" value="' + areaOfInterest + '" /></td></tr>';
                         }
                         //Add Result Will Show
@@ -1336,7 +1290,6 @@
         function removeDuplicates() {
             var seen = {};
             $('#tblLabTest tr ').each(function () {
-                debugger;
                 var test_id = $(this).find('td:eq(1) #labtestDID').val();
                 var test_name = $(this).find('td:eq(3)').text();
                 var date = $(this).find('td:eq(5)').text();
@@ -1351,9 +1304,7 @@
             });
 
         }
-        debugger;
         //function PreviewReport($this) {
-        //    debugger;
         //    var tbl = $($($this).parents('tr')[0]);
         //    // var Patient_ID = $('#hdnPatient_ID').val();
         //    var hdn_Patient_ID = tbl.find("td").find("input[id=Patient_Id]").val();
@@ -1373,7 +1324,6 @@
         //    var billdetailid = tbl.find('td:eq(14) #Bill_Details_ID').val()
         //    var testIds = tbl.find('td:eq(10) #ListOfTestIDs').val();
         //    if (testIds == "null" || testIds == '') {
-        //        debugger;
         //        //testIds = tbl.find('td:eq(1) #labtestDID').val();
         //        testIds = tbl.find('td:eq(1) #labtestDID').val();
         //        //testIds = tbl.find('td:eq(1)').find('input').attr('labid')
@@ -1391,7 +1341,6 @@
         //}
 
         function PreviewReport($this) {
-            debugger;
             var $row = $($this).closest('tr'); 
 
             var ChkLetterHead = true;
@@ -1429,7 +1378,6 @@
      
         var test_wise_id;
         function GetLabDetail() {
-            debugger;
             var Patient_ID = $("#<%= hdnPatient_ID.ClientID %>").val();
             var Lab_ID = $("#<%= hdnLab_Test_ID.ClientID %>").val();
             if (Patient_ID == null || Patient_ID == "" || Patient_ID == "(New)") {
@@ -1442,7 +1390,6 @@
                 Lab_ID = 0;
             }
             PageMethods.GetLabDetail(Patient_ID, Lab_ID, function (res) {
-                debugger;
                 var Test = JSON.parse(res);
                 var rows = '';
                 var preview = '';
@@ -1463,7 +1410,6 @@
                     return ""
                 }
                 $.each(Test, function (key, value) {
-                    debugger;
                     $("#<%= txtLab_Test_ID.ClientID %>").val(value.LabID);
 
                     if (value.MainDepartment == null)
@@ -1495,19 +1441,15 @@
                             rows += '<tr><td><input type="checkbox" name="chkReport" value=""/></td><td><input type="hidden" name="labtestDID" id="labtestDID" value="' + value.Test_ID + '" />' + value.Lab_Test_ID + '</td><td style="display:none">' + value.Lab_Test_Detail_ID + '</td><td style="color:red"><input type="hidden"  value="' + value.Parent_Transaction_Type + '" />' + value.Test_Name + '</td><td><input type="hidden"  value="' + value.Parent_Transaction_Type_ID + '" />' + value.Rejected_Reason + '</td><td>' + value.Service_Date + '</td><td>' + value.Unit_Name + '</td><td>' + value.TestDepartment + '</td><td>' + value.Test_Performed_By + '</td><td>' + value.Result_Time + '</td><td>' + value.Approved_By + '</td><td>' + value.Approved_Time + '</td><td style="display:none;">' + (value.Status ? 'Paid' : 'Unpaid') + '</td><td><input type="hidden" id="valuetype" value="' + value.ValueType + '"><a href="javascript:void(0)" onclick="EditData(this)"><span id="result' + value.Lab_Test_ID + '">' + result + '</span></a>| <a href="javascript:void(0)" onclick="PreviewReport(this)"><span id="isApprove" value="' + value.Is_Approve + '"></span></a></td><td class="tdemergency"><input type="hidden" id="emergency" value="' + value.Test_ID + '"/>' + value.Emergancy + '</td><td style="display:none;"><input type="hidden" name="Group_Category" id="GroupCategory" value="' + value.Group_Category + '" /><input type="hidden" name="List_Of_Test_IDs" id="ListOfTestIDs" value="' + value.ListOfTestIDs + '"/><input type="hidden" name="Bill_Details_ID" id="Bill_Details_ID" value="' + value.Bill_Details_ID + '"/><input type="hidden" name="Report_Colum" id="Report_Colum" value="' + value.Report_Colum + '"/><input type="hidden" name="test_wise_id" id="test_wise_id" value="' + test_wise_id + '"/></td></tr>';
                         }
                         else if (AllowLab == false && main_dep == "001") {
-                            debugger;
                             rows += '<tr style="display:none;"><td><input type="checkbox" name="chkReport" value=""/></td><td><input type="hidden" name="labtestDID" id="labtestDID" value="' + value.Test_ID + '" />' + value.Lab_Test_ID + '</td><td style="display:none">' + value.Lab_Test_Detail_ID + '</td><td><input type="hidden" value="' + value.Parent_Transaction_Type + '" />' + value.Test_Name + '</td><td><input type="hidden"  value="' + value.Parent_Transaction_Type_ID + '" />' + value.Rejected_Reason + '</td><td>' + value.Service_Date + '</td><td>' + value.Unit_Name + '</td><td>' + value.TestDepartment + '</td><td>' + value.Test_Performed_By + '</td><td>' + value.Result_Time + '</td><td>' + value.Approved_By + '</td><td>' + value.Approved_Time + '</td><td style="display:none;">' + (value.Status ? 'Paid' : 'Unpaid') + '</td><td class="tdemergency"><input type="hidden" id="emergency" value="' + value.Test_ID + '"/>' + value.Emergancy + '</td><td style="display:none;"><input type="hidden" name="Group_Category" id="GroupCategory" value="' + value.Group_Category + '" /><input type="hidden" name="List_Of_Test_IDs" id="ListOfTestIDs" value="' + value.ListOfTestIDs + '"/><input type="hidden" name="Bill_Details_ID" id="Bill_Details_ID" value="' + value.Bill_Details_ID + '"/><input type="hidden" name="Report_Colum" id="Report_Colum" value="' + value.Report_Colum + '"/><input type="hidden" name="test_wise_id" id="test_wise_id" value="' + test_wise_id + '"/></td></tr>';
                         }
                         else if (AllowUltra == false && main_dep == "002") {
-                            debugger;
                             rows += '<tr style="display:none;"><td><input type="checkbox" name="chkReport" value=""/></td><td><input type="hidden" name="labtestDID" id="labtestDID" value="' + value.Test_ID + '" />' + value.Lab_Test_ID + '</td><td style="display:none">' + value.Lab_Test_Detail_ID + '</td><td><input type="hidden" value="' + value.Parent_Transaction_Type + '" />' + value.Test_Name + '</td><td><input type="hidden"  value="' + value.Parent_Transaction_Type_ID + '" />' + value.Rejected_Reason + '</td><td>' + value.Service_Date + '</td><td>' + value.Unit_Name + '</td><td>' + value.TestDepartment + '</td><td>' + value.Test_Performed_By + '</td><td>' + value.Result_Time + '</td><td>' + value.Approved_By + '</td><td>' + value.Approved_Time + '</td><td style="display:none;">' + (value.Status ? 'Paid' : 'Unpaid') + '</td><td class="tdemergency"><input type="hidden" id="emergency" value="' + value.Test_ID + '"/>' + value.Emergancy + '</td><td style="display:none;"><input type="hidden" name="Group_Category" id="GroupCategory" value="' + value.Group_Category + '" /><input type="hidden" name="List_Of_Test_IDs" id="ListOfTestIDs" value="' + value.ListOfTestIDs + '"/><input type="hidden" name="Bill_Details_ID" id="Bill_Details_ID" value="' + value.Bill_Details_ID + '"/><input type="hidden" name="Report_Colum" id="Report_Colum" value="' + value.Report_Colum + '"/><input type="hidden" name="test_wise_id" id="test_wise_id" value="' + test_wise_id + '"/></td></tr>';
                         }
                         else if (Allow_Xray == false && main_dep == "003") {
-                            debugger;
                             rows += '<tr style="display:none;"><td><input type="checkbox" name="chkReport" value=""/></td><td><input type="hidden" name="labtestDID" id="labtestDID" value="' + value.Test_ID + '" />' + value.Lab_Test_ID + '</td><td style="display:none">' + value.Lab_Test_Detail_ID + '</td><td><input type="hidden" value="' + value.Parent_Transaction_Type + '" />' + value.Test_Name + '</td><td><input type="hidden"  value="' + value.Parent_Transaction_Type_ID + '" />' + value.Rejected_Reason + '</td><td>' + value.Service_Date + '</td><td>' + value.Unit_Name + '</td><td>' + value.TestDepartment + '</td><td>' + value.Test_Performed_By + '</td><td>' + value.Result_Time + '</td><td>' + value.Approved_By + '</td><td>' + value.Approved_Time + '</td><td style="display:none;">' + (value.Status ? 'Paid' : 'Unpaid') + '</td><td class="tdemergency"><input type="hidden" id="emergency" value="' + value.Test_ID + '"/>' + value.Emergancy + '</td><td style="display:none;"><input type="hidden" name="Group_Category" id="GroupCategory" value="' + value.Group_Category + '" /><input type="hidden" name="List_Of_Test_IDs" id="ListOfTestIDs" value="' + value.ListOfTestIDs + '"/><input type="hidden" name="Bill_Details_ID" id="Bill_Details_ID" value="' + value.Bill_Details_ID + '"/><input type="hidden" name="Report_Colum" id="Report_Colum" value="' + value.Report_Colum + '"/><input type="hidden" name="test_wise_id" id="test_wise_id" value="' + test_wise_id + '"/></td></tr>';
                         }
                         else if (Allow_blood == false && main_dep == "005") {
-                            debugger;
                             rows += '<tr style="display:none;"><td><input type="checkbox" name="chkReport" value=""/></td><td><input type="hidden" name="labtestDID" id="labtestDID" value="' + value.Test_ID + '" />' + value.Lab_Test_ID + '</td><td style="display:none">' + value.Lab_Test_Detail_ID + '</td><td><input type="hidden" value="' + value.Parent_Transaction_Type + '" />' + value.Test_Name + '</td><td><input type="hidden"  value="' + value.Parent_Transaction_Type_ID + '" />' + value.Rejected_Reason + '</td><td>' + value.Service_Date + '</td><td>' + value.Unit_Name + '</td><td>' + value.TestDepartment + '</td><td>' + value.Test_Performed_By + '</td><td>' + value.Result_Time + '</td><td>' + value.Approved_By + '</td><td>' + value.Approved_Time + '</td><td style="display:none;">' + (value.Status ? 'Paid' : 'Unpaid') + '</td><td class="tdemergency"><input type="hidden" id="emergency" value="' + value.Test_ID + '"/>' + value.Emergancy + '</td><td style="display:none;"><input type="hidden" name="Group_Category" id="GroupCategory" value="' + value.Group_Category + '" /><input type="hidden" name="List_Of_Test_IDs" id="ListOfTestIDs" value="' + value.ListOfTestIDs + '"/><input type="hidden" name="Bill_Details_ID" id="Bill_Details_ID" value="' + value.Bill_Details_ID + '"/><input type="hidden" name="Report_Colum" id="Report_Colum" value="' + value.Report_Colum + '"/><input type="hidden" name="test_wise_id" id="test_wise_id" value="' + test_wise_id + '"/></td></tr>';
                         }
                         else {
@@ -1518,31 +1460,25 @@
                         }
                     } else {
                         if (value.Is_Result == true && value.Is_Approve == true) {
-                            debugger;
                             result = "View Result";
                             preview = "Preview";
                             rows += '<tr><td><input type="checkbox" name="chkReport" value=""/></td><td><input type="hidden" name="labtestDID" id="labtestDID" value="' + value.Test_ID + '" />' + value.Lab_Test_ID + '</td><td style="display:none">' + value.Lab_Test_Detail_ID + '</td><td><input type="hidden" value="' + value.Parent_Transaction_Type + '" />' + value.Test_Name + '</td><td><input type="hidden"  value="' + value.Parent_Transaction_Type_ID + '" />' + value.Rejected_Reason + '</td><td>' + value.Service_Date + '</td><td>' + value.Unit_Name + '</td><td>' + value.TestDepartment + '</td><td>' + value.Test_Performed_By + '</td><td>' + value.Result_Time + '</td><td>' + value.Approved_By + '</td><td>' + value.Approved_Time + '</td><td style="display:none;">' + (value.Status ? 'Paid' : 'Unpaid') + '</td><td><input type="hidden" id="valuetype" value="' + value.ValueType + '"><a href="javascript:void(0)" onclick="EditData(this)"><span id="result' + value.Lab_Test_Detail_ID + '">' + result + '</span></a>| <a href="javascript:void(0)" onclick="PreviewReport(this)"><span id="isApprove" value="' + value.Is_Approve + '">' + preview + '</span></a></td><td class="tdemergency"><input type="hidden" id="emergency" value="' + value.Test_ID + '"/>' + value.Emergancy + '</td><td style="display:none;"><input type="hidden" name="Group_Category" id="GroupCategory" value="' + value.Group_Category + '" /><input type="hidden" name="List_Of_Test_IDs" id="ListOfTestIDs" value="' + value.ListOfTestIDs + '"/><input type="hidden" name="Bill_Details_ID" id="Bill_Details_ID" value="' + value.Bill_Details_ID + '"/><input type="hidden" name="Report_Colum" id="Report_Colum" value="' + value.Report_Colum + '"/><input type="hidden" name="test_wise_id" id="test_wise_id" value="' + test_wise_id + '"/></td></tr>';
                         }
                         //Only View Result Will Show
                         else if (value.Is_Result == true && value.Is_Approve == false) {
-                            debugger;
                             result = "View Result";
                             rows += '<tr><td><input type="checkbox" name="chkReport" value=""/></td><td><input type="hidden" name="labtestDID" id="labtestDID" value="' + value.Test_ID + '" />' + value.Lab_Test_ID + '</td><td style="display:none">' + value.Lab_Test_Detail_ID + '</td><td><input type="hidden" value="' + value.Parent_Transaction_Type + '" />' + value.Test_Name + '</td><td><input type="hidden"  value="' + value.Parent_Transaction_Type_ID + '" />' + value.Rejected_Reason + '</td><td>' + value.Service_Date + '</td><td>' + value.Unit_Name + '</td><td>' + value.TestDepartment + '</td><td>' + value.Test_Performed_By + '</td><td>' + value.Result_Time + '</td><td>' + value.Approved_By + '</td><td>' + value.Approved_Time + '</td><td style="display:none;">' + (value.Status ? 'Paid' : 'Unpaid') + '</td><td><input type="hidden" id="valuetype" value="' + value.ValueType + '"><a href="javascript:void(0)" onclick="EditData(this)"><span id="result' + value.Lab_Test_ID + '">' + result + '</span></a>| <a href="javascript:void(0)" onclick="PreviewReport(this)"><span id="isApprove" value="' + value.Is_Approve + '"></span></a></td><td class="tdemergency"><input type="hidden" id="emergency" value="' + value.Test_ID + '"/>' + value.Emergancy + '</td><td style="display:none;"><input type="hidden" name="Group_Category" id="GroupCategory" value="' + value.Group_Category + '" /><input type="hidden" name="List_Of_Test_IDs" id="ListOfTestIDs" value="' + value.ListOfTestIDs + '"/><input type="hidden" name="Bill_Details_ID" id="Bill_Details_ID" value="' + value.Bill_Details_ID + '"/><input type="hidden" name="Report_Colum" id="Report_Colum" value="' + value.Report_Colum + '"/><input type="hidden" name="test_wise_id" id="test_wise_id" value="' + test_wise_id + '"/></td></tr>';
                         }
                         else if (AllowUltra == false && main_dep == "002") {
-                            debugger;
                             rows += '<tr style="display:none;"><td><input type="checkbox" name="chkReport" value=""/></td><td><input type="hidden" name="labtestDID" id="labtestDID" value="' + value.Test_ID + '" />' + value.Lab_Test_ID + '</td><td style="display:none">' + value.Lab_Test_Detail_ID + '</td><td><input type="hidden" value="' + value.Parent_Transaction_Type + '" />' + value.Test_Name + '</td><td><input type="hidden"  value="' + value.Parent_Transaction_Type_ID + '" />' + value.Rejected_Reason + '</td><td>' + value.Service_Date + '</td><td>' + value.Unit_Name + '</td><td>' + value.TestDepartment + '</td><td>' + value.Test_Performed_By + '</td><td>' + value.Result_Time + '</td><td>' + value.Approved_By + '</td><td>' + value.Approved_Time + '</td><td style="display:none;">' + (value.Status ? 'Paid' : 'Unpaid') + '</td><td class="tdemergency"><input type="hidden" id="emergency" value="' + value.Test_ID + '"/>' + value.Emergancy + '</td><td style="display:none;"><input type="hidden" name="Group_Category" id="GroupCategory" value="' + value.Group_Category + '" /><input type="hidden" name="List_Of_Test_IDs" id="ListOfTestIDs" value="' + value.ListOfTestIDs + '"/><input type="hidden" name="Bill_Details_ID" id="Bill_Details_ID" value="' + value.Bill_Details_ID + '"/><input type="hidden" name="Report_Colum" id="Report_Colum" value="' + value.Report_Colum + '"/><input type="hidden" name="test_wise_id" id="test_wise_id" value="' + test_wise_id + '"/></td></tr>';
                         }
                         else if (Allow_Xray == false && main_dep == "003") {
-                            debugger;
                             rows += '<tr style="display:none;"><td><input type="checkbox" name="chkReport" value=""/></td><td><input type="hidden" name="labtestDID" id="labtestDID" value="' + value.Test_ID + '" />' + value.Lab_Test_ID + '</td><td style="display:none">' + value.Lab_Test_Detail_ID + '</td><td><input type="hidden" value="' + value.Parent_Transaction_Type + '" />' + value.Test_Name + '</td><td><input type="hidden"  value="' + value.Parent_Transaction_Type_ID + '" />' + value.Rejected_Reason + '</td><td>' + value.Service_Date + '</td><td>' + value.Unit_Name + '</td><td>' + value.TestDepartment + '</td><td>' + value.Test_Performed_By + '</td><td>' + value.Result_Time + '</td><td>' + value.Approved_By + '</td><td>' + value.Approved_Time + '</td><td style="display:none;">' + (value.Status ? 'Paid' : 'Unpaid') + '</td><td class="tdemergency"><input type="hidden" id="emergency" value="' + value.Test_ID + '"/>' + value.Emergancy + '</td><td style="display:none;"><input type="hidden" name="Group_Category" id="GroupCategory" value="' + value.Group_Category + '" /><input type="hidden" name="List_Of_Test_IDs" id="ListOfTestIDs" value="' + value.ListOfTestIDs + '"/><input type="hidden" name="Bill_Details_ID" id="Bill_Details_ID" value="' + value.Bill_Details_ID + '"/><input type="hidden" name="Report_Colum" id="Report_Colum" value="' + value.Report_Colum + '"/><input type="hidden" name="test_wise_id" id="test_wise_id" value="' + test_wise_id + '"/></td></tr>';
                         }
                         else if (AllowLab == false && main_dep == "001") {
-                            debugger;
                             rows += '<tr style="display:none;"><td><input type="checkbox" name="chkReport" value=""/></td><td><input type="hidden" name="labtestDID" id="labtestDID" value="' + value.Test_ID + '" />' + value.Lab_Test_ID + '</td><td style="display:none">' + value.Lab_Test_Detail_ID + '</td><td><input type="hidden" value="' + value.Parent_Transaction_Type + '" />' + value.Test_Name + '</td><td><input type="hidden"  value="' + value.Parent_Transaction_Type_ID + '" />' + value.Rejected_Reason + '</td><td>' + value.Service_Date + '</td><td>' + value.Unit_Name + '</td><td>' + value.TestDepartment + '</td><td>' + value.Test_Performed_By + '</td><td>' + value.Result_Time + '</td><td>' + value.Approved_By + '</td><td>' + value.Approved_Time + '</td><td style="display:none;">' + (value.Status ? 'Paid' : 'Unpaid') + '</td><td class="tdemergency"><input type="hidden" id="emergency" value="' + value.Test_ID + '"/>' + value.Emergancy + '</td><td style="display:none;"><input type="hidden" name="Group_Category" id="GroupCategory" value="' + value.Group_Category + '" /><input type="hidden" name="List_Of_Test_IDs" id="ListOfTestIDs" value="' + value.ListOfTestIDs + '"/><input type="hidden" name="Bill_Details_ID" id="Bill_Details_ID" value="' + value.Bill_Details_ID + '"/><input type="hidden" name="Report_Colum" id="Report_Colum" value="' + value.Report_Colum + '"/><input type="hidden" name="test_wise_id" id="test_wise_id" value="' + test_wise_id + '"/></td></tr>';
                         }
                         else if (Allow_blood == false && main_dep == "005") {
-                            debugger;
                             rows += '<tr style="display:none;"><td><input type="checkbox" name="chkReport" value=""/></td><td><input type="hidden" name="labtestDID" id="labtestDID" value="' + value.Test_ID + '" />' + value.Lab_Test_ID + '</td><td style="display:none">' + value.Lab_Test_Detail_ID + '</td><td><input type="hidden" value="' + value.Parent_Transaction_Type + '" />' + value.Test_Name + '</td><td><input type="hidden"  value="' + value.Parent_Transaction_Type_ID + '" />' + value.Rejected_Reason + '</td><td>' + value.Service_Date + '</td><td>' + value.Unit_Name + '</td><td>' + value.TestDepartment + '</td><td>' + value.Test_Performed_By + '</td><td>' + value.Result_Time + '</td><td>' + value.Approved_By + '</td><td>' + value.Approved_Time + '</td><td style="display:none;">' + (value.Status ? 'Paid' : 'Unpaid') + '</td><td class="tdemergency"><input type="hidden" id="emergency" value="' + value.Test_ID + '"/>' + value.Emergancy + '</td><td style="display:none;"><input type="hidden" name="Group_Category" id="GroupCategory" value="' + value.Group_Category + '" /><input type="hidden" name="List_Of_Test_IDs" id="ListOfTestIDs" value="' + value.ListOfTestIDs + '"/><input type="hidden" name="Bill_Details_ID" id="Bill_Details_ID" value="' + value.Bill_Details_ID + '"/><input type="hidden" name="Report_Colum" id="Report_Colum" value="' + value.Report_Colum + '"/><input type="hidden" name="test_wise_id" id="test_wise_id" value="' + test_wise_id + '"/></td></tr>';
                         }
                         //Add Result Will Show
@@ -1565,7 +1501,6 @@
 
         // Pending
         function GetLabDetailUsingLabID() {
-            debugger;
             var Lab_ID = $("#<%= hdnLab_Test_ID.ClientID %>").val();
             PageMethods.GetLabDetailUsingLabID(Lab_ID, function (res) {
                 var Test = JSON.parse(res);
@@ -1616,9 +1551,7 @@
                 }
             });
         }
-        debugger;
         function loadPatientDataUsingBillId() {
-            debugger;
             var Bill_No = $("#hdnBill_No").val();
             localStorage.Bill_No = Bill_No;
 
@@ -1636,9 +1569,7 @@
                 }
             });
         }
-        debugger;
         function OnSuccessBill(data) {
-            debugger;
             if (data.d != '') {
 
                 var mydate = new Date(Date.parse(data.d.Entry_Date));
@@ -1667,7 +1598,6 @@
         var checkCatagory;
        
         function showImage(testDetailID, single) {
-            debugger;
             PageMethods.LoadimagesDetail(testDetailID, single, function (res) {
                 var container = $('#container');
                 if (res == null || res == "[]" || res == "undefined") {
@@ -1766,7 +1696,6 @@
 
         });
         function loadpatientdetailbybarcode() {
-            debugger;
             var Bill_No = $("#hdnBill_No").val();
             localStorage.Bill_No = Bill_No;
 
@@ -1918,7 +1847,6 @@
         });
 
         function EditData($this) {
-            debugger;
             var Lab_Test_Detail_ID = '';
             var LabID = $("#<%= hdnLab_Test_ID.ClientID %>").val();
             var LabID = $($($this).parents('tr')[0]).find('td:nth-child(2)')[0].innerText;
@@ -1953,7 +1881,6 @@
             $('#myModal').modal('hide');
             PageMethods.LoadTestCatogry(LabID, CatID, billDetailID, function (res) {
 
-                debugger;
                 var parsedData = JSON.parse(res);
                 console.log(parsedData)
                 var row = '';
@@ -2204,7 +2131,6 @@
                             optionsList += '<option>' + parsedData[key].resultValueList[i] + ' </option>';
                         }
                         if (parsedData[key].Test_Value == null) parsedData[key].Test_Value = '';
-                        debugger;
 
                         var fixed = '';
                         var typeVal = '';
@@ -2260,7 +2186,6 @@
 
                         Lab_Test_Detail_ID = parsedData[key].Lab_Test_Detail_ID;
 
-                        debugger;
                         $('#tblgroupTestlist tbody').append(row);
                         if (parsedData[key].Result_Type_List == false) {
                             $('#ddlResultValue' + key + '').hide();
@@ -2494,9 +2419,7 @@
             });
         }
         function OnSuccess(data) {
-            debugger;
             if (data.d != '') {
-                debugger;
                 var mydate = new Date(Date.parse(data.d.Entry_Date));
                 var dateR = mydate.toLocaleDateString();
                 var tokendata = httpGet("../../json.aspx?Table=Patients&Record=Edit&q=" + data.d.Patient_No);

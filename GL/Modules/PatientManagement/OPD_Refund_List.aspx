@@ -322,7 +322,6 @@
         }
 
         function EditOPDRefund(RefundID) {
-            debugger;
             window.open("OPD_Refund.aspx?RefundID=" + RefundID);
         }
 

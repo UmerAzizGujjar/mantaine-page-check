@@ -145,7 +145,6 @@
             window.open(url, '_blank');
         }
         function PrintInvoice(key) {
-            debugger;
             IncrementReprintCount(key);
             //var BillId = $('#BillId' + key).val();
             window.open('../../ReportViewer.aspx?ReportName=PharmacySlip&ReportTitle=PharmacySlip&Bill_ID=' + key);
@@ -356,7 +355,6 @@
                     {
                         "data": "Invoice_Date", "name": "Invoice_Date",
                         "render": function (data, type, full) {
-                            debugger;
                             var date = full.Invoice_Date;
                             date = moment(date).format('DD-MMM-YYYY');
                             return date;
@@ -398,7 +396,6 @@
                     },
                     {
                         render: function (data, type, full) {
-                            debugger;
                             var res = '<a href="#" class="pharma-action-btn pharma-btn-upload" onclick="PrintInvoice(' + full.Bill_ID + ')" title="Upload Slip"><i class="fa fa-upload"></i></a>';
 
                             var print = '<a class="pharma-action-btn pharma-btn-print" href="#" onclick="PrintBill(' + full.Bill_ID + ')" id="btnprint" title="Print Bill"><i class="fa fa-print"></i></a>';

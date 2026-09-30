@@ -10,7 +10,6 @@
              $('#ctl00_MainContent_txtsDate').datepicker({ dateFormat: 'dd M yy' });
              $('#ctl00_MainContent_txteDate').datepicker({ dateFormat: 'dd M yy' });
              $('#btnPreview').click(function () {
-                 debugger;
                  var error = 0;
                  if ($('#ctl00_MainContent_txtsDate').val() == '' && error == 0) {
                      alert('Please Select Start Date');

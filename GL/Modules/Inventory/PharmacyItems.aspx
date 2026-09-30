@@ -21,7 +21,6 @@
             $('#ctl00_MainContent_hdfItem_Code').val("");
         }
         function Validate() {
-            debugger;
            
             var val = document.getElementById("hdnDuplicateCheck").value;
             var returnVal = false;

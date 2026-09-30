@@ -4,7 +4,6 @@
 
     <script type="text/javascript">
         $(document).ready(function () {
-            debugger;
             $('#ctl00_lblMessage').hide();
             LoadPage();
             
@@ -96,7 +95,6 @@
                     {
                         "data": "Death_Date", "name": "Death_Date",
                         "render": function (data, type, full) {
-                            debugger;
                             var date = full.Death_Date;
                             date = moment(date).format('DD-MMM-YYYY');
                             return date;
@@ -104,7 +102,6 @@
                     },
                     {
                         render: function (data, type, full) {
-                            debugger;
                             var res = '<a href="#" onclick="editOpen(' + full.IN_Patient_ID + ')" class="editListBtn" style="border-radius: 4px;padding: 5px 8px 5px 8px;"><i class="fa fa-pencil"></i></a>'
 
                             var Del = '<a href="#" class="delListBtn" style="border-radius: 4px;margin-left: 4px; color: white; padding: 5px 8px 5px 8px;" onclick=deleteConfirm(this)><i class="fa fa-trash" aria-hidden="true"></i></a>';

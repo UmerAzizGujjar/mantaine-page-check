@@ -106,7 +106,6 @@
 
         }
         function previewUltraSound(element) {
-            debugger;
             var row = $(element).closest('tr');
             var ultraSoundLevelID = row.find('[name="ultraSoundlevel_ID"]').val();
             var levelValue = row.find('select[name="levelvalue"]').val();
@@ -510,7 +509,6 @@
         }
 
         function ShowReport() {
-            debugger;
             var test_id = $('#test_id').val();
             window.open('ReportViewer.aspx?ReportName=TestDefination&ReportTitle= Test Defination&Test_IDs=' + test_id);
         }
@@ -554,7 +552,6 @@
             });
         }
         $(document).ready(function () {
-            debugger;
             var bool = '<%= Convert.ToBoolean(is_admin_Test_Rate)%>'
 
             var boxhideshow = '<%= Convert.ToBoolean(is_admin_Test_box)%>'
@@ -595,7 +592,6 @@
 
             }
             else {
-                debugger;
                 GetMainDepartments();
                 GetGroupDepartments();
                 GetUnits();
@@ -628,9 +624,7 @@
                 save_xray();
             });
             $("#loadultraSounds").on('click', function () {
-                debugger;
                 PageMethods.GetUltraSound(function (res) {
-                    debugger;
                     var test = JSON.parse(res);
                     var ckeditor = test;
                     var loadval = test;
@@ -639,7 +633,6 @@
                     groupKeys = '';
                     var i = 0;
                     for (i = 0; i < test.length; i++) {
-                        debugger;
                         row = row + '<tr><td><input type="hidden" name="ultraSoundlevel_ID" id="ultraSoundlevel_ID" value="' + test[i].UltraSoundLevel_ID + '" /><select style="" name="levelvalue" id="ddllevelvalue' + (i + 1) + '">' + levelType + '</select></td>' +
                             '<td><textarea id="txtfixedValueType' + (i + 1) + '" name="txtfixedValueType">' + test[i].FixValues + '</textarea></td>' +
                             '<td style="width: 127px;"><input type="hidden" name="value_id" value=""><a href="javascript:void(0)" onclick="value_delete(this)">Delete</a> | <a href="javascript:void(0)" onclick="previewUltraSound(this)">Preview</a></td>' +
@@ -648,7 +641,6 @@
                     $('#TblUltra_Value').append(row);
 
                     for (var k = 0; k < ckeditor.length; k++) {
-                        debugger;
                         groupKeys = ('txtfixedValueType' + (k + 1) + '');
                         CKEDITOR.replace(groupKeys, {
                             height: 50
@@ -768,10 +760,8 @@
             });
         });
         function save_ultraSound() {
-            debugger;
             var Ultra_value = [];
             $('#TblUltra_Value tbody tr').each(function (key, value) {
-                debugger;
                 var myArray = {};
                 var Data = CKEDITOR.instances['txtfixedValueType' + (key + 1) + ''].getData();
                 var Levels = $(value).find('select[name="levelvalue"]').val();
@@ -806,10 +796,8 @@
             });
         }
         function CollectedTableArray() {
-            debugger;
             var ExpenseArray = [];
             $("table#myTable tbody tr").each(function () {
-                debugger;
                 var TempRow = [];
                 TempRow[0] = $(this).find('td:eq(0)').text();
                 ExpenseArray.push(TempRow);
@@ -817,7 +805,6 @@
             return ExpenseArray;
         }
         function GetTest(id) {
-            debugger;
             PageMethods.GetTest(id, function (res) {
                 var test = JSON.parse(res);
                 var data = test.t;
@@ -834,7 +821,6 @@
 
                 $('#chktemplate').prop('checked', data.Result_Type_Fixed);
                 $('#chklistchooseresult').prop('checked', data.Result_Type_List);
-                debugger;
                 $('#Test_cultural').prop('checked', data.Is_Cultural);
                 $('#ddlrptColumns').val(data.Report_Colum);
                 $('#chkimageUpload').prop('checked', data.Result_Type_Image);
@@ -844,7 +830,6 @@
                 $("#ddlGroupHeader").val(data.Group_Header_L1);
                 $("#ddlAltrasound_level").val(data.Altrasound_Level);
 
-                debugger;
                 if (data.Main_Department != "001") {
                     $('#UnitRow').hide();
                     $('#NoteRow').hide();
@@ -858,7 +843,6 @@
                     $('#GropuCategoryRow').show();
 
                 }
-                debugger;
                 var outsourceid = "";
                 outsourceid = data.Out_Source_Lab_ID;
                 if (outsourceid == null) {
@@ -931,11 +915,8 @@
             });
         }
         function GETGenre(d) {
-            debugger;
             var options = '<option value="">Select Gener</option>';
-            debugger;
             PageMethods.FillTestGenreDrpdwn(function (groups) {
-                debugger;
                 $.each(JSON.parse(groups), function (key, value) {
                     options += '<option value="' + value.DataValue_Name + '" ' + (d == value.DataValue_Name ? 'selected' : '') + ' >' + value.DataValue_Description + '</option>';
                 });
@@ -943,11 +924,8 @@
             });
         }
         function GETDesignation(d) {
-            debugger;
             var options = '<option value="">Select Designation</option>';
-            debugger;
             PageMethods.FillTestDesignationDrpdwn(function (groups) {
-                debugger;
                 $.each(JSON.parse(groups), function (key, value) {
                     options += '<option value="' + value.DataValue_Name + '" ' + (d == value.DataValue_Name ? 'selected' : '') + ' >' + value.DataValue_Description + '</option>';
                 });
@@ -960,7 +938,6 @@
             $('.values_table table tbody').append(html);
         }
         function Level_value() {
-            debugger;
             var html = '';
             var rowlength = TblUltra_Value.rows.length;
             var fixedValRow = 'txtfixedValueType' + rowlength;
@@ -982,12 +959,10 @@
         var patientTypes = "";
         var levelType = "";
         function value_delete(row) {
-            debugger;
             // Directly remove the closest tr element
             $(row).closest('tr').remove();
         }
         function value_save(save) {
-            debugger;
             var row = $(save).parents('tr')[0];
             var type = $(row).find('select');
             var start = $(row).find('input[name=start]');
@@ -1009,7 +984,6 @@
 
         }
         function value_edit(edit) {
-            debugger;
             var row = $(edit).parents('tr')[0];
             var type = $(row).find('input[name=type]');
             var start = $(row).find('input[name=start]');
@@ -1021,7 +995,6 @@
             $(edit).parent().html('<input type="hidden" name="value_id" value="' + id.val() + '"><a href="javascript:void(0)" onclick="value_save(this)">Save</a> | <a href="javascript:void(0)" onclick="value_delete(this)">Delete</a>');
         }
         function save_test() {
-            debugger;
 
             var chk_value = ($('#chkvalue')[0].checked).toString();
             var chk_template = ($('#chktemplate')[0].checked).toString();
@@ -1105,26 +1078,22 @@
             });
             var Ultra_value = [];
             $('#TblUltra_Value tbody tr').each(function (key, value) {
-                debugger;
                 Ultra_value.push({
                     'Levels': $(value).find('select[name="levelvalue"]').val(),
                     'FixValues': $(value).find('textarea:input[name=txtfixedValueType]').val(),
                 });
             });
-            debugger;
             var IPD_Test_Rates = [];
             $('#IPD_Test_Rate_Table tbody tr').each(function (key, value) {
                 IPD_Test_Rates.push({ 'Patient_Type': 'IPD', 'Patient_Category': $(value).find('td #IPDPatientCategory').val(), 'Test_Rate': $(value).find('td #IPDTestRate').val() });
             });
 
-            debugger;
             var OPD_Test_Rates = [];
             $('#OPD_Test_Rate_Table tbody tr').each(function (key, value) {
                 OPD_Test_Rates.push({ 'Patient_Type': 'OPD', 'Patient_Category': $(value).find('td #OPDPatientCategory').val(), 'Test_Rate': $(value).find('td #OPDTestRate').val() });
             });
             var test_extra_values = [];
             $('#myTable tbody tr').each(function (key, value) {
-                debugger;
                 var value = $(value).closest('tr').find('td:eq(0)').text();
                 var arr = {};
                 arr.value = value;
@@ -1170,7 +1139,6 @@
             });
         }
         function GetMainDepartments(d) {
-            debugger;
             var options = '<option value="">Select Department</option>';
             PageMethods.GetMainDepartments(function (departments) {
                 $.each(JSON.parse(departments), function (key, value) {
@@ -1195,23 +1163,18 @@
             });
         }
         function fill_extra_test(id) {
-            debugger;
             PageMethods.GetExtratest(id, function (res) {
-                debugger;
                 var test = JSON.parse(res);
                 var row = '';
                 var i = 0;
                 for (i = 0; i < test.length; i++) {
-                    debugger;
                     row = row + '<tr><td style="text-align:center">' + test[i].Value + '</td><td style="text-align:center"><a href=""  onclick="test_delete(this)">Delete</a></td></tr>';
                 }
                 $('#myTable').append(row);
             });
         }
         function fill_ultraLevel(id) {
-            debugger;
             PageMethods.GetUltraValues(id, function (res) {
-                debugger;
                 var test = JSON.parse(res);
                 var ckeditor = test;
                 var loadval = test;
@@ -1220,14 +1183,12 @@
                 groupKeys = '';
                 var i = 0;
                 for (i = 0; i < test.length; i++) {
-                    debugger;
                     row = row + '<tr><td><select style="margin-left: 20px;" name="levelvalue" id="ddllevelvalue' + (i + 1) + '">' + levelType + '</select></td><td><textarea id="txtfixedValueType' + (i + 1) + '" name="txtfixedValueType">' + test[i].FixValues + '</textarea></td><td style="width: 127px;"><input type="hidden" name="value_id" value=""><a href="javascript:void(0)" onclick="value_delete(this)">Delete</a></td></tr>';
                 }
 
                 $('#TblUltra_Value').append(row);
 
                 for (var k = 0; k < ckeditor.length; k++) {
-                    debugger;
                     groupKeys = ('txtfixedValueType' + (k + 1) + '');
                     CKEDITOR.replace(groupKeys, {
                         height: 50
@@ -1251,7 +1212,6 @@
         }
         var Patients_Categories = "";
         function GetPatientsCategories() {
-            debugger;
             var options = '<option value="">Select</option>';
             $.ajax({
                 type: "post",
@@ -1260,12 +1220,9 @@
                 contentType: "application/json; charset=utf-8",
                 dataType: "json",
                 success: function (response) {
-                    debugger;
                     $.each(JSON.parse(response.d), function (key, value) {
-                        debugger;
                         options += '<option value="' + value.DataValue_Name + '">' + value.DataValue_Description + '</option>'
                     });
-                    debugger;
                     Patients_Categories = options;
                 },
                 failure: function (response) {
@@ -1274,13 +1231,11 @@
             });
         }
         function IPD_value() {
-            debugger;
             var html = '<tr><td><select style="">' + Patients_Categories + '</select></td><td><input type="text" id="IPDTestRate" style=""/></td><td><a href="javascript:void(0)" onclick="SaveIPDTestRates(this)">Save</a> | <a href="javascript:void(0)" onclick="DeleteIPDTestRates(this)">Delete</a></td></tr>';
 
             $('#IPD_Test_Rate_Table').append(html);
         }
         function SaveIPDTestRates(save) {
-            debugger;
             var Row = $(save).parents('tr')[0];
             var PatientCategory = $(Row).find('select');
             var TestRate = $(Row).find('#IPDTestRate');
@@ -1292,14 +1247,12 @@
             else $(TestRate).removeClass('ErrorAlert');
 
             if (!$(PatientCategory).hasClass('ErrorAlert') && !$(TestRate).hasClass('ErrorAlert')) {
-                debugger;
                 PatientCategory.parent().html('<input type="hidden" id="IPDPatientCategory" value="' + PatientCategory.val() + '">' + PatientCategory.find('option:selected').text());
                 TestRate.parent().html('<input type="hidden" id="IPDTestRate" value="' + TestRate.val() + '">' + TestRate.val());
                 $(save).parent().html('<a href="javascript:void(0)" onclick="EditIPDTestRates(this)">Edit</a> | <a href="javascript:void(0)" onclick="DeleteIPDTestRates(this)">Delete</a>');
             }
         }
         function EditIPDTestRates(reference) {
-            debugger;
             var Row = $(reference).parents('tr')[0];
             var PatientCategory = $(Row).find('#IPDPatientCategory');
             var TestRate = $(Row).find('#IPDTestRate');
@@ -1309,7 +1262,6 @@
             $(reference).parent().html('<a href="javascript:void(0)" onclick="SaveIPDTestRates(this)">Save</a> | <a href="javascript:void(0)" onclick="DeleteIPDTestRates(this)">Delete</a>');
         }
         function DeleteIPDTestRates(reference) {
-            debugger;
             Swal.fire({
                 icon: 'warning',
                 title: 'Are you sure?',
@@ -1332,13 +1284,11 @@
 
         }
         function OPD_value() {
-            debugger;
             var html = '<tr><td><select style="width: 100% !important;margin-left: 0px;">' + Patients_Categories + '</select></td><td><input type="text" id="OPDTestRate" style=""/></td><td><a href="javascript:void(0)" onclick="SaveOPDTestRates(this)">Save</a> | <a href="javascript:void(0)" onclick="DeleteOPDTestRates(this)">Delete</a></td></tr>';
 
             $('#OPD_Test_Rate_Table').append(html);
         }
         function SaveOPDTestRates(save) {
-            debugger;
             var Row = $(save).parents('tr')[0];
             var PatientCategory = $(Row).find('select');
             var TestRate = $(Row).find('#OPDTestRate');
@@ -1350,14 +1300,12 @@
             else $(TestRate).removeClass('ErrorAlert');
 
             if (!$(PatientCategory).hasClass('ErrorAlert') && !$(TestRate).hasClass('ErrorAlert')) {
-                debugger;
                 PatientCategory.parent().html('<input type="hidden" id="OPDPatientCategory" value="' + PatientCategory.val() + '">' + PatientCategory.find('option:selected').text());
                 TestRate.parent().html('<input type="hidden" id="OPDTestRate" value="' + TestRate.val() + '">' + TestRate.val());
                 $(save).parent().html('<a href="javascript:void(0)" onclick="EditOPDTestRates(this)">Edit</a> | <a href="javascript:void(0)" onclick="DeleteOPDTestRates(this)">Delete</a>');
             }
         }
         function EditOPDTestRates(reference) {
-            debugger;
             var Row = $(reference).parents('tr')[0];
             var PatientCategory = $(Row).find('#OPDPatientCategory');
             var TestRate = $(Row).find('#OPDTestRate');
@@ -1366,7 +1314,6 @@
             $(reference).parent().html('<a href="javascript:void(0)" onclick="SaveOPDTestRates(this)">Save</a> | <a href="javascript:void(0)" onclick="DeleteOPDTestRates(this)">Delete</a>');
         }
         function DeleteOPDTestRates(reference) {
-            debugger;
             Swal.fire({
                 icon: 'warning',
                 title: 'Are you sure?',

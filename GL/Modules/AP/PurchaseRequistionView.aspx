@@ -169,7 +169,6 @@
 
 
         function LoadPage() {
-            debugger
             let savedVisibility = null;
 
             $.ajax({
@@ -286,7 +285,6 @@
                     { "data": "Status", "orderable": false },
                     {
                         "render": function (data, type, full) {
-                            debugger;
                             var res = '<a href="#" class="editListBtn" onclick="Edit(' + full.PR_Id + ')" style="border-radius: 4px;margin-right: 4px;padding: 5px 8px 5px 8px;"><i class="fa fa-pencil"></i></a>';
 
                             var del = '<a href="#" class="delListBtn" onclick="deleteConfirm(' + full.PR_Id + ')" style="border-radius: 4px;padding: 5px 8px; display: inline-block;" class="btnDel"><i class="fa fa-trash"></i></a>';
@@ -382,7 +380,6 @@
                     contentType: "application/json; charset=utf-8",
                     dataType: "json",
                     success: function (resp) {
-                        debugger;
                         var d = resp.d;
                         var html = `
               <div class="child-container">                            
@@ -471,7 +468,6 @@
             });
         }
         function ViewPage(id, type) {
-            debugger;
             var ID = id
             if (type == 'GRN') {
                 window.open("../Inventory/GRN.aspx?GRN_ID=" + ID, "_blank");

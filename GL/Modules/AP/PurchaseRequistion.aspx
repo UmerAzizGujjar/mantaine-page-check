@@ -205,7 +205,6 @@
             });
 
             function LoadAllitem(searchText) {
-                debugger;
                 var warehouse = $('#ddlWarehouse').val();
                 // Guard: if warehouse is mandatory and not selected, block the browse
                 if (warehouseCond == '01' && (!warehouse || warehouse === '0' || warehouse === '')) {
@@ -226,7 +225,6 @@
                             tableBody.html('<tr><td colspan="5" class="text-center text-muted" style="padding:18px;">No items found.</td></tr>');
                         } else {
                             $.each(items, function (index, item) {
-                                debugger;
                                 var lastReqDateDisplay = '';
                                 if (item.LastRequiredDate) {
                                     try {
@@ -416,7 +414,6 @@
         }
 
         function append(anchor) {
-            debugger;
             var row = $(anchor).closest('tr');
             var Item_ID   = $(row).find('td:eq(1)').text();
             var Item_Code = $(row).find('td:eq(2)').text();
@@ -577,7 +574,6 @@
         }
 
         function GetItemDetail() {
-            debugger;
             var itemID = $("#hditemID").val();
             var PRDate = $("#txtPR_Date").val();
             $.ajax({
@@ -673,7 +669,6 @@
                 contentType: "application/json; charset=utf-8",
                 dataType: "json",
                 success: function (response) {
-                    debugger;
                     warehouseCond = JSON.parse(response.d);
                     if (warehouseCond == '01') { $('#warehouse').show(); }
                     else { $('#warehouse').hide(); }
@@ -683,7 +678,6 @@
         }
 
         function SaveTest() {
-            debugger;
             if (isSaving) return false;
             isSaving = true;
             $("#btnsave").prop("disabled", true);
@@ -777,7 +771,6 @@
         }
 
         function SaveDetailPurchaseRequestion(id, btnValue) {
-            debugger;
             var detailAry = [];
             $.each($("#tblPackage").find('tbody').find('tr'), function (index, row) {
                 var Qty = $(row).find('td:eq(5) input').val();
@@ -830,7 +823,6 @@
                 contentType: "application/json; charset=utf-8",
                 dataType: "json",
                 success: function (response) {
-                    debugger;
                     var parse = JSON.parse(response.d);
                     $('#txtPr_Num').val(parse.PR_Num);
                     $('#txt_Status').val(parse.Status);
@@ -851,7 +843,6 @@
                         $('#lblUpatedTime').text(moment(parseInt(parse.Update_Date.substring(6, 19))).format('DD-MMM-YYYY h:mm A'));
                     }
                     if (parse.Status == "Approved") {
-                        debugger;
                         $('#btnsave').attr("disabled", 'disabled');
                     } 
                     // Save values globally for async dropdown loaders to pick up
@@ -875,7 +866,6 @@
                     }
 
                     $('#txtRemarks').val(parse.Remarks);
-                    debugger;
                     if (parse.GIRNum && parse.GIRNum !== 0 && parse.GIRNum !== "0") {
                         $('#lblGIRNum').text(parse.GIRNum);
                         $('#lblGirCreatedBy').text(parse.GIRCreatedBy || '-');

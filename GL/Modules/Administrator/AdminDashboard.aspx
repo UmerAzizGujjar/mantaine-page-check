@@ -106,7 +106,6 @@
 
         /* ─── KPI ─── */
 function renderKpis(d) {
-    debugger;
             $("#lblTotalVisited").text(d.totalVisited);
             $("#lblWalkInVolume").text(d.walkInVolume);
             $("#lblTotalAppointments").text(d.totalAppointments);

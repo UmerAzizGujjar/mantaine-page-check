@@ -7,7 +7,6 @@
 
       
         $(document).ready(function () {
-            debugger;
             $('#ctl00_lblMessage').hide();
             LoadPage();
 
@@ -21,7 +20,6 @@
         }
     
         function deleteConfirm(ID) {
-            debugger;
             if (confirm('Are you sure want to delete this record')) {
                 PageMethods.DeleteRecord(ID, function (msg) {
                     location.reload();

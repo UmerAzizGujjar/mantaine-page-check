@@ -255,26 +255,21 @@
             LoadAlingerFormImages()
             <%}%>
             $('#AddIndirectveneer').on('click', function () {
-                debugger;
                 var html;
                 html += '<tr><td>' + $('#ctl00_MainContent_ddlIndirectveneer').find('option:selected').text() + '</td> <td><a href="#" onclick="Edit_Alinger(this)">Edit</a>|<a href="#" onclick="Delete_Alinger(this)">Delete</a></td></tr>'
                 $('#tblveneer tbody').append(html);
             });
             $('#AddCrownBridge').on('click', function () {
-                debugger;
                 var html;
                 html += '<tr><td>' + $('#ctl00_MainContent_ddlCrown_bridge').find('option:selected').text() + '</td> <td><a href="#" onclick="Edit_Alinger(this)">Edit</a>|<a href="#" onclick="Delete_Alinger(this)">Delete</a></td></tr>'
                 $('#tblCrown tbody').append(html);
             });
-            debugger;
             //$('#AddAlinger').on('click', function () {
-            //    debugger;
             //    var html;
             //    html += '<tr><td>' + $('#ctl00_MainContent_ddlarch').find('option:selected').text() + '</td><td>' + $('#ctl00_MainContent_ddlno_of_alinger').find('option:selected').text() + '</td><td>' + $('#ctl00_MainContent_ddlMaterial').find('option:selected').text() + '</td><td>' + $('#ctl00_MainContent_ddlMargin').find('option:selected').text() + '</td><td>' + $('#ctl00_MainContent_ddlType_of_Alinger').find('option:selected').text() + '</td><td>' + $('#ctl00_MainContent_ddlThicker').find('option:selected').text() + '</td><td> <a href="#" onclick="Edit_Alinger(this)">Edit</a>|<a href="#" onclick="Delete_Alinger(this)">Delete</a></td></tr>'
             //    $('#tblAlinger tbody').append(html);
             //});;
             $('#AddAlinger').on('click', function () {
-                debugger;
                 var numberOfRows = parseInt($('#ctl00_MainContent_ddlno_of_alinger').find('option:selected').text(), 10);
                 if (isNaN(numberOfRows) || numberOfRows <= 0) {
                     alert("Please select a valid number of aligners.");
@@ -321,22 +316,15 @@
         }
 
         function Delete_Alinger(row) {
-            debugger;
             $($(row).parents('tr')[0]).remove();
         }
-        debugger;
         function Delete_veneer(row) {
-            debugger;
             $($(row).parents('tr')[0]).remove();
         }
-        debugger;
         function Delete_crown(row) {
-            debugger;
             $($(row).parents('tr')[0]).remove();
         }
-        debugger;
         function Save_CrownBridges() {
-            debugger;
             var table = $('#tblCrown');
             var CrownBridgeList = [];
             table.find('tbody tr').each(function (key, value) {
@@ -355,9 +343,7 @@
 
             });
         }
-        debugger;
         function Save_Indirect_Veneer() {
-            debugger;
             var table = $('#tblveneer');
             var IndirectVeneerList = [];
             table.find('tbody tr').each(function (key, value) {
@@ -375,9 +361,7 @@
                 Save_CrownBridges();
             });
         }
-        debugger;
         function Save_Alinger() {
-            debugger;
             var table = $('#tblAlinger');
             var AlingerList = [];
             table.find('tbody tr').each(function (key, value) {
@@ -397,51 +381,39 @@
                 Save_Indirect_Veneer();
             });
         }
-        debugger;
         function LoadVeneer() {
-            debugger;
             var AlingerID = '<%= Request.QueryString["ID"]%>'
             if (AlingerID != '' && AlingerID != '(New)') {
                 PageMethods.LoadVeneer(AlingerID, function (res) {
                     var Alignerss = JSON.parse(res);
-                    debugger;
                     var rows = '';
                     $.each(Alignerss, function (key, value) {
-                        debugger;
                         rows += '<tr><td> ' + value.Indirect_Veneers_Name + ' </td>><td> <a href="#" onclick="editMedicine(this)"> Edit </a> | <a href="#" onclick="Delete_veneer(this)"> Delete </a>  </td> </tr>';
                     });
                     $('#tblveneer tbody').append(rows);
                 });
             }
         }
-        debugger;
         function LoadAlinger() {
-            debugger;
             var AlingerID = '<%= Request.QueryString["ID"]%>'
             if (AlingerID != '' && AlingerID != '(New)') {
                 PageMethods.LoadAlinger(AlingerID, function (res) {
                     var Alignerss = JSON.parse(res);
-                    debugger;
                     var rows = '';
                     $.each(Alignerss, function (key, value) {
-                        debugger;
                         rows += '<tr><td> ' + value.Arch + ' </td><td>' + value.No_Of_Alinger + '</td><td> ' + value.Material + ' </td> <td> ' + value.Margin_of_Alinger + ' </td><td> ' + value.Type_of_Alinger + ' </td><td> ' + value.Thicker_of_Alinger + ' </td><td> ' + value.Template + ' </td><td> <a href="#" onclick="Edit_Alinger(this)"> Edit </a> | <a href="#" onclick="Delete_Alinger(this)"> Delete </a>  </td> </tr>';
                     });
                     $('#tblAlinger tbody').append(rows);
                 });
             }
         }
-        debugger;
         function LoadCrownBrigdes() {
-            debugger;
             var AlingerID = '<%= Request.QueryString["ID"]%>'
             if (AlingerID != '' && AlingerID != '(New)') {
                 PageMethods.LoadCrownBrigdes(AlingerID, function (res) {
                     var Alignerss = JSON.parse(res);
-                    debugger;
                     var rows = '';
                     $.each(Alignerss, function (key, value) {
-                        debugger;
                         rows += '<tr><td> ' + value.Crown_Bridges_Name + ' </td>><td> <a href="#" onclick="editMedicine(this)"> Edit </a> | <a href="#" onclick="Delete_crown(this)"> Delete </a>  </td> </tr>';
                     });
                     $('#tblCrown tbody').append(rows);
@@ -470,11 +442,9 @@
             }
         }
         function LoadAlingerFormImages() {
-            debugger;
             var Alinger_Id = '<%= Request.QueryString["ID"]%>';
 
             PageMethods.LoadAlingerImages(Alinger_Id, function (res) {
-                debugger;
                 var container = $('#ImageContainer');
                 if (res == null || res == "[]" || res == "undefined") {
                     $("#errorMsg").show();
@@ -488,7 +458,6 @@
         }
 
         function loadImagesFromDatabase(images, container) {
-            debugger;
             images.forEach(function (image) {
                 let img = $(`
             <div>
@@ -504,14 +473,12 @@
             });
         }
         function downloadImage(imageId) {
-            debugger;
             var ID = imageId;
             var downloadUrl = 'DownloadFile.ashx?ID=' + ID;
             window.location.href = downloadUrl;
         }
 
         function readIMGsingle(input) {
-            debugger;
 
             var container = ($(input)[0].id == "ctl00_MainContent_fileUpload_CF_OP") ? "#containerOP" : ($(input)[0].id == "ctl00_MainContent_fileUpload_CF_AT") ? "#containerAT" : "#containerCT";
             var CF_Type = ($(input)[0].id == "ctl00_MainContent_fileUpload_CF_OP") ? "op" : ($(input)[0].id == "ctl00_MainContent_fileUpload_CF_AT") ? "at" : "ct";
@@ -566,7 +533,6 @@
         }
 
         function viewLargeImage(id) {
-            debugger;
             var newTab = window.open();
             var path = $("#" + id + "").attr("src");
             newTab.document.body.innerHTML = '<img src="' + path + '" width="1101px" height="881px">';

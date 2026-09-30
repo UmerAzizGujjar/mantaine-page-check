@@ -1,5 +1,4 @@
 $(document).ready(function () {
-    debugger;
 
     //filldepartment();
    // fillProvince();
@@ -9,9 +8,7 @@ $(document).ready(function () {
 
     $('#ddlsubdepartment').select2();
     $('#btnSave').on('click', function () {
-        debugger;
         verifydoctoravail(function (result) {
-            debugger;
 
             if (result === 'OnDay') {
                 save = $('#btnSave').val();
@@ -22,7 +19,6 @@ $(document).ready(function () {
         });
 
     });
-    debugger;
     $("#txtSearch").keypress(function (event) {
 
         var SearchString = $('#txtSearch').val();
@@ -55,7 +51,6 @@ $(document).ready(function () {
 
     $('#btnSaveMessage').on('click', function () {
         verifydoctoravail(function (result) {
-            debugger;
 
             if (result === 'OnDay') {
                 save = $('#btnSave').val();
@@ -68,7 +63,6 @@ $(document).ready(function () {
     });
 
 
-    debugger;
   
 
 
@@ -77,10 +71,8 @@ $(document).ready(function () {
   //  fillType();
 
 
-    debugger;
   
     $('#ctl00_MainContent_ddlPrefixDrp').on('select', function () {
-        debugger;
 
 
         setTimeout(function () {
@@ -91,7 +83,6 @@ $(document).ready(function () {
 
     });
     $('#ddlsubdepartment').on('change', function () {
-        debugger;
 
 
         setTimeout(function () {
@@ -102,7 +93,6 @@ $(document).ready(function () {
 
     });
     $('#ddlServices').on('change', function () {
-        debugger;
 
 
         setTimeout(function () {
@@ -140,7 +130,6 @@ $(document).ready(function () {
     setTimeout(function () {
         $('#ctl00_MainContent_ddlPrefixDrp').focus();
     }, 5000);
-    debugger;
    
 });
 function GetSubDepartmentByDoctor(doctor_Id) {
@@ -159,7 +148,6 @@ function GetSubDepartmentByDoctor(doctor_Id) {
 
 
 function addfunc() {
-    debugger;
 
 
     var maskedValue = $('#txtSearch').val();
@@ -181,7 +169,6 @@ function addfunc() {
 
 
 
-    debugger;
 
     $('#ClosePatientsSearchModel').click();
     fillmrno();
@@ -200,7 +187,6 @@ function fillmrno() {
         contentType: "application/json; charset=utf-8",
         dataType: "json",
         success: function (data) {
-            debugger;
             var max_mr = data.d;
             $('#txt_Mrnos').val(max_mr);
         },
@@ -214,7 +200,6 @@ function fillmrno() {
 function load_Initial_Pat_Data(reg_pat) {
     var reg_id = reg_pat;
     $('#PatientsSearchModel').close;
-    debugger;
     $.ajax({
         type: "POST",
         url: "Appointment.aspx/loadApp_data",
@@ -226,7 +211,6 @@ function load_Initial_Pat_Data(reg_pat) {
         contentType: "application/json; charset=utf-8",
         dataType: "json",
         success: function (data) {
-            debugger;
             var dataaa = JSON.parse(data.d);
 
             $('#txt_pt_name').val(dataaa.Full_Name);
@@ -246,7 +230,6 @@ function load_Initial_Pat_Data(reg_pat) {
     });
 }
 function SearchPatients() {
-    debugger;
     $('#PatientsSearchModel').modal({
         backdrop: 'static'
 
@@ -259,7 +242,6 @@ function SearchPatients() {
 
 }
 function AddNewPatient() {
-    debugger;
     $('#ddl_pnl_cpy').next(".select2-container").hide();
 
     clearPatient();
@@ -278,7 +260,6 @@ function AddNewPatient() {
     });
 }
 function FillPatientsList() {
-    debugger;
     $('#tblPatientsResult tbody').empty();
 
     var SearchString = '';
@@ -298,7 +279,6 @@ function OnFailPatients(exc) {
     alert(exc.get_message());
 }
 function AddPatientsResult(Reg_Patient_ID, Patient_No, Full_Name, NIC, Mobile1, Father_Name) {
-    debugger;
     tblLength = tblPatientsResult.rows.length;
 
     var row = iPatientsBody.insertRow(-1);
@@ -330,7 +310,6 @@ function ClearPatientResults() {
 }
 var isAdd = false;
 function AddPatientDetail(Reg_Patient_ID) {
-    debugger;
     try {
         isAdd = true;
         window.location.href = "Appointment.aspx?ID=" + Reg_Patient_ID + "&isAdd=" + isAdd;
@@ -341,7 +320,6 @@ function AddPatientDetail(Reg_Patient_ID) {
 
 }
 function LoadPage() {
-    debugger;
     var stDate;
     var endDate;
     var doc_id = $('#ddl_colstnt').val();
@@ -379,9 +357,7 @@ function LoadPage() {
             var slotsList = doctorData.Slots;
 
             var rows = '';
-            debugger;
             slotsList.forEach(function (slot) {
-                debugger;
                 var formattedItem1 = moment(slot.Item1).format('hh:mm A');
                 var formattedItem2 = moment(slot.Item2).format('hh:mm A');
 
@@ -401,13 +377,11 @@ function LoadPage() {
 
 
             });
-            debugger;
 
             $('#tblRes tbody').html(rows);
             $('#txt_time').val(formattedItem1)
         },
         error: function (xhr, status, error) {
-            debugger;
             console.error("Error fetching data from the backend:", error);
         }
     });
@@ -416,7 +390,6 @@ function LoadPage() {
 }
 var appendtime;
 function selectRow(appendtime) {
-    debugger;
     $('#txt_time').val(appendtime);
 }
 function fillgender() {
@@ -581,26 +554,21 @@ function getpage() {
 
 
     PageMethods.getlist(stDate, endDate, function (data) {
-        debugger;
         if (data.length === 0) {
 
             $("#table_res tbody").empty();
             return false;
         }
         else {
-            debugger;
             abc = false;
             //var table;
             var Priority = '';
 
             var length = $("#table_res tr:gt(0)").length;
-            debugger;
             if (data != '') {
                 var data = JSON.parse(data);
                 var rows = '';
-                debugger;
                 $.each(data, function (i, item) {
-                    debugger;
                     var App_Date = moment(data[i].App_Date).format('LL');
                     var time = moment(data[i].Time).format('h:mm a');
                     var cancel = data[i].cancelAppointment;
@@ -608,17 +576,14 @@ function getpage() {
                     if (cancel == true) {
                         status = 'Cancelled'
                     }
-                    debugger;
 
                     rows += '<tr><td>' + (i + 1) + '</td><td>' + data[i].Appointment_No + '</td><td>' + toTitleCase(data[i].Patient_Name.replace("_", " ")) + '</td><td>' + data[i].emp_name + '</td><td>' + data[i].Phone + '</td> <td>' + App_Date + '</td> <td>' + time + '</td>  <td>' + status + '</td><td style="display:none;" name="cancelAppointment">' + data[i].cancelAppointment + '</td><td style="width: 250px";><a href="#" onclick="Edit(' + data[i].Appointment_ID + ')" style="border-radius: 4px; background-color: #428bca; color: white; padding: 4px 11px 4px 11px; margin-left: 9px;">Change  Schedule</a><a href="#" onclick="CancelAppointment(' + data[i].Appointment_ID + ')" style="border-radius: 4px; background-color: #ea0000; color: white; padding: 4px 11px 4px 11px; margin-left: 9px;">Cancel</a></td></tr>';
 
 
                 });
-                debugger;
                 $('#t_body').html(rows);
 
                 $('#table_res tbody:eq(1) tr').each(function (key, value) {
-                    debugger;
                     var Status = $(this).find('td:eq(7)').text();
                     var app_date = $(this).find('td:eq(5)').text();
                     var currentDate = moment().format('LL');
@@ -652,7 +617,6 @@ function getpage() {
     return false;
 }
 function CancelAppointment(appointmentId) {
-    debugger;
     if (confirm("Are you sure you want to cancel this appointment?")) {
         $.ajax({
             type: "POST",
@@ -676,11 +640,8 @@ function CancelAppointment(appointmentId) {
 }
 
 
-debugger;
 function loadappt(appID) {
-    debugger;
     PageMethods.loadAppData(appID, function (resp) {
-        debugger;
         if (appID != "") {
             $('#btnSave').val('Update');
         }
@@ -715,7 +676,6 @@ function loadappt(appID) {
         $("#txt_date").val(date);
 
         setTimeout(function () {
-            debugger;
 
             $('#ddlsubdepartment').val(data.Sub_Department).change();
 
@@ -779,7 +739,6 @@ function loadapptEdit(App_id) {
 
 
 function Edit(aID) {
-    debugger;
     window.location.href = "Appointment.aspx?aID=" + aID;
 
 }
@@ -796,13 +755,9 @@ function GetAppNo() {
 
 }
 
-debugger;
 function GetAppointmentTime() {
-    debugger;
     var doctorID = $('#ddl_colstnt').val();
-    debugger;
     PageMethods.GetAppointmentTime(doctorID, function (resp) {
-        debugger;
 
         $("#txt_time").val(resp);
     },
@@ -836,7 +791,6 @@ function clearPatient() {
     $('#RevistPat').hide();
 }
 function GetServices() {
-    debugger;
     var options = '<option value="0">Select Services</option>';
     PageMethods.GetServices(function (data) {
         $.each(JSON.parse(data), function (key, value) {
@@ -853,16 +807,13 @@ function GetServices() {
 
 }
 
-debugger;
 function SavePatient() {
-    debugger;
     $('#SavePatient_Data').attr('disabled', true);
     var Prefix_PatientName = $('#ddl_name').val();
     var PatientName = $('#txt_name').val();
     var PatientID = $('#hdfPatient_ID').val();
 
     var Full_Name = Prefix_PatientName + PatientName;
-    debugger;
     var RelationType = $('#ddlRelation').val();
     var Relation = $('#txt_relation').val();
     var Gender = $('#ddl_Gender').val();
@@ -923,7 +874,6 @@ function SavePatient() {
         contentType: "application/json; charset=utf-8",
         dataType: "json",
         success: function (data) {
-            debugger;
             var ini_patientID = data.d;
 
             alert('Your Record Save and Load Successfully');
@@ -940,7 +890,6 @@ function SavePatient() {
     });
 }
 function get_pat_initial_info(ini_patientID) {
-    debugger;
     try {
         isAdd = true;
         window.location.href = "Appointment.aspx?ID=" + ini_patientID + "&isAdd=" + isAdd;
@@ -953,7 +902,6 @@ function get_pat_initial_info(ini_patientID) {
 
 
 function LoadDetailDoctor() {
-    debugger;
     var options = '<option value="0">Select Doctor</option>';
     PageMethods.GetDoctors(function (data) {
         $.each(JSON.parse(data), function (key, value) {
@@ -973,7 +921,6 @@ function LoadDetailDoctor() {
 
 var abc = false;
 function testddlchange() {
-    debugger;
 
 
 
@@ -1017,7 +964,6 @@ function toTitleCase(str) {
 }
 
 function ddldocchange() {
-    debugger;
 
 
 
@@ -1052,7 +998,6 @@ function ddldocchange() {
 
 }
 function CalculateDateOfBirth() {
-    debugger;
     var now = moment();
     var year = $('#txt_dob').val();
     var calcualteDate = now.subtract('years', year);
@@ -1076,11 +1021,9 @@ function filldepartment() {
 
     });
     return options;
-} debugger;
+}
 
-debugger;
 function convertTo24Hour(time) {
-    debugger;
     var hours = parseInt(time.substr(0, 2));
     var minutes = time.substr(3, 2);
     var period = time.substr(6, 2).toUpperCase();
@@ -1096,9 +1039,7 @@ function convertTo24Hour(time) {
     return hoursStr + ':' + minutes;
 }
 
-debugger;
 function verifydoctoravail(callback) {
-    debugger;
     var ddl_colstnts = $('#ddl_colstnt').val();
     var time_appointment = $('#txt_time').val();
     var date = $('#txt_date').val();
@@ -1113,14 +1054,12 @@ function verifydoctoravail(callback) {
         contentType: "application/json; charset=utf-8",
         dataType: "json",
         success: function (data) {
-            debugger;
             var dataaa = JSON.parse(data.d);
 
 
 
 
 
-            debugger;
             if (dataaa && dataaa.Off_Days_Names && dataaa.Off_Days_Names.includes) {
                 var dateObject = new Date(date);
                 var options = { weekday: 'short' };

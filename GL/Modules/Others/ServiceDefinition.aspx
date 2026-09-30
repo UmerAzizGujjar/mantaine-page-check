@@ -14,7 +14,6 @@
         });
 
         function bindControls() {
-            debugger;
             var hdFile_ID = $("#hdfAccount_ID").val();
             if (hdFile_ID != "(New)") {
                 //var accountId = document.getElementById('<%= txtAccount_ID.ClientID%>').value;

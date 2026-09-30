@@ -13,7 +13,6 @@
         });
        
         function printPerson(Vendor_ID) {
-            debugger;
             var locationInfo = window.location;
             var url = '/ReportViewer.aspx?ReportName=VendorPerson&ReportTitle=Vendor Person&ID=' + Vendor_ID;
             if (!locationInfo.origin.includes('localhost')) {
@@ -152,7 +151,6 @@
                     { "data": "AccountID", "width": "15%", "orderable": false },
                     {
                         render: function (data, type, full) {
-                            debugger;
                             var res = '<a href="#" class="editListBtn" onclick="Edit(' + full.Vendor_ID + ')" style="border-radius: 4px;padding: 5px 8px 5px 8px;"><i class="fa fa-pencil"></i></a>';
                             var print = '<a class="printListBtn" style="border-radius: 4px;margin-left: 4px;color: white;padding: 5px 8px 5px 8px;" href="#" onclick="printPerson(' + full.Vendor_ID + ')" id="btnprint"><i class="fa fa-print"></i></a>';
                             var result;
@@ -263,10 +261,8 @@
             window.location.href = "Vendor.aspx?ID=" + ID;
         }
         function deleteConfirm(Vendor_ID) {
-            debugger;
             if (confirm('Are you sure want to delete this record')) {
                 PageMethods.DeleteRecord(Vendor_ID, function (msg) {
-                    debugger
                     $(row).remove();
 
                 }, OnFail);

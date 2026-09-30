@@ -5,7 +5,6 @@
     <link href="../../wwwroot/THEME_TIBBIT/CustomCSS/tablestyle.css" rel="stylesheet" />
     <script type="text/javascript">
         $(document).ready(function () {
-            debugger;
             $('#ctl00_lblMessage').hide();
             LoadPage();
             
@@ -67,7 +66,6 @@
             });
         }
         function cancelPatient(patid, patname) {
-            debugger;
             var PatID = patid;
             var PatNo = patname;
 

@@ -16,7 +16,6 @@
         var btnVal = '';
         localStorage.IsDischarge = 0;
         $(document).ready(function () {
-            debugger;
             filldepartment();
             $('#ddlDepartments').on('change', function () {
                 var deptId = $(this).val();
@@ -69,27 +68,22 @@
             });
 
             $("#ctl00_MainContent_txtSaturation").focusin(function () {
-                debugger;
                 var text = $(this).val().replace(" %", "");
                 $(this).val(text);
             });
             $("#ctl00_MainContent_txtsaturationDis").focusin(function () {
-                debugger;
                 var text = $(this).val().replace(" %", "");
                 $(this).val(text);
             });
             $("#ctl00_MainContent_txtSaturation_Oxygen2").focusin(function () {
-                debugger;
                 var text = $(this).val().replace(" %", "");
                 $(this).val(text);
             });
             $("#ctl00_MainContent_txtSaturation_Oxygen2_desc").focusin(function () {
-                debugger;
                 var text = $(this).val().replace(" %", "");
                 $(this).val(text);
             });
             $("#ctl00_MainContent_txtSaturation,#ctl00_MainContent_txtSaturation_Oxygen2").focusout(function () {
-                debugger;
                 if ($(this).val() == " %") {
                     $(this).val("");
                 }
@@ -98,7 +92,6 @@
                 }
             });
             $("#ctl00_MainContent_txtsaturationDis,#ctl00_MainContent_txtSaturation_Oxygen2_desc").focusout(function () {
-                debugger;
                 if ($(this).val() == " %") {
                     $(this).val("");
                 }
@@ -107,17 +100,14 @@
                 }
             });
             $("#ctl00_MainContent_txtSaturation_Oxygen1").focusin(function () {
-                debugger;
                 var textOxygen = $(this).val().replace(" L/Min", "");
                 $(this).val(textOxygen);
             });
             $("#ctl00_MainContent_txtOxygen1").focusin(function () {
-                debugger;
                 var textOxygen = $(this).val().replace(" L/Min", "");
                 $(this).val(textOxygen);
             });
             $("#ctl00_MainContent_txtSaturation_Oxygen1").focusout(function () {
-                debugger;
                 if ($(this).val() == " L/Min") {
                     $(this).val("");
                 }
@@ -126,7 +116,6 @@
                 }
             });
             $("#ctl00_MainContent_txtOxygen1").focusout(function () {
-                debugger;
                 if ($(this).val() == " L/Min") {
                     $(this).val("");
                 }
@@ -136,7 +125,6 @@
             });
 
             $('#ctl00_MainContent_ctl00_MainContent_txtEOR').on('keypress, keydown', function (event) {
-                debugger;
                 if ((event.which != 37 && (event.which != 39)) &&
                     ((this.selectionEnd > 1) ||
                         ((this.selectionEnd == 1) && (event.which == 8)))) {
@@ -144,14 +132,12 @@
                 }
             });
             $('#ctl00_MainContent_txtMR').on('keypress, keydown', function (event) {
-                debugger;
                 if ((event.which != 37 && (event.which != 39)) && ((this.selectionEnd > 1) ||
                     ((this.selectionEnd == 1) && (event.which == 8)))) {
                     return false;
                 }
             });
             $('#ctl00_MainContent_txtVR').on('keypress, keydown', function (event) {
-                debugger;
                 if ((event.which != 37 && (event.which != 39)) &&
                     ((this.selectionEnd > 1) ||
                         ((this.selectionEnd == 1) && (event.which == 8)))) {
@@ -162,7 +148,6 @@
 
         });
         function saveprint() {
-            debugger;
             var dischargechk = document.getElementById("ctl00_MainContent_cbDicharg_Slip").checked;
             var ddlDischargeBy = $('#ctl00_MainContent_ddlDischarge_By').val();
 
@@ -198,14 +183,12 @@
             }
         }
         function InpatientDischargePrint() {
-            debugger;
             InPAtID = $('#ctl00_MainContent_txtIn_Patient_ID').val();
             if (InPAtID != "") {
                 window.open('../../ReportViewer.aspx?ReportName=DischargePrint&InPatientId=' + InPAtID);
             }
         }
         function toggleButton() {
-            debugger;
             var checkboxdischarge = $('#ctl00_MainContent_cbDicharg_Slip').is(':checked');
             if (checkboxdischarge == true) {
                 var ddlDischargeBy = $('#ctl00_MainContent_ddlDischarge_By').val();
@@ -235,7 +218,6 @@
             }
         }
         function PrintAdmisionDetails(response) {
-            debugger;
             PATID = $('#<%=txtPatient_ID.ClientID%>').val();
 
             InPAtID = response;
@@ -250,7 +232,6 @@
                 dataType: "json",
                 success: function (response) {
 
-                    debugger;
                     $('#lblName').text(response.d.Full_Name);
                     $('#lblAge').text(response.d.Age_years);
                     $('#lblAGender').text(response.d.Gender);
@@ -281,7 +262,6 @@
                     else {
                         $('#lblCNIC').text(response.d.NIC);
                     }
-                    debugger;
                     if (response.d.Admission_Fee == "") {
                         $('#lblAdmissionFeeRpt').text(".");
                     }
@@ -356,7 +336,6 @@
 
         }
         function Natal_CheckedChangedSVD() {
-            debugger;
             $("#ctl00_MainContent_rdbPeads_SVD").prop("checked", true);
             $("#ctl00_MainContent_rdbPeads_LSCS").prop("checked", false);
             $("#ctl00_MainContent_rdbPeads_Emergency").prop("checked", false);
@@ -447,7 +426,6 @@
                 dataType: "json",
                 success: function (response) {
 
-                    debugger;
                     $('#lblTMName').text(response.d.Full_Name);
                     $('#lblTMAAge').text(response.d.Age_years);
                     $('#lblTMAGender').text(response.d.Gender);
@@ -699,7 +677,6 @@
             }, 2000);
         }
         function PrintAdmisionDetail() {
-            debugger;
             PATID = $('#<%=txtPatient_ID.ClientID%>').val();
             InPAtID = $('#ctl00_MainContent_txtIn_Patient_ID').val();
             $.ajax({
@@ -713,7 +690,6 @@
                 dataType: "json",
                 success: function (response) {
 
-                    debugger;
                     $('#lblName').text(response.d.Full_Name);
                     $('#lblAge').text(response.d.Age_years);
                     $('#lblAGender').text(response.d.Gender);
@@ -777,7 +753,6 @@
 
 
         function PrintInpatientReceipt() {
-            debugger
             var txtNext_Visit = $('#ctl00_MainContent_txtNext_Visit').val();
             var dischargechk = document.getElementById("ctl00_MainContent_cbDicharg_Slip").checked;
             if (dischargechk == false) {
@@ -896,12 +871,10 @@
         }
 
         function AddBloodTest() {
-            debugger;
             var test = $('#ddlTestList').find('option:selected').text();
 
 
             PageMethods.GetBBDDLDetails(test, function (res) {
-                debugger;
                 var doctorVal;
                 var doctor;
                 $.each(JSON.parse(res), function (key, value) {
@@ -1155,7 +1128,6 @@
         }
 
         function VRFunction() {
-            debugger;
             if ($("#ctl00_MainContent_txtVR").val().split('/')[0] > 0 && $("#ctl00_MainContent_txtVR").val().split('/')[0] <= 6) {
                 var first_integer = $("#ctl00_MainContent_ctl00_MainContent_txtEOR").val().split('/')[0];
                 var Second_integer = $("#ctl00_MainContent_txtMR").val().split('/')[0];
@@ -1176,7 +1148,6 @@
 
         function saveAllRecord() {
 
-            debugger;
             var btnsave = $('#btnSave').val();
             var Patient_ID = $("#<%= hdfPatient_ID.ClientID%>").val();
             var txtAdmission_Date = $('#ctl00_MainContent_txtAdmission_Date').val();
@@ -1727,11 +1698,9 @@
                 DermaEyes, DermaEars, DermaNose, DermaLips, HBM_Problem, HBM_Caused, HBM_Started, HBM_Course, HBM_Treatment, HBM_Effects, PE_Pluse, PE_BP, PE_Temperature, PE_Weight, PE_RespiratoryRate, PE_Jaundice, PE_Anemia, PE_Cyanosis, PE_Clubbing, PE_JVP, PE_LymphNodes, PE_Edema, PE_Respiratory, PE_Cardiovascular, PE_Gastro_Intestinal, PE_Observation, PE_Cranial_Nerves, PE_Limb_Strength, PE_Spasticity, PE_Position, PE_Vibration, PE_Stereognosis, PE_Pain, PE_Biceps, PE_Triceps, PE_Brachioradialis, PE_Quadriceps, PE_Patellar, PE_Achilles, PE_Extensor, PE_Frontal, PE_Finger, PE_Heel, PE_Movements, PE_Gait, PE_Neck_Rigidity, PE_Kerning_Sign, PE_Brudzinki_Sign, For_Summary, For_Diagnosis, For_AxisI, For_AxisII, For_AxisIII, For_AxisIV, For_AxisV, For_PredisposingFactors, For_PrecipitatingFactors, For_PrepetuatingFactors, For_Investigation, For_Medical, For_Psychological, For_Major_Issues, For_Strengths, For_Goals, For_Strategies, txtPeads_weight, txtPeads_Length, txtPeads_HC, txtPeads_General_Appearance, chkPeads_Cyanosis, chkPeads_Jaundice, chkPeads_Lethargy, chkPeads_Rash, txtPeads_Others, chkPeads_Caput, chkPeads_Cephalhematoma, rdbPeads_Anterioropen, rdbPeads_AnteriorClose, chkPeads_Dextrocardia, chkPeads_Bulging, chkPeads_Murmur, txtPeads_HeartSound, chkPeads_Nasal, chkPeads_Recessions, txtPeads_AddedSounds, rdbPeads_Flat, rdbPeads_Distended, rdbPeads_Scaphoid, chkPeads_Liver, chkPeads_Spleen, txtPeads_GITOthers, chkPeads_Sucking, chkPeads_Rooting, chkPeads_Moro, txtPeads_CNSOthers, chkPeads_FullTerm, chkPeads_PreTerm, txtPeads_DateOfDelivery, txtPeads_TimeOfDelivery, rdbPeads_Booked, rdbPeads_UnBooked, chkPeads_DAIHandling, chkPeads_ANTURash, chkPeads_PIH, chkPeads_GDM, chkPeads_Vacinated, txtPeads_ANTOthers, rdbPeads_SVD, rdbPeads_LSCS, rdbPeads_Emergency, rdbPeads_Elective, txtPeads_PlaceOfDelivery, txtPeads_IndicationForLSCS, Peads_apgerScore1min, Peads_apgerScore5min, chkPeads_Resuscitation, txtPeads_NatalOthers, chkPeads_Moaning, chkPeads_RespDistress, chkPeads_PostNATALCyanosis, chkPeads_Fits, chkPeads_ReluctanceToFeed, txtPeads_PostNatalOthers, txtProcedure_Operation, txtProcedure_Detail, txtDignosis, txtDischarge_On, ddlDischarge_By, txtNext_Visit, txtAdvice, chkdischarge, PatientDiscountType, PanelCompany, patienttype, referto, referward, referbed_no, referroomno, referroomtype, RateBeats, ddlEmrgRhythm, ddlEmrgVolume, OthersRN, O2_Saturation_Oxygen1, O2_Saturation_Oxygen2, Saturation, HMFIntact, CranialNerves, SignsOfMeningism, HeartSound, Arrhythmias, AnyOtherAddedSound, AnyOtherFindings, NVB_Right, NVB_Left, Crepitation_Right, Crepitation_Left, Wheeze, Ranchi, AnyOtherSound, AbdomenSoft, Tenderness, Guarding, BowelSound, Distention, FluidThrill, ShiftingDullness, EpigastriaDiscomfort, RetrosternalBurning, Jondus, Pallor, Dehydration, GCSOrientation, ConsciousOrientely, Murmur, TextBoxCns, TextBoxCvs, TextBoxResp, TextBoxGit, TextBoxGpe, eye_response, motor_response, verbal_Response, accumulated_response, FurtherExplanation, PulseRate, BPDischarge, Tempdisch, volumedisc, RespRateDesc, Rhythmdischarge, Oxygen2_desc, saturationDis, Oxygen1, otherecdesc, Special_Instruction_Desc, Receiving_Date_Discharge, IdentificationMarks, DateOfDeath, TimeOfDeath, PlaceOfDeath, CauseOfDeath, IssuingOfficerName, DeathCertifiedby1, DeathCertifiedby2, BodyHandedOverTo, FamilyPersonName, CNIC, RelationWithDeceased, CMO_Police, ID,
                 function (response) {
 
-                    debugger;
                     var btn = btnVal;
 
                     if (btn == 'btnSave') {
-                        debugger;
 
                         alert('Data Successfully Save');
 
@@ -1739,7 +1708,6 @@
                         $('#btnSave').val("Update");
                     }
                     else if (btn == 'btnsaveprint') {
-                        debugger;
 
                         PrintAdmisionDetails(response);
                         $('#btnSave').val("Update");
@@ -1805,7 +1773,6 @@
 
 
         function InsertLabResult() {
-            debugger;
             var dis = document.getElementById('ctl00_MainContent_cbDicharg_Slip').checked;
             if (dis == true) {
 
@@ -2054,7 +2021,6 @@
         }
 
         function LoadMedicationHistory(PatientID) {
-            debugger;
             if (PatientID != '(New)') {
                 $('#HeaderHistoryMedication').html('<h2>Loading Previous History Please Wait....</h2>')
                 PageMethods.LoadMedicinesForHistory(PatientID, function (res) {
@@ -2109,12 +2075,10 @@
 
 
         function editMedicine(AnchorTag) {
-            debugger;
             $('#MedicationModel').modal({
                 backdrop: 'static'
             });
             setTimeout(function () {
-                debugger;
                 $('#txtMedicineName').val('');
                 $('#txtDosage').val('');
                 $('#txtRecomended_Dosage').val('');
@@ -2153,7 +2117,6 @@
         }
 
         function deleteMedicine(AnchorTag) {
-            debugger;
             var row = $(AnchorTag).parents('tr')[0];
             row.remove();
         }
@@ -2186,14 +2149,11 @@
 
 
         function LoadMedicines() {
-            debugger;
             if ($('#<%= txtIn_Patient_ID.ClientID%>').val() != '(New)') {
                 PageMethods.LoadMedicines($('#<%= txtIn_Patient_ID.ClientID%>').val(), function (res) {
                     var Medicines = JSON.parse(res);
-                    debugger;
                     var rows = '';
                     $.each(Medicines, function (key, value) {
-                        debugger;
                         var timeStamp = parseInt(value.Medicine_Date.substr(6, 10));
                         var date = moment.unix(timeStamp).format('DD/MM/YYYY hh:mm:ss A');
                         var datearray = date.split("/");
@@ -2208,14 +2168,11 @@
         }
 
         function LoadDischargeMedicines() {
-            debugger;
             if ($('#<%= txtIn_Patient_ID.ClientID%>').val() != '(New)') {
                 PageMethods.LoadDischargeMedicines($('#<%= txtIn_Patient_ID.ClientID%>').val(), function (res) {
                     var Medicines = JSON.parse(res);
-                    debugger;
                     var rows = '';
                     $.each(Medicines, function (key, value) {
-                        debugger;
                         var timeStamp = parseInt(value.Medicine_Date.substr(6, 10));
                         var date = moment.unix(timeStamp).format('M/D/YYYY h:m:s A');
                         var datearray = date.split("/");
@@ -2445,7 +2402,6 @@
         }
 
         function LoadTestList() {
-            debugger;
             var patientID = $('#<%= hdfPatient_ID.ClientID%>').val();
             if (patientID != "(New)") {
                 PageMethods.GetTestList(patientID, function (res) {
@@ -2561,11 +2517,9 @@
         }
 
         function SaveMedicines() {
-            debugger;
             var table = $('#tblMedicinesList');
             var MedicinesList = [];
             table.find('tbody tr').each(function (key, value) {
-                debugger;
 
                 MedicinesList.push({
                     'Medicine_Date': $($(value).find('td')[0]).text(), 'Medicine_Name': $($(value).find('td')[1]).text(), 'Frequency': $($(value).find('td')[2]).text(), 'Oral': $($(value).find('td')[3]).text(), 'Injection': $($(value).find('td')[4]).text(), 'AttendingParamedical_Staff': $($(value).find('td')[5]).text(),
@@ -2580,7 +2534,6 @@
         }
 
         function saveTests() {
-            debugger;
             var table = $('.tests-table tbody');
             var test_list = [];
             table.find('tr').each(function (key, value) {
@@ -2666,7 +2619,6 @@
         }
 
         function SaveWard() {
-            debugger;
             var btnsave = $('#btnSave').val();
             var PatID = $('#<%= txtPatient_ID.ClientID%>').val();
 
@@ -2739,7 +2691,6 @@
         }
 
         function CheckExistInOutPatient() {
-            debugger;
             var patient_Id = $("#<%= hdfPatient_ID.ClientID%>").val();
             $.ajax({
                 type: "POST",
@@ -2829,7 +2780,6 @@
 
         function SaveInPatientAllRecord() {
             $('#btnSave').attr('disabled', true);
-            debugger;
             var dischargechk = document.getElementById("ctl00_MainContent_cbDicharg_Slip").checked;
             var ddlDischargeBy = $('#ctl00_MainContent_ddlDischarge_By').val();
 
@@ -2867,7 +2817,6 @@
             }
         }
         function LoadPatientDetails() {
-            debugger;
             var Patient_ID = $('#hdfPatient_ID').val();
             $("#in_PatientId").val(Patient_ID);
             var inpatId_Json = "";
@@ -2905,7 +2854,6 @@
         }
 
         function OnSuccess1(data) {
-            debugger;
             if (data.d != '') {
 
                 $("#in_PatientId").val(data.d.PatientID);
@@ -2941,13 +2889,11 @@
                     var txtDignosis = $('#ctl00_MainContent_txtMedication').val();
                     var txtNext_Visit = $('#ctl00_MainContent_txtNext_Visit').val();
                     var DischargeType = $('#ctl00_MainContent_ddlDischarge_Type').val();
-                    debugger;
                     var Package_type = $('#ddlPackageType').val();
                     var Package_Name = $('#ddlPackageName').val();
                
 
                     PageMethods.SaveWardInformation(btnsave, PatID, InPatID, ddlWard_No, txtBed_No, txtExpected_Discharge_On_Date, ddlDoctor, DischargeChk, txtAdvice, txtProcedure_Operation, txtProcedure_Detail, txtDignosis, txtNext_Visit, DischargeType, function (response) {
-                        debugger;
                         if (response !== "") {
                                                   
 
@@ -2996,7 +2942,6 @@
                     var Package_Name = $('#ddlPackageName').val();
 
                     PageMethods.SaveRoomInformation(btnsave, PatID, InPatID, ddlRoom_No, txtRoom_Type, txtExpected_Discharge_On_Date, ddlDoctor, DischargeChk, txtAdvice, txtProcedure_Operation, txtProcedure_Detail, txtDignosis, txtNext_Visit, DischargeType, function (response) {
-                        debugger;
                         if (response !== "") {
 
                             var response_Arr = response.split(',');
@@ -3022,7 +2967,6 @@
 
 
         function LoadHistory() {
-            debugger;
             var dischargechk = document.getElementById("ctl00_MainContent_cbDicharg_Slip").checked;
             if (dischargechk == true) {
                 $('#btnDischargePrint').attr('disabled', false);
@@ -3347,7 +3291,6 @@
             }
         }
         function On_Sypyum_Success() {
-            debugger;
             LoadTokenInputForSymtoms();
             $('#txtNewSymptom').hide();
             $('#txtNewSymptom').val("");
@@ -3396,10 +3339,8 @@
         }
 
         function checkRepeat() {
-            debugger;
             var patID = $('#<%= txtPatient_ID.ClientID%>').val();
             PageMethods.checkRepeat(patID, function (data) {
-                debugger;
                 if (data == 0) {
                     loadAjax();
                     $("#tabs").tabs("option", "active", 0);
@@ -3483,10 +3424,8 @@
         }
 
         function AddLabTest() {
-            debugger;
             var test = $('#ddlTestList').find('option:selected').text();
             PageMethods.GetLabTestDDLDetails(test, function (res) {
-                debugger;
                 $.each(JSON.parse(res), function (key, value) {
                     var Result = 'Result';
                     var test = $('#ddlTestList').val();
@@ -3526,7 +3465,6 @@
       
 
         function AddRadialogyTest() {
-            debugger;
             $("#btnXray").removeClass("btn-danger").addClass("btn-info");
             $('#btnultrasound').removeClass('btn-danger').addClass('btn-info');
             $("#btnCTscan").removeClass("btn-danger").addClass("btn-info");
@@ -3627,7 +3565,6 @@
         }
 
         function AddAllTest() {
-            debugger;
             var maindpt = $('#ddlMainTestDepartment').val();
             var CheckTest = $('#ddlTestList').val();
 
@@ -3757,7 +3694,6 @@
 
         }
         function GetQS() {
-            debugger;
             var url = window.location.href.slice(window.location.href.indexOf('?') + 1).split('&');
             if (url[0].includes('=')) {
                 var QS = url[0].split('=')[1];
@@ -3769,7 +3705,6 @@
      var checkipddischarge = false;
      var InPatient_Ids_disc;
         $(document).ready(function () {
-            debugger;
 
             var chk = '<%= Request.QueryString["ID"]%>';
             if (chk != "") {
@@ -3836,7 +3771,6 @@
             $("#ctl00_MainContent_txtPeads_DateOfDelivery").datepicker();
             
             var btnsave = $("#btnSave").val();
-            debugger;
             var chk = '<%= Request.QueryString["ID"]%>';
 
             if (chk != "") {
@@ -3849,7 +3783,6 @@
             }
 
             if ($('#ctl00_MainContent_txtIn_Patient_ID').val() !== '(New)') {
-                debugger;
                 LoadLabResultrpt();
                
             }
@@ -3867,7 +3800,6 @@
 
             $('#<%= txtPatient_ID.ClientID%>').change(function () {
 
-                debugger;
 
                 checkRepeat();
 
@@ -3881,7 +3813,6 @@
             <% } %>
 
                 $('#btnDischarge_Billing').on('click', function () {
-                debugger;
                 isRedirect = true;
                 InPatient_Ids_disc = $("#ctl00_MainContent_txtIn_Patient_ID").val();
                 checkipddischarge = true;
@@ -3948,7 +3879,6 @@
             });
 
             $('#btnSaveMedicine').on("click", function () {
-                debugger;
                 if ($('#txtPharmacyItem').find('option:selected').text().trim() == 'Reassurance') {
                     $('#txtDosage').val("0");
                     $('#txtInjection').val("0");
@@ -4004,16 +3934,13 @@
                 var datetimeValue = '<%= DateTime.Now%>';
 
                 if ($(this).val() == 'Save') {
-                    debugger;
                     var medicine = ''//$('#txtMedicineName').val();
                     var pharmacyItem = $('#txtPharmacyItem').val();
                     var itemCode = $('#txtPharmacyItem').find('option:selected').val();
                     if (medicine == '') {
-                        debugger;
                         var row = '<tr> <td> <input type="hidden" name="testDate" value="' + datetimeValue + '">' + datetimeValue + ' </td><td><input type="hidden" name="hdnItemCode" value="0"> ' + pharmacyITem + '</td> <td> ' + $('#txtRecomended_Dosage').find('option:selected').text() + ' </td> <td> ' + $('#Routes').find('option:selected').text() + ' </td> <td> ' + $('#txtInjection').val() + '<td> ' + $('#AttendingParamedicalStaff').val() + '</td><td> ' + $('#ddlDosage_From').find('option:selected').text() + '</td><td> ' + $('#ddlDosage_Qty').find('option:selected').text() + '</td><td> ' + $('#ddlOther_Instruction').find('option:selected').text() + ' </td>' + '<td> <a href="#" onclick="editMedicine(this)"> Edit </a> | <a href="#" onclick="deleteMedicine(this)"> Delete </a> <input type="hidden" name="uurowid" value=' + uuid() + ' />  </td><td style="display:none;">' + itemCode + '</td></tr>';
                     }
                     else {
-                        debugger;
                         var row = '<tr> <td> <input type="hidden" name="testDate" value="' + datetimeValue + '">' + datetime + ' </td><td> <input type="hidden" name="hdnItemCode" value="' + pharmacyItem + '"> ' + pharmacyITem + '</td> <td> ' + $('#txtRecomended_Dosage').find('option:selected').text() + ' </td> <td> ' + '</td><td> ' + $('#Routes').find('option:selected').text() + ' </td> <td> ' + $('#txtInjection').val() + '<td> ' + $('#AttendingParamedicalStaff').val() + '</td><td> ' + $('#ddlDosage_From').find('option:selected').text() + '</td><td> ' + $('#ddlDosage_Qty').find('option:selected').text() + '</td><td> ' + $('#ddlOther_Instruction').find('option:selected').text() + ' </td>' + '<td> <a href="#" onclick="editMedicine(this)"> Edit </a> | <a href="#" onclick="deleteMedicine(this)"> Delete </a> <input type="hidden" name="uurowid" value=' + uuid() + ' />  </td> <td style="display:none;">' + itemCode + '</td></tr>';
                     }
                     if (localStorage.IsDischarge == 0) {
@@ -4027,7 +3954,6 @@
                     }
                 }
                 else if ($(this).val() == 'Update') {
-                    debugger;
                     var tid = $('#MedicationModel input[name=uurowid]').val();
 
                     var row = $('#tblMedicinesList tbody tr').find('input[value=' + tid + ']').parents('tr')[0];
@@ -4107,7 +4033,6 @@
 
 
         function Combination() {
-            debugger;
             TabFunction();
             bindControls();
             bindDate();
@@ -4153,7 +4078,6 @@
         }
 
         function selectPatient(Patient_ID) {
-            debugger;
             $('#ctl00_MainContent_txtPatient_ID').tokenInput('clear');
             var tokenData = httpGet("../../json.aspx?Table=Patients&Record=Edit&q=" + Patient_ID);
             var parsedData = JSON.parse(tokenData);
@@ -4207,16 +4131,13 @@
         });
     }
     function FillRoomsRefer() {
-        debugger;
         var RoomType = $('#ctl00_MainContent_ddlRoomType').val();
         PageMethods.FillRooms(RoomType, function (res) {
-            debugger;
             var item = JSON.parse(res);
             if (item != "") {
                 var rows = '';
                 var result;
                 $.each(item, function (key, value) {
-                    debugger;
                     var rows;
                     if (value.PatientNmae == null)
                         value.PatientNmae = 0;
@@ -4263,7 +4184,6 @@
         });
     }
     function ChangePanel() {
-        debugger;
         var type = $('#ctl00_MainContent_ddlPatientType').val();
         if (type == "10") {
             $('#ctl00_MainContent_lblPanelCompany').show();
@@ -4308,7 +4228,6 @@
 
     }
     function bindControls() {
-        debugger;
         var hdFile_ID = $("#hdfPatient_ID").val();
         if (hdFile_ID != "(New)") {
             var Patient_ID = $("#hdfPatient_ID").val();
@@ -4338,7 +4257,6 @@
              tokenLimit: 1,
              onAdd: function (item) {
                  try {
-                     debugger;
                      $("#hdfPatient_ID").val(item.id);
 
                      loadAjax();
@@ -4370,7 +4288,6 @@
          var Package_type = '';
          var Package_Name = '';
         function OnSuccessReference(response) {
-            debugger;
             var onsuccessreference = JSON.parse(response.d);
 
             $('#txtdprevDepart').val(onsuccessreference.Reffer_To);
@@ -4429,7 +4346,6 @@
     }
     var inpid = 0;
     function OnSuccess(data) {
-        debugger;
         if (data.d != '') {
 
             if (data.d.PatientType == null)
@@ -4457,11 +4373,9 @@
     }
 
         function FillDoctorsByDepartment(DepartmentId) {
-            debugger;
             PageMethods.FillDoctorsByDepartment(DepartmentId, function (response) {
                 var options = '<option value="0">Please Select</option>'
                 $.each(JSON.parse(response), function (key, value) {
-                    debugger;
                     options += '<option value="' + value.Emp_ID + '"> ' + value.Emp_Name + ' </option>';
                 });
                 $('#<%= ddlDischarge_By.ClientID%>').empty();
@@ -4472,13 +4386,11 @@
 
 
         function loadtokenInputs(data) {
-            debugger;
             $("#ctl00_MainContent_txtPatient_ID").tokenInput("../../json.aspx?Table=In_Patients_discharge",
                 {
                     prePopulate: data,
                     tokenLimit: 1,
                     onAdd: function (item) {
-                        debugger;
                         $("#hdfPatient_ID").val(item.id);
                         loadAjax();
                     }
@@ -4519,7 +4431,6 @@
 
         // Function to check discharge request status and disable button if already requested
         function CheckDischargeRequestStatus() {
-            debugger;
             var inPatientID = $('#ctl00_MainContent_txtIn_Patient_ID').val();
 
             if (inPatientID && inPatientID !== "(New)" && inPatientID !== "") {
@@ -4559,7 +4470,6 @@
 
         // Function to set discharge request
         function SetDischargeRequest() {
-            debugger;
             var inPatientID = $('#ctl00_MainContent_txtIn_Patient_ID').val();
             var dischargechk = document.getElementById("ctl00_MainContent_cbDicharg_Slip").checked;
 
@@ -4673,7 +4583,6 @@
             });
         }
         function CheckPendingBalanceBeforeSave(callback) {
-            debugger;
             var patientID = $('#<%= hdfPatient_ID.ClientID%>').val();
          var inPatientID = $('#ctl00_MainContent_txtIn_Patient_ID').val();
 
@@ -4732,7 +4641,6 @@
 
         // Modified DischargeRequest function to use the new method
         function DischargeRequest() {
-            debugger;
             // Set the hidden field value
             $("#ctl00_MainContent_DischargeRequest").val('true');
 

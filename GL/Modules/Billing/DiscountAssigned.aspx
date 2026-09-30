@@ -44,7 +44,6 @@
        });
 
         function LoadDiscountForEdit(discountAssignID) {
-            debugger;
             $.ajax({
                 type: "POST",
                 url: "DiscountAssigned.aspx/GetDiscountDataForEdit",
@@ -63,7 +62,6 @@
 
                     var data = JSON.parse(response.d);
                     console.log("Parsed data:", data);
-                    debugger;
 
                     if (data.Master) {
                         $('#hdPatientID').text(data.Master.Patient_ID || '');
@@ -225,7 +223,6 @@
         }
 
         function OnSuccesss(data) {
-            debugger;
             var parseData = JSON.parse(data.d);
             if (data.d != '') {
                 var mydate = new Date(Date.parse(parseData.Entry_Date));
@@ -334,7 +331,6 @@
         //  LOAD PATIENT + BILL DETAILS BY BILL NO
         // =============================================
  function GetPatientDetailByBill() {
-    debugger;
     var Bill_No = $('#txtBillNo').val();
     if (!Bill_No) {
         Swal.fire({ title: "Error!", text: "Please enter Bill No", icon: "error" });
@@ -401,7 +397,6 @@
                     '</tr>';
             }
             
-            debugger;
             // ---- Clear old rows and append new ----
             $('#tblDetails tbody').empty(); // Better than removing tr
             $('#tblDetails tbody').append(rows);
@@ -639,7 +634,6 @@
         }
 
         function SaveRecord() {
-            debugger;
             $('#btnSave').attr('disabled', true);
             if (validateSave()) {
                 var Patient_ID = $("#hdPatientID").text();
@@ -674,7 +668,6 @@
                     });
                 });
 
-                debugger;
                 var data = {
                     Discount_Assign_ID: Discount_Assign_ID ? parseInt(Discount_Assign_ID) : 0, // 0 means new record
                     Patient_ID: parseInt(Patient_ID),
@@ -743,7 +736,6 @@
 
 
         function ApproveRecord() {
-            debugger;
             $('#btnApprove').attr('disabled', true);
 
             var Bill_ID = $("#hdnBillID").val();

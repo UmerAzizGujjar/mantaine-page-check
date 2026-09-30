@@ -11,7 +11,6 @@
     <script type="text/javascript">
         var counter = 1;
         var append_data = '';
-        debugger;
         var id = '<% =Request.QueryString["ID"] %>';
         $(document).ready(function () {
             GetReqNum();
@@ -20,7 +19,6 @@
 
             stockRights();
             approveright();
-            debugger;
             FillDepartments();
             var date = '<%= DateTime.Now%>';
               $("#txtMIR_Date").datepicker({ dateFormat: 'mm/dd/yy' }).attr('readonly', 'readonly');
@@ -28,7 +26,6 @@
               $('.token-input-list').css('width', '666px !important', 'margin-left: 1px;');
               FillEmployeeList();
               loadtokenInputsDefaultitem();
-              debugger;
 
               if (id != "") {
                   checkstoreissueapprove(id);
@@ -48,7 +45,6 @@
           });
         var stockchck;
         function stockRights() {
-            debugger;
 
             $.ajax({
                 type: "POST",
@@ -58,7 +54,6 @@
                 dataType: "json",
                 async: true,
                 success: function (data) {
-                    debugger;
                     stockchck = data.d;
 
                 },
@@ -72,7 +67,6 @@
         var InvApproval;
 
         function Inventory_Approval() {
-            debugger;
             var status = $("#txt_Status").val();
             if (status == "Approved") {
                 $.ajax({
@@ -83,11 +77,8 @@
                     dataType: "json",
                     async: true,
                     success: function (data) {
-                        debugger;
                         InvApproval = data.d;
-                        debugger;
                         if ((InvApproval === true || InvApproval == "true")) {
-                            debugger;
                             if ((Inv_approval === true || Inv_approval == "true") && id != "") {
                                 $('#btnUnApprove').show();
                                 $('#btnApprove').hide();
@@ -116,7 +107,6 @@
         function manager_approval() {
             var status = $("#txt_Status").val();
             if (status == "Approved") {
-                debugger;
                 $.ajax({
                     type: "POST",
                     url: "MaterialIssueRequest.aspx/manager_approvals",
@@ -125,10 +115,8 @@
                     dataType: "json",
                     async: true,
                     success: function (data) {
-                        debugger;
                         approvmanager = data.d;
                         if ((approvmanager == "true" || approvmanager === true)) {
-                            debugger;
                             if ((managerialapprove === true || managerialapprove == "true") && id != "") {
                                 $('#btnmanagerial_unapprove').show();
                                 $('#btnmanagerial_approve').hide();
@@ -157,7 +145,6 @@
             }
         }
         //function manager_approval() {
-        //    debugger;
 
         //    $.ajax({
         //        type: "POST",
@@ -167,9 +154,7 @@
         //        dataType: "json",
         //        async: true,
         //        success: function (data) {
-        //            debugger;
         //            approvmanager = data.d;
-        //            debugger;
         //            if (managerialapprove === true && approvmanager == "true" && filt_status === "Approved" && id != "") {
 
         //                $('#btnmanagerial_unapprove').show();
@@ -199,7 +184,6 @@
         //                $('#btnmanagerial_unapprove').hide();
         //                $('#btnUnApprove').hide();
         //            }
-        //            debugger;
         //            if (rcv === true) {
         //                $('#btnmanagerial_approve').hide();
         //                $('#btnmanagerial_unapprove').hide();
@@ -214,7 +198,6 @@
         //}
 
         function FillDepartments() {
-            debugger;
             var optionsDPT = '';
             var optionInv = '';
 
@@ -267,10 +250,8 @@
         function FillEmployeeList() {
             var optionEmployee = '';
             PageMethods.GetEmployee(function (Tests) {
-                debugger
                 optionEmployee = '<option value="0">Please Select</option>';
                 $.each(JSON.parse(Tests), function (key, value) {
-                    debugger;
                     optionEmployee += '<option value="' + value.Emp_ID + '" >' + value.Emp_Name + '</option>';
                 });
                 $('#ddlEmployee').html(optionEmployee);
@@ -279,7 +260,6 @@
         }
 
         function loadtokenInputsDefaultitem() {
-            debugger;
             $('#txtItem').tokenInput("../json.aspx?Table=INV_Items",
                 {
                     tokenLimit: 1,
@@ -299,16 +279,13 @@
             $('#token-input-txtMR_No').focus();
         }
         function Delete(row) {
-            debugger;
             $(row).closest('tr').remove();
 
         }
         function GetItemDetail() {
-            debugger;
 
             var itemID = $("#hditemID").val();
 
-            debugger;
             $.ajax({
                 type: "POST",
                 url: "MaterialIssueRequest.aspx/Getitem",
@@ -319,7 +296,6 @@
                 dataType: "json",
                 success: function (response) {
                     var find = false;
-                    debugger;
                     var parse = JSON.parse(response.d);
                     var length = $("#tblbodyPackage tr").length;
                     if (length > 0) {
@@ -330,23 +306,19 @@
 
                     }
                     $('#tblbodyPackage tr').each(function () {
-                        debugger;
                         var $projectName = $(this).find('td:eq(9)').text();
                         if ($projectName == itemID) {
-                            debugger;
                             find = true;
                         }
                     });
 
                     if (find == true) {
-                        debugger;
                         alert("item already exists");
                         $("#txtItem").tokenInput("clear");
                     }
                     else {
                         if (parse[0].Active == true) {
                             $("#tblbodyPackage").append("<tr><td style='padding-top: 7px!important;'>" + length + "</td><td style='padding-top: 7px!important;padding-right: 3px!important; */'>" + parse[0].Item_Code + "</td><td style='padding-left: 8px!important;padding-top: 7px!important;'>" + parse[0].Description + "</td><td style='text-align:center;'>" + parse[0].Unit + "</td><td style='text-align: center;'><input type='text' name='Qty' id='txtQty" + length + "' style='font-size: 9px;width: 52px!important;text-align: right;margin-top: 2px;' autocomplete='off' onkeyup='calcutaeQty(this)'/></td><td id='tdstock' style='padding-left: 8px!important;padding-top: 7px!important;'>" + parse[0].Stock + "</td><td style='padding-top: 7px!important;padding-left: 8px!important;display:none;' contenteditable></td><td style='padding-top: 7px!important;padding-left: 8px!important' contenteditable></td><td><label class='fileContainer' style='font-size: 13px;margin-top: -3px;'><i class='glyphicon glyphicon-paperclip'></i><input type='file' name='fileuploadlist' id='fileuploadlist" + length + "'></label></td><td style='display:none'>" + parse[0].Item_ID + "</td><td><a href='#' onclick='Delete(this)'><i class='glyphicon glyphicon-trash' style='font-size: 13px; margin-top: 5px;  margin-left: 16px; color: #f30a0a;'></i></a></td></tr>")
-                            debugger;
                             if (stockchck == "true" || stockchck == true) {
                                 $('#tdstock').show();
                                 $('#thstock').show();
@@ -373,7 +345,6 @@
         }
 
         function Approve() {
-            debugger;
 
             //       elementIsClicked = true;
 
@@ -382,11 +353,9 @@
             var rowsnow = tblbodyPackage.rows.length;
 
 
-            debugger;
 
             if (rowsnow < rowsoneditmode || rowsoneditmode < rowsnow) {
 
-                debugger;
 
                 alert("You have modified MIR ! Please Update before Approving");
 
@@ -408,7 +377,6 @@
             var MIRId = '<% =Request.QueryString["ID"] %>';
               var user_id = '<% =AppConfig.UserID %>';
             PageMethods.ApproveMIR(MIRId, user_id, function (Tests) {
-                debugger
                 var message = JSON.parse(Tests);
                 if (message[0].Column1 == "1") {
                     alert("Approved Done Successfully");
@@ -431,10 +399,8 @@
 
 
             }
-            debugger;
             var MIRId = '<% =Request.QueryString["ID"] %>';
             PageMethods.UnApproveMIR(MIRId, function (Tests) {
-                debugger
                 var message = JSON.parse(Tests);
                 if (message[0].Column1 != "" || message[0].Column1 != null) {
                     alert("Un Approved Done Successfully");
@@ -446,10 +412,8 @@
 
 
         function manupproval() {
-            debugger;
             var MIRId = '<% =Request.QueryString["ID"] %>';
             PageMethods.managerapproval(MIRId, function (Tests) {
-                debugger
                 var message = JSON.parse(Tests);
                 if (message[0].Column1 != "" || message[0].Column1 != null) {
                     alert("managerial Approved Done Successfully");
@@ -459,10 +423,8 @@
             });
         }
         function manunpproval() {
-            debugger;
             var MIRId = '<% =Request.QueryString["ID"] %>';
             PageMethods.managerunapproval(MIRId, function (Tests) {
-                debugger
                 var message = JSON.parse(Tests);
                 if (message[0].Column1 != "" || message[0].Column1 != null) {
                     alert("managerial UnApproved Done Successfully");
@@ -471,12 +433,9 @@
                 }
             });
         }
-        debugger;
         function rcvdmir() {
-            debugger;
             var MIRId = '<% =Request.QueryString["ID"] %>';
             PageMethods.recievemir(MIRId, function (Tests) {
-                debugger
                 var message = JSON.parse(Tests);
                 if (message[0].Column1 != "" || message[0].Column1 != null) {
                     alert("Received Done Successfully");
@@ -487,7 +446,6 @@
         }
 
         function PrintMaterialIssueRequest() {
-            debugger;
             var id = '<% =Request.QueryString["ID"] %>';
             var locationInfo = window.location;
             var url = '/ReportViewer.aspx?ReportName=MaterialIssueRequestList&ReportTitle=Material IssueRequest List&MIRId=' + id;
@@ -524,7 +482,6 @@
         function SaveTest() {
 
             //       elementIsClicked = true;
-            debugger;
             var MIRId = 0;
             if (id == "") {
                 MIRId = 0;
@@ -575,7 +532,6 @@
                     }
                 })
                 if (status == "QtyError") {
-                    debugger;
                     alert("Please Enter MIR Qty Or MIR  Qty Must be Greater than zero");
                     return false;
                 }
@@ -600,7 +556,6 @@
                         contentType: "application/json; charset=utf-8",
                         dataType: "json",
                         success: function (response) {
-                            debugger;
                             var res = response.d;
                             var arr = res.split('-');
                             var msg = arr[0];
@@ -622,11 +577,9 @@
 
 
             var MIRDate = new Date($('#txtMIR_Date').val());
-            debugger;
             var detailAry = [];
             var btnValue = $("#btnsave").val();
             $.each($("#tblPackage").find('tbody').find('tr'), function (index) {
-                debugger
                 details = {};
                 details.MIRQty = $(this).find('td:eq(4) input').val();
                 //details.TechSpec = $(this).find('td:eq(5)').text();
@@ -642,7 +595,6 @@
             append_data = new FormData();
 
             for (var i = 0; i < getuploadlist.length; i++) {
-                debugger;
                 var filecomplete = getuploadlist[i].files;
                 if (filecomplete.length > 0) {
                     append_data.append(filecomplete[0].name, filecomplete[0]);
@@ -651,7 +603,6 @@
 
             }
 
-            debugger;
             if (detailAry.length > 0) {
                 $.ajax({
                     type: "POST",
@@ -664,7 +615,6 @@
                     contentType: "application/json; charset=utf-8",
                     dataType: "json",
                     success: function (response) {
-                        debugger;
                         var res = response.d;
                         var arr = res.split('-')[1];
 
@@ -699,7 +649,6 @@
         }
 
         function checkstoreissueapprove(id) {
-            debugger;
             $.ajax({
                 type: "POST",
                 url: "MaterialIssueRequest.aspx/checkapproval",
@@ -709,7 +658,6 @@
                 contentType: "application/json; charset=utf-8",
                 dataType: "json",
                 success: function (response) {
-                    debugger;
                     var parse = JSON.parse(response.d);
                     if (parse != undefined) {
                         var approvalcheck = parse.status;
@@ -739,7 +687,6 @@
         var Inv_approval;
         var rcv;
         function LoadMIRMaster(id) {
-            debugger;
             $.ajax({
                 type: "POST",
                 url: "MaterialIssueRequest.aspx/LoadMIR",
@@ -749,7 +696,6 @@
                 contentType: "application/json; charset=utf-8",
                 dataType: "json",
                 success: function (response) {
-                    debugger;
                     /* $("#chckreceived").attr('disabled', true);*/
                     var parse = JSON.parse(response.d);
                     $('#txtReq_Num').val(parse.Request_No);
@@ -820,7 +766,6 @@
 
         var rowsoneditmode = '';
         function LoadLoadMIRDetail(id) {
-            debugger;
             $.ajax({
                 type: "POST",
                 url: "MaterialIssueRequest.aspx/LoadMIRDetail",
@@ -830,11 +775,9 @@
                 contentType: "application/json; charset=utf-8",
                 dataType: "json",
                 success: function (response) {
-                    debugger;
                     var parse = JSON.parse(response.d);
                     var row = '';
                     $.each(parse, function (key, value) {
-                        debugger;
                         //<div class="upload-btn-wrapper-custom"><button class="btn" style=height:36px>Attachments</button><input type="file"/></div>                         
                         var len = key + 1;
                         row += '<tr><td style="padding-top: 7px!important;">' + len + '</td><td style="padding-top: 7px!important;padding-right: 3px!important; */">' + parse[key].itemCode + '</td><td style="padding-left: 8px!important;padding-top: 7px!important;">' + parse[key].Description + '</td><td style="text-align:center;">' + parse[key].Unit + '</td><td style="text-align: center;"><input type="text"  value="' + parseInt(parse[key].MIRQty) + '" name="Qty" id="txtQty ' + counter + '" style="font-size: 9px;width: 52px!important;text-align: right;margin-top: 2px;" autocomplete="off" onkeyup="calcutaeQty(this)"/></td><td id="tdstock"></td><td style="padding-top: 7px!important;padding-left: 8px!important;display:none;" contenteditable></td><td style="padding-top: 7px!important;padding-left: 8px!important" contenteditable>' + parse[key].remarks + '</td><td> <label class="fileContainer" style="font-size: 13px;margin-top: -3px;"><i class="glyphicon glyphicon-paperclip"></i><input type="file" name="fileuploadlist" id="fileuploadlist' + key + '"></label></td><td style="display:none">' + parse[key].itemId + '</td><td><a href="#" onclick="Delete(this)"><i class="glyphicon glyphicon-trash" style="font-size: 13px; margin-top: 5px;  margin-left: 16px; color: #f30a0a;"></i></a></td></tr>';
@@ -853,7 +796,6 @@
         }
 
         function sendFile(ID) {
-            debugger;
             var data = new FormData();
             data.append('file', $('#PR_UploadImage')[0].files[0]);
             data.append('ID', ID);
@@ -873,14 +815,11 @@
         }
 
         function calcutaeQty() {
-            debugger;
             var TotalQty = 0;
             $.each($('#tblPackage tbody tr'), function (key, value) {
-                debugger;
                 var Qty = $($(value).find('td input[name=Qty]')[0]).val();
                 TotalQty += parseFloat(Qty);
             });
-            debugger;
             $('#totQty').val(TotalQty);
         }
 

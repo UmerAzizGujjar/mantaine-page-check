@@ -29,7 +29,6 @@
             });
         }
         function validateSave() {
-            debugger;
             var table = $('#tblItemDescriptionDetail');
             var proceed = true;
             var main_type = $('#ddl_users').val();
@@ -78,15 +77,11 @@
             return proceed;
         }
         function LoadDetail(id) {
-            debugger
             var rows = '';
             PageMethods.LoadDetail(id, function (res) {
-                debugger;
                 var result = JSON.parse(res);
                 $.each(result, function (key, value) {
-                    debugger;
                     setTimeout(function () {
-                        debugger;
                         $("#ddl_users").val(value.User_Id);
                         $("#ddl_users").trigger('change');
                         $('#ddl_users').attr('disabled', 'disabled');
@@ -110,7 +105,6 @@
             });
         }
         function Delete(row) {
-            debugger;
             var a = confirm("Are you sure You want to delete");
             if (a == true) {
                 $(row).closest('tr').remove();
@@ -118,7 +112,6 @@
         }
         function SaveAllRecord() {
             if (validateSave()) {
-                debugger;
                 var tableItems = $('#tblItemDescription');
                 var btnSave = $('#btn_Save').val();
                 var idParam = '';
@@ -132,7 +125,6 @@
                 var AllItemDetail = [];
 
                 tableItems.find('tr:gt(0)').each(function (key, value) {
-                    debugger;
                     arr = {};
                     arr.userid = $('#ddl_users').val();
                     arr.dept = $(value).find('td input[name=txt_deptwisedoc_id]').val();
@@ -188,7 +180,6 @@
         }
 
         function FillUsers() {
-            debugger;
             var options = '';
             PageMethods.FillUsers(function (result) {
                 options = '<option value="0">Please Select</option>';
@@ -199,7 +190,6 @@
             });
         }
         function Addrow() {
-            debugger;
             var user_id = $('#ddl_users').val();
             var username = $('#ddl_users :selected').text();
             var Department = $('#ddlDepartment :selected').text();
@@ -280,7 +270,6 @@
         }
 
         function AddAllDepartments() {
-            debugger;
             var user_id = $('#ddl_users').val();
             var username = $('#ddl_users :selected').text();
 

@@ -7,7 +7,6 @@
             window.location = "InventoryOrgs.aspx";
         }
         function Validate() {
-            debugger;
 
             var val = document.getElementById("hdnDuplicateCheck").value;
             var returnVal = false;

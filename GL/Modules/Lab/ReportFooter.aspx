@@ -4,7 +4,6 @@
  <script type="text/javascript">
      $(document).ready(function () {
      $('#btn_Save').click(function () {
-         debugger;
          var Reportfooter = CKEDITOR.instances.editor.getData();
          var ReportfooterTow = CKEDITOR.instances.txtFooterTow.getData();
          var data = JSON.stringify({
@@ -18,7 +17,6 @@
              contentType: "application/json; charset=utf-8",
              dataType: "json",
              success: function (data) {
-                 debugger;
                  if (data.d == 'Successfull') {
                      alert("Save Successfully ");
                  }
@@ -35,7 +33,6 @@
 
      function LoadFooter() {
          PageMethods.LoadReportFooter(function (data) {
-             debugger;
              var FooterTxT = JSON.parse(data);
              $('#editor').text(FooterTxT);
              CKEDITOR.instances.editor.setData(FooterTxT);
@@ -44,7 +41,6 @@
      }
      function loadFooterTow() {
          PageMethods.LoadReportFooterTow(function (data) {
-             debugger;
              var Footer = JSON.parse(data);
              $('#txtFooterTow').text(Footer);
              CKEDITOR.instances.txtFooterTow.setData(Footer);

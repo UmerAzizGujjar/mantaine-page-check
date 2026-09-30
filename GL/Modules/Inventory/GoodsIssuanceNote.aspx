@@ -45,7 +45,6 @@
                 // Add this event handler inside document ready
                 $(document).on('click', '#confirmCloseBtn', function () {
                     var remarks = $('#remarks').val().trim();
-                    debugger;
                     if (remarks === "") {
                         Swal.fire({
                             icon: 'warning',
@@ -56,7 +55,6 @@
                         });
                         return false;
                     }
-                    debugger;
                     var GIR = $('#ddlMIR').val();
 
                     if (!GIR || GIR === "0") {
@@ -211,14 +209,12 @@
                  }
              });
              $('#btnAdd').on('click', function () {
-                 debugger;
                  var MIR_id = $("#ddlMIR").val();
                  LoadMIRDetail(MIR_id);
              });
             
             var GIRCloseCond;
             function GetGIRCloseCondition() {
-                debugger;
                 $.ajax({
                     type: "POST",
                     url: "GoodsIssuanceNote.aspx/GetGIRCloseCondition",
@@ -226,7 +222,6 @@
                     contentType: "application/json; charset=utf-8",
                     dataType: "json",
                     success: function (response) {
-                        debugger;
                         GIRCloseCond = JSON.parse(response.d);
                         if (GIRCloseCond == '01') {
                             $('#divSaveandClose').show();
@@ -244,7 +239,6 @@
             }
      
        <%--      $('#btnSave').on('click', function () {
-                 debugger;
                  var checkstock = false;
                  var status;
                  var btnSave = $('#btnSave').val();
@@ -264,7 +258,6 @@
                  }
                  var Item_list = [];
                  table.find('tr:gt(0)').each(function (key, value) {
-                     debugger
                      var StoreStock = $(value).find('td input[name=txtStoreStock]').val();
                      var IssueQty = $(value).find('td input[name=txtIssueQty]').val();
                      var MIRQty = $(value).find('td input[name=txtmirQty]').val();
@@ -324,7 +317,6 @@
                          status = "error";
                      }
                      else {
-                         debugger
                          if (btnSave == "Save") {
                              Item_list.push({
                                  'mirDetailId': $(value).find('td:eq(0)').text(), 'mir_id': $(value).find('td:eq(1)').text(), 'ItemId': $(value).find('td input[name=txtItemId]').val(), 'Unit': $(value).find('td:eq(6)').text(), 'StoreStock': $(value).find('td input[name=txtStoreStock]').val(), 'Remarks': $(value).find('input[name=txtRemarks]').val(), 'BatchNum': BatchNum, 'Qty': $(value).find('input[name=txtmirQty]').val(), 'IssueQty': $(value).find('input[name=txtIssueQty]').val(), 'BalanceQty': $(value).find('input[name=txtBlncQty]').val(), 'lastIssueDate': $(value).find('input[name=txtLastIsssueDate]').val(), 'CGS': parseFloat($(value).find('input[name=txtIssueQty]').val() || 0) * parseFloat($(value).find('input[name=txtCGSRate]').val() || 0), 'Department': $(value).find('td:eq(3)').text()
@@ -430,7 +422,6 @@
 
         var warehouseCond;
         function GetWareHouseCondition() {
-            debugger;
             $.ajax({
                 type: "POST",
                 url: "GoodsIssuanceNote.aspx/GetWareHouseCondition",
@@ -438,7 +429,6 @@
                 contentType: "application/json; charset=utf-8",
                 dataType: "json",
                 success: function (response) {
-                    debugger;
                     warehouseCond = JSON.parse(response.d);
                     if (warehouseCond == '01') {
                         getMIR();
@@ -455,7 +445,6 @@
         }
 
         function getMIRAll() {
-            debugger;
             $.ajax({
                 type: "POST",
                 url: "GoodsIssuanceNote.aspx/getMIRAll",
@@ -502,7 +491,6 @@
             }
             var Item_list = [];
             table.find('tr:gt(0)').each(function (key, value) {
-                debugger
                 var StoreStock = $(value).find('td input[name=txtStoreStock]').val();
                 var IssueQty = $(value).find('td input[name=txtIssueQty]').val();
                 var MIRQty = $(value).find('td input[name=txtmirQty]').val();
@@ -564,7 +552,6 @@
                     
                 }
                 else {
-                    debugger
                     if (btnSave == "Save") {
                         Item_list.push({
                             'mirDetailId': $(value).find('td:eq(0)').text(), 'mir_id': $(value).find('td:eq(1)').text(), 'ItemId': $(value).find('td input[name=txtItemId]').val(), 'Unit': $(value).find('td:eq(6)').text(), 'StoreStock': $(value).find('td input[name=txtStoreStock]').val(), 'Remarks': $(value).find('input[name=txtRemarks]').val(), 'BatchNum': BatchNum, 'Qty': $(value).find('input[name=txtmirQty]').val(), 'IssueQty': $(value).find('input[name=txtIssueQty]').val(), 'BalanceQty': $(value).find('input[name=txtBlncQty]').val(), 'lastIssueDate': $(value).find('input[name=txtLastIsssueDate]').val(), 'CGS': parseFloat($(value).find('input[name=txtIssueQty]').val() || 0) * parseFloat($(value).find('input[name=txtCGSRate]').val() || 0), 'Department': $(value).find('td:eq(3)').text()
@@ -743,18 +730,14 @@
             
         }
         function UserRights() {
-            debugger;
             $.ajax({
                 type: "POST",
                 url: "GoodsIssuanceNote.aspx/UserEntryRights",
                 contentType: "application/json; charset=utf-8",
                 dataType: "json",
                 success: function (response) {
-                    debugger;
                     var hasRights = response.d;
-                    debugger;
                     if (hasRights) {
-                        debugger;
                         $('#btnSave').show();
                     } else {
                         $('#btnSave').hide();
@@ -774,7 +757,6 @@
                     alert(error.get_message());
                 })
         }
-        debugger;
         function CloseGIRs() {
             // Clear previous remarks
             $('#remarks').val('');
@@ -809,21 +791,17 @@
             });
         }
         function getbatchsAgainstItem(itemcode, length) {
-            debugger
             PageMethods.Getbatchs(itemcode, function (data) {
-                debugger
                 var parsedData = JSON.parse(data);
                 var options = '<option value="0">Please Select</option>';
                 var batchCount = 0;
                 $.each(parsedData.GRN_Details, function (key, value) {
-                    debugger
                     if (value.BatchNum !== '') {
                         options += '<option value="' + value.BatchNum + '">' + value.BatchNum + '</option>';
                         batchCount++;
                     }
                 });
                 $.each(parsedData.Stock_Adjustment_Details, function (key, value) {
-                    debugger
                     if (value.BatchNum !== '') {
                         options += '<option value="' + value.BatchNum + '">' + value.BatchNum + '</option>';
                         batchCount++;
@@ -841,7 +819,6 @@
         }
 
         function LoadAllitem(searchText) {
-            debugger;
             var selectedWarehouse = $('#ddlInventoryOrg').val();
 
             if (!selectedWarehouse || selectedWarehouse == '0') {
@@ -900,7 +877,6 @@
         }
 
         function appendSearchItem(anchor) {
-            debugger;
             var row = $(anchor).closest('tr');
             var item_id = $(row).find('td:eq(1)').text().trim();
             var item_code = $(row).find('td:eq(2)').text().trim();
@@ -964,7 +940,6 @@
             }
 
             getbatchsAgainstItem(item_code, length);
-            debugger;
             var rows = '<tr>' +
                 '<td style="padding-top: 9px;height: 27px !important;text-align: center;padding-top: 6px !important;">' + mir_detail_id + ' </td>' +
                 '<td style="padding-top: 9px;height: 27px !important;text-align: center;padding-top: 6px !important;">' + mir_id + ' </td>' +
@@ -985,7 +960,6 @@
                 '<td style="display:none;padding-top: 2px;"><input type="hidden"  style=" font-size: 10px;height: 22px;  width: 64px!important;margin-top: 2px;margin-bottom: 0px;margin-left: 4px;" id="txtCGSAmount' + length + '" name="txtCGSAmount"/></td>' +
                 '<td style="padding-top: 2px;display:none;"><input type="hidden" value="' + IsBatch + '" style=" font-size: 10px;height: 22px;  width: 64px!important;margin-top: 2px;margin-bottom: 0px;margin-left: 4px;" id="txtBatch' + length + '" name="txtBatch"/></td>'
                 + '<td style="padding-top: 9px;padding-top: 6px !important;"> <a href="#" onclick="ExcludeFromPayment(this)">Delete</a></td></tr>';
-            debugger;
             if ((Qty == 0 || Qty == "0" || Qty == null) &&
                 (mir_detail_id && mir_detail_id !== "0")) {
                 return false;
@@ -995,9 +969,7 @@
                // $('#txtIssueQty' + length).prop('disabled', true);
             //}
         }
-        debugger;
         function append(anchor) {
-            debugger;
             count = 0;
             var rows = '';
             var row = $(anchor).parents('tr')[0];
@@ -1122,9 +1094,7 @@
         var departmentid = '';
         var warehouseid = '';
         function LoadMIRDetail(MIR_id) {
-            debugger
             PageMethods.getStoreIssueByID(MIR_id, function (data) {
-                debugger
                 var parsed_Date = JSON.parse(data);
                 departmentid = parsed_Date[0].Department;
                 warehouseid = parsed_Date[0].InventoryOrganization;
@@ -1164,15 +1134,12 @@
             });
         }
         function GetCGSRate(anchor) {
-            debugger;
             var row = $(anchor).parents('tr')[0];
             var Item_code = $($(row).find('input[name=txtItemCode]')).val();
             var batchNum = $($(row).find('select[name=ddlBatchNum]')).val();
             var invOrg = $('#ddlInventoryOrg').val();
             PageMethods.GetCGSRate(Item_code, batchNum, invOrg, function (res) {
-                debugger
                 var parsed_stock = JSON.parse(res);
-                debugger
                 if (parsed_stock != "") {
                     $($(row).find('input[name=txtCGSRate]')).val(parseInt(parsed_stock));
                 }
@@ -1182,15 +1149,12 @@
             });
         }
         function CheckBatch(anchor) {
-            debugger;
             var row = $(anchor).parents('tr')[0];
             var Item_code = $($(row).find('input[name=txtItemCode]')).val();
             var batchNum = $($(row).find('select[name=ddlBatchNum]')).val();
             var invOrg = $('#ddlInventoryOrg').val();
             PageMethods.GetStock(Item_code, batchNum, invOrg, function (res) {
-                debugger
                 var parsed_stock = JSON.parse(res);
-                debugger
                 if (parsed_stock != "") {
                     $($(row).find('input[name=txtStoreStock]')).val(parseInt(parsed_stock));
                 }
@@ -1200,7 +1164,6 @@
             });
         }
         //function getMIR() {
-        //    debugger;
         //    var warehouse = $("#ddlInventoryOrg").val();
         //    if (warehouse == null || warehouse == undefined) {
         //        warehouse = '0';
@@ -1226,7 +1189,6 @@
         //}
 
         function getMIR() {
-            debugger;
             var warehouse = $("#ddlInventoryOrg").val();
             var department = $("#ddlDepartment").val(); 
 
@@ -1282,9 +1244,7 @@
             $($(row).find('input[name=txtCGSAmount]')).val(cgsAmt);
         }
         function LoadMaster(SI_ID) {
-            debugger
             PageMethods.LoadMaster(SI_ID, function (res) {
-                debugger
                 var result = JSON.parse(res);
                 $('#txtStoreissueNo').val(result[0].Store_Issue_No);
                 $('#txtStatus').val(result[0].Status);
@@ -1317,9 +1277,7 @@
             }
         }
         function LoadDetail(SI_ID) {
-            debugger
             PageMethods.LoadDetail(SI_ID, function (res) {
-                debugger;
                 var result = JSON.parse(res);
                 selectedOptions = result;
                 $(result).each(function (key, value) {
@@ -1466,7 +1424,6 @@
             window.open(url, '_blank');
         }
         function sendFile(ID, callback) {
-            debugger;
             var fileInput = $('#choseGINfile')[0];
             if (fileInput.files.length > 0) {
                 var data = new FormData();
@@ -1492,18 +1449,14 @@
      
 
         function UserUnApproveButtonRights() {
-            debugger;
             $.ajax({
                 type: "POST",
                 url: "GoodsIssuanceNote.aspx/UserUnApproveEntryRights",
                 contentType: "application/json; charset=utf-8",
                 dataType: "json",
                 success: function (response) {
-                    debugger;
                     var hasRights = response.d;
-                    debugger;
                     if (hasRights) {
-                        debugger;
                         $('#btnUnApproveToBeHidden').show();
                     } else {
                         $('#btnUnApproveToBeHidden').hide();
@@ -1517,7 +1470,6 @@
         function UnApprove() {
             var SINId = '<% =Request.QueryString["SI_ID"] %>';
             PageMethods.UnApproveSIN(SINId, function (Tests) {
-                debugger
                 var message = JSON.parse(Tests);
                 if (message[0].Column1 != "" || message[0].Column1 != null) {
                     alert(message[0].Column1);

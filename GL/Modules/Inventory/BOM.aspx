@@ -43,7 +43,6 @@
                 }
            
             $('#addItemBtn').click(function (e) {
-                debugger;
                 e.preventDefault();
                 var itemId = $('#ddlitem').val();
                 var itemName = $('#ddlitem :selected').text().trim();
@@ -77,7 +76,6 @@
               /*      Batch_No: batchNo,*/
                     BaseUnitQty: parseFloat(qtyInBaseUnits) 
                 });
-                debugger;
                 var row = '<tr>' +
                     '<td><input type="text" name="ItemName" class="form-control" value="' + itemName + '" readonly /></td>' +
                     '<td><input type="text" name="Qty" class="form-control" value="' + quantityInPieces.toFixed(2) + '" readonly /></td>' +
@@ -95,7 +93,6 @@
                     '</tr>';
 
                 $('#itemsTableBody').append(row);
-                debugger;
 
                 var grandTotal = items.reduce((sum, i) => sum + i.Total, 0);
                 $('#grandTotal').text(grandTotal.toFixed(2));
@@ -200,9 +197,7 @@
         }
 
 
-                     debugger;
                      function LoadBOMForEdit(id) {
-                         debugger;
                         LoadProcedures();
                         LoadWareHouse();
                         LoadItems();      

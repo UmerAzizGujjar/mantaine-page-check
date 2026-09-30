@@ -213,7 +213,6 @@
                     {
                         "data": "LastActivityDate", "name": "LastActivityDate",
                         "render": function (data, type, full) {
-                            debugger;
                             var date = full.LastActivityDate;
                             date = moment(date).format('DD-MMM-YYYY hh:mm A'); // added time
                             return date;
@@ -223,7 +222,6 @@
                     { "data": "BlockUser", "width": "1%", "orderable": true },
                     {
                         render: function (data, type, full) {
-                            debugger;
                             var res = '<a href="#" onclick="editOpen(\'' + full.UserId + '\')" class="editListBtn" style="border-radius: 4px;padding: 5px 8px;"><i  class="fa fa-pencil"></i></a>';
 
                             var Del = '<a class="delListBtn" style="border-radius: 4px;margin-left: 4px;padding: 5px 8px 5px 8px;" href="#" data-id="' + full.UserId + '" onclick="deleteUser(\'' + full.UserId + '\')"><i class="fa fa-trash" ></i></a>';

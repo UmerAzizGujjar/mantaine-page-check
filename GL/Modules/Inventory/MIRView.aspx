@@ -194,13 +194,11 @@ font-weight: bold !important;
                         "type": "GET",
                         "dataType": "JSON",
                         "data": function (d) {
-                            debugger;
 
                             return d;
                         },
 
                         "dataSrc": function (json) {
-                            debugger;
                             json.draw = json.d.draw;
                             json.recordsTotal = json.d.recordsTotal;
                             json.recordsFiltered = json.d.recordsFiltered;
@@ -214,7 +212,7 @@ font-weight: bold !important;
                         { "data": "Request_No" },
                         {
                             "data": "Priority",
-                            "render": function (data, type, full) {                                debugger;                                var Priority = full.Priority;                                if (Priority == 1) {
+                            "render": function (data, type, full) {                                var Priority = full.Priority;                                if (Priority == 1) {
                                     Priority = "High";
                                 } else {
                                     Priority = "Low";
@@ -227,7 +225,6 @@ font-weight: bold !important;
 
                         {
                             render: function (data, type, full) {
-                                debugger;
                                 var res = ' <a href="#" onclick="Edit(' + full.MaterialRequest_Id + ')" style="border-radius: 4px;margin-right: 4px; background-color: #1f1fe3; color: white; padding: 5px 8px 5px 8px;"><i class="fa-solid fa-pen"></i>'
 
                                 var del ='</a><a  href="#"  onclick="deleteConfirm(this)" id="btnDel' + (full + 1) + '"style="border-radius: 4px; background-color: red; color: white; padding: 5px 8px 5px 8px;"><i class="fa-solid fa-trash"></i></a>';
@@ -271,7 +268,6 @@ font-weight: bold !important;
 
 
         function Print(id) {
-            debugger;
             var locationInfo = window.location;
             var url = '/ReportViewer.aspx?ReportName=MaterialIssueRequestList&ReportTitle=Material IssueRequest List&MIRId=' + id;
             if (!locationInfo.origin.includes('localhost')) {
@@ -300,7 +296,6 @@ font-weight: bold !important;
                 url: "MIRView.aspx/isDeleteAllow",
                 data: "",
                 success: function (resp) {
-                    debugger;
                     if (resp.d == true) {
                         isDele = true;
                     }
@@ -315,7 +310,6 @@ font-weight: bold !important;
 
         }
         function deleteConfirm(anchorTag) {
-            debugger;
             var row = $(anchorTag).parents('tr')[0];
 
 
@@ -324,7 +318,6 @@ font-weight: bold !important;
 
             if (confirm('Are you sure want to delete this record')) {
                 PageMethods.DeleteRecord(MIRID, function (msg) {
-                    debugger
                     $(row).remove();
                 }, OnFail);
             }

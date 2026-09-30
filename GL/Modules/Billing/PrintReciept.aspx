@@ -15,7 +15,6 @@
 
          $(document).ready(function () {
              //alert();
-             debugger;
        if ("<%=Request.QueryString["Bill_ID_Copy"]%>" != null) {
 
              PrintPatientCopy();
@@ -23,7 +22,6 @@
 
          });
          $(function () {
-             debugger;
              if ("<%=Request.QueryString["Patient_ID"]%>" != "") {
                  PrintPatientReceipt();
              }
@@ -35,7 +33,6 @@
          });
 
          function PrintBillingReport() {
-             debugger;
              
              var contents = $("#PrintBillingReport").html();
              var frame1 = $('<iframe />');
@@ -53,14 +50,12 @@
              frameDoc.document.write('</body></html>');
              frameDoc.document.close();
              setTimeout(function () {
-                 debugger;
                  window.frames["frame1"].focus();
                  window.frames["frame1"].print();
                  frame1.remove();
                  window.close();               
 
                  //setTimeout(function () {
-                 //    debugger;
 
                  //    window.frames["frame1"].blur();
                  //    window.close();
@@ -84,7 +79,6 @@
 
              }, 500);
              setTimeout(function () {
-                 debugger;
                  
      
                  window.close();
@@ -99,7 +93,6 @@
          }
 
          function PrintBillPatientCopyReport() {
-             debugger;
 
              var contents = $("#PrintBillPatientCopyReport").html();
              var frame1 = $('<iframe />');
@@ -117,7 +110,6 @@
              frameDoc.document.write('</body></html>');
              frameDoc.document.close();
              setTimeout(function () {
-                 debugger;
                  alert();
                  window.frames["frame1"].focus();
                  window.frames["frame1"].print();
@@ -127,7 +119,6 @@
          }
 
          function PrintPatientCopy() {
-             debugger;
              var Bill_ID = "<%=Request.QueryString["Bill_ID_Copy"]%>";
              var PatID = "<%=Request.QueryString["BillPatient_ID_Copy"]%>";
              $.ajax({
@@ -140,7 +131,6 @@
                  contentType: "application/json; charset=utf-8",
                  dataType: "json",
                  success: function (response) {
-                     debugger;
                      $('#lblNameb').text(response.d.Full_Name);
                      $('#lblAgeb').text(response.d.Age_years);
                      $('#lblPatientType').text(response.d.Patient_Type);
@@ -228,7 +218,6 @@
          }
 
          function PrintBIllingReceipt() {
-             debugger;
              var Bill_ID = "<%=Request.QueryString["Bill_ID"]%>";
              var PatID = "<%=Request.QueryString["BillPatient_ID"]%>";
              $.ajax({
@@ -241,7 +230,6 @@
                  contentType: "application/json; charset=utf-8",
                  dataType: "json",
                  success: function (response) {
-                     debugger;
                      console.log(response);
                      $('#lblNameb').text(response.d.Full_Name);
                      $('#lblAgeb').text(response.d.Age_years);
@@ -351,7 +339,6 @@
          var IsLab = false;
          function PrintBillingDetail(Bill_ID) {
 
-             debugger;
              //$.ajax({
              //    type: "POST",
              //    url: "PrintReciept.aspx/PrintBillingDetail",
@@ -444,7 +431,6 @@
              });
          }
          function removeCommas(str) {
-             debugger;
              while (str.search(",") >= 1) {
                  str = (str + "").replace(',', '');
              }
@@ -453,7 +439,6 @@
 
 
          function PrintPatientReceipt() {
-             debugger;
              var ID = "<%=Request.QueryString["Patient_ID"]%>";
              $.ajax({
                  type: "POST",
@@ -578,7 +563,6 @@
              });
          }
          function test_skill(Amount) {
-             debugger;
 
              var junkVal = Amount;
              junkVal = Math.floor(junkVal);

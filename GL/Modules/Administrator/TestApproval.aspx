@@ -52,7 +52,6 @@
         });
         //Bilal
         function httpGet(theUrl) {
-            debugger;
             var xmlHttp = null;
             xmlHttp = new XMLHttpRequest();
             xmlHttp.open("GET", theUrl, false);
@@ -60,7 +59,6 @@
             return xmlHttp.responseText;
         }
         function fillTokenInput(PatientID) {
-            debugger;
             // $('#ctl00_MainContent_txtPatient_ID').tokenInput('clear');
             $('#ctl00_MainContent_txtPatient_ID').tokenInput('clear');
             var tokenData = httpGet("json.aspx?Table=PatientsFetchByID&q=" + PatientID);
@@ -71,7 +69,6 @@
         function rejectList($this) {
 
 
-            debugger;
             //var groupCat = 0;
             var Group_Categroy = $($this).closest('tr').find('td input[name="GroupCategory"]').val();
             var LabTestDetailid = $($this).closest('tr').find('td input[id="labTestDetailID"]').val();
@@ -91,7 +88,6 @@
         }
         $(document).ready(function () {
             $("#ddlrptColumns").val(4);
-            debugger;
             var PatientID = '<%=Request.QueryString["PatientID"]%>';
             if (PatientID != "") {
                 fillTokenInput(PatientID);
@@ -99,25 +95,21 @@
             bindControls();
             GetPendingList();
             $('#btnGrowth').click(function () {
-                debugger;
                 var Growthtext = ddlGrowth.options[ddlGrowth.selectedIndex].text;
                 var existingText = $('#txtAreaGrowth').val();
                 existingText += '\n' + Growthtext;
                 $('#txtAreaGrowth').val(Growthtext);
             });
             $('#btnOrganism').click(function () {
-                debugger;
                 row = '<tr><td>' + $('#ddlOrganism').find('option:selected').text() + '</td><td><input type="text" name="orgvalue" id="orgvalue" value="" style="width: 65px !important;"/></td><td> <a href="javascript:void(0)" onclick="DeleteOrganism(this)">Delete</a></td></tr>';
                 var table = $('#tblOrganism tbody');
                 table.append(row);
 
             });
             $("#approveTest").click(function () {
-                debugger;
                 var table = $('#tbltest');
                 var approve_list = [];
                 $("#tbltest tr input[type=checkbox]:checked ").each(function (key, value) {
-                    debugger;
                     var listOfIds = {};
                     var lab_test_Detail_id = $($($(this)[0]).closest('tr')[0]).find('td #labTestDetailID').val();
                     var groupCID = $($($(this)[0]).closest('tr')[0]).find('td #groupCID').val();
@@ -130,7 +122,6 @@
                 });
                 if (approve_list.length > 0) {
                    
-                    debugger;
                     PageMethods.ApproveTests(approve_list, function (response) {
                         alert("Approved Successfully");
                     });
@@ -185,7 +176,6 @@
             }
         }
         function readIMG(input) {
-            debugger;
             var img_index = 0;
             var detail_id = $(input).closest('tr').find('td:eq(0)')[0].innerText;
             var countFiles = $(input)[0].files.length;
@@ -200,7 +190,6 @@
 
                         var reader = new FileReader();
                         reader.onload = function (e) {
-                            debugger;
                             var img = $('<img />').attr({
                                 'id': 'myImage' + i,
                                 'src': e.target.result,
@@ -226,7 +215,6 @@
             }
         }
         function readIMGsingle(input) {
-            debugger;
             var countFiles = $(input)[0].files.length;
             var imgPath = $(input)[0].value;
             var extn = imgPath.substring(imgPath.lastIndexOf('.') + 1).toLowerCase();
@@ -237,7 +225,6 @@
 
                         var reader = new FileReader();
                         reader.onload = function (e) {
-                            debugger;
                             var img = $('<img />').attr({
                                 'id': 'myImage' + i,
                                 'src': e.target.result,
@@ -261,7 +248,6 @@
 
         }
         function GetPendingList() {
-            debugger;
             $.ajax({
                 type: "post",
                 url: "TestApproval.aspx/ApprovedResultList",
@@ -284,7 +270,6 @@
             });
         }
         function GetSelectedDetail(patient_ID) {
-            debugger;
             //var PatientID = $('#hdfPatient_ID').val();
             if (patient_ID != "") {
                 $('#txtMR_No').tokenInput('clear');
@@ -299,13 +284,11 @@
             }
         }
         function image(input) {
-            debugger;
             var output = document.getElementById('image');
             var a = URL.createObjectURL(input.files[0]);
             console.log(a);
         }
         function CheckNumberOrNot(e) {
-            debugger;
             var check = true;
             // prevent: "e", "=", ",", "-", "."
             if ([69, 187, 188, 189, 190].includes(e.keyCode))
@@ -317,7 +300,6 @@
                 check = false;
 
             if (check == false) {
-                debugger;
                 alert("Only numeric values allowed");
                 e.preventDefault();
             }
@@ -354,7 +336,6 @@
                 tokenLimit: 1,
                 onAdd: function (item) {
                     try {
-                        debugger;
                         $("#hdnLab_Test_ID").val(item.id);
                         loadPatientDataUsingLabID();
                     }
@@ -381,7 +362,6 @@
              });
         }
         function loadPatientData() {
-            debugger;
             var Patient_ID = $("#<%= hdnPatient_ID.ClientID %>").val();
             var Lab_ID = $("#<%= hdnLab_Test_ID.ClientID %>").val();
             var Lab_id = $("#ctl00_MainContent_txtLab_Test_ID").val();
@@ -439,11 +419,9 @@
                     var dd = tbltest.rows.length;
                     if (value.Group_Category != "") {
                         var s = value.Group_Category;
-                        debugger;
                         value.Start_Range = "",
                         value.End_Range = "";
                         //Group Test
-                        debugger;
                         rows += '<tr>' +
                             '<td><input type="checkbox" name="chekApprove" value="approveVal"/></td>' +
                             '<td><input type="hidden" name="labtestDID" id="labtestDID" value="'
@@ -509,17 +487,14 @@
                     }
                 });
                 $('.table tbody').html(rows);
-                debugger;
                 $(".tdemergency").hide();
             });
             // function loadPatientData(labTestId, testId) {
             //     console.log("loadPatientData", labTestId, testId);
-            //debugger;
                 PageMethods.LoadOrganismList(labTestId, testId, function (res) {
                     var Org = JSON.parse(res);
                     var rows = "";
                     $.each(Org, function (key, value) {
-                        debugger;
                         rows += '<tr>' +
                             '<td>' + value.Organism_Name + '</td>' +
                             '<td>' + value.Organism_Value + '</td>' +
@@ -533,7 +508,6 @@
             //report view 
             function ShowReport(Test_ID, Lab_Test_ID, Lab_Test_Detail_ID) {
                 //var reportColums = $("#ddlrptColumns").val();
-                debugger;
                 var ListOfTestIDs = '';
                 var GroupCat = $('#groupCID' + Lab_Test_Detail_ID + '').val();
                 var ReportCol = $('#Report_Colum' + Lab_Test_Detail_ID + '').val();
@@ -546,7 +520,6 @@
                 if (ListOfTestIDs.length > 2) {
                     //ListOfTestIDs = ListOfTestIDs.replace(', ', '');
                     //ReportCol = ReportCol.replace(', ', '');
-                    debugger;
                     var Patient_ID = $('#hdnPatient_ID').val();
                     window.open('ReportViewer.aspx?ReportName=TestResultQ&ReportTitle=Department Of Pathalogy&Test_IDs=' + ListOfTestIDs + '&Patient_ID=' + Patient_ID + '&TransID=' + Lab_Test_ID + '&ReportColumn=' + ReportCol);
                 }
@@ -556,7 +529,6 @@
 
             function ShowSingleReport(Test_ID, Lab_Test_ID, Lab_Test_Detail_ID) {
 
-                debugger;
                 var ReportCol = $('#Report_Colum' + Lab_Test_Detail_ID + '').val();
                 var Patient_ID = $('#hdnPatient_ID').val();
                 window.open('ReportViewer.aspx?ReportName=TestResultQ&ReportTitle=Department Of Pathalogy&Test_IDs=' + Test_ID + '&Patient_ID=' + Patient_ID + '&TransID=' + Lab_Test_ID + '&ReportColumn=' + ReportCol);
@@ -570,7 +542,6 @@
                     //  CKEDITOR.replace('txtfixedType');
                 }
                 $('#txtMRNOSearch').keyup(function (e) {
-                    debugger;
                     //var CheckAll = $('#chkTodayAll').checked;
                     var MRno = $('#txtMRNOSearch').val();
                     var tbl = document.getElementById('tblPendingPatientsLIst');
@@ -597,7 +568,6 @@
             });
             function getTestID(LabID, CatID, billDetailID) {
                 var catID = CatID.toString();
-                debugger;
                 //  CatID = $($(this).find('#tbltest td input[name=labtestDID]')[1]).val();
                 PageMethods.GetTestDetails(LabID, catID, billDetailID, function (res) {
                     var TestTable = JSON.parse(res);
@@ -616,9 +586,7 @@
                 $('#myModal').modal('show');
             }
             function LabTestMultipleID(testID) {
-                debugger;
                 PageMethods.getResultValues(testID, function (res) {
-                    debugger;
                     var testValueList = JSON.parse(res);
                     testValueOptionsList = '';
                     $('#ddlTestResult').empty();
@@ -631,9 +599,7 @@
                 });
             }
             function LabTestMultipleID(testID) {
-                debugger;
                 PageMethods.getResultValues(testID, function (res) {
-                    debugger;
                     var testValueList = JSON.parse(res);
                     testValueOptionsList = '';
                     $('#ddlTestResult').empty();
@@ -646,7 +612,6 @@
                 });
             }
             function deleteImage(imageURL) {
-                debugger;
                 var imageURL = $($(imageURL)[0]).attr('src');
                 $.ajax({
                     type: "POST",
@@ -701,7 +666,6 @@
             var result_type_fixed = '';
             var result_type_list = '';
             function EditData($this) {
-                debugger;
                 var Lab_Test_Detail_ID = '';
                 var LabID = $("#<%= hdnLab_Test_ID.ClientID %>").val();
             var LabID = $($($this).parents('tr')[0]).find('td:nth-child(2)')[0].innerText;
@@ -721,19 +685,16 @@
                 $("#saveTest").show();
             }
             else {
-                debugger;
                 $("#tblgroupTestlist").show();
                 $("#tblsingleTest").hide();
             }
             $('#myModal').modal('hide');
             PageMethods.LoadTestCatogry(LabID, CatID, billDetailID, function (res) {
 
-                debugger;
                 var parsedData = JSON.parse(res);
                 var row = '';
                 if (Group_Categroy == "") //Single
                 {
-                    debugger;
                     //single
                     var single = "1";
                     isGroup = false;
@@ -746,7 +707,6 @@
                         contentType: "application/json; charset=utf-8",
                         dataType: "json",
                         success: function (response) {
-                            debugger;
                             var data = JSON.parse(response.d);
                             var result_value = data[8];
                             var range = data[13];
@@ -804,12 +764,10 @@
                     var single = "0";
                     //group
                     isGroup = true;
-                    debugger;
                     $('#tblgroupTestlist tr:gt(0)').remove();
                     optionsList = '<option>Please Select</option>';
                     var parsed_image_data = '';
                     $.each(parsedData, function (key, value) {
-                        debugger;
                         var selectValue = '';
                         var optionsList = '';
                         var Remarks = '';
@@ -855,14 +813,12 @@
                         $('#ddlResultValue' + key + '').val(parsedData[key].Result_Value);
                         if (parsedData[key].Growth_Type != '' && parsedData[key].Growth_Type != null) {
                             for (var i = 0; i <= parsedData[key].Growth_Type.length; i++) {
-                                debugger;
                                 var GrowthType = parsedData[key].Growth_Type;
                                 $('#ddlGrowth' + i + '').val(GrowthType);
                             }
                         }
                         if (parsedData[key].Growth_Type != '' && parsedData[key].Growth_Type != null) {
                             for (var i = 0; i <= parsedData[key].Organism_Type.length; i++) {
-                                debugger;
                                 var OrganismType = parsedData[key].Organism_Type;
                                 $('#ddlOrganism' + i + '').val(GrowthType);
                             }
@@ -876,7 +832,6 @@
         }
         var fileListGlobal = '';
         function Edit(rowSave) {
-            debugger;
             var lab_test_Detail_id = $($(rowSave).parents('tr')[0]).find('td:eq(0)').text();
             var filesComplete = $($(rowSave).closest('tr')[0]).find('td:eq(7) input[type=file]').get(0).files;
 
@@ -923,14 +878,11 @@
 
                         alert("Saved");
                     }
-                    debugger;
                 }, error: function () { }
             });
         }
         function OnSuccess(data) {
-            debugger;
             if (data.d != '') {
-                debugger;
                 var mydate = new Date(Date.parse(data.d.Entry_Date));
                 var dateR = mydate.toLocaleDateString();
                 var tokendata = httpGet("json.aspx?Table=Patients&Record=Edit&q=" + data.d.Patient_No);
@@ -942,7 +894,6 @@
            $('#<%= vLbl_Adress.ClientID %>').text(data.d.Address);
            $('#<%= vLbl_Contact.ClientID %>').text(data.d.Mobile);
            $('#<%= vPatient_Category.ClientID %>').text(data.d.Patient_Category);
-           debugger;
            //GetLabDetailUsingLabID();
            GetLabDetail();
        }
@@ -958,18 +909,15 @@
                 $('#<%= vLbl_Adress.ClientID %>').text(data.d.Address);
                 $('#<%= vLbl_Contact.ClientID %>').text(data.d.Mobile);
                 $('#<%= vPatient_Category.ClientID %>').text(data.d.Patient_Category);
-                debugger;
                 GetLabDetail();
             }
         }
         function DeleteOrganism(reference) {
-            debugger;
             $($(reference).parents('tr')[0]).remove();
         }
     </script>
     <script type="text/javascript">
         function toggle(source) {
-            debugger;
             var checkboxes = document.querySelectorAll('input[type="checkbox"]');
             for (var i = 0; i < checkboxes.length; i++) {
                 if (checkboxes[i] != source)

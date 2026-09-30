@@ -242,7 +242,6 @@
                 return;
             }
             if (event.altKey && event.code === 'KeyS') {
-                debugger;
                 event.preventDefault();
                 $('#medName').select2('close');
                 window.__saveMode = 'save_only';
@@ -255,7 +254,6 @@
                 $('#txtuserCode').focus();
             }
             else if (event.altKey && event.code === 'KeyL') {
-                debugger;
                 event.preventDefault();
                 // $('#medName').select2('close');
                 // $('#btnSave').attr('style', 'background: green !important;margin-top: -5px;').focus();
@@ -450,12 +448,10 @@
 
             });
             $("#txtReturnuserCode").on('change', function (e) {
-                debugger;
                 var userCode = $('#txtReturnuserCode').val();
                 var Nusername;
                 breakout = false;
                 $(arr).filter(function (i, n) {
-                    debugger;
                     if (userCode == n.User_Code) {
                         $('#lblReturnUsername').text(n.Username).css("color", "black");
                         breakout = true;
@@ -474,20 +470,16 @@
 
             });
         });
-        debugger;
         $(function () {
-            debugger;
             items = []
             loadmed();
             loadDepartment();
             loadDoctors();
-            debugger;
             pageSize = 50
             jQuery.fn.select2.amd.require(["select2/data/array", "select2/utils"],
 
                 function (ArrayData, Utils) {
                     function CustomData($element, options) {
-                        debugger;
                         CustomData.__super__.constructor.call(this, $element, options);
                     }
                     Utils.Extend(CustomData, ArrayData);
@@ -510,7 +502,6 @@
                         callback(data);
                     };
                     $(document).ready(function () {
-                        debugger;
                         $("#medName").select2({
                             ajax: {},
                             dataAdapter: CustomData,
@@ -639,7 +630,6 @@
                 });
             });
         }
-        debugger
         function loadDoctors() {
 
             PageMethods.loadDoctors(function (data) {
@@ -655,7 +645,6 @@
                     alert(error.get_message());
                 });
         }
-        debugger
         function loadDepartment() {
 
             PageMethods.GetDepartment(function (data) {
@@ -682,12 +671,10 @@
                 $('#lblUsername').text('');
             });
             $("#txtuserCode").on('change', function (e) {
-                debugger;
                 var userCode = $('#txtuserCode').val();
                 var Nusername;
                 breakout = false;
                 $(arr).filter(function (i, n) {
-                    debugger;
                     if (userCode == n.User_Code) {
                         $('#lblUsername').text(n.Username).css("color", "black");
                         breakout = true;
@@ -704,7 +691,6 @@
             });
             $("#chkprint").prop("checked", true);
             $("#chkbatch").prop("checked", true);
-            debugger;
             var btch = $('#chkbatch').prop("checked");
             if (btch == false) {
                 $('.batchdiv').hide();
@@ -717,7 +703,6 @@
             $('#row22').hide();
             LoadTokenInputsDefaultMRNo();
             $("#chkprint").on('change', function (e) {
-                debugger;
                 var checkPrint = $('#chkprint').is(":checked");
                 if (checkPrint == false) {
                     $('#btnSave').val("Save").css("width", "8.333%");
@@ -726,14 +711,12 @@
                 }
             });
             $("#medName").on('change', function (e) {
-                debugger;
                 if (window.__skipMedNameChange) return;
                 setTimeout(function () {
                     $('input[name="txtQty"]').focus().select();
                 }, 5);
             });
             $('input[name="rbtn"]').on('change', function (e) {
-                debugger;
                 var chkbtn = $('input[name="rbtn"]:checked').val();
                 if (chkbtn == 'rbtnHospital') {
                     $('#txtDisPer').attr("disabled", true);
@@ -765,7 +748,6 @@
                 }
             });
             $('#SearchModel').on('keypress', function (event) {
-                debugger;
                 var keycode = (event.keyCode ? event.keyCode : event.which);
                 if (keycode == '13') {
                     if (isPharmSaveInProgress()) return;
@@ -786,7 +768,6 @@
 
             // Open the modal for Sale Return
             $('#btnSaleReturn').click(function () {
-                debugger
                 $('#SaleReturnModal').modal('show');
                 loadInvoiceNumbers();
                 loadSaleReturnItems();
@@ -911,7 +892,6 @@
             $('#ddlSaleReturnItems').prop('disabled', srQtyFieldDisabled);
         }
         function AddSaleReturnInvoiceMaster() {
-            debugger
             var invNo = $('#ddlInvoiceNumber').val();
             if (invNo) {
                 $.ajax({
@@ -922,7 +902,6 @@
                     contentType: "application/json; charset=utf-8",
                     async: false,
                     success: function (msg) {
-                        debugger
                         var data = JSON.parse(msg.d);
                         $('#txtSaleReturnTotalPayable').val(data[0].Total_Amount);
                         $('#txtSaleReturnDisPer').val(data[0].Discount_Percentage);
@@ -939,7 +918,6 @@
 
         }
         function RefreshSaleReturnModal() {
-            debugger;
             $('#ddlInvoiceNumber').prop('disabled', false);
             $('#ddlpat_no').prop('disabled', false);
             $('#ddlSaleReturnItems').prop('disabled', false);
@@ -956,7 +934,6 @@
 
         }
         function CalculateSaleReturnAdj() {
-            debugger;
             var total = parseFloat($('#txtSaleReturnTotalPayable').val()) || 0;
             var disamt = parseFloat($('#txtSaleReturnDisAmt').val()) || 0;
             var linedisamt = parseFloat($('#txtSaleReturnLineDisc').val()) || 0;
@@ -966,7 +943,6 @@
                 net = 0;
             }
             $('#txtSaleReturnTotal').val(net.toFixed());
-            debugger;
         }
 
         function AddSaleReturnInvoiceDetails(invNo) {
@@ -1125,10 +1101,8 @@
 
 
         function updateReturnStock(anchors) {
-            debugger;
             var row = $(anchors).closest('tr');
             var rowIndex = row.index();
-            debugger;
             var selectId = $(anchors).attr('id');
             var idParts = selectId.split('txtRBatch_Nos');
             if (idParts.length > 1) {
@@ -1155,7 +1129,6 @@
                 contentType: "application/json; charset=utf-8",
                 async: false,
                 success: function (stockMsg) {
-                    debugger;
                     var stockData = JSON.parse(stockMsg.d);
                     var stock = stockData[0].Total_Stock || 0;
                     var rate = stockData[0].Sale_Rate || 0;
@@ -1164,7 +1137,6 @@
                     var Mini_Stocks = stockData[0].Mini_stock;
 
                     date = moment(date).format('D-MMM-YYYY');
-                    debugger;
                     $('#txtRStock' + counter).val(stock);
                     $('#txtRCGSRate' + counter).val(CGSRate);
                     $('#txtRSalerate' + counter).val(rate);
@@ -1405,7 +1377,6 @@
         }
 
         function validateSaleReturn() {
-            debugger
             var proceed = true;
             var total = $('#txtSaleReturnTotalPayable').val() || 0;
 
@@ -1491,7 +1462,6 @@
 
         function SearchReturnPop() {
             if (isPharmSaveInProgress()) return;
-            debugger;
             $('#SearchReturnModel').modal({
                 backdrop: 'static'
             });
@@ -1501,11 +1471,9 @@
             $('#lblReturnUsername').text('');
             $('#txtReturnpass').text('');
         }
-        debugger;
         function SaveSaleReturn() {
             if (isPharmSaveInProgress()) return;
             lockPharmSave();
-            debugger;
             $('#btnSaveSaleReturn').attr('disabled', true);
             var userC = $('#txtReturnuserCode').val();
             var userP = $('#txtReturnpass').val();
@@ -1513,7 +1481,6 @@
             var UserPass;
             var UserId;
             PageMethods.loadData(userC, function (resp) {
-                debugger;
                 var data = JSON.parse(resp);
                 if (data.length != 0) {
                     userCode = data[0].User_Code;
@@ -1537,7 +1504,6 @@
                     return;
                 }
                 if (userC == userCode && userP == UserPass) {
-                    debugger;
                     if (validateSaleReturn()) {
                         var BillId = 0;
                         var Bill_Id = $('#ddlInvoiceNumber').val() || 0;
@@ -1565,10 +1531,8 @@
                         var TotalDisAmt = $('#txtSaleReturnDisAmt').val() || 0;
                         var AdjustmentAmt = $('#txtSaleReturnFlatDisc').val() || 0;
                         var Remarks = $('#txtSaleReturnRemarks').val() || '';
-                        debugger;
                         //var WareHouse = $('#ddl_Warehouse').val() || 0;
                         //if (WareHouse == 0) {
-                        //    debugger;
                         //    Swal.fire({
                         //        icon: 'error',
                         //        title: 'Error!',
@@ -1589,7 +1553,6 @@
                         var Item_list = [];
                         var isValid = true;
                         table.find('tr').each(function () {
-                            debugger;
                             var itemID = $(this).find('input[name="txtRItemID"]').val() || 0;
                             var billDetailsID = $(this).find('input[name="txtRBill_Details_ID"]').val() || 0;
                             var itemName = $(this).find('input[name="txtRItemDescription"]').val() || 0;
@@ -1603,7 +1566,6 @@
                             var lineDiscount = $(this).find('input[name="txtLineTotal"]').val() || 0;
 
 
-                            debugger;
                             var CGSAmount = CGSRate * qty;
 
                             if (Batch_No == 'Please Select' || Batch_No == '0' || Batch_No == "") {
@@ -1696,7 +1658,6 @@
 
         }
 
-        debugger;
         var addedItemIDs = [];
         var items = [];
         var addedItemIDs = [];
@@ -1757,7 +1718,6 @@
         var counts = 0;
         var NegQty = false;
         function CulculateAmonutWithQty(anchor) {
-            debugger;
             counts = counts + 1;
             var row = $(anchor).parents('tr')[0];
             var CalAmount = $($(row).find('td')[8]).text();
@@ -1807,7 +1767,6 @@
             CountBalance();
         }
         function Invoice() {
-            debugger;
             var search = $('#Inv_No').val();
             $.ajax({
                 url: 'IssueMedicine.aspx/Preview',
@@ -1818,7 +1777,6 @@
                     "search": search,
                 }),
                 success: function (result) {
-                    debugger;
                     var result1 = JSON.parse(result.d);
                     if (result.d == '[]') {
                         alert('No Result Found')
@@ -1861,7 +1819,6 @@
             sumdiscount();
         }
         function CalculateTotalsFromScratch() {
-            debugger;
             var Amount = 0;
             var DisAmt = 0;
             var NetAmount = 0;
@@ -1871,7 +1828,6 @@
             var Qty = 0;
 
             $.each($('#tblDetails tbody tr'), function (key, value) {
-                debugger;
                 // Get quantity
                 Qty = parseFloat($($(value).find('td input[name=txtQty]')[0]).val()) || 0;
 
@@ -1930,7 +1886,6 @@
             CalculateSummariesMasterDiscount(false);
         }
         function CalculateTotals() {
-            debugger;
             var Amount = 0;
             var DisAmt = 0;
             var AmntFinal = 0;
@@ -1938,7 +1893,6 @@
             var Qty = 0;
             var ttlDisAmnt = 0;
             $.each($('#tblDetails tbody tr'), function (key, value) {
-                debugger;
                 Amount = parseFloat($($(value).find('td')[8]).text());
                 DisAmt = parseFloat($(value).find('input[name="DisAmount"]').val());
                 Qty = parseFloat($(value).find('input[name="txtQty"]').val());
@@ -1946,7 +1900,6 @@
                 AmntFinal += (Amount * Qty);
                 ttlDisAmnt += DisAmt
             });
-            debugger;
             Math.round($('#txtTotalPayable').val((AmntFinal).toFixed(0)), 0);
 
             $('#txtDisAmt').val(parseInt(Math.round(ttlDisAmnt)));
@@ -1962,7 +1915,6 @@
 
                 if ($('#txtTotalPayable').val() != '') {
                     if (AmtReceived != '') {
-                        debugger;
                         var balance = parseFloat(NetAmount - AmtReceived);
 
                         $('#txtBalances').val(Math.round(parseFloat(balance)));
@@ -1981,7 +1933,6 @@
         }
 
         function toasterMessage(isError = false, title, message) {
-            debugger;
             toastr.options = {
                 "closeButton": true,
                 "debug": false,
@@ -2006,7 +1957,6 @@
                 toastr.success(message, title);
         }
         //function CountBalance() {
-        //    debugger;
         //    var TtlPayable = $('#txtTotalPayable').val();
         //    if (TtlPayable == "") {
         //        TtlPayable = 0;
@@ -2030,7 +1980,6 @@
         //    }
         //}
         function CountBalance() {
-            debugger;
             var TtlPayable = parseFloat($('#txtTotalPayable').val()) || 0;
             var ttlDisc = parseFloat($('#txtDisAmt').val()) || 0;
             var tllDisc = parseFloat($('#txtLineDisc').val()) || 0;
@@ -2045,7 +1994,6 @@
             $('#txtBalances').val(Math.round(Balance));
         }
         function sumdiscount() {
-            debugger;
             var txtLineDisc = parseFloat($('#txtLineDisc').val()) || 0;
             var txtDisAmt = parseFloat($('#txtDisAmt').val()) || 0;
             var txtAmountReceived = parseFloat($('#txtAmountReceived').val()) || 0;
@@ -2055,7 +2003,6 @@
             $('#txttotalDisc').val(totalDisc);
         }
         function CalculateSummarieDiscountAmountWise(rowIndex) {
-            debugger;
             isMax = 0;
             AssignValue(txtDisPer, 0);
             AssignValue(txtDisAmt, 0);
@@ -2102,7 +2049,6 @@
                     $(value).find('input[name="DisPer"]').val('0');
                     $($(value).find('td')[11]).text(Amount);
                 }
-                debugger;
                 Amount = $($(value).find('td')[8]).text();
                 TotalAmount += parseFloat(Amount * Qty).toFixed(0);
                 TotalDiscountAmount += Math.round(parseFloat($(value).find('input[name="DisAmount"]').val()));
@@ -2112,7 +2058,6 @@
                 }
                 TotalNetAmount += parseFloat($($(value).find('td')[11]).text());
             });
-            debugger;
             $('#txtTotalPayable').val(TotalAmount.toFixed());
             $('#txtDisAmt').val(TotalDiscountAmount.toFixed(2));
             if (blnceCondition == 'true') {
@@ -2124,7 +2069,6 @@
             }
         }
         function ApplyEqualMasterDiscountToRows(masterDisPer) {
-            debugger;
             var totalLineDiscount = 0;
             var rowCount = $('#tblDetails tbody tr').length;
             if (rowCount <= 0) {
@@ -2136,22 +2080,18 @@
             var roundedPerItemDisPer = parseFloat(perItemDisPer.toFixed(2));
 
             $.each($('#tblDetails tbody tr'), function (key, value) {
-                debugger;
                 var rowNetAmount = parseFloat($($(value).find('td')[11]).text()) || 0;
                 var rowLineDiscount = Math.round((rowNetAmount * roundedPerItemDisPer) / 100);
 
                 $(value).find('input[name="LineDiscount"]').val(rowLineDiscount);
                 totalLineDiscount += rowLineDiscount;
             });
-            debugger;
             totalLineDiscount = Math.round(totalLineDiscount);
             $('#txtDisAmt').val(totalLineDiscount);
             return totalLineDiscount;
         }
         // function CalculateSummariesMasterDiscount(AmtWise) {
-        //     debugger
         //     if (!AmtWise) {
-        //         debugger
         //         var disper = $('#txtDisPer').val() || 0;
         //         var tableRowCount = $('#tblDetails tbody tr').length;
         //         if (tableRowCount > 0 && parseFloat(disper) > 0) {
@@ -2182,7 +2122,6 @@
 
         //     }
         //     if (AmtWise) {
-        //         debugger
         //         var txtDisAmt = $('#txtDisAmt').val() || 0;
         //         var totalpayable = $('#txtTotalPayable').val() || 0;
         //         var txtLineDisc = $('#txtLineDisc').val() || 0;
@@ -2196,7 +2135,6 @@
         //         }
         //         $('#txtDisPer').val(parseFloat(disper).toFixed(2));
         //     }
-        //     debugger;
         //     var txtDisAmt = parseFloat($('#txtDisAmt').val()) || 0;
         //     TotalAmount = parseFloat($('#txtTotalPayable').val()) || 0;
         //     var txtLineDisc = parseFloat($('#txtLineDisc').val()) || 0;
@@ -2316,9 +2254,7 @@ function CalculateReceivedAmount() {
         }
         var isMax = 0;
         var TDis = 0;
-        debugger;
         function CalculateSummarieDiscountPerWise(rowIndex) {
-            debugger;
             isMax = 0;
             AssignValue(txtDisPer, 0);
             AssignValue(txtDisAmt, 0);
@@ -2402,7 +2338,6 @@ function CalculateReceivedAmount() {
             }
         }
         function CheckSaleReturnAllow() {
-            debugger;
             $.ajax({
                 type: "POST",
                 url: "IssueMedicine.aspx/CheckSaleReturnAllow",
@@ -2411,7 +2346,6 @@ function CalculateReceivedAmount() {
                 dataType: "json",
                 async: true,
                 success: function (data) {
-                    debugger;
                     var checkActive = data.d;
 
                     if (checkActive == "true") {
@@ -2428,7 +2362,6 @@ function CalculateReceivedAmount() {
             });
         }
         function CheckSaleReturnQueue() {
-            debugger;
             $.ajax({
                 type: "POST",
                 url: "IssueMedicine.aspx/CheckSaleReturnQueue",
@@ -2437,7 +2370,6 @@ function CalculateReceivedAmount() {
                 dataType: "json",
                 async: true,
                 success: function (data) {
-                    debugger;
                     var checkActive = data.d;
 
                     if (checkActive == "true") {
@@ -2454,7 +2386,6 @@ function CalculateReceivedAmount() {
             });
         }
         function getOPDandIPDNO(pat_id) {
-            debugger;
             PageMethods.GetOPDandIPDNO(pat_id, function (data) {
                 var parsedData = JSON.parse(data);
                 var options = '<option value="0" >Please Select</option>';
@@ -2478,7 +2409,6 @@ function CalculateReceivedAmount() {
             })
         }
         function getbatchfrom_grn() {
-            debugger;
 
             var Inv_batch = $('#chkbatch').prop("checked");
 
@@ -2492,10 +2422,8 @@ function CalculateReceivedAmount() {
                 var med_id = $('#medName').find('option:selected').val();
 
                 PageMethods.GetinvBatch(med_id, function (dataa) {
-                    debugger;
                     var parsedDataa = JSON.parse(dataa);
                     if (parsedDataa == true) {
-                        debugger
                         var warehouse = $("#ddlWarehouse").val()
 
                         if (warehouse == "0") {
@@ -2515,11 +2443,9 @@ function CalculateReceivedAmount() {
                             return;
                         }
                         PageMethods.Getbatch_grn(med_id, warehouse, function (data) {
-                            debugger;
                             var parsedData = JSON.parse(data);
                             console.log(parsedData)
                             var options = '<option value="0" >Please Select</option>';
-                            debugger;
                             $.each(parsedData, function (key, value) {
                                 console.log(value)
                                 options += '<option value="' + value.BatchNum + '" >' + value.BatchNum + '</option>';
@@ -2527,7 +2453,6 @@ function CalculateReceivedAmount() {
                             $('#batchno').html(options);
                             $('#batchno').select2();
                             var isbatch = $('#chkbatch').prop("checked");
-                            debugger;
                             if (isbatch == true) {
                                 $('#batchno').show();
                                 $('#batchno').prop('disabled', false);
@@ -2551,7 +2476,6 @@ function CalculateReceivedAmount() {
             }
         }
         function AddnonBatchItems() {
-            debugger;
             var itemId = $('#medName').val();
 
             var pat_Id = $('#ddlPatient_No').val() || 0;
@@ -2586,7 +2510,6 @@ function CalculateReceivedAmount() {
                     var length = $("#tblDetails tr:gt(0)").length;
                     $('#Table_1 tr:gt(0)').remove();
                     var data = JSON.parse(msg.d);
-                    debugger;
                     var Uomqty = data[0].UOM_Qty;
                     if (Uomqty == null) {
                         Uomqty = 0;
@@ -2597,7 +2520,6 @@ function CalculateReceivedAmount() {
                     date = moment(date).format('D-MMM-YYYY');
                     var requestedQty = (data[0].RequestedQty && data[0].RequestedQty > 0) ? data[0].RequestedQty : 0;
 
-                    debugger;
                     rows = '<tr><td style="display:none;"><input type="hidden" value="' + data[0].Item_ID + '" name="ItemID" id="ItemID" ></td>' +
 
                         '<td> ' + parseInt(parseInt(rowIndex) + 1) + '</td>' +
@@ -2644,9 +2566,7 @@ function CalculateReceivedAmount() {
                 }
             });
         }
-        debugger;
         function AddMedicineDetail() {
-            debugger;
             var itemId = $('#medName').find('option:selected').val();
             var Batch = $('#batchno').find('option:selected').val();
             var warehouse = $('#ddlWarehouse').find('option:selected').val();
@@ -2697,7 +2617,6 @@ function CalculateReceivedAmount() {
                     var length = $("#tblDetails tr:gt(0)").length;
                     $('#Table_1 tr:gt(0)').remove();
                     var data = JSON.parse(msg.d);
-                    debugger;
                     var Uomqty = data[0].UOM_Qty;
                     if (Uomqty == null) {
                         Uomqty = 0;
@@ -2711,7 +2630,6 @@ function CalculateReceivedAmount() {
                     var disDisabledAttr = isDiscountDisabled ? 'disabled' : '';
                     var requestedQty = (data[0].RequestedQty && data[0].RequestedQty > 0) ? data[0].RequestedQty : 0;
 
-                    debugger;
                     rows = '<tr><td style="display:none;"><input type="hidden" value="' + data[0].Item_ID + '" name="ItemID" id="ItemID" ></td>' +
 
                         '<td> ' + parseInt(parseInt(rowIndex) + 1) + '</td>' +
@@ -2762,7 +2680,6 @@ function CalculateReceivedAmount() {
             });
         }
         function adjustment() {
-            debugger;
             var ttlpayable = $('#txtTotalPayable').val();
             if (ttlpayable == "") {
                 ttlpayable = 0;
@@ -2795,7 +2712,6 @@ function CalculateReceivedAmount() {
         function SaveDataWithoutUser() {
             if (isPharmSaveInProgress()) return;
             lockPharmSave();
-            debugger;
             $('#SaveVal').attr('disabled', true);
             var userC = $('#txtuserCode').val();
             var userP = $('#txtpass').val();
@@ -2804,7 +2720,6 @@ function CalculateReceivedAmount() {
             var UserId = 0
 
 
-            debugger;
             var Bill_ID = '';
             Bill_ID = '<%= Request.QueryString["Bill_ID"]%>'
             if (Bill_ID == '')
@@ -2865,7 +2780,6 @@ function CalculateReceivedAmount() {
             var hasInvalidStock = false;
             var Save_list = [];
             $.each($('#tblDetails tbody tr'), function (key, value) {
-                debugger;
                 var Itemid = $($(value).find('td input[name=ItemID]')[0]).val();
                 var ItemName = $($(value).find('td input[name=Itemdesc]')[0]).val();
                 var Qty = $($(value).find('td input[name=txtQty]')[0]).val();
@@ -2917,12 +2831,10 @@ function CalculateReceivedAmount() {
                     Itemid: Itemid, ItemName: ItemName, Qty: Qty, Stock: Stock, Amount: Amount, DiscPer: DiscPer, DiscAmount: DiscAmount, NetAmount: NetAmount, batchno: batchno, CGSAmount: CGSAmount, hdnItemid: hdnItemid, LineDiscount: LineDiscount, Remarks: Remarks, Req_qty: Req_qty,
                 });
             });
-            debugger;
             if (hasInvalidStock) {
                 unlockPharmSave();
                 return;
             }
-            debugger;
             var Parameters = {
                 "Bill_ID": Bill_ID,
                 "Patient_ID": Patient_ID,
@@ -2946,12 +2858,10 @@ function CalculateReceivedAmount() {
 
             };
             if (patId == undefined) {
-                debugger;
                 patId = 0;
             }
             try {
                 PageMethods.SaveRecord(JSON.stringify(Parameters), Rbtn, UserId, patId, function (res) {
-                    debugger;
                     var result = JSON.parse(res);
                     if (!result.Success) {
                         unlockPharmSave();
@@ -3006,7 +2916,6 @@ function CalculateReceivedAmount() {
         function SaveData() {
             if (isPharmSaveInProgress()) return;
             lockPharmSave();
-            debugger;
 
             // ============ STEP 1: VALIDATE IPD QUANTITIES ============
             if (!ValidateIPDQuantitiesOnly()) {
@@ -3070,7 +2979,6 @@ function CalculateReceivedAmount() {
             var hasInvalidStock = false;
 
             $.each($('#tblDetails tbody tr'), function (key, value) {
-                debugger;
                 var ItemName = $($(value).find('td input[name=Itemdesc]')[0]).val();
                 var Qty = $($(value).find('td input[name=txtQty]')[0]).val();
                 var Stock = $($(value).find('td input[name=txtStock]')[0]).val();
@@ -3169,7 +3077,6 @@ function CalculateReceivedAmount() {
 
             // Check user and save
             PageMethods.loadData(userC, function (resp) {
-                debugger;
                 var data = JSON.parse(resp);
                 if (data.length != 0) {
                     userCode = data[0].User_Code;
@@ -3192,7 +3099,6 @@ function CalculateReceivedAmount() {
                     try {
                         PageMethods.SaveRecord(JSON.stringify(Parameters), Rbtn, UserId, patId,
                             function (res) {
-                                debugger;
                                 var result = JSON.parse(res);
                                 if (!result.Success) {
                                     unlockPharmSave();
@@ -3223,7 +3129,6 @@ function CalculateReceivedAmount() {
                                 }, 2500);
                             },
                             function (error) {
-                                debugger;
                                 unlockPharmSave();
                                 Swal.fire({
                                     icon: 'error',
@@ -3252,7 +3157,6 @@ function CalculateReceivedAmount() {
             });
         }
         function ValidateIPDQuantitiesOnly() {
-            debugger;
             var transType = $("#txtTransType").val();
             var inPatientId = $('#ddlPatient_No').val() || 0;
 
@@ -3333,18 +3237,15 @@ function CalculateReceivedAmount() {
             return isValid;
         }
 
-        debugger;
         var out_Patient_Id;
         var MrNo;
         var ItemCode;
         var Opd_ID;
         var pat_id;
         function LoadTokenInputsDefaultMRNo() {
-            debugger;
             $("#txtMRNo").tokenInput("../../json.aspx?Table=PatientsForPharmacy", {
                 tokenLimit: 1,
                 onAdd: function (item) {
-                    debugger;
                     try {
                         pat_id = item.id;
                         out_Patient_Id = pat_id;
@@ -3377,7 +3278,6 @@ function CalculateReceivedAmount() {
         var currentTransType = "";
 
         function getOPDID(pat_id) {
-            debugger;
 
             if (currentTransType === "EMR Patient") return;
 
@@ -3389,7 +3289,6 @@ function CalculateReceivedAmount() {
                 dataType: "json",
                 async: false,
                 success: function (response) {
-                    debugger;
                     var opdId = response.d;
                     if (opdId && opdId !== "" && currentTransType === "") {
                         $("#txtTransType").val('OPD Patient');
@@ -3403,7 +3302,6 @@ function CalculateReceivedAmount() {
         }
         var emerid;
         function getEmergencyID(pat_id) {
-            debugger;
 
             $.ajax({
                 type: "POST",
@@ -3413,7 +3311,6 @@ function CalculateReceivedAmount() {
                 dataType: "json",
                 async: false,
                 success: function (response) {
-                    debugger;
                     var emerid = response.d;
                     if (emerid && emerid !== "") {
                         $("#txtTransType").val('EMR Patient');
@@ -3437,7 +3334,6 @@ function CalculateReceivedAmount() {
                 contentType: "application/json; charset=utf-8",
                 dataType: "json",
                 success: function (msg) {
-                    debugger;
                     var data = JSON.parse(msg.d);
                     if (data == '001') {
                         // user-required path: open modal; release outer lock so user can interact.
@@ -3466,7 +3362,6 @@ function CalculateReceivedAmount() {
                 contentType: "application/json; charset=utf-8",
                 dataType: "json",
                 success: function (msg) {
-                    debugger;
                     var data = JSON.parse(msg.d);
                     if (data == '01') {
                         //blnceCondition = 'true'
@@ -3494,7 +3389,6 @@ function CalculateReceivedAmount() {
 
 
         function getIPDID(pat_id) {
-            debugger;
 
             if (currentTransType !== "" && currentTransType !== "IPD Patient") return;
 
@@ -3506,7 +3400,6 @@ function CalculateReceivedAmount() {
                 dataType: "json",
                 async: false,
                 success: function (response) {
-                    debugger;
                     var result = JSON.parse(response.d);
                     var discountType = result.DiscountType;
                     var typeName = result.TypeName;
@@ -3532,7 +3425,6 @@ function CalculateReceivedAmount() {
 
 
         function GetPatientDetail() {
-            debugger;
             var Patient_ID = $('#hdPatientID').val();
             $.ajax({
                 type: "POST",
@@ -3547,12 +3439,10 @@ function CalculateReceivedAmount() {
             });
         }
         function openQueue() {
-            debugger;
             fillPendingPatientsLists();
             $('#queueModal').modal('show');
         }
         function OpenItemList() {
-            debugger;
             var warehouse = $('#ddlWarehouse').find('option:selected').val();
             if (warehouse == "0") {
                 Swal.fire({
@@ -3597,7 +3487,6 @@ function CalculateReceivedAmount() {
         let currentRowIndex = -1;
 
         function fillItemListsWareHouseWise(warehouse) {
-            debugger;
 
             var warehouse = $('#ddlWarehouse').find('option:selected').val();
             var SearchString = $("#txtSearchitem").val();
@@ -3718,9 +3607,7 @@ function CalculateReceivedAmount() {
         }
 
         
-        debugger;
         function ItemSelectionChanged(itemId, warehouse) {
-            debugger;
             let rows;
             var rowIndex = parseInt($('#tblDetails tbody tr').length);
             var expdate = '';
@@ -3768,7 +3655,6 @@ function CalculateReceivedAmount() {
                         $('#ItemModal').modal('hide');
                         return;
                     }
-                    debugger;
                     var Uomqty = data[0].UOM_Qty;
                     if (Uomqty == null) {
                         Uomqty = 0;
@@ -3782,7 +3668,6 @@ function CalculateReceivedAmount() {
                     var disDisabledAttr = isDiscountDisabled ? 'disabled' : '';
                     var requestedQty = (data[0].RequestedQty && data[0].RequestedQty > 0) ? data[0].RequestedQty : 0;
 
-                    debugger;
                     rows = '<tr><td style="display:none;"><input type="hidden" value="' + data[0].Item_ID + '" name="ItemID" id="ItemID" ></td>' +
 
                         '<td> ' + parseInt(parseInt(rowIndex) + 1) + '</td>' +
@@ -3846,7 +3731,6 @@ function CalculateReceivedAmount() {
         }
 
         function fillPendingPatientsLists() {
-            debugger;
             var SearchString = $("#txtSearchmodal").val();
             PageMethods.PendingPatients(SearchString, function (data) {
                 var parsedData = JSON.parse(data);
@@ -3856,9 +3740,7 @@ function CalculateReceivedAmount() {
                     return aClosed - bClosed;
                 });
                 var rows = '';
-                debugger;
                 $.each(parsedData, function (key, value) {
-                    debugger;
                     var TrnsDate = parsePharmDate(value.Medicine_Date);
                     var retdate = TrnsDate ? moment(TrnsDate).format('LLLL') : '';
                     var closeVal = parsePharmDate(value.Close_Time);
@@ -3931,7 +3813,6 @@ function CalculateReceivedAmount() {
                         '<td>' + remarkCell + '</td>' +
                         '</tr>';
                 });
-                debugger;
                 $('#tblPendingPatients tbody').html(rows);
                 $(".se-pre-con").fadeOut("slow");
                 filterPendingPatients();
@@ -3992,7 +3873,6 @@ function CalculateReceivedAmount() {
             });
         }
         function openReturnQueue() {
-            debugger;
             fillReturnPatientsLists();
             $('#SaleReturnModal').modal('hide');
             $('#ReturnqueueModal').modal('show');
@@ -4003,14 +3883,11 @@ function CalculateReceivedAmount() {
         }
 
         //function fillReturnPatientsLists() {
-        //    debugger;
         //    var SearchString = $("#txtReturnSearchmodal").val();
         //    PageMethods.ReturnPatients(SearchString, function (data) {
         //        var parsedData = JSON.parse(data);
         //        var rows = '';
-        //        debugger;
         //        $.each(parsedData, function (key, value) {
-        //            debugger;
         //            var TrnsDate = new Date(parseInt(value.Invoice_Date.substr(6)));
         //            var retdate = moment(TrnsDate).format('LLLL');
         //            var WardName = (value.Ward_Name !== null && value.Ward_Name !== undefined) ? value.Ward_Name : '';
@@ -4042,7 +3919,6 @@ function CalculateReceivedAmount() {
         //                '<td>' + actionButtons + '</td>' +
         //                '</tr>';
         //        });
-        //        debugger;
         //        $('#tblIPDReturnMed tbody').html(rows);
         //        $(".se-pre-con").fadeOut("slow");
         //    }, function (err) {
@@ -4109,7 +3985,6 @@ function CalculateReceivedAmount() {
                 contentType: "application/json; charset=utf-8",
                 async: false,
                 success: function (msg) {
-                    debugger
                     var data = JSON.parse(msg.d);
                     $("#ddlpat_no").val(data[0].Patient_ID).trigger('change')
                     $("#ddl_Warehouse").val(data[0].Ware_House).trigger('change')
@@ -4119,12 +3994,10 @@ function CalculateReceivedAmount() {
             });
         }
 
-        debugger;
         function LoadReturnMedicineDetail(Bill_Id, Item_Id) {
 
 
 
-            debugger
 
             $('#saleReturnTableBody').empty();
             $.ajax({
@@ -4177,7 +4050,6 @@ function CalculateReceivedAmount() {
         }
         var isPatientDataSaved = true;
         function RejectMedicineRequest(medicineId, element) {
-            debugger;
             Swal.fire({
                 title: 'Are you sure?',
                 text: "You want to Close this medicine request?",
@@ -4189,7 +4061,6 @@ function CalculateReceivedAmount() {
             }).then((result) => {
                 if (result.isConfirmed) {
                     PageMethods.RejectMedicineRequest(medicineId, function (response) {
-                        debugger;
                         var result = JSON.parse(response);
                         if (result.Success) {
                             Swal.fire({
@@ -4237,7 +4108,6 @@ function CalculateReceivedAmount() {
             getOPDandIPDNO(pat_id);
         }
         function OnSuccess(data) {
-            debugger;
             if (data.d !== '') {
                 $('#row22').show();
                 $('#lblPatienName').text(ReplaceNullWith_Space(data.d.Name));
@@ -4284,12 +4154,10 @@ function CalculateReceivedAmount() {
                     contentType: "application/json; charset=utf-8",
                     async: false,
                     success: function (msg) {
-                        debugger;
 
                         var data = JSON.parse(msg.d);
 
                         $.each(data.ItemCodes, function (index, value) {
-                            debugger;
                             itemIds.push(value);
                         });
                     }
@@ -4298,10 +4166,8 @@ function CalculateReceivedAmount() {
             }
         }
 
-        debugger;
         var itemIds;
         function getitem_code() {
-            debugger;
             var warehouse = $("#ddlWarehouse").val()
             if (warehouse == "0") {
                 Swal.fire({
@@ -4361,7 +4227,6 @@ function CalculateReceivedAmount() {
                         contentType: "application/json; charset=utf-8",
                         async: false,
                         success: function (msg) {
-                            debugger;
 
                             var data = JSON.parse(msg.d);
                             var doctorId = data.DoctorInfo?.Doctor_ID || 0;
@@ -4371,7 +4236,6 @@ function CalculateReceivedAmount() {
                             $('#ddlDoctor').attr('disabled', true);
                             $('#ddlDepartment').attr('disabled', true);
                             $.each(data.ItemCodes, function (index, value) {
-                                debugger;
                                 itemIds.push(value);
                             });
                         }
@@ -4388,7 +4252,6 @@ function CalculateReceivedAmount() {
                         contentType: "application/json; charset=utf-8",
                         async: false,
                         success: function (msg) {
-                            debugger;
                             var data = JSON.parse(msg.d);
                             var doctorId = data.DoctorInfo?.Doctor || 0;
                             var department = data.DoctorInfo?.Department || '';
@@ -4419,9 +4282,7 @@ function CalculateReceivedAmount() {
                                 $('#ddlpanel').attr('disabled', false);
                             }
                             getWardAndBed(pat_Id)
-                            debugger;
                             $.each(data.ItemCodes, function (key, value) {
-                                debugger;
                                 itemIds.push(value);
 
                             });
@@ -4440,12 +4301,9 @@ function CalculateReceivedAmount() {
                         contentType: "application/json; charset=utf-8",
                         async: false,
                         success: function (msg) {
-                            debugger;
                             var data = JSON.parse(msg.d);
                             // getWardAndBed(pat_Id)
-                            debugger;
                             $.each(data, function (key, value) {
-                                debugger;
                                 itemIds.push(value);
 
                             });
@@ -4464,7 +4322,6 @@ function CalculateReceivedAmount() {
                 contentType: "application/json; charset=utf-8",
                 dataType: "json",
                 success: function (msg) {
-                    debugger;
 
                     var data = JSON.parse(msg.d);
 
@@ -4478,9 +4335,7 @@ function CalculateReceivedAmount() {
                 }
             });
         }
-        debugger;
         function AddMedicineDetailFormOPD(itemIds) {
-            debugger;
             var pat_Id = $('#ddlPatient_No').val() || 0;
             var PatNo = $('#ddlPatient_No option:selected').text();
             var parts = PatNo.split('-');
@@ -4594,12 +4449,10 @@ function CalculateReceivedAmount() {
             });
         }
         function updateStock(anchors) {
-            debugger;
             var row = $(anchors).closest('tr');
             var rowIndex = row.index();
             var hdndiscountType = $('#hdndiscountType').val();
             var warehouse = $('#ddlWarehouse').find('option:selected').val();
-            debugger;
             var selectId = $(anchors).attr('id');
             var idParts = selectId.split('ddlbatch');
             if (idParts.length > 1) {
@@ -4636,7 +4489,6 @@ function CalculateReceivedAmount() {
                 contentType: "application/json; charset=utf-8",
                 async: false,
                 success: function (stockMsg) {
-                    debugger;
                     var stockData = JSON.parse(stockMsg.d);
                     var stock = stockData[0].Total_Stock || 0;
                     var rate = stockData[0].Sale_Rate || 0;
@@ -4648,7 +4500,6 @@ function CalculateReceivedAmount() {
                         alert("Minimum Stock Alert");
                     }
                     date = moment(date).format('D-MMM-YYYY');
-                    debugger;
                     console.log(rate);
                     $('#txtStock' + counter).val(stock);
                     $('#txtSalerate' + counter).val(rate);
@@ -4667,7 +4518,6 @@ function CalculateReceivedAmount() {
         }
         function SearchPop() {
             if (isPharmSaveInProgress()) return;
-            debugger;
             $('#SearchModel').modal({
                 backdrop: 'static'
             });
@@ -4781,9 +4631,7 @@ function CalculateReceivedAmount() {
                 }
             );
         }
-        debugger;
         function DisableWareHouse() {
-            debugger;
 
             if (isFirstLoad) {
                 return;
@@ -4801,7 +4649,6 @@ function CalculateReceivedAmount() {
             }
         }
         function DisableSaleReturnWareHouse() {
-            debugger;
             var warehouse = $("#ddl_Warehouse").val();
 
             // Only disable warehouse if it's selected and valid
@@ -4913,7 +4760,6 @@ function CalculateReceivedAmount() {
 
         var editrights;
         function AllowadjustmentEdit() {
-            debugger;
             $.ajax({
                 type: "POST",
                 url: "IssueMedicine.aspx/CheckEditAdjustment",
@@ -4922,7 +4768,6 @@ function CalculateReceivedAmount() {
                 dataType: "json",
                 async: true,
                 success: function (data) {
-                    debugger;
                     editrights = data.d;
 
                     if (editrights == "true") {
@@ -4972,7 +4817,6 @@ function CalculateReceivedAmount() {
                 async: false,
                 success: function (response) {
                     showTemplate = JSON.parse(response.d);
-                    debugger;
                     if (showTemplate === "01") {
                         // Show the div
                         $('#divinvoiceoldtemplate').show();
@@ -5032,12 +4876,10 @@ function CalculateReceivedAmount() {
                     contentType: "application/json; charset=utf-8",
                     async: false,
                     success: function (msg) {
-                        debugger;
 
                         var data = JSON.parse(msg.d);
 
                         $.each(data.ItemCodes, function (index, value) {
-                            debugger;
                             itemIds.push(value);
                         });
                     }
@@ -5047,7 +4889,6 @@ function CalculateReceivedAmount() {
         }
 
         function ResetPharmacyForm() {
-            debugger;
 
             $("#txtMRNo").tokenInput("clear");
 

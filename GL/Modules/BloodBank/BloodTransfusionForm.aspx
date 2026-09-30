@@ -9,7 +9,6 @@
               window.location.href = "BloodTransfusionList.aspx";
           }
           function prints() {
-              debugger;
               var id = '<%=Request.QueryString["ID"]%>';
               if (id != null) {
                   window.open('ReportViewer.aspx?ReportName=BasePrintBloodTransfusion&ReportTitle=Department Of Pathology&BTR_Id=' + id);
@@ -17,7 +16,6 @@
           }
 
           function prints2() {
-              debugger;
               var id = '<%=Request.QueryString["ID"]%>';
               if (id != null) {
                   window.open('ReportViewer.aspx?ReportName=BloodTransfusion&ReportTitle=Department Of Pathology&BTR_Id=' + id);
@@ -74,7 +72,6 @@
                       $("#nexpiry").prop('checked', parsed_data[0].BTR_expN);
                       $("#yinstruction").prop('checked', parsed_data[0].BTR_insY);
                       $("#ninstruction").prop('checked', parsed_data[0].BTR_insN);
-                      debugger;
                       $("#yreaction").prop('checked', parsed_data[0].BTR_Transfusion_ReactionY);
                       $("#nreaction").prop('checked', parsed_data[0].BTR_Transfusion_ReactionN);
                       $("#ypregnancy").prop('checked', parsed_data[0].BTR_pregY);
@@ -150,7 +147,6 @@
             assignIds();
             loadtokenInputsDefault();
             $("#btnSave").on('click', function () {
-                debugger;
                 isProced = true;
                 var Patient_id = $("#ctl00_MainContent_txtPatient_ID").val();
 
@@ -193,28 +189,23 @@
                 var sDoc = $("#sdoctor").val();
                 var indication = $("#txtIndication").val();
                 if (component == "0" || units == "" || Date == "" || Time == "" || sDoc == "" || indication == "") {
-                    debugger
                     isProced = false;
 
                 }
                 if (yreaction == false && nreaction == false) {
-                    debugger
                     isProced = false;
 
                 }
                 if (ypregnancy == false && npregnancy == false) {
-                    debugger
                     isProced = false;
 
                 }
                 var btnSave = $("#btnSave").val();
                 if (isProced == true) {
                     var arr = [];
-                    debugger;
                     var x = document.getElementById("tblCheckList");
 
                     for (var i = 1; i < x.rows.length; i++) {
-                        debugger;
                         var CheckList1 = {};
                         var CheckList2 = {};
                         var CheckList3 = {};
@@ -255,7 +246,6 @@
                         arr.push(CheckList1, CheckList2, CheckList3, CheckList4);
 
                     }
-                    debugger;
                     console.log(arr);
                     var patient_id = $("#ctl00_MainContent_txtPatient_ID").val();
                     if (patient_id == "") return false;
@@ -363,11 +353,9 @@
                   contentType: "application/json; charset=utf-8",
                   dataType: "json",
                   success: function (response) {
-                      debugger;
                       var arrData = response.d;
 
                       for (var i = 0; i < arrData.length; i++) {
-                          debugger;
 
                           var id = arrData[i].Complete_ID;
                           var s = id;

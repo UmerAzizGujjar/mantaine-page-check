@@ -4,12 +4,10 @@
     <link href="../../wwwroot/THEME_TIBBIT/CustomCSS/tablestyle.css" rel="stylesheet" />
     <script type="text/javascript">
         $(document).ready(function () {
-            debugger;
             $('#ctl00_lblMessage').hide();
             LoadPage();
 
         });
-        debugger;
         function PrintTest(id) {
             window.open('ReportViewer.aspx?ReportName=TestDefination&ReportTitle= Test Defination&Test_IDs=' + id);
         }
@@ -83,7 +81,6 @@
                     { "data": "Description", width: "20%", "orderable": false },
                     {
                         render: function (data, type, full) {
-                            debugger;
                             var res = '<a class="editListBtn" href="#" onclick="editOpen(\'' + full.RoleId + '\')" style="border-radius: 4px; margin-right: 4px;padding: 5px 8px;"><i class="fa fa-pencil"></i></a>';
 
                             var Delete = '<a class="delListBtn" style="border-radius: 4px;margin-left: 4px;padding: 5px 8px 5px 8px;" href="#" data-id="' + full.RoleId + '" onclick="deleteConfirm(this)"><i class="fa fa-trash"></i></a>';

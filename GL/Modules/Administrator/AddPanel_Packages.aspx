@@ -3,14 +3,12 @@
 <asp:Content ID="Content1" ContentPlaceHolderID="HeadContent" runat="server">
 <script type="text/javascript">
     $(document).ready(function () {
-        debugger;
 
         GetPanels();
         var Item_Code = $("#hdfItem_Code").val();
         FillLabTests();
         GetPanelItems();
         $('#btnSave').click(function () {
-            debugger;
             var btnSave = $('#btnSave').val();
             var PAckID = $('#hdnPackage_ID').val();
             var table = $('#tblbodyPackage');
@@ -32,7 +30,6 @@
                 PerDay_Charges = 0.00
             }
             table.find('tr').each(function (key, value) {
-                debugger;
                 var Amount = $(value).find('td input[name=txAmount]').val();
                 if (Amount == "" || Amount == null) Amount = 0;
                 var isExpense = $(value).find('td input[name=chkExpense]').is(':checked') ? true : false;
@@ -40,7 +37,6 @@
                 Pkg_list.push({ 'Item': $(value).find('td input[name=txtDes]').val(), 'QTy': $(value).find('td input[name=txtQTy]').val(), 'Price': $(value).find('td input[name=txPrice]').val(), 'isExpense': isExpense, 'Amount': Amount, 'ItemType': $(value).find('td input[name=ItemType]').val(), 'MainDepartment': $(value).find('td input[name=Main_Department]').val() });
 
             });
-            debugger;
             var PAKg = { 'PKDetail': Pkg_list };
             $('#tblPanel tr').each(function () {
                 var Panel_Id = $(this).find('[name="PanelComp"]').val();
@@ -168,14 +164,12 @@
             })
     }
     function PopulatePackageDetail(id) {
-        debugger;
         PageMethods.GetPackageDetail(id, function (res) {
 
             var item = JSON.parse(res);
             var rows = '';
             var result;
             $.each(item, function (key, value) {
-                debugger;
                 var lenght = tblbodyPackage.rows.length + 1;
                 var desc = (value.Item_Type != 'Test') ? value.Item_Code + "-" + value.itemanme : " " + value.itemanme;
 
@@ -281,7 +275,6 @@
             contentType: "application/json; charset=utf-8",
             dataType: "json",
             success: function (data) {
-                debugger;
                 $.each(JSON.parse(data.d), function (key, value) {
                     options += '<option value="' + value.Item_ID + '" Rate="' + value.Sale_Rate + '" >' + value.Description + '</option>';
                 });
@@ -292,7 +285,6 @@
         });
     }
     function GetPanels() {
-        debugger;
         var options = '<option value="0">Select Panel</option>';
         $.ajax({
             type: "post",
@@ -302,12 +294,10 @@
             dataType: "json",
             async: false,
             success: function (response) {
-                debugger;
                 $.each(JSON.parse(response.d), function (key, value) {
 
                     options += '<option value="' + value.Panel_ID + '">' + value.Company_Name + '</option>';
                 });
-                debugger;
                 Panels = options;
             },
             failure: function (response) {
@@ -338,11 +328,9 @@
                     dataType: "json",
                     success: function (response) {
                         var parsed_Data = JSON.parse(response.d);
-                        debugger;
                         var rows = '';
                         for (var i = 1; i <= parsed_Data.length; i++) {
                             generateRow();
-                            debugger;
                             $('#Select' + i + '').val(parsed_Data[i - 1].Panel_Id);
                        }
                     },
@@ -354,7 +342,6 @@
 
             }
     function generateRow() {
-        debugger;
         var rowID = document.getElementById('tblPanel').rows.length - 1;
         var html = '<tr id = "Row' + rowID + '">' +
             '<td><select style="width: 145px !important;" name="PanelComp" id = "Select' + rowID + '">' + Panels + '</select></td>' +

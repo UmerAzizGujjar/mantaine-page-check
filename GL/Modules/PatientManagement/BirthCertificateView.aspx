@@ -10,7 +10,6 @@
             });
 
             function PrintBirthCertificate(In_Patient_ID) {
-                debugger;
                 var url = '../../ReportViewer.aspx?ReportName=Birth_Certificate&ReportTitle=Admission Slip Report&Inpatient_ID=' + In_Patient_ID;
                 window.open(url, '_blank');
 

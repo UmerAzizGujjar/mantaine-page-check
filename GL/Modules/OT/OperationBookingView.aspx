@@ -17,13 +17,11 @@
             });
 
             $("#btnSave").on('click', function () {
-                debugger;
                 var detailAry = [];
                 var doc_id = '';
                 var op_date = '';
 
                 $("#tblotlist tr:gt(0) input[type=checkbox]:checked ").each(function (key, value) {
-                    debugger;
                     var In_Patient_ID = $(this).closest('tr').find('td:eq(0)').text();
                     doc_id = $(this).closest('tr').find('td select[name=ddltestperfomedBy]').val();
                     op_date = $(this).closest('tr').find('td input[name=txtrdate]').val();
@@ -47,7 +45,6 @@
                     detailAry.push(details);
                     
                 });
-                debugger;
                 console.log(detailAry);
                 if (op_date !== "" && doc_id !== "0") {
                     update_call(detailAry);
@@ -91,7 +88,6 @@
                 contentType: "application/json; charset=utf-8",
                 dataType: "json",
                 success: function (response) {
-                    debugger;
                     var result = JSON.parse(response.d);
                     optionsList = "<option value=0>Please Select</option>"
                     for (var i = 0; i <= result.length; i++) {
@@ -114,7 +110,6 @@
             GetDoctors();
         });
         function get_ot_fitnes_list() {
-            debugger;
             var jsonParsedData = '';
             $.ajax
                 ({
@@ -125,11 +120,9 @@
                     dataType: "json",
                     success: function (data) {
                         var row = '';
-                        debugger;
                         var parsed_data = JSON.parse(data.d);
                         jsonParsedData = parsed_data;
                         $.each(parsed_data, function (key, index) {
-                            debugger;
                             row += '<tr>' +
                                ' <td style="display:none">' + parsed_data[key].In_Patient_ID + '</td> ' +
                                ' <td><input type="checkbox" class ="chcktbl" id="chcktbl" name="chkReport" value="false"/></td> ' +
@@ -158,7 +151,6 @@
                         $('input[name="txtrdate"]').datepicker({ dateFormat: 'dd M yy' });
                         $.each(jsonParsedData, function (key, value) {
 
-                            debugger;
                             var emp_id = jsonParsedData[key].Referred_Doctor;
                             if (emp_id == null) { }
 

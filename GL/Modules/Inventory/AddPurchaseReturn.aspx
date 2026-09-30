@@ -78,7 +78,6 @@
                 $('#btnVoucher').hide();
             }
             $('#btn_GRN').on('click', function () {
-                debugger;
                 var vendorId = $("#ddl_VendorName").val();
                 var ddltype = $('#ddl_type').val();
                 var InvOrgId = $("#ddl_ReturnFormInventoryOrg").val();
@@ -104,15 +103,12 @@
             });
         });
         function LoadGRNDetail(vendorId, ddltype, InvOrgId) {
-            debugger
             PageMethods.GetGRNDetail(vendorId, ddltype, InvOrgId, function (data) {
-                debugger;
                 var Test = JSON.parse(data);
                 $('#tblPOItemstModelTable tbody tr').remove();
                 var rows = "";
                 for (var i = 0; i < Test.length; i++) {
                     var GRN_Date = $.datepicker.formatDate('dd M yy', new Date(parseInt(Test[i].GRN_Date.substring(6, 19))));
-                    debugger;
                     rows = '<tr>' +
                         '<td><input name="chkselect" class="chktd" type="checkbox" style=" margin-top: -2px; margin-left: 0px;height: 36px;" onclick="append(this)"/></td>' +
                         '<td>' + Test[i].Item_Code + '</td> ' +
@@ -188,7 +184,6 @@
         var iteration = 0;
         function LoadPurchaseDetail(ID) {
             PageMethods.LoadPurchaseReturn_Detail(ID, function (resp) {
-                debugger;
                 var data = (JSON.parse(resp));
                 var rows = '';
                 var rowIndex = parseInt((parseInt($('#tblDetails tbody tr').length)));
@@ -197,7 +192,6 @@
                 iteration++;
                 var rowlength = (document.getElementById("tblItemDescription").rows.length + iteration) - 1;
                 $.each(data, function (key, value) {
-                    debugger;
                     if (value.BatchNum != null || value.BatchNum != '') {
                         value.BatchNum = '';
                     }
@@ -233,13 +227,10 @@
                 })
         }
         function FillWareHousess() {
-            debugger;
             var optionInv = '';
             PageMethods.getDDLlist(function (Tests) {
-                debugger
                 optionInv = '<option value="0">Please Select</option>';
                 $.each(JSON.parse(Tests), function (key, value) {
-                    debugger;
                     optionInv += '<option value="' + value.DataValueName + '" >' + value.DataValueDescription + '</option>';
                 });
                 $('#ddl_ReturnFormInventoryOrg').html(optionInv);
@@ -268,7 +259,6 @@
             }
         }
         function append(anchor) {
-            debugger;
             var rows = '';
             var row = $(anchor).parents('tr')[0];
             console.log(row);
@@ -334,7 +324,6 @@
                
                 '<td><a href="javascript:void(0)" onclick="ExcludeFromPayment(this)"><i class="glyphicon glyphicon-trash" style="font-size: 13px;margin-left: 16px; color: #f30a0a;position:relative;left: 1px;" i=""></i></a></td>' +
                 '</tr>'
-            debugger;
             $("#tblItemDescription").append(rows);
             $('input').attr('autocomplete', 'off');
             length++;
@@ -349,7 +338,6 @@
         }
         function CulculateAmonutWithQty(anchor) {
 
-            debugger;
             var Amount = $(anchor).closest('tr').find('td:eq(9)').text();
             var qty = $($(anchor).closest('tr').find('td input[name=txtTransQty]')[0]).val();          
             var net_amt = (parseInt(Amount) * qty);
@@ -358,7 +346,6 @@
         }
         function SaveAllRecord() {
             elementIsClicked = true;
-            debugger;
             if (validateSave()) {
                 var btnSave = $('#btn_Save').val();
                 var VendorId = $('#ddl_VendorName').val();
@@ -369,15 +356,12 @@
                 var Remarks = $('#txt_Remarks').val();
                 var table = $('#tblItemDescriptionDetail');
                 var Item_list = [];
-                debugger;
                 table.find('tr').each(function (key, value) {
-                    debugger;
                     Item_list.push({ 'ItemId': $(value).find('td input[name=txtItemId]').val(), 'BatchNum': $(value).find('td input[name=txtBatchNum]').val(), 'Qty': $(value).find('td input[name=txtTransQty]').val(), 'Rate': $(value).find('td input[name=txtRate]').val(), 'Amount': $(value).find('td:eq(10)').text() , 'TransType': $(value).find('td input[name=txtTransType]').val(), 'GRNId': $(value).find('td input[name=GRNId]').val(), 'GRNDetailId': $(value).find('td input[name=txtGRNDetailId]').val(), 'GRNNum': $(value).find('td input[name=txtTransNum]').val(), 'GRNDate':  $(value).find('td:eq(11)').text().trim() });
                 });
                 $('#btn_Save').attr('disabled', true);
                 var AllItemDetail = { 'VendorId': VendorId, 'PurchaseReturnNum': PurchaseReturnNum, 'PurchaseReturndate': PurchaseReturndate, 'ReturnFormInventoryOrg': ReturnFormInventoryOrg, 'InvoiceType': InvoiceType, 'Remarks': Remarks, 'ItemList': Item_list };
                 PageMethods.SavePurchaseReturn(btnSave, JSON.stringify(AllItemDetail), function (res) {
-                    debugger;
                     Swal.fire({
                         icon: 'success',
                         title: 'Success!',
@@ -396,7 +380,6 @@
             }
         }
         function validateSave() {
-            debugger;
             var table = $('#tblItemDescriptionDetail');
             var proceed = true;
             if (document.getElementById('tblItemDescription').rows.length == 1) {
@@ -418,7 +401,6 @@
             if (document.getElementById('tblItemDescription').rows.length > 1) {
                 table.find('tr').each(function (key, value) {
                     var Qty = $(value).find('td input[name=txtBatchBalnce]').val();
-                    debugger;
                     var TransQty = $(value).find('td input[name=txtTransQty]').val();
                     if (!TransQty) {
                         proceed = false;
@@ -439,7 +421,6 @@
 
 
                     if (parseFloat(TransQty) > parseFloat(Qty)) {
-                        debugger;
                         proceed = false;
                         Swal.fire({
                             icon: 'error',
@@ -460,30 +441,22 @@
             return proceed;
         }
         function Approve() {
-            debugger;
             elementIsClicked = true;
-            debugger;
             var PRTId = '<% =Request.QueryString["ID"] %>';
             PageMethods.ApprovePurchaseReturn(PRTId, function (Tests) {
-                debugger;
                 var message = JSON.parse(Tests);
                 if (message[0].Column1 != null || message[0].Column1 != "") {
-                    debugger;
                     alert(message[0].Column1);
                     window.location = "PurchaseReturnList.aspx";
                 }
             });
         }
         function UnApprove() {
-            debugger;
             elementIsClicked = true;
-            debugger;
             var PRTId = '<% =Request.QueryString["ID"] %>';
             PageMethods.UnApprovePurchaseReturn(PRTId, function (Tests) {
-                debugger;
                 var message = JSON.parse(Tests);
                 if (message[0].Column1 != null || message[0].Column1 != "") {
-                    debugger;
                     alert(message[0].Column1);
                     window.location = "PurchaseReturnList.aspx";
                 }
@@ -491,18 +464,14 @@
         }
 
         function UserUnApproveButtonRights() {
-            debugger;
             $.ajax({
                 type: "POST",
                 url: "AddPurchaseReturn.aspx/UserUnApproveEntryRights",
                 contentType: "application/json; charset=utf-8",
                 dataType: "json",
                 success: function (response) {
-                    debugger;
                     var hasRights = response.d;
-                    debugger;
                     if (hasRights) {
-                        debugger;
                         $('#btnApprove').show();
                         $('#btnUnApprove').show();
                     } else {
@@ -528,7 +497,6 @@
             });
         }
       
-        debugger;
         function PrintVoucher() {
             var id = '<% =Request.QueryString["ID"] %>';
             var locationInfo = window.location;
@@ -550,7 +518,6 @@
             window.open(url, '_blank');
         }
         function Print() {
-            debugger;
             var id = '<% =Request.QueryString["ID"] %>';
             var locationInfo = window.location;
             var user_name = '<% =AppConfig.Company_Name %>';

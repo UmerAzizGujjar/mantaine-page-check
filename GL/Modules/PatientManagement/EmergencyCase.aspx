@@ -1162,7 +1162,6 @@ function setDropdownText(selector, text) {
         }
 
         function PrintInpatientReceipt() {
-            debugger
             var txtNext_Visit = $('#ctl00_MainContent_txtNext_Visit').val();
             var dischargechk = document.getElementById("ctl00_MainContent_cbDicharg_Slip").checked;
             if (dischargechk == false) {
@@ -2463,7 +2462,6 @@ function setDropdownText(selector, text) {
 
                         var TrnsDateRec = parseInt(value.Receiving_date.substr(6, 10));
                         var retdateRec = moment.unix(TrnsDateRec).format('M/D/YYYY h:m:s A');
-                        debugger;
                         // --- Action Column Logic ---
                         var actionHtml = '<td></td>'; // Default empty cell
                         if (value.ReceivingNoteID != null && value.ReceivingNoteID !== undefined && value.ReceivingNoteID !== "") {
@@ -4568,7 +4566,6 @@ function setDropdownText(selector, text) {
                 contentType: "application/json; charset=utf-8",
                 dataType: "json",
                 success: function (response) {
-                    debugger;
                     var doctor = JSON.parse(response.d);
                     var options = '<option value=""> Please Select </option>';
 

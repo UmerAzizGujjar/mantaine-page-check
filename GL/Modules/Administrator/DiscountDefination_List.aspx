@@ -11,7 +11,6 @@
 
 
         $(document).ready(function () {
-            debugger;
             LoadPage();
          
             });
@@ -19,11 +18,9 @@
 
 
         function LoadPage() {
-            debugger;
          
             //Append data from data base table
 
-            debugger;
             $.ajax({
                 type: "POST",
                 url: "DiscountDefination_List.aspx/Discount_Defination_list",
@@ -36,7 +33,6 @@
                 dataType: "json",
 
                 success: function (data) {
-                    debugger;
                     abc = false;
                     var Priority = '';
 
@@ -50,7 +46,6 @@
                         $.each(data, function (i, item) {
                             var date_Cat = moment(data[i].Created_Time).format('L');
                    
-                            debugger;
                             rows += '<tr><td>' + data[i].Discount_Definition_Id + '</td><td>' + data[i].Discount_Category_Id + '</td><td>' + date_Cat + '</td><td style ="width: 100px;"><a href="#" onclick="Edit(' + data[i].Discount_Definition_Id + ')" style="border-radius: 4px; background-color: #428bca; color: white; padding: 4px 11px 4px 11px; margin-left: 9px;">Edit</a></td></tr>';
 
                         });
@@ -63,7 +58,6 @@
 
                     }
 
-                    debugger;
                 }
             });
         }

@@ -10,7 +10,6 @@
         $(document).ready(function () {
             $("#txtAdvanceDate").datepicker({ dateFormat: 'mm/dd/yy' });
             $("#txtAdvanceDate").val($.datepicker.formatDate('mm/dd/yy', new Date()));
-            debugger;
             LoadTokenInputsDefaultMRNo();
             var advID = '<% =Request.QueryString["advID"] %>';
             if (advID != "") {
@@ -18,7 +17,6 @@
             }
         });
         function PrintRefund() {
-            debugger;
             var refundID = '<% =Request.QueryString["advID"] %>';
              var locationInfo = window.location;
             var url = "/ReportViewer.aspx?ReportName=PrintRefundReport&Title=Refund Print &Refund_ID=" + refundID;
@@ -31,7 +29,6 @@
              window.open(url, '_blank');
          }
         function LoadPatientDetails(advID) {
-            debugger;
             var AdvanceId = advID;
 
             $.ajax({
@@ -50,7 +47,6 @@
             RefundDetials(advID)
         }
         function OnSuccesss(data) {
-            debugger;
             var parseData = JSON.parse(data.d);
             if (data.d != '') {
                 if (data.d.Patient_Discount_Type == null)
@@ -103,14 +99,12 @@
             }
         }
         function LoadShareDetails(advID) {
-            debugger;
             PageMethods.LoadShareDetails(advID, function (resp) {
                 var data = (JSON.parse(resp));
                 var rows = '';
                 var rowIndex = parseInt((parseInt($('#tblDetails tbody tr').length)));
                 var Description = '';
                 $.each(data, function (key, value) {
-                    debugger;
                     rows = '<tr></td> ' + value.Item_Name + '</td><td>' + value.Item_Name + '</td><td>' + value.Doctor_Share + '</td><td>' + value.Net_Amount + '  </td><td>' + value.Doctor_Refund + '  </td><td>' + value.Hospital_Refund + '  </td><td></td></tr>'
                     $('#tblDetails tbody').append(rows);
                     rowIndex++;
@@ -122,14 +116,12 @@
                 })
         }
         function RefundDetials(advID) {
-            debugger;
             PageMethods.RefundDetials(advID, function (resp) {
                 var data = (JSON.parse(resp));
                 var rows = '';
                 var rowIndex = parseInt((parseInt($('#Doctor_Share_Table tbody tr').length)));
                 var Description = '';
                 $.each(data, function (key, value) {
-                    debugger;
                     rows = '<tr></td> ' + value.Emp_Name + '</td><td>' + value.Emp_Name + '</td><td>' + value.Share_type + '</td><td>' + value.Amount + '  </td><td>' + value.Refund_Amount + '  </td></tr>'
                     $('#Doctor_Share_Table tbody').append(rows);
                     rowIndex++;
@@ -142,7 +134,6 @@
                 })
         }
         function LoadTokenInputsDefaultMRNo() {
-            debugger;
             $("#txtMRNo").tokenInput("json.aspx?Table=Patients",
                 {
                     tokenLimit: 1,
@@ -159,7 +150,6 @@
         }
 
         function GetPatientDetailByBill() {
-            debugger;
             var Bill_No = $('#txtBillNo').val();
 
             if (Bill_No == '' || Bill_No == null) {
@@ -181,7 +171,6 @@
                 contentType: "application/json; charset=utf-8",
                 dataType: "json",
                 success: function (response) {
-                    debugger;
                     var parse = JSON.parse(response.d);
 
                     if (parse && parse.length > 0) {
@@ -287,7 +276,6 @@
                 contentType: "application/json; charset=utf-8",
                 dataType: "json",
                 success: function (response) {
-                    debugger;
                     var parse = JSON.parse(response.d);
                     var length = parse.length;
                     var rows = '';
@@ -308,7 +296,6 @@
             });
         }
         function autoFillShare(chk) {
-            debugger;
             var row = $(chk).closest('tr');
             var doctorShare = parseFloat(row.find('td:eq(4)').text()) || 0;
             var hospitalShare = parseFloat(row.find('td:eq(5)').text()) || 0;
@@ -322,7 +309,6 @@
             calculateDoctorShare();
         }
         function calculateDoctorShare() {
-            debugger;
             var list = document.getElementById('tblDetails');
             var doctorsList = document.getElementById('Doctor_Share_Table');
             var totalDoctorRefund = 0;
@@ -418,7 +404,6 @@
             $('#btnSave').attr('disabled', true);
             if (validateSave()) {
 
-                debugger;
 
                 var Patient_ID = $("#hdPatientID").text();
                 var Bill_ID = $("#hdnBillID").val();
@@ -505,7 +490,6 @@
 
 <%--        function SaveRecord() {
             if (validateSave()) {
-                debugger;
                 var Patient_ID = $("#hdPatientID").text();
                 var Bill_ID = $("#hdnBillID").val(); 
                 CheckBillTestApproved(Bill_ID, function (canSave) {
@@ -522,7 +506,6 @@
 
                 var ServiceRefund = [];
                 $.each($('#tblDetails tbody tr'), function (key, value) {
-                    debugger;
                     var Bill_Detial_ID = document.getElementById('tblDetails').rows[key + 1].cells[1].innerText;
                     var Doctor_Refund = $(value).find('input[name="DocRefund"]').val();
                     var Hos_Refund = $(value).find('input[name="HosRefund"]').val();
@@ -533,7 +516,6 @@
                 });
                 var ShareRefund = [];
                 $.each($('#Doctor_Share_Table tbody tr'), function (key, value) {
-                    debugger;
                     var Emp_ID = document.getElementById('Doctor_Share_Table').rows[key + 1].cells[1].innerText;
                     var Record_Id = document.getElementById('Doctor_Share_Table').rows[key + 1].cells[2].innerText;
                     var Refund_Amount = $(value).find('input[name="RefundDis"]').val();
@@ -565,7 +547,6 @@
         }--%>
 
         function validateSave() {
-            debugger;
             var proceed = true;
             var hasAnyRefund = false;
 
@@ -631,7 +612,6 @@
             }
 
             PageMethods.Approve_Refund(refundId, function (response) {
-                debugger;
                 try {
                     var result = JSON.parse(response);
                     if (result && result.Message) {
@@ -686,7 +666,6 @@
                 }
             }, function (error) {
                 $('#btnApprove').attr('disabled', false);
-                debugger;
                 console.error("PageMethods error:", error);
                 Swal.fire({
                     icon: 'error',
@@ -713,7 +692,6 @@
     }
 
     PageMethods.UnApprove_Refund(refundId, function (response) {
-        debugger;
         try {
             var result = JSON.parse(response);
             if (result && result.Message) {
@@ -768,7 +746,6 @@
         }
     }, function (error) {
         $('#btnUnApprove').attr('disabled', false);
-        debugger;
         console.error("PageMethods error:", error);
         Swal.fire({
             icon: 'error',
@@ -781,7 +758,6 @@
 
 
 function PrintVoucher() {
-    debugger;
     var refundID = '<%= Request.QueryString["advID"] %>' || '0';
     refundID = refundID.trim() === "" ? "0" : refundID;
     var locationInfo = window.location;

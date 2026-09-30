@@ -13,7 +13,6 @@
             FillFrequency();
             FillRoutes();
             FillOtherInstruction();
-            debugger;
             var id = '<%=Request.QueryString["ID"]%>';
             if (id != "") {
                 Appendintable();
@@ -22,7 +21,6 @@
 
             $('#btnAddMedicine').on("click", function () {
 
-                debugger;
                 $("#btnSaveMedicine").val('Save');
                 $('#MedicationModel').modal({
                     backdrop: 'static'
@@ -45,7 +43,6 @@
 
             });
             $('#btnSaveMedicine').on("click", function () {
-                debugger;
 
 
 
@@ -106,16 +103,13 @@
                 var other_Instruction = $('#ddlOther_Instruction').find('option:selected').text().trim() == 'Select' ? '' : $('#ddlOther_Instruction').find('option:selected').text();
 
                 if ($(this).val() == 'Save') {
-                    debugger;
                     var medicine = ''//$('#txtMedicineName').val();
                     var pharmacyItem = $('#txtPharmacyItem').val();
                     var itemCode = $('#txtPharmacyItem').find('option:selected').val();
                     if (medicine == '') {
-                        debugger;
                         var row = '<tr> <td> <input type="hidden" name="testDate" value="' + datetimeValue + '">' + datetime + ' </td><td><input type="hidden" name="hdnItemCode" value="0"> ' + pharmacyITem + '</td> <td> ' + $('#txtRecomended_Dosage').find('option:selected').text() + ' </td> <td> ' + routes + ' </td> <td> ' + $('#txtInjection').val() + '<td> ' + $('#AttendingParamedicalStaff').val() + '</td><td> ' + dosage_from + '</td><td> ' + dosage_Qty + '</td><td> ' + other_Instruction + ' </td>' + '<td> <a href="#" onclick="editMedicine(this)"> Edit </a> | <a href="#" onclick="deleteMedicine(this)"> Delete </a> <input type="hidden" name="uurowid" value=' + uuid() + ' />  </td><td style="display:none;">' + itemCode + '</td></tr>';
                     }
                     else {
-                        debugger;
                         var row = '<tr> <td> <input type="hidden" name="testDate" value="' + datetimeValue + '">' + datetime + ' </td><td> <input type="hidden" name="hdnItemCode" value="' + pharmacyItem + '"> ' + pharmacyITem + '</td> <td> ' + $('#txtRecomended_Dosage').find('option:selected').text() + ' </td> <td> ' + '</td><td> ' + routes + ' </td> <td> ' + $('#txtInjection').val() + '<td> ' + $('#AttendingParamedicalStaff').val() + '</td><td> ' + dosage_from + '</td><td> ' + dosage_Qty + '</td><td> ' + other_Instruction + ' </td>' + '<td> <a href="#" onclick="editMedicine(this)"> Edit </a> | <a href="#" onclick="deleteMedicine(this)"> Delete </a> <input type="hidden" name="uurowid" value=' + uuid() + ' />  </td> <td style="display:none;">' + itemCode + '</td></tr>';
                     }
 
@@ -125,7 +119,6 @@
 
                 }
                 else if ($(this).val() == 'Update') {
-                    debugger;
 
                     var tid = $('#MedicationModel input[name=uurowid]').val();
 
@@ -298,7 +291,6 @@
             });
         }
         function editMedicine(AnchorTag) {
-            debugger;
             $('#MedicationModel').modal({
                 backdrop: 'static'
             });
@@ -351,7 +343,6 @@
         }
 
         function SaveMedicine() {
-            debugger;
             var Medicine_Id = '<%=Request.QueryString["ID"]%>';
             var table = $('#tblMedicinesList');
             var MedicinesList = [];
@@ -379,9 +370,7 @@
 
             // Function to check if an item code exists
             var checkItemCodeExists = function (itemCode, callback) {
-                debugger;
                 PageMethods.CheckMedicineTemplateExists(itemCode, function (result) {
-                    debugger;
                     var exists = JSON.parse(result);
                     callback(exists);
                 }, function (error) {

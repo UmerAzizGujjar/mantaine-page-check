@@ -14,13 +14,10 @@
 
 
         function Print(id) {
-            debugger;
             if (id != '' && id != null && id != undefined) {
                 PageMethods.GetVendorsforReports(id, function (Tests) {
-                    debugger
                     var message = JSON.parse(Tests);
                     for (var i = 0; i < message.length; i++) {
-                        debugger;
                         var locationInfo = window.location;
 
                         var user_name = '<% =AppConfig.Company_Name %>';
@@ -45,7 +42,6 @@
         }
 
         function deleteConfirm(RFQID) {
-            debugger;
             if (confirm('Are you sure want to delete this record')) {
                 PageMethods.DeleteRecord(RFQID, function (msg) {
                     location.reload();

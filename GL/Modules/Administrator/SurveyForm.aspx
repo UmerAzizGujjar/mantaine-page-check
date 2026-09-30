@@ -3,13 +3,11 @@
 <asp:Content ID="Content1" ContentPlaceHolderID="HeadContent" runat="server">
     <script type="text/javascript">
         $(document).ready(function () {
-            debugger;
             var Stu_ID = '<%= Request.QueryString["Stu_ID"]%>'
             console.log(Stu_ID)
             if (Stu_ID != null) {
                 LoadSurveyDatas(Stu_ID);
             }
-        debugger;
         GetPatientNo();
         $('#ddlpat_no').select2();
     });
@@ -23,11 +21,8 @@
                 contentType: 'application/json;charset=utf-8',
                 dataType: 'json',
                 success: function (data) {
-                    debugger;
                     Getpat = '<option value="0">Please Select</option>';
-                    debugger;
                     $.each(JSON.parse(data.d), function (key, value) {
-                        debugger;
 
                         Getpat += '<option value="' + value.pat_id + '" >' + value.pat_no + '</option>';
                     });
@@ -36,9 +31,7 @@
                 },
             });
         }
-        debugger;
         function GetPatientNameByMR() {
-            debugger;
             var pat_id = $('#ddlpat_no').val();
             PageMethods.getname(pat_id, function (Tests) {
                 var data = JSON.parse(Tests);
@@ -50,7 +43,6 @@
 
 
         function SaveFunction() {
-            debugger;
             var Survey_Id = $('#Survey_Id').val();
             Survey_Id = '<%= Request.QueryString["ID"]%>'
 
@@ -177,7 +169,6 @@
             };
 
             PageMethods.SaveStudentData(btnSave, JSON.stringify(AllRecords), function (res) {
-                debugger;
 
 
 
@@ -190,10 +181,8 @@
 
 
         function LoadSurveyDatas(Stu_ID) {
-            debugger;
             PageMethods.LoadSurveyData(Stu_ID, function (resp) {
                 var studata = JSON.parse(resp);
-                debugger;
                 $('#CHKQ_1_1').val(studata.CHKQ_1_1); if (studata.CHKQ_1_1 == 1) { $("#CHKQ_1_1").prop('checked', true); }
                 $('#CHKQ_1_2').val(studata.CHKQ_1_2); if (studata.CHKQ_1_2 == 1) { $("#CHKQ_1_2").prop('checked', true); }
                 $('#CHKQ_1_3').val(studata.CHKQ_1_3); if (studata.CHKQ_1_3 == 1) { $("#CHKQ_1_3").prop('checked', true); }
@@ -295,14 +284,12 @@
             })
         }
         function SurvePrint() {
-            debugger;
             var id = '<%= Request.QueryString["Stu_ID"] %>';
             if (id != "") {
                 window.open('ReportViewer.aspx?ReportName=SurvePrint&ReportTitle=Surve Format Report&Surve_ID=' + id);
             }
         }
         function SurveFormat() {
-            debugger;
             window.open('ReportViewer.aspx?ReportName=SurveFormat&ReportTitle=Surve Format ');
         }
 </script>

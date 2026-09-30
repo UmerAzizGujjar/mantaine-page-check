@@ -11,7 +11,6 @@
             GetDoctors();
 
             $('#txtSearch').change(function () {
-                debugger;
                 var sea = $("#txtSearch").val();
                 var filter = $("#ddlFilter").val();
                 var doctor = $("#ddlDoctor").val();
@@ -21,7 +20,6 @@
 
             });
             $('#ddlDoctor').change(function () {
-                debugger;
                 var sea = $("#txtSearch").val();
                 var filter = $("#ddlFilter").val();
                 var doctor = $("#ddlDoctor").val();
@@ -31,7 +29,6 @@
 
             });
             $('#ddlFilter').change(function () {
-                debugger;
                 var sea = $("#txtSearch").val();
                 var filter = $("#ddlFilter").val();
                 var doctor = $("#ddlDoctor").val();
@@ -50,7 +47,6 @@
                 dataType: "json",
                 async: false,
                 success: function (response) {
-                    debugger;
                     var options = '<option value="0">Please Select </option>';
                     var Parsed_Data = JSON.parse(response.d);
                     $.each(Parsed_Data, function (key, value) {
@@ -73,7 +69,6 @@
                 dataType: "json",
                 async: false,
                 success: function (response) {
-                    debugger;
                     var options = '<option value="0">Please Select </option>';
                     var Parsed_Data = JSON.parse(response.d);
                     $.each(Parsed_Data, function (key, value) {
@@ -88,9 +83,7 @@
                 }
             });
         }
-        debugger;
         function LoadPage(sea, filter, doctor) {
-            debugger;
             var search = sea;
             var fil_clinic = filter;
             var Doc_id = doctor;
@@ -105,7 +98,6 @@
                 Doc_id = '0';
             }
 
-            debugger;
             PageMethods.ViewList(search, fil_clinic, Doc_id, function (res) {
                 var lsit = JSON.parse(res);
                 var rows = '';
@@ -134,7 +126,6 @@
         }
 
         function DischargePatient() {
-            debugger;
             var selectedPatients = [];
 
             $('.Discharge-checkbox:checked').each(function () {
@@ -142,7 +133,6 @@
             });
 
             if (selectedPatients.length > 0) {
-                debugger;
                 PageMethods.DischargePatients(selectedPatients, function (result) {
                     if (result) {
                         alert('Selected patients have been discharged.');

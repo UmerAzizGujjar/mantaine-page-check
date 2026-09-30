@@ -6,7 +6,6 @@
     <script type="text/javascript">
         var wholeBlood = 30;
         function loadtokenInputsDefault() {
-            debugger;
             $('#txtDonor').tokenInput("../../json.aspx?Table=Donor",
                 {
                     tokenLimit: 1,
@@ -32,7 +31,6 @@
         }
 
         function OnSuccess(data) {
-            debugger;
             var response = JSON.parse(data.d);
             var date = '';
             if (response[0].Donor_LastDonation == null || response[0].Donor_LastDonation == 'null') {
@@ -64,11 +62,9 @@
         }
 
         function LoadBloodDOnationId(Donor_ID) {
-            debugger;
             if (Donor_ID != '') {
 
                 PageMethods.GetDonorDivisionID(Donor_ID, function (res) {
-                    debugger;
                    
                     donoresult(res);
                 });
@@ -77,7 +73,6 @@
 
         function loadAjax(Donor_ID) {
           
-            debugger;
             if (Donor_ID != '') {
                 $.ajax({
                     type: "POST",
@@ -93,7 +88,6 @@
         }
         function donoresult(id) {
             PageMethods.GetPlatelets(id, function (res) {
-                debugger;
                 var data = JSON.parse(res);
                 var rows = '';
                 var Div_Exp_Date = 'null';
@@ -134,7 +128,6 @@
 
         }
         function CallingList() {
-            debugger;
             PageMethods.GetDonorList(function (res) {
                 var item = JSON.parse(res);
                 var rows = '';
@@ -186,7 +179,6 @@
             var days = parseInt(wholeBlood, 10);
             var current_Date_s = '';
             if (!isNaN(date.getTime())) {
-                debugger;
                 date.setDate(date.getDate() + days);
                 current_Date_s = moment(date.toInputFormat()).format('D MMMM YYYY');
                 $("#txtExpDate").val(current_Date_s);
@@ -217,7 +209,6 @@
                 $("table#tblDonorInformation").hide();
                 $('#btnSave').val('Update');
                 PageMethods.GetDonorID(id, function (res) {
-                    debugger;
                     var Donor_id = res.split('-')[0];
                     var wholeBlood = res.split('-')[1];
                     whole_Blood = wholeBlood;
@@ -240,7 +231,6 @@
 
                     }
                     else if (wholeBlood == "True") {
-                        debugger;
                         $('#chkW').prop('checked', true);
                         $("#showHide").hide();
                         $("#txtExpDate").show();
@@ -262,13 +252,11 @@
             }
 
             if (id === "") {
-                debugger;
                 CallingList();
             }
 
             
             $('#chkW').change(function () {
-                debugger;
                 if (this.checked) {
                     $("#showHide").hide();
                     $("#txtExpDate").show();
@@ -280,7 +268,6 @@
                     var days = parseInt(wholeBlood, 10);
                     var current_Date_s = '';
                     if (!isNaN(date.getTime())) {
-                        debugger;
                         date.setDate(date.getDate() + days);
                         current_Date_s = moment(date.toInputFormat()).format('D MMMM YYYY');
                         $("#txtExpDate").val(current_Date_s);
@@ -315,14 +302,12 @@
             $('#btnAdd').on('click', function () {
                 var blood = $("#ddlBlood").val();
                 if (blood == 0) return true;
-                debugger;
                 var isFalse = false;
                 var Platelets_name = $('#ddlBlood :selected').text();
                 var Platelets_id = $('#ddlBlood').val();
                 var Fixed_day = $('#ddlBlood :selected').attr('name');
 
                 $('#tblBloodChunks tbody tr:gt(0)').each(function () {
-                    debugger;
                     var Platelets_id_compare = $(this).find('td:eq(0)').text();
                     if (Platelets_id == Platelets_id_compare) {
                         Swal.fire({
@@ -341,13 +326,10 @@
                         return false;
                     }
                 });
-                debugger;
                 var date = new Date();
                 var id = '<%= Request.QueryString["ID"]%>';
                 if (id != "") {
-                    debugger;
                     if (whole_Blood == "True") {
-                        debugger;
                         date = new Date(Create_Date);
 
                     }
@@ -358,7 +340,6 @@
                 var days = parseInt(Fixed_day, 10);
 
                 if (!isNaN(date.getTime())) {
-                    debugger;
                     date.setDate(date.getDate() + days);
                     current_Date = moment(date.toInputFormat()).format('D MMMM YYYY');
                    
@@ -406,13 +387,11 @@
             var isDetailExp = true;
 
             $('#btnSave').on('click', function () {
-                debugger;
                 $(this).attr("disabled", true);
 
                 isProceed = true;
                 isDetailExp = true;
 
-                debugger;
                 var btnValue = $("#btnSave").val();
                 var donor_id = $('#txtDonor').val();
                 var id = '<%= Request.QueryString["ID"]%>'
@@ -459,7 +438,6 @@
                     Expiry_date = "";
                     var table = $('#tblBloodChunks');
                     table.find('tbody tr:gt(0)').each(function (key, value) {
-                        debugger;
                         var Type_id = $($(value).find('td')[0]).text();
                         var Platelets = $($(value).find('td')[1]).text();
                         var Qty = $(value).find('td input[name=Qty]').val();
@@ -498,7 +476,6 @@
 
                     }
                 }
-                debugger;
                 if (isProceed == true) {
 
 
@@ -558,7 +535,6 @@
         }
 
         function Select(row) {
-            debugger;
             var Donor_ID = $($(row).closest('tr')[0]).find('td:eq(0)').text();
           
             var tokendata = httpGet("../../json.aspx?Table=Donor&q=" + Donor_ID);

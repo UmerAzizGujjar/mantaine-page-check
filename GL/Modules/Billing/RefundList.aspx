@@ -21,13 +21,11 @@
 
             });
             function EditAdvance(advId) {
-                debugger;
                 window.open("Refund.aspx?advID=" + advId);
             }
 
 
             function PrintRefund(Refund_ID) {
-                debugger;
                 var locationInfo = window.location;
                 var url = "/ReportViewer.aspx?ReportName=PrintRefundReport&Title=Refund Print &Refund_ID=" + Refund_ID;
                 if (!locationInfo.origin.includes('localhost')) {

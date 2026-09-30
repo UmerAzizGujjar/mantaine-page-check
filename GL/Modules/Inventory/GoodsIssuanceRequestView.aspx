@@ -428,7 +428,6 @@
 
 
         function Print(id) {
-            debugger;
             var locationInfo = window.location;
 
 
@@ -509,7 +508,6 @@
                         contentType: "application/json; charset=utf-8",
                         dataType: "json",
                         success: function (response) {
-                            debugger;
                             callback({
                                 draw: response.d.draw,
                                 recordsTotal: response.d.recordsTotal,
@@ -761,7 +759,6 @@
         }
 
         function ViewPage(id, type) {
-            debugger;
             if (type == 'GIN') {
                 window.open("GoodsIssuanceNote.aspx?ID=" + id, "_blank");
             }

@@ -529,7 +529,6 @@
                 url: "PaymentInvoiceView.aspx/isDeleteAllow",
                 data: "",
                 success: function (resp) {
-                    debugger;
                     if (resp.d == true) {
                         isDele = true;
                     }
@@ -540,12 +539,10 @@
             })
         }
         function deleteConfirm(anchorTag) {
-            debugger;
             var row = $(anchorTag).parents('tr')[0];
             var InvID = $($(row).find('td')[0]).text();
             if (confirm('Are you sure want to delete this record')) {
                 PageMethods.DeleteRecord(InvID, function (msg) {
-                    debugger
                     $(row).remove();
                 }, OnFail);
             }
@@ -795,7 +792,6 @@
             });
         }
         function ViewPage(id, type) {
-            debugger;
             var ID = id
             if (type == 'GRN') {
                 window.open("GRN.aspx?GRN_ID=" + ID, "_blank");

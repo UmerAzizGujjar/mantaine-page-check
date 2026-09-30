@@ -33,7 +33,6 @@
                });
                $('#ddlUser').on('change', function ()
                {
-                   debugger;
                    var user = $(this).val();
                    var disc = $(this).find('option:selected').attr('Discount');
                    var disc_amt = $(this).find('option:selected').attr('discountamt');
@@ -69,7 +68,6 @@
                  
                    success: function (response)
                    {
-                       debugger;
                        if (response.d == "success")
                        {
                            alert("Data has been saved successfully");
@@ -87,7 +85,6 @@
            
            function FillUsers()
            {
-               debugger;
                var options = '';
                $.ajax({
                    type: "Post",
@@ -97,7 +94,6 @@
                
                    success: function (resp)
                    {
-                       debugger;
                        options = '<option value="0">Please Select</option>';
                        var users=JSON.parse(resp.d);
                        $.each(JSON.parse(resp.d), function (key, value)
@@ -109,7 +105,6 @@
                        });
                        $('#ddlUser').html(options);
                        $('#ddlUser').select2();
-                       debugger;
                        var userid=  '<% =AppConfig.UserID %>';
                        var record = users.find(x=>x.UserId == userid);
                        $('#ddlUser').val(record.UserId).trigger('change');

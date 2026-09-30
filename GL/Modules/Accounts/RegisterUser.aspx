@@ -25,7 +25,6 @@
                 contentType: "application/json; charset=utf-8",
                 dataType: "json",
                 success: function (response) {
-                    debugger;
                     var data = JSON.parse(response.d);
                     $('#saveBtn').val('Update User');
                     // Disable password fields
@@ -108,7 +107,6 @@
         }
 
         function CreateUser() {
-            debugger;
             var Valid = true;
             var UserIDfromURL = '<%= Request.QueryString["UserID"] %>';
             var UserName = $('#UserName').val();

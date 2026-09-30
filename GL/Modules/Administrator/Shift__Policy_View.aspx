@@ -3,7 +3,6 @@
     <link href="../../wwwroot/THEME_TIBBIT/CustomCSS/tablestyle.css" rel="stylesheet" />
      <script type="text/javascript">
      $(document).ready(function () {
-         debugger;
          $('#ctl00_lblMessage').hide();
          LoadPage();
      });
@@ -121,9 +120,7 @@
          });
      }
 
-         debugger;
          function cancelPolicy(policyId) {
-             debugger;
          Swal.fire({
              title: 'Are you sure?',
              text: 'Do you want to delete this policy?',

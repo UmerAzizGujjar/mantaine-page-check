@@ -5,7 +5,6 @@
     <script type="text/javascript">
 
         $(document).ready(function () {
-            debugger;
             $('#ctl00_lblMessage').hide();
             LoadPage();
 
@@ -17,7 +16,6 @@
         }
 
         function prints(BTR_Id) {
-            debugger;
             window.open('../../ReportViewer.aspx?ReportName=BasePrintBloodTransfusion&ReportTitle=Department Of Pathology&BTR_Id=' + BTR_Id);
             
         }
@@ -93,7 +91,6 @@
                     { "data": "Age", "name": "Age", "width": "10%", "orderable": false },
                     {
                         render: function (data, type, full) {
-                            debugger;
                             var res = '<a class="editListBtn" href="#" onclick="Edit(' + full.BTR_Id + ')" style="border-radius: 4px;padding: 5px 8px 5px 8px;"><i class="fa fa-pencil"></i></a>'
 
                             var print = '<a class="printListBtn" style="border-radius: 4px;margin-left: 4px;color: white;padding: 5px 8px 5px 8px;" href="#" onclick="prints(' + full.BTR_Id + ')" id="btnprint"><i class="fa fa-print"></i></a>';

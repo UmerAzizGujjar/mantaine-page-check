@@ -97,7 +97,6 @@
             });
         }
         function LoadGRNDetails() {
-            debugger;
             var grnId = $('#ddlGRN').val();
             selectedGRNId = grnId;
             if (grnId == "0" || grnId == null) {
@@ -113,7 +112,6 @@
                 contentType: "application/json; charset=utf-8",
                 dataType: "json",
                 success: function (response) {
-                    debugger;
                     var data = JSON.parse(response.d);
                     if (!data || data.length == 0) {
                         Swal.fire({ icon: 'error', title: 'Error!', text: 'No items found in this GRN', showConfirmButton: false, timer: 2000, customClass: { popup: 'swal-big-popup', title: 'swal-big-title', htmlContainer: 'swal-big-text' } });
@@ -145,13 +143,11 @@
             });
         }
         function getstockdetailnum() {
-            debugger;
            // var itemid = $("#txtItemCode").val().toString().split('-')[0];
             var itemid = itmid;
             var wareHousefrom = $("#ctl00_MainContent_Select_wareHouseFrom").val();
             var date = $("#StockTransferDate").val();
             var batcNo = $('#batchnoddl :selected').text();
-            debugger;
             if (itemid != "" && wareHousefrom != "" && date != "") {
                 $.ajax({
                     type: "POST",
@@ -165,7 +161,6 @@
                     contentType: "application/json; charset=utf-8",
                     dataType: "json",
                     success: function (response) {
-                        debugger;
                         var data = JSON.parse(response.d);
                         $("#Textstock").val(data.StockAvailable);
                         $("#TextRate").val(data.ItemRate);
@@ -236,7 +231,6 @@
         }
         var _gloabal = '';
         function fillbatchno(itemid) {
-            debugger;
             var warehouse = $('#ctl00_MainContent_Select_wareHouseFrom').val();
             var transferdate = $('#StockTransferDate').val();
 
@@ -279,18 +273,14 @@
                 return false;
             }
 
-            debugger;
             var optionsVen = '';
             var addedBatches = new Set();
 
             PageMethods.getbatchno(itemid, warehouse, transferdate, function (Tests) {
-                debugger;
                 var data = JSON.parse(Tests);
                 optionsVen = '<option value="0">Please Select</option>';
 
-                debugger;
                 $.each(data, function (key, value) {
-                    debugger;
                     if (value.Batch_No == "Non-Batch" && value.IsBatch == 0) {
                         return;
                     }
@@ -307,7 +297,6 @@
             //loadStock(itemid);
         }
         //function fillbatchno(itemid) {
-        //    debugger;
         //    var warehouse = $('#ctl00_MainContent_Select_wareHouseFrom').val();
         //    var transferdate = $('#StockTransferDate').val();
         //    if (warehouse == "0") {
@@ -345,18 +334,14 @@
         //            }
         //        });
         //    }
-        //    debugger;
         //    var optionsVen = '';
         //    PageMethods.getbatchno(itemid, warehouse, transferdate, function (Tests) {
-        //        debugger
         //        var data = JSON.parse(Tests);
         //        if (data.Batch_No == "") {
         //            getstockdetailnum();
         //        }
         //        optionsVen = '<option value="0">Please Select</option>';
-        //        debugger;
         //        $.each(JSON.parse(Tests), function (key, value) {
-        //            debugger;
         //            if (value.Batch_No == "Non-Batch" && value.IsBatch == 0) {
         //            }
         //            else {
@@ -370,7 +355,6 @@
         //}
 
         function PrintStoreTransfer() {
-            debugger;
             var stID = '<% =Request.QueryString["stID"] %>';
             var locationInfo = window.location;
             var url = "/ReportViewer.aspx?ReportName=StoreTransferPrint&Title=Store Transfer Print &Store_TransferID=" + stID;
@@ -383,7 +367,6 @@
             window.open(url, '_blank');
         }
         function GetWareHouseByBranch(b) {
-            debugger;
             var optionsPO = '<option value="0">Please Select</option>';
             var BranchId;
             BranchId = b.value;
@@ -392,14 +375,11 @@
             }
             var user_id = '<% =AppConfig.UserID %>';
             PageMethods.GetWHByBranchId(BranchId, user_id, function (res) {
-                debugger;
                 var b = JSON.parse(res);
                 amountonedit = $('#ctl00_MainContent_txtAmount').val();
-                debugger;
                 $.each(b, function (key, value) {
                     optionsPO += '<option value="' + value.Id + '" >' + value.name + '</option>';
                 })
-                debugger;
                 $("#ctl00_MainContent_Select_wareHouseFrom option").remove();
                 $('#ctl00_MainContent_Select_wareHouseFrom').html(optionsPO);
                 $("#ctl00_MainContent_Select_wareHouseFrom option").val(function (idx, val) {
@@ -409,7 +389,6 @@
             });
         }
         function GetWareHouseByBranchtooo(b) {
-            debugger;
             var optionsPO = '<option value="0">Please Select</option>';
             var BranchId;
             BranchId = b.value;
@@ -418,14 +397,11 @@
             }
             var user_id = '<% =AppConfig.UserID %>';
             PageMethods.GetWHByBranchIdtoooo(BranchId, user_id, function (res) {
-                debugger;
                 var b = JSON.parse(res);
                 amountonedit = $('#ctl00_MainContent_txtAmount').val();
-                debugger;
                 $.each(b, function (key, value) {
                     optionsPO += '<option value="' + value.Id + '" >' + value.name + '</option>';
                 })
-                debugger;
                 $("#ctl00_MainContent_Select_wareHouseTo option").remove();
                 $('#ctl00_MainContent_Select_wareHouseTo').html(optionsPO);
                 $("#ctl00_MainContent_Select_wareHouseTo option").val(function (idx, val) {
@@ -457,7 +433,6 @@
             });
         }
         $(document).ready(function () {
-            debugger;
             //UserRights();
             $("#lblstatus").hide();
             $("#txtstatus_trnsfer").hide();
@@ -514,18 +489,14 @@
         });
 
         function UserRights() {
-            debugger;
             $.ajax({
                 type: "POST",
                 url: "StoreStockTransfer.aspx/UserEntryRights",
                 contentType: "application/json; charset=utf-8",
                 dataType: "json",
                 success: function (response) {
-                    debugger;
                     var hasRights = response.d;
-                    debugger;
                     if (hasRights) {
-                        debugger;
                         $('#btnSave').show();
                     } else {
                         $('#btnSave').hide();
@@ -542,7 +513,6 @@
                 $("#StockTransferDate").val($.datepicker.formatDate('dd M yy', new Date(parseInt(data.d[0].stockTransferDate.substring(6, 19)))));
                 $("#Remarks").val(data.d[0].remarks);
                 $("#txtstatus_trnsfer").val(data.d[0].Transfer_Status);
-                debugger;
                 var grnIdFromEdit = data.d[0].grnId || 0;
                 selectedGRNId = grnIdFromEdit;
                 setTimeout(function () {
@@ -582,7 +552,6 @@
                     }
                 });
                 $("#StockTransferDate").attr('disabled', true);
-                debugger;
                 $('#ctl00_MainContent_Select_wareHouseFrom').attr('disabled', true);
                 $('#ctl00_MainContent_Select_wareHouseTo').attr('disabled', true);
                 calculatequantity();
@@ -590,12 +559,10 @@
             }
         }
         function calculatequantity() {
-            debugger;
             var totalquantity = 0;
             $.each($('#stocktable tbody tr'), function (key, value) {
                 var quanty = $($(value).find('td')[5]).text();
                 totalquantity += parseFloat(quanty);
-                debugger;
                 $('#txttrnsfer_qty').val(totalquantity);
             });
         }
@@ -617,7 +584,6 @@
             });
             $('.editQnty').bind('keypress', function (e) {
                 if (e.which == 13) {
-                    debugger;
                     var stock = $(this).parent().parent().find('.stkAvbl').text();
                     stock = (typeof (stock) != 'undefined' && stock != "") ? parseInt(stock) : 0;
                     var qty = (typeof ($(this).val()) != 'undefined' && $(this).val() != "") ? parseInt($(this).val()) : 0;
@@ -656,7 +622,6 @@
                 }
             });
             $("#stocktable").find(".deleteStkItem").bind('click', function () {
-                debugger;
 
                 var checkstats = $("#txtstatus_trnsfer").val();
                 if (checkstats == 'Approved') {
@@ -686,7 +651,6 @@
                 else
                     $(this).closest('tr').remove();
                 var findrow = stocktablebody.rows.length;
-                debugger;
                 if (findrow == 0) {
                     $('#ctl00_MainContent_Select_wareHouseFrom').attr('disabled', false);
                     $('#ctl00_MainContent_Select_wareHouseTo').attr('disabled', false);
@@ -705,7 +669,6 @@
         function deleteStockItem(id, stn, stkID) {
             if (!confirm('Are you sure you want to delete ?'))
                 return;
-            debugger;
             var ids = id.split('^');
             var itmCode = ids[0];
             var batch = ids[1];
@@ -741,7 +704,6 @@
             });
         }
         function addItemRow() {
-            debugger;
             var item = $("#txtItemCode").val();
             var itmCode = item.split('-')[0];
             var wareHousefrom = "";
@@ -806,7 +768,6 @@
 
                 return false;
             }
-            debugger;
             if (itmCode.trim() != "") {
                 $.each($("#stocktable").find('tbody').find('tr'), function (index) {
                     var srNo = $(this).find($('.srNo')).text();
@@ -910,7 +871,6 @@
             return false;
         }
         function AddStockMain() {
-            debugger;
             var stockNo = 0;
             var stockDate = $("#StockTransferDate").val();
             var wareHouseFrom = $("#ctl00_MainContent_Select_wareHouseFrom").val();
@@ -934,7 +894,6 @@
             });
         }
         function AddStockDetails(isUpdate) {
-            debugger;
             var details = {};
             var detailAry = [];
             var findInvalid = false;
@@ -954,7 +913,6 @@
                 if (isUpdate)
                     quantity = (typeof ($(this).find('.val').text()) != 'undefined' && $(this).find('.val').text() != "") ? parseInt($(this).find('.val').text()) : -1;
                 var stock = /^[0-9]/.test($(this).find('.stkAvbl').text()) ? parseInt($(this).find('.stkAvbl').text()) : -1;
-                debugger;
                 if (stock >= quantity) {
                     details = {};
                     details.itemCode = itemCode;
@@ -1037,7 +995,6 @@
             }
         }
         function loadstockTransferNo() {
-            debugger;
             $.ajax({
                 type: "POST",
                 contentType: "application/json; charset=utf-8",
@@ -1048,18 +1005,15 @@
                     $("#ctl00_MainContent_txtStock_No").val(data.d);
                 },
                 error: function (msg) {
-                    debugger;
                     alert("Could not load Stock transfer number");
                 }
             });
         }
         function loadStock(item) {
-            debugger;
             var itmCode = item.split('-')[0];
             var wareHousefrom = $("#ctl00_MainContent_Select_wareHouseFrom").val();
             var date = $("#StockTransferDate").val();
             var batcNo = $("#batchnoddl :selected").text();
-            debugger;
             if (itmCode != "" && wareHousefrom != "" && date != "") {
                 $.ajax({
                     type: "POST",
@@ -1128,16 +1082,13 @@
             return false;
         }
         function LoadBatchNoDetail() {
-            debugger;
             //var itemid = $("#txtItemCode").val().toString().split('-')[0];
             var itemid = itmid;
             var warehouse = $("#ctl00_MainContent_Select_wareHouseFrom").val();
             if (itemid.trim() != "") {
                 PageMethods.PerformBatchNoSearch(itemid, warehouse, function (data) {
                     var rows = "";
-                    debugger;
                     for (var i = 0; i < data.length; i++) {
-                        debugger;
                         if (data[i].Batch_Balance != 0.00) {
                             $("#Textstock").val(Number(data[i].Batch_Balance));
                         }
@@ -1148,7 +1099,6 @@
         }
         var itmid;
         function loadtokenInputsDefaultPRNo() {
-            debugger
             $('#txtItemCode').tokenInput("../../json.aspx?Table=INV_Items",
                 {
                     tokenLimit: 1,
@@ -1175,7 +1125,6 @@
             $('#POItemsModel').modal('hide');
         }
         function getFillStock(stID) {
-            debugger;
             $("#btnSave").hide();
             $("#btnUpdate").show();
             $(".actionClm").show();
@@ -1207,7 +1156,6 @@
         }
 
         function abcload(anchorTag) {
-            debugger;
             var row = $(anchorTag).parents('tr')[0];
             var itemcode = $($(row).find('td')[1]).text();
             var qty = $($(row).find('td')[5]).text();
@@ -1266,18 +1214,14 @@
         }
 
         function UserUnApproveButtonRights() {
-            debugger;
             $.ajax({
                 type: "POST",
                 url: "StoreStockTransfer.aspx/UserUnApproveEntryRights",
                 contentType: "application/json; charset=utf-8",
                 dataType: "json",
                 success: function (response) {
-                    debugger;
                     var hasRights = response.d;
-                    debugger;
                     if (hasRights) {
-                        debugger;
                         $('#btnUnApprove').show();
                     } else {
                         $('#btnUnApprove').hide();

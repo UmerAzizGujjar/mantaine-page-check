@@ -3,32 +3,26 @@
 
     <script type="text/javascript">
         $(document).ready(function () {
-            debugger;
 
             GetLatestToken();
 
             $('[id*="Getrow"]').on('click', function () {
-                debugger; var isTrue = $('#Getrow').is(':checked');
+                 var isTrue = $('#Getrow').is(':checked');
                 if (isTrue) {
-                    debugger; $('.chckrow').prop('checked', true);
+                     $('.chckrow').prop('checked', true);
                 } else {
-                    debugger; $('.chckrow').prop('checked', false);
+                     $('.chckrow').prop('checked', false);
                 }
             });
 
             $('#btnApproved').on('click', function () {
-                debugger;
 
                 $.each($('#tbloutPatients tbody tr'), function (key, value) {
-                    debugger;
                     var chck = $($(value).find('td input[name=Getrow]')[0]).prop("checked");
                     var Billid = $($(value).find('td input[name=Bil_id]')[0]).val();
                     var department = $('#ddldepartment').val();
-                    debugger;
                     if (chck == "true" || chck == true) {
-                        debugger;
                         PageMethods.Approvebilling(Billid, function (response) {
-                            debugger;
                             var data = response;
                             if (data == "Success") {
                                 // alert("Bill has been approved successfully");
@@ -64,16 +58,13 @@
                 contentType: 'application/json;charset=utf-8',
                 dataType: 'json',
                 success: function (_data) {
-                    debugger;
                     _data = JSON.parse(_data.d);
                     var mdTable = $('#tbloutPatients');
                     $('#tbl tr:gt(0)').remove();
                     table = $('#ibody');
                     table.empty();
-                    debugger;
                     $.each(_data, function (key, value) {
                         bill_id = value.Bill_ID;
-                        debugger;
 
                         var rowColor = '';
                         if (value.filter_clinic == "001" && value.Id == "001") {

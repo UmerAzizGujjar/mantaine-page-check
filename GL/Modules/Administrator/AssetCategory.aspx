@@ -6,7 +6,6 @@
 
     <script type="text/javascript">  
         $(document).ready(function () {
-            debugger
             LoadPage();
             FillDepreciationMethod();
 
@@ -17,7 +16,6 @@
         });
         var currentRow = null;
         function FillDepreciationMethod() {
-            debugger
             var optionDepriciation = '';
             PageMethods.filldepreciationMethods(function (Tests) {
                 optionDepriciation = '<option value="0">Please Select</option>';
@@ -44,7 +42,6 @@
 
 
         function LoadPage() {
-            debugger
             $("#tblDetials").DataTable({
                 "processing": true,
                 "serverSide": true,
@@ -85,7 +82,7 @@
                         error: function (xhr, status, error) {
                             console.log(xhr.responseText);
                         }
-                    }); debugger
+                    });
                 },
                 "columns": [
                     { "data": "Asset_Category_Id", "visible": false, "width": "0%" },
@@ -94,7 +91,6 @@
                     { "data": "Depreciation_Percentage", "width": "40%" },
                     {
                         "render": function (data, type, full) {
-                            debugger;
                             var res = '<a href="#" onclick="EditAsset(' + full.Asset_Category_Id + ', \'' + full.Asset_Cat_Name + '\', \'' + full.Depreciation_Method_Name + '\', ' + full.Depreciation_Percentage + ')" style="border-radius: 4px;margin-right: 4px; background-color: #1f1fe3; color: white; padding: 5px 8px 5px 8px;"><i style="color:white !important;" class="fa fa-pencil"></i></a>';
 
                             var result;

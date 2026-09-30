@@ -7,7 +7,6 @@
 
           var Panels = '';
           $(document).ready(function () {
-              debugger;
               $('#TxtTime_In').ptTimeSelect();
               $("#TxtTime_Out").ptTimeSelect();
               filldepartment();
@@ -164,7 +163,6 @@
           function populatedata(empID) {
               PageMethods.PopulateEmployeeData(parseInt(empID), function (data) {
                   var empData = JSON.parse(data);
-                  debugger;
                   console.log(empData);
                   // Now populate form fields
                   // Textboxes and Dropdowns
@@ -187,7 +185,6 @@
                   $("#txtPanelAmount").val(empData.panelrate);
 
 
-                  debugger;
                     setTimeout(function () {
                         $("#ddluser").val(empData.user);
                         }, 2500)
@@ -263,7 +260,6 @@
           }
 
           function toasterMessage(isError = false, title, message) {
-              debugger;
               toastr.options = {
                   "closeButton": true,
                   "debug": false,
@@ -322,7 +318,6 @@
               return `${hours.padStart(2, '0')}:${minutes.padStart(2, '0')}`;
           }
           function saveData() {             
-              debugger;          
               var hdfAccount_ID = $('#hdfAccount_ID').val();
               var buttonVal = $('#btnSave').val();
               var txtEmployeeID = $('#txtEmployeeID').val();
@@ -511,7 +506,6 @@
               var data = JSON.stringify({ dataa: dataObj });
 
 
-              debugger;
               $.ajax({
                   type: "POST",
                   url: "Employee.aspx/SaveData",
@@ -519,7 +513,6 @@
                   contentType: "application/json; charset=utf-8",
                   dataType: "json",
                   success: function (data) {
-                      debugger;
                       var result = data.d;
                       if (result !== "Saved Successfully!") {
                           Swal.fire({

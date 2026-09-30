@@ -6,7 +6,6 @@
 
     <script type="text/javascript">
         $(document).ready(function () {
-            debugger;
             FillPackageType();
             var date = '<%= DateTime.Now%>';
         $("#StartDate").datepicker({
@@ -191,7 +190,6 @@
                 dataType: "json",
                 data: JSON.stringify({ Bill_Id: Bill_Id }),
                 success: function (response) {
-                    debugger;
                     var data = JSON.parse(response.d);
                     console.log(data);
                     var tableBody = $("#example1 tbody");
@@ -265,7 +263,6 @@
         }
 
         function SaveShare() {
-            debugger;
             var PatientID = $('#hdnPatient_Id').val();
             var Doctor_ID = $('#hdnDocId').val();
             var Bill_Id = $('#hdnBillid').val();
@@ -299,7 +296,6 @@
                 contentType: "application/json; charset=utf-8",
                 dataType: "json",
                 success: function (response) {
-                    debugger;
                     var result = response.d;
 
                     if (result.startsWith("success")) {

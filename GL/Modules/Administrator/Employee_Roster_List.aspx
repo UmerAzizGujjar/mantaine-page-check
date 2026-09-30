@@ -7,7 +7,6 @@
 
 
         $(document).ready(function () {
-            debugger;
             $('#ctl00_lblMessage').hide();
             LoadPage();
 
@@ -19,7 +18,6 @@
             window.open('ReportViewer.aspx?ReportName=TestDefination&ReportTitle= Test Defination&Test_IDs=' + id);
         }
         function LoadPage() {
-            debugger
             $("#example").DataTable({
                 "processing": true,
                 "serverSide": true,
@@ -68,7 +66,6 @@
                     { "data": "Doctor_Id", "orderable": false },
                     {
                         render: function (data, type, full) {
-                            debugger;
                             var res = '<a class="editListBtn"  href="#" onclick="editOpen(' + full.RousterID + ')" style="border-radius: 4px;margin-right: 4px; padding: 5px 8px 5px 8px;"><i class="fa fa-pencil"></i></a>'
                                 ;
 
@@ -108,9 +105,7 @@
             window.open("Employee_Roster.aspx?ID=" + Rouster_id);
         }
 
-        debugger;
         function deleteConfirm(anchorTag) {
-            debugger;
 
 
             var row = $(anchorTag).parents('tr')[0];

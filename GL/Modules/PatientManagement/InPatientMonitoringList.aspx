@@ -11,7 +11,6 @@
         });
 
         function AddPrint(InPatient_Mon_ID) {
-            debugger;
             var url = '../../ReportViewer.aspx?ReportName=InPatientMonitoring&ReportTitle=Clinical Summary Report' + '&In_Patient_ID=' + InPatient_Mon_ID;
             window.open(url, '_blank');
            
@@ -99,7 +98,6 @@
                     { "data": "Bed_No", "width": "10%", "orderable": false },                   
                     {
                         render: function (data, type, full) {
-                            debugger;
                             var res = '<a href="#"  class="editListBtn"  onclick="Edit(' + full.InPatient_Mon_ID + ')" style="border-radius: 4px;  color: white; padding: 5px 8px 5px 8px;"><i class="fa fa-pencil"></i></a>'
 
                             var print = '<a class="printListBtn" style="border-radius: 4px;margin-left: 4px;color: white;padding: 5px 8px 5px 8px;" href="#" onclick="AddPrint(' + full.InPatient_Mon_ID + ')" id="btnprint"><i class="fa fa-print" ></i></a>';
@@ -158,7 +156,6 @@
         }
 
         function deleteConfirm(anchorTag) {
-            debugger;
             var row = $(anchorTag).parents('tr')[0];
 
 
@@ -167,7 +164,6 @@
 
             if (confirm('Are you sure want to delete this record')) {
                 PageMethods.DeleteRecord(InvID, function (msg) {
-                    debugger
                     $(row).remove();
                 }, OnFail);
             }

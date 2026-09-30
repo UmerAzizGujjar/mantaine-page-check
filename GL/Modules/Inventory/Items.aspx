@@ -23,12 +23,10 @@
 
         function CheckAccountExistance() {
 
-            debugger;
             var getaccount_ID = $('#ddlfiance_integration').val();
             if (getaccount_ID > 0) {
                 var ID = getaccount_ID;
                 PageMethods.CheckAccount(ID, function (Tests) {
-                    debugger
                     var message = JSON.parse(Tests);
                     //if (message[0].Column1 != null || message[0].Column1 != "" || message[0].Column1 != "1") {
                     if (message[0].Column1 != "1") {
@@ -42,13 +40,10 @@
         }
 
         function FillAccountCategory() {
-            debugger;
             var optionsAccCategory = '<option value="0">Please Select</option>';
 
             PageMethods.getAccountCategory(function (Tests) {
-                debugger
                 $.each(JSON.parse(Tests), function (key, value) {
-                    debugger;
                     optionsAccCategory += '<option value="' + value.Account_Category_Id + '" >' + value.CategoryName + '</option>';
                 });
                 $('#ddlfiance_integration').html(optionsAccCategory);

@@ -26,7 +26,6 @@
                     var parsed_data = JSON.parse(response.d);
                     console.log(parsed_data);
 
-                    debugger;
                     $("#txt_asi").val(parsed_data[0].Asset_Definition_Id);
                     $("#txt_iserial").val(parsed_data[0].Item_Serial);
                     $("#chk_moveable").prop('checked', parsed_data[0].Moveable);
@@ -107,7 +106,6 @@
                         var Reg_Date = $.datepicker.formatDate('dd M yy', new Date(parseInt(parsed_data[0].Reg_Date.substring(6, 19))))
                         $("#txt_reg_date").val(parsed_data[0].Reg_Date);
                     }
-                    debugger;
                     $("#txt_vmodel").val(parsed_data[0].Model);
                     $("#txt_eng_no").val(parsed_data[0].Engine_No);
                     $("#slct_vtype").val(parsed_data[0].Vehicle_Type);
@@ -118,7 +116,6 @@
                     $("#txt_ram").val(parsed_data[0].Ram);
                     $("#txt_procser").val(parsed_data[0].Processor);
                     $("#txt_disk").val(parsed_data[0].Hard_Disk);
-                    debugger;
                     $("#txt_comp_name").val(parsed_data[0].Name);
 
                     setTimeout(function () {
@@ -212,11 +209,9 @@
                 contentType: "application/json; charset=utf-8",
                 dataType: "json",
                 success: function (response) {
-                    debugger;
                     var rows = '';
                     var arrData = JSON.parse(response.d);
                     $.each(arrData, function (key, value) {
-                        debugger;
                         var Definition_Date = $.datepicker.formatDate('dd M yy', new Date(parseInt(arrData[key].Definition_Date.substring(6, 19))))
                         var grn_date = $.datepicker.formatDate('dd M yy', new Date(parseInt(arrData[key].Grn_Date.substring(6, 19))))
                         var mir_date = $.datepicker.formatDate('dd M yy', new Date(parseInt(arrData[key].Mir_Date.substring(6, 19))))
@@ -263,7 +258,6 @@
             load_Asset();
             load_DepreciationAccount();
             $("#btn_save").on('click', function () {
-                debugger;
                 var btnSave = $(this).val();
                 var department_id = $("#slct_dept").val();
                 var location = $('#ddlLocation_ID').val();
@@ -373,7 +367,6 @@
                     return;
                 }
 
-                debugger;
                 var acq_cost = $("#acq_cost").val();
                 var Capt_cost = $("#txtCapitilization_cost").val();
                 var acq_date = $("#acq_date").val();
@@ -445,7 +438,6 @@
                 var list = [];
 
                 table.find('tr:gt(0)').each(function (key, value) {
-                    debugger;
                     var Date = $(value).find('input[name="Date"]').val();
                     var refnce = $(value).find('input[name="refnce"]').val();
                     var amount = $(value).find('input[name="amount"]').val();
@@ -497,7 +489,6 @@
 
 
             $("#ast_ctgry").on('change', function () {
-                debugger;
                 loadSub();
             });
             var id = '<%=Request.QueryString["ID"]%>';
@@ -519,7 +510,6 @@
             }
         });
         function loadSub() {
-            debugger;
             var asset_sub = $("#ast_ctgry").val();
             var asset_subs = $("#ast_ctgry").find('option:selected').val();
             console.log(asset_sub);
@@ -808,7 +798,6 @@
         }
         var rowlength = '';
         function Addrow() {
-            debugger;
             var rows = '';
             var rowIndex = parseInt((parseInt($('#table_cost tbody tr:gt(0)').length)));
             rows += '<tr>' +
@@ -828,7 +817,6 @@
             rowlength++;
         }
         function ExcludeFromPayment(anchor) {
-            debugger;
             var a = confirm("Are you sure You want to delete");
             if (a == true) {
                 console.clear();
@@ -845,7 +833,6 @@
                 contentType: "application/json; charset=utf-8",
                 dataType: "json",
                 success: function (data) {
-                    debugger;
                     var options = '<option value="0" >Please Select</option>';
                     var values = JSON.parse(data.d);
                     $.each(values, function (key, value) {

@@ -98,7 +98,6 @@
         }
 
         function toasterMessage(isError = false, title, message) {
-            debugger;
             toastr.options = {
                 "closeButton": true,
                 "debug": false,

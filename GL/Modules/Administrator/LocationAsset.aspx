@@ -14,7 +14,6 @@
     <script>
         var id = '<% =Request.QueryString["ID"] %>';
         $(document).ready(function () {
-            debugger
             $("#btnSave").click(function (event) {
                 event.preventDefault();
                 SaveLocation();
@@ -31,7 +30,6 @@
             }
         });
         function GetLocationNo() {
-            debugger
             $.ajax({
                 type: "post",
                 url: "LocationAsset.aspx/GetLocationNo",
@@ -39,7 +37,6 @@
                 contentType: "application/json; charset=utf-8",
                 dataType: "json",
                 success: function (response) {
-                    debugger
                     var id = response.d;
                     $("#txtLocation_No").val(id);
                 },
@@ -60,7 +57,6 @@
             });
         }
         function SaveLocation() {
-            debugger;
             var Location_No = $('#txtLocation_No').val();
             var Location_Code = $('#txtLocation_Code').val();
             var Location_Description = $('#txtLocation_Description').val();
@@ -92,7 +88,6 @@
                 contentType: "application/json; charset=utf-8",
                 dataType: "json",
                 success: function (response) {
-                    debugger;
                     var res = response.d;
                     if (res.startsWith("Success")) {
                         Swal.fire({
@@ -118,7 +113,6 @@
             });
         }
         function Loadlocation(id) {
-            debugger;
             $.ajax({
                 type: "POST",
                 url: "LocationAsset.aspx/Loadlocation",
@@ -128,7 +122,6 @@
                 contentType: "application/json; charset=utf-8",
                 dataType: "json",
                 success: function (response) {
-                    debugger;
                     var parse = JSON.parse(response.d);
                     $('#txtLocation_No').val(parse.Location_No);
                     $('#txtLocation_Code').val(parse.Location_Code);

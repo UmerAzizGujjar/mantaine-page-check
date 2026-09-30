@@ -18,7 +18,6 @@
         });
         function LoadDiscountAssignedDetail(id)
         {
-            debugger;
            
             $.ajax({
                 type: "POST",
@@ -37,7 +36,6 @@
         }
         function GivenDiscount(row)
         {
-            debugger;
             var value = $(row).closest('tr').find('td input[name="disPer"]').val();
             //localStorage.Discount = data.Discount;
             //localStorage.Discount_Amt = data.Discount_Amt;
@@ -55,11 +53,9 @@
         }
 
         function GivenDiscountAmt(row) {
-            debugger;
             var Dis_amt = 0;
             var value = $(row).closest('tr').find('td input[name="disAmount"]').val();
             $('#tableDis tr:gt(0)').each(function () {
-                debugger;
                 var Dis_amt_value = $(this).find('td input[name="disAmount"]').val();
                 if (Dis_amt_value == "") Dis_amt_value = 0;
                 Dis_amt += parseInt(Dis_amt_value);
@@ -75,7 +71,6 @@
 
         }
         function OnSuccessdts(dataa) {
-            debugger;
 
             var parsed_Data = JSON.parse(dataa.d);
             var pat_id = parsed_Data[0].Patient_Id;
@@ -87,7 +82,6 @@
             LoadPatientDetails();
             $('#btnSave').val('Update');
            /* $('#btnSave').hide();*/
-            debugger;
             $('#ctl00_MainContent_ddlDiscountCAtegory').val(parsed_Data[0].Discount_Category_Id);
             $('#form_No').val(parsed_Data[0].Form_no);
             $('#txtempCode').val(parsed_Data[0].Code);
@@ -100,7 +94,6 @@
             if (parsed_Data.length > 0)
             {
                 $('#tableDis tr:gt(0)').each(function (key, value) {
-                    debugger;
                     $(this).find('td').find('input[name="disPer"]').val(parsed_Data[key].Discount_Percentage);
                     $(this).find('td').find('input[name="disAmount"]').val(parsed_Data[key].Discount_Amount);
                     var DT = $.datepicker.formatDate('dd M yy', new Date(parseInt(parsed_Data[key].Valid_for.substring(6, 19))));
@@ -157,7 +150,6 @@
 
         }
         function LoadPatientDetails() {
-            debugger;
             var Patient_ID = $('#hdfPatient_ID').val();
 
             $.ajax({
@@ -175,7 +167,6 @@
 
 
         function LoadDiscountDetail(id) {
-            debugger;
             
 
             $.ajax({
@@ -203,16 +194,13 @@
         }
 
         function OnSuccessdt(dataa) {
-            debugger;
 
             var parsed_Data = JSON.parse(dataa.d);
             if (parsed_Data.length > 0)
             {
-                debugger;
              
                 $('#tableDis tr:gt(0)').each(function (key, value)
                 {
-                    debugger;
 
                     $(this).find('td').find('input[name="disPer"]').val(parsed_Data[key].Discount_Percentage);
                     $(this).find('td').find('input[name="disAmount"]').val(parsed_Data[key].Discount_Amount);
@@ -231,7 +219,6 @@
                         var dd = newdate.getDate();
                         var mm = month[newdate.getMonth() + 1];
                         var y = newdate.getFullYear();
-                        debugger;
                         var someFormattedDate = dd + ' ' + mm + ' ' + y;
                         $('input[name="validfor"]').val(someFormattedDate);
 
@@ -254,7 +241,6 @@
 
 
         function ddlchange() {
-            debugger;
 
             //var chkdll = $('#ctl00_MainContent_ddlDiscountCAtegory :selected').find('option:selected').text();
             var id = $('#ctl00_MainContent_ddlDiscountCAtegory').val();
@@ -352,7 +338,6 @@
         month[11] = "Nov";
         month[12] = "Dec";
         function OnSuccess(data) {
-            debugger;
             var roomward = "";
             if (data.d != '')
             {
@@ -384,7 +369,6 @@
                     var dd = newdate.getDate();
                     var mm = month[newdate.getMonth()+1];
                     var y = newdate.getFullYear();
-                    debugger;
                     var someFormattedDate = dd + ' ' + mm + ' ' + y;
                     $('input[name="validfor"]').val(someFormattedDate);
 
@@ -395,13 +379,11 @@
 
 
         function tokenInputs(textboxID, tblName, OnAddFun) {
-            debugger;
             $('#' + textboxID).tokenInput("json.aspx?Table=" + tblName,
                 {
                     tokenLimit: 1,
                     onAdd:
                         function (item) {
-                            debugger;
                             try {
 
                                 if (tblName == 'Patients') {
@@ -527,7 +509,6 @@
         }
         function DiscountUserWise()
         {
-            debugger;
             $.ajax({
                 type: "Post",
                 contentType: "application/json; charset=utf-8",
@@ -535,7 +516,6 @@
                 data: "",
                 async:false,
                 success: function (response) {
-                    debugger;
                     var data = JSON.parse(response.d);
 
                     localStorage.Discount = data.Discount;
@@ -552,17 +532,13 @@
         localStorage.Discount_Amt = 0;
         function LoadDiscountCategory()
         {
-            debugger;
             PageMethods.LoadDiscountCategory(function (Dosage)
             {
-                debugger;
                     var options = '<option value=""> Select</option>'
                     $.each(JSON.parse(Dosage), function (key,value)
                     {
-                        debugger;
                         options += '<option value="' + value.DataValue_Name + '"> ' + value.DataValue_Description + ' </option>';
                     });
-                    debugger;
                  
                     $('#ddlCat').html(options);
                 });
@@ -576,7 +552,6 @@
        
             $('input[name="validfor"]').val(current_Date);
             DiscountUserWise();
-            debugger;
             $('#btnlist').on('click', function () {
 
                 window.location.href = "DiscountAssigned_List.aspx";
@@ -624,7 +599,6 @@
                     });
 
                 });
-                debugger;
                    var patID = $('#txtMRNo').val();
                    var Details = {
                        patient_Id: patient_Id,

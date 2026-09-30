@@ -29,10 +29,8 @@
             $('#AddAccount').attr('disabled', true);
             var rows = '';
             PageMethods.LoadDetails(id, function (res) {
-                debugger;
                 var result = JSON.parse(res);
                 $.each(result, function (key, value) {
-                    debugger;
                     setTimeout(function () {
                         $("#ddl_users").val(value.User_id);
                         $('#ddl_users').attr('disabled', 'disabled');
@@ -62,7 +60,6 @@
             });
         }
         function FillUsers() {
-            debugger;
             var options = '';
             PageMethods.FillUsers(function (result) {
                 options = '<option value="0">Please Select</option>';
@@ -85,7 +82,6 @@
         function Addrow() {
             $('#AddAccount').attr('disabled', true);
 
-            debugger;
             var main_type = $('#ddl_users').val();
             var username = $('#ddl_users :selected').text();
             var Branchname = $('#ddlBranch :selected').text();
@@ -123,14 +119,12 @@
             }
         }
         function Delete(row) {
-            debugger;
             var a = confirm("Are you sure You want to delete");
             if (a == true) {
                 $(row).closest('tr').remove();
             }
         }
         function validateSave() {
-            debugger;
             // var table = $('#tblItemDescriptionDetail');
             var proceed = true;
             var main_type = $('#ddl_users').val();
@@ -156,7 +150,6 @@
         }
         function SaveAllRecord() {
             if (validateSave()) {
-                debugger;
                 var tableItems = $('#tblItemDescription');
                 var btnSave = $('#btn_Save').val();
                 var idParam = '';
@@ -170,7 +163,6 @@
                 var AllItemDetail = [];
 
                 tableItems.find('tr:gt(0)').each(function (key, value) {
-                    debugger;
                     arr = {};
                     arr.userid = $('#ddl_users').val();
                     arr.Branch_id = 0;

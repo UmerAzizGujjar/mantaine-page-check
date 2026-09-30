@@ -14,9 +14,7 @@
             LoadDashboard();
 
         });
-        debugger;
         function LoadDashboard() {
-            debugger;
             async: false;
             $.ajax({
                 async: false,
@@ -29,11 +27,9 @@
                 dataType: "json",
 
                 success: function (data) {
-                    debugger;
 
                     var data = JSON.parse(data.d);
 
-                    debugger;
                     for (var i = 0; i < data.length; i++) {
                         var department = data[i].D_type;
 
@@ -168,7 +164,6 @@
             $('#chck_filter').hide();
             $('#chck_pvt').hide();
             PageMethods.PendingPrivatePatients(function (data) {
-                debugger;
                 var parsedData = JSON.parse(data);
                 var rows = '';
                 $.each(parsedData, function (key, value) {
@@ -193,7 +188,6 @@
             $('#chck_pvt').hide();
 
             PageMethods.PendingPatients(function (data) {
-                debugger;
                 var parsedData = JSON.parse(data);
                 var rows = '';
                 $.each(parsedData, function (key, value) {
@@ -217,7 +211,6 @@
             $('#chck_filter').hide();
             $('#chck_pvt').hide();
             PageMethods.PendingLabPatients(function (data) {
-                debugger;
                 var parsedData = JSON.parse(data);
                 var rows = '';
                 $.each(parsedData, function (key, value) {
@@ -241,7 +234,6 @@
             $('#chck_filter').hide();
             $('#chck_pvt').hide();
             PageMethods.PendingUltraPatients(function (data) {
-                debugger;
                 var parsedData = JSON.parse(data);
                 var rows = '';
                 $.each(parsedData, function (key, value) {
@@ -265,7 +257,6 @@
             $('#chck_filter').hide();
             $('#chck_pvt').hide();
             PageMethods.PendingXrayPatients(function (data) {
-                debugger;
                 var parsedData = JSON.parse(data);
                 var rows = '';
                 $.each(parsedData, function (key, value) {
@@ -291,7 +282,6 @@
             $('#chck_pvt').hide();
 
             PageMethods.CheckedFilterPatient(function (data) {
-                debugger;
                 var parsedData = JSON.parse(data);
                 var rows = '';
                 $.each(parsedData, function (key, value) {
@@ -317,7 +307,6 @@
             $('#chck_pvt').show();
 
             PageMethods.checkedPvtPatient(function (data) {
-                debugger;
                 var parsedData = JSON.parse(data);
                 var rows = '';
                 $.each(parsedData, function (key, value) {

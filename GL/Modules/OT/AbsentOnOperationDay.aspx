@@ -42,7 +42,6 @@
            }
            var get_row = '';
            function Save(row) {
-               debugger;
                get_row = row;
                var fitness_id = $($(row).closest('tr')[0]).find('td:eq(0)').text();
 
@@ -73,7 +72,6 @@
                    contentType: "application/json; charset=utf-8",
                    dataType: "json",
                    success: function (response) {
-                       debugger;
                        var result = JSON.parse(response.d);
                        optionsList = "<option value=0>Please Select</option>"
                        for (var i = 0; i <= result.length; i++) {
@@ -102,7 +100,6 @@
                        dataType: "json",
                        success: function (data) {
                            var row = '';
-                           debugger;
                            var parsed_data = JSON.parse(data.d);
                            jsonParsedData = parsed_data;
                            $.each(parsed_data, function (key, index) {

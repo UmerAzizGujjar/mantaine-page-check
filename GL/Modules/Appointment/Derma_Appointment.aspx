@@ -6,7 +6,6 @@
     <script src="../../wwwroot/THEME_TIBBIT/CustomJs/Appointment.js?v=<%= System.IO.File.GetLastWriteTimeUtc(Server.MapPath("~/wwwroot/THEME_TIBBIT/CustomJs/Appointment.js")).Ticks %>"></script>
     <script type="text/javascript">
         $(document).ready(function () {
-            debugger;
             var txt_apt_no = $('#txt_apt_no').val();
 
             var dropdowns = [
@@ -22,7 +21,6 @@
             ];
 
             dropdowns.forEach(item => {
-                debugger;
                 const $element = $(item.id);
                 $element.select2();
                 $element.on('select2:open', function () {
@@ -96,9 +94,7 @@
 
             $('#btnSave').off('click').on('click', safeSaveAttempt);
             $('#btnSaveMessage').off('click').on('click', safeSaveAttempt);
-            debugger;
             $("#txtSearch").keypress(function (event) {
-                debugger;
                 var SearchString = $('#txtSearch').val();
                 if (event.which == 13) {
                     {
@@ -129,7 +125,6 @@
 
 
 
-            debugger;
             var App_id = '<%= Request.QueryString["APPID"]%>';
             if (App_id != "") {
 
@@ -139,7 +134,6 @@
             if (App_id == "") {
                 filldepartment();
                 $('#ddlsubdepartment').on('change', function () {
-                    debugger;
                     var dep = $('#ddlsubdepartment').val();
                     //  LoadDetailDoctor(dep)
                     setTimeout(function () {
@@ -151,7 +145,6 @@
                 });
             }
             $('#ctl00_MainContent_ddlPrefixDrp').on('select', function () {
-                debugger;
 
 
                 setTimeout(function () {
@@ -163,7 +156,6 @@
             });
 
             $('#ddlServices').on('change', function () {
-                debugger;
 
 
                 setTimeout(function () {
@@ -195,13 +187,10 @@
             $('#txt_age').attr('disabled', true);
 
 
-            debugger;
             var ids = '<%= Request.QueryString["aID"]%>';
             var reg_pat = '<%= Request.QueryString["ID"]%>';
-            debugger;
 
             if (ids == '' || ids == "") {
-                debugger;
 
 
                 $("#PatientsSearchModel").modal('show');
@@ -283,9 +272,7 @@
              setTimeout(function () {
                  $('#ctl00_MainContent_ddlPrefixDrp').focus();
              }, 5000);
-             debugger;
              if (reg_pat != '' || reg_pat != "") {
-                 debugger;
                  $('#ClosePatientsSearchModel').click();
                  $('#patmodalClose').click();
                  load_Initial_Pat_Data(reg_pat);
@@ -314,7 +301,6 @@
                 $year.val(currentYear);
             })();
 
-            debugger;
             $('#calGoBtn').on('click', function (e) {
                 e.preventDefault();
                 var month = parseInt($('#calMonthSelect').val(), 10);
@@ -332,7 +318,6 @@
          });
 
         function fillDropdown($dropdown, methodName) {
-            debugger;
             if ($dropdown.data('filled')) return;
 
             $dropdown.data('filled', false);
@@ -345,7 +330,6 @@
                 dataType: "json",
                 success: function (response) {
                     try {
-                        debugger;
                         const data = JSON.parse(response.d);
                         var options = '<option value="0">Please Select</option>';
 
@@ -376,7 +360,6 @@
 
 
         function appointmentPatient_Print() {
-            debugger;
             var appointmentId = '<%= Request.QueryString["APPID"]%>';
             var locationInfo = window.location;
             var url = "/ReportViewer.aspx?ReportName=Appointment_Patient_Print&Title=Appointment Patient Print &appointmentId=" + appointmentId;
@@ -394,7 +377,6 @@
         
 
         function ConfigureAvailableDatesTechnition() {
-            debugger;
             var doc_id = $('#ddl_helper').val();
             var txt_date = $("#txt_date").val();
             var procTimeSlot = $("#txtProcedureTime").val();
@@ -440,7 +422,6 @@
             });
         }
         function ConfigureAvailableDates() {
-            debugger;
             var doc_id = $('#ddl_colstnt').val();
             var txt_date = $("#txt_date").val();
             var procTimeSlot = $("#txtProcedureTime").val();
@@ -487,7 +468,6 @@
         }
 
         function GethelperAvailbilty() {
-            debugger;
             var Emp_Id = $("#ddl_helper").val()
             var txt_date = $("#txt_date").val();
             //var helperTimeIn = $("#txt_sthelpertime").val()
@@ -532,7 +512,6 @@
         }
 
         function GetRoomsAvailbilty() {
-            debugger;
             var Room_Id = $("#ddlRoom").val();
             var txt_date = $("#txt_date").val();
             var RoomTimeIn = moment($("#txt_stdoctime").val(), ["hh:mm A", "HH:mm"]).format("HH:mm:ss");
@@ -572,7 +551,6 @@
         }
 
         function GetMachineAvailbilty() {
-            debugger;
             var Mch_Id = $("#ddlMachine").val()
             var txt_date = $("#txt_date").val();
 
@@ -610,7 +588,6 @@
 
 
         function addfunc() {
-            debugger;
 
 
             var maskedValue = $('#txtSearch').val();
@@ -644,7 +621,6 @@
 
 
 
-            debugger;
 
             $('#ClosePatientsSearchModel').click();
             $('#patmodalClose').click();
@@ -665,7 +641,6 @@
                 contentType: "application/json; charset=utf-8",
                 dataType: "json",
                 success: function (data) {
-                    debugger;
                     var max_mr = data.d;
                     $('#txt_Mrnos').val(max_mr);
                 },
@@ -679,7 +654,6 @@
         function load_Initial_Pat_Data(reg_pat) {
             var reg_id = reg_pat;
             $('#PatientsSearchModel').close;
-            debugger;
             $.ajax({
                 type: "POST",
                 url: "Derma_Appointment.aspx/loadApp_data",
@@ -691,7 +665,6 @@
                 contentType: "application/json; charset=utf-8",
                 dataType: "json",
                 success: function (data) {
-                    debugger;
                     var dataaa = JSON.parse(data.d);
 
                     $('#txt_pt_name').val(dataaa.Full_Name);
@@ -711,7 +684,6 @@
             });
         }
         function SearchPatients() {
-            debugger;
             $('#PatientsSearchModel').modal({
                 backdrop: 'static'
 
@@ -724,7 +696,6 @@
 
         }
         function AddNewPatient() {
-            debugger;
             $('#ddl_pnl_cpy').next(".select2-container").hide();
 
             clearPatient();
@@ -743,7 +714,6 @@
             });
         }
         function FillPatientsList() {
-            debugger;
             $('#tblPatientsResult tbody').empty();
 
             var SearchString = '';
@@ -763,7 +733,6 @@
             alert(exc.get_message());
         }
         function AddPatientsResult(Reg_Patient_ID, Patient_No, Full_Name, NIC, Mobile1, Father_Name) {
-            debugger;
             tblLength = tblPatientsResult.rows.length;
 
             var row = iPatientsBody.insertRow(-1);
@@ -795,7 +764,6 @@
         }
         var isAdd = false;
         function AddPatientDetail(Reg_Patient_ID) {
-            debugger;
             try {
                 isAdd = true;
                 window.location.href = "Derma_Appointment.aspx?ID=" + Reg_Patient_ID + "&isAdd=" + isAdd;
@@ -807,7 +775,6 @@
         }
 
         function LoadPage() {
-            debugger;
             var doc_id = $('#ddl_colstnt').val();
             var specificDate = $('#txt_date').val();
             if (doc_id != "") {
@@ -875,7 +842,6 @@
 
         var appendtime;
         function selectRow(appendtime) {
-            debugger;
             $('#txt_time').val(appendtime);
         }
         function fillgender() {
@@ -1047,24 +1013,19 @@
 
 
             PageMethods.getlist(stDate, endDate, function (data) {
-                debugger;
                 if (data.length === 0) {
                     $("#table_res tbody").empty();
                     return false;
                 } else {
-                    debugger;
                     abc = false;
                     var Priority = '';
                     var length = $("#table_res tr:gt(0)").length;
-                    debugger;
 
                     if (data != '') {
                         var data = JSON.parse(data);
                         var rows = '';
-                        debugger;
 
                         $.each(data, function (i, item) {
-                            debugger;
                             var App_Date = moment(data[i].App_Date).format('LL');
                             var time = moment(data[i].Time).format('h:mm a');
                             var cancel = data[i].cancelAppointment;
@@ -1102,18 +1063,14 @@
                                 '</td>' +
                                 '</tr>';
                         });
-                        debugger;
                         $('#t_body').html(rows);
-                        debugger;
                         $('#t_body tr').each(function (key, value) {
-                            debugger;
                             var $statusCell = $(this).find('td[name="statusCell"]');
                             var status = $statusCell.text();
                             // Adjusted index to ensure we get the right date cell if structure changes
                             var app_date = $(this).find('td:eq(5)').text();
                             var cancel = $(this).find('td[name="cancelAppointment"]').text();
                             var currentDate = moment().format('LL');
-                            debugger;
 
                             if (status === "Visited") {
                                 $statusCell.css('background-color', '#77f577');
@@ -1139,7 +1096,6 @@
             return false;
         }
         function CancelAppointment(appointmentId) {
-            debugger;
             if (confirm("Are you sure you want to cancel this appointment?")) {
                 $.ajax({
                     type: "POST",
@@ -1238,7 +1194,6 @@
                 alert('Error loading appointment: ' + error.get_message());
             });
         }
-        debugger;
 
         function extractTime(timeStr) {
             if (!timeStr) return '';
@@ -1286,12 +1241,9 @@
             return '';
         }
 
-        debugger;
         function loadapptEdit(App_id) {
-            debugger;
             if (!App_id) return;
             PageMethods.loadAppData_edit(App_id, function (resp) {
-                debugger;
                 var data = JSON.parse(resp);
 
                 $('#btnSave').val('Update');
@@ -1348,7 +1300,6 @@
 
 
         function Edit(aID) {
-            debugger;
             window.location.href = "Derma_Appointment.aspx?aID=" + aID;
 
         }
@@ -1366,7 +1317,6 @@
         }
 
         function GetAppNoByTechnition() {
-            debugger;
             var doctorID = $('#ddl_helper').val();
             var checkdate = $('#txt_date').val();
             var aID = '<%= Request.QueryString["aID"]%>';
@@ -1375,7 +1325,6 @@
             }
             else {
                 PageMethods.GetAppNoByDoctortechnition(doctorID, checkdate, function (resp) {
-                    debugger;
 
                     $('#txt_apt_no').val(resp);
                 },
@@ -1388,7 +1337,6 @@
 
         }
         function GetAppNoByDoctor() {
-            debugger;
             var doctorID = $('#ddl_colstnt').val();
             var checkdate = $('#txt_date').val();
             var aID = '<%= Request.QueryString["aID"]%>';
@@ -1397,7 +1345,6 @@
             }
             else {
                 PageMethods.GetAppNoByDoctor(doctorID, checkdate, function (resp) {
-                    debugger;
 
                     $('#txt_apt_no').val(resp);
                 },
@@ -1410,13 +1357,9 @@
 
         }
 
-        debugger;
         function GetAppointmentTime() {
-            debugger;
             var doctorID = $('#ddl_colstnt').val();
-            debugger;
             PageMethods.GetAppointmentTime(doctorID, function (resp) {
-                debugger;
 
                 $("#txt_time").val(resp);
             },
@@ -1450,7 +1393,6 @@
             $('#RevistPat').hide();
         }
         function GetServices() {
-            debugger;
             var options = '<option value="0">Select Services</option>';
             PageMethods.GetServices(function (data) {
                 $.each(JSON.parse(data), function (key, value) {
@@ -1466,16 +1408,13 @@
 
         }
 
-        debugger;
         function SavePatient() {
-            debugger;
             $('#SavePatient_Data').attr('disabled', true);
             var Prefix_PatientName = $('#ddl_name').val();
             var PatientName = $('#txt_name').val();
             var PatientID = $('#hdfPatient_ID').val();
 
             var Full_Name = Prefix_PatientName + PatientName;
-            debugger;
             var RelationType = $('#ddlRelation').val();
             var Relation = $('#txt_relation').val();
             var Gender = $('#ddl_Gender').val();
@@ -1552,7 +1491,6 @@
                 contentType: "application/json; charset=utf-8",
                 dataType: "json",
                 success: function (data) {
-                    debugger;
                     var ini_patientID = data.d;
                     Swal.fire({
                         icon: 'success',
@@ -1581,7 +1519,6 @@
             });
         }
         function get_pat_initial_info(ini_patientID) {
-            debugger;
             try {
                 isAdd = true;
                 window.location.href = "Derma_Appointment.aspx?ID=" + ini_patientID + "&isAdd=" + isAdd;
@@ -1602,7 +1539,6 @@
             });
         }
         function LoadDetailDoctor() {
-            debugger;
             var options = '<option value="0">Select Doctor</option>';
             PageMethods.GetDoctors(function (data) {
                 $.each(JSON.parse(data), function (key, value) {
@@ -1616,7 +1552,6 @@
         }
 
         function LoadRooms() {
-            debugger;
             var options = '<option value="0">Select Doctor</option>';
             PageMethods.GetRooms(function (data) {
                 $.each(JSON.parse(data), function (key, value) {
@@ -1629,7 +1564,6 @@
         }
 
         function LoadMachine() {
-            debugger;
             var options = '<option value="0">Select Machine</option>';
             PageMethods.GetMachine(function (data) {
                 $.each(JSON.parse(data), function (key, value) {
@@ -1643,7 +1577,6 @@
         }
 
         function LoadHelper() {
-            debugger;
             var options = '<option value="0">Select Doctor</option>';
             PageMethods.GetHelper(function (data) {
                 $.each(JSON.parse(data), function (key, value) {
@@ -1658,7 +1591,6 @@
 
         var abc = false;
         function testddlchange() {
-            debugger;
 
 
 
@@ -1702,7 +1634,6 @@
         }
 
         function ddldocchange() {
-            debugger;
 
             var DocChk = $('#chk_Doc').find('option:selected').text();
 
@@ -1754,7 +1685,6 @@
             }
         }
         function CalculateDateOfBirth() {
-            debugger;
             var now = moment();
             var year = $('#txt_dob').val();
             var calculateDate = now.subtract(year, 'years');
@@ -1784,10 +1714,9 @@
 
             });
             return options;
-        } debugger;
+        }
         var save;
         function SaveAllRecord() {
-            debugger;
             var btnsave = $('#btnSave').val();
             var txt_ID = $('#txt_ID').val();
             var ddl_colstnt = $('#ddl_colstnt').val();
@@ -1862,7 +1791,6 @@
             //    return;
             //}
             var aptid = '<%= Request.QueryString["aID"]%>';
-            debugger;
                     var editmode_ID = '<%= Request.QueryString["aID"]%>';
 
             $('#btnSave').attr('disabled', true);
@@ -1886,9 +1814,7 @@
                 });
             });
         }
-        debugger;
         function convertTo24Hour(time) {
-            debugger;
             var hours = parseInt(time.substr(0, 2));
             var minutes = time.substr(3, 2);
             var period = time.substr(6, 2).toUpperCase();
@@ -1904,9 +1830,7 @@
             return hoursStr + ':' + minutes;
         }
 
-        debugger;
         function verifydoctoravail(callback) {
-            debugger;
             var ddl_colstnts = $('#ddl_colstnt').val();
             var time_appointment = $('#txt_time').val();
             var date = $('#txt_date').val();
@@ -1921,9 +1845,7 @@
                 contentType: "application/json; charset=utf-8",
                 dataType: "json",
                 success: function (data) {
-                    debugger;
                     var dataaa = JSON.parse(data.d);
-                    debugger;
                     if (dataaa && dataaa.Off_Days_Names && dataaa.Off_Days_Names.includes) {
                         var dateObject = new Date(date);
                         var options = { weekday: 'short' };

@@ -13,7 +13,6 @@
     })
 
     function LoadPage() {
-        debugger;
         $.ajax({
             type: "POST",
             url: "StudentList.aspx/Student_Master",
@@ -21,13 +20,11 @@
             contentType: "application/json; charset=utf-8",
             dataType: "json",
             success: function (response) {
-                debugger;
                 var parsedData = JSON.parse(response.d);
                 var row = '';
                 var Priority = '';
                 var selectedOptions = parsedData;
                 $.each(parsedData, function (key, index) {
-                    debugger;
                     //
                 //    var InvocieDate = new Date(parseInt(parsedData[key].InvoiceDate.substr(6)));
                     //  InvocieDate = moment(InvocieDate).format('L');
@@ -52,7 +49,6 @@
                 });
                 $("#tblResult").append(row);
                 //$.each(selectedOptions, function (key, value) {
-                //    debugger;
                 //    if (selectedOptions[key].Status == "Approved") {
                 //        $('#btnDel' + (key + 1) + '').hide();
                 //    }
@@ -73,7 +69,6 @@
     }
 
     function deleteConfirm(anchorTag) {
-        debugger;
         var row = $(anchorTag).parents('tr')[0];
 
 
@@ -82,7 +77,6 @@
 
         if (confirm('Are you sure want to delete this record')) {
             PageMethods.DeleteRecord(stuid, function (msg) {
-                debugger
                 $(row).remove();
             }, OnFail);
         }

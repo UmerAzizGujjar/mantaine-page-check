@@ -290,7 +290,6 @@
     </style>
     <script type="text/javascript">
         $(document).ready(function () {
-            debugger;
             $('#ctl00_lblMessage').hide();
             LoadPage();
 
@@ -455,7 +454,6 @@
                     {
                         "data": "Bill_Date", "name": "Bill_Date",
                         "render": function (data, type, full) {
-                            debugger;
                             var date = full.Bill_Date;
                             // date = moment(date).format('DD-MMM-YYYY');
                             date = moment(date).format('DD-MMM-YYYY hh:mm A');
@@ -493,7 +491,6 @@
 
                     {
                         render: function (data, type, full) {
-                            debugger;
                             if (full.isCancel === true) {
                                 return '<span style="color:#721c24; font-weight:bold;">Cancelled</span>';
                             }
@@ -639,7 +636,6 @@
             });
         }
         function openReceipt(billNo, billId) {
-            debugger;
          
             window.location.href = 'Receipts.aspx?Bill_No=' + encodeURIComponent(billNo) + '&Bill_ID=' + billId;
         }
@@ -796,7 +792,6 @@
         }
         function CancelConfirm(anchorTag) {
 
-            debugger;
 
             var row = $(anchorTag).parents('tr')[0];
             var Bill_ID = $($(row).find('td')[0]).text();
@@ -809,7 +804,6 @@
 
         }
         function cancelPatient(anchorTag) {
-            debugger;
 
             var row = $(anchorTag).parents('tr')[0];
             var Bill_No = $($(row).find('td')[0]).text();
