@@ -57,7 +57,7 @@
             font-size: 15px;
             font-weight: bold;
         }
-
+        /*aak*/
         .emr-count {
             margin-left: 6px;
             color: #999;
