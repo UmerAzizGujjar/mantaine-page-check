@@ -23,6 +23,7 @@
         <link href="<%= Page.ResolveClientUrl("~/wwwroot/lib/ace/ace-skins.min.css") %>" rel="stylesheet" type="text/css" />
         <link href="<%= Page.ResolveClientUrl("~/wwwroot/lib/ace/ace-rtl.min.css") %>" rel="stylesheet" type="text/css" />
         <link href="<%= Page.ResolveClientUrl("~/wwwroot/THEME_TIBBIT/styleMaster.css") %>" rel="stylesheet" type="text/css" />
+        <link href="<%= Page.ResolveClientUrl("~/wwwroot/THEME_TIBBIT/theme-colors.css") %>" rel="stylesheet" type="text/css" />
          <link href="<%= Page.ResolveClientUrl("~/wwwroot/lib/jquery/jquery-ui.css") %>" rel="stylesheet" type="text/css" />
         <link href="<%= Page.ResolveClientUrl("~/wwwroot/lib/token_input/token-input.css") %>" type="text/css" rel="stylesheet" />
         <link href="<%= Page.ResolveClientUrl("~/wwwroot/lib/loader/loader.css") %>" rel="stylesheet" />
@@ -746,8 +747,8 @@
         #navbar {
             height: auto !important;
             min-height: 68px;
-            background: #ffffff !important;
-            border-bottom: 4px solid #EFA63E;
+            background: var(--theme-header-bg, linear-gradient(180deg, #ffffff 0%, #eceff3 100%)) !important;
+            border-bottom: 4px solid var(--theme-header-line, #EFA63E);
             box-shadow: 0 3px 12px rgba(0, 0, 0, 0.20) !important;
             position: relative;
             z-index: 1030;
@@ -761,7 +762,7 @@
             min-height: 64px;
             margin: 0 !important;
             padding: 0 16px !important;
-            background: linear-gradient(180deg, #ffffff 0%, #eceff3 100%) !important;
+            background: var(--theme-header-bg, linear-gradient(180deg, #ffffff 0%, #eceff3 100%)) !important;
         }
 
             /* ignore the fixed bootstrap column widths - let flexbox share the row */
@@ -818,7 +819,8 @@
             font-weight: 800;
             letter-spacing: .4px;
             line-height: 1.2;
-            color: #1b2a41;
+            color: var(--theme-header-text, #1b2a41);
+            text-shadow: var(--theme-header-text-shadow, none);
             text-align: center;
             white-space: nowrap;
             overflow: hidden;
@@ -835,6 +837,9 @@
             }
 
         #navbar .user-btn {
+            background: var(--theme-user-btn-bg, #EFA63E) !important;
+            color: var(--theme-user-btn-text, #000000) !important;
+            border: 1px solid var(--theme-user-btn-border, transparent) !important;
             box-shadow: 0 2px 6px rgba(0, 0, 0, 0.25);
             white-space: nowrap;
         }
@@ -898,7 +903,7 @@
 
                 .sidebar.h-sidebar .nav-list {
                     background: linear-gradient(180deg, #ffffff 0%, #f1f3f7 100%) !important;
-                    border-bottom: 3px solid #EFA63E !important;
+                    border-bottom: 3px solid var(--theme-header-line, #EFA63E) !important;
                 }
 
                     .sidebar.h-sidebar .nav-list > li {
@@ -915,20 +920,20 @@
                             font-size: 14px !important;
                             font-weight: 700 !important;
                             letter-spacing: .1px;
-                            color: #1b2a41 !important;
+                            color: var(--theme-ink, #1b2a41) !important;
                             transition: background-color .15s ease, color .15s ease;
                         }
 
                         .sidebar.h-sidebar .nav-list > li:hover > a,
                         .sidebar.h-sidebar .nav-list > li.hover:hover > a {
-                            background-color: #fff1d6 !important;
-                            color: #8a4b00 !important;
+                            background-color: var(--theme-accent-soft, #fff1d6) !important;
+                            color: var(--theme-accent-ink, #8a4b00) !important;
                         }
 
                         .sidebar.h-sidebar .nav-list > li.active > a,
                         .sidebar.h-sidebar .nav-list > li.active:hover > a {
-                            background-color: #EFA63E !important;
-                            color: #1b2a41 !important;
+                            background-color: var(--theme-accent, #EFA63E) !important;
+                            color: var(--theme-on-accent, #1b2a41) !important;
                         }
         }
     </style>

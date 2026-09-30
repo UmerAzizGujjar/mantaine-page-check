@@ -6,6 +6,7 @@
 <asp:Content ID="HeaderContent" runat="server" ContentPlaceHolderID="HeadContent">
 
     <link href="wwwroot/THEME_TIBBIT/CustomCSS/login.css" rel="stylesheet" />
+    <link href="wwwroot/THEME_TIBBIT/theme-colors.css" rel="stylesheet" />
     <script src="wwwroot/lib/sweetalert/swalalert.js"></script>
     <link href="wwwroot/lib/sweetalert/swalalert.css" rel="stylesheet" />
     
@@ -81,7 +82,7 @@
             width: 100% !important;
             max-width: 440px !important;
             padding: 30px 34px 22px !important;
-            background: linear-gradient(#EFA63E, #EFA63E) top / 100% 5px no-repeat, #ffffff;
+            background: linear-gradient(var(--theme-accent, #EFA63E), var(--theme-accent, #EFA63E)) top / 100% 5px no-repeat, #ffffff;
             border: 0 !important;
             border-radius: 18px !important;
             box-shadow: 0 24px 60px rgba(20, 32, 60, 0.20), 0 2px 8px rgba(20, 32, 60, 0.08);
@@ -160,8 +161,8 @@
         .login input.passwordEntry:focus {
             outline: 0;
             background: #ffffff;
-            border: 1.5px solid #EFA63E !important;
-            box-shadow: 0 0 0 4px rgba(239, 166, 62, 0.22);
+            border: 1.5px solid var(--theme-accent, #EFA63E) !important;
+            box-shadow: 0 0 0 4px var(--theme-accent-ring, rgba(239, 166, 62, 0.22));
         }
 
         .password-container { position: relative; }
@@ -209,13 +210,13 @@
             margin: 0 !important;
             border: 0 !important;
             border-radius: 10px !important;
-            background: linear-gradient(180deg, #F4B653 0%, #EFA63E 100%) !important;
-            color: #1b2a41 !important;
+            background: linear-gradient(180deg, var(--theme-accent-light, #F4B653) 0%, var(--theme-accent, #EFA63E) 100%) !important;
+            color: var(--theme-on-accent, #1b2a41) !important;
             font-size: 15px;
             font-weight: 700;
             letter-spacing: 1.2px;
             text-transform: uppercase;
-            box-shadow: 0 6px 16px rgba(239, 166, 62, 0.45) !important;
+            box-shadow: 0 6px 16px var(--theme-accent-shadow, rgba(239, 166, 62, 0.45)) !important;
             transition: transform .12s ease, box-shadow .12s ease, background .12s ease, color .12s ease;
         }
 

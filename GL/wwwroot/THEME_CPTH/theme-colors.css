@@ -1,0 +1,23 @@
+/* ==========================================================================
+   Theme colours - THEME_CPTH  (Red (Pakred / CPTH / Khurshid))
+   Used by the header, menu bar and login page.
+   The main colour of this client is taken from this theme's styleMaster.css
+   (#navbar background). To recolour a client, change the values below only.
+   ========================================================================== */
+:root {
+    --theme-header-bg: linear-gradient(180deg, #d42a2b 0%, #c11718 100%);   /* top header bar */
+    --theme-header-text: #ffffff;                 /* company name in the header */
+    --theme-header-text-shadow: 0 1px 2px rgba(0, 0, 0, 0.30);
+    --theme-header-line: #7f0c0d;                    /* line under the header and the menu bar */
+    --theme-accent: #c11718;                         /* buttons, active menu item */
+    --theme-accent-light: #d42a2b;                   /* top of the button gradient */
+    --theme-on-accent: #ffffff;                        /* text on top of the accent colour */
+    --theme-accent-soft: #fdeaea;                      /* menu hover background */
+    --theme-accent-ink: #8f1011;                       /* menu hover text */
+    --theme-accent-ring: rgba(193, 23, 24, 0.22);   /* focus ring on inputs */
+    --theme-accent-shadow: rgba(193, 23, 24, 0.40);  /* glow under the login button */
+    --theme-user-btn-bg: rgba(255, 255, 255, 0.18);      /* user-name button in the header */
+    --theme-user-btn-text: #ffffff;
+    --theme-user-btn-border: rgba(255, 255, 255, 0.60);
+    --theme-ink: #1b2a41;                          /* dark text used on light backgrounds */
+}
