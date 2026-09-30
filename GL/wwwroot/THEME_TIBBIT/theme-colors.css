@@ -19,5 +19,9 @@
     --theme-user-btn-bg: #EFA63E;      /* user-name button in the header */
     --theme-user-btn-text: #000000;
     --theme-user-btn-border: transparent;
+    --theme-footer-bg: linear-gradient(180deg, #24344f 0%, #1b2a41 100%);   /* footer bar */
+    --theme-footer-text: #e9eef5;
+    --theme-footer-line: #EFA63E;                  /* thin line on top of the footer */
+    --theme-footer-icon: #EFA63E;                  /* small icons in the footer */
     --theme-ink: #1b2a41;                          /* dark text used on light backgrounds */
 }
