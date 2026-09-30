@@ -9,33 +9,122 @@
             padding: 0 15px;
         }
 
-        .emr-search {
-            max-width: 520px;
-            margin: 0 auto 15px auto;
-        }
-
+        .emr-toolbar,
         .emr-section {
-            margin-top: 25px;
+            background: #fff;
+            border: 1px solid #e3e3e3;
+            border-radius: 8px;
+            padding: 12px 15px;
+            margin-bottom: 15px;
+            box-shadow: 0 1px 2px rgba(0, 0, 0, .04);
         }
 
-        .emr-section h4 {
-            margin-bottom: 10px;
+        .emr-toolbar-title {
+            margin: 0 0 2px;
+            font-size: 18px;
             font-weight: bold;
         }
 
-        #tblHeader th {
-            width: 260px;
-            text-align: left;
-            vertical-align: top;
+        .emr-toolbar-sub {
+            margin: 0 0 12px;
+            color: #888;
+            font-size: 12px;
         }
 
-        #tblServices th, #tblRadiology th {
+        .emr-search-row {
+            display: flex;
+            flex-wrap: wrap;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .emr-search-row label {
+            margin: 0;
+            font-size: 13px;
+            font-weight: 600;
+            color: #555;
+        }
+
+        .emr-search-row .textEntry {
+            flex: 1 1 240px;
+            max-width: 340px;
+            height: 34px;
+            border-radius: 8px !important;
+        }
+
+        .emr-section h4 {
+            margin: 0 0 10px;
+            font-size: 15px;
+            font-weight: bold;
+        }
+
+        .emr-count {
+            margin-left: 6px;
+            color: #999;
+            font-size: 12px;
+            font-weight: normal;
+        }
+
+        .emr-kv {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+            gap: 4px 14px;
+        }
+
+        .emr-kv-item {
+            display: flex;
+            flex-direction: column;
+            min-width: 0;
+            padding: 3px 0;
+            border-bottom: 1px solid #f0f0f0;
+        }
+
+        .emr-kv-k {
+            font-size: 11px;
+            text-transform: uppercase;
+            letter-spacing: .3px;
+            color: #999;
+        }
+
+        .emr-kv-v {
+            font-size: 13px;
+            color: #333;
+            overflow-wrap: anywhere;
+        }
+
+        .emr-kv-empty {
+            color: #aaa;
+            font-size: 13px;
+        }
+
+        .emr-table-wrap .table {
+            margin-bottom: 0;
+        }
+
+        .emr-table-scroll {
+            overflow-x: auto;
+        }
+
+        #tblServices th,
+        #tblServices td {
+            padding: 5px 8px;
+            font-size: 12px;
             white-space: nowrap;
+        }
+
+        #tblServices th {
+            padding-right: 26px;
+        }
+
+        .emr-table-wrap .dataTables_wrapper {
+            font-size: 12px;
         }
 
         .emr-btn {
             border-radius: 50px;
-            width: 170px;
+            width: 150px;
+            height: 34px;
+            padding: 0 14px;
         }
     </style>
 
@@ -48,10 +137,6 @@
                 .replace(/>/g, '&gt;')
                 .replace(/"/g, '&quot;')
                 .replace(/'/g, '&#39;');
-        }
-
-        function escapeAttr(v) {
-            return escapeHtml(v).replace(/"/g, '&quot;');
         }
 
         function swalMsg(icon, title, text) {
@@ -90,17 +175,25 @@
 
             $.ajax({
                 type: "POST",
-                url: "EMRLookup.aspx/GetPatient",
+                url: "EMRLookup.aspx/GetPatientLookup",
                 data: JSON.stringify({ key: key }),
                 contentType: "application/json; charset=utf-8",
                 dataType: "json",
                 success: function (response) {
-                    var rows = response.d || [];
+                    var res = response.d || {};
+                    var rows = res.Patient || [];
+
                     if (rows.length === 0) {
                         renderHeader(null);
                         swalMsg('info', 'Not Found', 'No patient found for: ' + key);
                     } else {
                         renderHeader(rows[0]);
+                    }
+
+                    renderDataTable('#tblServices', res.Services || []);
+
+                    if (res.ServicesError) {
+                        swalMsg('error', 'Services Error', res.ServicesError);
                     }
                 },
                 error: function () {
@@ -108,50 +201,6 @@
                 },
                 complete: function () {
                     $('#btnSearch').prop('disabled', false).val('Search');
-                }
-            });
-
-            loadServices(key);
-        }
-
-        function loadServices(key) {
-            $.ajax({
-                type: "POST",
-                url: "EMRLookup.aspx/GetServices",
-                data: JSON.stringify({ key: key }),
-                contentType: "application/json; charset=utf-8",
-                dataType: "json",
-                success: function (response) {
-                    renderDataTable('#tblServices', response.d || [], true, false);
-                },
-                error: function () {
-                    renderDataTable('#tblServices', [], true, false);
-                }
-            });
-        }
-
-        function loadRadiology(btn) {
-            var orderNo = $(btn).attr('data-order');
-            var detailId = $(btn).attr('data-detail');
-
-            $('#tblRadiology').html('<tbody><tr><td>Loading...</td></tr></tbody>');
-
-            $.ajax({
-                type: "POST",
-                url: "EMRLookup.aspx/GetRadiology",
-                data: JSON.stringify({ orderNo: orderNo, detailId: detailId }),
-                contentType: "application/json; charset=utf-8",
-                dataType: "json",
-                success: function (response) {
-                    var rows = response.d || [];
-                    renderDataTable('#tblRadiology', rows, false, true);
-                    if (rows.length === 0) {
-                        swalMsg('info', 'No Result', 'No radiology result for order ' + orderNo);
-                    }
-                },
-                error: function () {
-                    renderDataTable('#tblRadiology', [], false, true);
-                    swalMsg('error', 'Error!', 'Failed to fetch radiology results.');
                 }
             });
         }
@@ -196,20 +245,26 @@
             var $t = $('#tblHeader');
 
             if (!row) {
-                $t.html('');
+                $t.html('<span class="emr-kv-empty">No patient loaded.</span>');
+                $('#lblHeaderCount').text('');
                 return;
             }
 
-            var html = '<tbody>';
+            var html = '';
+            var count = 0;
             $.each(row, function (k, v) {
-                html += '<tr><th>' + escapeHtml(k) + '</th><td>' + escapeHtml(v) + '</td></tr>';
+                count++;
+                html += '<div class="emr-kv-item">' +
+                        '<span class="emr-kv-k">' + escapeHtml(String(k).replace(/_/g, ' ')) + '</span>' +
+                        '<span class="emr-kv-v">' + escapeHtml(v) + '</span>' +
+                        '</div>';
             });
-            html += '</tbody>';
 
             $t.html(html);
+            $('#lblHeaderCount').text(count + ' fields');
         }
 
-        function renderDataTable(selector, rows, withAction, withSearch) {
+        function renderDataTable(selector, rows) {
             var $t = $(selector);
 
             if ($.fn.DataTable.isDataTable(selector)) {
@@ -227,21 +282,12 @@
             $.each(rows[0], function (k) { cols.push(k); });
 
             var thead = '<thead><tr>';
-            if (withAction) { thead += '<th>Action</th>'; }
             $.each(cols, function (i, c) { thead += '<th>' + escapeHtml(c) + '</th>'; });
             thead += '</tr></thead>';
 
             var tbody = '<tbody>';
             $.each(rows, function (i, r) {
                 tbody += '<tr>';
-
-                if (withAction) {
-                    tbody += '<td><input type="button" class="btn-primry" value="Radiology" ' +
-                             'style="width:100px;border-radius:50px;" ' +
-                             'data-order="' + escapeAttr(r['COMPLETE_ORDER_NO']) + '" ' +
-                             'data-detail="' + escapeAttr(r['ORDER_DETAIL_ID']) + '" ' +
-                             'onclick="loadRadiology(this)" /></td>';
-                }
 
                 $.each(cols, function (j, c) {
                     tbody += '<td>' + escapeHtml(r[c]) + '</td>';
@@ -257,10 +303,10 @@
                 "paging": true,
                 "pageLength": 10,
                 "lengthMenu": [10, 25, 50, 100],
-                "searching": !!withSearch,
+                "searching": true,
                 "ordering": true,
                 "info": true,
-                "scrollX": true,
+                "dom": 'lf<"emr-table-scroll"t>ip',
                 "order": []
             });
         }
@@ -269,44 +315,30 @@
 
 <asp:Content ID="BodyContent" runat="server" ContentPlaceHolderID="MainContent">
     <div class="emr-wrap">
-        <h2 style="text-align: center; margin-bottom: 5px;">Client EMR Patient Lookup</h2>
-        <p style="text-align: center; color: #888; margin-bottom: 20px;">
-            Read-only lookup of patient information from the client's Oracle EMR database.
-        </p>
+        <div class="emr-toolbar">
+            <h3 class="emr-toolbar-title">Client EMR Patient Lookup</h3>
+            <p class="emr-toolbar-sub">Read-only lookup of patient information from the client's Oracle EMR database.</p>
 
-        <div class="emr-search">
-            <div class="label-field">
-                <label for="txtKey" style="font-size: 16px;">Patient Number:</label>
-            </div>
-            <div class="input-field">
+            <div class="emr-search-row">
+                <label for="txtKey">Patient Number:</label>
                 <input autocomplete="off" type="text" id="txtKey" name="txtKey" class="textEntry"
-                       style="border-radius: 10px !important;" placeholder="e.g. 001000071011" />
+                       placeholder="e.g. 001000071011" />
+                <input class="btn-primry emr-btn" type="button" id="btnSearch" value="Search" onclick="SearchPatient()" />
+                <input class="btn-primry emr-btn" type="button" id="btnTest" value="Test Connection" onclick="TestConnection()" />
             </div>
-        </div>
-
-        <div style="text-align: center; margin-bottom: 10px;">
-            <input class="btn-primry emr-btn" type="button" id="btnSearch" value="Search" onclick="SearchPatient()" />
-            <input class="btn-primry emr-btn" type="button" id="btnTest" value="Test Connection" onclick="TestConnection()" />
         </div>
 
         <div class="emr-section">
-            <h4>Patient Information</h4>
-            <div class="table-container">
-                <table id="tblHeader" class="table table-bordered table-striped" style="width: 100%;"></table>
+            <h4>Patient Information<span class="emr-count" id="lblHeaderCount"></span></h4>
+            <div id="tblHeader" class="emr-kv">
+                <span class="emr-kv-empty">Search a patient number to load information.</span>
             </div>
         </div>
 
         <div class="emr-section">
             <h4>Patient Services</h4>
-            <div class="table-container">
+            <div class="emr-table-wrap">
                 <table id="tblServices" class="table table-bordered table-striped" style="width: 100%;"></table>
-            </div>
-        </div>
-
-        <div class="emr-section">
-            <h4>Radiology Results</h4>
-            <div class="table-container">
-                <table id="tblRadiology" class="table table-bordered table-striped" style="width: 100%;"></table>
             </div>
         </div>
     </div>
