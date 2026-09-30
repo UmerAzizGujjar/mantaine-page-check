@@ -133,7 +133,7 @@ namespace PMS
 
 
         [WebMethod]
-        public static object ViewList(int draw, int start, int length, string sortColumn, string sortColumnDirection, string searchValue, string fromDate, string toDate)
+        public static object ViewList(int draw, int start, int length, string sortColumn, string sortColumnDirection, string searchValue, string fromDate, string toDate, string mainDept)
         {
             try
             {
@@ -170,7 +170,9 @@ namespace PMS
                                        In_Patient_ID = b.In_Patient_ID,
                                        Operator = u.UserName,
                                        isCancel = b.isCancel,
-                                       final_bill_ipd = b.final_bill_ipd
+                                       final_bill_ipd = b.final_bill_ipd,
+                                       Main_Department = _dbContext.GetDataValueName("Mode Of Registration", b.Main_Department),
+                                       Main_Department_Code = b.Main_Department,
                                    };
 
                     // Total records that match base filters (not affected by search)
@@ -199,6 +201,12 @@ namespace PMS
                     {
                         DateTime toDateExclusive = toDt.Date.AddDays(1);
                         Billing = Billing.Where(x => x.Bill_Date < toDateExclusive);
+                    }
+
+                    // Main Department filter (raw code value)
+                    if (!string.IsNullOrWhiteSpace(mainDept))
+                    {
+                        Billing = Billing.Where(x => x.Main_Department_Code == mainDept);
                     }
 
                     // Count after search + date filters
@@ -246,6 +254,7 @@ namespace PMS
                         x.Balance_Amount,
                         x.MrNo,
                         x.Full_Name,
+                        x.Main_Department,
                         x.Bill_ID,
                         x.Operator,
                         x.isCancel,

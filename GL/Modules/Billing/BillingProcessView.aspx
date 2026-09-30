@@ -302,6 +302,7 @@
         $(document).ready(function () {
             $('#ctl00_lblMessage').hide();
             initDateFilter();   // default: current month, filter ON
+            $('#ddlMainDept').select2({ width: '190px' }).on('change', function () { reloadBillList(); });
             LoadPage();
 
 
@@ -488,7 +489,8 @@
                             sortColumnDirection: data.order[0].dir,
                             searchValue: data.search.value,
                             fromDate: $('#txtFromDate').val() || '',
-                            toDate: $('#txtToDate').val() || ''
+                            toDate: $('#txtToDate').val() || '',
+                            mainDept: $('#ddlMainDept').val() || ''
                         }),
                         contentType: "application/json; charset=utf-8",
                         dataType: "json",
@@ -518,8 +520,9 @@
                             return date;
                         }, "width": "7%", "orderable": true
                     },
-                    { "data": "MrNo", "name": "MrNo", "width": "5%", "orderable": true },
-                    { "data": "Full_Name", "width": "13%", "orderable": false },
+                    { "data": "MrNo", "name": "MrNo", "width": "7%", "orderable": true },
+                    { "data": "Full_Name", "width": "10%", "orderable": false },
+                    { "data": "Main_Department", "width": "8%", "orderable": false },
                     { "data": "Total_Amount", "width": "5%", "orderable": false },
                     { "data": "Discount_Percentage", "width": "3%", "orderable": false },
                     { "data": "Discount_Amount", "width": "5%", "orderable": false },
@@ -1245,7 +1248,7 @@
 </asp:Content>
 <asp:Content ID="Content2" ContentPlaceHolderID="MainContent" runat="server">
     <div class="row">
-        <div class="col-lg-12 col-md-12 col-sm-12 bp-date-filter">
+        <div class="col-lg-5 col-md-12 col-sm-12 bp-date-filter">
             <label class="fl" for="txtFromDate">Start Date</label>
             <input type="date" id="txtFromDate" class="form-control" />
             <label class="fl" for="txtToDate">End Date</label>
@@ -1256,6 +1259,16 @@
                 <span class="bp-slider"></span>
             </label>
             <span id="lblDateFilterState" class="text-muted">Current month</span>
+         
+        </div>
+        <div class="col-lg-2 col-md-6 col-sm-12">
+            <label class="fl" for="ddlMainDept" style="margin-left: 18px;">Main Department</label>
+            <select id="ddlMainDept" class="form-control" style="width: 190px;">
+                <option value="">All</option>
+                <option value="01">OPD</option>
+                <option value="02">Emergency</option>
+                <option value="03">IPD</option>
+            </select>
         </div>
     </div>
     <div class="row">
@@ -1269,6 +1282,7 @@
                         <th>Bill Date</th>
                         <th>MR No</th>
                         <th>Name</th>
+                        <th>Main Department</th>
                         <th>Total Amount</th>
                         <th>Discount Percentage</th>
                         <th>Discount Amount</th>
