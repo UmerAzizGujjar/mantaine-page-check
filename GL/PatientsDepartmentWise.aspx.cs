@@ -8377,21 +8377,12 @@ namespace PMS
                     lblPatientType.Visible = false;
                     lblMultiSelect.Visible = false;
                     ddlDepartments.DataSource = DBClass.getDataTable(@"
-                        SELECT ManufacturerValue, ManufacturerText
-                        FROM
-                        (
-                            SELECT DISTINCT
-                                COALESCE(NULLIF(LTRIM(RTRIM(dbo.GetDataValueName('Manufacture Company', i.Manufacturer_Name))), ''),
-                                         NULLIF(LTRIM(RTRIM(i.Manufacturer_Name)), ''), 'Unassigned') AS ManufacturerValue,
-                                COALESCE(NULLIF(LTRIM(RTRIM(dbo.GetDataValueName('Manufacture Company', i.Manufacturer_Name))), ''),
-                                         NULLIF(LTRIM(RTRIM(i.Manufacturer_Name)), ''), 'Unassigned') AS ManufacturerText
-                            FROM dbo.INV_Items AS i
-                            WHERE ISNULL(i.IsPharmacyItem, 0) = 1
-                              AND ISNULL(i.Active, 0) = 1
-                              AND ISNULL(i.Is_Active, 0) = 1
-                              AND ISNULL(i.isCancel, 0) = 0
-                        ) AS Manufacturers
-                        ORDER BY ManufacturerText");
+                        SELECT dv.DataValue_Name AS ManufacturerValue,
+                               dv.DataValue_Description AS ManufacturerText
+                        FROM DataValues dv
+                        INNER JOIN ValueSet vs ON vs.ValueSet_ID = dv.ValueSet_ID
+                        WHERE vs.ValueSet_Name = 'Manufacture Company'
+                        ORDER BY dv.DataValue_Description");
                     ddlDepartments.DataValueField = "ManufacturerValue";
                     ddlDepartments.DataTextField = "ManufacturerText";
                     ddlDepartments.Items.Clear();
