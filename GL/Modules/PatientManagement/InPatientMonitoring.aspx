@@ -3462,7 +3462,21 @@
                         debugger;
                         var timeStamp = parseInt(value.Medicine_Date.substr(6, 10));
                         var date = moment.unix(timeStamp).format('M/D/YYYY h:m:s A');
-                        rows += '<tr> <td> ' + date + ' </td><td> ' + value.Medicine_Name + ' </td><td> ' + value.Frequency + ' </td> <td> ' + value.Oral + ' </td><td style="display:none"> ' + value.Req_Qty + ' </td> <td>' + value.Req_Qty + '</td><td>' + value.Rcv_Qty + '</td><td>' + Stop_Date + '</td><td>' + value.AttendingParamedical_Staff + '</td> <td>' + value.Dosage_From + '</td><td>' + value.Dosage_Qty + '</td><td>' + value.Other_Instruction + '</td><td>' + type + '</td></tr>';
+                        rows += '<tr> <td> ' + date + ' </td>' +
+                            '<td> ' + value.Medicine_Name + ' </td>' +
+                            '<td> ' + (value.Recomended_Dosage || '') + ' </td>' +         
+                            '<td> ' + value.Frequency + ' </td>' +                          
+                            '<td> ' + value.Oral + ' </td>' +                               
+                            '<td style="display:none"> ' + value.Injections + ' </td>' +    
+                            '<td> ' + (value.DoctorName || '') + ' </td>' +                 
+                            '<td> ' + Stop_Date + ' </td>' +                               
+                            '<td> ' + (value.AttendingParamedical_Staff || '') + ' </td>' +
+                            '<td> ' + value.Dosage_From + ' </td>' +                        
+                            '<td> ' + value.Dosage_Qty + ' </td>' +                         
+                            '<td> ' + value.Other_Instruction + ' </td>' +     
+                            '<td> ' + type + ' </td>' +                                     
+                            '<td></td>' +                                               
+                            '</tr>';
                         // rows += '<tr> <td> ' + date + ' </td><td> ' + value.Medicine_Name + ' </td><td> ' + value.Frequency + ' </td> <td> ' + value.Oral + ' </td><td style="display:none"> ' + value.Req_Qty + ' </td> <td>' + value.Req_Qty + '</td><td>' + value.Rcv_Qty + '</td><td>' + Stop_Date + '</td><td>' + value.AttendingParamedical_Staff + '</td> <td>' + value.Dosage_From + '</td><td>' + value.Dosage_Qty + '</td><td>' + value.Other_Instruction + '</td><td>' + type + '</td><td> <a href="#" onclick=select3(this)>Select</a> </td> </tr>';
                     });
                     debugger;
@@ -5480,7 +5494,7 @@
                                     <asp:TextBox id="txtService" name="txtService" runat="server"></asp:TextBox>
                                 </td>
                                 <td>
-                                    <input type="button" id="btnAddService" class="btn btn-primry" name="btnAddService" onclick="AddServiceOrItem()" value="Add Service" style="top: 3px; left: 20px;width:26% !important" />
+                                    <input type="button" id="btnAddService" class="btn btn-primry" name="btnAddService" onclick="AddServiceOrItem()" value="Add Service" style="top: 3px; left: 20px;" />
                                 </td>
                             </tr>
                         </tbody>

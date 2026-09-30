@@ -6240,13 +6240,20 @@
                 PageMethods.GetDoctorsAgainstMO(status, function (Medicine) {
                     var options = '<option value=""> Select Doctor  </option>'
                     $.each(JSON.parse(Medicine), function (key, value) {
-                        options += '<option value="' + value.Emp_ID + '"> ' + value.Emp_Name + ' </option>';
+                        options += '<option value="' + value.Emp_ID + '" data-designation="' + status + '"> ' + value.Emp_Name + ' </option>';
                     });
 
                     $('#ctl00_MainContent_DdlDocName').html(options);
                     $('#ctl00_MainContent_DdlDocName').select2();
 
                 });
+            });
+
+            $("#ctl00_MainContent_DdlDocName").on('change', function () {
+                var designation = $(this).find('option:selected').attr('data-designation');
+                if (designation) {
+                    $('#ctl00_MainContent_DocStatus').val(designation);
+                }
             });
 
 
@@ -6269,6 +6276,7 @@
             }
             Combination();
             $('#ctl00_MainContent_ddlLabResult').select2();
+            $('#ctl00_MainContent_DdlDocName').select2();
             $('#txtSymtom').tokenInput("../../json.aspx?Table=Symtoms",
                 {
                     tokenLimit: 1,

@@ -660,7 +660,7 @@ namespace PMS
                                              pm.Recomended_Dosage,
                                              op.Created_Time,
                                              pm.Doctor_ID,
-                                             DoctorName = (from d in db.HR_Employees where d.Emp_ID == Convert.ToInt32(pm.Doctor_ID) select d.Emp_Name).FirstOrDefault(),
+                                             DoctorName = (from d in db.HR_Employees where d.Emp_ID == Convert.ToInt32(op.Doctor) select d.Emp_Name).FirstOrDefault(),
                                              pm.Dosage_From,
                                              pm.Dosage_Qty,
                                              pm.Other_Instruction,

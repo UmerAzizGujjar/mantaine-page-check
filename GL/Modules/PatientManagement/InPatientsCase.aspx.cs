@@ -183,6 +183,14 @@ namespace PMS
             EmpList = (from tbl in db.HR_Employees
                        where tbl.IsDoctor == true
                        select tbl).ToList();
+            DdlDocName.Items.Clear();
+            DdlDocName.Items.Add(new ListItem("Select Doctor", "0"));
+            foreach (var emp in EmpList)
+            {
+                ListItem li = new ListItem(emp.Emp_Name, emp.Emp_ID.ToString());
+                li.Attributes.Add("data-designation", emp.Designation);
+                DdlDocName.Items.Add(li);
+            }
             List<Service_Definition> SrvcList = new List<Service_Definition>();
             SrvcList = (from tbl in db.Service_Definitions
                         join tbl2 in db.DataValues on tbl.Service_Type equals tbl2.DataValue_Name

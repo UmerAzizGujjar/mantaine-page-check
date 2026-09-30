@@ -8047,7 +8047,7 @@
                                     </div>
                                     <div class="ipd-field">
                                         <asp:Label ID="lbldiscount" runat="server" CssClass="ipd-label" Text="Discount %"></asp:Label>
-                                        <asp:TextBox ID="txtDiscount" onchange="Calc_Discount()" runat="server" CssClass="ipd-input"></asp:TextBox>
+                                        <asp:TextBox ID="txtDiscount" onkeyup="Calc_Discount()" runat="server" CssClass="ipd-input"></asp:TextBox>
                                     </div>
                                     <div class="ipd-field" style="display: none">
                                         <asp:Label ID="LblExpected_Discharge_Date" runat="server" CssClass="ipd-label" Text="Expected Discharge Date"></asp:Label>

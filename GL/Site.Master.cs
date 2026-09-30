@@ -392,7 +392,7 @@ namespace PMS
                     {
 
                     }
-                    if (filter_URL.Contains("?Type="))
+                    else if (filter_URL.Contains("?Type="))
                     {
 
                     }
@@ -436,9 +436,21 @@ namespace PMS
 
                 //qury1 = DBClass.getField("select Parent_ID from menus where URL='" + result + "' ");
                 //qury2 = DBClass.getField("select Menu_ID from menus where URL='" + result + "' ");  
-                qury1 = DBClass.getField("select Parent_ID from menus where URL LIKE '%" + result + "%'");
-                qury2 = DBClass.getField("select Menu_ID from menus where URL LIKE '%" + result + "%'");
-                if (qury1 == "0")
+                qury1 = DBClass.getField("select Parent_ID from menus where URL = '" + result + "'");
+                qury2 = DBClass.getField("select Menu_ID from menus where URL = '" + result + "'");
+                if (qury1 == "There is no row at position 0." || qury2 == "There is no row at position 0.")
+                {
+                    // fall back to a suffix match on the full URL (query string included)
+                    qury1 = DBClass.getField("select Parent_ID from menus where URL LIKE '%" + result + "'");
+                    qury2 = DBClass.getField("select Menu_ID from menus where URL LIKE '%" + result + "'");
+                }
+                if (qury1 == "There is no row at position 0." || qury2 == "There is no row at position 0.")
+                {
+                    // URL with its query string is not registered in menus - leave the parent name blank
+                    qury1 = "";
+                    qury2 = "";
+                }
+                else if (qury1 == "0")
                 {
                     qury3 = DBClass.getField("select Menu_Description from menus where Menu_ID='" + Convert.ToInt32(qury2) + "' ");
                 }
@@ -449,8 +461,15 @@ namespace PMS
                 string qury = "";
 
                 //qury = "select Menu_Description from menus where URL='" + result + "' ";
-                qury = "select Menu_Description from menus where URL LIKE '%" + result + "%' ";
+                qury = "select Menu_Description from menus where URL = '" + result + "' ";
                 x = DBClass.getField(qury);
+                if (x == "There is no row at position 0.")
+                {
+                    qury = "select Menu_Description from menus where URL LIKE '%" + result + "' ";
+                    x = DBClass.getField(qury);
+                }
+                if (x == "There is no row at position 0.")
+                    x = "";
                 if (qury3 == "There is no row at position 0.")
                     qury3 = "";
                 lbl1.Text = qury3;

@@ -66,7 +66,7 @@ namespace PMS
                         roomsQuery = sortColumnDirection == "asc" ? roomsQuery.OrderBy(r => r.Name) : roomsQuery.OrderByDescending(r => r.Name);
                         break;
                     default:
-                        roomsQuery = roomsQuery.OrderBy(r => r.Room_ID);
+                        roomsQuery = roomsQuery.OrderByDescending(r => r.Room_ID);
                         break;
                 }
 

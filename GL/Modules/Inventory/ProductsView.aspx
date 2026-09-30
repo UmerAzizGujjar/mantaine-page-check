@@ -11,6 +11,7 @@
             LoadWarehouseDropdown();
             LoadPage();
         });
+
         function LoadWarehouseDropdown() {
             PageMethods.GetWarehouses(function (result) {
                 var warehouses = JSON.parse(result);

@@ -268,7 +268,7 @@
                 contentType: "application/json; charset=utf-8",
                 dataType: "json",
                 success: function (response) {
-                    var data = response.d;
+                    var data = typeof response.d === 'string' ? JSON.parse(response.d) : response.d;
 
                     if (data.success) {
                         Swal.fire({
@@ -279,7 +279,9 @@
                             showConfirmButton: false
                         });
 
-
+                        // Registered Patient Print (opens with the reg_patient.pat_id that was just charged)
+                        var url = '../../ReportViewer.aspx?ReportName=RegisteredPatientPrint&ReportTitle=Registered Patient Print&pat_id=' + reg_id;
+                        window.open(url, '_blank');
                     }
                 },
                 error: function (xhr, status, error) {

@@ -634,6 +634,17 @@ namespace PMS.Modules.PatientManagement
                     if (data.Administration != null) OPD.Administration = data.Administration.ToString();
                     OPD.Control_Date = DateTime.Now;
                     if (data.Follow_Up != null) OPD.Follow_Up = data.Follow_Up.ToString();
+                    if (!string.IsNullOrWhiteSpace(data.FollowNoDate))
+                    {
+                        DateTime followDateValue;
+                        var followDateFormats = new[] { "yyyy-MM-dd", "MM/dd/yyyy", "dd/MM/yyyy" };
+                        if (DateTime.TryParseExact(data.FollowNoDate.Trim(), followDateFormats,
+                                System.Globalization.CultureInfo.InvariantCulture,
+                                System.Globalization.DateTimeStyles.None, out followDateValue))
+                        {
+                            OPD.Folllow_Date = followDateValue;
+                        }
+                    }
                     if (data.Proto != null) OPD.Proto = data.Proto.ToString();
                     if (data.Advice != null) OPD.Advice = data.Advice;
                     if (data.Birth_History != null) OPD.Birth_History = data.Birth_History;
