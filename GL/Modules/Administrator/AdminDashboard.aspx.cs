@@ -367,6 +367,17 @@ SELECT
                     {
                         PrepDb(db);
                         var conn2 = db.Connection.ConnectionString;
+
+                        /* ─────────── Card Fee ─────────── */
+
+                        var RegPatients = db.Reg_patients.Where(p => p.charge_time >= s && p.charge_time <= e).ToList();
+                        decimal RegPatientGross = RegPatients.Sum(p => p.Card_fee ?? 0);
+                        decimal RegPatientDiscount = 0;
+                        var RegPatientPatList = RegPatients.Select(p => p.pat_id).ToList();
+                        decimal RegPatientRefund = 0;
+                        decimal RegPatientNet = RegPatientGross - RegPatientDiscount - RegPatientRefund;
+
+                        /* ─────────── Private Patient ─────────── */
                         var specialistPatients = db.Patients.Where(p => p.Patient_Type == "02" && p.Created_Time >= s && p.Created_Time <= e).ToList();
                         decimal specialistGross = specialistPatients.Sum(p => p.Actual_amount ?? 0);
                         decimal specialistDiscount = specialistPatients.Sum(p => ((p.discount_amt/100) * p.Actual_amount) ?? 0);
@@ -384,10 +395,11 @@ SELECT
                         }
                         decimal specialistNet = specialistGross - specialistDiscount - specialistRefund;
 
+                        /* ─────────── General Patient ─────────── */
                         var GernalPatients = db.Patients.Where(p => p.Patient_Type == "01" && p.Created_Time >= s && p.Created_Time <= e).ToList();
-                        decimal GernalGross = specialistPatients.Sum(p => p.Actual_amount ?? 0);
-                        decimal GernalDiscount = specialistPatients.Sum(p => ((p.discount_amt/100) * p.Actual_amount) ?? 0);
-                        var GernalPatList = specialistPatients.Select(p => p.Patient_ID).ToList();
+                        decimal GernalGross = GernalPatients.Sum(p => p.Actual_amount ?? 0);
+                        decimal GernalDiscount = GernalPatients.Sum(p => ((p.discount_amt/100) * p.Actual_amount) ?? 0);
+                        var GernalPatList = GernalPatients.Select(p => p.Patient_ID).ToList();
 
                         decimal GernalRefund = 0;
                         if (GernalPatList.Count > 0)
@@ -401,6 +413,33 @@ SELECT
                         }
                         decimal GernalNet = GernalGross - GernalDiscount - GernalRefund;
 
+                        /* ─────────── Emer Patient ─────────── */
+
+                        var EmrPatients = db.Emergencies.Where(p =>  p.Created_Time >= s && p.Created_Time <= e).ToList();
+                        decimal EmrGross = EmrPatients.Sum(p => p.Actual_amount ?? 0);
+                        decimal EmrDiscount = EmrPatients.Sum(p => ((p.discount_amt/100) * p.Actual_amount) ?? 0);
+                        var EmrPatList = EmrPatients.Select(p => p.Emer_id).ToList();
+                        decimal EmrRefund = 0;
+                        decimal EmrNet = EmrGross - EmrDiscount - EmrRefund;
+
+                        /* ─────────── Pharmacy Patient ─────────── */
+
+                        var Pharmacy = db.Ar_Billings.Where(p => p.Creation_Date >= s && p.Creation_Date <= e && p.Ware_House =="008").ToList();
+                        decimal PharmacyGross = Pharmacy.Sum(p => p.Total_Amount ?? 0);
+                        decimal PharmacyDiscount = Pharmacy.Sum(p => (p.Discount_Amount) ?? 0);
+                        decimal PharmacyReceived = Pharmacy.Sum(p => (p.Received_Amount) ?? 0);
+                        decimal pharmacyRefund = 0;
+
+                        /* ─────────── PB! Patient ─────────── */
+
+                        var PB1 = db.Ar_Billings.Where(p => p.Creation_Date >= s && p.Creation_Date <= e && p.Ware_House =="009").ToList();
+                        decimal PBGross = PB1.Sum(p => p.Total_Amount ?? 0);
+                        decimal PBDiscount = PB1.Sum(p => (p.Discount_Amount) ?? 0);
+                        decimal PBReceived = PB1.Sum(p => (p.Received_Amount) ?? 0);
+                        decimal PBRefund = 0;
+                       
+
+
                         var grossRow = SqlGroup(@"
                                 SELECT d.Item_Type AS [Key],
                                        SUM(ISNULL(d.Amount,0)) AS Amt,
@@ -408,7 +447,7 @@ SELECT
                                 FROM Ar_Billings b
                                 INNER JOIN Ar_Billing_Details d ON b.Bill_ID = d.Bill_ID
                                 WHERE b.Creation_Date >= @s AND b.Creation_Date <= @e
-                                  AND (d.Item_Type = 'Test' OR d.Item_Type = 'Medicine')
+                                  AND (d.Item_Type = 'Test' OR d.Item_Type = 'Service')
                                 GROUP BY d.Item_Type", conn2, s, e).ToDictionary(x => x.Key, x => new { amt = ToDecimal(x.Value[0]), disc = ToDecimal(x.Value[1]) });
 
                         var refundRow = SqlGroup(@"
@@ -422,26 +461,30 @@ SELECT
                                   AND (r.isCancelled IS NULL OR r.isCancelled = 0)
                                   AND (rds.isCancelled IS NULL OR rds.isCancelled = 0)
                                   AND rds.Bill_Detail_ID IS NOT NULL AND rds.Refund_ID IS NOT NULL
-                                  AND (d.Item_Type = 'Test' OR d.Item_Type = 'Medicine')
+                                  AND (d.Item_Type = 'Test' OR d.Item_Type = 'Service')
                                   AND b.Creation_Date >= @s AND b.Creation_Date <= @e
                                 GROUP BY d.Item_Type", conn2, s, e).ToDictionary(x => x.Key, x => ToDecimal(x.Value[0]));
 
                         decimal diagnosticsGross = grossRow.ContainsKey("Test") ? grossRow["Test"].amt : 0;
                         decimal diagnosticsDiscount = grossRow.ContainsKey("Test") ? grossRow["Test"].disc : 0;
-                        decimal pharmacyGross = grossRow.ContainsKey("Medicine") ? grossRow["Medicine"].amt : 0;
-                        decimal pharmacyDiscount = grossRow.ContainsKey("Medicine") ? grossRow["Medicine"].disc : 0;
+                        decimal ServiceGross = grossRow.ContainsKey("Service") ? grossRow["Service"].amt : 0;
+                        decimal ServiceDiscount = grossRow.ContainsKey("Service") ? grossRow["Service"].disc : 0;
                         decimal diagnosticsRefund = refundRow.ContainsKey("Test") ? refundRow["Test"] : 0;
-                        decimal pharmacyRefund = refundRow.ContainsKey("Medicine") ? refundRow["Medicine"] : 0;
+                        decimal ServiceRefund = refundRow.ContainsKey("Service") ? refundRow["Service"] : 0;
                         decimal diagnosticsNet = diagnosticsGross - diagnosticsDiscount - diagnosticsRefund;
-                        decimal pharmacyNet = pharmacyGross - pharmacyDiscount - pharmacyRefund;
+                        decimal ServiceNet = ServiceGross - ServiceDiscount - ServiceRefund;
 
                         CloseDb(db);
                         return new[]
                         {
-                            new { category = "Specialist Consultation", grossAmount = (int)specialistGross, discount = (int)specialistDiscount, refund = (int)specialistRefund, netCollection = (int)specialistNet },
+                            new { category = "Registration Fee", grossAmount = (int)RegPatientGross, discount = (int)RegPatientDiscount, refund = (int)RegPatientRefund, netCollection = (int)RegPatientNet },
                             new { category = "General Consultation", grossAmount = (int)GernalGross, discount = (int)GernalDiscount, refund = (int)GernalRefund, netCollection = (int)GernalNet },
+                            new { category = "Specialist Consultation", grossAmount = (int)specialistGross, discount = (int)specialistDiscount, refund = (int)specialistRefund, netCollection = (int)specialistNet },
+                            new { category = "Emergency Consultation", grossAmount = (int)EmrGross, discount = (int)EmrDiscount, refund = (int)EmrRefund, netCollection = (int)EmrNet },
                             new { category = "Diagnostics & Labs", grossAmount = (int)diagnosticsGross, discount = (int)diagnosticsDiscount, refund = (int)diagnosticsRefund, netCollection = (int)diagnosticsNet },
-                            new { category = "Pharmacy Dispensing", grossAmount = (int)pharmacyGross, discount = (int)pharmacyDiscount, refund = (int)pharmacyRefund, netCollection = (int)pharmacyNet }
+                            new { category = "Service", grossAmount = (int)ServiceGross, discount = (int)ServiceDiscount, refund = (int)ServiceRefund, netCollection = (int)ServiceNet },
+                            new { category = "Pharmacy Dispensing", grossAmount = (int)PharmacyGross, discount = (int)PharmacyDiscount, refund = (int)pharmacyRefund, netCollection = (int)PharmacyReceived },
+                            new { category = "PB1 Dispensing", grossAmount = (int)PBGross, discount = (int)PBDiscount, refund = (int)PBRefund, netCollection = (int)PBReceived }
                         };
                     }
                 });
@@ -452,12 +495,12 @@ SELECT
                     using (DataBaseDataContext db = new DataBaseDataContext())
                     {
                         PrepDb(db);
-                        var regs = db.Reg_patients.Where(rp => rp.Created_time >= s && rp.Created_time <= e).ToList();
+                        var regs = db.Reg_patients.Where(rp => rp.charge_time >= s && rp.charge_time <= e).ToList();
                         var regByPat = regs.ToLookup(r => r.pat_id);
 
                         var pats = (from p in db.Patients
                                     join rp in db.Reg_patients on p.Reg_PatId equals rp.pat_id
-                                    where rp.Created_time >= s && rp.Created_time <= e
+                                    where rp.charge_time >= s && rp.charge_time <= e
                                     select p).Distinct().ToList();
                         var opds = db.Out_Patients.Where(op => op.Created_Time >= s && op.Created_Time <= e).ToList();
                         var opdByPat = opds.ToLookup(o => o.Reg_PatId ?? 0);
