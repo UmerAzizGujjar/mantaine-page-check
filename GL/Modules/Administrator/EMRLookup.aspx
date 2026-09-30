@@ -103,6 +103,7 @@
 
         .emr-table-scroll {
             overflow-x: auto;
+            clear: both;
         }
 
         #tblServices th,
@@ -118,6 +119,39 @@
 
         .emr-table-wrap .dataTables_wrapper {
             font-size: 12px;
+        }
+
+        .emr-table-wrap .dataTables_length,
+        .emr-table-wrap .dataTables_filter {
+            margin-bottom: 8px;
+        }
+
+        .emr-table-wrap .dataTables_length label,
+        .emr-table-wrap .dataTables_filter label {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            margin: 0;
+        }
+
+        .emr-table-wrap .dataTables_length select {
+            display: inline-block;
+            width: 70px;
+            height: 28px;
+            padding: 2px 6px;
+            margin: 0;
+            font-size: 12px;
+        }
+
+        .emr-table-wrap .dataTables_filter input {
+            display: inline-block;
+            width: 220px !important;
+            height: 28px;
+            padding: 2px 12px;
+            margin: 0;
+            box-sizing: border-box;
+            font-size: 12px;
+            border-radius: 15px !important;
         }
 
         .emr-btn {
