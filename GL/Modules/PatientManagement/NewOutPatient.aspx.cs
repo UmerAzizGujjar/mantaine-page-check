@@ -987,13 +987,16 @@ namespace PMS.Modules.PatientManagement
                 int patientId = serviceData.Pat;
                 int outPatientId = serviceData.PatientID;
 
-                if (formType == "InPatientDischarge" && outPatientId != 0)
+                // Update existing rows in place (keep their IDs); never delete.
+                List<InPatientService> existingServices = null;
+                if (outPatientId != 0)
                 {
-                    var existingServices = db.InPatientServices
-                        .Where(s => s.In_Patient_Id == outPatientId && s.PatientType == "InPatient Discharge").ToList();
-                    db.InPatientServices.DeleteAllOnSubmit(existingServices);
+                    existingServices = formType == "InPatientDischarge"
+                        ? db.InPatientServices.Where(s => s.In_Patient_Id == outPatientId && s.PatientType == "InPatient Discharge").OrderBy(s => s.CreatedDate).ToList()
+                        : db.InPatientServices.Where(s => s.Ou_Patient_Id == outPatientId.ToString() && s.PatientType == "OutPatient").OrderBy(s => s.CreatedDate).ToList();
                 }
 
+                int serviceIndex = 0;
                 foreach (var service in serviceData.ServiceList)
                 {
                     // Validate service item
@@ -1014,33 +1017,45 @@ namespace PMS.Modules.PatientManagement
                     if (itemDetails == null)
                         continue;
 
-                    InPatientService newService = new InPatientService
+                    InPatientService target;
+                    if (existingServices != null && serviceIndex < existingServices.Count)
                     {
-                        Service_ItemId = itemDetails.Item_Code,
-                        Services_Procedure_ItemName = itemDetails.Description,
-                        ServiceAmount = itemDetails.Sale_Rate ?? 0,
-                        PatientId = patientId,
-                        ServiceType = "Service",
-                        CreatedDate = DateTime.Now,
-                        UserName = Convert.ToString(AppConfig.UserID),
-                        isbilled = false,
-                        EmergencyId = null
-                    };
-
-                    if (formType == "InPatientDischarge")
-                    {
-                        newService.In_Patient_Id = outPatientId;
-                        newService.Ou_Patient_Id = "0";
-                        newService.PatientType = "InPatient Discharge";
+                        // Reuse the existing row: same ID, same billing state
+                        target = existingServices[serviceIndex];
                     }
                     else
                     {
-                        newService.Ou_Patient_Id = outPatientId.ToString();
-                        newService.In_Patient_Id = null;
-                        newService.PatientType = "OutPatient";
-                    }
+                        // Only genuinely new items get inserted
+                        target = new InPatientService
+                        {
+                            PatientId = patientId,
+                            ServiceType = "Service",
+                            CreatedDate = DateTime.Now,
+                            UserName = Convert.ToString(AppConfig.UserID),
+                            isbilled = false,
+                            EmergencyId = null
+                        };
 
-                    db.InPatientServices.InsertOnSubmit(newService);
+                        if (formType == "InPatientDischarge")
+                        {
+                            target.In_Patient_Id = outPatientId;
+                            target.Ou_Patient_Id = "0";
+                            target.PatientType = "InPatient Discharge";
+                        }
+                        else
+                        {
+                            target.Ou_Patient_Id = outPatientId.ToString();
+                            target.In_Patient_Id = null;
+                            target.PatientType = "OutPatient";
+                        }
+
+                        db.InPatientServices.InsertOnSubmit(target);
+                    }
+                    serviceIndex++;
+
+                    target.Service_ItemId = itemDetails.Item_Code;
+                    target.Services_Procedure_ItemName = itemDetails.Description;
+                    target.ServiceAmount = itemDetails.Sale_Rate ?? 0;
                 }
 
                 db.SubmitChanges();
