@@ -742,6 +742,195 @@
     </script>
     <asp:ContentPlaceHolder ID="HeadContent" runat="server"></asp:ContentPlaceHolder>
     <style type="text/css">
+        /* ===== Application header: responsive + prominent ===== */
+        #navbar {
+            height: auto !important;
+            min-height: 68px;
+            background: #ffffff !important;
+            border-bottom: 4px solid #EFA63E;
+            box-shadow: 0 3px 12px rgba(0, 0, 0, 0.20) !important;
+            position: relative;
+            z-index: 1030;
+        }
+
+        #navbar-container {
+            display: flex !important;
+            flex-wrap: nowrap;
+            align-items: center;
+            width: 100% !important;
+            min-height: 64px;
+            margin: 0 !important;
+            padding: 0 16px !important;
+            background: linear-gradient(180deg, #ffffff 0%, #eceff3 100%) !important;
+        }
+
+            /* ignore the fixed bootstrap column widths - let flexbox share the row */
+            #navbar-container > div[class*="col-"] {
+                float: none !important;
+                width: auto !important;
+                height: auto !important;
+                padding: 0 8px !important;
+                position: relative;
+            }
+
+                /* 1) logo */
+                #navbar-container > div:nth-child(1) {
+                    flex: 0 0 auto;
+                }
+
+                /* 2) company name takes all remaining space */
+                #navbar-container > div:nth-child(2) {
+                    flex: 1 1 auto;
+                    min-width: 0;
+                    display: flex;
+                    align-items: center;
+                    justify-content: center;
+                }
+
+                /* 3) notification bell */
+                #navbar-container > div:nth-child(3) {
+                    flex: 0 0 auto;
+                    align-self: stretch;
+                    min-width: 98px; /* bell is 90px wide */
+                    margin-right: 28px; /* gap between the bell and the user menu (#headerWelcome) */
+                }
+
+                /* 4) user menu */
+                #navbar-container > div:nth-child(4) {
+                    flex: 0 0 auto;
+                }
+
+        #navbar .app-logo {
+            display: block;
+            height: 56px !important;
+            width: auto !important;
+            max-width: 130px;
+            margin: 0 !important;
+            object-fit: contain;
+        }
+
+        #navbar .app-title {
+            display: block;
+            max-width: 100%;
+            margin: 0;
+            font-family: "Segoe UI", Arial, sans-serif;
+            font-size: clamp(16px, 2.3vw, 30px);
+            font-weight: 800;
+            letter-spacing: .4px;
+            line-height: 1.2;
+            color: #1b2a41;
+            text-align: center;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+
+        #navbar .header-user-dropdown {
+            margin-top: 0 !important;
+            padding: 0 !important;
+        }
+
+            #navbar .header-user-dropdown .dropdown {
+                margin-top: 0 !important;
+            }
+
+        #navbar .user-btn {
+            box-shadow: 0 2px 6px rgba(0, 0, 0, 0.25);
+            white-space: nowrap;
+        }
+
+        #navbar .notification {
+            top: 0;
+            left: 8px;
+        }
+
+        @media screen and (max-width: 991px) {
+            #navbar-container {
+                padding: 0 10px !important;
+            }
+
+            #navbar .app-logo {
+                height: 46px !important;
+                max-width: 100px;
+            }
+        }
+
+        @media screen and (max-width: 600px) {
+            #navbar {
+                min-height: 56px;
+                border-bottom-width: 3px;
+            }
+
+            #navbar-container {
+                min-height: 52px;
+                padding: 0 6px !important;
+            }
+
+            #navbar .app-logo {
+                height: 38px !important;
+                max-width: 80px;
+            }
+
+            #navbar .app-title {
+                font-size: 14px;
+                letter-spacing: 0;
+            }
+
+            #navbar-container > div[class*="col-"] {
+                padding: 0 4px !important;
+            }
+
+            #navbar .user-btn {
+                padding: 6px 10px;
+            }
+
+            #navbar-container > div:nth-child(3) {
+                margin-right: 12px;
+            }
+        }
+
+        /* ===== Main menu bar (horizontal) - match the new header, desktop only ===== */
+        @media screen and (min-width: 992px) {
+            .sidebar.h-sidebar {
+                margin-top: 0 !important;
+                box-shadow: 0 3px 8px rgba(0, 0, 0, 0.14) !important;
+            }
+
+                .sidebar.h-sidebar .nav-list {
+                    background: linear-gradient(180deg, #ffffff 0%, #f1f3f7 100%) !important;
+                    border-bottom: 3px solid #EFA63E !important;
+                }
+
+                    .sidebar.h-sidebar .nav-list > li {
+                        border-color: #d9dee5 !important;
+                    }
+
+                        .sidebar.h-sidebar .nav-list > li > a {
+                            display: flex !important;
+                            flex-direction: column;
+                            align-items: center;
+                            justify-content: center;
+                            height: 100% !important;
+                            padding: 6px 8px !important;
+                            font-size: 14px !important;
+                            font-weight: 700 !important;
+                            letter-spacing: .1px;
+                            color: #1b2a41 !important;
+                            transition: background-color .15s ease, color .15s ease;
+                        }
+
+                        .sidebar.h-sidebar .nav-list > li:hover > a,
+                        .sidebar.h-sidebar .nav-list > li.hover:hover > a {
+                            background-color: #fff1d6 !important;
+                            color: #8a4b00 !important;
+                        }
+
+                        .sidebar.h-sidebar .nav-list > li.active > a,
+                        .sidebar.h-sidebar .nav-list > li.active:hover > a {
+                            background-color: #EFA63E !important;
+                            color: #1b2a41 !important;
+                        }
+        }
     </style>
     <script type="text/javascript">
         (function ($) {
@@ -831,18 +1020,18 @@
         <asp:ToolkitScriptManager ID="cmManager" runat="server" EnablePageMethods="true" />
         <div class="page">
             <div class="loginDisplay">
-                <div id="navbar" style="height: 60px !important" class="navbar navbar-default navbar-collapse h-navbar ace-save-state">
+                <div id="navbar" class="navbar navbar-default navbar-collapse h-navbar ace-save-state">
                     <div class="navbar-container ace-save-state row" id="navbar-container">
                            <div class="col-lg-3 col-md-4 col-sm-3">
         <a href="~/Modules/Dashboards/ShortCuts.aspx" runat="server" id="IHome" title="Haroon Estates">
-            <asp:Image ID="imglogo" runat="server" Style="margin: 0px; margin-left: -10px; border-radius: 0px; height: 66px !important; margin-top: -5px !important; width: 108px;" ImageUrl="~/wwwroot/THEME_TIBBIT\images\LOGOS/logo.png" />
+            <asp:Image ID="imglogo" runat="server" CssClass="app-logo" ImageUrl="~/wwwroot/THEME_TIBBIT\images\LOGOS/logo.png" />
         </a>
     </div>
     
     <!-- Middle Company Name -->
     <div class="col-lg-6 col-md-4 col-sm-6" style="display: flex; align-items: center; justify-content: center; height: 60px;">
         <asp:Label ID="lblCompanyNameCenter" runat="server" Text="" 
-Style="color: white !important; font-weight: bold; font-size: 31px; text-align: center; margin: 0;"></asp:Label>
+CssClass="app-title"></asp:Label>
     </div>
     
     <div class="col-lg-1 col-md-2 col-sm-1">

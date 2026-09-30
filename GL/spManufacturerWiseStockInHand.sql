@@ -35,8 +35,11 @@ BEGIN
             CAST(ISNULL(i.Sale_Rate, 0) AS decimal(19,4)) AS Sale_Price,
             CAST(ISNULL(i.UOM_Qty, 1) AS decimal(19,4)) AS Pack_Unit,
             CAST(ISNULL(s.Stock_Value, 0) AS decimal(19,4)) AS Stock_Value,
-            COALESCE(NULLIF(LTRIM(RTRIM(dbo.GetDataValueName('Manufacture Company', i.Manufacturer_Name))), ''),
-                     NULLIF(LTRIM(RTRIM(i.Manufacturer_Name)), ''), 'Unassigned') AS Manufacturer_Name
+            COALESCE(NULLIF(LTRIM(RTRIM(dbo.GetDataValueName('Manufacture Company', NULLIF(NULLIF(LTRIM(RTRIM(i.Manufacture_Company)), ''), '0')))), ''),
+                     NULLIF(NULLIF(LTRIM(RTRIM(i.Manufacture_Company)), ''), '0'),
+                     NULLIF(LTRIM(RTRIM(dbo.GetDataValueName('Manufacture Company', NULLIF(NULLIF(LTRIM(RTRIM(i.Manufacturer_Name)), ''), '0')))), ''),
+                     NULLIF(NULLIF(LTRIM(RTRIM(i.Manufacturer_Name)), ''), '0'),
+                     'Unassigned') AS Manufacturer_Name
         FROM dbo.INV_Items AS i
         INNER JOIN StockData AS s ON s.Item_ID = i.Item_ID
         WHERE ISNULL(i.IsPharmacyItem, 0) = 1
@@ -50,9 +53,13 @@ BEGIN
                OR i.Item_Code LIKE '%' + LTRIM(RTRIM(@ItemName)) + '%')
           AND (NULLIF(LTRIM(RTRIM(@Manufacturer)), '') IS NULL
                OR LTRIM(RTRIM(@Manufacturer)) IN ('0', 'All')
-               OR i.Manufacturer_Name = LTRIM(RTRIM(@Manufacturer))
-               OR dbo.GetDataValueName('Manufacture Company', i.Manufacturer_Name) = LTRIM(RTRIM(@Manufacturer))
-               OR (LTRIM(RTRIM(@Manufacturer)) = 'Unassigned' AND NULLIF(LTRIM(RTRIM(i.Manufacturer_Name)), '') IS NULL))
+               OR LTRIM(RTRIM(@Manufacturer)) = NULLIF(NULLIF(LTRIM(RTRIM(i.Manufacture_Company)), ''), '0')
+               OR LTRIM(RTRIM(@Manufacturer)) = NULLIF(NULLIF(LTRIM(RTRIM(i.Manufacturer_Name)), ''), '0')
+               OR LTRIM(RTRIM(@Manufacturer)) = NULLIF(LTRIM(RTRIM(dbo.GetDataValueName('Manufacture Company', NULLIF(NULLIF(LTRIM(RTRIM(i.Manufacture_Company)), ''), '0')))), '')
+               OR LTRIM(RTRIM(@Manufacturer)) = NULLIF(LTRIM(RTRIM(dbo.GetDataValueName('Manufacture Company', NULLIF(NULLIF(LTRIM(RTRIM(i.Manufacturer_Name)), ''), '0')))), '')
+               OR (LTRIM(RTRIM(@Manufacturer)) = 'Unassigned'
+                   AND NULLIF(NULLIF(LTRIM(RTRIM(i.Manufacture_Company)), ''), '0') IS NULL
+                   AND NULLIF(NULLIF(LTRIM(RTRIM(i.Manufacturer_Name)), ''), '0') IS NULL))
     )
     SELECT
         ROW_NUMBER() OVER (ORDER BY Manufacturer_Name, Item_Name, Alias_Name) AS Serial_No,

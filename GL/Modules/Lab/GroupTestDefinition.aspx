@@ -311,6 +311,8 @@
                             <option value="15">15-MRI Radiology Report</option>
                             <option value="16">16-ECG Cardiology Report</option>
                             <option value="17">17-BioFire BioFire Test</option>
+                            <option value="18">18-Diagnostic Blood Tests</option>
+
                         </select>
                     </div>
                     <div class="col-md-2 col-lg-2">

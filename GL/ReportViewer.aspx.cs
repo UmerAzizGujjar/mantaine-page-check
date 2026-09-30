@@ -6948,6 +6948,11 @@ namespace PMS
                     reportPath += "LabRadiology/rptLabTestResultQ_BioFire.rpt";
 
                 }
+                else if (reportColumns == 18)
+                {
+                    reportPath += "LabRadiology/rptLabBloodTestDiagnostic.rpt";
+
+                }
                 rd.Load(reportPath);
                 rd.SummaryInfo.ReportTitle = reportTitle;
                 string list = string.Empty;
