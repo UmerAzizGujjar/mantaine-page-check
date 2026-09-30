@@ -250,12 +250,12 @@ SELECT
                 var tFunnel = Task.Run(() =>
                 {
                     var row = SqlRow(@"
-SELECT
-    SUM(CASE WHEN Status = 'Visited' THEN 1 ELSE 0 END) AS Visited,
-    SUM(CASE WHEN Status = 'Booked' AND ISNULL(cancelAppointment,0) = 0 THEN 1 ELSE 0 END) AS NoShow,
-    SUM(CASE WHEN cancelAppointment = 1 THEN 1 ELSE 0 END) AS Cancelled
-FROM Appointment_Form
-WHERE App_Date >= @s AND App_Date < @e", conn, s, eNext);
+                            SELECT
+                                SUM(CASE WHEN Status = 'Visited' THEN 1 ELSE 0 END) AS Visited,
+                                SUM(CASE WHEN Status = 'Booked' AND ISNULL(cancelAppointment,0) = 0 THEN 1 ELSE 0 END) AS NoShow,
+                                SUM(CASE WHEN cancelAppointment = 1 THEN 1 ELSE 0 END) AS Cancelled
+                            FROM Appointment_Form
+                            WHERE App_Date >= @s AND App_Date < @e", conn, s, eNext);
                     return new
                     {
                         visited = row.Length > 0 ? ToInt(row[0]) : 0,
@@ -271,12 +271,12 @@ WHERE App_Date >= @s AND App_Date < @e", conn, s, eNext);
                     {
                         PrepDb(db);
                         const string specialistSql = @"
-SELECT a.Consultant_ID AS [Key],
-       COUNT(*) AS Appts,
-       SUM(CASE WHEN a.Status = 'Visited' THEN 1 ELSE 0 END) AS Visited
-FROM Appointment_Form a
-WHERE a.App_Date >= @s AND a.App_Date < @e AND a.Consultant_ID IS NOT NULL
-GROUP BY a.Consultant_ID";
+                                SELECT a.Consultant_ID AS [Key],
+                                       COUNT(*) AS Appts,
+                                       SUM(CASE WHEN a.Status = 'Visited' THEN 1 ELSE 0 END) AS Visited
+                                FROM Appointment_Form a
+                                WHERE a.App_Date >= @s AND a.App_Date < @e AND a.Consultant_ID IS NOT NULL
+                                GROUP BY a.Consultant_ID";
 
                         DateTime monthStart = new DateTime(s.Year, s.Month, 1);
                         DateTime monthEnd = monthStart.AddMonths(1);
@@ -285,7 +285,7 @@ GROUP BY a.Consultant_ID";
                         var specialistLm = SqlGroup(specialistSql, db.Connection.ConnectionString, lastMonthStart, lastMonthEnd).ToDictionary(x => x.Key, x => ToInt(x.Value[0]));
                         var specialistLC = SqlGroup(specialistSql, db.Connection.ConnectionString, monthStart, monthEnd).ToDictionary(x => x.Key, x => ToInt(x.Value[0]));
 
-                        var doctors_ = db.HR_Employees.Where(emp => emp.IsDoctor == true).ToList();
+                        var doctors_ = db.HR_Employees.Where(emp => emp.IsDoctor == true && emp.Patient_Type == "02").ToList();
                         CloseDb(db);
                         return doctors_.Select(emp =>
                         {
@@ -314,21 +314,21 @@ GROUP BY a.Consultant_ID";
                 var tWalkIn = Task.Run(() =>
                 {
                     const string walkInOpSql = @"
-SELECT op.Doctor_ID AS [Key], COUNT(*) AS Cnt
-FROM Patients p
-INNER JOIN Out_Patient op ON p.Patient_ID = op.Patient_ID
-WHERE p.Created_Time >= @s AND p.Created_Time < @e
-  AND (p.filter_clinic = '001' OR p.filter_clinic = '002' OR p.filter_clinic = '003')
-  AND op.Doctor_ID IS NOT NULL AND op.Doctor_ID != ''
-GROUP BY op.Doctor_ID";
-                    const string walkInEmSql = @"
-SELECT ep.Doctor AS [Key], COUNT(*) AS Cnt
-FROM Patients p
-INNER JOIN Emergency_Patient ep ON p.Patient_ID = ep.Patient_ID
-WHERE p.Created_Time >= @s AND p.Created_Time < @e
-  AND (p.filter_clinic = '001' OR p.filter_clinic = '002' OR p.filter_clinic = '003')
-  AND ep.Doctor IS NOT NULL AND ep.Doctor != ''
-GROUP BY ep.Doctor";
+                            SELECT op.Doctor_ID AS [Key], COUNT(*) AS Cnt
+                            FROM Patients p
+                            INNER JOIN Out_Patient op ON p.Patient_ID = op.Patient_ID
+                            WHERE p.Created_Time >= @s AND p.Created_Time < @e
+                              AND (p.filter_clinic = '001' OR p.filter_clinic = '002' OR p.filter_clinic = '003')
+                              AND op.Doctor_ID IS NOT NULL AND op.Doctor_ID != ''
+                            GROUP BY op.Doctor_ID";
+                            const string walkInEmSql = @"
+                            SELECT ep.Doctor AS [Key], COUNT(*) AS Cnt
+                            FROM Patients p
+                            INNER JOIN Emergency_Patient ep ON p.Patient_ID = ep.Patient_ID
+                            WHERE p.Created_Time >= @s AND p.Created_Time < @e
+                              AND (p.filter_clinic = '001' OR p.filter_clinic = '002' OR p.filter_clinic = '003')
+                              AND ep.Doctor IS NOT NULL AND ep.Doctor != ''
+                            GROUP BY ep.Doctor";
 
                     var t1 = Task.Run(() => SqlGroup(walkInOpSql, conn, s, eNext).ToDictionary(x => x.Key, x => ToInt(x.Value[0])));
                     var t2 = Task.Run(() => SqlGroup(walkInEmSql, conn, s, eNext).ToDictionary(x => x.Key, x => ToInt(x.Value[0])));
@@ -340,7 +340,7 @@ GROUP BY ep.Doctor";
                     using (DataBaseDataContext db = new DataBaseDataContext())
                     {
                         PrepDb(db);
-                        var doctors_ = db.HR_Employees.Where(emp => emp.IsDoctor == true).ToList();
+                        var doctors_ = db.HR_Employees.Where(emp => emp.IsDoctor == true && emp.Patient_Type =="01").ToList();
                         CloseDb(db);
                         return doctors_.Select(emp =>
                         {
@@ -369,7 +369,7 @@ GROUP BY ep.Doctor";
                         var conn2 = db.Connection.ConnectionString;
                         var specialistPatients = db.Patients.Where(p => p.Patient_Type == "02" && p.Created_Time >= s && p.Created_Time <= e).ToList();
                         decimal specialistGross = specialistPatients.Sum(p => p.Actual_amount ?? 0);
-                        decimal specialistDiscount = specialistPatients.Sum(p => p.discount_amt ?? 0);
+                        decimal specialistDiscount = specialistPatients.Sum(p => ((p.discount_amt/100) * p.Actual_amount) ?? 0);
                         var specialistPatList = specialistPatients.Select(p => p.Patient_ID).ToList();
 
                         decimal specialistRefund = 0;
@@ -384,30 +384,47 @@ GROUP BY ep.Doctor";
                         }
                         decimal specialistNet = specialistGross - specialistDiscount - specialistRefund;
 
+                        var GernalPatients = db.Patients.Where(p => p.Patient_Type == "01" && p.Created_Time >= s && p.Created_Time <= e).ToList();
+                        decimal GernalGross = specialistPatients.Sum(p => p.Actual_amount ?? 0);
+                        decimal GernalDiscount = specialistPatients.Sum(p => ((p.discount_amt/100) * p.Actual_amount) ?? 0);
+                        var GernalPatList = specialistPatients.Select(p => p.Patient_ID).ToList();
+
+                        decimal GernalRefund = 0;
+                        if (GernalPatList.Count > 0)
+                        {
+                            GernalRefund = db.OPD_Refunds
+                                .Where(od => od.Refund_Date >= s && od.Refund_Date <= e
+                                          && (od.isCancelled == null || od.isCancelled == false))
+                                .ToList()
+                                .Where(od => GernalPatList.Contains(od.pat_id))
+                                .Sum(od => (od.Hospital_Refund ?? 0) + (od.Doctor_Refund ?? 0));
+                        }
+                        decimal GernalNet = GernalGross - GernalDiscount - GernalRefund;
+
                         var grossRow = SqlGroup(@"
-SELECT d.Item_Type AS [Key],
-       SUM(ISNULL(d.Amount,0)) AS Amt,
-       SUM(ISNULL(d.Discount_Amount,0)) AS Disc
-FROM Ar_Billings b
-INNER JOIN Ar_Billing_Details d ON b.Bill_ID = d.Bill_ID
-WHERE b.Creation_Date >= @s AND b.Creation_Date <= @e
-  AND (d.Item_Type = 'Test' OR d.Item_Type = 'Medicine')
-GROUP BY d.Item_Type", conn2, s, e).ToDictionary(x => x.Key, x => new { amt = ToDecimal(x.Value[0]), disc = ToDecimal(x.Value[1]) });
+                                SELECT d.Item_Type AS [Key],
+                                       SUM(ISNULL(d.Amount,0)) AS Amt,
+                                       SUM(ISNULL(d.Discount_Amount,0)) AS Disc
+                                FROM Ar_Billings b
+                                INNER JOIN Ar_Billing_Details d ON b.Bill_ID = d.Bill_ID
+                                WHERE b.Creation_Date >= @s AND b.Creation_Date <= @e
+                                  AND (d.Item_Type = 'Test' OR d.Item_Type = 'Medicine')
+                                GROUP BY d.Item_Type", conn2, s, e).ToDictionary(x => x.Key, x => new { amt = ToDecimal(x.Value[0]), disc = ToDecimal(x.Value[1]) });
 
                         var refundRow = SqlGroup(@"
-SELECT d.Item_Type AS [Key],
-       SUM(ISNULL(rds.Doctor_Refund,0) + ISNULL(rds.Hospital_Refund,0)) AS Amt
-FROM Refund_Detail_Services rds
-INNER JOIN Refund r ON r.Refund_ID = rds.Refund_ID
-INNER JOIN Ar_Billing_Details d ON d.Bill_Details_ID = rds.Bill_Detail_ID
-INNER JOIN Ar_Billings b ON b.Bill_ID = d.Bill_ID
-WHERE r.Creation_Date >= @s AND r.Creation_Date <= @e
-  AND (r.isCancelled IS NULL OR r.isCancelled = 0)
-  AND (rds.isCancelled IS NULL OR rds.isCancelled = 0)
-  AND rds.Bill_Detail_ID IS NOT NULL AND rds.Refund_ID IS NOT NULL
-  AND (d.Item_Type = 'Test' OR d.Item_Type = 'Medicine')
-  AND b.Creation_Date >= @s AND b.Creation_Date <= @e
-GROUP BY d.Item_Type", conn2, s, e).ToDictionary(x => x.Key, x => ToDecimal(x.Value[0]));
+                                SELECT d.Item_Type AS [Key],
+                                       SUM(ISNULL(rds.Doctor_Refund,0) + ISNULL(rds.Hospital_Refund,0)) AS Amt
+                                FROM Refund_Detail_Services rds
+                                INNER JOIN Refund r ON r.Refund_ID = rds.Refund_ID
+                                INNER JOIN Ar_Billing_Details d ON d.Bill_Details_ID = rds.Bill_Detail_ID
+                                INNER JOIN Ar_Billings b ON b.Bill_ID = d.Bill_ID
+                                WHERE r.Creation_Date >= @s AND r.Creation_Date <= @e
+                                  AND (r.isCancelled IS NULL OR r.isCancelled = 0)
+                                  AND (rds.isCancelled IS NULL OR rds.isCancelled = 0)
+                                  AND rds.Bill_Detail_ID IS NOT NULL AND rds.Refund_ID IS NOT NULL
+                                  AND (d.Item_Type = 'Test' OR d.Item_Type = 'Medicine')
+                                  AND b.Creation_Date >= @s AND b.Creation_Date <= @e
+                                GROUP BY d.Item_Type", conn2, s, e).ToDictionary(x => x.Key, x => ToDecimal(x.Value[0]));
 
                         decimal diagnosticsGross = grossRow.ContainsKey("Test") ? grossRow["Test"].amt : 0;
                         decimal diagnosticsDiscount = grossRow.ContainsKey("Test") ? grossRow["Test"].disc : 0;
@@ -422,6 +439,7 @@ GROUP BY d.Item_Type", conn2, s, e).ToDictionary(x => x.Key, x => ToDecimal(x.Va
                         return new[]
                         {
                             new { category = "Specialist Consultation", grossAmount = (int)specialistGross, discount = (int)specialistDiscount, refund = (int)specialistRefund, netCollection = (int)specialistNet },
+                            new { category = "General Consultation", grossAmount = (int)GernalGross, discount = (int)GernalDiscount, refund = (int)GernalRefund, netCollection = (int)GernalNet },
                             new { category = "Diagnostics & Labs", grossAmount = (int)diagnosticsGross, discount = (int)diagnosticsDiscount, refund = (int)diagnosticsRefund, netCollection = (int)diagnosticsNet },
                             new { category = "Pharmacy Dispensing", grossAmount = (int)pharmacyGross, discount = (int)pharmacyDiscount, refund = (int)pharmacyRefund, netCollection = (int)pharmacyNet }
                         };
