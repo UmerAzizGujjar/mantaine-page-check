@@ -143,8 +143,10 @@ namespace PMS.Modules.Administrator
                 double daySpan = Math.Max(1, (e.Date - s.Date).TotalDays + 1);
                 DateTime lastMonthStart = s.AddMonths(-1);
                 DateTime lastMonthEnd = s;
-                DateTime ys = DateTime.Today.AddDays(-1);
-                DateTime ye = DateTime.Today.AddTicks(-1);
+                //DateTime ys = DateTime.Today.AddDays(-1);
+                //DateTime ye = DateTime.Today.AddTicks(-1);
+                DateTime ys = s.AddDays(-1);
+                DateTime ye = s.AddTicks(-1);
 
                 string conn;
                 using (var db0 = new DataBaseDataContext()) { conn = db0.Connection.ConnectionString; }
@@ -155,26 +157,34 @@ namespace PMS.Modules.Administrator
                     object[] row;
                     using (var cmd = NoLockCmd(@"
 SELECT
-  (SELECT COUNT(*) FROM Patients pt JOIN Reg_patient rp ON pt.Reg_PatId=rp.pat_id WHERE rp.Created_time>=@s1 AND rp.Created_time<=@e1)
+  (SELECT COUNT(*) FROM Patients pt  WHERE pt.Created_Time>=@s1 AND pt.Created_time<=@e1)
+   +(SELECT COUNT(*) FROM Emergency_Patient ep  WHERE ep.Created_time>=@s1 AND ep.Created_time<=@e1)
+   +(SELECT COUNT(*) FROM In_Patient ipd  WHERE ipd.Created_time>=@s1 AND ipd.Created_time<=@e1) AS TotalVisited,
+     (SELECT COUNT(*) FROM Patients pt WHERE pt.Created_time>=@s2 AND pt.Created_time<=@e2)
+   +(SELECT COUNT(*) FROM Emergency_Patient ep WHERE ep.Created_time>=@s2 AND ep.Created_time<=@e2)
+   +(SELECT COUNT(*) FROM In_Patient ipd WHERE ipd.Created_time>=@s2 AND ipd.Created_time<=@e2) AS TotalVisitedY,
+    (SELECT COUNT(*) FROM Patients pt JOIN Reg_patient rp ON pt.Reg_PatId=rp.pat_id WHERE rp.Created_time>=@s1 AND rp.Created_time<=@e1)
    +(SELECT COUNT(*) FROM Emergency_Patient ep JOIN Reg_patient rp ON ep.Patient_ID=rp.pat_id WHERE rp.Created_time>=@s1 AND rp.Created_time<=@e1)
-   +(SELECT COUNT(*) FROM In_Patient ip JOIN Reg_patient rp ON ip.Patient_ID=rp.pat_id WHERE rp.Created_time>=@s1 AND rp.Created_time<=@e1) AS TotalVisited,
-  (SELECT COUNT(*) FROM Patients pt JOIN Reg_patient rp ON pt.Reg_PatId=rp.pat_id WHERE rp.Created_time>=@s2 AND rp.Created_time<=@e2)
+   +(SELECT COUNT(*) FROM In_Patient ip JOIN Reg_patient rp ON ip.Patient_ID=rp.pat_id WHERE rp.Created_time>=@s1 AND rp.Created_time<=@e1) AS WalkIn,
+      (SELECT COUNT(*) FROM Patients pt JOIN Reg_patient rp ON pt.Reg_PatId=rp.pat_id WHERE rp.Created_time>=@s2 AND rp.Created_time<=@e2)
    +(SELECT COUNT(*) FROM Emergency_Patient ep JOIN Reg_patient rp ON ep.Patient_ID=rp.pat_id WHERE rp.Created_time>=@s2 AND rp.Created_time<=@e2)
-   +(SELECT COUNT(*) FROM In_Patient ip JOIN Reg_patient rp ON ip.Patient_ID=rp.pat_id WHERE rp.Created_time>=@s2 AND rp.Created_time<=@e2) AS TotalVisitedY,
-  (SELECT COUNT(*) FROM Ar_Billings b WHERE b.Creation_Date>=@s1 AND b.Creation_Date<=@e1 AND (b.IsPharmacy IS NULL OR b.IsPharmacy=0) AND b.Main_Department='01' AND b.Opd_Id=0) AS WalkIn,
-  (SELECT COUNT(*) FROM Ar_Billings b WHERE b.Creation_Date>=@s2 AND b.Creation_Date<=@e2 AND (b.IsPharmacy IS NULL OR b.IsPharmacy=0) AND b.Main_Department='01' AND b.Opd_Id=0) AS WalkInY,
+   +(SELECT COUNT(*) FROM In_Patient ip JOIN Reg_patient rp ON ip.Patient_ID=rp.pat_id WHERE rp.Created_time>=@s2 AND rp.Created_time<=@e2) AS WalkInY,
   (SELECT COUNT(*) FROM Appointment_Form WHERE App_Date>=@s1 AND App_Date<@a1) AS Appts,
   (SELECT COUNT(*) FROM Appointment_Form WHERE App_Date>=@s2 AND App_Date<@a2) AS ApptsY,
-  (SELECT COUNT(*) FROM Appointment_Form WHERE App_Date>=@s1 AND App_Date<@a1 AND IS_CANCEL=1) AS Cancelled,
-  (SELECT COUNT(*) FROM Appointment_Form WHERE App_Date>=@s2 AND App_Date<@a2 AND IS_CANCEL=1) AS CancelledY,
-  (SELECT COUNT(*) FROM Patients p JOIN Reg_patient rp ON p.Reg_PatId=rp.pat_id WHERE rp.Created_time>=@s1 AND rp.Created_time<=@e1 AND p.Patient_Type='02') AS Checkups,
-  (SELECT COUNT(*) FROM Patients p JOIN Reg_patient rp ON p.Reg_PatId=rp.pat_id WHERE rp.Created_time>=@s2 AND rp.Created_time<=@e2 AND p.Patient_Type='02') AS CheckupsY,
-  (SELECT ISNULL(SUM(p.Receipt_Amount),0) FROM Patients p JOIN Reg_patient rp ON p.Reg_PatId=rp.pat_id WHERE rp.Created_time>=@s1 AND rp.Created_time<=@e1) AS Receipts,
-  (SELECT ISNULL(SUM(p.Receipt_Amount),0) FROM Patients p JOIN Reg_patient rp ON p.Reg_PatId=rp.pat_id WHERE rp.Created_time>=@s2 AND rp.Created_time<=@e2) AS ReceiptsY,
+  (SELECT COUNT(*) FROM Appointment_Form WHERE App_Date>=@s1 AND App_Date<@a1 AND cancelAppointment=1) AS Cancelled,
+  (SELECT COUNT(*) FROM Appointment_Form WHERE App_Date>=@s2 AND App_Date<@a2 AND cancelAppointment=1) AS CancelledY,
+  (SELECT COUNT(*) FROM Patients p  WHERE p.Created_time>=@s1 AND p.Created_time<=@e1 AND p.Patient_Type='02' And appointment_id is not Null) AS Checkups,
+  (SELECT COUNT(*) FROM Patients p  WHERE p.Created_time>=@s2 AND p.Created_time<=@e2 AND p.Patient_Type='02' And appointment_id is not Null) AS CheckupsY,
+  (SELECT ISNULL(SUM(p.Receipt_Amount),0) FROM Patients p  WHERE p.Created_time>=@s1 AND p.Created_time<=@e1)
++(Select ISNULL(Sum(ep.Receipt_Amount),0) From Emergency ep where ep.Created_Time >= @s1 AND ep.Created_Time <= @e1)
++(Select ISNULL(Sum(ep.Admission_Fees),0) From In_Patient ep where ep.Created_Time >= @s1 AND ep.Created_Time <= @e1) AS Receipts,
+  (SELECT ISNULL(SUM(p.Receipt_Amount),0) FROM Patients p  WHERE p.Created_time>=@s2 AND p.Created_time<=@e2)
++(Select ISNULL(Sum(ep.Receipt_Amount),0) From Emergency ep where ep.Created_Time >= @s2 AND ep.Created_Time <= @e2)
++(Select ISNULL(Sum(ep.Admission_Fees),0) From In_Patient ep where ep.Created_Time >= @s2 AND ep.Created_Time <= @e2) AS ReceiptsY,
   (SELECT ISNULL(SUM(b.Received_Amount),0) FROM Ar_Billings b WHERE b.Creation_Date>=@s1 AND b.Creation_Date<=@e1) AS Billing,
   (SELECT ISNULL(SUM(b.Received_Amount),0) FROM Ar_Billings b WHERE b.Creation_Date>=@s2 AND b.Creation_Date<=@e2) AS BillingY,
-  (SELECT ISNULL(SUM(rp.Card_fee),0) FROM Reg_patient rp WHERE rp.Created_time>=@s1 AND rp.Created_time<=@e1) AS CardFees,
-  (SELECT ISNULL(SUM(rp.Card_fee),0) FROM Reg_patient rp WHERE rp.Created_time>=@s2 AND rp.Created_time<=@e2) AS CardFeesY", conn))
+  (SELECT ISNULL(SUM(rp.Card_fee),0) FROM Reg_patient rp WHERE rp.charge_time>=@s1 AND rp.charge_time<=@e1) AS CardFees,
+  (SELECT ISNULL(SUM(rp.Card_fee),0) FROM Reg_patient rp WHERE rp.charge_time>=@s2 AND rp.charge_time<=@e2) AS CardFeesY", conn))
                     {
                         cmd.Parameters.AddWithValue("@s1", s);
                         cmd.Parameters.AddWithValue("@e1", e);
@@ -207,8 +217,8 @@ SELECT
                     decimal cardFees = row.Length > 14 ? ToDecimal(row[14]) : 0;
                     decimal cardFeesY = row.Length > 15 ? ToDecimal(row[15]) : 0;
 
-                    decimal revenueYield = patientReceipts + billingReceived + cardFees;
-                    decimal revenueYieldY = patientReceiptsY + billingReceivedY + cardFeesY;
+                    decimal revenueYield = patientReceipts  + cardFees;
+                    decimal revenueYieldY = patientReceiptsY  + cardFeesY;
                     double cancellationRate = totalAppointments > 0 ? Math.Round((double)cancelledToday / totalAppointments * 100, 1) : 0;
                     double cancellationRateY = totalAppointmentsY > 0 ? Math.Round((double)cancelledY / totalAppointmentsY * 100, 1) : 0;
 
@@ -242,8 +252,8 @@ SELECT
                     var row = SqlRow(@"
 SELECT
     SUM(CASE WHEN Status = 'Visited' THEN 1 ELSE 0 END) AS Visited,
-    SUM(CASE WHEN Status = 'Booked' AND IS_CANCEL = 0 THEN 1 ELSE 0 END) AS NoShow,
-    SUM(CASE WHEN IS_CANCEL = 1 THEN 1 ELSE 0 END) AS Cancelled
+    SUM(CASE WHEN Status = 'Booked' AND ISNULL(cancelAppointment,0) = 0 THEN 1 ELSE 0 END) AS NoShow,
+    SUM(CASE WHEN cancelAppointment = 1 THEN 1 ELSE 0 END) AS Cancelled
 FROM Appointment_Form
 WHERE App_Date >= @s AND App_Date < @e", conn, s, eNext);
                     return new
@@ -267,8 +277,13 @@ SELECT a.Consultant_ID AS [Key],
 FROM Appointment_Form a
 WHERE a.App_Date >= @s AND a.App_Date < @e AND a.Consultant_ID IS NOT NULL
 GROUP BY a.Consultant_ID";
+
+                        DateTime monthStart = new DateTime(s.Year, s.Month, 1);
+                        DateTime monthEnd = monthStart.AddMonths(1);
+
                         var specialistCur = SqlGroup(specialistSql, db.Connection.ConnectionString, s, eNext).ToDictionary(x => x.Key, x => new { appts = ToInt(x.Value[0]), visited = ToInt(x.Value[1]) });
                         var specialistLm = SqlGroup(specialistSql, db.Connection.ConnectionString, lastMonthStart, lastMonthEnd).ToDictionary(x => x.Key, x => ToInt(x.Value[0]));
+                        var specialistLC = SqlGroup(specialistSql, db.Connection.ConnectionString, monthStart, monthEnd).ToDictionary(x => x.Key, x => ToInt(x.Value[0]));
 
                         var doctors_ = db.HR_Employees.Where(emp => emp.IsDoctor == true).ToList();
                         CloseDb(db);
@@ -279,8 +294,9 @@ GROUP BY a.Consultant_ID";
                             int appointments = cur != null ? cur.appts : 0;
                             int patientsSeen = cur != null ? cur.visited : 0;
                             int lastMonth = specialistLm.ContainsKey(empId) ? specialistLm[empId] : 0;
+                            int CurrentMonth = specialistLC.ContainsKey(empId) ? specialistLC[empId] : 0;
                             double avgPerDay = Math.Round((double)appointments / daySpan, 1);
-                            int growth = lastMonth > 0 ? (int)Math.Round(((double)appointments - lastMonth) / lastMonth * 100) : 0;
+                            int growth = lastMonth > 0 ? (int)Math.Round(((double)CurrentMonth - lastMonth) / lastMonth * 100) : 0;
                             return new
                             {
                                 name = emp.Emp_Name ?? "Unknown",
