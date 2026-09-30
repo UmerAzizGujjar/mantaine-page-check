@@ -186,6 +186,19 @@
             });
         }
 
+        function showLoader(title, text) {
+            Swal.fire({
+                title: title,
+                text: text,
+                allowOutsideClick: false,
+                allowEscapeKey: false,
+                showConfirmButton: false,
+                didOpen: function () {
+                    Swal.showLoading();
+                }
+            });
+        }
+
         $(document).ready(function () {
             $('#txtKey').on('keypress', function (e) {
                 if (e.which === 13) {
@@ -205,6 +218,8 @@
 
             $('#btnSearch').prop('disabled', true).val('Searching...');
 
+            showLoader('Searching...', 'Fetching patient information, please wait.');
+
             $.ajax({
                 type: "POST",
                 url: "EMRLookup.aspx/GetPatientLookup",
@@ -212,6 +227,8 @@
                 contentType: "application/json; charset=utf-8",
                 dataType: "json",
                 success: function (response) {
+                    Swal.close();
+
                     var res = response.d || {};
                     var rows = res.Patient || [];
 
@@ -229,6 +246,7 @@
                     }
                 },
                 error: function () {
+                    Swal.close();
                     swalMsg('error', 'Error!', 'Failed to fetch patient information from the client database.');
                 },
                 complete: function () {
@@ -240,6 +258,8 @@
         function TestConnection() {
             $('#btnTest').prop('disabled', true).val('Testing...');
 
+            showLoader('Testing...', 'Checking client Oracle database connection.');
+
             $.ajax({
                 type: "POST",
                 url: "EMRLookup.aspx/TestConnection",
@@ -247,6 +267,8 @@
                 contentType: "application/json; charset=utf-8",
                 dataType: "json",
                 success: function (response) {
+                    Swal.close();
+
                     var res = response.d;
                     if (res === 'success') {
                         swalMsg('success', 'Connected', 'Client Oracle database connection successful.');
@@ -265,6 +287,7 @@
                     }
                 },
                 error: function () {
+                    Swal.close();
                     swalMsg('error', 'Error!', 'Connection test request failed.');
                 },
                 complete: function () {
