@@ -133,7 +133,7 @@ namespace PMS
 
 
         [WebMethod]
-        public static object ViewList(int draw, int start, int length, string sortColumn, string sortColumnDirection, string searchValue)
+        public static object ViewList(int draw, int start, int length, string sortColumn, string sortColumnDirection, string searchValue, string fromDate, string toDate)
         {
             try
             {
@@ -188,7 +188,20 @@ namespace PMS
                         );
                     }
 
-                    // Count after search filter
+                    // Start / End date filter on Bill Date (yyyy-MM-dd). Blank = no filter (all data).
+                    DateTime fromDt, toDt;
+                    if (DateTime.TryParseExact(fromDate, "yyyy-MM-dd", System.Globalization.CultureInfo.InvariantCulture, System.Globalization.DateTimeStyles.None, out fromDt))
+                    {
+                        DateTime fromDateValue = fromDt.Date;
+                        Billing = Billing.Where(x => x.Bill_Date >= fromDateValue);
+                    }
+                    if (DateTime.TryParseExact(toDate, "yyyy-MM-dd", System.Globalization.CultureInfo.InvariantCulture, System.Globalization.DateTimeStyles.None, out toDt))
+                    {
+                        DateTime toDateExclusive = toDt.Date.AddDays(1);
+                        Billing = Billing.Where(x => x.Bill_Date < toDateExclusive);
+                    }
+
+                    // Count after search + date filters
                     var FilteredCount = Billing.Count();
 
                     // Apply sorting (you can extend this later for dynamic sortColumn)
