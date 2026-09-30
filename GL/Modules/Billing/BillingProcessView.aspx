@@ -430,7 +430,8 @@
                             length: data.length,
                             sortColumn: data.columns[data.order[0].column].name,
                             sortColumnDirection: data.order[0].dir,
-                            searchValue: data.search.value
+                            searchValue: data.search.value,
+                            mainDeptFilter: $('#ddlMainDeptFilter').val() || 'all'
                         }),
                         contentType: "application/json; charset=utf-8",
                         dataType: "json",
@@ -458,10 +459,11 @@
                             // date = moment(date).format('DD-MMM-YYYY');
                             date = moment(date).format('DD-MMM-YYYY hh:mm A');
                             return date;
-                        }, "width": "7%", "orderable": true
+                        }, "width": "8%", "orderable": true
                     },
                     { "data": "MrNo", "name": "MrNo", "width": "5%", "orderable": true },
                     { "data": "Full_Name", "width": "13%", "orderable": false },
+                    { "data": "Main_Department", "width": "5%", "orderable": false },
                     { "data": "Total_Amount", "width": "5%", "orderable": false },
                     { "data": "Discount_Percentage", "width": "3%", "orderable": false },
                     { "data": "Discount_Amount", "width": "5%", "orderable": false },
@@ -625,6 +627,27 @@
                     row.child('<div style="padding:20px;text-align:center;">Loading...</div>').show();
                     tr.addClass('shown');
                     LoadBillDetails(billId, row);
+                }
+            });
+
+            $.ajax({
+                type: "POST",
+                url: "BillingProcessView.aspx/GetMainDepartments",
+                contentType: "application/json; charset=utf-8",
+                dataType: "json",
+                success: function (response) {
+                    var list = JSON.parse(response.d);
+                    var $sel = $('#ddlMainDeptFilter');
+                    $.each(list, function (i, it) {
+                        $sel.append($('<option>').val(it.DataValue_Name).text(it.DataValue_Description));
+                    });
+                    $sel.select2({ width: '220px', placeholder: 'Select department' });
+                    $sel.on('change', function () {
+                        $('#tbloutPatients').DataTable().ajax.reload();
+                    });
+                },
+                error: function () {
+                    console.error("Failed to load main departments");
                 }
             });
         }
@@ -1186,6 +1209,14 @@
 
 </asp:Content>
 <asp:Content ID="Content2" ContentPlaceHolderID="MainContent" runat="server">
+    <div class="row" style="margin-bottom: 10px;">
+        <div class="col-lg-2">
+            <label style="margin-right: 8px; font-weight: 600;">Main Department:</label>
+            <select id="ddlMainDeptFilter" style="width: 220px;">
+                <option value="all">All</option>
+            </select>
+        </div>
+    </div>
     <div class="row">
         <div class="table-container">
             <table class="table table-hover table-striped table-bordered" id="tbloutPatients">
@@ -1197,6 +1228,7 @@
                         <th>Bill Date</th>
                         <th>MR No</th>
                         <th>Name</th>
+                        <th>Main Department</th>
                         <th>Total Amount</th>
                         <th>Discount Percentage</th>
                         <th>Discount Amount</th>

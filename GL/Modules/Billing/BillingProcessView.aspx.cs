@@ -133,7 +133,7 @@ namespace PMS
 
 
         [WebMethod]
-        public static object ViewList(int draw, int start, int length, string sortColumn, string sortColumnDirection, string searchValue)
+        public static object ViewList(int draw, int start, int length, string sortColumn, string sortColumnDirection, string searchValue, string mainDeptFilter)
         {
             try
             {
@@ -148,6 +148,7 @@ namespace PMS
                                    where (b.Total_Amount != null || b.Discount_Amount != null)
                                         && (b.IsPharmacy == null || b.IsPharmacy == false)
                                         && (b.IsCathLab == null || b.IsCathLab == false)
+                                        && (mainDeptFilter == null || mainDeptFilter == "" || mainDeptFilter == "all" || b.Main_Department == mainDeptFilter)
                                    select new
                                    {
                                        Bill_No = b.Bill_No,
@@ -166,11 +167,13 @@ namespace PMS
                                        Balance_Amount = b.Balance_Amount,
                                        MrNo = p.mr_no_sequence,
                                        Full_Name = p.Full_Name,
+                                       Main_Department = _dbContext.GetDataValueName("Mode Of Registration", b.Main_Department),
                                        Bill_ID = b.Bill_ID,
                                        In_Patient_ID = b.In_Patient_ID,
                                        Operator = u.UserName,
                                        isCancel = b.isCancel,
-                                       final_bill_ipd = b.final_bill_ipd
+                                       final_bill_ipd = b.final_bill_ipd,
+                                       
                                    };
 
                     // Total records that match base filters (not affected by search)
@@ -233,6 +236,7 @@ namespace PMS
                         x.Balance_Amount,
                         x.MrNo,
                         x.Full_Name,
+                        x.Main_Department,
                         x.Bill_ID,
                         x.Operator,
                         x.isCancel,
@@ -264,6 +268,20 @@ namespace PMS
             catch (Exception ex)
             {
                 throw new Exception("Error fetching patient list", ex);
+            }
+        }
+
+        [WebMethod]
+        public static string GetMainDepartments()
+        {
+            using (var db = new DataBaseDataContext())
+            {
+                var list = (from d in db.DataValues
+                            join v in db.ValueSets on d.ValueSet_ID equals v.ValueSet_ID
+                            where v.ValueSet_Name == "Mode Of Registration"
+                            select new { d.DataValue_Name, d.DataValue_Description }).ToList();
+
+                return new JavaScriptSerializer().Serialize(list);
             }
         }
 

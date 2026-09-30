@@ -527,6 +527,65 @@
                 }
             });
         }
+        function openFinalBillQueue() {
+            fillFinalBillPatientsList();
+            $('#finalBillQueueModal').modal('show');
+        }
+
+        function RefreshFinalBillQueue() {
+            $("#txtSearchFinalBill").val('');
+            fillFinalBillPatientsList();
+        }
+
+        function fillFinalBillPatientsList() {
+            var SearchString = $("#txtSearchFinalBill").val();
+            PageMethods.GetFinalBillPatients(SearchString, function (data) {
+                var parsedData = JSON.parse(data);
+                var rows = '';
+
+                $.each(parsedData, function (key, value) {
+                    var admissionDate = '';
+                    if (value.Admission_Date) {
+                        try {
+                            admissionDate = moment(new Date(parseInt(value.Admission_Date.substr(6)))).format('DD-MMM-YYYY');
+                        } catch (e) {
+                            admissionDate = '';
+                        }
+                    }
+
+                    rows += '<tr>' +
+                        '<td style="padding: 8px;">' + (value.MR_No || '') + '</td>' +
+                        '<td style="padding: 8px;">' + (value.Full_Name || '') + '</td>' +
+                        '<td style="padding: 8px;">' + (value.Age || '') + '</td>' +
+                        '<td style="padding: 8px;">' + (value.Doctor || '') + '</td>' +
+                        '<td style="padding: 8px;">' + (value.Department || '') + '</td>' +
+                        '<td style="padding: 8px;">' + (value.Ward_Name || '') + '</td>' +
+                        '<td style="padding: 8px;">' + (value.Bed_No || '') + '</td>' +
+                        '<td style="padding: 8px;">' + admissionDate + '</td>' +
+                        '<td style="text-align: center; width: 100px; padding: 8px;">' +
+                        '<a href="#" onclick="SelectFinalBill(\'' + (value.Bill_No || '') + '\');return false;" style="color: #28a745; font-size: 16px;" title="Select">' +
+                        '<i class="fa fa-pencil-square-o"></i></a>' +
+                        '</td>' +
+                        '</tr>';
+                });
+
+                $('#tblFinalBills tbody').html(rows);
+
+                if (parsedData.length === 0) {
+                    $('#tblFinalBills tbody').html('<tr><td colspan="9" style="text-align: center; padding: 20px;">No final bills found</td></tr>');
+                }
+            }, function (err) {
+                $('#tblFinalBills tbody').html('<tr><td colspan="9" style="text-align: center; padding: 20px; color: red;">Error loading data</td></tr>');
+            });
+        }
+
+        function SelectFinalBill(billNo) {
+            if (!billNo) return;
+            $('#txtBillNo').val(billNo);
+            $('#finalBillQueueModal').modal('hide');
+            GetPatientDetailByBill();
+        }
+
         var Account = '';
         function getAccounts() {
             $.ajax({
@@ -1176,6 +1235,9 @@
         <div class="col-lg-1 col-md-4 col-sm-6">
             <input type="button" value="Search" id="btnSearch" class="btn btn-primry"  onclick="GetPatientDetailByBill()" />
         </div>
+        <div class="col-lg-1 col-md-4 col-sm-6">
+            <input type="button" value="Queue" id="btnFinalBillQueue" class="btn btn-primry" onclick="openFinalBillQueue()" />
+        </div>
     </div>
         <div class="row">
             <div class="col-lg-3 col-md-4 col-sm-6">
@@ -1355,6 +1417,49 @@
             <input type="button" id="btnPrintVoucher2" class="btn btn-primry" value="Print Doctor Voucher" onclick="PrintDoctorVoucher();" />
             </div>
 
+        </div>
+    </div>
+
+    <div id="finalBillQueueModal" class="modal fade" data-backdrop="static" tabindex="-1" role="dialog">
+        <div class="modal-dialog modal-lg modal-dialog-centered modal-dialog-scrollable" role="document">
+            <div class="modal-content">
+                <div class="modal-body">
+                    <fieldset class="form-group">
+                        <div class="form-row">
+                            <div class="col-md-6">
+                                <label for="txtSearchFinalBill">Search Final Bills:</label>
+                                <input type="text" id="txtSearchFinalBill" class="form-control" onkeyup="fillFinalBillPatientsList();" autocomplete="off" placeholder="Enter MR No or Patient Name" />
+                            </div>
+                            <div class="col-lg-2 text-end" style="margin-top:28px !important;">
+                                <a onclick="RefreshFinalBillQueue()">
+                                    <i class="fa fa-refresh fa-2x"></i>
+                                </a>
+                            </div>
+                        </div>
+                    </fieldset>
+                    <div class="table-responsive previewTable" style="overflow:scroll;overflow-x: scroll;height: 433px;">
+                        <table class="table" id="tblFinalBills" style="overflow: scroll; height: auto;">
+                            <thead>
+                                <tr>
+                                    <th>MR No</th>
+                                    <th>Patient Name</th>
+                                    <th>Age</th>
+                                    <th>Doctor</th>
+                                    <th>Department</th>
+                                    <th>Ward</th>
+                                    <th>Bed</th>
+                                    <th>Admission Date</th>
+                                    <th>Select</th>
+                                </tr>
+                            </thead>
+                            <tbody></tbody>
+                        </table>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-gray" data-dismiss="modal">Close</button>
+                </div>
+            </div>
         </div>
     </div>
 </asp:Content>

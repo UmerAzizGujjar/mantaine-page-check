@@ -70,6 +70,70 @@ namespace PMS.Modules.Billing
             }
         }
         [WebMethod]
+        public static string GetFinalBillPatients(string SearchString)
+        {
+            using (DataBaseDataContext db = new DataBaseDataContext())
+            {
+                if (string.IsNullOrWhiteSpace(SearchString))
+                {
+                    SearchString = null;
+                }
+
+var query = from ip in db.In_Patients
+                            join r in db.Reg_patients on ip.Patient_ID equals r.pat_id
+                            where ip.Company_ID == AppConfig.Company_ID
+                                  && ip.Final_Bill == true
+                                  && (SearchString == null
+                                      || r.mr_no_sequence.Contains(SearchString)
+                                      || r.Full_Name.Contains(SearchString))
+                            orderby ip.Created_Time descending
+                            select new
+                            {
+                                In_Patient_ID = ip.In_Patient_ID,
+                                Reg_Patient_ID = r.pat_id,
+                                MR_No = r.mr_no_sequence,
+                                Full_Name = r.Full_Name,
+                                Age = r.Age_years,
+                                Gender = r.Gender,
+                                Doctor = (from d in db.HR_Employees
+                                          where d.Emp_ID == Convert.ToInt32(ip.Doctor)
+                                          select d.Emp_Name).FirstOrDefault() ?? "",
+                                Department = ip.Department,
+                                Ward_Name = (from w in db.Ward_Definitions
+                                             where w.Ward_ID == ip.Ward_ID
+                                             select w.Ward_Type).FirstOrDefault() ?? "",
+                                Bed_No = ip.Bed_No,
+                                Admission_Date = (System.DateTime?)ip.Admission_Date,
+                                Final_Bill_ID = (from b in db.Ar_Billings
+                                                 where b.In_Patient_ID == ip.In_Patient_ID
+                                                    && b.final_bill_ipd == true
+                                                    && (b.isCancel == null || b.isCancel == false)
+                                                 orderby b.Bill_ID descending
+                                                 select (int?)b.Bill_ID).FirstOrDefault(),
+                                Bill_No = (from b in db.Ar_Billings
+                                           where b.In_Patient_ID == ip.In_Patient_ID
+                                              && b.final_bill_ipd == true
+                                              && (b.isCancel == null || b.isCancel == false)
+                                           orderby b.Bill_ID descending
+                                           select b.Bill_No).FirstOrDefault()
+                            };
+
+                var list = query.ToList();
+
+                // Hide patients whose final bill share distribution is already done
+                var finalIds = list.Where(x => x.Final_Bill_ID != null)
+                                   .Select(x => x.Final_Bill_ID.Value).ToList();
+                var distributedIds = db.IPD_Distribution_Masters
+                                       .Where(d => d.Bill_Id != null && finalIds.Contains(d.Bill_Id.Value))
+                                       .Select(d => d.Bill_Id.Value).ToList();
+
+                var result = list.Where(x => x.Final_Bill_ID == null
+                                          || !distributedIds.Contains(x.Final_Bill_ID.Value)).ToList();
+
+                return (new JavaScriptSerializer()).Serialize(result);
+            }
+        }
+        [WebMethod]
         public static string GetDoctors()
         {
             DataBaseDataContext db = new DataBaseDataContext();
