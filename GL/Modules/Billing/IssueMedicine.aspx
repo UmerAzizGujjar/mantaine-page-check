@@ -519,6 +519,35 @@
         function lockPharmSave()   { window.__pharmSaving = true;  $('#btnSave, #SaveVal, #btnSaveSaleReturn').attr('disabled', true); }
         function unlockPharmSave() { window.__pharmSaving = false; $('#btnSave, #SaveVal, #btnSaveSaleReturn').attr('disabled', false); }
 
+        // Returns true when the same item + same batch already exists in tblDetails.
+        // Pass $excludeRow to ignore the row being edited.
+        function pharmItemBatchExists(itemId, batch, $excludeRow) {
+            var b = $.trim(batch == null ? '' : String(batch));
+            if (!itemId || b === '') return false;
+            var exists = false;
+            $('#tblDetails tbody tr').each(function () {
+                if ($excludeRow && this === $excludeRow[0]) return;
+                var exId = $(this).find('input[name="ItemID"]').val();
+                var exBatch = $.trim($(this).find('input[name="BatchNo"]').val() || '');
+                if (exId && String(exId) === String(itemId) && exBatch === b) {
+                    exists = true;
+                    return false;
+                }
+            });
+            return exists;
+        }
+
+        function pharmDuplicateBatchAlert() {
+            Swal.fire({
+                icon: 'error',
+                title: 'Error!',
+                text: 'This item with the same batch number already exists.',
+                showConfirmButton: false,
+                timer: 2000,
+                customClass: { popup: 'swal-big-popup', title: 'swal-big-title', htmlContainer: 'swal-big-text' }
+            });
+        }
+
         // Open pharmacy slip print in a NEW window.
         function DirectPrintPharmacySlip(billId) {
             if (!billId) return null;
@@ -2487,12 +2516,6 @@ function CalculateReceivedAmount() {
             let rows;
             var expdate = '';
 
-            // Check if the item with the same batch number already exists
-            var itemExists = false;
-            $('#tblDetails tbody tr').each(function () {
-                var existingItemId = $(this).find('input[name="ItemID"]').val();
-
-            });
             $.ajax({
                 type: "post",
                 url: "IssueMedicine.aspx/MedicineDetailgetfromOPD",
@@ -2510,6 +2533,10 @@ function CalculateReceivedAmount() {
                     var length = $("#tblDetails tr:gt(0)").length;
                     $('#Table_1 tr:gt(0)').remove();
                     var data = JSON.parse(msg.d);
+                    if (pharmItemBatchExists(data[0].Item_ID, data[0].BatchNum)) {
+                        pharmDuplicateBatchAlert();
+                        return;
+                    }
                     var Uomqty = data[0].UOM_Qty;
                     if (Uomqty == null) {
                         Uomqty = 0;
@@ -2568,36 +2595,15 @@ function CalculateReceivedAmount() {
         }
         function AddMedicineDetail() {
             var itemId = $('#medName').find('option:selected').val();
-            var Batch = $('#batchno').find('option:selected').val();
+            var Batch = ($('#batchno').find('option:selected').val() || '').trim();
             var warehouse = $('#ddlWarehouse').find('option:selected').val();
             var hdndiscountType = $('#hdndiscountType').val();
             var rowIndex = parseInt($('#tblDetails tbody tr').length);
             let rows;
             var expdate = '';
-            var itemExists = false;
-
-            $('#tblDetails tbody tr').each(function () {
-                var existingItemId = $(this).find('input[name="ItemID"]').val();
-                var existingBatchNo = $(this).find('input[name="BatchNo"]').val();
-                if (existingItemId == itemId && existingBatchNo == Batch) {
-                    itemExists = true;
-                    return false;
-                }
-            });
+            var itemExists = pharmItemBatchExists(itemId, Batch);
             if (itemExists) {
-                Swal.fire({
-                    icon: 'error',
-                    title: 'Error!',
-                    text: 'This item with the same batch number already exists.',
-                    showConfirmButton: false,
-                    timer: 2000,
-                    customClass: {
-                        popup: 'swal-big-popup',
-                        title: 'swal-big-title',
-                        htmlContainer: 'swal-big-text'
-                    }
-                });
-
+                pharmDuplicateBatchAlert();
                 return;
             }
 
@@ -4363,6 +4369,8 @@ function CalculateReceivedAmount() {
                     var data = JSON.parse(msg.d);
                     var html = '';
                     var lowStock = [];
+                    var duplicateItems = [];
+                    var seenBatches = {};
                     data.forEach(function (entry, index) {
                         var d = entry.detail;
                         var rowIndex = index;
@@ -4382,6 +4390,15 @@ function CalculateReceivedAmount() {
                             firstBatch = entry.batches[0].BatchNum;
                         } else {
                             batchOptions = '<option value="0">No Batch Available</option>';
+                        }
+
+                        if (firstBatch) {
+                            var batchKey = String(d.Item_ID) + '|' + String(firstBatch).trim();
+                            if (seenBatches[batchKey] || pharmItemBatchExists(d.Item_ID, firstBatch)) {
+                                duplicateItems.push(d.Description + ' (Batch: ' + firstBatch + ')');
+                                return;
+                            }
+                            seenBatches[batchKey] = true;
                         }
 
                         var st = entry.stock || {};
@@ -4434,6 +4451,15 @@ function CalculateReceivedAmount() {
                         });
                     }
 
+                    if (duplicateItems.length) {
+                        Swal.fire({
+                            icon: 'error',
+                            title: 'Duplicate Item Batch — ' + duplicateItems.length + ' skipped',
+                            html: duplicateItems.join('<br>'),
+                            customClass: { popup: 'swal-big-popup', title: 'swal-big-title', htmlContainer: 'swal-big-text' }
+                        });
+                    }
+
                     if (data.length === totalItems) {
                         $('#ddlWarehouse').prop('disabled', true);
                     }
@@ -4473,6 +4499,16 @@ function CalculateReceivedAmount() {
 
             if (!itemId || itemId === "0") {
                 console.error("Invalid Item ID");
+                return;
+            }
+
+            // Block same item + same batch already present in another row
+            if (pharmItemBatchExists(itemId, batchNumber, row)) {
+                pharmDuplicateBatchAlert();
+                var committedBatch = $('#BatchNo' + counter).val();
+                if (committedBatch && $(anchors).find('option[value="' + committedBatch + '"]').length) {
+                    $(anchors).val(committedBatch);
+                }
                 return;
             }
 
