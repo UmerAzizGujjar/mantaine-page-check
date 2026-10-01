@@ -23,6 +23,7 @@
         <link href="<%= Page.ResolveClientUrl("~/wwwroot/lib/ace/ace-skins.min.css") %>" rel="stylesheet" type="text/css" />
         <link href="<%= Page.ResolveClientUrl("~/wwwroot/lib/ace/ace-rtl.min.css") %>" rel="stylesheet" type="text/css" />
         <link href="<%= Page.ResolveClientUrl("~/wwwroot/THEME_TIBBIT/styleMaster.css") %>" rel="stylesheet" type="text/css" />
+        <link href="<%= Page.ResolveClientUrl("~/wwwroot/THEME_TIBBIT/theme-colors.css") %>" rel="stylesheet" type="text/css" />
          <link href="<%= Page.ResolveClientUrl("~/wwwroot/lib/jquery/jquery-ui.css") %>" rel="stylesheet" type="text/css" />
         <link href="<%= Page.ResolveClientUrl("~/wwwroot/lib/token_input/token-input.css") %>" type="text/css" rel="stylesheet" />
         <link href="<%= Page.ResolveClientUrl("~/wwwroot/lib/loader/loader.css") %>" rel="stylesheet" />
@@ -742,6 +743,301 @@
     </script>
     <asp:ContentPlaceHolder ID="HeadContent" runat="server"></asp:ContentPlaceHolder>
     <style type="text/css">
+        /* ===== Application header: responsive + prominent ===== */
+        #navbar {
+            height: auto !important;
+            min-height: 68px;
+            background: var(--theme-header-bg, linear-gradient(180deg, #ffffff 0%, #eceff3 100%)) !important;
+            border-bottom: 4px solid var(--theme-header-line, #EFA63E);
+            box-shadow: 0 3px 12px rgba(0, 0, 0, 0.20) !important;
+            position: relative;
+            z-index: 1030;
+        }
+
+        #navbar-container {
+            display: flex !important;
+            flex-wrap: nowrap;
+            align-items: center;
+            width: 100% !important;
+            min-height: 64px;
+            margin: 0 !important;
+            padding: 0 16px !important;
+            background: var(--theme-header-bg, linear-gradient(180deg, #ffffff 0%, #eceff3 100%)) !important;
+        }
+
+            /* ignore the fixed bootstrap column widths - let flexbox share the row */
+            #navbar-container > div[class*="col-"] {
+                float: none !important;
+                width: auto !important;
+                height: auto !important;
+                padding: 0 8px !important;
+                position: relative;
+            }
+
+                /* 1) logo */
+                #navbar-container > div:nth-child(1) {
+                    flex: 0 0 auto;
+                }
+
+                /* 2) company name takes all remaining space */
+                #navbar-container > div:nth-child(2) {
+                    flex: 1 1 auto;
+                    min-width: 0;
+                    display: flex;
+                    align-items: center;
+                    justify-content: center;
+                }
+
+                /* 3) notification bell */
+                #navbar-container > div:nth-child(3) {
+                    flex: 0 0 auto;
+                    align-self: stretch;
+                    min-width: 98px; /* bell is 90px wide */
+                    margin-right: 28px; /* gap between the bell and the user menu (#headerWelcome) */
+                }
+
+                /* 4) user menu */
+                #navbar-container > div:nth-child(4) {
+                    flex: 0 0 auto;
+                }
+
+        #navbar .app-logo {
+            display: block;
+            height: 56px !important;
+            width: auto !important;
+            max-width: 130px;
+            margin: 0 !important;
+            object-fit: contain;
+        }
+
+        #navbar .app-title {
+            display: block;
+            max-width: 100%;
+            margin: 0;
+            font-family: "Segoe UI", Arial, sans-serif;
+            font-size: clamp(16px, 2.3vw, 30px);
+            font-weight: 800;
+            letter-spacing: .4px;
+            line-height: 1.2;
+            color: var(--theme-header-text, #1b2a41);
+            text-shadow: var(--theme-header-text-shadow, none);
+            text-align: center;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+
+        #navbar .header-user-dropdown {
+            margin-top: 0 !important;
+            padding: 0 !important;
+        }
+
+            #navbar .header-user-dropdown .dropdown {
+                margin-top: 0 !important;
+            }
+
+        #navbar .user-btn {
+            background: var(--theme-user-btn-bg, #EFA63E) !important;
+            color: var(--theme-user-btn-text, #000000) !important;
+            border: 1px solid var(--theme-user-btn-border, transparent) !important;
+            box-shadow: 0 2px 6px rgba(0, 0, 0, 0.25);
+            white-space: nowrap;
+        }
+
+        #navbar .notification {
+            top: 0;
+            left: 8px;
+        }
+
+        @media screen and (max-width: 991px) {
+            #navbar-container {
+                padding: 0 10px !important;
+            }
+
+            #navbar .app-logo {
+                height: 46px !important;
+                max-width: 100px;
+            }
+        }
+
+        @media screen and (max-width: 600px) {
+            #navbar {
+                min-height: 56px;
+                border-bottom-width: 3px;
+            }
+
+            #navbar-container {
+                min-height: 52px;
+                padding: 0 6px !important;
+            }
+
+            #navbar .app-logo {
+                height: 38px !important;
+                max-width: 80px;
+            }
+
+            #navbar .app-title {
+                font-size: 14px;
+                letter-spacing: 0;
+            }
+
+            #navbar-container > div[class*="col-"] {
+                padding: 0 4px !important;
+            }
+
+            #navbar .user-btn {
+                padding: 6px 10px;
+            }
+
+            #navbar-container > div:nth-child(3) {
+                margin-right: 12px;
+            }
+        }
+
+        /* ===== Main menu bar (horizontal) - match the new header, desktop only ===== */
+        @media screen and (min-width: 992px) {
+            .sidebar.h-sidebar {
+                margin-top: 0 !important;
+                box-shadow: 0 3px 8px rgba(0, 0, 0, 0.14) !important;
+            }
+
+                .sidebar.h-sidebar .nav-list {
+                    background: linear-gradient(180deg, #ffffff 0%, #f1f3f7 100%) !important;
+                    border-bottom: 3px solid var(--theme-header-line, #EFA63E) !important;
+                }
+
+                    .sidebar.h-sidebar .nav-list > li {
+                        border-color: #d9dee5 !important;
+                    }
+
+                        .sidebar.h-sidebar .nav-list > li > a {
+                            display: flex !important;
+                            flex-direction: column;
+                            align-items: center;
+                            justify-content: center;
+                            height: 100% !important;
+                            padding: 6px 8px !important;
+                            font-size: 14px !important;
+                            font-weight: 700 !important;
+                            letter-spacing: .1px;
+                            color: var(--theme-ink, #1b2a41) !important;
+                            transition: background-color .15s ease, color .15s ease;
+                        }
+
+                        .sidebar.h-sidebar .nav-list > li:hover > a,
+                        .sidebar.h-sidebar .nav-list > li.hover:hover > a {
+                            background-color: var(--theme-accent-soft, #fff1d6) !important;
+                            color: var(--theme-accent-ink, #8a4b00) !important;
+                        }
+
+                        .sidebar.h-sidebar .nav-list > li.active > a,
+                        .sidebar.h-sidebar .nav-list > li.active:hover > a {
+                            background-color: var(--theme-accent, #EFA63E) !important;
+                            color: var(--theme-on-accent, #1b2a41) !important;
+                        }
+        }
+
+        /* ===== Footer (all themes) - colours come from theme-colors.css ===== */
+        html body .main-content { padding-bottom: 90px !important; }
+
+        html body .app-footer {
+            position: absolute !important;
+            bottom: 0;
+            left: 0;
+            width: 100% !important;
+            height: auto !important;
+            min-height: 52px;
+            margin: 0 !important;
+            padding: 12px 24px !important;
+            display: block !important;
+            background: var(--theme-footer-bg, linear-gradient(180deg, #24344f 0%, #1b2a41 100%)) !important;
+            border-top: 3px solid var(--theme-footer-line, #EFA63E);
+            color: var(--theme-footer-text, #e9eef5) !important;
+            font-size: 13px;
+            line-height: 1.5;
+            text-align: left;
+            box-shadow: 0 -4px 14px rgba(0, 0, 0, 0.12);
+        }
+
+            html body .app-footer a {
+                color: var(--theme-footer-text, #e9eef5) !important;
+                font-weight: 600;
+                text-decoration: none;
+            }
+
+                html body .app-footer a:hover { text-decoration: underline; }
+
+            .app-footer i.fa {
+                width: 18px;
+                margin-right: 8px;
+                font-size: 15px;
+                text-align: center;
+                color: var(--theme-footer-icon, #EFA63E);
+            }
+
+        .app-footer-inner {
+            display: flex;
+            flex-wrap: wrap;
+            align-items: center;
+            justify-content: center;
+            gap: 6px 36px;
+            max-width: 1500px;
+            margin: 0 auto;
+        }
+
+        .app-footer-item {
+            display: inline-flex;
+            align-items: center;
+            white-space: nowrap;
+        }
+
+        .app-footer-title {
+            font-weight: 700;
+            letter-spacing: .3px;
+        }
+
+        /* brand footer (Tibbit) */
+        .app-footer-brand .app-footer-inner { justify-content: space-between; gap: 10px 40px; }
+
+        .app-footer-brand-text { flex: 1 1 560px; min-width: 0; }
+
+        .app-footer-brand-name { font-size: 16px; font-weight: 700; letter-spacing: .3px; }
+
+            .app-footer-brand-name span { font-weight: 400; opacity: .85; font-size: 14px; }
+
+        .app-footer-brand-tag { margin: 3px 0 0; font-size: 12.5px; line-height: 1.5; opacity: .85; max-width: 820px; }
+
+        .app-footer-contact {
+            display: flex;
+            flex-wrap: wrap;
+            align-items: center;
+            gap: 6px 24px;
+        }
+
+            .app-footer-contact .app-footer-title {
+                padding-right: 12px;
+                border-right: 1px solid rgba(255, 255, 255, 0.35);
+            }
+
+        @media screen and (max-width: 768px) {
+            html body .main-content { padding-bottom: 150px !important; }
+
+            html body .app-footer { padding: 10px 14px !important; }
+
+            .app-footer-inner { flex-direction: column; gap: 4px; text-align: center; }
+
+            .app-footer-brand .app-footer-inner { align-items: center; }
+
+            .app-footer-brand-text { flex: 0 0 auto; }
+
+            .app-footer-brand-tag { display: none; }
+
+            .app-footer-item { white-space: normal; }
+
+            .app-footer-contact { justify-content: center; }
+
+                .app-footer-contact .app-footer-title { border-right: 0; padding-right: 0; width: 100%; text-align: center; }
+        }
     </style>
     <script type="text/javascript">
         (function ($) {
@@ -831,18 +1127,18 @@
         <asp:ToolkitScriptManager ID="cmManager" runat="server" EnablePageMethods="true" />
         <div class="page">
             <div class="loginDisplay">
-                <div id="navbar" style="height: 60px !important" class="navbar navbar-default navbar-collapse h-navbar ace-save-state">
+                <div id="navbar" class="navbar navbar-default navbar-collapse h-navbar ace-save-state">
                     <div class="navbar-container ace-save-state row" id="navbar-container">
                            <div class="col-lg-3 col-md-4 col-sm-3">
         <a href="~/Modules/Dashboards/ShortCuts.aspx" runat="server" id="IHome" title="Haroon Estates">
-            <asp:Image ID="imglogo" runat="server" Style="margin: 0px; margin-left: -10px; border-radius: 0px; height: 66px !important; margin-top: -5px !important; width: 108px;" ImageUrl="~/wwwroot/THEME_TIBBIT\images\LOGOS/logo.png" />
+            <asp:Image ID="imglogo" runat="server" CssClass="app-logo" ImageUrl="~/wwwroot/THEME_TIBBIT\images\LOGOS/logo.png" />
         </a>
     </div>
     
     <!-- Middle Company Name -->
     <div class="col-lg-6 col-md-4 col-sm-6" style="display: flex; align-items: center; justify-content: center; height: 60px;">
         <asp:Label ID="lblCompanyNameCenter" runat="server" Text="" 
-Style="color: white !important; font-weight: bold; font-size: 31px; text-align: center; margin: 0;"></asp:Label>
+CssClass="app-title"></asp:Label>
     </div>
     
     <div class="col-lg-1 col-md-2 col-sm-1">

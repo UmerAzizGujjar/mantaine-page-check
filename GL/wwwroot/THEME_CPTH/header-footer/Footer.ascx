@@ -1,12 +1,8 @@
 ﻿<%@ Control Language="C#" AutoEventWireup="true" CodeBehind="Footer.ascx.cs" Inherits="PMS.wwwroot.THEME_CPTH.header_footer.Footer" %>
-<div class="center" id="StandardFooter" runat="server">
-    <div>
-        <a href="#" style="padding-right: 225px; color: black !important; font-weight: bold">Our 24/7 support:</a>
-        <span style="font-weight: bold;">Email:</span>
-        <a href="#" id="email" runat="server" style="padding-right: 300px; color: black !important; font-weight: bold"></a>
-        Contact:
-    <a href="#" id="mbl_no" runat="server" style="color: black !important; font-weight: bold"></a>
+<div class="center app-footer" id="StandardFooter" runat="server">
+    <div class="app-footer-inner">
+        <span class="app-footer-item app-footer-title"><i class="fa fa-headphones"></i>Our 24/7 support</span>
+        <span class="app-footer-item"><i class="fa fa-envelope"></i><a href="#" id="email" runat="server"></a></span>
+        <span class="app-footer-item"><i class="fa fa-phone"></i><a href="#" id="mbl_no" runat="server"></a></span>
     </div>
 </div>
-
-
