@@ -118,6 +118,22 @@ namespace PMS.AP
         }
 
         [WebMethod]
+        public static string fillModes()
+        {
+            DataBaseDataContext db = new DataBaseDataContext();
+            List<ddlListItems> listItems = new List<ddlListItems>();
+            listItems = (from p in db.DataValues
+                         join v in db.ValueSets on p.ValueSet_ID equals v.ValueSet_ID
+                         where v.ValueSet_Description == "Mode"
+                         select new ddlListItems
+                         {
+                             DataValueName = p.DataValue_Name,
+                             DataValueDescription = p.DataValue_Description,
+                         }).ToList();
+            return (new JavaScriptSerializer()).Serialize(listItems);
+        }
+
+        [WebMethod]
         public static string fillWarehouse()
         {
             DataBaseDataContext db = new DataBaseDataContext();
@@ -391,7 +407,7 @@ namespace PMS.AP
         }
 
         [WebMethod]
-        public static string SavePurchaseRequistion(int PRid, string PrNum, string PrDate, string dept, string Pirority, string Warehouse, string RefNum, string remarks, string btnValue, string branch)
+        public static string SavePurchaseRequistion(int PRid, string PrNum, string PrDate, string dept, string Pirority, string Warehouse, string RefNum, string remarks, string btnValue, string branch, string Mode)
         {
             DataBaseDataContext db = new DataBaseDataContext();
             Purchase_Requisition obj = new Purchase_Requisition();
@@ -402,6 +418,7 @@ namespace PMS.AP
                 obj.PR_Num = Convert.ToInt32(PrNum);
                 obj.PR_Date = Convert.ToDateTime(PrDate);
                 obj.Priority = Pirority;
+                obj.Mode = Mode;
                 obj.Warehouse = Warehouse;
                 obj.Branch_Id = string.IsNullOrEmpty(branch) ? (int?)null : Convert.ToInt32(branch);
                 obj.Department = dept;
@@ -428,6 +445,7 @@ namespace PMS.AP
                 WritePRChangeLog(db, query, new JavaScriptSerializer());
                 query.PR_Date = Convert.ToDateTime(PrDate);
                 query.Priority = Pirority;
+                query.Mode = Mode;
                 query.Warehouse = Warehouse;
                 query.Branch_Id = string.IsNullOrEmpty(branch) ? (int?)null : Convert.ToInt32(branch);
                 query.Department = dept;
@@ -556,6 +574,7 @@ namespace PMS.AP
                                  {
                                      pr.PR_Num,
                                      pr.Priority,
+                                     pr.Mode,
                                      pr.Warehouse,
                                      pr.Branch_Id,
                                      pr.Remarks,

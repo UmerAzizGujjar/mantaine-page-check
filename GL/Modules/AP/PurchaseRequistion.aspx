@@ -131,6 +131,7 @@
                 });
             
             FillPriority();
+            FillModes();
             FillWarehouse();
             UserRights();
 
@@ -138,6 +139,7 @@
             $('#ddlWarehouse').select2();
             $('#ddldept').select2();
             $('#ddlPriority').select2();
+            $('#ddlMode').select2();
             $('#ddlBranch').select2();
             loadUserBranch();
             $('#ctl00_MainContent_ddlGIR').select2();
@@ -502,6 +504,7 @@
         }
 
         var savedPriority = null;
+        var savedMode = null;
         var savedDept = null;
         var savedWarehouse = null;
         var savedBranch = null;
@@ -550,6 +553,19 @@
                 $('#ddlPriority').html(optionInv);
                 if (savedPriority) {
                     $('#ddlPriority').val(savedPriority).trigger('change');
+                }
+            });
+        }
+
+        function FillModes() {
+            PageMethods.fillModes(function (Tests) {
+                var optionMode = '<option value="0">Please Select</option>';
+                $.each(JSON.parse(Tests), function (key, value) {
+                    optionMode += '<option value="' + value.DataValueName + '" >' + value.DataValueDescription + '</option>';
+                });
+                $('#ddlMode').html(optionMode);
+                if (savedMode) {
+                    $('#ddlMode').val(savedMode).trigger('change');
                 }
             });
         }
@@ -698,6 +714,7 @@
             var totCost  = $("#totCost").val() || 0;
             var dept     = $('#ddldept').val();
             var branch   = $('#ddlBranch').val();
+            var Mode     = $('#ddlMode').val();
 
             if (warehouseCond == "01" && Warehouse == '0') {
                 Swal.fire({ icon: 'error', title: 'Error!', text: 'Please Select Warehouse', showConfirmButton: false, timer: 2000, customClass: { popup: 'swal-big-popup', title: 'swal-big-title', htmlContainer: 'swal-big-text' } });
@@ -752,7 +769,7 @@
                     $.ajax({
                         type: "post",
                         url: "PurchaseRequistion.aspx/SavePurchaseRequistion",
-                        data: JSON.stringify({ "PRid": PRId, "PrNum": PrNum, "PrDate": PrDate, "Pirority": Pirority, "Warehouse": Warehouse, "dept": dept, "RefNum": RefNum, "remarks": remarks, "btnValue": btnValue, "branch": branch }),
+                        data: JSON.stringify({ "PRid": PRId, "PrNum": PrNum, "PrDate": PrDate, "Pirority": Pirority, "Warehouse": Warehouse, "dept": dept, "RefNum": RefNum, "remarks": remarks, "btnValue": btnValue, "branch": branch, "Mode": Mode }),
                         contentType: "application/json; charset=utf-8",
                         dataType: "json",
                         success: function (response) {
@@ -847,6 +864,7 @@
                     } 
                     // Save values globally for async dropdown loaders to pick up
                     savedPriority = parse.Priority;
+                    savedMode = parse.Mode;
                     savedDept = parse.Department;
                     savedWarehouse = parse.Warehouse;
                     savedBranch = parse.Branch_Id;
@@ -860,6 +878,9 @@
                     }
                     if ($('#ddldept option[value="' + savedDept + '"]').length) {
                         $('#ddldept').val(savedDept).trigger('change');
+                    }
+                    if ($('#ddlMode option[value="' + savedMode + '"]').length) {
+                        $('#ddlMode').val(savedMode).trigger('change');
                     }
                     if ($('#ddlWarehouse option[value="' + savedWarehouse + '"]').length) {
                         $('#ddlWarehouse').val(savedWarehouse).trigger('change');
@@ -1200,6 +1221,12 @@
             <div class="col-lg-2 col-md-4 col-sm-6 col-xs-12">
                 <label id="LblPriority">Priority <span class="req-star">*</span></label>
                 <select id="ddlPriority" class="form-select">
+                    <option value="0">Please Select</option>
+                </select>
+            </div>
+            <div class="col-lg-2 col-md-4 col-sm-6 col-xs-12">
+                <label id="LblMode">Mode</label>
+                <select id="ddlMode" class="form-select">
                     <option value="0">Please Select</option>
                 </select>
             </div>

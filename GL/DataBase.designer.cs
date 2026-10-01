@@ -56004,6 +56004,8 @@ namespace PMS
 
         private System.Nullable<int> _Branch_Id;
 
+        private string _Mode;
+
         #region Extensibility Method Definitions
         partial void OnLoaded();
         partial void OnValidate(System.Data.Linq.ChangeAction action);
@@ -56056,6 +56058,8 @@ namespace PMS
         partial void OnIsNotificationViewedChanged();
         partial void OnBranch_IdChanging(System.Nullable<int> value);
         partial void OnBranch_IdChanged();
+        partial void OnModeChanging(string value);
+        partial void OnModeChanged();
         #endregion
 
         public Purchase_Requisition()
@@ -56539,6 +56543,26 @@ namespace PMS
                     this._Branch_Id = value;
                     this.SendPropertyChanged("Branch_Id");
                     this.OnBranch_IdChanged();
+                }
+            }
+        }
+
+        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_Mode", DbType = "VarChar(20)")]
+        public string Mode
+        {
+            get
+            {
+                return this._Mode;
+            }
+            set
+            {
+                if ((this._Mode != value))
+                {
+                    this.OnModeChanging(value);
+                    this.SendPropertyChanging();
+                    this._Mode = value;
+                    this.SendPropertyChanged("Mode");
+                    this.OnModeChanged();
                 }
             }
         }

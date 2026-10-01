@@ -2489,6 +2489,7 @@
       <Column Name="File_Path" Type="System.String" DbType="NVarChar(MAX)" CanBeNull="true" />
       <Column Name="IsNotificationViewed" Type="System.Boolean" DbType="Bit" CanBeNull="true" />
       <Column Name="Branch_Id" Type="System.Int32" DbType="Int" CanBeNull="true" />
+      <Column Name="Mode" Type="System.String" DbType="VarChar(20)" CanBeNull="true" />
     </Type>
   </Table>
   <Table Name="dbo.Appointment_Form" Member="Appointment_Forms">
