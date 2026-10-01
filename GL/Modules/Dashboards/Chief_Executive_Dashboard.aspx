@@ -14,6 +14,7 @@
         var deptDoctorChart = null;
         var _sparkCharts = {};
 
+
         function setPeriod(period, startDate, endDate) {
             $(".period-pill").removeClass("active");
             $(".period-pill[data-period='" + period + "']").addClass("active");
