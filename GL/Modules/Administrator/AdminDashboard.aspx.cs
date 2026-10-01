@@ -611,48 +611,39 @@ GROUP BY d.Test_Main_Department", conn2))
                     }
                 });
 
-                /* ─────────── NEW VS FOLLOW-UP (RETENTION) ─────────── */
+                /* ─────────── REVISIT PATIENTS (RETENTION) ─────────── */
                 var tRetention = Task.Run(() =>
                 {
                     using (DataBaseDataContext db = new DataBaseDataContext())
                     {
                         PrepDb(db);
+                        DateTime monthStart = new DateTime(s.Year, s.Month, 1);
+                        DateTime monthEnd = monthStart.AddMonths(1);
+
                         var allPats = db.Patients
-                            .Where(p => p.Created_Time >= s.AddDays(-7) && p.Created_Time < e && p.Reg_PatId != null)
-                            .OrderBy(p => p.Created_Time)
+                            .Where(p => p.Created_Time >= monthStart && p.Created_Time < monthEnd && p.Reg_PatId != null)
                             .ToList();
 
-                        var visitsByPat = allPats
-                            .Where(p => p.Reg_PatId != null)
-                            .GroupBy(p => p.Reg_PatId.Value)
-                            .ToDictionary(g => g.Key, g => g.OrderBy(p => p.Created_Time).Select(p => p.Created_Time.Value).ToList());
-
-                        DateTime latestMonth = allPats.Where(p => p.Created_Time >= s)
-                            .Select(p => p.Created_Time.Value)
-                            .DefaultIfEmpty(e.AddDays(-1))
-                            .Max();
-                        latestMonth = new DateTime(latestMonth.Year, latestMonth.Month, 1);
-
                         var retention = new System.Collections.Generic.List<object>();
+                        int daysInMonth = DateTime.DaysInMonth(s.Year, s.Month);
                         for (int w = 1; w <= 4; w++)
                         {
-                            int newC = 0, retC = 0;
-                            int wStartDay = (w - 1) * 7 + 1;
-                            int wEndDay = Math.Min(w * 7, DateTime.DaysInMonth(latestMonth.Year, latestMonth.Month));
-                            DateTime ws = new DateTime(latestMonth.Year, latestMonth.Month, wStartDay);
-                            DateTime we = new DateTime(latestMonth.Year, latestMonth.Month, wEndDay).AddDays(1).AddTicks(-1);
+                            DateTime ws = new DateTime(s.Year, s.Month, (w - 1) * 7 + 1);
+                            int wEndDay = (w == 4) ? daysInMonth : w * 7;
+                            DateTime we = new DateTime(s.Year, s.Month, wEndDay).AddDays(1).AddTicks(-1);
 
-                            var weekPats = allPats.Where(p => p.Created_Time >= ws && p.Created_Time <= we).ToList();
-                            foreach (var pat in weekPats)
+                            int revisitCount = allPats.Count(p =>
+                                p.Created_Time.HasValue &&
+                                p.Created_Time.Value >= ws &&
+                                p.Created_Time.Value <= we);
+
+                            retention.Add(new
                             {
-                                int rpid = pat.Reg_PatId.Value;
-                                var patTime = pat.Created_Time.Value;
-                                if (visitsByPat.ContainsKey(rpid) && visitsByPat[rpid].Any(d => d >= patTime.AddDays(-7) && d < patTime))
-                                    retC++;
-                                else
-                                    newC++;
-                            }
-                            retention.Add(new { week = "W" + w, newPatients = newC, returning = retC });
+                                week = "W" + w,
+                                startDate = ws.ToString("yyyy-MM-dd"),
+                                endDate = we.ToString("yyyy-MM-dd"),
+                                revisits = revisitCount
+                            });
                         }
                         CloseDb(db);
                         return retention;

@@ -1405,8 +1405,8 @@
                 $('#ddlWarehouse').html(optionInv);
 
                 
-                if ($('#ddlWarehouse option[value="008"]').length > 0) {
-                    $('#ddlWarehouse').val("008");
+                if ($('#ddlWarehouse option[value="0001"]').length > 0) {
+                    $('#ddlWarehouse').val("0001");
                     $('#ddlWarehouse').trigger('change');
                 } else {
                     var firstVal = $('#ddlWarehouse option:not([value="0"])').first().val();
