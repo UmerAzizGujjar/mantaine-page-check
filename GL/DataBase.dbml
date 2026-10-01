@@ -3974,6 +3974,16 @@
       <Column Name="Log_Time" Type="System.DateTime" DbType="DateTime" CanBeNull="true" />
     </Type>
   </Table>
+  <Table Name="dbo.AP_Purchase_Requisition_Logs" Member="AP_Purchase_Requisition_Logs">
+    <Type Name="AP_Purchase_Requisition_Log">
+      <Column Name="Log_Id" Type="System.Int32" DbType="Int NOT NULL IDENTITY" IsPrimaryKey="true" IsDbGenerated="true" CanBeNull="false" />
+      <Column Name="PR_Id" Type="System.Int32" DbType="Int" CanBeNull="true" />
+      <Column Name="Master_Log" Type="System.String" DbType="NVarChar(MAX)" CanBeNull="true" />
+      <Column Name="Details_Log" Type="System.String" DbType="NVarChar(MAX)" CanBeNull="true" />
+      <Column Name="Loged_By" Type="System.Guid" DbType="UniqueIdentifier" CanBeNull="true" />
+      <Column Name="Log_Time" Type="System.DateTime" DbType="DateTime" CanBeNull="true" />
+    </Type>
+  </Table>
   <Table Name="dbo.IGP_Logs" Member="IGP_Logs">
     <Type Name="IGP_Log">
       <Column Name="Log_Id" Type="System.Int32" DbType="Int NOT NULL IDENTITY" IsPrimaryKey="true" IsDbGenerated="true" CanBeNull="false" />

@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.Data;
 using System.Data.Entity;
 using System.Data.SqlClient;
+using System.Globalization;
 using System.IO;
 using System.Linq;
 using System.Web;
@@ -279,6 +280,116 @@ namespace PMS.AP
 
 
 
+        // ================= PR CHANGE LOG SNAPSHOT HELPERS =================
+
+        private static string StrVal(object v)
+        {
+            if (v == null) return "";
+            return Convert.ToString(v, CultureInfo.InvariantCulture);
+        }
+
+        private static string NumVal(object v)
+        {
+            if (v == null) return "";
+            try { return Convert.ToDecimal(v).ToString("0.##", CultureInfo.InvariantCulture); }
+            catch { return ""; }
+        }
+
+        private static string DateVal(object v)
+        {
+            if (v == null) return "";
+            try { return Convert.ToDateTime(v).ToString("yyyy-MM-dd", CultureInfo.InvariantCulture); }
+            catch { return ""; }
+        }
+
+        private static Dictionary<string, string> BuildPRMasterSnapshot(Purchase_Requisition pr, DataBaseDataContext db)
+        {
+            string priorityName = "";
+            if (!string.IsNullOrEmpty(pr.Priority))
+            {
+                try { priorityName = db.GetDataValueName("Priority Type", pr.Priority) ?? ""; }
+                catch { priorityName = ""; }
+            }
+
+            string departmentName = "";
+            if (!string.IsNullOrEmpty(pr.Department))
+            {
+                try { departmentName = db.GetDataValueName("Department", pr.Department) ?? ""; }
+                catch { departmentName = ""; }
+            }
+
+            string warehouseName = "";
+            if (!string.IsNullOrEmpty(pr.Warehouse))
+            {
+                try { warehouseName = db.GetDataValueName("Ware House", pr.Warehouse) ?? ""; }
+                catch { warehouseName = ""; }
+            }
+
+            string branchName = "";
+            if (pr.Branch_Id.HasValue)
+            {
+                branchName = (from b in db.Branches where b.branch_ID == pr.Branch_Id select b.branch_Name).FirstOrDefault() ?? "";
+            }
+
+            var snap = new Dictionary<string, string>();
+            snap["PR_Num"] = pr.PR_Num.HasValue ? pr.PR_Num.Value.ToString() : "";
+            snap["PR_Date"] = DateVal(pr.PR_Date);
+            snap["Ref_No"] = StrVal(pr.Ref_Num);
+            snap["Priority"] = priorityName;
+            snap["Department"] = departmentName;
+            snap["Warehouse"] = warehouseName;
+            snap["Branch"] = branchName;
+            snap["Status"] = StrVal(pr.Status);
+            snap["Remarks"] = StrVal(pr.Remarks);
+            return snap;
+        }
+
+        private static object BuildPRItemsSnapshot(DataBaseDataContext db, int prId)
+        {
+            var rows = (from d in db.Purchase_Requisition_Details
+                        join i in db.INV_Items on d.Item_ID equals i.Item_ID
+                        where d.PR_ID == prId
+                        orderby d.PR_Detail_ID
+                        select new
+                        {
+                            Item_Code = i.Item_Code,
+                            Item_Name = i.Description,
+                            d.Qty,
+                            d.UnitPrice,
+                            d.EstimateCost,
+                            d.Required_Date,
+                            d.Remarks
+                        }).ToList();
+
+            return new
+            {
+                Items = rows.Select(i => new
+                {
+                    Item_Code = StrVal(i.Item_Code),
+                    Item_Name = StrVal(i.Item_Name),
+                    Qty = NumVal(i.Qty),
+                    UnitPrice = NumVal(i.UnitPrice),
+                    EstimateCost = NumVal(i.EstimateCost),
+                    Required_Date = DateVal(i.Required_Date),
+                    Remarks = StrVal(i.Remarks)
+                }).ToList()
+            };
+        }
+
+        private static void WritePRChangeLog(DataBaseDataContext db, Purchase_Requisition pr, JavaScriptSerializer serializer)
+        {
+            AP_Purchase_Requisition_Log prLog = new AP_Purchase_Requisition_Log
+            {
+                PR_Id = pr.PR_Id,
+                Master_Log = serializer.Serialize(BuildPRMasterSnapshot(pr, db)),
+                Details_Log = serializer.Serialize(BuildPRItemsSnapshot(db, pr.PR_Id)),
+                Loged_By = AppConfig.UserID,
+                Log_Time = DateTime.Now
+            };
+
+            db.AP_Purchase_Requisition_Logs.InsertOnSubmit(prLog);
+        }
+
         [WebMethod]
         public static string SavePurchaseRequistion(int PRid, string PrNum, string PrDate, string dept, string Pirority, string Warehouse, string RefNum, string remarks, string btnValue, string branch)
         {
@@ -314,6 +425,7 @@ namespace PMS.AP
             {
                 query = (from data in db.Purchase_Requisitions.Where(x => x.PR_Id.Equals(PRid))
                          select data).FirstOrDefault();
+                WritePRChangeLog(db, query, new JavaScriptSerializer());
                 query.PR_Date = Convert.ToDateTime(PrDate);
                 query.Priority = Pirority;
                 query.Warehouse = Warehouse;

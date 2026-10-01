@@ -38,6 +38,45 @@ namespace PMS
 
         }
 
+        /// <summary>
+        /// Parameterized overload of getDataTable. Always prefer this over the raw-string
+        /// overload above whenever any part of the query text comes from user input
+        /// (Request.QueryString/Form/etc.) - it binds values as SQL parameters instead of
+        /// concatenating them into the command text, which eliminates SQL injection for the
+        /// values passed in, regardless of what characters they contain.
+        /// </summary>
+        public static DataTable getDataTable(string strSQL, params SqlParameter[] parameters)
+        {
+            try
+            {
+                DataTable dt = new DataTable();
+                using (SqlConnection con = new SqlConnection(ConnectionString()))
+                using (SqlCommand cmd = new SqlCommand(strSQL, con))
+                {
+                    cmd.CommandTimeout = 999999999;
+                    if (parameters != null && parameters.Length > 0)
+                        cmd.Parameters.AddRange(parameters);
+                    using (SqlDataAdapter da = new SqlDataAdapter(cmd))
+                    {
+                        da.Fill(dt);
+                    }
+                }
+                return dt;
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+        }
+
+        /// <summary>
+        /// Shorthand for building a SqlParameter; null values are bound as DBNull.
+        /// </summary>
+        public static SqlParameter Param(string name, object value)
+        {
+            return new SqlParameter(name, value ?? DBNull.Value);
+        }
+
         public static string getParameter(string ParameterName)
         {
             string ParameterValue = getField("Select code from sys_parms where company_id=" + AppConfig.Company_ID + " and Name='" + ParameterName + "'").ToString();
