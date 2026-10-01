@@ -150,7 +150,7 @@
             if (fg[3] < 1) { continue; }
             if (ratio(fg, bg) >= 3) { if (el.hasAttribute(FIXATTR)) { /* already readable */ } continue; }
             var ink = ratio(INK, bg), paper = ratio(PAPER, bg);
-            el.style.setProperty('color', 'rgb(' + (ink >= paper ? INK : PAPER).join(',') + ')', 'important');
+            el.style.setProperty('color', 'rgb(' + ((paper >= 3.5 || paper >= ink) ? PAPER : INK).join(',') + ')', 'important');
             el.setAttribute(FIXATTR, '1');
         }
         win.setTimeout(function () { fixing = false; }, 0);

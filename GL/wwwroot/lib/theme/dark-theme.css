@@ -4,43 +4,51 @@
    * Loaded after styleMaster.css / theme-colors.css, but it only does anything
      while <html data-theme="dark"> is set (see theme-toggle.js).
    * Light mode is NOT touched - each client keeps its own theme exactly as is.
-   * The client's brand colour is read from --theme-accent (theme-colors.css),
-     so the same file gives a red dark mode for CPTH, orange for TIBBIT,
-     blue for STANDARD, etc.  Nothing here needs editing per client.
+   * Dark mode uses ONE standard palette (midnight slate + blue accent) for every
+     client, so it looks the same and polished everywhere.
    * To tune the dark look change the --dk-* values in the first block only.
    ========================================================================== */
 
 html[data-theme="dark"] {
     color-scheme: dark;
 
-    /* ---- dark palette (neutral surfaces) ---- */
-    --dk-bg:        #12151a;   /* page background            */
-    --dk-surface:   #1a1e25;   /* cards, panels, tables      */
-    --dk-surface-2: #222833;   /* inputs, table headers      */
-    --dk-surface-3: #2b3240;   /* hover rows, active tabs    */
-    --dk-border:    #343c4a;
-    --dk-border-2:  #434d5f;
-    --dk-text:      #e3e8ef;
-    --dk-text-dim:  #aab4c3;
-    --dk-text-mute: #7f8a9b;
+    /* ---- standard dark palette: midnight slate surfaces + one blue accent ---- */
+    --dk-bg:        #0e131b;   /* page background            */
+    --dk-surface:   #151b25;   /* cards, panels, tables      */
+    --dk-surface-2: #1c2431;   /* inputs, table headers      */
+    --dk-surface-3: #252f40;   /* hover rows, active tabs    */
+    --dk-border:    #2a3547;
+    --dk-border-2:  #3a475c;
+    --dk-text:      #e6ebf2;
+    --dk-text-dim:  #a9b4c4;
+    --dk-text-mute: #7a8699;
 
-    /* brand accent, lightened so it stays readable as TEXT on dark surfaces */
-    --dk-accent-text: #f2b45a;
-    --dk-accent-text: color-mix(in srgb, var(--theme-accent, #EFA63E) 62%, #ffffff);
+    /* the dark-mode accent - the SAME for every client */
+    --dk-accent:        #3574e8;   /* buttons, active tabs, header line   */
+    --dk-accent-light:  #5b92f0;   /* top of the button gradient, hover   */
+    --dk-accent-strong: #2a5fc4;   /* pressed / darker shade              */
+    --dk-accent-text:   #8db4ff;   /* accent used as TEXT / icons         */
+    --dk-on-accent:     #ffffff;   /* text on top of the accent colour    */
+    --dk-accent-soft:   #1f2f4d;   /* soft accent background (hover rows) */
 
-    /* ---- re-point the per-client variables used by the header / menu / footer ---- */
-    --theme-header-bg:          linear-gradient(180deg, #232a36 0%, #181d26 100%);
+    /* ---- re-point the per-client variables, so header / menu / footer / buttons all follow ---- */
+    --theme-accent:             var(--dk-accent);
+    --theme-accent-light:       var(--dk-accent-light);
+    --theme-on-accent:          var(--dk-on-accent);
+    --theme-accent-ring:        rgba(91, 146, 240, .35);
+    --theme-accent-shadow:      rgba(53, 116, 232, .45);
+    --theme-header-bg:          linear-gradient(180deg, #1c2431 0%, #131924 100%);
     --theme-header-text:        #f1f4f9;
     --theme-header-text-shadow: none;
-    --theme-header-line:        var(--theme-accent, #EFA63E);
-    --theme-accent-soft:        #2d3646;
+    --theme-header-line:        var(--dk-accent);
+    --theme-accent-soft:        var(--dk-accent-soft);
     --theme-accent-ink:         var(--dk-accent-text);
-    --theme-user-btn-bg:        var(--theme-accent, #EFA63E);
-    --theme-user-btn-text:      var(--theme-on-accent, #1b2a41);
+    --theme-user-btn-bg:        var(--dk-accent);
+    --theme-user-btn-text:      var(--dk-on-accent);
     --theme-user-btn-border:    transparent;
-    --theme-footer-bg:          linear-gradient(180deg, #1c222c 0%, #12161d 100%);
+    --theme-footer-bg:          linear-gradient(180deg, #172030 0%, #0f1520 100%);
     --theme-footer-text:        #d5dbe5;
-    --theme-footer-line:        var(--theme-accent, #EFA63E);
+    --theme-footer-line:        var(--dk-accent);
     --theme-footer-icon:        var(--dk-accent-text);
     --theme-ink:                var(--dk-text);
 }

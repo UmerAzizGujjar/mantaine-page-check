@@ -1129,9 +1129,9 @@
     </script>
     <%-- Dark/Light mode (shared by every client theme) - keep these two lines LAST in <head> --%>
     <asp:PlaceHolder ID="DarkModeAssets" runat="server">
-        <link href="<%= Page.ResolveClientUrl("~/wwwroot/lib/theme/dark-theme.css") %>?v=2" rel="stylesheet" type="text/css" />
-        <link href="<%= Page.ResolveClientUrl("~/wwwroot/lib/theme/dark-pages.css") %>?v=2" rel="stylesheet" type="text/css" />
-        <script src="<%= Page.ResolveClientUrl("~/wwwroot/lib/theme/theme-toggle.js") %>?v=2" type="text/javascript"></script>
+        <link href="<%= Page.ResolveClientUrl("~/wwwroot/lib/theme/dark-theme.css") %>?v=3" rel="stylesheet" type="text/css" />
+        <link href="<%= Page.ResolveClientUrl("~/wwwroot/lib/theme/dark-pages.css") %>?v=3" rel="stylesheet" type="text/css" />
+        <script src="<%= Page.ResolveClientUrl("~/wwwroot/lib/theme/theme-toggle.js") %>?v=3" type="text/javascript"></script>
     </asp:PlaceHolder>
 </head>
 <body class="no-skin" onload="releasemenu()">
