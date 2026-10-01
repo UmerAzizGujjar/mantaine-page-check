@@ -1181,6 +1181,9 @@
     <Content Include="wwwroot\lib\jquery\jquery.datetimepicker.css" />
     <Content Include="wwwroot\lib\jquery\jquery.datetimepicker.js" />
     <Content Include="wwwroot\lib\jquery\jquery.mask.js" />
+    <Content Include="wwwroot\lib\theme\dark-theme.css" />
+    <Content Include="wwwroot\lib\theme\dark-pages.css" />
+    <Content Include="wwwroot\lib\theme\theme-toggle.js" />
     <Content Include="wwwroot\lib\jquery\jquery.min.js" />
     <Content Include="wwwroot\lib\jquery\jquery.mobile.custom.min.js" />
     <Content Include="wwwroot\lib\jquery\jquery.ptTimeSelect.css" />

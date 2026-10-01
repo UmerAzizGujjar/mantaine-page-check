@@ -479,76 +479,94 @@ namespace PMS.AP
             {
                 return "Error: Purchase Requisition not found";
             }
-            if (btnValue == "Update")
-            {
-                var PurchaseList = from PurchaseRequistion in db.Purchase_Requisition_Details where PurchaseRequistion.PR_ID == PRid select PurchaseRequistion;
-                foreach (var del in PurchaseList)
-                {
-                    db.Purchase_Requisition_Details.DeleteOnSubmit(del);
-                }
-                db.SubmitChanges();
-            }
-            bool proceed = true;
+
+            // Validate and stage all rows BEFORE touching the database. A bad row
+            // must never leave the PR with a half-saved (partially deleted) detail list.
+            var newDetails = new List<Purchase_Requisition_Detail>();
+            int rowNo = 0;
             foreach (var item in PurchaseRequistionDetails)
             {
-                Purchase_Requisition_Detail obj = new Purchase_Requisition_Detail();
-                obj.Item_ID = Convert.ToInt32(item.itemId);
-                obj.PR_ID = Convert.ToInt32(item.PRId);
-                if (item.Qty == "")
+                rowNo++;
+                int itemId;
+                if (item == null || !int.TryParse(item.itemId, out itemId))
                 {
-                    obj.Qty = 0;
+                    return "Error: Invalid item id in row " + rowNo;
                 }
-                obj.Qty = Convert.ToDecimal(item.Qty);
-                if (item.UnitPrice == "")
+                int itemPrId;
+                if (!int.TryParse(item.PRId, out itemPrId))
                 {
-                    obj.UnitPrice = 0;
+                    return "Error: Invalid PR id in row " + rowNo;
                 }
-                else
+                decimal qty = 0m;
+                if (!string.IsNullOrWhiteSpace(item.Qty) && !decimal.TryParse(item.Qty, out qty))
                 {
-                    obj.UnitPrice = Convert.ToDecimal(item.UnitPrice);
+                    return "Error: Invalid Qty in row " + rowNo;
                 }
-                if (item.EstimateCost == "")
+                decimal unitPrice = 0m;
+                if (!string.IsNullOrWhiteSpace(item.UnitPrice) && !decimal.TryParse(item.UnitPrice, out unitPrice))
                 {
-                    obj.EstimateCost = 0;
+                    return "Error: Invalid Unit Price in row " + rowNo;
                 }
-                else
+                decimal estimateCost = 0m;
+                if (!string.IsNullOrWhiteSpace(item.EstimateCost) && !decimal.TryParse(item.EstimateCost, out estimateCost))
                 {
-                    obj.EstimateCost = Convert.ToDecimal(item.EstimateCost);
+                    return "Error: Invalid Estimated Cost in row " + rowNo;
                 }
-                obj.Remarks = Convert.ToString(item.Remarks);
-                obj.Required_Date = Convert.ToDateTime(item.RDate);
-                obj.MaterialRequestDetail_Id = Convert.ToInt32(item.MaterialRequestDetail_Id);
-                obj.MaterialRequest_Id = Convert.ToInt32(item.MaterialRequest_Id);
-                obj.Req_Num = Convert.ToInt32(item.Req_Num);
-                obj.Last_PR_Qty = Convert.ToDecimal(item.Last_PR_Qty);
-                obj.Last_PR_Date = item.Last_PR_Date;
-                obj.Last_PR_No = Convert.ToString(item.Last_PR_No);
-                db.Purchase_Requisition_Details.InsertOnSubmit(obj);
 
-                try
+                newDetails.Add(new Purchase_Requisition_Detail
                 {
-                    db.SubmitChanges();
-                    var max = db.Purchase_Requisition_Details.Max(x => x.PR_Detail_ID);
-                }
-                catch (Exception ex)
-                {
-                    proceed = true;
-                    return "Error";
-                }
+                    Item_ID = itemId,
+                    PR_ID = itemPrId,
+                    Qty = qty,
+                    UnitPrice = unitPrice,
+                    EstimateCost = estimateCost,
+                    Remarks = Convert.ToString(item.Remarks),
+                    Required_Date = item.RDate,
+                    MaterialRequestDetail_Id = item.MaterialRequestDetail_Id,
+                    MaterialRequest_Id = item.MaterialRequest_Id,
+                    Req_Num = item.Req_Num,
+                    Last_PR_Qty = item.Last_PR_Qty,
+                    Last_PR_Date = item.Last_PR_Date,
+                    Last_PR_No = Convert.ToString(item.Last_PR_No)
+                });
             }
-            // Update MaterialRequest_Id in Purchase_Requisition
-            var firstDetail = PurchaseRequistionDetails.FirstOrDefault();
-            if (firstDetail != null)
+
+            // Delete old rows + insert new rows in ONE transaction so a failure
+            // rolls everything back instead of losing the rows processed so far.
+            db.Connection.Open();
+            db.Transaction = db.Connection.BeginTransaction();
+            try
             {
-                purchaseRequisition.MaterialRequest_Id = firstDetail.MaterialRequest_Id;
-                try
+                if (btnValue == "Update")
                 {
-                    db.SubmitChanges();
+                    var oldDetails = db.Purchase_Requisition_Details.Where(d => d.PR_ID == PRid).ToList();
+                    if (oldDetails.Count > 0)
+                    {
+                        db.Purchase_Requisition_Details.DeleteAllOnSubmit(oldDetails);
+                    }
                 }
-                catch (Exception ex)
+
+                db.Purchase_Requisition_Details.InsertAllOnSubmit(newDetails);
+
+                // Update MaterialRequest_Id in Purchase_Requisition
+                var firstDetail = PurchaseRequistionDetails.FirstOrDefault();
+                if (firstDetail != null)
                 {
-                    return "Error: " + ex.Message;
+                    purchaseRequisition.MaterialRequest_Id = firstDetail.MaterialRequest_Id;
                 }
+
+                db.SubmitChanges();
+                db.Transaction.Commit();
+            }
+            catch (Exception ex)
+            {
+                db.Transaction.Rollback();
+                return "Error: " + ex.Message;
+            }
+            finally
+            {
+                db.Transaction = null;
+                db.Connection.Close();
             }
 
             return "Success-" + PRid;

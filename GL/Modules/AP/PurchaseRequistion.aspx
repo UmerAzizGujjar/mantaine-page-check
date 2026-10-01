@@ -632,7 +632,7 @@
                             "<td style='text-align:right;padding-top:7px!important;'>" + (parse[0].UOM_Qty || '0') + "</td>" +
                             "<td style='text-align:right;'><input type='text' name='Qty' id='txtQty" + length + "' style='font-size:9px;width:58px!important;text-align:right;margin-top:2px;' autocomplete='off' onkeyup='calcutaeQty();calcutaeEstimatedCost(this)'/></td>" +
                             "<td style='text-align:left;padding-top:7px!important;'>" + parse[0].Unit + "</td>" +
-                            "<td style='text-align:right;'><input type='text' name='txtUnitPrice' id='txtUnitPrice" + length + "' value = '" + parse[0].Last_PurchaseRate + "' style='font-size:9px;width:68px!important;text-align:right;margin-top:2px;' autocomplete='off' onkeyup='calcutaeEstimCost(this)'/></td>" +
+                            "<td style='text-align:right;'><input type='text' name='txtUnitPrice' id='txtUnitPrice" + length + "' value = '" + (parse[0].Last_PurchaseRate || 0) + "' style='font-size:9px;width:68px!important;text-align:right;margin-top:2px;' autocomplete='off' onkeyup='calcutaeEstimCost(this)'/></td>" +
                             "<td style='text-align:right;'><input readonly type='text' name='txtEstimCost' id='txtEstimCost" + length + "' style='font-size:9px;width:78px!important;text-align:right;margin-top:2px;' /></td>" +
                             "<td style='text-align:left;'><input type='text' name='txtrdate' id='txtrdate" + length + "' style='font-size:9px;width:80px!important;margin-top:2px;' autocomplete='off'/></td>" +
                             "<td style='text-align:left;padding-top:7px!important;'>" + lastPRNo + "</td>" +
@@ -755,6 +755,16 @@
                         Swal.fire({ icon: 'error', title: 'Error!', text: 'Please Enter Qty Or Qty Must be Greater than zero', showConfirmButton: false, timer: 2000, customClass: { popup: 'swal-big-popup', title: 'swal-big-title', htmlContainer: 'swal-big-text' } });
                         qtyOrAmtChck = true; isSaving = false; $("#btnsave").prop("disabled", false); return false;
                     }
+                    var UnitPrice = $(this).find('td:eq(7) input').val();
+                    var EstimCost = $(this).find('td:eq(8) input').val();
+                    if (UnitPrice !== "" && isNaN(parseFloat(UnitPrice))) {
+                        Swal.fire({ icon: 'error', title: 'Error!', text: 'Please Enter Valid Unit Price', showConfirmButton: false, timer: 2000, customClass: { popup: 'swal-big-popup', title: 'swal-big-title', htmlContainer: 'swal-big-text' } });
+                        qtyOrAmtChck = true; isSaving = false; $("#btnsave").prop("disabled", false); return false;
+                    }
+                    if (EstimCost !== "" && isNaN(parseFloat(EstimCost))) {
+                        Swal.fire({ icon: 'error', title: 'Error!', text: 'Please Enter Valid Estimated Cost', showConfirmButton: false, timer: 2000, customClass: { popup: 'swal-big-popup', title: 'swal-big-title', htmlContainer: 'swal-big-text' } });
+                        qtyOrAmtChck = true; isSaving = false; $("#btnsave").prop("disabled", false); return false;
+                    }
                 });
                 if (parseFloat(totCost) > 50000 && Pirority === '004') {
                     Swal.fire({ icon: 'error', title: 'Error!', text: 'For Low Priority Total Amount Must be Less then 50000', showConfirmButton: false, timer: 2000, customClass: { popup: 'swal-big-popup', title: 'swal-big-title', htmlContainer: 'swal-big-text' } });
@@ -777,11 +787,17 @@
                             var arr = res.split('-');
                             var msg = arr[0];
                             var id = arr[1];
+                            if (!res.startsWith("Success") || !id) {
+                                isSaving = false;
+                                $("#btnsave").prop("disabled", false);
+                                alert("Error In Purchase Requisition: " + res);
+                                return;
+                            }
                             sendFile(id, function () {
                                 SaveDetailPurchaseRequestion(id, btnValue);
                             });
                         },
-                        failure: function (response) { isSaving = false; alert("In failure method"); }
+                        error: function (response) { isSaving = false; $("#btnsave").prop("disabled", false); alert("In failure method"); }
                     });
                 }
             }
@@ -825,10 +841,11 @@
                         $("#btnsave").prop("disabled", true);
                     } else {
                         isSaving = false;
+                        $("#btnsave").prop("disabled", false);
                         alert("Error In Purchase Requisition details: " + res);
                     }
                 },
-                failure: function (response) { isSaving = false; alert("In failure method"); }
+                error: function (response) { isSaving = false; $("#btnsave").prop("disabled", false); alert("In failure method"); }
             });
         }
 
@@ -950,10 +967,10 @@
                             '<td style="text-align:left;padding-left:8px!important;padding-top:7px!important;">' + parse[key].Description + '</td>' +
                             '<td style="text-align:right;padding-top:7px!important;">' + parse[key].stock + '</td>' +
                             '<td style="text-align:right;padding-top:7px!important;">' + (parse[key].UOM_Qty || '0') + '</td>' +
-                            '<td style="text-align:right;"><input type="text" value="' + parseFloat(parse[key].Qty).toFixed(2) + '" name="Qty" id="txtQty' + counter + '" style="font-size:9px;width:58px!important;text-align:right;margin-top:2px;" autocomplete="off" onkeyup="calcutaeQty();calcutaeEstimatedCost(this)"/></td>' +
+                            '<td style="text-align:right;"><input type="text" value="' + parseFloat(parse[key].Qty || 0).toFixed(2) + '" name="Qty" id="txtQty' + counter + '" style="font-size:9px;width:58px!important;text-align:right;margin-top:2px;" autocomplete="off" onkeyup="calcutaeQty();calcutaeEstimatedCost(this)"/></td>' +
                             '<td style="text-align:left;padding-top:7px!important;">' + uom + '</td>' +
-                            '<td style="text-align:right;"><input type="text" value="' + parseFloat(parse[key].UnitPrice).toFixed(2) + '" name="txtUnitPrice" id="txtUnitPrice' + counter + '" style="font-size:9px;width:68px!important;text-align:right;margin-top:2px;" autocomplete="off" onkeyup="calcutaeEstimCost(this)"/></td>' +
-                            '<td style="text-align:right;"><input readonly type="text" value="' + parseFloat(parse[key].EstimateCost).toFixed(2) + '" name="txtEstimCost" id="txtEstimCost' + counter + '" style="font-size:9px;width:78px!important;text-align:right;margin-top:2px;" autocomplete="off"/></td>' +
+                            '<td style="text-align:right;"><input type="text" value="' + parseFloat(parse[key].UnitPrice || 0).toFixed(2) + '" name="txtUnitPrice" id="txtUnitPrice' + counter + '" style="font-size:9px;width:68px!important;text-align:right;margin-top:2px;" autocomplete="off" onkeyup="calcutaeEstimCost(this)"/></td>' +
+                            '<td style="text-align:right;"><input readonly type="text" value="' + parseFloat(parse[key].EstimateCost || 0).toFixed(2) + '" name="txtEstimCost" id="txtEstimCost' + counter + '" style="font-size:9px;width:78px!important;text-align:right;margin-top:2px;" autocomplete="off"/></td>' +
                             '<td style="text-align:left;"><input type="text" name="txtrdate" id="txtrdate' + counter + '" style="font-size:9px;width:80px!important;margin-top:2px;" value="' + datetime + '"/></td>' +
                             '<td style="text-align:left;padding-top:7px!important;">' + (parse[key].Last_PR_No || '') + '</td>' +
                             '<td style="text-align:right;padding-top:7px!important;">' + (parse[key].Last_PR_Qty || 0) + '</td>' +
