@@ -936,6 +936,108 @@
                             color: var(--theme-on-accent, #1b2a41) !important;
                         }
         }
+
+        /* ===== Footer (all themes) - colours come from theme-colors.css ===== */
+        html body .main-content { padding-bottom: 90px !important; }
+
+        html body .app-footer {
+            position: absolute !important;
+            bottom: 0;
+            left: 0;
+            width: 100% !important;
+            height: auto !important;
+            min-height: 52px;
+            margin: 0 !important;
+            padding: 12px 24px !important;
+            display: block !important;
+            background: var(--theme-footer-bg, linear-gradient(180deg, #24344f 0%, #1b2a41 100%)) !important;
+            border-top: 3px solid var(--theme-footer-line, #EFA63E);
+            color: var(--theme-footer-text, #e9eef5) !important;
+            font-size: 13px;
+            line-height: 1.5;
+            text-align: left;
+            box-shadow: 0 -4px 14px rgba(0, 0, 0, 0.12);
+        }
+
+            html body .app-footer a {
+                color: var(--theme-footer-text, #e9eef5) !important;
+                font-weight: 600;
+                text-decoration: none;
+            }
+
+                html body .app-footer a:hover { text-decoration: underline; }
+
+            .app-footer i.fa {
+                width: 18px;
+                margin-right: 8px;
+                font-size: 15px;
+                text-align: center;
+                color: var(--theme-footer-icon, #EFA63E);
+            }
+
+        .app-footer-inner {
+            display: flex;
+            flex-wrap: wrap;
+            align-items: center;
+            justify-content: center;
+            gap: 6px 36px;
+            max-width: 1500px;
+            margin: 0 auto;
+        }
+
+        .app-footer-item {
+            display: inline-flex;
+            align-items: center;
+            white-space: nowrap;
+        }
+
+        .app-footer-title {
+            font-weight: 700;
+            letter-spacing: .3px;
+        }
+
+        /* brand footer (Tibbit) */
+        .app-footer-brand .app-footer-inner { justify-content: space-between; gap: 10px 40px; }
+
+        .app-footer-brand-text { flex: 1 1 560px; min-width: 0; }
+
+        .app-footer-brand-name { font-size: 16px; font-weight: 700; letter-spacing: .3px; }
+
+            .app-footer-brand-name span { font-weight: 400; opacity: .85; font-size: 14px; }
+
+        .app-footer-brand-tag { margin: 3px 0 0; font-size: 12.5px; line-height: 1.5; opacity: .85; max-width: 820px; }
+
+        .app-footer-contact {
+            display: flex;
+            flex-wrap: wrap;
+            align-items: center;
+            gap: 6px 24px;
+        }
+
+            .app-footer-contact .app-footer-title {
+                padding-right: 12px;
+                border-right: 1px solid rgba(255, 255, 255, 0.35);
+            }
+
+        @media screen and (max-width: 768px) {
+            html body .main-content { padding-bottom: 150px !important; }
+
+            html body .app-footer { padding: 10px 14px !important; }
+
+            .app-footer-inner { flex-direction: column; gap: 4px; text-align: center; }
+
+            .app-footer-brand .app-footer-inner { align-items: center; }
+
+            .app-footer-brand-text { flex: 0 0 auto; }
+
+            .app-footer-brand-tag { display: none; }
+
+            .app-footer-item { white-space: normal; }
+
+            .app-footer-contact { justify-content: center; }
+
+                .app-footer-contact .app-footer-title { border-right: 0; padding-right: 0; width: 100%; text-align: center; }
+        }
     </style>
     <script type="text/javascript">
         (function ($) {

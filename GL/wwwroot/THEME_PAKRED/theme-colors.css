@@ -19,5 +19,9 @@
     --theme-user-btn-bg: rgba(255, 255, 255, 0.18);      /* user-name button in the header */
     --theme-user-btn-text: #ffffff;
     --theme-user-btn-border: rgba(255, 255, 255, 0.60);
+    --theme-footer-bg: linear-gradient(180deg, #c11718 0%, #94100f 100%);   /* footer bar */
+    --theme-footer-text: #ffffff;
+    --theme-footer-line: #d42a2b;                  /* thin line on top of the footer */
+    --theme-footer-icon: #ffd5d5;                  /* small icons in the footer */
     --theme-ink: #1b2a41;                          /* dark text used on light backgrounds */
 }
