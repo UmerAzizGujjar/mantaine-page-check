@@ -7,6 +7,10 @@
 <html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en">
 <head id="Head1" runat="server">
     <meta charset="UTF-8">
+    <%-- Dark/Light mode: apply the saved choice before the page paints (no white flash). Light is the default. --%>
+    <script type="text/javascript">
+        (function () { try { if (localStorage.getItem('hmis-theme-mode') === 'dark') { document.documentElement.setAttribute('data-theme', 'dark'); } } catch (e) { } })();
+    </script>
     <title>Hospital Management System</title>
     <link rel="icon" type="image/x-icon" href="wwwroot/SOURCE_IMAGES/GENERAL_ICONS/Icon.png" />
     <asp:PlaceHolder ID="PlaceHolder1" runat="server">
@@ -836,6 +840,8 @@
                 margin-top: 0 !important;
             }
 
+        #navbar .header-user-dropdown .hdr-dd-link, #headerWelcome .hdr-dd-link { text-decoration: none; color: #000000 !important; }
+
         #navbar .user-btn {
             background: var(--theme-user-btn-bg, #EFA63E) !important;
             color: var(--theme-user-btn-text, #000000) !important;
@@ -1121,6 +1127,12 @@
 
 
     </script>
+    <%-- Dark/Light mode (shared by every client theme) - keep these two lines LAST in <head> --%>
+    <asp:PlaceHolder ID="DarkModeAssets" runat="server">
+        <link href="<%= Page.ResolveClientUrl("~/wwwroot/lib/theme/dark-theme.css") %>?v=2" rel="stylesheet" type="text/css" />
+        <link href="<%= Page.ResolveClientUrl("~/wwwroot/lib/theme/dark-pages.css") %>?v=2" rel="stylesheet" type="text/css" />
+        <script src="<%= Page.ResolveClientUrl("~/wwwroot/lib/theme/theme-toggle.js") %>?v=2" type="text/javascript"></script>
+    </asp:PlaceHolder>
 </head>
 <body class="no-skin" onload="releasemenu()">
     <form runat="server" id="MasterPageForm1">
@@ -1305,6 +1317,12 @@ CssClass="app-title"></asp:Label>
                         </div>
 
                         <div class="col-lg-2 col-md-2 col-sm-2">
+                            <div class="header-tools">
+                                <%-- Light / Dark mode toggle --%>
+                                <button type="button" class="theme-toggle" data-theme-toggle title="Switch to dark mode" aria-label="Switch to dark mode" aria-pressed="false">
+                                    <i class="fa fa-moon-o tt-moon" aria-hidden="true"></i>
+                                    <i class="fa fa-sun-o tt-sun" aria-hidden="true"></i>
+                                </button>
                             <div id="headerWelcome" class="header-user-dropdown">
                                 <div class="dropdown" style="margin-top: -15px;">
                                     <button class="btn user-btn dropdown-toggle btn-primry" type="button" id="userDropdown"
@@ -1319,8 +1337,7 @@ CssClass="app-title"></asp:Label>
                                         <!-- Logout with icon -->
                                <a href="javascript:void(0);" 
                                    onclick="handleLogout(); return false;"
-                                   style="text-decoration: none; color: black !important" 
-                                   class="dropdown-item">
+                                   class="dropdown-item hdr-dd-link">
                                    <i class="fa fa-sign-out mr-2" aria-hidden="true"></i>Log Out
                                 </a>
 
@@ -1336,8 +1353,7 @@ CssClass="app-title"></asp:Label>
                                         <div class="dropdown-divider"></div>
                                         <!-- Change Password -->
                                         <a href="<%= ResolveUrl("~/Modules/Accounts/PasswordChange.aspx") %>"
-                                            style="text-decoration: none; color: Black !important"
-                                            class="dropdown-item">
+                                            class="dropdown-item hdr-dd-link">
                                             <i class="fa fa-key mr-2" aria-hidden="true"></i>Change Password
                                         </a>
                                     </div>
@@ -1346,6 +1362,7 @@ CssClass="app-title"></asp:Label>
 
                                 </div>
                             </div>
+                            </div><%-- /header-tools --%>
                         </div>
 
 

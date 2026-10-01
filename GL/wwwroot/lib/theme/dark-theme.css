@@ -1,0 +1,587 @@
+/* ==========================================================================
+   DARK MODE  -  shared by every client theme (TIBBIT, CPTH, STANDARD, ...)
+
+   * Loaded after styleMaster.css / theme-colors.css, but it only does anything
+     while <html data-theme="dark"> is set (see theme-toggle.js).
+   * Light mode is NOT touched - each client keeps its own theme exactly as is.
+   * The client's brand colour is read from --theme-accent (theme-colors.css),
+     so the same file gives a red dark mode for CPTH, orange for TIBBIT,
+     blue for STANDARD, etc.  Nothing here needs editing per client.
+   * To tune the dark look change the --dk-* values in the first block only.
+   ========================================================================== */
+
+html[data-theme="dark"] {
+    color-scheme: dark;
+
+    /* ---- dark palette (neutral surfaces) ---- */
+    --dk-bg:        #12151a;   /* page background            */
+    --dk-surface:   #1a1e25;   /* cards, panels, tables      */
+    --dk-surface-2: #222833;   /* inputs, table headers      */
+    --dk-surface-3: #2b3240;   /* hover rows, active tabs    */
+    --dk-border:    #343c4a;
+    --dk-border-2:  #434d5f;
+    --dk-text:      #e3e8ef;
+    --dk-text-dim:  #aab4c3;
+    --dk-text-mute: #7f8a9b;
+
+    /* brand accent, lightened so it stays readable as TEXT on dark surfaces */
+    --dk-accent-text: #f2b45a;
+    --dk-accent-text: color-mix(in srgb, var(--theme-accent, #EFA63E) 62%, #ffffff);
+
+    /* ---- re-point the per-client variables used by the header / menu / footer ---- */
+    --theme-header-bg:          linear-gradient(180deg, #232a36 0%, #181d26 100%);
+    --theme-header-text:        #f1f4f9;
+    --theme-header-text-shadow: none;
+    --theme-header-line:        var(--theme-accent, #EFA63E);
+    --theme-accent-soft:        #2d3646;
+    --theme-accent-ink:         var(--dk-accent-text);
+    --theme-user-btn-bg:        var(--theme-accent, #EFA63E);
+    --theme-user-btn-text:      var(--theme-on-accent, #1b2a41);
+    --theme-user-btn-border:    transparent;
+    --theme-footer-bg:          linear-gradient(180deg, #1c222c 0%, #12161d 100%);
+    --theme-footer-text:        #d5dbe5;
+    --theme-footer-line:        var(--theme-accent, #EFA63E);
+    --theme-footer-icon:        var(--dk-accent-text);
+    --theme-ink:                var(--dk-text);
+}
+
+/* ---------- page canvas & base text ---------- */
+html[data-theme="dark"] body,
+html[data-theme="dark"] body.no-skin,
+html[data-theme="dark"] .page,
+html[data-theme="dark"] .main,
+html[data-theme="dark"] .main-content,
+html[data-theme="dark"] .main-container,
+html[data-theme="dark"] .page-content,
+html[data-theme="dark"] .content {
+    background-color: var(--dk-bg) !important;
+    color: var(--dk-text);
+}
+html[data-theme="dark"] h1, html[data-theme="dark"] h2, html[data-theme="dark"] h3,
+html[data-theme="dark"] h4, html[data-theme="dark"] h5, html[data-theme="dark"] h6,
+html[data-theme="dark"] label, html[data-theme="dark"] legend,
+html[data-theme="dark"] .control-label, html[data-theme="dark"] .lbl {
+    color: var(--dk-text);
+}
+html[data-theme="dark"] small, html[data-theme="dark"] .text-muted,
+html[data-theme="dark"] .help-block { color: var(--dk-text-dim) !important; }
+html[data-theme="dark"] hr { border-color: var(--dk-border); }
+html[data-theme="dark"] a { color: var(--dk-accent-text); }
+html[data-theme="dark"] a:hover, html[data-theme="dark"] a:focus { color: #ffffff; }
+html[data-theme="dark"] .page-header { border-bottom-color: var(--theme-accent, #EFA63E) !important; }
+html[data-theme="dark"] .page-header h1,
+html[data-theme="dark"] .page-header h1 small { color: var(--dk-accent-text) !important; }
+html[data-theme="dark"] .breadcrumbs {
+    background-color: var(--dk-surface) !important;
+    border-bottom-color: var(--dk-border) !important;
+}
+html[data-theme="dark"] .breadcrumb, html[data-theme="dark"] .breadcrumb > li,
+html[data-theme="dark"] .breadcrumb > li.active { color: var(--dk-text-dim); }
+
+/* ---------- header ---------- */
+html[data-theme="dark"] #navbar,
+html[data-theme="dark"] #navbar-container,
+html[data-theme="dark"] #navbar.navbar-default {
+    background: var(--theme-header-bg) !important;
+    box-shadow: 0 3px 14px rgba(0, 0, 0, .55) !important;
+}
+/* logos are usually drawn for light backgrounds - sit them on a soft light plate */
+html[data-theme="dark"] #navbar .app-logo {
+    background: #f4f6fa;
+    border-radius: 8px;
+    padding: 3px 6px;
+}
+html[data-theme="dark"] #navbar .ace-nav > li > a { color: var(--dk-text) !important; background: transparent !important; }
+html[data-theme="dark"] #navbar .ace-nav > li > a:hover { background: var(--dk-surface-3) !important; }
+html[data-theme="dark"] #navbar .user-btn {
+    background: var(--theme-accent) !important;
+    color: var(--theme-on-accent, #fff) !important;
+    border-color: transparent !important;
+}
+
+/* ---------- horizontal main menu ---------- */
+html[data-theme="dark"] .sidebar,
+html[data-theme="dark"] .sidebar.h-sidebar {
+    background: var(--dk-surface) !important;
+    border-color: var(--dk-border) !important;
+}
+html[data-theme="dark"] .sidebar.h-sidebar .nav-list {
+    background: linear-gradient(180deg, #202734 0%, #171c25 100%) !important;
+    border-bottom-color: var(--theme-accent, #EFA63E) !important;
+}
+html[data-theme="dark"] .sidebar.h-sidebar .nav-list > li { border-color: var(--dk-border) !important; background: transparent !important; }
+html[data-theme="dark"] .sidebar.h-sidebar .nav-list > li > a { color: var(--dk-text) !important; background: transparent; }
+html[data-theme="dark"] .sidebar.h-sidebar .nav-list > li:hover > a,
+html[data-theme="dark"] .sidebar.h-sidebar .nav-list > li.hover:hover > a {
+    background-color: var(--theme-accent-soft) !important;
+    color: var(--dk-accent-text) !important;
+}
+html[data-theme="dark"] .sidebar.h-sidebar .nav-list > li.active > a,
+html[data-theme="dark"] .sidebar.h-sidebar .nav-list > li.active:hover > a {
+    background-color: var(--theme-accent) !important;
+    color: var(--theme-on-accent, #fff) !important;
+}
+/* the little white "notch" Ace draws under the active tab */
+html[data-theme="dark"] .nav-list > li.active > a:after,
+html[data-theme="dark"] .nav-list > li.active > a:before { border-bottom-color: var(--dk-bg) !important; }
+html[data-theme="dark"] .sidebar:before { background-color: var(--dk-surface) !important; border-color: var(--dk-border) !important; box-shadow: none !important; }
+html[data-theme="dark"] .sidebar .submenu,
+html[data-theme="dark"] .nav-list > li .submenu,
+html[data-theme="dark"] .sidebar .nav-list > li > .submenu > li {
+    background-color: var(--dk-surface-2) !important;
+    border-color: var(--dk-border) !important;
+}
+html[data-theme="dark"] .nav-list > li .submenu > li > a {
+    background-color: transparent !important;
+    color: var(--dk-text) !important;
+    border-color: var(--dk-border) !important;
+}
+html[data-theme="dark"] .nav-list > li .submenu > li > a:hover,
+html[data-theme="dark"] .nav-list > li .submenu > li.active > a {
+    background-color: var(--theme-accent-soft) !important;
+    color: var(--dk-accent-text) !important;
+}
+
+/* ---------- footer ---------- */
+html[data-theme="dark"] .app-footer { box-shadow: 0 -4px 14px rgba(0, 0, 0, .45); }
+
+/* ---------- dropdowns, popovers, tooltips ---------- */
+html[data-theme="dark"] .dropdown-menu,
+html[data-theme="dark"] .dropdown-navbar,
+html[data-theme="dark"] .popover {
+    background-color: var(--dk-surface-2) !important;
+    border: 1px solid var(--dk-border-2) !important;
+    box-shadow: 0 8px 24px rgba(0, 0, 0, .55) !important;
+}
+html[data-theme="dark"] .dropdown-menu > li > a,
+html[data-theme="dark"] .dropdown-menu > li > a > .clearfix,
+html[data-theme="dark"] .dropdown-menu .dropdown-item,
+html[data-theme="dark"] #headerWelcome .dropdown-item {
+    color: var(--dk-text) !important;
+    background-color: transparent;
+    border-color: var(--dk-border) !important;
+}
+html[data-theme="dark"] .dropdown-menu > li > a:hover,
+html[data-theme="dark"] .dropdown-menu .dropdown-item:hover,
+html[data-theme="dark"] #headerWelcome .dropdown-item:hover {
+    background-color: var(--theme-accent-soft) !important;
+    color: var(--dk-accent-text) !important;
+}
+html[data-theme="dark"] .dropdown-header, html[data-theme="dark"] .dropdown-navbar .dropdown-header {
+    background-color: var(--dk-surface-3) !important;
+    color: var(--dk-text) !important;
+    border-color: var(--dk-border) !important;
+}
+html[data-theme="dark"] .dropdown-divider, html[data-theme="dark"] .dropdown-menu .divider {
+    background-color: var(--dk-border) !important;
+    border-color: var(--dk-border) !important;
+}
+html[data-theme="dark"] .popover-title { background-color: var(--dk-surface-3); color: var(--dk-text); border-color: var(--dk-border); }
+html[data-theme="dark"] .popover-content { color: var(--dk-text); }
+
+/* ---------- widgets, wells, panels, cards ---------- */
+html[data-theme="dark"] .widget-box,
+html[data-theme="dark"] .widget-body,
+html[data-theme="dark"] .widget-main,
+html[data-theme="dark"] .well,
+html[data-theme="dark"] .panel,
+html[data-theme="dark"] .panel-body,
+html[data-theme="dark"] .panel-default,
+html[data-theme="dark"] .card,
+html[data-theme="dark"] .card-body,
+html[data-theme="dark"] .jumbotron,
+html[data-theme="dark"] .infobox {
+    background-color: var(--dk-surface) !important;
+    border-color: var(--dk-border) !important;
+    color: var(--dk-text);
+}
+html[data-theme="dark"] .widget-header,
+html[data-theme="dark"] .panel-heading,
+html[data-theme="dark"] .panel-footer,
+html[data-theme="dark"] .card-header,
+html[data-theme="dark"] .widget-toolbox {
+    background: var(--dk-surface-3) !important;
+    border-color: var(--dk-border) !important;
+    color: var(--dk-text) !important;
+}
+html[data-theme="dark"] .widget-title, html[data-theme="dark"] .widget-header h1,
+html[data-theme="dark"] .widget-header h2, html[data-theme="dark"] .widget-header h3,
+html[data-theme="dark"] .widget-header h4, html[data-theme="dark"] .widget-header h5 { color: var(--dk-text) !important; }
+html[data-theme="dark"] .list-group-item {
+    background-color: var(--dk-surface) !important;
+    border-color: var(--dk-border) !important;
+    color: var(--dk-text);
+}
+
+/* ---------- tabs ---------- */
+html[data-theme="dark"] .tab-content {
+    background-color: var(--dk-surface) !important;
+    border-color: var(--dk-border) !important;
+    color: var(--dk-text);
+}
+html[data-theme="dark"] .nav-tabs { border-color: var(--dk-border) !important; }
+html[data-theme="dark"] .nav-tabs > li > a,
+html[data-theme="dark"] .nav-tabs > li > a:focus {
+    background-color: var(--dk-surface-2) !important;
+    border-color: var(--dk-border) !important;
+    color: var(--dk-text-dim) !important;
+}
+html[data-theme="dark"] .nav-tabs > li > a:hover { background-color: var(--dk-surface-3) !important; color: var(--dk-text) !important; }
+html[data-theme="dark"] .nav-tabs > li.active > a,
+html[data-theme="dark"] .nav-tabs > li.active > a:hover,
+html[data-theme="dark"] .nav-tabs > li.active > a:focus {
+    background-color: var(--dk-surface) !important;
+    border-color: var(--dk-border-2) !important;
+    border-top: 2px solid var(--theme-accent, #EFA63E) !important;
+    color: var(--dk-accent-text) !important;
+}
+html[data-theme="dark"] .nav-pills > li > a { color: var(--dk-text-dim); }
+html[data-theme="dark"] .nav-pills > li.active > a { background-color: var(--theme-accent) !important; color: var(--theme-on-accent, #fff) !important; }
+
+/* ---------- tables & grids ---------- */
+html[data-theme="dark"] table,
+html[data-theme="dark"] .table { color: var(--dk-text); }
+html[data-theme="dark"] .table > thead > tr > th,
+html[data-theme="dark"] .table > tbody > tr > th,
+html[data-theme="dark"] .table th,
+html[data-theme="dark"] table th,
+html[data-theme="dark"] table.dataTable thead th,
+html[data-theme="dark"] table.dataTable thead td {
+    background: var(--dk-surface-3) !important;
+    background-image: none !important;
+    color: var(--dk-text) !important;
+    border-color: var(--dk-border-2) !important;
+}
+html[data-theme="dark"] .table > tbody > tr > td,
+html[data-theme="dark"] .table > tfoot > tr > td,
+html[data-theme="dark"] table td,
+html[data-theme="dark"] table.dataTable tbody td {
+    background-color: var(--dk-surface);
+    border-color: var(--dk-border) !important;
+    color: var(--dk-text);
+}
+html[data-theme="dark"] .table-striped > tbody > tr:nth-of-type(odd) > td,
+html[data-theme="dark"] .table-striped > tbody > tr:nth-child(odd) > td,
+html[data-theme="dark"] table.dataTable.stripe tbody tr.odd td,
+html[data-theme="dark"] table.dataTable.display tbody tr.odd td {
+    background-color: #1f242d !important;
+}
+html[data-theme="dark"] .table-hover > tbody > tr:hover > td,
+html[data-theme="dark"] .table-hover > tbody > tr:hover > th,
+html[data-theme="dark"] table.dataTable.hover tbody tr:hover td,
+html[data-theme="dark"] table.dataTable.display tbody tr:hover td,
+html[data-theme="dark"] table.dataTable tbody tr.selected td {
+    background-color: var(--dk-surface-3) !important;
+}
+html[data-theme="dark"] .table-bordered, html[data-theme="dark"] .table-bordered > thead > tr > th,
+html[data-theme="dark"] .table-bordered > tbody > tr > td { border-color: var(--dk-border) !important; }
+/* bootstrap contextual rows keep a tint, but dark */
+html[data-theme="dark"] .table > tbody > tr.success > td { background-color: rgba(52, 168, 83, .22) !important; }
+html[data-theme="dark"] .table > tbody > tr.danger  > td { background-color: rgba(234, 67, 53, .24) !important; }
+html[data-theme="dark"] .table > tbody > tr.warning > td { background-color: rgba(251, 188, 5, .20) !important; }
+html[data-theme="dark"] .table > tbody > tr.info    > td { background-color: rgba(66, 133, 244, .22) !important; }
+
+/* DataTables chrome */
+html[data-theme="dark"] .dataTables_wrapper,
+html[data-theme="dark"] .dataTables_length, html[data-theme="dark"] .dataTables_filter,
+html[data-theme="dark"] .dataTables_info, html[data-theme="dark"] .dataTables_paginate { color: var(--dk-text) !important; }
+html[data-theme="dark"] .dataTables_wrapper .ui-toolbar { background: var(--dk-surface) !important; border-color: var(--dk-border) !important; }
+html[data-theme="dark"] .dataTables_wrapper .dataTables_paginate .paginate_button {
+    color: var(--dk-text) !important;
+    background: var(--dk-surface-2) !important;
+    border: 1px solid var(--dk-border) !important;
+}
+html[data-theme="dark"] .dataTables_wrapper .dataTables_paginate .paginate_button:hover {
+    background: var(--dk-surface-3) !important;
+    color: #fff !important;
+}
+html[data-theme="dark"] .dataTables_wrapper .dataTables_paginate .paginate_button.current,
+html[data-theme="dark"] .dataTables_wrapper .dataTables_paginate .paginate_button.current:hover {
+    background: var(--theme-accent) !important;
+    color: var(--theme-on-accent, #fff) !important;
+    border-color: var(--theme-accent) !important;
+}
+html[data-theme="dark"] .dataTables_wrapper .dataTables_paginate .paginate_button.disabled { color: var(--dk-text-mute) !important; }
+
+/* pagination (bootstrap) */
+html[data-theme="dark"] .pagination > li > a, html[data-theme="dark"] .pagination > li > span,
+html[data-theme="dark"] .pager > li > a {
+    background-color: var(--dk-surface-2) !important;
+    border-color: var(--dk-border) !important;
+    color: var(--dk-text) !important;
+}
+html[data-theme="dark"] .pagination > li > a:hover { background-color: var(--dk-surface-3) !important; }
+html[data-theme="dark"] .pagination > .active > a, html[data-theme="dark"] .pagination > .active > span {
+    background-color: var(--theme-accent) !important;
+    border-color: var(--theme-accent) !important;
+    color: var(--theme-on-accent, #fff) !important;
+}
+
+/* ---------- form controls ---------- */
+html[data-theme="dark"] input[type="text"], html[data-theme="dark"] input[type="password"],
+html[data-theme="dark"] input[type="number"], html[data-theme="dark"] input[type="email"],
+html[data-theme="dark"] input[type="search"], html[data-theme="dark"] input[type="tel"],
+html[data-theme="dark"] input[type="url"], html[data-theme="dark"] input[type="date"],
+html[data-theme="dark"] input[type="time"], html[data-theme="dark"] input[type="datetime-local"],
+html[data-theme="dark"] input:not([type]),
+html[data-theme="dark"] textarea, html[data-theme="dark"] select,
+html[data-theme="dark"] .form-control, html[data-theme="dark"] .input-group-addon {
+    background-color: var(--dk-surface-2) !important;
+    color: var(--dk-text) !important;
+    border: 1px solid var(--dk-border-2) !important;
+}
+html[data-theme="dark"] .input-group-addon { color: var(--dk-text-dim) !important; background-color: var(--dk-surface-3) !important; }
+html[data-theme="dark"] input::placeholder, html[data-theme="dark"] textarea::placeholder { color: var(--dk-text-mute) !important; opacity: 1; }
+html[data-theme="dark"] input:focus, html[data-theme="dark"] textarea:focus,
+html[data-theme="dark"] select:focus, html[data-theme="dark"] .form-control:focus {
+    border-color: var(--theme-accent, #EFA63E) !important;
+    box-shadow: 0 0 0 3px var(--theme-accent-ring, rgba(239, 166, 62, .25)) !important;
+    outline: 0;
+    background-color: #272e3b !important;
+    color: #fff !important;
+}
+html[data-theme="dark"] input[disabled], html[data-theme="dark"] input[readonly],
+html[data-theme="dark"] select[disabled], html[data-theme="dark"] textarea[disabled],
+html[data-theme="dark"] textarea[readonly], html[data-theme="dark"] .form-control[disabled],
+html[data-theme="dark"] .form-control[readonly], html[data-theme="dark"] fieldset[disabled] .form-control {
+    background-color: #181c23 !important;
+    color: var(--dk-text-dim) !important;
+    border-color: var(--dk-border) !important;
+    cursor: not-allowed;
+}
+html[data-theme="dark"] select option, html[data-theme="dark"] select optgroup {
+    background-color: var(--dk-surface-2);
+    color: var(--dk-text);
+}
+html[data-theme="dark"] input[type="checkbox"], html[data-theme="dark"] input[type="radio"] { accent-color: var(--theme-accent, #EFA63E); }
+/* Ace custom check / radio / switch */
+html[data-theme="dark"] input[type="checkbox"].ace + .lbl::before,
+html[data-theme="dark"] input[type="radio"].ace + .lbl::before {
+    background-color: var(--dk-surface-2) !important;
+    border-color: var(--dk-border-2) !important;
+    color: var(--theme-accent);
+}
+
+/* ---------- buttons ---------- */
+html[data-theme="dark"] .btn-primry, html[data-theme="dark"] .btn-primary,
+html[data-theme="dark"] .btn-primry:focus, html[data-theme="dark"] .btn-primary:focus {
+    background: var(--theme-accent) !important;
+    background-image: none !important;
+    border-color: var(--theme-accent) !important;
+    color: var(--theme-on-accent, #fff) !important;
+}
+html[data-theme="dark"] .btn-primry:hover, html[data-theme="dark"] .btn-primary:hover,
+html[data-theme="dark"] .btn-primry:active, html[data-theme="dark"] .btn-primary:active,
+html[data-theme="dark"] .btn-primry.no-hover:hover, html[data-theme="dark"] .btn-primary.no-hover:hover {
+    background: var(--theme-accent-light, var(--theme-accent)) !important;
+    border-color: var(--theme-accent-light, var(--theme-accent)) !important;
+    color: var(--theme-on-accent, #fff) !important;
+    filter: brightness(1.08);
+}
+html[data-theme="dark"] .btn-default, html[data-theme="dark"] .btn-white, html[data-theme="dark"] .btn-light,
+html[data-theme="dark"] .btn-grey {
+    background: var(--dk-surface-3) !important;
+    background-image: none !important;
+    border-color: var(--dk-border-2) !important;
+    color: var(--dk-text) !important;
+}
+html[data-theme="dark"] .btn-default:hover, html[data-theme="dark"] .btn-white:hover,
+html[data-theme="dark"] .btn-light:hover { background: #38414f !important; color: #fff !important; }
+/* semantic buttons: keep their meaning, soften the glare */
+html[data-theme="dark"] .btn-success, html[data-theme="dark"] .btn-danger,
+html[data-theme="dark"] .btn-warning, html[data-theme="dark"] .btn-info,
+html[data-theme="dark"] .btn-yellow, html[data-theme="dark"] .btn-pink,
+html[data-theme="dark"] .btn-purple { filter: saturate(.88) brightness(.92); }
+html[data-theme="dark"] .btn-success:hover, html[data-theme="dark"] .btn-danger:hover,
+html[data-theme="dark"] .btn-warning:hover, html[data-theme="dark"] .btn-info:hover { filter: saturate(.95) brightness(1.05); }
+html[data-theme="dark"] .btn.disabled, html[data-theme="dark"] .btn[disabled] { opacity: .5; }
+html[data-theme="dark"] .btn-link { color: var(--dk-accent-text); }
+
+/* ---------- modals / dialogs ---------- */
+html[data-theme="dark"] .modal-content,
+html[data-theme="dark"] .ui-dialog,
+html[data-theme="dark"] .ui-widget-content,
+html[data-theme="dark"] .swal2-popup,
+html[data-theme="dark"] .bootbox .modal-content {
+    background-color: var(--dk-surface) !important;
+    border: 1px solid var(--dk-border-2) !important;
+    color: var(--dk-text) !important;
+}
+html[data-theme="dark"] .modal-header, html[data-theme="dark"] .modal-footer,
+html[data-theme="dark"] .ui-dialog .ui-dialog-titlebar,
+html[data-theme="dark"] .ui-dialog .ui-dialog-buttonpane {
+    background: var(--dk-surface-3) !important;
+    border-color: var(--dk-border) !important;
+    color: var(--dk-text) !important;
+}
+html[data-theme="dark"] .modal-title, html[data-theme="dark"] .ui-dialog-title { color: var(--dk-text) !important; }
+html[data-theme="dark"] .modal-body { background-color: var(--dk-surface) !important; color: var(--dk-text); }
+html[data-theme="dark"] .close, html[data-theme="dark"] button.close { color: var(--dk-text); text-shadow: none; opacity: .8; }
+html[data-theme="dark"] .modal-backdrop.in { opacity: .72; }
+html[data-theme="dark"] .ui-widget-overlay { background: #000 !important; opacity: .7 !important; }
+html[data-theme="dark"] .ui-widget-header { background: var(--dk-surface-3) !important; border-color: var(--dk-border) !important; color: var(--dk-text) !important; }
+html[data-theme="dark"] .ui-widget { color: var(--dk-text); }
+
+/* ---------- select2 (v3 + v4), jquery-ui autocomplete, token input ---------- */
+html[data-theme="dark"] .select2-container .select2-choice,
+html[data-theme="dark"] .select2-container-multi .select2-choices,
+html[data-theme="dark"] .select2-container--default .select2-selection--single,
+html[data-theme="dark"] .select2-container--default .select2-selection--multiple {
+    background: var(--dk-surface-2) !important;
+    background-image: none !important;
+    border: 1px solid var(--dk-border-2) !important;
+    color: var(--dk-text) !important;
+}
+html[data-theme="dark"] .select2-container .select2-choice > .select2-chosen,
+html[data-theme="dark"] .select2-container--default .select2-selection--single .select2-selection__rendered { color: var(--dk-text) !important; }
+html[data-theme="dark"] .select2-drop, html[data-theme="dark"] .select2-drop-active,
+html[data-theme="dark"] .select2-dropdown, html[data-theme="dark"] .select2-results {
+    background: var(--dk-surface-2) !important;
+    border-color: var(--dk-border-2) !important;
+    color: var(--dk-text) !important;
+}
+html[data-theme="dark"] .select2-search input, html[data-theme="dark"] .select2-search--dropdown .select2-search__field {
+    background: var(--dk-bg) !important; color: var(--dk-text) !important; border-color: var(--dk-border-2) !important;
+}
+html[data-theme="dark"] .select2-results .select2-result-label,
+html[data-theme="dark"] .select2-results__option { color: var(--dk-text) !important; }
+html[data-theme="dark"] .select2-results .select2-highlighted,
+html[data-theme="dark"] .select2-container--default .select2-results__option--highlighted[aria-selected] {
+    background: var(--theme-accent) !important;
+    color: var(--theme-on-accent, #fff) !important;
+}
+html[data-theme="dark"] .select2-container--default .select2-results__option[aria-selected=true] { background: var(--dk-surface-3) !important; }
+html[data-theme="dark"] .select2-container-multi .select2-choices .select2-search-choice {
+    background: var(--dk-surface-3) !important; border-color: var(--dk-border-2) !important; color: var(--dk-text) !important;
+}
+html[data-theme="dark"] ul.token-input-list, html[data-theme="dark"] ul.token-input-dropdown {
+    background: var(--dk-surface-2) !important; border-color: var(--dk-border-2) !important; color: var(--dk-text);
+}
+html[data-theme="dark"] li.token-input-token { background: var(--dk-surface-3) !important; color: var(--dk-text) !important; }
+html[data-theme="dark"] .ui-autocomplete, html[data-theme="dark"] .ui-menu {
+    background: var(--dk-surface-2) !important; border: 1px solid var(--dk-border-2) !important; color: var(--dk-text) !important;
+}
+html[data-theme="dark"] .ui-menu .ui-menu-item, html[data-theme="dark"] .ui-menu .ui-menu-item-wrapper { color: var(--dk-text) !important; }
+html[data-theme="dark"] .ui-menu .ui-state-active, html[data-theme="dark"] .ui-menu-item .ui-state-focus,
+html[data-theme="dark"] .ui-menu .ui-menu-item:hover {
+    background: var(--theme-accent) !important; border-color: var(--theme-accent) !important; color: var(--theme-on-accent, #fff) !important;
+}
+
+/* ---------- date / time pickers ---------- */
+html[data-theme="dark"] .ui-datepicker,
+html[data-theme="dark"] .xdsoft_datetimepicker,
+html[data-theme="dark"] .bootstrap-datetimepicker-widget,
+html[data-theme="dark"] .datepicker, html[data-theme="dark"] .bootstrap-timepicker-widget,
+html[data-theme="dark"] .ptTimeSelect {
+    background: var(--dk-surface-2) !important;
+    border: 1px solid var(--dk-border-2) !important;
+    color: var(--dk-text) !important;
+    box-shadow: 0 8px 24px rgba(0, 0, 0, .55) !important;
+}
+html[data-theme="dark"] .ui-datepicker .ui-datepicker-header { background: var(--dk-surface-3) !important; border-color: var(--dk-border) !important; color: var(--dk-text) !important; }
+html[data-theme="dark"] .ui-datepicker th { color: var(--dk-text-dim) !important; background: transparent !important; }
+html[data-theme="dark"] .ui-datepicker td { background: transparent !important; }
+html[data-theme="dark"] .ui-datepicker td a, html[data-theme="dark"] .ui-datepicker td span,
+html[data-theme="dark"] .ui-state-default {
+    background: var(--dk-surface-3) !important; border-color: var(--dk-border) !important; color: var(--dk-text) !important;
+}
+html[data-theme="dark"] .ui-datepicker td a:hover, html[data-theme="dark"] .ui-state-hover { background: #38414f !important; }
+html[data-theme="dark"] .ui-datepicker td a.ui-state-active, html[data-theme="dark"] .ui-state-active,
+html[data-theme="dark"] .ui-datepicker .ui-state-highlight {
+    background: var(--theme-accent) !important; border-color: var(--theme-accent) !important; color: var(--theme-on-accent, #fff) !important;
+}
+html[data-theme="dark"] .xdsoft_datetimepicker .xdsoft_calendar td,
+html[data-theme="dark"] .xdsoft_datetimepicker .xdsoft_calendar th,
+html[data-theme="dark"] .xdsoft_datetimepicker .xdsoft_timepicker .xdsoft_time_box > div > div {
+    background: var(--dk-surface-3) !important; border-color: var(--dk-border) !important; color: var(--dk-text) !important;
+}
+html[data-theme="dark"] .xdsoft_datetimepicker .xdsoft_calendar td.xdsoft_current,
+html[data-theme="dark"] .xdsoft_datetimepicker .xdsoft_timepicker .xdsoft_time_box > div > div.xdsoft_current,
+html[data-theme="dark"] .xdsoft_datetimepicker .xdsoft_calendar td:hover {
+    background: var(--theme-accent) !important; color: var(--theme-on-accent, #fff) !important; box-shadow: none !important;
+}
+html[data-theme="dark"] .xdsoft_datetimepicker .xdsoft_label { background: var(--dk-surface-3) !important; color: var(--dk-text) !important; }
+html[data-theme="dark"] .xdsoft_datetimepicker .xdsoft_label > .xdsoft_select { background: var(--dk-surface-2) !important; border-color: var(--dk-border-2) !important; }
+html[data-theme="dark"] .xdsoft_datetimepicker .xdsoft_label > .xdsoft_select > div > .xdsoft_option { color: var(--dk-text) !important; }
+html[data-theme="dark"] .bootstrap-datetimepicker-widget table td, html[data-theme="dark"] .bootstrap-datetimepicker-widget table th {
+    color: var(--dk-text) !important; background: transparent !important;
+}
+html[data-theme="dark"] .bootstrap-datetimepicker-widget table td.active { background: var(--theme-accent) !important; color: var(--theme-on-accent, #fff) !important; }
+
+/* ---------- alerts, badges, labels ---------- */
+html[data-theme="dark"] .alert { border-color: var(--dk-border-2); }
+html[data-theme="dark"] .alert-success { background-color: rgba(52, 168, 83, .18); color: #9be0ae; border-color: rgba(52, 168, 83, .45); }
+html[data-theme="dark"] .alert-danger  { background-color: rgba(234, 67, 53, .18); color: #ffb1a8; border-color: rgba(234, 67, 53, .45); }
+html[data-theme="dark"] .alert-warning { background-color: rgba(251, 188, 5, .16); color: #ffd978; border-color: rgba(251, 188, 5, .45); }
+html[data-theme="dark"] .alert-info    { background-color: rgba(66, 133, 244, .18); color: #a9c7ff; border-color: rgba(66, 133, 244, .45); }
+html[data-theme="dark"] .progress { background-color: var(--dk-surface-3); }
+
+/* ---------- charts (ApexCharts) ---------- */
+html[data-theme="dark"] .apexcharts-text,
+html[data-theme="dark"] .apexcharts-legend-text,
+html[data-theme="dark"] .apexcharts-title-text,
+html[data-theme="dark"] .apexcharts-xaxis-label,
+html[data-theme="dark"] .apexcharts-yaxis-label { fill: var(--dk-text-dim) !important; color: var(--dk-text-dim) !important; }
+html[data-theme="dark"] .apexcharts-gridline { stroke: var(--dk-border) !important; }
+html[data-theme="dark"] .apexcharts-tooltip { background: var(--dk-surface-3) !important; border-color: var(--dk-border-2) !important; color: var(--dk-text) !important; }
+html[data-theme="dark"] .apexcharts-tooltip-title { background: var(--dk-surface-2) !important; border-color: var(--dk-border-2) !important; }
+
+/* ---------- scrollbars ---------- */
+html[data-theme="dark"] * { scrollbar-color: #465064 var(--dk-bg); }
+html[data-theme="dark"] ::-webkit-scrollbar { width: 11px; height: 11px; }
+html[data-theme="dark"] ::-webkit-scrollbar-track { background: var(--dk-bg); }
+html[data-theme="dark"] ::-webkit-scrollbar-thumb { background: #465064; border-radius: 6px; border: 2px solid var(--dk-bg); }
+html[data-theme="dark"] ::-webkit-scrollbar-thumb:hover { background: #5b677d; }
+
+/* ---------- pictures: take the glare off a little ---------- */
+html[data-theme="dark"] .main img:not(.app-logo) { filter: brightness(.92); }
+
+/* ==========================================================================
+   THEME TOGGLE BUTTON  (sun / moon in the header)
+   Light mode styling lives here too so it always matches the client colours.
+   ========================================================================== */
+.theme-toggle {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 38px;
+    height: 38px;
+    margin: 0 12px 0 0;
+    padding: 0;
+    border-radius: 50%;
+    cursor: pointer;
+    flex: 0 0 auto;
+    background: var(--theme-user-btn-bg, rgba(255, 255, 255, .18));
+    color: var(--theme-user-btn-text, #000);
+    border: 1px solid var(--theme-user-btn-border, transparent);
+    box-shadow: 0 2px 6px rgba(0, 0, 0, .25);
+    font-size: 17px;
+    line-height: 1;
+    transition: transform .15s ease, filter .15s ease;
+}
+.theme-toggle:hover { filter: brightness(1.08); transform: translateY(-1px); }
+.theme-toggle:focus-visible { outline: 3px solid var(--theme-accent-ring, rgba(0, 0, 0, .3)); outline-offset: 2px; }
+.theme-toggle .fa { margin: 0; }
+.theme-toggle .tt-sun  { display: none; }
+.theme-toggle .tt-moon { display: inline-block; }
+html[data-theme="dark"] .theme-toggle {
+    background: var(--theme-accent);
+    color: var(--theme-on-accent, #fff);
+    border-color: transparent;
+}
+html[data-theme="dark"] .theme-toggle .tt-sun  { display: inline-block; }
+html[data-theme="dark"] .theme-toggle .tt-moon { display: none; }
+
+/* header user area: toggle + user button side by side */
+#navbar .header-tools { display: flex; align-items: center; justify-content: flex-end; }
+
+/* smooth fade when switching (only while the switch is happening) */
+html.theme-switching, html.theme-switching *, html.theme-switching *::before, html.theme-switching *::after {
+    transition: background-color .25s ease, color .25s ease, border-color .25s ease !important;
+}
+
+@media print {
+    html[data-theme="dark"] body, html[data-theme="dark"] .main, html[data-theme="dark"] .main-content,
+    html[data-theme="dark"] .page-content { background: #fff !important; color: #000 !important; }
+    .theme-toggle { display: none !important; }
+}
