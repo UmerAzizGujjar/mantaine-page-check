@@ -83,6 +83,16 @@ namespace PMS
             return beds >= 2;
         }
 
+        private bool TryParseFloor(out int floor)
+        {
+            floor = 0;
+            string t = (txtFloorNo.Text ?? "").Trim();
+            if (int.TryParse(t, out floor))
+                return true;
+            string digits = new string(t.Where(char.IsDigit).ToArray());
+            return int.TryParse(digits, out floor);
+        }
+
         private void UpdatePerBedHint()
         {
             decimal charges;
@@ -148,6 +158,13 @@ namespace PMS
                     return;
                 }
 
+                int floorNo;
+                if (!TryParseFloor(out floorNo))
+                {
+                    ShowError("Enter a valid Floor No. (e.g. 1 or 1st).");
+                    return;
+                }
+
                 if (btnSave.Text == "Save")
                 {
                     Room rm = new  Room();
@@ -156,7 +173,7 @@ namespace PMS
                     rm.Name = txtName.Text;
                     rm.Building_Type = ddlBuildingType.SelectedValue;
                     rm.Room_Type = ddlRoomType.SelectedValue;
-                    rm.Floor_No = Convert.ToInt32(txtFloorNo.Text);
+                    rm.Floor_No = floorNo;
                     rm.Location = txtLocation.Text;
                     rm.Warden = ddlWarden.SelectedValue;
                     rm.Room_Charges = Convert.ToDecimal(txtRoom_Charges.Text);
@@ -196,7 +213,7 @@ namespace PMS
                         rm.Name = txtName.Text;
                         rm.Building_Type = ddlBuildingType.SelectedValue;
                         rm.Room_Type = ddlRoomType.SelectedValue;
-                        rm.Floor_No = Convert.ToInt32(txtFloorNo.Text);
+                        rm.Floor_No = floorNo;
                         rm.Location = txtLocation.Text;
                         rm.Warden = ddlWarden.SelectedValue;
                         rm.Room_Charges = Convert.ToDecimal(txtRoom_Charges.Text);
