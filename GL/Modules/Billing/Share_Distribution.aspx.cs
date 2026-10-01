@@ -98,7 +98,8 @@ var query = from ip in db.In_Patients
                                 Doctor = (from d in db.HR_Employees
                                           where d.Emp_ID == Convert.ToInt32(ip.Doctor)
                                           select d.Emp_Name).FirstOrDefault() ?? "",
-                                Department = ip.Department,
+                                //Department = ip.Department,
+                                Department=  db.GetDataValueName("Patient Main Category", ip.Department),
                                 Ward_Name = (from w in db.Ward_Definitions
                                              where w.Ward_ID == ip.Ward_ID
                                              select w.Ward_Type).FirstOrDefault() ?? "",
