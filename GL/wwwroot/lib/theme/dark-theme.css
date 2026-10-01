@@ -12,7 +12,7 @@
 html[data-theme="dark"] {
     color-scheme: dark;
 
-    /* ---- standard dark palette: midnight slate surfaces + one blue accent ---- */
+    /* ---- standard dark palette: midnight slate surfaces + one teal accent ---- */
     --dk-bg:        #0e131b;   /* page background            */
     --dk-surface:   #151b25;   /* cards, panels, tables      */
     --dk-surface-2: #1c2431;   /* inputs, table headers      */
@@ -23,20 +23,27 @@ html[data-theme="dark"] {
     --dk-text-dim:  #a9b4c4;
     --dk-text-mute: #7a8699;
 
-    /* the dark-mode accent - the SAME for every client */
-    --dk-accent:        #3574e8;   /* buttons, active tabs, header line   */
-    --dk-accent-light:  #5b92f0;   /* top of the button gradient, hover   */
-    --dk-accent-strong: #2a5fc4;   /* pressed / darker shade              */
-    --dk-accent-text:   #8db4ff;   /* accent used as TEXT / icons         */
+    /* ---------------------------------------------------------------------------------
+       THE DARK-MODE ACCENT  (one colour for every client)
+       Change these 7 values to recolour the whole dark theme, or pick a colour live:
+         - open any page with  ?darkpicker=1  to get a small colour picker, or
+         - in the browser console:  HmisTheme.setAccent('teal')  /  HmisTheme.setAccent('#e8742a')
+       (theme-toggle.js computes all 7 values from one colour and sets them on <html>)
+       --------------------------------------------------------------------------------- */
+    --dk-accent:        #0f9488;   /* buttons, active tabs, header line   */
+    --dk-accent-rgb:    15 148 136;   /* same colour as r,g,b - used for glows / tints */
+    --dk-accent-light:  #14b8a6;   /* top of the button gradient, hover   */
+    --dk-accent-strong: #0b766c;   /* pressed / darker shade              */
+    --dk-accent-text:   #6ee0d2;   /* accent used as TEXT / icons         */
     --dk-on-accent:     #ffffff;   /* text on top of the accent colour    */
-    --dk-accent-soft:   #1f2f4d;   /* soft accent background (hover rows) */
+    --dk-accent-soft:   #123c3a;   /* soft accent background (hover rows) */
 
     /* ---- re-point the per-client variables, so header / menu / footer / buttons all follow ---- */
     --theme-accent:             var(--dk-accent);
     --theme-accent-light:       var(--dk-accent-light);
     --theme-on-accent:          var(--dk-on-accent);
-    --theme-accent-ring:        rgba(91, 146, 240, .35);
-    --theme-accent-shadow:      rgba(53, 116, 232, .45);
+    --theme-accent-ring:        rgb(var(--dk-accent-rgb) / .35);
+    --theme-accent-shadow:      rgb(var(--dk-accent-rgb) / .45);
     --theme-header-bg:          linear-gradient(180deg, #1c2431 0%, #131924 100%);
     --theme-header-text:        #f1f4f9;
     --theme-header-text-shadow: none;
