@@ -8,6 +8,7 @@
         $(document).ready(function () {
             CheckCNICUpdateonCondition();
             CheckEmerDocTokenCondition();
+            LoadERAutoDepartment();
             MaskedInput({
                 elm: document.getElementById('txt_mobile'),
                 format: '+92__________',
@@ -542,6 +543,8 @@
                 $('#employee').hide();
 
                 $('#discount').show();
+
+                applyERAutoDepartment();
             }
             else if (Category == "02") {
                 $('#fees').show();
@@ -1084,6 +1087,43 @@
                 }
             });
         }
+        var erAutoDeptCode = "";
+        function LoadERAutoDepartment() {
+            $.ajax({
+                type: "POST",
+                url: "EmergencyForm.aspx/GetERAutoDepartment",
+                data: "{}",
+                contentType: "application/json; charset=utf-8",
+                dataType: "json",
+                success: function (response) {
+                    try { erAutoDeptCode = JSON.parse(response.d) || ""; } catch (e) { erAutoDeptCode = ""; }
+                    if (erAutoDeptCode && $('#ddlPatient_Type').val() === "01") {
+                        applyERAutoDepartment();
+                    }
+                },
+                error: function () { erAutoDeptCode = ""; }
+            });
+        }
+        function applyERAutoDepartment() {
+            if (!erAutoDeptCode) return;
+            if ($('#ddlPatient_Type').val() !== "01") return;
+            if ($('#hdn_EmergencyFormId').val() !== "" || $('#hdn_emer_reffered').val() !== "") return;
+
+            var $dept = $('#ddlDepartment');
+            var selectER = function () {
+                $('#ddlDepartment').val(erAutoDeptCode).trigger('change');
+                if ($('#ddlDepartment').hasClass('select2-hidden-accessible')) {
+                    $('#ddlDepartment').trigger('select2:select');
+                    $('#ddlDepartment').select2('close');
+                }
+            };
+
+            if ($dept.find('option').length <= 1) {
+                fillDropdown($dept, 'GetDepartment', selectER);
+            } else {
+                selectER();
+            }
+        }
         var CNICs;
         function CheckCNICUpdateonCondition() {
 
@@ -1321,9 +1361,10 @@
             });
         }  // ← This closing brace was missing!
      
-        function fillDropdown($dropdown, methodName) {
+        function fillDropdown($dropdown, methodName, onDone) {
             if ($dropdown.data('filled')) {
                 autoSelectGender();
+                if (typeof onDone === 'function') onDone();
                 return;
             }
 
@@ -1357,6 +1398,8 @@
                         if ($dropdown.attr('id') === 'ddl_Gender') {
                             autoSelectGender();
                         }
+
+                        if (typeof onDone === 'function') onDone();
                     } catch (e) {
                         console.error(`Error parsing data from ${methodName}:`, e);
                         $dropdown.data('filled', false);

@@ -593,6 +593,7 @@ List<BatchNum> batchList, List<PatientTypeList> PatientTypeList, List<WarehouseM
                     obj.Is_CathLab = Convert.ToBoolean(CathLabItems);
                     obj.High_risk = Convert.ToBoolean(HighRisk);
                     obj.DepartmentId = DepartmentId;
+                    obj.ItemGroupId = ItemGroup;
                     obj.InventoryOrg = Warehouse;
                     obj.Hospital_Services = Convert.ToBoolean(IsHospital);
                     obj.Services = Convert.ToBoolean(IsService);
