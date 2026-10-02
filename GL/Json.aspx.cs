@@ -490,7 +490,7 @@ namespace PMS
                 {
                     string sqlQuery;
                     if (Request.QueryString["q"] != null)
-                        sqlQuery = "Select * from INV_Items Where Book_ID=" + AppConfig.Book_ID + " and Hospital_Services= 0 and Services<>1 and Active=1 AND Item_Code like@qb_q";
+                        sqlQuery = "Select * from INV_Items Where Book_ID=" + AppConfig.Book_ID + " and Hospital_Services= 0 and Services<>1 and Active=1 AND Item_Code like @qb_q";
                     else
                         sqlQuery = "Select * from INV_Items Where Book_ID=" + AppConfig.Book_ID + "";
                     string result = "";
@@ -520,15 +520,15 @@ namespace PMS
                     {
                         if (allowPharmacy && allowGeneralItem)
                         {                           
-                            sqlQuery = "Select *, isnull(dbo.GetDataValueName('UOM', i.Unit),'NIL') as UOM, (select top 1 CAST(ISNULL(Rate,0) as DECIMAL(18,2)) from AP_Purchase_Order_Items where Item_Id = i.Item_ID order by PO_Item_ID desc) as LastRate, (select ISNULL(sum(Qty),0) from vwBatch_Ledger where Item_ID = i.Item_ID) as Stock from INV_Items i Where Hospital_Services= 0 and Services<>1 and Active=1 and Book_ID=" + AppConfig.Book_ID + " AND Description like@qb_q";
+                            sqlQuery = "Select *, isnull(dbo.GetDataValueName('UOM', i.Unit),'NIL') as UOM, (select top 1 CAST(ISNULL(Rate,0) as DECIMAL(18,2)) from AP_Purchase_Order_Items where Item_Id = i.Item_ID order by PO_Item_ID desc) as LastRate, (select ISNULL(sum(Qty),0) from vwBatch_Ledger where Item_ID = i.Item_ID) as Stock from INV_Items i Where Hospital_Services= 0 and Services<>1 and Active=1 and Book_ID=" + AppConfig.Book_ID + " AND Description like @qb_q";
                         }
                         else if (allowPharmacy)
                         {
-                            sqlQuery = "Select *, isnull(dbo.GetDataValueName('UOM', i.Unit),'NIL') as UOM, (select top 1 CAST(ISNULL(Rate,0) as DECIMAL(18,2)) from AP_Purchase_Order_Items where Item_Id = i.Item_ID order by PO_Item_ID desc) as LastRate, (select ISNULL(sum(Qty),0) from vwBatch_Ledger where Item_ID = i.Item_ID) as Stock from INV_Items i Where Pharmacy_Item=1 and IsPharmacyItem=1 and Hospital_Services= 0 and Services<>1 and Active=1 and Book_ID=" + AppConfig.Book_ID + " AND Description like@qb_q";
+                            sqlQuery = "Select *, isnull(dbo.GetDataValueName('UOM', i.Unit),'NIL') as UOM, (select top 1 CAST(ISNULL(Rate,0) as DECIMAL(18,2)) from AP_Purchase_Order_Items where Item_Id = i.Item_ID order by PO_Item_ID desc) as LastRate, (select ISNULL(sum(Qty),0) from vwBatch_Ledger where Item_ID = i.Item_ID) as Stock from INV_Items i Where Pharmacy_Item=1 and IsPharmacyItem=1 and Hospital_Services= 0 and Services<>1 and Active=1 and Book_ID=" + AppConfig.Book_ID + " AND Description like @qb_q";
                         }
                         else
                         {
-                            sqlQuery = "Select *, isnull(dbo.GetDataValueName('UOM', i.Unit),'NIL') as UOM, (select top 1 CAST(ISNULL(Rate,0) as DECIMAL(18,2)) from AP_Purchase_Order_Items where Item_Id = i.Item_ID order by PO_Item_ID desc) as LastRate, (select ISNULL(sum(Qty),0) from vwBatch_Ledger where Item_ID = i.Item_ID) as Stock from INV_Items i Where Pharmacy_Item<>1 and IsPharmacyItem<>1 and Hospital_Services= 0 and Services<>1 and Active=1 and Book_ID=" + AppConfig.Book_ID + " AND Description like@qb_q";                            
+                            sqlQuery = "Select *, isnull(dbo.GetDataValueName('UOM', i.Unit),'NIL') as UOM, (select top 1 CAST(ISNULL(Rate,0) as DECIMAL(18,2)) from AP_Purchase_Order_Items where Item_Id = i.Item_ID order by PO_Item_ID desc) as LastRate, (select ISNULL(sum(Qty),0) from vwBatch_Ledger where Item_ID = i.Item_ID) as Stock from INV_Items i Where Pharmacy_Item<>1 and IsPharmacyItem<>1 and Hospital_Services= 0 and Services<>1 and Active=1 and Book_ID=" + AppConfig.Book_ID + " AND Description like @qb_q";                            
                         }
                     }
                     else
@@ -625,7 +625,7 @@ namespace PMS
                 {
                     string sqlQuery;
                     if (Request.QueryString["q"] != null)
-                        sqlQuery = "Select *, isnull(dbo.GetDataValueName('UOM', i.Unit),'NIL') as UOM, (select top 1 CAST(ISNULL(Rate,0) as DECIMAL(18,2)) from AP_Purchase_Order_Items where Item_Id = i.Item_ID order by PO_Item_ID desc) as LastRate, (select ISNULL(sum(Qty),0) from vwBatch_Ledger where Item_ID = i.Item_ID) as Stock from INV_Items i Where Hospital_Services= 0 and Services<>1 and Active=1 and Book_ID=" + AppConfig.Book_ID + " AND Description like@qb_q";
+                        sqlQuery = "Select *, isnull(dbo.GetDataValueName('UOM', i.Unit),'NIL') as UOM, (select top 1 CAST(ISNULL(Rate,0) as DECIMAL(18,2)) from AP_Purchase_Order_Items where Item_Id = i.Item_ID order by PO_Item_ID desc) as LastRate, (select ISNULL(sum(Qty),0) from vwBatch_Ledger where Item_ID = i.Item_ID) as Stock from INV_Items i Where Hospital_Services= 0 and Services<>1 and Active=1 and Book_ID=" + AppConfig.Book_ID + " AND Description like @qb_q";
 
                     else
                         sqlQuery = "Select * from INV_Items Where Book_ID=" + AppConfig.Book_ID + "";
@@ -1550,7 +1550,7 @@ namespace PMS
                         deptFilter = " AND ISNULL(DepartmentId, 0) = @qe_DeptID";
                     }
                     if (Request.QueryString["q"] != null)
-                        sqlQuery = "Select top 1000 Item_ID as ItemID,Item_Code as ItemCode,Description as ItemName,Pharmacy_Item, Sale_Rate as Amount,case when Services = 1 then 'Service' when Services = 0 then 'Item' else '' end ItemType from INV_Items Where (Services = 1)  and Book_ID = 1  and Active=1 and Description like@qb_q" + deptFilter;
+                        sqlQuery = "Select top 1000 Item_ID as ItemID,Item_Code as ItemCode,Description as ItemName,Pharmacy_Item, Sale_Rate as Amount,case when Services = 1 then 'Service' when Services = 0 then 'Item' else '' end ItemType from INV_Items Where (Services = 1)  and Book_ID = 1  and Active=1 and Description like @qb_q" + deptFilter;
                     else
                         sqlQuery = "Select  top 1000  Item_ID as ItemID,Item_Code as ItemCode,Description as ItemName,Sale_Rate as Amount,case when Services=1 then 'Service' when Services=0 then 'Item' else '' end ItemType from INV_Items Where (Pharmacy_Item=0 or Pharmacy_Item is null) and Active=1 and Book_ID=" + AppConfig.Book_ID + deptFilter;
                     string result = "";
@@ -1570,7 +1570,7 @@ namespace PMS
                     string sqlQuery;
                     var s = Request.QueryString["Panel"];
                     if (Request.QueryString["q"] != null)
-                        sqlQuery = "Select   top 1000 Item_ID as ItemID,Item_Code as ItemCode,Description as ItemName,Sale_Rate as Amount,case when Services=1 then 'Service' when Services=0 then 'Item' else '' end ItemType from INV_Items Where (Pharmacy_Item=0 or Pharmacy_Item is null) and  ISNULL(Payment,'0')=1 and Book_ID=1 and Description like@qb_q";
+                        sqlQuery = "Select   top 1000 Item_ID as ItemID,Item_Code as ItemCode,Description as ItemName,Sale_Rate as Amount,case when Services=1 then 'Service' when Services=0 then 'Item' else '' end ItemType from INV_Items Where (Pharmacy_Item=0 or Pharmacy_Item is null) and  ISNULL(Payment,'0')=1 and Book_ID=1 and Description like @qb_q";
                     else
                         sqlQuery = "Select  top 1000  Item_ID as ItemID,Item_Code as ItemCode,Description as ItemName,Sale_Rate as Amount,case when Services=1 then 'Service' when Services=0 then 'Item' else '' end ItemType from INV_Items Where (Pharmacy_Item=0 or Pharmacy_Item is null) and Book_ID=" + AppConfig.Book_ID + "";
                     string result = "";
@@ -1587,7 +1587,7 @@ namespace PMS
                     string sqlQuery;
                     var Panel = Request.QueryString["Panel"];
                     if (Request.QueryString["q"] != null)
-                        sqlQuery = "Select   top 1000 inv.Item_ID as ItemID,inv.Item_Code as ItemCode,Description as ItemName,pnl.Rate as Amount,case when Services=1 then 'Service' when Services=0 then 'Item' else '' end ItemType from INV_Items inv,Panel_Detail_Services pnl Where (Pharmacy_Item=0 or Pharmacy_Item is null)and inv.Item_ID = pnl.Item_ID and Book_ID=1 and ISNULL(IsBill_Item,'0')=1 and pnl.Panel_ID=@qe_Panel and Description like@qb_q";
+                        sqlQuery = "Select   top 1000 inv.Item_ID as ItemID,inv.Item_Code as ItemCode,Description as ItemName,pnl.Rate as Amount,case when Services=1 then 'Service' when Services=0 then 'Item' else '' end ItemType from INV_Items inv,Panel_Detail_Services pnl Where (Pharmacy_Item=0 or Pharmacy_Item is null)and inv.Item_ID = pnl.Item_ID and Book_ID=1 and ISNULL(IsBill_Item,'0')=1 and pnl.Panel_ID=@qe_Panel and Description like @qb_q";
                     else
                         sqlQuery = "Select  top 1000  inv.Item_ID as ItemID,inv.Item_Code as ItemCode,Description as ItemName,pnl.Rate as Amount,case when Services=1 then 'Service' when Services=0 then 'Item' else '' end ItemType from INV_Items inv,Panel_Detail_Services pnl Where (Pharmacy_Item=0 or Pharmacy_Item is null) and inv.Item_ID = pnl.Item_ID and Book_ID=" + AppConfig.Book_ID + "";
                     string result = "";
@@ -1604,7 +1604,7 @@ namespace PMS
                     string sqlQuery;
                     var s = Request.QueryString["Panel"];
                     if (Request.QueryString["q"] != null)
-                        sqlQuery = "Select   top 1000 inv.Item_ID as ItemID,inv.Item_Code as ItemCode,Description as ItemName,pnl.Rate as Amount,case when Services=1 then 'Service' when Services=0 then 'Item' else '' end ItemType from INV_Items inv,Panel_Detail_Services pnl Where (Pharmacy_Item=0 or Pharmacy_Item is null)and inv.Item_ID = pnl.Item_ID and Book_ID=1 and ISNULL(IsBill_Item,'0')=1 and pnl.Panel_ID=36 and Description like@qb_q";
+                        sqlQuery = "Select   top 1000 inv.Item_ID as ItemID,inv.Item_Code as ItemCode,Description as ItemName,pnl.Rate as Amount,case when Services=1 then 'Service' when Services=0 then 'Item' else '' end ItemType from INV_Items inv,Panel_Detail_Services pnl Where (Pharmacy_Item=0 or Pharmacy_Item is null)and inv.Item_ID = pnl.Item_ID and Book_ID=1 and ISNULL(IsBill_Item,'0')=1 and pnl.Panel_ID=36 and Description like @qb_q";
                     else
                         sqlQuery = "Select  top 1000  inv.Item_ID as ItemID,inv.Item_Code as ItemCode,Description as ItemName,pnl.Rate as Amount,case when Services=1 then 'Service' when Services=0 then 'Item' else '' end ItemType from INV_Items inv,Panel_Detail_Services pnl Where (Pharmacy_Item=0 or Pharmacy_Item is null) and inv.Item_ID = pnl.Item_ID and Book_ID=" + AppConfig.Book_ID + "";
                     string result = "";
@@ -1621,7 +1621,7 @@ namespace PMS
                     string sqlQuery;
                     var s = Request.QueryString["Panel"];
                     if (Request.QueryString["q"] != null)
-                        sqlQuery = "Select   top 1000 inv.Item_ID as ItemID,inv.Item_Code as ItemCode,Description as ItemName,pnl.Rate as Amount,case when Services=1 then 'Service' when Services=0 then 'Item' else '' end ItemType from INV_Items inv,Panel_Detail_Services pnl Where (Pharmacy_Item=0 or Pharmacy_Item is null)and inv.Item_ID = pnl.Item_ID and Book_ID=1 and ISNULL(IsBill_Item,'0')=1 and pnl.Panel_ID=35 and Description like@qb_q";
+                        sqlQuery = "Select   top 1000 inv.Item_ID as ItemID,inv.Item_Code as ItemCode,Description as ItemName,pnl.Rate as Amount,case when Services=1 then 'Service' when Services=0 then 'Item' else '' end ItemType from INV_Items inv,Panel_Detail_Services pnl Where (Pharmacy_Item=0 or Pharmacy_Item is null)and inv.Item_ID = pnl.Item_ID and Book_ID=1 and ISNULL(IsBill_Item,'0')=1 and pnl.Panel_ID=35 and Description like @qb_q";
                     else
                         sqlQuery = "Select  top 1000  inv.Item_ID as ItemID,inv.Item_Code as ItemCode,Description as ItemName,pnl.Rate as Amount,case when Services=1 then 'Service' when Services=0 then 'Item' else '' end ItemType from INV_Items inv,Panel_Detail_Services pnl Where (Pharmacy_Item=0 or Pharmacy_Item is null) and inv.Item_ID = pnl.Item_ID and Book_ID=" + AppConfig.Book_ID + "";
                     string result = "";
@@ -1639,7 +1639,7 @@ namespace PMS
                     var data = Request.QueryString["Editdata"];
                     if (data == null)
                     {
-                        sqlQuery = "Select   top 1000 Item_ID as ItemID,Item_Code as ItemCode,Description as ItemName,Salt,Purchase_Rate as Amount,case when Services=1 then 'Service' when Services=0 then 'Item' else '' end ItemType from INV_Items Where Pharmacy_Item=1 and  Book_ID=" + AppConfig.Book_ID + " AND (Description like@qb_q OR Item_Code like@qb_q OR Salt like@qb_q)";
+                        sqlQuery = "Select   top 1000 Item_ID as ItemID,Item_Code as ItemCode,Description as ItemName,Salt,Purchase_Rate as Amount,case when Services=1 then 'Service' when Services=0 then 'Item' else '' end ItemType from INV_Items Where Pharmacy_Item=1 and  Book_ID=" + AppConfig.Book_ID + " AND (Description like @qb_q OR Item_Code like @qb_q OR Salt like @qb_q)";
                     }
                     else
                     {
@@ -1661,7 +1661,7 @@ namespace PMS
                 {
                     string sqlQuery;
                     if (Request.QueryString["q"] != null)
-                        sqlQuery = "select PO_ID as PO_ID,PO_No as PO_No,op.Vendor_ID as VendorID,PO_Date as Date,(select vendor_Name from AP_Vendors where Vendor_ID=op.Vendor_ID) as Vendor_ID from AP_Purchase_Orders op where (PO_No like@qb_q or dbo.GetVendorName(Vendor_ID) like@qb_q)";
+                        sqlQuery = "select PO_ID as PO_ID,PO_No as PO_No,op.Vendor_ID as VendorID,PO_Date as Date,(select vendor_Name from AP_Vendors where Vendor_ID=op.Vendor_ID) as Vendor_ID from AP_Purchase_Orders op where (PO_No like @qb_q or dbo.GetVendorName(Vendor_ID) like @qb_q)";
                     else
                         sqlQuery = "select PO_ID,PO_No,Vendor_ID from AP_Purchase_Orders";
                     string result = "";
@@ -1682,7 +1682,7 @@ namespace PMS
                 {
                     string sqlQuery;
                     if (Request.QueryString["q"] != null)
-                        sqlQuery = "Select Item_ID as ItemID,Item_Code as ItemCode,Description as ItemName,Sale_Rate as Amount,case when Services=1 then 'Service' when Services=0 then 'Item' else '' end ItemType from INV_Items Where Pharmacy_Item=1 and Book_ID=" + AppConfig.Book_ID + " AND Description like@qb_q";
+                        sqlQuery = "Select Item_ID as ItemID,Item_Code as ItemCode,Description as ItemName,Sale_Rate as Amount,case when Services=1 then 'Service' when Services=0 then 'Item' else '' end ItemType from INV_Items Where Pharmacy_Item=1 and Book_ID=" + AppConfig.Book_ID + " AND Description like @qb_q";
                     else
                         sqlQuery = "Select Item_ID as ItemID,Item_Code as ItemCode,Description as ItemName,Sale_Rate as Amount,case when Services=1 then 'Service' when Services=0 then 'Item' else '' end ItemType from INV_Items Where Pharmacy_Item=1 and Book_ID=" + AppConfig.Book_ID + "";
                     string result = "";
@@ -1698,7 +1698,7 @@ namespace PMS
                 {
                     string sqlQuery;
                     if (Request.QueryString["q"] != null)
-                        sqlQuery = "Select  Packages_ID as ItemID,Package_Name as ItemName,'Packages' ItemType from Packages m where m.Package_Name like@qb_q";
+                        sqlQuery = "Select  Packages_ID as ItemID,Package_Name as ItemName,'Packages' ItemType from Packages m where m.Package_Name like @qb_q";
                     else
                         sqlQuery = "Select Packages_ID as ItemID,Package_Name as ItemName,'Packages' ItemType from Packages m";
                     string result = "";
