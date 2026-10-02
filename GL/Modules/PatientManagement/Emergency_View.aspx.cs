@@ -63,7 +63,7 @@ namespace PMS.Modules.PatientManagement
             return status;
         }
         [WebMethod]
-        public static object ViewList(int draw, int start, int length, string sortColumn, string sortColumnDirection, string searchValue)
+        public static object ViewList(int draw, int start, int length, string sortColumn, string sortColumnDirection, string searchValue, string fromDate, string toDate)
         {
             try
             {
@@ -103,6 +103,19 @@ namespace PMS.Modules.PatientManagement
                               };
 
 
+
+                    // Start / End date filter (yyyy-MM-dd). Blank = no filter (all data).
+                    DateTime fromDt, toDt;
+                    if (DateTime.TryParseExact(fromDate, "yyyy-MM-dd", System.Globalization.CultureInfo.InvariantCulture, System.Globalization.DateTimeStyles.None, out fromDt))
+                    {
+                        DateTime fromDateValue = fromDt.Date;
+                        emer = emer.Where(a => a.Created_Time >= fromDateValue);
+                    }
+                    if (DateTime.TryParseExact(toDate, "yyyy-MM-dd", System.Globalization.CultureInfo.InvariantCulture, System.Globalization.DateTimeStyles.None, out toDt))
+                    {
+                        DateTime toDateExclusive = toDt.Date.AddDays(1);
+                        emer = emer.Where(a => a.Created_Time < toDateExclusive);
+                    }
 
                     var FilteredCount = emer.Count();
                     switch (sortColumn)

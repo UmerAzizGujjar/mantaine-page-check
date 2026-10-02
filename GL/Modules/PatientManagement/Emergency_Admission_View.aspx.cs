@@ -63,7 +63,7 @@ namespace PMS.Modules.PatientManagement
             return status;
         }
         [WebMethod]
-        public static object ViewList(int draw, int start, int length, string sortColumn, string sortColumnDirection, string searchValue)
+        public static object ViewList(int draw, int start, int length, string sortColumn, string sortColumnDirection, string searchValue, string fromDate, string toDate)
         {
             try
             {
@@ -114,6 +114,19 @@ namespace PMS.Modules.PatientManagement
                                       join e in _dbContext.Emergencies on ep.Emergency_ID equals e.Emer_id
                                       where (e.isCancel == false || e.isCancel == null)
                                       select ep.Emergency_ID).Count();
+
+                    // Start / End date filter (yyyy-MM-dd). Blank = no filter (all data).
+                    DateTime fromDt, toDt;
+                    if (DateTime.TryParseExact(fromDate, "yyyy-MM-dd", System.Globalization.CultureInfo.InvariantCulture, System.Globalization.DateTimeStyles.None, out fromDt))
+                    {
+                        DateTime fromDateValue = fromDt.Date;
+                        admissions = admissions.Where(a => a.Admission_Date >= fromDateValue);
+                    }
+                    if (DateTime.TryParseExact(toDate, "yyyy-MM-dd", System.Globalization.CultureInfo.InvariantCulture, System.Globalization.DateTimeStyles.None, out toDt))
+                    {
+                        DateTime toDateExclusive = toDt.Date.AddDays(1);
+                        admissions = admissions.Where(a => a.Admission_Date < toDateExclusive);
+                    }
 
                     var FilteredCount = admissions.Count();
                     switch (sortColumn)

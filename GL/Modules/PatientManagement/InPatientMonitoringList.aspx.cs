@@ -58,7 +58,7 @@ namespace PMS
 
 
         [WebMethod]
-        public static object ViewList(int draw, int start, int length, string sortColumn, string sortColumnDirection, string searchValue)
+        public static object ViewList(int draw, int start, int length, string sortColumn, string sortColumnDirection, string searchValue, string fromDate, string toDate)
         {
             try
             {
@@ -74,6 +74,7 @@ namespace PMS
                                     select new
                                     {
                                         InPatient_Mon_ID = IPM.InPatient_Mon_ID,
+                                        Created_Time = IPM.Created_Time,
                                         mr_no_sequence = P.mr_no_sequence,
                                         Full_Name = P.Full_Name,
                                         Father_Name = P.Father_Name,
@@ -86,6 +87,19 @@ namespace PMS
                                                   where IP.Patient_ID == IPM.Patient_ID
                                                   select IP.Bed_No).FirstOrDefault()
                                     };
+
+                    // Start / End date filter (yyyy-MM-dd). Blank = no filter (all data).
+                    DateTime fromDt, toDt;
+                    if (DateTime.TryParseExact(fromDate, "yyyy-MM-dd", System.Globalization.CultureInfo.InvariantCulture, System.Globalization.DateTimeStyles.None, out fromDt))
+                    {
+                        DateTime fromDateValue = fromDt.Date;
+                        IN_Monitoring = IN_Monitoring.Where(a => a.Created_Time >= fromDateValue);
+                    }
+                    if (DateTime.TryParseExact(toDate, "yyyy-MM-dd", System.Globalization.CultureInfo.InvariantCulture, System.Globalization.DateTimeStyles.None, out toDt))
+                    {
+                        DateTime toDateExclusive = toDt.Date.AddDays(1);
+                        IN_Monitoring = IN_Monitoring.Where(a => a.Created_Time < toDateExclusive);
+                    }
 
                     var FilteredCount = IN_Monitoring.Count();
                     switch (sortColumn)
