@@ -144,7 +144,7 @@ namespace PMS
         }
 
         [WebMethod]
-        public static object ViewList(int draw, int start, int length, string sortColumn, string sortColumnDirection, string searchValue)
+        public static object ViewList(int draw, int start, int length, string sortColumn, string sortColumnDirection, string searchValue, string fromDate, string toDate)
         {
             try
             {
@@ -177,6 +177,19 @@ namespace PMS
                                         Bill_No = (from ab in _dbContext.Ar_Billings where ab.In_Patient_ID == opd.In_Patient_ID && ab.final_bill_ipd == true select ab.IPD_BillNo).FirstOrDefault(),
                                         AdmitDays = SqlMethods.DateDiffDay(opd.Admission_Date, DateTime.Now)
                                     };
+
+                    // Start / End date filter (yyyy-MM-dd). Blank = no filter (all data).
+                    DateTime fromDt, toDt;
+                    if (DateTime.TryParseExact(fromDate, "yyyy-MM-dd", System.Globalization.CultureInfo.InvariantCulture, System.Globalization.DateTimeStyles.None, out fromDt))
+                    {
+                        DateTime fromDateValue = fromDt.Date;
+                        baseQuery = baseQuery.Where(a => a.Admission_Date >= fromDateValue);
+                    }
+                    if (DateTime.TryParseExact(toDate, "yyyy-MM-dd", System.Globalization.CultureInfo.InvariantCulture, System.Globalization.DateTimeStyles.None, out toDt))
+                    {
+                        DateTime toDateExclusive = toDt.Date.AddDays(1);
+                        baseQuery = baseQuery.Where(a => a.Admission_Date < toDateExclusive);
+                    }
 
                     var filteredCount = baseQuery.Count();
 

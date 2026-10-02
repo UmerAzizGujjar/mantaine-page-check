@@ -182,7 +182,7 @@ namespace PMS
         }
 
         [WebMethod]
-        public static object ViewList(int draw, int start, int length, string sortColumn, string sortColumnDirection, string searchValue, string locationFilter)
+        public static object ViewList(int draw, int start, int length, string sortColumn, string sortColumnDirection, string searchValue, string locationFilter, string fromDate, string toDate)
         {
             try
             {
@@ -250,6 +250,19 @@ namespace PMS
                                                          select R.Name).FirstOrDefault(),
                                             Bed_No = IP.Bed_No
                                         };
+
+                    // Start / End date filter (yyyy-MM-dd). Blank = no filter (all data).
+                    DateTime fromDt, toDt;
+                    if (DateTime.TryParseExact(fromDate, "yyyy-MM-dd", System.Globalization.CultureInfo.InvariantCulture, System.Globalization.DateTimeStyles.None, out fromDt))
+                    {
+                        DateTime fromDateValue = fromDt.Date;
+                        IN_Monitoring = IN_Monitoring.Where(a => a.Admission_Date >= fromDateValue);
+                    }
+                    if (DateTime.TryParseExact(toDate, "yyyy-MM-dd", System.Globalization.CultureInfo.InvariantCulture, System.Globalization.DateTimeStyles.None, out toDt))
+                    {
+                        DateTime toDateExclusive = toDt.Date.AddDays(1);
+                        IN_Monitoring = IN_Monitoring.Where(a => a.Admission_Date < toDateExclusive);
+                    }
 
                     var FilteredCount = IN_Monitoring.Count();
                     switch (sortColumn)

@@ -80,7 +80,7 @@ namespace PMS
         }
 
         [WebMethod]
-        public static object ViewList(int draw, int start, int length, string sortColumn, string sortColumnDirection, string searchValue)
+        public static object ViewList(int draw, int start, int length, string sortColumn, string sortColumnDirection, string searchValue, string fromDate, string toDate)
         {
             try
             {
@@ -104,6 +104,19 @@ namespace PMS
                                   Mobile1 = rg.Mobile1,
                                   Status = p.Status
                               };
+
+                    // Start / End date filter (yyyy-MM-dd). Blank = no filter (all data).
+                    DateTime fromDt, toDt;
+                    if (DateTime.TryParseExact(fromDate, "yyyy-MM-dd", System.Globalization.CultureInfo.InvariantCulture, System.Globalization.DateTimeStyles.None, out fromDt))
+                    {
+                        DateTime fromDateValue = fromDt.Date;
+                        pat = pat.Where(a => a.Created_Time >= fromDateValue);
+                    }
+                    if (DateTime.TryParseExact(toDate, "yyyy-MM-dd", System.Globalization.CultureInfo.InvariantCulture, System.Globalization.DateTimeStyles.None, out toDt))
+                    {
+                        DateTime toDateExclusive = toDt.Date.AddDays(1);
+                        pat = pat.Where(a => a.Created_Time < toDateExclusive);
+                    }
 
                     var FilteredCount = pat.Count();
                     switch (sortColumn)
