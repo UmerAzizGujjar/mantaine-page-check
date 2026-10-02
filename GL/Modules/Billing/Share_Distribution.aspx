@@ -195,6 +195,7 @@
             });
         }
         var shareableIncomes = 0;
+        var ipdBaseRevenue = null;
         function LoadDistributionDetail(Dist_ID) {
 
             PageMethods.LoadDistributionDetail(Dist_ID, function (resp) {
@@ -209,6 +210,7 @@
                     );
                     if (value.Share_Calculation === 'IPD REVENUE') {
                         shareableIncomes = value.Net_Amount;
+                        ipdBaseRevenue = parseFloat(value.Net_Amount) || 0;
                         $('#txtShareableIncome').val(shareableIncomes)
                     }
 
@@ -238,46 +240,30 @@
                 });
 
                 $('#tblDetails tbody').empty().append(rows);
-
+                InitAccountSelect2($('#tblDetails tbody'));
             });
         }
 
         function CalculateRemainingIPDRevenue() {
 
-
             var totalDistributed = 0;
-            var ipdamt = 0;
 
-            // Sum all appended custom row amounts
+            // Sum all manually added rows
             $('#tblDetails tbody tr.custom-share-row').each(function () {
-
                 var amount = parseFloat(
-                    $(this).find('.distribution-amount').val()
+                    $(this).find('.distribution-amount').first().val()
                 ) || 0;
-
-                totalDistributed = amount;
+                totalDistributed += amount;
             });
 
-            // Get original IPD REVENUE amount
-            $('#tblDetails tbody tr').each(function () {
-
-                var description = $(this)
-                    .find('input[name="txtDescription"]')
-                    .val();
-
-                if (description &&
-                    description.toUpperCase() === 'IPD REVENUE') {
-
-                    ipdamt = parseFloat(
-                        $(this)
-                            .find('input[name="txtNetAmount"]')
-                            .val()
-                    ) || 0;
-                }
-            });
+            // Stable base IPD revenue (captured when the data was loaded)
+            var base = ipdBaseRevenue;
+            if (base === null || base === undefined || isNaN(base)) {
+                base = parseFloat($('#txtShareableIncome').val()) || 0;
+            }
 
             // Remaining amount
-            var remaining = ipdamt - totalDistributed;
+            var remaining = base - totalDistributed;
 
             if (remaining < 0) {
                 remaining = 0;
@@ -304,6 +290,44 @@
             });
             $("#txtShareableIncome").val(remaining.toFixed(2))
         }
+        function InitAccountSelect2($rows) {
+            $rows.find('select[name="ddlGlAccounts"]').each(function () {
+                var $s = $(this);
+                var acct = $s.attr('data-account');
+                if ($s.data('select2')) { $s.select2('destroy'); }
+
+                var hasAccount = acct !== undefined && acct !== null && acct !== '';
+                if (hasAccount && $s.find('option[value="' + acct + '"]').length === 0) {
+                    var code = $s.attr('data-account-code') || acct;
+                    $s.append('<option value="' + acct + '">' + code + '</option>');
+                }
+                if (hasAccount) { $s.val(String(acct)); }
+
+                $s.select2({ width: '100%' });
+
+                if (hasAccount) { $s.val(String(acct)).trigger('change'); }
+            });
+        }
+
+        function ToggleEditShareRow(btn) {
+            var $row = $(btn).closest('tr');
+            var $icon = $(btn).find('i');
+            if ($row.data('editing') === true) {
+                $row.find('input[name="txtDescription"], input.distribution-amount').prop('readonly', true);
+                $row.data('editing', false);
+                $icon.removeClass('fa-floppy-o').addClass('fa-pencil');
+            } else {
+                $row.find('input[name="txtDescription"], input.distribution-amount').prop('readonly', false);
+                $row.data('editing', true);
+                $icon.removeClass('fa-pencil').addClass('fa-floppy-o');
+            }
+        }
+
+        function DeleteShareRow(btn) {
+            $(btn).closest('tr').remove();
+            CalculateRemainingIPDRevenue();
+        }
+
         function AddDistributionRow() {
             var description = $('#IPD_Discription').val();
             var amount = parseFloat($('#Dist_Amount').val()) || 0;
@@ -364,12 +388,16 @@
                        readonly>
             </td>
 
- 
+            <td style="text-align:center;">
+                <a href="javascript:void(0)" onclick="ToggleEditShareRow(this)" title="Edit" style="margin-right:8px;"><i class="fa fa-pencil" style="font-size:16px;color:#0d6efd;"></i></a>
+                <a href="javascript:void(0)" onclick="DeleteShareRow(this)" title="Delete"><i class="fa fa-trash-o" style="font-size:16px;color:#dc3545;"></i></a>
+            </td>
 
         </tr>
     `;
 
             $('#tblDetails tbody').append(row);
+            InitAccountSelect2($('#tblDetails tbody tr').last());
 
             // clear controls
             $('#IPD_Discription').val('');
@@ -470,12 +498,13 @@
                         var netAmount = parse[i].Net_Amount;
                         if (parse[i].Description === 'IPD REVENUE') {
                             shareableIncome = netAmount;
+                            ipdBaseRevenue = parseFloat(netAmount) || 0;
                             $('#txtShareableIncome').val(shareableIncome)
                         }
                         rows += `
                 <tr>
                     <td>
-                        <select id="ddlGlAccounts${i}" name="ddlGlAccounts">
+                        <select id="ddlGlAccounts${i}" name="ddlGlAccounts" data-account="${parse[i].Account_ID}" data-account-code="${parse[i].Account_Code}">
                             ${Account}
                         </select>
                     </td>
@@ -499,6 +528,7 @@
 
                     $('#tblDetails tbody').empty();
                     $('#tblDetails tbody').append(rows);
+                    InitAccountSelect2($('#tblDetails tbody'));
                 }
             });
             AddDoctorFromBilling(Bill_No)
@@ -593,6 +623,7 @@
                 type: 'POST',
                 contentType: 'application/json; charset=utf-8',
                 dataType: 'json',
+                async: false,
                 success: function (response) {
                     let options = '<option value="0">Please Select</option>';
                     let data = JSON.parse(response.d);
@@ -1309,6 +1340,7 @@
                                 <th style="text-align: center; width: 15%;">Disc Percentage</th>
                                 <th style="text-align: center; width: 15%;">Disc Amount</th>
                                 <th style="text-align: center; width: 15%;">Net Amount</th>
+                                <th style="text-align: center; width: 10%;">Action</th>
                             </tr>
                         </thead>
                         <tbody>
