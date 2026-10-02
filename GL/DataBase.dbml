@@ -6680,6 +6680,7 @@
       <Column Name="ApprovedBy" Type="System.Guid" DbType="UniqueIdentifier" CanBeNull="true" />
       <Column Name="Discount_Amount" Type="System.Decimal" DbType="Decimal(18,2)" CanBeNull="true" />
       <Column Name="is_DirtGRN" Type="System.Boolean" DbType="Bit" CanBeNull="true" />
+      <Column Name="Freight_Amount" Type="System.Decimal" DbType="Decimal(18,2)" CanBeNull="true" />
     </Type>
   </Table>
   <Table Name="dbo.AP_Vendors" Member="AP_Vendors">

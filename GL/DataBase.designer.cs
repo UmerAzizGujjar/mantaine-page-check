@@ -146938,6 +146938,8 @@ namespace PMS
 
         private System.Nullable<bool> _is_DirtGRN;
 
+        private System.Nullable<decimal> _Freight_Amount;
+
         #region Extensibility Method Definitions
         partial void OnLoaded();
         partial void OnValidate(System.Data.Linq.ChangeAction action);
@@ -147010,6 +147012,8 @@ namespace PMS
         partial void OnDiscount_AmountChanged();
         partial void Onis_DirtGRNChanging(System.Nullable<bool> value);
         partial void Onis_DirtGRNChanged();
+        partial void OnFreight_AmountChanging(System.Nullable<decimal> value);
+        partial void OnFreight_AmountChanged();
         #endregion
 
         public Purchase_Invoice_Master()
@@ -147693,6 +147697,26 @@ namespace PMS
                     this._is_DirtGRN = value;
                     this.SendPropertyChanged("is_DirtGRN");
                     this.Onis_DirtGRNChanged();
+                }
+            }
+        }
+
+        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_Freight_Amount", DbType = "Decimal(18,2)")]
+        public System.Nullable<decimal> Freight_Amount
+        {
+            get
+            {
+                return this._Freight_Amount;
+            }
+            set
+            {
+                if ((this._Freight_Amount != value))
+                {
+                    this.OnFreight_AmountChanging(value);
+                    this.SendPropertyChanging();
+                    this._Freight_Amount = value;
+                    this.SendPropertyChanged("Freight_Amount");
+                    this.OnFreight_AmountChanged();
                 }
             }
         }

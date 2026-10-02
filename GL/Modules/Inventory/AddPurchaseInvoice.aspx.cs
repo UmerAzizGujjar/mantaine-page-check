@@ -406,6 +406,10 @@ namespace PMS.Inventory
                 {
                     lstItem.Discount_Amount = Convert.ToDecimal(record.disc_amount);
                 }
+                if (!string.IsNullOrEmpty(record.freight_amount))
+                {
+                    lstItem.Freight_Amount = Convert.ToDecimal(record.freight_amount);
+                }
                 if (record.ExRate != "")
                 {
                     lstItem.ExRate = Convert.ToDecimal(record.ExRate);
@@ -446,6 +450,10 @@ namespace PMS.Inventory
                 if (record.disc_amount != "")
                 {
                     PO.Discount_Amount = Convert.ToDecimal(record.disc_amount);
+                }
+                if (!string.IsNullOrEmpty(record.freight_amount))
+                {
+                    PO.Freight_Amount = Convert.ToDecimal(record.freight_amount);
                 }
                 if (record.ExRate != "")
                 {
@@ -624,6 +632,7 @@ namespace PMS.Inventory
                               m.Net_Amount,
                               m.is_DirtGRN,
                               m.Discount_Amount,
+                              m.Freight_Amount,
                               m.Branch_id,
                               Vendor_Name = db.AP_Vendors.Where(po => po.Vendor_ID == Convert.ToInt32(m.VendorId)).Select(po => po.Vendor_Name),
                           }).FirstOrDefault();
@@ -688,6 +697,7 @@ namespace PMS.Inventory
             public string totalnetamount { get; set; }
             public bool Is_Direct { get; set; }
             public string disc_amount { get; set; }
+            public string freight_amount { get; set; }
             
             public List<InoiceDetailList> ItemList { get; set; }
             public List<InoiceDetailList2> ItemList2 { get; set; }
@@ -783,6 +793,31 @@ namespace PMS.Inventory
 
             var result = query.ToList();
             return (new JavaScriptSerializer()).Serialize(result);
+        }
+
+        [WebMethod]
+        public static string GetFreightAmountByPONos(string poNos)
+        {
+            DataBaseDataContext db = new DataBaseDataContext(DBClass.ConnectionString());
+            var ids = (poNos ?? "")
+                .Split(new[] { ',' }, StringSplitOptions.RemoveEmptyEntries)
+                .Select(s => s.Trim())
+                .Where(s => s != "")
+                .Select(s => { int n; return int.TryParse(s, out n) ? n : 0; })
+                .Where(n => n > 0)
+                .Distinct()
+                .ToList();
+
+            if (ids.Count == 0)
+                return "0.00";
+
+            var total = db.AP_Purchase_Orders
+                .Where(o => o.PO_No.HasValue && ids.Contains(o.PO_No.Value))
+                .Select(o => o.Frieght_Charges)
+                .ToList()
+                .Sum(v => v ?? 0);
+
+            return total.ToString("0.00");
         }
 
         [WebMethod]

@@ -556,11 +556,32 @@
             $("#tblItemDescription").append(rows);
             $('#Staxddl' + length).val(stax);
             CulculateAmonut();
+            LoadFreightFromItems();
             length++;
         }
         function Delete(row) {
             $(row).closest('tr').remove();
             calculateRowData();
+            LoadFreightFromItems();
+        }
+
+        function LoadFreightFromItems() {
+            var pos = [];
+            $('#tblItemDescription tbody tr').each(function () {
+                var po = $.trim($($(this).find('td')[3]).text());
+                if (po && po !== '-') {
+                    pos.push(po);
+                }
+            });
+            if (pos.length === 0) {
+                $('#freight_amount').val(0);
+                calculateRowData();
+                return;
+            }
+            PageMethods.GetFreightAmountByPONos(pos.join(','), function (resp) {
+                $('#freight_amount').val(resp);
+                calculateRowData();
+            });
         }
 
         function calculateRowData() {
@@ -608,7 +629,7 @@
             $('#tot_inv_amount').val(totalinvamount.toFixed());
             var totalfinalinvamount = $('#tot_inv_amount').val();
             var totaladvfinaladjusted = $('#tot_adjusted_advance').val();
-            netamount = parseFloat(totalfinalinvamount) - parseFloat(totaladvfinaladjusted) - parseFloat(discamount) + parseFloat(total_accounting_amt);
+            netamount = parseFloat(totalfinalinvamount) - parseFloat(totaladvfinaladjusted) - parseFloat(discamount) + parseFloat(total_accounting_amt) + parseFloat($('#freight_amount').val() || 0);
             $('#net_amount').val(netamount.toFixed());
         }
 
@@ -642,6 +663,7 @@
                     $('#ddlBranch').val(savedBranch).trigger('change');
                 }
                 $('#tot_inv_amount').val(data.Total_Invoice_Amount);
+                $('#freight_amount').val(data.Freight_Amount || 0);
                 $('#tot_adjusted_advance').val(data.Total_Advance_Adjusted);
                 $('#net_amount').val(data.Net_Amount);
                 $('#disc_amount').val(data.Discount_Amount);
@@ -829,6 +851,7 @@
                 var totaladvanceadjusted = $('#tot_adjusted_advance').val();
                 var totalnetamount = $('#net_amount').val();
                 var disc_amount = $('#disc_amount').val();
+                var freight_amount = $('#freight_amount').val();
                 var table = $('#tblItemDescriptionDetail');
                 var table2 = $('#advancepaymenttablebody');
 
@@ -865,7 +888,7 @@
                         'advadjusted': $(value).find('td input[name=adjusted_Amount]').val()
                     });
                 });
-                var AllItemDetail = { 'disc_amount': disc_amount, 'totalnetamount': totalnetamount, 'totaladvanceadjusted': totaladvanceadjusted, 'totalinvoiceamount': totalinvoiceamount, 'InvoiceNum': InvoiceNum, 'InvoiceType': InvoiceTyp, 'VendorId': VendorId, 'RefInvoiceNum': RefInvoiceno, 'SalTaxInvoiceNum': StaxInvoice, 'InvoiceDate': InvoiceDate, 'AccountingDate': AccountingDate, 'DueDate': DueDate, 'Currency': CurrencyId, 'ExRate': ExRate, 'Remarks': Remarks, 'Branch': Branch, 'ExDate': ExDate, 'ItemList': Item_list, 'Itemlist2': Item_list2, 'Is_Direct': Is_Direct };
+                var AllItemDetail = { 'disc_amount': disc_amount, 'freight_amount': freight_amount, 'totalnetamount': totalnetamount, 'totaladvanceadjusted': totaladvanceadjusted, 'totalinvoiceamount': totalinvoiceamount, 'InvoiceNum': InvoiceNum, 'InvoiceType': InvoiceTyp, 'VendorId': VendorId, 'RefInvoiceNum': RefInvoiceno, 'SalTaxInvoiceNum': StaxInvoice, 'InvoiceDate': InvoiceDate, 'AccountingDate': AccountingDate, 'DueDate': DueDate, 'Currency': CurrencyId, 'ExRate': ExRate, 'Remarks': Remarks, 'Branch': Branch, 'ExDate': ExDate, 'ItemList': Item_list, 'Itemlist2': Item_list2, 'Is_Direct': Is_Direct };
                 PageMethods.SaveInvoice(btnSave, JSON.stringify(AllItemDetail), function (res) {
                     Swal.fire({
                         icon: 'success',
@@ -1127,7 +1150,7 @@
             $('#tot_inv_amount').val(totalinvamount.toFixed());
             var totalfinalinvamount = $('#tot_inv_amount').val();
             var totaladvfinaladjusted = $('#tot_adjusted_advance').val();
-            netamount = parseFloat(totalfinalinvamount) - parseFloat(totaladvfinaladjusted) - parseFloat(discamount) + parseFloat(total_accounting_amt);
+            netamount = parseFloat(totalfinalinvamount) - parseFloat(totaladvfinaladjusted) - parseFloat(discamount) + parseFloat(total_accounting_amt) + parseFloat($('#freight_amount').val() || 0);
             $('#net_amount').val(netamount.toFixed());
         }
         function Loadadvancepaymentdetail(Inv_ID) {
@@ -1358,6 +1381,7 @@
             $('#tblItemDescription tbody').append(newRow);
             $('#Staxddl' + length).select2();
             CulculateAmonut();
+            LoadFreightFromItems();
         }
 
         function updateHiddenQty(visibleInput, index) {
@@ -1641,6 +1665,8 @@
             <div style="float: right;">
                 <label id="lbl_tot_inv_amount">Total Invoice Amount</label>
                 <input type="text" id="tot_inv_amount" name="tot_inv_amount" readonly="readonly" />
+                <label id="lbl_freight_amount">Freight</label>
+                <input type="text" id="freight_amount" name="freight_amount" onkeyup="CulculateAmonut()" />
                 <label id="lbl_disc_amount">Additional Discount</label>
                 <input type="text" id="disc_amount" name="disc_amount" onkeyup="CulculateAmonut()" />
                 <label id="lbl_tot_adjusted_advance">Advance Adjusted</label>
