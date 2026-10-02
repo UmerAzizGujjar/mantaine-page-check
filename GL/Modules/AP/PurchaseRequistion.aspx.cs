@@ -76,6 +76,18 @@ namespace PMS.AP
             return (new JavaScriptSerializer()).Serialize(dept);
         }
 
+        [WebMethod]
+        public static string GetMode()
+        {
+            DataBaseDataContext db = new DataBaseDataContext(DBClass.ConnectionString());
+            var dept = (from data in db.sys_Parms
+                        where data.Name == "PR Mode"
+                        select
+                          data.Code
+                        ).FirstOrDefault();
+            return (new JavaScriptSerializer()).Serialize(dept);
+        }
+
         private void LoadGIRNum()
         {
             #region "Bind GIRNUM in Dropdown"
@@ -99,6 +111,16 @@ namespace PMS.AP
             int GirId = Convert.ToInt32(GIRId);
             var listDetails = db.sp_GetGIRDetailByGIRID(GirId).ToList();
             return (new JavaScriptSerializer()).Serialize(listDetails);
+        }
+        [WebMethod]
+        public static string getGIRHeader(string GIRId)
+        {
+            DataBaseDataContext db = new DataBaseDataContext();
+            long girId = Convert.ToInt64(GIRId);
+            var header = (from mir in db.MaterialIssueRequests
+                          where mir.MaterialRequest_Id == girId
+                          select new { mir.Priority, mir.Department }).FirstOrDefault();
+            return (new JavaScriptSerializer()).Serialize(header);
         }
         [WebMethod]
         public static string fillpriorities()

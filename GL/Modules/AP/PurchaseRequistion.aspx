@@ -61,6 +61,7 @@
 
         $(document).ready(function () {
             GetWareHouseCondition();
+            GetModeCondition();
 
             // ── Sanitize JSON from json.aspx endpoints before jQuery parses it.
             // Fixes "Bad escaped character" errors caused by raw backslashes in item names.
@@ -154,6 +155,28 @@
             $('#btnGIR').on('click', function () {
                 var Gir_id = $("#ctl00_MainContent_ddlGIR").val();
                 LoadGIRNoDetail(Gir_id);
+                if (Gir_id && Gir_id !== "0" && Gir_id !== "") {
+                    $.ajax({
+                        type: "POST",
+                        url: "PurchaseRequistion.aspx/getGIRHeader",
+                        data: JSON.stringify({ GIRId: Gir_id }),
+                        contentType: "application/json; charset=utf-8",
+                        dataType: "json",
+                        success: function (response) {
+                            var header = response.d ? JSON.parse(response.d) : null;
+                            if (!header) return;
+                            var modeVal = resolveGIRMode(header.Priority);
+                            if (modeVal && $('#ddlMode option[value="' + modeVal + '"]').length) {
+                                $('#ddlMode').val(modeVal).trigger('change');
+                                if ($('#ddlMode').hasClass('select2-hidden-accessible')) { $('#ddlMode').trigger('select2:select'); }
+                            }
+                            if (header.Department) {
+                                $('#ddldept').val(header.Department).trigger('change');
+                                if ($('#ddldept').hasClass('select2-hidden-accessible')) { $('#ddldept').trigger('select2:select'); }
+                            }
+                        }
+                    });
+                }
                 $('#txtRemarks').focus();
             });
 
@@ -570,6 +593,14 @@
             });
         }
 
+        function resolveGIRMode(val) {
+            if (val === null || val === undefined) return '';
+            val = String(val).trim();
+            if (val === '1') return '003';   // GIR High -> Emergent
+            if (val === '2') return '004';   // GIR Low  -> Low
+            return '';
+        }
+
         function FillWarehouse() {
             PageMethods.fillWarehouse(function (Tests) {
                 var optionInv = '<option value="0">Please Select</option>';
@@ -673,6 +704,22 @@
                     syncMetaBar();
                 },
                 failure: function (response) { alert("In failure method"); }
+            });
+        }
+
+        function GetModeCondition() {
+            $.ajax({
+                type: "POST",
+                url: "PurchaseRequistion.aspx/GetMode",
+                data: JSON.stringify({}),
+                contentType: "application/json; charset=utf-8",
+                dataType: "json",
+                success: function (response) {
+                    var modeCond = response.d ? JSON.parse(response.d) : '';
+                    if (modeCond == '01') { $('#mode').show(); }
+                    else { $('#mode').hide(); }
+                },
+                error: function (error) { console.error("Error fetching mode condition", error); }
             });
         }
 
@@ -1241,7 +1288,7 @@
                     <option value="0">Please Select</option>
                 </select>
             </div>
-            <div class="col-lg-2 col-md-4 col-sm-6 col-xs-12">
+            <div id="mode" class="col-lg-2 col-md-4 col-sm-6 col-xs-12">
                 <label id="LblMode">Mode</label>
                 <select id="ddlMode" class="form-select">
                     <option value="0">Please Select</option>
