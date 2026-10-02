@@ -1,0 +1,27 @@
+/* ==========================================================================
+   Theme colours - THEME_SKINSTUDIO  (Green (As-Siraat / Kaleem / NHMC / Demo / SkinStudio))
+   Used by the header, menu bar and login page.
+   The main colour of this client is taken from this theme's styleMaster.css
+   (#navbar background). To recolour a client, change the values below only.
+   ========================================================================== */
+:root {
+    --theme-header-bg: linear-gradient(180deg, #3b9a76 0%, #308665 100%);   /* top header bar */
+    --theme-header-text: #ffffff;                 /* company name in the header */
+    --theme-header-text-shadow: 0 1px 2px rgba(0, 0, 0, 0.30);
+    --theme-header-line: #1d5a43;                    /* line under the header and the menu bar */
+    --theme-accent: #308665;                         /* buttons, active menu item */
+    --theme-accent-light: #3b9a76;                   /* top of the button gradient */
+    --theme-on-accent: #ffffff;                        /* text on top of the accent colour */
+    --theme-accent-soft: #e4f3ec;                      /* menu hover background */
+    --theme-accent-ink: #1d5a43;                       /* menu hover text */
+    --theme-accent-ring: rgba(48, 134, 101, 0.25);   /* focus ring on inputs */
+    --theme-accent-shadow: rgba(48, 134, 101, 0.40);  /* glow under the login button */
+    --theme-user-btn-bg: rgba(255, 255, 255, 0.18);      /* user-name button in the header */
+    --theme-user-btn-text: #ffffff;
+    --theme-user-btn-border: rgba(255, 255, 255, 0.60);
+    --theme-footer-bg: linear-gradient(180deg, #308665 0%, #206348 100%);   /* footer bar */
+    --theme-footer-text: #ffffff;
+    --theme-footer-line: #3b9a76;                  /* thin line on top of the footer */
+    --theme-footer-icon: #cdeedd;                  /* small icons in the footer */
+    --theme-ink: #1b2a41;                          /* dark text used on light backgrounds */
+}

@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.Data;
 using System.Data.Entity;
 using System.Data.SqlClient;
+using System.Globalization;
 using System.IO;
 using System.Linq;
 using System.Web;
@@ -75,6 +76,18 @@ namespace PMS.AP
             return (new JavaScriptSerializer()).Serialize(dept);
         }
 
+        [WebMethod]
+        public static string GetMode()
+        {
+            DataBaseDataContext db = new DataBaseDataContext(DBClass.ConnectionString());
+            var dept = (from data in db.sys_Parms
+                        where data.Name == "PR Mode"
+                        select
+                          data.Code
+                        ).FirstOrDefault();
+            return (new JavaScriptSerializer()).Serialize(dept);
+        }
+
         private void LoadGIRNum()
         {
             #region "Bind GIRNUM in Dropdown"
@@ -100,6 +113,16 @@ namespace PMS.AP
             return (new JavaScriptSerializer()).Serialize(listDetails);
         }
         [WebMethod]
+        public static string getGIRHeader(string GIRId)
+        {
+            DataBaseDataContext db = new DataBaseDataContext();
+            long girId = Convert.ToInt64(GIRId);
+            var header = (from mir in db.MaterialIssueRequests
+                          where mir.MaterialRequest_Id == girId
+                          select new { mir.Priority, mir.Department }).FirstOrDefault();
+            return (new JavaScriptSerializer()).Serialize(header);
+        }
+        [WebMethod]
         public static string fillpriorities()
         {
             DataBaseDataContext db = new DataBaseDataContext();
@@ -108,6 +131,22 @@ namespace PMS.AP
             listItems = (from p in db.DataValues
                          join v in db.ValueSets on p.ValueSet_ID equals v.ValueSet_ID
                          where v.ValueSet_Description == "Priority Type"
+                         select new ddlListItems
+                         {
+                             DataValueName = p.DataValue_Name,
+                             DataValueDescription = p.DataValue_Description,
+                         }).ToList();
+            return (new JavaScriptSerializer()).Serialize(listItems);
+        }
+
+        [WebMethod]
+        public static string fillModes()
+        {
+            DataBaseDataContext db = new DataBaseDataContext();
+            List<ddlListItems> listItems = new List<ddlListItems>();
+            listItems = (from p in db.DataValues
+                         join v in db.ValueSets on p.ValueSet_ID equals v.ValueSet_ID
+                         where v.ValueSet_Description == "Mode"
                          select new ddlListItems
                          {
                              DataValueName = p.DataValue_Name,
@@ -279,8 +318,118 @@ namespace PMS.AP
 
 
 
+        // ================= PR CHANGE LOG SNAPSHOT HELPERS =================
+
+        private static string StrVal(object v)
+        {
+            if (v == null) return "";
+            return Convert.ToString(v, CultureInfo.InvariantCulture);
+        }
+
+        private static string NumVal(object v)
+        {
+            if (v == null) return "";
+            try { return Convert.ToDecimal(v).ToString("0.##", CultureInfo.InvariantCulture); }
+            catch { return ""; }
+        }
+
+        private static string DateVal(object v)
+        {
+            if (v == null) return "";
+            try { return Convert.ToDateTime(v).ToString("yyyy-MM-dd", CultureInfo.InvariantCulture); }
+            catch { return ""; }
+        }
+
+        private static Dictionary<string, string> BuildPRMasterSnapshot(Purchase_Requisition pr, DataBaseDataContext db)
+        {
+            string priorityName = "";
+            if (!string.IsNullOrEmpty(pr.Priority))
+            {
+                try { priorityName = db.GetDataValueName("Priority Type", pr.Priority) ?? ""; }
+                catch { priorityName = ""; }
+            }
+
+            string departmentName = "";
+            if (!string.IsNullOrEmpty(pr.Department))
+            {
+                try { departmentName = db.GetDataValueName("Department", pr.Department) ?? ""; }
+                catch { departmentName = ""; }
+            }
+
+            string warehouseName = "";
+            if (!string.IsNullOrEmpty(pr.Warehouse))
+            {
+                try { warehouseName = db.GetDataValueName("Ware House", pr.Warehouse) ?? ""; }
+                catch { warehouseName = ""; }
+            }
+
+            string branchName = "";
+            if (pr.Branch_Id.HasValue)
+            {
+                branchName = (from b in db.Branches where b.branch_ID == pr.Branch_Id select b.branch_Name).FirstOrDefault() ?? "";
+            }
+
+            var snap = new Dictionary<string, string>();
+            snap["PR_Num"] = pr.PR_Num.HasValue ? pr.PR_Num.Value.ToString() : "";
+            snap["PR_Date"] = DateVal(pr.PR_Date);
+            snap["Ref_No"] = StrVal(pr.Ref_Num);
+            snap["Priority"] = priorityName;
+            snap["Department"] = departmentName;
+            snap["Warehouse"] = warehouseName;
+            snap["Branch"] = branchName;
+            snap["Status"] = StrVal(pr.Status);
+            snap["Remarks"] = StrVal(pr.Remarks);
+            return snap;
+        }
+
+        private static object BuildPRItemsSnapshot(DataBaseDataContext db, int prId)
+        {
+            var rows = (from d in db.Purchase_Requisition_Details
+                        join i in db.INV_Items on d.Item_ID equals i.Item_ID
+                        where d.PR_ID == prId
+                        orderby d.PR_Detail_ID
+                        select new
+                        {
+                            Item_Code = i.Item_Code,
+                            Item_Name = i.Description,
+                            d.Qty,
+                            d.UnitPrice,
+                            d.EstimateCost,
+                            d.Required_Date,
+                            d.Remarks
+                        }).ToList();
+
+            return new
+            {
+                Items = rows.Select(i => new
+                {
+                    Item_Code = StrVal(i.Item_Code),
+                    Item_Name = StrVal(i.Item_Name),
+                    Qty = NumVal(i.Qty),
+                    UnitPrice = NumVal(i.UnitPrice),
+                    EstimateCost = NumVal(i.EstimateCost),
+                    Required_Date = DateVal(i.Required_Date),
+                    Remarks = StrVal(i.Remarks)
+                }).ToList()
+            };
+        }
+
+        private static void WritePRChangeLog(DataBaseDataContext db, Purchase_Requisition pr, JavaScriptSerializer serializer)
+        {
+            AP_Purchase_Requisition_Log prLog = new AP_Purchase_Requisition_Log
+            {
+                PR_Id = pr.PR_Id,
+                Master_Log = serializer.Serialize(BuildPRMasterSnapshot(pr, db)),
+                Details_Log = serializer.Serialize(BuildPRItemsSnapshot(db, pr.PR_Id)),
+                Loged_By = AppConfig.UserID,
+                Log_Time = DateTime.Now
+            };
+
+            db.AP_Purchase_Requisition_Logs.InsertOnSubmit(prLog);
+        }
+
         [WebMethod]
-        public static string SavePurchaseRequistion(int PRid, string PrNum, string PrDate, string dept, string Pirority, string Warehouse, string RefNum, string remarks, string btnValue, string branch)
+        public static string SavePurchaseRequistion(int PRid, string PrNum, string PrDate, string dept, string Pirority, string Warehouse, string RefNum, string remarks, string btnValue, string branch, string Mode)
         {
             DataBaseDataContext db = new DataBaseDataContext();
             Purchase_Requisition obj = new Purchase_Requisition();
@@ -291,6 +440,7 @@ namespace PMS.AP
                 obj.PR_Num = Convert.ToInt32(PrNum);
                 obj.PR_Date = Convert.ToDateTime(PrDate);
                 obj.Priority = Pirority;
+                obj.Mode = Mode;
                 obj.Warehouse = Warehouse;
                 obj.Branch_Id = string.IsNullOrEmpty(branch) ? (int?)null : Convert.ToInt32(branch);
                 obj.Department = dept;
@@ -314,8 +464,10 @@ namespace PMS.AP
             {
                 query = (from data in db.Purchase_Requisitions.Where(x => x.PR_Id.Equals(PRid))
                          select data).FirstOrDefault();
+                WritePRChangeLog(db, query, new JavaScriptSerializer());
                 query.PR_Date = Convert.ToDateTime(PrDate);
                 query.Priority = Pirority;
+                query.Mode = Mode;
                 query.Warehouse = Warehouse;
                 query.Branch_Id = string.IsNullOrEmpty(branch) ? (int?)null : Convert.ToInt32(branch);
                 query.Department = dept;
@@ -349,76 +501,94 @@ namespace PMS.AP
             {
                 return "Error: Purchase Requisition not found";
             }
-            if (btnValue == "Update")
-            {
-                var PurchaseList = from PurchaseRequistion in db.Purchase_Requisition_Details where PurchaseRequistion.PR_ID == PRid select PurchaseRequistion;
-                foreach (var del in PurchaseList)
-                {
-                    db.Purchase_Requisition_Details.DeleteOnSubmit(del);
-                }
-                db.SubmitChanges();
-            }
-            bool proceed = true;
+
+            // Validate and stage all rows BEFORE touching the database. A bad row
+            // must never leave the PR with a half-saved (partially deleted) detail list.
+            var newDetails = new List<Purchase_Requisition_Detail>();
+            int rowNo = 0;
             foreach (var item in PurchaseRequistionDetails)
             {
-                Purchase_Requisition_Detail obj = new Purchase_Requisition_Detail();
-                obj.Item_ID = Convert.ToInt32(item.itemId);
-                obj.PR_ID = Convert.ToInt32(item.PRId);
-                if (item.Qty == "")
+                rowNo++;
+                int itemId;
+                if (item == null || !int.TryParse(item.itemId, out itemId))
                 {
-                    obj.Qty = 0;
+                    return "Error: Invalid item id in row " + rowNo;
                 }
-                obj.Qty = Convert.ToDecimal(item.Qty);
-                if (item.UnitPrice == "")
+                int itemPrId;
+                if (!int.TryParse(item.PRId, out itemPrId))
                 {
-                    obj.UnitPrice = 0;
+                    return "Error: Invalid PR id in row " + rowNo;
                 }
-                else
+                decimal qty = 0m;
+                if (!string.IsNullOrWhiteSpace(item.Qty) && !decimal.TryParse(item.Qty, out qty))
                 {
-                    obj.UnitPrice = Convert.ToDecimal(item.UnitPrice);
+                    return "Error: Invalid Qty in row " + rowNo;
                 }
-                if (item.EstimateCost == "")
+                decimal unitPrice = 0m;
+                if (!string.IsNullOrWhiteSpace(item.UnitPrice) && !decimal.TryParse(item.UnitPrice, out unitPrice))
                 {
-                    obj.EstimateCost = 0;
+                    return "Error: Invalid Unit Price in row " + rowNo;
                 }
-                else
+                decimal estimateCost = 0m;
+                if (!string.IsNullOrWhiteSpace(item.EstimateCost) && !decimal.TryParse(item.EstimateCost, out estimateCost))
                 {
-                    obj.EstimateCost = Convert.ToDecimal(item.EstimateCost);
+                    return "Error: Invalid Estimated Cost in row " + rowNo;
                 }
-                obj.Remarks = Convert.ToString(item.Remarks);
-                obj.Required_Date = Convert.ToDateTime(item.RDate);
-                obj.MaterialRequestDetail_Id = Convert.ToInt32(item.MaterialRequestDetail_Id);
-                obj.MaterialRequest_Id = Convert.ToInt32(item.MaterialRequest_Id);
-                obj.Req_Num = Convert.ToInt32(item.Req_Num);
-                obj.Last_PR_Qty = Convert.ToDecimal(item.Last_PR_Qty);
-                obj.Last_PR_Date = item.Last_PR_Date;
-                obj.Last_PR_No = Convert.ToString(item.Last_PR_No);
-                db.Purchase_Requisition_Details.InsertOnSubmit(obj);
 
-                try
+                newDetails.Add(new Purchase_Requisition_Detail
                 {
-                    db.SubmitChanges();
-                    var max = db.Purchase_Requisition_Details.Max(x => x.PR_Detail_ID);
-                }
-                catch (Exception ex)
-                {
-                    proceed = true;
-                    return "Error";
-                }
+                    Item_ID = itemId,
+                    PR_ID = itemPrId,
+                    Qty = qty,
+                    UnitPrice = unitPrice,
+                    EstimateCost = estimateCost,
+                    Remarks = Convert.ToString(item.Remarks),
+                    Required_Date = item.RDate,
+                    MaterialRequestDetail_Id = item.MaterialRequestDetail_Id,
+                    MaterialRequest_Id = item.MaterialRequest_Id,
+                    Req_Num = item.Req_Num,
+                    Last_PR_Qty = item.Last_PR_Qty,
+                    Last_PR_Date = item.Last_PR_Date,
+                    Last_PR_No = Convert.ToString(item.Last_PR_No)
+                });
             }
-            // Update MaterialRequest_Id in Purchase_Requisition
-            var firstDetail = PurchaseRequistionDetails.FirstOrDefault();
-            if (firstDetail != null)
+
+            // Delete old rows + insert new rows in ONE transaction so a failure
+            // rolls everything back instead of losing the rows processed so far.
+            db.Connection.Open();
+            db.Transaction = db.Connection.BeginTransaction();
+            try
             {
-                purchaseRequisition.MaterialRequest_Id = firstDetail.MaterialRequest_Id;
-                try
+                if (btnValue == "Update")
                 {
-                    db.SubmitChanges();
+                    var oldDetails = db.Purchase_Requisition_Details.Where(d => d.PR_ID == PRid).ToList();
+                    if (oldDetails.Count > 0)
+                    {
+                        db.Purchase_Requisition_Details.DeleteAllOnSubmit(oldDetails);
+                    }
                 }
-                catch (Exception ex)
+
+                db.Purchase_Requisition_Details.InsertAllOnSubmit(newDetails);
+
+                // Update MaterialRequest_Id in Purchase_Requisition
+                var firstDetail = PurchaseRequistionDetails.FirstOrDefault();
+                if (firstDetail != null)
                 {
-                    return "Error: " + ex.Message;
+                    purchaseRequisition.MaterialRequest_Id = firstDetail.MaterialRequest_Id;
                 }
+
+                db.SubmitChanges();
+                db.Transaction.Commit();
+            }
+            catch (Exception ex)
+            {
+                db.Transaction.Rollback();
+                return "Error: " + ex.Message;
+            }
+            finally
+            {
+                db.Transaction = null;
+                db.Connection.Close();
             }
 
             return "Success-" + PRid;
@@ -444,6 +614,7 @@ namespace PMS.AP
                                  {
                                      pr.PR_Num,
                                      pr.Priority,
+                                     pr.Mode,
                                      pr.Warehouse,
                                      pr.Branch_Id,
                                      pr.Remarks,

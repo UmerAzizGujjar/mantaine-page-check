@@ -1858,6 +1858,25 @@ namespace PMS.Modules.PatientManagement
             return (new JavaScriptSerializer()).Serialize(dept);
         }
         [WebMethod]
+        public static string GetERAutoDepartment()
+        {
+            DataBaseDataContext db = new DataBaseDataContext(DBClass.ConnectionString());
+            var flag = (from data in db.sys_Parms
+                        where data.Name == "ER Auto Department"
+                        select data.Code).FirstOrDefault();
+            if (flag != "01")
+            {
+                return (new JavaScriptSerializer()).Serialize("");
+            }
+            var erDept = (from dv in db.DataValues
+                          join ds in db.ValueSets
+                          on dv.ValueSet_ID equals ds.ValueSet_ID
+                          where ds.ValueSet_Name == "Patient Main Category"
+                                && dv.DataValue_Description == "ER"
+                          select dv.DataValue_Name).FirstOrDefault();
+            return (new JavaScriptSerializer()).Serialize(erDept ?? "");
+        }
+        [WebMethod]
         public static string SaveCNIC(string Patient_ID, string enteredCNIC)
         {
             try

@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Data;
+using System.Data.SqlClient;
 using System.Diagnostics.Eventing.Reader;
 using System.Linq;
 using System.Web;
@@ -13,18 +14,33 @@ namespace PMS
 {
     public partial class Jason : System.Web.UI.Page
     {
+        // Small helper so query-building code below stays readable: builds a SqlParameter,
+        // binding null as DBNull so an absent/empty value never has to be concatenated into SQL text.
+        private static SqlParameter P(string name, object value)
+        {
+            return new SqlParameter(name, value ?? (object)DBNull.Value);
+        }
+
+        // Strict integer parsing for any ID that arrives as a query-string value. Returns false
+        // (caller should bail out with an empty result) instead of letting a non-numeric value
+        // anywhere near a SQL string, parameterized or not.
+        private static bool TryId(string raw, out int value)
+        {
+            return int.TryParse(raw, System.Globalization.NumberStyles.Integer, System.Globalization.CultureInfo.InvariantCulture, out value);
+        }
+
         protected void Page_Load(object sender, EventArgs e)
         {
            
 
             if (Session["Book_ID"] != null && Request.QueryString["Table"] == null && Request.QueryString["StartCode"] == null && Request.QueryString["EndCode"] == null && Request.QueryString["Bank"] == null && Request.QueryString["Levels"] == null)
             {
-                string sqlQuery = "SELECT gl.*,Parent3.Account_Name AS GrandParentAccountName FROM GL_Accounts gl LEFT JOIN GL_Accounts Parent1 ON Parent1.Account_ID = gl.Parent_Code LEFT JOIN GL_Accounts Parent2 ON Parent2.Account_ID = Parent1.Parent_Code LEFT JOIN GL_Accounts Parent3 ON Parent3.Account_ID = Parent2.Parent_Code WHERE gl.Levels = 4; AND (Account_Name like '%" + Request.QueryString["q"].Replace("'", "''") + "%' OR Account_Code like '%" + Request.QueryString["q"].Replace("'", "''") + "%')";
+                string sqlQuery = "SELECT gl.*,Parent3.Account_Name AS GrandParentAccountName FROM GL_Accounts gl LEFT JOIN GL_Accounts Parent1 ON Parent1.Account_ID = gl.Parent_Code LEFT JOIN GL_Accounts Parent2 ON Parent2.Account_ID = Parent1.Parent_Code LEFT JOIN GL_Accounts Parent3 ON Parent3.Account_ID = Parent2.Parent_Code WHERE gl.Levels = 4; AND (Account_Name like @qb_q OR Account_Code like @qb_q)";
 
-                sqlQuery = "SELECT DISTINCT * FROM(SELECT gl.*, Parent3.Account_Name AS GrandParentAccountName FROM GL_Accounts gl LEFT JOIN GL_Accounts Parent1 ON Parent1.Account_ID = gl.Parent_Code LEFT JOIN GL_Accounts Parent2 ON Parent2.Account_ID = Parent1.Parent_Code LEFT JOIN GL_Accounts Parent3 ON Parent3.Account_ID = Parent2.Parent_Code WHERE gl.Book_ID = 1 AND gl.Levels = 4 AND (gl.Account_Name LIKE  '%" + Request.QueryString["q"].Replace("'", "''") + "%'  OR gl.Account_Code LIKE  '%" + Request.QueryString["q"].Replace("'", "''") + "%' )UNION ALL SELECT gl.*,Parent3.Account_Name AS GrandParentAccountName FROM GL_Accounts gl LEFT JOIN GL_Accounts Parent1 ON Parent1.Account_ID = gl.Parent_Code LEFT JOIN GL_Accounts Parent2 ON Parent2.Account_ID = Parent1.Parent_Code LEFT JOIN GL_Accounts Parent3 ON Parent3.Account_ID = Parent2.Parent_Code WHERE gl.Book_ID = 1 AND gl.Levels = 4 AND gl.Parent_Code IN ( SELECT Account_ID FROM GL_Accounts WHERE Book_ID = 1 AND (Account_Name LIKE  '" + Request.QueryString["q"].Replace("'", "''") + "%'  OR Account_Code LIKE '" + Request.QueryString["q"].Replace("'", "''") + "%' )) )t;";
+                sqlQuery = "SELECT DISTINCT * FROM(SELECT gl.*, Parent3.Account_Name AS GrandParentAccountName FROM GL_Accounts gl LEFT JOIN GL_Accounts Parent1 ON Parent1.Account_ID = gl.Parent_Code LEFT JOIN GL_Accounts Parent2 ON Parent2.Account_ID = Parent1.Parent_Code LEFT JOIN GL_Accounts Parent3 ON Parent3.Account_ID = Parent2.Parent_Code WHERE gl.Book_ID = 1 AND gl.Levels = 4 AND (gl.Account_Name LIKE  @qb_q  OR gl.Account_Code LIKE  @qb_q )UNION ALL SELECT gl.*,Parent3.Account_Name AS GrandParentAccountName FROM GL_Accounts gl LEFT JOIN GL_Accounts Parent1 ON Parent1.Account_ID = gl.Parent_Code LEFT JOIN GL_Accounts Parent2 ON Parent2.Account_ID = Parent1.Parent_Code LEFT JOIN GL_Accounts Parent3 ON Parent3.Account_ID = Parent2.Parent_Code WHERE gl.Book_ID = 1 AND gl.Levels = 4 AND gl.Parent_Code IN ( SELECT Account_ID FROM GL_Accounts WHERE Book_ID = 1 AND (Account_Name LIKE  @qp_q  OR Account_Code LIKE @qp_q )) )t;";
 
                 string result = "";
-                DataTable dt = DBClass.getDataTable(sqlQuery);
+                DataTable dt = DBClass.getDataTable(sqlQuery, P("@qb_q", "%" + Request.QueryString["q"] + "%"), P("@qp_q", Request.QueryString["q"] + "%"));
                 foreach (DataRow dr in dt.Rows)
                 {
                     result += (result == "") ? "" : ",";
@@ -39,24 +55,24 @@ namespace PMS
                 string sqlQuery = "";
                 if (accountType == "rbtncash")
                 {
-                     sqlQuery = "SELECT gl.*,Parent3.Account_Name AS GrandParentAccountName FROM GL_Accounts gl LEFT JOIN GL_Accounts Parent1 ON Parent1.Account_ID = gl.Parent_Code LEFT JOIN GL_Accounts Parent2 ON Parent2.Account_ID = Parent1.Parent_Code LEFT JOIN GL_Accounts Parent3 ON Parent3.Account_ID = Parent2.Parent_Code WHERE gl.Levels = 4 AND gl.Cash = 1 AND (gl.Account_Name like '%" + Request.QueryString["q"].Replace("'", "''") + "%' OR gl.Account_Code like '%" + Request.QueryString["q"].Replace("'", "''") + "%')";
+                     sqlQuery = "SELECT gl.*,Parent3.Account_Name AS GrandParentAccountName FROM GL_Accounts gl LEFT JOIN GL_Accounts Parent1 ON Parent1.Account_ID = gl.Parent_Code LEFT JOIN GL_Accounts Parent2 ON Parent2.Account_ID = Parent1.Parent_Code LEFT JOIN GL_Accounts Parent3 ON Parent3.Account_ID = Parent2.Parent_Code WHERE gl.Levels = 4 AND gl.Cash = 1 AND (gl.Account_Name like @qb_q OR gl.Account_Code like @qb_q)";
 
-                    sqlQuery = "SELECT DISTINCT * FROM(SELECT gl.*, Parent3.Account_Name AS GrandParentAccountName FROM GL_Accounts gl LEFT JOIN GL_Accounts Parent1 ON Parent1.Account_ID = gl.Parent_Code LEFT JOIN GL_Accounts Parent2 ON Parent2.Account_ID = Parent1.Parent_Code LEFT JOIN GL_Accounts Parent3 ON Parent3.Account_ID = Parent2.Parent_Code WHERE gl.Book_ID = 1 AND gl.Levels = 4 AND gl.Cash = 1 AND (gl.Account_Name LIKE  '%" + Request.QueryString["q"].Replace("'", "''") + "%'  OR gl.Account_Code LIKE  '%" + Request.QueryString["q"].Replace("'", "''") + "%' )UNION ALL SELECT gl.*,Parent3.Account_Name AS GrandParentAccountName FROM GL_Accounts gl LEFT JOIN GL_Accounts Parent1 ON Parent1.Account_ID = gl.Parent_Code LEFT JOIN GL_Accounts Parent2 ON Parent2.Account_ID = Parent1.Parent_Code LEFT JOIN GL_Accounts Parent3 ON Parent3.Account_ID = Parent2.Parent_Code WHERE gl.Book_ID = 1 AND gl.Levels = 4 AND gl.Cash = 1 AND gl.Parent_Code IN ( SELECT Account_ID FROM GL_Accounts WHERE Book_ID = 1 AND (gl.Account_Name LIKE  '%" + Request.QueryString["q"].Replace("'", "''") + "%'  OR gl.Account_Code LIKE '%" + Request.QueryString["q"].Replace("'", "''") + "%' )) )t;";
+                    sqlQuery = "SELECT DISTINCT * FROM(SELECT gl.*, Parent3.Account_Name AS GrandParentAccountName FROM GL_Accounts gl LEFT JOIN GL_Accounts Parent1 ON Parent1.Account_ID = gl.Parent_Code LEFT JOIN GL_Accounts Parent2 ON Parent2.Account_ID = Parent1.Parent_Code LEFT JOIN GL_Accounts Parent3 ON Parent3.Account_ID = Parent2.Parent_Code WHERE gl.Book_ID = 1 AND gl.Levels = 4 AND gl.Cash = 1 AND (gl.Account_Name LIKE  @qb_q  OR gl.Account_Code LIKE  @qb_q )UNION ALL SELECT gl.*,Parent3.Account_Name AS GrandParentAccountName FROM GL_Accounts gl LEFT JOIN GL_Accounts Parent1 ON Parent1.Account_ID = gl.Parent_Code LEFT JOIN GL_Accounts Parent2 ON Parent2.Account_ID = Parent1.Parent_Code LEFT JOIN GL_Accounts Parent3 ON Parent3.Account_ID = Parent2.Parent_Code WHERE gl.Book_ID = 1 AND gl.Levels = 4 AND gl.Cash = 1 AND gl.Parent_Code IN ( SELECT Account_ID FROM GL_Accounts WHERE Book_ID = 1 AND (gl.Account_Name LIKE  @qb_q  OR gl.Account_Code LIKE @qb_q )) )t;";
                 }
                 else if (accountType == "rbtnbank")
                 {
-                     sqlQuery = "SELECT gl.*,Parent3.Account_Name AS GrandParentAccountName FROM GL_Accounts gl LEFT JOIN GL_Accounts Parent1 ON Parent1.Account_ID = gl.Parent_Code LEFT JOIN GL_Accounts Parent2 ON Parent2.Account_ID = Parent1.Parent_Code LEFT JOIN GL_Accounts Parent3 ON Parent3.Account_ID = Parent2.Parent_Code WHERE gl.Levels = 4 AND gl.Bank = 1 AND (gl.Account_Name like '%" + Request.QueryString["q"].Replace("'", "''") + "%' OR gl.Account_Code like '%" + Request.QueryString["q"].Replace("'", "''") + "%')";
+                     sqlQuery = "SELECT gl.*,Parent3.Account_Name AS GrandParentAccountName FROM GL_Accounts gl LEFT JOIN GL_Accounts Parent1 ON Parent1.Account_ID = gl.Parent_Code LEFT JOIN GL_Accounts Parent2 ON Parent2.Account_ID = Parent1.Parent_Code LEFT JOIN GL_Accounts Parent3 ON Parent3.Account_ID = Parent2.Parent_Code WHERE gl.Levels = 4 AND gl.Bank = 1 AND (gl.Account_Name like @qb_q OR gl.Account_Code like @qb_q)";
 
-                    sqlQuery = "SELECT DISTINCT * FROM(SELECT gl.*, Parent3.Account_Name AS GrandParentAccountName FROM GL_Accounts gl LEFT JOIN GL_Accounts Parent1 ON Parent1.Account_ID = gl.Parent_Code LEFT JOIN GL_Accounts Parent2 ON Parent2.Account_ID = Parent1.Parent_Code LEFT JOIN GL_Accounts Parent3 ON Parent3.Account_ID = Parent2.Parent_Code WHERE gl.Book_ID = 1 AND gl.Levels = 4 AND gl.Bank = 1 AND (gl.Account_Name LIKE  '%" + Request.QueryString["q"].Replace("'", "''") + "%'  OR gl.Account_Code LIKE  '%" + Request.QueryString["q"].Replace("'", "''") + "%' )UNION ALL SELECT gl.*,Parent3.Account_Name AS GrandParentAccountName FROM GL_Accounts gl LEFT JOIN GL_Accounts Parent1 ON Parent1.Account_ID = gl.Parent_Code LEFT JOIN GL_Accounts Parent2 ON Parent2.Account_ID = Parent1.Parent_Code LEFT JOIN GL_Accounts Parent3 ON Parent3.Account_ID = Parent2.Parent_Code WHERE gl.Book_ID = 1 AND gl.Levels = 4 AND gl.Bank = 1 AND gl.Parent_Code IN ( SELECT Account_ID FROM GL_Accounts WHERE Book_ID = 1 AND (gl.Account_Name LIKE  '%" + Request.QueryString["q"].Replace("'", "''") + "%'  OR gl.Account_Code LIKE '%" + Request.QueryString["q"].Replace("'", "''") + "%' )) )t;";
+                    sqlQuery = "SELECT DISTINCT * FROM(SELECT gl.*, Parent3.Account_Name AS GrandParentAccountName FROM GL_Accounts gl LEFT JOIN GL_Accounts Parent1 ON Parent1.Account_ID = gl.Parent_Code LEFT JOIN GL_Accounts Parent2 ON Parent2.Account_ID = Parent1.Parent_Code LEFT JOIN GL_Accounts Parent3 ON Parent3.Account_ID = Parent2.Parent_Code WHERE gl.Book_ID = 1 AND gl.Levels = 4 AND gl.Bank = 1 AND (gl.Account_Name LIKE  @qb_q  OR gl.Account_Code LIKE  @qb_q )UNION ALL SELECT gl.*,Parent3.Account_Name AS GrandParentAccountName FROM GL_Accounts gl LEFT JOIN GL_Accounts Parent1 ON Parent1.Account_ID = gl.Parent_Code LEFT JOIN GL_Accounts Parent2 ON Parent2.Account_ID = Parent1.Parent_Code LEFT JOIN GL_Accounts Parent3 ON Parent3.Account_ID = Parent2.Parent_Code WHERE gl.Book_ID = 1 AND gl.Levels = 4 AND gl.Bank = 1 AND gl.Parent_Code IN ( SELECT Account_ID FROM GL_Accounts WHERE Book_ID = 1 AND (gl.Account_Name LIKE  @qb_q  OR gl.Account_Code LIKE @qb_q )) )t;";
                 }
                 else if (accountType == "rbtnAll")
                 {
-                     sqlQuery = "SELECT gl.*,Parent3.Account_Name AS GrandParentAccountName FROM GL_Accounts gl LEFT JOIN GL_Accounts Parent1 ON Parent1.Account_ID = gl.Parent_Code LEFT JOIN GL_Accounts Parent2 ON Parent2.Account_ID = Parent1.Parent_Code LEFT JOIN GL_Accounts Parent3 ON Parent3.Account_ID = Parent2.Parent_Code WHERE gl.Levels = 4; AND (gl.Account_Name like '%" + Request.QueryString["q"].Replace("'", "''") + "%' OR gl.Account_Code like '%" + Request.QueryString["q"].Replace("'", "''") + "%')";
+                     sqlQuery = "SELECT gl.*,Parent3.Account_Name AS GrandParentAccountName FROM GL_Accounts gl LEFT JOIN GL_Accounts Parent1 ON Parent1.Account_ID = gl.Parent_Code LEFT JOIN GL_Accounts Parent2 ON Parent2.Account_ID = Parent1.Parent_Code LEFT JOIN GL_Accounts Parent3 ON Parent3.Account_ID = Parent2.Parent_Code WHERE gl.Levels = 4; AND (gl.Account_Name like @qb_q OR gl.Account_Code like @qb_q)";
 
-                    sqlQuery = "SELECT DISTINCT * FROM(SELECT gl.*, Parent3.Account_Name AS GrandParentAccountName FROM GL_Accounts gl LEFT JOIN GL_Accounts Parent1 ON Parent1.Account_ID = gl.Parent_Code LEFT JOIN GL_Accounts Parent2 ON Parent2.Account_ID = Parent1.Parent_Code LEFT JOIN GL_Accounts Parent3 ON Parent3.Account_ID = Parent2.Parent_Code WHERE gl.Book_ID = 1 AND gl.Levels = 4 AND (gl.Account_Name LIKE  '%" + Request.QueryString["q"].Replace("'", "''") + "%'  OR gl.Account_Code LIKE  '%" + Request.QueryString["q"].Replace("'", "''") + "%' )UNION ALL SELECT gl.*,Parent3.Account_Name AS GrandParentAccountName FROM GL_Accounts gl LEFT JOIN GL_Accounts Parent1 ON Parent1.Account_ID = gl.Parent_Code LEFT JOIN GL_Accounts Parent2 ON Parent2.Account_ID = Parent1.Parent_Code LEFT JOIN GL_Accounts Parent3 ON Parent3.Account_ID = Parent2.Parent_Code WHERE gl.Book_ID = 1 AND gl.Levels = 4 AND gl.Parent_Code IN ( SELECT Account_ID FROM GL_Accounts WHERE Book_ID = 1 AND (gl.Account_Name LIKE  '%" + Request.QueryString["q"].Replace("'", "''") + "%'  OR gl.Account_Code LIKE '%" + Request.QueryString["q"].Replace("'", "''") + "%' )) )t;";
+                    sqlQuery = "SELECT DISTINCT * FROM(SELECT gl.*, Parent3.Account_Name AS GrandParentAccountName FROM GL_Accounts gl LEFT JOIN GL_Accounts Parent1 ON Parent1.Account_ID = gl.Parent_Code LEFT JOIN GL_Accounts Parent2 ON Parent2.Account_ID = Parent1.Parent_Code LEFT JOIN GL_Accounts Parent3 ON Parent3.Account_ID = Parent2.Parent_Code WHERE gl.Book_ID = 1 AND gl.Levels = 4 AND (gl.Account_Name LIKE  @qb_q  OR gl.Account_Code LIKE  @qb_q )UNION ALL SELECT gl.*,Parent3.Account_Name AS GrandParentAccountName FROM GL_Accounts gl LEFT JOIN GL_Accounts Parent1 ON Parent1.Account_ID = gl.Parent_Code LEFT JOIN GL_Accounts Parent2 ON Parent2.Account_ID = Parent1.Parent_Code LEFT JOIN GL_Accounts Parent3 ON Parent3.Account_ID = Parent2.Parent_Code WHERE gl.Book_ID = 1 AND gl.Levels = 4 AND gl.Parent_Code IN ( SELECT Account_ID FROM GL_Accounts WHERE Book_ID = 1 AND (gl.Account_Name LIKE  @qb_q  OR gl.Account_Code LIKE @qb_q )) )t;";
                 }
                     string result = "";
-                    DataTable dt = DBClass.getDataTable(sqlQuery);
+                    DataTable dt = DBClass.getDataTable(sqlQuery, P("@qb_q", "%" + Request.QueryString["q"] + "%"));
                     foreach (DataRow dr in dt.Rows)
                     {
                         result += (result == "") ? "" : ",";
@@ -69,11 +85,11 @@ namespace PMS
             {
                 string sqlQuery;
                 if (Request.QueryString["q"] != null)
-                    sqlQuery = "Select top 1 Bill_No, * From Ar_Billings WHERE Bill_No= '" + Request.QueryString["q"].ToString() + "'";
+                    sqlQuery = "Select top 1 Bill_No, * From Ar_Billings WHERE Bill_No= @qe_q";
                 else
                     sqlQuery = "SELECT * FROM Ar_Billings";
                 string result = "";
-                DataTable dt = DBClass.getDataTable(sqlQuery);
+                DataTable dt = DBClass.getDataTable(sqlQuery, P("@qe_q", Request.QueryString["q"]));
                 foreach (DataRow dr in dt.Rows)
                 {
                     result += (result == "") ? "" : ",";
@@ -83,9 +99,9 @@ namespace PMS
             }
             else if (Session["Book_ID"] != null && Request.QueryString["Bank"] != null && Request.QueryString["Cash"] != null && Request.QueryString["Table"] == null && Request.QueryString["StartCode"] == null && Request.QueryString["EndCode"] == null && Request.QueryString["Bank"] == null)
             {
-                string sqlQuery = "Select * from GL_Accounts Where Book_ID=" + AppConfig.Book_ID + " AND Levels=4 AND Cash=1 OR Bank=1 AND (Account_Name like '" + Request.QueryString["q"].Replace("'", "''") + "%' OR Account_Code like '" + Request.QueryString["q"].Replace("'", "''") + "%')";
+                string sqlQuery = "Select * from GL_Accounts Where Book_ID=" + AppConfig.Book_ID + " AND Levels=4 AND Cash=1 OR Bank=1 AND (Account_Name like @qp_q OR Account_Code like @qp_q)";
                 string result = "";
-                DataTable dt = DBClass.getDataTable(sqlQuery);
+                DataTable dt = DBClass.getDataTable(sqlQuery, P("@qp_q", Request.QueryString["q"] + "%"));
                 foreach (DataRow dr in dt.Rows)
                 {
                     result += (result == "") ? "" : ",";
@@ -95,9 +111,9 @@ namespace PMS
             }
             else if (Session["Book_ID"] != null && Request.QueryString["Bank"] != null)
             {
-                string sqlQuery = "Select * from GL_Accounts Where Book_ID=" + AppConfig.Book_ID + " AND Levels=4 AND Bank=1 AND (Account_Name like '" + Request.QueryString["q"].Replace("'", "''") + "%' OR Account_Code like '" + Request.QueryString["q"].Replace("'", "''") + "%')";
+                string sqlQuery = "Select * from GL_Accounts Where Book_ID=" + AppConfig.Book_ID + " AND Levels=4 AND Bank=1 AND (Account_Name like @qp_q OR Account_Code like @qp_q)";
                 string result = "";
-                DataTable dt = DBClass.getDataTable(sqlQuery);
+                DataTable dt = DBClass.getDataTable(sqlQuery, P("@qp_q", Request.QueryString["q"] + "%"));
                 foreach (DataRow dr in dt.Rows)
                 {
                     result += (result == "") ? "" : ",";
@@ -107,9 +123,9 @@ namespace PMS
             }
             else if (Session["Book_ID"] != null && Request.QueryString["StartCode"] != null)
             {
-                string sqlQuery = "select top 1 account_Id,Account_Code,account_Name From GL_Accounts Where Book_ID=" + AppConfig.Book_ID + " AND Levels=4 AND (Account_Name like '" + Request.QueryString["q"].Replace("'", "''") + "%' OR Account_Code like '" + Request.QueryString["q"].Replace("'", "''") + "%') Order By Account_ID Asc";
+                string sqlQuery = "select top 1 account_Id,Account_Code,account_Name From GL_Accounts Where Book_ID=" + AppConfig.Book_ID + " AND Levels=4 AND (Account_Name like @qp_q OR Account_Code like @qp_q) Order By Account_ID Asc";
                 string result = "";
-                DataTable dt = DBClass.getDataTable(sqlQuery);
+                DataTable dt = DBClass.getDataTable(sqlQuery, P("@qp_q", Request.QueryString["q"] + "%"));
                 foreach (DataRow dr in dt.Rows)
                 {
                     result += (result == "") ? "" : ",";
@@ -119,9 +135,9 @@ namespace PMS
             }
             else if (Session["Book_ID"] != null && Request.QueryString["EndCode"] != null)
             {
-                string sqlQuery = "select top 1 account_Id,Account_Code,account_Name From GL_Accounts Where Book_ID=" + AppConfig.Book_ID + " AND Levels=4 AND (Account_Name like '" + Request.QueryString["q"].Replace("'", "''") + "%' OR Account_Code like '" + Request.QueryString["q"].Replace("'", "''") + "%') Order By Account_ID desc";
+                string sqlQuery = "select top 1 account_Id,Account_Code,account_Name From GL_Accounts Where Book_ID=" + AppConfig.Book_ID + " AND Levels=4 AND (Account_Name like @qp_q OR Account_Code like @qp_q) Order By Account_ID desc";
                 string result = "";
-                DataTable dt = DBClass.getDataTable(sqlQuery);
+                DataTable dt = DBClass.getDataTable(sqlQuery, P("@qp_q", Request.QueryString["q"] + "%"));
                 foreach (DataRow dr in dt.Rows)
                 {
                     result += (result == "") ? "" : ",";
@@ -163,9 +179,9 @@ namespace PMS
             }
             else if (Session["Book_ID"] != null && Request.QueryString["Table"] == "GL_Accounts")
             {
-                string sqlQuery = "Select * from GL_Accounts Where Book_ID=" + AppConfig.Book_ID + " AND Levels=4 AND (Account_Name like '" + Request.QueryString["q"].Replace("'", "''") + "%' OR Account_Code like '" + Request.QueryString["q"].Replace("'", "''") + "%')";                
+                string sqlQuery = "Select * from GL_Accounts Where Book_ID=" + AppConfig.Book_ID + " AND Levels=4 AND (Account_Name like @qp_q OR Account_Code like @qp_q)";                
                 string result = "";
-                DataTable dt = DBClass.getDataTable(sqlQuery);
+                DataTable dt = DBClass.getDataTable(sqlQuery, P("@qp_q", Request.QueryString["q"] + "%"));
                 foreach (DataRow dr in dt.Rows)
                 {
                     result += (result == "") ? "" : ",";
@@ -178,9 +194,9 @@ namespace PMS
             {
                 if (Request.QueryString["Customer_ID"] != null && Request.QueryString["Table"] == "Customer")
                 {
-                    string sqlQuery = "Select * from Ar_Customers Where Company_ID=" + AppConfig.Company_ID + " and Customer_ID=" + Request.QueryString["Customer_ID"] + "";
+                    string sqlQuery = "Select * from Ar_Customers Where Company_ID=" + AppConfig.Company_ID + " and Customer_ID=@qe_Customer_ID";
                     string result = "";
-                    DataTable dt = DBClass.getDataTable(sqlQuery);
+                    DataTable dt = DBClass.getDataTable(sqlQuery, P("@qe_Customer_ID", Request.QueryString["Customer_ID"]));
                     foreach (DataRow dr in dt.Rows)
                     {
                         result += (result == "") ? "" : ",";
@@ -190,9 +206,9 @@ namespace PMS
                 }
                 else if (Request.QueryString["Plot_ID"] != null && Request.QueryString["Table"] == "Plots")
                 {
-                    string sqlQuery = "Select Plot_ID,Plot_Number,dbo.GetDataValueName('Block',Block) as Block,dbo.GetDataValueName('Area',Area) as Area,dbo.GetDataValueName('Sector',Sector) as Sector,dbo.GetDataValueName('Plot Type',Plot_Type) as Plot_Type,dbo.GetDataValueName('Sector',Sector) as Sector,dbo.GetDataValueName('Category',Category) as Category from Plots Where Company_ID=" + AppConfig.Company_ID + " and  Plot_ID=" + Request.QueryString["Plot_ID"] + "";
+                    string sqlQuery = "Select Plot_ID,Plot_Number,dbo.GetDataValueName('Block',Block) as Block,dbo.GetDataValueName('Area',Area) as Area,dbo.GetDataValueName('Sector',Sector) as Sector,dbo.GetDataValueName('Plot Type',Plot_Type) as Plot_Type,dbo.GetDataValueName('Sector',Sector) as Sector,dbo.GetDataValueName('Category',Category) as Category from Plots Where Company_ID=" + AppConfig.Company_ID + " and  Plot_ID=@qe_Plot_ID";
                     string result = "";
-                    DataTable dt = DBClass.getDataTable(sqlQuery);
+                    DataTable dt = DBClass.getDataTable(sqlQuery, P("@qe_Plot_ID", Request.QueryString["Plot_ID"]));
                     foreach (DataRow dr in dt.Rows)
                     {
                         result += (result == "") ? "" : ",";
@@ -204,11 +220,11 @@ namespace PMS
                 {
                     string sqlQuery;
                     if (Request.QueryString["Account_ID"] != null && Request.QueryString["Table"] == "Account")
-                        sqlQuery = "Select * from GL_Accounts Where Book_ID=" + AppConfig.Book_ID + " AND Account_ID=" + Request.QueryString["Account_ID"] + "";
+                        sqlQuery = "Select * from GL_Accounts Where Book_ID=" + AppConfig.Book_ID + " AND Account_ID=@qe_Account_ID";
                     else
                         sqlQuery = "Select * from GL_Accounts Where Book_ID=" + AppConfig.Book_ID + "";
                     string result = "";
-                    DataTable dt = DBClass.getDataTable(sqlQuery);
+                    DataTable dt = DBClass.getDataTable(sqlQuery, P("@qe_Account_ID", Request.QueryString["Account_ID"]));
                     foreach (DataRow dr in dt.Rows)
                     {
                         result += (result == "") ? "" : ",";
@@ -218,9 +234,9 @@ namespace PMS
                 }
                 else if (Request.QueryString["SaleID"] == null && Request.QueryString["Table"] == "Customer")
                 {
-                    string sqlQuery = "Select * from Ar_Customers Where Company_ID=" + AppConfig.Company_ID + " and  Customer_Name like '" + Request.QueryString["q"].Replace("'", "''") + "%'";
+                    string sqlQuery = "Select * from Ar_Customers Where Company_ID=" + AppConfig.Company_ID + " and  Customer_Name like @qp_q";
                     string result = "";
-                    DataTable dt = DBClass.getDataTable(sqlQuery);
+                    DataTable dt = DBClass.getDataTable(sqlQuery, P("@qp_q", Request.QueryString["q"] + "%"));
                     foreach (DataRow dr in dt.Rows)
                     {
                         result += (result == "") ? "" : ",";
@@ -261,15 +277,15 @@ namespace PMS
                 //    {
                 //        if (allowPharmacy && allowGeneralItem)
                 //        {
-                //            sqlQuery = "Select * from INV_Items i Where Hospital_Services=0 and Services<>1 and Active=1 and Book_ID=" + AppConfig.Book_ID + " and InventoryOrg=" + warehouseID + "  AND (Description like '%" + Request.QueryString["q"] + "%' OR Item_Code like '%" + Request.QueryString["q"] + "%')";
+                //            sqlQuery = "Select * from INV_Items i Where Hospital_Services=0 and Services<>1 and Active=1 and Book_ID=" + AppConfig.Book_ID + " and InventoryOrg=" + warehouseID + "  AND (Description like @qb_q OR Item_Code like @qb_q)";
                 //        }
                 //        else if (allowPharmacy)
                 //        {
-                //            sqlQuery = "Select * from INV_Items i Where Pharmacy_Item=1 and IsPharmacyItem=1 and Hospital_Services=0 and Services<>1 and Active=1 and Book_ID=" + AppConfig.Book_ID + " and InventoryOrg=" + warehouseID + " AND (Description like '%" + Request.QueryString["q"] + "%' OR Item_Code like '%" + Request.QueryString["q"] + "%')";
+                //            sqlQuery = "Select * from INV_Items i Where Pharmacy_Item=1 and IsPharmacyItem=1 and Hospital_Services=0 and Services<>1 and Active=1 and Book_ID=" + AppConfig.Book_ID + " and InventoryOrg=" + warehouseID + " AND (Description like @qb_q OR Item_Code like @qb_q)";
                 //        }                        
                 //        else
                 //        {
-                //            sqlQuery = "Select * from INV_Items i Where Pharmacy_Item<>1 and IsPharmacyItem<>1 and Hospital_Services=0 and Services<>1 and Active=1 and Book_ID=" + AppConfig.Book_ID + " and InventoryOrg=" + warehouseID + " AND (Description like '%" + Request.QueryString["q"] + "%' OR Item_Code like '%" + Request.QueryString["q"] + "%')";
+                //            sqlQuery = "Select * from INV_Items i Where Pharmacy_Item<>1 and IsPharmacyItem<>1 and Hospital_Services=0 and Services<>1 and Active=1 and Book_ID=" + AppConfig.Book_ID + " and InventoryOrg=" + warehouseID + " AND (Description like @qb_q OR Item_Code like @qb_q)";
                 //        }
                 //    }
                 //    else
@@ -288,7 +304,7 @@ namespace PMS
                 //        }
                 //    }
                 //    string result = "";
-                //    DataTable dt = DBClass.getDataTable(sqlQuery);
+                //    DataTable dt = DBClass.getDataTable(sqlQuery, P("@qb_q", "%" + Request.QueryString["q"] + "%"));
 
                 //    foreach (DataRow dr in dt.Rows)
                 //    {
@@ -314,25 +330,25 @@ namespace PMS
                     bool allowPharmacy = userPermissions != null && Convert.ToBoolean(userPermissions.AllowPharmacy);
                     bool allowGeneralItem = userPermissions != null && Convert.ToBoolean(userPermissions.AllowGeneralItems);
 
-                    string warehouseCondition = @"(InventoryOrg = " + warehouseID + @" 
+                    string warehouseCondition = @"(InventoryOrg = @qe_WarehouseID 
                                   OR Item_ID IN (SELECT CONVERT(INT, Item_ID) 
                                                  FROM Item_Warehouse_Mapping 
-                                                 WHERE Warehouse_Id = '" + warehouseID + @"'))";
+                                                 WHERE Warehouse_Id = @qe_WarehouseID))";
 
                     string sqlQuery;
                     if (Request.QueryString["q"] != null)
                     {
                         if (allowPharmacy && allowGeneralItem)
                         {
-                            sqlQuery = "Select * from INV_Items i Where Hospital_Services=0 and Services<>1 and Active=1 and Book_ID=" + AppConfig.Book_ID + " and " + warehouseCondition + " AND (Description like '%" + Request.QueryString["q"] + "%' OR Item_Code like '%" + Request.QueryString["q"] + "%')";
+                            sqlQuery = "Select * from INV_Items i Where Hospital_Services=0 and Services<>1 and Active=1 and Book_ID=" + AppConfig.Book_ID + " and " + warehouseCondition + " AND (Description like @qb_q OR Item_Code like @qb_q)";
                         }
                         else if (allowPharmacy)
                         {
-                            sqlQuery = "Select * from INV_Items i Where Pharmacy_Item=1 and IsPharmacyItem=1 and Hospital_Services=0 and Services<>1 and Active=1 and Book_ID=" + AppConfig.Book_ID + " and " + warehouseCondition + " AND (Description like '%" + Request.QueryString["q"] + "%' OR Item_Code like '%" + Request.QueryString["q"] + "%')";
+                            sqlQuery = "Select * from INV_Items i Where Pharmacy_Item=1 and IsPharmacyItem=1 and Hospital_Services=0 and Services<>1 and Active=1 and Book_ID=" + AppConfig.Book_ID + " and " + warehouseCondition + " AND (Description like @qb_q OR Item_Code like @qb_q)";
                         }
                         else
                         {
-                            sqlQuery = "Select * from INV_Items i Where Pharmacy_Item<>1 and IsPharmacyItem<>1 and Hospital_Services=0 and Services<>1 and Active=1 and Book_ID=" + AppConfig.Book_ID + " and " + warehouseCondition + " AND (Description like '%" + Request.QueryString["q"] + "%' OR Item_Code like '%" + Request.QueryString["q"] + "%')";
+                            sqlQuery = "Select * from INV_Items i Where Pharmacy_Item<>1 and IsPharmacyItem<>1 and Hospital_Services=0 and Services<>1 and Active=1 and Book_ID=" + AppConfig.Book_ID + " and " + warehouseCondition + " AND (Description like @qb_q OR Item_Code like @qb_q)";
                         }
                     }
                     else
@@ -351,7 +367,7 @@ namespace PMS
                         }
                     }
                     string result = "";
-                    DataTable dt = DBClass.getDataTable(sqlQuery);
+                    DataTable dt = DBClass.getDataTable(sqlQuery, P("@qe_WarehouseID", Request.QueryString["WarehouseID"]), P("@qb_q", "%" + Request.QueryString["q"] + "%"));
 
                     foreach (DataRow dr in dt.Rows)
                     {
@@ -380,15 +396,15 @@ namespace PMS
                     {
                         if (allowPharmacy && allowGeneralItem)
                         {
-                            sqlQuery = "Select * from INV_Items i Where Hospital_Services=0 and Services<>1 and Active=1 and Book_ID=" + AppConfig.Book_ID + "   AND (Description like '%" + Request.QueryString["q"] + "%' OR Item_Code like '%" + Request.QueryString["q"] + "%')";
+                            sqlQuery = "Select * from INV_Items i Where Hospital_Services=0 and Services<>1 and Active=1 and Book_ID=" + AppConfig.Book_ID + "   AND (Description like @qb_q OR Item_Code like @qb_q)";
                         }
                         else if (allowPharmacy)
                         {
-                            sqlQuery = "Select * from INV_Items i Where Pharmacy_Item=1 and IsPharmacyItem=1 and Hospital_Services=0 and Services<>1 and Active=1 and Book_ID=" + AppConfig.Book_ID + "  AND (Description like '%" + Request.QueryString["q"] + "%' OR Item_Code like '%" + Request.QueryString["q"] + "%')";
+                            sqlQuery = "Select * from INV_Items i Where Pharmacy_Item=1 and IsPharmacyItem=1 and Hospital_Services=0 and Services<>1 and Active=1 and Book_ID=" + AppConfig.Book_ID + "  AND (Description like @qb_q OR Item_Code like @qb_q)";
                         }                        
                         else
                         {
-                            sqlQuery = "Select * from INV_Items i Where Pharmacy_Item<>1 and IsPharmacyItem<>1 and Hospital_Services=0 and Services<>1 and Active=1 and Book_ID=" + AppConfig.Book_ID + " AND (Description like '%" + Request.QueryString["q"] + "%' OR Item_Code like '%" + Request.QueryString["q"] + "%')";
+                            sqlQuery = "Select * from INV_Items i Where Pharmacy_Item<>1 and IsPharmacyItem<>1 and Hospital_Services=0 and Services<>1 and Active=1 and Book_ID=" + AppConfig.Book_ID + " AND (Description like @qb_q OR Item_Code like @qb_q)";
                         }
                     }
                     else
@@ -407,7 +423,7 @@ namespace PMS
                         }
                     }
                     string result = "";
-                    DataTable dt = DBClass.getDataTable(sqlQuery);
+                    DataTable dt = DBClass.getDataTable(sqlQuery, P("@qb_q", "%" + Request.QueryString["q"] + "%"));
 
                     foreach (DataRow dr in dt.Rows)
                     {
@@ -434,15 +450,15 @@ namespace PMS
                     {
                         if (allowPharmacy && allowGeneralItem)
                         {
-                            sqlQuery = "Select * from INV_Items i Where Hospital_Services=0 and Services<>1 and Active=1 and Book_ID=" + AppConfig.Book_ID + " AND Description like '%" + Request.QueryString["q"] + "%'";
+                            sqlQuery = "Select * from INV_Items i Where Hospital_Services=0 and Services<>1 and Active=1 and Book_ID=" + AppConfig.Book_ID + " AND Description like @qb_q";
                         }
                         else if (allowPharmacy)
                         {
-                            sqlQuery = "Select * from INV_Items i Where Pharmacy_Item=1 and IsPharmacyItem=1 and Hospital_Services=0 and Services<>1 and Active=1 and Book_ID=" + AppConfig.Book_ID + " AND Description like '%" + Request.QueryString["q"] + "%'";
+                            sqlQuery = "Select * from INV_Items i Where Pharmacy_Item=1 and IsPharmacyItem=1 and Hospital_Services=0 and Services<>1 and Active=1 and Book_ID=" + AppConfig.Book_ID + " AND Description like @qb_q";
                         }
                         else
                         {
-                            sqlQuery = "Select * from INV_Items i Where Pharmacy_Item<>1 and IsPharmacyItem<>1 and Hospital_Services=0 and Services<>1 and Active=1 and Book_ID=" + AppConfig.Book_ID + " AND Description like '%" + Request.QueryString["q"] + "%'";
+                            sqlQuery = "Select * from INV_Items i Where Pharmacy_Item<>1 and IsPharmacyItem<>1 and Hospital_Services=0 and Services<>1 and Active=1 and Book_ID=" + AppConfig.Book_ID + " AND Description like @qb_q";
                         }
                     }
                     else
@@ -462,7 +478,7 @@ namespace PMS
                     }
 
                     string result = "";
-                    DataTable dt = DBClass.getDataTable(sqlQuery);
+                    DataTable dt = DBClass.getDataTable(sqlQuery, P("@qb_q", "%" + Request.QueryString["q"] + "%"));
                     foreach (DataRow dr in dt.Rows)
                     {
                         result += (result == "") ? "" : ",";
@@ -474,11 +490,11 @@ namespace PMS
                 {
                     string sqlQuery;
                     if (Request.QueryString["q"] != null)
-                        sqlQuery = "Select * from INV_Items Where Book_ID=" + AppConfig.Book_ID + " and Hospital_Services= 0 and Services<>1 and Active=1 AND Item_Code like'%" + Request.QueryString["q"] + "%'";
+                        sqlQuery = "Select * from INV_Items Where Book_ID=" + AppConfig.Book_ID + " and Hospital_Services= 0 and Services<>1 and Active=1 AND Item_Code like @qb_q";
                     else
                         sqlQuery = "Select * from INV_Items Where Book_ID=" + AppConfig.Book_ID + "";
                     string result = "";
-                    DataTable dt = DBClass.getDataTable(sqlQuery);
+                    DataTable dt = DBClass.getDataTable(sqlQuery, P("@qb_q", "%" + Request.QueryString["q"] + "%"));
                     foreach (DataRow dr in dt.Rows)
                     {
                         result += (result == "") ? "" : ",";
@@ -504,15 +520,15 @@ namespace PMS
                     {
                         if (allowPharmacy && allowGeneralItem)
                         {                           
-                            sqlQuery = "Select *, isnull(dbo.GetDataValueName('UOM', i.Unit),'NIL') as UOM, (select top 1 CAST(ISNULL(Rate,0) as DECIMAL(18,2)) from AP_Purchase_Order_Items where Item_Id = i.Item_ID order by PO_Item_ID desc) as LastRate, (select ISNULL(sum(Qty),0) from vwBatch_Ledger where Item_ID = i.Item_ID) as Stock from INV_Items i Where Hospital_Services= 0 and Services<>1 and Active=1 and Book_ID=" + AppConfig.Book_ID + " AND Description like'%" + Request.QueryString["q"] + "%'";
+                            sqlQuery = "Select *, isnull(dbo.GetDataValueName('UOM', i.Unit),'NIL') as UOM, (select top 1 CAST(ISNULL(Rate,0) as DECIMAL(18,2)) from AP_Purchase_Order_Items where Item_Id = i.Item_ID order by PO_Item_ID desc) as LastRate, (select ISNULL(sum(Qty),0) from vwBatch_Ledger where Item_ID = i.Item_ID) as Stock from INV_Items i Where Hospital_Services= 0 and Services<>1 and Active=1 and Book_ID=" + AppConfig.Book_ID + " AND Description like @qb_q";
                         }
                         else if (allowPharmacy)
                         {
-                            sqlQuery = "Select *, isnull(dbo.GetDataValueName('UOM', i.Unit),'NIL') as UOM, (select top 1 CAST(ISNULL(Rate,0) as DECIMAL(18,2)) from AP_Purchase_Order_Items where Item_Id = i.Item_ID order by PO_Item_ID desc) as LastRate, (select ISNULL(sum(Qty),0) from vwBatch_Ledger where Item_ID = i.Item_ID) as Stock from INV_Items i Where Pharmacy_Item=1 and IsPharmacyItem=1 and Hospital_Services= 0 and Services<>1 and Active=1 and Book_ID=" + AppConfig.Book_ID + " AND Description like'%" + Request.QueryString["q"] + "%'";
+                            sqlQuery = "Select *, isnull(dbo.GetDataValueName('UOM', i.Unit),'NIL') as UOM, (select top 1 CAST(ISNULL(Rate,0) as DECIMAL(18,2)) from AP_Purchase_Order_Items where Item_Id = i.Item_ID order by PO_Item_ID desc) as LastRate, (select ISNULL(sum(Qty),0) from vwBatch_Ledger where Item_ID = i.Item_ID) as Stock from INV_Items i Where Pharmacy_Item=1 and IsPharmacyItem=1 and Hospital_Services= 0 and Services<>1 and Active=1 and Book_ID=" + AppConfig.Book_ID + " AND Description like @qb_q";
                         }
                         else
                         {
-                            sqlQuery = "Select *, isnull(dbo.GetDataValueName('UOM', i.Unit),'NIL') as UOM, (select top 1 CAST(ISNULL(Rate,0) as DECIMAL(18,2)) from AP_Purchase_Order_Items where Item_Id = i.Item_ID order by PO_Item_ID desc) as LastRate, (select ISNULL(sum(Qty),0) from vwBatch_Ledger where Item_ID = i.Item_ID) as Stock from INV_Items i Where Pharmacy_Item<>1 and IsPharmacyItem<>1 and Hospital_Services= 0 and Services<>1 and Active=1 and Book_ID=" + AppConfig.Book_ID + " AND Description like'%" + Request.QueryString["q"] + "%'";                            
+                            sqlQuery = "Select *, isnull(dbo.GetDataValueName('UOM', i.Unit),'NIL') as UOM, (select top 1 CAST(ISNULL(Rate,0) as DECIMAL(18,2)) from AP_Purchase_Order_Items where Item_Id = i.Item_ID order by PO_Item_ID desc) as LastRate, (select ISNULL(sum(Qty),0) from vwBatch_Ledger where Item_ID = i.Item_ID) as Stock from INV_Items i Where Pharmacy_Item<>1 and IsPharmacyItem<>1 and Hospital_Services= 0 and Services<>1 and Active=1 and Book_ID=" + AppConfig.Book_ID + " AND Description like @qb_q";                            
                         }
                     }
                     else
@@ -531,7 +547,7 @@ namespace PMS
                         }
                     }
                     string result = "";
-                    DataTable dt = DBClass.getDataTable(sqlQuery);
+                    DataTable dt = DBClass.getDataTable(sqlQuery, P("@qb_q", "%" + Request.QueryString["q"] + "%"));
 
                     foreach (DataRow dr in dt.Rows)
                     {
@@ -555,29 +571,27 @@ namespace PMS
                     bool allowPharmacy = userPermissions != null && Convert.ToBoolean(userPermissions.AllowPharmacy);
                     bool allowGeneralItem = userPermissions != null && Convert.ToBoolean(userPermissions.AllowGeneralItems);
 
-                    string warehouseCondition = @"(InventoryOrg = " + warehouseID + @" 
+                    string warehouseCondition = @"(InventoryOrg = @qe_WarehouseID 
                                   OR Item_ID IN (SELECT CONVERT(INT, Item_ID) 
                                                  FROM Item_Warehouse_Mapping 
-                                                 WHERE Warehouse_Id = '" + warehouseID + @"'))";
+                                                 WHERE Warehouse_Id = @qe_WarehouseID))";
                     // ---------------------------------------------------------------------------------
 
                     string sqlQuery;
 
                     if (Request.QueryString["q"] != null)
                     {
-                        string searchTerm = Request.QueryString["q"].Replace("'", "''"); // Basic SQL injection mitigation
-
                         if (allowPharmacy && allowGeneralItem)
                         {
-                            sqlQuery = "Select *, isnull(dbo.GetDataValueName('UOM', i.Unit),'NIL') as UOM, (select top 1 CAST(ISNULL(Rate,0) as DECIMAL(18,2)) from AP_Purchase_Order_Items where Item_Id = i.Item_ID order by PO_Item_ID desc) as LastRate, (select ISNULL(sum(Qty),0) from vwBatch_Ledger where Item_ID = i.Item_ID) as Stock from INV_Items i Where Hospital_Services= 0 and Services<>1 and Active=1 and " + warehouseCondition + " and Book_ID=" + AppConfig.Book_ID + " AND (Description like '%" + searchTerm + "%' OR Generic_Name like '%" + searchTerm + "%')";
+                            sqlQuery = "Select *, isnull(dbo.GetDataValueName('UOM', i.Unit),'NIL') as UOM, (select top 1 CAST(ISNULL(Rate,0) as DECIMAL(18,2)) from AP_Purchase_Order_Items where Item_Id = i.Item_ID order by PO_Item_ID desc) as LastRate, (select ISNULL(sum(Qty),0) from vwBatch_Ledger where Item_ID = i.Item_ID) as Stock from INV_Items i Where Hospital_Services= 0 and Services<>1 and Active=1 and " + warehouseCondition + " and Book_ID=" + AppConfig.Book_ID + " AND (Description like @qb_q OR Generic_Name like @qb_q)";
                         }
                         else if (allowPharmacy)
                         {
-                            sqlQuery = "Select *, isnull(dbo.GetDataValueName('UOM', i.Unit),'NIL') as UOM, (select top 1 CAST(ISNULL(Rate,0) as DECIMAL(18,2)) from AP_Purchase_Order_Items where Item_Id = i.Item_ID order by PO_Item_ID desc) as LastRate, (select ISNULL(sum(Qty),0) from vwBatch_Ledger where Item_ID = i.Item_ID) as Stock from INV_Items i Where Pharmacy_Item=1 and IsPharmacyItem=1 and Hospital_Services= 0 and Services<>1 and Active=1 and " + warehouseCondition + " and Book_ID=" + AppConfig.Book_ID + " AND (Description like '%" + searchTerm + "%' OR Generic_Name like '%" + searchTerm + "%')";
+                            sqlQuery = "Select *, isnull(dbo.GetDataValueName('UOM', i.Unit),'NIL') as UOM, (select top 1 CAST(ISNULL(Rate,0) as DECIMAL(18,2)) from AP_Purchase_Order_Items where Item_Id = i.Item_ID order by PO_Item_ID desc) as LastRate, (select ISNULL(sum(Qty),0) from vwBatch_Ledger where Item_ID = i.Item_ID) as Stock from INV_Items i Where Pharmacy_Item=1 and IsPharmacyItem=1 and Hospital_Services= 0 and Services<>1 and Active=1 and " + warehouseCondition + " and Book_ID=" + AppConfig.Book_ID + " AND (Description like @qb_q OR Generic_Name like @qb_q)";
                         }
                         else
                         {
-                            sqlQuery = "Select *, isnull(dbo.GetDataValueName('UOM', i.Unit),'NIL') as UOM, (select top 1 CAST(ISNULL(Rate,0) as DECIMAL(18,2)) from AP_Purchase_Order_Items where Item_Id = i.Item_ID order by PO_Item_ID desc) as LastRate, (select ISNULL(sum(Qty),0) from vwBatch_Ledger where Item_ID = i.Item_ID) as Stock from INV_Items i Where Pharmacy_Item<>1 and IsPharmacyItem<>1 and Hospital_Services= 0 and Services<>1 and Active=1 and " + warehouseCondition + " and Book_ID=" + AppConfig.Book_ID + " AND (Description like '%" + searchTerm + "%' OR Generic_Name like '%" + searchTerm + "%')";
+                            sqlQuery = "Select *, isnull(dbo.GetDataValueName('UOM', i.Unit),'NIL') as UOM, (select top 1 CAST(ISNULL(Rate,0) as DECIMAL(18,2)) from AP_Purchase_Order_Items where Item_Id = i.Item_ID order by PO_Item_ID desc) as LastRate, (select ISNULL(sum(Qty),0) from vwBatch_Ledger where Item_ID = i.Item_ID) as Stock from INV_Items i Where Pharmacy_Item<>1 and IsPharmacyItem<>1 and Hospital_Services= 0 and Services<>1 and Active=1 and " + warehouseCondition + " and Book_ID=" + AppConfig.Book_ID + " AND (Description like @qb_q OR Generic_Name like @qb_q)";
                         }
                     }
                     else
@@ -597,7 +611,7 @@ namespace PMS
                     }
 
                     string result = "";
-                    DataTable dt = DBClass.getDataTable(sqlQuery);
+                    DataTable dt = DBClass.getDataTable(sqlQuery, P("@qe_WarehouseID", Request.QueryString["WarehouseID"]), P("@qb_q", "%" + Request.QueryString["q"] + "%"));
 
                     foreach (DataRow dr in dt.Rows)
                     {
@@ -611,12 +625,12 @@ namespace PMS
                 {
                     string sqlQuery;
                     if (Request.QueryString["q"] != null)
-                        sqlQuery = "Select *, isnull(dbo.GetDataValueName('UOM', i.Unit),'NIL') as UOM, (select top 1 CAST(ISNULL(Rate,0) as DECIMAL(18,2)) from AP_Purchase_Order_Items where Item_Id = i.Item_ID order by PO_Item_ID desc) as LastRate, (select ISNULL(sum(Qty),0) from vwBatch_Ledger where Item_ID = i.Item_ID) as Stock from INV_Items i Where Hospital_Services= 0 and Services<>1 and Active=1 and Book_ID=" + AppConfig.Book_ID + " AND Description like'%" + Request.QueryString["q"] + "%'";
+                        sqlQuery = "Select *, isnull(dbo.GetDataValueName('UOM', i.Unit),'NIL') as UOM, (select top 1 CAST(ISNULL(Rate,0) as DECIMAL(18,2)) from AP_Purchase_Order_Items where Item_Id = i.Item_ID order by PO_Item_ID desc) as LastRate, (select ISNULL(sum(Qty),0) from vwBatch_Ledger where Item_ID = i.Item_ID) as Stock from INV_Items i Where Hospital_Services= 0 and Services<>1 and Active=1 and Book_ID=" + AppConfig.Book_ID + " AND Description like @qb_q";
 
                     else
                         sqlQuery = "Select * from INV_Items Where Book_ID=" + AppConfig.Book_ID + "";
                     string result = "";
-                    DataTable dt = DBClass.getDataTable(sqlQuery);
+                    DataTable dt = DBClass.getDataTable(sqlQuery, P("@qb_q", "%" + Request.QueryString["q"] + "%"));
 
                     foreach (DataRow dr in dt.Rows)
                     {
@@ -646,9 +660,6 @@ namespace PMS
                         filterClause = "AND i.Pharmacy_Item = 1 AND i.IsPharmacyItem = 1";
                     else
                         filterClause = "AND (i.Pharmacy_Item <> 1 OR i.IsPharmacyItem <> 1)";
-
-                    string searchTerm = Request.QueryString["q"] ?? "";
-                    string safeSearch = searchTerm.Replace("'", "''");
 
                     string sqlQuery = $@"
         SELECT TOP 30 
@@ -686,10 +697,10 @@ namespace PMS
           AND i.Active = 1 
           AND i.Book_ID = {AppConfig.Book_ID}
           {filterClause}
-          AND (i.Item_Code LIKE '%{safeSearch}%' OR i.Description LIKE '%{safeSearch}%')
+          AND (i.Item_Code LIKE @qb_q OR i.Description LIKE @qb_q)
         ORDER BY i.Item_Code";
 
-                    DataTable dt = DBClass.getDataTable(sqlQuery);
+                    DataTable dt = DBClass.getDataTable(sqlQuery, P("@qb_q", "%" + Request.QueryString["q"] + "%"));
                     var items = new List<object>();
                     foreach (DataRow dr in dt.Rows)
                     {
@@ -729,17 +740,15 @@ namespace PMS
                     bool allowPharmacy = userPermissions != null && Convert.ToBoolean(userPermissions.AllowPharmacy);
                     bool allowGeneralItem = userPermissions != null && Convert.ToBoolean(userPermissions.AllowGeneralItems);
 
-                    string warehouseCondition = @"(InventoryOrg = " + warehouseID + @" 
+                    string warehouseCondition = @"(InventoryOrg = @qe_WarehouseID 
                                   OR Item_ID IN (SELECT CONVERT(INT, Item_ID) 
                                                  FROM Item_Warehouse_Mapping 
-                                                 WHERE Warehouse_Id = '" + warehouseID + @"'))";
+                                                 WHERE Warehouse_Id = @qe_WarehouseID))";
 
                     string sqlQuery;
 
                     if (Request.QueryString["q"] != null)
                     {
-                        string searchTerm = Request.QueryString["q"].Replace("'", "''"); 
-
                         if (allowPharmacy && allowGeneralItem)
                         {
                             sqlQuery = @"Select *, isnull(dbo.GetDataValueName('UOM', i.Unit),'NIL') as UOM, 
@@ -748,7 +757,7 @@ namespace PMS
         from INV_Items i 
         Where Hospital_Services=0 and Services<>1 and Active=1 and Book_ID=" + AppConfig.Book_ID + @" 
         and " + warehouseCondition + @" 
-        AND (Description like '%" + searchTerm + @"%' OR Generic_Name like '%" + searchTerm + @"%')";
+        AND (Description like @qb_q OR Generic_Name like @qb_q)";
                         }
                         else if (allowPharmacy)
                         {
@@ -758,7 +767,7 @@ namespace PMS
         from INV_Items i 
         Where Pharmacy_Item=1 and IsPharmacyItem=1 and Hospital_Services=0 and Services<>1 and Active=1 and Book_ID=" + AppConfig.Book_ID + @" 
         and " + warehouseCondition + @" 
-        AND (Description like '%" + searchTerm + @"%' OR Generic_Name like '%" + searchTerm + @"%')";
+        AND (Description like @qb_q OR Generic_Name like @qb_q)";
                         }
                         else
                         {
@@ -768,7 +777,7 @@ namespace PMS
         from INV_Items i 
         Where Pharmacy_Item<>1 and IsPharmacyItem<>1 and Hospital_Services=0 and Services<>1 and Active=1 and Book_ID=" + AppConfig.Book_ID + @" 
         and " + warehouseCondition + @" 
-        AND (Description like '%" + searchTerm + @"%' OR Generic_Name like '%" + searchTerm + @"%')";
+        AND (Description like @qb_q OR Generic_Name like @qb_q)";
                         }
                     }
                     else
@@ -788,7 +797,7 @@ namespace PMS
                     }
 
                     var serializer = new JavaScriptSerializer();
-                    DataTable dt = DBClass.getDataTable(sqlQuery);
+                    DataTable dt = DBClass.getDataTable(sqlQuery, P("@qe_WarehouseID", Request.QueryString["WarehouseID"]), P("@qb_q", "%" + Request.QueryString["q"] + "%"));
                     var items = new List<object>();
 
                     foreach (DataRow dr in dt.Rows)
@@ -844,8 +853,8 @@ namespace PMS
 
                                 id = Convert.ToInt32(Request.QueryString["q"]);
 
-                            sqlQuery = "Select * from Patients where Patient_ID = " + Request.QueryString["q"].ToString() + ""; 
-                            DataTable dt = DBClass.getDataTable(sqlQuery);
+                            sqlQuery = "Select * from Patients where Patient_ID = @qe_q"; 
+                            DataTable dt = DBClass.getDataTable(sqlQuery, P("@qe_q", Request.QueryString["q"]));
                             foreach (DataRow dr in dt.Rows)
                             {
                                 result += @"{""id"":""" + dr["Patient_ID"].ToString() + @""",
@@ -863,11 +872,11 @@ namespace PMS
                 {
                     string sqlQuery;
                     if (Request.QueryString["q"] != null)
-                        sqlQuery = "Select  top 1 pat_id,Patient_No,Full_Name from Reg_patient Where  Patient_No = '" + Request.QueryString["q"].ToString() + "' order by Created_Time desc";
+                        sqlQuery = "Select  top 1 pat_id,Patient_No,Full_Name from Reg_patient Where  Patient_No = @qe_q order by Created_Time desc";
                     else
                         sqlQuery = "Select distinct (select top 1 pat_id from Reg_patient where Patient_No=p.Patient_No)Patient_ID,Patient_No,Full_Name from Reg_patient p  order by Created_Time desc";
                     string result = "";
-                    DataTable dt = DBClass.getDataTable(sqlQuery);
+                    DataTable dt = DBClass.getDataTable(sqlQuery, P("@qe_q", Request.QueryString["q"]));
                     foreach (DataRow dr in dt.Rows)
                     {
                         result += (result == "") ? "" : ",";
@@ -879,12 +888,12 @@ namespace PMS
                 {
                     string sqlQuery;
                     if (Request.QueryString["q"] != null)
-                        sqlQuery = "Select top 1000 pat_id as Patient_ID, mr_no_sequence as  Patient_No from Reg_patient Where mr_no_sequence LIKE '%" + Request.QueryString["q"].ToString() + "%' order by Created_time desc";
+                        sqlQuery = "Select top 1000 pat_id as Patient_ID, mr_no_sequence as  Patient_No from Reg_patient Where mr_no_sequence LIKE @qb_q order by Created_time desc";
                     else
                         sqlQuery = "Select distinct (select top 1 Patient_ID from Patients where Patient_No=p.Patient_No) Patient_ID, Patient_No from Patients p where isnull(IsRevisit,'0')=0 order by Created_Time desc";
 
                     string result = "";
-                    DataTable dt = DBClass.getDataTable(sqlQuery);
+                    DataTable dt = DBClass.getDataTable(sqlQuery, P("@qb_q", "%" + Request.QueryString["q"] + "%"));
                     foreach (DataRow dr in dt.Rows)
                     {
                         result += (result == "") ? "" : ",";
@@ -896,12 +905,12 @@ namespace PMS
                 {
                     string sqlQuery;
                     if (Request.QueryString["q"] != null)
-                        sqlQuery = "Select top 1 pat_id as Patient_ID, mr_no_sequence as  Patient_No from Reg_patient Where mr_no_sequence = '" + Request.QueryString["q"].ToString() + "' order by Created_time desc";
+                        sqlQuery = "Select top 1 pat_id as Patient_ID, mr_no_sequence as  Patient_No from Reg_patient Where mr_no_sequence = @qe_q order by Created_time desc";
                     else
                         sqlQuery = "Select distinct (select top 1 Patient_ID from Patients where Patient_No=p.Patient_No) Patient_ID, Patient_No from Patients p where isnull(IsRevisit,'0')=0 order by Created_Time desc";
 
                     string result = "";
-                    DataTable dt = DBClass.getDataTable(sqlQuery);
+                    DataTable dt = DBClass.getDataTable(sqlQuery, P("@qe_q", Request.QueryString["q"]));
                     foreach (DataRow dr in dt.Rows)
                     {
                         result += (result == "") ? "" : ",";
@@ -913,12 +922,12 @@ namespace PMS
                 {
                     string sqlQuery;
                     if (Request.QueryString["q"] != null)
-                        sqlQuery = "Select top 20 pat_id as Patient_ID, mr_no_sequence as  Patient_No from Reg_patient rg inner join In_Patient ipd  on rg.pat_id=ipd.Patient_ID Where mr_no_sequence LIKE '%" + Request.QueryString["q"].ToString() + "%' order by rg.Created_time desc";
+                        sqlQuery = "Select top 20 pat_id as Patient_ID, mr_no_sequence as  Patient_No from Reg_patient rg inner join In_Patient ipd  on rg.pat_id=ipd.Patient_ID Where mr_no_sequence LIKE @qb_q order by rg.Created_time desc";
                     else
                         sqlQuery = "Select distinct pat_id as Patient_ID, mr_no_sequence as Patient_No from Reg_patient rg inner join In_Patient ipd on rg.pat_id = ipd.Patient_ID where ISNULL(ipd.Discharge,0)=0 order by rg.Created_time desc";
 
                     string result = "";
-                    DataTable dt = DBClass.getDataTable(sqlQuery);
+                    DataTable dt = DBClass.getDataTable(sqlQuery, P("@qb_q", "%" + Request.QueryString["q"] + "%"));
                     foreach (DataRow dr in dt.Rows)
                     {
                         result += (result == "") ? "" : ",";
@@ -930,12 +939,12 @@ namespace PMS
                 {
                     string sqlQuery;
                     if (Request.QueryString["q"] != null)
-                        sqlQuery = "Select top 1 pat_id as Patient_ID, mr_no_sequence as  Patient_No from Reg_patient rg inner join In_Patient ipd  on rg.pat_id=ipd.Patient_ID Where mr_no_sequence LIKE '%" + Request.QueryString["q"].ToString() + "%' and isnull(ipd.Discharge,0)=0 order by rg.Created_time desc";
+                        sqlQuery = "Select top 1 pat_id as Patient_ID, mr_no_sequence as  Patient_No from Reg_patient rg inner join In_Patient ipd  on rg.pat_id=ipd.Patient_ID Where mr_no_sequence LIKE @qb_q and isnull(ipd.Discharge,0)=0 order by rg.Created_time desc";
                     else
                         sqlQuery = "Select distinct pat_id as Patient_ID, mr_no_sequence as Patient_No from Reg_patient rg inner join In_Patient ipd on rg.pat_id = ipd.Patient_ID where ISNULL(ipd.Discharge,0)=0 order by rg.Created_time desc";
 
                     string result = "";
-                    DataTable dt = DBClass.getDataTable(sqlQuery);
+                    DataTable dt = DBClass.getDataTable(sqlQuery, P("@qb_q", "%" + Request.QueryString["q"] + "%"));
                     foreach (DataRow dr in dt.Rows)
                     {
                         result += (result == "") ? "" : ",";
@@ -947,12 +956,12 @@ namespace PMS
                 {
                     string sqlQuery;
                     if (Request.QueryString["q"] != null)
-                        sqlQuery = "Select top 1 pat_id as Pat_id, Patient_No,mr_no_sequence from Reg_patient  Where mr_no_sequence = '" + Request.QueryString["q"].ToString() + "' order by Created_time desc";
+                        sqlQuery = "Select top 1 pat_id as Pat_id, Patient_No,mr_no_sequence from Reg_patient  Where mr_no_sequence = @qe_q order by Created_time desc";
                     else
                         sqlQuery = "Select distinct (select top 1 Patient_ID from Patients where Patient_No=p.Patient_No) Patient_ID, Patient_No from Patients p where isnull(IsRevisit,'0')=0 order by Created_Time desc";
 
                     string result = "";
-                    DataTable dt = DBClass.getDataTable(sqlQuery);
+                    DataTable dt = DBClass.getDataTable(sqlQuery, P("@qe_q", Request.QueryString["q"]));
                     foreach (DataRow dr in dt.Rows)
                     {
                         result += (result == "") ? "" : ",";
@@ -964,11 +973,11 @@ namespace PMS
                 {
                     string sqlQuery;
                     if (Request.QueryString["q"] != null)
-                        sqlQuery = "Select top 1 p.Patient_ID as Out_Patient_ID,ipm.Item_Code,rg.mr_no_sequence,rg.Full_Name,rg.Patient_No,op.Out_Patient_ID as opdid,rg.pat_id as Pat_id from Reg_patient rg inner join  Patients p on rg.pat_id = p.Reg_PatId inner join Out_Patient op on p.Patient_ID = op.Patient_ID inner join In_Patient_Medicines ipm on op.Out_Patient_ID = ipm.Patient_ID Where rg.Patient_No = '" + Request.QueryString["q"].ToString() + "' order by op.Created_Time desc ";
+                        sqlQuery = "Select top 1 p.Patient_ID as Out_Patient_ID,ipm.Item_Code,rg.mr_no_sequence,rg.Full_Name,rg.Patient_No,op.Out_Patient_ID as opdid,rg.pat_id as Pat_id from Reg_patient rg inner join  Patients p on rg.pat_id = p.Reg_PatId inner join Out_Patient op on p.Patient_ID = op.Patient_ID inner join In_Patient_Medicines ipm on op.Out_Patient_ID = ipm.Patient_ID Where rg.Patient_No = @qe_q order by op.Created_Time desc ";
                     else
                         sqlQuery = "Select  top 1 op.Out_Patient_ID,ipm.Item_Code,rg.mr_no_sequence from Reg_patient rg inner join  Patients p on rg.pat_id = p.Reg_PatId inner join Out_Patient op on p.Patient_ID = op.Patient_ID inner join In_Patient_Medicines ipm on op.Out_Patient_ID = ipm.Patient_ID Where  isnull(IsRevisit,'0')=0  order by op.Created_Time desc ";
                     string result = "";
-                    DataTable dt = DBClass.getDataTable(sqlQuery);
+                    DataTable dt = DBClass.getDataTable(sqlQuery, P("@qe_q", Request.QueryString["q"]));
                     foreach (DataRow dr in dt.Rows)
                     {
                         result += (result == "") ? "" : ",";
@@ -981,11 +990,11 @@ namespace PMS
                 {
                     string sqlQuery;
                     if (Request.QueryString["q"] != null)
-                        sqlQuery = "Select  top 1 pat_id as Patient_ID,mr_no_sequence as Patient_No,Full_Name from Reg_patient Where mr_no_sequence = '" + Request.QueryString["q"].ToString() + "' order by Created_time desc";
+                        sqlQuery = "Select  top 1 pat_id as Patient_ID,mr_no_sequence as Patient_No,Full_Name from Reg_patient Where mr_no_sequence = @qe_q order by Created_time desc";
                     else
                         sqlQuery = "Select distinct (select top 1 Patient_ID from Patients where Patient_No=p.Patient_No)Patient_ID,Patient_No,Full_Name from Patients p where isnull(IsRevisit,'0')=0  order by Created_Time desc";
                     string result = "";
-                    DataTable dt = DBClass.getDataTable(sqlQuery);
+                    DataTable dt = DBClass.getDataTable(sqlQuery, P("@qe_q", Request.QueryString["q"]));
                     foreach (DataRow dr in dt.Rows)
                     {
                         result += (result == "") ? "" : ",";
@@ -1025,7 +1034,6 @@ namespace PMS
                     string sqlQuery;
                     if (!string.IsNullOrEmpty(Request.QueryString["q"]))
                     {
-                        string q = Request.QueryString["q"].Replace("'", "''");
                         sqlQuery = @"
             SELECT TOP 1 
                 sm.Sample_No,
@@ -1038,7 +1046,7 @@ namespace PMS
             INNER JOIN Sample_Detail sd ON sm.Sample_ID = sd.Sample_ID
             INNER JOIN Ar_Billing_Details bd ON sd.Bill_Detail_ID = bd.Bill_Details_ID
             INNER JOIN Ar_Billings b ON bd.Bill_ID = b.Bill_ID
-            WHERE sm.Sample_No = '" + q + @"'";
+            WHERE sm.Sample_No = @qe_q";
                     }
                     else
                     {
@@ -1058,7 +1066,7 @@ namespace PMS
                     }
 
                     string result = "";
-                    DataTable dt = DBClass.getDataTable(sqlQuery);
+                    DataTable dt = DBClass.getDataTable(sqlQuery, P("@qe_q", Request.QueryString["q"]));
                     foreach (DataRow dr in dt.Rows)
                     {
                         if (result != "") result += ",";
@@ -1076,11 +1084,11 @@ namespace PMS
                 {
                     string sqlQuery;
                     if (Request.QueryString["q"] != null)
-                        sqlQuery = "Select  top 1 Patient_ID,Opd_No,Full_Name,Reg_PatId from Patients Where Opd_No = '" + Request.QueryString["q"].ToString() + "' order by Created_Time desc";
+                        sqlQuery = "Select  top 1 Patient_ID,Opd_No,Full_Name,Reg_PatId from Patients Where Opd_No = @qe_q order by Created_Time desc";
                     else
                         sqlQuery = "Select distinct (select top 1 Patient_ID from Patients where Patient_No=p.Patient_No)Patient_ID,Patient_No,Full_Name from Patients p where isnull(IsRevisit,'0')=0  order by Created_Time desc";
                     string result = "";
-                    DataTable dt = DBClass.getDataTable(sqlQuery);
+                    DataTable dt = DBClass.getDataTable(sqlQuery, P("@qe_q", Request.QueryString["q"]));
                     foreach (DataRow dr in dt.Rows)
                     {
                         result += (result == "") ? "" : ",";
@@ -1094,11 +1102,11 @@ namespace PMS
                 {
                     string sqlQuery;
                     if (Request.QueryString["q"] != null)
-                        sqlQuery = "Select  top 1 p.Patient_ID,p.Opd_No,p.Full_Name,rp.pat_id,rp.mr_no_sequence  as Patient_No,p.Reg_PatId from Patients p join Reg_patient rp on p.Reg_PatId = rp.pat_id   Where rp.mr_no_sequence = '" + Request.QueryString["q"].ToString() + "' order by p.Created_Time desc";
+                        sqlQuery = "Select  top 1 p.Patient_ID,p.Opd_No,p.Full_Name,rp.pat_id,rp.mr_no_sequence  as Patient_No,p.Reg_PatId from Patients p join Reg_patient rp on p.Reg_PatId = rp.pat_id   Where rp.mr_no_sequence = @qe_q order by p.Created_Time desc";
                     else
                         sqlQuery = "Select distinct (select top 1 Patient_ID from Patients where Patient_No=p.Patient_No)Patient_ID,Patient_No,Full_Name from Patients p where isnull(IsRevisit,'0')=0  order by Created_Time desc";
                     string result = "";
-                    DataTable dt = DBClass.getDataTable(sqlQuery);
+                    DataTable dt = DBClass.getDataTable(sqlQuery, P("@qe_q", Request.QueryString["q"]));
                     foreach (DataRow dr in dt.Rows)
                     {
                         result += (result == "") ? "" : ",";
@@ -1115,7 +1123,7 @@ namespace PMS
 
                     if (Request.QueryString["q"] != null)
                     {
-                        sqlQuery = @"SELECT TOP 10 p.Patient_ID,p.Opd_No,p.Full_Name,rp.pat_id, rp.mr_no_sequence AS Patient_No, p.Reg_PatId FROM Patients p INNER JOIN Reg_patient rp  ON p.Reg_PatId = rp.pat_id  WHERE rp.mr_no_sequence LIKE '%" + Request.QueryString["q"].ToString() + @"%' ORDER BY p.Created_Time DESC";
+                        sqlQuery = @"SELECT TOP 10 p.Patient_ID,p.Opd_No,p.Full_Name,rp.pat_id, rp.mr_no_sequence AS Patient_No, p.Reg_PatId FROM Patients p INNER JOIN Reg_patient rp  ON p.Reg_PatId = rp.pat_id  WHERE rp.mr_no_sequence LIKE @qb_q ORDER BY p.Created_Time DESC";
                     }
                     else
                     {sqlQuery = @"SELECT DISTINCT (SELECT TOP 1 Patient_ID FROM Patients
@@ -1128,7 +1136,7 @@ namespace PMS
                     }
 
                     string result = "";
-                    DataTable dt = DBClass.getDataTable(sqlQuery);
+                    DataTable dt = DBClass.getDataTable(sqlQuery, P("@qb_q", "%" + Request.QueryString["q"] + "%"));
 
                     foreach (DataRow dr in dt.Rows)
                     {
@@ -1144,11 +1152,11 @@ namespace PMS
                 {
                     string sqlQuery;
                     if (Request.QueryString["q"] != null)
-                        sqlQuery = "Select  top 1 pat_id as Patient_ID,Patient_No,Full_Name from Reg_patient  Where Patient_No = '" + Request.QueryString["q"].ToString() + "' order by Created_Time desc";
+                        sqlQuery = "Select  top 1 pat_id as Patient_ID,Patient_No,Full_Name from Reg_patient  Where Patient_No = @qe_q order by Created_Time desc";
                     else
                         sqlQuery = "Select distinct (select top 1 Patient_ID from Patients where Patient_No=p.Patient_No)Patient_ID,Patient_No,Full_Name from Patients p where isnull(IsRevisit,'0')=0  order by Created_Time desc";
                     string result = "";
-                    DataTable dt = DBClass.getDataTable(sqlQuery);
+                    DataTable dt = DBClass.getDataTable(sqlQuery, P("@qe_q", Request.QueryString["q"]));
                     foreach (DataRow dr in dt.Rows)
                     {
                         result += (result == "") ? "" : ",";
@@ -1168,7 +1176,7 @@ namespace PMS
                 //            mr_no_sequence,
                 //            Full_Name
                 //     FROM Patients
-                //     WHERE mr_no_sequence = '" + Request.QueryString["q"].ToString() + @"'
+                //     WHERE mr_no_sequence = @qe_q
                 //     ORDER BY Created_Time DESC";
                 //    }
                 //    else
@@ -1183,7 +1191,7 @@ namespace PMS
                 //    }
 
                 //    string result = "";
-                //    DataTable dt = DBClass.getDataTable(sqlQuery);
+                //    DataTable dt = DBClass.getDataTable(sqlQuery, P("@qe_q", Request.QueryString["q"]));
 
                 //    foreach (DataRow dr in dt.Rows)
                 //    {
@@ -1208,7 +1216,7 @@ namespace PMS
                         rp.mr_no_sequence,
                         rp.Full_Name
                      FROM reg_patient rp
-                     WHERE rp.mr_no_sequence = '" + Request.QueryString["q"].ToString() + @"'
+                     WHERE rp.mr_no_sequence = @qe_q
                      ORDER BY rp.Created_Time DESC";
                     }
                     else
@@ -1224,7 +1232,7 @@ namespace PMS
                     }
 
                     string result = "";
-                    DataTable dt = DBClass.getDataTable(sqlQuery);
+                    DataTable dt = DBClass.getDataTable(sqlQuery, P("@qe_q", Request.QueryString["q"]));
 
                     foreach (DataRow dr in dt.Rows)
                     {
@@ -1243,11 +1251,11 @@ namespace PMS
                 {
                     string sqlQuery;
                     if (Request.QueryString["q"] != null)
-                        sqlQuery = "Select  top 1 pat_id,Patient_No,Full_Name from Reg_patient Where  Patient_No = '" + Request.QueryString["q"].ToString() + "' order by Created_Time desc";
+                        sqlQuery = "Select  top 1 pat_id,Patient_No,Full_Name from Reg_patient Where  Patient_No = @qe_q order by Created_Time desc";
                     else
                         sqlQuery = "Select distinct (select top 1 pat_id from Reg_patient where Patient_No=p.Patient_No)Patient_ID,Patient_No,Full_Name from Reg_patient p  order by Created_Time desc";
                     string result = "";
-                    DataTable dt = DBClass.getDataTable(sqlQuery);
+                    DataTable dt = DBClass.getDataTable(sqlQuery, P("@qe_q", Request.QueryString["q"]));
                     foreach (DataRow dr in dt.Rows)
                     {
                         result += (result == "") ? "" : ",";
@@ -1259,11 +1267,11 @@ namespace PMS
                 {
                     string sqlQuery;
                     if (Request.QueryString["q"] != null)
-                        sqlQuery = "Select  top 1 Patient_ID,Patient_No,Full_Name,NIC from Patients Where NIC = '" + Request.QueryString["q"].ToString() + "' order by Entry_Date desc";
+                        sqlQuery = "Select  top 1 Patient_ID,Patient_No,Full_Name,NIC from Patients Where NIC = @qe_q order by Entry_Date desc";
                     else
                         sqlQuery = "Select distinct (select top 1 Patient_ID from Patients where Patient_No=p.Patient_No)Patient_ID,Patient_No,Full_Name from Patients p where IsRevisit='False'  order by Entry_Date desc";
                     string result = "";
-                    DataTable dt = DBClass.getDataTable(sqlQuery);
+                    DataTable dt = DBClass.getDataTable(sqlQuery, P("@qe_q", Request.QueryString["q"]));
                     foreach (DataRow dr in dt.Rows)
                     {
                         result += (result == "") ? "" : ",";
@@ -1275,11 +1283,11 @@ namespace PMS
                 {
                     string sqlQuery;
                     if (Request.QueryString["q"] != null)
-                        sqlQuery = "Select  top 1 Patient_ID,Patient_No,Full_Name,Mobile1 from Patients Where Mobile1 = '" + Request.QueryString["q"].ToString() + "' order by Entry_Date desc";
+                        sqlQuery = "Select  top 1 Patient_ID,Patient_No,Full_Name,Mobile1 from Patients Where Mobile1 = @qe_q order by Entry_Date desc";
                     else
                         sqlQuery = "Select distinct (select top 1 Patient_ID from Patients where Patient_No=p.Patient_No)Patient_ID,Patient_No,Full_Name from Patients p where IsRevisit='False'  order by Entry_Date desc";
                     string result = "";
-                    DataTable dt = DBClass.getDataTable(sqlQuery);
+                    DataTable dt = DBClass.getDataTable(sqlQuery, P("@qe_q", Request.QueryString["q"]));
                     foreach (DataRow dr in dt.Rows)
                     {
                         result += (result == "") ? "" : ",";
@@ -1291,12 +1299,12 @@ namespace PMS
                 {
                     string sqlQuery;
                     if (Request.QueryString["q"] != null)
-                        sqlQuery = "Select top 1 pat_id as Patient_ID, mr_no_sequence, Patient_No, Full_Name from Reg_patient Where pat_id ='" + Request.QueryString["q"].ToString() + "' order by Created_time desc";
+                        sqlQuery = "Select top 1 pat_id as Patient_ID, mr_no_sequence, Patient_No, Full_Name from Reg_patient Where pat_id =@qe_q order by Created_time desc";
                     else
                         sqlQuery = "Select distinct (select top 1 pat_id as Patient_ID from Reg_patient where Patient_No=p.Patient_No) Patient_ID, mr_no_sequence, Patient_No, Full_Name from Reg_patient p order by Created_time desc";
 
                     string result = "";
-                    DataTable dt = DBClass.getDataTable(sqlQuery);
+                    DataTable dt = DBClass.getDataTable(sqlQuery, P("@qe_q", Request.QueryString["q"]));
 
                     foreach (DataRow dr in dt.Rows)
                     {
@@ -1310,11 +1318,11 @@ namespace PMS
                 {
                     string sqlQuery;
                     if (Request.QueryString["q"] != null)
-                        sqlQuery = "Select  top 1 pat_id as Patient_ID,Patient_No,Full_Name from Reg_patient Where pat_id ='" + Request.QueryString["q"].ToString() + "' order by Created_time desc";
+                        sqlQuery = "Select  top 1 pat_id as Patient_ID,Patient_No,Full_Name from Reg_patient Where pat_id =@qe_q order by Created_time desc";
                     else
                         sqlQuery = "Select distinct (select top 1 pat_id as Patient_ID from Patients where Patient_No=p.Patient_No)Patient_ID,Patient_No,Full_Name from Reg_patient p where   order by Created_time desc";
                     string result = "";
-                    DataTable dt = DBClass.getDataTable(sqlQuery);
+                    DataTable dt = DBClass.getDataTable(sqlQuery, P("@qe_q", Request.QueryString["q"]));
                     foreach (DataRow dr in dt.Rows)
                     {
                         result += (result == "") ? "" : ",";
@@ -1326,11 +1334,11 @@ namespace PMS
                 {
                     string sqlQuery;
                     if (Request.QueryString["q"] != null)
-                        sqlQuery = "Select  * from Ar_Billings Where Bill_No ='" + Request.QueryString["q"].ToString() + "'";
+                        sqlQuery = "Select  * from Ar_Billings Where Bill_No =@qe_q";
                     else
                         sqlQuery = "Select  * from Ar_Billings";
                     string result = "";
-                    DataTable dt = DBClass.getDataTable(sqlQuery);
+                    DataTable dt = DBClass.getDataTable(sqlQuery, P("@qe_q", Request.QueryString["q"]));
                     foreach (DataRow dr in dt.Rows)
                     {
                         result += (result == "") ? "" : ",";
@@ -1343,19 +1351,19 @@ namespace PMS
                 {
                     string sqlQuery;
                     if (Request.QueryString["Patient_ID"] != null)
-                        sqlQuery = "Select  top 1 Patient_ID,Opd_No,Full_Name from Patients Where Patient_ID = '" + Request.QueryString["Patient_ID"].ToString() + "' and IsRevisit='False'";
+                        sqlQuery = "Select  top 1 Patient_ID,Opd_No,Full_Name from Patients Where Patient_ID = @qe_Patient_ID and IsRevisit='False'";
                     else
                         sqlQuery = "Select distinct (select top 1 Patient_ID from Patients where Patient_No=p.Patient_No)Patient_ID,Opd_No,Full_Name from Patients p where IsRevisit='False'"; string result = "";
 
-                    DataTable dt = DBClass.getDataTable(sqlQuery);
+                    DataTable dt = DBClass.getDataTable(sqlQuery, P("@qe_Patient_ID", Request.QueryString["Patient_ID"]));
                     // It is for the patients coming from patient waiting select list.
                     if (dt.Rows.Count == 0)
                     {
                         if (Request.QueryString["Patient_ID"] != null)
-                            sqlQuery = "Select  top 1 Patient_ID, Opd_No,Full_Name from Patients Where Patient_ID = '" + Request.QueryString["Patient_ID"].ToString() + "' ";
+                            sqlQuery = "Select  top 1 Patient_ID, Opd_No,Full_Name from Patients Where Patient_ID = @qe_Patient_ID ";
                         else
                             sqlQuery = "Select distinct (select top 1 Patient_ID from Patients where Patient_No=p.Patient_No)Patient_ID,Opd_No,Full_Name from Patients p where IsRevisit='False'";
-                        dt = DBClass.getDataTable(sqlQuery);
+                        dt = DBClass.getDataTable(sqlQuery, P("@qe_Patient_ID", Request.QueryString["Patient_ID"]));
                     }
                     foreach (DataRow dr in dt.Rows)
                     {
@@ -1368,19 +1376,19 @@ namespace PMS
                 {
                     string sqlQuery;
                     if (Request.QueryString["Patient_ID"] != null)
-                        sqlQuery = "Select  top 1 Patient_ID,rp.Patient_No,rp.Full_Name from Patients p join Reg_patient rp on p.Reg_PatId = rp.pat_id Where p.Patient_ID = '" + Request.QueryString["Patient_ID"].ToString() + "' and IsRevisit='False'";
+                        sqlQuery = "Select  top 1 Patient_ID,rp.Patient_No,rp.Full_Name from Patients p join Reg_patient rp on p.Reg_PatId = rp.pat_id Where p.Patient_ID = @qe_Patient_ID and IsRevisit='False'";
                     else
                         sqlQuery = "Select distinct (select top 1 Patient_ID from Patients where Patient_No=p.Patient_No)Patient_ID,Patient_No,Full_Name from Patients p where IsRevisit='False'"; string result = "";
 
-                    DataTable dt = DBClass.getDataTable(sqlQuery);
+                    DataTable dt = DBClass.getDataTable(sqlQuery, P("@qe_Patient_ID", Request.QueryString["Patient_ID"]));
                     // It is for the patients coming from patient waiting select list.
                     if (dt.Rows.Count == 0)
                     {
                         if (Request.QueryString["Patient_ID"] != null)
-                            sqlQuery = "Select  top 1 Patient_ID,rp.Patient_No,rp.Full_Name from Patients p join Reg_patient rp on p.Reg_PatId = rp.pat_id Where p.Patient_ID = '" + Request.QueryString["Patient_ID"].ToString() + "' ";
+                            sqlQuery = "Select  top 1 Patient_ID,rp.Patient_No,rp.Full_Name from Patients p join Reg_patient rp on p.Reg_PatId = rp.pat_id Where p.Patient_ID = @qe_Patient_ID ";
                         else
                             sqlQuery = "Select distinct (select top 1 Patient_ID from Patients where Patient_No=p.Patient_No)Patient_ID,Patient_No,Full_Name from Patients p where IsRevisit='False'";
-                        dt = DBClass.getDataTable(sqlQuery);
+                        dt = DBClass.getDataTable(sqlQuery, P("@qe_Patient_ID", Request.QueryString["Patient_ID"]));
                     }
                     foreach (DataRow dr in dt.Rows)
                     {
@@ -1394,11 +1402,11 @@ namespace PMS
                 {
                     string sqlQuery;
                     if (Request.QueryString["q"] != null)
-                        sqlQuery = "select top 1 pat.*,app.Appointment_ID from Appointment_Form app,patients pat where app.Appointment_Code like '%" + Request.QueryString["q"].ToString() + "%'";
+                        sqlQuery = "select top 1 pat.*,app.Appointment_ID from Appointment_Form app,patients pat where app.Appointment_Code like @qb_q";
                     else
                         sqlQuery = "select pat.*,app.Appointment_ID from Patient_Appointment app,patients pat where pat.Patient_ID=app.Patient_ID";
                     string result = "";
-                    DataTable dt = DBClass.getDataTable(sqlQuery);
+                    DataTable dt = DBClass.getDataTable(sqlQuery, P("@qb_q", "%" + Request.QueryString["q"] + "%"));
                     foreach (DataRow dr in dt.Rows)
                     {
                         result += (result == "") ? "" : ",";
@@ -1431,11 +1439,11 @@ namespace PMS
                 {
                     string sqlQuery;
                     if (Request.QueryString["q"] != null)
-                        sqlQuery = "Select * from Laboratory_Test Where Lab_Test_ID like '%" + Request.QueryString["q"].ToString() + "%'";
+                        sqlQuery = "Select * from Laboratory_Test Where Lab_Test_ID like @qb_q";
                     else
                         sqlQuery = "Select * from Laboratory_Test ";
                     string result = "";
-                    DataTable dt = DBClass.getDataTable(sqlQuery);
+                    DataTable dt = DBClass.getDataTable(sqlQuery, P("@qb_q", "%" + Request.QueryString["q"] + "%"));
                     foreach (DataRow dr in dt.Rows)
                     {
                         result += (result == "") ? "" : ",";
@@ -1447,11 +1455,11 @@ namespace PMS
                 {
                     string sqlQuery;
                     if (Request.QueryString["q"] != null)
-                        sqlQuery = "Select * From Ar_Billings WHERE Bill_No= '" + Request.QueryString["q"].ToString() + "'";
+                        sqlQuery = "Select * From Ar_Billings WHERE Bill_No= @qe_q";
                     else
                         sqlQuery = "SELECT * FROM Ar_Billings";
                     string result = "";
-                    DataTable dt = DBClass.getDataTable(sqlQuery);
+                    DataTable dt = DBClass.getDataTable(sqlQuery, P("@qe_q", Request.QueryString["q"]));
                     foreach (DataRow dr in dt.Rows)
                     {
                         result += (result == "") ? "" : ",";
@@ -1465,12 +1473,12 @@ namespace PMS
                     string sqlQuery;
                     if (Request.QueryString["q"] != null)
                     {
-                        sqlQuery = "select DataValue_Name,DataValue_Description from DataValues dv, ValueSet vs where dv.ValueSet_ID=vs.ValueSet_ID and vs.ValueSet_Name='Symtoms' and DataValue_Name like '%" + Request.QueryString["q"].ToString() + "%'";
+                        sqlQuery = "select DataValue_Name,DataValue_Description from DataValues dv, ValueSet vs where dv.ValueSet_ID=vs.ValueSet_ID and vs.ValueSet_Name='Symtoms' and DataValue_Name like @qb_q";
                     }
                     else
                         sqlQuery = "select DataValue_Name,DataValue_Description from DataValues dv, ValueSet vs where dv.ValueSet_ID=vs.ValueSet_ID and vs.ValueSet_Name='Symtoms'";
                     string result = "";
-                    DataTable dt = DBClass.getDataTable(sqlQuery);
+                    DataTable dt = DBClass.getDataTable(sqlQuery, P("@qb_q", "%" + Request.QueryString["q"] + "%"));
                     foreach (DataRow dr in dt.Rows)
                     {
                         result += (result == "") ? "" : ",";
@@ -1483,12 +1491,12 @@ namespace PMS
                     string sqlQuery;
                     if (Request.QueryString["q"] != null)
                     {
-                        sqlQuery = "select DataValue_Name,DataValue_Description from DataValues dv, ValueSet vs where dv.ValueSet_ID=vs.ValueSet_ID and vs.ValueSet_Name='Symtoms' and DataValue_Description like '%" + Request.QueryString["q"].ToString() + "%'";
+                        sqlQuery = "select DataValue_Name,DataValue_Description from DataValues dv, ValueSet vs where dv.ValueSet_ID=vs.ValueSet_ID and vs.ValueSet_Name='Symtoms' and DataValue_Description like @qb_q";
                     }
                     else
                         sqlQuery = "select DataValue_Name,DataValue_Description from DataValues dv, ValueSet vs where dv.ValueSet_ID=vs.ValueSet_ID and vs.ValueSet_Name='Symtoms'";
                     string result = "";
-                    DataTable dt = DBClass.getDataTable(sqlQuery);
+                    DataTable dt = DBClass.getDataTable(sqlQuery, P("@qb_q", "%" + Request.QueryString["q"] + "%"));
                     foreach (DataRow dr in dt.Rows)
                     {
                         result += (result == "") ? "" : ",";
@@ -1501,12 +1509,12 @@ namespace PMS
                     string sqlQuery;
                     if (Request.QueryString["q"] != null)
                     {
-                        sqlQuery = "select * from Packages where Package_Name like '%" + Request.QueryString["q"].ToString() + "%'";
+                        sqlQuery = "select * from Packages where Package_Name like @qb_q";
                     }
                     else
                         sqlQuery = "select * from Packages ";
                     string result = "";
-                    DataTable dt = DBClass.getDataTable(sqlQuery);
+                    DataTable dt = DBClass.getDataTable(sqlQuery, P("@qb_q", "%" + Request.QueryString["q"] + "%"));
                     foreach (DataRow dr in dt.Rows)
                     {
                         result += (result == "") ? "" : ",";
@@ -1519,12 +1527,12 @@ namespace PMS
                     string sqlQuery;
                     if (Request.QueryString["q"] != null)
                     {
-                        sqlQuery = "select * from Donor where Donor_Id=" + Request.QueryString["q"].ToString();
+                        sqlQuery = "select * from Donor where Donor_Id=@qe_q";
                     }
                     else
                         sqlQuery = "select * from Donor ";
                     string result = "";
-                    DataTable dt = DBClass.getDataTable(sqlQuery);
+                    DataTable dt = DBClass.getDataTable(sqlQuery, P("@qe_q", Request.QueryString["q"]));
                     foreach (DataRow dr in dt.Rows)
                     {
                         result += (result == "") ? "" : ",";
@@ -1539,14 +1547,14 @@ namespace PMS
                     string deptFilter = "";
                     if (Request.QueryString["DeptID"] != null && Request.QueryString["DeptID"] != "0" && Request.QueryString["DeptID"] != "")
                     {
-                        deptFilter = " AND ISNULL(DepartmentId, 0) = " + Request.QueryString["DeptID"];
+                        deptFilter = " AND ISNULL(DepartmentId, 0) = @qe_DeptID";
                     }
                     if (Request.QueryString["q"] != null)
-                        sqlQuery = "Select top 1000 Item_ID as ItemID,Item_Code as ItemCode,Description as ItemName,Pharmacy_Item, Sale_Rate as Amount,case when Services = 1 then 'Service' when Services = 0 then 'Item' else '' end ItemType from INV_Items Where (Services = 1)  and Book_ID = 1  and Active=1 and Description like'%" + Request.QueryString["q"] + "%'" + deptFilter;
+                        sqlQuery = "Select top 1000 Item_ID as ItemID,Item_Code as ItemCode,Description as ItemName,Pharmacy_Item, Sale_Rate as Amount,case when Services = 1 then 'Service' when Services = 0 then 'Item' else '' end ItemType from INV_Items Where (Services = 1)  and Book_ID = 1  and Active=1 and Description like @qb_q" + deptFilter;
                     else
                         sqlQuery = "Select  top 1000  Item_ID as ItemID,Item_Code as ItemCode,Description as ItemName,Sale_Rate as Amount,case when Services=1 then 'Service' when Services=0 then 'Item' else '' end ItemType from INV_Items Where (Pharmacy_Item=0 or Pharmacy_Item is null) and Active=1 and Book_ID=" + AppConfig.Book_ID + deptFilter;
                     string result = "";
-                    DataTable dt = DBClass.getDataTable(sqlQuery);
+                    DataTable dt = DBClass.getDataTable(sqlQuery, P("@qe_DeptID", Request.QueryString["DeptID"]), P("@qb_q", "%" + Request.QueryString["q"] + "%"));
                     foreach (DataRow dr in dt.Rows)
                     {
                         result += (result == "") ? "" : ",";
@@ -1562,11 +1570,11 @@ namespace PMS
                     string sqlQuery;
                     var s = Request.QueryString["Panel"];
                     if (Request.QueryString["q"] != null)
-                        sqlQuery = "Select   top 1000 Item_ID as ItemID,Item_Code as ItemCode,Description as ItemName,Sale_Rate as Amount,case when Services=1 then 'Service' when Services=0 then 'Item' else '' end ItemType from INV_Items Where (Pharmacy_Item=0 or Pharmacy_Item is null) and  ISNULL(Payment,'0')=1 and Book_ID=1 and Description like'%" + Request.QueryString["q"] + "%'";
+                        sqlQuery = "Select   top 1000 Item_ID as ItemID,Item_Code as ItemCode,Description as ItemName,Sale_Rate as Amount,case when Services=1 then 'Service' when Services=0 then 'Item' else '' end ItemType from INV_Items Where (Pharmacy_Item=0 or Pharmacy_Item is null) and  ISNULL(Payment,'0')=1 and Book_ID=1 and Description like @qb_q";
                     else
                         sqlQuery = "Select  top 1000  Item_ID as ItemID,Item_Code as ItemCode,Description as ItemName,Sale_Rate as Amount,case when Services=1 then 'Service' when Services=0 then 'Item' else '' end ItemType from INV_Items Where (Pharmacy_Item=0 or Pharmacy_Item is null) and Book_ID=" + AppConfig.Book_ID + "";
                     string result = "";
-                    DataTable dt = DBClass.getDataTable(sqlQuery);
+                    DataTable dt = DBClass.getDataTable(sqlQuery, P("@qb_q", "%" + Request.QueryString["q"] + "%"));
                     foreach (DataRow dr in dt.Rows)
                     {
                         result += (result == "") ? "" : ",";
@@ -1579,11 +1587,11 @@ namespace PMS
                     string sqlQuery;
                     var Panel = Request.QueryString["Panel"];
                     if (Request.QueryString["q"] != null)
-                        sqlQuery = "Select   top 1000 inv.Item_ID as ItemID,inv.Item_Code as ItemCode,Description as ItemName,pnl.Rate as Amount,case when Services=1 then 'Service' when Services=0 then 'Item' else '' end ItemType from INV_Items inv,Panel_Detail_Services pnl Where (Pharmacy_Item=0 or Pharmacy_Item is null)and inv.Item_ID = pnl.Item_ID and Book_ID=1 and ISNULL(IsBill_Item,'0')=1 and pnl.Panel_ID='" + Panel + "' and Description like'%" + Request.QueryString["q"] + "%'";
+                        sqlQuery = "Select   top 1000 inv.Item_ID as ItemID,inv.Item_Code as ItemCode,Description as ItemName,pnl.Rate as Amount,case when Services=1 then 'Service' when Services=0 then 'Item' else '' end ItemType from INV_Items inv,Panel_Detail_Services pnl Where (Pharmacy_Item=0 or Pharmacy_Item is null)and inv.Item_ID = pnl.Item_ID and Book_ID=1 and ISNULL(IsBill_Item,'0')=1 and pnl.Panel_ID=@qe_Panel and Description like @qb_q";
                     else
                         sqlQuery = "Select  top 1000  inv.Item_ID as ItemID,inv.Item_Code as ItemCode,Description as ItemName,pnl.Rate as Amount,case when Services=1 then 'Service' when Services=0 then 'Item' else '' end ItemType from INV_Items inv,Panel_Detail_Services pnl Where (Pharmacy_Item=0 or Pharmacy_Item is null) and inv.Item_ID = pnl.Item_ID and Book_ID=" + AppConfig.Book_ID + "";
                     string result = "";
-                    DataTable dt = DBClass.getDataTable(sqlQuery);
+                    DataTable dt = DBClass.getDataTable(sqlQuery, P("@qe_Panel", Request.QueryString["Panel"]), P("@qb_q", "%" + Request.QueryString["q"] + "%"));
                     foreach (DataRow dr in dt.Rows)
                     {
                         result += (result == "") ? "" : ",";
@@ -1596,11 +1604,11 @@ namespace PMS
                     string sqlQuery;
                     var s = Request.QueryString["Panel"];
                     if (Request.QueryString["q"] != null)
-                        sqlQuery = "Select   top 1000 inv.Item_ID as ItemID,inv.Item_Code as ItemCode,Description as ItemName,pnl.Rate as Amount,case when Services=1 then 'Service' when Services=0 then 'Item' else '' end ItemType from INV_Items inv,Panel_Detail_Services pnl Where (Pharmacy_Item=0 or Pharmacy_Item is null)and inv.Item_ID = pnl.Item_ID and Book_ID=1 and ISNULL(IsBill_Item,'0')=1 and pnl.Panel_ID=36 and Description like'%" + Request.QueryString["q"] + "%'";
+                        sqlQuery = "Select   top 1000 inv.Item_ID as ItemID,inv.Item_Code as ItemCode,Description as ItemName,pnl.Rate as Amount,case when Services=1 then 'Service' when Services=0 then 'Item' else '' end ItemType from INV_Items inv,Panel_Detail_Services pnl Where (Pharmacy_Item=0 or Pharmacy_Item is null)and inv.Item_ID = pnl.Item_ID and Book_ID=1 and ISNULL(IsBill_Item,'0')=1 and pnl.Panel_ID=36 and Description like @qb_q";
                     else
                         sqlQuery = "Select  top 1000  inv.Item_ID as ItemID,inv.Item_Code as ItemCode,Description as ItemName,pnl.Rate as Amount,case when Services=1 then 'Service' when Services=0 then 'Item' else '' end ItemType from INV_Items inv,Panel_Detail_Services pnl Where (Pharmacy_Item=0 or Pharmacy_Item is null) and inv.Item_ID = pnl.Item_ID and Book_ID=" + AppConfig.Book_ID + "";
                     string result = "";
-                    DataTable dt = DBClass.getDataTable(sqlQuery);
+                    DataTable dt = DBClass.getDataTable(sqlQuery, P("@qb_q", "%" + Request.QueryString["q"] + "%"));
                     foreach (DataRow dr in dt.Rows)
                     {
                         result += (result == "") ? "" : ",";
@@ -1613,11 +1621,11 @@ namespace PMS
                     string sqlQuery;
                     var s = Request.QueryString["Panel"];
                     if (Request.QueryString["q"] != null)
-                        sqlQuery = "Select   top 1000 inv.Item_ID as ItemID,inv.Item_Code as ItemCode,Description as ItemName,pnl.Rate as Amount,case when Services=1 then 'Service' when Services=0 then 'Item' else '' end ItemType from INV_Items inv,Panel_Detail_Services pnl Where (Pharmacy_Item=0 or Pharmacy_Item is null)and inv.Item_ID = pnl.Item_ID and Book_ID=1 and ISNULL(IsBill_Item,'0')=1 and pnl.Panel_ID=35 and Description like'%" + Request.QueryString["q"] + "%'";
+                        sqlQuery = "Select   top 1000 inv.Item_ID as ItemID,inv.Item_Code as ItemCode,Description as ItemName,pnl.Rate as Amount,case when Services=1 then 'Service' when Services=0 then 'Item' else '' end ItemType from INV_Items inv,Panel_Detail_Services pnl Where (Pharmacy_Item=0 or Pharmacy_Item is null)and inv.Item_ID = pnl.Item_ID and Book_ID=1 and ISNULL(IsBill_Item,'0')=1 and pnl.Panel_ID=35 and Description like @qb_q";
                     else
                         sqlQuery = "Select  top 1000  inv.Item_ID as ItemID,inv.Item_Code as ItemCode,Description as ItemName,pnl.Rate as Amount,case when Services=1 then 'Service' when Services=0 then 'Item' else '' end ItemType from INV_Items inv,Panel_Detail_Services pnl Where (Pharmacy_Item=0 or Pharmacy_Item is null) and inv.Item_ID = pnl.Item_ID and Book_ID=" + AppConfig.Book_ID + "";
                     string result = "";
-                    DataTable dt = DBClass.getDataTable(sqlQuery);
+                    DataTable dt = DBClass.getDataTable(sqlQuery, P("@qb_q", "%" + Request.QueryString["q"] + "%"));
                     foreach (DataRow dr in dt.Rows)
                     {
                         result += (result == "") ? "" : ",";
@@ -1631,15 +1639,15 @@ namespace PMS
                     var data = Request.QueryString["Editdata"];
                     if (data == null)
                     {
-                        sqlQuery = "Select   top 1000 Item_ID as ItemID,Item_Code as ItemCode,Description as ItemName,Salt,Purchase_Rate as Amount,case when Services=1 then 'Service' when Services=0 then 'Item' else '' end ItemType from INV_Items Where Pharmacy_Item=1 and  Book_ID=" + AppConfig.Book_ID + " AND (Description like'%" + Request.QueryString["q"] + "%' OR Item_Code like'%" + Request.QueryString["q"] + "%' OR Salt like'%" + Request.QueryString["q"] + "%')";
+                        sqlQuery = "Select   top 1000 Item_ID as ItemID,Item_Code as ItemCode,Description as ItemName,Salt,Purchase_Rate as Amount,case when Services=1 then 'Service' when Services=0 then 'Item' else '' end ItemType from INV_Items Where Pharmacy_Item=1 and  Book_ID=" + AppConfig.Book_ID + " AND (Description like @qb_q OR Item_Code like @qb_q OR Salt like @qb_q)";
                     }
                     else
                     {
-                        sqlQuery = "Select   top 1000 Item_ID as ItemID,Item_Code as ItemCode,Description as ItemName,Salt,Purchase_Rate as Amount,case when Services=1 then 'Service' when Services=0 then 'Item' else '' end ItemType from INV_Items Where Pharmacy_Item=1 and  Book_ID=" + AppConfig.Book_ID + " AND Item_Code=" + Request.QueryString["Editdata"] + "";
+                        sqlQuery = "Select   top 1000 Item_ID as ItemID,Item_Code as ItemCode,Description as ItemName,Salt,Purchase_Rate as Amount,case when Services=1 then 'Service' when Services=0 then 'Item' else '' end ItemType from INV_Items Where Pharmacy_Item=1 and  Book_ID=" + AppConfig.Book_ID + " AND Item_Code=@qe_Editdata";
                     }
 
                     string result = "";
-                    DataTable dt = DBClass.getDataTable(sqlQuery);
+                    DataTable dt = DBClass.getDataTable(sqlQuery, P("@qb_q", "%" + Request.QueryString["q"] + "%"), P("@qe_Editdata", Request.QueryString["Editdata"]));
                     foreach (DataRow dr in dt.Rows)
                     {
                         result += (result == "") ? "" : ",";
@@ -1653,11 +1661,11 @@ namespace PMS
                 {
                     string sqlQuery;
                     if (Request.QueryString["q"] != null)
-                        sqlQuery = "select PO_ID as PO_ID,PO_No as PO_No,op.Vendor_ID as VendorID,PO_Date as Date,(select vendor_Name from AP_Vendors where Vendor_ID=op.Vendor_ID) as Vendor_ID from AP_Purchase_Orders op where (PO_No like'%" + Request.QueryString["q"] + "%' or dbo.GetVendorName(Vendor_ID) like'%" + Request.QueryString["q"] + "%')";
+                        sqlQuery = "select PO_ID as PO_ID,PO_No as PO_No,op.Vendor_ID as VendorID,PO_Date as Date,(select vendor_Name from AP_Vendors where Vendor_ID=op.Vendor_ID) as Vendor_ID from AP_Purchase_Orders op where (PO_No like @qb_q or dbo.GetVendorName(Vendor_ID) like @qb_q)";
                     else
                         sqlQuery = "select PO_ID,PO_No,Vendor_ID from AP_Purchase_Orders";
                     string result = "";
-                    DataTable dt = DBClass.getDataTable(sqlQuery);
+                    DataTable dt = DBClass.getDataTable(sqlQuery, P("@qb_q", "%" + Request.QueryString["q"] + "%"));
                     foreach (DataRow dr in dt.Rows)
                     {
                         result += (result == "") ? "" : ",";
@@ -1674,11 +1682,11 @@ namespace PMS
                 {
                     string sqlQuery;
                     if (Request.QueryString["q"] != null)
-                        sqlQuery = "Select Item_ID as ItemID,Item_Code as ItemCode,Description as ItemName,Sale_Rate as Amount,case when Services=1 then 'Service' when Services=0 then 'Item' else '' end ItemType from INV_Items Where Pharmacy_Item=1 and Book_ID=" + AppConfig.Book_ID + " AND Description like'%" + Request.QueryString["q"] + "%'";
+                        sqlQuery = "Select Item_ID as ItemID,Item_Code as ItemCode,Description as ItemName,Sale_Rate as Amount,case when Services=1 then 'Service' when Services=0 then 'Item' else '' end ItemType from INV_Items Where Pharmacy_Item=1 and Book_ID=" + AppConfig.Book_ID + " AND Description like @qb_q";
                     else
                         sqlQuery = "Select Item_ID as ItemID,Item_Code as ItemCode,Description as ItemName,Sale_Rate as Amount,case when Services=1 then 'Service' when Services=0 then 'Item' else '' end ItemType from INV_Items Where Pharmacy_Item=1 and Book_ID=" + AppConfig.Book_ID + "";
                     string result = "";
-                    DataTable dt = DBClass.getDataTable(sqlQuery);
+                    DataTable dt = DBClass.getDataTable(sqlQuery, P("@qb_q", "%" + Request.QueryString["q"] + "%"));
                     foreach (DataRow dr in dt.Rows)
                     {
                         result += (result == "") ? "" : ",";
@@ -1690,11 +1698,11 @@ namespace PMS
                 {
                     string sqlQuery;
                     if (Request.QueryString["q"] != null)
-                        sqlQuery = "Select  Packages_ID as ItemID,Package_Name as ItemName,'Packages' ItemType from Packages m where m.Package_Name like'%" + Request.QueryString["q"] + "%'";
+                        sqlQuery = "Select  Packages_ID as ItemID,Package_Name as ItemName,'Packages' ItemType from Packages m where m.Package_Name like @qb_q";
                     else
                         sqlQuery = "Select Packages_ID as ItemID,Package_Name as ItemName,'Packages' ItemType from Packages m";
                     string result = "";
-                    DataTable dt = DBClass.getDataTable(sqlQuery);
+                    DataTable dt = DBClass.getDataTable(sqlQuery, P("@qb_q", "%" + Request.QueryString["q"] + "%"));
                     foreach (DataRow dr in dt.Rows)
                     {
                         result += (result == "") ? "" : ",";

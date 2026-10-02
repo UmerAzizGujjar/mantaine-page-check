@@ -160,19 +160,16 @@ function renderKpis(d) {
             var chart = initChart("chartNewVsFollowUp");
             if (!chart) return;
             var weeks = data.map(function (d) { return d.week; });
-            var newP = data.map(function (d) { return d.newPatients; });
-            var rtn = data.map(function (d) { return d.returning; });
-            var allVals = newP.concat(rtn);
-            var maxV = allVals.length > 0 ? Math.max.apply(null, allVals) * 1.35 : 10;
+            var vals = data.map(function (d) { return d.revisits; });
+            var maxV = vals.length > 0 ? Math.max.apply(null, vals) * 1.35 : 10;
             chart.setOption({
                 tooltip: { trigger: 'axis' },
-                legend: { data: ['New Patients', 'Returning (7d)'], bottom: 0, left: 'center', icon: 'circle', itemWidth: 8, itemHeight: 8, textStyle: { fontSize: 10 } },
+                legend: { data: ['Revisits'], bottom: 0, left: 'center', icon: 'circle', itemWidth: 8, itemHeight: 8, textStyle: { fontSize: 10 } },
                 grid: { left: 50, right: 50, top: 50, bottom: 40 },
                 xAxis: { type: 'category', data: weeks, axisLabel: { fontSize: 10, fontWeight: 600 }, axisLine: { show: false }, axisTick: { show: false } },
                 yAxis: { type: 'value', splitLine: { lineStyle: { color: '#f1f5f9', type: 'dashed' } }, axisLabel: { fontSize: 9 }, max: maxV },
                 series: [
-                    { name: 'New Patients', type: 'bar', barWidth: 18, barGap: '20%', data: newP.map(function (v) { return { value: v, itemStyle: { color: '#1a4332', borderRadius: [4, 4, 0, 0] } }; }), label: { show: true, position: 'top', color: '#1a4332', fontSize: 9, fontWeight: 'bold', offset: [0, 6] } },
-                    { name: 'Returning (7d)', type: 'bar', barWidth: 18, data: rtn.map(function (v) { return { value: v, itemStyle: { color: '#10b981', borderRadius: [4, 4, 0, 0] } }; }), label: { show: true, position: 'top', color: '#10b981', fontSize: 9, fontWeight: 'bold', offset: [0, 6] } }
+                    { name: 'Revisits', type: 'bar', barWidth: 30, data: vals.map(function (v) { return { value: v, itemStyle: { color: '#1a4332', borderRadius: [4, 4, 0, 0] } }; }), label: { show: true, position: 'top', color: '#1a4332', fontSize: 10, fontWeight: 'bold', offset: [0, 6] } }
                 ]
             });
         }
@@ -667,7 +664,19 @@ function renderKpis(d) {
                     </div>
                 </div>
             </div>
-            <div class="bento-item">
+                        <div class="bento-item">
+                <div class="bento-header"><div><div class="bh-title">Investigation Summary</div><div class="bh-sub">DIAGNOSTIC ORDER EFFICIENCY</div></div></div>
+                <div class="bento-body" style="padding:0;">
+                    <div class="table-wrap">
+                        <table id="tblInvestigation">
+                            <thead><tr><th>Department</th><th>Ordered</th><th>Performed</th><th>Net Amount (Rs.)</th></tr></thead>
+                            <tbody></tbody>
+                            <tfoot><tr><td>Total</td><td>0</td><td>0</td><td>0</td></tr></tfoot>
+                        </table>
+                    </div>
+                </div>
+            </div>
+            <div class="bento-item" style="display:none">
                 <div class="bento-header"><div><div class="bh-title">Patient Billing Matrix</div><div class="bh-sub">REGISTRATION VS NET REVENUE</div></div></div>
                 <div class="bento-body" style="padding:0;">
                     <div class="table-wrap">
@@ -690,12 +699,12 @@ function renderKpis(d) {
         <!-- === RETENTION & LOYALTY MATRIX + INVESTIGATION === -->
         <div class="grid-2">
             <div class="bento-item">
-                <div class="bento-header"><div><div class="bh-title">Retention &amp; Loyalty Matrix</div><div class="bh-sub">NEW VS RETURNING (7-DAY)</div></div></div>
+                <div class="bento-header"><div><div class="bh-title">Retention &amp; Loyalty Matrix</div><div class="bh-sub">REVISIT PATIENTS</div></div></div>
                 <div class="bento-body">
                     <div id="chartNewVsFollowUp" class="chart-container" style="height:320px;"></div>
                 </div>
             </div>
-            <div class="bento-item">
+<%--            <div class="bento-item">
                 <div class="bento-header"><div><div class="bh-title">Investigation Summary</div><div class="bh-sub">DIAGNOSTIC ORDER EFFICIENCY</div></div></div>
                 <div class="bento-body" style="padding:0;">
                     <div class="table-wrap">
@@ -706,7 +715,7 @@ function renderKpis(d) {
                         </table>
                     </div>
                 </div>
-            </div>
+            </div>--%>
         </div>
 
         <!-- === DEMOGRAPHICS & WAIT TIMES === -->

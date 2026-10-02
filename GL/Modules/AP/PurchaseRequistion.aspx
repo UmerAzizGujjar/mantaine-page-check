@@ -61,6 +61,7 @@
 
         $(document).ready(function () {
             GetWareHouseCondition();
+            GetModeCondition();
 
             // ── Sanitize JSON from json.aspx endpoints before jQuery parses it.
             // Fixes "Bad escaped character" errors caused by raw backslashes in item names.
@@ -131,6 +132,7 @@
                 });
             
             FillPriority();
+            FillModes();
             FillWarehouse();
             UserRights();
 
@@ -138,6 +140,7 @@
             $('#ddlWarehouse').select2();
             $('#ddldept').select2();
             $('#ddlPriority').select2();
+            $('#ddlMode').select2();
             $('#ddlBranch').select2();
             loadUserBranch();
             $('#ctl00_MainContent_ddlGIR').select2();
@@ -152,6 +155,28 @@
             $('#btnGIR').on('click', function () {
                 var Gir_id = $("#ctl00_MainContent_ddlGIR").val();
                 LoadGIRNoDetail(Gir_id);
+                if (Gir_id && Gir_id !== "0" && Gir_id !== "") {
+                    $.ajax({
+                        type: "POST",
+                        url: "PurchaseRequistion.aspx/getGIRHeader",
+                        data: JSON.stringify({ GIRId: Gir_id }),
+                        contentType: "application/json; charset=utf-8",
+                        dataType: "json",
+                        success: function (response) {
+                            var header = response.d ? JSON.parse(response.d) : null;
+                            if (!header) return;
+                            var modeVal = resolveGIRMode(header.Priority);
+                            if (modeVal && $('#ddlMode option[value="' + modeVal + '"]').length) {
+                                $('#ddlMode').val(modeVal).trigger('change');
+                                if ($('#ddlMode').hasClass('select2-hidden-accessible')) { $('#ddlMode').trigger('select2:select'); }
+                            }
+                            if (header.Department) {
+                                $('#ddldept').val(header.Department).trigger('change');
+                                if ($('#ddldept').hasClass('select2-hidden-accessible')) { $('#ddldept').trigger('select2:select'); }
+                            }
+                        }
+                    });
+                }
                 $('#txtRemarks').focus();
             });
 
@@ -502,6 +527,7 @@
         }
 
         var savedPriority = null;
+        var savedMode = null;
         var savedDept = null;
         var savedWarehouse = null;
         var savedBranch = null;
@@ -552,6 +578,27 @@
                     $('#ddlPriority').val(savedPriority).trigger('change');
                 }
             });
+        }
+
+        function FillModes() {
+            PageMethods.fillModes(function (Tests) {
+                var optionMode = '<option value="0">Please Select</option>';
+                $.each(JSON.parse(Tests), function (key, value) {
+                    optionMode += '<option value="' + value.DataValueName + '" >' + value.DataValueDescription + '</option>';
+                });
+                $('#ddlMode').html(optionMode);
+                if (savedMode) {
+                    $('#ddlMode').val(savedMode).trigger('change');
+                }
+            });
+        }
+
+        function resolveGIRMode(val) {
+            if (val === null || val === undefined) return '';
+            val = String(val).trim();
+            if (val === '1') return '003';   // GIR High -> Emergent
+            if (val === '2') return '004';   // GIR Low  -> Low
+            return '';
         }
 
         function FillWarehouse() {
@@ -616,7 +663,7 @@
                             "<td style='text-align:right;padding-top:7px!important;'>" + (parse[0].UOM_Qty || '0') + "</td>" +
                             "<td style='text-align:right;'><input type='text' name='Qty' id='txtQty" + length + "' style='font-size:9px;width:58px!important;text-align:right;margin-top:2px;' autocomplete='off' onkeyup='calcutaeQty();calcutaeEstimatedCost(this)'/></td>" +
                             "<td style='text-align:left;padding-top:7px!important;'>" + parse[0].Unit + "</td>" +
-                            "<td style='text-align:right;'><input type='text' name='txtUnitPrice' id='txtUnitPrice" + length + "' value = '" + parse[0].Last_PurchaseRate + "' style='font-size:9px;width:68px!important;text-align:right;margin-top:2px;' autocomplete='off' onkeyup='calcutaeEstimCost(this)'/></td>" +
+                            "<td style='text-align:right;'><input type='text' name='txtUnitPrice' id='txtUnitPrice" + length + "' value = '" + (parse[0].Last_PurchaseRate || 0) + "' style='font-size:9px;width:68px!important;text-align:right;margin-top:2px;' autocomplete='off' onkeyup='calcutaeEstimCost(this)'/></td>" +
                             "<td style='text-align:right;'><input readonly type='text' name='txtEstimCost' id='txtEstimCost" + length + "' style='font-size:9px;width:78px!important;text-align:right;margin-top:2px;' /></td>" +
                             "<td style='text-align:left;'><input type='text' name='txtrdate' id='txtrdate" + length + "' style='font-size:9px;width:80px!important;margin-top:2px;' autocomplete='off'/></td>" +
                             "<td style='text-align:left;padding-top:7px!important;'>" + lastPRNo + "</td>" +
@@ -660,6 +707,22 @@
             });
         }
 
+        function GetModeCondition() {
+            $.ajax({
+                type: "POST",
+                url: "PurchaseRequistion.aspx/GetMode",
+                data: JSON.stringify({}),
+                contentType: "application/json; charset=utf-8",
+                dataType: "json",
+                success: function (response) {
+                    var modeCond = response.d ? JSON.parse(response.d) : '';
+                    if (modeCond == '01') { $('#mode').show(); }
+                    else { $('#mode').hide(); }
+                },
+                error: function (error) { console.error("Error fetching mode condition", error); }
+            });
+        }
+
         var warehouseCond;
         function GetWareHouseCondition() {
             $.ajax({
@@ -698,6 +761,7 @@
             var totCost  = $("#totCost").val() || 0;
             var dept     = $('#ddldept').val();
             var branch   = $('#ddlBranch').val();
+            var Mode     = $('#ddlMode').val();
 
             if (warehouseCond == "01" && Warehouse == '0') {
                 Swal.fire({ icon: 'error', title: 'Error!', text: 'Please Select Warehouse', showConfirmButton: false, timer: 2000, customClass: { popup: 'swal-big-popup', title: 'swal-big-title', htmlContainer: 'swal-big-text' } });
@@ -738,6 +802,16 @@
                         Swal.fire({ icon: 'error', title: 'Error!', text: 'Please Enter Qty Or Qty Must be Greater than zero', showConfirmButton: false, timer: 2000, customClass: { popup: 'swal-big-popup', title: 'swal-big-title', htmlContainer: 'swal-big-text' } });
                         qtyOrAmtChck = true; isSaving = false; $("#btnsave").prop("disabled", false); return false;
                     }
+                    var UnitPrice = $(this).find('td:eq(7) input').val();
+                    var EstimCost = $(this).find('td:eq(8) input').val();
+                    if (UnitPrice !== "" && isNaN(parseFloat(UnitPrice))) {
+                        Swal.fire({ icon: 'error', title: 'Error!', text: 'Please Enter Valid Unit Price', showConfirmButton: false, timer: 2000, customClass: { popup: 'swal-big-popup', title: 'swal-big-title', htmlContainer: 'swal-big-text' } });
+                        qtyOrAmtChck = true; isSaving = false; $("#btnsave").prop("disabled", false); return false;
+                    }
+                    if (EstimCost !== "" && isNaN(parseFloat(EstimCost))) {
+                        Swal.fire({ icon: 'error', title: 'Error!', text: 'Please Enter Valid Estimated Cost', showConfirmButton: false, timer: 2000, customClass: { popup: 'swal-big-popup', title: 'swal-big-title', htmlContainer: 'swal-big-text' } });
+                        qtyOrAmtChck = true; isSaving = false; $("#btnsave").prop("disabled", false); return false;
+                    }
                 });
                 if (parseFloat(totCost) > 50000 && Pirority === '004') {
                     Swal.fire({ icon: 'error', title: 'Error!', text: 'For Low Priority Total Amount Must be Less then 50000', showConfirmButton: false, timer: 2000, customClass: { popup: 'swal-big-popup', title: 'swal-big-title', htmlContainer: 'swal-big-text' } });
@@ -752,7 +826,7 @@
                     $.ajax({
                         type: "post",
                         url: "PurchaseRequistion.aspx/SavePurchaseRequistion",
-                        data: JSON.stringify({ "PRid": PRId, "PrNum": PrNum, "PrDate": PrDate, "Pirority": Pirority, "Warehouse": Warehouse, "dept": dept, "RefNum": RefNum, "remarks": remarks, "btnValue": btnValue, "branch": branch }),
+                        data: JSON.stringify({ "PRid": PRId, "PrNum": PrNum, "PrDate": PrDate, "Pirority": Pirority, "Warehouse": Warehouse, "dept": dept, "RefNum": RefNum, "remarks": remarks, "btnValue": btnValue, "branch": branch, "Mode": Mode }),
                         contentType: "application/json; charset=utf-8",
                         dataType: "json",
                         success: function (response) {
@@ -760,11 +834,17 @@
                             var arr = res.split('-');
                             var msg = arr[0];
                             var id = arr[1];
+                            if (!res.startsWith("Success") || !id) {
+                                isSaving = false;
+                                $("#btnsave").prop("disabled", false);
+                                alert("Error In Purchase Requisition: " + res);
+                                return;
+                            }
                             sendFile(id, function () {
                                 SaveDetailPurchaseRequestion(id, btnValue);
                             });
                         },
-                        failure: function (response) { isSaving = false; alert("In failure method"); }
+                        error: function (response) { isSaving = false; $("#btnsave").prop("disabled", false); alert("In failure method"); }
                     });
                 }
             }
@@ -808,10 +888,11 @@
                         $("#btnsave").prop("disabled", true);
                     } else {
                         isSaving = false;
+                        $("#btnsave").prop("disabled", false);
                         alert("Error In Purchase Requisition details: " + res);
                     }
                 },
-                failure: function (response) { isSaving = false; alert("In failure method"); }
+                error: function (response) { isSaving = false; $("#btnsave").prop("disabled", false); alert("In failure method"); }
             });
         }
 
@@ -847,6 +928,7 @@
                     } 
                     // Save values globally for async dropdown loaders to pick up
                     savedPriority = parse.Priority;
+                    savedMode = parse.Mode;
                     savedDept = parse.Department;
                     savedWarehouse = parse.Warehouse;
                     savedBranch = parse.Branch_Id;
@@ -860,6 +942,9 @@
                     }
                     if ($('#ddldept option[value="' + savedDept + '"]').length) {
                         $('#ddldept').val(savedDept).trigger('change');
+                    }
+                    if ($('#ddlMode option[value="' + savedMode + '"]').length) {
+                        $('#ddlMode').val(savedMode).trigger('change');
                     }
                     if ($('#ddlWarehouse option[value="' + savedWarehouse + '"]').length) {
                         $('#ddlWarehouse').val(savedWarehouse).trigger('change');
@@ -929,10 +1014,10 @@
                             '<td style="text-align:left;padding-left:8px!important;padding-top:7px!important;">' + parse[key].Description + '</td>' +
                             '<td style="text-align:right;padding-top:7px!important;">' + parse[key].stock + '</td>' +
                             '<td style="text-align:right;padding-top:7px!important;">' + (parse[key].UOM_Qty || '0') + '</td>' +
-                            '<td style="text-align:right;"><input type="text" value="' + parseFloat(parse[key].Qty).toFixed(2) + '" name="Qty" id="txtQty' + counter + '" style="font-size:9px;width:58px!important;text-align:right;margin-top:2px;" autocomplete="off" onkeyup="calcutaeQty();calcutaeEstimatedCost(this)"/></td>' +
+                            '<td style="text-align:right;"><input type="text" value="' + parseFloat(parse[key].Qty || 0).toFixed(2) + '" name="Qty" id="txtQty' + counter + '" style="font-size:9px;width:58px!important;text-align:right;margin-top:2px;" autocomplete="off" onkeyup="calcutaeQty();calcutaeEstimatedCost(this)"/></td>' +
                             '<td style="text-align:left;padding-top:7px!important;">' + uom + '</td>' +
-                            '<td style="text-align:right;"><input type="text" value="' + parseFloat(parse[key].UnitPrice).toFixed(2) + '" name="txtUnitPrice" id="txtUnitPrice' + counter + '" style="font-size:9px;width:68px!important;text-align:right;margin-top:2px;" autocomplete="off" onkeyup="calcutaeEstimCost(this)"/></td>' +
-                            '<td style="text-align:right;"><input readonly type="text" value="' + parseFloat(parse[key].EstimateCost).toFixed(2) + '" name="txtEstimCost" id="txtEstimCost' + counter + '" style="font-size:9px;width:78px!important;text-align:right;margin-top:2px;" autocomplete="off"/></td>' +
+                            '<td style="text-align:right;"><input type="text" value="' + parseFloat(parse[key].UnitPrice || 0).toFixed(2) + '" name="txtUnitPrice" id="txtUnitPrice' + counter + '" style="font-size:9px;width:68px!important;text-align:right;margin-top:2px;" autocomplete="off" onkeyup="calcutaeEstimCost(this)"/></td>' +
+                            '<td style="text-align:right;"><input readonly type="text" value="' + parseFloat(parse[key].EstimateCost || 0).toFixed(2) + '" name="txtEstimCost" id="txtEstimCost' + counter + '" style="font-size:9px;width:78px!important;text-align:right;margin-top:2px;" autocomplete="off"/></td>' +
                             '<td style="text-align:left;"><input type="text" name="txtrdate" id="txtrdate' + counter + '" style="font-size:9px;width:80px!important;margin-top:2px;" value="' + datetime + '"/></td>' +
                             '<td style="text-align:left;padding-top:7px!important;">' + (parse[key].Last_PR_No || '') + '</td>' +
                             '<td style="text-align:right;padding-top:7px!important;">' + (parse[key].Last_PR_Qty || 0) + '</td>' +
@@ -1200,6 +1285,12 @@
             <div class="col-lg-2 col-md-4 col-sm-6 col-xs-12">
                 <label id="LblPriority">Priority <span class="req-star">*</span></label>
                 <select id="ddlPriority" class="form-select">
+                    <option value="0">Please Select</option>
+                </select>
+            </div>
+            <div id="mode" class="col-lg-2 col-md-4 col-sm-6 col-xs-12">
+                <label id="LblMode">Mode</label>
+                <select id="ddlMode" class="form-select">
                     <option value="0">Please Select</option>
                 </select>
             </div>

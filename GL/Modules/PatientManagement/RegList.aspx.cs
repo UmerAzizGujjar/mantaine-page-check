@@ -92,55 +92,57 @@ namespace PMS
                     string userId = HttpContext.Current.Session["UserId"].ToString();
 
                     var Total_pat = _dbContext.Reg_patients.Count();
-                    var pat = from a in _dbContext.Reg_patients
-                              where (
-                                    (a.Patient_No.ToString().Contains(searchValue) || a.Mobile1.Contains(searchValue) ||a.mr_no_sequence.Contains(searchValue) || a.Old_Mr_no_sequence.Contains(searchValue) || a.Full_Name.Contains(searchValue) || a.NIC.Contains(searchValue)))
-                              select new
-                              {
-                                  pat_id = a.pat_id,
-                                  MRNO = a.mr_no_sequence,
-                                  Old_Mr_no_sequence = a.Old_Mr_no_sequence,
-                                  Patient_No = a.Patient_No,
-                                  Full_Name = a.Full_Name,
-                                  Age_years = a.Age_years,
-                                  Mobile1 = a.Mobile1,
-                                  NIC = a.NIC,
-                                  Permanent_Address = a.Permanent_Address,
-                                  Created_time = a.Created_time,
-                                  CreatedBy = _dbContext.aspnet_Users.Where(x => x.UserId == a.Created_by).Select(x => x.UserName).FirstOrDefault() ?? "",
-                                  Updated_By = _dbContext.aspnet_Users.Where(x => x.UserId == a.updated_by).Select(x => x.UserName).FirstOrDefault() ?? "",
-                                  Charged_by = _dbContext.aspnet_Users.Where(x => x.UserId == a.Charged_by).Select(x => x.UserName).FirstOrDefault() ?? "",
-                              };
+                    var baseQuery = from a in _dbContext.Reg_patients
+                                    where (
+                                          (a.Patient_No.ToString().Contains(searchValue) || a.Mobile1.Contains(searchValue) || a.mr_no_sequence.Contains(searchValue) || a.Old_Mr_no_sequence.Contains(searchValue) || a.Full_Name.Contains(searchValue) || a.NIC.Contains(searchValue)))
+                                    select a;
 
                     // Start / End date filter (yyyy-MM-dd) on registration date. Blank = no filter (all data).
                     DateTime fromDt, toDt;
                     if (DateTime.TryParseExact(fromDate, "yyyy-MM-dd", System.Globalization.CultureInfo.InvariantCulture, System.Globalization.DateTimeStyles.None, out fromDt))
                     {
                         DateTime fromDateValue = fromDt.Date;
-                        pat = pat.Where(a => a.Created_time >= fromDateValue);
+                        baseQuery = baseQuery.Where(a => a.Created_time >= fromDateValue);
                     }
                     if (DateTime.TryParseExact(toDate, "yyyy-MM-dd", System.Globalization.CultureInfo.InvariantCulture, System.Globalization.DateTimeStyles.None, out toDt))
                     {
                         DateTime toDateExclusive = toDt.Date.AddDays(1);
-                        pat = pat.Where(a => a.Created_time < toDateExclusive);
+                        baseQuery = baseQuery.Where(a => a.Created_time < toDateExclusive);
                     }
 
-                    var FilteredCount = pat.Count();
+                    var FilteredCount = baseQuery.Count();
                     switch (sortColumn)
                     {
                         case "Age_years":
-                            pat = sortColumnDirection == "asc" ? pat.OrderBy(a => a.Age_years) : pat.OrderByDescending(a => a.Age_years);
+                            baseQuery = sortColumnDirection == "asc" ? baseQuery.OrderBy(a => a.Age_years) : baseQuery.OrderByDescending(a => a.Age_years);
                             break;
                         case "Created_time":
-                            pat = sortColumnDirection == "asc" ? pat.OrderBy(a => a.Created_time) : pat.OrderByDescending(a => a.Created_time);
+                            baseQuery = sortColumnDirection == "asc" ? baseQuery.OrderBy(a => a.Created_time) : baseQuery.OrderByDescending(a => a.Created_time);
                             break;
                         default:
-                            pat = pat.OrderByDescending(a => a.Created_time); 
+                            baseQuery = baseQuery.OrderByDescending(a => a.Created_time); 
                             break;
                     }
 
 
-                    var patientList = pat.Skip(start).Take(length).ToList();
+                    var patientList = baseQuery.Skip(start).Take(length)
+                        .Select(a => new
+                        {
+                            pat_id = a.pat_id,
+                            MRNO = a.mr_no_sequence,
+                            Old_Mr_no_sequence = a.Old_Mr_no_sequence,
+                            Patient_No = a.Patient_No,
+                            Full_Name = a.Full_Name,
+                            Age_years = a.Age_years,
+                            Mobile1 = a.Mobile1,
+                            NIC = a.NIC,
+                            Permanent_Address = a.Permanent_Address,
+                            Created_time = a.Created_time,
+                            CreatedBy = _dbContext.aspnet_Users.Where(x => x.UserId == a.Created_by).Select(x => x.UserName).FirstOrDefault() ?? "",
+                            Updated_By = _dbContext.aspnet_Users.Where(x => x.UserId == a.updated_by).Select(x => x.UserName).FirstOrDefault() ?? "",
+                            Charged_by = _dbContext.aspnet_Users.Where(x => x.UserId == a.Charged_by).Select(x => x.UserName).FirstOrDefault() ?? "",
+                        })
+                        .ToList();
 
 
                     var jsonData = new { draw = draw, recordsFiltered = FilteredCount, recordsTotal = Total_pat, data = patientList };

@@ -1,0 +1,27 @@
+/* ==========================================================================
+   Theme colours - THEME_TIBBIT  (Tibbit (yellow / orange))
+   Used by the header, menu bar and login page.
+   The main colour of this client is taken from this theme's styleMaster.css
+   (#navbar background). To recolour a client, change the values below only.
+   ========================================================================== */
+:root {
+    --theme-header-bg: linear-gradient(180deg, #ffffff 0%, #eceff3 100%);   /* top header bar */
+    --theme-header-text: #1b2a41;                 /* company name in the header */
+    --theme-header-text-shadow: none;
+    --theme-header-line: #EFA63E;                    /* line under the header and the menu bar */
+    --theme-accent: #EFA63E;                         /* buttons, active menu item */
+    --theme-accent-light: #F4B653;                   /* top of the button gradient */
+    --theme-on-accent: #1b2a41;                        /* text on top of the accent colour */
+    --theme-accent-soft: #fff1d6;                      /* menu hover background */
+    --theme-accent-ink: #8a4b00;                       /* menu hover text */
+    --theme-accent-ring: rgba(239, 166, 62, 0.25);   /* focus ring on inputs */
+    --theme-accent-shadow: rgba(239, 166, 62, 0.45);  /* glow under the login button */
+    --theme-user-btn-bg: #EFA63E;      /* user-name button in the header */
+    --theme-user-btn-text: #000000;
+    --theme-user-btn-border: transparent;
+    --theme-footer-bg: linear-gradient(180deg, #24344f 0%, #1b2a41 100%);   /* footer bar */
+    --theme-footer-text: #e9eef5;
+    --theme-footer-line: #EFA63E;                  /* thin line on top of the footer */
+    --theme-footer-icon: #EFA63E;                  /* small icons in the footer */
+    --theme-ink: #1b2a41;                          /* dark text used on light backgrounds */
+}
