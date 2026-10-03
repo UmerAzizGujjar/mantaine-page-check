@@ -85,7 +85,7 @@ namespace PMS.Modules.Dashboards
                                        select (decimal?)b.Received_Amount).Sum() ?? 0;
                     decimal ReturnSum = (from b in db.Pharmacy_SaleReturns
                                           where b.Created_Date >= sDate && b.Created_Date <= eDate && b.Is_Pharmacy == true && b.Ware_House == "008"
-                                       select (decimal?)b.Net_Amount).Sum() ?? 0;
+                                       select (decimal?)b.Total_Amount - (b.TotalDisc_Amount - b.Disc_Adjustment)).Sum() ?? 0;
 
                     decimal totalRevenue = patientSum + billingSum + RegSum + PharSum + EMRSum - ReturnSum;
 
