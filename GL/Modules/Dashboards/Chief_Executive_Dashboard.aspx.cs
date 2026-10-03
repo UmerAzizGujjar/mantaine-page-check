@@ -78,10 +78,10 @@ namespace PMS.Modules.Dashboards
                                           select (decimal?)p.Receipt_Amount).Sum() ?? 0;
 
                     decimal billingSum = (from b in db.Ar_Billings
-                                          where b.Creation_Date >= sDate && b.Creation_Date <= eDate && (b.IsPharmacy == null || b.IsPharmacy == false)
+                                          where b.Creation_Date >= sDate && b.Creation_Date <= eDate && (b.IsPharmacy == null || b.IsPharmacy == false) && (b.isCancel == null || b.isCancel == false)
                                           select (decimal?)b.Received_Amount).Sum() ?? 0;
                     decimal PharSum = (from b in db.Ar_Billings
-                                          where b.Creation_Date >= sDate && b.Creation_Date <= eDate && b.IsPharmacy == true && b.Ware_House == "008"
+                                          where b.Creation_Date >= sDate && b.Creation_Date <= eDate && b.IsPharmacy == true && b.Ware_House == "008" && (b.isCancel == null || b.isCancel == false)
                                        select (decimal?)b.Received_Amount).Sum() ?? 0;
                     decimal ReturnSum = (from b in db.Pharmacy_SaleReturns
                                           where b.Created_Date >= sDate && b.Created_Date <= eDate && b.Is_Pharmacy == true && b.Ware_House == "008"
