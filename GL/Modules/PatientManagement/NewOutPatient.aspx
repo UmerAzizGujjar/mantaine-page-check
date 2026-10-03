@@ -1333,7 +1333,16 @@ function LoadLabResultrpt() {
                         var rowColorStyle = (status = 'Checked') ? 'style="background-color: #aeffae;"' : '';
                     }
 
-                    rows += '<tr ' + rowColorStyle + '> <td>' + value.Patient_No + '</td> <td> ' + value.Dep_token + ' </td>' + '<td>' + value.Full_Name + '</td> ' + '</td> ' + '<td>' + value.Age_years + '</td> ' + '<td>' + value.Department + '</td> ' + '<td>' + value.Dep_token + '</td>' +  '<td>' + value.DoctorName + '</td> ' + '<td>' + retdate + '</td> ' + '<td>' + value.UserName + '</td> ' + '<td>' + status + '</td>' + ' <td> <a href="javascript:void(0)" onclick=loadPatient(' + value.Patient_ID + ',' + value.Patient_No + ',' + value.Reg_PatId + ')><i class="fa fa-plus-circle fa-2x" ></i></a> </td> </tr>';
+                    var cancelIcon = '';
+                    var safeName = (value.Full_Name || '').replace(/'/g, "\\'");
+                    if (value.isCancel == true) {
+                        rowColorStyle = 'style="background-color: #ffb3b3;"';
+                        cancelIcon = '<i class="fa fa-ban fa-2x" style="color:#b30000;" title="' + (value.CancelRemarks || 'Cancelled') + '"></i>';
+                    } else {
+                        cancelIcon = '<a href="javascript:void(0)" onclick="CancelPendingPatient(' + value.Patient_ID + ', \'' + safeName + '\')"><i class="fa fa-times-circle fa-2x" style="color:#b30000;" title="Cancel"></i></a>';
+                    }
+
+                    rows += '<tr ' + rowColorStyle + '> <td>' + value.Patient_No + '</td> <td> ' + value.Dep_token + ' </td>' + '<td>' + value.Full_Name + '</td> ' + '</td> ' + '<td>' + value.Age_years + '</td> ' + '<td>' + value.Department + '</td> ' + '<td>' + value.Dep_token + '</td>' +  '<td>' + value.DoctorName + '</td> ' + '<td>' + retdate + '</td> ' + '<td>' + value.UserName + '</td> ' + '<td>' + status + '</td>' + ' <td> <a href="javascript:void(0)" onclick=loadPatient(' + value.Patient_ID + ',' + value.Patient_No + ',' + value.Reg_PatId + ')><i class="fa fa-plus-circle fa-2x" ></i></a> </td> <td>' + cancelIcon + '</td> </tr>';
                 });
                 $('#tblPendingPatients tbody').html(rows);
 
@@ -1341,6 +1350,59 @@ function LoadLabResultrpt() {
                 $(".se-pre-con").fadeOut("slow");
 
             }, function (exec) { })
+        }
+
+        function CancelPendingPatient(patientId, patientName) {
+            $(document).off('focusin.bs.modal');
+            Swal.fire({
+                title: 'Cancel Patient?',
+                html: 'Are you sure you want to cancel <strong>' + patientName + '</strong>?',
+                icon: 'warning',
+                input: 'textarea',
+                inputPlaceholder: 'Write cancel remarks here...',
+                inputAttributes: { 'aria-label': 'Cancel remarks' },
+                showCancelButton: true,
+                confirmButtonText: 'OK',
+                cancelButtonText: 'Cancel',
+                didOpen: function (popup) {
+                    var input = Swal.getInput();
+                    if (input) input.focus();
+                },
+                customClass: { popup: 'swal-big-popup', title: 'swal-big-title', htmlContainer: 'swal-big-text' }
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    var remarks = result.value || '';
+                    PageMethods.CancelPendingPatient(patientId, remarks, function (response) {
+                        if (response == "success") {
+                            Swal.fire({
+                                icon: 'success',
+                                title: 'Cancelled!',
+                                text: 'Patient has been cancelled successfully.',
+                                showConfirmButton: false,
+                                timer: 2000,
+                                customClass: { popup: 'swal-big-popup', title: 'swal-big-title', htmlContainer: 'swal-big-text' }
+                            });
+                            fillPendingPatientsList();
+                        } else {
+                            Swal.fire({
+                                icon: 'error',
+                                title: 'Error',
+                                text: 'Unable to cancel this patient.',
+                                showConfirmButton: true,
+                                customClass: { popup: 'swal-big-popup', title: 'swal-big-title', htmlContainer: 'swal-big-text' }
+                            });
+                        }
+                    }, function () {
+                        Swal.fire({
+                            icon: 'error',
+                            title: 'Error',
+                            text: 'Something went wrong.',
+                            showConfirmButton: true,
+                            customClass: { popup: 'swal-big-popup', title: 'swal-big-title', htmlContainer: 'swal-big-text' }
+                        });
+                    });
+                }
+            });
         }
 
         function fillDepartment() {
@@ -4836,6 +4898,7 @@ function LoadLabResultrpt() {
                                         <th>Operator Name</th>
                                         <th>Status</th>
                                         <th>Select</th>
+                                        <th>Cancel</th>
                                     </tr>
                                 </thead>
                                 <tbody id="ibody">

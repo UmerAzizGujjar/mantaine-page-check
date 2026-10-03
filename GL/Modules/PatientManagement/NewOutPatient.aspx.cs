@@ -2139,7 +2139,9 @@ namespace PMS.Modules.PatientManagement
                             //               && t.Created_Time.Value.Year == p.Created_Time.Value.Year
                             //               && t.Patient_Main_Category == p.Patient_Main_Category
                             //            select t).Count() + 1
-                            Token_No = p.Doc_Token
+                            Token_No = p.Doc_Token,
+                            p.isCancel,
+                            p.CancelRemarks
                         });
 
             if (!string.IsNullOrEmpty(filterDepartment) && filterDepartment != "" && doc_name == "")
@@ -2163,6 +2165,22 @@ namespace PMS.Modules.PatientManagement
 
             var result = data.ToList();
             return (new JavaScriptSerializer()).Serialize(result);
+        }
+        [WebMethod]
+        public static string CancelPendingPatient(string Patient_ID, string Remarks)
+        {
+            DataBaseDataContext db = new DataBaseDataContext();
+            var query = db.Patients.SingleOrDefault(x => x.Patient_ID == Convert.ToInt32(Patient_ID));
+            if (query != null)
+            {
+                Remarks = (Remarks ?? "").Trim();
+                if (Remarks.Length > 200) Remarks = Remarks.Substring(0, 200);
+                query.isCancel = true;
+                query.CancelRemarks = Remarks;
+                db.SubmitChanges();
+                return "success";
+            }
+            return "Fail";
         }
         [WebMethod]
         public static string GetAllDeparmtent()
