@@ -340,6 +340,17 @@ html body .sidebar.h-sidebar.mm ul.nav.nav-list ul.mm-empty { display: none !imp
         }
     }
 
+    /* 8-10 menu items: tighten a little on normal laptop / desktop screens so the bar stays on one row */
+    @media screen and (min-width: 1200px) and (max-width: 1599px) {
+        html body .sidebar.h-sidebar.mm ul.nav.nav-list { padding: 0 8px !important; }
+
+            html body .sidebar.h-sidebar.mm ul.nav.nav-list > li > a { padding: 0 12px !important; gap: 8px; font-size: 13.5px !important; }
+
+                html body .sidebar.h-sidebar.mm ul.nav.nav-list > li > a:after { padding-left: 0 !important; }
+
+                html body .sidebar.h-sidebar.mm ul.nav.nav-list > li > a > i.menu-icon { width: 18px !important; font-size: 16px !important; }
+    }
+
     /* slimmer bar on small desktops / landscape tablets */
     @media screen and (max-width: 1199px) {
         html body .sidebar.h-sidebar.mm ul.nav.nav-list { padding: 0 6px !important; }
