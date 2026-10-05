@@ -43,63 +43,7 @@
             --coa-shadow-hover: 0 6px 16px rgba(0, 0, 0, .5);
         }
 
-        /* -- Meta bar -- */
-        .coa-page .coa-meta {
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            flex-wrap: wrap;
-            gap: 10px;
-            padding: 12px 18px;
-            margin-bottom: 16px;
-            background: var(--coa-surface);
-            border: 1px solid var(--coa-border);
-            border-left: 3px solid var(--coa-accent);
-            border-radius: 6px;
-            box-shadow: var(--coa-shadow);
-        }
-
-        .coa-page .coa-meta-title {
-            display: flex;
-            align-items: center;
-            gap: 10px;
-            font-size: 16px;
-            font-weight: 700;
-            letter-spacing: .02em;
-            color: var(--coa-text);
-        }
-
-            .coa-page .coa-meta-title i {
-                color: var(--coa-accent);
-                font-size: 18px;
-            }
-
-        .coa-page .coa-meta-right {
-            display: flex;
-            align-items: center;
-            gap: 12px;
-        }
-
-        .coa-page .coa-badge {
-            display: inline-flex;
-            align-items: center;
-            gap: 6px;
-            padding: 4px 12px;
-            border-radius: 999px;
-            font-size: 12px;
-            font-weight: 600;
-            background: var(--coa-surface-alt);
-            color: var(--coa-muted);
-            border: 1px solid var(--coa-border);
-        }
-
-        .coa-page[data-mode="Edit"] .coa-badge,
-        .coa-page[data-mode="Add"] .coa-badge,
-        .coa-page[data-mode="Add Child"] .coa-badge {
-            background: var(--coa-soft);
-            color: var(--coa-accent-ink);
-            border-color: var(--coa-accent);
-        }
+        /* Title bar + badge: shared .pm-bar / .pm-badge classes (wwwroot/lib/theme/table-modern.css) */
 
         .coa-page .coa-progress {
             font-size: 12px;
@@ -683,6 +627,8 @@
             var labels = { '': 'No account selected', 'Edit': 'Editing account', 'Add': 'New sibling account', 'Add Child': 'New child account' };
             var badge = document.getElementById('coaModeText');
             if (badge) badge.textContent = labels[mode] || mode;
+            var badgeBox = document.getElementById('coaBadge');
+            if (badgeBox) badgeBox.classList.toggle('is-active', mode !== '');
 
             // Bank / Cash options only exist for level-4 accounts
             var typeRow = document.getElementById('coaTypeRow');
@@ -723,15 +669,15 @@
 
     <div class="coa-page" id="coaPage" data-mode="">
 
-        <div class="coa-meta">
-            <span class="coa-meta-title"><i class="fa fa-sitemap"></i>Chart of Accounts</span>
-            <div class="coa-meta-right">
+        <div class="pm-bar">
+            <span class="pm-bar-title"><i class="fa fa-sitemap"></i>Chart of Accounts</span>
+            <div class="pm-bar-right">
                 <asp:UpdateProgress ID="UpdateProgress1" runat="server">
                     <ProgressTemplate>
                         <span class="coa-progress"><i class="fa fa-spinner fa-spin"></i> Working&hellip;</span>
                     </ProgressTemplate>
                 </asp:UpdateProgress>
-                <span class="coa-badge"><i class="fa fa-info-circle"></i><span id="coaModeText">No account selected</span></span>
+                <span class="pm-badge" id="coaBadge"><i class="fa fa-info-circle"></i><span id="coaModeText">No account selected</span></span>
             </div>
         </div>
 

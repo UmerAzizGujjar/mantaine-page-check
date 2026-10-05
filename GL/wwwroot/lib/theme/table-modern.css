@@ -487,6 +487,13 @@ html:root body .tm-scroll {
 }
 html:root body .tm-scroll > table.dataTable { margin: 0 !important; box-shadow: none; }
 
+/* DataTables writes an inline pixel width (style="width: 1119px") on the table when it initialises, which beats
+   the plain width:100% above and leaves the table narrower than its frame. Force it to fill the frame; a table
+   with more columns than fit is still wider than 100% by content and scrolls inside .tm-scroll.
+   (scrollX/scrollY tables are inside .dataTables_scroll* so they are not touched.) */
+html:root body .tm-scroll > table.dataTable,
+html:root body .dataTables_wrapper > table.dataTable { width: 100% !important; }
+
 @media (max-width: 991px) {
     html:root body .tm-scroll > table.dataTable > tbody > tr > td { white-space: nowrap; }
 }
@@ -510,6 +517,157 @@ html:root body .tm-scroll > table.dataTable { margin: 0 !important; box-shadow: 
 
 @media (max-width: 479px) {
     html:root body .dataTables_wrapper .dt-buttons .dt-button { flex: 1 1 auto; padding: 0 10px !important; height: 34px; }
+}
+
+/* ==========================================================================
+   PAGE CHROME (shared by list and form pages)
+   .pm-bar      title bar: icon + page title on the left, badge(s) on the right
+   .pm-filters  filter card: a row of .pm-field (label + control) that wraps on small screens
+   .dt-add      the DataTables "Add" button, in the accent colour
+   Same --tm-* tokens as the tables, so dark mode and every client theme follow.
+   ========================================================================== */
+html:root body .pm-bar {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    flex-wrap: wrap;
+    gap: 10px;
+    padding: 12px 18px;
+    margin: 0 0 14px;
+    background: var(--tm-card);
+    border: 1px solid var(--tm-line);
+    border-left: 3px solid var(--tm-accent);
+    border-radius: 8px;
+    box-shadow: var(--tm-shadow);
+    color: var(--tm-ink);
+}
+html:root body .pm-bar-title { display: flex; align-items: center; gap: 10px; font-size: 16px; font-weight: 700; letter-spacing: .02em; }
+html:root body .pm-bar-title i { color: var(--tm-accent); font-size: 18px; }
+html:root body .pm-bar-right { display: flex; align-items: center; gap: 12px; }
+html:root body .pm-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    padding: 4px 12px;
+    border-radius: 999px;
+    font-size: 12px;
+    font-weight: 600;
+    background: var(--tm-zebra);
+    color: var(--tm-dim);
+    border: 1px solid var(--tm-line);
+}
+html:root body .pm-badge.is-active { background: var(--tm-hover); color: var(--tm-accent-ink); border-color: var(--tm-accent); }
+
+html:root body .pm-filters {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(210px, 1fr));
+    gap: 14px 16px;
+    align-items: end;
+    padding: 14px 18px;
+    margin: 0 0 14px;
+    background: var(--tm-card);
+    border: 1px solid var(--tm-line);
+    border-radius: 8px;
+    box-shadow: var(--tm-shadow);
+}
+html:root body .pm-field { min-width: 0; margin: 0; }
+html:root body .pm-field > label {
+    display: block;
+    margin: 0 0 4px;
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: .05em;
+    text-transform: uppercase;
+    color: var(--tm-dim);
+}
+
+/* native controls (the Select2 original is hidden by select2.css and must keep its own sizing) */
+html:root body .pm-field input[type="text"],
+html:root body .pm-field select:not(.select2-hidden-accessible) {
+    width: 100% !important;
+    height: 38px !important;
+    margin: 0 !important;
+    padding: 0 12px !important;
+    border: 1px solid var(--tm-line-strong) !important;
+    border-radius: 10px !important;
+    background: var(--tm-card) !important;
+    color: var(--tm-ink) !important;
+    font-size: 13px;
+    font-weight: 500;
+    box-shadow: none !important;
+    box-sizing: border-box;
+}
+/* Select2 4.x look-alike */
+html:root body .pm-field .select2-container { width: 100% !important; }
+html:root body .pm-field .select2-container .select2-selection--single {
+    height: 38px !important;
+    border: 1px solid var(--tm-line-strong) !important;
+    border-radius: 10px !important;
+    background: var(--tm-card) !important;
+    outline: 0;
+}
+html:root body .pm-field .select2-container .select2-selection--single .select2-selection__rendered {
+    line-height: 36px !important;
+    padding: 0 30px 0 12px !important;
+    color: var(--tm-ink) !important;
+    font-size: 13px;
+    font-weight: 500;
+}
+html:root body .pm-field .select2-container .select2-selection--single .select2-selection__arrow { height: 36px !important; right: 6px; }
+html:root body .pm-field input[type="text"]:focus,
+html:root body .pm-field select:focus,
+html:root body .pm-field .select2-container--focus .select2-selection--single,
+html:root body .pm-field .select2-container--open .select2-selection--single {
+    border-color: var(--tm-accent) !important;
+    box-shadow: 0 0 0 3px var(--tm-ring) !important;
+}
+/* read-only date box stays white and clickable (a datepicker input must not look disabled) */
+html:root body .pm-field input[type="text"][readonly] { background: var(--tm-card) !important; cursor: pointer; }
+
+/* date field = icon on the left, clear button on the right (shown by the page once a date is picked) */
+html:root body .pm-date { position: relative; }
+html:root body .pm-date > .fa-calendar { position: absolute; left: 12px; top: 12px; font-size: 14px; color: var(--tm-dim); pointer-events: none; }
+html:root body .pm-date input[type="text"] { padding-left: 34px !important; padding-right: 34px !important; }
+html:root body .pm-date .pm-clear {
+    position: absolute;
+    right: 6px;
+    top: 6px;
+    display: none;
+    width: 26px;
+    height: 26px;
+    padding: 0;
+    border: 0;
+    border-radius: 50%;
+    background: transparent;
+    color: var(--tm-dim);
+    line-height: 26px;
+    cursor: pointer;
+}
+html:root body .pm-date .pm-clear:hover { background: var(--tm-hover); color: var(--tm-accent-ink); }
+
+/* DataTables "Add" button = the one primary action in the toolbar */
+html:root body .dataTables_wrapper .dt-buttons .dt-button.dt-add {
+    background: var(--tm-accent) !important;
+    border-color: var(--tm-accent) !important;
+    color: var(--tm-on-accent) !important;
+}
+html:root body .dataTables_wrapper .dt-buttons .dt-button.dt-add:hover,
+html:root body .dataTables_wrapper .dt-buttons .dt-button.dt-add:focus-visible {
+    background: var(--tm-accent) !important;
+    border-color: var(--tm-accent) !important;
+    color: var(--tm-on-accent) !important;
+    filter: brightness(.9);
+    box-shadow: 0 4px 10px -3px var(--tm-ring) !important;
+}
+
+/* empty table: icon above the message (pages can set language.emptyTable / zeroRecords for a better sentence) */
+html:root body table.dataTable > tbody > tr > td.dataTables_empty:before {
+    content: "\f01c";
+    display: block;
+    margin-bottom: 10px;
+    font: normal normal normal 34px/1 FontAwesome;
+    color: var(--tm-accent);
+    opacity: .6;
 }
 
 @media (prefers-reduced-motion: reduce) {

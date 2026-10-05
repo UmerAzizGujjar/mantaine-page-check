@@ -7,22 +7,27 @@
             LoadPage();
             $("#doctorFilter").select2();
             $("#deptFilter").select2();
+            $("#statusFilter").select2({ minimumResultsForSearch: Infinity });
 
             $("#dateFilter").datepicker({
                 dateFormat: 'yy-mm-dd',
                 onSelect: function () {
-                    $("#example").DataTable().ajax.reload();
-                }
-            });
-            var today = new Date();
-            $("#dateFilter").datepicker({
-                dateFormat: 'yy-mm-dd',
-                onSelect: function () {
+                    toggleDateClear();
                     $("#example").DataTable().ajax.reload();
                 }
             });
 
+            $("#dateClear").on("click", function () {
+                $("#dateFilter").val("");
+                toggleDateClear();
+                $("#example").DataTable().ajax.reload();
+            });
         });
+
+        // the clear button only shows while a date is picked
+        function toggleDateClear() {
+            $("#dateClear").toggle($("#dateFilter").val() !== "");
+        }
 
         function appointmentPatient_Print(Appointment_ID) {
 
@@ -91,8 +96,8 @@
                 "lengthChange": true,
                 "buttons": [
                     {
-                        text: 'Add',
-                        className: 'dt-button buttons-copy buttons-html5',
+                        text: '<i class="fa fa-plus"></i> Add',
+                        className: 'dt-button dt-add',
                         action: function () {
                             window.location = 'Appointment.aspx';
                         }
@@ -109,6 +114,10 @@
                     }
                 ],
                 "filter": true,
+                "language": {
+                    "emptyTable": "No appointments found",
+                    "zeroRecords": "No appointments match the selected filters"
+                },
                 "ajax": function (data, callback, settings) {
                     var selectedDoctor = $("#doctorFilter").val() || "";
                     var selectedDept = $("#deptFilter").val() || "";
@@ -213,24 +222,15 @@
                             function (error) { }
                         );
                     });
-                    var lengthContainer = document.querySelector('#example_length');
-                    var lengthDropdown = document.querySelector('#example_length select');
-                    var label = document.querySelector('#example_length label');
-
-                    if (lengthDropdown && label && lengthContainer) {
-                        var labelText = document.createElement('span');
-                        labelText.textContent = 'Show entries ';
-                        labelText.style.marginTop = '10px';
-                        labelText.style.display = 'inline-block';
-
-                        lengthDropdown.style.width = '60px';
-                        label.innerHTML = '';
-                        label.style.display = 'inline-flex';
-                        label.style.marginTop = '17px';
-                        label.appendChild(labelText);
-                        label.appendChild(lengthDropdown);
-                    }
                 }
+            });
+            // record count in the title bar
+            table.on("draw", function () {
+                var info = table.page.info();
+                var text = info.recordsDisplay === info.recordsTotal
+                    ? info.recordsTotal + " appointments"
+                    : info.recordsDisplay + " of " + info.recordsTotal + " appointments";
+                $("#pmCount").toggleClass("is-active", info.recordsDisplay > 0).find("span").text(text);
             });
             $("#doctorFilter,#deptFilter,#statusFilter,#dateFilter").on("change", function () {
                 table.ajax.reload();
@@ -266,32 +266,43 @@
 
 </asp:Content>
 <asp:Content ID="Content2" ContentPlaceHolderID="MainContent" runat="server">
-    <div class="row">
-        <div class="col-lg-2 col-md-4 col-sm-6">
-                <label for="doctorFilter">Doctor</label>
-                <select id="doctorFilter" style="padding: 4px; margin-left: 8px;">
-                    <option value="">All Doctors</option>
-                </select>
+    <div class="pm-bar">
+        <span class="pm-bar-title"><i class="fa fa-calendar-check-o"></i>Appointment List</span>
+        <div class="pm-bar-right">
+            <span class="pm-badge" id="pmCount"><i class="fa fa-list"></i><span>Loading&hellip;</span></span>
         </div>
-        <div class="col-lg-2 col-md-4 col-sm-6">
-            <label>Department</label>
-            <select id="deptFilter" class="form-control">
+    </div>
+
+    <div class="pm-filters">
+        <div class="pm-field">
+            <label for="doctorFilter">Doctor</label>
+            <select id="doctorFilter">
+                <option value="">All Doctors</option>
+            </select>
+        </div>
+        <div class="pm-field">
+            <label for="deptFilter">Department</label>
+            <select id="deptFilter">
                 <option value="">All Departments</option>
             </select>
         </div>
-    <div class="col-lg-2 col-md-4 col-sm-6">
-        <label>Status</label>
-        <select id="statusFilter" class="form-control">
-            <option value="">All</option>
-            <option value="Booked">Booked</option>
-            <option value="Visited">Visited</option>
-            <option value="Not Visited">Not Visited</option>
-        </select>
-    </div>
-    <div class="col-lg-2 col-md-4 col-sm-6">
-        <label>App. Date</label>
-        <input type="text" id="dateFilter" class="form-control" readonly="readonly" />
-    </div>
+        <div class="pm-field">
+            <label for="statusFilter">Status</label>
+            <select id="statusFilter">
+                <option value="">All</option>
+                <option value="Booked">Booked</option>
+                <option value="Visited">Visited</option>
+                <option value="Not Visited">Not Visited</option>
+            </select>
+        </div>
+        <div class="pm-field">
+            <label for="dateFilter">App. Date</label>
+            <div class="pm-date">
+                <i class="fa fa-calendar"></i>
+                <input type="text" id="dateFilter" readonly="readonly" placeholder="All dates" />
+                <button type="button" id="dateClear" class="pm-clear" title="Clear date"><i class="fa fa-times"></i></button>
+            </div>
+        </div>
     </div>
     <div class="table-container" style="margin-top: 15px;">
 
