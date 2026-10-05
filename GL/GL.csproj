@@ -1185,6 +1185,8 @@
     <Content Include="wwwroot\lib\theme\dark-pages.css" />
     <Content Include="wwwroot\lib\theme\menu-modern.css" />
     <Content Include="wwwroot\lib\theme\menu-modern.js" />
+    <Content Include="wwwroot\lib\theme\table-modern.css" />
+    <Content Include="wwwroot\lib\theme\table-modern.js" />
     <Content Include="wwwroot\lib\theme\theme-toggle.js" />
     <Content Include="wwwroot\lib\jquery\jquery.min.js" />
     <Content Include="wwwroot\lib\jquery\jquery.mobile.custom.min.js" />

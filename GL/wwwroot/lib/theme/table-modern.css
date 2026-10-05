@@ -1,0 +1,513 @@
+/* ==========================================================================
+   MODERN DATA TABLES  -  DataTables + Bootstrap .table, every client theme
+   Loaded from Site.Master AFTER the DataTables, Ace, dark-theme and the
+   page-level CustomCSS (tablestyle.css ...) files, so it can tidy them up.
+
+   What it gives you
+   * light header row, small caps labels, clean row dividers, soft zebra,
+     accent-tinted row hover, rounded table frame
+   * toolbar in one tidy row: page length | export buttons | search box
+   * pill shaped pagination with an accent "current" page
+   * phone: toolbar stacks, the table scrolls sideways inside itself
+   * dark mode follows <html data-theme="dark"> (dark-theme.css variables)
+   * colours come from theme-colors.css (--theme-accent ...) so each client
+     theme keeps its own brand colour
+
+   Everything is prefixed "html:root body" + !important on purpose: the old
+   tablestyle.css / styleMaster.css use !important and bold-everything rules.
+   ========================================================================== */
+
+html {
+    --tm-ink: var(--theme-ink, #1e293b);
+    --tm-dim: #64748b;
+    --tm-card: #ffffff;
+    --tm-head: #f1f4f9;
+    --tm-head-ink: #475569;
+    --tm-zebra: #f8fafc;
+    --tm-line: #e4e9f0;
+    --tm-line-strong: #d5dce6;
+    --tm-accent: var(--theme-accent, #EFA63E);
+    --tm-accent-ink: var(--theme-accent-ink, #8a4b00);
+    --tm-on-accent: var(--theme-on-accent, #1b1b1b);
+    --tm-hover: var(--theme-accent-soft, rgba(239, 166, 62, .13));
+    --tm-ring: var(--theme-accent-shadow, rgba(239, 166, 62, .35));
+    --tm-icon: #526077;
+    --tm-shadow: 0 1px 2px rgba(16, 24, 40, .04), 0 4px 14px rgba(16, 24, 40, .05);
+    --tm-radius: 12px;
+}
+
+html[data-theme="dark"] {
+    --tm-ink: var(--dk-text, #e6ebf2);
+    --tm-dim: var(--dk-text-dim, #a9b4c4);
+    --tm-card: var(--dk-surface, #151b25);
+    --tm-head: var(--dk-surface-3, #232d3d);
+    --tm-head-ink: var(--dk-text-dim, #a9b4c4);
+    --tm-zebra: #1b212b;
+    --tm-line: var(--dk-border, #2a3547);
+    --tm-line-strong: var(--dk-border-2, #36445a);
+    --tm-accent-ink: var(--dk-accent-text, #6ee0d2);
+    --tm-hover: rgba(255, 255, 255, .06);
+    --tm-icon: #b7c2d3;
+    --tm-shadow: 0 1px 2px rgba(0, 0, 0, .35), 0 4px 14px rgba(0, 0, 0, .3);
+}
+
+/* ---------- the table frame ---------- */
+html:root body table.dataTable,
+html:root body table.table {
+    width: 100%;
+    margin: 10px 0 8px !important;
+    border-collapse: separate !important;
+    border-spacing: 0 !important;
+    border: 1px solid var(--tm-line) !important;
+    border-radius: var(--tm-radius);
+    background: var(--tm-card) !important;
+    color: var(--tm-ink) !important;
+    box-shadow: var(--tm-shadow);
+    font-size: 13.5px;
+}
+
+/* ---------- header ---------- */
+html:root body table.dataTable > thead > tr > th,
+html:root body table.dataTable > thead > tr > td,
+html:root body table.table > thead > tr > th,
+html:root body table.dataTable > tfoot > tr > th {
+    position: relative;
+    padding: 12px 30px 12px 14px !important;
+    background: var(--tm-head) !important;
+    background-image: none !important;
+    color: var(--tm-head-ink) !important;
+    border: 0 !important;
+    border-bottom: 1px solid var(--tm-line-strong) !important;
+    font-size: 12px;
+    font-weight: 700 !important;
+    line-height: 1.3 !important;
+    letter-spacing: .5px;
+    text-transform: uppercase;
+    text-align: left;
+    white-space: nowrap;
+    vertical-align: middle;
+    transition: background-color .15s ease, color .15s ease;
+}
+
+html:root body table.dataTable > tfoot > tr > th { border-top: 1px solid var(--tm-line-strong) !important; border-bottom: 0 !important; }
+
+html:root body table.dataTable > thead > tr > th:hover,
+html:root body table.table > thead > tr > th:hover {
+    background: var(--tm-hover) !important;
+    color: var(--tm-ink) !important;
+}
+
+/* rounded corners on the corner cells (table itself is not clipped, so sticky headers keep working) */
+html:root body table.dataTable > thead > tr:first-child > th:first-child,
+html:root body table.table > thead > tr:first-child > th:first-child { border-top-left-radius: calc(var(--tm-radius) - 1px); }
+html:root body table.dataTable > thead > tr:first-child > th:last-child,
+html:root body table.table > thead > tr:first-child > th:last-child { border-top-right-radius: calc(var(--tm-radius) - 1px); }
+html:root body table.dataTable > tbody > tr:last-child > td:first-child,
+html:root body table.table > tbody > tr:last-child > td:first-child { border-bottom-left-radius: calc(var(--tm-radius) - 1px); }
+html:root body table.dataTable > tbody > tr:last-child > td:last-child,
+html:root body table.table > tbody > tr:last-child > td:last-child { border-bottom-right-radius: calc(var(--tm-radius) - 1px); }
+
+/* tablestyle.css put a green tick after EVERY <th>; keep the cross for hidden columns only */
+html:root body table th:not(.sorting):not(.sorting_asc):not(.sorting_desc)::after { content: none !important; }
+html:root body table th.hidden-col::after { content: " \2717" !important; color: #ef4444 !important; }
+
+/* sort arrows: two small triangles, the active one lights up in the accent colour */
+html:root body table.dataTable > thead > tr > th.sorting:before,
+html:root body table.dataTable > thead > tr > th.sorting_asc:before,
+html:root body table.dataTable > thead > tr > th.sorting_desc:before,
+html:root body table.dataTable > thead > tr > th.sorting:after,
+html:root body table.dataTable > thead > tr > th.sorting_asc:after,
+html:root body table.dataTable > thead > tr > th.sorting_desc:after {
+    position: absolute;
+    right: 11px;
+    display: block;
+    font-size: 9px !important;
+    line-height: 9px !important;
+    color: var(--tm-dim) !important;
+    opacity: .38 !important;
+    top: auto;
+    transform: none !important;
+    margin: 0 !important;
+    font-weight: 400 !important;
+    letter-spacing: 0;
+}
+html:root body table.dataTable > thead > tr > th.sorting:before,
+html:root body table.dataTable > thead > tr > th.sorting_asc:before,
+html:root body table.dataTable > thead > tr > th.sorting_desc:before { content: "\25B2" !important; bottom: 50% !important; }
+html:root body table.dataTable > thead > tr > th.sorting:after,
+html:root body table.dataTable > thead > tr > th.sorting_asc:after,
+html:root body table.dataTable > thead > tr > th.sorting_desc:after { content: "\25BC" !important; top: 50% !important; }
+
+html:root body table.dataTable > thead > tr > th.sorting_asc:before,
+html:root body table.dataTable > thead > tr > th.sorting_desc:after { opacity: 1 !important; color: var(--tm-accent) !important; }
+
+/* the sorted column gets an accent underline instead of the old solid orange header */
+html:root body table.dataTable > thead > tr > th.sorting_asc,
+html:root body table.dataTable > thead > tr > th.sorting_desc {
+    background: var(--tm-head) !important;
+    color: var(--tm-ink) !important;
+    box-shadow: inset 0 -2px 0 var(--tm-accent);
+}
+
+/* ---------- body cells ---------- */
+html:root body table.dataTable > tbody > tr > td,
+html:root body table.dataTable > tbody > tr > th,
+html:root body table.table > tbody > tr > td,
+html:root body table.table > tbody > tr > th,
+html:root body table.table > tfoot > tr > td {
+    padding: 11px 14px !important;
+    background: transparent !important;
+    background-image: none !important;
+    color: var(--tm-ink) !important;
+    border: 0 !important;
+    border-top: 0 !important;
+    border-bottom: 1px solid var(--tm-line) !important;
+    font-size: 13.5px;
+    font-weight: 500 !important;
+    line-height: 1.45 !important;
+    vertical-align: middle;
+    box-shadow: none !important;           /* kills DataTables' sorted-column tint */
+}
+
+html:root body table.dataTable > tbody > tr:last-child > td,
+html:root body table.table > tbody > tr:last-child > td { border-bottom: 0 !important; }
+
+html:root body table.dataTable > tbody > tr.even > td,
+html:root body table.table-striped > tbody > tr:nth-of-type(even) > td { background: var(--tm-zebra) !important; }
+
+html:root body table.dataTable > tbody > tr:hover > td,
+html:root body table.table-hover > tbody > tr:hover > td,
+html:root body table.table-hover > tbody > tr:hover > th { background: var(--tm-hover) !important; }
+
+html:root body table.dataTable > tbody > tr.selected > td { background: var(--tm-hover) !important; box-shadow: inset 3px 0 0 var(--tm-accent) !important; }
+html:root body table.dataTable > tbody > tr.selected > td ~ td { box-shadow: none !important; }
+
+/* "No data available" row */
+html:root body table.dataTable > tbody > tr > td.dataTables_empty {
+    padding: 38px 14px !important;
+    text-align: center;
+    color: var(--tm-dim) !important;
+    font-weight: 600 !important;
+}
+
+html:root body table.dataTable > tbody > tr:hover > td.dataTables_empty,
+html:root body table.dataTable > tbody > tr.even:hover > td.dataTables_empty { background: transparent !important; }
+
+/* action icons were forced black (invisible in dark mode) */
+html:root body table td .fa-pencil,
+html:root body table td .fa-money,
+html:root body table td .fa-print,
+html:root body table td .fa-edit,
+html:root body table td .fa-eye,
+html:root body table td .fa-trash {
+    color: var(--tm-icon) !important;
+    font-size: 15px;
+    font-weight: 400;
+    transition: color .15s ease, transform .15s ease;
+}
+html:root body table td a:hover .fa-pencil,
+html:root body table td a:hover .fa-money,
+html:root body table td a:hover .fa-print,
+html:root body table td a:hover .fa-edit,
+html:root body table td a:hover .fa-eye { color: var(--tm-accent-ink) !important; transform: scale(1.12); }
+html:root body table td a:hover .fa-trash { color: #dc2626 !important; transform: scale(1.12); }
+
+/* ---------- toolbar: length | buttons | search  (one row, wraps on small screens) ---------- */
+html:root body .dataTables_wrapper {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 10px 14px;
+    width: 100%;
+    color: var(--tm-ink);
+    font-size: 13px;
+}
+html:root body .dataTables_wrapper:after { content: none !important; display: none !important; }
+
+html:root body .dataTables_wrapper > .dataTables_length  { order: 1; float: none !important; margin: 0 !important; }
+html:root body .dataTables_wrapper > .dt-buttons          { order: 2; float: none !important; width: auto !important; margin: 0 auto 0 0 !important; display: flex; flex-wrap: wrap; gap: 8px; }
+html:root body .dataTables_wrapper > .dataTables_filter   { order: 3; float: none !important; margin: 0 0 0 auto !important; text-align: right; }
+html:root body .dataTables_wrapper > .dataTables_processing { order: 4; }
+html:root body .dataTables_wrapper > table.dataTable,
+html:root body .dataTables_wrapper > .tm-scroll,
+html:root body .dataTables_wrapper > .dataTables_scroll   { order: 5; flex: 1 1 100%; min-width: 0; }
+html:root body .dataTables_wrapper > .dataTables_info     { order: 6; float: none !important; clear: none !important; padding: 0 !important; margin: 0 !important; }
+html:root body .dataTables_wrapper > .dataTables_paginate { order: 7; float: none !important; width: auto !important; margin: 0 0 0 auto !important; padding: 0 !important; text-align: right; font-size: 13px; }
+
+html:root body .dataTables_wrapper .dataTables_length label,
+html:root body .dataTables_wrapper .dataTables_filter label {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    margin: 0;
+    font-weight: 600;
+    color: var(--tm-dim);
+}
+
+/* page length */
+html:root body .dataTables_wrapper .dataTables_length select {
+    height: 36px !important;
+    width: auto !important;
+    min-width: 82px;
+    padding: 0 30px 0 12px !important;
+    border: 1px solid var(--tm-line-strong) !important;
+    border-radius: 10px !important;
+    background-color: var(--tm-card) !important;
+    color: var(--tm-ink) !important;
+    font-size: 13px;
+    font-weight: 600;
+    box-shadow: none;
+    cursor: pointer;
+}
+
+/* search box: pill with a magnifier */
+html:root body .dataTables_wrapper .dataTables_filter label {
+    width: 320px;
+    max-width: 100%;
+    height: 38px;
+    padding: 0 6px 0 14px;
+    background: var(--tm-card);
+    border: 1px solid var(--tm-line-strong);
+    border-radius: 999px;
+    box-shadow: 0 1px 2px rgba(16, 24, 40, .04);
+    color: var(--tm-dim);
+    font-size: 0;                       /* hides the word "Search:" - the magnifier says it */
+    transition: border-color .15s ease, box-shadow .15s ease;
+}
+html:root body .dataTables_wrapper .dataTables_filter label:focus-within {
+    border-color: var(--tm-accent);
+    box-shadow: 0 0 0 3px var(--tm-ring);
+}
+html:root body .dataTables_wrapper .dataTables_filter label:before {
+    content: "\f002" !important;
+    margin: 0 !important;
+    font: normal normal normal 14px/1 FontAwesome !important;
+    color: var(--tm-dim) !important;
+}
+html:root body .dataTables_wrapper .dataTables_filter input {
+    flex: 1 1 auto;
+    width: 100% !important;
+    min-width: 0;
+    height: 34px !important;
+    margin: 0 !important;
+    padding: 0 8px !important;
+    border: 0 !important;
+    outline: 0 !important;
+    border-radius: 999px !important;
+    background: transparent !important;
+    color: var(--tm-ink) !important;
+    font-size: 13.5px;
+    font-weight: 500;
+    box-shadow: none !important;
+}
+html:root body .dataTables_wrapper .dataTables_filter input::placeholder { color: var(--tm-dim); font-style: normal; opacity: .8; }
+
+/* export buttons (Copy / Excel / PDF / Print / Column visibility) */
+html:root body .dataTables_wrapper .dt-buttons .dt-button,
+html:root body .dataTables_wrapper .dt-buttons .buttons-copy,
+html:root body .dataTables_wrapper .dt-buttons .buttons-excel,
+html:root body .dataTables_wrapper .dt-buttons .buttons-pdf,
+html:root body .dataTables_wrapper .dt-buttons .buttons-print,
+html:root body .dataTables_wrapper .dt-buttons .buttons-colvis {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 6px;
+    width: auto !important;
+    height: 36px;
+    margin: 0 !important;
+    padding: 0 14px !important;
+    background: var(--tm-card) !important;
+    background-image: none !important;
+    color: var(--tm-ink) !important;
+    border: 1px solid var(--tm-line-strong) !important;
+    border-radius: 10px !important;
+    box-shadow: none !important;
+    font-size: 13px;
+    font-weight: 600 !important;
+    line-height: 1 !important;
+    letter-spacing: 0;
+    transition: background-color .15s ease, border-color .15s ease, color .15s ease, transform .15s ease;
+}
+html:root body .dataTables_wrapper .dt-buttons .dt-button:hover,
+html:root body .dataTables_wrapper .dt-buttons .dt-button:focus-visible {
+    background: var(--tm-accent) !important;
+    border-color: var(--tm-accent) !important;
+    color: var(--tm-on-accent) !important;
+    transform: translateY(-1px);
+    outline: 0;
+}
+html:root body .dataTables_wrapper .dt-buttons .dt-button:active { transform: none; }
+
+/* column-visibility popup */
+html:root body .dataTables_wrapper .dt-buttons div.dt-button-collection {
+    min-width: 220px;
+    padding: 8px !important;
+    background: var(--tm-card) !important;
+    border: 1px solid var(--tm-line-strong) !important;
+    border-radius: 14px !important;
+    box-shadow: 0 16px 40px rgba(16, 24, 40, .22) !important;
+}
+html:root body .dataTables_wrapper .dt-buttons div.dt-button-collection .dt-button {
+    margin: 2px 0 !important;
+    padding: 9px 12px !important;
+    background: transparent !important;
+    color: var(--tm-ink) !important;
+    border: 0 !important;
+    border-radius: 8px !important;
+    box-shadow: none !important;
+    font-size: 13px !important;
+    font-weight: 600 !important;
+    letter-spacing: 0;
+    justify-content: flex-start !important;
+    width: 100% !important;
+}
+html:root body .dataTables_wrapper .dt-buttons div.dt-button-collection .dt-button:before { content: "\f096" !important; font: normal normal normal 14px/1 FontAwesome !important; color: var(--tm-dim) !important; margin-right: 10px !important; }
+html:root body .dataTables_wrapper .dt-buttons div.dt-button-collection .dt-button.active:before,
+html:root body .dataTables_wrapper .dt-buttons div.dt-button-collection .dt-button.dt-button-active:before { content: "\f046" !important; color: var(--tm-accent-ink) !important; }
+html:root body .dataTables_wrapper .dt-buttons div.dt-button-collection .dt-button:hover { background: var(--tm-hover) !important; color: var(--tm-ink) !important; }
+html:root body .dataTables_wrapper .dt-buttons div.dt-button-collection .dt-button.active,
+html:root body .dataTables_wrapper .dt-buttons div.dt-button-collection .dt-button.dt-button-active { background: var(--tm-hover) !important; color: var(--tm-ink) !important; box-shadow: none !important; }
+html:root body .dt-button-background { background: rgba(15, 23, 42, .25) !important; }
+
+/* ---------- footer: info + pagination ---------- */
+html:root body .dataTables_wrapper .dataTables_info {
+    font-size: 13px !important;
+    font-weight: 600 !important;
+    color: var(--tm-dim) !important;
+}
+
+html:root body .dataTables_wrapper .dataTables_paginate .paginate_button {
+    min-width: 36px;
+    height: 36px;
+    margin: 0 0 0 4px !important;
+    padding: 0 12px !important;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    background: var(--tm-card) !important;
+    background-image: none !important;
+    color: var(--tm-ink) !important;
+    border: 1px solid var(--tm-line-strong) !important;
+    border-radius: 10px !important;
+    box-shadow: none !important;
+    font-size: 13px;
+    font-weight: 600;
+    line-height: 1;
+    transition: background-color .15s ease, border-color .15s ease, color .15s ease;
+}
+html:root body .dataTables_wrapper .dataTables_paginate .paginate_button:hover {
+    background: var(--tm-hover) !important;
+    border-color: var(--tm-accent) !important;
+    color: var(--tm-ink) !important;
+}
+html:root body .dataTables_wrapper .dataTables_paginate .paginate_button.current,
+html:root body .dataTables_wrapper .dataTables_paginate .paginate_button.current:hover {
+    background: var(--tm-accent) !important;
+    border-color: var(--tm-accent) !important;
+    color: var(--tm-on-accent) !important;
+    box-shadow: 0 4px 10px -3px var(--tm-ring) !important;
+}
+html:root body .dataTables_wrapper .dataTables_paginate .paginate_button.disabled,
+html:root body .dataTables_wrapper .dataTables_paginate .paginate_button.disabled:hover {
+    background: var(--tm-card) !important;
+    border-color: var(--tm-line) !important;
+    color: var(--tm-dim) !important;
+    opacity: .5;
+    box-shadow: none !important;
+}
+html:root body .dataTables_wrapper .dataTables_paginate .ellipsis { padding: 0 8px; color: var(--tm-dim); }
+
+/* "Processing..." overlay */
+html:root body .dataTables_wrapper .dataTables_processing {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: auto;
+    margin: -20px 0 0 -70px;
+    padding: 10px 18px;
+    background: var(--tm-card) !important;
+    color: var(--tm-ink);
+    border: 1px solid var(--tm-line-strong);
+    border-radius: 999px;
+    box-shadow: var(--tm-shadow);
+    font-weight: 600;
+}
+
+/* scrollY tables: the frame goes round the whole scroller */
+html:root body .dataTables_wrapper .dataTables_scroll {
+    border: 1px solid var(--tm-line);
+    border-radius: var(--tm-radius);
+    overflow: hidden;
+    box-shadow: var(--tm-shadow);
+    margin: 10px 0 8px;
+}
+html:root body .dataTables_wrapper .dataTables_scroll table.dataTable { margin: 0 !important; border: 0 !important; border-radius: 0; box-shadow: none; }
+html:root body .dataTables_wrapper .dataTables_scroll .dataTables_scrollBody { border-bottom: 0 !important; }
+
+/* scrollY: the copy of the header inside the scrolling body must stay collapsed */
+html:root body .dataTables_scrollBody > table > thead > tr > th,
+html:root body .dataTables_scrollBody > table > thead > tr > td {
+    height: 0 !important;
+    padding-top: 0 !important;
+    padding-bottom: 0 !important;
+    border: 0 !important;
+    line-height: 0 !important;
+    box-shadow: none !important;
+}
+html:root body .dataTables_scrollBody > table > thead > tr > th:before,
+html:root body .dataTables_scrollBody > table > thead > tr > th:after { display: none !important; }
+
+/* scrolling containers some pages already use: keep the header visible */
+html:root body .table-container table thead th { position: sticky; top: 0; z-index: 2; }
+
+/* ---------- horizontal scroller (table-modern.js wraps each DataTable in .tm-scroll) ----------
+   A wide table scrolls inside its own frame instead of making the whole page scroll. */
+html:root body .tm-scroll {
+    width: 100%;
+    margin: 10px 0 8px;
+    overflow-x: auto;
+    overflow-y: hidden;
+    -webkit-overflow-scrolling: touch;
+    border-radius: var(--tm-radius);
+    box-shadow: var(--tm-shadow);
+}
+html:root body .tm-scroll > table.dataTable { margin: 0 !important; box-shadow: none; }
+
+@media (max-width: 991px) {
+    html:root body .tm-scroll > table.dataTable > tbody > tr > td { white-space: nowrap; }
+}
+
+/* ---------- phone ---------- */
+@media (max-width: 767px) {
+    html:root body .dataTables_wrapper > .dataTables_length { order: 1; }
+    html:root body .dataTables_wrapper > .dataTables_filter { order: 2; flex: 1 1 100%; margin: 0 !important; text-align: left; }
+    html:root body .dataTables_wrapper > .dt-buttons { order: 3; flex: 1 1 100%; }
+    html:root body .dataTables_wrapper .dataTables_filter label { width: 100%; }
+
+    html:root body .dataTables_wrapper > .dataTables_info { flex: 1 1 100%; text-align: center; }
+    html:root body .dataTables_wrapper > .dataTables_paginate { flex: 1 1 100%; margin: 0 !important; text-align: center; }
+    html:root body .dataTables_wrapper .dataTables_paginate .paginate_button { min-width: 34px; height: 34px; padding: 0 9px !important; }
+
+    html:root body table.dataTable > thead > tr > th,
+    html:root body table.table > thead > tr > th { padding: 10px 26px 10px 12px !important; }
+    html:root body table.dataTable > tbody > tr > td,
+    html:root body table.table > tbody > tr > td { padding: 10px 12px !important; }
+}
+
+@media (max-width: 479px) {
+    html:root body .dataTables_wrapper .dt-buttons .dt-button { flex: 1 1 auto; padding: 0 10px !important; height: 34px; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+    html:root body table *,
+    html:root body .dataTables_wrapper * { transition: none !important; }
+}
+
+@media print {
+    html:root body .dataTables_wrapper > .dataTables_length,
+    html:root body .dataTables_wrapper > .dataTables_filter,
+    html:root body .dataTables_wrapper > .dt-buttons,
+    html:root body .dataTables_wrapper > .dataTables_paginate { display: none !important; }
+    html:root body table.dataTable { box-shadow: none; }
+}
