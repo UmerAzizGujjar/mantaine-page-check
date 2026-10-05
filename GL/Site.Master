@@ -898,6 +898,11 @@
     <%-- Modern data tables (DataTables + .table): loaded AFTER the dark-mode files on purpose --%>
     <link href="<%= Page.ResolveClientUrl("~/wwwroot/lib/theme/table-modern.css") %>?v=3" rel="stylesheet" type="text/css" />
     <script src="<%= Page.ResolveClientUrl("~/wwwroot/lib/theme/table-modern.js") %>?v=1" type="text/javascript" defer="defer"></script>
+    <%-- One look for every date / time picker (theme colours + month/year drop-downs); loaded after the dark-mode files --%>
+    <link href="<%= Page.ResolveClientUrl("~/wwwroot/lib/theme/datepicker-modern.css") %>?v=4" rel="stylesheet" type="text/css" />
+    <script src="<%= Page.ResolveClientUrl("~/wwwroot/lib/theme/datepicker-modern.js") %>?v=4" type="text/javascript"></script>
+    <%-- Checkboxes drawn as toggle switches on every form (opt out with class="no-switch") --%>
+    <link href="<%= Page.ResolveClientUrl("~/wwwroot/lib/theme/form-modern.css") %>?v=2" rel="stylesheet" type="text/css" />
 </head>
 <body class="no-skin" onload="releasemenu()">
     <form runat="server" id="MasterPageForm1">

@@ -45,6 +45,32 @@
     flex: 0 0 auto;
 }
 
+/* Select2 hides the original <select> with width:1px; the page-wide "select { width:100% !important }" rules made
+   those hidden selects ~1800px wide (absolutely positioned) and pushed the page sideways = horizontal scroll */
+select.select2-hidden-accessible {
+    width: 1px !important;
+    height: 1px !important;
+    min-width: 0 !important;
+    max-width: 1px !important;
+    padding: 0 !important;
+    border: 0 !important;
+}
+
+/* Account Entries grid: fit the card width (no horizontal scroll) using the column widths set on the header */
+#tbldescription {
+    table-layout: fixed;
+    width: 100%;
+    max-width: 100%;
+}
+#tbldescription th,
+#tbldescription td { overflow: hidden; text-overflow: ellipsis; }
+#tbldescription input,
+#tbldescription select { min-width: 0; max-width: 100%; }
+#tbldescription thead tr:first-child th#seq { width: 48px !important; }
+#tbldescription thead tr:first-child th#plus { width: 80px !important; }
+#tbldescription td .editListBtn,
+#tbldescription td .delListBtn { display: inline-block; }
+
 /* Equal height columns for Voucher Details + Summary layout */
 .voucher-form-row {
     display: flex !important;
