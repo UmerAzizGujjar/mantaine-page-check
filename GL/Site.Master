@@ -7,6 +7,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en">
 <head id="Head1" runat="server">
     <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
     <%-- Dark/Light mode: apply the saved choice before the page paints (no white flash). Light is the default. --%>
     <script type="text/javascript">
         (function () { try { if (localStorage.getItem('hmis-theme-mode') === 'dark') { document.documentElement.setAttribute('data-theme', 'dark'); } } catch (e) { } })();
@@ -328,59 +329,11 @@
     <asp:ContentPlaceHolder ID="ContentPlaceHolder1" runat="server"></asp:ContentPlaceHolder>
 
     <style type="text/css">
+        /* ===== Small screens: page-level helpers (the MENU itself lives in wwwroot/lib/theme/menu-modern.css) ===== */
         @media screen and (max-width: 995px) {
             .container-fluid {
                 padding-left: 0px !important;
                 padding-right: 0px !important;
-            }
-
-            .hamburger-btn {
-                background: none;
-                border: none;
-                cursor: pointer;
-                padding: 10px;
-                display: flex;
-                flex-direction: column;
-                justify-content: space-between;
-                width: 40px;
-            }
-
-                .hamburger-btn span {
-                    display: block;
-                    margin-top: 2px;
-                    height: 3px;
-                    width: 100%;
-                    background-color: #333;
-                    border-radius: 3px;
-                    transition: all 0.3s ease;
-                }
-
-            #ctl00_sidebar.hide-force {
-                transform: translateX(-120%);
-            }
-
-            .hover {
-                width: 160px !important;
-            }
-
-            .hamburger-row {
-                display: block !important;
-            }
-
-            #ctl00_sidebar {
-                width: 180px !important;
-                height: 100vh !important;
-                transition: transform 0.5s ease;
-                transform: translateX(0); /* visible */
-            }
-
-                #ctl00_sidebar.hide-force {
-                    transform: translateX(-120%);
-                }
-
-            .main {
-                width: 732px !important;
-                margin-left: 12%;
             }
 
             .headerWelcome {
@@ -400,39 +353,6 @@
                 height: 34px !important;
             }
 
-            .no-skin .sidebar.h-sidebar {
-                background-color: #f8f8f8 !important;
-            }
-
-            .sidebar.navbar-collapse {
-                width: 190px !important;
-                max-height: none !important;
-            }
-
-            .no-skin .sidebar {
-                border-style: solid !important;
-                border-color: #ccc !important;
-            }
-
-            .sidebar.h-sidebar {
-                margin-top: 17px !important;
-                border-width: 0 !important;
-                box-shadow: none !important;
-                position: absolute !important;
-            }
-
-            .navbar-collapse.collapse {
-                display: block !important;
-                height: auto !important;
-                padding-bottom: 0 !important;
-                overflow: visible !important;
-            }
-
-            .sidebar {
-                padding-left: 0 !important;
-                padding-right: 0 !important;
-            }
-
             body {
                 background-color: #fff !important;
                 min-height: 100% !important;
@@ -444,107 +364,6 @@
                 font-weight: bold !important;
             }
         }
-
-        @media screen and (max-width: 993px) {
-            .sidebar.navbar-collapse .nav-list > li > a {
-                background: transparent !important;
-            }
-
-            .nav-list > li > a > .menu-icon {
-                display: flex !important;
-                margin-right: 2px !important;
-                vertical-align: sub !important;
-                text-align: center !important;
-                padding-left: 41px !important;
-                padding-right: 37px !important;
-                font-size: 18px !important;
-                font-weight: normal !important;
-            }
-
-            .nav-list > li a > .arrow {
-                background-color: red;
-                display: block;
-                width: 0px !important;
-                height: 14px;
-                line-height: 14px;
-                text-shadow: none;
-                font-size: 30px;
-                position: absolute;
-                right: 10px;
-                top: 30px;
-                padding: 0;
-                text-align: center;
-            }
-
-            .no-skin .nav-list > li .submenu {
-                background-color: #fff;
-                top: 12px !important;
-            }
-        }
-
-        @media screen and (max-width: 901px) {
-            .main {
-                width: 700px !important;
-                float: left;
-            }
-        }
-
-        @media screen and (max-width: 870px) {
-            .main {
-                width: 594px !important;
-                float: left;
-            }
-        }
-
-        @media screen and (max-width: 763px) {
-            .main {
-                width: 590px !important;
-                float: left;
-            }
-        }
-
-        @media screen and (max-width: 759px) {
-            .main {
-                width: 570px !important;
-                float: left;
-            }
-        }
-
-        @media screen and (max-width: 739px) {
-            .main {
-                width: 520px !important;
-                float: left;
-            }
-        }
-
-        @media screen and (max-width: 689px) {
-            .main {
-                width: 480px !important;
-                float: left;
-            }
-        }
-
-        @media screen and (max-width: 649px) {
-            .main {
-                width: 425px !important;
-                float: left;
-            }
-        }
-
-        @media screen and (max-width: 594px) {
-            .main {
-                width: 365px !important;
-                float: left;
-            }
-        }
-
-        @media screen and (max-width: 534px) {
-            .main {
-                width: 330px !important;
-                float: left;
-            }
-        }
-
 
         @media screen and (max-width: 589px) {
             #welCome {
@@ -562,39 +381,8 @@
             }
         }
 
-        @media screen and (max-width: 526px) {
-            #ctl00_LoginName {
-                display: none;
-            }
-
-            #LoginSign {
-                display: none;
-            }
-        }
-
-
-
-        .sidebar.h-sidebar .nav-list > li > a {
-            text-align: center;
-        }
-
-        .submenu .menu-icon {
-            display: none !important;
-        }
-
-        .mainmenu {
-        }
-
-        .nav-list > li {
-            height: 70px;
-        }
-
         .span1 {
             padding-top: 18px;
-        }
-
-        .submenu .fa-caret {
-            display: block !important;
         }
 
         .ui-button-text-only .ui-button-text {
@@ -900,48 +688,7 @@
             }
         }
 
-        /* ===== Main menu bar (horizontal) - match the new header, desktop only ===== */
-        @media screen and (min-width: 992px) {
-            .sidebar.h-sidebar {
-                margin-top: 0 !important;
-                box-shadow: 0 3px 8px rgba(0, 0, 0, 0.14) !important;
-            }
-
-                .sidebar.h-sidebar .nav-list {
-                    background: linear-gradient(180deg, #ffffff 0%, #f1f3f7 100%) !important;
-                    border-bottom: 3px solid var(--theme-header-line, #EFA63E) !important;
-                }
-
-                    .sidebar.h-sidebar .nav-list > li {
-                        border-color: #d9dee5 !important;
-                    }
-
-                        .sidebar.h-sidebar .nav-list > li > a {
-                            display: flex !important;
-                            flex-direction: column;
-                            align-items: center;
-                            justify-content: center;
-                            height: 100% !important;
-                            padding: 6px 8px !important;
-                            font-size: 14px !important;
-                            font-weight: 700 !important;
-                            letter-spacing: .1px;
-                            color: var(--theme-ink, #1b2a41) !important;
-                            transition: background-color .15s ease, color .15s ease;
-                        }
-
-                        .sidebar.h-sidebar .nav-list > li:hover > a,
-                        .sidebar.h-sidebar .nav-list > li.hover:hover > a {
-                            background-color: var(--theme-accent-soft, #fff1d6) !important;
-                            color: var(--theme-accent-ink, #8a4b00) !important;
-                        }
-
-                        .sidebar.h-sidebar .nav-list > li.active > a,
-                        .sidebar.h-sidebar .nav-list > li.active:hover > a {
-                            background-color: var(--theme-accent, #EFA63E) !important;
-                            color: var(--theme-on-accent, #1b2a41) !important;
-                        }
-        }
+        /* ===== Main menu bar: see wwwroot/lib/theme/menu-modern.css (desktop bar + mobile drawer) ===== */
 
         /* ===== Footer (all themes) - colours come from theme-colors.css ===== */
         html body .main-content { padding-bottom: 90px !important; }
@@ -1051,9 +798,6 @@
                 $('.nav li ul').each(function () {
                     $(this).addClass("submenu");
                 });
-                $('.nav li').click(function () {
-                    $(this).addClass('active').siblings().removeClass('active');
-                });
             });
 
         })(jQuery);
@@ -1127,12 +871,18 @@
 
 
     </script>
+    <%-- Modern main menu (shared by every client theme): horizontal bar on desktop, slide-in drawer on phone/tablet --%>
+    <link href="<%= Page.ResolveClientUrl("~/wwwroot/lib/theme/menu-modern.css") %>?v=2" rel="stylesheet" type="text/css" />
+    <script src="<%= Page.ResolveClientUrl("~/wwwroot/lib/theme/menu-modern.js") %>?v=2" type="text/javascript" defer="defer"></script>
     <%-- Dark/Light mode (shared by every client theme) - keep these two lines LAST in <head> --%>
     <asp:PlaceHolder ID="DarkModeAssets" runat="server">
         <link href="<%= Page.ResolveClientUrl("~/wwwroot/lib/theme/dark-theme.css") %>?v=3" rel="stylesheet" type="text/css" />
         <link href="<%= Page.ResolveClientUrl("~/wwwroot/lib/theme/dark-pages.css") %>?v=3" rel="stylesheet" type="text/css" />
         <script src="<%= Page.ResolveClientUrl("~/wwwroot/lib/theme/theme-toggle.js") %>?v=3" type="text/javascript"></script>
     </asp:PlaceHolder>
+    <%-- Modern data tables (DataTables + .table): loaded AFTER the dark-mode files on purpose --%>
+    <link href="<%= Page.ResolveClientUrl("~/wwwroot/lib/theme/table-modern.css") %>?v=1" rel="stylesheet" type="text/css" />
+    <script src="<%= Page.ResolveClientUrl("~/wwwroot/lib/theme/table-modern.js") %>?v=1" type="text/javascript" defer="defer"></script>
 </head>
 <body class="no-skin" onload="releasemenu()">
     <form runat="server" id="MasterPageForm1">
@@ -1375,20 +1125,19 @@ CssClass="app-title"></asp:Label>
             </div>
 
             <div class="main-content">
-                <div id="sidebar" runat="server" class="sidebar h-sidebar navbar-collapse collapse"></div>
+                <%-- Mobile / tablet toolbar (hidden on desktop by menu-modern.css) --%>
+                <div class="mm-toolbar" id="mmToolbar">
+                    <button type="button" id="hamburger" class="hamburger-btn" aria-label="Open menu" aria-expanded="false">
+                        <span></span>
+                        <span></span>
+                        <span></span>
+                    </button>
+                    <span class="mm-toolbar-title" id="mmToolbarTitle">Menu</span>
+                </div>
+                <div id="sidebar" runat="server" class="sidebar h-sidebar navbar-collapse collapse mm"></div>
                 <div class="main">
 
                     <div id="clear" style="clear: both; height: 10px;"></div>
-                    <div class="row hamburger-row" style="margin-left: -13% !important; display: none">
-                        <div class="col-2">
-                            <button type="button" onclick="hideNavbar" id="hamburger" class="hamburger-btn" aria-label="Toggle navigation">
-                                <span></span>
-                                <span></span>
-                                <span></span>
-                            </button>
-
-                        </div>
-                    </div>
                     <div class="ace-settings-container" style="display: none" id="ace-settings-container">
                         <div class="btn btn-app btn-xs btn-warning ace-settings-btn" id="ace-settings-btn">
                             <i class="ace-icon fa fa-cog bigger-130"></i>
@@ -1521,29 +1270,10 @@ top: auto;
 
     <script type="text/javascript">
         jQuery(function ($) {
-            $('.sidebar .nav li:nth-child(1) i').addClass("fa-tachometer");
-            $('.sidebar .nav li:nth-child(2) i').addClass("fa-bed");
-            $('.sidebar .nav > li:nth-child(2)').css('width', '160px');
-            $('.sidebar .nav li:nth-child(3) i').addClass("fa-table");
-            $('.sidebar .nav li:nth-child(4) i').addClass("fa-group");
-            $('.sidebar .nav li:nth-child(5) i').addClass("fa-hourglass-end");
-            $('.sidebar .nav li:nth-child(8) i').addClass("fa-desktop");
-            $('.sidebar .nav li:nth-child(6) i').addClass("fa-plus-square");
-            $('.sidebar .nav li:nth-child(7) i').addClass("fa-bank");
-            $('.sidebar .nav li:nth-child(8) i').addClass("fa-tag");
-            $('.sidebar .nav li:nth-child(9) i').addClass("fa-list-alt");
-            $('.sidebar .nav li:nth-child(10) i').addClass("fa-pencil-square-o");
-            $('.sidebar .nav li:nth-child(11) i').addClass("fa-desktop");
-            $('.sidebar .nav li:nth-child(12) i').addClass("fa-tachometer");
-            $('.sidebar .nav li:nth-child(13) i').addClass("fa-tachometer");
-
             $('.nav li ul').each(function () {
                 $(this).addClass("submenu");
             });
 
-            $('.nav li').click(function () {
-                $(this).addClass('active').siblings().removeClass('active');
-            });
         });
         $(document).ready(function () {
 
@@ -1560,25 +1290,7 @@ top: auto;
                 alert(message);
             }
         });
-        $(document).ready(function () {
-            const $div = $('#ctl00_sidebar');
-            const $button = $('#hamburger');
-
-            // Show the div (by removing .hide-force) on button click
-            $button.on('click', function (e) {
-                e.stopPropagation(); // Prevent document click from firing
-                $div.removeClass('hide-force');
-            });
-
-            // Hide div if click is outside both the div and the button
-            $(document).on('click', function (event) {
-                if (
-                    !$div.is(event.target) && $div.has(event.target).length === 0
-                ) {
-                    $div.addClass('hide-force');
-                }
-            });
-        });
+        /* menu open/close, drawer and accordion: wwwroot/lib/theme/menu-modern.js */
 
         $("#ctl00_lblMessage").hide();
     </script>
