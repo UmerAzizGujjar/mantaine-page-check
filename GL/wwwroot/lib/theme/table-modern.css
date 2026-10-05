@@ -21,8 +21,9 @@ html {
     --tm-ink: var(--theme-ink, #1e293b);
     --tm-dim: #64748b;
     --tm-card: #ffffff;
-    --tm-head: #f1f4f9;
-    --tm-head-ink: #475569;
+    --tm-head-bg: linear-gradient(180deg, var(--theme-accent-light, #F4B653) 0%, var(--theme-accent, #EFA63E) 100%);   /* header row = this theme's accent, shaded */
+    --tm-head-ink: var(--theme-on-accent, #1b2a41);
+    --tm-head-shade: linear-gradient(rgba(0, 0, 0, .10), rgba(0, 0, 0, .10));                                      /* darker overlay: hover / sorted column */
     --tm-zebra: #f8fafc;
     --tm-line: #e4e9f0;
     --tm-line-strong: #d5dce6;
@@ -40,8 +41,6 @@ html[data-theme="dark"] {
     --tm-ink: var(--dk-text, #e6ebf2);
     --tm-dim: var(--dk-text-dim, #a9b4c4);
     --tm-card: var(--dk-surface, #151b25);
-    --tm-head: var(--dk-surface-3, #232d3d);
-    --tm-head-ink: var(--dk-text-dim, #a9b4c4);
     --tm-zebra: #1b212b;
     --tm-line: var(--dk-border, #2a3547);
     --tm-line-strong: var(--dk-border-2, #36445a);
@@ -73,11 +72,11 @@ html:root body table.table > thead > tr > th,
 html:root body table.dataTable > tfoot > tr > th {
     position: relative;
     padding: 12px 30px 12px 14px !important;
-    background: var(--tm-head) !important;
-    background-image: none !important;
+    background: var(--tm-head-bg) !important;
     color: var(--tm-head-ink) !important;
+    text-shadow: none !important;
     border: 0 !important;
-    border-bottom: 1px solid var(--tm-line-strong) !important;
+    border-bottom: 1px solid rgba(0, 0, 0, .14) !important;
     font-size: 12px;
     font-weight: 700 !important;
     line-height: 1.3 !important;
@@ -89,12 +88,15 @@ html:root body table.dataTable > tfoot > tr > th {
     transition: background-color .15s ease, color .15s ease;
 }
 
-html:root body table.dataTable > tfoot > tr > th { border-top: 1px solid var(--tm-line-strong) !important; border-bottom: 0 !important; }
+html:root body table.dataTable > tfoot > tr > th { border-top: 1px solid rgba(0, 0, 0, .14) !important; border-bottom: 0 !important; }
 
 html:root body table.dataTable > thead > tr > th:hover,
+html:root body table.dataTable > thead > tr > th.sorting:hover,
+html:root body table.dataTable > thead > tr > th.sorting_asc:hover,
+html:root body table.dataTable > thead > tr > th.sorting_desc:hover,
 html:root body table.table > thead > tr > th:hover {
-    background: var(--tm-hover) !important;
-    color: var(--tm-ink) !important;
+    background: var(--tm-head-shade), var(--tm-head-bg) !important;
+    color: var(--tm-head-ink) !important;
 }
 
 /* rounded corners on the corner cells (table itself is not clipped, so sticky headers keep working) */
@@ -123,8 +125,8 @@ html:root body table.dataTable > thead > tr > th.sorting_desc:after {
     display: block;
     font-size: 9px !important;
     line-height: 9px !important;
-    color: var(--tm-dim) !important;
-    opacity: .38 !important;
+    color: var(--tm-head-ink) !important;
+    opacity: .45 !important;
     top: auto;
     transform: none !important;
     margin: 0 !important;
@@ -139,14 +141,14 @@ html:root body table.dataTable > thead > tr > th.sorting_asc:after,
 html:root body table.dataTable > thead > tr > th.sorting_desc:after { content: "\25BC" !important; top: 50% !important; }
 
 html:root body table.dataTable > thead > tr > th.sorting_asc:before,
-html:root body table.dataTable > thead > tr > th.sorting_desc:after { opacity: 1 !important; color: var(--tm-accent) !important; }
+html:root body table.dataTable > thead > tr > th.sorting_desc:after { opacity: 1 !important; color: var(--tm-head-ink) !important; }
 
-/* the sorted column gets an accent underline instead of the old solid orange header */
+/* the sorted column is one shade darker, with an underline */
 html:root body table.dataTable > thead > tr > th.sorting_asc,
 html:root body table.dataTable > thead > tr > th.sorting_desc {
-    background: var(--tm-head) !important;
-    color: var(--tm-ink) !important;
-    box-shadow: inset 0 -2px 0 var(--tm-accent);
+    background: var(--tm-head-shade), var(--tm-head-bg) !important;
+    color: var(--tm-head-ink) !important;
+    box-shadow: inset 0 -3px 0 var(--tm-head-ink);
 }
 
 /* ---------- body cells ---------- */
