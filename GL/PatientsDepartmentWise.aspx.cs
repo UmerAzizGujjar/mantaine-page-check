@@ -3597,6 +3597,18 @@ namespace PMS
                     lbItemCategory.Visible = false;
                     lblItemCode.Visible = false;
                     txtItemCode.Visible = false;
+
+                    trSearch1.Visible = true;
+                    DataBaseDataContext db = new DataBaseDataContext(DBClass.ConnectionString());
+                    var serviceList = (from sl in db.INV_Items
+                                       where sl.Active == true
+                                       select new { sl.Item_ID, sl.Description }).ToList();
+
+                    ddlItemName.DataSource = serviceList;
+                    ddlItemName.DataValueField = "Item_ID";
+                    ddlItemName.DataTextField = "Description";
+                    ddlItemName.Items.Add(new ListItem() { Text = "All", Value = "0" });
+                    ddlItemName.DataBind();
                 }
                 else if (this.PageTitle == "VPDR")
                 {

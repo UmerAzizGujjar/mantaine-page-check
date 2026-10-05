@@ -2939,6 +2939,7 @@ namespace PMS
                 rd.SetParameterValue("Title", reportTitle);
                 rd.SetParameterValue("@StartDate", Convert.ToDateTime(Request.QueryString["sDate"]));
                 rd.SetParameterValue("@EndDate", Convert.ToDateTime(Request.QueryString["eDate"]));
+                rd.SetParameterValue("@itemId", (Request.QueryString["ItemID"] ?? "0").ToString());
                 rd.SetParameterValue("CompanyLogo", logoPath);
 
             }
