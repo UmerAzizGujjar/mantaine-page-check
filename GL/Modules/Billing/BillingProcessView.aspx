@@ -1282,10 +1282,10 @@
                         <th>Bill Date</th>
                         <th>MR No</th>
                         <th>Name</th>
-                        <th>Main Department</th>
+                        <th>Main Dept</th>
                         <th>Total Amount</th>
-                        <th>Discount Percentage</th>
-                        <th>Discount Amount</th>
+                        <th>Disc %</th>
+                        <th>Disc Amount</th>
                         <th>Net Amount</th>
                         <th>Received Amount</th>
                         <th>Balance Amount</th>
