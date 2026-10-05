@@ -384,6 +384,7 @@
     <Content Include="Modules\Dashboards\OPD_Utilization_Dashboard.aspx" />
     <Content Include="Modules\Dashboards\Inventory_ProcurementDashboard.aspx" />
     <Content Include="Modules\Dashboards\Inventory_Dashboard.aspx" />
+    <Content Include="Modules\Dashboards\PR_PO_IGP_Dashboard.aspx" />
     <Content Include="Modules\Dashboards\LabSection.aspx" />
     <Content Include="Modules\Dashboards\NewEMR.aspx" />
     <Content Include="Modules\Dashboards\PatientsTurnOver.aspx" />
@@ -3487,6 +3488,13 @@
     </Compile>
     <Compile Include="Modules\Dashboards\Inventory_Dashboard.aspx.designer.cs">
       <DependentUpon>Inventory_Dashboard.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="Modules\Dashboards\PR_PO_IGP_Dashboard.aspx.cs">
+      <DependentUpon>PR_PO_IGP_Dashboard.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Modules\Dashboards\PR_PO_IGP_Dashboard.aspx.designer.cs">
+      <DependentUpon>PR_PO_IGP_Dashboard.aspx</DependentUpon>
     </Compile>
     <Compile Include="Modules\Dashboards\LabSection.aspx.cs">
       <DependentUpon>LabSection.aspx</DependentUpon>

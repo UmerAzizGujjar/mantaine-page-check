@@ -1,0 +1,1879 @@
+- generic [ref=f3e2]:
+  - generic [ref=f3e3]:
+    - generic [ref=f3e6]:
+      - link "Test" [ref=f3e8] [cursor=pointer]:
+        - /url: ShortCuts.aspx
+      - generic [ref=f3e10]: Test
+      - navigation [ref=f3e14]:
+        - list [ref=f3e15]:
+          - listitem [ref=f3e16]:
+            - link " 374" [ref=f3e17] [cursor=pointer]:
+              - /url: "#"
+              - generic [ref=f3e18]: 
+              - generic [ref=f3e19]: "374"
+            - text:   
+      - generic [ref=f3e22]:
+        - button "Switch to dark mode" [ref=f3e23] [cursor=pointer]:
+          - generic [aria-hidden] [ref=f3e24]: 
+          - text: 
+        - generic [ref=f3e26]:
+          - button " ADMINISTRATOR " [ref=f3e27] [cursor=pointer]:
+            - generic [ref=f3e28]: 
+            - generic [ref=f3e29]: ADMINISTRATOR
+            - generic [ref=f3e30]: 
+          - text:  
+    - generic [ref=f3e31]:
+      - list [ref=f3e33]:
+        - listitem [ref=f3e34]:
+          - link "Dashboard" [ref=f3e35] [cursor=pointer]:
+            - /url: /Modules/Dashboards/ShortCuts.aspx
+            - text:  Dashboard
+          - list [ref=f3e36]:
+            - listitem [ref=f3e37]:
+              - link "ShortCuts" [ref=f3e38] [cursor=pointer]:
+                - /url: /Modules/Dashboards/ShortCuts.aspx
+            - listitem [ref=f3e39]:
+              - link "MainDashboard" [ref=f3e40] [cursor=pointer]:
+                - /url: /Modules/Dashboards/MainDashboard.aspx
+            - listitem [ref=f3e41]:
+              - link "CONSULTANT WISE STATISTICS" [ref=f3e42] [cursor=pointer]:
+                - /url: /Modules/Dashboards/CONSULTANT_WISE_STATISTICS.aspx
+            - listitem [ref=f3e43]:
+              - link "DEPARTMENT WISE STATISTICS" [ref=f3e44] [cursor=pointer]:
+                - /url: /Modules/Dashboards/DEPARTMENT_WISE_STATISTICS.aspx
+            - listitem [ref=f3e45]:
+              - link "EMR" [ref=f3e46] [cursor=pointer]:
+                - /url: /Modules/Dashboards/EMR.aspx
+            - listitem [ref=f3e47]:
+              - link "OPD Patients & Turn Over" [ref=f3e48] [cursor=pointer]:
+                - /url: /Modules/Dashboards/DashPatientsCount.aspx
+            - listitem [ref=f3e49]:
+              - link "Electronic Medical Record" [ref=f3e50] [cursor=pointer]:
+                - /url: /Modules/Dashboards/NewEMR.aspx
+            - listitem [ref=f3e51]:
+              - link "Pharmacy Sales Dashboard" [ref=f3e52] [cursor=pointer]:
+                - /url: /Modules/Dashboards/Sales_Dashboard.aspx
+            - listitem [ref=f3e53]:
+              - link "Procurement Dashboard" [ref=f3e54] [cursor=pointer]:
+                - /url: /Modules/Dashboards/Inventory_Dashboard.aspx
+            - listitem [ref=f3e55]:
+              - link "Inventory&Procurement" [ref=f3e56] [cursor=pointer]:
+                - /url: /Modules/Dashboards/Inventory_ProcurementDashboard.aspx
+            - listitem [ref=f3e57]:
+              - link "Annexure Dashboard" [ref=f3e58] [cursor=pointer]:
+                - /url: /Modules/Dashboards/AnnexureDashboard.aspx
+            - listitem [ref=f3e59]:
+              - link "Chief Executive Dashboard" [ref=f3e60] [cursor=pointer]:
+                - /url: /Modules/Dashboards/Chief_Executive_Dashboard.aspx
+            - listitem [ref=f3e61]:
+              - link "Admin Dashboard" [ref=f3e62] [cursor=pointer]:
+                - /url: /Modules/Administrator/AdminDashboard.aspx
+            - listitem [ref=f3e63]:
+              - link "PR to PO to IGP Dashboard" [ref=f3e64] [cursor=pointer]:
+                - /url: /Modules/Dashboards/PR_PO_IGP_Dashboard.aspx
+        - listitem [ref=f3e65]:
+          - link "Patient Management" [ref=f3e66] [cursor=pointer]:
+            - /url: /Modules/Dashboards/ShortCuts.aspx
+            - text:  Patient Management
+          - list [ref=f3e67]:
+            - listitem [ref=f3e68]:
+              - link " Patient Reg." [ref=f3e69] [cursor=pointer]:
+                - /url: /Modules/Dashboards/ShortCuts.aspx
+                - generic [ref=f3e70]: 
+                - text: Patient Reg.
+              - list [ref=f3e71]:
+                - listitem [ref=f3e72]:
+                  - link "Register Patient" [ref=f3e73] [cursor=pointer]:
+                    - /url: /Modules/PatientManagement/RegisterPatient.aspx
+                - listitem [ref=f3e74]:
+                  - link "Registration List" [ref=f3e75] [cursor=pointer]:
+                    - /url: /Modules/PatientManagement/RegList.aspx
+                - listitem [ref=f3e76]:
+                  - link "Token List" [ref=f3e77] [cursor=pointer]:
+                    - /url: /Modules/Administrator/TokenListWithOutSiteMaster.aspx
+                - listitem [ref=f3e78]:
+                  - link "Token List Assirat" [ref=f3e79] [cursor=pointer]:
+                    - /url: /Modules/Administrator/Token_List.aspx
+            - listitem [ref=f3e80]:
+              - link " Appointment" [ref=f3e81] [cursor=pointer]:
+                - /url: /Modules/Dashboards/ShortCuts.aspx
+                - generic [ref=f3e82]: 
+                - text: Appointment
+              - list [ref=f3e83]:
+                - listitem [ref=f3e84]:
+                  - link "Add New Appointment" [ref=f3e85] [cursor=pointer]:
+                    - /url: /Modules/Appointment/Appointment.aspx
+                - listitem [ref=f3e86]:
+                  - link "Appointment List" [ref=f3e87] [cursor=pointer]:
+                    - /url: /Modules/Appointment/AppointmentView.aspx
+                - listitem [ref=f3e88]:
+                  - link "Doctor Appoitnment" [ref=f3e89] [cursor=pointer]:
+                    - /url: /Modules/Appointment/DoctorAppointment.aspx
+            - listitem [ref=f3e90]:
+              - link " OPD" [ref=f3e91] [cursor=pointer]:
+                - /url: /Modules/Dashboards/default
+                - generic [ref=f3e92]: 
+                - text: OPD
+              - list [ref=f3e93]:
+                - listitem [ref=f3e94]:
+                  - link " OPD" [ref=f3e95] [cursor=pointer]:
+                    - /url: /Modules/Dashboards/ShortCuts.aspx
+                    - generic [ref=f3e96]: 
+                    - text: OPD
+                  - list [ref=f3e97]:
+                    - listitem [ref=f3e98]:
+                      - link "OPD" [ref=f3e99] [cursor=pointer]:
+                        - /url: /Modules/PatientManagement/OPD.aspx
+                    - listitem [ref=f3e100]:
+                      - link "OPD View" [ref=f3e101] [cursor=pointer]:
+                        - /url: /Modules/PatientManagement/OPDView.aspx
+                    - listitem [ref=f3e102]:
+                      - link "OPD Approval" [ref=f3e103] [cursor=pointer]:
+                        - /url: /Modules/PatientManagement/OPDApproval.aspx
+                - listitem [ref=f3e104]:
+                  - link " Out Patients" [ref=f3e105] [cursor=pointer]:
+                    - /url: /Modules/Dashboards/ShortCuts.aspx
+                    - generic [ref=f3e106]: 
+                    - text: Out Patients
+                  - list [ref=f3e107]:
+                    - listitem [ref=f3e108]:
+                      - link "OPD Prescription" [ref=f3e109] [cursor=pointer]:
+                        - /url: /Modules/PatientManagement/NewOutPatient.aspx
+                    - listitem [ref=f3e110]:
+                      - link "Out Patients List" [ref=f3e111] [cursor=pointer]:
+                        - /url: /Modules/PatientManagement/OutPatientsView.aspx
+                    - listitem [ref=f3e112]:
+                      - link "OPD Discharge List" [ref=f3e113] [cursor=pointer]:
+                        - /url: /Modules/PatientManagement/OPDDischarge.aspx
+                - listitem [ref=f3e114]:
+                  - link "Define Policy" [ref=f3e115] [cursor=pointer]:
+                    - /url: /Modules/PatientManagement/OPDPolicy.aspx
+                - listitem [ref=f3e116]:
+                  - link " OPD Refund" [ref=f3e117] [cursor=pointer]:
+                    - /url: /Modules/Dashboards/ShortCuts.aspx
+                    - generic [ref=f3e118]: 
+                    - text: OPD Refund
+                  - list [ref=f3e119]:
+                    - listitem [ref=f3e120]:
+                      - link "Add OPD Refund" [ref=f3e121] [cursor=pointer]:
+                        - /url: /Modules/PatientManagement/OPD_Refund.aspx
+                    - listitem [ref=f3e122]:
+                      - link "OPD Refund List" [ref=f3e123] [cursor=pointer]:
+                        - /url: /Modules/PatientManagement/OPD_Refund_List.aspx
+            - listitem [ref=f3e124]:
+              - link " Accident & Emergency Case" [ref=f3e125] [cursor=pointer]:
+                - /url: /Modules/Dashboards/ShortCuts.aspx
+                - generic [ref=f3e126]: 
+                - text: Accident & Emergency Case
+              - list [ref=f3e127]:
+                - listitem [ref=f3e128]:
+                  - link " Emergency Form" [ref=f3e129] [cursor=pointer]:
+                    - /url: /Modules/Dashboards/ShortCuts.aspx
+                    - generic [ref=f3e130]: 
+                    - text: Emergency Form
+                  - list [ref=f3e131]:
+                    - listitem [ref=f3e132]:
+                      - link "Add Emergency Patient" [ref=f3e133] [cursor=pointer]:
+                        - /url: /Modules/PatientManagement/EmergencyForm.aspx
+                    - listitem [ref=f3e134]:
+                      - link "Emergency Form View" [ref=f3e135] [cursor=pointer]:
+                        - /url: /Modules/PatientManagement/Emergency_View.aspx
+                - listitem [ref=f3e136]:
+                  - link " Emergency Admission" [ref=f3e137] [cursor=pointer]:
+                    - /url: /Modules/Dashboards/ShortCuts.aspx
+                    - generic [ref=f3e138]: 
+                    - text: Emergency Admission
+                  - list [ref=f3e139]:
+                    - listitem [ref=f3e140]:
+                      - link "Emergency Admission" [ref=f3e141] [cursor=pointer]:
+                        - /url: /Modules/PatientManagement/EmergencyAdmission.aspx
+                    - listitem [ref=f3e142]:
+                      - link "Emergency Admission View" [ref=f3e143] [cursor=pointer]:
+                        - /url: /Modules/PatientManagement/Emergency_Admission_View.aspx
+                - listitem [ref=f3e144]:
+                  - link " Emergency Prescription" [ref=f3e145] [cursor=pointer]:
+                    - /url: /Modules/Dashboards/ShortCuts.aspx
+                    - generic [ref=f3e146]: 
+                    - text: Emergency Prescription
+                  - list [ref=f3e147]:
+                    - listitem [ref=f3e148]:
+                      - link "Add Accident & Emergency Case" [ref=f3e149] [cursor=pointer]:
+                        - /url: /Modules/PatientManagement/EmergencyCase.aspx
+                    - listitem [ref=f3e150]:
+                      - link "Accident & Emergency Case List" [ref=f3e151] [cursor=pointer]:
+                        - /url: /Modules/PatientManagement/EmergencyCaseView.aspx
+                - listitem [ref=f3e152]:
+                  - link " Emergency Refund" [ref=f3e153] [cursor=pointer]:
+                    - /url: /Modules/Dashboards/ShortCuts.aspx
+                    - generic [ref=f3e154]: 
+                    - text: Emergency Refund
+                  - list [ref=f3e155]:
+                    - listitem [ref=f3e156]:
+                      - link "Add Emergency Refund" [ref=f3e157] [cursor=pointer]:
+                        - /url: /Modules/PatientManagement/EmergencyRefund.aspx
+                    - listitem [ref=f3e158]:
+                      - link "Emergency Refund View" [ref=f3e159] [cursor=pointer]:
+                        - /url: /Modules/PatientManagement/ERRefundView.aspx
+            - listitem [ref=f3e160]:
+              - link " In-Patient Case" [ref=f3e161] [cursor=pointer]:
+                - /url: /Modules/Dashboards/ShortCuts.aspx
+                - generic [ref=f3e162]: 
+                - text: In-Patient Case
+              - list [ref=f3e163]:
+                - listitem [ref=f3e164]:
+                  - link "In-Patients Admission" [ref=f3e165] [cursor=pointer]:
+                    - /url: /Modules/PatientManagement/InPatientsAdmission.aspx
+                - listitem [ref=f3e166]:
+                  - link "In-Patients Admission List" [ref=f3e167] [cursor=pointer]:
+                    - /url: /Modules/PatientManagement/InPatientsAdmissionList.aspx
+                - listitem [ref=f3e168]:
+                  - link "Create In-Patient Case" [ref=f3e169] [cursor=pointer]:
+                    - /url: /Modules/PatientManagement/InPatientsCase.aspx
+                - listitem [ref=f3e170]:
+                  - link "In Patient List" [ref=f3e171] [cursor=pointer]:
+                    - /url: /Modules/PatientManagement/InPatientView.aspx
+                - listitem [ref=f3e172]:
+                  - link "Create In-Patient Monitoring" [ref=f3e173] [cursor=pointer]:
+                    - /url: /Modules/PatientManagement/InPatientMonitoring.aspx
+                - listitem [ref=f3e174]:
+                  - link "InPatient Monitoring List" [ref=f3e175] [cursor=pointer]:
+                    - /url: /Modules/PatientManagement/InPatientMonitoringList.aspx
+                - listitem [ref=f3e176]:
+                  - link "In-Patients Discharge" [ref=f3e177] [cursor=pointer]:
+                    - /url: /Modules/PatientManagement/InPatientsDischarge.aspx
+                - listitem [ref=f3e178]:
+                  - link "In-Patients Discharge List" [ref=f3e179] [cursor=pointer]:
+                    - /url: /Modules/PatientManagement/InPatientsDischargeList.aspx
+            - listitem [ref=f3e180]:
+              - link " Billing" [ref=f3e181] [cursor=pointer]:
+                - /url: /Modules/Dashboards/ShortCuts.aspx
+                - generic [ref=f3e182]: 
+                - text: Billing
+              - list [ref=f3e183]:
+                - listitem [ref=f3e184]:
+                  - link " Billing Process" [ref=f3e185] [cursor=pointer]:
+                    - /url: /Modules/Dashboards/ShortCuts.aspx
+                    - generic [ref=f3e186]: 
+                    - text: Billing Process
+                  - list [ref=f3e187]:
+                    - listitem [ref=f3e188]:
+                      - link "Add New Bill" [ref=f3e189] [cursor=pointer]:
+                        - /url: /Modules/Billing/BillingProcess.aspx
+                    - listitem [ref=f3e190]:
+                      - link "Bills List" [ref=f3e191] [cursor=pointer]:
+                        - /url: /Modules/Billing/BillingProcessView.aspx
+                    - listitem [ref=f3e192]:
+                      - link "Add New Advance" [ref=f3e193] [cursor=pointer]:
+                        - /url: /Modules/Billing/AddNewAdvance.aspx
+                    - listitem [ref=f3e194]:
+                      - link "Bill Approval" [ref=f3e195] [cursor=pointer]:
+                        - /url: /Modules/Billing/BillApproval.aspx
+                    - listitem [ref=f3e196]:
+                      - link "Advance List" [ref=f3e197] [cursor=pointer]:
+                        - /url: /Modules/Billing/AdvanceList.aspx
+                    - listitem [ref=f3e198]:
+                      - link "FBR Bills" [ref=f3e199] [cursor=pointer]:
+                        - /url: /Modules/Billing/FBRBillingView.aspx
+                - listitem [ref=f3e200]:
+                  - link " Receipts" [ref=f3e201] [cursor=pointer]:
+                    - /url: /Modules/Dashboards/ShortCuts.aspx
+                    - generic [ref=f3e202]: 
+                    - text: Receipts
+                  - list [ref=f3e203]:
+                    - listitem [ref=f3e204]:
+                      - link "Add Receipts" [ref=f3e205] [cursor=pointer]:
+                        - /url: /Modules/Billing/Receipts.aspx
+                    - listitem [ref=f3e206]:
+                      - link "View Receipts" [ref=f3e207] [cursor=pointer]:
+                        - /url: /Modules/Billing/ReceiptsView.aspx
+                - listitem [ref=f3e208]:
+                  - link " Refund" [ref=f3e209] [cursor=pointer]:
+                    - /url: /Modules/Dashboards/ShortCuts.aspx
+                    - generic [ref=f3e210]: 
+                    - text: Refund
+                  - list [ref=f3e211]:
+                    - listitem [ref=f3e212]:
+                      - link "Add New Refund" [ref=f3e213] [cursor=pointer]:
+                        - /url: /Modules/Billing/Refund.aspx
+                    - listitem [ref=f3e214]:
+                      - link "Refund List" [ref=f3e215] [cursor=pointer]:
+                        - /url: /Modules/Billing/RefundList.aspx
+                - listitem [ref=f3e216]:
+                  - link "Radiology Waiting List" [ref=f3e217] [cursor=pointer]:
+                    - /url: /Modules/Lab/WaitingList.aspx
+                - listitem [ref=f3e218]:
+                  - link " Discount Assignment Form" [ref=f3e219] [cursor=pointer]:
+                    - /url: /Modules/Dashboards/ShortCuts.aspx
+                    - generic [ref=f3e220]: 
+                    - text: Discount Assignment Form
+                  - list [ref=f3e221]:
+                    - listitem [ref=f3e222]:
+                      - link "Add Discount" [ref=f3e223] [cursor=pointer]:
+                        - /url: /Modules/Billing/DiscountAssigned.aspx
+                    - listitem [ref=f3e224]:
+                      - link "Discount Assign View" [ref=f3e225] [cursor=pointer]:
+                        - /url: /Modules/Billing/DiscountAssignedList.aspx
+            - listitem [ref=f3e226]:
+              - link " Dialysis" [ref=f3e227] [cursor=pointer]:
+                - /url: /Modules/Dashboards/ShortCuts.aspx
+                - generic [ref=f3e228]: 
+                - text: Dialysis
+              - list [ref=f3e229]:
+                - listitem [ref=f3e230]:
+                  - link "Add Dialysis" [ref=f3e231] [cursor=pointer]:
+                    - /url: /Modules/PatientManagement/DialysisForm.aspx
+                - listitem [ref=f3e232]:
+                  - link "Dialysis View" [ref=f3e233] [cursor=pointer]:
+                    - /url: /Modules/PatientManagement/DialysisView.aspx
+            - listitem [ref=f3e234]:
+              - link " Pharmacy" [ref=f3e235] [cursor=pointer]:
+                - /url: /Modules/Dashboards/ShortCuts.aspx
+                - generic [ref=f3e236]: 
+                - text: Pharmacy
+              - list [ref=f3e237]:
+                - listitem [ref=f3e238]:
+                  - link "Pharmacy Sale Invoice" [ref=f3e239] [cursor=pointer]:
+                    - /url: /Modules/Billing/IssueMedicine.aspx
+                - listitem [ref=f3e240]:
+                  - link "Issue Medicine List" [ref=f3e241] [cursor=pointer]:
+                    - /url: /Modules/Billing/IssueMedicineList.aspx
+                - listitem [ref=f3e242]:
+                  - link "Add New User" [ref=f3e243] [cursor=pointer]:
+                    - /url: /Modules/Administrator/Pharmacy_Users.aspx
+                - listitem [ref=f3e244]:
+                  - link "Sale Return List" [ref=f3e245] [cursor=pointer]:
+                    - /url: /Modules/Billing/SaleReturnList.aspx
+                - listitem [ref=f3e246]:
+                  - link "User View" [ref=f3e247] [cursor=pointer]:
+                    - /url: /Modules/Administrator/Pharmacy_UserView.aspx
+                - listitem [ref=f3e248]:
+                  - link "Pharmacy Items List" [ref=f3e249] [cursor=pointer]:
+                    - /url: /Modules/Billing/PharmacyItemsView.aspx
+                - listitem [ref=f3e250]:
+                  - link "Medicine History" [ref=f3e251] [cursor=pointer]:
+                    - /url: /Modules/Billing/Medicine_History.aspx
+                - listitem [ref=f3e252]:
+                  - link "IPD Medicine History" [ref=f3e253] [cursor=pointer]:
+                    - /url: /Modules/Billing/IPDMedicineHistory.aspx
+            - listitem [ref=f3e254]:
+              - link " Cath Lab" [ref=f3e255] [cursor=pointer]:
+                - /url: /Modules/Dashboards/ShortCuts.aspx
+                - generic [ref=f3e256]: 
+                - text: Cath Lab
+              - list [ref=f3e257]:
+                - listitem [ref=f3e258]:
+                  - link "Cath Lab Sale" [ref=f3e259] [cursor=pointer]:
+                    - /url: /Modules/Billing/IssueCathLabItems.aspx
+                - listitem [ref=f3e260]:
+                  - link "Cath Lab Sale View" [ref=f3e261] [cursor=pointer]:
+                    - /url: /Modules/Billing/IssueCathLabItemsView.aspx
+            - listitem [ref=f3e262]:
+              - link " Birth Certificate" [ref=f3e263] [cursor=pointer]:
+                - /url: /Modules/Dashboards/ShortCuts.aspx
+                - generic [ref=f3e264]: 
+                - text: Birth Certificate
+              - list [ref=f3e265]:
+                - listitem [ref=f3e266]:
+                  - link "Add Birth Certificate" [ref=f3e267] [cursor=pointer]:
+                    - /url: /Modules/PatientManagement/Birthcertificate.aspx
+                - listitem [ref=f3e268]:
+                  - link "Birth Certificate View" [ref=f3e269] [cursor=pointer]:
+                    - /url: /Modules/PatientManagement/BirthCertificateView.aspx
+            - listitem [ref=f3e270]:
+              - link " Room" [ref=f3e271] [cursor=pointer]:
+                - /url: /Modules/Dashboards/ShortCuts.aspx
+                - generic [ref=f3e272]: 
+                - text: Room
+              - list [ref=f3e273]:
+                - listitem [ref=f3e274]:
+                  - link " Room Definition" [ref=f3e275] [cursor=pointer]:
+                    - /url: /Modules/Dashboards/ShortCuts.aspx
+                    - generic [ref=f3e276]: 
+                    - text: Room Definition
+                  - list [ref=f3e277]:
+                    - listitem [ref=f3e278]:
+                      - link "Rooms List" [ref=f3e279] [cursor=pointer]:
+                        - /url: /Modules/WardAndRooms/RoomView.aspx
+                    - listitem [ref=f3e280]:
+                      - link "Add New Room" [ref=f3e281] [cursor=pointer]:
+                        - /url: /Modules/WardAndRooms/Room.aspx
+        - listitem [ref=f3e282]:
+          - link "Lab/Radiology" [ref=f3e283] [cursor=pointer]:
+            - /url: /Modules/Dashboards/ShortCuts.aspx
+            - text:  Lab/Radiology
+          - list [ref=f3e284]:
+            - listitem [ref=f3e285]:
+              - link " Test Definition" [ref=f3e286] [cursor=pointer]:
+                - /url: /Modules/Dashboards/ShortCuts.aspx
+                - generic [ref=f3e287]: 
+                - text: Test Definition
+              - list [ref=f3e288]:
+                - listitem [ref=f3e289]:
+                  - link "Add Test Definition" [ref=f3e290] [cursor=pointer]:
+                    - /url: /Modules/Lab/TestDefination.aspx
+                - listitem [ref=f3e291]:
+                  - link "Test Definition List" [ref=f3e292] [cursor=pointer]:
+                    - /url: /Modules/Lab/TestDefinationList.aspx
+                - listitem [ref=f3e293]:
+                  - link " Group Tests" [ref=f3e294] [cursor=pointer]:
+                    - /url: /Modules/Dashboards/ShortCuts.aspx
+                    - generic [ref=f3e295]: 
+                    - text: Group Tests
+                  - list [ref=f3e296]:
+                    - listitem [ref=f3e297]:
+                      - link "Add Group Test" [ref=f3e298] [cursor=pointer]:
+                        - /url: /Modules/Lab/GroupTestDefinition.aspx
+                    - listitem [ref=f3e299]:
+                      - link "Group Test List" [ref=f3e300] [cursor=pointer]:
+                        - /url: /Modules/Lab/GroupTestList.aspx
+            - listitem [ref=f3e301]:
+              - link " Laboratory Test" [ref=f3e302] [cursor=pointer]:
+                - /url: /Modules/Dashboards/ShortCuts.aspx
+                - generic [ref=f3e303]: 
+                - text: Laboratory Test
+              - list [ref=f3e304]:
+                - listitem [ref=f3e305]:
+                  - link "Add New Sample" [ref=f3e306] [cursor=pointer]:
+                    - /url: /Modules/Lab/SampleCollectionFrom.aspx
+                - listitem [ref=f3e307]:
+                  - link "Samples List" [ref=f3e308] [cursor=pointer]:
+                    - /url: /Modules/Lab/TransactionView.aspx?Tag=SampleView
+                - listitem [ref=f3e309]:
+                  - link "Add New Lab Test" [ref=f3e310] [cursor=pointer]:
+                    - /url: /Modules/Lab/LaboratoryTest.aspx
+                - listitem [ref=f3e311]:
+                  - link "Laboratory Test List" [ref=f3e312] [cursor=pointer]:
+                    - /url: /Modules/Lab/LaboratoryTestView.aspx
+                - listitem [ref=f3e313]:
+                  - link "Add Report" [ref=f3e314] [cursor=pointer]:
+                    - /url: /Modules/Lab/LabReportPreview.aspx
+                - listitem [ref=f3e315]:
+                  - link "Add Report Preview" [ref=f3e316] [cursor=pointer]:
+                    - /url: /Modules/Lab/LabTestResult.aspx
+                - listitem [ref=f3e317]:
+                  - link " Lab Header Footer" [ref=f3e318] [cursor=pointer]:
+                    - /url: /Modules/Dashboards/ShortCuts.aspx
+                    - generic [ref=f3e319]: 
+                    - text: Lab Header Footer
+                  - list [ref=f3e320]:
+                    - listitem [ref=f3e321]:
+                      - link "Test Approval" [ref=f3e322] [cursor=pointer]:
+                        - /url: /Modules/Administrator/TestApproval.aspx
+                    - listitem [ref=f3e323]:
+                      - link "Report Footer" [ref=f3e324] [cursor=pointer]:
+                        - /url: /Modules/Lab/ReportFooter.aspx
+                    - listitem [ref=f3e325]:
+                      - link "Ultrasound Footer" [ref=f3e326] [cursor=pointer]:
+                        - /url: /Modules/Lab/UltrasoundFooter.aspx
+                    - listitem [ref=f3e327]:
+                      - link "UltraSound Footer List" [ref=f3e328] [cursor=pointer]:
+                        - /url: /Modules/Lab/UltraSoundfooterList.aspx
+            - listitem [ref=f3e329]:
+              - link "Radiology Acknowledgment" [ref=f3e330] [cursor=pointer]:
+                - /url: /RadiologyAcknolgment.aspx
+            - listitem [ref=f3e331]:
+              - link "Radiology Test Result" [ref=f3e332] [cursor=pointer]:
+                - /url: /Modules/Lab/RadiologyTestResult.aspx
+            - listitem [ref=f3e333]:
+              - link "Approve Test" [ref=f3e334] [cursor=pointer]:
+                - /url: /Modules/lab/ApproveTest.aspx
+            - listitem [ref=f3e335]:
+              - link "PACS" [ref=f3e336] [cursor=pointer]:
+                - /url: /Modules/Lab/RadiologyResultsPreview.aspx
+        - listitem [ref=f3e337]:
+          - link "Inventory" [ref=f3e338] [cursor=pointer]:
+            - /url: /Modules/Dashboards/ShortCuts.aspx
+            - text:  Inventory
+          - list [ref=f3e339]:
+            - listitem [ref=f3e340]:
+              - link " Inv Items" [ref=f3e341] [cursor=pointer]:
+                - /url: /Modules/Dashboards/ShortCuts.aspx
+                - generic [ref=f3e342]: 
+                - text: Inv Items
+              - list [ref=f3e343]:
+                - listitem [ref=f3e344]:
+                  - link "Add New" [ref=f3e345] [cursor=pointer]:
+                    - /url: /Modules/Inventory/Product.aspx
+                - listitem [ref=f3e346]:
+                  - link "Items View" [ref=f3e347] [cursor=pointer]:
+                    - /url: /Modules/Inventory/ProductsView.aspx
+                - listitem [ref=f3e348]:
+                  - link "Add Service" [ref=f3e349] [cursor=pointer]:
+                    - /url: /Modules/Inventory/Service.aspx
+                - listitem [ref=f3e350]:
+                  - link "Service View" [ref=f3e351] [cursor=pointer]:
+                    - /url: /Modules/Inventory/ServiceView.aspx
+            - listitem [ref=f3e352]:
+              - link " Inventory" [ref=f3e353] [cursor=pointer]:
+                - /url: /Modules/Dashboards/ShortCuts.aspx
+                - generic [ref=f3e354]: 
+                - text: Inventory
+              - list [ref=f3e355]:
+                - listitem [ref=f3e356]:
+                  - link " IGP" [ref=f3e357] [cursor=pointer]:
+                    - /url: /Modules/Dashboards/ShortCuts.aspx
+                    - generic [ref=f3e358]: 
+                    - text: IGP
+                  - list [ref=f3e359]:
+                    - listitem [ref=f3e360]:
+                      - link "Add IGP" [ref=f3e361] [cursor=pointer]:
+                        - /url: /Modules/Inventory/InversionGatePass.aspx
+                    - listitem [ref=f3e362]:
+                      - link "IGP List" [ref=f3e363] [cursor=pointer]:
+                        - /url: /Modules/Inventory/InversionGatePassView.aspx
+                - listitem [ref=f3e364]:
+                  - link " GRN" [ref=f3e365] [cursor=pointer]:
+                    - /url: /Modules/Dashboards/ShortCuts.aspx
+                    - generic [ref=f3e366]: 
+                    - text: GRN
+                  - list [ref=f3e367]:
+                    - listitem [ref=f3e368]:
+                      - link "Add GRN" [ref=f3e369] [cursor=pointer]:
+                        - /url: /Modules/Inventory/GRN.aspx
+                    - listitem [ref=f3e370]:
+                      - link "GRN List" [ref=f3e371] [cursor=pointer]:
+                        - /url: /Modules/Inventory/GRNView.aspx
+                - listitem [ref=f3e372]:
+                  - link " Goods Issuance Request" [ref=f3e373] [cursor=pointer]:
+                    - /url: /Modules/Dashboards/ShortCuts.aspx
+                    - generic [ref=f3e374]: 
+                    - text: Goods Issuance Request
+                  - list [ref=f3e375]:
+                    - listitem [ref=f3e376]:
+                      - link "Add GIR" [ref=f3e377] [cursor=pointer]:
+                        - /url: /Modules/Inventory/GoodsIssuanceRequest.aspx
+                    - listitem [ref=f3e378]:
+                      - link "GIR View" [ref=f3e379] [cursor=pointer]:
+                        - /url: /Modules/Inventory/GoodsIssuanceRequestView.aspx
+                - listitem [ref=f3e380]:
+                  - link " Goods Issuance Note" [ref=f3e381] [cursor=pointer]:
+                    - /url: /Modules/Dashboards/ShortCuts.aspx
+                    - generic [ref=f3e382]: 
+                    - text: Goods Issuance Note
+                  - list [ref=f3e383]:
+                    - listitem [ref=f3e384]:
+                      - link "Add GIN" [ref=f3e385] [cursor=pointer]:
+                        - /url: /Modules/Inventory/GoodsIssuanceNote.aspx
+                    - listitem [ref=f3e386]:
+                      - link "GIN View" [ref=f3e387] [cursor=pointer]:
+                        - /url: /Modules/Inventory/GoodsIssuanceNoteView.aspx
+                - listitem [ref=f3e388]:
+                  - link " Stock Adjustment" [ref=f3e389] [cursor=pointer]:
+                    - /url: /Modules/Dashboards/ShortCuts.aspx
+                    - generic [ref=f3e390]: 
+                    - text: Stock Adjustment
+                  - list [ref=f3e391]:
+                    - listitem [ref=f3e392]:
+                      - link "Add Stock Adjustment" [ref=f3e393] [cursor=pointer]:
+                        - /url: /Modules/Inventory/StockAdjustment.aspx
+                    - listitem [ref=f3e394]:
+                      - link "Stock Adjustment View" [ref=f3e395] [cursor=pointer]:
+                        - /url: /Modules/Inventory/StockAdjustmentView.aspx
+                - listitem [ref=f3e396]:
+                  - link " Store Stock Transfer" [ref=f3e397] [cursor=pointer]:
+                    - /url: /Modules/Dashboards/ShortCuts.aspx
+                    - generic [ref=f3e398]: 
+                    - text: Store Stock Transfer
+                  - list [ref=f3e399]:
+                    - listitem [ref=f3e400]:
+                      - link "Add New" [ref=f3e401] [cursor=pointer]:
+                        - /url: /Modules/Inventory/StoreStockTransfer.aspx
+                    - listitem [ref=f3e402]:
+                      - link "Stock TransferView" [ref=f3e403] [cursor=pointer]:
+                        - /url: /Modules/Inventory/StoreStockTransferView.aspx
+            - listitem [ref=f3e404]:
+              - link " Asset Category" [ref=f3e405] [cursor=pointer]:
+                - /url: /Modules/Dashboards/ShortCuts.aspx
+                - generic [ref=f3e406]: 
+                - text: Asset Category
+              - list [ref=f3e407]:
+                - listitem [ref=f3e408]:
+                  - link "Add New Category" [ref=f3e409] [cursor=pointer]:
+                    - /url: /Modules/Administrator/AssetCategory.aspx
+            - listitem [ref=f3e410]:
+              - link " Item Selection" [ref=f3e411] [cursor=pointer]:
+                - /url: /Modules/Dashboards/ShortCuts.aspx
+                - generic [ref=f3e412]: 
+                - text: Item Selection
+              - list [ref=f3e413]:
+                - listitem [ref=f3e414]:
+                  - link "Add Item Selection" [ref=f3e415] [cursor=pointer]:
+                    - /url: /Modules/Inventory/ItemSelection.aspx
+                - listitem [ref=f3e416]:
+                  - link "Item Selection View" [ref=f3e417] [cursor=pointer]:
+                    - /url: /Modules/Inventory/ItemSelectionList.aspx
+        - listitem [ref=f3e418]:
+          - link "Purchase" [ref=f3e419] [cursor=pointer]:
+            - /url: /Modules/Dashboards/ShortCuts.aspx
+            - text:  Purchase
+          - list [ref=f3e420]:
+            - listitem [ref=f3e421]:
+              - link " Vendor Defination" [ref=f3e422] [cursor=pointer]:
+                - /url: /Modules/Dashboards/ShortCuts.aspx
+                - generic [ref=f3e423]: 
+                - text: Vendor Defination
+              - list [ref=f3e424]:
+                - listitem [ref=f3e425]:
+                  - link "Add Vendor" [ref=f3e426] [cursor=pointer]:
+                    - /url: /Modules/AP/Vendor.aspx
+                - listitem [ref=f3e427]:
+                  - link "Vendor View" [ref=f3e428] [cursor=pointer]:
+                    - /url: /Modules/AP/VendorView.aspx
+            - listitem [ref=f3e429]:
+              - link " Purchase" [ref=f3e430] [cursor=pointer]:
+                - /url: /Modules/Dashboards/ShortCuts.aspx
+                - generic [ref=f3e431]: 
+                - text: Purchase
+              - list [ref=f3e432]:
+                - listitem [ref=f3e433]:
+                  - link " Purchase Requistion" [ref=f3e434] [cursor=pointer]:
+                    - /url: /Modules/Dashboards/ShortCuts.aspx
+                    - generic [ref=f3e435]: 
+                    - text: Purchase Requistion
+                  - list [ref=f3e436]:
+                    - listitem [ref=f3e437]:
+                      - link "Add New" [ref=f3e438] [cursor=pointer]:
+                        - /url: /Modules/AP/PurchaseRequistion.aspx
+                    - listitem [ref=f3e439]:
+                      - link "Purchase Req View" [ref=f3e440] [cursor=pointer]:
+                        - /url: /Modules/AP/PurchaseRequistionView.aspx
+                - listitem [ref=f3e441]:
+                  - link " Purchase Order" [ref=f3e442] [cursor=pointer]:
+                    - /url: /Modules/Dashboards/ShortCuts.aspx
+                    - generic [ref=f3e443]: 
+                    - text: Purchase Order
+                  - list [ref=f3e444]:
+                    - listitem [ref=f3e445]:
+                      - link "Add New" [ref=f3e446] [cursor=pointer]:
+                        - /url: /Modules/AP/PurchaseOrder.aspx
+                    - listitem [ref=f3e447]:
+                      - link "Purchase Order View" [ref=f3e448] [cursor=pointer]:
+                        - /url: /Modules/AP/PurchaseOrderView.aspx
+                - listitem [ref=f3e449]:
+                  - link " Request For Quotation" [ref=f3e450] [cursor=pointer]:
+                    - /url: /Modules/Dashboards/ShortCuts.aspx
+                    - generic [ref=f3e451]: 
+                    - text: Request For Quotation
+                  - list [ref=f3e452]:
+                    - listitem [ref=f3e453]:
+                      - link "Add New" [ref=f3e454] [cursor=pointer]:
+                        - /url: /Modules/AP/RequestForQuotation.aspx
+                    - listitem [ref=f3e455]:
+                      - link "RequestForQuotation View" [ref=f3e456] [cursor=pointer]:
+                        - /url: /Modules/AP/RequestForQuotationView.aspx
+                - listitem [ref=f3e457]:
+                  - link " Comparative Statement" [ref=f3e458] [cursor=pointer]:
+                    - /url: /Modules/Dashboards/ShortCuts.aspx
+                    - generic [ref=f3e459]: 
+                    - text: Comparative Statement
+                  - list [ref=f3e460]:
+                    - listitem [ref=f3e461]:
+                      - link "Add New" [ref=f3e462] [cursor=pointer]:
+                        - /url: /Modules/AP/ComparativeStatementVendor.aspx
+                    - listitem [ref=f3e463]:
+                      - link "ComparativeStatement View" [ref=f3e464] [cursor=pointer]:
+                        - /url: /Modules/AP/ComparativeStatementVendorView.aspx
+        - listitem [ref=f3e465]:
+          - link "Accounts" [ref=f3e466] [cursor=pointer]:
+            - /url: /Modules/Dashboards/ShortCuts.aspx
+            - text:  Accounts
+          - list [ref=f3e467]:
+            - listitem [ref=f3e468]:
+              - link "Chart of Accounts" [ref=f3e469] [cursor=pointer]:
+                - /url: /Modules/GL/ChartofAccounts.aspx
+            - listitem [ref=f3e470]:
+              - link " Accounts Definition" [ref=f3e471] [cursor=pointer]:
+                - /url: /Modules/Dashboards/ShortCuts.aspx
+                - generic [ref=f3e472]: 
+                - text: Accounts Definition
+              - list [ref=f3e473]:
+                - listitem [ref=f3e474]:
+                  - link "Items Account Category" [ref=f3e475] [cursor=pointer]:
+                    - /url: /Modules/Inventory/AccountCategory.aspx
+                - listitem [ref=f3e476]:
+                  - link "Sales Tax" [ref=f3e477] [cursor=pointer]:
+                    - /url: /Modules/Administrator/SalesTaxDefinition.aspx
+                - listitem [ref=f3e478]:
+                  - link "WithHolding Tax" [ref=f3e479] [cursor=pointer]:
+                    - /url: /Modules/Administrator/WithHoldingTaxAccountDefinition.aspx
+                - listitem [ref=f3e480]:
+                  - link "Advance Tax" [ref=f3e481] [cursor=pointer]:
+                    - /url: /Modules/Inventory/AdvanceTaxDefinition.aspx
+                - listitem [ref=f3e482]:
+                  - link "Further Tax" [ref=f3e483] [cursor=pointer]:
+                    - /url: /Modules/Inventory/FurtherTaxDefinition.aspx
+            - listitem [ref=f3e484]:
+              - link " Year Opening & Closing" [ref=f3e485] [cursor=pointer]:
+                - /url: /Modules/Dashboards/ShortCuts.aspx
+                - generic [ref=f3e486]: 
+                - text: Year Opening & Closing
+              - list [ref=f3e487]:
+                - listitem [ref=f3e488]:
+                  - link "Year Opening" [ref=f3e489] [cursor=pointer]:
+                    - /url: /Modules/Administrator/OpenYear.aspx
+                - listitem [ref=f3e490]:
+                  - link "Year Closing" [ref=f3e491] [cursor=pointer]:
+                    - /url: /Modules/Administrator/CloseYear.aspx
+            - listitem [ref=f3e492]:
+              - link " General Ledger" [ref=f3e493] [cursor=pointer]:
+                - /url: /Modules/Dashboards/ShortCuts.aspx
+                - generic [ref=f3e494]: 
+                - text: General Ledger
+              - list [ref=f3e495]:
+                - listitem [ref=f3e496]:
+                  - link " Cash Payment Voucher" [ref=f3e497] [cursor=pointer]:
+                    - /url: /Modules/Dashboards/ShortCuts.aspx
+                    - generic [ref=f3e498]: 
+                    - text: Cash Payment Voucher
+                  - list [ref=f3e499]:
+                    - listitem [ref=f3e500]:
+                      - link "Add New" [ref=f3e501] [cursor=pointer]:
+                        - /url: /Modules/GL/Voucher.aspx?VoucherType=CPV
+                    - listitem [ref=f3e502]:
+                      - link "Cash Payment Voucher" [ref=f3e503] [cursor=pointer]:
+                        - /url: /Modules/GL/VoucherView.aspx?VoucherType=CPV
+                - listitem [ref=f3e504]:
+                  - link " Bank Payment Voucher" [ref=f3e505] [cursor=pointer]:
+                    - /url: /Modules/Dashboards/ShortCuts.aspx
+                    - generic [ref=f3e506]: 
+                    - text: Bank Payment Voucher
+                  - list [ref=f3e507]:
+                    - listitem [ref=f3e508]:
+                      - link "Add New" [ref=f3e509] [cursor=pointer]:
+                        - /url: /Modules/GL/Voucher.aspx?VoucherType=BPV
+                    - listitem [ref=f3e510]:
+                      - link "Bank Payment Voucher" [ref=f3e511] [cursor=pointer]:
+                        - /url: /Modules/GL/VoucherView.aspx?VoucherType=BPV
+                - listitem [ref=f3e512]:
+                  - link " Cash Receipt Voucher" [ref=f3e513] [cursor=pointer]:
+                    - /url: /Modules/Dashboards/ShortCuts.aspx
+                    - generic [ref=f3e514]: 
+                    - text: Cash Receipt Voucher
+                  - list [ref=f3e515]:
+                    - listitem [ref=f3e516]:
+                      - link "Add New" [ref=f3e517] [cursor=pointer]:
+                        - /url: /Modules/GL/Voucher.aspx?VoucherType=CRV
+                    - listitem [ref=f3e518]:
+                      - link "Cash Receipt Voucher" [ref=f3e519] [cursor=pointer]:
+                        - /url: /Modules/GL/VoucherView.aspx?VoucherType=CRV
+                - listitem [ref=f3e520]:
+                  - link " Bank Receipt Voucher" [ref=f3e521] [cursor=pointer]:
+                    - /url: /Modules/Dashboards/ShortCuts.aspx
+                    - generic [ref=f3e522]: 
+                    - text: Bank Receipt Voucher
+                  - list [ref=f3e523]:
+                    - listitem [ref=f3e524]:
+                      - link "Add New" [ref=f3e525] [cursor=pointer]:
+                        - /url: /Modules/GL/Voucher.aspx?VoucherType=BRV
+                    - listitem [ref=f3e526]:
+                      - link "Bank Receipt Voucher" [ref=f3e527] [cursor=pointer]:
+                        - /url: /Modules/GL/VoucherView.aspx?VoucherType=BRV
+                - listitem [ref=f3e528]:
+                  - link " Journal Voucher" [ref=f3e529] [cursor=pointer]:
+                    - /url: /Modules/Dashboards/ShortCuts.aspx
+                    - generic [ref=f3e530]: 
+                    - text: Journal Voucher
+                  - list [ref=f3e531]:
+                    - listitem [ref=f3e532]:
+                      - link "Add New" [ref=f3e533] [cursor=pointer]:
+                        - /url: /Modules/GL/Voucher.aspx?VoucherType=JV
+                    - listitem [ref=f3e534]:
+                      - link "Jurnal Voucher" [ref=f3e535] [cursor=pointer]:
+                        - /url: /Modules/GL/VoucherView.aspx?VoucherType=JV
+                - listitem [ref=f3e536]:
+                  - link "Approve / Reject Vouchers" [ref=f3e537] [cursor=pointer]:
+                    - /url: /Modules/GL/PostVouchers.aspx
+                - listitem [ref=f3e538]:
+                  - link "Replace G.L Account" [ref=f3e539] [cursor=pointer]:
+                    - /url: /Modules/Accounts/ChangeAccount.aspx
+                - listitem [ref=f3e540]:
+                  - link " Budget" [ref=f3e541] [cursor=pointer]:
+                    - /url: /Modules/Dashboards/ShortCuts.aspx
+                    - generic [ref=f3e542]: 
+                    - text: Budget
+                  - list [ref=f3e543]:
+                    - listitem [ref=f3e544]:
+                      - link "Add Budget" [ref=f3e545] [cursor=pointer]:
+                        - /url: /Modules/GL/Budget.aspx
+                    - listitem [ref=f3e546]:
+                      - link "Budget View" [ref=f3e547] [cursor=pointer]:
+                        - /url: /Modules/GL/BudgetView.aspx
+                - listitem [ref=f3e548]:
+                  - link "All Vouchers List" [ref=f3e549] [cursor=pointer]:
+                    - /url: /Modules/GL/AllVoucherList.aspx
+            - listitem [ref=f3e550]:
+              - link " Accounts Payables" [ref=f3e551] [cursor=pointer]:
+                - /url: /Modules/Dashboards/ShortCuts.aspx
+                - generic [ref=f3e552]: 
+                - text: Accounts Payables
+              - list [ref=f3e553]:
+                - listitem [ref=f3e554]:
+                  - link " Manual Invoice" [ref=f3e555] [cursor=pointer]:
+                    - /url: /Modules/Dashboards/ShortCuts.aspx
+                    - generic [ref=f3e556]: 
+                    - text: Manual Invoice
+                  - list [ref=f3e557]:
+                    - listitem [ref=f3e558]:
+                      - link "Add Manual Invoice" [ref=f3e559] [cursor=pointer]:
+                        - /url: /Modules/Inventory/AddManualInvoice.aspx
+                    - listitem [ref=f3e560]:
+                      - link "Manual Invoice View" [ref=f3e561] [cursor=pointer]:
+                        - /url: /Modules/Inventory/ManualInvoiceList.aspx
+                - listitem [ref=f3e562]:
+                  - link " Purchase Invoice" [ref=f3e563] [cursor=pointer]:
+                    - /url: /Modules/Dashboards/ShortCuts.aspx
+                    - generic [ref=f3e564]: 
+                    - text: Purchase Invoice
+                  - list [ref=f3e565]:
+                    - listitem [ref=f3e566]:
+                      - link "Add Purchase Invoice" [ref=f3e567] [cursor=pointer]:
+                        - /url: /Modules/Inventory/AddPurchaseInvoice.aspx
+                    - listitem [ref=f3e568]:
+                      - link "Purchase Invoice List" [ref=f3e569] [cursor=pointer]:
+                        - /url: /Modules/Inventory/PurchaseInvoiceView.aspx
+                - listitem [ref=f3e570]:
+                  - link " Payment" [ref=f3e571] [cursor=pointer]:
+                    - /url: /Modules/Dashboards/ShortCuts.aspx
+                    - generic [ref=f3e572]: 
+                    - text: Payment
+                  - list [ref=f3e573]:
+                    - listitem [ref=f3e574]:
+                      - link "Add Payment" [ref=f3e575] [cursor=pointer]:
+                        - /url: /Modules/Inventory/AddPaymentInvoice.aspx
+                    - listitem [ref=f3e576]:
+                      - link "Payment List" [ref=f3e577] [cursor=pointer]:
+                        - /url: /Modules/Inventory/PaymentInvoiceView.aspx
+                - listitem [ref=f3e578]:
+                  - link " Purchase Return" [ref=f3e579] [cursor=pointer]:
+                    - /url: /Modules/Dashboards/#
+                    - generic [ref=f3e580]: 
+                    - text: Purchase Return
+                  - list [ref=f3e581]:
+                    - listitem [ref=f3e582]:
+                      - link "Add Purchase Return" [ref=f3e583] [cursor=pointer]:
+                        - /url: /Modules/Inventory/AddPurchaseReturn.aspx
+                    - listitem [ref=f3e584]:
+                      - link "Purchase Return View" [ref=f3e585] [cursor=pointer]:
+                        - /url: /Modules/Inventory/PurchaseReturnList.aspx
+                - listitem [ref=f3e586]:
+                  - link " Advance" [ref=f3e587] [cursor=pointer]:
+                    - /url: /Modules/Dashboards/ShortCuts.aspx
+                    - generic [ref=f3e588]: 
+                    - text: Advance
+                  - list [ref=f3e589]:
+                    - listitem [ref=f3e590]:
+                      - link "Add Advance" [ref=f3e591] [cursor=pointer]:
+                        - /url: /Modules/Inventory/AdvancePayment.aspx
+                    - listitem [ref=f3e592]:
+                      - link "Advance View" [ref=f3e593] [cursor=pointer]:
+                        - /url: /Modules/Inventory/AdvancePaymentView.aspx
+            - listitem [ref=f3e594]:
+              - link "Financial Integration" [ref=f3e595] [cursor=pointer]:
+                - /url: /Modules/Accounts/ClinicalFinancial.aspx
+        - listitem [ref=f3e596]:
+          - link "Reports" [ref=f3e597] [cursor=pointer]:
+            - /url: /Modules/Dashboards/ShortCuts.aspx
+            - text:  Reports
+          - list [ref=f3e598]:
+            - listitem [ref=f3e599]:
+              - link " Accounts" [ref=f3e600] [cursor=pointer]:
+                - /url: /Modules/Dashboards/ShortCuts.aspx
+                - generic [ref=f3e601]: 
+                - text: Accounts
+              - list [ref=f3e602]:
+                - listitem [ref=f3e603]:
+                  - link " Ledger" [ref=f3e604] [cursor=pointer]:
+                    - /url: /Modules/Dashboards/ShortCuts.aspx
+                    - generic [ref=f3e605]: 
+                    - text: Ledger
+                  - list [ref=f3e606]:
+                    - listitem [ref=f3e607]:
+                      - link "Ledger" [ref=f3e608] [cursor=pointer]:
+                        - /url: /Modules/Accounts/Ledger.aspx
+                    - listitem [ref=f3e609]:
+                      - link "Ledger Cost Center Wise" [ref=f3e610] [cursor=pointer]:
+                        - /url: /Report.aspx?Type=LBC
+                    - listitem [ref=f3e611]:
+                      - link "Multi Ledger" [ref=f3e612] [cursor=pointer]:
+                        - /url: /Report.aspx?Type=ML
+                - listitem [ref=f3e613]:
+                  - link " Profit & Loss" [ref=f3e614] [cursor=pointer]:
+                    - /url: /Modules/Dashboards/ShortCuts.aspx
+                    - generic [ref=f3e615]: 
+                    - text: Profit & Loss
+                  - list [ref=f3e616]:
+                    - listitem [ref=f3e617]:
+                      - link "Profit & Loss Detail" [ref=f3e618] [cursor=pointer]:
+                        - /url: /Report.aspx?Type=PLD
+                - listitem [ref=f3e619]:
+                  - link " Trail Balance" [ref=f3e620] [cursor=pointer]:
+                    - /url: /Modules/Dashboards/ShortCuts.aspx
+                    - generic [ref=f3e621]: 
+                    - text: Trail Balance
+                  - list [ref=f3e622]:
+                    - listitem [ref=f3e623]:
+                      - link "Trial Balance" [ref=f3e624] [cursor=pointer]:
+                        - /url: /Report.aspx?Type=TB
+                    - listitem [ref=f3e625]:
+                      - link "Trail Balance By Dates" [ref=f3e626] [cursor=pointer]:
+                        - /url: /Report.aspx?Type=TBD
+                    - listitem [ref=f3e627]:
+                      - link "Trail Cost Center Wise" [ref=f3e628] [cursor=pointer]:
+                        - /url: /Report.aspx?Type=TBC
+                    - listitem [ref=f3e629]:
+                      - link "Trail By Level And Code Selection" [ref=f3e630] [cursor=pointer]:
+                        - /url: /Report.aspx?Type=TBDC
+                - listitem [ref=f3e631]:
+                  - link "Journal Voucher List" [ref=f3e632] [cursor=pointer]:
+                    - /url: /Modules/GL/VoucherEditList.aspx
+                - listitem [ref=f3e633]:
+                  - link "Chart Of Account" [ref=f3e634] [cursor=pointer]:
+                    - /url: /Report.aspx?Type=COA
+                - listitem [ref=f3e635]:
+                  - link " Balance Sheet" [ref=f3e636] [cursor=pointer]:
+                    - /url: /Modules/Dashboards/ShortCuts.aspx
+                    - generic [ref=f3e637]: 
+                    - text: Balance Sheet
+                  - list [ref=f3e638]:
+                    - listitem [ref=f3e639]:
+                      - link "Balance Sheet Detail" [ref=f3e640] [cursor=pointer]:
+                        - /url: /Report.aspx?Type=BSD
+            - listitem [ref=f3e641]:
+              - link " Inventory" [ref=f3e642] [cursor=pointer]:
+                - /url: /Modules/Dashboards/ShortCuts.aspx
+                - generic [ref=f3e643]: 
+                - text: Inventory
+              - list [ref=f3e644]:
+                - listitem [ref=f3e645]:
+                  - link "New Reports" [ref=f3e646] [cursor=pointer]:
+                    - /url: /Modules/Dashboards/ShortCuts.aspx
+                - listitem [ref=f3e647]:
+                  - link "Stock Balance Report" [ref=f3e648] [cursor=pointer]:
+                    - /url: /PatientsDepartmentWise.aspx?rptTitle=STM
+                - listitem [ref=f3e649]:
+                  - link "Stock Ledger report" [ref=f3e650] [cursor=pointer]:
+                    - /url: /Modules/Accounts/StockLedgerReport.aspx
+                - listitem [ref=f3e651]:
+                  - link "Purchase Order Report" [ref=f3e652] [cursor=pointer]:
+                    - /url: /PatientsDepartmentWise.aspx?rptTitle=Purchase_Order_Report
+                - listitem [ref=f3e653]:
+                  - link "Pending Purchase Request Report" [ref=f3e654] [cursor=pointer]:
+                    - /url: /PatientsDepartmentWise.aspx?rptTitle=Pending_Payment_Request_Report
+                - listitem [ref=f3e655]:
+                  - link "Payment to Supplier Report" [ref=f3e656] [cursor=pointer]:
+                    - /url: /PatientsDepartmentWise.aspx?rptTitle=Payment_to_Supplier_Report
+                - listitem [ref=f3e657]:
+                  - link "Stock Adjustment Report" [ref=f3e658] [cursor=pointer]:
+                    - /url: /PatientsDepartmentWise.aspx?rptTitle=SAR
+                - listitem [ref=f3e659]:
+                  - link "Batch Expiry Report" [ref=f3e660] [cursor=pointer]:
+                    - /url: /PatientsDepartmentWise.aspx?rptTitle=BER
+                - listitem [ref=f3e661]:
+                  - link "Vendor Wise PO Summary" [ref=f3e662] [cursor=pointer]:
+                    - /url: /Modules/Accounts/Ledger.aspx?Type=VWPOS
+                - listitem [ref=f3e663]:
+                  - link "Vendor Wise Purchase Summary" [ref=f3e664] [cursor=pointer]:
+                    - /url: /Modules/Accounts/Ledger.aspx?Type=VWPS
+                - listitem [ref=f3e665]:
+                  - link "Purchase Register Report" [ref=f3e666] [cursor=pointer]:
+                    - /url: /PatientsDepartmentWise.aspx?rptTitle=Purchase_Register_Report
+                - listitem [ref=f3e667]:
+                  - link "Vendor Wise Purchase Detail" [ref=f3e668] [cursor=pointer]:
+                    - /url: /Modules/Accounts/Ledger.aspx?Type=VWP
+                - listitem [ref=f3e669]:
+                  - link "SIN Summary" [ref=f3e670] [cursor=pointer]:
+                    - /url: /PatientsDepartmentWise.aspx?rptTitle=SIN_summary
+                - listitem [ref=f3e671]:
+                  - link "Minimum Stock Report" [ref=f3e672] [cursor=pointer]:
+                    - /url: /PatientsDepartmentWise.aspx?rptTitle=MSR
+                - listitem [ref=f3e673]:
+                  - link "MIR Summary" [ref=f3e674] [cursor=pointer]:
+                    - /url: /PatientsDepartmentWise.aspx?rptTitle=MIR_summary
+                - listitem [ref=f3e675]:
+                  - link "Stock In Hand" [ref=f3e676] [cursor=pointer]:
+                    - /url: /PatientsDepartmentWise.aspx?rptTitle=SIH
+                - listitem [ref=f3e677]:
+                  - link "Vendor Inward Gate Pass Summary" [ref=f3e678] [cursor=pointer]:
+                    - /url: /Modules/Accounts/Ledger.aspx?Type=IGPS
+                - listitem [ref=f3e679]:
+                  - link "Vendor Summary GRN" [ref=f3e680] [cursor=pointer]:
+                    - /url: /Modules/Accounts/Ledger.aspx?Type=GRNS
+                - listitem [ref=f3e681]:
+                  - link "GRN and Item Wise Report" [ref=f3e682] [cursor=pointer]:
+                    - /url: /PatientsDepartmentWise.aspx?rptTitle=GRN_and_Item_Wise_Report
+                - listitem [ref=f3e683]:
+                  - link "Par And Reorder Level" [ref=f3e684] [cursor=pointer]:
+                    - /url: /PatientsDepartmentWise.aspx?rptTitle=PARLR
+                - listitem [ref=f3e685]:
+                  - link "Inventory Reconciliation Report" [ref=f3e686] [cursor=pointer]:
+                    - /url: /PatientsDepartmentWise.aspx?rptTitle=Inventory_Reconciliation_Report
+                - listitem [ref=f3e687]:
+                  - link "Vendor Wise Payment Summary" [ref=f3e688] [cursor=pointer]:
+                    - /url: /PatientsDepartmentWise.aspx?rptTitle=Vendor_Wise_Payment_Summary
+                - listitem [ref=f3e689]:
+                  - link "Stock Transfer Report" [ref=f3e690] [cursor=pointer]:
+                    - /url: /PatientsDepartmentWise.aspx?rptTitle=Stock_Transfer_Report
+                - listitem [ref=f3e691]:
+                  - link "Gate Pass Report" [ref=f3e692] [cursor=pointer]:
+                    - /url: /PatientsDepartmentWise.aspx?rptTitle=IGP_Report
+                - listitem [ref=f3e693]:
+                  - link "Stock In Hand Detail(Pharmacy)" [ref=f3e694] [cursor=pointer]:
+                    - /url: /Modules/Accounts/Ledger.aspx?Type=SIHD
+                - listitem [ref=f3e695]:
+                  - link "Stock IN Hand Detail" [ref=f3e696] [cursor=pointer]:
+                    - /url: /PatientsDepartmentWise.aspx?rptTitle=Stock_In_Hand_Detail
+                - listitem [ref=f3e697]:
+                  - link "Vendor Wise Transaction Detail" [ref=f3e698] [cursor=pointer]:
+                    - /url: /PatientsDepartmentWise.aspx?rptTitle=Vendor_Wise_Transaction_Detail
+                - listitem [ref=f3e699]:
+                  - link "Stock Consumption Detail" [ref=f3e700] [cursor=pointer]:
+                    - /url: /Modules/Accounts/Ledger.aspx?Type=Stock_Consumption_Details
+                - listitem [ref=f3e701]:
+                  - link "Active Inventory Items" [ref=f3e702] [cursor=pointer]:
+                    - /url: /PatientsDepartmentWise.aspx?rptTitle=ActiveItems
+            - listitem [ref=f3e703]:
+              - link " Purchase" [ref=f3e704] [cursor=pointer]:
+                - /url: /Modules/Dashboards/ShortCuts.aspx
+                - generic [ref=f3e705]: 
+                - text: Purchase
+              - list [ref=f3e706]:
+                - listitem [ref=f3e707]:
+                  - link "Vendor Ledger" [ref=f3e708] [cursor=pointer]:
+                    - /url: /PatientsDepartmentWise.aspx?rptTitle=VendorLedger
+                - listitem [ref=f3e709]:
+                  - link "Invoice Aging" [ref=f3e710] [cursor=pointer]:
+                    - /url: /PatientsDepartmentWise.aspx?rptTitle=InvoiceAging
+            - listitem [ref=f3e711]:
+              - link " Pharmacy" [ref=f3e712] [cursor=pointer]:
+                - /url: /Modules/Dashboards/ShortCuts.aspx
+                - generic [ref=f3e713]: 
+                - text: Pharmacy
+              - list [ref=f3e714]:
+                - listitem [ref=f3e715]:
+                  - link " New Reports" [ref=f3e716] [cursor=pointer]:
+                    - /url: /Modules/Dashboards/ShortCuts.aspx
+                    - generic [ref=f3e717]: 
+                    - text: New Reports
+                  - list [ref=f3e718]:
+                    - listitem [ref=f3e719]:
+                      - link "Bonus Medicine Detail Report" [ref=f3e720] [cursor=pointer]:
+                        - /url: /PatientsDepartmentWise.aspx?rptTitle=Bonus_Medicine_Detail_Report
+                    - listitem [ref=f3e721]:
+                      - link "Fast Slow Non-Moving Stock" [ref=f3e722] [cursor=pointer]:
+                        - /url: /PatientsDepartmentWise.aspx?rptTitle=Fast_Slow_Non_Moving_Stock
+                    - listitem [ref=f3e723]:
+                      - link "Overall Pharmacy Sale Summary" [ref=f3e724] [cursor=pointer]:
+                        - /url: /PatientsDepartmentWise.aspx?rptTitle=YearlyPharmacyOverallSummary
+                    - listitem [ref=f3e725]:
+                      - link "Stock Category Valuation Report" [ref=f3e726] [cursor=pointer]:
+                        - /url: /PatientsDepartmentWise.aspx?rptTitle=StockValuationReport
+                    - listitem [ref=f3e727]:
+                      - link "Purchase Return Report" [ref=f3e728] [cursor=pointer]:
+                        - /url: /PatientsDepartmentWise.aspx?rptTitle=PurchaseReturnReport
+                    - listitem [ref=f3e729]:
+                      - link "Item Wise Gross Profit Report" [ref=f3e730] [cursor=pointer]:
+                        - /url: /PatientsDepartmentWise.aspx?rptTitle=Item_Wise_Gross_Profit_Report
+                    - listitem [ref=f3e731]:
+                      - link "GRN vs PO Reconciliation Report" [ref=f3e732] [cursor=pointer]:
+                        - /url: /PatientsDepartmentWise.aspx?rptTitle=GRN_PO_Reconciliation_Report
+                    - listitem [ref=f3e733]:
+                      - link "GRN Report" [ref=f3e734] [cursor=pointer]:
+                        - /url: /PatientsDepartmentWise.aspx?rptTitle=GRN_Report
+                    - listitem [ref=f3e735]:
+                      - link "Category Wise Profitability Report" [ref=f3e736] [cursor=pointer]:
+                        - /url: /PatientsDepartmentWise.aspx?rptTitle=Category_Wise_Profitability_Report
+                - listitem [ref=f3e737]:
+                  - link "Stock Category Valuation Report" [ref=f3e738] [cursor=pointer]:
+                    - /url: /PatientsDepartmentWise.aspx?rptTitle=StockValuationReport
+                - listitem [ref=f3e739]:
+                  - link "Purchase Return Report" [ref=f3e740] [cursor=pointer]:
+                    - /url: /PatientsDepartmentWise.aspx?rptTitle=PurchaseReturnReport
+                - listitem [ref=f3e741]:
+                  - link "Pharmacy Sale Report" [ref=f3e742] [cursor=pointer]:
+                    - /url: /PatientsDepartmentWise.aspx?rptTitle=PharmacySaleReport
+                - listitem [ref=f3e743]:
+                  - link "Medicine Expiry Report" [ref=f3e744] [cursor=pointer]:
+                    - /url: /PatientsDepartmentWise.aspx?rptTitle=MER
+                - listitem [ref=f3e745]:
+                  - link "Pharmacy Sale Report Payment Wise" [ref=f3e746] [cursor=pointer]:
+                    - /url: /PatientsDepartmentWise.aspx?rptTitle=PharmacySaleReport_PaymentWise
+                - listitem [ref=f3e747]:
+                  - link "Pharmacy Stock Batch Wise" [ref=f3e748] [cursor=pointer]:
+                    - /url: /Modules/Accounts/Ledger.aspx?Type=SIHBW
+                - listitem [ref=f3e749]:
+                  - link "Pharmacy P&L Report" [ref=f3e750] [cursor=pointer]:
+                    - /url: /PatientsDepartmentWise.aspx?rptTitle=Pharmacy_Profit_and_Loss_Report
+                - listitem [ref=f3e751]:
+                  - link "Stock In Hand Detail(Pharmacy)" [ref=f3e752] [cursor=pointer]:
+                    - /url: /Modules/Accounts/Ledger.aspx?Type=SIHD
+                - listitem [ref=f3e753]:
+                  - link "Daily Sale Summary" [ref=f3e754] [cursor=pointer]:
+                    - /url: /PatientsDepartmentWise.aspx?rptTitle=DailySaleSummary
+                - listitem [ref=f3e755]:
+                  - link "Sale Return Report" [ref=f3e756] [cursor=pointer]:
+                    - /url: /PatientsDepartmentWise.aspx?rptTitle=Sale_Return_Report
+                - listitem [ref=f3e757]:
+                  - link "Sale Report Summary" [ref=f3e758] [cursor=pointer]:
+                    - /url: /PatientsDepartmentWise.aspx?rptTitle=Sale_Report_Summary
+                - listitem [ref=f3e759]:
+                  - link "Item Wise Margin Report" [ref=f3e760] [cursor=pointer]:
+                    - /url: /PatientsDepartmentWise.aspx?rptTitle=Item_Wise_Margin_Report
+                - listitem [ref=f3e761]:
+                  - link "Item Wise Purchase Report" [ref=f3e762] [cursor=pointer]:
+                    - /url: /PatientsDepartmentWise.aspx?rptTitle=Item_Wise_Purchase_Report
+                - listitem [ref=f3e763]:
+                  - link "Customer Report" [ref=f3e764] [cursor=pointer]:
+                    - /url: /PatientsDepartmentWise.aspx?rptTitle=Pharmacy_Customer_Report
+            - listitem [ref=f3e765]:
+              - link " Fixed Assets" [ref=f3e766] [cursor=pointer]:
+                - /url: /Modules/Dashboards/ShortCuts.aspx
+                - generic [ref=f3e767]: 
+                - text: Fixed Assets
+              - list [ref=f3e768]:
+                - listitem [ref=f3e769]:
+                  - link "Asset Register Report" [ref=f3e770] [cursor=pointer]:
+                    - /url: /PatientsDepartmentWise.aspx?rptTitle=Asset_Register_Report
+                - listitem [ref=f3e771]:
+                  - link "Asset Register Report" [ref=f3e772] [cursor=pointer]:
+                    - /url: /PatientsDepartmentWise.aspx?rptTitle=Asset_Register_Report
+                - listitem [ref=f3e773]:
+                  - link "Asset Depreciation Report" [ref=f3e774] [cursor=pointer]:
+                    - /url: /PatientsDepartmentWise.aspx?rptTitle=Asset_Depreciation_Report
+                - listitem [ref=f3e775]:
+                  - link "Asset Acquisition Report" [ref=f3e776] [cursor=pointer]:
+                    - /url: /PatientsDepartmentWise.aspx?rptTitle=Asset_Acquisition_Report
+                - listitem [ref=f3e777]:
+                  - link "Asset Ageing Report" [ref=f3e778] [cursor=pointer]:
+                    - /url: /PatientsDepartmentWise.aspx?rptTitle=Asset_Ageing_Report
+            - listitem [ref=f3e779]:
+              - link " Cath Lab" [ref=f3e780] [cursor=pointer]:
+                - /url: /Modules/Dashboards/ShortCuts.aspx
+                - generic [ref=f3e781]: 
+                - text: Cath Lab
+              - list [ref=f3e782]:
+                - listitem [ref=f3e783]:
+                  - link "Cath Lab Billing Detail" [ref=f3e784] [cursor=pointer]:
+                    - /url: /PatientsDepartmentWise.aspx?rptTitle=Cath_Lab_Billing_Detail_Report
+                - listitem [ref=f3e785]:
+                  - link "Cath Lab Billing Detail Vendor Wise" [ref=f3e786] [cursor=pointer]:
+                    - /url: /PatientsDepartmentWise.aspx?rptTitle=Cath_Lab_Billing_Detail_Vendor_Wise_Report
+                - listitem [ref=f3e787]:
+                  - link "Cath Lab Stock in Hand Detail" [ref=f3e788] [cursor=pointer]:
+                    - /url: /PatientsDepartmentWise.aspx?rptTitle=CathLabStockInHand
+                - listitem [ref=f3e789]:
+                  - link "Cath Lab Medicine Expiry Report" [ref=f3e790] [cursor=pointer]:
+                    - /url: /PatientsDepartmentWise.aspx?rptTitle=CathLab_MER
+            - listitem [ref=f3e791]:
+              - link " Patients" [ref=f3e792] [cursor=pointer]:
+                - /url: /Modules/Dashboards/ShortCuts.aspx
+                - generic [ref=f3e793]: 
+                - text: Patients
+              - list [ref=f3e794]:
+                - listitem [ref=f3e795]:
+                  - link " OPD Patient" [ref=f3e796] [cursor=pointer]:
+                    - /url: /Modules/Dashboards/ShortCuts.aspx
+                    - generic [ref=f3e797]: 
+                    - text: OPD Patient
+                  - list [ref=f3e798]:
+                    - listitem [ref=f3e799]:
+                      - link "General OPD Report" [ref=f3e800] [cursor=pointer]:
+                        - /url: /PatientsDepartmentWise.aspx?rptTitle=OPD_Detail_Report
+                    - listitem [ref=f3e801]:
+                      - link "Out Patients Status" [ref=f3e802] [cursor=pointer]:
+                        - /url: /Modules/PatientManagement/OutPatientStatus.aspx
+                    - listitem [ref=f3e803]:
+                      - link "Doctor Wise Patients" [ref=f3e804] [cursor=pointer]:
+                        - /url: /PatientsDepartmentWise.aspx?rptTitle=Doctotr_Receipts
+                    - listitem [ref=f3e805]:
+                      - link "OPD Time Line" [ref=f3e806] [cursor=pointer]:
+                        - /url: /PatientsDepartmentWise.aspx?rptTitle=OPD_Time_Line
+                    - listitem [ref=f3e807]:
+                      - link "Total Patients and Revisit Patient" [ref=f3e808] [cursor=pointer]:
+                        - /url: /PatientsDepartmentWise.aspx?rptTitle=TotalpatientsandRevisitpatientsreport
+                    - listitem [ref=f3e809]:
+                      - link "Total Patient Register" [ref=f3e810] [cursor=pointer]:
+                        - /url: /PatientsDepartmentWise.aspx?rptTitle=TotalPatientRegsreport
+                    - listitem [ref=f3e811]:
+                      - link "OPD Discharge Report" [ref=f3e812] [cursor=pointer]:
+                        - /url: /PatientsDepartmentWise.aspx?rptTitle=TotalOpdDischargeReport
+                    - listitem [ref=f3e813]:
+                      - link "Active Patient List" [ref=f3e814] [cursor=pointer]:
+                        - /url: /PatientsDepartmentWise.aspx?rptTitle=APL
+                    - listitem [ref=f3e815]:
+                      - link "Active Patient List Summary" [ref=f3e816] [cursor=pointer]:
+                        - /url: /PatientsDepartmentWise.aspx?rptTitle=APLS
+                    - listitem [ref=f3e817]:
+                      - link "Appointment List" [ref=f3e818] [cursor=pointer]:
+                        - /url: /PatientsDepartmentWise.aspx?rptTitle=AL
+                    - listitem [ref=f3e819]:
+                      - link "Patient Ledger" [ref=f3e820] [cursor=pointer]:
+                        - /url: /PatientsDepartmentWise.aspx?rptTitle=PatientLedger
+                    - listitem [ref=f3e821]:
+                      - link "Single Patient Ledger" [ref=f3e822] [cursor=pointer]:
+                        - /url: /PatientsDepartmentWise.aspx?rptTitle=SinglePatientLedger
+                - listitem [ref=f3e823]:
+                  - link " IPD Patient" [ref=f3e824] [cursor=pointer]:
+                    - /url: /Modules/Dashboards/ShortCuts.aspx
+                    - generic [ref=f3e825]: 
+                    - text: IPD Patient
+                  - list [ref=f3e826]:
+                    - listitem [ref=f3e827]:
+                      - link "IPD Detail Report" [ref=f3e828] [cursor=pointer]:
+                        - /url: /PatientsDepartmentWise.aspx?rptTitle=IPD_Detail_Report
+                    - listitem [ref=f3e829]:
+                      - link "In Patients Status" [ref=f3e830] [cursor=pointer]:
+                        - /url: /Modules/PatientManagement/In_PatientsStatus.aspx
+                    - listitem [ref=f3e831]:
+                      - link "Department Wise InPatient Detail" [ref=f3e832] [cursor=pointer]:
+                        - /url: /PatientsDepartmentWise.aspx?rptTitle=InPatients_Detail
+                    - listitem [ref=f3e833]:
+                      - link "Admission Detail" [ref=f3e834] [cursor=pointer]:
+                        - /url: /PatientsDepartmentWise.aspx?rptTitle=Admission_Detail
+                    - listitem [ref=f3e835]:
+                      - link "Birth Certificate Detail Report" [ref=f3e836] [cursor=pointer]:
+                        - /url: /PatientsDepartmentWise.aspx?rptTitle=Birth_Certificate_Detail_Report
+                    - listitem [ref=f3e837]:
+                      - link "IPD Time Line" [ref=f3e838] [cursor=pointer]:
+                        - /url: /PatientsDepartmentWise.aspx?rptTitle=IPD_Time_Line
+                    - listitem [ref=f3e839]:
+                      - link "Discharge Detail" [ref=f3e840] [cursor=pointer]:
+                        - /url: /PatientsDepartmentWise.aspx?rptTitle=Discharge_Detail
+                    - listitem [ref=f3e841]:
+                      - link "Discharge Time Line" [ref=f3e842] [cursor=pointer]:
+                        - /url: /PatientsDepartmentWise.aspx?rptTitle=Discharge_Time_Line
+                    - listitem [ref=f3e843]:
+                      - link "Bed Occupancy" [ref=f3e844] [cursor=pointer]:
+                        - /url: /PatientsDepartmentWise.aspx?rptTitle=Bed_Occupancy
+                    - listitem [ref=f3e845]:
+                      - link "Average Length of Stay" [ref=f3e846] [cursor=pointer]:
+                        - /url: /PatientsDepartmentWise.aspx?rptTitle=AverageLengthOfStay
+                    - listitem [ref=f3e847]:
+                      - link "Death Certificate Detail Report" [ref=f3e848] [cursor=pointer]:
+                        - /url: /PatientsDepartmentWise.aspx?rptTitle=Death_Certificate_Detail_Report
+                    - listitem [ref=f3e849]:
+                      - link "Procedure Detail" [ref=f3e850] [cursor=pointer]:
+                        - /url: /PatientsDepartmentWise.aspx?rptTitle=Procedure_Detail
+                    - listitem [ref=f3e851]:
+                      - link "Admit Patient Detail" [ref=f3e852] [cursor=pointer]:
+                        - /url: /PatientsDepartmentWise.aspx?rptTitle=AdmitPatientList
+                - listitem [ref=f3e853]:
+                  - link " Emergency" [ref=f3e854] [cursor=pointer]:
+                    - /url: /Modules/Dashboards/ShortCuts.aspx
+                    - generic [ref=f3e855]: 
+                    - text: Emergency
+                  - list [ref=f3e856]:
+                    - listitem [ref=f3e857]:
+                      - link "Emergency Detail Report" [ref=f3e858] [cursor=pointer]:
+                        - /url: /PatientsDepartmentWise.aspx?rptTitle=Emer_Detail_Report
+                    - listitem [ref=f3e859]:
+                      - link "Registered Emergency Patient Detail Report" [ref=f3e860] [cursor=pointer]:
+                        - /url: /PatientsDepartmentWise.aspx?rptTitle=Emergency_Reg_Report
+                - listitem [ref=f3e861]:
+                  - link " Lab" [ref=f3e862] [cursor=pointer]:
+                    - /url: /Modules/Dashboards/ShortCuts.aspx
+                    - generic [ref=f3e863]: 
+                    - text: Lab
+                  - list [ref=f3e864]:
+                    - listitem [ref=f3e865]:
+                      - link "Time And Motion" [ref=f3e866] [cursor=pointer]:
+                        - /url: /PatientsDepartmentWise.aspx?rptTitle=TimeAndMotion
+                - listitem [ref=f3e867]:
+                  - link " Radiology" [ref=f3e868] [cursor=pointer]:
+                    - /url: /Modules/Dashboards/ShortCuts.aspx
+                    - generic [ref=f3e869]: 
+                    - text: Radiology
+                  - list [ref=f3e870]:
+                    - listitem [ref=f3e871]:
+                      - link "Radiology Statistics Report" [ref=f3e872] [cursor=pointer]:
+                        - /url: /PatientsDepartmentWise.aspx?rptTitle=DoctorWiseUltrasoundReport
+                - listitem [ref=f3e873]:
+                  - link " Combine Reports" [ref=f3e874] [cursor=pointer]:
+                    - /url: /Modules/Dashboards/ShortCuts.aspx
+                    - generic [ref=f3e875]: 
+                    - text: Combine Reports
+                  - list
+                - listitem [ref=f3e876]:
+                  - link " Billings" [ref=f3e877] [cursor=pointer]:
+                    - /url: /Modules/Dashboards/ShortCuts.aspx
+                    - generic [ref=f3e878]: 
+                    - text: Billings
+                  - list [ref=f3e879]:
+                    - listitem [ref=f3e880]:
+                      - link "Radiology Log Report" [ref=f3e881] [cursor=pointer]:
+                        - /url: /PatientsDepartmentWise.aspx?rptTitle=Lab_Log_Report
+                    - listitem [ref=f3e882]:
+                      - link "Operator Wise Receipts" [ref=f3e883] [cursor=pointer]:
+                        - /url: /PatientsDepartmentWise.aspx?rptTitle=Receipt_Operator_Wise_Report
+                    - listitem [ref=f3e884]:
+                      - link "Service Wise Summary" [ref=f3e885] [cursor=pointer]:
+                        - /url: /PatientsDepartmentWise.aspx?rptTitle=Service_Wise_Summary_Report
+                    - listitem [ref=f3e886]:
+                      - link "Operator Wise Billing" [ref=f3e887] [cursor=pointer]:
+                        - /url: /PatientsDepartmentWise.aspx?rptTitle=Operator_Wise_Billing_Report
+            - listitem [ref=f3e888]:
+              - link " Transactional Detail" [ref=f3e889] [cursor=pointer]:
+                - /url: /Modules/Dashboards/ShortCuts.aspx
+                - generic [ref=f3e890]: 
+                - text: Transactional Detail
+              - list [ref=f3e891]:
+                - listitem [ref=f3e892]:
+                  - link "Lab Cash Collection" [ref=f3e893] [cursor=pointer]:
+                    - /url: /PatientsDepartmentWise.aspx?rptTitle=Lab_Cash_Collection
+                - listitem [ref=f3e894]:
+                  - link "Hospital Services" [ref=f3e895] [cursor=pointer]:
+                    - /url: /PatientsDepartmentWise.aspx?rptTitle=HospitalServices
+                - listitem [ref=f3e896]:
+                  - link "Lab Test Wise Summary" [ref=f3e897] [cursor=pointer]:
+                    - /url: /PatientsDepartmentWise.aspx?rptTitle=Lab_Test_Wise_Summary
+                - listitem [ref=f3e898]:
+                  - link "Lab Test Investigation" [ref=f3e899] [cursor=pointer]:
+                    - /url: /PatientsDepartmentWise.aspx?rptTitle=Lab_Test_Investigation
+                - listitem [ref=f3e900]:
+                  - link "Advance Payment Report" [ref=f3e901] [cursor=pointer]:
+                    - /url: /PatientsDepartmentWise.aspx?rptTitle=AdvanceReport
+                - listitem [ref=f3e902]:
+                  - link "Refund Report" [ref=f3e903] [cursor=pointer]:
+                    - /url: /PatientsDepartmentWise.aspx?rptTitle=RefundReport
+                - listitem [ref=f3e904]:
+                  - link "Bill Cancel Report" [ref=f3e905] [cursor=pointer]:
+                    - /url: /PatientsDepartmentWise.aspx?rptTitle=CancelBill
+                - listitem [ref=f3e906]:
+                  - link "Head Wise Discount Report" [ref=f3e907] [cursor=pointer]:
+                    - /url: /PatientsDepartmentWise.aspx?rptTitle=Head_Wise_Discount_Report
+                - listitem [ref=f3e908]:
+                  - link "Cardiology Cash Collection" [ref=f3e909] [cursor=pointer]:
+                    - /url: /PatientsDepartmentWise.aspx?rptTitle=Cardiology_Cash_Collection
+                - listitem [ref=f3e910]:
+                  - link "Physiotherapy Cash Collection" [ref=f3e911] [cursor=pointer]:
+                    - /url: /PatientsDepartmentWise.aspx?rptTitle=Physiotherapy_Cash_Collection
+                - listitem [ref=f3e912]:
+                  - link "Analysis Report" [ref=f3e913] [cursor=pointer]:
+                    - /url: /PatientsDepartmentWise.aspx?rptTitle=AnalysisReport
+                - listitem [ref=f3e914]:
+                  - link "Radiology Report" [ref=f3e915] [cursor=pointer]:
+                    - /url: /PatientsDepartmentWise.aspx?rptTitle=Extended_RadiologyReport
+                - listitem [ref=f3e916]:
+                  - link "Panelized Radiology Report" [ref=f3e917] [cursor=pointer]:
+                    - /url: /PatientsDepartmentWise.aspx?rptTitle=Extended_RadiologyReport_Panel
+            - listitem [ref=f3e918]:
+              - link " Account & Finance" [ref=f3e919] [cursor=pointer]:
+                - /url: /Modules/Dashboards/ShortCuts.aspx
+                - generic [ref=f3e920]: 
+                - text: Account & Finance
+              - list [ref=f3e921]:
+                - listitem [ref=f3e922]:
+                  - link "Revenue Department Wise" [ref=f3e923] [cursor=pointer]:
+                    - /url: /PatientsDepartmentWise.aspx?rptTitle=RDW
+                - listitem [ref=f3e924]:
+                  - link "Revenue Summary" [ref=f3e925] [cursor=pointer]:
+                    - /url: /PatientsDepartmentWise.aspx?rptTitle=RevenuseSummary
+                - listitem [ref=f3e926]:
+                  - link "Pharmacy Cash Report" [ref=f3e927] [cursor=pointer]:
+                    - /url: /PatientsDepartmentWise.aspx?rptTitle=PCR
+                - listitem [ref=f3e928]:
+                  - link "Item Wise Sales Report" [ref=f3e929] [cursor=pointer]:
+                    - /url: /PatientsDepartmentWise.aspx?rptTitle=PCRS
+            - listitem [ref=f3e930]:
+              - link " Account & Finance/Management" [ref=f3e931] [cursor=pointer]:
+                - /url: /Modules/Dashboards/ShortCuts.aspx
+                - generic [ref=f3e932]: 
+                - text: Account & Finance/Management
+              - list [ref=f3e933]:
+                - listitem [ref=f3e934]:
+                  - link "Doctorwise Medicine Sales" [ref=f3e935] [cursor=pointer]:
+                    - /url: /PatientsDepartmentWise.aspx?rptTitle=DoctorMS
+                - listitem [ref=f3e936]:
+                  - link "Doctorwise Medicine Sales Summary" [ref=f3e937] [cursor=pointer]:
+                    - /url: /PatientsDepartmentWise.aspx?rptTitle=DoctorMSS
+                - listitem [ref=f3e938]:
+                  - link "Departmentwise Medicine Sales" [ref=f3e939] [cursor=pointer]:
+                    - /url: /PatientsDepartmentWise.aspx?rptTitle=DMS
+                - listitem [ref=f3e940]:
+                  - link "Departmentwise Medicine Sales Summary" [ref=f3e941] [cursor=pointer]:
+                    - /url: /PatientsDepartmentWise.aspx?rptTitle=DMSS
+                - listitem [ref=f3e942]:
+                  - link "Inv Track Report" [ref=f3e943] [cursor=pointer]:
+                    - /url: /PatientsDepartmentWise.aspx?rptTitle=ITR
+        - listitem [ref=f3e944]:
+          - link "Administration" [ref=f3e945] [cursor=pointer]:
+            - /url: /Modules/Dashboards/ShortCuts.aspx
+            - text:  Administration
+          - list [ref=f3e946]:
+            - listitem [ref=f3e947]:
+              - link " Users List" [ref=f3e948] [cursor=pointer]:
+                - /url: /Modules/Dashboards/ShortCuts.aspx
+                - generic [ref=f3e949]: 
+                - text: Users List
+              - list [ref=f3e950]:
+                - listitem [ref=f3e951]:
+                  - link "Register User" [ref=f3e952] [cursor=pointer]:
+                    - /url: /Modules/Accounts/RegisterUser.aspx
+                - listitem [ref=f3e953]:
+                  - link "UserWise Clinic Control List" [ref=f3e954] [cursor=pointer]:
+                    - /url: /Modules/Accounts/UserControlList.aspx
+                - listitem [ref=f3e955]:
+                  - link "User List" [ref=f3e956] [cursor=pointer]:
+                    - /url: /Modules/Accounts/UserList.aspx
+                - listitem [ref=f3e957]:
+                  - link "UserWise Clinic Control" [ref=f3e958] [cursor=pointer]:
+                    - /url: /Modules/Accounts/UserControl.aspx
+                - listitem [ref=f3e959]:
+                  - link "Change Password" [ref=f3e960] [cursor=pointer]:
+                    - /url: /Modules/Accounts/PasswordChange.aspx
+            - listitem [ref=f3e961]:
+              - link " Approval Stages" [ref=f3e962] [cursor=pointer]:
+                - /url: /Modules/Dashboards/ShortCuts.aspx
+                - generic [ref=f3e963]: 
+                - text: Approval Stages
+              - list [ref=f3e964]:
+                - listitem [ref=f3e965]:
+                  - link "Add New" [ref=f3e966] [cursor=pointer]:
+                    - /url: /Modules/GL/ApprovalStages.aspx
+                - listitem [ref=f3e967]:
+                  - link "List" [ref=f3e968] [cursor=pointer]:
+                    - /url: /Modules/GL/ApprovalStagesView.aspx
+            - listitem [ref=f3e969]:
+              - link " Approval Temeplates" [ref=f3e970] [cursor=pointer]:
+                - /url: /Modules/Dashboards/ShortCuts.aspx
+                - generic [ref=f3e971]: 
+                - text: Approval Temeplates
+              - list [ref=f3e972]:
+                - listitem [ref=f3e973]:
+                  - link "Add New" [ref=f3e974] [cursor=pointer]:
+                    - /url: /Modules/GL/ApprovalTempelates.aspx
+                - listitem [ref=f3e975]:
+                  - link "List" [ref=f3e976] [cursor=pointer]:
+                    - /url: /Modules/GL/ApprovalTempelatesView.aspx
+            - listitem [ref=f3e977]:
+              - link " Approve Inventory" [ref=f3e978] [cursor=pointer]:
+                - /url: /Modules/Dashboards/ShortCuts.aspx
+                - generic [ref=f3e979]: 
+                - text: Approve Inventory
+              - list [ref=f3e980]:
+                - listitem [ref=f3e981]:
+                  - link "Approve PR" [ref=f3e982] [cursor=pointer]:
+                    - /url: /Modules/Administrator/ApprovePR.aspx
+                - listitem [ref=f3e983]:
+                  - link "Approve CS" [ref=f3e984] [cursor=pointer]:
+                    - /url: /Modules/Administrator/ApproveCS.aspx
+                - listitem [ref=f3e985]:
+                  - link "Approve PO" [ref=f3e986] [cursor=pointer]:
+                    - /url: /Modules/Administrator/ApprovePO.aspx
+                - listitem [ref=f3e987]:
+                  - link "Approve IGP" [ref=f3e988] [cursor=pointer]:
+                    - /url: /Modules/Administrator/ApproveIGP.aspx
+                - listitem [ref=f3e989]:
+                  - link "Approve GIR" [ref=f3e990] [cursor=pointer]:
+                    - /url: /Modules/Administrator/ApproveGIR.aspx
+                - listitem [ref=f3e991]:
+                  - link "Approve GIN" [ref=f3e992] [cursor=pointer]:
+                    - /url: /Modules/Administrator/ApproveGIN.aspx
+                - listitem [ref=f3e993]:
+                  - link "Approve StockAdj" [ref=f3e994] [cursor=pointer]:
+                    - /url: /Modules/Administrator/ApproveStockAdj.aspx
+                - listitem [ref=f3e995]:
+                  - link "Approve StoreStockTransfer" [ref=f3e996] [cursor=pointer]:
+                    - /url: /Modules/Administrator/ApproveStoreStockTransfer.aspx
+                - listitem [ref=f3e997]:
+                  - link "Approve MI" [ref=f3e998] [cursor=pointer]:
+                    - /url: /Modules/Administrator/ApproveMI.aspx
+                - listitem [ref=f3e999]:
+                  - link "Approve PI" [ref=f3e1000] [cursor=pointer]:
+                    - /url: /Modules/Administrator/ApprovePI.aspx
+                - listitem [ref=f3e1001]:
+                  - link "Approve Payment" [ref=f3e1002] [cursor=pointer]:
+                    - /url: /Modules/Administrator/ApprovePayment.aspx
+                - listitem [ref=f3e1003]:
+                  - link "Approve Advance" [ref=f3e1004] [cursor=pointer]:
+                    - /url: /Modules/Administrator/Approveadvance.aspx
+                - listitem [ref=f3e1005]:
+                  - link "Notify Approved PR" [ref=f3e1006] [cursor=pointer]:
+                    - /url: /Modules/Administrator/ApprovedPRFsAck.aspx
+            - listitem [ref=f3e1007]:
+              - link " Inv Orignator Temeplates" [ref=f3e1008] [cursor=pointer]:
+                - /url: /Modules/Dashboards/ShortCuts.aspx
+                - generic [ref=f3e1009]: 
+                - text: Inv Orignator Temeplates
+              - list [ref=f3e1010]:
+                - listitem [ref=f3e1011]:
+                  - link "Add New" [ref=f3e1012] [cursor=pointer]:
+                    - /url: /Modules/GL/Inv_OriginatorTempelates.aspx
+                - listitem [ref=f3e1013]:
+                  - link "List" [ref=f3e1014] [cursor=pointer]:
+                    - /url: /Modules/GL/Inv_OriginatorTempelatesView.aspx
+            - listitem [ref=f3e1015]:
+              - link " User Role" [ref=f3e1016] [cursor=pointer]:
+                - /url: /Modules/Dashboards/ShortCuts.aspx
+                - generic [ref=f3e1017]: 
+                - text: User Role
+              - list [ref=f3e1018]:
+                - listitem [ref=f3e1019]:
+                  - link "Add New User Role" [ref=f3e1020] [cursor=pointer]:
+                    - /url: /Modules/Accounts/Roles.aspx
+                - listitem [ref=f3e1021]:
+                  - link "User Role List" [ref=f3e1022] [cursor=pointer]:
+                    - /url: /Modules/Accounts/RolesView.aspx
+            - listitem [ref=f3e1023]:
+              - link " User Management" [ref=f3e1024] [cursor=pointer]:
+                - /url: /Modules/Dashboards/ShortCuts.aspx
+                - generic [ref=f3e1025]: 
+                - text: User Management
+              - list [ref=f3e1026]:
+                - listitem [ref=f3e1027]:
+                  - link "Add Department Wise User" [ref=f3e1028] [cursor=pointer]:
+                    - /url: /Modules/Administrator/DepartmentWiseUser.aspx
+                - listitem [ref=f3e1029]:
+                  - link "Department Wise User List" [ref=f3e1030] [cursor=pointer]:
+                    - /url: /Modules/Administrator/DepartmentWiseUserList.aspx
+                - listitem [ref=f3e1031]:
+                  - link "Add WareHouse Wise User" [ref=f3e1032] [cursor=pointer]:
+                    - /url: /Modules/Administrator/WareHouseWiseUser.aspx
+                - listitem [ref=f3e1033]:
+                  - link "WareHouse Wise User List" [ref=f3e1034] [cursor=pointer]:
+                    - /url: /Modules/Administrator/WareHouseWiseUserList.aspx
+                - listitem [ref=f3e1035]:
+                  - link "Add branch Wise User" [ref=f3e1036] [cursor=pointer]:
+                    - /url: /Modules/Administrator/BranchWiseUser.aspx
+                - listitem [ref=f3e1037]:
+                  - link "Branch Wise User List" [ref=f3e1038] [cursor=pointer]:
+                    - /url: /Modules/Administrator/BranchWiseUserList.aspx
+                - listitem [ref=f3e1039]:
+                  - link "User Wise Template" [ref=f3e1040] [cursor=pointer]:
+                    - /url: /Modules/Administrator/UserWiseDoctor.aspx
+                - listitem [ref=f3e1041]:
+                  - link "User Wise Template list" [ref=f3e1042] [cursor=pointer]:
+                    - /url: /Modules/Administrator/UserWiseDoctorList.aspx
+                - listitem [ref=f3e1043]:
+                  - link "Add Cost Center Wise Department" [ref=f3e1044] [cursor=pointer]:
+                    - /url: /Modules/Administrator/CostCenterWiseDepartment.aspx
+                - listitem [ref=f3e1045]:
+                  - link "Cost Center Wise Department List" [ref=f3e1046] [cursor=pointer]:
+                    - /url: /Modules/Administrator/CostCenterWiseDepartmentList.aspx
+            - listitem [ref=f3e1047]:
+              - link " Role Assignment" [ref=f3e1048] [cursor=pointer]:
+                - /url: /Modules/Dashboards/ShortCuts.aspx
+                - generic [ref=f3e1049]: 
+                - text: Role Assignment
+              - list [ref=f3e1050]:
+                - listitem [ref=f3e1051]:
+                  - link "Role Assignment" [ref=f3e1052] [cursor=pointer]:
+                    - /url: /Modules/Accounts/RoleAssignment.aspx
+                - listitem [ref=f3e1053]:
+                  - link "Manage Roles" [ref=f3e1054] [cursor=pointer]:
+                    - /url: /Modules/Accounts/ManageRoles.aspx
+            - listitem [ref=f3e1055]:
+              - link " Definition" [ref=f3e1056] [cursor=pointer]:
+                - /url: /Modules/Dashboards/ShortCuts.aspx
+                - generic [ref=f3e1057]: 
+                - text: Definition
+              - list [ref=f3e1058]:
+                - listitem [ref=f3e1059]:
+                  - link "Data Value" [ref=f3e1060] [cursor=pointer]:
+                    - /url: /Modules/Administrator/DataValue.aspx
+            - listitem [ref=f3e1061]:
+              - link " Ward" [ref=f3e1062] [cursor=pointer]:
+                - /url: /Modules/Dashboards/ShortCuts.aspx
+                - generic [ref=f3e1063]: 
+                - text: Ward
+              - list [ref=f3e1064]:
+                - listitem [ref=f3e1065]:
+                  - link " Ward Definition" [ref=f3e1066] [cursor=pointer]:
+                    - /url: /Modules/Dashboards/ShortCuts.aspx
+                    - generic [ref=f3e1067]: 
+                    - text: Ward Definition
+                  - list [ref=f3e1068]:
+                    - listitem [ref=f3e1069]:
+                      - link "Ward Definition List" [ref=f3e1070] [cursor=pointer]:
+                        - /url: /Modules/WardAndRooms/WardDefinitionView.aspx
+                    - listitem [ref=f3e1071]:
+                      - link "Add Ward Definition" [ref=f3e1072] [cursor=pointer]:
+                        - /url: /Modules/WardAndRooms/WardDefinition.aspx
+                - listitem [ref=f3e1073]:
+                  - link " Ward Re-Allocation" [ref=f3e1074] [cursor=pointer]:
+                    - /url: /Modules/Dashboards/ShortCuts.aspx
+                    - generic [ref=f3e1075]: 
+                    - text: Ward Re-Allocation
+                  - list [ref=f3e1076]:
+                    - listitem [ref=f3e1077]:
+                      - link "Ward Allocation List" [ref=f3e1078] [cursor=pointer]:
+                        - /url: /Modules/WardAndRooms/WardAllocationView.aspx
+                    - listitem [ref=f3e1079]:
+                      - link "Add Ward Allocation" [ref=f3e1080] [cursor=pointer]:
+                        - /url: /Modules/WardAndRooms/WardAllocation.aspx
+            - listitem [ref=f3e1081]:
+              - link " Menu" [ref=f3e1082] [cursor=pointer]:
+                - /url: /Modules/Dashboards/ShortCuts.aspx
+                - generic [ref=f3e1083]: 
+                - text: Menu
+              - list [ref=f3e1084]:
+                - listitem [ref=f3e1085]:
+                  - link "Menu List" [ref=f3e1086] [cursor=pointer]:
+                    - /url: /Modules/Administrator/MenuView.aspx
+                - listitem [ref=f3e1087]:
+                  - link "Add New Menu" [ref=f3e1088] [cursor=pointer]:
+                    - /url: /Modules/Administrator/Menu.aspx
+            - listitem [ref=f3e1089]:
+              - link "System Parameters" [ref=f3e1090] [cursor=pointer]:
+                - /url: /Modules/Administrator/SysParams.aspx
+            - listitem [ref=f3e1091]:
+              - link " Excel Uploads" [ref=f3e1092] [cursor=pointer]:
+                - /url: /Modules/Dashboards/ShortCuts.aspx
+                - generic [ref=f3e1093]: 
+                - text: Excel Uploads
+              - list [ref=f3e1094]:
+                - listitem [ref=f3e1095]:
+                  - link "COA" [ref=f3e1096] [cursor=pointer]:
+                    - /url: /upload/ChartofAccountExcelUpload.aspx
+                - listitem [ref=f3e1097]:
+                  - link "InvItem Uploads" [ref=f3e1098] [cursor=pointer]:
+                    - /url: /upload/InvItemsUpload.aspx
+                - listitem [ref=f3e1099]:
+                  - link "Items Stock Upload" [ref=f3e1100] [cursor=pointer]:
+                    - /url: /upload/ItemStockUpload.aspx
+                - listitem [ref=f3e1101]:
+                  - link "Vouchers Upload" [ref=f3e1102] [cursor=pointer]:
+                    - /url: /upload/VouchersUpload.aspx
+            - listitem [ref=f3e1103]:
+              - link " Panel Agreement" [ref=f3e1104] [cursor=pointer]:
+                - /url: /Modules/Dashboards/ShortCuts.aspx
+                - generic [ref=f3e1105]: 
+                - text: Panel Agreement
+              - list [ref=f3e1106]:
+                - listitem [ref=f3e1107]:
+                  - link "Add New" [ref=f3e1108] [cursor=pointer]:
+                    - /url: /Modules/Administrator/panelagreement.aspx
+                - listitem [ref=f3e1109]:
+                  - link "Panel View" [ref=f3e1110] [cursor=pointer]:
+                    - /url: /Modules/Administrator/PanelView.aspx
+            - listitem [ref=f3e1111]:
+              - link "Backup Database" [ref=f3e1112] [cursor=pointer]:
+                - /url: /BackupDatabase.aspx
+            - listitem [ref=f3e1113]:
+              - link " HRM" [ref=f3e1114] [cursor=pointer]:
+                - /url: /Modules/Dashboards/ShortCuts.aspx
+                - generic [ref=f3e1115]: 
+                - text: HRM
+              - list [ref=f3e1116]:
+                - listitem [ref=f3e1117]:
+                  - link " Employee/Doctor" [ref=f3e1118] [cursor=pointer]:
+                    - /url: /Modules/Dashboards/ShortCuts.aspx
+                    - generic [ref=f3e1119]: 
+                    - text: Employee/Doctor
+                  - list [ref=f3e1120]:
+                    - listitem [ref=f3e1121]:
+                      - link "Add New Employee" [ref=f3e1122] [cursor=pointer]:
+                        - /url: /Modules/Administrator/Employee.aspx
+                    - listitem [ref=f3e1123]:
+                      - link "Employee List" [ref=f3e1124] [cursor=pointer]:
+                        - /url: /Modules/Administrator/EmployeeView.aspx
+                    - listitem [ref=f3e1125]:
+                      - link "Employee Roster" [ref=f3e1126] [cursor=pointer]:
+                        - /url: /Modules/Administrator/Employee_Roster.aspx
+                    - listitem [ref=f3e1127]:
+                      - link "Employee Roster List" [ref=f3e1128] [cursor=pointer]:
+                        - /url: /Modules/Administrator/Employee_Roster_list.aspx
+                - listitem [ref=f3e1129]:
+                  - link " Shift" [ref=f3e1130] [cursor=pointer]:
+                    - /url: /Modules/Dashboards/ShortCuts.aspx
+                    - generic [ref=f3e1131]: 
+                    - text: Shift
+                  - list [ref=f3e1132]:
+                    - listitem [ref=f3e1133]:
+                      - link "HR Shift List" [ref=f3e1134] [cursor=pointer]:
+                        - /url: /HR_Shifts_View.aspx
+                    - listitem [ref=f3e1135]:
+                      - link "Add HR Shift" [ref=f3e1136] [cursor=pointer]:
+                        - /url: /Modules/Administrator/HR_Shifts.aspx
+                - listitem [ref=f3e1137]:
+                  - link " Policy" [ref=f3e1138] [cursor=pointer]:
+                    - /url: /Modules/Dashboards/ShortCuts.aspx
+                    - generic [ref=f3e1139]: 
+                    - text: Policy
+                  - list [ref=f3e1140]:
+                    - listitem [ref=f3e1141]:
+                      - link "Define Policy" [ref=f3e1142] [cursor=pointer]:
+                        - /url: /Modules/Administrator/Define_Policy.aspx
+                    - listitem [ref=f3e1143]:
+                      - link "Policy View" [ref=f3e1144] [cursor=pointer]:
+                        - /url: /Modules/Administrator/Define_Policy_View.aspx
+                    - listitem [ref=f3e1145]:
+                      - link "Shift Assign Policy" [ref=f3e1146] [cursor=pointer]:
+                        - /url: /Modules/Administrator/Shift_Assign_Policy.aspx
+                    - listitem [ref=f3e1147]:
+                      - link "Shift Assign View" [ref=f3e1148] [cursor=pointer]:
+                        - /url: /Modules/Administrator/Shift__Policy_View.aspx
+                    - listitem [ref=f3e1149]:
+                      - link "Department Assign Policy" [ref=f3e1150] [cursor=pointer]:
+                        - /url: /Modules/Administrator/Department_Assign_Policy.aspx
+                    - listitem [ref=f3e1151]:
+                      - link "Department Policy View" [ref=f3e1152] [cursor=pointer]:
+                        - /url: /Modules/Administrator/Department_Assign_View.aspx
+            - listitem [ref=f3e1153]:
+              - link " Doctor Agreement" [ref=f3e1154] [cursor=pointer]:
+                - /url: /Modules/Dashboards/ShortCuts.aspx
+                - generic [ref=f3e1155]: 
+                - text: Doctor Agreement
+              - list [ref=f3e1156]:
+                - listitem [ref=f3e1157]:
+                  - link "Add Doctor Agreement" [ref=f3e1158] [cursor=pointer]:
+                    - /url: /Modules/Administrator/AddDoctorAgreement.aspx
+                - listitem [ref=f3e1159]:
+                  - link "Doctor Agreement View" [ref=f3e1160] [cursor=pointer]:
+                    - /url: /Modules/Administrator/DoctorAgreementView.aspx
+            - listitem [ref=f3e1161]:
+              - link " Medicine Template" [ref=f3e1162] [cursor=pointer]:
+                - /url: /Modules/Dashboards/#
+                - generic [ref=f3e1163]: 
+                - text: Medicine Template
+              - list [ref=f3e1164]:
+                - listitem [ref=f3e1165]:
+                  - link "Add New" [ref=f3e1166] [cursor=pointer]:
+                    - /url: /Modules/Administrator/MedicineTemplate.aspx
+                - listitem [ref=f3e1167]:
+                  - link "List View" [ref=f3e1168] [cursor=pointer]:
+                    - /url: /Modules/Administrator/TemplateList.aspx
+            - listitem [ref=f3e1169]:
+              - link " Doctor Templates" [ref=f3e1170] [cursor=pointer]:
+                - /url: /Modules/Dashboards/#
+                - generic [ref=f3e1171]: 
+                - text: Doctor Templates
+              - list [ref=f3e1172]:
+                - listitem [ref=f3e1173]:
+                  - link "Doctor Template" [ref=f3e1174] [cursor=pointer]:
+                    - /url: /Modules/Administrator/Doctor_Template.aspx
+                - listitem [ref=f3e1175]:
+                  - link "Doctor Template List" [ref=f3e1176] [cursor=pointer]:
+                    - /url: /Modules/Administrator/Doctor_Template_list.aspx
+            - listitem [ref=f3e1177]:
+              - link " Pharmacy Template" [ref=f3e1178] [cursor=pointer]:
+                - /url: /Modules/Dashboards/ShortCuts.aspx
+                - generic [ref=f3e1179]: 
+                - text: Pharmacy Template
+              - list [ref=f3e1180]:
+                - listitem [ref=f3e1181]:
+                  - link "Add Pharmacy Template" [ref=f3e1182] [cursor=pointer]:
+                    - /url: /Modules/Administrator/PharmacyTemplate.aspx
+                - listitem [ref=f3e1183]:
+                  - link "Pharmacy Template View" [ref=f3e1184] [cursor=pointer]:
+                    - /url: /Modules/Administrator/PharmacyTemplateList.aspx
+            - listitem [ref=f3e1185]:
+              - link "Api" [ref=f3e1186] [cursor=pointer]:
+                - /url: /Modules/Administrator/API.aspx
+            - listitem [ref=f3e1187]:
+              - link " Doctor Payable" [ref=f3e1188] [cursor=pointer]:
+                - /url: /Modules/Dashboards/ShortCuts.aspx
+                - generic [ref=f3e1189]: 
+                - text: Doctor Payable
+              - list [ref=f3e1190]:
+                - listitem [ref=f3e1191]:
+                  - link "Doctor Payable" [ref=f3e1192] [cursor=pointer]:
+                    - /url: /Modules/Administrator/Doctor_Payable.aspx
+                - listitem [ref=f3e1193]:
+                  - link "Doctor Payable View" [ref=f3e1194] [cursor=pointer]:
+                    - /url: /Modules/Administrator/DoctorPayableView.aspx
+            - listitem [ref=f3e1195]:
+              - link "Survey form" [ref=f3e1196] [cursor=pointer]:
+                - /url: /Modules/Administrator/SurveyForm.aspx
+            - listitem [ref=f3e1197]:
+              - link "Add Company" [ref=f3e1198] [cursor=pointer]:
+                - /url: /Modules/Administrator/AddCompany.aspx
+            - listitem [ref=f3e1199]:
+              - link " Procedure Template" [ref=f3e1200] [cursor=pointer]:
+                - /url: /Modules/Dashboards/ShortCuts.aspx
+                - generic [ref=f3e1201]: 
+                - text: Procedure Template
+              - list [ref=f3e1202]:
+                - listitem [ref=f3e1203]:
+                  - link "Add Procedure Template" [ref=f3e1204] [cursor=pointer]:
+                    - /url: /Modules/Administrator/Procedure_Template.aspx
+                - listitem [ref=f3e1205]:
+                  - link "Procedure Template List" [ref=f3e1206] [cursor=pointer]:
+                    - /url: /Modules/Administrator/Procedure_Template_list.aspx
+      - generic [ref=f3e1207]:
+        - text:  
+        - generic [ref=f3e1209]:
+          - heading "Dashboard  PR to PO to IGP Dashboard" [level=1] [ref=f3e1211]:
+            - text: Dashboard
+            - generic [ref=f3e1212]:
+              - generic [ref=f3e1213]: 
+              - text: PR to PO to IGP Dashboard
+          - generic [ref=f3e1216]:
+            - heading "PR → PO → IGP Pipeline" [level=1] [ref=f3e1217]
+            - paragraph [ref=f3e1218]: Purchase Requisition → Purchase Order → Inward Gate Pass — pending red, completed green
+          - generic [ref=f3e1219]:
+            - generic [ref=f3e1220]:
+              - generic [ref=f3e1221]: Start Date (PR Date)
+              - textbox "All" [ref=f3e1222]
+            - generic [ref=f3e1223]:
+              - generic [ref=f3e1224]: End Date (PR Date)
+              - textbox "All" [ref=f3e1225]
+            - generic [ref=f3e1226]:
+              - button "Search" [ref=f3e1227] [cursor=pointer]
+              - button "Clear" [ref=f3e1228] [cursor=pointer]
+          - generic [ref=f3e1229]:
+            - generic [ref=f3e1230] [cursor=pointer]:
+              - generic [ref=f3e1231]: Total PRs
+              - generic [ref=f3e1232]: "0"
+            - generic [ref=f3e1233] [cursor=pointer]:
+              - generic [ref=f3e1234]: Total POs
+              - generic [ref=f3e1235]: "0"
+            - generic [ref=f3e1236] [cursor=pointer]:
+              - generic [ref=f3e1237]: Total IGPs
+              - generic [ref=f3e1238]: "0"
+            - generic [ref=f3e1239] [cursor=pointer]:
+              - generic [ref=f3e1240]: 
+              - generic [ref=f3e1241]: Direct POs (No PR)
+              - generic [ref=f3e1242]: "0"
+          - generic [ref=f3e1243]:
+            - generic [ref=f3e1244] [cursor=pointer]:
+              - generic [ref=f3e1245]: Total PR Items
+              - generic [ref=f3e1246]: "0"
+            - generic [ref=f3e1248] [cursor=pointer]:
+              - generic [ref=f3e1249]: Pending Approval
+              - generic [ref=f3e1250]: "0"
+            - generic [ref=f3e1252] [cursor=pointer]:
+              - generic [ref=f3e1253]: Pending PO
+              - generic [ref=f3e1254]: "0"
+            - generic [ref=f3e1256] [cursor=pointer]:
+              - generic [ref=f3e1257]: Pending IGP
+              - generic [ref=f3e1258]: "0"
+            - generic [ref=f3e1260] [cursor=pointer]:
+              - generic [ref=f3e1261]: Partially Received
+              - generic [ref=f3e1262]: "0"
+            - generic [ref=f3e1264] [cursor=pointer]:
+              - generic [ref=f3e1265]: Completed
+              - generic [ref=f3e1266]: "0"
+          - generic [ref=f3e1269]:
+            - generic [ref=f3e1270]: Pipeline Completion
+            - generic [ref=f3e1271]: 0%
+          - generic [ref=f3e1273]:
+            - heading "Stage Distribution" [level=3] [ref=f3e1275]
+            - heading "Monthly PR Items — Pending vs Completed" [level=3] [ref=f3e1278]
+          - heading "Top 10 Pending Items (by PR Qty)" [level=3] [ref=f3e1281]
+          - table [ref=f3e1284]:
+            - rowgroup [ref=f3e1285]:
+              - row [ref=f3e1286]:
+                - columnheader "PR No" [ref=f3e1287]
+                - columnheader "PR Date" [ref=f3e1288]
+                - columnheader "PR Status" [ref=f3e1289]
+                - columnheader "Item" [ref=f3e1290]
+                - columnheader "PR Qty" [ref=f3e1291]
+                - columnheader "PO No" [ref=f3e1292]
+                - columnheader "PO Status" [ref=f3e1293]
+                - columnheader "IGP No" [ref=f3e1294]
+                - columnheader "IGP Date" [ref=f3e1295]
+                - columnheader "Received Qty" [ref=f3e1296]
+                - columnheader "Status" [ref=f3e1297]
+            - rowgroup
+  - generic [ref=f3e1299]:
+    - generic [ref=f3e1300]:
+      - generic [ref=f3e1301]: TibbIT – Health Platform By Garaj
+      - paragraph [ref=f3e1302]: An all-in-one Hospital Management Information System (HMIS) designed to streamline your hospital operations, enhance patient care, and drive smarter, faster decision-making — all through one easy-to-use platform.
+    - generic [ref=f3e1303]:
+      - generic [ref=f3e1304]: Contact Us
+      - generic [ref=f3e1305]:
+        - generic [ref=f3e1306]: 
+        - generic [ref=f3e1307]: 042-111-17-18-19
+      - generic [ref=f3e1308]:
+        - generic [ref=f3e1309]: 
+        - generic [ref=f3e1310]: National@gmail.com
