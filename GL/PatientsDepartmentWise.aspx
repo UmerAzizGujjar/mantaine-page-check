@@ -1839,7 +1839,7 @@
                     }
                     if (rptTitle == "Pending_Payment_Request_Report") {
                         var exporttopdf = document.getElementById('<%= chkExportPDF.ClientID %>').checked;
-                        var url = 'ReportViewer.aspx?ReportName=Pending_Payment_Request_Report&ReportTitle=Pending Payment Request Report From  ' + $('#ctl00_MainContent_txtStart_Date').val() + ' to ' + $('#ctl00_MainContent_txtEnd_Date').val() + '&sDate=' + $('#ctl00_MainContent_txtStart_Date').val() + '&eDate=' + $('#ctl00_MainContent_txtEnd_Date').val() + '&ExportPDF=' + exporttopdf;
+                        var url = 'ReportViewer.aspx?ReportName=Pending_Payment_Request_Report&ReportTitle=Pending Payment Request Report From  ' + $('#ctl00_MainContent_txtStart_Date').val() + ' to ' + $('#ctl00_MainContent_txtEnd_Date').val() + '&sDate=' + $('#ctl00_MainContent_txtStart_Date').val() + '&eDate=' + $('#ctl00_MainContent_txtEnd_Date').val() + '&ItemID=' + $('#ctl00_MainContent_ddlItemName').val() + '&ExportPDF=' + exporttopdf;
                         window.open(url, '_blank');
                     }
                      if (rptTitle == "VendorWiseLedger") {

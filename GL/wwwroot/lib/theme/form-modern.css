@@ -1,0 +1,106 @@
+/* ==========================================================================
+   MODERN FORM TOGGLES  -  every <input type="checkbox"> on a form page is drawn as a switch
+   Loaded from Site.Master after table-modern.css. CSS only: the element is still a real
+   checkbox, so ids, name/value, postbacks, jQuery .prop('checked'), :checked and label clicks
+   all keep working. Nothing in any .aspx needs to change.
+
+   Stays a normal checkbox (add class "no-switch" to any checkbox to opt out):
+   * row pickers in data tables: DataTables / GridView / any <table> that has a <thead>
+   * the usual row-picker classes (row-select, select-row, chckrow, rowCheck, itemCheckbox ...)
+   * Telerik grids, jqGrid, Select2, SweetAlert and DataTables button popups
+
+   Colours come from theme-colors.css (--theme-accent ...) so each client theme and dark
+   mode keep their own brand colour. If a browser cannot parse the exclusion list the whole
+   rule is dropped and the page simply keeps its native checkboxes.
+   ========================================================================== */
+
+html {
+    --fm-off: #cbd5e1;
+    --fm-off-line: #b3c0d1;
+    --fm-knob: #ffffff;
+    --fm-accent: var(--theme-accent, #EFA63E);
+    --fm-ring: var(--theme-accent-ring, rgba(239, 166, 62, .35));
+    --fm-ink: var(--theme-ink, #1e293b);
+}
+html[data-theme="dark"] {
+    --fm-off: #3a4658;
+    --fm-off-line: #4a586d;
+    --fm-ink: var(--dk-text, #e6ebf2);
+}
+
+/* ---------- the switch ---------- */
+html:root body input[type="checkbox"]:not(:is(.no-switch,.row-select,.select-row,.chckrow,.rowCheck,.itemCheckbox,.chcktbl,.tx-select,.chktd,.select-checkbox,.dt-checkboxes,.dtr-control,thead *,th *,table.dataTable *,table[rules] *,table:has(> thead) *,.dataTables_wrapper *,.dt-button-collection *,.swal2-container *,.select2-container *,.rgRow *,.rgAltRow *,.rgHeader *,.RadGrid *,.ui-jqgrid *)) {
+    -webkit-appearance: none;
+    appearance: none;
+    position: relative !important;
+    display: inline-block;
+    flex: none;
+    box-sizing: border-box;
+    width: 34px !important;
+    min-width: 34px;
+    height: 19px !important;
+    margin: 3px 8px 3px 0 !important;   /* vertical room: many forms use 0-padding rows only 19px high */
+    padding: 0 !important;
+    vertical-align: middle;
+    background: var(--fm-off) !important;
+    border: 1px solid var(--fm-off-line) !important;
+    border-radius: 999px !important;
+    box-shadow: none !important;
+    outline: 0;
+    cursor: pointer;
+    transition: background-color .18s ease, border-color .18s ease, box-shadow .18s ease;
+}
+html:root body input[type="checkbox"]:not(:is(.no-switch,.row-select,.select-row,.chckrow,.rowCheck,.itemCheckbox,.chcktbl,.tx-select,.chktd,.select-checkbox,.dt-checkboxes,.dtr-control,thead *,th *,table.dataTable *,table[rules] *,table:has(> thead) *,.dataTables_wrapper *,.dt-button-collection *,.swal2-container *,.select2-container *,.rgRow *,.rgAltRow *,.rgHeader *,.RadGrid *,.ui-jqgrid *)):before {
+    content: "";
+    position: absolute;
+    top: 50%;
+    left: 2px;
+    width: 13px;
+    height: 13px;
+    border-radius: 50%;
+    background: var(--fm-knob);
+    box-shadow: 0 1px 2px rgba(0, 0, 0, .35);
+    transform: translateY(-50%);
+    transition: left .18s ease;
+}
+html:root body input[type="checkbox"]:not(:is(.no-switch,.row-select,.select-row,.chckrow,.rowCheck,.itemCheckbox,.chcktbl,.tx-select,.chktd,.select-checkbox,.dt-checkboxes,.dtr-control,thead *,th *,table.dataTable *,table[rules] *,table:has(> thead) *,.dataTables_wrapper *,.dt-button-collection *,.swal2-container *,.select2-container *,.rgRow *,.rgAltRow *,.rgHeader *,.RadGrid *,.ui-jqgrid *)):checked {
+    background: var(--fm-accent) !important;
+    border-color: var(--fm-accent) !important;
+}
+html:root body input[type="checkbox"]:not(:is(.no-switch,.row-select,.select-row,.chckrow,.rowCheck,.itemCheckbox,.chcktbl,.tx-select,.chktd,.select-checkbox,.dt-checkboxes,.dtr-control,thead *,th *,table.dataTable *,table[rules] *,table:has(> thead) *,.dataTables_wrapper *,.dt-button-collection *,.swal2-container *,.select2-container *,.rgRow *,.rgAltRow *,.rgHeader *,.RadGrid *,.ui-jqgrid *)):checked:before { left: calc(100% - 15px); }
+html:root body input[type="checkbox"]:not(:is(.no-switch,.row-select,.select-row,.chckrow,.rowCheck,.itemCheckbox,.chcktbl,.tx-select,.chktd,.select-checkbox,.dt-checkboxes,.dtr-control,thead *,th *,table.dataTable *,table[rules] *,table:has(> thead) *,.dataTables_wrapper *,.dt-button-collection *,.swal2-container *,.select2-container *,.rgRow *,.rgAltRow *,.rgHeader *,.RadGrid *,.ui-jqgrid *)):hover:not(:disabled) { border-color: var(--fm-accent) !important; }
+html:root body input[type="checkbox"]:not(:is(.no-switch,.row-select,.select-row,.chckrow,.rowCheck,.itemCheckbox,.chcktbl,.tx-select,.chktd,.select-checkbox,.dt-checkboxes,.dtr-control,thead *,th *,table.dataTable *,table[rules] *,table:has(> thead) *,.dataTables_wrapper *,.dt-button-collection *,.swal2-container *,.select2-container *,.rgRow *,.rgAltRow *,.rgHeader *,.RadGrid *,.ui-jqgrid *)):focus-visible { box-shadow: 0 0 0 3px var(--fm-ring) !important; }
+html:root body input[type="checkbox"]:not(:is(.no-switch,.row-select,.select-row,.chckrow,.rowCheck,.itemCheckbox,.chcktbl,.tx-select,.chktd,.select-checkbox,.dt-checkboxes,.dtr-control,thead *,th *,table.dataTable *,table[rules] *,table:has(> thead) *,.dataTables_wrapper *,.dt-button-collection *,.swal2-container *,.select2-container *,.rgRow *,.rgAltRow *,.rgHeader *,.RadGrid *,.ui-jqgrid *)):disabled { opacity: .5; cursor: not-allowed; }
+html:root body input[type="checkbox"]:not(:is(.no-switch,.row-select,.select-row,.chckrow,.rowCheck,.itemCheckbox,.chcktbl,.tx-select,.chktd,.select-checkbox,.dt-checkboxes,.dtr-control,thead *,th *,table.dataTable *,table[rules] *,table:has(> thead) *,.dataTables_wrapper *,.dt-button-collection *,.swal2-container *,.select2-container *,.rgRow *,.rgAltRow *,.rgHeader *,.RadGrid *,.ui-jqgrid *)):indeterminate:before { left: calc(50% - 6px); }
+
+/* ---------- alignment ---------- */
+/* label next to a switch: same baseline as the switch, clickable, no stray margins */
+html:root body input[type="checkbox"] + label,
+html:root body input[type="checkbox"] + .lbl,
+html:root body input[type="checkbox"] + span.form-check-label {
+    display: inline-block;
+    margin: 0;
+    vertical-align: middle;
+    line-height: 19px;
+    cursor: pointer;
+}
+/* a switch that is alone in its cell / span (label lives in the neighbouring cell): breathing room on its left too,
+   otherwise it touches the previous column's label */
+html:root body input[type="checkbox"]:not(:is(.no-switch,.row-select,.select-row,.chckrow,.rowCheck,.itemCheckbox,.chcktbl,.tx-select,.chktd,.select-checkbox,.dt-checkboxes,.dtr-control,thead *,th *,table.dataTable *,table[rules] *,table:has(> thead) *,.dataTables_wrapper *,.dt-button-collection *,.swal2-container *,.select2-container *,.rgRow *,.rgAltRow *,.rgHeader *,.RadGrid *,.ui-jqgrid *)):only-child { margin-left: 12px !important; }
+/* Bootstrap-5 style wrappers: let the wrapper grow to fit the switch (some pages hard-code width:26px) */
+html:root body .form-check:has(> input[type="checkbox"]) {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    width: auto !important;
+    padding-left: 0;
+}
+html:root body .form-check:has(> input[type="checkbox"]) > input[type="checkbox"] { margin-left: 0 !important; margin-right: 0 !important; float: none !important; }
+/* Bootstrap-3 .checkbox rows: input is absolutely positioned with a negative margin, undo it */
+html:root body .checkbox > label > input[type="checkbox"],
+html:root body .checkbox-inline > input[type="checkbox"] { position: relative !important; margin-left: 0 !important; }
+html:root body .checkbox > label { padding-left: 0; }
+
+@media (prefers-reduced-motion: reduce) {
+    html:root body input[type="checkbox"]:not(:is(.no-switch,.row-select,.select-row,.chckrow,.rowCheck,.itemCheckbox,.chcktbl,.tx-select,.chktd,.select-checkbox,.dt-checkboxes,.dtr-control,thead *,th *,table.dataTable *,table[rules] *,table:has(> thead) *,.dataTables_wrapper *,.dt-button-collection *,.swal2-container *,.select2-container *,.rgRow *,.rgAltRow *,.rgHeader *,.RadGrid *,.ui-jqgrid *)), html:root body input[type="checkbox"]:not(:is(.no-switch,.row-select,.select-row,.chckrow,.rowCheck,.itemCheckbox,.chcktbl,.tx-select,.chktd,.select-checkbox,.dt-checkboxes,.dtr-control,thead *,th *,table.dataTable *,table[rules] *,table:has(> thead) *,.dataTables_wrapper *,.dt-button-collection *,.swal2-container *,.select2-container *,.rgRow *,.rgAltRow *,.rgHeader *,.RadGrid *,.ui-jqgrid *)):before { transition: none !important; }
+}

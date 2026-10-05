@@ -694,14 +694,16 @@
         html body .main-content { padding-bottom: 90px !important; }
 
         html body .app-footer {
-            position: absolute !important;
+            position: fixed !important;           /* static: stays at the bottom of the window while the page scrolls */
             bottom: 0;
             left: 0;
-            width: 100% !important;
+            right: 0;
+            z-index: 900;                         /* above page content, below menus / modals / date pickers */
+            width: auto !important;
             height: auto !important;
-            min-height: 52px;
+            min-height: 48px;
             margin: 0 !important;
-            padding: 12px 24px !important;
+            padding: 8px 24px !important;
             display: block !important;
             background: var(--theme-footer-bg, linear-gradient(180deg, #24344f 0%, #1b2a41 100%)) !important;
             border-top: 3px solid var(--theme-footer-line, #EFA63E);
@@ -758,7 +760,12 @@
 
             .app-footer-brand-name span { font-weight: 400; opacity: .85; font-size: 14px; }
 
-        .app-footer-brand-tag { margin: 3px 0 0; font-size: 12.5px; line-height: 1.5; opacity: .85; max-width: 820px; }
+        .app-footer-brand-tag { margin: 1px 0 0; font-size: 12px; line-height: 1.4; opacity: .85; max-width: 820px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+
+        /* keep the floating quick-time button clear of the fixed footer */
+        html body .quick-time-toggle { bottom: max(10vh, 84px) !important; }
+
+        @media print { html body .app-footer { display: none !important; } }
 
         .app-footer-contact {
             display: flex;
@@ -773,11 +780,15 @@
             }
 
         @media screen and (max-width: 768px) {
-            html body .main-content { padding-bottom: 150px !important; }
+            html body .main-content { padding-bottom: 96px !important; }
 
-            html body .app-footer { padding: 10px 14px !important; }
+            html body .app-footer { padding: 6px 14px !important; min-height: 0; }
 
-            .app-footer-inner { flex-direction: column; gap: 4px; text-align: center; }
+            html body .quick-time-toggle { bottom: 84px !important; }
+
+            .app-footer-brand-name { font-size: 14px; }
+
+            .app-footer-inner { flex-direction: column; gap: 2px; text-align: center; }
 
             .app-footer-brand .app-footer-inner { align-items: center; }
 
@@ -789,7 +800,11 @@
 
             .app-footer-contact { justify-content: center; }
 
-                .app-footer-contact .app-footer-title { border-right: 0; padding-right: 0; width: 100%; text-align: center; }
+                .app-footer-contact .app-footer-title { display: none; }
+
+            .app-footer-contact { gap: 2px 18px; }
+
+            .app-footer i.fa { margin-right: 5px; font-size: 13px; width: 14px; }
         }
     </style>
     <script type="text/javascript">
@@ -881,8 +896,13 @@
         <script src="<%= Page.ResolveClientUrl("~/wwwroot/lib/theme/theme-toggle.js") %>?v=3" type="text/javascript"></script>
     </asp:PlaceHolder>
     <%-- Modern data tables (DataTables + .table): loaded AFTER the dark-mode files on purpose --%>
-    <link href="<%= Page.ResolveClientUrl("~/wwwroot/lib/theme/table-modern.css") %>?v=1" rel="stylesheet" type="text/css" />
+    <link href="<%= Page.ResolveClientUrl("~/wwwroot/lib/theme/table-modern.css") %>?v=3" rel="stylesheet" type="text/css" />
     <script src="<%= Page.ResolveClientUrl("~/wwwroot/lib/theme/table-modern.js") %>?v=1" type="text/javascript" defer="defer"></script>
+    <%-- One look for every date / time picker (theme colours + month/year drop-downs); loaded after the dark-mode files --%>
+    <link href="<%= Page.ResolveClientUrl("~/wwwroot/lib/theme/datepicker-modern.css") %>?v=4" rel="stylesheet" type="text/css" />
+    <script src="<%= Page.ResolveClientUrl("~/wwwroot/lib/theme/datepicker-modern.js") %>?v=4" type="text/javascript"></script>
+    <%-- Checkboxes drawn as toggle switches on every form (opt out with class="no-switch") --%>
+    <link href="<%= Page.ResolveClientUrl("~/wwwroot/lib/theme/form-modern.css") %>?v=2" rel="stylesheet" type="text/css" />
 </head>
 <body class="no-skin" onload="releasemenu()">
     <form runat="server" id="MasterPageForm1">
