@@ -1,0 +1,44 @@
+- generic [active] [ref=e1]:
+  - generic [ref=e2]:
+    - table [ref=e8]:
+      - rowgroup [ref=e9]:
+        - row [ref=e10]:
+          - cell [ref=e11]:
+            - generic [ref=e12]:
+              - group [ref=e13]:
+                - img "Company Logo" [ref=e15]
+                - heading "Welcome Back" [level=2] [ref=e16]
+                - paragraph [ref=e17]: Enter your username and password to sign in.
+                - generic [ref=e18]: "Username:"
+                - generic [ref=e22]:
+                  - textbox "Username:" [ref=e23]
+                  - paragraph
+                - generic [ref=e24]: "Password:"
+                - generic [ref=e28]:
+                  - generic [ref=e29]:
+                    - textbox "Password:" [ref=e30]
+                    - generic [ref=e31] [cursor=pointer]: 
+                  - paragraph
+                - generic [ref=e32]: "Company:"
+                - combobox "Company:" [ref=e37]:
+                  - option "Please Select"
+                  - option "National Hospital & Medical Centre" [selected]
+                  - option "National Hospital & Lab"
+                - link "Forgot Password ?" [ref=e39] [cursor=pointer]:
+                  - /url: javascript:__doPostBack('ctl00$MainContent$UserLogin$forgetPassword','')
+              - paragraph [ref=e40]:
+                - button "LOGIN" [ref=e41] [cursor=pointer]
+    - separator [ref=e42]
+    - generic [ref=e43]:
+      - strong [ref=e44]: "Website:"
+      - link "www.visionplus.com.pk" [ref=e45] [cursor=pointer]:
+        - /url: http://www.visionplus.com.pk
+      - strong [ref=e46]: "Email:"
+      - link "info@visionplus.com.pk" [ref=e47] [cursor=pointer]:
+        - /url: mailto:info@visionplus.com.pk
+      - strong [ref=e48]: "For Support:"
+      - text: 042-35136381
+  - generic [ref=e50]:
+    - text: Application Developed by
+    - link "VisionPlus Technologies (Pvt) LTD." [ref=e51] [cursor=pointer]:
+      - /url: http://www.visionplus.com.pk

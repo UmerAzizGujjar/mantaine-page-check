@@ -384,6 +384,7 @@
     <Content Include="Modules\Dashboards\OPD_Utilization_Dashboard.aspx" />
     <Content Include="Modules\Dashboards\Inventory_ProcurementDashboard.aspx" />
     <Content Include="Modules\Dashboards\Inventory_Dashboard.aspx" />
+    <Content Include="Modules\Dashboards\PR_PO_IGP_Dashboard.aspx" />
     <Content Include="Modules\Dashboards\LabSection.aspx" />
     <Content Include="Modules\Dashboards\NewEMR.aspx" />
     <Content Include="Modules\Dashboards\PatientsTurnOver.aspx" />
@@ -1183,6 +1184,10 @@
     <Content Include="wwwroot\lib\jquery\jquery.mask.js" />
     <Content Include="wwwroot\lib\theme\dark-theme.css" />
     <Content Include="wwwroot\lib\theme\dark-pages.css" />
+    <Content Include="wwwroot\lib\theme\menu-modern.css" />
+    <Content Include="wwwroot\lib\theme\menu-modern.js" />
+    <Content Include="wwwroot\lib\theme\table-modern.css" />
+    <Content Include="wwwroot\lib\theme\table-modern.js" />
     <Content Include="wwwroot\lib\theme\theme-toggle.js" />
     <Content Include="wwwroot\lib\jquery\jquery.min.js" />
     <Content Include="wwwroot\lib\jquery\jquery.mobile.custom.min.js" />
@@ -3487,6 +3492,13 @@
     </Compile>
     <Compile Include="Modules\Dashboards\Inventory_Dashboard.aspx.designer.cs">
       <DependentUpon>Inventory_Dashboard.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="Modules\Dashboards\PR_PO_IGP_Dashboard.aspx.cs">
+      <DependentUpon>PR_PO_IGP_Dashboard.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Modules\Dashboards\PR_PO_IGP_Dashboard.aspx.designer.cs">
+      <DependentUpon>PR_PO_IGP_Dashboard.aspx</DependentUpon>
     </Compile>
     <Compile Include="Modules\Dashboards\LabSection.aspx.cs">
       <DependentUpon>LabSection.aspx</DependentUpon>

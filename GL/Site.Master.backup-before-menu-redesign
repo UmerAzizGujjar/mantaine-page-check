@@ -1,0 +1,1724 @@
+﻿<%@ Master Language="C#" AutoEventWireup="true" CodeBehind="SiteMaster.master.cs" Inherits="PMS.SiteMaster" %>
+
+<%@ Register Assembly="AjaxControlToolkit" Namespace="AjaxControlToolkit" TagPrefix="asp" %>
+<%@ Register Src="~/wwwroot/THEME_TIBBIT/header-footer/Footer.ascx" TagPrefix="uc" TagName="Footer" %>
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en">
+<head id="Head1" runat="server">
+    <meta charset="UTF-8">
+    <%-- Dark/Light mode: apply the saved choice before the page paints (no white flash). Light is the default. --%>
+    <script type="text/javascript">
+        (function () { try { if (localStorage.getItem('hmis-theme-mode') === 'dark') { document.documentElement.setAttribute('data-theme', 'dark'); } } catch (e) { } })();
+    </script>
+    <title>Hospital Management System</title>
+    <link rel="icon" type="image/x-icon" href="wwwroot/SOURCE_IMAGES/GENERAL_ICONS/Icon.png" />
+    <asp:PlaceHolder ID="PlaceHolder1" runat="server">
+
+        <link rel="stylesheet" type="text/css" href="<%=Page.ResolveUrl("~/wwwroot/lib/jquery/jquery.datetimepicker.css") %>" />
+        <link href="<%= Page.ResolveClientUrl("~/wwwroot/lib/bootstrap/bootstrap.min.css") %>" rel="stylesheet" type="text/css" />
+        <link href="<%= Page.ResolveClientUrl("~/wwwroot/lib/bootstrap/bootstrap.min.js") %>" rel="stylesheet" type="text/css" />
+        <link href="<%= Page.ResolveClientUrl("~/wwwroot/lib/fontawesome/css/font-awesome.min.css") %>" rel="stylesheet" type="text/css" />
+        <link href="<%= Page.ResolveClientUrl("~/wwwroot/lib/jquery/buttons.jqueryui.min.css") %>" rel="stylesheet" type="text/css" />
+        <link href="<%= Page.ResolveClientUrl("~/wwwroot/lib/fonts/fonts.googleapis.com.css") %>" rel="stylesheet" type="text/css" />
+        <link href="<%= Page.ResolveClientUrl("~/wwwroot/lib/ace/ace.min.css") %>" rel="stylesheet" type="text/css" />
+
+        <link href="<%= Page.ResolveClientUrl("~/wwwroot/lib/select2/select2.min.css") %>" rel="stylesheet" type="text/css" />
+        <link href="<%= Page.ResolveClientUrl("~/wwwroot/lib/ace/ace-skins.min.css") %>" rel="stylesheet" type="text/css" />
+        <link href="<%= Page.ResolveClientUrl("~/wwwroot/lib/ace/ace-rtl.min.css") %>" rel="stylesheet" type="text/css" />
+        <link href="<%= Page.ResolveClientUrl("~/wwwroot/THEME_TIBBIT/styleMaster.css") %>" rel="stylesheet" type="text/css" />
+        <link href="<%= Page.ResolveClientUrl("~/wwwroot/THEME_TIBBIT/theme-colors.css") %>" rel="stylesheet" type="text/css" />
+         <link href="<%= Page.ResolveClientUrl("~/wwwroot/lib/jquery/jquery-ui.css") %>" rel="stylesheet" type="text/css" />
+        <link href="<%= Page.ResolveClientUrl("~/wwwroot/lib/token_input/token-input.css") %>" type="text/css" rel="stylesheet" />
+        <link href="<%= Page.ResolveClientUrl("~/wwwroot/lib/loader/loader.css") %>" rel="stylesheet" />
+        <link rel="stylesheet" href="<%= Page.ResolveClientUrl("~/wwwroot/lib/bootstrap/bootstrap-timepicker.css") %>" type="text/css" />
+        <link rel="stylesheet" href="<%= Page.ResolveClientUrl("~/wwwroot/lib/bootstrap/bootstrap-datetimepicker.css") %>" type="text/css" />
+        <link href="<%= Page.ResolveClientUrl("~/wwwroot/lib/jquery/jquery.ptTimeSelect.css") %>" rel="stylesheet" type="text/css" />
+
+
+
+        <%--datatable css--%>
+        <link rel="stylesheet" href="<%= Page.ResolveClientUrl("~/wwwroot/lib/datatable/buttons.dataTables.min.css") %>" type="text/css" />
+        <link rel="stylesheet" href="<%= Page.ResolveClientUrl("~/wwwroot/lib/datatable/jquery.dataTables.min.css") %>" type="text/css" />
+        <script src="<%= Page.ResolveClientUrl("~/wwwroot/lib/jquery/jquery-2.1.4.min.js") %>" type="text/javascript"></script>
+        <script src="<%= Page.ResolveClientUrl("~/wwwroot/lib/ace/ace-extra.min.js") %>" type="text/javascript"></script>
+        <script src="<%= Page.ResolveClientUrl("~/wwwroot/lib/jquery/jquery-1.8.0.js") %>" type="text/javascript"></script>
+        <script src="<%= Page.ResolveClientUrl("~/wwwroot/lib/moment/moment.min.js") %>" type="text/javascript"></script>
+        <script src="<%= Page.ResolveClientUrl("~/wwwroot/lib/jquery/jquery-1.11.1.js") %>" type="text/javascript"></script>
+        <script type="text/javascript" src="<%=Page.ResolveUrl("~/wwwroot/lib/jquery/jquery.tokeninput.js") %>"></script>
+        <script type="text/javascript" src="<%=Page.ResolveUrl("~/wwwroot/lib/jquery/jquery.tokeninput.js") %>"></script>
+        <link href="<%= Page.ResolveClientUrl("~/wwwroot/lib/timepicker/timepicki.css")%>" rel="stylesheet" type="text/css" />
+        <script src="<%= Page.ResolveClientUrl("~/wwwroot/lib/jquery/jquery-ui.js") %>" type="text/javascript"></script>
+        <script src="<%= Page.ResolveClientUrl("~/wwwroot/lib/masked_input/masked_input_1.4-min.js") %>" type="text/javascript"></script>
+        <script type='text/javascript' src="<%= Page.ResolveClientUrl("~/wwwroot/lib/timepicker/timepicki.js")%>"></script>
+        <script src="<%= Page.ResolveClientUrl("~/wwwroot/lib/jquery/jquery.min.js")%>" type="text/javascript"></script>
+        <script src="<%= Page.ResolveClientUrl("~/wwwroot/lib/ckeditor/ckeditor.js")%>" type="text/javascript"></script>
+        <script src="<%= Page.ResolveClientUrl("~/wwwroot/lib/jquery/jquery.ptTimeSelect.js")%>" type="text/javascript"></script>
+
+        <script type="text/javascript" src="<%= Page.ResolveClientUrl("~/wwwroot/lib/jquery/jquery.searchabledropdown-1.0.8.min.js") %>"></script>
+        <script type="text/javascript" src="<%= Page.ResolveClientUrl("~/wwwroot/lib/select2/select2.min.js") %>"></script>
+        <script src="<%=Page.ResolveUrl("~/wwwroot/lib/jquery/jquery.datetimepicker.js") %>" type="text/javascript"></script>
+        <script src="<%=Page.ResolveUrl("~/wwwroot/lib/toastr/toastr.min.js") %>" type="text/javascript"></script>
+        <script src="<%= Page.ResolveClientUrl("~/wwwroot/lib/jquery/jquery-ui.js")%>" type="text/javascript"></script>
+        <%--datatable js--%>
+        <script src="<%= Page.ResolveClientUrl("~/wwwroot/lib/datatable/jquery.dataTables.min.js")%>" type="text/javascript"></script>
+        <script src="<%= Page.ResolveClientUrl("~/wwwroot/lib/datatable/dataTables.buttons.min.js")%>" type="text/javascript"></script>
+        <script src="<%= Page.ResolveClientUrl("~/wwwroot/lib/datatable/buttons.html5.min.js")%>" type="text/javascript"></script>
+        <script src="<%= Page.ResolveClientUrl("~/wwwroot/lib/datatable/jszip.min.js")%>" type="text/javascript"></script>
+        <script src="<%= Page.ResolveClientUrl("~/wwwroot/lib/datatable/vfs_fonts.js")%>" type="text/javascript"></script>
+        <script src="<%= Page.ResolveClientUrl("~/wwwroot/lib/datatable/buttons.print.min.js")%>" type="text/javascript"></script>
+        <script src="<%= Page.ResolveClientUrl("~/wwwroot/lib/datatable/pdfmake.min.js")%>" type="text/javascript"></script>
+        <script src="<%= Page.ResolveClientUrl("~/wwwroot/lib/datatable/LatestDataTableColumns.min.js")%>" type="text/javascript"></script>
+        <%--datatable js--%>
+        <script type="text/javascript" src="<%=Page.ResolveUrl("~/wwwroot/lib/jquery/jquery.tokeninput.js") %>"></script>
+        <script type="text/javascript" src="<%=Page.ResolveUrl("~/wwwroot/lib/jquery/jquery-ui.min.js") %>"></script>
+        <script type="text/javascript" src="<%=Page.ResolveUrl("~/wwwroot/lib/jquery/jquery.mask.js") %>"></script>
+        <script type="text/javascript" src="<%= Page.ResolveClientUrl("~/wwwroot/lib/datatable/vfs_fonts.js") %>"></script>
+        <script type="text/javascript" src="<%= Page.ResolveClientUrl("~/wwwroot/lib/jquery/jquery-ui.min.js") %>"></script>
+
+    </asp:PlaceHolder>
+    <style type="text/css">
+       
+</style>
+    <script type="text/javascript">
+        //jQuery.browser = {};
+        //(function () {
+        //    jQuery.browser.msie = false;
+        //    jQuery.browser.version = 0;
+        //    if (navigator.userAgent.match(/MSIE ([0-9]+)\./)) {
+        //        jQuery.browser.msie = true;
+        //        jQuery.browser.version = RegExp.$1;
+        //    }
+        //})();
+        function RunHRMS() {
+            $.ajax({
+                type: "POST",
+                url: "PatientManagementSection.aspx/RunHRMS",
+                contentType: "application/json; charset=utf-8",
+                dataType: "json",
+                success: function (response) {
+
+                },
+                Error: function (x, e) {
+                    alert(e)
+                }
+            });
+        }
+
+        $(window).load(function () {
+
+            $("#loading").delay(1000).fadeOut(1000);
+            $('#ctl00_lblMessage').hide();
+
+        });
+
+    </script>
+    <script type="text/javascript">
+     
+
+      
+        $(document).ajaxError(function (event, xhr, settings, thrownError) {
+            console.error("AJAX Error:", xhr.status, thrownError);
+
+            if (xhr.status === 500) {
+                try {
+                    var response = JSON.parse(xhr.responseText);
+                    if (response && response.redirect) {
+                    
+                        window.location.href = response.redirect;
+                        return;
+                    }
+                } catch (e) { }
+
+              
+                showToast("A server error occurred. Please try again or contact support.", "error");
+            }
+            else if (xhr.status === 404) {
+                showToast("Requested resource not found.", "warning");
+            }
+            else {
+                showToast("Network error. Please check your connection.", "warning");
+            }
+        });
+
+      
+        window.onerror = function (message, source, lineno, colno, error) {
+           
+
+            return true;
+        };
+
+        
+        window.addEventListener('unhandledrejection', function (event) {
+            console.error("Unhandled Promise Rejection:", event.reason);
+            showToast("Something went wrong. Please try again.", "error");
+            event.preventDefault();
+        });
+
+     
+        function showToast(message, type) {
+         
+            if (typeof toastr !== 'undefined') {
+                toastr[type](message);
+            }
+            else if (typeof Swal !== 'undefined') {
+                Swal.fire("Error", message, "error");
+            }
+            else {
+                alert(message); 
+            }
+        }
+    </script>
+
+
+
+    <script type="text/javascript">
+        $(document).ready(function () {
+           
+
+            const allowedExtensions = ['.pdf', '.doc', '.docx', '.xls', '.xlsx', '.png', '.jpg', '.jpeg'];
+
+            const allowedMimes = [
+                'application/pdf',
+                'application/msword',
+                'application/vnd.openxmlformats-officedocument.wordprocessingml.document',
+                'application/vnd.ms-excel',
+                'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
+                'image/png',
+                'image/jpeg',
+                'image/jpg'
+            ];
+
+            const maxSize = 10 * 1024 * 1024; // 10 MB
+
+          
+            $(document).on('change', 'input[type="file"]', function () {
+                const file = this.files[0];
+                if (!file) return;
+
+                const fileName = file.name.toLowerCase();
+                const fileExtension = fileName.substring(fileName.lastIndexOf('.'));
+                const fileType = file.type;
+                const fileSize = file.size;
+
+     
+                if (!allowedExtensions.includes(fileExtension)) {
+                    Swal.fire({
+                        icon: 'error',
+                        title: 'Invalid File Type',
+                        text: 'Only PDF, Word, Excel, PNG, JPG, and JPEG files are allowed.',
+                        confirmButtonText: 'OK',
+                        customClass: {
+                            popup: 'swal-big-popup',
+                            title: 'swal-big-title',
+                            htmlContainer: 'swal-big-text'
+                        }
+                    });
+                    this.value = '';
+                    return;
+                }
+
+                
+                if (!allowedMimes.includes(fileType)) {
+                    Swal.fire({
+                        icon: 'error',
+                        title: 'Unsupported File',
+                        text: 'File type not allowed. Please upload a valid file.',
+                        confirmButtonText: 'OK',
+                        customClass: {
+                            popup: 'swal-big-popup',
+                            title: 'swal-big-title',
+                            htmlContainer: 'swal-big-text'
+                        }
+                    });
+                    this.value = '';
+                    return;
+                }
+
+                if (fileSize > maxSize) {
+                    Swal.fire({
+                        icon: 'error',
+                        title: 'File Too Large',
+                        text: 'Maximum file size is 10 MB.',
+                        confirmButtonText: 'OK',
+                        customClass: {
+                            popup: 'swal-big-popup',
+                            title: 'swal-big-title',
+                            htmlContainer: 'swal-big-text'
+                        }
+                    });
+                    this.value = '';
+                    return;
+                }
+
+                Swal.fire({
+                    icon: 'success',
+                    title: 'File Accepted',
+                    text: `${file.name} is valid and ready to upload.`,
+                    confirmButtonText: 'Got it',
+                    timer: 1500,
+                    timerProgressBar: true,
+                    customClass: {
+                        popup: 'swal-big-popup',
+                        title: 'swal-big-title',
+                        htmlContainer: 'swal-big-text'
+                    }
+                });
+
+                console.log('Valid file selected:', file.name, 'Size:', fileSize, 'bytes');
+            });
+        });
+</script>
+<%--<script type="text/javascript">
+  
+    (function () {
+        
+        if (typeof window.skipDevToolsCheck !== 'undefined' && window.skipDevToolsCheck === true) {
+            console.log("DevTools detection skipped on this page.");
+            return; 
+        }
+
+        var devtoolsOpen = false;
+
+        
+        var loginUrl = "../../../Login.aspx";
+
+        function checkDevTools() {
+      
+            var threshold = 160;
+            var widthDiff = window.outerWidth - window.innerWidth;
+            var heightDiff = window.outerHeight - window.innerHeight;
+
+            if (widthDiff > threshold || heightDiff > threshold) {
+                if (!devtoolsOpen) {
+                    devtoolsOpen = true;
+                    alert("⚠️ Developer Tools detected! You will be logged out.");
+                    window.location.href = loginUrl;
+                }
+            }
+        }
+
+     
+        setInterval(checkDevTools, 1000);
+
+     
+        document.addEventListener("contextmenu", function (e) {
+            e.preventDefault();
+        }, false);
+
+       
+        document.addEventListener("keydown", function (e) {
+         
+            if (e.keyCode === 123) {
+                e.preventDefault();
+            }
+           
+            if (e.ctrlKey && e.shiftKey && e.keyCode === 73) {
+                e.preventDefault();
+            }
+          
+            if (e.ctrlKey && e.keyCode === 85) {
+                e.preventDefault();
+            }
+        }, false);
+
+        console.log("DevTools protection is ACTIVE on this page.");
+    })();
+</script>--%>
+    <asp:ContentPlaceHolder ID="ContentPlaceHolder1" runat="server"></asp:ContentPlaceHolder>
+
+    <style type="text/css">
+        @media screen and (max-width: 995px) {
+            .container-fluid {
+                padding-left: 0px !important;
+                padding-right: 0px !important;
+            }
+
+            .hamburger-btn {
+                background: none;
+                border: none;
+                cursor: pointer;
+                padding: 10px;
+                display: flex;
+                flex-direction: column;
+                justify-content: space-between;
+                width: 40px;
+            }
+
+                .hamburger-btn span {
+                    display: block;
+                    margin-top: 2px;
+                    height: 3px;
+                    width: 100%;
+                    background-color: #333;
+                    border-radius: 3px;
+                    transition: all 0.3s ease;
+                }
+
+            #ctl00_sidebar.hide-force {
+                transform: translateX(-120%);
+            }
+
+            .hover {
+                width: 160px !important;
+            }
+
+            .hamburger-row {
+                display: block !important;
+            }
+
+            #ctl00_sidebar {
+                width: 180px !important;
+                height: 100vh !important;
+                transition: transform 0.5s ease;
+                transform: translateX(0); /* visible */
+            }
+
+                #ctl00_sidebar.hide-force {
+                    transform: translateX(-120%);
+                }
+
+            .main {
+                width: 732px !important;
+                margin-left: 12%;
+            }
+
+            .headerWelcome {
+                font-size: 50%;
+            }
+
+            .table-container {
+                overflow-x: auto !important;
+                max-height: 600px !important;
+                height: 100% !important;
+                padding: 10px !important;
+                box-sizing: border-box !important;
+            }
+
+            select {
+                width: 100% !important;
+                height: 34px !important;
+            }
+
+            .no-skin .sidebar.h-sidebar {
+                background-color: #f8f8f8 !important;
+            }
+
+            .sidebar.navbar-collapse {
+                width: 190px !important;
+                max-height: none !important;
+            }
+
+            .no-skin .sidebar {
+                border-style: solid !important;
+                border-color: #ccc !important;
+            }
+
+            .sidebar.h-sidebar {
+                margin-top: 17px !important;
+                border-width: 0 !important;
+                box-shadow: none !important;
+                position: absolute !important;
+            }
+
+            .navbar-collapse.collapse {
+                display: block !important;
+                height: auto !important;
+                padding-bottom: 0 !important;
+                overflow: visible !important;
+            }
+
+            .sidebar {
+                padding-left: 0 !important;
+                padding-right: 0 !important;
+            }
+
+            body {
+                background-color: #fff !important;
+                min-height: 100% !important;
+                padding-bottom: 0 !important;
+                font-family: 'Open Sans' !important;
+                font-size: 13px !important;
+                color: black !important;
+                line-height: 1.5 !important;
+                font-weight: bold !important;
+            }
+        }
+
+        @media screen and (max-width: 993px) {
+            .sidebar.navbar-collapse .nav-list > li > a {
+                background: transparent !important;
+            }
+
+            .nav-list > li > a > .menu-icon {
+                display: flex !important;
+                margin-right: 2px !important;
+                vertical-align: sub !important;
+                text-align: center !important;
+                padding-left: 41px !important;
+                padding-right: 37px !important;
+                font-size: 18px !important;
+                font-weight: normal !important;
+            }
+
+            .nav-list > li a > .arrow {
+                background-color: red;
+                display: block;
+                width: 0px !important;
+                height: 14px;
+                line-height: 14px;
+                text-shadow: none;
+                font-size: 30px;
+                position: absolute;
+                right: 10px;
+                top: 30px;
+                padding: 0;
+                text-align: center;
+            }
+
+            .no-skin .nav-list > li .submenu {
+                background-color: #fff;
+                top: 12px !important;
+            }
+        }
+
+        @media screen and (max-width: 901px) {
+            .main {
+                width: 700px !important;
+                float: left;
+            }
+        }
+
+        @media screen and (max-width: 870px) {
+            .main {
+                width: 594px !important;
+                float: left;
+            }
+        }
+
+        @media screen and (max-width: 763px) {
+            .main {
+                width: 590px !important;
+                float: left;
+            }
+        }
+
+        @media screen and (max-width: 759px) {
+            .main {
+                width: 570px !important;
+                float: left;
+            }
+        }
+
+        @media screen and (max-width: 739px) {
+            .main {
+                width: 520px !important;
+                float: left;
+            }
+        }
+
+        @media screen and (max-width: 689px) {
+            .main {
+                width: 480px !important;
+                float: left;
+            }
+        }
+
+        @media screen and (max-width: 649px) {
+            .main {
+                width: 425px !important;
+                float: left;
+            }
+        }
+
+        @media screen and (max-width: 594px) {
+            .main {
+                width: 365px !important;
+                float: left;
+            }
+        }
+
+        @media screen and (max-width: 534px) {
+            .main {
+                width: 330px !important;
+                float: left;
+            }
+        }
+
+
+        @media screen and (max-width: 589px) {
+            #welCome {
+                display: none;
+            }
+        }
+
+        @media screen and (max-width: 526px) {
+            #ctl00_LoginName {
+                display: none;
+            }
+
+            #LoginSign {
+                display: none;
+            }
+        }
+
+        @media screen and (max-width: 526px) {
+            #ctl00_LoginName {
+                display: none;
+            }
+
+            #LoginSign {
+                display: none;
+            }
+        }
+
+
+
+        .sidebar.h-sidebar .nav-list > li > a {
+            text-align: center;
+        }
+
+        .submenu .menu-icon {
+            display: none !important;
+        }
+
+        .mainmenu {
+        }
+
+        .nav-list > li {
+            height: 70px;
+        }
+
+        .span1 {
+            padding-top: 18px;
+        }
+
+        .submenu .fa-caret {
+            display: block !important;
+        }
+
+        .ui-button-text-only .ui-button-text {
+            padding: .4em 1em;
+        }
+
+        .span2 {
+            padding-top: 18px;
+        }
+
+        .main input {
+            margin-bottom: 6px;
+        }
+
+        .main textarea {
+            margin-bottom: 6px;
+        }
+
+        .main select {
+            margin-bottom: 6px;
+        }
+
+        page-header h1 {
+            margin-left: 0;
+            margin-right: 0;
+        }
+
+
+
+        .tokeninput {
+            box-shadow: 2px -3px 5px rgba(0, 0, 0, 0.2) !important;
+        }
+
+        .notification {
+            position: absolute;
+            top: 0;
+        }
+
+        .notif-detail {
+            background-color: #ebebeb;
+            position: relative;
+            text-align: left;
+            top: -5px;
+            display: block;
+            width: 258px;
+            z-index: 999;
+            display: none;
+        }
+
+        .header-user-dropdown {
+            display: flex;
+            justify-content: flex-end;
+            align-items: center;
+            padding: 10px 15px;
+            margin-top: 17px;
+            position: relative;
+        }
+
+        .user-btn {
+            background-color: #5a5a5a;
+            color: #fff;
+            border: none;
+            border-radius: 10px;
+            padding: 6px 16px;
+            font-weight: bold;
+            display: flex;
+            align-items: center;
+            transition: background-color 0.3s ease;
+        }
+
+            .user-btn:hover {
+                background-color: #444;
+                color: #fff;
+            }
+
+        .dropdown-menu {
+            min-width: 120px;
+            padding: 0.5rem;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            margin-top: 5px;
+            position: absolute;
+            border: none !important;
+            left: 1px; /* Align the dropdown menu to the left edge of the button */
+        }
+
+        .logout-btn {
+            background-color: #f7941d;
+            color: black;
+            font-weight: bold;
+            text-align: center;
+            border-radius: 6px;
+            padding: 6px 12px;
+            display: block;
+            width: 100%;
+            margin-top: -5px;
+        }
+
+            .logout-btn:hover {
+                background-color: #e0850f;
+                color: white;
+            }
+
+        .dropdown-item i {
+            color: black
+        }
+
+        .dropdown-divider {
+            margin: 0.3rem 0;
+        }
+
+        .ml-2 {
+            margin-left: 0.5rem;
+        }
+
+        .mr-2 {
+            margin-right: 0.5rem;
+        }
+    </style>
+    <script type="text/javascript">
+        jQuery.browser = {};
+        (function () {
+            jQuery.browser.msie = false;
+            jQuery.browser.version = 0;
+            if (navigator.userAgent.match(/MSIE ([0-9]+)\./)) {
+                jQuery.browser.msie = true;
+                jQuery.browser.version = RegExp.$1;
+            }
+        })();
+        function RunHRMS() {
+            $.ajax({
+                type: "POST",
+                url: "PatientManagementSection.aspx/RunHRMS",
+                contentType: "application/json; charset=utf-8",
+                dataType: "json",
+                success: function (response) {
+
+                },
+                Error: function (x, e) {
+                    alert(e)
+                }
+            });
+        }
+
+        $(window).load(function () {
+
+            $("#loading").delay(1000).fadeOut(1000);
+            $('#ctl00_lblMessage').hide();
+
+        });
+    </script>
+    <asp:ContentPlaceHolder ID="HeadContent" runat="server"></asp:ContentPlaceHolder>
+    <style type="text/css">
+        /* ===== Application header: responsive + prominent ===== */
+        #navbar {
+            height: auto !important;
+            min-height: 68px;
+            background: var(--theme-header-bg, linear-gradient(180deg, #ffffff 0%, #eceff3 100%)) !important;
+            border-bottom: 4px solid var(--theme-header-line, #EFA63E);
+            box-shadow: 0 3px 12px rgba(0, 0, 0, 0.20) !important;
+            position: relative;
+            z-index: 1030;
+        }
+
+        #navbar-container {
+            display: flex !important;
+            flex-wrap: nowrap;
+            align-items: center;
+            width: 100% !important;
+            min-height: 64px;
+            margin: 0 !important;
+            padding: 0 16px !important;
+            background: var(--theme-header-bg, linear-gradient(180deg, #ffffff 0%, #eceff3 100%)) !important;
+        }
+
+            /* ignore the fixed bootstrap column widths - let flexbox share the row */
+            #navbar-container > div[class*="col-"] {
+                float: none !important;
+                width: auto !important;
+                height: auto !important;
+                padding: 0 8px !important;
+                position: relative;
+            }
+
+                /* 1) logo */
+                #navbar-container > div:nth-child(1) {
+                    flex: 0 0 auto;
+                }
+
+                /* 2) company name takes all remaining space */
+                #navbar-container > div:nth-child(2) {
+                    flex: 1 1 auto;
+                    min-width: 0;
+                    display: flex;
+                    align-items: center;
+                    justify-content: center;
+                }
+
+                /* 3) notification bell */
+                #navbar-container > div:nth-child(3) {
+                    flex: 0 0 auto;
+                    align-self: stretch;
+                    min-width: 98px; /* bell is 90px wide */
+                    margin-right: 28px; /* gap between the bell and the user menu (#headerWelcome) */
+                }
+
+                /* 4) user menu */
+                #navbar-container > div:nth-child(4) {
+                    flex: 0 0 auto;
+                }
+
+        #navbar .app-logo {
+            display: block;
+            height: 56px !important;
+            width: auto !important;
+            max-width: 130px;
+            margin: 0 !important;
+            object-fit: contain;
+        }
+
+        #navbar .app-title {
+            display: block;
+            max-width: 100%;
+            margin: 0;
+            font-family: "Segoe UI", Arial, sans-serif;
+            font-size: clamp(16px, 2.3vw, 30px);
+            font-weight: 800;
+            letter-spacing: .4px;
+            line-height: 1.2;
+            color: var(--theme-header-text, #1b2a41);
+            text-shadow: var(--theme-header-text-shadow, none);
+            text-align: center;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+
+        #navbar .header-user-dropdown {
+            margin-top: 0 !important;
+            padding: 0 !important;
+        }
+
+            #navbar .header-user-dropdown .dropdown {
+                margin-top: 0 !important;
+            }
+
+        #navbar .header-user-dropdown .hdr-dd-link, #headerWelcome .hdr-dd-link { text-decoration: none; color: #000000 !important; }
+
+        #navbar .user-btn {
+            background: var(--theme-user-btn-bg, #EFA63E) !important;
+            color: var(--theme-user-btn-text, #000000) !important;
+            border: 1px solid var(--theme-user-btn-border, transparent) !important;
+            box-shadow: 0 2px 6px rgba(0, 0, 0, 0.25);
+            white-space: nowrap;
+        }
+
+        #navbar .notification {
+            top: 0;
+            left: 8px;
+        }
+
+        @media screen and (max-width: 991px) {
+            #navbar-container {
+                padding: 0 10px !important;
+            }
+
+            #navbar .app-logo {
+                height: 46px !important;
+                max-width: 100px;
+            }
+        }
+
+        @media screen and (max-width: 600px) {
+            #navbar {
+                min-height: 56px;
+                border-bottom-width: 3px;
+            }
+
+            #navbar-container {
+                min-height: 52px;
+                padding: 0 6px !important;
+            }
+
+            #navbar .app-logo {
+                height: 38px !important;
+                max-width: 80px;
+            }
+
+            #navbar .app-title {
+                font-size: 14px;
+                letter-spacing: 0;
+            }
+
+            #navbar-container > div[class*="col-"] {
+                padding: 0 4px !important;
+            }
+
+            #navbar .user-btn {
+                padding: 6px 10px;
+            }
+
+            #navbar-container > div:nth-child(3) {
+                margin-right: 12px;
+            }
+        }
+
+        /* ===== Main menu bar (horizontal) - match the new header, desktop only ===== */
+        @media screen and (min-width: 992px) {
+            .sidebar.h-sidebar {
+                margin-top: 0 !important;
+                box-shadow: 0 3px 8px rgba(0, 0, 0, 0.14) !important;
+            }
+
+                .sidebar.h-sidebar .nav-list {
+                    background: linear-gradient(180deg, #ffffff 0%, #f1f3f7 100%) !important;
+                    border-bottom: 3px solid var(--theme-header-line, #EFA63E) !important;
+                }
+
+                    .sidebar.h-sidebar .nav-list > li {
+                        border-color: #d9dee5 !important;
+                    }
+
+                        .sidebar.h-sidebar .nav-list > li > a {
+                            display: flex !important;
+                            flex-direction: column;
+                            align-items: center;
+                            justify-content: center;
+                            height: 100% !important;
+                            padding: 6px 8px !important;
+                            font-size: 14px !important;
+                            font-weight: 700 !important;
+                            letter-spacing: .1px;
+                            color: var(--theme-ink, #1b2a41) !important;
+                            transition: background-color .15s ease, color .15s ease;
+                        }
+
+                        .sidebar.h-sidebar .nav-list > li:hover > a,
+                        .sidebar.h-sidebar .nav-list > li.hover:hover > a {
+                            background-color: var(--theme-accent-soft, #fff1d6) !important;
+                            color: var(--theme-accent-ink, #8a4b00) !important;
+                        }
+
+                        .sidebar.h-sidebar .nav-list > li.active > a,
+                        .sidebar.h-sidebar .nav-list > li.active:hover > a {
+                            background-color: var(--theme-accent, #EFA63E) !important;
+                            color: var(--theme-on-accent, #1b2a41) !important;
+                        }
+        }
+
+        /* ===== Footer (all themes) - colours come from theme-colors.css ===== */
+        html body .main-content { padding-bottom: 90px !important; }
+
+        html body .app-footer {
+            position: absolute !important;
+            bottom: 0;
+            left: 0;
+            width: 100% !important;
+            height: auto !important;
+            min-height: 52px;
+            margin: 0 !important;
+            padding: 12px 24px !important;
+            display: block !important;
+            background: var(--theme-footer-bg, linear-gradient(180deg, #24344f 0%, #1b2a41 100%)) !important;
+            border-top: 3px solid var(--theme-footer-line, #EFA63E);
+            color: var(--theme-footer-text, #e9eef5) !important;
+            font-size: 13px;
+            line-height: 1.5;
+            text-align: left;
+            box-shadow: 0 -4px 14px rgba(0, 0, 0, 0.12);
+        }
+
+            html body .app-footer a {
+                color: var(--theme-footer-text, #e9eef5) !important;
+                font-weight: 600;
+                text-decoration: none;
+            }
+
+                html body .app-footer a:hover { text-decoration: underline; }
+
+            .app-footer i.fa {
+                width: 18px;
+                margin-right: 8px;
+                font-size: 15px;
+                text-align: center;
+                color: var(--theme-footer-icon, #EFA63E);
+            }
+
+        .app-footer-inner {
+            display: flex;
+            flex-wrap: wrap;
+            align-items: center;
+            justify-content: center;
+            gap: 6px 36px;
+            max-width: 1500px;
+            margin: 0 auto;
+        }
+
+        .app-footer-item {
+            display: inline-flex;
+            align-items: center;
+            white-space: nowrap;
+        }
+
+        .app-footer-title {
+            font-weight: 700;
+            letter-spacing: .3px;
+        }
+
+        /* brand footer (Tibbit) */
+        .app-footer-brand .app-footer-inner { justify-content: space-between; gap: 10px 40px; }
+
+        .app-footer-brand-text { flex: 1 1 560px; min-width: 0; }
+
+        .app-footer-brand-name { font-size: 16px; font-weight: 700; letter-spacing: .3px; }
+
+            .app-footer-brand-name span { font-weight: 400; opacity: .85; font-size: 14px; }
+
+        .app-footer-brand-tag { margin: 3px 0 0; font-size: 12.5px; line-height: 1.5; opacity: .85; max-width: 820px; }
+
+        .app-footer-contact {
+            display: flex;
+            flex-wrap: wrap;
+            align-items: center;
+            gap: 6px 24px;
+        }
+
+            .app-footer-contact .app-footer-title {
+                padding-right: 12px;
+                border-right: 1px solid rgba(255, 255, 255, 0.35);
+            }
+
+        @media screen and (max-width: 768px) {
+            html body .main-content { padding-bottom: 150px !important; }
+
+            html body .app-footer { padding: 10px 14px !important; }
+
+            .app-footer-inner { flex-direction: column; gap: 4px; text-align: center; }
+
+            .app-footer-brand .app-footer-inner { align-items: center; }
+
+            .app-footer-brand-text { flex: 0 0 auto; }
+
+            .app-footer-brand-tag { display: none; }
+
+            .app-footer-item { white-space: normal; }
+
+            .app-footer-contact { justify-content: center; }
+
+                .app-footer-contact .app-footer-title { border-right: 0; padding-right: 0; width: 100%; text-align: center; }
+        }
+    </style>
+    <script type="text/javascript">
+        (function ($) {
+            $(function () {
+                $('.nav li ul').each(function () {
+                    $(this).addClass("submenu");
+                });
+                $('.nav li').click(function () {
+                    $(this).addClass('active').siblings().removeClass('active');
+                });
+            });
+
+        })(jQuery);
+
+
+
+        function releasemenu() {
+            $(".nav").css('display', 'block');
+        }
+        function RedirectToPR() {
+            window.history.replaceState({}, document.title, "/");
+            window.location.href = "/Modules/Administrator/ApprovePR.aspx";
+        }
+        function RedirectToRFQ() {
+            window.history.replaceState({}, document.title, "/");
+            window.location.href = "/Modules/Administrator/ApproveRFQ.aspx";
+        }
+        function RedirectToCS() {
+            window.history.replaceState({}, document.title, "/");
+            window.location.href = "/Modules/Administrator/ApproveCS.aspx";
+        }
+        function RedirectToPO() {
+            window.history.replaceState({}, document.title, "/");
+            window.location.href = "/Modules/Administrator/ApprovePO.aspx";
+        }
+        function RedirectToIGP() {
+            window.history.replaceState({}, document.title, "/");
+            window.location.href = "/Modules/Administrator/ApproveIGP.aspx";
+        }
+        function RedirectToGRN() {
+            window.history.replaceState({}, document.title, "/");
+            window.location.href = "/Modules/Administrator/ApproveGRN.aspx";
+        }
+        function RedirectToGIR() {
+            window.history.replaceState({}, document.title, "/");
+            window.location.href = "/Modules/Administrator/ApproveGIR.aspx";
+        }
+        function RedirectToGIN() {
+            window.history.replaceState({}, document.title, "/");
+            window.location.href = "/Modules/Administrator/ApproveGIN.aspx";
+        }
+        function RedirectToStockAdj() {
+            window.history.replaceState({}, document.title, "/");
+            window.location.href = "/Modules/Administrator/ApproveStockAdj.aspx";
+        }
+        function RedirectToStoreStockTransfer() {
+            window.history.replaceState({}, document.title, "/");
+            window.location.href = "/Modules/Administrator/ApproveStoreStockTransfer.aspx";
+        }
+        function RedirectToMI() {
+            window.history.replaceState({}, document.title, "/");
+            window.location.href = "/Modules/Administrator/ApproveMI.aspx";
+        }
+        function RedirectToPI() {
+            window.history.replaceState({}, document.title, "/");
+            window.location.href = "/Modules/Administrator/ApprovePI.aspx";
+        }
+        function RedirectToPayment() {
+            window.history.replaceState({}, document.title, "/");
+            window.location.href = "/Modules/Administrator/ApprovePayment.aspx";
+        }
+        function RedirectToAdvance() {
+            window.history.replaceState({}, document.title, "/");
+            window.location.href = "/Modules/Administrator/Approveadvance.aspx";
+        }
+        function RedirectToApprovedPRFsAck() {
+            window.history.replaceState({}, document.title, "/");
+            window.location.href = "/Modules/Administrator/ApprovedPRFsAck.aspx";
+        }
+
+
+
+    </script>
+    <%-- Dark/Light mode (shared by every client theme) - keep these two lines LAST in <head> --%>
+    <asp:PlaceHolder ID="DarkModeAssets" runat="server">
+        <link href="<%= Page.ResolveClientUrl("~/wwwroot/lib/theme/dark-theme.css") %>?v=3" rel="stylesheet" type="text/css" />
+        <link href="<%= Page.ResolveClientUrl("~/wwwroot/lib/theme/dark-pages.css") %>?v=3" rel="stylesheet" type="text/css" />
+        <script src="<%= Page.ResolveClientUrl("~/wwwroot/lib/theme/theme-toggle.js") %>?v=3" type="text/javascript"></script>
+    </asp:PlaceHolder>
+</head>
+<body class="no-skin" onload="releasemenu()">
+    <form runat="server" id="MasterPageForm1">
+        <asp:ToolkitScriptManager ID="cmManager" runat="server" EnablePageMethods="true" />
+        <div class="page">
+            <div class="loginDisplay">
+                <div id="navbar" class="navbar navbar-default navbar-collapse h-navbar ace-save-state">
+                    <div class="navbar-container ace-save-state row" id="navbar-container">
+                           <div class="col-lg-3 col-md-4 col-sm-3">
+        <a href="~/Modules/Dashboards/ShortCuts.aspx" runat="server" id="IHome" title="Haroon Estates">
+            <asp:Image ID="imglogo" runat="server" CssClass="app-logo" ImageUrl="~/wwwroot/THEME_TIBBIT\images\LOGOS/logo.png" />
+        </a>
+    </div>
+    
+    <!-- Middle Company Name -->
+    <div class="col-lg-6 col-md-4 col-sm-6" style="display: flex; align-items: center; justify-content: center; height: 60px;">
+        <asp:Label ID="lblCompanyNameCenter" runat="server" Text="" 
+CssClass="app-title"></asp:Label>
+    </div>
+    
+    <div class="col-lg-1 col-md-2 col-sm-1">
+                            <!-- Bell Icon and Notification Dropdown (moved here) -->
+                            <div id="notification" class="notification" runat="server">
+                                <div class="navbar-buttons navbar-header" role="navigation">
+                                    <ul class="nav ace-nav">
+                                        <li class="" style="width: 90px !important; height: 60px;">
+                                            <a data-toggle="dropdown" class="dropdown-toggle" href="#">
+                                                <i class="ace-icon fa fa-bell icon-animated-bell" id="bell" style="font-size: 30px"></i>
+                                                <span id="blink_notify" style="margin-left: 6px;" runat="server">
+                                                    <span id="blink-notif" class="badge badge-important blink">
+                                                        <asp:Label ID="lblTotal_Notifs" runat="server" Text="8"></asp:Label>
+
+
+                                                    </span>
+                                                </span>
+                                            </a>
+                                            <ul class="dropdown-menu-right dropdown-navbar navbar-pink dropdown-menu dropdown-caret dropdown-close">
+                                                <li class="dropdown-header" style="text-align: left !important;">
+                                                    <i class="ace-icon fa fa-bell" id="bellnotify"></i>
+                                                    Notifications
+                                                </li>
+                                                <!-- Notification Items -->
+                                                <li id="PurchaseRequisition" runat="server">
+                                                    <a onclick="RedirectToPR()">
+                                                        <div class="clearfix">
+                                                            <span class="pull-left"><i class="btn btn-xs no-hover btn-info fa fa-home"></i>Purchase Requisition</span>
+                                                            <span class="pull-right badge badge-info">
+                                                                <asp:Label ID="lblPR" runat="server" Text="8"></asp:Label></span>
+                                                        </div>
+                                                    </a>
+                                                </li>
+                                                <li id="RFQ" runat="server">
+                                                    <a onclick="RedirectToRFQ()">
+                                                        <div class="clearfix">
+                                                            <span class="pull-left"><i class="btn btn-xs no-hover btn-info fa fa-home"></i>Request For Quotation</span>
+                                                            <span class="pull-right badge badge-info">
+                                                                <asp:Label ID="lblRFQ" runat="server" Text="8"></asp:Label></span>
+                                                        </div>
+                                                    </a>
+                                                </li>
+                                                <li id="CS" runat="server">
+                                                    <a onclick="RedirectToCS()">
+                                                        <div class="clearfix">
+                                                            <span class="pull-left"><i class="btn btn-xs no-hover btn-info fa fa-home"></i>Comparative Statement</span>
+                                                            <span class="pull-right badge badge-info">
+                                                                <asp:Label ID="lblCS" runat="server" Text="8"></asp:Label></span>
+                                                        </div>
+                                                    </a>
+                                                </li>
+                                                <li id="PO" runat="server">
+                                                    <a onclick="RedirectToPO()">
+                                                        <div class="clearfix">
+                                                            <span class="pull-left"><i class="btn btn-xs no-hover btn-info fa fa-home"></i>Purchase Order</span>
+                                                            <span class="pull-right badge badge-info">
+                                                                <asp:Label ID="lblpo" runat="server" Text="8"></asp:Label></span>
+                                                        </div>
+                                                    </a>
+                                                </li>
+                                                <li id="IGP" runat="server">
+                                                    <a onclick="RedirectToIGP()">
+                                                        <div class="clearfix">
+                                                            <span class="pull-left"><i class="btn btn-xs no-hover btn-info fa fa-home"></i>IGP</span>
+                                                            <span class="pull-right badge badge-info">
+                                                                <asp:Label ID="lbligp" runat="server" Text="8"></asp:Label></span>
+                                                        </div>
+                                                    </a>
+                                                </li>
+                                                <li id="GRN" runat="server">
+                                                    <a onclick="RedirectToGRN()">
+                                                        <div class="clearfix">
+                                                            <span class="pull-left"><i class="btn btn-xs no-hover btn-info fa fa-file-o"></i>GRN</span>
+                                                            <span class="pull-right badge badge-info">
+                                                                <asp:Label ID="lblgrn" runat="server" Text="8"></asp:Label></span>
+                                                        </div>
+                                                    </a>
+                                                </li>
+                                                <li id="GIR" runat="server">
+                                                    <a onclick="RedirectToGIR()">
+                                                        <div class="clearfix">
+                                                            <span class="pull-left"><i class="btn btn-xs no-hover btn-info fa fa-file-o"></i>GIR</span>
+                                                            <span class="pull-right badge badge-info">
+                                                                <asp:Label ID="lblGIR" runat="server" Text="8"></asp:Label></span>
+                                                        </div>
+                                                    </a>
+                                                </li>
+                                                <li id="GIN" runat="server">
+                                                    <a onclick="RedirectToGIN()">
+                                                        <div class="clearfix">
+                                                            <span class="pull-left"><i class="btn btn-xs no-hover btn-info fa fa-file-o"></i>GIN</span>
+                                                            <span class="pull-right badge badge-info">
+                                                                <asp:Label ID="lblGIN" runat="server" Text="8"></asp:Label></span>
+                                                        </div>
+                                                    </a>
+                                                </li>
+                                                <li id="StockAdj" runat="server">
+                                                    <a onclick="RedirectToStockAdj()">
+                                                        <div class="clearfix">
+                                                            <span class="pull-left"><i class="btn btn-xs no-hover btn-info fa fa-file-o"></i>Stock Adjustment</span>
+                                                            <span class="pull-right badge badge-info">
+                                                                <asp:Label ID="lblStockAdj" runat="server" Text="8"></asp:Label></span>
+                                                        </div>
+                                                    </a>
+                                                </li>
+                                                <li id="StoreStockTransfer" runat="server">
+                                                    <a onclick="RedirectToStoreStockTransfer()">
+                                                        <div class="clearfix">
+                                                            <span class="pull-left"><i class="btn btn-xs no-hover btn-info fa fa-file-o"></i>Store Stock Transfer</span>
+                                                            <span class="pull-right badge badge-info">
+                                                                <asp:Label ID="lblstorestocktransfer" runat="server" Text="8"></asp:Label></span>
+                                                        </div>
+                                                    </a>
+                                                </li>
+                                                <li id="MI" runat="server">
+                                                    <a onclick="RedirectToMI()">
+                                                        <div class="clearfix">
+                                                            <span class="pull-left"><i class="btn btn-xs no-hover btn-info fa fa-file-o"></i>Manual Invoice</span>
+                                                            <span class="pull-right badge badge-info">
+                                                                <asp:Label ID="lblManualInvoice" runat="server" Text="8"></asp:Label></span>
+                                                        </div>
+                                                    </a>
+                                                </li>
+                                                <li id="PI" runat="server">
+                                                    <a onclick="RedirectToPI()">
+                                                        <div class="clearfix">
+                                                            <span class="pull-left"><i class="btn btn-xs no-hover btn-info fa fa-file-o"></i>Purchase Invoice</span>
+                                                            <span class="pull-right badge badge-info">
+                                                                <asp:Label ID="lblPurchaseInvoice" runat="server" Text="8"></asp:Label></span>
+                                                        </div>
+                                                    </a>
+                                                </li>
+                                                <!-- Payment Notification Item -->
+                                                <li id="Payment" runat="server">
+                                                    <a onclick="RedirectToPayment()">
+                                                        <div class="clearfix">
+                                                            <span class="pull-left">
+                                                                <i class="btn btn-xs no-hover btn-info fa fa-file-o"></i>Payment
+                                                            </span>
+                                                            <span class="pull-right badge badge-info">
+                                                                <asp:Label ID="lblPayment" runat="server" Text="8"></asp:Label>
+                                                            </span>
+                                                        </div>
+                                                    </a>
+                                                </li>
+                                                <li id="advance" runat="server">
+                                                    <a onclick="RedirectToAdvance()">
+                                                        <div class="clearfix">
+                                                            <span class="pull-left">
+                                                                <i class="btn btn-xs no-hover btn-info fa fa-file-o"></i>Advance Payment
+                                                            </span>
+                                                            <span class="pull-right badge badge-info">
+                                                                <asp:Label ID="lblAdvance" runat="server" Text="8"></asp:Label>
+                                                            </span>
+                                                        </div>
+                                                    </a>
+                                                </li>
+                                            </ul>
+                                        </li>
+                                    </ul>
+                                </div>
+                            </div>
+
+                        </div>
+
+                        <div class="col-lg-2 col-md-2 col-sm-2">
+                            <div class="header-tools">
+                                <%-- Light / Dark mode toggle --%>
+                                <button type="button" class="theme-toggle" data-theme-toggle title="Switch to dark mode" aria-label="Switch to dark mode" aria-pressed="false">
+                                    <i class="fa fa-moon-o tt-moon" aria-hidden="true"></i>
+                                    <i class="fa fa-sun-o tt-sun" aria-hidden="true"></i>
+                                </button>
+                            <div id="headerWelcome" class="header-user-dropdown">
+                                <div class="dropdown" style="margin-top: -15px;">
+                                    <button class="btn user-btn dropdown-toggle btn-primry" type="button" id="userDropdown"
+                                        data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                        <i class="fa fa-user mr-2"></i>
+                                        <asp:Label ID="LoginName" runat="server" />
+                                        <i class="fa fa-caret-down ml-2"></i>
+                                        <!-- Added arrow down icon -->
+                                    </button>
+                                    <div class="dropdown-menu dropdown-menu-right" aria-labelledby="userDropdown">
+
+                                        <!-- Logout with icon -->
+                               <a href="javascript:void(0);" 
+                                   onclick="handleLogout(); return false;"
+                                   class="dropdown-item hdr-dd-link">
+                                   <i class="fa fa-sign-out mr-2" aria-hidden="true"></i>Log Out
+                                </a>
+
+<!-- Hidden actual logout control -->
+                                        <asp:LoginStatus ID="HeadLoginStatus" runat="server"
+                                            LogoutAction="Redirect"
+                                            LogoutText=""
+                                            LogoutPageUrl="~/Login.aspx"
+                                            Style="display: none;"
+                                            OnLoggedOut="HeadLoginStatus_LoggedOut" />
+
+
+                                        <div class="dropdown-divider"></div>
+                                        <!-- Change Password -->
+                                        <a href="<%= ResolveUrl("~/Modules/Accounts/PasswordChange.aspx") %>"
+                                            class="dropdown-item hdr-dd-link">
+                                            <i class="fa fa-key mr-2" aria-hidden="true"></i>Change Password
+                                        </a>
+                                    </div>
+
+
+
+                                </div>
+                            </div>
+                            </div><%-- /header-tools --%>
+                        </div>
+
+
+
+
+                    </div>
+
+                </div>
+
+            </div>
+
+            <div class="main-content">
+                <div id="sidebar" runat="server" class="sidebar h-sidebar navbar-collapse collapse"></div>
+                <div class="main">
+
+                    <div id="clear" style="clear: both; height: 10px;"></div>
+                    <div class="row hamburger-row" style="margin-left: -13% !important; display: none">
+                        <div class="col-2">
+                            <button type="button" onclick="hideNavbar" id="hamburger" class="hamburger-btn" aria-label="Toggle navigation">
+                                <span></span>
+                                <span></span>
+                                <span></span>
+                            </button>
+
+                        </div>
+                    </div>
+                    <div class="ace-settings-container" style="display: none" id="ace-settings-container">
+                        <div class="btn btn-app btn-xs btn-warning ace-settings-btn" id="ace-settings-btn">
+                            <i class="ace-icon fa fa-cog bigger-130"></i>
+                        </div>
+                        <div class="ace-settings-box clearfix" id="ace-settings-box">
+                            <div class="pull-left width-50">
+                                <div class="ace-settings-item">
+                                    <div class="pull-left">
+                                        <select id="skin-colorpicker" class="hide">
+                                            <option data-skin="no-skin" value="#EFA63E">#EFA63E</option>
+                                            <option data-skin="skin-1" value="#FDC303">#FDC303</option>
+                                            <option data-skin="skin-2" value="#C6487E">#C6487E</option>
+                                            <option data-skin="skin-3" value="#D0D0D0">#D0D0D0</option>
+                                        </select>
+                                    </div>
+                                    <span>&nbsp; Choose Skin</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="container-fluid">
+                        <div class="page-header">
+                            <h1>
+                                <asp:Label ID="lbl1" runat="server" Text=""></asp:Label>
+                                <small>
+                                    <i class="ace-icon fa fa-angle-double-right"></i>&nbsp;&nbsp;
+                                <asp:Label ID="lbl2" Style="color: #484b4d !important" runat="server" Text=""></asp:Label>
+                                </small>
+                            </h1>
+                        </div>
+                        <asp:ContentPlaceHolder ID="MainContent" runat="server" />
+                    </div>
+                </div>
+                <div class="clear"></div>
+                <div>
+                    <asp:Label ID="lblMessage" runat="server" />
+                </div>
+            </div>
+        </div>
+        <br />
+
+        <div>
+            <uc:Footer runat="server" ID="Footer" />
+
+        </div>
+
+        <style type="text/css">
+            .quick-time-toggle {
+    position: fixed;
+    right: 20px;
+    bottom: 10vh; /* Increased to move the button up */
+left: auto;
+top: auto;
+    width: 56px;
+    height: 56px;
+    border-radius: 50%;
+    border: none;
+    background: #f7941d;
+    color: #fff;
+    font-size: 20px;
+    z-index: 9999;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.25);
+    
+    /* Added to make it behave like a real button */
+    cursor: pointer;
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+/* Added hover effect to make it pop when a user mouses over it */
+.quick-time-toggle:hover {
+    transform: scale(1.08);
+    box-shadow: 0 6px 16px rgba(0, 0, 0, 0.35);
+}
+
+            .quick-time-panel {
+                position: fixed;
+                right: 20px;
+                bottom: 20vh;
+                width: 260px;
+                background: #fff;
+                border-radius: 12px;
+                padding: 14px;
+                box-shadow: 0 8px 20px rgba(0, 0, 0, 0.25);
+                transform: translateX(120%);
+                transition: transform 0.3s ease;
+                z-index: 9998;
+            }
+
+            .quick-time-panel.open {
+                transform: translateX(0);
+            }
+
+            .quick-time-panel .title {
+                font-weight: bold;
+                margin-bottom: 8px;
+            }
+
+            .quick-time-panel .dt-value {
+                font-size: 14px;
+                color: #333;
+                margin-bottom: 10px;
+            }
+
+            .quick-time-panel .start-btn {
+                background: #28a745;
+                color: #fff;
+                border: none;
+                border-radius: 6px;
+                padding: 8px 14px;
+                font-weight: 600;
+            }
+
+            .quick-time-panel .start-info {
+                margin-top: 8px;
+                font-size: 12px;
+                color: #666;
+            }
+        </style>
+
+   
+    </form>
+     <div id="quickTimePanel" class="quick-time-panel">
+            <div class="title">Current Date &amp; Time</div>
+            <div id="quickDateTime" class="dt-value"></div>
+            <button type="button" id="quickStartBtn" class="start-btn">Start</button>
+            <div id="quickStartInfo" class="start-info"></div>
+            <div id="quickEndInfo" class="start-info"></div>
+        </div>
+        <button type="button" id="quickTimeToggle" class="quick-time-toggle" title="Show Date/Time">Till</button>
+
+    <script type="text/javascript">
+        jQuery(function ($) {
+            $('.sidebar .nav li:nth-child(1) i').addClass("fa-tachometer");
+            $('.sidebar .nav li:nth-child(2) i').addClass("fa-bed");
+            $('.sidebar .nav > li:nth-child(2)').css('width', '160px');
+            $('.sidebar .nav li:nth-child(3) i').addClass("fa-table");
+            $('.sidebar .nav li:nth-child(4) i').addClass("fa-group");
+            $('.sidebar .nav li:nth-child(5) i').addClass("fa-hourglass-end");
+            $('.sidebar .nav li:nth-child(8) i').addClass("fa-desktop");
+            $('.sidebar .nav li:nth-child(6) i').addClass("fa-plus-square");
+            $('.sidebar .nav li:nth-child(7) i').addClass("fa-bank");
+            $('.sidebar .nav li:nth-child(8) i').addClass("fa-tag");
+            $('.sidebar .nav li:nth-child(9) i').addClass("fa-list-alt");
+            $('.sidebar .nav li:nth-child(10) i').addClass("fa-pencil-square-o");
+            $('.sidebar .nav li:nth-child(11) i').addClass("fa-desktop");
+            $('.sidebar .nav li:nth-child(12) i').addClass("fa-tachometer");
+            $('.sidebar .nav li:nth-child(13) i').addClass("fa-tachometer");
+
+            $('.nav li ul').each(function () {
+                $(this).addClass("submenu");
+            });
+
+            $('.nav li').click(function () {
+                $(this).addClass('active').siblings().removeClass('active');
+            });
+        });
+        $(document).ready(function () {
+
+            $('#ctl00_sidebar').delay(2000).fadeIn();
+            var sessionTimeoutWarning ="<%= System.Configuration.ConfigurationManager.AppSettings["SessionTimeoutWarning"].ToString()%>";
+            var sessionTimeout = "<%= Session.Timeout %>";
+            var sTimeout = parseInt(sessionTimeoutWarning) * 55 * 1000;
+            setTimeout('SessionWarning()', sTimeout);
+            var time = "<%= DateTime.Now.ToString("h:mm:ss tt") %>";
+            function SessionWarning() {
+                var message = time + "\n Your session will expire in another " +
+                    (parseInt(sessionTimeout) - parseInt(sessionTimeoutWarning)) +
+                    " mins! Please Save the data before the session expires";
+                alert(message);
+            }
+        });
+        $(document).ready(function () {
+            const $div = $('#ctl00_sidebar');
+            const $button = $('#hamburger');
+
+            // Show the div (by removing .hide-force) on button click
+            $button.on('click', function (e) {
+                e.stopPropagation(); // Prevent document click from firing
+                $div.removeClass('hide-force');
+            });
+
+            // Hide div if click is outside both the div and the button
+            $(document).on('click', function (event) {
+                if (
+                    !$div.is(event.target) && $div.has(event.target).length === 0
+                ) {
+                    $div.addClass('hide-force');
+                }
+            });
+        });
+
+        $("#ctl00_lblMessage").hide();
+    </script>
+    <script type="text/javascript">
+        function handleLogout() {
+            if (confirm('Are you sure you want to log out?')) {
+                // Direct redirect to logout page - most reliable
+                window.location.href = '<%= ResolveUrl("~/Login.aspx?logout=true") %>';
+            }
+            return false;
+        }
+    </script>
+    <script type="text/javascript">
+        (function () {
+            function formatDateTime(now) {
+                var date = now.toLocaleDateString();
+                var time = now.toLocaleTimeString();
+                return date + ' ' + time;
+            }
+
+            function initQuickTimeWidget() {
+                var panel = document.getElementById('quickTimePanel');
+                var toggle = document.getElementById('quickTimeToggle');
+                var dateTime = document.getElementById('quickDateTime');
+                var startBtn = document.getElementById('quickStartBtn');
+                var startInfo = document.getElementById('quickStartInfo');
+                var endInfo = document.getElementById('quickEndInfo');
+                var webMethodBase = '<%= ResolveUrl("~/PatientManagementSection.aspx/") %>';
+
+                if (!panel || !toggle || !dateTime || !startBtn || !startInfo || !endInfo) {
+                    return;
+                }
+
+                function postTill(methodName, onSuccess) {
+                    $.ajax({
+                        type: 'POST',
+                        url: webMethodBase + methodName,
+                        data: '{}',
+                        contentType: 'application/json; charset=utf-8',
+                        dataType: 'json',
+                        success: function (response) {
+                            var result = response && response.d ? response.d : response;
+                            if (onSuccess) {
+                                onSuccess(result || {});
+                            }
+                        },
+                        error: function () {
+                            showToast('Unable to process till action.', 'error');
+                        }
+                    });
+                }
+
+                function applyTillState(result) {
+                    if (!result || result.IsTillEnabled === false) {
+                        panel.style.display = 'none';
+                        toggle.style.display = 'none';
+                        return;
+                    }
+
+                    panel.style.display = 'block';
+                    toggle.style.display = 'inline-block';
+
+                    if (result && result.StartedAt) {
+                        startInfo.innerHTML = 'Started at: ' + result.StartedAt;
+                    } else {
+                        startInfo.innerHTML = '';
+                    }
+
+                    if (result && result.EndedAt) {
+                        endInfo.innerHTML = 'Ended at: ' + result.EndedAt;
+                    } else {
+                        endInfo.innerHTML = '';
+                    }
+
+                    if (result && result.Message) {
+                        showToast(result.Message, result.IsSuccess === false ? 'warning' : 'success');
+                    }
+
+                    if (result && result.HideButton === true) {
+                        startBtn.style.display = 'inline-block';
+                        startBtn.disabled = true;
+                        startBtn.innerHTML = 'Done';
+                        return;
+                    }
+
+                    startBtn.style.display = 'inline-block';
+                    startBtn.disabled = false;
+                    startBtn.innerHTML = result && result.IsActive ? 'End' : 'Start';
+                }
+
+                function updateDateTime() {
+                    dateTime.innerHTML = formatDateTime(new Date());
+                }
+
+                updateDateTime();
+                setInterval(updateDateTime, 1000);
+
+                postTill('GetTillStatus', function (result) {
+                    applyTillState(result);
+                });
+
+                toggle.addEventListener('click', function (e) {
+                    e.stopPropagation();
+                    panel.classList.toggle('open');
+                });
+
+                startBtn.addEventListener('click', function () {
+                    var isStartMode = startBtn.innerHTML === 'Start';
+                    postTill(isStartMode ? 'StartTill' : 'EndTill', function (result) {
+                        applyTillState(result);
+                    });
+                });
+
+                document.addEventListener('click', function (e) {
+                    if (!panel.contains(e.target) && e.target !== toggle) {
+                        panel.classList.remove('open');
+                    }
+                });
+            }
+
+            if (document.readyState === 'loading') {
+                document.addEventListener('DOMContentLoaded', initQuickTimeWidget);
+            } else {
+                initQuickTimeWidget();
+            }
+        })();
+    </script>
+    <script type="text/javascript">
+        if ('ontouchstart' in document.documentElement) document.write("<script src='wwwroot/lib/jquery/jquery.mobile.custom.min.js'>" + "<" + "/script>");
+    </script >
+
+            <script src="<%= Page.ResolveClientUrl("~/wwwroot/lib/bootstrap/bootstrap.min.js") %>" type="text/javascript"></script>
+    <script src="<%= Page.ResolveClientUrl("~/wwwroot/lib/ace/ace-elements.min.js") %>" type="text/javascript"></script>
+    <script src="<%= Page.ResolveClientUrl("~/wwwroot/lib/ace/ace.min.js") %>" type="text/javascript"></script>
+    <script src="<%= Page.ResolveClientUrl("~/wwwroot/lib/sweetalert/swalalert.js") %>" type="text/javascript"></script>
+
+
+    <script type="text/javascript">
+
+</script>
+</body>
+
+</html>
