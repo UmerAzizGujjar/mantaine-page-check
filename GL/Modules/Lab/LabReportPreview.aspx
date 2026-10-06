@@ -590,7 +590,7 @@
                         var GetBillDetailID = $($(value).find('td')[7]).text();
 
                         var options = {};
-                        options.url = "ImageUpload.ashx";
+                        options.url = "../../upload/LabImageUpload.ashx";
                         options.type = "POST";
                         options.data = datas;
                         options.contentType = false;
@@ -680,7 +680,7 @@
                     }
                     if (filesComplete.length > 0) {
                         $.ajax({
-                            url: "ImageUpload.ashx",
+                            url: "../../upload/LabImageUpload.ashx",
                             type: "POST",
                             data: dataImgs,
                             contentType: false,

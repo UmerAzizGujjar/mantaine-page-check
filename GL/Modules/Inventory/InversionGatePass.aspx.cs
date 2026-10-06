@@ -268,6 +268,11 @@ namespace PMS.Inventory
                 {
                     AcquireIgpSaveLock(db);
 
+                    var poItemIds = record.ItemList.Select(i => Convert.ToInt32(i.PODetailId)).ToList();
+                    var blockedPOs = PMS.AP.WorkOrderHelper.GetDirectInvoicePOIds(db);
+                    if (db.AP_Purchase_Order_Items.Any(i => poItemIds.Contains(i.PO_Item_ID) && blockedPOs.Contains(i.PO_ID ?? 0)))
+                        throw new Exception("A Purchase Order with Work Order 002 cannot be processed through IGP.");
+
                     var lstItem = (from t in db.Igp_masters where t.Igp_num == int.Parse(record.Igp_num) select t).FirstOrDefault();
                     if (btnSave == "Update")
                     {
@@ -496,7 +501,8 @@ namespace PMS.Inventory
         public static string GetPONoByVendor(string venId)
         {
             DataBaseDataContext db = new DataBaseDataContext();
-            var POList = db.sp_GetPOByVendorId(Convert.ToInt32(venId));
+            var blockedPOs = PMS.AP.WorkOrderHelper.GetDirectInvoicePOIds(db);
+            var POList = db.sp_GetPOByVendorId(Convert.ToInt32(venId)).Where(p => !blockedPOs.Contains(p.PO_ID)).ToList();
             return (new JavaScriptSerializer()).Serialize(POList);
         }
         [WebMethod]
@@ -537,6 +543,9 @@ namespace PMS.Inventory
         {
             DataBaseDataContext db = new DataBaseDataContext();
             int POId = Convert.ToInt32(POID);
+
+            if (PMS.AP.WorkOrderHelper.IsPOBlockedFromIgp(db, POId))
+                throw new Exception("This Purchase Order (Work Order 002) cannot be processed through IGP.");
 
             var listPurchaseOrderDetails = db.sp_GetPODetailByPOID(POId).ToList();
 

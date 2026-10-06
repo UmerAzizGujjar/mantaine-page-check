@@ -147,6 +147,12 @@ namespace PMS.Inventory
 
             return (new JavaScriptSerializer()).Serialize(listItems);
         }
+        private class VendorOption
+        {
+            public int VendorID { get; set; }
+            public string VendorName { get; set; }
+            public bool isActive { get; set; }
+        }
         private class ddlListItems
         {
             public string DataValueName;
@@ -157,18 +163,22 @@ namespace PMS.Inventory
         public static string getVendorDDLlist()
         {
             DataBaseDataContext db = new DataBaseDataContext();
-            var code = db.sys_Parms.Where(x => x.Name == "Direct PO ON Purchase Invoice").Select(x => x.Code).FirstOrDefault();
-            object listItems;
-            if (code == "01")
+            // Vendors with GRNs to invoice (Work Order 001 flow).
+            var listItems = new List<VendorOption>();
+            listItems.AddRange(db.sp_LoadVendorPurchase().Select(v => new VendorOption { VendorID = v.VendorID, VendorName = v.VendorName, isActive = v.isActive }));
+
+            // Vendors that have Work Order 002 POs waiting to be invoiced.
+            var poVendorIds = PMS.AP.WorkOrderHelper.GetInvoiceablePOs(db).Select(p => p.Vendor_ID).Distinct().ToList();
+            var poVendors = (from v in db.AP_Vendors
+                             where poVendorIds.Contains(v.Vendor_ID)
+                             select new VendorOption { VendorID = v.Vendor_ID, VendorName = v.Vendor_Name, isActive = v.IsActive ?? false }).ToList();
+            foreach (var v in poVendors)
             {
-                listItems = db.sp_LoadVendorPurchaseOrders();
-            }
-            else
-            {
-                listItems = db.sp_LoadVendorPurchase();
+                if (!listItems.Any(x => x.VendorID == v.VendorID))
+                    listItems.Add(v);
             }
 
-            return (new JavaScriptSerializer()).Serialize(listItems);
+            return (new JavaScriptSerializer()).Serialize(listItems.OrderBy(x => x.VendorName).ToList());
         }
 
         [WebMethod]
@@ -385,6 +395,20 @@ namespace PMS.Inventory
             var lstItem = (from t in db.Purchase_Invoice_Masters
                            where t.InvoiceNum == int.Parse(record.InvoiceNum)
                            select t).FirstOrDefault();
+
+            // PO-based lines (no GRN) are only allowed for approved Work Order 002 POs that are not invoiced elsewhere.
+            long currentInvoiceId = (btnSave == "Update" && lstItem != null) ? lstItem.PurchaseInvoiceId : 0;
+            var poBasedIds = record.ItemList
+                .Where(i => int.TryParse(i.POID, out int pid) && pid > 0 && !(int.TryParse(i.GRNId, out int gid) && gid > 0))
+                .Select(i => int.Parse(i.POID)).Distinct().ToList();
+            foreach (int poId in poBasedIds)
+            {
+                bool eligible = db.AP_Purchase_Orders.Any(p => p.PO_ID == poId && p.Work_Order == PMS.AP.WorkOrderHelper.DirectInvoice && p.Status == "Approved" && p.IsDeleted == false);
+                bool invoicedElsewhere = db.Purchase_Invoice_Details.Any(d => d.Po_Id == poId && d.PurchaseInvoiceId != currentInvoiceId);
+                if (!eligible || invoicedElsewhere)
+                    throw new Exception("Purchase Order is not eligible for Purchase Invoice (must be an approved Work Order 002 PO that is not already invoiced).");
+            }
+
             if (btnSave == "Update")
             {
                 WritePIChangeLog(db, lstItem, oJS);
@@ -642,12 +666,13 @@ namespace PMS.Inventory
         public static string LoadInvocieDetail(int Inv_ID, bool isDirct)
         {
             DataBaseDataContext db = new DataBaseDataContext();
-            var code = db.sys_Parms.Where(x => x.Name == "Direct PO ON Purchase Invoice").Select(x => x.Code).FirstOrDefault();
 
             try
             {
                 object Details;
-                if (code == "01")
+                // Invoices created from a PO (Work Order 002) have no GRN, so they load with the PO-based procedure.
+                bool isPOBased = db.Purchase_Invoice_Details.Any(d => d.PurchaseInvoiceId == Inv_ID && d.Po_Id > 0 && (d.GRN_ID == null || d.GRN_ID == 0));
+                if (isPOBased)
                     Details = db.sp_LoadPurchaseDetailInvoice_DirectPO(Inv_ID).ToList();
                 else
                     Details = db.sp_LoadPurchaseDetailInvoice_DirctGRN(Inv_ID, isDirct).ToList();
@@ -753,7 +778,8 @@ namespace PMS.Inventory
             DataBaseDataContext db = new DataBaseDataContext();
             int vendorIdInt = Convert.ToInt32(vendorId);
 
-            var query = from po in db.AP_Purchase_Orders
+            // Only approved, not-yet-invoiced Work Order 002 POs of the selected vendor.
+            var query = from po in PMS.AP.WorkOrderHelper.GetInvoiceablePOs(db)
                         join pod in db.AP_Purchase_Order_Items
                             on po.PO_ID equals pod.PO_ID
                         join item in db.INV_Items
@@ -761,8 +787,6 @@ namespace PMS.Inventory
                         join vendor in db.AP_Vendors
                             on po.Vendor_ID equals vendor.Vendor_ID
                         where po.Vendor_ID == vendorIdInt
-                        && po.Status == "Approved"
-                        && po.IsDeleted == false
                         && pod.Qty > 0
                         select new
                         {

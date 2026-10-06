@@ -740,6 +740,7 @@
     <Content Include="upload\UploadVoucherFiles.ashx" />
     <Content Include="Reports\Student\rptAttendanceDetails.rpt" />
     <Content Include="upload\RadiologyImageUpload.ashx" />
+    <Content Include="upload\LabImageUpload.ashx" />
     <Content Include="wwwroot\lib\ace\ace-editable.min.js" />
     <Content Include="wwwroot\lib\ace\ace-elements.min.js" />
     <Content Include="wwwroot\lib\ace\ace-extra.min.js" />
@@ -5066,6 +5067,9 @@
     </Compile>
     <Compile Include="upload\RadiologyImageUpload.ashx.cs">
       <DependentUpon>RadiologyImageUpload.ashx</DependentUpon>
+    </Compile>
+    <Compile Include="upload\LabImageUpload.ashx.cs">
+      <DependentUpon>LabImageUpload.ashx</DependentUpon>
     </Compile>
     <Compile Include="upload\ImageUpload.ashx.cs">
       <DependentUpon>ImageUpload.ashx</DependentUpon>

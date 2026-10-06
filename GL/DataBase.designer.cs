@@ -132156,6 +132156,8 @@ namespace PMS
 
         private System.Nullable<bool> _IsAdvancewithTax;
 
+        private string _Work_Order;
+
         private System.Nullable<int> _Branch_Id;
 
         #region Extensibility Method Definitions
@@ -132258,6 +132260,8 @@ namespace PMS
         partial void Onprojection_typeChanged();
         partial void OnIsAdvancewithTaxChanging(System.Nullable<bool> value);
         partial void OnIsAdvancewithTaxChanged();
+        partial void OnWork_OrderChanging(string value);
+        partial void OnWork_OrderChanged();
         partial void OnBranch_IdChanging(System.Nullable<int> value);
         partial void OnBranch_IdChanged();
         #endregion
@@ -133223,6 +133227,26 @@ namespace PMS
                     this._IsAdvancewithTax = value;
                     this.SendPropertyChanged("IsAdvancewithTax");
                     this.OnIsAdvancewithTaxChanged();
+                }
+            }
+        }
+
+        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_Work_Order", DbType = "VarChar(10)")]
+        public string Work_Order
+        {
+            get
+            {
+                return this._Work_Order;
+            }
+            set
+            {
+                if ((this._Work_Order != value))
+                {
+                    this.OnWork_OrderChanging(value);
+                    this.SendPropertyChanging();
+                    this._Work_Order = value;
+                    this.SendPropertyChanged("Work_Order");
+                    this.OnWork_OrderChanged();
                 }
             }
         }

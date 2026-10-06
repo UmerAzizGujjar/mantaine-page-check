@@ -1397,16 +1397,9 @@
                 dataType: "json",
                 success: function (res) {
 
-                    var code = res.d;
-
-                    if (code === "01") {
-                        $("#btn_GetFromPO").show();
-                        $("#btn_GRN").hide();
-                    }
-                    else {
-                        $("#btn_GRN").show();
-                        $("#btn_GetFromPO").hide();
-                    }
+                    // GRN (Work Order 001) and Get from PO (Work Order 002 only) are both always available.
+                    $("#btn_GetFromPO").show();
+                    $("#btn_GRN").show();
                 }
             });
         }

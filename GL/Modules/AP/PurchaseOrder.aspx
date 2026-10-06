@@ -1386,8 +1386,8 @@ function buildNewRow(length, PR_Num, itemcode, item_name, unit, Qty, UOM_Qty, Ra
                 setTimeout(function () {
                     $('#ctl00_MainContent_ddlPOType').val(data.PO_Type).trigger('change');
                 }, 1000)
-            
-             
+                $('#ctl00_MainContent_ddlWorkOrder').val(data.Work_Order || '001').prop('disabled', data.Status === 'Approved');
+
                 setTimeout(function () {
                     $('#ctl00_MainContent_ddlpayment').val(data.Payment_Terms).trigger('change');
                 }, 1000)
@@ -2772,6 +2772,7 @@ function scheduleCalcTotal(delay) {
                 var DeliveryTerms = $('#ctl00_MainContent_ddlDelivery').val();
                 var Freight = $('#ctl00_MainContent_Freight').val();
                 var POType = $('#ctl00_MainContent_ddlPOType').val();
+                var WorkOrder = $('#ctl00_MainContent_ddlWorkOrder').val() || '001';
                 var PO_ID = $('#hdnPurchase_ID').val();
                 var transtype = $('#txttranstype').val();
                 var txtcsmasterid = $('#txtcsmasterid').val();
@@ -2821,7 +2822,7 @@ function scheduleCalcTotal(delay) {
                 }
                 else {
                     var AllItemDetail = {
-                        'txtst_amou': txtst_amou, 'Adv_amount': Adv_amount, 'transtype': transtype, 'txtcsmasterid': txtcsmasterid, 'PO_ID': PO_ID, 'SubTotal': SubTotal, 'DiscountAmount': DiscountAmount, 'NetAmount': NetAmount, 'Purchase_Date': Purchase_Date, 'Purchase_No': Purchase_No, 'RefNo': RefNo, 'VendorName': VendorName, 'Remarks': Remarks, 'Warranty': Warranty, 'Disclaimer': Disclaimer, 'PaymentTerms': PaymentTerms, 'Term_ID': Term_ID, 'DeliveryTerms': DeliveryTerms, 'FreightCharges': Freight, 'POType': POType, 'Due_Date': Due_Date, 'ItemList': Item_list, 'Warehouse': Warehouse, 'Branch': Branch, 'Further_amount': Further_amount, 'ProjectionDate': ProjectionDate,'ProjectionType': ProjectionType, 'IsManual': IsManual,
+                        'txtst_amou': txtst_amou, 'Adv_amount': Adv_amount, 'transtype': transtype, 'txtcsmasterid': txtcsmasterid, 'PO_ID': PO_ID, 'SubTotal': SubTotal, 'DiscountAmount': DiscountAmount, 'NetAmount': NetAmount, 'Purchase_Date': Purchase_Date, 'Purchase_No': Purchase_No, 'RefNo': RefNo, 'VendorName': VendorName, 'Remarks': Remarks, 'Warranty': Warranty, 'Disclaimer': Disclaimer, 'PaymentTerms': PaymentTerms, 'Term_ID': Term_ID, 'DeliveryTerms': DeliveryTerms, 'FreightCharges': Freight, 'POType': POType, 'WorkOrder': WorkOrder, 'Due_Date': Due_Date, 'ItemList': Item_list, 'Warehouse': Warehouse, 'Branch': Branch, 'Further_amount': Further_amount, 'ProjectionDate': ProjectionDate,'ProjectionType': ProjectionType, 'IsManual': IsManual,
                         'IsByDefault': IsByDefault, 'IsAdvanceWithTax': IsAdvanceWithTax };
                     callPageMethod('SavePurchaseItemDetail', { btnSave: btnSave, AllItemDetail: JSON.stringify(AllItemDetail) }, function (res) {
                         sendFile(res);
@@ -3409,6 +3410,10 @@ function scheduleCalcTotal(delay) {
                 <div class="col-lg-2 col-md-4 col-sm-6 col-xs-12">
                     <asp:Label ID="lblPOType" runat="server" Text="P.O Type"></asp:Label>
                     <asp:DropDownList runat="server" ID="ddlPOType" class="form-control" AppendDataBoundItems="true"></asp:DropDownList>
+                </div>
+                <div class="col-lg-2 col-md-4 col-sm-6 col-xs-12">
+                    <asp:Label ID="lblWorkOrder" runat="server" Text="Work Order"></asp:Label>
+                    <asp:DropDownList runat="server" ID="ddlWorkOrder" class="form-control" AppendDataBoundItems="true"></asp:DropDownList>
                 </div>
             </div>
 

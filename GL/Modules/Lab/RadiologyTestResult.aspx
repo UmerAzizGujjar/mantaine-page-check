@@ -878,7 +878,7 @@
                         var GetBillDetailID = $($(value).find('td')[7]).text();
 
                         var options = {};
-                        options.url = "ImageUpload.ashx";
+                        options.url = "../../upload/RadiologyImageUpload.ashx";
                         options.type = "POST";
                         options.data = datas;
                         options.contentType = false;
@@ -958,11 +958,11 @@
                         for (var f = 0; f < filesComplete.length; f++) {
                             dataImgs.append(filesComplete[f].name, filesComplete[f]);
                         }
-                        dataImgs.append('lab_test_Detail_id', lab_test_Detail_id);
+                        dataImgs.append('lab_test_Detail_id', $("#hdtestdetailid").val());
 
                         // SILENT IMAGE UPLOAD (No Postback)
                         $.ajax({
-                            url: "RadiologyImageUpload.ashx",
+                            url: "../../upload/RadiologyImageUpload.ashx",
                             type: "POST",
                             data: dataImgs,
                             contentType: false,
@@ -2827,7 +2827,12 @@ ${data.Addendum_Template ? `
                 }
                 else { $("#errorMsg").hide(); }
 
-                var test = JSON.parse(res);
+                var test = JSON.parse(res || '[]');
+                if (!test || test.length === 0) {
+                    $("#errorMsg").show();
+                    container.html('');
+                    return;
+                }
                 var counter = test[0].Single;
                 var rows = '';
 

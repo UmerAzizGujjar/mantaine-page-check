@@ -186,6 +186,24 @@ namespace PMS.AP
         protected global::System.Web.UI.WebControls.DropDownList ddlPOType;
 
         /// <summary>
+        /// lblWorkOrder control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.Label lblWorkOrder;
+
+        /// <summary>
+        /// ddlWorkOrder control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.DropDownList ddlWorkOrder;
+
+        /// <summary>
         /// lblpayment control.
         /// </summary>
         /// <remarks>
