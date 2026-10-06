@@ -1,0 +1,266 @@
+/* ==========================================================================
+   Pharmacy sale / issue-medicine form (Modules/Billing/IssueMedicine.aspx).
+   Replaces the old Bootstrap-5-style utility classes (d-flex, mb-3, text-end ...) that do not exist in the
+   Bootstrap 3 css this application ships, which left the form unaligned.
+   Layout: two cards on the left (patient + order, medicine + actions) and the bill summary on the right;
+   one column on tablets / phones. Colours come from the active theme (--theme-accent ...).
+   ========================================================================== */
+.ph-layout {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) 340px;
+    gap: 16px;
+    align-items: start;
+    margin-bottom: 16px;
+}
+.ph-main { display: flex; flex-direction: column; gap: 16px; min-width: 0; }
+.ph-summary { min-width: 0; position: sticky; top: 8px; }
+@media (max-width: 1199px) {
+    .ph-layout { grid-template-columns: minmax(0, 1fr); }
+    .ph-summary { position: static; }
+}
+
+/* ---------- cards ---------- */
+.ph-card {
+    background: #ffffff;
+    border: 1px solid #e3e8ee;
+    border-top: 3px solid var(--theme-accent, #438eb9);
+    border-radius: 10px;
+    padding: 0 16px 14px;
+    box-shadow: 0 2px 10px rgba(16, 24, 40, 0.05);
+    min-width: 0;
+}
+.ph-card-title {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    margin: 0 -16px 14px;
+    padding: 10px 16px;
+    font-size: 13px;
+    font-weight: 700;
+    letter-spacing: .04em;
+    text-transform: uppercase;
+    color: var(--theme-accent-ink, #2b6a90);
+    background: var(--theme-accent-soft, #f1f6fa);
+    border-bottom: 1px solid #e3e8ee;
+}
+.ph-card-title i { font-size: 14px; opacity: .85; }
+
+/* ---------- field grid ---------- */
+.ph-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(165px, 1fr));
+    gap: 12px 14px;
+    align-items: end;
+}
+.ph-span-2 { grid-column: span 2; }
+/* patient card: even 4 x 3 on desktop; medicine row: wide medicine, warehouse, batch, batch switch */
+@media (min-width: 1200px) {
+    .ph-grid-4 { grid-template-columns: repeat(4, minmax(0, 1fr)); }
+    .ph-grid-med { grid-template-columns: minmax(0, 2fr) minmax(0, 1fr) minmax(0, 1fr) 110px; }
+}
+@media (min-width: 700px) and (max-width: 1199px) {
+    .ph-grid-4, .ph-grid-med { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+}
+@media (max-width: 699px) {
+    .ph-grid-4, .ph-grid-med { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+}
+@media (max-width: 440px) {
+    .ph-grid-4, .ph-grid-med { grid-template-columns: minmax(0, 1fr); }
+}
+@media (max-width: 520px) { .ph-span-2 { grid-column: span 1; } }
+.ph-grid-med .ph-span-2 { grid-column: auto; }
+.ph-grid-2 { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+.ph-grid-2 .ph-span-2 { grid-column: span 2; }
+/* patient card: even 4 x 3 on desktop; medicine row: wide medicine, warehouse, batch, batch switch */
+@media (min-width: 1200px) {
+    .ph-grid-4 { grid-template-columns: repeat(4, minmax(0, 1fr)); }
+    .ph-grid-med { grid-template-columns: minmax(0, 2fr) minmax(0, 1fr) minmax(0, 1fr) 110px; }
+}
+@media (min-width: 700px) and (max-width: 1199px) {
+    .ph-grid-4, .ph-grid-med { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+}
+@media (max-width: 699px) {
+    .ph-grid-4, .ph-grid-med { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+}
+@media (max-width: 440px) {
+    .ph-grid-4, .ph-grid-med { grid-template-columns: minmax(0, 1fr); }
+}
+
+.ph-field { min-width: 0; display: flex; flex-direction: column; justify-content: flex-end; }
+.ph-field > label {
+    display: block;
+    margin: 0 0 4px;
+    font-size: 11.5px;
+    font-weight: 700;
+    letter-spacing: .02em;
+    color: #4a5568;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+.ph-hint { margin-left: 4px; font-size: 11px; font-weight: 600; color: #8a94a6; }
+
+/* ---------- controls ---------- */
+.ph-card input.form-control,
+.ph-card select.form-control,
+.ph-card select.form-select,
+.ph-card input[type="text"] {
+    width: 100% !important;
+    height: 34px !important;
+    min-width: 0;
+    padding: 4px 10px !important;
+    margin: 0 !important;
+    font-size: 13px;
+    font-weight: 600;
+    color: var(--theme-ink, #1b2a41);
+    background: #ffffff;
+    border: 1px solid #cfd6e0 !important;
+    border-radius: 6px !important;
+    box-shadow: none !important;
+    box-sizing: border-box !important;
+}
+.ph-card input.form-control:focus,
+.ph-card select.form-control:focus,
+.ph-card select.form-select:focus {
+    border-color: var(--theme-accent, #438eb9) !important;
+    box-shadow: 0 0 0 3px var(--theme-accent-ring, rgba(67, 142, 185, .25)) !important;
+    outline: none;
+}
+.ph-card input[readonly],
+.ph-card input[disabled],
+.ph-card input.form-control[disabled] { background: #f3f5f8 !important; color: #3b475a; cursor: not-allowed; }
+.ph-card .text-end { text-align: right; }
+
+/* Select2 hides the original <select> at 1px; "width:100% !important" on .form-control made those hidden
+   selects as wide as the card (absolutely positioned) and pushed the page sideways */
+.ph-card select.form-control.select2-hidden-accessible,
+.ph-card select.select2-hidden-accessible {
+    width: 1px !important;
+    height: 1px !important;
+    min-width: 0 !important;
+    max-width: 1px !important;
+    padding: 0 !important;
+    border: 0 !important;
+}
+/* select2 + token input sized like the other controls */
+.ph-card .select2-container { width: 100% !important; display: block; }
+.ph-card .select2-container .select2-selection--single { height: 34px; border: 1px solid #cfd6e0; border-radius: 6px; }
+.ph-card .select2-container .select2-selection--single .select2-selection__rendered { line-height: 32px; padding-left: 10px; font-size: 13px; font-weight: 600; color: var(--theme-ink, #1b2a41); }
+.ph-card .select2-container .select2-selection--single .select2-selection__arrow { height: 32px; }
+.ph-card .select2-container--open .select2-selection--single,
+.ph-card .select2-container--focus .select2-selection--single { border-color: var(--theme-accent, #438eb9); }
+.ph-card ul.token-input-list { width: 100% !important; min-height: 34px; box-sizing: border-box; border: 1px solid #cfd6e0; border-radius: 6px; }
+.ph-card ul.token-input-list li input { height: auto !important; border: 0 !important; box-shadow: none !important; }
+.ph-card ul.token-input-list li.token-input-token { margin: 3px; }
+
+/* ---------- radios / checkboxes ---------- */
+.ph-check, .ph-radio {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    margin: 0;
+    font-size: 13px;
+    font-weight: 700;
+    color: #2d3748;
+    cursor: pointer;
+    white-space: nowrap;
+}
+.ph-field-check { justify-content: flex-end; }
+.ph-field-check .ph-check { height: 34px; }
+.ph-seg {
+    display: inline-flex;
+    padding: 3px;
+    gap: 2px;
+    background: #eef1f5;
+    border: 1px solid #dde3ea;
+    border-radius: 8px;
+}
+.ph-seg .ph-radio { position: relative; padding: 5px 14px; border-radius: 6px; }
+.ph-seg .ph-radio input { position: absolute; opacity: 0; pointer-events: none; }
+.ph-seg .ph-radio:has(input:checked) {
+    background: var(--theme-accent, #438eb9);
+    color: var(--theme-on-accent, #ffffff);
+    box-shadow: 0 1px 3px rgba(16, 24, 40, .18);
+}
+.ph-seg .ph-radio:has(input:focus-visible) { outline: 2px solid var(--theme-accent-ring, rgba(67,142,185,.5)); outline-offset: 1px; }
+
+/* ---------- action bar ---------- */
+.ph-bar {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px 20px;
+    margin-top: 16px;
+    padding-top: 14px;
+    border-top: 1px dashed #d9e0e8;
+}
+.ph-options, .ph-buttons { display: flex; flex-wrap: wrap; align-items: center; gap: 10px 16px; }
+.ph-buttons { gap: 8px 10px; justify-content: flex-end; }
+.ph-buttons input[type="button"],
+.ph-buttons .btn {
+    height: 36px;
+    padding: 0 16px !important;
+    margin: 0 !important;
+    width: auto !important;
+    min-width: 0;
+    font-size: 13px;
+    font-weight: 700;
+    line-height: 34px;
+    border-radius: 6px;
+    white-space: nowrap !important;
+}
+.ph-buttons #btnSave { min-width: 170px !important; }
+#queueCount { margin-left: -4px !important; }
+
+/* ---------- bill summary ---------- */
+#dvSummary.ph-card { padding-bottom: 16px; }
+.ph-total {
+    margin-bottom: 14px;
+    padding: 12px 14px;
+    border: 1px solid #f3c9c4;
+    border-radius: 8px;
+    background: #fff5f4;
+}
+.ph-total label { display: block; margin: 0 0 4px; font-size: 11.5px; font-weight: 700; color: #7a2e27; text-transform: uppercase; letter-spacing: .04em; }
+.ph-total input.form-control {
+    height: 44px !important;
+    font-size: 22px !important;
+    font-weight: 800 !important;
+    text-align: right;
+    background: transparent !important;
+    border: 0 !important;
+    padding: 0 !important;
+    color: #c0392b !important;
+}
+#dvSummary .ph-grid { align-items: end; }
+
+/* ---------- items table ---------- */
+.ph-table-card { padding-bottom: 0; overflow: hidden; }
+.ph-table-card .table-responsive { margin: 0 -16px; border: 0; }
+.ph-table-card #tblDetails { margin-bottom: 0; }
+.ph-table-card #tblDetails thead th {
+    position: sticky;
+    top: 0;
+    z-index: 1;
+    color: var(--theme-accent-ink, #2b6a90);
+    background: var(--theme-accent-soft, #f1f6fa) !important;
+    font-size: 11.5px;
+    letter-spacing: .03em;
+    text-transform: uppercase;
+    border-bottom: 2px solid var(--theme-accent, #438eb9) !important;
+}
+
+/* ---------- dark mode ---------- */
+html[data-theme="dark"] .ph-card { background: var(--dk-surface-2, #1c2431); border-color: var(--dk-border, #2d3748); }
+html[data-theme="dark"] .ph-card-title { background: var(--dk-surface-3, #232d3d); border-bottom-color: var(--dk-border, #2d3748); color: var(--dk-text, #e6e9ef); }
+html[data-theme="dark"] .ph-field > label,
+html[data-theme="dark"] .ph-check,
+html[data-theme="dark"] .ph-radio { color: var(--dk-text, #e6e9ef); }
+html[data-theme="dark"] .ph-seg { background: var(--dk-surface-3, #232d3d); border-color: var(--dk-border, #2d3748); }
+html[data-theme="dark"] .ph-bar { border-top-color: var(--dk-border, #2d3748); }
+html[data-theme="dark"] .ph-total { background: rgba(192, 57, 43, .14); border-color: rgba(192, 57, 43, .45); }
+html[data-theme="dark"] .ph-total label { color: #ffb1a8; }
+html[data-theme="dark"] .ph-total input.form-control { color: #ff8a7d !important; }
+html[data-theme="dark"] .ph-card input[readonly],
+html[data-theme="dark"] .ph-card input[disabled] { background: var(--dk-surface-3, #232d3d) !important; color: var(--dk-text-dim, #9aa3b2); }
