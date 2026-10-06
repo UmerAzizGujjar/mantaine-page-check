@@ -2492,11 +2492,14 @@ namespace PMS
         public static string PendingAdmisionPatients()
         {
             DataBaseDataContext db = new DataBaseDataContext();
+            // Same "created today" filter as before, written as a date range so the Created_Time index can be used
+            DateTime todayStart = DateTime.Today;
+            DateTime tomorrowStart = todayStart.AddDays(1);
             var data = (from op in db.Out_Patients
                         join p in db.Reg_patients
                         on op.Reg_PatId equals p.pat_id
                         where op.Follow_Up == "002" &&
-              Convert.ToDateTime(op.Created_Time).Month == DateTime.Now.Month && Convert.ToDateTime(op.Created_Time).Year == DateTime.Now.Year && Convert.ToDateTime(op.Created_Time).Day == DateTime.Now.Day
+              op.Created_Time >= todayStart && op.Created_Time < tomorrowStart
                         select new
                         {
                             p.pat_id,
@@ -2593,7 +2596,7 @@ namespace PMS
                           {
                               d.Item_ID,
                               Description = (d.Salt != null ? (d.Salt + "-" + d.Description) : d.Description),
-                          }).ToList().Take(20);
+                          }).Take(20).ToList(); // Take before ToList: the SQL returns 20 rows, not the whole pharmacy catalog
 
             return (new JavaScriptSerializer().Serialize(Routes));
         }

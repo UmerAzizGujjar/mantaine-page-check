@@ -20,6 +20,19 @@ namespace PMS
 {
     public partial class SiteMaster : System.Web.UI.MasterPage
     {
+        // Cache-busting version for static assets: the file's last-modified time, so editing a
+        // css/js file automatically makes browsers download it (no manual ?v=N bump needed).
+        public string Ver(string virtualPath)
+        {
+            try
+            {
+                return System.IO.File.GetLastWriteTimeUtc(Server.MapPath(virtualPath)).Ticks.ToString();
+            }
+            catch
+            {
+                return "0";
+            }
+        }
 
        
 

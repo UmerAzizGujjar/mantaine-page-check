@@ -56,7 +56,6 @@
                 FillCostCenterByDepartment($(this).val());
             });
             CheckCNICUpdateonCondition();
-            isCNICValidationRequired();
 
             $('#ctl00_MainContent_ddlPatientType').change(function () {
                 $('#ctl00_MainContent_ddlPatientType').attr('disabled', true)
@@ -2688,7 +2687,7 @@
 
         }
 
-        function FillMedicine() {
+        function FillMedicine(done) {
             PageMethods.FillMedicineDropDown(function (Medicine) {
                 var options = '<option value=""> Select Medicine  </option>'
                 $.each(JSON.parse(Medicine), function (key, value) {
@@ -2696,8 +2695,19 @@
                 });
 
                 $('#txtMedicineName').html(options);
-
+                if (done) done();
             });
+        }
+
+        // Medicine / pharmacy catalogs load when the Medication modal first opens (see document.ready);
+        // callers that read those dropdowns run through this so they never see them half-filled.
+        function whenMedicationCatalogReady(cb) {
+            var waited = 0;
+            (function check() {
+                if ($('#MedicationModel').data('catalogReady') || waited >= 30000) { cb(); return; }
+                waited += 250;
+                setTimeout(check, 250);
+            })();
         }
 
 
@@ -2706,7 +2716,7 @@
             $('#MedicationModel').modal({
                 backdrop: 'static'
             });
-            setTimeout(function () {
+            setTimeout(function () { whenMedicationCatalogReady(function () {
                 $('#txtMedicineName').val('');
                 $('#txtDosage').val('');
                 $('#txtRecomended_Dosage').val('');
@@ -2739,7 +2749,7 @@
                 $('#AttendingParamedicalStaff').val($($(row).find('td')[5]).text());
                 $('#MedicationModel input[name=uurowid]').val($(row).find('input[name=uurowid]').val());
 
-            }, 2000);
+            }); }, 2000);
 
         }
 
@@ -5046,7 +5056,7 @@
                 $('#ddlXRayLF').hide();
             }
         }
-        function FillPharmacyItem() {
+        function FillPharmacyItem(done) {
             PageMethods.FillPharmacyItemDropDown(function (Medicine) {
                 var options = '<option value=""> Select Medicine  </option>'
                 $.each(JSON.parse(Medicine), function (key, value) {
@@ -5055,7 +5065,7 @@
 
                 $('#txtPharmacyItem').html(options);
                 $('#txtPharmacyItem').select2();
-
+                if (done) done();
 
             });
         }
@@ -5153,7 +5163,17 @@
             FillRoomsRefer();
             ChangePanel();
 
-            FillPharmacyItem();
+            // Heavy catalogs (pharmacy ~27k, medicine ~12k) load lazily when the Medication modal opens.
+            // Loading them at page open blocks the main thread -> Chrome "Page Unresponsive".
+            $(document).on('shown.bs.modal', '#MedicationModel', function () {
+                if ($('#MedicationModel').data('catalogLoaded')) return;
+                $('#MedicationModel').data('catalogLoaded', true);
+                var pending = 2;
+                var oneDone = function () { if (--pending === 0) $('#MedicationModel').data('catalogReady', true); };
+                FillMedicine(oneDone);
+                FillPharmacyItem(oneDone);
+            });
+
             var btnsave = $("#btnSave").val();
 
             var chk = '<%= Request.QueryString["ID"]%>';
@@ -5197,7 +5217,6 @@
             FillEyeMainTypesAndSubTypes();
 
             FillDropDowns();
-            FillMedicine();
             FillRoutes();
             FillDosage();
             FillFrequency();

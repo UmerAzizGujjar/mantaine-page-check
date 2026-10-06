@@ -144,10 +144,16 @@ namespace PMS.Inventory
 
             var ids = rows.Where(r => r.Item_Id.HasValue).Select(r => r.Item_Id.Value).Distinct().ToList();
             var itemNames = new Dictionary<int, string>();
+            // One query per chunk instead of one per item (an IGP can hold 50-100+ items)
+            for (int i = 0; i < ids.Count; i += 1000)
+            {
+                var chunk = ids.Skip(i).Take(1000).ToList();
+                foreach (var x in dbc.INV_Items.Where(x => chunk.Contains(x.Item_ID)).Select(x => new { x.Item_ID, x.Description }).ToList())
+                    itemNames[x.Item_ID] = x.Description ?? "";
+            }
             foreach (var id in ids)
             {
-                var desc = dbc.INV_Items.Where(x => x.Item_ID == id).Select(x => x.Description).FirstOrDefault();
-                itemNames[id] = desc ?? "";
+                if (!itemNames.ContainsKey(id)) itemNames[id] = "";
             }
 
             return new
@@ -318,6 +324,8 @@ namespace PMS.Inventory
                         List<Igp_Detail> lstPOItemDetails = db.Igp_Details.Where(t => t.Igp_Id == int.Parse(IgpNo)).ToList(); db.Igp_Details.DeleteAllOnSubmit(lstPOItemDetails);
                         db.SubmitChanges();
                     }
+                    var itemIdByCode = ResolveItemIds(record.ItemList.Select(i => Convert.ToInt32(i.ItemCode)));
+                    var newDetails = new List<Igp_Detail>();
                     foreach (var POitem in record.ItemList)
                     {
                         Igp_Detail ltd = new Igp_Detail();
@@ -331,7 +339,10 @@ namespace PMS.Inventory
                         ltd.BounusQty = Convert.ToDecimal(POitem.BounusQty);
                         ltd.POQty = Convert.ToDecimal(POitem.POQty);
                         ltd.PO_Item_ID = Convert.ToInt32(POitem.PODetailId);
-                        ltd.Item_Id = Convert.ToInt32(DBClass.getField("select Item_Id from inv_items where Item_Code=" + Convert.ToInt32(POitem.ItemCode)));
+                        int resolvedItemId;
+                        if (!itemIdByCode.TryGetValue(Convert.ToInt32(POitem.ItemCode), out resolvedItemId))
+                            throw new Exception("Item code " + POitem.ItemCode + " was not found in the item master.");
+                        ltd.Item_Id = resolvedItemId;
                         ltd.BatchNum = POitem.BatchNo;
                         if (POitem.txtuomqty != 0)
                         {
@@ -350,9 +361,10 @@ namespace PMS.Inventory
                         {
                             ltd.Sale_Rate = Convert.ToDecimal(POitem.SaleRate);
                         }
-                        db.Igp_Details.InsertOnSubmit(ltd);
-                        db.SubmitChanges();
+                        newDetails.Add(ltd);
                     }
+                    db.Igp_Details.InsertAllOnSubmit(newDetails);
+                    db.SubmitChanges();
 
                     db.Transaction.Commit();
                 }
@@ -363,6 +375,33 @@ namespace PMS.Inventory
                 }
             }
             return int.Parse(IgpNo);
+        }
+
+        public class ItemIdLookupRow
+        {
+            public int CodeNum { get; set; }
+            public int Item_Id { get; set; }
+        }
+
+        // Item_Code is varchar in INV_Items, so "Item_Code = <int>" converts every row: one lookup per item scanned the
+        // whole table. Same numeric comparison, but one query for all items. Own connection (as getField used), so the
+        // save transaction takes no extra locks on INV_Items.
+        private static Dictionary<int, int> ResolveItemIds(IEnumerable<int> itemCodes)
+        {
+            var result = new Dictionary<int, int>();
+            var codes = itemCodes.Distinct().ToList();
+            using (var lookup = new DataBaseDataContext(DBClass.ConnectionString()))
+            {
+                for (int i = 0; i < codes.Count; i += 500)
+                {
+                    var list = string.Join(",", codes.Skip(i).Take(500).Select(c => c.ToString(CultureInfo.InvariantCulture)));
+                    var rows = lookup.ExecuteQuery<ItemIdLookupRow>(
+                        "select cast(Item_Code as int) as CodeNum, min(Item_Id) as Item_Id from inv_items where Item_Code in (" + list + ") group by cast(Item_Code as int)");
+                    foreach (var r in rows)
+                        result[r.CodeNum] = r.Item_Id;
+                }
+            }
+            return result;
         }
 
         private static void AcquireIgpSaveLock(DataBaseDataContext db)

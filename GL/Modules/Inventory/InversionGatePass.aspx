@@ -276,7 +276,7 @@
                 BatchValidation2();
 
                 //$('input[name="txtMfgdate"]').datepicker({ dateFormat: 'dd M yy' });
-                $(document).on('focus', 'input[name="txtMfgdate"], input[name="Expdate"]', function () {
+                $(document).off('focus.igpdate', 'input[name="txtMfgdate"], input[name="Expdate"]').on('focus.igpdate', 'input[name="txtMfgdate"], input[name="Expdate"]', function () {
                     $(this).datepicker({
                         changeMonth: true,
                         changeYear: true,
@@ -648,6 +648,16 @@
                     Item_list.push({ 'PODetailId': $(value).find('td input[name=txtPODetailId]').val(), 'ItemCode': $(value).find('td input[name=txtItemCode]').val(), 'RcvQty': $(value).find('td input[name=RcvQty]').val(), 'POQty': $(value).find('td input[name=POQty]').val(), 'BatchNo': $(value).find('td input[name=BatchNo]').val(), 'txtuomqty': $(value).find('td input[name=txtuomqty]').val(), 'BlncQty': $(value).find('td input[name=blncQty]').val(), 'IgpQty': $(value).find('td input[name=IgpQty]').val(), 'InspecQty': $(value).find('td input[name=InspQty]').val(), 'BounusQty': $(value).find('td input[name=BounusQty]').val(), 'Mfgdate': $(value).find('td input[name=txtMfgdate]').val(), 'Expdate': $(value).find('td input[name=Expdate]').val(), 'SaleRate': $(value).find('td input[name=SaleRate]').val(), });
                 });
                 var AllItemDetail = { 'Igp_num': IgpNo, 'Date': date, 'Vendor': Vendor, 'DriverName': DriverName, 'VehicleNum': VehicleNum, 'BilityNum': Bility_No, 'remarks': Remarks, 'InvOrg': InvOrg, 'Branch': Branch, 'ItemList': Item_list };
+                // Block double clicks while the save runs (a large IGP takes a while) and show progress
+                $('#btnSave').prop('disabled', true);
+                Swal.fire({
+                    title: 'Saving...',
+                    text: 'Please wait, do not close or refresh the page.',
+                    allowOutsideClick: false,
+                    allowEscapeKey: false,
+                    showConfirmButton: false,
+                    didOpen: function () { Swal.showLoading(); }
+                });
                 PageMethods.SaveIgpDetail(btnSave, JSON.stringify(AllItemDetail), function (res) {
 
                     Swal.fire({
@@ -667,6 +677,13 @@
                         window.location = "InversionGatePass.aspx?IGP_ID=" + res;
                         $('#btnSave').val("Update");
                     });
+                }, function (error) {
+                    // Without this a failed or timed-out save showed nothing and the button looked dead
+                    $('#btnSave').prop('disabled', false);
+                    var msg = error && error.get_timedOut && error.get_timedOut()
+                        ? 'The server is taking longer than expected. Please check the IGP list before saving again, to avoid a duplicate.'
+                        : (error && error.get_message ? error.get_message() : 'Unknown error');
+                    Swal.fire({ icon: 'error', title: 'Save failed', text: msg, confirmButtonText: 'OK' });
                 });
             }
         }
@@ -875,12 +892,12 @@
                     });
                     $('#tblItemDescription').append(rows);
                     BatchValidation2();
-                    $(document).on('blur', 'input[name="BatchNo"]', function () {
+                    $(document).off('blur.igpbatch', 'input[name="BatchNo"]').on('blur.igpbatch', 'input[name="BatchNo"]', function () {
                         BatchValidation(this);
                     });
                     //$('input[name="txtMfgdate"]').datepicker({ dateFormat: 'dd M yy' });
                     //$('input[name="Expdate"]').datepicker({ dateFormat: 'dd M yy' });
-                    $(document).on('focus', 'input[name="txtMfgdate"], input[name="Expdate"]', function () {
+                    $(document).off('focus.igpdate', 'input[name="txtMfgdate"], input[name="Expdate"]').on('focus.igpdate', 'input[name="txtMfgdate"], input[name="Expdate"]', function () {
                         $(this).datepicker({
                             changeMonth: true,
                             changeYear: true,
