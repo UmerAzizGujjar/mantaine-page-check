@@ -1,1 +1,1 @@
-﻿<%@ WebHandler Language="C#" CodeBehind="RadiologyImageUpload.ashx.cs" Class="PMS.ImageUpload" %>
+﻿<%@ WebHandler Language="C#" CodeBehind="RadiologyImageUpload.ashx.cs" Class="PMS.RadiologyImageUpload" %>

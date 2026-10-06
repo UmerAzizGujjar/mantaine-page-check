@@ -570,21 +570,50 @@ namespace PMS.Modules.Lab
         public static string LoadimagesDetail(string TestDetailID, string single)
         {
             DataBaseDataContext db = new DataBaseDataContext();
-            string folderPath = DBClass.getField("Select Segment3 from Sys_Parms where Name like '%Images Folder Path%'");
-            var data = (from td in db.Test_Images
+            var rawData = (from td in db.Test_Images
 
                         where td.Lab_Test_Detail_ID == int.Parse(TestDetailID)
                         select new
                         {
-                            Image_path = td.Image_path.Replace("~/", string.Empty).Contains("RadiologyTestImg") == true ? td.Image_path.Replace("~/", string.Empty) : "RadiologyTestImg/" + td.Image_path.Replace("~/", string.Empty),
-                            td.Lab_Test_Detail_ID,
-                            Single = single
+                            td.Image_path,
+                            td.Lab_Test_Detail_ID
                         }).ToList();
-            if (data.Count != 0)
+
+            var data = rawData.Select(td =>
             {
+                string resolvedPath = (td.Image_path ?? string.Empty)
+                    .Replace("~../../../../", "~/")
+                    .Replace("../../../../", string.Empty);
 
+                if (resolvedPath.StartsWith("~/"))
+                {
+                    if (HttpContext.Current != null)
+                    {
+                        resolvedPath = VirtualPathUtility.ToAbsolute(resolvedPath);
+                    }
+                    else
+                    {
+                        resolvedPath = resolvedPath.Replace("~/", "/");
+                    }
+                }
+                else
+                {
+                    resolvedPath = resolvedPath.Replace("~/", string.Empty);
+                    if (!resolvedPath.Contains("RadiologyTestImg"))
+                    {
+                        resolvedPath = "wwwroot/images/RadiologyTestImg/" + resolvedPath;
+                    }
+                    resolvedPath = "/" + resolvedPath.TrimStart('/');
+                }
 
-            }
+                return new
+                {
+                    Image_path = resolvedPath,
+                    td.Lab_Test_Detail_ID,
+                    Single = single
+                };
+            }).ToList();
+
             return (new JavaScriptSerializer().Serialize(data));
         }
 
