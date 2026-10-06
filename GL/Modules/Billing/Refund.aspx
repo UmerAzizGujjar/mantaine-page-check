@@ -162,6 +162,20 @@
                 return;
             }
 
+            var sampleTakenIds = [];
+            $.ajax({
+                type: "post",
+                url: "Refund.aspx/GetSampleTakenDetailIds",
+                data: JSON.stringify({ "Bill_No": Bill_No }),
+                contentType: "application/json; charset=utf-8",
+                dataType: "json",
+                async: false,
+                success: function (r) {
+                    try { sampleTakenIds = JSON.parse(r.d); } catch (e) { sampleTakenIds = []; }
+                },
+                error: function () { sampleTakenIds = []; }
+            });
+
             $.ajax({
                 type: "post",
                 url: "Refund.aspx/LoadPatientDetailsByBillNO",
@@ -212,7 +226,12 @@
                         $('#txt_RcvdAmount').val(receivedAmount);
 
                         var rowIndex = 0;
+                        var sampleSkipped = 0;
                         for (var i = 0; i < length; i++) {
+                            if ($.inArray(parse[i].Bill_Details_ID, sampleTakenIds) !== -1) {
+                                sampleSkipped++;
+                                continue;
+                            }
                             if (parse[i].Is_Refunded == true || parse[i].Is_Refunded == 1) {
                                 continue;
                             }
@@ -234,12 +253,21 @@
                         }
 
                         if (!hasRefundableItems) {
-                            Swal.fire({
-                                title: "No Items Available",
-                                text: "All items in this bill have already been refunded.",
-                                icon: "warning",
-                                confirmButtonText: "OK"
-                            });
+                            if (sampleSkipped > 0) {
+                                Swal.fire({
+                                    title: "Sample Taken",
+                                    text: "This bill is sample taken. We cannot refund it.",
+                                    icon: "warning",
+                                    confirmButtonText: "OK"
+                                });
+                            } else {
+                                Swal.fire({
+                                    title: "No Items Available",
+                                    text: "All items in this bill have already been refunded.",
+                                    icon: "warning",
+                                    confirmButtonText: "OK"
+                                });
+                            }
                             $('#tblDetails tbody tr').remove();
                             $('#btnSave').attr('disabled', 'disabled');
                             return;
@@ -248,6 +276,16 @@
                         $('#tblDetails tbody tr').remove();
                         $('#tblDetails tbody').append(rows);
                         $('#btnSave').removeAttr('disabled');
+
+                        if (sampleSkipped > 0) {
+                            Swal.fire({
+                                icon: 'info',
+                                title: 'Sample Taken',
+                                text: sampleSkipped + ' item(s) not shown because sample already taken.',
+                                showConfirmButton: false,
+                                timer: 3000
+                            });
+                        }
                     } else {
                         Swal.fire({
                             title: "Not Found",

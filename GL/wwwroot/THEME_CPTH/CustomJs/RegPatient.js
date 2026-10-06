@@ -340,10 +340,7 @@ function SavePatient() {
         $('#relation-error').show();
         valid = false;
     }
-    if (Address === "") {
-        $('#address-error').show();
-        valid = false;
-    }
+   
     if (Gender === "" || Gender === "0") {
         valid = false;
     }

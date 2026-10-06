@@ -223,6 +223,31 @@ namespace PMS
             }
         }
         [WebMethod]
+        public static string GetSampleTakenDetailIds(string Bill_No)
+        {
+            using (DataBaseDataContext db = new DataBaseDataContext())
+            {
+                try
+                {
+                    var mode = db.sys_Parms.Where(p => p.Name == "Refund Lab Working").Select(p => p.Code).FirstOrDefault();
+                    if (mode != "01")
+                        return (new JavaScriptSerializer().Serialize(new List<int>()));
+
+                    var ids = (from bd in db.Ar_Billing_Details
+                               join b in db.Ar_Billings on bd.Bill_ID equals b.Bill_ID
+                               join sd in db.Sample_Details on bd.Bill_Details_ID equals sd.Bill_Detail_ID
+                               where b.Bill_No == Bill_No && sd.Sample_Collected == true
+                               select bd.Bill_Details_ID).Distinct().ToList();
+                    return (new JavaScriptSerializer().Serialize(ids));
+                }
+                catch (Exception)
+                {
+                    return (new JavaScriptSerializer().Serialize(new List<int>()));
+                }
+            }
+        }
+
+        [WebMethod]
         public static string LoadDoctorShare(string Bill_No)
         {
             using (DataBaseDataContext db = new DataBaseDataContext())
