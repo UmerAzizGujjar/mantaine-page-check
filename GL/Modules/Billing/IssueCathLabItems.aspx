@@ -3576,16 +3576,16 @@
                         <select class="form-control" tabindex="3" id="ddlDoctor">
                             <option></option>
                         </select>
-                    </div>
+                    </div>                  
                     <div class="ph-field">
-                        <label id="lblDepartment">Department:</label>
-                        <select class="form-control depName" tabindex="4" id="ddlDepartment">
+                        <label>Patient NO</label>
+                        <select class="form-control depName" tabindex="4" id="ddlPatient_No" onchange="getitem_code();">
                             <option></option>
                         </select>
                     </div>
                     <div class="ph-field">
-                        <label>Patient NO</label>
-                        <select class="form-control depName" tabindex="4" id="ddlPatient_No" onchange="getitem_code();">
+                        <label id="lblDepartment">Department:</label>
+                        <select class="form-control depName" tabindex="4" id="ddlDepartment">
                             <option></option>
                         </select>
                     </div>
