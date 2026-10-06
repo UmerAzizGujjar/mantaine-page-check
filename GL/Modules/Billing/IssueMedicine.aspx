@@ -5076,6 +5076,12 @@ function CalculateReceivedAmount() {
                         </select>
                     </div>
                     <div class="ph-field">
+                        <label>Patient NO</label>
+                        <select class="form-control depName" tabindex="4" id="ddlPatient_No" onchange="getitem_code();">
+                            <option></option>
+                        </select>
+                    </div>
+                    <div class="ph-field">
                         <label id="LblPatientType">Patient Type</label>
                         <input type="text" id="txtPatientType" tabindex="2" autocomplete="off" class="form-control" />
                     </div>
@@ -5087,12 +5093,7 @@ function CalculateReceivedAmount() {
                         <label id="lblBed">Bed No:</label>
                         <input type="text" id="BedName" tabindex="2" autocomplete="off" class="form-control" />
                     </div>
-                    <div class="ph-field">
-                        <label>Patient NO</label>
-                        <select class="form-control depName" tabindex="4" id="ddlPatient_No" onchange="getitem_code();">
-                            <option></option>
-                        </select>
-                    </div>
+                    
                     <div class="ph-field">
                         <label class="InvoiceNum">Invoice No:</label>
                         <select id="ddlInv_No" onchange="GetBillingItems()" class="form-control select2"></select>
