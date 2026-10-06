@@ -35,6 +35,7 @@ namespace PMS.AP
                 BindPaymentTerms();
                 BindDeliveryTerms();
                 BindPOType();
+                BindWorkOrder();
                 //LoadPRNum();
                 var code = db.sys_Parms.Where(x => x.Name == "Replicate").Select(x => x.Code).FirstOrDefault();
                 ReplicateCode = code ?? "";
@@ -253,6 +254,7 @@ namespace PMS.AP
                               m.Delivery_Terms,
                               m.Frieght_Charges,
                               m.PO_Type,
+                              m.Work_Order,
                               m.Transaction_Type,
                               m.Warranty,
                               m.Disclaimer,
@@ -418,6 +420,24 @@ TotalStock = db.GetInvenrtoryItemUomTotalStock(d.Item_Id ?? 0, m.Ware_House),
             #endregion
         }
 
+        private void BindWorkOrder()
+        {
+            #region "Bind Work Order"
+            object valueset;
+            valueset = DBClass.GetValueSet(WorkOrderHelper.ValueSetName);
+            ddlWorkOrder.DataSource = valueset;
+            ddlWorkOrder.DataTextField = "DataValue_Description";
+            ddlWorkOrder.DataValueField = "DataValue_Name";
+            ddlWorkOrder.DataBind();
+            ListItem defaultItem = ddlWorkOrder.Items.FindByValue(WorkOrderHelper.Standard);
+            if (defaultItem != null)
+            {
+                ddlWorkOrder.ClearSelection();
+                defaultItem.Selected = true;
+            }
+            #endregion
+        }
+
         //private void LoadPRNum()
         //{
         //    #region "Bind PRNUM in Dropdown"
@@ -498,6 +518,7 @@ TotalStock = db.GetInvenrtoryItemUomTotalStock(d.Item_Id ?? 0, m.Ware_House),
             public string FreightCharges { get; set; }
             public string ImagePath { get; set; }
             public string POType { get; set; }
+            public string WorkOrder { get; set; }
             public string WareHouse { get; set; }
             public string Branch { get; set; }
             public string Further_amount { get; set; }
@@ -648,6 +669,7 @@ TotalStock = db.GetInvenrtoryItemUomTotalStock(d.Item_Id ?? 0, m.Ware_House),
             DataBaseDataContext db = new DataBaseDataContext(DBClass.ConnectionString());
             JavaScriptSerializer oJS = new JavaScriptSerializer();
             var record = oJS.Deserialize<MasterItemList>(AllItemDetail);
+            string workOrder = WorkOrderHelper.Resolve(db, record.WorkOrder);
 
             if (btnSave == "Update")
             {
@@ -655,6 +677,10 @@ TotalStock = db.GetInvenrtoryItemUomTotalStock(d.Item_Id ?? 0, m.Ware_House),
                 AP_Purchase_Order existingItem = db.AP_Purchase_Orders.SingleOrDefault(t => t.PO_No == int.Parse(record.Purchase_No));
                 if (existingItem != null)
                 {
+                    if (existingItem.Status == "Approved" && WorkOrderHelper.Normalize(existingItem.Work_Order) != workOrder)
+                    {
+                        throw new Exception("Work Order cannot be changed after the Purchase Order is approved.");
+                    }
                     WritePOChangeLog(db, existingItem, oJS);
 
                     if (record.RefNo != "")
@@ -720,6 +746,7 @@ TotalStock = db.GetInvenrtoryItemUomTotalStock(d.Item_Id ?? 0, m.Ware_House),
                         existingItem.Frieght_Charges = Convert.ToDecimal(record.FreightCharges);
                     }
                     existingItem.PO_Type = record.POType;
+                    existingItem.Work_Order = workOrder;
                     db.SubmitChanges();
                     PoNo = existingItem.PO_ID.ToString();
                 }
@@ -774,6 +801,7 @@ TotalStock = db.GetInvenrtoryItemUomTotalStock(d.Item_Id ?? 0, m.Ware_House),
                 PO.projection_type = record.ProjectionType;
                 PO.Delivery_Terms = record.DeliveryTerms;
                 PO.PO_Type = record.POType;
+                PO.Work_Order = workOrder;
                 PO.Status = "Created";
                 PO.IsClosed = false;
                 PO.IsDeleted = false;
@@ -1500,6 +1528,68 @@ TotalStock = db.GetInvenrtoryItemUomTotalStock(d.Item_Id ?? 0, m.Ware_House),
             {
                 return (new JavaScriptSerializer()).Serialize(new List<object>());
             }
+        }
+    }
+
+    /// <summary>
+    /// Work Order rules for Purchase Orders.
+    /// 001 (default, also used for NULL/empty legacy rows): normal PO -> IGP -> GRN -> Invoice flow.
+    /// 002: no IGP; the PO is invoiced directly on the Purchase Invoice screen (vendor -> PO).
+    /// </summary>
+    public static class WorkOrderHelper
+    {
+        public const string ValueSetName = "Work Order";
+        public const string Standard = "001";
+        public const string DirectInvoice = "002";
+
+        public static string Normalize(string workOrder)
+        {
+            return string.IsNullOrWhiteSpace(workOrder) ? Standard : workOrder.Trim();
+        }
+
+        public static bool IsDirectInvoice(string workOrder)
+        {
+            return Normalize(workOrder) == "002";
+        }
+
+        // Returns the normalized Work Order, rejecting values that are not in the "Work Order" value set.
+        public static string Resolve(DataBaseDataContext db, string workOrder)
+        {
+            string value = Normalize(workOrder);
+            if (value == Standard)
+                return value;
+
+            bool exists = (from d in db.DataValues
+                           join v in db.ValueSets on d.ValueSet_ID equals v.ValueSet_ID
+                           where v.ValueSet_Name == ValueSetName && d.DataValue_Name == value
+                           select d.DataValue_ID).Any();
+            if (!exists)
+                throw new Exception("Invalid Work Order '" + value + "'.");
+            return value;
+        }
+
+        // PO ids that must never be offered to / processed by IGP.
+        public static List<int> GetDirectInvoicePOIds(DataBaseDataContext db)
+        {
+            return db.AP_Purchase_Orders
+                     .Where(p => p.Work_Order == "002")
+                     .Select(p => p.PO_ID)
+                     .ToList();
+        }
+
+        public static bool IsPOBlockedFromIgp(DataBaseDataContext db, int poId)
+        {
+            return db.AP_Purchase_Orders.Any(p => p.PO_ID == poId && p.Work_Order == "002");
+        }
+
+        // Approved Work Order 002 POs that have not been invoiced yet (the only POs the Purchase Invoice screen may load).
+        public static IQueryable<AP_Purchase_Order> GetInvoiceablePOs(DataBaseDataContext db)
+        {
+            return db.AP_Purchase_Orders.Where(po => po.Work_Order == "002"
+                                                  && po.Status == "Approved"
+                                                  && (po.IsDeleted == false || po.IsDeleted == null )
+                                                  && !db.Purchase_Invoice_Details.Any(d => d.Po_Id == po.PO_ID)
+                                                  );
         }
     }
 }
