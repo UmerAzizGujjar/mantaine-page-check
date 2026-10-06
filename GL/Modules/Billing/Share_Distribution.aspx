@@ -584,6 +584,7 @@
                     }
 
                     rows += '<tr>' +
+                        '<td style="padding: 8px;">' + (value.Bill_No || '') + '</td>' +
                         '<td style="padding: 8px;">' + (value.MR_No || '') + '</td>' +
                         '<td style="padding: 8px;">' + (value.Full_Name || '') + '</td>' +
                         '<td style="padding: 8px;">' + (value.Age || '') + '</td>' +
@@ -602,10 +603,10 @@
                 $('#tblFinalBills tbody').html(rows);
 
                 if (parsedData.length === 0) {
-                    $('#tblFinalBills tbody').html('<tr><td colspan="9" style="text-align: center; padding: 20px;">No final bills found</td></tr>');
+                    $('#tblFinalBills tbody').html('<tr><td colspan="10" style="text-align: center; padding: 20px;">No final bills found</td></tr>');
                 }
             }, function (err) {
-                $('#tblFinalBills tbody').html('<tr><td colspan="9" style="text-align: center; padding: 20px; color: red;">Error loading data</td></tr>');
+                $('#tblFinalBills tbody').html('<tr><td colspan="10" style="text-align: center; padding: 20px; color: red;">Error loading data</td></tr>');
             });
         }
 
@@ -1473,6 +1474,7 @@
                         <table class="table" id="tblFinalBills" style="overflow: scroll; height: auto;">
                             <thead>
                                 <tr>
+                                    <th>Bill No</th>
                                     <th>MR No</th>
                                     <th>Patient Name</th>
                                     <th>Age</th>

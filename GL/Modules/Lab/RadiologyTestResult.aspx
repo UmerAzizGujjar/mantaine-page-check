@@ -7,6 +7,9 @@
         .select2-container--open {
             z-index: 99999 !important;
         }
+        #radiologyFooterButtons .col-lg-2:has(input[style*="display: none"]) {
+            display: none;
+        }
     </style>
     <link href="../../wwwroot/THEME_TIBBIT//CustomCSS/LabReportPreview.css" rel="stylesheet" />
     <script type="text/javascript">
@@ -5036,13 +5039,15 @@ function cleanPrint() {
                             <select id="ddlReferDoctor" class="form-control"></select>
                         </div>
                     </div>
-                    <div class="row">
+                    <div class="row" id="radiologyFooterButtons" style="width: 100%;">
                         <div class="col-lg-2 col-md-6 col-sm-12">
                             <input class="btn btn-yellow" data-toggle="modal" data-target="#myInnerModal1" style="color: white !important; border-radius: 5px; height: 35px;" value="Remarks" />
                         </div>
-                        <div class="col-lg-2 col-md-6 col-sm-12" style="display:flex;gap:4px;">
-                            <input type="button" class="btn btn-primry" id="saveTest" name="saveTest" value="Save" style="flex:1;" />
-                            <input type="button" class="btn btn-primry" id="btnSaveTemplate" value="Save Result & Template" style="flex:1;" />
+                        <div class="col-lg-2 col-md-6 col-sm-12">
+                            <input type="button" class="btn btn-primry" id="saveTest" name="saveTest" value="Save" />
+                        </div>
+                        <div class="col-lg-2 col-md-6 col-sm-12">
+                            <input type="button" class="btn btn-primry" id="btnSaveTemplate" value="Save Result & Template" />
                         </div>
                         <div class="col-lg-2 col-md-6 col-sm-12">
                             <input type="button" id="btnApprove" class="btn btn-primry" name="btnApprove" value="Approve" />
