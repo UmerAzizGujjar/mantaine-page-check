@@ -364,7 +364,9 @@ MigrationBackup/
 FodyWeavers.xsd
 /GL/upload/UploadPRFilesImages
 # Local artifacts (never commit)
-GL/upload/
+GL/upload/*
+!GL/upload/*.ashx
+!GL/upload/*.ashx.cs
 GL/Operation_Booking_Images/
 GL/PatientQRs/
 GL/TempQR/
