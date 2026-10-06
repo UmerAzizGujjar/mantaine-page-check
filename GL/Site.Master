@@ -1,4 +1,4 @@
-﻿<%@ Master Language="C#" AutoEventWireup="true" CodeBehind="SiteMaster.master.cs" Inherits="PMS.SiteMaster" %>
+<%@ Master Language="C#" AutoEventWireup="true" CodeBehind="SiteMaster.master.cs" Inherits="PMS.SiteMaster" %>
 
 <%@ Register Assembly="AjaxControlToolkit" Namespace="AjaxControlToolkit" TagPrefix="asp" %>
 <%@ Register Src="~/wwwroot/THEME_TIBBIT/header-footer/Footer.ascx" TagPrefix="uc" TagName="Footer" %>
@@ -901,6 +901,9 @@
     <%-- One look for every date / time picker (theme colours + month/year drop-downs); loaded after the dark-mode files --%>
     <link href="<%= Page.ResolveClientUrl("~/wwwroot/lib/theme/datepicker-modern.css") %>?v=4" rel="stylesheet" type="text/css" />
     <script src="<%= Page.ResolveClientUrl("~/wwwroot/lib/theme/datepicker-modern.js") %>?v=4" type="text/javascript"></script>
+    <%-- One size for every Bootstrap modal (900px x 80% height, centred; opt out with class="modal-free-size") --%>
+    <link href="<%= Page.ResolveClientUrl("~/wwwroot/lib/theme/modal-modern.css") %>?v=6" rel="stylesheet" type="text/css" />
+    <script src="<%= Page.ResolveClientUrl("~/wwwroot/lib/theme/modal-modern.js") %>?v=2" type="text/javascript"></script>
     <%-- Checkboxes drawn as toggle switches on every form (opt out with class="no-switch") --%>
     <link href="<%= Page.ResolveClientUrl("~/wwwroot/lib/theme/form-modern.css") %>?v=2" rel="stylesheet" type="text/css" />
 </head>

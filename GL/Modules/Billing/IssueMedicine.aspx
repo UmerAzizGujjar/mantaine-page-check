@@ -2,6 +2,7 @@
 
 <asp:Content ID="Content1" ContentPlaceHolderID="HeadContent" runat="server">
     <link href="../../wwwroot/THEME_TIBBIT/CustomCSS/Pharmacy.css" rel="stylesheet" />
+    <link href="../../wwwroot/lib/theme/pharmacy-form.css?v=3" rel="stylesheet" />
     <link href="../../wwwroot/lib/sweetalert/swalalert.css" rel="stylesheet" />
     <script src="https://cdnjs.cloudflare.com/ajax/libs/underscore.js/1.8.2/underscore-min.js"></script>
    <style>
@@ -5034,245 +5035,184 @@ function CalculateReceivedAmount() {
 
 
 <asp:Content ID="Content2" ContentPlaceHolderID="MainContent" runat="server">
-    <div class="row d-flex align-items-stretch">
-        <!-- Left Section -->
-        <div class="col-lg-9 col-md-12">
-            <!-- Patient Details -->
-            <div class="row mb-3" style="display: none;">
-                <div class="col-12 col-sm-6 col-md-4">
-                    <label>Patient Name:</label>
-                    <label id="lblPatienName"></label>
-                </div>
-                <div class="col-12 col-sm-6 col-md-4">
-                    <label>Contact:</label>
-                    <label id="lblContactNo"></label>
-                </div>
+    <div class="ph-layout">
+        <!-- Left: patient / order and medicine entry -->
+        <div class="ph-main">
+
+            <!-- Patient Details (filled by script) -->
+            <div class="ph-patient-info" style="display: none;">
+                <label>Patient Name:</label>
+                <label id="lblPatienName"></label>
+                <label>Contact:</label>
+                <label id="lblContactNo"></label>
             </div>
 
-            <!-- Input Fields -->
-            <div class="row mb-3">
-                <div class="col-sm-12 col-md-4 col-lg-2">
-                    <label>MR No:</label>
-                    <input type="hidden" id="hdPatientID" />
-                    <input type="hidden" id="hdndiscountType" />
-                    <input type="hidden" id="hdnReturnBillID" />
-                    <input type="text" id="txtMRNo" tabindex="1" class="form-control" />
-                    <input type="text" id="txtTransType" style="display: none" tabindex="1" class="form-control" />
+            <!-- Patient & order -->
+            <section class="ph-card">
+                <h5 class="ph-card-title"><i class="fa fa-user-circle-o"></i> Patient &amp; Order</h5>
+                <div class="ph-grid ph-grid-4">
+                    <div class="ph-field">
+                        <label>MR No:</label>
+                        <input type="hidden" id="hdPatientID" />
+                        <input type="hidden" id="hdndiscountType" />
+                        <input type="hidden" id="hdnReturnBillID" />
+                        <input type="text" id="txtMRNo" tabindex="1" class="form-control" />
+                        <input type="text" id="txtTransType" style="display: none" tabindex="1" class="form-control" />
+                    </div>
+                    <div class="ph-field">
+                        <label id="LblCustomerName">Patient Name</label>
+                        <input type="text" id="CustomerName" tabindex="2" autocomplete="off" class="form-control" />
+                    </div>
+                    <div class="ph-field">
+                        <label>Referred By:</label>
+                        <select class="form-control" tabindex="3" id="ddlDoctor">
+                            <option></option>
+                        </select>
+                    </div>
+                    <div class="ph-field">
+                        <label id="lblDepartment">Department:</label>
+                        <select class="form-control depName" tabindex="4" id="ddlDepartment">
+                            <option></option>
+                        </select>
+                    </div>
+                    <div class="ph-field">
+                        <label id="LblPatientType">Patient Type</label>
+                        <input type="text" id="txtPatientType" tabindex="2" autocomplete="off" class="form-control" />
+                    </div>
+                    <div class="ph-field">
+                        <label id="LblWard">Ward Name</label>
+                        <input type="text" id="Ward_Name" tabindex="2" autocomplete="off" class="form-control" />
+                    </div>
+                    <div class="ph-field">
+                        <label id="lblBed">Bed No:</label>
+                        <input type="text" id="BedName" tabindex="2" autocomplete="off" class="form-control" />
+                    </div>
+                    <div class="ph-field">
+                        <label>Patient NO</label>
+                        <select class="form-control depName" tabindex="4" id="ddlPatient_No" onchange="getitem_code();">
+                            <option></option>
+                        </select>
+                    </div>
+                    <div class="ph-field">
+                        <label class="InvoiceNum">Invoice No:</label>
+                        <select id="ddlInv_No" onchange="GetBillingItems()" class="form-control select2"></select>
+                    </div>
+                    <div class="ph-field">
+                        <label class="InvoiceNum">Template:</label>
+                        <select id="ddlTemplate" onchange="GetTemplateItems()" class="form-control select2"></select>
+                    </div>
+                    <div class="ph-field">
+                        <label class="paneldiv">Panel</label>
+                        <select id="ddlpanel" class="form-control ddlpanel" tabindex="7"></select>
+                    </div>
+                    <div class="ph-field">
+                        <label>MR_No:</label>
+                        <input type="text" id="txtPatientMRNo" class="form-control" readonly="readonly" style="font-weight: bold;" />
+                    </div>
                 </div>
-                <div class="col-sm-12 col-md-4 col-lg-2">
-                    <label id="LblCustomerName">Patient Name</label>
-                    <input type="text" id="CustomerName" tabindex="2" autocomplete="off" class="form-control" />
-                </div>
-                <div class="col-sm-12 col-md-4 col-lg-2">
-                    <label>Referred By:</label>
-                    <select class="form-control" tabindex="3" id="ddlDoctor">
-                        <option></option>
-                    </select>
-                </div>
-                <div class="col-sm-6 col-md-4 col-lg-2">
-                    <label id="lblDepartment">Department:</label>
-                    <select class="form-control depName" tabindex="4" id="ddlDepartment">
-                        <option></option>
-                    </select>
-                </div>
-                <div class="col-sm-12 col-md-4 col-lg-2">
-                    <label id="LblPatientType">Patient Type</label>
-                    <input type="text" id="txtPatientType" tabindex="2" autocomplete="off" class="form-control" />
-                </div>
-                <div class="col-sm-12 col-md-4 col-lg-2">
-                    <label id="LblWard">Ward Name</label>
-                    <input type="text" id="Ward_Name" tabindex="2" autocomplete="off" class="form-control" />
-                </div>
-            </div>
-            <div class="row mb-3">
-                <div class="col-sm-12 col-md-4 col-lg-2">
-                    <label>Patient NO</label>
-                    <select class="form-control depName" tabindex="4" id="ddlPatient_No" onchange="getitem_code();">
-                        <option></option>
-                    </select>
+            </section>
 
-                </div>
-                <div class="col-sm-12 col-md-4 col-lg-1">
-                    <label></label>
-                    <input type="button" class="btn-primry" onclick="Print_Prescription()" value="Print" />
-                </div>                              
-                <div class="col-sm-6 col-md-4 col-lg-1">
-                    <label id="lblBed">Bed No:</label>
-                    <input type="text" id="BedName" tabindex="2" autocomplete="off" class="form-control" />
-                </div>
-                <div class="col-lg-2 col-md-4 col-sm-6">
-                    <label class="InvoiceNum">Invoice No:</label>
-                    <select id="ddlInv_No" style="width: 180px !important;" onchange="GetBillingItems()" class="form-control select2"></select>
-                </div>
-                <div class="col-lg-2 col-md-4 col-sm-6">
-                    <label class="InvoiceNum">Template:</label>
-                    <select id="ddlTemplate" style="width: 180px !important;" onchange="GetTemplateItems()" class="form-control select2"></select>
-                </div>
-                <div class="col-lg-2 col-md-4 col-sm-6">
-                    <label class="paneldiv">Panel</label>
-                    <select id="ddlpanel" class="form-control ddlpanel" tabindex="7"></select>
-                </div>
-               <div class="col-lg-1 col-md-4 col-sm-6">
-                <label></label>
-                <input type="button" class="btn-primry" value="Queue" id="Queue" onclick="openQueue()" style="width:144px !important" />
-                <span id="queueCount" style="display:none; background-color:red; color:white; border-radius:50%; padding:2px 8px; font-size:12px; margin-left:5px;"></span>
-            </div>
-            </div>
-
-            <!-- OPD Prescription & Batch -->
-            <div class="row mb-3">
-                <div class="col-lg-2 col-md-7 col-sm-6">
-                    <label id="lblmedName">Medicine:</label>
-                    <label class="small">(Alt+Q)</label>
-                    <select id="medName" class="form-control" tabindex="6" onchange="getbatchfrom_grn()">
-                        <option></option>
-                    </select>
-                </div>
-                <div class="col-lg-2 col-md-4 col-sm-6">
-                    <label>WareHouse</label>
-                    <select id="ddlWarehouse" class="form-select" onchange="DisableWareHouse()">
-                        <option value="0">Please Select</option>
-                        <!-- other options -->
-                    </select>
+            <!-- Medicine entry & actions -->
+            <section class="ph-card">
+                <h5 class="ph-card-title"><i class="fa fa-medkit"></i> Medicine</h5>
+                <div class="ph-grid ph-grid-med">
+                    <div class="ph-field ph-span-2">
+                        <label id="lblmedName">Medicine: <span class="ph-hint">(Alt+Q)</span></label>
+                        <select id="medName" class="form-control" tabindex="6" onchange="getbatchfrom_grn()">
+                            <option></option>
+                        </select>
+                    </div>
+                    <div class="ph-field">
+                        <label>WareHouse</label>
+                        <select id="ddlWarehouse" class="form-control form-select" onchange="DisableWareHouse()">
+                            <option value="0">Please Select</option>
+                            <!-- other options -->
+                        </select>
+                    </div>
+                    <div class="ph-field">
+                        <label class="batchdiv">Batch No:</label>
+                        <select id="batchno" class="form-control batchdiv" tabindex="7" onchange="AddMedicineDetail()"></select>
+                    </div>
+                    <div class="ph-field ph-field-check">
+                        <label class="ph-check">
+                            <input type="checkbox" id="chkbatch" tabindex="8" onchange="loadmed();" />
+                            <span id="lblbatch">Batch</span>
+                        </label>
+                    </div>
                 </div>
 
-                <div class="col-lg-2 col-md-4 col-sm-6">
-                    <label class="batchdiv">Batch No:</label>
-                    <select id="batchno" class="form-control batchdiv" tabindex="7" onchange="AddMedicineDetail()"></select>
-                </div>
-                <div class="col-lg-1 col-sm-3 col-md-1 text-center" style="margin-top: 2%;">
-                    <label id="lblbatch">Batch</label>
-                </div>
-                <div class="col-lg-1 col-sm-3 col-md-1 text-center" style="margin-top: 2%; margin-left: -5%;">
-                    <input type="checkbox" id="chkbatch" tabindex="8" onchange="loadmed();" />
-                </div>
-               
-                  <div class="col-sm-2 col-md-2 col-lg-2">
-                      <label></label>
-                  <input type="button" class="btn btn-primry w-100 w-md-auto" id="btnSave" tabindex="10" value="Save &amp; Print (Alt+P)" onclick="GetPharmacyUser()" />
-              </div>
-                
-               <div class="col-lg-2 col-md-4 col-sm-6">
-                   <label></label>
-                <input type="button" tabindex="15" title="Sale Return" class="btn btn-primry" value="Sale Return" id="btnSaleReturn" />
-            </div>
-                    
-                
+                <div id="divinvoiceoldtemplate"></div>
 
-               
-            </div>
-
-              <div class="row mb-3 align-items-center" id="divinvoiceoldtemplate" style="margin-top: 1%; margin-bottom: 1%">
-
-                
-                                  
-                                 
-                  </div>
-
-            <!-- Checkboxes and Radio Buttons -->
-            <div class="row mb-3 align-items-center" style="margin-top: 1%; margin-bottom: 1%">
-                <div class="col-lg-1 col-md-4 col-sm-6">
-                    <input type="radio" name="rbtn" id="chkcash" tabindex="11" value="rbtncash" checked />
+                <div class="ph-bar">
+                    <div class="ph-options">
+                        <span class="ph-seg">
+                            <label class="ph-radio"><input type="radio" name="rbtn" id="chkcash" tabindex="11" value="rbtncash" checked /><span>Cash</span></label>
+                            <label class="ph-radio"><input type="radio" name="rbtn" tabindex="12" id="chkBank" value="rbtnbank" /><span>Credit</span></label>
+                            <label class="ph-radio"><input type="radio" name="rbtn" tabindex="13" id="chkHospital" value="rbtnHospital" /><span>Panel</span></label>
+                        </span>
+                        <label class="ph-check"><input type="checkbox" tabindex="14" onchange="OnHoldBill()" id="chkHold" /><span id="lblHold">Hold</span></label>
+                        <label class="ph-check"><input type="checkbox" tabindex="9" id="chkprint" /><span>Print</span></label>
+                    </div>
+                    <div class="ph-buttons">
+                        <input type="button" class="btn-primry" onclick="Print_Prescription()" value="Print" title="Print prescription" />
+                        <input type="button" class="btn-primry" value="Queue" id="Queue" onclick="openQueue()" />
+                        <span id="queueCount" style="display:none; background-color:red; color:white; border-radius:50%; padding:2px 8px; font-size:12px; margin-left:5px;"></span>
+                        <input type="button" class="btn-primry" value="Item List (Alt + L)" id="item_List" onclick="OpenItemList();" />
+                        <input type="button" class="btn-primry" value="Reset" id="btnResetForm" onclick="ResetPharmacyForm();" />
+                        <input type="button" tabindex="15" title="Sale Return" class="btn btn-primry" value="Sale Return" id="btnSaleReturn" />
+                        <input type="button" class="btn btn-primry" id="btnSave" tabindex="10" value="Save &amp; Print (Alt+P)" onclick="GetPharmacyUser()" />
+                    </div>
                 </div>
-                <div class="col-lg-1 col-sm-6 col-md-4 margin">
-                    <label for="lblcash">Cash</label>
-                </div>
-                <div class="col-lg-1 col-md-4 col-sm-6">
-                    <input type="radio" name="rbtn" tabindex="12" id="chkBank" value="rbtnbank" />
-                </div>
-                <div class="col-lg-1 col-md-4 col-sm-6 margin">
-                    <label for="lblbank">Credit</label>
-                </div>
-                <div class="col-lg-1 col-md-4 col-sm-6">
-                    <input type="radio" name="rbtn" tabindex="13" id="chkHospital" value="rbtnHospital" />
-                </div>
-                <div class="col-lg-1 col-md-4 col-sm-6 margin">
-                    <label for="lblPanel">Panel</label>
-                </div>
-                <div class="col-lg-1 col-md-4 col-sm-6">
-                    <input type="checkbox" tabindex="14" onchange="OnHoldBill()" id="chkHold" />
-                </div>
-                <div class="col-lg-1 col-md-4 col-sm-6 margin">
-                    <label id="lblHold">Hold</label>
-                </div>
-                
-                <div class="col-sm-2 col-md-2 col-lg-1 text-center" >
-                    <label class="me-3">Print</label>
-                </div>
-                <div class="col-sm-2 col-md-2 col-lg-1 text-center" style="margin-left: -4%;">
-                    <input type="checkbox" tabindex="9" id="chkprint" />
-                </div>
-               <div class="col-sm-2 col-md-2 col-lg-2">
-                <input type="button" class="btn-primry" value="Item List (Alt + L)" id="item_List" onclick="OpenItemList();"  />
-                </div>
-               <div class="col-sm-1 col-md-2 col-lg-1">
-                   <input type="button" class="btn-primry" value="Reset" id="btnResetForm" onclick="ResetPharmacyForm();"  />
-               </div>
-                <div class="col-sm-12 col-md-4 col-lg-2">
-                    <label>MR_No:</label>
-                    <input type="text" id="txtPatientMRNo" class="form-control" readonly="readonly" style="background-color: #f5f5f5; font-weight: bold;" />
-                </div>
-            </div>
-
+            </section>
         </div>
 
-        <!-- Right Section -->
-        <div class="col-lg-3 col-md-12 d-flex flex-column" style="border: 1px solid; border-radius: 10px; padding: 9px">
-            <div id="dvSummary" class="border p-3 rounded h-100">
-                <!-- Total Payable -->
-                <div class="row mb-2 align-items-center left-right-margin">
-                    <div class="col-lg-6">
-                        <label>Total Payable</label>
-                        <input type="text" id="txtTotalPayable" tabindex="16" class="form-control text-end text-danger" disabled />
-                    </div>
-                    <div class="col-lg-6 col-md-6 col-sm-12">
+        <!-- Right: bill summary -->
+        <aside class="ph-summary">
+            <div id="dvSummary" class="ph-card">
+                <h5 class="ph-card-title"><i class="fa fa-calculator"></i> Bill Summary</h5>
+                <div class="ph-total">
+                    <label>Total Payable</label>
+                    <input type="text" id="txtTotalPayable" tabindex="16" class="form-control text-end text-danger" disabled />
+                </div>
+                <div class="ph-grid ph-grid-2">
+                    <div class="ph-field">
                         <label>Line Discount</label>
-                        <input type="text" id="txtLineDisc" tabindex="17" onkeyup="sumdiscount();" autocomplete="off" class="form-control me-2" onkeypress='return event.charCode >= 48 && event.charCode <= 57' readonly="readonly" />
+                        <input type="text" id="txtLineDisc" tabindex="17" onkeyup="sumdiscount();" autocomplete="off" class="form-control text-end" onkeypress='return event.charCode >= 48 && event.charCode <= 57' readonly="readonly" />
                     </div>
-
-                </div>
-                <div class="row mb-2 align-items-center left-right-margin">
-                    <div class="col-lg-6">
+                    <div class="ph-field">
                         <label>Disc %</label>
-
-                        <input type="text" tabindex="18" id="txtDisPer" class="form-control me-2" onkeyup="CalculateSummariesMasterDiscount(false)"  onblur="CalculateSummariesMasterDiscount(false)"/>
+                        <input type="text" tabindex="18" id="txtDisPer" class="form-control text-end" onkeyup="CalculateSummariesMasterDiscount(false)" onblur="CalculateSummariesMasterDiscount(false)" />
                     </div>
-                    <div class="col-lg-6 col-md-6 col-sm-12">
+                    <div class="ph-field">
                         <label>Disc (Alt+D)</label>
-                        <input type="text" id="txtDisAmt" tabindex="19" class="form-control ms-2" disabled="disabled" onkeyup="CalculateSummariesMasterDiscount(true)" onblur="CalculateSummariesMasterDiscount(true)"/>
-
+                        <input type="text" id="txtDisAmt" tabindex="19" class="form-control text-end" disabled="disabled" onkeyup="CalculateSummariesMasterDiscount(true)" onblur="CalculateSummariesMasterDiscount(true)" />
                     </div>
-
-                </div>
-                <div class="row mb-2 align-items-center left-right-margin">
-                    <div class="col-lg-6">
+                    <div class="ph-field">
                         <label>Total Discount</label>
                         <input type="text" id="txttotalDisc" tabindex="20" class="form-control text-end" readonly="readonly" />
                     </div>
-                    <div class="col-lg-6 col-md-6 col-sm-12">
+                    <div class="ph-field ph-span-2">
                         <label>Adjustment (Alt+A)</label>
                         <input type="text" id="txtFlatDisc" tabindex="21" value="0" class="form-control text-end" onkeyup="adjustment()" />
                     </div>
-
-                </div>
-                <!-- Amount Received -->
-                <div class="row mb-2 align-items-center  left-right-margin">
-                    <div class="col-lg-6">
+                    <div class="ph-field ph-span-2">
                         <label>Amount Received</label>
                         <input type="text" id="txtAmountReceived" tabindex="20" class="form-control text-end" onkeyup="CountBalance()" />
                     </div>
-                    <div class="col-lg-6 d-flex align-items-center" id="divBalance">
-                        <label class="ms-3" id="blnc">Balance</label>
+                    <div class="ph-field ph-span-2" id="divBalance">
+                        <label id="blnc">Balance</label>
                         <input type="text" id="txtBalances" tabindex="22" class="form-control text-end text-primary" disabled />
                     </div>
                 </div>
-
             </div>
-        </div>
+        </aside>
     </div>
 
+    <!-- Medicine items -->
+    <section class="ph-card ph-table-card">
+        <h5 class="ph-card-title"><i class="fa fa-list"></i> Items</h5>
   <div class="table-responsive" style="overflow-x: auto; overflow-y: visible; width: 100%;">
-    <table class="table table-bordered table-striped" id="tblDetails" style="min-width: 1300px; width: 100%; border-collapse: collapse; table-layout: auto;">
+    <table class="table table-bordered table-striped" id="tblDetails" style="min-width: 1180px; width: 100%; border-collapse: collapse; table-layout: auto;">
         <thead>
     <tr>
         <th style="width: 40px; white-space: nowrap;">Sr.</th>
@@ -5297,6 +5237,7 @@ function CalculateReceivedAmount() {
         </tbody>
     </table>
 </div>
+    </section>
 
     <div id="SearchModel" class="modal fade-in" role="dialog">
         <div class="modal-dialog">

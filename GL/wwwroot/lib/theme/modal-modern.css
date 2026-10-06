@@ -1,0 +1,178 @@
+/* ==========================================================================
+   One look for every Bootstrap modal in the application:
+   900px wide, height follows the content (no empty space below short forms) up to 80% of the
+   screen height, always centred. When the content is longer the body scrolls inside the modal.
+   On small screens it shrinks to fit (never wider/taller than the screen).
+   Look only - modal content and logic are untouched.
+   Pages that hard-code sizes inline (style="width:1140px !important" ...) are normalised by
+   modal-modern.js. Selectors carry two ":not(#x)" so they also beat "#SomeModal .modal-dialog" rules.
+   Opt out for one modal with class="modal-free-size" on the .modal element.
+   ========================================================================== */
+:root {
+    --hmis-modal-w: 900px;
+    --hmis-modal-h: 80vh;
+    --hmis-modal-gap: 10vh;   /* minimum top/bottom space = (100vh - 80vh) / 2 */
+}
+
+/* the full-screen layer behind the dialog: no page-level offsets (e.g. "#PatientModel { margin-top:15px !important }")
+   and no always-visible scrollbar (bootstrap.min.css here has .modal { overflow-y: scroll }) - the dialog is
+   always kept inside the screen, so it only scrolls if it really has to */
+.modal:not(.modal-free-size):not(#hmis-m1):not(#hmis-m2) {
+    margin: 0 !important;
+    overflow-x: hidden !important;
+    overflow-y: auto !important;
+}
+/* the dialog box */
+.modal:not(.modal-free-size) .modal-dialog:not(#hmis-m1):not(#hmis-m2),
+.modal:not(.modal-free-size) .modal-dialogue:not(#hmis-m1):not(#hmis-m2) {
+    position: relative !important;
+    top: auto !important;
+    left: auto !important;
+    width: var(--hmis-modal-w) !important;
+    min-width: 0 !important;
+    max-width: calc(100% - 24px) !important;
+    height: auto !important;
+    margin: 0 auto !important;   /* vertical centring is done by the flex rule below */
+    padding: 0 !important;
+    flex: 0 1 auto;
+    transform-origin: center top;
+}
+
+/* centre the dialog vertically while the modal is open. Bootstrap/jQuery set display:block inline when it
+   opens; after the first open jQuery restores the remembered value, which is then "flex" - match both. */
+.modal:not(.modal-free-size)[style*="display: block"],
+.modal:not(.modal-free-size)[style*="display:block"],
+.modal:not(.modal-free-size)[style*="display: flex"],
+.modal:not(.modal-free-size)[style*="display:flex"] {
+    display: flex !important;
+    align-items: center;
+    justify-content: center;
+    padding: var(--hmis-modal-gap) 0 !important;
+    box-sizing: border-box;
+}
+
+/* the white panel: height follows the content, capped at 80% of the screen; header / body / footer stacked */
+.modal:not(.modal-free-size) .modal-dialog:not(#hmis-m1):not(#hmis-m2) > .modal-content,
+.modal:not(.modal-free-size) .modal-dialogue:not(#hmis-m1):not(#hmis-m2) > .modal-content {
+    display: flex !important;
+    flex-direction: column;
+    position: relative !important;
+    width: 100% !important;
+    min-width: 0 !important;
+    max-width: 100% !important;
+    height: auto !important;
+    min-height: 0 !important;
+    max-height: var(--hmis-modal-h) !important;
+    margin: 0 !important;
+    left: auto !important;
+    top: auto !important;
+    overflow: hidden;
+}
+
+/* header + footer keep their height; the body takes the rest and scrolls */
+.modal:not(.modal-free-size) .modal-content > .modal-header,
+.modal:not(.modal-free-size) .modal-content > .modal-footer { flex: 0 0 auto; }
+.modal:not(.modal-free-size) .modal-content > .modal-body:not(#hmis-m1):not(#hmis-m2),
+.modal:not(.modal-free-size) .modal-content > form > .modal-body:not(#hmis-m1):not(#hmis-m2) {
+    flex: 1 1 auto;
+    min-height: 0 !important;
+    height: auto !important;
+    max-height: none !important;
+    overflow-y: auto;
+    overflow-x: auto;   /* a table wider than the modal scrolls inside the body instead of being cut off */
+}
+/* markup where the body sits inside the header, or everything is wrapped in a <form> / <div> */
+.modal:not(.modal-free-size) .modal-content > .modal-header:has(.modal-body) { flex: 1 1 auto; min-height: 0; overflow-y: auto; }
+.modal:not(.modal-free-size) .modal-content > form,
+.modal:not(.modal-free-size) .modal-content > .modal-wrapper {
+    display: flex;
+    flex-direction: column;
+    flex: 1 1 auto;
+    min-height: 0;
+}
+
+/* ---- modal content: one base padding, one scroll area, nothing wider than the modal ---- */
+.modal:not(.modal-free-size) .modal-content > .modal-body,
+.modal:not(.modal-free-size) .modal-content > form > .modal-body {
+    position: relative;
+    box-sizing: border-box;
+    padding: 15px;
+    word-wrap: break-word;
+    overscroll-behavior: contain;          /* wheel / touch scroll stays inside the modal */
+    -webkit-overflow-scrolling: touch;
+    scrollbar-width: thin;
+    scrollbar-color: var(--theme-accent, #9aa3b2) transparent;
+}
+.modal:not(.modal-free-size) .modal-body::-webkit-scrollbar { width: 10px; height: 10px; }
+.modal:not(.modal-free-size) .modal-body::-webkit-scrollbar-thumb { background: var(--theme-accent, #9aa3b2); border-radius: 6px; border: 2px solid transparent; background-clip: content-box; }
+.modal:not(.modal-free-size) .modal-body::-webkit-scrollbar-track { background: transparent; }
+
+/* fixed inline widths (width:1040px ...) are capped to the modal; the body scrolls if a table still needs more */
+.modal:not(.modal-free-size) .modal-body :is(div, form, fieldset, section, ul, ol, p, pre, table, textarea, iframe, img, canvas, video, .select2-container, .cke, .dataTables_wrapper):not(#hmis-m1) {
+    max-width: 100% !important;
+    box-sizing: border-box;
+}
+.modal:not(.modal-free-size) .modal-body :is(img, canvas, video) { height: auto; }
+/* when the grid stacks (below 1200px) a field that the page widened inline (width:137% !important) must not stick out */
+@media (max-width: 1199px) {
+    .modal:not(.modal-free-size) .modal-body :is(input, select):not([type="checkbox"]):not([type="radio"]):not(#hmis-m1) {
+        max-width: 100% !important;
+        box-sizing: border-box;
+    }
+}
+/* a table that cannot shrink any further scrolls inside its own wrapper, never sticks out of the modal */
+.modal:not(.modal-free-size) .modal-body table { table-layout: auto; }
+.modal:not(.modal-free-size) .modal-body .dataTables_wrapper { width: 100%; }
+
+/* header / footer never grow beyond the panel */
+.modal:not(.modal-free-size) .modal-content > .modal-footer { max-height: 40%; overflow-y: auto; }
+.modal:not(.modal-free-size) .modal-content > .modal-header { position: relative; z-index: 2; }
+
+/* short screens (landscape phones, small laptops with zoom): use the whole height */
+@media (max-height: 560px) {
+    :root { --hmis-modal-gap: 12px; --hmis-modal-h: calc(100vh - 24px); }
+}
+/* phones / narrow windows */
+@media (max-width: 767px) {
+    :root { --hmis-modal-gap: 12px; --hmis-modal-h: calc(100vh - 24px); }
+    .modal:not(.modal-free-size) .modal-dialog:not(#hmis-m1):not(#hmis-m2),
+    .modal:not(.modal-free-size) .modal-dialogue:not(#hmis-m1):not(#hmis-m2) { width: calc(100% - 16px) !important; max-width: calc(100% - 16px) !important; }
+}
+
+/* ==========================================================================
+   Register / edit patient modal (#PatientModel - same markup on OPD, Emergency, IPD admission, Billing,
+   Appointment, Dialysis, Patients, Birth certificate, OT booking ...).
+   Its rows are Bootstrap columns that add up to 11 of 12, which left an empty strip on the right.
+   On desktop widths the columns of each row now share the full row width in the same proportions
+   (col-lg-1 : col-lg-2 : col-lg-3 ...), so the form fills the modal edge to edge. Below 1200px the page's
+   own md / sm layout is used unchanged.
+   ========================================================================== */
+@media (min-width: 1200px) {
+    #PatientModel .modal-body .row {
+        display: flex;
+        flex-wrap: wrap;
+    }
+    #PatientModel .modal-body .row::before,
+    #PatientModel .modal-body .row::after { display: none; content: none; }   /* clearfix pseudo-elements would become flex items */
+    #PatientModel .modal-body .row > [class*="col-lg-"] {
+        float: none;
+        width: auto;
+        min-width: 0;
+        flex: 1 1 0;
+    }
+    #PatientModel .modal-body .row > .col-lg-1  { flex-grow: 1; }
+    #PatientModel .modal-body .row > .col-lg-2  { flex-grow: 2; }
+    #PatientModel .modal-body .row > .col-lg-3  { flex-grow: 3; }
+    #PatientModel .modal-body .row > .col-lg-4  { flex-grow: 4; }
+    #PatientModel .modal-body .row > .col-lg-5  { flex-grow: 5; }
+    #PatientModel .modal-body .row > .col-lg-6  { flex-grow: 6; }
+    #PatientModel .modal-body .row > .col-lg-7  { flex-grow: 7; }
+    #PatientModel .modal-body .row > .col-lg-8  { flex-grow: 8; }
+    #PatientModel .modal-body .row > .col-lg-9  { flex-grow: 9; }
+    #PatientModel .modal-body .row > .col-lg-10 { flex-grow: 10; }
+    #PatientModel .modal-body .row > .col-lg-11 { flex-grow: 11; }
+    #PatientModel .modal-body .row > .col-lg-12 { flex-grow: 12; }
+}
+/* tidy spacing between the form rows */
+#PatientModel .modal-body .row + .row { margin-top: 4px; }
+#PatientModel .modal-body .row > [class*="col-"] { margin-bottom: 6px; }
