@@ -110,12 +110,22 @@
         if (!window.MutationObserver) { return; }
         var shownState = typeof WeakMap === 'function' ? new WeakMap() : null;
         new MutationObserver(function (muts) {
+            // Normalise each modal once per batch. Filling a select with thousands of options inside a modal
+            // used to re-scan the whole modal once per added option and froze the page.
+            var done = typeof Set === 'function' ? new Set() : null;
+            function normaliseOnce(modal) {
+                if (done) {
+                    if (done.has(modal)) { return; }
+                    done.add(modal);
+                }
+                normaliseModal(modal);
+            }
             for (var i = 0; i < muts.length; i++) {
                 var m = muts[i], t = m.target, j, n, modal;
                 if (m.type === 'attributes') {
                     modal = owningModal(t);
                     if (modal) {
-                        normaliseModal(modal);
+                        normaliseOnce(modal);
                         if (shownState && modal === t) {
                             var now = isShown(modal);
                             if (now && !shownState.get(modal)) { window.setTimeout(function () { alignTables(); }, 60); window.setTimeout(function () { alignTables(); }, 400); }
@@ -127,7 +137,7 @@
                         n = m.addedNodes[j];
                         if (n.nodeType !== 1) { continue; }
                         modal = owningModal(n);
-                        if (modal) { normaliseModal(modal); }
+                        if (modal) { normaliseOnce(modal); }
                         else if (n.querySelectorAll) { normaliseAll(n); }
                     }
                 }

@@ -39,10 +39,13 @@ namespace PMS
                 txtAdmission_Date.Text = DateTime.Now.ToString();
                 txtReceiving_Date.Text = DateTime.Now.ToString();
                 txtDischarge_On.Text = DateTime.Now.ToString();
+                var sw = System.Diagnostics.Stopwatch.StartNew();
                 LoadAllDoctors();
+                System.Diagnostics.Trace.WriteLine("[PERF] Emergency Page_Load LoadAllDoctors: " + sw.ElapsedMilliseconds + " ms"); sw.Restart();
                 BindingDropDown();
+                System.Diagnostics.Trace.WriteLine("[PERF] Emergency Page_Load BindingDropDown: " + sw.ElapsedMilliseconds + " ms"); sw.Restart();
                 BlankForm();
-             
+                System.Diagnostics.Trace.WriteLine("[PERF] Emergency Page_Load BlankForm: " + sw.ElapsedMilliseconds + " ms"); sw.Restart();
 
                 if (Request.QueryString["ID"] != null)
                 {
@@ -50,6 +53,7 @@ namespace PMS
                     PopulateGetEmergencyPatientData(Convert.ToInt32(QS));
                     InPatient_Case_id = Convert.ToInt32(QS);
                     ScriptManager.RegisterStartupScript(this.Page, this.GetType(), "", "FillInstruction();", true);
+                    System.Diagnostics.Trace.WriteLine("[PERF] Emergency Page_Load PopulateGetEmergencyPatientData: " + sw.ElapsedMilliseconds + " ms");
                 }
             }
             else
@@ -136,38 +140,11 @@ namespace PMS
             ddlDischarge_Type.DataBind();
 
 
-            var ss = AppConfig.UserID;
-
-            var EmpCode = (from tbl in db.aspnet_Users
-                           where tbl.UserId == AppConfig.UserID
-                           select tbl.Emp_Code).FirstOrDefault();
-            if (EmpCode != null)
-            {
-                List<HR_Employee> loginEmpName = new List<HR_Employee>();
-                loginEmpName = (from tbl in db.HR_Employees
-                                where tbl.IsDoctor == true && tbl.Emp_No == EmpCode
-                                select tbl).ToList();
-                if (loginEmpName != null)
-                {
-
-                }
-
-                var Empstatus = (from tbl in db.HR_Employees
-                                 where tbl.IsDoctor == true && tbl.Emp_No == EmpCode
-                                 select tbl.Designation).FirstOrDefault();
-
-            }
-
-            List<HR_Employee> EmpList = new List<HR_Employee>();
-            EmpList = (from tbl in db.HR_Employees
-                       where tbl.IsDoctor == true
-                       select tbl).ToList();
-            List<Service_Definition> SrvcList = new List<Service_Definition>();
-            SrvcList = (from tbl in db.Service_Definitions
-                        join tbl2 in db.DataValues on tbl.Service_Type equals tbl2.DataValue_Name
-                        join tbl3 in db.ValueSets on tbl2.ValueSet_ID equals tbl3.ValueSet_ID
-                        where tbl2.DataValue_Description == "In-Patient"
-                        select tbl).ToList();
+            // Only the two columns the dropdown binds are fetched (removed unused login-employee and
+            // Service_Definitions queries that were executed on every page load and never read).
+            var EmpList = (from tbl in db.HR_Employees
+                           where tbl.IsDoctor == true
+                           select new { tbl.Emp_Name, tbl.Emp_ID }).ToList();
             ddlPerformed_By.DataSource = EmpList;
             ddlPerformed_By.DataTextField = "Emp_Name";
             ddlPerformed_By.DataValueField = "Emp_ID";
@@ -3034,7 +3011,7 @@ namespace PMS
                           {
                               d.Item_ID,
                               Description = (d.Salt != null ? (d.Salt + "-" + d.Description) : d.Description),
-                          }).ToList().Take(20);
+                          }).Take(20).ToList();
 
             return (new JavaScriptSerializer().Serialize(Routes));
         }
@@ -3046,14 +3023,15 @@ namespace PMS
                 return "[]";
 
             searchString = searchString.Trim();
+            var sw = System.Diagnostics.Stopwatch.StartNew();
 
             using (DataBaseDataContext db = new DataBaseDataContext())
             {
 
                 var pharmacyItems = (from d in db.INV_Items
-                                     where d.Pharmacy_Item == true 
+                                     where d.Pharmacy_Item == true
                                      && (d.Short_Item == false || d.Short_Item == null)
-                                     && d.Description.Contains(searchString) 
+                                     && (d.Description.Contains(searchString) || d.Item_Code.Contains(searchString))
                                      orderby d.Item_ID descending
                                      select new
                                      {
@@ -3061,23 +3039,24 @@ namespace PMS
                                          Description = (d.Salt != null ? (d.Salt + "-" + d.Description) : d.Description),
                                      }).Take(20).ToList();
 
-                return (new JavaScriptSerializer().Serialize(pharmacyItems));
+                var json = new JavaScriptSerializer().Serialize(pharmacyItems);
+                System.Diagnostics.Trace.WriteLine("[PERF] Emergency getpharmacyitems '" + searchString + "': " + sw.ElapsedMilliseconds + " ms, " + pharmacyItems.Count + " rows");
+                return json;
             }
         }
         [WebMethod]
         public static string getallpharmacyitems(string itemID)
         {
-            if (string.IsNullOrEmpty(itemID))
+            int itemIdValue;
+            if (!int.TryParse(itemID, out itemIdValue))
                 return "[]";
-
-             
 
             using (DataBaseDataContext db = new DataBaseDataContext())
             {
 
                 var pharmacyItems = (from d in db.INV_Items
                                      where d.Pharmacy_Item == true
-                                     && d.Item_ID.ToString() == itemID
+                                     && d.Item_ID == itemIdValue
                                      orderby d.Item_ID descending
                                      select new
                                      {
@@ -7384,14 +7363,11 @@ namespace PMS
         private void LoadAllDoctors()
         {
             db = new DataBaseDataContext(DBClass.ConnectionString());
-            List<HR_Employee> EmpList = new List<HR_Employee>();
-            List<HR_Employee> EmpList2 = new List<HR_Employee>();
-            EmpList = (from tbl in db.HR_Employees
-                       where tbl.IsDoctor == true 
-                       select tbl).ToList();
-            EmpList2 = (from tbl in db.HR_Employees
-                       where tbl.IsDoctor == true 
-                       select tbl).ToList();
+            // One query, two columns (was two identical full-entity HR_Employee queries).
+            var EmpList = (from tbl in db.HR_Employees
+                           where tbl.IsDoctor == true
+                           select new { tbl.Emp_Name, tbl.Emp_ID }).ToList();
+            var EmpList2 = EmpList;
             ddlDoctor.Items.Clear();
             ddlDoctor.DataSource = EmpList;
             ddlDoctor.DataTextField = "Emp_Name";
@@ -7693,6 +7669,7 @@ namespace PMS
         [WebMethod]
         public static string loadtemplate(string item_id)
         {
+            var sw = System.Diagnostics.Stopwatch.StartNew();
             DataBaseDataContext db = new DataBaseDataContext();
             var data = (from td in db.Medicines_Templates
                         where td.Item_Code == Convert.ToString(item_id)
@@ -7706,6 +7683,7 @@ namespace PMS
                             td.Injections,
                             td.AttendingParamedical_Staff
                         }).ToList();
+            System.Diagnostics.Trace.WriteLine("[PERF] Emergency loadtemplate item " + item_id + ": " + sw.ElapsedMilliseconds + " ms");
             return (new JavaScriptSerializer().Serialize(data));
         }
 

@@ -4865,62 +4865,39 @@ function setDropdownText(selector, text) {
             }
         }
 
-        $(document).on('keyup', '.select2-search__field', function () {
-          var searchString = $(this).val();
-    
-                if (searchString.length < 2) {
-                    return;
-                }
-
-              $.ajax({
-              url: 'EmergencyCase.aspx/getpharmacyitems',
-            method: 'POST',
-           contentType: 'application/json',
-             data: JSON.stringify({ searchString: searchString }),
-            success: function (response) {
-            try {
-                var pharmacyItems = JSON.parse(response.d);
-                var $select = $('#txtPharmacyItem');
-                
-                $.each(pharmacyItems, function (key, value) {
-                    var optionExists = $select.find('option[value="' + value.Item_ID + '"]').length > 0;
-                    if (!optionExists) {
-                        $select.append('<option value="' + value.Item_ID + '">' + value.Description + '</option>');
-                    }
-                });
-                
-                $select.trigger('change');
-                
-            } catch (error) {
-                console.error('Error parsing response:', error);
-            }
-        },
-        error: function (xhr, status, error) {
-            console.error('Error fetching data:', error);
-        }
-    });
-});
-
+        // Medicine search is server-side: only matches for the typed text are fetched (2+ chars, debounced),
+        // instead of preloading the pharmacy item list and querying on every keystroke of every select2.
         function FillPharmacyItem() {
-            PageMethods.FillPharmacyItemDropDown(function (Medicine) {
-                var options = '<option value=""> Select Medicine  </option>'
-                $.each(JSON.parse(Medicine), function (key, value) {
-                    options += '<option value="' + value.Item_ID + '"> ' + value.Description + ' </option>';
-                });
-
-                $('#txtPharmacyItem').html(options);
-                $('#txtPharmacyItem').select2();
-
-                $('#txtPharmacyItem').select2({
-                    width: '100%',
-                    dropdownAutoWidth: false,
-                    minimumResultsForSearch: 0,
-                    dropdownParent: $('#MedicationModel'),
-                    placeholder: 'Select Medicine',
-                    allowClear: true
-                });
-
-
+            var $sel = $('#txtPharmacyItem');
+            if ($sel.hasClass('select2-hidden-accessible')) {
+                $sel.select2('destroy');
+            }
+            $sel.html('<option value=""> Select Medicine  </option>');
+            $sel.select2({
+                width: '100%',
+                dropdownAutoWidth: false,
+                dropdownParent: $('#MedicationModel'),
+                placeholder: 'Select Medicine',
+                allowClear: true,
+                minimumInputLength: 2,
+                ajax: {
+                    url: 'EmergencyCase.aspx/getpharmacyitems',
+                    type: 'POST',
+                    delay: 300,
+                    cache: false,
+                    contentType: 'application/json; charset=utf-8',
+                    dataType: 'json',
+                    data: function (params) {
+                        return JSON.stringify({ searchString: params.term });
+                    },
+                    processResults: function (response) {
+                        var items = [];
+                        try { items = JSON.parse(response.d); } catch (e) { console.error('Error parsing response:', e); }
+                        return {
+                            results: $.map(items, function (v) { return { id: v.Item_ID, text: v.Description }; })
+                        };
+                    }
+                }
             });
         }
         var checkRepeateRecord = false;
@@ -5924,11 +5901,14 @@ function setDropdownText(selector, text) {
         
         function Cleardrpdwn() {
             if (skipClear) return;
-            FillMedicine();
+            // Previously re-downloaded the whole "Medicine" value set on every item change just to reset the selection.
+            $('#txtMedicineName').val('');
         }
         function CleardrpdwnItem() {
-
-            FillPharmacyItem()
+            // Resetting the pharmacy item must not fire its inline onchange (Cleardrpdwn) and clear the unlisted medicine.
+            skipClear = true;
+            FillPharmacyItem();
+            skipClear = false;
         }
         function NewMedicine() {
              

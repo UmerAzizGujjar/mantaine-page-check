@@ -1,4 +1,4 @@
-<%@ Master Language="C#" AutoEventWireup="true" CodeBehind="SiteMaster.master.cs" Inherits="PMS.SiteMaster" %>
+﻿<%@ Master Language="C#" AutoEventWireup="true" CodeBehind="SiteMaster.master.cs" Inherits="PMS.SiteMaster" %>
 
 <%@ Register Assembly="AjaxControlToolkit" Namespace="AjaxControlToolkit" TagPrefix="asp" %>
 <%@ Register Src="~/wwwroot/THEME_TIBBIT/header-footer/Footer.ascx" TagPrefix="uc" TagName="Footer" %>
@@ -887,25 +887,25 @@
 
     </script>
     <%-- Modern main menu (shared by every client theme): horizontal bar on desktop, slide-in drawer on phone/tablet --%>
-    <link href="<%= Page.ResolveClientUrl("~/wwwroot/lib/theme/menu-modern.css") %>?v=2" rel="stylesheet" type="text/css" />
-    <script src="<%= Page.ResolveClientUrl("~/wwwroot/lib/theme/menu-modern.js") %>?v=2" type="text/javascript" defer="defer"></script>
+    <link href="<%= Page.ResolveClientUrl("~/wwwroot/lib/theme/menu-modern.css") %>?v=<%= Ver("~/wwwroot/lib/theme/menu-modern.css") %>" rel="stylesheet" type="text/css" />
+    <script src="<%= Page.ResolveClientUrl("~/wwwroot/lib/theme/menu-modern.js") %>?v=<%= Ver("~/wwwroot/lib/theme/menu-modern.js") %>" type="text/javascript" defer="defer"></script>
     <%-- Dark/Light mode (shared by every client theme) - keep these two lines LAST in <head> --%>
     <asp:PlaceHolder ID="DarkModeAssets" runat="server">
-        <link href="<%= Page.ResolveClientUrl("~/wwwroot/lib/theme/dark-theme.css") %>?v=3" rel="stylesheet" type="text/css" />
-        <link href="<%= Page.ResolveClientUrl("~/wwwroot/lib/theme/dark-pages.css") %>?v=3" rel="stylesheet" type="text/css" />
-        <script src="<%= Page.ResolveClientUrl("~/wwwroot/lib/theme/theme-toggle.js") %>?v=3" type="text/javascript"></script>
+        <link href="<%= Page.ResolveClientUrl("~/wwwroot/lib/theme/dark-theme.css") %>?v=<%= Ver("~/wwwroot/lib/theme/dark-theme.css") %>" rel="stylesheet" type="text/css" />
+        <link href="<%= Page.ResolveClientUrl("~/wwwroot/lib/theme/dark-pages.css") %>?v=<%= Ver("~/wwwroot/lib/theme/dark-pages.css") %>" rel="stylesheet" type="text/css" />
+        <script src="<%= Page.ResolveClientUrl("~/wwwroot/lib/theme/theme-toggle.js") %>?v=<%= Ver("~/wwwroot/lib/theme/theme-toggle.js") %>" type="text/javascript"></script>
     </asp:PlaceHolder>
     <%-- Modern data tables (DataTables + .table): loaded AFTER the dark-mode files on purpose --%>
-    <link href="<%= Page.ResolveClientUrl("~/wwwroot/lib/theme/table-modern.css") %>?v=3" rel="stylesheet" type="text/css" />
-    <script src="<%= Page.ResolveClientUrl("~/wwwroot/lib/theme/table-modern.js") %>?v=1" type="text/javascript" defer="defer"></script>
+    <link href="<%= Page.ResolveClientUrl("~/wwwroot/lib/theme/table-modern.css") %>?v=<%= Ver("~/wwwroot/lib/theme/table-modern.css") %>" rel="stylesheet" type="text/css" />
+    <script src="<%= Page.ResolveClientUrl("~/wwwroot/lib/theme/table-modern.js") %>?v=<%= Ver("~/wwwroot/lib/theme/table-modern.js") %>" type="text/javascript" defer="defer"></script>
     <%-- One look for every date / time picker (theme colours + month/year drop-downs); loaded after the dark-mode files --%>
-    <link href="<%= Page.ResolveClientUrl("~/wwwroot/lib/theme/datepicker-modern.css") %>?v=4" rel="stylesheet" type="text/css" />
-    <script src="<%= Page.ResolveClientUrl("~/wwwroot/lib/theme/datepicker-modern.js") %>?v=4" type="text/javascript"></script>
+    <link href="<%= Page.ResolveClientUrl("~/wwwroot/lib/theme/datepicker-modern.css") %>?v=<%= Ver("~/wwwroot/lib/theme/datepicker-modern.css") %>" rel="stylesheet" type="text/css" />
+    <script src="<%= Page.ResolveClientUrl("~/wwwroot/lib/theme/datepicker-modern.js") %>?v=<%= Ver("~/wwwroot/lib/theme/datepicker-modern.js") %>" type="text/javascript"></script>
     <%-- One size for every Bootstrap modal (900px x 80% height, centred; opt out with class="modal-free-size") --%>
-    <link href="<%= Page.ResolveClientUrl("~/wwwroot/lib/theme/modal-modern.css") %>?v=6" rel="stylesheet" type="text/css" />
-    <script src="<%= Page.ResolveClientUrl("~/wwwroot/lib/theme/modal-modern.js") %>?v=2" type="text/javascript"></script>
+    <link href="<%= Page.ResolveClientUrl("~/wwwroot/lib/theme/modal-modern.css") %>?v=<%= Ver("~/wwwroot/lib/theme/modal-modern.css") %>" rel="stylesheet" type="text/css" />
+    <script src="<%= Page.ResolveClientUrl("~/wwwroot/lib/theme/modal-modern.js") %>?v=<%= Ver("~/wwwroot/lib/theme/modal-modern.js") %>" type="text/javascript"></script>
     <%-- Checkboxes drawn as toggle switches on every form (opt out with class="no-switch") --%>
-    <link href="<%= Page.ResolveClientUrl("~/wwwroot/lib/theme/form-modern.css") %>?v=2" rel="stylesheet" type="text/css" />
+    <link href="<%= Page.ResolveClientUrl("~/wwwroot/lib/theme/form-modern.css") %>?v=<%= Ver("~/wwwroot/lib/theme/form-modern.css") %>" rel="stylesheet" type="text/css" />
 </head>
 <body class="no-skin" onload="releasemenu()">
     <form runat="server" id="MasterPageForm1">
