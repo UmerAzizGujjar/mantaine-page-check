@@ -10,6 +10,7 @@
         #radiologyFooterButtons .col-lg-2:has(input[style*="display: none"]) {
             display: none;
         }
+        #myModal { --hmis-modal-w: 1268px; }
     </style>
     <link href="../../wwwroot/THEME_TIBBIT//CustomCSS/LabReportPreview.css" rel="stylesheet" />
     <script type="text/javascript">
@@ -4878,7 +4879,7 @@ function cleanPrint() {
 
     <div id="myModal" class="modal fade" role="dialog">
         <div class="modal-dialog">
-            <div class="modal-content" style="width: 1268px; margin-left: -333px;">
+            <div class="modal-content">
                 <div class="modal-header">
                     <button type="button" style="width: auto;" class="close" data-dismiss="modal">&times;</button>
                     <h4 class="modal-title" id="titleee">Add Test Result</h4>
