@@ -165,7 +165,7 @@ html:root body table.table > tfoot > tr > td {
     border-top: 0 !important;
     border-bottom: 1px solid var(--tm-line) !important;
     font-size: 13.5px;
-    font-weight: 500 !important;
+    font-weight: 700 !important;
     line-height: 1.45 !important;
     vertical-align: middle;
     box-shadow: none !important;           /* kills DataTables' sorted-column tint */

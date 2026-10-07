@@ -3834,7 +3834,7 @@ ${data.Addendum_Template ? `
                                 '<td>' + (item.DoctorName || '') + '</td>' +
                                 '<td>' + item.Test_Main_Department + '</td>' +
                                 '<td>' + statuss + '</td>' +
-                                '<td><button type="button" class="btn btn-sm btn-primary" ' +
+                                '<td><button type="button" class="btn btn-sm btn-primry" ' +
                                 'onclick="selectRadiologyPatient(' + item.Bill_ID + ', ' + item.Bill_Details_ID + ', ' + item.Bill_No + ')">Select</button></td>' +
                                 '</tr>';
 
@@ -3962,7 +3962,7 @@ ${data.Addendum_Template ? `
                                     '<td>' + item.Item_Name + '</td>' +
                                     '<td>' + item.Test_Main_Department + '</td>' +
                                     '<td>' + (item.Doctor || '') + '</td>' +
-                                    '<td><button type="button" class="btn btn-sm btn-success" ' +
+                                    '<td><button type="button" class="btn btn-sm btn-primry" ' +
                                     'onclick="selectRadiologyPatient(' + item.Bill_ID + ', ' + item.Bill_Details_ID + ', ' + item.Bill_No + ')">Select</button></td>' +
                                     '</tr>';
                                 tbody.append(row);
@@ -4802,8 +4802,8 @@ function cleanPrint() {
             </div>
         </div>
         <div class="row">
-            <div class="table-responsive-lg table-responsive-md">
-                <table style="padding: 20px; height: 200px; float: left;">
+            <div class="table-responsive-lg table-responsive-md" style="width: 100%; overflow-x: auto;">
+                <table style="padding: 20px; height: 200px;">
                     <tr>
                         <td style="display: none">Report Columns</td>
                         <td style="display: none">
@@ -5171,7 +5171,7 @@ function cleanPrint() {
             </div>
 
 
-            <div style="height: 400px; overflow-y: auto; overflow-x: hidden;">
+            <div style="height: 400px; overflow-y: auto; overflow-x: auto;">
                 <table class="table test-table" id="tblradilogy_results">
                     <thead>
                         <tr>

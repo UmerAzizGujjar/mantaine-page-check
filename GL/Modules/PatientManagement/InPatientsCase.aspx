@@ -1,7 +1,7 @@
 <%@ Page Title="" Language="C#" MasterPageFile="~/Site.Master" AutoEventWireup="true" CodeBehind="InPatientsCase.aspx.cs" Inherits="PMS.InPatientsCase" %>
 
 <asp:Content ID="Content1" ContentPlaceHolderID="HeadContent" runat="server">
-    <link href="../../wwwroot/THEME_TIBBIT/CustomCSS/ipdcase.css" rel="stylesheet" />
+    <link href="../../wwwroot/THEME_TIBBIT/CustomCSS/ipdcase.css?v=<%= ((PMS.SiteMaster)Master).Ver("~/wwwroot/THEME_TIBBIT/CustomCSS/ipdcase.css") %>" rel="stylesheet" />
 
     <script type="text/javascript">
         (function ($) {
@@ -8456,14 +8456,14 @@ if (localStorage.IsPRN == 1) {
                                                  </div>
                                         </form>                                                                                           
                         </table>
-                        <table class="table">
+                        <table class="table grid-fit">
                             <tr>
                                 <td>
-                                    <div style="overflow:scroll;margin-left:-9px">
-                                    <table class="table" id="tblVitalParametersHistory">
+                                    <div class="grid-scroll">
+                                    <table class="table sticky-head" id="tblVitalParametersHistory">
     <thead>
         <tr>
-            <td colspan="21">
+            <td colspan="19">
                 <div id="tblHistoryHeader">
                     <h2 class="color">Previous History</h2>
                 </div>
@@ -8580,7 +8580,7 @@ if (localStorage.IsPRN == 1) {
                     <div id="Tab-4">
                         <div id="Medication" >
                             <h2 >Medication : </h2>
-                            <table style="width:100%">
+                            <table class="med-layout" style="width:100%">
                                 <tr>
                                     <td>
                                         <div class="col-lg-2 col-md-4 col-sm-12" style="padding-left: 0; padding-right: 5px; display: inline-block;">
@@ -8597,7 +8597,7 @@ if (localStorage.IsPRN == 1) {
                                   <%--      <input type="button" class="btn btn-primry" onclick="PrintMecicationDetailPRN()" value="STAT Print"  style="width: 15% !important;"/>
                                          <input type="button" class="btn btn-primry" onclick="PrintMecicationDetailSTAT()" value="PRN Print" style="width: 15% !important;" />--%>
                                         <h2>Regular Medicine</h2>
-                                        <div style="overflow: scroll; height: 280px;">                                       
+                                        <div class="med-grid-wrap">
                                         <table class="table" id="tblMedicinesListRegular">
                                         <thead>
                                             <tr style="position: sticky; top: 0px; z-index: 10;">
@@ -8625,7 +8625,7 @@ if (localStorage.IsPRN == 1) {
                                     </table>
                                             </div>
                                          <h2>STAT Medicine</h2>
-                                          <div style="overflow: scroll; height: 280px;">
+                                          <div class="med-grid-wrap">
                                             <table class="table" id="tblMedicinesListSTAT">
                                         <thead>
                                             <tr style="position: sticky; top: 0px; z-index: 10;">
@@ -8677,17 +8677,17 @@ if (localStorage.IsPRN == 1) {
                                     </td>
                                 </tr>
                             </table>
-                            <div style=" overflow: scroll; height: 280px;">
+                            <div class="med-grid-wrap">
                                 <table class="table" id="tblHistoryMedication">
                                         <thead>
-                                            <tr style="position: sticky; top: 0;z-index: 10;";>
-                                                <td colspan="12">
+                                            <tr>
+                                                <td colspan="11">
                                                     <div id="HeaderHistoryMedication">
                                                         <h2 class="color">Previous History</h2>
                                                     </div>
                                                 </td>
                                             </tr>
-                                            <tr style="position: sticky; top: 70px; z-index: 10;">
+                                            <tr>
                                                 <th style="width: 160px;">Date</th>
                                                 <th style="width: 84px;">Status</th>
                                                 <th style="width: 170px;">Medicine Name</th>
@@ -9137,11 +9137,11 @@ if (localStorage.IsPRN == 1) {
                                 </tr>
                             </table>
                           
-                            <div>
-                                <table class="table" style="margin-left:-5px" id="tblHistoryTabHistory" >
+                            <div class="grid-scroll">
+                                <table class="table sticky-head" id="tblHistoryTabHistory" >
                                     <thead>
                                         <tr>
-                                            <td colspan="26">
+                                            <td colspan="14">
                                                 <div id="tblHistoryTabHistoryHeader">
                                                     <h2 class="color">Previous History</h2>
                                                 </div>
@@ -9170,10 +9170,10 @@ if (localStorage.IsPRN == 1) {
                             </div>
                            
                          
-                            <table class="table">
+                            <table class="table grid-fit">
                                 <tr>
                                     <td>
-                                      <div id="dvSyptomHistory" style="overflow:scroll;height: 211px;margin-left:-11px">
+                                      <div id="dvSyptomHistory" class="grid-scroll" style="height: 211px;">
                                 <table class="table" id="tblSymptomHistory">
                                     <thead>
                                         <tr>
@@ -9449,16 +9449,16 @@ if (localStorage.IsPRN == 1) {
                         <table class="table" id="dvHistoryTests">
                             <tr >
                                 <td>
-                                    <table class="table" id="tblHistoryTests" >
+                                    <table class="table sticky-head" id="tblHistoryTests" >
                                         <thead>
-                                            <tr style="position: sticky; top: 0;z-index: 10;">
-                                                <td colspan="12">
+                                            <tr>
+                                                <td colspan="7">
                                                     <div id="HeaderTests">
                                                         <h2 class="color">Previous History</h2>
                                                     </div>
                                                 </td>
                                             </tr>
-                                            <tr style="position: sticky; top: 65px; z-index: 10;">
+                                            <tr>
                                                 <th>Date</th>
                                                <th>Status</th>
                                                 <th>Test Name</th>
@@ -9466,7 +9466,7 @@ if (localStorage.IsPRN == 1) {
                                                 <th>Result</th>
                                                 <th>Special Tests</th>
                                                 <th>Area Of Interest</th>
-                                                <th>Doctor Name</th>
+                                                <%--<th>Doctor Name</th>--%>
                                             </tr>
                                         </thead>
                                         <tbody>
@@ -9511,16 +9511,16 @@ if (localStorage.IsPRN == 1) {
             </div> 
                            
             <div style="overflow: scroll; height: 250px !important; height: auto;">
-                <table class="table" id="tblServicesHistory">
+                <table class="table sticky-head" id="tblServicesHistory">
                     <thead>
-                        <tr style="position: sticky; top: 0;z-index: 10;">
-                            <td colspan="12">
+                        <tr>
+                            <td colspan="3">
                                 <div id="ServicesHistoryHeader">
                                     <h2 class="color">Previous History</h2>
                                 </div>
                             </td>
                         </tr>
-                        <tr style="position: sticky; top: 70px; z-index: 10;">                            
+                        <tr>
                             <th style="text-align: left;">Date Time</th>
                             <th style="text-align: left;">Services / Procedure</th>
                             <th style="text-align: left;">User Name</th>                          
@@ -10881,17 +10881,17 @@ if (localStorage.IsPRN == 1) {
                         </table>
                                 <tr>
                                     <td>
-                                        <div style="overflow: scroll; height: 280px;">
-                                            <table class="table" id="tblDischargeMedication">                                                                                           
+                                        <div class="grid-scroll" style="height: 280px;">
+                                            <table class="table sticky-head" id="tblDischargeMedication">
                                                   <thead>
-                                                       <tr style="position: sticky; top: 0;z-index: 10;">
-                                                        <td colspan="12">
+                                                       <tr>
+                                                        <td colspan="11">
                                                             <div id="Div7">
                                                                 <h2 class="color">Medication on Discharge</h2>
                                                             </div>
                                                         </td>
                                                     </tr>
-                                            <tr style="position: sticky; top: 75px; z-index: 10;">
+                                            <tr>
                                                 <th style="width: 160px;">Date </th>
                                                 <th style="width: 170px;">Medicine Name </th>
                                                 <th>Dosage Qty </th>
@@ -10911,13 +10911,14 @@ if (localStorage.IsPRN == 1) {
                                             </table>
                                         </div>
                                 </tr>
-                        <table class="table">
+                        <table class="table grid-fit">
                             <tr>
                                 <td>
-                                    <table class="table" id="tblVitalParametersHistoryDesc" >
+                                    <div class="grid-scroll">
+                                    <table class="table sticky-head" id="tblVitalParametersHistoryDesc" >
     <thead>
         <tr>
-            <td colspan="23">
+            <td colspan="21">
                 <div id="tblHistoryHeaderDesc">
                     <h2 class="color">Previous History</h2>
                 </div>
@@ -10950,6 +10951,7 @@ if (localStorage.IsPRN == 1) {
     <tbody>
     </tbody>
 </table>
+                                    </div>
                                 </td>
                             </tr>
                         </table>
