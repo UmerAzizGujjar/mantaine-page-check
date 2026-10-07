@@ -45,6 +45,70 @@
         color: #000 !important;
         opacity: 1 !important;
     }
+    /* ================= Billing Process layout: field grid, spacing, small screens =================
+       Kept in the page so every theme gets it; colours still come from the theme's Billing.css. */
+
+    /* patient card + patient details: the details get the wider column so 4 fields fit per row */
+    .bp-bento.bp-bento--info { grid-template-columns: minmax(300px, 1fr) minmax(0, 2fr); }
+
+    /* Billing Configuration: 16 fields in equal columns (8 / 4 / 2 / 1), every row full - no empty cells */
+    .bp-flow { --n: 8; --g: 10px; display: flex; flex-wrap: wrap; gap: 0 var(--g); }
+    .bp-flow > .bp-field { flex: 1 1 calc((100% - (var(--n) - 1) * var(--g)) / var(--n)); min-width: 0; }
+
+    /* service table + bill summary: the table card stretches to the summary's height (no blank strip under it) */
+    .bp-bento.bp-bento--main { grid-template-columns: minmax(0, 3fr) minmax(260px, 1fr); }
+    .bp-bento--main > .bp-card { display: flex; flex-direction: column; }
+    .bp-bento--main .bp-table-container { flex: 1 1 0; height: auto; max-height: none; min-height: clamp(320px, 50vh, 520px); }
+
+    /* action buttons: keep the old button look (all the same width, 6 per line in 2/3 of the card, 30px apart);
+       the only change is that hidden buttons no longer leave empty slots */
+    .bp-actions { display: flex; flex-wrap: wrap; align-items: center; gap: 0 30px; max-width: calc(66.667% + 20px); }
+    .bp-actions > input[type="button"], .bp-actions > div { width: calc((100% - 150px) / 6) !important; }
+    .bp-actions > div > input[type="button"] { width: 100% !important; }
+
+    /* Add Services search box: same size as before on desktop (was inline), full width on phones */
+    .bp-service-input { max-width: 30% !important; min-width: 220px; flex: 0 1 280px; }
+
+    /* the two patient / appointment search popups: same size on desktop, fit the screen on smaller ones */
+    .bp-search-modal { width: 1140px; margin-top: 116px; margin-left: -306px; height: 604px; position: relative; }
+
+    @media (max-width: 1599px) { .bp-flow { --n: 4; } }
+
+    @media (max-width: 1199px) {
+        .bp-bento.bp-bento--info, .bp-bento.bp-bento--main { grid-template-columns: minmax(0, 1fr); }
+        .bp-actions > input[type="button"], .bp-actions > div { width: calc(100% - 28px) !important; }
+        /* popups that were shifted / sized with fixed pixels */
+        #PatientsSearchModel .modal-dialog, #AppointmentSearchModel .modal-dialog, #PatientModel .modal-dialog,
+        #TestModel .modal-dialog, #PackageModel .modal-dialog, #DetailModel .modal-dialog, #BillingDetailModel .modal-dialog {
+            width: auto; max-width: 96vw; margin: 12px auto;
+        }
+        #PatientsSearchModel .modal-content, #AppointmentSearchModel .modal-content, #PatientModel .modal-content,
+        #TestModel .modal-content, #PackageModel .modal-content, #DetailModel .modal-content, #BillingDetailModel .modal-content {
+            width: auto !important; margin-left: 0 !important; margin-top: 0 !important; height: auto !important;
+            max-height: 92vh; overflow: auto;
+        }
+    }
+
+    @media (max-width: 991px) { .bp-flow { --n: 2; } }
+
+    @media (max-width: 767px) {
+        .bp-actions { max-width: none; }
+        .bp-actions > input[type="button"], .bp-actions > div { width: calc(100% - 12px) !important; }
+        .bp-page { padding: 8px; }
+        .bp-meta-bar .bp-meta-actions { width: 100%; }
+        /* comfortable touch targets; 16px text stops iOS zooming into a field */
+        .bp-input, .bp-select { height: 38px; font-size: 16px; }
+        .bp-field .select2-container .select2-selection--single { height: 38px !important; }
+        .bp-field .select2-container--default .select2-selection--single .select2-selection__rendered { line-height: 34px !important; }
+        .bp-field .select2-container--default .select2-selection--single .select2-selection__arrow { height: 36px !important; }
+        /* Add Services row: the search box was fixed at 350px (wider than a phone) */
+        .bp-toolbar-divider { display: none; }
+        .bp-toolbar .bp-service-input { flex: 1 1 100% !important; max-width: none !important; min-width: 0 !important; }
+        .bp-toolbar .token-input-list { width: 100% !important; min-width: 0 !important; max-width: 100% !important; flex: 1 1 100%; }
+        .bp-toolbar .token-input-dropdown { width: calc(100vw - 32px) !important; max-width: 100%; }
+    }
+
+    @media (max-width: 575px) { .bp-flow { --n: 1; } }
     </style>
 </asp:Content>
 <asp:Content ID="Content2" ContentPlaceHolderID="MainContent" runat="server">
@@ -8430,7 +8494,7 @@
     </div>
 
     <!-- ============ PATIENT + BILL INFO BENTO ============ -->
-    <div class="bp-bento">
+    <div class="bp-bento bp-bento--info">
 
         <!-- Patient Card -->
         <div class="bp-card">
@@ -8537,7 +8601,7 @@
             <span>Billing Configuration</span>
         </div>
         <div class="bp-card-body">
-            <div class="bp-bento bp-bento--6">
+            <div class="bp-flow">
                 <div class="bp-field">
                     <label class="bp-label" for="ddlChargePolicy">Charge Policy <span class="bp-required">*</span></label>
                     <select id="ddlChargePolicy" class="bp-select">
@@ -8616,7 +8680,7 @@
     <div class="bp-toolbar">
         <span class="bp-toolbar-label"><i class="fa fa-plus-circle"></i> Add Services</span>
         <div class="bp-toolbar-divider"></div>
-        <input type="text" id="txtAddService" class="bp-input" placeholder="Type service / item name..." style="max-width:30% !important; min-width:220px; flex: 0 1 280px;" />
+        <input type="text" id="txtAddService" class="bp-input bp-service-input" placeholder="Type service / item name..." />
         <button type="button" class="bp-btn bp-btn--primary bp-btn--sm" id="btnAddServiceOrItem" onclick="AddServiceOrItem()">
             <i class="fa fa-plus"></i> Add Srvc / Itm
         </button>
@@ -8636,7 +8700,7 @@
     </div>
 
     <!-- ============ SERVICE TABLE + SUMMARY PANEL ============ -->
-    <div class="bp-bento" style="grid-template-columns: minmax(0, 3fr) minmax(240px, 1fr);">
+    <div class="bp-bento bp-bento--main">
 
         <!-- Service items table -->
         <div class="bp-card">
@@ -8804,47 +8868,27 @@
 
     <!-- ============ ACTION BUTTONS ============ -->
     <div class="bp-card" style="padding:10px 14px;">
-      <div class="row">
-          <div class="col-lg-8 col-md-8 col-sm-8">
-              <div class="row">
-                 <div class="col-lg-2">
-                        <input type="button" class="btn-primry billing-save" value="Save & Print" onclick="SaveRecord()" id="btnSave" />
-                    </div>
-                    <div class="col-lg-2" id="divSaveOnly" style="display:none;">
-                        <input type="button" class="btn-primry billing-save" value="Save" onclick="SaveRecord(true)" id="btnSaveOnly" style="display:none;" />
-                    </div>
-                    <div class="col-lg-2">
-                        <input type="button" class="btn btn-yellow" value="New" onclick="window.location = 'BillingProcess.aspx'" />
-                    </div>
-                    <div class="col-lg-2" id="btnPrint">
-                        <input type="button" class="btn-primry" value="Print" name="name" onclick="PrintCRV();"  style="width: 100px;" />
-                    </div>
-                    <div class="col-lg-2">
-                        <input type="button" class="btn-primry" value="Print-1" onclick="PrintCRV1();"  style="width: 100px;" />
-                    </div>
-                    <div class="col-lg-2">
-                        <input type="button" class="btn-primry" value="Print-2" onclick="PrintCRV2();"  style="width: 100px;" />
-                    </div>
-
-                            <div class="col-lg-2">
-                        <input type="button" class="btn btn-gray" value="List View" onclick="window.open('BillingProcessView.aspx')" />
-                    </div>
-                     <div class="col-lg-2">
-                        <input type="button" class="btn btn-primry"  style="width: 110px; display: none;" value="Approve" id="btnApprove"   onclick="ApproveBill()" />
-                    </div>
-                    <div class="col-lg-2">
-                        <input type="button" style="width: 110px; display: none;" id="btnPrintVoucher" class="btn btn-primry" value="Print Voucher" onclick="PrintVoucher();" />
-                        <input type="button" style="width: 110px; display: none;" id="btnPrintVoucher2" class="btn btn-primry" value="Print Voucher 2"  onclick="PrintVoucher2();" />
-                        <input type="button" style="width: 110px;" id="btnIPDFinalPrint" runat="server" class="btn btn-primry" value="Print Final Bill" onclick="PrintFinalBill();" />
-                        <input type="button" style="width: 130px;" id="btnEstimatedBill" runat="server" class="btn btn-primry" value="IPD Bill" onclick="PrintIPDBill();" />
-                        <input type="button" style="width: 110px; display: none;" value="Hospital Print" onclick="PrintHospital();" />
-                        <input type="button" style="width: 110px; display: none;" value="Consult Print" onclick="PrintConsultant();" />
-                        <input type="button" style="width: 100px; display: none;" value="Patient Copy" name="name" onclick="BackToPrintPatient();"  />
-                    
-                    </div>
-              </div>
-          </div>
-      </div>
+        <div class="bp-actions">
+            <input type="button" class="btn-primry billing-save" value="Save & Print" onclick="SaveRecord()" id="btnSave" />
+            <div id="divSaveOnly" style="display:none;">
+                <input type="button" class="btn-primry billing-save" value="Save" onclick="SaveRecord(true)" id="btnSaveOnly" style="display:none;" />
+            </div>
+            <input type="button" class="btn btn-yellow" value="New" onclick="window.location = 'BillingProcess.aspx'" />
+            <div id="btnPrint">
+                <input type="button" class="btn-primry" value="Print" name="name" onclick="PrintCRV();"  style="width: 100px;" />
+            </div>
+            <input type="button" class="btn-primry" value="Print-1" onclick="PrintCRV1();"  style="width: 100px;" />
+            <input type="button" class="btn-primry" value="Print-2" onclick="PrintCRV2();"  style="width: 100px;" />
+            <input type="button" class="btn btn-gray" value="List View" onclick="window.open('BillingProcessView.aspx')" />
+            <input type="button" class="btn btn-primry"  style="width: 110px; display: none;" value="Approve" id="btnApprove"   onclick="ApproveBill()" />
+            <input type="button" style="width: 110px; display: none;" id="btnPrintVoucher" class="btn btn-primry" value="Print Voucher" onclick="PrintVoucher();" />
+            <input type="button" style="width: 110px; display: none;" id="btnPrintVoucher2" class="btn btn-primry" value="Print Voucher 2"  onclick="PrintVoucher2();" />
+            <input type="button" style="width: 110px;" id="btnIPDFinalPrint" runat="server" class="btn btn-primry" value="Print Final Bill" onclick="PrintFinalBill();" />
+            <input type="button" style="width: 130px;" id="btnEstimatedBill" runat="server" class="btn btn-primry" value="IPD Bill" onclick="PrintIPDBill();" />
+            <input type="button" style="width: 110px; display: none;" value="Hospital Print" onclick="PrintHospital();" />
+            <input type="button" style="width: 110px; display: none;" value="Consult Print" onclick="PrintConsultant();" />
+            <input type="button" style="width: 100px; display: none;" value="Patient Copy" name="name" onclick="BackToPrintPatient();"  />
+        </div>
     </div>
 
 </div>
@@ -8854,7 +8898,7 @@
     
         <div id="PatientsSearchModel" data-backdrop="static" class="modal fade-in" role="dialog">
             <div class="modal-dialog">
-                <div class="modal-content" style="width: 1140px !important; margin-top: 116px; margin-left: -306px; height: 604px; position: relative;">
+                <div class="modal-content bp-search-modal">
                     <fieldset style="padding-top: 20px; padding-left: 14px;">
                         <div class="col-lg-2 col-md-4 col-sm-6">                           
                         <label id="srchpat">Search Your Patients: </label>
@@ -9617,7 +9661,7 @@
     <%--Appointment Search Modal--%>
 <div id="AppointmentSearchModel" data-backdrop="static" class="modal fade-in" role="dialog">
     <div class="modal-dialog">
-        <div class="modal-content" style="width: 1140px !important; margin-top: 116px; margin-left: -306px; height: 604px; position: relative;">
+        <div class="modal-content bp-search-modal">
             <fieldset style="padding-top: 20px; padding-left: 14px;">
                 <div class="col-lg-3 col-md-4 col-sm-6">
                     <label id="srchapt">Search Appointments: </label>
