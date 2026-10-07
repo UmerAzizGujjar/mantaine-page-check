@@ -1,10 +1,21 @@
-﻿<%@ Page Title="" Language="C#" MasterPageFile="~/Site.Master" AutoEventWireup="true" CodeBehind="AccountCategory.aspx.cs" Inherits="PMS.Inventory.AccountCategory" %>
+<%@ Page Title="" Language="C#" MasterPageFile="~/Site.Master" AutoEventWireup="true" CodeBehind="AccountCategory.aspx.cs" Inherits="PMS.Inventory.AccountCategory" %>
 <asp:Content ID="Content1" ContentPlaceHolderID="HeadContent" runat="server">
 
     <style type="text/css">
         .select2-selection__rendered
         {
             line-height: 18px !important;
+        }
+        /* read-only rows show plain dropdowns until Edit is clicked: make them look like the Select2 ones */
+        #tblItemDescriptionDetail select:not(.select2-hidden-accessible)
+        {
+            width: 100%;
+            height: 22px !important;
+            padding: 0 4px;
+            font-size: 10px !important;
+            border: 1px solid #aaa;
+            border-radius: 4px;
+            background-color: #eee;
         }
         .main input 
         {
@@ -201,30 +212,67 @@
                 });
             });
         });
-        function loadItemList(rowlength) {
-            var optionsitem = '';
-            var length = rowlength;
-            $('#txtAccountCode' + length + '').select2();
-            $('#txtConsumptionAccount' + length + '').select2();
-            $('#txtsalAccount' + length + '').select2();
-            $('#txtCgsAccount' + length + '').select2();
-            $('#txtworkProgress' + length + '').select2();
-            $('#txtCapitalConsumption' + length + '').select2();
+        // The six account dropdowns of a row, in the same order as the columns.
+        var accountSelectIds = ['txtAccountCode', 'txtConsumptionAccount', 'txtsalAccount', 'txtCgsAccount', 'txtworkProgress', 'txtCapitalConsumption'];
+
+        // The level-4 account list is loaded ONCE and shared by every row (it used to be requested again for each row,
+        // and every dropdown of every row was filled with the whole list).
+        var accountOptionsHtml = '';      // '<option>Please Select</option>' + one <option> per account
+        var accountNames = {};            // Account_ID -> "code-name"
+        var accountsLoaded = false;
+        var accountWaiters = [];
+
+        function escapeHtml(s) {
+            return String(s == null ? '' : s).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;');
+        }
+
+        function withAccountList(callback) {
+            if (accountsLoaded) { callback(); return; }
+            accountWaiters.push(callback);
+            if (accountWaiters.length > 1) { return; }      // a request is already running
             PageMethods.loadAccountList(function (resp) {
-                optionsitem = '<option value="0">Please Select</option>';
-                $.each(JSON.parse(resp), function (key, value) {
-                    optionsitem += '<option value="' + value.Account_ID + '" >' + value.name + '</option>';
+                var html = ['<option value="0">Please Select</option>'];
+                $.each(resp ? JSON.parse(resp) : [], function (key, value) {
+                    accountNames[value.Account_ID] = value.name;
+                    html.push('<option value="' + value.Account_ID + '">' + escapeHtml(value.name) + '</option>');
                 });
-                $('#txtAccountCode' + length + '').html(optionsitem);
-                $('#txtConsumptionAccount' + length + '').html(optionsitem);
-                $('#txtsalAccount' + length + '').html(optionsitem);
-                $('#txtCgsAccount' + length + '').html(optionsitem);
-                $('#txtworkProgress' + length + '').html(optionsitem);
-                $('#txtCapitalConsumption' + length + '').html(optionsitem);
+                accountOptionsHtml = html.join('');
+                accountsLoaded = true;
+                var waiting = accountWaiters;
+                accountWaiters = [];
+                $.each(waiting, function (i, fn) { fn(); });
             },
                 function (error) {
+                    accountWaiters = [];
                     alert(error.get_message());
                 });
+        }
+
+        // Fill ONE dropdown with just its saved account. The full list is only added when the row is edited
+        // (EditRow) or created (Addrow), so a page with many categories no longer builds thousands of options per row.
+        function showSavedAccount(selectEl, savedId) {
+            var html = '';
+            if (savedId === 0 || savedId === '0') {
+                html = '<option value="0">Please Select</option>';
+            } else if (savedId !== null && savedId !== undefined && savedId !== '') {
+                html = '<option value="' + savedId + '">' + escapeHtml(accountNames[savedId] || savedId) + '</option>';
+            }
+            $(selectEl).html(html).val(savedId === null || savedId === undefined ? null : String(savedId));
+        }
+
+        // Put the whole account list into one dropdown, keeping whatever is currently selected.
+        function fillAllAccounts(selectEl) {
+            var current = $(selectEl).val();
+            $(selectEl).html(accountOptionsHtml).val(current === null ? null : current);
+        }
+
+        // New (empty) row: every dropdown gets the full list with "Please Select" chosen.
+        function loadItemList(rowlength) {
+            var length = rowlength;
+            $.each(accountSelectIds, function (i, id) { $('#' + id + length).select2(); });
+            withAccountList(function () {
+                $.each(accountSelectIds, function (i, id) { $('#' + id + length).html(accountOptionsHtml); });
+            });
         }
         function SaveAllRecord() {
             var btnSave = 'Update';
@@ -276,41 +324,31 @@
                         '<td ><input type=text class="form-control" id="AccountId' + (key + 1) + '" name="AccountId" style="font-size: 10px !important;height:20px!important;"  value=' + data[key].Account_Category_Id + ' readonly=readonly /></td>' +
                         '<td class="hide-id-column"><input type=text class="form-control" id="Id' + (key + 1) + '" name="Id" style="font-size: 10px !important;height:20px!important;"  value=' + (key + 1) + ' readonly=readonly /></td>' +
                         '<td><input type=text class="form-control" id="AccountCategoryName' + (key + 1) + '" name="AccountCategoryName" style="font-size: 10px !important;height:20px!important;"  value="' + value.CategoryName + '" readonly=readonly /></td>' +
-                        '<td><select class="form-control" id="txtAccountCode' + (key + 1) + '" name="txtAccountCode" style="font-size: 10px !important;height:10px!important;" readonly=readonly ></select></td>' +
-                        '<td><select class="form-control" id="txtConsumptionAccount' + (key + 1) + '" name="txtConsumptionAccount" style="font-size: 10px !important;height:10px!important;" readonly=readonly ></select></td>' +
-                        '<td><select class="form-control" id="txtsalAccount' + (key + 1) + '" name="txtsalAccount" style="font-size: 10px !important;height:10px!important;" readonly=readonly ></select></td>' +
-                        '<td><select class="form-control" id="txtCgsAccount' + (key + 1) + '" name="txtCgsAccount" style="font-size: 10px !important;height:10px!important;" readonly=readonly ></select></td>' +
-                        '<td><select class="form-control" id="txtworkProgress' + (key + 1) + '" name="txtworkProgress" style="font-size: 10px !important;height:10px!important;" readonly=readonly ></select></td>' +
-                        '<td><select class="form-control" id="txtCapitalConsumption' + (key + 1) + '" name="txtCapitalConsumption" style="font-size: 10px !important;height:10px!important;" readonly=readonly ></select></td>' +
+                        '<td><select class="form-control" id="txtAccountCode' + (key + 1) + '" name="txtAccountCode" style="font-size: 10px !important;height:22px!important;" readonly=readonly ></select></td>' +
+                        '<td><select class="form-control" id="txtConsumptionAccount' + (key + 1) + '" name="txtConsumptionAccount" style="font-size: 10px !important;height:22px!important;" readonly=readonly ></select></td>' +
+                        '<td><select class="form-control" id="txtsalAccount' + (key + 1) + '" name="txtsalAccount" style="font-size: 10px !important;height:22px!important;" readonly=readonly ></select></td>' +
+                        '<td><select class="form-control" id="txtCgsAccount' + (key + 1) + '" name="txtCgsAccount" style="font-size: 10px !important;height:22px!important;" readonly=readonly ></select></td>' +
+                        '<td><select class="form-control" id="txtworkProgress' + (key + 1) + '" name="txtworkProgress" style="font-size: 10px !important;height:22px!important;" readonly=readonly ></select></td>' +
+                        '<td><select class="form-control" id="txtCapitalConsumption' + (key + 1) + '" name="txtCapitalConsumption" style="font-size: 10px !important;height:22px!important;" readonly=readonly ></select></td>' +
                         '<td><a href="javascript:void(0)" onclick="EditRow(' + (key + 1) + ')"><i class="glyphicon glyphicon-edit" style="width:15px !important;font-size: 13px;color:#f30a0a;position:relative;" i="">' +
                         '</td>'
                     '</tr>';
                 });
                 $('#tblItemDescriptionDetail').append(rows);
-                $.each(selectedOptions, function (key, value) {
-                    loadItemList(key + 1);
-                    setTimeout(function () {
-                        $('#txtAccountCode' + (key + 1)).val(value.Asset_Account).prop("disabled", true).trigger('change');
-                    }, 4000);
-                    setTimeout(function () {
-                        $('#txtConsumptionAccount' + (key + 1)).val(value.Consumption_Account).prop("disabled", true).trigger('change');
-                    }, 4000);
-                    setTimeout(function () {
-                        $('#txtsalAccount' + (key + 1)).val(value.Sal_Account).prop("disabled", true).trigger('change');
-                    }, 4000);
-                    setTimeout(function () {
-                        $('#txtCgsAccount' + (key + 1)).val(value.CgsAccount).prop("disabled", true).trigger('change');
-                    }, 4000);
-                    setTimeout(function () {
-                        $('#txtworkProgress' + (key + 1)).val(value.Work_Progress_Account).prop("disabled", true).trigger('change');
-                    }, 4000);
-                    setTimeout(function () {
-                        $('#txtCapitalConsumption' + (key + 1)).val(value.Capital_Consumption_Account).prop("disabled", true).trigger('change');
-                    }, 4000);
-                });
-                setTimeout(function () {
+                // once the account list has arrived, show each row's saved accounts (read-only until Edit is clicked)
+                withAccountList(function () {
+                    $.each(selectedOptions, function (key, value) {
+                        var saved = [value.Asset_Account, value.Consumption_Account, value.Sal_Account, value.CgsAccount, value.Work_Progress_Account, value.Capital_Consumption_Account];
+                        $.each(accountSelectIds, function (i, id) {
+                            var el = $('#' + id + (key + 1));
+                            showSavedAccount(el, saved[i]);
+                            // read-only rows stay plain dropdowns (a Select2 widget per dropdown was the slow part);
+                            // EditRow turns a row's dropdowns into Select2 when the user edits it
+                            el.prop('disabled', true);
+                        });
+                    });
                     $('#btnSave').attr('disabled', false);
-                }, 6000);
+                });
 
             });
         }
@@ -325,12 +363,15 @@
         function EditRow(rowlength) {
             var length = rowlength;
             $('#AccountCategoryName' + length).attr("readonly", false);
-            $('#txtAccountCode' + length).prop("disabled", false).trigger('change');
-            $('#txtConsumptionAccount' + length).prop("disabled", false).trigger('change');
-            $('#txtsalAccount' + length).prop("disabled", false).trigger('change');
-            $('#txtCgsAccount' + length).prop("disabled", false).trigger('change');
-            $('#txtworkProgress' + length).prop("disabled", false).trigger('change');
-            $('#txtCapitalConsumption' + length).prop("disabled", false).trigger('change');
+            // this row is being edited: now give its dropdowns the full account list (the saved account stays selected)
+            withAccountList(function () {
+                $.each(accountSelectIds, function (i, id) {
+                    var el = $('#' + id + length);
+                    fillAllAccounts(el);
+                    if (!el.hasClass('select2-hidden-accessible')) { el.select2(); }
+                    el.prop("disabled", false).trigger('change');
+                });
+            });
         }
     </script>
 </asp:Content>

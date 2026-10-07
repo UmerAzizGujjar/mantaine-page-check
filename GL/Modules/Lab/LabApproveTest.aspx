@@ -1,4 +1,4 @@
-﻿<%@ Page Title="" Language="C#" MasterPageFile="~/Site.Master" AutoEventWireup="true" CodeBehind="LabApproveTest.aspx.cs" Inherits="PMS.Modules.Lab.LabApproveTest" %>
+<%@ Page Title="" Language="C#" MasterPageFile="~/Site.Master" AutoEventWireup="true" CodeBehind="LabApproveTest.aspx.cs" Inherits="PMS.Modules.Lab.LabApproveTest" %>
 
 <asp:Content ID="Content1" ContentPlaceHolderID="HeadContent" runat="server">
 
@@ -23,20 +23,22 @@
         }
         h2 {
             color: #333;
-            border-left: 4px solid #5bc0de;
+            border-left: 4px solid var(--theme-accent, #EFA63E);
             padding-left: 15px;
             margin-bottom: 20px;
         }
         .btn-preview {
-            background-color: #5bc0de;
-            color: white;
+            /* theme colours (theme-colors.css), not a fixed blue */
+            background-color: var(--theme-accent, #EFA63E);
+            color: var(--theme-on-accent, #fff);
             border: none;
             padding: 5px 12px;
             border-radius: 3px;
             cursor: pointer;
         }
         .btn-preview:hover {
-            background-color: #31b0d5;
+            background-color: var(--theme-accent-ink, #8a4b00);
+            color: #fff;
         }
         .dataTables_wrapper .dt-buttons {
             margin-bottom: 10px;

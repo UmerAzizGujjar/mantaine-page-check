@@ -21,6 +21,7 @@ namespace PMS.Inventory
         {
             string result = string.Empty;
             DataBaseDataContext db = new DataBaseDataContext();
+            db.ObjectTrackingEnabled = false;      // read-only query: no change tracking needed
             var itemsList = (from i in db.GL_Accounts where i.Levels == 4 select new { i.Account_ID, name = i.Account_Code.ToString() + '-' + i.Account_Name }).ToList();
             if (itemsList != null)
             {
@@ -75,7 +76,8 @@ namespace PMS.Inventory
         public static string LoadAccount()
         {
             DataBaseDataContext db = new DataBaseDataContext();
-            var Header = (from m in db.Account_Categories                       
+            db.ObjectTrackingEnabled = false;      // read-only query: no change tracking needed
+            var Header = (from m in db.Account_Categories                      
                         
                           select new
                           {
