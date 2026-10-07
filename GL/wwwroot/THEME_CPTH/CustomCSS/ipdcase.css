@@ -228,6 +228,93 @@ tr, td {
         }
 
 
+/* Medication tab grids: stay inside the tab panel and scroll inside their own box */
+#Medication .med-layout {
+    table-layout: fixed;
+    width: 100%;
+}
+
+#Medication .med-grid-wrap {
+    width: 100%;
+    max-height: 280px;
+    overflow: auto;
+    margin-bottom: 15px;
+    border: 1px solid #D9E4E6;
+}
+
+    #Medication .med-grid-wrap .table {
+        margin-bottom: 0;
+    }
+
+    #Medication .med-grid-wrap thead {
+        position: sticky;
+        top: 0;
+        z-index: 10;
+    }
+
+    #Medication .med-grid-wrap .table th,
+    #Medication .med-grid-wrap .table td {
+        padding: 8px 10px;
+        vertical-align: middle;
+        text-align: left;
+        max-width: none;
+    }
+
+    #Medication .med-grid-wrap .table th {
+        white-space: nowrap;
+    }
+
+    #Medication .med-grid-wrap .table td.eddit,
+    #tblMedicinesListRegular td:nth-child(15),
+    #tblMedicinesListSTAT td:nth-child(15),
+    #Medication .med-grid-wrap .table td:first-child {
+        white-space: nowrap;
+    }
+
+    #Medication .med-grid-wrap .table td .routeInput {
+        width: 80px;
+        min-width: 80px;
+    }
+
+/* Wide grids: scroll inside their own box instead of widening the page */
+.table.grid-fit {
+    table-layout: fixed;
+    width: 100%;
+}
+
+.grid-scroll {
+    width: 100%;
+    max-height: 300px;
+    overflow: auto;
+}
+
+    .grid-scroll .table {
+        margin-bottom: 0;
+    }
+
+        .grid-scroll .table th {
+            white-space: nowrap;
+            vertical-align: middle;
+        }
+
+/* Title row + column header row stick together (no hard-coded top offsets) */
+.table.sticky-head thead {
+    position: sticky;
+    top: 0;
+    z-index: 10;
+}
+
+#tblHistoryMedication thead td,
+.table.sticky-head thead td {
+    background-color: #fff;
+    padding: 4px 10px;
+}
+
+    #tblHistoryMedication thead td h2,
+    .table.sticky-head thead td h2 {
+        margin: 6px 0;
+    }
+
 .mgTab {
     padding-left: 100px;
 }

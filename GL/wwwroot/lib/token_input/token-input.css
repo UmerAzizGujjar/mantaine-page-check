@@ -127,3 +127,44 @@ div.token-input-dropdown ul li.token-input-selected-dropdown-item {
     background-color: #4B6C9E; /*#d0efa0;*/
     color:#F9F9F9;
 }
+
+/* ---- Larger item-search token inputs (Inventory / Purchase pages) ----
+   Scoped by the plugin-generated input id (token-input-<original id>), so patient/account
+   searches are unaffected. The dropdown is appended to <body>, hence the body:has() scope. */
+ul.token-input-list:has(#token-input-txtItem, #token-input-txtItemCode, #token-input-ctl00_MainContent_txtItem_Code, #token-input-ctl00_MainContent_txtItem_Description) {
+    min-height: 42px !important;
+    height: 42px !important;
+    font-size: 15px;
+}
+
+#token-input-txtItem,
+#token-input-txtItemCode,
+#token-input-ctl00_MainContent_txtItem_Code,
+#token-input-ctl00_MainContent_txtItem_Description {
+    font-size: 15px !important;
+    height: 40px;
+    padding: 8px 10px;
+    width: 100%;
+}
+
+ul.token-input-list:has(#token-input-txtItem, #token-input-txtItemCode, #token-input-ctl00_MainContent_txtItem_Code, #token-input-ctl00_MainContent_txtItem_Description) li.token-input-token {
+    font-size: 14px;
+    padding: 6px 8px;
+    margin: 3px 4px;
+}
+
+/* keep the "Items / Browse" button beside the search box the same height */
+#itemInputSection .source-inline-group,
+#itemInputSection .source-action-btn {
+    height: 42px;
+}
+
+body:has(#token-input-txtItem, #token-input-txtItemCode, #token-input-ctl00_MainContent_txtItem_Code, #token-input-ctl00_MainContent_txtItem_Description) div.token-input-dropdown {
+    font-size: 15px;
+    max-height: 320px !important;
+    overflow-y: auto;
+}
+
+body:has(#token-input-txtItem, #token-input-txtItemCode, #token-input-ctl00_MainContent_txtItem_Code, #token-input-ctl00_MainContent_txtItem_Description) div.token-input-dropdown ul li {
+    padding: 8px 10px;
+}
