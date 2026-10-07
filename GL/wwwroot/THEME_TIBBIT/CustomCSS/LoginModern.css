@@ -1,5 +1,6 @@
 /* ==========================================================================
-   Login page - modern 16:9 split layout (THEME_TIBBIT)
+   Login page - modern 16:9 split layout (identical copy in every THEME_* folder;
+   all colours come from that theme's theme-colors.css, so edit the copies together)
    Left  : branding panel (dynamic company logo in a 16:9 plate, headline, art)
    Right : full-height sign-in panel
    Loaded by Login.aspx after SiteNoMenu.Master, so selectors are prefixed with
@@ -252,7 +253,7 @@ html body#contbod .wrapper .center a { color: #2b6cb0 !important; }
     flex-direction: column;
     padding: clamp(24px, 4.2vh, 52px) clamp(28px, 4vw, 88px) clamp(16px, 2.4vh, 28px);
     background:
-        radial-gradient(60vw 45vh at 92% -5%, rgba(239, 166, 62, 0.20), transparent 62%),
+        radial-gradient(60vw 45vh at 92% -5%, var(--theme-accent-ring, rgba(239, 166, 62, 0.25)), transparent 62%),
         radial-gradient(50vw 50vh at -5% 105%, rgba(43, 108, 176, 0.12), transparent 62%),
         linear-gradient(135deg, #fafbfd 0%, #e9eff7 100%);
     overflow: hidden;
@@ -397,7 +398,7 @@ html body#contbod .wrapper .brand-title br { display: inline; }
    -------------------------------------------------------------------------- */
 @media (max-width: 1024px) {
     html body#contbod {
-        background: linear-gradient(135deg, #fff6e6 0%, #eef2f8 100%) !important;
+        background: linear-gradient(135deg, var(--theme-accent-soft, #fff6e6) 0%, #eef2f8 100%) !important;
     }
 
     html body#contbod .wrapper {

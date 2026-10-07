@@ -1525,6 +1525,7 @@
     <Content Include="wwwroot\THEME_DEMO\CustomCSS\LabReportPreview.css" />
     <Content Include="wwwroot\THEME_DEMO\CustomCSS\LabSample.css" />
     <Content Include="wwwroot\THEME_DEMO\CustomCSS\login.css" />
+    <Content Include="wwwroot\THEME_DEMO\CustomCSS\LoginModern.css" />
     <Content Include="wwwroot\THEME_DEMO\CustomCSS\LoginPage.css" />
     <Content Include="wwwroot\THEME_DEMO\CustomCSS\Maindashboard.css" />
     <Content Include="wwwroot\THEME_DEMO\CustomCSS\MainDashboard.min.css" />
@@ -1588,6 +1589,7 @@
     <Content Include="wwwroot\THEME_DEMO\images\bootstrap-colorpicker\saturation.png" />
     <Content Include="wwwroot\THEME_DEMO\images\LOGOS\Icon.png" />
     <Content Include="wwwroot\THEME_DEMO\images\LOGOS\LoginBackground.jpg" />
+    <Content Include="wwwroot\THEME_DEMO\images\LOGOS\LoginIllustration.jpg" />
     <Content Include="wwwroot\THEME_DEMO\images\LOGOS\logo.PNG" />
     <Content Include="wwwroot\THEME_DEMO\images\Projectimages\Project\11414.png" />
     <Content Include="wwwroot\THEME_DEMO\images\StudentImages\1.jpg" />
@@ -1630,6 +1632,7 @@
     <Content Include="wwwroot\THEME_KALEEM\CustomCSS\LabReportPreview.css" />
     <Content Include="wwwroot\THEME_KALEEM\CustomCSS\LabSample.css" />
     <Content Include="wwwroot\THEME_KALEEM\CustomCSS\login.css" />
+    <Content Include="wwwroot\THEME_KALEEM\CustomCSS\LoginModern.css" />
     <Content Include="wwwroot\THEME_KALEEM\CustomCSS\LoginPage.css" />
     <Content Include="wwwroot\THEME_KALEEM\CustomCSS\Maindashboard.css" />
     <Content Include="wwwroot\THEME_KALEEM\CustomCSS\MainDashboard.min.css" />
@@ -1692,6 +1695,7 @@
     <Content Include="wwwroot\THEME_KALEEM\images\bootstrap-colorpicker\hue.png" />
     <Content Include="wwwroot\THEME_KALEEM\images\bootstrap-colorpicker\saturation.png" />
     <Content Include="wwwroot\THEME_KALEEM\images\LOGOS\LoginBackground.jpg" />
+    <Content Include="wwwroot\THEME_KALEEM\images\LOGOS\LoginIllustration.jpg" />
     <Content Include="wwwroot\THEME_KALEEM\images\LOGOS\logo.png" />
     <Content Include="wwwroot\THEME_KALEEM\images\Projectimages\Project\11414.png" />
     <Content Include="wwwroot\THEME_KALEEM\images\StudentImages\1.jpg" />
@@ -1735,6 +1739,7 @@
     <Content Include="wwwroot\THEME_CPTH\CustomCSS\LabReportPreview.css" />
     <Content Include="wwwroot\THEME_CPTH\CustomCSS\LabSample.css" />
     <Content Include="wwwroot\THEME_CPTH\CustomCSS\login.css" />
+    <Content Include="wwwroot\THEME_CPTH\CustomCSS\LoginModern.css" />
     <Content Include="wwwroot\THEME_CPTH\CustomCSS\LoginPage.css" />
     <Content Include="wwwroot\THEME_CPTH\CustomCSS\Maindashboard.css" />
     <Content Include="wwwroot\THEME_CPTH\CustomCSS\MainDashboard.min.css" />
@@ -1793,6 +1798,7 @@
     <Content Include="wwwroot\THEME_CPTH\images\bootstrap-colorpicker\hue.png" />
     <Content Include="wwwroot\THEME_CPTH\images\bootstrap-colorpicker\saturation.png" />
     <Content Include="wwwroot\THEME_CPTH\images\LOGOS\LoginBackground.jpg" />
+    <Content Include="wwwroot\THEME_CPTH\images\LOGOS\LoginIllustration.jpg" />
     <Content Include="wwwroot\THEME_CPTH\images\LOGOS\logo.png" />
     <Content Include="wwwroot\THEME_CPTH\images\Projectimages\Project\11414.png" />
     <Content Include="wwwroot\THEME_CPTH\images\StudentImages\1.jpg" />
@@ -1834,6 +1840,7 @@
     <Content Include="wwwroot\THEME_SKINSTUDIO\CustomCSS\LabReportPreview.css" />
     <Content Include="wwwroot\THEME_SKINSTUDIO\CustomCSS\LabSample.css" />
     <Content Include="wwwroot\THEME_SKINSTUDIO\CustomCSS\login.css" />
+    <Content Include="wwwroot\THEME_SKINSTUDIO\CustomCSS\LoginModern.css" />
     <Content Include="wwwroot\THEME_SKINSTUDIO\CustomCSS\LoginPage.css" />
     <Content Include="wwwroot\THEME_SKINSTUDIO\CustomCSS\Maindashboard.css" />
     <Content Include="wwwroot\THEME_SKINSTUDIO\CustomCSS\MainDashboard.min.css" />
@@ -1896,6 +1903,7 @@
     <Content Include="wwwroot\THEME_SKINSTUDIO\images\bootstrap-colorpicker\hue.png" />
     <Content Include="wwwroot\THEME_SKINSTUDIO\images\bootstrap-colorpicker\saturation.png" />
     <Content Include="wwwroot\THEME_SKINSTUDIO\images\LOGOS\LoginBackground.jpg" />
+    <Content Include="wwwroot\THEME_SKINSTUDIO\images\LOGOS\LoginIllustration.jpg" />
     <Content Include="wwwroot\THEME_SKINSTUDIO\images\Projectimages\Project\11414.png" />
     <Content Include="wwwroot\THEME_SKINSTUDIO\images\StudentImages\1.jpg" />
     <Content Include="wwwroot\THEME_SKINSTUDIO\images\StudentImages\1.png" />
@@ -1947,6 +1955,7 @@
     <Content Include="wwwroot\THEME_NHMC\CustomCSS\LabReportPreview.css" />
     <Content Include="wwwroot\THEME_NHMC\CustomCSS\LabSample.css" />
     <Content Include="wwwroot\THEME_NHMC\CustomCSS\login.css" />
+    <Content Include="wwwroot\THEME_NHMC\CustomCSS\LoginModern.css" />
     <Content Include="wwwroot\THEME_NHMC\CustomCSS\LoginPage.css" />
     <Content Include="wwwroot\THEME_NHMC\CustomCSS\Maindashboard.css" />
     <Content Include="wwwroot\THEME_NHMC\CustomCSS\MainDashboard.min.css" />
@@ -2008,6 +2017,7 @@
     <Content Include="wwwroot\THEME_NHMC\images\bootstrap-colorpicker\hue.png" />
     <Content Include="wwwroot\THEME_NHMC\images\bootstrap-colorpicker\saturation.png" />
     <Content Include="wwwroot\THEME_NHMC\images\LOGOS\LoginBackground.jpg" />
+    <Content Include="wwwroot\THEME_NHMC\images\LOGOS\LoginIllustration.jpg" />
     <Content Include="wwwroot\THEME_NHMC\images\LOGOS\logo.PNG" />
     <Content Include="wwwroot\THEME_NHMC\images\Projectimages\Project\11414.png" />
     <Content Include="wwwroot\THEME_NHMC\images\StudentImages\1.jpg" />
@@ -2048,6 +2058,7 @@
     <Content Include="wwwroot\THEME_ASSIRAAT\CustomCSS\LabReportPreview.css" />
     <Content Include="wwwroot\THEME_ASSIRAAT\CustomCSS\LabSample.css" />
     <Content Include="wwwroot\THEME_ASSIRAAT\CustomCSS\login.css" />
+    <Content Include="wwwroot\THEME_ASSIRAAT\CustomCSS\LoginModern.css" />
     <Content Include="wwwroot\THEME_ASSIRAAT\CustomCSS\LoginPage.css" />
     <Content Include="wwwroot\THEME_ASSIRAAT\CustomCSS\Maindashboard.css" />
     <Content Include="wwwroot\THEME_ASSIRAAT\CustomCSS\MEdTemplate.css" />
@@ -2105,6 +2116,7 @@
     <Content Include="wwwroot\THEME_ASSIRAAT\images\bootstrap-colorpicker\hue.png" />
     <Content Include="wwwroot\THEME_ASSIRAAT\images\bootstrap-colorpicker\saturation.png" />
     <Content Include="wwwroot\THEME_ASSIRAAT\images\LOGOS\LoginBackground.jpg" />
+    <Content Include="wwwroot\THEME_ASSIRAAT\images\LOGOS\LoginIllustration.jpg" />
     <Content Include="wwwroot\THEME_ASSIRAAT\images\LOGOS\logo.PNG" />
     <Content Include="wwwroot\THEME_ASSIRAAT\images\Projectimages\Project\11414.png" />
     <Content Include="wwwroot\THEME_ASSIRAAT\images\StudentImages\1.jpg" />
@@ -2144,6 +2156,7 @@
     <Content Include="wwwroot\THEME_IITH\CustomCSS\LabReportPreview.css" />
     <Content Include="wwwroot\THEME_IITH\CustomCSS\LabSample.css" />
     <Content Include="wwwroot\THEME_IITH\CustomCSS\login.css" />
+    <Content Include="wwwroot\THEME_IITH\CustomCSS\LoginModern.css" />
     <Content Include="wwwroot\THEME_IITH\CustomCSS\LoginPage.css" />
     <Content Include="wwwroot\THEME_IITH\CustomCSS\Maindashboard.css" />
     <Content Include="wwwroot\THEME_IITH\CustomCSS\MEdTemplate.css" />
@@ -2200,6 +2213,7 @@
     <Content Include="wwwroot\THEME_IITH\images\bootstrap-colorpicker\saturation.png" />
     <Content Include="wwwroot\THEME_IITH\images\LOGOS\ias.png" />
     <Content Include="wwwroot\THEME_IITH\images\LOGOS\LoginBackground.jpg" />
+    <Content Include="wwwroot\THEME_IITH\images\LOGOS\LoginIllustration.jpg" />
     <Content Include="wwwroot\THEME_IITH\images\LOGOS\logo.png" />
     <Content Include="wwwroot\THEME_IITH\images\Projectimages\Project\11414.png" />
     <Content Include="wwwroot\THEME_IITH\images\Standard_icons\LoginBackground.jpg" />
@@ -2241,6 +2255,7 @@
     <Content Include="wwwroot\THEME_KHURSHID\CustomCSS\LabReportPreview.css" />
     <Content Include="wwwroot\THEME_KHURSHID\CustomCSS\LabSample.css" />
     <Content Include="wwwroot\THEME_KHURSHID\CustomCSS\login.css" />
+    <Content Include="wwwroot\THEME_KHURSHID\CustomCSS\LoginModern.css" />
     <Content Include="wwwroot\THEME_KHURSHID\CustomCSS\LoginPage.css" />
     <Content Include="wwwroot\THEME_KHURSHID\CustomCSS\Maindashboard.css" />
     <Content Include="wwwroot\THEME_KHURSHID\CustomCSS\MEdTemplate.css" />
@@ -2295,6 +2310,7 @@
     <Content Include="wwwroot\THEME_KHURSHID\images\bootstrap-colorpicker\hue.png" />
     <Content Include="wwwroot\THEME_KHURSHID\images\bootstrap-colorpicker\saturation.png" />
     <Content Include="wwwroot\THEME_KHURSHID\images\LOGOS\LoginBackground.png" />
+    <Content Include="wwwroot\THEME_KHURSHID\images\LOGOS\LoginIllustration.jpg" />
     <Content Include="wwwroot\THEME_KHURSHID\images\LOGOS\logo.jpg" />
     <Content Include="wwwroot\THEME_KHURSHID\images\Projectimages\Project\11414.png" />
     <Content Include="wwwroot\THEME_KHURSHID\images\StudentImages\1.jpg" />
@@ -2333,6 +2349,7 @@
     <Content Include="wwwroot\THEME_NOOR\CustomCSS\LabReportPreview.css" />
     <Content Include="wwwroot\THEME_NOOR\CustomCSS\LabSample.css" />
     <Content Include="wwwroot\THEME_NOOR\CustomCSS\login.css" />
+    <Content Include="wwwroot\THEME_NOOR\CustomCSS\LoginModern.css" />
     <Content Include="wwwroot\THEME_NOOR\CustomCSS\LoginPage.css" />
     <Content Include="wwwroot\THEME_NOOR\CustomCSS\Maindashboard.css" />
     <Content Include="wwwroot\THEME_NOOR\CustomCSS\MainDashboard.min.css" />
@@ -2391,6 +2408,7 @@
     <Content Include="wwwroot\THEME_NOOR\images\bootstrap-colorpicker\hue.png" />
     <Content Include="wwwroot\THEME_NOOR\images\bootstrap-colorpicker\saturation.png" />
     <Content Include="wwwroot\THEME_NOOR\images\LOGOS\LoginBackground.jpg" />
+    <Content Include="wwwroot\THEME_NOOR\images\LOGOS\LoginIllustration.jpg" />
     <Content Include="wwwroot\THEME_NOOR\images\LOGOS\Logo.png" />
     <Content Include="wwwroot\THEME_NOOR\images\Projectimages\Project\11414.png" />
     <Content Include="wwwroot\THEME_NOOR\images\StudentImages\1.jpg" />
@@ -2429,6 +2447,7 @@
     <Content Include="wwwroot\THEME_PAKRED\CustomCSS\LabReportPreview.css" />
     <Content Include="wwwroot\THEME_PAKRED\CustomCSS\LabSample.css" />
     <Content Include="wwwroot\THEME_PAKRED\CustomCSS\login.css" />
+    <Content Include="wwwroot\THEME_PAKRED\CustomCSS\LoginModern.css" />
     <Content Include="wwwroot\THEME_PAKRED\CustomCSS\LoginPage.css" />
     <Content Include="wwwroot\THEME_PAKRED\CustomCSS\Maindashboard.css" />
     <Content Include="wwwroot\THEME_PAKRED\CustomCSS\MainDashboard.min.css" />
@@ -2487,6 +2506,7 @@
     <Content Include="wwwroot\THEME_PAKRED\images\bootstrap-colorpicker\hue.png" />
     <Content Include="wwwroot\THEME_PAKRED\images\bootstrap-colorpicker\saturation.png" />
     <Content Include="wwwroot\THEME_PAKRED\images\LOGOS\LoginBackground.jpg" />
+    <Content Include="wwwroot\THEME_PAKRED\images\LOGOS\LoginIllustration.jpg" />
     <Content Include="wwwroot\THEME_PAKRED\images\LOGOS\logo.png" />
     <Content Include="wwwroot\THEME_PAKRED\images\Projectimages\Project\11414.png" />
     <Content Include="wwwroot\THEME_PAKRED\images\StudentImages\1.jpg" />
@@ -2525,6 +2545,7 @@
     <Content Include="wwwroot\THEME_STANDARD\CustomCSS\LabReportPreview.css" />
     <Content Include="wwwroot\THEME_STANDARD\CustomCSS\LabSample.css" />
     <Content Include="wwwroot\THEME_STANDARD\CustomCSS\login.css" />
+    <Content Include="wwwroot\THEME_STANDARD\CustomCSS\LoginModern.css" />
     <Content Include="wwwroot\THEME_STANDARD\CustomCSS\LoginPage.css" />
     <Content Include="wwwroot\THEME_STANDARD\CustomCSS\Maindashboard.css" />
     <Content Include="wwwroot\THEME_STANDARD\CustomCSS\MainDashboard.min.css" />
@@ -2585,6 +2606,7 @@
     <Content Include="wwwroot\THEME_STANDARD\images\bootstrap-colorpicker\hue.png" />
     <Content Include="wwwroot\THEME_STANDARD\images\bootstrap-colorpicker\saturation.png" />
     <Content Include="wwwroot\THEME_STANDARD\images\LOGOS\LoginBackground.jpg" />
+    <Content Include="wwwroot\THEME_STANDARD\images\LOGOS\LoginIllustration.jpg" />
     <Content Include="wwwroot\THEME_STANDARD\images\LOGOS\logo.PNG" />
     <Content Include="wwwroot\THEME_STANDARD\images\LOGOS\Logoheader.png" />
     <Content Include="wwwroot\THEME_STANDARD\images\Projectimages\Project\11414.png" />
