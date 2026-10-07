@@ -1,6 +1,7 @@
 ﻿<%@ Page Title="" Language="C#" MasterPageFile="~/Site.Master" AutoEventWireup="true" CodeBehind="LaboratoryTimeSlab.aspx.cs" Inherits="PMS.Modules.Dashboards.LaboratoryTimeSlab" %>
 <asp:Content ID="Content1" ContentPlaceHolderID="HeadContent" runat="server">
     <link href="../../wwwroot/THEME_TIBBIT/CustomCSS/tablestyle.css" rel="stylesheet" />
+    <link href="../../wwwroot/THEME_TIBBIT/CustomCSS/custom-modals.css" rel="stylesheet" />
     <style>
         .row-dash { margin: 0; }
         .row-dash > [class^="col-"] { padding: 0 8px; }
@@ -247,6 +248,16 @@
                             }
                             return data;
                         }
+                    },
+                    { "data": null, "name": "history", "width": "8%", "orderable": false,
+                        "render": function (data, type, full) {
+                            if (type === 'display') {
+                                var nm = String(full.patientName || '').replace(/&/g, '&amp;').replace(/"/g, '&quot;').replace(/</g, '&lt;');
+                                var mr = String(full.mrNo || '').replace(/&/g, '&amp;').replace(/"/g, '&quot;').replace(/</g, '&lt;');
+                                return '<button type="button" class="btn btn-sm btn-primry btn-history" data-mrno="' + mr + '" data-name="' + nm + '">Select</button>';
+                            }
+                            return '';
+                        }
                     }
                 ],
                 "order": [[0, "asc"]],
@@ -268,6 +279,45 @@
                 }
             });
         }
+        function escHist(s) {
+            return String(s == null ? '' : s).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
+        }
+        $(document).on('click', '.btn-history', function () {
+            var mrNo = $(this).attr('data-mrno');
+            var name = $(this).attr('data-name');
+            $('#histMrNo').text(mrNo);
+            $('#histPatName').text(name);
+            $('#histSearch').val('');
+            $('#histBody').html('<tr><td colspan="4" style="text-align:center;padding:16px;color:#667085;">Loading...</td></tr>');
+            $('#modalHistory').modal('show');
+            $.ajax({
+                type: "POST",
+                url: "LaboratoryTimeSlab.aspx/GetPreviousTests",
+                data: JSON.stringify({ mrNo: mrNo }),
+                contentType: "application/json; charset=utf-8",
+                success: function (r) {
+                    var rows = JSON.parse(r.d);
+                    if (!rows || rows.length === 0) {
+                        $('#histBody').html('<tr><td colspan="4" style="text-align:center;padding:16px;color:#667085;">No previous tests found</td></tr>');
+                        return;
+                    }
+                    var html = '';
+                    $.each(rows, function (i, x) {
+                        html += '<tr><td>' + (i + 1) + '</td><td>' + escHist(x.testName) + '</td><td>' + escHist(x.testDate) + '</td><td>' + escHist(x.status) + '</td></tr>';
+                    });
+                    $('#histBody').html(html);
+                },
+                error: function () {
+                    $('#histBody').html('<tr><td colspan="4" style="text-align:center;padding:16px;color:#b42318;">Failed to load previous tests</td></tr>');
+                }
+            });
+        });
+        $(document).on('input', '#histSearch', function () {
+            var q = $(this).val().toLowerCase();
+            $('#histBody tr').each(function () {
+                $(this).toggle($(this).text().toLowerCase().indexOf(q) > -1);
+            });
+        });
     </script>
     <style>
         .time-badge { display: inline-block; padding: 3px 12px; border-radius: 20px; font-size: 12px; font-weight: 600; }
@@ -356,9 +406,44 @@
                                     <th>Report Date</th>
                                     <th>Approve Date</th>
                                     <th>Total Time</th>
+                                    <th style="width:8%">History</th>
                                 </tr>
                             </thead>
                             <tbody></tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="modal fade" id="modalHistory" tabindex="-1" aria-hidden="true">
+        <div class="modal-dialog modal-lg custom-modal-dialog">
+            <div class="modal-content custom-modal-content">
+                <div class="modal-header custom-modal-header">
+                    <div class="custom-modal-title-wrap">
+                        <span class="custom-modal-icon"><i class="fa fa-history"></i></span>
+                        <h4 class="modal-title custom-modal-title">Previous Tests - <span id="histPatName"></span> (<span id="histMrNo"></span>)</h4>
+                    </div>
+                    <button type="button" class="custom-modal-close" data-dismiss="modal" aria-label="Close">
+                        <i class="fa fa-times"></i>
+                    </button>
+                </div>
+                <div class="modal-body custom-modal-body">
+                    <div class="custom-modal-search-wrap">
+                        <span class="custom-modal-search-icon"><i class="fa fa-search"></i></span>
+                        <input type="text" id="histSearch" class="custom-modal-search" placeholder="Search test..." />
+                    </div>
+                    <div class="custom-modal-table-wrap">
+                        <table class="table custom-modal-table">
+                            <thead>
+                                <tr>
+                                    <th style="width:50px;">#</th>
+                                    <th>Test Name</th>
+                                    <th style="width:120px;">Date</th>
+                                    <th style="width:100px;">Status</th>
+                                </tr>
+                            </thead>
+                            <tbody id="histBody"></tbody>
                         </table>
                     </div>
                 </div>

@@ -251,5 +251,59 @@ namespace PMS.Modules.Dashboards
                 return new JavaScriptSerializer().Serialize(new { labels = months, tests, avgTat });
             }
         }
+
+        [WebMethod]
+        public static string GetPreviousTests(string mrNo)
+        {
+            using (DataBaseDataContext db = new DataBaseDataContext())
+            {
+                var pat = db.Reg_patients.FirstOrDefault(p => p.mr_no_sequence == mrNo);
+                if (pat == null) return "[]";
+
+                int? patientNo = pat.Patient_No;
+
+                var individual = (from ltm in db.Laboratory_Tests
+                                  join ltd in db.Lab_Test_Details on ltm.Lab_Test_ID equals ltd.Lab_Test_ID
+                                  join tdef in db.Lab_Tests on ltd.Test_ID equals tdef.Test_ID
+                                  join bd in db.Ar_Billing_Details on ltd.Bill_Details_ID equals bd.Bill_Details_ID
+                                  where ltm.Patient_ID == pat.pat_id
+                                     && (bd.Is_Group_Category == null ? false : bd.Is_Group_Category) == false
+                                  select new
+                                  {
+                                      TestName = tdef.Test_Name,
+                                      TestDate = bd.Service_Date,
+                                      IsApproved = ltd.isApproved
+                                  }).ToList();
+
+                var groups = (from ld in db.Lab_Test_Details
+                              join p in db.Reg_patients on ld.Patient_ID equals p.pat_id
+                              join bt in db.Lab_Tests on ld.Test_ID equals bt.Test_ID
+                              join ltm in db.Laboratory_Tests on ld.Lab_Test_ID equals ltm.Lab_Test_ID
+                              join bd in db.Ar_Billing_Details on ld.Bill_Details_ID equals bd.Bill_Details_ID
+                              where p.Patient_No == patientNo
+                                 && (bd.Is_Group_Category == null ? false : bd.Is_Group_Category) == true
+                              group new { ld, bt, bd } by new { ld.Lab_Test_ID, bt.Group_Category } into g
+                              select new
+                              {
+                                  TestName = db.GetDataValueName("Test Groups", g.Key.Group_Category) ?? g.Key.Group_Category,
+                                  TestDate = g.Max(x => x.bd.Service_Date),
+                                  IsApproved = g.Max(x => x.ld.isApproved == true ? 1 : (int?)0)
+                              }).ToList();
+
+                var rows = individual
+                    .Select(x => new { x.TestName, x.TestDate, Ok = x.IsApproved == true })
+                    .Concat(groups.Select(x => new { x.TestName, x.TestDate, Ok = x.IsApproved == 1 }))
+                    .OrderByDescending(x => x.TestDate)
+                    .ThenBy(x => x.TestName)
+                    .ToList();
+
+                return new JavaScriptSerializer().Serialize(rows.Select(x => new
+                {
+                    testName = x.TestName,
+                    testDate = x.TestDate.HasValue ? x.TestDate.Value.ToString("dd-MMM-yyyy") : "",
+                    status = x.Ok ? "Approved" : "Pending"
+                }));
+            }
+        }
     }
 }
