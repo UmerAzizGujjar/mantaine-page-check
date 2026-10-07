@@ -650,6 +650,20 @@
                 var AllItemDetail = { 'Igp_num': IgpNo, 'Date': date, 'Vendor': Vendor, 'DriverName': DriverName, 'VehicleNum': VehicleNum, 'BilityNum': Bility_No, 'remarks': Remarks, 'InvOrg': InvOrg, 'Branch': Branch, 'ItemList': Item_list };
                 // Block double clicks while the save runs (a large IGP takes a while) and show progress
                 $('#btnSave').prop('disabled', true);
+                var saveCompleted = false;
+                // Safety net: never leave the button disabled / modal open forever if the server hangs
+                var saveWatchdog = setTimeout(function () {
+                    if (saveCompleted) return;
+                    saveCompleted = true;
+                    Swal.close();
+                    $('#btnSave').prop('disabled', false);
+                    Swal.fire({
+                        icon: 'warning',
+                        title: 'Still saving...',
+                        text: 'The server is taking longer than expected. Please check the IGP list before saving again, to avoid a duplicate.',
+                        confirmButtonText: 'OK'
+                    });
+                }, 90000);
                 Swal.fire({
                     title: 'Saving...',
                     text: 'Please wait, do not close or refresh the page.',
@@ -659,7 +673,8 @@
                     didOpen: function () { Swal.showLoading(); }
                 });
                 PageMethods.SaveIgpDetail(btnSave, JSON.stringify(AllItemDetail), function (res) {
-
+                    saveCompleted = true;
+                    clearTimeout(saveWatchdog);
                     Swal.fire({
                         icon: 'success',
                         title: 'Success!',
@@ -672,13 +687,16 @@
                             htmlContainer: 'swal-big-text'
                         }
                     });
+                    // Navigation must run even if the attachment upload fails, otherwise the page stays stuck
                     sendFile(res, function () {
                         $('#btnSave').val("Update");
                         window.location = "InversionGatePass.aspx?IGP_ID=" + res;
-                        $('#btnSave').val("Update");
                     });
                 }, function (error) {
                     // Without this a failed or timed-out save showed nothing and the button looked dead
+                    saveCompleted = true;
+                    clearTimeout(saveWatchdog);
+                    Swal.close();
                     $('#btnSave').prop('disabled', false);
                     var msg = error && error.get_timedOut && error.get_timedOut()
                         ? 'The server is taking longer than expected. Please check the IGP list before saving again, to avoid a duplicate.'
@@ -703,7 +721,9 @@
                     processData: false,
                     contentType: false,
                     error: function () {
-                        alert("Whoops something went wrong!");
+                        // Never block the post-save navigation on an attachment failure
+                        console.error("Attachment upload failed.");
+                        if (typeof callback === 'function') callback();
                     }
                 });
             } else {

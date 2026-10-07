@@ -5,9 +5,15 @@
     <link href="../../wwwroot/THEME_TIBBIT/CustomCSS/custom-modals.css" rel="stylesheet" />
     <script src="https://cdn.datatables.net/buttons/2.4.2/js/buttons.colVis.min.js"></script>
     <style>
-        .bp-date-filter { display: flex; flex-wrap: wrap; align-items: center; gap: 10px 14px; margin-bottom: 10px; }
-        .bp-date-filter label.fl { margin: 0; font-weight: 600; }
-        .bp-date-filter input[type=date] { width: 160px; display: inline-block; }
+        /* one filter row: [Start Date] [End Date] [Date Filter switch + hint] ... [Main Department] - everything vertically centred */
+        .bp-filter-bar { display: flex; flex-wrap: wrap; align-items: center; gap: 8px 28px; margin: 0 0 8px; }
+        .bp-date-filter, .bp-dept-filter { display: flex; flex-wrap: wrap; align-items: center; gap: 6px 10px; }
+        .bp-filter-bar label.fl { margin: 0; font-weight: 600; white-space: nowrap; line-height: 1; }
+        .bp-filter-bar .form-control { height: 32px; margin: 0 !important; padding: 3px 8px; font-size: 13px; }   /* !important: Site.Master gives .main input a 6px bottom margin */
+        .bp-date-filter input[type=date] { width: 150px; display: inline-block; }
+        .bp-dept-filter select.form-control { width: 190px; }
+        .bp-dept-filter .select2-container { width: 190px !important; }
+        .bp-date-filter .text-muted { font-size: 12px; white-space: nowrap; }
         .bp-switch { position: relative; display: inline-block; width: 44px; height: 24px; margin: 0; }
         .bp-switch input { opacity: 0; width: 0; height: 0; }
         .bp-slider { position: absolute; cursor: pointer; inset: 0; background: #ccc; border-radius: 24px; transition: .2s; }
@@ -1247,8 +1253,8 @@
 
 </asp:Content>
 <asp:Content ID="Content2" ContentPlaceHolderID="MainContent" runat="server">
-    <div class="row">
-        <div class="col-lg-5 col-md-12 col-sm-12 bp-date-filter">
+    <div class="bp-filter-bar">
+        <div class="bp-date-filter">
             <label class="fl" for="txtFromDate">Start Date</label>
             <input type="date" id="txtFromDate" class="form-control" />
             <label class="fl" for="txtToDate">End Date</label>
@@ -1259,11 +1265,10 @@
                 <span class="bp-slider"></span>
             </label>
             <span id="lblDateFilterState" class="text-muted">Current month</span>
-         
         </div>
-        <div class="col-lg-2 col-md-6 col-sm-12">
-            <label class="fl" for="ddlMainDept" style="margin-left: 18px;">Main Department</label>
-            <select id="ddlMainDept" class="form-control" style="width: 190px;">
+        <div class="bp-dept-filter">
+            <label class="fl" for="ddlMainDept">Main Department</label>
+            <select id="ddlMainDept" class="form-control">
                 <option value="">All</option>
                 <option value="01">OPD</option>
                 <option value="02">Emergency</option>

@@ -7162,11 +7162,10 @@ function setDropdownText(selector, text) {
                         <legend>Medication Details</legend>
                         <table id="tblMedicines" class="add-test">
                             <tr>
-                                <td style="width: 110px">
+                                <td style="width: 110px; display: none;">
                                     <span id="lblMed">Medicine Name</span>
-                                    
                                 </td>
-                                <td style="width: 234px" id="MedicineName" >
+                                <td style="width: 234px; display: none;" id="MedicineName">
                                     <div>
                                     <select id="txtMedicineName" name="txtMedicineName" class="js-example-responsive" style="width: 334px" onchange="CleardrpdwnItem()">
                                     </select>
@@ -7174,15 +7173,12 @@ function setDropdownText(selector, text) {
                                 </td>
 
                                 <td style="width: 110px">
-                                    <span id="pitem" style="margin-left: -346px;">Medicine Name</span>
+                                    <span id="pitem">Medicine Name</span>
                                     <span class="RedStar">*</span>
                                 </td>
                                 <td style="width: 234px">
-                                    <div style="margin-left: -544px;  margin-bottom: 12px; " >                                   
-                                        <select style="width: 48% !important" id="txtPharmacyItem" name="txtPharmacyItem" style="margin-left: -93px;margin-left: -176px;" onchange="Cleardrpdwn()">
+                                    <select id="txtPharmacyItem" name="txtPharmacyItem" style="width: 100% !important;" onchange="Cleardrpdwn()">
                                     </select>
-                                        </div>
-
                                 </td>
                             </tr>
                             <tr>

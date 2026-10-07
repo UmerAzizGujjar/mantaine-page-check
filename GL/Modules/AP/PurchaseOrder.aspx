@@ -637,36 +637,36 @@
         // Helper function to build row HTML
 function buildNewRow(length, PR_Num, itemcode, item_name, unit, Qty, UOM_Qty, Rate, pr_detail_id, total_stock, lastPORate, last_vendor_name, disableQty) {
             return '<tr>' +
-                '<td style="padding-top:7px!important;"><input type="hidden" id="txtPRDId' + length + '" name="txtPRDId" value="' + pr_detail_id + '" style="width: 75px !important;text-align:right" />' + length + '</td>' +
-                '<td style="padding-top: 7px!important;"><input type="hidden" name="txtPRNo" id="txtPRNO' + length + '" value="' + PR_Num + '" style="text-align:right ;width:50px !important;font-size:9px;height:20px;padding-top: 7px!important;padding-right: 3px!important;"/>' + PR_Num + '</td>' +
-                '<td style="padding-top: 7px!important;text-align:right!important;"><input type="hidden" name="txtcsno" id="txtcsno' + length + '" value="" style="text-align:right ;width:50px !important;font-size:9px;height:20px;"/></td>' +
-                '<td style="padding-top: 7px!important;padding-right: 3px!important;text-align:right!important;"><input type="hidden" name="txtItemCode" id="txtItemCode' + length + '" value="' + itemcode + '" style="width:50px !important;text-align:right;font-size:9px;height:20px;"/> ' + itemcode + '  </td>' +
-                '<td style="padding-left: 8px!important;padding-top: 7px!important;text-align:left!important;"><input type="hidden" name="txtItemName" id="txtItemName' + length + '" value="' + item_name + '"/> ' + item_name + '  </td>' +
+                '<td style=""><input type="hidden" id="txtPRDId' + length + '" name="txtPRDId" value="' + pr_detail_id + '" style="width: 75px !important;text-align:right" />' + length + '</td>' +
+                '<td style=""><input type="hidden" name="txtPRNo" id="txtPRNO' + length + '" value="' + PR_Num + '" style="text-align:right ;width:100%!important;font-size:12px;font-weight:700;height:28px;"/>' + PR_Num + '</td>' +
+                '<td style="text-align:right!important;"><input type="hidden" name="txtcsno" id="txtcsno' + length + '" value="" style="text-align:right ;width:100%!important;font-size:12px;font-weight:700;height:28px;"/></td>' +
+                '<td style="text-align:right!important;"><input type="hidden" name="txtItemCode" id="txtItemCode' + length + '" value="' + itemcode + '" style="width:100%!important;text-align:right;font-size:12px;font-weight:700;height:28px;"/> ' + itemcode + '  </td>' +
+                '<td style="text-align:left!important;"><input type="hidden" name="txtItemName" id="txtItemName' + length + '" value="' + item_name + '"/> ' + item_name + '  </td>' +
                 '<td style="text-align:left!important;"> <input type="hidden" name="txtUnit" id="txtUnit' + length + '" value="' + unit + '" />' + unit + '  </td>' +
-                '<td><input type="text" id="txtQty' + length + '" style="text-align:right ;width:50px !important;font-size:9px;height:20px;" name="txtQty" onkeyup="CulculateAmonutWithQty(this)" value="' + Qty + '" ' + (disableQty ? 'disabled="disabled"' : '') + '/></td>' +
-                '<td><input type="text" id="txtUOMQty' + length + '" style="text-align:right;width:50px!important;font-size:9px;height:20px;" name="txtUOMQty" value="' + UOM_Qty + '" /></td>' +
-                '<td><input type="text" id="txtBonusQty' + length + '" style="text-align:right;width:50px!important;font-size:9px;height:20px;" name="txtBonusQty" value="0" data-toggle="tooltip" data-placement="bottom" title="Enter Bonus quantity in Loose"/></td>' +
-                '<td><input type="text" autocomplete="off" style="text-align:right ;width:50px !important;font-size:9px;height:20px;" onkeyup="CulculateAmonutWithQty(this)" name="txtRate" id="txtRate' + length + '" value="' + Rate + '" /></td>' +
-                /*'<td><input type="text" autocomplete="off" style="text-align:right ;width:50px !important;font-size:9px;height:20px;" name="txtDisPer" readonly="readonly" id="txtDisPer' + length + '" value="0" /></td>' +*/
-                '<td><input type="text" autocomplete="off" style="text-align:right ;width:50px !important;font-size:9px;height:20px;" name="txtDisPer" onchange="calculateDiscountFromPercent(this)" onkeyup="calculateDiscountFromPercent(this)" id="txtDisPer' + length + '" value="0" /></td>' +
-                '<td style="text-align:right;padding-top: 7px!important"><input type="text" onkeyup="calcTotal()" style="width: 50px !important;text-align:right;font-size:9px;height:20px;text-align:right!important;" id="txtDisAmount' + length + '" name="txtDisAmount" value="0"></input></td>' +
-                '<td><select id="ddlSTAX' + length + '" name="ddlSTAX" onchange="calcTotal()" style="text-align:right ;width:50px !important;font-size:9px;height:20px;"><option value="0">0</option></select></td>' +
-                '<td style="padding-top: 7px!important;text-align:right!important"><input type="text" style="text-align:right!important; width:50px !important;font-size:9px;height:20px;" value="0" readonly="readonly" id="txtSalAmount' + length + '" name="txtSalAmount" /></td>' +
-                '<td><input type="text" id="ddlFurtherTax' + length + '" name="ddlFurtherTax" onkeyup="calcTotal()" style="text-align:right ;width:50px !important;font-size:9px;height:20px;" value="0" /></td>' +
-                '<td><input type="text" style="width:50px !important;text-align:right;font-size:9px;height:20px;" value="0" id="txtFurtherTaxAmount' + length + '" name="txtFurtherTaxAmount" onkeyup="calcFurtherTaxFromAmount(this)" data-manual="false"></td>' +
-                '<td><select id="ddlAdvanceTax' + length + '" name="ddlAdvanceTax" onchange="calcTotal()" style="text-align:right ;width:50px !important;font-size:9px;height:20px;"></select></td>' +
-                '<td><input type="text" readonly="readonly" style="width:50px !important;text-align:right;font-size:9px;height:20px;" value="0" id="txtAdvanceTaxAmount' + length + '" name="txtAdvanceTaxAmount"></td>' +
-                '<td style="display:none;"><select id="ddlFed' + length + '" onchange="calcTotal()" style="text-align:right ;width:50px !important;font-size:9px;height:20px;margin-left: 6px;"><option value="0">0</option></select></td>' +
-                '<td style="display:none;"><input type="text" value="0" style="width: 50px !important;text-align:right;font-size:9px;height:20px;" id="txtFedAmount' + length + '" name="txtFedAmount"></input></td>' +
-                '<td><input type="text" readonly style="width:50px!important;text-align:right;font-size:9px;height:20px;" value="0" id="txtBonusAmount' + length + '" name="txtBonusAmount" /></td>' +
-                '<td style="text-align:right ;width:50px !important;font-size:9px;height:20px;padding-top: 7px!important;"><input type="text" style="width:50px !important;text-align:right;font-size:9px;height:20px;" value="0" readonly="readonly" id="txtTotalAmount' + length + '" name="txtTotalAmount"></input></td>' +
-                '<td><input type="text" name="txtddate" id="txtddate' + length + '" class="row-date-picker" style="width:64px !important;text-align:center;font-size:9px;height:20px;" /></td>' +
+                '<td><input type="text" id="txtQty' + length + '" style="text-align:right ;width:100%!important;font-size:12px;font-weight:700;height:28px;" name="txtQty" onkeyup="CulculateAmonutWithQty(this)" value="' + Qty + '" ' + (disableQty ? 'disabled="disabled"' : '') + '/></td>' +
+                '<td><input type="text" id="txtUOMQty' + length + '" style="text-align:right;width:100%!important;font-size:12px;font-weight:700;height:28px;" name="txtUOMQty" value="' + UOM_Qty + '" /></td>' +
+                '<td><input type="text" id="txtBonusQty' + length + '" style="text-align:right;width:100%!important;font-size:12px;font-weight:700;height:28px;" name="txtBonusQty" value="0" data-toggle="tooltip" data-placement="bottom" title="Enter Bonus quantity in Loose"/></td>' +
+                '<td><input type="text" autocomplete="off" style="text-align:right ;width:100%!important;font-size:12px;font-weight:700;height:28px;" onkeyup="CulculateAmonutWithQty(this)" name="txtRate" id="txtRate' + length + '" value="' + Rate + '" /></td>' +
+                /*'<td><input type="text" autocomplete="off" style="text-align:right ;width:100%!important;font-size:12px;font-weight:700;height:28px;" name="txtDisPer" readonly="readonly" id="txtDisPer' + length + '" value="0" /></td>' +*/
+                '<td><input type="text" autocomplete="off" style="text-align:right ;width:100%!important;font-size:12px;font-weight:700;height:28px;" name="txtDisPer" onchange="calculateDiscountFromPercent(this)" onkeyup="calculateDiscountFromPercent(this)" id="txtDisPer' + length + '" value="0" /></td>' +
+                '<td style="text-align:right;"><input type="text" onkeyup="calcTotal()" style="width:100%!important;text-align:right;font-size:12px;font-weight:700;height:28px;text-align:right!important;" id="txtDisAmount' + length + '" name="txtDisAmount" value="0"></input></td>' +
+                '<td><select id="ddlSTAX' + length + '" name="ddlSTAX" onchange="calcTotal()" style="text-align:right ;width:100%!important;font-size:12px;font-weight:700;height:28px;"><option value="0">0</option></select></td>' +
+                '<td style="text-align:right!important"><input type="text" style="text-align:right!important; width:100%!important;font-size:12px;font-weight:700;height:28px;" value="0" readonly="readonly" id="txtSalAmount' + length + '" name="txtSalAmount" /></td>' +
+                '<td><input type="text" id="ddlFurtherTax' + length + '" name="ddlFurtherTax" onkeyup="calcTotal()" style="text-align:right ;width:100%!important;font-size:12px;font-weight:700;height:28px;" value="0" /></td>' +
+                '<td><input type="text" style="width:100%!important;text-align:right;font-size:12px;font-weight:700;height:28px;" value="0" id="txtFurtherTaxAmount' + length + '" name="txtFurtherTaxAmount" onkeyup="calcFurtherTaxFromAmount(this)" data-manual="false"></td>' +
+                '<td><select id="ddlAdvanceTax' + length + '" name="ddlAdvanceTax" onchange="calcTotal()" style="text-align:right ;width:100%!important;font-size:12px;font-weight:700;height:28px;"></select></td>' +
+                '<td><input type="text" readonly="readonly" style="width:100%!important;text-align:right;font-size:12px;font-weight:700;height:28px;" value="0" id="txtAdvanceTaxAmount' + length + '" name="txtAdvanceTaxAmount"></td>' +
+                '<td style="display:none;"><select id="ddlFed' + length + '" onchange="calcTotal()" style="text-align:right ;width:100%!important;font-size:12px;font-weight:700;height:28px;margin-left: 6px;"><option value="0">0</option></select></td>' +
+                '<td style="display:none;"><input type="text" value="0" style="width:100%!important;text-align:right;font-size:12px;font-weight:700;height:28px;" id="txtFedAmount' + length + '" name="txtFedAmount"></input></td>' +
+                '<td><input type="text" readonly style="width:100%!important;text-align:right;font-size:12px;font-weight:700;height:28px;" value="0" id="txtBonusAmount' + length + '" name="txtBonusAmount" /></td>' +
+                '<td style="text-align:right ;width:100%!important;font-size:12px;font-weight:700;height:28px;"><input type="text" style="width:100%!important;text-align:right;font-size:12px;font-weight:700;height:28px;" value="0" readonly="readonly" id="txtTotalAmount' + length + '" name="txtTotalAmount"></input></td>' +
+                '<td><input type="text" name="txtddate" id="txtddate' + length + '" class="row-date-picker" style="width:100%!important;text-align:center;font-size:12px;font-weight:700;height:28px;" /></td>' +
                 '<td style="text-align:center; font-weight:bold; color:#555;">' + total_stock + '</td>' +
-                '<td style="padding-top: 7px!important; text-align:right;">' +
+                '<td style=" text-align:right;">' +
                 '<input type="text" readonly="readonly" id="txtLastPORate' + length + '" name="txtLastPORate" ' +
-                'style="width:50px !important;text-align:right;font-size:9px;height:20px;" value="' + parseFloat(lastPORate).toFixed(2) + '" />' +
-                '<td style="padding-top: 7px!important; text-align:center; font-size:9px;"><input type="hidden" name="txtLastVendorName" value="' + (last_vendor_name || '') + '" />' + (last_vendor_name || '') + '</td>' +
-                '<td style="padding-top: 7px!important;"><a href="javascript:void(0)" onclick="ExcludeFromPayment(this)"><i class="fa fa-trash" style="font-size: 13px;margin-left: 16px; color: #f30a0a;position:relative;left: -10px;"></i></a>  </td>' +
+                'style="width:100%!important;text-align:right;font-size:12px;font-weight:700;height:28px;" value="' + parseFloat(lastPORate).toFixed(2) + '" />' +
+                '<td style=" text-align:center; font-size:12px;font-weight:700;"><input type="hidden" name="txtLastVendorName" value="' + (last_vendor_name || '') + '" />' + (last_vendor_name || '') + '</td>' +
+                '<td style=""><a href="javascript:void(0)" onclick="ExcludeFromPayment(this)"><i class="fa fa-trash" style="font-size: 13px;margin-left: 16px; color: #f30a0a;position:relative;left: -10px;"></i></a>  </td>' +
                 '</tr>';
         }
         var dropdownsPopulated = false;
@@ -1734,38 +1734,38 @@ function scheduleCalcTotal(delay) {
 
                         // Build row
                         var row = '<tr data-index="' + idx + '">' +
-                            '<td style="padding-top:7px!important;"><input type="hidden" id="txtPRDId' + idx + '" name="txtPRDId" value="' + safeVal(value.PRDetailId, 0) + '" />' + idx + '<\/td>' +
-                            '<td style="padding-top: 7px!important;"><input type="hidden" name="txtPRNo" id="txtPRNO' + idx + '" value="' + pr_id + '" style="text-align:right ;width:50px !important;font-size:9px;height:20px;"/>' + pr_id + '<\/td>' +
-                            '<td style="padding-top: 7px!important;text-align:right!important;"><input type="hidden" name="txtcsno" id="txtcsno' + idx + '" value="' + safeVal(value.CS_Ven_No, "") + '" style="text-align:right ;width:50px !important;font-size:9px;height:20px;"/>' + safeVal(value.CS_Ven_No, "") + '<\/td>' +
-                            '<td style="padding-top: 7px!important;padding-right: 3px!important;text-align:right!important;"><input type="hidden" name="txtItemCode" id="txtItemCode' + idx + '" value="' + safeVal(value.Item_Code, "") + '" style="width:50px !important;text-align:right;font-size:9px;height:20px;"/> ' + safeVal(value.Item_Code, "") + '  <\/td>' +
-                            '<td style="padding-left: 8px!important;padding-top: 7px!important;text-align:left!important;"><input type="hidden" name="txtItemName" id="txtItemName' + idx + '" value="' + safeVal(value.Item_Name, "") + '"/> ' + safeVal(value.Item_Name, "") + '  <\/td>' +
+                            '<td style=""><input type="hidden" id="txtPRDId' + idx + '" name="txtPRDId" value="' + safeVal(value.PRDetailId, 0) + '" />' + idx + '<\/td>' +
+                            '<td style=""><input type="hidden" name="txtPRNo" id="txtPRNO' + idx + '" value="' + pr_id + '" style="text-align:right ;width:100%!important;font-size:12px;font-weight:700;height:28px;"/>' + pr_id + '<\/td>' +
+                            '<td style="text-align:right!important;"><input type="hidden" name="txtcsno" id="txtcsno' + idx + '" value="' + safeVal(value.CS_Ven_No, "") + '" style="text-align:right ;width:100%!important;font-size:12px;font-weight:700;height:28px;"/>' + safeVal(value.CS_Ven_No, "") + '<\/td>' +
+                            '<td style="text-align:right!important;"><input type="hidden" name="txtItemCode" id="txtItemCode' + idx + '" value="' + safeVal(value.Item_Code, "") + '" style="width:100%!important;text-align:right;font-size:12px;font-weight:700;height:28px;"/> ' + safeVal(value.Item_Code, "") + '  <\/td>' +
+                            '<td style="text-align:left!important;"><input type="hidden" name="txtItemName" id="txtItemName' + idx + '" value="' + safeVal(value.Item_Name, "") + '"/> ' + safeVal(value.Item_Name, "") + '  <\/td>' +
                             '<td style="text-align:left!important;"><input type="hidden" name="txtUnit" id="txtUnit' + idx + '" value="' + safeVal(value.Unit, "") + '" />' + safeVal(value.Unit, "") + '  <\/td>' +
-                            '<td><input type="text" id="txtQty' + idx + '" name="txtQty" style="text-align:right ;width:50px !important;font-size:9px;height:20px;" onkeyup="CulculateAmonutWithQty(this)" value="' + parseFloat(safeVal(value.Qty, 0)).toFixed(2) + '"/><\/td>' +
-                            '<td><input type="text" id="txtUOMQty' + idx + '" name="txtUOMQty" style="text-align:right;width:50px!important;font-size:9px;height:20px;" value="' + parseFloat(safeVal(value.UOM_Qty, 0)).toFixed(2) + '" /><\/td>' +
-                            '<td><input type="text" id="txtBonusQty' + idx + '" name="txtBonusQty" style="text-align:right;width:50px!important;font-size:9px;height:20px;" value="' + parseFloat(safeVal(value.Bonus_Qty, 0)).toFixed(2) + '" data-toggle="tooltip" data-placement="bottom" title="Enter Bonus quantity in Loose"/><\/td>' +
-                            '<td><input type="text" name="txtRate" style="text-align:right ;width:50px !important;font-size:9px;height:20px" onkeyup="CulculateAmonutWithQty(this)" id="txtRate' + idx + '" value="' + parseFloat(safeVal(value.Rate, 0)).toFixed(2) + '" /><\/td>' +
-                        /*'<td><input type="text" autocomplete="off" style="text-align:right ;width:50px !important;font-size:9px;height:20px;" readonly="readonly" name="txtDisPer" id="txtDisPer' + idx + '" value="' + safeVal(value.Discount_Percentage, 0) + '" /><\/td>' +*/
-                            '<td><input type="text" autocomplete="off" style="text-align:right ;width:50px !important;font-size:9px;height:20px;" name="txtDisPer" onchange="calculateDiscountFromPercent(this)" onkeyup="calculateDiscountFromPercent(this)" id="txtDisPer' + idx + '" value="' + safeVal(value.Discount_Percentage, 0) + '" /><\/td>' +
-                            '<td style="text-align:right;padding-top: 7px!important;"><input type="text" onkeyup="calcTotal()" value="' + safeVal(value.Discount_Amount, 0) + '" style="width: 50px !important;text-align:right;font-size:9px;height:20px;text-align:right!important;" id="txtDisAmount' + idx + '" name="txtDisAmount"><\/input><\/td>' +
-                            '<td><select id="ddlSTAX' + idx + '" name="ddlSTAX" onchange="calcTotal()" style="text-align:right ;width:50px !important;font-size:9px;height:20px;"><option value="0">0</option><\/select><\/td>' +
-                            '<td style="padding-top: 7px!important;"><input type="text" style="text-align:right!important;width:50px !important;font-size:9px;height:20px;" readonly="readonly" value="" id="txtSalAmount' + idx + '" name="txtSalAmount"><\/input><\/td>' +
-                            '<td><input type="text" id="ddlFurtherTax' + idx + '" name="ddlFurtherTax" onkeyup="calcTotal()" style="text-align:right ;width:50px !important;font-size:9px;height:20px;" value="' + safeVal(value.FurtherTax_Percentage, 0) + '" /><\/td>' +
-                            /*'<td><input type="text" readonly="readonly" style="width:50px !important;text-align:right;font-size:9px;height:20px;" value="' + safeVal(value.FurtherTax_Amount, 0) + '" id="txtFurtherTaxAmount' + idx + '" name="txtFurtherTaxAmount"><\/td>' +*/
-                            '<td><input type="text" style="width:50px !important;text-align:right;font-size:9px;height:20px;" value="' + safeVal(value.FurtherTax_Amount, 0) + '" id="txtFurtherTaxAmount' + idx + '" name="txtFurtherTaxAmount" onkeyup="calcFurtherTaxFromAmount(this)" data-manual="false"><\/td>' +
-                            '<td><select id="ddlAdvanceTax' + idx + '" name="ddlAdvanceTax" onchange="calcTotal()" style="text-align:right ;width:50px !important;font-size:9px;height:20px;"><option value="0">0</option><\/select><\/td>' +
-                            '<td><input type="text" readonly="readonly" style="width:50px !important;text-align:right;font-size:9px;height:20px;" value="" id="txtAdvanceTaxAmount' + idx + '" name="txtAdvanceTaxAmount"><\/td>' +
-                            '<td style="display:none;"><select id="ddlFed' + idx + '" style="text-align:right ;width:50px !important;font-size:9px;height:20px;margin-left: 9px;" ><option value="0">0</option><\/select><\/td>' +
-                            '<td style="display:none;"><input type="hidden" value="' + safeVal(value.Fed_Percentage, 0) + '" style="text-align:right ;width:50px !important;font-size:9px;height:20px;" id="txtFedAmount' + idx + '" name="txtFedAmount"><\/input><\/td>' +
-                            '<td><input type="text" readonly style="width:50px!important;text-align:right;font-size:9px;height:20px;" value="' + parseFloat(safeVal(value.Bonus_Tax, 0)).toFixed(2) + '" id="txtBonusAmount' + idx + '" name="txtBonusAmount" /><\/td>' +
-                            '<td style="text-align:right ;width:50px !important;font-size:9px;height:20px;padding-top: 7px!important;"><input type="text" style="width:50px !important;text-align:right;font-size:9px;height:20px;" value="' + safeVal(value.Amount, 0) + '" readonly="readonly" id="txtTotalAmount' + idx + '" name="txtTotalAmount"><\/input><\/td>' +
-                            '<td><input type="text" name="txtddate" id="txtddate' + idx + '" value="' + TrnsDate + '" style="text-align:right ;width:64px !important;font-size:9px;height:20px;" /><\/td>' +
+                            '<td><input type="text" id="txtQty' + idx + '" name="txtQty" style="text-align:right ;width:100%!important;font-size:12px;font-weight:700;height:28px;" onkeyup="CulculateAmonutWithQty(this)" value="' + parseFloat(safeVal(value.Qty, 0)).toFixed(2) + '"/><\/td>' +
+                            '<td><input type="text" id="txtUOMQty' + idx + '" name="txtUOMQty" style="text-align:right;width:100%!important;font-size:12px;font-weight:700;height:28px;" value="' + parseFloat(safeVal(value.UOM_Qty, 0)).toFixed(2) + '" /><\/td>' +
+                            '<td><input type="text" id="txtBonusQty' + idx + '" name="txtBonusQty" style="text-align:right;width:100%!important;font-size:12px;font-weight:700;height:28px;" value="' + parseFloat(safeVal(value.Bonus_Qty, 0)).toFixed(2) + '" data-toggle="tooltip" data-placement="bottom" title="Enter Bonus quantity in Loose"/><\/td>' +
+                            '<td><input type="text" name="txtRate" style="text-align:right ;width:100%!important;font-size:12px;font-weight:700;height:28px;" onkeyup="CulculateAmonutWithQty(this)" id="txtRate' + idx + '" value="' + parseFloat(safeVal(value.Rate, 0)).toFixed(2) + '" /><\/td>' +
+                        /*'<td><input type="text" autocomplete="off" style="text-align:right ;width:100%!important;font-size:12px;font-weight:700;height:28px;" readonly="readonly" name="txtDisPer" id="txtDisPer' + idx + '" value="' + safeVal(value.Discount_Percentage, 0) + '" /><\/td>' +*/
+                            '<td><input type="text" autocomplete="off" style="text-align:right ;width:100%!important;font-size:12px;font-weight:700;height:28px;" name="txtDisPer" onchange="calculateDiscountFromPercent(this)" onkeyup="calculateDiscountFromPercent(this)" id="txtDisPer' + idx + '" value="' + safeVal(value.Discount_Percentage, 0) + '" /><\/td>' +
+                            '<td style="text-align:right;"><input type="text" onkeyup="calcTotal()" value="' + safeVal(value.Discount_Amount, 0) + '" style="width:100%!important;text-align:right;font-size:12px;font-weight:700;height:28px;text-align:right!important;" id="txtDisAmount' + idx + '" name="txtDisAmount"><\/input><\/td>' +
+                            '<td><select id="ddlSTAX' + idx + '" name="ddlSTAX" onchange="calcTotal()" style="text-align:right ;width:100%!important;font-size:12px;font-weight:700;height:28px;"><option value="0">0</option><\/select><\/td>' +
+                            '<td style=""><input type="text" style="text-align:right!important;width:100%!important;font-size:12px;font-weight:700;height:28px;" readonly="readonly" value="" id="txtSalAmount' + idx + '" name="txtSalAmount"><\/input><\/td>' +
+                            '<td><input type="text" id="ddlFurtherTax' + idx + '" name="ddlFurtherTax" onkeyup="calcTotal()" style="text-align:right ;width:100%!important;font-size:12px;font-weight:700;height:28px;" value="' + safeVal(value.FurtherTax_Percentage, 0) + '" /><\/td>' +
+                            /*'<td><input type="text" readonly="readonly" style="width:100%!important;text-align:right;font-size:12px;font-weight:700;height:28px;" value="' + safeVal(value.FurtherTax_Amount, 0) + '" id="txtFurtherTaxAmount' + idx + '" name="txtFurtherTaxAmount"><\/td>' +*/
+                            '<td><input type="text" style="width:100%!important;text-align:right;font-size:12px;font-weight:700;height:28px;" value="' + safeVal(value.FurtherTax_Amount, 0) + '" id="txtFurtherTaxAmount' + idx + '" name="txtFurtherTaxAmount" onkeyup="calcFurtherTaxFromAmount(this)" data-manual="false"><\/td>' +
+                            '<td><select id="ddlAdvanceTax' + idx + '" name="ddlAdvanceTax" onchange="calcTotal()" style="text-align:right ;width:100%!important;font-size:12px;font-weight:700;height:28px;"><option value="0">0</option><\/select><\/td>' +
+                            '<td><input type="text" readonly="readonly" style="width:100%!important;text-align:right;font-size:12px;font-weight:700;height:28px;" value="" id="txtAdvanceTaxAmount' + idx + '" name="txtAdvanceTaxAmount"><\/td>' +
+                            '<td style="display:none;"><select id="ddlFed' + idx + '" style="text-align:right ;width:100%!important;font-size:12px;font-weight:700;height:28px;margin-left: 9px;" ><option value="0">0</option><\/select><\/td>' +
+                            '<td style="display:none;"><input type="hidden" value="' + safeVal(value.Fed_Percentage, 0) + '" style="text-align:right ;width:100%!important;font-size:12px;font-weight:700;height:28px;" id="txtFedAmount' + idx + '" name="txtFedAmount"><\/input><\/td>' +
+                            '<td><input type="text" readonly style="width:100%!important;text-align:right;font-size:12px;font-weight:700;height:28px;" value="' + parseFloat(safeVal(value.Bonus_Tax, 0)).toFixed(2) + '" id="txtBonusAmount' + idx + '" name="txtBonusAmount" /><\/td>' +
+                            '<td style="text-align:right ;width:100%!important;font-size:12px;font-weight:700;height:28px;"><input type="text" style="width:100%!important;text-align:right;font-size:12px;font-weight:700;height:28px;" value="' + safeVal(value.Amount, 0) + '" readonly="readonly" id="txtTotalAmount' + idx + '" name="txtTotalAmount"><\/input><\/td>' +
+                            '<td><input type="text" name="txtddate" id="txtddate' + idx + '" value="' + TrnsDate + '" style="text-align:right ;width:100%!important;font-size:12px;font-weight:700;height:28px;" /><\/td>' +
                             '<td style="text-align:center; font-weight:bold; color:#555;">' + (value.TotalStock != null ? value.TotalStock : '0') + '</td>' +
-                            '<td style="padding-top: 7px!important; text-align:right;">' +
+                            '<td style=" text-align:right;">' +
                             '<input type="text" readonly="readonly" id="txtLastPORate' + idx + '" name="txtLastPORate" ' +
-                            'style="width:50px !important;text-align:right;font-size:9px;height:20px;" value="' + parseFloat(safeVal(value.LastPORate, 0)).toFixed(2) + '" />' +
+                            'style="width:100%!important;text-align:right;font-size:12px;font-weight:700;height:28px;" value="' + parseFloat(safeVal(value.LastPORate, 0)).toFixed(2) + '" />' +
                             '</td>' +
-                            '<td style="padding-top: 7px!important; text-align:center; font-size:9px;"><input type="hidden" name="txtLastVendorName" value="' + (value.LastVendorName || '') + '" />' + (value.LastVendorName || '') + '</td>' + 
-                            '<td style="padding-top: 7px!important;"><a href="javascript:void(0)" onclick="ExcludeFromPayment(this)"><i class="fa fa-trash" style="font-size: 13px;margin-left: 16px; color: #f30a0a;position:relative;left: -10px;"><\/i><\/a>  <\/td>' +
+                            '<td style=" text-align:center; font-size:12px;font-weight:700;"><input type="hidden" name="txtLastVendorName" value="' + (value.LastVendorName || '') + '" />' + (value.LastVendorName || '') + '</td>' + 
+                            '<td style=""><a href="javascript:void(0)" onclick="ExcludeFromPayment(this)"><i class="fa fa-trash" style="font-size: 13px;margin-left: 16px; color: #f30a0a;position:relative;left: -10px;"><\/i><\/a>  <\/td>' +
                             '<\/tr>';
                         rowsHTML.push(row);
                     });
@@ -2824,8 +2824,33 @@ function scheduleCalcTotal(delay) {
                     var AllItemDetail = {
                         'txtst_amou': txtst_amou, 'Adv_amount': Adv_amount, 'transtype': transtype, 'txtcsmasterid': txtcsmasterid, 'PO_ID': PO_ID, 'SubTotal': SubTotal, 'DiscountAmount': DiscountAmount, 'NetAmount': NetAmount, 'Purchase_Date': Purchase_Date, 'Purchase_No': Purchase_No, 'RefNo': RefNo, 'VendorName': VendorName, 'Remarks': Remarks, 'Warranty': Warranty, 'Disclaimer': Disclaimer, 'PaymentTerms': PaymentTerms, 'Term_ID': Term_ID, 'DeliveryTerms': DeliveryTerms, 'FreightCharges': Freight, 'POType': POType, 'WorkOrder': WorkOrder, 'Due_Date': Due_Date, 'ItemList': Item_list, 'Warehouse': Warehouse, 'Branch': Branch, 'Further_amount': Further_amount, 'ProjectionDate': ProjectionDate,'ProjectionType': ProjectionType, 'IsManual': IsManual,
                         'IsByDefault': IsByDefault, 'IsAdvanceWithTax': IsAdvanceWithTax };
+                    var saveCompleted = false;
+                    // Safety net: never leave the button disabled / modal open forever if the server hangs
+                    var saveWatchdog = setTimeout(function () {
+                        if (saveCompleted) return;
+                        saveCompleted = true;
+                        Swal.close();
+                        $('#btnSave').prop('disabled', false).removeAttr('disabled');
+                        Swal.fire({
+                            icon: 'warning',
+                            title: 'Still saving...',
+                            text: 'The server is taking longer than expected. Please check the Purchase Order list before saving again, to avoid a duplicate.',
+                            confirmButtonText: 'OK'
+                        });
+                    }, 90000);
+                    Swal.fire({
+                        title: 'Saving...',
+                        text: 'Please wait, do not close or refresh the page.',
+                        allowOutsideClick: false,
+                        allowEscapeKey: false,
+                        showConfirmButton: false,
+                        didOpen: function () { Swal.showLoading(); }
+                    });
                     callPageMethod('SavePurchaseItemDetail', { btnSave: btnSave, AllItemDetail: JSON.stringify(AllItemDetail) }, function (res) {
-                        sendFile(res);
+                        saveCompleted = true;
+                        clearTimeout(saveWatchdog);
+                        // Attachment upload must never block the redirect, or the form appears frozen
+                        try { sendFile(res); } catch (e) { console.error(e); }
                         Swal.fire({
                             icon: 'success',
                             title: 'Success!',
@@ -2840,6 +2865,13 @@ function scheduleCalcTotal(delay) {
                         });
 
                         window.location = "PurchaseOrder.aspx?PO_ID=" + res;
+                    }, function (error) {
+                        // Without this, a failed/timed-out save left the button disabled and the page unresponsive
+                        saveCompleted = true;
+                        clearTimeout(saveWatchdog);
+                        Swal.close();
+                        $('#btnSave').prop('disabled', false).removeAttr('disabled');
+                        Swal.fire({ icon: 'error', title: 'Save failed', text: 'An error occurred while saving. Please check the Purchase Order list before saving again.', confirmButtonText: 'OK' });
                     });
                 }
             }
@@ -3199,39 +3231,39 @@ function scheduleCalcTotal(delay) {
             }
 
             var newRow = '<tr>' +
-                '<td style="padding-top:7px!important;"><input type="hidden" id="txtPRDId' + length + '" name="txtPRDId" value="0" />' + length + '</td>' +
-                '<td style="padding-top: 7px!important;"><input type="hidden" name="txtPRNo" id="txtPRNO' + length + '" value="" /></td>' +
-                '<td style="padding-top: 7px!important;text-align:right!important;"><input type="hidden" name="txtcsno" id="txtcsno' + length + '" value="" /></td>' +
-                '<td style="padding-top: 7px!important;padding-right: 3px!important;text-align:right!important;"><input type="hidden" name="txtItemCode" id="txtItemCode' + length + '" value="' + item_code + '" style="width:50px !important;text-align:right;font-size:9px;height:20px;"/> ' + item_code + '   </td>' +
-                '<td style="padding-left: 8px!important;padding-top: 7px!important;text-align:left!important;"><input type="hidden" name="txtItemName" id="txtItemName' + length + '" value="' + item_name + '"/> ' + item_name + '   </td>' +
+                '<td style=""><input type="hidden" id="txtPRDId' + length + '" name="txtPRDId" value="0" />' + length + '</td>' +
+                '<td style=""><input type="hidden" name="txtPRNo" id="txtPRNO' + length + '" value="" /></td>' +
+                '<td style="text-align:right!important;"><input type="hidden" name="txtcsno" id="txtcsno' + length + '" value="" /></td>' +
+                '<td style="text-align:right!important;"><input type="hidden" name="txtItemCode" id="txtItemCode' + length + '" value="' + item_code + '" style="width:100%!important;text-align:right;font-size:12px;font-weight:700;height:28px;"/> ' + item_code + '   </td>' +
+                '<td style="text-align:left!important;"><input type="hidden" name="txtItemName" id="txtItemName' + length + '" value="' + item_name + '"/> ' + item_name + '   </td>' +
                 '<td style="text-align:left!important;"> <input type="hidden" name="txtUnit" id="txtUnit' + length + '" value="' + unit + '" />' + unit + '   </td>' +
-                '<td><input type="text" id="txtQty' + length + '" style="text-align:right ;width:50px !important;font-size:9px;height:20px;" name="txtQty" onkeyup="CulculateAmonutWithQty(this)" value="' + defaultQty + '"/></td>' +
-                '<td><input type="text" id="txtUOMQty' + length + '" style="text-align:right;width:50px!important;font-size:9px;height:20px;" name="txtUOMQty" value="' + uom_qty + '" /></td>' +
-                '<td><input type="text" id="txtBonusQty' + length + '" style="text-align:right;width:50px!important;font-size:9px;height:20px;" name="txtBonusQty" value="0" data-toggle="tooltip" data-placement="bottom" title="Enter Bonus quantity in Loose"/></td>' +
-                '<td><input type="text" autocomplete="off" style="text-align:right ;width:50px !important;font-size:9px;height:20px;" onkeyup="CulculateAmonutWithQty(this)" name="txtRate" id="txtRate' + length + '" value="' + rate + '" /></td>' +
-                /*'<td><input type="text" autocomplete="off" style="text-align:right ;width:50px !important;font-size:9px;height:20px;" name="txtDisPer" readonly="readonly" id="txtDisPer' + length + '" value="0" /></td>' +*/
-                '<td><input type="text" autocomplete="off" style="text-align:right ;width:50px !important;font-size:9px;height:20px;" name="txtDisPer" onchange="calculateDiscountFromPercent(this)" onkeyup="calculateDiscountFromPercent(this)" id="txtDisPer' + length + '" value="0" /></td>' +
-                '<td style="text-align:right;padding-top: 7px!important"><input type="text" onkeyup="calcTotal()" style="width: 50px !important;text-align:right;font-size:9px;height:20px;text-align:right!important;" id="txtDisAmount' + length + '" name="txtDisAmount" value="0"></input></td>' +
-                '<td><select id="ddlSTAX' + length + '" name="ddlSTAX" onchange="calcTotal()" style="text-align:right ;width:50px !important;font-size:9px;height:20px;"><option value="0">0</option></select></td>' +
-                '<td style="padding-top: 7px!important;text-align:right!important"><input type="text" style="text-align:right!important; width:50px !important;font-size:9px;height:20px;" value="0" readonly="readonly" id="txtSalAmount' + length + '" name="txtSalAmount" /></td>' +
-                '<td><input type="text" id="ddlFurtherTax' + length + '" name="ddlFurtherTax" onkeyup="calcTotal()" style="text-align:right ;width:50px !important;font-size:9px;height:20px;" value="0" /></td>' +
-                /*'<td><input type="text" readonly="readonly" style="width:50px !important;text-align:right;font-size:9px;height:20px;" value="0" id="txtFurtherTaxAmount' + length + '" name="txtFurtherTaxAmount"></td>' +*/
-                '<td><input type="text" style="width:50px !important;text-align:right;font-size:9px;height:20px;" value="0" id="txtFurtherTaxAmount' + length + '" name="txtFurtherTaxAmount" onkeyup="calcFurtherTaxFromAmount(this)" data-manual="false"></td>' +
-                '<td><select id="ddlAdvanceTax' + length + '" name="ddlAdvanceTax" onchange="calcTotal()" style="text-align:right ;width:50px !important;font-size:9px;height:20px;"><option value="0">0</option></select></td>' +
-                '<td><input type="text" readonly="readonly" style="width:50px !important;text-align:right;font-size:9px;height:20px;" value="0" id="txtAdvanceTaxAmount' + length + '" name="txtAdvanceTaxAmount"></td>' +
-                '<td style="display:none;"><select id="ddlFed' + length + '" onchange="calcTotal()" style="text-align:right ;width:50px !important;font-size:9px;height:20px;margin-left: 6px;"><option value="0">0</option></select></td>' +
-                '<td style="display:none;"><input type="text" value="0" style="width: 50px !important;text-align:right;font-size:9px;height:20px;" id="txtFedAmount' + length + '" name="txtFedAmount"></input></td>' +
-                '<td><input type="text" readonly style="width:50px!important;text-align:right;font-size:9px;height:20px;" value="0" id="txtBonusAmount' + length + '" name="txtBonusAmount" /></td>' +
-                '<td style="text-align:right ;width:50px !important;font-size:9px;height:20px;padding-top: 7px!important;"><input type="text" style="width:50px !important;text-align:right;font-size:9px;height:20px;" value="0" readonly="readonly" id="txtTotalAmount' + length + '" name="txtTotalAmount"></input></td>' +
-                '<td><input type="text" name="txtddate" id="txtddate' + length + '" class="row-date-picker" style="width:64px !important;text-align:center;font-size:9px;height:20px;" /></td>' +
+                '<td><input type="text" id="txtQty' + length + '" style="text-align:right ;width:100%!important;font-size:12px;font-weight:700;height:28px;" name="txtQty" onkeyup="CulculateAmonutWithQty(this)" value="' + defaultQty + '"/></td>' +
+                '<td><input type="text" id="txtUOMQty' + length + '" style="text-align:right;width:100%!important;font-size:12px;font-weight:700;height:28px;" name="txtUOMQty" value="' + uom_qty + '" /></td>' +
+                '<td><input type="text" id="txtBonusQty' + length + '" style="text-align:right;width:100%!important;font-size:12px;font-weight:700;height:28px;" name="txtBonusQty" value="0" data-toggle="tooltip" data-placement="bottom" title="Enter Bonus quantity in Loose"/></td>' +
+                '<td><input type="text" autocomplete="off" style="text-align:right ;width:100%!important;font-size:12px;font-weight:700;height:28px;" onkeyup="CulculateAmonutWithQty(this)" name="txtRate" id="txtRate' + length + '" value="' + rate + '" /></td>' +
+                /*'<td><input type="text" autocomplete="off" style="text-align:right ;width:100%!important;font-size:12px;font-weight:700;height:28px;" name="txtDisPer" readonly="readonly" id="txtDisPer' + length + '" value="0" /></td>' +*/
+                '<td><input type="text" autocomplete="off" style="text-align:right ;width:100%!important;font-size:12px;font-weight:700;height:28px;" name="txtDisPer" onchange="calculateDiscountFromPercent(this)" onkeyup="calculateDiscountFromPercent(this)" id="txtDisPer' + length + '" value="0" /></td>' +
+                '<td style="text-align:right;"><input type="text" onkeyup="calcTotal()" style="width:100%!important;text-align:right;font-size:12px;font-weight:700;height:28px;text-align:right!important;" id="txtDisAmount' + length + '" name="txtDisAmount" value="0"></input></td>' +
+                '<td><select id="ddlSTAX' + length + '" name="ddlSTAX" onchange="calcTotal()" style="text-align:right ;width:100%!important;font-size:12px;font-weight:700;height:28px;"><option value="0">0</option></select></td>' +
+                '<td style="text-align:right!important"><input type="text" style="text-align:right!important; width:100%!important;font-size:12px;font-weight:700;height:28px;" value="0" readonly="readonly" id="txtSalAmount' + length + '" name="txtSalAmount" /></td>' +
+                '<td><input type="text" id="ddlFurtherTax' + length + '" name="ddlFurtherTax" onkeyup="calcTotal()" style="text-align:right ;width:100%!important;font-size:12px;font-weight:700;height:28px;" value="0" /></td>' +
+                /*'<td><input type="text" readonly="readonly" style="width:100%!important;text-align:right;font-size:12px;font-weight:700;height:28px;" value="0" id="txtFurtherTaxAmount' + length + '" name="txtFurtherTaxAmount"></td>' +*/
+                '<td><input type="text" style="width:100%!important;text-align:right;font-size:12px;font-weight:700;height:28px;" value="0" id="txtFurtherTaxAmount' + length + '" name="txtFurtherTaxAmount" onkeyup="calcFurtherTaxFromAmount(this)" data-manual="false"></td>' +
+                '<td><select id="ddlAdvanceTax' + length + '" name="ddlAdvanceTax" onchange="calcTotal()" style="text-align:right ;width:100%!important;font-size:12px;font-weight:700;height:28px;"><option value="0">0</option></select></td>' +
+                '<td><input type="text" readonly="readonly" style="width:100%!important;text-align:right;font-size:12px;font-weight:700;height:28px;" value="0" id="txtAdvanceTaxAmount' + length + '" name="txtAdvanceTaxAmount"></td>' +
+                '<td style="display:none;"><select id="ddlFed' + length + '" onchange="calcTotal()" style="text-align:right ;width:100%!important;font-size:12px;font-weight:700;height:28px;margin-left: 6px;"><option value="0">0</option></select></td>' +
+                '<td style="display:none;"><input type="text" value="0" style="width:100%!important;text-align:right;font-size:12px;font-weight:700;height:28px;" id="txtFedAmount' + length + '" name="txtFedAmount"></input></td>' +
+                '<td><input type="text" readonly style="width:100%!important;text-align:right;font-size:12px;font-weight:700;height:28px;" value="0" id="txtBonusAmount' + length + '" name="txtBonusAmount" /></td>' +
+                '<td style="text-align:right ;width:100%!important;font-size:12px;font-weight:700;height:28px;"><input type="text" style="width:100%!important;text-align:right;font-size:12px;font-weight:700;height:28px;" value="0" readonly="readonly" id="txtTotalAmount' + length + '" name="txtTotalAmount"></input></td>' +
+                '<td><input type="text" name="txtddate" id="txtddate' + length + '" class="row-date-picker" style="width:100%!important;text-align:center;font-size:12px;font-weight:700;height:28px;" /></td>' +
                 '<td style="text-align:center; font-weight:bold; color:#555;">' + total_stock + '</td>' +
-                '<td style="padding-top: 7px!important; text-align:right;">' +
+                '<td style=" text-align:right;">' +
                 '<input type="text" readonly="readonly" id="txtLastPORate' + length + '" name="txtLastPORate" ' +
-                'style="width:50px !important;text-align:right;font-size:9px;height:20px;" value="' + last_po_rate + '" />' +
+                'style="width:100%!important;text-align:right;font-size:12px;font-weight:700;height:28px;" value="' + last_po_rate + '" />' +
                 '</td>' +
-                '<td style="padding-top: 7px!important; text-align:center; font-size:9px;"><input type="hidden" name="txtLastVendorName" value="' + (last_vendor_name || '') + '" />' + last_vendor_name + '</td>' +
+                '<td style=" text-align:center; font-size:12px;font-weight:700;"><input type="hidden" name="txtLastVendorName" value="' + (last_vendor_name || '') + '" />' + last_vendor_name + '</td>' +
                 '</td>' +
-                '<td style="padding-top: 7px!important;"><a href="javascript:void(0)" onclick="ExcludeFromPayment(this)"><i class="glyphicon glyphicon-trash" style="font-size: 13px;margin-left: 16px; color: #f30a0a;position:relative;left: -10px;"></i></a>   </td>' +
+                '<td style=""><a href="javascript:void(0)" onclick="ExcludeFromPayment(this)"><i class="glyphicon glyphicon-trash" style="font-size: 13px;margin-left: 16px; color: #f30a0a;position:relative;left: -10px;"></i></a>   </td>' +
                 '</tr>';
 
             $('#tblItemDescription tbody').append(newRow);
@@ -3522,37 +3554,37 @@ function scheduleCalcTotal(delay) {
         </div>
     </form>
     <asp:HiddenField ID="hdfItem_ID" runat="server" ClientIDMode="Static" />
-    <div id="ITEMTable" style="overflow-x:auto; overflow-y:auto; max-height:310px; border:1px solid #dee2e6; border-radius:4px 4px 0 0;">
-        <table class="table table-bordered table-striped" id="tblItemDescription" style="font-size: 9px !important; width: 100%; min-width: 860px; margin-bottom: 0; overflow: visible; height: auto;">
+    <div id="ITEMTable">
+        <table class="table table-bordered table-striped" id="tblItemDescription">
             <thead>
                 <tr style="position: sticky; top: 0px; z-index: 10;">
-                    <th style="width: 29px;">No</th>
-                    <th style="width: 50px; text-align: center; font-size: 10px;">P.R No</th>
-                    <th style="width: 66px; text-align: center; font-size: 10px;">CS NO</th>
-                    <th style="width: 66px; text-align: center; font-size: 10px;">Item Code</th>
-                    <th style="width: 218px; text-align: center;">Item Description</th>
-                    <th style="width: 60px;">Unit</th>
-                    <th style="width: 60px;">Qty</th>
-                    <th style="width: 60px;">UOM / P Size Qty </th>
-                    <th style="width: 60px;">Bonus Qty</th>
-                    <th style="width: 60px;">Rate</th>
-                    <th style="width: 63px;">Dis %</th>
-                    <th style="width: 69px;">Dis Amount</th>
-                    <th style="width: 63px;">S.Tax %</th>
-                    <th style="width: 66px;">ST Amount</th>
-                    <th style="width: 66px;">F.Tax %</th>
-                    <th style="width: 66px;">F.Tax Amount</th>
-                    <th style="width: 63px;">A.Tax %</th>
-                    <th style="width: 66px;">Adv Amount</th>
+                    <th style="width: 34px;">No</th>
+                    <th style="width: 54px; text-align: center;">P.R No</th>
+                    <th style="width: 54px; text-align: center;">CS NO</th>
+                    <th style="width: 80px; text-align: center;">Item Code</th>
+                    <th style="text-align: center;">Item Description</th>
+                    <th style="width: 48px;">Unit</th>
+                    <th style="width: 66px;">Qty</th>
+                    <th style="width: 70px;">UOM / P Size Qty </th>
+                    <th style="width: 64px;">Bonus Qty</th>
+                    <th style="width: 72px;">Rate</th>
+                    <th style="width: 52px;">Dis %</th>
+                    <th style="width: 70px;">Dis Amount</th>
+                    <th style="width: 64px;">S.Tax %</th>
+                    <th style="width: 70px;">ST Amount</th>
+                    <th style="width: 56px;">F.Tax %</th>
+                    <th style="width: 70px;">F.Tax Amount</th>
+                    <th style="width: 64px;">A.Tax %</th>
+                    <th style="width: 72px;">Adv Amount</th>
                     <th style="width: 58px; display: none;">Fed%</th>
                     <th style="width: 70px; display: none;">Fed Amount</th>
-                    <th style="width: 75px;">Bonus Tax</th>
-                    <th style="width: 75px;">Total</th>
-                    <th style="width: 75px;">Delivery Date</th>
-                    <th style="width: 60px; text-align: center;">Stock</th>
-                    <th style="width: 80px; text-align: center;">Last PO Rate</th>
-                    <th style="width: 120px; text-align: center;">Last Vendor</th> 
-                    <th style="width: 45px;">Action</th>
+                    <th style="width: 70px;">Bonus Tax</th>
+                    <th style="width: 84px;">Total</th>
+                    <th style="width: 104px;">Delivery Date</th>
+                    <th style="width: 54px; text-align: center;">Stock</th>
+                    <th style="width: 74px; text-align: center;">Last PO Rate</th>
+                    <th style="width: 110px; text-align: center;">Last Vendor</th>
+                    <th style="width: 48px;">Action</th>
                 </tr>
             </thead>
             <tbody id="tblItemDescriptionDetail">

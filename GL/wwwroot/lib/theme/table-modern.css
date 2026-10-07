@@ -54,7 +54,7 @@ html[data-theme="dark"] {
 html:root body table.dataTable,
 html:root body table.table {
     width: 100%;
-    margin: 10px 0 8px !important;
+    margin: 6px 0 4px !important;
     border-collapse: separate !important;
     border-spacing: 0 !important;
     border: 1px solid var(--tm-line) !important;
@@ -62,7 +62,7 @@ html:root body table.table {
     background: var(--tm-card) !important;
     color: var(--tm-ink) !important;
     box-shadow: var(--tm-shadow);
-    font-size: 13.5px;
+    font-size: 12.5px;
 }
 
 /* ---------- header ---------- */
@@ -71,22 +71,33 @@ html:root body table.dataTable > thead > tr > td,
 html:root body table.table > thead > tr > th,
 html:root body table.dataTable > tfoot > tr > th {
     position: relative;
-    padding: 12px 30px 12px 14px !important;
+    padding: 8px 22px 8px 10px !important;      /* right gap = room for the sort arrows */
     background: var(--tm-head-bg) !important;
     color: var(--tm-head-ink) !important;
     text-shadow: none !important;
     border: 0 !important;
     border-bottom: 1px solid rgba(0, 0, 0, .14) !important;
-    font-size: 12px;
+    font-size: 11px;
     font-weight: 700 !important;
-    line-height: 1.3 !important;
-    letter-spacing: .5px;
+    line-height: 1.25 !important;
+    letter-spacing: .35px;
     text-transform: uppercase;
     text-align: left;
     white-space: nowrap;
     vertical-align: middle;
     transition: background-color .15s ease, color .15s ease;
 }
+
+/* columns that cannot be sorted have no arrows, so no extra gap on the right */
+html:root body table.dataTable > thead > tr > th:not(.sorting):not(.sorting_asc):not(.sorting_desc),
+html:root body table.table > thead > tr > th:not(.sorting):not(.sorting_asc):not(.sorting_desc) { padding-right: 10px !important; }
+
+/* number columns (marked by table-modern.js) line up on the right, header included */
+html:root body table.dataTable > thead > tr > th.tm-num,
+html:root body table.dataTable > tbody > tr > td.tm-num { text-align: right !important; font-variant-numeric: tabular-nums; }
+html:root body table.dataTable > thead > tr > th.tm-num.sorting,
+html:root body table.dataTable > thead > tr > th.tm-num.sorting_asc,
+html:root body table.dataTable > thead > tr > th.tm-num.sorting_desc { padding-right: 22px !important; }
 
 html:root body table.dataTable > tfoot > tr > th { border-top: 1px solid rgba(0, 0, 0, .14) !important; border-bottom: 0 !important; }
 
@@ -121,7 +132,7 @@ html:root body table.dataTable > thead > tr > th.sorting:after,
 html:root body table.dataTable > thead > tr > th.sorting_asc:after,
 html:root body table.dataTable > thead > tr > th.sorting_desc:after {
     position: absolute;
-    right: 11px;
+    right: 7px;
     display: block;
     font-size: 9px !important;
     line-height: 9px !important;
@@ -157,18 +168,29 @@ html:root body table.dataTable > tbody > tr > th,
 html:root body table.table > tbody > tr > td,
 html:root body table.table > tbody > tr > th,
 html:root body table.table > tfoot > tr > td {
-    padding: 11px 14px !important;
+    padding: 6px 10px !important;
     background: transparent !important;
     background-image: none !important;
     color: var(--tm-ink) !important;
     border: 0 !important;
     border-top: 0 !important;
     border-bottom: 1px solid var(--tm-line) !important;
-    font-size: 13.5px;
-    font-weight: 700 !important;
-    line-height: 1.45 !important;
+    font-size: 12.5px;
+    font-weight: 600 !important;
+    line-height: 1.35 !important;
     vertical-align: middle;
     box-shadow: none !important;           /* kills DataTables' sorted-column tint */
+}
+
+/* DataTables only: dates, codes, numbers and status never break onto two lines ... */
+html:root body table.dataTable > tbody > tr > td { white-space: nowrap; }
+
+/* ... but long text (remarks, names, addresses: marked by table-modern.js) wraps inside a sensible width */
+html:root body table.dataTable > tbody > tr > td.tm-wrap {
+    white-space: normal;
+    min-width: 160px;
+    max-width: 320px;
+    word-break: break-word;
 }
 
 html:root body table.dataTable > tbody > tr:last-child > td,
@@ -208,7 +230,7 @@ html:root body table td .fa-file-text-o,
 html:root body table td .fa-trash,
 html:root body table td .fa-trash-o {
     color: var(--tm-icon) !important;
-    font-size: 16px;
+    font-size: 14px;
     font-weight: 400;
     opacity: 1 !important;
     transition: color .15s ease, transform .15s ease;
@@ -230,14 +252,14 @@ html:root body .dataTables_wrapper {
     display: flex;
     flex-wrap: wrap;
     align-items: center;
-    gap: 10px 14px;
+    gap: 6px 10px;
     width: 100%;
     color: var(--tm-ink);
-    font-size: 13px;
+    font-size: 12.5px;
 }
 html:root body .dataTables_wrapper:after { content: none !important; display: none !important; }
 
-html:root body .dataTables_wrapper > .dataTables_length  { order: 1; float: none !important; margin: 0 !important; }
+html:root body .dataTables_wrapper > .dataTables_length  { order: 1; float: none !important; margin: 0 !important; padding: 0 !important; display: flex; align-items: center; }
 html:root body .dataTables_wrapper > .dt-buttons          { order: 2; float: none !important; width: auto !important; margin: 0 auto 0 0 !important; display: flex; flex-wrap: wrap; gap: 8px; }
 html:root body .dataTables_wrapper > .dataTables_filter   { order: 3; float: none !important; margin: 0 0 0 auto !important; text-align: right; }
 html:root body .dataTables_wrapper > .dataTables_processing { order: 4; }
@@ -252,19 +274,20 @@ html:root body .dataTables_wrapper .dataTables_filter label {
     display: flex;
     align-items: center;
     gap: 8px;
-    margin: 0;
+    margin: 0 !important;                /* older page CSS gives the length label margin-top:17px, which dropped it below the buttons */
+    padding-top: 0 !important;
     font-weight: 600;
     color: var(--tm-dim);
 }
 
 /* page length */
 html:root body .dataTables_wrapper .dataTables_length select {
-    height: 36px !important;
+    height: 30px !important;
     width: auto !important;
-    min-width: 82px;
-    padding: 0 30px 0 12px !important;
+    min-width: 70px;
+    padding: 0 26px 0 10px !important;
     border: 1px solid var(--tm-line-strong) !important;
-    border-radius: 10px !important;
+    border-radius: 8px !important;
     background-color: var(--tm-card) !important;
     color: var(--tm-ink) !important;
     font-size: 13px;
@@ -275,10 +298,10 @@ html:root body .dataTables_wrapper .dataTables_length select {
 
 /* search box: pill with a magnifier */
 html:root body .dataTables_wrapper .dataTables_filter label {
-    width: 320px;
+    width: 280px;
     max-width: 100%;
-    height: 38px;
-    padding: 0 6px 0 14px;
+    height: 32px;
+    padding: 0 6px 0 12px;
     background: var(--tm-card);
     border: 1px solid var(--tm-line-strong);
     border-radius: 999px;
@@ -301,7 +324,7 @@ html:root body .dataTables_wrapper .dataTables_filter input {
     flex: 1 1 auto;
     width: 100% !important;
     min-width: 0;
-    height: 34px !important;
+    height: 28px !important;
     margin: 0 !important;
     padding: 0 8px !important;
     border: 0 !important;
@@ -309,7 +332,7 @@ html:root body .dataTables_wrapper .dataTables_filter input {
     border-radius: 999px !important;
     background: transparent !important;
     color: var(--tm-ink) !important;
-    font-size: 13.5px;
+    font-size: 12.5px;
     font-weight: 500;
     box-shadow: none !important;
 }
@@ -327,16 +350,16 @@ html:root body .dataTables_wrapper .dt-buttons .buttons-colvis {
     justify-content: center;
     gap: 6px;
     width: auto !important;
-    height: 36px;
+    height: 30px;
     margin: 0 !important;
-    padding: 0 14px !important;
+    padding: 0 12px !important;
     background: var(--tm-card) !important;
     background-image: none !important;
     color: var(--tm-ink) !important;
     border: 1px solid var(--tm-line-strong) !important;
-    border-radius: 10px !important;
+    border-radius: 8px !important;
     box-shadow: none !important;
-    font-size: 13px;
+    font-size: 12.5px;
     font-weight: 600 !important;
     line-height: 1 !important;
     letter-spacing: 0;
@@ -385,16 +408,16 @@ html:root body .dt-button-background { background: rgba(15, 23, 42, .25) !import
 
 /* ---------- footer: info + pagination ---------- */
 html:root body .dataTables_wrapper .dataTables_info {
-    font-size: 13px !important;
+    font-size: 12px !important;
     font-weight: 600 !important;
     color: var(--tm-dim) !important;
 }
 
 html:root body .dataTables_wrapper .dataTables_paginate .paginate_button {
-    min-width: 36px;
-    height: 36px;
-    margin: 0 0 0 4px !important;
-    padding: 0 12px !important;
+    min-width: 30px;
+    height: 30px;
+    margin: 0 0 0 3px !important;
+    padding: 0 10px !important;
     display: inline-flex;
     align-items: center;
     justify-content: center;
@@ -402,9 +425,9 @@ html:root body .dataTables_wrapper .dataTables_paginate .paginate_button {
     background-image: none !important;
     color: var(--tm-ink) !important;
     border: 1px solid var(--tm-line-strong) !important;
-    border-radius: 10px !important;
+    border-radius: 8px !important;
     box-shadow: none !important;
-    font-size: 13px;
+    font-size: 12.5px;
     font-weight: 600;
     line-height: 1;
     transition: background-color .15s ease, border-color .15s ease, color .15s ease;
@@ -510,9 +533,9 @@ html:root body .dataTables_wrapper > table.dataTable { width: 100% !important; }
     html:root body .dataTables_wrapper .dataTables_paginate .paginate_button { min-width: 34px; height: 34px; padding: 0 9px !important; }
 
     html:root body table.dataTable > thead > tr > th,
-    html:root body table.table > thead > tr > th { padding: 10px 26px 10px 12px !important; }
+    html:root body table.table > thead > tr > th { padding: 8px 22px 8px 10px !important; }
     html:root body table.dataTable > tbody > tr > td,
-    html:root body table.table > tbody > tr > td { padding: 10px 12px !important; }
+    html:root body table.table > tbody > tr > td { padding: 6px 10px !important; }
 }
 
 @media (max-width: 479px) {
