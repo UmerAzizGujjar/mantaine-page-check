@@ -782,8 +782,9 @@
             display: flex;
             align-items: center;
             padding: 3px 8px 4px !important;
-            background: linear-gradient(90deg, var(--theme-accent-soft, #fdf2e2), transparent);
-            border-bottom: 1px solid var(--theme-accent-light, #f5ca8b);
+            /* light -> dark across the bar, from the theme's own shades (soft tint -> light -> main colour) */
+            background: linear-gradient(90deg, var(--theme-accent-soft, #fdf2e2) 0%, var(--theme-accent-light, #f5ca8b) 55%, var(--theme-accent, #EFA63E) 100%);
+            border-bottom: 1px solid var(--theme-accent, #EFA63E);
             border-radius: 4px 4px 0 0;
         }
         html[data-theme="dark"] .container-fluid > .page-header.pr-title-bar {
@@ -809,8 +810,9 @@
             gap: 8px;
             padding: 3px 8px 4px;
             margin-bottom: 8px;
-            background: linear-gradient(90deg, transparent, var(--theme-accent-soft, #fdf2e2));
-            border-bottom: 1px solid var(--theme-accent-light, #f5ca8b);
+            /* same light -> dark gradient as the title strip above, so every page header looks alike */
+            background: linear-gradient(90deg, var(--theme-accent-soft, #fdf2e2) 0%, var(--theme-accent-light, #f5ca8b) 55%, var(--theme-accent, #EFA63E) 100%);
+            border-bottom: 1px solid var(--theme-accent, #EFA63E);
             border-radius: 0 0 4px 4px;
         }
         html[data-theme="dark"] body .container-fluid .pr-meta-bar {

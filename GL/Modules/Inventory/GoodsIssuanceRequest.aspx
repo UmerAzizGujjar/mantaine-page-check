@@ -1,7 +1,61 @@
-﻿<%@ Page Title="" Language="C#" MasterPageFile="~/Site.Master" AutoEventWireup="true" CodeBehind="GoodsIssuanceRequest.aspx.cs" Inherits="PMS.Inventory.GoodsIssuanceRequest" %>
+<%@ Page Title="" Language="C#" MasterPageFile="~/Site.Master" AutoEventWireup="true" CodeBehind="GoodsIssuanceRequest.aspx.cs" Inherits="PMS.Inventory.GoodsIssuanceRequest" %>
 
 <asp:Content ID="Content1" ContentPlaceHolderID="HeadContent" runat="server">
     <link href="../../wwwroot/THEME_TIBBIT/CustomCSS/GIR.css" rel="stylesheet" />
+    <style type="text/css">
+        /* Goods Issuance entry fields: one wrapping grid of 8 equal units across the page, so every row is full
+           (no empty space beside Branch / Remarks) and the item search is 2 units wide
+           (about 450px on a full-HD screen, the same width as the item search on PR / PO). */
+        div.gir-fields {
+            --g: 12px;
+            --n: 8;
+            --u: calc((100% - (var(--n) - 1) * var(--g)) / var(--n));
+            display: flex;
+            flex-direction: row;
+            flex-wrap: wrap;
+            align-items: flex-start;
+            gap: 6px var(--g);
+            margin-bottom: 8px;
+        }
+        /* the Bootstrap rows only group the markup; their fields join the grid above */
+        .gir-fields > .row { display: contents; }
+        .gir-fields > .row::before, .gir-fields > .row::after { display: none !important; content: none !important; }
+        .gir-fields > .row > [class*="col-"] {
+            float: none;
+            width: auto;
+            min-width: 0;
+            margin: 0;
+            padding: 0;
+            flex: 1 1 var(--u);
+        }
+        .gir-fields > .row > .gir-w2 { flex: 2 1 calc(var(--u) * 2 + var(--g)); }
+        .gir-fields > .row > .gir-w4 { flex: 4 1 calc(var(--u) * 4 + var(--g) * 3); }
+        /* Attachments wraps its content in another Bootstrap column: drop that column's padding so labels line up */
+        .gir-fields > .row > [class*="col-"] [class*="col-"] { float: none; width: 100%; padding: 0; }
+        /* same control look as the Stock Adjustment form: 13px text, 5px radius, light grey border, compact height */
+        .gir-fields input[type="text"].form-control {
+            height: 33px;
+            padding: 5px 4px 6px;
+            font-size: 13px;
+            border: 1px solid #d5d5d5;
+            border-radius: 5px;
+            box-shadow: none;
+        }
+        .gir-fields select, .gir-fields textarea { width: 100% !important; box-sizing: border-box; }
+        .gir-fields .select2-container { width: 100% !important; }
+
+        @media (max-width: 1399px) {
+            div.gir-fields { --n: 6; }
+        }
+        @media (max-width: 991px) {
+            div.gir-fields { --n: 4; }
+        }
+        @media (max-width: 575px) {
+            div.gir-fields { --n: 2; }
+            .gir-fields > .row > .gir-w2, .gir-fields > .row > .gir-w4 { flex: 1 1 100%; }
+        }
+    </style>
+    <script src="../../wwwroot/lib/jquery/itemsearch.boost.js?v=<%= System.IO.File.GetLastWriteTimeUtc(Server.MapPath("~/wwwroot/lib/jquery/itemsearch.boost.js")).Ticks %>" type="text/javascript"></script>
     <script type="text/javascript">
         var counter = 1;
         var isReplicate = false;
@@ -52,7 +106,9 @@
                 hintText: "Select a warehouse first...",
                 noResultsText: "No items found.",
                 searchingText: "Searching...",
-               
+                minChars: 2,          // no search on a single letter
+                searchDelay: 200,     // wait for a short pause in typing instead of searching every key
+                resultsLimit: 10,     // show only the top 10 (json.aspx also returns at most 10)
                 onAdd: function (item) {
                     $("#hditemID").val(item.id);
                     $("#txtItem").val(item.name);
@@ -801,7 +857,8 @@
     </script>
 </asp:Content>
 <asp:Content ID="Content2" ContentPlaceHolderID="MainContent" runat="server">
-    <form id="item">
+    <%-- a plain div, not a form: a second <form> inside the master page's form is ignored by the browser, which dropped the grid below --%>
+    <div id="item" class="gir-fields">
         <div class="row">
             <div class="col-lg-3 col-md-6 col-sm-12">
                 <label id="LblPr_Num">Request #</label>
@@ -811,6 +868,10 @@
                 <label id="LblPR_Date">GIR Date</label>
                 <input type="text" class="form-control" id="txtMIR_Date" name="txtMIR_Date" autocomplete="off" />
             </div>
+            <div class="col-lg-2 col-md-6 col-sm-12">
+                <label id="lbl_Status">Status</label>
+                <input type="text" class="form-control" id="txt_Status" name="txt_Status" readonly="readonly" />
+            </div>
             <div class="col-lg-3 col-md-6 col-sm-12">
                 <label id="LblPriority">Priority</label>
                 <select id="ddlPriority">
@@ -819,30 +880,32 @@
                     <option value="2">Low</option>
                 </select>
             </div>
-            <div class="col-lg-3 col-md-6 col-sm-12">
+            <div class="col-lg-3 col-md-6 col-sm-12 gir-w2">
                 <label id="Lbldept">Department<span>*</span></label>
                 <select id="ddldept">
                 </select>
             </div>
-        </div>
-        <div class="row">
-
-            <div class="col-lg-4 col-md-6 col-sm-12">
-                <label>Item</label>
-                <input type="text" class="form-control" id="txtItem"  name="txtItem" placeholder="item" />
-            </div>
-
             <div id="warehouse" class="col-lg-3 col-md-6 col-sm-12">
                 <label id="Lblwarehouse">Ware House <span style="color: red">*</span></label>
                 <select id="ddlwarehouse">
                     <option value="0">Please Select</option>
                 </select>
             </div>
-            <div class="col-lg-2 col-md-6 col-sm-12">
-                <label id="lbl_Status">Status</label>
-                <input type="text" class="form-control" id="txt_Status" name="txt_Status" readonly="readonly" />
-            </div>
             <div class="col-lg-3 col-md-6 col-sm-12">
+                <label id="LblBranch">Branch</label>
+                <select id="ddlBranch" class="form-control"></select>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-lg-4 col-md-6 col-sm-12 gir-w2">
+                <label>Item</label>
+                <input type="text" class="form-control" id="txtItem"  name="txtItem" placeholder="item" />
+            </div>
+            <div class="col-lg-12 col-md-12 col-sm-12 gir-w4">
+                <label id="lblrem">Remarks</label>
+                <input type="text" class="form-control" id="txtRemarks" name="txtRemarks" />
+            </div>
+            <div class="col-lg-3 col-md-6 col-sm-12 gir-w2">
                 <div class="col-lg-12 col-md-12 col-sm-12">
                     <label id="lblattach">Attachments</label>
                     <input type="file" id="choseGIRfile" name="choseGIRfile" />
@@ -852,23 +915,8 @@
                     <input type="hidden" id="hditemID" />
                 </div>
             </div>
-
-
-
         </div>
-        <div class="row">
-            <div class="col-lg-3 col-md-6 col-sm-12">
-                <label id="LblBranch">Branch</label>
-                <select id="ddlBranch" class="form-control"></select>
-            </div>
-        </div>
-        <div class="row">
-            <div class="col-lg-12 col-md-12 col-sm-12">
-                <label id="lblrem">Remarks</label>
-                <input type="text" class="form-control" id="txtRemarks" name="txtRemarks" />
-            </div>
-        </div>
-    </form>
+    </div>
   
 
     <div class="table-container">
@@ -902,7 +950,7 @@
         <div class="col-lg-3 col-md-6 col-sm-12">
         </div>
         <div class="col-lg-1 col-md-6 col-sm-12">
-            <label style="margin-left: 62px">Total Qty</label>
+            <label style="display: block; text-align: right; white-space: nowrap">Total Qty</label>
             </div>
         <div class="col-lg-2 col-md-6 col-sm-12">
             <input type="text" id="totQty" name="totQty" readonly="readonly" />
@@ -918,9 +966,6 @@
                 &nbsp;
             </div>
             <div class="col-lg-2 col-md-4 col-sm-6">
-                <input type="button" class="btn btn-primry" value="Replicate" id="btnReplicate" style="display:none;" />
-            </div>
-            <div class="col-lg-2 col-md-4 col-sm-6">
                 <input type="button" class="btn-gray" value="List" onclick="window.location = 'GoodsIssuanceRequestView.aspx'" />
                 &nbsp;
             </div>
@@ -931,6 +976,10 @@
                 <div class="col-lg-2 col-md-4 col-sm-6">
     <input type="button" value="Print" class="btn btn-primry" name="btn_Print" id="btn_Print" onclick="PrintGoodsIssuanceRequest();" style="width: 81px;" />
 </div>
+            <%-- Replicate sits after Print (hidden until the status allows it) so the visible buttons stay side by side --%>
+            <div class="col-lg-2 col-md-4 col-sm-6">
+                <input type="button" class="btn btn-primry" value="Replicate" id="btnReplicate" style="display:none;" />
+            </div>
             <div class="col-lg-2 col-md-4 col-sm-6">
                 <input type="button" style="display:none;" class="btn btn-primry" value="Approve" id="btnApprove" onclick="ApproveGIRFromEdit()" />
                 &nbsp;

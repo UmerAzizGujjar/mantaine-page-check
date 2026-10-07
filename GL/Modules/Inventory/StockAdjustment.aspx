@@ -3,6 +3,50 @@
 <%@ Register Assembly="AjaxControlToolkit" Namespace="AjaxControlToolkit" TagPrefix="asp" %>
 <asp:Content ID="Content1" ContentPlaceHolderID="HeadContent" runat="server">
     <link href="../../wwwroot/THEME_TIBBIT/CustomCSS/stockadjustment.css" rel="stylesheet" />
+    <style type="text/css">
+        /* Stock Adjustment entry fields: one wrapping grid of 8 equal units across the page, so every row is full
+           (no empty space after Branch / Batch No / hidden Warehouse) and the item search is 2 units wide
+           (about 450px on a full-HD screen, the same width as the item search on PR / PO). */
+        .sa-fields {
+            --g: 12px;
+            --n: 8;
+            --u: calc((100% - (var(--n) - 1) * var(--g)) / var(--n));
+            display: flex;
+            flex-wrap: wrap;
+            align-items: flex-start;
+            gap: 6px var(--g);
+            margin-bottom: 8px;
+        }
+        /* the Bootstrap rows only group the markup; their fields join the grid above */
+        .sa-fields > .row { display: contents; }
+        .sa-fields > .row::before, .sa-fields > .row::after { display: none !important; content: none !important; }
+        .sa-fields > .row > [class*="col-"] {
+            float: none;
+            width: auto;
+            min-width: 0;
+            margin: 0;
+            padding: 0;
+            flex: 1 1 var(--u);
+        }
+        .sa-fields > .row > .sa-w2 { flex: 2 1 calc(var(--u) * 2 + var(--g)); }
+        .sa-fields > .row > .sa-w7 { flex: 7 1 calc(var(--u) * 7 + var(--g) * 6); }
+        .sa-fields select, .sa-fields textarea { width: 100% !important; box-sizing: border-box; }
+        .sa-fields .select2-container { width: 100% !important; }
+
+        @media (max-width: 1399px) {
+            .sa-fields { --n: 6; }
+            /* Remarks takes the rest of its line and the Add button keeps its own unit beside it */
+            .sa-fields > .row > .sa-w7 { flex: 1 1 calc(100% - var(--u) - var(--g)); }
+        }
+        @media (max-width: 991px) {
+            .sa-fields { --n: 4; }
+        }
+        @media (max-width: 575px) {
+            .sa-fields { --n: 2; }
+            .sa-fields > .row > .sa-w2 { flex: 1 1 100%; }
+        }
+    </style>
+    <script src="../../wwwroot/lib/jquery/itemsearch.boost.js?v=<%= System.IO.File.GetLastWriteTimeUtc(Server.MapPath("~/wwwroot/lib/jquery/itemsearch.boost.js")).Ticks %>" type="text/javascript"></script>
 
     <script type="text/javascript">
         var Stock_ID = 0;
@@ -142,6 +186,9 @@
                     hintText: "Select a warehouse first...",
                     noResultsText: "No items found.",
                     searchingText: "Searching...",
+                    minChars: 2,          // no search on a single letter
+                    searchDelay: 200,     // wait for a short pause in typing instead of searching every key
+                    resultsLimit: 10,     // show only the top 10 (json.aspx also returns at most 10)
                     onAdd: function (item) {
                         $('#ctl00_MainContent_hdfItem_ID').val(item.id);
                         $('#ctl00_MainContent_hdnDescription').val(item.name);
@@ -700,6 +747,8 @@
     
     <!-- CHANGED FROM FORM TO DIV to stop broken nested form submissions -->
     <div id="divStockItemForm">
+        <%-- sa-fields: the four rows below flow as one wrapping grid (see the style block in HeadContent), so no row has empty space --%>
+        <div class="sa-fields">
         <div class="row">
             <div class="col-lg-2 col-md-3 col-sm-4">
                 <asp:Label Text="Transaction ID" runat="server" ID="lblAdjustment_ID" />
@@ -721,7 +770,7 @@
                 <asp:RequiredFieldValidator ID="RequiredFieldValidator2" ErrorMessage="BatchNo is required."
                     ControlToValidate="txtBatchNo" runat="server" SetFocusOnError="true" Display="Dynamic" InitialValue="0" />
             </div>
-            <div class="col-lg-4 col-md-3 col-sm-4">
+            <div class="col-lg-4 col-md-3 col-sm-4 sa-w2">
                 <asp:Label Text="Item Code & Description" runat="server" ID="lblItem_Code" />
                 <asp:TextBox runat="server" ID="txtItem_Code" />
                 <asp:RequiredFieldValidator ErrorMessage="Item Code is required." ID="rfvItemCode"
@@ -779,12 +828,12 @@
                     <asp:ListItem Text="-- Select Batch --" Value="0" />
                 </asp:DropDownList>
             </div>
-            <div class="col-lg-4 col-md-3 col-sm-4">
+            <div class="col-lg-4 col-md-3 col-sm-4 sa-w2">
                 <asp:Label ID="lbl_Reason_Needed" runat="server" Text="Reason Needed"></asp:Label>
                 <asp:DropDownList runat="server" ID="ddlReasonNeeded" Style="height: 35px;" AppendDataBoundItems="true">
                 </asp:DropDownList>
             </div>
-            <div class="col-lg-4 col-md-3 col-sm-4">
+            <div class="col-lg-4 col-md-3 col-sm-4 sa-w7">
                 <asp:Label Text="Remarks" runat="server" ID="lblremarks" />
                 <asp:TextBox ID="txtRemarks" runat="server" TextMode="MultiLine" Style="width: 100%; border-radius: 5px; height: 35px !important"></asp:TextBox>
             </div>
@@ -793,7 +842,8 @@
                 <input type="button" class="btn btn-primry" value="Add" id="btnAddToTable" onclick="return AddItemToTable();" />
             </div>
         </div>
-        
+        </div><%-- /sa-fields --%>
+
         <div class="row" style="margin-top:10px;display:none" id="divGridContainer">
             <div class="col-lg-12">
                 <div class="table-responsive">

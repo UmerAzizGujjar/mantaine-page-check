@@ -128,13 +128,14 @@ div.token-input-dropdown ul li.token-input-selected-dropdown-item {
     color:#F9F9F9;
 }
 
-/* ---- Larger item-search token inputs (Inventory / Purchase pages) ----
-   Scoped by the plugin-generated input id (token-input-<original id>), so patient/account
-   searches are unaffected. The dropdown is appended to <body>, hence the body:has() scope. */
+/* ---- Item-search token inputs (Inventory / Purchase pages) ----
+   One compact size for every item search (PR, PO, Goods Issuance, Material Issue, Stock Adjustment, GRN):
+   34px high, 13px text. Scoped by the plugin-generated input id (token-input-<original id>), so
+   patient/account searches are unaffected. The dropdown is appended to <body>, hence the body:has() scope. */
 ul.token-input-list:has(#token-input-txtItem, #token-input-txtItemCode, #token-input-ctl00_MainContent_txtItem_Code, #token-input-ctl00_MainContent_txtItem_Description) {
-    min-height: 42px !important;
-    height: 42px !important;
-    font-size: 15px;
+    min-height: 34px !important;
+    height: 34px !important;
+    font-size: 13px;
     /* fill the column / flex container instead of the plugin's fixed 350px (beats the inline width some pages set via JS) */
     width: 100% !important;
     min-width: 0;
@@ -145,22 +146,22 @@ ul.token-input-list:has(#token-input-txtItem, #token-input-txtItemCode, #token-i
 #token-input-txtItemCode,
 #token-input-ctl00_MainContent_txtItem_Code,
 #token-input-ctl00_MainContent_txtItem_Description {
-    font-size: 15px !important;
-    height: 40px;
-    padding: 8px 10px;
+    font-size: 13px !important;
+    height: 32px;
+    padding: 4px 10px;
     width: 100%;
 }
 
 ul.token-input-list:has(#token-input-txtItem, #token-input-txtItemCode, #token-input-ctl00_MainContent_txtItem_Code, #token-input-ctl00_MainContent_txtItem_Description) li.token-input-token {
-    font-size: 14px;
-    padding: 6px 8px;
-    margin: 3px 4px;
+    font-size: 13px;
+    padding: 3px 8px;
+    margin: 2px 4px;
 }
 
 /* keep the "Items / Browse" button beside the search box the same height */
 #itemInputSection .source-inline-group,
 #itemInputSection .source-action-btn {
-    height: 42px;
+    height: 34px;
 }
 
 /* PR / PO source row: give the selector a real width (was flex: 0.25), keep the row height
@@ -168,7 +169,7 @@ ul.token-input-list:has(#token-input-txtItem, #token-input-txtItemCode, #token-i
 .pr-source-left:has(#itemInputSection) {
     flex-wrap: wrap;
     row-gap: 8px;
-    min-height: 42px;
+    min-height: 34px;
 }
 
 .pr-source-left:has(#itemInputSection) > .source-input-wrap {
@@ -177,11 +178,11 @@ ul.token-input-list:has(#token-input-txtItem, #token-input-txtItemCode, #token-i
 }
 
 body:has(#token-input-txtItem, #token-input-txtItemCode, #token-input-ctl00_MainContent_txtItem_Code, #token-input-ctl00_MainContent_txtItem_Description) div.token-input-dropdown {
-    font-size: 15px;
-    max-height: 320px !important;
+    font-size: 13px;
+    max-height: 260px !important;
     overflow-y: auto;
 }
 
 body:has(#token-input-txtItem, #token-input-txtItemCode, #token-input-ctl00_MainContent_txtItem_Code, #token-input-ctl00_MainContent_txtItem_Description) div.token-input-dropdown ul li {
-    padding: 8px 10px;
+    padding: 6px 10px;
 }

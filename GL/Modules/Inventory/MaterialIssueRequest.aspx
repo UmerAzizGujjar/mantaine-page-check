@@ -876,6 +876,13 @@
             width: 484px !important;
         }
 
+        /* item search box: same 34px height as the other item searches (set in token-input.css) and
+           the same width as Goods Issuance / Stock Adjustment: one third of the row
+           (this input sits in a 9-column area next to a label column, so 43.5% of it = about 4 of 12 columns) */
+        html body ul.token-input-list:has(#token-input-txtItem) {
+            width: 43.5% !important;
+        }
+
 
         .btn-custom {
             border: 2px solid #3c8dbc;

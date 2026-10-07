@@ -3,6 +3,7 @@
 <asp:Content ID="Content1" ContentPlaceHolderID="HeadContent" runat="server">
     <link href="../../wwwroot/THEME_TIBBIT/CustomCSS/PO.css" rel="stylesheet" />
     <link href="../../wwwroot/THEME_TIBBIT/CustomCSS/custom-modals.css" rel="stylesheet" />
+    <script src="../../wwwroot/lib/jquery/itemsearch.boost.js?v=<%= System.IO.File.GetLastWriteTimeUtc(Server.MapPath("~/wwwroot/lib/jquery/itemsearch.boost.js")).Ticks %>" type="text/javascript"></script>
     <style type="text/css">
         .tooltip-inner {
             background-color: #ffc107 !important;
@@ -1009,6 +1010,9 @@ function buildNewRow(length, PR_Num, itemcode, item_name, unit, Qty, UOM_Qty, Ra
 
             $('#txtItem').tokenInput("../../json.aspx?Table=INV_ItemsForPR", {
                 tokenLimit: 1,
+                minChars: 2,          // no search on a single letter
+                searchDelay: 200,     // wait for a short pause in typing instead of searching every key
+                resultsLimit: 10,     // show only the top 10 (json.aspx also returns at most 10)
                 onResult: function (results) {
                     if (warehouseCond === '01') {
                         var warehouseVal = $('#ddlWarehouse').val();
@@ -1069,10 +1073,12 @@ function buildNewRow(length, PR_Num, itemcode, item_name, unit, Qty, UOM_Qty, Ra
 
             $('#searchInput').on('keyup', function () {
                 var searchText = $(this).val().trim();
-                LoadAllitem(searchText);
+                // search after a short pause in typing, not on every key
+                clearTimeout(window._itemSearchTimer);
+                window._itemSearchTimer = setTimeout(function () { LoadAllitem(searchText); }, 350);
             });
 
-            $('#chkByDefault').prop('checked', true); 
+            $('#chkByDefault').prop('checked', true);
         });
 /*        $(document).ready*/(function () {
             // ✅ Show page loader immediately

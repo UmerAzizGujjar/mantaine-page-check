@@ -1201,6 +1201,7 @@
     <Content Include="wwwroot\lib\jquery\jquery.ptTimeSelect.css" />
     <Content Include="wwwroot\lib\jquery\jquery.ptTimeSelect.js" />
     <Content Include="wwwroot\lib\jquery\jquery.searchabledropdown-1.0.8.min.js" />
+    <Content Include="wwwroot\lib\jquery\itemsearch.boost.js" />
     <Content Include="wwwroot\lib\jquery\jquery.tokeninput.js" />
     <Content Include="wwwroot\lib\loader\loader.css" />
     <Content Include="wwwroot\lib\masked_input\masked_input_1.4-min.js" />

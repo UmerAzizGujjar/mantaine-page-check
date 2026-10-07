@@ -3,6 +3,7 @@
 <asp:Content ID="Content1" ContentPlaceHolderID="HeadContent" runat="server">
        <link href="../../wwwroot/THEME_TIBBIT/CustomCSS/PR.css" rel="stylesheet" />
        <link href="../../wwwroot/THEME_TIBBIT/CustomCSS/custom-modals.css" rel="stylesheet" />
+       <script src="../../wwwroot/lib/jquery/itemsearch.boost.js?v=<%= System.IO.File.GetLastWriteTimeUtc(Server.MapPath("~/wwwroot/lib/jquery/itemsearch.boost.js")).Ticks %>" type="text/javascript"></script>
 </asp:Content>
 <asp:Content ID="Content2" ContentPlaceHolderID="MainContent" runat="server">
     <script type="text/javascript">
@@ -104,7 +105,9 @@
                     hintText: "Type to search items...",
                     noResultsText: "No items found.",
                     searchingText: "Searching...",
-                    minChars: 1,
+                    minChars: 2,          // no search on a single letter
+                    searchDelay: 200,     // wait for a short pause in typing instead of searching every key
+                    resultsLimit: 10,     // show only the top 10 (json.aspx also returns at most 10)
                     onResult: function (results) {
                         // If warehouse is required but not selected, force empty results
                         // and swap the noResultsText to the warehouse warning
@@ -291,7 +294,9 @@
             }
             $('#searchInput').on('keyup', function () {
                 var searchText = $(this).val().trim();
-                LoadAllitem(searchText);
+                // search after a short pause in typing, not on every key
+                clearTimeout(window._itemSearchTimer);
+                window._itemSearchTimer = setTimeout(function () { LoadAllitem(searchText); }, 350);
             });
 
             function LoadGIRNoDetail(Gir_id) {

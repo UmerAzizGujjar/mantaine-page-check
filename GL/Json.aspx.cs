@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Data;
 using System.Data.SqlClient;
@@ -340,15 +340,15 @@ namespace PMS
                     {
                         if (allowPharmacy && allowGeneralItem)
                         {
-                            sqlQuery = "Select * from INV_Items i Where Hospital_Services=0 and Services<>1 and Active=1 and Book_ID=" + AppConfig.Book_ID + " and " + warehouseCondition + " AND (Description like @qb_q OR Item_Code like @qb_q)";
+                            sqlQuery = "Select TOP 10 i.Item_ID, i.Item_Code, i.Description from INV_Items i Where Hospital_Services=0 and Services<>1 and Active=1 and Book_ID=" + AppConfig.Book_ID + " and " + warehouseCondition + " AND (Description like @qb_q OR Item_Code like @qb_q) ORDER BY CASE WHEN Item_Code LIKE @qp_q THEN 0 WHEN Description LIKE @qp_q THEN 1 ELSE 2 END, Item_Code";
                         }
                         else if (allowPharmacy)
                         {
-                            sqlQuery = "Select * from INV_Items i Where Pharmacy_Item=1 and IsPharmacyItem=1 and Hospital_Services=0 and Services<>1 and Active=1 and Book_ID=" + AppConfig.Book_ID + " and " + warehouseCondition + " AND (Description like @qb_q OR Item_Code like @qb_q)";
+                            sqlQuery = "Select TOP 10 i.Item_ID, i.Item_Code, i.Description from INV_Items i Where Pharmacy_Item=1 and IsPharmacyItem=1 and Hospital_Services=0 and Services<>1 and Active=1 and Book_ID=" + AppConfig.Book_ID + " and " + warehouseCondition + " AND (Description like @qb_q OR Item_Code like @qb_q) ORDER BY CASE WHEN Item_Code LIKE @qp_q THEN 0 WHEN Description LIKE @qp_q THEN 1 ELSE 2 END, Item_Code";
                         }
                         else
                         {
-                            sqlQuery = "Select * from INV_Items i Where Pharmacy_Item<>1 and IsPharmacyItem<>1 and Hospital_Services=0 and Services<>1 and Active=1 and Book_ID=" + AppConfig.Book_ID + " and " + warehouseCondition + " AND (Description like @qb_q OR Item_Code like @qb_q)";
+                            sqlQuery = "Select TOP 10 i.Item_ID, i.Item_Code, i.Description from INV_Items i Where Pharmacy_Item<>1 and IsPharmacyItem<>1 and Hospital_Services=0 and Services<>1 and Active=1 and Book_ID=" + AppConfig.Book_ID + " and " + warehouseCondition + " AND (Description like @qb_q OR Item_Code like @qb_q) ORDER BY CASE WHEN Item_Code LIKE @qp_q THEN 0 WHEN Description LIKE @qp_q THEN 1 ELSE 2 END, Item_Code";
                         }
                     }
                     else
@@ -367,7 +367,7 @@ namespace PMS
                         }
                     }
                     string result = "";
-                    DataTable dt = DBClass.getDataTable(sqlQuery, P("@qe_WarehouseID", Request.QueryString["WarehouseID"]), P("@qb_q", "%" + Request.QueryString["q"] + "%"));
+                    DataTable dt = DBClass.getDataTable(sqlQuery, P("@qe_WarehouseID", Request.QueryString["WarehouseID"]), P("@qb_q", "%" + Request.QueryString["q"] + "%"), P("@qp_q", Request.QueryString["q"] + "%"));
 
                     foreach (DataRow dr in dt.Rows)
                     {
@@ -396,15 +396,15 @@ namespace PMS
                     {
                         if (allowPharmacy && allowGeneralItem)
                         {
-                            sqlQuery = "Select * from INV_Items i Where Hospital_Services=0 and Services<>1 and Active=1 and Book_ID=" + AppConfig.Book_ID + "   AND (Description like @qb_q OR Item_Code like @qb_q)";
+                            sqlQuery = "Select TOP 10 i.Item_ID, i.Item_Code, i.Description from INV_Items i Where Hospital_Services=0 and Services<>1 and Active=1 and Book_ID=" + AppConfig.Book_ID + "   AND (Description like @qb_q OR Item_Code like @qb_q) ORDER BY CASE WHEN Item_Code LIKE @qp_q THEN 0 WHEN Description LIKE @qp_q THEN 1 ELSE 2 END, Item_Code";
                         }
                         else if (allowPharmacy)
                         {
-                            sqlQuery = "Select * from INV_Items i Where Pharmacy_Item=1 and IsPharmacyItem=1 and Hospital_Services=0 and Services<>1 and Active=1 and Book_ID=" + AppConfig.Book_ID + "  AND (Description like @qb_q OR Item_Code like @qb_q)";
+                            sqlQuery = "Select TOP 10 i.Item_ID, i.Item_Code, i.Description from INV_Items i Where Pharmacy_Item=1 and IsPharmacyItem=1 and Hospital_Services=0 and Services<>1 and Active=1 and Book_ID=" + AppConfig.Book_ID + "  AND (Description like @qb_q OR Item_Code like @qb_q) ORDER BY CASE WHEN Item_Code LIKE @qp_q THEN 0 WHEN Description LIKE @qp_q THEN 1 ELSE 2 END, Item_Code";
                         }                        
                         else
                         {
-                            sqlQuery = "Select * from INV_Items i Where Pharmacy_Item<>1 and IsPharmacyItem<>1 and Hospital_Services=0 and Services<>1 and Active=1 and Book_ID=" + AppConfig.Book_ID + " AND (Description like @qb_q OR Item_Code like @qb_q)";
+                            sqlQuery = "Select TOP 10 i.Item_ID, i.Item_Code, i.Description from INV_Items i Where Pharmacy_Item<>1 and IsPharmacyItem<>1 and Hospital_Services=0 and Services<>1 and Active=1 and Book_ID=" + AppConfig.Book_ID + " AND (Description like @qb_q OR Item_Code like @qb_q) ORDER BY CASE WHEN Item_Code LIKE @qp_q THEN 0 WHEN Description LIKE @qp_q THEN 1 ELSE 2 END, Item_Code";
                         }
                     }
                     else
@@ -423,7 +423,7 @@ namespace PMS
                         }
                     }
                     string result = "";
-                    DataTable dt = DBClass.getDataTable(sqlQuery, P("@qb_q", "%" + Request.QueryString["q"] + "%"));
+                    DataTable dt = DBClass.getDataTable(sqlQuery, P("@qb_q", "%" + Request.QueryString["q"] + "%"), P("@qp_q", Request.QueryString["q"] + "%"));
 
                     foreach (DataRow dr in dt.Rows)
                     {
@@ -520,15 +520,15 @@ namespace PMS
                     {
                         if (allowPharmacy && allowGeneralItem)
                         {                           
-                            sqlQuery = "Select *, isnull(dbo.GetDataValueName('UOM', i.Unit),'NIL') as UOM, (select top 1 CAST(ISNULL(Rate,0) as DECIMAL(18,2)) from AP_Purchase_Order_Items where Item_Id = i.Item_ID order by PO_Item_ID desc) as LastRate, (select ISNULL(sum(Qty),0) from vwBatch_Ledger where Item_ID = i.Item_ID) as Stock from INV_Items i Where Hospital_Services= 0 and Services<>1 and Active=1 and Book_ID=" + AppConfig.Book_ID + " AND Description like @qb_q";
+                            sqlQuery = "Select TOP 10 i.Item_ID, i.Item_Code, i.Description from INV_Items i Where Hospital_Services= 0 and Services<>1 and Active=1 and Book_ID=" + AppConfig.Book_ID + " AND Description like @qb_q ORDER BY CASE WHEN Description LIKE @qp_q THEN 0 ELSE 1 END, Item_Code";
                         }
                         else if (allowPharmacy)
                         {
-                            sqlQuery = "Select *, isnull(dbo.GetDataValueName('UOM', i.Unit),'NIL') as UOM, (select top 1 CAST(ISNULL(Rate,0) as DECIMAL(18,2)) from AP_Purchase_Order_Items where Item_Id = i.Item_ID order by PO_Item_ID desc) as LastRate, (select ISNULL(sum(Qty),0) from vwBatch_Ledger where Item_ID = i.Item_ID) as Stock from INV_Items i Where Pharmacy_Item=1 and IsPharmacyItem=1 and Hospital_Services= 0 and Services<>1 and Active=1 and Book_ID=" + AppConfig.Book_ID + " AND Description like @qb_q";
+                            sqlQuery = "Select TOP 10 i.Item_ID, i.Item_Code, i.Description from INV_Items i Where Pharmacy_Item=1 and IsPharmacyItem=1 and Hospital_Services= 0 and Services<>1 and Active=1 and Book_ID=" + AppConfig.Book_ID + " AND Description like @qb_q ORDER BY CASE WHEN Description LIKE @qp_q THEN 0 ELSE 1 END, Item_Code";
                         }
                         else
                         {
-                            sqlQuery = "Select *, isnull(dbo.GetDataValueName('UOM', i.Unit),'NIL') as UOM, (select top 1 CAST(ISNULL(Rate,0) as DECIMAL(18,2)) from AP_Purchase_Order_Items where Item_Id = i.Item_ID order by PO_Item_ID desc) as LastRate, (select ISNULL(sum(Qty),0) from vwBatch_Ledger where Item_ID = i.Item_ID) as Stock from INV_Items i Where Pharmacy_Item<>1 and IsPharmacyItem<>1 and Hospital_Services= 0 and Services<>1 and Active=1 and Book_ID=" + AppConfig.Book_ID + " AND Description like @qb_q";                            
+                            sqlQuery = "Select TOP 10 i.Item_ID, i.Item_Code, i.Description from INV_Items i Where Pharmacy_Item<>1 and IsPharmacyItem<>1 and Hospital_Services= 0 and Services<>1 and Active=1 and Book_ID=" + AppConfig.Book_ID + " AND Description like @qb_q ORDER BY CASE WHEN Description LIKE @qp_q THEN 0 ELSE 1 END, Item_Code";                            
                         }
                     }
                     else
@@ -547,7 +547,7 @@ namespace PMS
                         }
                     }
                     string result = "";
-                    DataTable dt = DBClass.getDataTable(sqlQuery, P("@qb_q", "%" + Request.QueryString["q"] + "%"));
+                    DataTable dt = DBClass.getDataTable(sqlQuery, P("@qb_q", "%" + Request.QueryString["q"] + "%"), P("@qp_q", Request.QueryString["q"] + "%"));
 
                     foreach (DataRow dr in dt.Rows)
                     {
@@ -583,15 +583,15 @@ namespace PMS
                     {
                         if (allowPharmacy && allowGeneralItem)
                         {
-                            sqlQuery = "Select *, isnull(dbo.GetDataValueName('UOM', i.Unit),'NIL') as UOM, (select top 1 CAST(ISNULL(Rate,0) as DECIMAL(18,2)) from AP_Purchase_Order_Items where Item_Id = i.Item_ID order by PO_Item_ID desc) as LastRate, (select ISNULL(sum(Qty),0) from vwBatch_Ledger where Item_ID = i.Item_ID) as Stock from INV_Items i Where Hospital_Services= 0 and Services<>1 and Active=1 and " + warehouseCondition + " and Book_ID=" + AppConfig.Book_ID + " AND (Description like @qb_q OR Generic_Name like @qb_q)";
+                            sqlQuery = "Select TOP 10 i.Item_ID, i.Item_Code, i.Description from INV_Items i Where Hospital_Services= 0 and Services<>1 and Active=1 and " + warehouseCondition + " and Book_ID=" + AppConfig.Book_ID + " AND (Description like @qb_q OR Generic_Name like @qb_q) ORDER BY CASE WHEN Description LIKE @qp_q THEN 0 ELSE 1 END, Item_Code";
                         }
                         else if (allowPharmacy)
                         {
-                            sqlQuery = "Select *, isnull(dbo.GetDataValueName('UOM', i.Unit),'NIL') as UOM, (select top 1 CAST(ISNULL(Rate,0) as DECIMAL(18,2)) from AP_Purchase_Order_Items where Item_Id = i.Item_ID order by PO_Item_ID desc) as LastRate, (select ISNULL(sum(Qty),0) from vwBatch_Ledger where Item_ID = i.Item_ID) as Stock from INV_Items i Where Pharmacy_Item=1 and IsPharmacyItem=1 and Hospital_Services= 0 and Services<>1 and Active=1 and " + warehouseCondition + " and Book_ID=" + AppConfig.Book_ID + " AND (Description like @qb_q OR Generic_Name like @qb_q)";
+                            sqlQuery = "Select TOP 10 i.Item_ID, i.Item_Code, i.Description from INV_Items i Where Pharmacy_Item=1 and IsPharmacyItem=1 and Hospital_Services= 0 and Services<>1 and Active=1 and " + warehouseCondition + " and Book_ID=" + AppConfig.Book_ID + " AND (Description like @qb_q OR Generic_Name like @qb_q) ORDER BY CASE WHEN Description LIKE @qp_q THEN 0 ELSE 1 END, Item_Code";
                         }
                         else
                         {
-                            sqlQuery = "Select *, isnull(dbo.GetDataValueName('UOM', i.Unit),'NIL') as UOM, (select top 1 CAST(ISNULL(Rate,0) as DECIMAL(18,2)) from AP_Purchase_Order_Items where Item_Id = i.Item_ID order by PO_Item_ID desc) as LastRate, (select ISNULL(sum(Qty),0) from vwBatch_Ledger where Item_ID = i.Item_ID) as Stock from INV_Items i Where Pharmacy_Item<>1 and IsPharmacyItem<>1 and Hospital_Services= 0 and Services<>1 and Active=1 and " + warehouseCondition + " and Book_ID=" + AppConfig.Book_ID + " AND (Description like @qb_q OR Generic_Name like @qb_q)";
+                            sqlQuery = "Select TOP 10 i.Item_ID, i.Item_Code, i.Description from INV_Items i Where Pharmacy_Item<>1 and IsPharmacyItem<>1 and Hospital_Services= 0 and Services<>1 and Active=1 and " + warehouseCondition + " and Book_ID=" + AppConfig.Book_ID + " AND (Description like @qb_q OR Generic_Name like @qb_q) ORDER BY CASE WHEN Description LIKE @qp_q THEN 0 ELSE 1 END, Item_Code";
                         }
                     }
                     else
@@ -611,7 +611,7 @@ namespace PMS
                     }
 
                     string result = "";
-                    DataTable dt = DBClass.getDataTable(sqlQuery, P("@qe_WarehouseID", Request.QueryString["WarehouseID"]), P("@qb_q", "%" + Request.QueryString["q"] + "%"));
+                    DataTable dt = DBClass.getDataTable(sqlQuery, P("@qe_WarehouseID", Request.QueryString["WarehouseID"]), P("@qb_q", "%" + Request.QueryString["q"] + "%"), P("@qp_q", Request.QueryString["q"] + "%"));
 
                     foreach (DataRow dr in dt.Rows)
                     {
@@ -657,66 +657,32 @@ namespace PMS
                     if (allowPharmacy && allowGeneralItem)
                         filterClause = "";
                     else if (allowPharmacy)
-                        filterClause = "AND i.Pharmacy_Item = 1 AND i.IsPharmacyItem = 1";
+                        filterClause = "AND s.Pharmacy_Item = 1 AND s.IsPharmacyItem = 1";
                     else
-                        filterClause = "AND (i.Pharmacy_Item <> 1 OR i.IsPharmacyItem <> 1)";
+                        filterClause = "AND (s.Pharmacy_Item <> 1 OR s.IsPharmacyItem <> 1)";
 
+                    // The dropdown only shows "code - description" and the pages only use the item id, so this
+                    // returns just that: the 10 best matches (starts-with matches first), no per-item stock / rate
+                    // lookups. Those lookups (esp. the vwBatch_Ledger stock sum) were the slow part of the search.
                     string sqlQuery = $@"
-        SELECT TOP 30 
-            i.Item_ID,
-            i.Item_Code,
-            i.Description,
-            i.Unit,
-            ISNULL(dbo.GetDataValueName('UOM', i.Unit), 'NIL') AS UOM,
-            ISNULL(po.LastRate, 0) AS Last_PurchaseRate,
-            ISNULL(st.Stock, 0) AS Stock,
-            ISNULL(lq.LastQty, 0) AS LastQty,
-            lq.LastRequiredDate
-        FROM INV_Items i
-        OUTER APPLY (
-            SELECT TOP 1 CAST(ISNULL(Rate, 0) AS DECIMAL(18,2)) AS LastRate
-            FROM AP_Purchase_Order_Items 
-            WHERE Item_Id = i.Item_ID 
-            ORDER BY PO_Item_ID DESC
-        ) po
-        OUTER APPLY (
-            SELECT ISNULL(SUM(Qty), 0) AS Stock
-            FROM vwBatch_Ledger 
-            WHERE Item_ID = i.Item_ID
-        ) st
-        OUTER APPLY (
-            SELECT TOP 1 
-                Qty AS LastQty,
-                Required_Date AS LastRequiredDate
-            FROM Purchase_Requisition_Detail 
-            WHERE Item_ID = i.Item_ID 
-            ORDER BY PR_Detail_ID DESC
-        ) lq
-        WHERE i.Hospital_Services = 0 
-          AND i.Services <> 1 
-          AND i.Active = 1 
-          AND i.Book_ID = {AppConfig.Book_ID}
+        SELECT TOP 10 s.Item_ID, s.Item_Code, s.Description
+        FROM INV_Items s
+        WHERE s.Hospital_Services = 0
+          AND s.Services <> 1
+          AND s.Active = 1
+          AND s.Book_ID = {AppConfig.Book_ID}
           {filterClause}
-          AND (i.Item_Code LIKE @qb_q OR i.Description LIKE @qb_q)
-        ORDER BY i.Item_Code";
+          AND (s.Item_Code LIKE @qb_q OR s.Description LIKE @qb_q)
+        ORDER BY CASE WHEN s.Item_Code LIKE @qp_q THEN 0 WHEN s.Description LIKE @qp_q THEN 1 ELSE 2 END, s.Item_Code";
 
-                    DataTable dt = DBClass.getDataTable(sqlQuery, P("@qb_q", "%" + Request.QueryString["q"] + "%"));
+                    DataTable dt = DBClass.getDataTable(sqlQuery, P("@qb_q", "%" + Request.QueryString["q"] + "%"), P("@qp_q", Request.QueryString["q"] + "%"));
                     var items = new List<object>();
                     foreach (DataRow dr in dt.Rows)
                     {
                         items.Add(new
                         {
                             id = dr["Item_ID"].ToString(),
-                            name = dr["Item_Code"].ToString() + " - " + dr["Description"].ToString(),
-                            // Additional fields for immediate use
-                            Stock = dr["Stock"].ToString(),
-                            UOM_Qty = dr["UOM"].ToString(),
-                            Last_PurchaseRate = dr["Last_PurchaseRate"].ToString(),
-                            LastQty = dr["LastQty"].ToString(),
-                            LastRequiredDate = dr["LastRequiredDate"] != DBNull.Value
-                                ? Convert.ToDateTime(dr["LastRequiredDate"]).ToString("dd MMM yyyy")
-                                : "",
-                            Unit = dr["Unit"].ToString()
+                            name = dr["Item_Code"].ToString() + " - " + dr["Description"].ToString()
                         });
                     }
 
@@ -751,33 +717,30 @@ namespace PMS
                     {
                         if (allowPharmacy && allowGeneralItem)
                         {
-                            sqlQuery = @"Select *, isnull(dbo.GetDataValueName('UOM', i.Unit),'NIL') as UOM, 
-        (select top 1 CAST(ISNULL(Rate,0) as DECIMAL(18,2)) from AP_Purchase_Order_Items where Item_Id = i.Item_ID order by PO_Item_ID desc) as LastRate, 
-        (select ISNULL(sum(Qty),0) from vwBatch_Ledger where Item_ID = i.Item_ID) as Stock 
+                            sqlQuery = @"Select TOP 10 i.Item_ID, i.Item_Code, i.Description
         from INV_Items i 
         Where Hospital_Services=0 and Services<>1 and Active=1 and Book_ID=" + AppConfig.Book_ID + @" 
         and " + warehouseCondition + @" 
-        AND (Description like @qb_q OR Generic_Name like @qb_q)";
+        AND (Description like @qb_q OR Generic_Name like @qb_q)
+        ORDER BY CASE WHEN Description LIKE @qp_q THEN 0 ELSE 1 END, Item_Code";
                         }
                         else if (allowPharmacy)
                         {
-                            sqlQuery = @"Select *, isnull(dbo.GetDataValueName('UOM', i.Unit),'NIL') as UOM, 
-        (select top 1 CAST(ISNULL(Rate,0) as DECIMAL(18,2)) from AP_Purchase_Order_Items where Item_Id = i.Item_ID order by PO_Item_ID desc) as LastRate, 
-        (select ISNULL(sum(Qty),0) from vwBatch_Ledger where Item_ID = i.Item_ID) as Stock 
+                            sqlQuery = @"Select TOP 10 i.Item_ID, i.Item_Code, i.Description
         from INV_Items i 
         Where Pharmacy_Item=1 and IsPharmacyItem=1 and Hospital_Services=0 and Services<>1 and Active=1 and Book_ID=" + AppConfig.Book_ID + @" 
         and " + warehouseCondition + @" 
-        AND (Description like @qb_q OR Generic_Name like @qb_q)";
+        AND (Description like @qb_q OR Generic_Name like @qb_q)
+        ORDER BY CASE WHEN Description LIKE @qp_q THEN 0 ELSE 1 END, Item_Code";
                         }
                         else
                         {
-                            sqlQuery = @"Select *, isnull(dbo.GetDataValueName('UOM', i.Unit),'NIL') as UOM, 
-        (select top 1 CAST(ISNULL(Rate,0) as DECIMAL(18,2)) from AP_Purchase_Order_Items where Item_Id = i.Item_ID order by PO_Item_ID desc) as LastRate, 
-        (select ISNULL(sum(Qty),0) from vwBatch_Ledger where Item_ID = i.Item_ID) as Stock 
+                            sqlQuery = @"Select TOP 10 i.Item_ID, i.Item_Code, i.Description
         from INV_Items i 
         Where Pharmacy_Item<>1 and IsPharmacyItem<>1 and Hospital_Services=0 and Services<>1 and Active=1 and Book_ID=" + AppConfig.Book_ID + @" 
         and " + warehouseCondition + @" 
-        AND (Description like @qb_q OR Generic_Name like @qb_q)";
+        AND (Description like @qb_q OR Generic_Name like @qb_q)
+        ORDER BY CASE WHEN Description LIKE @qp_q THEN 0 ELSE 1 END, Item_Code";
                         }
                     }
                     else
@@ -797,7 +760,7 @@ namespace PMS
                     }
 
                     var serializer = new JavaScriptSerializer();
-                    DataTable dt = DBClass.getDataTable(sqlQuery, P("@qe_WarehouseID", Request.QueryString["WarehouseID"]), P("@qb_q", "%" + Request.QueryString["q"] + "%"));
+                    DataTable dt = DBClass.getDataTable(sqlQuery, P("@qe_WarehouseID", Request.QueryString["WarehouseID"]), P("@qb_q", "%" + Request.QueryString["q"] + "%"), P("@qp_q", Request.QueryString["q"] + "%"));
                     var items = new List<object>();
 
                     foreach (DataRow dr in dt.Rows)
