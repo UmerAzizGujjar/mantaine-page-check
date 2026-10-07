@@ -1299,7 +1299,7 @@
                 <asp:DropDownList class="form-select" ID="Select_wareHouseTo" runat="server"></asp:DropDownList>
             </div>
 
-        <div class="col-lg-3 col-md-6 col-sm-12">
+        <div class="col-lg-4 col-md-6 col-sm-12">
                 <label for="ItemCode">Item Code : </label>
             
                 <input class="form-control" type="text" id="txtItemCode" />
@@ -1307,8 +1307,8 @@
         </div>
 
 
-        <div class="col-lg-3 col-md-6 col-sm-12">
-            
+        <div class="col-lg-2 col-md-6 col-sm-12">
+
                 <label for="BatchNo">Batch No:</label>
             
                 <select id="batchnoddl" name="batchnoddl" onchange="getstockdetailnum();"></select>

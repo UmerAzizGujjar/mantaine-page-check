@@ -41,22 +41,22 @@ textarea { font-size: 10px; border-radius: 5px; }
     align-items: center;
     padding: 5px 4px 6px;
     margin-bottom: 10px;
-    background: linear-gradient(90deg, transparent, #e0ede8);
-    border-bottom: 1px solid #b5d5c4;
+    background: linear-gradient(90deg, transparent, #e8f7f1);
+    border-bottom: 1px solid #a2dec7;
     border-radius: 0 0 4px 4px;
 }
 
 .pr-meta-text {
     font-size: 12px;
-    color: #1a5c40;
+    color: #336451;
     letter-spacing: 0.02em;
-    background: #e0ede8;
-    border: 1px solid #b5d5c4;
+    background: #e8f7f1;
+    border: 1px solid #a2dec7;
     border-radius: 20px;
     padding: 3px 14px;
 }
 
-.pr-meta-text strong { color: #0d3d28; font-weight: 700; }
+.pr-meta-text strong { color: #1f3c31; font-weight: 700; }
 
 /* ── Primary Settings ─────────────────────────────────────────── */
 .pr-primary-settings {
@@ -66,6 +66,26 @@ textarea { font-size: 10px; border-radius: 5px; }
 
 .pr-primary-settings [class*="col-"] {
     padding-bottom: 6px;
+}
+
+/* All field columns flow as ONE continuous wrapping run (the three Bootstrap .row blocks are
+   flattened with display: contents; markup unchanged). Column widths stay the original col-lg-2 etc.,
+   so when Projection / Warehouse fields are shown or hidden the rest simply re-flow with no empty
+   gaps (before, each .row wrapped on its own and left half-empty lines). */
+.pr-primary-settings {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: flex-start;
+    margin-left: -15px;   /* same offset the removed .row margins gave the columns */
+    margin-right: -15px;
+}
+.pr-primary-settings > .row { display: contents; }
+/* asp:Label renders an inline <span>, WareHouse/Branch use a block <label>: align both captions */
+.pr-primary-settings [class*="col-"] > span,
+.pr-primary-settings [class*="col-"] > label {
+    display: block;
+    margin-bottom: 3px;
+    line-height: 1.3;
 }
 
 /* ── Select2 overrides ────────────────────────────────────────── */
@@ -82,7 +102,6 @@ textarea { font-size: 10px; border-radius: 5px; }
 .select2-container--default .select2-selection--single .select2-selection__arrow {
     height: 32px !important;
 }
-
 /* ── Source toggle + Attachment row ──────────────────────────── */
 .pr-source-attach-row {
     display: flex;
@@ -189,7 +208,7 @@ textarea { font-size: 10px; border-radius: 5px; }
     text-shadow: none !important;
     flex-shrink: 0;
 }
-.source-action-btn:hover { background: #256b50 !important; border-color: #256b50; }
+.source-action-btn:hover { background: #2e5b4a !important; border-color: #2e5b4a; }
 
 /* token-input plugin overrides */
 .token-input-list {
@@ -206,8 +225,8 @@ textarea { font-size: 10px; border-radius: 5px; }
     display: flex;
     align-items: center;
     gap: 10px;
-    background: linear-gradient(135deg, #e0ede8 0%, #e0ede8 100%);
-    border: 1px solid #b5d5c4;
+    background: linear-gradient(135deg, #e8f7f1 0%, #d9f1e8 100%);
+    border: 1px solid #a2dec7;
     border-radius: 8px;
     padding: 5px 14px;
     box-shadow: 0 1px 4px rgba(48,134,101,0.10);
@@ -237,14 +256,14 @@ textarea { font-size: 10px; border-radius: 5px; }
 .pr-attachment-label {
     font-size: 12px;
     font-weight: 700;
-    color: #2a664b;
+    color: #244639;
     white-space: nowrap;
 }
 
 .pr-file-input {
     font-size: 11px !important;
-    border: 1px dashed #5b9e7e !important;
-    background: #e0ede8 !important;
+    border: 1px dashed #295142 !important;
+    background: #f7fcfa !important;
     border-radius: 5px !important;
     padding: 2px 6px !important;
     color: #333 !important;
@@ -276,7 +295,7 @@ textarea { font-size: 10px; border-radius: 5px; }
 }
 .pr-download-btn:hover,
 #ctl00_MainContent_HyperLink1:hover {
-    background: #256b50 !important;
+    background: #2e5b4a !important;
     color: #fff !important;
     text-decoration: none !important;
 }
@@ -287,8 +306,8 @@ textarea { font-size: 10px; border-radius: 5px; }
     flex-wrap: wrap;
     gap: 10px;
     padding: 8px 12px;
-    background: #e0ede8;
-    border: 1px dashed #8fbda8;
+    background: #f3faf7;
+    border: 1px dashed #43ae85;
     border-radius: 6px;
     margin-bottom: 10px;
 }
@@ -356,22 +375,99 @@ textarea { font-size: 10px; border-radius: 5px; }
 }
 
 /* ── Table header ─────────────────────────────────────────────── */
+#ITEMTable {
+    overflow-x: auto;
+    overflow-y: auto;
+    max-height: 420px;
+    margin-top: 6px;
+    border: 1px solid #dee2e6;
+    border-radius: 4px 4px 0 0;
+}
+
+/* Fixed layout: column widths come from the <th> widths, Item Description takes the rest.
+   Inputs / selects fill their cell, so a narrow column never has an over-wide box in it. */
+#tblItemDescription {
+    table-layout: fixed;
+    width: 100%;
+    min-width: 1830px;
+    margin-bottom: 0;
+}
+
 #tblItemDescription thead th {
     background-color: #f1f4f8;
-    font-size: 10px !important;
     font-weight: 700;
     white-space: nowrap;
-    padding: 6px 5px;
     position: sticky;
     top: 0;
     z-index: 1;
 }
 
 #tblItemDescription tbody td {
-    padding: 2px 4px;
     vertical-align: middle;
-    font-size: 10px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
 }
+
+/* Item description (5th column) and last vendor (26th, counting the 2 hidden Fed columns): allow wrapping */
+#tblItemDescription tbody td:nth-child(5),
+#tblItemDescription tbody td:nth-child(26) {
+    white-space: normal;
+    word-break: break-word;
+}
+
+#tblItemDescription tbody td input[type="text"],
+#tblItemDescription tbody td select {
+    width: 100% !important;
+    height: 28px;
+    padding: 1px 4px;
+    margin: 0;
+    box-sizing: border-box;
+}
+
+#tblItemDescription tbody td input[readonly] { background-color: #f7f7f7; }
+
+/* ── Override the global table skin (table-modern.css) for this grid ──
+   table-modern.css forces 12px/30px header padding and 11px/14px cell padding with !important,
+   which is wider than the narrow columns, so headers clipped and the table overflowed.
+   These selectors are more specific, so they win. */
+html:root body #tblItemDescription.table {
+    margin: 0 !important;
+    border-radius: 0 !important;
+    box-shadow: none !important;
+    border: 0 !important;
+    font-size: 12px !important;
+}
+
+html:root body #tblItemDescription.table > thead > tr > th {
+    padding: 7px 5px !important;
+    font-size: 11px !important;
+    line-height: 1.2 !important;
+    letter-spacing: .2px !important;
+    white-space: normal !important;   /* long labels (Adv Amount, Last PO Rate...) wrap instead of clipping */
+    overflow: hidden;
+    text-overflow: clip;
+    border-radius: 0 !important;
+}
+
+html:root body #tblItemDescription.table > tbody > tr > td {
+    padding: 3px 5px !important;
+    font-size: 12px !important;
+    font-weight: 700 !important;
+    line-height: 1.25 !important;
+    height: 36px;
+}
+
+html:root body #tblItemDescription.table > tbody > tr:last-child > td { border-radius: 0 !important; }
+
+html:root body #tblItemDescription tbody td input[type="text"],
+html:root body #tblItemDescription tbody td select {
+    font-size: 12px !important;
+    font-weight: 700 !important;
+}
+
+/* Delivery date input: keep the whole "dd MMM yyyy" visible */
+#tblItemDescription tbody td input[name="txtddate"] { padding: 1px 2px; letter-spacing: 0; }
 
 /* ── Totals Bar ───────────────────────────────────────────────── */
 .pr-totals-bar {
@@ -420,7 +516,7 @@ textarea { font-size: 10px; border-radius: 5px; }
     text-align: right !important;
     font-weight: 700 !important;
     font-size: 11px !important;
-    background-color: #e0ede8 !important;
+    background-color: #e8f7f1 !important;
     border: 1px solid #308665 !important;
     border-radius: 4px !important;
     padding: 3px 7px !important;
@@ -511,3 +607,20 @@ textarea { font-size: 10px; border-radius: 5px; }
     margin-bottom: 0;
 }
 
+/* ── Gap between the item search box and the Browse / Items button ──
+   They used to be glued together (input had no right border, button had square left corners).
+   Now they are two separate controls with a gap, so both get a full border and rounded corners. */
+.source-inline-group { gap: 8px !important; }
+
+.source-inline-group .source-select-input,
+.source-inline-group .token-input-list {
+    border-right: 1px solid #d5d5d5 !important;
+    border-radius: 5px !important;
+}
+
+.source-inline-group .source-action-btn { border-radius: 5px !important; }
+
+#girInputSection .select2-container--default .select2-selection--single {
+    border-right: 1px solid #d5d5d5 !important;
+    border-radius: 5px !important;
+}

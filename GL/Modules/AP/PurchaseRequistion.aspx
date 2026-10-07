@@ -393,20 +393,20 @@
             length++;
             $("#tblbodyPackage").append(
                 "<tr data-itemid='" + Item_ID + "'>" +
-                "<td style='text-align:center;padding-top:7px!important;'>" + length + "</td>" +
-                "<td style='text-align:left;padding-top:7px!important;padding-right:3px!important;'>" + Item_Code + "</td>" +
-                "<td style='text-align:left;padding-left:8px!important;padding-top:7px!important;'>" + Item_name + "</td>" +
-                "<td style='text-align:right;padding-top:7px!important;'>" + stock + "</td>" +
-                "<td style='text-align:right;padding-top:7px!important;'>" + UOM_Qty + "</td>" +
-                "<td style='text-align:right;'><input type='text' value='" + Qty + "' name='Qty' id='txtQty" + length + "' style='font-size:9px;width:58px!important;text-align:right;margin-top:2px;' autocomplete='off' onkeyup='calcutaeQty();calcutaeEstimatedCost(this)'/></td>" +
-                "<td style='text-align:left;padding-top:7px!important;'>" + unit + "</td>" +
-                "<td style='text-align:right;'><input type='text' name='txtUnitPrice' id='txtUnitPrice" + length + "' style='font-size:9px;width:68px!important;text-align:right;margin-top:2px;' autocomplete='off' value='" + Rate + "' onkeyup='calcutaeEstimCost(this)'/></td>" +
-                "<td style='text-align:right;'><input readonly type='text' name='txtEstimCost' id='txtEstimCost" + length + "' style='font-size:9px;width:78px!important;text-align:right;margin-top:2px;' /></td>" +
-                "<td style='text-align:left;'><input type='text' name='txtrdate' id='txtrdate" + length + "' style='font-size:9px;width:80px!important;margin-top:2px;' autocomplete='off'/></td>" +
-                "<td style='text-align:left;padding-top:7px!important;'>" + "</td>" +
-                "<td style='text-align:right;padding-top:7px!important;'>" + "</td>" +
-                "<td style='text-align:left;padding-top:7px!important;'>" + "</td>" +
-                "<td style='text-align:left;'><input type='text' name='remarks' id='remarks" + length + "' style='font-size:9px;width:100%;margin-top:2px;'/></td>" +
+                "<td style='text-align:center;'>" + length + "</td>" +
+                "<td style='text-align:left;'>" + Item_Code + "</td>" +
+                "<td style='text-align:left;'>" + Item_name + "</td>" +
+                "<td style='text-align:right;'>" + stock + "</td>" +
+                "<td style='text-align:right;'>" + UOM_Qty + "</td>" +
+                "<td style='text-align:right;'><input type='text' value='" + Qty + "' name='Qty' id='txtQty" + length + "' style='font-size:12.5px;font-weight:700;width:100%!important;text-align:right;' autocomplete='off' onkeyup='calcutaeQty();calcutaeEstimatedCost(this)'/></td>" +
+                "<td style='text-align:left;'>" + unit + "</td>" +
+                "<td style='text-align:right;'><input type='text' name='txtUnitPrice' id='txtUnitPrice" + length + "' style='font-size:12.5px;font-weight:700;width:100%!important;text-align:right;' autocomplete='off' value='" + Rate + "' onkeyup='calcutaeEstimCost(this)'/></td>" +
+                "<td style='text-align:right;'><input readonly type='text' name='txtEstimCost' id='txtEstimCost" + length + "' style='font-size:12.5px;font-weight:700;width:100%!important;text-align:right;' /></td>" +
+                "<td style='text-align:left;'><input type='text' name='txtrdate' id='txtrdate" + length + "' style='font-size:12.5px;font-weight:700;width:100%!important;' autocomplete='off'/></td>" +
+                "<td style='text-align:left;'>" + "</td>" +
+                "<td style='text-align:right;'>" + "</td>" +
+                "<td style='text-align:left;'>" + "</td>" +
+                "<td style='text-align:left;'><input type='text' name='remarks' id='remarks" + length + "' style='font-size:11px;width:100%;'/></td>" +
                 "<td style='display:none'>" + Item_ID + "</td>" +
                 "<td style='text-align:center;'><a href='#' onclick='Delete(this)'><i class='fa fa-trash' style='font-size:13px;margin-top:5px;color:#f30a0a;'></i></a></td>" +
                 "<td style='display:none'>" + MaterialRequestDetail_Id + "</td>" +
@@ -499,20 +499,20 @@
             console.log('Formatted Last Required Date:', formattedLastReqDate);
             $("#tblbodyPackage").append(
                 "<tr data-itemid='" + Item_ID + "'>" +
-                "<td style='text-align:center;padding-top:7px!important;'>" + length + "</td>" +
-                "<td style='text-align:left;padding-top:7px!important;padding-right:3px!important;'>" + Item_Code + "</td>" +
-                "<td style='text-align:left;padding-left:8px!important;padding-top:7px!important;'>" + Item_name + "</td>" +
-                "<td style='text-align:right;padding-top:7px!important;'>" + stock + "</td>" +
-                "<td style='text-align:right;padding-top:7px!important;'>" + uomQty + "</td>" +
-                "<td style='text-align:right;'><input type='text' name='Qty' id='txtQty" + length + "' style='font-size:9px;width:58px!important;text-align:right;margin-top:2px;' autocomplete='off' onkeyup='calcutaeQty();calcutaeEstimatedCost(this)'/></td>" +
-                "<td style='text-align:left;padding-top:7px!important;'>" + unit + "</td>" +
-                "<td style='text-align:right;'><input type='text' name='txtUnitPrice' id='txtUnitPrice" + length + "' value='" + LastRate + "' style='font-size:9px;width:68px!important;text-align:right;margin-top:2px;' autocomplete='off' onkeyup='calcutaeEstimCost(this)'/></td>" +
-                "<td style='text-align:right;'><input readonly type='text' name='txtEstimCost' id='txtEstimCost" + length + "' style='font-size:9px;width:78px!important;text-align:right;margin-top:2px;' /></td>" +
-                "<td style='text-align:left;'><input type='text' name='txtrdate' id='txtrdate" + length + "' style='font-size:9px;width:80px!important;margin-top:2px;' autocomplete='off'/></td>" +
-                "<td style='text-align:left;padding-top:7px!important;'>" + lastPRNo + "</td>" +
-                "<td style='text-align:right;padding-top:7px!important;'>" + lastQty + "</td>" +
-                "<td style='text-align:left;padding-top:7px!important;'>" + formattedLastReqDate + "</td>" +
-                "<td style='text-align:left;'><input type='text' name='remarks' id='remarks" + length + "' style='font-size:9px;width:100%;margin-top:2px;'/></td>" +
+                "<td style='text-align:center;'>" + length + "</td>" +
+                "<td style='text-align:left;'>" + Item_Code + "</td>" +
+                "<td style='text-align:left;'>" + Item_name + "</td>" +
+                "<td style='text-align:right;'>" + stock + "</td>" +
+                "<td style='text-align:right;'>" + uomQty + "</td>" +
+                "<td style='text-align:right;'><input type='text' name='Qty' id='txtQty" + length + "' style='font-size:12.5px;font-weight:700;width:100%!important;text-align:right;' autocomplete='off' onkeyup='calcutaeQty();calcutaeEstimatedCost(this)'/></td>" +
+                "<td style='text-align:left;'>" + unit + "</td>" +
+                "<td style='text-align:right;'><input type='text' name='txtUnitPrice' id='txtUnitPrice" + length + "' value='" + LastRate + "' style='font-size:12.5px;font-weight:700;width:100%!important;text-align:right;' autocomplete='off' onkeyup='calcutaeEstimCost(this)'/></td>" +
+                "<td style='text-align:right;'><input readonly type='text' name='txtEstimCost' id='txtEstimCost" + length + "' style='font-size:12.5px;font-weight:700;width:100%!important;text-align:right;' /></td>" +
+                "<td style='text-align:left;'><input type='text' name='txtrdate' id='txtrdate" + length + "' style='font-size:12.5px;font-weight:700;width:100%!important;' autocomplete='off'/></td>" +
+                "<td style='text-align:left;'>" + lastPRNo + "</td>" +
+                "<td style='text-align:right;'>" + lastQty + "</td>" +
+                "<td style='text-align:left;'>" + formattedLastReqDate + "</td>" +
+                "<td style='text-align:left;'><input type='text' name='remarks' id='remarks" + length + "' style='font-size:11px;width:100%;'/></td>" +
                 "<td style='display:none'>" + Item_ID + "</td>" +
                 "<td style='text-align:center;'><a href='#' onclick='Delete(this)'><i class='fa fa-trash' style='font-size:13px;margin-top:5px;color:#f30a0a;'></i></a></td>" +
                 "<td style='display:none'>0</td><td style='display:none'>0</td><td style='display:none'>0</td>" +
@@ -656,20 +656,20 @@
                         }
                         $("#tblbodyPackage").append(
                             "<tr>" +
-                            "<td style='text-align:center;padding-top:7px!important;'>" + length + "</td>" +
-                            "<td style='text-align:left;padding-top:7px!important;padding-right:3px!important;'>" + parse[0].Item_Code + "</td>" +
-                            "<td style='text-align:left;padding-left:8px!important;padding-top:7px!important;'>" + parse[0].Description + "</td>" +
-                            "<td style='text-align:right;padding-top:7px!important;'>" + parse[0].Stock + "</td>" +
-                            "<td style='text-align:right;padding-top:7px!important;'>" + (parse[0].UOM_Qty || '0') + "</td>" +
-                            "<td style='text-align:right;'><input type='text' name='Qty' id='txtQty" + length + "' style='font-size:9px;width:58px!important;text-align:right;margin-top:2px;' autocomplete='off' onkeyup='calcutaeQty();calcutaeEstimatedCost(this)'/></td>" +
-                            "<td style='text-align:left;padding-top:7px!important;'>" + parse[0].Unit + "</td>" +
-                            "<td style='text-align:right;'><input type='text' name='txtUnitPrice' id='txtUnitPrice" + length + "' value = '" + (parse[0].Last_PurchaseRate || 0) + "' style='font-size:9px;width:68px!important;text-align:right;margin-top:2px;' autocomplete='off' onkeyup='calcutaeEstimCost(this)'/></td>" +
-                            "<td style='text-align:right;'><input readonly type='text' name='txtEstimCost' id='txtEstimCost" + length + "' style='font-size:9px;width:78px!important;text-align:right;margin-top:2px;' /></td>" +
-                            "<td style='text-align:left;'><input type='text' name='txtrdate' id='txtrdate" + length + "' style='font-size:9px;width:80px!important;margin-top:2px;' autocomplete='off'/></td>" +
-                            "<td style='text-align:left;padding-top:7px!important;'>" + lastPRNo + "</td>" +
-                            "<td style='text-align:right;padding-top:7px!important;'>" + lastQty + "</td>" +
-                            "<td style='text-align:left;padding-top:7px!important;'>" + lastReqDate + "</td>" +
-                            "<td style='text-align:left;'><input type='text' name='remarks' id='remarks" + length + "' style='font-size:9px;width:100%;margin-top:2px;'/></td>" +
+                            "<td style='text-align:center;'>" + length + "</td>" +
+                            "<td style='text-align:left;'>" + parse[0].Item_Code + "</td>" +
+                            "<td style='text-align:left;'>" + parse[0].Description + "</td>" +
+                            "<td style='text-align:right;'>" + parse[0].Stock + "</td>" +
+                            "<td style='text-align:right;'>" + (parse[0].UOM_Qty || '0') + "</td>" +
+                            "<td style='text-align:right;'><input type='text' name='Qty' id='txtQty" + length + "' style='font-size:12.5px;font-weight:700;width:100%!important;text-align:right;' autocomplete='off' onkeyup='calcutaeQty();calcutaeEstimatedCost(this)'/></td>" +
+                            "<td style='text-align:left;'>" + parse[0].Unit + "</td>" +
+                            "<td style='text-align:right;'><input type='text' name='txtUnitPrice' id='txtUnitPrice" + length + "' value = '" + (parse[0].Last_PurchaseRate || 0) + "' style='font-size:12.5px;font-weight:700;width:100%!important;text-align:right;' autocomplete='off' onkeyup='calcutaeEstimCost(this)'/></td>" +
+                            "<td style='text-align:right;'><input readonly type='text' name='txtEstimCost' id='txtEstimCost" + length + "' style='font-size:12.5px;font-weight:700;width:100%!important;text-align:right;' /></td>" +
+                            "<td style='text-align:left;'><input type='text' name='txtrdate' id='txtrdate" + length + "' style='font-size:12.5px;font-weight:700;width:100%!important;' autocomplete='off'/></td>" +
+                            "<td style='text-align:left;'>" + lastPRNo + "</td>" +
+                            "<td style='text-align:right;'>" + lastQty + "</td>" +
+                            "<td style='text-align:left;'>" + lastReqDate + "</td>" +
+                            "<td style='text-align:left;'><input type='text' name='remarks' id='remarks" + length + "' style='font-size:11px;width:100%;'/></td>" +
                             "<td style='display:none'><input type='hidden' name='txtItemID' value='" + parse[0].Item_ID + "'/>" + parse[0].Item_ID + "</td>" +
                             "<td style='text-align:center;'><a href='#' onclick='Delete(this)'><i class='fa fa-trash' style='font-size:13px;margin-top:5px;color:#f30a0a;'></i></a></td>" +
                             "<td style='display:none'>0</td><td style='display:none'>0</td><td style='display:none'>0</td>" +
@@ -1009,20 +1009,20 @@
 
                         row +=
                             '<tr>' +
-                            '<td style="text-align:center;padding-top:7px!important;">' + len + '</td>' +
-                            '<td style="text-align:left;padding-top:7px!important;padding-right:3px!important;">' + parse[key].itemCode + '</td>' +
-                            '<td style="text-align:left;padding-left:8px!important;padding-top:7px!important;">' + parse[key].Description + '</td>' +
-                            '<td style="text-align:right;padding-top:7px!important;">' + parse[key].stock + '</td>' +
-                            '<td style="text-align:right;padding-top:7px!important;">' + (parse[key].UOM_Qty || '0') + '</td>' +
-                            '<td style="text-align:right;"><input type="text" value="' + parseFloat(parse[key].Qty || 0).toFixed(2) + '" name="Qty" id="txtQty' + counter + '" style="font-size:9px;width:58px!important;text-align:right;margin-top:2px;" autocomplete="off" onkeyup="calcutaeQty();calcutaeEstimatedCost(this)"/></td>' +
-                            '<td style="text-align:left;padding-top:7px!important;">' + uom + '</td>' +
-                            '<td style="text-align:right;"><input type="text" value="' + parseFloat(parse[key].UnitPrice || 0).toFixed(2) + '" name="txtUnitPrice" id="txtUnitPrice' + counter + '" style="font-size:9px;width:68px!important;text-align:right;margin-top:2px;" autocomplete="off" onkeyup="calcutaeEstimCost(this)"/></td>' +
-                            '<td style="text-align:right;"><input readonly type="text" value="' + parseFloat(parse[key].EstimateCost || 0).toFixed(2) + '" name="txtEstimCost" id="txtEstimCost' + counter + '" style="font-size:9px;width:78px!important;text-align:right;margin-top:2px;" autocomplete="off"/></td>' +
-                            '<td style="text-align:left;"><input type="text" name="txtrdate" id="txtrdate' + counter + '" style="font-size:9px;width:80px!important;margin-top:2px;" value="' + datetime + '"/></td>' +
-                            '<td style="text-align:left;padding-top:7px!important;">' + (parse[key].Last_PR_No || '') + '</td>' +
-                            '<td style="text-align:right;padding-top:7px!important;">' + (parse[key].Last_PR_Qty || 0) + '</td>' +
-                            '<td style="text-align:left;padding-top:7px!important;">' + lastReqDateDisplay + '</td>' +
-                            '<td style="text-align:left;"><input type="text" name="remarks" id="remarks' + counter + '" style="font-size:9px;width:100%;margin-top:2px;" value="' + parse[key].Remarks + '"/></td>' +
+                            '<td style="text-align:center;">' + len + '</td>' +
+                            '<td style="text-align:left;">' + parse[key].itemCode + '</td>' +
+                            '<td style="text-align:left;">' + parse[key].Description + '</td>' +
+                            '<td style="text-align:right;">' + parse[key].stock + '</td>' +
+                            '<td style="text-align:right;">' + (parse[key].UOM_Qty || '0') + '</td>' +
+                            '<td style="text-align:right;"><input type="text" value="' + parseFloat(parse[key].Qty || 0).toFixed(2) + '" name="Qty" id="txtQty' + counter + '" style="font-size:12.5px;font-weight:700;width:100%!important;text-align:right;" autocomplete="off" onkeyup="calcutaeQty();calcutaeEstimatedCost(this)"/></td>' +
+                            '<td style="text-align:left;">' + uom + '</td>' +
+                            '<td style="text-align:right;"><input type="text" value="' + parseFloat(parse[key].UnitPrice || 0).toFixed(2) + '" name="txtUnitPrice" id="txtUnitPrice' + counter + '" style="font-size:12.5px;font-weight:700;width:100%!important;text-align:right;" autocomplete="off" onkeyup="calcutaeEstimCost(this)"/></td>' +
+                            '<td style="text-align:right;"><input readonly type="text" value="' + parseFloat(parse[key].EstimateCost || 0).toFixed(2) + '" name="txtEstimCost" id="txtEstimCost' + counter + '" style="font-size:12.5px;font-weight:700;width:100%!important;text-align:right;" autocomplete="off"/></td>' +
+                            '<td style="text-align:left;"><input type="text" name="txtrdate" id="txtrdate' + counter + '" style="font-size:12.5px;font-weight:700;width:100%!important;" value="' + datetime + '"/></td>' +
+                            '<td style="text-align:left;">' + (parse[key].Last_PR_No || '') + '</td>' +
+                            '<td style="text-align:right;">' + (parse[key].Last_PR_Qty || 0) + '</td>' +
+                            '<td style="text-align:left;">' + lastReqDateDisplay + '</td>' +
+                            '<td style="text-align:left;"><input type="text" name="remarks" id="remarks' + counter + '" style="font-size:11px;width:100%;" value="' + parse[key].Remarks + '"/></td>' +
                             '<td style="display:none">' + parse[key].itemId + '</td>' +
                             '<td style="text-align:center;"><a href="#" onclick="Delete(this)"><i class="fa fa-trash" style="font-size:13px;margin-top:5px;color:#f30a0a;"></i></a></td>' +
                             '<td style="display:none">' + parse[key].MaterialRequestDetail_Id + '</td>' +
@@ -1261,6 +1261,34 @@
          SYSTEM META-DATA BAR  (top-right, read-only badge strip)
     ════════════════════════════════════════════════════════════ -->
     <div class="pr-meta-bar">
+        <!-- Read-only info (edit mode): audit chips + GIR link, same line as PR # / Date / Status -->
+        <div class="pr-audit-group" id="CreatedByRow" style="display:none;">
+            <div class="pr-audit-chip" title="Created By">
+                <i class="fa fa-user-plus"></i> <span id="lblCreatedBy" class="pr-audit-chip-value">-</span>
+            </div>
+            <div class="pr-audit-chip" title="Created Date">
+                <i class="fa fa-calendar-plus-o"></i> <span id="lblCreatedTime" class="pr-audit-chip-value">-</span>
+            </div>
+            <div class="pr-audit-chip" title="Updated By">
+                <i class="fa fa-edit"></i> <span id="lblUpatedBy" class="pr-audit-chip-value">-</span>
+            </div>
+            <div class="pr-audit-chip" title="Updated Date">
+                <i class="fa fa-calendar-check-o"></i> <span id="lblUpatedTime" class="pr-audit-chip-value">-</span>
+            </div>
+        </div>
+        <div class="pr-gir-card" id="girInfoGroup" style="display:none;">
+            <div class="pr-gir-card-left">
+                <i class="fa fa-link"></i> GIR <span id="lblGIRNum">-</span>
+            </div>
+            <div class="pr-gir-card-right">
+                <div class="pr-gir-stat" title="GIR Prepared By">
+                    <i class="fa fa-user-circle"></i> <span id="lblGirCreatedBy">-</span>
+                </div>
+                <div class="pr-gir-stat" title="GIR Approved By">
+                    <i class="fa fa-check-circle"></i> <span id="lblGirApprovedBy">-</span>
+                </div>
+            </div>
+        </div>
         <span id="prMetaDisplay" class="pr-meta-text">
             PR&nbsp;#&nbsp;<strong>—</strong>&nbsp;&nbsp;|&nbsp;&nbsp;Date:&nbsp;<strong>—</strong>&nbsp;&nbsp;|&nbsp;&nbsp;Status:&nbsp;<strong>Draft</strong>
         </span>
@@ -1271,40 +1299,40 @@
         <!-- ══════════════════════════════════════════════════════
              ROW 1: Warehouse | Department | Priority | Ref # | Remarks
         ════════════════════════════════════════════════════════ -->
-        <div class="row pr-primary-settings">
-            <div id="warehouse" class="col-lg-2 col-md-4 col-sm-6 col-xs-12">
+        <div class="pr-primary-settings">
+            <div id="warehouse" class="pr-field">
                 <label id="LblWarehouse">WareHouse <span class="req-star">*</span></label>
                 <select id="ddlWarehouse" class="form-select">
                     <option value="0">Please Select</option>
                 </select>
             </div>
-            <div class="col-lg-2 col-md-4 col-sm-6 col-xs-12">
+            <div class="pr-field">
                 <label id="Lbldepartment">Department <span class="req-star">*</span></label>
                 <select id="ddldept" class="form-select"></select>
             </div>
-            <div class="col-lg-2 col-md-4 col-sm-6 col-xs-12">
+            <div class="pr-field">
                 <label id="LblPriority">Priority <span class="req-star">*</span></label>
                 <select id="ddlPriority" class="form-select">
                     <option value="0">Please Select</option>
                 </select>
             </div>
-            <div id="mode" class="col-lg-2 col-md-4 col-sm-6 col-xs-12">
+            <div id="mode" class="pr-field">
                 <label id="LblMode">Mode</label>
                 <select id="ddlMode" class="form-select">
                     <option value="0">Please Select</option>
                 </select>
             </div>
-            <div class="col-lg-2 col-md-4 col-sm-6 col-xs-12">
+            <div class="pr-field">
                 <label id="LblBranch">Branch</label>
                 <select id="ddlBranch" class="form-select">
                     <option value="0">Please Select</option>
                 </select>
             </div>
-            <div class="col-lg-2 col-md-4 col-sm-6 col-xs-12">
+            <div class="pr-field pr-field-sm">
                 <label id="LblRef_Num">Ref #</label>
                 <input type="text" class="form-control" id="txtRef_Num" name="txtRef_Num" placeholder="Reference no." autocomplete="off" />
             </div>
-            <div class="col-lg-2 col-md-8 col-sm-12 col-xs-12">
+            <div class="pr-field pr-field-lg">
                 <label id="lblrem">Remarks</label>
                 <input id="txtRemarks" type="text" class="form-control" placeholder="Enter any remarks..." />
             </div>
@@ -1370,64 +1398,30 @@
 
         </div>
 
-        <!-- ----------------------------------------------------------
-         AUDIT BAR (Edit Mode only)
-    ------------------------------------------------------------ -->
-    <div class="pr-audit-bar" id="CreatedByRow" style="display:none;">
-        <div class="pr-audit-group">
-            <div class="pr-audit-chip" title="Created By">
-                <i class="fa fa-user-plus" style="color:#aaa;"></i> <span id="lblCreatedBy" class="pr-audit-chip-value">-</span>
-            </div>
-            <div class="pr-audit-chip" title="Created Date">
-                <i class="fa fa-calendar-plus-o" style="color:#aaa;"></i> <span id="lblCreatedTime" class="pr-audit-chip-value">-</span>
-            </div>
-            <div class="pr-audit-chip" title="Updated By">
-                <i class="fa fa-edit" style="color:#aaa;"></i> <span id="lblUpatedBy" class="pr-audit-chip-value">-</span>
-            </div>
-            <div class="pr-audit-chip" title="Updated Date">
-                <i class="fa fa-calendar-check-o" style="color:#aaa;"></i> <span id="lblUpatedTime" class="pr-audit-chip-value">-</span>
-            </div>
-        </div>
-        
-        <div class="pr-gir-card" id="girInfoGroup" style="display:none;">
-            <div class="pr-gir-card-left">
-                <i class="fa fa-link"></i> GIR <span id="lblGIRNum">-</span>
-            </div>
-            <div class="pr-gir-card-right">
-                <div class="pr-gir-stat" title="GIR Prepared By">
-                    <i class="fa fa-user-circle"></i> <span id="lblGirCreatedBy">-</span>
-                </div>
-                <div class="pr-gir-stat" title="GIR Approved By">
-                    <i class="fa fa-check-circle"></i> <span id="lblGirApprovedBy">-</span>
-                </div>
-            </div>
-        </div>
-    </div>
-
     </form>
 
     <!-- ══════════════════════════════════════════════════════════
          ITEMS TABLE
     ════════════════════════════════════════════════════════════ -->
-    <div id="ITEMTable" style="overflow-x:auto; overflow-y:auto; max-height:310px; margin-top:14px; margin-bottom:0; border:1px solid #dee2e6; border-radius:4px 4px 0 0;">
-        <table class="table table-bordered table-striped" id="tblPackage" style="font-size:10px !important; width:100%; min-width:860px; margin-bottom:0;">
+    <div id="ITEMTable">
+        <table class="table table-bordered table-striped" id="tblPackage">
             <thead>
                 <tr>
-                    <th style="width:4%;  text-align:center;">Sr No.</th>
-                    <th style="width:8%;  text-align:left;">Item Code</th>
-                    <th style="width:20%; text-align:left;">Description</th>
-                    <th style="width:7%;  text-align:right;">Stock</th>
-                    <th style="width:6%;  text-align:right;">UOM Qty</th>
-                    <th style="width:6%;  text-align:right;">Qty</th>
-                    <th style="width:5%;  text-align:left;">MOU</th>
-                    <th style="width:9%;  text-align:right;">Unit Price</th>
-                    <th style="width:10%; text-align:right;">Estimated Cost</th>
-                    <th style="width:10%; text-align:left;">Required Date</th>
-                    <th style="width:8%;  text-align:right;">Last PR No</th>
-                    <th style="width:6%;  text-align:right;">Last Qty</th>
-                    <th style="width:10%; text-align:left;">Last PR Date</th>
-                    <th style="width:15%; text-align:left;">Remarks</th>
-                    <th style="width:6%;  text-align:center;">Action</th>
+                    <th style="width:40px;  text-align:center;">Sr</th>
+                    <th style="width:86px;  text-align:left;">Item Code</th>
+                    <th style="text-align:left;">Description</th>
+                    <th style="width:62px;  text-align:right;">Stock</th>
+                    <th style="width:74px;  text-align:right;">UOM Qty</th>
+                    <th style="width:80px;  text-align:right;">Qty</th>
+                    <th style="width:54px;  text-align:left;">MOU</th>
+                    <th style="width:90px;  text-align:right;">Unit Price</th>
+                    <th style="width:102px; text-align:right;">Est. Cost</th>
+                    <th style="width:126px; text-align:left;">Required Date</th>
+                    <th style="width:90px;  text-align:left;">Last PR No</th>
+                    <th style="width:76px;  text-align:right;">Last Qty</th>
+                    <th style="width:106px; text-align:left;">Last PR Date</th>
+                    <th style="width:160px; text-align:left;">Remarks</th>
+                    <th style="width:54px;  text-align:center;">Action</th>
                     <th style="display:none;">MaterialRequestDetail Id</th>
                     <th style="display:none;">MaterialRequest Id</th>
                     <th style="display:none;">Req Num</th>

@@ -538,10 +538,10 @@
         /* ===== Application header: responsive + prominent ===== */
         #navbar {
             height: auto !important;
-            min-height: 68px;
+            min-height: 50px;
             background: var(--theme-header-bg, linear-gradient(180deg, #ffffff 0%, #eceff3 100%)) !important;
-            border-bottom: 4px solid var(--theme-header-line, #EFA63E);
-            box-shadow: 0 3px 12px rgba(0, 0, 0, 0.20) !important;
+            border-bottom: 3px solid var(--theme-header-line, #EFA63E);
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.12) !important;
             position: relative;
             z-index: 1030;
         }
@@ -551,9 +551,9 @@
             flex-wrap: nowrap;
             align-items: center;
             width: 100% !important;
-            min-height: 64px;
+            min-height: 46px;
             margin: 0 !important;
-            padding: 0 16px !important;
+            padding: 2px 16px !important;
             background: var(--theme-header-bg, linear-gradient(180deg, #ffffff 0%, #eceff3 100%)) !important;
         }
 
@@ -584,8 +584,8 @@
                 #navbar-container > div:nth-child(3) {
                     flex: 0 0 auto;
                     align-self: stretch;
-                    min-width: 98px; /* bell is 90px wide */
-                    margin-right: 28px; /* gap between the bell and the user menu (#headerWelcome) */
+                    min-width: 56px; /* bell is capped at 56px wide (see compact header block below) */
+                    margin-right: 10px; /* gap between the bell and the user menu (#headerWelcome) */
                 }
 
                 /* 4) user menu */
@@ -595,9 +595,9 @@
 
         #navbar .app-logo {
             display: block;
-            height: 56px !important;
+            height: 38px !important;
             width: auto !important;
-            max-width: 130px;
+            max-width: 120px;
             margin: 0 !important;
             object-fit: contain;
         }
@@ -607,9 +607,9 @@
             max-width: 100%;
             margin: 0;
             font-family: "Segoe UI", Arial, sans-serif;
-            font-size: clamp(16px, 2.3vw, 30px);
-            font-weight: 800;
-            letter-spacing: .4px;
+            font-size: clamp(15px, 1.6vw, 22px);
+            font-weight: 700;
+            letter-spacing: .3px;
             line-height: 1.2;
             color: var(--theme-header-text, #1b2a41);
             text-shadow: var(--theme-header-text-shadow, none);
@@ -638,35 +638,115 @@
             white-space: nowrap;
         }
 
+        /* centre the 38px bell in the header: top = 50% of the column minus half the bell */
         #navbar .notification {
-            top: 0;
-            left: 8px;
+            top: calc(50% - 19px);
+            left: 0;
+        }
+
+        /* ===== Compact, modern header controls (colours still come from theme-colors.css) ===== */
+
+        /* bell: slim round icon button instead of a 90x60 white block */
+        #navbar .ace-nav > li {
+            height: 38px !important;
+            max-width: 42px;   /* beats the inline width:90px !important */
+            line-height: 38px;
+            border-left: 0;
+        }
+        #navbar .ace-nav > li > a {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            position: relative;
+            width: 38px;
+            height: 38px;
+            min-width: 38px;
+            padding: 0 !important;
+            background: var(--theme-accent-soft, rgba(0, 0, 0, .06));
+            border-radius: 50%;
+            box-shadow: 0 1px 3px rgba(0, 0, 0, .18);
+            transition: background-color .15s ease, transform .15s ease;
+        }
+        #navbar .ace-nav > li > a:hover,
+        #navbar .ace-nav > li.open > a { background: var(--theme-accent-soft, rgba(0, 0, 0, .1)); transform: translateY(-1px); }
+        #navbar #bell { margin: 0 !important; position: static; font-size: 18px !important; line-height: 1; color: var(--theme-accent-ink, var(--theme-header-text, #1b2a41)); }
+
+        /* unread count: small pill pinned to the bell's top-right corner (it used to wrap under the bell) */
+        /* the span is runat="server", so its id is ctl00_blink_notify - match by suffix */
+        #navbar [id$="blink_notify"] {
+            position: absolute;
+            top: -2px;
+            right: -20px;
+            width: auto;
+            height: auto;
+            margin: 0 !important;
+            line-height: 1;
+        }
+        #navbar [id$="blink_notify"] .badge {
+            position: static;
+            display: block;
+            min-width: 18px;
+            height: 18px;
+            padding: 0 5px !important;
+            border-radius: 9px;
+            font-size: 10px;
+            font-weight: 700;
+            line-height: 18px;
+            text-align: center;
+            background: var(--theme-accent, #EFA63E);
+            color: var(--theme-on-accent, #1b2a41);
+            border: 2px solid #fff;
+            box-sizing: content-box;
+            box-shadow: 0 1px 2px rgba(0, 0, 0, .25);
+        }
+        html[data-theme="dark"] #navbar #bell { color: var(--dk-text, #e6ebf2) !important; }
+        html[data-theme="dark"] #navbar [id$="blink_notify"] .badge { border-color: var(--dk-surface, #151b25); }
+
+        /* light / dark toggle: smaller round button */
+        #navbar .theme-toggle {
+            width: 32px;
+            height: 32px;
+            margin-right: 8px;
+            font-size: 15px;
+            box-shadow: 0 1px 3px rgba(0, 0, 0, .22);
+        }
+
+        /* user menu: slim pill (styleMaster gives .btn-primry 10px 20px padding) */
+        #navbar .user-btn.btn-primry {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            padding: 5px 14px !important;
+            border-radius: 999px !important;
+            font-size: 13px;
+            line-height: 1.3;
+            box-shadow: 0 1px 3px rgba(0, 0, 0, .22) !important;
         }
 
         @media screen and (max-width: 991px) {
             #navbar-container {
-                padding: 0 10px !important;
+                padding: 2px 10px !important;
             }
 
             #navbar .app-logo {
-                height: 46px !important;
+                height: 34px !important;
                 max-width: 100px;
             }
         }
 
         @media screen and (max-width: 600px) {
             #navbar {
-                min-height: 56px;
+                min-height: 44px;
                 border-bottom-width: 3px;
             }
 
             #navbar-container {
-                min-height: 52px;
-                padding: 0 6px !important;
+                min-height: 40px;
+                padding: 2px 6px !important;
             }
 
             #navbar .app-logo {
-                height: 38px !important;
+                height: 30px !important;
                 max-width: 80px;
             }
 
@@ -686,6 +766,111 @@
             #navbar-container > div:nth-child(3) {
                 margin-right: 12px;
             }
+        }
+
+        /* ===== Compact page title ("OPD » OPD" strip above every form): one slim line instead of ~61px ===== */
+        .main > #clear { height: 2px !important; }   /* inline style says 10px */
+
+        .container-fluid > .page-header {
+            margin: 0 0 6px !important;
+            padding: 2px 0 3px !important;
+        }
+
+        /* --- Title bar (new, shared): pages WITHOUT a .pr-meta-bar get the same tinted strip the PR / PO forms have,
+               with the page title in it. Colours come from theme-colors.css, so every theme keeps its own look. --- */
+        .container-fluid > .page-header.pr-title-bar {
+            display: flex;
+            align-items: center;
+            padding: 3px 8px 4px !important;
+            background: linear-gradient(90deg, var(--theme-accent-soft, #fdf2e2), transparent);
+            border-bottom: 1px solid var(--theme-accent-light, #f5ca8b);
+            border-radius: 4px 4px 0 0;
+        }
+        html[data-theme="dark"] .container-fluid > .page-header.pr-title-bar {
+            background: transparent;
+            border-bottom-color: var(--dk-border, #2a3547);
+        }
+
+        /* --- Forms that HAVE a .pr-meta-bar (PR / PO ...): the title lives inside that bar, the separate title strip is hidden --- */
+        .container-fluid:has(.pr-meta-bar) > .page-header.pr-title-bar { display: none !important; }
+
+        /* --- Forms with their OWN title banner (Billing Process bp-, OPD opd-, IPD ipd-, Employee emp-, Appointment apt- ...
+               each has a "*-meta-title" with the form name, status badge and action buttons): keep that banner, drop the
+               duplicate title strip above it. --- */
+        .container-fluid:has([class*="-meta-title"]) > .page-header.pr-title-bar { display: none !important; }
+
+        /* --- ONE look for every .pr-meta-bar (PR / PO, Vendor, Product, Receipts, Room ... each page used to style it differently):
+               title on the left, badges / meta text on the right, all on the same row. Beats the per-page rules by specificity. --- */
+        html body .container-fluid .pr-meta-bar {
+            display: flex;
+            flex-wrap: wrap;
+            align-items: center;
+            justify-content: flex-start;
+            gap: 8px;
+            padding: 3px 8px 4px;
+            margin-bottom: 8px;
+            background: linear-gradient(90deg, transparent, var(--theme-accent-soft, #fdf2e2));
+            border-bottom: 1px solid var(--theme-accent-light, #f5ca8b);
+            border-radius: 0 0 4px 4px;
+        }
+        html[data-theme="dark"] body .container-fluid .pr-meta-bar {
+            background: transparent;
+            border-bottom-color: var(--dk-border, #2a3547);
+        }
+        /* left block (title) keeps to the left, the right block (badges) is pushed to the far right */
+        html body .container-fluid .pr-meta-bar > .meta-left { display: flex; align-items: center; margin-right: auto; }
+        html body .container-fluid .pr-meta-bar > .meta-right { display: flex; align-items: center; gap: 10px; margin-left: auto; }
+        html body .container-fluid .pr-meta-bar > .meta-left:empty,
+        html body .container-fluid .pr-meta-bar > .meta-right:empty { display: none; }
+
+        /* title text: the hard-coded .meta-title that many forms carry gets the same look as the shared title */
+        html body .container-fluid .pr-meta-bar .meta-title {
+            display: inline-flex;
+            align-items: baseline;
+            gap: 8px;
+            font-size: 16px;
+            font-weight: 700;
+            line-height: 1.25;
+            letter-spacing: 0;
+            text-transform: none;
+            color: var(--theme-accent, #EFA63E);
+        }
+
+        .pr-meta-bar .pr-meta-title {
+            display: inline-flex;
+            align-items: baseline;
+            gap: 8px;
+            margin-right: 12px;
+            white-space: nowrap;
+        }
+        .pr-meta-bar .pr-meta-title-main {
+            font-size: 16px;
+            font-weight: 700;
+            line-height: 1.25;
+            color: var(--theme-accent, #EFA63E);
+        }
+        .pr-meta-bar .pr-meta-title-sub {
+            font-size: 12px;
+            line-height: 1.25;
+            color: #484b4d;
+        }
+        html[data-theme="dark"] .pr-meta-bar .pr-meta-title-sub { color: var(--dk-text-dim, #a9b4c4); }
+        /* PO / PR badge (PR # / Date / Status) stays at the far right of the bar */
+        .pr-meta-bar .pr-meta-text { margin-left: auto; }
+
+        .container-fluid > .page-header h1 {
+            display: flex;
+            align-items: baseline;
+            gap: 8px;
+            margin: 0 !important;
+            font-size: 18px !important;
+            line-height: 1.25 !important;
+        }
+
+        .container-fluid > .page-header h1 small {
+            font-size: 12px !important;
+            line-height: 1.25 !important;
+            padding: 0;
         }
 
         /* ===== Main menu bar: see wwwroot/lib/theme/menu-modern.css (desktop bar + mobile drawer) ===== */
@@ -1182,7 +1367,7 @@ CssClass="app-title"></asp:Label>
                         </div>
                     </div>
                     <div class="container-fluid">
-                        <div class="page-header">
+                        <div class="page-header pr-title-bar">
                             <h1>
                                 <asp:Label ID="lbl1" runat="server" Text=""></asp:Label>
                                 <small>
@@ -1191,6 +1376,60 @@ CssClass="app-title"></asp:Label>
                                 </small>
                             </h1>
                         </div>
+                        <script type="text/javascript">
+                            // "OPD » OPD": when the breadcrumb only repeats the title (or is empty) show the title alone
+                            (function () {
+                                var t = document.querySelector('.page-header [id$="lbl1"]');
+                                var s = document.querySelector('.page-header [id$="lbl2"]');
+                                if (!t || !s) return;
+                                var a = (t.textContent || '').trim().toLowerCase(), b = (s.textContent || '').trim().toLowerCase();
+                                if (b === '' || a === b) { var sm = s.closest('small'); if (sm) sm.style.display = 'none'; }
+                            })();
+
+                            // Forms that already have a .pr-meta-bar (PR #, Date, Status ...): show the page title inside that bar
+                            // (left side) and hide the separate title strip. Pages without the bar keep the .pr-title-bar strip.
+                            // Bars that already carry their own .meta-title (Vendor, Product, Receipts ...) keep it; a bar with an
+                            // empty .meta-left (Test Definition, Register Patient, Voucher ...) gets the title there.
+                            function placePageTitle() {
+                                var bar = document.querySelector('.container-fluid .pr-meta-bar');
+                                var head = document.querySelector('.container-fluid > .page-header.pr-title-bar');
+                                if (!head) return;
+                                // form has its own title banner (bp-/opd-/ipd-/emp-/apt-meta-title): drop the duplicate strip
+                                var banner = document.querySelector('.container-fluid [class*="-meta-title"]:not(.pr-meta-title)');
+                                if (banner && (banner.textContent || '').trim() !== '') { head.style.display = 'none'; return; }
+                                if (!bar) return;
+                                var own = bar.querySelector('.meta-title, .pr-meta-title');
+                                if (own && (own.textContent || '').trim() !== '') { head.style.display = 'none'; return; }
+                                var t = head.querySelector('[id$="lbl1"]'), s = head.querySelector('[id$="lbl2"]');
+                                var main = t ? (t.textContent || '').trim() : '';
+                                var sub = s ? (s.textContent || '').trim() : '';
+                                if (!main) return;                              // no title set: leave the normal strip alone
+                                var box = document.createElement('div');
+                                box.className = 'pr-meta-title';
+                                var m = document.createElement('span');
+                                m.className = 'pr-meta-title-main';
+                                m.textContent = main;
+                                box.appendChild(m);
+                                if (sub && sub.toLowerCase() !== main.toLowerCase()) {
+                                    var sp = document.createElement('span');
+                                    sp.className = 'pr-meta-title-sub';
+                                    sp.textContent = '» ' + sub;
+                                    box.appendChild(sp);
+                                }
+                                var target = bar.querySelector('.meta-left') || bar;
+                                target.insertBefore(box, target.firstChild);
+                                head.style.display = 'none';
+                            }
+                            document.addEventListener('DOMContentLoaded', function () {
+                                placePageTitle();
+                                // UpdatePanel partial postbacks re-render the bar: put the title back each time
+                                try {
+                                    if (window.Sys && Sys.WebForms && Sys.WebForms.PageRequestManager) {
+                                        Sys.WebForms.PageRequestManager.getInstance().add_endRequest(placePageTitle);
+                                    }
+                                } catch (e) { }
+                            });
+                        </script>
                         <asp:ContentPlaceHolder ID="MainContent" runat="server" />
                     </div>
                 </div>

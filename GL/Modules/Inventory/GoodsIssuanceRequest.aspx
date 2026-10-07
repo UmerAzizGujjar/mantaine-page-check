@@ -827,7 +827,7 @@
         </div>
         <div class="row">
 
-            <div class="col-lg-3 col-md-6 col-sm-12">
+            <div class="col-lg-4 col-md-6 col-sm-12">
                 <label>Item</label>
                 <input type="text" class="form-control" id="txtItem"  name="txtItem" placeholder="item" />
             </div>
@@ -838,7 +838,7 @@
                     <option value="0">Please Select</option>
                 </select>
             </div>
-            <div class="col-lg-3 col-md-6 col-sm-12">
+            <div class="col-lg-2 col-md-6 col-sm-12">
                 <label id="lbl_Status">Status</label>
                 <input type="text" class="form-control" id="txt_Status" name="txt_Status" readonly="readonly" />
             </div>
