@@ -1,4 +1,4 @@
-﻿<%@ Page Title="Log In" Language="C#" MasterPageFile="~/SiteNoMenu.master" AutoEventWireup="true"
+<%@ Page Title="Log In" Language="C#" MasterPageFile="~/SiteNoMenu.master" AutoEventWireup="true"
     CodeBehind="Login.aspx.cs" Inherits="PMS.Login" %>
 
 <%@ Register Assembly="AjaxControlToolkit" Namespace="AjaxControlToolkit" TagPrefix="asp" %>
@@ -61,225 +61,7 @@
         }
     </style>
 
-    <style type="text/css">
-        /* ===== Modern login card ===== */
-        html body#contbod {
-            display: flex;
-            flex-direction: column;
-            align-items: flex-end;
-            justify-content: center;
-            padding: 24px 8vw;
-            min-height: 100vh;
-        }
-
-        html body#contbod .wrapper {
-            position: relative !important;
-            top: auto !important;
-            right: auto !important;
-            left: auto !important;
-            transform: none !important;
-            margin: 0 !important;
-            width: 100% !important;
-            max-width: 440px !important;
-            padding: 30px 34px 22px !important;
-            background: linear-gradient(var(--theme-accent, #EFA63E), var(--theme-accent, #EFA63E)) top / 100% 5px no-repeat, #ffffff;
-            border: 0 !important;
-            border-radius: 18px !important;
-            box-shadow: 0 24px 60px rgba(20, 32, 60, 0.20), 0 2px 8px rgba(20, 32, 60, 0.08);
-            text-align: left;
-        }
-
-        /* undo the old fixed 455px table + row hacks */
-        #ctl00_MainContent_UserLogin,
-        #ctl00_MainContent_UserLogin table {
-            width: 100% !important;
-            background: transparent !important;
-            border: 0 !important;
-        }
-
-        #ctl00_MainContent_UserLogin td { padding: 0 !important; }
-
-        .main .login .row,
-        .login .row { margin-left: 0 !important; margin-right: 0 !important; }
-
-        .login [class*="col-"] { padding-left: 0; padding-right: 0; }
-
-        .login { margin-top: 0 !important; border: 0; padding: 0; min-width: 0; }
-        .login hr, .login br { display: none !important; }
-
-        .login img { display: block; margin: 0 auto 4px; max-width: 200px !important; }
-
-        .login .header_login {
-            font-family: "Open Sans", sans-serif;
-            font-size: 28px !important;
-            font-weight: 700;
-            color: #1b2a41 !important;
-            text-align: center;
-            margin: 6px 0 4px !important;
-        }
-
-        .login .login-sub {
-            text-align: center;
-            font-size: 14px;
-            color: #6b7686;
-            margin: 0 0 18px !important;
-        }
-
-        .login .labels {
-            display: block;
-            margin: 14px 0 0;
-            font-size: 13px;
-            font-weight: 600;
-            color: #1b2a41 !important;
-        }
-
-        .login select,
-        .login input.textEntry,
-        .login input.passwordEntry {
-            display: block;
-            width: 100% !important;
-            height: 46px;
-            margin-top: 6px;
-            padding: 0 14px;
-            font-size: 15px;
-            color: #1b2a41;
-            background: #f6f8fb;
-            border: 1.5px solid #d6dce5 !important;
-            border-radius: 10px !important;
-            box-shadow: none;
-            transition: border-color .15s ease, box-shadow .15s ease, background-color .15s ease;
-        }
-
-        .login input.passwordEntry { padding-right: 44px !important; }
-
-        .login select:hover,
-        .login input.textEntry:hover,
-        .login input.passwordEntry:hover { border: 1.5px solid #c3ccd8 !important; }
-
-        .login select:focus,
-        .login input.textEntry:focus,
-        .login input.passwordEntry:focus {
-            outline: 0;
-            background: #ffffff;
-            border: 1.5px solid var(--theme-accent, #EFA63E) !important;
-            box-shadow: 0 0 0 4px var(--theme-accent-ring, rgba(239, 166, 62, 0.22));
-        }
-
-        .password-container { position: relative; }
-
-        .toggle-password {
-            top: calc(50% + 3px);
-            right: 14px;
-            color: #6b7686 !important;
-            font-size: 15px;
-        }
-
-        .toggle-password:hover { color: #1b2a41 !important; }
-
-        /* validation messages */
-        .login span[id*="Required"], .login span[id*="RequiredFieldValidator"] {
-            display: block;
-            margin-top: 4px;
-            font-size: 12px;
-            color: #c0392b;
-        }
-
-        .login .forgot-password-link {
-            display: block;
-            margin-top: 10px;
-            text-align: right;
-            font-size: 13px;
-            text-decoration: none;
-        }
-
-            .login .forgot-password-link span {
-                font-weight: 600;
-                color: #2b6cb0;
-            }
-
-            .login .forgot-password-link:hover span { color: #1b2a41; text-decoration: underline; }
-
-        /* sign in button */
-        .main .submitButton { margin: 20px 0 0; }
-
-        html body#contbod .main .submitButton input,
-        html body#contbod #ctl00_MainContent_UserLogin_LoginButton {
-            display: block;
-            width: 100% !important;
-            height: 48px !important;
-            margin: 0 !important;
-            border: 0 !important;
-            border-radius: 10px !important;
-            background: linear-gradient(180deg, var(--theme-accent-light, #F4B653) 0%, var(--theme-accent, #EFA63E) 100%) !important;
-            color: var(--theme-on-accent, #1b2a41) !important;
-            font-size: 15px;
-            font-weight: 700;
-            letter-spacing: 1.2px;
-            text-transform: uppercase;
-            box-shadow: 0 6px 16px var(--theme-accent-shadow, rgba(239, 166, 62, 0.45)) !important;
-            transition: transform .12s ease, box-shadow .12s ease, background .12s ease, color .12s ease;
-        }
-
-        html body#contbod .main .submitButton input:hover,
-        html body#contbod #ctl00_MainContent_UserLogin_LoginButton:hover {
-            background: #1b2a41 !important;
-            color: #ffffff !important;
-            transform: translateY(-1px);
-            box-shadow: 0 8px 20px rgba(27, 42, 65, 0.35) !important;
-        }
-
-        /* contact footer inside the card */
-        html body#contbod .wrapper #toBeHidden {
-            display: block !important;
-            border: 0 !important;
-            border-top: 1px solid #e6eaf0 !important;
-            margin: 22px 0 12px !important;
-        }
-
-        html body#contbod .wrapper .center {
-            margin-top: 0 !important;
-            text-align: center !important;
-            font-size: 12.5px;
-            line-height: 1.7;
-            color: #6b7686 !important;
-        }
-
-            html body#contbod .wrapper .center strong { color: #1b2a41; }
-
-            html body#contbod .wrapper .center a { color: #2b6cb0 !important; }
-
-        /* OTP / forgot-password panels */
-        #otpContainer, #changepassowrd { display: flex; justify-content: center; gap: 12px; margin: 12px 0; }
-
-        #otp1, #otp2, #otp3, #otp4, #pass1, #pass2, #pass3, #pass4 {
-            height: 52px;
-            border: 1.5px solid #d6dce5 !important;
-            border-radius: 10px !important;
-        }
-
-        html body#contbod .wrapper form br { display: none; }
-
-        /* mid and small screens: centre the card on a soft background */
-        @media (max-width: 1280px) {
-            html body#contbod {
-                align-items: center;
-                padding: 24px 16px;
-                background: linear-gradient(135deg, #fff6e6 0%, #eef2f8 100%) !important;
-            }
-
-            /* developer credit: flow under the card instead of floating over it */
-            html body#contbod > div[style*="position: fixed"] {
-                position: static !important;
-                margin-top: 16px;
-                text-align: center !important;
-            }
-        }
-
-        @media (max-width: 480px) {
-            html body#contbod .wrapper { padding: 24px 20px 18px !important; border-radius: 14px !important; }
-            .login .header_login { font-size: 24px !important; }
-        }
-    </style>
+    <link href="wwwroot/THEME_TIBBIT/CustomCSS/LoginModern.css?v=20261007" rel="stylesheet" />
    
 </asp:Content>
 <asp:Content ID="BodyContent" runat="server" ContentPlaceHolderID="MainContent">
@@ -287,6 +69,30 @@
 
     <asp:UpdatePanel runat="server" ID="upForm" UpdateMode="Conditional">
         <ContentTemplate>
+            <div class="brand-panel">
+                <div class="brand-top">
+                    <div class="brand-logo-plate">
+                        <asp:Image ID="imgBrandLogo" runat="server" CssClass="brand-logo" AlternateText="Company logo" />
+                    </div>
+                    <div class="brand-company">
+                        <asp:Label ID="lblBrandCompany" runat="server" />
+                        <small>Hospital Management System</small>
+                    </div>
+                </div>
+                <div class="brand-hero">
+                    <h1 class="brand-title">Smarter care.<br /><span>Simpler</span> hospital management.</h1>
+                    <p class="brand-text">Patients, labs, pharmacy, billing and finance &mdash; connected in one secure platform for your whole hospital.</p>
+                </div>
+                <ul class="brand-points">
+                    <li><i class="fas fa-stethoscope"></i>Clinical records</li>
+                    <li><i class="fas fa-vial"></i>Lab &amp; pharmacy</li>
+                    <li><i class="fas fa-chart-line"></i>Billing &amp; dashboards</li>
+                </ul>
+                <img class="brand-art" src="wwwroot/THEME_TIBBIT/images/LOGOS/LoginIllustration.jpg" alt="" />
+                <div class="brand-credit">
+                    Application developed by <a href="http://www.visionplus.com.pk" target="_blank">VisionPlus Technologies (Pvt) LTD.</a>
+                </div>
+            </div>
             <asp:ModalPopupExtender ID="PasswordChangeAlter_ModalPopupExtender" runat="server" DynamicServicePath=""
                 BackgroundCssClass="popupBackground" TargetControlID="hdnmessageCancel"
                 PopupControlID="messagePanel">
@@ -301,13 +107,7 @@
                     
                         <div class="accountInfo" style="">
                             <fieldset class="login">
-                                <div style="text-align: center; margin-bottom: 10px;">
-                                    <asp:Image ID="imgCompanyLogo" runat="server" 
-                                        ImageUrl="~/wwwroot/THEME_TIBBIT/images/LOGOS/logo.png" 
-                                        AlternateText="Company Logo" 
-                                        Visible="true"
-                                        Style="max-width: 250px; height: auto;" />
-                                </div>
+                                <p class="login-eyebrow">Secure sign in</p>
                                 <h2 class="header_login">Welcome Back</h2>
                                 <p class="login-sub">Enter your username and password to sign in.</p>
                                 <hr />

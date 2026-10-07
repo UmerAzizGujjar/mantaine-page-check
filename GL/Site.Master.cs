@@ -150,6 +150,8 @@ namespace PMS
             Page.Title = AppConfig.Company_Name + " - " + PageName;
             lblCompanyNameCenter.Text = AppConfig.Company_Name;
             IHome.Title = AppConfig.Company_Name;
+            // header logo = the logo uploaded for the signed-in company (Add Company form), else the default
+            imglogo.ImageUrl = CompanyLogo.GetUrl(AppConfig.Company_ID);
         }
 
 

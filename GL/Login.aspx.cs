@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Web;
@@ -59,10 +59,34 @@ namespace PMS
 
         protected void Page_PreRender(object sender, EventArgs e)
         {
-            if (loginportion.Visible)
+            ApplyCompanyBranding();
+        }
+
+        // Brand panel (logo + company name) follows the company chosen in the dropdown.
+        // The logo is the file the Add Company form saves in ~/wwwroot/CompanyImages
+        // (path kept in sys_Companys.ImageURL). Falls back to the active theme's own logo
+        // when the company has no uploaded image or the file is missing.
+        protected global::System.Web.UI.WebControls.Image imgBrandLogo;
+        protected global::System.Web.UI.WebControls.Label lblBrandCompany;
+        private void ApplyCompanyBranding()
+        {
+            if (imgBrandLogo == null) return;
+
+            string defaultLogoUrl = CompanyLogo.GetDefaultUrl(true);   // active theme's own logo
+            string logoUrl = defaultLogoUrl;
+            string companyName = string.Empty;
+
+            DropDownList ddlCompany = UserLogin.FindControl("ddlCompany") as DropDownList;
+            int companyId;
+            if (ddlCompany != null && int.TryParse(ddlCompany.SelectedValue, out companyId) && companyId > 0)
             {
-               
+                companyName = ddlCompany.SelectedItem.Text;
+                logoUrl = CompanyLogo.GetUrlOrNull(companyId) ?? defaultLogoUrl;
             }
+
+            imgBrandLogo.ImageUrl = logoUrl;
+            imgBrandLogo.AlternateText = string.IsNullOrEmpty(companyName) ? "Company logo" : companyName;
+            lblBrandCompany.Text = Server.HtmlEncode(companyName);
         }
 
         protected void LoginButton_Click(object sender, EventArgs e)

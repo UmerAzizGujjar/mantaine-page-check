@@ -703,7 +703,9 @@
             formData.append('file', fileInput.files[0]);
 
             $.ajax({
-                url: 'AddCompany.aspx', // Ensure this handles file upload
+                // the server reads the company ID from this request's query string; without it the
+                // upload is treated as a new company and lands on the highest company ID
+                url: 'AddCompany.aspx' + (ID !== '' ? '?ID=' + encodeURIComponent(ID) : ''),
                 type: 'POST',
                 data: formData,
                 contentType: false,

@@ -2625,6 +2625,7 @@
     <Content Include="wwwroot\THEME_TIBBIT\CustomCSS\LabReportPreview.css" />
     <Content Include="wwwroot\THEME_TIBBIT\CustomCSS\LabSample.css" />
     <Content Include="wwwroot\THEME_TIBBIT\CustomCSS\login.css" />
+    <Content Include="wwwroot\THEME_TIBBIT\CustomCSS\LoginModern.css" />
     <Content Include="wwwroot\THEME_TIBBIT\CustomCSS\LoginPage.css" />
     <Content Include="wwwroot\THEME_TIBBIT\CustomCSS\Maindashboard.css" />
     <Content Include="wwwroot\THEME_TIBBIT\CustomCSS\MEdTemplate.css" />
@@ -2686,7 +2687,9 @@
     <Content Include="wwwroot\THEME_TIBBIT\images\CompanyImages\companyImage20.png" />
     <Content Include="wwwroot\THEME_TIBBIT\images\LOGOS\Icon.png" />
     <Content Include="wwwroot\THEME_TIBBIT\images\LOGOS\LoginBackground.jpg" />
-    <Content Include="wwwroot\THEME_TIBBIT\images\LOGOS\logo.png" />
+    <Content Include="wwwroot\THEME_TIBBIT\images\LOGOS\LoginIllustration.jpg" />
+    <Content Include="wwwroot\THEME_TIBBIT\images\LOGOS\logo-16x9.png" />
+    <Content Include="wwwroot\THEME_TIBBIT\images\CompanyImages\logo.png" />
     <Content Include="wwwroot\THEME_TIBBIT\images\Projectimages\Project\11414.png" />
     <Content Include="wwwroot\THEME_TIBBIT\images\StudentImages\1.jpg" />
     <Content Include="wwwroot\THEME_TIBBIT\images\StudentImages\1.png" />
@@ -4077,6 +4080,7 @@
     </Compile>
     <Compile Include="App_Themes\App_Data\AppConfig.cs" />
     <Compile Include="App_Themes\App_Data\CommonMethods.cs" />
+    <Compile Include="App_Themes\App_Data\CompanyLogo.cs" />
     <Compile Include="App_Themes\App_Data\DBClass.cs" />
     <Compile Include="App_Themes\App_Data\EMRDb.cs" />
     <Compile Include="App_Themes\App_Data\Employee.cs" />
