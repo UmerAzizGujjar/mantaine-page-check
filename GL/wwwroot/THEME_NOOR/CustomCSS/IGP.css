@@ -110,7 +110,7 @@ ul.token-input-list {
     .table th {
         display: none;
         border: 1px solid #FFF;
-        background-color: #438eb9;
+        background-color: #438eb9 ;
         color: #FFF;
         padding: 1em;
     }
@@ -222,4 +222,139 @@ input[disabled] {
 
 .tooltip.right .tooltip-arrow {
     border-right-color: #ffc107 !important;
+}
+
+/* ── Items table: same grid style as the Purchase Order form ──────────────
+   Fixed layout: widths come from the <th> widths, Item Description takes the rest; inputs fill their
+   cell. The global .table rules above (card-style td, 1em padding, 7em max-width) and the shared
+   table-modern.css padding are overridden for this one grid only (id selector = higher specificity). */
+#igpItemTable {
+    overflow-x: auto;
+    overflow-y: auto;
+    max-height: 420px;
+    margin-top: 6px;
+    border: 1px solid #dee2e6;
+    border-radius: 4px 4px 0 0;
+}
+
+#tblItemDescription {
+    table-layout: fixed;
+    width: 100%;
+    min-width: 1600px;
+    margin: 0;
+}
+
+#tblItemDescription thead th {
+    position: sticky;
+    top: 0;
+    z-index: 1;
+}
+
+html:root body #tblItemDescription.table {
+    margin: 0 !important;
+    border-radius: 0 !important;
+    box-shadow: none !important;
+    border: 0 !important;
+    font-size: 12px !important;
+}
+
+html:root body #tblItemDescription.table > thead > tr > th {
+    padding: 7px 5px !important;
+    font-size: 11px !important;
+    line-height: 1.2 !important;
+    letter-spacing: .2px !important;
+    white-space: normal !important;
+    overflow: hidden;
+    text-overflow: clip;
+    border-radius: 0 !important;
+}
+
+html:root body #tblItemDescription.table > tbody > tr > td {
+    padding: 3px 5px !important;
+    font-size: 12px !important;
+    font-weight: 700 !important;
+    line-height: 1.25 !important;
+    height: 36px;
+    max-width: none !important;
+    vertical-align: middle !important;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+/* item description (4th) wraps; everything else stays on one line */
+html:root body #tblItemDescription.table > tbody > tr > td:nth-child(4) {
+    white-space: normal;
+    word-break: break-word;
+}
+
+/* alignment: ids / text left, quantities and rates right, dates and counters centred (header follows the data) */
+html:root body #tblItemDescription.table > thead > tr > th,
+html:root body #tblItemDescription.table > tbody > tr > td { text-align: left !important; }
+html:root body #tblItemDescription.table > thead > tr > th:nth-child(1),
+html:root body #tblItemDescription.table > tbody > tr > td:nth-child(1),
+html:root body #tblItemDescription.table > thead > tr > th:nth-child(8),
+html:root body #tblItemDescription.table > tbody > tr > td:nth-child(8),
+html:root body #tblItemDescription.table > thead > tr > th:nth-child(15),
+html:root body #tblItemDescription.table > tbody > tr > td:nth-child(15),
+html:root body #tblItemDescription.table > thead > tr > th:nth-child(16),
+html:root body #tblItemDescription.table > tbody > tr > td:nth-child(16),
+html:root body #tblItemDescription.table > thead > tr > th:nth-child(19),
+html:root body #tblItemDescription.table > tbody > tr > td:nth-child(19) { text-align: center !important; }
+html:root body #tblItemDescription.table > thead > tr > th:nth-child(5),
+html:root body #tblItemDescription.table > tbody > tr > td:nth-child(5),
+html:root body #tblItemDescription.table > thead > tr > th:nth-child(n+9):nth-child(-n+14),
+html:root body #tblItemDescription.table > tbody > tr > td:nth-child(n+9):nth-child(-n+14),
+html:root body #tblItemDescription.table > thead > tr > th:nth-child(17),
+html:root body #tblItemDescription.table > tbody > tr > td:nth-child(17) { text-align: right !important; }
+
+/* editable boxes fill their cell */
+#tblItemDescription tbody td input[type="text"] {
+    width: 100% !important;
+    height: 28px !important;
+    padding: 1px 4px;
+    margin: 0 !important;
+    box-sizing: border-box;
+    font-size: 12px !important;
+    font-weight: 700 !important;
+}
+
+/* read-only / disabled cells: calm grey instead of the bright blue used elsewhere on this page */
+#tblItemDescription tbody td input[readonly],
+#tblItemDescription tbody td input[disabled] {
+    background-color: #f7f7f7 !important;
+    color: #333 !important;
+}
+
+/* ── Header fields: one continuous grid (no half-empty rows) ──────────────
+   The form was four separate Bootstrap rows (4 + 4 + 1 + 4 fields), so row 3 held only "Branch" and
+   the rest of each short row stayed empty. The rows are flattened (display: contents) and the 13 fields
+   flow through ONE auto-fill grid, so they pack left to right and only the very last line can be short.
+   Markup, ids and field order are unchanged. */
+#igpHeader {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(230px, 1fr));
+    gap: 4px 14px;
+    align-items: start;
+    margin-bottom: 6px;
+}
+
+#igpHeader > .row { display: contents; }
+/* Bootstrap's clearfix ::before / ::after on .row would each become an empty grid cell */
+#igpHeader > .row::before,
+#igpHeader > .row::after { display: none !important; content: none !important; }
+
+#igpHeader > .row > [class*="col-"] {
+    float: none;
+    width: auto;
+    max-width: none;
+    min-width: 0;
+    padding: 0;
+    margin: 0 0 4px;
+}
+
+#igpHeader .labelIGP {
+    display: block;
+    margin-bottom: 2px;
+    line-height: 1.3;
 }

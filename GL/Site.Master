@@ -1091,6 +1091,8 @@
     <script src="<%= Page.ResolveClientUrl("~/wwwroot/lib/theme/modal-modern.js") %>?v=<%= Ver("~/wwwroot/lib/theme/modal-modern.js") %>" type="text/javascript"></script>
     <%-- Checkboxes drawn as toggle switches on every form (opt out with class="no-switch") --%>
     <link href="<%= Page.ResolveClientUrl("~/wwwroot/lib/theme/form-modern.css") %>?v=<%= Ver("~/wwwroot/lib/theme/form-modern.css") %>" rel="stylesheet" type="text/css" />
+    <%-- Modern file / attachment fields (every input type="file"; CSS only) --%>
+    <link href="<%= Page.ResolveClientUrl("~/wwwroot/lib/theme/file-modern.css") %>?v=<%= Ver("~/wwwroot/lib/theme/file-modern.css") %>" rel="stylesheet" type="text/css" />
 </head>
 <body class="no-skin" onload="releasemenu()">
     <form runat="server" id="MasterPageForm1">

@@ -245,29 +245,29 @@
                     }
                     else {
                         rows += '<tr>' +
-                            '<td style=" border: 1px solid #D9E4E6;"><input type="hidden" id="txtPODetailId' + (key + 1) + '" name="txtPODetailId" value="' + value.PO_Item_ID + '" style="width:50px !important;text-align:right" />' + (key + 1) + '</td>' +
-                            '<td align="right !important" style="padding-right: 3px!important;"><input type="hidden" name="txtPONO" id="txtPONO' + (key + 1) + '"  value="' + value.PO_No + '"  style="width:50px !important;text-align:right;font-size:9px;height:10px !important;"/>' + value.PO_No + '</td>' +
-                            '<td style="padding-right: 3px!important;"><input type="hidden" name="txtItemCode" id="txtItemCode' + (key + 1) + '"  value="' + value.Item_Code + '"  style="width:50px !important;text-align:right;font-size:9px;height:10px !important;"/> ' + value.Item_Code + ' </td>' +
-                            '<td style="padding-left: 3px!important;"><input type="hidden" name="txtItemName" id="txtItemName' + rowlength + '"  value="' + value.Description + '" style="width:50px !important;text-align:left;font-size:9px;height:10px;!important"/> ' + value.Description + ' </td>' +
-                            '<td><input type="text" disabled="disable" name="txtuomqty" id="txtuomqty' + rowlength + '"  value="' + value.UOM_Qty + '" style="width:50px !important;text-align:left;font-size:9px;height:21px !important;" /></td>' +
-                            '<td style="padding-left: 3px!important;"><input type="hidden" name="txtUnit" id="txtUnit' + rowlength + '"  value="' + value.Unit_ID + '" />' + value.UOM + ' </td>' +
-                            '<td><input type="text" name="BatchNo" id="BatchNo' + rowlength + '"  value="' + value.BatchNum + '" style="width:50px !important;text-align:left;font-size:9px;height:21px !important;" onkeyup="BatchValidation(this)"/></td>' +
-                            '<td><input type="text" style="width:65px !important;text-align:center;font-size:9px;height:21px !important;" name="txtdeliverydate" id="txtdeliverydate' + (key + 1) + '"  value="' + datetime + '" readonly="readonly" /></td>' +
-                            '<td style="padding-right: 3px!important;"><input type="hidden" value="' + value.POQty + '" style="width: 50px !important;text-align:right;font-size:9px;height:10px !important;  id="POQty' + (key + 1) + '" name="POQty" style="width:50px !important;"></input>' + value.POQty + '</td>' +
-                            '<td style="padding-right: 3px!important;"><input type="hidden" style="width:50px !important;text-align:right;font-size:9px;height:10px !important;" value="' + value.Received_Qty + '"  id="RcvQty' + (key + 1) + '" name="RcvQty" ></input>' + value.Received_Qty + '</td>' +
-                            '<td style="padding-right: 3px!important;" style="text-align:right"><input type="hidden" value="' + value.Balance + '" style="width: 50px !important;text-align:right;font-size:9px;height:10px !important;"  id="blncQty' + (key + 1) + '" name="blncQty" ></input>' + value.Balance + '</td>' +
-                            '<td style="width:50px !important;text-align:right;font-size:9px;height:10px !important;"><input type="text" style="width:50px !important;text-align:right;font-size:9px;height: 21px !important;position: relative;" value="' + value.IGPQty + '"  id="IgpQty' + (key + 1) + '" name="IgpQty"></input></td>' +
+                            '<td style=" border: 1px solid #D9E4E6;"><input type="hidden" id="txtPODetailId' + (key + 1) + '" name="txtPODetailId" value="' + value.PO_Item_ID + '" style="width:100%!important;text-align:right" />' + (key + 1) + '</td>' +
+                            '<td align="right !important" style=""><input type="hidden" name="txtPONO" id="txtPONO' + (key + 1) + '"  value="' + value.PO_No + '"  style="width:100%!important;text-align:right;font-size:12px;font-weight:700;height:10px !important;"/>' + value.PO_No + '</td>' +
+                            '<td style=""><input type="hidden" name="txtItemCode" id="txtItemCode' + (key + 1) + '"  value="' + value.Item_Code + '"  style="width:100%!important;text-align:right;font-size:12px;font-weight:700;height:10px !important;"/> ' + value.Item_Code + ' </td>' +
+                            '<td style=""><input type="hidden" name="txtItemName" id="txtItemName' + rowlength + '"  value="' + value.Description + '" style="width:100%!important;text-align:left;font-size:12px;font-weight:700;height:10px;!important"/> ' + value.Description + ' </td>' +
+                            '<td><input type="text" disabled="disable" name="txtuomqty" id="txtuomqty' + rowlength + '"  value="' + value.UOM_Qty + '" style="width:100%!important;text-align:left;font-size:12px;font-weight:700;height:28px;" /></td>' +
+                            '<td style=""><input type="hidden" name="txtUnit" id="txtUnit' + rowlength + '"  value="' + value.Unit_ID + '" />' + value.UOM + ' </td>' +
+                            '<td><input type="text" name="BatchNo" id="BatchNo' + rowlength + '"  value="' + value.BatchNum + '" style="width:100%!important;text-align:left;font-size:12px;font-weight:700;height:28px;" onkeyup="BatchValidation(this)"/></td>' +
+                            '<td><input type="text" style="width:100%!important;text-align:center;font-size:12px;font-weight:700;height:28px;" name="txtdeliverydate" id="txtdeliverydate' + (key + 1) + '"  value="' + datetime + '" readonly="readonly" /></td>' +
+                            '<td style=""><input type="hidden" value="' + value.POQty + '" style="width:100%!important;text-align:right;font-size:12px;font-weight:700;height:10px !important;  id="POQty' + (key + 1) + '" name="POQty" style="width:100%!important;"></input>' + value.POQty + '</td>' +
+                            '<td style=""><input type="hidden" style="width:100%!important;text-align:right;font-size:12px;font-weight:700;height:10px !important;" value="' + value.Received_Qty + '"  id="RcvQty' + (key + 1) + '" name="RcvQty" ></input>' + value.Received_Qty + '</td>' +
+                            '<td style="" style="text-align:right"><input type="hidden" value="' + value.Balance + '" style="width:100%!important;text-align:right;font-size:12px;font-weight:700;height:10px !important;"  id="blncQty' + (key + 1) + '" name="blncQty" ></input>' + value.Balance + '</td>' +
+                            '<td style="width:100%!important;text-align:right;font-size:12px;font-weight:700;height:10px !important;"><input type="text" style="width:100%!important;text-align:right;font-size:12px;font-weight:700;height:28px;position: relative;" value="' + value.IGPQty + '"  id="IgpQty' + (key + 1) + '" name="IgpQty"></input></td>' +
 
-                            '<td style="padding-right: 3px!important;"><input type="hidden" value="' + value.InspecQty + '" style="width: 50px !important;text-align:right;font-size:9px;height:10px !important;  id="InspQty' + (key + 1) + '" name="InspQty" style="width:50px !important;"></input>' + value.InspecQty + '</td>' +
+                            '<td style=""><input type="hidden" value="' + value.InspecQty + '" style="width:100%!important;text-align:right;font-size:12px;font-weight:700;height:10px !important;  id="InspQty' + (key + 1) + '" name="InspQty" style="width:100%!important;"></input>' + value.InspecQty + '</td>' +
 
-                            '<td style="width:50px !important;text-align:right;font-size:9px;height:10px !important;"><input type="text" style="width:50px !important;text-align:right;font-size:9px;height:21px !important;position: relative;" value="' + value.BounusQty + '" autocomplete="off" id="BounusQty' + (key + 1) + '" name="BounusQty"></input></td>' +
+                            '<td style="width:100%!important;text-align:right;font-size:12px;font-weight:700;height:10px !important;"><input type="text" style="width:100%!important;text-align:right;font-size:12px;font-weight:700;height:28px;position: relative;" value="' + value.BounusQty + '" autocomplete="off" id="BounusQty' + (key + 1) + '" name="BounusQty"></input></td>' +
 
 
-                            '<td><input type="text" style="width:61px !important;text-align:center;font-size:9px;height:21px !important;" name="txtMfgdate" id="txtMfgdate' + (key + 1) + '"  value="' + MfgDate + '" readonly="readonly"/></td>' +
-                            '<td><input type="text" style="width:61px !important;text-align:center;font-size:9px;height:21px !important;" name="Expdate" id="Expdate' + (key + 1) + '"  value="' + ExpiryDate + '" readonly="readonly"/></td>' +
-                            '<td><input type="text" style="width:65px !important;text-align:right;font-size:9px;height:21px !important;" name="SaleRate" id="SaleRate' + (key + 1) + '"  value="' + saleRateValue + '"/></td>' +
-                            '<td style="display:none"><input type="hidden" style="width:61px !important;text-align:center;font-size:9px;height:21px !important;" name="Isbatch" id="Isbatch' + rowlength + '" value="' + value.IsBatch + '" readonly="readonly"/></td>' +
-                            '<td style="display:none;width:50px !important;text-align:right;font-size:9px;height:10px !important;"><input type="text" style="width:50px !important;text-align:right;font-size:9px;height:21px !important;position: relative;" value="0"  id="RejQty' + rowlength + '" name="RejQty"></input></td>' +
+                            '<td><input type="text" style="width:100%!important;text-align:center;font-size:12px;font-weight:700;height:28px;" name="txtMfgdate" id="txtMfgdate' + (key + 1) + '"  value="' + MfgDate + '" readonly="readonly"/></td>' +
+                            '<td><input type="text" style="width:100%!important;text-align:center;font-size:12px;font-weight:700;height:28px;" name="Expdate" id="Expdate' + (key + 1) + '"  value="' + ExpiryDate + '" readonly="readonly"/></td>' +
+                            '<td><input type="text" style="width:100%!important;text-align:right;font-size:12px;font-weight:700;height:28px;" name="SaleRate" id="SaleRate' + (key + 1) + '"  value="' + saleRateValue + '"/></td>' +
+                            '<td style="display:none"><input type="hidden" style="width:100%!important;text-align:center;font-size:12px;font-weight:700;height:28px;" name="Isbatch" id="Isbatch' + rowlength + '" value="' + value.IsBatch + '" readonly="readonly"/></td>' +
+                            '<td style="display:none;width:100%!important;text-align:right;font-size:12px;font-weight:700;height:10px !important;"><input type="text" style="width:100%!important;text-align:right;font-size:12px;font-weight:700;height:28px;position: relative;" value="0"  id="RejQty' + rowlength + '" name="RejQty"></input></td>' +
                             '<td><a href="javascript:void(0)" onclick="ExcludeFromPayment(this)"><i class="glyphicon glyphicon-trash" style="font-size: 13px;color: #f30a0a;position:relative;" i=""></i></a></td>' +
                             '</tr>';
                     }
@@ -881,32 +881,32 @@
                         iteration++;
                         var rowlength = (document.getElementById("tblItemDescription").rows.length + iteration) - 1;
                         rows += '<tr>' +
-                            '<td style=" border: 1px solid #D9E4E6;"><input type="hidden" id="txtPODetailId' + rowlength + '" name="txtPODetailId" value="' + value.PO_Item_ID + '" style="width:50px !important;text-align:right" />' + rowlength + '</td>' +
-                            '<td style="padding-right: 3px!important;"><input type="hidden" name="txtPONO" id="txtPONO' + rowlength + '" value="" style="width:50px !important;text-align:right;font-size:9px;height:10px !important;"/>' + PONum + '</td>' +
-                            '<td style="padding-right: 3px!important;"><input type="hidden" name="txtItemCode" id="txtItemCode' + rowlength + '" value="' + value.Item_Code + '" style="width:50px !important;text-align:right;font-size:9px;height:10px !important;"/> ' + value.Item_Code + ' </td>' +
-                            '<td style="padding-left: 3px!important;"><input type="hidden" name="txtItemName" id="txtItemName' + rowlength + '" value="' + value.Description + '" style="width:50px !important;text-align:left;font-size:9px;height:10px !important ;"/> ' + value.Description + ' </td>' +
-                            '<td><input type="text" name="txtuomqty" id="txtuomqty' + rowlength + '" value="' + value.UOM_Qty + '" style="width:50px !important;text-align:left;font-size:9px;height:21px !important ;" /></td>' +
-                            '<td style="padding-left: 3px!important;"><input type="hidden" name="txtUnit" id="txtUnit' + rowlength + '" value="' + value.Unit + '" />' + value.UnitName + ' </td>' +
+                            '<td style=" border: 1px solid #D9E4E6;"><input type="hidden" id="txtPODetailId' + rowlength + '" name="txtPODetailId" value="' + value.PO_Item_ID + '" style="width:100%!important;text-align:right" />' + rowlength + '</td>' +
+                            '<td style=""><input type="hidden" name="txtPONO" id="txtPONO' + rowlength + '" value="" style="width:100%!important;text-align:right;font-size:12px;font-weight:700;height:10px !important;"/>' + PONum + '</td>' +
+                            '<td style=""><input type="hidden" name="txtItemCode" id="txtItemCode' + rowlength + '" value="' + value.Item_Code + '" style="width:100%!important;text-align:right;font-size:12px;font-weight:700;height:10px !important;"/> ' + value.Item_Code + ' </td>' +
+                            '<td style=""><input type="hidden" name="txtItemName" id="txtItemName' + rowlength + '" value="' + value.Description + '" style="width:100%!important;text-align:left;font-size:12px;font-weight:700;height:10px !important ;"/> ' + value.Description + ' </td>' +
+                            '<td><input type="text" name="txtuomqty" id="txtuomqty' + rowlength + '" value="' + value.UOM_Qty + '" style="width:100%!important;text-align:left;font-size:12px;font-weight:700;height:28px;" /></td>' +
+                            '<td style=""><input type="hidden" name="txtUnit" id="txtUnit' + rowlength + '" value="' + value.Unit + '" />' + value.UnitName + ' </td>' +
 
-                            '<td><input type="text" name="BatchNo" id="BatchNo' + rowlength + '" value="" style="width:50px !important;text-align:left;font-size:9px;height:21px !important ;" onkeyup="BatchValidation(this)"/></td>' +
-                            '<td><input type="text" style="width:61px !important;text-align:center;font-size:9px;height:21px !important;" name="txtdeliverydate" id="txtdeliverydate' + rowlength + '" value="' + datetime + '" readonly="readonly"/></td>' +
-                            '<td style="padding-right: 3px!important;"><input type="hidden" value="' + parseFloat(value.Qty).toFixed(2) + '" style="width: 50px !important;text-align:right;font-size:9px;height:10px !important; id="POQty' + rowlength + '" name="POQty" style="width:50px !important;"></input>' + parseFloat(value.Qty).toFixed(2) + '</td>' +
+                            '<td><input type="text" name="BatchNo" id="BatchNo' + rowlength + '" value="" style="width:100%!important;text-align:left;font-size:12px;font-weight:700;height:28px;" onkeyup="BatchValidation(this)"/></td>' +
+                            '<td><input type="text" style="width:100%!important;text-align:center;font-size:12px;font-weight:700;height:28px;" name="txtdeliverydate" id="txtdeliverydate' + rowlength + '" value="' + datetime + '" readonly="readonly"/></td>' +
+                            '<td style=""><input type="hidden" value="' + parseFloat(value.Qty).toFixed(2) + '" style="width:100%!important;text-align:right;font-size:12px;font-weight:700;height:10px !important; id="POQty' + rowlength + '" name="POQty" style="width:100%!important;"></input>' + parseFloat(value.Qty).toFixed(2) + '</td>' +
 
-                            '<td style="padding-right: 3px!important;"><input type="hidden" style="width:50px !important;text-align:right;font-size:9px;height:10px !important;" value="' + parseFloat(recqty).toFixed(2) + '" id="RcvQty' + rowlength + '" name="RcvQty" ></input>' + parseFloat(recqty).toFixed(2) + '</td>' +
+                            '<td style=""><input type="hidden" style="width:100%!important;text-align:right;font-size:12px;font-weight:700;height:10px !important;" value="' + parseFloat(recqty).toFixed(2) + '" id="RcvQty' + rowlength + '" name="RcvQty" ></input>' + parseFloat(recqty).toFixed(2) + '</td>' +
 
-                            '<td style="text-align:right;padding-right: 3px!important;><input type="hidden" value="' + parseFloat(blncQty).toFixed(2) + '" style="width: 50px !important;text-align:right;font-size:9px;height:10px; !important" id="blncQty' + rowlength + '" name="blncQty" ></input>' + parseFloat(blncQty).toFixed(2) + '</td>' +
+                            '<td style="text-align:right;><input type="hidden" value="' + parseFloat(blncQty).toFixed(2) + '" style="width:100%!important;text-align:right;font-size:12px;font-weight:700;height:10px; !important" id="blncQty' + rowlength + '" name="blncQty" ></input>' + parseFloat(blncQty).toFixed(2) + '</td>' +
 
-                            '<td style="width:50px !important;text-align:right;font-size:9px;height:10px !important;"><input type="text" style="width:50px !important;text-align:right;font-size:9px;height:21px !important;position: relative;" value="0" id="IgpQty' + rowlength + '" name="IgpQty"></input></td>' +
+                            '<td style="width:100%!important;text-align:right;font-size:12px;font-weight:700;height:10px !important;"><input type="text" style="width:100%!important;text-align:right;font-size:12px;font-weight:700;height:28px;position: relative;" value="0" id="IgpQty' + rowlength + '" name="IgpQty"></input></td>' +
 
-                            '<td style="padding-right: 3px!important;"><input type="hidden" style="width: 50px !important;text-align:right;font-size:9px;height:10px !important; id="InspQty' + rowlength + '" value="0" name="InspQty" style="width:50px !important;"></input>' + 0 + '</td>' +
+                            '<td style=""><input type="hidden" style="width:100%!important;text-align:right;font-size:12px;font-weight:700;height:10px !important; id="InspQty' + rowlength + '" value="0" name="InspQty" style="width:100%!important;"></input>' + 0 + '</td>' +
 
-                            '<td style="width:50px !important;text-align:right;font-size:9px;height:10px !important;"><input type="text" style="width:50px !important;text-align:right;font-size:9px;height:21px !important;position: relative;" value="' + (value.Bonus_Qty != null ? parseFloat(value.Bonus_Qty).toFixed(2) : '0') + '" id="BounusQty' + rowlength + '" name="BounusQty" autocomplete="off" class="bonusQtyField" data-toggle="tooltip" data-placement="top" title="Enter Bounus quantity in Loose" ></input></td>' +
+                            '<td style="width:100%!important;text-align:right;font-size:12px;font-weight:700;height:10px !important;"><input type="text" style="width:100%!important;text-align:right;font-size:12px;font-weight:700;height:28px;position: relative;" value="' + (value.Bonus_Qty != null ? parseFloat(value.Bonus_Qty).toFixed(2) : '0') + '" id="BounusQty' + rowlength + '" name="BounusQty" autocomplete="off" class="bonusQtyField" data-toggle="tooltip" data-placement="top" title="Enter Bounus quantity in Loose" ></input></td>' +
 
-                            '<td><input type="text" style="width:61px !important;text-align:center;font-size:9px;height:21px !important;" name="txtMfgdate" id="txtMfgdate' + (key + 1) + '" value="' + formattedDate + '"/></td>' +
-                            '<td><input type="text" style="width:61px !important;text-align:center;font-size:9px;height:21px !important;" name="Expdate" id="Expdate' + (key + 1) + '" value="" readonly="readonly"/></td>' +
-                            '<td><input type="text" style="width:65px !important;text-align:right;font-size:9px;height:21px !important;" name="SaleRate" id="SaleRate' + rowlength + '" value="' + (value.SaleRate ? parseFloat(value.SaleRate).toFixed(2) : '') + '"/></td>' +
+                            '<td><input type="text" style="width:100%!important;text-align:center;font-size:12px;font-weight:700;height:28px;" name="txtMfgdate" id="txtMfgdate' + (key + 1) + '" value="' + formattedDate + '"/></td>' +
+                            '<td><input type="text" style="width:100%!important;text-align:center;font-size:12px;font-weight:700;height:28px;" name="Expdate" id="Expdate' + (key + 1) + '" value="" readonly="readonly"/></td>' +
+                            '<td><input type="text" style="width:100%!important;text-align:right;font-size:12px;font-weight:700;height:28px;" name="SaleRate" id="SaleRate' + rowlength + '" value="' + (value.SaleRate ? parseFloat(value.SaleRate).toFixed(2) : '') + '"/></td>' +
                             '<td style="display:none"><input type="hidden" name="Isbatch" id="Isbatch' + rowlength + '" value="' + value.IsBatch + '" readonly="readonly"/></td>' +
-                            '<td style="display:none;width:50px !important;text-align:right;font-size:9px;height:10px !important;"><input type="text" style="width:50px !important;text-align:right;font-size:9px;height:21px !important;position: relative;" value="0" id="RejQty' + rowlength + '" name="RejQty"></input></td>' +
+                            '<td style="display:none;width:100%!important;text-align:right;font-size:12px;font-weight:700;height:10px !important;"><input type="text" style="width:100%!important;text-align:right;font-size:12px;font-weight:700;height:28px;position: relative;" value="0" id="RejQty' + rowlength + '" name="RejQty"></input></td>' +
                             '<td><a href="javascript:void(0)" onclick="ExcludeFromPayment(this)"><i class="glyphicon glyphicon-trash" style="font-size:11px;color: #f30a0a;position:relative;"></i></a> </td>' +
                             '</tr>';
                     });
@@ -1322,6 +1322,7 @@
 </asp:Content>
 <asp:Content ID="Content2" ContentPlaceHolderID="MainContent" runat="server">
     <form id="item">
+      <div id="igpHeader">
         <div class="row">
             <div class="col-lg-3 col-md-6 col-sm-12 mb-3">
                 <label id="LblIGP_Num" class="labelIGP">IGP No</label>
@@ -1386,32 +1387,32 @@
                 <asp:HyperLink ID="HyperLink1" runat="server">Download</asp:HyperLink>
             </div>
         </div>
-
+      </div>
     </form>
     <div class="row">
-        <div class="table-responsive">
-            <table class="table" id="tblItemDescription" style="overflow-x: scroll !important;">
+        <div class="table-responsive" id="igpItemTable">
+            <table class="table" id="tblItemDescription">
                 <thead>
                     <tr>
-                        <th style="width: 30px; text-align: center;">Sr No.</th>
-                        <th style="width: 30px; text-align: center;">PO #</th>
-                        <th style="width: 40px; text-align: center; font-size: 10px;">Item Code</th>
-                        <th style="width: 195px; text-align: center;">Item Description</th>
-                        <th style="width: 35px; text-align: center;">UOM_QTY</th>
-                        <th style="width: 35px; text-align: center;">Unit</th>
-                        <th style="width: 40px; text-align: center;">Batch No</th>
-                        <th style="width: 62px; text-align: center;">PO Delivery Date</th>
-                        <th style="width: 40px; text-align: center;">PO Qty</th>
-                        <th style="width: 40px; text-align: center;">Rcv Qty</th>
-                        <th style="width: 40px; text-align: center;">Blnc Qty</th>
-                        <th style="width: 40px; text-align: center;">IGP Qty</th>
-                        <th style="width: 40px; text-align: center;">Insp Qty</th>
-                        <th style="width: 40px; text-align: center;">Bounus Qty</th>
-                        <th style="width: 30px; text-align: center;">Mfg Date</th>
-                        <th style="width: 30px; text-align: center;">Exp Date</th>
-                        <th style="width: 40px; text-align: center;">Sale Rate</th>
-                        <th style="width: 40px; display: none; text-align: center;">Rej Qty</th>
-                        <th style="width: 40px; text-align: center;">Action</th>
+                        <th style="width: 40px;">Sr No.</th>
+                        <th style="width: 70px;">PO #</th>
+                        <th style="width: 86px;">Item Code</th>
+                        <th>Item Description</th>
+                        <th style="width: 76px;">UOM_QTY</th>
+                        <th style="width: 56px;">Unit</th>
+                        <th style="width: 100px;">Batch No</th>
+                        <th style="width: 108px;">PO Delivery Date</th>
+                        <th style="width: 76px;">PO Qty</th>
+                        <th style="width: 76px;">Rcv Qty</th>
+                        <th style="width: 76px;">Blnc Qty</th>
+                        <th style="width: 84px;">IGP Qty</th>
+                        <th style="width: 76px;">Insp Qty</th>
+                        <th style="width: 84px;">Bounus Qty</th>
+                        <th style="width: 108px;">Mfg Date</th>
+                        <th style="width: 108px;">Exp Date</th>
+                        <th style="width: 90px;">Sale Rate</th>
+                        <th style="width: 40px; display: none;">Rej Qty</th>
+                        <th style="width: 54px;">Action</th>
                     </tr>
                 </thead>
                 <tbody id="tblItemDescriptionDetail" style="height: 25px;">

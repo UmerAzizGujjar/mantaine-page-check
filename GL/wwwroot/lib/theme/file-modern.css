@@ -1,0 +1,96 @@
+/* ==========================================================================
+   MODERN FILE / ATTACHMENT FIELDS  -  every <input type="file"> in the application
+   Loaded from Site.Master after form-modern.css. CSS only: the element is still the real
+   file input (ids, name, change events, FormData uploads, .files, .val() all unchanged);
+   only its look changes - a soft dashed drop-box with a rounded, theme-coloured
+   "Choose file" button. Colours come from theme-colors.css (--theme-accent ...), so each
+   client theme keeps its own brand colour; dark mode follows <html data-theme="dark">.
+
+   Left alone on purpose
+   * invisible overlay uploaders (.drop-area input, e.g. company / branch logo): they are
+     opacity:0 click targets, so they are excluded
+   * inputs a page hides with display:none (still hidden)
+   * layout: no width / height / position / display is set here, only look & feel
+   ========================================================================== */
+
+html {
+    --fm-file-accent:      var(--theme-accent, #EFA63E);
+    --fm-file-on-accent:   var(--theme-on-accent, #1b2a41);
+    --fm-file-soft:        var(--theme-accent-soft, #fff1d6);
+    --fm-file-line:        var(--theme-accent-light, #f5ca8b);
+    --fm-file-ink:         var(--theme-ink, #1b2a41);
+    --fm-file-ring:        var(--theme-accent-ring, rgba(239, 166, 62, .25));
+}
+
+html[data-theme="dark"] {
+    --fm-file-soft:        rgba(255, 255, 255, .05);
+    --fm-file-line:        var(--dk-border-2, #3a475c);
+    --fm-file-ink:         var(--dk-text, #e6ebf2);
+}
+
+/* ---------- the field: dashed drop-box ---------- */
+html:root body input[type="file"]:not(.drop-area *):not(.no-file-modern) {
+    box-sizing: border-box;
+    max-width: 100%;
+    min-height: 34px;
+    padding: 3px 6px;
+    background-color: var(--fm-file-soft);
+    border: 1px dashed var(--fm-file-line);
+    border-radius: 8px;
+    color: var(--fm-file-ink);
+    font-size: 12px;
+    font-weight: 600;
+    line-height: 1.4;
+    cursor: pointer;
+    box-shadow: none;
+    transition: border-color .15s ease, background-color .15s ease, box-shadow .15s ease;
+}
+
+html:root body input[type="file"]:not(.drop-area *):not(.no-file-modern):hover {
+    border-color: var(--fm-file-accent);
+}
+
+html:root body input[type="file"]:not(.drop-area *):not(.no-file-modern):focus,
+html:root body input[type="file"]:not(.drop-area *):not(.no-file-modern):focus-visible {
+    outline: 0;
+    border-style: solid;
+    border-color: var(--fm-file-accent);
+    box-shadow: 0 0 0 3px var(--fm-file-ring);
+}
+
+html:root body input[type="file"]:not(.drop-area *):not(.no-file-modern):disabled {
+    opacity: .55;
+    cursor: not-allowed;
+}
+
+/* ---------- the "Choose file" button ---------- */
+html:root body input[type="file"]:not(.drop-area *):not(.no-file-modern)::file-selector-button {
+    margin: 0 10px 0 0;
+    padding: 5px 14px;
+    background: var(--fm-file-accent);
+    color: var(--fm-file-on-accent);
+    border: 0;
+    border-radius: 6px;
+    font-family: inherit;
+    font-size: 12px;
+    font-weight: 700;
+    line-height: 1.3;
+    cursor: pointer;
+    box-shadow: 0 1px 2px rgba(0, 0, 0, .18);
+    transition: filter .15s ease, transform .15s ease;
+}
+
+html:root body input[type="file"]:not(.drop-area *):not(.no-file-modern)::file-selector-button:hover {
+    filter: brightness(1.08);
+    transform: translateY(-1px);
+}
+
+html:root body input[type="file"]:not(.drop-area *):not(.no-file-modern)::file-selector-button:active {
+    transform: none;
+    filter: brightness(.95);
+}
+
+html:root body input[type="file"]:disabled::file-selector-button { cursor: not-allowed; }
+
+/* the page's own "Attachment" pill (PR / PO ...) keeps its card; just make the button match */
+html:root body .pr-file-input::file-selector-button { padding: 3px 10px; }

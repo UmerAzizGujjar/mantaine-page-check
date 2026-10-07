@@ -114,17 +114,7 @@
         backdrop.className = 'mm-backdrop';
         document.body.appendChild(backdrop);
 
-        qsa('li.mm-has-sub', list).forEach(function (li) {
-            var a = childByTag(li, 'A'), ul = childByTag(li, 'UL'), href = realHref(a);
-            if (!href || !ul) { return; }
-            var o = document.createElement('li');
-            o.className = 'mm-overview';
-            var oa = document.createElement('a');
-            oa.setAttribute('href', href);
-            oa.textContent = 'Open ' + text(a);
-            o.appendChild(oa);
-            ul.insertBefore(o, ul.firstChild);
-        });
+        /* (the "Open <section>" rows were removed: a parent only opens its sub menu, it never goes to a page of its own) */
 
         if (title) {
             var cur = qs('ul.nav-list > li.active > a', root);
@@ -214,7 +204,10 @@
 
         /* desktop: measure just before a dropdown appears */
         qsa('li.mm-has-sub', list).forEach(function (li) {
-            li.addEventListener('mouseenter', function () { fit(li); });
+            li.addEventListener('mouseenter', function () {
+                if (!isMobile()) { closeSiblings(li); }             /* a click-opened menu closes when the mouse moves to another one */
+                fit(li);
+            });
             li.addEventListener('focusin', function () { fit(li); });
         });
 
@@ -228,23 +221,15 @@
             var hasSub = li.classList.contains('mm-has-sub');
 
             if (hasSub) {
-                if (isMobile()) {                                   /* accordion */
-                    e.preventDefault();
-                    var open = !li.classList.contains('mm-open');
-                    if (open) { closeSiblings(li); }
-                    setOpen(li, open);
-                    return;
+                /* a PARENT item never navigates (the server gives every parent the default dashboard link):
+                   a click opens / closes its sub menu; only the pages inside it (leaf links) open a page */
+                e.preventDefault();
+                var willOpen = !li.classList.contains('mm-open');
+                if (willOpen) {
+                    closeSiblings(li);
+                    if (!isMobile()) { fit(li); }
                 }
-                if (!canHover()) {                                  /* touch screen with a wide viewport */
-                    if (!li.classList.contains('mm-open')) {
-                        e.preventDefault();
-                        closeSiblings(li);
-                        fit(li);
-                        setOpen(li, true);
-                        return;
-                    }
-                }
-                if (!realHref(a)) { e.preventDefault(); }           /* "#" parents just open */
+                setOpen(li, willOpen);
                 return;
             }
             if (isMobile() && realHref(a)) { closeDrawer(); }       /* leaf link: go and close the drawer */
