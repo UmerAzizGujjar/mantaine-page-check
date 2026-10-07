@@ -1,9 +1,7 @@
-﻿<%@ Page Title="" Language="C#" MasterPageFile="~/Site.Master" AutoEventWireup="true" CodeBehind="Voucher.aspx.cs" Inherits="PMS.Voucher" %>
+<%@ Page Title="" Language="C#" MasterPageFile="~/Site.Master" AutoEventWireup="true" CodeBehind="Voucher.aspx.cs" Inherits="PMS.Voucher" %>
 
 <asp:Content ID="Content1" ContentPlaceHolderID="HeadContent" runat="server">
-    <link href="../../wwwroot/THEME_TIBBIT/CustomCSS/vendor.css" rel="stylesheet" />
-    <link href="../../wwwroot/THEME_TIBBIT/CustomCSS/PR.css" rel="stylesheet" />
-    <link href="../../wwwroot/THEME_TIBBIT/CustomCSS/voucher.css" rel="stylesheet" />
+    <link href="../../wwwroot/THEME_TIBBIT/CustomCSS/VoucherForm.css" rel="stylesheet" />
 
     <script type="text/javascript">
         $(function () {
@@ -688,120 +686,121 @@
         </div>
     </div>
 
-    <div class="row voucher-form-row">
-        <!-- Left: Voucher Details + Account Filter -->
-        <div class="col-lg-8 col-md-12 pr-cards-column">
-            <div class="pr-primary-settings">
-                <h5 class="pr-section-title" style="margin-top:0;"><i class="fa fa-file-text-o"></i> Voucher Details</h5>
-                <div class="row">
-                    <div class="col-lg-3 col-md-3 col-sm-6">
-                        <label>Type</label>
-                        <input class="form-control" value="BCR" type="text" id="txt_vcher_type" readonly="readonly" />
-                    </div>
-                    <div class="col-lg-3 col-md-3 col-sm-6">
-                        <label>No</label>
-                        <input class="form-control" type="text" value="New" id="voucher_no" readonly="readonly" />
-                    </div>
-                    <div class="col-lg-3 col-md-3 col-sm-6">
-                        <label>Date</label>
-                        <input class="form-control" type="text" id="txt_date" />
-                    </div>
-                    <div class="col-lg-3 col-md-3 col-sm-6">
-                        <label>Status</label>
-                        <input class="form-control" type="text" id="txtstatus" readonly="readonly" />
-                    </div>
-                </div>
-                <div class="row">
-                    <div class="col-lg-4 col-md-4 col-sm-12">
-                        <label>Vendor Name</label>
-                        <select id="ddlVendor" class="form-control form-control-sm">
-                            <option value="0">Please Select</option>
-                        </select>
-                    </div>
-                    <div class="col-lg-4 col-md-4 col-sm-12">
-                        <label id="lblptn" style="display: none;">Pay to Name</label>
-                        <label id="lblname" style="display: none;">Name</label>
-                        <label id="lbldocno" style="display: none;">Document #</label>
-                        <label id="lblreference" style="display: none;">Reference</label>
+    <div class="vch-page">
 
-                        <input class="form-control" type="text" id="txt_ref_no" />
-                        <input class="form-control" type="text" id="txt_Ptn" style="display:none;" />
+        <div class="vch-top">
+            <!-- Voucher details -->
+            <section class="vch-card">
+                <header class="vch-card-head"><i class="fa fa-file-text-o"></i><span>Voucher Details</span></header>
+                <div class="vch-card-body">
+                    <div class="vch-grid vch-cols-4">
+                        <div class="vch-field">
+                            <label>Type</label>
+                            <input class="form-control" value="BCR" type="text" id="txt_vcher_type" readonly="readonly" />
+                        </div>
+                        <div class="vch-field">
+                            <label>No</label>
+                            <input class="form-control" type="text" value="New" id="voucher_no" readonly="readonly" />
+                        </div>
+                        <div class="vch-field">
+                            <label>Date</label>
+                            <input class="form-control" type="text" id="txt_date" />
+                        </div>
+                        <div class="vch-field">
+                            <label>Status</label>
+                            <input class="form-control" type="text" id="txtstatus" readonly="readonly" />
+                        </div>
                     </div>
-                    <div class="col-lg-4 col-md-4 col-sm-12">
-                        <label id="lb_Attachments" class="w115 fleft">Attachments</label>
-                        <input id="ChoseVoucherfile" type="file" name="ChoseVoucherfile" class="form-control" style="height:34px; padding:4px;" />
-                        <asp:HyperLink ID="HyperLink1" runat="server">Download</asp:HyperLink>
-                    </div>
-                </div>
-                <div class="row">
-                    <div class="col-lg-12">
-                        <label>Description</label>
-                        <textarea class="form-control" id="txt_descrip_master" rows="1" cols="20"></textarea>
-                    </div>
-                </div>
-            </div>
+                    <div class="vch-grid vch-cols-3">
+                        <div class="vch-field">
+                            <label>Vendor Name</label>
+                            <select id="ddlVendor" class="form-control form-control-sm">
+                                <option value="0">Please Select</option>
+                            </select>
+                        </div>
+                        <div class="vch-field">
+                            <label id="lblptn" style="display: none;">Pay to Name</label>
+                            <label id="lblname" style="display: none;">Name</label>
+                            <label id="lbldocno" style="display: none;">Document #</label>
+                            <label id="lblreference" style="display: none;">Reference</label>
 
-            <div class="pr-primary-settings" style="max-width: 280px;">
-                <h5 class="pr-section-title" style="margin-top:0;"><i class="fa fa-filter"></i> Account Filter</h5>
-                <div class="row">
-                    <div class="col-lg-12">
-                        <div class="source-toggle-pill" style="width: fit-content;">
-                            <label class="source-radio-option"><input type="radio" name="rbtn" id="chkAll" tabindex="11" value="rbtnAll" checked /><span class="source-pill-label">All</span></label>
-                            <label class="source-radio-option"><input type="radio" name="rbtn" id="chkcash" tabindex="11" value="rbtncash" /><span class="source-pill-label">Cash</span></label>
-                            <label class="source-radio-option"><input type="radio" name="rbtn" tabindex="12" id="chkBank" value="rbtnbank" /><span class="source-pill-label">Bank</span></label>
+                            <input class="form-control" type="text" id="txt_ref_no" />
+                            <input class="form-control" type="text" id="txt_Ptn" style="display:none;" />
+                        </div>
+                        <div class="vch-field">
+                            <label id="lb_Attachments">Attachments</label>
+                            <input id="ChoseVoucherfile" type="file" name="ChoseVoucherfile" class="form-control" />
+                            <asp:HyperLink ID="HyperLink1" runat="server">Download</asp:HyperLink>
+                        </div>
+                    </div>
+                    <div class="vch-grid vch-cols-1">
+                        <div class="vch-field">
+                            <label>Description</label>
+                            <textarea class="form-control" id="txt_descrip_master" rows="1" cols="20"></textarea>
                         </div>
                     </div>
                 </div>
-            </div>
+            </section>
+
+            <!-- Currency + summary -->
+            <aside class="vch-side">
+                <section class="vch-card">
+                    <header class="vch-card-head"><i class="fa fa-exchange"></i><span>Currency Exchange</span></header>
+                    <div class="vch-card-body">
+                        <div class="vch-grid vch-cols-2">
+                            <div class="vch-field">
+                                <label>Currency</label>
+                                <select class="form-control" id="ddl_currency">
+                                    <option>PKR</option>
+                                    <option>USD</option>
+                                    <option>AUD</option>
+                                </select>
+                            </div>
+                            <div class="vch-field">
+                                <label>Exchange Rate</label>
+                                <input class="form-control vch-num" type="text" id="txt_exg_rate" value="1.00" readonly="readonly" />
+                            </div>
+                        </div>
+                    </div>
+                </section>
+
+                <section class="vch-card">
+                    <header class="vch-card-head"><i class="fa fa-calculator"></i><span>Voucher Summary</span></header>
+                    <div class="vch-card-body">
+                        <div class="vch-grid vch-cols-3">
+                            <div class="vch-field">
+                                <label>Debit</label>
+                                <input class="form-control vch-num" type="text" id="txt_debit" readonly="readonly" />
+                            </div>
+                            <div class="vch-field">
+                                <label>Credit</label>
+                                <input class="form-control vch-num" type="text" id="txt_credit" readonly="readonly" />
+                            </div>
+                            <div class="vch-field">
+                                <label>Difference</label>
+                                <input class="form-control vch-num" type="text" id="txt_diff" readonly="readonly" />
+                            </div>
+                        </div>
+                    </div>
+                </section>
+            </aside>
         </div>
 
-        <!-- Right: Currency + Summary -->
-        <div class="col-lg-4 col-md-12 pr-cards-column">
-            <div class="pr-primary-settings">
-                <h5 class="pr-section-title" style="margin-top:0;"><i class="fa fa-exchange"></i> Currency Exchange</h5>
-                <div class="row">
-                    <div class="col-lg-7 col-md-7 col-sm-7">
-                        <label>Currency</label>
-                        <select class="form-control" id="ddl_currency">
-                            <option>PKR</option>
-                            <option>USD</option>
-                            <option>AUD</option>
-                        </select>
-                    </div>
-                    <div class="col-lg-5 col-md-5 col-sm-5">
-                        <label>Exchange Rate</label>
-                        <input class="form-control" type="text" id="txt_exg_rate" value="1.00" readonly="readonly" />
+        <!-- Account Entries (the All / Cash / Bank filter sits in the card header) -->
+        <section class="vch-card vch-card--entries">
+            <header class="vch-card-head">
+                <i class="fa fa-list"></i><span>Account Entries</span>
+                <div class="vch-head-tools">
+                    <span class="vch-tools-label">Account filter</span>
+                    <div class="vch-pill">
+                        <label><input type="radio" name="rbtn" id="chkAll" tabindex="11" value="rbtnAll" checked /><span>All</span></label>
+                        <label><input type="radio" name="rbtn" id="chkcash" tabindex="11" value="rbtncash" /><span>Cash</span></label>
+                        <label><input type="radio" name="rbtn" tabindex="12" id="chkBank" value="rbtnbank" /><span>Bank</span></label>
                     </div>
                 </div>
-            </div>
-
-            <div class="pr-primary-settings">
-                <h5 class="pr-section-title" style="margin-top:0;"><i class="fa fa-calculator"></i> Voucher Summary</h5>
-                <div class="row">
-                    <div class="col-lg-6 col-md-6 col-sm-6">
-                        <label>Debit</label>
-                        <input class="form-control" type="text" id="txt_debit" readonly="readonly" />
-                    </div>
-                    <div class="col-lg-6 col-md-6 col-sm-6">
-                        <label>Credit</label>
-                        <input class="form-control" type="text" id="txt_credit" readonly="readonly" />
-                    </div>
-                </div>
-                <div class="row">
-                    <div class="col-lg-6 col-md-6 col-sm-6">
-                        <label>Difference</label>
-                        <input class="form-control" type="text" id="txt_diff" readonly="readonly" />
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
-
-    <!-- Account Entries Table -->
-    <div class="pr-primary-settings" style="margin-top:8px;">
-        <h5 class="pr-section-title" style="margin-top:0;"><i class="fa fa-list"></i> Account Entries</h5>
-        <div class="table-container">
-            <table class="table table-bordered" id="tbldescription">
+            </header>
+            <div class="vch-table-wrap">
+<table class="table table-bordered" id="tbldescription">
                 <thead class="thead-light">
                     <tr style="color: black">
                         <th id="seq" style="width: 5%;">Seq</th>
@@ -866,14 +865,15 @@
                             </div>
                         </td>
                         <td style="width: 5%;">
-                            <i class="fa fa-plus fa-1x text-light" aria-hidden="true" id="addbtn" onclick="append()"></i>
+                            <i class="fa fa-plus vch-add" aria-hidden="true" id="addbtn" onclick="append()"></i>
                         </td>
                     </tr>
                 </thead>
                 <tbody id="tbldescriptionbody">
                 </tbody>
             </table>
-        </div>
+            </div>
+        </section>
     </div>
 
             <div class="row">

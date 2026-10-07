@@ -1,0 +1,304 @@
+/* ==========================================================================
+   Voucher form (Modules/GL/Voucher.aspx) - its own stylesheet.
+   Does not use PR.css / vendor.css: everything the form needs is here.
+   Colours come from the active theme (theme-colors.css), so every client theme keeps its own look.
+   Identical copy in every THEME_* folder - edit the copies together.
+   ========================================================================== */
+
+.vch-page {
+    --vch-ink: #1b2a41;
+    --vch-muted: #5b6577;
+    --vch-border: #dfe5ee;
+    --vch-line: #d5dbe5;
+    --vch-accent: var(--theme-accent, #EFA63E);
+    --vch-accent-light: var(--theme-accent-light, #F4B653);
+    --vch-accent-soft: var(--theme-accent-soft, #fff1d6);
+    --vch-accent-ink: var(--theme-accent-ink, #8a4b00);
+    --vch-ring: var(--theme-accent-ring, rgba(239, 166, 62, 0.25));
+    --vch-on-accent: var(--theme-on-accent, #1b2a41);
+}
+
+/* ---------- layout: details card + side cards, then the entries card ---------- */
+.vch-top {
+    display: grid;
+    grid-template-columns: minmax(0, 2fr) minmax(300px, 1fr);
+    gap: 12px;
+    margin: 8px 0 12px;
+    align-items: stretch;
+}
+
+.vch-side { display: flex; flex-direction: column; gap: 12px; min-width: 0; }
+.vch-side > .vch-card { flex: 1 1 auto; }
+
+/* ---------- cards ---------- */
+.vch-card {
+    display: flex;
+    flex-direction: column;
+    min-width: 0;
+    background: #fff;
+    border: 1px solid var(--vch-border);
+    border-left: 3px solid var(--vch-accent);
+    border-radius: 8px;
+    box-shadow: 0 1px 2px rgba(15, 23, 42, 0.05);
+    overflow: hidden;
+}
+
+.vch-card-head {
+    display: flex;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 8px;
+    padding: 9px 14px;
+    font-size: 12px;
+    font-weight: 700;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    color: var(--vch-accent-ink);
+    background: linear-gradient(90deg, var(--vch-accent-soft), #fff);
+    border-bottom: 1px solid var(--vch-border);
+}
+
+.vch-card-head > i { font-size: 14px; opacity: 0.85; }
+.vch-head-tools { margin-left: auto; display: flex; align-items: center; gap: 8px; }
+.vch-head-tools .vch-tools-label { font-size: 11px; color: var(--vch-muted); letter-spacing: 0.04em; }
+
+.vch-card-body { display: grid; gap: 10px; padding: 12px 14px; flex: 1 1 auto; align-content: start; }
+
+/* ---------- field grids (every row is full) ---------- */
+.vch-grid {
+    display: grid;
+    gap: 10px 12px;
+    grid-template-columns: repeat(var(--cols, 4), minmax(0, 1fr));
+}
+.vch-cols-1 { --cols: 1; }
+.vch-cols-2 { --cols: 2; }
+.vch-cols-3 { --cols: 3; }
+.vch-cols-4 { --cols: 4; }
+
+.vch-field { min-width: 0; }
+
+.vch-field label {
+    display: block;
+    margin: 0 0 4px;
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+    color: var(--vch-muted);
+    white-space: nowrap;
+}
+
+/* ---------- controls ---------- */
+.vch-page .vch-field .form-control {
+    display: block;
+    width: 100% !important;
+    height: 34px !important;
+    padding: 5px 10px !important;
+    font-size: 13px !important;
+    color: var(--vch-ink) !important;
+    background: #fff !important;
+    border: 1px solid var(--vch-line) !important;
+    border-radius: 6px !important;
+    box-shadow: none !important;
+}
+
+.vch-page .vch-field .form-control:focus {
+    border-color: var(--vch-accent) !important;
+    box-shadow: 0 0 0 3px var(--vch-ring) !important;
+    outline: 0;
+}
+
+.vch-page .vch-field .form-control[readonly] { background: #f4f6f9 !important; }
+
+/* the site stylesheet fixes #txt_date at 32px; keep it level with the other fields */
+.vch-page .vch-field #txt_date { height: 34px !important; }
+
+.vch-page .vch-field textarea.form-control {
+    height: auto !important;
+    min-height: 64px;
+    resize: vertical;
+}
+
+.vch-page .vch-field input[type="file"].form-control { padding: 3px 6px !important; }
+
+.vch-num { text-align: right; font-weight: 700; font-variant-numeric: tabular-nums; }
+
+/* Select2 (vendor / cost centre / department) */
+.vch-page .select2-container { width: 100% !important; }
+.vch-page .select2-container--default .select2-selection--single {
+    height: 34px !important;
+    border: 1px solid var(--vch-line) !important;
+    border-radius: 6px !important;
+}
+.vch-page .select2-container--default .select2-selection--single .select2-selection__rendered {
+    line-height: 32px !important;
+    font-size: 13px;
+    color: var(--vch-ink);
+}
+.vch-page .select2-container--default .select2-selection--single .select2-selection__arrow { height: 32px !important; }
+.vch-page .select2-container--default.select2-container--focus .select2-selection--single,
+.vch-page .select2-container--default.select2-container--open .select2-selection--single {
+    border-color: var(--vch-accent) !important;
+    box-shadow: 0 0 0 3px var(--vch-ring);
+}
+
+/* Select2 hides the original <select> with width:1px; page-wide "select { width:100% !important }" rules made
+   those hidden selects very wide and pushed the page sideways */
+select.select2-hidden-accessible {
+    width: 1px !important;
+    height: 1px !important;
+    min-width: 0 !important;
+    max-width: 1px !important;
+    padding: 0 !important;
+    border: 0 !important;
+}
+
+/* ---------- All / Cash / Bank toggle ---------- */
+.vch-pill {
+    display: inline-flex;
+    padding: 3px;
+    gap: 2px;
+    background: #f0f3f8;
+    border: 1px solid #dbe1ea;
+    border-radius: 999px;
+}
+.vch-pill label { position: relative; margin: 0; cursor: pointer; }
+.vch-pill input { position: absolute; opacity: 0; pointer-events: none; }
+.vch-pill span {
+    display: block;
+    padding: 4px 16px;
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: 0.05em;
+    text-transform: uppercase;
+    color: var(--vch-muted);
+    border-radius: 999px;
+    transition: background-color .15s ease, color .15s ease;
+}
+.vch-pill label:hover span { color: var(--vch-ink); }
+.vch-pill input:checked + span { background: var(--vch-accent); color: var(--vch-on-accent); }
+.vch-pill input:focus-visible + span { outline: 2px solid var(--vch-ring); outline-offset: 1px; }
+
+/* ---------- account entries table ---------- */
+.vch-table-wrap { overflow-x: auto; padding: 12px 14px 14px; }
+
+#tbldescription {
+    width: 100%;
+    min-width: 860px;
+    max-width: 100%;
+    margin: 0;
+    table-layout: fixed;
+    border-collapse: separate;
+    border-spacing: 0;
+    font-size: 12px;
+    background: #fff;
+}
+
+#tbldescription th,
+#tbldescription td { overflow: hidden; text-overflow: ellipsis; }
+
+#tbldescription thead tr:first-child th {
+    padding: 9px 10px;
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: 0.05em;
+    text-transform: uppercase;
+    text-align: left;
+    white-space: nowrap;
+    color: var(--vch-on-accent) !important;
+    background: linear-gradient(135deg, var(--vch-accent-light), var(--vch-accent)) !important;
+    border: 0 !important;
+}
+#tbldescription thead tr:first-child th:first-child { border-radius: 6px 0 0 0; }
+#tbldescription thead tr:first-child th:last-child { border-radius: 0 6px 0 0; }
+
+/* the "new line" row under the headings */
+#tbldescription thead tr:nth-child(2) td {
+    padding: 8px 10px;
+    vertical-align: middle;
+    background: var(--vch-accent-soft) !important;
+    border-bottom: 1px solid var(--vch-border) !important;
+}
+#tbldescription thead tr:nth-child(2) td input.form-control,
+#tbldescription thead tr:nth-child(2) td select.form-control {
+    width: 100%;
+    height: 34px;
+    padding: 5px 10px;
+    font-size: 13px;
+    color: var(--vch-ink);
+    background: #fff;
+    border: 1px solid var(--vch-line);
+    border-radius: 6px;
+    box-shadow: none;
+}
+#tbldescription thead tr:nth-child(2) td input.form-control:focus {
+    border-color: var(--vch-accent);
+    box-shadow: 0 0 0 3px var(--vch-ring);
+    outline: 0;
+}
+
+/* account search box (token input) in the new-line row */
+#tbldescription ul.token-input-list {
+    width: 100% !important;
+    min-height: 34px !important;
+    height: 34px !important;
+    overflow: hidden;
+    margin: 0;
+    background: #fff;
+    border: 1px solid var(--vch-line);
+    border-radius: 6px;
+}
+#tbldescription ul.token-input-list li { margin: 0; padding: 0; }
+#tbldescription ul.token-input-list li input { height: 32px; border: 0 !important; box-shadow: none !important; }
+#token-input-txtAccountName { box-shadow: none !important; }
+
+/* saved lines */
+#tbldescription tbody td {
+    padding: 6px 10px;
+    vertical-align: middle;
+    border-bottom: 1px solid #eef1f6;
+    color: var(--vch-ink);
+}
+#tbldescription tbody tr:hover td { background: var(--vch-accent-soft); }
+
+#tbldescription thead tr:first-child th#seq { width: 48px !important; }
+#tbldescription thead tr:first-child th#plus { width: 96px !important; }
+#tbldescription input,
+#tbldescription select { min-width: 0; max-width: 100%; }
+
+/* add-line button (the + in the new-line row) */
+#tbldescription .vch-add {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 32px;
+    height: 32px;
+    font-size: 14px;
+    color: var(--vch-on-accent);
+    background: var(--vch-accent);
+    border-radius: 50%;
+    box-shadow: 0 2px 6px rgba(15, 23, 42, 0.18);
+    cursor: pointer;
+    transition: transform .12s ease, box-shadow .12s ease;
+}
+#tbldescription .vch-add:hover { transform: translateY(-1px); box-shadow: 0 4px 10px rgba(15, 23, 42, 0.25); }
+
+/* edit / delete buttons created by the page script: edit uses the theme colour instead of a fixed blue */
+#tbldescription .editListBtn {
+    background-color: var(--vch-accent) !important;
+    color: var(--vch-on-accent) !important;
+    display: inline-block;
+}
+#tbldescription .delListBtn { display: inline-block; }
+
+/* ---------- smaller screens ---------- */
+@media (max-width: 1199px) {
+    .vch-top { grid-template-columns: minmax(0, 1fr); }
+}
+@media (max-width: 991px) {
+    .vch-cols-3, .vch-cols-4 { --cols: 2; }
+}
+@media (max-width: 575px) {
+    .vch-cols-2, .vch-cols-3, .vch-cols-4 { --cols: 1; }
+    .vch-head-tools { margin-left: 0; width: 100%; }
+}

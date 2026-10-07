@@ -1,14 +1,13 @@
-﻿<%@ Page Title="" Language="C#" MasterPageFile="~/Site.Master" AutoEventWireup="true" CodeBehind="FurtherTaxDefinition.aspx.cs" Inherits="PMS.Modules.Inventory.FurtherTaxDefinition" %>
+<%@ Page Title="" Language="C#" MasterPageFile="~/Site.Master" AutoEventWireup="true" CodeBehind="FurtherTaxDefinition.aspx.cs" Inherits="PMS.Modules.Inventory.FurtherTaxDefinition" %>
 <asp:Content ID="Content1" ContentPlaceHolderID="HeadContent" runat="server">
+    <script src="../../wwwroot/lib/jquery/accountlist.lazy.js?v=<%= System.IO.File.GetLastWriteTimeUtc(Server.MapPath("~/wwwroot/lib/jquery/accountlist.lazy.js")).Ticks %>" type="text/javascript"></script>
     <script type="text/javascript">
         var _global_payable = '';
         var _global_receiveable = '';
 
         $(document).ready(function () {
-            loadItemList();
-            loadrecvablaccountegl();
-            loadpayableaccountgl();
-            setTimeout(function () { LoadAccount(); }, 2000);
+            withAccountList(function () { });   // start loading the account list at once, in parallel with the tax rows
+            LoadAccount();
         });
 
         function SaveAllRecord() {
@@ -65,60 +64,55 @@
                         '<td><input style="width:55px!important;" type="text" id="Further_Tax_Perc' + rowIndex + '" name="Further_Tax_Perc" value="' + value.Further_Tax_Perc + '" readonly /></td>' +
                         '<td style="display:none">' +
                         '<select style="width:175px!important;" id="Account_ID_Payable' + rowIndex + '" name="Account_ID_Payable" onchange="loadpayableaccountgl(this)">' +
-                        _global_payable +
                         '</select>' +
                         '</td>' +
                         '<td style="display:none"><input style="width:165px!important;" type="text" id="Description_Payable' + rowIndex + '" name="Description_Payable" value="' + value.Description_Payable + '" readonly /></td>' +
                         '<td>' +
                         '<select style="width:175px!important;" id="Account_Code_Recvable' + rowIndex + '" name="Account_Code_Recvable" onchange="loadrecvablaccountegl(this)">' +
-                        _global_receiveable +
                         '</select>' +
                         '</td>' +
                         '<td><input style="width:195px!important;" type="text" id="Description_Recvable' + rowIndex + '" name="Description_Recvable" value="' + value.Description_Recvable + '" readonly /></td>' +
                         '<td><input type="checkbox" style="display:none" id="chk_STWH' + rowIndex + '" name="chk_STWH" ' + chk_STWH_checked + ' /></td>' +
                         '<td><input type="checkbox" style="margin-left:-159px" id="chk_Active' + rowIndex + '" name="chk_Active" ' + chk_Active_checked + ' /></td>' +
                         '<td><a href="javascript:void(0)" style="margin-left:-113px" onclick="EditRow(' + rowIndex + ')">' +
-                        '<i class="glyphicon glyphicon-edit" style="color:#f30a0a;"></i>' +
+                        '<i class="fa fa-pencil-square-o" style="font-size:16px;color:var(--theme-accent, #EFA63E) !important;"></i>' +
                         '</a></td>' +
                         '</tr>';
                 });
 
                 $('#tblItemDescriptionDetail').append(rows);
-                $('input, select').attr('autocomplete', 'off');
-                $('select').select2();
-
-                $.each(data, function (key, value) {
-                    var idx = key + 1;
-                    setTimeout(function () {
-                        $('#Account_ID_Payable' + idx)
-                            .val(value.Account_ID_Payable)
-                            .prop("disabled", true)
-                            .trigger('change');
-
-                        $('#Account_Code_Recvable' + idx)
-                            .val(value.Account_Code_Recvable)
-                            .prop("disabled", true)
-                            .trigger('change');
-                    }, 3000); 
+                $('input').attr('autocomplete', 'off');
+                // show each row's saved accounts; the full account list is only added when the row is edited (see EditRow)
+                withAccountList(function () {
+                    $.each(data, function (key, value) {
+                        var idx = key + 1;
+                        var payable = $('#Account_ID_Payable' + idx), receivable = $('#Account_Code_Recvable' + idx);
+                        showSavedAccount(payable, value.Account_ID_Payable);
+                        showSavedAccount(receivable, value.Account_Code_Recvable);
+                        payable.prop('disabled', true);
+                        receivable.prop('disabled', true);
+                    });
                 });
             });
         }
 
-        function Addrow() {
+        function Addrow() { withAccountList(AddrowCore); }
+
+        function AddrowCore() {
             var rowlength = $('#tblItemDescription tr').length;
             var rows = '<tr>' +
                 '<td><input style="width:175px!important;" type="text" name="Tax_Type"/></td>' +
                 '<td><input style="width:35px!important;" type="text" name="Further_Tax_Perc"/></td>' +
-                '<td style="display:none"><select style="width:175px!important;" name="Account_ID_Payable" onchange="loadpayableaccountgl(this)">' + _global_payable + '</select></td>' +
+                '<td style="display:none"><select style="width:175px!important;" name="Account_ID_Payable" onchange="loadpayableaccountgl(this)">' + accountOptions() + '</select></td>' +
                 '<td style="display:none"><input style="width:165px!important;" type="text" name="Description_Payable"/></td>' +
-                '<td><select style="width:175px!important;" name="Account_Code_Recvable" onchange="loadrecvablaccountegl(this)">' + _global_receiveable + '</select></td>' +
+                '<td><select style="width:175px!important;" name="Account_Code_Recvable" onchange="loadrecvablaccountegl(this)">' + accountOptions() + '</select></td>' +
                 '<td><input style="width:165px!important;" type="text" name="Description_Recvable"/></td>' +
                 '<td><input type="checkbox" style="display:none" name="chk_STWH"/></td>' +
                 '<td><input type="checkbox" style="margin-left:-154px" name="chk_Active"/></td>' +
-                '<td><a href="javascript:void(0)" style="margin-left:-109px" onclick="EditRow(' + rowlength + ')"><i class="glyphicon glyphicon-edit" style="color:#f30a0a;"></i></a></td>' +
+                '<td><a href="javascript:void(0)" style="margin-left:-109px" onclick="EditRow(' + rowlength + ')"><i class="fa fa-pencil-square-o" style="font-size:16px;color:var(--theme-accent, #EFA63E) !important;"></i></a></td>' +
                 '</tr>';
             $('#tblItemDescription').append(rows);
-            $('#tblItemDescription select').select2();
+            $('#tblItemDescription tr:last select').select2();
         }
 
         function EditRow(index) {
@@ -126,29 +120,18 @@
             $('#Further_Tax_Perc' + index).prop('readonly', false);
             $('#Description_Payable' + index).prop('readonly', false);
             $('#Description_Recvable' + index).prop('readonly', false);
-            $('#Account_ID_Payable' + index).prop('disabled', false);
-            $('#Account_Code_Recvable' + index).prop('disabled', false);
-        }
-
-        function loadItemList() {
-            var optionsitem = '';
-            $('#Account_ID_Payable').select2();
-            $('#Account_Code_Recvable').select2();
-
-            PageMethods.loadAccountList(function (resp) {
-                optionsitem = '<option value="0">Please Select</option>';
-                $.each(JSON.parse(resp), function (key, value) {
-                    $('select').select2();
-                    optionsitem += '<option value="' + value.Account_ID + '">' + value.name + '</option>';
+            // this row is being edited: give its two account dropdowns the full list (the saved account stays selected)
+            withAccountList(function () {
+                $.each(['Account_ID_Payable', 'Account_Code_Recvable'], function (i, id) {
+                    var el = $('#' + id + index);
+                    fillAllAccounts(el);
+                    if (!el.hasClass('select2-hidden-accessible')) { el.select2(); }
+                    el.prop('disabled', false);
                 });
-                $('#Account_ID_Payable').html(optionsitem);
-                $('#Account_Code_Recvable').html(optionsitem);
-                _global_payable = optionsitem;
-                _global_receiveable = optionsitem;
-            }, function (error) {
-                alert("Error loading account list: " + error.get_message());
             });
         }
+
+        // loadItemList removed: the account list now loads once via withAccountList() (accountlist.lazy.js)
 
         function loadpayableaccountgl(row) {
             var ID = $(row).val();

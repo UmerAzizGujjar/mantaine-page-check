@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Web;
@@ -33,6 +33,7 @@ namespace PMS
         {
             string result = string.Empty;
             DataBaseDataContext db = new DataBaseDataContext();
+            db.ObjectTrackingEnabled = false;      // read-only query: no change tracking needed
             var itemsList = (from i in db.GL_Accounts where i.Levels == 4 select new { i.Account_ID, name = i.Account_Code.ToString() + '-' + i.Account_Name }).ToList();
             if (itemsList != null)
             {
@@ -83,6 +84,7 @@ namespace PMS
         public static string LoadAccount()
         {
             DataBaseDataContext db = new DataBaseDataContext();
+            db.ObjectTrackingEnabled = false;      // read-only query: no change tracking needed
             var Header = (from a in db.WithHold_Taxes select new {
                 a.Account_Code_Recvable,
                 a.Account_ID_Payable,

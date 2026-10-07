@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Web;
@@ -40,6 +40,7 @@ namespace PMS.Modules.Inventory
         public static string loadAccountList()
         {
             DataBaseDataContext db = new DataBaseDataContext();
+            db.ObjectTrackingEnabled = false;      // read-only query: no change tracking needed
             var itemsList = (from i in db.GL_Accounts
                              where i.Levels == 4
                              select new
@@ -54,6 +55,7 @@ namespace PMS.Modules.Inventory
         public static string LoadAccount()
         {
             DataBaseDataContext db = new DataBaseDataContext();
+            db.ObjectTrackingEnabled = false;      // read-only query: no change tracking needed
             var list = (from a in db.Further_Taxes
                         select new
                         {
