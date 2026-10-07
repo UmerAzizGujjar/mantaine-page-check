@@ -189,7 +189,7 @@
                 '<td><select class="form-control" id="txtCgsAccount' + rowlength + '" name="txtCgsAccount" style="font-size: 10px !important;height:10px!important;"></select></td>' +
                 '<td><select class="form-control" id="txtworkProgress' + rowlength + '" name="txtworkProgress" style="font-size: 10px !important;height:10px!important;"></select></td>' +
                 '<td><select class="form-control" id="txtCapitalConsumption' + rowlength + '" name="txtCapitalConsumption" style="font-size: 10px !important;height:10px!important;"></select></td>' +
-                '<td><a href="javascript:void(0)" onclick="ExcludeFromPayment(this)"><i class="glyphicon glyphicon-trash" style="width:15px !important;font-size: 13px;color:#f30a0a;position:relative;" i=""></i></a></td>' +
+                '<td style="text-align:center;"><a href="javascript:void(0)" title="Delete" onclick="ExcludeFromPayment(this)"><i class="fa fa-trash-o" style="font-size:16px;color:#f30a0a !important;"></i></a></td>' +
             '</tr>';
             $('#tblItemDescriptionDetail').append(rows);
             loadItemList(rowlength);
@@ -330,9 +330,8 @@
                         '<td><select class="form-control" id="txtCgsAccount' + (key + 1) + '" name="txtCgsAccount" style="font-size: 10px !important;height:22px!important;" readonly=readonly ></select></td>' +
                         '<td><select class="form-control" id="txtworkProgress' + (key + 1) + '" name="txtworkProgress" style="font-size: 10px !important;height:22px!important;" readonly=readonly ></select></td>' +
                         '<td><select class="form-control" id="txtCapitalConsumption' + (key + 1) + '" name="txtCapitalConsumption" style="font-size: 10px !important;height:22px!important;" readonly=readonly ></select></td>' +
-                        '<td><a href="javascript:void(0)" onclick="EditRow(' + (key + 1) + ')"><i class="glyphicon glyphicon-edit" style="width:15px !important;font-size: 13px;color:#f30a0a;position:relative;" i="">' +
-                        '</td>'
-                    '</tr>';
+                        '<td style="text-align:center;"><a href="javascript:void(0)" title="Edit" onclick="EditRow(' + (key + 1) + ')"><i class="fa fa-pencil-square-o" style="font-size:16px;color:var(--theme-accent, #EFA63E) !important;"></i></a></td>' +
+                        '</tr>';
                 });
                 $('#tblItemDescriptionDetail').append(rows);
                 // once the account list has arrived, show each row's saved accounts (read-only until Edit is clicked)
