@@ -2,7 +2,7 @@
 
 <asp:Content ID="Content1" ContentPlaceHolderID="HeadContent" runat="server">
     <link href="../../wwwroot/THEME_TIBBIT/CustomCSS/Pharmacy.css" rel="stylesheet" />
-    <link href="../../wwwroot/lib/theme/pharmacy-form.css?v=3" rel="stylesheet" />
+    <link href="../../wwwroot/lib/theme/pharmacy-form.css?v=6" rel="stylesheet" />
     <link href="../../wwwroot/lib/sweetalert/swalalert.css" rel="stylesheet" />
     <script src="https://cdnjs.cloudflare.com/ajax/libs/underscore.js/1.8.2/underscore-min.js"></script>
    <style>
@@ -484,23 +484,31 @@
                         CustomData.__super__.constructor.call(this, $element, options);
                     }
                     Utils.Extend(CustomData, ArrayData);
+                    // Asynchronous + debounced: the server is asked for the typed term without freezing the page,
+                    // only the latest request is answered, and finished searches are cached (see fetchMedicines()).
                     CustomData.prototype.query = function (params, callback) {
-                        results = [];
-                        if (params.term && params.term !== '') {
-                            results = _.filter(items, function (e) {
-                                return e.text.toUpperCase().indexOf(params.term.toUpperCase()) >= 0;
-                            });
-                        } else {
-                            results = items;
+                        var term = $.trim(params.term || '');
+                        var page = ("page" in params) ? params.page : 1;
+                        var myReq = ++medReq;
+
+                        function respond(list) {
+                            if (myReq !== medReq) return;   // a newer keystroke replaced this request
+                            var data = {};
+                            data.results = list.slice((page - 1) * pageSize, page * pageSize);
+                            data.pagination = {};
+                            data.pagination.more = page * pageSize < list.length;
+                            callback(data);
                         }
-                        if (!("page" in params)) {
-                            params.page = 1;
+
+                        clearTimeout(medTimer);
+                        if (medCache.hasOwnProperty(term)) {          // instant: already fetched / scrolling to the next page
+                            respond(medCache[term]);
+                            return;
                         }
-                        var data = {};
-                        data.results = results.slice((params.page - 1) * pageSize, params.page * pageSize);
-                        data.pagination = {};
-                        data.pagination.more = params.page * pageSize < results.length;
-                        callback(data);
+                        medTimer = setTimeout(function () {
+                            if (medXhr) { medXhr.abort(); }
+                            medXhr = fetchMedicines(term, respond);
+                        }, term === '' ? 0 : MED_SEARCH_DELAY_MS);
                     };
                     $(document).ready(function () {
                         $("#medName").select2({
@@ -790,10 +798,7 @@
                     $('#medname').select2('close');
                 }
             });
-            $(document).on('keyup', '.select2-search__field', function () {
-                ItemNames = $(this).val();
-                loadmed();
-            });
+            // (search is now handled by the Medicine dropdown's own debounced query - no request per keystroke here)
             $('.select2').select2();
 
             // Open the modal for Sale Return
@@ -1693,49 +1698,57 @@
         var addedItemIDs = [];
         var items = [];
 
-        function loadmed() {
-            var ItemName = ItemNames || '';
+        // ---- medicine list (Medicine dropdown) ----
+        var MED_SEARCH_DELAY_MS = 250;      // wait for a pause in typing before asking the server
+        var medCache = {};                  // search term -> [{id, text}]
+        var medXhr = null, medTimer = null, medReq = 0;
 
-            $.ajax({
+        // Same display text as before: "Item_Code - Description" (Generic name shown first when it matched the search).
+        function buildMedicineItems(data, term) {
+            var list = [], seen = {};
+            $.each(data, function (key, value) {
+                if (seen[value.Item_ID]) return;      // prevents duplicates
+                seen[value.Item_ID] = true;
+
+                var displayText = value.Description && value.Description.trim() !== ''
+                    ? value.Description
+                    : (value.Generic_Name && value.Generic_Name.trim() !== ''
+                        ? value.Generic_Name
+                        : 'No Name');
+
+                if (value.Generic_Name && value.Generic_Name.toLowerCase().includes(term.toLowerCase())) {
+                    displayText = '[' + value.Generic_Name + '] ' + displayText;
+                }
+
+                list.push({ id: value.Item_ID, text: value.Item_Code + ' - ' + displayText });
+            });
+            return list;
+        }
+
+        // Asynchronous fetch (the old version was a blocking request fired on every keystroke).
+        function fetchMedicines(term, done) {
+            return $.ajax({
                 type: "POST",
                 url: "IssueMedicine.aspx/loadMedicine",
-                data: JSON.stringify({ "ItemName": ItemName }),
+                data: JSON.stringify({ "ItemName": term }),
                 dataType: 'json',
                 contentType: "application/json; charset=utf-8",
-                async: false,
                 success: function (msg) {
-                    var data = JSON.parse(msg.d);
-                    items = [];
-                    addedItemIDs = [];
-
-                    $.each(data, function (key, value) {
-                        // Skip if already added (prevents duplicates)
-                        if (addedItemIDs.indexOf(value.Item_ID) !== -1) return;
-
-                        // Build display text: prefer Description, fallback to Generic_Name
-                        let displayText = value.Description && value.Description.trim() !== ''
-                            ? value.Description
-                            : (value.Generic_Name && value.Generic_Name.trim() !== ''
-                                ? value.Generic_Name
-                                : 'No Name');
-
-                        // Optional: Highlight if Generic_Name matched the search
-                        if (value.Generic_Name && value.Generic_Name.toLowerCase().includes(ItemName.toLowerCase())) {
-                            displayText = `[${value.Generic_Name}] ${displayText}`;
-                        }
-
-                        // Final display: Item_Code - DisplayText
-                        let fullText = `${value.Item_Code} - ${displayText}`;
-
-                        items.push({ id: value.Item_ID, text: fullText });
-                        addedItemIDs.push(value.Item_ID);
-                    });
-
+                    var list = buildMedicineItems(JSON.parse(msg.d), term);
+                    if (Object.keys(medCache).length > 200) { medCache = {}; }
+                    medCache[term] = list;
+                    done(list);
                 },
                 error: function (xhr, status, error) {
-                    console.error("AJAX Error:", error);
+                    if (status !== 'abort') { console.error("AJAX Error:", error); }
                 }
             });
+        }
+
+        // Refresh / pre-load the full list in the background so the first open of the dropdown is instant.
+        function loadmed() {
+            medCache = {};
+            fetchMedicines('', function (list) { items = list; });
         }
 
         function OnHoldBill() {
@@ -3493,54 +3506,90 @@ function CalculateReceivedAmount() {
         }
         let currentRowIndex = -1;
 
+        var itemListRun = 0;          // newest request wins - slow older answers are ignored
+        var itemRateCache = {};       // "itemId|ledgerWarehouse" -> purchase rate
+
         function fillItemListsWareHouseWise(warehouse) {
 
             var warehouse = $('#ddlWarehouse').find('option:selected').val();
             var SearchString = $("#txtSearchitem").val();
+            var run = ++itemListRun;
+
+            if ($("#tblItemList tbody tr.item-row").length === 0) {
+                $("#tblItemList tbody").html('<tr><td colspan="8" class="text-center text-muted" style="padding:14px;">Loading...</td></tr>');
+            }
 
             PageMethods.GetItemList_WareHouseWise(warehouse, SearchString, function (data) {
+                if (run !== itemListRun) return;
 
                 var parsedData = JSON.parse(data);
                 var rows = '';
+                var needRates = {};
 
                 $.each(parsedData, function (i, value) {
+
+                    var rateKey = value.Item_ID + '|' + (value.Ledger_Ware_House || '');
+                    var rateText = '...';
+                    if (itemRateCache.hasOwnProperty(rateKey)) {
+                        rateText = parseFloat(itemRateCache[rateKey]).toFixed(2);
+                    } else {
+                        needRates[rateKey] = true;
+                    }
 
                     rows += '<tr tabindex="0" class="item-row" ' +
                         'data-itemid="' + value.Item_ID + '" ' +
                         'data-warehouse="' + value.Ware_House + '">' +
 
-                        // '<td class="text-center">' +
-                        // '<input type="checkbox" class="chkItem" ' +
-                        // 'data-itemid="' + value.Item_ID + '" ' +
-                        // 'data-warehouse="' + value.Ware_House + '">' +
-                        // '</td>' +
-
                         '<td>' + value.Item_Code + '</td>' +
                         '<td>' + value.Description + '</td>' +
                         '<td class="text-end">' + value.Qty + '</td>' +
                         '<td>' + value.WareHouse_Name + '</td>' +
-                        '<td class="text-end">' + parseFloat(value.Purchase_Rate).toFixed(2) + '</td>' +
+                        '<td class="text-end item-rate" data-ratekey="' + rateKey + '">' + rateText + '</td>' +
                         '<td>' + value.UOM_Qty + '</td>' +
                         '<td>' + value.Manufacturer_Name + '</td>' +
                         '<td>' + (value.Locator || '') + '</td>' +
                         '</tr>';
                 });
 
+                if (rows === '') {
+                    rows = '<tr><td colspan="8" class="text-center text-muted" style="padding:14px;">No items found.</td></tr>';
+                }
                 $("#tblItemList tbody").html(rows);
 
                 attachRowEvents();
 
                 $(".se-pre-con").fadeOut("slow");
 
+                // purchase rates are the slow part - fetch them after the list is already on screen
+                var keys = Object.keys(needRates);
+                if (keys.length > 0) {
+                    PageMethods.GetItemListRates(keys.join(';'), function (rateData) {
+                        $.each(JSON.parse(rateData), function (i, r) {
+                            itemRateCache[r.Item_ID + '|' + (r.Ware_House || '')] = r.Purchase_Rate;
+                        });
+                        $("#tblItemList tbody td.item-rate").each(function () {
+                            var k = $(this).attr('data-ratekey');
+                            if (itemRateCache.hasOwnProperty(k)) {
+                                $(this).text(parseFloat(itemRateCache[k]).toFixed(2));
+                            }
+                        });
+                    }, function (err) {
+                        console.log(err);
+                        $("#tblItemList tbody td.item-rate").filter(function () { return $(this).text() === '...'; }).text('-');
+                    });
+                }
+
             }, function (err) {
+                if (run !== itemListRun) return;
                 console.log(err);
+                $("#tblItemList tbody").html('<tr><td colspan="8" class="text-center text-danger" style="padding:14px;">Could not load the item list. Please try again.</td></tr>');
                 $(".se-pre-con").fadeOut("slow");
             });
         }
 
         function attachRowEvents() {
 
-            let $rows = $("#tblItemList tbody tr");
+            let $rows = $("#tblItemList tbody tr.item-row");
             currentRowIndex = -1;
 
             // CLICK selection
@@ -3556,7 +3605,7 @@ function CalculateReceivedAmount() {
             // KEYBOARD navigation
             $(document).off("keydown.itemNav").on("keydown.itemNav", function (e) {
 
-                $rows = $("#tblItemList tbody tr");
+                $rows = $("#tblItemList tbody tr.item-row");
 
                 if ($rows.length === 0) return;
 

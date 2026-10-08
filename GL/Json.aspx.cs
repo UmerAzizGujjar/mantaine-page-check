@@ -97,6 +97,30 @@ namespace PMS
                 }
                 Response.Write("[" + result + "]");
             }
+            else if (Request.QueryString["Table"] == "LabTestBarcode")
+            {
+                // Lab barcode value = Laboratory_Test.Lab_Test_ID; resolve to its bill/patient via Lab_Test_Detail when Laboratory_Test.Bill_ID is empty
+                string result = "";
+                int labTestId;
+                if (int.TryParse((Request.QueryString["q"] ?? "").Trim(), out labTestId))
+                {
+                    string sqlQuery = @"SELECT TOP 1 lt.Lab_Test_ID, lt.Patient_ID, x.Bill_ID, b.Bill_No, p.Full_Name
+                        FROM Laboratory_Test lt
+                        OUTER APPLY (SELECT ISNULL(lt.Bill_ID, (SELECT TOP 1 bd.Bill_ID FROM Lab_Test_Detail ld
+                                        JOIN Ar_Billing_Details bd ON bd.Bill_Details_ID = ld.Bill_Details_ID
+                                        WHERE ld.Lab_Test_ID = lt.Lab_Test_ID)) AS Bill_ID) x
+                        LEFT JOIN Ar_Billings b ON b.Bill_ID = x.Bill_ID
+                        LEFT JOIN Reg_patient p ON p.pat_id = lt.Patient_ID
+                        WHERE lt.Lab_Test_ID = @qe_q";
+                    DataTable dt = DBClass.getDataTable(sqlQuery, P("@qe_q", labTestId));
+                    foreach (DataRow dr in dt.Rows)
+                    {
+                        string fullName = dr["Full_Name"].ToString().Replace("\\", "\\\\").Replace("\"", "\\\"");
+                        result += @"{""id"":""" + dr["Lab_Test_ID"].ToString() + @""",""name"":""" + dr["Lab_Test_ID"].ToString() + (fullName != "" ? " - " + fullName : "") + @""",""patient_id"":""" + dr["Patient_ID"].ToString() + @""",""bill_id"":""" + dr["Bill_ID"].ToString() + @""",""bill_no"":""" + dr["Bill_No"].ToString().Replace("\\", "\\\\").Replace("\"", "\\\"") + @"""}";
+                    }
+                }
+                Response.Write("[" + result + "]");
+            }
             else if (Session["Book_ID"] != null && Request.QueryString["Bank"] != null && Request.QueryString["Cash"] != null && Request.QueryString["Table"] == null && Request.QueryString["StartCode"] == null && Request.QueryString["EndCode"] == null && Request.QueryString["Bank"] == null)
             {
                 string sqlQuery = "Select * from GL_Accounts Where Book_ID=" + AppConfig.Book_ID + " AND Levels=4 AND Cash=1 OR Bank=1 AND (Account_Name like @qp_q OR Account_Code like @qp_q)";

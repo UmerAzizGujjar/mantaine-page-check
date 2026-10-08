@@ -445,7 +445,7 @@
                     });
 
                     // Set focus after a short delay (adjust the delay if needed)
-                    $('#<%= txtSearchBillNo.ClientID %>').focus();
+                    $('#<%= txtSearchLabBarcode.ClientID %>').focus();
                 }, 800); // 200 milliseconds delay
             });
 
@@ -1106,6 +1106,67 @@
                     });
             }
 
+            // Lab_Test_ID (printed barcode) -> bill + patient + tests, same as Bill No search
+            $('#<%= txtSearchLabBarcode.ClientID %>').tokenInput("../../json.aspx?Table=LabTestBarcode", {
+                // no tokenLimit: the input stays usable so the next scan can be typed while the last result stays shown;
+                // onAdd drops the previous token so only the latest one is displayed
+                preventDuplicates: true,
+                onAdd: function (item) {
+                    try {
+                        var $t = $('#<%= txtSearchLabBarcode.ClientID %>');
+                        $.each($t.tokenInput('get'), function (i, tk) {
+                            if (tk.id !== item.id) $t.tokenInput('remove', { id: tk.id });
+                        });
+                        if (!item.bill_id || item.bill_id === "") {
+                            alert("No billing record found for this lab test.");
+                            return;
+                        }
+                        localStorage.billid = 1;
+                        localStorage.patientid = 0;
+                        localStorage.isSaved = 0;
+                        $('#ctl00_MainContent_txtPatient_ID').tokenInput('clear');
+                        $("#hdBill_id").val(item.bill_id);
+                        $("#hdnBill_No").val(item.bill_no);
+                        if (item.patient_id) $("#hdnPatient_ID").val(item.patient_id);
+                        loadPatientDataUsingBillId();
+                    } catch (err) {
+                        alert(err.message);
+                    }
+                    setTimeout(function () {
+                        $('#token-input-<%= txtSearchLabBarcode.ClientID %>').focus();
+                    }, 0);
+                }
+            });
+
+            // Barcode scanners type the digits and send Enter (or Tab) immediately, before tokenInput's
+            // search delay fires, so tokenInput would discard the value. Capture it on the parent list
+            // (runs before tokenInput's own keydown) and resolve it directly.
+            (function () {
+                var scanInput = document.getElementById('token-input-<%= txtSearchLabBarcode.ClientID %>');
+                if (!scanInput) return;
+                scanInput.parentNode.parentNode.addEventListener('keydown', function (e) {
+                    if (e.target !== scanInput || (e.keyCode !== 13 && e.keyCode !== 9)) return;
+                    var code = scanInput.value.trim();
+                    if (code === "") return;
+                    e.preventDefault();
+                    e.stopPropagation();
+                    scanInput.value = "";
+                    $.getJSON("../../json.aspx?Table=LabTestBarcode&q=" + encodeURIComponent(code), function (res) {
+                        if (res && res.length > 0) {
+                            // re-scanning the same code must reload, so drop the existing token first
+                            var $t = $('#<%= txtSearchLabBarcode.ClientID %>');
+                            $t.tokenInput('clear');
+                            $t.tokenInput('add', res[0]);
+                        } else {
+                            Swal.fire({ icon: 'error', title: 'Not Found!', text: 'No lab test found for barcode ' + code, timer: 2500, showConfirmButton: false });
+                            scanInput.focus();
+                        }
+                    }).fail(function () {
+                        Swal.fire({ icon: 'error', title: 'Error!', text: 'Could not search barcode ' + code });
+                    });
+                }, true);
+            })();
+
             $('#<%= txtSampleNo.ClientID %>').tokenInput("../../json.aspx?Table=SampleNo", {
                 tokenLimit: 1,
                 onAdd: function (item) {
@@ -1631,7 +1692,7 @@
 
             $(function () {
                 setTimeout(function () {
-                    $('#<%= txtSearchBillNo.ClientID %>').focus();
+                    $('#<%= txtSearchLabBarcode.ClientID %>').focus();
                 }, 100); // 200 milliseconds delay
             });
 
@@ -2799,6 +2860,14 @@
                                     </div>
                                     <div class="col-lg-7 col-md-7 col-sm-6">
                                         <asp:TextBox ID="txtSearchBillNo" runat="server"></asp:TextBox>
+                                    </div>
+                                </div>
+                                <div class="row mb-3 mtt">
+                                    <div class="col-lg-5 col-md-5 col-sm-6">
+                                        <b>Search Lab ID / Barcode</b>
+                                    </div>
+                                    <div class="col-lg-7 col-md-7 col-sm-6">
+                                        <asp:TextBox ID="txtSearchLabBarcode" runat="server"></asp:TextBox>
                                     </div>
                                 </div>
                                 <div class="row mb-3 mtt">

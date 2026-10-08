@@ -5,7 +5,7 @@
    (#navbar background). To recolour a client, change the values below only.
    ========================================================================== */
 :root {
-    --theme-header-bg: linear-gradient(180deg, #d42a2b 0%, #c11718 100%);   /* top header bar */
+    --theme-header-bg: linear-gradient(90deg, #e8504f 0%, #c11718 55%, #8f1011 100%);   /* top header bar */
     --theme-header-text: #ffffff;                 /* company name in the header */
     --theme-header-text-shadow: 0 1px 2px rgba(0, 0, 0, 0.30);
     --theme-header-line: #7f0c0d;                    /* line under the header and the menu bar */

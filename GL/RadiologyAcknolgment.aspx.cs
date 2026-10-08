@@ -20,6 +20,7 @@ namespace PMS
             try
             {
                 DataBaseDataContext db = new DataBaseDataContext();
+                db.CommandTimeout = 120;
 
                 DateTime startDateTime;
                 DateTime endDateTime;
@@ -27,7 +28,7 @@ namespace PMS
                 if (string.IsNullOrEmpty(startDate) || string.IsNullOrEmpty(endDate))
                 {
                     endDateTime = DateTime.Now.Date.AddDays(1);
-                    startDateTime = DateTime.Now.Date.AddDays(-1); 
+                    startDateTime = DateTime.Now.Date.AddDays(-1);
                 }
                 else
                 {
@@ -35,92 +36,54 @@ namespace PMS
                     endDateTime = DateTime.ParseExact(endDate, "dd-MM-yyyy", CultureInfo.InvariantCulture).AddDays(1);
                 }
 
-                var query = from pat in db.Reg_patients
-                            join bill in db.Ar_Billings on pat.pat_id equals bill.Patient_ID
-                            join bill_details in db.Ar_Billing_Details on bill.Bill_ID equals bill_details.Bill_ID
-                            join labtest_detail in db.Lab_Test_Details on bill_details.Bill_Details_ID equals labtest_detail.Bill_Details_ID
-                            join lbt in db.Laboratory_Tests on labtest_detail.Lab_Test_ID equals lbt.Lab_Test_ID
-                            where lbt.System_Generated == true
-                                  && bill_details.Test_Main_Department != "001"
-                                  && (bill.isCancel == false || bill.isCancel == null)
-                                 // && !db.Refunds.Any(r => r.Bill_ID == bill.Bill_ID)
+                // STEP 1 - lean query: only the joins + filters + sort + paging run in SQL, returning just the ids of the page.
+                // (Before, every row in the date range was loaded with several per-row sub-queries, then filtered/sorted in memory.)
+                var lean = from pat in db.Reg_patients
+                           join bill in db.Ar_Billings on pat.pat_id equals bill.Patient_ID
+                           join bill_details in db.Ar_Billing_Details on bill.Bill_ID equals bill_details.Bill_ID
+                           join labtest_detail in db.Lab_Test_Details on bill_details.Bill_Details_ID equals labtest_detail.Bill_Details_ID
+                           join lbt in db.Laboratory_Tests on labtest_detail.Lab_Test_ID equals lbt.Lab_Test_ID
+                           where lbt.System_Generated == true
+                                 && bill_details.Test_Main_Department != "001"
+                                 && (bill.isCancel == false || bill.isCancel == null)
                                  && (bill_details.Is_Refunded == false || bill_details.Is_Refunded == null)
-                                  && bill.Creation_Date >= startDateTime
-                                  && bill.Creation_Date < endDateTime
-                            let dept = (from ipd in db.In_Patients
-                                        where ipd.Patient_ID == pat.pat_id
-                                        orderby ipd.In_Patient_ID descending
-                                        select ipd.Department).FirstOrDefault()
-                                      ?? (from emg in db.Emergency_Patients
-                                          where emg.Patient_ID == pat.pat_id
-                                          orderby emg.Emergency_ID descending
-                                          select emg.Department).FirstOrDefault()
-                                      ?? (from p2 in db.Patients
-                                          where p2.Patient_ID == pat.pat_id
-                                          select p2.Patient_Main_Category).FirstOrDefault()
-                            let emergencyRec = (from emg in db.Emergency_Patients
-                                                where emg.Patient_ID == pat.pat_id
-                                                orderby emg.Emergency_ID descending
-                                                select emg).FirstOrDefault()
-                            let inPatientRec = (from ipd in db.In_Patients
-                                                where ipd.Patient_ID == pat.pat_id
-                                                orderby ipd.In_Patient_ID descending
-                                                select ipd).FirstOrDefault()
-                            let activeWardId = (emergencyRec != null ? (int?)emergencyRec.Ward_ID : (inPatientRec != null ? (int?)inPatientRec.Ward_ID : null))
-                            let activeBedNo = (emergencyRec != null ? (int?)emergencyRec.Bed_No : (inPatientRec != null ? (int?)inPatientRec.Bed_No : null))
-                            let wardName = (activeWardId != null ? (from w in db.Ward_Definitions where w.Ward_ID == activeWardId select w.Ward_Type).FirstOrDefault() : null)
-                            select new
-                            {
-                                Bill_Date = bill.Creation_Date,
-                                bill.Bill_No,
-                                bill.Bill_ID,
-                                bill_details.Item_Name,
-                                pat.Full_Name,
-                                pat.mr_no_sequence,
-                                bill_details.Bill_Details_ID,
-                                Main_Test_Departments = db.GetDataValueName("Main Test Departments", bill_details.Test_Main_Department),
-                                labtest_detail.Lab_Test_Detail_ID,
-                                Department = db.GetDataValueName("Patient Main Category", dept),
-                                Main_Department = db.GetDataValueName("Mode Of Registration", bill.Main_Department),
-                                bill_details.ParentTrans_Name,
-                                bill_details.Net_Amount,
-                                DoctorID = labtest_detail.DoctorID ?? (bill_details.Doctor_id != null && bill_details.Doctor_id != "" ? Convert.ToInt32(bill_details.Doctor_id) : 0),
-                                LabTest_DoctorID = labtest_detail.DoctorID ?? 0,
-                                Billing_DoctorID = (bill_details.Doctor_id != null && bill_details.Doctor_id != "" ? Convert.ToInt32(bill_details.Doctor_id) : 0),
-                                IsAcknowledge = labtest_detail.IsAcknowledge ?? false,
-                                IsApproved = labtest_detail.isApproved ?? false,
-                                History = labtest_detail.History,
-                                Priorities = labtest_detail.Priorities,
-                                WardName = wardName ?? "",
-                                BedNo = (activeBedNo != null ? activeBedNo.Value.ToString() : ""),
-                                RawTestDeptCode = bill_details.Test_Main_Department,
-                                Panel = bill.Panel_Id,
-                                Panel_Name = db.Panels.Where(p => p.Panel_ID == bill.Panel_Id).Select(p => p.Company_Name).FirstOrDefault(),
-                            };
-
-                var queryList = query.ToList();
-
-                
+                                 && bill.Creation_Date >= startDateTime
+                                 && bill.Creation_Date < endDateTime
+                           select new
+                           {
+                               PatId = pat.pat_id,
+                               Lab_Test_Detail_ID = labtest_detail.Lab_Test_Detail_ID,
+                               Bill_Date = bill.Creation_Date,
+                               bill.Bill_No,
+                               pat.Full_Name,
+                               pat.mr_no_sequence,
+                               bill_details.Item_Name,
+                               bill_details.ParentTrans_Name,
+                               bill_details.Test_Main_Department,
+                               Billing_Doctor = bill_details.Doctor_id,
+                               LabDoctor = labtest_detail.DoctorID,
+                               Ack = labtest_detail.IsAcknowledge,
+                               Appr = labtest_detail.isApproved
+                           };
 
                 if (!string.IsNullOrEmpty(ddlDoctorFilter) && ddlDoctorFilter != "0")
                 {
                     int doctorId = Convert.ToInt32(ddlDoctorFilter);
-                    queryList = queryList.Where(x =>
-                    {
-                        int displayDoctorId = (x.LabTest_DoctorID > 0) ? x.LabTest_DoctorID : x.Billing_DoctorID;
-                        return displayDoctorId == doctorId;
-                    }).ToList();
+                    string doctorIdText = doctorId.ToString();
+                    // shown doctor = lab-test doctor when set (> 0), otherwise the billing doctor
+                    lean = lean.Where(x => (x.LabDoctor ?? 0) == doctorId
+                                           || ((x.LabDoctor ?? 0) <= 0 && x.Billing_Doctor == doctorIdText));
                 }
 
                 if (!string.IsNullOrEmpty(mainDepartmentFilter) && mainDepartmentFilter != "All")
                 {
                     if (mainDepartmentFilter == "WalkIn")
                     {
-                        queryList = queryList.Where(x => string.IsNullOrEmpty(x.ParentTrans_Name)).ToList();
+                        lean = lean.Where(x => x.ParentTrans_Name == null || x.ParentTrans_Name == "");
                     }
                     else
                     {
-                        queryList = queryList.Where(x => x.ParentTrans_Name == mainDepartmentFilter).ToList();
+                        lean = lean.Where(x => x.ParentTrans_Name == mainDepartmentFilter);
                     }
                 }
 
@@ -128,64 +91,152 @@ namespace PMS
                 {
                     if (statusFilter == "Approved")
                     {
-                        queryList = queryList.Where(x => x.IsApproved == true).ToList();
+                        lean = lean.Where(x => x.Appr == true);
                     }
                     else if (statusFilter == "NotApproved")
                     {
-                        queryList = queryList.Where(x => x.IsApproved == false || x.IsApproved == null).ToList();
+                        lean = lean.Where(x => x.Appr == false || x.Appr == null);
                     }
                     else if (statusFilter == "Acknowledged")
                     {
-                        queryList = queryList.Where(x => x.IsAcknowledge == true && (x.IsApproved == false || x.IsApproved == null)).ToList();
+                        lean = lean.Where(x => x.Ack == true && (x.Appr == false || x.Appr == null));
                     }
                 }
 
                 if (!string.IsNullOrEmpty(mainTestDepartmentFilter) && mainTestDepartmentFilter != "All")
                 {
-                    queryList = queryList.Where(x => x.RawTestDeptCode == mainTestDepartmentFilter).ToList();
+                    lean = lean.Where(x => x.Test_Main_Department == mainTestDepartmentFilter);
                 }
 
                 if (!string.IsNullOrEmpty(searchValue))
                 {
-                    queryList = queryList.Where(x =>
-                        (x.Full_Name != null && x.Full_Name.ToLower().Contains(searchValue.ToLower())) ||
-                        (x.Bill_No != null && x.Bill_No.ToLower().Contains(searchValue.ToLower())) ||
-                        (x.mr_no_sequence != null && x.mr_no_sequence.ToLower().Contains(searchValue.ToLower())) ||
-                        (x.Item_Name != null && x.Item_Name.ToLower().Contains(searchValue.ToLower()))
-                    ).ToList();
+                    string term = searchValue.Trim();
+                    lean = lean.Where(x =>
+                        x.Full_Name.Contains(term) ||
+                        x.Bill_No.Contains(term) ||
+                        x.mr_no_sequence.Contains(term) ||
+                        x.Item_Name.Contains(term));
                 }
 
-                int totalRecords = queryList.Count();
+                int totalRecords = lean.Count();
 
-                if (length > 100000) 
+                if (length > 100000)
                 {
                     start = 0;
                     length = totalRecords;
                 }
 
+                bool asc = sortDirection == "asc";
+                var ordered = lean.OrderByDescending(x => x.Bill_Date);
                 switch (sortColumn)
                 {
                     case "Bill_No":
-                        queryList = sortDirection == "asc" ? queryList.OrderBy(x => x.Bill_No).ToList() : queryList.OrderByDescending(x => x.Bill_No).ToList();
+                        ordered = asc ? lean.OrderBy(x => x.Bill_No) : lean.OrderByDescending(x => x.Bill_No);
                         break;
                     case "Full_Name":
-                        queryList = sortDirection == "asc" ? queryList.OrderBy(x => x.Full_Name).ToList() : queryList.OrderByDescending(x => x.Full_Name).ToList();
+                        ordered = asc ? lean.OrderBy(x => x.Full_Name) : lean.OrderByDescending(x => x.Full_Name);
                         break;
                     case "mr_no_sequence":
-                        queryList = sortDirection == "asc" ? queryList.OrderBy(x => x.mr_no_sequence).ToList() : queryList.OrderByDescending(x => x.mr_no_sequence).ToList();
+                        ordered = asc ? lean.OrderBy(x => x.mr_no_sequence) : lean.OrderByDescending(x => x.mr_no_sequence);
                         break;
                     case "Bill_Date":
-                        queryList = sortDirection == "asc" ? queryList.OrderBy(x => x.Bill_Date).ToList() : queryList.OrderByDescending(x => x.Bill_Date).ToList();
+                        ordered = asc ? lean.OrderBy(x => x.Bill_Date) : lean.OrderByDescending(x => x.Bill_Date);
                         break;
                     case "Department":
-                        queryList = sortDirection == "asc" ? queryList.OrderBy(x => x.Department).ToList() : queryList.OrderByDescending(x => x.Department).ToList();
-                        break;
-                    default:
-                        queryList = queryList.OrderByDescending(x => x.Bill_Date).ToList();
+                        // the department only exists as a per-patient sub-query, so it is evaluated just for this sort
+                        ordered = asc
+                            ? lean.OrderBy(x => (from ipd in db.In_Patients where ipd.Patient_ID == x.PatId orderby ipd.In_Patient_ID descending select ipd.Department).FirstOrDefault()
+                                                ?? (from emg in db.Emergency_Patients where emg.Patient_ID == x.PatId orderby emg.Emergency_ID descending select emg.Department).FirstOrDefault()
+                                                ?? (from p2 in db.Patients where p2.Patient_ID == x.PatId select p2.Patient_Main_Category).FirstOrDefault())
+                            : lean.OrderByDescending(x => (from ipd in db.In_Patients where ipd.Patient_ID == x.PatId orderby ipd.In_Patient_ID descending select ipd.Department).FirstOrDefault()
+                                                ?? (from emg in db.Emergency_Patients where emg.Patient_ID == x.PatId orderby emg.Emergency_ID descending select emg.Department).FirstOrDefault()
+                                                ?? (from p2 in db.Patients where p2.Patient_ID == x.PatId select p2.Patient_Main_Category).FirstOrDefault());
                         break;
                 }
+                // unique tie-breaker so paging is stable
+                ordered = ordered.ThenBy(x => x.Lab_Test_Detail_ID);
 
-                var finalList = queryList.Skip(start).Take(length).ToList();
+                var pageIds = ordered.Skip(start).Take(length).Select(x => x.Lab_Test_Detail_ID).ToList();
+
+                // STEP 2 - the full projection (ward / bed / department / panel / names) only for the rows of this page.
+                // Chunked so a big "All" page never exceeds SQL Server's 2100-parameter limit.
+                var byId = new Dictionary<string, object>();
+                for (int i = 0; i < pageIds.Count; i += 1000)
+                {
+                    var chunk = pageIds.Skip(i).Take(1000).ToList();
+
+                    var detail = from pat in db.Reg_patients
+                                 join bill in db.Ar_Billings on pat.pat_id equals bill.Patient_ID
+                                 join bill_details in db.Ar_Billing_Details on bill.Bill_ID equals bill_details.Bill_ID
+                                 join labtest_detail in db.Lab_Test_Details on bill_details.Bill_Details_ID equals labtest_detail.Bill_Details_ID
+                                 where chunk.Contains(labtest_detail.Lab_Test_Detail_ID)
+                                 let dept = (from ipd in db.In_Patients
+                                             where ipd.Patient_ID == pat.pat_id
+                                             orderby ipd.In_Patient_ID descending
+                                             select ipd.Department).FirstOrDefault()
+                                           ?? (from emg in db.Emergency_Patients
+                                               where emg.Patient_ID == pat.pat_id
+                                               orderby emg.Emergency_ID descending
+                                               select emg.Department).FirstOrDefault()
+                                           ?? (from p2 in db.Patients
+                                               where p2.Patient_ID == pat.pat_id
+                                               select p2.Patient_Main_Category).FirstOrDefault()
+                                 let emergencyRec = (from emg in db.Emergency_Patients
+                                                     where emg.Patient_ID == pat.pat_id
+                                                     orderby emg.Emergency_ID descending
+                                                     select emg).FirstOrDefault()
+                                 let inPatientRec = (from ipd in db.In_Patients
+                                                     where ipd.Patient_ID == pat.pat_id
+                                                     orderby ipd.In_Patient_ID descending
+                                                     select ipd).FirstOrDefault()
+                                 let activeWardId = (emergencyRec != null ? (int?)emergencyRec.Ward_ID : (inPatientRec != null ? (int?)inPatientRec.Ward_ID : null))
+                                 let activeBedNo = (emergencyRec != null ? (int?)emergencyRec.Bed_No : (inPatientRec != null ? (int?)inPatientRec.Bed_No : null))
+                                 let wardName = (activeWardId != null ? (from w in db.Ward_Definitions where w.Ward_ID == activeWardId select w.Ward_Type).FirstOrDefault() : null)
+                                 select new
+                                 {
+                                     Bill_Date = bill.Creation_Date,
+                                     bill.Bill_No,
+                                     bill.Bill_ID,
+                                     bill_details.Item_Name,
+                                     pat.Full_Name,
+                                     pat.mr_no_sequence,
+                                     bill_details.Bill_Details_ID,
+                                     Main_Test_Departments = db.GetDataValueName("Main Test Departments", bill_details.Test_Main_Department),
+                                     labtest_detail.Lab_Test_Detail_ID,
+                                     Department = db.GetDataValueName("Patient Main Category", dept),
+                                     Main_Department = db.GetDataValueName("Mode Of Registration", bill.Main_Department),
+                                     bill_details.ParentTrans_Name,
+                                     bill_details.Net_Amount,
+                                     DoctorID = labtest_detail.DoctorID ?? (bill_details.Doctor_id != null && bill_details.Doctor_id != "" ? Convert.ToInt32(bill_details.Doctor_id) : 0),
+                                     LabTest_DoctorID = labtest_detail.DoctorID ?? 0,
+                                     Billing_DoctorID = (bill_details.Doctor_id != null && bill_details.Doctor_id != "" ? Convert.ToInt32(bill_details.Doctor_id) : 0),
+                                     IsAcknowledge = labtest_detail.IsAcknowledge ?? false,
+                                     IsApproved = labtest_detail.isApproved ?? false,
+                                     History = labtest_detail.History,
+                                     Priorities = labtest_detail.Priorities,
+                                     WardName = wardName ?? "",
+                                     BedNo = (activeBedNo != null ? activeBedNo.Value.ToString() : ""),
+                                     RawTestDeptCode = bill_details.Test_Main_Department,
+                                     Panel = bill.Panel_Id,
+                                     Panel_Name = db.Panels.Where(p => p.Panel_ID == bill.Panel_Id).Select(p => p.Company_Name).FirstOrDefault(),
+                                 };
+
+                    foreach (var row in detail)
+                    {
+                        byId[row.Lab_Test_Detail_ID.ToString()] = row;
+                    }
+                }
+
+                // keep the order chosen in step 1
+                var finalList = new List<object>();
+                foreach (int id in pageIds)
+                {
+                    object row;
+                    if (byId.TryGetValue(id.ToString(), out row))
+                    {
+                        finalList.Add(row);
+                    }
+                }
 
                 return new
                 {
