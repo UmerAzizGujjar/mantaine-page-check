@@ -1,0 +1,227 @@
+/* ==========================================================================
+   stock-adjustment.css - Stock Adjustment screen (Modules/Inventory/StockAdjustment.aspx)
+   Stand-alone: this screen uses no other screen's stylesheet. Every colour comes from the active theme
+   (--theme-accent ... in that theme's theme-colors.css); the fallbacks are only a safety net.
+   The same file is kept in every theme folder (wwwroot/THEME_*/CustomCSS/stock-adjustment.css).
+   Layout: status badges on the title line, two columns (item entry | transaction) and the items added.
+   ========================================================================== */
+
+.sa-page { display: flex; flex-direction: column; gap: 16px; width: 100%; margin: 0 0 24px; color: var(--theme-ink, #1b2a41); }
+.sa-page * { box-sizing: border-box; }
+
+/* ---------- status badges (on the title line, right side of the master's .pr-meta-bar) ---------- */
+.sa-badge {
+    display: inline-flex; align-items: baseline; gap: 6px; padding: 3px 12px; white-space: nowrap;
+    background: #fff; border: 1px solid #e3e8ee; border-left: 3px solid var(--theme-accent, #438eb9); border-radius: 6px;
+}
+.sa-badge-label { font-size: 10.5px; font-weight: 700; letter-spacing: .06em; text-transform: uppercase; color: #8a94a6; }
+.sa-badge-value { font-size: 13px; font-weight: 800; color: var(--theme-ink, #1b2a41); }
+/* ---------- layout ---------- */
+.sa-layout { display: grid; grid-template-columns: minmax(0, 2fr) minmax(0, 1fr); gap: 16px; align-items: start; }
+.sa-col { display: flex; flex-direction: column; gap: 16px; min-width: 0; }
+@media (max-width: 1199px) { .sa-layout { grid-template-columns: minmax(0, 1fr); } }
+
+/* ---------- cards ---------- */
+.sa-card {
+    min-width: 0; padding: 0 16px 16px; background: #fff;
+    border: 1px solid #e3e8ee; border-top: 3px solid var(--theme-accent, #438eb9); border-radius: 10px;
+    box-shadow: 0 2px 10px rgba(16, 24, 40, .05);
+}
+.sa-card-title {
+    display: flex; align-items: center; gap: 8px; margin: 0 -16px 14px; padding: 10px 16px;
+    font-size: 13px; font-weight: 700; letter-spacing: .04em; text-transform: uppercase;
+    color: var(--theme-on-accent, #fff);
+    background: linear-gradient(180deg, var(--theme-accent-light, #438eb9) 0%, var(--theme-accent, #438eb9) 100%);
+    border-bottom: 1px solid var(--theme-accent-ink, #2b6a90);
+}
+.sa-card-title i { font-size: 14px; opacity: .9; }
+.sa-card-title .sa-card-note { margin-left: auto; font-size: 11.5px; font-weight: 600; letter-spacing: 0; text-transform: none; opacity: .9; }
+
+/* ---------- field grid ---------- */
+.sa-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(190px, 1fr)); gap: 12px 14px; align-items: end; }
+.sa-grid-2 { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+.sa-grid-3 { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+@media (max-width: 520px) { .sa-grid-2, .sa-grid-3 { grid-template-columns: minmax(0, 1fr); } }
+.sa-span-2 { grid-column: span 2; }
+.sa-span-all { grid-column: 1 / -1; }
+@media (max-width: 520px) { .sa-span-2 { grid-column: span 1; } }
+.sa-field { display: flex; flex-direction: column; justify-content: flex-end; min-width: 0; }
+.sa-field > label {
+    display: block; margin: 0 0 4px; font-size: 11.5px; font-weight: 700; letter-spacing: .02em; color: #4a5568;
+    white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+}
+.sa-req { color: #c0392b; margin-left: 2px; }
+.sa-link { margin-top: 4px; font-size: 12px; font-weight: 600; color: var(--theme-accent-ink, #2b6a90); }
+
+/* ---------- controls ---------- */
+.sa-page input.form-control, .sa-page select.form-control, .sa-page textarea.form-control {
+    display: block; width: 100% !important; margin: 0 !important; padding: 4px 10px !important;
+    font-size: 13px; font-weight: 600; color: var(--theme-ink, #1b2a41);
+    background: #fff !important; border: 1px solid #cfd6e0 !important; border-radius: 6px !important; box-shadow: none !important;
+}
+.sa-page input.form-control, .sa-page select.form-control { height: 34px !important; }
+.sa-page textarea.form-control { min-height: 84px; padding: 8px 10px !important; resize: vertical; }
+.sa-page input[type="file"].form-control { padding: 4px !important; }
+.sa-page input.form-control:focus, .sa-page select.form-control:focus, .sa-page textarea.form-control:focus {
+    border-color: var(--theme-accent, #438eb9) !important; box-shadow: 0 0 0 3px var(--theme-accent-ring, rgba(67, 142, 185, .25)) !important; outline: none;
+}
+.sa-page input[readonly], .sa-page input[disabled] { background: #f3f5f8 !important; color: #3b475a; cursor: default; }
+
+/* select2 (page script turns the dropdowns into select2) */
+.sa-page select.select2-hidden-accessible { width: 1px !important; height: 1px !important; min-width: 0 !important; padding: 0 !important; border: 0 !important; }
+.sa-page .select2-container { width: 100% !important; display: block; }
+.sa-page .select2-container .select2-selection--single { height: 34px; border: 1px solid #cfd6e0; border-radius: 6px; }
+.sa-page .select2-container .select2-selection--single .select2-selection__rendered { line-height: 32px; padding-left: 10px; font-size: 13px; font-weight: 600; color: var(--theme-ink, #1b2a41); }
+.sa-page .select2-container .select2-selection--single .select2-selection__arrow { height: 32px; }
+.sa-page .select2-container--open .select2-selection--single, .sa-page .select2-container--focus .select2-selection--single { border-color: var(--theme-accent, #438eb9); }
+/* validation: the page script adds .ErrorAlert to an empty required field / the empty table */
+.sa-page .ErrorAlert, .sa-page select.ErrorAlert + .select2-container .select2-selection { border-color: #c0392b !important; }
+.sa-page .ErrorAlert { box-shadow: 0 0 0 3px rgba(192, 57, 43, .15); }
+
+/* All / Cash / Bank pills */
+.sa-seg { display: inline-flex; align-self: flex-start; gap: 2px; padding: 3px; background: #eef1f5; border: 1px solid #dde3ea; border-radius: 8px; }
+.sa-seg label { position: relative; margin: 0; cursor: pointer; }
+.sa-seg input { position: absolute; opacity: 0; pointer-events: none; }
+.sa-seg span { display: block; padding: 5px 18px; font-size: 13px; font-weight: 700; color: #2d3748; border-radius: 6px; }
+.sa-seg input:checked + span { color: var(--theme-on-accent, #fff); background: var(--theme-accent, #438eb9); box-shadow: 0 1px 3px rgba(16, 24, 40, .18); }
+.sa-seg input:focus-visible + span { outline: 2px solid var(--theme-accent-ring, rgba(67, 142, 185, .5)); outline-offset: 1px; }
+
+/* summary figures */
+.sa-figure input.form-control { height: 40px !important; font-size: 16px; font-weight: 800; text-align: right; }
+.sa-figure.sa-figure-main input.form-control { font-size: 18px; color: var(--theme-accent-ink, #2b6a90); background: var(--theme-accent-soft, #f4f8fb) !important; }
+
+/* ---------- invoices table ---------- */
+.sa-table-wrap { margin: 0 -16px; max-height: 58vh; overflow: auto; border-top: 1px solid #e3e8ee; }
+.sa-table { width: 100%; margin: 0; border-collapse: separate; border-spacing: 0; background: transparent; }
+.sa-table thead th {
+    position: sticky; top: 0; z-index: 2; padding: 9px 10px; font-size: 11.5px; letter-spacing: .03em; text-transform: uppercase; white-space: nowrap; vertical-align: middle;
+    color: var(--theme-on-accent, #fff); background: var(--theme-accent, #438eb9); border: 0; border-bottom: 2px solid var(--theme-accent-ink, #2b6a90);
+}
+.sa-table td { padding: 6px 10px; vertical-align: middle; font-size: 13px; font-weight: 600; border: 0; border-bottom: 1px solid #eef1f5; }
+.sa-table tbody tr:hover td { background: var(--theme-accent-soft, #f4f8fb); }
+.sa-table td input[type="text"] {
+    height: 30px; padding: 3px 8px; font-size: 13px; font-weight: 600; text-align: right;
+    color: var(--theme-ink, #1b2a41); background: #fff; border: 1px solid #cfd6e0; border-radius: 6px; box-shadow: none;
+}
+.sa-table td input[type="text"]:focus { border-color: var(--theme-accent, #438eb9); box-shadow: 0 0 0 3px var(--theme-accent-ring, rgba(67, 142, 185, .25)); outline: none; }
+.sa-table td input[readonly] { background: #f3f5f8; }
+.sa-table td select { height: 30px; padding: 2px 6px; font-size: 12.5px; border: 1px solid #cfd6e0; border-radius: 6px; background: #fff; }
+.sa-table td:last-child, .sa-table th:last-child { text-align: center; }
+.sa-table td a .fa-trash { margin-left: 0 !important; font-size: 15px !important; }
+.sa-table td a { display: inline-flex; align-items: center; justify-content: center; width: 30px; height: 30px; border-radius: 6px; text-decoration: none; }
+.sa-table td a:hover { background: #fdecea; }
+.sa-table.ErrorAlert { outline: 2px solid #c0392b; outline-offset: -2px; }
+
+/* ---------- "Add invoices" picker window ---------- */
+.sa-modal .modal-dialog { width: 1000px; max-width: 96vw; }
+.sa-modal .modal-content { width: auto !important; height: auto !important; margin: 0 !important; overflow: hidden; border: 0; border-radius: 10px; box-shadow: 0 20px 50px rgba(16, 24, 40, .3); }
+.sa-modal .modal-header {
+    display: flex; align-items: center; justify-content: space-between; flex-direction: row-reverse; padding: 12px 18px;
+    color: var(--theme-on-accent, #fff); border-bottom: 1px solid var(--theme-accent-ink, #2b6a90);
+    background: linear-gradient(180deg, var(--theme-accent-light, #438eb9) 0%, var(--theme-accent, #438eb9) 100%);
+}
+.sa-modal .modal-header::before, .sa-modal .modal-header::after { display: none; }
+.sa-modal .modal-title { margin: 0; font-size: 15px; font-weight: 800; letter-spacing: .03em; text-transform: uppercase; }
+.sa-modal .modal-header .close { float: none; width: auto !important; margin: 0 !important; padding: 0; line-height: 1; font-size: 26px; color: inherit; opacity: .9; text-shadow: none; background: transparent; border: 0; }
+.sa-modal-scroll { max-height: 56vh; overflow: auto; }
+.sa-modal .sa-modal .sa-modal-scroll > table { width: 100% !important; height: auto !important; margin: 0; border-collapse: separate; border-spacing: 0; }
+.sa-modal .sa-modal .sa-modal-scroll > table thead th {
+    position: sticky; top: 0; z-index: 1; padding: 9px 12px; font-size: 11.5px; letter-spacing: .03em; text-transform: uppercase; white-space: nowrap;
+    background: #eef1f5; color: #2d3748; border: 0; border-bottom: 2px solid #dde3ea;
+}
+.sa-modal .sa-modal .sa-modal-scroll > table td { padding: 6px 12px; vertical-align: middle; border: 0; border-bottom: 1px solid #eef1f5; }
+.sa-modal .sa-modal .sa-modal-scroll > table tbody tr:hover td { background: var(--theme-accent-soft, #f4f8fb); }
+.sa-modal .sa-modal .sa-modal-scroll > table input[type="checkbox"], .sa-modal .sa-modal .sa-modal-scroll > table input.chktd { width: 16px; height: 16px !important; margin: 0 !important; }
+.sa-modal .modal-footer { padding: 12px 18px; background: #f8fafc; border-top: 1px solid #e3e8ee; }
+
+/* ---------- dark mode ---------- */
+html[data-theme="dark"] .sa-page { color: var(--dk-text, #e6e9ef); }
+html[data-theme="dark"] .sa-badge, html[data-theme="dark"] .sa-card { background: var(--dk-surface-2, #1c2431); border-color: var(--dk-border, #2d3748); }
+html[data-theme="dark"] .sa-card-title { background: var(--dk-surface-3, #232d3d); border-bottom-color: var(--dk-border, #2d3748); color: var(--dk-text, #e6e9ef); }
+html[data-theme="dark"] .sa-field > label { color: var(--dk-muted, #9aa6b8); }
+html[data-theme="dark"] .sa-page input.form-control, html[data-theme="dark"] .sa-page select.form-control, html[data-theme="dark"] .sa-page textarea.form-control {
+    background: var(--dk-surface-3, #232d3d) !important; color: var(--dk-text, #e6e9ef); border-color: var(--dk-border, #2d3748) !important;
+}
+html[data-theme="dark"] .sa-page input[readonly], html[data-theme="dark"] .sa-page input[disabled] { background: var(--dk-surface-1, #161d29) !important; }
+html[data-theme="dark"] .sa-seg { background: var(--dk-surface-3, #232d3d); border-color: var(--dk-border, #2d3748); }
+html[data-theme="dark"] .sa-seg span { color: var(--dk-text, #e6e9ef); }
+html[data-theme="dark"] .sa-table-wrap, html[data-theme="dark"] .sa-table td { border-color: var(--dk-border, #2d3748); }
+html[data-theme="dark"] .sa-table thead th { background: var(--dk-surface-3, #232d3d); color: var(--dk-text, #e6e9ef); }
+html[data-theme="dark"] .sa-table tbody tr:hover td, html[data-theme="dark"] .sa-modal .sa-modal .sa-modal-scroll > table tbody tr:hover td { background: var(--dk-surface-3, #232d3d); }
+html[data-theme="dark"] .sa-table td input[type="text"], html[data-theme="dark"] .sa-table td select { background: var(--dk-surface-3, #232d3d); color: var(--dk-text, #e6e9ef); border-color: var(--dk-border, #2d3748); }
+html[data-theme="dark"] .sa-modal .modal-content { background: var(--dk-surface-2, #1c2431); color: var(--dk-text, #e6e9ef); }
+html[data-theme="dark"] .sa-modal .sa-modal .sa-modal-scroll > table thead th { background: var(--dk-surface-3, #232d3d); color: var(--dk-text, #e6e9ef); }
+html[data-theme="dark"] .sa-modal .modal-footer { background: var(--dk-surface-3, #232d3d); border-color: var(--dk-border, #2d3748); }
+
+html[data-theme="dark"] .sa-badge-value { color: var(--dk-text, #e6e9ef); }
+html[data-theme="dark"] .sa-badge-label { color: var(--dk-muted, #9aa6b8); }
+
+/* ---------- invoice-lines tabs (jQuery UI tabs) ---------- */
+.sa-page #tabs { padding: 0; background: transparent; border: 0; }
+.sa-page #tabs > ul {
+    display: flex; flex-wrap: wrap; gap: 4px; margin: 0 0 12px; padding: 4px; overflow-x: auto; list-style: none;
+    background: #eef1f5; border: 1px solid #dde3ea; border-radius: 8px;
+}
+.sa-page #tabs > ul::before, .sa-page #tabs > ul::after { display: none; }
+.sa-page #tabs > ul li { float: none; margin: 0; padding: 0; list-style: none; background: transparent; border: 0; }
+.sa-page #tabs > ul li a,
+.sa-page #tabs > ul li.ui-tabs-active a {
+    display: block; padding: 7px 18px !important; font-size: 13px; font-weight: 700; text-decoration: none; cursor: pointer;
+    color: #2d3748 !important; background: transparent !important; border: 0 !important; border-radius: 6px;
+}
+.sa-page #tabs > ul li a:hover { background: rgba(0, 0, 0, .05) !important; }
+.sa-page #tabs > ul li.ui-tabs-active a {
+    color: var(--theme-on-accent, #fff) !important; background: var(--theme-accent, #438eb9) !important;
+    box-shadow: 0 1px 3px rgba(16, 24, 40, .18);
+}
+.sa-page #tabs > div.ui-tabs-panel { padding: 0; background: transparent; border: 0; }
+.sa-tab-tools { display: flex; align-items: center; justify-content: space-between; gap: 12px; margin-bottom: 10px; font-size: 12.5px; font-weight: 600; color: #6b7686; }
+.sa-btnrow { display: flex; gap: 8px; }
+.sa-btnrow > input { flex: 1 1 0; min-width: 0; }
+.sa-check { display: flex; align-items: center; height: 34px; }
+.sa-check input[type="checkbox"] { width: 18px; height: 18px; margin: 0; }
+.sa-field .sa-link { align-self: flex-start; }
+
+/* ---------- "Get from PO" picker ---------- */
+.sa-modal .modal-header .form-control { width: auto !important; max-width: 260px; height: 32px !important; }
+.sa-modal .modal-header .input-group { width: auto !important; max-width: 260px; }
+.sa-modal .modal-header .btn-close { margin: 0; }
+.sa-modal #PO_Modal .modal-body, .sa-modal .modal-body { max-height: 62vh; overflow: auto; padding: 0; }
+.sa-modal .modal-body table.table { width: 100%; margin: 0; border-collapse: separate; border-spacing: 0; }
+.sa-modal .modal-body table.table thead th {
+    position: sticky; top: 0; z-index: 1; padding: 9px 12px; font-size: 11.5px; letter-spacing: .03em; text-transform: uppercase; white-space: nowrap;
+    background: #eef1f5; color: #2d3748; border: 0; border-bottom: 2px solid #dde3ea;
+}
+.sa-modal .modal-body table.table td { padding: 6px 12px; vertical-align: middle; border: 0; border-bottom: 1px solid #eef1f5; }
+.sa-modal .modal-body table.table tbody tr:hover td { background: var(--theme-accent-soft, #f4f8fb); }
+.sa-modal .modal-footer { overflow: hidden; }
+.sa-modal #POItemsModel .modal-header, .sa-modal .modal-header { gap: 12px; }
+
+html[data-theme="dark"] .sa-page #tabs > ul { background: var(--dk-surface-3, #232d3d); border-color: var(--dk-border, #2d3748); }
+html[data-theme="dark"] .sa-page #tabs > ul li a { color: var(--dk-text, #e6e9ef) !important; }
+html[data-theme="dark"] .sa-tab-tools { color: var(--dk-muted, #9aa6b8); }
+html[data-theme="dark"] .sa-modal .modal-body table.table thead th { background: var(--dk-surface-3, #232d3d); color: var(--dk-text, #e6e9ef); }
+html[data-theme="dark"] .sa-modal .modal-body table.table td { border-color: var(--dk-border, #2d3748); }
+
+/* ---------- ASP.NET server controls: asp:Label renders a <span>, validators render red <span>s ---------- */
+.sa-page .sa-field > span:first-child {
+    display: block; margin: 0 0 4px; font-size: 11.5px; font-weight: 700; letter-spacing: .02em; color: #4a5568;
+    white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+}
+.sa-page .sa-field > span[style*="color:Red"], .sa-page .sa-field > span[style*="color: Red"] {
+    margin-top: 3px; font-size: 11.5px; font-weight: 600; color: #c0392b !important;
+}
+.sa-page .tooltip-style {
+    position: absolute; z-index: 20; padding: 4px 10px; font-size: 12px; font-weight: 600; white-space: nowrap;
+    color: #fff; background: #2d3748; border-radius: 6px; box-shadow: 0 4px 12px rgba(16, 24, 40, .25);
+}
+.sa-page .sa-figure input.form-control { height: 36px !important; font-weight: 800; text-align: right; }
+.sa-page input.form-control.ErrorAlert, .sa-page select.form-control.ErrorAlert { border-color: #c0392b !important; }
+.sa-page input[type="button"].btn, .sa-page input[type="submit"].btn { margin: 0; }
+
+/* ---------- item search (token input on #txtItem_Code) ---------- */
+.sa-page ul.token-input-list { width: 100% !important; min-height: 34px; margin: 0; padding: 0 4px; background: #fff; border: 1px solid #cfd6e0; border-radius: 6px; box-sizing: border-box; }
+.sa-page ul.token-input-list li input { height: 30px !important; padding: 0 6px !important; background: transparent !important; border: 0 !important; box-shadow: none !important; }
+.sa-page ul.token-input-list li.token-input-token { margin: 3px 4px 3px 0; }
+html[data-theme="dark"] .sa-page .sa-field > span:first-child { color: var(--dk-muted, #9aa6b8); }
+html[data-theme="dark"] .sa-page ul.token-input-list { background: var(--dk-surface-3, #232d3d); border-color: var(--dk-border, #2d3748); }

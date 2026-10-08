@@ -1,6 +1,7 @@
 ﻿<%@ Page Title="" Language="C#" MasterPageFile="~/Site.Master" AutoEventWireup="true" CodeBehind="GoodsIssuanceNote.aspx.cs" Inherits="PMS.Inventory.GoodsIssuanceNote" %>
 
 <asp:Content ID="Content1" ContentPlaceHolderID="HeadContent" runat="server">
+    <link href="../../wwwroot/THEME_TIBBIT/CustomCSS/goods-issuance-note.css?v=20261020" rel="stylesheet" />
 
 
     <script type="text/javascript">
@@ -1572,226 +1573,276 @@
     </script>
 </asp:Content>
 <asp:Content ID="Content2" ContentPlaceHolderID="MainContent" runat="server">
-    <form id="item">
+    <div class="gn-page">
+
+        <!-- Title line: the master page puts the page title in the empty left side; the badges sit on the right -->
+        <div class="pr-meta-bar">
+            <div class="meta-left"></div>
+            <div class="meta-right">
+                <div class="gn-badge"><span class="gn-badge-label">Issue No</span><span class="gn-badge-value" id="badgeGinNo">---</span></div>
+                <div class="gn-badge"><span class="gn-badge-label">Department</span><span class="gn-badge-value" id="badgeGinDept">---</span></div>
+                <div class="gn-badge"><span class="gn-badge-label">Warehouse</span><span class="gn-badge-value" id="badgeGinWarehouse">---</span></div>
+                <div class="gn-badge"><span class="gn-badge-label">Status</span><span class="gn-badge-value" id="badgeGinStatus">---</span></div>
+            </div>
+        </div>
+
+        <div class="gn-layout">
+
+            <!-- Left: issue details + attachment -->
+            <div class="gn-col">
+                <section class="gn-card">
+                    <h5 class="gn-card-title"><i class="fa fa-truck"></i> Issue Details</h5>
+                    <input type="hidden" id="hdiemID" />
+                    <input type="hidden" id="mir_id" />
+                    <div class="gn-grid">
+                        <div class="gn-field">
+                            <label for="txtStoreissueNo">Store issue no</label>
+                            <input type="text" readonly="readonly" id="txtStoreissueNo" class="form-control" name="txtStoreissueNo" value="New" />
+                        </div>
+                        <div class="gn-field">
+                            <label for="ddlDepartment">Department</label>
+                            <select id="ddlDepartment" class="form-control">
+                            </select>
+                        </div>
+                        <div class="gn-field">
+                            <label for="ddlInventoryOrg">Warehouse</label>
+                            <select id="ddlInventoryOrg" class="form-control">
+                            </select>
+                        </div>
+                        <div class="gn-field">
+                            <label for="ddlBranch">Branch</label>
+                            <select id="ddlBranch" class="form-control"></select>
+                        </div>
+                        <div class="gn-field">
+                            <label for="ddlMRNo">MR #</label>
+                            <select id="ddlMRNo" class="form-control">
+                            </select>
+                        </div>
+                        <div class="gn-field">
+                            <label for="ddlMIR">GIR#</label>
+                            <select id="ddlMIR" class="form-control"></select>
+                        </div>
+                        <div class="gn-field">
+                            <label>&nbsp;</label>
+                            <div class="gn-btnrow">
+                                <input type="button" value="Add" id="btnAdd" class="btn btn-primry" />
+                                <input type="button" value="Items" id="btnGetAllItems" class="btn btn-gray" />
+                            </div>
+                        </div>
+                    </div>
+                </section>
+
+                <section class="gn-card">
+                    <h5 class="gn-card-title"><i class="fa fa-paperclip"></i> Attachment</h5>
+                    <div class="gn-grid">
+                        <div class="gn-field gn-span-2">
+                            <label for="choseGINfile">Attachment</label>
+                            <input type="file" id="choseGINfile" name="choseGINfile" class="form-control" />
+                            <asp:HyperLink ID="HyperLink1" runat="server" CssClass="gn-link">Download</asp:HyperLink>
+                        </div>
+                    </div>
+                </section>
+            </div>
+
+            <!-- Right: status -->
+            <div class="gn-col">
+                <section class="gn-card">
+                    <h5 class="gn-card-title"><i class="fa fa-check-square-o"></i> Status</h5>
+                    <div class="gn-grid" style="grid-template-columns: minmax(0, 1fr);">
+                        <div class="gn-field">
+                            <label for="txtStatus">Status</label>
+                            <input type="text" id="txtStatus" class="form-control" name="txtStatus" readonly="readonly" />
+                        </div>
+                    </div>
+                </section>
+            </div>
+        </div>
+
+        <!-- Items -->
+        <section class="gn-card">
+            <h5 class="gn-card-title"><i class="fa fa-list-alt"></i> Items</h5>
+            <div class="gn-table-wrap">
+                <table class="table table-hover gn-table" id="tblStoreIssueBote">
+                    <thead>
+                        <tr>
+                            <th>Request #</th>
+                            <th>GIR #</th>
+                            <th>GIR App Date</th>
+                            <th>Department</th>
+                            <th>Item Code</th>
+                            <th>Item Description</th>
+                            <th>UOM</th>
+                            <th>Batch Num</th>
+                            <th>Store Stock</th>
+                            <th>GIR Qty</th>
+                            <th>Issue Qty</th>
+                            <th>Balance Qty</th>
+                            <th>Last Issue Date</th>
+                            <th>Expiry Date</th>
+                            <th>Remarks</th>
+                            <th>Action</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                    </tbody>
+                </table>
+            </div>
+        </section>
+
+        <!-- Actions -->
         <div class="row">
-            <input type="hidden" id="hdiemID" />
-            <input type="hidden" id="mir_id" />
-            <div class="col-lg-2 col-md-6 col-sm-12">
-                <label class="">Store issue no</label>
-                <input type="text" readonly="readonly" id="txtStoreissueNo" class="form-control" name="txtStoreissueNo" value="New" />
+            <div class="col-lg-8">
+                <div class="row">
+                    <div class="col-lg-2 col-md-4 col-sm-6" id="divSaveandClose">
+                        <input type="button" class="btn btn-primry" id="btnSaveClose" value="Save & Close" onclick="SaveAndClose();" />
+                        &nbsp;
+                    </div>
+                    <div class="col-lg-2 col-md-4 col-sm-6">
+                        <input type="button" class="btn btn-primry" id="btnSave" value="Save" onclick="SaveGIN();" />
+                        &nbsp;
+                    </div>
+                    <div class="col-lg-2 col-md-4 col-sm-6">
+                        <input type="button" name="" value="Print" class="btn btn-primry" onclick="btn_Print()" />
+                    </div>
+                    <div class="col-lg-2 col-md-4 col-sm-6">
+                        <input type="button" name="" value="Print2" class="btn btn-primry" onclick="btn_Print2()" />
+                    </div>
+                    <div class="col-lg-2 col-md-4 col-sm-6">
+                        <input type="button" class="btn-gray" value="List" onclick="window.location = 'GoodsIssuanceNoteView.aspx'" />
+                        &nbsp;
+                    </div>
+                    <div class="col-lg-2 col-md-4 col-sm-6">
+                        <input type="button" class="btn btn-yellow" value="New" onclick="window.location = 'GoodsIssuanceNote.aspx'" />
+                        &nbsp;
+                    </div>
+                    <div class="col-lg-2 col-md-4 col-sm-6">
+                        <input type="button" class="btn btn-primry" value="Voucher" id="btnVoucher" onclick="PrintVoucher()" />
+                    </div>
+                    <div class="col-lg-2 col-md-4 col-sm-6">
+                        <input type="button" style="display: none;" class="btn btn-primry" value="Approve" id="btnApprove" onclick="ApproveGINFromEdit()" />
+                    </div>
+                    <div class="col-lg-2 col-md-4 col-sm-6" id="btnUnApproveToBeHidden" style="display: none">
+                        <input type="button" class="btn btn-primry" value="UnApprove" id="btnUnApprove" onclick="UnApprove()" />
+                    </div>
+                    <div class="col-lg-2 col-md-4 col-sm-6" id="isCloseGIR">
+                        <input type="button" class="btn btn-primry" value="Close GIR" id="CloseGIR" onclick="CloseGIRs()" />
+                    </div>
+                </div>
             </div>
-            <div class="col-lg-3 col-md-6 col-sm-12">
-                <label class="">Department</label>
-                <select id="ddlDepartment" class="form-control">
-                </select>
-            </div>
-            <div class="col-lg-2 col-md-6 col-sm-12">
-                <label class="">Warehouse</label>
-                <select id="ddlInventoryOrg"  class="form-control">
-                </select>
-            </div>
-        
-            <div class="col-lg-2 col-md-4 col-sm-12">
-                <label>GIR#</label>
-                <select id="ddlMIR"  class="form-select"></select>
-            </div>
-            <div class="col-lg-1 col-md-2 col-sm-6">
-                <input type="button" value="Add" id="btnAdd" class="btn btn-primry" style="margin-top: 20px;" />
-            </div>
-            <div class="col-lg-1 col-md-2 col-sm-4">
-     <input type="button" value="Items" id="btnGetAllItems" class="btn btn-gray" style="margin-top: 16px;" />
- </div>
-            </div>
-            <div class="row">
-                 <div class="col-lg-2 col-md-6 col-sm-12">
-     <label class="">MR #</label>
-     <select id="ddlMRNo" class="form-control">
-     </select>
- </div>
-            <div class="col-lg-2 col-md-6 col-sm-12">
-                <label>Status</label>
-                <input type="text" id="txtStatus" class="form-control" name="txtStatus" readonly="readonly" />
-            </div>
-            <div class="col-lg-2 col-md-6 col-sm-12">
-                <label>Branch</label>
-                <select id="ddlBranch" class="form-control"></select>
-            </div>
-            <div class="col-lg-3 col-md-6 col-sm-12">
-                <label class="col-form-label">Attachment</label>
-                <input type="file" id="choseGINfile" name="choseGINfile" />
-                <asp:HyperLink ID="HyperLink1" runat="server">Download</asp:HyperLink>
+        </div>
 
+        <!-- Add MIR items picker -->
+        <div id="POItemsModel" class="modal fade gn-modal" role="dialog">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">&times;</button>
+                        <h4 class="modal-title">Add MIR Items</h4>
+                    </div>
+                    <input type="hidden" id="txthiddentr" name="txthidddentr" />
+                    <div class="gn-modal-scroll">
+                        <table class="table" id="tblMIRItemstModelTable">
+                            <thead>
+                                <tr>
+                                    <th style="width: 32px;">
+                                        <input type="checkbox" id="checkHeader" value="false" /></th>
+                                    <th style="display: none;">MIR ID </th>
+                                    <th style="display: none;">Item ID</th>
+                                    <th>Item Name</th>
+                                    <th style="display: none;"></th>
+                                    <th style="display: none;"></th>
+                                    <th style="display: none;"></th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                            </tbody>
+                        </table>
+                    </div>
+                    <div class="modal-footer">
+                        <input class="btn-gray" type="button" id="PoItem" name="PoItem" value="Done" data-dismiss="modal" style="width: 20% !important; margin-left: 79%" />
+                    </div>
+                </div>
             </div>
         </div>
-    </form>
-    
-    <div class="row " >
-        <div class="table-responsive">
-            <table class="table table-hover table-striped table-bordered" id="tblStoreIssueBote">
-                <thead style="font-size: 10px;">.
-                    <tr>
-                        <th>Request #</th>
-                        <th>GIR #</th>
-                        <th>GIR App Date</th>
-                        <th>Department</th>
-                        <th>Item Code</th>
-                        <th>Item Description</th>
-                        <th>UOM</th>
-                        <th>Batch Num</th>
-                        <th>Store Stock</th>
-                        <th>GIR Qty</th>
-                        <th>Issue Qty</th>
-                        <th>Balance Qty</th>
-                        <th>Last Issue Date</th>
-                         <th>Expiry Date</th>
-                        <th>Remarks</th>
-                        <th>Action</th>
-                    </tr>
-                </thead>
-                <tbody>
-                </tbody>
-            </table>
-        </div>
-        </div>
-    <div class="col-5"></div>
 
-    <div class="row">
-         <div class="col-lg-8">
-            <div class="row">
-                <div class="col-lg-2 col-md-4 col-sm-6" id="divSaveandClose">
-            <input type="button" class="btn btn-primry" id="btnSaveClose" value="Save & Close" onclick="SaveAndClose();" />
-            &nbsp;
-        </div>
-                <div class="col-lg-2 col-md-4 col-sm-6">
-            <input type="button" class="btn btn-primry" id="btnSave" value="Save" onclick="SaveGIN();" />
-            &nbsp;
-        </div>
-        <div class="col-lg-2 col-md-4 col-sm-6">
-            <input type="button" name="" value="Print" class="btn btn-primry" onclick="btn_Print()" />
-        </div>
-        <div class="col-lg-2 col-md-4 col-sm-6">
-            <input type="button" name="" value="Print2" class="btn btn-primry" onclick="btn_Print2()" />
-        </div>
-        <div class="col-lg-2 col-md-4 col-sm-6">
-            <input type="button" class="btn-gray" value="List" onclick="window.location = 'GoodsIssuanceNoteView.aspx'" />
-            &nbsp;
-        </div>
-        <div class="col-lg-2 col-md-4 col-sm-6">
-            <input type="button" class="btn btn-yellow" value="New" onclick="window.location = 'GoodsIssuanceNote.aspx'" />
-            &nbsp;
-        </div>
-                <div class="col-lg-2 col-md-4 col-sm-6">
-    <input type="button" class="btn btn-primry" value="Voucher" id="btnVoucher" onclick="PrintVoucher()" />
-</div>
-        <div class="col-lg-2 col-md-4 col-sm-6">
-            <input type="button" style="display:none;" class="btn btn-primry" value="Approve" id="btnApprove" onclick="ApproveGINFromEdit()" />
-        </div>
-        <div class="col-lg-2 col-md-4 col-sm-6" id="btnUnApproveToBeHidden" style="display: none">
-            <input type="button"  class="btn btn-primry" value="UnApprove" id="btnUnApprove" onclick="UnApprove()" />
-            
-        </div>
-        <div class="col-lg-2 col-md-4 col-sm-6" id="isCloseGIR">
-            <input type="button"  class="btn btn-primry" value="Close GIR" id="CloseGIR" onclick="CloseGIRs()" />
-          
-        </div>
-        
+        <!-- Item search picker -->
+        <div class="modal fade gn-modal" id="itemsModal" tabindex="-1" aria-labelledby="itemsModalLabel" aria-hidden="true">
+            <div class="modal-dialog modal-lg">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                        <h4 class="modal-title" id="itemsModalLabel">Item Details</h4>
+                    </div>
+                    <div class="modal-body">
+                        <div class="gn-modal-search">
+                            <i class="fa fa-search"></i>
+                            <input type="text" id="searchInput" class="form-control search-input" placeholder="Search items..." autocomplete="off" />
+                        </div>
+                        <div class="gn-modal-scroll">
+                            <table class="table">
+                                <thead>
+                                    <tr>
+                                        <th>Select</th>
+                                        <th style="display: none;">Item ID</th>
+                                        <th>Item Code</th>
+                                        <th>Description</th>
+                                        <th>Unit</th>
+                                        <th style="display: none;">Rate</th>
+                                        <th style="display: none;">UOM Qty</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="itemsTableBody">
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <div class="col-lg-10 col-md-10 col-sm-10"></div>
+                        <div class="col-lg-2 col-md-2 col-sm-2 float-end">
+                            <input type="button" value="Close" class="btn-gray" data-dismiss="modal" />
+                        </div>
+                    </div>
+                </div>
             </div>
         </div>
+
+        <!-- Close GIR remarks -->
+        <div class="modal fade gn-modal" id="remarksModal" tabindex="-1" role="dialog" aria-labelledby="remarksModalLabel" aria-hidden="true">
+            <div class="modal-dialog" role="document">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                        <h5 class="modal-title" id="remarksModalLabel">Close GIR</h5>
+                    </div>
+                    <div class="modal-body gn-modal-pad">
+                        <div class="form-group">
+                            <label for="remarks">Remarks <span class="text-danger">*</span></label>
+                            <textarea class="form-control" id="remarks" rows="4" placeholder="Enter closing remarks..."></textarea>
+                            <small class="form-text text-muted">Please provide reason for closing this GIR</small>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
+                        <button type="button" class="btn btn-primary" id="confirmCloseBtn">Confirm Close</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
     </div>
-    <div id="POItemsModel" class="modal fade" role="dialog">
-        <div class="modal-dialog">
-            <div class="modal-content" style="width: 1000px; margin-left: -270px; height: 505px;">
-                <div >
-                    
-                    <button type="button" style="margin-top:8px !important"  class="close col-lg-1" data-dismiss="modal">&times;</button>
-                    <h4 class="col-lg-2">Add MIR Items</h4>
-                </div>
-                <input type="hidden" id="txthiddentr" name="txthidddentr" />
-                <div style="width: 970px; overflow: scroll; height: 401px  !important; height: auto;">
-                    <table class="table" style="width: 953px; height: 146px !important; height: auto; overflow: scroll;" id="tblMIRItemstModelTable">
-                        <thead>
-                            <tr>
-                                <th style="width: 32px;">
-                                    <input type="checkbox" id="checkHeader" value="false" /></th>
-                                <th style="display: none;">MIR ID </th>
-                                <th style="display: none;">Item ID</th>
-                                <th>Item Name</th>
-                                <th style="display: none;"></th>
-                                <th style="display: none;"></th>
-                                <th style="display: none;"></th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                        </tbody>
-                    </table>
-                </div>
-                <div class="modal-footer">
-                    <input class="btn-gray" type="button" id="PoItem" name="PoItem" value="Done" data-dismiss="modal" style="width:20% !important;margin-left:79%" />
-                </div>
-            </div>
-        </div>
-    </div>
-            <!-- Add this NEW modal for Item Search -->
-<div class="modal fade" id="itemsModal" tabindex="-1" aria-labelledby="itemsModalLabel" aria-hidden="true">
-    <div class="modal-dialog modal-lg modal-md">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h3 class="modal-title" id="itemsModalLabel">Item Details</h3>
-                <button type="button" class="close" data-dismiss="modal" aria-label="Close" style="margin-top: -11px !important">
-                    <span aria-hidden="true">&times;</span>
-                </button>
-            </div>
-            <div class="modal-body">
-                <input type="text" id="searchInput" class="form-control search-input" placeholder="Search items..." />
-                <div style="max-height: 400px; overflow-y: auto;">
-                    <table class="table table-bordered table-striped table-responsive-md table-responsive-lg">
-                        <thead>
-                            <tr>
-                                <th>Select</th>          <!-- td:eq(0) -->
-                                <th style="display:none;">Item ID</th>  <!-- td:eq(1) -->
-                                <th>Item Code</th>       <!-- td:eq(2) -->
-                                <th>Description</th>     <!-- td:eq(3) -->
-                                <th>Unit</th>            <!-- td:eq(4) -->
-                                <th style="display:none;">Rate</th>      <!-- td:eq(5) -->
-                                <th style="display:none;">UOM Qty</th>   <!-- td:eq(6) -->
-                            </tr>
-                        </thead>
-                        <tbody id="itemsTableBody">
-                        </tbody>
-                    </table>
-                </div>
-            </div>
-            <div class="modal-footer">
-                <div class="col-lg-10 col-md-10 col-sm-10"> </div>
-                <div class="col-lg-2 col-md-2 col-sm-2 float-end">
-                    <input type="button" value="Close" class="btn-gray" data-dismiss="modal" />
-                </div>
-            </div>
-        </div>
-    </div>
-</div>
-    <!-- Remarks Modal -->
-<div class="modal fade" id="remarksModal" tabindex="-1" role="dialog" aria-labelledby="remarksModalLabel" aria-hidden="true">
-    <div class="modal-dialog" role="document">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h5 class="modal-title" id="remarksModalLabel">Close GIR</h5>
-                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                    <span aria-hidden="true">&times;</span>
-                </button>
-            </div>
-            <div class="modal-body">
-                <div class="form-group">
-                    <label for="remarks">Remarks <span class="text-danger">*</span></label>
-                    <textarea class="form-control" id="remarks" rows="4" placeholder="Enter closing remarks..."></textarea>
-                    <small class="form-text text-muted">Please provide reason for closing this GIR</small>
-                </div>
-            </div>
-            <div class="modal-footer">
-                <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
-                <button type="button" class="btn btn-primary" id="confirmCloseBtn">Confirm Close</button>
-            </div>
-        </div>
-    </div>
-</div>
+
+    <script type="text/javascript">
+        // title-line badges follow the form fields (the page script fills them in after loading)
+        function ginSelText(sel) { var t = $(sel + ' option:selected').text(); return (t && t.indexOf('Please Select') < 0 && t.indexOf('Select') !== 0) ? t : '---'; }
+        function syncGinBadges() {
+            $('#badgeGinNo').text($('#txtStoreissueNo').val() || '---');
+            $('#badgeGinDept').text(ginSelText('#ddlDepartment'));
+            $('#badgeGinWarehouse').text(ginSelText('#ddlInventoryOrg'));
+            $('#badgeGinStatus').text($('#txtStatus').val() || '---');
+        }
+        $(function () {
+            syncGinBadges();
+            setInterval(syncGinBadges, 600);
+        });
+    </script>
 </asp:Content>

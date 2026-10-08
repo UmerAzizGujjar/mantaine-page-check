@@ -1,60 +1,7 @@
 <%@ Page Title="" Language="C#" MasterPageFile="~/Site.Master" AutoEventWireup="true" CodeBehind="GoodsIssuanceRequest.aspx.cs" Inherits="PMS.Inventory.GoodsIssuanceRequest" %>
 
 <asp:Content ID="Content1" ContentPlaceHolderID="HeadContent" runat="server">
-    <link href="../../wwwroot/THEME_TIBBIT/CustomCSS/GIR.css" rel="stylesheet" />
-    <style type="text/css">
-        /* Goods Issuance entry fields: one wrapping grid of 8 equal units across the page, so every row is full
-           (no empty space beside Branch / Remarks) and the item search is 2 units wide
-           (about 450px on a full-HD screen, the same width as the item search on PR / PO). */
-        div.gir-fields {
-            --g: 12px;
-            --n: 8;
-            --u: calc((100% - (var(--n) - 1) * var(--g)) / var(--n));
-            display: flex;
-            flex-direction: row;
-            flex-wrap: wrap;
-            align-items: flex-start;
-            gap: 6px var(--g);
-            margin-bottom: 8px;
-        }
-        /* the Bootstrap rows only group the markup; their fields join the grid above */
-        .gir-fields > .row { display: contents; }
-        .gir-fields > .row::before, .gir-fields > .row::after { display: none !important; content: none !important; }
-        .gir-fields > .row > [class*="col-"] {
-            float: none;
-            width: auto;
-            min-width: 0;
-            margin: 0;
-            padding: 0;
-            flex: 1 1 var(--u);
-        }
-        .gir-fields > .row > .gir-w2 { flex: 2 1 calc(var(--u) * 2 + var(--g)); }
-        .gir-fields > .row > .gir-w4 { flex: 4 1 calc(var(--u) * 4 + var(--g) * 3); }
-        /* Attachments wraps its content in another Bootstrap column: drop that column's padding so labels line up */
-        .gir-fields > .row > [class*="col-"] [class*="col-"] { float: none; width: 100%; padding: 0; }
-        /* same control look as the Stock Adjustment form: 13px text, 5px radius, light grey border, compact height */
-        .gir-fields input[type="text"].form-control {
-            height: 33px;
-            padding: 5px 4px 6px;
-            font-size: 13px;
-            border: 1px solid #d5d5d5;
-            border-radius: 5px;
-            box-shadow: none;
-        }
-        .gir-fields select, .gir-fields textarea { width: 100% !important; box-sizing: border-box; }
-        .gir-fields .select2-container { width: 100% !important; }
-
-        @media (max-width: 1399px) {
-            div.gir-fields { --n: 6; }
-        }
-        @media (max-width: 991px) {
-            div.gir-fields { --n: 4; }
-        }
-        @media (max-width: 575px) {
-            div.gir-fields { --n: 2; }
-            .gir-fields > .row > .gir-w2, .gir-fields > .row > .gir-w4 { flex: 1 1 100%; }
-        }
-    </style>
+    <link href="../../wwwroot/THEME_TIBBIT/CustomCSS/goods-issuance-request.css?v=20261019" rel="stylesheet" />
     <script src="../../wwwroot/lib/jquery/itemsearch.boost.js?v=<%= System.IO.File.GetLastWriteTimeUtc(Server.MapPath("~/wwwroot/lib/jquery/itemsearch.boost.js")).Ticks %>" type="text/javascript"></script>
     <script type="text/javascript">
         var counter = 1;
@@ -301,14 +248,14 @@
                                 "<td style='padding-top: 7px!important;text-align:center;padding-left: 8px!important;' >" + parse[0].Last_MIR_Qty + "</td>" +
                                 "<td style='padding-top: 7px!important;text-align:center;padding-left: 8px!important;' >" + parse[0].Last_SIN_Qty + "</td>" +
                                 "<td style='padding-top: 7px!important;padding-left: 8px!important' contenteditable></td>" +
-                                "<td><label class='fileContainer' style='font-size: 13px;margin-top: -3px;'><i class='glyphicon glyphicon-paperclip'></i><input type='file' name='fileuploadlist' id='fileuploadlist" + length + "'></label></td>" +
+                                "<td><label class='fileContainer' style='font-size: 13px;margin-top: -3px;'><i class='fa fa-paperclip'></i><input type='file' name='fileuploadlist' id='fileuploadlist" + length + "'></label></td>" +
                                 "<td style='display:none'>" + parse[0].Item_ID + "</td>" +
                                 "<td style='text-align:center;'>" + (parse[0].UOM_Qty || '0') + "</td>" +
                                 "<td style='text-align:center;'>" +
                                 (parse[0].Last_MIR_Date ? moment(parse[0].Last_MIR_Date).format('D-MMM-YYYY') : '') +
                                 "</td>" +
                                 "<td style='display:none'>" + lastGIRDateValue + "</td>" + 
-                                "<td><a href='#' onclick='Delete(this)'><i class='glyphicon glyphicon-trash' style='font-size: 13px; margin-top: 5px; margin-left: 16px; color: #f30a0a;'></i></a></td>" +
+                                "<td><a href='#' onclick='Delete(this)'><i class='fa fa-trash' style='font-size: 13px; margin-top: 5px; margin-left: 16px; color: #f30a0a;'></i></a></td>" +
                                 "</tr>")
                             length++;
                             $("#txtItem").tokenInput("clear");
@@ -762,7 +709,7 @@
                     $.each(parse, function (key, value) {
                         var len = key + 1;
                         var filePath = parse[key].FilePath || '';
-                        var downloadLink = filePath ? '<a href="' + filePath + '" target="_blank" style="margin-right:4px;" title="Download"><i class="glyphicon glyphicon-download-alt"></i></a>' : '';
+                        var downloadLink = filePath ? '<a href="' + filePath + '" target="_blank" style="margin-right:4px;" title="Download"><i class="fa fa-download"></i></a>' : '';
 
 
                         var lastGIRDateDisplay = '';
@@ -803,11 +750,11 @@
                             '<td style="padding-top: 7px!important;text-align:center;padding-left: 8px!important;" contenteditable>' + parse[key].Last_MIR_Qty + '</td>' +
                             '<td style="padding-top: 7px!important;text-align:center;padding-left: 8px!important;" contenteditable>' + parse[key].Last_SIN_Qty + '</td>' +
                             '<td style="padding-top: 7px!important;padding-left: 8px!important" contenteditable>' + parse[key].remarks + '</td>' +
-                            '<td>' + downloadLink + '<label class="fileContainer" style="font-size: 13px;margin-top: -3px;"><i class="glyphicon glyphicon-paperclip"></i><input type="file" name="fileuploadlist" id="fileuploadlist' + key + '"></label></td>' +
+                            '<td>' + downloadLink + '<label class="fileContainer" style="font-size: 13px;margin-top: -3px;"><i class="fa fa-paperclip"></i><input type="file" name="fileuploadlist" id="fileuploadlist' + key + '"></label></td>' +
                             '<td style="display:none">' + parse[key].itemId + '</td>' +
                             '<td style="text-align:center;">' + (parse[key].UOM_Qty || '0') + '</td>' +
                             '<td style="text-align:center;padding-left: 8px!important;">' + lastGIRDateDisplay + '</td>' +
-                            '<td><a href="#" onclick="Delete(this)"><i class="glyphicon glyphicon-trash" style="font-size: 13px; margin-top: 5px; margin-left: 16px; color: #f30a0a;"></i></a></td>' +
+                            '<td><a href="#" onclick="Delete(this)"><i class="fa fa-trash" style="font-size: 13px; margin-top: 5px; margin-left: 16px; color: #f30a0a;"></i></a></td>' +
                             '</tr>';
                     });
                     $("#tblPackage").append(row);
@@ -857,140 +804,177 @@
     </script>
 </asp:Content>
 <asp:Content ID="Content2" ContentPlaceHolderID="MainContent" runat="server">
-    <%-- a plain div, not a form: a second <form> inside the master page's form is ignored by the browser, which dropped the grid below --%>
-    <div id="item" class="gir-fields">
-        <div class="row">
-            <div class="col-lg-3 col-md-6 col-sm-12">
-                <label id="LblPr_Num">Request #</label>
-                <input type="text" class="form-control" id="txtReq_Num" value="New" name="txtReq_Num" placeholder="Request #" readonly="readonly" />
-            </div>
-            <div class="col-lg-3 col-md-6 col-sm-12">
-                <label id="LblPR_Date">GIR Date</label>
-                <input type="text" class="form-control" id="txtMIR_Date" name="txtMIR_Date" autocomplete="off" />
-            </div>
-            <div class="col-lg-2 col-md-6 col-sm-12">
-                <label id="lbl_Status">Status</label>
-                <input type="text" class="form-control" id="txt_Status" name="txt_Status" readonly="readonly" />
-            </div>
-            <div class="col-lg-3 col-md-6 col-sm-12">
-                <label id="LblPriority">Priority</label>
-                <select id="ddlPriority">
-                    <option value="0">Please Select</option>
-                    <option value="1">High</option>
-                    <option value="2">Low</option>
-                </select>
-            </div>
-            <div class="col-lg-3 col-md-6 col-sm-12 gir-w2">
-                <label id="Lbldept">Department<span>*</span></label>
-                <select id="ddldept">
-                </select>
-            </div>
-            <div id="warehouse" class="col-lg-3 col-md-6 col-sm-12">
-                <label id="Lblwarehouse">Ware House <span style="color: red">*</span></label>
-                <select id="ddlwarehouse">
-                    <option value="0">Please Select</option>
-                </select>
-            </div>
-            <div class="col-lg-3 col-md-6 col-sm-12">
-                <label id="LblBranch">Branch</label>
-                <select id="ddlBranch" class="form-control"></select>
-            </div>
-        </div>
-        <div class="row">
-            <div class="col-lg-4 col-md-6 col-sm-12 gir-w2">
-                <label>Item</label>
-                <input type="text" class="form-control" id="txtItem"  name="txtItem" placeholder="item" />
-            </div>
-            <div class="col-lg-12 col-md-12 col-sm-12 gir-w4">
-                <label id="lblrem">Remarks</label>
-                <input type="text" class="form-control" id="txtRemarks" name="txtRemarks" />
-            </div>
-            <div class="col-lg-3 col-md-6 col-sm-12 gir-w2">
-                <div class="col-lg-12 col-md-12 col-sm-12">
-                    <label id="lblattach">Attachments</label>
-                    <input type="file" id="choseGIRfile" name="choseGIRfile" />
-                    <asp:HyperLink ID="HyperLink1" runat="server">Download</asp:HyperLink>
-                </div>
-                <div class="col-lg-0 col-md-3 col-sm-4">
-                    <input type="hidden" id="hditemID" />
-                </div>
-            </div>
-        </div>
-    </div>
-  
+    <div class="gi-page">
 
-    <div class="table-container">
-        <div class="table-responsive">
-            <table class="table table-hover table-striped table-bordered" id="tblPackage" style="margin-top: 13px; font-size: 10px!important; width: 100% !important; overflow: scroll; height: auto">
-                <thead>
-                    <tr>
-                    <th style="width: 40px; text-align: center;">GIR No.</th>
-                    <th style="width: 56px; text-align: center; font-size: 10px;">Item Code</th>
-                    <th style="width: 205px; text-align: center;">Description</th>
-                    <th style="width: 35px; text-align: center;">Unit</th>
-                    <th style="width: 43px; text-align: center;">GIR Qty</th>
-                    <th style="width: 43px; text-align: center;">Last GIR Qty</th>
-                    <th style="width: 43px; text-align: center;">Last GIN Qty</th>
-                    <th style="width: 112px; text-align: center; display: none;">Technical Specifications</th>
-                    <th style="width: 126px; text-align: center;">Remarks</th>
-                    <th style="width: 32px!important; text-align: center;">Attachment</th>
-                    <th style="width: 43px; text-align: center;">UOM Qty</th>
-                    <th style="width: 43px; text-align: center;">Last GIR Date</th>
-                    <th style="width: 40px; text-align: center;">Delete</th>
+        <!-- Title line: the master page puts the page title in the empty left side; the badges sit on the right -->
+        <div class="pr-meta-bar">
+            <div class="meta-left"></div>
+            <div class="meta-right">
+                <div class="gi-badge"><span class="gi-badge-label">Request #</span><span class="gi-badge-value" id="badgeGirNo">---</span></div>
+                <div class="gi-badge"><span class="gi-badge-label">Date</span><span class="gi-badge-value" id="badgeGirDate">---</span></div>
+                <div class="gi-badge"><span class="gi-badge-label">Priority</span><span class="gi-badge-value" id="badgeGirPriority">---</span></div>
+                <div class="gi-badge"><span class="gi-badge-label">Status</span><span class="gi-badge-value" id="badgeGirStatus">---</span></div>
+            </div>
+        </div>
+
+        <div id="item" class="gi-layout">
+
+            <!-- Left: request details + item / remarks -->
+            <div class="gi-col">
+                <section class="gi-card">
+                    <h5 class="gi-card-title"><i class="fa fa-file-text-o"></i> Request Details</h5>
+                    <div class="gi-grid">
+                        <div class="gi-field">
+                            <label id="LblPr_Num" for="txtReq_Num">Request #</label>
+                            <input type="text" class="form-control" id="txtReq_Num" value="New" name="txtReq_Num" placeholder="Request #" readonly="readonly" />
+                        </div>
+                        <div class="gi-field">
+                            <label id="LblPR_Date" for="txtMIR_Date">GIR Date</label>
+                            <input type="text" class="form-control" id="txtMIR_Date" name="txtMIR_Date" autocomplete="off" />
+                        </div>
+                        <div class="gi-field">
+                            <label id="LblPriority" for="ddlPriority">Priority</label>
+                            <select id="ddlPriority" class="form-control">
+                                <option value="0">Please Select</option>
+                                <option value="1">High</option>
+                                <option value="2">Low</option>
+                            </select>
+                        </div>
+                        <div class="gi-field">
+                            <label id="LblBranch" for="ddlBranch">Branch</label>
+                            <select id="ddlBranch" class="form-control"></select>
+                        </div>
+                        <div class="gi-field gi-span-2">
+                            <label id="Lbldept" for="ddldept">Department <span class="gi-req">*</span></label>
+                            <select id="ddldept" class="form-control">
+                            </select>
+                        </div>
+                        <div id="warehouse" class="gi-field gi-span-2">
+                            <label id="Lblwarehouse" for="ddlwarehouse">Ware House <span class="gi-req">*</span></label>
+                            <select id="ddlwarehouse" class="form-control">
+                                <option value="0">Please Select</option>
+                            </select>
+                        </div>
+                    </div>
+                </section>
+
+                <section class="gi-card">
+                    <h5 class="gi-card-title"><i class="fa fa-search"></i> Item, Remarks &amp; Attachments</h5>
+                    <div class="gi-grid" style="align-items: start;">
+                        <div class="gi-field gi-span-2">
+                            <label for="txtItem">Item</label>
+                            <input type="text" class="form-control" id="txtItem" name="txtItem" placeholder="item" />
+                            <input type="hidden" id="hditemID" />
+                        </div>
+                        <div class="gi-field gi-span-2">
+                            <label id="lblattach" for="choseGIRfile">Attachments</label>
+                            <input type="file" id="choseGIRfile" name="choseGIRfile" class="form-control" />
+                            <asp:HyperLink ID="HyperLink1" runat="server" CssClass="gi-link">Download</asp:HyperLink>
+                        </div>
+                        <div class="gi-field gi-span-all">
+                            <label id="lblrem" for="txtRemarks">Remarks</label>
+                            <input type="text" class="form-control" id="txtRemarks" name="txtRemarks" autocomplete="off" />
+                        </div>
+                    </div>
+                </section>
+            </div>
+
+            <!-- Right: status + total -->
+            <div class="gi-col">
+                <section class="gi-card">
+                    <h5 class="gi-card-title"><i class="fa fa-calculator"></i> Summary</h5>
+                    <div class="gi-grid" style="grid-template-columns: minmax(0, 1fr);">
+                        <div class="gi-field">
+                            <label id="lbl_Status" for="txt_Status">Status</label>
+                            <input type="text" class="form-control" id="txt_Status" name="txt_Status" readonly="readonly" />
+                        </div>
+                        <div class="gi-field gi-figure gi-figure-main">
+                            <label for="totQty">Total Qty</label>
+                            <input type="text" class="form-control" id="totQty" name="totQty" readonly="readonly" />
+                        </div>
+                    </div>
+                </section>
+            </div>
+        </div>
+
+        <!-- Items -->
+        <section class="gi-card">
+            <h5 class="gi-card-title"><i class="fa fa-list-alt"></i> Items</h5>
+            <div class="gi-table-wrap">
+                <table class="table table-hover gi-table" id="tblPackage">
+                    <thead>
+                        <tr>
+                            <th style="width: 40px;">GIR No.</th>
+                            <th style="width: 56px;">Item Code</th>
+                            <th style="width: 205px;">Description</th>
+                            <th style="width: 35px;">Unit</th>
+                            <th style="width: 43px;">GIR Qty</th>
+                            <th style="width: 43px;">Last GIR Qty</th>
+                            <th style="width: 43px;">Last GIN Qty</th>
+                            <th style="width: 112px; display: none;">Technical Specifications</th>
+                            <th style="width: 126px;">Remarks</th>
+                            <th style="width: 32px !important;">Attachment</th>
+                            <th style="width: 43px;">UOM Qty</th>
+                            <th style="width: 43px;">Last GIR Date</th>
+                            <th style="width: 40px;">Delete</th>
                         </tr>
-                </thead>
-                <tbody id="tblbodyPackage"></tbody>
-            </table>
-        </div>
-    </div>
-
-    <div class="row">
-        <div class="col-lg-3 col-md-6 col-sm-12">
-        </div>
-        <div class="col-lg-3 col-md-6 col-sm-12">
-        </div>
-        <div class="col-lg-1 col-md-6 col-sm-12">
-            <label style="display: block; text-align: right; white-space: nowrap">Total Qty</label>
+                    </thead>
+                    <tbody id="tblbodyPackage"></tbody>
+                </table>
             </div>
-        <div class="col-lg-2 col-md-6 col-sm-12">
-            <input type="text" id="totQty" name="totQty" readonly="readonly" />
-        </div>
-    </div>
+        </section>
 
-    <div class="purchaseOrderSubmitForm" style=" margin-top: 21px;">
-        <div class="row">
-             <div class="col-lg-8">
+        <!-- Actions -->
+        <div class="purchaseOrderSubmitForm" style="margin-top: 21px;">
             <div class="row">
-            <div class="col-lg-2 col-md-4 col-sm-6">
-                <input type="button" class="btn btn-primry" value="Save" id="btnsave" onclick="SaveTest()" />
-                &nbsp;
-            </div>
-            <div class="col-lg-2 col-md-4 col-sm-6">
-                <input type="button" class="btn-gray" value="List" onclick="window.location = 'GoodsIssuanceRequestView.aspx'" />
-                &nbsp;
-            </div>
-            <div class="col-lg-2 col-md-4 col-sm-6">
-                <input type="button" value="New" class="btn btn-yellow" onclick="window.location = 'GoodsIssuanceRequest.aspx'" />
-                &nbsp;
-            </div>
-                <div class="col-lg-2 col-md-4 col-sm-6">
-    <input type="button" value="Print" class="btn btn-primry" name="btn_Print" id="btn_Print" onclick="PrintGoodsIssuanceRequest();" style="width: 81px;" />
-</div>
-            <%-- Replicate sits after Print (hidden until the status allows it) so the visible buttons stay side by side --%>
-            <div class="col-lg-2 col-md-4 col-sm-6">
-                <input type="button" class="btn btn-primry" value="Replicate" id="btnReplicate" style="display:none;" />
-            </div>
-            <div class="col-lg-2 col-md-4 col-sm-6">
-                <input type="button" style="display:none;" class="btn btn-primry" value="Approve" id="btnApprove" onclick="ApproveGIRFromEdit()" />
-                &nbsp;
-            </div>
-            <div class="col-lg-2 col-md-4 col-sm-6" id="btnUnApproveToBeHidden" style="display: none">
-                <input type="button"  class="btn btn-primry" value="UnApprove" id="btnUnApprove" onclick="UnApprove()" />            
-                        &nbsp;
-            </div>
-            
+                <div class="col-lg-8">
+                    <div class="row">
+                        <div class="col-lg-2 col-md-4 col-sm-6">
+                            <input type="button" class="btn btn-primry" value="Save" id="btnsave" onclick="SaveTest()" />
+                            &nbsp;
+                        </div>
+                        <div class="col-lg-2 col-md-4 col-sm-6">
+                            <input type="button" class="btn-gray" value="List" onclick="window.location = 'GoodsIssuanceRequestView.aspx'" />
+                            &nbsp;
+                        </div>
+                        <div class="col-lg-2 col-md-4 col-sm-6">
+                            <input type="button" value="New" class="btn btn-yellow" onclick="window.location = 'GoodsIssuanceRequest.aspx'" />
+                            &nbsp;
+                        </div>
+                        <div class="col-lg-2 col-md-4 col-sm-6">
+                            <input type="button" value="Print" class="btn btn-primry" name="btn_Print" id="btn_Print" onclick="PrintGoodsIssuanceRequest();" style="width: 81px;" />
+                        </div>
+                        <%-- Replicate sits after Print (hidden until the status allows it) so the visible buttons stay side by side --%>
+                        <div class="col-lg-2 col-md-4 col-sm-6">
+                            <input type="button" class="btn btn-primry" value="Replicate" id="btnReplicate" style="display: none;" />
+                        </div>
+                        <div class="col-lg-2 col-md-4 col-sm-6">
+                            <input type="button" style="display: none;" class="btn btn-primry" value="Approve" id="btnApprove" onclick="ApproveGIRFromEdit()" />
+                            &nbsp;
+                        </div>
+                        <div class="col-lg-2 col-md-4 col-sm-6" id="btnUnApproveToBeHidden" style="display: none">
+                            <input type="button" class="btn btn-primry" value="UnApprove" id="btnUnApprove" onclick="UnApprove()" />
+                            &nbsp;
+                        </div>
+                    </div>
+                </div>
             </div>
         </div>
-        </div>
+
     </div>
+
+    <script type="text/javascript">
+        // title-line badges follow the form fields (the page script fills them in after loading)
+        function syncGirBadges() {
+            $('#badgeGirNo').text($('#txtReq_Num').val() || '---');
+            $('#badgeGirDate').text($('#txtMIR_Date').val() || '---');
+            var pr = $('#ddlPriority option:selected').text();
+            $('#badgeGirPriority').text((pr && pr.indexOf('Please Select') < 0) ? pr : '---');
+            $('#badgeGirStatus').text($('#txt_Status').val() || '---');
+        }
+        $(function () {
+            syncGirBadges();
+            setInterval(syncGirBadges, 600);
+        });
+    </script>
 </asp:Content>

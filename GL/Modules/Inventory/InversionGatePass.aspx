@@ -1,7 +1,7 @@
 ﻿<%@ Page Title="" Language="C#" MasterPageFile="~/Site.Master" AutoEventWireup="true" CodeBehind="InversionGatePass.aspx.cs" Inherits="PMS.Inventory.InversionGatePass" %>
 
 <asp:Content ID="Content1" ContentPlaceHolderID="HeadContent" runat="server">
-    <link href="../../wwwroot/THEME_TIBBIT/CustomCSS/IGP.css" rel="stylesheet" />
+    <link href="../../wwwroot/THEME_TIBBIT/CustomCSS/gate-pass.css?v=20261017" rel="stylesheet" />
     <script type="text/javascript">
         var savedBranch = null;
 
@@ -268,7 +268,7 @@
                             '<td><input type="text" style="width:100%!important;text-align:right;font-size:12px;font-weight:700;height:28px;" name="SaleRate" id="SaleRate' + (key + 1) + '"  value="' + saleRateValue + '"/></td>' +
                             '<td style="display:none"><input type="hidden" style="width:100%!important;text-align:center;font-size:12px;font-weight:700;height:28px;" name="Isbatch" id="Isbatch' + rowlength + '" value="' + value.IsBatch + '" readonly="readonly"/></td>' +
                             '<td style="display:none;width:100%!important;text-align:right;font-size:12px;font-weight:700;height:10px !important;"><input type="text" style="width:100%!important;text-align:right;font-size:12px;font-weight:700;height:28px;position: relative;" value="0"  id="RejQty' + rowlength + '" name="RejQty"></input></td>' +
-                            '<td><a href="javascript:void(0)" onclick="ExcludeFromPayment(this)"><i class="glyphicon glyphicon-trash" style="font-size: 13px;color: #f30a0a;position:relative;" i=""></i></a></td>' +
+                            '<td><a href="javascript:void(0)" onclick="ExcludeFromPayment(this)"><i class="fa fa-trash" style="font-size: 13px;color: #f30a0a;position:relative;" i=""></i></a></td>' +
                             '</tr>';
                     }
                 });
@@ -907,7 +907,7 @@
                             '<td><input type="text" style="width:100%!important;text-align:right;font-size:12px;font-weight:700;height:28px;" name="SaleRate" id="SaleRate' + rowlength + '" value="' + (value.SaleRate ? parseFloat(value.SaleRate).toFixed(2) : '') + '"/></td>' +
                             '<td style="display:none"><input type="hidden" name="Isbatch" id="Isbatch' + rowlength + '" value="' + value.IsBatch + '" readonly="readonly"/></td>' +
                             '<td style="display:none;width:100%!important;text-align:right;font-size:12px;font-weight:700;height:10px !important;"><input type="text" style="width:100%!important;text-align:right;font-size:12px;font-weight:700;height:28px;position: relative;" value="0" id="RejQty' + rowlength + '" name="RejQty"></input></td>' +
-                            '<td><a href="javascript:void(0)" onclick="ExcludeFromPayment(this)"><i class="glyphicon glyphicon-trash" style="font-size:11px;color: #f30a0a;position:relative;"></i></a> </td>' +
+                            '<td><a href="javascript:void(0)" onclick="ExcludeFromPayment(this)"><i class="fa fa-trash" style="font-size:11px;color: #f30a0a;position:relative;"></i></a> </td>' +
                             '</tr>';
                     });
                     $('#tblItemDescription').append(rows);
@@ -1321,183 +1321,226 @@
     </script>
 </asp:Content>
 <asp:Content ID="Content2" ContentPlaceHolderID="MainContent" runat="server">
-    <form id="item">
-      <div id="igpHeader">
-        <div class="row">
-            <div class="col-lg-3 col-md-6 col-sm-12 mb-3">
-                <label id="LblIGP_Num" class="labelIGP">IGP No</label>
-                <input type="text" class="form-control" id="IGP_Num" name="IGP_Num" readonly="readonly" />
-            </div>
-            <div class="col-lg-3 col-md-6 col-sm-12 mb-3">
-                <label id="Lbl_Date" class="labelIGP">Date</label>
-                <input type="text" class="form-control" id="txtDate" name="txtDate" />
-            </div>
-            <div class="col-lg-3 col-md-6 col-sm-12  mb-3">
-                <label id="lbltxtVendor" class="labelIGP">Vendor <span>*</span></label>
-                <select class="form-control" id="ddlVendor" name="ddlVendor" onchange="getPONumByVendor(this)">
-                </select>
-            </div>
-            <div class="col-lg-3 col-md-6 col-sm-12 mb-3">
-                <label id="lblPO_No" class="labelIGP">Po No</label>
-                <select class="form-control" id="ddlPONo" name="ddlPONo" onchange="PerformPOSearch()">
-                </select>
+    <div class="gp-page">
+
+        <!-- Title line: the master page puts the page title in the empty left side; the badges sit on the right -->
+        <div class="pr-meta-bar">
+            <div class="meta-left"></div>
+            <div class="meta-right">
+                <div class="gp-badge"><span class="gp-badge-label">IGP No</span><span class="gp-badge-value" id="badgeIgpNo">---</span></div>
+                <div class="gp-badge"><span class="gp-badge-label">Date</span><span class="gp-badge-value" id="badgeIgpDate">---</span></div>
+                <div class="gp-badge"><span class="gp-badge-label">Status</span><span class="gp-badge-value" id="badgeIgpStatus">---</span></div>
+                <div class="gp-badge"><span class="gp-badge-label">Inspec</span><span class="gp-badge-value" id="badgeIgpInspec">---</span></div>
             </div>
         </div>
-        <div class="row">
-            <div class="col-lg-3 col-md-6 col-sm-12 mb-3">
-                <label id="lblInvorg" class="labelIGP">Warehouse<span>*</span></label>
-                <select class="form-control" id="ddlInv_Org"></select>
-            </div>
-            <div class="col-lg-3 col-md-6 col-sm-12 mb-3">
-                <label id="LblDriverName" class="labelIGP">Driver Name</label>
-                <input type="text" class="form-control" id="DriverName" name="DriverName" />
+
+        <div id="igpHeader" class="gp-layout">
+
+            <!-- Left: gate pass details + remarks / attachments -->
+            <div class="gp-col">
+                <section class="gp-card">
+                    <h5 class="gp-card-title"><i class="fa fa-truck"></i> Gate Pass Details</h5>
+                    <div class="gp-grid">
+                        <div class="gp-field">
+                            <label id="LblIGP_Num" for="IGP_Num">IGP No</label>
+                            <input type="text" class="form-control" id="IGP_Num" name="IGP_Num" readonly="readonly" />
+                        </div>
+                        <div class="gp-field">
+                            <label id="Lbl_Date" for="txtDate">Date</label>
+                            <input type="text" class="form-control" id="txtDate" name="txtDate" autocomplete="off" />
+                        </div>
+                        <div class="gp-field">
+                            <label id="lbltxtVendor" for="ddlVendor">Vendor <span class="gp-req">*</span></label>
+                            <select class="form-control" id="ddlVendor" name="ddlVendor" onchange="getPONumByVendor(this)">
+                            </select>
+                        </div>
+                        <div class="gp-field">
+                            <label id="lblPO_No" for="ddlPONo">Po No</label>
+                            <select class="form-control" id="ddlPONo" name="ddlPONo" onchange="PerformPOSearch()">
+                            </select>
+                        </div>
+                        <div class="gp-field">
+                            <label id="lblInvorg" for="ddlInv_Org">Warehouse <span class="gp-req">*</span></label>
+                            <select class="form-control" id="ddlInv_Org"></select>
+                        </div>
+                        <div class="gp-field">
+                            <label id="LblBranch" for="ddlBranch">Branch</label>
+                            <select class="form-control" id="ddlBranch" name="ddlBranch"></select>
+                        </div>
+                        <div class="gp-field">
+                            <label id="LblDriverName" for="DriverName">Driver Name</label>
+                            <input type="text" class="form-control" id="DriverName" name="DriverName" autocomplete="off" />
+                        </div>
+                        <div class="gp-field">
+                            <label id="Lbl_Vehiclenum" for="txtVehiclenum">Vehicle #</label>
+                            <input type="text" class="form-control" id="txtVehiclenum" name="txtVehiclenum" autocomplete="off" />
+                        </div>
+                        <div class="gp-field">
+                            <label id="lblBility_No" for="txtBility_No">Bility #</label>
+                            <input type="text" class="form-control" id="txtBility_No" name="txtBility_No" autocomplete="off" />
+                        </div>
+                    </div>
+                </section>
+
+                <section class="gp-card">
+                    <h5 class="gp-card-title"><i class="fa fa-paperclip"></i> Remarks &amp; Attachments</h5>
+                    <div class="gp-grid" style="align-items: start;">
+                        <div class="gp-field gp-span-2">
+                            <label id="lblRemarks" for="txtRemarks">Remarks</label>
+                            <textarea class="form-control" id="txtRemarks" rows="2"></textarea>
+                        </div>
+                        <div class="gp-field gp-span-2">
+                            <label id="lblAttachments" for="fileUpload1">Attachments</label>
+                            <input type="file" id="fileUpload1" name="fileUpload1" class="form-control" />
+                            <asp:HyperLink ID="HyperLink1" runat="server" CssClass="gp-link">Download</asp:HyperLink>
+                        </div>
+                    </div>
+                </section>
             </div>
 
-            <div class="col-lg-3 col-md-6 col-sm-12 mb-3">
-                <label id="Lbl_Vehiclenum" class="labelIGP">Vehicle #</label>
-                <input type="text" class="form-control" id="txtVehiclenum" name="txtVehiclenum" />
-            </div>
-            <div class="col-lg-3 col-md-6 col-sm-12 mb-3">
-                <label id="lblBility_No" class="labelIGP">Bility #</label>
-                <input type="text" class="form-control" id="txtBility_No" name="txtBility_No" />
+            <!-- Right: status -->
+            <div class="gp-col">
+                <section class="gp-card">
+                    <h5 class="gp-card-title"><i class="fa fa-check-square-o"></i> Status</h5>
+                    <div class="gp-grid" style="grid-template-columns: minmax(0, 1fr);">
+                        <div class="gp-field">
+                            <label id="lblStatus" for="txtStatus">Status</label>
+                            <input type="text" class="form-control" id="txtStatus" name="txtStatus" readonly="readonly" />
+                        </div>
+                        <div class="gp-field">
+                            <label id="lblStatusinpec" for="txtStatusInspec">Inspec Status</label>
+                            <input type="text" class="form-control" id="txtStatusInspec" name="txtStatusInspec" readonly="readonly" />
+                        </div>
+                    </div>
+                </section>
             </div>
         </div>
+
+        <!-- Items -->
+        <section class="gp-card">
+            <h5 class="gp-card-title"><i class="fa fa-list-alt"></i> Items</h5>
+            <div class="gp-table-wrap" id="igpItemTable">
+                <table class="table gp-table" id="tblItemDescription">
+                    <thead>
+                        <tr>
+                            <th style="width: 40px;">Sr No.</th>
+                            <th style="width: 70px;">PO #</th>
+                            <th style="width: 86px;">Item Code</th>
+                            <th>Item Description</th>
+                            <th style="width: 76px;">UOM_QTY</th>
+                            <th style="width: 56px;">Unit</th>
+                            <th style="width: 100px;">Batch No</th>
+                            <th style="width: 108px;">PO Delivery Date</th>
+                            <th style="width: 76px;">PO Qty</th>
+                            <th style="width: 76px;">Rcv Qty</th>
+                            <th style="width: 76px;">Blnc Qty</th>
+                            <th style="width: 84px;">IGP Qty</th>
+                            <th style="width: 76px;">Insp Qty</th>
+                            <th style="width: 84px;">Bounus Qty</th>
+                            <th style="width: 108px;">Mfg Date</th>
+                            <th style="width: 108px;">Exp Date</th>
+                            <th style="width: 90px;">Sale Rate</th>
+                            <th style="width: 40px; display: none;">Rej Qty</th>
+                            <th style="width: 54px;">Action</th>
+                        </tr>
+                    </thead>
+                    <tbody id="tblItemDescriptionDetail">
+                    </tbody>
+                </table>
+            </div>
+        </section>
+
+        <!-- Actions -->
         <div class="row">
-            <div class="col-lg-3 col-md-6 col-sm-12 mb-3">
-                <label id="LblBranch" class="labelIGP">Branch</label>
-                <select class="form-control" id="ddlBranch" name="ddlBranch"></select>
+            <div class="col-lg-10">
+                <div class="row">
+                    <div class="col-lg-2 col-md-4 col-sm-12" id="SaveButtonToBeHidden">
+                        <input type="button" class="btn btn-primry" value="Save" id="btnSave" />
+                        &nbsp;
+                    </div>
+                    <div class="col-lg-2 col-md-4 col-sm-12">
+                        <input type="button" class="btn btn-primry" value="Print" name="name" onclick="PrintInwardGatePassDetail();" />
+                        &nbsp;
+                    </div>
+                    <div class="col-lg-2 col-md-4 col-sm-12">
+                        <input type="button" class="btn-gray" value="List" onclick="window.location = 'InversionGatePassView.aspx'" />
+                        &nbsp;
+                    </div>
+                    <div class="col-lg-2 col-md-4 col-sm-12">
+                        <input type="button" class="btn btn-yellow" value="New" onclick="window.location = 'InversionGatePass.aspx'" />
+                    </div>
+                    <div class="col-lg-2 col-md-4 col-sm-12">
+                        <input type="button" style="display: none;" class="btn btn-primry" value="Approve" id="btnApprove" onclick="ApproveIGPFromEdit()" />
+                    </div>
+                    <div class="col-lg-2 col-md-4 col-sm-12" id="btnUnApproveToBeHidden">
+                        <input type="button" class=" btn-primry" style="width: 103px; display: none" value="UnApprove" id="btnUnApprove" onclick="UnApprove()" />
+                    </div>
+
+                    <div class="col-lg-2 col-md-4 col-sm-12" id="btnUnInspecToBeHidden">
+                        <input type="button" class="btn-primry" value="Inspec UnApproval" id="btnUnInspec" onclick="UnApproveInspec()" />
+                        &nbsp;
+                    </div>
+
+                    <div class="col-lg-2 col-md-4 col-sm-12" id="btnPrintInspecToBeHidden">
+                        <input type="button" class="btn-primry" value="Print Inspec" id="btnPrintInspec" onclick="PrintInspection()" />
+                        &nbsp;
+                    </div>
+                    <div class="col-lg-2 col-md-4 col-sm-12" id="btnInspecToBeHidden">
+                        <input type="button" class="btn btn-primry" value="Inspec Approval" id="btnInspec" onclick="ApproveInspecModal()" />
+                        &nbsp;
+                    </div>
+                </div>
             </div>
         </div>
-        <div class="row">
-            <div class="col-lg-3 col-md-6 col-sm-12 mb-3">
-                <label style="width: 78px !important;" id="lblStatus" class="labelIGP">Status</label>
-                <input type="text" class="form-control" id="txtStatus" name="txtStatus" readonly="readonly" />
-            </div>
-            <div class="col-lg-3 col-md-6 col-sm-12 mb-3">
-                <label style="width: 78px !important;" id="lblStatusinpec" class="labelIGP">Inspec Status</label>
-                <input type="text" class="form-control" id="txtStatusInspec" name="txtStatusInspec" readonly="readonly" />
-            </div>
-            <div class="col-lg-3 col-md-6 col-sm-12 mb-3">
-                <label id="lblRemarks" class="labelIGP">Remarks</label>
-                <textarea class="form-control" id="txtRemarks " style="height: 33px;"></textarea>
-            </div>
-            <div class="col-lg-3 col-md-6 col-sm-12 mb-3">
-                <label id="lblAttachments" class="labelIGP">Attachments</label>
-                <input type="file" id="fileUpload1" name="fileUpload1" />
-                <asp:HyperLink ID="HyperLink1" runat="server">Download</asp:HyperLink>
+
+        <!-- Inspection approval window -->
+        <div id="inspecModal" class="modal gp-modal" tabindex="-1" role="dialog">
+            <div class="modal-dialog" role="document">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                        <h5 class="modal-title">Inspec Approval</h5>
+                    </div>
+                    <div class="gp-modal-scroll">
+                        <table class="table" id="InspmodalItemDescription">
+                            <thead>
+                                <tr>
+                                    <th style="display: none;">PO Detail ID</th>
+                                    <th style="display: none;">Item Code</th>
+                                    <th style="width: 40%;">Item Name</th>
+                                    <th style="width: 8%;">PO Qty</th>
+                                    <th style="width: 8%;">IGP Qty</th>
+                                    <th style="width: 8%;">Insp Qty</th>
+                                    <th style="width: 40%;">Remarks</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                            </tbody>
+                        </table>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-primry" onclick="ApproveInspec()">Save</button>
+                        <button type="button" class="btn btn-gray" data-dismiss="modal">Close</button>
+                    </div>
+                </div>
             </div>
         </div>
-      </div>
-    </form>
-    <div class="row">
-        <div class="table-responsive" id="igpItemTable">
-            <table class="table" id="tblItemDescription">
-                <thead>
-                    <tr>
-                        <th style="width: 40px;">Sr No.</th>
-                        <th style="width: 70px;">PO #</th>
-                        <th style="width: 86px;">Item Code</th>
-                        <th>Item Description</th>
-                        <th style="width: 76px;">UOM_QTY</th>
-                        <th style="width: 56px;">Unit</th>
-                        <th style="width: 100px;">Batch No</th>
-                        <th style="width: 108px;">PO Delivery Date</th>
-                        <th style="width: 76px;">PO Qty</th>
-                        <th style="width: 76px;">Rcv Qty</th>
-                        <th style="width: 76px;">Blnc Qty</th>
-                        <th style="width: 84px;">IGP Qty</th>
-                        <th style="width: 76px;">Insp Qty</th>
-                        <th style="width: 84px;">Bounus Qty</th>
-                        <th style="width: 108px;">Mfg Date</th>
-                        <th style="width: 108px;">Exp Date</th>
-                        <th style="width: 90px;">Sale Rate</th>
-                        <th style="width: 40px; display: none;">Rej Qty</th>
-                        <th style="width: 54px;">Action</th>
-                    </tr>
-                </thead>
-                <tbody id="tblItemDescriptionDetail" style="height: 25px;">
-                </tbody>
-            </table>
-        </div>
+
     </div>
 
-
-    <div class="row">
-        <div class="col-lg-10">
-            <div class="row">
-                <div class="col-lg-2 col-md-4 col-sm-12" id="SaveButtonToBeHidden">
-                    <input type="button" class="btn btn-primry" value="Save" id="btnSave" />
-                    &nbsp;
-                </div>
-                <div class="col-lg-2 col-md-4 col-sm-12">
-                    <input type="button" class="btn btn-primry" value="Print" name="name" onclick="PrintInwardGatePassDetail();" />
-                    &nbsp;
-                </div>
-                <div class="col-lg-2 col-md-4 col-sm-12">
-                    <input type="button" class="btn-gray" value="List" onclick="window.location = 'InversionGatePassView.aspx'" />
-                    &nbsp;
-                </div>
-                <div class="col-lg-2 col-md-4 col-sm-12">
-                    <input type="button" class="btn btn-yellow" value="New" onclick="window.location = 'InversionGatePass.aspx'" />
-                </div>
-                <div class="col-lg-2 col-md-4 col-sm-12">
-                    <input type="button" style="display:none;" class="btn btn-primry" value="Approve" id="btnApprove" onclick="ApproveIGPFromEdit()" />
-                </div>
-                <div class="col-lg-2 col-md-4 col-sm-12" id="btnUnApproveToBeHidden">
-                    <input type="button" class=" btn-primry" style="width: 103px; display: none" value="UnApprove" id="btnUnApprove" onclick="UnApprove()" />
-                </div>
-
-                <div class="col-lg-2 col-md-4 col-sm-12" id="btnUnInspecToBeHidden">
-                    <input type="button" class="btn-primry" value="Inspec UnApproval" id="btnUnInspec" onclick="UnApproveInspec()" />
-                    &nbsp;
-                </div>
-
-                <div class="col-lg-2 col-md-4 col-sm-12" id="btnPrintInspecToBeHidden">
-                    <input type="button" class="btn-primry" value="Print Inspec" id="btnPrintInspec" onclick="PrintInspection()" />
-                    &nbsp;
-                </div>
-                <div class="col-lg-2 col-md-4 col-sm-12" id="btnInspecToBeHidden">
-                    <input type="button" class="btn btn-primry" value="Inspec Approval" id="btnInspec" onclick="ApproveInspecModal()" />
-                    &nbsp;
-                </div>
-            </div>
-        </div>
-    </div>
-
-
-    <div id="inspecModal" class="modal" tabindex="-1" role="dialog">
-        <div class="modal-dialog" role="document">
-            <div class="modal-content" style="width: 1000px; margin-left: -270px; height: 505px;">
-                <div class="modal-header">
-                    <h5 class="modal-title">Inspec Approval</h5>
-                    <button type="button" class="close" data-dismiss="modal" style="margin-top: -27px !important; margin-right: -30px !important;" aria-label="Close">
-                        <span aria-hidden="true">&times;</span>
-                    </button>
-                </div>
-                <div class="modal-body" style="width: 970px; overflow: scroll; height: 401px  !important; height: auto;">
-                    <table class="table" style="width: 953px; height: 80px !important; height: auto; overflow: scroll;" id="InspmodalItemDescription">
-                        <thead>
-                            <tr>
-                                <th style="display: none;">PO Detail ID</th>
-                                <th style="display: none;">Item Code</th>
-                                <th style="width: 40%;">Item Name</th>
-                                <th style="width: 8%;">PO Qty</th>
-                                <th style="width: 8%;">IGP Qty</th>
-                                <th style="width: 8%;">Insp Qty</th>
-                                <th style="width: 40%;">Remarks</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                        </tbody>
-                    </table>
-                </div>
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-primry" onclick="ApproveInspec()">Save</button>
-                    <button type="button" class="btn btn-gray" data-dismiss="modal">Close</button>
-                </div>
-            </div>
-        </div>
-    </div>
-
-
+    <script type="text/javascript">
+        // title-line badges follow the form fields (the page script fills them in after loading)
+        function syncGatePassBadges() {
+            $('#badgeIgpNo').text($('#IGP_Num').val() || '---');
+            $('#badgeIgpDate').text($('#txtDate').val() || '---');
+            $('#badgeIgpStatus').text($('#txtStatus').val() || '---');
+            $('#badgeIgpInspec').text($('#txtStatusInspec').val() || '---');
+        }
+        $(function () {
+            syncGatePassBadges();
+            setInterval(syncGatePassBadges, 600);
+        });
+    </script>
 </asp:Content>
