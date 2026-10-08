@@ -179950,6 +179950,8 @@ namespace PMS
 
         private string _Cost_Center;
 
+        private string _Payment_Mode;
+
         private EntitySet<Ar_Billing_Detail> _Ar_Billing_Details;
 
         #region Extensibility Method Definitions
@@ -180132,6 +180134,8 @@ namespace PMS
         partial void OnReferred_By_NameChanged();
         partial void OnCost_CenterChanging(string value);
         partial void OnCost_CenterChanged();
+        partial void OnPayment_ModeChanging(string value);
+        partial void OnPayment_ModeChanged();
         #endregion
 
         public Ar_Billing()
@@ -181914,6 +181918,26 @@ namespace PMS
                     this._Cost_Center = value;
                     this.SendPropertyChanged("Cost_Center");
                     this.OnCost_CenterChanged();
+                }
+            }
+        }
+
+        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_Payment_Mode", DbType = "VarChar(20)")]
+        public string Payment_Mode
+        {
+            get
+            {
+                return this._Payment_Mode;
+            }
+            set
+            {
+                if ((this._Payment_Mode != value))
+                {
+                    this.OnPayment_ModeChanging(value);
+                    this.SendPropertyChanging();
+                    this._Payment_Mode = value;
+                    this.SendPropertyChanged("Payment_Mode");
+                    this.OnPayment_ModeChanged();
                 }
             }
         }

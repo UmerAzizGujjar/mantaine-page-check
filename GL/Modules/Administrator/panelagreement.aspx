@@ -7,6 +7,7 @@
 
         $(document).ready(function () {
             loadItemList();
+            initMedicineSearch();
             FillMainTestDepartment();
             loadGlAccounts();
             $('#ddlGlAccount').select2();
@@ -112,7 +113,7 @@
                                 var data = response.d;
                                 alert("Data has been saved successfully");
                                 window.location.href = "panelagreement.aspx?ID=" + data;
-                            }, error: function () { }
+                            }, error: function (xhr) { showSaveError(xhr); }
                         });
                     }
 
@@ -120,6 +121,14 @@
             })
 
         });
+        function showSaveError(xhr) {
+            var msg = 'Data could not be saved.';
+            try {
+                var r = JSON.parse(xhr.responseText);
+                if (r && r.Message) msg += '\n' + r.Message;
+            } catch (e) { }
+            alert(msg);
+        }
         function ReplicatePanel() {
             var valid = true;
             var cmp_name = $("#txtCompanyName").val();
@@ -185,7 +194,7 @@
                             var data = response.d;
                             alert("Data has been saved successfully");
                             window.location.href = "PanelView.aspx";
-                        }, error: function () { }
+                        }, error: function (xhr) { showSaveError(xhr); }
                     });
                 }
             }
@@ -328,6 +337,44 @@
             else {
                 appendRowHtml(ItemId, concat, Rate);
             }
+        }
+        function initMedicineSearch() {
+            $('#ddlMedicine').select2({
+                placeholder: 'Search medicine',
+                allowClear: true,
+                minimumInputLength: 2,
+                width: '100%',
+                ajax: {
+                    transport: function (params, success, failure) {
+                        PageMethods.SearchMedicines(
+                            params.data.term || '',
+                            function (result) {
+                                success({ results: JSON.parse(result) });
+                            },
+                            failure
+                        );
+                    }
+                }
+            });
+        }
+        function AddMedicineRow() {
+            var data = $('#ddlMedicine').select2('data');
+            if (!data || data.length == 0 || !data[0].id) {
+                alert("Please Select Medicine");
+                return false;
+            }
+            var itemID = data[0].id;
+            var duplicate = false;
+            $('#tblItemDescriptionDetail input[name="tbltxt_ServicesId"]').each(function () {
+                if ($(this).val() == itemID) { duplicate = true; return false; }
+            });
+            if (duplicate) {
+                alert("This medicine is already added");
+                return false;
+            }
+            var name = data[0].description || data[0].text;
+            appendRowHtml(itemID, $('<div>').text(name).html().replace(/"/g, '&quot;'), 0, '', '');
+            $('#ddlMedicine').val(null).trigger('change');
         }
         function AddTestRow() {
             var maindpt = $('#ddlMainTestDepartment').val();
@@ -685,6 +732,16 @@
         <div class="col-lg-2 col-md-3 col-sm-4">
             <label></label>
             <input type="button" onclick="AddallTest()" class="btn btn-primry" value="Add All Test" id="AddallTests" />
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-lg-3 col-md-6 col-sm-8">
+            <label id="lb_medicine">Medicine</label>
+            <select id="ddlMedicine" name="ddlMedicine"></select>
+        </div>
+        <div class="col-lg-1 col-md-3 col-sm-4">
+            <label></label>
+            <input type="button" onclick="AddMedicineRow()" class="btn btn-primry" value="Add Medicine" id="AddMedicine" />
         </div>
     </div>
     <div class="row">

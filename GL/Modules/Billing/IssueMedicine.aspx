@@ -192,6 +192,8 @@
                 $('#chkbatch').prop("checked", true);
             }
             fillPanel();
+            fillBankAccounts();
+            initPanelRates();
             BalanceAmountCondition();
             CheckSaleReturnAllow();
             CheckSaleReturnQueue();
@@ -756,12 +758,18 @@
             });
             $('input[name="rbtn"]').on('change', function (e) {
                 var chkbtn = $('input[name="rbtn"]:checked').val();
+                if (chkbtn == 'rbtnbankacc') {
+                    $('#ddlBankAccount').show();
+                } else {
+                    $('#ddlBankAccount').hide().val('0');
+                }
                 if (chkbtn == 'rbtnHospital') {
                     $('#txtDisPer').attr("disabled", true);
                     $('#txtDisAmt').attr("disabled", true);
                     $('#txtFlatDisc').attr("disabled", true);
 
                     $('#txtAmountReceived').attr("disabled", true);
+                    SetAmountReceived(0);
                     $('#ddlpanel').attr('disabled', false);
                 }
                 else if (chkbtn == 'rbtnbank') {
@@ -780,9 +788,10 @@
 
 
                     $('#txtAmountReceived').attr("disabled", true);
-                    $('#txtAmountReceived').attr("disabled", true).val(0);
                     $('#divBalance').hide();
                     blnceCondition = 'false'
+                    // Cash / Bank: amount received = net payable of the current items
+                    CalculateReceivedAmount();
                 }
             });
             $('#SearchModel').on('keypress', function (event) {
@@ -1919,7 +1928,7 @@
                 if (balance < 0) balance = 0;
                 $('#txtBalances').val(Math.round(balance));
             } else {
-                $('#txtAmountReceived').val(Math.round(finalAmount));
+                SetAmountReceived(Math.round(finalAmount));
             }
 
             // Update total discount display
@@ -1970,7 +1979,7 @@
                 }
             }
             else {
-                $('#txtAmountReceived').val(Math.round(NetAmount));
+                SetAmountReceived(Math.round(NetAmount));
             }
 
         }
@@ -2108,7 +2117,7 @@
                 $('#txtBalances').val(parseFloat(TotalNetAmount.toFixed(2)) - parseFloat(ReceivedAmount));
             }
             else {
-                $('#txtAmountReceived').val(parseFloat(TotalNetAmount.toFixed(2)));
+                SetAmountReceived(parseFloat(TotalNetAmount.toFixed(2)));
             }
         }
         function ApplyEqualMasterDiscountToRows(masterDisPer) {
@@ -2270,7 +2279,7 @@ function CalculateReceivedAmount() {
     }
     else {
          console.log("Final Bill Inside Else" + finalBalance);
-        $('#txtAmountReceived').val(finalBalance.toFixed(2));
+        SetAmountReceived(finalBalance.toFixed(2));
         $('#txtBalances').val('0.00');
     }
 }
@@ -2370,13 +2379,13 @@ function CalculateReceivedAmount() {
                 var AmtReceived = parseFloat($('#txtAmountReceived').val()) || 0;
                 if (AmtReceived <= 0) {
                     AmtReceived = finalAmount;
-                    $('#txtAmountReceived').val(Math.round(finalAmount));
+                    SetAmountReceived(Math.round(finalAmount));
                 }
                 var balance = finalAmount - AmtReceived;
                 if (balance < 0) balance = 0;
                 $('#txtBalances').val(Math.round(balance));
             } else {
-                $('#txtAmountReceived').val(Math.round(finalAmount));
+                SetAmountReceived(Math.round(finalAmount));
                 $('#txtBalances').val('0');
             }
         }
@@ -2726,7 +2735,7 @@ function CalculateReceivedAmount() {
                 }
             }
             else {
-                $('#txtAmountReceived').val(finlblce.toFixed());
+                SetAmountReceived(finlblce.toFixed());
             }
         }
         function SaveDataWithoutUser() {
@@ -2874,7 +2883,8 @@ function CalculateReceivedAmount() {
                 "Save_list": Save_list,
                 "In_Patient_ID": In_Patient_ID,
                 "invNumber": invNumber,
-                "Panel_Id": $('#ddlpanel').val()
+                "Panel_Id": $('#ddlpanel').val(),
+                "BankAccountId": parseInt($('#ddlBankAccount').val()) || 0
 
             };
             if (patId == undefined) {
@@ -3088,7 +3098,8 @@ function CalculateReceivedAmount() {
                 "In_Patient_ID": In_Patient_ID,
                 "Save_list": Save_list,
                 "invNumber": invNumber,
-                "Panel_Id": $('#ddlpanel').val()
+                "Panel_Id": $('#ddlpanel').val(),
+                "BankAccountId": parseInt($('#ddlBankAccount').val()) || 0
             };
 
             if (patId == undefined) {
@@ -4324,19 +4335,7 @@ function CalculateReceivedAmount() {
                             $('#ddlDoctor').attr('disabled', true);
                             $('#ddlDepartment').attr('disabled', true);
 
-                            var panelCompany = data.DoctorInfo?.Panel_Company || '';
-                            if (panelCompany && panelCompany != "0" && panelCompany != 0) {
-                                setTimeout(function () {
-                                    $('#ddlpanel').val(panelCompany.toString()).trigger('change');
-                                    if ($('input[name="rbtn"]:checked').val() !== 'rbtnHospital') {
-                                        $('#ddlpanel').attr('disabled', true);
-                                    } else {
-                                        $('#ddlpanel').attr('disabled', false);
-                                    }
-                                }, 100);
-                            } else {
-                                $('#ddlpanel').attr('disabled', false);
-                            }
+                            SelectPanelForPatient(data.DoctorInfo?.Panel_Company || '');
                             getWardAndBed(pat_Id)
                             $.each(data.ItemCodes, function (key, value) {
                                 itemIds.push(value);
@@ -4872,6 +4871,87 @@ function CalculateReceivedAmount() {
 
 
         }
+        // A patient admitted under a panel: tick the Panel radio and select that panel
+        function SelectPanelForPatient(panelCompany) {
+            if (panelCompany && panelCompany != "0" && panelCompany != 0) {
+                setTimeout(function () {
+                    $('#chkHospital').prop('checked', true).trigger('change');
+                    $('#ddlpanel').attr('disabled', false);
+                    $('#ddlpanel').val(panelCompany.toString()).trigger('change');
+                }, 100);
+            } else {
+                $('#ddlpanel').attr('disabled', false);
+            }
+        }
+        // Panel bills are settled with the panel, so nothing is received at the counter
+        function SetAmountReceived(value) {
+            if ($('input[name="rbtn"]:checked').val() == 'rbtnHospital') value = 0;
+            $('#txtAmountReceived').val(value);
+        }
+        // ---- Panel rates: when a panel is selected, rows use the rate from its agreement ----
+        var panelRateTimer = null;
+        function initPanelRates() {
+            $('#ddlpanel').on('change', function () { ApplyPanelRates(); });
+            var body = document.getElementById('tblbody');
+            if (body && window.MutationObserver) {
+                // rows are added from many places; re-price whenever the row set changes
+                new MutationObserver(function () {
+                    clearTimeout(panelRateTimer);
+                    panelRateTimer = setTimeout(ApplyPanelRates, 50);
+                }).observe(body, { childList: true });
+            }
+        }
+        function setRowSaleRate(row, rate) {
+            var $inp = $(row).find('input[name="txtSalerate"]').first();
+            if ($inp.length == 0) return;
+            if ($(row).data('origRate') === undefined) $(row).data('origRate', $inp.val());
+            if (parseFloat($inp.val()) == parseFloat(rate)) return false;
+            $inp.val(rate);
+            // the rate cell shows the rate as text next to the hidden input
+            $($(row).find('td')[8]).contents().filter(function () {
+                return this.nodeType === 3 && $.trim(this.nodeValue) !== '';
+            }).each(function () { this.nodeValue = rate; });
+            return true;
+        }
+        function ApplyPanelRates() {
+            var rows = $('#tblDetails #tblbody tr');
+            if (rows.length == 0) return;
+            var panelId = parseInt($('#ddlpanel').val()) || 0;
+            var done = function (map) {
+                var changed = false;
+                rows.each(function () {
+                    var itemId = $(this).find('input[name="ItemID"]').val() || $(this).find('input[name="hdnItemID"]').val();
+                    var rate = (map && map[itemId] !== undefined) ? map[itemId] : $(this).data('origRate');
+                    if (rate !== undefined && setRowSaleRate(this, rate)) changed = true;
+                });
+                if (changed) {
+                    CalculateTotalsFromScratch();
+                    CountBalance();
+                    sumdiscount();
+                }
+            };
+            if (panelId <= 0) { done(null); return; }
+            var ids = rows.map(function () {
+                return $(this).find('input[name="ItemID"]').val() || $(this).find('input[name="hdnItemID"]').val();
+            }).get().join(',');
+            PageMethods.GetPanelRates(panelId, ids, function (res) { done(JSON.parse(res)); }, function () { });
+        }
+        function fillBankAccounts() {
+            var options = '<option value="0">Select Bank Account</option>';
+            $.ajax({
+                url: 'IssueMedicine.aspx/GetBankAccounts',
+                type: 'POST',
+                contentType: 'application/json; charset=utf-8',
+                dataType: 'json',
+                success: function (response) {
+                    var data = response.d ? JSON.parse(response.d) : response;
+                    $.each(data, function (key, value) {
+                        options += '<option value="' + value.Account_ID + '">' + $('<div>').text(value.Name).html() + '</option>';
+                    });
+                    $('#ddlBankAccount').html(options);
+                }
+            });
+        }
         function fillPanel() {
             var options = '<option value="0">Please Select</option>';
 
@@ -5017,6 +5097,8 @@ function CalculateReceivedAmount() {
             $('#chkcash').prop('checked', true);
             $('#chkBank').prop('checked', false);
             $('#chkHospital').prop('checked', false);
+            $('#chkBankAcc').prop('checked', false);
+            $('#ddlBankAccount').hide().val('0');
 
             $('#chkbatch').prop('checked', true);
             $('#chkprint').prop('checked', true);
@@ -5199,7 +5281,9 @@ function CalculateReceivedAmount() {
                             <label class="ph-radio"><input type="radio" name="rbtn" id="chkcash" tabindex="11" value="rbtncash" checked /><span>Cash</span></label>
                             <label class="ph-radio"><input type="radio" name="rbtn" tabindex="12" id="chkBank" value="rbtnbank" /><span>Credit</span></label>
                             <label class="ph-radio"><input type="radio" name="rbtn" tabindex="13" id="chkHospital" value="rbtnHospital" /><span>Panel</span></label>
+                            <label class="ph-radio"><input type="radio" name="rbtn" tabindex="13" id="chkBankAcc" value="rbtnbankacc" /><span>Bank</span></label>
                         </span>
+                        <select id="ddlBankAccount" class="form-control" tabindex="13" style="display:none; width:auto; min-width:220px; max-width:320px; height:32px; padding:2px 8px;" title="Bank account"></select>
                         <label class="ph-check"><input type="checkbox" tabindex="14" onchange="OnHoldBill()" id="chkHold" /><span id="lblHold">Hold</span></label>
                         <label class="ph-check"><input type="checkbox" tabindex="9" id="chkprint" /><span>Print</span></label>
                     </div>
