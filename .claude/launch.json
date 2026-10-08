@@ -1,0 +1,11 @@
+{
+  "version": "0.0.1",
+  "configurations": [
+    {
+      "name": "gl-iisexpress",
+      "runtimeExecutable": "C:\\Program Files\\IIS Express\\iisexpress.exe",
+      "runtimeArgs": ["/path:E:\\Wajahat\\LatestSources\\HMIS_GitSource\\Standard_Hospital\\GL", "/port:28402"],
+      "port": 28402
+    }
+  ]
+}

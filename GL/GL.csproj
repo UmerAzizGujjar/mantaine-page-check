@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
+﻿<?xml version="1.0" encoding="utf-8"?>
 <Project ToolsVersion="12.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
   <PropertyGroup>
@@ -603,6 +603,7 @@
     <Content Include="Modules\GL\Voucher.aspx" />
     <Content Include="Modules\GL\BudgetView.aspx" />
     <Content Include="Modules\GL\AllVoucherList.aspx" />
+    <Content Include="Modules\GL\UnbalancedVoucherList.aspx" />
     <Content Include="Modules\GL\VoucherView.aspx" />
     <Content Include="Modules\Lab\GroupTestDefinition.aspx" />
     <Content Include="Modules\Lab\GroupTestList.aspx" />
@@ -5040,6 +5041,13 @@
     <Compile Include="Modules\GL\AllVoucherList.aspx.designer.cs">
       <DependentUpon>AllVoucherList.aspx</DependentUpon>
     </Compile>
+    <Compile Include="Modules\GL\UnbalancedVoucherList.aspx.cs">
+      <DependentUpon>UnbalancedVoucherList.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Modules\GL\UnbalancedVoucherList.aspx.designer.cs">
+      <DependentUpon>UnbalancedVoucherList.aspx</DependentUpon>
+    </Compile>
     <Compile Include="Modules\GL\VoucherView.aspx.cs">
       <DependentUpon>VoucherView.aspx</DependentUpon>
       <SubType>ASPXCodeBehind</SubType>
@@ -6539,3 +6547,4 @@
   </Target>
   -->
 </Project>
+
