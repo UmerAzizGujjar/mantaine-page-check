@@ -4,7 +4,7 @@
 <asp:Content ID="Content1" ContentPlaceHolderID="HeadContent" runat="server">
         <link href="../../wwwroot/THEME_TIBBIT/CustomCSS/Pharmacy.css" rel="stylesheet" />
     <link href="../../wwwroot/lib/sweetalert/swalalert.css" rel="stylesheet" />
-    <link href="../../wwwroot/lib/theme/pharmacy-form.css?v=4" rel="stylesheet" />
+    <link href="../../wwwroot/lib/theme/pharmacy-form.css?v=6" rel="stylesheet" />
     <style>
         /* Issue-medicine look: card layout comes from pharmacy-form.css */
         @media (min-width: 1200px) {
