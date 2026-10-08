@@ -8143,6 +8143,7 @@
       <Column Name="Patient_Type" Type="System.String" DbType="VarChar(50)" CanBeNull="true" />
       <Column Name="Referred_By_Name" Type="System.String" DbType="VarChar(100)" CanBeNull="true" />
       <Column Name="Cost_Center" Type="System.String" DbType="VarChar(100)" CanBeNull="true" />
+      <Column Name="Payment_Mode" Type="System.String" DbType="VarChar(20)" CanBeNull="true" />
       <Association Name="Ar_Billing_Ar_Billing_Detail" Member="Ar_Billing_Details" ThisKey="Bill_ID" OtherKey="Bill_ID" Type="Ar_Billing_Detail" />
     </Type>
   </Table>

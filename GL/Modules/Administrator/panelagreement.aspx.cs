@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.Linq;
 using System.Web;
 using System.Web.Script.Serialization;
@@ -105,9 +106,6 @@ namespace PMS
 
                 panel.Updated_By = AppConfig.UserID;
                 panel.Updated_Time = DateTime.Now;
-
-                string sql = "Delete from Panel_Detail_Services where Panel_ID = " + panel.Panel_ID.ToString();
-                DBClass.executeNonQueryWithoutBegin(sql);
             }
 
             panel.Address = address;
@@ -125,42 +123,60 @@ namespace PMS
                 db.SubmitChanges(); 
             }
 
+            // Build every detail row first, so a bad value fails before the old rows are deleted
+            var newDetails = new List<Panel_Detail_Service>();
             for (int i = 1; i < rateDetail.Length; i++)
             {
-                if (rateDetail[i].Length < 2) continue;
+                if (rateDetail[i] == null || rateDetail[i].Length < 2) continue;
 
                 string itemIDVal = rateDetail[i][0].ToString().Trim();
                 string rateVal = rateDetail[i][1].ToString().Trim();
                 string groupCatVal = rateDetail[i].Length > 2 ? rateDetail[i][2].ToString().Trim() : "";
                 string testIDVal = rateDetail[i].Length > 3 ? rateDetail[i][3].ToString().Trim() : "";
+                decimal rate = 0;
+                if (!string.IsNullOrEmpty(rateVal) && !decimal.TryParse(rateVal, NumberStyles.Number, CultureInfo.InvariantCulture, out rate))
+                    throw new Exception("Invalid rate '" + rateVal + "'. Please enter a number.");
+
                 if (!string.IsNullOrEmpty(itemIDVal) && itemIDVal != "0")
                 {
                     Panel_Detail_Service pds = new Panel_Detail_Service();
                     pds.Panel_ID = panel.Panel_ID;
                     pds.Item_ID = itemIDVal;
-                    string query = "Select Item_Code from inv_items i where i.item_ID = " + pds.Item_ID;
-                    object codeObj = DBClass.getField(query);
-                    pds.Item_Code = codeObj != null ? Convert.ToInt32(codeObj) : 0;
+                    int itemKey;
+                    int itemCode = 0;
+                    if (int.TryParse(itemIDVal, out itemKey))
+                    {
+                        string codeVal = Convert.ToString(DBClass.getField("Select Item_Code from inv_items i where i.item_ID = " + itemKey));
+                        int.TryParse(codeVal, out itemCode);
+                    }
+                    pds.Item_Code = itemCode;
 
-                    pds.Rate = string.IsNullOrEmpty(rateVal) ? 0 : Convert.ToInt32(rateVal);
+                    pds.Rate = rate;
                     pds.GroupCategory = null;
-                    pds.Test_ID = null;      
+                    pds.Test_ID = null;
 
-                    db.Panel_Detail_Services.InsertOnSubmit(pds);
+                    newDetails.Add(pds);
                 }
                 else if (!string.IsNullOrEmpty(groupCatVal) || !string.IsNullOrEmpty(testIDVal))
                 {
                     Panel_Detail_Service pds = new Panel_Detail_Service();
                     pds.Panel_ID = panel.Panel_ID;
-                    pds.Item_ID = null;      
-                    pds.Item_Code = 0;  
-                    pds.Rate = string.IsNullOrEmpty(rateVal) ? 0 : Convert.ToInt32(rateVal);
+                    pds.Item_ID = null;
+                    pds.Item_Code = 0;
+                    pds.Rate = rate;
                     pds.GroupCategory = groupCatVal;
                     pds.Test_ID = testIDVal;
 
-                    db.Panel_Detail_Services.InsertOnSubmit(pds);
+                    newDetails.Add(pds);
                 }
             }
+
+            if (btnValue != "Save" && btnValue != "Replicate")
+            {
+                string sql = "Delete from Panel_Detail_Services where Panel_ID = " + panel.Panel_ID.ToString();
+                DBClass.executeNonQueryWithoutBegin(sql);
+            }
+            db.Panel_Detail_Services.InsertAllOnSubmit(newDetails);
 
             db.SubmitChanges();
 
@@ -215,6 +231,27 @@ namespace PMS
             }
             return result;
         }
+        // Medicines are INV_Items flagged IsPharmacyItem (~27k rows), so the dropdown searches on demand
+        [WebMethod]
+        public static string SearchMedicines(string term)
+        {
+            term = (term ?? "").Trim();
+            DataBaseDataContext db = new DataBaseDataContext();
+            var medicines = (from i in db.INV_Items
+                             where i.IsPharmacyItem == true
+                                   && (i.isCancel == null || i.isCancel == false)
+                                   && (i.Is_Active == true)
+                                   && (i.Description.Contains(term) || i.Item_Code.ToString().Contains(term))
+                             orderby i.Description
+                             select new
+                             {
+                                 id = i.Item_ID,
+                                 text = i.Item_Code.ToString() + " - " + i.Description,
+                                 description = i.Description
+                             }).Take(50).ToList();
+            return (new JavaScriptSerializer()).Serialize(medicines);
+        }
+
         [WebMethod]
         public static string FillTestMainDepartment()
         {

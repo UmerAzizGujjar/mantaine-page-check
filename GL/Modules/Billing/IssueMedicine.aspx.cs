@@ -1732,6 +1732,8 @@ ORDER BY i.Item_Code, i.Item_ID";
                 newBill.Received_Amount = data.AmntReceived;
             }
             newBill.Received_Amount = data.AmntReceived;
+            if (Rbtn == "rbtnHospital")
+                newBill.Received_Amount = 0; // panel bills are settled with the panel, nothing received at the counter
             newBill.Pharma_trans_Type = data.TransType;
 
             var Inpat = "";
@@ -1789,7 +1791,7 @@ ORDER BY i.Item_Code, i.Item_ID";
                     throw new Exception("Please select a valid bank account.");
 
                 newBill.IsBank = true;
-                newBill.AccountId = data.BankAccountId;
+                newBill.Bank_Account = data.BankAccountId.ToString();
             }
 
             if (Rbtn == "rbtnHospital")
@@ -2029,6 +2031,25 @@ ORDER BY i.Item_Code, i.Item_ID";
 
             return (new JavaScriptSerializer()).Serialize(PharmacyDetail);
         }
+        // Rates agreed with a panel (Panel Agreement screen) for the given items (Item_ID, comma separated).
+        // A rate of 0 means "not set", so the normal sale rate applies.
+        [WebMethod]
+        public static string GetPanelRates(int panelId, string itemIds)
+        {
+            var ids = (itemIds ?? "").Split(',').Select(s => s.Trim()).Where(s => s != "").Distinct().ToList();
+            var result = new Dictionary<string, decimal>();
+            if (panelId > 0 && ids.Count > 0)
+            {
+                DataBaseDataContext db = new DataBaseDataContext();
+                var rates = (from p in db.Panel_Detail_Services
+                             where p.Panel_ID == panelId && p.Test_ID == null && p.Rate > 0 && ids.Contains(p.Item_ID)
+                             select new { p.Item_ID, Rate = p.Rate.Value }).ToList();
+                foreach (var r in rates)
+                    result[r.Item_ID] = r.Rate;
+            }
+            return (new JavaScriptSerializer()).Serialize(result);
+        }
+
         [WebMethod]
         public static string GetBankAccounts()
         {
