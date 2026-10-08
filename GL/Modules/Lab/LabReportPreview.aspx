@@ -1106,6 +1106,29 @@
                     });
             }
 
+            // Lab_Test_ID (printed barcode) -> bill + patient + tests, same as Bill No search
+            $('#<%= txtSearchLabBarcode.ClientID %>').tokenInput("../../json.aspx?Table=LabTestBarcode", {
+                tokenLimit: 1,
+                onAdd: function (item) {
+                    try {
+                        if (!item.bill_id || item.bill_id === "") {
+                            alert("No billing record found for this lab test.");
+                            return;
+                        }
+                        localStorage.billid = 1;
+                        localStorage.patientid = 0;
+                        localStorage.isSaved = 0;
+                        $('#ctl00_MainContent_txtPatient_ID').tokenInput('clear');
+                        $("#hdBill_id").val(item.bill_id);
+                        $("#hdnBill_No").val(item.bill_no);
+                        if (item.patient_id) $("#hdnPatient_ID").val(item.patient_id);
+                        loadPatientDataUsingBillId();
+                    } catch (err) {
+                        alert(err.message);
+                    }
+                }
+            });
+
             $('#<%= txtSampleNo.ClientID %>').tokenInput("../../json.aspx?Table=SampleNo", {
                 tokenLimit: 1,
                 onAdd: function (item) {
@@ -2799,6 +2822,14 @@
                                     </div>
                                     <div class="col-lg-7 col-md-7 col-sm-6">
                                         <asp:TextBox ID="txtSearchBillNo" runat="server"></asp:TextBox>
+                                    </div>
+                                </div>
+                                <div class="row mb-3 mtt">
+                                    <div class="col-lg-5 col-md-5 col-sm-6">
+                                        <b>Search Lab ID / Barcode</b>
+                                    </div>
+                                    <div class="col-lg-7 col-md-7 col-sm-6">
+                                        <asp:TextBox ID="txtSearchLabBarcode" runat="server"></asp:TextBox>
                                     </div>
                                 </div>
                                 <div class="row mb-3 mtt">
