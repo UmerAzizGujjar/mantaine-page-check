@@ -1485,6 +1485,7 @@ ORDER BY i.Item_Code, i.Item_ID";
             public int In_Patient_ID { get; set; }
 
             public string Panel_Id { get; set; }
+            public int BankAccountId { get; set; }
             public List<Medicindetails> Save_list { get; set; }
         }
 
@@ -1740,7 +1741,7 @@ ORDER BY i.Item_Code, i.Item_ID";
                 Inpat = inpatientid;
             }
 
-            if ((data.Patient_ID != "") && (Rbtn == "rbtncash" || Rbtn == "rbtnbank"))
+            if ((data.Patient_ID != "") && (Rbtn == "rbtncash" || Rbtn == "rbtnbank" || Rbtn == "rbtnbankacc"))
             {
                 newBill.Customer_Type = "Hospital-Patient";
                 newBill.Patient_ID = Convert.ToInt32(data.Patient_ID);
@@ -1779,12 +1780,29 @@ ORDER BY i.Item_Code, i.Item_ID";
                 newBill.AccountId = AccIdBank;
             }
 
+            // "Bank" mode: payment goes to the bank account picked from the dropdown
+            if (Rbtn == "rbtnbankacc")
+            {
+                var isValidBank = data.BankAccountId > 0 && db.GL_Accounts.Any(a =>
+                    a.Account_ID == data.BankAccountId && a.Levels == 4 && a.Bank == true && a.Active == true);
+                if (!isValidBank)
+                    throw new Exception("Please select a valid bank account.");
+
+                newBill.IsBank = true;
+                newBill.AccountId = data.BankAccountId;
+            }
+
             if (Rbtn == "rbtnHospital")
             {
                 newBill.IsHospital_Pharmacy = true;
             }
 
             newBill.Company_ID = AppConfig.Company_ID;
+
+            newBill.Payment_Mode = Rbtn == "rbtncash" ? "Cash"
+                                 : Rbtn == "rbtnbankacc" ? "Bank"
+                                 : Rbtn == "rbtnHospital" ? "Panel"
+                                 : Rbtn == "rbtnbank" ? "Credit" : null;
 
             // ============ IMPORTANT: Save Bill Header FIRST ============
             if (data.Bill_ID == 0)
@@ -2011,6 +2029,23 @@ ORDER BY i.Item_Code, i.Item_ID";
 
             return (new JavaScriptSerializer()).Serialize(PharmacyDetail);
         }
+        [WebMethod]
+        public static string GetBankAccounts()
+        {
+            DataBaseDataContext db = new DataBaseDataContext();
+
+            var bankList = (from i in db.GL_Accounts
+                            where i.Levels == 4 && i.Bank == true && i.Active == true
+                            orderby i.Account_Name
+                            select new
+                            {
+                                i.Account_ID,
+                                Name = i.Account_Code + "-" + i.Account_Name
+                            }).ToList();
+
+            return (new JavaScriptSerializer()).Serialize(bankList);
+        }
+
         [WebMethod]
         public static string GetBalanceAmountCondition()
         {

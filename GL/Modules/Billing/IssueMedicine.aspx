@@ -192,6 +192,7 @@
                 $('#chkbatch').prop("checked", true);
             }
             fillPanel();
+            fillBankAccounts();
             BalanceAmountCondition();
             CheckSaleReturnAllow();
             CheckSaleReturnQueue();
@@ -756,6 +757,11 @@
             });
             $('input[name="rbtn"]').on('change', function (e) {
                 var chkbtn = $('input[name="rbtn"]:checked').val();
+                if (chkbtn == 'rbtnbankacc') {
+                    $('#ddlBankAccount').show();
+                } else {
+                    $('#ddlBankAccount').hide().val('0');
+                }
                 if (chkbtn == 'rbtnHospital') {
                     $('#txtDisPer').attr("disabled", true);
                     $('#txtDisAmt').attr("disabled", true);
@@ -2874,7 +2880,8 @@ function CalculateReceivedAmount() {
                 "Save_list": Save_list,
                 "In_Patient_ID": In_Patient_ID,
                 "invNumber": invNumber,
-                "Panel_Id": $('#ddlpanel').val()
+                "Panel_Id": $('#ddlpanel').val(),
+                "BankAccountId": parseInt($('#ddlBankAccount').val()) || 0
 
             };
             if (patId == undefined) {
@@ -3088,7 +3095,8 @@ function CalculateReceivedAmount() {
                 "In_Patient_ID": In_Patient_ID,
                 "Save_list": Save_list,
                 "invNumber": invNumber,
-                "Panel_Id": $('#ddlpanel').val()
+                "Panel_Id": $('#ddlpanel').val(),
+                "BankAccountId": parseInt($('#ddlBankAccount').val()) || 0
             };
 
             if (patId == undefined) {
@@ -4872,6 +4880,22 @@ function CalculateReceivedAmount() {
 
 
         }
+        function fillBankAccounts() {
+            var options = '<option value="0">Select Bank Account</option>';
+            $.ajax({
+                url: 'IssueMedicine.aspx/GetBankAccounts',
+                type: 'POST',
+                contentType: 'application/json; charset=utf-8',
+                dataType: 'json',
+                success: function (response) {
+                    var data = response.d ? JSON.parse(response.d) : response;
+                    $.each(data, function (key, value) {
+                        options += '<option value="' + value.Account_ID + '">' + $('<div>').text(value.Name).html() + '</option>';
+                    });
+                    $('#ddlBankAccount').html(options);
+                }
+            });
+        }
         function fillPanel() {
             var options = '<option value="0">Please Select</option>';
 
@@ -5017,6 +5041,8 @@ function CalculateReceivedAmount() {
             $('#chkcash').prop('checked', true);
             $('#chkBank').prop('checked', false);
             $('#chkHospital').prop('checked', false);
+            $('#chkBankAcc').prop('checked', false);
+            $('#ddlBankAccount').hide().val('0');
 
             $('#chkbatch').prop('checked', true);
             $('#chkprint').prop('checked', true);
@@ -5199,7 +5225,9 @@ function CalculateReceivedAmount() {
                             <label class="ph-radio"><input type="radio" name="rbtn" id="chkcash" tabindex="11" value="rbtncash" checked /><span>Cash</span></label>
                             <label class="ph-radio"><input type="radio" name="rbtn" tabindex="12" id="chkBank" value="rbtnbank" /><span>Credit</span></label>
                             <label class="ph-radio"><input type="radio" name="rbtn" tabindex="13" id="chkHospital" value="rbtnHospital" /><span>Panel</span></label>
+                            <label class="ph-radio"><input type="radio" name="rbtn" tabindex="13" id="chkBankAcc" value="rbtnbankacc" /><span>Bank</span></label>
                         </span>
+                        <select id="ddlBankAccount" class="form-control" tabindex="13" style="display:none; width:auto; min-width:220px; max-width:320px; height:32px; padding:2px 8px;" title="Bank account"></select>
                         <label class="ph-check"><input type="checkbox" tabindex="14" onchange="OnHoldBill()" id="chkHold" /><span id="lblHold">Hold</span></label>
                         <label class="ph-check"><input type="checkbox" tabindex="9" id="chkprint" /><span>Print</span></label>
                     </div>
