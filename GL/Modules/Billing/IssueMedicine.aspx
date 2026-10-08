@@ -2,7 +2,7 @@
 
 <asp:Content ID="Content1" ContentPlaceHolderID="HeadContent" runat="server">
     <link href="../../wwwroot/THEME_TIBBIT/CustomCSS/Pharmacy.css" rel="stylesheet" />
-    <link href="../../wwwroot/lib/theme/pharmacy-form.css?v=3" rel="stylesheet" />
+    <link href="../../wwwroot/lib/theme/pharmacy-form.css?v=4" rel="stylesheet" />
     <link href="../../wwwroot/lib/sweetalert/swalalert.css" rel="stylesheet" />
     <script src="https://cdnjs.cloudflare.com/ajax/libs/underscore.js/1.8.2/underscore-min.js"></script>
    <style>
