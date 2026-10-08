@@ -60,6 +60,8 @@
     </style>
     <script type="text/javascript">
         var doctorsList = [];
+        var doctorOptionsHtml = '<option value="0">Select Doctor</option>';
+        var select2Run = 0;
 
         // ---- slow-load handling: "please wait" -> "taking longer" + Cancel -> error + Retry/Close ----
         var LOAD_TIMEOUT_MS = 180000;   // give up after 3 minutes
@@ -114,13 +116,13 @@
         }
 
         $(document).ready(function () {
-            loadDoctors();
             loadDoctorsforFilter();
             FillMainTestDepartment();
-            
+
             initializeDatePickers();
-            
-            loadRadiologyAcknowledgment();
+
+            // the doctor list must be there before the rows are drawn (each row shows its selected doctor)
+            loadDoctors().always(function () { loadRadiologyAcknowledgment(); });
 
             $('.filter-control').on('change', function () {
                 var table = $('#tblradilogy').DataTable();
@@ -182,18 +184,32 @@
         }
 
         function loadDoctors() {
-            $.ajax({
+            return $.ajax({
                 type: "POST",
                 url: "RadiologyAcknolgment.aspx/GetDoctors",
                 contentType: "application/json; charset=utf-8",
                 success: function (response) {
                     doctorsList = JSON.parse(response.d);
+                    doctorOptionsHtml = '<option value="0">Select Doctor</option>' + doctorsList.map(function (doctor) {
+                        return '<option value="' + doctor.Emp_ID + '">' + doctor.Emp_Name + '</option>';
+                    }).join('');
                 },
                 error: function (xhr) {
                     console.log(xhr.responseText);
                 }
             });
         }
+
+        // Fill a row's doctor dropdown with the full list the first time it is opened (keeps the current selection).
+        function fillDoctorOptions(sel) {
+            if (sel.getAttribute('data-filled') === '1' || sel.disabled) return;
+            var current = $(sel).val();
+            sel.innerHTML = doctorOptionsHtml;
+            $(sel).val(current);
+            sel.setAttribute('data-filled', '1');
+            $(sel).trigger('change.select2');
+        }
+        $(document).on('select2:opening', '.doctor-select', function () { fillDoctorOptions(this); });
 
         function loadRadiologyAcknowledgment() {
             let savedVisibility = null;
@@ -420,11 +436,13 @@
                             var isDisabled = (row.IsApproved === true);
                             var disabledAttr = isDisabled ? 'disabled' : '';
 
+                            // Only the selected doctor is rendered here. The full list (hundreds of doctors x every row made the
+                            // table take ~30 s to draw) is filled in the first time a dropdown is opened - see fillDoctorOptions().
                             var options = '<option value="0">Select Doctor</option>';
-                            doctorsList.forEach(function (doctor) {
-                                var selected = (selectedDoctorId == doctor.Emp_ID) ? 'selected' : '';
-                                options += `<option value="${doctor.Emp_ID}" ${selected}>${doctor.Emp_Name}</option>`;
-                            });
+                            var selectedDoctor = doctorsList.find(function (d) { return selectedDoctorId == d.Emp_ID; });
+                            if (selectedDoctor) {
+                                options += `<option value="${selectedDoctor.Emp_ID}" selected>${selectedDoctor.Emp_Name}</option>`;
+                            }
 
                             return `<select class="form-control doctor-select" name="doctor" ${disabledAttr}>${options}</select>`;
                         }
@@ -517,25 +535,36 @@
                     }
                 },
                 "drawCallback": function () {
-                    $('.doctor-select').each(function () {
-                        if (!$(this).hasClass("select2-hidden-accessible")) {
-                            $(this).select2({
-                                width: '100%',
-                                placeholder: "Select Doctor",
-                                allowClear: true,
-                                disabled: $(this).is(':disabled')
-                            });
-                        }
-                    });
+                    // Upgrade the row dropdowns to select2 in small batches after the table is on screen
+                    // (doing all rows in one go froze the page for seconds).
+                    var run = ++select2Run;
+                    var pending = $('#tblradilogy .doctor-select, #tblradilogy .priority-select').filter(function () {
+                        return !$(this).hasClass("select2-hidden-accessible");
+                    }).toArray();
 
-                    $('.priority-select').each(function () {
-                        if (!$(this).hasClass("select2-hidden-accessible")) {
-                            $(this).select2({
-                                width: '100%',
-                                minimumResultsForSearch: -1
-                            });
+                    function upgradeBatch() {
+                        if (run !== select2Run) return;   // a newer draw replaced these rows
+                        var n = 0;
+                        while (pending.length && n < 10) {
+                            var el = $(pending.shift());
+                            if (el.hasClass('doctor-select')) {
+                                el.select2({
+                                    width: '100%',
+                                    placeholder: "Select Doctor",
+                                    allowClear: true,
+                                    disabled: el.is(':disabled')
+                                });
+                            } else {
+                                el.select2({
+                                    width: '100%',
+                                    minimumResultsForSearch: -1
+                                });
+                            }
+                            n++;
                         }
-                    });
+                        if (pending.length) setTimeout(upgradeBatch, 0);
+                    }
+                    upgradeBatch();
                 },
             });
         }
