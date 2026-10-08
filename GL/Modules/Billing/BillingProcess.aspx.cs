@@ -3093,15 +3093,25 @@ namespace PMS
                 ItemId = itemId
             });
         }
+        // Agreements whose Start_Time/End_Time window contains 'now'. Handles overnight ranges (Start > End).
+        // Agreements with NULL times (legacy rows) are always considered valid.
+        private static IQueryable<Doctor_Agreement> AgreementsValidAt(DataBaseDataContext db, TimeSpan now)
+        {
+            return db.Doctor_Agreements.Where(a => a.Start_Time == null || a.End_Time == null
+                || (a.Start_Time <= a.End_Time && now >= a.Start_Time && now <= a.End_Time)
+                || (a.Start_Time > a.End_Time && (now >= a.Start_Time || now <= a.End_Time)));
+        }
+
         [WebMethod]
         public static string GetDocAgreementValues(string doc_id, string test_id, string item_id, string item_name, string Aggreement_Type)
         {
             using (DataBaseDataContext db = new DataBaseDataContext())
             {
                 bool isAgreementType03 = Aggreement_Type == "03"; // Moved outside for global access
+                var validAgreements = AgreementsValidAt(db, DateTime.Now.TimeOfDay);
 
                 // Check if the doctor exists in agreements
-                var Check_Doc = (from data in db.Doctor_Agreements
+                var Check_Doc = (from data in validAgreements
                                  join dd in db.Doctor_agreement_details on data.Doc_agreemnt_id equals dd.Doc_agreement_id
                                  where data.Doctor == doc_id
                                  //&& dd.item_id.ToString() == item_id
@@ -3111,7 +3121,7 @@ namespace PMS
 
                 if (Check_Doc != null)
                 {
-                    var check = (from data in db.Doctor_Agreements
+                    var check = (from data in validAgreements
                                  join dd in db.Doctor_agreement_details on data.Doc_agreemnt_id equals dd.Doc_agreement_id
                                  where data.Doctor == doc_id
                                  && dd.item_id.ToString() == item_id
@@ -3124,7 +3134,7 @@ namespace PMS
 
                     if (check != null && check.services == "001")
                     {
-                        var serv = db.Doctor_Agreements
+                        var serv = validAgreements
                                      .Join(db.Doctor_agreement_details,
                                            data => data.Doc_agreemnt_id,
                                            dd => dd.Doc_agreement_id,
@@ -3140,7 +3150,7 @@ namespace PMS
                         return new JavaScriptSerializer().Serialize(serv);
                     }
 
-                    var items = db.Doctor_Agreements
+                    var items = validAgreements
                                   .Join(db.Doctor_agreement_details,
                                         data => data.Doc_agreemnt_id,
                                         dd => dd.Doc_agreement_id,

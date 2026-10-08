@@ -2792,6 +2792,8 @@
       <Column Name="blood_bank" Type="System.String" DbType="NVarChar(150)" CanBeNull="true" />
       <Column Name="Services" Type="System.String" DbType="NVarChar(150)" CanBeNull="true" />
       <Column Name="MIR" Type="System.String" DbType="NVarChar(50)" CanBeNull="true" />
+      <Column Name="Start_Time" Type="System.TimeSpan" DbType="Time" CanBeNull="true" />
+      <Column Name="End_Time" Type="System.TimeSpan" DbType="Time" CanBeNull="true" />
     </Type>
   </Table>
   <Table Name="dbo.Reg_Student" Member="Reg_Students">

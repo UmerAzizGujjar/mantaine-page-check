@@ -328,6 +328,11 @@
             });
         }
 
+        // JavaScriptSerializer emits TimeSpan as {Hours, Minutes, ...}; legacy rows have null.
+        function timeSpanToHHmm(ts) {
+            if (!ts) return '';
+            return ('0' + ts.Hours).slice(-2) + ':' + ('0' + ts.Minutes).slice(-2);
+        }
         function EditMasterForm(doc_ids) {
             PageMethods.editMaster(doc_ids, function (resp) {
                 var doc_data = JSON.parse(resp);
@@ -336,6 +341,8 @@
                     $('#ddl_Doctor').val(doc_data.Doctor).trigger('change');
                 }, 1500);
                 $('#txtdocamount').val(doc_data.Doc_account);
+                $('#txtStartTime').val(timeSpanToHHmm(doc_data.Start_Time));
+                $('#txtEndTime').val(timeSpanToHHmm(doc_data.End_Time));
             });
             setTimeout(function () {
                 editDetail(doc_ids);
@@ -464,6 +471,16 @@
         }
         var doc_idss;
         function saveLabtest() {
+            var Start_Time = $('#txtStartTime').val();
+            var End_Time = $('#txtEndTime').val();
+            if (!Start_Time || !End_Time) {
+                toasterMessage(true, "Error", "Please select Start Time and End Time.");
+                return;
+            }
+            if (Start_Time === End_Time) {
+                toasterMessage(true, "Error", "Start Time and End Time cannot be the same.");
+                return;
+            }
             $("#btnValue").prop("disabled", true);
             var btnsaves = $('#btnValue').val();
             if (btnsaves == "Update") {
@@ -643,7 +660,7 @@
                     });
                 });
             }
-            var AllRecords = { 'ddlDoctor': ddlDoctor, 'doc_account': doc_account, 'Is_Active': Is_Active, 'ddllabtest': ddllabtest, 'ddl_xray': ddl_xray, 'ddl_ultrasound': ddl_ultrasound, 'ddlmaindep_Opd': ddlmaindep_Opd, 'ddl_CTScan': ddl_CTScan, 'ddl_bloodbank': ddl_bloodbank, 'ddl_Service': ddl_Service, 'ddl_mir': ddl_mir, 'save_opd': save_opd, 'Save_list': Save_list, 'save_xray': save_xray, 'save_ultra': save_ultra, 'save_Ct_Scan': save_Ct_Scan, 'save_blood_bank': save_blood_bank, 'save_Services': save_Services, 'save_mri': save_mri, 'doc_idss': doc_idss };
+            var AllRecords = { 'ddlDoctor': ddlDoctor, 'doc_account': doc_account, 'Is_Active': Is_Active, 'Start_Time': Start_Time, 'End_Time': End_Time, 'ddllabtest': ddllabtest, 'ddl_xray': ddl_xray, 'ddl_ultrasound': ddl_ultrasound, 'ddlmaindep_Opd': ddlmaindep_Opd, 'ddl_CTScan': ddl_CTScan, 'ddl_bloodbank': ddl_bloodbank, 'ddl_Service': ddl_Service, 'ddl_mir': ddl_mir, 'save_opd': save_opd, 'Save_list': Save_list, 'save_xray': save_xray, 'save_ultra': save_ultra, 'save_Ct_Scan': save_Ct_Scan, 'save_blood_bank': save_blood_bank, 'save_Services': save_Services, 'save_mri': save_mri, 'doc_idss': doc_idss };
             PageMethods.SaveDocagreement(JSON.stringify(AllRecords), btnsaves, function () {
                 toasterMessage(false, "Success", "Data added Successfully");
                 window.location.href = "AddDoctorAgreement.aspx";
@@ -1654,6 +1671,14 @@
 
             <input type="checkbox" id="Active" name="chkIsActive" />
 
+        </div>
+        <div class="col-lg-2 col-md-3 col-sm-6">
+            <label id="LblStartTime">Start Time</label>
+            <input type="time" id="txtStartTime" name="txtStartTime" step="60" />
+        </div>
+        <div class="col-lg-2 col-md-3 col-sm-6">
+            <label id="LblEndTime">End Time</label>
+            <input type="time" id="txtEndTime" name="txtEndTime" step="60" />
         </div>
         <div class="col-lg-1 col-md-2 col-sm-12" style="margin-top: 30px;">
             <label id="LblActive">Active</label>

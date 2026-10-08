@@ -50,6 +50,8 @@ namespace PMS.Inventory
             public string ddl_Service { get; set; }
             public string ddl_mir { get; set; }
             public bool Is_Active { get; set; }
+            public string Start_Time { get; set; }   // "HH:mm"
+            public string End_Time { get; set; }     // "HH:mm"
             public List<Detaillist> Save_list { get; set; }
             public List<save_opdlist> save_opd { get; set; }
             public List<x_raylist> save_ultra { get; set; }
@@ -217,6 +219,14 @@ namespace PMS.Inventory
             var service = serialize.Deserialize<DocagreemnetMaster>(AllRecords);
             var MIR = serialize.Deserialize<DocagreemnetMaster>(AllRecords);
 
+            // Overnight ranges (e.g. 22:00 -> 06:00) are valid; only empty/invalid/equal times are rejected.
+            TimeSpan startTime, endTime;
+            if (!TimeSpan.TryParse(doc_agremment.Start_Time, out startTime) || !TimeSpan.TryParse(doc_agremment.End_Time, out endTime)
+                || startTime < TimeSpan.Zero || startTime >= TimeSpan.FromDays(1) || endTime < TimeSpan.Zero || endTime >= TimeSpan.FromDays(1))
+                throw new Exception("Please enter a valid Start Time and End Time.");
+            if (startTime == endTime)
+                throw new Exception("Start Time and End Time cannot be the same.");
+
             if (btnsaves == "Update")
             {
                 var lstItem = (from a in db.Doctor_Agreements
@@ -234,6 +244,8 @@ namespace PMS.Inventory
                 lstItem.Services = doc_agremment.ddl_Service;
                 lstItem.Is_Active = doc_agremment.Is_Active;
                 lstItem.Doc_account = doc_agremment.doc_account;
+                lstItem.Start_Time = startTime;
+                lstItem.End_Time = endTime;
                 db.SubmitChanges();
                 doc_id = lstItem.Doc_agreemnt_id.ToString();
             }
@@ -249,6 +261,8 @@ namespace PMS.Inventory
                 doc_agr.blood_bank = doc_agremment.ddl_bloodbank;
                 doc_agr.Services = doc_agremment.ddl_Service;
                 doc_agr.MIR = doc_agremment.ddl_mir;
+                doc_agr.Start_Time = startTime;
+                doc_agr.End_Time = endTime;
                 doc_agr.Created_By = AppConfig.UserID;
                 doc_agr.Created_Time = DateTime.Now;
                 db.Doctor_Agreements.InsertOnSubmit(doc_agr);
