@@ -1,7 +1,8 @@
 ﻿<%@ Page Title="" Language="C#" MasterPageFile="~/Site.Master" AutoEventWireup="true" CodeBehind="AddDoctorAgreement.aspx.cs" Inherits="PMS.Inventory.AddDoctorAgreement" %>
 
 <asp:Content ID="Content1" ContentPlaceHolderID="HeadContent" runat="server">
-    <link href="../../wwwroot/THEME_TIBBIT/CustomCSS/DoctorAgrement.css" rel="stylesheet" />
+    <link href="../../wwwroot/lib/theme/pharmacy-form.css?v=6" rel="stylesheet" />
+    <link href="../../wwwroot/THEME_TIBBIT/CustomCSS/DoctorAgrement.css?v=20261010" rel="stylesheet" />
     <script type="text/javascript">
         var id = '<% =Request.QueryString["ID"] %>';
         $(document).ready(function () {
@@ -30,7 +31,8 @@
 
         });
         $(function () {
-            $("#tabs").tabs();
+            // the OPD tab (index 0) is hidden, so open on the first visible tab (Lab)
+            $("#tabs").tabs({ active: 1 });
 
         });
         function GetDoctors() {
@@ -1657,58 +1659,59 @@
 </asp:Content>
 <asp:Content ID="Content2" ContentPlaceHolderID="MainContent" runat="server">
 
-    <div class="row">
-        <div class="col-lg-3 col-md-3 col-sm-6">
-            <label id="Lblitem_code">Doctors</label>
-            <select id="ddl_Doctor" name="ddl_Doctor" onchange="loaddoctordata()"></select>
-            <input type="hidden" id="doc_id" />
-        </div>
-        <div class="col-lg-3 col-md-3 col-sm-6">
-            <label id="LblDescription">Doctor Account</label>
-            <input type="text" id="txtdocamount" name="txtdocamount" autocomplete="off" readonly="readonly" />
-        </div>
-        <div class="col-lg-1 col-md-2 col-sm-12" style="margin-top: 30px; width: 40px !important;">
+    <div class="da-page">
 
-            <input type="checkbox" id="Active" name="chkIsActive" />
-
+    <!-- Page header + actions -->
+    <div class="da-head">
+        <div>
+            <h2><span id="daTitle">Doctor Agreement</span> <span class="da-badge" id="daMode"><i class="fa fa-plus-circle" style="font-size: 12px !important; margin: 0 !important; color: inherit !important;"></i> New</span></h2>
+            <p>Doctor and hospital share of each service, by department.</p>
         </div>
-        <div class="col-lg-2 col-md-3 col-sm-6">
-            <label id="LblStartTime">Start Time</label>
-            <input type="time" id="txtStartTime" name="txtStartTime" step="60" />
-        </div>
-        <div class="col-lg-2 col-md-3 col-sm-6">
-            <label id="LblEndTime">End Time</label>
-            <input type="time" id="txtEndTime" name="txtEndTime" step="60" />
-        </div>
-        <div class="col-lg-1 col-md-2 col-sm-12" style="margin-top: 30px;">
-            <label id="LblActive">Active</label>
-
-        </div>
-
-    </div>
-
-    <div class="row" style="margin-top: 10px !important">
-        <div class="col-lg-1 col-md-1 col-sm-1">
-            <input type="button" value="Save" id="btnValue" class="btn-primry" onclick="saveLabtest()" />
-        </div>
-        <div class="col-lg-1 col-md-1 col-sm-1">
-            <input type="button" value="List View" class="btn-primry" id="btnBack" onclick="window.location = 'DoctorAgreementView.aspx'" />
-        </div>
-
-        <div class="col-lg-1 col-md-1 col-sm-1">
-            <input type="button" value="New" class="btn-primry" onclick="NewPage()" />
+        <div class="da-actions">
+            <input type="button" value="Save" id="btnValue" class="da-btn da-btn-primary" onclick="saveLabtest()" />
+            <input type="button" value="New" class="da-btn da-btn-quiet" onclick="NewPage()" />
+            <input type="button" value="List View" class="da-btn da-btn-quiet" id="btnBack" onclick="window.location = 'DoctorAgreementView.aspx'" />
         </div>
     </div>
 
+    <!-- Doctor -->
+    <section class="ph-card">
+        <h5 class="ph-card-title"><i class="fa fa-user-md"></i> Doctor Details</h5>
+        <div class="ph-grid da-grid">
+            <div class="ph-field">
+                <label id="Lblitem_code" for="ddl_Doctor">Doctor</label>
+                <select id="ddl_Doctor" name="ddl_Doctor" onchange="loaddoctordata()"></select>
+                <input type="hidden" id="doc_id" />
+            </div>
+            <div class="ph-field">
+                <label id="LblDescription" for="txtdocamount">Doctor Account</label>
+                <input type="text" id="txtdocamount" name="txtdocamount" class="form-control" autocomplete="off" readonly="readonly" />
+            </div>
+            <div class="ph-field">
+                <label id="LblStartTime" for="txtStartTime">Start Time</label>
+                <input type="time" id="txtStartTime" name="txtStartTime" step="60" />
+            </div>
+            <div class="ph-field">
+                <label id="LblEndTime" for="txtEndTime">End Time</label>
+                <input type="time" id="txtEndTime" name="txtEndTime" step="60" />
+            </div>
+            <div class="ph-field ph-field-check">
+                <label class="ph-check" for="Active">
+                    <input type="checkbox" id="Active" name="chkIsActive" />
+                    <span id="LblActive">Active</span>
+                </label>
+            </div>
+        </div>
+    </section>
 
     <div id="tabs">
         <ul>
             <li style="display:none;"><a href="#Tab-1">OPD</a></li>
             <li><a href="#Tab-2">Lab</a></li>
-            <li><a href="#Tab-3">X_ray</a></li>
-            <li><a href="#Tab-4">Ultra_Sound</a></li>
-            <li><a href="#Tab-5">CT_Scan</a></li>
-            <li><a href="#Tab-6">BloodBank</a></li>
+            <li><a href="#Tab-3">X-Ray</a></li>
+            <li><a href="#Tab-4">Ultrasound</a></li>
+            <li><a href="#Tab-5">CT Scan</a></li>
+            <li><a href="#Tab-6">Blood Bank</a></li>
             <li><a href="#Tab-7">MRI</a></li>
             <li><a href="#Tab-8">Services</a></li>
         </ul>
@@ -2210,6 +2213,21 @@
             </table>
         </div>
     </div>
+
+    </div><%-- /da-page --%>
+
+    <script type="text/javascript">
+        $(function () {
+            // badge: "Editing" when opened for an existing agreement; shows the doctor's name once it is selected
+            if (/[?&]doc_id=/i.test(location.search)) {
+                $('#daMode').html('<i class="fa fa-pencil" style="font-size: 12px !important; margin: 0 !important; color: inherit !important;"></i> Editing');
+            }
+            $('#ddl_Doctor').on('change', function () {
+                var name = $('#ddl_Doctor option:selected').text();
+                $('#daTitle').text($('#ddl_Doctor').val() && $('#ddl_Doctor').val() !== '0' ? name : 'Doctor Agreement');
+            });
+        });
+    </script>
 
     <!-- Modal For OPD -->
     <div class="modal fade" id="modalOpd" tabindex="-1" role="dialog" aria-labelledby="exampleOpdModalLabel" aria-hidden="true">
