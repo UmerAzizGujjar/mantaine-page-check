@@ -1,36 +1,158 @@
-/* ================================================================
-   payment-invoice.css  —  Payment Invoice form overrides
-   ================================================================ */
+/* ==========================================================================
+   payment-invoice.css - Payment Invoice screen (Modules/Inventory/AddPaymentInvoice.aspx)
+   Stand-alone: this screen uses no other screen's stylesheet. Every colour comes from the active theme
+   (--theme-accent ... in that theme's theme-colors.css); the fallbacks are only a safety net.
+   The same file is kept in every theme folder (wwwroot/THEME_*/CustomCSS/payment-invoice.css).
+   Layout: header with four status badges, two columns (details + attachments | bank/cash + summary),
+   the invoices table, an action bar and the "Add invoices" picker window.
+   ========================================================================== */
 
-/* Visible borders on inputs (override vendor.css cream border) */
-.pr-primary-settings input[type="text"],
-.pr-primary-settings input[type="file"],
-.pr-primary-settings select,
-.pr-primary-settings textarea {
-    border: 1px solid #d5d5d5 !important;
-    background: #fff !important;
-}
+.pi-page { display: flex; flex-direction: column; gap: 16px; width: 100%; margin: 0 0 24px; color: var(--theme-ink, #1b2a41); }
+.pi-page * { box-sizing: border-box; }
 
-.pr-primary-settings input[type="text"]:focus,
-.pr-primary-settings select:focus,
-.pr-primary-settings textarea:focus {
-    border-color: #438eb9 !important;
+/* ---------- status badges (on the title line, right side of the master's .pr-meta-bar) ---------- */
+.pi-badge {
+    display: inline-flex; align-items: baseline; gap: 6px; padding: 3px 12px; white-space: nowrap;
+    background: #fff; border: 1px solid #e3e8ee; border-left: 3px solid var(--theme-accent, #438eb9); border-radius: 6px;
 }
+.pi-badge-label { font-size: 10.5px; font-weight: 700; letter-spacing: .06em; text-transform: uppercase; color: #8a94a6; }
+.pi-badge-value { font-size: 13px; font-weight: 800; color: var(--theme-ink, #1b2a41); }
+/* ---------- layout ---------- */
+.pi-layout { display: grid; grid-template-columns: minmax(0, 2fr) minmax(0, 1fr); gap: 16px; align-items: start; }
+.pi-col { display: flex; flex-direction: column; gap: 16px; min-width: 0; }
+@media (max-width: 1199px) { .pi-layout { grid-template-columns: minmax(0, 1fr); } }
 
-.pr-primary-settings input[readonly],
-.pr-primary-settings input[readonly="readonly"] {
-    background: #f5f5f5 !important;
-    color: #2c3e50 !important;
+/* ---------- cards ---------- */
+.pi-card {
+    min-width: 0; padding: 0 16px 16px; background: #fff;
+    border: 1px solid #e3e8ee; border-top: 3px solid var(--theme-accent, #438eb9); border-radius: 10px;
+    box-shadow: 0 2px 10px rgba(16, 24, 40, .05);
 }
+.pi-card-title {
+    display: flex; align-items: center; gap: 8px; margin: 0 -16px 14px; padding: 10px 16px;
+    font-size: 13px; font-weight: 700; letter-spacing: .04em; text-transform: uppercase;
+    color: var(--theme-on-accent, #fff);
+    background: linear-gradient(180deg, var(--theme-accent-light, #438eb9) 0%, var(--theme-accent, #438eb9) 100%);
+    border-bottom: 1px solid var(--theme-accent-ink, #2b6a90);
+}
+.pi-card-title i { font-size: 14px; opacity: .9; }
+.pi-card-title .pi-card-note { margin-left: auto; font-size: 11.5px; font-weight: 600; letter-spacing: 0; text-transform: none; opacity: .9; }
 
-/* Equal height columns for Payment Details + Bank/Summary layout */
-.voucher-form-row {
-    align-items: stretch;
+/* ---------- field grid ---------- */
+.pi-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(190px, 1fr)); gap: 12px 14px; align-items: end; }
+.pi-grid-2 { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+.pi-grid-3 { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+@media (max-width: 520px) { .pi-grid-2, .pi-grid-3 { grid-template-columns: minmax(0, 1fr); } }
+.pi-span-2 { grid-column: span 2; }
+.pi-span-all { grid-column: 1 / -1; }
+@media (max-width: 520px) { .pi-span-2 { grid-column: span 1; } }
+.pi-field { display: flex; flex-direction: column; justify-content: flex-end; min-width: 0; }
+.pi-field > label {
+    display: block; margin: 0 0 4px; font-size: 11.5px; font-weight: 700; letter-spacing: .02em; color: #4a5568;
+    white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
 }
-.voucher-form-row > [class*="col-"] {
-    display: flex;
-    flex-direction: column;
+.pi-req { color: #c0392b; margin-left: 2px; }
+.pi-link { margin-top: 4px; font-size: 12px; font-weight: 600; color: var(--theme-accent-ink, #2b6a90); }
+
+/* ---------- controls ---------- */
+.pi-page input.form-control, .pi-page select.form-control, .pi-page textarea.form-control {
+    display: block; width: 100% !important; margin: 0 !important; padding: 4px 10px !important;
+    font-size: 13px; font-weight: 600; color: var(--theme-ink, #1b2a41);
+    background: #fff !important; border: 1px solid #cfd6e0 !important; border-radius: 6px !important; box-shadow: none !important;
 }
-.voucher-form-row .pr-primary-settings {
-    flex: 1 1 auto;
+.pi-page input.form-control, .pi-page select.form-control { height: 34px !important; }
+.pi-page textarea.form-control { min-height: 84px; padding: 8px 10px !important; resize: vertical; }
+.pi-page input[type="file"].form-control { padding: 4px !important; }
+.pi-page input.form-control:focus, .pi-page select.form-control:focus, .pi-page textarea.form-control:focus {
+    border-color: var(--theme-accent, #438eb9) !important; box-shadow: 0 0 0 3px var(--theme-accent-ring, rgba(67, 142, 185, .25)) !important; outline: none;
 }
+.pi-page input[readonly], .pi-page input[disabled] { background: #f3f5f8 !important; color: #3b475a; cursor: default; }
+
+/* select2 (page script turns the dropdowns into select2) */
+.pi-page select.select2-hidden-accessible { width: 1px !important; height: 1px !important; min-width: 0 !important; padding: 0 !important; border: 0 !important; }
+.pi-page .select2-container { width: 100% !important; display: block; }
+.pi-page .select2-container .select2-selection--single { height: 34px; border: 1px solid #cfd6e0; border-radius: 6px; }
+.pi-page .select2-container .select2-selection--single .select2-selection__rendered { line-height: 32px; padding-left: 10px; font-size: 13px; font-weight: 600; color: var(--theme-ink, #1b2a41); }
+.pi-page .select2-container .select2-selection--single .select2-selection__arrow { height: 32px; }
+.pi-page .select2-container--open .select2-selection--single, .pi-page .select2-container--focus .select2-selection--single { border-color: var(--theme-accent, #438eb9); }
+/* validation: the page script adds .ErrorAlert to an empty required field / the empty table */
+.pi-page .ErrorAlert, .pi-page select.ErrorAlert + .select2-container .select2-selection { border-color: #c0392b !important; }
+.pi-page .ErrorAlert { box-shadow: 0 0 0 3px rgba(192, 57, 43, .15); }
+
+/* All / Cash / Bank pills */
+.pi-seg { display: inline-flex; align-self: flex-start; gap: 2px; padding: 3px; background: #eef1f5; border: 1px solid #dde3ea; border-radius: 8px; }
+.pi-seg label { position: relative; margin: 0; cursor: pointer; }
+.pi-seg input { position: absolute; opacity: 0; pointer-events: none; }
+.pi-seg span { display: block; padding: 5px 18px; font-size: 13px; font-weight: 700; color: #2d3748; border-radius: 6px; }
+.pi-seg input:checked + span { color: var(--theme-on-accent, #fff); background: var(--theme-accent, #438eb9); box-shadow: 0 1px 3px rgba(16, 24, 40, .18); }
+.pi-seg input:focus-visible + span { outline: 2px solid var(--theme-accent-ring, rgba(67, 142, 185, .5)); outline-offset: 1px; }
+
+/* summary figures */
+.pi-figure input.form-control { height: 40px !important; font-size: 16px; font-weight: 800; text-align: right; }
+.pi-figure.pi-figure-main input.form-control { font-size: 18px; color: var(--theme-accent-ink, #2b6a90); background: var(--theme-accent-soft, #f4f8fb) !important; }
+
+/* ---------- invoices table ---------- */
+.pi-table-wrap { margin: 0 -16px; max-height: 58vh; overflow: auto; border-top: 1px solid #e3e8ee; }
+#tblItemDescription { width: 100%; margin: 0; border-collapse: separate; border-spacing: 0; background: transparent; }
+#tblItemDescription thead th {
+    position: sticky; top: 0; z-index: 2; padding: 9px 10px; font-size: 11.5px; letter-spacing: .03em; text-transform: uppercase; white-space: nowrap; vertical-align: middle;
+    color: var(--theme-on-accent, #fff); background: var(--theme-accent, #438eb9); border: 0; border-bottom: 2px solid var(--theme-accent-ink, #2b6a90);
+}
+#tblItemDescription td { padding: 6px 10px; vertical-align: middle; font-size: 13px; font-weight: 600; border: 0; border-bottom: 1px solid #eef1f5; }
+#tblItemDescription tbody tr:hover td { background: var(--theme-accent-soft, #f4f8fb); }
+#tblItemDescription td input[type="text"] {
+    height: 30px; padding: 3px 8px; font-size: 13px; font-weight: 600; text-align: right;
+    color: var(--theme-ink, #1b2a41); background: #fff; border: 1px solid #cfd6e0; border-radius: 6px; box-shadow: none;
+}
+#tblItemDescription td input[type="text"]:focus { border-color: var(--theme-accent, #438eb9); box-shadow: 0 0 0 3px var(--theme-accent-ring, rgba(67, 142, 185, .25)); outline: none; }
+#tblItemDescription td input[readonly] { background: #f3f5f8; }
+#tblItemDescription td select { height: 30px; padding: 2px 6px; font-size: 12.5px; border: 1px solid #cfd6e0; border-radius: 6px; background: #fff; }
+#tblItemDescription td:last-child, #tblItemDescription th:last-child { text-align: center; }
+#tblItemDescription td a .fa-trash { margin-left: 0 !important; font-size: 15px !important; }
+#tblItemDescription td a { display: inline-flex; align-items: center; justify-content: center; width: 30px; height: 30px; border-radius: 6px; text-decoration: none; }
+#tblItemDescription td a:hover { background: #fdecea; }
+#tblItemDescription.ErrorAlert { outline: 2px solid #c0392b; outline-offset: -2px; }
+
+/* ---------- "Add invoices" picker window ---------- */
+.pi-modal .modal-dialog { width: 1000px; max-width: 96vw; }
+.pi-modal .modal-content { width: auto !important; height: auto !important; margin: 0 !important; overflow: hidden; border: 0; border-radius: 10px; box-shadow: 0 20px 50px rgba(16, 24, 40, .3); }
+.pi-modal .modal-header {
+    display: flex; align-items: center; justify-content: space-between; flex-direction: row-reverse; padding: 12px 18px;
+    color: var(--theme-on-accent, #fff); border-bottom: 1px solid var(--theme-accent-ink, #2b6a90);
+    background: linear-gradient(180deg, var(--theme-accent-light, #438eb9) 0%, var(--theme-accent, #438eb9) 100%);
+}
+.pi-modal .modal-header::before, .pi-modal .modal-header::after { display: none; }
+.pi-modal .modal-title { margin: 0; font-size: 15px; font-weight: 800; letter-spacing: .03em; text-transform: uppercase; }
+.pi-modal .modal-header .close { float: none; width: auto !important; margin: 0 !important; padding: 0; line-height: 1; font-size: 26px; color: inherit; opacity: .9; text-shadow: none; background: transparent; border: 0; }
+.pi-modal-scroll { max-height: 56vh; overflow: auto; }
+.pi-modal #tblPOItemstModelTable { width: 100% !important; height: auto !important; margin: 0; border-collapse: separate; border-spacing: 0; }
+.pi-modal #tblPOItemstModelTable thead th {
+    position: sticky; top: 0; z-index: 1; padding: 9px 12px; font-size: 11.5px; letter-spacing: .03em; text-transform: uppercase; white-space: nowrap;
+    background: #eef1f5; color: #2d3748; border: 0; border-bottom: 2px solid #dde3ea;
+}
+.pi-modal #tblPOItemstModelTable td { padding: 6px 12px; vertical-align: middle; border: 0; border-bottom: 1px solid #eef1f5; }
+.pi-modal #tblPOItemstModelTable tbody tr:hover td { background: var(--theme-accent-soft, #f4f8fb); }
+.pi-modal #tblPOItemstModelTable input[type="checkbox"], .pi-modal #tblPOItemstModelTable input.chktd { width: 16px; height: 16px !important; margin: 0 !important; }
+.pi-modal .modal-footer { padding: 12px 18px; background: #f8fafc; border-top: 1px solid #e3e8ee; }
+
+/* ---------- dark mode ---------- */
+html[data-theme="dark"] .pi-page { color: var(--dk-text, #e6e9ef); }
+html[data-theme="dark"] .pi-badge, html[data-theme="dark"] .pi-card { background: var(--dk-surface-2, #1c2431); border-color: var(--dk-border, #2d3748); }
+html[data-theme="dark"] .pi-card-title { background: var(--dk-surface-3, #232d3d); border-bottom-color: var(--dk-border, #2d3748); color: var(--dk-text, #e6e9ef); }
+html[data-theme="dark"] .pi-field > label { color: var(--dk-muted, #9aa6b8); }
+html[data-theme="dark"] .pi-page input.form-control, html[data-theme="dark"] .pi-page select.form-control, html[data-theme="dark"] .pi-page textarea.form-control {
+    background: var(--dk-surface-3, #232d3d) !important; color: var(--dk-text, #e6e9ef); border-color: var(--dk-border, #2d3748) !important;
+}
+html[data-theme="dark"] .pi-page input[readonly], html[data-theme="dark"] .pi-page input[disabled] { background: var(--dk-surface-1, #161d29) !important; }
+html[data-theme="dark"] .pi-seg { background: var(--dk-surface-3, #232d3d); border-color: var(--dk-border, #2d3748); }
+html[data-theme="dark"] .pi-seg span { color: var(--dk-text, #e6e9ef); }
+html[data-theme="dark"] .pi-table-wrap, html[data-theme="dark"] #tblItemDescription td { border-color: var(--dk-border, #2d3748); }
+html[data-theme="dark"] #tblItemDescription thead th { background: var(--dk-surface-3, #232d3d); color: var(--dk-text, #e6e9ef); }
+html[data-theme="dark"] #tblItemDescription tbody tr:hover td, html[data-theme="dark"] .pi-modal #tblPOItemstModelTable tbody tr:hover td { background: var(--dk-surface-3, #232d3d); }
+html[data-theme="dark"] #tblItemDescription td input[type="text"], html[data-theme="dark"] #tblItemDescription td select { background: var(--dk-surface-3, #232d3d); color: var(--dk-text, #e6e9ef); border-color: var(--dk-border, #2d3748); }
+html[data-theme="dark"] .pi-modal .modal-content { background: var(--dk-surface-2, #1c2431); color: var(--dk-text, #e6e9ef); }
+html[data-theme="dark"] .pi-modal #tblPOItemstModelTable thead th { background: var(--dk-surface-3, #232d3d); color: var(--dk-text, #e6e9ef); }
+html[data-theme="dark"] .pi-modal .modal-footer { background: var(--dk-surface-3, #232d3d); border-color: var(--dk-border, #2d3748); }
+
+html[data-theme="dark"] .pi-badge-value { color: var(--dk-text, #e6e9ef); }
+html[data-theme="dark"] .pi-badge-label { color: var(--dk-muted, #9aa6b8); }
