@@ -19,6 +19,37 @@
                 margin-bottom: 0;
             }
         }
+        #loadOverlay {
+            display: none;
+            position: fixed;
+            inset: 0;
+            z-index: 99999;
+            align-items: center;
+            justify-content: center;
+            background: rgba(255, 255, 255, .78);
+        }
+        #loadOverlay .load-box {
+            min-width: 300px;
+            max-width: 440px;
+            padding: 22px 26px;
+            text-align: center;
+            background: #fff;
+            border: 1px solid #d5dbe3;
+            border-top: 4px solid var(--theme-accent, #438eb9);
+            border-radius: 8px;
+            box-shadow: 0 10px 30px rgba(16, 24, 40, .2);
+        }
+        #loadOverlay .load-title { font-size: 17px; font-weight: 700; margin: 8px 0 4px; }
+        #loadOverlay .load-text { font-size: 13px; color: #556; margin-bottom: 6px; }
+        #loadOverlay .load-elapsed { font-size: 12px; color: #889; min-height: 16px; margin-bottom: 10px; }
+        #loadOverlay .load-spinner {
+            width: 34px; height: 34px; margin: 0 auto;
+            border: 4px solid #e3e8ee;
+            border-top-color: var(--theme-accent, #438eb9);
+            border-radius: 50%;
+            animation: loadspin .8s linear infinite;
+        }
+        @keyframes loadspin { to { transform: rotate(360deg); } }
         .date-picker-wrapper {
             position: relative;
         }
@@ -29,6 +60,58 @@
     </style>
     <script type="text/javascript">
         var doctorsList = [];
+
+        // ---- slow-load handling: "please wait" -> "taking longer" + Cancel -> error + Retry/Close ----
+        var LOAD_TIMEOUT_MS = 180000;   // give up after 3 minutes
+        var SLOW_AFTER_MS = 8000;       // show the "taking longer than usual" notice + Cancel after 8 seconds
+        var loadXhr = null, slowTimer = null, tickTimer = null, loadStartedAt = 0;
+
+        function showLoading() {
+            clearTimeout(slowTimer); clearInterval(tickTimer);
+            loadStartedAt = Date.now();
+            $('#loadMsgTitle').text('Loading, please wait...');
+            $('#loadMsgText').text('Fetching radiology records.');
+            $('#loadElapsed').text('');
+            $('#loadSpinner').show();
+            $('#btnLoadCancel').hide();
+            $('#btnLoadRetry').hide();
+            $('#btnLoadClose').hide();
+            $('#loadOverlay').css('display', 'flex');
+            slowTimer = setTimeout(function () {
+                $('#loadMsgTitle').text('Still working...');
+                $('#loadMsgText').text('This is taking longer than usual. Please wait, or cancel and try again with a shorter date range.');
+                $('#btnLoadCancel').show();
+            }, SLOW_AFTER_MS);
+            tickTimer = setInterval(function () {
+                $('#loadElapsed').text(Math.round((Date.now() - loadStartedAt) / 1000) + ' sec');
+            }, 1000);
+        }
+
+        function hideLoading() {
+            clearTimeout(slowTimer); clearInterval(tickTimer);
+            $('#loadOverlay').hide();
+        }
+
+        function showLoadError(message) {
+            clearTimeout(slowTimer); clearInterval(tickTimer);
+            $('#loadMsgTitle').text('Unable to load data');
+            $('#loadMsgText').text(message);
+            $('#loadElapsed').text('');
+            $('#loadSpinner').hide();
+            $('#btnLoadCancel').hide();
+            $('#btnLoadRetry').show();
+            $('#btnLoadClose').show();
+            $('#loadOverlay').css('display', 'flex');
+        }
+
+        function cancelLoading() {
+            if (loadXhr) { loadXhr.abort(); }
+            hideLoading();
+        }
+
+        function retryLoading() {
+            $('#tblradilogy').DataTable().ajax.reload();
+        }
 
         $(document).ready(function () {
             loadDoctors();
@@ -206,10 +289,16 @@
                     var endDateVal = $('#endDate').val() || '';
                     var length = data.length;
                     if (length === -1) {
-                        length = 1000000; 
+                        length = 1000000;
                     }
+                    var emptyResult = { draw: data.draw, recordsTotal: 0, recordsFiltered: 0, data: [] };
 
-                    $.ajax({
+                    // a newer request (filter change / reload) replaces any one still running
+                    if (loadXhr) { loadXhr.abort(); }
+                    showLoading();
+
+                    loadXhr = $.ajax({
+                        timeout: LOAD_TIMEOUT_MS,
                         type: "POST",
                         url: "RadiologyAcknolgment.aspx/GetRadiologyAcknowledgment",
                         data: JSON.stringify({
@@ -228,6 +317,12 @@
                         }),
                         contentType: "application/json; charset=utf-8",
                         success: function (response) {
+                            if (response.d && response.d.error) {
+                                showLoadError('The server could not load the list: ' + response.d.error);
+                                callback(emptyResult);
+                                return;
+                            }
+                            hideLoading();
                             callback({
                                 draw: response.d.draw,
                                 recordsTotal: response.d.recordsTotal,
@@ -235,9 +330,19 @@
                                 data: response.d.data
                             });
                         },
-                        error: function (xhr) {
+                        error: function (xhr, textStatus) {
                             console.log(xhr.responseText);
-                        }
+                            if (textStatus === 'abort') {
+                                // cancelled by the user or replaced by a newer request - the caller decides what to show
+                                callback(emptyResult);
+                                return;
+                            }
+                            showLoadError(textStatus === 'timeout'
+                                ? 'The server is taking too long to respond (over ' + (LOAD_TIMEOUT_MS / 1000) + ' seconds).'
+                                : 'Could not load the list. Please check your connection and try again.');
+                            callback(emptyResult);
+                        },
+                        complete: function () { loadXhr = null; }
                     });
                 },
                 "columns": [
@@ -668,6 +773,19 @@
                     </div>
                 </div>
          
+        </div>
+    </div>
+
+    <!-- Slow-load / error overlay -->
+    <div id="loadOverlay">
+        <div class="load-box">
+            <div id="loadSpinner" class="load-spinner"></div>
+            <div id="loadMsgTitle" class="load-title"></div>
+            <div id="loadMsgText" class="load-text"></div>
+            <div id="loadElapsed" class="load-elapsed"></div>
+            <button type="button" id="btnLoadCancel" class="btn btn-default" style="display:none;" onclick="cancelLoading()">Cancel / Exit</button>
+            <button type="button" id="btnLoadRetry" class="btn btn-primary" style="display:none;" onclick="retryLoading()">Try Again</button>
+            <button type="button" id="btnLoadClose" class="btn btn-default" style="display:none;" onclick="hideLoading()">Close</button>
         </div>
     </div>
 
