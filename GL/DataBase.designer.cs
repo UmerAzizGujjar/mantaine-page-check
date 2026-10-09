@@ -119801,6 +119801,8 @@ namespace PMS
 
         private string _Master_Remarks;
 
+        private string _Comments;
+
         private string _Test_Status;
 
         private System.Nullable<bool> _IsRejected;
@@ -119947,6 +119949,8 @@ namespace PMS
         partial void OnActual_Patient_IDChanged();
         partial void OnMaster_RemarksChanging(string value);
         partial void OnMaster_RemarksChanged();
+        partial void OnCommentsChanging(string value);
+        partial void OnCommentsChanged();
         partial void OnTest_StatusChanging(string value);
         partial void OnTest_StatusChanged();
         partial void OnIsRejectedChanging(System.Nullable<bool> value);
@@ -120974,6 +120978,26 @@ namespace PMS
                     this._Master_Remarks = value;
                     this.SendPropertyChanged("Master_Remarks");
                     this.OnMaster_RemarksChanged();
+                }
+            }
+        }
+
+        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_Comments", DbType = "VarChar(500)")]
+        public string Comments
+        {
+            get
+            {
+                return this._Comments;
+            }
+            set
+            {
+                if ((this._Comments != value))
+                {
+                    this.OnCommentsChanging(value);
+                    this.SendPropertyChanging();
+                    this._Comments = value;
+                    this.SendPropertyChanged("Comments");
+                    this.OnCommentsChanged();
                 }
             }
         }

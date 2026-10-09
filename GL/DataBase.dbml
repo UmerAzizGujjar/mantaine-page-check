@@ -5518,6 +5518,7 @@
       <Column Name="Organism_Type" Type="System.String" DbType="VarChar(200)" CanBeNull="true" />
       <Column Name="Actual_Patient_ID" Type="System.Int32" DbType="Int" CanBeNull="true" />
       <Column Name="Master_Remarks" Type="System.String" DbType="NVarChar(3000)" CanBeNull="true" />
+      <Column Name="Comments" Type="System.String" DbType="VarChar(500)" CanBeNull="true" />
       <Column Name="Test_Status" Type="System.String" DbType="VarChar(100)" CanBeNull="true" />
       <Column Name="IsRejected" Type="System.Boolean" DbType="Bit" CanBeNull="true" />
       <Column Name="Rejected_By" Type="System.Guid" DbType="UniqueIdentifier" CanBeNull="true" />

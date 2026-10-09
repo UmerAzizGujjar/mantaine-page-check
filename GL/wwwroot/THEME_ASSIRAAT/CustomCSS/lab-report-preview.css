@@ -207,7 +207,12 @@ html[data-theme="dark"] .rp-attach input[type="file"] { background: var(--dk-sur
 .rp-modal .form-control:focus { border-color: var(--theme-accent, #438eb9); box-shadow: 0 0 0 3px var(--theme-accent-ring, rgba(67, 142, 185, .25)); outline: none; }
 .rp-modal .form-control[disabled], .rp-modal .form-control[readonly] { background: #f3f5f8; }
 .rp-modal .modal-footer { display: flex; justify-content: flex-end; gap: 8px; padding: 12px 18px; background: #f8fafc; border-top: 1px solid #e3e8ee; }
-.rp-modal .modal-footer .btn { margin: 0; }
+.rp-modal .modal-footer .btn { margin: 0; min-width: 104px; height: 40px !important; padding: 0 14px !important; display: inline-flex; align-items: center; justify-content: center; white-space: nowrap; border-radius: 8px; font-weight: 700; }
+.rp-modal .modal-footer .btn-yellow { background-color: #EFA63E !important; border: none !important; color: #111 !important; }
+/* The action buttons sit in a Bootstrap row; keep them on one line, right-aligned, instead of squeezing into col-lg-2 */
+.rp-modal .modal-footer .row { display: flex; flex-wrap: wrap; justify-content: flex-end; align-items: center; gap: 8px; width: 100%; margin: 0; }
+.rp-modal .modal-footer .row > [class*="col-"] { flex: 1 1 auto; width: auto; max-width: none; padding: 0; margin: 0; }
+@media (max-width: 575px) { .rp-modal .modal-footer .row > [class*="col-"] { flex: 1 1 45%; } .rp-modal .modal-footer .btn { width: 100%; } }
 .rp-modal .table-responsive { max-height: 56vh; overflow: auto; border: 1px solid #e3e8ee; border-radius: 8px; }
 .rp-modal .table-responsive > table { width: 100%; margin: 0; border-collapse: separate; border-spacing: 0; }
 html:root body .rp-modal .table-responsive > table > thead > tr > th {
