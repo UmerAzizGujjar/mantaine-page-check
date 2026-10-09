@@ -233,7 +233,8 @@
                         var pp = purchaseRow ? (purchaseRow[cm]||0) : 0;
                         var ps = saleRow ? (saleRow[cm]||0) : 0;
                         var pc = closingRow ? (closingRow[cm]||0) : 0;
-                        $('#pharmOpening').text('Rs. ' + fmt(po));
+                        $('#pharmBadge').text('HP (' + cm + ')');
+                        $('#pharmOpening').text('Opening ' + fmt(po));
                         $('#pharmPurchase').text('Rs. ' + fmt(pp));
                         $('#pharmSale').text('Rs. ' + fmt(ps));
                         $('#pharmClosing').text('Rs. ' + fmt(pc));
@@ -259,7 +260,8 @@
                         var pp = purchaseRow ? (purchaseRow[cm]||0) : 0;
                         var ps = saleRow ? (saleRow[cm]||0) : 0;
                         var pc = closingRow ? (closingRow[cm]||0) : 0;
-                        $('#pharmOpeningPB').text('Rs. ' + fmt(po));
+                        $('#pharmBadgePB').text('PB-1 (' + cm + ')');
+                        $('#pharmOpeningPB').text('Opening ' + fmt(po));
                         $('#pharmPurchasePB').text('Rs. ' + fmt(pp));
                         $('#pharmSalePB').text('Rs. ' + fmt(ps));
                         $('#pharmClosingPB').text('Rs. ' + fmt(pc));
@@ -352,7 +354,8 @@
                     var pp = purchaseRow ? (purchaseRow[curMon] || 0) : 0;
                     var ps = saleRow ? (saleRow[curMon] || 0) : 0;
                     var pc = closingRow ? (closingRow[curMon] || 0) : 0;
-                    $('#pharmOpening').text('Rs. ' + fmt(po));
+                    $('#pharmBadge').text('HP (' + curMon + ')');
+                    $('#pharmOpening').text('Opening ' + fmt(po));
                     $('#pharmPurchase').text('Rs. ' + fmt(pp));
                     $('#pharmSale').text('Rs. ' + fmt(ps));
                     $('#pharmClosing').text('Rs. ' + fmt(pc));
@@ -1205,7 +1208,8 @@
                     var pp = purchaseRow ? (purchaseRow[curMon]||0) : 0;
                     var ps = saleRow ? (saleRow[curMon]||0) : 0;
                     var pc = closingRow ? (closingRow[curMon]||0) : 0;
-                    $('#pharmOpening').text('Rs. ' + fmt(po));
+                    $('#pharmBadge').text('HP (' + curMon + ')');
+                    $('#pharmOpening').text('Opening ' + fmt(po));
                     $('#pharmPurchase').text('Rs. ' + fmt(pp));
                     $('#pharmSale').text('Rs. ' + fmt(ps));
                     $('#pharmClosing').text('Rs. ' + fmt(pc));
@@ -2367,7 +2371,7 @@
         <div class="main-sub trend-sub" id="pharmStockCard">
             <div class="ms-title">Pharmacy Stock Analytics</div>
             <div class="ts-badge" id="pharmBadge">HP</div>
-            <div class="ts-big-number" id="pharmOpening">Rs. 0.00</div>
+            <div class="ts-big-number" id="pharmOpening">Opening 0.00</div>
             <div class="ts-metrics" id="pharmMetrics">
                 <div class="ts-row"><span class="ts-lbl">Purchase Value</span><span class="ts-val" id="pharmPurchase">Rs. 0.00</span></div>
                 <div class="ts-row"><span class="ts-lbl">Sale Value</span><span class="ts-val" id="pharmSale">Rs. 0.00</span></div>
@@ -2379,7 +2383,7 @@
         <div class="main-sub trend-sub" id="pharmStockCardPB">
             <div class="ms-title">Pharmacy Stock Analytics</div>
             <div class="ts-badge" id="pharmBadgePB">PB-1</div>
-            <div class="ts-big-number" id="pharmOpeningPB">Rs. 0.00</div>
+            <div class="ts-big-number" id="pharmOpeningPB">Opening 0.00</div>
             <div class="ts-metrics" id="pharmMetricsPB">
                 <div class="ts-row"><span class="ts-lbl">Purchase Value</span><span class="ts-val" id="pharmPurchasePB">Rs. 0.00</span></div>
                 <div class="ts-row"><span class="ts-lbl">Sale Value</span><span class="ts-val" id="pharmSalePB">Rs. 0.00</span></div>
