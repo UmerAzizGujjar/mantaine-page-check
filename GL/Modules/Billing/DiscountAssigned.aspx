@@ -1,6 +1,6 @@
 ﻿<%@ Page Title="" Language="C#" MasterPageFile="~/Site.Master" AutoEventWireup="true" CodeBehind="DiscountAssigned.aspx.cs" Inherits="PMS.Modules.Billing.DiscountAssigned" %>
 <asp:Content ID="Content1" ContentPlaceHolderID="HeadContent" runat="server">
-    <link href="../../wwwroot/THEME_TIBBIT/CustomCSS/Refund.css" rel="stylesheet" />
+    <link href="../../wwwroot/THEME_TIBBIT/CustomCSS/discount-assigned.css" rel="stylesheet" />
     <link href="../../wwwroot/THEME_TIBBIT/CustomCSS/swalalert.css" rel="stylesheet" />
 
     <script type="text/javascript">
@@ -791,136 +791,87 @@
 </asp:Content>
 
 <asp:Content ID="Content2" ContentPlaceHolderID="MainContent" runat="server">
-    <div class="container-fluid">
+    <div class="da-page">
 
         <input type="hidden" id="hdPatientID" />
         <input type="hidden" id="hdnBillID" />
         <input type="hidden" id="hdRegID" />
         <input type="hidden" id="hdnDiscountAssignID" />
 
-        <%-- ======================== PATIENT INFO ROW ======================== --%>
-        <div class="row">
-
-            <%-- Left card: image + basic info + bill search --%>
-            <div class="col-lg-5 col-md-5 col-sm-12">
-                <div class="card">
-                    <div class="card-body">
-                        <div class="row">
-                            <div class="col-lg-4 col-md-5 col-sm-6 text-center">
-                                <div class="image-container">
-                                    <img src="../../../../wwwroot/SOURCE_IMAGES/DASHBOARD_ICONS/billing2.png"
-                                        alt="Patient Image" class="img-fluid rounded-circle patient-image" />
-                                </div>
-                            </div>
-                            <div class="col-lg-8 col-md-7 col-sm-6">
-                                <div class="row mb-3">
-                                    <div class="col-lg-4 col-md-5 col-sm-6"><label>Bill No:</label></div>
-                                    <div class="col-lg-8 col-md-7 col-sm-6 top">
-                                        <input type="text" id="txtBillNo" class="form-control" />
-                                    </div>
-                                </div>
-                                <div class="row mb-3">
-                                    <div class="col-lg-4 col-md-5 col-sm-6"><label>Patient Name :</label></div>
-                                    <div class="col-lg-8 col-md-7 col-sm-6 top"><label id="lblPatienName"></label></div>
-                                </div>
-                                <div class="row mb-3">
-                                    <div class="col-lg-4 col-md-5 col-sm-6 formrgn"><label>Contact No :</label></div>
-                                    <div class="col-lg-8 col-md-7 col-sm-6 top"><label id="lblContactNo"></label></div>
-                                </div>
-                                <div class="row mb-3">
-                                    <div class="col-lg-4 col-md-5 col-sm-6 formrgn"><label>Reg. Date :</label></div>
-                                    <div class="col-lg-8 col-md-7 col-sm-6 top"><label id="lblRegDate"></label></div>
-                                </div>
-                               
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-
-            <%-- Right card: additional patient details --%>
-            <div class="col-lg-5 col-md-5 col-sm-12">
-                <div class="card">
-                    <div class="card-body">
-                        <div class="row mb-3">
-                            <div class="col-lg-4 formrgn"><label>Age Years :</label></div>
-                            <div class="col-lg-8"><label id="lblAgeYears"></label></div>
-                        </div>
-                        <div class="row mb-3">
-                            <div class="col-lg-4 formrgn"><label>Address :</label></div>
-                            <div class="col-lg-8"><label id="lblAddress"></label></div>
-                        </div>
-                        <div class="row mb-3">
-                            <div class="col-lg-4 formrgn"><label>Patient Category :</label></div>
-                            <div class="col-lg-8"><label id="lblPatientCategory"></label></div>
-                        </div>
-                        <div class="row mb-3">
-                            <div class="col-lg-4 formrgn"><label>Department :</label></div>
-                            <div class="col-lg-8"><label id="lblDepartment"></label></div>
-                        </div>
-                         <div class="row mb-3">
-                             <div class="col-lg-4 col-md-5 col-sm-6 formrgn"><label>Gender :</label></div>
-                             <div class="col-lg-8 col-md-7 col-sm-6"><label id="lblGender"></label></div>
-                         </div>
-                   
-                        <div class="row mb-3" style="display:none">
-                            <div class="col-lg-4"><label>MR No *:</label></div>
-                            <div class="col-lg-8"><label id="lblMRNo"></label></div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-
-            <%-- Search button --%>
-            <div class="col-lg-1 col-md-2 col-sm-6">
-                <input type="button" value="Search" id="btnSearch" class="btn btn-primry mt-4"
-                    onclick="GetPatientDetailByBill()" />
-            </div>
-
-        </div>
-        <%-- END PATIENT INFO ROW --%>
-
-        <%-- ======================== DATE + REMARKS + ATTACHMENT ======================== --%>
-        <div class="row mt-3">
-            <div class="col-lg-2 col-md-4 col-sm-6">
-                <label>Discount Date :</label>
-                <input type="text" id="txtdiscountdate" class="form-control" />
-            </div>
-            <div class="col-lg-3 col-md-4 col-sm-6">
-                <label>Remarks:</label>
-                <textarea id="txtRemarks" class="form-control" style="height:35px"></textarea>
-            </div>
-            <div class="col-lg-5 col-md-8 col-sm-12">
-                <label>&nbsp;</label>
-                <div class="pr-attachment-card">
-                    <div class="pr-attachment-icon">
-                        <i class="fa fa-paperclip"></i>
-                    </div>
-                    <div class="pr-attachment-body">
-                        <span class="pr-attachment-label">Attachment</span>
-                        <input type="file" id="choseDiscountFile" name="choseDiscountFile" class="pr-file-input" />
-                    </div>
-                    <div class="pr-attachment-download">
-                        <asp:HyperLink ID="HyperLink1" runat="server" CssClass="pr-download-btn">
-                            <i class="fa fa-download"></i> Download
-                        </asp:HyperLink>
-                    </div>
-                    <div class="pr-attachment-delete" style="flex-shrink:0; margin-left:4px;">
-                        <a href="#" id="btnDeleteDiscountFile" onclick="DeleteDiscountFile(); return false;"
-                           style="display:none; background:#dc3545; color:#fff; font-size:12px; font-weight:600;
-                                  padding:4px 10px; border-radius:20px; text-decoration:none; white-space:nowrap;
-                                  align-items:center; gap:5px;">
-                            <i class="fa fa-trash"></i> Delete
-                        </a>
-                    </div>
-                </div>
+        <!-- Title line: the master page puts the page title in the empty left side; the badges sit on the right -->
+        <div class="pr-meta-bar">
+            <div class="meta-left"></div>
+            <div class="meta-right">
+                <div class="da-badge"><span class="da-badge-label">Bill No</span><span class="da-badge-value" id="badgeDaBill">---</span></div>
+                <div class="da-badge"><span class="da-badge-label">Patient</span><span class="da-badge-value" id="badgeDaPatient">---</span></div>
+                <div class="da-badge"><span class="da-badge-label">Net Payable</span><span class="da-badge-value" id="badgeDaNet">0</span></div>
             </div>
         </div>
 
-    
-        <div class="row mt-3">
-            <div class="col-12 table-responsive">
-                <table id="tblDetails" class="table table-bordered">
+        <div class="da-layout">
+
+            <%-- Patient + bill search --%>
+            <section class="da-card">
+                <h5 class="da-card-title"><i class="fa fa-user-circle"></i> Patient Information</h5>
+                <div class="da-patient">
+                    <div class="da-avatar">
+                        <img src="../../../../wwwroot/SOURCE_IMAGES/DASHBOARD_ICONS/billing2.png" alt="Patient Image" />
+                    </div>
+                    <div class="da-who">
+                        <div class="da-name" id="lblPatienName"></div>
+                        <div class="da-search">
+                            <div class="da-field">
+                                <label for="txtBillNo">Bill No</label>
+                                <input type="text" id="txtBillNo" class="da-input" autocomplete="off" />
+                            </div>
+                            <input type="button" value="Search" id="btnSearch" class="btn btn-primry" onclick="GetPatientDetailByBill()" />
+                        </div>
+                    </div>
+                </div>
+                <dl class="da-info">
+                    <div><dt>Contact No</dt><dd id="lblContactNo"></dd></div>
+                    <div><dt>Reg. Date</dt><dd id="lblRegDate"></dd></div>
+                    <div><dt>Age Years</dt><dd id="lblAgeYears"></dd></div>
+                    <div><dt>Gender</dt><dd id="lblGender"></dd></div>
+                    <div><dt>Patient Category</dt><dd id="lblPatientCategory"></dd></div>
+                    <div><dt>Department</dt><dd id="lblDepartment"></dd></div>
+                    <div class="da-span-all"><dt>Address</dt><dd id="lblAddress"></dd></div>
+                    <div style="display:none"><dt>MR No *</dt><dd id="lblMRNo"></dd></div>
+                </dl>
+            </section>
+
+            <%-- Date, remarks, attachment --%>
+            <section class="da-card">
+                <h5 class="da-card-title"><i class="fa fa-percent"></i> Discount Details</h5>
+                <div class="da-grid da-grid-1">
+                    <div class="da-field">
+                        <label for="txtdiscountdate">Discount Date</label>
+                        <input type="text" id="txtdiscountdate" class="da-input" />
+                    </div>
+                    <div class="da-field">
+                        <label for="txtRemarks">Remarks</label>
+                        <textarea id="txtRemarks" class="da-input"></textarea>
+                    </div>
+                    <div class="da-field">
+                        <label for="choseDiscountFile">Attachment</label>
+                        <div class="da-attach">
+                            <input type="file" id="choseDiscountFile" name="choseDiscountFile" />
+                            <asp:HyperLink ID="HyperLink1" runat="server" CssClass="da-link">
+                                <i class="fa fa-download"></i> Download
+                            </asp:HyperLink>
+                            <a href="#" id="btnDeleteDiscountFile" class="da-del" onclick="DeleteDiscountFile(); return false;" style="display:none;">
+                                <i class="fa fa-trash"></i> Delete
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </section>
+        </div>
+
+        <section class="da-card">
+            <h5 class="da-card-title"><i class="fa fa-list"></i> Bill Items</h5>
+            <div class="da-table-wrap">
+                <table id="tblDetails" class="table da-table">
                     <thead>
                         <tr>
                             <th style="display:none">Patient ID</th>
@@ -936,52 +887,57 @@
                     <tbody></tbody>
                 </table>
             </div>
-        </div>
 
-   
-        <div class="row mt-3">
-            <div class="col-lg-3 col-md-4 col-sm-6">
-                <label class="summary-label">Total Received Amount:</label>
-                <input type="text" id="txtReceivedAmount" class="form-control" readonly />
+            <div class="da-grid da-summary">
+                <div class="da-field da-figure">
+                    <label for="txtReceivedAmount">Total Received Amount</label>
+                    <input type="text" id="txtReceivedAmount" class="da-input" readonly />
+                </div>
+                <div class="da-field da-figure">
+                    <label for="txtDisPer">Total Discount %</label>
+                    <input type="text" id="txtDisPer" class="da-input" value="0" />
+                </div>
+                <div class="da-field da-figure">
+                    <label for="txttotaldiscount">Total Discount Amount</label>
+                    <input type="text" id="txttotaldiscount" disabled="disabled" class="da-input" value="0" />
+                </div>
+                <div class="da-field da-figure da-figure-main">
+                    <label for="lblOutputShow">Net Payable Amount</label>
+                    <input type="text" id="lblOutputShow" disabled="disabled" class="da-input" value="0" />
+                </div>
             </div>
-            <div class="col-lg-3 col-md-4 col-sm-6">
-                <label class="summary-label">Total Discount %:</label>
-                <input type="text" id="txtDisPer" class="form-control" value="0" />
-            </div>
-            <div class="col-lg-3 col-md-4 col-sm-6">
-                <label class="summary-label">Total Discount Amount:</label>
-                <input type="text" id="txttotaldiscount" disabled="disabled" class="form-control" value="0" />
-            </div>
-            <div class="col-lg-3 col-md-4 col-sm-6">
-                <label class="summary-label">Net Payable Amount:</label>
-                   <input type="text" id="lblOutputShow" disabled="disabled" class="form-control" value="0" />
-                
-            </div>
-        </div>
+        </section>
 
-        <br />
-        <div class="row mt-3">
-            <div class="col-lg-8 col-md-6 col-sm-6">
-                <div class="col-lg-2">
-                    <input type="button" value="Save" id="btnSave" class="btn btn-primry"
-                        onclick="SaveRecord()" />
-                </div>
-                <div class="col-lg-2">
-                    <input type="button" value="Print" id="btnPrint" class="btn btn-primry"
-                        onclick="PrintRefund()" />
-                </div>
-                <div class="col-lg-2">
-                    <input type="button" value="New" id="btnnew" class="btn btn-primry" onclick="window.location = 'DiscountAssigned.aspx'" />
-                </div>
-                <div class="col-lg-2">
-                    <input type="button" value="List" id="btnlist" class="btn btn-primry" onclick="window.location = 'DiscountAssignedList.aspx'" />
-                </div>
-                <div class="col-lg-2">
-                    <input type="button" value="Approve" id="btnApprove" class="btn btn-primry" onclick="ApproveRecord()" />
-                </div>
+        <div class="da-actions">
+            <div>
+                <input type="button" value="Save" id="btnSave" class="btn btn-primry" onclick="SaveRecord()" />
             </div>
-
+            <div>
+                <input type="button" value="Print" id="btnPrint" class="btn btn-primry" onclick="PrintRefund()" />
+            </div>
+            <div>
+                <input type="button" value="New" id="btnnew" class="btn btn-primry" onclick="window.location = 'DiscountAssigned.aspx'" />
+            </div>
+            <div>
+                <input type="button" value="List" id="btnlist" class="btn btn-primry" onclick="window.location = 'DiscountAssignedList.aspx'" />
+            </div>
+            <div>
+                <input type="button" value="Approve" id="btnApprove" class="btn btn-primry" onclick="ApproveRecord()" />
+            </div>
         </div>
 
     </div>
+
+    <script type="text/javascript">
+        // title-line badges follow the form (the page script fills the fields in after loading)
+        function syncDiscountBadges() {
+            $('#badgeDaBill').text($('#txtBillNo').val() || '---');
+            $('#badgeDaPatient').text($.trim($('#lblPatienName').text()) || '---');
+            $('#badgeDaNet').text($('#lblOutputShow').val() || '0');
+        }
+        $(function () {
+            syncDiscountBadges();
+            setInterval(syncDiscountBadges, 600);
+        });
+    </script>
 </asp:Content>
