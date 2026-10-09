@@ -4,6 +4,7 @@
 
 <asp:Content ID="Content1" ContentPlaceHolderID="HeadContent" runat="server">
     <link href="../../wwwroot/THEME_TIBBIT/CustomCSS/TestApproval.css" rel="stylesheet" />
+    <link href="../../wwwroot/THEME_TIBBIT/CustomCSS/test-approval.css" rel="stylesheet" />
 
     <script type="text/javascript">
         var GrowthTypeGlobal = '';
@@ -951,117 +952,63 @@
     </script>
 </asp:Content>
 <asp:Content ID="Content2" ContentPlaceHolderID="MainContent" runat="server">
-    <div id="PatientDetail" style="width: 100%">
-        <div class="row">
-            <!-- Left Card -->
-            <div class="col-lg-5 col-md-5 col-sm-12">
-                <div class="card">
-                    <div class="card-body">
-                        <div class="row">
-                            <div class="col-lg-4 col-md-5 col-sm-6 text-center">
-                                <div class="image-container">
-                                    <img src="~../../../../wwwroot/SOURCE_IMAGES/DASHBOARD_ICONS/Lab2.png" alt="Patient Image" class="img-fluid rounded-circle patient-image" />
-                                </div>
-                            </div>
-                            <div class="col-lg-8 col-md-7 col-sm-6">
-                                <div class="row mb-3 mtt">
-                                    <div class="col-lg-5 col-md-5 col-sm-6">
-                                        <asp:Label ID="LblLab_Test_ID" runat="server" Text="Lab Test ID :"></asp:Label>
-                                    </div>
-                                    <div class="col-lg-7 col-md-7 col-sm-6">
-                                        <asp:TextBox ID="txtLab_Test_ID" runat="server"></asp:TextBox>
-                                        <asp:HiddenField ID="hdnLab_Test_ID" runat="server" ClientIDMode="Static" Value="(New)" />
-                                    </div>
-                                </div>
-                                <div class="row mb-3 mtt">
-                                    <div class="col-lg-5 col-md-5 col-sm-6">
-                                        <asp:Label ID="lblPatien_ID" runat="server" Text="MR No:*"></asp:Label>
-                                    </div>
-                                    <div class="col-lg-7 col-md-7 col-sm-6 top">
-                                        <asp:TextBox ID="txtPatient_ID" runat="server"></asp:TextBox>
-                                        <asp:HiddenField ID="hdnPatient_ID" runat="server" Value="(New)" ClientIDMode="Static" />
-                                    </div>
-                                </div>
-                                <div class="row mb-3 mtt">
-                                    <div class="col-lg-5 col-md-5 col-sm-6">
-                                       <asp:Label ID="lblPatient_Name" runat="server" Text="Name :"></asp:Label>
-                                    </div>
-                                    <div class="col-lg-7 col-md-7 col-sm-6 top">
-                                        <asp:Label ID="vlblPatients_Name" runat="server"></asp:Label>
-                                    </div>
-                                </div>
-                                <div class="row mb-3 mtt">
-                                    <div class="col-lg-5 col-md-5 col-sm-6 formrgn">
-                                       <asp:Label ID="lblContactNo" runat="server" Text="Contact No :"></asp:Label>
-                                    </div>
-                                    <div class="col-lg-7 col-md-7 col-sm-6 top">
-                                       <asp:Label ID="vLbl_Contact" runat="server"></asp:Label>
-                                    </div>
-                                </div>
-                                <div class="row mb-3 mtt">
-                                    <div class="col-lg-5 col-md-5 col-sm-6 formrgn">
-                                        <asp:Label ID="lblGender" runat="server" Text="Gender :"></asp:Label>
-                                    </div>
-                                    <div class="col-lg-7 col-md-7 col-sm-6 top">
-                                        <asp:Label ID="vLbl_Gender" runat="server"></asp:Label>
-                                    </div>
-                                </div>
-                            </div>
+    <div class="ta-page">
+
+        <!-- Title line: the master page puts the page title in the empty left side; the badges sit on the right -->
+        <div class="pr-meta-bar">
+            <div class="meta-left"></div>
+            <div class="meta-right">
+                <div class="ta-badge"><span class="ta-badge-label">Lab Test</span><span class="ta-badge-value" id="badgeTaLab">---</span></div>
+                <div class="ta-badge"><span class="ta-badge-label">MR No</span><span class="ta-badge-value" id="badgeTaMr">---</span></div>
+                <div class="ta-badge"><span class="ta-badge-label">Patient</span><span class="ta-badge-value" id="badgeTaPatient">---</span></div>
+            </div>
+        </div>
+
+        <div id="PatientDetail" class="ta-layout2">
+            <section class="ta-card">
+                <h5 class="ta-card-title"><i class="fa fa-user-circle"></i> Patient Information</h5>
+                <div class="ta-patient">
+                    <div class="ta-avatar">
+                        <img src="~../../../../wwwroot/SOURCE_IMAGES/DASHBOARD_ICONS/Lab2.png" alt="Patient Image" />
+                    </div>
+                    <div class="ta-grid ta-patient-fields">
+                        <div class="ta-field">
+                            <asp:Label ID="LblLab_Test_ID" runat="server" Text="Lab Test ID :" CssClass="ta-lbl"></asp:Label>
+                            <asp:TextBox ID="txtLab_Test_ID" runat="server"></asp:TextBox>
+                            <asp:HiddenField ID="hdnLab_Test_ID" runat="server" ClientIDMode="Static" Value="(New)" />
+                        </div>
+                        <div class="ta-field">
+                            <asp:Label ID="lblPatien_ID" runat="server" Text="MR No:*" CssClass="ta-lbl"></asp:Label>
+                            <asp:TextBox ID="txtPatient_ID" runat="server"></asp:TextBox>
+                            <asp:HiddenField ID="hdnPatient_ID" runat="server" Value="(New)" ClientIDMode="Static" />
                         </div>
                     </div>
                 </div>
-            </div>
-            <!-- Right Card -->
-            <div class="col-lg-5 col-md-5 col-sm-12">
-                <div class="card">
-                    <div class="card-body">
-                        <div class="row mb-3">
-                            <div class="col-lg-5 col-md-5 col-sm-6 formrgn">
-                                <b>Search From MRNo:</b>
-                            </div>
-                            <div class="col-lg-4 col-md-5 col-sm-6">
-                                <input id="txtMRNOSearch" type="text" />
-                            </div>
-                        </div>
-                        <div class="row mb-3">
-                            <div class="col-lg-5 col-md-5 col-sm-6 formrgn">
-                               <asp:Label ID="lblAge_Years" runat="server" Text="Age Years :"></asp:Label>
-                            </div>
-                            <div class="col-lg-7 col-md-5 col-sm-6 detail">
-                                <asp:Label ID="vLbl_Age" runat="server"></asp:Label>
-                            </div>
-                        </div>
-                        <div class="row mb-3">
-                            <div class="col-lg-5 col-md-5 col-sm-6 formrgn">
-                                <asp:Label ID="LblReg_Date" runat="server" Text="Reg. Date:"></asp:Label>
-                            </div>
-                            <div class="col-lg-7 col-md-5 col-sm-6 detail">
-                               <asp:Label ID="vLbl_RegDate" runat="server"></asp:Label>
-                            </div>
-                        </div>
-                        <div class="row mb-3">
-                            <div class="col-lg-5 col-md-5 col-sm-6 formrgn">
-                               <asp:Label ID="LblPatient_Category" runat="server" Text="Category :"></asp:Label>
-                            </div>
-                            <div class="col-lg-7 col-md-5 col-sm-6 detail">
-                                 <asp:Label ID="vPatient_Category" runat="server"></asp:Label>
-                            </div>
-                        </div>
-                        <div class="row mb-3">
-                            <div class="col-lg-5 col-md-5 col-sm-6 formrgn">
-                                <asp:Label ID="lblAdress" runat="server" Text="Address :"></asp:Label>
-                            </div>
-                            <div class="col-lg-7 col-md-5 col-sm-6 detail">
-                                <asp:Label ID="vLbl_Adress" runat="server"></asp:Label>
-                            </div>
-                        </div>
-                    </div>
+                <dl class="ta-info">
+                    <div class="ta-span-2"><dt><asp:Label ID="lblPatient_Name" runat="server" Text="Name :"></asp:Label></dt><dd><asp:Label ID="vlblPatients_Name" runat="server"></asp:Label></dd></div>
+                    <div><dt><asp:Label ID="lblContactNo" runat="server" Text="Contact No :"></asp:Label></dt><dd><asp:Label ID="vLbl_Contact" runat="server"></asp:Label></dd></div>
+                    <div><dt><asp:Label ID="lblGender" runat="server" Text="Gender :"></asp:Label></dt><dd><asp:Label ID="vLbl_Gender" runat="server"></asp:Label></dd></div>
+                </dl>
+            </section>
+
+            <section class="ta-card">
+                <h5 class="ta-card-title"><i class="fa fa-search"></i> Search &amp; Details</h5>
+                <div class="ta-grid ta-grid-1">
+                    <div class="ta-field">
+                        <label for="txtMRNOSearch">Search From MRNo</label>
+                        <input id="txtMRNOSearch" type="text" class="ta-input" />
                     </div>
                 </div>
-            </div>
-        
-       
-        <table style="padding: 20px; width: 829px; height: 200px; float: left;">
+                <dl class="ta-info" style="margin-top: 14px;">
+                    <div><dt><asp:Label ID="lblAge_Years" runat="server" Text="Age Years :"></asp:Label></dt><dd><asp:Label ID="vLbl_Age" runat="server"></asp:Label></dd></div>
+                    <div><dt><asp:Label ID="LblReg_Date" runat="server" Text="Reg. Date:"></asp:Label></dt><dd><asp:Label ID="vLbl_RegDate" runat="server"></asp:Label></dd></div>
+                    <div><dt><asp:Label ID="LblPatient_Category" runat="server" Text="Category :"></asp:Label></dt><dd><asp:Label ID="vPatient_Category" runat="server"></asp:Label></dd></div>
+                    <div class="ta-span-2"><dt><asp:Label ID="lblAdress" runat="server" Text="Address :"></asp:Label></dt><dd><asp:Label ID="vLbl_Adress" runat="server"></asp:Label></dd></div>
+                </dl>
+            </section>
+        </div>
+
+        <table style="display: none;">
             <tr style="display: none">
                 <td>Report Columns</td>
                 <td style="display: none">
@@ -1076,30 +1023,29 @@
                 </td>
             </tr>
         </table>
-    </div>
- 
-    <div id="dvtblSymtomps" style="width:70%;height: 298px;overflow: scroll; position: absolute;">
-        <table class="table" style="overflow: scroll;" id="tblPendingPatientsLIst">
-            <thead>
-                <tr>
-                    <th>MR No</th>
-                    <th>Name</th>
-                    <th>Father Name</th>
-                    <th>Dpt</th>
-                    <th>Action</th>
-                </tr>
-            </thead>
-            <tbody></tbody>
-        </table>
-    </div>
-    <div>
-        <table>
-            <tr>
-                <td colspan="6">
-                    <div style="margin-top: 7%;">
-                        <h2>Tests : </h2>
-                        <div style="overflow: scroll; height: 300px;">
-                            <table id="tbltestDetail" class="table" style="width: 1325px;">
+
+        <section class="ta-card">
+            <h5 class="ta-card-title"><i class="fa fa-clock-o"></i> Pending Patients</h5>
+            <div id="dvtblSymtomps" class="ta-table-wrap ta-pending">
+                <table class="table" id="tblPendingPatientsLIst">
+                    <thead>
+                        <tr>
+                            <th>MR No</th>
+                            <th>Name</th>
+                            <th>Father Name</th>
+                            <th>Dpt</th>
+                            <th>Action</th>
+                        </tr>
+                    </thead>
+                    <tbody></tbody>
+                </table>
+            </div>
+        </section>
+
+        <section class="ta-card">
+            <h5 class="ta-card-title"><i class="fa fa-flask"></i> Tests</h5>
+                        <div class="ta-table-wrap">
+                            <table id="tbltestDetail" class="table ta-wide" style="width: 1325px;">
                                 <thead>
                                     <tr>
                                         <th style="width: 174px;">
@@ -1120,45 +1066,40 @@
                                 <tbody id="tbltest"></tbody>
                             </table>
                         </div>
-                    </div>
-                </td>
-            </tr>
-            <tr>
-                <td>
-                    <asp:HiddenField ID="hdfPatient_ID" Value="(New)" runat="server" ClientIDMode="Static" />
-                </td>
-                <td style="width: 100px;">
-                    <asp:HiddenField ID="hdfPatient_No" runat="server" ClientIDMode="Static" />
-                </td>
-                <td></td>
-                <td class="mg"></td>
-                <td></td>
-                <td></td>
-            </tr>
-            <tr>
-                <td colspan="6">
-                    <asp:ValidationSummary ID="ValidationSummary1" runat="server" ForeColor="Red" HeaderText="Page Errors"
-                        ShowSummary="true" DisplayMode="List" />
-                </td>
-            </tr>
-            <tr>
-                <td colspan="6">
-                    <asp:Label ID="Label1" Text="" runat="server" />
-                </td>
-            </tr>
-        </table>
-    </div>
-    <div>
-        <div class="col-lg-1 col-md-4 col-sm-6" style="margin-top:1%">
-               <input type="button" class="btn btn-primry" id="approveTest" name="approveTest" value="Approve" />
-    </div>
-        </div>
-    <!-- Modal -->
+        </section>
 
-    <div id="myModal" class="modal fade" role="dialog">
+        <asp:HiddenField ID="hdfPatient_ID" Value="(New)" runat="server" ClientIDMode="Static" />
+        <asp:HiddenField ID="hdfPatient_No" runat="server" ClientIDMode="Static" />
+        <asp:ValidationSummary ID="ValidationSummary1" runat="server" ForeColor="Red" HeaderText="Page Errors"
+            ShowSummary="true" DisplayMode="List" />
+        <asp:Label ID="Label1" Text="" runat="server" />
+
+        <div class="ta-actions">
+            <div>
+                <input type="button" class="btn btn-primry" id="approveTest" name="approveTest" value="Approve" />
+            </div>
+        </div>
+    </div>
+
+    <script type="text/javascript">
+        // title-line badges follow the form (the page script fills the fields in after loading)
+        function syncApprovalBadges() {
+            var lab = $('#hdnLab_Test_ID').val();
+            $('#badgeTaLab').text(lab && lab !== '(New)' ? lab : '---');
+            var mr = $('#hdnPatient_ID').val();
+            $('#badgeTaMr').text(mr && mr !== '(New)' ? mr : '---');
+            $('#badgeTaPatient').text($.trim($('#<%= vlblPatients_Name.ClientID %>').text()) || '---');
+        }
+        $(function () {
+            syncApprovalBadges();
+            setInterval(syncApprovalBadges, 600);
+        });
+    </script>
+
+    <div id="myModal" class="modal fade ta-modal" role="dialog">
         <div class="modal-dialog">
             <!-- Modal content-->
-            <div class="modal-content" style="width: 1504px; margin-left: -459px;">
+            <div class="modal-content">
                 <div class="modal-header">
                     <button type="button" style="width: auto;" class="close" data-dismiss="modal">&times;</button>
                     <h4 class="modal-title" id="titleee">Test Results</h4>
@@ -1213,4 +1154,3 @@
         </div>
     </div>
 </asp:Content>
-

@@ -2,7 +2,7 @@
    gate-pass.css - Inversion Gate Pass screen (Modules/Inventory/InversionGatePass.aspx)
    Stand-alone: this screen uses no other screen's stylesheet. Every colour comes from the active theme
    (--theme-accent ... in that theme's theme-colors.css); the fallbacks are only a safety net.
-   The same file is kept in every theme folder (wwwroot/THEME_*/CustomCSS/gate-pass.css).
+   The same file is kept in every theme folder (wwwroot/THEME_xxx/CustomCSS/gate-pass.css).
    Layout: status badges on the title line, two columns (details | status), the items table and the inspection window.
    ========================================================================== */
 

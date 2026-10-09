@@ -2,7 +2,7 @@
    purchase-invoice.css - Purchase Invoice screen (Modules/Inventory/AddPurchaseInvoice.aspx)
    Stand-alone: this screen uses no other screen's stylesheet. Every colour comes from the active theme
    (--theme-accent ... in that theme's theme-colors.css); the fallbacks are only a safety net.
-   The same file is kept in every theme folder (wwwroot/THEME_*/CustomCSS/purchase-invoice.css).
+   The same file is kept in every theme folder (wwwroot/THEME_xxx/CustomCSS/purchase-invoice.css).
    Layout: status badges on the title line, two columns (details | amounts), the invoice-lines tabs, and the picker windows.
    ========================================================================== */
 

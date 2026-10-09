@@ -1,7 +1,7 @@
 ﻿<%@ Page Language="C#" MasterPageFile="~/Site.Master" AutoEventWireup="true" CodeBehind="AddNewAdvance.aspx.cs" Inherits="PMS.AddNewAdvance" %>
 
 <asp:Content ID="Content1" ContentPlaceHolderID="HeadContent" runat="server">
-    <link href="../../wwwroot/THEME_TIBBIT/CustomCSS/Advance.css" rel="stylesheet" />
+    <link href="../../wwwroot/THEME_TIBBIT/CustomCSS/advance-payment.css" rel="stylesheet" />
 </asp:Content>
 <asp:Content ID="Content2" ContentPlaceHolderID="MainContent" runat="server">
 <script type="text/javascript">
@@ -446,136 +446,119 @@
 
 
 
-    <div id="header" class="container-fluid">
+    <div id="header" class="ad-page">
         <input type="hidden" id="hdPatientID" />
         <label id="lblOutput" style="background-color: silver; display: none;"></label>
         <label id="lblOutputShow" style="margin-left: -214px; display: none;"></label>
 
-        <div class="bp-meta-bar">
-            <div class="bp-meta-title">
-                <i class="fa fa-money"></i>
-                <span>Advance Payment</span>
-                <span class="bp-badge bp-badge--new" id="advanceStatusBadge">New Advance</span>
+        <!-- Title line: the master page puts the page title in the empty left side; the badges sit on the right -->
+        <div class="pr-meta-bar">
+            <div class="meta-left"></div>
+            <div class="meta-right">
+                <div class="ad-badge"><span class="ad-badge-label">Patient</span><span class="ad-badge-value" id="badgeAdMr">---</span></div>
+                <div class="ad-badge"><span class="ad-badge-label">Advance</span><span class="ad-badge-value" id="badgeAdAmount">0</span></div>
+                <div class="ad-badge"><span class="ad-badge-label">Status</span><span class="ad-badge-value" id="advanceStatusBadge">New Advance</span></div>
             </div>
         </div>
 
-        <div class="bp-bento">
-            <div class="bp-card">
-                <div class="bp-card-header">
-                    <i class="fa fa-user-circle"></i>
-                    <span>Patient Information</span>
-                </div>
-                <div class="bp-card-body">
-                    <div class="bp-patient">
-                        <div class="bp-patient-avatar">
-                            <img src="~../../../../wwwroot/SOURCE_IMAGES/DASHBOARD_ICONS/AddAdvance.png" alt="Patient" id="patientImage" />
-                        </div>
-                        <div class="bp-patient-info">
-                            <div class="bp-patient-name" id="lblPatienName">Patient Name</div>
-                            <dl class="bp-patient-grid">
-                                <dt>MR No</dt>
-                                <dd><input type="text" id="txtMRNo" /></dd>
-                                <dt>Contact</dt><dd id="lblContactNo"></dd>
-                                <dt>Gender</dt><dd id="lblGender"></dd>
-                                <dt>Reg Date</dt><dd id="lblRegDate"></dd>
-                            </dl>
+        <div class="ad-layout">
+            <section class="ad-card">
+                <h5 class="ad-card-title"><i class="fa fa-user-circle"></i> Patient Information</h5>
+                <div class="ad-patient">
+                    <div class="ad-avatar">
+                        <img src="~../../../../wwwroot/SOURCE_IMAGES/DASHBOARD_ICONS/AddAdvance.png" alt="Patient" id="patientImage" />
+                    </div>
+                    <div class="ad-who">
+                        <div class="ad-name" id="lblPatienName">Patient Name</div>
+                        <div class="ad-search">
+                            <div class="ad-field">
+                                <label for="txtMRNo">MR No</label>
+                                <input type="text" id="txtMRNo" />
+                            </div>
                         </div>
                     </div>
                 </div>
-            </div>
+                <dl class="ad-info">
+                    <div><dt>Age</dt><dd id="lblAgeYears"></dd></div>
+                    <div><dt>Gender</dt><dd id="lblGender"></dd></div>
+                    <div><dt>Contact</dt><dd id="lblContactNo"></dd></div>
+                    <div><dt>Reg Date</dt><dd id="lblRegDate"></dd></div>
+                    <div><dt>Patient Category</dt><dd id="lblPatientCategory"></dd></div>
+                    <div><dt>Department</dt><dd id="lblDepartment"></dd></div>
+                    <div><dt>Admit Category</dt><dd id="lblPatientDiscountType"></dd></div>
+                    <div class="ad-wide"><dt>Address</dt><dd id="lblAddress"></dd></div>
+                </dl>
+            </section>
 
-            <div class="bp-card">
-                <div class="bp-card-header">
-                    <i class="fa fa-info-circle"></i>
-                    <span>Additional Details</span>
-                </div>
-                <div class="bp-card-body" style="padding:0;">
-                    <div class="bp-summary-row">
-                        <span class="bp-summary-label">Age</span>
-                        <span id="lblAgeYears" class="bp-summary-value bp-summary-value--readonly"></span>
-                    </div>
-                    <div class="bp-summary-row">
-                        <span class="bp-summary-label">Address</span>
-                        <span id="lblAddress" style="margin-left:auto;color:var(--bp-text);font-weight:600;text-align:right;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;max-width:65%;"></span>
-                    </div>
-                    <div class="bp-summary-row">
-                        <span class="bp-summary-label">Patient Category</span>
-                        <span id="lblPatientCategory" style="margin-left:auto;color:var(--bp-text);font-weight:600;"></span>
-                    </div>
-                    <div class="bp-summary-row">
-                        <span class="bp-summary-label">Department</span>
-                        <span id="lblDepartment" style="margin-left:auto;color:var(--bp-text);font-weight:600;"></span>
-                    </div>
-                    <div class="bp-summary-row">
-                        <span class="bp-summary-label">Admit Category</span>
-                        <span id="lblPatientDiscountType" style="margin-left:auto;color:var(--bp-text);font-weight:600;"></span>
-                    </div>
-                </div>
-            </div>
-        </div>
-
-        <div class="bp-card">
-            <div class="bp-card-header">
-                <i class="fa fa-credit-card"></i>
-                <span>Advance Details</span>
-            </div>
-            <div class="bp-card-body">
-                <div class="bp-bento bp-bento--4" style="gap:12px;">
-                    <div>
-                        <label class="bp-summary-label" style="display:block;margin-bottom:4px;">Payment Type</label>
-                        <select id="ddlPaymentType" class="bp-select">
+            <section class="ad-card">
+                <h5 class="ad-card-title"><i class="fa fa-credit-card"></i> Advance Details</h5>
+                <div class="ad-grid ad-grid-1">
+                    <div class="ad-field">
+                        <label for="ddlPaymentType">Payment Type</label>
+                        <select id="ddlPaymentType" class="ad-input">
                             <option value="0">Select</option>
                             <option value="01">Cash</option>
                             <option value="02">Bank</option>
                         </select>
                     </div>
-                    <div>
-                        <label class="bp-summary-label" style="display:block;margin-bottom:4px;">Advance Date</label>
-                        <input type="text" id="txtAdvanceDate" class="bp-input datepicker" />
+                    <div class="ad-field">
+                        <label for="txtAdvanceDate">Advance Date</label>
+                        <input type="text" id="txtAdvanceDate" class="ad-input datepicker" />
                     </div>
-                    <div>
-                        <label class="bp-summary-label" style="display:block;margin-bottom:4px;">Advance Amount *</label>
-                        <input type="text" id="txtAdvanceAmount" class="bp-input" style="text-align:right;font-weight:700;color:var(--bp-primary);" />
+                    <div class="ad-field ad-figure ad-figure-main">
+                        <label for="txtAdvanceAmount">Advance Amount <span class="ad-req">*</span></label>
+                        <input type="text" id="txtAdvanceAmount" class="ad-input" />
                     </div>
-                    <div>
-                        <label class="bp-summary-label" style="display:block;margin-bottom:4px;">Remarks</label>
-                        <textarea id="txtRemarks" class="bp-input" style="height:30px;resize:vertical;"></textarea>
+                    <div class="ad-field">
+                        <label for="txtRemarks">Remarks</label>
+                        <textarea id="txtRemarks" class="ad-input"></textarea>
                     </div>
                 </div>
-            </div>
+            </section>
         </div>
 
-        <div class="row mt-3">
-            <div class="col-lg-8">
-                <div class="row">
-                    <div class="col-lg-2 col-md-3 col-sm-6">
-                        <input type="button" value="Save" class="btn btn-primry" onclick="SaveRecord()" id="btnSave" />
-                    </div>
-                    <div class="col-lg-2 col-md-3 col-sm-6">
-                        <input type="button" class="btn-gray" value="View" onclick="window.open('AdvanceList.aspx')" />
-                    </div>
-                    <div class="col-lg-2 col-md-3 col-sm-6">
-                        <input type="button" class="btn-gray" value="New" onclick="window.open('AddNewAdvance.aspx')" />
-                    </div>
-                    <div class="col-lg-2 col-md-2 col-sm-3">
-                        <input type="button" id="btnPrint" class="btn btn-primry" onclick="PrintAdvance()" value="Print" />
-                    </div>
-                    <div class="col-lg-2 col-md-2 col-sm-3">
-                        <input type="button" id="btnPrint1" class="btn btn-primry" onclick="PrintAdvanceThermal()" value="Print2" />
-                    </div>
-                    <div class="col-lg-2 col-md-2 col-sm-3" id="divApproveContainer">
-                        <input type="button" id="btnApprove" class="btn btn-primry" onclick="ApproveAdvance()" value="Approve" />
-                    </div>
-
-                    <div class="col-lg-2 col-md-2 col-sm-3" id="divUnApproveContainer">
-                        <input type="button" id="btnUnApprove" class="btn btn-primry" onclick="UnApprove()" value="UnApprove" />
-                    </div>
-
-                    <div class="col-lg-2 col-md-2 col-sm-3" id="divVoucherContainer">
-                        <input type="button" id="btnPrintVoucher" class="btn btn-primry" onclick="PrintVoucher();" value="Voucher" />
-                    </div>
-                </div>
+        <div class="ad-actions">
+            <div>
+                <input type="button" value="Save" class="btn btn-primry" onclick="SaveRecord()" id="btnSave" />
+            </div>
+            <div>
+                <input type="button" class="btn-gray" value="View" onclick="window.open('AdvanceList.aspx')" />
+            </div>
+            <div>
+                <input type="button" class="btn-gray" value="New" onclick="window.open('AddNewAdvance.aspx')" />
+            </div>
+            <div>
+                <input type="button" id="btnPrint" class="btn btn-primry" onclick="PrintAdvance()" value="Print" />
+            </div>
+            <div>
+                <input type="button" id="btnPrint1" class="btn btn-primry" onclick="PrintAdvanceThermal()" value="Print2" />
+            </div>
+            <div id="divApproveContainer">
+                <input type="button" id="btnApprove" class="btn btn-primry" onclick="ApproveAdvance()" value="Approve" />
+            </div>
+            <div id="divUnApproveContainer">
+                <input type="button" id="btnUnApprove" class="btn btn-primry" onclick="UnApprove()" value="UnApprove" />
+            </div>
+            <div id="divVoucherContainer">
+                <input type="button" id="btnPrintVoucher" class="btn btn-primry" onclick="PrintVoucher();" value="Voucher" />
             </div>
         </div>
     </div>
+
+    <script type="text/javascript">
+        // title-line badges follow the form (the page script fills the fields in after loading)
+        function syncAdvanceBadges() {
+            $('#badgeAdMr').text($('#txtMRNo').val() || '---');
+            $('#badgeAdAmount').text($('#txtAdvanceAmount').val() || '0');
+            var st = 'New Advance';
+            if ($('#btnSave').val() === 'Update') {
+                st = $('#divUnApproveContainer').is(':visible') ? 'Approved' : 'Created';
+            }
+            $('#advanceStatusBadge').text(st);
+        }
+        $(function () {
+            syncAdvanceBadges();
+            setInterval(syncAdvanceBadges, 600);
+        });
+    </script>
 </asp:Content>

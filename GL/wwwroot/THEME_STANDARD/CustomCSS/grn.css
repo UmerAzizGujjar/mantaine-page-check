@@ -2,7 +2,7 @@
    grn.css - Goods Received Note screen (Modules/Inventory/GRN.aspx)
    Stand-alone: this screen uses no other screen's stylesheet. Every colour comes from the active theme
    (--theme-accent ... in that theme's theme-colors.css); the fallbacks are only a safety net.
-   The same file is kept in every theme folder (wwwroot/THEME_*/CustomCSS/grn.css).
+   The same file is kept in every theme folder (wwwroot/THEME_xxx/CustomCSS/grn.css).
    Layout: status badges on the title line, two columns (details | status), the items tables, the loader and the item picker.
    ========================================================================== */
 

@@ -1,7 +1,7 @@
 ﻿<%@ Page Title="" Language="C#" MasterPageFile="~/Site.Master" AutoEventWireup="true" CodeBehind="OPD_Refund.aspx.cs" Inherits="PMS.Modules.PatientManagement.OPD_Refund" %>
 
 <asp:Content ID="Content1" ContentPlaceHolderID="HeadContent" runat="server">
-    <link href="../../wwwroot/THEME_TIBBIT/CustomCSS/Refund.css" rel="stylesheet" />
+    <link href="../../wwwroot/THEME_TIBBIT/CustomCSS/opd-refund.css" rel="stylesheet" />
     <script type="text/javascript">          
         $(document).ready(function () {
 
@@ -409,135 +409,123 @@
     </script>
 </asp:Content>
 <asp:Content ID="Content2" ContentPlaceHolderID="MainContent" runat="server">
-    <div class="container-fluid">
+    <div class="or-page">
         <input type="hidden" id="hdRegPatId" />
         <input type="hidden" id="hdPatientID" />
 
-        <div class="bp-meta-bar">
-            <div class="bp-meta-title">
-                <i class="fa fa-undo"></i>
-                <span>OPD Refund</span>
-                <span class="bp-badge bp-badge--new" id="refundStatusBadge">New Refund</span>
-            </div>
-            <div class="bp-meta-actions">
-                <button type="button" class="bp-meta-btn bp-meta-btn--search" id="btnSearch" onclick="GetPatientDetailByOPDNO()">
-                    <i class="fa fa-search"></i> Search Patient
-                </button>
+        <!-- Title line: the master page puts the page title in the empty left side; the badges sit on the right -->
+        <div class="pr-meta-bar">
+            <div class="meta-left"></div>
+            <div class="meta-right">
+                <div class="or-badge"><span class="or-badge-label">MR No</span><span class="or-badge-value" id="badgeRfMr">---</span></div>
+                <div class="or-badge"><span class="or-badge-label">Total Refund</span><span class="or-badge-value" id="badgeRfTotal">0.00</span></div>
+                <div class="or-badge"><span class="or-badge-label">Status</span><span class="or-badge-value" id="refundStatusBadge">New Refund</span></div>
             </div>
         </div>
 
-        <div class="bp-bento">
-            <div class="bp-card">
-                <div class="bp-card-header">
-                    <i class="fa fa-user-circle"></i>
-                    <span>Patient Information</span>
-                </div>
-                <div class="bp-card-body">
-                    <div class="bp-patient">
-                        <div class="bp-patient-avatar">
-                            <img src="~../../../../wwwroot/SOURCE_IMAGES/DASHBOARD_ICONS/billing2.png" alt="Patient" id="patientImage" />
-                        </div>
-                        <div class="bp-patient-info">
-                            <div class="bp-patient-name" id="lblPatienName">Patient Name</div>
-                            <dl class="bp-patient-grid">
-                                <dt>OPD No</dt>
-                                <dd><input type="text" id="txtOPD_NO" class="bp-input" style="height:26px;padding:3px 7px;" /></dd>
-                                <dt>Contact</dt><dd id="lblContactNo"></dd>
-                                <dt>Gender</dt><dd id="lblGender"></dd>
-                                <dt>Reg Date</dt><dd id="lblRegDate"></dd>
-                                <dt>MR No</dt><dd id="lblMRNo"></dd>
-                            </dl>
+        <div class="or-layout">
+            <section class="or-card">
+                <h5 class="or-card-title"><i class="fa fa-user-circle"></i> Patient Information</h5>
+                <div class="or-patient">
+                    <div class="or-avatar">
+                        <img src="~../../../../wwwroot/SOURCE_IMAGES/DASHBOARD_ICONS/billing2.png" alt="Patient" id="patientImage" />
+                    </div>
+                    <div class="or-who">
+                        <div class="or-name" id="lblPatienName">Patient Name</div>
+                        <div class="or-search">
+                            <div class="or-field">
+                                <label for="txtOPD_NO">OPD No</label>
+                                <input type="text" id="txtOPD_NO" class="or-input" autocomplete="off" />
+                            </div>
+                            <button type="button" class="or-search-btn" id="btnSearch" onclick="GetPatientDetailByOPDNO()"><i class="fa fa-search"></i> Search Patient</button>
                         </div>
                     </div>
                 </div>
-            </div>
+                <dl class="or-info">
+                    <div><dt>MR No</dt><dd id="lblMRNo"></dd></div>
+                    <div><dt>Age</dt><dd id="lblAgeYears"></dd></div>
+                    <div><dt>Gender</dt><dd id="lblGender"></dd></div>
+                    <div><dt>Contact</dt><dd id="lblContactNo"></dd></div>
+                    <div><dt>Reg Date</dt><dd id="lblRegDate"></dd></div>
+                    <div><dt>Patient Category</dt><dd id="lblPatientCategory"></dd></div>
+                    <div><dt>Department</dt><dd id="lblDepartment"></dd></div>
+                    <div class="or-wide"><dt>Address</dt><dd id="lblAddress"></dd></div>
+                </dl>
+            </section>
 
-            <div class="bp-card">
-                <div class="bp-card-header">
-                    <i class="fa fa-info-circle"></i>
-                    <span>Additional Details</span>
-                </div>
-                <div class="bp-card-body" style="padding:0;">
-                    <div class="bp-summary-row">
-                        <span class="bp-summary-label">Age</span>
-                        <span id="lblAgeYears" class="bp-summary-value bp-summary-value--readonly"></span>
+            <section class="or-card">
+                <h5 class="or-card-title"><i class="fa fa-file-text-o"></i> Original Amounts</h5>
+                <div class="or-grid or-grid-1">
+                    <div class="or-field or-figure or-figure-main">
+                        <label for="txtActualAmount">Actual Amount</label>
+                        <input type="text" id="txtActualAmount" class="or-input" disabled="disabled" />
                     </div>
-                    <div class="bp-summary-row">
-                        <span class="bp-summary-label">Address</span>
-                        <span id="lblAddress" style="margin-left:auto;color:var(--bp-text);font-weight:600;text-align:right;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;max-width:65%;"></span>
+                    <div class="or-field or-figure">
+                        <label for="txtDoctorAmount">Doctor Share</label>
+                        <input type="text" id="txtDoctorAmount" class="or-input" disabled="disabled" />
                     </div>
-                    <div class="bp-summary-row">
-                        <span class="bp-summary-label">Patient Category</span>
-                        <span id="lblPatientCategory" style="margin-left:auto;color:var(--bp-text);font-weight:600;"></span>
-                    </div>
-                    <div class="bp-summary-row">
-                        <span class="bp-summary-label">Department</span>
-                        <span id="lblDepartment" style="margin-left:auto;color:var(--bp-text);font-weight:600;"></span>
+                    <div class="or-field or-figure">
+                        <label for="txtHospitalShare">Hospital Share</label>
+                        <input type="text" id="txtHospitalShare" class="or-input" disabled="disabled" />
                     </div>
                 </div>
-            </div>
+            </section>
         </div>
 
-        <div class="bp-card">
-            <div class="bp-card-header">
-                <i class="fa fa-money"></i>
-                <span>Refund Details</span>
-            </div>
-            <div class="bp-card-body">
-                <div class="bp-bento bp-bento--4" style="gap:12px;">
-                    <div>
-                        <label class="bp-summary-label" style="display:block;margin-bottom:4px;">Doctor Share</label>
-                        <input type="text" id="txtDoctorAmount" class="bp-input" style="text-align:right;" disabled="disabled" />
-                    </div>
-                    <div>
-                        <label class="bp-summary-label" style="display:block;margin-bottom:4px;">Hospital Share</label>
-                        <input type="text" id="txtHospitalShare" class="bp-input" style="text-align:right;" disabled="disabled" />
-                    </div>
-                    <div>
-                        <label class="bp-summary-label" style="display:block;margin-bottom:4px;">Actual Amount</label>
-                        <input type="text" id="txtActualAmount" class="bp-input" style="text-align:right;" disabled="disabled" />
-                    </div>
-                    <div>
-                        <label class="bp-summary-label" style="display:block;margin-bottom:4px;">Refund Date</label>
-                        <input type="text" id="txtRefundDate" class="bp-input datepicker" />
-                    </div>
-                    <div>
-                        <label class="bp-summary-label" style="display:block;margin-bottom:4px;">Hospital Refund</label>
-                        <input type="text" id="txtHospitalRefund" class="bp-input" style="text-align:right;" />
-                    </div>
-                    <div>
-                        <label class="bp-summary-label" style="display:block;margin-bottom:4px;">Doctor Refund</label>
-                        <input type="text" id="txtDoctorRefund" class="bp-input" style="text-align:right;" />
-                    </div>
-                    <div>
-                        <label class="bp-summary-label" style="display:block;margin-bottom:4px;">Total Refund</label>
-                        <input type="text" id="TotalRefundAmount" class="bp-input" style="text-align:right;font-weight:700;color:var(--bp-primary);" disabled="disabled" />
-                    </div>
-                    <div>
-                        <label class="bp-summary-label" style="display:block;margin-bottom:4px;">Remarks</label>
-                        <input type="text" id="txtRemarks" class="bp-input" />
-                    </div>
+        <section class="or-card">
+            <h5 class="or-card-title"><i class="fa fa-money"></i> Refund Details</h5>
+            <div class="or-grid">
+                <div class="or-field">
+                    <label for="txtHospitalRefund">Hospital Refund</label>
+                    <input type="text" id="txtHospitalRefund" class="or-input or-num" />
+                </div>
+                <div class="or-field">
+                    <label for="txtDoctorRefund">Doctor Refund</label>
+                    <input type="text" id="txtDoctorRefund" class="or-input or-num" />
+                </div>
+                <div class="or-field or-figure or-figure-main">
+                    <label for="TotalRefundAmount">Total Refund</label>
+                    <input type="text" id="TotalRefundAmount" class="or-input" disabled="disabled" />
+                </div>
+                <div class="or-field">
+                    <label for="txtRefundDate">Refund Date</label>
+                    <input type="text" id="txtRefundDate" class="or-input datepicker" />
+                </div>
+                <div class="or-field or-span-all">
+                    <label for="txtRemarks">Remarks</label>
+                    <input type="text" id="txtRemarks" class="or-input" />
                 </div>
             </div>
-        </div>
+        </section>
 
-        <div class="row mt-3" id="divActionButtons">
-            <div class="col-lg-8">
-                <div class="row">
-                    <div class="col-lg-2 col-md-3 col-sm-6" id="colSave">
-                        <input type="button" value="Save" onclick="SaveOPDRecord()" id="btnSave" class="btn btn-primry" />
-                    </div>
-                    <div class="col-lg-2 col-md-3 col-sm-6" id="colApprove">
-                        <input type="button" value="Approve" onclick="ApproveOPDRecord()" id="btnApprove" class="btn btn-primry" />
-                    </div>
-                    <div class="col-lg-2 col-md-3 col-sm-6">
-                        <input type="button" value="List View" class="btn-gray" onclick="window.open('OPD_Refund_List.aspx')" />
-                    </div>
-                    <div class="col-lg-2 col-md-2 col-sm-3" id="colPrint">
-                        <input type="button" id="btnPrint" class="btn btn-primry" onclick="PrintRefund()" value="Print" />
-                    </div>
-                </div>
+        <div class="or-actions">
+            <div id="colSave">
+                <input type="button" value="Save" onclick="SaveOPDRecord()" id="btnSave" class="btn btn-primry" />
+            </div>
+            <div id="colApprove">
+                <input type="button" value="Approve" onclick="ApproveOPDRecord()" id="btnApprove" class="btn btn-primry" />
+            </div>
+            <div>
+                <input type="button" value="List View" class="btn-gray" onclick="window.open('OPD_Refund_List.aspx')" />
+            </div>
+            <div id="colPrint">
+                <input type="button" id="btnPrint" class="btn btn-primry" onclick="PrintRefund()" value="Print" />
             </div>
         </div>
     </div>
+
+    <script type="text/javascript">
+        // title-line badges follow the form (the page script fills the fields in after loading)
+        function syncRefundBadges() {
+            $('#badgeRfMr').text($('#lblMRNo').text() || '---');
+            $('#badgeRfTotal').text($('#TotalRefundAmount').val() || '0.00');
+            var st = 'New Refund';
+            if ($('#btnSave').val() === 'Update') st = $('#colPrint').is(':visible') ? 'Approved' : 'Pending';
+            $('#refundStatusBadge').text(st);
+        }
+        $(function () {
+            syncRefundBadges();
+            setInterval(syncRefundBadges, 600);
+        });
+    </script>
 </asp:Content>

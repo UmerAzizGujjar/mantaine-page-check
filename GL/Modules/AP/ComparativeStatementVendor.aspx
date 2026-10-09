@@ -1,7 +1,7 @@
-<%@ Page Title="" Language="C#" MasterPageFile="~/Site.Master" AutoEventWireup="true" CodeBehind="ComparativeStatementVendor.aspx.cs" Inherits="PMS.AP.ComparativeStatementVendor" %>
+﻿<%@ Page Title="" Language="C#" MasterPageFile="~/Site.Master" AutoEventWireup="true" CodeBehind="ComparativeStatementVendor.aspx.cs" Inherits="PMS.AP.ComparativeStatementVendor" %>
 <asp:Content ID="Content1" ContentPlaceHolderID="HeadContent" runat="server">
 
-    <link href="../../wwwroot/THEME_TIBBIT/CustomCSS/CRV.css" rel="stylesheet" />
+    <link href="../../wwwroot/THEME_TIBBIT/CustomCSS/comparative-statement.css" rel="stylesheet" />
     <script type="text/javascript">
         var amount1 = 0;
         var amount2 = 0;
@@ -1957,6 +1957,13 @@ function RecalculateAllVendorTotals() {
                   }
               });
           }
+
+        function syncCsBadges() {
+            $('#badgeCsNo').text($('#txt_CSno').val() || '---');
+            $('#badgeCsDate').text($('#txt_Date').val() || '---');
+            $('#badgeCsStatus').text($('#txt_status').val() || '---');
+        }
+        $(function () { syncCsBadges(); setInterval(syncCsBadges, 600); });
     </script>
 </asp:Content>
 <asp:Content ID="Content2" ContentPlaceHolderID="MainContent" runat="server">
@@ -1967,114 +1974,99 @@ function RecalculateAllVendorTotals() {
     <input type="hidden" id="txtSTAmount_Vend4" name="txtSTAmount_Vend4" />
     <input type="hidden" id="txtSTAmount_Vend5" name="txtSTAmount_Vend5" />
 
-    <div class="row" style="overflow: scroll;">
-        <div class="col-lg-5 col-md-5 col-sm-5">
-            <div class="row">
-                <div class="col-xs-9 col-lg-9 col-md-5 col-sm-9">
-                    <div class="row" id="warehouserow">
-                        <div class="col-lg-4 col-md-4 col-sm-6">
-                            <label id="LblWarehouse">WareHouse<span style="color: red">*</span></label>
-                        </div>
-                        <div class="col-lg-6 col-md-4 col-sm-6 mt-1">
-                            <select id="ddlWarehouse" onchange="getprNoBy_WareHouseCS()" style="width: 100% !important">
-                                <option value="0">Please Select</option>
-                            </select>
-                        </div>
-                    </div>
-                    <div class="row">
-                        <div class="col-lg-4 col-md-4 col-sm-6">
-                            <label id="LblBranch">Branch</label>
-                        </div>
-                        <div class="col-lg-6 col-md-4 col-sm-6 mt-1">
-                            <select id="ddlBranch" style="width: 100% !important">
-                                <option value="0">Please Select</option>
-                            </select>
-                        </div>
-                    </div>
-                    <div class="row">
-                        <div class="col-lg-4 col-md-5 col-sm-6">
-                            <label class="Fleft"  id="lb_CSno">CS#</label>
-                            </div>
-                        <div class="col-lg-6 col-md-8 col-sm-5">
-                            <input class="Fleft"  type="text" name="txt_CSno" id="txt_CSno" readonly="readonly" />
-                            </div>
-                    </div>
-                    <div class="row">
-                        <div class="col-lg-4 col-md-5 col-sm-6">
-                            <label class="Fleft m_top_3"  id="lb_Date">Date</label>
-                            </div>
-                        <div class="col-lg-6 col-md-8 col-sm-6">
-                            <input class="Fleft m_top_3"  type="text" name="txt_Date" id="txt_Date" /> 
-                    </div>
-                        </div>
-                    <div class="row">
-                         <div class="col-lg-4 col-md-4 col-sm-6">
-                             <label class="Fleft m_top_3"  id="lb_Cs_Validity">CS Validity</label>
-                             </div>
-                        <div class="col-lg-6 col-md-4 col-sm-6">
-                            <input class="Fleft m_top_3"  type="text" name="txt_Cs_Validity" id="txt_Cs_Validity" /> 
-                            </div>
-                    </div>
-                     <div class="row">
-                         <div class="col-lg-4 col-md-4 col-sm-6">
-                             <label class="Fleft m_top_3"  id="lb_Pr_No">PR No</label>
-                             </div>
-                         <div class="col-lg-6 col-md-4 col-sm-6 mt-1">
-                             <asp:DropDownList runat="server" ID="ddlPrNo" class="Fleft" onchange="ddlPrNoChanged()">
-                                 <asp:ListItem Value="0">Please Select</asp:ListItem>
-                             </asp:DropDownList>
-                         </div>
-                     </div>
-                    <div class="row">
-                        <div class="col-lg-4 col-md-4 col-sm-6">
-                            <label class="Fleft m_top_3"  id="lb_remarks">Remarks</label>
-                            </div>
-                        <div class="col-lg-6 col-md-4 col-sm-6">
-                            <input type="text" style="width: 100% !important" class="m_top_3" id="txt_remarks" />
-                            </div>
-                        </div>
-                    <div class="row">
-                         <div class="col-lg-4 col-md-4 col-sm-6">
-                             <label class="Fleft m_top_3"  id="lbl_status">Status</label>
-                             </div>
-                        <div class="col-lg-6 col-md-4 col-sm-6">
-                            <input class="Fleft m_top_3"  type="text" name="txt_status" id="txt_status" value="Created" readonly="readonly" />
-                            </div>
-                    </div>
-                           <div class="row">
-                               <div class="col-lg-4 col-md-4 col-sm-6">
-                                   <label class="Fleft m_top_3"  id="lbl_termid">Term & Conditions</label>
-                                   </div>
-                               <div class="col-lg-6 col-md-4 col-sm-6 mt-1">
-                                   <asp:DropDownList runat="server" ID="ddlterms" class="Fleft">
-                                       <asp:ListItem Value="0">Please Select</asp:ListItem>
-                                   </asp:DropDownList>
-                               </div>
-                           </div>  
-                    
-                </div>
+    <!-- Title line: the master adds the page title on the left; CS no / date / status badges sit on the right -->
+    <div class="pr-meta-bar">
+        <div class="meta-left"></div>
+        <div class="meta-right">
+            <div class="cs-badge"><span class="cs-badge-label">CS#</span><span class="cs-badge-value" id="badgeCsNo">---</span></div>
+            <div class="cs-badge"><span class="cs-badge-label">Date</span><span class="cs-badge-value" id="badgeCsDate">---</span></div>
+            <div class="cs-badge"><span class="cs-badge-label">Status</span><span class="cs-badge-value" id="badgeCsStatus">---</span></div>
+        </div>
+    </div>
 
-                <div class="col-xs-3 col-sm-3 col-lg-3 col-md-3">
-                    <label id="lb_vendorName" class="padding_b_3" style="margin-top: 45px;">Vendor Name</label>
-                    <label id="lb_paymentTerms" class="" style=" margin-top: 60px;">Mode of Payment</label>
-                    <label id="lb_DeliveryTerms" class="" style="margin-top: 50px;">Delivery Terms</label>
+    <div class="cs-page">
+        <!-- Statement details -->
+        <div class="cs-card">
+            <h5 class="cs-card-title"><i class="fa fa-balance-scale"></i> Statement Details</h5>
+            <div class="cs-grid">
+                <div class="cs-field" id="warehouserow">
+                    <label id="LblWarehouse" for="ddlWarehouse">WareHouse<span class="cs-req">*</span></label>
+                    <select id="ddlWarehouse" class="cs-input" onchange="getprNoBy_WareHouseCS()">
+                        <option value="0">Please Select</option>
+                    </select>
+                </div>
+                <div class="cs-field">
+                    <label id="LblBranch" for="ddlBranch">Branch</label>
+                    <select id="ddlBranch" class="cs-input">
+                        <option value="0">Please Select</option>
+                    </select>
+                </div>
+                <div class="cs-field">
+                    <label id="lb_CSno" for="txt_CSno">CS#</label>
+                    <input class="cs-input" type="text" name="txt_CSno" id="txt_CSno" readonly="readonly" />
+                </div>
+                <div class="cs-field">
+                    <label id="lb_Date" for="txt_Date">Date</label>
+                    <input class="cs-input" type="text" name="txt_Date" id="txt_Date" />
+                </div>
+                <div class="cs-field">
+                    <label id="lb_Cs_Validity" for="txt_Cs_Validity">CS Validity</label>
+                    <input class="cs-input" type="text" name="txt_Cs_Validity" id="txt_Cs_Validity" />
+                </div>
+                <div class="cs-field">
+                    <label id="lbl_status" for="txt_status">Status</label>
+                    <input class="cs-input" type="text" name="txt_status" id="txt_status" value="Created" readonly="readonly" />
+                </div>
+                <div class="cs-field">
+                    <label id="lb_Pr_No" for="ctl00_MainContent_ddlPrNo">PR No</label>
+                    <asp:DropDownList runat="server" ID="ddlPrNo" CssClass="cs-input" onchange="ddlPrNoChanged()">
+                        <asp:ListItem Value="0">Please Select</asp:ListItem>
+                    </asp:DropDownList>
+                </div>
+                <div class="cs-field">
+                    <label id="lbl_termid" for="ctl00_MainContent_ddlterms">Term &amp; Conditions</label>
+                    <asp:DropDownList runat="server" ID="ddlterms" CssClass="cs-input">
+                        <asp:ListItem Value="0">Please Select</asp:ListItem>
+                    </asp:DropDownList>
+                </div>
+                <div class="cs-field cs-span-2">
+                    <label id="lb_remarks" for="txt_remarks">Remarks</label>
+                    <input type="text" class="cs-input" id="txt_remarks" />
+                </div>
+                <div class="cs-field cs-span-2">
+                    <label id="lb_Attachments" for="uploadcsfile">Attachments</label>
+                    <div class="cs-attach">
+                        <input type="file" name="txt_attachments" id="uploadcsfile" />
+                        <asp:HyperLink ID="hyperlink1" runat="server" CssClass="cs-link">Download</asp:HyperLink>
+                        <input type="button" id="marklowratebtn" class="cs-lowrate" style="display: none;" onclick="getlowrate()" value="Mark Low Rate" />
+                    </div>
                 </div>
             </div>
-            <div class="row">
-                <div class="col-xs-12 col-sm-12 col-lg-12 col-md-12">
-                    <table class="table table-bordered" id="tblDetails" style="margin-top: 4px;">
+        </div>
+
+        <!-- Comparison grid: items on the left, one block per vendor, then the last GRN rates -->
+        <div class="cs-card">
+            <h5 class="cs-card-title"><i class="fa fa-table"></i> Vendor Comparison</h5>
+            <div class="cs-compare">
+                <div class="cs-col-items">
+                    <div class="cs-band">
+                        <div class="cs-band-head">Items</div>
+                        <div class="cs-band-row"><label id="lb_vendorName">Vendor Name</label></div>
+                        <div class="cs-band-row"><label id="lb_paymentTerms">Mode of Payment</label></div>
+                        <div class="cs-band-row"><label id="lb_DeliveryTerms">Delivery Terms</label></div>
+                    </div>
+                    <table class="cs-items" id="tblDetails">
                         <thead>
                             <tr>
                                 <th>Action</th>
-                                <th style="display: none">PR ID</th>        
-                                
+                                <th style="display: none">PR ID</th>
                                 <th>PR No</th>
                                 <th style="display: none">Item ID</th>
                                 <th>Item Code</th>
-                                <th style="width: 220px !important;">Item Description</th>
+                                <th class="cs-th-desc">Item Description</th>
                                 <th>UOM</th>
                                 <th>Qty</th>
-                                <th style="width: 50px !important;">Req Date</th>
+                                <th>Req Date</th>
                                 <th style="display: none">Pr Detail Id</th>
                                 <th style="display: none">GrnNum</th>
                                 <th style="display: none">GrnRate</th>
@@ -2084,298 +2076,224 @@ function RecalculateAllVendorTotals() {
                         </tbody>
                     </table>
                 </div>
-            </div>
-        </div>
-        <div class="col-xs-5 col-sm-5 col-lg-5 col-md-5">
-            <div style="margin-left:-10px; float: left; width: 100%; min-width: 50px; overflow-x: auto!important; white-space: nowrap;">
-                <table class="table" border="1">
-                    <tr>
-                        <td>
-                            <table   border="1" cellpadding="0" cellspacing="0" style="width: 253px !important; height: 239px !important;line-height:0.5px !important" id="toptable1">
-                                <tr style="background-color: #449777db !important;color: white;">
-                                    <th style="padding-top:7px !important" colspan="2">All Items</th>
-                                    <th style="padding-top:7px !important">Vendor 1</th>
-                                </tr>
-                                <tr>
-                                    <td colspan="3" style="height:60px !important">
-                                        <select class="width_input_ver" name="txt_vendorName_vendor1" id="txt_vendorName_vendor1" /></td>
-                                </tr>
-                                <tr>
-                                    <td colspan="3" style="height:60px !important">
-                                        <select class="width_input_ver" name="txt_paymentTerms_vendor1" id="txt_paymentTerms_vendor1" /></td>
-                                </tr>
-                                <tr>
-                                    <td colspan="3" style="height:60px !important">
-                                        <select class="width_input_ver" name="txt_DeliveryTerms_vendor1" id="txt_DeliveryTerms_vendor1" /></td>
-                                </tr>
-                            </table>
-                            <table border="1" cellpadding="0" cellspacing="0" style="width: 253px !important" id="tblItemDescription1">
-                                <thead>
-                                    <tr>
-                                        <th></th>
-                                        <th style="padding-bottom:6px !important">Qty</th>
-                                        <th style="padding-bottom:6px !important">Rate</th>
-                                        <th style="width: 75px;padding-bottom:6px !important">S.Tax</th>
-                                        <th style="padding-bottom:6px !important">Amount</th>
-
-
-                                    </tr>
-                                </thead>
-                                <tbody id="tblItemDescription11">
-                                </tbody>
-                            </table>
-                            <table id="bottomtable1">
-                                <tr>
-                                    <td colspan="4">
-                                        <label id="lb_amount_vendor1" style="width: 65px;">Amount</label>
-                                        <input type="text" name="txt_amount_vendor1" id="txt_amount_vendor1" style="width: 97px !important; text-align: right; float: right" />
-                                    </td>
-                                </tr>
-                                <tr>
-                                    <td colspan="4">
-                                        <label id="lb_Freight_vendor1" style="width: 65px;">Freight</label>
-                                        <input type="text" name="txt_Freight_vendor1" id="txt_Freight_vendor1" style="width: 97px !important; text-align: right; float: right" onchange="calculate2(this)" />
-                                    </td>
-                                </tr>
-                                <tr>
-                                    <td colspan="4">
-                                        <label id="lb_TotalAmount_vendor1" style="width: 65px;">Total Amount</label>
-                                        <input type="text" name="txt_TotalAmount_vendor1" id="txt_TotalAmount_vendor1" style="width: 97px !important; text-align: right; float: right" />
-                                    </td>
-                                </tr>
-
-                            </table>
-                        </td>
-                        <td>
-                            <table border="1" cellpadding="0" cellspacing="0" style="width: 253px !important; height: 239px !important;" id="toptable2">
-                                <tr style="height:21px !important">
-                                    <th style="padding-top:7px !important" colspan="2">All Items</th>
-                                    <th style="padding-top:7px !important">Vendor 2</th>
-                                </tr>
-                                <tr>
-                                    <td colspan="3" style="height:60px !important">
-                                        <select class="width_input_ver" name="txt_vendorName_vendor2" id="txt_vendorName_vendor2" /></td>
-                                </tr>
-                                <tr>
-                                    <td colspan="3" style="height:60px !important">
-                                        <select class="width_input_ver" name="txt_paymentTerms_vendor2" id="txt_paymentTerms_vendor2" /></td>
-                                </tr>
-                                <tr>
-                                    <td colspan="3" style="height:60px !important">
-                                        <select class="width_input_ver" name="txt_DeliveryTerms_vendor2" id="txt_DeliveryTerms_vendor2" /></td>
-                                </tr>
-                            </table>
-                            <table border="1" cellpadding="0" cellspacing="0" style="width: 253px !important;" id="tblItemDescription2">
-                                <thead>
-                                    <tr>
-                                        <th></th>
-                                        <th style="padding-bottom:6px !important">Qty</th>
-                                        <th style="padding-bottom:6px !important">Rate</th>
-                                        <th style="width: 75px;padding-bottom:6px !important">S.Tax</th>
-                                        <th style="padding-bottom:6px !important">Amount</th>
-                                    </tr>
-                                </thead>
-                                <tbody id="tblItemDescription21">
-                                </tbody>
-                            </table>
-                            <table id="bottomtable2">
-                                <tr>
-                                    <td colspan="4">
-                                        <label id="lb_amount_vendor2" style="width: 65px;">Amount</label>
-                                        <input type="text" name="txt_amount_vendor2" id="txt_amount_vendor2" style="width: 97px !important; text-align: right; float: right" />
-                                    </td>
-                                </tr>
-                                <tr>
-                                    <td colspan="4">
-                                        <label id="lb_Freight_vendor2" style="width: 65px;">Freight</label>
-                                        <input type="text" name="txt_Freight_vendor2" id="txt_Freight_vendor2" style="width: 97px !important; text-align: right; float: right" onchange="calculate2(this)" />
-                                    </td>
-                                </tr>
-                                <tr>
-                                    <td colspan="4">
-                                        <label id="lb_TotalAmount_vendor2" style="width: 65px;">Total Amount</label>
-                                        <input type="text" name="txt_TotalAmount_vendor2" id="txt_TotalAmount_vendor2" style="width: 97px !important; text-align: right; float: right" />
-                                    </td>
-                                </tr>
-                            </table>
-                        </td>
-                        <td>
-                            <table border="1" cellpadding="0" cellspacing="0" style="width: 253px !important; height: 239px !important;" id="toptable3">
-                                <tr>
-                                    <th style="padding-top:7px !important" colspan="2">All Items</th>
-                                    <th style="padding-top:7px !important">Vendor 3</th>
-                                </tr>
-                                <tr>
-                                    <td colspan="3" style="height:60px !important">
-                                        <select class="width_input_ver" name="txt_vendorName_vendor3" id="txt_vendorName_vendor3" /></td>
-                                </tr>
-                                <tr>
-                                    <td colspan="3" style="height:60px !important">
-                                        <select class="width_input_ver" name="txt_paymentTerms_vendor3" id="txt_paymentTerms_vendor3" /></td>
-                                </tr>
-                                <tr>
-                                    <td colspan="3" style="height:60px !important">
-                                        <select class="width_input_ver" name="txt_DeliveryTerms_vendor3" id="txt_DeliveryTerms_vendor3" /></td>
-                                </tr>
-                            </table>
-                            <table border="1" cellpadding="0" cellspacing="0" style="width: 253px !important;" id="tblItemDescription3">
-                                <thead>
-                                    <tr>
-                                        <th></th>
-                                        <th style="padding-bottom:6px !important">Qty</th>
-                                        <th style="padding-bottom:6px !important">Rate</th>
-                                        <th style="width: 75px;padding-bottom:6px !important">S.Tax</th>
-                                        <th style="padding-bottom:6px !important">Amount</th>
-                                    </tr>
-                                </thead>
-                                <tbody id="tblItemDescription31">
-                                </tbody>
-                            </table>
-                            <table id="bottomtable3">
-                                <tr>
-                                    <td colspan="4">
-                                        <label id="lb_amount_vendor3" style="width: 65px;">Amount</label>
-                                        <input type="text" name="txt_amount_vendor3" id="txt_amount_vendor3" style="width: 97px !important; text-align: right; float: right" />
-                                    </td>
-                                </tr>
-                                <tr>
-                                    <td colspan="4">
-                                        <label id="lb_Freight_vendor3" style="width: 65px;">Freight</label>
-                                        <input type="text" name="txt_Freight_vendor3" id="txt_Freight_vendor3" style="width: 97px !important; text-align: right; float: right" onchange="calculate2(this)" />
-                                    </td>
-                                </tr>
-                                <tr>
-                                    <td colspan="4">
-                                        <label id="lb_TotalAmount_vendor3" style="width: 65px;">Total Amount</label>
-                                        <input type="text" name="txt_TotalAmount_vendor3" id="txt_TotalAmount_vendor3" style="width: 97px !important; text-align: right; float: right" />
-                                    </td>
-                                </tr>
-                            </table>
-                        </td>
-                        <td>
-                            <table border="1" cellpadding="0" cellspacing="0" style="width: 253px !important; height: 239px !important;" id="toptable4">
-                                <tr>
-                                    <th style="padding-top:7px !important" colspan="2">All Items</th>
-                                    <th style="padding-top:7px !important">Vendor 4</th>
-                                </tr>
-                                <tr>
-                                    <td colspan="3" style="height:60px !important">
-                                        <select class="width_input_ver" name="txt_vendorName_vendor4" id="txt_vendorName_vendor4" /></td>
-                                </tr>
-                                <tr>
-                                    <td colspan="3" style="height:60px !important">
-                                        <select class="width_input_ver" name="txt_paymentTerms_vendor4" id="txt_paymentTerms_vendor4" /></td>
-                                </tr>
-                                <tr>
-                                    <td colspan="3" style="height:60px !important">
-                                        <select class="width_input_ver" name="txt_DeliveryTerms_vendor4" id="txt_DeliveryTerms_vendor4" /></td>
-                                </tr>
-                            </table>
-                            <table border="1" cellpadding="0" cellspacing="0" style="width: 253px !important;" id="tblItemDescription4">
-                                <thead>
-                                    <tr>
-                                        <th></th>
-                                        <th style="padding-bottom:6px !important">Qty</th>
-                                        <th style="padding-bottom:6px !important">Rate</th>
-                                        <th style="width: 75px;padding-bottom:6px !important">S.Tax</th>
-                                        <th style="padding-bottom:6px !important">Amount</th>
-                                    </tr>
-                                </thead>
-                                <tbody id="tblItemDescription41">
-                                </tbody>
-                            </table>
-                            <table id="bottomtable4">
-                                <tr>
-                                    <td colspan="4">
-                                        <label id="lb_amount_vendor4" style="width: 65px;">Amount</label>
-                                        <input type="text" name="txt_amount_vendor4" id="txt_amount_vendor4" style="width: 97px !important; text-align: right; float: right" />
-                                    </td>
-                                </tr>
-                                <tr>
-                                    <td colspan="4">
-                                        <label id="lb_Freight_vendor4" style="width: 65px;">Freight</label>
-                                        <input type="text" name="txt_Freight_vendor4" id="txt_Freight_vendor4" style="width: 97px !important; text-align: right; float: right" onchange="calculate2(this)" />
-                                    </td>
-                                </tr>
-                                <tr>
-                                    <td colspan="4">
-                                        <label id="lb_TotalAmount_vendor4" style="width: 65px;">Total Amount</label>
-                                        <input type="text" name="txt_TotalAmount_vendor4" id="txt_TotalAmount_vendor4" style="width: 97px !important; text-align: right; float: right" />
-                                    </td>
-                                </tr>
-                            </table>
-                        </td>
-                        <td>
-                            <table border="1" cellpadding="0" cellspacing="0" style="width: 253px !important; height: 239px !important;" id="toptable5">
-                                <tr>
-                                    <th style="padding-top:7px !important" colspan="2">All Items</th>
-                                    <th style="padding-top:7px !important">Vendor 5</th>
-                                </tr>
-                                <tr>
-                                    <td colspan="3" style="height:60px !important">
-                                        <select class="width_input_ver" name="txt_vendorName_vendor5" id="txt_vendorName_vendor5" /></td>
-                                </tr>
-                                <tr>
-                                    <td colspan="3" style="height:60px !important">
-                                        <select class="width_input_ver" name="txt_paymentTerms_vendor5" id="txt_paymentTerms_vendor5" /></td>
-                                </tr>
-                                <tr>
-                                    <td colspan="3" style="height:60px !important">
-                                        <select class="width_input_ver" name="txt_DeliveryTerms_vendor5" id="txt_DeliveryTerms_vendor5" /></td>
-                                </tr>
-                            </table>
-                            <table border="1" cellpadding="0" cellspacing="0" style="width: 253px !important;" id="tblItemDescription5">
-                                <thead>
-                                    <tr>
-                                        <th></th>
-                                        <th style="padding-bottom:6px !important">Qty</th>
-                                        <th style="padding-bottom:6px !important">Rate</th>
-                                        <th style="width: 75px;padding-bottom:6px !important">S.Tax</th>
-                                        <th style="padding-bottom:6px !important">Amount</th>
-                                    </tr>
-                                </thead>
-                                <tbody id="tblItemDescription51">
-                                </tbody>
-                            </table>
-                            <table id="bottomtable5">
-                                <tr>
-                                    <td colspan="4">
-                                        <label id="lb_amount_vendor5" style="width: 65px;">Amount</label>
-                                        <input type="text" name="txt_amount_vendor5" id="txt_amount_vendor5" style="width: 97px !important; text-align: right; float: right" />
-                                    </td>
-                                </tr>
-                                <tr>
-                                    <td colspan="4">
-                                        <label id="lb_Freight_vendor5" style="width: 65px;">Freight</label>
-                                        <input type="text" name="txt_Freight_vendor5" id="txt_Freight_vendor5" style="width: 97px !important; text-align: right; float: right" onchange="calculate2(this)" />
-                                    </td>
-                                </tr>
-                                <tr>
-                                    <td colspan="4">
-                                        <label id="lb_TotalAmount_vendor5" style="width: 65px;">Total Amount</label>
-                                        <input type="text" name="txt_TotalAmount_vendor5" id="txt_TotalAmount_vendor5" style="width: 97px !important; text-align: right; float: right" />
-                                    </td>
-                                </tr>
-                            </table>
-                        </td>
-                    </tr>
-                </table>
-            </div>
-        </div>
-        <div class="col-xs-2 col-sm-2 col-lg-2 col-md-2">
-            <div class="row">
-                <div class="col-lg-12">
-                    <label id="lb_Attachments" class="Fleft">Attachments</label>
-                    <input type="file" name="txt_attachments" id="uploadcsfile" class="Fleft" />
-                    <br />
-                    <asp:HyperLink ID="hyperlink1" runat="server">Download</asp:HyperLink>
-                    <br />
-                    <input type="button" id="marklowratebtn" style="margin-left: 80px; display: none; margin-top: 5px; width: 172px; margin-bottom: 15px" onclick="getlowrate()" value="Mark Low Rate" />
+                <div class="cs-vendor">
+                    <table class="cs-top" id="toptable1">
+                        <tr>
+                            <th colspan="2">All Items</th>
+                            <th>Vendor 1</th>
+                        </tr>
+                        <tr><td colspan="3"><select class="cs-input" name="txt_vendorName_vendor1" id="txt_vendorName_vendor1"></select></td></tr>
+                        <tr><td colspan="3"><select class="cs-input" name="txt_paymentTerms_vendor1" id="txt_paymentTerms_vendor1"></select></td></tr>
+                        <tr><td colspan="3"><select class="cs-input" name="txt_DeliveryTerms_vendor1" id="txt_DeliveryTerms_vendor1"></select></td></tr>
+                    </table>
+                    <table class="cs-items" id="tblItemDescription1">
+                        <thead>
+                            <tr>
+                                <th></th>
+                                <th>Qty</th>
+                                <th>Rate</th>
+                                <th>S.Tax</th>
+                                <th>Amount</th>
+                            </tr>
+                        </thead>
+                        <tbody id="tblItemDescription11">
+                        </tbody>
+                    </table>
+                    <table class="cs-bottom" id="bottomtable1">
+                        <tr>
+                            <td colspan="4">
+                                <label id="lb_amount_vendor1">Amount</label>
+                                <input type="text" name="txt_amount_vendor1" id="txt_amount_vendor1" />
+                            </td>
+                        </tr>
+                        <tr>
+                            <td colspan="4">
+                                <label id="lb_Freight_vendor1">Freight</label>
+                                <input type="text" name="txt_Freight_vendor1" id="txt_Freight_vendor1" onchange="calculate2(this)" />
+                            </td>
+                        </tr>
+                        <tr>
+                            <td colspan="4">
+                                <label id="lb_TotalAmount_vendor1">Total Amount</label>
+                                <input type="text" name="txt_TotalAmount_vendor1" id="txt_TotalAmount_vendor1" />
+                            </td>
+                        </tr>
+                    </table>
+                </div>                <div class="cs-vendor">
+                    <table class="cs-top" id="toptable2">
+                        <tr>
+                            <th colspan="2">All Items</th>
+                            <th>Vendor 2</th>
+                        </tr>
+                        <tr><td colspan="3"><select class="cs-input" name="txt_vendorName_vendor2" id="txt_vendorName_vendor2"></select></td></tr>
+                        <tr><td colspan="3"><select class="cs-input" name="txt_paymentTerms_vendor2" id="txt_paymentTerms_vendor2"></select></td></tr>
+                        <tr><td colspan="3"><select class="cs-input" name="txt_DeliveryTerms_vendor2" id="txt_DeliveryTerms_vendor2"></select></td></tr>
+                    </table>
+                    <table class="cs-items" id="tblItemDescription2">
+                        <thead>
+                            <tr>
+                                <th></th>
+                                <th>Qty</th>
+                                <th>Rate</th>
+                                <th>S.Tax</th>
+                                <th>Amount</th>
+                            </tr>
+                        </thead>
+                        <tbody id="tblItemDescription21">
+                        </tbody>
+                    </table>
+                    <table class="cs-bottom" id="bottomtable2">
+                        <tr>
+                            <td colspan="4">
+                                <label id="lb_amount_vendor2">Amount</label>
+                                <input type="text" name="txt_amount_vendor2" id="txt_amount_vendor2" />
+                            </td>
+                        </tr>
+                        <tr>
+                            <td colspan="4">
+                                <label id="lb_Freight_vendor2">Freight</label>
+                                <input type="text" name="txt_Freight_vendor2" id="txt_Freight_vendor2" onchange="calculate2(this)" />
+                            </td>
+                        </tr>
+                        <tr>
+                            <td colspan="4">
+                                <label id="lb_TotalAmount_vendor2">Total Amount</label>
+                                <input type="text" name="txt_TotalAmount_vendor2" id="txt_TotalAmount_vendor2" />
+                            </td>
+                        </tr>
+                    </table>
+                </div>                <div class="cs-vendor">
+                    <table class="cs-top" id="toptable3">
+                        <tr>
+                            <th colspan="2">All Items</th>
+                            <th>Vendor 3</th>
+                        </tr>
+                        <tr><td colspan="3"><select class="cs-input" name="txt_vendorName_vendor3" id="txt_vendorName_vendor3"></select></td></tr>
+                        <tr><td colspan="3"><select class="cs-input" name="txt_paymentTerms_vendor3" id="txt_paymentTerms_vendor3"></select></td></tr>
+                        <tr><td colspan="3"><select class="cs-input" name="txt_DeliveryTerms_vendor3" id="txt_DeliveryTerms_vendor3"></select></td></tr>
+                    </table>
+                    <table class="cs-items" id="tblItemDescription3">
+                        <thead>
+                            <tr>
+                                <th></th>
+                                <th>Qty</th>
+                                <th>Rate</th>
+                                <th>S.Tax</th>
+                                <th>Amount</th>
+                            </tr>
+                        </thead>
+                        <tbody id="tblItemDescription31">
+                        </tbody>
+                    </table>
+                    <table class="cs-bottom" id="bottomtable3">
+                        <tr>
+                            <td colspan="4">
+                                <label id="lb_amount_vendor3">Amount</label>
+                                <input type="text" name="txt_amount_vendor3" id="txt_amount_vendor3" />
+                            </td>
+                        </tr>
+                        <tr>
+                            <td colspan="4">
+                                <label id="lb_Freight_vendor3">Freight</label>
+                                <input type="text" name="txt_Freight_vendor3" id="txt_Freight_vendor3" onchange="calculate2(this)" />
+                            </td>
+                        </tr>
+                        <tr>
+                            <td colspan="4">
+                                <label id="lb_TotalAmount_vendor3">Total Amount</label>
+                                <input type="text" name="txt_TotalAmount_vendor3" id="txt_TotalAmount_vendor3" />
+                            </td>
+                        </tr>
+                    </table>
+                </div>                <div class="cs-vendor">
+                    <table class="cs-top" id="toptable4">
+                        <tr>
+                            <th colspan="2">All Items</th>
+                            <th>Vendor 4</th>
+                        </tr>
+                        <tr><td colspan="3"><select class="cs-input" name="txt_vendorName_vendor4" id="txt_vendorName_vendor4"></select></td></tr>
+                        <tr><td colspan="3"><select class="cs-input" name="txt_paymentTerms_vendor4" id="txt_paymentTerms_vendor4"></select></td></tr>
+                        <tr><td colspan="3"><select class="cs-input" name="txt_DeliveryTerms_vendor4" id="txt_DeliveryTerms_vendor4"></select></td></tr>
+                    </table>
+                    <table class="cs-items" id="tblItemDescription4">
+                        <thead>
+                            <tr>
+                                <th></th>
+                                <th>Qty</th>
+                                <th>Rate</th>
+                                <th>S.Tax</th>
+                                <th>Amount</th>
+                            </tr>
+                        </thead>
+                        <tbody id="tblItemDescription41">
+                        </tbody>
+                    </table>
+                    <table class="cs-bottom" id="bottomtable4">
+                        <tr>
+                            <td colspan="4">
+                                <label id="lb_amount_vendor4">Amount</label>
+                                <input type="text" name="txt_amount_vendor4" id="txt_amount_vendor4" />
+                            </td>
+                        </tr>
+                        <tr>
+                            <td colspan="4">
+                                <label id="lb_Freight_vendor4">Freight</label>
+                                <input type="text" name="txt_Freight_vendor4" id="txt_Freight_vendor4" onchange="calculate2(this)" />
+                            </td>
+                        </tr>
+                        <tr>
+                            <td colspan="4">
+                                <label id="lb_TotalAmount_vendor4">Total Amount</label>
+                                <input type="text" name="txt_TotalAmount_vendor4" id="txt_TotalAmount_vendor4" />
+                            </td>
+                        </tr>
+                    </table>
+                </div>                <div class="cs-vendor">
+                    <table class="cs-top" id="toptable5">
+                        <tr>
+                            <th colspan="2">All Items</th>
+                            <th>Vendor 5</th>
+                        </tr>
+                        <tr><td colspan="3"><select class="cs-input" name="txt_vendorName_vendor5" id="txt_vendorName_vendor5"></select></td></tr>
+                        <tr><td colspan="3"><select class="cs-input" name="txt_paymentTerms_vendor5" id="txt_paymentTerms_vendor5"></select></td></tr>
+                        <tr><td colspan="3"><select class="cs-input" name="txt_DeliveryTerms_vendor5" id="txt_DeliveryTerms_vendor5"></select></td></tr>
+                    </table>
+                    <table class="cs-items" id="tblItemDescription5">
+                        <thead>
+                            <tr>
+                                <th></th>
+                                <th>Qty</th>
+                                <th>Rate</th>
+                                <th>S.Tax</th>
+                                <th>Amount</th>
+                            </tr>
+                        </thead>
+                        <tbody id="tblItemDescription51">
+                        </tbody>
+                    </table>
+                    <table class="cs-bottom" id="bottomtable5">
+                        <tr>
+                            <td colspan="4">
+                                <label id="lb_amount_vendor5">Amount</label>
+                                <input type="text" name="txt_amount_vendor5" id="txt_amount_vendor5" />
+                            </td>
+                        </tr>
+                        <tr>
+                            <td colspan="4">
+                                <label id="lb_Freight_vendor5">Freight</label>
+                                <input type="text" name="txt_Freight_vendor5" id="txt_Freight_vendor5" onchange="calculate2(this)" />
+                            </td>
+                        </tr>
+                        <tr>
+                            <td colspan="4">
+                                <label id="lb_TotalAmount_vendor5">Total Amount</label>
+                                <input type="text" name="txt_TotalAmount_vendor5" id="txt_TotalAmount_vendor5" />
+                            </td>
+                        </tr>
+                    </table>
                 </div>
-            </div>
-            <div class="row">
-                <div class="col-xs-12 col-sm-12 col-lg-12 col-md-12">
-                    <table class="table table-bordered" id="grntable" style="margin-top: 202px;">
+                <div class="cs-col-grn">
+                    <table class="cs-items" id="grntable">
                         <thead>
                             <tr>
                                 <th>Total App Amt</th>
@@ -2386,77 +2304,59 @@ function RecalculateAllVendorTotals() {
                         </tbody>
                     </table>
                 </div>
-
             </div>
+        </div>
+
+        <div class="cs-actions">
+            <div><input type="button" class="btn btn-primry" id="btn_Save" value="Save" onclick="SaveAllRecord()" /></div>
+            <div><input type="button" class="btn btn-gray" id="btnList" value="List" onclick="window.location = 'ComparativeStatementVendorView.aspx'" /></div>
+            <div><input type="button" class="btn btn-primry" id="Printbtn" value="Print" onclick="Print()" /></div>
+            <div><input type="button" class="btn btn-gray" value="Cancel" id="btncancel" onclick="Cancel()" /></div>
+            <div><input type="button" id="Approvebtn" class="btn btn-primry" value="Approve" onclick="ApproveCSFromEdit()" style="display:none;" /></div>
+            <div><input type="button" id="Unapprovebtn" class="btn btn-primry" value="UnApprove" onclick="UnApprove()" style="display:none;" /></div>
         </div>
     </div>
 
-    <div class="row" style="margin-top:10px">     
-        <div class="col-lg-8">
-            <div class="row">
-        <div class="col-lg-2 col-md-4 col-sm-8">
-            <input type="button" class="btn btn-primry" id="btn_Save" value="Save" onclick="SaveAllRecord()" />
-             </div>
-        <div class="col-lg-2 col-md-4 col-sm-8">
-            <input type="button" class="btn btn-gray" id="btnList" value="List" onclick="window.location = 'ComparativeStatementVendorView.aspx'" />
-            </div>
-       
-        <div class="col-lg-2 col-md-4 col-sm-8">         
-            <input type="button" class="btn btn-primry" id="Printbtn" value="Print" onclick="Print()"  />
-            </div>
-        <div class="col-lg-2 col-md-4 col-sm-8">
-            <input type="button" class="btn btn-gray"  value="Cancel" id="btncancel" onclick="Cancel()" />
-       </div>
-         <div class="col-lg-2 col-md-4 col-sm-8">
-      <input type="button" id="Approvebtn" class="btn btn-primry"  value="Approve" onclick="ApproveCSFromEdit()" style="display:none;" />
-         </div>
-         <div class="col-lg-2 col-md-4 col-sm-8">
-      <input type="button" id="Unapprovebtn" class="btn btn-primry"  value="UnApprove" onclick="UnApprove()" style="display:none;" />
-         </div>
-            </div>
-        </div>
-    </div>
-<div id="PRItemsModel" class="modal fade" role="dialog">
-    <div class="modal-dialog modal-lg">
-        <div class="modal-content">
-            <div class="modal-header">
-                  <h3 class="modal-title">Add PR Items</h3>
-                <button type="button" class="close" data-dismiss="modal" aria-label="Close" style="margin-top: -11px !important">
-                      <span aria-hidden="true">&times;</span>
-                  </button>              
-            </div>
+    <div id="PRItemsModel" class="modal fade cs-modal" role="dialog">
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h3 class="modal-title">Add PR Items</h3>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
 
-            <input type="hidden" id="txthiddentr" name="txthidddentr" />
-            <div class="modal-body">
-                <div class="table-container">
-                    <table class="table Modal-Table table-striped" id="tblPRItemstModelTable">
-                        <thead>
-                            <tr class="modal-tR">
-                                <th class="modal-thead" style="width: 32px;">
-                                    <input type="checkbox" id="checkHeader" value="false" />
-                                </th>
-                                <th class="modal-thead" style="display: none;">Pr ID</th>
-                                <th class="modal-thead" style="display: none;">Pr Num</th>
-                                <th class="modal-thead" style="display: none;">Item ID</th>
-                                <th class="modal-thead">Item Name</th>
-                                <th class="modal-thead">Qty</th>
-                                <th class="modal-thead" style="display: none;">Item Code</th>
-                                <th class="modal-thead">MOU</th>
-                                <th class="modal-thead" style="display: none;">Required_Date</th>
-                                <th class="modal-thead" style="display: none;">PR_Detail_ID</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                        </tbody>
-                    </table>
+                <input type="hidden" id="txthiddentr" name="txthidddentr" />
+                <div class="modal-body">
+                    <div class="table-container table-responsive">
+                        <table class="table Modal-Table table-striped" id="tblPRItemstModelTable">
+                            <thead>
+                                <tr class="modal-tR">
+                                    <th class="modal-thead" style="width: 32px;">
+                                        <input type="checkbox" id="checkHeader" value="false" />
+                                    </th>
+                                    <th class="modal-thead" style="display: none;">Pr ID</th>
+                                    <th class="modal-thead" style="display: none;">Pr Num</th>
+                                    <th class="modal-thead" style="display: none;">Item ID</th>
+                                    <th class="modal-thead">Item Name</th>
+                                    <th class="modal-thead">Qty</th>
+                                    <th class="modal-thead" style="display: none;">Item Code</th>
+                                    <th class="modal-thead">MOU</th>
+                                    <th class="modal-thead" style="display: none;">Required_Date</th>
+                                    <th class="modal-thead" style="display: none;">PR_Detail_ID</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <input type="button" id="PRItem" value="Close" class="btn btn-gray" name="PRItem" data-dismiss="modal" />
                 </div>
             </div>
-            <div class="modal-footer">
-                <input type="button" id="PRItem" value="Close"  class="btn btn-gray"  name="PRItem" data-dismiss="modal" style="width:20% !important" />
-                </div>
         </div>
     </div>
-</div>
-
 
 </asp:Content>

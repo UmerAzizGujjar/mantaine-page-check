@@ -5,6 +5,7 @@
 <asp:Content ID="Content1" ContentPlaceHolderID="HeadContent" runat="server">    
 
     <link href="../../wwwroot/THEME_TIBBIT/CustomCSS/LabReportPreview.css" rel="stylesheet" />
+    <link href="../../wwwroot/THEME_TIBBIT/CustomCSS/lab-report-preview.css" rel="stylesheet" />
     <script type="text/javascript">
         var GrowthTypeGlobal = '';
         var OrganismTypeGlobal = '';
@@ -2841,227 +2842,154 @@
     </script>
 </asp:Content>
 <asp:Content ID="Content2" ContentPlaceHolderID="MainContent" runat="server">
-    <div id="PatientDetail" style="width: 100%">
-        <div class="row">
-            <!-- Left Card -->
-            <div class="col-lg-5 col-md-5 col-sm-12">
-                <div class="card">
-                    <div class="card-body">
-                        <div class="row">
-                            <div class="col-lg-4 col-md-5 col-sm-6 text-center">
-                                <div class="image-container">
-                                    <img src="~../../../../wwwroot/SOURCE_IMAGES/DASHBOARD_ICONS/Lab2.png" alt="Patient Image" class="img-fluid rounded-circle patient-image" />
-                                </div>
-                            </div>
-                            <div class="col-lg-8 col-md-7 col-sm-6">
-                                <div class="row mb-3 mtt">
-                                    <div class="col-lg-5 col-md-5 col-sm-6">
-                                        <b>Search Bill No</b>
-                                    </div>
-                                    <div class="col-lg-7 col-md-7 col-sm-6">
-                                        <asp:TextBox ID="txtSearchBillNo" runat="server"></asp:TextBox>
-                                    </div>
-                                </div>
-                                <div class="row mb-3 mtt">
-                                    <div class="col-lg-5 col-md-5 col-sm-6">
-                                        <b>Search Lab ID / Barcode</b>
-                                    </div>
-                                    <div class="col-lg-7 col-md-7 col-sm-6">
-                                        <asp:TextBox ID="txtSearchLabBarcode" runat="server"></asp:TextBox>
-                                    </div>
-                                </div>
-                                <div class="row mb-3 mtt">
-                                    <div class="col-lg-5 col-md-5 col-sm-6">
-                                       <asp:Label ID="LblLab_Test_ID" runat="server" Text="Bill No :"></asp:Label>
-                                    </div>
-                                    <div class="col-lg-7 col-md-7 col-sm-6">
-                                        <asp:TextBox ID="txtBilling" runat="server"></asp:TextBox>
-                                        <asp:HiddenField ID="hdBill_id" runat="server" ClientIDMode="Static" Value="(New)" />
-                                        <asp:TextBox ID="txtLab_Test_ID" runat="server" Style="display: none;"></asp:TextBox>
-                                        <asp:HiddenField ID="hdnLab_Test_ID" runat="server" ClientIDMode="Static" Value="(New)" />
-                                        <asp:HiddenField ID="hdnBill_No" runat="server" ClientIDMode="Static" Value="(New)" />
-                                    </div>
-                                </div>                               
-                                <div class="row mb-3 mtt">
-                                    <div class="col-lg-5 col-md-5 col-sm-6 ">
-                                       <asp:Label ID="lblPatient_Name" runat="server" Text="Name :"></asp:Label>
-                                    </div>
-                                    <div class="col-lg-7 col-md-7 col-sm-6">
-                                         <asp:Label ID="vlblPatients_Name" runat="server"></asp:Label>
-                                    </div>
-                                </div>
-                                <div class="row mb-3 mtt">
-                                    <div class="col-lg-5 col-md-5 col-sm-6 formrgn">
-                                        <asp:Label ID="lblAge_Years" runat="server" Text="Age Years :"></asp:Label>
-                                    </div>
-                                    <div class="col-lg-7 col-md-7 col-sm-6 detail">
-                                         <asp:Label ID="vLbl_Age" runat="server"></asp:Label>
-                                    </div>
-                                </div>
-                                <div class="row mb-3 mtt">
-                                    <div class="col-lg-5 col-md-5 col-sm-6 formrgn">
-                                        <asp:Label ID="lblGender" runat="server" Text="Gender :"></asp:Label>
-                                    </div>
-                                    <div class="col-lg-7 col-md-7 col-sm-6 detail">
-                                       <asp:Label ID="vLbl_Gender" runat="server"></asp:Label>
-                                    </div>
-                                </div>
-                                <div class="row mb-3 mtt">
-                                    <div class="col-lg-5 col-md-5 col-sm-6 formrgn">
-                                        <asp:Label ID="lblLocation" runat="server" Text="Ward/Bed :"></asp:Label>
-                                    </div>
-                                    <div class="col-lg-7 col-md-7 col-sm-6 detail">
-                                       <asp:Label ID="vLbl_Location" runat="server"></asp:Label>
-                                    </div>
-                                </div>
-
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-
-            <!-- Right Card -->
-            <div class="col-lg-5 col-md-5 col-sm-12">
-                <div class="card">
-                    <div class="card-body">
-                        <div class="row mb-3 mtt">
-                            <div class="col-lg-4 col-md-5 col-sm-6">
-                                <asp:Label ID="lblPatien_ID" runat="server" Text="MR No :"></asp:Label>
-                                <asp:Label runat="server" Style="font-size: 20px; color: red;">*</asp:Label>
-                            </div>
-                            <div class="col-lg-4 col-md-7 col-sm-6">
-                                <asp:TextBox ID="txtPatient_ID" runat="server"></asp:TextBox>
-                                <asp:HiddenField ID="hdnPatient_ID" runat="server" Value="(New)" ClientIDMode="Static" />
-                            </div>
-                        </div>
-                        <div class="row mb-3 mtt">
-                            <div class="col-lg-4 col-md-5 col-sm-6">
-                                <asp:Label ID="lblSampleNo" runat="server" Text="Sample No :"></asp:Label>
-                            </div>
-                            <div class="col-lg-4 col-md-7 col-sm-6">
-                                <asp:TextBox ID="txtSampleNo" runat="server"></asp:TextBox>
-                            </div>
-                        </div>
-                        <div class="row mb-3 mtt">
-                            <div class="col-lg-4 col-md-5 col-sm-6 formrgn">
-                               <asp:Label ID="lblContactNo" runat="server" Text="Contact No :"></asp:Label>
-                            </div>
-                            <div class="col-lg-8 col-md-7 col-sm-6 top">
-                              <asp:Label ID="vLbl_Contact" runat="server"></asp:Label>
-                            </div>
-                        </div>
-                        <div class="row mb-3 mtt">
-                            <div class="col-lg-4 col-md-5 col-sm-6 formrgn">
-                                <asp:Label ID="LblReg_Date" runat="server" Text="Reg. Date :"></asp:Label>
-                            </div>
-                            <div class="col-lg-8 col-md-7 col-sm-6 top">
-                                 <asp:Label ID="vLbl_RegDate" runat="server"></asp:Label>
-                            </div>
-                        </div>
-                        <div class="row mb-3 mtt">
-                            <div class="col-lg-4 col-md-5 col-sm-6 formrgn">
-                               <asp:Label ID="LblPatient_Category" runat="server" Text="Category :"></asp:Label>
-                            </div>
-                            <div class="col-lg-8 col-md-7 col-sm-6 top">
-                               <asp:Label ID="vPatient_Category" runat="server"></asp:Label>
-                            </div>
-                        </div>
-                        <div class="row mb-3 mtt">
-                            <div class="col-lg-4 col-md-5 col-sm-6 formrgn">
-                                <asp:Label ID="lblAdress" runat="server" Text="Department :"></asp:Label>
-                            </div>
-                            <div class="col-lg-8 col-md-7 col-sm-6 top">
-                                 <asp:Label ID="vLbl_Department" runat="server"></asp:Label>
-                            </div>
-                        </div>
-                    </div>
-                    </div>
-                </div>
-            </div>
-        <div class="row">
-           <div class="col-lg-2 col-md-3 col-sm-4">
-                <label>Test Department</label>
-  <select id="ddlTestDepartment">
-     <option></option>
- </select>
-           </div>
-            <div class="col-lg-2 col-md-4 col-sm-6">
-                <label for="ddlUserBranch">Branch</label>
-                <select id="ddlUserBranch" class="form-control">
-                    <option value="">Loading...</option>
-                </select>
-            </div>
-
+    <!-- Title line: the master page puts the page title in the empty left side; the badges sit on the right -->
+    <div class="pr-meta-bar">
+        <div class="meta-left"></div>
+        <div class="meta-right">
+            <div class="rp-badge"><span class="rp-badge-label">Bill No</span><span class="rp-badge-value" id="badgeRpBill">---</span></div>
+            <div class="rp-badge"><span class="rp-badge-label">MR No</span><span class="rp-badge-value" id="badgeRpMr">---</span></div>
+            <div class="rp-badge"><span class="rp-badge-label">Patient</span><span class="rp-badge-value" id="badgeRpPatient">---</span></div>
         </div>
-        <div class="row">
-            <div class="table-responsive-lg table-responsive-md">
-                <table style="padding: 20px; height: 200px; float: left;">                   
-        <tr>
-            <td style="display: none">Report Columns</td>
-            <td style="display: none">
-                <select id="ddlrptColumns" style="width: 210px!important;">
-                    <option value="2">2-Fixed Or DropDown</option>
-                    <option value="3">3-DropDown and Fixed</option>
-                    <option value="4">4-Table Range and Fixed</option>
-                    <option value="5">4-Value Range Table</option>
-                    <option value="6">5-Cutt Off</option>
-                    <option value="7">6-Result Organism</option>
-                </select></td>
-        </tr>
+    </div>
+    <script type="text/javascript">
+        // title-line badges follow the form (the page script fills the fields in after loading)
+        function syncPreviewBadges() {
+            var bill = $('#<%= txtBilling.ClientID %>').val();
+            $('#badgeRpBill').text(bill && bill !== '(New)' ? bill : '---');
+            var mr = $('#hdnPatient_ID').val();
+            $('#badgeRpMr').text(mr && mr !== '(New)' ? mr : '---');
+            $('#badgeRpPatient').text($.trim($('#<%= vlblPatients_Name.ClientID %>').text()) || '---');
+        }
+        $(function () {
+            syncPreviewBadges();
+            setInterval(syncPreviewBadges, 600);
+        });
+    </script>
 
-        <tr>
-            <td colspan="6">
-                <table class="table test-table" id="tblLabTest" >
+    <div id="PatientDetail" class="rp-page" style="width: 100%">
+        <div class="rp-layout2">
+            <section class="rp-card">
+                <h5 class="rp-card-title"><i class="fa fa-user-circle"></i> Patient Information</h5>
+                <div class="rp-patient">
+                    <div class="rp-avatar">
+                        <img src="~../../../../wwwroot/SOURCE_IMAGES/DASHBOARD_ICONS/Lab2.png" alt="Patient Image" />
+                    </div>
+                    <div class="rp-grid rp-patient-fields">
+                        <div class="rp-field">
+                            <label for="<%= txtSearchBillNo.ClientID %>">Search Bill No</label>
+                            <asp:TextBox ID="txtSearchBillNo" runat="server"></asp:TextBox>
+                        </div>
+                        <div class="rp-field">
+                            <label for="<%= txtSearchLabBarcode.ClientID %>">Search Lab ID / Barcode</label>
+                            <asp:TextBox ID="txtSearchLabBarcode" runat="server"></asp:TextBox>
+                        </div>
+                        <div class="rp-field">
+                            <asp:Label ID="LblLab_Test_ID" runat="server" Text="Bill No :" CssClass="rp-lbl"></asp:Label>
+                            <asp:TextBox ID="txtBilling" runat="server"></asp:TextBox>
+                            <asp:HiddenField ID="hdBill_id" runat="server" ClientIDMode="Static" Value="(New)" />
+                            <asp:TextBox ID="txtLab_Test_ID" runat="server" Style="display: none;"></asp:TextBox>
+                            <asp:HiddenField ID="hdnLab_Test_ID" runat="server" ClientIDMode="Static" Value="(New)" />
+                            <asp:HiddenField ID="hdnBill_No" runat="server" ClientIDMode="Static" Value="(New)" />
+                        </div>
+                    </div>
+                </div>
+                <dl class="rp-info">
+                    <div class="rp-span-2"><dt><asp:Label ID="lblPatient_Name" runat="server" Text="Name :"></asp:Label></dt><dd><asp:Label ID="vlblPatients_Name" runat="server"></asp:Label></dd></div>
+                    <div><dt><asp:Label ID="lblAge_Years" runat="server" Text="Age Years :"></asp:Label></dt><dd><asp:Label ID="vLbl_Age" runat="server"></asp:Label></dd></div>
+                    <div><dt><asp:Label ID="lblGender" runat="server" Text="Gender :"></asp:Label></dt><dd><asp:Label ID="vLbl_Gender" runat="server"></asp:Label></dd></div>
+                    <div class="rp-span-2"><dt><asp:Label ID="lblLocation" runat="server" Text="Ward/Bed :"></asp:Label></dt><dd><asp:Label ID="vLbl_Location" runat="server"></asp:Label></dd></div>
+                </dl>
+            </section>
+
+            <section class="rp-card">
+                <h5 class="rp-card-title"><i class="fa fa-id-card-o"></i> Patient Details</h5>
+                <div class="rp-grid rp-grid-2">
+                    <div class="rp-field">
+                        <asp:Label ID="lblPatien_ID" runat="server" Text="MR No :" CssClass="rp-lbl"></asp:Label>
+                        <asp:TextBox ID="txtPatient_ID" runat="server"></asp:TextBox>
+                        <asp:HiddenField ID="hdnPatient_ID" runat="server" Value="(New)" ClientIDMode="Static" />
+                    </div>
+                    <div class="rp-field">
+                        <asp:Label ID="lblSampleNo" runat="server" Text="Sample No :" CssClass="rp-lbl"></asp:Label>
+                        <asp:TextBox ID="txtSampleNo" runat="server"></asp:TextBox>
+                    </div>
+                </div>
+                <dl class="rp-info" style="margin-top: 14px;">
+                    <div><dt><asp:Label ID="lblContactNo" runat="server" Text="Contact No :"></asp:Label></dt><dd><asp:Label ID="vLbl_Contact" runat="server"></asp:Label></dd></div>
+                    <div><dt><asp:Label ID="LblReg_Date" runat="server" Text="Reg. Date :"></asp:Label></dt><dd><asp:Label ID="vLbl_RegDate" runat="server"></asp:Label></dd></div>
+                    <div><dt><asp:Label ID="LblPatient_Category" runat="server" Text="Category :"></asp:Label></dt><dd><asp:Label ID="vPatient_Category" runat="server"></asp:Label></dd></div>
+                    <div><dt><asp:Label ID="lblAdress" runat="server" Text="Department :"></asp:Label></dt><dd><asp:Label ID="vLbl_Department" runat="server"></asp:Label></dd></div>
+                </dl>
+            </section>
+        </div>
+
+        <section class="rp-card">
+            <h5 class="rp-card-title"><i class="fa fa-flask"></i> Tests
+                <span class="rp-title-field">
+                    <label for="ddlTestDepartment">Test Department</label>
+                    <select id="ddlTestDepartment">
+                        <option></option>
+                    </select>
+                </span>
+                <span class="rp-title-field">
+                    <label for="ddlUserBranch">Branch</label>
+                    <select id="ddlUserBranch" class="form-control">
+                        <option value="">Loading...</option>
+                    </select>
+                </span>
+            </h5>
+            <div class="rp-table-wrap">
+                <table style="display: none;">
+                    <tr>
+                        <td style="display: none">Report Columns</td>
+                        <td style="display: none">
+                            <select id="ddlrptColumns" style="width: 210px!important;">
+                                <option value="2">2-Fixed Or DropDown</option>
+                                <option value="3">3-DropDown and Fixed</option>
+                                <option value="4">4-Table Range and Fixed</option>
+                                <option value="5">4-Value Range Table</option>
+                                <option value="6">5-Cutt Off</option>
+                                <option value="7">6-Result Organism</option>
+                            </select></td>
+                    </tr>
+                </table>
+                <table class="table test-table" id="tblLabTest">
                     <thead>
                         <tr>
-                        <th><input type="checkbox" onclick="toggle(this);" /></th>
-                        <th>Lab Test ID</th>
-                        <th style="display: none">Test Detail ID</th>
-                        <th>Test Name</th>
-                        <th>Rej Remarks</th>
-                        <th>Bill Date</th>
-                        <th>Unit</th>
-                        <th>Group Department</th>
-                        <th>Reported By</th>
-                        <th>Reported Date</th>
-                        <th>Approved By</th>
-                        <th>Approved Time</th>
-                        <th style="display: none;">Status</th>
-                        <th>Action</th>
-                        <th>Area of Interest</th> 
-                        <th style="display: none;">Group_Category</th>
-                        <th style="display: none;">List Of TestIDs</th>    
-                            </tr>
+                            <th><input type="checkbox" onclick="toggle(this);" /></th>
+                            <th>Lab Test ID</th>
+                            <th style="display: none">Test Detail ID</th>
+                            <th>Test Name</th>
+                            <th>Rej Remarks</th>
+                            <th>Bill Date</th>
+                            <th>Unit</th>
+                            <th>Group Department</th>
+                            <th>Reported By</th>
+                            <th>Reported Date</th>
+                            <th>Approved By</th>
+                            <th>Approved Time</th>
+                            <th style="display: none;">Status</th>
+                            <th>Action</th>
+                            <th>Area of Interest</th>
+                            <th style="display: none;">Group_Category</th>
+                            <th style="display: none;">List Of TestIDs</th>
+                        </tr>
                     </thead>
                     <tbody id="tbltestid"></tbody>
                 </table>
-            </td>
-        </tr>
-        <tr>
-            <%--<td colspan="6"></td>--%>
-        </tr>
-        <tr>
-            <td colspan="6">
-                <asp:Label ID="lblMessage" Text="" runat="server" />
-            </td>
-        </tr>
-                    <tr style="display: none;">
-                        <td>
-                            <b style="margin-left: 10px; display: none;">Search From Bill No:</b>
-                            <input id="txtMRNOSearch" type="text" style="margin-left: 12px; width: 120px !important; display: none;" />
-                        </td>
-                    </tr>
-        </table>
-                
-    </div>        
-    
-</div>
-        <div class="row">
-            <div class="col-lg-6 col-md-3 sm-6" id="Radiologylist">
-                <h1>Radiology Patients List </h1>
-                <div class="row" style="overflow: scroll; height: 500px;">
-                    <table class="table test-table" id="tbl_radilogy" style="overflow: scroll; height: 500px;">
+            </div>
+            <asp:Label ID="lblMessage" Text="" runat="server" />
+            <div style="display: none;">
+                <b style="margin-left: 10px; display: none;">Search From Bill No:</b>
+                <input id="txtMRNOSearch" type="text" style="margin-left: 12px; width: 120px !important; display: none;" />
+            </div>
+        </section>
+
+        <div class="rp-lists">
+            <section class="rp-card" id="Radiologylist">
+                <h5 class="rp-card-title"><i class="fa fa-camera"></i> Radiology Patients List</h5>
+                <div class="rp-table-wrap">
+                    <table class="table test-table" id="tbl_radilogy">
                         <thead>
                             <tr>
                                 <th>Bill Date</th>
@@ -3076,50 +3004,47 @@
                         </tbody>
                     </table>
                 </div>
-            </div>
-            <div class="col-lg-6 col-md-3 sm-6" id="Samplelist">
-                <h1>Sample List</h1>
-                <div class="row" style="overflow: scroll; height: 500px;">
-                <table class="table table-hover table-striped test-table" id="tbl_pending_samples">
-                    <thead class="thead-light">
-                        <tr>
-                            <th>Sample Collected Date</th>
-                            <th>Sample No</th>
-                            <th>Bill No</th>
-                            <th>MR No</th>
-                            <th>Patient Name</th>
-                            <th>Action</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                    </tbody>
-                </table>
-            </div>
+            </section>
+            <section class="rp-card" id="Samplelist">
+                <h5 class="rp-card-title"><i class="fa fa-tint"></i> Sample List</h5>
+                <div class="rp-table-wrap">
+                    <table class="table table-hover table-striped test-table" id="tbl_pending_samples">
+                        <thead class="thead-light">
+                            <tr>
+                                <th>Sample Collected Date</th>
+                                <th>Sample No</th>
+                                <th>Bill No</th>
+                                <th>MR No</th>
+                                <th>Patient Name</th>
+                                <th>Action</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                        </tbody>
+                    </table>
                 </div>
+            </section>
+            <section class="rp-card" id="Resultlist">
+                <h5 class="rp-card-title"><i class="fa fa-check-square-o"></i> Pending Approval List</h5>
+                <div class="rp-table-wrap">
+                    <table class="table test-table" id="tbl_Result">
+                        <thead>
+                            <tr>
+                                <th>Bill Date</th>
+                                <th>Bill No</th>
+                                <th>Name</th>
+                                <th>Test Name</th>
+                                <th>Priority</th>
+                                <th>Action</th>
+                            </tr>
+                        </thead>
+                        <tbody id="tbl_tbodyresult">
+                        </tbody>
+                    </table>
+                </div>
+            </section>
         </div>
-        <div class="row">
-             <div class="col-lg-6 col-md-3 sm-6" id="Resultlist">
-     <h1>Pending Approval List </h1>
-     <div class="row" style="overflow: scroll; height: 500px;">
-         <table class="table test-table" id="tbl_Result" style="overflow: scroll; height: 500px;">
-             <thead>
-                 <tr>
-                     <th>Bill Date</th>
-                     <th>Bill No</th>
-                     <th>Name</th>
-                     <th>Test Name</th>
-                     <th>Priority</th>
-                     <th>Action</th>
-                 </tr>
-             </thead>
-             <tbody id="tbl_tbodyresult">
-             </tbody>
-         </table>
-     </div>
- </div>
-        </div>
-</div>
-
+    </div>
     <div for="unofficial_work" style="margin-left: 1106px; margin-top: -1px; width: 341px; position: absolute; display: none;">
         <select id="SearchFilter" style="width: 174px !important; float: left; display: none;">
             <option>All </option>
@@ -3131,14 +3056,15 @@
 
 
 
-<div id="myModal" class="modal fade" role="dialog">
+
+<div id="myModal" class="modal fade rp-modal" role="dialog">
     <div class="modal-dialog">
-        <div class="modal-content" style="width: 1268px; margin-left: -333px;">
+        <div class="modal-content">
             <div class="modal-header">
                 <button type="button" style="width: auto;" class="close" data-dismiss="modal">&times;</button>
                 <h4 class="modal-title" id="titleee">Add Test Result</h4>
             </div>
-            <div class="patient-basic-info" style="background: #f8f9fa; padding: 8px 15px; margin: 0 15px; border-radius: 6px; border-left: 4px solid #007bff;">
+            <div class="patient-basic-info rp-modal-info">
                 <div style="display: flex; flex-wrap: wrap; gap: 20px; align-items: center; font-size: 13px;">
                     <div><strong>MR No:</strong> <span id="modal_MRNo">--</span></div>
                     <div><strong>Name:</strong> <span id="modal_PatientName">--</span></div>
@@ -3283,7 +3209,7 @@
     </div>
       </div>
 
-    <div id="historyModal" class="modal fade" role="dialog">
+    <div id="historyModal" class="modal fade rp-modal" role="dialog">
         <div class="modal-dialog modal-lg">
             <div class="modal-content">
                 <div class="modal-header">
@@ -3316,20 +3242,14 @@
         </div>
     </div>
 
-    <div class="row">
-    <div class="col-lg-8">
-    <div class="row">
-        <div class="col-lg-2 col-md-12 mb-2">
+    <div class="rp-actions">
+        <div>
             <asp:Button Text="Back" runat="server" Class="btn btn-primry" ID="btnBack" CausesValidation="false" PostBackUrl="~/Modules/Lab/LaboratoryTestView.aspx" />
         </div>
-        <div class="col-lg-2 col-md-12 mb-2">
-            <input type="button" class="btn-gray"  id="btnResultPrint" value="Print"  onclick="ShowReport()" />
+        <div>
+            <input type="button" class="btn-gray" id="btnResultPrint" value="Print" onclick="ShowReport()" />
         </div>
-        <div class="col-lg-2 col-md-12 mb-2">
+        <div>
             <asp:Button Text="New" class="btn btn-gray" runat="server" ID="Button1" OnClick="Button1_Click" />
         </div>
-    </div>
-        </div>
-        </div>
-</asp:Content>
- 
+    </div></asp:Content>

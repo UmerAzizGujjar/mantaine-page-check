@@ -1,8 +1,7 @@
 ﻿<%@ Page Title="" Language="C#" MasterPageFile="~/Site.Master" AutoEventWireup="true" CodeBehind="PurchaseOrder.aspx.cs" Inherits="PMS.AP.PurchaseOrder" %>
 
 <asp:Content ID="Content1" ContentPlaceHolderID="HeadContent" runat="server">
-    <link href="../../wwwroot/THEME_TIBBIT/CustomCSS/PO.css" rel="stylesheet" />
-    <link href="../../wwwroot/THEME_TIBBIT/CustomCSS/custom-modals.css" rel="stylesheet" />
+    <link href="../../wwwroot/THEME_TIBBIT/CustomCSS/purchase-order.css" rel="stylesheet" />
     <script src="../../wwwroot/lib/jquery/itemsearch.boost.js?v=<%= System.IO.File.GetLastWriteTimeUtc(Server.MapPath("~/wwwroot/lib/jquery/itemsearch.boost.js")).Ticks %>" type="text/javascript"></script>
     <style type="text/css">
         .tooltip-inner {
@@ -20,82 +19,6 @@
         #ui-datepicker-div{
         z-index: 1000 !important;
         }
-        /* ========== PAGE LOADER STYLES ========== */
-/* Enhanced PAGE LOADER STYLES */
-#page-loader {
-    position: fixed;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    background: rgba(255, 255, 255, 0.95);
-    z-index: 9999;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    flex-direction: column;
-    /* Add these to ensure full coverage */
-    right: 0;
-    bottom: 0;
-}
-
-/* Optional: Add a container to center content better */
-#page-loader .loader-container {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    text-align: center;
-}
-
-#page-loader .loader-spinner {
-    border: 5px solid #f3f3f3;
-    border-top: 5px solid #3498db;
-    border-radius: 50%;
-    width: 60px;
-    height: 60px;
-    animation: spin 1s linear infinite;
-    margin-bottom: 20px;
-}
-
-#page-loader .loader-text {
-    font-size: 16px;
-    color: #333;
-    font-weight: bold;
-    margin-top: 10px;
-}
-
-/* Progress bar styles */
-#page-loader .loader-progress {
-    width: 300px;
-    height: 6px;
-    background: #e0e0e0;
-    border-radius: 3px;
-    margin-top: 20px;
-    overflow: hidden;
-}
-
-#page-loader .loader-progress-bar {
-    height: 100%;
-    background: #3498db;
-    width: 0%;
-    transition: width 0.3s ease;
-    border-radius: 3px;
-}
-
-@keyframes spin {
-    0% { transform: rotate(0deg); }
-    100% { transform: rotate(360deg); }
-}
-
-#page-loader.hidden {
-    display: none;
-}
-
-/* Ensure the loader is always on top and centered */
-#page-loader.show {
-    display: flex !important;
-}
     </style>
 
     <script type="text/javascript">
@@ -151,16 +74,12 @@
 
         /* ─── Meta-bar sync helper ─── */
         function syncMetaBar() {
-            var poNum = $('#ctl00_MainContent_txtPurchase_No').val() || '\u2014';
-            var poDate = $('#ctl00_MainContent_txtPurchase_Date').val() || '\u2014';
-            var status = $('#ctl00_MainContent_txtStatus').val() || 'Draft';
-            $('#poMetaDisplay').html(
-                'PO\u00a0#\u00a0<strong>' + poNum + '</strong>' +
-                '\u00a0\u00a0|\u00a0\u00a0Date:\u00a0<strong>' + poDate + '</strong>' +
-                '\u00a0\u00a0|\u00a0\u00a0Status:\u00a0<strong>' + status + '</strong>'
-            );
+            $('#badgePoNo').text($('#ctl00_MainContent_txtPurchase_No').val() || '---');
+            $('#badgePoDate').text($('#ctl00_MainContent_txtPurchase_Date').val() || '---');
+            $('#badgePoStatus').text($('#ctl00_MainContent_txtStatus').val() || 'Draft');
         }
-
+        // the fields are filled in by code after the page loads, so keep the badges following them
+        $(function () { setInterval(syncMetaBar, 600); });
         /* ─── Source-type toggle (Item | PR) ─── */
         function initSourceToggle() {
             $('input[name="poSourceType"]').on('change', function () {
@@ -3397,24 +3316,31 @@ function scheduleCalcTotal(delay) {
     <input type="hidden" id="txtcsno" name="txtcsno" />
     <input type="hidden" id="txttranstype" name="txttranstype" />
 
-    <div class="pr-meta-bar">
-        <span class="pr-meta-text" id="poMetaDisplay">PO&nbsp;#&nbsp;<strong>\u2014</strong>&nbsp;&nbsp;|&nbsp;&nbsp;Date:&nbsp;<strong>\u2014</strong>&nbsp;&nbsp;|&nbsp;&nbsp;Status:&nbsp;<strong>Draft</strong></span>
-    </div>
+    <div class="po-page">
 
-    <form id="item">
-
-        <!-- PAGE LOADER - Make sure this is right after the form tag or at the top of content -->
-        <div id="page-loader" style="display: none;">
-            <div class="loader-spinner"></div>
-            <div class="loader-text">Loading Purchase Order...</div>
-            <div class="loader-progress">
-                <div class="loader-progress-bar"></div>
+        <!-- Title line: the master page puts the page title in the empty left side; the badges sit on the right -->
+        <div class="pr-meta-bar">
+            <div class="meta-left"></div>
+            <div class="meta-right">
+                <div class="po-badge"><span class="po-badge-label">PO #</span><span class="po-badge-value" id="badgePoNo">---</span></div>
+                <div class="po-badge"><span class="po-badge-label">Date</span><span class="po-badge-value" id="badgePoDate">---</span></div>
+                <div class="po-badge"><span class="po-badge-label">Status</span><span class="po-badge-value" id="badgePoStatus">Draft</span></div>
             </div>
         </div>
 
-        <div class="pr-primary-settings">
+        <form id="item">
 
-            <div style="display:none;">
+            <!-- PAGE LOADER - Make sure this is right after the form tag or at the top of content -->
+            <div id="page-loader" style="display: none;">
+                <div class="loader-spinner"></div>
+                <div class="loader-text">Loading Purchase Order...</div>
+                <div class="loader-progress">
+                    <div class="loader-progress-bar"></div>
+                </div>
+            </div>
+
+            <!-- Date and status live in the badges on the title line; the page script still reads these controls -->
+            <div style="display: none;">
                 <asp:Label ID="LabelPurchase_Date" runat="server" Text="Date"></asp:Label>
                 <asp:RequiredFieldValidator ID="rfvPurchaseDate" runat="server" InitialValue="0" ControlToValidate="txtPurchase_Date" ErrorMessage="*" Display="Dynamic"></asp:RequiredFieldValidator>
                 <asp:TextBox runat="server" ID="txtPurchase_Date" class="form-control" />
@@ -3422,250 +3348,260 @@ function scheduleCalcTotal(delay) {
                 <asp:TextBox runat="server" ReadOnly="true" ID="txtStatus" class="form-control" />
             </div>
 
-            <div class="row">
-                <div class="col-lg-2 col-md-4 col-sm-6 col-xs-12">
-                    <asp:Label ID="LabelPurchase_No" runat="server" Text="PO No."></asp:Label>
-                    <asp:TextBox runat="server" ID="txtPurchase_No" class="form-control" ReadOnly="true" />
-                    <asp:HiddenField ID="hdnPurchase_ID" runat="server" ClientIDMode="Static" />
-                    <asp:TextBox runat="server" ID="txtPurchase_ID" Visible="false" ReadOnly="true" Width="0" />
-                </div>
-                <div class="col-lg-2 col-md-4 col-sm-6 col-xs-12">
-                    <asp:Label ID="lblDueDate" runat="server" Text="Due Date"></asp:Label>
-                    <asp:TextBox runat="server" ID="txtdueDate" class="form-control" />
-                </div>
-                <div class="col-lg-2 col-md-4 col-sm-6 col-xs-12" id="projectiondate">
-                    <asp:Label ID="lblprojectiondate" runat="server" Text="Projection Date"></asp:Label>
-                    <asp:TextBox runat="server" ID="txtProjection_Date" class="form-control" />
-                </div>
-                <div class="col-lg-2 col-md-4 col-sm-6 col-xs-12" id="projectiontype">
-                    <asp:Label ID="lblddlprojection" runat="server" Text="Projection" Style="">Projection<span style="color: red">*</span></asp:Label>
-                    <asp:DropDownList runat="server" ID="ddlprojection" class="form-control" AppendDataBoundItems="true"></asp:DropDownList>
-                </div>
-                <div class="col-lg-2 col-md-4 col-sm-6 col-xs-12">
-                    <asp:Label ID="lblSupplier_ID" runat="server" Text="Vendor">Vendor <span style="color: red;">*</span></asp:Label>
-                    <asp:DropDownList runat="server" ID="ddlVendor" class="form-control" AppendDataBoundItems="true"></asp:DropDownList>
-                </div>
-                <div class="col-lg-2 col-md-4 col-sm-6 col-xs-12">
-                    <asp:Label ID="lblPOType" runat="server" Text="P.O Type"></asp:Label>
-                    <asp:DropDownList runat="server" ID="ddlPOType" class="form-control" AppendDataBoundItems="true"></asp:DropDownList>
-                </div>
-                <div class="col-lg-2 col-md-4 col-sm-6 col-xs-12">
-                    <asp:Label ID="lblWorkOrder" runat="server" Text="Work Order"></asp:Label>
-                    <asp:DropDownList runat="server" ID="ddlWorkOrder" class="form-control" AppendDataBoundItems="true"></asp:DropDownList>
-                </div>
-            </div>
+            <div class="po-layout">
 
-            <div class="row">
-                <div class="col-lg-2 col-md-4 col-sm-6 col-xs-12">
-                    <asp:Label ID="lblpayment" runat="server" Text="Payment Mode" Style="">Mode of Payment<span style="color: red">*</span></asp:Label>
-                    <asp:DropDownList runat="server" ID="ddlpayment" class="form-control" AppendDataBoundItems="true"></asp:DropDownList>
-                </div>
-                <div class="col-lg-2 col-md-4 col-sm-6 col-xs-12" id="warehouse">
-                    <label id="LblWarehouse">WareHouse<span style="color: red">*</span></label>
-                    <select id="ddlWarehouse" onchange="getprNoBy_WareHouse(this)" class="form-select">
-                        <option value="0">Please Select</option>
-                    </select>
-                </div>
-                <div class="col-lg-2 col-md-4 col-sm-6 col-xs-12">
-                    <asp:Label ID="lblReference" runat="server" Text="Ref. No"></asp:Label>
-                    <asp:TextBox runat="server" ID="txtPurchase_Reference" class="form-control" />
-                </div>
-                <div class="col-lg-2 col-md-4 col-sm-6 col-xs-12">
-                    <asp:Label ID="lblTerm_ID" runat="server" Text="Payment Terms"></asp:Label>
-                    <asp:DropDownList runat="server" ID="ddlTerm" class="form-control" AppendDataBoundItems="true"></asp:DropDownList>
-                </div>
-                <div class="col-lg-2 col-md-4 col-sm-6 col-xs-12">
-                    <asp:Label ID="lblDelivery" runat="server" Text="Delivery Terms"></asp:Label>
-                    <asp:DropDownList runat="server" ID="ddlDelivery" class="form-control" AppendDataBoundItems="true"></asp:DropDownList>
-                </div>
-                <div class="col-lg-2 col-md-4 col-sm-6 col-xs-12">
-                    <asp:Label ID="lblFreight" runat="server" Text="Freight Amount"></asp:Label>
-                    <asp:TextBox runat="server" ID="Freight" onkeyup="calcTotal()" class="form-control" />
-                </div>
-            </div>
+                <!-- Left: order details + terms -->
+                <div class="po-col">
+                    <section class="po-card">
+                        <h5 class="po-card-title"><i class="fa fa-file-text-o"></i> Order Details</h5>
+                        <div class="po-grid">
+                            <div class="po-field">
+                                <asp:Label ID="LabelPurchase_No" runat="server" Text="PO No."></asp:Label>
+                                <asp:TextBox runat="server" ID="txtPurchase_No" class="form-control" ReadOnly="true" />
+                                <asp:HiddenField ID="hdnPurchase_ID" runat="server" ClientIDMode="Static" />
+                                <asp:TextBox runat="server" ID="txtPurchase_ID" Visible="false" ReadOnly="true" Width="0" />
+                            </div>
+                            <div class="po-field">
+                                <asp:Label ID="lblDueDate" runat="server" Text="Due Date"></asp:Label>
+                                <asp:TextBox runat="server" ID="txtdueDate" class="form-control" />
+                            </div>
+                            <div class="po-field" id="projectiondate">
+                                <asp:Label ID="lblprojectiondate" runat="server" Text="Projection Date"></asp:Label>
+                                <asp:TextBox runat="server" ID="txtProjection_Date" class="form-control" />
+                            </div>
+                            <div class="po-field" id="projectiontype">
+                                <asp:Label ID="lblddlprojection" runat="server" Text="Projection" Style="">Projection<span style="color: red">*</span></asp:Label>
+                                <asp:DropDownList runat="server" ID="ddlprojection" class="form-control" AppendDataBoundItems="true"></asp:DropDownList>
+                            </div>
+                            <div class="po-field po-span-2">
+                                <asp:Label ID="lblSupplier_ID" runat="server" Text="Vendor">Vendor <span style="color: red;">*</span></asp:Label>
+                                <asp:DropDownList runat="server" ID="ddlVendor" class="form-control" AppendDataBoundItems="true"></asp:DropDownList>
+                            </div>
+                            <div class="po-field">
+                                <asp:Label ID="lblPOType" runat="server" Text="P.O Type"></asp:Label>
+                                <asp:DropDownList runat="server" ID="ddlPOType" class="form-control" AppendDataBoundItems="true"></asp:DropDownList>
+                            </div>
+                            <div class="po-field">
+                                <asp:Label ID="lblWorkOrder" runat="server" Text="Work Order"></asp:Label>
+                                <asp:DropDownList runat="server" ID="ddlWorkOrder" class="form-control" AppendDataBoundItems="true"></asp:DropDownList>
+                            </div>
+                            <div class="po-field" id="warehouse">
+                                <label id="LblWarehouse">WareHouse<span style="color: red">*</span></label>
+                                <select id="ddlWarehouse" onchange="getprNoBy_WareHouse(this)" class="form-control">
+                                    <option value="0">Please Select</option>
+                                </select>
+                            </div>
+                            <div class="po-field">
+                                <label id="LblBranch">Branch</label>
+                                <select id="ddlBranch" class="form-control">
+                                    <option value="0">Please Select</option>
+                                </select>
+                            </div>
+                            <div class="po-field">
+                                <asp:Label ID="lblReference" runat="server" Text="Ref. No"></asp:Label>
+                                <asp:TextBox runat="server" ID="txtPurchase_Reference" class="form-control" />
+                            </div>
+                        </div>
+                    </section>
 
-            <div class="row">
-                <div class="col-lg-2 col-md-4 col-sm-6 col-xs-12">
-                    <asp:Label ID="lblRemarks" runat="server" Text="Remarks"></asp:Label>
-                    <asp:TextBox runat="server" ID="txtRemarks" class="form-control" />
+                    <section class="po-card">
+                        <h5 class="po-card-title"><i class="fa fa-money"></i> Payment &amp; Terms</h5>
+                        <div class="po-grid">
+                            <div class="po-field">
+                                <asp:Label ID="lblpayment" runat="server" Text="Payment Mode" Style="">Mode of Payment<span style="color: red">*</span></asp:Label>
+                                <asp:DropDownList runat="server" ID="ddlpayment" class="form-control" AppendDataBoundItems="true"></asp:DropDownList>
+                            </div>
+                            <div class="po-field">
+                                <asp:Label ID="lblTerm_ID" runat="server" Text="Payment Terms"></asp:Label>
+                                <asp:DropDownList runat="server" ID="ddlTerm" class="form-control" AppendDataBoundItems="true"></asp:DropDownList>
+                            </div>
+                            <div class="po-field">
+                                <asp:Label ID="lblDelivery" runat="server" Text="Delivery Terms"></asp:Label>
+                                <asp:DropDownList runat="server" ID="ddlDelivery" class="form-control" AppendDataBoundItems="true"></asp:DropDownList>
+                            </div>
+                            <div class="po-field">
+                                <asp:Label ID="lblFreight" runat="server" Text="Freight Amount"></asp:Label>
+                                <asp:TextBox runat="server" ID="Freight" onkeyup="calcTotal()" class="form-control" />
+                            </div>
+                            <div class="po-field">
+                                <asp:Label ID="lblWarranty" runat="server" Text="Warranty"></asp:Label>
+                                <asp:TextBox runat="server" ID="txtWarranty" class="form-control" />
+                            </div>
+                            <div class="po-field po-span-2">
+                                <asp:Label ID="LblDisclaimer" runat="server" Text="Disclaimer"></asp:Label>
+                                <asp:TextBox runat="server" ID="txtDisclaimer" class="form-control" />
+                            </div>
+                            <div class="po-field po-span-all">
+                                <asp:Label ID="lblRemarks" runat="server" Text="Remarks"></asp:Label>
+                                <asp:TextBox runat="server" ID="txtRemarks" class="form-control" />
+                            </div>
+                        </div>
+                    </section>
                 </div>
-                <div class="col-lg-2 col-md-4 col-sm-6 col-xs-12">
-                    <asp:Label ID="lblWarranty" runat="server" Text="Warranty"></asp:Label>
-                    <asp:TextBox runat="server" ID="txtWarranty" class="form-control" />
-                </div>
-                <div class="col-lg-2 col-md-4 col-sm-6 col-xs-12">
-                    <label id="LblBranch">Branch</label>
-                    <select id="ddlBranch" class="form-select">
-                        <option value="0">Please Select</option>
-                    </select>
-                </div>
-                <div class="col-lg-2 col-md-4 col-sm-6 col-xs-12">
-                    <asp:Label ID="LblDisclaimer" runat="server" Text="Disclaimer"></asp:Label>
-                    <asp:TextBox runat="server" ID="txtDisclaimer" class="form-control" />
-                </div>
-            </div>
 
+                <!-- Right: where the items come from + attachment -->
+                <div class="po-col">
+                    <section class="po-card">
+                        <h5 class="po-card-title"><i class="fa fa-search"></i> Add Items</h5>
+                        <div class="po-field">
+                            <label>Add from</label>
+                            <div class="po-seg" id="poSourceTogglePill">
+                                <label><input type="radio" name="poSourceType" id="rdoPOItem" value="item" checked="checked" /><span>Item</span></label>
+                                <label><input type="radio" name="poSourceType" id="rdoPOPR" value="pr" /><span>PR</span></label>
+                            </div>
+
+                            <!-- Item selector (shown by default) -->
+                            <div id="itemInputSection" class="po-source">
+                                <input type="text" id="txtItem" class="form-control" placeholder="Search items..." />
+                                <button type="button" class="po-source-btn" id="btnGetAllItems"><i class="fa fa-search"></i> Items</button>
+                            </div>
+
+                            <!-- PR selector (hidden by default) -->
+                            <div id="prInputSection" class="po-source" style="display: none;">
+                                <asp:DropDownList runat="server" ID="ddlPrNo" class="form-control"></asp:DropDownList>
+                                <button type="button" class="po-source-btn" id="btnPRSave" onclick="LoadPrNoDetail($('#ctl00_MainContent_ddlPrNo').val())"><i class="fa fa-plus"></i> Add</button>
+                            </div>
+                        </div>
+                        <div class="po-checks">
+                            <div class="po-check">
+                                <input type="checkbox" id="chkByDefault" />
+                                <label for="chkByDefault">By Default</label>
+                            </div>
+                            <div class="po-check">
+                                <input type="checkbox" id="chkManual" />
+                                <label for="chkManual">Manual</label>
+                            </div>
+                            <div class="po-check">
+                                <input type="checkbox" id="IsadvancewithTax" />
+                                <label for="IsadvancewithTax">Adv Tax Including GST</label>
+                            </div>
+                        </div>
+                    </section>
+
+                    <section class="po-card">
+                        <h5 class="po-card-title"><i class="fa fa-paperclip"></i> Attachment</h5>
+                        <div class="po-field">
+                            <input type="file" id="chosePofile" name="chosePofile" class="form-control" />
+                            <asp:HyperLink ID="HyperLink1" runat="server" CssClass="po-link"><i class="fa fa-download"></i> Download</asp:HyperLink>
+                        </div>
+                    </section>
+                </div>
+            </div>
+        </form>
+        <asp:HiddenField ID="hdfItem_ID" runat="server" ClientIDMode="Static" />
+
+        <!-- Items -->
+        <section class="po-card">
+            <h5 class="po-card-title"><i class="fa fa-list-alt"></i> Items</h5>
+            <div id="ITEMTable" class="po-table-wrap">
+                <table class="table table-bordered table-striped po-table" id="tblItemDescription">
+                    <thead>
+                        <tr style="position: sticky; top: 0px; z-index: 10;">
+                            <th style="width: 34px;">No</th>
+                            <th style="width: 54px; text-align: center;">P.R No</th>
+                            <th style="width: 54px; text-align: center;">CS NO</th>
+                            <th style="width: 80px; text-align: center;">Item Code</th>
+                            <th style="text-align: center;">Item Description</th>
+                            <th style="width: 48px;">Unit</th>
+                            <th style="width: 66px;">Qty</th>
+                            <th style="width: 70px;">UOM / P Size Qty </th>
+                            <th style="width: 64px;">Bonus Qty</th>
+                            <th style="width: 72px;">Rate</th>
+                            <th style="width: 52px;">Dis %</th>
+                            <th style="width: 70px;">Dis Amount</th>
+                            <th style="width: 64px;">S.Tax %</th>
+                            <th style="width: 70px;">ST Amount</th>
+                            <th style="width: 56px;">F.Tax %</th>
+                            <th style="width: 70px;">F.Tax Amount</th>
+                            <th style="width: 64px;">A.Tax %</th>
+                            <th style="width: 72px;">Adv Amount</th>
+                            <th style="width: 58px; display: none;">Fed%</th>
+                            <th style="width: 70px; display: none;">Fed Amount</th>
+                            <th style="width: 70px;">Bonus Tax</th>
+                            <th style="width: 84px;">Total</th>
+                            <th style="width: 104px;">Delivery Date</th>
+                            <th style="width: 54px; text-align: center;">Stock</th>
+                            <th style="width: 74px; text-align: center;">Last PO Rate</th>
+                            <th style="width: 110px; text-align: center;">Last Vendor</th>
+                            <th style="width: 48px;">Action</th>
+                        </tr>
+                    </thead>
+                    <tbody id="tblItemDescriptionDetail">
+                    </tbody>
+                </table>
+            </div>
+        </section>
+
+        <!-- Totals -->
+        <section class="po-card">
+            <h5 class="po-card-title"><i class="fa fa-calculator"></i> Totals</h5>
+            <div class="po-totals">
+                <div class="po-total-item">
+                    <label>Sub Total</label>
+                    <input type="text" id="txtSub_Total" readonly="readonly" class="po-total-input" placeholder="0.00" />
+                </div>
+                <div class="po-total-item">
+                    <label>Discount</label>
+                    <input type="text" id="txtTotalDiscAmt" readonly="readonly" class="po-total-input" placeholder="0.00" />
+                </div>
+                <div class="po-total-item">
+                    <label>Tax</label>
+                    <input type="text" id="txtst_amou" readonly="readonly" class="po-total-input" placeholder="0.00" />
+                </div>
+                <div class="po-total-item">
+                    <label>Bonus Tax</label>
+                    <input type="text" id="txtBonusTaxTotal" readonly="readonly" class="po-total-input" placeholder="0.00" />
+                </div>
+                <div class="po-total-item">
+                    <label>Freight</label>
+                    <input type="text" id="txtfreight_charges" readonly="readonly" class="po-total-input" placeholder="0.00" />
+                </div>
+                <div class="po-total-item po-total-main">
+                    <label>Net Amount</label>
+                    <input type="text" id="ctl00_MainContent_Net_Amount" readonly="readonly" class="po-total-input" placeholder="0.00" />
+                </div>
+                <div class="po-total-item" style="display: none;">
+                    <label>Adv Tax</label>
+                    <input type="text" id="txtAdv_amou" readonly="readonly" class="po-total-input" placeholder="0.00" />
+                </div>
+                <div class="po-total-item" style="display: none;">
+                    <label>Further Tax</label>
+                    <input type="text" id="txtFurther_amou" readonly="readonly" class="po-total-input" placeholder="0.00" />
+                </div>
+            </div>
+        </section>
+
+        <!-- Action Buttons -->
+        <div class="po-actions">
+            <div>
+                <input type="button" class="btn btn-primry w-100" onclick="this.disabled=true;SaveAllRecord()" value="Save" id="btnSave" />
+            </div>
+            <div>
+                <input type="button" class="btn-gray w-100" value="List" onclick="window.location = 'PurchaseOrderView.aspx'" />
+            </div>
+            <div>
+                <input type="button" class="btn btn-yellow w-100" value="New" onclick="window.location = 'PurchaseOrder.aspx'" />
+            </div>
+            <div>
+                <input style="text-align: center" type="button" value="Cancel" id="btncancel" class="btn btn-primry w-100" onclick="Cancel()" />
+            </div>
+            <div>
+                <input type="button" id="btnPrint" value="Print" class="btn btn-primry w-100" name="name" onclick="PrintPurchaseOrderDetail();" />
+            </div>
+            <div>
+                <input type="button" id="btnPrint2" value="Print2" class="btn btn-primry w-100" name="name" onclick="PrintPurchaseOrderDetail2();" />
+            </div>
+            <div>
+                <input type="button" style="display:none;" class="btn btn-primry w-100" value="Approve" id="btnApprove" onclick="ApprovePOFromEdit()" />
+            </div>
+            <div>
+                <input type="button" style="display:none;" class="btn btn-primry w-100" value="UnApprove" id="btnUnApprove" onclick="UnApprove()" />
+            </div>
+            <div>
+                <input type="button" style="display:none;" class="btn btn-primry w-100" value="Replicate" id="btnReplicate" onclick="this.disabled=true;$('#tblItemDescription tbody tr').each(function(){var $prd=$(this).find('input[name=txtPRDId]');if($prd.val()&&$prd.val()!='0'&&$prd.val()!=''){$prd.val('0');$(this).find('input[name=txtPRNo]').val('');$(this).find('input[name=txtcsno]').val('');}});$('#btnSave').val('Save');$('#hdnPurchase_ID').val('');SaveAllRecord()" />
+            </div>
         </div>
 
-        <!-- Source toggle + Attachment -->
-        <div class="pr-source-attach-row">
-            <div class="pr-source-left">
-                <div class="source-toggle-pill" id="poSourceTogglePill">
-                    <label class="source-radio-option">
-                        <input type="radio" name="poSourceType" id="rdoPOItem" value="item" checked="checked" />
-                        <span class="source-pill-label">Item</span>
-                    </label>
-                    <label class="source-radio-option">
-                        <input type="radio" name="poSourceType" id="rdoPOPR" value="pr" />
-                        <span class="source-pill-label">PR</span>
-                    </label>
-                </div>
-                <div id="itemInputSection" class="source-input-wrap">
-                    <div class="source-inline-group">
-                        <input type="text" id="txtItem" class="source-select-input" placeholder="Search items..." />
-                        <button type="button" class="source-action-btn" id="btnGetAllItems" ><i class="fa fa-search"></i> Items</button>
-                    </div>
-                </div>
-                <div id="prInputSection" class="source-input-wrap" style="display:none;">
-                    <div class="source-inline-group">
-                        <asp:DropDownList runat="server" ID="ddlPrNo" class="source-select-input"></asp:DropDownList>
-                        <button type="button" class="source-action-btn" id="btnPRSave" onclick="LoadPrNoDetail($('#ctl00_MainContent_ddlPrNo').val())"><i class="fa fa-plus"></i> Add</button>
-                    </div>
-                </div>
-                <div class="source-checkbox-group">
-                    <div class="pr-checkbox-wrap pr-checkbox-inline">
-                        <input type="checkbox" id="chkByDefault" />
-                        <label for="chkByDefault">By Default</label>
-                    </div>
-                    <div class="pr-checkbox-wrap pr-checkbox-inline">
-                        <input type="checkbox" id="chkManual" />
-                        <label for="chkManual">Manual</label>
-                    </div>
-                    <div class="pr-checkbox-wrap pr-checkbox-inline" >
-                        <input type="checkbox" id="IsadvancewithTax" />
-                        <label for="IsadvancewithTax">Adv Tax Including GST</label>
-                    </div>
-                </div>
-            </div>
-            <div class="pr-attachment-card">
-                <div class="pr-attachment-icon"><i class="fa fa-paperclip"></i></div>
-                <div class="pr-attachment-body">
-                    <span class="pr-attachment-label">Attachment</span>
-                    <input type="file" id="chosePofile" name="chosePofile" class="pr-file-input" />
-                    <div class="pr-attachment-download">
-                        <asp:HyperLink ID="HyperLink1" runat="server" CssClass="pr-download-btn"><i class="fa fa-download"></i> Download</asp:HyperLink>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </form>
-    <asp:HiddenField ID="hdfItem_ID" runat="server" ClientIDMode="Static" />
-    <div id="ITEMTable">
-        <table class="table table-bordered table-striped" id="tblItemDescription">
-            <thead>
-                <tr style="position: sticky; top: 0px; z-index: 10;">
-                    <th style="width: 34px;">No</th>
-                    <th style="width: 54px; text-align: center;">P.R No</th>
-                    <th style="width: 54px; text-align: center;">CS NO</th>
-                    <th style="width: 80px; text-align: center;">Item Code</th>
-                    <th style="text-align: center;">Item Description</th>
-                    <th style="width: 48px;">Unit</th>
-                    <th style="width: 66px;">Qty</th>
-                    <th style="width: 70px;">UOM / P Size Qty </th>
-                    <th style="width: 64px;">Bonus Qty</th>
-                    <th style="width: 72px;">Rate</th>
-                    <th style="width: 52px;">Dis %</th>
-                    <th style="width: 70px;">Dis Amount</th>
-                    <th style="width: 64px;">S.Tax %</th>
-                    <th style="width: 70px;">ST Amount</th>
-                    <th style="width: 56px;">F.Tax %</th>
-                    <th style="width: 70px;">F.Tax Amount</th>
-                    <th style="width: 64px;">A.Tax %</th>
-                    <th style="width: 72px;">Adv Amount</th>
-                    <th style="width: 58px; display: none;">Fed%</th>
-                    <th style="width: 70px; display: none;">Fed Amount</th>
-                    <th style="width: 70px;">Bonus Tax</th>
-                    <th style="width: 84px;">Total</th>
-                    <th style="width: 104px;">Delivery Date</th>
-                    <th style="width: 54px; text-align: center;">Stock</th>
-                    <th style="width: 74px; text-align: center;">Last PO Rate</th>
-                    <th style="width: 110px; text-align: center;">Last Vendor</th>
-                    <th style="width: 48px;">Action</th>
-                </tr>
-            </thead>
-            <tbody id="tblItemDescriptionDetail">
-            </tbody>
-        </table>
-    </div>
-
-    <!-- Totals Bar -->
-    <div class="pr-totals-bar">
-        <span class="pr-totals-bar-label">Totals</span>
-        <div class="pr-totals-bar-fields">
-            <div class="pr-totals-bar-item">
-                <label>Sub Total</label>
-                <input type="text" id="txtSub_Total" readonly="readonly" class="pr-total-input" placeholder="0.00" />
-            </div>
-            <div class="pr-totals-bar-item">
-                <label>Discount</label>
-                <input type="text" id="txtTotalDiscAmt" readonly="readonly" class="pr-total-input" placeholder="0.00" />
-            </div>
-            <div class="pr-totals-bar-item">
-                <label>Tax</label>
-                <input type="text" id="txtst_amou" readonly="readonly" class="pr-total-input" placeholder="0.00" />
-            </div>
-            <div class="pr-totals-bar-item">
-                <label>Bonus Tax</label>
-                <input type="text" id="txtBonusTaxTotal" readonly="readonly" class="pr-total-input" placeholder="0.00" />
-            </div>
-            <div class="pr-totals-bar-item">
-                <label>Freight</label>
-                <input type="text" id="txtfreight_charges" readonly="readonly" class="pr-total-input" placeholder="0.00" />
-            </div>
-            <div class="pr-totals-bar-item">
-                <label>Net Amount</label>
-                <input type="text" id="ctl00_MainContent_Net_Amount" readonly="readonly" class="pr-total-input" placeholder="0.00" />
-            </div>
-            <div class="pr-totals-bar-item" style="display: none;">
-                <label>Adv Tax</label>
-                <input type="text" id="txtAdv_amou" readonly="readonly" class="pr-total-input" placeholder="0.00" />
-            </div>
-            <div class="pr-totals-bar-item" style="display: none;">
-                <label>Further Tax</label>
-                <input type="text" id="txtFurther_amou" readonly="readonly" class="pr-total-input" placeholder="0.00" />
-            </div>
-        </div>
-    </div>
-
-    <!-- Action Buttons -->
-    <div class="pr-action-buttons">
-        <div>
-            <input type="button" class="btn btn-primry w-100" onclick="this.disabled=true;SaveAllRecord()" value="Save" id="btnSave" />
-        </div>
-        <div>
-            <input type="button" class="btn-gray w-100" value="List" onclick="window.location = 'PurchaseOrderView.aspx'" />
-        </div>
-        <div>
-            <input type="button" class="btn btn-yellow w-100" value="New" onclick="window.location = 'PurchaseOrder.aspx'" />
-        </div>
-        <div>
-            <input style="text-align: center" type="button" value="Cancel" id="btncancel" class="btn btn-primry w-100" onclick="Cancel()" />
-        </div>
-        <div>
-            <input type="button" id="btnPrint" value="Print" class="btn btn-primry w-100" name="name" onclick="PrintPurchaseOrderDetail();" />
-        </div>
-        <div>
-            <input type="button" id="btnPrint2" value="Print2" class="btn btn-primry w-100" name="name" onclick="PrintPurchaseOrderDetail2();" />
-        </div>
-        <div>
-            <input type="button" style="display:none;" class="btn btn-primry w-100" value="Approve" id="btnApprove" onclick="ApprovePOFromEdit()" />
-        </div>
-        <div>
-            <input type="button" style="display:none;" class="btn btn-primry w-100" value="UnApprove" id="btnUnApprove" onclick="UnApprove()" />
-        </div>
-        <div>
-            <input type="button" style="display:none;" class="btn btn-primry w-100" value="Replicate" id="btnReplicate" onclick="this.disabled=true;$('#tblItemDescription tbody tr').each(function(){var $prd=$(this).find('input[name=txtPRDId]');if($prd.val()&&$prd.val()!='0'&&$prd.val()!=''){$prd.val('0');$(this).find('input[name=txtPRNo]').val('');$(this).find('input[name=txtcsno]').val('');}});$('#btnSave').val('Save');$('#hdnPurchase_ID').val('');SaveAllRecord()" />
-        </div>
     </div>
 
     <div id="PrintPurchseOrderReport" style="display: none;">
@@ -3812,23 +3748,21 @@ function scheduleCalcTotal(delay) {
             </tbody>
         </table>
     </div>
-    <div id="POItemsModel" class="modal fade" role="dialog" tabindex="-1" aria-hidden="true">
-        <div class="modal-dialog modal-lg custom-modal-dialog">
-            <div class="modal-content custom-modal-content">
-                <div class="modal-header custom-modal-header">
-                    <div class="custom-modal-title-wrap">
-                        <span class="custom-modal-icon"><i class="fa fa-list"></i></span>
-                        <h4 class="modal-title custom-modal-title">Add PR Items</h4>
-                    </div>
-                    <button type="button" class="custom-modal-close" data-dismiss="modal"><i class="fa fa-times"></i></button>
+    <!-- Add PR items -->
+    <div id="POItemsModel" class="modal fade po-modal" role="dialog" tabindex="-1" aria-hidden="true">
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                    <h4 class="modal-title">Add PR Items</h4>
                 </div>
                 <input type="hidden" id="txthiddentr" name="txthidddentr" />
-                <div class="modal-body custom-modal-body">
-                    <div class="custom-modal-table-wrap">
-                        <table class="table custom-modal-table" id="tblPOItemstModelTable">
+                <div class="modal-body">
+                    <div class="po-modal-scroll">
+                        <table class="table" id="tblPOItemstModelTable">
                             <thead>
                                 <tr>
-                                    <th style="width: 32px;">
+                                    <th style="width: 40px;">
                                         <input type="checkbox" id="checkHeader" value="false" /></th>
                                     <th style="display: none;">Pr ID </th>
                                     <th style="display: none;">Item ID </th>
@@ -3852,24 +3786,22 @@ function scheduleCalcTotal(delay) {
             </div>
         </div>
     </div>
-    <!-- Add this NEW modal for Item Search -->
-    <div class="modal fade" id="itemsModal" tabindex="-1" aria-labelledby="itemsModalLabel" aria-hidden="true">
-        <div class="modal-dialog modal-lg custom-modal-dialog">
-            <div class="modal-content custom-modal-content">
-                <div class="modal-header custom-modal-header">
-                    <div class="custom-modal-title-wrap">
-                        <span class="custom-modal-icon"><i class="fa fa-cubes"></i></span>
-                        <h4 class="modal-title custom-modal-title" id="itemsModalLabel">Item Details</h4>
-                    </div>
-                    <button type="button" class="custom-modal-close" data-dismiss="modal" aria-label="Close"><i class="fa fa-times"></i></button>
+
+    <!-- Browse items -->
+    <div class="modal fade po-modal" id="itemsModal" tabindex="-1" aria-labelledby="itemsModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                    <h4 class="modal-title" id="itemsModalLabel">Item Details</h4>
                 </div>
-                <div class="modal-body custom-modal-body">
-                    <div class="custom-modal-search-wrap">
-                        <span class="custom-modal-search-icon"><i class="fa fa-search"></i></span>
-                        <input type="text" id="searchInput" class="custom-modal-search" placeholder="Search items..." />
+                <div class="modal-body">
+                    <div class="po-modal-search">
+                        <i class="fa fa-search"></i>
+                        <input type="text" id="searchInput" class="form-control" placeholder="Search items..." autocomplete="off" />
                     </div>
-                    <div class="custom-modal-table-wrap">
-                        <table class="table custom-modal-table">
+                    <div class="po-modal-scroll">
+                        <table class="table">
                             <thead>
                                 <tr>
                                     <th>Select</th>
@@ -3886,7 +3818,7 @@ function scheduleCalcTotal(delay) {
                                     <!-- td:eq(5) -->
                                     <th style="display: none;">UOM Qty</th>
 
-                                    <th>Last Purchase Rate</th>                               
+                                    <th>Last Purchase Rate</th>
                                     <!-- td:eq(6) -->
                                     <th>Stock</th>
                                     <th>Last Vendor</th>

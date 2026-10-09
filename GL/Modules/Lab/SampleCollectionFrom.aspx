@@ -1,9 +1,7 @@
 ﻿<%@ Page Language="C#" MasterPageFile="~/Site.Master" AutoEventWireup="true" CodeBehind="SampleCollectionFrom.aspx.cs" Inherits="PMS.SampleCollectionFrom" %>
 
 <asp:Content ID="Content1" ContentPlaceHolderID="HeadContent" runat="server">
-    <link href="../../wwwroot/THEME_TIBBIT/CustomCSS/LabSample.css" rel="stylesheet" />
-    <link href="../../wwwroot/THEME_TIBBIT/CustomCSS/vendor.css" rel="stylesheet" />
-    <link href="../../wwwroot/THEME_TIBBIT/CustomCSS/custom-modals.css" rel="stylesheet" />
+    <link href="../../wwwroot/THEME_TIBBIT/CustomCSS/sample-collection.css" rel="stylesheet" />
     <script type="text/javascript">
 
 
@@ -1323,162 +1321,86 @@
 </asp:Content>
 
 <asp:Content ID="Content2" ContentPlaceHolderID="MainContent" runat="server">
+    <div class="sc-page">
     <form id="item">
-        <!-- Meta Bar -->
+
+        <!-- Title line: the master page puts the page title in the empty left side; the badges sit on the right -->
         <div class="pr-meta-bar">
-            <div class="meta-left">
-                <span class="meta-title"><i class="fa fa-flask"></i> Sample Collection</span>
-            </div>
+            <div class="meta-left"></div>
             <div class="meta-right">
-                <div class="meta-badge">
-                    <span class="badge-label">Sample No:</span>
-                    <span class="badge-value" id="sampleNoDisplay">---</span>
-                </div>
-                <div class="meta-badge">
-                    <span class="badge-label">Branch:</span>
-                    <span class="badge-value" id="branchDisplay">---</span>
-                </div>
+                <div class="sc-badge"><span class="sc-badge-label">Sample No</span><span class="sc-badge-value" id="sampleNoDisplay">---</span></div>
+                <div class="sc-badge"><span class="sc-badge-label">Branch</span><span class="sc-badge-value" id="branchDisplay">---</span></div>
             </div>
         </div>
 
-        <div class="row">
-            <!-- Left Card -->
-            <div class="col-lg-5 col-md-5 col-sm-12">
-                <div class="card">
-                    <div class="card-body">
-                        <div class="row">
-                            <div class="col-lg-4 col-md-5 col-sm-6 text-center">
-                                <div class="image-container">
-                                    <img src="~../../../../wwwroot/SOURCE_IMAGES/DASHBOARD_ICONS/Lab2.png" alt="Patient Image" class="img-fluid rounded-circle patient-image" />
-                                </div>
-                            </div>
-                            <div class="col-lg-8 col-md-7 col-sm-6">
-                                <div class="row mb-3 mtt">
-                                    <div class="col-lg-5 col-md-5 col-sm-6">
-                                        <label for="BillNo" style="font-weight: bold">Bill No: </label>
-                                    </div>
-                                    <div class="col-lg-7 col-md-7 col-sm-6">
-                                        <input type="text" id="txtBillNo" class="form-control" />
-                                    </div>
-                                </div>
-                                <div class="row mb-3 mtt">
-                                    <div class="col-lg-5 col-md-5 col-sm-6 formrgn">
-                                        <label for="lblPatient_Name">Name:  </label>
-                                    </div>
-                                    <div class="col-lg-7 col-md-7 col-sm-6 formrgn">
-                                        <label id="vlblPatients_Name"></label>
-                                    </div>
-                                </div>
-                                <div class="row mb-3 mtt">
-                                    <div class="col-lg-5 col-md-5 col-sm-6 formrgn">
-                                        <label for="lblContactNo">Contact No :  </label>
-                                    </div>
-                                    <div class="col-lg-7 col-md-7 col-sm-6 formrgn">
-                                        <label id="vLbl_Contact"></label>
-                                    </div>
-                                </div>
-                                <div class="row mb-3 mtt">
-                                    <div class="col-lg-5 col-md-5 col-sm-6 formrgn">
-                                        <label for="lblGender" style="font-weight: bold">Gender:  </label>
-                                    </div>
-                                    <div class="col-lg-7 col-md-7 col-sm-6 formrgn">
-                                        <label id="vLbl_Gender"></label>
-                                    </div>
-                                </div>
-                                <div class="row mb-3 mtt">
-                                    <div class="col-lg-5 col-md-5 col-sm-6 formrgn">
-                                        <label for="lblAge_Years" style="font-weight: bold">Age Years:  </label>
-                                    </div>
-                                    <div class="col-lg-7 col-md-7 col-sm-6 formrgn">
-                                        <label id="vLbl_Age"></label>
-                                    </div>
-                                </div>
-                            </div>
+        <div class="sc-layout2">
+            <section class="sc-card">
+                <h5 class="sc-card-title"><i class="fa fa-user-circle"></i> Patient Information</h5>
+                <div class="sc-patient">
+                    <div class="sc-avatar">
+                        <img src="~../../../../wwwroot/SOURCE_IMAGES/DASHBOARD_ICONS/Lab2.png" alt="Patient Image" />
+                    </div>
+                    <div class="sc-grid sc-patient-fields">
+                        <div class="sc-field">
+                            <label for="txtBillNo">Bill No</label>
+                            <input type="text" id="txtBillNo" class="form-control" />
+                        </div>
+                        <div class="sc-field">
+                            <label for="txtMR_No">MR No</label>
+                            <input type="text" id="txtMR_No" class="form-control" />
                         </div>
                     </div>
                 </div>
-            </div>
+                <dl class="sc-info">
+                    <div class="sc-span-2"><dt>Name</dt><dd id="vlblPatients_Name"></dd></div>
+                    <div><dt>Contact No</dt><dd id="vLbl_Contact"></dd></div>
+                    <div><dt>Gender</dt><dd id="vLbl_Gender"></dd></div>
+                    <div><dt>Age Years</dt><dd id="vLbl_Age"></dd></div>
+                    <div><dt>Reg. Date</dt><dd id="vLbl_RegDate"></dd></div>
+                    <div><dt>Specimen</dt><dd id="vLbl_Specimen"></dd></div>
+                    <div class="sc-span-all"><dt>Address</dt><dd id="vLbl_Adress"></dd></div>
+                </dl>
+            </section>
 
-            <!-- Right Card -->
-            <div class="col-lg-5 col-md-5 col-sm-12">
-                <div class="card">
-                    <div class="card-body">
-                        <div class="row mb-3">
-                            <div class="col-lg-4 col-md-5 col-sm-6 formrgn">
-                                <label for="MRNo">MR no:</label>
-                            </div>
-                            <div class="col-lg-7 col-md-5 col-sm-6">
-                                <input type="text" id="txtMR_No" class="form-control" />
-                            </div>
-                        </div>
-                        <div class="row mb-3">
-                            <div class="col-lg-4 col-md-5 col-sm-6 formrgn">
-                                <label for="LblReg_Date">Reg. Date:  </label>
-                            </div>
-                            <div class="col-lg-8 col-md-5 col-sm-6 formrgn">
-                                <label id="vLbl_RegDate"></label>
-                            </div>
-                        </div>
-                        <div class="row mb-3">
-                            <div class="col-lg-4 col-md-5 col-sm-6 formrgn">
-                                <label for="lblAdress" style="font-weight: bold">Address:  </label>
-                            </div>
-                            <div class="col-lg-8 col-md-5 col-sm-6 formrgn">
-                                <label id="vLbl_Adress"></label>
-                            </div>
-                        </div>
-                        <div class="row mb-3">
-                            <div class="col-lg-4 col-md-5 col-sm-6 formrgn">
-                                <label for="lblSpecimen" style="font-weight: bold">Specimen:  </label>
-                            </div>
-                            <div class="col-lg-8 col-md-5 col-sm-6 formrgn">
-                                <label id="vLbl_Specimen"></label>
-                            </div>
-                        </div>
+            <section class="sc-card">
+                <h5 class="sc-card-title"><i class="fa fa-flask"></i> Sample Details</h5>
+                <div class="sc-grid">
+                    <div class="sc-field">
+                        <label>Sample ID</label>
+                        <input type="text" id="txtSample_ID" class="sc-input" readonly="readonly" />
+                    </div>
+                    <div class="sc-field">
+                        <label for="txtSample_No">Sample No</label>
+                        <input type="text" id="txtSample_No" class="sc-input" readonly="readonly" />
+                    </div>
+                    <div class="sc-field">
+                        <label id="sampleCode">Sample Code</label>
+                        <input type="text" disabled="disabled" id="txtSampleCode" class="sc-input" />
+                    </div>
+                    <div class="sc-field">
+                        <label id="lblSample_Date">Collected Date*</label>
+                        <input type="text" readonly="readonly" id="txtSampleCollected_Date" class="sc-input" />
+                    </div>
+                    <div class="sc-field">
+                        <label>Patient Type<span class="sc-req">*</span></label>
+                        <select id="ddlPat_type" class="sc-input"></select>
+                    </div>
+                    <div class="sc-field">
+                        <label>Sample Status</label>
+                        <select id="ddlSample_Status" class="sc-input"></select>
+                    </div>
+                    <div class="sc-field">
+                        <label for="ddlUserBranch">Branch</label>
+                        <select id="ddlUserBranch" class="sc-input">
+                            <option value="">Loading...</option>
+                        </select>
+                    </div>
+                    <div class="sc-field">
+                        <label id="lblremarks">Remarks</label>
+                        <input type="text" id="txtRemarks" class="sc-input" />
                     </div>
                 </div>
-            </div>
-        </div>
-
-
-
-        <div class="row">
-            <div class="col-lg-1 col-md-3 col-sm-4">
-                <label>Sample ID</label>
-                <input type="text" id="txtSample_ID" readonly="readonly" />
-            </div>
-            <div class="col-lg-1 col-md-3 col-sm-4">
-                <label for="SampleNo">Sample No:  </label>
-                <input type="text" id="txtSample_No" class="form-control" readonly="readonly" />
-            </div>
-            
-            <div class="col-lg-1 col-md-3 col-sm-4">
-                <label id="sampleCode" style="display: inline-block;">Sample Code</label>
-                <input type="text" disabled="disabled" id="txtSampleCode" class="form-control" />
-            </div>
-
-            <div class="col-lg-1 col-md-3 col-sm-4">
-                <label id="lblSample_Date" style="display: inline-block;">Collected Date*</label>
-                <input type="text" readonly="readonly" id="txtSampleCollected_Date" class="form-control" />
-            </div>
-            <div class="col-lg-1 col-md-3 col-sm-4">
-                <label id="" style="display: inline-block;">Patient Type<span style="color: red;">*</span></label>
-                <select id="ddlPat_type" class="form-control"></select>
-            </div>
-            <div class="col-lg-2 col-md-3 col-sm-4">
-            <label id="" style="display: inline-block;">Sample Status</label>
-                <select id="ddlSample_Status"></select>
-            </div>
-                <div class="col-lg-2 col-md-4 col-sm-6">
-                <label for="ddlUserBranch">Branch</label>
-                <select id="ddlUserBranch" class="form-control">
-                    <option value="">Loading...</option>
-                </select>
-            </div>
-              <div class="col-lg-2 col-md-3 col-sm-4">
-      <label id="lblremarks" style="display: inline-block;">Remarks</label>
-      <input type="text"  id="txtRemarks" class="form-control" />
-  </div>
+            </section>
         </div>
     </form>
 
@@ -1489,114 +1411,69 @@
     <select id="Emp_Name" style="height: 33px; margin-top: 11px; display:none">
         <option></option>
     </select>
-    <div class="panel panel-default">
-        <div class="panel-body">
-            <div id="r1">
-            </div>
 
-            <div class="table-container">
-                <input type="button" id="btnDetail" class="btn btn-primry" value="Select Test" style="margin-left: 88%; width: 12% !important;" />
-                <table class="responstable table" id="CollectedSample" style="overflow: scroll; height: auto;">
-                    <thead id="Collected_Sample_Head">
-                        <tr id="Collected_Sample_tr">
-                            <th style="text-align: center; padding-left: 0px; padding-right: 0px; display: none">Test ID</th>
-                            <th style="text-align: center; padding-left: 0px; padding-right: 0px; display: none">Bill Detail ID</th>
-                            <th style="text-align: center; padding-left: 0px; padding-right: 0px;">Test Name</th>
-                            <th style="text-align: center; padding-left: 0px; padding-right: 0px;">Department</th>
-                            <th style="text-align: center; padding-left: 0px; padding-right: 0px">Gener</th>
-                            <th style="text-align: center; padding-left: 0px; padding-right: 0px">Quantity</th>
-                            <th style="text-align: center;">Collected</th>
-                            <th style="text-align: center; padding-left: 0px; padding-right: 0px;">Urgent</th>
-                            <th style="text-align: center; padding-left: 0px; padding-right: 0px; width: 210px !important">Remarks</th>
-                            <th style="text-align: center; padding-left: 0px; padding-right: 0px;">Out Source</th>
-                            <th style="text-align: center;">Action</th>
-
-                        </tr>
-                    </thead>
-                    <tbody></tbody>
-                </table>
-
-
-            </div>
-            <div class="pr-action-buttons">
-        <div class="row">
-            <div class="col-lg-2 col-md-3 col-sm-4">
-                <input id="btSnave" class="btn btn-primry w-100" type="button" value="Save & Print" onclick="SaveTest()" />
-                <input type="hidden" name="hdnDuplicateCheck" value="0" id="hdnDuplicateCheck" />
-            </div>
-            <div class="col-lg-2 col-md-3 col-sm-4">
-                <input id="btnList" class="btn-gray w-100" type="button" value="View" onclick="ListView()" />
-            </div>
-            <div class="col-lg-2 col-md-3 col-sm-4">
-                <input id="btnNew" class="btn btn-yellow w-100" type="button" value="New" onclick="NewEntry()" />
-            </div>
-            <div class="col-lg-2 col-md-3 col-sm-4">
-                <input id="btnPrintBarcode" class="btn btn-primry w-100" type="button" value="Barcode" onclick="PrintBarcode()" />
-            </div>
-            <div class="col-lg-2 col-md-3 col-sm-4">
-                <input id="btnPrintQrCode" class="btn btn-primry w-100" type="button" value="QR Code" onclick="PrintQrCode()" />
-            </div>
-            <div class="col-lg-2 col-md-3 col-sm-4">
-                <input id="btnPrintOrder" class="btn btn-primry w-100" type="button" value="Print Order" onclick="PrintOrder()" />
-            </div>
-            <div class="col-lg-2 col-md-3 col-sm-4">
-                <input id="btnPrint" class="btn btn-primry w-100" type="button" value="Print" onclick="Print()" />
-            </div>
+    <section class="sc-card">
+        <h5 class="sc-card-title"><i class="fa fa-list-alt"></i> Tests
+            <input type="button" id="btnDetail" class="btn btn-primry sc-title-btn" value="Select Test" />
+        </h5>
+        <div id="r1">
         </div>
-    </div>
-    </div>
+        <div class="sc-table-wrap">
+            <table class="responstable table" id="CollectedSample" style="overflow: scroll; height: auto;">
+                <thead id="Collected_Sample_Head">
+                    <tr id="Collected_Sample_tr">
+                        <th style="text-align: center; padding-left: 0px; padding-right: 0px; display: none">Test ID</th>
+                        <th style="text-align: center; padding-left: 0px; padding-right: 0px; display: none">Bill Detail ID</th>
+                        <th style="text-align: center; padding-left: 0px; padding-right: 0px;">Test Name</th>
+                        <th style="text-align: center; padding-left: 0px; padding-right: 0px;">Department</th>
+                        <th style="text-align: center; padding-left: 0px; padding-right: 0px">Gener</th>
+                        <th style="text-align: center; padding-left: 0px; padding-right: 0px">Quantity</th>
+                        <th style="text-align: center;">Collected</th>
+                        <th style="text-align: center; padding-left: 0px; padding-right: 0px;">Urgent</th>
+                        <th style="text-align: center; padding-left: 0px; padding-right: 0px; width: 210px !important">Remarks</th>
+                        <th style="text-align: center; padding-left: 0px; padding-right: 0px;">Out Source</th>
+                        <th style="text-align: center;">Action</th>
+                    </tr>
+                </thead>
+                <tbody></tbody>
+            </table>
+        </div>
+    </section>
 
-    <div id="TestItemsModel" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="TestItemsModalLabel" aria-hidden="true">
-        <div class="modal-dialog modal-lg" role="document">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h4 class="modal-title" id="TestItemsModalLabel">Detail Selection</h4>
-                   
-                </div>
-                <div class="modal-body">
-                    <input type="hidden" id="txthiddentr" name="txthiddentr" />
-                    <div class="table-responsive" style="max-height: 400px; overflow-y: auto;">
-                        <table class="table table-bordered table-striped" id="tblDetailModelTable">
-                            <thead class="table-light">
-                                <tr>
-                                    <th style="width: 32px;"></th> 
-                                    <th style="display: none">Test ID</th>
-                                    <th style="display: none">Bill Detail ID</th>
-                                    <th>Test Name</th>
-                                    <th>Department</th>
-                                    <th>Gener</th>
-                                    <th>Quantity</th>
-                                    <th>Remarks</th>
-                                     <th>Save</th>
-                                     <th>Urgent</th>
-                                    <th><input type="checkbox" id="chkAll"  onclick="toggleAll(this)" /></th>
-                                    
-                                </tr>
-                            </thead>
-                            <tbody>
-                                <!-- Dynamic rows go here -->
-                            </tbody>
-                        </table>
-                    </div>
-                </div>
-                <div class="modal-footer">
-                    <button type="button" id="btnDetailSelection" class="btn btn-gray" name="btnDetailSelection" value="Close" onclick="appendTests()">Close</button>
-
-                </div>
-            </div>
+    <div class="sc-actions">
+        <div>
+            <input id="btSnave" class="btn btn-primry w-100" type="button" value="Save & Print" onclick="SaveTest()" />
+            <input type="hidden" name="hdnDuplicateCheck" value="0" id="hdnDuplicateCheck" />
+        </div>
+        <div>
+            <input id="btnList" class="btn-gray w-100" type="button" value="View" onclick="ListView()" />
+        </div>
+        <div>
+            <input id="btnNew" class="btn btn-yellow w-100" type="button" value="New" onclick="NewEntry()" />
+        </div>
+        <div>
+            <input id="btnPrintBarcode" class="btn btn-primry w-100" type="button" value="Barcode" onclick="PrintBarcode()" />
+        </div>
+        <div>
+            <input id="btnPrintQrCode" class="btn btn-primry w-100" type="button" value="QR Code" onclick="PrintQrCode()" />
+        </div>
+        <div>
+            <input id="btnPrintOrder" class="btn btn-primry w-100" type="button" value="Print Order" onclick="PrintOrder()" />
+        </div>
+        <div>
+            <input id="btnPrint" class="btn btn-primry w-100" type="button" value="Print" onclick="Print()" />
         </div>
     </div>
 
-    <div class="modal-content" style="height: 505px; overflow-y: auto" id="listModel">
-        <div class="modal-header header-sample" style=" color: white;">
-            <h4 class="modal-title">Sample Calling List</h4>
+    <section class="sc-card sc-list" id="listModel">
+        <h5 class="sc-card-title"><i class="fa fa-list"></i> Sample Calling List</h5>
+        <div class="sc-grid sc-search-row">
+            <div class="sc-field">
+                <label for="txtMRNOSearch">Search From Bill No</label>
+                <input id="txtMRNOSearch" type="text" class="sc-input" />
+            </div>
         </div>
-
-        <b style="margin-left: 10px;">Search From Bill No:</b>
-        <div class="col-lg-4 col-md-5 col-sm-6">
-            <input id="txtMRNOSearch" type="text" style="margin-left: 12px;"></input>
-        </div>
-
+        <div class="sc-table-wrap">
         <input type="hidden" id="Hidden1" name="txthidddentr" />
         <div>
             <table class="table" id="tblPendingSample">
@@ -1653,6 +1530,49 @@
                                              </thead>
                                              <tbody></tbody>
                                          </table>
+        </div>
+    </section>
+    </div>
+
+    <div id="TestItemsModel" class="modal fade sc-modal" tabindex="-1" role="dialog" aria-labelledby="TestItemsModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-lg" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h4 class="modal-title" id="TestItemsModalLabel">Detail Selection</h4>
+                   
+                </div>
+                <div class="modal-body">
+                    <input type="hidden" id="txthiddentr" name="txthiddentr" />
+                    <div class="table-responsive" style="max-height: 400px; overflow-y: auto;">
+                        <table class="table table-bordered table-striped" id="tblDetailModelTable">
+                            <thead class="table-light">
+                                <tr>
+                                    <th style="width: 32px;"></th> 
+                                    <th style="display: none">Test ID</th>
+                                    <th style="display: none">Bill Detail ID</th>
+                                    <th>Test Name</th>
+                                    <th>Department</th>
+                                    <th>Gener</th>
+                                    <th>Quantity</th>
+                                    <th>Remarks</th>
+                                     <th>Save</th>
+                                     <th>Urgent</th>
+                                    <th><input type="checkbox" id="chkAll"  onclick="toggleAll(this)" /></th>
+                                    
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <!-- Dynamic rows go here -->
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" id="btnDetailSelection" class="btn btn-gray" name="btnDetailSelection" value="Close" onclick="appendTests()">Close</button>
+
+                </div>
+            </div>
+        </div>
     </div>
 
 </asp:Content>

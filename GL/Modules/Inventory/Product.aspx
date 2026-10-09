@@ -1,8 +1,6 @@
 ﻿<%@ Page Title="" Language="C#" MasterPageFile="~/Site.Master" AutoEventWireup="true" CodeBehind="Product.aspx.cs" Inherits="PMS.Inventory.Product" %>
 <asp:Content ID="Content1" ContentPlaceHolderID="HeadContent" runat="server">
-    <link href="../../wwwroot/THEME_TIBBIT/CustomCSS/Product.css" rel="stylesheet" />
-    <link href="../../wwwroot/THEME_TIBBIT/CustomCSS/vendor.css" rel="stylesheet" />
-    <link href="../../wwwroot/THEME_TIBBIT/CustomCSS/Service.css" rel="stylesheet" />
+<link href="../../wwwroot/THEME_TIBBIT/CustomCSS/product-item.css" rel="stylesheet" />
     <script type="text/javascript">
         var id = '<% =Request.QueryString["ID"] %>';
         $(document).ready(function () {
@@ -1643,17 +1641,15 @@
 <asp:Content ID="Content2" ContentPlaceHolderID="MainContent" runat="server">
 <input type="hidden" name="item_rate_id" value="${rowId}" />
 
-    <!-- Meta Bar -->
+    <!-- Title line: the master adds the page title on the left; code + status badges sit on the right -->
     <div class="pr-meta-bar">
-        <div class="meta-left">
-            <span class="meta-title"><i class="fa fa-cube"></i> Product Item</span>
-        </div>
+        <div class="meta-left"></div>
         <div class="meta-right">
-            <div class="meta-badge">
-                <span class="badge-label">Code:</span>
-                <span class="badge-value" id="productCodeDisplay">---</span>
+            <div class="pd-badge">
+                <span class="pd-badge-label">Code</span>
+                <span class="pd-badge-value" id="productCodeDisplay">---</span>
             </div>
-            <div class="meta-badge" id="productActiveBadge" style="cursor: pointer;" onclick="$('#Active').click();">
+            <div class="pd-badge pd-status badge-active" id="productActiveBadge" onclick="$('#Active').click();">
                 <i class="fa fa-check-circle" id="productActiveIcon"></i> <span id="productActiveText">Active</span>
             </div>
             <!-- Hidden inputs to retain logic -->
@@ -1662,549 +1658,380 @@
         </div>
     </div>
 
-     <form  id="item">
-        <div class="row">
-            <!-- Left Column: Basic & Pricing -->
-            <div class="col-lg-6 col-md-12 pr-cards-column">
-                <!-- Card 1: Basic Information -->
-                <div class="pr-primary-settings">
-                    <h5 class="pr-section-title" style="margin-top:0;"><i class="fa fa-info-circle"></i> Basic Information</h5>
-                    <div class="row">
-                        <div class="col-md-12">
-                            <label id="LblDescription">Description</label>
-                            <div class="input-group">
-                                <div class="input-group-prepend"><span class="input-group-text"><i class="fa fa-tag"></i></span></div>
-                                <input type="text" class="form-control" id="txtDescription" name="txtDescription" autocomplete="off" placeholder="Enter product description" />
+    <div class="pd-page">
+        <div id="item">
+            <div class="pd-layout2">
+                <!-- Basic Information -->
+                <div class="pd-card">
+                    <h5 class="pd-card-title"><i class="fa fa-info-circle"></i> Basic Information</h5>
+                    <div class="pd-grid">
+                        <div class="pd-field pd-s6">
+                            <label id="LblDescription" for="txtDescription">Description</label>
+                            <input type="text" class="pd-input" id="txtDescription" name="txtDescription" autocomplete="off" placeholder="Enter product description" />
+                        </div>
+                        <div class="pd-field pd-s3">
+                            <label id="Lblitem_type">Item Type</label>
+                            <select id="ddlitem_type" class="pd-input"></select>
+                        </div>
+                        <div class="pd-field pd-s3">
+                            <label id="LblItemGroup">Item Group</label>
+                            <select id="ddlItemGroup" name="ddlItemGroup" class="pd-input"></select>
+                        </div>
+                        <div class="pd-field pd-s4">
+                            <label id="Lblpack_unit">UOM / Pack Size</label>
+                            <select id="ddlpack_unit" class="pd-input"></select>
+                        </div>
+                        <div class="pd-field pd-s2">
+                            <label id="lbl_UOMQty" for="UOMQty">UOM Qty</label>
+                            <input type="text" class="pd-input" id="UOMQty" name="UOMQty" placeholder="0" />
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Pricing & Packaging -->
+                <div class="pd-card">
+                    <h5 class="pd-card-title"><i class="fa fa-money"></i> Pricing &amp; Packaging</h5>
+                    <div class="pd-grid">
+                        <div class="pd-field pd-s3">
+                            <label id="Lblsales_Rate" for="sales_Rate">Sale Rate</label>
+                            <input type="text" class="pd-input" id="sales_Rate" name="sales_Rate" placeholder="0.00" />
+                        </div>
+                        <div class="pd-field pd-s3">
+                            <label id="Lblpurch_rate" for="purch_rate">PR Rate</label>
+                            <input type="text" class="pd-input" id="purch_rate" name="purch_rate" placeholder="0.00" />
+                        </div>
+                        <div class="pd-field pd-s3">
+                            <label id="lblunitSize">Unit Size</label>
+                            <select id="ddlunitsize" class="pd-input"></select>
+                        </div>
+                        <div class="pd-field pd-s3">
+                            <label id="lblunitsizeqty" for="txtunitqty">Unit Size QTY</label>
+                            <input type="text" class="pd-input" id="txtunitqty" name="purch_rate" placeholder="0" />
+                        </div>
+                        <div class="pd-field pd-s6">
+                            <label id="Lblremarks" for="txtremarks">Remarks</label>
+                            <input type="text" class="pd-input" id="txtremarks" name="txtremarks" placeholder="Any additional remarks" />
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Inventory & Account -->
+                <div class="pd-card pd-wide">
+                    <h5 class="pd-card-title"><i class="fa fa-cubes"></i> Inventory &amp; Account</h5>
+                    <div class="pd-grid">
+                        <div class="pd-field pd-s2">
+                            <label id="Lblfiance_integration">Account Category</label>
+                            <select id="ddlfiance_integration" class="pd-input"></select>
+                        </div>
+                        <div class="pd-field pd-s2">
+                            <label id="LblwareHouse">WareHouse</label>
+                            <select id="ddlwareHouse" class="pd-input"></select>
+                        </div>
+                        <div class="pd-field pd-s2">
+                            <label id="LbllocatorAddress" for="txtlocatorAddress">Locator</label>
+                            <input type="text" class="pd-input" id="txtlocatorAddress" name="locatorAddress" placeholder="Locator" />
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Sehat Card & hidden dimensions (kept for the page script; the card itself stays hidden as before) -->
+                <div class="pd-card" style="display:none;">
+                    <h5 class="pd-card-title"><i class="fa fa-heartbeat"></i> Sehat Card &amp; Dimensions</h5>
+                    <div class="pd-grid">
+                        <div class="pd-field pd-s6" id="sehatCardRateContainer" style="display: none;">
+                            <label id="LblsehatCardrate" for="txtSehatCardRate">Sehat Card Rate</label>
+                            <input type="text" class="pd-input" id="txtSehatCardRate" name="txtSehatCardRate" placeholder="0.00" />
+                        </div>
+                        <div class="pd-hint pd-s6">
+                            <i class="fa fa-info-circle"></i>
+                            <span>The Sehat Card Rate field appears automatically when <strong>Sehat Sahulat</strong> is checked in the Hospital tab.</span>
+                        </div>
+                        <div class="pd-field pd-s2">
+                            <label id="LblLength" for="txtLength">Length</label>
+                            <input type="text" class="pd-input" id="txtLength" name="txtLength" />
+                        </div>
+                        <div class="pd-field pd-s2">
+                            <label id="Lblwidth" for="txtwidth">Width</label>
+                            <input type="text" class="pd-input" id="txtwidth" name="txtwidth" />
+                        </div>
+                        <div class="pd-field pd-s2">
+                            <label id="Lblheight" for="txtheight">Height</label>
+                            <input type="text" class="pd-input" id="txtheight" name="txtheight" />
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div id="tabs" class="pd-tabs" style="margin-top: 16px;">
+                <ul>
+                    <li><a href="#Tab-3"><i class="fa fa-cubes"></i> General</a></li>
+                    <li><a href="#Tab-4"><i class="fa fa-medkit"></i> Pharmacy</a></li>
+                    <li><a href="#Tab-1"><i class="fa fa-stethoscope"></i> Procedure</a></li>
+                    <li><a href="#Tab-5"><i class="fa fa-tags"></i> Item Tags</a></li>
+                    <li><a href="#Tab-6"><i class="fa fa-hospital-o"></i> Hospital</a></li>
+                </ul>
+
+                <!-- Tab: Procedure -->
+                <div id="Tab-1" class="table-container">
+                    <div id="procedureTypes">
+                        <div class="pd-grid">
+                            <div class="pd-field pd-s2">
+                                <label id="levl">Level1</label>
+                                <select id="ddlProcedureTypes" class="pd-input">
+                                    <option value="0">Please Select</option>
+                                </select>
+                            </div>
+                            <div class="pd-field pd-s2">
+                                <label id="lblddldepartment">Department</label>
+                                <select id="ddldepartment" class="pd-input">
+                                    <option value="0">Please Select</option>
+                                </select>
+                            </div>
+                            <div class="pd-field pd-s2">
+                                <label id="Notes" for="Note">Notes</label>
+                                <textarea rows="2" cols="3" id="Note" name="Note" class="pd-input"></textarea>
                             </div>
                         </div>
                     </div>
-                    <div class="row mt-2">
-                        <div class="col-md-6 col-sm-12">
-                            <label id="Lblitem_type">Item Type</label>
-                            <select id="ddlitem_type" class="form-control"></select>
+                </div>
+
+                <!-- Tab: General (stock level + patient-type rates) -->
+                <div id="Tab-3">
+                    <div class="pd-split">
+                        <div class="pd-sub">
+                            <h6 class="pd-sub-title"><i class="fa fa-sort-amount-asc"></i> Stock Level</h6>
+                            <div class="pd-grid">
+                                <div class="pd-field pd-s6">
+                                    <label for="minimum_stock">Minimum Stock</label>
+                                    <input type="text" id="minimum_stock" name="minimum_stock" class="pd-input" />
+                                </div>
+                                <div class="pd-field pd-s6">
+                                    <label for="Reorder_Stock">Reorder Stock</label>
+                                    <input type="text" id="Reorder_Stock" name="Reorder_Stock" class="pd-input" />
+                                </div>
+                                <div class="pd-field pd-s6">
+                                    <label for="Maximum_Stock">Maximum Stock</label>
+                                    <input type="text" id="Maximum_Stock" name="Maximum_Stock" class="pd-input" />
+                                </div>
+                            </div>
                         </div>
-                        <div class="col-md-6 col-sm-12">
-                            <label id="LblItemGroup">Item Group</label>
-                            <select id="ddlItemGroup" name="ddlItemGroup" class="form-control"></select>
-                        </div>
-                    </div>
-                    <div class="row mt-2">
-                        <div class="col-md-8 col-sm-12">
-                            <label id="Lblpack_unit">UOM / Pack Size</label>
-                            <select id="ddlpack_unit" class="form-control"></select>
-                        </div>
-                        <div class="col-md-4 col-sm-12">
-                            <label id="lbl_UOMQty">UOM Qty</label>
-                            <input type="text" class="form-control" id="UOMQty" name="UOMQty" placeholder="0" />
+
+                        <div class="pd-sub">
+                            <h6 class="pd-sub-title"><i class="fa fa-users"></i> Rate by Patient Type</h6>
+                            <div class="pd-addrow">
+                                <div class="pd-field">
+                                    <label for="ddlPatient_type">Patient_type</label>
+                                    <select id="ddlPatient_type" class="pd-input">
+                                        <option value="0">Please Select</option>
+                                    </select>
+                                </div>
+                                <div class="pd-field">
+                                    <label for="txtRate">Rate</label>
+                                    <input type="number" id="txtRate" class="pd-input" placeholder="Enter rate" />
+                                </div>
+                                <input type="button" value="+" class="btn-primry" onclick="AddRateCategory()" />
+                            </div>
+                            <div class="pd-table-wrap">
+                                <table class="table pd-table">
+                                    <thead>
+                                        <tr>
+                                            <th>Patient_type</th>
+                                            <th>Rate</th>
+                                            <th style="text-align: center;">Action</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody id="tbodypatientRateList">
+
+                                    </tbody>
+                                </table>
+                            </div>
+                            <input type="hidden" id="patientRatesData" name="patientRatesData" value="" />
                         </div>
                     </div>
                 </div>
 
-                <!-- Card 2: Pricing & Packaging -->
-                <div class="pr-primary-settings">
-                    <h5 class="pr-section-title" style="margin-top:0;"><i class="fa fa-money"></i> Pricing &amp; Packaging</h5>
-                    <div class="row">
-                        <div class="col-md-6 col-sm-12">
-                            <label id="Lblsales_Rate">Sale Rate</label>
-                            <input type="text" class="form-control" id="sales_Rate" name="sales_Rate" placeholder="0.00" />
+                <!-- Tab: Pharmacy -->
+                <div id="Tab-4" class="table-container">
+                    <div class="pd-checks">
+                        <div class="pd-check"><input type="checkbox" id="Narcotics" name="Narcotics" /><label for="Narcotics">Narcotics</label></div>
+                        <div class="pd-check"><input type="checkbox" id="Refregrator" name="Refregrator" /><label for="Refregrator">Refregrator</label></div>
+                        <div class="pd-check DiscountBlock"><input type="checkbox" id="Discount_Block" name="Discount_Block" /><label for="Discount_Block">Discount Block</label></div>
+                        <div class="pd-check"><input type="checkbox" id="controller_drug" name="controller_drug" /><label for="controller_drug">Controller Drug</label></div>
+                        <div class="pd-check"><input type="checkbox" id="PharmacyItem" name="PharmacyItem" /><label for="PharmacyItem">Pharmacy Item</label></div>
+                        <div class="pd-check"><input type="checkbox" id="InfusionFluid" name="InfusionFluid" /><label for="InfusionFluid">Infusion Fluid</label></div>
+                    </div>
+                    <div class="pd-divider"></div>
+                    <div class="pd-grid">
+                        <div class="pd-field pd-s2">
+                            <label for="ATC">ATC</label>
+                            <input type="text" id="ATC" name="ATC" class="pd-input" />
                         </div>
-                        <div class="col-md-6 col-sm-12">
-                            <label id="Lblpurch_rate">PR Rate</label>
-                            <input type="text" class="form-control" id="purch_rate" name="purch_rate" placeholder="0.00" />
+                        <div class="pd-field pd-s2">
+                            <label id="Lblmanufacturer">Manufacturer</label>
+                            <select id="ddlmanu" class="pd-input">
+                                <option value="0">Please Select</option>
+                            </select>
+                        </div>
+                        <div class="pd-field pd-s2">
+                            <label id="Lblitem_Qty">Item Main Category</label>
+                            <select id="ddlitem_Qty" class="pd-input" name="ddlitem_Qty">
+                                <option value="0">Please Select</option>
+                            </select>
+                        </div>
+                        <div class="pd-field pd-s2">
+                            <label for="GenericName">Generic Name</label>
+                            <input type="text" id="GenericName" name="GenericName" class="pd-input" />
+                        </div>
+                        <div class="pd-field pd-s2">
+                            <label for="ddlWare">WareHouse</label>
+                            <select id="ddlWare" class="pd-input" onchange="getbatchfrom_grn();"></select>
+                        </div>
+                        <div class="pd-field pd-s2">
+                            <label for="ddlBatchNum">Batch Number</label>
+                            <div class="pd-addrow" style="margin-bottom:0;">
+                                <select id="ddlBatchNum" class="pd-input"></select>
+                                <input type="button" onclick="AppendBatch()" value="+" id="AddBatch" />
+                            </div>
                         </div>
                     </div>
-                    <div class="row mt-2">
-                        <div class="col-md-6 col-sm-12">
-                            <label id="lblunitSize">Unit Size</label>
-                            <select id="ddlunitsize" class="form-control"></select>
+
+                    <div class="pd-trio">
+                        <div class="pd-sub">
+                            <h6 class="pd-sub-title"><i class="fa fa-barcode"></i> Batches</h6>
+                            <div class="pd-table-wrap">
+                                <table class="table table-bordered pd-table" id="BatchTable">
+                                    <thead>
+                                        <tr id="row_sample">
+                                            <th>Batch Number</th>
+                                            <th>Rate</th>
+                                            <th>Sehat Card Rate</th>
+                                            <th>Uom Qty</th>
+                                            <th style="text-align: center;">Actions</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody id="BatchTable_body">
+                                    </tbody>
+                                </table>
+                            </div>
                         </div>
-                        <div class="col-md-6 col-sm-12">
-                            <label id="lblunitsizeqty">Unit Size QTY</label>
-                            <input type="text" class="form-control" id="txtunitqty" name="purch_rate" placeholder="0" />
+
+                        <div id="divMultipleWarehouse" class="pd-sub">
+                            <h6 class="pd-sub-title"><i class="fa fa-building-o"></i> Assign Multiple Warehouses</h6>
+                            <div class="pd-addrow">
+                                <div class="pd-field">
+                                    <select id="ddlAssignWarehouse" class="pd-input">
+                                        <option value="0">Select Warehouse</option>
+                                    </select>
+                                </div>
+                                <input type="button" value="+" onclick="AddWarehouseRow()" />
+                            </div>
+                            <div class="pd-table-wrap">
+                                <table class="table table-bordered pd-table">
+                                    <thead>
+                                        <tr>
+                                            <th>Warehouse Name</th>
+                                            <th style="width: 80px; text-align: center;">Action</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody id="tbodyAssignedWarehouses">
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+
+                        <div id="divWarehouseBatches" class="pd-sub">
+                            <h6 class="pd-sub-title"><i class="fa fa-th-list"></i> Assign Batches to Warehouse</h6>
+                            <div class="pd-addrow">
+                                <div class="pd-field">
+                                    <label for="ddlBatchWarehouse">Warehouse</label>
+                                    <select id="ddlBatchWarehouse" class="pd-input">
+                                        <option value="0">Select Warehouse</option>
+                                    </select>
+                                </div>
+                                <div class="pd-field">
+                                    <label for="ddlBatchNumber">Batch</label>
+                                    <select id="ddlBatchNumber" class="pd-input">
+                                        <option value="0">Select Batch</option>
+                                    </select>
+                                </div>
+                                <input type="button" value="+" onclick="AddWarehouseBatchRow()" />
+                                <input type="button" value="Refresh Batches" onclick="LoadBatchesForWarehouse()" style="display:none;" />
+                            </div>
+                            <div class="pd-table-wrap">
+                                <table class="table table-bordered pd-table">
+                                    <thead>
+                                        <tr>
+                                            <th style="width: 35%;">Warehouse Name</th>
+                                            <th style="width: 35%;">Batch Number</th>
+                                            <th style="width: 20%; text-align: center;">Status</th>
+                                            <th style="width: 10%; text-align: center;">Action</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody id="tbodyWarehouseBatches">
+                                    </tbody>
+                                </table>
+                            </div>
                         </div>
                     </div>
-                    <div class="row mt-2">
-                        <div class="col-md-12">
-                            <label id="Lblremarks">Remarks</label>
-                            <input type="text" class="form-control" id="txtremarks" name="txtremarks" placeholder="Any additional remarks" />
+                </div>
+
+                <!-- Tab: Item Tags -->
+                <div id="Tab-5">
+                    <div class="pd-checks">
+                        <div class="pd-check"><input type="checkbox" id="Finished_Product" name="Finished_Product" /><label for="Finished_Product">Finished Product</label></div>
+                        <div class="pd-check"><input type="checkbox" id="Consumable" name="Consumable" /><label for="Consumable">Consumable</label></div>
+                        <div class="pd-check"><input type="checkbox" id="Purchaseable" name="Purchaseable" /><label for="Purchaseable">Purchaseable</label></div>
+                        <div class="pd-check"><input type="checkbox" id="Saleable" name="Saleable" /><label for="Saleable">Saleable</label></div>
+                        <div class="pd-check"><input type="checkbox" id="IsNonStockItem" name="IsNonStockItem" /><label for="IsNonStockItem">Non Stock Item</label></div>
+                        <div class="pd-check"><input type="checkbox" id="Isfixasset" name="Isfixasset" /><label for="Isfixasset">Fix Asset</label></div>
+                        <div class="pd-check"><input type="checkbox" id="Locator" name="Locator" /><label for="Locator">Locator</label></div>
+                        <div class="pd-check"><input type="checkbox" id="IsBatch" name="IsBatch" /><label for="IsBatch">Batch</label></div>
+                    </div>
+                </div>
+
+                <!-- Tab: Hospital -->
+                <div id="Tab-6">
+                    <div class="pd-checks">
+                        <div class="pd-check"><input type="checkbox" id="radio_charges" name="radio_charges" /><label for="radio_charges">Lab/Radiology Charges</label></div>
+                        <div class="pd-check"><input type="checkbox" id="Dental_Item" name="Dental_Item" /><label for="Dental_Item">Dental Item</label></div>
+                        <div class="pd-check"><input type="checkbox" id="chkCathLab" name="chkCathLab" /><label for="chkCathLab">Cath Lab</label></div>
+                        <div class="pd-check"><input type="checkbox" id="Procedure" name="Procedure" onchange="ShowProcTime();" /><label for="Procedure">Procedure</label></div>
+                        <div class="pd-check"><input type="checkbox" id="ckhBedServices" name="ckhBedServices" /><label for="ckhBedServices">Bed Services</label></div>
+                        <div class="pd-check"><input type="checkbox" id="chkHighRisk" name="chkHighRisk" /><label for="chkHighRisk">High Risk</label></div>
+                        <div class="pd-check"><input type="checkbox" id="chkLabRequired" name="chkLabRequired" /><label for="chkLabRequired">Lab Required</label></div>
+                        <div class="pd-check"><input type="checkbox" id="chkOtherServices" name="chkOtherServices" /><label for="chkOtherServices">Other Services</label></div>
+                        <div class="pd-check"><input type="checkbox" id="chkLensRequired" name="chkLensRequired" /><label for="chkLensRequired">Lens Required</label></div>
+                        <div class="pd-check"><input type="checkbox" id="chkFitnessCertificate" name="chkFitnessCertificate" /><label for="chkFitnessCertificate">Fitness Certificates</label></div>
+                        <div class="pd-check"><input type="checkbox" id="chkPattHistorRequired" name="chkPattHistorRequired" /><label for="chkPattHistorRequired">Pat History Required</label></div>
+                        <div class="pd-check"><input type="checkbox" id="chkBillingRequired" name="chkBillingRequired" /><label for="chkBillingRequired">Billing Required</label></div>
+                        <div class="pd-check"><input type="checkbox" id="chkIsHospital" name="chkIsHospital" /><label for="chkIsHospital">Is Hospital Required</label></div>
+                        <div class="pd-check"><input type="checkbox" id="chkOTProcedure" name="chkOTProcedure" /><label for="chkOTProcedure">OT Procedure</label></div>
+                        <div class="pd-check"><input type="checkbox" id="chkIsService" name="chkIsService" /><label for="chkIsService">Services Item</label></div>
+                        <div class="pd-check"><input type="checkbox" id="chkShortItem" name="chkShortItem" /><label for="chkShortItem">Short Item</label></div>
+                        <div class="pd-check" style="display:none;"><input type="checkbox" id="chkSehatSahulat" name="chkSehatSahulat" /><label for="chkSehatSahulat">Sehat Sahulat</label></div>
+                    </div>
+                    <div class="pd-divider"></div>
+                    <div class="pd-grid">
+                        <div class="pd-field pd-s2">
+                            <label id="lblProcedure_Time" for="Procedure_Time">Procedure Time</label>
+                            <input type="text" id="Procedure_Time" class="pd-input" />
                         </div>
                     </div>
                 </div>
             </div>
-
-            <!-- Right Column: Inventory & Account -->
-            <div class="col-lg-6 col-md-12 pr-cards-column">
-                <!-- Card 3: Inventory & Account -->
-                <div class="pr-primary-settings">
-                    <h5 class="pr-section-title" style="margin-top:0;"><i class="fa fa-cubes"></i> Inventory &amp; Account</h5>
-                    <div class="row">
-                        <div class="col-md-12">
-                            <label id="Lblfiance_integration">Account Category</label>
-                            <select id="ddlfiance_integration" class="form-control"></select>
-                        </div>
-                    </div>
-                    <div class="row mt-2">
-                        <div class="col-md-8 col-sm-12">
-                            <label id="LblwareHouse">WareHouse</label>
-                            <select id="ddlwareHouse" class="form-control"></select>
-                        </div>
-                        <div class="col-md-4 col-sm-12">
-                            <label id="LbllocatorAddress">Locator</label>
-                            <input type="text" class="form-control" id="txtlocatorAddress" name="locatorAddress" placeholder="Locator" />
-                        </div>
-                    </div>
-                </div>
-
-                <!-- Card 4: Sehat Card & Hidden Dimensions -->
-                <div class="pr-primary-settings" style="display:none;">
-                    <h5 class="pr-section-title" style="margin-top:0;"><i class="fa fa-heartbeat"></i> Sehat Card &amp; Dimensions</h5>
-                    <div class="row">
-                        <div class="col-md-12" id="sehatCardRateContainer" style="display: none;">
-                            <label id="LblsehatCardrate">Sehat Card Rate</label>
-                            <input type="text" class="form-control" id="txtSehatCardRate" name="txtSehatCardRate" placeholder="0.00" />
-                        </div>
-                    </div>
-                    <div class="vendor-info-callout" style="margin-top:10px;">
-                        <i class="fa fa-info-circle"></i>
-                        <span>The Sehat Card Rate field appears automatically when <strong>Sehat Sahulat</strong> is checked in the Hospital tab.</span>
-                    </div>
-                    <!-- Hidden dimensions preserved from original -->
-                    <div class="row mt-2" style="display:none">
-                        <div class="col-md-4">
-                            <label id="LblLength">Length</label>
-                            <input type="text" class="form-control" id="txtLength" name="txtLength" />
-                        </div>
-                        <div class="col-md-4">
-                            <label id="Lblwidth">Width</label>
-                            <input type="text" class="form-control" id="txtwidth" name="txtwidth" />
-                        </div>
-                        <div class="col-md-4">
-                            <label id="Lblheight">Height</label>
-                            <input type="text" class="form-control" id="txtheight" name="txtheight" />
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-     </form>
-
-
-    <table style="width: 100% !important">
-    </table>       
-    <div id="tabs">
-        <ul>
-            <li><a href="#Tab-3">General</a></li>
-            <li><a href="#Tab-4">Pharmacy</a></li>
-            <li><a href="#Tab-1">Procedure</a></li>
-            <li><a href="#Tab-5">Item Tags</a></li>
-            <li><a href="#Tab-6">Hospital</a></li>
-        </ul>
-        <div id="Tab-1" class="table-container">
-            <table style="padding: 20px; width: 900px; height: 94px;" class="table-responsive-lg table-responsive-md table-responsive-sm">
-                <tr>
-                    <td style="font-size: 15px;">Procedure Type:</td>
-                    <td>
-                        <div id="procedureTypes">
-                            <table>
-                                <tr>
-                                    <td class="col-lg-1 col-md-1 col-sm-2">
-                                        <label id="levl">Level1</label>
-                                    </td>
-                                    <td class="col-lg-3 col-md-3 col-sm-2">
-                                        <select id="ddlProcedureTypes">
-                                            <option value="0">Please Select</option>
-                                        </select>
-                                    </td>
-                                    <td class="col-lg-1 col-md-1 col-sm-2">
-                                        <label id="Notes">Notes</label>
-                                    </td>
-                                    <td class="col-lg-2 col-md-2 col-sm-2">
-                                        <textarea rows="2" cols="3" id="Note" name="Note" style="margin-left: 30px;width: 194px;margin-top: 3px;height: 30px;"></textarea>
-                                    </td>
-                                    <td class="col-lg-2 col-md-2 col-sm-2">
-                                        <label id="lblddldepartment">Department</label>
-                                    </td>
-                                    <td class="col-lg-3 col-md-3 col-sm-2">
-                                        <select id="ddldepartment" >
-                                            <option value="0">Please Select</option>
-                                        </select>          
-                                    </td>
-                                </tr>
-                            </table>
-                        </div>
-                    </td>
-                </tr>
-            </table>
-        </div>        
-   <div id="Tab-3" style="display: flex; gap: 40px; align-items: flex-start; padding: 20px;">
-
-    <div style="flex: 1; border: 1px solid #ddd; padding: 15px; border-radius: 6px; background-color: #f9f9f9;">
-        <span style="font-size: 15px; font-weight: bold;">Stock Level</span>
-        <table class="table-responsive-lg table-responsive-md" style="width: 100%; margin-top: 10px;">
-            <tr>
-                <td style="width: 120px;">Minimum Stock</td>
-                <td><input type="text" id="minimum_stock" name="minimum_stock" style="width: 100%;" /></td>
-            </tr>
-            <tr>
-                <td>Reorder Stock</td>
-                <td><input type="text" id="Reorder_Stock" name="Reorder_Stock" style="width: 100%;" /></td>
-            </tr>
-            <tr>
-                <td>Maximum Stock</td>
-                <td><input type="text" id="Maximum_Stock" name="Maximum_Stock" style="width: 100%;" /></td>
-            </tr>
-        </table>
-    </div>
-
-   <div style="flex: 1; padding: 20px; border: 1px solid #ddd; border-radius: 8px; background-color: white;">
-    <div style="display: flex; gap: 15px; margin-bottom: 15px; align-items: center;">
-        <div style="flex: 1;">
-            <label style="font-weight: bold; display: block; margin-bottom: 5px;">Patient_type</label>
-            <select id="ddlPatient_type" style="width: 100%; padding: 8px; border: 1px solid #ccc; border-radius: 4px; font-size: 14px;">
-              <option value="0">Please Select</option>
-            </select>
         </div>
 
-        <div style="flex: 1;">
-            <label style="font-weight: bold; display: block; margin-bottom: 5px;">Rate</label>
-            <input type="number" id="txtRate" placeholder="Enter rate" style="width: 100%; padding: 8px; border: 1px solid #ccc; border-radius: 4px; font-size: 14px;" />
-        </div>
-          <input type="button" style="width:25px !important" value="+" class="btn-primry" onclick="AddRateCategory()" />
-
-
-    </div>
-
-
-  
-
-    <div style="margin-top: 15px; border: 1px solid #ddd; border-radius: 6px; overflow: hidden;">
-        <table class="table">
-            <thead style="background-color: #f5f5f5; border-bottom: 1px solid #ddd;">
-                <tr>
-                    <th style="padding: 12px; text-align: left; font-weight: 600; font-size: 14px;">Patient_type</th>
-                    <th style="padding: 12px; text-align: left; font-weight: 600; font-size: 14px;">Rate</th>
-                    <th style="padding: 12px; text-align: center; font-weight: 600; font-size: 14px;">Action</th>
-                </tr>
-            </thead>
-            <tbody id="tbodypatientRateList">
-               
-            </tbody>
-        </table>
-    </div>
-
-    <input type="hidden" id="patientRatesData" name="patientRatesData" value="" />
-</div>
-
-</div>
-        <div id="Tab-4" class="table-container">
-    
-    <table style="padding: 20px;" class="table-responsive-lg table-responsive-md table-responsive-sm">
-        <tr>
-            <td style="width: 21px;">
-                <input type="checkbox" id="Narcotics" name="Narcotics" />
-            </td>
-            <td style="width: 145px;">Narcotics</td>
-            <td style="width: 21px;">
-                <input type="checkbox" id="Refregrator" name="Refregrator" /></td>
-            <td style="width: 84px;">Refregrator</td>
-            <td style="width: 21px;" class="DiscountBlock">
-                <input type="checkbox" id="Discount_Block" name="Discount_Block" /></td>
-            <td class="DiscountBlock" style="width: 84px;">Discount Block</td>
-        </tr>
-        <tr>
-            <td style="width: 21px;">
-                <input type="checkbox" id="controller_drug" name="controller_drug" />
-            </td>
-            <td style="width: 145px;">Controller Drug</td>
-            <td style="width: 5px;">
-                <input type="checkbox" id="PharmacyItem" name="PharmacyItem" /></td>
-            <td style="width: 93px;">Pharmacy Item</td>
-            <td style="width: 5px;">
-            <input type="checkbox" id="InfusionFluid" name="InfusionFluid" /></td>
-            <td style="width: 93px;">Infusion Fluid</td>
-        </tr>
-    </table>
-    <table>
-        <tr>
-            <td>
-                <label style="width: 71px;">ATC</label>
-                <input style="width:auto !important" type="text" id="ATC" name="ATC" />
-            </td>
-            <td>
-               <label id="Lblmanufacturer" style=" float: left; position: relative; width: 80px;margin-right: 14px; margin-bottom : 10px;margin-left: 16px">Manufacturer</label>
-            </td>
-            <td style="width: 170px !important;min-width:170px !important;" >  
-                <select id="ddlmanu" style="height: 33px !important">
-                    <option value="0">Please Select</option>
-                </select>
-            </td>
-            <td><label id="Lblitem_Qty" style="display: inline-block; float: left; position: relative; width: 150px !important;margin-left: 33px;margin-bottom: 10px">Item Main Category</label></td>
-
-            <td  style="width: 170px !important;min-width:170px !important;">
-                
-                <select id="ddlitem_Qty" style="height: 33px !important" name="ddlitem_Qty">
-                     <option value="0">Please Select</option>
-                </select>
-            </td>
-        </tr>
-    </table>
-    <table style="margin-left:0px">
-        <tr>
-            <td style="width: 71px;">Generic Name</td>
-            <td>
-                <input type="text" id="GenericName" name="GenericName" style="width: 178px!Important; margin-left: 8px" /></td>
-            <td>
-                <label style=" float: left; position: relative; width: 80px;margin-right: 14px; margin-bottom : 10px;margin-left: 16px">WareHouse</label>
-            </td>
-            <td >
-                <select id="ddlWare" onchange="getbatchfrom_grn();" style="width: 170px;"></select>
-
-            </td>
-            <td>
-                <label style="display: inline-block; float: left; position: relative; width: 150px !important;margin-left: 33px;margin-bottom: 10px">Batch Number</label>
-            </td>
-            <td >
-                <select id="ddlBatchNum" style="width: 170px;"></select>
-
-            </td>
-            <td>
-                <input type="button" onclick="AppendBatch()" value="+" id="AddBatch" style="width: 44px; margin-left: 10px !important;" />
-            </td>
-        </tr>
-    </table>
-
-    <div  style="display: flex; gap: 30px; align-items: flex-start; margin-top: 15px; flex-wrap: wrap;">
-        
-        <div style="flex: 0 0 auto;">
-            <table class="table table-bordered" id="BatchTable" style="width: 550px;">
-                <tr id="row_sample">
-                    <th style="width: 40%;">Batch Number</th>
-                    <th style="width: 30%;">Rate</th>
-                    <th style="width: 30%;">Sehat Card Rate</th>
-                    <th style="width: 20%;">Uom Qty</th>
-                    <th style="text-align: center; width: 10%;">ACTIONS</th>
-                </tr>
-                <tbody id="BatchTable_body">
-                </tbody>
-            </table>
-        </div>
-
-        <div id="divMultipleWarehouse" style="flex: 0 0 auto; border: 1px solid #ddd; padding: 15px; border-radius: 6px; background-color: #f9f9f9;">
-            <h4 style="font-size: 16px; font-weight: bold; margin-top: 0;">Assign Multiple Warehouses</h4>
-            <div style="display: flex; gap: 10px; align-items: center; margin-bottom: 10px;">
-                <select id="ddlAssignWarehouse" class="form-control" style="width: 200px;">
-                    <option value="0">Select Warehouse</option>
-                </select>
-                <input type="button" value="+" onclick="AddWarehouseRow()"
-                    style="width: 40px; height: 34px; font-weight: bold; cursor: pointer;" />
-            </div>
-
-            <table class="table table-bordered" style="width: 350px; background-color: white;">
-                <thead>
-                    <tr style="background-color: #f5f5f5;">
-                        <th>Warehouse Name</th>
-                        <th style="width: 80px;">Action</th>
-                    </tr>
-                </thead>
-                <tbody id="tbodyAssignedWarehouses">
-                </tbody>
-            </table>
-        </div>
-
-        <div id="divWarehouseBatches" style="flex: 0 0 auto; border: 1px solid #ddd; padding: 15px; border-radius: 6px; background-color: #f9f9f9; margin-top: 15px;">
-            <h4 style="font-size: 16px; font-weight: bold; margin-top: 0;">Assign Batches to Warehouse</h4>
-            <div style="display: flex; gap: 10px; align-items: center; margin-bottom: 10px; flex-wrap: wrap;">
-                <div style="display: flex; align-items: center; gap: 5px;">
-                    <label style="font-weight: bold; margin-right: 5px;">Warehouse:</label>
-                    <select id="ddlBatchWarehouse" class="form-control" style="width: 180px;">
-                        <option value="0">Select Warehouse</option>
-                    </select>
-                </div>
-                <div style="display: flex; align-items: center; gap: 5px;">
-                    <label style="font-weight: bold; margin-right: 5px;">Batch:</label>
-
-                    <select id="ddlBatchNumber" class="form-control" style="width: 180px;">
-                        <option value="0">Select Batch</option>
-                    </select>
-
-                    <input type="button" value="+"
-                        onclick="AddWarehouseBatchRow()"
-                        style="width: 40px; height: 34px; font-weight: bold; cursor: pointer;" />
-                </div>
-                <input type="button" value="Refresh Batches"
-                    onclick="LoadBatchesForWarehouse()"
-                    style="height: 34px; font-weight: bold; cursor: pointer; padding: 0 15px;display:none;" />
-            </div>
-
-            <table class="table table-bordered" style="width: 100%; background-color: white;">
-                <thead>
-                    <tr style="background-color: #f5f5f5;">
-                        <th style="width: 35%;">Warehouse Name</th>
-                        <th style="width: 35%;">Batch Number</th>
-                        <th style="width: 20%;">Status</th>
-                        <th style="width: 10%;">Action</th>
-                    </tr>
-                </thead>
-                <tbody id="tbodyWarehouseBatches">
-                </tbody>
-            </table>
-        </div>
-
-    </div>
-
-</div>
-        <div id="Tab-5" >
-            <table>
-                <tr>
-                    <td style="width: 23px;">
-                        <input type="checkbox" id="Finished_Product" name="Finished_Product" /></td>
-                    <td style="width: 162px;">Finished Product</td>
-                    <td style="width: 23px;">
-                        <input type="checkbox" id="Consumable" name="Consumable" /></td>
-                    <td style="width: 84px;">Consumable</td>
-                </tr>
-                <tr>                   
-                    <td>
-                        <input type="checkbox" id="Purchaseable" name="Purchaseable" /></td>
-                    <td style="width: 84px;">Purchaseable</td>
-                    <td>
-                        <input type="checkbox" id="Saleable" name="Saleable" /></td>
-                    <td style="width: 84px;">Saleable</td>
-                </tr>   
-                <tr>
-                    <td>
-                        <input type="checkbox" id="IsNonStockItem" name="IsNonStockItem" /></td>
-                    <td style="width: 84px;">Non Stock Item</td>
-                    <td>
-                        <input type="checkbox" id="Isfixasset" name="Isfixasset" /></td>
-                    <td style="width: 84px;">Fix Asset</td>
-                </tr>
-                <tr>
-                    <td><input type="checkbox" id="Locator" name="Locator" /></td>
-                    <td style="width: 84px;">Locator</td>
-                    <td><input type="checkbox" id="IsBatch" name="IsBatch" /></td>
-                    <td style="width: 84px;">Batch</td>
-                </tr>
-            </table>
-        </div>
-        <div id="Tab-6">
-            <table>
-                <tr>
-                    <td style="width: 20px;">
-                        <input type="checkbox" id="radio_charges" name="radio_charges" />
-                    </td>
-                    <td style="width: 145px;" >Lab/Radiology Charges</td>
-                    <td style="width: 20px;">
-                        <input type="checkbox" id="Dental_Item" name="Dental_Item" /></td>
-                    <td style="width: 84px;">Dental Item</td>
-                    <td>
-                        <input type="checkbox" id="chkCathLab" name="chkCathLab" />
-                    </td>
-                     <td>
-                        <label for="chkCathLab">Cath Lab</label>
-                    </td>
-                </tr>
-                <tr>
-                    <td>
-                        <input type="checkbox" id="Procedure" name="Procedure" onchange="ShowProcTime();" />
-                    </td>
-                    <td style="width: 84px;">Procedure</td>
-                    <td style="width: 5px;">
-                        <input type="checkbox" id="ckhBedServices" name="ckhBedServices" /></td>
-                    <td style="width: 84px;">Bed Services</td>            
-                    <td>
-                        <input type="checkbox" id="chkHighRisk" name="chkHighRisk" />
-                    </td>
-                    <td>
-                        <label for="chkHighRisk">High Risk</label>
-                    </td>
-                    <td><label id="lblProcedure_Time" >Procedure Time</label></td>
-                    <td><input type="text" id="Procedure_Time"  /></td>
-                    
-                </tr>
-                <tr>
-                    <td>
-                        <input type="checkbox" id="chkLabRequired" name="chkLabRequired" />
-                    </td>
-                    <td style="width: 84px;">Lab Required</td>
-                    <td style="width: 5px;">
-                        <input type="checkbox" id="chkOtherServices" name="chkOtherServices" /></td>
-                    <td style="width: 84px;">Other Services</td>
-                </tr>
-                <tr>
-                    <td>
-                        <input type="checkbox" id="chkLensRequired" name="chkLensRequired" />
-                    </td>
-                    <td style="width: 84px;">Lens Required</td>
-                    <td style="width: 5px;">
-                        <input type="checkbox" id="chkFitnessCertificate" name="chkFitnessCertificate" /></td>
-                    <td style="width:133px;">Fitness Certificates</td>
-                </tr>
-                <tr>
-                    <td>
-                        <input type="checkbox" id="chkPattHistorRequired" name="chkPattHistorRequired" />
-                    </td>
-                    <td style="width: 84px;">Pat History Required</td>
-                    <td style="width: 5px;">
-                        <input type="checkbox" id="chkBillingRequired" name="chkBillingRequired" /></td>
-                    <td style="width: 84px;">Billing Required</td>
-                </tr>
-                <tr>
-                    <td>
-                        <input type="checkbox" id="chkIsHospital" name="chkIsHospital" />
-                    </td>
-                    <td style="width: 84px;">Is Hospital Required</td>
-                    <td>
-                        <input type="checkbox" id="chkOTProcedure" name="chkOTProcedure" />
-                    </td>
-                    <td style="width: 84px;">
-                        <label for="chkOTProcedure">OT Procedure</label>
-                    </td>
-                </tr>
-                <tr>
-                    <td>
-                         <input type="checkbox" id="chkIsService" name="chkIsService" />
-                    </td>
-                    <td style="width: 84px;">
-                         <label for="chkOTProcedure">Services Item</label> 
-                    </td>   
-                    <td style="display:none;">
-                        <input type="checkbox" id="chkSehatSahulat" name="chkSehatSahulat" />
-                    </td>
-                    <td>
-                        <input type="checkbox" id="chkShortItem" name="chkShortItem" />
-                    </td>
-                    <td>
-                        <label for="chkShortItem">Short Item</label>
-                    </td>
-                    <td style="width: 84px;display:none;">
-                        <label for="chkSehatSahulat">Sehat Sahulat</label>
-                    </td>
-                </tr>
-            </table>
-        </div>
-    </div>
-
-    <div class="pr-action-buttons">
-        <div class="row">
-            <div class="col-lg-2 col-md-4 col-sm-12">
+        <div class="pd-actions">
+            <div>
                 <input type="button" class="btn btn-primry w-100" value="Save" id="btnValue" onclick="Saveitem()" />
             </div>
-            <div class="col-lg-2 col-md-4 col-sm-12">
+            <div>
                 <input type="button" class="btn btn-gray w-100" value="View" id="btnBack" onclick="window.location = 'ProductsView.aspx'" />
             </div>
-            <div class="col-lg-2 col-md-4 col-sm-12">
+            <div>
                 <input type="button" class="btn btn-yellow w-100" value="New" onclick="NewPage()" />
             </div>
         </div>
     </div>
 
-
-    
-
-
-
-
-   
 </asp:Content>
-
