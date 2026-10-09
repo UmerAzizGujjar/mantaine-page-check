@@ -1,0 +1,106 @@
+/* ==========================================================================
+   emergency-refund.css - Emergency Refund screen (Modules/PatientManagement/EmergencyRefund.aspx)
+   Stand-alone: this screen uses no other screen's stylesheet. Every colour comes from the active theme
+   (--theme-accent ... in that theme's theme-colors.css); the fallbacks are only a safety net.
+   The same file is kept in every theme folder (wwwroot/THEME_xxx/CustomCSS/emergency-refund.css).
+   Layout: status badges on the title line, patient card + original amounts, the refund card and the buttons.
+   ========================================================================== */
+
+.er-page { display: flex; flex-direction: column; gap: 16px; width: 100%; margin: 0 0 24px; color: var(--theme-ink, #1b2a41); }
+.er-page * { box-sizing: border-box; }
+
+/* ---------- status badges (on the title line, right side of the master's .pr-meta-bar) ---------- */
+.er-badge {
+    display: inline-flex; align-items: baseline; gap: 6px; padding: 3px 12px; white-space: nowrap;
+    background: #fff; border: 1px solid #e3e8ee; border-left: 3px solid var(--theme-accent, #438eb9); border-radius: 6px;
+}
+.er-badge-label { font-size: 10.5px; font-weight: 700; letter-spacing: .06em; text-transform: uppercase; color: #8a94a6; }
+.er-badge-value { font-size: 13px; font-weight: 800; color: var(--theme-ink, #1b2a41); }
+
+/* ---------- layout ---------- */
+.er-layout { display: grid; grid-template-columns: minmax(0, 2fr) minmax(0, 1fr); gap: 16px; align-items: stretch; }
+@media (max-width: 1199px) { .er-layout { grid-template-columns: minmax(0, 1fr); } }
+
+/* ---------- cards ---------- */
+.er-card {
+    min-width: 0; padding: 0 16px 16px; background: #fff;
+    border: 1px solid #e3e8ee; border-top: 3px solid var(--theme-accent, #438eb9); border-radius: 10px;
+    box-shadow: 0 2px 10px rgba(16, 24, 40, .05);
+}
+.er-card-title {
+    display: flex; align-items: center; gap: 8px; margin: 0 -16px 14px; padding: 10px 16px;
+    font-size: 13px; font-weight: 700; letter-spacing: .04em; text-transform: uppercase;
+    color: var(--theme-on-accent, #fff);
+    background: linear-gradient(180deg, var(--theme-accent-light, #438eb9) 0%, var(--theme-accent, #438eb9) 100%);
+    border-bottom: 1px solid var(--theme-accent-ink, #2b6a90);
+}
+.er-card-title i { font-size: 14px; opacity: .9; }
+
+/* ---------- patient ---------- */
+.er-patient { display: flex; align-items: center; gap: 16px; margin-bottom: 14px; padding-bottom: 14px; border-bottom: 1px dashed #dde3ea; }
+.er-avatar {
+    flex: 0 0 auto; display: flex; align-items: center; justify-content: center; width: 64px; height: 64px; overflow: hidden;
+    background: var(--theme-accent-soft, #f4f8fb); border: 2px solid var(--theme-accent, #438eb9); border-radius: 50%;
+}
+.er-avatar img { width: 40px; height: 40px; object-fit: contain; }
+.er-who { flex: 1 1 auto; min-width: 0; }
+.er-name { margin: 0 0 8px; font-size: 18px; font-weight: 800; line-height: 1.2; color: var(--theme-ink, #1b2a41); overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.er-search { display: flex; align-items: flex-end; gap: 8px; max-width: 420px; }
+.er-search .er-field { flex: 1 1 auto; }
+.er-page .er-search-btn {
+    display: inline-flex; align-items: center; justify-content: center; gap: 6px; flex: 0 0 auto; height: 34px; margin: 0; padding: 0 16px;
+    font-size: 13px; font-weight: 700; white-space: nowrap; cursor: pointer; user-select: none; text-shadow: none;
+    color: var(--theme-on-accent, #fff); background: var(--theme-accent, #438eb9); border: 0; border-radius: 6px;
+}
+.er-page .er-search-btn:hover { filter: brightness(.95); }
+
+.er-info { display: grid; grid-template-columns: repeat(auto-fill, minmax(190px, 1fr)); gap: 12px 16px; margin: 0; }
+.er-info > div { min-width: 0; }
+.er-info dt { margin: 0 0 2px; font-size: 11px; font-weight: 700; letter-spacing: .05em; text-transform: uppercase; color: #8a94a6; }
+.er-info dd { min-height: 20px; margin: 0; font-size: 14px; font-weight: 700; color: var(--theme-ink, #1b2a41); overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.er-info .er-wide { grid-column: span 2; }
+@media (max-width: 520px) { .er-info .er-wide { grid-column: span 1; } }
+
+/* ---------- fields ---------- */
+.er-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(190px, 1fr)); gap: 12px 14px; align-items: end; }
+.er-grid-1 { grid-template-columns: minmax(0, 1fr); }
+.er-span-2 { grid-column: span 2; }
+.er-span-all { grid-column: 1 / -1; }
+@media (max-width: 520px) { .er-span-2 { grid-column: span 1; } }
+.er-field { display: flex; flex-direction: column; justify-content: flex-end; min-width: 0; }
+.er-field > label { display: block; margin: 0 0 4px; font-size: 11.5px; font-weight: 700; letter-spacing: .02em; line-height: 1.3; color: #4a5568; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+
+.er-page input.er-input {
+    display: block; width: 100% !important; height: 34px !important; margin: 0 !important; padding: 4px 10px !important;
+    font-size: 13px; font-weight: 600; color: var(--theme-ink, #1b2a41);
+    background: #fff !important; border: 1px solid #cfd6e0 !important; border-radius: 6px !important; box-shadow: none !important;
+}
+.er-page input.er-input:focus { border-color: var(--theme-accent, #438eb9) !important; box-shadow: 0 0 0 3px var(--theme-accent-ring, rgba(67, 142, 185, .25)) !important; outline: none; }
+.er-page input.er-input[disabled], .er-page input.er-input[readonly] { background: #f3f5f8 !important; color: #3b475a; cursor: default; opacity: 1; }
+.er-page input.er-num { text-align: right; }
+
+/* figures (read-only amounts) */
+.er-figure input.er-input { height: 40px !important; font-size: 16px; font-weight: 800; text-align: right; }
+.er-figure.er-figure-main input.er-input { font-size: 18px; color: var(--theme-accent-ink, #2b6a90); background: var(--theme-accent-soft, #f4f8fb) !important; border-color: var(--theme-accent, #438eb9) !important; }
+
+/* ---------- buttons (original buttons; only their row layout is set here) ---------- */
+.er-actions { display: grid; grid-template-columns: repeat(auto-fit, minmax(130px, 200px)); gap: 8px; margin: 0; }
+.er-actions > div { min-width: 0; }
+.er-actions input[type="button"] { width: 100% !important; }
+
+/* ---------- dark mode ---------- */
+html[data-theme="dark"] .er-page { color: var(--dk-text, #e6e9ef); }
+html[data-theme="dark"] .er-badge, html[data-theme="dark"] .er-card { background: var(--dk-surface-2, #1c2431); border-color: var(--dk-border, #2d3748); }
+html[data-theme="dark"] .er-badge-value, html[data-theme="dark"] .er-name, html[data-theme="dark"] .er-info dd { color: var(--dk-text, #e6e9ef); }
+html[data-theme="dark"] .er-badge-label, html[data-theme="dark"] .er-info dt { color: var(--dk-muted, #9aa6b8); }
+html[data-theme="dark"] .er-card-title { background: var(--dk-surface-3, #232d3d); border-bottom-color: var(--dk-border, #2d3748); color: var(--dk-text, #e6e9ef); }
+html[data-theme="dark"] .er-patient { border-color: var(--dk-border, #2d3748); }
+html[data-theme="dark"] .er-avatar { background: var(--dk-surface-3, #232d3d); }
+html[data-theme="dark"] .er-field > label { color: var(--dk-muted, #9aa6b8); }
+html[data-theme="dark"] .er-page input.er-input { background: var(--dk-surface-3, #232d3d) !important; color: var(--dk-text, #e6e9ef); border-color: var(--dk-border, #2d3748) !important; }
+html[data-theme="dark"] .er-page input.er-input[disabled], html[data-theme="dark"] .er-page input.er-input[readonly] { background: var(--dk-surface-1, #161d29) !important; }
+
+.er-actions > div:has(> input[style*="display: none"]), .er-actions > div:has(> input[style*="display:none"]) { display: none; }
+
+/* phones: let the title-line badges wrap instead of running off the screen */
+@media (max-width: 767px) { .pr-meta-bar:has(.er-badge) .meta-right { flex-wrap: wrap; justify-content: flex-start; gap: 6px; } }

@@ -2,7 +2,7 @@
    payment-invoice.css - Payment Invoice screen (Modules/Inventory/AddPaymentInvoice.aspx)
    Stand-alone: this screen uses no other screen's stylesheet. Every colour comes from the active theme
    (--theme-accent ... in that theme's theme-colors.css); the fallbacks are only a safety net.
-   The same file is kept in every theme folder (wwwroot/THEME_*/CustomCSS/payment-invoice.css).
+   The same file is kept in every theme folder (wwwroot/THEME_xxx/CustomCSS/payment-invoice.css).
    Layout: header with four status badges, two columns (details + attachments | bank/cash + summary),
    the invoices table, an action bar and the "Add invoices" picker window.
    ========================================================================== */

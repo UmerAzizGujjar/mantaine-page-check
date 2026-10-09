@@ -1,313 +1,8 @@
 ﻿<%@ Page Title="" Language="C#" MasterPageFile="~/Site.Master" AutoEventWireup="true" CodeBehind="Receipts.aspx.cs" Inherits="PMS.Receipts" %>
 
 <asp:Content ID="Content1" ContentPlaceHolderID="HeadContent" runat="server">
-
-    <link href="../../wwwroot/THEME_TIBBIT/CustomCSS/Receipts.css" rel="stylesheet" />
-     <link href="../../wwwroot/lib/sweetalert/swalalert.css" rel="stylesheet" />
-    <link href="../../wwwroot/THEME_TIBBIT/CustomCSS/vendor.css" rel="stylesheet" />
-    <link href="../../wwwroot/THEME_TIBBIT/CustomCSS/Datavalue.css" rel="stylesheet" />
-    <style>
-        /* ===================== Receipts page polish ===================== */
-        .rc-page { padding-bottom: 16px; }
-        .rc-page .pr-meta-bar { margin-bottom: 16px; padding: 6px 16px; }
-        .rc-page .hr_receipt {
-            margin: 14px 0 !important;
-            border: none !important;
-            border-top: 1px solid #fdf2e2 !important;
-        }
-
-        /* ── Summary tiles ── */
-        .rc-page #divReceiptsBoxes { margin-bottom: 4px; }
-        .rc-page #divReceiptsBoxes > [class*="col-"] { margin-bottom: 12px; }
-        .rc-page .card1 {
-            background: #fff !important;
-            border: 1px solid #fdf2e2 !important;
-            border-left: 3px solid #EFA63E !important;
-            border-radius: 8px !important;
-            padding: 0 !important;
-            margin-bottom: 0 !important;
-            box-shadow: 0 4px 12px rgba(0,0,0,.04) !important;
-            overflow: hidden;
-            height: 100%;
-        }
-        .rc-page .card1 .card-header {
-            background: linear-gradient(90deg, #EFA63E10, #fff) !important;
-            border-bottom: 1px solid #EFA63E30 !important;
-            color: #7a6530 !important;
-            font-size: 10.5px !important;
-            font-weight: 700 !important;
-            text-transform: uppercase;
-            letter-spacing: .04em;
-            padding: 7px 12px !important;
-        }
-        .rc-page .card1 .card-body { padding: 10px 12px !important; }
-        .rc-page .card1 .card-title,
-        .rc-page .card1 h4 {
-            margin: 0 !important;
-            font-size: 17px !important;
-            font-weight: 700 !important;
-            color: #2f3d45 !important;
-            line-height: 1.2 !important;
-        }
-
-        /* ── Info cards ── */
-        .rc-page .card {
-            background: #fff !important;
-            border: 1px solid #fdf2e2 !important;
-            border-left: 3px solid #EFA63E !important;
-            border-radius: 8px !important;
-            padding: 14px 16px !important;
-            margin-bottom: 16px !important;
-            box-shadow: 0 4px 12px rgba(0,0,0,.04) !important;
-            height: auto !important;
-        }
-        .rc-page .card-body { padding: 0 !important; }
-        .rc-page .card label {
-            font-size: 11px !important;
-            font-weight: 700 !important;
-            color: #555 !important;
-            text-transform: uppercase;
-            letter-spacing: .03em;
-            margin-bottom: 2px !important;
-        }
-        .rc-page .card .image-container {
-            background: #f7f8fa !important;
-            padding: 12px !important;
-            border-radius: 50%;
-            display: inline-block;
-        }
-        .rc-page .card .patient-image { max-width: 76px; border-radius: 8px; }
-        .rc-page .mtt { margin-top: 0 !important; margin-bottom: 8px !important; }
-        .rc-page .formrgn, .rc-page .top { margin-top: 0 !important; }
-        .rc-page .card input[type="text"] {
-            height: 30px !important;
-            width: 100% !important;
-            font-size: 12px !important;
-            border: 1px solid #e0e0e0 !important;
-            border-radius: 4px !important;
-            padding: 4px 8px !important;
-            background: #fff !important;
-            box-shadow: none !important;
-        }
-        .rc-page .card input[type="text"][disabled] { background: #f5f6f8 !important; color: #8a8f98 !important; }
-
-        /* ── Entry form panels ── */
-        .rc-page .cards {
-            background: #fff !important;
-            border: 1px solid #fdf2e2 !important;
-            border-left: 3px solid #EFA63E !important;
-            border-radius: 8px !important;
-            padding: 14px 16px !important;
-            margin-bottom: 16px !important;
-            box-shadow: 0 4px 12px rgba(0,0,0,.04) !important;
-            height: 100%;
-        }
-        .rc-page .cards .card-body { padding: 0 !important; }
-        .rc-page .cards label {
-            font-size: 11px !important;
-            font-weight: 700 !important;
-            color: #555 !important;
-            text-transform: uppercase;
-            letter-spacing: .03em;
-            margin-bottom: 3px !important;
-            display: block;
-        }
-        .rc-page .cards .mb-3 { margin-bottom: 10px !important; }
-        .rc-page .cards input[type="text"] {
-            height: 32px !important;
-            width: 100% !important;
-            font-size: 12px !important;
-            border: 1px solid #e0e0e0 !important;
-            border-radius: 4px !important;
-            padding: 5px 10px !important;
-            background: #fff !important;
-            box-shadow: none !important;
-        }
-        .rc-page .cards input[type="text"]:focus {
-            border-color: #EFA63E !important;
-            box-shadow: 0 0 0 3px #EFA63E25 !important;
-            outline: none !important;
-        }
-        .rc-page .cards input[disabled] { background: #f5f6f8 !important; color: #8a8f98 !important; }
-        .rc-page .cards .fieldcolor {
-            background: #EFA63E !important;
-            border-color: #EFA63E !important;
-            color: #fff !important;
-            font-weight: 700 !important;
-        }
-        .rc-page .form-check { display: flex; align-items: center; gap: 8px; padding: 0 !important; }
-        .rc-page .form-check label { margin: 0 !important; }
-        .rc-page .form-check input[type="checkbox"] { width: 16px !important; height: 16px !important; margin: 0 !important; }
-
-        /* ── Entry lists ── */
-        .rc-page .self {
-            position: relative !important;
-            width: 100% !important;
-            height: auto !important;
-            border: none !important;
-            border-radius: 8px 8px 0 0 !important;
-            background: linear-gradient(90deg, #EFA63E10, #fff) !important;
-            background-image: linear-gradient(90deg, #EFA63E10, #fff) !important;
-            color: #EFA63E !important;
-            text-align: left !important;
-            font-size: 12px !important;
-            font-weight: 700 !important;
-            text-transform: uppercase;
-            letter-spacing: .05em;
-            padding: 8px 12px !important;
-            margin: 0 !important;
-            border-bottom: 1px solid #EFA63E30 !important;
-        }
-        .rc-page .self2 {
-            width: 100% !important;
-            height: auto !important;
-            background: #fff !important;
-            border: 1px solid #fdf2e2 !important;
-            border-left: 3px solid #EFA63E !important;
-            border-radius: 8px !important;
-            margin: 0 0 16px 0 !important;
-            box-shadow: 0 4px 12px rgba(0,0,0,.04) !important;
-            overflow: hidden;
-        }
-        .rc-page .self2 > div {
-            width: 100% !important;
-            max-height: 170px;
-            overflow: auto !important;
-        }
-        .rc-page .self2 .table { margin: 0 !important; }
-        .rc-page #lblTotalReceiptsmsg,
-        .rc-page #lblTotalBillsmsg {
-            display: block;
-            padding: 6px 12px;
-            font-size: 11px;
-            font-weight: 700;
-            color: #7a6530;
-            background: #fdf7ef;
-            border-top: 1px solid #f0e0c8;
-        }
-
-        /* ── Tables (beat the Receipts.css yellow / 1em / width:100% rules) ── */
-        .rc-page .table {
-            width: 100% !important;
-            margin-bottom: 0 !important;
-            background: #fff !important;
-            border-collapse: collapse !important;
-        }
-        .rc-page .table th {
-            background: #EFA63E !important;
-            background-image: none !important;
-            color: #fff !important;
-            font-size: 10px !important;
-            font-weight: 700 !important;
-            text-transform: uppercase;
-            letter-spacing: .03em;
-            padding: 6px 8px !important;
-            border: none !important;
-            border-bottom: 1px solid #EFA63E !important;
-            text-align: left !important;
-            width: auto !important;
-            position: static !important;
-            transform: none !important;
-            top: auto !important;
-            left: auto !important;
-            right: auto !important;
-        }
-        .rc-page .table td {
-            padding: 5px 8px !important;
-            font-size: 11.5px !important;
-            color: #444 !important;
-            border: none !important;
-            border-bottom: 1px solid #f0f0f0 !important;
-            text-align: left !important;
-            width: auto !important;
-            background: transparent !important;
-            position: static !important;
-            transform: none !important;
-            top: auto !important;
-            left: auto !important;
-            right: auto !important;
-        }
-        .rc-page .table tbody tr:nth-child(even) { background: #fbfcfe; }
-        .rc-page .table tbody tr:hover { background: #EFA63E12; }
-        .rc-page .table td a { color: #d29237 !important; font-weight: 700; text-decoration: none !important; }
-
-        /* ── Action row (button styles untouched) ── */
-        .rc-page .rc-actions { margin-top: 4px; padding-top: 14px; border-top: 1px solid #fdf2e2; }
-        .rc-page .rc-actions > [class*="col-"] { margin-bottom: 8px; }
-
-        /* ── Discharge modal ── */
-        .rc-page .modal-content {
-            border-radius: 10px;
-            border: none;
-            box-shadow: 0 10px 40px rgba(0,0,0,.18);
-        }
-        .rc-page .modal-header {
-            background: linear-gradient(90deg, #EFA63E10, #fff);
-            border-bottom: 1px solid #EFA63E30;
-            border-radius: 10px 10px 0 0;
-            padding: 12px 18px;
-        }
-        .rc-page .modal-title {
-            font-size: 14px;
-            font-weight: 700;
-            color: #EFA63E;
-            text-transform: uppercase;
-            letter-spacing: .04em;
-        }
-        .rc-page .modal-body { padding: 16px 18px; }
-        .rc-page legend {
-            font-size: 12px !important;
-            font-weight: 700 !important;
-            color: #7a6530 !important;
-            padding: 0 8px !important;
-            width: auto !important;
-            border: none !important;
-            margin-bottom: 8px !important;
-        }
-        .rc-page .rc-svc-row { display: flex; gap: 10px; align-items: center; }
-        .rc-page .rc-svc-row .select2-container { flex: 1 1 auto; min-width: 0; width: 100% !important; }
-        .rc-page .rc-svc-row > input[type="button"] { flex: 0 0 auto; }
-        .rc-page .rc-modal-sub {
-            font-size: 12px !important;
-            font-weight: 700 !important;
-            color: #EFA63E !important;
-            text-transform: uppercase;
-            letter-spacing: .05em;
-            margin: 0 0 8px !important;
-        }
-        .rc-page .rc-modal-scroll {
-            max-height: 250px;
-            overflow: auto;
-            border: 1px solid #eee;
-            border-radius: 6px;
-        }
-        .rc-page .rc-sum-table { width: 100%; margin-top: 12px; }
-        .rc-page .rc-sum-table td {
-            padding: 5px 8px !important;
-            font-size: 12px !important;
-            border: none !important;
-            vertical-align: middle !important;
-        }
-        .rc-page .rc-sum-table input[type="text"] {
-            height: 30px !important;
-            width: 100% !important;
-            font-size: 12px !important;
-            border: 1px solid #e0e0e0 !important;
-            border-radius: 4px !important;
-            padding: 4px 8px !important;
-            background: #fff !important;
-            box-shadow: none !important;
-        }
-        .rc-page .rc-sum-table input[disabled] { background: #f5f6f8 !important; color: #8a8f98 !important; }
-        .rc-page .modal-body select.form-control { height: 32px !important; font-size: 12px !important; }
-        .rc-page .modal-body .select2-selection {
-            height: 32px !important;
-            font-size: 12px !important;
-            border: 1px solid #e0e0e0 !important;
-            border-radius: 4px !important;
-            background: #fff !important;
-        }
-    </style>
+    <link href="../../wwwroot/THEME_TIBBIT/CustomCSS/receipt-entry.css" rel="stylesheet" />
+    <link href="../../wwwroot/lib/sweetalert/swalalert.css" rel="stylesheet" />
 </asp:Content>
 <asp:Content ID="Content2" ContentPlaceHolderID="MainContent" runat="server">
 
@@ -1841,457 +1536,224 @@
     </script>
     <div class="rc-page">
 
+        <!-- Title line: the master page puts the page title in the empty left side; the badges sit on the right -->
         <div class="pr-meta-bar">
-            <div class="meta-left">
-                <span class="meta-title"><i class="fa fa-receipt"></i> Patient Receipts</span>
+            <div class="meta-left"></div>
+            <div class="meta-right">
+                <div class="rc-badge"><span class="rc-badge-label">Receipt #</span><span class="rc-badge-value" id="badgeRcNo">New</span></div>
+                <div class="rc-badge"><span class="rc-badge-label">Date</span><span class="rc-badge-value" id="badgeRcDate">---</span></div>
+                <div class="rc-badge"><span class="rc-badge-label">Patient</span><span class="rc-badge-value" id="badgeRcPatient">---</span></div>
             </div>
-            <div class="meta-right"></div>
         </div>
 
-    <div class="row">
         <input type="hidden" name="hdnDuplicateCheck" value="0" id="hdnDuplicateCheck" />
-        <div class="row mb-3" id="divReceiptsBoxes">
-            <div class="col-lg-2 col-md-4 col-sm-6">
-                <div class="card1 border-primary shadow-sm">
-                    <div class="card-header text-white">
-                        <i class=""></i>Total Sale
-                    </div>
-                    <div class="card-body text-center">
-                        <h4 class="card-title text-primary" id="lblTotalBillingSum">0.00</h4>
-                    </div>
-                </div>
-            </div>
-            <div class="col-lg-2 col-md-4 col-sm-6">
-                <div class="card1 border-primary shadow-sm">
-                    <div class="card-header text-white"><i class=""></i>Private</div>
-                    <div class="card-body text-center">
-                        <h4 class="card-title text-primary" id="lblPrivateCash">0.00</h4>
-                    </div>
-                </div>
-            </div>
 
-            <div class="col-lg-2 col-md-4 col-sm-6">
-                <div class="card1 border-primary shadow-sm">
-                    <div class="card-header text-white"><i class=""></i>Panel</div>
-                    <div class="card-body text-center">
-                        <h4 class="card-title text-primary" id="lblPanelCash">0.00</h4>
-                    </div>
-                </div>
-            </div>
-
-            <div class="col-lg-2 col-md-4 col-sm-6">
-                <div class="card1 border-primary shadow-sm">
-                    <div class="card-header text-white">
-                        <i class=""></i>Discount
-                    </div>
-                    <div class="card-body text-center">
-                        <h4 class="card-title text-primary" id="lblTotalDiscount">0.00</h4>
-                    </div>
-                </div>
-            </div>
-            <div class="col-lg-2 col-md-4 col-sm-6">
-                <div class="card1 border-primary shadow-sm">
-                    <div class="card-header  text-white">
-                        <i class=""></i>Net Sale
-                    </div>
-                    <div class="card-body text-center">
-                        <h4 class="card-title text-primary" id="lblTotalAmount">0.00</h4>
-                    </div>
-                </div>
-            </div>
-
-            <div class="col-lg-2 col-md-4 col-sm-6">
-                <div class="card1 border-primary shadow-sm">
-                    <div class="card-header  text-white">
-                        <i class=""></i>Cash Paid
-                    </div>
-                    <div class="card-body text-center">
-                        <h4 class="card-title text-primary" id="lblTotalCashPaid">0.00</h4>
-                    </div>
-                </div>
-            </div>
-
-            <div class="col-lg-2 col-md-4 col-sm-6">
-                <div class="card1 border-primary shadow-sm">
-                    <div class="card-header  text-white">
-                        <i class=""></i>Advances
-                    </div>
-                    <div class="card-body text-center">
-                        <h4 class="card-title text-primary" id="lblTotalAdvance">0.00</h4>
-                    </div>
-                </div>
-            </div>
-
-            <div class="col-lg-2 col-md-4 col-sm-6">
-                <div class="card1 border-primary shadow-sm">
-                    <div class="card-header  text-white">
-                        <i class=""></i>Services Refund
-                    </div>
-                    <div class="card-body text-center">
-                        <h4 class="card-title text-primary" id="lblTotalRefund">0.00</h4>
-                    </div>
-                </div>
-            </div>
-
-            <div class="col-lg-2 col-md-4 col-sm-6">
-                <div class="card1 border-primary shadow-sm">
-                    <div class="card-header  text-white">
-                        <i class=""></i>Actual Cash
-                    </div>
-                    <div class="card-body text-center">
-                        <h4 class="card-title text-primary" id="lblActualCash">0.00</h4>
-                    </div>
-                </div>
-            </div>
-            
-            
-
-        </div>
-        <!-- Left Card -->
-        <div class="col-lg-4 col-md-5 col-sm-12">
-            <div class="card">
-                <div class="card-body">
-                    <div class="row">
-                        <div class="col-lg-5 col-md-5 col-sm-6">
-                            <div class="image-container">
-                                <img src="~../../../../wwwroot/SOURCE_IMAGES/DASHBOARD_ICONS/Addrecepit.png" alt="Patient Image" class="img-fluid rounded-circle patient-image " />
-                            </div>
-                        </div>
-                        <div class="col-lg-7 col-md-7 col-sm-6">
-                            <div class="row mb-3 mtt">
-                                <div class="col-lg-5 col-md-5 col-sm-6">
-                                    <label>Bill No *:</label>
-                                </div>
-                                <div class="col-lg-7 col-md-7 col-sm-6">
-                                    <input type="text" id="txtMRNo" />
-                                </div>
-                            </div>
-                            <div class="row mb-3 mtt">
-                                <div class="col-lg-5 col-md-5 col-sm-6">
-                                    <label>Receipt No:</label>
-                                </div>
-                                <div class="col-lg-7 col-md-7 col-sm-6">
-                                    <input type="text" id="txtReceiptNo" disabled="disabled" value="New" />
-                                    <input type="hidden" id="hdntxtReceiptNo" value="" />
-                                </div>
-                            </div>
-                            <div class="row mb-3 mtt">
-                                <div class="col-lg-5 col-md-5 col-sm-6">
-                                    <label>Receipt Date :</label>
-                                </div>
-                                <div class="col-lg-7 col-md-7 col-sm-6">
-                                    <input type="text" id="txtReceiptDate" disabled="disabled" />
-                                </div>
-                            </div>
-                            <div class="row mb-3">
-                                <div class="col-lg-5 col-md-5 col-sm-6 formrgn">
-                                    <label>Addmision Date  :</label>
-                                </div>
-                                <div class="col-lg-7 col-md-7 col-sm-6">
-                                    <label id="lblAddmisionDate"></label>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
+        <!-- Sale summary tiles (shown or hidden by the page script) -->
+        <div class="rc-stats" id="divReceiptsBoxes">
+            <div class="rc-stat"><div class="rc-stat-label">Total Sale</div><div class="rc-stat-value" id="lblTotalBillingSum">0.00</div></div>
+            <div class="rc-stat"><div class="rc-stat-label">Private</div><div class="rc-stat-value" id="lblPrivateCash">0.00</div></div>
+            <div class="rc-stat"><div class="rc-stat-label">Panel</div><div class="rc-stat-value" id="lblPanelCash">0.00</div></div>
+            <div class="rc-stat"><div class="rc-stat-label">Discount</div><div class="rc-stat-value" id="lblTotalDiscount">0.00</div></div>
+            <div class="rc-stat"><div class="rc-stat-label">Net Sale</div><div class="rc-stat-value" id="lblTotalAmount">0.00</div></div>
+            <div class="rc-stat"><div class="rc-stat-label">Cash Paid</div><div class="rc-stat-value" id="lblTotalCashPaid">0.00</div></div>
+            <div class="rc-stat"><div class="rc-stat-label">Advances</div><div class="rc-stat-value" id="lblTotalAdvance">0.00</div></div>
+            <div class="rc-stat"><div class="rc-stat-label">Services Refund</div><div class="rc-stat-value" id="lblTotalRefund">0.00</div></div>
+            <div class="rc-stat rc-stat-main"><div class="rc-stat-label">Actual Cash</div><div class="rc-stat-value" id="lblActualCash">0.00</div></div>
         </div>
 
+        <div class="rc-layout">
 
-        <!-- Right Card -->
-        <div class="col-lg-4 col-md-5 col-sm-12">
-            <div class="card">
-                <div class="card-body">
-                    <div class="row mb-3">
-                        <div class="col-lg-5 col-md-5 col-sm-6">
-                            <label>Age Years :</label>
+            <!-- Left: patient, account summary + receipt entry, buttons -->
+            <div class="rc-col">
+                <section class="rc-card">
+                    <h5 class="rc-card-title"><i class="fa fa-user-circle"></i> Patient Information</h5>
+                    <div class="rc-patient">
+                        <div class="rc-avatar">
+                            <img src="~../../../../wwwroot/SOURCE_IMAGES/DASHBOARD_ICONS/Addrecepit.png" alt="Patient Image" />
                         </div>
-                        <div class="col-lg-7 col-md-5 col-sm-6">
-                            <label id="lblAgeYears"></label>
-                        </div>
-                    </div>
-                    <div class="row mb-3">
-                        <div class="col-lg-5 col-md-5 col-sm-6">
-                            <label>Contact No :	</label>
-                        </div>
-                        <div class="col-lg-7 col-md-5 col-sm-6">
-                            <label id="lblContactNo"></label>
-                        </div>
-                    </div>
-                    <div class="row mb-3">
-                        <div class="col-lg-5 col-md-5 col-sm-6">
-                            <label>Patient Name :	</label>
-                        </div>
-                        <div class="col-lg-7 col-md-5 col-sm-6">
-                            <label id="lblPatienName"></label>
+                        <div class="rc-grid rc-patient-fields">
+                            <div class="rc-field rc-span-2">
+                                <label for="txtMRNo">Bill No <span class="rc-req">*</span></label>
+                                <input type="text" id="txtMRNo" />
+                            </div>
+                            <div class="rc-field">
+                                <label for="txtReceiptNo">Receipt No</label>
+                                <input type="text" id="txtReceiptNo" class="rc-input" disabled="disabled" value="New" />
+                                <input type="hidden" id="hdntxtReceiptNo" value="" />
+                            </div>
+                            <div class="rc-field">
+                                <label for="txtReceiptDate">Receipt Date</label>
+                                <input type="text" id="txtReceiptDate" class="rc-input" disabled="disabled" />
+                            </div>
                         </div>
                     </div>
-                    <div class="row mb-3">
-                        <div class="col-lg-5 col-md-5 col-sm-6">
-                            <label>Patient Category :	</label>
-                        </div>
-                        <div class="col-lg-7 col-md-5 col-sm-6">
-                            <label id="lblPatientCategory"></label>
-                        </div>
-                    </div>
-                    <div class="row mb-3">
-                        <div class="col-lg-5 col-md-5 col-sm-6">
-                            <label>Reg. Date :	</label>
-                        </div>
-                        <div class="col-lg-7 col-md-5 col-sm-6">
-                            <label id="lblRegDate"></label>
-                        </div>
-                    </div>
-                    <div class="row mb-3">
-                        <div class="col-lg-5 col-md-5 col-sm-6">
-                            <label>Department  :	</label>
-                        </div>
-                        <div class="col-lg-7 col-md-5 col-sm-6">
-                            <label id="lblDepartment"></label>
-                        </div>
-                    </div>
-                    <div class="row mb-3">
-                        <div class="col-lg-5 col-md-5 col-sm-6">
-                            <label>Address:</label>
-                        </div>
-                        <div class="col-lg-7 col-md-5 col-sm-6">
-                            <label id="lblAddress"></label>
-                        </div>
-                    </div>
+                    <dl class="rc-info">
+                        <div class="rc-span-2"><dt>Patient Name</dt><dd id="lblPatienName"></dd></div>
+                        <div><dt>MR No</dt><dd id="lb_Mirno"></dd></div>
+                        <div><dt>Age Years</dt><dd id="lblAgeYears"></dd></div>
+                        <div><dt>Gender</dt><dd id="lblGender"></dd></div>
+                        <div><dt>Contact No</dt><dd id="lblContactNo"></dd></div>
+                        <div><dt>Patient Category</dt><dd id="lblPatientCategory"></dd></div>
+                        <div><dt>Reg. Date</dt><dd id="lblRegDate"></dd></div>
+                        <div><dt>Department</dt><dd id="lblDepartment"></dd></div>
+                        <div><dt>Admission Date</dt><dd id="lblAddmisionDate"></dd></div>
+                        <div><dt>Bed No</dt><dd id="lblBedNo"></dd></div>
+                        <div><dt>Room No</dt><dd id="lblRoomNo"></dd></div>
+                        <div><dt>Ward No</dt><dd id="lblWardNo"></dd></div>
+                        <div class="rc-span-all"><dt>Address</dt><dd id="lblAddress"></dd></div>
+                    </dl>
                     <label style="display: none;">Panel Company</label>
                     <label style="display: none;">Panel Company</label>
+                </section>
+
+                <div class="rc-pair">
+                    <section class="rc-card">
+                        <h5 class="rc-card-title"><i class="fa fa-calculator"></i> Account Summary</h5>
+                        <div class="rc-grid rc-grid-1">
+                            <div class="rc-field">
+                                <label for="totalAdvanceAmount">Total Advance Amount</label>
+                                <input type="text" id="totalAdvanceAmount" disabled="disabled" name="totalAdvanceAmount" class="rc-input rc-num" />
+                            </div>
+                            <div class="rc-field">
+                                <label for="totalBill">Total Bill</label>
+                                <input type="text" id="totalBill" disabled="disabled" name="totalBill" class="rc-input rc-num" />
+                            </div>
+                            <div class="rc-field">
+                                <label for="totalReceipt">Total Receipt</label>
+                                <input type="text" id="totalReceipt" disabled="disabled" name="totalReceipt" class="rc-input rc-num" />
+                            </div>
+                            <div class="rc-field rc-figure">
+                                <label for="txtNetBalance">Net Balance</label>
+                                <input type="text" id="txtNetBalance" disabled="disabled" name="netBalance" class="rc-input rc-num" />
+                            </div>
+                            <div class="rc-check">
+                                <input type="checkbox" id="chkDischarge" onchange="DischargeCheck();" />
+                                <label for="chkDischarge">Discharge</label>
+                            </div>
+                        </div>
+                    </section>
+
+                    <section class="rc-card">
+                        <h5 class="rc-card-title"><i class="fa fa-money"></i> Receipt Entry</h5>
+                        <div class="rc-grid rc-grid-1">
+                            <div class="rc-field">
+                                <label for="txtReceiptAmount">Receipt Amount</label>
+                                <input type="text" id="txtReceiptAmount" name="txtReceiptAmount" onkeyup="CountNetAmount()" class="rc-input rc-num" />
+                            </div>
+                            <div class="rc-field">
+                                <label for="txtRemarks">Remarks</label>
+                                <input type="text" id="txtRemarks" name="remarks" class="rc-input" />
+                            </div>
+                            <div class="rc-field">
+                                <label for="txtDischageCharges">Discharge Charges</label>
+                                <input type="text" id="txtDischageCharges" disabled="disabled" name="txtDischageCharges" class="rc-input rc-num" />
+                            </div>
+                            <div class="rc-field rc-figure rc-figure-main">
+                                <label for="txtNetReceivable">Net Receivables</label>
+                                <input type="text" id="txtNetReceivable" name="txtNetReceivable" class="rc-input rc-num fieldcolor" />
+                            </div>
+                            <div class="rc-check">
+                                <input type="checkbox" id="chkSummary" />
+                                <label for="chkSummary">Summary</label>
+                            </div>
+                        </div>
+                    </section>
+                </div>
+
+                <div class="rc-actions">
+                    <div>
+                        <input type="button" class="btn btn-primry" style="width:auto" value="Save" onclick="SaveRecord()" id="btnSave" />
+                    </div>
+                    <div>
+                        <input type="button" class="btn btn-yellow" style="width:auto" value="New" onclick="window.location = 'Receipts.aspx'" />
+                    </div>
+                    <div>
+                        <input type="button" class="btn btn-primry" style="width:auto" value="Print" name="name" onclick="PrintCashReceipt();" />
+                    </div>
+                    <div>
+                        <input type="button" class="btn-gray" style="width:auto" value="List View" onclick="window.open('ReceiptsView.aspx')" />
+                    </div>
+                    <div>
+                        <input type="button" style="width:auto" class="btn btn-primry" value="Print All Detail" onclick="PrinAllReceiptDetail();" />
+                    </div>
+                    <div>
+                        <input type="button" style="width:auto" class="btn btn-primry" value="Sale Close" onclick="SaleClose();" />
+                    </div>
                 </div>
             </div>
-        </div>
-        <!-- Right Card -->
-        <div class="col-lg-4 col-md-5 col-sm-12">
-            <div class="card">
-                <div class="card-body">
-                    <div class="row mb-3">
-                        <div class="col-lg-5 col-md-5 col-sm-6">
-                            <label>Bed No:</label>
-                        </div>
-                        <div class="col-lg-7 col-md-5 col-sm-6">
-                            <label id="lblBedNo"></label>
-                        </div>
+
+            <!-- Right: entries for this bill -->
+            <div class="rc-col">
+                <section class="rc-card">
+                    <h5 class="rc-card-title"><i class="fa fa-credit-card"></i> Advance Entries</h5>
+                    <div class="rc-table-wrap">
+                        <table class="table rc-table" id="tblAdvance">
+                            <thead>
+                                <tr>
+                                    <th>Advance No</th>
+                                    <th>Date</th>
+                                    <th>Remarks</th>
+                                    <th>Amount</th>
+                                </tr>
+                            </thead>
+                            <tbody></tbody>
+                        </table>
                     </div>
-                    <div class="row mb-3">
-                        <div class="col-lg-5 col-md-5 col-sm-6 formrgn">
-                            <label>Room No  :</label>
-                        </div>
-                        <div class="col-lg-7 col-md-5 col-sm-6">
-                            <label id="lblRoomNo"></label>
-                        </div>
+                    <label id="Label1"></label>
+                    <label id="Label2"></label>
+                </section>
+
+                <section class="rc-card">
+                    <h5 class="rc-card-title"><i class="fa fa-file-text-o"></i> Bill Entries</h5>
+                    <div class="rc-table-wrap">
+                        <table class="table rc-table" id="tblBills">
+                            <thead>
+                                <tr>
+                                    <th>No</th>
+                                    <th>Date</th>
+                                    <th>Description</th>
+                                    <th>Amount</th>
+                                </tr>
+                            </thead>
+                            <tbody></tbody>
+                        </table>
                     </div>
-                    <div class="row mb-3">
-                        <div class="col-lg-5 col-md-5 col-sm-6 formrgn">
-                            <label>Ward No  :</label>
-                        </div>
-                        <div class="col-lg-7 col-md-5 col-sm-6 top">
-                            <label id="lblWardNo"></label>
-                        </div>
+                </section>
+
+                <section class="rc-card">
+                    <h5 class="rc-card-title"><i class="fa fa-list-alt"></i> Receipt Entries</h5>
+                    <div class="rc-table-wrap">
+                        <table class="table rc-table" id="tblReceipts">
+                            <thead>
+                                <tr>
+                                    <th>Receipt No</th>
+                                    <th>Bill No</th>
+                                    <th>Date</th>
+                                    <th>Amount</th>
+                                    <th>Remarks</th>
+                                </tr>
+                            </thead>
+                            <tbody></tbody>
+                        </table>
                     </div>
-                    <div class="row mb-3">
-                        <div class="col-lg-5 col-md-5 col-sm-6 formrgn">
-                            <label>MR NO :</label>
-                        </div>
-                        <div class="col-lg-7 col-md-5 col-sm-6 top">
-                            <label id="lb_Mirno"></label>
-                        </div>
-                    </div>
-                    <div class="row mb-3">
-                        <div class="col-lg-5 col-md-5 col-sm-6 formrgn">
-                            <label>Gender :</label>
-                        </div>
-                        <div class="col-lg-7 col-md-5 col-sm-6 top">
-                            <label id="lblGender"></label>
-                        </div>
-                    </div>
-                </div>
+                    <label id="lblTotalReceiptsmsg"></label>
+                </section>
             </div>
         </div>
     </div>
 
-    <hr class="hr_receipt" />
-        <div class="row g-3">
-            <div  class="col-lg-8">
-                <div class="row">
-                      <!-- Left Card -->
-            <div class="col-md-6">
-                <div class="cards border-danger">
-                    <div class="card-body">
-                        <div class="mb-3">
-                            <label for="totalAdvanceAmount" class="form-label">Total Advance Amount:</label>
-                            <input type="text" id="totalAdvanceAmount" disabled="disabled" name="totalAdvanceAmount" class="form-control" />
-                        </div>
-                        <div class="mb-3">
-                            <label for="totalBill" class="form-label">Total Bill:</label>
-                            <input type="text" id="totalBill" disabled="disabled" name="totalBill" class="form-control" />
-                        </div>
-                        <div class="mb-3">
-                            <label for="totalReceipt" class="form-label">Total Receipt:</label>
-                            <input type="text" id="totalReceipt" disabled="disabled" name="totalReceipt" class="form-control" />
-                        </div>
-                        <div class="mb-3">
-                            <label for="txtNetBalance" class="form-label">Net Balance:</label>
-                            <input type="text" id="txtNetBalance" disabled="disabled" name="netBalance" class="form-control" />
-                        </div>
-                        <div class="form-check" >
-                            <label style="margin-left: 15px;">Discharge</label>
-                            <input type="checkbox" style="margin-top: 9px;width: 58px !important;" id="chkDischarge" onchange="DischargeCheck();" />
-                        </div>
-                    </div>
-                </div>
-
-            </div>
-
-            <!-- Right Card -->
-            <div class="col-lg-6">
-                <div class="cards border-danger">
-                    <div class="card-body">
-                        <div class="mb-3">
-                            <label for="txtReceiptAmount" class="form-label">Receipt Amount:</label>
-                            <input type="text" id="txtReceiptAmount" name="txtReceiptAmount" onkeyup="CountNetAmount()" class="form-control" />
-                        </div>
-                        <div class="mb-3">
-                            <label for="txtRemarks" class="form-label">Remarks:</label>
-                            <input type="text" id="txtRemarks" name="remarks" class="form-control" />
-                        </div>
-                        <div class=" mb-3">
-                            <label for="txtDischageCharges" class="form-label">Discharge Charges:</label>
-                            <input type="text" id="txtDischageCharges" disabled="disabled" name="txtDischageCharges" class="form-control" />
-
-                        </div>
-                        <div class="mb-3">
-                            <label for="txtNetReceivable" class="form-label">Net Receivables:</label>
-                            <input type="text" id="txtNetReceivable" name="txtNetReceivable"  class="form-control fieldcolor" />
-                        </div>
-                     
-                            <div class="form-check">
-                                   <label>Summary:</label>
-                                <input type="checkbox" style="margin-top: 9px;width: 58px !important;" id="chkSummary" />
-                             
-                            </div>
-                       
-                    </div>
-                </div>
-            </div>
-                </div>
-                <div class="row rc-actions">
-                      <div class="col-lg-2 col-md-3 col-sm-4">
-                          <input type="button" class="btn btn-primry" style="width:auto" value="Save" onclick="SaveRecord()" id="btnSave" />
-                  </div>
-                  <div class="col-lg-2 col-md-3 col-sm-4">
-                       <input type="button" class="btn btn-yellow" style="width:auto" value="New" onclick="window.location = 'Receipts.aspx'" />
-                  </div> 
-                  <div class="col-lg-2 col-md-3 col-sm-4">
-                      <input type="button" class="btn btn-primry" style="width:auto" value="Print" name="name" onclick="PrintCashReceipt();" />
-                  </div> 
-                  <div class="col-lg-2 col-md-3 col-sm-4">
-                           <input type="button" class="btn-gray"  style="width:auto" value="List View" onclick="window.open('ReceiptsView.aspx')" />
-                  </div> 
-                  <div class="col-lg-2 col-md-3 col-sm-4">             
-                      <input type="button" style="width:auto" class="btn btn-primry" value="Print All Detail" onclick="PrinAllReceiptDetail();" />
-                  </div>
-                  <div class="col-lg-2 col-md-3 col-sm-4">             
-                      <input type="button" style="width:auto" class="btn btn-primry" value="Sale Close" onclick="SaleClose();" />
-                  </div>
-                </div>
-            </div>
-          
-            <div class="col-lg-4">
-                <div class="row">
-                    <div class="col-lg-12">
-                        <div class="self2">
-                            <h3 class="self" style="position: relative;">Advance Entries </h3>
-                            <div style="width: 430px; overflow: scroll; height: 153px !important; height: auto;">
-                                <table class="table" id="tblAdvance" style="height: 146px !important; height: auto; overflow: scroll;">
-                                    <thead>
-                                        <tr>
-                                            <th style="width: 36px;">Advance No
-                                            </th>
-
-                                            <th style="width: 75px;">Date
-                                            </th>
-
-                                            <th style="width: 169px;">Remarks
-                                            </th>
-                                            <th style="width: 66px;">Amount
-                                            </th>
-                                        </tr>
-                                    </thead>
-                                    <tbody></tbody>
-                                </table>
-                            </div>
-
-                            <label id="Label1"></label>
-                            <label id="Label2"></label>
-                        </div>
-                    </div>
-                </div>
-                <div class="row">
-                    <div class="col-lg-12">
-
-                        <div style="height: 226px;" class="self2">
-
-                            <h3 class="self">Bill Entries </h3>
-                            <div style="width: 430px; overflow: scroll; height: 138px !important; height: auto;">
-                                <table class="table" id="tblBills" style="height: 146px !important; height: auto; overflow: scroll;">
-                                    <thead>
-                                        <tr>
-                                            <th style="width: 36px;">No
-                                            </th>
-                                            <th style="width: 86px;">Date
-                                            </th>
-                                            <th style="width: 126px;">Description
-                                            </th>
-                                            <th style="width: 67px;">Amount
-                                            </th>
-
-                                        </tr>
-                                    </thead>
-                                    <tbody></tbody>
-                                </table>
-                            </div>
-
-                        </div>
-
-                    </div>
-                </div>
-                <div class="row">
-                    <div class="col-lg-12">
-                        <div style="" class="self2">
-                            <h3 style="position: relative;" class="self">Receipt Entries </h3>
-                            <div style="width: 430px; overflow: scroll; height: 163px !important; height: auto;">
-
-                                <table class="table" id="tblReceipts" style="height: 146px !important; height: auto; overflow: scroll;">
-                                    <thead>
-                                        <tr>
-                                            <th style="width: 36px;">Receipt No
-                                            </th>
-                                            <th>Bill No</th>
-                                            <th style="width: 75px;">Date
-                                            </th>
-                                            <th style="width: 66px;">Amount
-                                            </th>
-                                            <th style="width: 169px;">Remarks
-                                            </th>
-                                        </tr>
-                                    </thead>
-                                    <tbody></tbody>
-                                </table>
-                            </div>
-                            <label id="lblTotalReceiptsmsg"></label>
-
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-   
-    
-
-
+    <script type="text/javascript">
+        // title-line badges follow the form (the page script fills the fields in after loading)
+        function syncReceiptBadges() {
+            $('#badgeRcNo').text($('#txtReceiptNo').val() || 'New');
+            $('#badgeRcDate').text($('#txtReceiptDate').val() || '---');
+            $('#badgeRcPatient').text($.trim($('#lblPatienName').text()) || '---');
+        }
+        $(function () {
+            syncReceiptBadges();
+            setInterval(syncReceiptBadges, 600);
+        });
+    </script>
 
     <div id="PrintRecieptReport" style="display: none;">
 
@@ -2475,7 +1937,7 @@
             </tbody>
         </table>
     </div>
-    <div id="DischargeModel" class="modal fade" role="dialog">
+    <div id="DischargeModel" class="modal fade rc-modal" role="dialog">
         <div class="modal-dialog" style="width: 1080px; max-width: 96%;">
             <div class="modal-content">
                 <div class="modal-header">
@@ -2787,5 +2249,5 @@
                
        
     </div>
-    </div>
+
 </asp:Content>

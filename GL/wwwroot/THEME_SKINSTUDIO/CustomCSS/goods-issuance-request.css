@@ -2,7 +2,7 @@
    goods-issuance-request.css - Goods Issuance Request screen (Modules/Inventory/GoodsIssuanceRequest.aspx)
    Stand-alone: this screen uses no other screen's stylesheet. Every colour comes from the active theme
    (--theme-accent ... in that theme's theme-colors.css); the fallbacks are only a safety net.
-   The same file is kept in every theme folder (wwwroot/THEME_*/CustomCSS/goods-issuance-request.css).
+   The same file is kept in every theme folder (wwwroot/THEME_xxx/CustomCSS/goods-issuance-request.css).
    Layout: status badges on the title line, two columns (details | summary), the items table and the item search.
    ========================================================================== */
 

@@ -1,7 +1,7 @@
 ﻿<%@ Page Language="C#" MasterPageFile="~/Site.Master" AutoEventWireup="true" CodeBehind="Refund.aspx.cs" Inherits="PMS.Refund" %>
 
 <asp:Content ID="Content1" ContentPlaceHolderID="HeadContent" runat="server">
-    <link href="../../wwwroot/THEME_TIBBIT/CustomCSS/Refund.css" rel="stylesheet" />
+    <link href="../../wwwroot/THEME_TIBBIT/CustomCSS/bill-refund.css" rel="stylesheet" />
      <link href="../../wwwroot/lib/sweetalert/swalalert.css" rel="stylesheet" />
 
 </asp:Content>
@@ -811,189 +811,155 @@ function PrintVoucher() {
 
     </script>
 
-    <div class="container-fluid">
+    <div class="ir-page">
         <input type="hidden" id="hdPatientID" />
         <input type="hidden" id="hdnBillID" />
         <input type="hidden" id="txtAdvanceAmount" />
         <label id="lblOutput" style="background-color: silver; display: none;"></label>
         <label id="lblOutputShow" style="margin-left: -214px; display: none;"></label>
 
-        <div class="bp-meta-bar">
-            <div class="bp-meta-title">
-                <i class="fa fa-file-text-o"></i>
-                <span>Bill Refund</span>
-                <span class="bp-badge bp-badge--new" id="refundStatusBadge">New Refund</span>
-            </div>
-            <div class="bp-meta-actions">
-                <button type="button" class="bp-meta-btn bp-meta-btn--search" id="btnSearch" onclick="GetPatientDetailByBill()">
-                    <i class="fa fa-search"></i> Search Bill
-                </button>
+        <!-- Title line: the master page puts the page title in the empty left side; the badges sit on the right -->
+        <div class="pr-meta-bar">
+            <div class="meta-left"></div>
+            <div class="meta-right">
+                <div class="ir-badge"><span class="ir-badge-label">MR No</span><span class="ir-badge-value" id="badgeRfMr">---</span></div>
+                <div class="ir-badge"><span class="ir-badge-label">Total Refund</span><span class="ir-badge-value" id="badgeRfTotal">0.00</span></div>
+                <div class="ir-badge"><span class="ir-badge-label">Status</span><span class="ir-badge-value" id="refundStatusBadge">New Refund</span></div>
             </div>
         </div>
 
-        <div class="bp-bento">
-            <div class="bp-card">
-                <div class="bp-card-header">
-                    <i class="fa fa-user-circle"></i>
-                    <span>Patient Information</span>
-                </div>
-                <div class="bp-card-body">
-                    <div class="bp-patient">
-                        <div class="bp-patient-avatar">
-                            <img src="~../../../../wwwroot/SOURCE_IMAGES/DASHBOARD_ICONS/billing2.png" alt="Patient" id="patientImage" />
-                        </div>
-                        <div class="bp-patient-info">
-                            <div class="bp-patient-name" id="lblPatienName">Patient Name</div>
-                            <dl class="bp-patient-grid">
-                                <dt>Bill No</dt>
-                                <dd><input type="text" id="txtBillNo" class="bp-input" style="height:26px;padding:3px 7px;" /></dd>
-                                <dt>Contact</dt><dd id="lblContactNo"></dd>
-                                <dt>Gender</dt><dd id="lblGender"></dd>
-                                <dt>Reg Date</dt><dd id="lblRegDate"></dd>
-                                <dt>MR No</dt><dd id="lblMRNo"></dd>
-                            </dl>
+        <div class="ir-layout">
+            <section class="ir-card">
+                <h5 class="ir-card-title"><i class="fa fa-user-circle"></i> Patient Information</h5>
+                <div class="ir-patient">
+                    <div class="ir-avatar">
+                        <img src="~../../../../wwwroot/SOURCE_IMAGES/DASHBOARD_ICONS/billing2.png" alt="Patient" id="patientImage" />
+                    </div>
+                    <div class="ir-who">
+                        <div class="ir-name" id="lblPatienName">Patient Name</div>
+                        <div class="ir-search">
+                            <div class="ir-field">
+                                <label for="txtBillNo">Bill No</label>
+                                <input type="text" id="txtBillNo" class="ir-input" autocomplete="off" />
+                            </div>
+                            <button type="button" class="ir-search-btn" id="btnSearch" onclick="GetPatientDetailByBill()"><i class="fa fa-search"></i> Search Bill</button>
                         </div>
                     </div>
                 </div>
-            </div>
+                <dl class="ir-info">
+                    <div><dt>MR No</dt><dd id="lblMRNo"></dd></div>
+                    <div><dt>Age</dt><dd id="lblAgeYears"></dd></div>
+                    <div><dt>Gender</dt><dd id="lblGender"></dd></div>
+                    <div><dt>Contact</dt><dd id="lblContactNo"></dd></div>
+                    <div><dt>Reg Date</dt><dd id="lblRegDate"></dd></div>
+                    <div><dt>Patient Category</dt><dd id="lblPatientCategory"></dd></div>
+                    <div><dt>Department</dt><dd id="lblDepartment"></dd></div>
+                    <div><dt>Admit Category</dt><dd id="lblPatientDiscountType"></dd></div>
+                    <div class="ir-wide"><dt>Address</dt><dd id="lblAddress"></dd></div>
+                </dl>
+            </section>
 
-            <div class="bp-card">
-                <div class="bp-card-header">
-                    <i class="fa fa-info-circle"></i>
-                    <span>Additional Details</span>
-                </div>
-                <div class="bp-card-body" style="padding:0;">
-                    <div class="bp-summary-row">
-                        <span class="bp-summary-label">Age</span>
-                        <span id="lblAgeYears" class="bp-summary-value bp-summary-value--readonly"></span>
+            <section class="ir-card">
+                <h5 class="ir-card-title"><i class="fa fa-money"></i> Refund Details</h5>
+                <div class="ir-grid ir-grid-1">
+                    <div class="ir-field">
+                        <label for="txtAdvanceDate">Refund Date</label>
+                        <input type="text" id="txtAdvanceDate" class="ir-input datepicker" />
                     </div>
-                    <div class="bp-summary-row">
-                        <span class="bp-summary-label">Address</span>
-                        <span id="lblAddress" style="margin-left:auto;color:var(--bp-text);font-weight:600;text-align:right;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;max-width:65%;"></span>
+                    <div class="ir-field ir-figure ir-figure-main">
+                        <label for="txtToT_amount">Total Bill</label>
+                        <input type="text" id="txtToT_amount" class="ir-input" disabled="disabled" />
                     </div>
-                    <div class="bp-summary-row">
-                        <span class="bp-summary-label">Patient Category</span>
-                        <span id="lblPatientCategory" style="margin-left:auto;color:var(--bp-text);font-weight:600;"></span>
+                    <div class="ir-field ir-figure">
+                        <label for="txt_RcvdAmount">Received Amount</label>
+                        <input type="text" id="txt_RcvdAmount" class="ir-input" disabled="disabled" />
                     </div>
-                    <div class="bp-summary-row">
-                        <span class="bp-summary-label">Department</span>
-                        <span id="lblDepartment" style="margin-left:auto;color:var(--bp-text);font-weight:600;"></span>
-                    </div>
-                    <div class="bp-summary-row">
-                        <span class="bp-summary-label">Admit Category</span>
-                        <span id="lblPatientDiscountType" style="margin-left:auto;color:var(--bp-text);font-weight:600;"></span>
+                    <div class="ir-field">
+                        <label for="txtRemarks">Remarks</label>
+                        <textarea id="txtRemarks" class="ir-input"></textarea>
                     </div>
                 </div>
-            </div>
+            </section>
         </div>
 
-        <div class="bp-card">
-            <div class="bp-card-header">
-                <i class="fa fa-money"></i>
-                <span>Refund Details</span>
+        <section class="ir-card">
+            <h5 class="ir-card-title"><i class="fa fa-list"></i> Refund Items</h5>
+            <div class="ir-table-wrap">
+                <table class="ir-table" id="tblDetails">
+                    <thead>
+                        <tr>
+                            <th>Description</th>
+                            <th style="text-align:right;">Doc Share</th>
+                            <th style="text-align:right;">Hospital Share</th>
+                            <th style="text-align:right;width:95px;">Doctor Refund</th>
+                            <th style="text-align:right;width:95px;">Hospital Refund</th>
+                            <th style="text-align:center;width:60px;">Select</th>
+                        </tr>
+                    </thead>
+                    <tbody></tbody>
+                </table>
             </div>
-            <div class="bp-card-body">
-                <div class="bp-bento bp-bento--4" style="gap:12px;">
-                    <div>
-                        <label class="bp-summary-label" style="display:block;margin-bottom:4px;">Refund Date</label>
-                        <input type="text" id="txtAdvanceDate" class="bp-input datepicker" />
-                    </div>
-                    <div>
-                        <label class="bp-summary-label" style="display:block;margin-bottom:4px;">Total Bill</label>
-                        <input type="text" id="txtToT_amount" class="bp-input" style="text-align:right;" disabled="disabled" />
-                    </div>
-                    <div>
-                        <label class="bp-summary-label" style="display:block;margin-bottom:4px;">Received Amount</label>
-                        <input type="text" id="txt_RcvdAmount" class="bp-input" style="text-align:right;" disabled="disabled" />
-                    </div>
-                    <div>
-                        <label class="bp-summary-label" style="display:block;margin-bottom:4px;">Remarks</label>
-                        <textarea id="txtRemarks" class="bp-input" style="height:30px;resize:vertical;"></textarea>
-                    </div>
-                </div>
-            </div>
-        </div>
 
-        <div class="bp-card">
-            <div class="bp-card-header">
-                <i class="fa fa-list"></i>
-                <span>Refund Items</span>
-            </div>
-            <div class="bp-card-body" style="padding:8px;">
-                <div class="bp-table-wrap bp-table-scroll">
-                    <table class="bp-table" id="tblDetails">
+            <fieldset style="display:none">
+                <legend style="margin-bottom: 0px">Doctor Refund Distribution</legend>
+                <div class="ir-table-wrap">
+                    <table class="ir-table" id="Doctor_Share_Table">
                         <thead>
                             <tr>
-                                <th>Description</th>
-                                <th style="text-align:right;">Doc Share</th>
-                                <th style="text-align:right;">Hospital Share</th>
-                                <th style="text-align:right;width:95px;">Doctor Refund</th>
-                                <th style="text-align:right;width:95px;">Hospital Refund</th>
-                                <th style="text-align:center;width:60px;">Select</th>
+                                <th>Doctor Name</th>
+                                <th>Share Type</th>
+                                <th style="text-align:right;">Amount</th>
+                                <th style="text-align:right;width:95px;">Refund Dis</th>
                             </tr>
                         </thead>
                         <tbody></tbody>
                     </table>
                 </div>
+            </fieldset>
 
-                <fieldset style="display:none">
-                    <legend style="margin-bottom: 0px">Doctor Refund Distribution</legend>
-                    <div class="bp-table-wrap bp-table-scroll">
-                        <table class="bp-table" id="Doctor_Share_Table">
-                            <thead>
-                                <tr>
-                                    <th>Doctor Name</th>
-                                    <th>Share Type</th>
-                                    <th style="text-align:right;">Amount</th>
-                                    <th style="text-align:right;width:95px;">Refund Dis</th>
-                                </tr>
-                            </thead>
-                            <tbody></tbody>
-                        </table>
-                    </div>
-                </fieldset>
+            <div class="ir-total">
+                <label for="txtTotalDoctorShare">Total Refund</label>
+                <input type="text" id="txtTotalDoctorShare" class="ir-input" disabled="disabled" />
+                <input type="hidden" id="txtDoctorTotalDistribution" disabled="disabled" />
             </div>
-        </div>
+        </section>
 
-        <div class="bp-card">
-            <div class="bp-card-body" style="padding:0;">
-                <div class="bp-summary-row bp-summary-row--total">
-                    <span class="bp-summary-label">Total Refund</span>
-                    <input type="text" id="txtTotalDoctorShare" class="bp-summary-value" style="font-size:15px;font-weight:700;color:var(--bp-primary);" disabled="disabled" />
-                    <input type="hidden" id="txtDoctorTotalDistribution" disabled="disabled" />
-                </div>
+        <div class="ir-actions">
+            <div>
+                <input type="button" value="Save" onclick="SaveRecord()" id="btnSave" class="btn btn-primry" />
             </div>
-        </div>
-
-        <div class="row mt-3">
-            <div class="col-lg-8">
-                <div class="row">
-                    <div class="col-lg-2 col-md-3 col-sm-6">
-                        <input type="button" value="Save" onclick="SaveRecord()" id="btnSave" class="btn btn-primry" />
-                    </div>
-                    <div class="col-lg-2 col-md-3 col-sm-6">
-                        <input type="button" value="List View" class="btn-gray" onclick="window.open('RefundList.aspx')" />
-                    </div>
-                    <div class="col-lg-2 col-md-2 col-sm-3">
-                        <input type="button" id="btnPrint" class="btn btn-primry" onclick="PrintRefund()" value="Print" />
-                    </div>
-
-                    <div class="col-lg-2 col-md-2 col-sm-3" id="divApproveContainer" style="display:none;">
-                        <input type="button" id="btnApprove" class="btn btn-primry" onclick="ApproveRefund()" value="Approve" />
-                    </div>
-
-                    <div class="col-lg-2 col-md-2 col-sm-3" id="divUnApproveContainer" style="display:none;">
-                        <input type="button" id="btnUnApprove" class="btn btn-primry" onclick="UnApproveRefund()" value="UnApprove" />
-                    </div>
-
-                    <div class="col-lg-2 col-md-2 col-sm-3" id="divVoucherContainer" style="display:none;">
-                        <input type="button" id="btnPrintVoucher" class="btn btn-primry" onclick="PrintVoucher();" value="Voucher" />
-                    </div>
-                </div>
+            <div>
+                <input type="button" value="List View" class="btn-gray" onclick="window.open('RefundList.aspx')" />
+            </div>
+            <div>
+                <input type="button" id="btnPrint" class="btn btn-primry" onclick="PrintRefund()" value="Print" />
+            </div>
+            <div id="divApproveContainer" style="display:none;">
+                <input type="button" id="btnApprove" class="btn btn-primry" onclick="ApproveRefund()" value="Approve" />
+            </div>
+            <div id="divUnApproveContainer" style="display:none;">
+                <input type="button" id="btnUnApprove" class="btn btn-primry" onclick="UnApproveRefund()" value="UnApprove" />
+            </div>
+            <div id="divVoucherContainer" style="display:none;">
+                <input type="button" id="btnPrintVoucher" class="btn btn-primry" onclick="PrintVoucher();" value="Voucher" />
             </div>
         </div>
     </div>
 
-
+    <script type="text/javascript">
+        // title-line badges follow the form (the page script fills the fields in after loading)
+        function syncRefundBadges() {
+            $('#badgeRfMr').text($('#lblMRNo').text() || '---');
+            $('#badgeRfTotal').text($('#txtTotalDoctorShare').val() || '0.00');
+            var st = 'New Refund';
+            if ($('#divUnApproveContainer').is(':visible')) st = 'Approved';
+            else if ($('#divApproveContainer').is(':visible')) st = 'Created';
+            $('#refundStatusBadge').text(st);
+        }
+        $(function () {
+            syncRefundBadges();
+            setInterval(syncRefundBadges, 600);
+        });
+    </script>
 
 </asp:Content>

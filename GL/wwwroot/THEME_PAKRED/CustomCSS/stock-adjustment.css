@@ -2,7 +2,7 @@
    stock-adjustment.css - Stock Adjustment screen (Modules/Inventory/StockAdjustment.aspx)
    Stand-alone: this screen uses no other screen's stylesheet. Every colour comes from the active theme
    (--theme-accent ... in that theme's theme-colors.css); the fallbacks are only a safety net.
-   The same file is kept in every theme folder (wwwroot/THEME_*/CustomCSS/stock-adjustment.css).
+   The same file is kept in every theme folder (wwwroot/THEME_xxx/CustomCSS/stock-adjustment.css).
    Layout: status badges on the title line, two columns (item entry | transaction) and the items added.
    ========================================================================== */
 

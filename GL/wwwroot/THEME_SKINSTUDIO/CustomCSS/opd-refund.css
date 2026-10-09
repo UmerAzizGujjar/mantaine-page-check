@@ -1,0 +1,106 @@
+/* ==========================================================================
+   opd-refund.css - OPD Refund screen (Modules/PatientManagement/OPD_Refund.aspx)
+   Stand-alone: this screen uses no other screen's stylesheet. Every colour comes from the active theme
+   (--theme-accent ... in that theme's theme-colors.css); the fallbacks are only a safety net.
+   The same file is kept in every theme folder (wwwroot/THEME_xxx/CustomCSS/opd-refund.css).
+   Layout: status badges on the title line, patient card + original amounts, the refund card and the buttons.
+   ========================================================================== */
+
+.or-page { display: flex; flex-direction: column; gap: 16px; width: 100%; margin: 0 0 24px; color: var(--theme-ink, #1b2a41); }
+.or-page * { box-sizing: border-box; }
+
+/* ---------- status badges (on the title line, right side of the master's .pr-meta-bar) ---------- */
+.or-badge {
+    display: inline-flex; align-items: baseline; gap: 6px; padding: 3px 12px; white-space: nowrap;
+    background: #fff; border: 1px solid #e3e8ee; border-left: 3px solid var(--theme-accent, #438eb9); border-radius: 6px;
+}
+.or-badge-label { font-size: 10.5px; font-weight: 700; letter-spacing: .06em; text-transform: uppercase; color: #8a94a6; }
+.or-badge-value { font-size: 13px; font-weight: 800; color: var(--theme-ink, #1b2a41); }
+
+/* ---------- layout ---------- */
+.or-layout { display: grid; grid-template-columns: minmax(0, 2fr) minmax(0, 1fr); gap: 16px; align-items: stretch; }
+@media (max-width: 1199px) { .or-layout { grid-template-columns: minmax(0, 1fr); } }
+
+/* ---------- cards ---------- */
+.or-card {
+    min-width: 0; padding: 0 16px 16px; background: #fff;
+    border: 1px solid #e3e8ee; border-top: 3px solid var(--theme-accent, #438eb9); border-radius: 10px;
+    box-shadow: 0 2px 10px rgba(16, 24, 40, .05);
+}
+.or-card-title {
+    display: flex; align-items: center; gap: 8px; margin: 0 -16px 14px; padding: 10px 16px;
+    font-size: 13px; font-weight: 700; letter-spacing: .04em; text-transform: uppercase;
+    color: var(--theme-on-accent, #fff);
+    background: linear-gradient(180deg, var(--theme-accent-light, #438eb9) 0%, var(--theme-accent, #438eb9) 100%);
+    border-bottom: 1px solid var(--theme-accent-ink, #2b6a90);
+}
+.or-card-title i { font-size: 14px; opacity: .9; }
+
+/* ---------- patient ---------- */
+.or-patient { display: flex; align-items: center; gap: 16px; margin-bottom: 14px; padding-bottom: 14px; border-bottom: 1px dashed #dde3ea; }
+.or-avatar {
+    flex: 0 0 auto; display: flex; align-items: center; justify-content: center; width: 64px; height: 64px; overflow: hidden;
+    background: var(--theme-accent-soft, #f4f8fb); border: 2px solid var(--theme-accent, #438eb9); border-radius: 50%;
+}
+.or-avatar img { width: 40px; height: 40px; object-fit: contain; }
+.or-who { flex: 1 1 auto; min-width: 0; }
+.or-name { margin: 0 0 8px; font-size: 18px; font-weight: 800; line-height: 1.2; color: var(--theme-ink, #1b2a41); overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.or-search { display: flex; align-items: flex-end; gap: 8px; max-width: 420px; }
+.or-search .or-field { flex: 1 1 auto; }
+.or-page .or-search-btn {
+    display: inline-flex; align-items: center; justify-content: center; gap: 6px; flex: 0 0 auto; height: 34px; margin: 0; padding: 0 16px;
+    font-size: 13px; font-weight: 700; white-space: nowrap; cursor: pointer; user-select: none; text-shadow: none;
+    color: var(--theme-on-accent, #fff); background: var(--theme-accent, #438eb9); border: 0; border-radius: 6px;
+}
+.or-page .or-search-btn:hover { filter: brightness(.95); }
+
+.or-info { display: grid; grid-template-columns: repeat(auto-fill, minmax(190px, 1fr)); gap: 12px 16px; margin: 0; }
+.or-info > div { min-width: 0; }
+.or-info dt { margin: 0 0 2px; font-size: 11px; font-weight: 700; letter-spacing: .05em; text-transform: uppercase; color: #8a94a6; }
+.or-info dd { min-height: 20px; margin: 0; font-size: 14px; font-weight: 700; color: var(--theme-ink, #1b2a41); overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.or-info .or-wide { grid-column: span 2; }
+@media (max-width: 520px) { .or-info .or-wide { grid-column: span 1; } }
+
+/* ---------- fields ---------- */
+.or-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(190px, 1fr)); gap: 12px 14px; align-items: end; }
+.or-grid-1 { grid-template-columns: minmax(0, 1fr); }
+.or-span-2 { grid-column: span 2; }
+.or-span-all { grid-column: 1 / -1; }
+@media (max-width: 520px) { .or-span-2 { grid-column: span 1; } }
+.or-field { display: flex; flex-direction: column; justify-content: flex-end; min-width: 0; }
+.or-field > label { display: block; margin: 0 0 4px; font-size: 11.5px; font-weight: 700; letter-spacing: .02em; line-height: 1.3; color: #4a5568; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+
+.or-page input.or-input {
+    display: block; width: 100% !important; height: 34px !important; margin: 0 !important; padding: 4px 10px !important;
+    font-size: 13px; font-weight: 600; color: var(--theme-ink, #1b2a41);
+    background: #fff !important; border: 1px solid #cfd6e0 !important; border-radius: 6px !important; box-shadow: none !important;
+}
+.or-page input.or-input:focus { border-color: var(--theme-accent, #438eb9) !important; box-shadow: 0 0 0 3px var(--theme-accent-ring, rgba(67, 142, 185, .25)) !important; outline: none; }
+.or-page input.or-input[disabled], .or-page input.or-input[readonly] { background: #f3f5f8 !important; color: #3b475a; cursor: default; opacity: 1; }
+.or-page input.or-num { text-align: right; }
+
+/* figures (read-only amounts) */
+.or-figure input.or-input { height: 40px !important; font-size: 16px; font-weight: 800; text-align: right; }
+.or-figure.or-figure-main input.or-input { font-size: 18px; color: var(--theme-accent-ink, #2b6a90); background: var(--theme-accent-soft, #f4f8fb) !important; border-color: var(--theme-accent, #438eb9) !important; }
+
+/* ---------- buttons (original buttons; only their row layout is set here) ---------- */
+.or-actions { display: grid; grid-template-columns: repeat(auto-fit, minmax(130px, 200px)); gap: 8px; margin: 0; }
+.or-actions > div { min-width: 0; }
+.or-actions input[type="button"] { width: 100% !important; }
+
+/* ---------- dark mode ---------- */
+html[data-theme="dark"] .or-page { color: var(--dk-text, #e6e9ef); }
+html[data-theme="dark"] .or-badge, html[data-theme="dark"] .or-card { background: var(--dk-surface-2, #1c2431); border-color: var(--dk-border, #2d3748); }
+html[data-theme="dark"] .or-badge-value, html[data-theme="dark"] .or-name, html[data-theme="dark"] .or-info dd { color: var(--dk-text, #e6e9ef); }
+html[data-theme="dark"] .or-badge-label, html[data-theme="dark"] .or-info dt { color: var(--dk-muted, #9aa6b8); }
+html[data-theme="dark"] .or-card-title { background: var(--dk-surface-3, #232d3d); border-bottom-color: var(--dk-border, #2d3748); color: var(--dk-text, #e6e9ef); }
+html[data-theme="dark"] .or-patient { border-color: var(--dk-border, #2d3748); }
+html[data-theme="dark"] .or-avatar { background: var(--dk-surface-3, #232d3d); }
+html[data-theme="dark"] .or-field > label { color: var(--dk-muted, #9aa6b8); }
+html[data-theme="dark"] .or-page input.or-input { background: var(--dk-surface-3, #232d3d) !important; color: var(--dk-text, #e6e9ef); border-color: var(--dk-border, #2d3748) !important; }
+html[data-theme="dark"] .or-page input.or-input[disabled], html[data-theme="dark"] .or-page input.or-input[readonly] { background: var(--dk-surface-1, #161d29) !important; }
+
+.or-actions > div:has(> input[style*="display: none"]), .or-actions > div:has(> input[style*="display:none"]) { display: none; }
+
+/* phones: let the title-line badges wrap instead of running off the screen */
+@media (max-width: 767px) { .pr-meta-bar:has(.or-badge) .meta-right { flex-wrap: wrap; justify-content: flex-start; gap: 6px; } }

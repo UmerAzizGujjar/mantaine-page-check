@@ -1,7 +1,7 @@
 ﻿<%@ Page Title="" Language="C#" MasterPageFile="~/Site.Master" AutoEventWireup="true" CodeBehind="EmergencyRefund.aspx.cs" Inherits="PMS.Modules.PatientManagement.EmergencyRefund" %>
 
 <asp:Content ID="Content1" ContentPlaceHolderID="HeadContent" runat="server">
-    <link href="../../wwwroot/THEME_TIBBIT/CustomCSS/Refund.css" rel="stylesheet" />
+    <link href="../../wwwroot/THEME_TIBBIT/CustomCSS/emergency-refund.css" rel="stylesheet" />
     <script type="text/javascript">          
         $(document).ready(function () {
             var urlParams = new URLSearchParams(window.location.search);
@@ -250,129 +250,115 @@
     </script>
 </asp:Content>
 <asp:Content ID="Content2" ContentPlaceHolderID="MainContent" runat="server">
-    <div class="container-fluid">
+    <div class="er-page">
         <input type="hidden" id="hdRegPatId" />
         <input type="hidden" id="hdPatientID" />
         <input type="hidden" id="txtRefundDate" class="datepicker" />
 
-        <div class="bp-meta-bar">
-            <div class="bp-meta-title">
-                <i class="fa fa-ambulance"></i>
-                <span>Emergency Refund</span>
-                <span class="bp-badge bp-badge--pending" id="refundStatusBadge">New Refund</span>
-            </div>
-            <div class="bp-meta-actions">
-                <button type="button" class="bp-meta-btn bp-meta-btn--search" id="btnSearch" onclick="GetPatientDetailByEmergencyNO()">
-                    <i class="fa fa-search"></i> Search Patient
-                </button>
+        <!-- Title line: the master page puts the page title in the empty left side; the badges sit on the right -->
+        <div class="pr-meta-bar">
+            <div class="meta-left"></div>
+            <div class="meta-right">
+                <div class="er-badge"><span class="er-badge-label">MR No</span><span class="er-badge-value" id="badgeRfMr">---</span></div>
+                <div class="er-badge"><span class="er-badge-label">Total Refund</span><span class="er-badge-value" id="badgeRfTotal">0.00</span></div>
+                <div class="er-badge"><span class="er-badge-label">Status</span><span class="er-badge-value" id="refundStatusBadge">New Refund</span></div>
             </div>
         </div>
 
-        <div class="bp-bento">
-            <div class="bp-card">
-                <div class="bp-card-header">
-                    <i class="fa fa-user-circle"></i>
-                    <span>Patient Information</span>
-                </div>
-                <div class="bp-card-body">
-                    <div class="bp-patient">
-                        <div class="bp-patient-avatar">
-                            <img src="~../../../../wwwroot/SOURCE_IMAGES/DASHBOARD_ICONS/billing2.png" alt="Patient" id="patientImage" />
-                        </div>
-                        <div class="bp-patient-info">
-                            <div class="bp-patient-name" id="lblPatienName">Patient Name</div>
-                            <dl class="bp-patient-grid">
-                                <dt>Emerg No</dt>
-                                <dd><input type="text" id="txtEmergency_NO" class="bp-input" style="height:26px;padding:3px 7px;" /></dd>
-                                <dt>Contact</dt><dd id="lblContactNo"></dd>
-                                <dt>Gender</dt><dd id="lblGender"></dd>
-                                <dt>Reg Date</dt><dd id="lblRegDate"></dd>
-                                <dt>MR No</dt><dd id="lblMRNo"></dd>
-                            </dl>
+        <div class="er-layout">
+            <section class="er-card">
+                <h5 class="er-card-title"><i class="fa fa-user-circle"></i> Patient Information</h5>
+                <div class="er-patient">
+                    <div class="er-avatar">
+                        <img src="~../../../../wwwroot/SOURCE_IMAGES/DASHBOARD_ICONS/billing2.png" alt="Patient" id="patientImage" />
+                    </div>
+                    <div class="er-who">
+                        <div class="er-name" id="lblPatienName">Patient Name</div>
+                        <div class="er-search">
+                            <div class="er-field">
+                                <label for="txtEmergency_NO">Emergency No</label>
+                                <input type="text" id="txtEmergency_NO" class="er-input" autocomplete="off" />
+                            </div>
+                            <button type="button" class="er-search-btn" id="btnSearch" onclick="GetPatientDetailByEmergencyNO()"><i class="fa fa-search"></i> Search Patient</button>
                         </div>
                     </div>
                 </div>
-            </div>
+                <dl class="er-info">
+                    <div><dt>MR No</dt><dd id="lblMRNo"></dd></div>
+                    <div><dt>Age</dt><dd id="lblAgeYears"></dd></div>
+                    <div><dt>Gender</dt><dd id="lblGender"></dd></div>
+                    <div><dt>Contact</dt><dd id="lblContactNo"></dd></div>
+                    <div><dt>Reg Date</dt><dd id="lblRegDate"></dd></div>
+                    <div><dt>Patient Category</dt><dd id="lblPatientCategory"></dd></div>
+                    <div><dt>Department</dt><dd id="lblDepartment"></dd></div>
+                    <div class="er-wide"><dt>Address</dt><dd id="lblAddress"></dd></div>
+                </dl>
+            </section>
 
-            <div class="bp-card">
-                <div class="bp-card-header">
-                    <i class="fa fa-info-circle"></i>
-                    <span>Additional Details</span>
-                </div>
-                <div class="bp-card-body" style="padding:0;">
-                    <div class="bp-summary-row">
-                        <span class="bp-summary-label">Age</span>
-                        <span id="lblAgeYears" class="bp-summary-value bp-summary-value--readonly"></span>
+            <section class="er-card">
+                <h5 class="er-card-title"><i class="fa fa-file-text-o"></i> Original Amounts</h5>
+                <div class="er-grid er-grid-1">
+                    <div class="er-field er-figure er-figure-main">
+                        <label for="txtActualAmount">Actual Amount</label>
+                        <input type="text" id="txtActualAmount" class="er-input" disabled="disabled" />
                     </div>
-                    <div class="bp-summary-row">
-                        <span class="bp-summary-label">Address</span>
-                        <span id="lblAddress" style="margin-left:auto;color:var(--bp-text);font-weight:600;text-align:right;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;max-width:65%;"></span>
+                    <div class="er-field er-figure">
+                        <label for="txtDoctorAmount">Doctor Share</label>
+                        <input type="text" id="txtDoctorAmount" class="er-input" disabled="disabled" />
                     </div>
-                    <div class="bp-summary-row">
-                        <span class="bp-summary-label">Patient Category</span>
-                        <span id="lblPatientCategory" style="margin-left:auto;color:var(--bp-text);font-weight:600;"></span>
-                    </div>
-                    <div class="bp-summary-row">
-                        <span class="bp-summary-label">Department</span>
-                        <span id="lblDepartment" style="margin-left:auto;color:var(--bp-text);font-weight:600;"></span>
+                    <div class="er-field er-figure">
+                        <label for="txtHospitalShare">Hospital Share</label>
+                        <input type="text" id="txtHospitalShare" class="er-input" disabled="disabled" />
                     </div>
                 </div>
-            </div>
+            </section>
         </div>
 
-        <div class="bp-card">
-            <div class="bp-card-header">
-                <i class="fa fa-money"></i>
-                <span>Refund Details</span>
-            </div>
-            <div class="bp-card-body">
-                <div class="bp-bento bp-bento--4" style="gap:12px;">
-                    <div>
-                        <label class="bp-summary-label" style="display:block;margin-bottom:4px;">Doctor Share</label>
-                        <input type="text" id="txtDoctorAmount" class="bp-input" style="text-align:right;" disabled="disabled" />
-                    </div>
-                    <div>
-                        <label class="bp-summary-label" style="display:block;margin-bottom:4px;">Hospital Share</label>
-                        <input type="text" id="txtHospitalShare" class="bp-input" style="text-align:right;" disabled="disabled" />
-                    </div>
-                    <div>
-                        <label class="bp-summary-label" style="display:block;margin-bottom:4px;">Actual Amount</label>
-                        <input type="text" id="txtActualAmount" class="bp-input" style="text-align:right;" disabled="disabled" />
-                    </div>
-                    <div>
-                        <label class="bp-summary-label" style="display:block;margin-bottom:4px;">Hospital Refund</label>
-                        <input type="text" id="txtHospitalRefund" class="bp-input" style="text-align:right;" />
-                    </div>
-                    <div>
-                        <label class="bp-summary-label" style="display:block;margin-bottom:4px;">Doctor Refund</label>
-                        <input type="text" id="txtDoctorRefund" class="bp-input" style="text-align:right;" />
-                    </div>
-                    <div>
-                        <label class="bp-summary-label" style="display:block;margin-bottom:4px;">Total Refund</label>
-                        <input type="text" id="TotalRefundAmount" class="bp-input" style="text-align:right;font-weight:700;color:var(--bp-primary);" disabled="disabled" />
-                    </div>
-                    <div>
-                        <label class="bp-summary-label" style="display:block;margin-bottom:4px;">Remarks</label>
-                        <input type="text" id="txtRemarks" class="bp-input" />
-                    </div>
+        <section class="er-card">
+            <h5 class="er-card-title"><i class="fa fa-money"></i> Refund Details</h5>
+            <div class="er-grid">
+                <div class="er-field">
+                    <label for="txtHospitalRefund">Hospital Refund</label>
+                    <input type="text" id="txtHospitalRefund" class="er-input er-num" />
+                </div>
+                <div class="er-field">
+                    <label for="txtDoctorRefund">Doctor Refund</label>
+                    <input type="text" id="txtDoctorRefund" class="er-input er-num" />
+                </div>
+                <div class="er-field er-figure er-figure-main">
+                    <label for="TotalRefundAmount">Total Refund</label>
+                    <input type="text" id="TotalRefundAmount" class="er-input" disabled="disabled" />
+                </div>
+                <div class="er-field er-span-all">
+                    <label for="txtRemarks">Remarks</label>
+                    <input type="text" id="txtRemarks" class="er-input" />
                 </div>
             </div>
-        </div>
+        </section>
 
-        <div class="row mt-3">
-            <div class="col-lg-8">
-                <div class="row">
-                    <div class="col-lg-2 col-md-3 col-sm-6">
-                        <input type="button" value="Save" onclick="SaveEmergencyRecord()" id="btnSave" class="btn btn-primry" />
-                    </div>
-                    <div class="col-lg-2 col-md-3 col-sm-6">
-                        <input type="button" value="List View" class="btn btn-primry" onclick="window.open('EmergencyRefund_List.aspx')" />
-                    </div>
-                    <div class="col-lg-2 col-md-2 col-sm-3">
-                        <input type="button" id="btnPrint" class="btn btn-primry" onclick="PrintRefund()" value="Print" style="display: none" />
-                    </div>
-                </div>
+        <div class="er-actions">
+            <div>
+                <input type="button" value="Save" onclick="SaveEmergencyRecord()" id="btnSave" class="btn btn-primry" />
+            </div>
+            <div>
+                <input type="button" value="List View" class="btn btn-primry" onclick="window.open('EmergencyRefund_List.aspx')" />
+            </div>
+            <div>
+                <input type="button" id="btnPrint" class="btn btn-primry" onclick="PrintRefund()" value="Print" style="display: none" />
             </div>
         </div>
     </div>
+
+    <script type="text/javascript">
+        // title-line badges follow the form (the page script fills the fields in after loading)
+        function syncRefundBadges() {
+            $('#badgeRfMr').text($('#lblMRNo').text() || '---');
+            $('#badgeRfTotal').text($('#TotalRefundAmount').val() || '0.00');
+            $('#refundStatusBadge').text($('#btnSave').val() === 'Update' ? 'Saved' : 'New Refund');
+        }
+        $(function () {
+            syncRefundBadges();
+            setInterval(syncRefundBadges, 600);
+        });
+    </script>
 </asp:Content>
