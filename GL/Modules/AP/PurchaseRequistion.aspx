@@ -1,8 +1,8 @@
 ﻿<%@ Page Title="" Language="C#" MasterPageFile="~/Site.Master" AutoEventWireup="true" CodeBehind="PurchaseRequistion.aspx.cs" Inherits="PMS.AP.PurchaseRequistion" %>
 
 <asp:Content ID="Content1" ContentPlaceHolderID="HeadContent" runat="server">
-       <link href="../../wwwroot/THEME_TIBBIT/CustomCSS/PR.css" rel="stylesheet" />
-       <link href="../../wwwroot/THEME_TIBBIT/CustomCSS/custom-modals.css" rel="stylesheet" />
+       <link href="../../wwwroot/THEME_TIBBIT/CustomCSS/purchase-requisition.css?v=20261022" rel="stylesheet" />
+       
        <script src="../../wwwroot/lib/jquery/itemsearch.boost.js?v=<%= System.IO.File.GetLastWriteTimeUtc(Server.MapPath("~/wwwroot/lib/jquery/itemsearch.boost.js")).Ticks %>" type="text/javascript"></script>
 </asp:Content>
 <asp:Content ID="Content2" ContentPlaceHolderID="MainContent" runat="server">
@@ -20,11 +20,9 @@
             var prNum  = $('#txtPr_Num').val()  || '—';
             var prDate = $('#txtPR_Date').val() || '—';
             var status = $('#txt_Status').val() || 'Draft';
-            $('#prMetaDisplay').html(
-                'PR&nbsp;#&nbsp;<strong>' + prNum + '</strong>' +
-                '&nbsp;&nbsp;|&nbsp;&nbsp;Date:&nbsp;<strong>' + prDate + '</strong>' +
-                '&nbsp;&nbsp;|&nbsp;&nbsp;Status:&nbsp;<strong>' + status + '</strong>'
-            );
+            $('#badgePrNo').text(prNum);
+            $('#badgePrDate').text(prDate);
+            $('#badgePrStatus').text(status);
         }
 
         /* ─── Source-type toggle ─── */
@@ -1256,317 +1254,265 @@
 
     </script>
 
-    <!-- Hidden inputs — JS still reads/writes these for all data ops -->
-    <input type="hidden" id="txtPr_Num"  name="txtPr_Num"  />
-    <input type="hidden" id="txtPR_Date" name="txtPR_Date" />
-    <input type="hidden" id="txt_Status" name="txt_Status" />
-    <input type="hidden" id="hditemID" />
+        <div class="pq-page">
 
-    <!-- ══════════════════════════════════════════════════════════
-         SYSTEM META-DATA BAR  (top-right, read-only badge strip)
-    ════════════════════════════════════════════════════════════ -->
-    <div class="pr-meta-bar">
-        <!-- Read-only info (edit mode): audit chips + GIR link, same line as PR # / Date / Status -->
-        <div class="pr-audit-group" id="CreatedByRow" style="display:none;">
-            <div class="pr-audit-chip" title="Created By">
-                <i class="fa fa-user-plus"></i> <span id="lblCreatedBy" class="pr-audit-chip-value">-</span>
-            </div>
-            <div class="pr-audit-chip" title="Created Date">
-                <i class="fa fa-calendar-plus-o"></i> <span id="lblCreatedTime" class="pr-audit-chip-value">-</span>
-            </div>
-            <div class="pr-audit-chip" title="Updated By">
-                <i class="fa fa-edit"></i> <span id="lblUpatedBy" class="pr-audit-chip-value">-</span>
-            </div>
-            <div class="pr-audit-chip" title="Updated Date">
-                <i class="fa fa-calendar-check-o"></i> <span id="lblUpatedTime" class="pr-audit-chip-value">-</span>
-            </div>
-        </div>
-        <div class="pr-gir-card" id="girInfoGroup" style="display:none;">
-            <div class="pr-gir-card-left">
-                <i class="fa fa-link"></i> GIR <span id="lblGIRNum">-</span>
-            </div>
-            <div class="pr-gir-card-right">
-                <div class="pr-gir-stat" title="GIR Prepared By">
-                    <i class="fa fa-user-circle"></i> <span id="lblGirCreatedBy">-</span>
+        <!-- Hidden inputs: the page script still reads and writes these for all data operations -->
+        <input type="hidden" id="txtPr_Num" name="txtPr_Num" />
+        <input type="hidden" id="txtPR_Date" name="txtPR_Date" />
+        <input type="hidden" id="txt_Status" name="txt_Status" />
+        <input type="hidden" id="hditemID" />
+
+        <!-- Title line: the master page puts the page title in the empty left side; audit info and badges sit on the right -->
+        <div class="pr-meta-bar">
+            <div class="meta-left"></div>
+            <div class="meta-right">
+                <!-- Read-only info (edit mode): audit chips + GIR link -->
+                <div class="pq-audit-group" id="CreatedByRow" style="display: none;">
+                    <div class="pq-chip" title="Created By"><i class="fa fa-user-plus"></i> <span id="lblCreatedBy">-</span></div>
+                    <div class="pq-chip" title="Created Date"><i class="fa fa-calendar-plus-o"></i> <span id="lblCreatedTime">-</span></div>
+                    <div class="pq-chip" title="Updated By"><i class="fa fa-edit"></i> <span id="lblUpatedBy">-</span></div>
+                    <div class="pq-chip" title="Updated Date"><i class="fa fa-calendar-check-o"></i> <span id="lblUpatedTime">-</span></div>
                 </div>
-                <div class="pr-gir-stat" title="GIR Approved By">
-                    <i class="fa fa-check-circle"></i> <span id="lblGirApprovedBy">-</span>
+                <div class="pq-gir" id="girInfoGroup" style="display: none;">
+                    <span class="pq-gir-main"><i class="fa fa-link"></i> GIR <span id="lblGIRNum">-</span></span>
+                    <span class="pq-chip" title="GIR Prepared By"><i class="fa fa-user-circle"></i> <span id="lblGirCreatedBy">-</span></span>
+                    <span class="pq-chip" title="GIR Approved By"><i class="fa fa-check-circle"></i> <span id="lblGirApprovedBy">-</span></span>
                 </div>
-            </div>
-        </div>
-        <span id="prMetaDisplay" class="pr-meta-text">
-            PR&nbsp;#&nbsp;<strong>—</strong>&nbsp;&nbsp;|&nbsp;&nbsp;Date:&nbsp;<strong>—</strong>&nbsp;&nbsp;|&nbsp;&nbsp;Status:&nbsp;<strong>Draft</strong>
-        </span>
-    </div>
-
-    <form id="item">
-
-        <!-- ══════════════════════════════════════════════════════
-             ROW 1: Warehouse | Department | Priority | Ref # | Remarks
-        ════════════════════════════════════════════════════════ -->
-        <div class="pr-primary-settings">
-            <div id="warehouse" class="pr-field">
-                <label id="LblWarehouse">WareHouse <span class="req-star">*</span></label>
-                <select id="ddlWarehouse" class="form-select">
-                    <option value="0">Please Select</option>
-                </select>
-            </div>
-            <div class="pr-field">
-                <label id="Lbldepartment">Department <span class="req-star">*</span></label>
-                <select id="ddldept" class="form-select"></select>
-            </div>
-            <div class="pr-field">
-                <label id="LblPriority">Priority <span class="req-star">*</span></label>
-                <select id="ddlPriority" class="form-select">
-                    <option value="0">Please Select</option>
-                </select>
-            </div>
-            <div id="mode" class="pr-field">
-                <label id="LblMode">Mode</label>
-                <select id="ddlMode" class="form-select">
-                    <option value="0">Please Select</option>
-                </select>
-            </div>
-            <div class="pr-field">
-                <label id="LblBranch">Branch</label>
-                <select id="ddlBranch" class="form-select">
-                    <option value="0">Please Select</option>
-                </select>
-            </div>
-            <div class="pr-field pr-field-sm">
-                <label id="LblRef_Num">Ref #</label>
-                <input type="text" class="form-control" id="txtRef_Num" name="txtRef_Num" placeholder="Reference no." autocomplete="off" />
-            </div>
-            <div class="pr-field pr-field-lg">
-                <label id="lblrem">Remarks</label>
-                <input id="txtRemarks" type="text" class="form-control" placeholder="Enter any remarks..." />
+                <div class="pq-badge"><span class="pq-badge-label">PR #</span><span class="pq-badge-value" id="badgePrNo">---</span></div>
+                <div class="pq-badge"><span class="pq-badge-label">Date</span><span class="pq-badge-value" id="badgePrDate">---</span></div>
+                <div class="pq-badge"><span class="pq-badge-label">Status</span><span class="pq-badge-value" id="badgePrStatus">Draft</span></div>
+                <span id="prMetaDisplay" style="display: none;"></span>
             </div>
         </div>
 
-        <!-- ══════════════════════════════════════════════════════
-             ROW 2: Source toggle + selector (left) | Attachment (right)
-        ════════════════════════════════════════════════════════ -->
-        <div class="pr-source-attach-row">
+        <div id="item" class="pq-layout">
 
-            <!-- LEFT: toggle pill + item/GIR selector -->
-            <div class="pr-source-left">
-
-                <!-- Radio toggle pill -->
-                <div class="source-toggle-pill" id="sourceTogglePill">
-                    <label class="source-radio-option">
-                        <input type="radio" name="sourceType" id="rdoItem" value="item" checked="checked" />
-                        <span class="source-pill-label">Item</span>
-                    </label>
-                    <label class="source-radio-option">
-                        <input type="radio" name="sourceType" id="rdoGIR" value="gir" />
-                        <span class="source-pill-label">GIR</span>
-                    </label>
-                </div>
-
-                <!-- Item selector (shown by default) -->
-                <div class="source-input-wrap" id="itemInputSection">
-                    <div class="source-inline-group">
-                        <input type="text" class="form-control source-select-input" id="txtItem" name="txtItem" placeholder="Search and select item..." />
-                        <span class="btn-item source-action-btn" id="btnGetAllItems">
-                            <i class="fa fa-th-list"></i> Browse
-                        </span>
+            <!-- Left: requisition details + item source -->
+            <div class="pq-col">
+                <section class="pq-card">
+                    <h5 class="pq-card-title"><i class="fa fa-file-text-o"></i> Requisition Details</h5>
+                    <div class="pq-grid">
+                        <div id="warehouse" class="pq-field">
+                            <label id="LblWarehouse" for="ddlWarehouse">WareHouse <span class="pq-req">*</span></label>
+                            <select id="ddlWarehouse" class="form-control">
+                                <option value="0">Please Select</option>
+                            </select>
+                        </div>
+                        <div class="pq-field">
+                            <label id="Lbldepartment" for="ddldept">Department <span class="pq-req">*</span></label>
+                            <select id="ddldept" class="form-control"></select>
+                        </div>
+                        <div class="pq-field">
+                            <label id="LblPriority" for="ddlPriority">Priority <span class="pq-req">*</span></label>
+                            <select id="ddlPriority" class="form-control">
+                                <option value="0">Please Select</option>
+                            </select>
+                        </div>
+                        <div id="mode" class="pq-field">
+                            <label id="LblMode" for="ddlMode">Mode</label>
+                            <select id="ddlMode" class="form-control">
+                                <option value="0">Please Select</option>
+                            </select>
+                        </div>
+                        <div class="pq-field">
+                            <label id="LblBranch" for="ddlBranch">Branch</label>
+                            <select id="ddlBranch" class="form-control">
+                                <option value="0">Please Select</option>
+                            </select>
+                        </div>
+                        <div class="pq-field">
+                            <label id="LblRef_Num" for="txtRef_Num">Ref #</label>
+                            <input type="text" class="form-control" id="txtRef_Num" name="txtRef_Num" placeholder="Reference no." autocomplete="off" />
+                        </div>
+                        <div class="pq-field pq-span-2">
+                            <label id="lblrem" for="txtRemarks">Remarks</label>
+                            <input id="txtRemarks" type="text" class="form-control" placeholder="Enter any remarks..." autocomplete="off" />
+                        </div>
                     </div>
-                </div>
+                </section>
 
-                <!-- GIR selector (hidden by default) -->
-                <div class="source-input-wrap" id="girInputSection" style="display:none;">
-                    <div class="source-inline-group">
-                        <asp:DropDownList runat="server" ID="ddlGIR" class="form-select source-gir-select"></asp:DropDownList>
-                        <span class="btn-item source-action-btn" id="btnGIR">
-                            <i class="fa fa-plus"></i> Add GIR
-                        </span>
+                <section class="pq-card">
+                    <h5 class="pq-card-title"><i class="fa fa-search"></i> Items Source &amp; Attachment</h5>
+                    <div class="pq-grid" style="align-items: start;">
+                        <div class="pq-field pq-span-2">
+                            <label>Add from</label>
+                            <div class="pq-seg" id="sourceTogglePill">
+                                <label><input type="radio" name="sourceType" id="rdoItem" value="item" checked="checked" /><span>Item</span></label>
+                                <label><input type="radio" name="sourceType" id="rdoGIR" value="gir" /><span>GIR</span></label>
+                            </div>
+
+                            <!-- Item selector (shown by default) -->
+                            <div class="pq-source" id="itemInputSection">
+                                <input type="text" class="form-control" id="txtItem" name="txtItem" placeholder="Search and select item..." />
+                                <span class="btn-item source-action-btn pq-source-btn" id="btnGetAllItems"><i class="fa fa-th-list"></i> Browse</span>
+                            </div>
+
+                            <!-- GIR selector (hidden by default) -->
+                            <div class="pq-source" id="girInputSection" style="display: none;">
+                                <asp:DropDownList runat="server" ID="ddlGIR" class="form-control"></asp:DropDownList>
+                                <span class="btn-item source-action-btn pq-source-btn" id="btnGIR"><i class="fa fa-plus"></i> Add GIR</span>
+                            </div>
+                        </div>
+                        <div class="pq-field pq-span-2">
+                            <label for="chosePrfile">Attachment</label>
+                            <input type="file" id="chosePrfile" name="chosePrfile" class="form-control" />
+                            <asp:HyperLink ID="HyperLink1" runat="server" CssClass="pq-link">
+                                <i class="fa fa-download"></i> Download
+                            </asp:HyperLink>
+                        </div>
                     </div>
-                </div>
-
+                </section>
             </div>
 
-            <!-- RIGHT: fancy attachment card -->
-            <div class="pr-attachment-card">
-                <div class="pr-attachment-icon">
-                    <i class="fa fa-paperclip"></i>
-                </div>
-                <div class="pr-attachment-body">
-                    <span class="pr-attachment-label">Attachment</span>
-                    <input type="file" id="chosePrfile" name="chosePrfile" class="pr-file-input" />
-                </div>
-                <div class="pr-attachment-download">
-                    <asp:HyperLink ID="HyperLink1" runat="server" CssClass="pr-download-btn">
-                        <i class="fa fa-download"></i> Download
-                    </asp:HyperLink>
-                </div>
-            </div>
-
-        </div>
-
-    </form>
-
-    <!-- ══════════════════════════════════════════════════════════
-         ITEMS TABLE
-    ════════════════════════════════════════════════════════════ -->
-    <div id="ITEMTable">
-        <table class="table table-bordered table-striped" id="tblPackage">
-            <thead>
-                <tr>
-                    <th style="width:40px;  text-align:center;">Sr</th>
-                    <th style="width:86px;  text-align:left;">Item Code</th>
-                    <th style="text-align:left;">Description</th>
-                    <th style="width:62px;  text-align:right;">Stock</th>
-                    <th style="width:74px;  text-align:right;">UOM Qty</th>
-                    <th style="width:80px;  text-align:right;">Qty</th>
-                    <th style="width:54px;  text-align:left;">MOU</th>
-                    <th style="width:90px;  text-align:right;">Unit Price</th>
-                    <th style="width:102px; text-align:right;">Est. Cost</th>
-                    <th style="width:126px; text-align:left;">Required Date</th>
-                    <th style="width:90px;  text-align:left;">Last PR No</th>
-                    <th style="width:76px;  text-align:right;">Last Qty</th>
-                    <th style="width:106px; text-align:left;">Last PR Date</th>
-                    <th style="width:160px; text-align:left;">Remarks</th>
-                    <th style="width:54px;  text-align:center;">Action</th>
-                    <th style="display:none;">MaterialRequestDetail Id</th>
-                    <th style="display:none;">MaterialRequest Id</th>
-                    <th style="display:none;">Req Num</th>
-                </tr>
-            </thead>
-            <tbody id="tblbodyPackage"></tbody>
-        </table>
-    </div>
-
-    <!-- ══════════════════════════════════════════════════════════
-         TOTALS BAR  (outside table, below the scrollable area)
-    ════════════════════════════════════════════════════════════ -->
-    <div class="pr-totals-bar">
-        <span class="pr-totals-bar-label">Totals</span>
-        <div class="pr-totals-bar-fields">
-            <div class="pr-totals-bar-item">
-                <label>Total Qty</label>
-                <input type="text" id="totQty" name="totQty" readonly="readonly" class="pr-total-input" placeholder="0.00" />
-            </div>
-            <div class="pr-totals-bar-item">
-                <label>Total Cost</label>
-                <input type="text" id="totCost" name="totCost" readonly="readonly" class="pr-total-input" placeholder="0.00" />
-            </div>
-        </div>
-    </div>
-
-    <!-- ══════════════════════════════════════════════════════════
-         ACTION BUTTONS
-    ════════════════════════════════════════════════════════════ -->
-    <div class="row pr-action-buttons">
-        <div class="col-lg-2 col-md-4 col-sm-12">
-            <input type="button" class="btn btn-primry" value="Save" id="btnsave" onclick="SaveTest()" />
-        </div>
-        <div class="col-lg-2 col-md-4 col-sm-12">
-            <input type="button" class="btn btn-primry" value="Replicate" id="btnReplicate" style="display:none;" />
-        </div>
-        <div class="col-lg-2 col-md-4 col-sm-12">
-            <input type="button" class="btn-gray" value="List" onclick="window.location = 'PurchaseRequistionView.aspx'" />
-        </div>
-        <div class="col-lg-2 col-md-4 col-sm-12">
-            <input type="button" class="btn btn-yellow" value="New" onclick="window.location = 'PurchaseRequistion.aspx'" />
-        </div>
-        <div class="col-lg-2 col-md-4 col-sm-12">
-            <input type="button" value="Print" class="btn-primry" id="btn_Print" onclick="PrintPurchaseRequisitionDetail();" />
-        </div>
-        <div class="col-lg-2 col-md-4 col-sm-12">
-            <input type="button" class="btn-primry" value="Approve" style="display:none;" id="btnApprove" onclick="ApprovePRFromEdit()" />
-        </div>
-        <div class="col-lg-2 col-md-4 col-sm-12">
-            <input type="button" class="btn-primry" value="Unnaprove" style="display:none;" id="btnUnApprove" onclick="UnApprovePR()" />
-        </div>
-    </div>
-
-    <!-- ══════════════════════════════════════════════════════════
-         MODAL: Browse Items
-    ════════════════════════════════════════════════════════════ -->
-    <div class="modal fade" id="itemsModal" tabindex="-1" aria-labelledby="itemsModalLabel">
-        <div class="modal-dialog modal-lg custom-modal-dialog">
-            <div class="modal-content custom-modal-content">
-                <div class="modal-header custom-modal-header">
-                    <div class="custom-modal-title-wrap">
-                        <span class="custom-modal-icon"><i class="fa fa-cubes"></i></span>
-                        <h4 class="modal-title custom-modal-title" id="itemsModalLabel">Browse Items</h4>
+            <!-- Right: totals -->
+            <div class="pq-col">
+                <section class="pq-card">
+                    <h5 class="pq-card-title"><i class="fa fa-calculator"></i> Totals</h5>
+                    <div class="pq-grid" style="grid-template-columns: minmax(0, 1fr);">
+                        <div class="pq-field pq-figure">
+                            <label for="totQty">Total Qty</label>
+                            <input type="text" id="totQty" name="totQty" readonly="readonly" class="form-control" placeholder="0.00" />
+                        </div>
+                        <div class="pq-field pq-figure pq-figure-main">
+                            <label for="totCost">Total Cost</label>
+                            <input type="text" id="totCost" name="totCost" readonly="readonly" class="form-control" placeholder="0.00" />
+                        </div>
                     </div>
-                    <button type="button" class="custom-modal-close" data-dismiss="modal" aria-label="Close">
-                        <i class="fa fa-times"></i>
-                    </button>
-                </div>
-                <div class="modal-body custom-modal-body">
-                    <div class="custom-modal-search-wrap">
-                        <span class="custom-modal-search-icon"><i class="fa fa-search"></i></span>
-                        <input type="text" id="searchInput" class="custom-modal-search" placeholder="Search by code or description..." />
+                </section>
+            </div>
+        </div>
+
+        <!-- Items -->
+        <section class="pq-card">
+            <h5 class="pq-card-title"><i class="fa fa-list-alt"></i> Items</h5>
+            <div id="ITEMTable" class="pq-table-wrap">
+                <table class="table table-hover pq-table" id="tblPackage">
+                    <thead>
+                        <tr>
+                            <th style="width: 40px; text-align: center;">Sr</th>
+                            <th style="width: 86px; text-align: left;">Item Code</th>
+                            <th style="text-align: left;">Description</th>
+                            <th style="width: 62px; text-align: right;">Stock</th>
+                            <th style="width: 74px; text-align: right;">UOM Qty</th>
+                            <th style="width: 80px; text-align: right;">Qty</th>
+                            <th style="width: 54px; text-align: left;">MOU</th>
+                            <th style="width: 90px; text-align: right;">Unit Price</th>
+                            <th style="width: 102px; text-align: right;">Est. Cost</th>
+                            <th style="width: 126px; text-align: left;">Required Date</th>
+                            <th style="width: 90px; text-align: left;">Last PR No</th>
+                            <th style="width: 76px; text-align: right;">Last Qty</th>
+                            <th style="width: 106px; text-align: left;">Last PR Date</th>
+                            <th style="width: 160px; text-align: left;">Remarks</th>
+                            <th style="width: 54px; text-align: center;">Action</th>
+                            <th style="display: none;">MaterialRequestDetail Id</th>
+                            <th style="display: none;">MaterialRequest Id</th>
+                            <th style="display: none;">Req Num</th>
+                        </tr>
+                    </thead>
+                    <tbody id="tblbodyPackage"></tbody>
+                </table>
+            </div>
+        </section>
+
+        <!-- Actions -->
+        <div class="row pr-action-buttons">
+            <div class="col-lg-2 col-md-4 col-sm-12">
+                <input type="button" class="btn btn-primry" value="Save" id="btnsave" onclick="SaveTest()" />
+            </div>
+            <div class="col-lg-2 col-md-4 col-sm-12">
+                <input type="button" class="btn btn-primry" value="Replicate" id="btnReplicate" style="display: none;" />
+            </div>
+            <div class="col-lg-2 col-md-4 col-sm-12">
+                <input type="button" class="btn-gray" value="List" onclick="window.location = 'PurchaseRequistionView.aspx'" />
+            </div>
+            <div class="col-lg-2 col-md-4 col-sm-12">
+                <input type="button" class="btn btn-yellow" value="New" onclick="window.location = 'PurchaseRequistion.aspx'" />
+            </div>
+            <div class="col-lg-2 col-md-4 col-sm-12">
+                <input type="button" value="Print" class="btn-primry" id="btn_Print" onclick="PrintPurchaseRequisitionDetail();" />
+            </div>
+            <div class="col-lg-2 col-md-4 col-sm-12">
+                <input type="button" class="btn-primry" value="Approve" style="display: none;" id="btnApprove" onclick="ApprovePRFromEdit()" />
+            </div>
+            <div class="col-lg-2 col-md-4 col-sm-12">
+                <input type="button" class="btn-primry" value="Unnaprove" style="display: none;" id="btnUnApprove" onclick="UnApprovePR()" />
+            </div>
+        </div>
+
+        <!-- Browse items -->
+        <div class="modal fade pq-modal" id="itemsModal" tabindex="-1" aria-labelledby="itemsModalLabel">
+            <div class="modal-dialog modal-lg">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                        <h4 class="modal-title" id="itemsModalLabel">Browse Items</h4>
                     </div>
-                    <div class="custom-modal-table-wrap">
-                        <table class="table custom-modal-table" id="itemsTable">
-                            <thead>
-                                <tr>
-                                    <th style="width:50px;">Add</th>
-                                    <th style="display:none;">ID</th>
-                                    <th>Item Code</th>
-                                    <th>Description</th>
-                                    <th style="width:80px;">Unit</th>
-                                    <th style="width:80px; text-align:right;">UOM Qty</th>
-                                    <th style="display:none;">Last Qty</th>
-                                    <th style="display:none;">Last PR Date</th>
-                                    <th style="display:none;">Last PR No</th>
-                                </tr>
-                            </thead>
-                            <tbody id="itemsTableBody"></tbody>
-                        </table>
+                    <div class="modal-body">
+                        <div class="pq-modal-search">
+                            <i class="fa fa-search"></i>
+                            <input type="text" id="searchInput" class="form-control" placeholder="Search by code or description..." autocomplete="off" />
+                        </div>
+                        <div class="pq-modal-scroll">
+                            <table class="table" id="itemsTable">
+                                <thead>
+                                    <tr>
+                                        <th style="width: 50px;">Add</th>
+                                        <th style="display: none;">ID</th>
+                                        <th>Item Code</th>
+                                        <th>Description</th>
+                                        <th style="width: 80px;">Unit</th>
+                                        <th style="width: 80px; text-align: right;">UOM Qty</th>
+                                        <th style="display: none;">Last Qty</th>
+                                        <th style="display: none;">Last PR Date</th>
+                                        <th style="display: none;">Last PR No</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="itemsTableBody"></tbody>
+                            </table>
+                        </div>
                     </div>
                 </div>
             </div>
         </div>
-    </div>
 
-    <!-- ══════════════════════════════════════════════════════════
-         MODAL: GIR Items
-    ════════════════════════════════════════════════════════════ -->
-    <div id="GIRModal" class="modal fade" tabindex="-1" role="dialog">
-        <div class="modal-dialog custom-modal-dialog custom-modal-dialog-xl" role="document">
-            <div class="modal-content custom-modal-content">
-                <div class="modal-header custom-modal-header">
-                    <div class="custom-modal-title-wrap">
-                        <span class="custom-modal-icon"><i class="fa fa-list-alt"></i></span>
-                        <h4 class="modal-title custom-modal-title">GIR Items</h4>
+        <!-- GIR items -->
+        <div id="GIRModal" class="modal fade pq-modal" tabindex="-1" role="dialog">
+            <div class="modal-dialog modal-lg" role="document">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                        <h4 class="modal-title">GIR Items</h4>
                     </div>
-                    <button type="button" class="custom-modal-close" data-dismiss="modal" aria-label="Close">
-                        <i class="fa fa-times"></i>
-                    </button>
-                </div>
-                <div class="modal-body custom-modal-body">
-                    <div class="custom-modal-table-wrap">
-                        <table class="table custom-modal-table" id="tblGIRDetails">
-                            <thead>
-                                <tr>
-                                    
-                                    <th style="width: 50px;">
-                                        <button type="button" id="GIRallItemsUpload" class="btn-item-pick" title="Select All">
-                                            <i class="fa fa-plus-circle"></i>
-                                        </button>
-                                    </th>
-                                    <th style="display:none;">MaterialRequestDetail Id</th>
-                                    <th style="display:none;">MaterialRequest Id</th>
-                                    <th>Request #</th>
-                                    <th style="display:none;">Item Id</th>
-                                    <th>Item Code</th>
-                                    <th>Description</th>
-                                    <th style="width:70px;">Unit</th>
-                                    <th style="width:70px; text-align:right;">UOM Qty</th>
-                                    <th style="width:70px; text-align:right;">QTY</th>
-                                    <th style="width:110px; text-align:right;">Last Rate</th>
-                                </tr>
-                            </thead>
-                            <tbody id="GIRItemTableBody"></tbody>
-                        </table>
+                    <div class="modal-body">
+                        <div class="pq-modal-scroll">
+                            <table class="table" id="tblGIRDetails">
+                                <thead>
+                                    <tr>
+                                        <th style="width: 50px;">
+                                            <button type="button" id="GIRallItemsUpload" class="btn-item-pick" title="Select All">
+                                                <i class="fa fa-plus-circle"></i>
+                                            </button>
+                                        </th>
+                                        <th style="display: none;">MaterialRequestDetail Id</th>
+                                        <th style="display: none;">MaterialRequest Id</th>
+                                        <th>Request #</th>
+                                        <th style="display: none;">Item Id</th>
+                                        <th>Item Code</th>
+                                        <th>Description</th>
+                                        <th style="width: 70px;">Unit</th>
+                                        <th style="width: 70px; text-align: right;">UOM Qty</th>
+                                        <th style="width: 70px; text-align: right;">QTY</th>
+                                        <th style="width: 110px; text-align: right;">Last Rate</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="GIRItemTableBody"></tbody>
+                            </table>
+                        </div>
                     </div>
                 </div>
             </div>
         </div>
+
     </div>
 
 </asp:Content>

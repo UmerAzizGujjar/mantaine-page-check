@@ -2,7 +2,91 @@
 
 <asp:Content ID="Content1" ContentPlaceHolderID="HeadContent" runat="server">
 
-     <link href="../../wwwroot/lib/sweetalert/swalalert.css" rel="stylesheet" />
+    <link href="../../wwwroot/lib/sweetalert/swalalert.css" rel="stylesheet" />
+    <link href="../../wwwroot/lib/theme/pharmacy-form.css?v=6" rel="stylesheet" />
+    <style type="text/css">
+        /* Panel agreement - built on the shared .ph-card / .ph-grid styles of the pharmacy form */
+        .pa-page { display: flex; flex-direction: column; gap: 16px; width: 100%; margin: 0 0 24px; padding: 0; }
+
+        .pa-head { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 12px 20px; padding: 0 6px; }
+        .pa-head h2 { margin: 0; font-size: 22px; font-weight: 800; color: var(--theme-ink, #1b2a41) !important; }
+        .pa-head p { margin: 2px 0 0; font-size: 13px; color: #6b7686; }
+        .pa-badge {
+            display: inline-flex; align-items: center; gap: 6px; margin-left: 10px; padding: 3px 10px;
+            font-size: 12px; font-weight: 700; vertical-align: middle; border-radius: 999px;
+            color: var(--theme-accent-ink, #2b6a90); background: var(--theme-accent-soft, #e8f1f8);
+        }
+        .pa-actions { display: flex; flex-wrap: wrap; gap: 8px; }
+
+        .pa-btn {
+            display: inline-flex; align-items: center; justify-content: center; gap: 6px;
+            height: 34px; padding: 0 14px; font-size: 13px; font-weight: 700; line-height: 1;
+            white-space: nowrap; cursor: pointer; border-radius: 6px; border: 1px solid transparent;
+            transition: filter .15s ease, box-shadow .15s ease;
+        }
+        /* the global input[type=button] styles are wide/stacked; keep these as compact buttons */
+        .pa-page input.pa-btn { display: inline-flex !important; width: auto !important; min-width: 0 !important; margin: 0 !important; height: 34px !important; padding: 0 16px !important; float: none !important; }
+        .pa-btn:hover { filter: brightness(.95); }
+        .pa-btn:disabled { opacity: .6; cursor: not-allowed; }
+        .pa-btn-primary { color: var(--theme-on-accent, #fff); background: var(--theme-accent, #438eb9); }
+        .pa-btn-outline { color: var(--theme-accent-ink, #2b6a90); background: #fff; border-color: var(--theme-accent, #438eb9); }
+        .pa-btn-quiet { color: #4a5568; background: #eef1f5; border-color: #dde3ea; }
+
+        .pa-top { display: grid; grid-template-columns: minmax(0, 2fr) minmax(0, 1fr); gap: 16px; align-items: stretch; }
+        @media (max-width: 1099px) { .pa-top { grid-template-columns: minmax(0, 1fr); } }
+        .pa-grid-3 { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+        @media (max-width: 699px) { .pa-grid-3 { grid-template-columns: minmax(0, 1fr); } }
+        .pa-req { color: #c0392b; }
+
+        .pa-tools { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 14px; }
+        @media (max-width: 1099px) { .pa-tools { grid-template-columns: minmax(0, 1fr); } }
+        .pa-tool { display: flex; flex-direction: column; gap: 10px; padding: 12px; background: #f8fafc; border: 1px solid #e3e8ee; border-radius: 8px; min-width: 0; }
+        .pa-tool h6 { display: flex; align-items: center; gap: 6px; margin: 0; font-size: 12px; font-weight: 800; letter-spacing: .05em; text-transform: uppercase; color: var(--theme-accent-ink, #2b6a90); }
+        .pa-row { display: grid; grid-template-columns: minmax(0, 1fr) auto; gap: 8px; align-items: end; }
+        .pa-row-2 { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 8px; }
+        .pa-btns { display: flex; flex-wrap: wrap; gap: 8px; }
+        .pa-note { margin: 0; font-size: 11.5px; color: #8a94a6; }
+
+        .pa-filter { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 10px 16px; margin-bottom: 12px; }
+        .pa-filter .pa-search { position: relative; flex: 1 1 260px; max-width: 420px; }
+        .pa-filter .pa-search i { position: absolute; left: 11px; top: 11px; font-size: 13px; color: #8a94a6; pointer-events: none; }
+        .pa-filter .pa-search input.form-control { padding-left: 32px !important; }
+        .pa-count { font-size: 12.5px; font-weight: 700; color: #4a5568; }
+        .pa-state { display: none; padding: 26px 16px; text-align: center; font-size: 13px; color: #8a94a6; }
+        .pa-state i { display: block; margin-bottom: 6px; font-size: 26px; opacity: .6; }
+
+        .pa-table-wrap { max-height: 62vh; overflow: auto; margin: 0 -16px; border-top: 1px solid #e3e8ee; }
+        #tblItemDescription { width: 100%; margin: 0; border-collapse: separate; border-spacing: 0; }
+        #tblItemDescription thead th {
+            position: sticky; top: 0; z-index: 2; padding: 9px 16px;
+            font-size: 11.5px; letter-spacing: .03em; text-transform: uppercase; white-space: nowrap;
+            color: var(--theme-on-accent, #fff); background: var(--theme-accent, #438eb9);
+            border-bottom: 2px solid var(--theme-accent-ink, #2b6a90);
+        }
+        #tblItemDescription thead th.pa-col-rate { width: 200px; text-align: right; }
+        #tblItemDescription thead th.pa-col-act { width: 90px; text-align: center; }
+        #tblItemDescription td { padding: 5px 16px; vertical-align: middle; border-bottom: 1px solid #eef1f5; }
+        #tblItemDescription tbody tr:hover td { background: var(--theme-accent-soft, #f4f8fb); }
+        /* td 1 is the hidden id cell; 2 = name, 3 = rate, 6 = action */
+        #tblItemDescription td:nth-child(6) { text-align: center; }
+        #tblItemDescription input[name="tbltxt_ServicesName"] {
+            border: 0 !important; background: transparent !important; box-shadow: none !important;
+            padding-left: 0 !important; font-weight: 600; cursor: default;
+        }
+        #tblItemDescription input[name="tbltxt_Rate"] { max-width: 168px; margin-left: auto !important; text-align: right; }
+        #tblItemDescription td:nth-child(3) { text-align: right; }
+        #tblItemDescription .pa-del { display: inline-flex; align-items: center; justify-content: center; width: 30px; height: 30px; border-radius: 6px; color: #c0392b; text-decoration: none; }
+        #tblItemDescription .pa-del:hover { background: #fdecea; }
+
+        html[data-theme="dark"] .pa-head h2 { color: var(--dk-text, #e6e9ef); }
+        html[data-theme="dark"] .pa-head p, html[data-theme="dark"] .pa-note, html[data-theme="dark"] .pa-count { color: var(--dk-muted, #9aa6b8); }
+        html[data-theme="dark"] .pa-badge { background: var(--dk-surface-3, #232d3d); color: var(--dk-text, #e6e9ef); }
+        html[data-theme="dark"] .pa-tool { background: var(--dk-surface-3, #232d3d); border-color: var(--dk-border, #2d3748); }
+        html[data-theme="dark"] .pa-btn-outline, html[data-theme="dark"] .pa-btn-quiet { background: var(--dk-surface-3, #232d3d); color: var(--dk-text, #e6e9ef); border-color: var(--dk-border, #2d3748); }
+        html[data-theme="dark"] .pa-table-wrap, html[data-theme="dark"] #tblItemDescription td { border-color: var(--dk-border, #2d3748); }
+        html[data-theme="dark"] #tblItemDescription thead th { background: var(--dk-surface-3, #232d3d); color: var(--dk-text, #e6e9ef); }
+        html[data-theme="dark"] #tblItemDescription tbody tr:hover td { background: var(--dk-surface-3, #232d3d); }
+    </style>
     <script type="text/javascript">
 
         $(document).ready(function () {
@@ -15,10 +99,18 @@
             if (id != "") {
                 $('#btnSave').val('Update');
                 $('#btnReplicate').show();
+                $('#paMode').html('<i class="fa fa-pencil"></i> Editing');
+                $('#paTitle').text('Panel Agreement');
                 LoadPanelData(id);
-                $('#tblItemDescriptionDetail').html('<tr><td colspan="3">Loading services...</td></tr>');
+                $('#paLoading').show();
                 ajaxCall("panelagreement.aspx/loadData", JSON.stringify({ "panelID": id }), getResponseData);
             }
+            $('#txtFilterRates').on('input', filterRates);
+            var rateBody = document.getElementById('tblItemDescriptionDetail');
+            if (rateBody && window.MutationObserver) {
+                new MutationObserver(filterRates).observe(rateBody, { childList: true });
+            }
+            filterRates();
             $('#btnNew').on('click', function () {
 
                 window.location.href = "panelagreement.aspx";
@@ -90,6 +182,7 @@
                     }
 
                     if (valid) {
+                        setSaving(true);
                         $.ajax({
                             type: "POST",
                             url: "panelagreement.aspx/Save",
@@ -111,9 +204,8 @@
                             dataType: "json",
                             success: function (response) {
                                 var data = response.d;
-                                alert("Data has been saved successfully");
-                                window.location.href = "panelagreement.aspx?ID=" + data;
-                            }, error: function (xhr) { showSaveError(xhr); }
+                                showSavedAndGo("panelagreement.aspx?ID=" + data);
+                            }, error: function (xhr) { setSaving(false); showSaveError(xhr); }
                         });
                     }
 
@@ -121,6 +213,36 @@
             })
 
         });
+        // disable the save buttons while a save is running (no double submit)
+        function setSaving(on) {
+            $('#btnSave, #btnReplicate').prop('disabled', on);
+        }
+        function showSavedAndGo(url) {
+            Swal.fire({
+                icon: 'success',
+                title: 'Saved',
+                text: 'Panel agreement saved successfully.',
+                showConfirmButton: false,
+                timer: 1200
+            });
+            setTimeout(function () { window.location.href = url; }, 1300);
+        }
+        // filter the agreed-rates table by name and keep the item count / empty state up to date
+        function filterRates() {
+            var q = $.trim($('#txtFilterRates').val()).toLowerCase();
+            var rows = $('#tblItemDescriptionDetail tr');
+            var shown = 0;
+            rows.each(function () {
+                var name = ($(this).find('input[name="tbltxt_ServicesName"]').val() || '').toLowerCase();
+                var show = !q || name.indexOf(q) > -1;
+                this.style.display = show ? '' : 'none';
+                if (show) shown++;
+            });
+            var total = rows.length;
+            $('#lblRateCount').text(q ? shown + ' of ' + total + ' items' : total + (total == 1 ? ' item' : ' items'));
+            $('#paEmpty').toggle(total == 0 && !$('#paLoading').is(':visible'));
+            $('#paNoMatch').toggle(total > 0 && shown == 0);
+        }
         function showSaveError(xhr) {
             var msg = 'Data could not be saved.';
             try {
@@ -171,6 +293,7 @@
                 }
 
                 if (valid) {
+                    setSaving(true);
                     $.ajax({
                         type: "POST",
                         url: "panelagreement.aspx/Save",
@@ -192,9 +315,8 @@
                         dataType: "json",
                         success: function (response) {
                             var data = response.d;
-                            alert("Data has been saved successfully");
-                            window.location.href = "PanelView.aspx";
-                        }, error: function (xhr) { showSaveError(xhr); }
+                            showSavedAndGo("PanelView.aspx");
+                        }, error: function (xhr) { setSaving(false); showSaveError(xhr); }
                     });
                 }
             }
@@ -240,6 +362,8 @@
                     getResposeParam(resp.d);
                 },
                 error: function (data) {
+                    $('#paLoading').hide();
+                    filterRates();
                     alert("Error");
                 }
             });
@@ -256,6 +380,7 @@
                     var parsed_Data = JSON.parse(response.d);
                     if (parsed_Data) {
                         $("#txtCompanyName").val(parsed_Data.Company_Name || '');
+                        if (parsed_Data.Company_Name) $('#paTitle').text(parsed_Data.Company_Name);
                         $("#txtEmpNo").val(parsed_Data.No_Of_Employees || '');
                         $("#txtEmail").val(parsed_Data.Email || '');
                         $("#txtContactNo").val(parsed_Data.Contact_No || '');
@@ -298,10 +423,10 @@
             var rows = '<tr>' +
                 '<td style="display:none"><input type="hidden" name="tbltxt_ServicesId" id="tbltxt_ServicesId" value="' + itemID + '"/></td>' +
                 '<td>' +
-                '<input type="text" name="tbltxt_ServicesName" id="tbltxt_ServicesName" value="' + itemName + '"/>' +
+                '<input type="text" name="tbltxt_ServicesName" id="tbltxt_ServicesName" value="' + itemName + '" readonly/>' +
                 '</td>' +
                 '<td>' +
-                '<input type="text" name="tbltxt_Rate" id="tbltxt_Description" value="' + Rate + '"/>' +
+                '<input type="text" name="tbltxt_Rate" id="tbltxt_Description" value="' + Rate + '" inputmode="decimal"/>' +
                 '</td>' +
                 '<td style="Display:None">' +
                 '<input type="text"  value="' + testGroupCatVal + '"/>' +
@@ -310,7 +435,7 @@
                 '<input type="text"  value="' + getTestID + '"/>' +
                 '</td>' +
 
-                '<td><a href="javascript:void(0)" onclick="ExcludeFromPayment(this)"><i class="glyphicon glyphicon-trash" style="width:15px !important;font-size: 13px;color:#f30a0a;position:relative;" i=""></i></a>' +
+                '<td><a href="javascript:void(0)" class="pa-del" title="Remove" onclick="ExcludeFromPayment(this)"><i class="fa fa-trash-o" style="font-size:16px"></i></a>' +
                 '</td>' +
                 '</tr>'
             $('#tblItemDescriptionDetail').append(rows);
@@ -403,18 +528,21 @@
                     allRows +=
                         '<tr>' +
                         '<td style="display:none"><input type="hidden" name="tbltxt_ServicesId" value="' + (item.ItemID || '') + '"/></td>' +
-                        '<td><input type="text" name="tbltxt_ServicesName" value="' + (item.Description || '') + '" readonly/></td>' +
-                        '<td><input type="text" name="tbltxt_Rate" value="' + (item.Rate || '0') + '"/></td>' +
+                        '<td><input type="text" name="tbltxt_ServicesName" value="' + $('<div>').text(item.Description || '').html().replace(/"/g, '&quot;') + '" readonly/></td>' +
+                        '<td><input type="text" name="tbltxt_Rate" value="' + (item.Rate || '0') + '" inputmode="decimal"/></td>' +
                         '<td style="display:none"><input type="text" value="' + (item.GroupCategory || '') + '"/></td>' +
                         '<td style="display:none"><input type="text" value="' + (item.TestID || '') + '"/></td>' +
-                        '<td><a href="javascript:void(0)" onclick="ExcludeFromPayment(this)">' +
-                        '<i class="glyphicon glyphicon-trash" style="width:15px !important;font-size: 13px;color:#f30a0a;position:relative;"></i>' +
+                        '<td><a href="javascript:void(0)" class="pa-del" title="Remove" onclick="ExcludeFromPayment(this)">' +
+                        '<i class="fa fa-trash-o" style="font-size:16px"></i>' +
                         '</a></td>' +
                         '</tr>';
                 }
                 $('#tblItemDescriptionDetail').html(allRows);
             } catch (e) {
                 console.error("Error loading service rows:", e);
+            } finally {
+                $('#paLoading').hide();
+                filterRates();
             }
         }
         function ExcludeFromPayment(anchor) {
@@ -652,134 +780,148 @@
 
 </asp:Content>
 <asp:Content ID="Content2" ContentPlaceHolderID="MainContent" runat="server">
-    <div class="row">
-        <div class="col-lg-3 col-md-6 col-sm-12">
-            <label>Company Name</label>
-            <input type="text" name="txtCompanyName" class="input_width form-control" id="txtCompanyName" />
-        </div>
-        <div class="col-lg-3 col-md-6 col-sm-12">
-            <label>No of Employee</label>
-            <input type="text" name="txtEmpNo" class="form-control" id="txtEmpNo" />
+    <div class="pa-page">
+
+        <!-- Page header + actions -->
+        <div class="pa-head">
+            <div>
+                <h2><span id="paTitle">New Panel Agreement</span> <span class="pa-badge" id="paMode"><i class="fa fa-plus-circle"></i> New</span></h2>
+                <p>Agreed rates for services, medicines and tests of a panel company.</p>
+            </div>
+            <div class="pa-actions">
+                <input type="button" class="pa-btn pa-btn-primary" id="btnSave" value="Save" />
+                <input type="button" class="pa-btn pa-btn-outline" id="btnReplicate" value="Replicate" style="display: none;" onclick="ReplicatePanel()" />
+                <input type="button" class="pa-btn pa-btn-quiet" id="btnNew" value="New" />
+                <input type="button" class="pa-btn pa-btn-quiet" id="btnList" value="View List" />
+            </div>
         </div>
 
-        <div class="col-lg-3 col-md-6 col-sm-12">
-            <label>Email</label>
-            <input type="text" name="txtEmail" class="input_width form-control" id="txtEmail" />
+        <!-- Company + rates -->
+        <div class="pa-top">
+            <section class="ph-card">
+                <h5 class="ph-card-title"><i class="fa fa-building-o"></i> Company Details</h5>
+                <div class="ph-grid ph-grid-4">
+                    <div class="ph-field ph-span-2">
+                        <label for="txtCompanyName">Company Name <span class="pa-req">*</span></label>
+                        <input type="text" name="txtCompanyName" class="form-control" id="txtCompanyName" placeholder="Panel company name" autocomplete="off" />
+                    </div>
+                    <div class="ph-field">
+                        <label for="txtEmpNo">No of Employees</label>
+                        <input type="text" name="txtEmpNo" class="form-control" id="txtEmpNo" inputmode="numeric" autocomplete="off" />
+                    </div>
+                    <div class="ph-field">
+                        <label for="ddlGlAccount">GL Account</label>
+                        <select id="ddlGlAccount" class="form-control"></select>
+                    </div>
+                    <div class="ph-field">
+                        <label for="txtContactNo">Contact No</label>
+                        <input type="text" name="txtContactNo" class="form-control" id="txtContactNo" inputmode="tel" autocomplete="off" />
+                    </div>
+                    <div class="ph-field">
+                        <label for="txtEmail">Email</label>
+                        <input type="text" name="txtEmail" class="form-control" id="txtEmail" placeholder="name@company.com" autocomplete="off" />
+                    </div>
+                    <div class="ph-field ph-span-2">
+                        <label for="txtAddress">Address</label>
+                        <input type="text" name="txtAddress" class="form-control" id="txtAddress" autocomplete="off" />
+                    </div>
+                </div>
+            </section>
+
+            <section class="ph-card">
+                <h5 class="ph-card-title"><i class="fa fa-percent"></i> Rates &amp; Discount</h5>
+                <div class="ph-grid pa-grid-3">
+                    <div class="ph-field">
+                        <label for="txtpanelrate">Rate OPD</label>
+                        <input type="text" name="txtrate" class="form-control" id="txtpanelrate" inputmode="decimal" autocomplete="off" />
+                    </div>
+                    <div class="ph-field">
+                        <label for="txtpanelrateEmergency">Rate Emergency</label>
+                        <input type="text" name="txtrate" class="form-control" id="txtpanelrateEmergency" inputmode="decimal" autocomplete="off" />
+                    </div>
+                    <div class="ph-field">
+                        <label for="txtDiscount">Discount</label>
+                        <input type="text" name="txtDiscount" class="form-control" id="txtDiscount" inputmode="decimal" autocomplete="off" />
+                    </div>
+                </div>
+            </section>
         </div>
 
-        <div class="col-lg-2 col-md-6 col-sm-12">
-            <label>Rate OPD</label>
-            <input type="text" name="txtrate" class="input_width form-control" id="txtpanelrate" />
-        </div>
-        <div class="col-lg-1 col-md-6 col-sm-12">
-            <label>Rate Emergency</label>
-            <input type="text" name="txtrate" class="input_width form-control" id="txtpanelrateEmergency" />
-        </div>
+        <!-- Add items to the agreement -->
+        <section class="ph-card">
+            <h5 class="ph-card-title"><i class="fa fa-plus-square-o"></i> Add to Agreement</h5>
+            <div class="pa-tools">
+
+                <div class="pa-tool">
+                    <h6><i class="fa fa-stethoscope"></i> <span id="lb_services">Services</span></h6>
+                    <div class="ph-field">
+                        <select id="ddltble_Services" name="ddltble_Services" class="form-control" onchange="onSelection()"></select>
+                    </div>
+                    <div class="pa-btns">
+                        <input type="button" onclick="Addrow()" class="pa-btn pa-btn-primary" value="Add" id="AddAccount" />
+                        <input type="button" onclick="AddAllrow()" class="pa-btn pa-btn-outline" value="Add All Services" id="AddallAccount" />
+                    </div>
+                </div>
+
+                <div class="pa-tool">
+                    <h6><i class="fa fa-medkit"></i> <span id="lb_medicine">Medicines</span></h6>
+                    <div class="ph-field">
+                        <select id="ddlMedicine" name="ddlMedicine" class="form-control"></select>
+                    </div>
+                    <div class="pa-btns">
+                        <input type="button" onclick="AddMedicineRow()" class="pa-btn pa-btn-primary" value="Add Medicine" id="AddMedicine" />
+                    </div>
+                    <p class="pa-note">Type 2 or more letters of the name or code.</p>
+                </div>
+
+                <div class="pa-tool">
+                    <h6><i class="fa fa-flask"></i> Tests &amp; Procedures</h6>
+                    <div class="pa-row-2">
+                        <div class="ph-field">
+                            <select id="ddlMainTestDepartment" class="form-control" onchange="LoadTestByDepartment()">
+                                <option value="">Select Department</option>
+                            </select>
+                        </div>
+                        <div class="ph-field">
+                            <select id="ddlTestList" class="form-control"></select>
+                        </div>
+                    </div>
+                    <div class="pa-btns">
+                        <input type="button" onclick="AddTestRow()" class="pa-btn pa-btn-primary" value="Add Test" id="AddTests" />
+                        <input type="button" onclick="AddallTest()" class="pa-btn pa-btn-outline" value="Add All Tests" id="AddallTests" />
+                    </div>
+                </div>
+
+            </div>
+        </section>
+
+        <!-- Agreed rates -->
+        <section class="ph-card">
+            <h5 class="ph-card-title"><i class="fa fa-list"></i> Agreed Rates</h5>
+            <div class="pa-filter">
+                <div class="pa-search">
+                    <i class="fa fa-search"></i>
+                    <input type="text" id="txtFilterRates" class="form-control" placeholder="Filter by name" autocomplete="off" />
+                </div>
+                <span class="pa-count" id="lblRateCount">0 items</span>
+            </div>
+            <div class="pa-table-wrap">
+                <table id="tblItemDescription">
+                    <thead>
+                        <tr>
+                            <th>Name</th>
+                            <th class="pa-col-rate">Rate</th>
+                            <th class="pa-col-act">Action</th>
+                        </tr>
+                    </thead>
+                    <tbody id="tblItemDescriptionDetail">
+                    </tbody>
+                </table>
+                <div class="pa-state" id="paLoading"><i class="fa fa-spinner fa-spin"></i> Loading agreed rates...</div>
+                <div class="pa-state" id="paEmpty" style="display: block;"><i class="fa fa-inbox"></i> No items yet. Add services, medicines or tests above.</div>
+                <div class="pa-state" id="paNoMatch"><i class="fa fa-search"></i> No item matches the filter.</div>
+            </div>
+        </section>
+
     </div>
-
-    <div class="row">
-        <div class="col-lg-3 col-md-6 col-sm-12">
-            <label>Contact No</label>
-            <input type="text" name="txtContactNo" class="form-control" id="txtContactNo" />
-        </div>
-
-        <div class="col-lg-3 col-md-6 col-sm-12">
-            <label>Address</label>
-            <input type="text" name="txtAddress" class="input_width form-control" id="txtAddress" />
-        </div>
-
-        <div class="col-lg-3 col-md-6 col-sm-12">
-            <label>Discount</label>
-            <input type="text" name="txtDiscount" class="form-control" id="txtDiscount" />
-        </div>
-
-        <div class="col-lg-3 col-md-6 col-sm-12">
-            <label>Gl Account</label>
-            <select id="ddlGlAccount"></select>
-        </div>
-    </div>
-
-    <div class="row">
-        <div class="col-lg-2 col-md-3 col-sm-4">
-            <label id="lb_services">Services</label>
-            <select id="ddltble_Services" name="ddltble_Services" onchange="onSelection()"></select>
-
-        </div>
-        <div class="col-lg-1 col-md-3 col-sm-4">
-            <label></label>
-            <input type="button" onclick="Addrow()" class="btn btn-primry" value="Add" id="AddAccount" />
-        </div>
-        <div class="col-lg-2 col-md-3 col-sm-4">
-            <label></label>
-            <input type="button" onclick="AddAllrow()" class="btn btn-primry" value="Add All Services" id="AddallAccount" />
-        </div>
-        <div class="col-lg-2 col-md-3 col-sm-4">
-            <label>Test Department</label>
-            <select id="ddlMainTestDepartment" onchange="LoadTestByDepartment()">
-                <option value="">Select Department</option>
-            </select>
-
-        </div>
-        <div class="col-lg-2 col-md-3 col-sm-4">
-            <label id="test">Test</label>
-            <select id="ddlTestList">
-            </select>
-        </div>
-        <div class="col-lg-1 col-md-3 col-sm-4">
-            <label></label>
-            <input type="button" onclick="AddTestRow()" class="btn btn-primry" value="Add Test" id="AddTests" />
-        </div>
-        <div class="col-lg-2 col-md-3 col-sm-4">
-            <label></label>
-            <input type="button" onclick="AddallTest()" class="btn btn-primry" value="Add All Test" id="AddallTests" />
-        </div>
-    </div>
-    <div class="row">
-        <div class="col-lg-3 col-md-6 col-sm-8">
-            <label id="lb_medicine">Medicine</label>
-            <select id="ddlMedicine" name="ddlMedicine"></select>
-        </div>
-        <div class="col-lg-1 col-md-3 col-sm-4">
-            <label></label>
-            <input type="button" onclick="AddMedicineRow()" class="btn btn-primry" value="Add Medicine" id="AddMedicine" />
-        </div>
-    </div>
-    <div class="row">
-        <div class="col-xs-12 col-sm-12 col-lg-12 col-md-12" style="overflow: scroll; width: 100%;">
-
-
-            <table class="table table-bordered" id="tblItemDescription">
-                <thead>
-                    <tr>
-                        <th style="width: 15%;">Services Name</th>
-                        <th style="width: 26%;">Rate</th>
-                        <th style="width: 15%">Action</th>
-                    </tr>
-                </thead>
-                <tbody id="tblItemDescriptionDetail">
-                </tbody>
-            </table>
-        </div>
-    </div>
-
-    <div class="row">
-        <div class="col-lg-1 col-md-4 col-sm-6">
-            <input type="button" class="btn btn-primry" id="btnSave" value="Save" />
-        </div>
-        <div class="col-lg-1 col-md-4 col-sm-6">
-            <input type="button" class="btn btn-primry" id="btnReplicate" value="Replicate" style="display:none;" onclick="ReplicatePanel()" />
-        </div>
-        <div class="col-lg-1 col-md-4 col-sm-6">
-            <input type="button" class="btn btn-yellow" id="btnNew" value="New" />
-        </div>
-        <div class="col-lg-1 col-md-4 col-sm-6">
-            <input type="button" class="btn-gray" id="btnList" value="view" />
-        </div>
-    </div>
-
-
-
-
-
-
 </asp:Content>

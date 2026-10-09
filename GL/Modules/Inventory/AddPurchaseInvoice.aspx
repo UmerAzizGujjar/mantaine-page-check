@@ -2,7 +2,7 @@
 
 <asp:Content ID="Content1" ContentPlaceHolderID="HeadContent" runat="server">
 
-    <link href="../../wwwroot/THEME_TIBBIT/CustomCSS/AddpurchaseInvoice.css" rel="stylesheet" />
+    <link href="../../wwwroot/THEME_TIBBIT/CustomCSS/purchase-invoice.css?v=20261016" rel="stylesheet" />
     <script type="text/javascript">
 
         var vendor_Id_Global = 0;
@@ -551,7 +551,7 @@
                 '<td style="display:none"><input type="hidden" id="FurtherTaxAmount' + length + '" name="FurtherTaxAmount" value="' + (FurtherTaxAmount || 0) + '"/></td>' +
                 '<td class="headcol_batch">' +
                 '<input type="text" id="txtBatchNum' + length + '" ' + 'name="txtBatchNum" ' + 'value="' + batchValue + '" ' + 'placeholder="' + batchPlaceholder + '" ' + batchDisabled + ' ' + 'style="width:100px;" />' +'</td>' +
-                '<td class="headcol2_10 long"><a href="#" onclick="Delete(this)"><i class="glyphicon glyphicon-trash" style="font-size: 13px; margin-left: 16px; color: #f30a0a;"></i></a></td>' +
+                '<td class="headcol2_10 long"><a href="#" onclick="Delete(this)"><i class="fa fa-trash" style="font-size: 13px; margin-left: 16px; color: #f30a0a;"></i></a></td>' +
                 '</tr>'
             $("#tblItemDescription").append(rows);
             $('#Staxddl' + length).val(stax);
@@ -671,6 +671,7 @@
                 var isDirct = data.is_DirtGRN == true
                 setTimeout(function () {
                     var status = data.Status;
+                    $('#badgeStatus').text(status || '---');
                     if (status == "Approved") {
                         $('#btnVoucher').show();
                     }
@@ -766,7 +767,7 @@
                         '<td style="display:none"><input type="hidden" name="FurtherTaxId" value="' + (value.FurtherTax_Id || 0) + '"/></td>' +
                         '<td style="display:none"><input type="hidden" name="FurtherTaxAmount" value="' + (value.FurtherTax_Amount || 0) + '"/></td>' +
                         '<td class="headcol_batch">' + '<input type="text" id="txtBatchNum' + currentIndex + '" ' + 'name="txtBatchNum" ' + 'value="' + batchValue + '" ' + 'placeholder="' + batchPlaceholder + '" ' + batchDisabled + ' ' + 'style="width:100px;" />' + '</td>' +
-                        '<td class="headcol2_10 long"><a href="#" onclick="Delete(this)"><i class="glyphicon glyphicon-trash" style="font-size: 13px;  margin-left: 16px; color: #f30a0a;"></i></a></td>' +
+                        '<td class="headcol2_10 long"><a href="#" onclick="Delete(this)"><i class="fa fa-trash" style="font-size: 13px;  margin-left: 16px; color: #f30a0a;"></i></a></td>' +
                         '</tr>';
                 });
                 $("#tblItemDescription tbody").append(rows);
@@ -1375,7 +1376,7 @@
                 '<td style="display:none"><input type="hidden" id="FurtherTaxId' + length + '" name="FurtherTaxId" value="' + furthertaxid + '"/></td>' +
                 '<td style="display:none"><input type="hidden" id="FurtherTaxAmount' + length + '" name="FurtherTaxAmount" value="' + parseFloat(further_tax).toFixed(2) + '"/></td>' +
                 '<td class="headcol_batch"><input type="text" id="txtBatchNum' + length + '" name="txtBatchNum" value="' + batchValue + '" placeholder="' + batchPlaceholder + '" ' + batchDisabled + ' style="width:100px;" /></td>' +
-                '<td class="headcol2_10 long"><a href="#" onclick="Delete(this)"><i class="glyphicon glyphicon-trash" style="font-size:13px;margin-left:16px;color:#f30a0a;"></i></a></td>' +
+                '<td class="headcol2_10 long"><a href="#" onclick="Delete(this)"><i class="fa fa-trash" style="font-size:13px;margin-left:16px;color:#f30a0a;"></i></a></td>' +
                 '</tr>';
 
             $('#tblItemDescription tbody').append(newRow);
@@ -1407,158 +1408,158 @@
     </script>
 </asp:Content>
 <asp:Content ID="Content2" ContentPlaceHolderID="MainContent" runat="server">
-    <form id="item">
-        <div class="row">
-            <div class="col-lg-2 col-md-4 col-sm-6">
-                <label id="lb_invoiceId">Invoice #</label>
-                <input class="form-control" type="text" name="txt_invoicenum" id="txt_invoicenum" readonly="readonly" />
-            </div>
-            <div class="col-lg-2 col-md-4 col-sm-6">
-                <label id="lb_invoicetype">Invoice Type <span style="color: red;">*</span></label>
-                <select id="ddl_invoicetype" class="form-control">
-                    <option>Please Select</option>
-                </select>
-            </div>
-            <div class="col-lg-2 col-md-4 col-sm-6">
-                <label id="lb_invoicedate" style="">Invoice Date</label>
-                <input class="form-control" type="text" name="txt_invoicedate" id="txt_invoicedate" />
-            </div>
-            <div class="col-lg-2 col-md-4 col-sm-6">
-                <label id="lbl_accountingDate">Accounting Date</label>
-                <input class="form-control" type="text" name="txt_accountingDate" id="txt_accountingDate" />
-            </div>
-            <div class="col-lg-2 col-md-4 col-sm-6">
-                <label id="lb_duedate">Due Date</label>
-                <input class="form-control" type="text" id="txt_dueDate" name="txt_dueDate" />
-            </div>
-            <div class="col-lg-2 col-md-4 col-sm-6">
-                <label id="lb_invoiceno">Ref Invoice #</label>
-                <input class="form-control" type="text" name="txt_refinvoiceno" id="txt_refinvoiceno" />
-            </div>
+    <div class="pv-page">
 
-        </div>
-        <div class="row">
-            <div class="col-lg-2 col-md-4 col-sm-6">
-                <label id="lb_Stax_invoice">S Tax inv #</label>
-                <input class="form-control" type="text" name="txt_Stax_invoice" id="txt_Stax_invoice" />
-            </div>
-            <div class="col-lg-2 col-md-6 col-sm-10">
-                <label id="lb_Vendor">Vendor <span style="color: red;">*</span></label>
-                <select id="ddl_Vendor">
-                    <option>Please Select</option>
-                </select>
-            </div>
-            <div class="col-lg-1 col-md-4 col-sm-6">
-                <input class="btn btn-primry" type="button" value="GRN" id="btn_GRN" style="margin-top: 26px;display:none" />
-            </div>
-            <div class="col-lg-1 col-md-4 col-sm-6">
-                <input class="btn btn-primry" type="button" value="Get from PO" id="btn_GetFromPO" style="margin-top: 26px;display:none;" />
-            </div>
-
-            <div class="col-lg-2 col-md-4 col-sm-6">
-                <label id="lb_currency">Currency</label>
-                <select id="ddl_currency" class="form-control">
-                    <option></option>
-                    <option>Currency</option>
-                </select>
-            </div>
-            <div class="col-lg-2 col-md-4 col-sm-6">
-                <label id="lb_exRate">Ex Rate</label>
-                <input type="text" name="txt_exRate" id="txt_exRate" class="form-control" />
-            </div>
-            <div class="col-lg-2 col-md-4 col-sm-6">
-                <label id="lb_exDate">Ex Date</label>
-                <input type="text" name="txt_exDate" id="txt_exDate" class="form-control" />
-            </div>
-        </div>
-        <div class="row">
-            <div class="col-lg-4 col-md-3 col-sm-4">
-                <label id="lb_remarks">Remarks</label>
-                <input type="text" name="txt_Remarks" id="txt_Remarks"  />
-            </div>
-            
-            <div class="col-lg-2 col-md-4 col-sm-6">
-                <label id="lb_Branch">Branch</label>
-                <select id="ddlBranch" class="form-control">
-                    <option value="0">Please Select</option>
-                </select>
-            </div>
-            <div class="col-lg-2 col-md-4 col-sm-6">
-                <label id="lb_attachments">Attachments</label>
-                <input type="file" name="txt_attachments" id="txt_attachments" />
-                <asp:HyperLink ID="HyperLink1" runat="server">Download</asp:HyperLink>
-            </div>
-                         <div class="col-lg-1 col-md-6 col-sm-12" name="directgrn">
-                     <label class="source-radio-option">
-                    Direct GRN
-                </label>
-                <input type="checkbox" name="dircGRN" id="dircGRN" value="item" />
+        <!-- Title line: the master page puts "Purchase » Add Invoice" in the empty left side; the badges sit on the right -->
+        <div class="pr-meta-bar">
+            <div class="meta-left"></div>
+            <div class="meta-right">
+                <div class="pv-badge"><span class="pv-badge-label">Invoice #</span><span class="pv-badge-value" id="badgeInvoiceNo">---</span></div>
+                <div class="pv-badge"><span class="pv-badge-label">Date</span><span class="pv-badge-value" id="badgeInvoiceDate">---</span></div>
+                <div class="pv-badge"><span class="pv-badge-label">Type</span><span class="pv-badge-value" id="badgeInvoiceType">---</span></div>
+                <div class="pv-badge"><span class="pv-badge-label">Status</span><span class="pv-badge-value" id="badgeStatus">---</span></div>
             </div>
         </div>
 
-        <div class="modal fade" id="PO_Modal" tabindex="-1" role="dialog" aria-labelledby="PO_ModalLabel" aria-hidden="true">
-            <div class="modal-dialog modal-lg" role="document">
-                <div class="modal-content">
-                    <div class="modal-header">
-                        <div class="input-group" style="width: 40%;">
-                            <input type="text" id="searchPONo" class="form-control" placeholder="Search by PO No..." />
+        <div class="pv-layout">
+
+            <!-- Left: invoice details + remarks / attachments -->
+            <div class="pv-col">
+                <section class="pv-card">
+                    <h5 class="pv-card-title"><i class="fa fa-file-text-o"></i> Invoice Details</h5>
+                    <div class="pv-grid">
+                        <div class="pv-field">
+                            <label id="lb_invoiceId" for="txt_invoicenum">Invoice #</label>
+                            <input class="form-control" type="text" name="txt_invoicenum" id="txt_invoicenum" readonly="readonly" />
                         </div>
-                        <h5 class="modal-title" id="PO_ModalLabel">PO Details</h5>
-                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                        <div class="pv-field">
+                            <label id="lb_invoicetype" for="ddl_invoicetype">Invoice Type <span class="pv-req">*</span></label>
+                            <select id="ddl_invoicetype" class="form-control">
+                                <option>Please Select</option>
+                            </select>
+                        </div>
+                        <div class="pv-field">
+                            <label id="lb_invoicedate" for="txt_invoicedate">Invoice Date</label>
+                            <input class="form-control" type="text" name="txt_invoicedate" id="txt_invoicedate" autocomplete="off" />
+                        </div>
+                        <div class="pv-field">
+                            <label id="lbl_accountingDate" for="txt_accountingDate">Accounting Date</label>
+                            <input class="form-control" type="text" name="txt_accountingDate" id="txt_accountingDate" autocomplete="off" />
+                        </div>
+                        <div class="pv-field">
+                            <label id="lb_duedate" for="txt_dueDate">Due Date</label>
+                            <input class="form-control" type="text" id="txt_dueDate" name="txt_dueDate" autocomplete="off" />
+                        </div>
+                        <div class="pv-field">
+                            <label id="lb_invoiceno" for="txt_refinvoiceno">Ref Invoice #</label>
+                            <input class="form-control" type="text" name="txt_refinvoiceno" id="txt_refinvoiceno" autocomplete="off" />
+                        </div>
+                        <div class="pv-field">
+                            <label id="lb_Stax_invoice" for="txt_Stax_invoice">S Tax inv #</label>
+                            <input class="form-control" type="text" name="txt_Stax_invoice" id="txt_Stax_invoice" autocomplete="off" />
+                        </div>
+                        <div class="pv-field pv-span-2">
+                            <label id="lb_Vendor" for="ddl_Vendor">Vendor <span class="pv-req">*</span></label>
+                            <select id="ddl_Vendor" class="form-control">
+                                <option>Please Select</option>
+                            </select>
+                        </div>
+                        <div class="pv-field">
+                            <label id="lb_currency" for="ddl_currency">Currency</label>
+                            <select id="ddl_currency" class="form-control">
+                                <option></option>
+                                <option>Currency</option>
+                            </select>
+                        </div>
+                        <div class="pv-field">
+                            <label id="lb_exRate" for="txt_exRate">Ex Rate</label>
+                            <input type="text" name="txt_exRate" id="txt_exRate" class="form-control" autocomplete="off" />
+                        </div>
+                        <div class="pv-field">
+                            <label id="lb_exDate" for="txt_exDate">Ex Date</label>
+                            <input type="text" name="txt_exDate" id="txt_exDate" class="form-control" autocomplete="off" />
+                        </div>
+                        <div class="pv-field">
+                            <label id="lb_Branch" for="ddlBranch">Branch</label>
+                            <select id="ddlBranch" class="form-control">
+                                <option value="0">Please Select</option>
+                            </select>
+                        </div>
+                        <div class="pv-field" name="directgrn">
+                            <label for="dircGRN">Direct GRN</label>
+                            <div class="pv-check">
+                                <input type="checkbox" name="dircGRN" id="dircGRN" value="item" />
+                            </div>
+                        </div>
+                        <div class="pv-field pv-span-2">
+                            <label>&nbsp;</label>
+                            <div class="pv-btnrow">
+                                <input class="btn btn-primry" type="button" value="GRN" id="btn_GRN" style="display: none" />
+                                <input class="btn btn-primry" type="button" value="Get from PO" id="btn_GetFromPO" style="display: none;" />
+                            </div>
+                        </div>
                     </div>
-                    <div class="modal-body">
-                        <table class="table table-bordered">
-                            <thead>
-                                <tr>
-                                    <th>
-                                        <input type="checkbox" id="checkPOHeader" /></th>
-                                    <th>PO No</th>
-                                    <th>Description</th>
-                                    <th>Qty</th>
-                                    <th>Bonus_qty</th>
-                                    <th>bonus_tax</th>
-                                    <th>sale_tax_amt</th>
-                                    <th>further_tax</th>
-                                    <th>discount_per</th>
-                                  
-                                    <th>Rate</th>
-                                    <th>Total Amount</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                            </tbody>
-                        </table>
+                </section>
+
+                <section class="pv-card">
+                    <h5 class="pv-card-title"><i class="fa fa-paperclip"></i> Remarks &amp; Attachments</h5>
+                    <div class="pv-grid">
+                        <div class="pv-field pv-span-2">
+                            <label id="lb_remarks" for="txt_Remarks">Remarks</label>
+                            <input type="text" name="txt_Remarks" id="txt_Remarks" class="form-control" autocomplete="off" />
+                        </div>
+                        <div class="pv-field pv-span-2">
+                            <label id="lb_attachments" for="txt_attachments">Attachments</label>
+                            <input type="file" name="txt_attachments" id="txt_attachments" class="form-control" />
+                            <asp:HyperLink ID="HyperLink1" runat="server" CssClass="pv-link">Download</asp:HyperLink>
+                        </div>
                     </div>
-                    <div class="modal-footer">
-                        <div class="col-lg-10 col-md-10 col-sm-10"></div>
-                         <div class="col-lg-2 col-md-2 col-sm-2 float-end">
-                        <input type="button" value="Close" class="btn-gray" data-dismiss="modal" />
-                             </div>
+                </section>
+            </div>
+
+            <!-- Right: amounts -->
+            <div class="pv-col">
+                <section class="pv-card">
+                    <h5 class="pv-card-title"><i class="fa fa-calculator"></i> Amounts</h5>
+                    <div class="pv-grid" style="grid-template-columns: minmax(0, 1fr);">
+                        <div class="pv-field pv-figure">
+                            <label id="lbl_tot_inv_amount" for="tot_inv_amount">Total Invoice Amount</label>
+                            <input type="text" id="tot_inv_amount" name="tot_inv_amount" class="form-control" readonly="readonly" />
+                        </div>
+                        <div class="pv-field pv-figure">
+                            <label id="lbl_freight_amount" for="freight_amount">Freight</label>
+                            <input type="text" id="freight_amount" name="freight_amount" class="form-control" onkeyup="CulculateAmonut()" />
+                        </div>
+                        <div class="pv-field pv-figure">
+                            <label id="lbl_disc_amount" for="disc_amount">Additional Discount</label>
+                            <input type="text" id="disc_amount" name="disc_amount" class="form-control" onkeyup="CulculateAmonut()" />
+                        </div>
+                        <div class="pv-field pv-figure">
+                            <label id="lbl_tot_adjusted_advance" for="tot_adjusted_advance">Advance Adjusted</label>
+                            <input type="text" id="tot_adjusted_advance" name="tot_adjusted_advance" class="form-control" readonly="readonly" />
+                        </div>
+                        <div class="pv-field pv-figure pv-figure-main">
+                            <label id="lbl_net_amount" for="net_amount">Net Amount</label>
+                            <input type="text" id="net_amount" name="net_amount" class="form-control" readonly="readonly" />
+                        </div>
                     </div>
-                </div>
+                </section>
             </div>
         </div>
 
-    </form>
-    <br />
-    <div class="row">
-        <div class="col-md-6">
-        </div>
-    </div>
-    <br />
+        <!-- Lines -->
+        <section class="pv-card">
+            <h5 class="pv-card-title"><i class="fa fa-list-alt"></i> Invoice Lines</h5>
+            <div id="tabs">
+                <ul>
+                    <li><a href="#Tab-1">Payable Invoice</a></li>
+                    <li><a href="#Tab-2">Advance</a></li>
+                </ul>
 
-    <div id="tabs">
-        <ul>
-            <li><a href="#Tab-1">Payable Invoice</a></li>
-            <li><a href="#Tab-2">Advance</a></li>
-        </ul>
-
-        <div id="Tab-1">
-            <div id="divdiv">
-                <div>
-                    <div class="row">
-                        <div class="table-responsive">
-                            <table style="width: 100%" class="table table-responsive table-hover table-bordered" id="tblItemDescription">
+                <div id="Tab-1">
+                    <div id="divdiv">
+                        <div class="pv-table-wrap">
+                            <table class="table table-hover pv-table" id="tblItemDescription">
                                 <thead>
                                     <tr>
                                         <th>Item Code</th>
@@ -1594,19 +1595,13 @@
                     </div>
                 </div>
 
-            </div>
-        </div>
-
-        <div id="Tab-2">
-            <div class="row">
-                <div class="col-lg-1 col-md-4 col-sm-12">
-                    <input type="button" class="btn btn-primry" onclick="Addrow()" value="+" id="AddAccount" />
-                </div>
-            </div>
-            <div>
-                <div class="row">
-                    <div class="table-responsive">
-                        <table class="table table-bordered" id="advancepaymenttable">
+                <div id="Tab-2">
+                    <div class="pv-tab-tools">
+                        <span>Add the vendor's advance payments to adjust against this invoice</span>
+                        <input type="button" class="btn btn-primry" onclick="Addrow()" value="+" id="AddAccount" />
+                    </div>
+                    <div class="pv-table-wrap">
+                        <table class="table pv-table" id="advancepaymenttable">
                             <thead>
                                 <tr>
                                     <th>Advance Num</th>
@@ -1622,102 +1617,145 @@
                     </div>
                 </div>
             </div>
-        </div>
-    </div>
+        </section>
 
-    <div class="row">
-        <div class="col-lg-6 col-md-9 col-sm-10" style="margin-top:1%">
-            <div class="row">
-                <div class="col-lg-2 col-md-4 col-sm-6">
-                    <input type="button" id="btnSave" class="btn btn-primry" value="Save" />
-                </div>
-                <div class="col-lg-2 col-md-4 col-sm-6">
-                    <input type="button" class="btn btn-yellow" value="New" onclick="window.location = 'AddPurchaseInvoice.aspx'" />
-                </div>
-                <div class="col-lg-2 col-md-4 col-sm-6">
-                    <input type="button" class="btn-gray" value="List" onclick="window.location = 'PurchaseInvoiceView.aspx'" />
-                </div>
-                <div class="col-lg-2 col-md-4 col-sm-6">
-                    <input type="button" value="Print" class="btn btn-primry" id="btn_Print" onclick="PrintPurchaseDetail();" />
-                </div>
-                <div class="col-lg-2 col-md-4 col-sm-6">
-                    <input type="button" class="btn btn-primry" value="Voucher" id="btnVoucher" onclick="PrintVoucher()" />
-                </div>
-                <div class="col-lg-2 col-md-4 col-sm-6">
-                    <input type="button" style="height: 32px !important; width: 102px; display: none" value="Approve" id="btnApprove" onclick="ApprovePIFromEdit()" />
-                </div>
-                <div class="col-lg-2 col-md-4 col-sm-6">
-                    
-                    <input type="button" style="height: 32px !important; width: 102px; display: none" value="UnApprove" id="btnUnApprove" onclick="UnApprove()" />
+        <!-- Actions -->
+        <div class="row">
+            <div class="col-lg-6 col-md-9 col-sm-10" style="margin-top: 1%">
+                <div class="row">
+                    <div class="col-lg-2 col-md-4 col-sm-6">
+                        <input type="button" id="btnSave" class="btn btn-primry" value="Save" />
+                    </div>
+                    <div class="col-lg-2 col-md-4 col-sm-6">
+                        <input type="button" class="btn btn-yellow" value="New" onclick="window.location = 'AddPurchaseInvoice.aspx'" />
+                    </div>
+                    <div class="col-lg-2 col-md-4 col-sm-6">
+                        <input type="button" class="btn-gray" value="List" onclick="window.location = 'PurchaseInvoiceView.aspx'" />
+                    </div>
+                    <div class="col-lg-2 col-md-4 col-sm-6">
+                        <input type="button" value="Print" class="btn btn-primry" id="btn_Print" onclick="PrintPurchaseDetail();" />
+                    </div>
+                    <div class="col-lg-2 col-md-4 col-sm-6">
+                        <input type="button" class="btn btn-primry" value="Voucher" id="btnVoucher" onclick="PrintVoucher()" />
+                    </div>
+                    <div class="col-lg-2 col-md-4 col-sm-6">
+                        <input type="button" style="height: 32px !important; width: 102px; display: none" value="Approve" id="btnApprove" onclick="ApprovePIFromEdit()" />
+                    </div>
+                    <div class="col-lg-2 col-md-4 col-sm-6">
+                        <input type="button" style="height: 32px !important; width: 102px; display: none" value="UnApprove" id="btnUnApprove" onclick="UnApprove()" />
+                    </div>
                 </div>
             </div>
         </div>
-        <div class="col-lg-4 col-md-3 col-sm-3"></div>
 
-        <div class="col-lg-2 col-md-3 col-sm-3">
-            <div style="float: right;">
-                <label id="lbl_tot_inv_amount">Total Invoice Amount</label>
-                <input type="text" id="tot_inv_amount" name="tot_inv_amount" readonly="readonly" />
-                <label id="lbl_freight_amount">Freight</label>
-                <input type="text" id="freight_amount" name="freight_amount" onkeyup="CulculateAmonut()" />
-                <label id="lbl_disc_amount">Additional Discount</label>
-                <input type="text" id="disc_amount" name="disc_amount" onkeyup="CulculateAmonut()" />
-                <label id="lbl_tot_adjusted_advance">Advance Adjusted</label>
-                <input type="text" id="tot_adjusted_advance" name="tot_adjusted_advance" readonly="readonly" />
-                <label id="lbl_net_amount">Net Amount</label>
-                <input type="text" id="net_amount" name="net_amount" readonly="readonly" />
-            </div>
-        </div>
-    </div>
-    <div id="POItemsModel" class="modal fade" role="dialog">
-        <div class="modal-dialog">
-            <div class="modal-content" style="width: 1000px; margin-left: -270px; height: 505px;">
-                <div class="modal-header">
-                    <button type="button" style="width: auto; margin-top: -15px" class="close" data-dismiss="modal">&times;</button>
-                    <h4 style="margin-right: 620px; margin-left: 17px" class="modal-title">Add GRN Items </h4>
-                    <input type="text" id="PoNum" name="PoNum" style="width:30% !important" placeholder="PO #" />
-                </div>
-                <input type="hidden" id="txthiddentr" name="txthidddentr" />
-                <div style="width: 970px; overflow: scroll; height: 401px  !important; height: auto;">
-                    <table class="table" style="width: 953px; height: 0px !important; height: auto; overflow: scroll;" id="tblPOItemstModelTable">
-                        <thead>
-                            <tr>
-                                <th class="table_heading_color" style="width: 40px !important;">
-                                    <input type="checkbox" id="checkHeader" value="false" /></th>
-                                <th class="table_heading_color" style="display: none">GRN Id</th>
-                                <th class="table_heading_color" style="display: none">GRN Detail Id</th>
-                                <th class="table_heading_color" style="display: none">Item Id</th>
-                                <th class="table_heading_color" style="width: 100px !important;">Account Item Code</th>
-                                <th class="table_heading_color">Description</th>
-                                <th class="table_heading_color" style="display: none">Invoice Amount</th>
-                                <th class="table_heading_color">PO No</th>
-                                <th class="table_heading_color" style="display: none">PO Date</th>
-                                <th class="table_heading_color" style="display: none">IGP #</th>
-                                <th class="table_heading_color" style="display: none">PO Date</th>
-                                <th class="table_heading_color">IGP #</th>
-                                <th class="table_heading_color" style="display: none">IGP Date</th>
-                                <th class="table_heading_color">GRN #</th>
-                                <th class="table_heading_color" style="display: none">Accepted Qty</th>
-                                <th class="table_heading_color" style="display: none">Received Qty</th>
-                                <th class="table_heading_color">Qty</th>
-                                <th class="table_heading_color">Rate</th>
-                                <th class="table_heading_color" style="display: none">Value</th>
-                                <th class="table_heading_color">Total Amount</th>
-                                <th class="table_heading_color">Vendor Name</th>
-                                <th class="table_heading_color">InvType</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                        </tbody>
-                    </table>
-                </div>
-                <div class="modal-footer">
-                    <input type="button" id="PoItem" name="PoItem" value="Done" class="btn-gray" data-dismiss="modal" style="width:20%!important" />
+        <!-- Get from PO picker -->
+        <div class="modal fade pv-modal" id="PO_Modal" tabindex="-1" role="dialog" aria-labelledby="PO_ModalLabel" aria-hidden="true">
+            <div class="modal-dialog modal-lg" role="document">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <div class="input-group" style="width: 40%;">
+                            <input type="text" id="searchPONo" class="form-control" placeholder="Search by PO No..." />
+                        </div>
+                        <h5 class="modal-title" id="PO_ModalLabel">PO Details</h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <div class="modal-body">
+                        <table class="table table-bordered">
+                            <thead>
+                                <tr>
+                                    <th>
+                                        <input type="checkbox" id="checkPOHeader" /></th>
+                                    <th>PO No</th>
+                                    <th>Description</th>
+                                    <th>Qty</th>
+                                    <th>Bonus_qty</th>
+                                    <th>bonus_tax</th>
+                                    <th>sale_tax_amt</th>
+                                    <th>further_tax</th>
+                                    <th>discount_per</th>
+                                    <th>Rate</th>
+                                    <th>Total Amount</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                            </tbody>
+                        </table>
+                    </div>
+                    <div class="modal-footer">
+                        <div class="col-lg-10 col-md-10 col-sm-10"></div>
+                        <div class="col-lg-2 col-md-2 col-sm-2 float-end">
+                            <input type="button" value="Close" class="btn-gray" data-dismiss="modal" />
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>
+
+        <!-- Add GRN items picker -->
+        <div id="POItemsModel" class="modal fade pv-modal" role="dialog">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">&times;</button>
+                        <h4 class="modal-title">Add GRN Items</h4>
+                        <input type="text" id="PoNum" name="PoNum" class="form-control" placeholder="PO #" />
+                    </div>
+                    <input type="hidden" id="txthiddentr" name="txthidddentr" />
+                    <div class="pv-modal-scroll">
+                        <table class="table" id="tblPOItemstModelTable">
+                            <thead>
+                                <tr>
+                                    <th class="table_heading_color" style="width: 40px !important;">
+                                        <input type="checkbox" id="checkHeader" value="false" /></th>
+                                    <th class="table_heading_color" style="display: none">GRN Id</th>
+                                    <th class="table_heading_color" style="display: none">GRN Detail Id</th>
+                                    <th class="table_heading_color" style="display: none">Item Id</th>
+                                    <th class="table_heading_color" style="width: 100px !important;">Account Item Code</th>
+                                    <th class="table_heading_color">Description</th>
+                                    <th class="table_heading_color" style="display: none">Invoice Amount</th>
+                                    <th class="table_heading_color">PO No</th>
+                                    <th class="table_heading_color" style="display: none">PO Date</th>
+                                    <th class="table_heading_color" style="display: none">IGP #</th>
+                                    <th class="table_heading_color" style="display: none">PO Date</th>
+                                    <th class="table_heading_color">IGP #</th>
+                                    <th class="table_heading_color" style="display: none">IGP Date</th>
+                                    <th class="table_heading_color">GRN #</th>
+                                    <th class="table_heading_color" style="display: none">Accepted Qty</th>
+                                    <th class="table_heading_color" style="display: none">Received Qty</th>
+                                    <th class="table_heading_color">Qty</th>
+                                    <th class="table_heading_color">Rate</th>
+                                    <th class="table_heading_color" style="display: none">Value</th>
+                                    <th class="table_heading_color">Total Amount</th>
+                                    <th class="table_heading_color">Vendor Name</th>
+                                    <th class="table_heading_color">InvType</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                            </tbody>
+                        </table>
+                    </div>
+                    <div class="modal-footer">
+                        <input type="button" id="PoItem" name="PoItem" value="Done" class="btn-gray" data-dismiss="modal" style="width: 20% !important" />
+                    </div>
+                </div>
+            </div>
+        </div>
+
     </div>
 
-
-
+    <script type="text/javascript">
+        // title-line badges: follow the form fields (values are often set by the page script, so check regularly)
+        function syncPurchaseBadges() {
+            var num = $('#txt_invoicenum').val();
+            var dt = $('#txt_invoicedate').val();
+            var typeText = $('#ddl_invoicetype option:selected').text();
+            $('#badgeInvoiceNo').text(num || '---');
+            $('#badgeInvoiceDate').text(dt || '---');
+            $('#badgeInvoiceType').text((typeText && typeText.indexOf('Please Select') < 0) ? typeText : '---');
+        }
+        $(function () {
+            syncPurchaseBadges();
+            setInterval(syncPurchaseBadges, 600);
+        });
+    </script>
 </asp:Content>
