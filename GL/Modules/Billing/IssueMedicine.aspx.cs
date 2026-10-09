@@ -900,12 +900,13 @@ ORDER BY i.Item_Code, i.Item_ID";
                                 on ipd.Patient_ID equals rp.pat_id
 
                             join ab in db.Ar_Billings
-                                on ipd.In_Patient_ID equals ab.In_Patient_ID into abGroup
-                            from ab in abGroup.DefaultIfEmpty()
+                                on ipd.In_Patient_ID equals ab.In_Patient_ID
 
+                            // bill line must be the same medicine (matches spMedicineReturnfromIPDDetails)
                             join abd in db.Ar_Billing_Details
-                                on ab.Bill_ID equals abd.Bill_ID into abdGroup
-                            from abd in abdGroup.DefaultIfEmpty()
+                                on ab.Bill_ID equals abd.Bill_ID
+                            where abd.Item_ID == Convert.ToInt32(ipm.Item_Code)
+                                  && (ab.isCancel == false || ab.isCancel == null)
 
                             join wd in db.Ward_Definitions
                                 on ipd.Ward_ID equals wd.Ward_ID into wdGroup
@@ -945,9 +946,9 @@ ORDER BY i.Item_Code, i.Item_ID";
                                 rp.pat_id,
                                 rp.Full_Name,
                                 rp.Father_Name,
-                                ab.Bill_ID,
+                                Bill_ID = (int?)ab.Bill_ID,
                                 ab.Bill_No,
-                                abd.Bill_Details_ID,
+                                Bill_Details_ID = (int?)abd.Bill_Details_ID,
                                 abd.Item_Name,
                                 rp.mr_no_sequence,
                                 ab.Invoice_Date,

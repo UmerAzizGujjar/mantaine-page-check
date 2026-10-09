@@ -23,6 +23,7 @@
         font-weight:bold;
     }
 
+   
     #QueueList .table-responsive.previewTable {
         max-height: 420px;
         overflow-y: auto;
@@ -164,6 +165,96 @@
         margin-top: 8px;
     }
 
+    /* Sale return totals block */
+    #SaleReturnModal .sr-sum { display: grid; grid-template-columns: 130px 240px; gap: 6px 10px; align-items: center; }
+    #SaleReturnModal .sr-sum label { margin: 0; text-align: right; font-size: 13px; font-weight: bold; white-space: nowrap; }
+    #SaleReturnModal .sr-sum input { width: 100% !important; max-width: none !important; height: 30px !important; margin: 0 !important; text-align: right; font-size: 18px; font-variant-numeric: tabular-nums; }
+    #SaleReturnModal .sr-sum input.sr-sum-red { color: #cd1818 !important; }
+    #SaleReturnModal .sr-sum .sr-sum-disc { display: flex; align-items: center; gap: 6px; }
+    #SaleReturnModal .sr-sum .sr-sum-disc input:first-child { flex: 0 0 80px; width: 80px !important; }
+    #SaleReturnModal .sr-sum .sr-sum-disc input:last-child { flex: 1 1 auto; min-width: 0; }
+    #SaleReturnModal .sr-sum .sr-sum-disc span { font-size: 18px; font-weight: bold; }
+    #SaleReturnModal .sr-sum .sr-sum-total { font-weight: bold; }
+    #SaleReturnModal .sr-sum input.sr-sum-total { font-size: 22px; }
+
+    /* Sale return confirm / authorize modal */
+    #SearchReturnModel, #SearchModel { z-index: 1065; }
+    #SearchReturnModel .srs-dialog, #SearchModel .srs-dialog { width: 440px !important; max-width: 95vw !important; min-width: 0 !important; margin: 0 auto !important; }
+    #SearchReturnModel .srs-content, #SearchModel .srs-content { height: auto !important; }
+    #SearchReturnModel .modal-content.srs-content { width: 440px !important; max-width: 95vw !important; min-width: 0 !important; margin: 0 auto !important; float: none !important; }
+    #SearchReturnModel .srs-content, #SearchModel .srs-content { border-radius: 10px; overflow: hidden; border: 0; box-shadow: 0 10px 40px rgba(0,0,0,.25); }
+    #SearchReturnModel .srs-header, #SearchModel .srs-header { display: flex; align-items: center; gap: 12px; padding: 14px 18px; border-bottom: 1px solid #e5e7eb; }
+    #SearchReturnModel .srs-icon, #SearchModel .srs-icon { width: 38px; height: 38px; border-radius: 50%; background: #fdecec; color: #cd1818; display: flex; align-items: center; justify-content: center; font-size: 17px; flex-shrink: 0; }
+    #SearchReturnModel .srs-title-wrap, #SearchModel .srs-title-wrap { flex: 1; min-width: 0; }
+    #SearchReturnModel .srs-title, #SearchModel .srs-title { margin: 0; font-size: 18px; font-weight: 700; }
+    #SearchReturnModel .srs-sub, #SearchModel .srs-sub { font-size: 12px; color: #6b7280; }
+    #SearchReturnModel .srs-body, #SearchModel .srs-body { padding: 16px 18px; }
+    #SearchReturnModel .srs-meta, #SearchModel .srs-meta { display: flex; gap: 8px; margin-bottom: 12px; }
+    #SearchReturnModel .srs-meta > div, #SearchModel .srs-meta > div { flex: 1; min-width: 0; background: #f6f7f9; border-radius: 8px; padding: 6px 10px; }
+    #SearchReturnModel .srs-meta span, #SearchModel .srs-meta span { display: block; font-size: 11px; color: #6b7280; text-transform: uppercase; letter-spacing: .3px; }
+    #SearchReturnModel .srs-meta b, #SearchModel .srs-meta b { display: block; font-size: 13px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+    #SearchReturnModel .srs-summary, #SearchModel .srs-summary { width: 100%; margin-bottom: 14px; }
+    #SearchReturnModel .srs-summary td, #SearchModel .srs-summary td { padding: 5px 2px; font-size: 14px; border-bottom: 1px dashed #e5e7eb; }
+    #SearchReturnModel .srs-summary td:last-child, #SearchModel .srs-summary td:last-child { text-align: right; font-variant-numeric: tabular-nums; font-weight: 600; }
+    #SearchReturnModel .srs-summary small, #SearchModel .srs-summary small { color: #6b7280; font-weight: 400; }
+    #SearchReturnModel .srs-summary tr.srs-net td, #SearchModel .srs-summary tr.srs-net td { border-bottom: 0; border-top: 2px solid #1f2937; padding-top: 8px; font-size: 18px; font-weight: 700; }
+    #SearchReturnModel .srs-summary tr.srs-net td:last-child, #SearchModel .srs-summary tr.srs-net td:last-child { color: #cd1818; font-size: 22px; }
+    #SearchReturnModel .srs-auth, #SearchModel .srs-auth { background: #f6f7f9; border-radius: 8px; padding: 10px 12px; }
+    #SearchReturnModel .srs-auth-title, #SearchModel .srs-auth-title { font-size: 12px; font-weight: 700; color: #374151; margin-bottom: 8px; text-transform: uppercase; letter-spacing: .3px; }
+    #SearchReturnModel .srs-auth-row, #SearchModel .srs-auth-row { display: flex; align-items: center; gap: 10px; margin-bottom: 8px; }
+    #SearchReturnModel .srs-auth input[type=text], #SearchModel .srs-auth input[type=text], #SearchReturnModel .srs-auth input[type=password], #SearchModel .srs-auth input[type=password] { width: 100% !important; margin: 0 !important; height: 34px; }
+    #SearchReturnModel .srs-auth-row input, #SearchModel .srs-auth-row input { flex: 0 0 45%; width: 45% !important; }
+    #SearchReturnModel .srs-auth-row label, #SearchModel .srs-auth-row label { margin: 0; font-size: 13px; font-weight: 600; }
+    #SearchReturnModel .srs-footer, #SearchModel .srs-footer { display: flex; gap: 8px; justify-content: flex-end; padding: 12px 18px; border-top: 1px solid #e5e7eb; }
+    #SearchReturnModel .srs-footer .btn, #SearchModel .srs-footer .btn, #SearchReturnModel .srs-footer .btn-gray, #SearchModel .srs-footer .btn-gray { width: auto !important; min-width: 100px; }
+    #SearchModel .srs-icon-lock { background: #eef2ff; color: #3b4cca; }
+    #SearchModel .srs-inv-row { display: flex; gap: 8px; align-items: center; }
+    #SearchModel .srs-inv-row input[type=text] { flex: 1 1 auto; min-width: 0; width: auto !important; margin: 0 !important; height: 34px; }
+    #SearchModel .srs-inv-row .btn { flex: 0 0 auto; width: auto !important; min-width: 90px; margin: 0 !important; }
+    #SearchModel .srs-auth { margin-top: 12px; }
+    #SearchModel { z-index: 1060; }
+    /* compact confirm card (sale return save) */
+    #SearchReturnModel .srs-header { padding: 8px 12px; gap: 8px; }
+    #SearchReturnModel .srs-icon { width: 28px; height: 28px; font-size: 13px; }
+    #SearchReturnModel .srs-title { font-size: 14px; }
+    #SearchReturnModel .srs-sub { font-size: 11px; max-width: 240px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+    #SearchReturnModel .srs-body { padding: 10px 12px; }
+    #SearchReturnModel .srs-meta { gap: 6px; margin-bottom: 8px; }
+    #SearchReturnModel .srs-meta > div { padding: 4px 8px; }
+    #SearchReturnModel .srs-meta span { font-size: 10px; }
+    #SearchReturnModel .srs-meta b { font-size: 12px; }
+    #SearchReturnModel .srs-summary { margin-bottom: 8px; }
+    #SearchReturnModel .srs-summary td { padding: 2px; font-size: 12px; }
+    #SearchReturnModel .srs-summary tr.srs-net td { padding-top: 4px; font-size: 14px; }
+    #SearchReturnModel .srs-summary tr.srs-net td:last-child { font-size: 16px; }
+    #SearchReturnModel .srs-auth { padding: 6px 10px; }
+    #SearchReturnModel .srs-auth-title { font-size: 10px; margin-bottom: 4px; }
+    #SearchReturnModel .srs-auth-row { display: block; margin-bottom: 4px; }
+    #SearchReturnModel .srs-auth-row input { width: 100% !important; flex: none; }
+    #SearchReturnModel .srs-auth-row label { display: block; margin: 2px 0 0 2px; font-size: 11px; }
+    #SearchReturnModel .srs-auth input[type=text], #SearchReturnModel .srs-auth input[type=password] { height: 26px !important; padding: 2px 8px !important; font-size: 12px !important; box-sizing: border-box; }
+    #SearchReturnModel .srs-footer { padding: 8px 12px; gap: 6px; }
+    #SearchReturnModel .srs-footer .btn, #SearchReturnModel .srs-footer .btn-gray { height: 28px !important; min-width: 0; padding: 0 10px !important; font-size: 12px !important; line-height: 26px; }
+    /* both modals: half the screen width */
+    #SearchModel .modal-dialog, #SearchReturnModel .modal-dialog { width: 50% !important; max-width: 50% !important; min-width: 0 !important; margin: 0 auto !important; }
+    #SearchModel .modal-dialog .modal-content, #SearchReturnModel .modal-dialog .modal-content { width: 100% !important; max-width: 100% !important; min-width: 0 !important; margin: 0 !important; float: none !important; }
+    /* compact card */
+    #SearchModel .srs-header { padding: 10px 14px; gap: 10px; }
+    #SearchModel .srs-icon { width: 30px; height: 30px; font-size: 14px; }
+    #SearchModel .srs-title { font-size: 15px; }
+    #SearchModel .srs-sub { font-size: 11px; }
+    #SearchModel .srs-body { padding: 12px 14px; }
+    #SearchModel .srs-inv-row { margin-bottom: 8px; }
+    #SearchModel .srs-inv-row input[type=text], #SearchModel .srs-auth input[type=text], #SearchModel .srs-auth input[type=password] { height: 28px !important; padding: 2px 8px !important; font-size: 13px !important; width: 100% !important; box-sizing: border-box; margin: 0 !important; }
+    #SearchModel .srs-inv-row input[type=text] { width: auto !important; flex: 1 1 auto; }
+    #SearchModel .srs-inv-row .btn { height: 28px !important; min-width: 70px; padding: 0 10px !important; font-size: 12px !important; line-height: 26px; }
+    #SearchModel .srs-auth { margin-top: 0; padding: 8px 10px; }
+    #SearchModel .srs-auth-title { font-size: 11px; margin-bottom: 6px; }
+    #SearchModel .srs-auth-row { display: block; margin-bottom: 6px; }
+    #SearchModel .srs-auth-row input { width: 100% !important; flex: none; }
+    #SearchModel .srs-auth-row label { display: block; min-height: 0; margin: 2px 0 0 2px; font-size: 11px; color: #374151; }
+    #SearchModel .srs-footer { padding: 8px 14px; gap: 6px; }
+    #SearchModel .srs-footer .btn, #SearchModel .srs-footer .btn-gray { height: 28px !important; min-width: 70px; padding: 0 12px !important; font-size: 12px !important; line-height: 26px; }
        #btnSave {
            min-width: 150px !important;
           
@@ -527,8 +618,8 @@
         // --- single-flight guard for ALL save paths (main + SaleReturn) ---
         window.__pharmSaving = false;
         function isPharmSaveInProgress() { return window.__pharmSaving; }
-        function lockPharmSave()   { window.__pharmSaving = true;  $('#btnSave, #SaveVal, #btnSaveSaleReturn').attr('disabled', true); }
-        function unlockPharmSave() { window.__pharmSaving = false; $('#btnSave, #SaveVal, #btnSaveSaleReturn').attr('disabled', false); }
+        function lockPharmSave()   { window.__pharmSaving = true;  $('#btnSave, #SaveVal, #btnSaveSaleReturn, #btnSaveSaleReturnPrint').attr('disabled', true); }
+        function unlockPharmSave() { window.__pharmSaving = false; $('#btnSave, #SaveVal, #btnSaveSaleReturn, #btnSaveSaleReturnPrint').attr('disabled', false); }
 
         // Returns true when the same item + same batch already exists in tblDetails.
         // Pass $excludeRow to ignore the row being edited.
@@ -1506,19 +1597,40 @@
 
         function SearchReturnPop() {
             if (isPharmSaveInProgress()) return;
+            var itemCount = $('#saleReturnTableBody tr').length;
+            if (itemCount === 0) {
+                Swal.fire({ icon: 'error', title: 'Error!', text: 'Please add at least one item to return.', showConfirmButton: false, timer: 2000 });
+                return;
+            }
+            var n = function (id) { return parseFloat($(id).val()) || 0; };
+            var inv = $('#ddlInvoiceNumber option:selected').text();
+            if (!$('#ddlInvoiceNumber').val() || inv === 'Please Select') {
+                inv = $('#hdnReturnBillID').val() ? ('Bill ID ' + $('#hdnReturnBillID').val()) : '-';
+            }
+            var pat = $('#ddlpat_no option:selected').text();
+            $('#srsPatient').text(pat && pat !== 'Please Select' ? pat : '-').attr('title', pat);
+            $('#srsInvoice').text(inv);
+            $('#srsItems').text(itemCount);
+            $('#srsPayable').text(n('#txtSaleReturnTotalPayable').toLocaleString());
+            $('#srsLineDisc').text(n('#txtSaleReturnLineDisc').toLocaleString());
+            var dp = n('#txtSaleReturnDisPer');
+            $('#srsDisPer').text(dp > 0 ? '(' + dp + '%)' : '');
+            $('#srsDisAmt').text(n('#txtSaleReturnDisAmt').toLocaleString());
+            $('#srsAdj').text(n('#txtSaleReturnFlatDisc').toLocaleString());
+            $('#srsTotal').text(n('#txtSaleReturnTotal').toLocaleString());
+            $('#srsSubTitle').text($('#txtSaleReturnRemarks').val() || 'Enter your credentials to authorize this return');
             $('#SearchReturnModel').modal({
                 backdrop: 'static'
             });
-            $('#txtReturnuserCode').focus();
             $('#txtReturnuserCode').val('');
-            $('#btnSaveSaleReturn').attr('disabled', false);
+            $('#txtReturnpass').val('');
+            $('#btnSaveSaleReturn, #btnSaveSaleReturnPrint').attr('disabled', false);
             $('#lblReturnUsername').text('');
-            $('#txtReturnpass').text('');
+            setTimeout(function () { $('#txtReturnuserCode').focus(); }, 300);
         }
-        function SaveSaleReturn() {
+        function SaveSaleReturn(printSlip) {
             if (isPharmSaveInProgress()) return;
             lockPharmSave();
-            $('#btnSaveSaleReturn').attr('disabled', true);
             var userC = $('#txtReturnuserCode').val();
             var userP = $('#txtReturnpass').val();
             var userCode;
@@ -1544,6 +1656,11 @@
                             htmlContainer: 'swal-big-text'
                         }
                     });
+                    unlockPharmSave();
+                    return;
+                }
+                if (!(userC == userCode && userP == UserPass)) {
+                    Swal.fire({ icon: 'error', title: 'Error!', text: 'Invalid user code or password', showConfirmButton: false, timer: 2000 });
                     unlockPharmSave();
                     return;
                 }
@@ -1667,10 +1784,9 @@
                         try {
                             PageMethods.SaveSaleReturnData(JSON.stringify(AllItemDetail), UserId,
                                 function (res) {
-                                    var btnSave = $('#SSearchReturnPop').val();
-                                    /*  if (btnSave == 'Save & Print' || btnSave == "Save & Print") {*/
-                                    window.open('../../ReportViewer.aspx?ReportName=PharmacyReturnSlip&ReportTitle=Pharmacy Return Slip&Return_ID=' + JSON.parse(res));
-                                    //}
+                                    if (printSlip === true) {
+                                        window.open('../../ReportViewer.aspx?ReportName=PharmacyReturnSlip&ReportTitle=Pharmacy Return Slip&Return_ID=' + JSON.parse(res));
+                                    }
                                     Swal.fire({
                                         icon: 'success',
                                         title: 'Success!',
@@ -4056,6 +4172,23 @@ function CalculateReceivedAmount() {
                     $("#ddlpat_no").val(data[0].Patient_ID).trigger('change')
                     $("#ddl_Warehouse").val(data[0].Ware_House).trigger('change')
                     $("#hdnReturnBillID").val(data[0].Bill_ID)
+                    // bill-level discount % (amounts are recomputed from the returned qty)
+                    $('#txtSaleReturnDisPer').val(0);
+                    $('#txtSaleReturnFlatDisc').val(0);
+                    $.ajax({
+                        type: "post",
+                        url: "IssueMedicine.aspx/SaleReturnInvoiceMaster",
+                        data: JSON.stringify({ "invNo": Bill_Id }),
+                        dataType: 'JSON',
+                        contentType: "application/json; charset=utf-8",
+                        async: false,
+                        success: function (m) {
+                            var master = JSON.parse(m.d);
+                            if (master.length > 0) {
+                                $('#txtSaleReturnDisPer').val(master[0].Discount_Percentage);
+                            }
+                        },
+                    });
                     LoadReturnMedicineDetail(Bill_Id, Item_Id);
                 },
             });
@@ -4099,13 +4232,25 @@ function CalculateReceivedAmount() {
                             '</tr>';
                         $('#saleReturnTableBody').append(row);
                     });
-                    $('#saleReturnTableBody').on('change keyup', 'input[name="txtRQty"], input[name="txtRSalerate"], input[name="txtRDisPer"]', function () {
+                    $('#saleReturnTableBody').off('change keyup').on('change keyup', 'input[name="txtRQty"], input[name="txtRSalerate"], input[name="txtRDisPer"]', function () {
                         var $row = $(this).closest('tr');
                         calculateNetAmount($row);
                         $('#txtSaleReturnFlatDisc').val(0)
 
                     });
-                    CalculateSaleReturnLineDiscounts();
+                    // line discount/net from the returned qty, then master totals
+                    $('#saleReturnTableBody tr').each(function () {
+                        var $r = $(this);
+                        var q = parseFloat($r.find('input[name="txtRQty"]').val()) || 0;
+                        var rate = parseFloat($r.find('input[name="txtRSalerate"]').val()) || 0;
+                        var dp = parseFloat($r.find('input[name="txtRDisPer"]').val()) || 0;
+                        var da = (q * rate * dp) / 100;
+                        $r.find('input[name="txtRDisAmount"]').val(da.toFixed(0));
+                        $r.find('input[name="txtRnet"]').val((q * rate - da).toFixed(0));
+                    });
+                    CalculateSaleReturnHeader();
+                    CalCulateReturnDisc();
+                    CalculateSaleReturnAdj();
                     setTimeout(function () {
                         $('#ddlSaleReturnItems').select2('close');
                         $('input[name="txtRQty"]').focus().select();
@@ -5374,28 +5519,39 @@ function CalculateReceivedAmount() {
     </section>
 
     <div id="SearchModel" class="modal fade-in" role="dialog">
-        <div class="modal-dialog">
-            <div class="modal-content" style="width: 345px; margin-left: 80px; margin-top: 317px; height: 200px;">
-                <div class="modal-header">
-                    <h2 class="modal-title">Login</h2>
+        <div class="modal-dialog modal-dialog-centered srs-dialog" role="document">
+            <div class="modal-content srs-content">
+                <div class="modal-header srs-header">
+                    <span class="srs-icon srs-icon-lock"><i class="fa fa-lock"></i></span>
+                    <div class="srs-title-wrap">
+                        <h4 class="modal-title srs-title">Authorization</h4>
+                        <div class="srs-sub">Enter your credentials to continue</div>
+                    </div>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
                 </div>
 
-                <div class="modal-body" style="background-color: white">
-                    <input type="text" id="Inv_No" style="margin-left: 0px !important;" placeholder="Invoice Number" />
-                    <input type="button" id="btnpreview" value="Preview" onclick=" Invoice()" style="width: 30% !important; margin-left: 69%;" class="btn btn-primry" />
-                    <input type="text" id="txtuserCode" placeholder="UserCode" style="margin-top: 5px" autocomplete="off" />
-                    <label id="lblUsername"></label>
-                    <input type="password" id="txtpass" placeholder="Password" style="margin-left: 0px;" autocomplete="off" />
+                <div class="modal-body srs-body">
+                    <div class="srs-inv-row">
+                        <input type="text" id="Inv_No" placeholder="Invoice Number" />
+                        <input type="button" id="btnpreview" value="Preview" onclick=" Invoice()" class="btn btn-primry" />
+                    </div>
+                    <div class="srs-auth">
+                        <div class="srs-auth-title"><i class="fa fa-user"></i> Credentials</div>
+                        <div class="srs-auth-row">
+                            <input type="text" id="txtuserCode" placeholder="User Code" autocomplete="off" />
+                            <label id="lblUsername"></label>
+                        </div>
+                        <input type="password" id="txtpass" placeholder="Password" autocomplete="new-password" />
+                    </div>
                 </div>
 
-                <div class="modal-footer">
-                    <input type="button" id="SaveVal" class="btn btn-primry" onclick="SaveData()" value="Save" style="width: 30% !important;" />
-                    <input type="button" id="CloseSearchModel" class="btn-gray" value="Close" data-dismiss="modal" style="width: 30% !important;" />
+                <div class="modal-footer srs-footer">
+                    <input type="button" id="CloseSearchModel" class="btn-gray" value="Close" data-dismiss="modal" />
+                    <input type="button" id="SaveVal" class="btn btn-primry" onclick="SaveData()" value="Save" />
                 </div>
             </div>
         </div>
     </div>
-
     <%--Return Que Start--%>
     <div id="ReturnqueueModal" class="modal fade scrollable-modal" data-backdrop="static" tabindex="-1" role="dialog">
         <div class="modal-dialog modal-lg modal-dialog-centered modal-dialog-scrollable" role="document">
@@ -5656,42 +5812,22 @@ function CalculateReceivedAmount() {
                         </div>
                     </div>
                     <div class="summary-wrap">
-                        <table class="table-summary" style="width: auto;">
-                                <tr>
-                                    <td style="font-size: 13px; font-weight: bold; white-space: nowrap; padding-right: 8px; width: 1px;">Total Payable:</td>
-                                    <td style="width: 100%;">
-                                        <input type="text" id="txtSaleReturnTotalPayable" style="width: 100% !important; max-width: 220px; height: 25px; text-align: right; font-size: 22px; color: #cd1818 !important;" readonly="readonly" />
-                                    </td>
-                                </tr>
-                                <tr>
-                                    <td style="font-size: 13px; font-weight: bold; white-space: nowrap; padding-right: 8px; width: 1px;">Total Line Disc :</td>
-                                    <td>
-                                        <input type="text" id="txtSaleReturnLineDisc" style="width: 100% !important; max-width: 220px; height: 25px; text-align: right; font-size: 22px;" readonly="readonly" />
-                                    </td>
-                                </tr>
-                                <tr>
-                                    <td style="font-size: 13px; font-weight: bold; white-space: nowrap; padding-right: 8px; width: 1px;">Disc :</td>
-                                    <td>
-                                        <div style="display: flex; align-items: center; gap: 4px; max-width: 220px;">
-                                            <input type="text" id="txtSaleReturnDisPer" onkeyup="CalCulateReturnDisc()" readonly="readonly" style="width: 70px !important; height: 25px; text-align: right; font-size: 22px; flex-shrink: 0;" />
-                                            <span style="font-size: 22px; flex-shrink: 0;">%</span>
-                                            <input type="text" id="txtSaleReturnDisAmt" readonly="readonly" style="flex: 1; height: 25px; text-align: right; font-size: 22px;" />
-                                        </div>
-                                    </td>
-                                </tr>
-                                <tr>
-                                    <td style="font-size: 13px; font-weight: bold; white-space: nowrap; padding-right: 8px; width: 1px;">Adjustment :</td>
-                                    <td>
-                                        <input type="text" id="txtSaleReturnFlatDisc" onkeyup="CalculateSaleReturnAdj()" style="width: 100% !important; max-width: 220px; height: 25px; text-align: right; font-size: 22px;" autocomplete="off" />
-                                    </td>
-                                </tr>
-                                <tr>
-                                    <td style="font-size: 13px; font-weight: bold; white-space: nowrap; padding-right: 8px; width: 1px;">Total :</td>
-                                    <td>
-                                        <input type="text" id="txtSaleReturnTotal" style="width: 100% !important; max-width: 220px; height: 25px; text-align: right; font-size: 22px;" readonly="readonly" />
-                                    </td>
-                                </tr>
-                            </table>
+                        <div class="sr-sum">
+                            <label for="txtSaleReturnTotalPayable">Total Payable</label>
+                            <input type="text" id="txtSaleReturnTotalPayable" class="sr-sum-red" readonly="readonly" />
+                            <label for="txtSaleReturnLineDisc">Total Line Disc</label>
+                            <input type="text" id="txtSaleReturnLineDisc" readonly="readonly" />
+                            <label for="txtSaleReturnDisPer">Disc</label>
+                            <div class="sr-sum-disc">
+                                <input type="text" id="txtSaleReturnDisPer" onkeyup="CalCulateReturnDisc()" readonly="readonly" />
+                                <span>%</span>
+                                <input type="text" id="txtSaleReturnDisAmt" readonly="readonly" />
+                            </div>
+                            <label for="txtSaleReturnFlatDisc">Adjustment</label>
+                            <input type="text" id="txtSaleReturnFlatDisc" onkeyup="CalculateSaleReturnAdj()" autocomplete="off" />
+                            <label for="txtSaleReturnTotal" class="sr-sum-total">Total</label>
+                            <input type="text" id="txtSaleReturnTotal" class="sr-sum-total" readonly="readonly" />
+                        </div>
                         </div>
                     <table id="saleReturnTable" class="table table-bordered table-responsive-lg table-responsive-md">
                         <thead>
@@ -5716,7 +5852,7 @@ function CalculateReceivedAmount() {
                     </table>
                 </div>
                 <div class="modal-footer">
-                    <button type="button" class="btn btn-primry" id="SSearchReturnPop" onclick="SearchReturnPop()">Save & Print</button>
+                    <button type="button" class="btn btn-primry" id="SSearchReturnPop" onclick="SearchReturnPop()">Save</button>
                     <button type="button" class="btn btn-primry" id="ReturnQueue" onclick="openReturnQueue()">Queue</button>
                     <button type="button" class="btn btn-primry" onclick="RefreshSaleReturnModal()">Refresh</button>
                     <button type="button" class="btn btn-primry" data-dismiss="modal">Close</button>
@@ -5724,23 +5860,46 @@ function CalculateReceivedAmount() {
             </div>
         </div>
 
-        <div id="SearchReturnModel" data-backdrop="static" class="modal fade-in" role="dialog">
-            <div class="modal-dialog">
-                <div class="modal-content" style="width: 345px; margin-left: 80px; margin-top: 317px; height: 200px;">
-                    <div class="modal-header">
-                        <h2 class="modal-title">Login</h2>
+    </div>
 
+    <!-- Sale Return: confirm & authorize (Save / Save & Print) -->
+    <div id="SearchReturnModel" data-backdrop="static" class="modal fade" tabindex="-1" role="dialog">
+        <div class="modal-dialog modal-dialog-centered srs-dialog" role="document">
+            <div class="modal-content srs-content">
+                <div class="modal-header srs-header">
+                    <span class="srs-icon"><i class="fa fa-undo"></i></span>
+                    <div class="srs-title-wrap">
+                        <h4 class="modal-title srs-title">Confirm Sale Return</h4>
+                        <div class="srs-sub" id="srsSubTitle"></div>
                     </div>
-                    <div class="modal-body">
-                        <input type="text" id="txtReturnuserCode" placeholder="UserCode" style="margin-left: 0;" autocomplete="off" />
-                        <label id="lblReturnUsername"></label>
-                        <input type="password" id="txtReturnpass" placeholder="Password" style="margin-left: 0;" autocomplete="off" />
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                </div>
+                <div class="modal-body srs-body">
+                    <div class="srs-meta">
+                        <div><span>Patient</span><b id="srsPatient">-</b></div>
+                        <div><span>Invoice #</span><b id="srsInvoice">-</b></div>
+                        <div><span>Items</span><b id="srsItems">0</b></div>
                     </div>
-                    <div class="modal-footer">
-
-                        <input type="button" class="btn btn-primry" id="btnSaveSaleReturn" onclick="SaveSaleReturn()" value="Save" style="width: 30% !important;" />
-                        <input type="button" class="btn-gray" id="CloseSearchReturnModel" value="Close" data-dismiss="modal" style="width: 30% !important;" />
+                    <table class="srs-summary">
+                        <tr><td>Total Payable</td><td id="srsPayable">0</td></tr>
+                        <tr><td>Line Discount</td><td id="srsLineDisc">0</td></tr>
+                        <tr><td>Discount <small id="srsDisPer"></small></td><td id="srsDisAmt">0</td></tr>
+                        <tr><td>Adjustment</td><td id="srsAdj">0</td></tr>
+                        <tr class="srs-net"><td>Net Refund</td><td id="srsTotal">0</td></tr>
+                    </table>
+                    <div class="srs-auth">
+                        <div class="srs-auth-title"><i class="fa fa-lock"></i> Authorization</div>
+                        <div class="srs-auth-row">
+                            <input type="text" id="txtReturnuserCode" placeholder="User Code" autocomplete="off" />
+                            <label id="lblReturnUsername"></label>
+                        </div>
+                        <input type="password" id="txtReturnpass" placeholder="Password" autocomplete="new-password" />
                     </div>
+                </div>
+                <div class="modal-footer srs-footer">
+                    <input type="button" class="btn-gray" id="CloseSearchReturnModel" value="Cancel" data-dismiss="modal" />
+                    <button type="button" class="btn btn-primry" id="btnSaveSaleReturn" onclick="SaveSaleReturn(false)"><i class="fa fa-save"></i> Save</button>
+                    <button type="button" class="btn btn-primry" id="btnSaveSaleReturnPrint" onclick="SaveSaleReturn(true)"><i class="fa fa-print"></i> Save &amp; Print</button>
                 </div>
             </div>
         </div>
