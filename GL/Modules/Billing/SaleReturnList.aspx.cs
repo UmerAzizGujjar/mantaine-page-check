@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Web;
+using System.Web.Script.Serialization;
 using System.Web.Services;
 using System.Web.UI;
 using System.Web.UI.WebControls;
@@ -36,6 +37,7 @@ namespace PMS.Modules.Billing
                                          TotalDisc_Amount = (PS.TotalLine_Wise_Discount+PS.Master_Discount_Amt),
                                          Net_Amount = PS.Net_Amount,
                                          Total_Amount = PS.Total_Amount,
+                                         Status = PS.Voucher_ID != null ?"Approved" : "Created",
                                      };
 
                     var FilteredCount = SaleReturn.Count();
@@ -61,6 +63,49 @@ namespace PMS.Modules.Billing
             catch (Exception ex)
             {
                 throw new Exception("Error fetching Sale Return list", ex);
+            }
+        }
+
+        [WebMethod]
+        public static string ApproveReturn(string returnId)
+        {
+            try
+            {
+                var user_id = AppConfig.UserID;
+                int id = Convert.ToInt32(returnId);
+
+                using (DataBaseDataContext db = new DataBaseDataContext())
+                {
+                    // The proc deletes and recreates the voucher, so never run it on an already-approved return.
+                    if (db.Pharmacy_SaleReturns.Any(r => r.Return_ID == id && r.Voucher_ID != null))
+                    {
+                        return new JavaScriptSerializer().Serialize(new
+                        {
+                            Success = false,
+                            Message = "Already approved."
+                        });
+                    }
+
+                    db.ExecuteCommand(
+                        "EXEC dbo.SpApproveSaleReturn {0}, {1}",
+                        id,
+                        user_id
+                    );
+                }
+
+                return new JavaScriptSerializer().Serialize(new
+                {
+                    Success = true,
+                    Message = "Sale return approved successfully"
+                });
+            }
+            catch (Exception ex)
+            {
+                return new JavaScriptSerializer().Serialize(new
+                {
+                    Success = false,
+                    Message = ex.Message
+                });
             }
         }
 

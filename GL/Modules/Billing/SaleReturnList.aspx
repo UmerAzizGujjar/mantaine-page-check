@@ -7,8 +7,111 @@
             $('#ctl00_lblMessage').hide();
             LoadPage();
 
+            $(document).on('change', '#header-check', function () {
+                $('#tbl tbody .issue-checkbox:not(:disabled)').prop('checked', $(this).prop('checked'));
+            });
+
+            $(document).on('change', '.issue-checkbox', function () {
+                var total = $('#tbl tbody .issue-checkbox:not(:disabled)').length;
+                var checked = $('#tbl tbody .issue-checkbox:checked:not(:disabled)').length;
+                $('#header-check').prop('checked', total > 0 && total === checked);
+            });
         });
-      
+
+        function ApproveSelected() {
+            var selectedIds = [];
+            $('#tbl tbody .issue-checkbox:checked:not(:disabled)').each(function () {
+                selectedIds.push($(this).val());
+            });
+
+            if (selectedIds.length === 0) {
+                Swal.fire({
+                    icon: 'warning',
+                    title: 'No Selection',
+                    text: 'Please select at least one record to approve (only Created records can be approved).',
+                    confirmButtonColor: '#3085d6'
+                });
+                return;
+            }
+
+            Swal.fire({
+                title: 'Confirm Approval',
+                text: 'Are you sure you want to approve ' + selectedIds.length + ' record(s)?',
+                icon: 'question',
+                showCancelButton: true,
+                confirmButtonColor: '#28a745',
+                cancelButtonColor: '#d33',
+                confirmButtonText: 'Yes, Approve!',
+                cancelButtonText: 'Cancel'
+            }).then((result) => {
+                if (!result.isConfirmed) return;
+
+                Swal.fire({
+                    title: 'Processing...',
+                    text: 'Please wait',
+                    allowOutsideClick: false,
+                    showConfirmButton: false,
+                    didOpen: () => { Swal.showLoading(); }
+                });
+
+                var successCount = 0, failedCount = 0, processed = 0, failedDetails = [];
+
+                function finalizeApproval() {
+                    if (processed !== selectedIds.length) return;
+                    var html = '<div style="text-align: left;">' +
+                        '<p><strong>Total Selected:</strong> ' + selectedIds.length + '</p>' +
+                        '<p style="color: green;"><strong>Approved:</strong> ' + successCount + '</p>' +
+                        '<p style="color: red;"><strong>Failed:</strong> ' + failedCount + '</p>';
+                    if (failedDetails.length > 0) {
+                        html += '<hr><div style="max-height: 150px; overflow-y: auto; font-size: 12px;">';
+                        for (var i = 0; i < failedDetails.length; i++) {
+                            html += '<p style="color: red;">' + failedDetails[i] + '</p>';
+                        }
+                        html += '</div>';
+                    }
+                    html += '</div>';
+
+                    Swal.fire({
+                        icon: successCount > 0 ? 'success' : 'error',
+                        title: 'Approval Complete',
+                        html: html,
+                        confirmButtonColor: '#28a745'
+                    }).then(() => {
+                        $('#tbl').DataTable().ajax.reload();
+                        $('#header-check').prop('checked', false);
+                    });
+                }
+
+                selectedIds.forEach(function (returnId) {
+                    $.ajax({
+                        type: "POST",
+                        url: "SaleReturnList.aspx/ApproveReturn",
+                        data: JSON.stringify({ returnId: String(returnId) }),
+                        contentType: "application/json; charset=utf-8",
+                        dataType: "json",
+                        success: function (response) {
+                            processed++;
+                            var res = {};
+                            try { res = JSON.parse(response.d); } catch (e) { }
+                            if (res.Success === true) {
+                                successCount++;
+                            } else {
+                                failedCount++;
+                                failedDetails.push('Return #' + returnId + ': ' + (res.Message || 'Unknown response'));
+                            }
+                            finalizeApproval();
+                        },
+                        error: function (xhr, status, error) {
+                            processed++;
+                            failedCount++;
+                            failedDetails.push('Return #' + returnId + ': ' + (error || 'Unknown error'));
+                            finalizeApproval();
+                        }
+                    });
+                });
+            });
+        }
+
        
         function PrintInvoice(key) {
             //var BillId = $('#BillId' + key).val();
@@ -24,6 +127,11 @@
                 "dom": 'lBfrtip',
                 "lengthChange": true,
                 buttons: [
+                    {
+                        text: '<i class="fa fa-check"></i> Approve Selected',
+                        className: 'dt-button buttons-copy buttons-html5',
+                        action: function () { ApproveSelected(); }
+                    },
                     'copy',
                     'excel',
                     'pdf',
@@ -64,7 +172,19 @@
                     });
                 },
                 "columns": [
-                    { "data": "Return_ID", "visible": false, "width": "0%" },                                                        
+                    {
+                        "data": null,
+                        "width": "5%",
+                        "orderable": false,
+                        "render": function (data, type, full) {
+                            if (full.Status === "Approved") {
+                                return '<input type="checkbox" class="issue-checkbox" disabled />';
+                            }
+                            return '<input type="checkbox" class="issue-checkbox" value="' + full.Return_ID + '" />';
+                        },
+                        "createdCell": function (td) { $(td).css('text-align', 'center'); }
+                    },
+                    { "data": "Return_ID", "visible": false, "width": "0%" },                                                    
                     {
                         "data": "Created_Date", "name": "Created_Date",
                         "render": function (data, type, full) {
@@ -78,6 +198,17 @@
                     { "data": "Net_Amount", "name": "Net_Amount", "width": "10%" },                    
                     { "data": "Total_Amount", "width": "10%", },
                     { "data": "UserName", "width": "10%", },
+                    {
+                        "data": "Status",
+                        "width": "8%",
+                        "orderable": false,
+                        "render": function (data) {
+                            if (data === "Approved") {
+                                return '<span style="background-color: #28a745; padding: 4px 8px; border-radius: 4px; color: white; font-size: 11px; font-weight: bold;">Approved</span>';
+                            }
+                            return '<span style="background-color: #ffc107; padding: 4px 8px; border-radius: 4px; color: #333; font-size: 11px; font-weight: bold;">Created</span>';
+                        }
+                    },
                     {
                         render: function (data, type, full) {
                             var res = '<a href="#" onclick="PrintInvoice(' + full.Return_ID + ')" style="border-radius: 4px; background-color: #1f1fe3; color: white; padding: 5px 8px 5px 8px;"><i style="color:white !important;" class="fa fa-upload"></i></a>'
@@ -112,6 +243,7 @@
             <table id="tbl" class="table table-bordered table-hover table-striped">
                 <thead id="ihead">
                     <tr>
+                        <th style="text-align:center;"><input type="checkbox" id="header-check" /></th>
                         <th style="display:none;">Return_ID</th>
                         <th>Return Date</th>
                         <th>Inv No</th>
@@ -119,6 +251,7 @@
                         <th>Net Amount</th>
                         <th>Total Amount</th>
                         <th>Operator</th>
+                        <th>Status</th>
                         <th>Action</th>                      
                     </tr>
                 </thead>
