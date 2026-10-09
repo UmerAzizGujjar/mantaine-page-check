@@ -433,8 +433,7 @@ html body#contbod .wrapper .brand-title br { display: inline; }
         position: static !important;
         margin: 0 0 16px;
         text-align: center !important;
-    }
-}
+    }}
 
 @media (max-width: 480px) {
     html body#contbod .wrapper { margin: 12px !important; width: auto !important; padding: 20px 18px 16px !important; border-radius: 14px !important; }

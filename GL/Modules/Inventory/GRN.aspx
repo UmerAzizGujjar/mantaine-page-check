@@ -2,277 +2,7 @@
 
 <asp:Content ID="Content1" ContentPlaceHolderID="HeadContent" runat="server">
 
-    <link href="../../wwwroot/THEME_TIBBIT/CustomCSS/custom-modals.css" rel="stylesheet" />
-    <style type="text/css">
-
-        .source-select-input {
-            flex: 1;
-            min-width: 0;
-            border-right: none !important;
-            border-radius: 5px 0 0 5px !important;
-            height: 34px;
-            font-size: 13px;
-            max-width: 220px;
-        }
-        .ErrorAlert {
-            border: 1px solid red !important;
-        }
-
-        .select2-selection__rendered {
-            line-height: 30px !important;
-        }
-
-        .main input {
-            margin-bottom: 0px !important;
-        }
-
-        .select2-container .select2-selection--single {
-            height: 30px !important;
-        }
-
-        .select2-selection__arrow {
-            height: 30px !important;
-        }
-
-        .table tr td:nth-child(2) {
-            text-align: right !important;
-        }
-
-        .table tr td:nth-child(3) {
-            text-align: left !important;
-        }
-
-        .table tr td:nth-child(4) {
-            text-align: right !important;
-        }
-
-        .table tr td:nth-child(6) {
-            text-align: right !important;
-        }
-
-        .table tr td:nth-child(7) {
-            text-align: center !important;
-        }
-
-        .table tr td:nth-child(8) {
-            text-align: right !important;
-        }
-
-        .table tr td:nth-child(10) {
-            text-align: right !important;
-        }
-
-        .table tr td:nth-child(12) {
-            text-align: right !important;
-        }
-
-        .table tr td:nth-child(9) {
-            text-align: right !important;
-        }
-
-        input[type="text"] {
-            font-size: 13px;
-            border-radius: 5px !important;
-        }
-
-        #ctl00_MainContent_Label2 {
-            position: relative;
-            left: 7px;
-        }
-
-        li.token-input-token p {
-            margin: -3px !important;
-        }
-
-        input[type="number"] {
-            height: 20px !important;
-        }
-
-        textarea {
-            font-size: 8px !important;
-            border-radius: 5px !important;
-        }
-
-        #txtStatus {
-            font-size: 10px !important;
-        }
-
-
-        select {
-            height: 20px !important;
-        }
-
-        ul.token-input-list {
-            height: 23px !important;
-            width: 692px !important;
-        }
-
-        div.token-input-dropdown {
-            overflow: auto;
-            max-height: 150px;
-        }
-
-        ul.token-input-list {
-            width: 168px;
-        }
-
-        .table {
-            margin: 1em 0;
-            width: 100%;
-            overflow: hidden;
-            background: #FFF;
-            color: #024457;
-        }
-
-            .table tr {
-                border: 1px solid #D9E4E6;
-            }
-
-                .table tr:nth-child(even) {
-                    background-color: #EAF3F3;
-                }
-
-            .table th {
-                display: none;
-                border: 1px solid #FFF;
-                background-color: #438eb9;
-                color: #FFF;
-                padding: 1em;
-            }
-
-            .table thead th {
-                display: table-cell;
-                text-align: center;
-            }
-
-        @media (min-width: 480px) {
-            .table th:nth-child(2) span {
-                display: block;
-            }
-
-            .table th:nth-child(2):after {
-                display: none;
-            }
-        }
-
-        .table td {
-            display: block;
-            word-wrap: break-word;
-            max-width: 7em;
-        }
-
-            .table td:first-child {
-                display: table-cell;
-                text-align: center;
-                border-right: 1px solid #D9E4E6;
-            }
-
-        @media (min-width: 480px) {
-            .table td {
-                border: 1px solid #D9E4E6;
-            }
-        }
-
-        .table th, .table td {
-            text-align: center;
-            margin: .5em 1em;
-        }
-
-        @media (min-width: 480px) {
-            .table th, .table td {
-                display: table-cell;
-                padding: 1em;
-            }
-        }
-
-        select option {
-            background: #f5f5f5;
-            font-weight: bold;
-            color: #000000;
-            font-size: 10px !important;
-        }
-
-        .responstable td {
-            height: 0px !important;
-            padding: 0 !important;
-        }
-
-        .labelIGP {
-            font-size: 11px !important;
-        }
-
-        /* ========== PAGE LOADER STYLES ========== */
-        #page-loader {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: rgba(255, 255, 255, 0.95);
-            z-index: 9999;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            flex-direction: column;
-            right: 0;
-            bottom: 0;
-        }
-
-        #page-loader .loader-container {
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
-            text-align: center;
-        }
-
-        #page-loader .loader-spinner {
-            border: 5px solid #f3f3f3;
-            border-top: 5px solid #3498db;
-            border-radius: 50%;
-            width: 60px;
-            height: 60px;
-            animation: spin 1s linear infinite;
-            margin-bottom: 20px;
-        }
-
-        #page-loader .loader-text {
-            font-size: 16px;
-            color: #333;
-            font-weight: bold;
-            margin-top: 10px;
-        }
-
-        #page-loader .loader-progress {
-            width: 300px;
-            height: 6px;
-            background: #e0e0e0;
-            border-radius: 3px;
-            margin-top: 20px;
-            overflow: hidden;
-        }
-
-        #page-loader .loader-progress-bar {
-            height: 100%;
-            background: #3498db;
-            width: 0%;
-            transition: width 0.3s ease;
-            border-radius: 3px;
-        }
-
-        @keyframes spin {
-            0% { transform: rotate(0deg); }
-            100% { transform: rotate(360deg); }
-        }
-
-        #page-loader.hidden {
-            display: none;
-        }
-
-        #page-loader.show {
-            display: flex !important;
-        }
-    </style>
+    <link href="../../wwwroot/THEME_TIBBIT/CustomCSS/grn.css?v=20261018" rel="stylesheet" />
     <script type="text/javascript">
         var GRN_ID = 0;
         var loaderTimeout = null;
@@ -653,7 +383,7 @@ function LoadAllitem(searchText) {
                 '<td><input type="text" style="text-align:center;font-size:11px;" name="txtRateDir" id="txtRateDir' + length + '"  value="' + rate + '" /></td>' +
                 '<td style="padding-right: 3px!important;text-align:center;"><input type="text" style="width:125px !important;text-align:right;font-size:11px;height:27px !important;" value="0" readonly="readonly"  id="txtamountDir' + length + '" name="txtamountDir" ></input></td>' +
                 '<td style="padding-right: 3px!important;text-align:center;"><input type="text" style="width:125px !important;text-align:right;font-size:11px;height:27px !important;" value="0"  id="txtSaleRateDir' + length + '" name="txtSaleRateDir" ></input></td>' +
-                '<td><a href="javascript:void(0)" onclick="ExcludeFromPayment(this)"><i class="glyphicon glyphicon-trash" style="font-size:11px;margin-left: 16px; color: #f30a0a;position:relative;left:-33px"></i></a> </td>' +
+                '<td><a href="javascript:void(0)" onclick="ExcludeFromPayment(this)"><i class="fa fa-trash" style="font-size:11px;margin-left: 16px; color: #f30a0a;position:relative;left:-33px"></i></a> </td>' +
                 '</tr>';
 
             // $('#tblItemDescription tbody').append(newRow);
@@ -748,7 +478,7 @@ function LoadGRNDetailDir(GRN_ID) {
                     '<td><input type="text" id="txtRateDir' + rowlength + '" name="txtRateDir" value="' + parseFloat(value.Rate).toFixed(2) + '" style="text-align:center;font-size:11px;" /></td>' +
                     '<td><input type="text" id="txtamountDir' + rowlength + '" name="txtamountDir" value="' + parseFloat(value.Amount).toFixed(2) + '" readonly style="width:125px;text-align:right;font-size:11px;height:27px;" /></td>' +
                     '<td><input type="text" id="txtSaleRateDir' + rowlength + '" name="txtSaleRateDir" value="' + parseFloat(value.Sale_Rate).toFixed(2) + '" readonly style="width:125px;text-align:right;font-size:11px;height:27px;" /></td>' +
-                    '<td><a href="javascript:void(0)" onclick="ExcludeFromPayment(this)"><i class="glyphicon glyphicon-trash" style="font-size:11px;color:#f30a0a;"></i></a></td>' +
+                    '<td><a href="javascript:void(0)" onclick="ExcludeFromPayment(this)"><i class="fa fa-trash" style="font-size:11px;color:#f30a0a;"></i></a></td>' +
                     '</tr>';
                 $tbody[0].insertAdjacentHTML('beforeend', html);
             }
@@ -1053,7 +783,7 @@ function LoadGRNDetailDir(GRN_ID) {
                                 '<td style="padding-right: 3px!important;"><input type="text" value="0" style="text-align:right;font-size:9px;  id="AccQty' + rowlength + '" name="AccQty" style="width:50px !important;" onkeyup="CulculateRejQty(this)"></input></td>' +
                                 '<td style="padding-right: 3px!important;"><input type="hidden" style="width:50px !important;text-align:right;font-size:9px;height:10px !important;" value="0"  id="RejQty' + rowlength + '" name="RejQty" ></input></td>' +
                                 '<td style="width:50px !important;text-align:right;font-size:9px;height:10px !important;"><input type="hidden" style="width:50px !important;text-align:right;font-size:9px;height:10px !important;position: relative;left: -14px;" value="0"  id="GRNQty' + rowlength + '" name="GRNQty"></input></td>' +
-                                '<td><a href="javascript:void(0)" onclick="ExcludeFromPayment(this)"><i class="glyphicon glyphicon-trash" style="font-size:11px;margin-left: 16px; color: #f30a0a;position:relative;left:-33px"></i></a> </td>' +
+                                '<td><a href="javascript:void(0)" onclick="ExcludeFromPayment(this)"><i class="fa fa-trash" style="font-size:11px;margin-left: 16px; color: #f30a0a;position:relative;left:-33px"></i></a> </td>' +
                                 '</tr>');
                         }
                     });
@@ -1428,9 +1158,9 @@ function LoadGRNDetailDir(GRN_ID) {
     </script>
 </asp:Content>
 <asp:Content ID="Content2" ContentPlaceHolderID="MainContent" runat="server">
-    <form id="item">
+    <div class="gr-page">
 
-        <!-- PAGE LOADER -->
+        <!-- PAGE LOADER (shown/hidden by the page script) -->
         <div id="page-loader" style="display: none;">
             <div class="loader-spinner"></div>
             <div class="loader-text">Loading...</div>
@@ -1439,225 +1169,246 @@ function LoadGRNDetailDir(GRN_ID) {
             </div>
         </div>
 
-        <div class="row">
-            <div class="col-lg-3 col-md-6 col-sm-12">
-                <label id="LblIGP_Num" class="labelIGP">GRN No</label>
-                <input type="text" class="form-control" id="GRN_Num" name="GRN_Num" readonly="readonly" />
-            </div>
-            <div class="col-lg-3 col-md-6 col-sm-12">
-                <label id="Lbl_Date" class="labelIGP">Date</label>
-                <input type="text" class="form-control" id="txtDate" name="txtDate" />
-            </div>
-            <div class="col-lg-3 col-md-6 col-sm-12">
-                <label id="lbltxtVendor" class="labelIGP">Vendor</label>
-                <select class="form-control" id="ddlVendor" name="ddlVendor" onchange="getIGPNumByVendor(this)">
-                </select>
-            </div>
-            <div class="col-lg-3 col-md-6 col-sm-12">
-                <label id="lblPO_No" class="labelIGP">Igp No</label>
-                <select class="form-control" id="ddlIgpNo" name="ddlIgpNo" onchange="PerformIGPSearch()">
-                </select>
-            </div>
-            </div>
-
-
-            <div class="row">
-            <div class="col-lg-3 col-md-6 col-sm-12">
-                <label id="lblInvOrg" class="labelIGP">Warehouse</label>
-                <select id="ddlInv_org" class="form-control">
-                </select>
-            </div>
-
-            <div class="col-lg-3 col-md-6 col-sm-12">
-                <label id="LblProject" class="labelIGP">Project</label>
-                <select id="ddlProject" class="form-control" name="ddlProject">
-                </select>
-            </div>
-           <div class="col-lg-3 col-md-6 col-sm-12">
-                <label id="lblStatus" class="labelIGP">Status</label>
-                <input type="text" class="form-control" id="txtStatus" readonly="readonly" />
-            </div>
-
-            <div class="col-lg-3 col-md-6 col-sm-12">
-                 <label id="lblrem" class="labelIGP">Remarks</label>
-                 <textarea id="txtRemarks" class="form-control" rows="2" cols="20"></textarea>
-             </div>
-         </div>
-
-        <div class="row">
-            <div class="col-lg-3 col-md-6 col-sm-12">
-                <label id="LblBranch" class="labelIGP">Branch</label>
-                <select id="ddlBranch" class="form-control"></select>
+        <!-- Title line: the master page puts the page title in the empty left side; the badges sit on the right -->
+        <div class="pr-meta-bar">
+            <div class="meta-left"></div>
+            <div class="meta-right">
+                <div class="gr-badge"><span class="gr-badge-label">GRN No</span><span class="gr-badge-value" id="badgeGrnNo">---</span></div>
+                <div class="gr-badge"><span class="gr-badge-label">Date</span><span class="gr-badge-value" id="badgeGrnDate">---</span></div>
+                <div class="gr-badge"><span class="gr-badge-label">Status</span><span class="gr-badge-value" id="badgeGrnStatus">---</span></div>
             </div>
         </div>
 
-        <div class="row">
-            <div class="col-lg-3 col-md-6 col-sm-12">
-                <label id="lblAttachment" class="labelIGP">Attachment</label>
-                <input type="file" id="choseGRNfile" name="choseGRNfile" />
-                <asp:HyperLink ID="HyperLink1" runat="server">Download</asp:HyperLink>
+        <div class="gr-layout">
+
+            <!-- Left: GRN details + remarks / attachment -->
+            <div class="gr-col">
+                <section class="gr-card">
+                    <h5 class="gr-card-title"><i class="fa fa-cubes"></i> GRN Details</h5>
+                    <div class="gr-grid">
+                        <div class="gr-field">
+                            <label id="LblIGP_Num" for="GRN_Num">GRN No</label>
+                            <input type="text" class="form-control" id="GRN_Num" name="GRN_Num" readonly="readonly" />
+                        </div>
+                        <div class="gr-field">
+                            <label id="Lbl_Date" for="txtDate">Date</label>
+                            <input type="text" class="form-control" id="txtDate" name="txtDate" autocomplete="off" />
+                        </div>
+                        <div class="gr-field">
+                            <label id="lbltxtVendor" for="ddlVendor">Vendor</label>
+                            <select class="form-control" id="ddlVendor" name="ddlVendor" onchange="getIGPNumByVendor(this)">
+                            </select>
+                        </div>
+                        <div class="gr-field">
+                            <label id="lblPO_No" for="ddlIgpNo">Igp No</label>
+                            <select class="form-control" id="ddlIgpNo" name="ddlIgpNo" onchange="PerformIGPSearch()">
+                            </select>
+                        </div>
+                        <div class="gr-field">
+                            <label id="lblInvOrg" for="ddlInv_org">Warehouse</label>
+                            <select id="ddlInv_org" class="form-control">
+                            </select>
+                        </div>
+                        <div class="gr-field">
+                            <label id="LblProject" for="ddlProject">Project</label>
+                            <select id="ddlProject" class="form-control" name="ddlProject">
+                            </select>
+                        </div>
+                        <div class="gr-field">
+                            <label id="LblBranch" for="ddlBranch">Branch</label>
+                            <select id="ddlBranch" class="form-control"></select>
+                        </div>
+                        <div class="gr-field" name="grndirect">
+                            <label for="dircGRN">Direct GRN</label>
+                            <div class="gr-check">
+                                <input type="checkbox" name="dircGRN" id="dircGRN" value="item" />
+                            </div>
+                        </div>
+                        <div id="itemInputSection" class="gr-field">
+                            <label>&nbsp;</label>
+                            <%-- <input type="hidden" id="txtItem" class="source-select-input" placeholder="Search items..." />--%>
+                            <button type="button" class="btn btn-primry" id="btnGetAllItems" onclick="LoadAllitem('')"><i class="fa fa-search"></i>Items</button>
+                        </div>
+                    </div>
+                </section>
+
+                <section class="gr-card">
+                    <h5 class="gr-card-title"><i class="fa fa-paperclip"></i> Remarks &amp; Attachment</h5>
+                    <div class="gr-grid" style="align-items: start;">
+                        <div class="gr-field gr-span-2">
+                            <label id="lblrem" for="txtRemarks">Remarks</label>
+                            <textarea id="txtRemarks" class="form-control" rows="2" cols="20"></textarea>
+                        </div>
+                        <div class="gr-field gr-span-2">
+                            <label id="lblAttachment" for="choseGRNfile">Attachment</label>
+                            <input type="file" id="choseGRNfile" name="choseGRNfile" class="form-control" />
+                            <asp:HyperLink ID="HyperLink1" runat="server" CssClass="gr-link">Download</asp:HyperLink>
+                        </div>
+                    </div>
+                </section>
             </div>
 
-            <div class="col-lg-1 col-md-6 col-sm-12" name="grndirect">
-                <label class="source-radio-option">
-                    Direct GRN
-                </label>
+            <!-- Right: status -->
+            <div class="gr-col">
+                <section class="gr-card">
+                    <h5 class="gr-card-title"><i class="fa fa-check-square-o"></i> Status</h5>
+                    <div class="gr-grid" style="grid-template-columns: minmax(0, 1fr);">
+                        <div class="gr-field">
+                            <label id="lblStatus" for="txtStatus">Status</label>
+                            <input type="text" class="form-control" id="txtStatus" readonly="readonly" />
+                        </div>
+                    </div>
+                </section>
             </div>
-
-            <div class="col-lg-1 col-md-6 col-sm-12"  name="grndirect">
-     
-                <input type="checkbox" name="dircGRN" id="dircGRN" value="item" />
-            </div>
-            <div id="itemInputSection" class="col-lg-4 col-md-6 col-sm-12">
-                
-                   <%-- <input type="hidden" id="txtItem" class="source-select-input" placeholder="Search items..." />--%>
-                    <button type="button" class="btn btn-primry" id="btnGetAllItems" onclick="LoadAllitem('')"><i class="fa fa-search"></i>Items</button>
-              
-            </div>
-
-
         </div>
 
-     
-     </form>
+        <!-- Items (the page script shows the manual or the direct table) -->
+        <section class="gr-card">
+            <h5 class="gr-card-title"><i class="fa fa-list-alt"></i> Items</h5>
 
-            <div id="ManualGRN" class="table-container" style="width:100%">
-                <table class="table " id="tblItemDescription" style="margin-top: 13px; font-size: 10px!important; width: 100% !important; overflow: unset;">
+            <div id="ManualGRN" class="gr-table-wrap">
+                <table class="table gr-table" id="tblItemDescription">
                     <thead>
                         <tr>
-                            <th style="text-align: center;">Sr No.</th>
-                            <th style="text-align: center; font-size: 10px;">Item Code</th>
-                            <th style="text-align: center;">Item Description</th>
-                            <th style="text-align: center;">IGP #</th>
-                            <th style="text-align: center;">IGP Date</th>
-                            <th style="text-align: center;">PO No</th>
-                            <th style="text-align: center;">PO Date</th>
-                            <th style="text-align: center;">Batch No</th>
-                            <th style="text-align: center;">Mfg Date</th>
-                            <th style="text-align: center;">Exp Date</th>
-                            <th style="text-align: center;">IGP Qty</th>
-                            <th style="display: none; text-align: center;">Acc Qty</th>
-                            <th style="display: none; text-align: center;">Rej Qty</th>
-                            <th style="text-align: center;">Rate</th>
-                            <th style="text-align: center;">GRN Qty</th>
-                            <th style="text-align: center;">Sale Rate</th>
-                            <th style="text-align: center;" id="thaction">Action</th>
+                            <th>Sr No.</th>
+                            <th>Item Code</th>
+                            <th>Item Description</th>
+                            <th>IGP #</th>
+                            <th>IGP Date</th>
+                            <th>PO No</th>
+                            <th>PO Date</th>
+                            <th>Batch No</th>
+                            <th>Mfg Date</th>
+                            <th>Exp Date</th>
+                            <th>IGP Qty</th>
+                            <th style="display: none;">Acc Qty</th>
+                            <th style="display: none;">Rej Qty</th>
+                            <th>Rate</th>
+                            <th>GRN Qty</th>
+                            <th>Sale Rate</th>
+                            <th id="thaction">Action</th>
                         </tr>
                     </thead>
                     <tbody id="tblItemDescriptionDetail">
                     </tbody>
                 </table>
             </div>
-    
-            <div id="DirectGRN" class="table-container" style="width:100%">
-                <table class="table " id="tblItemDescriptionDir" style="margin-top: 13px; font-size: 10px!important; width: 100% !important; overflow: unset;">
+
+            <div id="DirectGRN" class="gr-table-wrap">
+                <table class="table gr-table" id="tblItemDescriptionDir">
                     <thead>
                         <tr>
-                            <th style="text-align: center;">Sr No.</th>
-                            <th style="text-align: center; font-size: 10px;">Item Code</th>
-                            <th style="text-align: center;">Item Description</th>
-                            <th style="text-align: center;">GRN Qty</th>
-                            <th style="text-align: center;">UOM</th>
-                            <th style="text-align: center;">Batch No</th>
-                            <th style="text-align: center;">Mfg Date</th>
-                            <th style="text-align: center;">Exp Date</th>
-                            <th style="text-align: center;">Bounus Qty</th>
-                            <th style="text-align: center;">Rate</th>
-                            <th style="text-align: center;">Amount</th>
-                            <th style="text-align: center;">Sale Rate</th>
-                            <th style="text-align: center;" id="thactiond">Action</th>
+                            <th>Sr No.</th>
+                            <th>Item Code</th>
+                            <th>Item Description</th>
+                            <th>GRN Qty</th>
+                            <th>UOM</th>
+                            <th>Batch No</th>
+                            <th>Mfg Date</th>
+                            <th>Exp Date</th>
+                            <th>Bounus Qty</th>
+                            <th>Rate</th>
+                            <th>Amount</th>
+                            <th>Sale Rate</th>
+                            <th id="thactiond">Action</th>
                         </tr>
                     </thead>
                     <tbody id="tblItemDescriptionDetailDir">
                     </tbody>
                 </table>
             </div>
+        </section>
 
-    <div class="purchaseOrderSubmitForm" style=" margin-top: 21px;">       
-        <div class="row">
-            <div class="col-lg-8">
-                <div class="row">
-                    <div class="col-lg-2 col-md-4 col-sm-12">
-                        <input type="button" class="btn btn-primry" value="Voucher" id="btnVoucher" onclick="PrintVoucher()" />
-                        &nbsp;
-                    </div>
-                    <div class="col-lg-2 col-md-4 col-sm-12">
-                        <input type="button" class="btn btn-gray" value="List" onclick="window.location = 'GRNView.aspx'" />
-                        &nbsp;
-                    </div>
-                    <div class="col-lg-2 col-md-4 col-sm-12">
-                        <input type="button" class="btn-primry" value="Print" name="name" id="btn_Print" onclick="PrintGRNDetail();" style="width: 81px;" />
-                        &nbsp;
-                    </div>
-                    <div class="col-lg-2 col-md-4 col-sm-12" id="SaveButtonToBeHidden">
-                        <input type="button" class="btn-primry" onclick="SaveAllRecord()" value="Save" id="btnSave" style="width: 81px; display: none" />
-                        &nbsp;
-                    </div>
-                    <div class="col-lg-2 col-md-4 col-sm-12">
-                        <input type="button" class="btn-primry" style="width: 103px; display: none" value="UnApprove" id="btnUnApprove" onclick="UnApprove()" />
-                        &nbsp;
-                    </div>
-                    <div class="col-lg-2 col-md-4 col-sm-12">
-                        <input type="button" class="btn-primry" style="width: 93px; display: none" value="Approve" id="btnApprove" onclick="Approve()" />
-                        &nbsp;
-                    </div>
+        <!-- Actions -->
+        <div class="purchaseOrderSubmitForm" style="margin-top: 21px;">
+            <div class="row">
+                <div class="col-lg-8">
+                    <div class="row">
+                        <div class="col-lg-2 col-md-4 col-sm-12">
+                            <input type="button" class="btn btn-primry" value="Voucher" id="btnVoucher" onclick="PrintVoucher()" />
+                            &nbsp;
+                        </div>
+                        <div class="col-lg-2 col-md-4 col-sm-12">
+                            <input type="button" class="btn btn-gray" value="List" onclick="window.location = 'GRNView.aspx'" />
+                            &nbsp;
+                        </div>
+                        <div class="col-lg-2 col-md-4 col-sm-12">
+                            <input type="button" class="btn-primry" value="Print" name="name" id="btn_Print" onclick="PrintGRNDetail();" style="width: 81px;" />
+                            &nbsp;
+                        </div>
+                        <div class="col-lg-2 col-md-4 col-sm-12" id="SaveButtonToBeHidden">
+                            <input type="button" class="btn-primry" onclick="SaveAllRecord()" value="Save" id="btnSave" style="width: 81px; display: none" />
+                            &nbsp;
+                        </div>
+                        <div class="col-lg-2 col-md-4 col-sm-12">
+                            <input type="button" class="btn-primry" style="width: 103px; display: none" value="UnApprove" id="btnUnApprove" onclick="UnApprove()" />
+                            &nbsp;
+                        </div>
+                        <div class="col-lg-2 col-md-4 col-sm-12">
+                            <input type="button" class="btn-primry" style="width: 93px; display: none" value="Approve" id="btnApprove" onclick="Approve()" />
+                            &nbsp;
+                        </div>
 
-                    <div class="col-lg-2 col-md-4 col-sm-12">
-                        <input type="button" value="New" class="btn btn-yellow" onclick="window.location = 'GRN.aspx'" style="display: none" />
+                        <div class="col-lg-2 col-md-4 col-sm-12">
+                            <input type="button" value="New" class="btn btn-yellow" onclick="window.location = 'GRN.aspx'" style="display: none" />
+                        </div>
                     </div>
                 </div>
             </div>
-
         </div>
+
+        <!-- Item picker -->
+        <div class="modal fade gr-modal" id="itemsModal" tabindex="-1" aria-labelledby="itemsModalLabel" aria-hidden="true">
+            <div class="modal-dialog modal-lg">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                        <h4 class="modal-title" id="itemsModalLabel">Item Details</h4>
+                    </div>
+                    <div class="modal-body">
+                        <div class="gr-modal-search">
+                            <i class="fa fa-search"></i>
+                            <input type="text" id="searchInput" class="form-control" placeholder="Search items..." autocomplete="off" />
+                        </div>
+                        <div class="gr-modal-scroll">
+                            <table class="table">
+                                <thead>
+                                    <tr>
+                                        <th>Select</th>
+                                        <th style="display: none;">Item ID</th>
+                                        <th>Item Code</th>
+                                        <th>Description</th>
+                                        <th>Unit</th>
+                                        <th style="display: none;">Rate</th>
+                                        <th style="display: none;">UOM Qty</th>
+                                        <th>Last Purchase Rate</th>
+                                        <th>Stock</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="itemsTableBody">
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <input type="button" value="Close" class="btn-gray" data-dismiss="modal" />
+                    </div>
+                </div>
+            </div>
+        </div>
+
     </div>
 
-       <div class="modal fade" id="itemsModal" tabindex="-1" aria-labelledby="itemsModalLabel" aria-hidden="true">
-       <div class="modal-dialog modal-lg custom-modal-dialog">
-           <div class="modal-content custom-modal-content">
-               <div class="modal-header custom-modal-header">
-                   <div class="custom-modal-title-wrap">
-                       <span class="custom-modal-icon"><i class="fa fa-cubes"></i></span>
-                       <h4 class="modal-title custom-modal-title" id="itemsModalLabel">Item Details</h4>
-                   </div>
-                   <button type="button" class="custom-modal-close" data-dismiss="modal" aria-label="Close"><i class="fa fa-times"></i></button>
-               </div>
-               <div class="modal-body custom-modal-body">
-                   <div class="custom-modal-search-wrap">
-                       <span class="custom-modal-search-icon"><i class="fa fa-search"></i></span>
-                       <input type="text" id="searchInput" class="custom-modal-search" placeholder="Search items..." />
-                   </div>
-                   <div class="custom-modal-table-wrap">
-                       <table class="table custom-modal-table">
-                           <thead>
-                               <tr>
-                                   <th>Select</th>
-                                   <!-- td:eq(0) -->
-                                   <th style="display: none;">Item ID</th>
-                                   <!-- td:eq(1) -->
-                                   <th>Item Code</th>
-                                   <!-- td:eq(2) -->
-                                   <th>Description</th>
-                                   <!-- td:eq(3) -->
-                                   <th>Unit</th>
-                                   <!-- td:eq(4) -->
-                                   <th style="display: none;">Rate</th>
-                                   <!-- td:eq(5) -->
-                                   <th style="display: none;">UOM Qty</th>
-
-                                   <th>Last Purchase Rate</th>
-                                   <!-- td:eq(6) -->
-                                   <th>Stock</th>
-                               </tr>
-                           </thead>
-                           <tbody id="itemsTableBody">
-                           </tbody>
-                       </table>
-                   </div>
-               </div>
-               <div class="modal-footer">
-                   <input type="button" value="Close" class="btn-gray" data-dismiss="modal" />
-               </div>
-           </div>
-       </div>
-   </div>
+    <script type="text/javascript">
+        // title-line badges follow the form fields (the page script fills them in after loading)
+        function syncGrnBadges() {
+            $('#badgeGrnNo').text($('#GRN_Num').val() || '---');
+            $('#badgeGrnDate').text($('#txtDate').val() || '---');
+            $('#badgeGrnStatus').text($('#txtStatus').val() || '---');
+        }
+        $(function () {
+            syncGrnBadges();
+            setInterval(syncGrnBadges, 600);
+        });
+    </script>
 </asp:Content>

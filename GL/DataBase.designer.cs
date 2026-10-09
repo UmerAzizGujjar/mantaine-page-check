@@ -62581,6 +62581,10 @@ namespace PMS
 
         private string _MIR;
 
+        private System.Nullable<System.TimeSpan> _Start_Time;
+
+        private System.Nullable<System.TimeSpan> _End_Time;
+
         #region Extensibility Method Definitions
         partial void OnLoaded();
         partial void OnValidate(System.Data.Linq.ChangeAction action);
@@ -62615,6 +62619,10 @@ namespace PMS
         partial void OnServicesChanged();
         partial void OnMIRChanging(string value);
         partial void OnMIRChanged();
+        partial void OnStart_TimeChanging(System.Nullable<System.TimeSpan> value);
+        partial void OnStart_TimeChanged();
+        partial void OnEnd_TimeChanging(System.Nullable<System.TimeSpan> value);
+        partial void OnEnd_TimeChanged();
         #endregion
 
         public Doctor_Agreement()
@@ -62918,6 +62926,46 @@ namespace PMS
                     this._MIR = value;
                     this.SendPropertyChanged("MIR");
                     this.OnMIRChanged();
+                }
+            }
+        }
+
+        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_Start_Time", DbType = "Time")]
+        public System.Nullable<System.TimeSpan> Start_Time
+        {
+            get
+            {
+                return this._Start_Time;
+            }
+            set
+            {
+                if ((this._Start_Time != value))
+                {
+                    this.OnStart_TimeChanging(value);
+                    this.SendPropertyChanging();
+                    this._Start_Time = value;
+                    this.SendPropertyChanged("Start_Time");
+                    this.OnStart_TimeChanged();
+                }
+            }
+        }
+
+        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_End_Time", DbType = "Time")]
+        public System.Nullable<System.TimeSpan> End_Time
+        {
+            get
+            {
+                return this._End_Time;
+            }
+            set
+            {
+                if ((this._End_Time != value))
+                {
+                    this.OnEnd_TimeChanging(value);
+                    this.SendPropertyChanging();
+                    this._End_Time = value;
+                    this.SendPropertyChanged("End_Time");
+                    this.OnEnd_TimeChanged();
                 }
             }
         }
@@ -179902,6 +179950,8 @@ namespace PMS
 
         private string _Cost_Center;
 
+        private string _Payment_Mode;
+
         private EntitySet<Ar_Billing_Detail> _Ar_Billing_Details;
 
         #region Extensibility Method Definitions
@@ -180084,6 +180134,8 @@ namespace PMS
         partial void OnReferred_By_NameChanged();
         partial void OnCost_CenterChanging(string value);
         partial void OnCost_CenterChanged();
+        partial void OnPayment_ModeChanging(string value);
+        partial void OnPayment_ModeChanged();
         #endregion
 
         public Ar_Billing()
@@ -181866,6 +181918,26 @@ namespace PMS
                     this._Cost_Center = value;
                     this.SendPropertyChanged("Cost_Center");
                     this.OnCost_CenterChanged();
+                }
+            }
+        }
+
+        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_Payment_Mode", DbType = "VarChar(20)")]
+        public string Payment_Mode
+        {
+            get
+            {
+                return this._Payment_Mode;
+            }
+            set
+            {
+                if ((this._Payment_Mode != value))
+                {
+                    this.OnPayment_ModeChanging(value);
+                    this.SendPropertyChanging();
+                    this._Payment_Mode = value;
+                    this.SendPropertyChanged("Payment_Mode");
+                    this.OnPayment_ModeChanged();
                 }
             }
         }

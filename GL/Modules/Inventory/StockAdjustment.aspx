@@ -2,50 +2,7 @@
 
 <%@ Register Assembly="AjaxControlToolkit" Namespace="AjaxControlToolkit" TagPrefix="asp" %>
 <asp:Content ID="Content1" ContentPlaceHolderID="HeadContent" runat="server">
-    <link href="../../wwwroot/THEME_TIBBIT/CustomCSS/stockadjustment.css" rel="stylesheet" />
-    <style type="text/css">
-        /* Stock Adjustment entry fields: one wrapping grid of 8 equal units across the page, so every row is full
-           (no empty space after Branch / Batch No / hidden Warehouse) and the item search is 2 units wide
-           (about 450px on a full-HD screen, the same width as the item search on PR / PO). */
-        .sa-fields {
-            --g: 12px;
-            --n: 8;
-            --u: calc((100% - (var(--n) - 1) * var(--g)) / var(--n));
-            display: flex;
-            flex-wrap: wrap;
-            align-items: flex-start;
-            gap: 6px var(--g);
-            margin-bottom: 8px;
-        }
-        /* the Bootstrap rows only group the markup; their fields join the grid above */
-        .sa-fields > .row { display: contents; }
-        .sa-fields > .row::before, .sa-fields > .row::after { display: none !important; content: none !important; }
-        .sa-fields > .row > [class*="col-"] {
-            float: none;
-            width: auto;
-            min-width: 0;
-            margin: 0;
-            padding: 0;
-            flex: 1 1 var(--u);
-        }
-        .sa-fields > .row > .sa-w2 { flex: 2 1 calc(var(--u) * 2 + var(--g)); }
-        .sa-fields > .row > .sa-w7 { flex: 7 1 calc(var(--u) * 7 + var(--g) * 6); }
-        .sa-fields select, .sa-fields textarea { width: 100% !important; box-sizing: border-box; }
-        .sa-fields .select2-container { width: 100% !important; }
-
-        @media (max-width: 1399px) {
-            .sa-fields { --n: 6; }
-            /* Remarks takes the rest of its line and the Add button keeps its own unit beside it */
-            .sa-fields > .row > .sa-w7 { flex: 1 1 calc(100% - var(--u) - var(--g)); }
-        }
-        @media (max-width: 991px) {
-            .sa-fields { --n: 4; }
-        }
-        @media (max-width: 575px) {
-            .sa-fields { --n: 2; }
-            .sa-fields > .row > .sa-w2 { flex: 1 1 100%; }
-        }
-    </style>
+    <link href="../../wwwroot/THEME_TIBBIT/CustomCSS/stock-adjustment.css?v=20261021" rel="stylesheet" />
     <script src="../../wwwroot/lib/jquery/itemsearch.boost.js?v=<%= System.IO.File.GetLastWriteTimeUtc(Server.MapPath("~/wwwroot/lib/jquery/itemsearch.boost.js")).Ticks %>" type="text/javascript"></script>
 
     <script type="text/javascript">
@@ -744,110 +701,140 @@
 
 <asp:Content ID="Content2" ContentPlaceHolderID="MainContent" runat="server">
     <asp:HiddenField runat="server" ID="hdnSelectedBatchValue" />
-    
-    <!-- CHANGED FROM FORM TO DIV to stop broken nested form submissions -->
-    <div id="divStockItemForm">
-        <%-- sa-fields: the four rows below flow as one wrapping grid (see the style block in HeadContent), so no row has empty space --%>
-        <div class="sa-fields">
-        <div class="row">
-            <div class="col-lg-2 col-md-3 col-sm-4">
-                <asp:Label Text="Transaction ID" runat="server" ID="lblAdjustment_ID" />
-                <asp:TextBox runat="server" ID="txtAdjustment_ID" ReadOnly="true" Text="(New)" />
-            </div>
-            <div class="col-lg-2 col-md-3 col-sm-4">
-                <asp:Label Text="Transaction Date" runat="server" ID="lblAdustment_date" />
-                <asp:TextBox runat="server" ID="txtAdustment_date" />
-                <asp:RequiredFieldValidator ID="rfvAdjustment_date" ErrorMessage="Date is required."
-                    ControlToValidate="txtAdustment_date" runat="server" SetFocusOnError="true" Display="Dynamic" />
-            </div>
-            <div class="col-lg-2 col-md-3 col-sm-4">
-                <asp:Label Text="Status" runat="server" ID="lbl_Status" />
-                <asp:TextBox runat="server" ID="txt_status" ReadOnly="true" />
-            </div>
-            <div class="col-lg-2 col-md-3 col-sm-4">
-                <asp:Label Text="Batch No" runat="server" ID="Label2" />
-                <asp:TextBox runat="server" ID="txtBatchNo" />
-                <asp:RequiredFieldValidator ID="RequiredFieldValidator2" ErrorMessage="BatchNo is required."
-                    ControlToValidate="txtBatchNo" runat="server" SetFocusOnError="true" Display="Dynamic" InitialValue="0" />
-            </div>
-            <div class="col-lg-4 col-md-3 col-sm-4 sa-w2">
-                <asp:Label Text="Item Code & Description" runat="server" ID="lblItem_Code" />
-                <asp:TextBox runat="server" ID="txtItem_Code" />
-                <asp:RequiredFieldValidator ErrorMessage="Item Code is required." ID="rfvItemCode"
-                    ControlToValidate="txtItem_Code" runat="server" SetFocusOnError="true" Display="Dynamic" />
-            </div>
-        </div>
-        <div class="row">
-            <div class="col-lg-2 col-md-3 col-sm-4">
-                <asp:Label Text="Expire Date" runat="server" ID="Label1" />
-                <asp:TextBox runat="server" ID="txtExpiredate" />
-                <asp:RequiredFieldValidator ID="RequiredFieldValidator1" ErrorMessage="Date is required."
-                    ControlToValidate="txtExpiredate" runat="server" SetFocusOnError="true"  Display="Dynamic" InitialValue="0" />
-            </div>
-            <div class="col-lg-2 col-md-3 col-sm-4">
-                <asp:Label Text="Quantity" runat="server" ID="Label4" />
-                <asp:TextBox runat="server" ID="txtQuantity" onchange="return onchange();" autocomplete="off" onfocus="showTooltip(this);" onblur="hideTooltip(this);" />
-                <asp:RequiredFieldValidator ID="rfvQuantity" ErrorMessage="Quantity is required."
-                    ControlToValidate="txtQuantity" runat="server" SetFocusOnError="true" Display="Dynamic" />
-                <span id="tooltipQuantity" class="tooltip-style" style="display:none;">Enter quantity in loose.</span>
-            </div>
-            <div class="col-lg-2 col-md-3 col-sm-4">
-                <asp:Label Text="Purchase Rate" runat="server" ID="lblRate" />
-                <asp:TextBox runat="server" ID="txtRate" onchange="return onchange();"  />
-                <asp:RequiredFieldValidator ID="rfvRate" ErrorMessage="Rate is required."
-                    ControlToValidate="txtRate" runat="server" SetFocusOnError="true" Display="Dynamic" />
-            </div>
-            <div class="col-lg-2 col-md-3 col-sm-4">
-                <asp:Label Text="Amount" runat="server" ID="lblAmount" />
-                <asp:TextBox runat="server" ID="txtAmount" ReadOnly="True" />
-            </div>
-            <div class="col-lg-2 col-md-3 col-sm-4" id="divWarehouse">
-                <asp:Label ID="Label3" runat="server" Text="WareHouse"></asp:Label>
-                <asp:DropDownList runat="server" ID="ddl_Ware_House" AppendDataBoundItems="true" onchange="calculatecurrentstock()">
-                </asp:DropDownList>
-                <asp:RequiredFieldValidator ID="rfvddl_Ware_House" ErrorMessage="Ware House is required."
-                    ControlToValidate="ddl_Ware_House" InitialValue="0" runat="server" SetFocusOnError="true" Display="Dynamic" />
-            </div>
-            <div class="col-lg-2 col-md-3 col-sm-4">
-                <asp:Label ID="lb_currentStock" runat="server" Text="Current Stock"></asp:Label>
-                <asp:TextBox runat="server" ID="txtcurrentStock" ReadOnly="True" />               
-                <asp:HiddenField ID="hndcheckbatch" runat="server" />                 
-            </div>
-        </div>
-        <div class="row">
-            <div class="col-lg-2 col-md-3 col-sm-4">
-                <label id="LblBranch">Branch</label>
-                <select id="ddlBranch" name="ddlBranch" class="form-control" style="width: 100%; height: 35px;"></select>
-                <asp:HiddenField runat="server" ID="hdnBranch_Id" />
-            </div>
-        </div>
-        <div class="row">
-            <div class="col-lg-2 col-md-3 col-sm-4">
-                <asp:Label Text="Batch No" runat="server" ID="Label5" />
-                <asp:DropDownList runat="server" ID="ddlBatchNo" Style="width: 100%; height: 35px;">
-                    <asp:ListItem Text="-- Select Batch --" Value="0" />
-                </asp:DropDownList>
-            </div>
-            <div class="col-lg-4 col-md-3 col-sm-4 sa-w2">
-                <asp:Label ID="lbl_Reason_Needed" runat="server" Text="Reason Needed"></asp:Label>
-                <asp:DropDownList runat="server" ID="ddlReasonNeeded" Style="height: 35px;" AppendDataBoundItems="true">
-                </asp:DropDownList>
-            </div>
-            <div class="col-lg-4 col-md-3 col-sm-4 sa-w7">
-                <asp:Label Text="Remarks" runat="server" ID="lblremarks" />
-                <asp:TextBox ID="txtRemarks" runat="server" TextMode="MultiLine" Style="width: 100%; border-radius: 5px; height: 35px !important"></asp:TextBox>
-            </div>
-            <div class="col-lg-1 col-md-3 col-sm-4" id="divAddButton" style="display:none;">
-                <label></label>
-                <input type="button" class="btn btn-primry" value="Add" id="btnAddToTable" onclick="return AddItemToTable();" />
-            </div>
-        </div>
-        </div><%-- /sa-fields --%>
 
-        <div class="row" style="margin-top:10px;display:none" id="divGridContainer">
-            <div class="col-lg-12">
-                <div class="table-responsive">
-                    <table id="tblStockItems" class="table table-bordered table-striped"  style="width:100%;">
+    <div class="sa-page">
+
+        <!-- Title line: the master page puts the page title in the empty left side; the badges sit on the right -->
+        <div class="pr-meta-bar">
+            <div class="meta-left"></div>
+            <div class="meta-right">
+                <div class="sa-badge"><span class="sa-badge-label">Transaction</span><span class="sa-badge-value" id="badgeSaId">---</span></div>
+                <div class="sa-badge"><span class="sa-badge-label">Date</span><span class="sa-badge-value" id="badgeSaDate">---</span></div>
+                <div class="sa-badge"><span class="sa-badge-label">Items</span><span class="sa-badge-value" id="badgeSaItems">0</span></div>
+                <div class="sa-badge"><span class="sa-badge-label">Status</span><span class="sa-badge-value" id="badgeSaStatus">---</span></div>
+            </div>
+        </div>
+
+        <!-- a plain div, not a form: a second form inside the master page's form is ignored by the browser -->
+        <div id="divStockItemForm" class="sa-form">
+
+            <div class="sa-layout">
+
+                <!-- Left: item entry -->
+                <div class="sa-col">
+                    <section class="sa-card">
+                        <h5 class="sa-card-title"><i class="fa fa-cubes"></i> Item Details</h5>
+                        <div class="sa-grid">
+                            <div class="sa-field sa-span-2">
+                                <asp:Label Text="Item Code & Description" runat="server" ID="lblItem_Code" />
+                                <asp:TextBox runat="server" ID="txtItem_Code" CssClass="form-control" />
+                                <asp:RequiredFieldValidator ErrorMessage="Item Code is required." ID="rfvItemCode"
+                                    ControlToValidate="txtItem_Code" runat="server" SetFocusOnError="true" Display="Dynamic" />
+                            </div>
+                            <div class="sa-field">
+                                <asp:Label Text="Batch No" runat="server" ID="Label2" />
+                                <asp:TextBox runat="server" ID="txtBatchNo" CssClass="form-control" />
+                                <asp:RequiredFieldValidator ID="RequiredFieldValidator2" ErrorMessage="BatchNo is required."
+                                    ControlToValidate="txtBatchNo" runat="server" SetFocusOnError="true" Display="Dynamic" InitialValue="0" />
+                            </div>
+                            <div class="sa-field">
+                                <asp:Label Text="Expire Date" runat="server" ID="Label1" />
+                                <asp:TextBox runat="server" ID="txtExpiredate" CssClass="form-control" />
+                                <asp:RequiredFieldValidator ID="RequiredFieldValidator1" ErrorMessage="Date is required."
+                                    ControlToValidate="txtExpiredate" runat="server" SetFocusOnError="true" Display="Dynamic" InitialValue="0" />
+                            </div>
+                            <div class="sa-field">
+                                <asp:Label Text="Quantity" runat="server" ID="Label4" />
+                                <asp:TextBox runat="server" ID="txtQuantity" CssClass="form-control" onchange="return onchange();" autocomplete="off" onfocus="showTooltip(this);" onblur="hideTooltip(this);" />
+                                <asp:RequiredFieldValidator ID="rfvQuantity" ErrorMessage="Quantity is required."
+                                    ControlToValidate="txtQuantity" runat="server" SetFocusOnError="true" Display="Dynamic" />
+                                <span id="tooltipQuantity" class="tooltip-style" style="display: none;">Enter quantity in loose.</span>
+                            </div>
+                            <div class="sa-field">
+                                <asp:Label Text="Purchase Rate" runat="server" ID="lblRate" />
+                                <asp:TextBox runat="server" ID="txtRate" CssClass="form-control" onchange="return onchange();" />
+                                <asp:RequiredFieldValidator ID="rfvRate" ErrorMessage="Rate is required."
+                                    ControlToValidate="txtRate" runat="server" SetFocusOnError="true" Display="Dynamic" />
+                            </div>
+                            <div class="sa-field sa-figure">
+                                <asp:Label Text="Amount" runat="server" ID="lblAmount" />
+                                <asp:TextBox runat="server" ID="txtAmount" CssClass="form-control" ReadOnly="True" />
+                            </div>
+                            <div class="sa-field" id="divWarehouse">
+                                <asp:Label ID="Label3" runat="server" Text="WareHouse"></asp:Label>
+                                <asp:DropDownList runat="server" ID="ddl_Ware_House" CssClass="form-control" AppendDataBoundItems="true" onchange="calculatecurrentstock()">
+                                </asp:DropDownList>
+                                <asp:RequiredFieldValidator ID="rfvddl_Ware_House" ErrorMessage="Ware House is required."
+                                    ControlToValidate="ddl_Ware_House" InitialValue="0" runat="server" SetFocusOnError="true" Display="Dynamic" />
+                            </div>
+                            <div class="sa-field sa-figure">
+                                <asp:Label ID="lb_currentStock" runat="server" Text="Current Stock"></asp:Label>
+                                <asp:TextBox runat="server" ID="txtcurrentStock" CssClass="form-control" ReadOnly="True" />
+                                <asp:HiddenField ID="hndcheckbatch" runat="server" />
+                            </div>
+                            <div class="sa-field">
+                                <label id="LblBranch" for="ddlBranch">Branch</label>
+                                <select id="ddlBranch" name="ddlBranch" class="form-control"></select>
+                                <asp:HiddenField runat="server" ID="hdnBranch_Id" />
+                            </div>
+                        </div>
+                    </section>
+
+                    <section class="sa-card">
+                        <h5 class="sa-card-title"><i class="fa fa-pencil-square-o"></i> Batch, Reason &amp; Remarks</h5>
+                        <div class="sa-grid">
+                            <div class="sa-field">
+                                <asp:Label Text="Batch No" runat="server" ID="Label5" />
+                                <asp:DropDownList runat="server" ID="ddlBatchNo" CssClass="form-control">
+                                    <asp:ListItem Text="-- Select Batch --" Value="0" />
+                                </asp:DropDownList>
+                            </div>
+                            <div class="sa-field sa-span-2">
+                                <asp:Label ID="lbl_Reason_Needed" runat="server" Text="Reason Needed"></asp:Label>
+                                <asp:DropDownList runat="server" ID="ddlReasonNeeded" CssClass="form-control" AppendDataBoundItems="true">
+                                </asp:DropDownList>
+                            </div>
+                            <div class="sa-field" id="divAddButton" style="display: none;">
+                                <label>&nbsp;</label>
+                                <input type="button" class="btn btn-primry" value="Add" id="btnAddToTable" onclick="return AddItemToTable();" />
+                            </div>
+                            <div class="sa-field sa-span-all">
+                                <asp:Label Text="Remarks" runat="server" ID="lblremarks" />
+                                <asp:TextBox ID="txtRemarks" runat="server" TextMode="MultiLine" CssClass="form-control" Rows="2"></asp:TextBox>
+                            </div>
+                        </div>
+                    </section>
+                </div>
+
+                <!-- Right: transaction -->
+                <div class="sa-col">
+                    <section class="sa-card">
+                        <h5 class="sa-card-title"><i class="fa fa-file-text-o"></i> Transaction</h5>
+                        <div class="sa-grid" style="grid-template-columns: minmax(0, 1fr);">
+                            <div class="sa-field">
+                                <asp:Label Text="Transaction ID" runat="server" ID="lblAdjustment_ID" />
+                                <asp:TextBox runat="server" ID="txtAdjustment_ID" CssClass="form-control" ReadOnly="true" Text="(New)" />
+                            </div>
+                            <div class="sa-field">
+                                <asp:Label Text="Transaction Date" runat="server" ID="lblAdustment_date" />
+                                <asp:TextBox runat="server" ID="txtAdustment_date" CssClass="form-control" />
+                                <asp:RequiredFieldValidator ID="rfvAdjustment_date" ErrorMessage="Date is required."
+                                    ControlToValidate="txtAdustment_date" runat="server" SetFocusOnError="true" Display="Dynamic" />
+                            </div>
+                            <div class="sa-field">
+                                <asp:Label Text="Status" runat="server" ID="lbl_Status" />
+                                <asp:TextBox runat="server" ID="txt_status" CssClass="form-control" ReadOnly="true" />
+                            </div>
+                        </div>
+                    </section>
+                </div>
+            </div>
+
+            <!-- Items added (shown by the page script once an item is picked) -->
+            <section class="sa-card" id="divGridContainer" style="display: none;">
+                <h5 class="sa-card-title"><i class="fa fa-list-alt"></i> Items</h5>
+                <div class="sa-table-wrap">
+                    <table id="tblStockItems" class="table table-bordered table-striped sa-table">
                         <thead>
                             <tr>
                                 <th>Item Code</th>
@@ -865,50 +852,62 @@
                         </tbody>
                     </table>
                 </div>
-            </div>
-        </div>
-        <asp:HiddenField runat="server" ID="hdnGridData" />
-        <div class="row">
-            <div class="col-lg-0 col-md-3 col-sm-4">
-                <input type="hidden" name="hdnDuplicateCheck" value="0" id="hdnDuplicateCheck" />            
-                <asp:TextBox runat="server" ID="hdfItem_Code" Style="display: none" />
-            </div>
-        </div>
-    </div>
+            </section>
 
-    <asp:Panel runat="server" ID="pnlForm">
-        <div class="row">
-            <div class="col-lg-8">
-                <div class="row">
-                    <div class="col-lg-2 col-md-4 col-sm-6">               
-                        <input type="button" class="btn-gray" name="back" value="View" onclick="location.href = 'StockAdjustmentView.aspx'" />
-                    </div>
-                    <div class="col-lg-2 col-md-4 col-sm-6">
-                        <asp:Button Text="Save" Class="btn btn-primry" ID="btnSave" runat="server" OnClick="btnSave_Click" OnClientClick="return Validate();" />
-                    </div>
-                    <div class="col-lg-2 col-md-4 col-sm-6">
-                        <input type="button" class="btn btn-yellow" value="New" id="btnNew" onclick="New()" />
-                    </div>
-                    <div class="col-lg-2 col-md-4 col-sm-6">
-                        <input type="button" class="btn btn-yellow" value="Print" id="btnStockAdjustmentPrint" onclick="PrintStockAdjustment();" />
-                    </div>
-                    <div class="col-lg-2 col-md-4 col-sm-6">
-                        <input type="button" class="btn btn-primry" value="Voucher" id="btnVoucher" onclick="PrintVoucher()" />
-                    </div>
-                    <div class="col-lg-2 col-md-4 col-sm-6">
-                        <input type="button" style="display:none" class="btn btn-primry" value="Approve" id="btnApprove" onclick="ApproveSTOCKADJFromEdit()" />
-                    </div>
-                    <div class="col-lg-2 col-md-4 col-sm-6">
-                        <input type="button" style="display:none" class="btn btn-primry" value="UnApprove" id="btnUnApprove" onclick="UnApprove()" />
+            <asp:HiddenField runat="server" ID="hdnGridData" />
+            <input type="hidden" name="hdnDuplicateCheck" value="0" id="hdnDuplicateCheck" />
+            <asp:TextBox runat="server" ID="hdfItem_Code" Style="display: none" />
+        </div>
+
+        <asp:Panel runat="server" ID="pnlForm">
+            <div class="row">
+                <div class="col-lg-8">
+                    <div class="row">
+                        <div class="col-lg-2 col-md-4 col-sm-6">
+                            <input type="button" class="btn-gray" name="back" value="View" onclick="location.href = 'StockAdjustmentView.aspx'" />
+                        </div>
+                        <div class="col-lg-2 col-md-4 col-sm-6">
+                            <asp:Button Text="Save" Class="btn btn-primry" ID="btnSave" runat="server" OnClick="btnSave_Click" OnClientClick="return Validate();" />
+                        </div>
+                        <div class="col-lg-2 col-md-4 col-sm-6">
+                            <input type="button" class="btn btn-yellow" value="New" id="btnNew" onclick="New()" />
+                        </div>
+                        <div class="col-lg-2 col-md-4 col-sm-6">
+                            <input type="button" class="btn btn-yellow" value="Print" id="btnStockAdjustmentPrint" onclick="PrintStockAdjustment();" />
+                        </div>
+                        <div class="col-lg-2 col-md-4 col-sm-6">
+                            <input type="button" class="btn btn-primry" value="Voucher" id="btnVoucher" onclick="PrintVoucher()" />
+                        </div>
+                        <div class="col-lg-2 col-md-4 col-sm-6">
+                            <input type="button" style="display: none" class="btn btn-primry" value="Approve" id="btnApprove" onclick="ApproveSTOCKADJFromEdit()" />
+                        </div>
+                        <div class="col-lg-2 col-md-4 col-sm-6">
+                            <input type="button" style="display: none" class="btn btn-primry" value="UnApprove" id="btnUnApprove" onclick="UnApprove()" />
+                        </div>
                     </div>
                 </div>
             </div>
-        </div>
-        <asp:Label ID="lblMessage" runat="server" />
-    </asp:Panel>
-    <asp:HiddenField runat="server" ID="hdbatch" />
-    <asp:HiddenField runat="server" ID="hdDate" />
-    <asp:HiddenField runat="server" ID="hdallowblank" />
-    <asp:HiddenField runat="server" ID="hdnDescription" />
-    <asp:HiddenField runat="server" ID="hdfItem_ID" />
+            <asp:Label ID="lblMessage" runat="server" />
+        </asp:Panel>
+        <asp:HiddenField runat="server" ID="hdbatch" />
+        <asp:HiddenField runat="server" ID="hdDate" />
+        <asp:HiddenField runat="server" ID="hdallowblank" />
+        <asp:HiddenField runat="server" ID="hdnDescription" />
+        <asp:HiddenField runat="server" ID="hdfItem_ID" />
+
+    </div>
+
+    <script type="text/javascript">
+        // title-line badges follow the form fields (the page script fills them in after loading)
+        function syncStockBadges() {
+            $('#badgeSaId').text($('#<%= txtAdjustment_ID.ClientID %>').val() || '---');
+            $('#badgeSaDate').text($('#<%= txtAdustment_date.ClientID %>').val() || '---');
+            $('#badgeSaItems').text($('#tblStockItemsBody tr').length);
+            $('#badgeSaStatus').text($('#<%= txt_status.ClientID %>').val() || '---');
+        }
+        $(function () {
+            syncStockBadges();
+            setInterval(syncStockBadges, 600);
+        });
+    </script>
 </asp:Content>

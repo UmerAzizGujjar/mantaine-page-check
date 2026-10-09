@@ -756,15 +756,103 @@ namespace PMS
         [WebMethod]
         public static string GetItemList_WareHouseWise(string warehouse, string SearchString)
         {
-            string result;
+            // Same rows/columns as sp_GetItemList_WareHouseWise, but the first 100 (200 when searching) items are picked
+            // BEFORE their stock is totalled from vwBatch_Ledger - the proc totalled every pharmacy item of the warehouse
+            // first and then kept 100 (3-6 s per search). Purchase_Rate (a heavy running-average function per row) is
+            // not computed here any more; the page asks for it separately through GetItemListRates so the list appears at once.
+            string search = (SearchString ?? "").Trim();
+            bool hasSearch = search != "";
+            string sql = @"
+DECLARE @wh varchar(50) = @WareHouse;   -- same type as the ledger column so the comparison can use its indexes
+;WITH Sel AS (
+    SELECT TOP (" + (hasSearch ? 200 : 100) + @") i.Item_ID, i.Description, i.Item_Code, i.InventoryOrg, i.Manufacture_Company, i.locatorAddress
+    FROM INV_Items i
+    WHERE i.IsPharmacyItem = 1
+      AND (i.InventoryOrg = @WareHouse
+           OR EXISTS (SELECT 1 FROM Item_Warehouse_Mapping m WHERE m.Item_ID = i.Item_ID AND m.Warehouse_Id = @WareHouse))"
+      + (hasSearch ? @"
+      AND (i.Description LIKE '%' + @Search + '%' OR i.Item_Code LIKE '%' + @Search + '%')" : "") + @"
+    ORDER BY i.Item_Code, i.Item_ID
+),
+-- stock is totalled on the raw ledger columns first; the warehouse NAME (a function call) is then looked up once per
+-- group instead of once per ledger row (the view calls it for every row when WareHouse_Name is selected)
+Agg AS (
+    -- only the stock of the SELECTED warehouse (the ledger rows of the item's other warehouses are not listed)
+    SELECT s.Item_ID, vl.UOM_Qty, SUM(vl.Qty) AS Qty
+    FROM Sel s
+    LEFT JOIN vwBatch_Ledger vl ON vl.Item_ID = s.Item_ID AND vl.Ware_House = @wh
+    GROUP BY s.Item_ID, vl.UOM_Qty
+)
+SELECT i.Description,
+       i.Item_Code,
+       i.Item_ID,
+       ISNULL(dbo.GetDataValueName('Ware house', @wh), '') AS WareHouse_Name,
+       @WareHouse AS Ware_House,   -- the warehouse being browsed (= InventoryOrg for the item's own warehouse; an item mapped in from another warehouse is sold from this one)
+       ISNULL(a.Qty, 0) AS Qty,
+       ISNULL(dbo.GetDataValueName('Manufacture Company', i.Manufacture_Company), '') AS Manufacturer_Name,
+       CAST(0 AS float) AS Purchase_Rate,
+       ISNULL(i.locatorAddress, '') AS Locator,
+       ISNULL(a.UOM_Qty, 0) AS UOM_Qty,
+       @wh AS Ledger_Ware_House
+FROM Sel i
+JOIN Agg a ON a.Item_ID = i.Item_ID
+ORDER BY i.Item_Code, i.Item_ID";
 
-            using (DataBaseDataContext db = new DataBaseDataContext())
+            DataTable dt = DBClass.getDataTable(sql, DBClass.Param("@WareHouse", warehouse), DBClass.Param("@Search", search));
+
+            var rows = new List<Dictionary<string, object>>();
+            foreach (DataRow dr in dt.Rows)
             {
-                var query = db.sp_GetItemList_WareHouseWise(warehouse,SearchString).ToList();
-                result = (new JavaScriptSerializer()).Serialize(query).ToString();
-
+                var row = new Dictionary<string, object>();
+                foreach (DataColumn col in dt.Columns)
+                {
+                    row[col.ColumnName] = dr[col] == DBNull.Value ? null : dr[col];
+                }
+                rows.Add(row);
             }
-            return result;
+            return new JavaScriptSerializer().Serialize(rows);
+        }
+
+        // Purchase rate (last average rate) for the rows shown in the Item List. pairs = "itemId|ledgerWarehouse;itemId|ledgerWarehouse"
+        [WebMethod]
+        public static string GetItemListRates(string pairs)
+        {
+            var list = new List<KeyValuePair<int, string>>();
+            foreach (string p in (pairs ?? "").Split(new[] { ';' }, StringSplitOptions.RemoveEmptyEntries))
+            {
+                string[] a = p.Split('|');
+                int id;
+                if (a.Length == 2 && int.TryParse(a[0], out id))
+                {
+                    list.Add(new KeyValuePair<int, string>(id, a[1]));
+                }
+            }
+            if (list.Count == 0 || list.Count > 500) return "[]";
+
+            var values = new List<string>();
+            var prm = new List<SqlParameter>();
+            for (int i = 0; i < list.Count; i++)
+            {
+                values.Add("(@i" + i + ", @w" + i + ")");
+                prm.Add(DBClass.Param("@i" + i, list[i].Key));
+                prm.Add(DBClass.Param("@w" + i, string.IsNullOrEmpty(list[i].Value) ? null : list[i].Value));
+            }
+
+            string sql = "SELECT x.Item_ID, x.Wh AS Ware_House, ISNULL(dbo.fn_GetLastAvgRate(x.Item_ID, x.Wh), 0) AS Purchase_Rate FROM (VALUES "
+                         + string.Join(",", values) + ") x(Item_ID, Wh)";
+            DataTable dt = DBClass.getDataTable(sql, prm.ToArray());
+
+            var rows = new List<Dictionary<string, object>>();
+            foreach (DataRow dr in dt.Rows)
+            {
+                rows.Add(new Dictionary<string, object>
+                {
+                    { "Item_ID", dr["Item_ID"] },
+                    { "Ware_House", dr["Ware_House"] == DBNull.Value ? "" : dr["Ware_House"] },
+                    { "Purchase_Rate", dr["Purchase_Rate"] }
+                });
+            }
+            return new JavaScriptSerializer().Serialize(rows);
         }
         [WebMethod]
         public static string GetReturnMedicineDetail(int Bill_Id, int Item_Id)
@@ -1397,6 +1485,7 @@ namespace PMS
             public int In_Patient_ID { get; set; }
 
             public string Panel_Id { get; set; }
+            public int BankAccountId { get; set; }
             public List<Medicindetails> Save_list { get; set; }
         }
 
@@ -1643,6 +1732,8 @@ namespace PMS
                 newBill.Received_Amount = data.AmntReceived;
             }
             newBill.Received_Amount = data.AmntReceived;
+            if (Rbtn == "rbtnHospital")
+                newBill.Received_Amount = 0; // panel bills are settled with the panel, nothing received at the counter
             newBill.Pharma_trans_Type = data.TransType;
 
             var Inpat = "";
@@ -1652,7 +1743,7 @@ namespace PMS
                 Inpat = inpatientid;
             }
 
-            if ((data.Patient_ID != "") && (Rbtn == "rbtncash" || Rbtn == "rbtnbank"))
+            if ((data.Patient_ID != "") && (Rbtn == "rbtncash" || Rbtn == "rbtnbank" || Rbtn == "rbtnbankacc"))
             {
                 newBill.Customer_Type = "Hospital-Patient";
                 newBill.Patient_ID = Convert.ToInt32(data.Patient_ID);
@@ -1691,12 +1782,29 @@ namespace PMS
                 newBill.AccountId = AccIdBank;
             }
 
+            // "Bank" mode: payment goes to the bank account picked from the dropdown
+            if (Rbtn == "rbtnbankacc")
+            {
+                var isValidBank = data.BankAccountId > 0 && db.GL_Accounts.Any(a =>
+                    a.Account_ID == data.BankAccountId && a.Levels == 4 && a.Bank == true && a.Active == true);
+                if (!isValidBank)
+                    throw new Exception("Please select a valid bank account.");
+
+                newBill.IsBank = true;
+                newBill.Bank_Account = data.BankAccountId.ToString();
+            }
+
             if (Rbtn == "rbtnHospital")
             {
                 newBill.IsHospital_Pharmacy = true;
             }
 
             newBill.Company_ID = AppConfig.Company_ID;
+
+            newBill.Payment_Mode = Rbtn == "rbtncash" ? "Cash"
+                                 : Rbtn == "rbtnbankacc" ? "Bank"
+                                 : Rbtn == "rbtnHospital" ? "Panel"
+                                 : Rbtn == "rbtnbank" ? "Credit" : null;
 
             // ============ IMPORTANT: Save Bill Header FIRST ============
             if (data.Bill_ID == 0)
@@ -1923,6 +2031,42 @@ namespace PMS
 
             return (new JavaScriptSerializer()).Serialize(PharmacyDetail);
         }
+        // Rates agreed with a panel (Panel Agreement screen) for the given items (Item_ID, comma separated).
+        // A rate of 0 means "not set", so the normal sale rate applies.
+        [WebMethod]
+        public static string GetPanelRates(int panelId, string itemIds)
+        {
+            var ids = (itemIds ?? "").Split(',').Select(s => s.Trim()).Where(s => s != "").Distinct().ToList();
+            var result = new Dictionary<string, decimal>();
+            if (panelId > 0 && ids.Count > 0)
+            {
+                DataBaseDataContext db = new DataBaseDataContext();
+                var rates = (from p in db.Panel_Detail_Services
+                             where p.Panel_ID == panelId && p.Test_ID == null && p.Rate > 0 && ids.Contains(p.Item_ID)
+                             select new { p.Item_ID, Rate = p.Rate.Value }).ToList();
+                foreach (var r in rates)
+                    result[r.Item_ID] = r.Rate;
+            }
+            return (new JavaScriptSerializer()).Serialize(result);
+        }
+
+        [WebMethod]
+        public static string GetBankAccounts()
+        {
+            DataBaseDataContext db = new DataBaseDataContext();
+
+            var bankList = (from i in db.GL_Accounts
+                            where i.Levels == 4 && i.Bank == true && i.Active == true
+                            orderby i.Account_Name
+                            select new
+                            {
+                                i.Account_ID,
+                                Name = i.Account_Code + "-" + i.Account_Name
+                            }).ToList();
+
+            return (new JavaScriptSerializer()).Serialize(bankList);
+        }
+
         [WebMethod]
         public static string GetBalanceAmountCondition()
         {

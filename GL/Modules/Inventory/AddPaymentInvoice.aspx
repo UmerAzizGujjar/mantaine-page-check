@@ -1,9 +1,7 @@
 ﻿<%@ Page Title="" Language="C#" MasterPageFile="~/Site.Master" AutoEventWireup="true" CodeBehind="AddPaymentInvoice.aspx.cs" Inherits="PMS.Inventory.AddPaymentInvoice" %>
 
 <asp:Content ID="Content1" ContentPlaceHolderID="HeadContent" runat="server">
-    <link href="../../wwwroot/THEME_TIBBIT/CustomCSS/vendor.css" rel="stylesheet" />
-    <link href="../../wwwroot/THEME_TIBBIT/CustomCSS/PR.css" rel="stylesheet" />
-    <link href="../../wwwroot/THEME_TIBBIT/CustomCSS/payment-invoice.css" rel="stylesheet" />
+    <link href="../../wwwroot/THEME_TIBBIT/CustomCSS/payment-invoice.css?v=20261014" rel="stylesheet" />
 
         <script type="text/javascript">
             var InvType = '';
@@ -904,230 +902,229 @@
         </script>
 </asp:Content>
 <asp:Content ID="Content2" ContentPlaceHolderID="MainContent" runat="server">
-    <form id="item">
-        <!-- Meta Bar -->
+    <div class="pi-page">
+
+        <!-- Title line: the master page puts "Payment » Add Payment" in the empty left side; the badges sit on the right -->
         <div class="pr-meta-bar">
-            <div class="meta-left">
-                <span class="meta-title"><i class="fa fa-credit-card"></i> Payment Invoice</span>
-            </div>
+            <div class="meta-left"></div>
             <div class="meta-right">
-                <div class="meta-badge"><span class="badge-label">No</span><span class="badge-value" id="badgePaymentNo">---</span></div>
-                <div class="meta-badge"><span class="badge-label">Date</span><span class="badge-value" id="badgePaymentDate">---</span></div>
-                <div class="meta-badge"><span class="badge-label">Mode</span><span class="badge-value" id="badgePaymentMode">---</span></div>
-                <div class="meta-badge"><span class="badge-label">Status</span><span class="badge-value" id="badgeStatus">---</span></div>
+                <div class="pi-badge"><span class="pi-badge-label">No</span><span class="pi-badge-value" id="badgePaymentNo">---</span></div>
+                <div class="pi-badge"><span class="pi-badge-label">Date</span><span class="pi-badge-value" id="badgePaymentDate">---</span></div>
+                <div class="pi-badge"><span class="pi-badge-label">Mode</span><span class="pi-badge-value" id="badgePaymentMode">---</span></div>
+                <div class="pi-badge"><span class="pi-badge-label">Status</span><span class="pi-badge-value" id="badgeStatus">---</span></div>
             </div>
         </div>
 
-        <div class="row voucher-form-row">
-            <!-- Left: Payment Details + Attachments -->
-            <div class="col-lg-8 col-md-12 pr-cards-column">
-                <div class="pr-primary-settings">
-                    <h5 class="pr-section-title" style="margin-top:0;"><i class="fa fa-file-text-o"></i> Payment Details</h5>
-                    <div class="row">
-                        <div class="col-lg-3 col-md-3 col-sm-6">
-                            <label>Payment No</label>
+        <div class="pi-layout">
+
+            <!-- Left: payment details + attachments -->
+            <div class="pi-col">
+                <section class="pi-card">
+                    <h5 class="pi-card-title"><i class="fa fa-file-text-o"></i> Payment Details</h5>
+                    <div class="pi-grid">
+                        <div class="pi-field">
+                            <label for="txt_PaymentNo">Payment No</label>
                             <input id="txt_PaymentNo" class="form-control" type="text" name="txt_PaymentNo" readonly="readonly" />
                         </div>
-                        <div class="col-lg-3 col-md-3 col-sm-6">
-                            <label>Payment Mode<span style="color: red;">*</span></label>
+                        <div class="pi-field">
+                            <label for="ddl_PaymentMode">Payment Mode<span class="pi-req">*</span></label>
                             <select id="ddl_PaymentMode" class="form-control">
                                 <option value="0">Please Select</option>
                             </select>
                         </div>
-                        <div class="col-lg-3 col-md-3 col-sm-6">
-                            <label>Payment Date</label>
-                            <input id="txt_paymentDate" class="form-control" type="text" name="txt_paymentDate" />
+                        <div class="pi-field">
+                            <label for="txt_paymentDate">Payment Date</label>
+                            <input id="txt_paymentDate" class="form-control" type="text" name="txt_paymentDate" autocomplete="off" />
                         </div>
-                        <div class="col-lg-3 col-md-3 col-sm-6">
-                            <label>Status</label>
+                        <div class="pi-field">
+                            <label for="txtStatusid">Status</label>
                             <input type="text" id="txtStatusid" readonly="readonly" class="form-control" />
                         </div>
-                    </div>
-                    <div class="row">
-                        <div class="col-lg-3 col-md-3 col-sm-6">
-                            <label>Document No</label>
-                            <input id="txt_documentNo" class="form-control" type="text" name="txt_documentNo" />
+
+                        <div class="pi-field">
+                            <label for="txt_documentNo">Document No</label>
+                            <input id="txt_documentNo" class="form-control" type="text" name="txt_documentNo" autocomplete="off" />
                         </div>
-                        <div class="col-lg-3 col-md-3 col-sm-6">
-                            <label>Document Date</label>
-                            <input id="txt_DocumentDate" class="form-control" type="text" name="" />
+                        <div class="pi-field">
+                            <label for="txt_DocumentDate">Document Date</label>
+                            <input id="txt_DocumentDate" class="form-control" type="text" name="txt_DocumentDate" autocomplete="off" />
                         </div>
-                        <div class="col-lg-3 col-md-3 col-sm-6">
-                            <label>Vendor Name<span style="color: red;">*</span></label>
+                        <div class="pi-field">
+                            <label for="ddl_venderName">Vendor Name<span class="pi-req">*</span></label>
                             <select id="ddl_venderName" class="form-control">
                                 <option value="0">Please Select</option>
                             </select>
                         </div>
-                        <div class="col-lg-3 col-md-3 col-sm-6">
+                        <div class="pi-field">
                             <label>&nbsp;</label>
                             <button id="btn_ManInv" type="button" class="btn btn-primry" style="width:100%;"><i class="fa fa-plus"></i> Add Invoices</button>
                         </div>
                     </div>
-                </div>
+                </section>
 
-                <div class="pr-primary-settings">
-                    <h5 class="pr-section-title" style="margin-top:0;"><i class="fa fa-paperclip"></i> Attachments & Remarks</h5>
-                    <div class="row">
-                        <div class="col-lg-4 col-md-4 col-sm-12">
-                            <label>Attachments</label>
-                            <input id="chosePaymentfile" type="file" name="chosePaymentfile" class="form-control" style="height:34px; padding:4px;" />
-                            <asp:HyperLink ID="HyperLink1" runat="server">Download</asp:HyperLink>
+                <section class="pi-card">
+                    <h5 class="pi-card-title"><i class="fa fa-paperclip"></i> Attachments &amp; Remarks</h5>
+                    <div class="pi-grid">
+                        <div class="pi-field pi-span-2">
+                            <label for="chosePaymentfile">Attachments</label>
+                            <input id="chosePaymentfile" type="file" name="chosePaymentfile" class="form-control" />
+                            <asp:HyperLink ID="HyperLink1" runat="server" CssClass="pi-link">Download</asp:HyperLink>
                         </div>
-                        <div class="col-lg-2 col-md-4 col-sm-12">
-                            <label>Branch</label>
+                        <div class="pi-field">
+                            <label for="ddlBranch">Branch</label>
                             <select id="ddlBranch" class="form-control">
                                 <option value="0">Please Select</option>
                             </select>
                         </div>
-                        <div class="col-lg-6 col-md-8 col-sm-12">
-                            <label>Remarks</label>
-                            <textarea id="txt_remarks" class="form-control" name="txt_remarks" rows="1" cols="20" style="height:60px;"></textarea>
+                        <div class="pi-field pi-span-all">
+                            <label for="txt_remarks">Remarks</label>
+                            <textarea id="txt_remarks" class="form-control" name="txt_remarks" rows="2" cols="20"></textarea>
                         </div>
                     </div>
-                </div>
+                </section>
             </div>
 
-            <!-- Right: Account Filter + Summary -->
-            <div class="col-lg-4 col-md-12 pr-cards-column">
-                <div class="pr-primary-settings">
-                    <h5 class="pr-section-title" style="margin-top:0;"><i class="fa fa-bank"></i> Bank / Cash</h5>
-                    <div class="row">
-                        <div class="col-lg-12">
+            <!-- Right: bank / cash + summary -->
+            <div class="pi-col">
+                <section class="pi-card">
+                    <h5 class="pi-card-title"><i class="fa fa-bank"></i> Bank / Cash</h5>
+                    <div class="pi-grid pi-grid-2" style="grid-template-columns: minmax(0, 1fr);">
+                        <div class="pi-field">
                             <label>Account Type</label>
-                            <div class="source-toggle-pill" style="width: fit-content;">
-                                <label class="source-radio-option"><input type="radio" name="rbtnAccType" id="rbtnAccAll" value="all" checked /><span class="source-pill-label">All</span></label>
-                                <label class="source-radio-option"><input type="radio" name="rbtnAccType" id="rbtnAccCash" value="cash" /><span class="source-pill-label">Cash</span></label>
-                                <label class="source-radio-option"><input type="radio" name="rbtnAccType" id="rbtnAccBank" value="bank" /><span class="source-pill-label">Bank</span></label>
+                            <div class="pi-seg">
+                                <label><input type="radio" name="rbtnAccType" id="rbtnAccAll" value="all" checked /><span>All</span></label>
+                                <label><input type="radio" name="rbtnAccType" id="rbtnAccCash" value="cash" /><span>Cash</span></label>
+                                <label><input type="radio" name="rbtnAccType" id="rbtnAccBank" value="bank" /><span>Bank</span></label>
                             </div>
                         </div>
-                    </div>
-                    <div class="row">
-                        <div class="col-lg-12">
-                            <label>Select Account<span style="color: red;">*</span></label>
+                        <div class="pi-field">
+                            <label for="ddl_bankCash">Select Account<span class="pi-req">*</span></label>
                             <select id="ddl_bankCash" class="form-control">
                                 <option>Please Select</option>
                             </select>
                         </div>
                     </div>
-                </div>
+                </section>
 
-                <div class="pr-primary-settings">
-                    <h5 class="pr-section-title" style="margin-top:0;"><i class="fa fa-calculator"></i> Summary</h5>
-                    <div class="row">
-                        <div class="col-lg-6 col-md-6 col-sm-6">
-                            <label>Adjusted</label>
-                            <input id="txt_invoiceAdjusted" class="form-control" type="text" name="txt_invoiceAdjusted" readonly="readonly" />
-                        </div>
-                        <div class="col-lg-6 col-md-6 col-sm-6">
-                            <label>Paid Amnt</label>
+                <section class="pi-card">
+                    <h5 class="pi-card-title"><i class="fa fa-calculator"></i> Summary</h5>
+                    <div class="pi-grid" style="grid-template-columns: minmax(0, 1fr);">
+                        <div class="pi-field pi-figure pi-figure-main">
+                            <label for="txt_PaidAmount">Paid Amount</label>
                             <input id="txt_PaidAmount" type="text" name="txt_PaidAmount" readonly="readonly" class="form-control" />
                         </div>
-                    </div>
-                    <div class="row">
-                        <div class="col-lg-6 col-md-6 col-sm-6">
-                            <label>W Tax Amnt</label>
+                        <div class="pi-field pi-figure">
+                            <label for="txt_invoiceAdjusted">Adjusted</label>
+                            <input id="txt_invoiceAdjusted" class="form-control" type="text" name="txt_invoiceAdjusted" readonly="readonly" />
+                        </div>
+                        <div class="pi-field pi-figure">
+                            <label for="txt_WTaxAmount">W Tax Amount</label>
                             <input id="txt_WTaxAmount" class="form-control" type="text" readonly="readonly" name="txt_WTaxAmount" />
                         </div>
                     </div>
-                </div>
+                </section>
             </div>
         </div>
-    </form>
 
+        <!-- Invoices being paid -->
+        <section class="pi-card">
+            <h5 class="pi-card-title"><i class="fa fa-list-alt"></i> Invoices <span class="pi-card-note">Use <b>Add Invoices</b> to pick the vendor's open invoices</span></h5>
+            <div class="pi-table-wrap">
+                <table class="table" id="tblItemDescription">
+                    <thead>
+                        <tr>
+                            <th class="table_heading_color" style="width: 87px;">Invoice#</th>
+                            <th class="table_heading_color" style="width: 114px;">Invoice Amt</th>
+                            <th class="table_heading_color" style="width: 104px;">Advance Amt</th>
+                            <th class="table_heading_color" style="width: 100px;">Previously Paid </th>
+                            <th class="table_heading_color" style="width: 100px;">Balance</th>
+                            <th class="table_heading_color" style="width: 120px;">Adjusted</th>
+                            <th class="table_heading_color" style="width: 120px;">Deduction</th>
+                            <th class="table_heading_color" style="display: none;">P Tax</th>
+                            <th class="table_heading_color" style="display: none;">P Tax</th>
+                            <th class="table_heading_color" style="width: 120px;">WH Tax</th>
+                            <th class="table_heading_color" style="display: none;">Wh On Inv Adj</th>
+                            <th class="table_heading_color" style="display: none;">Taxtable SWHT</th>
+                            <th class="table_heading_color" style="width: 134px;">WH Tax Amt</th>
+                            <th class="table_heading_color" style="width: 101px; display: none !important;">SalTax</th>
+                            <th class="table_heading_color" style="width: 134px; display: none !important;">SalTax Amt</th>
+                            <th class="table_heading_color" style="width: 150px;">Paid Amount</th>
+                            <th class="table_heading_color">Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody id="tblItemDescriptionDetail">
+                    </tbody>
+                </table>
+            </div>
+        </section>
 
-    <div class="row">
-        <div class="" style="width: 100%; overflow: scroll;">
-            <table class="table table-bordered" id="tblItemDescription">
-                <thead>
-                    <tr>
-                        <th class="table_heading_color" style="width: 87px;">Invoice#</th>
-                        <th class="table_heading_color" style="width: 114px;">Invoice Amt</th>
-                        <th class="table_heading_color" style="width: 104px;">Advance Amt</th>
-                        <%--<th class="table_heading_color" style="display: none;">SWHT Amt</th>--%>
-                        <th class="table_heading_color" style="width: 100px;">Previously Paid </th>
-                        <th class="table_heading_color" style="width: 100px;">Balance</th>
-                        <th class="table_heading_color" style="width: 120px;">Adjusted</th>
-                        <th class="table_heading_color" style="width: 120px;">Deduction</th>
-                        <th class="table_heading_color" style="display: none;">P Tax</th>
-                        <th class="table_heading_color" style="display: none;">P Tax</th>
-                        <th class="table_heading_color" style="width: 120px;">WH Tax</th>
-                        <th class="table_heading_color" style="display: none;">Wh On Inv Adj</th>
-                        <th class="table_heading_color" style="display: none;">Taxtable SWHT</th>
-                        <th class="table_heading_color" style="width: 134px;">WH Tax Amt</th>
-                        <th class="table_heading_color" style="width: 101px;display:none !important;">SalTax</th>
-                        <th class="table_heading_color" style="width: 134px;display:none !important;">SalTax Amt</th>
-                        <th class="table_heading_color" style="width: 150px;">Paid Amount</th>
-                        <th class="table_heading_color">Actions</th>
-                    </tr>
-                </thead>
-                <tbody id="tblItemDescriptionDetail">
-                </tbody>
-            </table>
-        </div>
-    </div>
-<div class="row" style="margin-top:1%">
-         <div class="col-lg-6">
-            <div class="row">
+        <!-- Actions -->
+        <div class="row" style="margin-top: 1%">
+            <div class="col-lg-6">
+                <div class="row">
                     <div class="col-lg-2 col-md-4 col-sm-12">
-            <input type="button" class="btn btn-primry" name="btnSave" id="btnSave" value="Save"  onclick="this.disabled = true;" />
-        </div>
-        <div class="col-lg-2 col-md-4 col-sm-12">
-            <input type="button" class="btn-gray" value="List" onclick="window.location='PaymentInvoiceView.aspx'"  />
-        </div>
-        <div class="col-lg-2 col-md-4 col-sm-12">
-            <input type="button" class="btn btn-yellow" value="New" onclick="window.location='AddPaymentInvoice.aspx'"  />
-        </div>
-        <div class="col-lg-2 col-md-4 col-sm-12">
-            <input type="button" name="" id="btn_Print" value="Print" class="btn btn-primry" onclick="PrintPaymentDetail()" />
-        </div>
-        <div class="col-lg-2 col-md-4 col-sm-12">
-            <input type="button" style="display: none" class="btn btn-primry" value="Approve" id="btnApprovePay" onclick="ApprovePAYMENTFromEdit()" />
-            <input type="button" style="display: none" class="btn btn-primry" value="UnApprove" id="btnUnApprove" onclick="UnApprove()" />
-    
-        </div>
-        <div class="col-lg-2 col-md-4 col-sm-12">
-            <input type="button"  value="Voucher" class="btn btn-primry" id="btnVoucher" onclick="PrintVoucher()" />
-        </div>
-            </div>
-        </div>
-    </div>
-
-    <div id="POItemsModel" class="modal fade" role="dialog">
-        <div class="modal-dialog">
-            <div class="modal-content" style="width: 1000px; margin-left: -270px; height: 505px;">
-                <div class="modal-header">
-                    <button type="button" style="width: auto;" class="close" data-dismiss="modal">&times;</button>
-                    <h4 class="modal-title">Add Purchase Items </h4>
-                </div>
-                <input type="hidden" id="txthiddentr" name="txthidddentr" />
-                <div style="width: 970px; overflow: scroll; height: 401px  !important; height: auto;">
-                    <table class="table table-bordered" style="width: 953px; height: 0px !important; height: auto; overflow: scroll;" id="tblPOItemstModelTable">
-                        <thead>
-                            <tr>
-                                <th style="width: 40px !important;">
-                                <input type="checkbox" id="checkHeader" value="false" /></th>
-                                <th>Invoice#</th>
-                                <th>Payable</th>
-                                <th>Advance Amount</th>
-                                <th>Paid Amount</th>                              
-                                <th>Balance</th>                               
-                                <th>Invoice Type</th>
-                                <th>SalTax</th>
-                                <th>SalTax Amt</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                        </tbody>
-                    </table>
-                <div class="modal-footer">
-                    <div class="row">
-                        <div class="col-lg-10"></div>
-                        <div class="col-lg-2 col-md-4 col-sm-6">
-                    <input type="button" id="PoItem" name="PoItem" value="Done" class="btn btn-primry" data-dismiss="modal" />
-                            </div>
-                </div>
+                        <input type="button" class="btn btn-primry" name="btnSave" id="btnSave" value="Save" onclick="this.disabled = true;" />
                     </div>
+                    <div class="col-lg-2 col-md-4 col-sm-12">
+                        <input type="button" class="btn-gray" value="List" onclick="window.location='PaymentInvoiceView.aspx'" />
+                    </div>
+                    <div class="col-lg-2 col-md-4 col-sm-12">
+                        <input type="button" class="btn btn-yellow" value="New" onclick="window.location='AddPaymentInvoice.aspx'" />
+                    </div>
+                    <div class="col-lg-2 col-md-4 col-sm-12">
+                        <input type="button" name="" id="btn_Print" value="Print" class="btn btn-primry" onclick="PrintPaymentDetail()" />
+                    </div>
+                    <div class="col-lg-2 col-md-4 col-sm-12">
+                        <input type="button" style="display: none" class="btn btn-primry" value="Approve" id="btnApprovePay" onclick="ApprovePAYMENTFromEdit()" />
+                        <input type="button" style="display: none" class="btn btn-primry" value="UnApprove" id="btnUnApprove" onclick="UnApprove()" />
+                    </div>
+                    <div class="col-lg-2 col-md-4 col-sm-12">
+                        <input type="button" value="Voucher" class="btn btn-primry" id="btnVoucher" onclick="PrintVoucher()" />
+                    </div>
+                </div>
             </div>
         </div>
+
+        <!-- Add invoices picker -->
+        <div id="POItemsModel" class="modal fade pi-modal" role="dialog">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">&times;</button>
+                        <h4 class="modal-title">Add Purchase Items</h4>
+                    </div>
+                    <input type="hidden" id="txthiddentr" name="txthidddentr" />
+                    <div class="pi-modal-scroll">
+                        <table class="table" id="tblPOItemstModelTable">
+                            <thead>
+                                <tr>
+                                    <th style="width: 40px;">
+                                        <input type="checkbox" id="checkHeader" value="false" /></th>
+                                    <th>Invoice#</th>
+                                    <th>Payable</th>
+                                    <th>Advance Amount</th>
+                                    <th>Paid Amount</th>
+                                    <th>Balance</th>
+                                    <th>Invoice Type</th>
+                                    <th>SalTax</th>
+                                    <th>SalTax Amt</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                            </tbody>
+                        </table>
+                    </div>
+                    <div class="modal-footer">
+                        <div class="row">
+                            <div class="col-lg-10"></div>
+                            <div class="col-lg-2 col-md-4 col-sm-6">
+                                <input type="button" id="PoItem" name="PoItem" value="Done" class="btn btn-primry" data-dismiss="modal" />
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
     </div>
 </asp:Content>

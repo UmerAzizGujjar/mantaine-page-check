@@ -2792,6 +2792,8 @@
       <Column Name="blood_bank" Type="System.String" DbType="NVarChar(150)" CanBeNull="true" />
       <Column Name="Services" Type="System.String" DbType="NVarChar(150)" CanBeNull="true" />
       <Column Name="MIR" Type="System.String" DbType="NVarChar(50)" CanBeNull="true" />
+      <Column Name="Start_Time" Type="System.TimeSpan" DbType="Time" CanBeNull="true" />
+      <Column Name="End_Time" Type="System.TimeSpan" DbType="Time" CanBeNull="true" />
     </Type>
   </Table>
   <Table Name="dbo.Reg_Student" Member="Reg_Students">
@@ -8141,6 +8143,7 @@
       <Column Name="Patient_Type" Type="System.String" DbType="VarChar(50)" CanBeNull="true" />
       <Column Name="Referred_By_Name" Type="System.String" DbType="VarChar(100)" CanBeNull="true" />
       <Column Name="Cost_Center" Type="System.String" DbType="VarChar(100)" CanBeNull="true" />
+      <Column Name="Payment_Mode" Type="System.String" DbType="VarChar(20)" CanBeNull="true" />
       <Association Name="Ar_Billing_Ar_Billing_Detail" Member="Ar_Billing_Details" ThisKey="Bill_ID" OtherKey="Bill_ID" Type="Ar_Billing_Detail" />
     </Type>
   </Table>
