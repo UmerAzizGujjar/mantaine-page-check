@@ -24,6 +24,7 @@
         var lowrate = parseInt(0);
 
         var savedBranch = null;
+        var savedWarehouse = null;
 
         function loadUserBranch() {
             PageMethods.GetUserBranch(function (result) {
@@ -69,6 +70,9 @@
                     optionInv += '<option value="' + value.DataValueName + '" >' + value.DataValueDescription + '</option>';
                 });
                 $('#ddlWarehouse').html(optionInv);
+                if (savedWarehouse) {
+                    $('#ddlWarehouse').val(savedWarehouse).trigger('change');
+                }
             });
         }
 
@@ -567,6 +571,7 @@ function RecalculateAllVendorTotals() {
             PageMethods.LoadVenHeader(CM_ID, function (resp) {
                 var data = JSON.parse(resp);
                 $('#txt_CSno').val(data.CS_Ven_No);
+                savedWarehouse = data.Ware_House;
                 $('#ddlWarehouse').val(data.Ware_House);
                 PageMethods.GetCSBranch(CM_ID, function (branchId) {
                     savedBranch = (branchId === null || branchId === undefined || branchId === '') ? null : branchId;
