@@ -96,54 +96,73 @@
 
      }
  </script>
-        <style type="text/css">
-            .ckeditor3 {
-                width: 50%;
-                display: flex;
-                float: left;
-            }
-            .ckeditor4 {
-                display: flex;
-            }
-        </style>
+    <link href="../../wwwroot/THEME_TIBBIT/CustomCSS/ultrasound-footer.css" rel="stylesheet" />
 </asp:Content>
 <asp:Content ID="Content2" ContentPlaceHolderID="MainContent" runat="server">
-    <div class="row" style="margin-top:20px">
-        <div class="col">
-            <legend>Ultrasound Footer</legend>
-            <div class="row">
+    <div class="uf-page">
 
-                <div class="col-lg-2">
-                    <label>Doctor</label>
-                    <select id="ddlDoctor">
+        <!-- Title line: the master page puts the page title in the empty left side; the badges sit on the right -->
+        <div class="pr-meta-bar">
+            <div class="meta-left"></div>
+            <div class="meta-right">
+                <div class="uf-badge"><span class="uf-badge-label">Doctor</span><span class="uf-badge-value" id="badgeUfDoctor">---</span></div>
+                <div class="uf-badge"><span class="uf-badge-label">Template</span><span class="uf-badge-value" id="badgeUfTemplate">---</span></div>
+            </div>
+        </div>
 
+        <section class="uf-card">
+            <h5 class="uf-card-title"><i class="fa fa-user-md"></i> Footer Template</h5>
+            <div class="uf-grid">
+                <div class="uf-field">
+                    <label for="ddlDoctor">Doctor</label>
+                    <select id="ddlDoctor" class="uf-input">
                     </select>
                 </div>
-                
-                <div class="col-lg-2">
-                    <label>Template Name</label>
-                    <input type="text" id="templateName" />
+                <div class="uf-field">
+                    <label for="templateName">Template Name</label>
+                    <input type="text" id="templateName" class="uf-input" />
                 </div>
             </div>
-            <div class="row">
-                <div class="ckeditor3">
+        </section>
+
+        <div class="uf-layout2">
+            <section class="uf-card">
+                <h5 class="uf-card-title"><i class="fa fa-file-text-o"></i> Footer (left)</h5>
+                <div class="uf-editor">
                     <textarea name="labFooter" id="labFooter" rows="10" cols="80"></textarea>
                     <script type="text/javascript">
                         CKEDITOR.replace('labFooter');
                     </script>
                 </div>
-                <div class="ckeditor4">
+            </section>
+            <section class="uf-card">
+                <h5 class="uf-card-title"><i class="fa fa-file-text-o"></i> Footer (right)</h5>
+                <div class="uf-editor">
                     <textarea name="labFooterTwo" id="labFooterTwo" rows="10" cols="80"></textarea>
                     <script type="text/javascript">
                         CKEDITOR.replace('labFooterTwo');
                     </script>
                 </div>
+            </section>
+        </div>
+
+        <div class="uf-actions">
+            <div>
+                <input type="button" class="btn btn btn-primry" value="Save" id="btnSaveLab" />
             </div>
         </div>
     </div>
-    <div class="row" style="margin-top:1%">
-        <div class="col-lg-1 col-md-4 col-sm-6">
-    <input type="button" class="btn btn btn-primry"  value="Save" id="btnSaveLab"  />
-        </div>
-        </div>
+
+    <script type="text/javascript">
+        // title-line badges follow the form (the page script fills the fields in after loading)
+        function syncFooterBadges() {
+            var d = $('#ddlDoctor').val() && $('#ddlDoctor').val() !== '0' ? $.trim($('#ddlDoctor option:selected').text()) : '';
+            $('#badgeUfDoctor').text(d || '---');
+            $('#badgeUfTemplate').text($('#templateName').val() || '---');
+        }
+        $(function () {
+            syncFooterBadges();
+            setInterval(syncFooterBadges, 600);
+        });
+    </script>
 </asp:Content>

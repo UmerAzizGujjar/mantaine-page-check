@@ -1,0 +1,329 @@
+/* ==========================================================================
+   comparative-statement.css - Comparative Statement screen (Modules/AP/ComparativeStatementVendor.aspx)
+   Stand-alone: this screen uses no other screen's stylesheet. Every colour comes from the active theme
+   (--theme-accent ... in that theme's theme-colors.css); the fallbacks are only a safety net.
+   The same file is kept in every theme folder (wwwroot/THEME_xxx/CustomCSS/comparative-statement.css).
+   Layout: status badges on the title line, patient card + original amounts, the refund card and the buttons.
+   ========================================================================== */
+
+.cs-page { display: flex; flex-direction: column; gap: 16px; width: 100%; margin: 0 0 24px; color: var(--theme-ink, #1b2a41); }
+.cs-page * { box-sizing: border-box; }
+
+/* ---------- status badges (on the title line, right side of the master's .pr-meta-bar) ---------- */
+.cs-badge {
+    display: inline-flex; align-items: baseline; gap: 6px; padding: 3px 12px; white-space: nowrap;
+    background: #fff; border: 1px solid #e3e8ee; border-left: 3px solid var(--theme-accent, #438eb9); border-radius: 6px;
+}
+.cs-badge-label { font-size: 10.5px; font-weight: 700; letter-spacing: .06em; text-transform: uppercase; color: #8a94a6; }
+.cs-badge-value { font-size: 13px; font-weight: 800; color: var(--theme-ink, #1b2a41); }
+
+/* ---------- layout ---------- */
+.cs-layout { display: grid; grid-template-columns: minmax(0, 2fr) minmax(0, 1fr); gap: 16px; align-items: stretch; }
+@media (max-width: 1199px) { .cs-layout { grid-template-columns: minmax(0, 1fr); } }
+
+/* ---------- cards ---------- */
+.cs-card {
+    min-width: 0; padding: 0 16px 16px; background: #fff;
+    border: 1px solid #e3e8ee; border-top: 3px solid var(--theme-accent, #438eb9); border-radius: 10px;
+    box-shadow: 0 2px 10px rgba(16, 24, 40, .05);
+}
+.cs-card-title {
+    display: flex; align-items: center; gap: 8px; margin: 0 -16px 14px; padding: 10px 16px;
+    font-size: 13px; font-weight: 700; letter-spacing: .04em; text-transform: uppercase;
+    color: var(--theme-on-accent, #fff);
+    background: linear-gradient(180deg, var(--theme-accent-light, #438eb9) 0%, var(--theme-accent, #438eb9) 100%);
+    border-bottom: 1px solid var(--theme-accent-ink, #2b6a90);
+}
+.cs-card-title i { font-size: 14px; opacity: .9; }
+
+/* ---------- patient ---------- */
+.cs-patient { display: flex; align-items: center; gap: 16px; margin-bottom: 14px; padding-bottom: 14px; border-bottom: 1px dashed #dde3ea; }
+.cs-avatar {
+    flex: 0 0 auto; display: flex; align-items: center; justify-content: center; width: 64px; height: 64px; overflow: hidden;
+    background: var(--theme-accent-soft, #f4f8fb); border: 2px solid var(--theme-accent, #438eb9); border-radius: 50%;
+}
+.cs-avatar img { width: 40px; height: 40px; object-fit: contain; }
+.cs-who { flex: 1 1 auto; min-width: 0; }
+.cs-name { margin: 0 0 8px; font-size: 18px; font-weight: 800; line-height: 1.2; color: var(--theme-ink, #1b2a41); overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.cs-search { display: flex; align-items: flex-end; gap: 8px; max-width: 420px; }
+.cs-search .cs-field { flex: 1 1 auto; }
+.cs-page .cs-search-btn {
+    display: inline-flex; align-items: center; justify-content: center; gap: 6px; flex: 0 0 auto; height: 34px; margin: 0; padding: 0 16px;
+    font-size: 13px; font-weight: 700; white-space: nowrap; cursor: pointer; user-select: none; text-shadow: none;
+    color: var(--theme-on-accent, #fff); background: var(--theme-accent, #438eb9); border: 0; border-radius: 6px;
+}
+.cs-page .cs-search-btn:hover { filter: brightness(.95); }
+
+.cs-info { display: grid; grid-template-columns: repeat(auto-fill, minmax(190px, 1fr)); gap: 12px 16px; margin: 0; }
+.cs-info > div { min-width: 0; }
+.cs-info dt { margin: 0 0 2px; font-size: 11px; font-weight: 700; letter-spacing: .05em; text-transform: uppercase; color: #8a94a6; }
+.cs-info dd { min-height: 20px; margin: 0; font-size: 14px; font-weight: 700; color: var(--theme-ink, #1b2a41); overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.cs-info .cs-wide { grid-column: span 2; }
+@media (max-width: 520px) { .cs-info .cs-wide { grid-column: span 1; } }
+
+/* ---------- fields ---------- */
+.cs-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(190px, 1fr)); gap: 12px 14px; align-items: end; }
+.cs-grid-1 { grid-template-columns: minmax(0, 1fr); }
+.cs-span-2 { grid-column: span 2; }
+.cs-span-all { grid-column: 1 / -1; }
+@media (max-width: 520px) { .cs-span-2 { grid-column: span 1; } }
+.cs-field { display: flex; flex-direction: column; justify-content: flex-end; min-width: 0; }
+.cs-field > label { display: block; margin: 0 0 4px; font-size: 11.5px; font-weight: 700; letter-spacing: .02em; line-height: 1.3; color: #4a5568; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+
+.cs-page input.cs-input {
+    display: block; width: 100% !important; height: 34px !important; margin: 0 !important; padding: 4px 10px !important;
+    font-size: 13px; font-weight: 600; color: var(--theme-ink, #1b2a41);
+    background: #fff !important; border: 1px solid #cfd6e0 !important; border-radius: 6px !important; box-shadow: none !important;
+}
+.cs-page input.cs-input:focus { border-color: var(--theme-accent, #438eb9) !important; box-shadow: 0 0 0 3px var(--theme-accent-ring, rgba(67, 142, 185, .25)) !important; outline: none; }
+.cs-page input.cs-input[disabled], .cs-page input.cs-input[readonly] { background: #f3f5f8 !important; color: #3b475a; cursor: default; opacity: 1; }
+.cs-page input.cs-num { text-align: right; }
+
+/* figures (read-only amounts) */
+.cs-figure input.cs-input { height: 40px !important; font-size: 16px; font-weight: 800; text-align: right; }
+.cs-figure.cs-figure-main input.cs-input { font-size: 18px; color: var(--theme-accent-ink, #2b6a90); background: var(--theme-accent-soft, #f4f8fb) !important; border-color: var(--theme-accent, #438eb9) !important; }
+
+/* ---------- buttons (original buttons; only their row layout is set here) ---------- */
+.cs-actions { display: grid; grid-template-columns: repeat(auto-fit, minmax(130px, 200px)); gap: 8px; margin: 0; }
+.cs-actions > div { min-width: 0; }
+.cs-actions input[type="button"] { width: 100% !important; }
+
+/* ---------- dark mode ---------- */
+html[data-theme="dark"] .cs-page { color: var(--dk-text, #e6e9ef); }
+html[data-theme="dark"] .cs-badge, html[data-theme="dark"] .cs-card { background: var(--dk-surface-2, #1c2431); border-color: var(--dk-border, #2d3748); }
+html[data-theme="dark"] .cs-badge-value, html[data-theme="dark"] .cs-name, html[data-theme="dark"] .cs-info dd { color: var(--dk-text, #e6e9ef); }
+html[data-theme="dark"] .cs-badge-label, html[data-theme="dark"] .cs-info dt { color: var(--dk-muted, #9aa6b8); }
+html[data-theme="dark"] .cs-card-title { background: var(--dk-surface-3, #232d3d); border-bottom-color: var(--dk-border, #2d3748); color: var(--dk-text, #e6e9ef); }
+html[data-theme="dark"] .cs-patient { border-color: var(--dk-border, #2d3748); }
+html[data-theme="dark"] .cs-avatar { background: var(--dk-surface-3, #232d3d); }
+html[data-theme="dark"] .cs-field > label { color: var(--dk-muted, #9aa6b8); }
+html[data-theme="dark"] .cs-page input.cs-input { background: var(--dk-surface-3, #232d3d) !important; color: var(--dk-text, #e6e9ef); border-color: var(--dk-border, #2d3748) !important; }
+html[data-theme="dark"] .cs-page input.cs-input[disabled], html[data-theme="dark"] .cs-page input.cs-input[readonly] { background: var(--dk-surface-1, #161d29) !important; }
+
+.cs-actions > div:has(> input[style*="display: none"]), .cs-actions > div:has(> input[style*="display:none"]) { display: none; }
+
+/* ---------- remarks box ---------- */
+.cs-page textarea.cs-input {
+    display: block; width: 100% !important; min-height: 64px; margin: 0 !important; padding: 8px 10px !important; resize: vertical;
+    font-size: 13px; font-weight: 600; color: var(--theme-ink, #1b2a41);
+    background: #fff !important; border: 1px solid #cfd6e0 !important; border-radius: 6px !important; box-shadow: none !important;
+}
+.cs-page textarea.cs-input:focus { border-color: var(--theme-accent, #438eb9) !important; box-shadow: 0 0 0 3px var(--theme-accent-ring, rgba(67, 142, 185, .25)) !important; outline: none; }
+.cs-page textarea.cs-input[disabled] { background: #f3f5f8 !important; }
+
+/* ---------- items table ---------- */
+.cs-table-wrap { margin: 0 -16px; max-height: 52vh; overflow: auto; border-top: 1px solid #e3e8ee; }
+.cs-table { width: 100%; margin: 0; border-collapse: separate; border-spacing: 0; background: transparent; }
+html:root body .cs-page table.cs-table > thead > tr > th {
+    position: sticky; top: 0; z-index: 2; padding: 9px 10px !important; font-size: 11.5px !important; letter-spacing: .03em; text-transform: uppercase; white-space: nowrap; vertical-align: middle;
+    color: var(--theme-on-accent, #fff) !important; background: var(--theme-accent, #438eb9) !important; border: 0; border-bottom: 2px solid var(--theme-accent-ink, #2b6a90) !important; border-radius: 0 !important;
+}
+html:root body .cs-page table.cs-table > tbody > tr > td {
+    padding: 6px 10px !important; vertical-align: middle; font-size: 13px !important; font-weight: 600 !important; border: 0; border-bottom: 1px solid #eef1f5; border-radius: 0 !important;
+}
+.cs-table tbody tr:hover td { background: var(--theme-accent-soft, #f4f8fb); }
+.cs-table td input[type="text"] {
+    height: 30px; padding: 3px 8px; font-size: 13px; font-weight: 600; text-align: right;
+    color: var(--theme-ink, #1b2a41); background: #fff; border: 1px solid #cfd6e0; border-radius: 6px; box-shadow: none;
+}
+.cs-table td input[type="text"]:focus { border-color: var(--theme-accent, #438eb9); box-shadow: 0 0 0 3px var(--theme-accent-ring, rgba(67, 142, 185, .25)); outline: none; }
+.cs-table td input[type="checkbox"] { width: 17px; height: 17px; margin: 0; cursor: pointer; accent-color: var(--theme-accent, #438eb9); }
+.cs-table td:empty::after { content: ""; }
+.cs-empty { padding: 18px 16px; text-align: center; font-size: 13px; font-weight: 600; color: #8a94a6; }
+
+/* ---------- total refund bar ---------- */
+.cs-total { display: flex; align-items: center; justify-content: flex-end; gap: 14px; margin: 14px 0 0; padding-top: 14px; border-top: 1px dashed #dde3ea; }
+.cs-total label { margin: 0; font-size: 12px; font-weight: 800; letter-spacing: .05em; text-transform: uppercase; color: #4a5568; }
+.cs-page .cs-total input.cs-input { width: 220px !important; height: 42px !important; font-size: 18px; font-weight: 800; text-align: right; color: var(--theme-accent-ink, #2b6a90); background: var(--theme-accent-soft, #f4f8fb) !important; border-color: var(--theme-accent, #438eb9) !important; }
+
+html[data-theme="dark"] .cs-page textarea.cs-input { background: var(--dk-surface-3, #232d3d) !important; color: var(--dk-text, #e6e9ef); border-color: var(--dk-border, #2d3748) !important; }
+html[data-theme="dark"] .cs-table-wrap, html[data-theme="dark"] .cs-total { border-color: var(--dk-border, #2d3748); }
+html[data-theme="dark"] body .cs-page table.cs-table > thead > tr > th { background: var(--dk-surface-3, #232d3d) !important; color: var(--dk-text, #e6e9ef) !important; }
+html[data-theme="dark"] body .cs-page table.cs-table > tbody > tr > td { border-color: var(--dk-border, #2d3748); }
+html[data-theme="dark"] .cs-table tbody tr:hover td { background: var(--dk-surface-3, #232d3d); }
+html[data-theme="dark"] .cs-table td input[type="text"] { background: var(--dk-surface-3, #232d3d); color: var(--dk-text, #e6e9ef); border-color: var(--dk-border, #2d3748); }
+html[data-theme="dark"] .cs-total label { color: var(--dk-muted, #9aa6b8); }
+
+/* ---------- patient / item search (token input) ---------- */
+.cs-page ul.token-input-list { width: 100% !important; height: auto !important; min-height: 34px; margin: 0 !important; padding: 0 4px; overflow: visible; background: #fff; border: 1px solid #cfd6e0 !important; border-radius: 6px !important; box-sizing: border-box; box-shadow: none !important; }
+.cs-page ul.token-input-list li input { height: 30px !important; padding: 0 6px !important; background: transparent !important; border: 0 !important; box-shadow: none !important; }
+.cs-page ul.token-input-list li.token-input-token { margin: 3px 4px 3px 0; }
+
+/* ---------- selects, select2, validators ---------- */
+.cs-page select.cs-input {
+    display: block; width: 100% !important; height: 34px !important; margin: 0 !important; padding: 4px 8px !important;
+    font-size: 13px; font-weight: 600; color: var(--theme-ink, #1b2a41);
+    background-color: #fff !important; border: 1px solid #cfd6e0 !important; border-radius: 6px !important; box-shadow: none !important;
+}
+.cs-page select.cs-input:focus { border-color: var(--theme-accent, #438eb9) !important; box-shadow: 0 0 0 3px var(--theme-accent-ring, rgba(67, 142, 185, .25)) !important; outline: none; }
+.cs-page select.select2-hidden-accessible { width: 1px !important; height: 1px !important; min-width: 0 !important; padding: 0 !important; border: 0 !important; }
+.cs-page .select2-container { width: 100% !important; display: block; }
+.cs-page .select2-container .select2-selection--single { height: 34px; border: 1px solid #cfd6e0; border-radius: 6px; }
+.cs-page .select2-container .select2-selection--single .select2-selection__rendered { line-height: 32px; padding-left: 10px; font-size: 13px; font-weight: 600; color: var(--theme-ink, #1b2a41); }
+.cs-page .select2-container .select2-selection--single .select2-selection__arrow { height: 32px; }
+.cs-field > span[id*="rfv"], .cs-field > span[id*="rng"], .cs-field > span[id*="Validator"] { margin-top: 3px; font-size: 11.5px; font-weight: 700; color: #c0392b; }
+.cs-req { color: #c0392b; margin-left: 2px; }
+.cs-help { margin-top: 3px; font-size: 11.5px; font-weight: 600; color: #8a94a6; }
+.cs-span-2 { grid-column: span 2; }
+.cs-span-all { grid-column: 1 / -1; }
+@media (max-width: 520px) { .cs-span-2 { grid-column: span 1; } }
+.cs-field > label, .cs-field > span:first-child.cs-lbl { display: block; margin: 0 0 4px; font-size: 11.5px; font-weight: 700; letter-spacing: .02em; line-height: 1.3; color: #4a5568; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.cs-lbl { display: block; margin: 0 0 4px; font-size: 11.5px; font-weight: 700; letter-spacing: .02em; line-height: 1.3; color: #4a5568; }
+.cs-check { display: flex; align-items: center; gap: 8px; margin: 0; }
+.cs-check input[type="checkbox"] { width: 18px; height: 18px; margin: 0; cursor: pointer; accent-color: var(--theme-accent, #438eb9); }
+.cs-check label, .cs-check span label { margin: 0; font-size: 13px; font-weight: 700; color: #2d3748; cursor: pointer; }
+.cs-layout2 { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 16px; align-items: start; }
+.cs-col { display: flex; flex-direction: column; gap: 16px; min-width: 0; }
+@media (max-width: 1199px) { .cs-layout2 { grid-template-columns: minmax(0, 1fr); } }
+.cs-attach { display: flex; flex-wrap: wrap; align-items: center; gap: 8px; }
+.cs-attach input[type="file"] { flex: 1 1 220px; min-width: 0; padding: 4px; font-size: 12.5px; background: #fff; border: 1px dashed #cfd6e0; border-radius: 6px; }
+.cs-attach a { display: inline-flex; align-items: center; gap: 6px; padding: 5px 12px; font-size: 12.5px; font-weight: 700; text-decoration: none; white-space: nowrap; border-radius: 6px; }
+.cs-attach a.cs-link { color: var(--theme-accent-ink, #2b6a90); background: var(--theme-accent-soft, #f4f8fb); }
+.cs-attach a.cs-del { color: #fff; background: #c0392b; }
+html[data-theme="dark"] .cs-lbl { color: var(--dk-muted, #9aa6b8); }
+html[data-theme="dark"] .cs-check label, html[data-theme="dark"] .cs-check span label { color: var(--dk-text, #e6e9ef); }
+html[data-theme="dark"] .cs-page select.cs-input { background-color: var(--dk-surface-3, #232d3d) !important; color: var(--dk-text, #e6e9ef); border-color: var(--dk-border, #2d3748) !important; }
+html[data-theme="dark"] .cs-page ul.token-input-list { background: var(--dk-surface-3, #232d3d); border-color: var(--dk-border, #2d3748) !important; }
+html[data-theme="dark"] .cs-attach input[type="file"] { background: var(--dk-surface-3, #232d3d); border-color: var(--dk-border, #2d3748); }
+@media (max-width: 767px) { .pr-meta-bar:has(.cs-badge) .meta-right { flex-wrap: wrap; justify-content: flex-start; gap: 6px; } }
+/* ---------- windows (registration, patient / appointment search) ---------- */
+.cs-modal .modal-content { overflow: hidden; border: 0; border-radius: 10px; box-shadow: 0 20px 50px rgba(16, 24, 40, .3); }
+.cs-modal .modal-header {
+    display: flex; align-items: center; justify-content: space-between; padding: 12px 18px;
+    color: var(--theme-on-accent, #fff); border-bottom: 1px solid var(--theme-accent-ink, #2b6a90);
+    background: linear-gradient(180deg, var(--theme-accent-light, #438eb9) 0%, var(--theme-accent, #438eb9) 100%);
+}
+.cs-modal .modal-header::before, .cs-modal .modal-header::after { display: none; }
+.cs-modal .modal-title { margin: 0; font-size: 15px; font-weight: 800; letter-spacing: .03em; text-transform: uppercase; }
+.cs-modal .modal-header .close { float: none; width: auto !important; margin: 0 !important; padding: 0; line-height: 1; font-size: 26px; color: inherit; opacity: .9; text-shadow: none; background: transparent; border: 0; }
+.cs-modal .modal-body { padding: 16px 18px; }
+.cs-modal .modal-body label { margin: 0 0 4px; font-size: 11.5px; font-weight: 700; letter-spacing: .02em; color: #4a5568; }
+.cs-modal .modal-body h5 { margin: 0 0 6px; font-size: 13px; font-weight: 800; letter-spacing: .03em; text-transform: uppercase; color: var(--theme-accent-ink, #2b6a90); }
+.cs-modal .modal-body .row > [class*="col-"] { margin-bottom: 10px; }
+.cs-modal .form-control {
+    height: 34px; padding: 4px 10px; font-size: 13px; font-weight: 600; color: var(--theme-ink, #1b2a41);
+    background: #fff; border: 1px solid #cfd6e0; border-radius: 6px; box-shadow: none;
+}
+.cs-modal .form-control:focus { border-color: var(--theme-accent, #438eb9); box-shadow: 0 0 0 3px var(--theme-accent-ring, rgba(67, 142, 185, .25)); outline: none; }
+.cs-modal .form-control[disabled], .cs-modal .form-control[readonly] { background: #f3f5f8; }
+.cs-modal .modal-footer { display: flex; justify-content: flex-end; gap: 8px; padding: 12px 18px; background: #f8fafc; border-top: 1px solid #e3e8ee; }
+.cs-modal .modal-footer .btn { margin: 0; }
+.cs-modal .table-responsive { max-height: 56vh; overflow: auto; border: 1px solid #e3e8ee; border-radius: 8px; }
+.cs-modal .table-responsive > table { width: 100%; margin: 0; border-collapse: separate; border-spacing: 0; }
+html:root body .cs-modal .table-responsive > table > thead > tr > th {
+    position: sticky; top: 0; z-index: 1; padding: 9px 12px !important; font-size: 11.5px !important; letter-spacing: .03em; text-transform: uppercase; white-space: nowrap;
+    background: #eef1f5 !important; color: #2d3748 !important; border: 0 !important; border-bottom: 2px solid #dde3ea !important; border-radius: 0 !important;
+}
+html:root body .cs-modal .table-responsive > table > tbody > tr > td { padding: 6px 12px !important; vertical-align: middle; border: 0 !important; border-bottom: 1px solid #eef1f5 !important; border-radius: 0 !important; }
+.cs-modal .table-responsive > table > tbody > tr:hover > td { background: var(--theme-accent-soft, #f4f8fb) !important; }
+
+
+html[data-theme="dark"] .cs-modal .modal-content { background: var(--dk-surface-2, #1c2431); color: var(--dk-text, #e6e9ef); }
+html[data-theme="dark"] .cs-modal .modal-body label { color: var(--dk-muted, #9aa6b8); }
+html[data-theme="dark"] .cs-modal .form-control { background: var(--dk-surface-3, #232d3d); color: var(--dk-text, #e6e9ef); border-color: var(--dk-border, #2d3748); }
+html[data-theme="dark"] .cs-modal .modal-footer { background: var(--dk-surface-3, #232d3d); border-color: var(--dk-border, #2d3748); }
+html[data-theme="dark"] .cs-modal .table-responsive { border-color: var(--dk-border, #2d3748); }
+html[data-theme="dark"] body .cs-modal .table-responsive > table > thead > tr > th { background: var(--dk-surface-3, #232d3d) !important; color: var(--dk-text, #e6e9ef) !important; }
+html[data-theme="dark"] body .cs-modal .table-responsive > table > tbody > tr > td { border-color: var(--dk-border, #2d3748) !important; }
+html[data-theme="dark"] .cs-modal .table-responsive > table > tbody > tr:hover > td { background: var(--dk-surface-3, #232d3d) !important; }
+
+/* ---------- comparative statement extras ---------- */
+.cs-page { --cs-head: 42px; --cs-band-row: 66px; --cs-row: 50px; min-width: 0; }
+.cs-card { min-width: 0; }
+.cs-req { color: #c0392b; margin-left: 2px; }
+.cs-page .cs-lowrate { flex: 0 0 auto; width: auto !important; margin: 0 !important; padding: 0 14px !important; height: 34px; font-size: 13px; font-weight: 700; cursor: pointer; color: var(--theme-on-accent, #fff); background: var(--theme-accent, #438eb9); border: 0; border-radius: 6px; }
+.cs-attach input[type="file"] { flex: 1 1 200px; }
+
+/* ---------- comparison grid: scrolls sideways INSIDE its card; the page itself never does ---------- */
+.cs-compare {
+    position: relative; display: flex; flex-wrap: nowrap; align-items: flex-start; gap: 14px; max-width: 100%; padding: 4px 2px 14px;
+    overflow-x: auto; overflow-y: hidden; scroll-behavior: smooth; scrollbar-width: thin; scrollbar-color: var(--theme-accent, #438eb9) #eef1f5;
+}
+.cs-compare::-webkit-scrollbar { height: 10px; }
+.cs-compare::-webkit-scrollbar-track { background: #eef1f5; border-radius: 8px; }
+.cs-compare::-webkit-scrollbar-thumb { background: var(--theme-accent, #438eb9); border-radius: 8px; border: 2px solid #eef1f5; }
+
+/* every block is a rounded card; items stay pinned on the left while the vendors scroll */
+.cs-col-items, .cs-vendor { flex: 0 0 auto; min-width: 0; background: #fff; border: 1px solid #e3e8ee; border-radius: 12px; overflow: hidden; box-shadow: 0 2px 8px rgba(16, 24, 40, .06); }
+.cs-col-items { position: sticky; left: 0; z-index: 3; width: 620px; box-shadow: 6px 0 14px rgba(16, 24, 40, .10); }
+.cs-vendor { width: 340px; }
+.cs-col-grn { flex: 0 0 auto; width: 200px; min-width: 0; padding-top: calc(var(--cs-head) + 3 * var(--cs-band-row)); }
+.cs-col-grn table.cs-items { border: 1px solid #e3e8ee; border-radius: 12px; overflow: hidden; }
+
+/* left block: heading + the three row captions that line up with each vendor's drop-downs */
+.cs-band { display: grid; grid-template-rows: var(--cs-head) var(--cs-band-row) var(--cs-band-row) var(--cs-band-row); }
+.cs-band-head { display: flex; align-items: center; gap: 8px; padding: 0 14px; font-size: 12px; font-weight: 800; letter-spacing: .05em; text-transform: uppercase; color: var(--theme-on-accent, #fff); background: var(--theme-accent, #438eb9); }
+.cs-band-row { display: flex; align-items: center; padding: 0 14px; background: var(--theme-accent-soft, #f4f8fb); border-top: 1px solid #e3e8ee; }
+.cs-band-row label { margin: 0; font-size: 13px; font-weight: 700; color: #000; }
+
+/* vendor header: "All Items | Vendor n" and its three drop-downs */
+.cs-page table.cs-top { width: 100%; margin: 0; table-layout: fixed; border-collapse: separate; border-spacing: 0; background: #fff; }
+html:root body .cs-page table.cs-top > tbody > tr > th {
+    height: var(--cs-head); padding: 0 14px !important; font-size: 12px !important; letter-spacing: .05em; text-transform: uppercase; text-align: left; white-space: nowrap; vertical-align: middle;
+    color: var(--theme-on-accent, #fff) !important; background: var(--theme-accent, #438eb9) !important; border: 0 !important; border-radius: 0 !important;
+}
+html:root body .cs-page table.cs-top > tbody > tr > th:last-child { text-align: right; }
+html:root body .cs-page table.cs-top > tbody > tr > td { height: var(--cs-band-row); padding: 0 10px !important; vertical-align: middle; background: var(--theme-accent-soft, #f4f8fb) !important; border: 0 !important; border-top: 1px solid #e3e8ee !important; border-radius: 0 !important; }
+.cs-top select { width: 100% !important; height: 36px; }
+.cs-page .cs-top .select2-container { width: 100% !important; display: block; }
+.cs-page .cs-top .select2-container .select2-selection--single { height: 36px; background: #fff; }
+.cs-page .cs-top .select2-container .select2-selection--single .select2-selection__rendered { line-height: 34px; }
+.cs-page .cs-top .select2-container .select2-selection--single .select2-selection__arrow { height: 34px; }
+
+/* item tables (left list, one per vendor, last-GRN-rate list) */
+.cs-page table.cs-items { width: 100% !important; margin: 0 !important; border-collapse: separate; border-spacing: 0; background: #fff; border: 0; border-top: 1px solid #e3e8ee; }
+html:root body .cs-page table.cs-items > thead > tr > th {
+    height: var(--cs-head); padding: 0 10px !important; font-size: 11.5px !important; font-weight: 800; letter-spacing: .04em; text-transform: uppercase; white-space: nowrap; vertical-align: middle; text-align: left;
+    color: var(--theme-accent-ink, #2b6a90) !important; background: #eef1f5 !important; border: 0 !important; border-bottom: 2px solid var(--theme-accent, #438eb9) !important; border-radius: 0 !important;
+}
+html:root body .cs-page table.cs-items > thead > tr > th.cs-th-desc { width: 200px; }
+html:root body .cs-page table.cs-items > tbody > tr { height: var(--cs-row); }
+html:root body .cs-page table.cs-items > tbody > tr > td {
+    padding: 4px 10px !important; vertical-align: middle; font-size: 13px !important; font-weight: 600 !important; color: var(--theme-ink, #1b2a41);
+    border: 0 !important; border-bottom: 1px solid #eef1f5 !important; border-radius: 0 !important;
+}
+.cs-items tbody tr:hover td { background: var(--theme-accent-soft, #f4f8fb); }
+.cs-page .cs-items td input[type="text"], .cs-page .cs-items td select {
+    height: 34px !important; margin: 0 !important; padding: 3px 8px; font-size: 13px; font-weight: 600; color: var(--theme-ink, #1b2a41);
+    background: #fff; border: 1px solid #cfd6e0; border-radius: 8px; box-shadow: none; min-width: 0;
+}
+.cs-page .cs-items td input[type="text"]:focus, .cs-page .cs-items td select:focus { border-color: var(--theme-accent, #438eb9); box-shadow: 0 0 0 3px var(--theme-accent-ring, rgba(67, 142, 185, .25)); outline: none; }
+.cs-page .cs-items td input[readonly] { background: #f3f5f8; }
+.cs-page .cs-items td input[type="checkbox"] { width: 17px; height: 17px !important; margin: 0 !important; cursor: pointer; accent-color: var(--theme-accent, #438eb9); }
+.cs-items td a { text-decoration: none; }
+.cs-page table.cs-items#grntable { margin-top: 0 !important; }
+.cs-page .cs-col-grn .cs-items td input[type="text"] { text-align: right; }
+
+/* vendor item columns: tick | qty | rate | s.tax | amount */
+.cs-vendor table.cs-items { table-layout: fixed; }
+html:root body .cs-vendor table.cs-items > thead > tr > th:nth-child(1) { width: 38px; }
+html:root body .cs-vendor table.cs-items > thead > tr > th:nth-child(2) { width: 68px; }
+html:root body .cs-vendor table.cs-items > thead > tr > th:nth-child(3) { width: 78px; }
+html:root body .cs-vendor table.cs-items > thead > tr > th:nth-child(4) { width: 88px; }
+html:root body .cs-vendor table.cs-items > tbody > tr > td { padding: 4px 5px !important; }
+html:root body .cs-vendor table.cs-items > thead > tr > th { padding: 0 5px !important; }
+
+/* amount / freight / total under each vendor */
+.cs-page table.cs-bottom, .cs-bottom tbody, .cs-bottom tr, .cs-bottom td { display: block; width: 100%; }
+.cs-page table.cs-bottom { margin: 0; background: var(--theme-accent-soft, #f4f8fb); border: 0; }
+html:root body .cs-page table.cs-bottom td { display: flex; align-items: center; justify-content: space-between; gap: 12px; padding: 8px 14px !important; border: 0 !important; border-top: 1px solid #e3e8ee !important; }
+.cs-bottom label { width: auto !important; margin: 0; font-size: 12px; font-weight: 800; letter-spacing: .04em; text-transform: uppercase; color: #000; }
+.cs-page .cs-bottom input[type="text"] { width: 150px !important; height: 36px; margin: 0; padding: 3px 10px; float: none !important; text-align: right; font-size: 14px; font-weight: 800; color: var(--theme-ink, #1b2a41); background: #fff; border: 1px solid #cfd6e0; border-radius: 8px; }
+.cs-bottom tr:last-child { background: var(--theme-accent, #438eb9); }
+.cs-bottom tr:last-child label { color: var(--theme-on-accent, #fff); }
+.cs-bottom tr:last-child input[type="text"] { color: var(--theme-accent-ink, #2b6a90); font-size: 15px; border-color: var(--theme-accent, #438eb9); }
+
+/* PR items window */
+.cs-modal .modal-footer input[type="button"] { width: auto !important; min-width: 110px; margin: 0 !important; }
+.cs-modal .modal-header .modal-title { color: var(--theme-on-accent, #fff) !important; }
+.cs-modal .table-responsive > table { width: 100%; }
+
+/* dark mode */
+html[data-theme="dark"] .cs-col-items, html[data-theme="dark"] .cs-vendor, html[data-theme="dark"] .cs-page table.cs-top, html[data-theme="dark"] .cs-page table.cs-items { background: var(--dk-surface-2, #1c2431); border-color: var(--dk-border, #2d3748); }
+html[data-theme="dark"] .cs-compare::-webkit-scrollbar-track { background: var(--dk-surface-3, #232d3d); }
+html[data-theme="dark"] .cs-band-row, html[data-theme="dark"] body .cs-page table.cs-top > tbody > tr > td, html[data-theme="dark"] .cs-page table.cs-bottom { background: var(--dk-surface-3, #232d3d) !important; border-color: var(--dk-border, #2d3748) !important; }
+html[data-theme="dark"] .cs-band-row label, html[data-theme="dark"] .cs-bottom label { color: var(--dk-text, #e6e9ef); }
+html[data-theme="dark"] body .cs-page table.cs-items > thead > tr > th { background: var(--dk-surface-3, #232d3d) !important; color: var(--dk-text, #e6e9ef) !important; }
+html[data-theme="dark"] body .cs-page table.cs-items > tbody > tr > td { color: var(--dk-text, #e6e9ef); border-color: var(--dk-border, #2d3748) !important; }
+html[data-theme="dark"] .cs-page .cs-items td input[type="text"], html[data-theme="dark"] .cs-page .cs-items td select, html[data-theme="dark"] .cs-page .cs-bottom input[type="text"] { background: var(--dk-surface-3, #232d3d); color: var(--dk-text, #e6e9ef); border-color: var(--dk-border, #2d3748); }
+html[data-theme="dark"] .cs-items tbody tr:hover td { background: var(--dk-surface-3, #232d3d); }

@@ -1,0 +1,189 @@
+/* ==========================================================================
+   product-item.css - Product Item screen (Modules/Inventory/Product.aspx)
+   Stand-alone: this screen uses no other screen's stylesheet. Every colour comes from the active theme
+   (--theme-accent ... in that theme's theme-colors.css); the fallbacks are only a safety net.
+   The same file is kept in every theme folder (wwwroot/THEME_xxx/CustomCSS/product-item.css).
+   Layout: code / status badges on the title line, cards of fields, a tab card of option checkboxes and the buttons.
+   ========================================================================== */
+
+.pd-page { display: flex; flex-direction: column; gap: 16px; width: 100%; margin: 0 0 24px; color: var(--theme-ink, #1b2a41); }
+.pd-page * { box-sizing: border-box; }
+
+/* ---------- badges (on the title line, right side of the master's .pr-meta-bar) ---------- */
+.pd-badge {
+    display: inline-flex; align-items: baseline; gap: 6px; padding: 3px 12px; white-space: nowrap;
+    background: #fff; border: 1px solid #e3e8ee; border-left: 3px solid var(--theme-accent, #438eb9); border-radius: 6px;
+}
+.pd-badge-label { font-size: 10.5px; font-weight: 700; letter-spacing: .06em; text-transform: uppercase; color: #000; }
+.pd-badge-value { font-size: 13px; font-weight: 800; color: var(--theme-ink, #1b2a41); }
+.pd-status { align-items: center; cursor: pointer; user-select: none; font-size: 12.5px; font-weight: 800; color: #1e8449; border-left-color: #1e8449; }
+.pd-status.badge-inactive { color: #c0392b; border-left-color: #c0392b; }
+.pd-status:hover { filter: brightness(.96); }
+
+/* ---------- layout ---------- */
+.pd-layout2 { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 16px; align-items: stretch; }
+.pd-layout2 > .pd-wide { grid-column: 1 / -1; }
+@media (max-width: 1199px) { .pd-layout2 { grid-template-columns: minmax(0, 1fr); } }
+
+/* ---------- cards ---------- */
+.pd-card {
+    min-width: 0; padding: 0 16px 16px; background: #fff;
+    border: 1px solid #e3e8ee; border-top: 3px solid var(--theme-accent, #438eb9); border-radius: 10px;
+    box-shadow: 0 2px 10px rgba(16, 24, 40, .05);
+}
+.pd-card-title {
+    display: flex; align-items: center; gap: 8px; margin: 0 -16px 14px; padding: 10px 16px;
+    font-size: 13px; font-weight: 700; letter-spacing: .04em; text-transform: uppercase;
+    color: var(--theme-on-accent, #fff);
+    background: linear-gradient(180deg, var(--theme-accent-light, #438eb9) 0%, var(--theme-accent, #438eb9) 100%);
+    border-bottom: 1px solid var(--theme-accent-ink, #2b6a90);
+}
+.pd-card-title i { font-size: 14px; opacity: .9; }
+
+/* ---------- fields: a 6-column grid, fields span 2 / 3 / 4 / 6 columns ---------- */
+.pd-grid { display: grid; grid-template-columns: repeat(6, minmax(0, 1fr)); gap: 12px 14px; align-items: end; }
+.pd-s2 { grid-column: span 2; }
+.pd-s3 { grid-column: span 3; }
+.pd-s4 { grid-column: span 4; }
+.pd-s6 { grid-column: span 6; }
+@media (max-width: 767px) { .pd-s2, .pd-s3, .pd-s4 { grid-column: span 6; } }
+.pd-field { display: flex; flex-direction: column; justify-content: flex-end; min-width: 0; }
+.pd-field > label, .pd-lbl { display: block; margin: 0 0 4px; font-size: 11.5px; font-weight: 700; letter-spacing: .02em; line-height: 1.3; color: #000; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+
+.pd-page input.pd-input {
+    display: block; width: 100% !important; height: 34px !important; margin: 0 !important; padding: 4px 10px !important;
+    font-size: 13px; font-weight: 600; color: var(--theme-ink, #1b2a41);
+    background: #fff !important; border: 1px solid #cfd6e0 !important; border-radius: 6px !important; box-shadow: none !important;
+}
+.pd-page input.pd-input:focus, .pd-page select.pd-input:focus, .pd-page textarea.pd-input:focus {
+    border-color: var(--theme-accent, #438eb9) !important; box-shadow: 0 0 0 3px var(--theme-accent-ring, rgba(67, 142, 185, .25)) !important; outline: none;
+}
+.pd-page input.pd-input[disabled], .pd-page input.pd-input[readonly] { background: #f3f5f8 !important; color: #3b475a; cursor: default; opacity: 1; }
+.pd-page textarea.pd-input {
+    display: block; width: 100% !important; height: auto !important; min-height: 64px; margin: 0 !important; padding: 8px 10px !important; resize: vertical;
+    font-size: 13px; font-weight: 600; color: var(--theme-ink, #1b2a41);
+    background: #fff !important; border: 1px solid #cfd6e0 !important; border-radius: 6px !important; box-shadow: none !important;
+}
+.pd-page select.pd-input {
+    display: block; width: 100% !important; height: 34px !important; margin: 0 !important; padding: 4px 8px !important;
+    font-size: 13px; font-weight: 600; color: var(--theme-ink, #1b2a41);
+    background-color: #fff !important; border: 1px solid #cfd6e0 !important; border-radius: 6px !important; box-shadow: none !important;
+}
+
+/* select2 (every dropdown on the form is turned into a select2 by the page script) */
+.pd-page select.select2-hidden-accessible { width: 1px !important; height: 1px !important; min-width: 0 !important; padding: 0 !important; border: 0 !important; }
+.pd-page .select2-container { width: 100% !important; display: block; }
+.pd-page .select2-container .select2-selection--single { height: 34px; border: 1px solid #cfd6e0; border-radius: 6px; }
+.pd-page .select2-container--open .select2-selection--single,
+.pd-page .select2-container--focus .select2-selection--single { border-color: var(--theme-accent, #438eb9); box-shadow: 0 0 0 3px var(--theme-accent-ring, rgba(67, 142, 185, .25)); }
+.pd-page .select2-container .select2-selection--single .select2-selection__rendered { line-height: 32px; padding-left: 10px; font-size: 13px; font-weight: 600; color: var(--theme-ink, #1b2a41); }
+.pd-page .select2-container .select2-selection--single .select2-selection__arrow { height: 32px; }
+
+/* ---------- tabs (jQuery UI) ---------- */
+html:root body .pd-page #tabs.pd-tabs {
+    padding: 0; margin: 0; overflow: hidden; background: #fff;
+    border: 1px solid #e3e8ee; border-top: 3px solid var(--theme-accent, #438eb9); border-radius: 10px; box-shadow: 0 2px 10px rgba(16, 24, 40, .05);
+}
+html:root body .pd-page #tabs.pd-tabs > ul.ui-tabs-nav {
+    display: flex; flex-wrap: wrap; gap: 4px; margin: 0; padding: 8px 10px 0; overflow: visible;
+    list-style: none; background: var(--theme-accent-soft, #f4f8fb); border: 0; border-bottom: 1px solid #e3e8ee; border-radius: 0;
+}
+html:root body .pd-page #tabs.pd-tabs > ul.ui-tabs-nav > li {
+    float: none; margin: 0 0 -1px; padding: 0; background: transparent; border: 0; border-radius: 8px 8px 0 0;
+}
+html:root body .pd-page #tabs.pd-tabs > ul.ui-tabs-nav > li > a {
+    display: inline-flex; align-items: center; gap: 7px; float: none; padding: 9px 18px !important;
+    font-size: 12.5px; font-weight: 700; letter-spacing: .03em; text-transform: uppercase; text-decoration: none;
+    color: #000 !important; background: transparent !important; background-image: none !important;
+    border: 1px solid transparent !important; border-bottom: 0 !important; border-radius: 8px 8px 0 0;
+}
+html:root body .pd-page #tabs.pd-tabs > ul.ui-tabs-nav > li > a:hover { color: #000 !important; }
+html:root body .pd-page #tabs.pd-tabs > ul.ui-tabs-nav > li.ui-tabs-active > a {
+    color: #000 !important; background: #fff !important; border-color: #e3e8ee !important; box-shadow: inset 0 3px 0 var(--theme-accent, #438eb9);
+}
+html:root body .pd-page #tabs.pd-tabs > .ui-tabs-panel { padding: 16px; background: #fff; border: 0; border-radius: 0; }
+
+/* ---------- option checkboxes ---------- */
+.pd-checks { display: grid; grid-template-columns: repeat(auto-fill, minmax(220px, 1fr)); gap: 8px 14px; }
+.pd-check {
+    display: flex; align-items: center; gap: 10px; min-width: 0; margin: 0; padding: 8px 12px;
+    background: #fff; border: 1px solid #e3e8ee; border-radius: 8px; transition: background .15s ease, border-color .15s ease;
+}
+.pd-check:hover { background: var(--theme-accent-soft, #f4f8fb); border-color: var(--theme-accent, #438eb9); }
+.pd-check input[type="checkbox"] { flex: 0 0 auto; width: 17px; height: 17px; margin: 0 !important; cursor: pointer; accent-color: var(--theme-accent, #438eb9); }
+.pd-check label { flex: 1 1 auto; margin: 0 !important; font-size: 13px; font-weight: 700; color: #000; cursor: pointer; text-transform: none; letter-spacing: 0; }
+.pd-divider { height: 0; margin: 16px 0; border: 0; border-top: 1px dashed #dde3ea; }
+.pd-hint {
+    display: flex; align-items: flex-start; gap: 10px; padding: 10px 14px; font-size: 12px; font-weight: 600; line-height: 1.5; color: #4a5568;
+    background: var(--theme-accent-soft, #f4f8fb); border: 1px dashed var(--theme-accent, #438eb9); border-radius: 8px;
+}
+.pd-hint i { margin-top: 2px; font-size: 16px; color: var(--theme-accent, #438eb9); flex: 0 0 auto; }
+.pd-share { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr) minmax(0, 2fr); gap: 12px 14px; align-items: end; }
+@media (max-width: 767px) { .pd-share { grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); } .pd-share .pd-hint { grid-column: 1 / -1; } }
+
+/* ---------- buttons (original buttons; only their row layout is set here) ---------- */
+.pd-actions { display: grid; grid-template-columns: repeat(auto-fit, minmax(130px, 200px)); gap: 8px; margin: 0; }
+.pd-actions > div { min-width: 0; }
+.pd-actions input[type="button"] { width: 100% !important; }
+
+/* ---------- dark mode ---------- */
+html[data-theme="dark"] .pd-page { color: var(--dk-text, #e6e9ef); }
+html[data-theme="dark"] .pd-badge, html[data-theme="dark"] .pd-card, html[data-theme="dark"] .pd-check { background: var(--dk-surface-2, #1c2431); border-color: var(--dk-border, #2d3748); }
+html[data-theme="dark"] .pd-badge-value { color: var(--dk-text, #e6e9ef); }
+html[data-theme="dark"] .pd-badge-label { color: var(--dk-muted, #9aa6b8); }
+html[data-theme="dark"] .pd-card-title { background: var(--dk-surface-3, #232d3d); border-bottom-color: var(--dk-border, #2d3748); color: var(--dk-text, #e6e9ef); }
+html[data-theme="dark"] .pd-field > label, html[data-theme="dark"] .pd-lbl { color: var(--dk-muted, #9aa6b8); }
+html[data-theme="dark"] .pd-check label { color: var(--dk-text, #e6e9ef); }
+html[data-theme="dark"] .pd-check:hover { background: var(--dk-surface-3, #232d3d); }
+html[data-theme="dark"] .pd-divider { border-color: var(--dk-border, #2d3748); }
+html[data-theme="dark"] .pd-hint { color: var(--dk-muted, #9aa6b8); background: var(--dk-surface-3, #232d3d); }
+html[data-theme="dark"] .pd-page input.pd-input, html[data-theme="dark"] .pd-page textarea.pd-input { background: var(--dk-surface-3, #232d3d) !important; color: var(--dk-text, #e6e9ef); border-color: var(--dk-border, #2d3748) !important; }
+html[data-theme="dark"] .pd-page select.pd-input { background-color: var(--dk-surface-3, #232d3d) !important; color: var(--dk-text, #e6e9ef); border-color: var(--dk-border, #2d3748) !important; }
+html[data-theme="dark"] .pd-page input.pd-input[disabled], html[data-theme="dark"] .pd-page input.pd-input[readonly] { background: var(--dk-surface-1, #161d29) !important; }
+html[data-theme="dark"] .pd-page .select2-container .select2-selection--single { background: var(--dk-surface-3, #232d3d); border-color: var(--dk-border, #2d3748); }
+html[data-theme="dark"] .pd-page .select2-container .select2-selection--single .select2-selection__rendered { color: var(--dk-text, #e6e9ef); }
+html[data-theme="dark"] body .pd-page #tabs.pd-tabs { background: var(--dk-surface-2, #1c2431); border-color: var(--dk-border, #2d3748); }
+html[data-theme="dark"] body .pd-page #tabs.pd-tabs > ul.ui-tabs-nav { background: var(--dk-surface-3, #232d3d); border-color: var(--dk-border, #2d3748); }
+html[data-theme="dark"] body .pd-page #tabs.pd-tabs > ul.ui-tabs-nav > li > a { color: var(--dk-muted, #9aa6b8) !important; }
+html[data-theme="dark"] body .pd-page #tabs.pd-tabs > ul.ui-tabs-nav > li.ui-tabs-active > a { background: var(--dk-surface-2, #1c2431) !important; color: var(--dk-text, #e6e9ef) !important; border-color: var(--dk-border, #2d3748) !important; }
+html[data-theme="dark"] body .pd-page #tabs.pd-tabs > .ui-tabs-panel { background: var(--dk-surface-2, #1c2431); }
+@media (max-width: 767px) { .pr-meta-bar:has(.pd-badge) .meta-right { flex-wrap: wrap; justify-content: flex-start; gap: 6px; } }
+
+/* ---------- product extras: side-by-side blocks, add rows, small tables ---------- */
+.pd-split { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 16px; align-items: stretch; }
+@media (max-width: 991px) { .pd-split { grid-template-columns: minmax(0, 1fr); } }
+.pd-trio { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 16px; align-items: start; margin-top: 16px; }
+@media (max-width: 991px) { .pd-trio { grid-template-columns: minmax(0, 1fr); } }
+.pd-trio > .pd-sub:first-child { grid-column: 1 / -1; }
+.pd-sub { min-width: 0; padding: 14px; background: var(--theme-accent-soft, #f4f8fb); border: 1px solid #e3e8ee; border-radius: 10px; }
+.pd-sub-title { margin: 0 0 10px; font-size: 12.5px; font-weight: 800; letter-spacing: .04em; text-transform: uppercase; color: #000; }
+.pd-addrow { display: flex; align-items: flex-end; gap: 10px; margin-bottom: 12px; }
+.pd-addrow .pd-field { flex: 1 1 0; }
+.pd-page .pd-addrow input[type="button"], .pd-page .pd-addbtn {
+    flex: 0 0 auto; width: 40px !important; height: 34px; margin: 0 !important; padding: 0 !important; font-size: 18px; font-weight: 800; line-height: 1; cursor: pointer;
+    color: var(--theme-on-accent, #fff); background: var(--theme-accent, #438eb9); border: 0; border-radius: 6px;
+}
+.pd-page .pd-addrow input[type="button"]:hover, .pd-page .pd-addbtn:hover { filter: brightness(.95); }
+
+.pd-table-wrap { max-height: 46vh; overflow-x: auto; overflow-y: auto; background: #fff; border: 1px solid #e3e8ee; border-radius: 8px; }
+.pd-table { width: 100% !important; margin: 0 !important; border-collapse: separate; border-spacing: 0; background: transparent; }
+html:root body .pd-page table.pd-table > thead > tr > th {
+    position: sticky; top: 0; z-index: 2; padding: 9px 10px !important; font-size: 11.5px !important; letter-spacing: .03em; text-transform: uppercase; white-space: nowrap; vertical-align: middle; text-align: left;
+    color: var(--theme-on-accent, #fff) !important; background: var(--theme-accent, #438eb9) !important; border: 0; border-bottom: 2px solid var(--theme-accent-ink, #2b6a90) !important; border-radius: 0 !important;
+}
+html:root body .pd-page table.pd-table > tbody > tr > td {
+    padding: 6px 10px !important; vertical-align: middle; font-size: 13px !important; font-weight: 600 !important; color: var(--theme-ink, #1b2a41); border: 0; border-bottom: 1px solid #eef1f5; border-radius: 0 !important;
+}
+.pd-table tbody tr:hover td { background: var(--theme-accent-soft, #f4f8fb); }
+.pd-table td input[type="text"] { height: 30px; padding: 3px 8px; font-size: 13px; font-weight: 600; border-radius: 6px; }
+.pd-table td a { text-decoration: none; }
+.pd-table td a.editListBtn, .pd-table td a.delListBtn { display: inline-block; line-height: 1; }
+.pd-table td a.editListBtn { color: #fff; background: var(--theme-accent, #438eb9); }
+.pd-table td a.delListBtn { background: #c0392b; }
+
+html[data-theme="dark"] .pd-sub { background: var(--dk-surface-3, #232d3d); border-color: var(--dk-border, #2d3748); }
+html[data-theme="dark"] .pd-sub-title { color: var(--dk-text, #e6e9ef); }
+html[data-theme="dark"] .pd-table-wrap { background: var(--dk-surface-2, #1c2431); border-color: var(--dk-border, #2d3748); }
+html[data-theme="dark"] body .pd-page table.pd-table > thead > tr > th { background: var(--dk-surface-3, #232d3d) !important; color: var(--dk-text, #e6e9ef) !important; }
+html[data-theme="dark"] body .pd-page table.pd-table > tbody > tr > td { color: var(--dk-text, #e6e9ef); border-color: var(--dk-border, #2d3748); }
+html[data-theme="dark"] .pd-table tbody tr:hover td { background: var(--dk-surface-3, #232d3d); }

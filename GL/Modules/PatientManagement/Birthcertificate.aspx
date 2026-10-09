@@ -2,7 +2,7 @@
 
 <asp:Content ID="Content1" ContentPlaceHolderID="HeadContent" runat="server">
     
-    <link href="../../wwwroot/THEME_TIBBIT/CustomCSS/ipdadmission.css" rel="stylesheet" />
+    <link href="../../wwwroot/THEME_TIBBIT/CustomCSS/birth-certificate.css" rel="stylesheet" />
     <link href="../../wwwroot/lib/sweetalert/swalalert.css" rel="stylesheet" />
 
     <script type="text/javascript">
@@ -1137,936 +1137,397 @@
 </asp:Content>
 <asp:Content ID="Content2" ContentPlaceHolderID="MainContent" runat="server">
 
-        <div class="col-lg-8 col-md-10 col-sm-12">
-        <div class="row">
-            <div class="col-md-2 text-end">
-                <input type="button" value="Add Patient" id="btnSearchPatient" onclick="OpenModal()" class="btn-primry" />
+    <div class="bc-page">
+
+        <!-- Title line: the master page puts the page title in the empty left side; the badges sit on the right -->
+        <div class="pr-meta-bar">
+            <div class="meta-left"></div>
+            <div class="meta-right">
+                <div class="bc-badge"><span class="bc-badge-label">Patient</span><span class="bc-badge-value" id="badgeBcPatient">---</span></div>
+                <div class="bc-badge"><span class="bc-badge-label">In Patient</span><span class="bc-badge-value" id="badgeBcIpd">New</span></div>
+                <div class="bc-badge"><span class="bc-badge-label">Reg #</span><span class="bc-badge-value" id="badgeBcReg">---</span></div>
             </div>
         </div>
-    </div>
-      
-<div id="PatientsSearchModel" data-backdrop="static" class="modal fade-in" role="dialog">
-    <div class="modal-dialog">
-        <div class="modal-content" style="width: 1140px !important; margin-top: 116px; margin-left: -78px; height: 604px; position: relative;">
-            <fieldset style="padding-top: 20px; padding-left: 14px;">
-                <div class="col-lg-3 col-md-4 col-sm-6">                           
-                <label id="srchpat">Search Your Patients: </label>
-                    <input type="text" id="txtSearch" style="margin-left: 2px;" autocomplete="off" />
-                </div>
-                <div class="col-lg-2 col-md-4 col-sm-6">
-                    <label></label>
-                    <input type="button" class="btn btn-primry" id="addNewbtn" onclick="addfunc()" value="Add New" />
-                </div>
-                
-            </fieldset>
-            <div style="overflow: scroll; height: 460px; padding: 10px;">
-                <table class="table table-hover table-striped table-bordered" id="tblPatientsResult" style="overflow: scroll; height: auto;">
-                    <thead id="Thead1">
-                        <tr>
-                            <th style="display: none;">Patient ID</th>
-                            <th>MR No</th>
-                            <th>Patient Name</th>
-                            <th>Father Name</th>
-                            <th>CNIC</th>
-                            <th>Contact No</th>
-                            <th>Actions</th>
-                        </tr>
-                    </thead>
 
-                    <tbody id="iPatientsBody">
-                    </tbody>
-                </table>
-            </div>
-            <div class="modal-footer">
-                <input type="button" style="width:13% !important" id="ClosePatientsSearchModel" class="btn-gray" name="saveENT" value="Close" data-dismiss="modal" />
-            </div>
-
-        </div>
-
-    </div>
-
-</div>
-<%--patient modal here--%>
-      <div id="PatientModel" class="modal fade-in" role="dialog">
-    <div class="modal-dialog">
-        <div class="modal-content modalSize" style="width: 1104px; margin-left: -77px; height: 308px; margin-top: 117px; /* 316px */">
-
-            <form>
-                <div class="container-fluid">
-                    <div class="row" style="margin-top: 40px!important;">
-                        <div class="col-lg-1 col-md-3 col-sm-4"></div>
-                        <div class="col-lg-1 col-md-3 col-sm-4">
-                            <label>MR No</label>
-                        </div>
-
-                        <div class="col-lg-2 col-md-3 col-sm-4">
-                            <input type="text" tabindex="1" id="txt_Mrno" value="New" disabled style="width: 232px !important;" />
-                        </div>
-
-
-                        <div class="col-lg-1 col-md-3 col-sm-4"></div>
-                        <div class="col-lg-2 col-md-3 col-sm-4"></div>
-                        <div class="col-lg-2 col-md-3 col-sm-4">
-                            <label>Gender<span style="color:red;">*</span></label>
-                        </div>
-
-                        <div class="col-lg-2 col-md-3 col-sm-4">
-                            <select id="ddl_Gender" tabindex="5" style="width: 197px;">
-                            </select>
-                        </div>
+        <!-- Patient + admission -->
+        <div class="bc-layout2">
+            <section class="bc-card">
+                <h5 class="bc-card-title"><i class="fa fa-user-circle"></i> Patient Information
+                    <input type="button" value="Add Patient" id="btnSearchPatient" onclick="OpenModal()" class="btn-primry bc-title-btn" />
+                </h5>
+                <div class="bc-patient">
+                    <div class="bc-avatar">
+                        <img src="~../../../../wwwroot/SOURCE_IMAGES/DASHBOARD_ICONS/IpdAdmissions.png" alt="Patient Image" />
                     </div>
-                    <div class="row">
-                        <div class="col-lg-1 col-md-3 col-sm-4"></div>
-                        <div class="col-lg-1 col-md-3 col-sm-4">
-                            <label>Name<span style="color:red;">*</span></label>
-                        </div>
-
-                        <div class="col-lg-1 col-md-3 col-sm-4">
-                            <select class="impo-drop1 fcux" tabindex="3" name="name" id="ddl_name">
-                                <option value="Mr.">Mr.</option>
-                                <option value="Mrs.">Mrs.</option>
-                                <option value="Ms.">Ms.</option>
-                                <option value="B/O.">B/O.</option>
-                            </select>
-                        </div>
-
-
-                        <div class="col-lg-2 col-md-3 col-sm-4">
-                            <input name="dob"  type="text" id="txt_name" tabindex="4" style="margin-left: -12px !important" />
-                        </div>
-                        <div class="col-lg-2 col-md-3 col-sm-4"></div>
-                        <div class="col-lg-2 col-md-3 col-sm-4">
-                            <label>Martial Status<span style="color:red;">*</span></label>
-                        </div>
-
-                        <div class="col-lg-2 col-md-3 col-sm-4">
-                            <select  tabindex="6" id="ddl_status" style="width: 197px;">
-                                <option></option>
-                            </select>
-                        </div>
-                    </div>
-                    <div class="row">
-                        <div class="col-lg-1 col-md-3 col-sm-4"></div>
-                        <div class="col-lg-1 col-md-3 col-sm-4">
-                            <label>Relation<span style="color:red;">*</span></label>
-                        </div>
-                        <div class="col-lg-1 col-md-3 col-sm-4">
-                            <select class="impo-drop fcux" tabindex="7" name="name" id="ddlRelation">
-                                <option value="S/O">S/O</option>
-                                <option value="W/O">W/O</option>
-                                <option value="D/O">D/O</option>
-                            </select>
-                        </div>
-                        <div class="col-lg-2 col-md-3 col-sm-4">
-                            <input type="text" id="txt_relation" tabindex="8" style="margin-left: -12px !important" />
-                        </div>
-
-                        <div class="col-lg-2 col-md-3 col-sm-4"></div>
-                        <div class="col-lg-2 col-md-3 col-sm-4">
-                            <label>Mobile<span style="color:red;">*</span></label>
-                        </div>
-                        <div class="col-lg-2 col-md-3 col-sm-4">
-                            <input type="text" tabindex="9" id="txt_mobile" style="width: 197px !important;" />
-                        </div>
-                    </div>
-
-                    <div class="row">
-                        <div class="col-lg-1 col-md-3 col-sm-4"></div>
-                        <div class="col-lg-1 col-md-3 col-sm-4">
-                            <label>Age/DOB<span style="color:red;">*</span></label>
-                        </div>
-                        <div class="col-lg-1 col-md-3 col-sm-4">
-                            <select name="name" tabindex="10" id="PrefixAge" >
-                                <option value="Year">Year</option>
-                                <option value="Month">Month</option>
-                                <option value="Day">Day</option>
-                            </select>
-                        </div>
-
-                        <div class="col-lg-2 col-md-3 col-sm-4">
-                            <input type="text" id="txt_dob" tabindex="11" style="width: 35% !important; margin-left: -15px!important" onchange="CalculateDateOfBirth();" />
-                            <input class="fcux" type="text" id="txtAge_yearss" style="display: inline; width: 65% !important" placeholder="mm ddyy" />
-                        </div>
-
-                        <div class="col-lg-2 col-md-3 col-sm-4"></div>
-                        <div class="col-lg-2 col-md-3 col-sm-4">
-                            <label>CNIC<span style="color:red;">*</span></label>
-                        </div>
-
-                        <div class="col-lg-2 col-md-3 col-sm-4">
-                            <input tabindex="12"  type="text" id="txt_cnic" style="width: 200px !important" />
-                        </div>
-                    </div>
-
-                    <div class="row">
-                        <div class="col-lg-1 col-md-3 col-sm-4"></div>
-                        <div class="col-lg-1 col-md-3 col-sm-4">
-                            <label>Address<span style="color:red;">*</span></label>
-                        </div>
-
-                        <div class="col-lg-5 col-md-3 col-sm-4">
-                            <input type="text"  tabindex="13" id="txt_Address"  />
-                        </div>
-                        
-                        <div class="col-lg-2 col-md-3 col-sm-4">
-                            <label>Other CNIC</label>
-                        </div>
-                        <div class="col-lg-2 col-md-3 col-sm-4">
-                            <input tabindex="12" type="text" id="txt_Othercnic" style="width: 200px !important" />
-                        </div>
-                                <div class="col-lg-2 col-md-3 col-sm-4" >
-                            <label id="lblfees">Fees<span style="color:red;">*</span></label>
-                        </div>
-
-                        <div class="col-lg-2 col-md-3 col-sm-4">
-                            <input tabindex="9"  type="text" disabled="disabled" style="display:none" id="txtfees" />
-                        </div>
-                    </div>
-                </div>
-            </form>
-
-
-            <div class="modal-footer" style="margin-top: 6%;">
-                <input type="button"  id="SavePatient_Data" class="btn btn-primry" tabindex="10" name="savePatient_Data" value="Save" style="width:10% !important" onclick="SavePatient();" />
-                <input type="button" id="updatePatient_Data" class="btn btn-primry"  name="updatePatient_Data" style="text-transform: capitalize;width:10% !important" value="Update" onclick="SavePatient();" tabindex="23" />
-                <input type="button" id="CloseSearchModel" class="btn-gray" style="width:10% !important" name="saveENT" value="Close" data-dismiss="modal" />
-            </div>
-        </div>
-    </div>
-</div>
-
-            <div class="row">
-<!-- Left Card -->
-<div class="col-lg-5 col-md-5 col-sm-12">
-    <div class="card">
-        <div class="card-body">
-            <div class="row">
-                <div class="col-lg-4 col-md-5 col-sm-6 text-center">
-                    <div class="image-container">
-                        <img src="~../../../../wwwroot/SOURCE_IMAGES/DASHBOARD_ICONS/IpdAdmissions.png" alt="Patient Image" class="img-fluid rounded-circle patient-image">
-                    </div>
-                </div>
-                <div class="col-lg-8 col-md-7 col-sm-6">
-                    <div class="row mb-3 mtt">
-                        <div class="col-lg-5 col-md-5 col-sm-6">
-                            <asp:Label ID="lblPatien_ID" runat="server" Text="MR No :*"></asp:Label>
-                        </div>
-                        <div class="col-lg-7 col-md-7 col-sm-6">
+                    <div class="bc-who">
+                        <div class="bc-field">
+                            <asp:Label ID="lblPatien_ID" runat="server" Text="MR No :*" CssClass="bc-lbl"></asp:Label>
                             <asp:TextBox ID="txtPatient_ID" runat="server"></asp:TextBox>
-                              <asp:HiddenField ID="hdfPatient_IDs" runat="server" Value="(New)" ClientIDMode="Static" />
-                            <input type="hidden" id ="hdfPatient_ID" value="(New)" />
-                            <input type="hidden" id ="hdfBC_ID"  />
-                              <%--<asp:HiddenField ID="hdfPatient_ID" runat="server" Value="(New)" ClientIDMode="Static" />--%>
+                            <asp:HiddenField ID="hdfPatient_IDs" runat="server" Value="(New)" ClientIDMode="Static" />
+                            <input type="hidden" id="hdfPatient_ID" value="(New)" />
+                            <input type="hidden" id="hdfBC_ID" />
                             <asp:RequiredFieldValidator ID="rfvPatient_ID" runat="server" ControlToValidate="txtPatient_ID" ErrorMessage="Select Patient ID" Text="*"></asp:RequiredFieldValidator>
                         </div>
                     </div>
-                    <div class="row mb-3 mtt">
-                        <div class="col-lg-5 col-md-5 col-sm-6 ">
-                            <asp:Label ID="lblPatient_Name" runat="server" Text="Patient Name :"></asp:Label>
-                        </div>
-                        <div class="col-lg-7 col-md-7 col-sm-6 ">
-                             <asp:Label ID="vlblPatients_Name" runat="server"></asp:Label>
-                        </div>
-                    </div>
-                    <div class="row mb-3 mtt">
-                        <div class="col-lg-5 col-md-5 col-sm-6 formrgn">
-                             <asp:Label ID="lblContactNo" runat="server" Text="Contact No :"></asp:Label>
-                        </div>
-                        <div class="col-lg-7 col-md-7 col-sm-6 top">
-                            <asp:Label ID="vLbl_Contact" runat="server"></asp:Label>
-                        </div>
-                    </div>
-                    <div class="row mb-3 mtt">
-                        <div class="col-lg-5 col-md-5 col-sm-6 formrgn">
-                            <asp:Label ID="lblAge_Years" runat="server" Text="Age Years :"></asp:Label>
-                        </div>
-                        <div class="col-lg-7 col-md-7 col-sm-6 top">
-                            <asp:Label ID="vLbl_Age" runat="server"></asp:Label>
-                        </div>
-                    </div>
-                    <div class="row mb-3 mtt">
-                        <div class="col-lg-5 col-md-5 col-sm-6 formrgn">
-                            <asp:Label ID="lblGender" runat="server" Text="Gender :"></asp:Label>
-                        </div>
-                        <div class="col-lg-7 col-md-7 col-sm-6 top">
-                           <asp:Label ID="vLbl_Gender" runat="server"></asp:Label>
-                        </div>
+                </div>
+                <dl class="bc-info">
+                    <div class="bc-span-2"><dt><asp:Label ID="lblPatient_Name" runat="server" Text="Patient Name :"></asp:Label></dt><dd><asp:Label ID="vlblPatients_Name" runat="server"></asp:Label></dd></div>
+                    <div><dt><asp:Label ID="lblContactNo" runat="server" Text="Contact No :"></asp:Label></dt><dd><asp:Label ID="vLbl_Contact" runat="server"></asp:Label></dd></div>
+                    <div><dt><asp:Label ID="lblAge_Years" runat="server" Text="Age Years :"></asp:Label></dt><dd><asp:Label ID="vLbl_Age" runat="server"></asp:Label></dd></div>
+                    <div><dt><asp:Label ID="lblGender" runat="server" Text="Gender :"></asp:Label></dt><dd><asp:Label ID="vLbl_Gender" runat="server"></asp:Label></dd></div>
+                </dl>
+            </section>
+
+            <section class="bc-card">
+                <h5 class="bc-card-title"><i class="fa fa-hospital-o"></i> Admission</h5>
+                <div class="bc-grid">
+                    <div class="bc-field">
+                        <asp:Label ID="LblIn_Patient_ID" runat="server" Text="In Patient No" CssClass="bc-lbl"></asp:Label>
+                        <asp:TextBox ID="txtIn_Patient_ID" runat="server" Text="(New)" ReadOnly="True"></asp:TextBox>
                     </div>
                 </div>
-            </div>
-        </div>
-    </div>
- </div>
-            <!-- Right Card -->
-            <div class="col-lg-5 col-md-5 col-sm-12">
-                <div class="card">
-                    <div class="card-body">
-                        <div class="row mb-3">
-                            <div class="col-lg-5 col-md-5 col-sm-6 formrgn">
-                                <asp:Label ID="LblIn_Patient_ID" runat="server" Text="In Patient No"></asp:Label>
-                            </div>
-                            <div class="col-lg-4 col-md-5 col-sm-6">
-                                 <asp:TextBox ID="txtIn_Patient_ID" runat="server" Text="(New)" ReadOnly="True"></asp:TextBox>
-                            </div>
-                        </div>
-                        <div class="row mb-3">
-                            <div class="col-lg-5 col-md-5 col-sm-6 formrgn">
-                               <asp:Label ID="LblReg_Date" runat="server" Text="Reg. Date:"></asp:Label>
-                            </div>
-                            <div class="col-lg-7 col-md-5 col-sm-6 top">
-                                  <asp:Label ID="vLbl_RegDate" runat="server"></asp:Label>
-                            </div>
-                        </div>
-                         </div>
-                    <div class="row mb-3">
-                        <div class="col-lg-5 col-md-5 col-sm-6 formrgn">
-                             <asp:Label ID="lblAdress" runat="server" Text="Address :"></asp:Label>
-                        </div>
-                        <div class="col-lg-7 col-md-5 col-sm-6 top">
-                             <asp:Label ID="vLbl_Adress" runat="server"></asp:Label>
-                        </div>
-                    </div>
-                    <div class="row mb-3">
-                        <div class="col-lg-5 col-md-5 col-sm-6 formrgn">
-                             <asp:Label ID="Label36" runat="server" Text="Patient Type:"></asp:Label>
-                        </div>
-                        <div class="col-lg-7 col-md-5 col-sm-6 top">
-                           <asp:Label ID="vLbl_Patient_Type" runat="server" style="background-color: silver;"></asp:Label>
-                        </div>
-                    </div>
-                    <div class="row mb-3">
-                        <div class="col-lg-5 col-md-5 col-sm-6 formrgn">
-                           <asp:Label ID="Label35" runat="server" Text="InPatient Admit Catagory :"></asp:Label>
-                        </div>
-                        <div class="col-lg-7 col-md-5 col-sm-6 top">
-                             <asp:Label ID="vLbl_Patient_AdmitCatagory" runat="server" ></asp:Label>
-                        </div>
-                    </div>
-                        </div>
-                    </div>                    
-               </div>
-        <style type="text/css">
-                .cnic-input {
-    width: 250px !important;
-    margin: 0 auto;   /* center it */
-    display: block;
-}
-        .mgTab {
-            padding-left: 100px;
-        }
-
-        .mg {
-            padding-left: 30px;
-        }
-
-        .header-center {
-            text-align: center;
-        }
-
-        .dropdownBackgroud {
-            background-color: #f5f5f5 !important;
-        }
-
-        .dropdownBackgroudWhite {
-            background-color: #fff !important;
-        }
-
-        .Error {
-            color: #f00;
-        }
-
-        .Success {
-            color: #4800ff;
-        }
-
-        .Checking {
-            color: #00ff21;
-        }
-        /* Birth Certificate Tab Styles */
-        .compact-card {
-            margin-bottom: 15px;
-            border: 1px solid #999999;
-            border-radius: 6px;
-            box-shadow: 0 1px 3px rgba(0,0,0,0.05);
-        }
-
-            .compact-card .card-header {
-                background-color: #f8f9fa;
-                padding: 8px 15px;
-                border-bottom: 1px solid #b9b9b9;
-                border-radius: 6px 6px 0 0;
-            }
-
-                .compact-card .card-header h4 {
-                    margin: 0;
-                    font-size: 16px;
-                    font-weight: 600;
-                    color: #2c3e50;
-                }
-
-            .compact-card .card-body {
-                padding: 12px 15px;
-            }
-
-        .compact-row {
-            margin: 0 -8px;
-        }
-
-            .compact-row [class*="col-"] {
-                padding: 0 8px;
-                margin-bottom: 10px;
-            }
-
-        .compact-card label {
-            font-size: 12px;
-            font-weight: 500;
-            margin-bottom: 3px;
-            color: #555;
-            display: block;
-        }
-
-        .compact-card input,
-        .compact-card select,
-        .compact-card textarea {
-            font-size: 13px;
-            padding: 4px 8px;
-            height: 30px;
-            width: 100%;
-            border: 1px solid #ccc;
-            border-radius: 4px;
-        }
-
-        .compact-card textarea {
-            height: 60px;
-            resize: vertical;
-        }
-
-        .compact-card hr {
-            margin: 8px 0;
-        }
-
-        .compact-card .form-group {
-            margin-bottom: 0;
-        }
-
-        /* Remove extra spacing from parent containers */
-        #Tab-14 .mt {
-            margin-top: 0 !important;
-        }
-
-        #Tab-14 .row {
-            margin-bottom: 0;
-        }
-
-        .section-divider {
-            margin: 0 0 10px 0;
-            border-top: 1px solid #eee;
-        }
-        #Tab-14{
-            border:1px solid;
-                padding: 15px;
-    border-radius: 10px;
-    border-color: gainsboro;
-        }
-    </style>
-     <%--    <div id="Tab-14" >
-         <div class="row compact-row">
-        <!-- Child Information Card -->
-        <div class="col-lg-12">
-            <div class="compact-card">
-                <div class="card-header">
-                    <h4><i class="fa fa-child"></i> Child Information</h4>
-                </div>
-                <div class="card-body">
-                    <div class="row compact-row">
-                        <div class="col-lg-3 col-md-4 col-sm-6">
-                            <asp:Label ID="lblBirthChildName" runat="server" Text="Child's Full Name *"></asp:Label>
-                            <asp:TextBox ID="txtBirthChildName" runat="server" placeholder="Enter child's full name"></asp:TextBox>
-                        </div>
-                        <div class="col-lg-2 col-md-4 col-sm-6">
-                            <asp:Label ID="lblBirthGender" runat="server" Text="Gender *"></asp:Label>
-                            <asp:DropDownList ID="ddlBirthGender" runat="server" AppendDataBoundItems="true">
-                                <asp:ListItem Text="Select" Value="0"></asp:ListItem>
-                            </asp:DropDownList>
-                        </div>
-                        <div class="col-lg-2 col-md-4 col-sm-6">
-                            <asp:Label ID="lblBirthDate" runat="server" Text="Date of Birth *"></asp:Label>
-                            <asp:TextBox ID="txtBirthDate" runat="server" placeholder="mm/dd/yyyy"></asp:TextBox>
-                        </div>
-                        <div class="col-lg-2 col-md-4 col-sm-6">
-                            <asp:Label ID="lblBirthTime" runat="server" Text="Time of Birth"></asp:Label>
-                            <asp:TextBox ID="txtBirthTime" runat="server" placeholder="hh:mm AM/PM"></asp:TextBox>
-                        </div>
-                        <div class="col-lg-3 col-md-4 col-sm-6">
-                            <asp:Label ID="lblBirthPlace" runat="server" Text="Place of Birth *"></asp:Label>
-                            <asp:TextBox ID="txtBirthPlace" runat="server" placeholder="City/District"></asp:TextBox>
-                        </div>
-                    </div>
-                    <div class="row compact-row">
-                        <div class="col-lg-3 col-md-4 col-sm-6">
-                            <asp:Label ID="lblBirthWeight" runat="server" Text="Birth Weight (kg)"></asp:Label>
-                            <asp:TextBox ID="txtBirthWeight" runat="server" placeholder="e.g., 3.2"></asp:TextBox>
-                        </div>
-                        <div class="col-lg-2 col-md-4 col-sm-6">
-                            <asp:Label ID="lblBirthType" runat="server" Text="Type of Birth"></asp:Label>
-                                <asp:DropDownList ID="ddlBirthType" runat="server" AppendDataBoundItems="true">
-                                    <asp:ListItem Text="Select" Value="0"></asp:ListItem>
-                                </asp:DropDownList>
-                            </div>
-                        <div class="col-lg-2 col-md-4 col-sm-6">
-                            <asp:Label ID="lblBirthOrder" runat="server" Text="Birth Order"></asp:Label>
-                            <asp:TextBox ID="txtBirthOrder" runat="server" placeholder="1st, 2nd, etc."></asp:TextBox>
-                        </div>
-                    </div>
-                </div>
-            </div>
+                <dl class="bc-info" style="margin-top: 14px;">
+                    <div><dt><asp:Label ID="LblReg_Date" runat="server" Text="Reg. Date:"></asp:Label></dt><dd><asp:Label ID="vLbl_RegDate" runat="server"></asp:Label></dd></div>
+                    <div><dt><asp:Label ID="Label36" runat="server" Text="Patient Type:"></asp:Label></dt><dd><asp:Label ID="vLbl_Patient_Type" runat="server" style="background-color: silver;"></asp:Label></dd></div>
+                    <div class="bc-span-2"><dt><asp:Label ID="Label35" runat="server" Text="InPatient Admit Catagory :"></asp:Label></dt><dd><asp:Label ID="vLbl_Patient_AdmitCatagory" runat="server"></asp:Label></dd></div>
+                    <div class="bc-span-2"><dt><asp:Label ID="lblAdress" runat="server" Text="Address :"></asp:Label></dt><dd><asp:Label ID="vLbl_Adress" runat="server"></asp:Label></dd></div>
+                </dl>
+            </section>
         </div>
 
-        <!-- Father's Information Card -->
-        <div class="col-lg-12">
-            <div class="compact-card">
-                <div class="card-header">
-                    <h4><i class="fa fa-male"></i> Father's Information</h4>
-                </div>
-                <div class="card-body">
-                    <div class="row compact-row">
-                        <div class="col-lg-3 col-md-4 col-sm-6">
-                            <asp:Label ID="lblBirthFatherName" runat="server" Text="Father's Full Name *"></asp:Label>
-                            <asp:TextBox ID="txtBirthFatherName" runat="server" placeholder="Enter father's full name"></asp:TextBox>
-                        </div>
-                        <div class="col-lg-3 col-md-4 col-sm-6">
-                            <asp:Label ID="lblBirthFatherCNIC" runat="server" Text="Father's CNIC *"></asp:Label>
-                            <asp:TextBox ID="txtBirthFatherCNIC" runat="server" placeholder="XXXXX-XXXXXXX-X"></asp:TextBox>
-                        </div>
-                        <div class="col-lg-3 col-md-4 col-sm-6">
-                            <asp:Label ID="lblBirthFatherOccupation" runat="server" Text="Occupation"></asp:Label>
-                            <asp:TextBox ID="txtBirthFatherOccupation" runat="server" placeholder="Occupation"></asp:TextBox>
-                        </div>
-                        <div class="col-lg-3 col-md-4 col-sm-6">
-                            <asp:Label ID="lblBirthFatherNationality" runat="server" Text="Nationality"></asp:Label>
-                            <asp:DropDownList ID="txtBirthFatherNationality" runat="server" AppendDataBoundItems="true">
-                                <asp:ListItem Text="Select" Value="0"></asp:ListItem>
-                            </asp:DropDownList>
-                        </div>
+        <!-- Birth certificate details -->
+        <div id="Tab-14" class="bc-col">
+
+            <section class="bc-card">
+                <h5 class="bc-card-title"><i class="fa fa-child"></i> Child Information</h5>
+                <input type="hidden" id="Birth_Id" />
+                <div class="bc-grid">
+                    <div class="bc-field bc-span-2">
+                        <label for="txtBirthChildName">Child's Full Name *</label>
+                        <input type="text" id="txtBirthChildName" class="bc-input" placeholder="Enter child's full name" />
+                    </div>
+                    <div class="bc-field">
+                        <label for="ddlBirthGender">Gender *</label>
+                        <select id="ddlBirthGender" class="bc-input">
+                            <option value="0">Select</option>
+                        </select>
+                    </div>
+                    <div class="bc-field">
+                        <label for="txtBirthDate">Date of Birth *</label>
+                        <input type="text" id="txtBirthDate" class="bc-input" placeholder="mm/dd/yyyy" />
+                    </div>
+                    <div class="bc-field">
+                        <label for="txtBirthTime">Time of Birth</label>
+                        <input type="text" id="txtBirthTime" class="bc-input" placeholder="hh:mm AM/PM" />
+                    </div>
+                    <div class="bc-field">
+                        <label for="txtBirthPlace">Place of Birth *</label>
+                        <input type="text" id="txtBirthPlace" class="bc-input" placeholder="City/District" />
+                    </div>
+                    <div class="bc-field">
+                        <label for="txtBirthWeight">Birth Weight (kg)</label>
+                        <input type="text" id="txtBirthWeight" class="bc-input" placeholder="e.g., 3.2" />
+                    </div>
+                    <div class="bc-field">
+                        <label for="ddlBirthType">Type of Birth</label>
+                        <select id="ddlBirthType" class="bc-input">
+                            <option value="0">Select</option>
+                        </select>
+                    </div>
+                    <div class="bc-field">
+                        <label for="txtBirthOrder">Birth Order</label>
+                        <input type="text" id="txtBirthOrder" class="bc-input" placeholder="1st, 2nd, etc." />
                     </div>
                 </div>
-            </div>
-        </div>
+            </section>
 
-        <!-- Mother's Information Card -->
-        <div class="col-lg-12">
-            <div class="compact-card">
-                <div class="card-header">
-                    <h4><i class="fa fa-female"></i> Mother's Information</h4>
-                </div>
-                <div class="card-body">
-                    <div class="row compact-row">
-                        <div class="col-lg-3 col-md-4 col-sm-6">
-                            <asp:Label ID="lblBirthMotherName" runat="server" Text="Mother's Full Name *"></asp:Label>
-                            <asp:TextBox ID="txtBirthMotherName" runat="server" placeholder="Enter mother's full name"></asp:TextBox>
-                        </div>
-                        <div class="col-lg-3 col-md-4 col-sm-6">
-                            <asp:Label ID="lblBirthMotherCNIC" runat="server" Text="Mother's CNIC *"></asp:Label>
-                            <asp:TextBox ID="txtBirthMotherCNIC" runat="server" placeholder="XXXXX-XXXXXXX-X"></asp:TextBox>
-                        </div>
-                        <div class="col-lg-3 col-md-4 col-sm-6">
-                            <asp:Label ID="lblBirthMotherOccupation" runat="server" Text="Occupation"></asp:Label>
-                            <asp:TextBox ID="txtBirthMotherOccupation" runat="server" placeholder="Occupation"></asp:TextBox>
-                        </div>
-                        <div class="col-lg-3 col-md-4 col-sm-6">
-                            <asp:Label ID="lblBirthMotherNationality" runat="server" Text="Nationality"></asp:Label>
-                            <asp:DropDownList ID="txtBirthMotherNationality" runat="server" AppendDataBoundItems="true">
-                                <asp:ListItem Text="Select" Value="0"></asp:ListItem>
-                            </asp:DropDownList>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-
-        <!-- Registration Information Card -->
-        <div class="col-lg-12">
-            <div class="compact-card">
-                <div class="card-header">
-                    <h4><i class="fa fa-registered"></i> Registration Information</h4>
-                </div>
-                <div class="card-body">
-                    <div class="row compact-row">
-                        <div class="col-lg-3 col-md-4 col-sm-6">
-                            <asp:Label ID="lblBirthRegNumber" runat="server" Text="Registration Number"></asp:Label>
-                            <asp:TextBox ID="txtBirthRegNumber" runat="server" placeholder="Auto-generated" ReadOnly="true"></asp:TextBox>
-                        </div>
-                        <div class="col-lg-3 col-md-4 col-sm-6">
-                            <asp:Label ID="lblBirthRegDate" runat="server" Text="Registration Date"></asp:Label>
-                            <asp:TextBox ID="txtBirthRegDate" runat="server" ReadOnly="true"></asp:TextBox>
-                        </div>
-                        <div class="col-lg-3 col-md-4 col-sm-6">
-                            <asp:Label ID="lblBirthRegistrar" runat="server" Text="Registrar Name"></asp:Label>
-                            <asp:TextBox ID="txtBirthRegistrar" runat="server" placeholder="Registrar name"></asp:TextBox>
-                        </div>
-                        <div class="col-lg-3 col-md-4 col-sm-6">
-                            <asp:Label ID="lblBirthUnionCouncil" runat="server" Text="Union Council"></asp:Label>
-                            <asp:TextBox ID="txtBirthUnionCouncil" runat="server" placeholder="Union Council"></asp:TextBox>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-
-        <!-- Permanent Address Card -->
-        <div class="col-lg-12">
-            <div class="compact-card">
-                <div class="card-header">
-                    <h4><i class="fa fa-home"></i> Permanent Address</h4>
-                </div>
-                <div class="card-body">
-                    <div class="row compact-row">
-                        <div class="col-lg-4 col-md-4 col-sm-12">
-                            <asp:Label ID="lblBirthAddress" runat="server" Text="Address"></asp:Label>
-                            <asp:TextBox ID="txtBirthAddress" runat="server" placeholder="House No., Street, Area"></asp:TextBox>
-                        </div>
-                        <div class="col-lg-2 col-md-4 col-sm-6">
-                            <asp:Label ID="lblBirthCity" runat="server" Text="City/District"></asp:Label>
-                            <asp:TextBox ID="txtBirthCity" runat="server" placeholder="City/District"></asp:TextBox>
-                        </div>
-                        <div class="col-lg-3 col-md-4 col-sm-6">
-                            <asp:Label ID="lblBirthProvince" runat="server" Text="Province"></asp:Label>
-                            <asp:DropDownList ID="ddlBirthProvince" runat="server" AppendDataBoundItems="true">
-                                <asp:ListItem Text="Select" Value="0"></asp:ListItem>
-                            </asp:DropDownList>
-                        </div>
-                        <div class="col-lg-3 col-md-4 col-sm-6">
-                            <asp:Label ID="lblBirthPostalCode" runat="server" Text="Postal Code"></asp:Label>
-                            <asp:TextBox ID="txtBirthPostalCode" runat="server" placeholder="Postal code"></asp:TextBox>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-
-        <!-- Additional Information Card -->
-        <div class="col-lg-12">
-            <div class="compact-card">
-                <div class="card-header">
-                    <h4><i class="fa fa-info-circle"></i> Additional Information</h4>
-                </div>
-                <div class="card-body">
-                    <div class="row compact-row">
-                        <div class="col-lg-3 col-md-4 col-sm-6">
-                            <asp:Label ID="lblBirthReligion" runat="server" Text="Religion"></asp:Label>
-                            <asp:DropDownList ID="ddlBirthReligion" runat="server" AppendDataBoundItems="true">
-                                <asp:ListItem Text="Select" Value="0"></asp:ListItem>
-                            </asp:DropDownList>
-                        </div>
-                        <div class="col-lg-3 col-md-4 col-sm-6">
-                            <asp:Label ID="lblBirthAttendant" runat="server" Text="Birth Attendant"></asp:Label>
-                            <asp:TextBox ID="txtBirthAttendant" runat="server" placeholder="Doctor/Nurse/Midwife"></asp:TextBox>
-                        </div>
-                        <div class="col-lg-6 col-md-8 col-sm-12">
-                            <asp:Label ID="lblBirthRemarks" runat="server" Text="Remarks"></asp:Label>
-                            <asp:TextBox ID="txtBirthRemarks" runat="server" TextMode="MultiLine" Rows="2" placeholder="Any additional remarks"></asp:TextBox>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-                        <div class="row">
-
-                            
-                                       <div class="col-lg-2 col-md-4 col-sm-6" id="GenrateCertificate">
-              <input value="Generate" class="btn-primry" id="genrateCerti" type="button" onclick="GenrateCertificate()"/>
-           </div>
-                            <div class="col-lg-2 col-md-4 col-sm-6" id="Printbirth">
-                                <input value="Print Certificate" class="btn-primry" id="Printbirthcertificate" type="button" onclick="PrintGenrateCertificate()" />
-                            </div>
-                        </div>
-    </div>
-</div>--%>
-
-
-    <div id="Tab-14">
-    <div class="row compact-row">
-
-        <!-- Child Information Card -->
-        <div class="col-lg-12">
-            <div class="compact-card">
-                <div class="card-header">
-                    <h4><i class="fa fa-child"></i> Child Information</h4>
-                    <input type="hidden" id="Birth_Id" />
-                </div>
-
-                <div class="card-body">
-                    <div class="row compact-row">
-
-                        <div class="col-lg-3 col-md-4 col-sm-6">
-                            <label for="txtBirthChildName">Child's Full Name *</label>
-                            <input type="text" id="txtBirthChildName" placeholder="Enter child's full name" />
-                        </div>
-
-                        <div class="col-lg-2 col-md-4 col-sm-6">
-                            <label for="ddlBirthGender">Gender *</label>
-                            <select id="ddlBirthGender">
-                                <option value="0">Select</option>
-                            </select>
-                        </div>
-
-                        <div class="col-lg-2 col-md-4 col-sm-6">
-                            <label for="txtBirthDate">Date of Birth *</label>
-                            <input type="text" id="txtBirthDate" placeholder="mm/dd/yyyy" />
-                        </div>
-
-                        <div class="col-lg-2 col-md-4 col-sm-6">
-                            <label for="txtBirthTime">Time of Birth</label>
-                            <input type="text" id="txtBirthTime" placeholder="hh:mm AM/PM" />
-                        </div>
-
-                        <div class="col-lg-3 col-md-4 col-sm-6">
-                            <label for="txtBirthPlace">Place of Birth *</label>
-                            <input type="text" id="txtBirthPlace" placeholder="City/District" />
-                        </div>
-
-                    </div>
-
-                    <div class="row compact-row">
-
-                        <div class="col-lg-3 col-md-4 col-sm-6">
-                            <label for="txtBirthWeight">Birth Weight (kg)</label>
-                            <input type="text" id="txtBirthWeight" placeholder="e.g., 3.2" />
-                        </div>
-
-                        <div class="col-lg-2 col-md-4 col-sm-6">
-                            <label for="ddlBirthType">Type of Birth</label>
-                            <select id="ddlBirthType">
-                                <option value="0">Select</option>
-                            </select>
-                        </div>
-
-                        <div class="col-lg-2 col-md-4 col-sm-6">
-                            <label for="txtBirthOrder">Birth Order</label>
-                            <input type="text" id="txtBirthOrder" placeholder="1st, 2nd, etc." />
-                        </div>
-
-                    </div>
-                </div>
-            </div>
-        </div>
-
-        <!-- Father's Information Card -->
-        <div class="col-lg-12">
-            <div class="compact-card">
-
-                <div class="card-header">
-                    <h4><i class="fa fa-male"></i> Father's Information</h4>
-                </div>
-
-                <div class="card-body">
-                    <div class="row compact-row">
-
-                        <div class="col-lg-3 col-md-4 col-sm-6">
+            <div class="bc-layout2">
+                <section class="bc-card">
+                    <h5 class="bc-card-title"><i class="fa fa-male"></i> Father's Information</h5>
+                    <div class="bc-grid">
+                        <div class="bc-field">
                             <label for="txtBirthFatherName">Father's Full Name *</label>
-                            <input type="text" id="txtBirthFatherName" placeholder="Enter father's full name" />
+                            <input type="text" id="txtBirthFatherName" class="bc-input" placeholder="Enter father's full name" />
                         </div>
-
-                        <div class="col-lg-3 col-md-4 col-sm-6">
+                        <div class="bc-field">
                             <label for="txtBirthFatherCNIC">Father's CNIC *</label>
-                            <input type="text" id="txtBirthFatherCNIC" placeholder="XXXXX-XXXXXXX-X" />
+                            <input type="text" id="txtBirthFatherCNIC" class="bc-input" placeholder="XXXXX-XXXXXXX-X" />
                         </div>
-
-                        <div class="col-lg-3 col-md-4 col-sm-6">
+                        <div class="bc-field">
                             <label for="txtBirthFatherOccupation">Occupation</label>
-                            <input type="text" id="txtBirthFatherOccupation" placeholder="Occupation" />
+                            <input type="text" id="txtBirthFatherOccupation" class="bc-input" placeholder="Occupation" />
                         </div>
-
-                        <div class="col-lg-3 col-md-4 col-sm-6">
+                        <div class="bc-field">
                             <label for="txtBirthFatherNationality">Nationality</label>
-                            <select id="txtBirthFatherNationality">
+                            <select id="txtBirthFatherNationality" class="bc-input">
                                 <option value="0">Select</option>
                             </select>
                         </div>
-
                     </div>
-                </div>
-            </div>
-        </div>
+                </section>
 
-        <!-- Mother's Information Card -->
-        <div class="col-lg-12">
-            <div class="compact-card">
-
-                <div class="card-header">
-                    <h4><i class="fa fa-female"></i> Mother's Information</h4>
-                </div>
-
-                <div class="card-body">
-                    <div class="row compact-row">
-
-                        <div class="col-lg-3 col-md-4 col-sm-6">
+                <section class="bc-card">
+                    <h5 class="bc-card-title"><i class="fa fa-female"></i> Mother's Information</h5>
+                    <div class="bc-grid">
+                        <div class="bc-field">
                             <label for="txtBirthMotherName">Mother's Full Name *</label>
-                            <input type="text" id="txtBirthMotherName" placeholder="Enter mother's full name" />
+                            <input type="text" id="txtBirthMotherName" class="bc-input" placeholder="Enter mother's full name" />
                         </div>
-
-                        <div class="col-lg-3 col-md-4 col-sm-6">
+                        <div class="bc-field">
                             <label for="txtBirthMotherCNIC">Mother's CNIC *</label>
-                            <input type="text" id="txtBirthMotherCNIC" placeholder="XXXXX-XXXXXXX-X" />
+                            <input type="text" id="txtBirthMotherCNIC" class="bc-input" placeholder="XXXXX-XXXXXXX-X" />
                         </div>
-
-                        <div class="col-lg-3 col-md-4 col-sm-6">
+                        <div class="bc-field">
                             <label for="txtBirthMotherOccupation">Occupation</label>
-                            <input type="text" id="txtBirthMotherOccupation" placeholder="Occupation" />
+                            <input type="text" id="txtBirthMotherOccupation" class="bc-input" placeholder="Occupation" />
                         </div>
-
-                        <div class="col-lg-3 col-md-4 col-sm-6">
+                        <div class="bc-field">
                             <label for="txtBirthMotherNationality">Nationality</label>
-                            <select id="txtBirthMotherNationality">
+                            <select id="txtBirthMotherNationality" class="bc-input">
                                 <option value="0">Select</option>
                             </select>
                         </div>
+                    </div>
+                </section>
+            </div>
 
+            <section class="bc-card">
+                <h5 class="bc-card-title"><i class="fa fa-registered"></i> Registration Information</h5>
+                <div class="bc-grid">
+                    <div class="bc-field">
+                        <label for="txtBirthRegNumber">Registration Number</label>
+                        <input type="text" id="txtBirthRegNumber" class="bc-input" placeholder="Auto-generated" readonly />
+                    </div>
+                    <div class="bc-field">
+                        <label for="txtBirthRegDate">Registration Date</label>
+                        <input type="text" id="txtBirthRegDate" class="bc-input" readonly />
+                    </div>
+                    <div class="bc-field">
+                        <label for="txtBirthRegistrar">Registrar Name</label>
+                        <input type="text" id="txtBirthRegistrar" class="bc-input" placeholder="Registrar name" />
+                    </div>
+                    <div class="bc-field">
+                        <label for="txtBirthUnionCouncil">Union Council</label>
+                        <input type="text" id="txtBirthUnionCouncil" class="bc-input" placeholder="Union Council" />
                     </div>
                 </div>
-            </div>
-        </div>
+            </section>
 
-        <!-- Registration Information Card -->
-        <div class="col-lg-12">
-            <div class="compact-card">
-
-                <div class="card-header">
-                    <h4><i class="fa fa-registered"></i> Registration Information</h4>
-                </div>
-
-                <div class="card-body">
-                    <div class="row compact-row">
-
-                        <div class="col-lg-3 col-md-4 col-sm-6">
-                            <label for="txtBirthRegNumber">Registration Number</label>
-                            <input type="text" id="txtBirthRegNumber" placeholder="Auto-generated" readonly />
-                        </div>
-
-                        <div class="col-lg-3 col-md-4 col-sm-6">
-                            <label for="txtBirthRegDate">Registration Date</label>
-                            <input type="text" id="txtBirthRegDate" readonly />
-                        </div>
-
-                        <div class="col-lg-3 col-md-4 col-sm-6">
-                            <label for="txtBirthRegistrar">Registrar Name</label>
-                            <input type="text" id="txtBirthRegistrar" placeholder="Registrar name" />
-                        </div>
-
-                        <div class="col-lg-3 col-md-4 col-sm-6">
-                            <label for="txtBirthUnionCouncil">Union Council</label>
-                            <input type="text" id="txtBirthUnionCouncil" placeholder="Union Council" />
-                        </div>
-
+            <section class="bc-card">
+                <h5 class="bc-card-title"><i class="fa fa-home"></i> Permanent Address</h5>
+                <div class="bc-grid">
+                    <div class="bc-field bc-span-2">
+                        <label for="txtBirthAddress">Address</label>
+                        <input type="text" id="txtBirthAddress" class="bc-input" placeholder="House No., Street, Area" />
+                    </div>
+                    <div class="bc-field">
+                        <label for="txtBirthCity">City/District</label>
+                        <input type="text" id="txtBirthCity" class="bc-input" placeholder="City/District" />
+                    </div>
+                    <div class="bc-field">
+                        <label for="ddlBirthProvince">Province</label>
+                        <select id="ddlBirthProvince" class="bc-input">
+                            <option value="0">Select</option>
+                        </select>
+                    </div>
+                    <div class="bc-field">
+                        <label for="txtBirthPostalCode">Postal Code</label>
+                        <input type="text" id="txtBirthPostalCode" class="bc-input" placeholder="Postal code" />
                     </div>
                 </div>
-            </div>
-        </div>
+            </section>
 
-        <!-- Permanent Address Card -->
-        <div class="col-lg-12">
-            <div class="compact-card">
-
-                <div class="card-header">
-                    <h4><i class="fa fa-home"></i> Permanent Address</h4>
-                </div>
-
-                <div class="card-body">
-                    <div class="row compact-row">
-
-                        <div class="col-lg-4 col-md-4 col-sm-12">
-                            <label for="txtBirthAddress">Address</label>
-                            <input type="text" id="txtBirthAddress" placeholder="House No., Street, Area" />
-                        </div>
-
-                        <div class="col-lg-2 col-md-4 col-sm-6">
-                            <label for="txtBirthCity">City/District</label>
-                            <input type="text" id="txtBirthCity" placeholder="City/District" />
-                        </div>
-
-                        <div class="col-lg-3 col-md-4 col-sm-6">
-                            <label for="ddlBirthProvince">Province</label>
-                            <select id="ddlBirthProvince">
-                                <option value="0">Select</option>
-                            </select>
-                        </div>
-
-                        <div class="col-lg-3 col-md-4 col-sm-6">
-                            <label for="txtBirthPostalCode">Postal Code</label>
-                            <input type="text" id="txtBirthPostalCode" placeholder="Postal code" />
-                        </div>
-
+            <section class="bc-card">
+                <h5 class="bc-card-title"><i class="fa fa-info-circle"></i> Additional Information</h5>
+                <div class="bc-grid">
+                    <div class="bc-field">
+                        <label for="ddlBirthReligion">Religion</label>
+                        <select id="ddlBirthReligion" class="bc-input">
+                            <option value="0">Select</option>
+                        </select>
+                    </div>
+                    <div class="bc-field">
+                        <label for="txtBirthAttendant">Birth Attendant</label>
+                        <input type="text" id="txtBirthAttendant" class="bc-input" placeholder="Doctor/Nurse/Midwife" />
+                    </div>
+                    <div class="bc-field bc-span-all">
+                        <label for="txtBirthRemarks">Remarks</label>
+                        <textarea id="txtBirthRemarks" class="bc-input" rows="2" placeholder="Any additional remarks"></textarea>
                     </div>
                 </div>
-            </div>
-        </div>
 
-        <!-- Additional Information Card -->
-        <div class="col-lg-12">
-            <div class="compact-card">
-
-                <div class="card-header">
-                    <h4><i class="fa fa-info-circle"></i> Additional Information</h4>
-                </div>
-
-                <div class="card-body">
-                    <div class="row compact-row">
-
-                        <div class="col-lg-3 col-md-4 col-sm-6">
-                            <label for="ddlBirthReligion">Religion</label>
-                            <select id="ddlBirthReligion">
-                                <option value="0">Select</option>
-                            </select>
-                        </div>
-
-                        <div class="col-lg-3 col-md-4 col-sm-6">
-                            <label for="txtBirthAttendant">Birth Attendant</label>
-                            <input type="text" id="txtBirthAttendant" placeholder="Doctor/Nurse/Midwife" />
-                        </div>
-
-                        <div class="col-lg-6 col-md-8 col-sm-12">
-                            <label for="txtBirthRemarks">Remarks</label>
-                            <textarea id="txtBirthRemarks" rows="2" placeholder="Any additional remarks"></textarea>
-                        </div>
-
+                <!-- Certificate buttons -->
+                <div class="bc-actions bc-actions-inner">
+                    <div id="GenrateCertificate">
+                        <input value="Generate" class="btn-primry" id="genrateCerti" type="button" onclick="GenrateCertificate()" />
+                    </div>
+                    <div id="Printbirth">
+                        <input value="Print Certificate" class="btn-primry" id="Printbirthcertificate" type="button" onclick="PrintGenrateCertificate($('#hdfBC_ID').val())" />
                     </div>
                 </div>
-            </div>
+            </section>
         </div>
 
-        <!-- Buttons -->
-        <div class="row">
-
-            <div class="col-lg-2 col-md-4 col-sm-6" id="GenrateCertificate">
-                <input value="Generate"
-                       class="btn-primry"
-                       id="genrateCerti"
-                       type="button"
-                       onclick="GenrateCertificate()" />
+        <div class="bc-actions">
+            <div>
+                <input type="button" class="btn-primry" id="btnsave" value="Save" onclick="SaveAllRecords();" />
             </div>
-
-            <div class="col-lg-2 col-md-4 col-sm-6" id="Printbirth">
-                <input value="Print Certificate"
-                       class="btn-primry"
-                       id="Printbirthcertificate"
-                       type="button"
-                       onclick="PrintGenrateCertificate($('#hdfBC_ID').val())" />
-            </div>
-
-        </div>
-
-    </div>
-</div>
-    <div class="row">
-        <div class="col-lg-2 col-md-4 col-sm-6">
-        <input type="button" class="btn-primry" id="btnsave" value="Save" onclick="SaveAllRecords();" />
-            </div>
-                    <div class="col-lg-2 col-md-4 col-sm-6">
+            <div>
                 <input type="button" class="btn btn-yellow" value="New" name="btnName" onclick="NewWindow()" />
             </div>
-            <div class="col-lg-2 col-md-4 col-sm-6">
+            <div>
                 <input type="button" class="btn btn-gray" id="btnBackList" value="View " onclick="BackToList()" />
             </div>
+        </div>
 
+    </div>
+
+    <script type="text/javascript">
+        // title-line badges follow the form (the page script fills the fields in after loading)
+        function syncBirthBadges() {
+            $('#badgeBcPatient').text($.trim($('#<%= vlblPatients_Name.ClientID %>').text()) || '---');
+            $('#badgeBcIpd').text($('#<%= txtIn_Patient_ID.ClientID %>').val() || 'New');
+            $('#badgeBcReg').text($('#txtBirthRegNumber').val() || '---');
+        }
+        $(function () {
+            syncBirthBadges();
+            setInterval(syncBirthBadges, 600);
+        });
+    </script>
+
+    <!-- patient search window -->
+    <div id="PatientsSearchModel" data-backdrop="static" class="modal fade-in bc-modal" role="dialog">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h4 class="modal-title" id="srchpat">Search Your Patients</h4>
+                </div>
+                <div class="modal-body">
+                    <div class="bc-search-row">
+                        <div class="bc-field">
+                            <label for="txtSearch">Name or MR No.</label>
+                            <input type="text" id="txtSearch" class="bc-input" autocomplete="off" />
+                        </div>
+                        <input type="button" class="btn btn-primry" id="addNewbtn" onclick="addfunc()" value="Add New" />
+                    </div>
+                    <div class="table-responsive">
+                        <table class="table table-hover table-striped table-bordered" id="tblPatientsResult">
+                            <thead id="Thead1">
+                                <tr>
+                                    <th style="display: none;">Patient ID</th>
+                                    <th>MR No</th>
+                                    <th>Patient Name</th>
+                                    <th>Father Name</th>
+                                    <th>CNIC</th>
+                                    <th>Contact No</th>
+                                    <th>Actions</th>
+                                </tr>
+                            </thead>
+                            <tbody id="iPatientsBody">
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <input type="button" id="ClosePatientsSearchModel" class="btn-gray" name="saveENT" value="Close" data-dismiss="modal" />
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <%--patient modal here--%>
+    <div id="PatientModel" class="modal fade-in bc-modal" role="dialog">
+        <div class="modal-dialog">
+            <div class="modal-content modalSize">
+                <div class="modal-header">
+                    <h4 class="modal-title">Patient Details</h4>
+                </div>
+                <form>
+                    <div class="modal-body">
+                        <div class="bc-grid bc-modal-grid">
+                            <div class="bc-field">
+                                <label>MR No</label>
+                                <input type="text" tabindex="1" id="txt_Mrno" class="bc-input" value="New" disabled />
+                            </div>
+                            <div class="bc-field">
+                                <label>Gender<span class="bc-req">*</span></label>
+                                <select id="ddl_Gender" tabindex="5" class="bc-input">
+                                </select>
+                            </div>
+                            <div class="bc-field">
+                                <label>Martial Status<span class="bc-req">*</span></label>
+                                <select tabindex="6" id="ddl_status" class="bc-input">
+                                    <option></option>
+                                </select>
+                            </div>
+
+                            <div class="bc-field bc-span-2">
+                                <label>Name<span class="bc-req">*</span></label>
+                                <div class="bc-inline">
+                                    <select tabindex="3" name="name" id="ddl_name" class="bc-input bc-inline-sel">
+                                        <option value="Mr.">Mr.</option>
+                                        <option value="Mrs.">Mrs.</option>
+                                        <option value="Ms.">Ms.</option>
+                                        <option value="B/O.">B/O.</option>
+                                    </select>
+                                    <input name="dob" type="text" id="txt_name" tabindex="4" class="bc-input" />
+                                </div>
+                            </div>
+                            <div class="bc-field">
+                                <label>Mobile<span class="bc-req">*</span></label>
+                                <input type="text" tabindex="9" id="txt_mobile" class="bc-input" />
+                            </div>
+
+                            <div class="bc-field bc-span-2">
+                                <label>Relation<span class="bc-req">*</span></label>
+                                <div class="bc-inline">
+                                    <select tabindex="7" name="name" id="ddlRelation" class="bc-input bc-inline-sel">
+                                        <option value="S/O">S/O</option>
+                                        <option value="W/O">W/O</option>
+                                        <option value="D/O">D/O</option>
+                                    </select>
+                                    <input type="text" id="txt_relation" tabindex="8" class="bc-input" />
+                                </div>
+                            </div>
+                            <div class="bc-field">
+                                <label>CNIC<span class="bc-req">*</span></label>
+                                <input tabindex="12" type="text" id="txt_cnic" class="bc-input" />
+                            </div>
+
+                            <div class="bc-field bc-span-2">
+                                <label>Age/DOB<span class="bc-req">*</span></label>
+                                <div class="bc-inline">
+                                    <select name="name" tabindex="10" id="PrefixAge" class="bc-input bc-inline-sel">
+                                        <option value="Year">Year</option>
+                                        <option value="Month">Month</option>
+                                        <option value="Day">Day</option>
+                                    </select>
+                                    <input type="text" id="txt_dob" tabindex="11" class="bc-input" onchange="CalculateDateOfBirth();" />
+                                    <input class="bc-input" type="text" id="txtAge_yearss" placeholder="mm ddyy" />
+                                </div>
+                            </div>
+                            <div class="bc-field">
+                                <label>Other CNIC</label>
+                                <input tabindex="12" type="text" id="txt_Othercnic" class="bc-input" />
+                            </div>
+
+                            <div class="bc-field bc-span-2">
+                                <label>Address<span class="bc-req">*</span></label>
+                                <input type="text" tabindex="13" id="txt_Address" class="bc-input" />
+                            </div>
+                            <div class="bc-field">
+                                <label id="lblfees">Fees<span class="bc-req">*</span></label>
+                                <input tabindex="9" type="text" disabled="disabled" style="display:none" id="txtfees" class="bc-input" />
+                            </div>
+                        </div>
+                    </div>
+                </form>
+                <div class="modal-footer">
+                    <input type="button" id="SavePatient_Data" class="btn btn-primry" tabindex="10" name="savePatient_Data" value="Save" onclick="SavePatient();" />
+                    <input type="button" id="updatePatient_Data" class="btn btn-primry" name="updatePatient_Data" style="text-transform: capitalize;" value="Update" onclick="SavePatient();" tabindex="23" />
+                    <input type="button" id="CloseSearchModel" class="btn-gray" name="saveENT" value="Close" data-dismiss="modal" />
+                </div>
+            </div>
+        </div>
     </div>
 </asp:Content>

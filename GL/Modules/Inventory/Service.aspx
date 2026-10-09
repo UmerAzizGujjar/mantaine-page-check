@@ -1,7 +1,6 @@
 ﻿<%@ Page Title="" Language="C#" MasterPageFile="~/Site.Master" AutoEventWireup="true" CodeBehind="Service.aspx.cs" Inherits="PMS.Modules.Inventory.Service" %>
 <asp:Content ID="Content1" ContentPlaceHolderID="HeadContent" runat="server">
-      <link href="../../wwwroot/THEME_TIBBIT/CustomCSS/vendor.css" rel="stylesheet" />
-      <link href="../../wwwroot/THEME_TIBBIT/CustomCSS/Service.css" rel="stylesheet" />
+      <link href="../../wwwroot/THEME_TIBBIT/CustomCSS/service-item.css" rel="stylesheet" />
     <script type="text/javascript">
         var id = '<% =Request.QueryString["ID"] %>';
         $(document).ready(function () {
@@ -736,17 +735,15 @@
     </script>
 </asp:Content>
 <asp:Content ID="Content2" ContentPlaceHolderID="MainContent" runat="server">
-    <!-- Meta Bar -->
+    <!-- Title line: the master adds the page title on the left; code + status badges sit on the right -->
     <div class="pr-meta-bar">
-        <div class="meta-left">
-            <span class="meta-title"><i class="fa fa-stethoscope"></i> Service Item</span>
-        </div>
+        <div class="meta-left"></div>
         <div class="meta-right">
-            <div class="meta-badge">
-                <span class="badge-label">Code:</span>
-                <span class="badge-value" id="serviceCodeDisplay">---</span>
+            <div class="sv-badge">
+                <span class="sv-badge-label">Code</span>
+                <span class="sv-badge-value" id="serviceCodeDisplay">---</span>
             </div>
-            <div class="meta-badge" id="serviceActiveBadge" style="cursor: pointer;" onclick="$('#Active').click();">
+            <div class="sv-badge sv-status badge-active" id="serviceActiveBadge" onclick="$('#Active').click();">
                 <i class="fa fa-check-circle" id="serviceActiveIcon"></i> <span id="serviceActiveText">Active</span>
             </div>
             <!-- Hidden inputs to retain logic -->
@@ -755,351 +752,236 @@
         </div>
     </div>
 
-    <form id="item">
-        <div class="row">
-            <!-- Left Column: Basic & Procedure -->
-            <div class="col-lg-6 col-md-12 pr-cards-column">
-                <!-- Card 1: Basic Information -->
-                <div class="pr-primary-settings">
-                    <h5 class="pr-section-title" style="margin-top:0;"><i class="fa fa-info-circle"></i> Basic Information</h5>
-                    <div class="row">
-                        <div class="col-md-12">
-                            <label id="LblDescription">Service / Item Description</label>
-                            <div class="input-group">
-                                <div class="input-group-prepend"><span class="input-group-text"><i class="fa fa-tag"></i></span></div>
-                                <input type="text" class="form-control" id="txtDescription" name="txtDescription" autocomplete="off" placeholder="Enter service or item name" />
-                            </div>
+    <div class="sv-page">
+        <div id="item">
+            <div class="sv-layout2">
+                <!-- Basic Information -->
+                <div class="sv-card">
+                    <h5 class="sv-card-title"><i class="fa fa-info-circle"></i> Basic Information</h5>
+                    <div class="sv-grid">
+                        <div class="sv-field sv-s6">
+                            <label id="LblDescription" for="txtDescription">Service / Item Description</label>
+                            <input type="text" class="sv-input" id="txtDescription" name="txtDescription" autocomplete="off" placeholder="Enter service or item name" />
                         </div>
-                    </div>
-                    <div class="row mt-2">
-                        <div class="col-md-4 col-sm-12">
+                        <div class="sv-field sv-s2">
                             <label id="Lblitem_type">Item Type</label>
-                            <select id="ddlitem_type" class="form-control"></select>
+                            <select id="ddlitem_type" class="sv-input"></select>
                         </div>
-                        <div class="col-md-4 col-sm-12">
+                        <div class="sv-field sv-s2">
                             <label id="LblItemGroup">Item Group</label>
-                            <select id="ddlItemGroup" name="ddlItemGroup" class="form-control"></select>
+                            <select id="ddlItemGroup" name="ddlItemGroup" class="sv-input"></select>
                         </div>
-                        <div class="col-md-4 col-sm-12">
+                        <div class="sv-field sv-s2">
                             <label id="LblAccount">Account</label>
-                            <select id="ddlAccount" class="form-control"></select>
+                            <select id="ddlAccount" class="sv-input"></select>
                         </div>
-                    </div>
-                    <div class="row mt-2">
-                        <div class="col-md-8 col-sm-12">
+                        <div class="sv-field sv-s4">
                             <label id="Lblpack_unit">UOM (Pack Unit)</label>
-                            <select id="ddlpack_unit" class="form-control"></select>
+                            <select id="ddlpack_unit" class="sv-input"></select>
                         </div>
-                        <div class="col-md-4 col-sm-12">
-                            <label id="lbl_UOMQty">UOM Qty</label>
-                            <input type="text" class="form-control" id="UOMQty" name="UOMQty" placeholder="e.g. 1" />
+                        <div class="sv-field sv-s2">
+                            <label id="lbl_UOMQty" for="UOMQty">UOM Qty</label>
+                            <input type="text" class="sv-input" id="UOMQty" name="UOMQty" placeholder="e.g. 1" />
                         </div>
                     </div>
                 </div>
 
-                <!-- Card 2: Procedure Details -->
-                <div class="pr-primary-settings">
-                    <h5 class="pr-section-title" style="margin-top:0;"><i class="fa fa-medkit"></i> Procedure Details</h5>
-                    <div class="row">
-                        <div class="col-md-6 col-sm-12">
-                            <label id="levl">Procedure Type</label>
-                            <select id="ddlProcedureTypes" class="form-control"></select>
+                <!-- Pricing & Inventory -->
+                <div class="sv-card">
+                    <h5 class="sv-card-title"><i class="fa fa-money"></i> Pricing &amp; Inventory</h5>
+                    <div class="sv-grid">
+                        <div class="sv-field sv-s3">
+                            <label id="Lblsales_Rate" for="sales_Rate">Sale Rate</label>
+                            <input type="text" class="sv-input" id="sales_Rate" name="sales_Rate" placeholder="0.00" />
                         </div>
-                        <div class="col-md-6 col-sm-12">
-                            <label id="lblddldepartment">Department</label>
-                            <select id="ddldepartment" class="form-control"></select>
+                        <div class="sv-field sv-s3">
+                            <label id="Lblpurch_rate" for="purch_rate">Purchase Rate</label>
+                            <input type="text" class="sv-input" id="purch_rate" name="purch_rate" placeholder="0.00" />
                         </div>
-                    </div>
-                    <div class="row mt-2">
-                        <div class="col-md-12">
-                            <label id="lblSubcategory">Sub Category</label>
-                            <select id="ddlSubcategory" class="form-control"></select>
-                        </div>
-                    </div>
-                    <div class="row mt-2">
-                        <div class="col-md-12">
-                            <label id="Notes">Notes</label>
-                            <textarea rows="2" id="Note" name="Note" class="form-control" style="height:60px !important; resize:vertical;" placeholder="Procedure notes"></textarea>
-                        </div>
-                    </div>
-                </div>
-            </div>
-
-            <!-- Right Column: Pricing, Inventory & Account -->
-            <div class="col-lg-6 col-md-12 pr-cards-column">
-                <!-- Card 3: Pricing & Inventory -->
-                <div class="pr-primary-settings">
-                    <h5 class="pr-section-title" style="margin-top:0;"><i class="fa fa-money"></i> Pricing & Inventory</h5>
-                    <div class="row">
-                        <div class="col-md-6 col-sm-12">
-                            <label id="Lblsales_Rate">Sale Rate</label>
-                            <input type="text" class="form-control" id="sales_Rate" name="sales_Rate" placeholder="0.00" />
-                        </div>
-                        <div class="col-md-6 col-sm-12">
-                            <label id="Lblpurch_rate">Purchase Rate</label>
-                            <input type="text" class="form-control" id="purch_rate" name="purch_rate" placeholder="0.00" />
-                        </div>
-                    </div>
-                    <div class="row mt-2">
-                        <div class="col-md-6 col-sm-12">
+                        <div class="sv-field sv-s3">
                             <label id="Lblfiance_integration">Account Category</label>
-                            <select id="ddlfiance_integration" class="form-control"></select>
+                            <select id="ddlfiance_integration" class="sv-input"></select>
                         </div>
-                        <div class="col-md-6 col-sm-12">
+                        <div class="sv-field sv-s3">
                             <label id="LblwareHouse">Warehouse</label>
-                            <select id="ddlwareHouse" class="form-control"></select>
+                            <select id="ddlwareHouse" class="sv-input"></select>
                         </div>
-                    </div>
-                    <div class="row mt-2">
-                        <div class="col-md-6 col-sm-12">
+                        <div class="sv-field sv-s3">
                             <label id="Lblitem_Qty">Item Main Category</label>
-                            <select id="ddlitem_Qty" class="form-control" name="ddlitem_Qty"></select>
+                            <select id="ddlitem_Qty" class="sv-input" name="ddlitem_Qty"></select>
                         </div>
-                        <div class="col-md-6 col-sm-12">
+                        <div class="sv-field sv-s3">
                             <label id="Lblmanufacturer">Manufacturer</label>
-                            <select id="ddlmanu" class="form-control"></select>
+                            <select id="ddlmanu" class="sv-input"></select>
                         </div>
                     </div>
                 </div>
 
-                <!-- Card 4: Dimensions, Stock & Remarks -->
-                <div class="pr-primary-settings">
-                    <h5 class="pr-section-title" style="margin-top:0;"><i class="fa fa-cube"></i> Dimensions, Stock & Remarks</h5>
-                    <div class="row">
-                        <div class="col-md-4 col-sm-12">
-                            <label id="LbllocatorAddress">Locator</label>
-                            <input type="text" class="form-control" id="txtlocatorAddress" name="locatorAddress" placeholder="Locator address" />
+                <!-- Procedure Details -->
+                <div class="sv-card">
+                    <h5 class="sv-card-title"><i class="fa fa-medkit"></i> Procedure Details</h5>
+                    <div class="sv-grid">
+                        <div class="sv-field sv-s3">
+                            <label id="levl">Procedure Type</label>
+                            <select id="ddlProcedureTypes" class="sv-input"></select>
                         </div>
-                        <div class="col-md-4 col-sm-12">
-                            <label id="LblLength">Length</label>
-                            <input type="text" class="form-control" id="txtLength" name="txtLength" placeholder="L" />
+                        <div class="sv-field sv-s3">
+                            <label id="lblddldepartment">Department</label>
+                            <select id="ddldepartment" class="sv-input"></select>
                         </div>
-                        <div class="col-md-4 col-sm-12">
-                            <label id="Lblwidth">Width</label>
-                            <input type="text" class="form-control" id="txtwidth" name="txtwidth" placeholder="W" />
+                        <div class="sv-field sv-s6">
+                            <label id="lblSubcategory">Sub Category</label>
+                            <select id="ddlSubcategory" class="sv-input"></select>
                         </div>
-                    </div>
-                    <div class="row mt-2">
-                        <div class="col-md-4 col-sm-12">
-                            <label id="Lblheight">Height</label>
-                            <input type="text" class="form-control" id="txtheight" name="txtheight" placeholder="H" />
-                        </div>
-                        <div class="col-md-4 col-sm-12">
-                            <label>Minimum Stock</label>
-                            <input type="text" class="form-control" id="minimum_stock" name="minimum_stock" placeholder="0" />
-                        </div>
-                        <div class="col-md-4 col-sm-12">
-                            <label>Reorder Stock</label>
-                            <input type="text" class="form-control" id="Reorder_Stock" name="Reorder_Stock" placeholder="0" />
+                        <div class="sv-field sv-s6">
+                            <label id="Notes" for="Note">Notes</label>
+                            <textarea rows="2" id="Note" name="Note" class="sv-input" placeholder="Procedure notes"></textarea>
                         </div>
                     </div>
-                    <div class="row mt-2">
-                        <div class="col-md-4 col-sm-12">
-                            <label>Maximum Stock</label>
-                            <input type="text" class="form-control" id="Maximum_Stock" name="Maximum_Stock" placeholder="0" />
+                </div>
+
+                <!-- Dimensions, Stock & Remarks -->
+                <div class="sv-card">
+                    <h5 class="sv-card-title"><i class="fa fa-cube"></i> Dimensions, Stock &amp; Remarks</h5>
+                    <div class="sv-grid">
+                        <div class="sv-field sv-s2">
+                            <label id="LbllocatorAddress" for="txtlocatorAddress">Locator</label>
+                            <input type="text" class="sv-input" id="txtlocatorAddress" name="locatorAddress" placeholder="Locator address" />
                         </div>
-                        <div class="col-md-8 col-sm-12">
-                            <label id="Lblremarks">Remarks</label>
-                            <input type="text" class="form-control" id="txtremarks" name="txtremarks" placeholder="Any additional remarks" />
+                        <div class="sv-field sv-s2">
+                            <label id="LblLength" for="txtLength">Length</label>
+                            <input type="text" class="sv-input" id="txtLength" name="txtLength" placeholder="L" />
+                        </div>
+                        <div class="sv-field sv-s2">
+                            <label id="Lblwidth" for="txtwidth">Width</label>
+                            <input type="text" class="sv-input" id="txtwidth" name="txtwidth" placeholder="W" />
+                        </div>
+                        <div class="sv-field sv-s2">
+                            <label id="Lblheight" for="txtheight">Height</label>
+                            <input type="text" class="sv-input" id="txtheight" name="txtheight" placeholder="H" />
+                        </div>
+                        <div class="sv-field sv-s2">
+                            <label for="minimum_stock">Minimum Stock</label>
+                            <input type="text" class="sv-input" id="minimum_stock" name="minimum_stock" placeholder="0" />
+                        </div>
+                        <div class="sv-field sv-s2">
+                            <label for="Reorder_Stock">Reorder Stock</label>
+                            <input type="text" class="sv-input" id="Reorder_Stock" name="Reorder_Stock" placeholder="0" />
+                        </div>
+                        <div class="sv-field sv-s2">
+                            <label for="Maximum_Stock">Maximum Stock</label>
+                            <input type="text" class="sv-input" id="Maximum_Stock" name="Maximum_Stock" placeholder="0" />
+                        </div>
+                        <div class="sv-field sv-s4">
+                            <label id="Lblremarks" for="txtremarks">Remarks</label>
+                            <input type="text" class="sv-input" id="txtremarks" name="txtremarks" placeholder="Any additional remarks" />
                         </div>
                     </div>
                 </div>
             </div>
-        </div>
 
-        <div id="tabs" style="margin-top: 20px;">
-            <ul>
-                <li><a href="#Tab-Hospital"><i class="fa fa-hospital-o"></i> Hospital</a></li>
-                <li style="display:none;"><a href="#Tab-Pharmacy"><i class="fa fa-medkit"></i> Pharmacy</a></li>
-                <li style="display:none;"><a href="#Tab-ItemTags"><i class="fa fa-tags"></i> Item Tags</a></li>
-                <li><a href="#Tab-ProcedureExtras"><i class="fa fa-clock-o"></i> Procedure Extras</a></li>
-            </ul>
+            <div id="tabs" class="sv-tabs" style="margin-top: 16px;">
+                <ul>
+                    <li><a href="#Tab-Hospital"><i class="fa fa-hospital-o"></i> Hospital</a></li>
+                    <li style="display:none;"><a href="#Tab-Pharmacy"><i class="fa fa-medkit"></i> Pharmacy</a></li>
+                    <li style="display:none;"><a href="#Tab-ItemTags"><i class="fa fa-tags"></i> Item Tags</a></li>
+                    <li><a href="#Tab-ProcedureExtras"><i class="fa fa-clock-o"></i> Procedure Extras</a></li>
+                </ul>
 
-            <!-- Tab: Hospital Settings -->
-            <div id="Tab-Hospital">
-                <div class="pr-tab-card">
-                    <div class="pr-tab-card-grid">
-                        <div class="pr-check-row">
-                            <input type="checkbox" id="chkIsHospital" name="chkIsHospital" />
-                            <label for="chkIsHospital">Is Hospital Required</label>
-                        </div>
-                        <div class="pr-check-row">
-                            <input type="checkbox" id="chkIsService" name="chkIsService" />
-                            <label for="chkIsService">Services Item</label>
-                        </div>
-                        <div class="pr-check-row">
-                            <input type="checkbox" id="chkIsPharmacyBilling" name="chkIsPharmacyBilling" />
-                            <label for="chkIsPharmacyBilling">Pharmacy Billing</label>
-                        </div>
-                        <div class="pr-check-row">
-                            <input type="checkbox" id="radio_charges" name="radio_charges" />
-                            <label for="radio_charges">Lab / Radiology Charges</label>
-                        </div>
-                        <div class="pr-check-row">
-                            <input type="checkbox" id="Dental_Item" name="Dental_Item" />
-                            <label for="Dental_Item">Dental Item</label>
-                        </div>
-                        <div class="pr-check-row">
-                            <input type="checkbox" id="ckhBedServices" name="ckhBedServices" />
-                            <label for="ckhBedServices">Bed Services</label>
-                        </div>
-                        <div class="pr-check-row">
-                            <input type="checkbox" id="chkOTProcedure" name="chkOTProcedure" />
-                            <label for="chkOTProcedure">OT Procedure</label>
-                        </div>
-                        <div class="pr-check-row">
-                            <input type="checkbox" id="chckfluid" name="chkIsfluid" />
-                            <label for="chckfluid">Infusion Fluid</label>
-                        </div>
-                        <div class="pr-check-row">
-                            <input type="checkbox" id="chkLabRequired" name="chkLabRequired" />
-                            <label for="chkLabRequired">Lab Required</label>
-                        </div>
-                        <div class="pr-check-row">
-                            <input type="checkbox" id="chkOtherServices" name="chkOtherServices" />
-                            <label for="chkOtherServices">Other Services</label>
-                        </div>
-                        <div class="pr-check-row">
-                            <input type="checkbox" id="chkLensRequired" name="chkLensRequired" />
-                            <label for="chkLensRequired">Lens Required</label>
-                        </div>
-                        <div class="pr-check-row">
-                            <input type="checkbox" id="chkFitnessCertificate" name="chkFitnessCertificate" />
-                            <label for="chkFitnessCertificate">Fitness Certificates</label>
-                        </div>
-                        <div class="pr-check-row">
-                            <input type="checkbox" id="chkPattHistorRequired" name="chkPattHistorRequired" />
-                            <label for="chkPattHistorRequired">Pat History Required</label>
-                        </div>
-                        <div class="pr-check-row">
-                            <input type="checkbox" id="chkBillingRequired" name="chkBillingRequired" />
-                            <label for="chkBillingRequired">Billing Required</label>
-                        </div>
-                        <div class="pr-check-row">
-                            <input type="checkbox" id="chkDoctorCompulsory" name="chkDoctorCompulsory" />
-                            <label for="chkDoctorCompulsory">Doctor Compulsory Name</label>
-                        </div>
+                <!-- Tab: Hospital Settings -->
+                <div id="Tab-Hospital">
+                    <div class="sv-checks">
+                        <div class="sv-check"><input type="checkbox" id="chkIsHospital" name="chkIsHospital" /><label for="chkIsHospital">Is Hospital Required</label></div>
+                        <div class="sv-check"><input type="checkbox" id="chkIsService" name="chkIsService" /><label for="chkIsService">Services Item</label></div>
+                        <div class="sv-check"><input type="checkbox" id="chkIsPharmacyBilling" name="chkIsPharmacyBilling" /><label for="chkIsPharmacyBilling">Pharmacy Billing</label></div>
+                        <div class="sv-check"><input type="checkbox" id="radio_charges" name="radio_charges" /><label for="radio_charges">Lab / Radiology Charges</label></div>
+                        <div class="sv-check"><input type="checkbox" id="Dental_Item" name="Dental_Item" /><label for="Dental_Item">Dental Item</label></div>
+                        <div class="sv-check"><input type="checkbox" id="ckhBedServices" name="ckhBedServices" /><label for="ckhBedServices">Bed Services</label></div>
+                        <div class="sv-check"><input type="checkbox" id="chkOTProcedure" name="chkOTProcedure" /><label for="chkOTProcedure">OT Procedure</label></div>
+                        <div class="sv-check"><input type="checkbox" id="chckfluid" name="chkIsfluid" /><label for="chckfluid">Infusion Fluid</label></div>
+                        <div class="sv-check"><input type="checkbox" id="chkLabRequired" name="chkLabRequired" /><label for="chkLabRequired">Lab Required</label></div>
+                        <div class="sv-check"><input type="checkbox" id="chkOtherServices" name="chkOtherServices" /><label for="chkOtherServices">Other Services</label></div>
+                        <div class="sv-check"><input type="checkbox" id="chkLensRequired" name="chkLensRequired" /><label for="chkLensRequired">Lens Required</label></div>
+                        <div class="sv-check"><input type="checkbox" id="chkFitnessCertificate" name="chkFitnessCertificate" /><label for="chkFitnessCertificate">Fitness Certificates</label></div>
+                        <div class="sv-check"><input type="checkbox" id="chkPattHistorRequired" name="chkPattHistorRequired" /><label for="chkPattHistorRequired">Pat History Required</label></div>
+                        <div class="sv-check"><input type="checkbox" id="chkBillingRequired" name="chkBillingRequired" /><label for="chkBillingRequired">Billing Required</label></div>
+                        <div class="sv-check"><input type="checkbox" id="chkDoctorCompulsory" name="chkDoctorCompulsory" /><label for="chkDoctorCompulsory">Doctor Compulsory Name</label></div>
                     </div>
-                    <div class="pr-divider"></div>
-                    <div class="row pr-share-row">
-                        <div class="col-md-3 col-sm-12">
-                            <label id="Label1">D. Share</label>
-                            <input type="text" id="txtDocShare" name="txtDocShare" autocomplete="off" class="form-control" placeholder="0" />
+                    <div class="sv-divider"></div>
+                    <div class="sv-share">
+                        <div class="sv-field">
+                            <label id="Label1" for="txtDocShare">D. Share</label>
+                            <input type="text" id="txtDocShare" name="txtDocShare" autocomplete="off" class="sv-input" placeholder="0" />
                         </div>
-                        <div class="col-md-3 col-sm-12">
-                            <label id="Label2">H. Share</label>
-                            <input type="text" id="txtHospitalShare" name="txtHospitalShare" autocomplete="off" class="form-control" placeholder="0" />
+                        <div class="sv-field">
+                            <label id="Label2" for="txtHospitalShare">H. Share</label>
+                            <input type="text" id="txtHospitalShare" name="txtHospitalShare" autocomplete="off" class="sv-input" placeholder="0" />
                         </div>
-                        <div class="col-md-6 col-sm-12 pr-share-hint">
+                        <div class="sv-hint">
                             <i class="fa fa-info-circle"></i>
-                            Doctor Share + Hospital Share must equal <strong>100</strong> when Service is enabled.
+                            <span>Doctor Share + Hospital Share must equal <strong>100</strong> when Service is enabled.</span>
                         </div>
                     </div>
                 </div>
-            </div>
 
-            <!-- Tab: Pharmacy -->
-            <div id="Tab-Pharmacy">
-                <div class="pr-tab-card">
-                    <div class="pr-tab-card-grid">
-                        <div class="pr-check-row">
-                            <input type="checkbox" id="PharmacyItem" name="PharmacyItem" />
-                            <label for="PharmacyItem">Pharmacy Item</label>
-                        </div>
-                        <div class="pr-check-row">
-                            <input type="checkbox" id="controller_drug" name="controller_drug" />
-                            <label for="controller_drug">Controller Drug</label>
-                        </div>
-                        <div class="pr-check-row">
-                            <input type="checkbox" id="Narcotics" name="Narcotics" />
-                            <label for="Narcotics">Narcotics</label>
-                        </div>
-                        <div class="pr-check-row">
-                            <input type="checkbox" id="Refregrator" name="Refregrator" />
-                            <label for="Refregrator">Refrigerator</label>
-                        </div>
+                <!-- Tab: Pharmacy -->
+                <div id="Tab-Pharmacy">
+                    <div class="sv-checks">
+                        <div class="sv-check"><input type="checkbox" id="PharmacyItem" name="PharmacyItem" /><label for="PharmacyItem">Pharmacy Item</label></div>
+                        <div class="sv-check"><input type="checkbox" id="controller_drug" name="controller_drug" /><label for="controller_drug">Controller Drug</label></div>
+                        <div class="sv-check"><input type="checkbox" id="Narcotics" name="Narcotics" /><label for="Narcotics">Narcotics</label></div>
+                        <div class="sv-check"><input type="checkbox" id="Refregrator" name="Refregrator" /><label for="Refregrator">Refrigerator</label></div>
                     </div>
-                    <div class="pr-divider"></div>
-                    <div class="row pr-pharmacy-row">
-                        <div class="col-md-3 col-sm-12">
-                            <label>ATC</label>
-                            <input type="text" id="ATC" name="ATC" class="form-control" placeholder="ATC code" />
+                    <div class="sv-divider"></div>
+                    <div class="sv-grid">
+                        <div class="sv-field sv-s2">
+                            <label for="ATC">ATC</label>
+                            <input type="text" id="ATC" name="ATC" class="sv-input" placeholder="ATC code" />
                         </div>
-                        <div class="col-md-9 col-sm-12">
-                            <label>Generic Name</label>
-                            <input type="text" id="GenericName" name="GenericName" class="form-control" placeholder="Enter generic name" />
+                        <div class="sv-field sv-s4">
+                            <label for="GenericName">Generic Name</label>
+                            <input type="text" id="GenericName" name="GenericName" class="sv-input" placeholder="Enter generic name" />
                         </div>
                     </div>
                 </div>
-            </div>
 
-            <!-- Tab: Item Tags -->
-            <div id="Tab-ItemTags">
-                <div class="pr-tab-card">
-                    <div class="pr-tab-card-grid">
-                        <div class="pr-check-row">
-                            <input type="checkbox" id="Finished_Product" name="Finished_Product" />
-                            <label for="Finished_Product">Finished Product</label>
-                        </div>
-                        <div class="pr-check-row">
-                            <input type="checkbox" id="Consumable" name="Consumable" />
-                            <label for="Consumable">Consumable</label>
-                        </div>
-                        <div class="pr-check-row">
-                            <input type="checkbox" id="Saleable" name="Saleable" />
-                            <label for="Saleable">Saleable</label>
-                        </div>
-                        <div class="pr-check-row">
-                            <input type="checkbox" id="Purchaseable" name="Purchaseable" />
-                            <label for="Purchaseable">Purchaseable</label>
-                        </div>
-                        <div class="pr-check-row">
-                            <input type="checkbox" id="IsNonStockItem" name="IsNonStockItem" />
-                            <label for="IsNonStockItem">Non Stock Item</label>
-                        </div>
-                        <div class="pr-check-row">
-                            <input type="checkbox" id="Isfixasset" name="Isfixasset" />
-                            <label for="Isfixasset">Fix Asset</label>
-                        </div>
-                        <div class="pr-check-row">
-                            <input type="checkbox" id="Locator" name="Locator" />
-                            <label for="Locator">Locator</label>
-                        </div>
-                        <div class="pr-check-row">
-                            <input type="checkbox" id="IsBatch" name="IsBatch" />
-                            <label for="IsBatch">Batch</label>
-                        </div>
+                <!-- Tab: Item Tags -->
+                <div id="Tab-ItemTags">
+                    <div class="sv-checks">
+                        <div class="sv-check"><input type="checkbox" id="Finished_Product" name="Finished_Product" /><label for="Finished_Product">Finished Product</label></div>
+                        <div class="sv-check"><input type="checkbox" id="Consumable" name="Consumable" /><label for="Consumable">Consumable</label></div>
+                        <div class="sv-check"><input type="checkbox" id="Saleable" name="Saleable" /><label for="Saleable">Saleable</label></div>
+                        <div class="sv-check"><input type="checkbox" id="Purchaseable" name="Purchaseable" /><label for="Purchaseable">Purchaseable</label></div>
+                        <div class="sv-check"><input type="checkbox" id="IsNonStockItem" name="IsNonStockItem" /><label for="IsNonStockItem">Non Stock Item</label></div>
+                        <div class="sv-check"><input type="checkbox" id="Isfixasset" name="Isfixasset" /><label for="Isfixasset">Fix Asset</label></div>
+                        <div class="sv-check"><input type="checkbox" id="Locator" name="Locator" /><label for="Locator">Locator</label></div>
+                        <div class="sv-check"><input type="checkbox" id="IsBatch" name="IsBatch" /><label for="IsBatch">Batch</label></div>
                     </div>
                 </div>
-            </div>
 
-            <!-- Tab: Procedure Extras (Procedure flag + Procedure Time) -->
-            <div id="Tab-ProcedureExtras">
-                <div class="pr-tab-card">
-                    <div class="pr-tab-card-grid">
-                        <div class="pr-check-row">
-                            <input type="checkbox" id="Procedure" name="Procedure" onchange="ShowProcTime();" />
-                            <label for="Procedure">Procedure</label>
+                <!-- Tab: Procedure Extras (Procedure flag + Procedure Time) -->
+                <div id="Tab-ProcedureExtras">
+                    <div class="sv-grid">
+                        <div class="sv-field sv-s2">
+                            <div class="sv-check"><input type="checkbox" id="Procedure" name="Procedure" onchange="ShowProcTime();" /><label for="Procedure">Procedure</label></div>
                         </div>
-                        <div class="pr-check-row" id="lblProcedure_Time">
+                        <div class="sv-field sv-s2" id="lblProcedure_Time">
                             <label for="Procedure_Time">Procedure Time</label>
-                            <input type="text" id="Procedure_Time" name="Procedure_Time" class="form-control" placeholder="e.g. 30 min" style="max-width:200px;" />
+                            <input type="text" id="Procedure_Time" name="Procedure_Time" class="sv-input" placeholder="e.g. 30 min" />
                         </div>
                     </div>
                 </div>
             </div>
         </div>
-    </form>
 
-    <div class="pr-action-buttons">
-        <div class="row">
-            <div class="col-lg-2 col-md-4 col-sm-12">
+        <div class="sv-actions">
+            <div>
                 <input type="button" class="btn btn-primry w-100" value="Save" id="btnValue" onclick="Saveitem()" />
             </div>
-            <div class="col-lg-2 col-md-4 col-sm-12">
+            <div>
                 <input type="button" class="btn btn-gray w-100" value="View" onclick="ListView()" />
             </div>
-            <div class="col-lg-2 col-md-4 col-sm-12">
+            <div>
                 <input type="button" class="btn btn-yellow w-100" value="New" onclick="NewPage()" />
             </div>
         </div>

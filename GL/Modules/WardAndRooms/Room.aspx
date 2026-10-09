@@ -35,103 +35,84 @@
         </div>
 
         <div class="rm-layout2">
-
-            <!-- Left: identification + building -->
-            <div class="rm-col">
-                <section class="rm-card">
-                    <h5 class="rm-card-title"><i class="fa fa-info-circle"></i> Room Identification</h5>
-                    <div class="rm-grid">
-                        <div class="rm-field">
-                            <asp:Label ID="lblRoom_No" runat="server" Text="Room No. *" CssClass="rm-lbl"></asp:Label>
-                            <asp:TextBox ID="txtRoom_No" runat="server" CssClass="rm-input"></asp:TextBox>
-                            <asp:RequiredFieldValidator ID="rfvRoom_No" runat="server" ControlToValidate="txtRoom_No" Display="Dynamic" Text="*" ErrorMessage="Room No. is Required"></asp:RequiredFieldValidator>
-                            <asp:RangeValidator ID="rngRoom_No" runat="server" MinimumValue="0" MaximumValue="99999999999999999999" Display="Dynamic" ControlToValidate="txtRoom_No" Text="*" ErrorMessage="Only Enter Integer Value"></asp:RangeValidator>
-                        </div>
-                        <div class="rm-field">
-                            <asp:Label ID="lblName" runat="server" Text="Room Name" CssClass="rm-lbl"></asp:Label>
-                            <asp:TextBox ID="txtName" runat="server" CssClass="rm-input"></asp:TextBox>
-                        </div>
+            <section class="rm-card">
+                <h5 class="rm-card-title"><i class="fa fa-info-circle"></i> Room Details</h5>
+                <div class="rm-grid">
+                    <div class="rm-field">
+                        <asp:Label ID="lblRoom_No" runat="server" Text="Room No. *" CssClass="rm-lbl"></asp:Label>
+                        <asp:TextBox ID="txtRoom_No" runat="server" CssClass="rm-input"></asp:TextBox>
+                        <asp:RequiredFieldValidator ID="rfvRoom_No" runat="server" ControlToValidate="txtRoom_No" Display="Dynamic" Text="*" ErrorMessage="Room No. is Required"></asp:RequiredFieldValidator>
+                        <asp:RangeValidator ID="rngRoom_No" runat="server" MinimumValue="0" MaximumValue="99999999999999999999" Display="Dynamic" ControlToValidate="txtRoom_No" Text="*" ErrorMessage="Only Enter Integer Value"></asp:RangeValidator>
                     </div>
-                </section>
-
-                <section class="rm-card">
-                    <h5 class="rm-card-title"><i class="fa fa-building"></i> Building &amp; Floor</h5>
-                    <div class="rm-grid">
-                        <div class="rm-field">
-                            <asp:Label ID="lblBuilding_Type" runat="server" Text="Building Type" CssClass="rm-lbl"></asp:Label>
-                            <asp:DropDownList ID="ddlBuildingType" runat="server" AppendDataBoundItems="true" CssClass="rm-input">
-                            </asp:DropDownList>
-                        </div>
-                        <div class="rm-field">
-                            <asp:Label ID="lblFloor_No" runat="server" Text="Floor No. *" CssClass="rm-lbl"></asp:Label>
-                            <asp:TextBox ID="txtFloorNo" runat="server" CssClass="rm-input"></asp:TextBox>
-                            <asp:RequiredFieldValidator ID="rfvFloor_No" runat="server" ControlToValidate="txtFloorNo" Text="*" Display="Dynamic" ErrorMessage="Floor No. Required"></asp:RequiredFieldValidator>
-                            <asp:RangeValidator ID="rngFloor_No" runat="server" MinimumValue="0" MaximumValue="999999999999999999999999" Display="Dynamic" ControlToValidate="txtFloorNo" Text="*" ErrorMessage="Only Enter Integer Value"></asp:RangeValidator>
-                        </div>
+                    <div class="rm-field">
+                        <asp:Label ID="lblName" runat="server" Text="Room Name" CssClass="rm-lbl"></asp:Label>
+                        <asp:TextBox ID="txtName" runat="server" CssClass="rm-input"></asp:TextBox>
                     </div>
-                </section>
-            </div>
-
-            <!-- Right: configuration + location -->
-            <div class="rm-col">
-                <section class="rm-card">
-                    <h5 class="rm-card-title"><i class="fa fa-cogs"></i> Room Configuration</h5>
-                    <div class="rm-grid">
-                        <div class="rm-field">
-                            <asp:Label ID="lblRoom_Type" runat="server" Text="Room Type *" CssClass="rm-lbl"></asp:Label>
-                            <asp:DropDownList ID="ddlRoomType" runat="server" AppendDataBoundItems="true" AutoPostBack="true" OnSelectedIndexChanged="ddlRoomType_SelectedIndexChanged" CssClass="rm-input">
-                            </asp:DropDownList>
-                            <asp:RequiredFieldValidator ID="rfvRoomType" runat="server" ControlToValidate="ddlRoomType" Display="Dynamic" InitialValue="0" Text="*" ErrorMessage="Select Room Type"></asp:RequiredFieldValidator>
-                        </div>
-                        <div class="rm-field">
-                            <asp:Label ID="LblRoom_Charges" runat="server" Text="Charges/Day *" CssClass="rm-lbl"></asp:Label>
-                            <asp:UpdatePanel ID="upCharges" runat="server" UpdateMode="Conditional">
-                                <Triggers>
-                                    <asp:AsyncPostBackTrigger ControlID="ddlRoomType" EventName="SelectedIndexChanged" />
-                                </Triggers>
-                                <ContentTemplate>
-                                    <asp:TextBox ID="txtRoom_Charges" runat="server" CssClass="rm-input"></asp:TextBox>
-                                    <div class="rm-help">Per-bed charge (auto): <asp:Label ID="lblPerBedCharge" runat="server" Text="-"></asp:Label></div>
-                                </ContentTemplate>
-                            </asp:UpdatePanel>
-                            <asp:RequiredFieldValidator ID="RequiredFieldValidator1" runat="server" ControlToValidate="txtRoom_Charges" ErrorMessage="Enter Charges" Text="*"></asp:RequiredFieldValidator>
-                            <asp:RangeValidator ID="rvRoom_Charges" runat="server" ControlToValidate="txtRoom_Charges" MinimumValue="0" MaximumValue="999999999" ErrorMessage="Only enter integer values." Text="*"></asp:RangeValidator>
-                            <asp:UpdateProgress ID="UpdateProgress1" runat="server">
-                                <ProgressTemplate>
-                                    <div class="loadingimage">
-                                        <asp:Image ID="image1" ImageUrl="~/images/loading.gif" runat="server" Width="32px" /></div>
-                                </ProgressTemplate>
-                            </asp:UpdateProgress>
-                        </div>
-                        <div class="rm-field">
-                            <label class="rm-check">
-                                <asp:CheckBox ID="chkMultipleBeds" runat="server" onclick="toggleBeds(this);" /> Multiple Beds
-                            </label>
-                            <div class="rm-help">Tick to allocate this room bed-wise (each bed separately).</div>
-                        </div>
-                        <div class="rm-field" id="divNoOfBeds" style="display:none;">
-                            <asp:Label ID="lblNoOfBeds" runat="server" Text="No. of Beds *" CssClass="rm-lbl"></asp:Label>
-                            <asp:TextBox ID="txtNoOfBeds" runat="server" CssClass="rm-input"></asp:TextBox>
-                            <div class="rm-help">e.g. 2 for a twin-sharing room.</div>
-                        </div>
+                    <div class="rm-field">
+                        <asp:Label ID="lblBuilding_Type" runat="server" Text="Building Type" CssClass="rm-lbl"></asp:Label>
+                        <asp:DropDownList ID="ddlBuildingType" runat="server" AppendDataBoundItems="true" CssClass="rm-input">
+                        </asp:DropDownList>
                     </div>
-                </section>
-
-                <section class="rm-card">
-                    <h5 class="rm-card-title"><i class="fa fa-map-marker"></i> Location &amp; Warden</h5>
-                    <div class="rm-grid">
-                        <div class="rm-field">
-                            <asp:Label ID="lblLocation" runat="server" Text="Location" CssClass="rm-lbl"></asp:Label>
-                            <asp:TextBox ID="txtLocation" runat="server" CssClass="rm-input"></asp:TextBox>
-                        </div>
-                        <div class="rm-field">
-                            <asp:Label ID="lblWarden" runat="server" Text="Warden *" CssClass="rm-lbl"></asp:Label>
-                            <asp:DropDownList ID="ddlWarden" runat="server" AppendDataBoundItems="true" CssClass="rm-input">
-                            </asp:DropDownList>
-                        </div>
+                    <div class="rm-field">
+                        <asp:Label ID="lblFloor_No" runat="server" Text="Floor No. *" CssClass="rm-lbl"></asp:Label>
+                        <asp:TextBox ID="txtFloorNo" runat="server" CssClass="rm-input"></asp:TextBox>
+                        <asp:RequiredFieldValidator ID="rfvFloor_No" runat="server" ControlToValidate="txtFloorNo" Text="*" Display="Dynamic" ErrorMessage="Floor No. Required"></asp:RequiredFieldValidator>
+                        <asp:RangeValidator ID="rngFloor_No" runat="server" MinimumValue="0" MaximumValue="999999999999999999999999" Display="Dynamic" ControlToValidate="txtFloorNo" Text="*" ErrorMessage="Only Enter Integer Value"></asp:RangeValidator>
                     </div>
-                </section>
-            </div>
+                    <div class="rm-field">
+                        <asp:Label ID="lblLocation" runat="server" Text="Location" CssClass="rm-lbl"></asp:Label>
+                        <asp:TextBox ID="txtLocation" runat="server" CssClass="rm-input"></asp:TextBox>
+                    </div>
+                    <div class="rm-field">
+                        <asp:Label ID="lblWarden" runat="server" Text="Warden *" CssClass="rm-lbl"></asp:Label>
+                        <asp:DropDownList ID="ddlWarden" runat="server" AppendDataBoundItems="true" CssClass="rm-input">
+                        </asp:DropDownList>
+                    </div>
+                </div>
+            </section>
+
+            <section class="rm-card">
+                <h5 class="rm-card-title"><i class="fa fa-cogs"></i> Room Configuration</h5>
+                <div class="rm-grid">
+                    <div class="rm-field">
+                        <asp:Label ID="lblRoom_Type" runat="server" Text="Room Type *" CssClass="rm-lbl"></asp:Label>
+                        <asp:DropDownList ID="ddlRoomType" runat="server" AppendDataBoundItems="true" AutoPostBack="true" OnSelectedIndexChanged="ddlRoomType_SelectedIndexChanged" CssClass="rm-input">
+                        </asp:DropDownList>
+                        <asp:RequiredFieldValidator ID="rfvRoomType" runat="server" ControlToValidate="ddlRoomType" Display="Dynamic" InitialValue="0" Text="*" ErrorMessage="Select Room Type"></asp:RequiredFieldValidator>
+                    </div>
+                    <div class="rm-field">
+                        <asp:Label ID="LblRoom_Charges" runat="server" Text="Charges/Day *" CssClass="rm-lbl"></asp:Label>
+                        <asp:UpdatePanel ID="upCharges" runat="server" UpdateMode="Conditional">
+                            <Triggers>
+                                <asp:AsyncPostBackTrigger ControlID="ddlRoomType" EventName="SelectedIndexChanged" />
+                            </Triggers>
+                            <ContentTemplate>
+                                <asp:TextBox ID="txtRoom_Charges" runat="server" CssClass="rm-input"></asp:TextBox>
+                                <div class="rm-help">Per-bed charge (auto): <asp:Label ID="lblPerBedCharge" runat="server" Text="-"></asp:Label></div>
+                            </ContentTemplate>
+                        </asp:UpdatePanel>
+                        <asp:RequiredFieldValidator ID="RequiredFieldValidator1" runat="server" ControlToValidate="txtRoom_Charges" ErrorMessage="Enter Charges" Text="*"></asp:RequiredFieldValidator>
+                        <asp:RangeValidator ID="rvRoom_Charges" runat="server" ControlToValidate="txtRoom_Charges" MinimumValue="0" MaximumValue="999999999" ErrorMessage="Only enter integer values." Text="*"></asp:RangeValidator>
+                        <asp:UpdateProgress ID="UpdateProgress1" runat="server">
+                            <ProgressTemplate>
+                                <div class="loadingimage">
+                                    <asp:Image ID="image1" ImageUrl="~/images/loading.gif" runat="server" Width="32px" /></div>
+                            </ProgressTemplate>
+                        </asp:UpdateProgress>
+                    </div>
+                    <div class="rm-field">
+                        <label class="rm-check">
+                            <asp:CheckBox ID="chkMultipleBeds" runat="server" onclick="toggleBeds(this);" /> Multiple Beds
+                        </label>
+                        <div class="rm-help">Tick to allocate this room bed-wise (each bed separately).</div>
+                    </div>
+                    <div class="rm-field" id="divNoOfBeds" style="display:none;">
+                        <asp:Label ID="lblNoOfBeds" runat="server" Text="No. of Beds *" CssClass="rm-lbl"></asp:Label>
+                        <asp:TextBox ID="txtNoOfBeds" runat="server" CssClass="rm-input"></asp:TextBox>
+                        <div class="rm-help">e.g. 2 for a twin-sharing room.</div>
+                    </div>
+                </div>
+            </section>
         </div>
 
         <div class="rm-actions">

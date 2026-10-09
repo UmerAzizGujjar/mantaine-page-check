@@ -2,6 +2,7 @@
 
 <asp:Content ID="Content1" ContentPlaceHolderID="HeadContent" runat="server">
     <link href="../../wwwroot/THEME_TIBBIT/CustomCSS/AddNewLabTest.css" rel="stylesheet" />
+    <link href="../../wwwroot/THEME_TIBBIT/CustomCSS/laboratory-test.css" rel="stylesheet" />
     <script src="https://cdn.jsdelivr.net/npm/jsbarcode@3.11.5/dist/JsBarcode.all.min.js"></script>
     <style type="text/css">
         
@@ -1813,124 +1814,75 @@
 </asp:Content>
 <asp:Content ID="Content2" ContentPlaceHolderID="MainContent" runat="server">
     
-    <div id="PatientDetail" class="lab-page" style="width: 100%">
+    <!-- Title line: the master page puts the page title in the empty left side; the badges sit on the right -->
+    <div class="pr-meta-bar">
+        <div class="meta-left"></div>
+        <div class="meta-right">
+            <div class="lt-badge"><span class="lt-badge-label">Lab Test</span><span class="lt-badge-value" id="badgeLtId">---</span></div>
+            <div class="lt-badge"><span class="lt-badge-label">Patient</span><span class="lt-badge-value" id="badgeLtPatient">---</span></div>
+            <div class="lt-badge"><span class="lt-badge-label">Category</span><span class="lt-badge-value" id="badgeLtCat">---</span></div>
+        </div>
+    </div>
+    <script type="text/javascript">
+        // title-line badges follow the form (the page script fills the fields in after loading)
+        function syncLabBadges() {
+            $('#badgeLtId').text($('#<%= txtLab_Test_ID.ClientID %>').val() || '---');
+            $('#badgeLtPatient').text($.trim($('#<%= vlblPatients_Name.ClientID %>').text()) || '---');
+            $('#badgeLtCat').text($.trim($('#<%= vPatient_Category.ClientID %>').text()) || '---');
+        }
+        $(function () {
+            syncLabBadges();
+            setInterval(syncLabBadges, 600);
+        });
+    </script>
+    <div id="PatientDetail" class="lab-page lt-page" style="width: 100%">
         <asp:UpdatePanel ID="UpdatePanel1" runat="server" UpdateMode="Conditional">
             <Triggers>
                 <asp:AsyncPostBackTrigger ControlID="chkCustomer" EventName="CheckedChanged" />
             </Triggers>
             <ContentTemplate>
-                <div class="row lab-cards-row">
-    <!-- Left Card -->
-    <div class="col-lg-6 col-md-6 col-sm-12">
-        <div class="card">
-            <div class="card-body">
-                <div class="row">
-                    <div class="col-lg-4 col-md-5 col-sm-6 text-center">
-                        <div class="image-container">
-                            <img src="~../../../../wwwroot/SOURCE_IMAGES/DASHBOARD_ICONS/Lab2.png" alt="Patient Image" class="img-fluid rounded-circle patient-image">
-                        </div>
-                    </div>
-                    <div class="col-lg-8 col-md-7 col-sm-6">
-                        <div class="row mb-3 mtt">
-                            <div class="col-lg-4 col-md-5 col-sm-6">
-                                 <asp:Label ID="Label3" runat="server" Text="MR No :*"></asp:Label>
+                <div class="lt-layout2">
+                    <section class="lt-card">
+                        <h5 class="lt-card-title"><i class="fa fa-user-circle"></i> Patient Information</h5>
+                        <div class="lt-patient">
+                            <div class="lt-avatar">
+                                <img src="~../../../../wwwroot/SOURCE_IMAGES/DASHBOARD_ICONS/Lab2.png" alt="Patient Image" />
                             </div>
-                            <div class="col-lg-8 col-md-7 col-sm-6">
-                                <asp:TextBox ID="txtPatient_ID" runat="server"></asp:TextBox>
-                            </div>
-                        </div>
-                        <div class="row mb-3 mtt">
-                            <div class="col-lg-5 col-md-5 col-sm-6 formrgn">
-                                <asp:Label ID="lblPatient_Name" runat="server" Text="Name :"></asp:Label>
-                            </div>
-                            <div class="col-lg-7 col-md-7 col-sm-6 top">
-                                <asp:Label ID="vlblPatients_Name" runat="server"></asp:Label>
-                            </div>
-                        </div>
-                        <div class="row mb-3 mtt">
-                            <div class="col-lg-5 col-md-5 col-sm-6 formrgn">
-                               <asp:Label ID="lblContactNo" runat="server" Text="Contact No :"></asp:Label>
-                            </div>
-                            <div class="col-lg-7 col-md-7 col-sm-6 top">
-                               <asp:Label ID="vLbl_Contact" runat="server"></asp:Label>
-                            </div>
-                        </div>
-                        <div class="row mb-3 mtt">
-                            <div class="col-lg-5 col-md-5 col-sm-6 formrgn">
-                                <asp:Label ID="lblGender" runat="server" Text="Gender :"></asp:Label>
-                            </div>
-                            <div class="col-lg-7 col-md-7 col-sm-6 top">
-                                <asp:Label ID="vLbl_Gender" runat="server"></asp:Label>
-                            </div>
-                        </div>
-                        <div class="row mb-3 mtt">
-                            <div class="col-lg-5 col-md-5 col-sm-6 formrgn">
-                               <asp:Label ID="lblAge_Years" runat="server" Text="Age Years :"></asp:Label>
-                            </div>
-                            <div class="col-lg-7 col-md-7 col-sm-6 top">
-                               <asp:Label ID="vLbl_Age" runat="server"></asp:Label>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-           </div>
-                    <!-- Right Card -->
-                    <div class="col-lg-6 col-md-6 col-sm-12">
-                        <div class="card">
-                            <div class="card-body">
-                                <div class="row mb-3">
-                                    <div class="col-lg-5 col-md-5 col-sm-6">
-                                        <label>Search From Bill No:</label>
-                                    </div>
-                                    <div class="col-lg-4 col-md-5 col-sm-6">
-                                      <input id="txtMRNOSearch" type="text"></input>
-                                    </div>
-                                </div>
-                                <div class="row mb-3">
-                                    <div class="col-lg-5 col-md-5 col-sm-6">
-                                         <asp:Label ID="LblReg_Date" runat="server" Text="Reg. Date:"></asp:Label>
-                                    </div>
-                                    <div class="col-lg-4 col-md-5 col-sm-6">
-                                         <asp:Label ID="vLbl_RegDate" runat="server"></asp:Label>
-                                    </div>
-                                </div>
-                                <div class="row mb-3">
-                                    <div class="col-lg-5 col-md-5 col-sm-6 detail">
-                                        <asp:Label ID="LblPatient_Category" runat="server" Text="Category :"></asp:Label>
-                                    </div>
-                                    <div class="col-lg-4 col-md-5 col-sm-6 detail">
-                                         <asp:Label ID="vPatient_Category" runat="server"></asp:Label>
-                                    </div>
-                                </div>
-                                <div class="row mb-3">
-                                    <div class="col-lg-5 col-md-5 col-sm-6 detail">
-                                        <asp:Label ID="lblAdress" runat="server" Text="Address :"></asp:Label>
-                                    </div>
-                                    <div class="col-lg-4 col-md-5 col-sm-6 detail">
-                                        <asp:Label ID="vLbl_Adress" runat="server"></asp:Label>
-                                    </div>
-                                </div>
-                                <div class="row mb-3">
-                                    <div class="col-lg-5 col-md-5 col-sm-6 detail">
-                                        <asp:Label ID="Label1" runat="server" Text="No of Result:"></asp:Label>
-                                    </div>
-                                    <div class="col-lg-4 col-md-5 col-sm-6">
-                                       <asp:Label ID="lblResultDpt" style="display:none;" runat="server"></asp:Label>
-                                    </div>
+                            <div class="lt-grid lt-patient-fields">
+                                <div class="lt-field">
+                                    <asp:Label ID="Label3" runat="server" Text="MR No :*" CssClass="lt-lbl"></asp:Label>
+                                    <asp:TextBox ID="txtPatient_ID" runat="server"></asp:TextBox>
                                 </div>
                             </div>
+                        </div>
+                        <dl class="lt-info">
+                            <div class="lt-span-2"><dt><asp:Label ID="lblPatient_Name" runat="server" Text="Name :"></asp:Label></dt><dd><asp:Label ID="vlblPatients_Name" runat="server"></asp:Label></dd></div>
+                            <div><dt><asp:Label ID="lblContactNo" runat="server" Text="Contact No :"></asp:Label></dt><dd><asp:Label ID="vLbl_Contact" runat="server"></asp:Label></dd></div>
+                            <div><dt><asp:Label ID="lblGender" runat="server" Text="Gender :"></asp:Label></dt><dd><asp:Label ID="vLbl_Gender" runat="server"></asp:Label></dd></div>
+                            <div><dt><asp:Label ID="lblAge_Years" runat="server" Text="Age Years :"></asp:Label></dt><dd><asp:Label ID="vLbl_Age" runat="server"></asp:Label></dd></div>
+                        </dl>
+                    </section>
+
+                    <section class="lt-card">
+                        <h5 class="lt-card-title"><i class="fa fa-search"></i> Search &amp; Details</h5>
+                        <div class="lt-grid lt-grid-2">
+                            <div class="lt-field">
+                                <label for="txtMRNOSearch">Search From Bill No</label>
+                                <input id="txtMRNOSearch" type="text" class="lt-input" />
+                            </div>
+                            <div class="lt-field">
+                                <label for="ddlmaindepartment">Patient Category</label>
+                                <select id="ddlmaindepartment" class="lt-input" onchange="LoadVitalParameters();"></select>
                             </div>
                         </div>
-                    </div>
-                  <div class="row">
-      <div class="col-lg-3 col-md-4 col-sm-6 lab-field">
-          <label>Patient Category</label>
-          <select id="ddlmaindepartment" onchange="LoadVitalParameters();"></select>
-      </div>
-  </div>
-  <div class="main-row ">
+                        <dl class="lt-info" style="margin-top: 14px;">
+                            <div><dt><asp:Label ID="LblReg_Date" runat="server" Text="Reg. Date:"></asp:Label></dt><dd><asp:Label ID="vLbl_RegDate" runat="server"></asp:Label></dd></div>
+                            <div><dt><asp:Label ID="LblPatient_Category" runat="server" Text="Category :"></asp:Label></dt><dd><asp:Label ID="vPatient_Category" runat="server"></asp:Label></dd></div>
+                            <div class="lt-span-2"><dt><asp:Label ID="lblAdress" runat="server" Text="Address :"></asp:Label></dt><dd><asp:Label ID="vLbl_Adress" runat="server"></asp:Label></dd></div>
+                            <div><dt><asp:Label ID="Label1" runat="server" Text="No of Result:"></asp:Label></dt><dd><asp:Label ID="lblResultDpt" style="display:none;" runat="server"></asp:Label></dd></div>
+                        </dl>
+                    </section>
+                </div>  <div class="main-row ">
       <div class="vitalsTable" id="opdvitals">
 
           <div style="display: flex; align-items: center; justify-content: space-between; width: 100%;">
@@ -2008,7 +1960,8 @@
       </div>
   </div>
                 
-                <form id="item">
+                <div id="item" class="lt-card lt-filters">
+                    <h5 class="lt-card-title"><i class="fa fa-flask"></i> Lab Test</h5>
                     <div class="row">
                         <div class="col-lg-2 col-md-3 col-sm-4 lab-field">
                             <asp:Label ID="Label2" runat="server" Text="Lab Test ID :"></asp:Label>
@@ -2033,7 +1986,7 @@
                             </div>
                         </div>
                     </div>
-                </form>
+                </div>
 
                 <div class="lab-panel">
                     <div class="lab-panel-head">

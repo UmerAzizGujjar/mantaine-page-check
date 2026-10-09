@@ -1,6 +1,7 @@
 ﻿<%@ Page Title="" Language="C#" MasterPageFile="~/Site.Master" AutoEventWireup="true" CodeBehind="RequestForQuotation.aspx.cs" Inherits="PMS.AP.RequestForQuotation" %>
 
 <asp:Content ID="Content1" ContentPlaceHolderID="HeadContent" runat="server">
+    <link href="../../wwwroot/THEME_TIBBIT/CustomCSS/request-for-quotation.css" rel="stylesheet" />
  
     <style>
         /* Prevent Select2 dropdown from being clipped inside modal */
@@ -644,167 +645,181 @@
             }
         }
 
+
+        function syncRfqBadges() {
+            $('#badgeRfqNo').text($('#ctl00_MainContent_txtRFQ_No').val() || '---');
+            $('#badgeRfqDate').text($('#ctl00_MainContent_txtRFQ_Date').val() || '---');
+            $('#badgeRfqStatus').text($('#ctl00_MainContent_txtStatus').val() || '---');
+        }
+        $(function () { syncRfqBadges(); setInterval(syncRfqBadges, 600); });
     </script>
 </asp:Content>
 <asp:Content ID="Content2" ContentPlaceHolderID="MainContent" runat="server">
-    <div class="row">
-        <div class="col-lg-3 col-md-6 col-sm-12">
-            <asp:Label ID="LabelRFQ_No" runat="server" Text="RFQ No."></asp:Label>
-            <asp:TextBox runat="server" ID="txtRFQ_No" class="form-control" ReadOnly="true" />
-            <asp:HiddenField ID="hdnRFQ_ID" runat="server" ClientIDMode="Static" />
-            <asp:TextBox runat="server" ID="txtRFQ_ID" Visible="false" ReadOnly="true" Width="0" />
-        </div>
-        <div class="col-lg-3 col-md-6 col-sm-12">
-            <asp:Label ID="LabelRFQ_Date" runat="server" Text="RFQ Date"></asp:Label>
-            <asp:RequiredFieldValidator ID="rfvRFQDate" runat="server" InitialValue="0" ControlToValidate="txtRFQ_Date" ErrorMessage="*" Display="Dynamic"></asp:RequiredFieldValidator>
-            <asp:TextBox runat="server" ID="txtRFQ_Date" class="form-control" />
-        </div>
-        <div class="col-lg-2 col-md-6 col-sm-12">
-            <asp:Label ID="lblStatus" runat="server" Text="Status"></asp:Label>
-            <asp:TextBox runat="server" ReadOnly="true" ID="txtStatus" class="form-control" />
-        </div>
-        <div class="col-lg-1 col-md-2 col-sm-4">
-            <input type="button" id="btnSelectVendor"  value="Vendor" class="btn btn-primry" style="margin-top: 16px" />
-
-        </div>
-        <div class="col-lg-2 col-md-6 col-sm-12">
-            <asp:Label ID="lblPrNo" runat="server" Text="Pr.No"> </asp:Label>
-            <asp:DropDownList runat="server" ID="ddlPrNo" onchange="GetWareHouse()" class="form-control"></asp:DropDownList>
-        </div>
-        <div class="col-lg-1 col-md-2 col-sm-4">
-            <input type="button" value="Add" id="btnPRSave" class="btn btn-primry" style="margin-top: 16px;" />
-        </div>
-        </div>
-
-        <div class="row">
-        <div class="col-lg-3 col-md-6 col-sm-12">
-            <asp:Label ID="LabelpaymentTerm" runat="server" Text="Mode of Payment"></asp:Label>
-            <asp:DropDownList runat="server" ID="ddlPaymentTerms" class="form-control"></asp:DropDownList>
-        </div>
-
-        <div class="col-lg-3 col-md-6 col-sm-12">
-            <asp:Label ID="LabelDue_Date" runat="server" Text="Due Date"></asp:Label>
-            <asp:RequiredFieldValidator ID="rfvdueDate" runat="server" InitialValue="0" ControlToValidate="txtDue_Date" ErrorMessage="*" Display="Dynamic"></asp:RequiredFieldValidator>
-            <asp:TextBox runat="server" ID="txtDue_Date" class="form-control" />
-        </div>
-
-        <div class="col-lg-3 col-md-6 col-sm-12" style="display: none">
-            <asp:Label ID="lblReference" runat="server" Text="Ref. No"></asp:Label>
-            <asp:TextBox runat="server" ID="txtRFQ_Reference" class="form-control" />
-        </div>
-        <div class="col-lg-3 col-md-6 col-sm-12">
-            <asp:Label ID="lblquotationValidty" runat="server" Text="Quotation Validty"></asp:Label>
-            <asp:TextBox runat="server" ID="txtquotationValidty" class="form-control" />
-        </div>
-
-        <div class="col-lg-3 col-md-6 col-sm-12">
-            <asp:Label ID="lblTerm_ID" runat="server" Text="Payment Terms"></asp:Label>
-            <asp:DropDownList runat="server" ID="ddlTerm" class="form-control" AppendDataBoundItems="true"></asp:DropDownList>
-        </div>
-
-    </div>
- 
-    <div class="row">
-           <div class="col-lg-3 col-md-6 col-sm-12" id="warehouse">
-            <asp:Label ID="lblwarehouse" runat="server" Text="Ware House"></asp:Label>
-            <asp:DropDownList runat="server" ID="ddlWareHouse"  class="form-control" AppendDataBoundItems="true"></asp:DropDownList>
-        </div>
-        <div class="col-lg-3 col-md-6 col-sm-12">
-            <label id="lblBranch">Branch</label>
-            <select id="ddlBranch" class="form-control">
-                <option value="0">Please Select</option>
-            </select>
-        </div>
-        <div class="col-lg-4 col-md-12 col-sm-12">
-            <asp:Label ID="lblRemarks" runat="server" Text="Remarks"></asp:Label>
-            <asp:TextBox runat="server" ID="txtRemarks" class="form-control" />
-        </div>
-        <div class="col-lg-2 col-md-4 col-sm-6">
-            <label class="col-form-label">Attachment</label>
-            <input type="file" id="choseRFQfile" name="choseRFQfile" />
-            <asp:HyperLink ID="HyperLink1" runat="server">Download</asp:HyperLink>
+    <!-- Title line: the master adds the page title on the left; RFQ no / date / status badges sit on the right -->
+    <div class="pr-meta-bar">
+        <div class="meta-left"></div>
+        <div class="meta-right">
+            <div class="rq-badge"><span class="rq-badge-label">RFQ No</span><span class="rq-badge-value" id="badgeRfqNo">---</span></div>
+            <div class="rq-badge"><span class="rq-badge-label">Date</span><span class="rq-badge-value" id="badgeRfqDate">---</span></div>
+            <div class="rq-badge"><span class="rq-badge-label">Status</span><span class="rq-badge-value" id="badgeRfqStatus">---</span></div>
         </div>
     </div>
 
-    <div class="row" style="overflow: scroll; height: 276px !important;">
-        <table class="table" id="tblItemDescription" style="width: 100% !important; font-size: 9px !important; overflow: scroll;">
-            <thead>
-                <tr>
-                    <th style="width: 29px;">No</th>
-                    <th style="display: none">P.R ID</th>
-                    <th style="width: 50px; text-align: center; font-size: 10px;">P.R No</th>
-                    <th style="display: none">Item ID</th>
-                    <th style="width: 66px; text-align: center; font-size: 10px;">Item Code</th>
-                    <th style="width: 218px; text-align: center;">Item Description</th>
-                    <th style="width: 60px;">Qty</th>
-                    <th style="width: 73px;">MOU</th>
-                    <th style="width: 75px;">Required Date</th>
-                    <th style="width: 56px;">Unit Price</th>
-                    <th style="width: 80px;">General S.Tax %</th>
-                    <th style="width: 66px;">Total Price</th>
-                    <th style="display: none">PR Detail ID</th>
-                </tr>
-            </thead>
-            <tbody id="tblItemDescriptionDetail">
-            </tbody>
-        </table>
-    </div>
-                    <div class="col-lg-8" style="margin-top:1%">
-                        <div class="col-lg-2 col-md-4 col-sm-12">
-                            <input type="button" class="btn btn-primry" onclick="SaveAllRecord()" value="Save" id="btnSave" />
-                        </div>
-                        <div class="col-lg-2 col-md-4 col-sm-12">
-                            <input type="button" class="btn btn-primry" id="btnPrint" value="Print" name="name" onclick="PrintRFQDetail();" />
-                        </div>
-                        <div class="col-lg-2 col-md-4 col-sm-12">
-                            <input type="button" class="btn-gray" value="View List" onclick="window.location = 'RequestForQuotationView.aspx'" />
-                        </div>
-                        <div class="col-lg-2 col-md-4 col-sm-12">
-                            <input type="button" class="btn btn-yellow" value="New" onclick="window.location = 'RequestForQuotation.aspx'" />
-                        </div>
+    <div class="rq-page">
+        <!-- RFQ details -->
+        <div class="rq-card">
+            <h5 class="rq-card-title"><i class="fa fa-file-text-o"></i> RFQ Details</h5>
+            <div class="rq-grid">
+                <div class="rq-field">
+                    <asp:Label ID="LabelRFQ_No" runat="server" Text="RFQ No." CssClass="rq-lbl"></asp:Label>
+                    <asp:TextBox runat="server" ID="txtRFQ_No" CssClass="rq-input" ReadOnly="true" />
+                    <asp:HiddenField ID="hdnRFQ_ID" runat="server" ClientIDMode="Static" />
+                    <asp:TextBox runat="server" ID="txtRFQ_ID" Visible="false" ReadOnly="true" Width="0" />
+                </div>
+                <div class="rq-field">
+                    <asp:Label ID="LabelRFQ_Date" runat="server" Text="RFQ Date" CssClass="rq-lbl"></asp:Label>
+                    <asp:TextBox runat="server" ID="txtRFQ_Date" CssClass="rq-input" />
+                    <asp:RequiredFieldValidator ID="rfvRFQDate" runat="server" InitialValue="0" ControlToValidate="txtRFQ_Date" ErrorMessage="*" Display="Dynamic"></asp:RequiredFieldValidator>
+                </div>
+                <div class="rq-field">
+                    <asp:Label ID="lblStatus" runat="server" Text="Status" CssClass="rq-lbl"></asp:Label>
+                    <asp:TextBox runat="server" ReadOnly="true" ID="txtStatus" CssClass="rq-input" />
+                </div>
+                <div class="rq-field">
+                    <asp:Label ID="LabelDue_Date" runat="server" Text="Due Date" CssClass="rq-lbl"></asp:Label>
+                    <asp:TextBox runat="server" ID="txtDue_Date" CssClass="rq-input" />
+                    <asp:RequiredFieldValidator ID="rfvdueDate" runat="server" InitialValue="0" ControlToValidate="txtDue_Date" ErrorMessage="*" Display="Dynamic"></asp:RequiredFieldValidator>
+                </div>
+                <div class="rq-field">
+                    <asp:Label ID="LabelpaymentTerm" runat="server" Text="Mode of Payment" CssClass="rq-lbl"></asp:Label>
+                    <asp:DropDownList runat="server" ID="ddlPaymentTerms" CssClass="rq-input"></asp:DropDownList>
+                </div>
+                <div class="rq-field">
+                    <asp:Label ID="lblTerm_ID" runat="server" Text="Payment Terms" CssClass="rq-lbl"></asp:Label>
+                    <asp:DropDownList runat="server" ID="ddlTerm" CssClass="rq-input" AppendDataBoundItems="true"></asp:DropDownList>
+                </div>
+                <div class="rq-field">
+                    <asp:Label ID="lblquotationValidty" runat="server" Text="Quotation Validty" CssClass="rq-lbl"></asp:Label>
+                    <asp:TextBox runat="server" ID="txtquotationValidty" CssClass="rq-input" />
+                </div>
+                <div class="rq-field" style="display: none">
+                    <asp:Label ID="lblReference" runat="server" Text="Ref. No" CssClass="rq-lbl"></asp:Label>
+                    <asp:TextBox runat="server" ID="txtRFQ_Reference" CssClass="rq-input" />
+                </div>
+                <div class="rq-field" id="warehouse">
+                    <asp:Label ID="lblwarehouse" runat="server" Text="Ware House" CssClass="rq-lbl"></asp:Label>
+                    <asp:DropDownList runat="server" ID="ddlWareHouse" CssClass="rq-input" AppendDataBoundItems="true"></asp:DropDownList>
+                </div>
+                <div class="rq-field">
+                    <label id="lblBranch" for="ddlBranch">Branch</label>
+                    <select id="ddlBranch" class="rq-input">
+                        <option value="0">Please Select</option>
+                    </select>
+                </div>
+                <div class="rq-field rq-span-2">
+                    <asp:Label ID="lblRemarks" runat="server" Text="Remarks" CssClass="rq-lbl"></asp:Label>
+                    <asp:TextBox runat="server" ID="txtRemarks" CssClass="rq-input" />
+                </div>
+                <div class="rq-field rq-span-2">
+                    <label class="col-form-label" for="choseRFQfile">Attachment</label>
+                    <div class="rq-attach">
+                        <input type="file" id="choseRFQfile" name="choseRFQfile" />
+                        <asp:HyperLink ID="HyperLink1" runat="server" CssClass="rq-link">Download</asp:HyperLink>
                     </div>
-   
-    <div id="RFQItemsModel" class="modal fade" role="dialog">
-        <div class="modal-dialog">
-            <div class="modal-content" style="width: 1000px; margin-left: -270px; height: 505px;">
+                </div>
+            </div>
+        </div>
+
+        <!-- Add PR items / vendors -->
+        <div class="rq-card">
+            <h5 class="rq-card-title"><i class="fa fa-plus-circle"></i> Add Items &amp; Vendors</h5>
+            <div class="rq-addrow">
+                <div class="rq-field">
+                    <asp:Label ID="lblPrNo" runat="server" Text="Pr.No" CssClass="rq-lbl"></asp:Label>
+                    <asp:DropDownList runat="server" ID="ddlPrNo" onchange="GetWareHouse()" CssClass="rq-input"></asp:DropDownList>
+                </div>
+                <input type="button" value="Add" id="btnPRSave" class="btn btn-primry" />
+                <input type="button" id="btnSelectVendor" value="Vendor" class="btn btn-primry" />
+            </div>
+        </div>
+
+        <!-- RFQ items -->
+        <div class="rq-card">
+            <h5 class="rq-card-title"><i class="fa fa-list-ul"></i> RFQ Items</h5>
+            <div class="rq-table-wrap">
+                <table class="table rq-table" id="tblItemDescription">
+                    <thead>
+                        <tr>
+                            <th style="width: 29px;">No</th>
+                            <th style="display: none">P.R ID</th>
+                            <th style="width: 50px; text-align: center;">P.R No</th>
+                            <th style="display: none">Item ID</th>
+                            <th style="width: 66px; text-align: center;">Item Code</th>
+                            <th style="width: 218px; text-align: center;">Item Description</th>
+                            <th style="width: 60px;">Qty</th>
+                            <th style="width: 73px;">MOU</th>
+                            <th style="width: 75px;">Required Date</th>
+                            <th style="width: 56px;">Unit Price</th>
+                            <th style="width: 80px;">General S.Tax %</th>
+                            <th style="width: 66px;">Total Price</th>
+                            <th style="display: none">PR Detail ID</th>
+                        </tr>
+                    </thead>
+                    <tbody id="tblItemDescriptionDetail">
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+        <div class="rq-actions">
+            <div><input type="button" class="btn btn-primry" onclick="SaveAllRecord()" value="Save" id="btnSave" /></div>
+            <div><input type="button" class="btn btn-primry" id="btnPrint" value="Print" name="name" onclick="PrintRFQDetail();" /></div>
+            <div><input type="button" class="btn-gray" value="View List" onclick="window.location = 'RequestForQuotationView.aspx'" /></div>
+            <div><input type="button" class="btn btn-yellow" value="New" onclick="window.location = 'RequestForQuotation.aspx'" /></div>
+        </div>
+    </div>
+
+    <div id="RFQItemsModel" class="modal fade rq-modal" role="dialog">
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content">
                 <div class="modal-header">
                     <h4 class="modal-title">Add PR Items</h4>
-                    <button type="button" style="width: auto; margin-top: 0px !important" class="close" data-dismiss="modal">&times;</button>
-                    
+                    <button type="button" class="close" data-dismiss="modal">&times;</button>
                 </div>
                 <input type="hidden" id="txthiddentr" name="txthidddentr" />
-                <div style="width: 970px; overflow: scroll; height: 401px  !important; height: auto;">
-                    <table class="table" style="width: 953px; height: auto; overflow: scroll;" id="tblRFQItemstModelTable">
-                        <thead>
-                            <tr>
-                                <th style="width: 50px;"><input type="checkbox" id="checkHeader" value="false" /></th>
-                                <th style="display: none;">Pr ID</th>
-                                <th style="display: none;">Pr Num</th>
-                                <th style="display: none;">Item ID </th>
-                                <th>Item Name</th>
-                                <th>Qty</th>
-                                <th style="display: none;">Item Code</th>
-                                <th>MOU</th>
-                                <th style="display: none;">UnitPrice</th>
-                                <th style="display: none;">Required_Date</th>
-                                <th style="display: none;">PR_Detail_ID</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                        </tbody>
-                    </table>
+                <div class="modal-body">
+                    <div class="table-responsive">
+                        <table class="table" id="tblRFQItemstModelTable">
+                            <thead>
+                                <tr>
+                                    <th style="width: 50px;"><input type="checkbox" id="checkHeader" value="false" /></th>
+                                    <th style="display: none;">Pr ID</th>
+                                    <th style="display: none;">Pr Num</th>
+                                    <th style="display: none;">Item ID </th>
+                                    <th>Item Name</th>
+                                    <th>Qty</th>
+                                    <th style="display: none;">Item Code</th>
+                                    <th>MOU</th>
+                                    <th style="display: none;">UnitPrice</th>
+                                    <th style="display: none;">Required_Date</th>
+                                    <th style="display: none;">PR_Detail_ID</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                            </tbody>
+                        </table>
+                    </div>
                 </div>
                 <div class="modal-footer">
-                    <input type="button" id="PoItem" style="width:20% !important" name="PoItem" value="Done" class="btn-gray" data-dismiss="modal" />
+                    <input type="button" id="PoItem" name="PoItem" value="Done" class="btn-gray" data-dismiss="modal" />
                 </div>
             </div>
         </div>
     </div>
 
-
     <!-- Modal for displaying Vendors -->
-    <div id="VendorModal" class="modal fade" tabindex="-1" role="dialog">
-        <div class="modal-dialog custom-modal-width" role="document">
+    <div id="VendorModal" class="modal fade rq-modal" tabindex="-1" role="dialog">
+        <div class="modal-dialog" role="document">
             <div class="modal-content">
                 <div class="modal-header">
                     <h3 class="modal-title">Vendors</h3>
@@ -813,25 +828,29 @@
                     </button>
                 </div>
                 <div class="modal-body">
-                    <div class="col-lg-12">
-                        <label id="lblVendor">Vendor</label>
-                        <asp:DropDownList runat="server" ID="ddlVendors" style="width:250px !important" CssClass="form-control" AppendDataBoundItems="true"></asp:DropDownList>
-                        <input type="button" class="btn btn-primry" onclick="Addrow()" value="+" id="AddVendor" style=" float: right;width:20% !important;margin-top:1%" />
+                    <div class="rq-addrow">
+                        <div class="rq-field">
+                            <label id="lblVendor">Vendor</label>
+                            <asp:DropDownList runat="server" ID="ddlVendors" CssClass="rq-input" AppendDataBoundItems="true"></asp:DropDownList>
+                        </div>
+                        <input type="button" class="btn btn-primry" onclick="Addrow()" value="+" id="AddVendor" />
                     </div>
-                    <table class="table" style="width: 100%; overflow: scroll;" id="tblVendorDetails">
-                        <thead>
-                            <tr>
-                                <th style="display: none; width: 10%">Vendor Id</th>
-                                <th style="width: 80%">Vendor Name</th>
-                                <th style="width: 80%">Action</th>
-                            </tr>
-                        </thead>
-                        <tbody id="VendorTableBody">
-                        </tbody>
-                    </table>
+                    <div class="table-responsive">
+                        <table class="table" id="tblVendorDetails">
+                            <thead>
+                                <tr>
+                                    <th style="display: none; width: 10%">Vendor Id</th>
+                                    <th style="width: 80%">Vendor Name</th>
+                                    <th style="width: 20%">Action</th>
+                                </tr>
+                            </thead>
+                            <tbody id="VendorTableBody">
+                            </tbody>
+                        </table>
+                    </div>
                 </div>
                 <div class="modal-footer">
-                    <input style="width:20% !important;margin-left:80%" class="btn-gray" type="button" value="Close" data-dismiss="modal"  />
+                    <input class="btn-gray" type="button" value="Close" data-dismiss="modal" />
                 </div>
             </div>
         </div>
