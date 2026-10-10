@@ -42,6 +42,33 @@ namespace PMS
         protected global::System.Web.UI.HtmlControls.HtmlTableCell lblEndDate;
 
         /// <summary>
+        /// rowItemName control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.HtmlControls.HtmlTableRow rowItemName;
+
+        /// <summary>
+        /// rowSupplierName control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.HtmlControls.HtmlTableRow rowSupplierName;
+
+        /// <summary>
+        /// rowStockOnly control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.HtmlControls.HtmlTableRow rowStockOnly;
+
+        /// <summary>
         /// rowItem control.
         /// </summary>
         /// <remarks>

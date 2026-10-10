@@ -158,16 +158,16 @@ namespace PMS.Modules.Administrator
                     using (var cmd = NoLockCmd(@"
 SELECT
   (SELECT COUNT(*) FROM Patients pt  WHERE pt.Created_Time>=@s1 AND pt.Created_time<=@e1)
-   +(SELECT COUNT(*) FROM Emergency_Patient ep  WHERE ep.Created_time>=@s1 AND ep.Created_time<=@e1)
+   +(SELECT COUNT(*) FROM Emergency ep  WHERE ep.Created_time>=@s1 AND ep.Created_time<=@e1)
    +(SELECT COUNT(*) FROM In_Patient ipd  WHERE ipd.Created_time>=@s1 AND ipd.Created_time<=@e1) AS TotalVisited,
      (SELECT COUNT(*) FROM Patients pt WHERE pt.Created_time>=@s2 AND pt.Created_time<=@e2)
-   +(SELECT COUNT(*) FROM Emergency_Patient ep WHERE ep.Created_time>=@s2 AND ep.Created_time<=@e2)
+   +(SELECT COUNT(*) FROM Emergency ep WHERE ep.Created_time>=@s2 AND ep.Created_time<=@e2)
    +(SELECT COUNT(*) FROM In_Patient ipd WHERE ipd.Created_time>=@s2 AND ipd.Created_time<=@e2) AS TotalVisitedY,
     (SELECT COUNT(*) FROM Patients pt JOIN Reg_patient rp ON pt.Reg_PatId=rp.pat_id WHERE rp.Created_time>=@s1 AND rp.Created_time<=@e1)
-   +(SELECT COUNT(*) FROM Emergency_Patient ep JOIN Reg_patient rp ON ep.Patient_ID=rp.pat_id WHERE rp.Created_time>=@s1 AND rp.Created_time<=@e1)
+   +(SELECT COUNT(*) FROM Emergency ep JOIN Reg_patient rp ON ep.Patient_ID=rp.pat_id WHERE rp.Created_time>=@s1 AND rp.Created_time<=@e1)
    +(SELECT COUNT(*) FROM In_Patient ip JOIN Reg_patient rp ON ip.Patient_ID=rp.pat_id WHERE rp.Created_time>=@s1 AND rp.Created_time<=@e1) AS WalkIn,
       (SELECT COUNT(*) FROM Patients pt JOIN Reg_patient rp ON pt.Reg_PatId=rp.pat_id WHERE rp.Created_time>=@s2 AND rp.Created_time<=@e2)
-   +(SELECT COUNT(*) FROM Emergency_Patient ep JOIN Reg_patient rp ON ep.Patient_ID=rp.pat_id WHERE rp.Created_time>=@s2 AND rp.Created_time<=@e2)
+   +(SELECT COUNT(*) FROM Emergency ep JOIN Reg_patient rp ON ep.Patient_ID=rp.pat_id WHERE rp.Created_time>=@s2 AND rp.Created_time<=@e2)
    +(SELECT COUNT(*) FROM In_Patient ip JOIN Reg_patient rp ON ip.Patient_ID=rp.pat_id WHERE rp.Created_time>=@s2 AND rp.Created_time<=@e2) AS WalkInY,
   (SELECT COUNT(*) FROM Appointment_Form WHERE App_Date>=@s1 AND App_Date<@a1) AS Appts,
   (SELECT COUNT(*) FROM Appointment_Form WHERE App_Date>=@s2 AND App_Date<@a2) AS ApptsY,
@@ -370,7 +370,7 @@ SELECT
 
                         /* ─────────── Card Fee ─────────── */
 
-                        var RegPatients = db.Reg_patients.Where(p => p.charge_time >= s && p.charge_time <= e).ToList();
+                        var RegPatients = db.Reg_patients.Where(p => p.charge_time >= s && p.charge_time <= e && (p.iscancel == false || p.iscancel == null)).ToList();
                         decimal RegPatientGross = RegPatients.Sum(p => p.Card_fee ?? 0);
                         decimal RegPatientDiscount = 0;
                         var RegPatientPatList = RegPatients.Select(p => p.pat_id).ToList();
@@ -378,7 +378,7 @@ SELECT
                         decimal RegPatientNet = RegPatientGross - RegPatientDiscount - RegPatientRefund;
 
                         /* ─────────── Private Patient ─────────── */
-                        var specialistPatients = db.Patients.Where(p => p.Patient_Type == "02" && p.Created_Time >= s && p.Created_Time <= e).ToList();
+                        var specialistPatients = db.Patients.Where(p => p.Patient_Type == "02" && p.Created_Time >= s && p.Created_Time <= e && (p.isCancel == false || p.isCancel == null)).ToList();
                         decimal specialistGross = specialistPatients.Sum(p => p.Actual_amount ?? 0);
                         decimal specialistDiscount = specialistPatients.Sum(p => ((p.discount_amt/100) * p.Actual_amount) ?? 0);
                         var specialistPatList = specialistPatients.Select(p => p.Patient_ID).ToList();
@@ -396,7 +396,7 @@ SELECT
                         decimal specialistNet = specialistGross - specialistDiscount - specialistRefund;
 
                         /* ─────────── General Patient ─────────── */
-                        var GernalPatients = db.Patients.Where(p => p.Patient_Type == "01" && p.Created_Time >= s && p.Created_Time <= e).ToList();
+                        var GernalPatients = db.Patients.Where(p => p.Patient_Type == "01" && p.Created_Time >= s && p.Created_Time <= e && (p.isCancel == false || p.isCancel == null)).ToList();
                         decimal GernalGross = GernalPatients.Sum(p => p.Actual_amount ?? 0);
                         decimal GernalDiscount = GernalPatients.Sum(p => ((p.discount_amt/100) * p.Actual_amount) ?? 0);
                         var GernalPatList = GernalPatients.Select(p => p.Patient_ID).ToList();
@@ -415,7 +415,7 @@ SELECT
 
                         /* ─────────── Emer Patient ─────────── */
 
-                        var EmrPatients = db.Emergencies.Where(p =>  p.Created_Time >= s && p.Created_Time <= e).ToList();
+                        var EmrPatients = db.Emergencies.Where(p =>  p.Created_Time >= s && p.Created_Time <= e && (p.isCancel == false || p.isCancel == null)).ToList();
                         decimal EmrGross = EmrPatients.Sum(p => p.Actual_amount ?? 0);
                         decimal EmrDiscount = EmrPatients.Sum(p => ((p.discount_amt/100) * p.Actual_amount) ?? 0);
                         var EmrPatList = EmrPatients.Select(p => p.Emer_id).ToList();
@@ -424,7 +424,7 @@ SELECT
 
                         /* ─────────── Pharmacy Patient ─────────── */
 
-                        var Pharmacy = db.Ar_Billings.Where(p => p.Creation_Date >= s && p.Creation_Date <= e && p.Ware_House =="008").ToList();
+                        var Pharmacy = db.Ar_Billings.Where(p => p.Creation_Date >= s && p.Creation_Date <= e && p.Ware_House =="008" && (p.isCancel == false || p.isCancel == null)).ToList();
                         decimal PharmacyGross = Pharmacy.Sum(p => p.Total_Amount ?? 0);
                         decimal PharmacyDiscount = Pharmacy.Sum(p => (p.Discount_Amount) ?? 0);
                         decimal PharmacyReceived = Pharmacy.Sum(p => (p.Received_Amount) ?? 0);
@@ -432,7 +432,7 @@ SELECT
 
                         /* ─────────── PB! Patient ─────────── */
 
-                        var PB1 = db.Ar_Billings.Where(p => p.Creation_Date >= s && p.Creation_Date <= e && p.Ware_House =="009").ToList();
+                        var PB1 = db.Ar_Billings.Where(p => p.Creation_Date >= s && p.Creation_Date <= e && p.Ware_House =="009" && (p.isCancel == false || p.isCancel == null)).ToList();
                         decimal PBGross = PB1.Sum(p => p.Total_Amount ?? 0);
                         decimal PBDiscount = PB1.Sum(p => (p.Discount_Amount) ?? 0);
                         decimal PBReceived = PB1.Sum(p => (p.Received_Amount) ?? 0);
@@ -448,6 +448,7 @@ SELECT
                                 INNER JOIN Ar_Billing_Details d ON b.Bill_ID = d.Bill_ID
                                 WHERE b.Creation_Date >= @s AND b.Creation_Date <= @e
                                   AND (d.Item_Type = 'Test' OR d.Item_Type = 'Service')
+                                  AND isNull(isCancel,0) = 0
                                 GROUP BY d.Item_Type", conn2, s, e).ToDictionary(x => x.Key, x => new { amt = ToDecimal(x.Value[0]), disc = ToDecimal(x.Value[1]) });
 
                         var refundRow = SqlGroup(@"

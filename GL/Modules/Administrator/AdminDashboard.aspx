@@ -578,14 +578,14 @@ function renderKpis(d) {
                 <label>End Date</label>
                 <input type="text" id="txtEndDate" class="form-control datepicker" placeholder="DD/MM/YYYY" readonly />
             </div>
-            <div class="filter-group" style="min-width:200px;">
+<%--            <div class="filter-group" style="min-width:200px;">
                 <label>Department</label>
                 <select id="ddlDepartment"><option value="0">All Departments</option></select>
             </div>
             <div class="filter-group" style="min-width:200px;">
                 <label>Doctor</label>
                 <select id="ddlDoctor"><option value="0">All Doctors</option></select>
-            </div>
+            </div>--%>
             <div class="filter-group" style="align-self:flex-end;">
                 <button type="button" id="btnApplyFilters" class="btn btn-primry" style="padding:7px 24px;font-size:13px;font-weight:700;">Apply</button>
             </div>

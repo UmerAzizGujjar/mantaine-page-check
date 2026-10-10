@@ -1,6 +1,50 @@
 ﻿<%@ Page Title="" Language="C#" MasterPageFile="~/Site.Master" AutoEventWireup="true" CodeBehind="SaleReturnList.aspx.cs" Inherits="PMS.Modules.Billing.SaleReturnList" %>
 <asp:Content ID="Content1" ContentPlaceHolderID="HeadContent" runat="server">
     <link href="../../wwwroot/THEME_TIBBIT/CustomCSS/tablestyle.css" rel="stylesheet" />
+    <style type="text/css">
+        .pharma-action-btn {
+            display: inline-block;
+            min-width: 28px;
+            height: 28px;
+            line-height: 28px;
+            padding: 0 8px;
+            margin: 0 2px;
+            border-radius: 4px;
+            color: #ffffff !important;
+            text-align: center;
+            vertical-align: middle;
+            font-size: 12px;
+            cursor: pointer;
+            text-decoration: none;
+            transition: all 0.15s ease;
+            box-shadow: 0 1px 2px rgba(0, 0, 0, 0.1);
+        }
+
+        .pharma-action-btn i {
+            color: #ffffff !important;
+            font-size: 12px;
+            line-height: 1;
+        }
+
+        .pharma-action-btn:hover {
+            text-decoration: none;
+            color: #ffffff !important;
+            transform: translateY(-1px);
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.18);
+        }
+
+        .pharma-btn-voucher {
+            background-color: #F59E0B;
+        }
+
+        .pharma-btn-voucher:hover {
+            background-color: #D97706;
+        }
+
+        #tbl a.pharma-action-btn {
+            color: #ffffff !important;
+        }
+    </style>
     <script type="text/javascript">
 
         $(document).ready(function () {
@@ -119,6 +163,11 @@
 
         }
 
+        function PrintVoucher(returnId) {
+            var url = '../../ReportViewer.aspx?ReportName=Voucher&ReportTitle=Sale Return Voucher&TransID=' + returnId + '&TransType=PSRV';
+            window.open(url, '_blank');
+        }
+
 
         function LoadPage() {
             $("#tbl").DataTable({
@@ -212,9 +261,10 @@
                     {
                         render: function (data, type, full) {
                             var res = '<a href="#" onclick="PrintInvoice(' + full.Return_ID + ')" style="border-radius: 4px; background-color: #1f1fe3; color: white; padding: 5px 8px 5px 8px;"><i style="color:white !important;" class="fa fa-upload"></i></a>'
-                      
+
+                            var voucher = '<a class="pharma-action-btn pharma-btn-voucher" href="#" onclick="PrintVoucher(' + full.Return_ID + ')" id="btnvoucherprint" title="Print Voucher"><i class="fa fa-file-text-o"></i></a>';
                             var result;
-                            result = res;
+                            result = res + voucher;
                             return result;
                         }, "width": "10%"
                     }

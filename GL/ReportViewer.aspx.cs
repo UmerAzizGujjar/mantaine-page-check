@@ -198,6 +198,11 @@ namespace PMS
                     {
                         VoucherId = DBClass.getField("select Voucher_ID from Ar_Billings  where ispharmacy = 1 and Bill_id = " + transID).ToString();
                     }
+                    else if (transType == "PSRV")
+                    {
+                        var rawVoucherId = DBClass.getField("select Voucher_ID from Pharmacy_SaleReturns where Return_ID = " + transID);
+                        VoucherId = rawVoucherId != null ? rawVoucherId.ToString() : "0"; // return not approved yet -> no voucher
+                    }
                     else if (transType == "CPV")
                     {
                         VoucherId = DBClass.getField("select Voucher_ID from GL_Vouchers  where Voucher_ID = " + transID).ToString();
