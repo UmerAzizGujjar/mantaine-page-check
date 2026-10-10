@@ -291,7 +291,7 @@ function loadItemList(rowlength) {
                     <input type="text" id="txteTime" name="txteTime" />
                 </td>
             </tr>
-            <tr id="rowItemName">
+            <tr id="rowItemName" runat="server" visible="false">
                 <td class="auto-style2">Item Name </td>
                 <td>
                     <select id="ddlItemName"></select>
@@ -302,7 +302,7 @@ function loadItemList(rowlength) {
                     <select id="ddlManufacturer"></select>
                 </td>
             </tr>
-            <tr id="rowSupplierName">
+            <tr id="rowSupplierName" runat="server" visible="false">
                 <td class="auto-style2">Supplier Name </td>
                 <td>
                     <select id="ddlSupplier"></select>
@@ -311,7 +311,7 @@ function loadItemList(rowlength) {
                 <td class="auto-style5"></td>
                 <td></td>
             </tr>
-            <tr id="rowStockOnly">
+            <tr id="rowStockOnly" runat="server" visible="false">
                 <td class="auto-style2">Only Stock &gt; 0</td>
                 <td>
                     <div class="form-check" style="display: inline-flex; width: 26px;">
