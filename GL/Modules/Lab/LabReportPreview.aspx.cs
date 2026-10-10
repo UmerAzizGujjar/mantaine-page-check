@@ -287,6 +287,7 @@ namespace PMS
                     labtest.Growth_Type = item.Growthtype;
                     labtest.Organism_Type = item.OrganismType;
                     labtest.Master_Remarks = item.Master_Remarks;
+                    labtest.Comments = item.Comments;
                     labtest.Is_Result = true;
                     labtest.Created_Time = DateTime.Now;
                     labtest.Test_Performed_By = testPerformby;
@@ -316,6 +317,7 @@ namespace PMS
             public string Growthtype { get; set; }
             public string OrganismType { get; set; }
             public string Master_Remarks { get; set; }
+            public string Comments { get; set; }
             public int BillDetailID { get; set; }
         }
         [WebMethod]
@@ -732,6 +734,7 @@ namespace PMS
                             td.Growth_Type,
                             td.Organism_Type,
                             td.Levels,
+                            td.Comments,
                             t.Result_Type_Image,
                             Is_Approve = td.isApproved == null ? false : true,
 
@@ -776,7 +779,23 @@ namespace PMS
             listObj.Add(data[0].Levels);
             listObj.Add(data[0].Result_Type_Image.ToString());
             listObj.Add(data[0].Is_Result.ToString()); //28
+            listObj.Add(data[0].Comments ?? string.Empty); //28 (Is_Result above is 27)
             return (new JavaScriptSerializer().Serialize(listObj));
+        }
+
+        [WebMethod]
+        public static string GetCommentValues()
+        {
+            using (DataBaseDataContext db = new DataBaseDataContext())
+            {
+                var values = (from dv in db.DataValues
+                              join vs in db.ValueSets on dv.ValueSet_ID equals vs.ValueSet_ID
+                              where vs.ValueSet_Name == "Comments"
+                              orderby dv.DataValue_Description
+                              select new { dv.DataValue_Name, dv.DataValue_Description }).ToList();
+
+                return (new JavaScriptSerializer()).Serialize(values);
+            }
         }
 
 
@@ -875,6 +894,7 @@ namespace PMS
                                                      pm.Growth_Type,
                                                      pm.Organism_Type,
                                                      pm.Master_Remarks,
+                                                     pm.Comments,
                                                      b.Bill_Details_ID,
 
 
@@ -943,6 +963,7 @@ namespace PMS
                                                  pm.Growth_Type,
                                                  pm.Organism_Type,
                                                  pm.Master_Remarks,
+                                                 pm.Comments,
                                                  b.Bill_Details_ID,
 
                                                  resultValueList = (from p in db.Lab_Test_Multiple_Values

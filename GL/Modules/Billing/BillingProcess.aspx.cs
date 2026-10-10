@@ -375,6 +375,60 @@ namespace PMS
             }
         }
 
+        // Info Desk button is shown only when sys_Parms has "Billing Info Desk" = "01" for the company
+        public bool ShowInfoDesk
+        {
+            get
+            {
+                using (DataBaseDataContext db = new DataBaseDataContext())
+                {
+                    return db.sys_Parms.Any(p => p.Name == "Billing Info Desk" && p.Code == "01" && p.Company_ID == AppConfig.Company_ID);
+                }
+            }
+        }
+
+        [WebMethod]
+        public static string GetAllTests()
+        {
+            using (DataBaseDataContext db = new DataBaseDataContext())
+            {
+                var query = (from t in db.Lab_Tests
+                             where t.Test_Name != null && t.Test_Name.Trim() != ""
+                             orderby t.Test_Name
+                             select new
+                             {
+                                 Test_ID = t.Test_ID,
+                                 Test_Name = t.Test_Name,
+                                 Main_Department = t.Main_Department,
+                                 Main_Department_Name = db.GetDataValueName("Main Test Departments", t.Main_Department) ?? string.Empty,
+                                 Group_Department_Name = db.GetDataValueName("Test Departments", t.Group_Department) ?? string.Empty,
+                                 Genre_Name = db.GetDataValueName("Sample Genre", t.Genre) ?? string.Empty,
+                                 Designation_Name = db.GetDataValueName("Designation", t.Test_Designation) ?? string.Empty,
+                                 Qty = t.Qty,
+                                 Reporting_Time = t.Reporting_Time,
+                                 Reporting_Day = t.Reporting_Day,
+                                 WaitingTime = t.WaitingTime,
+                                 Rate = t.Rate
+                             }).ToList();
+
+                return (new JavaScriptSerializer()).Serialize(query);
+            }
+        }
+
+        [WebMethod]
+        public static string GetMainTestDepartments()
+        {
+            using (DataBaseDataContext db = new DataBaseDataContext())
+            {
+                var dep = (from dv in db.DataValues
+                           join vs in db.ValueSets on dv.ValueSet_ID equals vs.ValueSet_ID
+                           where vs.ValueSet_Name == "Main Test Departments"
+                           select new { dv.DataValue_Name, dv.DataValue_Description }).ToList();
+
+                return (new JavaScriptSerializer()).Serialize(dep);
+            }
+        }
+
 
 
         [WebMethod]

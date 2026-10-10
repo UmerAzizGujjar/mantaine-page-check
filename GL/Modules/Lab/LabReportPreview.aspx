@@ -514,7 +514,11 @@
                             ApproveLab(singleTest);
                         }
                         
-                        refreshAfterSave();
+                        // Approved: keep the modal open; Update and Approve are hidden, Reject shows
+                        refreshAfterSaveKeepOpen();
+                        $('#saveTest').hide();
+                        $('#btnApprove').hide();
+                        $('#btnReject').show();
                     }, function (onfailure) {
 
                         alert(onfailure);
@@ -546,7 +550,11 @@
                 var TesttDetails = { Lab_ID: Lab_ID == '(New)' ? 0 : Lab_ID, test_list: test_list }
                 if (test_list.length > 0) {
                     PageMethods.RejectTestDetail(Lab_ID, JSON.stringify(TesttDetails), function (response) {
-                        refreshAfterSave();
+                        // Rejected: keep the modal open with Update and Approve showing
+                        $('#saveTest').val('Update').show();
+                        $('#btnApprove').show();
+                        $('#btnReject').hide();
+                        refreshAfterSaveKeepOpen();
                     }, function (onfailure) {
                         alert(onfailure);
                     });
@@ -607,6 +615,7 @@
                         array.Growthtype = Growthtype;
                         array.OrganismType = OrganismType;
                         array.Master_Remarks = Master_Remarks;
+                        array.Comments = $('#ddlComments').val() || '';
                         array.BillDetailID = GetBillDetailID;
                         test_list.push(array);
 
@@ -621,7 +630,11 @@
                     //var TesttDetails = {test_list: test_list }
                     PageMethods.SaveGroupTest(Lab_ID, test_list, function (response) {
 
-                        refreshAfterSave();
+                        // Saved: Update replaces Save, and Approve / Reject show as after a save
+                        $('#saveTest').val('Update').show();
+                        $('#btnApprove').show();
+                        $('#btnReject').show();
+                        refreshAfterSaveKeepOpen();
 
                     });
                 }
@@ -709,7 +722,8 @@
                         "GrowthTypeInfo": GrowthType_Info,
                         "OrganismType": OrganismType,
                         "Master_Remarks": Master_Remarks,
-                        "Levels": level
+                        "Levels": level,
+                        "Comments": $('#ddlComments').val() || ''
                     });
 
                     $.ajax({
@@ -735,7 +749,12 @@
                                 });
 
                             }
-                            setTimeout(function () { refreshAfterSave(); }, 3000);
+                            if (data.d == 'Successfull') {
+                                $("#saveTest").val("Update");
+                                $("#btnApprove").show();
+                                $("#btnReject").show();
+                            }
+                            setTimeout(function () { refreshAfterSaveKeepOpen(); }, 3000);
                         },
                         failure: function (response) {
                             alert(response.d);
@@ -1701,6 +1720,7 @@
             if (CKEDITOR) {
                 CKEDITOR.replace('txtfixedType');
             }
+            loadCommentOptions();
 
             $('#txtMRNOSearch').keyup(function (e) {
 
@@ -2020,6 +2040,7 @@
                             $('#ranges').val(TestRange);
                             $('#txtvaluetype').val(range);
                             $("#ddllistType").val(result_value);
+                            loadCommentOptions(function () { $('#ddlComments').val(data[28] || ''); });
 
                             if (result_type_fixed != "True") {
                                 $("#tblsingleTest td:eq(0)").hide();
@@ -2188,6 +2209,7 @@
                         Remarks = parsedData[key].Master_Remarks;
                         //$('#txtMaster_Remarks').val(Remarks);
                         CKEDITOR.instances['txtMaster_Remarks'].setData(Remarks);
+                        loadCommentOptions(function () { $('#ddlComments').val(parsedData[key].Comments || ''); });
                         optionsList += '<option>Please Select</option>';
                         for (var i = 0; i <= parsedData[key].resultValueList.length - 1; i++) {
                             optionsList += '<option>' + parsedData[key].resultValueList[i] + ' </option>';
@@ -2448,7 +2470,7 @@
                         });
 
                     }
-                    setTimeout(function () { $('#myModal').modal('hide'); }, 3000);
+                    setTimeout(function () { refreshAfterSaveKeepOpen(); }, 3000);
                     location.reload()
                 }, error: function () { }
 
@@ -2692,6 +2714,17 @@
             );
         }
 
+        // Used after saving results: refresh the page behind the modal but keep the modal open, like RadiologyTestResult
+        function refreshAfterSaveKeepOpen() {
+            ResultedTestDetail();
+            LoadPendingSamples();
+
+            var billId = $("#hdBill_id").val();
+            if (billId && billId != "" && billId != "(New)") {
+                loadPatientDataUsingBillId();
+            }
+        }
+
         function refreshAfterSave() {
             $('#myModal').modal('hide');
             try { $("#tblgroupTestlist tbody").empty(); } catch (e) { }
@@ -2704,6 +2737,17 @@
             if (billId && billId != "" && billId != "(New)") {
                 loadPatientDataUsingBillId();
             }
+        }
+
+        function loadCommentOptions(onLoaded) {
+            PageMethods.GetCommentValues(function (res) {
+                var options = '<option value="">Select Comment</option>';
+                $.each(JSON.parse(res), function (key, value) {
+                    options += '<option value="' + value.DataValue_Name + '">' + $('<div>').text(value.DataValue_Description).html() + '</option>';
+                });
+                $('#ddlComments').html(options);
+                if (onLoaded) onLoaded();
+            });
         }
 
         function updateModalPatientDetails() {
@@ -3162,6 +3206,10 @@
                     </thead>
                     <tbody></tbody>
                 </table>
+                <div class="form-group" style="margin: 15px 0 0;">
+                    <label for="ddlComments">Comments</label>
+                    <select id="ddlComments" class="form-control" style="max-width: 500px;"></select>
+                </div>
             </div>
 
 
@@ -3186,7 +3234,7 @@
             <div class="modal-footer">
                 <div class="row">
                     <div class="col-lg-2 col-md-6 col-sm-12">
-                <input class="btn btn-yellow" data-toggle="modal" data-target="#myInnerModal1" style="color:white !important;border-radius:5px;height:35px;" value="Remarks" />
+                <input class="btn btn-yellow" data-toggle="modal" data-target="#myInnerModal1" value="Remarks" />
                         </div>
                     <div class="col-lg-2 col-md-6 col-sm-12">
                 <input type="button" class="btn btn-primry" id="saveTest" name="saveTest" value="Save" />

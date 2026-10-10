@@ -192,7 +192,7 @@ namespace PMS
             public int BillDetailID { get; set; }
         }
         [WebMethod]
-        public static string SaveTestDetail(string valuetype, string valueofTemplate, string Lab_ID, string testDetailID, string CatID, string resultVal, string GrowthType, string GrowthTypeInfo, string OrganismType, string Master_Remarks, string Levels)
+        public static string SaveTestDetail(string valuetype, string valueofTemplate, string Lab_ID, string testDetailID, string CatID, string resultVal, string GrowthType, string GrowthTypeInfo, string OrganismType, string Master_Remarks, string Levels, string Comments)
         {
             DataBaseDataContext db = new DataBaseDataContext();
             Lab_Test_Detail test = (from t in db.Lab_Test_Details
@@ -208,6 +208,7 @@ namespace PMS
             test.Is_Result = true;
             test.Test_Status = "Created";
             test.Levels = Levels;
+            test.Comments = Comments;
             test.Created_Time = DateTime.Now;
             test.Test_Performed_By = AppConfig.UserName;
             db.SubmitChanges();

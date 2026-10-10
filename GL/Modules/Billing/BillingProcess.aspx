@@ -7416,6 +7416,77 @@
                 });
             }
 
+            var infoDeskTests = [];
+
+            function openInfoDesk() {
+                $('#txtSearchInfoDesk').val('');
+                $('#ddlInfoDeskMainDept').val('');
+                $('#infoDeskModal').modal('show');
+                loadInfoDeskMainDepartments();
+                PageMethods.GetAllTests(function (data) {
+                    infoDeskTests = JSON.parse(data);
+                    renderInfoDeskTests('');
+                }, function (err) {
+                    $('#ibodyInfoDesk').html('<tr><td colspan="10" style="text-align: center; padding: 20px; color: red;">Error loading tests</td></tr>');
+                });
+            }
+
+            function loadInfoDeskMainDepartments() {
+                var options = '<option value="">Select Department</option>';
+                PageMethods.GetMainTestDepartments(function (departments) {
+                    $.each(JSON.parse(departments), function (key, value) {
+                        options += '<option value="' + value.DataValue_Name + '">' + $('<div>').text(value.DataValue_Description).html() + '</option>';
+                    });
+                    $('#ddlInfoDeskMainDept').html(options);
+                });
+            }
+
+            function filterInfoDeskTests() {
+                renderInfoDeskTests($('#txtSearchInfoDesk').val());
+            }
+
+            // Reporting_Day codes: 001 = Hrs, 002 = Days. Blank/other = Mins.
+            function infoDeskReportingTime(time, day) {
+                if (time == null) {
+                    return '';
+                }
+                var unit = day === '001' ? 'Hrs' : (day === '002' ? 'Days' : 'Mins');
+                return time + ' ' + unit;
+            }
+
+            function renderInfoDeskTests(search) {
+                var term = (search || '').toLowerCase();
+                var deptId = $('#ddlInfoDeskMainDept').val() || '';
+                var rows = '';
+
+                $.each(infoDeskTests, function (key, value) {
+                    var name = value.Test_Name || '';
+                    if (term && name.toLowerCase().indexOf(term) === -1) {
+                        return;
+                    }
+                    if (deptId && value.Main_Department !== deptId) {
+                        return;
+                    }
+                    rows += '<tr>' +
+                        '<td style="display:none;">' + value.Test_ID + '</td>' +
+                        '<td style="padding: 8px;">' + $('<div>').text(name).html() + '</td>' +
+                        '<td style="padding: 8px;">' + $('<div>').text(value.Main_Department_Name || '').html() + '</td>' +
+                        '<td style="padding: 8px;">' + $('<div>').text(value.Group_Department_Name || '').html() + '</td>' +
+                        '<td style="padding: 8px;">' + $('<div>').text(value.Genre_Name || '').html() + '</td>' +
+                        '<td style="padding: 8px;">' + $('<div>').text(value.Designation_Name || '').html() + '</td>' +
+                        '<td style="padding: 8px;">' + (value.Qty == null ? '' : value.Qty) + '</td>' +
+                        '<td style="padding: 8px;">' + infoDeskReportingTime(value.Reporting_Time, value.Reporting_Day) + '</td>' +
+                        '<td style="padding: 8px;">' + (value.WaitingTime == null ? '' : value.WaitingTime) + '</td>' +
+                        '<td style="padding: 8px;">' + (value.Rate == null ? '' : value.Rate) + '</td>' +
+                        '</tr>';
+                });
+
+                if (rows === '') {
+                    rows = '<tr><td colspan="10" style="text-align: center; padding: 20px;">No tests found</td></tr>';
+                }
+                $('#ibodyInfoDesk').html(rows);
+            }
+
             function fillmartial() {
                 var options = '<option value="0">Please Select</option>';
                 PageMethods.GetMartailStatus(function (data) {
@@ -8487,6 +8558,11 @@
             <button type="button" class="bp-meta-btn" onclick="openDischargeQueue()">
                 <i class="fa fa-sign-out"></i> Discharge Que
             </button>
+            <% if (ShowInfoDesk) { %>
+            <button type="button" class="bp-meta-btn" onclick="openInfoDesk()">
+                <i class="fa fa-info-circle"></i> Info Desk
+            </button>
+            <% } %>
             <button type="button" class="bp-meta-btn" id="btnAppointment" onclick="OpenAppointmentModal()">
                 <i class="fa fa-calendar"></i> Appointment
             </button>
@@ -9047,6 +9123,53 @@
         </div>
     </div>
     <%--Discharge Request Que Ends--%>
+
+    <%--Info Desk Start--%>
+    <div id="infoDeskModal" class="modal fade scrollable-modal" data-backdrop="static" tabindex="-1" role="dialog">
+        <div class="modal-dialog modal-lg modal-dialog-centered modal-dialog-scrollable" role="document">
+            <div class="modal-content">
+                <div class="modal-body">
+                    <fieldset class="form-group">
+                        <div class="form-row">
+                            <div class="col-md-6">
+                                <label for="txtSearchInfoDesk">Search Tests:</label>
+                                <input type="text" id="txtSearchInfoDesk" class="form-control" onkeyup="filterInfoDeskTests();" autocomplete="off" placeholder="Enter test name" />
+                            </div>
+                            <div class="col-md-6">
+                                <label for="ddlInfoDeskMainDept">Main Department:</label>
+                                <select id="ddlInfoDeskMainDept" class="form-control" onchange="filterInfoDeskTests();">
+                                    <option value="">Select Department</option>
+                                </select>
+                            </div>
+                        </div>
+                    </fieldset>
+                    <div class="table-responsive previewTable" style="overflow:scroll;overflow-x: scroll;height: 433px;">
+                        <table class="table" id="tblInfoDeskTests">
+                            <thead>
+                                <tr>
+                                    <th style="display:none;">Test ID</th>
+                                    <th>Test Name</th>
+                                    <th>Main Department</th>
+                                    <th>Group Department</th>
+                                    <th>Genre</th>
+                                    <th>Designation</th>
+                                    <th>Qty</th>
+                                    <th>Reporting Time</th>
+                                    <th>Waiting Time (min)</th>
+                                    <th>Rate</th>
+                                </tr>
+                            </thead>
+                            <tbody id="ibodyInfoDesk"></tbody>
+                        </table>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-gray" data-dismiss="modal">Close</button>
+                </div>
+            </div>
+        </div>
+    </div>
+    <%--Info Desk Ends--%>
 
         <%--patient modal here--%>
 

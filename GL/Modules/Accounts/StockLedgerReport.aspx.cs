@@ -67,6 +67,18 @@ namespace PMS
                 {
                     rowItem.Visible = false;
                     rowInventory_Org.Visible = false;
+                    rowItemName.Visible = true;
+                    rowSupplierName.Visible = true;
+                    rowStockOnly.Visible = false;
+                }
+                if (pageTitle == "IWNSRC")
+                {
+                    rowItem.Visible = false;
+                    rowInventory_Org.Visible = false;
+                    rowWareHouse.Visible = false;
+                    rowItemName.Visible = true;
+                    rowSupplierName.Visible = true;
+                    rowStockOnly.Visible = true;
                 }
                 if (pageTitle == "BL")
                 {
