@@ -3114,10 +3114,12 @@ namespace PMS
             return (new JavaScriptSerializer()).Serialize(Details);
         }
 
+
         [WebMethod]
         public static string GetPharmacyBillTotal(int in_pat)
         {
             DataBaseDataContext db = new DataBaseDataContext();
+
             var pharmacyBills = (from m in db.Ar_Billings
                                  where m.In_Patient_ID == in_pat
                                        && m.IsPharmacy == true
@@ -3126,9 +3128,24 @@ namespace PMS
 
             decimal total = pharmacyBills.Sum(m => m.Balance_Amount ?? 0);
 
-            var pharmacyItem = (from itm in db.INV_Items
+            bool isOTPharmacy = pharmacyBills.Any(m => m.Ware_House == "004");
+
+            INV_Item pharmacyItem = null;
+
+            if (isOTPharmacy)
+            {
+                pharmacyItem = (from itm in db.INV_Items
+                                where itm.IsPharmacyBilling == true
+                                      && itm.Description == "OT Pharmacy Service"
+                                select itm).FirstOrDefault();
+            }
+
+            if (pharmacyItem == null)
+            {
+                pharmacyItem = (from itm in db.INV_Items
                                 where itm.IsPharmacyBilling == true
                                 select itm).FirstOrDefault();
+            }
 
             int itemId = 0;
             string itemName = "Pharmacy Bill";
@@ -3147,6 +3164,41 @@ namespace PMS
                 ItemId = itemId
             });
         }
+
+
+        //[WebMethod]
+        //public static string GetPharmacyBillTotal(int in_pat)
+        //{
+        //    DataBaseDataContext db = new DataBaseDataContext();
+        //    var pharmacyBills = (from m in db.Ar_Billings
+        //                         where m.In_Patient_ID == in_pat
+        //                               && m.IsPharmacy == true
+        //                               && (m.isCancel == false || m.isCancel == null)
+        //                         select m).ToList();
+
+        //    decimal total = pharmacyBills.Sum(m => m.Balance_Amount ?? 0);
+
+        //    var pharmacyItem = (from itm in db.INV_Items
+        //                        where itm.IsPharmacyBilling == true
+        //                        select itm).FirstOrDefault();
+
+        //    int itemId = 0;
+        //    string itemName = "Pharmacy Bill";
+
+        //    if (pharmacyItem != null)
+        //    {
+        //        itemId = pharmacyItem.Item_ID;
+        //        itemName = pharmacyItem.Description ?? "Pharmacy Bill";
+        //    }
+
+        //    return (new JavaScriptSerializer()).Serialize(new
+        //    {
+        //        PharmacyTotal = total,
+        //        BillCount = pharmacyBills.Count,
+        //        ItemName = itemName,
+        //        ItemId = itemId
+        //    });
+        //}
         // Agreements whose Start_Time/End_Time window contains 'now'. Handles overnight ranges (Start > End).
         // Agreements with NULL times (legacy rows) are always considered valid.
         private static IQueryable<Doctor_Agreement> AgreementsValidAt(DataBaseDataContext db, TimeSpan now)

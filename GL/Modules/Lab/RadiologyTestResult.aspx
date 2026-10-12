@@ -20,6 +20,11 @@
         var testValueOptionsList = '';
         var globalTestId = '';
         var currentMainDept = '';
+
+        function toggleLevelSelect(selector, show) {
+            $(selector).toggle(show).next('.select2-container').toggle(show);
+        }
+
         function swipe(thi) {
             var largeImage = document.getElementsByName('other_amount');
             largeImage.style.display = 'block';
@@ -295,6 +300,9 @@
             $("#eAppdate").val(date);
 
             $("#ddlrptColumns").val(4);
+            $('#chkXRay_level, #chkMRILevel, #chkCTScanLevel, #chkUltraSound_level').select2({
+                width: '100%'
+            });
             AllowLabRights();
             LoadDoctorsForWaitingList();
             checkAddendumMode();
@@ -2919,7 +2927,7 @@ ${data.Addendum_Template ? `
                 }
             });
           CallRadiologyReport()
-            $("#chkUltraSound_level").hide();
+            toggleLevelSelect('#chkUltraSound_level', false);
             $('#SearchFilter').change(function (e) {
 
                 //var CheckAll = $('#chkTodayAll').checked;
@@ -3165,55 +3173,55 @@ ${data.Addendum_Template ? `
                             currentMainDept = MainDept;
 
                             // Show/hide Ultrasound level dropdown
-                            $("#chkUltraSound_level").hide();
-                            $("#chkXRay_level").hide();
-                            $("#chkMRILevel").hide();
-                            $("#chkCTScanLevel").hide();
+                            toggleLevelSelect('#chkUltraSound_level', false);
+                            toggleLevelSelect('#chkXRay_level', false);
+                            toggleLevelSelect('#chkMRILevel', false);
+                            toggleLevelSelect('#chkCTScanLevel', false);
 
                             // Show/hide department-specific level dropdowns based on department
                             if (MainDept == "Ultrasound" || MainDept == "002") {
-                                $("#chkUltraSound_level").show();
+                                toggleLevelSelect('#chkUltraSound_level', true);
                                 LoadUltrasoundLevelsUserWise();
                                 var UltraLevels = data[25];  // CHANGED from 24 to 25
                                 if (UltraLevels && UltraLevels != "") {
                                     setTimeout(function () {
-                                        $('#chkUltraSound_level').val(UltraLevels);
+                                        $('#chkUltraSound_level').val(UltraLevels).trigger('change.select2');
                                     }, 1000);
                                 }
                             }
 
                             // X-Ray - Keep as is (works)
                             else if (MainDept == "X-Ray" || MainDept == "003") {
-                                $("#chkXRay_level").show();
+                                toggleLevelSelect('#chkXRay_level', true);
                                 LoadXRayLevels();
                                 var xrayLevels = data[25];  // This is correct - index 25
                                 if (xrayLevels && xrayLevels != "") {
                                     setTimeout(function () {
-                                        $('#chkXRay_level').val(xrayLevels);
+                                        $('#chkXRay_level').val(xrayLevels).trigger('change.select2');
                                     }, 500);
                                 }
                             }
 
                             // CT Scan - CHANGE FROM data[26] TO data[25]
                             else if (MainDept == "CT Scan" || MainDept == "004") {
-                                $("#chkCTScanLevel").show();
+                                toggleLevelSelect('#chkCTScanLevel', true);
                                 LoadCTScanLevels();
                                 var ctScanLevels = data[25];  // CHANGED from 26 to 25
                                 if (ctScanLevels && ctScanLevels != "") {
                                     setTimeout(function () {
-                                        $('#chkCTScanLevel').val(ctScanLevels);
+                                        $('#chkCTScanLevel').val(ctScanLevels).trigger('change.select2');
                                     }, 1000);
                                 }
                             }
 
                             // MRI - CHANGE FROM data[27] TO data[25]
                             else if (MainDept == "MRI" || MainDept == "006") {
-                                $("#chkMRILevel").show();
+                                toggleLevelSelect('#chkMRILevel', true);
                                 LoadMRILevels();
                                 var mriLevels = data[25];  // CHANGED from 27 to 25
                                 if (mriLevels && mriLevels != "") {
                                     setTimeout(function () {
-                                        $('#chkMRILevel').val(mriLevels);
+                                        $('#chkMRILevel').val(mriLevels).trigger('change.select2');
                                     }, 1000);
                                 }
                             }
@@ -3222,7 +3230,7 @@ ${data.Addendum_Template ? `
                             var xrayLevels = data[25]; // Assuming you add this to your GetTestDetail return
                             if (xrayLevels && xrayLevels != "") {
                                 setTimeout(function () {
-                                    $('#chkXRay_level').val(xrayLevels);
+                                    $('#chkXRay_level').val(xrayLevels).trigger('change.select2');
                                 }, 1000);
                             }
                             console.log("Data " + data);
@@ -4061,6 +4069,7 @@ ${data.Addendum_Template ? `
                     $xraySelect.append('<option value="">No X-Ray Levels Assigned</option>');
                     $xraySelect.prop('disabled', true);
                 }
+                $xraySelect.trigger('change.select2');
             }, function (error) {
                 console.error("Error loading X-Ray levels:", error);
             });
@@ -4087,6 +4096,7 @@ ${data.Addendum_Template ? `
                     $mriSelect.append('<option value="">No MRI Levels Assigned</option>');
                     $mriSelect.prop('disabled', true);
                 }
+                $mriSelect.trigger('change.select2');
             }, function (error) {
                 console.error("Error loading MRI levels:", error);
             });
@@ -4111,6 +4121,7 @@ ${data.Addendum_Template ? `
                     $ctSelect.append('<option value="">No CTScan Levels Assigned</option>');
                     $ctSelect.prop('disabled', true);
                 }
+                $ctSelect.trigger('change.select2');
             }, function (error) {
                 console.error("Error loading CTScan levels:", error);
             });
@@ -4137,6 +4148,7 @@ ${data.Addendum_Template ? `
                     $usSelect.append('<option value="">No Ultrasound Levels Assigned</option>');
                     $usSelect.prop('disabled', true);
                 }
+                $usSelect.trigger('change.select2');
             }, function (error) {
                 console.error("Error loading Ultrasound levels:", error);
             });
