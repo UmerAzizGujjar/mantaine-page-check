@@ -7618,14 +7618,14 @@ function setDropdownText(selector, text) {
                <asp:TextBox ID="txtSaturation_Oxygen1" runat="server" TabIndex="8" CssClass="form-control" />
            </div>
            <div class="col-lg-1 col-md-4 col-sm-6"></div>
-           <div class="col-lg-1 col-md-4 col-sm-6">
-               <label>Room Air</label>
-               <asp:CheckBox runat="server" Class="CHKK"  ID="chk_OnRoomAir" />
+           <div class="col-lg-1 col-md-4 col-sm-6" style="white-space:nowrap;">
+               <label style="display:inline-block; margin:0 6px 0 0; vertical-align:middle;">Room Air</label>
+               <asp:CheckBox runat="server" Class="CHKK" ID="chk_OnRoomAir" style="display:inline-block; vertical-align:middle; margin-left:0;" />
            </div>
 
-           <div class="col-lg-1 col-md-4 col-sm-6 mt-2">
-               <label>With O2</label>
-               <asp:CheckBox  runat="server" Class="CHKK" ID="chk_WithOxygen"  />
+           <div class="col-lg-1 col-md-4 col-sm-6" style="white-space:nowrap;">
+               <label style="display:inline-block; margin:0 6px 0 0; vertical-align:middle;">With O2</label>
+               <asp:CheckBox  runat="server" Class="CHKK" ID="chk_WithOxygen" style="display:inline-block; vertical-align:middle; margin-left:0;" />
            </div>
            <div class="col-lg-1 col-md-4 co-sm-6"></div>
            <div class="col-lg-2 col-md-4 col-sm-6">

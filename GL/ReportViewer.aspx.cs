@@ -198,6 +198,11 @@ namespace PMS
                     {
                         VoucherId = DBClass.getField("select Voucher_ID from Ar_Billings  where ispharmacy = 1 and Bill_id = " + transID).ToString();
                     }
+                    else if (transType == "PSRV")
+                    {
+                        var rawVoucherId = DBClass.getField("select Voucher_ID from Pharmacy_SaleReturns where Return_ID = " + transID);
+                        VoucherId = rawVoucherId != null ? rawVoucherId.ToString() : "0"; // return not approved yet -> no voucher
+                    }
                     else if (transType == "CPV")
                     {
                         VoucherId = DBClass.getField("select Voucher_ID from GL_Vouchers  where Voucher_ID = " + transID).ToString();
@@ -3124,6 +3129,7 @@ namespace PMS
                     rd.SetParameterValue("CompanyName", AppConfig.Company_Name);
                     rd.SetParameterValue("Address", companyAddress);
                     rd.SetParameterValue("@Warehouse", Request.QueryString["WareHouse"]);
+                    rd.SetParameterValue("@AccountCategory", Request.QueryString["AccountCategory"] ?? "0");
                 }
             }
             else if (reportName == "Overall_Stock_Consumption_Details")
@@ -3462,6 +3468,21 @@ namespace PMS
                 rd.SetParameterValue("@startDate", Convert.ToDateTime(Request.QueryString["sDate"]));
                 rd.SetParameterValue("@endDate", Convert.ToDateTime(Request.QueryString["eDate"]));
                 rd.SetParameterValue("@AssetName", Asset_Name);
+                rd.SetParameterValue("@Category", Category);
+                rd.SetParameterValue("CompanyLogo", logoPath);
+
+            }
+            else if (reportName == "Asset_Category_Report")
+            {
+                var logoPath = DBClass.getField("SELECT dbo.GetCompanyLogo()");
+                string Category = Request.QueryString["Category"].ToString();
+                string rptFileName = "Fixed-Assets/rptAssetcategoryreport.rpt";
+                reportPath += rptFileName;
+                rd.Load(reportPath);
+                rd.SetParameterValue("CompanyName", AppConfig.Company_Name);
+                rd.SetParameterValue("Title", reportTitle);
+                rd.SetParameterValue("@startDate", Convert.ToDateTime(Request.QueryString["sDate"]));
+                rd.SetParameterValue("@endDate", Convert.ToDateTime(Request.QueryString["eDate"]));
                 rd.SetParameterValue("@Category", Category);
                 rd.SetParameterValue("CompanyLogo", logoPath);
 

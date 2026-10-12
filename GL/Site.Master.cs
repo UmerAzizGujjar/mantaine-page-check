@@ -556,18 +556,45 @@ namespace PMS
 
         int childCount = 0;
 
+        // Per-request caches for the sidebar menu. getMenuItems() runs once per parent menu; it used to ask the membership
+        // provider for the user's roles every time and to run two COUNT queries for every menu item (about 1,000 queries per
+        // page). Neither can change during a request, so they are now loaded once. The generated menu HTML is unchanged.
+        private string _menuRoleNames;
+        private string GetMenuRoleNames()
+        {
+            if (_menuRoleNames == null)
+            {
+                string names = "";
+                foreach (string role in System.Web.Security.Roles.GetRolesForUser(Session["UserName"].ToString()))
+                {
+                    if (names != "")
+                        names += ",";
+                    names += "'" + role + "'";
+                }
+                _menuRoleNames = names;
+            }
+            return _menuRoleNames;
+        }
+
+        private Dictionary<int, int> _menuChildCounts;
+        private int GetMenuChildCount(int menuId)
+        {
+            if (_menuChildCounts == null)
+            {
+                _menuChildCounts = new Dictionary<int, int>();
+                foreach (DataRow row in DBClass.getDataTable("select parent_id, count(*) as n from menus where parent_id is not null group by parent_id").Rows)
+                {
+                    _menuChildCounts[Convert.ToInt32(row["parent_id"])] = Convert.ToInt32(row["n"]);
+                }
+            }
+            int count;
+            return _menuChildCounts.TryGetValue(menuId, out count) ? count : 0;
+        }
+
         public string getMenuItems(int parentId)
         {
-            string UserName = Session["UserName"].ToString();
-            string[] roles = System.Web.Security.Roles.GetRolesForUser(UserName);
-            string roleName = "";
+            string roleName = GetMenuRoleNames();
             string cmd = "";
-            foreach (string role in roles)
-            {
-                if (roleName != "")
-                    roleName += ",";
-                roleName += "'" + role + "'";
-            }
             using (DataBaseDataContext context = new DataBaseDataContext())
             {
                 if (roleName != "")
@@ -587,7 +614,7 @@ namespace PMS
                 foreach (DataRow dr in dt.Rows)
                 {
                     string href = Page.ResolveUrl(Convert.ToString(dr["URL"]));
-                    childCount = context.Menus.Count(r => r.Parent_ID == Convert.ToInt32(dr["Menu_Id"]));
+                    childCount = GetMenuChildCount(Convert.ToInt32(dr["Menu_Id"]));
                     if (childCount > 0)
                     {
                         if (Convert.ToString(dr["Menu_Description"]) == Menu_Name)
@@ -634,15 +661,7 @@ namespace PMS
 
         private bool haveParent(int menuId)
         {
-            bool returnVal = false;
-            string sql = "select count(*) from menus where parent_id=" + menuId + "";
-            DataTable dt = DBClass.getDataTable(sql);
-            if (dt.Rows[0][0].ToString() == "0")
-                returnVal = false;
-            else
-                returnVal = true;
-
-            return returnVal;
+            return GetMenuChildCount(menuId) > 0;
         }
 
         protected void HeadLoginStatus_LoggedOut(object sender, EventArgs e)

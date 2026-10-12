@@ -35,6 +35,7 @@ $(function () {
             $('#ctl00_MainContent_ddlVendorType').select2();
             $('#ctl00_MainContent_ddlWarehouse').select2();
             $('#ctl00_MainContent_ddlStock').select2();
+            $('#ctl00_MainContent_ddlAccountCategory').select2();
         }
     </script>
     <style>
@@ -91,6 +92,10 @@ $(function () {
             <div class="col-lg-3 col-md-3 col-sm-12">
                 <asp:Label ID="lblWarehouse" runat="server" Text="Warehouse" CssClass="form-label"></asp:Label>
                 <asp:DropDownList ID="ddlWarehouse" runat="server" CssClass="form-control"></asp:DropDownList>
+            </div>
+            <div class="col-lg-3 col-md-3 col-sm-12" id="accountCategoryDiv" runat="server" visible="false">
+                <asp:Label ID="lblAccountCategory" runat="server" Text="Account Category" CssClass="form-label"></asp:Label>
+                <asp:DropDownList ID="ddlAccountCategory" runat="server" CssClass="form-control"></asp:DropDownList>
             </div>
         </div>
         <div class="row" id="DateDiv" runat="server">

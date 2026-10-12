@@ -38,8 +38,54 @@ $(document).ready(function () {
         $('#btn_AddNew').hide();
     }
 
+    initDateFilter();
     LoadPage();
 });
+
+        /* ---------- Start / End date filter (default = current month) ---------- */
+        function pad2(n) { return n < 10 ? '0' + n : '' + n; }
+        function fmtYMD(d) { return d.getFullYear() + '-' + pad2(d.getMonth() + 1) + '-' + pad2(d.getDate()); }
+
+        function setCurrentMonthDates() {
+            var now = new Date();
+            $('#txtFromDate').val(fmtYMD(new Date(now.getFullYear(), now.getMonth(), 1)));
+            $('#txtToDate').val(fmtYMD(new Date(now.getFullYear(), now.getMonth() + 1, 0)));
+        }
+
+        function reloadList() {
+            if ($.fn.DataTable.isDataTable('#example')) {
+                $('#example').DataTable().ajax.reload();
+            }
+        }
+
+        function initDateFilter() {
+            setCurrentMonthDates();
+            $('#chkDateFilter').prop('checked', true);
+            $('#lblDateFilterState').text('Current month');
+
+            // Toggle: ON = date filter (current month), OFF = clear dates and show all data
+            $('#chkDateFilter').on('change', function () {
+                if (this.checked) {
+                    setCurrentMonthDates();
+                    $('#txtFromDate, #txtToDate').prop('disabled', false);
+                    $('#lblDateFilterState').text('Current month');
+                } else {
+                    $('#txtFromDate, #txtToDate').val('').prop('disabled', true);
+                    $('#lblDateFilterState').text('All data');
+                }
+                reloadList();
+            });
+
+            $('#txtFromDate, #txtToDate').on('change', function () {
+                var f = $('#txtFromDate').val(), t = $('#txtToDate').val();
+                if (f && t && f > t) {
+                    Swal.fire({ icon: 'warning', title: 'Invalid Date Range', text: 'Start date cannot be after end date.' });
+                    return;
+                }
+                $('#lblDateFilterState').text('Custom range');
+                reloadList();
+            });
+        }
 
         function LoadPage() {
             let savedVisibility = null;
@@ -129,7 +175,9 @@ $(document).ready(function () {
                     searchValue: data.search.value,
                     vouchertype: getquerytype,
                     voucheryear: getyear,
-                    vouchermonth: monthToSend
+                    vouchermonth: monthToSend,
+                    fromDate: $('#txtFromDate').val() || '',
+                    toDate: $('#txtToDate').val() || ''
                 }),
                 contentType: "application/json; charset=utf-8",
                 dataType: "json",
@@ -317,6 +365,20 @@ function redirecttonew() {
 
 </asp:Content>
 <asp:Content ID="Content2" ContentPlaceHolderID="MainContent" runat="server">
+    <div class="row">
+        <div class="col-lg-12 col-md-12 col-sm-12 opd-date-filter" style="margin-bottom: 15px;">
+            <label class="fl" for="txtFromDate">Start Date</label>
+            <input type="date" id="txtFromDate" class="form-control" />
+            <label class="fl" for="txtToDate">End Date</label>
+            <input type="date" id="txtToDate" class="form-control" />
+            <label class="fl" for="chkDateFilter">Date Filter</label>
+            <label class="opd-switch" title="Off = clear dates and show all data">
+                <input type="checkbox" id="chkDateFilter" checked="checked" />
+                <span class="opd-slider"></span>
+            </label>
+            <span id="lblDateFilterState" class="text-muted">Current month</span>
+        </div>
+    </div>
     <div class="row">
         <div class="col-lg-9 col-md-8 col-sm-8">
             <div class="row">

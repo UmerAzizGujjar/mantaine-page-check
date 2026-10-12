@@ -646,6 +646,162 @@ namespace PMS.Modules.Dashboards
             }
         }
 
+        // code -> description for a value set (e.g. "Patient Type": 01 General, 02 Private, 03 Panel)
+        private static Dictionary<string, string> ValueSetNames(DataBaseDataContext db, string valueSetName)
+        {
+            return (from dv in db.DataValues
+                    join vs in db.ValueSets on dv.ValueSet_ID equals vs.ValueSet_ID
+                    where vs.ValueSet_Name == valueSetName && dv.DataValue_Name != null
+                    select new { dv.DataValue_Name, dv.DataValue_Description })
+                   .ToList()
+                   .GroupBy(x => x.DataValue_Name)
+                   .ToDictionary(g => g.Key, g => (g.First().DataValue_Description ?? g.Key).Trim());
+        }
+
+        // IPD bed / room / ward status. Beds, rooms, wards and the current inpatients are a live census; only the
+        // admitted / discharged counts follow the selected period. "Occupied" = a distinct bed (or room) holding a patient
+        // that has not been discharged, never more than the ward's bed capacity.
+        [WebMethod(EnableSession = false)]
+        public static string GetIPDBedStatus(string period, string startDate = null, string endDate = null)
+        {
+            try
+            {
+                DateTime sDate, eDate;
+                ResolveDates(period, startDate, endDate, out sDate, out eDate);
+
+                using (DataBaseDataContext db = new DataBaseDataContext())
+                {
+                    var categoryNames = ValueSetNames(db, "Patient Type");
+                    var roomTypeNames = ValueSetNames(db, "Room Type");
+
+                    // everybody who is admitted right now
+                    var current = db.In_Patients
+                        .Where(p => p.Discharge == null || p.Discharge == false)
+                        .Select(p => new { p.In_Patient_ID, p.Ward_ID, p.Bed_No, p.Room_ID, p.Patient_Discount_Type })
+                        .ToList();
+
+                    // ---- wards and their beds ----
+                    var wardDefs = db.Ward_Definitions
+                        .Where(w => w.No_Of_Beds > 0)
+                        .Select(w => new { w.Ward_ID, w.Ward_Type, w.No_Of_Beds })
+                        .ToList();
+
+                    var wards = wardDefs.Select(w =>
+                    {
+                        var inWard = current.Where(p => p.Ward_ID == w.Ward_ID).ToList();
+                        int beds = w.No_Of_Beds ?? 0;
+                        int usedBeds = inWard.Where(p => p.Bed_No != null).Select(p => p.Bed_No).Distinct().Count()
+                                       + inWard.Count(p => p.Bed_No == null);
+                        int occupied = Math.Min(usedBeds, beds);
+                        return new
+                        {
+                            WardId = w.Ward_ID,
+                            Name = string.IsNullOrWhiteSpace(w.Ward_Type) ? "Ward " + w.Ward_ID : w.Ward_Type.Trim(),
+                            Beds = beds,
+                            Occupied = occupied,
+                            Free = beds - occupied,
+                            Inpatients = inWard.Count,
+                            Percent = beds > 0 ? Math.Round(occupied * 100.0 / beds, 1) : 0.0,
+                            OverCapacity = inWard.Count > beds
+                        };
+                    }).OrderByDescending(w => w.Percent).ThenBy(w => w.Name).ToList();
+
+                    int totalBeds = wards.Sum(w => w.Beds);
+                    int occupiedBeds = wards.Sum(w => w.Occupied);
+
+                    // ---- rooms (private / executive rooms etc.) ----
+                    var activeIds = new HashSet<int>(current.Select(p => Convert.ToInt32(p.In_Patient_ID)));
+                    var occupiedRoomIds = new HashSet<int>(
+                        current.Where(p => p.Room_ID != null && p.Room_ID > 0).Select(p => Convert.ToInt32(p.Room_ID)));
+                    var openAllocations = db.Room_Allocations
+                        .Where(a => (a.IsDischarge == null || a.IsDischarge == false) && a.To_Date == null && a.Room_ID > 0)
+                        .Select(a => new { a.Room_ID, a.In_Patient_ID })
+                        .ToList();
+                    foreach (var a in openAllocations)
+                    {
+                        if (activeIds.Contains(Convert.ToInt32(a.In_Patient_ID))) occupiedRoomIds.Add(Convert.ToInt32(a.Room_ID));
+                    }
+
+                    var roomList = db.Rooms
+                        .Where(r => (r.IS_Active == null || r.IS_Active == true) && (r.OPDRoom == null || r.OPDRoom == false))
+                        .Select(r => new { r.Room_ID, r.Room_No, r.Name, r.Room_Type })
+                        .ToList()
+                        .Select(r => new
+                        {
+                            Label = !string.IsNullOrWhiteSpace(r.Room_No) ? r.Room_No.Trim() : (!string.IsNullOrWhiteSpace(r.Name) ? r.Name.Trim() : "#" + r.Room_ID),
+                            TypeCode = r.Room_Type ?? "",
+                            Occupied = occupiedRoomIds.Contains(Convert.ToInt32(r.Room_ID))
+                        })
+                        .ToList();
+
+                    Func<string, string> roomTypeName = code => roomTypeNames.ContainsKey(code) ? roomTypeNames[code] : (code == "" ? "Other" : code);
+                    var roomTypes = roomList.GroupBy(r => r.TypeCode).Select(g => new
+                    {
+                        Type = roomTypeName(g.Key),
+                        Total = g.Count(),
+                        Occupied = g.Count(r => r.Occupied),
+                        Free = g.Count(r => !r.Occupied)
+                    }).OrderBy(t => t.Type).ToList();
+                    var freeRooms = roomList.Where(r => !r.Occupied).OrderBy(r => r.Label)
+                        .Select(r => new { r.Label, Type = roomTypeName(r.TypeCode) }).Take(60).ToList();
+                    int freeRoomCount = roomList.Count(r => !r.Occupied);
+
+                    // ---- patient category (General / Private / Panel ...) ----
+                    var admitted = db.In_Patients
+                        .Where(p => p.Admission_Date >= sDate && p.Admission_Date <= eDate)
+                        .GroupBy(p => p.Patient_Discount_Type)
+                        .Select(g => new { Key = g.Key, N = g.Count() }).ToList();
+                    var discharged = db.In_Patients
+                        .Where(p => p.Discharge == true && p.Discharge_On >= sDate && p.Discharge_On <= eDate)
+                        .GroupBy(p => p.Patient_Discount_Type)
+                        .Select(g => new { Key = g.Key, N = g.Count() }).ToList();
+
+                    var curBy = current.GroupBy(p => p.Patient_Discount_Type ?? "").ToDictionary(g => g.Key, g => g.Count());
+                    var admBy = admitted.GroupBy(x => x.Key ?? "").ToDictionary(g => g.Key, g => g.Sum(x => x.N));
+                    var disBy = discharged.GroupBy(x => x.Key ?? "").ToDictionary(g => g.Key, g => g.Sum(x => x.N));
+
+                    var codes = categoryNames.Keys.Union(curBy.Keys).Union(admBy.Keys).Union(disBy.Keys).Distinct().OrderBy(k => k).ToList();
+                    var categories = codes.Select(c => new
+                    {
+                        Code = c,
+                        Name = categoryNames.ContainsKey(c) ? categoryNames[c] : (c == "" ? "Unspecified" : c),
+                        Current = curBy.ContainsKey(c) ? curBy[c] : 0,
+                        Admitted = admBy.ContainsKey(c) ? admBy[c] : 0,
+                        Discharged = disBy.ContainsKey(c) ? disBy[c] : 0
+                    }).Where(c => c.Code != "" || c.Current + c.Admitted + c.Discharged > 0).ToList();
+
+                    return new JavaScriptSerializer().Serialize(new
+                    {
+                        AsOf = DateTime.Now.ToString("dd MMM yyyy, hh:mm tt"),
+                        Beds = new
+                        {
+                            Total = totalBeds,
+                            Occupied = occupiedBeds,
+                            Free = totalBeds - occupiedBeds,
+                            Percent = totalBeds > 0 ? Math.Round(occupiedBeds * 100.0 / totalBeds, 1) : 0.0
+                        },
+                        Inpatients = current.Count,
+                        AdmittedInPeriod = categories.Sum(c => c.Admitted),
+                        DischargedInPeriod = categories.Sum(c => c.Discharged),
+                        Rooms = new
+                        {
+                            Total = roomList.Count,
+                            Occupied = roomList.Count - freeRoomCount,
+                            Free = freeRoomCount,
+                            ByType = roomTypes,
+                            FreeList = freeRooms
+                        },
+                        Wards = wards,
+                        Categories = categories
+                    });
+                }
+            }
+            catch (Exception ex)
+            {
+                return new JavaScriptSerializer().Serialize(new { Error = ex.Message });
+            }
+        }
+
         [WebMethod(EnableSession = false)]
         public static string GetRegionalHeatmap(string period, string startDate = null, string endDate = null)
         {

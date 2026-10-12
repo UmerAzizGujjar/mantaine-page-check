@@ -149,6 +149,126 @@
                 background: var(--coa-soft);
             }
 
+        /* -- Account search -- */
+        .coa-page .coa-search {
+            position: relative;
+        }
+
+        .coa-page .coa-search-box {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            height: 38px;
+            padding: 0 6px 0 12px;
+            background: var(--coa-surface);
+            border: 1px solid var(--coa-border);
+            border-radius: 999px;
+            transition: border-color .15s ease, box-shadow .15s ease;
+        }
+
+            .coa-page .coa-search-box:focus-within {
+                border-color: var(--coa-accent);
+                box-shadow: 0 0 0 3px var(--coa-soft);
+            }
+
+            .coa-page .coa-search-box .fa {
+                color: var(--coa-muted);
+            }
+
+            .coa-page .coa-search-box input[type="text"] {
+                flex: 1 1 auto;
+                width: auto !important;
+                min-width: 0;
+                height: 34px !important;
+                margin: 0 !important;
+                padding: 0 !important;
+                border: 0 !important;
+                outline: 0 !important;
+                background: transparent !important;
+                box-shadow: none !important;
+                color: inherit;
+            }
+
+            .coa-page .coa-search-box .coa-search-clear {
+                display: none;
+                width: 24px;
+                height: 24px;
+                padding: 0;
+                border: 0;
+                border-radius: 50%;
+                background: rgba(127, 127, 127, .2);
+                color: inherit;
+                font-size: 16px;
+                line-height: 22px;
+                text-align: center;
+                cursor: pointer;
+            }
+
+            .coa-page .coa-search-box:has(input:not(:placeholder-shown)) .coa-search-clear {
+                display: block;
+            }
+
+        .coa-page .coa-search-results {
+            display: none;
+            position: absolute;
+            z-index: 20;
+            left: 0;
+            right: 0;
+            top: 42px;
+            max-height: 320px;
+            overflow-y: auto;
+            margin: 0;
+            padding: 4px;
+            list-style: none;
+            background: var(--coa-surface);
+            border: 1px solid var(--coa-border);
+            border-radius: 6px;
+            box-shadow: var(--coa-shadow-hover);
+        }
+
+            .coa-page .coa-search-results.is-open {
+                display: block;
+            }
+
+            .coa-page .coa-search-results li {
+                display: flex;
+                align-items: baseline;
+                gap: 8px;
+                padding: 6px 10px;
+                font-size: 13px;
+                border-radius: 4px;
+                cursor: pointer;
+            }
+
+                .coa-page .coa-search-results li.is-active,
+                .coa-page .coa-search-results li:hover {
+                    background: var(--coa-soft);
+                }
+
+                .coa-page .coa-search-results li b {
+                    flex: 0 0 auto;
+                    font-variant-numeric: tabular-nums;
+                }
+
+                .coa-page .coa-search-results li span {
+                    flex: 1 1 auto;
+                    min-width: 0;
+                    overflow: hidden;
+                    text-overflow: ellipsis;
+                    white-space: nowrap;
+                }
+
+                .coa-page .coa-search-results li small {
+                    flex: 0 0 auto;
+                    color: var(--coa-muted);
+                }
+
+            .coa-page .coa-search-results li.is-empty {
+                color: var(--coa-muted);
+                cursor: default;
+                background: transparent;
+            }
+
         .coa-page .coa-tree-scroll {
             height: 540px;
             padding: 8px 10px 12px;
@@ -591,6 +711,63 @@
             return false;
         }
 
+        // ----- Account search: server-side (tree nodes load lazily), pick a result to expand/select it in the tree -----
+        $(function () {
+            var $q = $('#coaSearch'), $list = $('#coaSearchResults'), timer = null, seq = 0, hits = [], active = -1;
+
+            function esc(s) { return $('<div>').text(s == null ? '' : s).html(); }
+            function close() { $list.removeClass('is-open').empty(); hits = []; active = -1; }
+            function setActive(i) {
+                var $li = $list.children('li[data-i]');
+                if (!$li.length) return;
+                active = (i + $li.length) % $li.length;
+                $li.removeClass('is-active').eq(active).addClass('is-active')[0].scrollIntoView({ block: 'nearest' });
+            }
+            function render(rows) {
+                hits = rows;
+                active = -1;
+                if (!rows.length) {
+                    $list.html('<li class="is-empty">No accounts match your search.</li>').addClass('is-open');
+                    return;
+                }
+                $list.html(rows.map(function (r, i) {
+                    return '<li data-i="' + i + '"><b>' + esc(r.Code) + '</b><span>' + esc(r.Name) + '</span><small>Level ' + r.Level + '</small></li>';
+                }).join('')).addClass('is-open');
+            }
+            function search() {
+                var t = $.trim($q.val());
+                if (t.length < 2) { close(); return; }
+                var mine = ++seq;
+                $.ajax({
+                    type: 'POST',
+                    url: 'ChartofAccounts.aspx/SearchAccounts',
+                    data: JSON.stringify({ term: t }),
+                    contentType: 'application/json; charset=utf-8',
+                    dataType: 'json'
+                }).done(function (res) { if (mine === seq) render(res.d || []); })
+                  .fail(function () { if (mine === seq) { close(); } });
+            }
+            function pick(i) {
+                var h = hits[i];
+                if (!h) return;
+                close();
+                $q.val(h.Code + ' - ' + h.Name);
+                $('#<%= hdnGoto.ClientID %>').val(h.Id);
+                __doPostBack('<%= btnGoTo.UniqueID %>', '');
+            }
+
+            $q.on('input', function () { clearTimeout(timer); timer = setTimeout(search, 250); });
+            $q.on('keydown', function (e) {
+                if (e.which === 40) { e.preventDefault(); setActive(active + 1); }
+                else if (e.which === 38) { e.preventDefault(); setActive(active - 1); }
+                else if (e.which === 13) { e.preventDefault(); pick(active >= 0 ? active : 0); }   // Enter must not submit the page
+                else if (e.which === 27) { close(); }
+            });
+            $list.on('mousedown', 'li[data-i]', function (e) { e.preventDefault(); pick(+$(this).attr('data-i')); });
+            $('#coaSearchClear').on('click', function () { $q.val('').trigger('input'); $q.trigger('focus'); });
+            $(document).on('click', function (e) { if (!$(e.target).closest('.coa-search').length) close(); });
+        });
+
         var xPos, yPos, coaSource = '';
         var prm = Sys.WebForms.PageRequestManager.getInstance();
 
@@ -609,6 +786,13 @@
             if (panel) {
                 panel.scrollLeft = xPos;
                 panel.scrollTop = yPos;
+                // Came from the search box: bring the selected account into view
+                if (coaSource === '<%= btnGoTo.ClientID %>') {
+                    var sel = panel.querySelector('.rtSelected');
+                    if (sel) {
+                        panel.scrollTop += sel.getBoundingClientRect().top - panel.getBoundingClientRect().top - panel.clientHeight / 3;
+                    }
+                }
             }
         }
 
@@ -687,8 +871,18 @@
 
                     <%-- Left: account tree --%>
                     <div class="coa-col">
+                        <div class="coa-search">
+                            <div class="coa-search-box">
+                                <i class="fa fa-search" aria-hidden="true"></i>
+                                <input type="text" id="coaSearch" placeholder="Search accounts by code or name" autocomplete="off" aria-label="Search accounts" />
+                                <button type="button" id="coaSearchClear" class="coa-search-clear" aria-label="Clear search">&times;</button>
+                            </div>
+                            <ul id="coaSearchResults" class="coa-search-results"></ul>
+                        </div>
                         <asp:UpdatePanel runat="server" UpdateMode="Conditional" ID="upRadTreeview">
                             <ContentTemplate>
+                                <asp:HiddenField ID="hdnGoto" runat="server" />
+                                <asp:Button ID="btnGoTo" runat="server" Text="Go" OnClick="btnGoTo_Click" CausesValidation="false" UseSubmitBehavior="false" Style="display: none;" />
                                 <div class="coa-card">
                                     <h5 class="coa-title">
                                         <i class="fa fa-sitemap"></i>
@@ -749,6 +943,7 @@
                             </ContentTemplate>
                             <Triggers>
                                 <asp:AsyncPostBackTrigger ControlID="RadTreeView1" EventName="NodeClick" />
+                                <asp:AsyncPostBackTrigger ControlID="btnGoTo" EventName="Click" />
                             </Triggers>
                         </asp:UpdatePanel>
 
@@ -809,6 +1004,7 @@
                             </ContentTemplate>
                             <Triggers>
                                 <asp:AsyncPostBackTrigger ControlID="RadTreeView1" EventName="NodeClick" />
+                                <asp:AsyncPostBackTrigger ControlID="btnGoTo" EventName="Click" />
                                 <asp:AsyncPostBackTrigger ControlID="btnAdd" EventName="Click" />
                                 <asp:AsyncPostBackTrigger ControlID="btnAddChild" EventName="Click" />
                                 <asp:AsyncPostBackTrigger ControlID="btnCancel" EventName="Click" />

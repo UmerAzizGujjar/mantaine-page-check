@@ -1,4 +1,4 @@
-﻿<%@ Page Title="" Language="C#" MasterPageFile="~/Site.Master" AutoEventWireup="true" CodeBehind="Chief_Executive_Dashboard.aspx.cs" Inherits="PMS.Modules.Dashboards.Chief_Executive_Dashboard" %>
+﻿<%@ Page Title="" Language="C#" MasterPageFile="~/Site.Master" AutoEventWireup="true" CodeBehind="Chief_Executive_Dashboard.aspx.cs" Inherits="PMS.Modules.Dashboards.Chief_Executive_Dashboard" EnableSessionState="ReadOnly" %>
 <asp:Content ID="Content1" ContentPlaceHolderID="HeadContent" runat="server">
    
     <script src="https://cdn.jsdelivr.net/npm/echarts@5/dist/echarts.min.js"></script>
@@ -13,6 +13,31 @@
         var deptCountChart = null;
         var deptDoctorChart = null;
         var _sparkCharts = {};
+
+        // The page-load sequence asks for the same yearly summaries several times at once (initial load, warehouse change,
+        // month filter). Identical read-only requests that are already running now share a single server call; every caller
+        // still gets its own success / error callback.
+        (function () {
+            var realAjax = $.ajax;
+            var running = {};
+            $.ajax = function (url, options) {
+                var opts = (typeof url === 'object') ? url : (options || {});
+                if (opts && opts.type === 'POST' && /Chief_Executive_Dashboard\.aspx\/GetYearly\w+$/.test(opts.url || '')) {
+                    var key = opts.url + '|' + opts.data;
+                    var shared = running[key];
+                    if (!shared) {
+                        var own = $.extend({}, opts);
+                        delete own.success; delete own.error; delete own.complete;
+                        shared = running[key] = realAjax.call($, own);
+                        shared.always(function () { delete running[key]; });
+                    }
+                    if (opts.success) { shared.done(opts.success); }
+                    if (opts.error) { shared.fail(opts.error); }
+                    return shared;
+                }
+                return realAjax.apply($, arguments);
+            };
+        })();
 
 
         function setPeriod(period, startDate, endDate) {
@@ -46,6 +71,7 @@
             LoadBillingData(period, startDate, endDate);
             LoadClinicalOutcomes(period, startDate, endDate);
             LoadRegionalHeatmap(period, startDate, endDate);
+            LoadIPDStatus(period, startDate, endDate);
         }
 
         function setCardLoading(id, loading) {
@@ -177,6 +203,7 @@
                     case "ph": LoadPharmacySnapshot("custom", from, to); break;
                     case "hp": LoadPharmacySnapshothp("custom", from, to); break;
                     case "lab": LoadBillingData("custom", from, to); break;
+                    case "ipd": LoadIPDStatus("custom", from, to); break;
                 }
             });
             function applyTrendFilter() {
@@ -315,6 +342,7 @@
                     case "ph": LoadPharmacySnapshot(m.period, m.startDate, m.endDate); break;
                     case "hp": LoadPharmacySnapshothp(m.period, m.startDate, m.endDate); break;
                     case "lab": LoadBillingData(m.period, m.startDate, m.endDate); break;
+                    case "ipd": LoadIPDStatus(m.period, m.startDate, m.endDate); break;
                 }
             });
 
@@ -1035,6 +1063,109 @@
             });
         }
 
+        // ---------- IPD beds / rooms / wards ----------
+        var ipdBedChart = null;
+        function ipdEsc(s) { return $('<div>').text(s == null ? '' : String(s)).html(); }
+        function ipdBarClass(p) { return p >= 90 ? 'hot' : (p >= 70 ? 'warm' : 'ok'); }
+
+        function LoadIPDStatus(period, startDate, endDate) {
+            var loadData = { 'period': period, 'startDate': startDate || null, 'endDate': endDate || null };
+            $.ajax({
+                type: "POST",
+                url: "Chief_Executive_Dashboard.aspx/GetIPDBedStatus",
+                data: JSON.stringify(loadData),
+                contentType: "application/json; charset=utf-8",
+                dataType: "json",
+                success: function (response) {
+                    var r = JSON.parse(response.d);
+                    if (r.Error) { console.error("IPD status error: " + r.Error); return; }
+                    renderIPDStatus(r);
+                },
+                error: function () { console.error("IPD status AJAX Error"); }
+            });
+        }
+
+        function renderIPDStatus(r) {
+            $('#lblIPDAsOf').text('Live census as of ' + r.AsOf);
+            $('#ipdTotalBeds').text(r.Beds.Total);
+            $('#ipdWardCount').text(r.Wards.length);
+            $('#ipdOccupiedBeds').text(r.Beds.Occupied);
+            $('#ipdFreeBeds').text(r.Beds.Free);
+            $('#ipdPercent').text(r.Beds.Percent);
+            $('#ipdInpatients').text(r.Inpatients);
+            $('#ipdRoomsFree').text(r.Rooms.Free);
+            $('#ipdRoomsTotal').text(r.Rooms.Total);
+            $('#ipdRoomsOccupied').text(r.Rooms.Occupied);
+            $('#ipdAdmitted').text(r.AdmittedInPeriod);
+            $('#ipdDischarged').text(r.DischargedInPeriod);
+            $('#ipdLegendOcc').text(r.Beds.Occupied);
+            $('#ipdLegendFree').text(r.Beds.Free);
+
+            // bed occupancy doughnut
+            var el = document.getElementById('chartIPDBeds');
+            if (el && window.echarts) {
+                if (!ipdBedChart) {
+                    ipdBedChart = echarts.init(el);
+                    window.addEventListener('resize', function () { if (ipdBedChart) ipdBedChart.resize(); });
+                }
+                ipdBedChart.setOption({
+                    tooltip: { trigger: 'item', formatter: '{b}: {c} ({d}%)' },
+                    title: { text: r.Beds.Percent + '%', subtext: 'occupied', left: 'center', top: 'center',
+                             textStyle: { fontSize: 22, fontWeight: 800, color: '#111827' }, subtextStyle: { fontSize: 10, color: '#6b7280' }, itemGap: 0 },
+                    series: [{
+                        type: 'pie', radius: ['62%', '84%'], avoidLabelOverlap: false, label: { show: false }, labelLine: { show: false },
+                        itemStyle: { borderRadius: 4, borderColor: '#f9fafb', borderWidth: 2 },
+                        data: [
+                            { value: r.Beds.Occupied, name: 'Occupied', itemStyle: { color: '#f97316' } },
+                            { value: r.Beds.Free, name: 'Free', itemStyle: { color: '#10b981' } }
+                        ]
+                    }]
+                }, true);
+                ipdBedChart.resize();
+            }
+
+            // ward-wise bars
+            var wardHtml = '';
+            $.each(r.Wards, function (i, w) {
+                var over = w.OverCapacity ? '<span class="ipd-over" title="' + w.Inpatients + ' inpatients for ' + w.Beds + ' beds">Over capacity</span>' : '';
+                wardHtml += '<div class="ipd-ward-row">' +
+                    '<div class="ipd-ward-top"><span class="ipd-ward-name">' + ipdEsc(w.Name) + over + '</span>' +
+                    '<span class="ipd-ward-nums"><b>' + w.Occupied + '</b> / ' + w.Beds + ' beds &middot; <b>' + w.Free + '</b> free &middot; ' + w.Percent + '%</span></div>' +
+                    '<div class="ipd-track"><div class="ipd-fill ' + ipdBarClass(w.Percent) + '" style="width:' + Math.min(w.Percent, 100) + '%"></div></div></div>';
+            });
+            $('#ipdWardList').html(wardHtml || '<div class="ipd-empty">No wards with beds defined</div>');
+
+            // patient category cards (General / Private / Panel ...)
+            var totalCur = 0;
+            $.each(r.Categories, function (i, c) { totalCur += c.Current; });
+            var catHtml = '';
+            $.each(r.Categories, function (i, c) {
+                var share = totalCur > 0 ? Math.round(c.Current * 1000 / totalCur) / 10 : 0;
+                catHtml += '<div class="ipd-cat c-' + ipdEsc(c.Code || 'xx') + '">' +
+                    '<div class="ipd-cat-top"><span class="ipd-cat-name">' + ipdEsc(c.Name) + '</span>' +
+                    '<span><span class="ipd-cat-num">' + c.Current + '</span><span class="ipd-cat-pct">' + share + '%</span></span></div>' +
+                    '<div class="ipd-track"><div class="ipd-fill ok" style="width:' + share + '%;background:#6366f1"></div></div>' +
+                    '<div class="ipd-cat-meta"><span>Admitted <b>' + c.Admitted + '</b></span><span>Discharged <b>' + c.Discharged + '</b></span></div></div>';
+            });
+            $('#ipdCategoryList').html(catHtml || '<div class="ipd-empty">No admissions</div>');
+
+            // rooms by type + free rooms
+            var typeHtml = '';
+            $.each(r.Rooms.ByType, function (i, t) {
+                typeHtml += '<tr><td>' + ipdEsc(t.Type) + '</td><td>' + t.Total + '</td><td class="occ">' + t.Occupied + '</td><td class="free">' + t.Free + '</td></tr>';
+            });
+            $('#ipdRoomTypes tbody').html(typeHtml || '<tr><td colspan="4" class="ipd-empty">No rooms defined</td></tr>');
+
+            var chipHtml = '';
+            $.each(r.Rooms.FreeList, function (i, f) {
+                chipHtml += '<span class="ipd-chip" title="' + ipdEsc(f.Type) + '">' + ipdEsc(f.Label) + '</span>';
+            });
+            if (r.Rooms.Free > r.Rooms.FreeList.length) {
+                chipHtml += '<span class="ipd-chip more">+' + (r.Rooms.Free - r.Rooms.FreeList.length) + ' more</span>';
+            }
+            $('#ipdFreeRooms').html(chipHtml || '<span class="ipd-empty" style="padding:0">No free rooms</span>');
+        }
+
         function LoadRegionalHeatmap(period, startDate, endDate) {
             var data = { 'period': period, 'startDate': startDate || null, 'endDate': endDate || null };
             $.ajax({
@@ -1451,7 +1582,8 @@
                 "left opd opd dia"
                 "left dept dept hp"
                 "left trend trend ph"
-                "left trend trend lab";
+                "left trend trend lab"
+                "ipd ipd ipd ipd";
         }
         #left-stack { grid-area: left; align-self: start; display: flex; flex-direction: column; gap: 10px; }
         #left-stack .rev-item { min-height: auto; }
@@ -2121,6 +2253,77 @@
             z-index: 10;
         }
         @keyframes spin { to { transform: rotate(360deg); } }
+
+        /* ---------- IPD beds / rooms / wards ---------- */
+        #ipd { grid-area: ipd; align-self: start; }
+        #ipd .ipd-head { display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 8px; margin-bottom: 10px; }
+        #ipd .ipd-head .main-heading { margin-bottom: 0; }
+        #ipd .ipd-asof { font-size: 10px; color: #9ca3af; font-weight: 600; }
+        .ipd-kpis { display: grid; grid-template-columns: repeat(auto-fit, minmax(130px, 1fr)); gap: 8px; margin-bottom: 10px; }
+        .ipd-kpi { background: #f9fafb; border-radius: 8px; padding: 8px 10px; border-left: 3px solid #d1d5db; }
+        .ipd-kpi .k-label { font-size: 9px; color: #6b7280; text-transform: uppercase; font-weight: 700; letter-spacing: 0.4px; }
+        .ipd-kpi .k-value { font-size: 20px; font-weight: 800; color: #111827; line-height: 1.2; }
+        .ipd-kpi .k-of { font-size: 11px; font-weight: 600; color: #6b7280; }
+        .ipd-kpi .k-sub { font-size: 9px; color: #9ca3af; }
+        .ipd-kpi.k-beds { border-left-color: #3b71ca; }
+        .ipd-kpi.k-occ { border-left-color: #f97316; }
+        .ipd-kpi.k-occ .k-value { color: #c2410c; }
+        .ipd-kpi.k-free { border-left-color: #10b981; }
+        .ipd-kpi.k-free .k-value { color: #047857; }
+        .ipd-kpi.k-pct { border-left-color: #8e0016; }
+        .ipd-kpi.k-pct .k-value { color: #8e0016; }
+        .ipd-kpi.k-pat { border-left-color: #6366f1; }
+        .ipd-kpi.k-room { border-left-color: #0ea5e9; }
+        .ipd-kpi.k-adm { border-left-color: #00C49F; }
+        .ipd-kpi.k-dis { border-left-color: #9fa8da; }
+
+        #ipd .main-inner { flex-wrap: wrap; }
+        #ipd .main-sub { min-width: 230px; }
+        #ipd .ipd-wards-sub { flex: 1.7; min-width: 320px; }
+        .ipd-donut { height: 170px; width: 100%; }
+        .ipd-legend { display: flex; justify-content: center; gap: 14px; font-size: 10px; color: #4b5563; font-weight: 600; }
+        .ipd-legend b { color: #111827; margin-left: 2px; }
+        .ipd-dot { display: inline-block; width: 8px; height: 8px; border-radius: 50%; margin-right: 4px; }
+        .ipd-dot.occ { background: #f97316; }
+        .ipd-dot.free { background: #10b981; }
+        .ipd-empty { font-size: 11px; color: #9ca3af; text-align: center; padding: 14px 0; }
+
+        .ipd-scroll { max-height: 300px; overflow-y: auto; padding-right: 4px; }
+        .ipd-ward-row { margin-bottom: 8px; }
+        .ipd-ward-top { display: flex; justify-content: space-between; align-items: baseline; gap: 6px; font-size: 11px; margin-bottom: 2px; }
+        .ipd-ward-name { font-weight: 700; color: #374151; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+        .ipd-ward-nums { color: #6b7280; white-space: nowrap; font-size: 10px; }
+        .ipd-ward-nums b { color: #111827; }
+        .ipd-over { display: inline-block; background: #fee2e2; color: #b91c1c; font-size: 8px; font-weight: 800; padding: 1px 6px; border-radius: 999px; margin-left: 4px; text-transform: uppercase; letter-spacing: 0.3px; }
+        .ipd-track { background: #e5e7eb; height: 6px; border-radius: 3px; overflow: hidden; }
+        .ipd-fill { height: 100%; border-radius: 3px; transition: width 0.4s ease; }
+        .ipd-fill.ok { background: #10b981; }
+        .ipd-fill.warm { background: #f59e0b; }
+        .ipd-fill.hot { background: #ef4444; }
+
+        .ipd-cat { background: #fff; border-radius: 6px; padding: 8px; margin-bottom: 6px; border-left: 3px solid #d1d5db; }
+        .ipd-cat:last-child { margin-bottom: 0; }
+        .ipd-cat.c-01 { border-left-color: #3b71ca; }
+        .ipd-cat.c-02 { border-left-color: #9fa8da; }
+        .ipd-cat.c-03 { border-left-color: #10b981; }
+        .ipd-cat-top { display: flex; justify-content: space-between; align-items: baseline; }
+        .ipd-cat-name { font-size: 11px; font-weight: 700; color: #374151; text-transform: uppercase; letter-spacing: 0.4px; }
+        .ipd-cat-num { font-size: 20px; font-weight: 800; color: #111827; line-height: 1.1; }
+        .ipd-cat-pct { font-size: 10px; color: #9ca3af; margin-left: 4px; font-weight: 600; }
+        .ipd-cat .ipd-track { margin: 4px 0 4px; }
+        .ipd-cat-meta { display: flex; justify-content: space-between; font-size: 9px; color: #6b7280; font-weight: 600; }
+        .ipd-cat-meta b { color: #374151; }
+
+        .ipd-table { width: 100%; border-collapse: collapse; font-size: 11px; }
+        .ipd-table th { font-size: 9px; color: #6b7280; text-transform: uppercase; font-weight: 700; text-align: right; padding: 3px 4px; border-bottom: 1px solid #e5e7eb; }
+        .ipd-table th:first-child, .ipd-table td:first-child { text-align: left; }
+        .ipd-table td { padding: 4px; text-align: right; color: #374151; font-weight: 600; border-bottom: 1px solid #f0f0f0; }
+        .ipd-table td.free { color: #047857; font-weight: 800; }
+        .ipd-table td.occ { color: #c2410c; }
+        .ipd-chip-title { margin-top: 10px; }
+        .ipd-chips { display: flex; flex-wrap: wrap; gap: 4px; max-height: 96px; overflow-y: auto; }
+        .ipd-chip { background: #ecfdf5; color: #047857; border: 1px solid #a7f3d0; border-radius: 999px; padding: 1px 8px; font-size: 10px; font-weight: 700; }
+        .ipd-chip.more { background: #f3f4f6; color: #6b7280; border-color: #e5e7eb; }
     </style>
 </asp:Content>
 <asp:Content ID="Content2" ContentPlaceHolderID="MainContent" runat="server">
@@ -2538,6 +2741,64 @@
             <div class="lab-order-row">
                 <span class="lab-order-label">CARDIOLOGY</span>
                 <span class="lab-order-value"><span id="lblCardioOrders">0</span> ORDERS</span>
+            </div>
+        </div>
+
+        <div class="bento-item" id="ipd">
+            <div class="ipd-head">
+                <div>
+                    <div class="main-heading">IPD Beds, Rooms &amp; Wards</div>
+                    <div class="ipd-asof" id="lblIPDAsOf">Live census</div>
+                </div>
+                <div class="card-filter" title="Dates apply to the admitted / discharged counts; beds, rooms and wards are always live">
+                    <input type="text" class="form-control datepicker" id="ipdFrom" placeholder="From" style="width:85px;font-size:10px;padding:2px 4px;height:24px;" readonly />
+                    <span style="font-size:10px;color:#6b7280;">-</span>
+                    <input type="text" class="form-control datepicker" id="ipdTo" placeholder="To" style="width:85px;font-size:10px;padding:2px 4px;height:24px;" readonly />
+                    <button type="button" class="btn btn-sm btn-primry card-apply" data-card="ipd" style="font-size:10px;height:24px;display:flex;align-items:center;justify-content:center;padding:0 10px;">Apply</button>
+                    <button type="button" class="btn btn-sm btn-trash card-trash" data-card="ipd" title="Reset to master"><i class="fa fa-trash"></i></button>
+                </div>
+            </div>
+
+            <div class="ipd-kpis">
+                <div class="ipd-kpi k-beds"><div class="k-label">Total Beds</div><div class="k-value" id="ipdTotalBeds">0</div><div class="k-sub">in <span id="ipdWardCount">0</span> wards</div></div>
+                <div class="ipd-kpi k-occ"><div class="k-label">Occupied Beds</div><div class="k-value" id="ipdOccupiedBeds">0</div><div class="k-sub">patients in beds</div></div>
+                <div class="ipd-kpi k-free"><div class="k-label">Free Beds</div><div class="k-value" id="ipdFreeBeds">0</div><div class="k-sub">available now</div></div>
+                <div class="ipd-kpi k-pct"><div class="k-label">Bed Occupancy</div><div class="k-value"><span id="ipdPercent">0</span>%</div><div class="k-sub">of all beds</div></div>
+                <div class="ipd-kpi k-pat"><div class="k-label">Current Inpatients</div><div class="k-value" id="ipdInpatients">0</div><div class="k-sub">not yet discharged</div></div>
+                <div class="ipd-kpi k-room"><div class="k-label">Rooms</div><div class="k-value"><span id="ipdRoomsFree">0</span><span class="k-of"> free / <span id="ipdRoomsTotal">0</span></span></div><div class="k-sub"><span id="ipdRoomsOccupied">0</span> occupied</div></div>
+                <div class="ipd-kpi k-adm"><div class="k-label">Admitted (period)</div><div class="k-value" id="ipdAdmitted">0</div><div class="k-sub">new admissions</div></div>
+                <div class="ipd-kpi k-dis"><div class="k-label">Discharged (period)</div><div class="k-value" id="ipdDischarged">0</div><div class="k-sub">patients sent home</div></div>
+            </div>
+
+            <div class="main-inner">
+                <div class="main-sub ipd-donut-sub">
+                    <div class="ms-title">Bed Occupancy</div>
+                    <div class="ipd-donut" id="chartIPDBeds"></div>
+                    <div class="ipd-legend">
+                        <span><i class="ipd-dot occ"></i>Occupied <b id="ipdLegendOcc">0</b></span>
+                        <span><i class="ipd-dot free"></i>Free <b id="ipdLegendFree">0</b></span>
+                    </div>
+                </div>
+
+                <div class="main-sub ipd-wards-sub">
+                    <div class="ms-title">Ward-wise Beds</div>
+                    <div class="ipd-scroll" id="ipdWardList"><div class="ipd-empty">Loading...</div></div>
+                </div>
+
+                <div class="main-sub ipd-cat-sub">
+                    <div class="ms-title">Patients by Category</div>
+                    <div id="ipdCategoryList"><div class="ipd-empty">Loading...</div></div>
+                </div>
+
+                <div class="main-sub ipd-rooms-sub">
+                    <div class="ms-title">Rooms by Type</div>
+                    <table class="ipd-table" id="ipdRoomTypes">
+                        <thead><tr><th>Type</th><th>Total</th><th>Occ.</th><th>Free</th></tr></thead>
+                        <tbody></tbody>
+                    </table>
+                    <div class="ms-title ipd-chip-title">Free Rooms</div>
+                    <div class="ipd-chips" id="ipdFreeRooms"></div>
+                </div>
             </div>
         </div>
 

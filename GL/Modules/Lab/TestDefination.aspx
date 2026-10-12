@@ -818,6 +818,7 @@
 
                 $('#chkPayment').prop('checked', data.Payment);
                 $('#chkSpecial_Test').prop('checked', data.Special_Test);
+                $('#chkBiofire').prop('checked', data.Is_Biofire);
 
                 $('#chktemplate').prop('checked', data.Result_Type_Fixed);
                 $('#chklistchooseresult').prop('checked', data.Result_Type_List);
@@ -1003,6 +1004,7 @@
             var chk_Levels = ($('#chkLevel')[0].checked).toString();
             var chk_Payment = ($('#chkPayment')[0].checked).toString();
             var Special_Test = ($('#chkSpecial_Test')[0].checked).toString();
+            var chk_Biofire = ($('#chkBiofire')[0].checked).toString();
 
             test_id = $('#test_id');
             test_name = $('#test_name');
@@ -1100,7 +1102,7 @@
                 test_extra_values.push(arr);
             });
 
-            var labTest = { 'ID': $(test_id).val(), 'Name': $(test_name).val(), 'MainDepartment': $(main_departments).val(), 'GroupDepartment': $(group_departments).val(), 'Group': $(groups).val(), 'Unit': $(units).val(), 'Note': $(test_note).val(), 'ValueType': $(value_type).val(), 'Rate': $(test_rate).val(), 'Active': $(test_active)[0].checked, 'cultural': $(Test_cultural)[0].checked, 'reportColums': $("#ddlrptColumns").val(), 'FixedValue': valueofTemplate, 'TestValues': test_values, 'IPDTestRates': IPD_Test_Rates, 'OPDTestRates': OPD_Test_Rates, 'SelectedDepartment': SelectedDepartment, 'out_source_lab_id': out_source_lab_id, 'reporthour': reporthour, 'reportDays': reportDays, 'GroupOrder': GroupOrder, 'Genre': $(genre).val(), 'Qty': $(qty).val(), 'Designation': $(Designation).val(), 'Group_Header_L1': Group_Header_L1, 'Altrasound_Level': Altrasound_Level, 'chk_value': chk_value, 'chk_template': chk_template, 'chk_listchooseresult': chk_listchooseresult, 'chk_resultTypeImage': chk_resultTypeImage, 'UltraValues': Ultra_value, 'chk_Levels': chk_Levels, 'chk_Payment': chk_Payment, 'Special_Test': Special_Test, 'WaitingTime': waitingTimeValue, 'MachineName': machine_name, 'StandardName': standard_name };
+            var labTest = { 'ID': $(test_id).val(), 'Name': $(test_name).val(), 'MainDepartment': $(main_departments).val(), 'GroupDepartment': $(group_departments).val(), 'Group': $(groups).val(), 'Unit': $(units).val(), 'Note': $(test_note).val(), 'ValueType': $(value_type).val(), 'Rate': $(test_rate).val(), 'Active': $(test_active)[0].checked, 'cultural': $(Test_cultural)[0].checked, 'reportColums': $("#ddlrptColumns").val(), 'FixedValue': valueofTemplate, 'TestValues': test_values, 'IPDTestRates': IPD_Test_Rates, 'OPDTestRates': OPD_Test_Rates, 'SelectedDepartment': SelectedDepartment, 'out_source_lab_id': out_source_lab_id, 'reporthour': reporthour, 'reportDays': reportDays, 'GroupOrder': GroupOrder, 'Genre': $(genre).val(), 'Qty': $(qty).val(), 'Designation': $(Designation).val(), 'Group_Header_L1': Group_Header_L1, 'Altrasound_Level': Altrasound_Level, 'chk_value': chk_value, 'chk_template': chk_template, 'chk_listchooseresult': chk_listchooseresult, 'chk_resultTypeImage': chk_resultTypeImage, 'UltraValues': Ultra_value, 'chk_Levels': chk_Levels, 'chk_Payment': chk_Payment, 'Special_Test': Special_Test, 'chk_Biofire': chk_Biofire,'WaitingTime': waitingTimeValue, 'MachineName': machine_name, 'StandardName': standard_name };
             PageMethods.SaveTest(JSON.stringify(labTest), test_extra_values,
                 function (res) {
                     Swal.fire({
@@ -1600,6 +1602,7 @@
                                 <label class="td-check"><input type="checkbox" id="chkLevel" name="chkLevel" /> Ultrasound</label>
                                 <label class="td-check"><input type="checkbox" id="chkPayment" name="chkPayment" /> Payment</label>
                                 <label class="td-check"><input type="checkbox" id="chkSpecial_Test" name="chkSpecial_Test" /> Special Test</label>
+                                <label class="td-check"><input type="checkbox" id="chkBiofire" name="chkBiofire" /> Biofire</label>
                             </div>
                         </div>
                     </div>

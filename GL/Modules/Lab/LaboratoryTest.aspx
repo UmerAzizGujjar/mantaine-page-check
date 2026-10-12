@@ -76,7 +76,7 @@
     font-weight: 700 !important;
     text-transform: uppercase;
     letter-spacing: .04em;
-    padding: 7px 10px !important;
+    padding: 5px 8px !important;
     border: none !important;
     border-bottom: 1px solid var(--lab-primary) !important;
     text-align: left !important;
@@ -85,7 +85,7 @@
 }
 .lab-page .table td {
     display: table-cell !important;
-    padding: 6px 10px !important;
+    padding: 4px 8px !important;
     font-size: 12px !important;
     border: none !important;
     border-bottom: 1px solid #f0f0f0 !important;
