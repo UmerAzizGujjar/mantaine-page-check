@@ -267,6 +267,16 @@ namespace Salon.GL
         protected global::System.Web.UI.WebControls.Button btnAdd;
 
         /// <summary>
+        /// hdnGoto control.
+        /// </summary>
+        protected global::System.Web.UI.WebControls.HiddenField hdnGoto;
+
+        /// <summary>
+        /// btnGoTo control.
+        /// </summary>
+        protected global::System.Web.UI.WebControls.Button btnGoTo;
+
+        /// <summary>
         /// btnAddChild control.
         /// </summary>
         /// <remarks>
