@@ -4694,6 +4694,41 @@ namespace PMS
                     ddlItemCategory.Visible = false;
 
                 }
+                if (this.PageTitle == "ExecutiveSalesSummary")
+                {
+                    string x = "Executive Sales Summary";
+                    Master.Label2.Text = x;
+                    Master.GetMenuName();
+                    tr_Summary.Visible = false;
+                    tr1MedicalSubsidy.Visible = false;
+                    lblMainDepartment.Visible = false;
+                    ddlDepartments.Visible = false;
+                    lblPatientType.Visible = false;
+                    lblMultiSelect.Visible = false;
+                    ddlPatientType.Visible = false;
+                    optRw.Visible = false;
+                    trDoctor.Visible = false;
+                    AllowPatientRecord = false;
+                    lblMedical.Visible = false;
+                    DateDiv.Visible = true;
+                    Time_Row.Visible = false;
+                    dpROw.Visible = false;
+                    tr_Export.Visible = true;
+
+                    ddlwareHouse.DataSource = GetUserWarehouses();
+                    ddlwareHouse.DataTextField = "Text";
+                    ddlwareHouse.DataValueField = "Value";
+                    ddlwareHouse.Items.Clear();
+                    ddlwareHouse.Items.Add(new ListItem() { Text = "All", Value = "0" });
+                    ddlwareHouse.DataBind();
+                    Stock_Movement.Visible = true;
+
+                    ddlwareHouse.Visible = true;
+                    lblWarehouse.Visible = true;
+
+                    lbItemCategory.Visible = false;
+                    ddlItemCategory.Visible = false;
+                }
                 if (this.PageTitle == "Item_Wise_Gross_Profit_Report")
                 {
                     string x = "Item Wise Gross Profit Report";
