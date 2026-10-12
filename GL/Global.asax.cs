@@ -14,6 +14,13 @@ namespace PMS
         {
             // Code that runs on application startup
             // Example: Initialize cache, app settings, etc.
+
+            // The dashboards fire dozens of short database calls at the same moment. By default the thread pool starts with
+            // one worker thread per CPU core and adds a new one only about every 500 ms, so those calls queue for several
+            // seconds even though each takes a few milliseconds. A higher starting floor removes that wait.
+            int minWorker, minIo;
+            System.Threading.ThreadPool.GetMinThreads(out minWorker, out minIo);
+            System.Threading.ThreadPool.SetMinThreads(Math.Max(minWorker, 64), Math.Max(minIo, 64));
         }
 
         void Application_End(object sender, EventArgs e)
