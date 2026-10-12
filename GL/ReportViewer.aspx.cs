@@ -3129,6 +3129,7 @@ namespace PMS
                     rd.SetParameterValue("CompanyName", AppConfig.Company_Name);
                     rd.SetParameterValue("Address", companyAddress);
                     rd.SetParameterValue("@Warehouse", Request.QueryString["WareHouse"]);
+                    rd.SetParameterValue("@AccountCategory", Request.QueryString["AccountCategory"] ?? "0");
                 }
             }
             else if (reportName == "Overall_Stock_Consumption_Details")

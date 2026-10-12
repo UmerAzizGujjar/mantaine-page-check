@@ -195,6 +195,33 @@ namespace PMS
         protected global::System.Web.UI.WebControls.DropDownList ddlWarehouse;
 
         /// <summary>
+        /// accountCategoryDiv control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.HtmlControls.HtmlGenericControl accountCategoryDiv;
+
+        /// <summary>
+        /// lblAccountCategory control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.Label lblAccountCategory;
+
+        /// <summary>
+        /// ddlAccountCategory control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.DropDownList ddlAccountCategory;
+
+        /// <summary>
         /// DateDiv control.
         /// </summary>
         /// <remarks>
