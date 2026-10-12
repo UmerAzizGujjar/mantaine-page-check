@@ -3471,6 +3471,21 @@ namespace PMS
                 rd.SetParameterValue("CompanyLogo", logoPath);
 
             }
+            else if (reportName == "Asset_Category_Report")
+            {
+                var logoPath = DBClass.getField("SELECT dbo.GetCompanyLogo()");
+                string Category = Request.QueryString["Category"].ToString();
+                string rptFileName = "Fixed-Assets/rptAssetcategoryreport.rpt";
+                reportPath += rptFileName;
+                rd.Load(reportPath);
+                rd.SetParameterValue("CompanyName", AppConfig.Company_Name);
+                rd.SetParameterValue("Title", reportTitle);
+                rd.SetParameterValue("@startDate", Convert.ToDateTime(Request.QueryString["sDate"]));
+                rd.SetParameterValue("@endDate", Convert.ToDateTime(Request.QueryString["eDate"]));
+                rd.SetParameterValue("@Category", Category);
+                rd.SetParameterValue("CompanyLogo", logoPath);
+
+            }
             else if (reportName == "Stock_Transfer_Report")
             {
                 var logoPath = DBClass.getField("SELECT dbo.GetCompanyLogo()");
