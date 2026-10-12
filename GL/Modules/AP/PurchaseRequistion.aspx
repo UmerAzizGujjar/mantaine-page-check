@@ -599,10 +599,12 @@
         function resolveGIRMode(val) {
             if (val === null || val === undefined) return '';
             val = String(val).trim();
-            if (val === '1') return '003';   // GIR High -> Emergent
-            if (val === '2') return '004';   // GIR Low  -> Low
+            if (val === '1') return '01';    
+            if (val === '2' || val === '3') return '02';   
             return '';
         }
+
+        
 
         function FillWarehouse() {
             PageMethods.fillWarehouse(function (Tests) {
@@ -1303,13 +1305,13 @@
                             <select id="ddldept" class="form-control"></select>
                         </div>
                         <div class="pq-field">
-                            <label id="LblPriority" for="ddlPriority">Priority <span class="pq-req">*</span></label>
+                            <label id="LblPriority" for="ddlPriority">Priority / Mode<span class="pq-req">*</span></label>
                             <select id="ddlPriority" class="form-control">
                                 <option value="0">Please Select</option>
                             </select>
                         </div>
                         <div id="mode" class="pq-field">
-                            <label id="LblMode" for="ddlMode">Mode</label>
+                            <label id="LblMode" for="ddlMode">GIR Priority</label>
                             <select id="ddlMode" class="form-control">
                                 <option value="0">Please Select</option>
                             </select>

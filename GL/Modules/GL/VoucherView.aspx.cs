@@ -19,7 +19,7 @@ namespace PMS
 
         }
         [WebMethod]
-        public static object VoucherViewList(int draw, int start, int length, string sortColumn, string sortColumnDirection, string searchValue, string vouchertype, string voucheryear, string vouchermonth)
+        public static object VoucherViewList(int draw, int start, int length, string sortColumn, string sortColumnDirection, string searchValue, string vouchertype, string voucheryear, string vouchermonth, string fromDate, string toDate)
         {
             try
             {
@@ -59,6 +59,18 @@ namespace PMS
                                             Approved_By = (from u in _dbContext.aspnet_Users where u.UserId == a.Approved_By select u.UserName).FirstOrDefault(),
                                             TotalDebtAmt = _dbContext.GL_Voucher_Accounts.Where(g => g.Voucher_ID == a.Voucher_ID).Sum(g => g.DR)
                                         };
+
+                    DateTime fromDt, toDt;
+                    if (DateTime.TryParseExact(fromDate, "yyyy-MM-dd", System.Globalization.CultureInfo.InvariantCulture, System.Globalization.DateTimeStyles.None, out fromDt))
+                    {
+                        DateTime fromDateValue = fromDt.Date;
+                        vouchersQuery = vouchersQuery.Where(a => a.Voucher_Date >= fromDateValue);
+                    }
+                    if (DateTime.TryParseExact(toDate, "yyyy-MM-dd", System.Globalization.CultureInfo.InvariantCulture, System.Globalization.DateTimeStyles.None, out toDt))
+                    {
+                        DateTime toDateExclusive = toDt.Date.AddDays(1);
+                        vouchersQuery = vouchersQuery.Where(a => a.Voucher_Date < toDateExclusive);
+                    }
 
                     var filteredCount = vouchersQuery.Count();
 
