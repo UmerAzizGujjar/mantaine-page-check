@@ -200,6 +200,14 @@ namespace PMS
                         ddlWarehouse.DataValueField = "Value";
                         ddlWarehouse.DataBind();
                         ddlWarehouse.Items.Insert(0, new ListItem("All", "0"));
+
+                        accountCategoryDiv.Visible = true;
+                        System.Data.DataTable dtAccCat = DBClass.getDataTable("SELECT Account_Category_Id AS [Value], CategoryName AS [Text] FROM Account_Category ORDER BY CategoryName");
+                        ddlAccountCategory.DataSource = dtAccCat;
+                        ddlAccountCategory.DataTextField = "Text";
+                        ddlAccountCategory.DataValueField = "Value";
+                        ddlAccountCategory.DataBind();
+                        ddlAccountCategory.Items.Insert(0, new ListItem("All", "0"));
                         break;
 
                     case "Pharmacy_Stock_Consumption_Details":
@@ -302,7 +310,7 @@ namespace PMS
                     break;
 
                 case "Stock_Consumption_Details":
-                    query = "ReportName=Stock_Consumption_Details&ReportTitle=Stock Consumption Detail From" + txtStart_Date.Text + " to " + txtEnd_Date.Text + "&startDate=" + txtStart_Date.Text + "&endDate=" + txtEnd_Date.Text + "&Stock=" + ddlStock.SelectedValue + ""+ "&Warehouse=" + ddlWarehouse.SelectedValue + "&ExportPDF=" + chkExportPDF.Checked;
+                    query = "ReportName=Stock_Consumption_Details&ReportTitle=Stock Consumption Detail From" + txtStart_Date.Text + " to " + txtEnd_Date.Text + "&startDate=" + txtStart_Date.Text + "&endDate=" + txtEnd_Date.Text + "&Stock=" + ddlStock.SelectedValue + ""+ "&Warehouse=" + ddlWarehouse.SelectedValue + "&AccountCategory=" + ddlAccountCategory.SelectedValue + "&ExportPDF=" + chkExportPDF.Checked;
                     break;
 
                 case "Pharmacy_Stock_Consumption_Details":

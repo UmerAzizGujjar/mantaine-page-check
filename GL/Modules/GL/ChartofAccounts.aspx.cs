@@ -82,6 +82,69 @@ namespace Salon.GL
             }
             db.Dispose();
         }
+        public class AccountHit
+        {
+            public int Id { get; set; }
+            public string Code { get; set; }
+            public string Name { get; set; }
+            public int Level { get; set; }
+        }
+
+        // Account search box: matches code or name across the whole book (the tree itself loads lazily)
+        [System.Web.Services.WebMethod(EnableSession = true)]
+        public static List<AccountHit> SearchAccounts(string term)
+        {
+            term = (term ?? "").Trim();
+            if (term.Length < 2 || HttpContext.Current.Session["Book_ID"] == null)
+                return new List<AccountHit>();
+            int bookId = AppConfig.Book_ID;
+            using (DataBaseDataContext db = new DataBaseDataContext(DBClass.ConnectionString()))
+            {
+                return (from a in db.GL_Accounts
+                        where a.Book_ID == bookId && (a.Account_Code.Contains(term) || a.Account_Name.Contains(term))
+                        orderby a.Account_Code
+                        select new AccountHit { Id = a.Account_ID, Code = a.Account_Code, Name = a.Account_Name, Level = Convert.ToInt32(a.Levels) }
+                       ).Take(30).ToList();
+            }
+        }
+
+        // Search result picked: expand the tree down to the account, select it and load its details
+        protected void btnGoTo_Click(object sender, EventArgs e)
+        {
+            int targetId;
+            if (!int.TryParse(hdnGoto.Value, out targetId))
+                return;
+            hdnGoto.Value = "";
+            var path = new List<int>();   // target ... root
+            using (DataBaseDataContext db = new DataBaseDataContext(connectionString))
+            {
+                int curId = targetId;
+                for (int i = 0; i < 10; i++)
+                {
+                    var row = (from c in db.GL_Accounts
+                               where c.Account_ID == curId && c.Book_ID == AppConfig.Book_ID
+                               select c).FirstOrDefault();
+                    if (row == null) return;
+                    path.Add(row.Account_ID);
+                    if (row.Levels == 1) break;
+                    curId = Convert.ToInt32(row.Parent_Code);
+                }
+            }
+            path.Reverse();
+            RadTreeNode node = RadTreeView1.FindNodeByValue(path[0].ToString());
+            for (int i = 1; node != null && i < path.Count; i++)
+            {
+                if (node.Nodes.Count == 0)
+                    addChildNodesLevel4NodeExpand(node, Convert.ToInt32(node.Value));
+                node.Expanded = true;
+                node = node.Nodes.FindNodeByValue(path[i].ToString());
+            }
+            if (node == null) return;
+            RadTreeView1.UnselectAllNodes();
+            node.Selected = true;
+            RadTreeView1_NodeClick(RadTreeView1, new RadTreeNodeEventArgs(node));
+        }
+
         protected void btnaddSave_Click(object sender, EventArgs e)
         {
         }

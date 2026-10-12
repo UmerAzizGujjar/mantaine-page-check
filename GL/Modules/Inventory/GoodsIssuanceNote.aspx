@@ -8,6 +8,32 @@
         var selectedOptions = '';
         var savedBranch = null;
 
+        // ---- opening an existing note (edit mode) ----
+        // The header and the items used to be loaded by fixed timers (1s / 2.5s) that raced with the organization / department
+        // lists and with the organization 'change' handler, which empties the items table. When the header answered a little late,
+        // its programmatic 'change' wiped the items that had just been added. Now: wait for the lookup lists, load header + items
+        // together, and keep the table untouched while isLoadingExisting is true.
+        var isLoadingExisting = false;
+        var pendingEditLoads = 0;
+        var editLoadSafetyTimer = null;
+        function startEditLoad(SI_ID) {
+            var waited = 0;
+            (function waitForLists() {
+                var ready = $('#ddlInventoryOrg option').length > 1 && $('#ddlDepartment option').length > 1 && typeof warehouseCond !== 'undefined';
+                if (!ready && waited < 8000) { waited += 100; setTimeout(waitForLists, 100); return; }
+                isLoadingExisting = true;
+                pendingEditLoads = 2;
+                LoadMaster(SI_ID);
+                LoadDetail(SI_ID);
+                clearTimeout(editLoadSafetyTimer);
+                editLoadSafetyTimer = setTimeout(function () { isLoadingExisting = false; }, 30000); // safety net if one of the two calls never answers
+            })();
+        }
+        function editLoadDone() {
+            pendingEditLoads--;
+            if (pendingEditLoads <= 0) { isLoadingExisting = false; clearTimeout(editLoadSafetyTimer); }
+        }
+
         function loadUserBranch() {
             PageMethods.GetUserBranch(function (result) {
                 if (!result || result === "null") {
@@ -149,6 +175,7 @@
                 }
             });
             $('#ddlInventoryOrg').change(function () {
+                if (isLoadingExisting) { return; } // the organization is being set from the saved note: keep the items being loaded
                 $('#tblStoreIssueBote tbody').empty();
                 $('#checkHeader').prop('checked', false);
             });
@@ -164,8 +191,7 @@
              if (SI_ID != "") {
                 
 
-                 setTimeout(function () { LoadMaster(SI_ID); }, 1000);
-                 setTimeout(function () { LoadDetail(SI_ID); }, 2500);
+                 startEditLoad(SI_ID);
                  $("#btnSave").val('Update');
                  $("#divSaveandClose").hide();
 
@@ -177,7 +203,8 @@
                  $('#btnVoucher').hide();
              }
              else {
-                 setTimeout(function () {
+                 // called by LoadMaster once the saved status is on the page (was a fixed 2s timer)
+                 window.applyEditStatusUi = function () {
                      var status = $('#txtStatus').val();
                      if (status == "Approved") {
                          UserUnApproveButtonRights();
@@ -192,7 +219,7 @@
                              CheckGINApprovalRightsAndShowButton(SI_ID);
                          }
                      }
-                 }, 2000);
+                 };
              }
              $('[id*=checkHeader]').click(function () {
                  var isTrue = $('#checkHeader').is(':checked');
@@ -791,7 +818,7 @@
                 $('#ddlInventoryOrg').addClass('readonly');
             });
         }
-        function getbatchsAgainstItem(itemcode, length) {
+        function getbatchsAgainstItem(itemcode, length, onDone) {
             PageMethods.Getbatchs(itemcode, function (data) {
                 var parsedData = JSON.parse(data);
                 var options = '<option value="0">Please Select</option>';
@@ -814,6 +841,7 @@
                 }
                 $('#ddlBatchNum' + length).html(options);
                 $('#ddlBatchNum' + length).select2();
+                if (onDone) { onDone(); }
             }, function (error) {
                 alert(error.get_message());
             });
@@ -1254,19 +1282,19 @@
                     $('#ddlBranch').val(savedBranch).trigger('change');
                 }
                 var organizationId = result[0].Organization_Id;
-                setTimeout(function () {
-                    $('#ddlInventoryOrg').val(organizationId).trigger('change');
-                    $('#ddlInventoryOrg').attr('disabled', 'disabled');
-                }, 1000);
-                setTimeout(function () {
-                    $('#ddlDepartment').val(result[0].Department_Id).trigger('change');
-                    $('#ddlDepartment').attr('disabled', 'disabled');
-                }, 2000);
+                $('#ddlInventoryOrg').val(organizationId).trigger('change');
+                $('#ddlInventoryOrg').attr('disabled', 'disabled');
+                $('#ddlDepartment').val(result[0].Department_Id).trigger('change');
+                $('#ddlDepartment').attr('disabled', 'disabled');
 
 
 
-                initializeMRNoDropdown(result.query.MR_No);
-                $('#ddlMRNo').val(result.query.MR_No).trigger('change');
+                try {
+                    initializeMRNoDropdown(result.query.MR_No);
+                    $('#ddlMRNo').val(result.query.MR_No).trigger('change');
+                } catch (e) { /* the header result has no 'query' object (as before); this must not stop the loading */ }
+                if (window.applyEditStatusUi) { window.applyEditStatusUi(); }
+                editLoadDone();
             });
         }
         function ExcludeFromPayment(anchor) {
@@ -1345,11 +1373,11 @@
                         '<td style="padding-top: 9px;padding-top: 6px !important;"> <a href="#" onclick="ExcludeFromPayment(this)">Delete</a></td>' +
                         '<td style="display:none;padding-top: 2px;"><input type="hidden" value=" ' + result[key].SaveTimeStock + '" style=" font-size: 10px;height: 22px;  width: 64px!important;margin-top: 2px;margin-bottom: 0px;margin-left: 4px;" id="txtSaveTimeStock' + length + '" name="txtSaveTimeStock"/></td></tr > ';
                     $("#tblStoreIssueBote tbody").append(rows);
-                    getbatchsAgainstItem(result[key].Item_code, (key + 1));
-                    setTimeout(function () {
+                    getbatchsAgainstItem(result[key].Item_code, (key + 1), function () {
                         $('#ddlBatchNum' + (key + 1)).val(result[key].BatchNum).trigger('change');
-                    }, 2000);
+                    });
                 });
+                editLoadDone();
             });
         }
 

@@ -2018,6 +2018,46 @@ namespace PMS
                     ddlProcedure.DataBind();
 
                 }
+                if (this.PageTitle == "Asset_Category_Report")
+                {
+                    string x = "Non Current Assets Report";
+                    Master.Label2.Text = x;
+                    Master.GetMenuName();
+                    tr1MedicalSubsidy.Visible = false;
+                    dpROw.Visible = false;
+                    lblMultiSelect.Visible = false;
+                    tr_Export.Visible = true;
+                    trDoctor.Visible = false;
+                    tr_Summary.Visible = false;
+                    Time_Row.Visible = true;
+                    DateDiv.Visible = true;
+                    trSearch1.Visible = false;
+                    trProcedure1.Visible = false;
+                    op_FilterClinic.Visible = false;
+                    lblMultiSelect.Visible = false;
+                    ddlDepartments.Visible = false;
+                    lblDepartment.Visible = false;
+
+                    DataTable dbPanel = DBClass.getDataTable("select Account_Code, RTRIM(Account_Name) as Account_Name from GL_Accounts where Parent_Code = 276 and ISNULL(Active,1) = 1 order by Account_Code");
+                    ddlwareHouse.DataSource = dbPanel;
+                    ddlwareHouse.DataTextField = "Account_Name";
+                    ddlwareHouse.DataValueField = "Account_Code";
+                    ddlwareHouse.Items.Clear();
+                    ddlwareHouse.Items.Add(new ListItem() { Text = "All", Value = "0" });
+                    ddlwareHouse.DataBind();
+                    Stock_Movement.Visible = true;
+
+                    ddlwareHouse.Visible = true;
+                    lblWarehouse.Visible = true;
+                    lblWarehouse.Text = "Asset Category";
+
+                    lbItemCategory.Visible = false;
+                    ddlItemCategory.Visible = false;
+
+                    lblPatientType.Visible = false;
+                    ddlPatientType.Visible = false;
+
+                }
                 if (this.PageTitle == "Stock_Transfer_Report")
                 {
                     string x = "Stock Transfer Report";

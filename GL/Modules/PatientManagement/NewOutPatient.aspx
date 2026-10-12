@@ -4,6 +4,73 @@
 
     <link href="../../wwwroot/THEME_TIBBIT/CustomCSS/NewOutPatient.css" rel="stylesheet" />
 
+    <style type="text/css">
+        /* ---------- Pending patients (queue) window ---------- */
+        #queueModal { --hmis-modal-w: 1240px; } /* wider window so the 12 columns fit without sideways scrolling (theme/modal-modern.css reads this) */
+        #queueModal .modal-content { border: 0; border-radius: 12px; overflow: hidden; box-shadow: 0 20px 50px rgba(16, 24, 40, .28); }
+        #queueModal .modal-body { padding: 12px 14px 8px !important; }
+        #queueModal .modal-footer { display: flex; justify-content: flex-end; padding: 8px 14px; background: #f8fafc; border-top: 1px solid #e3e8ee; }
+        #queueModal .modal-footer .btn { min-width: 88px; margin: 0; padding: 5px 18px; font-size: 13px; }
+
+        /* toolbar: filters on the left, Private switch next to them, refresh pushed to the right */
+        .queue-toolbar { display: flex; align-items: center; flex-wrap: wrap; gap: 8px 14px; margin: 0 0 10px; }
+        .queue-filter { flex: 0 1 230px; min-width: 170px; }
+        #queueModal .queue-filter select { display: block; width: 100%; height: 32px; margin: 0; padding: 3px 10px; font-size: 13px; font-weight: 600; background-color: #fff; border: 1px solid #cfd6e0; border-radius: 6px; box-shadow: none; }
+        #queueModal .queue-filter select:focus { border-color: var(--theme-accent, #438eb9); box-shadow: 0 0 0 3px var(--theme-accent-ring, rgba(67, 142, 185, .25)); outline: none; }
+        #queueModal .queue-filter .select2-container { width: 100% !important; }
+        #queueModal .queue-filter .select2-container .select2-selection--single { height: 32px; border: 1px solid #cfd6e0; border-radius: 6px; }
+        #queueModal .queue-filter .select2-container .select2-selection--single .select2-selection__rendered { line-height: 30px; padding-left: 10px; font-size: 13px; font-weight: 600; }
+        #queueModal .queue-filter .select2-container .select2-selection--single .select2-selection__arrow { height: 30px; }
+        .queue-private { display: inline-flex; align-items: center; gap: 8px; margin: 0; font-size: 13px; font-weight: 700; cursor: pointer; user-select: none; }
+        #queueModal .queue-private input[type="checkbox"] { margin: 0 !important; cursor: pointer; }
+        .queue-refresh { margin-left: auto; display: inline-flex; align-items: center; justify-content: center; width: 32px; height: 32px; border-radius: 50%; cursor: pointer; text-decoration: none; color: var(--theme-accent-ink, #2b6a90); background: var(--theme-accent-soft, #f4f8fb); border: 1px solid var(--theme-accent, #438eb9); }
+        .queue-refresh:hover { color: var(--theme-on-accent, #fff); background: var(--theme-accent, #438eb9); }
+        .queue-refresh i { font-size: 15px; }
+
+        /* table */
+        #queueModal .previewTable { margin: 0; padding: 0; max-height: 52vh; overflow: auto; background: #fff; border: 1px solid #e3e8ee; border-radius: 10px; }
+        #queueModal #tblPendingPatients { width: 100%; margin: 0; border-collapse: separate; border-spacing: 0; border: 0 !important; }
+        html:root body #queueModal #tblPendingPatients > thead > tr > th {
+            position: sticky; top: 0; z-index: 2; width: auto !important; padding: 7px 8px !important; vertical-align: middle; white-space: nowrap;
+            font-size: 11.5px !important; font-weight: 700; letter-spacing: .03em; text-transform: uppercase;
+            color: var(--theme-on-accent, #fff) !important; background: var(--theme-accent, #438eb9) !important;
+            border: 0 !important; border-bottom: 2px solid var(--theme-accent-ink, #2b6a90) !important; border-radius: 0 !important;
+        }
+        html:root body #queueModal #tblPendingPatients > tbody > tr > td {
+            padding: 5px 8px !important; vertical-align: middle; white-space: nowrap; font-size: 12.5px; font-weight: 600; line-height: 1.35;
+            border: 0 !important; border-bottom: 1px solid #eef1f5 !important; border-radius: 0 !important;
+        }
+        #queueModal #tblPendingPatients > tbody > tr:last-child > td { border-bottom: 0 !important; }
+        #queueModal #tblPendingPatients > tbody > tr:hover > td { background: rgba(16, 24, 40, .04); }
+        /* alignment: ids, counts, status and actions centred; names, departments, doctor, time, operator left */
+        /* columns: 1 Select, 2 OPD No, 3 Token No, 4 Patient Name, 5 Age, 6 Department, 7 Dept Token, 8 Doctor, 9 Created Time, 10 Operator, 11 Status, 12 Cancel */
+        #queueModal #tblPendingPatients th:nth-child(1), #queueModal #tblPendingPatients td:nth-child(1),
+        #queueModal #tblPendingPatients th:nth-child(2), #queueModal #tblPendingPatients td:nth-child(2),
+        #queueModal #tblPendingPatients th:nth-child(3), #queueModal #tblPendingPatients td:nth-child(3),
+        #queueModal #tblPendingPatients th:nth-child(5), #queueModal #tblPendingPatients td:nth-child(5),
+        #queueModal #tblPendingPatients th:nth-child(7), #queueModal #tblPendingPatients td:nth-child(7),
+        #queueModal #tblPendingPatients th:nth-child(11), #queueModal #tblPendingPatients td:nth-child(11),
+        #queueModal #tblPendingPatients th:nth-child(12), #queueModal #tblPendingPatients td:nth-child(12) { text-align: center; }
+        #queueModal #tblPendingPatients th:nth-child(4), #queueModal #tblPendingPatients td:nth-child(4),
+        #queueModal #tblPendingPatients th:nth-child(6), #queueModal #tblPendingPatients td:nth-child(6),
+        #queueModal #tblPendingPatients th:nth-child(8), #queueModal #tblPendingPatients td:nth-child(8),
+        #queueModal #tblPendingPatients th:nth-child(9), #queueModal #tblPendingPatients td:nth-child(9),
+        #queueModal #tblPendingPatients th:nth-child(10), #queueModal #tblPendingPatients td:nth-child(10) { text-align: left; }
+        #queueModal #tblPendingPatients td:nth-child(4) { white-space: normal; min-width: 150px; font-weight: 700; }
+        #queueModal #tblPendingPatients .fa-2x { font-size: 19px; vertical-align: middle; }
+        #queueModal #tblPendingPatients .fa-plus-circle { color: var(--theme-accent-ink, #2b6a90); }
+        #queueModal #tblPendingPatients a:hover .fa { filter: brightness(1.15); }
+        .q-badge { display: inline-block; padding: 2px 10px; font-size: 11px; font-weight: 700; line-height: 1.5; border-radius: 999px; }
+        .q-badge-checked { color: #1c7a45; background: #d9f2e3; }
+        .q-badge-unchecked { color: #8a5a00; background: #fff1d6; }
+
+        html[data-theme="dark"] #queueModal .modal-content { background: var(--dk-surface-2, #1c2431); color: var(--dk-text, #e6e9ef); }
+        html[data-theme="dark"] #queueModal .modal-footer { background: var(--dk-surface-3, #232d3d); border-color: var(--dk-border, #2d3748); }
+        html[data-theme="dark"] #queueModal .previewTable { background: var(--dk-surface-2, #1c2431); border-color: var(--dk-border, #2d3748); }
+        html[data-theme="dark"] #queueModal .queue-filter select { background-color: var(--dk-surface-3, #232d3d); color: var(--dk-text, #e6e9ef); border-color: var(--dk-border, #2d3748); }
+        html[data-theme="dark"] body #queueModal #tblPendingPatients > tbody > tr > td { border-color: var(--dk-border, #2d3748) !important; }
+    </style>
+
     <script id="ScriptmanageSymptomsModal">
 
         $(document).on('input', '#symptomSearch', function () {
@@ -377,6 +444,7 @@
                 fillPendingPatientsList();
             });
             $('#isPrivate').on('change', function () {
+                fillPendingPatientsList();
                 if ($(this).is(':checked')) {
                     $('#divdocname').slideDown();
                     $('#divFilterClinic').slideUp();
@@ -1303,6 +1371,9 @@ function LoadLabResultrpt() {
             }
         }
         function fillPendingPatientsList() {
+            // the doctor filter is set asynchronously by filldoc(); wait for it, so the list loads once with the right filter
+            // (loading it before showed everyone's patients for a moment, then replaced them with the doctor's own list)
+            if (!window.queueFilterReady) { return; }
 
             var filterDepartment = $('#ctl00_MainContent_ddlPatientDepartment').val();
             var filterClinic = $('#ctl00_MainContent_ddlFilterClinic').val();
@@ -1317,12 +1388,15 @@ function LoadLabResultrpt() {
                 filterClinic = "";
             }
             
-            PageMethods.PendingPatients(filterDepartment, filterClinic, doc_name, function (data) {
+            // Private ticked = only that doctor's own patients; otherwise also show patients nobody has been assigned to yet
+            var includeUnassigned = !$('#isPrivate').is(':checked');
+
+            PageMethods.PendingPatients(filterDepartment, filterClinic, doc_name, includeUnassigned, function (data) {
                 var parsedData = JSON.parse(data);
                 var rows = '';
                 $.each(parsedData, function (key, value) {
                     var TrnsDate = new Date(parseInt(value.Created_Time.substr(6)));
-                    var retdate = moment(TrnsDate).format('LLLL');
+                    var retdate = moment(TrnsDate).format('DD MMM YYYY, hh:mm A');
                     var status = '';
                 
        
@@ -1330,19 +1404,19 @@ function LoadLabResultrpt() {
                         status = 'Un Checked';
                     }
                     if (value.Checked != null) {
-                        var rowColorStyle = (status = 'Checked') ? 'style="background-color: #aeffae;"' : '';
+                        var rowColorStyle = (status = 'Checked') ? 'style="background-color: #eaf8ee;"' : '';
                     }
 
                     var cancelIcon = '';
                     var safeName = (value.Full_Name || '').replace(/'/g, "\\'");
                     if (value.isCancel == true) {
-                        rowColorStyle = 'style="background-color: #ffb3b3;"';
+                        rowColorStyle = 'style="background-color: #fde6e6;"';
                         cancelIcon = '<i class="fa fa-ban fa-2x" style="color:#b30000;" title="' + (value.CancelRemarks || 'Cancelled') + '"></i>';
                     } else {
                         cancelIcon = '<a href="javascript:void(0)" onclick="CancelPendingPatient(' + value.Patient_ID + ', \'' + safeName + '\')"><i class="fa fa-times-circle fa-2x" style="color:#b30000;" title="Cancel"></i></a>';
                     }
 
-                    rows += '<tr ' + rowColorStyle + '> <td>' + value.Patient_No + '</td> <td> ' + value.Dep_token + ' </td>' + '<td>' + value.Full_Name + '</td> ' + '</td> ' + '<td>' + value.Age_years + '</td> ' + '<td>' + value.Department + '</td> ' + '<td>' + value.Dep_token + '</td>' +  '<td>' + value.DoctorName + '</td> ' + '<td>' + retdate + '</td> ' + '<td>' + value.UserName + '</td> ' + '<td>' + status + '</td>' + ' <td> <a href="javascript:void(0)" onclick=loadPatient(' + value.Patient_ID + ',' + value.Patient_No + ',' + value.Reg_PatId + ')><i class="fa fa-plus-circle fa-2x" ></i></a> </td> <td>' + cancelIcon + '</td> </tr>';
+                    rows += '<tr ' + (rowColorStyle || '') + '> <td> <a href="javascript:void(0)" onclick=loadPatient(' + value.Patient_ID + ',' + value.Patient_No + ',' + value.Reg_PatId + ')><i class="fa fa-plus-circle fa-2x" title="Select"></i></a> </td> <td>' + value.Patient_No + '</td> <td>' + value.Dep_token + '</td>' + '<td>' + value.Full_Name + '</td> ' + '<td>' + value.Age_years + '</td> ' + '<td>' + value.Department + '</td> ' + '<td>' + value.Dep_token + '</td>' +  '<td>' + (value.DoctorName || '-') + '</td> ' + '<td>' + retdate + '</td> ' + '<td>' + value.UserName + '</td> ' + '<td><span class="q-badge ' + (status === 'Checked' ? 'q-badge-checked' : 'q-badge-unchecked') + '">' + status + '</span></td>' + ' <td>' + cancelIcon + '</td> </tr>';
                 });
                 $('#tblPendingPatients tbody').html(rows);
 
@@ -1429,6 +1503,10 @@ function LoadLabResultrpt() {
             return options;
         }
         function filldoc() {
+            // safety net: if the doctor lookup is slow or fails, load the list anyway after 4 seconds
+            setTimeout(function () {
+                if (!window.queueFilterReady) { window.queueFilterReady = true; fillPendingPatientsList(); }
+            }, 4000);
             var options;
             PageMethods.GetDoctorFilter(function (filterData) {
                 var filterPolicy = filterData; 
@@ -1447,6 +1525,7 @@ function LoadLabResultrpt() {
 
                     $("#ctl00_MainContent_ddldocname").html(options);
                     $("#ctl00_MainContent_ddldocname").select2();
+                    window.queueFilterReady = true;
                     if (filterPolicy === "02" && firstDoctorId) {
                         $("#ctl00_MainContent_ddldocname").val(firstDoctorId).trigger('change');
                     } else {
@@ -4858,27 +4937,23 @@ function LoadLabResultrpt() {
             <div class="modal-content">
                 <div class="modal-body">
                     <div id="QueueList">
-                        <div class="row" style="margin-bottom: 15px">
-                            <div class="col-lg-3">
+                        <div class="queue-toolbar">
+                            <div class="queue-filter">
                                 <select class="" id="ddlPatientDepartment" onchange="fillPendingPatientsList();" runat="server"></select>
                             </div>
-                            <div id="divFilterClinic" class="col-lg-3" style="display: none">
+                            <div id="divFilterClinic" class="queue-filter" style="display: none">
                                 <select class="select2-enable" id="ddlFilterClinic" onchange="fillPendingPatientsList();" runat="server"></select>
                             </div>
-                            <div class="col-lg-1">
+                            <label class="queue-private" for="isPrivate">
                                 <input type="checkbox" id="isPrivate" />
-                            </div>
-                            <div class="col-lg-2">
-                                <label>Private</label>
-                            </div>
-                            <div id="divdocname" class="col-lg-3" style="display: none">
+                                <span>Private</span>
+                            </label>
+                            <div id="divdocname" class="queue-filter" style="display: none">
                                 <select class="select2-enable" id="ddldocname" onchange="fillPendingPatientsList();" runat="server"></select>
                             </div>
-                            <div class="col-lg-2 text-end">
-                                <a onclick="fillPendingPatientsList()">
-                                    <i class="fa fa-refresh fa-2x"></i>
-                                </a>
-                            </div>
+                            <a class="queue-refresh" onclick="fillPendingPatientsList()" title="Refresh">
+                                <i class="fa fa-refresh"></i>
+                            </a>
 
                         </div>
 
@@ -4887,6 +4962,7 @@ function LoadLabResultrpt() {
                             <table class="table table-bordered table-custom" id="tblPendingPatients">
                                 <thead id="ihead">
                                     <tr>
+                                        <th>Select</th>
                                         <th>OPD No</th>
                                         <th>Token No</th>
                                         <th>Patient Name</th>
@@ -4897,7 +4973,6 @@ function LoadLabResultrpt() {
                                         <th style="width: 173px;">Created Time</th>
                                         <th>Operator Name</th>
                                         <th>Status</th>
-                                        <th>Select</th>
                                         <th>Cancel</th>
                                     </tr>
                                 </thead>

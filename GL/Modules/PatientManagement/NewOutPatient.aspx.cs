@@ -2095,7 +2095,7 @@ namespace PMS.Modules.PatientManagement
             return data;
         }
         [WebMethod]
-        public static string PendingPatients(string filterDepartment,string filterClinic, string doc_name)
+        public static string PendingPatients(string filterDepartment,string filterClinic, string doc_name, bool includeUnassigned)
         {
             DataBaseDataContext db = new DataBaseDataContext();
 
@@ -2155,12 +2155,13 @@ namespace PMS.Modules.PatientManagement
 
             else if (!string.IsNullOrEmpty(filterDepartment) && filterDepartment != "" && !string.IsNullOrEmpty(doc_name))
             {
-                data = data.Where(p => p.Department == db.GetDataValueName("Patient Main Category", filterDepartment) && p.Doctor_ID == doc_name);
+                data = data.Where(p => p.Department == db.GetDataValueName("Patient Main Category", filterDepartment) && (p.Doctor_ID == doc_name || (includeUnassigned && (p.Doctor_ID == null || p.Doctor_ID == ""))));
             }
 
             else if (!string.IsNullOrEmpty(doc_name) && (string.IsNullOrEmpty(filterDepartment) || filterDepartment == ""))
             {
-                data = data.Where(p => p.Doctor_ID == doc_name);
+                // includeUnassigned: a just-registered patient has no doctor yet; the normal (non-Private) queue must still show them
+                data = data.Where(p => p.Doctor_ID == doc_name || (includeUnassigned && (p.Doctor_ID == null || p.Doctor_ID == "")));
             }
 
             var result = data.ToList();
