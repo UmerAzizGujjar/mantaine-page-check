@@ -7533,6 +7533,7 @@
       <Column Name="Reporting_Day" Type="System.String" DbType="VarChar(50)" CanBeNull="true" />
       <Column Name="Payment" Type="System.Boolean" DbType="Bit" CanBeNull="true" />
       <Column Name="Special_Test" Type="System.Boolean" DbType="Bit" CanBeNull="true" />
+      <Column Name="Is_Biofire" Type="System.Boolean" DbType="Bit" CanBeNull="true" />
       <Column Name="StandardName" Type="System.String" DbType="NVarChar(150)" CanBeNull="true" />
       <Column Name="WaitingTime" Type="System.Int32" DbType="Int" CanBeNull="true" />
       <Column Name="machine_name" Type="System.String" DbType="NVarChar(50)" CanBeNull="true" />

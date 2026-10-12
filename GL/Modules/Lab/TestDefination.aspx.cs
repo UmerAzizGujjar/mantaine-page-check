@@ -429,6 +429,7 @@ namespace PMS
             public bool chk_Payment { get; set; }
 
             public bool Special_Test { get; set; }
+            public bool chk_Biofire { get; set; }
             public string WaitingTime { get; set; }
             public string MachineName { get; set; }
             public string StandardName { get; set; }
@@ -544,6 +545,7 @@ namespace PMS
                 test.Chk_Levels = record.chk_Levels;
                 test.Payment = record.chk_Payment;
                 test.Special_Test = record.Special_Test;
+                test.Is_Biofire = record.chk_Biofire;
                 test.Result_Type_Fixed = record.chk_template;
                 test.Result_Type_List = record.chk_listchooseresult;
                 test.Result_Type_Image = record.chk_resultTypeImage;
@@ -655,6 +657,7 @@ namespace PMS
                 test.Updated_By = AppConfig.UserID;
                 test.Updated_Time = DateTime.Now;
                 test.Special_Test = record.Special_Test;
+                test.Is_Biofire = record.chk_Biofire;
                // if (is_admin)
                // {
                     test.Rate = Convert.ToDecimal(record.Rate == "" ? "0.0" : record.Rate);

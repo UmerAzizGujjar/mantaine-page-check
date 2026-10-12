@@ -166888,6 +166888,8 @@ namespace PMS
 
         private System.Nullable<bool> _Special_Test;
 
+        private System.Nullable<bool> _Is_Biofire;
+
         private string _StandardName;
 
         private System.Nullable<int> _WaitingTime;
@@ -166966,6 +166968,8 @@ namespace PMS
         partial void OnPaymentChanged();
         partial void OnSpecial_TestChanging(System.Nullable<bool> value);
         partial void OnSpecial_TestChanged();
+        partial void OnIs_BiofireChanging(System.Nullable<bool> value);
+        partial void OnIs_BiofireChanged();
         partial void OnStandardNameChanging(string value);
         partial void OnStandardNameChanged();
         partial void OnWaitingTimeChanging(System.Nullable<int> value);
@@ -167655,6 +167659,26 @@ namespace PMS
                     this._Special_Test = value;
                     this.SendPropertyChanged("Special_Test");
                     this.OnSpecial_TestChanged();
+                }
+            }
+        }
+
+        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_Is_Biofire", DbType = "Bit")]
+        public System.Nullable<bool> Is_Biofire
+        {
+            get
+            {
+                return this._Is_Biofire;
+            }
+            set
+            {
+                if ((this._Is_Biofire != value))
+                {
+                    this.OnIs_BiofireChanging(value);
+                    this.SendPropertyChanging();
+                    this._Is_Biofire = value;
+                    this.SendPropertyChanged("Is_Biofire");
+                    this.OnIs_BiofireChanged();
                 }
             }
         }
