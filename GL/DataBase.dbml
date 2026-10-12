@@ -1,4 +1,4 @@
-﻿<?xml version="1.0" encoding="utf-8"?><Database Name="H_P_National_Hospital" Class="DataBaseDataContext" xmlns="http://schemas.microsoft.com/linqtosql/dbml/2007">
+<?xml version="1.0" encoding="utf-8"?><Database Name="H_P_National_Hospital" Class="DataBaseDataContext" xmlns="http://schemas.microsoft.com/linqtosql/dbml/2007">
   <Table Name="dbo.Ar_Customers" Member="Ar_Customers">
     <Type Name="Ar_Customer">
       <Column Name="Customer_ID" Type="System.Int32" DbType="Int NOT NULL IDENTITY" IsPrimaryKey="true" IsDbGenerated="true" CanBeNull="false" />
@@ -7396,6 +7396,7 @@
       <Column Name="TimeOfDeath" Type="System.TimeSpan" DbType="Time" CanBeNull="true" />
       <Column Name="PlaceOfDeath" Type="System.String" DbType="VarChar(100)" CanBeNull="true" />
       <Column Name="CauseOfDeath" Type="System.String" DbType="VarChar(100)" CanBeNull="true" />
+      <Column Name="OtherCauseOfDeath" Type="System.String" DbType="VarChar(500)" CanBeNull="true" />
       <Column Name="IssuingOfficerName" Type="System.String" DbType="VarChar(100)" CanBeNull="true" />
       <Column Name="DeathCertifiedBy1" Type="System.String" DbType="VarChar(80)" CanBeNull="true" />
       <Column Name="DeathCertifiedBy2" Type="System.String" DbType="VarChar(80)" CanBeNull="true" />
@@ -12509,6 +12510,7 @@
       <Column Name="TimeOfDeath" Type="System.TimeSpan" DbType="Time" CanBeNull="true" />
       <Column Name="PlaceOfDeath" Type="System.String" DbType="VarChar(100)" CanBeNull="true" />
       <Column Name="CauseOfDeath" Type="System.String" DbType="VarChar(100)" CanBeNull="true" />
+      <Column Name="OtherCauseOfDeath" Type="System.String" DbType="VarChar(500)" CanBeNull="true" />
       <Column Name="IssuingOfficerName" Type="System.String" DbType="VarChar(100)" CanBeNull="true" />
       <Column Name="DeathCertifiedBy1" Type="System.String" DbType="VarChar(80)" CanBeNull="true" />
       <Column Name="DeathCertifiedBy2" Type="System.String" DbType="VarChar(80)" CanBeNull="true" />
