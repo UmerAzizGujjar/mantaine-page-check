@@ -137,6 +137,12 @@ namespace PMS
                         ddlVendor.DataValueField = "Vendor_ID";
                         ddlVendor.DataBind();
 
+                        warehouseDiv.Visible = true;
+                        ddlWarehouse.DataSource = GetUserWarehouses();
+                        ddlWarehouse.DataTextField = "Text";
+                        ddlWarehouse.DataValueField = "Value";
+                        ddlWarehouse.DataBind();
+                        ddlWarehouse.Items.Insert(0, new ListItem("All", "0"));
                         break;
                     case "IGPS":
                         vendorDiv.Visible = true;
@@ -297,7 +303,7 @@ namespace PMS
                     query = "ReportName=VendorWiseIGPS&ReportTitle=Vendor Wise Inward Gate Pass Summary from " + txtStart_Date.Text + " to " + txtEnd_Date.Text + "&Vendor_ID=" + ddlVendor.SelectedValue + "&startDate=" + txtStart_Date.Text + "&endDate=" + txtEnd_Date.Text + "&ExportPDF=" + chkExportPDF.Checked;
                     break;
                 case "GRNS":
-                    query = "ReportName=VendorDetailsGRNS&ReportTitle=Good Receipt Note Summary from " + txtStart_Date.Text + " to " + txtEnd_Date.Text + "&Vendor_ID=" + ddlVendor.SelectedValue + "&startDate=" + txtStart_Date.Text + "&endDate=" + txtEnd_Date.Text + "&ExportPDF=" + chkExportPDF.Checked;
+                    query = "ReportName=VendorDetailsGRNS&ReportTitle=Good Receipt Note Summary from " + txtStart_Date.Text + " to " + txtEnd_Date.Text + "&Vendor_ID=" + ddlVendor.SelectedValue + "&startDate=" + txtStart_Date.Text + "&endDate=" + txtEnd_Date.Text + "&Warehouse=" + ddlWarehouse.SelectedValue + "&ExportPDF=" + chkExportPDF.Checked;
                     break;
                 case "VWP":
                     query = "ReportName=VendorWisePurchase&ReportTitle=Vendor Wise Purchase Detail from " + txtStart_Date.Text + " to " + txtEnd_Date.Text + "&startDate=" + txtStart_Date.Text + "&endDate=" + txtEnd_Date.Text + "&VendorType=" + ddlVendorType.SelectedValue + "&VendorId=" + ddlVendor.SelectedValue + "&Warehouse=" + ddlWarehouse.SelectedValue + "&ExportPDF=" + chkExportPDF.Checked;
