@@ -47,6 +47,9 @@ html[data-theme="dark"] {
 /* the extra mobile pieces only exist for < 992px */
 .mm-toolbar, .mm-backdrop, .mm-drawer-head, .mm-overview { display: none; }
 
+/* desktop hide / show buttons (shown only >= 992px, see the DESKTOP block) */
+.mm-desk-toggle, .mm-desk-show { display: none; }
+
 /* ==========================================================================
    SHARED  (bar + drawer)  -  reset of the old Ace sidebar look
    ========================================================================== */
@@ -179,12 +182,70 @@ html body .sidebar.h-sidebar.mm ul.nav.nav-list ul.mm-empty { display: none !imp
         box-shadow: 0 3px 10px rgba(16, 24, 40, .08) !important;
     }
 
+        /* the bar is a row: [hide button] [menu items] */
+        html body .sidebar.h-sidebar.mm {
+            display: flex !important;
+            align-items: stretch;
+        }
+
         html body .sidebar.h-sidebar.mm ul.nav.nav-list {
             display: flex !important;
+            flex: 1 1 auto;
+            min-width: 0;
             flex-wrap: wrap;
             align-items: stretch;
             padding: 0 14px !important;
         }
+
+        /* hide button at the left end of the bar */
+        html body .sidebar.h-sidebar.mm .mm-desk-toggle {
+            display: inline-flex;
+            flex: 0 0 auto;
+            align-items: center;
+            justify-content: center;
+            width: 46px;
+            height: var(--mm-bar-h);
+            margin: 0;
+            padding: 0;
+            background: transparent;
+            border: 0;
+            border-right: 1px solid var(--mm-border);
+            color: var(--mm-ink);
+            font-size: 17px;
+            cursor: pointer;
+            -webkit-tap-highlight-color: transparent;
+        }
+
+            html body .sidebar.h-sidebar.mm .mm-desk-toggle:hover,
+            html body .sidebar.h-sidebar.mm .mm-desk-toggle:focus-visible { background: var(--mm-bg-2); outline: 0; }
+
+        /* bar hidden: only the corner button stays, it brings the bar back */
+        html body.mm-desk-hidden .sidebar.h-sidebar.mm { display: none !important; }
+
+        html body.mm-desk-hidden .mm-desk-show {
+            display: inline-flex;
+            align-items: center;
+            gap: 9px;
+            height: 38px;
+            margin: 10px 14px 6px;
+            padding: 0 14px 0 12px;
+            background: var(--mm-bg);
+            border: 1px solid var(--mm-border);
+            border-radius: var(--mm-radius);
+            box-shadow: 0 2px 6px rgba(16, 24, 40, .08);
+            color: var(--mm-text);
+            font-family: inherit;
+            font-size: 13.5px;
+            font-weight: 600;
+            line-height: 1;
+            cursor: pointer;
+            -webkit-tap-highlight-color: transparent;
+        }
+
+            html body.mm-desk-hidden .mm-desk-show i { color: var(--mm-ink); font-size: 15px; }
+            html body.mm-desk-hidden .mm-desk-show:hover,
+            html body.mm-desk-hidden .mm-desk-show:focus-visible { background: var(--mm-bg-2); outline: 0; }
+            html body.mm-desk-hidden .mm-desk-show:focus-visible { box-shadow: 0 0 0 2px var(--mm-accent); }
 
             html body .sidebar.h-sidebar.mm ul.nav.nav-list > li {
                 height: var(--mm-bar-h) !important;

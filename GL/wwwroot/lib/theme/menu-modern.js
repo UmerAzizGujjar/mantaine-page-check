@@ -7,6 +7,8 @@
    - gives every top level item an icon (picked from its text, see ICONS below)
    - desktop: dropdowns flip to the other side when they would leave the screen,
               first tap opens / second tap follows the link on touch screens
+              a button at the left end of the bar hides it; a "Menu" button in the
+              left corner brings it back (choice remembered in localStorage)
    - phone / tablet: hamburger -> slide-in drawer, backdrop, accordion sub menus,
               Esc / backdrop / close button / link tap closes the drawer
    ========================================================================== */
@@ -116,6 +118,39 @@
 
         /* (the "Open <section>" rows were removed: a parent only opens its sub menu, it never goes to a page of its own) */
 
+        /* ---------- desktop: hide the bar, bring it back from a corner button ---------- */
+        var deskToggle = document.createElement('button');
+        deskToggle.type = 'button';
+        deskToggle.className = 'mm-desk-toggle';
+        deskToggle.setAttribute('aria-label', 'Hide menu');
+        deskToggle.setAttribute('title', 'Hide menu');
+        deskToggle.setAttribute('aria-expanded', 'true');
+        deskToggle.innerHTML = '<i class="fa fa-bars" aria-hidden="true"></i>';
+        root.insertBefore(deskToggle, list);
+
+        var deskShow = document.createElement('button');
+        deskShow.type = 'button';
+        deskShow.className = 'mm-desk-show';
+        deskShow.setAttribute('aria-label', 'Show menu');
+        deskShow.setAttribute('title', 'Show menu');
+        deskShow.setAttribute('aria-expanded', 'false');
+        deskShow.innerHTML = '<i class="fa fa-bars" aria-hidden="true"></i><span>Menu</span>';
+        root.parentNode.insertBefore(deskShow, root.nextSibling);
+
+        var DESK_KEY = 'mmDeskHidden';
+        function applyDesk(hidden) {
+            document.body.classList.toggle('mm-desk-hidden', hidden);
+            deskToggle.setAttribute('aria-expanded', hidden ? 'false' : 'true');
+            deskShow.setAttribute('aria-expanded', hidden ? 'true' : 'false');
+        }
+        function setDeskHidden(hidden) {
+            applyDesk(hidden);
+            try { window.localStorage.setItem(DESK_KEY, hidden ? '1' : '0'); } catch (e) { }
+        }
+        var savedDesk = null;
+        try { savedDesk = window.localStorage.getItem(DESK_KEY); } catch (e) { }
+        applyDesk(savedDesk === '1');
+
         if (title) {
             var cur = qs('ul.nav-list > li.active > a', root);
             if (cur) { title.textContent = text(cur); }
@@ -193,6 +228,16 @@
                 if (document.body.classList.contains('mm-open')) { closeDrawer(); } else { openDrawer(); }
             });
         }
+        deskToggle.addEventListener('click', function () {
+            closeAllItems();
+            setDeskHidden(true);
+            deskShow.focus({ preventScroll: true });
+        });
+        deskShow.addEventListener('click', function () {
+            setDeskHidden(false);
+            deskToggle.focus({ preventScroll: true });
+        });
+
         backdrop.addEventListener('click', function () { closeDrawer(true); });
         qs('.mm-close', root).addEventListener('click', function () { closeDrawer(true); });
 
